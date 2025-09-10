@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://bwqo2xj0q4e6b"]
+
+[ext_resource type="PackedScene" uid="uid://c4et7yv1q7yt0" path="res://assets/vehicles/SportBike01.glb" id="1_3k4v6"]
+[ext_resource type="Script" uid="uid://miyskj4vmuok" path="res://scenes/motorcycle.gd" id="1_xey2u"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_xey2u"]
+radius = 0.4
+
+[node name="Motorcycle" type="AnimatableBody3D"]
+script = ExtResource("1_xey2u")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.4, 0)
+shape = SubResource("CapsuleShape3D_xey2u")
+
+[node name="RotatePoint" type="Node3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.684003)
+
+[node name="SportBike01" parent="RotatePoint" instance=ExtResource("1_3k4v6")]
+transform = Transform3D(0.0152547, 0, 0, 0, 0.0152547, 0, 0, 0, 0.0152547, 0, 0, -0.669979)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="SpringArm3D" type="SpringArm3D" parent="."]
+transform = Transform3D(0.820192, -0.17965, 0.543149, 0, 0.949415, 0.314026, -0.572089, -0.257561, 0.778702, 1.86308, 1.59916, 1.29101)
+
+[node name="Camera3D" type="Camera3D" parent="SpringArm3D"]
