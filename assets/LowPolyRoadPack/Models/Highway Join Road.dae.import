@@ -1,0 +1,35 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://dc7jvqgtby7kw"
+path="res://.godot/imported/Highway Join Road.dae-023c46b82f5dbfa7cec20a169b2ad049.scn"
+
+[deps]
+
+source_file="res://assets/LowPolyRoadPack/Models/Highway Join Road.dae"
+dest_files=["res://.godot/imported/Highway Join Road.dae-023c46b82f5dbfa7cec20a169b2ad049.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/import_as_skeleton_bones=false
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+_subresources={}
