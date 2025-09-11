@@ -42,8 +42,6 @@ func _physics_process(delta):
     var current_x_angle_deg = rotate_point.global_rotation_degrees.x
     var current_z_angle_deg = rotate_point.global_rotation_degrees.z
     
-
-    
     # lower the bike down
     if current_x_angle_deg > 0 && current_x_angle_deg <= 90:
         x_angle_rad -= gravity
