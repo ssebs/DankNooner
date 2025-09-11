@@ -2,6 +2,10 @@
 
 Wheelie challenge game, try to hold a wheelie for as long as you can & earn points to upgrade your bike.
 
+[theofficialssebs.itch.io/dank-nooner](https://theofficialssebs.itch.io/dank-nooner)
+
+![Screenshot01](./img/screenshot01.png)
+
 Gameplay:
 - [x] mouse => throttle / lean control
 - [x] score based on speed * angle
