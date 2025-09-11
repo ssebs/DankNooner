@@ -24,7 +24,7 @@ func handle_user_input(ret: Dictionary) -> Dictionary:
 
     ret['input_angle'] += SignalBus.throttle_input
     if Input.is_action_pressed("brake"):
-        ret['input_angle'] = -10
+        ret['input_angle'] = -80
     
     return ret
 
