@@ -8,8 +8,8 @@ signal angle_updated(angle_deg: float)
 
 var throttle_input: float:
     set(val):
-        throttle_input = val
-        throttle_updated.emit(val)
+        throttle_input = clampf(val, 0, 100)
+        throttle_updated.emit(throttle_input)
 signal throttle_updated(pct: float)
 
 var score: int:

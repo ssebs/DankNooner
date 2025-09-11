@@ -23,7 +23,7 @@ func handle_user_input(ret: Dictionary) -> Dictionary:
     elif Input.is_action_pressed("lean_right"):
         ret['swerve_dir'] = "right"
 
-    ret['input_angle'] += SignalBus.throttle_input
+    ret['input_angle'] = SignalBus.throttle_input
     if Input.is_action_pressed("brake"):
         ret['input_angle'] = -80
     
@@ -41,6 +41,9 @@ func _input(event: InputEvent):
         if event.keycode == KEY_ESCAPE:
             Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
     
+    if disable_input:
+        return
+
     # Set throttle input
     if event is InputEventMouseMotion:
         if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
@@ -52,8 +55,6 @@ func _physics_process(delta):
     if disable_input:
         return
     
-    if has_started:
-        SignalBus.distance += delta * speed
 
     var current_x_angle_deg = rotate_point.global_rotation_degrees.x
     var input_info: Dictionary = {
@@ -78,7 +79,11 @@ func _physics_process(delta):
     if current_x_angle_deg > 90:
         do_crash()
         return
-    
+
+    if has_started && SignalBus.score > 200 && current_x_angle_deg < 0:
+        do_finish_run()
+        return
+
     # swerve the bike
     if !anim_player.is_playing():
         # todo: check if we're on the edge of the road, if so crash
@@ -88,14 +93,21 @@ func _physics_process(delta):
             "right":
                 anim_player.play("swerve_right")
     
-    # print("input_angle: %.1f" % [input_info['input_angle']])
-    # print("current_angle: %.1f" % [current_x_angle_deg])
+    print("input_angle: %.1f" % [input_info['input_angle']])
+    print("current_angle: %.1f" % [current_x_angle_deg])
     
     # actually rotate the bike & send info to SignalBus
-    rotate_point.rotate_x(deg_to_rad(input_info['input_angle']) * delta)
+    rotate_point.rotate_x(deg_to_rad(input_info['input_angle']) * 3 * delta)
     SignalBus.angle_deg = rotate_point.global_rotation_degrees.x
+    if has_started:
+        SignalBus.distance += delta * speed
+        SignalBus.score += roundi((SignalBus.distance * SignalBus.angle_deg) / 100)
 
 func do_crash():
     disable_input = true
     anim_player.play("crash")
     SignalBus.notify_ui.emit("You crashed!")
+
+func do_finish_run():
+    disable_input = true
+    SignalBus.notify_ui.emit("Run finished!")
