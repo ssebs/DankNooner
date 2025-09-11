@@ -36,7 +36,7 @@ environment = SubResource("Environment_8b0r0")
 [node name="UI" parent="." instance=ExtResource("1_0b4ue")]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.766863, -0.390061, 0.50968, 7.19241e-09, 0.794128, 0.60775, -0.641811, -0.466061, 0.608988, 22.5, 27, 15)
+transform = Transform3D(0.766863, -0.390061, 0.50968, 7.19241e-09, 0.794128, 0.60775, -0.641811, -0.466061, 0.608987, 30, 27, 15)
 
 [node name="Motorcycle" parent="." instance=ExtResource("1_u52ul")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
