@@ -1,9 +1,6 @@
 # Dank Nooner
 
-Wheelie challenge video game
-
-Goal:
-- Try to hold a wheelie for as long as you can & earn points
+Wheelie challenge game, try to hold a wheelie for as long as you can & earn points to upgrade your bike.
 
 Gameplay:
 - [x] mouse => throttle / lean control
