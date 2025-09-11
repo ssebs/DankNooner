@@ -6,6 +6,12 @@ var angle_deg: float:
         angle_updated.emit(val)
 signal angle_updated(angle_deg: float)
 
+var throttle_input: float:
+    set(val):
+        throttle_input = val
+        throttle_updated.emit(val)
+signal throttle_updated(pct: float)
+
 signal notify_ui(msg: String) # see ui.gd
 
 
