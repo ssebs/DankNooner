@@ -1,5 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://c6j1taidj4kyv"]
+[gd_scene load_steps=6 format=3 uid="uid://c6j1taidj4kyv"]
 
+[ext_resource type="PackedScene" uid="uid://boveos4k30e0d" path="res://scenes/ui.tscn" id="1_0b4ue"]
 [ext_resource type="PackedScene" uid="uid://bwqo2xj0q4e6b" path="res://scenes/motorcycle.tscn" id="1_u52ul"]
 [ext_resource type="PackedScene" uid="uid://i4dmnqdvoow2" path="res://assets/vehicles/Car01.glb" id="2_oi3di"]
 [ext_resource type="PackedScene" uid="uid://drmtql816tpes" path="res://assets/vehicles/Police Car.glb" id="3_0b4ue"]
@@ -8,6 +9,8 @@
 albedo_color = Color(0.187893, 0.187893, 0.187893, 1)
 
 [node name="World" type="Node3D"]
+
+[node name="UI" parent="." instance=ExtResource("1_0b4ue")]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.840935, 0.328875, -0.429731, 0, 0.794128, 0.60775, 0.541136, -0.511078, 0.66781, 0, 27, 0)
