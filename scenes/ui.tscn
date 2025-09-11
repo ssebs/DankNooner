@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://boveos4k30e0d"]
+[gd_scene load_steps=5 format=3 uid="uid://boveos4k30e0d"]
 
 [ext_resource type="Script" uid="uid://byfj6wa0klab3" path="res://scenes/ui.gd" id="1_nt7q6"]
 [ext_resource type="Theme" uid="uid://d15reok7osseo" path="res://resources/theme.tres" id="1_x4jx1"]
+[ext_resource type="StyleBox" uid="uid://c4nos0reov3e4" path="res://resources/green_stylebox_black_border_empty.tres" id="3_gdt2y"]
+[ext_resource type="StyleBox" uid="uid://g4xm0g06mw1c" path="res://resources/green_stylebox_black_border_fill.tres" id="4_wm3ai"]
 
 [node name="UI" type="MarginContainer"]
 anchors_preset = 15
@@ -16,15 +18,41 @@ theme_override_constants/margin_right = 80
 theme_override_constants/margin_bottom = 80
 script = ExtResource("1_nt7q6")
 
-[node name="AngleLabel" type="Label" parent="."]
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 0
-theme_override_font_sizes/font_size = 36
-text = "ANGLE_LABEL"
-
 [node name="NotifyLabel" type="Label" parent="."]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 48
 text = "NOTIFY"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="AngleLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "angle_degrees*"
+horizontal_alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="ProgressLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Throttle:"
+horizontal_alignment = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 3
+theme_override_styles/background = ExtResource("3_gdt2y")
+theme_override_styles/fill = ExtResource("4_wm3ai")
+step = 1.0
+value = 42.0
+rounded = true
+fill_mode = 3

@@ -13,6 +13,8 @@ var input_info: Dictionary = {
 
 func _ready():
     pass
+    # var throttle_input from mouse
+    # use brake w/ space to save it, but lose speed
 
 # Uses input_info's dictionary
 func handle_user_input(ret: Dictionary) -> Dictionary:
