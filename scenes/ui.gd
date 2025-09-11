@@ -34,6 +34,19 @@ func on_distance_updated(distance: int):
 func on_angle_updated(angle_deg: float):
     angle_label.text = "%.0f°" % abs(angle_deg)
 
+    var color: Color
+    if angle_deg <= 45:
+        # From white (0°) to yellow (45°)
+        var t = angle_deg / 45.0
+        color = Color.WHITE.lerp(Color.YELLOW, t)
+    else:
+        # From yellow (45°) to red (90°)
+        var t = (angle_deg - 45.0) / 45.0
+        color = Color.YELLOW.lerp(Color.RED, t)
+
+
+    angle_label.add_theme_color_override("font_color", color)
+
 func on_notify_ui(msg: String):
     notify_label.text = msg
     await get_tree().create_timer(notify_time_sec).timeout
