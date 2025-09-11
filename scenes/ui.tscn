@@ -19,6 +19,7 @@ theme_override_constants/margin_bottom = 80
 script = ExtResource("1_nt7q6")
 
 [node name="NotifyLabel" type="Label" parent="."]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 48
@@ -29,6 +30,7 @@ layout_mode = 2
 size_flags_horizontal = 8
 
 [node name="AngleLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "angle_degrees*"
@@ -39,12 +41,13 @@ layout_mode = 2
 theme_override_constants/separation = 30
 
 [node name="ProgressLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "Throttle:"
 horizontal_alignment = 2
 
-[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer"]
+[node name="ThrottleProgress" type="ProgressBar" parent="VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
