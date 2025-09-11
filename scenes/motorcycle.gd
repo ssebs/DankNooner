@@ -3,20 +3,14 @@ class_name Motorcycle extends AnimatableBody3D
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var rotate_point: Node3D = %RotatePoint
 
-var gravity = .98
+var gravity = 50
 var disable_input = false
-var deadspaces_deg = 1
-var input_info: Dictionary = {
-    'input_angle': 0.0,
-    'swerve_dir': "", # "", left, right
-}
+
 
 func _ready():
     Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-    # var throttle_input from mouse
-    # use brake w/ space to save it, but lose speed
 
-# Uses input_info's dictionary
+# Uses input_info's dictionary & throttle_input
 func handle_user_input(ret: Dictionary) -> Dictionary:
     if Input.is_action_pressed("lean_back"):
         ret['input_angle'] += 1
@@ -30,21 +24,16 @@ func handle_user_input(ret: Dictionary) -> Dictionary:
 
     ret['input_angle'] += SignalBus.throttle_input
     if Input.is_action_pressed("brake"):
-        ret['input_angle'] = -2
+        ret['input_angle'] = -10
     
     return ret
 
+# capture window + set throttle input
 func _input(event: InputEvent):
     # Capture/uncapture the mouse w/ click/escape
     if event is InputEventMouseButton:
         if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
             Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-        
-        # on LMB release
-        if !event.pressed:
-            SignalBus.throttle_input = 0
-            lerpf(SignalBus.throttle_input, 0, 0.5)
-    
     if event is InputEventKey:
         if event.keycode == KEY_ESCAPE:
             Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -59,30 +48,26 @@ func _input(event: InputEvent):
 func _physics_process(delta):
     if disable_input:
         return
-    
-    # keyboard stuff
-    input_info = handle_user_input(input_info)
-    var input_angle_deg = input_info['input_angle']
-    var current_x_angle_deg = rotate_point.global_rotation_degrees.x
-    
-    # lower the bike down
-    if current_x_angle_deg > 0 && current_x_angle_deg <= 90:
-        input_angle_deg -= gravity
 
-    # ground + crash checks
-    if current_x_angle_deg < 0:
-        input_angle_deg = 0
-        rotate_point.global_rotation_degrees.x = 0
-        return
-    elif current_x_angle_deg > 90:
+    var current_x_angle_deg = rotate_point.global_rotation_degrees.x
+    var input_info: Dictionary = {
+        'input_angle': 0.0,
+        'swerve_dir': "", # "", left, right
+    }
+
+    # Get user inputs
+    if !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+        SignalBus.throttle_input = lerpf(SignalBus.throttle_input, 0, 5 * delta)
+    input_info = handle_user_input(input_info)
+    
+    # lower the bike down if you're doing a wheelie
+    if current_x_angle_deg > 0 && current_x_angle_deg <= 90:
+        input_info['input_angle'] -= gravity
+
+    # crash checks
+    if current_x_angle_deg > 90:
         do_crash()
         return
-    
-    print("input_angle: %.1f" % [input_angle_deg])
-    print("current_angle: %.1f" % [current_x_angle_deg])
-    
-    # rotate the bike
-    rotate_point.rotate_x(rad_to_deg(input_angle_deg) * delta)
     
     # swerve the bike
     if !anim_player.is_playing():
@@ -93,13 +78,12 @@ func _physics_process(delta):
             "right":
                 anim_player.play("swerve_right")
     
-    # send info to SignalBus
+    # print("input_angle: %.1f" % [input_info['input_angle']])
+    # print("current_angle: %.1f" % [current_x_angle_deg])
+    
+    # actually rotate the bike & send info to SignalBus
+    rotate_point.rotate_x(deg_to_rad(input_info['input_angle']) * delta)
     SignalBus.angle_deg = rotate_point.global_rotation_degrees.x
-    # reset
-    input_info = {
-        'input_angle': 0.0,
-        'swerve_dir': 0,
-    }
 
 func do_crash():
     disable_input = true
