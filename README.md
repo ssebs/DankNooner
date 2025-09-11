@@ -11,6 +11,7 @@ Gameplay:
 - [ ] treadmill road using motorcycle's speed
 - [ ] avoid traffic on highway by switching lanes
 - [ ] gas can run out
+- [ ] other hazards (speed bump, gravel, oil slick, etc.)
 
 Misc:
 - [ ] sfx at 1mi (dank nooner brah, siiiick, etc.)
