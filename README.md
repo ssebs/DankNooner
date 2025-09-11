@@ -7,8 +7,8 @@ Goal:
 
 Gameplay:
 - [x] mouse => throttle / lean control
+- [x] score based on speed * angle
 - [ ] treadmill road using motorcycle's speed
-- [ ] score based on speed * angle
 - [ ] avoid traffic on highway by switching lanes
 - [ ] gas can run out
 
