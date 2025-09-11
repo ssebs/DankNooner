@@ -5,7 +5,8 @@ class_name Motorcycle extends AnimatableBody3D
 
 var gravity = 50
 var disable_input = false
-
+var has_started = false
+var speed = 1
 
 func _ready():
     Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -34,6 +35,8 @@ func _input(event: InputEvent):
     if event is InputEventMouseButton:
         if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
             Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+        if !has_started:
+            has_started = true
     if event is InputEventKey:
         if event.keycode == KEY_ESCAPE:
             Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -48,6 +51,9 @@ func _input(event: InputEvent):
 func _physics_process(delta):
     if disable_input:
         return
+    
+    if has_started:
+        SignalBus.distance += delta * speed
 
     var current_x_angle_deg = rotate_point.global_rotation_degrees.x
     var input_info: Dictionary = {
@@ -60,6 +66,10 @@ func _physics_process(delta):
         SignalBus.throttle_input = lerpf(SignalBus.throttle_input, 0, 5 * delta)
     input_info = handle_user_input(input_info)
     
+    # print("throttle_input:", SignalBus.throttle_input)
+    # print("speed:", speed)
+    speed = clampf(speed * SignalBus.throttle_input, 1, 100)
+
     # lower the bike down if you're doing a wheelie
     if current_x_angle_deg > 0 && current_x_angle_deg <= 90:
         input_info['input_angle'] -= gravity

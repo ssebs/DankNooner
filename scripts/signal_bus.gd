@@ -12,6 +12,18 @@ var throttle_input: float:
         throttle_updated.emit(val)
 signal throttle_updated(pct: float)
 
+var score: int:
+    set(val):
+        score = val
+        score_updated.emit(val)
+signal score_updated(score: int)
+
+var distance: float:
+    set(val):
+        distance = val
+        distance_updated.emit(val)
+signal distance_updated(distance: float)
+
 signal notify_ui(msg: String) # see ui.gd
 
 
