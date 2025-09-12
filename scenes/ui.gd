@@ -12,6 +12,10 @@ class_name UI extends MarginContainer
 @onready var main_menu_panel: Control = %MainMenuPanel
 @onready var pause_menu_panel: Control = %PauseMenuPanel
 
+@onready var play_btn: Button = %PlayBtn
+@onready var quit_btn: Button = %QuitBtn
+@onready var volume_slider: Slider = %VolumeSlider
+
 # var notifications = [] # todo: use queue for multiple
 
 func _ready():
