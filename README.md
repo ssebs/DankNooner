@@ -8,7 +8,9 @@ Wheelie challenge game, try to hold a wheelie for as long as you can & earn poin
 
 Gameplay:
 - [x] mouse => throttle / lean control
+  - [ ] also support keyboard press
 - [x] score based on speed * angle
+- [ ] restart game loop
 - [ ] treadmill road using motorcycle's speed
 - [ ] avoid traffic on highway by switching lanes
 - [ ] gas can run out
