@@ -6,17 +6,16 @@ class_name MainGame extends Node
 @onready var ui: UI = $UI
 
 enum GameState {MAIN_MENU, PAUSE_MENU, PLAYING}
-var game_state: GameState = GameState.MAIN_MENU:
+var game_state: GameState:
     set(val):
         game_state = val
         switch_game_state(val)
 
 func _ready():
-    pass
-    # ui.onplay => play_game
-    play_game()
+    game_state = GameState.MAIN_MENU
+    # ui.onplay => start_game()
 
-func play_game():
+func start_game():
     var motorcycle: Motorcycle = moto_scene.instantiate()
     motorcycle.global_position = spawn_pos.global_position
     add_child(motorcycle)

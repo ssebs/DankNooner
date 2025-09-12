@@ -20,6 +20,7 @@ script = ExtResource("1_nt7q6")
 
 [node name="GamePanel" type="Control" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="NotifyLabel" type="Label" parent="GamePanel"]
@@ -93,6 +94,73 @@ text = "Distance"
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="TitleContainer" type="VBoxContainer" parent="MainMenuPanel"]
+layout_mode = 1
+offset_right = 688.0
+offset_bottom = 185.0
+
+[node name="Title" type="Label" parent="MainMenuPanel/TitleContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 96
+text = "Dank Nooner"
+
+[node name="Title2" type="Label" parent="MainMenuPanel/TitleContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.683077, 0.683077, 0.683077, 1)
+theme_override_font_sizes/font_size = 48
+text = "How long can you balance a wheelie?"
+
+[node name="BtnContainer" type="VBoxContainer" parent="MainMenuPanel"]
+layout_mode = 2
+offset_top = 436.0
+offset_right = 400.0
+offset_bottom = 740.0
+grow_vertical = 0
+theme_override_constants/separation = 64
+
+[node name="PlayBtn" type="Button" parent="MainMenuPanel/BtnContainer"]
+custom_minimum_size = Vector2(400, 120)
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "Play"
+
+[node name="QuitBtn" type="Button" parent="MainMenuPanel/BtnContainer"]
+custom_minimum_size = Vector2(400, 120)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 64
+text = "Quit"
+
+[node name="VolContainer" type="VBoxContainer" parent="MainMenuPanel"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -407.0
+offset_top = -304.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="MainMenuPanel/VolContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 48
+text = "Volume:"
+
+[node name="VolumeSlider" type="HSlider" parent="MainMenuPanel/VolContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+value = 75.0
+rounded = true
+
 [node name="PauseMenuPanel" type="Control" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
