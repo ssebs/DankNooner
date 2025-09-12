@@ -8,6 +8,10 @@ class_name UI extends MarginContainer
 @onready var distance_label: Label = %DistanceLabel
 @onready var throttle_progress: ProgressBar = %ThrottleProgress
 
+@onready var game_panel: Control = %GamePanel
+@onready var main_menu_panel: Control = %MainMenuPanel
+@onready var pause_menu_panel: Control = %PauseMenuPanel
+
 # var notifications = [] # todo: use queue for multiple
 
 func _ready():
@@ -22,6 +26,22 @@ func _ready():
     distance_label.text = "0m"
     throttle_progress.value = 0
 
+func switch_panels(state: MainGame.GameState):
+    match state:
+        MainGame.GameState.MAIN_MENU:
+            game_panel.visible = false
+            pause_menu_panel.visible = false
+            main_menu_panel.visible = true
+        MainGame.GameState.PLAYING:
+            game_panel.visible = true
+            pause_menu_panel.visible = false
+            main_menu_panel.visible = false
+        MainGame.GameState.PAUSE_MENU:
+            game_panel.visible = false
+            pause_menu_panel.visible = true
+            main_menu_panel.visible = false
+
+#region signal handlers
 func on_throttle_updated(pct: float):
     throttle_progress.value = pct
 
@@ -51,3 +71,4 @@ func on_notify_ui(msg: String):
     notify_label.text = msg
     await get_tree().create_timer(notify_time_sec).timeout
     notify_label.text = ""
+#endregion

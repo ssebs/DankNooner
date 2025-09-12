@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="DankNooner"
-run/main_scene="uid://c6j1taidj4kyv"
+run/main_scene="uid://b8y3uqkpm2ctg"
 config/features=PackedStringArray("4.4", "Mobile")
 boot_splash/show_image=false
 config/icon="res://icon.svg"
