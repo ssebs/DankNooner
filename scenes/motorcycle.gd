@@ -2,6 +2,7 @@ class_name Motorcycle extends AnimatableBody3D
 
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var rotate_point: Node3D = %RotatePoint
+@onready var camera: Camera3D = $SpringArm3D/Camera3D
 
 var gravity = 50
 var disable_input = false
