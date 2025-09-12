@@ -33,5 +33,8 @@ Pickups:
 - [ ] Gas
 - [ ] Speed boost
 
+Bugs:
+- [ ] Web export [see](https://forum.godotengine.org/t/mouse-jumps-on-exported-web-build/57385)
+
 Out of scope:
 - avoid cops?
