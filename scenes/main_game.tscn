@@ -1,0 +1,122 @@
+[gd_scene load_steps=15 format=3 uid="uid://b8y3uqkpm2ctg"]
+
+[ext_resource type="Script" uid="uid://d3gn4nknw3s61" path="res://scenes/main_game.gd" id="1_s3esy"]
+[ext_resource type="PackedScene" uid="uid://boveos4k30e0d" path="res://scenes/ui.tscn" id="2_o6v7o"]
+[ext_resource type="PackedScene" uid="uid://i4dmnqdvoow2" path="res://assets/vehicles/Car01.glb" id="4_8xp80"]
+[ext_resource type="PackedScene" uid="uid://drmtql816tpes" path="res://assets/vehicles/Police Car.glb" id="5_sp04v"]
+[ext_resource type="PackedScene" uid="uid://b2tmcghnjj2iu" path="res://assets/LowPolyRoadPack/Models/Road Straight 2.dae" id="6_ihbck"]
+[ext_resource type="PackedScene" uid="uid://lx4se6m3cw3v" path="res://assets/LowPolyRoadPack/Models/Parkinglot Entrance.dae" id="7_vnsdt"]
+[ext_resource type="PackedScene" uid="uid://drsie5ww5xl2v" path="res://assets/LowPolyRoadPack/Models/Parkinglot Center 1.dae" id="8_ikqpi"]
+[ext_resource type="PackedScene" uid="uid://de0oj5dundds7" path="res://assets/LowPolyRoadPack/Models/Parkinglot Corner 3.dae" id="9_5luka"]
+[ext_resource type="PackedScene" uid="uid://d03bs21f5d1dy" path="res://assets/LowPolyRoadPack/Models/Parkinglot Edge 1.dae" id="10_yu8cv"]
+[ext_resource type="PackedScene" uid="uid://dl44va1ncrtit" path="res://assets/LowPolyRoadPack/Models/Parkinglot Edge 3.dae" id="11_ibnub"]
+[ext_resource type="PackedScene" uid="uid://fovif1yrpoc3" path="res://assets/LowPolyRoadPack/Models/Parkinglot Edge 4.dae" id="12_5wboo"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6de02"]
+sky_top_color = Color(0, 0, 0, 1)
+sky_horizon_color = Color(0.0235287, 0.0227557, 0.0396556, 1)
+ground_bottom_color = Color(0.0198388, 0.016747, 0.0843464, 1)
+ground_horizon_color = Color(0.0235287, 0.0227557, 0.0396556, 1)
+energy_multiplier = 0.35
+
+[sub_resource type="Sky" id="Sky_aicyk"]
+sky_material = SubResource("ProceduralSkyMaterial_6de02")
+
+[sub_resource type="Environment" id="Environment_cybgu"]
+background_mode = 2
+sky = SubResource("Sky_aicyk")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="MainGame" type="Node"]
+script = ExtResource("1_s3esy")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_cybgu")
+
+[node name="UI" parent="." instance=ExtResource("2_o6v7o")]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.766863, -0.390061, 0.50968, 7.19241e-09, 0.794128, 0.60775, -0.641811, -0.466061, 0.608987, 30, 27, 15)
+light_color = Color(0.79, 0.711263, 0.5846, 1)
+directional_shadow_mode = 1
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.903804, -0.0552367, 0.424368, 0.233428, 0.894757, -0.380683, -0.358679, 0.443123, 0.821578, 30, 27, 15)
+light_color = Color(0.79, 0.711263, 0.5846, 1)
+directional_shadow_mode = 1
+
+[node name="Car01" parent="." instance=ExtResource("4_8xp80")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.99292, 0.0783427, -13.3749)
+
+[node name="Police Car" parent="." instance=ExtResource("5_sp04v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.41767, 0.0662612, -12.2237)
+
+[node name="Roads" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0, 0)
+
+[node name="Road Straight 2" parent="Roads" instance=ExtResource("6_ihbck")]
+
+[node name="Road Straight 3" parent="Roads" instance=ExtResource("6_ihbck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
+
+[node name="Road Straight 4" parent="Roads" instance=ExtResource("6_ihbck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
+
+[node name="Road Straight 5" parent="Roads" instance=ExtResource("6_ihbck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -30)
+
+[node name="Road Straight 6" parent="Roads" instance=ExtResource("6_ihbck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -40)
+
+[node name="Road Straight 7" parent="Roads" instance=ExtResource("6_ihbck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -50)
+
+[node name="ParkingLot" type="Node3D" parent="Roads"]
+
+[node name="Parkinglot Entrance" parent="Roads/ParkingLot" instance=ExtResource("7_vnsdt")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+
+[node name="Parkinglot Center 1" parent="Roads/ParkingLot" instance=ExtResource("8_ikqpi")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 15, 0, 30)
+
+[node name="Parkinglot Center 2" parent="Roads/ParkingLot" instance=ExtResource("8_ikqpi")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 30)
+
+[node name="Parkinglot Center 4" parent="Roads/ParkingLot" instance=ExtResource("8_ikqpi")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 30, 0, 30)
+
+[node name="Parkinglot Corner 3" parent="Roads/ParkingLot" instance=ExtResource("9_5luka")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -15, 0, 15)
+
+[node name="Parkinglot Corner 4" parent="Roads/ParkingLot" instance=ExtResource("9_5luka")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, 15)
+
+[node name="Parkinglot Corner 5" parent="Roads/ParkingLot" instance=ExtResource("9_5luka")]
+transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 30, 0, 30)
+
+[node name="Parkinglot Corner 6" parent="Roads/ParkingLot" instance=ExtResource("9_5luka")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -15, 0, 30)
+
+[node name="Parkinglot Edge 1" parent="Roads/ParkingLot" instance=ExtResource("10_yu8cv")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 30, 0, 15)
+
+[node name="Parkinglot Edge 2" parent="Roads/ParkingLot" instance=ExtResource("10_yu8cv")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -15, 0, 30)
+
+[node name="Parkinglot Edge 3" parent="Roads/ParkingLot" instance=ExtResource("11_ibnub")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -15, 0, 30)
+
+[node name="Parkinglot Edge 4" parent="Roads/ParkingLot" instance=ExtResource("12_5wboo")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 15, 0, 30)
+
+[node name="Parkinglot Edge 7" parent="Roads/ParkingLot" instance=ExtResource("12_5wboo")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 30, 0, 30)
+
+[node name="Parkinglot Edge 5" parent="Roads/ParkingLot" instance=ExtResource("12_5wboo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, 15)
+
+[node name="Parkinglot Edge 6" parent="Roads/ParkingLot" instance=ExtResource("12_5wboo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 15)
+
+[node name="SpawnPos" type="Marker3D" parent="."]

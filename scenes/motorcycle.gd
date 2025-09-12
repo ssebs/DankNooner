@@ -93,8 +93,8 @@ func _physics_process(delta):
             "right":
                 anim_player.play("swerve_right")
     
-    print("input_angle: %.1f" % [input_info['input_angle']])
-    print("current_angle: %.1f" % [current_x_angle_deg])
+    # print("input_angle: %.1f" % [input_info['input_angle']])
+    # print("current_angle: %.1f" % [current_x_angle_deg])
     
     # actually rotate the bike & send info to SignalBus
     rotate_point.rotate_x(deg_to_rad(input_info['input_angle']) * 3 * delta)
