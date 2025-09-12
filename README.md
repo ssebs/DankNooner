@@ -18,8 +18,8 @@ Gameplay:
 
 Misc:
 - [ ] sfx at 1mi (dank nooner brah, siiiick, etc.)
-- [ ] main menu
-- [ ] settings menu
+- [x] main menu
+- [ ] working volume
 
 Upgrades:
 - [ ] Increase fuel
