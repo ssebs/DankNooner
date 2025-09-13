@@ -5,6 +5,7 @@ Wheelie challenge game, try to hold a wheelie for as long as you can & earn poin
 [theofficialssebs.itch.io/dank-nooner](https://theofficialssebs.itch.io/dank-nooner)
 
 ![Screenshot01](./img/screenshot01.png)
+![Screenshot02](./img/screenshot02.png)
 
 TODO:
 - add quit btn on restart screen + make new screen for that
