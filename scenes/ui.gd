@@ -1,6 +1,8 @@
 class_name UI extends MarginContainer
 
-@export var notify_time_sec = 5
+signal notify_finished()
+
+@export var notify_time_sec = 3
 
 @onready var angle_label: Label = %AngleLabel
 @onready var notify_label: Label = %NotifyLabel
@@ -15,6 +17,7 @@ class_name UI extends MarginContainer
 @onready var play_btn: Button = %PlayBtn
 @onready var quit_btn: Button = %QuitBtn
 @onready var volume_slider: Slider = %VolumeSlider
+@onready var restart_btn: Button = %RestartBtn
 
 # var notifications = [] # todo: use queue for multiple
 
@@ -29,6 +32,7 @@ func _ready():
     score_label.text = "0"
     distance_label.text = "0m"
     throttle_progress.value = 0
+    restart_btn.visible = false
 
 func switch_panels(state: MainGame.GameState):
     match state:
@@ -71,8 +75,9 @@ func on_angle_updated(angle_deg: float):
 
     angle_label.add_theme_color_override("font_color", color)
 
-func on_notify_ui(msg: String):
+func on_notify_ui(msg: String, duration: float = notify_time_sec):
     notify_label.text = msg
-    await get_tree().create_timer(notify_time_sec).timeout
+    await get_tree().create_timer(duration).timeout
     notify_label.text = ""
+    notify_finished.emit()
 #endregion
