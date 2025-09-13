@@ -27,9 +27,9 @@ func spawn_roads(count: int):
         piece.global_position.z -= i * offset
 
 func _physics_process(delta):
-    if road_spawn == null:
+    if road_spawn == null || SignalBus.speed == null:
         return
     if road_spawn.position.z > len(road_pieces) * offset:
         road_spawn.position.z = 0
     
-    road_spawn.position.z += lerpf(0,delta * (SignalBus.speed / 5), 0.5)
+    road_spawn.position.z += lerpf(0, delta * (SignalBus.speed / 5), 0.5)

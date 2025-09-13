@@ -1,10 +1,7 @@
-[gd_scene load_steps=22 format=3 uid="uid://bt8t0gafmsf2w"]
+[gd_scene load_steps=19 format=3 uid="uid://bt8t0gafmsf2w"]
 
 [ext_resource type="Script" uid="uid://d3gn4nknw3s61" path="res://scenes/main_game.gd" id="1_s3esy"]
 [ext_resource type="PackedScene" uid="uid://boveos4k30e0d" path="res://scenes/ui.tscn" id="2_o6v7o"]
-[ext_resource type="PackedScene" uid="uid://i4dmnqdvoow2" path="res://assets/vehicles/Car01.glb" id="4_8xp80"]
-[ext_resource type="PackedScene" uid="uid://drmtql816tpes" path="res://assets/vehicles/Police Car.glb" id="5_sp04v"]
-[ext_resource type="PackedScene" uid="uid://lx4se6m3cw3v" path="res://assets/LowPolyRoadPack/Models/Parkinglot Entrance.dae" id="7_vnsdt"]
 [ext_resource type="PackedScene" uid="uid://drsie5ww5xl2v" path="res://assets/LowPolyRoadPack/Models/Parkinglot Center 1.dae" id="8_ikqpi"]
 [ext_resource type="PackedScene" uid="uid://de0oj5dundds7" path="res://assets/LowPolyRoadPack/Models/Parkinglot Corner 3.dae" id="9_5luka"]
 [ext_resource type="PackedScene" uid="uid://d03bs21f5d1dy" path="res://assets/LowPolyRoadPack/Models/Parkinglot Edge 1.dae" id="10_yu8cv"]
@@ -113,69 +110,21 @@ transform = Transform3D(0.903804, -0.0552367, 0.424368, 0.233428, 0.894757, -0.3
 light_color = Color(0.79, 0.711263, 0.5846, 1)
 directional_shadow_mode = 1
 
-[node name="Car01" parent="." instance=ExtResource("4_8xp80")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.33624, 0.0783427, -13.3749)
-
-[node name="Police Car" parent="." instance=ExtResource("5_sp04v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.92564, 0.0662612, -12.2237)
-
 [node name="TreadmillRoad" parent="." instance=ExtResource("15_sp04v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 17.5)
 
-[node name="Roads" type="Node3D" parent="."]
+[node name="TreadmillRoad2" parent="." instance=ExtResource("15_sp04v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -42.5)
 
-[node name="ParkingLot" type="Node3D" parent="Roads"]
-
-[node name="Parkinglot Entrance" parent="Roads/ParkingLot" instance=ExtResource("7_vnsdt")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
-
-[node name="Parkinglot Center 1" parent="Roads/ParkingLot" instance=ExtResource("8_ikqpi")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 15, 0, 30)
-
-[node name="Parkinglot Center 2" parent="Roads/ParkingLot" instance=ExtResource("8_ikqpi")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 30)
-
-[node name="Parkinglot Center 4" parent="Roads/ParkingLot" instance=ExtResource("8_ikqpi")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 30, 0, 30)
-
-[node name="Parkinglot Corner 3" parent="Roads/ParkingLot" instance=ExtResource("9_5luka")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -15, 0, 15)
-
-[node name="Parkinglot Corner 4" parent="Roads/ParkingLot" instance=ExtResource("9_5luka")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, 15)
-
-[node name="Parkinglot Corner 5" parent="Roads/ParkingLot" instance=ExtResource("9_5luka")]
-transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 30, 0, 30)
-
-[node name="Parkinglot Corner 6" parent="Roads/ParkingLot" instance=ExtResource("9_5luka")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -15, 0, 30)
-
-[node name="Parkinglot Edge 1" parent="Roads/ParkingLot" instance=ExtResource("10_yu8cv")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 30, 0, 15)
-
-[node name="Parkinglot Edge 2" parent="Roads/ParkingLot" instance=ExtResource("10_yu8cv")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -15, 0, 30)
-
-[node name="Parkinglot Edge 3" parent="Roads/ParkingLot" instance=ExtResource("11_ibnub")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -15, 0, 30)
-
-[node name="Parkinglot Edge 4" parent="Roads/ParkingLot" instance=ExtResource("12_5wboo")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 15, 0, 30)
-
-[node name="Parkinglot Edge 7" parent="Roads/ParkingLot" instance=ExtResource("12_5wboo")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 30, 0, 30)
-
-[node name="Parkinglot Edge 5" parent="Roads/ParkingLot" instance=ExtResource("12_5wboo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, 15)
-
-[node name="Parkinglot Edge 6" parent="Roads/ParkingLot" instance=ExtResource("12_5wboo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 15)
+[node name="TreadmillRoad3" parent="." instance=ExtResource("15_sp04v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -102.5)
 
 [node name="SpawnPos" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.3734, 0, 0)
 
 [node name="MenuStuff" type="Node3D" parent="."]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 0, 45)
 
 [node name="MenuCam" type="Camera3D" parent="MenuStuff"]
 transform = Transform3D(0.922323, 0.00068848, 0.386419, 1.8764e-10, 0.999999, -0.00178169, -0.386419, 0.0016433, 0.922322, 16.4432, 3.537, 24.365)
@@ -196,6 +145,55 @@ libraries = {
 &"": SubResource("AnimationLibrary_sp04v")
 }
 autoplay = "bike_wheelie"
+
+[node name="Roads" type="Node3D" parent="MenuStuff"]
+
+[node name="ParkingLot" type="Node3D" parent="MenuStuff/Roads"]
+
+[node name="Parkinglot Center 1" parent="MenuStuff/Roads/ParkingLot" instance=ExtResource("8_ikqpi")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 15, 0, 30)
+
+[node name="Parkinglot Center 2" parent="MenuStuff/Roads/ParkingLot" instance=ExtResource("8_ikqpi")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 30)
+
+[node name="Parkinglot Center 4" parent="MenuStuff/Roads/ParkingLot" instance=ExtResource("8_ikqpi")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 30, 0, 30)
+
+[node name="Parkinglot Corner 3" parent="MenuStuff/Roads/ParkingLot" instance=ExtResource("9_5luka")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -15, 0, 15)
+
+[node name="Parkinglot Corner 4" parent="MenuStuff/Roads/ParkingLot" instance=ExtResource("9_5luka")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, 15)
+
+[node name="Parkinglot Corner 5" parent="MenuStuff/Roads/ParkingLot" instance=ExtResource("9_5luka")]
+transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 30, 0, 30)
+
+[node name="Parkinglot Corner 6" parent="MenuStuff/Roads/ParkingLot" instance=ExtResource("9_5luka")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -15, 0, 30)
+
+[node name="Parkinglot Edge 1" parent="MenuStuff/Roads/ParkingLot" instance=ExtResource("10_yu8cv")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 30, 0, 15)
+
+[node name="Parkinglot Edge 2" parent="MenuStuff/Roads/ParkingLot" instance=ExtResource("10_yu8cv")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -15, 0, 30)
+
+[node name="Parkinglot Edge 3" parent="MenuStuff/Roads/ParkingLot" instance=ExtResource("11_ibnub")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -15, 0, 30)
+
+[node name="Parkinglot Edge 4" parent="MenuStuff/Roads/ParkingLot" instance=ExtResource("12_5wboo")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 15, 0, 30)
+
+[node name="Parkinglot Edge 7" parent="MenuStuff/Roads/ParkingLot" instance=ExtResource("12_5wboo")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 30, 0, 30)
+
+[node name="Parkinglot Edge 5" parent="MenuStuff/Roads/ParkingLot" instance=ExtResource("12_5wboo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, 15)
+
+[node name="Parkinglot Edge 8" parent="MenuStuff/Roads/ParkingLot" instance=ExtResource("12_5wboo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 15)
+
+[node name="Parkinglot Edge 6" parent="MenuStuff/Roads/ParkingLot" instance=ExtResource("12_5wboo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 15)
 
 [node name="Ground" type="StaticBody3D" parent="."]
 

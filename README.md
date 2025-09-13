@@ -14,8 +14,8 @@ Gameplay:
   - [ ] also support keyboard press
 - [x] score based on speed * angle
 - [x] restart game loop
+- [x] treadmill road using motorcycle's speed
 - [ ] add randomness to balance
-- [ ] treadmill road using motorcycle's speed
 - [ ] avoid traffic on highway by switching lanes
 - [ ] gas can run out
 - [ ] other hazards (speed bump, gravel, oil slick, etc.)
