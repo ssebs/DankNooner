@@ -6,6 +6,9 @@ Wheelie challenge game, try to hold a wheelie for as long as you can & earn poin
 
 ![Screenshot01](./img/screenshot01.png)
 
+TODO:
+- add quit btn on restart screen + make new screen for that
+
 Gameplay:
 - [x] mouse => throttle / lean control
   - [ ] also support keyboard press
