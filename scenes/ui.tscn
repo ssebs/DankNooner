@@ -20,19 +20,35 @@ script = ExtResource("1_nt7q6")
 
 [node name="GamePanel" type="Control" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
-[node name="NotifyLabel" type="Label" parent="GamePanel"]
+[node name="VBoxContainer3" type="VBoxContainer" parent="GamePanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -92.5
+offset_right = 200.0
+offset_bottom = 92.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NotifyLabel" type="Label" parent="GamePanel/VBoxContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
-offset_left = 658.0
-offset_top = 339.0
-offset_right = 781.0
-offset_bottom = 400.0
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 48
 text = "NOTIFY"
+
+[node name="RestartBtn" type="Button" parent="GamePanel/VBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 120)
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "Restart Game"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="GamePanel"]
 layout_mode = 2
@@ -92,6 +108,7 @@ text = "Distance"
 
 [node name="MainMenuPanel" type="Control" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="TitleContainer" type="VBoxContainer" parent="MainMenuPanel"]

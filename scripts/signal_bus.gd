@@ -24,7 +24,7 @@ var distance: float:
         distance_updated.emit(val)
 signal distance_updated(distance: float)
 
-signal notify_ui(msg: String) # see ui.gd
+signal notify_ui(msg: String, duration: float) # see ui.gd
 
 
 func _hide_warnings_in_editor():

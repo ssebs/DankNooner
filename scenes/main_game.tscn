@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://b8y3uqkpm2ctg"]
+[gd_scene load_steps=22 format=3 uid="uid://bt8t0gafmsf2w"]
 
 [ext_resource type="Script" uid="uid://d3gn4nknw3s61" path="res://scenes/main_game.gd" id="1_s3esy"]
 [ext_resource type="PackedScene" uid="uid://boveos4k30e0d" path="res://scenes/ui.tscn" id="2_o6v7o"]
@@ -31,6 +31,33 @@ sky = SubResource("Sky_aicyk")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="Animation" id="Animation_sp04v"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MenuStuff/SportBike01:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(31, 0, 10)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MenuStuff/SportBike01:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1.5708, 0)]
+}
+
 [sub_resource type="Animation" id="Animation_8xp80"]
 resource_name = "bike_wheelie"
 length = 6.0
@@ -58,33 +85,6 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Vector3(1.0472, 1.5708, 0), Vector3(1.0472, 1.5708, 7.57104e-08), Vector3(1.0472, 1.5708, 7.57104e-08)]
-}
-
-[sub_resource type="Animation" id="Animation_sp04v"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("MenuStuff/SportBike01:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(31, 0, 10)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("MenuStuff/SportBike01:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 1.5708, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_sp04v"]
@@ -202,7 +202,7 @@ transform = Transform3D(0.00225, 0, -0.00389711, 0, 0.0045, 0, 0.00389711, 0, 0.
 transform = Transform3D(-1.24577e-08, 0, 0.285, 0, 0.285, 0, -0.285, 0, -1.24577e-08, 7.99456, 0.027356, 16.9172)
 
 [node name="SportBike01" parent="MenuStuff" instance=ExtResource("14_8xp80")]
-transform = Transform3D(-1.44248e-09, 0, 0.033, 0, 0.033, 0, -0.033, 0, -1.44248e-09, 31, 0, 10)
+transform = Transform3D(-1.1946e-07, 0, 0.033, 0, 0.033, 0, -0.033, 0, -1.1946e-07, 31, 0, 10)
 
 [node name="MenuAnim" type="AnimationPlayer" parent="MenuStuff"]
 root_node = NodePath("../..")
