@@ -4,7 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://boveos4k30e0d" path="res://scenes/ui.tscn" id="2_o6v7o"]
 [ext_resource type="PackedScene" uid="uid://i4dmnqdvoow2" path="res://assets/vehicles/Car01.glb" id="4_8xp80"]
 [ext_resource type="PackedScene" uid="uid://drmtql816tpes" path="res://assets/vehicles/Police Car.glb" id="5_sp04v"]
-[ext_resource type="PackedScene" uid="uid://b2tmcghnjj2iu" path="res://assets/LowPolyRoadPack/Models/Road Straight 2.dae" id="6_ihbck"]
 [ext_resource type="PackedScene" uid="uid://lx4se6m3cw3v" path="res://assets/LowPolyRoadPack/Models/Parkinglot Entrance.dae" id="7_vnsdt"]
 [ext_resource type="PackedScene" uid="uid://drsie5ww5xl2v" path="res://assets/LowPolyRoadPack/Models/Parkinglot Center 1.dae" id="8_ikqpi"]
 [ext_resource type="PackedScene" uid="uid://de0oj5dundds7" path="res://assets/LowPolyRoadPack/Models/Parkinglot Corner 3.dae" id="9_5luka"]
@@ -14,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://dkgft7eiof4jv" path="res://assets/vehicles/Cruiser01.glb" id="12_o6v7o"]
 [ext_resource type="PackedScene" uid="uid://dhegmy5wplhro" path="res://assets/vehicles/Scooter01.glb" id="13_wjob3"]
 [ext_resource type="PackedScene" uid="uid://c4et7yv1q7yt0" path="res://assets/vehicles/SportBike01.glb" id="14_8xp80"]
+[ext_resource type="PackedScene" uid="uid://dqgeknfpgj635" path="res://scenes/treadmill_road.tscn" id="15_sp04v"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6de02"]
 sky_top_color = Color(0, 0, 0, 1)
@@ -114,30 +114,12 @@ light_color = Color(0.79, 0.711263, 0.5846, 1)
 directional_shadow_mode = 1
 
 [node name="Car01" parent="." instance=ExtResource("4_8xp80")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.99292, 0.0783427, -13.3749)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.33624, 0.0783427, -13.3749)
 
 [node name="Police Car" parent="." instance=ExtResource("5_sp04v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.41767, 0.0662612, -12.2237)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.92564, 0.0662612, -12.2237)
 
 [node name="Roads" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0, 0)
-
-[node name="Road Straight 2" parent="Roads" instance=ExtResource("6_ihbck")]
-
-[node name="Road Straight 3" parent="Roads" instance=ExtResource("6_ihbck")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
-
-[node name="Road Straight 4" parent="Roads" instance=ExtResource("6_ihbck")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
-
-[node name="Road Straight 5" parent="Roads" instance=ExtResource("6_ihbck")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -30)
-
-[node name="Road Straight 6" parent="Roads" instance=ExtResource("6_ihbck")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -40)
-
-[node name="Road Straight 7" parent="Roads" instance=ExtResource("6_ihbck")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -50)
 
 [node name="ParkingLot" type="Node3D" parent="Roads"]
 
@@ -215,3 +197,5 @@ autoplay = "bike_wheelie"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
 shape = SubResource("WorldBoundaryShape3D_8xp80")
+
+[node name="TreadmillRoad" parent="." instance=ExtResource("15_sp04v")]
