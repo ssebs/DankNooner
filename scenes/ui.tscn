@@ -22,7 +22,7 @@ script = ExtResource("1_nt7q6")
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="GamePanel"]
+[node name="Center" type="VBoxContainer" parent="GamePanel"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -36,46 +36,46 @@ offset_bottom = 92.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="NotifyLabel" type="Label" parent="GamePanel/VBoxContainer3"]
+[node name="NotifyLabel" type="Label" parent="GamePanel/Center"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 48
 text = "NOTIFY"
 
-[node name="RestartBtn" type="Button" parent="GamePanel/VBoxContainer3"]
+[node name="RestartBtn" type="Button" parent="GamePanel/Center"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(400, 120)
 layout_mode = 2
 theme_override_font_sizes/font_size = 64
 text = "Restart Game"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="GamePanel"]
+[node name="Right" type="VBoxContainer" parent="GamePanel"]
 layout_mode = 2
 offset_left = 1159.0
 offset_right = 1440.0
 offset_bottom = 740.0
 size_flags_horizontal = 8
 
-[node name="AngleLabel" type="Label" parent="GamePanel/VBoxContainer"]
+[node name="AngleLabel" type="Label" parent="GamePanel/Right"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "angle_degrees*"
 horizontal_alignment = 2
 
-[node name="HSeparator" type="HSeparator" parent="GamePanel/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="GamePanel/Right"]
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="ProgressLabel" type="Label" parent="GamePanel/VBoxContainer"]
+[node name="ProgressLabel" type="Label" parent="GamePanel/Right"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "Throttle:"
 horizontal_alignment = 2
 
-[node name="ThrottleProgress" type="ProgressBar" parent="GamePanel/VBoxContainer"]
+[node name="ThrottleProgress" type="ProgressBar" parent="GamePanel/Right"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -88,23 +88,50 @@ value = 42.0
 rounded = true
 fill_mode = 3
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="GamePanel"]
-layout_mode = 2
-offset_right = 198.0
-offset_bottom = 740.0
+[node name="Left" type="VBoxContainer" parent="GamePanel"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 272.0
+grow_vertical = 2
 size_flags_horizontal = 0
 
-[node name="ScoreLabel" type="Label" parent="GamePanel/VBoxContainer2"]
+[node name="ScoreLabel" type="Label" parent="GamePanel/Left"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "ScoreLabel"
 
-[node name="DistanceLabel" type="Label" parent="GamePanel/VBoxContainer2"]
+[node name="DistanceLabel" type="Label" parent="GamePanel/Left"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "Distance"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GamePanel/Left"]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="MaxScoreLabel" type="Label" parent="GamePanel/Left/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "MaxScoreLabel"
+
+[node name="MaxDistanceLabel" type="Label" parent="GamePanel/Left/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "MaxDistance"
+
+[node name="MaxCleanRunsLabel" type="Label" parent="GamePanel/Left/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "MaxCleanRuns:"
 
 [node name="MainMenuPanel" type="Control" parent="."]
 unique_name_in_owner = true

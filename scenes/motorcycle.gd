@@ -82,20 +82,11 @@ func _physics_process(delta):
 
     # crash checks
     if current_x_angle_deg > 90:
-        disable_input = true
-        Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-        anim_player.animation_finished.connect(func(_anim_name: String):
-            queue_free()
-            finished_run.emit(true)
-        )
-        anim_player.play("crash")
+        finish_up("crash", true)
         return
 
     if has_started && SignalBus.score > 200 && current_x_angle_deg < 0:
-        disable_input = true
-        Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-        queue_free()
-        finished_run.emit(false)
+        finish_up("stoppie", false)
         return
 
     # swerve the bike
@@ -116,3 +107,12 @@ func _physics_process(delta):
     if has_started:
         SignalBus.distance += delta * speed
         SignalBus.score += roundi((SignalBus.distance * SignalBus.angle_deg) / 100)
+
+func finish_up(anim_name: String, has_crashed: bool):
+    disable_input = true
+    Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+    anim_player.animation_finished.connect(func(_anim_name: String):
+        queue_free()
+        finished_run.emit(has_crashed)
+    )
+    anim_player.play(anim_name)

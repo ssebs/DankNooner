@@ -13,7 +13,9 @@ var game_state: GameState:
         game_state = val
         switch_game_state(val)
 var motorcycle: Motorcycle
-# var high_score: 
+var max_score: int = 0
+var max_distance: float = 0.0
+var max_clean_runs: int = 0
 
 func _ready():
     game_state = GameState.MAIN_MENU
@@ -41,13 +43,24 @@ func on_run_finished(has_crashed: bool):
     # ui.notify_finished.connect(func():
     #     pass
     # )
+    if !has_crashed:
+        if SignalBus.score > max_score:
+            max_score = SignalBus.score
+        if SignalBus.distance > max_distance:
+            max_distance = SignalBus.distance
+    
+    SignalBus.score = 0
+    SignalBus.distance = 0.0
+    ui.set_max_distance_label_text(max_distance)
+    ui.set_max_score_label_text(max_score)
+    ui.set_max_clean_runs_label_text(max_clean_runs)
 
     if has_crashed:
         # disable_input = true
-        SignalBus.notify_ui.emit("You crashed!")
+        SignalBus.notify_ui.emit("You crashed!", 5)
     else:
         # disable_input = true
-        SignalBus.notify_ui.emit("Run finished!")
+        SignalBus.notify_ui.emit("Run finished!", 5)
 
 func on_restart_pressed():
     ui.restart_btn.visible = false
