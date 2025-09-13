@@ -2,3 +2,5 @@
 .godot/
 /android/
 dist/
+!dist/*.sh
+!dist/*.bat
