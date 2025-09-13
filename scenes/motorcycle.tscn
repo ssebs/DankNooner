@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bwqo2xj0q4e6b"]
+[gd_scene load_steps=10 format=3 uid="uid://bwqo2xj0q4e6b"]
 
 [ext_resource type="PackedScene" uid="uid://c4et7yv1q7yt0" path="res://assets/vehicles/SportBike01.glb" id="1_3k4v6"]
 [ext_resource type="Script" uid="uid://miyskj4vmuok" path="res://scenes/motorcycle.gd" id="1_xey2u"]
@@ -189,10 +189,14 @@ tracks/3/keys = {
 "values": [Vector3(0, 0, 0), Vector3(0, 0, -0.436332), Vector3(0, 0, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_8lv88"]
+resource_name = "stoppie"
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_804uw"]
 _data = {
 &"RESET": SubResource("Animation_41a0n"),
 &"crash": SubResource("Animation_xey2u"),
+&"stoppie": SubResource("Animation_8lv88"),
 &"swerve_left": SubResource("Animation_804uw"),
 &"swerve_right": SubResource("Animation_illx2")
 }

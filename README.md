@@ -10,11 +10,13 @@ Gameplay:
 - [x] mouse => throttle / lean control
   - [ ] also support keyboard press
 - [x] score based on speed * angle
-- [ ] restart game loop
+- [x] restart game loop
+- [ ] add randomness to balance
 - [ ] treadmill road using motorcycle's speed
 - [ ] avoid traffic on highway by switching lanes
 - [ ] gas can run out
 - [ ] other hazards (speed bump, gravel, oil slick, etc.)
+- [ ] rpm dependent sound
 
 Misc:
 - [ ] sfx at 1mi (dank nooner brah, siiiick, etc.)
@@ -38,3 +40,4 @@ Bugs:
 
 Out of scope:
 - avoid cops?
+- shoot at cars?

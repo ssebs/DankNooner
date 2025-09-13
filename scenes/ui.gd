@@ -8,6 +8,9 @@ signal notify_finished()
 @onready var notify_label: Label = %NotifyLabel
 @onready var score_label: Label = %ScoreLabel
 @onready var distance_label: Label = %DistanceLabel
+@onready var max_score_label: Label = %MaxScoreLabel
+@onready var max_distance_label: Label = %MaxDistanceLabel
+@onready var max_clean_runs_label: Label = %MaxCleanRunsLabel
 @onready var throttle_progress: ProgressBar = %ThrottleProgress
 
 @onready var game_panel: Control = %GamePanel
@@ -25,14 +28,19 @@ func _ready():
     SignalBus.angle_updated.connect(on_angle_updated)
     SignalBus.notify_ui.connect(on_notify_ui)
     SignalBus.throttle_updated.connect(on_throttle_updated)
-    SignalBus.score_updated.connect(on_score_updated)
-    SignalBus.distance_updated.connect(on_distance_updated)
+    SignalBus.score_updated.connect(set_score_label_text)
+    SignalBus.distance_updated.connect(set_distance_label_text)
     
+    # Defaults
     notify_label.text = ""
-    score_label.text = "0"
-    distance_label.text = "0m"
     throttle_progress.value = 0
     restart_btn.visible = false
+
+    set_score_label_text(0)
+    set_distance_label_text(0)
+    set_max_score_label_text(0)
+    set_max_distance_label_text(0)
+    set_max_clean_runs_label_text(0)
 
 func switch_panels(state: MainGame.GameState):
     match state:
@@ -52,12 +60,6 @@ func switch_panels(state: MainGame.GameState):
 #region signal handlers
 func on_throttle_updated(pct: float):
     throttle_progress.value = pct
-
-func on_score_updated(score: int):
-    score_label.text = "Score: %.0f" % score
-
-func on_distance_updated(distance: int):
-    distance_label.text = "Distance: %dm" % distance
 
 func on_angle_updated(angle_deg: float):
     angle_label.text = "%.0f°" % abs(angle_deg)
@@ -81,3 +83,18 @@ func on_notify_ui(msg: String, duration: float = notify_time_sec):
     notify_label.text = ""
     notify_finished.emit()
 #endregion
+
+func set_score_label_text(score: int):
+    score_label.text = "Score: %d" % score
+
+func set_distance_label_text(distance: float):
+    distance_label.text = "Distance: %.0fm" % distance
+
+func set_max_score_label_text(score: int):
+    max_score_label.text = "High Score: %d" % score
+
+func set_max_distance_label_text(distance: float):
+    max_distance_label.text = "Max Distance: %.0fm" % distance
+
+func set_max_clean_runs_label_text(clean_runs: int):
+    max_clean_runs_label.text = "Clean Runs: %d" % clean_runs
