@@ -119,6 +119,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.33624, 0.0783427, -13.3749
 [node name="Police Car" parent="." instance=ExtResource("5_sp04v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.92564, 0.0662612, -12.2237)
 
+[node name="TreadmillRoad" parent="." instance=ExtResource("15_sp04v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
+
 [node name="Roads" type="Node3D" parent="."]
 
 [node name="ParkingLot" type="Node3D" parent="Roads"]
@@ -169,6 +172,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, 15)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 15)
 
 [node name="SpawnPos" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.3734, 0, 0)
 
 [node name="MenuStuff" type="Node3D" parent="."]
 unique_name_in_owner = true
@@ -197,5 +201,3 @@ autoplay = "bike_wheelie"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
 shape = SubResource("WorldBoundaryShape3D_8xp80")
-
-[node name="TreadmillRoad" parent="." instance=ExtResource("15_sp04v")]

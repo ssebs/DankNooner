@@ -9,7 +9,6 @@ signal finished_run(has_crashed: bool)
 var gravity = 50
 var disable_input = false
 var has_started = false
-var speed = 1
 
 func _ready():
     Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -58,6 +57,8 @@ func _input(event: InputEvent):
 
 func _physics_process(delta):
     if disable_input:
+        if SignalBus.speed > 0:
+            SignalBus.speed -= 5
         return
     
 
@@ -73,8 +74,8 @@ func _physics_process(delta):
     input_info = handle_user_input(input_info)
     
     # print("throttle_input:", SignalBus.throttle_input)
-    # print("speed:", speed)
-    speed = clampf(speed * SignalBus.throttle_input, 1, 100)
+    # print("SignalBus.speed:", SignalBus.speed)
+    SignalBus.speed = clampf(SignalBus.speed * SignalBus.throttle_input, 1, 180)
 
     # lower the bike down if you're doing a wheelie
     if current_x_angle_deg > 0 && current_x_angle_deg <= 90:
@@ -105,7 +106,7 @@ func _physics_process(delta):
     rotate_point.rotate_x(deg_to_rad(input_info['input_angle']) * 3 * delta)
     SignalBus.angle_deg = rotate_point.global_rotation_degrees.x
     if has_started:
-        SignalBus.distance += delta * speed
+        SignalBus.distance += delta * SignalBus.speed
         SignalBus.score += roundi((SignalBus.distance * SignalBus.angle_deg) / 100)
 
 func finish_up(anim_name: String, has_crashed: bool):

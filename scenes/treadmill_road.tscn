@@ -7,6 +7,10 @@
 [node name="TreadmillRoad" type="Node3D"]
 script = ExtResource("1_75pc8")
 
+[node name="RoadSpawn" type="Marker3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20.0833)
+
 [node name="Car01" parent="." instance=ExtResource("2_afk70")]
 visible = false
 

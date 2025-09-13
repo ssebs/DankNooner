@@ -18,6 +18,12 @@ var score: int:
         score_updated.emit(val)
 signal score_updated(score: int)
 
+var speed: float = 1:
+    set(val):
+        speed = val
+        speed_updated.emit(val)
+signal speed_updated(speed: float)
+
 var distance: float:
     set(val):
         distance = val
