@@ -1,5 +1,7 @@
 class_name Motorcycle extends AnimatableBody3D
 
+signal finished_run(has_crashed: bool)
+
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var rotate_point: Node3D = %RotatePoint
 @onready var camera: Camera3D = $SpringArm3D/Camera3D
@@ -35,9 +37,11 @@ func _input(event: InputEvent):
     # Capture/uncapture the mouse w/ click/escape
     if event is InputEventMouseButton:
         if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
-            Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+            if !disable_input:
+                Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
         if !has_started:
             has_started = true
+
     if event is InputEventKey:
         if event.keycode == KEY_ESCAPE:
             Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -78,11 +82,20 @@ func _physics_process(delta):
 
     # crash checks
     if current_x_angle_deg > 90:
-        do_crash()
+        disable_input = true
+        Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+        anim_player.animation_finished.connect(func(_anim_name: String):
+            queue_free()
+            finished_run.emit(true)
+        )
+        anim_player.play("crash")
         return
 
     if has_started && SignalBus.score > 200 && current_x_angle_deg < 0:
-        do_finish_run()
+        disable_input = true
+        Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+        queue_free()
+        finished_run.emit(false)
         return
 
     # swerve the bike
@@ -103,12 +116,3 @@ func _physics_process(delta):
     if has_started:
         SignalBus.distance += delta * speed
         SignalBus.score += roundi((SignalBus.distance * SignalBus.angle_deg) / 100)
-
-func do_crash():
-    disable_input = true
-    anim_player.play("crash")
-    SignalBus.notify_ui.emit("You crashed!")
-
-func do_finish_run():
-    disable_input = true
-    SignalBus.notify_ui.emit("Run finished!")
