@@ -51,6 +51,8 @@ func on_run_finished(has_crashed: bool):
     
     SignalBus.score = 0
     SignalBus.distance = 0.0
+    SignalBus.throttle_input = 0.0
+    SignalBus.angle_deg = 0.0
     ui.set_max_distance_label_text(max_distance)
     ui.set_max_score_label_text(max_score)
     ui.set_max_clean_runs_label_text(max_clean_runs)
