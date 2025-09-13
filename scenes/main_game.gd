@@ -6,13 +6,14 @@ class_name MainGame extends Node
 @onready var ui: UI = $UI
 @onready var menu_stuff = %MenuStuff
 
-enum GameState {MAIN_MENU, PAUSE_MENU, PLAYING}
+enum GameState {MAIN_MENU, PAUSE_MENU, PLAYING, RUN_OVER}
 
 var game_state: GameState:
     set(val):
         game_state = val
         switch_game_state(val)
 var motorcycle: Motorcycle
+# var high_score: 
 
 func _ready():
     game_state = GameState.MAIN_MENU
@@ -34,10 +35,13 @@ func start_run():
 
 ## Note: Motorcycle should queue_free() on it's own
 func on_run_finished(has_crashed: bool):
+    switch_game_state(GameState.RUN_OVER)
+    ui.restart_btn.visible = true
+    
     # ui.notify_finished.connect(func():
     #     pass
     # )
-    ui.restart_btn.visible = true
+
     if has_crashed:
         # disable_input = true
         SignalBus.notify_ui.emit("You crashed!")
@@ -62,3 +66,5 @@ func switch_game_state(state: GameState):
             menu_stuff.visible = false
         GameState.PAUSE_MENU:
             menu_stuff.visible = false
+        GameState.RUN_OVER:
+            menu_stuff.visible = true

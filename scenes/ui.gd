@@ -40,7 +40,7 @@ func switch_panels(state: MainGame.GameState):
             game_panel.visible = false
             pause_menu_panel.visible = false
             main_menu_panel.visible = true
-        MainGame.GameState.PLAYING:
+        MainGame.GameState.PLAYING, MainGame.GameState.RUN_OVER:
             game_panel.visible = true
             pause_menu_panel.visible = false
             main_menu_panel.visible = false
