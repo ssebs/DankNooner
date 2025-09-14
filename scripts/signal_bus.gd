@@ -35,3 +35,4 @@ signal motorcycle_collision(msg: String) # see obstacle.gd
 
 func _hide_warnings_in_editor():
     notify_ui.emit('this should never show up')
+    motorcycle_collision.emit('this should never show up')

@@ -27,6 +27,8 @@ func _ready():
 
 ## Spawn Motorcycle, add child, set cam, switch game state, conn finished_run signal
 func start_run():
+    if spawn_pos == null || SignalBus == null || SignalBus.notify_ui == null:
+        return
     motorcycle = moto_scene.instantiate()
     motorcycle.global_position = spawn_pos.global_position
     add_child(motorcycle)
@@ -36,7 +38,7 @@ func start_run():
     SignalBus.notify_ui.emit("Click & drag your mouse to pop a wheelie!", 2)
 
 ## Note: Motorcycle should queue_free() on it's own
-func on_run_finished(has_crashed: bool):
+func on_run_finished(has_crashed: bool, msg: String):
     switch_game_state(GameState.RUN_OVER)
     ui.restart_btn.visible = true
     
@@ -57,12 +59,7 @@ func on_run_finished(has_crashed: bool):
     ui.set_max_score_label_text(max_score)
     ui.set_max_clean_runs_label_text(max_clean_runs)
 
-    if has_crashed:
-        # disable_input = true
-        SignalBus.notify_ui.emit("You crashed!", 5)
-    else:
-        # disable_input = true
-        SignalBus.notify_ui.emit("Run finished!", 5)
+    SignalBus.notify_ui.emit(msg, 5)
 
 func on_restart_pressed():
     ui.restart_btn.visible = false
