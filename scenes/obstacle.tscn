@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://c5luuvbq5nggv"]
+
+[ext_resource type="Script" uid="uid://ci6jiokxqafxm" path="res://scenes/obstacle.gd" id="1_7ukg5"]
+[ext_resource type="PackedScene" uid="uid://i4dmnqdvoow2" path="res://assets/vehicles/Car01.glb" id="2_drdry"]
+[ext_resource type="PackedScene" uid="uid://bw26dgjeoxot1" path="res://assets/vehicles/SUV.glb" id="3_cjuko"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7ukg5"]
+size = Vector3(763.514, 535.55, 336.387)
+
+[node name="Obstacle" type="AnimatableBody3D"]
+script = ExtResource("1_7ukg5")
+variants = Array[PackedScene]([ExtResource("2_drdry"), ExtResource("3_cjuko")])
+
+[node name="Mesh" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 267.775, 0)
+shape = SubResource("BoxShape3D_7ukg5")
