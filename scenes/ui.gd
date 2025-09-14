@@ -31,6 +31,8 @@ func _ready():
     SignalBus.score_updated.connect(set_score_label_text)
     SignalBus.distance_updated.connect(set_distance_label_text)
     
+    volume_slider.value_changed.connect(on_volume_changed)
+
     # Defaults
     notify_label.text = ""
     throttle_progress.value = 0
@@ -41,6 +43,7 @@ func _ready():
     set_max_score_label_text(0)
     set_max_distance_label_text(0)
     set_max_clean_runs_label_text(0)
+    volume_slider.value = 0.75 # TODO: load from save
 
 func switch_panels(state: MainGame.GameState):
     match state:
@@ -84,6 +87,10 @@ func on_notify_ui(msg: String, duration: float = notify_time_sec):
     notify_finished.emit()
 #endregion
 
+func on_volume_changed(value: float):
+    SignalBus.volume = value
+
+##region label setters
 func set_score_label_text(score: int):
     score_label.text = "Score: %d" % score
 
@@ -98,3 +105,4 @@ func set_max_distance_label_text(distance: float):
 
 func set_max_clean_runs_label_text(clean_runs: int):
     max_clean_runs_label.text = "Clean Runs: %d" % clean_runs
+#
