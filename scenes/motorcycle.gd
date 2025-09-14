@@ -77,8 +77,12 @@ func _physics_process(delta):
     # Get user inputs
     if !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
         SignalBus.throttle_input = lerpf(SignalBus.throttle_input, 0, 5 * delta)
+    else:
+        SignalBus.throttle_input += randf_range(-2, 2)
     input_info = handle_user_input(input_info)
-    
+
+
+    # RPM Audio Pitch
     if SignalBus.throttle_input > 0:
         audio_player.pitch_scale = clampf(SignalBus.throttle_input / 100, 0.5, 3)
 
