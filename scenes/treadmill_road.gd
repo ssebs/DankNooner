@@ -8,14 +8,30 @@ class_name TreadmillRoad extends Node3D
 
 @export var road_spawn_count = 6
 @export var road_piece: PackedScene = preload("res://assets/LowPolyRoadPack/Models/Road Straight 2.dae")
+@export var obstacle_scn: PackedScene = preload("res://scenes/obstacle.tscn")
 
 @onready var road_spawn: Marker3D = %RoadSpawn
+@onready var lane1_spawn: Marker3D = %Lane1
+@onready var lane2_spawn: Marker3D = %Lane2
 
 var offset = 10
 var road_pieces: Array[Node3D]
 
 func _ready():
     spawn_roads(road_spawn_count)
+
+func spawn_obstacle(lane_spawn: Marker3D):
+    if lane_spawn == null:
+        return
+    
+    # Remove old obstacles if there are any 
+    for child in lane_spawn.get_children():
+        child.queue_free()
+    
+    var thing = obstacle_scn.instantiate() as Obstacle
+    thing.variant = randi_range(0, thing.variants.size() - 1)
+    lane_spawn.add_child(thing)
+    
 
 func spawn_roads(count: int):
     if road_spawn == null:
@@ -27,9 +43,11 @@ func spawn_roads(count: int):
         piece.global_position.z -= i * offset
 
 func _physics_process(delta):
-    if road_spawn == null || SignalBus.speed == null:
+    if road_spawn == null || SignalBus || SignalBus.speed == null:
         return
     if road_spawn.position.z > len(road_pieces) * offset:
         road_spawn.position.z = 0
+        var lane_pos = randi() % 2
+        spawn_obstacle(lane1_spawn if lane_pos == 0 else lane2_spawn)
     
     road_spawn.position.z += lerpf(0, delta * (SignalBus.speed / 5), 0.5)
