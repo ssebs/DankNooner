@@ -1,6 +1,6 @@
 class_name Motorcycle extends AnimatableBody3D
 
-signal finished_run(has_crashed: bool)
+signal finished_run(has_crashed: bool, msg: String)
 
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var rotate_point: Node3D = %RotatePoint
@@ -84,11 +84,11 @@ func _physics_process(delta):
 
     # crash checks
     if current_x_angle_deg > 90:
-        finish_up("crash", true)
+        finish_up("crash", true, "You looped it!")
         return
 
     if has_started && SignalBus.score > 200 && current_x_angle_deg < 0:
-        finish_up("stoppie", false)
+        finish_up("stoppie", false, "Run finished!")
         return
 
     # swerve the bike
@@ -111,15 +111,14 @@ func _physics_process(delta):
         SignalBus.score += roundi((SignalBus.distance * SignalBus.angle_deg) / 100)
 
 func on_collide(msg: String):
-    SignalBus.notify_ui.emit(msg)
-    finish_up("crash", true)
+    finish_up("crash", true, msg)
 
-func finish_up(anim_name: String = "", has_crashed: bool = false):
+func finish_up(anim_name: String = "", has_crashed: bool = false, msg: String = ''):
     disable_input = true
     Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
     anim_player.animation_finished.connect(func(_anim_name: String):
         queue_free()
-        finished_run.emit(has_crashed)
+        finished_run.emit(has_crashed, msg)
     )
     if anim_name != "":
         anim_player.play(anim_name)

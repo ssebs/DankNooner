@@ -4,7 +4,6 @@
 
 [node name="TreadmillRoad" type="Node3D"]
 script = ExtResource("1_75pc8")
-obstacle_scn = null
 
 [node name="RoadSpawn" type="Marker3D" parent="."]
 unique_name_in_owner = true
