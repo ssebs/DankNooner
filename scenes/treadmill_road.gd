@@ -47,8 +47,13 @@ func spawn_roads(count: int):
 func _physics_process(delta):
     if road_spawn == null || Engine.is_editor_hint():
         return
-    if self.position.z > len(road_pieces) * offset:
-        self.position.z = 0
+    if road_spawn.position.z > len(road_pieces) * offset:
+        road_spawn.position.z = 0
+        lane1_spawn.position.z = 0
+        lane2_spawn.position.z = 0
         spawn_obstacle(lane1_spawn if randi() % 2 == 0 else lane2_spawn)
     
-    self.position.z += lerpf(0, delta * (SignalBus.speed / 5), 0.5)
+    var move_amount = lerpf(0, delta * (SignalBus.speed / 5), 0.5)
+    road_spawn.position.z += move_amount
+    lane1_spawn.position.z += move_amount
+    lane2_spawn.position.z += move_amount
