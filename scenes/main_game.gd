@@ -27,10 +27,10 @@ func _ready():
 
 ## Spawn Motorcycle, add child, set cam, switch game state, conn finished_run signal
 func start_run():
-    if spawn_pos == null || SignalBus == null || SignalBus.notify_ui == null:
+    if spawn_pos == null || Engine.is_editor_hint():
         return
     motorcycle = moto_scene.instantiate()
-    motorcycle.global_position = spawn_pos.global_position
+    motorcycle.position = spawn_pos.position
     add_child(motorcycle)
     motorcycle.camera.make_current()
     switch_game_state(GameState.PLAYING)
@@ -46,10 +46,13 @@ func on_run_finished(has_crashed: bool, msg: String):
     #     pass
     # )
     if !has_crashed:
+        max_clean_runs += 1
         if SignalBus.score > max_score:
             max_score = SignalBus.score
         if SignalBus.distance > max_distance:
             max_distance = SignalBus.distance
+    else:
+        max_clean_runs = 0
     
     SignalBus.score = 0
     SignalBus.distance = 0.0
