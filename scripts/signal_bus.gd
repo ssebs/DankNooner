@@ -30,6 +30,13 @@ var distance: float:
         distance_updated.emit(val)
 signal distance_updated(distance: float)
 
+var volume: float:
+    set(val):
+        volume = val
+        volume_updated.emit(val)
+signal volume_updated(volume: float)
+
+
 signal notify_ui(msg: String, duration: float) # see ui.gd
 signal motorcycle_collision(msg: String) # see obstacle.gd
 

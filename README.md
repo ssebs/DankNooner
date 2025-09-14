@@ -17,12 +17,12 @@ Gameplay:
 - [x] restart game loop
 - [x] treadmill road using motorcycle's speed
 - [x] cars spawn w/ collision
+- [x] rpm dependent sound
 - [ ] avoid traffic on highway by switching lanes
 - [ ] add randomness to balance
 - [ ] add gears
 - [ ] gas can run out
 - [ ] other hazards (speed bump, gravel, oil slick, etc.)
-- [ ] rpm dependent sound
 
 Misc:
 - [ ] sfx at 1mi (dank nooner brah, siiiick, etc.)

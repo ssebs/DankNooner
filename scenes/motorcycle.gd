@@ -5,6 +5,7 @@ signal finished_run(has_crashed: bool, msg: String)
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var rotate_point: Node3D = %RotatePoint
 @onready var camera: Camera3D = $SpringArm3D/Camera3D
+@onready var audio_player: AudioStreamPlayer = $AudioStreamPlayer
 
 var gravity = 50
 var disable_input = false
@@ -13,6 +14,8 @@ var has_started = false
 func _ready():
     Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
     SignalBus.motorcycle_collision.connect(on_collide)
+    if !Engine.is_editor_hint():
+        audio_player.volume_linear = SignalBus.volume
 
 # Uses input_info's dictionary & throttle_input
 func handle_user_input(ret: Dictionary) -> Dictionary:
@@ -41,6 +44,7 @@ func _input(event: InputEvent):
                 Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
         if !has_started:
             has_started = true
+            audio_player.play()
 
     if event is InputEventKey:
         if event.keycode == KEY_ESCAPE:
@@ -53,6 +57,7 @@ func _input(event: InputEvent):
     if event is InputEventMouseMotion:
         if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
             SignalBus.throttle_input += -1 * event.relative.y
+            
             # print("Mouse Motion rel: ", event.relative)
 
 
@@ -74,6 +79,10 @@ func _physics_process(delta):
         SignalBus.throttle_input = lerpf(SignalBus.throttle_input, 0, 5 * delta)
     input_info = handle_user_input(input_info)
     
+    if SignalBus.throttle_input > 0:
+        print("thr: ", SignalBus.throttle_input)
+        audio_player.pitch_scale = clampf(SignalBus.throttle_input / 100, 0.5, 2)
+
     # print("throttle_input:", SignalBus.throttle_input)
     # print("SignalBus.speed:", SignalBus.speed)
     SignalBus.speed = clampf(SignalBus.speed * SignalBus.throttle_input, 1, 180)
