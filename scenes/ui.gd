@@ -64,9 +64,25 @@ func switch_panels(state: MainGame.GameState):
 func on_throttle_updated(pct: float):
     throttle_progress.value = pct
 
+    # Set color from val
+    var color: Color
+    if pct <= 66:
+        # From white (0) to yellow (66)
+        var t = pct / 66.0
+        color = Color.hex(0x12b100ff).lerp(Color.YELLOW, t)
+    else:
+        # From yellow (66) to red (90)
+        var t = (pct - 66.0) / 66.0
+        color = Color.YELLOW.lerp(Color.RED, t)
+
+    var new_stylebox: StyleBoxFlat = throttle_progress.get_theme_stylebox("fill").duplicate()
+    new_stylebox.bg_color = color
+    throttle_progress.add_theme_stylebox_override('fill', new_stylebox)
+
 func on_angle_updated(angle_deg: float):
     angle_label.text = "%.0f°" % abs(angle_deg)
 
+    # Set color from val
     var color: Color
     if angle_deg <= 45:
         # From white (0°) to yellow (45°)
@@ -76,7 +92,6 @@ func on_angle_updated(angle_deg: float):
         # From yellow (45°) to red (90°)
         var t = (angle_deg - 45.0) / 45.0
         color = Color.YELLOW.lerp(Color.RED, t)
-
 
     angle_label.add_theme_color_override("font_color", color)
 
