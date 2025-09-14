@@ -12,6 +12,7 @@ var has_started = false
 
 func _ready():
     Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+    SignalBus.motorcycle_collision.connect(on_collide)
 
 # Uses input_info's dictionary & throttle_input
 func handle_user_input(ret: Dictionary) -> Dictionary:
@@ -109,11 +110,16 @@ func _physics_process(delta):
         SignalBus.distance += delta * SignalBus.speed
         SignalBus.score += roundi((SignalBus.distance * SignalBus.angle_deg) / 100)
 
-func finish_up(anim_name: String, has_crashed: bool):
+func on_collide(msg: String):
+    SignalBus.notify_ui.emit(msg)
+    finish_up("crash", true)
+
+func finish_up(anim_name: String = "", has_crashed: bool = false):
     disable_input = true
     Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
     anim_player.animation_finished.connect(func(_anim_name: String):
         queue_free()
         finished_run.emit(has_crashed)
     )
-    anim_player.play(anim_name)
+    if anim_name != "":
+        anim_player.play(anim_name)

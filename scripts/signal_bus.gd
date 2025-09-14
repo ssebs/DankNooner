@@ -31,7 +31,7 @@ var distance: float:
 signal distance_updated(distance: float)
 
 signal notify_ui(msg: String, duration: float) # see ui.gd
-
+signal motorcycle_collision(msg: String) # see obstacle.gd
 
 func _hide_warnings_in_editor():
     notify_ui.emit('this should never show up')
