@@ -18,8 +18,8 @@ Gameplay:
 - [x] treadmill road using motorcycle's speed
 - [x] cars spawn w/ collision
 - [x] rpm dependent sound
+- [x] add randomness to balance
 - [ ] avoid traffic on highway by switching lanes
-- [ ] add randomness to balance
 - [ ] add gears
 - [ ] gas can run out
 - [ ] other hazards (speed bump, gravel, oil slick, etc.)
