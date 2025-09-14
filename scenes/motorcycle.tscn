@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://bwqo2xj0q4e6b"]
+[gd_scene load_steps=11 format=3 uid="uid://bwqo2xj0q4e6b"]
 
 [ext_resource type="PackedScene" uid="uid://c4et7yv1q7yt0" path="res://assets/vehicles/SportBike01.glb" id="1_3k4v6"]
 [ext_resource type="Script" uid="uid://miyskj4vmuok" path="res://scenes/motorcycle.gd" id="1_xey2u"]
+[ext_resource type="AudioStream" uid="uid://bh3jehpewcgdf" path="res://assets/motorcycle-running.ogg" id="2_41a0n"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_xey2u"]
 radius = 0.4
@@ -252,6 +253,9 @@ _data = {
 
 [node name="Motorcycle" type="AnimatableBody3D"]
 script = ExtResource("1_xey2u")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_41a0n")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -3.61999e-06, -1, 0, 1, -3.61999e-06, 0, 0.4, 0)
