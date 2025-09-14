@@ -16,9 +16,10 @@ Gameplay:
 - [x] score based on speed * angle
 - [x] restart game loop
 - [x] treadmill road using motorcycle's speed
-- [ ] add gears
-- [ ] add randomness to balance
+- [x] cars spawn w/ collision
 - [ ] avoid traffic on highway by switching lanes
+- [ ] add randomness to balance
+- [ ] add gears
 - [ ] gas can run out
 - [ ] other hazards (speed bump, gravel, oil slick, etc.)
 - [ ] rpm dependent sound
