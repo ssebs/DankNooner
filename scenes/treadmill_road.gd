@@ -19,9 +19,11 @@ var road_pieces: Array[Node3D]
 
 func _ready():
     spawn_roads(road_spawn_count)
+    # spawn_obstacle(lane1_spawn if randi() % 2 == 0 else lane2_spawn)
 
 func spawn_obstacle(lane_spawn: Marker3D):
-    if lane_spawn == null:
+    if lane_spawn == null || obstacle_scn == null:
+        print('something is null spawn_obstacle')
         return
     
     # Remove old obstacles if there are any 
@@ -43,11 +45,10 @@ func spawn_roads(count: int):
         piece.global_position.z -= i * offset
 
 func _physics_process(delta):
-    if road_spawn == null || SignalBus || SignalBus.speed == null:
+    if road_spawn == null || Engine.is_editor_hint():
         return
-    if road_spawn.position.z > len(road_pieces) * offset:
-        road_spawn.position.z = 0
-        var lane_pos = randi() % 2
-        spawn_obstacle(lane1_spawn if lane_pos == 0 else lane2_spawn)
+    if self.position.z > len(road_pieces) * offset:
+        self.position.z = 0
+        spawn_obstacle(lane1_spawn if randi() % 2 == 0 else lane2_spawn)
     
-    road_spawn.position.z += lerpf(0, delta * (SignalBus.speed / 5), 0.5)
+    self.position.z += lerpf(0, delta * (SignalBus.speed / 5), 0.5)
