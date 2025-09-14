@@ -20,7 +20,6 @@ script = ExtResource("1_nt7q6")
 
 [node name="GamePanel" type="Control" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="Center" type="VBoxContainer" parent="GamePanel"]
@@ -136,6 +135,7 @@ text = "MaxCleanRuns:"
 
 [node name="MainMenuPanel" type="Control" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="TitleContainer" type="VBoxContainer" parent="MainMenuPanel"]
