@@ -80,8 +80,7 @@ func _physics_process(delta):
     input_info = handle_user_input(input_info)
     
     if SignalBus.throttle_input > 0:
-        print("thr: ", SignalBus.throttle_input)
-        audio_player.pitch_scale = clampf(SignalBus.throttle_input / 100, 0.5, 2)
+        audio_player.pitch_scale = clampf(SignalBus.throttle_input / 100, 0.5, 3)
 
     # print("throttle_input:", SignalBus.throttle_input)
     # print("SignalBus.speed:", SignalBus.speed)
