@@ -9,6 +9,7 @@ Wheelie challenge game, try to hold a wheelie for as long as you can & earn poin
 
 TODO:
 - add quit btn on restart screen + make new screen for that
+- Dankness angle slider
 
 Gameplay:
 - [x] mouse => throttle / lean control

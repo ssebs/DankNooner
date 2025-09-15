@@ -1,9 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://boveos4k30e0d"]
+[gd_scene load_steps=8 format=3 uid="uid://boveos4k30e0d"]
 
 [ext_resource type="Script" uid="uid://byfj6wa0klab3" path="res://scenes/ui.gd" id="1_nt7q6"]
 [ext_resource type="Theme" uid="uid://d15reok7osseo" path="res://resources/theme.tres" id="1_x4jx1"]
 [ext_resource type="StyleBox" uid="uid://c4nos0reov3e4" path="res://resources/green_stylebox_black_border_empty.tres" id="3_gdt2y"]
+[ext_resource type="Texture2D" uid="uid://x06baq0f3yui" path="res://assets/img/DanknessMeter.png" id="3_wm3ai"]
+[ext_resource type="Texture2D" uid="uid://cxsdwwhqi4jjd" path="res://assets/img/DanknessArrow.png" id="4_8dubc"]
 [ext_resource type="StyleBox" uid="uid://g4xm0g06mw1c" path="res://resources/green_stylebox_black_border_fill.tres" id="4_wm3ai"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8dubc"]
 
 [node name="UI" type="MarginContainer"]
 anchors_preset = 15
@@ -57,36 +61,67 @@ offset_right = 1440.0
 offset_bottom = 740.0
 size_flags_horizontal = 8
 
-[node name="AngleLabel" type="Label" parent="GamePanel/Right"]
+[node name="NoonerMeter" type="Control" parent="GamePanel/Right"]
+custom_minimum_size = Vector2(220, 220)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+
+[node name="bg" type="TextureRect" parent="GamePanel/Right/NoonerMeter"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_wm3ai")
+expand_mode = 1
+
+[node name="ArrowTexture" type="TextureRect" parent="GamePanel/Right/NoonerMeter"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 220)
+layout_mode = 0
+offset_left = -87.0
+offset_top = -22.0
+offset_right = 133.0
+offset_bottom = 198.0
+pivot_offset = Vector2(110, 220)
+texture = ExtResource("4_8dubc")
+expand_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GamePanel"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -272.0
+offset_top = -143.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_vertical = 8
+
+[node name="MaxScoreLabel" type="Label" parent="GamePanel/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
-text = "angle_degrees*"
-horizontal_alignment = 2
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "MaxScoreLabel"
 
-[node name="HSeparator" type="HSeparator" parent="GamePanel/Right"]
-layout_mode = 2
-theme_override_constants/separation = 30
-
-[node name="ProgressLabel" type="Label" parent="GamePanel/Right"]
+[node name="MaxDistanceLabel" type="Label" parent="GamePanel/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
-text = "Throttle:"
-horizontal_alignment = 2
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "MaxDistance"
 
-[node name="ThrottleProgress" type="ProgressBar" parent="GamePanel/Right"]
+[node name="MaxCleanRunsLabel" type="Label" parent="GamePanel/VBoxContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 3
-theme_override_styles/background = ExtResource("3_gdt2y")
-theme_override_styles/fill = ExtResource("4_wm3ai")
-step = 1.0
-value = 42.0
-rounded = true
-fill_mode = 3
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "MaxCleanRuns:"
 
 [node name="Left" type="VBoxContainer" parent="GamePanel"]
 layout_mode = 1
@@ -108,30 +143,33 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "Distance"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="GamePanel/Left"]
+[node name="HSeparator" type="HSeparator" parent="GamePanel/Left"]
 layout_mode = 2
-size_flags_vertical = 10
+theme_override_constants/separation = 30
+theme_override_styles/separator = SubResource("StyleBoxEmpty_8dubc")
 
-[node name="MaxScoreLabel" type="Label" parent="GamePanel/Left/VBoxContainer"]
-unique_name_in_owner = true
+[node name="ThrottleLabel" type="Label" parent="GamePanel/Left"]
 layout_mode = 2
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 36
-text = "MaxScoreLabel"
+theme_override_font_sizes/font_size = 48
+text = "Throttle:"
 
-[node name="MaxDistanceLabel" type="Label" parent="GamePanel/Left/VBoxContainer"]
+[node name="ThrottleProgress" type="ProgressBar" parent="GamePanel/Left"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 36
-text = "MaxDistance"
+size_flags_horizontal = 0
+size_flags_vertical = 3
+theme_override_styles/background = ExtResource("3_gdt2y")
+theme_override_styles/fill = ExtResource("4_wm3ai")
+step = 1.0
+value = 42.0
+rounded = true
+fill_mode = 3
 
-[node name="MaxCleanRunsLabel" type="Label" parent="GamePanel/Left/VBoxContainer"]
-unique_name_in_owner = true
+[node name="HSeparator2" type="HSeparator" parent="GamePanel/Left"]
 layout_mode = 2
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 36
-text = "MaxCleanRuns:"
+theme_override_constants/separation = 30
+theme_override_styles/separator = SubResource("StyleBoxEmpty_8dubc")
 
 [node name="MainMenuPanel" type="Control" parent="."]
 unique_name_in_owner = true
