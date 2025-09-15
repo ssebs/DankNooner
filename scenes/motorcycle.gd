@@ -4,7 +4,7 @@ signal finished_run(has_crashed: bool, msg: String)
 
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var rotate_point: Node3D = %RotatePoint
-@onready var camera: Camera3D = $SpringArm3D/Camera3D
+@onready var camera: Camera3D = %Camera3D
 @onready var audio_player: AudioStreamPlayer = $AudioStreamPlayer
 
 var gravity = 50
@@ -62,9 +62,11 @@ func _physics_process(delta):
         # todo: check if we're on the edge of the road, if so crash
         match input_info['swerve_dir']:
             "left":
-                anim_player.play("swerve_left")
+                # anim_player.play("swerve_left")
+                self.position.x -= 8 * delta
             "right":
-                anim_player.play("swerve_right")
+                # anim_player.play("swerve_right")
+                self.position.x += 8 * delta
     
     # print("input_angle: %.1f" % [input_info['input_angle']])
     # print("current_angle: %.1f" % [current_x_angle_deg])
