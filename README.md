@@ -9,7 +9,7 @@ Wheelie challenge game, try to hold a wheelie for as long as you can & earn poin
 
 TODO:
 - add quit btn on restart screen + make new screen for that
-- Dankness angle slider
+- Make speed feel faster / better / increase
 
 Gameplay:
 - [x] mouse => throttle / lean control
@@ -23,7 +23,7 @@ Gameplay:
 - [x] avoid traffic on highway by switching lanes
 - [ ] add gears
 - [ ] gas can run out
-- [ ] other hazards (speed bump, gravel, oil slick, etc.)
+- [x] other hazards (speed bump, gravel, oil slick, etc.)
 
 Misc:
 - [ ] sfx at 1mi (dank nooner brah, siiiick, etc.)

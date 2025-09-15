@@ -2,10 +2,15 @@
 class_name Obstacle extends Area3D
 
 @export var variant: int = 0
+# HACK - hard code offset for vehicles vs hazards in variants
+@export var variant_split_idx := 3
 @export var variants: Array[PackedScene] = [
     preload("res://assets/vehicles/Car01.glb"),
     preload("res://assets/vehicles/Police Car.glb"),
-    preload("res://assets/vehicles/SUV.glb")
+    preload("res://assets/vehicles/SUV.glb"),
+    
+    preload("res://assets/misc/Traffic Cone.glb"),
+    preload("res://assets/misc/Wood Planks.glb"),
 ]
 
 @onready var timer: Timer = $Timer
@@ -15,6 +20,8 @@ class_name Obstacle extends Area3D
 func _ready():
     set_mesh()
     # collision_shape.
+    if Engine.is_editor_hint():
+        return
     body_entered.connect(on_body_entered)
     timer.timeout.connect(finish)
     timer.start()

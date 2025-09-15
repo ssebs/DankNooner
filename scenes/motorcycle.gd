@@ -31,10 +31,11 @@ func _physics_process(delta):
         'input_angle': 0.0,
         'swerve_dir': "", # "", left, right
     }
+
     if !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
         SignalBus.throttle_input = lerpf(SignalBus.throttle_input, 0, 5 * delta)
     else:
-        SignalBus.throttle_input += randf_range(-2, 2)
+        SignalBus.throttle_input += randf_range(-2.5, 2.5)
     
     input_info = handle_user_input(input_info)
     SignalBus.speed = clampf(SignalBus.speed * SignalBus.throttle_input, 1, 180)
