@@ -16,6 +16,9 @@ var offset = 10
 var amount_moved = 0.0
 var road_pieces: Array[Node3D]
 
+var spawn_chance_base = 0.25 # 15% base chance
+var difficulty_modifier = 1.0 # Increases over time
+
 func _ready():
     spawn_roads(road_spawn_count)
     if debug:
@@ -29,7 +32,7 @@ func spawn_roads(count: int):
         var piece = road_piece.instantiate() as Node3D
         road_spawn.add_child(piece)
         road_pieces.append(piece)
-        piece.global_position.z -= i * offset
+        piece.global_position.z += i * offset
 
 func _physics_process(delta):
     if road_spawn == null || Engine.is_editor_hint():
@@ -52,8 +55,11 @@ func _physics_process(delta):
         road_pieces.push_front(last_piece) # Add to beginning
         
         # Spawn obstacles when a piece cycles
-        if randi() % 2 == 0:
+        var current_spawn_chance = spawn_chance_base * difficulty_modifier
+        if randf() < current_spawn_chance:
             spawn_obstacle(first_piece, lane1_spawn if randi() % 2 == 0 else lane2_spawn, false)
+        
+        if randf() < current_spawn_chance:
             spawn_obstacle(first_piece, hazard_spawn, true)
         
         # clear old obstacles
@@ -62,7 +68,7 @@ func _physics_process(delta):
                 child.queue_free()
 
 func spawn_obstacle(parent_node: Node3D, lane_spawn: Marker3D, is_hazard := false):
-    if lane_spawn == null || obstacle_scn == null:
+    if lane_spawn == null || obstacle_scn == null || Engine.is_editor_hint():
         print('something is null spawn_obstacle')
         return
     
