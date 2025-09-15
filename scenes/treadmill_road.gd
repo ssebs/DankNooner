@@ -2,10 +2,6 @@
 class_name TreadmillRoad extends Node3D
 
 @export var debug = false
-@export var cars_to_spawn: Array[PackedScene] = [
-    preload("res://assets/vehicles/Car01.glb"),
-    preload("res://assets/vehicles/Police Car.glb")
-]
 
 @export var road_spawn_count = 6
 @export var road_piece: PackedScene = preload("res://assets/LowPolyRoadPack/Models/Road Straight 2.dae")
@@ -14,6 +10,7 @@ class_name TreadmillRoad extends Node3D
 @onready var road_spawn: Marker3D = %RoadSpawn
 @onready var lane1_spawn: Marker3D = %Lane1
 @onready var lane2_spawn: Marker3D = %Lane2
+@onready var hazard_spawn: Marker3D = %HazardPos
 
 var offset = 10
 var road_pieces: Array[Node3D]
@@ -23,7 +20,7 @@ func _ready():
     if debug:
         spawn_obstacle(lane1_spawn if randi() % 2 == 0 else lane2_spawn)
 
-func spawn_obstacle(lane_spawn: Marker3D):
+func spawn_obstacle(lane_spawn: Marker3D, is_hazard := false):
     if lane_spawn == null || obstacle_scn == null:
         print('something is null spawn_obstacle')
         return
@@ -33,7 +30,10 @@ func spawn_obstacle(lane_spawn: Marker3D):
         child.queue_free()
     
     var thing = obstacle_scn.instantiate() as Obstacle
-    thing.variant = randi_range(0, thing.variants.size() - 1)
+    if is_hazard:
+        thing.variant = randi_range(thing.variant_split_idx, thing.variants.size() - 1)
+    else:
+        thing.variant = randi_range(0, thing.variant_split_idx)
     lane_spawn.add_child(thing)
     
 
@@ -53,9 +53,13 @@ func _physics_process(delta):
         road_spawn.position.z = 0
         lane1_spawn.position.z = 0
         lane2_spawn.position.z = 0
-        spawn_obstacle(lane1_spawn if randi() % 2 == 0 else lane2_spawn)
+        hazard_spawn.position.z = 0
+        spawn_obstacle(lane1_spawn if randi() % 2 == 0 else lane2_spawn, false)
+        if randi() % 2 == 0:
+            spawn_obstacle(hazard_spawn, true)
     
     var move_amount = lerpf(0, delta * (SignalBus.speed / 5), 0.5)
     road_spawn.position.z += move_amount
     lane1_spawn.position.z += move_amount
     lane2_spawn.position.z += move_amount
+    hazard_spawn.position.z += move_amount
