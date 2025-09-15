@@ -19,7 +19,7 @@ Gameplay:
 - [x] cars spawn w/ collision
 - [x] rpm dependent sound
 - [x] add randomness to balance
-- [ ] avoid traffic on highway by switching lanes
+- [x] avoid traffic on highway by switching lanes
 - [ ] add gears
 - [ ] gas can run out
 - [ ] other hazards (speed bump, gravel, oil slick, etc.)
