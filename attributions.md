@@ -8,4 +8,5 @@
 - Police Car by Quaternius (https://poly.pizza/m/BwwnUrWGmV)
 - SUV by Quaternius (https://poly.pizza/m/BwwnUrWGmV)
 - Car by Quaternius (https://poly.pizza/m/unqqkULtRU)
-- 
+- Traffic Cone by Quaternius (https://poly.pizza/m/lAx8JytxGD)
+- Wood Planks by Quaternius (https://poly.pizza/m/hwQ1Fx5P8U)
