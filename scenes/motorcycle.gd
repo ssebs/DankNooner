@@ -17,24 +17,81 @@ func _ready():
     if !Engine.is_editor_hint():
         audio_player.volume_linear = SignalBus.volume
 
-# Uses input_info's dictionary & throttle_input
-func handle_user_input(ret: Dictionary) -> Dictionary:
-    if Input.is_action_pressed("lean_back"):
-        ret['input_angle'] += 1
-    elif Input.is_action_pressed("lean_forward"):
-        ret['input_angle'] -= 1
-    
-    if Input.is_action_pressed("lean_left"):
-        ret['swerve_dir'] = "left"
-    elif Input.is_action_pressed("lean_right"):
-        ret['swerve_dir'] = "right"
 
-    ret['input_angle'] = SignalBus.throttle_input
-    if Input.is_action_pressed("brake"):
-        ret['input_angle'] = -80
+func _physics_process(delta):
+    if disable_input:
+        if SignalBus.speed > 0:
+            SignalBus.speed -= 5
+        return
     
-    return ret
 
+    # Get & clean user inputs
+    var current_x_angle_deg = rotate_point.global_rotation_degrees.x
+    var input_info: Dictionary = {
+        'input_angle': 0.0,
+        'swerve_dir': "", # "", left, right
+    }
+    if !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+        SignalBus.throttle_input = lerpf(SignalBus.throttle_input, 0, 5 * delta)
+    else:
+        SignalBus.throttle_input += randf_range(-2, 2)
+    
+    input_info = handle_user_input(input_info)
+    SignalBus.speed = clampf(SignalBus.speed * SignalBus.throttle_input, 1, 180)
+
+    # RPM Audio Pitch
+    if SignalBus.throttle_input > 0:
+        audio_player.pitch_scale = clampf(SignalBus.throttle_input / 100, 0.5, 3)
+
+
+    # lower the bike down if you're doing a wheelie
+    if current_x_angle_deg > 0 && current_x_angle_deg <= 90:
+        input_info['input_angle'] -= gravity
+
+    # looped the bike
+    if current_x_angle_deg > 90:
+        finish_up("crash", true, "You looped it!")
+        return
+    # landed back down
+    if has_started && SignalBus.score > 200 && current_x_angle_deg < 0:
+        finish_up("stoppie", false, "Run finished!")
+        return
+
+    # swerve the bike
+    if !anim_player.is_playing():
+        # todo: check if we're on the edge of the road, if so crash
+        match input_info['swerve_dir']:
+            "left":
+                anim_player.play("swerve_left")
+            "right":
+                anim_player.play("swerve_right")
+    
+    # print("input_angle: %.1f" % [input_info['input_angle']])
+    # print("current_angle: %.1f" % [current_x_angle_deg])
+    
+    # Actually rotate the bike & send info to SignalBus
+    rotate_point.rotate_x(deg_to_rad(input_info['input_angle']) * 3 * delta)
+    SignalBus.angle_deg = rotate_point.global_rotation_degrees.x
+    
+    if has_started:
+        SignalBus.distance += delta * SignalBus.speed
+        SignalBus.score += roundi((SignalBus.distance * SignalBus.angle_deg) / 100)
+
+func on_collide(msg: String):
+    finish_up("crash", true, msg)
+
+func finish_up(anim_name: String = "", has_crashed: bool = false, msg: String = ''):
+    disable_input = true
+    Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+    anim_player.animation_finished.connect(func(_anim_name: String):
+        queue_free()
+        finished_run.emit(has_crashed, msg)
+    )
+    if anim_name != "":
+        anim_player.play(anim_name)
+
+
+#region input
 # capture window + set throttle input
 func _input(event: InputEvent):
     # Capture/uncapture the mouse w/ click/escape
@@ -60,77 +117,21 @@ func _input(event: InputEvent):
             
             # print("Mouse Motion rel: ", event.relative)
 
-
-func _physics_process(delta):
-    if disable_input:
-        if SignalBus.speed > 0:
-            SignalBus.speed -= 5
-        return
+# Uses input_info's dictionary & throttle_input
+func handle_user_input(ret: Dictionary) -> Dictionary:
+    if Input.is_action_pressed("lean_back"):
+        ret['input_angle'] += 1
+    elif Input.is_action_pressed("lean_forward"):
+        ret['input_angle'] -= 1
     
+    if Input.is_action_pressed("lean_left"):
+        ret['swerve_dir'] = "left"
+    elif Input.is_action_pressed("lean_right"):
+        ret['swerve_dir'] = "right"
 
-    var current_x_angle_deg = rotate_point.global_rotation_degrees.x
-    var input_info: Dictionary = {
-        'input_angle': 0.0,
-        'swerve_dir': "", # "", left, right
-    }
-
-    # Get user inputs
-    if !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-        SignalBus.throttle_input = lerpf(SignalBus.throttle_input, 0, 5 * delta)
-    else:
-        SignalBus.throttle_input += randf_range(-2, 2)
-    input_info = handle_user_input(input_info)
-
-
-    # RPM Audio Pitch
-    if SignalBus.throttle_input > 0:
-        audio_player.pitch_scale = clampf(SignalBus.throttle_input / 100, 0.5, 3)
-
-    # print("throttle_input:", SignalBus.throttle_input)
-    # print("SignalBus.speed:", SignalBus.speed)
-    SignalBus.speed = clampf(SignalBus.speed * SignalBus.throttle_input, 1, 180)
-
-    # lower the bike down if you're doing a wheelie
-    if current_x_angle_deg > 0 && current_x_angle_deg <= 90:
-        input_info['input_angle'] -= gravity
-
-    # crash checks
-    if current_x_angle_deg > 90:
-        finish_up("crash", true, "You looped it!")
-        return
-
-    if has_started && SignalBus.score > 200 && current_x_angle_deg < 0:
-        finish_up("stoppie", false, "Run finished!")
-        return
-
-    # swerve the bike
-    if !anim_player.is_playing():
-        # todo: check if we're on the edge of the road, if so crash
-        match input_info['swerve_dir']:
-            "left":
-                anim_player.play("swerve_left")
-            "right":
-                anim_player.play("swerve_right")
+    ret['input_angle'] = SignalBus.throttle_input
+    if Input.is_action_pressed("brake"):
+        ret['input_angle'] = -80
     
-    # print("input_angle: %.1f" % [input_info['input_angle']])
-    # print("current_angle: %.1f" % [current_x_angle_deg])
-    
-    # actually rotate the bike & send info to SignalBus
-    rotate_point.rotate_x(deg_to_rad(input_info['input_angle']) * 3 * delta)
-    SignalBus.angle_deg = rotate_point.global_rotation_degrees.x
-    if has_started:
-        SignalBus.distance += delta * SignalBus.speed
-        SignalBus.score += roundi((SignalBus.distance * SignalBus.angle_deg) / 100)
-
-func on_collide(msg: String):
-    finish_up("crash", true, msg)
-
-func finish_up(anim_name: String = "", has_crashed: bool = false, msg: String = ''):
-    disable_input = true
-    Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-    anim_player.animation_finished.connect(func(_anim_name: String):
-        queue_free()
-        finished_run.emit(has_crashed, msg)
-    )
-    if anim_name != "":
-        anim_player.play(anim_name)
+    return ret
+#endregion

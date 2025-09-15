@@ -1,6 +1,7 @@
 @tool
 class_name TreadmillRoad extends Node3D
 
+@export var debug = false
 @export var cars_to_spawn: Array[PackedScene] = [
     preload("res://assets/vehicles/Car01.glb"),
     preload("res://assets/vehicles/Police Car.glb")
@@ -19,7 +20,8 @@ var road_pieces: Array[Node3D]
 
 func _ready():
     spawn_roads(road_spawn_count)
-    # spawn_obstacle(lane1_spawn if randi() % 2 == 0 else lane2_spawn)
+    if debug:
+        spawn_obstacle(lane1_spawn if randi() % 2 == 0 else lane2_spawn)
 
 func spawn_obstacle(lane_spawn: Marker3D):
     if lane_spawn == null || obstacle_scn == null:
