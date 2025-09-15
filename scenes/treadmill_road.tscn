@@ -1,9 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://dqgeknfpgj635"]
+[gd_scene load_steps=3 format=3 uid="uid://dqgeknfpgj635"]
 
 [ext_resource type="Script" uid="uid://boi3rdemmv28p" path="res://scenes/treadmill_road.gd" id="1_75pc8"]
+[ext_resource type="PackedScene" uid="uid://cgfh6rv4s8ygb" path="res://scenes/wall.tscn" id="2_2hvkh"]
 
 [node name="TreadmillRoad" type="Node3D"]
 script = ExtResource("1_75pc8")
+debug = true
 
 [node name="RoadSpawn" type="Marker3D" parent="."]
 unique_name_in_owner = true
@@ -16,3 +18,39 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 9.7972
 [node name="Lane2" type="Marker3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.02707, 0, 0)
+
+[node name="Wall" parent="." instance=ExtResource("2_2hvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.75, 15)
+
+[node name="Wall2" parent="." instance=ExtResource("2_2hvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.75, 5)
+
+[node name="Wall3" parent="." instance=ExtResource("2_2hvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.75, -5)
+
+[node name="Wall4" parent="." instance=ExtResource("2_2hvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.75, -15)
+
+[node name="Wall5" parent="." instance=ExtResource("2_2hvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.75, -25)
+
+[node name="Wall6" parent="." instance=ExtResource("2_2hvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.75, -35)
+
+[node name="Wall7" parent="." instance=ExtResource("2_2hvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 15)
+
+[node name="Wall8" parent="." instance=ExtResource("2_2hvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 5)
+
+[node name="Wall9" parent="." instance=ExtResource("2_2hvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -5)
+
+[node name="Wall10" parent="." instance=ExtResource("2_2hvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -15)
+
+[node name="Wall11" parent="." instance=ExtResource("2_2hvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -25)
+
+[node name="Wall12" parent="." instance=ExtResource("2_2hvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -35)
