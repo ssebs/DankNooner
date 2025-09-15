@@ -19,38 +19,42 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 9.7972
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.02707, 0, 0)
 
+[node name="HazardPos" type="Marker3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 0)
+
 [node name="Wall" parent="." instance=ExtResource("2_2hvkh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.211726, 15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.211726, 15)
 
 [node name="Wall2" parent="." instance=ExtResource("2_2hvkh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.211726, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.211726, 5)
 
 [node name="Wall3" parent="." instance=ExtResource("2_2hvkh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.211726, -5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.211726, -5)
 
 [node name="Wall4" parent="." instance=ExtResource("2_2hvkh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.211726, -15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.211726, -15)
 
 [node name="Wall5" parent="." instance=ExtResource("2_2hvkh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.211726, -25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.211726, -25)
 
 [node name="Wall6" parent="." instance=ExtResource("2_2hvkh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.211726, -35)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.211726, -35)
 
 [node name="Wall7" parent="." instance=ExtResource("2_2hvkh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.211726, 15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.211726, 15)
 
 [node name="Wall8" parent="." instance=ExtResource("2_2hvkh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.211726, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.211726, 5)
 
 [node name="Wall9" parent="." instance=ExtResource("2_2hvkh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.211726, -5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.211726, -5)
 
 [node name="Wall10" parent="." instance=ExtResource("2_2hvkh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.211726, -15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.211726, -15)
 
 [node name="Wall11" parent="." instance=ExtResource("2_2hvkh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.211726, -25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.211726, -25)
 
 [node name="Wall12" parent="." instance=ExtResource("2_2hvkh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.211726, -35)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.211726, -35)
