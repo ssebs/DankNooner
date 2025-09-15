@@ -4,7 +4,7 @@ signal notify_finished()
 
 @export var notify_time_sec = 3
 
-@onready var angle_label: Label = %AngleLabel
+@onready var angle_texture: TextureRect = $%ArrowTexture
 @onready var notify_label: Label = %NotifyLabel
 @onready var score_label: Label = %ScoreLabel
 @onready var distance_label: Label = %DistanceLabel
@@ -80,20 +80,7 @@ func on_throttle_updated(pct: float):
     throttle_progress.add_theme_stylebox_override('fill', new_stylebox)
 
 func on_angle_updated(angle_deg: float):
-    angle_label.text = "%.0f°" % abs(angle_deg)
-
-    # Set color from val
-    var color: Color
-    if angle_deg <= 45:
-        # From white (0°) to yellow (45°)
-        var t = angle_deg / 45.0
-        color = Color.WHITE.lerp(Color.YELLOW, t)
-    else:
-        # From yellow (45°) to red (90°)
-        var t = (angle_deg - 45.0) / 45.0
-        color = Color.YELLOW.lerp(Color.RED, t)
-
-    angle_label.add_theme_color_override("font_color", color)
+    angle_texture.rotation_degrees = 90 - angle_deg
 
 func on_notify_ui(msg: String, duration: float = notify_time_sec):
     notify_label.text = msg
