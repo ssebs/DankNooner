@@ -117,13 +117,8 @@ light_color = Color(0.79, 0.711263, 0.5846, 1)
 directional_shadow_mode = 1
 
 [node name="TreadmillRoad" parent="." instance=ExtResource("15_sp04v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 17.5)
-
-[node name="TreadmillRoad2" parent="." instance=ExtResource("15_sp04v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -42.5)
-
-[node name="TreadmillRoad3" parent="." instance=ExtResource("15_sp04v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -102.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.5)
+debug = false
 
 [node name="SpawnPos" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.3734, 0, 0)

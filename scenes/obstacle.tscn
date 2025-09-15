@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://ci6jiokxqafxm" path="res://scenes/obstacle.gd" id="1_7ukg5"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7ukg5"]
-size = Vector3(2.1111, 1.27386, 4.20935)
+size = Vector3(1.63845, 0.974459, 3.30962)
 
 [node name="Obstacle" type="Area3D"]
 script = ExtResource("1_7ukg5")
@@ -17,4 +17,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.487229, 0)
 shape = SubResource("BoxShape3D_7ukg5")
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 5.0
+wait_time = 15.0
