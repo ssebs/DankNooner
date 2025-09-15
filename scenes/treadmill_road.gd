@@ -3,7 +3,7 @@ class_name TreadmillRoad extends Node3D
 
 @export var debug = false
 
-@export var road_spawn_count = 6
+@export var road_spawn_count = 10
 @export var road_piece: PackedScene = preload("res://assets/LowPolyRoadPack/Models/Road Straight 2.dae")
 @export var obstacle_scn: PackedScene = preload("res://scenes/obstacle.tscn")
 
@@ -13,13 +13,14 @@ class_name TreadmillRoad extends Node3D
 @onready var hazard_spawn: Marker3D = %HazardPos
 
 var offset = 10
+var amount_moved = 0.0
 var road_pieces: Array[Node3D]
 
 func _ready():
     spawn_roads(road_spawn_count)
     if debug:
-        spawn_obstacle(lane1_spawn if randi() % 2 == 0 else lane2_spawn)
-        SignalBus.speed = 80
+        # spawn_obstacle(lane1_spawn if randi() % 2 == 0 else lane2_spawn)
+        SignalBus.speed = 120
 
 func spawn_roads(count: int):
     if road_spawn == null:
@@ -33,33 +34,42 @@ func spawn_roads(count: int):
 func _physics_process(delta):
     if road_spawn == null || Engine.is_editor_hint():
         return
-    if road_spawn.position.z > len(road_pieces) * offset:
-        road_spawn.position.z = 0
-        lane1_spawn.position.z = 0
-        lane2_spawn.position.z = 0
-        hazard_spawn.position.z = 0
-        spawn_obstacle(lane1_spawn if randi() % 2 == 0 else lane2_spawn, false)
-        if randi() % 2 == 0:
-            spawn_obstacle(hazard_spawn, true)
-    
     var move_amount = lerpf(0, delta * (SignalBus.speed / 5), 0.5)
-    road_spawn.position.z += move_amount
-    lane1_spawn.position.z += move_amount
-    lane2_spawn.position.z += move_amount
-    hazard_spawn.position.z += move_amount
+    
+    # Move all road pieces forward
+    for piece in road_pieces:
+        piece.global_position.z += move_amount
+    
+    var last_piece = road_pieces[-1]
+    
+    if last_piece.global_position.z > offset:
+        # Calculate new position: in front of the current first piece
+        var first_piece = road_pieces[0]
+        last_piece.global_position.z = first_piece.global_position.z - offset
+        
+        # Move the piece from end to beginning of array (a=>b=>c becomes c=>a=>b)
+        road_pieces.pop_back() # Remove from end
+        road_pieces.push_front(last_piece) # Add to beginning
+        
+        # Spawn obstacles when a piece cycles
+        if randi() % 2 == 0:
+            spawn_obstacle(first_piece, lane1_spawn if randi() % 2 == 0 else lane2_spawn, false)
+            spawn_obstacle(first_piece, hazard_spawn, true)
+        
+        # clear old obstacles
+        for child in last_piece.get_children():
+            if child is Obstacle:
+                child.queue_free()
 
-func spawn_obstacle(lane_spawn: Marker3D, is_hazard := false):
+func spawn_obstacle(parent_node: Node3D, lane_spawn: Marker3D, is_hazard := false):
     if lane_spawn == null || obstacle_scn == null:
         print('something is null spawn_obstacle')
         return
-    
-    # Remove old obstacles if there are any 
-    for child in lane_spawn.get_children():
-        child.queue_free()
     
     var thing = obstacle_scn.instantiate() as Obstacle
     if is_hazard:
         thing.variant = randi_range(thing.variant_split_idx, thing.variants.size() - 1)
     else:
         thing.variant = randi_range(0, thing.variant_split_idx)
-    lane_spawn.add_child(thing)
+    thing.global_position = lane_spawn.global_position
+    parent_node.add_child(thing)

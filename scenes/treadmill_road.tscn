@@ -7,57 +7,61 @@
 script = ExtResource("1_75pc8")
 debug = true
 
+[node name="DebugCamera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.801254, -0.132049, 0.583571, 0, 0.975342, 0.220698, -0.598325, -0.176835, 0.781497, 31.955, 12.2966, 32.7929)
+
 [node name="RoadSpawn" type="Marker3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20.0833)
 
 [node name="Lane1" type="Marker3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 9.79721, 0, 0)
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 9.79721, 0, -20)
 
 [node name="Lane2" type="Marker3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.02707, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.02707, 0, -20)
 
 [node name="HazardPos" type="Marker3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, -20)
 
-[node name="Wall" parent="." instance=ExtResource("2_2hvkh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.211726, 15)
+[node name="Walls" type="Node3D" parent="."]
 
-[node name="Wall2" parent="." instance=ExtResource("2_2hvkh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.211726, 5)
-
-[node name="Wall3" parent="." instance=ExtResource("2_2hvkh")]
+[node name="Wall" parent="Walls" instance=ExtResource("2_2hvkh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.211726, -5)
 
-[node name="Wall4" parent="." instance=ExtResource("2_2hvkh")]
+[node name="Wall2" parent="Walls" instance=ExtResource("2_2hvkh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.211726, -15)
 
-[node name="Wall5" parent="." instance=ExtResource("2_2hvkh")]
+[node name="Wall3" parent="Walls" instance=ExtResource("2_2hvkh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.211726, -25)
 
-[node name="Wall6" parent="." instance=ExtResource("2_2hvkh")]
+[node name="Wall4" parent="Walls" instance=ExtResource("2_2hvkh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.211726, -35)
 
-[node name="Wall7" parent="." instance=ExtResource("2_2hvkh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.211726, 15)
+[node name="Wall5" parent="Walls" instance=ExtResource("2_2hvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.211726, -45)
 
-[node name="Wall8" parent="." instance=ExtResource("2_2hvkh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.211726, 5)
+[node name="Wall6" parent="Walls" instance=ExtResource("2_2hvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.211726, -55)
 
-[node name="Wall9" parent="." instance=ExtResource("2_2hvkh")]
+[node name="Wall7" parent="Walls" instance=ExtResource("2_2hvkh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.211726, -5)
 
-[node name="Wall10" parent="." instance=ExtResource("2_2hvkh")]
+[node name="Wall8" parent="Walls" instance=ExtResource("2_2hvkh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.211726, -15)
 
-[node name="Wall11" parent="." instance=ExtResource("2_2hvkh")]
+[node name="Wall9" parent="Walls" instance=ExtResource("2_2hvkh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.211726, -25)
 
-[node name="Wall12" parent="." instance=ExtResource("2_2hvkh")]
+[node name="Wall10" parent="Walls" instance=ExtResource("2_2hvkh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.211726, -35)
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.801254, -0.132049, 0.583571, 0, 0.975342, 0.220698, -0.598325, -0.176835, 0.781497, 31.955, 12.2966, 32.7929)
+[node name="Wall11" parent="Walls" instance=ExtResource("2_2hvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.211726, -45)
+
+[node name="Wall12" parent="Walls" instance=ExtResource("2_2hvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.211726, -55)
+
+[node name="Obstacles" type="Node3D" parent="."]
+unique_name_in_owner = true
