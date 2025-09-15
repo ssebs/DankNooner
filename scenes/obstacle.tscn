@@ -1,9 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c5luuvbq5nggv"]
 
 [ext_resource type="Script" uid="uid://ci6jiokxqafxm" path="res://scenes/obstacle.gd" id="1_7ukg5"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_7ukg5"]
-size = Vector3(1.63845, 0.974459, 3.30962)
+[ext_resource type="Shape3D" uid="uid://cq07spmpfekm5" path="res://resources/hazard_hacky_obstacle_shape.tres" id="2_drdry"]
 
 [node name="Obstacle" type="Area3D"]
 script = ExtResource("1_7ukg5")
@@ -14,7 +12,7 @@ unique_name_in_owner = true
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.487229, 0)
-shape = SubResource("BoxShape3D_7ukg5")
+shape = ExtResource("2_drdry")
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 15.0

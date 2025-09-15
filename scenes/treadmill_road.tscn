@@ -7,9 +7,6 @@
 script = ExtResource("1_75pc8")
 debug = true
 
-[node name="DebugCamera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.801254, -0.132049, 0.583571, 0, 0.975342, 0.220698, -0.598325, -0.176835, 0.781497, 31.955, 12.2966, 32.7929)
-
 [node name="RoadSpawn" type="Marker3D" parent="."]
 unique_name_in_owner = true
 
