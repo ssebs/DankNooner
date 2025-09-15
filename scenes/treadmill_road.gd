@@ -19,23 +19,7 @@ func _ready():
     spawn_roads(road_spawn_count)
     if debug:
         spawn_obstacle(lane1_spawn if randi() % 2 == 0 else lane2_spawn)
-
-func spawn_obstacle(lane_spawn: Marker3D, is_hazard := false):
-    if lane_spawn == null || obstacle_scn == null:
-        print('something is null spawn_obstacle')
-        return
-    
-    # Remove old obstacles if there are any 
-    for child in lane_spawn.get_children():
-        child.queue_free()
-    
-    var thing = obstacle_scn.instantiate() as Obstacle
-    if is_hazard:
-        thing.variant = randi_range(thing.variant_split_idx, thing.variants.size() - 1)
-    else:
-        thing.variant = randi_range(0, thing.variant_split_idx)
-    lane_spawn.add_child(thing)
-    
+        SignalBus.speed = 80
 
 func spawn_roads(count: int):
     if road_spawn == null:
@@ -63,3 +47,19 @@ func _physics_process(delta):
     lane1_spawn.position.z += move_amount
     lane2_spawn.position.z += move_amount
     hazard_spawn.position.z += move_amount
+
+func spawn_obstacle(lane_spawn: Marker3D, is_hazard := false):
+    if lane_spawn == null || obstacle_scn == null:
+        print('something is null spawn_obstacle')
+        return
+    
+    # Remove old obstacles if there are any 
+    for child in lane_spawn.get_children():
+        child.queue_free()
+    
+    var thing = obstacle_scn.instantiate() as Obstacle
+    if is_hazard:
+        thing.variant = randi_range(thing.variant_split_idx, thing.variants.size() - 1)
+    else:
+        thing.variant = randi_range(0, thing.variant_split_idx)
+    lane_spawn.add_child(thing)
