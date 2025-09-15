@@ -178,12 +178,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.742951)
 [node name="SportBike01" parent="RotatePoint" instance=ExtResource("1_3k4v6")]
 transform = Transform3D(0.0152547, 0, 0, 0, 0.0152547, 4.65661e-10, 0, -4.65661e-10, 0.0152547, 0, 0, -0.766747)
 
-[node name="SpringArm3D" type="SpringArm3D" parent="."]
-transform = Transform3D(0.820192, -0.17965, 0.543149, 0, 0.949415, 0.314026, -0.572089, -0.257561, 0.778702, 1.86308, 1.59916, 1.29101)
-
-[node name="Camera3D" type="Camera3D" parent="SpringArm3D"]
+[node name="Camera3D" type="Camera3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.999761, -0.00243476, 0.021712, 0.00686093, 0.978485, -0.206201, -0.0207431, 0.206299, 0.978269, -0.645652, -0.702775, -0.52637)
+transform = Transform3D(0.807497, -0.0657308, 0.586198, -6.0536e-09, 0.993772, 0.111432, -0.589872, -0.0899813, 0.802468, 1.17388, 0.755049, 1.4315)
 
 [node name="Marker3D" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.743679)
