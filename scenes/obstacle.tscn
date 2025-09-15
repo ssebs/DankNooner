@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://ci6jiokxqafxm" path="res://scenes/obstacle.gd" id="1_7ukg5"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7ukg5"]
-size = Vector3(1.77763, 1.13234, 3.73049)
+size = Vector3(2.1111, 1.27386, 4.20935)
 
 [node name="Obstacle" type="Area3D"]
 script = ExtResource("1_7ukg5")
