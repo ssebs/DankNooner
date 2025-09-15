@@ -58,3 +58,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.211726, -25)
 
 [node name="Wall12" parent="." instance=ExtResource("2_2hvkh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.211726, -35)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.801254, -0.132049, 0.583571, 0, 0.975342, 0.220698, -0.598325, -0.176835, 0.781497, 31.955, 12.2966, 32.7929)
