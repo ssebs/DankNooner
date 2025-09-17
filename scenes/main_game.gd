@@ -4,7 +4,7 @@ class_name MainGame extends Node
 
 @onready var spawn_pos: Marker3D = $SpawnPos
 @onready var ui: UI = $UI
-@onready var menu_stuff = %MenuStuff
+@onready var menu_screen_items: Node3D = %MenuStuff
 
 enum GameState {MAIN_MENU, PAUSE_MENU, PLAYING, RUN_OVER}
 
@@ -19,11 +19,27 @@ var max_clean_runs: int = 0
 
 func _ready():
     game_state = GameState.MAIN_MENU
+    # Main menu handlers
     ui.play_btn.pressed.connect(start_run)
-    ui.quit_btn.pressed.connect(func():
+    ui.quit_btn_main_menu.pressed.connect(func():
         get_tree().quit(0)
     )
-    ui.restart_btn.pressed.connect(on_restart_pressed)
+
+    # Upgrade menu handlers
+    ui.quit_btn_upgrade_menu.pressed.connect(func():
+        get_tree().quit(0)
+    )
+    ui.no_upgrade_btn.pressed.connect(on_no_upgrade_pressed)
+    ui.main_menu_btn.pressed.connect(goto_main_menu)
+    ui.upgrade_1_btn.pressed.connect(func():
+        on_upgrade_pressed(1)
+    )
+    ui.upgrade_2_btn.pressed.connect(func():
+        on_upgrade_pressed(2)
+    )
+    ui.upgrade_3_btn.pressed.connect(func():
+        on_upgrade_pressed(3)
+    )
 
 ## Spawn Motorcycle, add child, set cam, switch game state, conn finished_run signal
 func start_run():
@@ -39,12 +55,11 @@ func start_run():
 
 ## Note: Motorcycle should queue_free() on it's own
 func on_run_finished(has_crashed: bool, msg: String):
+    SignalBus.notify_ui.emit(msg, 5)
+
     switch_game_state(GameState.RUN_OVER)
-    ui.restart_btn.visible = true
     
-    # ui.notify_finished.connect(func():
-    #     pass
-    # )
+    # set score
     if !has_crashed:
         max_clean_runs += 1
         if SignalBus.score > max_score:
@@ -62,12 +77,15 @@ func on_run_finished(has_crashed: bool, msg: String):
     ui.set_max_score_label_text(max_score)
     ui.set_max_clean_runs_label_text(max_clean_runs)
 
-    SignalBus.notify_ui.emit(msg, 5)
+func on_upgrade_pressed(num: int):
+    print("upgrade " + str(num) + " pressed")
 
-func on_restart_pressed():
-    ui.restart_btn.visible = false
+func on_no_upgrade_pressed():
     # reset score
     start_run()
+
+func goto_main_menu():
+    switch_game_state(GameState.MAIN_MENU)
 
 
 # TODO: move pause/esc/press logic here
@@ -76,10 +94,10 @@ func switch_game_state(state: GameState):
     ui.switch_panels(state)
     match state:
         GameState.MAIN_MENU:
-            menu_stuff.visible = true
+            menu_screen_items.visible = true
         GameState.PLAYING:
-            menu_stuff.visible = false
+            menu_screen_items.visible = false
         GameState.PAUSE_MENU:
-            menu_stuff.visible = false
+            menu_screen_items.visible = false
         GameState.RUN_OVER:
-            menu_stuff.visible = true
+            menu_screen_items.visible = true

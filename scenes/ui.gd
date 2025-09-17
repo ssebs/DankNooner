@@ -16,11 +16,20 @@ signal notify_finished()
 @onready var game_panel: Control = %GamePanel
 @onready var main_menu_panel: Control = %MainMenuPanel
 @onready var pause_menu_panel: Control = %PauseMenuPanel
+@onready var upgrade_menu_panel: Control = %UpgradeMenuPanel
 
+# main menu
 @onready var play_btn: Button = %PlayBtn
-@onready var quit_btn: Button = %QuitBtn
+@onready var quit_btn_main_menu: Button = %QuitBtn
 @onready var volume_slider: Slider = %VolumeSlider
-@onready var restart_btn: Button = %RestartBtn
+
+# upgrade menu
+@onready var quit_btn_upgrade_menu: Button = %QuitBtn
+@onready var no_upgrade_btn: Button = %NoUpgradeBtn
+@onready var main_menu_btn: Button = %MainMenuBtn
+@onready var upgrade_1_btn: Button = %Upgrade1Btn
+@onready var upgrade_2_btn: Button = %Upgrade2Btn
+@onready var upgrade_3_btn: Button = %Upgrade3Btn
 
 # var notifications = [] # todo: use queue for multiple
 
@@ -36,7 +45,6 @@ func _ready():
     # Defaults
     notify_label.text = ""
     throttle_progress.value = 0
-    restart_btn.visible = false
 
     set_score_label_text(0)
     set_distance_label_text(0)
@@ -48,17 +56,25 @@ func _ready():
 func switch_panels(state: MainGame.GameState):
     match state:
         MainGame.GameState.MAIN_MENU:
+            main_menu_panel.visible = true
             game_panel.visible = false
             pause_menu_panel.visible = false
-            main_menu_panel.visible = true
-        MainGame.GameState.PLAYING, MainGame.GameState.RUN_OVER:
+            upgrade_menu_panel.visible = false
+        MainGame.GameState.PLAYING:
             game_panel.visible = true
             pause_menu_panel.visible = false
             main_menu_panel.visible = false
-        MainGame.GameState.PAUSE_MENU:
+            upgrade_menu_panel.visible = false
+        MainGame.GameState.RUN_OVER:
+            upgrade_menu_panel.visible = true
             game_panel.visible = false
-            pause_menu_panel.visible = true
+            pause_menu_panel.visible = false
             main_menu_panel.visible = false
+        MainGame.GameState.PAUSE_MENU:
+            pause_menu_panel.visible = true
+            game_panel.visible = false
+            main_menu_panel.visible = false
+            upgrade_menu_panel.visible = false
 
 #region signal handlers
 func on_throttle_updated(pct: float):
