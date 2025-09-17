@@ -6,11 +6,12 @@ signal notify_finished()
 
 @onready var angle_texture: TextureRect = $%ArrowTexture
 @onready var notify_label: Label = %NotifyLabel
-@onready var score_label: Label = %ScoreLabel
+@onready var bonus_time_label: Label = %BonusTimeLabel
 @onready var distance_label: Label = %DistanceLabel
-@onready var max_score_label: Label = %MaxScoreLabel
+@onready var max_bonus_time_label: Label = %MaxBonusTimeLabel
 @onready var max_distance_label: Label = %MaxDistanceLabel
 @onready var max_clean_runs_label: Label = %MaxCleanRunsLabel
+@onready var money_label: Label = %MoneyLabel
 @onready var throttle_progress: ProgressBar = %ThrottleProgress
 
 @onready var game_panel: Control = %GamePanel
@@ -24,7 +25,7 @@ signal notify_finished()
 @onready var volume_slider: Slider = %VolumeSlider
 
 # upgrade menu
-@onready var quit_btn_upgrade_menu: Button = %QuitBtn
+@onready var quit_btn_upgrade_menu: Button = %QuitBtn2
 @onready var no_upgrade_btn: Button = %NoUpgradeBtn
 @onready var main_menu_btn: Button = %MainMenuBtn
 @onready var upgrade_1_btn: Button = %Upgrade1Btn
@@ -37,8 +38,8 @@ func _ready():
     SignalBus.angle_updated.connect(on_angle_updated)
     SignalBus.notify_ui.connect(on_notify_ui)
     SignalBus.throttle_updated.connect(on_throttle_updated)
-    SignalBus.score_updated.connect(set_score_label_text)
     SignalBus.distance_updated.connect(set_distance_label_text)
+    SignalBus.bonus_time_updated.connect(on_bonus_time_updated)
     
     volume_slider.value_changed.connect(on_volume_changed)
 
@@ -46,11 +47,12 @@ func _ready():
     notify_label.text = ""
     throttle_progress.value = 0
 
-    set_score_label_text(0)
     set_distance_label_text(0)
-    set_max_score_label_text(0)
     set_max_distance_label_text(0)
     set_max_clean_runs_label_text(0)
+    set_money_label_text(0)
+    on_bonus_time_updated(0)
+    set_max_bonus_time_label_text(0)
     volume_slider.value = 0.75 # TODO: load from save
 
 func switch_panels(state: MainGame.GameState):
@@ -98,6 +100,9 @@ func on_throttle_updated(pct: float):
 func on_angle_updated(angle_deg: float):
     angle_texture.rotation_degrees = 90 - angle_deg
 
+func on_bonus_time_updated(time: float):
+    bonus_time_label.text = "Dank Time: %.2fs" % time
+
 func on_notify_ui(msg: String, duration: float = notify_time_sec):
     notify_label.text = msg
     await get_tree().create_timer(duration).timeout
@@ -108,19 +113,19 @@ func on_notify_ui(msg: String, duration: float = notify_time_sec):
 func on_volume_changed(value: float):
     SignalBus.volume = value
 
-##region label setters
-func set_score_label_text(score: int):
-    score_label.text = "Score: %d" % score
+#region label setters
+func set_max_bonus_time_label_text(time: float):
+    max_bonus_time_label.text = "Most Dank Time: %.2fs" % time
 
 func set_distance_label_text(distance: float):
     distance_label.text = "Distance: %.0fm" % distance
-
-func set_max_score_label_text(score: int):
-    max_score_label.text = "High Score: %d" % score
 
 func set_max_distance_label_text(distance: float):
     max_distance_label.text = "Max Distance: %.0fm" % distance
 
 func set_max_clean_runs_label_text(clean_runs: int):
     max_clean_runs_label.text = "Clean Runs: %d" % clean_runs
-#
+
+func set_money_label_text(money: float):
+    money_label.text = "Money: $%.2f" % money
+#endregion

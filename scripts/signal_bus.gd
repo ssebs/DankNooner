@@ -12,11 +12,11 @@ var throttle_input: float:
         throttle_updated.emit(throttle_input)
 signal throttle_updated(pct: float)
 
-var score: int:
+var bonus_time: float:
     set(val):
-        score = val
-        score_updated.emit(val)
-signal score_updated(score: int)
+        bonus_time = clampf(val, 0, 100)
+        bonus_time_updated.emit(bonus_time)
+signal bonus_time_updated(pct: float)
 
 var speed: float = 1:
     set(val):
@@ -35,6 +35,12 @@ var volume: float:
         volume = val
         volume_updated.emit(val)
 signal volume_updated(volume: float)
+
+var money: float:
+    set(val):
+        money = val
+        money_updated.emit(val)
+signal money_updated(money: float)
 
 
 signal notify_ui(msg: String, duration: float) # see ui.gd
