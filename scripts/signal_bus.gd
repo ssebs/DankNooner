@@ -1,5 +1,7 @@
 extends Node
 
+@export var upgrade_stats: UpgradeStatsRes = preload("res://resources/default_upgrade_stats.tres")
+
 var angle_deg: float:
     set(val):
         angle_deg = val
