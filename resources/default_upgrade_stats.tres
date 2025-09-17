@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UpgradeStatsRes" load_steps=2 format=3 uid="uid://vs4s574wr2lf"]
+
+[ext_resource type="Script" uid="uid://bxp0dvuwnd2ie" path="res://resources/upgrade_stats.gd" id="1_xhfxy"]
+
+[resource]
+script = ExtResource("1_xhfxy")
+fuel_level = 0
+speed_level = 0
+armor_level = 0
+unlocked_tricks = {
+"BACKFLIP": false,
+"BUNNY_HOP": false,
+"FRONTFLIP": false,
+"NOLLIE_LAZERFLIP": false
+}
+metadata/_custom_type_script = "uid://cjr4x6yj37qnt"
