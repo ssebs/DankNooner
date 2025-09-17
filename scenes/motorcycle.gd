@@ -17,7 +17,6 @@ func _ready():
     if !Engine.is_editor_hint():
         audio_player.volume_linear = SignalBus.volume
 
-
 func _physics_process(delta):
     if disable_input:
         if SignalBus.speed > 0:
@@ -65,7 +64,12 @@ func _physics_process(delta):
     
     if has_started:
         SignalBus.distance += delta * SignalBus.speed
+        SignalBus.fuel -= delta
         
+        # ran out of gas
+        if SignalBus.fuel <= 0:
+            finish_up("RESET", false, "Ran out of gas.")
+
         # landed back down
         if SignalBus.distance > 400 && current_x_angle_deg < 0:
             finish_up("stoppie", false, "Run finished!")
@@ -80,7 +84,6 @@ func _physics_process(delta):
         # 
         rotate_point.rotate_x(deg_to_rad(input_info['input_angle']) * 3 * delta)
         SignalBus.angle_deg = rotate_point.global_rotation_degrees.x
-
 
 
 func on_collide(msg: String):

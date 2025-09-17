@@ -44,6 +44,12 @@ var money: float:
         money_updated.emit(val)
 signal money_updated(money: float)
 
+var fuel: float = 10:
+    set(val):
+        fuel = val
+        fuel_updated.emit(val)
+signal fuel_updated(fuel: float)
+
 
 signal notify_ui(msg: String, duration: float) # see ui.gd
 signal motorcycle_collision(msg: String) # see obstacle.gd
