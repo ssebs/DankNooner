@@ -44,6 +44,15 @@ func _physics_process(delta):
     if SignalBus.throttle_input > 0:
         audio_player.pitch_scale = clampf(SignalBus.throttle_input / 100, 0.5, 3)
 
+    # swerve the bike
+    if !anim_player.is_playing():
+        match input_info['swerve_dir']:
+            "left":
+                # anim_player.play("swerve_left")
+                self.position.x -= 8 * delta
+            "right":
+                # anim_player.play("swerve_right")
+                self.position.x += 8 * delta
 
     # lower the bike down if you're doing a wheelie
     if current_x_angle_deg > 0 && current_x_angle_deg <= 90:
@@ -53,32 +62,26 @@ func _physics_process(delta):
     if current_x_angle_deg > 90:
         finish_up("crash", true, "You looped it!")
         return
-    # landed back down
-    if has_started && SignalBus.score > 200 && current_x_angle_deg < 0:
-        finish_up("stoppie", false, "Run finished!")
-        return
-
-    # swerve the bike
-    if !anim_player.is_playing():
-        # todo: check if we're on the edge of the road, if so crash
-        match input_info['swerve_dir']:
-            "left":
-                # anim_player.play("swerve_left")
-                self.position.x -= 8 * delta
-            "right":
-                # anim_player.play("swerve_right")
-                self.position.x += 8 * delta
-    
-    # print("input_angle: %.1f" % [input_info['input_angle']])
-    # print("current_angle: %.1f" % [current_x_angle_deg])
-    
-    # Actually rotate the bike & send info to SignalBus
-    rotate_point.rotate_x(deg_to_rad(input_info['input_angle']) * 3 * delta)
-    SignalBus.angle_deg = rotate_point.global_rotation_degrees.x
     
     if has_started:
         SignalBus.distance += delta * SignalBus.speed
-        SignalBus.score += roundi((SignalBus.distance * SignalBus.angle_deg) / 100)
+        
+        # landed back down
+        if SignalBus.distance > 400 && current_x_angle_deg < 0:
+            finish_up("stoppie", false, "Run finished!")
+            return
+        
+        # Use time between 75=>90 for bonus
+        if SignalBus.angle_deg >= 75 && current_x_angle_deg <= 90:
+            SignalBus.bonus_time += delta
+
+        # 
+        # Actually rotate the bike & send new angle to SignalBus
+        # 
+        rotate_point.rotate_x(deg_to_rad(input_info['input_angle']) * 3 * delta)
+        SignalBus.angle_deg = rotate_point.global_rotation_degrees.x
+
+
 
 func on_collide(msg: String):
     finish_up("crash", true, msg)
@@ -109,6 +112,7 @@ func _input(event: InputEvent):
     if event is InputEventKey:
         if event.keycode == KEY_ESCAPE:
             Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+            # TODO: if game mode is playing, switch to pause mode
     
     if disable_input:
         return

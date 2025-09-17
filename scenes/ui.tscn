@@ -24,7 +24,6 @@ script = ExtResource("1_nt7q6")
 
 [node name="GamePanel" type="Control" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="Center" type="VBoxContainer" parent="GamePanel"]
@@ -91,11 +90,11 @@ offset_right = 272.0
 grow_vertical = 2
 size_flags_horizontal = 0
 
-[node name="ScoreLabel" type="Label" parent="GamePanel/Left"]
+[node name="BonusTimeLabel" type="Label" parent="GamePanel/Left"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
-text = "ScoreLabel"
+text = "BonusTimeLabel"
 
 [node name="DistanceLabel" type="Label" parent="GamePanel/Left"]
 unique_name_in_owner = true
@@ -147,12 +146,12 @@ grow_vertical = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 
-[node name="MaxScoreLabel" type="Label" parent="UpgradeMenuPanel/VBoxContainer2"]
+[node name="MaxBonusTimeLabel" type="Label" parent="UpgradeMenuPanel/VBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 36
-text = "MaxScoreLabel"
+text = "MaxBonusTimeLabel"
 
 [node name="MaxDistanceLabel" type="Label" parent="UpgradeMenuPanel/VBoxContainer2"]
 unique_name_in_owner = true
@@ -238,7 +237,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 theme_override_font_sizes/font_size = 48
-text = "No Upgrade :c"
+text = "Retry"
 
 [node name="HSeparator4" type="HSeparator" parent="UpgradeMenuPanel/VBoxContainer"]
 layout_mode = 2

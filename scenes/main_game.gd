@@ -13,8 +13,8 @@ var game_state: GameState:
         game_state = val
         switch_game_state(val)
 var motorcycle: Motorcycle
-var max_score: int = 0
 var max_distance: float = 0.0
+var max_bonus_time: float = 0.0
 var max_clean_runs: int = 0
 
 func _ready():
@@ -59,29 +59,32 @@ func on_run_finished(has_crashed: bool, msg: String):
 
     switch_game_state(GameState.RUN_OVER)
     
-    # set score
+    # set stats
     if !has_crashed:
         max_clean_runs += 1
-        if SignalBus.score > max_score:
-            max_score = SignalBus.score
         if SignalBus.distance > max_distance:
             max_distance = SignalBus.distance
+        if SignalBus.bonus_time > max_bonus_time:
+            max_bonus_time = SignalBus.bonus_time
     else:
         max_clean_runs = 0
     
-    SignalBus.score = 0
+    SignalBus.money += (SignalBus.distance * (1 + max_clean_runs)) + (SignalBus.bonus_time)
     SignalBus.distance = 0.0
     SignalBus.throttle_input = 0.0
     SignalBus.angle_deg = 0.0
+    SignalBus.bonus_time = 0.0
+
     ui.set_max_distance_label_text(max_distance)
-    ui.set_max_score_label_text(max_score)
     ui.set_max_clean_runs_label_text(max_clean_runs)
+    ui.set_money_label_text(SignalBus.money)
+    ui.set_max_bonus_time_label_text(max_bonus_time)
 
 func on_upgrade_pressed(num: int):
     print("upgrade " + str(num) + " pressed")
 
 func on_no_upgrade_pressed():
-    # reset score
+    # resets score/stats
     start_run()
 
 func goto_main_menu():
