@@ -44,7 +44,7 @@ var money: float:
         money_updated.emit(val)
 signal money_updated(money: float)
 
-var fuel: float = 10:
+var fuel: float = 10: # default but also look at main_game's reset
     set(val):
         fuel = val
         fuel_updated.emit(val)

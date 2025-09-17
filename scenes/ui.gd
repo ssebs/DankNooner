@@ -56,7 +56,7 @@ func _ready():
     set_money_label_text(0)
     on_bonus_time_updated(0)
     set_max_bonus_time_label_text(0)
-    volume_slider.value = 0.75 # TODO: load from save
+    volume_slider.value = 0.25 # TODO: load from save
 
 func switch_panels(state: MainGame.GameState):
     match state:

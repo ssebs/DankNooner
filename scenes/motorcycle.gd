@@ -10,6 +10,7 @@ signal finished_run(has_crashed: bool, msg: String)
 var gravity = 50
 var disable_input = false
 var has_started = false
+var is_lerping_to_stop = false
 
 func _ready():
     Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -17,10 +18,20 @@ func _ready():
     if !Engine.is_editor_hint():
         audio_player.volume_linear = SignalBus.volume
 
+func lerp_rotation_to_stop():
+    is_lerping_to_stop = true
+
 func _physics_process(delta):
     if disable_input:
         if SignalBus.speed > 0:
             SignalBus.speed -= 5
+        if is_lerping_to_stop:
+            var rot = lerp_angle(deg_to_rad(rotate_point.rotation_degrees.x), deg_to_rad(-1), 0.85)
+            if rot < 0:
+                return
+            rotate_point.rotate_x(-1 * abs(rot * delta))
+            SignalBus.angle_deg = rotate_point.global_rotation_degrees.x
+
         return
     
 
@@ -68,7 +79,8 @@ func _physics_process(delta):
         
         # ran out of gas
         if SignalBus.fuel <= 0:
-            finish_up("RESET", false, "Ran out of gas.")
+            finish_up("regular_stop", false, "Ran out of gas.")
+            return
 
         # landed back down
         if SignalBus.distance > 400 && current_x_angle_deg < 0:
