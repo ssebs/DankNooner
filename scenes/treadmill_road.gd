@@ -73,6 +73,10 @@ func spawn_obstacle(parent_node: Node3D, lane_spawn: Marker3D, is_hazard := fals
         return
     
     var thing = obstacle_scn.instantiate() as Obstacle
+    if thing == null:
+        print("null thing spawn_obstacle")
+        return
+
     if is_hazard:
         thing.variant = randi_range(thing.variant_split_idx, thing.variants.size() - 1)
     else:
