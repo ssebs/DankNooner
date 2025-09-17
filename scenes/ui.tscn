@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://boveos4k30e0d"]
+[gd_scene load_steps=10 format=3 uid="uid://boveos4k30e0d"]
 
 [ext_resource type="Script" uid="uid://byfj6wa0klab3" path="res://scenes/ui.gd" id="1_nt7q6"]
 [ext_resource type="Theme" uid="uid://d15reok7osseo" path="res://resources/theme.tres" id="1_x4jx1"]
@@ -6,6 +6,23 @@
 [ext_resource type="Texture2D" uid="uid://x06baq0f3yui" path="res://assets/img/DanknessMeter.png" id="3_wm3ai"]
 [ext_resource type="Texture2D" uid="uid://cxsdwwhqi4jjd" path="res://assets/img/DanknessArrow.png" id="4_8dubc"]
 [ext_resource type="StyleBox" uid="uid://g4xm0g06mw1c" path="res://resources/green_stylebox_black_border_fill.tres" id="4_wm3ai"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8dubc"]
+bg_color = Color(0, 0.0313726, 0, 1)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_color = Color(0, 0, 0, 1)
+expand_margin_top = 8.0
+expand_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p7vwb"]
+bg_color = Color(0.0705882, 0.694118, 0, 1)
+border_width_left = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0, 0, 0, 1)
+expand_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8dubc"]
 
@@ -24,27 +41,48 @@ script = ExtResource("1_nt7q6")
 
 [node name="GamePanel" type="Control" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="Center" type="VBoxContainer" parent="GamePanel"]
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 13
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -200.0
-offset_top = -92.5
-offset_right = 200.0
-offset_bottom = 92.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_right = 250.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GamePanel/Center"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 20
+
+[node name="FuelLabel" type="Label" parent="GamePanel/Center/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Gas:"
+horizontal_alignment = 1
+
+[node name="FuelProgress" type="ProgressBar" parent="GamePanel/Center/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_styles/background = SubResource("StyleBoxFlat_8dubc")
+theme_override_styles/fill = SubResource("StyleBoxFlat_p7vwb")
+max_value = 10.0
+step = 1.0
+value = 10.0
+rounded = true
 
 [node name="NotifyLabel" type="Label" parent="GamePanel/Center"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 6
 theme_override_font_sizes/font_size = 48
 text = "NOTIFY"
 
@@ -133,6 +171,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_8dubc")
 
 [node name="UpgradeMenuPanel" type="Control" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="UpgradeMenuPanel"]

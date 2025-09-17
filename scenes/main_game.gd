@@ -54,9 +54,8 @@ func start_run():
 ## Note: Motorcycle should queue_free() on it's own
 func on_run_finished(has_crashed: bool, msg: String):
     SignalBus.notify_ui.emit(msg, 5)
-
     switch_game_state(GameState.RUN_OVER)
-    
+
     # set stats
     if !has_crashed:
         SignalBus.upgrade_stats.max_clean_runs += 1
@@ -72,6 +71,8 @@ func on_run_finished(has_crashed: bool, msg: String):
     SignalBus.throttle_input = 0.0
     SignalBus.angle_deg = 0.0
     SignalBus.bonus_time = 0.0
+    SignalBus.fuel = 10 + SignalBus.upgrade_stats.fuel_level
+    ui.fuel_progress.max_value = SignalBus.fuel
 
     ui.set_max_distance_label_text(SignalBus.upgrade_stats.max_distance)
     ui.set_max_clean_runs_label_text(SignalBus.upgrade_stats.max_clean_runs)
