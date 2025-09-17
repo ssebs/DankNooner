@@ -13,6 +13,7 @@ signal notify_finished()
 @onready var max_clean_runs_label: Label = %MaxCleanRunsLabel
 @onready var money_label: Label = %MoneyLabel
 @onready var throttle_progress: ProgressBar = %ThrottleProgress
+@onready var fuel_progress: ProgressBar = %FuelProgress
 
 @onready var game_panel: Control = %GamePanel
 @onready var main_menu_panel: Control = %MainMenuPanel
@@ -40,12 +41,14 @@ func _ready():
     SignalBus.throttle_updated.connect(on_throttle_updated)
     SignalBus.distance_updated.connect(set_distance_label_text)
     SignalBus.bonus_time_updated.connect(on_bonus_time_updated)
+    SignalBus.fuel_updated.connect(on_fuel_updated)
     
     volume_slider.value_changed.connect(on_volume_changed)
 
     # Defaults
     notify_label.text = ""
     throttle_progress.value = 0
+    fuel_progress.value = 100
 
     set_distance_label_text(0)
     set_max_distance_label_text(0)
@@ -96,6 +99,25 @@ func on_throttle_updated(pct: float):
     var new_stylebox: StyleBoxFlat = throttle_progress.get_theme_stylebox("fill").duplicate()
     new_stylebox.bg_color = color
     throttle_progress.add_theme_stylebox_override('fill', new_stylebox)
+
+func on_fuel_updated(val: float):
+    fuel_progress.value = val
+    # var pct := val / fuel_progress.max_value
+
+    # # Set color from val
+    # var color: Color
+    # if pct <= 50:
+    #     # From yellow (50) to red (90)
+    #     var t = pct / 50.0
+    #     color = Color.RED.lerp(Color.YELLOW, t)
+    # else:
+    #     # From green (0) to yellow (50)
+    #     var t = (pct - 50.0) / 50.0
+    #     color = Color.YELLOW.lerp(Color.hex(0x12b100ff), t)
+
+    # var new_stylebox: StyleBoxFlat = fuel_progress.get_theme_stylebox("fill").duplicate()
+    # new_stylebox.bg_color = color
+    # fuel_progress.add_theme_stylebox_override('fill', new_stylebox)
 
 func on_angle_updated(angle_deg: float):
     angle_texture.rotation_degrees = 90 - angle_deg
