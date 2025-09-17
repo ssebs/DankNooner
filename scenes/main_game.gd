@@ -30,6 +30,7 @@ func _ready():
     ui.main_menu_btn.pressed.connect(goto_main_menu)
     ui.upgrade_1_btn.pressed.connect(func():
         on_upgrade_pressed(1)
+        # do something with upgrade_stats
     )
     ui.upgrade_2_btn.pressed.connect(func():
         on_upgrade_pressed(2)
