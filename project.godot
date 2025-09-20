@@ -12,9 +12,9 @@ config_version=5
 
 config/name="DankNooner"
 run/main_scene="uid://bt8t0gafmsf2w"
-config/features=PackedStringArray("4.4", "Mobile")
+config/features=PackedStringArray("4.5", "Mobile")
 boot_splash/show_image=false
-config/icon="res://icon.svg"
+config/icon="uid://dgj31bfxs2ql6"
 
 [autoload]
 
@@ -66,3 +66,4 @@ emote={
 [rendering]
 
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true

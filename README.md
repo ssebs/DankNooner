@@ -22,8 +22,8 @@ Gameplay:
 - [x] add randomness to balance
 - [x] avoid traffic on highway by switching lanes
 - [x] other hazards (speed bump, gravel, oil slick, etc.)
+- [x] gas can run out
 - [ ] add gears
-- [ ] gas can run out
 
 Misc:
 - [ ] sfx at 1mi (dank nooner brah, siiiick, etc.)
