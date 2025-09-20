@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://x06baq0f3yui"
-path="res://.godot/imported/DanknessMeter.png-6ab75202342d25cf5c4fd85af935a93b.ctex"
+uid="uid://6cmxa1f0wohy"
+path="res://.godot/imported/motorcycle.svg-35fdfd38e5b386da71f4ab4f25d4f9a5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/img/DanknessMeter.png"
-dest_files=["res://.godot/imported/DanknessMeter.png-6ab75202342d25cf5c4fd85af935a93b.ctex"]
+source_file="res://img/motorcycle.svg"
+dest_files=["res://.godot/imported/motorcycle.svg-35fdfd38e5b386da71f4ab4f25d4f9a5.ctex"]
 
 [params]
 
@@ -38,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

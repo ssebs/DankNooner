@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://boveos4k30e0d"]
+[gd_scene load_steps=11 format=3 uid="uid://boveos4k30e0d"]
 
 [ext_resource type="Script" uid="uid://byfj6wa0klab3" path="res://scenes/ui.gd" id="1_nt7q6"]
 [ext_resource type="Theme" uid="uid://d15reok7osseo" path="res://resources/theme.tres" id="1_x4jx1"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://x06baq0f3yui" path="res://assets/img/DanknessMeter.png" id="3_wm3ai"]
 [ext_resource type="Texture2D" uid="uid://cxsdwwhqi4jjd" path="res://assets/img/DanknessArrow.png" id="4_8dubc"]
 [ext_resource type="StyleBox" uid="uid://g4xm0g06mw1c" path="res://resources/green_stylebox_black_border_fill.tres" id="4_wm3ai"]
+[ext_resource type="Texture2D" uid="uid://c4l51uj4lica7" path="res://img/LogoNoBG.png" id="7_p7vwb"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8dubc"]
 bg_color = Color(0, 0.0313726, 0, 1)
@@ -41,6 +42,7 @@ script = ExtResource("1_nt7q6")
 
 [node name="GamePanel" type="Control" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="Center" type="VBoxContainer" parent="GamePanel"]
@@ -87,7 +89,7 @@ theme_override_font_sizes/font_size = 48
 text = "NOTIFY"
 
 [node name="Right" type="VBoxContainer" parent="GamePanel"]
-layout_mode = 2
+layout_mode = 0
 offset_left = 1159.0
 offset_right = 1440.0
 offset_bottom = 740.0
@@ -308,7 +310,6 @@ text = "Quit Game"
 
 [node name="MainMenuPanel" type="Control" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="TitleContainer" type="VBoxContainer" parent="MainMenuPanel"]
@@ -316,7 +317,15 @@ layout_mode = 1
 offset_right = 688.0
 offset_bottom = 185.0
 
+[node name="TextureRect" type="TextureRect" parent="MainMenuPanel/TitleContainer"]
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 2
+texture = ExtResource("7_p7vwb")
+expand_mode = 1
+stretch_mode = 4
+
 [node name="Title" type="Label" parent="MainMenuPanel/TitleContainer"]
+visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 96
 text = "Dank Nooner"
@@ -328,7 +337,7 @@ theme_override_font_sizes/font_size = 48
 text = "How long can you balance a wheelie?"
 
 [node name="BtnContainer" type="VBoxContainer" parent="MainMenuPanel"]
-layout_mode = 2
+layout_mode = 0
 offset_top = 436.0
 offset_right = 400.0
 offset_bottom = 740.0

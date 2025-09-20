@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://x06baq0f3yui"
-path="res://.godot/imported/DanknessMeter.png-6ab75202342d25cf5c4fd85af935a93b.ctex"
+uid="uid://dgj31bfxs2ql6"
+path="res://.godot/imported/Logo.png-e5d3c815ff0119fdde9f6af849f43d99.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/img/DanknessMeter.png"
-dest_files=["res://.godot/imported/DanknessMeter.png-6ab75202342d25cf5c4fd85af935a93b.ctex"]
+source_file="res://img/Logo.png"
+dest_files=["res://.godot/imported/Logo.png-e5d3c815ff0119fdde9f6af849f43d99.ctex"]
 
 [params]
 
