@@ -29,6 +29,7 @@ Misc:
 - [ ] sfx at 1mi (dank nooner brah, siiiick, etc.)
 - [x] main menu
 - [x] working volume
+- [ ] android support
 
 Upgrades:
 - [ ] Increase fuel
