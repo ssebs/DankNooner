@@ -1,6 +1,9 @@
 extends Node
 
+# TODO: load from disk
 @export var upgrade_stats: UpgradeStatsRes = preload("res://resources/default_upgrade_stats.tres")
+
+var ui: UI
 
 var angle_deg: float:
     set(val):

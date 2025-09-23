@@ -45,6 +45,8 @@ Pickups:
 
 Bugs:
 - [ ] Web export [see](https://forum.godotengine.org/t/mouse-jumps-on-exported-web-build/57385)
+- [ ] Force road items to despawn on new run
+  - [ ] also don't spawn items in player
 
 Out of scope:
 - avoid cops?

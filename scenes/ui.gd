@@ -14,6 +14,10 @@ signal notify_finished()
 @onready var money_label: Label = %MoneyLabel
 @onready var throttle_progress: ProgressBar = %ThrottleProgress
 @onready var fuel_progress: ProgressBar = %FuelProgress
+@onready var boosts_remaining: Label = %BoostsRemaining
+@onready var fuel_upgrade_level: Label = %FuelUpgradeLevel
+@onready var max_speed_upgrade_level: Label = %MaxSpeedUpgradeLevel
+@onready var speed_boost_upgrade_level: Label = %SpeedBoostUpgradeLevel
 
 @onready var game_panel: Control = %GamePanel
 @onready var main_menu_panel: Control = %MainMenuPanel
@@ -56,7 +60,13 @@ func _ready():
     set_money_label_text(0)
     on_bonus_time_updated(0)
     set_max_bonus_time_label_text(0)
+    set_boosts_remaining_label_text(0)
+    set_fuel_upgrade_label_text(UpgradeStatsRes.Level.LOW)
+    set_max_speed_upgrade_label_text(UpgradeStatsRes.Level.LOW)
+    set_speed_boost_upgrade_label_text(UpgradeStatsRes.Level.LOW)
     volume_slider.value = 0.25 # TODO: load from save
+
+    SignalBus.ui = self
 
 func switch_panels(state: MainGame.GameState):
     match state:
@@ -150,4 +160,16 @@ func set_max_clean_runs_label_text(clean_runs: int):
 
 func set_money_label_text(money: float):
     money_label.text = "Money: $%.2f" % money
+
+func set_boosts_remaining_label_text(count: int):
+    # TODO: make icons instead
+    boosts_remaining.text = "Boosts: %d" % count
+
+func set_fuel_upgrade_label_text(level: UpgradeStatsRes.Level):
+    fuel_upgrade_level.text = "Fuel Upgrade Level: %d" % level
+func set_max_speed_upgrade_label_text(level: UpgradeStatsRes.Level):
+    max_speed_upgrade_level.text = "Max Speed Upgrade Level: %d" % level
+func set_speed_boost_upgrade_label_text(level: UpgradeStatsRes.Level):
+    speed_boost_upgrade_level.text = "Speed Boost Upgrade Level: %d" % level
+
 #endregion

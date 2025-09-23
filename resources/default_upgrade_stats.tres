@@ -4,13 +4,3 @@
 
 [resource]
 script = ExtResource("1_xhfxy")
-fuel_level = 0
-speed_level = 0
-armor_level = 0
-unlocked_tricks = {
-"BACKFLIP": false,
-"BUNNY_HOP": false,
-"FRONTFLIP": false,
-"NOLLIE_LAZERFLIP": false
-}
-metadata/_custom_type_script = "uid://cjr4x6yj37qnt"
