@@ -20,6 +20,36 @@ func _ready():
     if !Engine.is_editor_hint():
         audio_player.volume_linear = SignalBus.volume
 
+#region input
+# capture window + set throttle input
+func _input(event: InputEvent):
+    # Capture/uncapture the mouse w/ click/escape
+    if event is InputEventMouseButton:
+        if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
+            if !disable_input:
+                Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+        if !has_started:
+            has_started = true
+            audio_player.play()
+
+    if event is InputEventKey:
+        if event.keycode == KEY_ESCAPE:
+            Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+            # TODO: if game mode is playing, switch to pause mode
+        else:
+            if !has_started:
+                has_started = true
+                audio_player.play()
+    
+    if disable_input:
+        return
+
+    # Set throttle input
+    if event is InputEventMouseMotion:
+        if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+            SignalBus.throttle_input -= event.relative.y    
+
+#endregion
 
 func _physics_process(delta):
     # RPM Audio Pitch
@@ -44,12 +74,23 @@ func _physics_process(delta):
         'swerve_dir': "", # "", left, right
     }
 
-    if !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+    if !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && !Input.is_action_pressed("lean_forward"):
         SignalBus.throttle_input = lerpf(SignalBus.throttle_input, 0, 5 * delta)
     else:
         SignalBus.throttle_input += randf_range(-2.5, 2.5)
     
-    input_info = handle_user_input(input_info)
+    if Input.is_action_pressed("lean_forward"):
+        SignalBus.throttle_input += 6.9
+
+    if Input.is_action_pressed("lean_left"):
+        input_info['swerve_dir'] = "left"
+    elif Input.is_action_pressed("lean_right"):
+        input_info['swerve_dir'] = "right"
+
+    input_info['input_angle'] = SignalBus.throttle_input
+    if Input.is_action_pressed("brake"):
+        input_info['input_angle'] = -80
+
     SignalBus.speed = clampf(SignalBus.speed * SignalBus.throttle_input, 1, 180)
 
     # Gameplay stuff
@@ -114,49 +155,3 @@ func do_rotate(deg: float, delta: float):
 ## used in `regular_stop` animation
 func lerp_rotation_to_stop():
     is_lerping_to_stop = true
-
-#region input
-# capture window + set throttle input
-func _input(event: InputEvent):
-    # Capture/uncapture the mouse w/ click/escape
-    if event is InputEventMouseButton:
-        if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
-            if !disable_input:
-                Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-        if !has_started:
-            has_started = true
-            audio_player.play()
-
-    if event is InputEventKey:
-        if event.keycode == KEY_ESCAPE:
-            Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-            # TODO: if game mode is playing, switch to pause mode
-    
-    if disable_input:
-        return
-
-    # Set throttle input
-    if event is InputEventMouseMotion:
-        if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-            SignalBus.throttle_input += -1 * event.relative.y
-            
-            # print("Mouse Motion rel: ", event.relative)
-
-# Uses input_info's dictionary & throttle_input
-func handle_user_input(ret: Dictionary) -> Dictionary:
-    if Input.is_action_pressed("lean_back"):
-        ret['input_angle'] += 1
-    elif Input.is_action_pressed("lean_forward"):
-        ret['input_angle'] -= 1
-    
-    if Input.is_action_pressed("lean_left"):
-        ret['swerve_dir'] = "left"
-    elif Input.is_action_pressed("lean_right"):
-        ret['swerve_dir'] = "right"
-
-    ret['input_angle'] = SignalBus.throttle_input
-    if Input.is_action_pressed("brake"):
-        ret['input_angle'] = -80
-    
-    return ret
-#endregion
