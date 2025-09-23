@@ -57,9 +57,11 @@ func _physics_process(delta):
         # Spawn obstacles when a piece cycles
         var current_spawn_chance = spawn_chance_base * difficulty_modifier
         if randf() < current_spawn_chance:
-            spawn_obstacle(first_piece, lane1_spawn if randi() % 2 == 0 else lane2_spawn, false)
+            var is_left_lane := randi() % 2 == 0
+            spawn_obstacle(first_piece, lane1_spawn if is_left_lane else lane2_spawn, false, !is_left_lane)
         
         if randf() < current_spawn_chance:
+            # TODO: random chance to spawn pickup
             spawn_obstacle(first_piece, hazard_spawn, true)
         
         # clear old obstacles
@@ -67,7 +69,7 @@ func _physics_process(delta):
             if child is Obstacle:
                 child.queue_free()
 
-func spawn_obstacle(parent_node: Node3D, lane_spawn: Marker3D, is_hazard := false):
+func spawn_obstacle(parent_node: Node3D, lane_spawn: Marker3D, is_hazard := false, should_flip := false):
     if lane_spawn == null || obstacle_scn == null || Engine.is_editor_hint():
         print('something is null spawn_obstacle')
         return
@@ -78,4 +80,6 @@ func spawn_obstacle(parent_node: Node3D, lane_spawn: Marker3D, is_hazard := fals
     else:
         thing.variant = randi_range(0, thing.variant_split_idx)
     thing.global_position = lane_spawn.global_position
+    if should_flip:
+        thing.rotate_y(deg_to_rad(180))
     parent_node.add_child(thing)
