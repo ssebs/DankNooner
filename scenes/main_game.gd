@@ -49,7 +49,7 @@ func start_run():
     motorcycle.camera.make_current()
     switch_game_state(GameState.PLAYING)
     motorcycle.finished_run.connect(on_run_finished)
-    SignalBus.notify_ui.emit("Click & drag your mouse to pop a wheelie!", 2)
+    SignalBus.notify_ui.emit("Click & drag your mouse to pop a wheelie!\nOr use WASD...", 2)
 
 ## Note: Motorcycle should queue_free() on it's own
 func on_run_finished(has_crashed: bool, msg: String):

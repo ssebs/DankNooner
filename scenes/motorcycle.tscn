@@ -74,6 +74,24 @@ tracks/1/keys = {
 "values": [Vector3(1.58825, 0, 0), Vector3(0.775467, 2.46378, 3.14159), Vector3(0.260054, 2.85536, 3.14159), Vector3(-0.0667542, 1.01473, -1.82239)]
 }
 
+[sub_resource type="Animation" id="Animation_ca4ax"]
+resource_name = "regular_stop"
+length = 2.0
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.0333333),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"lerp_rotation_to_stop"
+}]
+}
+
 [sub_resource type="Animation" id="Animation_8lv88"]
 resource_name = "stoppie"
 length = 2.0
@@ -146,24 +164,6 @@ tracks/0/keys = {
 "values": [Vector3(0, 0, 0), Vector3(0, 0, -0.436332), Vector3(0, 0, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_ca4ax"]
-resource_name = "regular_stop"
-length = 2.0
-tracks/0/type = "method"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.0333333),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": [],
-"method": &"lerp_rotation_to_stop"
-}]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_804uw"]
 _data = {
 &"RESET": SubResource("Animation_41a0n"),
@@ -203,3 +203,6 @@ transform = Transform3D(0.807497, -0.0657308, 0.586198, -6.0536e-09, 0.993772, 0
 
 [node name="Marker3D" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.743679)
+
+[node name="SpeedBoostTimer" type="Timer" parent="."]
+unique_name_in_owner = true
