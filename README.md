@@ -33,8 +33,8 @@ Misc:
 
 Upgrades:
 - [x] Increase speed boost count
-- [ ] Increase fuel
-- [ ] Increase max speed
+- [x] Increase fuel
+- [x] Increase max speed
 - [ ] Use up $
 - [ ] Armour (allow 1-3 hits)
 - [ ] Other tricks (360, flip)?
