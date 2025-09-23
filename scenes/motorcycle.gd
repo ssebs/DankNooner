@@ -14,14 +14,19 @@ var gravity = 50
 var disable_input = false
 var has_started = false
 var is_lerping_to_stop = false
+var speed_boosts_remaining: int
 
 func _ready():
     Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
     SignalBus.motorcycle_collision.connect(func(msg: String):
         finish_up("crash", true, msg)
     )
+
+    speed_boosts_remaining = SignalBus.upgrade_stats.speed_boost_level
+
     if !Engine.is_editor_hint():
         audio_player.volume_linear = SignalBus.volume
+        SignalBus.ui.set_boosts_remaining_label_text(speed_boosts_remaining)
 
 #region input
 # capture window + set throttle input
@@ -53,9 +58,6 @@ func _input(event: InputEvent):
             SignalBus.throttle_input -= event.relative.y
 
 #endregion
-
-
-
 
 func _physics_process(delta):
     # RPM Audio Pitch
@@ -89,7 +91,10 @@ func _physics_process(delta):
         SignalBus.throttle_input += 6.9
 
     if Input.is_action_just_pressed("boost"):
-        do_speed_boost(100, 2)
+        if speed_boosts_remaining > 0 && speed_boost_timer.time_left == 0:
+            do_speed_boost(SignalBus.upgrade_stats.speed_boost_level * 10, 3)
+            speed_boosts_remaining -= 1
+            SignalBus.ui.set_boosts_remaining_label_text(speed_boosts_remaining)
 
     if Input.is_action_pressed("lean_left"):
         input_info['swerve_dir'] = "left"

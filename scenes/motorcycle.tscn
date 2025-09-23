@@ -76,7 +76,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Animation_ca4ax"]
 resource_name = "regular_stop"
-length = 2.0
 tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
