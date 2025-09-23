@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://c5luuvbq5nggv"]
+[gd_scene load_steps=4 format=3 uid="uid://c5luuvbq5nggv"]
 
 [ext_resource type="Script" uid="uid://ci6jiokxqafxm" path="res://scenes/obstacle.gd" id="1_7ukg5"]
 [ext_resource type="Shape3D" uid="uid://cq07spmpfekm5" path="res://resources/hazard_hacky_obstacle_shape.tres" id="2_drdry"]
+[ext_resource type="PackedScene" uid="uid://cbg4d5yqrhfff" path="res://assets/misc/Gas can.glb" id="3_cjuko"]
 
 [node name="Obstacle" type="Area3D"]
 script = ExtResource("1_7ukg5")
@@ -16,3 +17,6 @@ shape = ExtResource("2_drdry")
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 15.0
+
+[node name="Gas can" parent="." instance=ExtResource("3_cjuko")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 135, 150, 245)

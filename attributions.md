@@ -10,3 +10,4 @@
 - Car by Quaternius (https://poly.pizza/m/unqqkULtRU)
 - Traffic Cone by Quaternius (https://poly.pizza/m/lAx8JytxGD)
 - Wood Planks by Quaternius (https://poly.pizza/m/hwQ1Fx5P8U)
+- Gas can by Poly by Google [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/bOjbK_rGqRA)
