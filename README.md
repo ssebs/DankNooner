@@ -32,11 +32,11 @@ Misc:
 - [ ] android support
 
 Upgrades:
+- [x] Increase speed boost count
 - [ ] Increase fuel
-- [ ] Increase speed
+- [ ] Increase max speed
+- [ ] Use up $
 - [ ] Armour (allow 1-3 hits)
-- [ ] Unlock the pickups?
-- [ ] Pickups spawn rate?
 - [ ] Other tricks (360, flip)?
 
 Pickups:
