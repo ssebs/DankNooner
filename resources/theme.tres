@@ -1,8 +1,40 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://d15reok7osseo"]
+[gd_resource type="Theme" load_steps=4 format=3 uid="uid://d15reok7osseo"]
 
 [ext_resource type="FontFile" uid="uid://bbcto8fdm7jbd" path="res://assets/MetalMania-Regular.ttf" id="1_d4nwg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d4nwg"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.75)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ct1h"]
 
 [resource]
 default_font = ExtResource("1_d4nwg")
 default_font_size = 24
-Label/constants/outline_size = 12
+Label/colors/font_color = Color(0, 0, 0, 1)
+Label/colors/font_outline_color = Color(1, 1, 1, 1)
+Label/colors/font_shadow_color = Color(0, 0, 0, 0)
+Label/constants/line_spacing = 3
+Label/constants/outline_size = 4
+Label/constants/shadow_offset_x = 1
+Label/constants/shadow_offset_y = 1
+Label/constants/shadow_outline_size = 1
+Label/styles/focus = SubResource("StyleBoxFlat_d4nwg")
+Label/styles/normal = SubResource("StyleBoxEmpty_7ct1h")

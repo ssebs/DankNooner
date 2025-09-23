@@ -173,7 +173,6 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_8dubc")
 
 [node name="UpgradeMenuPanel" type="Control" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="UpgradeMenuPanel"]
@@ -272,7 +271,7 @@ layout_mode = 2
 theme_override_constants/separation = 20
 theme_override_styles/separator = SubResource("StyleBoxEmpty_8dubc")
 
-[node name="NoUpgradeBtn" type="Button" parent="UpgradeMenuPanel/VBoxContainer"]
+[node name="RetryBtn" type="Button" parent="UpgradeMenuPanel/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 150)
 layout_mode = 2
@@ -310,29 +309,25 @@ text = "Quit Game"
 
 [node name="MainMenuPanel" type="Control" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
-[node name="TitleContainer" type="VBoxContainer" parent="MainMenuPanel"]
+[node name="TitleContainer" type="HBoxContainer" parent="MainMenuPanel"]
 layout_mode = 1
-offset_right = 688.0
-offset_bottom = 185.0
+offset_right = 1022.0
+offset_bottom = 365.0
+theme_override_constants/separation = 34
 
 [node name="TextureRect" type="TextureRect" parent="MainMenuPanel/TitleContainer"]
 custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
+size_flags_vertical = 0
 texture = ExtResource("7_p7vwb")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="Title" type="Label" parent="MainMenuPanel/TitleContainer"]
-visible = false
-layout_mode = 2
-theme_override_font_sizes/font_size = 96
-text = "Dank Nooner"
-
 [node name="Title2" type="Label" parent="MainMenuPanel/TitleContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.683077, 0.683077, 0.683077, 1)
 theme_override_font_sizes/font_size = 48
 text = "How long can you balance a wheelie?"
 
