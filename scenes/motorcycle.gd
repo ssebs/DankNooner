@@ -2,7 +2,7 @@ class_name Motorcycle extends AnimatableBody3D
 
 signal finished_run(has_crashed: bool, msg: String)
 
-@export var max_speed: float = 140 # to be increased by upgrades
+@export var max_speed: float = 180 # to be increased by upgrades
 
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var rotate_point: Node3D = %RotatePoint
@@ -23,6 +23,8 @@ func _ready():
     )
 
     speed_boosts_remaining = SignalBus.upgrade_stats.speed_boost_level
+    SignalBus.fuel = SignalBus.upgrade_stats.fuel_level * 10
+    SignalBus.ui.fuel_progress.max_value = SignalBus.fuel
 
     if !Engine.is_editor_hint():
         audio_player.volume_linear = SignalBus.volume
@@ -92,7 +94,7 @@ func _physics_process(delta):
 
     if Input.is_action_just_pressed("boost"):
         if speed_boosts_remaining > 0 && speed_boost_timer.time_left == 0:
-            do_speed_boost(SignalBus.upgrade_stats.speed_boost_level * 10, 3)
+            do_speed_boost(SignalBus.upgrade_stats.speed_boost_level * 20, 3)
             speed_boosts_remaining -= 1
             SignalBus.ui.set_boosts_remaining_label_text(speed_boosts_remaining)
 
@@ -122,8 +124,8 @@ func _physics_process(delta):
             finish_up("stoppie", false, "Run finished!")
             return
         
-        # Use time between 75=>90 for bonus
-        if SignalBus.angle_deg >= 75 && current_x_angle_deg <= 90:
+        # Use time between 69=>90 for bonus
+        if SignalBus.angle_deg >= 69 && current_x_angle_deg <= 90:
             SignalBus.bonus_time += delta
 
         # lower the bike down if you're doing a wheelie

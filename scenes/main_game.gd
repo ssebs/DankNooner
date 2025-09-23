@@ -34,6 +34,7 @@ func _ready():
 func on_upgrade_1_pressed():
     print("Boost count upgrade")
     if SignalBus.upgrade_stats.speed_boost_level < UpgradeStatsRes.Level.HIGH:
+        # TODO: Check & subtract $$$
         # += doesn't cast properly, according to the linter B)
         var new_val = SignalBus.upgrade_stats.speed_boost_level + 1
         SignalBus.upgrade_stats.speed_boost_level = new_val as UpgradeStatsRes.Level
@@ -45,9 +46,18 @@ func on_upgrade_1_pressed():
     
 func on_upgrade_2_pressed():
     print("Max Speed Upgrade")
-    
+
 func on_upgrade_3_pressed():
     print("Max Gas Upgrade")
+    if SignalBus.upgrade_stats.fuel_level < UpgradeStatsRes.Level.HIGH:
+        # TODO: Check & subtract $$$
+        var new_val = SignalBus.upgrade_stats.fuel_level + 1
+        SignalBus.upgrade_stats.fuel_level = new_val as UpgradeStatsRes.Level
+
+        ui.set_fuel_upgrade_label_text(SignalBus.upgrade_stats.fuel_level)
+
+    if SignalBus.upgrade_stats.fuel_level >= UpgradeStatsRes.Level.HIGH:
+        ui.upgrade_3_btn.disabled = true
 
 ## Spawn Motorcycle, add child, set cam, switch game state, conn finished_run signal
 func start_run():
@@ -85,8 +95,6 @@ func reset_stats():
     SignalBus.throttle_input = 0.0
     SignalBus.angle_deg = 0.0
     SignalBus.bonus_time = 0.0
-    SignalBus.fuel = 10 + SignalBus.upgrade_stats.fuel_level
-    ui.fuel_progress.max_value = SignalBus.fuel
 
     ui.set_max_distance_label_text(SignalBus.upgrade_stats.max_distance)
     ui.set_max_clean_runs_label_text(SignalBus.upgrade_stats.max_clean_runs)
