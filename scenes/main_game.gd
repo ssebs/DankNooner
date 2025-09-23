@@ -26,7 +26,7 @@ func _ready():
     ui.quit_btn_upgrade_menu.pressed.connect(func():
         get_tree().quit(0)
     )
-    ui.no_upgrade_btn.pressed.connect(on_no_upgrade_pressed)
+    ui.retry_btn.pressed.connect(on_retry_pressed)
     ui.main_menu_btn.pressed.connect(goto_main_menu)
     ui.upgrade_1_btn.pressed.connect(func():
         on_upgrade_pressed(1)
@@ -82,7 +82,7 @@ func on_run_finished(has_crashed: bool, msg: String):
 func on_upgrade_pressed(num: int):
     print("upgrade " + str(num) + " pressed")
 
-func on_no_upgrade_pressed():
+func on_retry_pressed():
     # resets score/stats
     start_run()
 

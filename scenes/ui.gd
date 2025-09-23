@@ -27,7 +27,7 @@ signal notify_finished()
 
 # upgrade menu
 @onready var quit_btn_upgrade_menu: Button = %QuitBtn2
-@onready var no_upgrade_btn: Button = %NoUpgradeBtn
+@onready var retry_btn: Button = %RetryBtn
 @onready var main_menu_btn: Button = %MainMenuBtn
 @onready var upgrade_1_btn: Button = %Upgrade1Btn
 @onready var upgrade_2_btn: Button = %Upgrade2Btn
