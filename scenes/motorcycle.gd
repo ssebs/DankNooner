@@ -14,22 +14,28 @@ var is_lerping_to_stop = false
 
 func _ready():
     Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-    SignalBus.motorcycle_collision.connect(on_collide)
+    SignalBus.motorcycle_collision.connect(func(msg: String):
+        finish_up("crash", true, msg)
+    )
     if !Engine.is_editor_hint():
         audio_player.volume_linear = SignalBus.volume
 
-func lerp_rotation_to_stop():
-    is_lerping_to_stop = true
 
 func _physics_process(delta):
+    # RPM Audio Pitch
+    if SignalBus.throttle_input > 0:
+        audio_player.pitch_scale = clampf(SignalBus.throttle_input / 100, 0.5, 3)
+    
+    # During crash / stoppie / end run
     if disable_input:
         if SignalBus.speed > 0:
             SignalBus.speed -= 5
+            SignalBus.throttle_input -= 5
         if is_lerping_to_stop:
             if SignalBus.angle_deg > 0:
                 do_rotate(-gravity, delta)
         return
-    
+
 
     # Get & clean user inputs
     var current_x_angle_deg = rotate_point.global_rotation_degrees.x
@@ -46,29 +52,7 @@ func _physics_process(delta):
     input_info = handle_user_input(input_info)
     SignalBus.speed = clampf(SignalBus.speed * SignalBus.throttle_input, 1, 180)
 
-    # RPM Audio Pitch
-    if SignalBus.throttle_input > 0:
-        audio_player.pitch_scale = clampf(SignalBus.throttle_input / 100, 0.5, 3)
-
-    # swerve the bike
-    if !anim_player.is_playing():
-        match input_info['swerve_dir']:
-            "left":
-                # anim_player.play("swerve_left")
-                self.position.x -= 8 * delta
-            "right":
-                # anim_player.play("swerve_right")
-                self.position.x += 8 * delta
-
-    # lower the bike down if you're doing a wheelie
-    if current_x_angle_deg > 0 && current_x_angle_deg <= 90:
-        input_info['input_angle'] -= gravity
-
-    # looped the bike
-    if current_x_angle_deg > 90:
-        finish_up("crash", true, "You looped it!")
-        return
-    
+    # Gameplay stuff
     if has_started:
         SignalBus.distance += delta * SignalBus.speed
         SignalBus.fuel -= delta
@@ -87,14 +71,31 @@ func _physics_process(delta):
         if SignalBus.angle_deg >= 75 && current_x_angle_deg <= 90:
             SignalBus.bonus_time += delta
 
+        # lower the bike down if you're doing a wheelie
+        if current_x_angle_deg > 0 && current_x_angle_deg <= 90:
+            input_info['input_angle'] -= gravity
+ 
+        # looped the bike
+        if current_x_angle_deg > 90:
+            finish_up("crash", true, "You looped it!")
+            return
+        
+        # turn the bike
+        if !anim_player.is_playing():
+            match input_info['swerve_dir']:
+                "left":
+                    # anim_player.play("swerve_left")
+                    self.position.x -= 8 * delta
+                "right":
+                    # anim_player.play("swerve_right")
+                    self.position.x += 8 * delta
+
         # 
         # Actually rotate the bike & send new angle to SignalBus
         # 
         do_rotate(input_info['input_angle'], delta)
 
-func on_collide(msg: String):
-    finish_up("crash", true, msg)
-
+#region gameplay stuff
 func finish_up(anim_name: String = "", has_crashed: bool = false, msg: String = ''):
     disable_input = true
     Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -108,6 +109,11 @@ func finish_up(anim_name: String = "", has_crashed: bool = false, msg: String = 
 func do_rotate(deg: float, delta: float):
     rotate_point.rotate_x(deg_to_rad(deg) * 3 * delta)
     SignalBus.angle_deg = rotate_point.global_rotation_degrees.x
+#endregion
+
+## used in `regular_stop` animation
+func lerp_rotation_to_stop():
+    is_lerping_to_stop = true
 
 #region input
 # capture window + set throttle input
