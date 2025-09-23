@@ -330,12 +330,12 @@ grow_vertical = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 
-[node name="FuelUpgradeLevel" type="Label" parent="UpgradeMenuPanel/VBoxContainer3"]
+[node name="SpeedBoostUpgradeLevel" type="Label" parent="UpgradeMenuPanel/VBoxContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 36
-text = "Fuel Upgrade Level:"
+text = "Speed Boost Upgrade Level:"
 horizontal_alignment = 2
 
 [node name="MaxSpeedUpgradeLevel" type="Label" parent="UpgradeMenuPanel/VBoxContainer3"]
@@ -346,12 +346,12 @@ theme_override_font_sizes/font_size = 36
 text = "Max Speed Upgrade Level:"
 horizontal_alignment = 2
 
-[node name="SpeedBoostUpgradeLevel" type="Label" parent="UpgradeMenuPanel/VBoxContainer3"]
+[node name="FuelUpgradeLevel" type="Label" parent="UpgradeMenuPanel/VBoxContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 36
-text = "Speed Boost Upgrade Level:"
+text = "Fuel Upgrade Level:"
 horizontal_alignment = 2
 
 [node name="MainMenuPanel" type="Control" parent="."]
