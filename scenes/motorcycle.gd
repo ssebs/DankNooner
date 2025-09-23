@@ -26,12 +26,8 @@ func _physics_process(delta):
         if SignalBus.speed > 0:
             SignalBus.speed -= 5
         if is_lerping_to_stop:
-            var rot = lerp_angle(deg_to_rad(rotate_point.rotation_degrees.x), deg_to_rad(-1), 0.85)
-            if rot < 0:
-                return
-            rotate_point.rotate_x(-1 * abs(rot * delta))
-            SignalBus.angle_deg = rotate_point.global_rotation_degrees.x
-
+            if SignalBus.angle_deg > 0:
+                do_rotate(-gravity, delta)
         return
     
 
@@ -94,9 +90,7 @@ func _physics_process(delta):
         # 
         # Actually rotate the bike & send new angle to SignalBus
         # 
-        rotate_point.rotate_x(deg_to_rad(input_info['input_angle']) * 3 * delta)
-        SignalBus.angle_deg = rotate_point.global_rotation_degrees.x
-
+        do_rotate(input_info['input_angle'], delta)
 
 func on_collide(msg: String):
     finish_up("crash", true, msg)
@@ -111,6 +105,9 @@ func finish_up(anim_name: String = "", has_crashed: bool = false, msg: String = 
     if anim_name != "":
         anim_player.play(anim_name)
 
+func do_rotate(deg: float, delta: float):
+    rotate_point.rotate_x(deg_to_rad(deg) * 3 * delta)
+    SignalBus.angle_deg = rotate_point.global_rotation_degrees.x
 
 #region input
 # capture window + set throttle input
