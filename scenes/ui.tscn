@@ -247,16 +247,16 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 150)
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
-text = "UPGRADE_1
-$3"
+text = "+1 Speed Boost
+$600"
 
 [node name="Upgrade2Btn" type="Button" parent="UpgradeMenuPanel/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 150)
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
-text = "UPGRADE_2
-$500"
+text = "+50 Max Speed 
+$1500"
 
 [node name="Upgrade3Btn" type="Button" parent="UpgradeMenuPanel/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true

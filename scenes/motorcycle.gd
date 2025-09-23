@@ -2,10 +2,13 @@ class_name Motorcycle extends AnimatableBody3D
 
 signal finished_run(has_crashed: bool, msg: String)
 
+@export var max_speed: float = 140 # to be increased by upgrades
+
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var rotate_point: Node3D = %RotatePoint
 @onready var camera: Camera3D = %Camera3D
 @onready var audio_player: AudioStreamPlayer = $AudioStreamPlayer
+@onready var speed_boost_timer: Timer = $SpeedBoostTimer
 
 var gravity = 50
 var disable_input = false
@@ -47,9 +50,12 @@ func _input(event: InputEvent):
     # Set throttle input
     if event is InputEventMouseMotion:
         if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-            SignalBus.throttle_input -= event.relative.y    
+            SignalBus.throttle_input -= event.relative.y
 
 #endregion
+
+
+
 
 func _physics_process(delta):
     # RPM Audio Pitch
@@ -82,6 +88,9 @@ func _physics_process(delta):
     if Input.is_action_pressed("lean_forward"):
         SignalBus.throttle_input += 6.9
 
+    if Input.is_action_just_pressed("boost"):
+        do_speed_boost(100, 2)
+
     if Input.is_action_pressed("lean_left"):
         input_info['swerve_dir'] = "left"
     elif Input.is_action_pressed("lean_right"):
@@ -91,7 +100,7 @@ func _physics_process(delta):
     if Input.is_action_pressed("brake"):
         input_info['input_angle'] = -80
 
-    SignalBus.speed = clampf(SignalBus.speed * SignalBus.throttle_input, 1, 180)
+    SignalBus.speed = clampf(SignalBus.speed * SignalBus.throttle_input, 1, max_speed)
 
     # Gameplay stuff
     if has_started:
@@ -122,14 +131,11 @@ func _physics_process(delta):
             return
         
         # turn the bike
-        if !anim_player.is_playing():
-            match input_info['swerve_dir']:
-                "left":
-                    # anim_player.play("swerve_left")
-                    self.position.x -= 8 * delta
-                "right":
-                    # anim_player.play("swerve_right")
-                    self.position.x += 8 * delta
+        match input_info['swerve_dir']:
+            "left":
+                self.position.x -= 8 * delta
+            "right":
+                self.position.x += 8 * delta
 
         # 
         # Actually rotate the bike & send new angle to SignalBus
@@ -137,6 +143,17 @@ func _physics_process(delta):
         do_rotate(input_info['input_angle'], delta)
 
 #region gameplay stuff
+func do_speed_boost(addl_amount: float, duration: float):
+    var old_max_speed = max_speed
+    speed_boost_timer.wait_time = duration
+
+    max_speed += addl_amount
+
+    speed_boost_timer.start()
+    await speed_boost_timer.timeout
+    speed_boost_timer.stop()
+    max_speed = old_max_speed
+
 func finish_up(anim_name: String = "", has_crashed: bool = false, msg: String = ''):
     disable_input = true
     Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -150,6 +167,7 @@ func finish_up(anim_name: String = "", has_crashed: bool = false, msg: String = 
 func do_rotate(deg: float, delta: float):
     rotate_point.rotate_x(deg_to_rad(deg) * 3 * delta)
     SignalBus.angle_deg = rotate_point.global_rotation_degrees.x
+
 #endregion
 
 ## used in `regular_stop` animation
