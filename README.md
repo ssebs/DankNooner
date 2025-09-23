@@ -13,7 +13,7 @@ TODO:
 
 Gameplay:
 - [x] mouse => throttle / lean control
-  - [ ] also support keyboard press
+  - [x] also support keyboard press
 - [x] score based on speed * angle
 - [x] restart game loop
 - [x] treadmill road using motorcycle's speed
