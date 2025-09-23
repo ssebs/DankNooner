@@ -46,6 +46,15 @@ func on_upgrade_1_pressed():
     
 func on_upgrade_2_pressed():
     print("Max Speed Upgrade")
+    if SignalBus.upgrade_stats.speed_level < UpgradeStatsRes.Level.HIGH:
+        # TODO: Check & subtract $$$
+        var new_val = SignalBus.upgrade_stats.speed_level + 1
+        SignalBus.upgrade_stats.speed_level = new_val as UpgradeStatsRes.Level
+
+        ui.set_max_speed_upgrade_label_text(SignalBus.upgrade_stats.speed_level)
+
+    if SignalBus.upgrade_stats.speed_level >= UpgradeStatsRes.Level.HIGH:
+        ui.upgrade_2_btn.disabled = true
 
 func on_upgrade_3_pressed():
     print("Max Gas Upgrade")

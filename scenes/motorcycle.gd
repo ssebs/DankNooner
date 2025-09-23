@@ -2,8 +2,6 @@ class_name Motorcycle extends AnimatableBody3D
 
 signal finished_run(has_crashed: bool, msg: String)
 
-@export var max_speed: float = 180 # to be increased by upgrades
-
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var rotate_point: Node3D = %RotatePoint
 @onready var camera: Camera3D = %Camera3D
@@ -15,6 +13,7 @@ var disable_input = false
 var has_started = false
 var is_lerping_to_stop = false
 var speed_boosts_remaining: int
+var max_speed: float
 
 func _ready():
     Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -25,6 +24,8 @@ func _ready():
     speed_boosts_remaining = SignalBus.upgrade_stats.speed_boost_level
     SignalBus.fuel = SignalBus.upgrade_stats.fuel_level * 10
     SignalBus.ui.fuel_progress.max_value = SignalBus.fuel
+
+    max_speed = lerp(180.0, 360.0, float(SignalBus.upgrade_stats.speed_level - 1) / float(UpgradeStatsRes.Level.HIGH - 1))
 
     if !Engine.is_editor_hint():
         audio_player.volume_linear = SignalBus.volume
@@ -94,7 +95,7 @@ func _physics_process(delta):
 
     if Input.is_action_just_pressed("boost"):
         if speed_boosts_remaining > 0 && speed_boost_timer.time_left == 0:
-            do_speed_boost(SignalBus.upgrade_stats.speed_boost_level * 20, 3)
+            do_speed_boost(SignalBus.upgrade_stats.speed_boost_level * 42, 3)
             speed_boosts_remaining -= 1
             SignalBus.ui.set_boosts_remaining_label_text(speed_boosts_remaining)
 
