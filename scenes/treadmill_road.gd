@@ -6,6 +6,7 @@ class_name TreadmillRoad extends Node3D
 @export var road_spawn_count = 10
 @export var road_piece: PackedScene = preload("res://assets/LowPolyRoadPack/Models/Road Straight 2.dae")
 @export var obstacle_scn: PackedScene = preload("res://scenes/obstacle.tscn")
+@export var pickup_scn: PackedScene = preload("res://scenes/pickup.tscn")
 
 @onready var road_spawn: Marker3D = %RoadSpawn
 @onready var lane1_spawn: Marker3D = %Lane1
@@ -62,12 +63,19 @@ func _physics_process(delta):
         
         if randf() < current_spawn_chance:
             # TODO: random chance to spawn pickup
-            spawn_obstacle(first_piece, hazard_spawn, true)
+            # spawn_obstacle(first_piece, hazard_spawn, true)
+            spawn_pickup(first_piece, hazard_spawn, 0 if randi() % 2 else 1)
         
         # clear old obstacles
         for child in last_piece.get_children():
             if child is Obstacle:
                 child.queue_free()
+func spawn_pickup(parent_node: Node3D, lane_spawn: Marker3D, type: Pickup.PickupType):
+    var pickup_item = pickup_scn.instantiate() as Pickup
+    pickup_item.type = type
+
+    pickup_item.global_position = lane_spawn.global_position
+    parent_node.add_child(pickup_item)
 
 func spawn_obstacle(parent_node: Node3D, lane_spawn: Marker3D, is_hazard := false, should_flip := false):
     if lane_spawn == null || obstacle_scn == null || Engine.is_editor_hint():

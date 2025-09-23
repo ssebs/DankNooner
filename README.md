@@ -8,8 +8,10 @@ Wheelie challenge game, try to hold a wheelie for as long as you can & earn poin
 ![Screenshot02](./img/screenshot02.png)
 
 TODO:
-- add quit btn on restart screen + make new screen for that
 - Make speed feel faster / better / increase
+- Fix pickups not working
+- Fix money not being spend
+- Fix pickup size
 
 Gameplay:
 - [x] mouse => throttle / lean control
