@@ -121,9 +121,11 @@ func _physics_process(delta):
             return
 
         # landed back down
+        # TODO: make this optional
         if SignalBus.distance > 400 && current_x_angle_deg < 0:
-            finish_up("stoppie", false, "Run finished!")
-            return
+            # finish_up("stoppie", false, "Run finished!")
+            # return
+            pass
         
         # Use time between 69=>90 for bonus
         if SignalBus.angle_deg >= 69 && current_x_angle_deg <= 90:
