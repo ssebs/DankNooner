@@ -63,8 +63,8 @@ func _physics_process(delta):
         
         if randf() < current_spawn_chance:
             # TODO: random chance to spawn pickup
-            # spawn_obstacle(first_piece, hazard_spawn, true)
-            spawn_pickup(first_piece, hazard_spawn, 0 if randi() % 2 else 1)
+            spawn_obstacle(first_piece, hazard_spawn, true)
+            # spawn_pickup(first_piece, hazard_spawn, 0 if randi() % 2 else 1)
         
         # clear old obstacles
         for child in last_piece.get_children():
