@@ -12,6 +12,9 @@ TODO:
 - Fix pickups not working
 - Fix money not being spend
 - Fix pickup size
+- More goals
+  - e.g. at 1 mi, change the skybox or something
+  - dank time should reward / give currency for unlocking tricks
 
 Gameplay:
 - [x] mouse => throttle / lean control
@@ -51,5 +54,6 @@ Bugs:
   - [ ] also don't spawn items in player
 
 Out of scope:
+- Global leaderboard
 - avoid cops?
 - shoot at cars?
