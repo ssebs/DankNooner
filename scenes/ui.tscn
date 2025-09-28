@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://boveos4k30e0d"]
+[gd_scene load_steps=14 format=3 uid="uid://boveos4k30e0d"]
 
 [ext_resource type="Script" uid="uid://byfj6wa0klab3" path="res://scenes/ui.gd" id="1_nt7q6"]
 [ext_resource type="Theme" uid="uid://d15reok7osseo" path="res://resources/theme.tres" id="1_x4jx1"]
@@ -7,6 +7,9 @@
 [ext_resource type="Texture2D" uid="uid://cxsdwwhqi4jjd" path="res://assets/img/DanknessArrow.png" id="4_8dubc"]
 [ext_resource type="StyleBox" uid="uid://g4xm0g06mw1c" path="res://resources/green_stylebox_black_border_fill.tres" id="4_wm3ai"]
 [ext_resource type="Texture2D" uid="uid://c4l51uj4lica7" path="res://img/LogoNoBG.png" id="7_p7vwb"]
+[ext_resource type="Texture2D" uid="uid://bna1pt01qnemg" path="res://assets/kenney-input-prompts/Keyboard & Mouse/Double/mouse.png" id="8_ktti3"]
+[ext_resource type="Texture2D" uid="uid://dtdkjfndpcm1s" path="res://assets/kenney-input-prompts/Keyboard & Mouse/Double/mouse_left.png" id="9_cgfq5"]
+[ext_resource type="Texture2D" uid="uid://cstx1wj3tp1ah" path="res://assets/kenney-input-prompts/Flairs/Double/flair_arrows_up.png" id="10_7dvkv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8dubc"]
 bg_color = Color(0, 0.0313726, 0, 1)
@@ -181,6 +184,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_8dubc")
 
 [node name="UpgradeMenuPanel" type="Control" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="UpgradeMenuPanel"]
@@ -435,3 +439,39 @@ value = 1.0
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+
+[node name="TutorialPanel" type="Control" parent="."]
+layout_mode = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="TutorialPanel"]
+
+[node name="MouseControlsLabel" type="Label" parent="TutorialPanel"]
+unique_name_in_owner = true
+layout_mode = 0
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "Click & Drag up & down to control your throttle, left & right to steer."
+horizontal_alignment = 2
+
+[node name="MouseRect" type="TextureRect" parent="TutorialPanel"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("8_ktti3")
+
+[node name="MouseLMBRect" type="TextureRect" parent="TutorialPanel"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("9_cgfq5")
+
+[node name="MouseLMBRect2" type="TextureRect" parent="TutorialPanel"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 464.0
+offset_top = 309.0
+offset_right = 592.0
+offset_bottom = 437.0
+texture = ExtResource("10_7dvkv")
