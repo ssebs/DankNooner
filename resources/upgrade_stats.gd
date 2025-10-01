@@ -19,5 +19,6 @@ enum Level {LOW = 1, MEDIUM, HIGH}
 @export var max_distance: float = 0.0
 @export var max_bonus_time: float = 0.0
 @export var max_clean_runs: int = 0
+@export var runs_played: int = 0
 
 # TODO: implement save and load
