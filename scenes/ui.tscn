@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://boveos4k30e0d"]
+[gd_scene load_steps=28 format=3 uid="uid://boveos4k30e0d"]
 
 [ext_resource type="Script" uid="uid://byfj6wa0klab3" path="res://scenes/ui.gd" id="1_nt7q6"]
 [ext_resource type="Theme" uid="uid://d15reok7osseo" path="res://resources/theme.tres" id="1_x4jx1"]
@@ -9,7 +9,14 @@
 [ext_resource type="Texture2D" uid="uid://c4l51uj4lica7" path="res://img/LogoNoBG.png" id="7_p7vwb"]
 [ext_resource type="Texture2D" uid="uid://bna1pt01qnemg" path="res://assets/kenney-input-prompts/Keyboard & Mouse/Double/mouse.png" id="8_ktti3"]
 [ext_resource type="Texture2D" uid="uid://dtdkjfndpcm1s" path="res://assets/kenney-input-prompts/Keyboard & Mouse/Double/mouse_left.png" id="9_cgfq5"]
-[ext_resource type="Texture2D" uid="uid://cstx1wj3tp1ah" path="res://assets/kenney-input-prompts/Flairs/Double/flair_arrows_up.png" id="10_7dvkv"]
+[ext_resource type="Texture2D" uid="uid://bnp0iwwtbm2il" path="res://assets/kenney-input-prompts/Keyboard & Mouse/Double/keyboard_w.png" id="10_vsj0x"]
+[ext_resource type="Texture2D" uid="uid://wy6i87i16uhe" path="res://assets/kenney-input-prompts/Keyboard & Mouse/Default/keyboard_a_outline.png" id="11_f7tlh"]
+[ext_resource type="Texture2D" uid="uid://cw3n8s44rbl23" path="res://assets/kenney-input-prompts/Keyboard & Mouse/Double/keyboard_a.png" id="11_qsv74"]
+[ext_resource type="Texture2D" uid="uid://cmoy1lu43jm1s" path="res://assets/kenney-input-prompts/Keyboard & Mouse/Default/keyboard_w_outline.png" id="12_cof4p"]
+[ext_resource type="Texture2D" uid="uid://byolnn4its4me" path="res://assets/kenney-input-prompts/Keyboard & Mouse/Double/keyboard_s.png" id="12_h1mc3"]
+[ext_resource type="Texture2D" uid="uid://bblv1emw7udic" path="res://assets/kenney-input-prompts/Keyboard & Mouse/Double/keyboard_d.png" id="13_cof4p"]
+[ext_resource type="Texture2D" uid="uid://cc3f14ruiaqhl" path="res://assets/kenney-input-prompts/Keyboard & Mouse/Default/keyboard_s_outline.png" id="14_f7tlh"]
+[ext_resource type="Texture2D" uid="uid://d21oanuvdi7hl" path="res://assets/kenney-input-prompts/Keyboard & Mouse/Default/keyboard_d_outline.png" id="16_cof4p"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8dubc"]
 bg_color = Color(0, 0.0313726, 0, 1)
@@ -29,6 +36,412 @@ border_color = Color(0, 0, 0, 1)
 expand_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8dubc"]
+
+[sub_resource type="Animation" id="Animation_cgfq5"]
+resource_name = "mouse_controls_tutorial"
+length = 8.0
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("%MoverLocation:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 1.5, 2, 2.5, 3, 3.5, 4.5, 5.5, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(219, 400), Vector2(219, 400), Vector2(219, 306), Vector2(219, 400), Vector2(219, 306), Vector2(219, 400), Vector2(119, 400), Vector2(319, 400), Vector2(119, 400), Vector2(219, 400)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("%Label1:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("%Label2:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1, 3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("%MouseLMBTex:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.4, 6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("%Label3:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 3, 6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("%Label4:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("%MouseTex:visible")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("WASD/hbox:visible")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("%WASD/hbox/a/a:visible")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 6.85, 7.1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [true, false, true]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("%WASD/hbox/a/a2:visible")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 6.85, 7.1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("%WASD/hbox/VBoxContainer/w/w:visible")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0, 6.25, 6.5, 6.75, 7, 7.2000003, 7.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [true, false, true, false, true, false, true]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("%WASD/hbox/VBoxContainer/w/w2:visible")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0, 6.25, 6.5, 6.75, 7, 7.2000003, 7.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [false, true, false, true, false, true, false]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("%WASD/hbox/VBoxContainer/s/s:visible")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(0, 7.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("%WASD/hbox/VBoxContainer/s/s2:visible")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0, 7.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/14/type = "value"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("%WASD/hbox/d/d:visible")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"times": PackedFloat32Array(0, 7.35, 7.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [true, false, true]
+}
+tracks/15/type = "value"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("%WASD/hbox/d/d2:visible")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/keys = {
+"times": PackedFloat32Array(0, 7.35, 7.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_7dvkv"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("%MoverLocation:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(219, 306)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("%Label1:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("%Label2:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("%MouseLMBTex:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("%Label3:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("%Label4:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("%MouseTex:visible")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("WASD/hbox:visible")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("%WASD/hbox/a/a:visible")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("%WASD/hbox/a/a2:visible")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("%WASD/hbox/VBoxContainer/w/w:visible")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("%WASD/hbox/VBoxContainer/w/w2:visible")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("%WASD/hbox/VBoxContainer/s/s:visible")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("%WASD/hbox/VBoxContainer/s/s2:visible")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/14/type = "value"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("%WASD/hbox/d/d:visible")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/15/type = "value"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("%WASD/hbox/d/d2:visible")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7dvkv"]
+_data = {
+&"RESET": SubResource("Animation_7dvkv"),
+&"mouse_controls_tutorial": SubResource("Animation_cgfq5")
+}
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f7tlh"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8k7j3"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jkdwc"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rlppe"]
 
 [node name="UI" type="MarginContainer"]
 anchors_preset = 15
@@ -441,37 +854,327 @@ visible = false
 layout_mode = 2
 
 [node name="TutorialPanel" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="TutorialPanel"]
+[node name="ColorRect" type="ColorRect" parent="TutorialPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.33333334)
 
-[node name="MouseControlsLabel" type="Label" parent="TutorialPanel"]
+[node name="TutorialAnimPlayer" type="AnimationPlayer" parent="TutorialPanel"]
+unique_name_in_owner = true
+libraries = {
+&"": SubResource("AnimationLibrary_7dvkv")
+}
+
+[node name="Label1" type="Label" parent="TutorialPanel"]
 unique_name_in_owner = true
 layout_mode = 0
+offset_left = 219.0
+offset_top = 257.0
+offset_right = 1221.0
+offset_bottom = 302.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 36
-text = "Click & Drag up & down to control your throttle, left & right to steer."
-horizontal_alignment = 2
+text = "Click and hold the Left Mouse Button"
+horizontal_alignment = 1
 
-[node name="MouseRect" type="TextureRect" parent="TutorialPanel"]
+[node name="Label2" type="Label" parent="TutorialPanel"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 219.0
+offset_top = 257.0
+offset_right = 1221.0
+offset_bottom = 302.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "Drag up & down to control your throttle"
+horizontal_alignment = 1
+
+[node name="Label3" type="Label" parent="TutorialPanel"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 219.0
+offset_top = 257.0
+offset_right = 1221.0
+offset_bottom = 302.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "Move Left & Right to steer"
+horizontal_alignment = 1
+
+[node name="Label4" type="Label" parent="TutorialPanel"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 219.0
+offset_top = 257.0
+offset_right = 1221.0
+offset_bottom = 302.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "You can also Move with"
+horizontal_alignment = 1
+
+[node name="MoverLocation" type="Control" parent="TutorialPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -501.0
+offset_top = -64.0
+offset_right = 501.00647
+offset_bottom = 64.00037
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MouseTex" type="TextureRect" parent="TutorialPanel/MoverLocation"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 texture = ExtResource("8_ktti3")
+stretch_mode = 2
 
-[node name="MouseLMBRect" type="TextureRect" parent="TutorialPanel"]
+[node name="MouseLMBTex" type="TextureRect" parent="TutorialPanel/MoverLocation"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 texture = ExtResource("9_cgfq5")
+stretch_mode = 2
 
-[node name="MouseLMBRect2" type="TextureRect" parent="TutorialPanel"]
+[node name="WASD" type="MarginContainer" parent="TutorialPanel"]
 unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -196.0
+offset_top = -128.0
+offset_right = 196.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_top = 170
+
+[node name="hbox" type="HBoxContainer" parent="TutorialPanel/WASD"]
+layout_mode = 2
+
+[node name="a" type="Panel" parent="TutorialPanel/WASD/hbox"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxEmpty_f7tlh")
+
+[node name="a" type="TextureRect" parent="TutorialPanel/WASD/hbox/a"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 8
+texture = ExtResource("11_qsv74")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="a2" type="TextureRect" parent="TutorialPanel/WASD/hbox/a"]
+visible = false
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 8
+texture = ExtResource("11_f7tlh")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TutorialPanel/WASD/hbox"]
+custom_minimum_size = Vector2(128, 256)
+layout_mode = 2
+
+[node name="w" type="Panel" parent="TutorialPanel/WASD/hbox/VBoxContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxEmpty_8k7j3")
+
+[node name="w" type="TextureRect" parent="TutorialPanel/WASD/hbox/VBoxContainer/w"]
 layout_mode = 0
-offset_left = 464.0
-offset_top = 309.0
-offset_right = 592.0
-offset_bottom = 437.0
-texture = ExtResource("10_7dvkv")
+offset_right = 128.0
+offset_bottom = 126.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+texture = ExtResource("10_vsj0x")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="w2" type="TextureRect" parent="TutorialPanel/WASD/hbox/VBoxContainer/w"]
+visible = false
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 126.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+texture = ExtResource("12_cof4p")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="s" type="Panel" parent="TutorialPanel/WASD/hbox/VBoxContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_jkdwc")
+
+[node name="s" type="TextureRect" parent="TutorialPanel/WASD/hbox/VBoxContainer/s"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -62.0
+offset_right = 64.0
+offset_bottom = 62.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+texture = ExtResource("12_h1mc3")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="s2" type="TextureRect" parent="TutorialPanel/WASD/hbox/VBoxContainer/s"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -62.0
+offset_right = 64.0
+offset_bottom = 62.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+texture = ExtResource("14_f7tlh")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="d" type="Panel" parent="TutorialPanel/WASD/hbox"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxEmpty_rlppe")
+
+[node name="d" type="TextureRect" parent="TutorialPanel/WASD/hbox/d"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 8
+texture = ExtResource("13_cof4p")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="d2" type="TextureRect" parent="TutorialPanel/WASD/hbox/d"]
+visible = false
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 8
+texture = ExtResource("16_cof4p")
+expand_mode = 2
+stretch_mode = 4

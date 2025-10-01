@@ -78,12 +78,17 @@ func start_run():
     motorcycle.camera.make_current()
     motorcycle.finished_run.connect(on_run_finished)
     switch_game_state(GameState.PLAYING)
-    SignalBus.notify_ui.emit("Click & drag your mouse to pop a wheelie!\nOr use WASD...", 2)
+
+    if SignalBus.upgrade_stats.runs_played == 0:
+        SignalBus.ui.play_tutorial_anim()
 
 ## Note: Motorcycle should queue_free() on it's own
 func on_run_finished(has_crashed: bool, msg: String):
     SignalBus.notify_ui.emit(msg, 5) # TODO: move out of GamePanel so it doesn't hide
     switch_game_state(GameState.RUN_OVER)
+
+    if SignalBus.ui.tutorial_anim_player.is_playing():
+        SignalBus.ui.tutorial_anim_player.stop()
 
     # set stats
     if !has_crashed:
@@ -96,7 +101,8 @@ func on_run_finished(has_crashed: bool, msg: String):
         SignalBus.upgrade_stats.max_clean_runs = 0
     
     SignalBus.money += (SignalBus.distance * (1 + SignalBus.upgrade_stats.max_clean_runs)) + (SignalBus.bonus_time)
-    
+    SignalBus.upgrade_stats.runs_played += 1
+
     reset_stats()
 
 func reset_stats():

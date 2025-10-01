@@ -37,7 +37,13 @@ signal notify_finished()
 @onready var upgrade_2_btn: Button = %Upgrade2Btn
 @onready var upgrade_3_btn: Button = %Upgrade3Btn
 
+# tutorial menu
+@onready var tutorial_menu_panel: Control = %TutorialPanel
+@onready var tutorial_anim_player: AnimationPlayer = %TutorialAnimPlayer
+
 # var notifications = [] # todo: use queue for multiple
+
+# TODO: only show tutorial panel on game state + first playthru
 
 func _ready():
     SignalBus.angle_updated.connect(on_angle_updated)
@@ -65,6 +71,8 @@ func _ready():
     set_max_speed_upgrade_label_text(UpgradeStatsRes.Level.LOW)
     set_speed_boost_upgrade_label_text(UpgradeStatsRes.Level.LOW)
     volume_slider.value = 0.25 # TODO: load from save
+
+    tutorial_menu_panel.hide()
 
     SignalBus.ui = self
 
@@ -173,3 +181,10 @@ func set_speed_boost_upgrade_label_text(level: UpgradeStatsRes.Level):
     speed_boost_upgrade_level.text = "Speed Boost Upgrade Level: %d" % level
 
 #endregion
+
+func play_tutorial_anim():
+    tutorial_menu_panel.show()
+    tutorial_anim_player.animation_finished.connect(func(_anim_name: StringName):
+        tutorial_menu_panel.hide()
+    )
+    tutorial_anim_player.play("mouse_controls_tutorial")
