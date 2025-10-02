@@ -30,7 +30,7 @@ func _ready():
     ui.upgrade_2_btn.pressed.connect(on_upgrade_2_pressed)
     ui.upgrade_3_btn.pressed.connect(on_upgrade_3_pressed)
 
-#region gameplay
+#region upgrade btn
 func on_upgrade_1_pressed():
     print("Boost count upgrade")
     if SignalBus.upgrade_stats.speed_boost_level < UpgradeStatsRes.Level.HIGH:
@@ -67,7 +67,9 @@ func on_upgrade_3_pressed():
 
     if SignalBus.upgrade_stats.fuel_level >= UpgradeStatsRes.Level.HIGH:
         ui.upgrade_3_btn.disabled = true
+#endregion
 
+#region gameplay
 ## Spawn Motorcycle, add child, set cam, switch game state, conn finished_run signal
 func start_run():
     if Engine.is_editor_hint():

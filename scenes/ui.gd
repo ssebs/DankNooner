@@ -46,12 +46,12 @@ signal notify_finished()
 # TODO: only show tutorial panel on game state + first playthru
 
 func _ready():
-    SignalBus.angle_updated.connect(on_angle_updated)
+    # SignalBus.angle_updated.connect(on_angle_updated)
     SignalBus.notify_ui.connect(on_notify_ui)
-    SignalBus.throttle_updated.connect(on_throttle_updated)
-    SignalBus.distance_updated.connect(set_distance_label_text)
-    SignalBus.bonus_time_updated.connect(on_bonus_time_updated)
-    SignalBus.fuel_updated.connect(on_fuel_updated)
+    # SignalBus.throttle_updated.connect(on_throttle_updated)
+    # SignalBus.distance_updated.connect(set_distance_label_text)
+    # SignalBus.bonus_time_updated.connect(on_bonus_time_updated)
+    # SignalBus.fuel_updated.connect(on_fuel_updated)
     
     volume_slider.value_changed.connect(on_volume_changed)
 
@@ -151,7 +151,7 @@ func on_notify_ui(msg: String, duration: float = notify_time_sec):
 #endregion
 
 func on_volume_changed(value: float):
-    SignalBus.volume = value
+    SignalBus.upgrade_stats.volume = value
 
 #region label setters
 func set_max_bonus_time_label_text(time: float):
