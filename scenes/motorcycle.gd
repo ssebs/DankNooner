@@ -14,6 +14,9 @@ var angle_deg: float:
         angle_deg = val
         if SignalBus.ui != null:
             SignalBus.ui.on_angle_updated(angle_deg)
+var steering_input: float:
+    set(val):
+        steering_input = clampf(val, -10, 10)
 var throttle_input: float:
     set(val):
         throttle_input = clampf(val, 0, 100)
@@ -49,7 +52,6 @@ var fuel: float:
         fuel = val
         if SignalBus.ui != null:
             SignalBus.ui.on_fuel_updated(fuel)
-
 
 func _ready():
     Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -95,6 +97,10 @@ func _input(event: InputEvent):
     if event is InputEventMouseMotion:
         if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
             throttle_input -= event.relative.y
+            
+            if abs(steering_input) < 5:
+                steering_input = 0.0
+                steering_input += event.relative.x
 
 #endregion
 
@@ -135,10 +141,14 @@ func _physics_process(delta):
             speed_boosts_remaining -= 1
             SignalBus.ui.set_boosts_remaining_label_text(speed_boosts_remaining)
 
+    
     if Input.is_action_pressed("lean_left"):
         input_info['swerve_dir'] = "left"
     elif Input.is_action_pressed("lean_right"):
         input_info['swerve_dir'] = "right"
+    elif steering_input != 0:
+        steering_input = move_toward(steering_input, 0.0, 8 * delta)
+        input_info['swerve_dir'] = "mouse"
 
     input_info['input_angle'] = throttle_input
     if Input.is_action_pressed("brake"):
@@ -182,6 +192,8 @@ func _physics_process(delta):
                 self.position.x -= 8 * delta
             "right":
                 self.position.x += 8 * delta
+            "mouse":
+                self.position.x += steering_input * delta
 
         # 
         # Actually rotate the bike & send new angle to SignalBus
