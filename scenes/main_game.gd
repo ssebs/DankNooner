@@ -11,6 +11,25 @@ enum GameState {MAIN_MENU, PAUSE_MENU, PLAYING, RUN_OVER}
 var game_state: GameState
 var motorcycle: Motorcycle
 
+# TODO: multiply cost by upgrade level
+var upgrade_button_metadata: Dictionary = {
+    1: {
+        "label": "+1 Speed Boost\n$600",
+        'cost': 600,
+        'func': on_upgrade_1_pressed
+    },
+    2: {
+        "label": "+50 Max Speed\n$1500",
+        'cost': 1500,
+        'func': on_upgrade_2_pressed
+    },
+    3: {
+        "label": "Upgrade Max Fuel",
+        'cost': 2000,
+        'func': on_upgrade_3_pressed
+    },
+}
+
 func _ready():
     switch_game_state(GameState.MAIN_MENU)
 
@@ -26,46 +45,69 @@ func _ready():
     )
     ui.retry_btn.pressed.connect(start_run)
     ui.main_menu_btn.pressed.connect(goto_main_menu)
-    ui.upgrade_1_btn.pressed.connect(on_upgrade_1_pressed)
-    ui.upgrade_2_btn.pressed.connect(on_upgrade_2_pressed)
-    ui.upgrade_3_btn.pressed.connect(on_upgrade_3_pressed)
+
+    ui.upgrade_1_btn.pressed.connect(upgrade_button_metadata[1]['func'])
+    ui.upgrade_2_btn.pressed.connect(upgrade_button_metadata[2]['func'])
+    ui.upgrade_3_btn.pressed.connect(upgrade_button_metadata[3]['func'])
+    ui.upgrade_1_btn.text = upgrade_button_metadata[1]["label"]
+    ui.upgrade_2_btn.text = upgrade_button_metadata[2]["label"]
+    # TODO: this for the other 2
+    ui.upgrade_3_btn.text = upgrade_button_metadata[3]["label"] + "\n$" + str(upgrade_button_metadata[3]["cost"])
+
 
 #region upgrade btn
+## speed boost count upgrade
 func on_upgrade_1_pressed():
-    print("Boost count upgrade")
-    if SignalBus.upgrade_stats.speed_boost_level < UpgradeStatsRes.Level.HIGH:
-        # TODO: Check & subtract $$$
+    if SignalBus.upgrade_stats.speed_boost_level < UpgradeStatsRes.Level.MAX:
+        if SignalBus.upgrade_stats.money < upgrade_button_metadata[1]["cost"]:
+            print("you're too poor")
+            return
+        SignalBus.upgrade_stats.money -= upgrade_button_metadata[1]["cost"]
+        ui.set_money_label_text(SignalBus.upgrade_stats.money)
+        
         # += doesn't cast properly, according to the linter B)
         var new_val = SignalBus.upgrade_stats.speed_boost_level + 1
         SignalBus.upgrade_stats.speed_boost_level = new_val as UpgradeStatsRes.Level
 
         ui.set_speed_boost_upgrade_label_text(SignalBus.upgrade_stats.speed_boost_level)
         
-    if SignalBus.upgrade_stats.speed_boost_level >= UpgradeStatsRes.Level.HIGH:
+    if SignalBus.upgrade_stats.speed_boost_level >= UpgradeStatsRes.Level.MAX:
         ui.upgrade_1_btn.disabled = true
     
+## Max Speed Upgrade
 func on_upgrade_2_pressed():
-    print("Max Speed Upgrade")
-    if SignalBus.upgrade_stats.speed_level < UpgradeStatsRes.Level.HIGH:
-        # TODO: Check & subtract $$$
+    if SignalBus.upgrade_stats.speed_level < UpgradeStatsRes.Level.MAX:
+        if SignalBus.upgrade_stats.money < upgrade_button_metadata[2]["cost"]:
+            print("you're too poor")
+            return
+        SignalBus.upgrade_stats.money -= upgrade_button_metadata[2]["cost"]
+
         var new_val = SignalBus.upgrade_stats.speed_level + 1
         SignalBus.upgrade_stats.speed_level = new_val as UpgradeStatsRes.Level
 
         ui.set_max_speed_upgrade_label_text(SignalBus.upgrade_stats.speed_level)
 
-    if SignalBus.upgrade_stats.speed_level >= UpgradeStatsRes.Level.HIGH:
+    if SignalBus.upgrade_stats.speed_level >= UpgradeStatsRes.Level.MAX:
         ui.upgrade_2_btn.disabled = true
 
+## Max fuel upgrade
 func on_upgrade_3_pressed():
-    print("Max Gas Upgrade")
-    if SignalBus.upgrade_stats.fuel_level < UpgradeStatsRes.Level.HIGH:
-        # TODO: Check & subtract $$$
+    if SignalBus.upgrade_stats.fuel_level < UpgradeStatsRes.Level.MAX:
+        var cost = (SignalBus.upgrade_stats.fuel_level + 1) * upgrade_button_metadata[3]["cost"]
+
+        if SignalBus.upgrade_stats.money < cost:
+            print("you're too poor")
+            return
+        SignalBus.upgrade_stats.money -= cost
+                
         var new_val = SignalBus.upgrade_stats.fuel_level + 1
         SignalBus.upgrade_stats.fuel_level = new_val as UpgradeStatsRes.Level
+        ui.upgrade_3_btn.text = upgrade_button_metadata[3]["label"] + "\n$" + str(cost)
+        print("cost:", cost)
 
         ui.set_fuel_upgrade_label_text(SignalBus.upgrade_stats.fuel_level)
 
-    if SignalBus.upgrade_stats.fuel_level >= UpgradeStatsRes.Level.HIGH:
+    if SignalBus.upgrade_stats.fuel_level >= UpgradeStatsRes.Level.MAX:
         ui.upgrade_3_btn.disabled = true
 #endregion
 

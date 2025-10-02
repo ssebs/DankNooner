@@ -459,6 +459,7 @@ script = ExtResource("1_nt7q6")
 
 [node name="GamePanel" type="Control" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="Center" type="VBoxContainer" parent="GamePanel"]
@@ -615,7 +616,6 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_8dubc")
 
 [node name="UpgradeMenuPanel" type="Control" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="UpgradeMenuPanel"]
@@ -690,24 +690,21 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 150)
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
-text = "+1 Speed Boost
-$600"
+text = "button1"
 
 [node name="Upgrade2Btn" type="Button" parent="UpgradeMenuPanel/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 150)
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
-text = "+50 Max Speed 
-$1500"
+text = "button2"
 
 [node name="Upgrade3Btn" type="Button" parent="UpgradeMenuPanel/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 150)
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
-text = "+10 Max Fuel
-$2000"
+text = "button3"
 
 [node name="HSeparator3" type="HSeparator" parent="UpgradeMenuPanel/VBoxContainer"]
 layout_mode = 2
