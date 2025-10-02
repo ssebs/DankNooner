@@ -1,6 +1,6 @@
 class_name Motorcycle extends AnimatableBody3D
 
-signal finished_run(has_crashed: bool, msg: String)
+signal run_finished(msg: String, has_crashed: bool, distance: float, bonus_time: float)
 
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var rotate_point: Node3D = %RotatePoint
@@ -77,6 +77,7 @@ func _input(event: InputEvent):
         if !has_started:
             has_started = true
             audio_player.play()
+            SignalBus.ui.stop_tutorial_anim()
 
     if event is InputEventKey:
         if event.keycode == KEY_ESCAPE:
@@ -204,7 +205,7 @@ func finish_up(anim_name: String = "", has_crashed: bool = false, msg: String = 
     Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
     anim_player.animation_finished.connect(func(_anim_name: String):
         queue_free()
-        finished_run.emit(has_crashed, msg)
+        run_finished.emit(msg, has_crashed, distance, bonus_time)
     )
     if anim_name != "":
         anim_player.play(anim_name)

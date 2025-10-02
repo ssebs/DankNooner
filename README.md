@@ -8,13 +8,12 @@ Wheelie challenge game, try to hold a wheelie for as long as you can & earn poin
 ![Screenshot02](./img/screenshot02.png)
 
 ## Minor Refactor:
-- SignalBus has too many vars, 
-  - move control specific things to moto script
-  - update ui vars from `SignalBus.ui.__func__()`, instead of subscribing to events
-- UI vars
-- Add left/right steer controls
+- Organize UI vars
+- Input:
+  - Move window capture to `main_game`
+  - Add left/right steer controls
+  - Disable input as a global
 - Tutorial:
-  - Don't allow gameplay til it's done, or stop it when input is pressed
   - Add shift to boost
 
 TODO:
