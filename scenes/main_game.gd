@@ -78,14 +78,14 @@ func start_run():
     motorcycle.position = spawn_pos.position
     add_child(motorcycle)
     motorcycle.camera.make_current()
-    motorcycle.finished_run.connect(on_run_finished)
+    motorcycle.run_finished.connect(on_run_finished)
     switch_game_state(GameState.PLAYING)
 
     if SignalBus.upgrade_stats.runs_played == 0:
         SignalBus.ui.play_tutorial_anim()
 
 ## Note: Motorcycle should queue_free() on it's own
-func on_run_finished(has_crashed: bool, msg: String):
+func on_run_finished(msg: String, has_crashed: bool, distance: float, bonus_time: float):
     SignalBus.notify_ui.emit(msg, 5) # TODO: move out of GamePanel so it doesn't hide
     switch_game_state(GameState.RUN_OVER)
 
@@ -95,27 +95,22 @@ func on_run_finished(has_crashed: bool, msg: String):
     # set stats
     if !has_crashed:
         SignalBus.upgrade_stats.max_clean_runs += 1
-        if SignalBus.distance > SignalBus.upgrade_stats.max_distance:
-            SignalBus.upgrade_stats.max_distance = SignalBus.distance
-        if SignalBus.bonus_time > SignalBus.upgrade_stats.max_bonus_time:
-            SignalBus.upgrade_stats.max_bonus_time = SignalBus.bonus_time
+        if distance > SignalBus.upgrade_stats.max_distance:
+            SignalBus.upgrade_stats.max_distance = distance
+        if bonus_time > SignalBus.upgrade_stats.max_bonus_time:
+            SignalBus.upgrade_stats.max_bonus_time = bonus_time
     else:
         SignalBus.upgrade_stats.max_clean_runs = 0
     
-    SignalBus.money += (SignalBus.distance * (1 + SignalBus.upgrade_stats.max_clean_runs)) + (SignalBus.bonus_time)
+    SignalBus.upgrade_stats.money += (distance * (1 + SignalBus.upgrade_stats.max_clean_runs)) + (bonus_time)
     SignalBus.upgrade_stats.runs_played += 1
 
     reset_stats()
 
 func reset_stats():
-    SignalBus.distance = 0.0
-    SignalBus.throttle_input = 0.0
-    SignalBus.angle_deg = 0.0
-    SignalBus.bonus_time = 0.0
-
     ui.set_max_distance_label_text(SignalBus.upgrade_stats.max_distance)
     ui.set_max_clean_runs_label_text(SignalBus.upgrade_stats.max_clean_runs)
-    ui.set_money_label_text(SignalBus.money)
+    ui.set_money_label_text(SignalBus.upgrade_stats.money)
     ui.set_max_bonus_time_label_text(SignalBus.upgrade_stats.max_bonus_time)
     ui.set_boosts_remaining_label_text(SignalBus.upgrade_stats.speed_boost_level as int)
 

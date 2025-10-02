@@ -22,7 +22,7 @@ func _ready():
     )
     timer.start()
 
-func on_body_entered(body: Node3D):
+func on_body_entered(_body: Node3D):
     print("Hit a thing")
     pass
     # var msg = variants[variant].resource_path

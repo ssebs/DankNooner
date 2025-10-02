@@ -72,6 +72,8 @@ func _physics_process(delta):
                 child.queue_free()
 
 func spawn_pickup(parent_node: Node3D, lane_spawn: Marker3D, type: Pickup.PickupType):
+    if Engine.is_editor_hint():
+        return
     var pickup_item = pickup_scn.instantiate() as Pickup
     pickup_item.type = type
 
