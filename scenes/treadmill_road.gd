@@ -70,6 +70,7 @@ func _physics_process(delta):
         for child in last_piece.get_children():
             if child is Obstacle:
                 child.queue_free()
+
 func spawn_pickup(parent_node: Node3D, lane_spawn: Marker3D, type: Pickup.PickupType):
     var pickup_item = pickup_scn.instantiate() as Pickup
     pickup_item.type = type
