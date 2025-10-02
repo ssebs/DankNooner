@@ -2,7 +2,7 @@
 class_name UpgradeStatsRes extends Resource
 
 # TODO: implement save and load
-enum Level {LOW = 1, MEDIUM, HIGH}
+enum Level {LOW = 1, MEDIUM, HIGH, MAX}
 
 # Upgrades
 @export var fuel_level: Level = Level.LOW

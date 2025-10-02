@@ -12,6 +12,8 @@ Wheelie challenge game, try to hold a wheelie for as long as you can & earn poin
 - Input:
   - Move window capture to `main_game`
   - Disable input as a global
+- Move Upgrades to their own file from main_game
+- Multiple upgrade cost by upgrade level
 
 TODO:
 - Make speed feel faster / better / increase
