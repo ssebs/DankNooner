@@ -8,12 +8,37 @@ signal finished_run(has_crashed: bool, msg: String)
 @onready var audio_player: AudioStreamPlayer = $AudioStreamPlayer
 @onready var speed_boost_timer: Timer = $SpeedBoostTimer
 
+# moved from SignalBus
+var angle_deg: float
+var throttle_input: float:
+    set(val):
+        throttle_input = clampf(val, 0, 100)
+var bonus_time: float: # aka dank time
+    set(val):
+        bonus_time = clampf(val, 0, 100)
+var speed: float
+var distance: float
 var gravity = 50
+
+# state related
 var disable_input = false
 var has_started = false
 var is_lerping_to_stop = false
-var speed_boosts_remaining: int
+
+# to be set in _ready
+var speed_boosts_remaining: int:
+    set(val):
+        speed_boosts_remaining = val
+        if SignalBus.ui != null:
+            SignalBus.ui.set_boosts_remaining_label_text(speed_boosts_remaining)
+
 var max_speed: float
+var fuel: float:
+    set(val):
+        fuel = val
+        if SignalBus.ui != null:
+            SignalBus.ui.fuel_progress.max_value = fuel
+            SignalBus.ui.fuel_progress.value = fuel
 
 func _ready():
     Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -21,15 +46,12 @@ func _ready():
         finish_up("crash", true, msg)
     )
 
+    fuel = SignalBus.upgrade_stats.fuel_level * 10
     speed_boosts_remaining = SignalBus.upgrade_stats.speed_boost_level
-    SignalBus.fuel = SignalBus.upgrade_stats.fuel_level * 10
-    SignalBus.ui.fuel_progress.max_value = SignalBus.fuel
-
     max_speed = lerp(180.0, 360.0, float(SignalBus.upgrade_stats.speed_level - 1) / float(UpgradeStatsRes.Level.HIGH - 1))
 
     if !Engine.is_editor_hint():
-        audio_player.volume_linear = SignalBus.volume
-        SignalBus.ui.set_boosts_remaining_label_text(speed_boosts_remaining)
+        audio_player.volume_linear = SignalBus.upgrade_stats.volume
 
 #region input
 # capture window + set throttle input
@@ -113,10 +135,10 @@ func _physics_process(delta):
     # Gameplay stuff
     if has_started:
         SignalBus.distance += delta * SignalBus.speed
-        SignalBus.fuel -= delta
+        fuel -= delta
         
         # ran out of gas
-        if SignalBus.fuel <= 0:
+        if fuel <= 0:
             finish_up("regular_stop", false, "Ran out of gas.")
             return
 
