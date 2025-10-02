@@ -11,15 +11,12 @@ Wheelie challenge game, try to hold a wheelie for as long as you can & earn poin
 - Organize UI vars
 - Input:
   - Move window capture to `main_game`
-  - Add left/right steer controls
   - Disable input as a global
-- Tutorial:
-  - Add shift to boost
 
 TODO:
 - Make speed feel faster / better / increase
 - Fix pickups not working
-- Fix money not being spend
+- Fix money not being spent
 - Fix pickup size
 - More goals
   - e.g. at 1 mi, change the skybox or something

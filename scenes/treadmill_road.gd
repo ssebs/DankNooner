@@ -59,7 +59,7 @@ func _physics_process(delta):
         var current_spawn_chance = spawn_chance_base * difficulty_modifier
         if randf() < current_spawn_chance:
             var is_left_lane := randi() % 2 == 0
-            spawn_obstacle(first_piece, lane1_spawn if is_left_lane else lane2_spawn, false, !is_left_lane)
+            spawn_obstacle(first_piece, lane1_spawn if is_left_lane else lane2_spawn, false, is_left_lane)
         
         if randf() < current_spawn_chance:
             # TODO: random chance to spawn pickup
@@ -91,6 +91,6 @@ func spawn_obstacle(parent_node: Node3D, lane_spawn: Marker3D, is_hazard := fals
     else:
         thing.variant = randi_range(0, thing.variant_split_idx)
     thing.global_position = lane_spawn.global_position
+    parent_node.add_child(thing)
     if should_flip:
         thing.rotate_y(deg_to_rad(180))
-    parent_node.add_child(thing)

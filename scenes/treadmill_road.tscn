@@ -23,6 +23,7 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, -20)
 
 [node name="Walls" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2857243, 0)
 
 [node name="Wall" parent="Walls" instance=ExtResource("2_2hvkh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.211726, -5)
