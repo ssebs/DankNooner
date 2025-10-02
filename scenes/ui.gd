@@ -188,3 +188,8 @@ func play_tutorial_anim():
         tutorial_menu_panel.hide()
     )
     tutorial_anim_player.play("mouse_controls_tutorial")
+
+func stop_tutorial_anim():
+    # TODO: disconnect the signal
+    tutorial_anim_player.stop()
+    tutorial_menu_panel.hide()
