@@ -37,6 +37,7 @@ Gameplay:
 - [x] other hazards (speed bump, gravel, oil slick, etc.)
 - [x] gas can run out
 - [ ] add gears
+- [ ] Leaderboard
 
 Misc:
 - [ ] sfx at 1mi (dank nooner brah, siiiick, etc.)
