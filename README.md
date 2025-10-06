@@ -13,18 +13,18 @@ Wheelie challenge game, try to hold a wheelie for as long as you can & earn poin
   - Move window capture to `main_game`
   - Disable input as a global
 - Move Upgrades to their own file from main_game
-- Multiple upgrade cost by upgrade level
+- Money doesn't update when spending it
+- Multiple upgrade cost by upgrade level, not just fuel
 
-TODO:
+## TODO:
 - Make speed feel faster / better / increase
-- Fix pickups not working
-- Fix money not being spent
-- Fix pickup size
-- More goals
-  - e.g. at 1 mi, change the skybox or something
-  - dank time should reward / give currency for unlocking tricks
+  - Speed boost FX (leave flame trail)
+- Fix pickups 
+  - not working
+  - icon/hitbox size
+- Fix hazard hitbox size
 
-Gameplay:
+## Gameplay:
 - [x] mouse => throttle / lean control
   - [x] also support keyboard press
 - [x] score based on speed * angle
@@ -36,33 +36,35 @@ Gameplay:
 - [x] avoid traffic on highway by switching lanes
 - [x] other hazards (speed bump, gravel, oil slick, etc.)
 - [x] gas can run out
+- [ ] Dank time should reward / give currency for unlocking tricks
+- [ ] add pickups
 - [ ] add gears
-- [ ] Leaderboard
+- [ ] more road types (turns/intersections/freeway vs street.)
+- [ ] Global Leaderboard
 
-Misc:
-- [ ] sfx at 1mi (dank nooner brah, siiiick, etc.)
+## Misc:
+- [ ] FX at 1mi (dank nooner brah, siiiick, skybox change, etc.)
 - [x] main menu
 - [x] working volume
-- [ ] android support
+- [x] android support
 
-Upgrades:
+## Upgrades:
 - [x] Increase speed boost count
 - [x] Increase fuel
 - [x] Increase max speed
 - [ ] Use up $
 - [ ] Armour (allow 1-3 hits)
-- [ ] Other tricks (360, flip)?
+- [ ] Tricks (360, flip)?
 
-Pickups:
+## Pickups:
 - [ ] Gas
 - [ ] Speed boost
 
-Bugs:
+## Bugs:
 - [ ] Web export [see](https://forum.godotengine.org/t/mouse-jumps-on-exported-web-build/57385)
 - [ ] Force road items to despawn on new run
   - [ ] also don't spawn items in player
 
-Out of scope:
-- Global leaderboard
+## Out of scope:
 - avoid cops?
 - shoot at cars?
