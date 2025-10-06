@@ -25,12 +25,12 @@ shader_parameter/layer_scale = 20.0
 shader_parameter/layer_scale_step = 10.0
 shader_parameter/layers_count = 3
 
-[sub_resource type="Sky" id="Sky_aicyk"]
+[sub_resource type="Sky" id="Sky_o6v7o"]
 sky_material = SubResource("ShaderMaterial_8xp80")
 
 [sub_resource type="Environment" id="Environment_cybgu"]
 background_mode = 2
-sky = SubResource("Sky_aicyk")
+sky = SubResource("Sky_o6v7o")
 tonemap_mode = 2
 glow_enabled = true
 

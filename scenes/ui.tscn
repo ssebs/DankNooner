@@ -7,7 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://cxsdwwhqi4jjd" path="res://assets/img/DanknessArrow.png" id="4_8dubc"]
 [ext_resource type="StyleBox" uid="uid://g4xm0g06mw1c" path="res://resources/green_stylebox_black_border_fill.tres" id="4_wm3ai"]
 [ext_resource type="Texture2D" uid="uid://cdycovjotm6fc" path="res://assets/kenney-input-prompts/Keyboard & Mouse/Double/keyboard_shift.png" id="5_8k7j3"]
-[ext_resource type="Texture2D" uid="uid://c4l51uj4lica7" path="res://img/LogoNoBG.png" id="7_p7vwb"]
 [ext_resource type="Texture2D" uid="uid://bna1pt01qnemg" path="res://assets/kenney-input-prompts/Keyboard & Mouse/Double/mouse.png" id="8_ktti3"]
 [ext_resource type="Texture2D" uid="uid://dtdkjfndpcm1s" path="res://assets/kenney-input-prompts/Keyboard & Mouse/Double/mouse_left.png" id="9_cgfq5"]
 [ext_resource type="Texture2D" uid="uid://bnp0iwwtbm2il" path="res://assets/kenney-input-prompts/Keyboard & Mouse/Double/keyboard_w.png" id="10_vsj0x"]
@@ -444,6 +443,8 @@ _data = {
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rlppe"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ycmcx"]
+
 [node name="UI" type="MarginContainer"]
 anchors_preset = 15
 anchor_right = 1.0
@@ -616,6 +617,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_8dubc")
 
 [node name="UpgradeMenuPanel" type="Control" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="UpgradeMenuPanel"]
@@ -797,18 +799,25 @@ offset_right = 1022.0
 offset_bottom = 365.0
 theme_override_constants/separation = 34
 
-[node name="TextureRect" type="TextureRect" parent="MainMenuPanel/TitleContainer"]
-custom_minimum_size = Vector2(300, 300)
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenuPanel/TitleContainer"]
 layout_mode = 2
-size_flags_vertical = 0
-texture = ExtResource("7_p7vwb")
-expand_mode = 1
-stretch_mode = 4
 
-[node name="Title2" type="Label" parent="MainMenuPanel/TitleContainer"]
+[node name="Title" type="Label" parent="MainMenuPanel/TitleContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 96
+text = "Dank Nooner"
+
+[node name="Title2" type="Label" parent="MainMenuPanel/TitleContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.8217887, 0.82178867, 0.82178867, 1)
+theme_override_constants/line_spacing = -15
 theme_override_font_sizes/font_size = 48
-text = "How long can you balance a wheelie?"
+text = "How long can you
+balance a wheelie?"
 
 [node name="BtnContainer" type="VBoxContainer" parent="MainMenuPanel"]
 layout_mode = 0
@@ -841,8 +850,8 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -407.0
-offset_top = -304.0
+offset_left = -386.0
+offset_top = -196.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_constants/separation = 20
@@ -860,8 +869,27 @@ custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 max_value = 1.0
-step = 0.2
+step = 0.05
 value = 1.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainMenuPanel/VolContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title3" type="Label" parent="MainMenuPanel/VolContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0.8217887, 0.82178867, 0.82178867, 1)
+theme_override_constants/line_spacing = -15
+theme_override_font_sizes/font_size = 48
+text = "Made by"
+
+[node name="LinkButton" type="LinkButton" parent="MainMenuPanel/VolContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "@ssebs"
+uri = "https://ssebs.com"
 
 [node name="PauseMenuPanel" type="Control" parent="."]
 unique_name_in_owner = true
@@ -870,18 +898,18 @@ layout_mode = 2
 
 [node name="TutorialPanel" type="Control" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="TutorialPanel"]
+custom_minimum_size = Vector2(1600, 900)
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.33333334)
+color = Color(0, 0, 0, 0.88235295)
 
 [node name="TutorialAnimPlayer" type="AnimationPlayer" parent="TutorialPanel"]
 unique_name_in_owner = true
@@ -961,10 +989,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 219.0
-offset_top = 306.0
-offset_right = 1221.0065
-offset_bottom = 434.00037
+offset_left = -501.0
+offset_top = -64.0
+offset_right = 501.00647
+offset_bottom = 64.00037
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -1194,3 +1222,31 @@ size_flags_vertical = 8
 texture = ExtResource("16_cof4p")
 expand_mode = 2
 stretch_mode = 4
+
+[node name="Title" type="VBoxContainer" parent="TutorialPanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -416.0
+offset_right = 416.0
+offset_bottom = 144.0
+grow_horizontal = 2
+
+[node name="HSeparator" type="HSeparator" parent="TutorialPanel/Title"]
+layout_mode = 2
+theme_override_constants/separation = 72
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ycmcx")
+
+[node name="Title" type="Label" parent="TutorialPanel/Title"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 48
+text = "Tutorial"
+horizontal_alignment = 1
+
+[node name="Title2" type="Label" parent="TutorialPanel/Title"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Press any button to skip"
+horizontal_alignment = 1

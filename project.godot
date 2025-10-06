@@ -14,7 +14,7 @@ config/name="DankNooner"
 run/main_scene="uid://bt8t0gafmsf2w"
 config/features=PackedStringArray("4.5", "Mobile")
 boot_splash/show_image=false
-config/icon="uid://dgj31bfxs2ql6"
+config/icon="uid://cynkexq0hw3ik"
 
 [autoload]
 
