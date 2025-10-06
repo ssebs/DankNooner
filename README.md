@@ -17,6 +17,7 @@ Wheelie challenge game, try to hold a wheelie for as long as you can & earn poin
 - Multiple upgrade cost by upgrade level, not just fuel
 
 ## TODO:
+- Fix steering w/ mouse (goes right on web)
 - Make speed feel faster / better / increase
   - Speed boost FX (leave flame trail)
 - Fix pickups 
