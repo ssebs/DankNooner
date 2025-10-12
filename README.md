@@ -24,6 +24,8 @@ Wheelie challenge game, try to hold a wheelie for as long as you can & earn poin
   - not working
   - icon/hitbox size
 - Fix hazard hitbox size
+- Rider on bike can ragdoll on crash
+  - uses IK to animate to hold on to bike / lean
 
 ## Gameplay:
 - [x] mouse => throttle / lean control
