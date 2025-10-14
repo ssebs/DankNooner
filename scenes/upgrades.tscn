@@ -1,6 +1,229 @@
-[gd_scene load_steps=2 format=3 uid="uid://cbxomjvlf3mtb"]
+[gd_scene load_steps=11 format=3 uid="uid://cbxomjvlf3mtb"]
 
+[ext_resource type="Theme" uid="uid://d15reok7osseo" path="res://resources/theme.tres" id="1_1xumc"]
 [ext_resource type="Script" uid="uid://cjyvlya1pl6ds" path="res://scenes/upgrades.gd" id="1_a0ma6"]
+[ext_resource type="PackedScene" uid="uid://b2tmcghnjj2iu" path="res://assets/LowPolyRoadPack/Models/Road Straight 2.dae" id="3_usctq"]
+[ext_resource type="PackedScene" uid="uid://bwqo2xj0q4e6b" path="res://scenes/motorcycle.tscn" id="4_15hgd"]
+[ext_resource type="Shader" uid="uid://c61w1rswrmalb" path="res://resources/skybox_shader.gdshader" id="5_jcj7r"]
 
-[node name="Upgrades" type="Node"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_js5n2"]
+shader = ExtResource("5_jcj7r")
+shader_parameter/sky_color = Color(0.0470588, 0.0509804, 0.109804, 1)
+shader_parameter/star_base_color = Color(0.934797, 1, 0.826931, 1)
+shader_parameter/star_hue_offset = 0.156
+shader_parameter/star_intensity = 0.08
+shader_parameter/star_twinkle_speed = 0.8
+shader_parameter/star_twinkle_intensity = 0.2
+shader_parameter/layer_scale = 20.0
+shader_parameter/layer_scale_step = 10.0
+shader_parameter/layers_count = 3
+
+[sub_resource type="Sky" id="Sky_o6v7o"]
+sky_material = SubResource("ShaderMaterial_js5n2")
+
+[sub_resource type="Environment" id="Environment_ef3hr"]
+background_mode = 2
+sky = SubResource("Sky_o6v7o")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1xumc"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.8, 0, 0, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1xumc"]
+
+[node name="Upgrades" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_1xumc")
 script = ExtResource("1_a0ma6")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(1600, 900)
+render_target_update_mode = 4
+
+[node name="Road Straight 2" parent="SubViewportContainer/SubViewport" instance=ExtResource("3_usctq")]
+
+[node name="Road Straight 3" parent="SubViewportContainer/SubViewport" instance=ExtResource("3_usctq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
+
+[node name="Motorcycle" parent="SubViewportContainer/SubViewport" instance=ExtResource("4_15hgd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.155939, 0, -3.1039095)
+collision_layer = 0
+collision_mask = 0
+is_playable = false
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport"]
+environment = SubResource("Environment_ef3hr")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewportContainer/SubViewport"]
+transform = Transform3D(0.766863, -0.390061, 0.50968, 7.19241e-09, 0.794128, 0.60775, -0.641811, -0.466061, 0.608987, 30, 27, 15)
+light_color = Color(0.79, 0.711263, 0.5846, 1)
+directional_shadow_mode = 1
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport"]
+unique_name_in_owner = true
+transform = Transform3D(0.28153914, -0.052692, 0.9581019, 0, 0.99849117, 0.054913253, -0.9595498, -0.0154602295, 0.28111434, 10.645426, 0.5500619, -2.5923972)
+current = true
+fov = 93.7
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 80.0
+offset_right = 1520.0
+offset_bottom = 820.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_1xumc")
+
+[node name="txt" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="MaxBonusTimeLabel" type="Label" parent="PanelContainer/txt"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "Most Dank Time: 0.00s"
+
+[node name="MaxDistanceLabel" type="Label" parent="PanelContainer/txt"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "Max Distance: 0m"
+
+[node name="MaxCleanRunsLabel" type="Label" parent="PanelContainer/txt"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "Clean Runs: 0"
+
+[node name="MoneyLabel" type="Label" parent="PanelContainer/txt"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "Money: $0.00"
+
+[node name="HSeparator4" type="HSeparator" parent="PanelContainer/txt"]
+layout_mode = 2
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxEmpty_1xumc")
+
+[node name="SpeedBoostUpgradeLevel" type="Label" parent="PanelContainer/txt"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "Speed Boost Upgrade Level: 1"
+
+[node name="MaxSpeedUpgradeLevel" type="Label" parent="PanelContainer/txt"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "Max Speed Upgrade Level: 1"
+
+[node name="FuelUpgradeLevel" type="Label" parent="PanelContainer/txt"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "Fuel Upgrade Level: 1"
+
+[node name="btns" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Upgrade1Btn" type="Button" parent="PanelContainer/btns"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 150)
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Add a Speed Boost
+$600"
+
+[node name="Upgrade2Btn" type="Button" parent="PanelContainer/btns"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 150)
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Increase Top Speed
+$1500"
+
+[node name="Upgrade3Btn" type="Button" parent="PanelContainer/btns"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 150)
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Upgrade Max Fuel
+$2000"
+
+[node name="ChooseUpgradeLabel" type="Label" parent="PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 64
+text = "Choose an upgrade:"
+horizontal_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_constants/separation = 64
+
+[node name="MainMenuBtn" type="Button" parent="PanelContainer/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 48
+text = "Main Menu"
+
+[node name="QuitBtn2" type="Button" parent="PanelContainer/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 48
+text = "Quit Game"
+
+[node name="RetryBtn" type="Button" parent="PanelContainer/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 48
+text = "Retry "

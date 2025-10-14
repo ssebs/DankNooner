@@ -2,6 +2,9 @@ class_name Motorcycle extends AnimatableBody3D
 
 signal run_finished(msg: String, has_crashed: bool, distance: float, bonus_time: float)
 
+@export var is_playable: bool = true
+
+@onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var rotate_point: Node3D = %RotatePoint
 @onready var camera: Camera3D = %Camera3D
@@ -54,6 +57,10 @@ var fuel: float:
             SignalBus.ui.on_fuel_updated(fuel)
 
 func _ready():
+    if !is_playable:
+        collision_shape.set_deferred("disabled", true)
+        camera.queue_free()
+        return
     Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
     SignalBus.motorcycle_collision.connect(func(msg: String):
         finish_up("crash", true, msg)
@@ -71,6 +78,8 @@ func _ready():
 #region input
 # capture window + set throttle input
 func _input(event: InputEvent):
+    if !is_playable:
+        return
     # Capture/uncapture the mouse w/ click/escape
     if event is InputEventMouseButton:
         if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
@@ -105,6 +114,8 @@ func _input(event: InputEvent):
 #endregion
 
 func _physics_process(delta):
+    if !is_playable:
+        return
     # RPM Audio Pitch
     if throttle_input > 0:
         audio_player.pitch_scale = clampf(throttle_input / 100, 0.5, 3)
