@@ -12,7 +12,6 @@ Wheelie challenge game, try to hold a wheelie for as long as you can & earn poin
 - Input:
   - Move window capture to `main_game`
   - Disable input as a global
-- Move Upgrades to their own file from main_game
 - Money doesn't update when spending it
 - Multiple upgrade cost by upgrade level, not just fuel
 
