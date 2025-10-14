@@ -36,8 +36,7 @@ var upgrade_button_metadata: Dictionary = {
         'func': on_upgrade_3_pressed
     },
 }
-# TODO: multiply cost by upgrade level
-# Move buttons/bg into this scene, and make it a new floating panel.
+# TODO: multiply cost by upgrade level, see upgrade 3 btn onclick
 
 func _ready():
     if !Engine.is_editor_hint() and SignalBus.ui == null:
@@ -79,13 +78,13 @@ func on_upgrade_1_pressed():
             print("you're too poor")
             return
         SignalBus.upgrade_stats.money -= upgrade_button_metadata[1]["cost"]
-        SignalBus.ui.set_money_label_text(SignalBus.upgrade_stats.money)
+        set_money_label_text(SignalBus.upgrade_stats.money)
         
         # += doesn't cast properly, according to the linter B)
         var new_val = SignalBus.upgrade_stats.speed_boost_level + 1
         SignalBus.upgrade_stats.speed_boost_level = new_val as UpgradeStatsRes.Level
 
-        SignalBus.ui.set_speed_boost_upgrade_label_text(SignalBus.upgrade_stats.speed_boost_level)
+        set_speed_boost_upgrade_label_text(SignalBus.upgrade_stats.speed_boost_level)
         
     if SignalBus.upgrade_stats.speed_boost_level >= UpgradeStatsRes.Level.MAX:
         upgrade_1_btn.disabled = true
@@ -97,12 +96,12 @@ func on_upgrade_2_pressed():
             print("you're too poor")
             return
         SignalBus.upgrade_stats.money -= upgrade_button_metadata[2]["cost"]
-        SignalBus.ui.set_money_label_text(SignalBus.upgrade_stats.money)
+        set_money_label_text(SignalBus.upgrade_stats.money)
 
         var new_val = SignalBus.upgrade_stats.speed_level + 1
         SignalBus.upgrade_stats.speed_level = new_val as UpgradeStatsRes.Level
 
-        SignalBus.ui.set_max_speed_upgrade_label_text(SignalBus.upgrade_stats.speed_level)
+        set_max_speed_upgrade_label_text(SignalBus.upgrade_stats.speed_level)
 
     if SignalBus.upgrade_stats.speed_level >= UpgradeStatsRes.Level.MAX:
         upgrade_2_btn.disabled = true
@@ -116,14 +115,14 @@ func on_upgrade_3_pressed():
             print("you're too poor")
             return
         SignalBus.upgrade_stats.money -= cost
-        SignalBus.ui.set_money_label_text(SignalBus.upgrade_stats.money)
+        set_money_label_text(SignalBus.upgrade_stats.money)
                 
         var new_val = SignalBus.upgrade_stats.fuel_level + 1
         SignalBus.upgrade_stats.fuel_level = new_val as UpgradeStatsRes.Level
         upgrade_3_btn.text = upgrade_button_metadata[3]["label"] + "\n$" + str(cost)
         print("cost:", cost)
 
-        SignalBus.ui.set_fuel_upgrade_label_text(SignalBus.upgrade_stats.fuel_level)
+        set_fuel_upgrade_label_text(SignalBus.upgrade_stats.fuel_level)
 
     if SignalBus.upgrade_stats.fuel_level >= UpgradeStatsRes.Level.MAX:
         upgrade_3_btn.disabled = true
