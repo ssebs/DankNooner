@@ -2,6 +2,7 @@ class_name MainGame extends Node
 
 @export var moto_scene: PackedScene = preload("res://scenes/motorcycle.tscn")
 
+@onready var upgrades: Upgrades = $Upgrades
 @onready var spawn_pos: Marker3D = $SpawnPos
 @onready var ui: UI = $UI
 @onready var menu_screen_items: Node3D = %MenuStuff
@@ -21,11 +22,11 @@ func _ready():
     )
 
     # Upgrade menu handlers
-    ui.quit_btn_upgrade_menu.pressed.connect(func():
+    upgrades.quit_btn_upgrade_menu.pressed.connect(func():
         get_tree().quit(0)
     )
-    ui.retry_btn.pressed.connect(start_run)
-    ui.main_menu_btn.pressed.connect(goto_main_menu)
+    upgrades.retry_btn.pressed.connect(start_run)
+    upgrades.main_menu_btn.pressed.connect(goto_main_menu)
 
 
 #region gameplay
@@ -67,10 +68,10 @@ func on_run_finished(msg: String, has_crashed: bool, distance: float, bonus_time
     reset_stats()
 
 func reset_stats():
-    ui.set_max_distance_label_text(SignalBus.upgrade_stats.max_distance)
-    ui.set_max_clean_runs_label_text(SignalBus.upgrade_stats.max_clean_runs)
-    ui.set_money_label_text(SignalBus.upgrade_stats.money)
-    ui.set_max_bonus_time_label_text(SignalBus.upgrade_stats.max_bonus_time)
+    upgrades.set_max_distance_label_text(SignalBus.upgrade_stats.max_distance)
+    upgrades.set_max_clean_runs_label_text(SignalBus.upgrade_stats.max_clean_runs)
+    upgrades.set_money_label_text(SignalBus.upgrade_stats.money)
+    upgrades.set_max_bonus_time_label_text(SignalBus.upgrade_stats.max_bonus_time)
     ui.set_boosts_remaining_label_text(SignalBus.upgrade_stats.speed_boost_level as int)
 
 #endregion
@@ -86,10 +87,19 @@ func switch_game_state(state: GameState):
     match state:
         GameState.MAIN_MENU:
             menu_screen_items.visible = true
+            if upgrades != null:
+                upgrades.my_hide()
         GameState.PLAYING:
             menu_screen_items.visible = false
+            if upgrades != null:
+                upgrades.my_hide()
         GameState.PAUSE_MENU:
             menu_screen_items.visible = false
+            if upgrades != null:
+                upgrades.my_hide()
         GameState.RUN_OVER:
-            menu_screen_items.visible = true
+            # menu_screen_items.visible = true
+            menu_screen_items.visible = false
+            if upgrades != null:
+                upgrades.my_show()
 #endregion

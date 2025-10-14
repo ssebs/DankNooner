@@ -7,13 +7,14 @@ Wheelie challenge game, try to hold a wheelie for as long as you can & earn poin
 ![Screenshot01](./img/screenshot01.png)
 ![Screenshot02](./img/screenshot02.png)
 
+- Multiple upgrade cost by upgrade level, not just fuel
+
 ## Minor Refactor:
 - Organize UI vars
 - Input:
   - Move window capture to `main_game`
   - Disable input as a global
 - Money doesn't update when spending it
-- Multiple upgrade cost by upgrade level, not just fuel
 
 ## TODO:
 - Fix steering w/ mouse (goes right on web)
