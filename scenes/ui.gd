@@ -7,35 +7,20 @@ signal notify_finished()
 @onready var angle_texture: TextureRect = $%ArrowTexture
 @onready var notify_label: Label = %NotifyLabel
 @onready var bonus_time_label: Label = %BonusTimeLabel
-@onready var distance_label: Label = %DistanceLabel
-@onready var max_bonus_time_label: Label = %MaxBonusTimeLabel
-@onready var max_distance_label: Label = %MaxDistanceLabel
-@onready var max_clean_runs_label: Label = %MaxCleanRunsLabel
-@onready var money_label: Label = %MoneyLabel
 @onready var throttle_progress: ProgressBar = %ThrottleProgress
 @onready var fuel_progress: ProgressBar = %FuelProgress
 @onready var boosts_remaining: Label = %BoostsRemaining
-@onready var fuel_upgrade_level: Label = %FuelUpgradeLevel
-@onready var max_speed_upgrade_level: Label = %MaxSpeedUpgradeLevel
-@onready var speed_boost_upgrade_level: Label = %SpeedBoostUpgradeLevel
+@onready var distance_label: Label = %DistanceLabel
 
 @onready var game_panel: Control = %GamePanel
 @onready var main_menu_panel: Control = %MainMenuPanel
 @onready var pause_menu_panel: Control = %PauseMenuPanel
-@onready var upgrade_menu_panel: Control = %UpgradeMenuPanel
+# @onready var upgrade_menu_panel: Control = %UpgradeMenuPanel
 
 # main menu
 @onready var play_btn: Button = %PlayBtn
 @onready var quit_btn_main_menu: Button = %QuitBtn
 @onready var volume_slider: Slider = %VolumeSlider
-
-# upgrade menu
-@onready var quit_btn_upgrade_menu: Button = %QuitBtn2
-@onready var retry_btn: Button = %RetryBtn
-@onready var main_menu_btn: Button = %MainMenuBtn
-@onready var upgrade_1_btn: Button = %Upgrade1Btn
-@onready var upgrade_2_btn: Button = %Upgrade2Btn
-@onready var upgrade_3_btn: Button = %Upgrade3Btn
 
 # tutorial menu
 @onready var tutorial_menu_panel: Control = %TutorialPanel
@@ -61,15 +46,10 @@ func _ready():
     fuel_progress.value = 100
 
     set_distance_label_text(0)
-    set_max_distance_label_text(0)
-    set_max_clean_runs_label_text(0)
-    set_money_label_text(0)
+
     on_bonus_time_updated(0)
-    set_max_bonus_time_label_text(0)
     set_boosts_remaining_label_text(0)
-    set_fuel_upgrade_label_text(UpgradeStatsRes.Level.LOW)
-    set_max_speed_upgrade_label_text(UpgradeStatsRes.Level.LOW)
-    set_speed_boost_upgrade_label_text(UpgradeStatsRes.Level.LOW)
+
     volume_slider.value = 0.25 # TODO: load from save
 
     tutorial_menu_panel.hide()
@@ -82,14 +62,14 @@ func switch_panels(state: MainGame.GameState):
             main_menu_panel.visible = true
             game_panel.visible = false
             pause_menu_panel.visible = false
-            upgrade_menu_panel.visible = false
+            # upgrade_menu_panel.visible = false
         MainGame.GameState.PLAYING:
             game_panel.visible = true
             pause_menu_panel.visible = false
             main_menu_panel.visible = false
-            upgrade_menu_panel.visible = false
+            # upgrade_menu_panel.visible = false
         MainGame.GameState.RUN_OVER:
-            upgrade_menu_panel.visible = true
+            # upgrade_menu_panel.visible = true
             game_panel.visible = false
             pause_menu_panel.visible = false
             main_menu_panel.visible = false
@@ -97,7 +77,7 @@ func switch_panels(state: MainGame.GameState):
             pause_menu_panel.visible = true
             game_panel.visible = false
             main_menu_panel.visible = false
-            upgrade_menu_panel.visible = false
+            # upgrade_menu_panel.visible = false
 
 #region signal handlers
 func on_throttle_updated(pct: float):
@@ -150,37 +130,16 @@ func on_notify_ui(msg: String, duration: float = notify_time_sec):
     notify_finished.emit()
 #endregion
 
-func on_volume_changed(value: float):
-    SignalBus.upgrade_stats.volume = value
-
-#region label setters
-func set_max_bonus_time_label_text(time: float):
-    max_bonus_time_label.text = "Most Dank Time: %.2fs" % time
-
 func set_distance_label_text(distance: float):
     distance_label.text = "Distance: %.0fm" % distance
-
-func set_max_distance_label_text(distance: float):
-    max_distance_label.text = "Max Distance: %.0fm" % distance
-
-func set_max_clean_runs_label_text(clean_runs: int):
-    max_clean_runs_label.text = "Clean Runs: %d" % clean_runs
-
-func set_money_label_text(money: float):
-    money_label.text = "Money: $%.2f" % money
 
 func set_boosts_remaining_label_text(count: int):
     # TODO: make icons instead
     boosts_remaining.text = "Boosts: %d" % count
 
-func set_fuel_upgrade_label_text(level: UpgradeStatsRes.Level):
-    fuel_upgrade_level.text = "Fuel Upgrade Level: %d" % level
-func set_max_speed_upgrade_label_text(level: UpgradeStatsRes.Level):
-    max_speed_upgrade_level.text = "Max Speed Upgrade Level: %d" % level
-func set_speed_boost_upgrade_label_text(level: UpgradeStatsRes.Level):
-    speed_boost_upgrade_level.text = "Speed Boost Upgrade Level: %d" % level
+func on_volume_changed(value: float):
+    SignalBus.upgrade_stats.volume = value
 
-#endregion
 
 func play_tutorial_anim():
     tutorial_menu_panel.show()
