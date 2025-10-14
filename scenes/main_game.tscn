@@ -1,8 +1,9 @@
-[gd_scene load_steps=20 format=3 uid="uid://bt8t0gafmsf2w"]
+[gd_scene load_steps=21 format=3 uid="uid://bt8t0gafmsf2w"]
 
 [ext_resource type="Script" uid="uid://d3gn4nknw3s61" path="res://scenes/main_game.gd" id="1_s3esy"]
 [ext_resource type="PackedScene" uid="uid://boveos4k30e0d" path="res://scenes/ui.tscn" id="2_o6v7o"]
 [ext_resource type="Shader" uid="uid://c61w1rswrmalb" path="res://resources/skybox_shader.gdshader" id="2_wjob3"]
+[ext_resource type="PackedScene" uid="uid://cbxomjvlf3mtb" path="res://scenes/upgrades.tscn" id="4_wjob3"]
 [ext_resource type="PackedScene" uid="uid://drsie5ww5xl2v" path="res://assets/LowPolyRoadPack/Models/Parkinglot Center 1.dae" id="8_ikqpi"]
 [ext_resource type="PackedScene" uid="uid://de0oj5dundds7" path="res://assets/LowPolyRoadPack/Models/Parkinglot Corner 3.dae" id="9_5luka"]
 [ext_resource type="PackedScene" uid="uid://d03bs21f5d1dy" path="res://assets/LowPolyRoadPack/Models/Parkinglot Edge 1.dae" id="10_yu8cv"]
@@ -101,10 +102,12 @@ _data = {
 [node name="MainGame" type="Node"]
 script = ExtResource("1_s3esy")
 
+[node name="UI" parent="." instance=ExtResource("2_o6v7o")]
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cybgu")
 
-[node name="UI" parent="." instance=ExtResource("2_o6v7o")]
+[node name="Upgrades" parent="." instance=ExtResource("4_wjob3")]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.766863, -0.390061, 0.50968, 7.19241e-09, 0.794128, 0.60775, -0.641811, -0.466061, 0.608987, 30, 27, 15)
