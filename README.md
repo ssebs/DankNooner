@@ -16,6 +16,11 @@ Wheelie challenge game, try to hold a wheelie for as long as you can & earn poin
   - Disable input as a global
 - Money doesn't update when spending it
 
+## Scope Creep:
+- Add different levels to unlock
+  - Maybe like RV there yet with 1 long map with diff zones w/ checkpoints?
+- Story / goal is to "Make it home alive"
+
 ## TODO:
 - Fix steering w/ mouse (goes right on web)
 - Make speed feel faster / better / increase
