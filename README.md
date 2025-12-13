@@ -3,8 +3,7 @@
 ## Rewrite / V2 / Future of the game
 - Have more stunts
 - Animations
-  - (IK)
-  - Hold on to handlebars
+  - IK to animate to hold on to handlebars / lean
   - Ragdoll when you fall off
 - Plan Gameplay Loop w/ Flowcharts
 - Plan Code Structure
@@ -14,8 +13,14 @@
 - Story?
   - Progress from bicycle to scooter to harley to sport bike
   - Open world?
+- Different gameplay loops
+  - Riding / 
+  - Wheelies/other trick challenges (missions)
+  - Upgrade menu
+  - Traveling to next objective
 
 Wheelie challenge game, try to hold a wheelie for as long as you can & earn points to upgrade your bike.
+
 
 [theofficialssebs.itch.io/dank-nooner](https://theofficialssebs.itch.io/dank-nooner)
 
@@ -45,7 +50,7 @@ Wheelie challenge game, try to hold a wheelie for as long as you can & earn poin
   - icon/hitbox size
 - Fix hazard hitbox size
 - Rider on bike can ragdoll on crash
-  - uses IK to animate to hold on to bike / lean
+  -
 
 ## Gameplay:
 - [x] mouse => throttle / lean control
