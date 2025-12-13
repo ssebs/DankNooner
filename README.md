@@ -1,6 +1,15 @@
 # Dank Nooner
 
+## What is Dank Nooner?
+**Dank Nooner** is a motorcycle stunt game built in Godot. The current V1 proof of concept is a simple wheelie balance challenge—hold a wheelie as long as you can and earn points to upgrade your bike.
+
+The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll progress from a bicycle up to sport bikes, learning new tricks and completing missions along the way. The physics should feel fun but challenging—managing clutch, throttle, and balance—with ragdoll crashes when you bail. Doing wheelies fills your NOS meter. Planned features include upgrades, customization, multiplayer (races, co-op, free roam), and eventually a story mode.
+
+[V1 POC on Itch.io](https://theofficialssebs.itch.io/dank-nooner) | [GitHub](https://github.com/ssebs/danknooner)
+
 ## Rewrite / V2 / Future of the game
+
+### Goals
 - Have more stunts
 - Animations
   - IK to animate to hold on to handlebars / lean
@@ -12,7 +21,10 @@
   - e.g. don't have a single UI object that has 50 methods
 - Story?
   - Progress from bicycle to scooter to dirt bike to sport bike
-  - Open world?
+  - Open world
+    - City
+    - Hillside (like real moto, for races)
+    - Track
 - Different gameplay loops
   - Riding around the world
   - Wheelies/other trick challenges (missions)
@@ -26,11 +38,26 @@
   - Falling / crashing has ragdoll physics, player goes flying until they stop moving (or press btn)
 - Gameplay
   - Doing wheelies gives you NOS
+  - Controls:
+    - Gamepad preferred
+      - Front Brake `LT`
+      - Gas `RT`
+      - Steer (lean) `Right Stick`
+      - Clutch `LB`
+      - Trick `RB`
+        - Hold `RB` while pressing other buttons (A,B,X,Y) (maybe flick eventually)
+      - Shift Gears `DPAD Up/Down`
+      - Rear Brake `A`
 - Multiplayer
   - Races
   - Coop missions
   - Ride around together
-
+- Target platform
+  - PC (Windows+Linux) w/ Gamepad
+- Artstyle:
+  - Low Poly
+  - Cute/Bubbly?
+  - Aggressive/Sharp?
 
 ### Milestones
 - **Planning**
@@ -61,11 +88,8 @@
 - **Cutscenes / Story**
 - **Polish / Add life (NPCs)**
 
-Wheelie challenge game, try to hold a wheelie for as long as you can & earn points to upgrade your bike.
-
-> Need for speed 2 underground, but for motorcycles
-
-[theofficialssebs.itch.io/dank-nooner](https://theofficialssebs.itch.io/dank-nooner)
+## Timeline
+1-2 years, from 1/1/2026
 
 ## License
 [AGPL](./LICENSE)
