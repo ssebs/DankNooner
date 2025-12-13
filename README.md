@@ -7,6 +7,10 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
 
 [V1 POC on Itch.io](https://theofficialssebs.itch.io/dank-nooner) | [GitHub](https://github.com/ssebs/danknooner)
 
+## Current status:
+- Testing / learning multiplayer
+- Planning
+
 ## Rewrite / V2 / Future of the game
 
 ### Who's the target audience?
