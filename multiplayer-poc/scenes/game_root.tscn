@@ -13,6 +13,3 @@ _spawnable_scenes = PackedStringArray("uid://hentk2g6xmci")
 spawn_path = NodePath("..")
 script = ExtResource("2_ni5ms")
 network_player = ExtResource("3_uebra")
-
-[node name="Marker2D" type="Marker2D" parent="."]
-position = Vector2(619, 314)

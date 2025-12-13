@@ -19,7 +19,12 @@ offset_bottom = 40.0
 [node name="Server" type="Button" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Server"
+text = "Server Only"
+
+[node name="Host" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Host Game"
 
 [node name="Client" type="Button" parent="VBoxContainer"]
 unique_name_in_owner = true
