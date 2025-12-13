@@ -9,6 +9,12 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
 
 ## Rewrite / V2 / Future of the game
 
+### Who's the target audience?
+- Moto guys
+- Open world enjoyers
+- GTA enjoyers
+
+
 ### Goals
 - Have more stunts
 - Animations
