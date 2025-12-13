@@ -68,8 +68,18 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
   - Low Poly
   - Cute/Bubbly?
   - Aggressive/Sharp?
+- Race duration 2-5 mins
+- End goals for gamer:
+  - Be the best racer in town 😎
+    - Start on crappy races
+    - Upgrade bike
+    - Do harder races
+      - Need to do tricks to get NOS, needed to win
+    - Get golds / trophies
+
 
 ### Milestones
+#### POC
 - **Multiplayer POC**
   - > Start on separate project
   - Create lobby
@@ -85,6 +95,8 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
   - > continue from player controller project
   - Riding bike (lean, steer, wheelie)
   - Ragdoll
+
+#### MVP
 - **Start "real" project**
   - Import Scenes from past 2 projects (multiplayer, player controller)
   - Create code structure / processes
@@ -93,6 +105,9 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
   - (fill up gas, NOS/boost unlocks, ramps, wheelies)
 - **Multiplayer riding around town** 
   - (lobby, in game, sync)
+- **Multiplayer races**
+
+#### Full game
 - **Tricks** (in air tricks, more than just wheelie)
 - **Unlocks / Customization**
 - **Quests**
