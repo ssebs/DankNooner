@@ -14,7 +14,6 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
 - Open world enjoyers
 - GTA enjoyers
 
-
 ### Goals
 - Have more stunts
 - Animations
@@ -30,7 +29,8 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
   - Open world
     - City
     - Hillside (like real moto, for races)
-    - Track
+    - Race Track
+    - Dirt Track
 - Different gameplay loops
   - Riding around the world
   - Wheelies/other trick challenges (missions)

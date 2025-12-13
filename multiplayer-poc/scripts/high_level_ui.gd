@@ -1,0 +1,15 @@
+extends Control
+
+@onready var server_btn: Button = %Server
+@onready var client_btn: Button = %Client
+
+func _ready():
+    server_btn.pressed.connect(_on_server_pressed)
+    client_btn.pressed.connect(_on_client_pressed)
+
+
+func _on_server_pressed():
+    HighLevelNetworkHandler.start_server()
+
+func _on_client_pressed():
+    HighLevelNetworkHandler.start_client()
