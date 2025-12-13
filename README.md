@@ -60,14 +60,14 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
   - Aggressive/Sharp?
 
 ### Milestones
-- **Planning**
-  - Use Markdown Kanban for tasks
-  - Create subfolder for each mini project
-  - Use Excalidraw for diagrams
-- **Multiplayer demo**
+- **Multiplayer POC**
   - > Start on separate project
   - Create lobby
   - Sync 2 players in game
+- **Project Planning**
+  - Use Markdown Kanban for tasks
+  - Create subfolder for each mini project
+  - Use Excalidraw for diagrams
 - **Player controller** 
   - > Start on separate project
   - (gas, steer, brake, cluch, gears)
@@ -76,8 +76,9 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
   - Riding bike (lean, steer, wheelie)
   - Ragdoll
 - **Start "real" project**
-  - Import from past 2 projects
+  - Import Scenes from past 2 projects (multiplayer, player controller)
   - Create code structure / processes
+  - Create UI / Game managers
 - **Basic objectives**
   - (fill up gas, NOS/boost unlocks, ramps, wheelies)
 - **Multiplayer riding around town** 
