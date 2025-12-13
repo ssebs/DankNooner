@@ -30,7 +30,7 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
   - e.g. don't have a single UI object that has 50 methods
 - Story?
   - Progress from bicycle to scooter to dirt bike to sport bike
-  - Open world
+- Open world
     - City
     - Hillside (like real moto, for races)
     - Race Track
@@ -59,7 +59,7 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
       - Shift Gears `DPAD Up/Down`
       - Rear Brake `A`
 - Multiplayer
-  - Races
+  - Races (around mountain + drag race + around track)
   - Coop missions
   - Ride around together
 - Target platform
