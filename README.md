@@ -1,5 +1,20 @@
 # Dank Nooner
 
+## Rewrite / V2 / Future of the game
+- Have more stunts
+- Animations
+  - (IK)
+  - Hold on to handlebars
+  - Ragdoll when you fall off
+- Plan Gameplay Loop w/ Flowcharts
+- Plan Code Structure
+  - SignalBuses
+  - How features will be implemented
+  - e.g. don't have a single UI object that has 50 methods
+- Story?
+  - Progress from bicycle to scooter to harley to sport bike
+  - Open world?
+
 Wheelie challenge game, try to hold a wheelie for as long as you can & earn points to upgrade your bike.
 
 [theofficialssebs.itch.io/dank-nooner](https://theofficialssebs.itch.io/dank-nooner)
