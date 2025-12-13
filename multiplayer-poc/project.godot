@@ -17,4 +17,9 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-HighLevelNetworkHandler="*res://scripts/high_level_network_handler.gd"
+MultiplayerManager="*res://scripts/multiplayer_manager.gd"
+
+[display]
+
+window/size/viewport_width=400
+window/size/viewport_height=400
