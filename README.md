@@ -3,6 +3,7 @@
 ## Rewrite / V2 / Future of the game
 - Have more stunts
 - Multiplayer
+  - Races
 - Animations
   - IK to animate to hold on to handlebars / lean
   - Ragdoll when you fall off
