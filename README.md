@@ -14,10 +14,17 @@
   - Progress from bicycle to scooter to harley to sport bike
   - Open world?
 - Different gameplay loops
-  - Riding / 
+  - Riding around the world
   - Wheelies/other trick challenges (missions)
   - Upgrade menu
   - Traveling to next objective
+- Mechanics
+  - Fun but challenging
+  - Manage clutch, balancing, throttle, steering
+  - Falling / crashing has ragdoll physics, player goes flying until they stop moving (or press btn)
+- Gameplay
+  - Doing wheelies gives you NOS
+
 
 Wheelie challenge game, try to hold a wheelie for as long as you can & earn points to upgrade your bike.
 
