@@ -5,6 +5,9 @@ extends CharacterBody2D
 func _enter_tree():
     %InputSynchronizer.set_multiplayer_authority(name.to_int())
 
+func _ready():
+    %Label.text = "ID: " + name
+
 func _physics_process(delta):
     if multiplayer.is_server():
         _apply_movement_from_input(delta)

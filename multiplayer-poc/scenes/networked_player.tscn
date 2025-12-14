@@ -34,3 +34,20 @@ texture = ExtResource("1_g4e3d")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_g4e3d")
 disabled = true
+
+[node name="Label" type="Label" parent="."]
+unique_name_in_owner = true
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -49.0
+offset_top = -103.961
+offset_right = 49.0
+offset_bottom = -80.961
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+text = "REPLACE_ME"
+horizontal_alignment = 1
