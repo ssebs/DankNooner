@@ -26,16 +26,18 @@ func start_client():
     
 
 func _add_player_to_game(id: int):
-    print("adding %s" % id)
+    print("New Player: %s" % id)
     var player_to_add = multiplayer_scene.instantiate()
     player_to_add.name = str(id)
+    
+    # Note: Input sync must be after multiplayer sync so player_id is sync
+    player_to_add.player_id = id 
 
     _players_spawn_node.add_child(player_to_add, true)
-    player_to_add.player_id = id
 
 
 func _rm_player(id: int):
-    print("deleting %s" % id)
+    print("Deleting %s" % id)
 
     if not _players_spawn_node.has_node(str(id)):
         return
