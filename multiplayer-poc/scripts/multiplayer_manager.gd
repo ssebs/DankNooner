@@ -16,6 +16,7 @@ func start_server():
 
     _players_spawn_node = get_tree().current_scene.get_node("Players")
 
+    # Join as a client too
     _add_player_to_game(1)
 
 
@@ -29,9 +30,6 @@ func _add_player_to_game(id: int):
     print("New Player: %s" % id)
     var player_to_add = multiplayer_scene.instantiate()
     player_to_add.name = str(id)
-    
-    # Note: Input sync must be after multiplayer sync so player_id is sync
-    player_to_add.player_id = id 
 
     _players_spawn_node.add_child(player_to_add, true)
 
