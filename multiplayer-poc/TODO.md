@@ -5,6 +5,7 @@
 - Add RPC calls (e.g. damage)
 - Add broadcast
 - Add text chat (with connect/disconnect support)
+- create 2d gun scene in multiplayer, with health bars, a lobby, and respawning
 
 ## In Progress
 - Read https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html#example-lobby-implementation
