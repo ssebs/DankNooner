@@ -5,14 +5,12 @@ extends CharacterBody2D
 @export var player_id := 1:
     set(val):
         player_id = val
+        # Must be after %MultiplayerSynchronizer so player_id is available
         %InputSynchronizer.set_multiplayer_authority(val)
 
-@export var direction = Vector2.ZERO
-
 func _apply_movement_from_input(_delta):
-    direction = %InputSynchronizer.input_dir * speed
-    
-    velocity = direction
+    velocity = %InputSynchronizer.input_dir * speed
+
     move_and_slide()
 
 func _physics_process(delta):
