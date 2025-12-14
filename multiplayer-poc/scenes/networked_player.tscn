@@ -5,12 +5,9 @@
 [ext_resource type="Script" uid="uid://cuyo7nil48shj" path="res://scripts/input_synchronizer.gd" id="2_b60ip"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_b60ip"]
-properties/0/path = NodePath(".:player_id")
+properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath(".:position")
-properties/1/spawn = true
-properties/1/replication_mode = 1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_g4e3d"]
 properties/0/path = NodePath("InputSynchronizer:input_dir")
