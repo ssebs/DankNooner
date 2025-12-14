@@ -8,6 +8,9 @@
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
+properties/1/path = NodePath(".:shoot_bullet")
+properties/1/spawn = true
+properties/1/replication_mode = 1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_g4e3d"]
 properties/0/path = NodePath("InputSynchronizer:input_dir")
@@ -23,17 +26,17 @@ script = ExtResource("1_jx0ca")
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_b60ip")
 
-[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="." node_paths=PackedStringArray("player")]
 unique_name_in_owner = true
 replication_config = SubResource("SceneReplicationConfig_g4e3d")
 script = ExtResource("2_b60ip")
+player = NodePath("..")
 
 [node name="Icon" type="Sprite2D" parent="."]
 texture = ExtResource("1_g4e3d")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_g4e3d")
-disabled = true
 
 [node name="Label" type="Label" parent="."]
 unique_name_in_owner = true
@@ -51,3 +54,7 @@ grow_vertical = 2
 size_flags_horizontal = 4
 text = "REPLACE_ME"
 horizontal_alignment = 1
+
+[node name="BulletSpawnPos" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -75)
