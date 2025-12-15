@@ -1,6 +1,5 @@
 extends Node
 
-
 const PORT: int = 42069
 
 var multiplayer_scene = preload("res://scenes/networked_player.tscn")
