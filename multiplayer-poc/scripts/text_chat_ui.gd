@@ -9,7 +9,7 @@ func _ready():
 func on_submit(text: String):
     add_label_to_screen.rpc(text, multiplayer.get_unique_id())
 
-@rpc("any_peer", "call_local")
+@rpc("any_peer", "call_local", "reliable")
 func add_label_to_screen(text: String, id: int):
     var new_label = Label.new()
     new_label.text = "@" + str(id) + " | " + text
