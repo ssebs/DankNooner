@@ -16,6 +16,12 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
+[node name="IPEntry" type="LineEdit" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "127.0.0.1"
+placeholder_text = "IP Address"
+
 [node name="Server" type="Button" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2

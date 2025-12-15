@@ -1,6 +1,6 @@
 extends Node
 
-const IP_ADDR: String = "localhost"
+
 const PORT: int = 42069
 
 var multiplayer_scene = preload("res://scenes/networked_player.tscn")
@@ -20,9 +20,9 @@ func start_server():
     _add_player_to_game(1)
 
 
-func start_client():
+func start_client(ip_addr: String = "127.0.0.1"):
     var peer = ENetMultiplayerPeer.new()
-    peer.create_client(IP_ADDR, PORT)
+    peer.create_client(ip_addr, PORT)
     multiplayer.multiplayer_peer = peer
     
 
