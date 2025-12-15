@@ -31,6 +31,7 @@ func _add_player_to_game(id: int):
     player_to_add.name = str(id)
 
     _players_spawn_node.add_child(player_to_add, true)
+    # TODO: add spawn offset
 
 
 func _rm_player(id: int):
