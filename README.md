@@ -82,7 +82,7 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
 #### POC
 - **Multiplayer POC**
   - > Start on separate project
-  - See [multiplayer-poc-godot](./multiplayer-poc-godot/README.md)
+  - See [multiplayer-poc-godot](https://github.com/ssebs/multiplayer-poc-godot.git)
   - Create lobby
   - Sync 2 players in game
 - **Project Planning**
