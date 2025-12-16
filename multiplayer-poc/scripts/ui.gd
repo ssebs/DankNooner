@@ -8,7 +8,6 @@ func _ready():
     server_btn.pressed.connect(_on_server_pressed)
     client_btn.pressed.connect(_on_client_pressed)
 
-
 func _on_server_pressed():
     self.hide()
     MultiplayerManager.start_server()
