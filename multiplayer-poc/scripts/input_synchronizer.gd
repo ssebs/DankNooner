@@ -10,13 +10,18 @@ func _ready():
         set_physics_process(false)
 
 func _physics_process(_delta):
-    input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+    input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 
-    if Input.is_action_just_pressed("ui_accept"):
-        shoot_bullet.rpc()
+    if Input.is_action_just_pressed("shoot"):
+        tell_clients_to_shoot_bullet.rpc_id(1)
+    if Input.is_action_just_pressed("rotate"):
+        tell_clients_to_animate.rpc_id(1, multiplayer.get_unique_id())
 
-@rpc("call_local")
-func shoot_bullet():
-    # Set the variable only on the server
+@rpc("any_peer", "call_local", "reliable")
+func tell_clients_to_shoot_bullet():
+    player.shoot_bullet.rpc()
+
+@rpc("any_peer", "call_local", "reliable")
+func tell_clients_to_animate(_id: int):
     if multiplayer.is_server():
-        player.shoot_bullet = true
+        player.play_rotate_anim.rpc()
