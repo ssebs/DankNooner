@@ -2,14 +2,14 @@ extends RigidBody2D
 
 @onready var timer: Timer = %Timer
 
-const FORCE = 1000
-
 func _ready():
     timer.timeout.connect(on_timeout)
+
+func shoot_bullet(dir: Vector2, force = 1000):
+    self.apply_central_impulse(dir * force)
     timer.start()
-    self.apply_central_impulse(Vector2.UP * FORCE)
 
 func on_timeout():
     queue_free()
 
-# func _physics_process(delta):
+# TODO: Add hitcheck
