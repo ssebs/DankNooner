@@ -1,7 +1,6 @@
 # Dank Nooner
 
 ## Current status:
-- Testing / learning multiplayer
 - Planning
 
 ## What is Dank Nooner?
@@ -12,11 +11,6 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
 [V1 POC on Itch.io](https://theofficialssebs.itch.io/dank-nooner) | [GitHub](https://github.com/ssebs/danknooner)
 
 ## Rewrite / V2 / Future of the game
-
-### Who's the target audience?
-- Moto guys
-- Open world enjoyers
-- GTA enjoyers
 
 ### Goals
 - Have more stunts
@@ -80,33 +74,62 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
 
 ### Milestones
 #### POC
-- **Multiplayer POC**
+- **Multiplayer POC** - **[COMPLETE]**
   - > Start on separate project
   - See [multiplayer-poc-godot](https://github.com/ssebs/multiplayer-poc-godot.git)
   - Create lobby
   - Sync 2 players in game
-- **Project Planning**
+- **Project Planning** - **[IN PROGRESS]**
   - Use Markdown Kanban for tasks
   - Create subfolder for each mini project
   - Use Excalidraw for diagrams
-- **Player controller** 
+- **Player controller + Simple animations** 
   - > Start on separate project
-  - (gas, steer, brake, cluch, gears)
-- **Basic animations with IK**
+  - > think about what should be sync'd over the network
+  - Basic controls / movement (gas, steer, brake, cluch?, gears?)
+  - State machine to sync animations to movement state
+  - Riding bike Animations (lean/steer, wheelie, start/stop w/ leg down)
+  - Sync'd animations w/ state machine
+  - Code cleanup
+- **Complex animations**
   - > continue from player controller project
-  - Riding bike (lean, steer, wheelie)
-  - Ragdoll
-
+  - With IK?
+  - More bike animations (brakes, clutch, gear shift, throttle)
+  - Tricks (stoppie, ramp + backflip, can-can?, tabletop?)
+  - Ragdoll (crash + ragdoll)
+  - Code cleanup
 #### MVP
 - **Start "real" project**
+  - > Start on separate (main) project
+  - Major planning:
+    - Gameplay planning
+      - Map design
+      - Different Bikes / balancing
+      - Progression (unlock bikes, how will xp work, $ for upgrades, etc.)
+      - Customization (color, mods per bike, stat boosts)
+      - Game modes (race, wheelie race, stunt race, S.K.A.T.E. game, free roam, delivery (pizza? paper route?))
+      - Potential story for singleplayer mode (start as a kid with bicycle, do wheelies with a paper route, progress to scooter,etc .)
+      - Art style / vibe of the game
+    - Code structure (what files will control what, separation of concerns, etc.)
+    - Coding Processes (where to use state machines, how to sync data, interactions, etc.)
+    - Flow of Multiplayer auth, who sends what
+    - Create diagrams
+- **Implement Player Controller & Multiplayer**
   - Import Scenes from past 2 projects (multiplayer, player controller)
-  - Create code structure / processes
-  - Create UI / Game managers
-- **Basic objectives**
-  - (fill up gas, NOS/boost unlocks, ramps, wheelies)
-- **Multiplayer riding around town** 
-  - (lobby, in game, sync)
-- **Multiplayer races**
+  - Create UI / Game managers / Globals / Lobby / etc
+  - Follow the plan... (and update this doc)
+- **Freeroam + tricks MP demo**
+  - Playable demo with:
+    - Multiplayer (can play with friends)
+    - 1 bike choice with some customization
+    - NPCs (driving around)
+    - Open world map (race track, city, mountains)
+    - Ramps
+    - Tricks (basics)
+- **Basic gameplay**
+  - Progression
+  - Game modes (free roam, race, wheelie race, etc...)
+  - tbd
 
 #### Full game
 - **Tricks** (in air tricks, more than just wheelie)
