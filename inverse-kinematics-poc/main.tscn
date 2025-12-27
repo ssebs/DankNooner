@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://fxnuvj82quth"]
+
+[ext_resource type="PackedScene" uid="uid://dkluo1xds2uio" path="res://spider_bot.tscn" id="1_ig7tw"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7dm0k"]
+sky_top_color = Color(0.43239677, 0.5058865, 0.6039129, 1)
+sky_horizon_color = Color(0.73229206, 0.75240004, 0.78789854, 1)
+ground_bottom_color = Color(0.18701535, 0.19395748, 0.237925, 1)
+ground_horizon_color = Color(0.73229206, 0.75240004, 0.78789854, 1)
+
+[sub_resource type="Sky" id="Sky_ig7tw"]
+sky_material = SubResource("ProceduralSkyMaterial_7dm0k")
+
+[sub_resource type="Environment" id="Environment_0xm2m"]
+background_mode = 2
+sky = SubResource("Sky_ig7tw")
+tonemap_mode = 2
+ssao_enabled = true
+glow_enabled = true
+
+[node name="main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0xm2m")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(80, 5, 80)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.111395836, 0)
+operation = 2
+size = Vector3(79, 5, 79)
+
+[node name="SpiderBot" parent="." instance=ExtResource("1_ig7tw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.20447922, 1.5037491, -0.0684433)
