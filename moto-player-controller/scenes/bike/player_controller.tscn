@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://bmqevs0vheol7"]
+
+[ext_resource type="PackedScene" uid="uid://7etgly8gokpl" path="res://assets/bikes/GoogleMotorcycleSportbike.glb" id="1_ujl86"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ujl86"]
+size = Vector3(0.68, 1.05, 2)
+
+[node name="PlayerController" type="CharacterBody3D"]
+
+[node name="Markers" type="Node3D" parent="."]
+
+[node name="RearWheelMarker" type="Marker3D" parent="Markers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.68403995)
+
+[node name="FrontWheelMarker" type="Marker3D" parent="Markers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.7181249)
+
+[node name="OriginMarker" type="Marker3D" parent="Markers"]
+
+[node name="Mesh" type="Node3D" parent="."]
+
+[node name="GoogleMotorcycleSportbike" parent="Mesh" instance=ExtResource("1_ujl86")]
+transform = Transform3D(0.015421053, 0, 0, 0, 0.015421053, 0, 0, 0, 0.015421053, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.525, 0)
+shape = SubResource("BoxShape3D_ujl86")
