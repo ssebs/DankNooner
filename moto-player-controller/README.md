@@ -1,15 +1,12 @@
 # Moto Player Controller
 
 ## In Progress:
-
-
-## TODO:
-
-- [ ] Import motorcycle 3d model
-- [ ] Create basic world
 - [ ] Basic Movement / input system
   - [ ] throttle / brake
   - [ ] lean
+
+
+## TODO:
 - [ ] Create rigged character
 - [ ] Animate character
 - [ ] Complex movement / input system
@@ -21,7 +18,8 @@
   - [ ] Ragdoll
 
 ## Done:
-
+- [x] Import motorcycle 3d model
+- [x] Create basic world
 - [x] Create godot project
 - [x] Control map:
   - Gamepad
