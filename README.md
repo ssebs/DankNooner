@@ -1,7 +1,7 @@
 # Dank Nooner
 
 ## Current status:
-- Inverse Kinematics / Moto Player Controller
+- Moto Player Controller
 - Planning
 
 ## What is Dank Nooner?
@@ -85,11 +85,11 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
   - See [multiplayer-poc-godot](https://github.com/ssebs/multiplayer-poc-godot.git)
   - Create lobby
   - Sync 2 players in game
-- **Inverse Kinematics POC** - [IN_PROGRESS]
+- **Inverse Kinematics POC** - [COMPLETE]
   - > Start on separate project
   - See [inverse-kinematics-poc](./inverse-kinematics-poc/README.md)
   - Learn how IK works in godot
-- **Player controller + Simple animations**
+- **Player controller + Simple animations** - [IN_PROGRESS]
   - > Start on separate project
   - > think about what should be sync'd over the network
   - See [moto-player-controller](./moto-player-controller/README.md)
