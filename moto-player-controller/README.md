@@ -2,8 +2,9 @@
 
 ## In Progress:
 
+
 ## TODO:
-- [ ] Create godot project
+
 - [ ] Import motorcycle 3d model
 - [ ] Create basic world
 - [ ] Basic Movement / input system
@@ -21,16 +22,54 @@
 
 ## Done:
 
+- [x] Create godot project
+- [x] Control map:
+  - Gamepad
+    - Throttle `throttle_pct`
+      - Gamepad: **RT**
+      - KBM: **W**
+    - Front Brake `brake_front_pct`
+      - Gamepad: **LT** 
+      - KBM: **S**
+    - Rear Brake `brake_rear`
+      - > Note: input is cumulative - amount builds based on how long you hold it
+      - Gamepad: **A**
+      - KBM: **Space**
+    - Steering `steer_pct`
+      - > Note: steering causes a horizontal lean
+      - Gamepad: **Left Stick X Axis** 
+      - KBM: **A/D**
+    - Lean body `lean_pct`
+      - Gamepad: **Left Stick Y Axis**
+      - KBM: **Arrow Keys**
+    - Clutch `clutch`
+      - Gamepad: **LB**
+      - KBM: **CTRL**
+    - Shift Gears `gear_up` `gear_down`
+      - Gamepad: **DPAD Up/Down**
+      - KBM: **Q/E**
+    - Camera movement `cam_x` `cam_y`
+      - Gamepad: **Right Stick X / Y Axis** 
+      - KBM: **Mouse**
+    - Trick `trick`
+      - Gamepad: **RB**
+      - KBM: **Shift + Arrow keys**
+      - Hold **RB** while moving right joystick (**RB+Down** => Wheelie, etc.)
+    - Pause: `pause`
+      - Gamepad: **Start**
+      - KBM: `ESC`
 
 ## Notes copied from ../README.md
 
 ### To implement
+
 - Basic controls / movement (gas, steer, brake, cluch?, gears?)
 - State machine to sync animations to movement state
 - Riding bike Animations (lean/steer, wheelie, start/stop w/ leg down)
 - Sync'd animations w/ state machine
 
 ### Goals
+
 - Animations
   - IK to animate to hold on to handlebars / lean
   - Ragdoll when you fall off
@@ -44,13 +83,3 @@
   - Falling / crashing has ragdoll physics, player goes flying until they stop moving (or press btn)
 - Gameplay
   - Doing wheelies gives you NOS
-  - Controls:
-    - Gamepad preferred
-      - Front Brake `LT`
-      - Gas `RT`
-      - Steer (lean) `Right Stick`
-      - Clutch `LB`
-      - Trick `RB`
-        - Hold `RB` while pressing other buttons (A,B,X,Y) (maybe flick eventually)
-      - Shift Gears `DPAD Up/Down`
-      - Rear Brake `A`
