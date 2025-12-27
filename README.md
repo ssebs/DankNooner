@@ -38,7 +38,11 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
   - Traveling to next objective
 - Mechanics
   - Fun but challenging
-  - Manage clutch, balancing, throttle, steering
+    - Multiple difficult levels
+      - **Easy** - Automatic, can't fall off bike unless crashing
+      - **Medium** - Manual, can't fall easily from mistakes (e.g. lowside)
+      - **Hard** - Manual, can fall (e.g. low side crash if leaning and grabbing a fist full of brake)
+  - Manage clutch, balancing, throttle, steering (need to be smooth, don't just slam it.)
   - Falling / crashing has ragdoll physics, player goes flying until they stop moving (or press btn)
 - Gameplay
   - Doing wheelies gives you NOS
@@ -59,6 +63,7 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
 - Target platform
   - PC (Windows+Linux) w/ Gamepad
 - Artstyle:
+  - Cell Shaded (not just overlay like Guac & Load, but built in to materials)
   - Low Poly
   - Cute/Bubbly?
   - Aggressive/Sharp?
