@@ -94,6 +94,7 @@ func _update_vibration():
     bike_input.add_vibration(weak_total, strong_total)
 
 
+# TODO: refactor, this is the only thing that uses signals from bike_input
 func _on_difficulty_toggled():
     state.is_easy_mode = !state.is_easy_mode
     _update_difficulty_display()
