@@ -26,6 +26,10 @@ class_name PlayerController extends CharacterBody3D
 @export var skidmark_texture = preload("res://assets/skidmarktex.png")
 const SKID_MARK_LIFETIME: float = 5.0
 
+# Ground alignment
+@export var ground_align_speed: float = 10.0
+var ground_pitch: float = 0.0
+
 # Spawn tracking
 var spawn_position: Vector3
 var spawn_rotation: Vector3
@@ -83,7 +87,8 @@ func _physics_process(delta):
         bike_gearing.get_rpm_ratio(),
         bike_gearing.clutch_value,
         bike_steering.is_turning(),
-        bike_crash.is_front_wheel_locked()
+        bike_crash.is_front_wheel_locked(),
+        not is_on_floor()
     )
     bike_tricks.handle_skidding(delta, rear_wheel.global_position, front_wheel.global_position, global_rotation, is_on_floor(), bike_crash.is_front_wheel_locked())
 
@@ -125,6 +130,9 @@ func _physics_process(delta):
 
     move_and_slide()
 
+    # Align to ground
+    _align_to_ground(delta)
+
     # Check for collisions - crash if we hit something while moving
     _check_collision_crash()
 
@@ -155,6 +163,20 @@ func _check_collision_crash():
                 return
 
 
+func _align_to_ground(delta):
+    if is_on_floor():
+        var floor_normal = get_floor_normal()
+        # Calculate target pitch from floor normal
+        var forward_dir = -global_transform.basis.z
+        # Project floor normal onto forward axis to get pitch
+        var forward_dot = forward_dir.dot(floor_normal)
+        var target_pitch = asin(clamp(forward_dot, -1.0, 1.0))
+        ground_pitch = lerp(ground_pitch, target_pitch, ground_align_speed * delta)
+    else:
+        # Gradually return to level when airborne
+        ground_pitch = lerp(ground_pitch, 0.0, ground_align_speed * 0.5 * delta)
+
+
 func _apply_movement(delta):
     var forward = - global_transform.basis.z
 
@@ -176,14 +198,18 @@ func _apply_movement(delta):
 func _apply_mesh_rotation():
     mesh.transform = Transform3D.IDENTITY
 
-    # Pitch pivot selection
+    # Apply ground alignment pitch first
+    if ground_pitch != 0:
+        mesh.rotate_x(-ground_pitch)
+
+    # Pitch pivot selection for tricks
     var pivot: Vector3
     if bike_tricks.pitch_angle >= 0:
         pivot = rear_wheel.position
     else:
         pivot = front_wheel.position
 
-    # Apply pitch
+    # Apply trick pitch (wheelies/stoppies)
     if bike_tricks.pitch_angle != 0:
         _rotate_mesh_around_pivot(pivot, Vector3.RIGHT, bike_tricks.pitch_angle)
 

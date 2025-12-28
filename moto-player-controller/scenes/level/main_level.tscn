@@ -23,7 +23,7 @@ glow_enabled = true
 [node name="MainLevel" type="Node3D"]
 
 [node name="PlayerController" parent="." instance=ExtResource("2_p3kgh")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -67.476944, 0, -13.318401)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
@@ -34,26 +34,30 @@ shadow_enabled = true
 environment = SubResource("Environment_sc48v")
 
 [node name="city" parent="." instance=ExtResource("1_114d3")]
-transform = Transform3D(6.8, 0, 0, 0, 6.8, 0, 0, 0, 6.8, 145.03293, -28.125, 21.300917)
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 145.033, -41.36, 21.301)
 
-[node name="city3" parent="." instance=ExtResource("1_114d3")]
-transform = Transform3D(6.8, 0, 0, 0, 6.8, 0, 0, 0, 6.8, 566.03296, -28.125, -146.69908)
+[node name="CSGBox3DRAMP" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, -66.171074, 0.5108835, 149.29716)
+use_collision = true
+size = Vector3(4.9521484, 0.1, 5)
 
-[node name="city2" parent="." instance=ExtResource("1_114d3")]
-transform = Transform3D(-6.800001, 0, -5.94475e-07, 0, 6.800001, 0, 5.94475e-07, 0, -6.800001, 778.03296, -28.125, 181.30092)
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.571, 0.4, -17.815)
+use_collision = true
+collision_layer = 3
+size = Vector3(0.483, 0.8, 11.111)
+
+[node name="CSGBox3DRAMP2" type="CSGBox3D" parent="."]
+transform = Transform3D(-4.371139e-08, -0.25881904, 0.9659258, 0, 0.96592593, 0.25881907, -1.0000001, 1.13133405e-08, -4.2221963e-08, 160.8592, 0.94429934, 255.13216)
+use_collision = true
+size = Vector3(6.0092773, 0.1, 8.349121)
+
+[node name="CSGBox3DRAMP3" type="CSGBox3D" parent="."]
+transform = Transform3D(-4.1906574e-08, -0.5228259, 0.8524394, -1.2430799e-08, 0.8524395, 0.5228259, -1.0000001, 1.13133405e-08, -4.2221966e-08, 166.1469, 2.7701871, 255.13216)
+use_collision = true
+size = Vector3(6.0092773, 0.1, 3.2815552)
 
 [node name="FloorBounds" type="StaticBody3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FloorBounds"]
 shape = SubResource("WorldBoundaryShape3D_114d3")
-
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5825806, 0.5, -11.583963)
-use_collision = true
-collision_layer = 3
-size = Vector3(8.165161, 1, 1)
-
-[node name="CSGBox3DRAMP" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 0.44614142, 45.29218)
-use_collision = true
-size = Vector3(2.5, 0.1, 5)
