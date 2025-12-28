@@ -9,7 +9,7 @@ signal gear_grind # Tried to shift without clutch
 @export var num_gears: int = 6
 @export var max_rpm: float = 9000.0
 @export var idle_rpm: float = 1000.0
-@export var stall_rpm: float = 500.0
+@export var stall_rpm: float = 800.0
 @export var gear_ratios: Array[float] = [2.92, 2.05, 1.6, 1.46, 1.15, 1.0]
 
 # Clutch tuning
@@ -52,8 +52,7 @@ func get_clutch_engagement() -> float:
     if clutch_value <= friction_zone_start:
         return 1.0  # Clutch fully engaged (released)
     # Friction zone: smooth transition
-    var zone_progress = (clutch_value - friction_zone_start) / (friction_zone_end - friction_zone_start)
-    return 1.0 - zone_progress
+    return 1.0 - (clutch_value - friction_zone_start) / (friction_zone_end - friction_zone_start)
 
 
 func handle_gear_shifting(input: BikeInput):
@@ -73,10 +72,8 @@ func handle_gear_shifting(input: BikeInput):
             gear_grind.emit()
 
 
-func get_max_speed_for_gear(gear: int = -1) -> float:
-    if gear == -1:
-        gear = current_gear
-    var gear_ratio = gear_ratios[gear - 1]
+func get_max_speed_for_gear() -> float:
+    var gear_ratio = gear_ratios[current_gear - 1]
     var lowest_ratio = gear_ratios[num_gears - 1]
     return bike_physics.max_speed * (lowest_ratio / gear_ratio)
 
@@ -109,7 +106,7 @@ func update_rpm(input: BikeInput):
 
     # Check for stall (only when clutch is engaging and RPM drops too low)
     # Must check before clamping to idle_rpm
-    if get_clutch_engagement() > 0.5 and current_rpm < stall_rpm and state.speed < 1.0:
+    if get_clutch_engagement() > 0.5 and current_rpm < stall_rpm:
         is_stalled = true
         current_gear = 1
         engine_stalled.emit()

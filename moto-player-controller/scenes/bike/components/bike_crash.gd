@@ -24,13 +24,11 @@ var brake_danger_level: float = 0.0
 # Brake grab detection
 var last_front_brake: float = 0.0
 var brake_grab_level: float = 0.0 # How aggressively brake was grabbed (0-1)
-const BRAKE_GRAB_THRESHOLD: float = 4.0 # Rate per second that counts as "grabbing"
-const BRAKE_GRAB_CRASH_THRESHOLD: float = 0.9 # Grab level that causes instant crash/skid
+var brake_grab_threshold: float = 4.0 # Rate per second that counts as "grabbing"
 
 
 func setup(bike_state: BikeState, physics: BikePhysics):
     state = bike_state
-    state.brake_grab_crash_threshold = BRAKE_GRAB_CRASH_THRESHOLD
     bike_physics = physics
 
 
@@ -91,9 +89,9 @@ func _update_brake_danger(delta, input: BikeInput, steering_angle: float, lean_a
     last_front_brake = input.front_brake
 
     # Only care about increasing brake input at speed
-    if brake_rate > BRAKE_GRAB_THRESHOLD and state.speed > 10:
+    if brake_rate > brake_grab_threshold and state.speed > 10:
         # Accumulate grab level based on how aggressive the grab is
-        var grab_intensity = (brake_rate - BRAKE_GRAB_THRESHOLD) / BRAKE_GRAB_THRESHOLD
+        var grab_intensity = (brake_rate - brake_grab_threshold) / brake_grab_threshold
         brake_grab_level = clamp(brake_grab_level + grab_intensity * delta * 5.0, 0.0, 1.0)
     elif input.front_brake < 0.3:
         # Only decay grab level when brake is mostly released
@@ -105,7 +103,7 @@ func _update_brake_danger(delta, input: BikeInput, steering_angle: float, lean_a
     var instability = max(turn_factor, lean_factor)
 
     # Instant crash if brake grabbed while turning
-    if brake_grab_level > BRAKE_GRAB_CRASH_THRESHOLD and state.speed > 20:
+    if brake_grab_level > state.brake_grab_crash_threshold and state.speed > 20:
         if instability > 0.4:
             # Lowside crash from grabbing brake in turn
             crash_pitch_direction = 0
@@ -189,7 +187,7 @@ func reset():
 
 func is_front_wheel_locked() -> bool:
     """Returns true if front brake was grabbed hard enough to lock wheel (skid)"""
-    return brake_grab_level > BRAKE_GRAB_CRASH_THRESHOLD
+    return brake_grab_level > state.brake_grab_crash_threshold
 
 
 func get_brake_vibration() -> Vector2:
