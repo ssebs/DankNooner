@@ -1,23 +1,29 @@
 # Moto Player Controller
 
 ## In Progress:
-- [ ] Basic Movement / input system
-  - [ ] throttle / brake
-  - [ ] lean
 
+- [ ] Cleanup / refactor vibe coded `player_controller.gd`
+- [ ] Tweak values til they feel good
 
 ## TODO:
+
 - [ ] Create rigged character
 - [ ] Animate character
 - [ ] Complex movement / input system
   - [ ] State machine
   - [ ] Sync'd animations
   - [ ] tricks
-  - [ ] clutch / gears
-  - [ ] crashing (fall off bike, collision)
   - [ ] Ragdoll
 
 ## Done:
+
+- [x] Basic Movement / input system
+  - [x] throttle / brake
+  - [x] lean
+  - [x] clutch / gears
+  - [x] crashing (fall off bike, collision)
+- [x] Basic sounds
+- [x] Skidmarks / drifts
 - [x] Import motorcycle 3d model
 - [x] Create basic world
 - [x] Create godot project
@@ -27,7 +33,7 @@
       - Gamepad: **RT**
       - KBM: **W**
     - Front Brake `brake_front_pct`
-      - Gamepad: **LT** 
+      - Gamepad: **LT**
       - KBM: **S**
     - Rear Brake `brake_rear`
       - > Note: input is cumulative - amount builds based on how long you hold it
@@ -35,7 +41,7 @@
       - KBM: **Space**
     - Steering `steer_pct`
       - > Note: steering causes a horizontal lean
-      - Gamepad: **Left Stick X Axis** 
+      - Gamepad: **Left Stick X Axis**
       - KBM: **A/D**
     - Lean body `lean_pct`
       - Gamepad: **Left Stick Y Axis**
@@ -47,7 +53,7 @@
       - Gamepad: **DPAD Up/Down**
       - KBM: **Q/E**
     - Camera movement `cam_x` `cam_y`
-      - Gamepad: **Right Stick X / Y Axis** 
+      - Gamepad: **Right Stick X / Y Axis**
       - KBM: **Mouse**
     - Trick `trick`
       - Gamepad: **RB**
