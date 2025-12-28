@@ -1,23 +1,31 @@
-[gd_scene load_steps=3 format=3 uid="uid://bmqevs0vheol7"]
+[gd_scene load_steps=6 format=3 uid="uid://bmqevs0vheol7"]
 
+[ext_resource type="Script" uid="uid://c331s8cm2gjtp" path="res://scenes/bike/player_controller.gd" id="1_5uol1"]
 [ext_resource type="PackedScene" uid="uid://7etgly8gokpl" path="res://assets/bikes/GoogleMotorcycleSportbike.glb" id="1_ujl86"]
+[ext_resource type="AudioStream" uid="uid://cncnt6kih2g31" path="res://assets/motorcycle-running.ogg" id="3_ppvd4"]
+[ext_resource type="AudioStream" uid="uid://bf4prq84nmkpn" path="res://assets/rubber-tire-screech.mp3" id="4_fi808"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ujl86"]
 size = Vector3(0.68, 1.05, 2)
 
 [node name="PlayerController" type="CharacterBody3D"]
+script = ExtResource("1_5uol1")
 
 [node name="Markers" type="Node3D" parent="."]
 
 [node name="RearWheelMarker" type="Marker3D" parent="Markers"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.68403995)
 
 [node name="FrontWheelMarker" type="Marker3D" parent="Markers"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.7181249)
 
 [node name="OriginMarker" type="Marker3D" parent="Markers"]
+unique_name_in_owner = true
 
 [node name="Mesh" type="Node3D" parent="."]
+unique_name_in_owner = true
 
 [node name="GoogleMotorcycleSportbike" parent="Mesh" instance=ExtResource("1_ujl86")]
 transform = Transform3D(0.015421053, 0, 0, 0, 0.015421053, 0, 0, 0, 0.015421053, 0, 0, 0)
@@ -25,3 +33,14 @@ transform = Transform3D(0.015421053, 0, 0, 0, 0.015421053, 0, 0, 0, 0.015421053,
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.525, 0)
 shape = SubResource("BoxShape3D_ujl86")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("3_ppvd4")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.99976206, 0.0049999002, -0.021233825, 0, 0.9733793, 0.22920032, 0.021814544, -0.22914577, 0.9731477, -0.23836821, 1.2938731, 2.1143897)
+fov = 70.0
+
+[node name="TireScreetchSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_fi808")
