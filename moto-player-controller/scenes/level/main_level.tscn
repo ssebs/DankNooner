@@ -37,28 +37,31 @@ shadow_enabled = true
 environment = SubResource("Environment_sc48v")
 
 [node name="city" parent="." instance=ExtResource("1_114d3")]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 145.033, -41.36, 21.301)
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, -201.1486, -41.36, 21.301)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.222525, 1.3851197, -15.39259)
+use_collision = true
+collision_layer = 3
+size = Vector3(8.967552, 2.7702394, 3.2959795)
 
 [node name="CSGBox3DRAMP" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, -66.171074, 0.5108835, 149.29716)
+transform = Transform3D(1, 0, 0, 0, 0.93642753, 0.35086125, 0, -0.35086125, 0.93642753, -66.171074, 0.6227805, 149.29716)
 use_collision = true
 size = Vector3(4.9521484, 0.1, 5)
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.571, 0.4, -17.815)
-use_collision = true
-collision_layer = 3
-size = Vector3(0.483, 0.8, 11.111)
+[node name="Node3D" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.156874, 0.08500248, -15.480839)
 
-[node name="CSGBox3DRAMP2" type="CSGBox3D" parent="."]
-transform = Transform3D(-4.371139e-08, -0.25881904, 0.9659258, 0, 0.96592593, 0.25881907, -1.0000001, 1.13133405e-08, -4.2221963e-08, 160.8592, 0.94429934, 255.13216)
+[node name="CSGBox3DRAMP2" type="CSGBox3D" parent="Node3D"]
+transform = Transform3D(-4.371139e-08, -0.25881904, 0.9659258, 0, 0.96592593, 0.25881907, -1.0000001, 1.13133405e-08, -4.2221963e-08, 0, 0.94429934, 0)
 use_collision = true
-size = Vector3(6.0092773, 0.1, 8.349121)
+size = Vector3(4, 0.1, 8.349)
 
-[node name="CSGBox3DRAMP3" type="CSGBox3D" parent="."]
-transform = Transform3D(-4.1906574e-08, -0.5228259, 0.8524394, -1.2430799e-08, 0.8524395, 0.5228259, -1.0000001, 1.13133405e-08, -4.2221966e-08, 166.1469, 2.7701871, 255.13216)
+[node name="CSGBox3DRAMP3" type="CSGBox3D" parent="Node3D"]
+transform = Transform3D(-4.1906574e-08, -0.5228259, 0.8524394, -1.2430799e-08, 0.8524395, 0.5228259, -1.0000001, 1.13133405e-08, -4.2221966e-08, 5.1975117, 2.7701871, 0)
 use_collision = true
-size = Vector3(6.0092773, 0.1, 3.2815552)
+size = Vector3(4, 0.1, 3.282)
 
 [node name="FloorBounds" type="StaticBody3D" parent="."]
 

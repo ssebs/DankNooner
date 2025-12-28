@@ -1,6 +1,13 @@
 # Moto Player Controller
 
 ## In Progress:
+- [ ] Fix bugs / understand the code
+  - [WIP] Merge bike_steering & bike_physics
+  - [ ] Cleanup player controller
+  - [ ] Fix lean / tip in / steering feeling
+  - [ ] Fix brake slam / crashing
+
+## TODO:
 
 - [ ] Tweak values til they feel good
 
@@ -10,8 +17,8 @@
   - [ ] falling at low speeds (fix idle tip in)
   - [ ] wheelie / stoppie control
 
-- [ ] Fix bugs / understand the refactored code
 - [ ] User stories:
+
   - [ ] bike should fall when too slow
   - [ ] bike should lean up when accelerating
   - [ ] bike should tip-in / countersteer when leaning
@@ -24,8 +31,6 @@
   - [x] gear grind sound
   - [x] gear display, speedometer, throttle bar (with redline color), brake danger bar
   - [x] Controller vibration - brake danger, fishtail, redline
-
-## TODO:
 
 - [ ] Create rigged character
 - [ ] Animate character
