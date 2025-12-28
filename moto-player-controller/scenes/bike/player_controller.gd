@@ -45,12 +45,11 @@ func _ready():
 
     # Setup all components with shared state
     bike_physics.setup(state)
-    bike_gearing.setup(state)
-    bike_tricks.setup(state)
-    bike_crash.setup(state)
+    bike_gearing.setup(state, bike_physics)
+    bike_tricks.setup(state, bike_physics)
+    bike_crash.setup(state, bike_physics)
     bike_audio.setup(state, engine_sound, tire_screech, engine_grind)
-    bike_ui.setup(state, gear_label, speed_label, throttle_bar, brake_danger_bar, difficulty_label,
-                 bike_input, bike_crash, bike_tricks)
+    bike_ui.setup(state, bike_input, bike_crash, bike_tricks, gear_label, speed_label, throttle_bar, brake_danger_bar, difficulty_label)
 
     # Initialize difficulty from gearing setting
     bike_ui.set_difficulty(bike_gearing.dont_require_clutch)
@@ -150,8 +149,8 @@ func _physics_process(delta):
     _apply_mesh_rotation()
 
     # Audio and UI
-    bike_audio.update_engine_audio(bike_input)
-    bike_ui.update_ui(bike_input)
+    bike_audio.update_engine_audio(bike_input, bike_gearing.get_rpm_ratio())
+    bike_ui.update_ui(bike_input, bike_gearing.get_rpm_ratio())
 
     move_and_slide()
 
@@ -188,7 +187,7 @@ func _check_collision_crash():
 func _align_to_ground(delta):
     if is_on_floor():
         var floor_normal = get_floor_normal()
-        var forward_dir = -global_transform.basis.z
+        var forward_dir = - global_transform.basis.z
         var forward_dot = forward_dir.dot(floor_normal)
         var target_pitch = asin(clamp(forward_dot, -1.0, 1.0))
         ground_pitch = lerp(ground_pitch, target_pitch, ground_align_speed * delta)
@@ -197,7 +196,7 @@ func _align_to_ground(delta):
 
 
 func _apply_movement(delta):
-    var forward = -global_transform.basis.z
+    var forward = - global_transform.basis.z
 
     if bike_physics.speed > 0.5:
         var turn_rate = bike_physics.get_turn_rate()
@@ -252,7 +251,7 @@ func _handle_crash_state(delta):
         bike_physics.fall_angle = move_toward(bike_physics.fall_angle, bike_crash.crash_lean_direction * deg_to_rad(90), 3.0 * delta)
 
         if bike_physics.speed > 0.1:
-            var forward = -global_transform.basis.z
+            var forward = - global_transform.basis.z
             velocity = forward * bike_physics.speed
             bike_physics.speed = move_toward(bike_physics.speed, 0, 20.0 * delta)
             move_and_slide()
@@ -271,7 +270,7 @@ func _respawn():
     bike_physics.reset()
     bike_tricks.reset()
     bike_crash.reset()
-    bike_input.stop_vibration()
+    bike_input.reset()
 
 
 # Signal handlers
