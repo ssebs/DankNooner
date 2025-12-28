@@ -23,6 +23,7 @@ signal stoppie_stopped  # Emitted when bike comes to rest during a stoppie
 # Skid marks
 const SKID_SPAWN_INTERVAL: float = 0.025
 var skid_spawn_timer: float = 0.0
+var front_skid_spawn_timer: float = 0.0
 
 # State
 var pitch_angle: float = 0.0
@@ -63,13 +64,9 @@ func handle_wheelie_stoppie(delta, rpm_ratio: float, clutch_value: float, is_tur
 	# Stoppie logic - only works with progressive braking (not grabbed)
 	# If front wheel is locked (brake grabbed), no stoppie - just skid
 	var stoppie_target = 0.0
-	var wants_stoppie = lean_input < -0.1 and front_brake > 0.5 and not front_wheel_locked
-	if bike_physics.speed > 1 and (is_in_stoppie or (wants_stoppie and can_start_trick)):
-		# Can't maintain stoppie if wheel locks mid-trick
-		if front_wheel_locked:
-			# Wheel locked - abort stoppie, bike drops back down
-			stoppie_target = 0.0
-		else:
+	if not front_wheel_locked:
+		var wants_stoppie = lean_input < -0.1 and front_brake > 0.5
+		if bike_physics.speed > 1 and (is_in_stoppie or (wants_stoppie and can_start_trick)):
 			stoppie_target = -max_stoppie_angle * front_brake * (1.0 - throttle * 0.5)
 			stoppie_target += -max_stoppie_angle * (-lean_input) * 0.15
 
@@ -92,12 +89,13 @@ func handle_wheelie_stoppie(delta, rpm_ratio: float, clutch_value: float, is_tur
 			tire_screech_stop.emit()
 
 
-func handle_skidding(delta, rear_wheel_position: Vector3, bike_rotation: Vector3, is_on_floor: bool):
+func handle_skidding(delta, rear_wheel_position: Vector3, front_wheel_position: Vector3, bike_rotation: Vector3, is_on_floor: bool, front_wheel_locked: bool):
 	var rear_brake = Input.get_action_strength("brake_rear")
-	var is_skidding = rear_brake > 0.5 and bike_physics.speed > 2 and is_on_floor
+	var is_rear_skidding = rear_brake > 0.5 and bike_physics.speed > 2 and is_on_floor
+	var is_front_skidding = front_wheel_locked and bike_physics.speed > 2 and is_on_floor
 
-	if is_skidding:
-		# Spawn skid marks
+	# Rear wheel skid
+	if is_rear_skidding:
 		skid_spawn_timer += delta
 		if skid_spawn_timer >= SKID_SPAWN_INTERVAL:
 			skid_spawn_timer = 0.0
@@ -114,11 +112,23 @@ func handle_skidding(delta, rear_wheel_position: Vector3, bike_rotation: Vector3
 			target_fishtail *= 1.1  # Amplify once sliding
 
 		fishtail_angle = move_toward(fishtail_angle, target_fishtail, fishtail_speed * delta)
-
-		tire_screech_start.emit(0.7)
 	else:
 		skid_spawn_timer = 0.0
 		fishtail_angle = move_toward(fishtail_angle, 0, fishtail_recovery_speed * delta)
+
+	# Front wheel skid (locked brake)
+	if is_front_skidding:
+		front_skid_spawn_timer += delta
+		if front_skid_spawn_timer >= SKID_SPAWN_INTERVAL:
+			front_skid_spawn_timer = 0.0
+			skid_mark_requested.emit(front_wheel_position, bike_rotation)
+		tire_screech_start.emit(0.8)
+	else:
+		front_skid_spawn_timer = 0.0
+
+	# Tire screech for rear skid (only if not already screeching from front)
+	if is_rear_skidding and not is_front_skidding:
+		tire_screech_start.emit(0.7)
 
 
 func get_fishtail_speed_loss(delta) -> float:
@@ -146,5 +156,6 @@ func reset():
 	pitch_angle = 0.0
 	fishtail_angle = 0.0
 	skid_spawn_timer = 0.0
+	front_skid_spawn_timer = 0.0
 	last_throttle_input = 0.0
 	last_clutch_input = 0.0
