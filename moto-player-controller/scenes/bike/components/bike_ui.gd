@@ -4,6 +4,7 @@ class_name BikeUI extends Node
 @onready var speed_label: Label = null
 @onready var throttle_bar: ProgressBar = null
 @onready var brake_danger_bar: ProgressBar = null
+@onready var clutch_bar: ProgressBar = null
 @onready var difficulty_label: Label = null
 
 # Shared state
@@ -16,7 +17,7 @@ var bike_tricks: BikeTricks
 
 
 func setup(bike_state: BikeState, input: BikeInput, crash: BikeCrash, tricks: BikeTricks,
-        gear: Label, spd: Label, throttle: ProgressBar, brake: ProgressBar, difficulty: Label
+        gear: Label, spd: Label, throttle: ProgressBar, brake: ProgressBar, clutch: ProgressBar, difficulty: Label
     ):
     state = bike_state
     bike_input = input
@@ -27,6 +28,7 @@ func setup(bike_state: BikeState, input: BikeInput, crash: BikeCrash, tricks: Bi
     speed_label = spd
     throttle_bar = throttle
     brake_danger_bar = brake
+    clutch_bar = clutch
     difficulty_label = difficulty
 
     bike_input.difficulty_toggled.connect(_on_difficulty_toggled)
@@ -69,6 +71,10 @@ func _update_bars(input: BikeInput, rpm_ratio: float):
         brake_danger_bar.modulate = danger_color
     else:
         brake_danger_bar.modulate = Color(0.3, 0.5, 0.9)
+
+    if clutch_bar:
+        clutch_bar.value = state.clutch_value
+        clutch_bar.modulate = Color(0.8, 0.6, 0.2) # Orange/yellow
 
 
 # TODO: move this

@@ -13,10 +13,13 @@ signal gear_grind # Tried to shift without clutch
 @export var gear_ratios: Array[float] = [2.92, 2.05, 1.6, 1.46, 1.15, 1.0]
 
 # Clutch tuning
-@export var clutch_speed: float = 15.0
-@export var friction_zone_start: float = 0.3  # Clutch starts engaging here
-@export var friction_zone_end: float = 0.7    # Clutch fully engaged here
-@export var gear_shift_threshold: float = 0.25 # Clutch value needed to shift (lower = faster shifts)
+@export var clutch_engage_speed: float = 6.0   # How fast clutch pulls in when held
+@export var clutch_release_speed: float = 2.5  # How fast clutch releases when not held
+@export var clutch_tap_amount: float = 0.35    # How much a tap adds to clutch value
+@export var clutch_hold_delay: float = 0.05    # Seconds before hold starts engaging fully
+@export var gear_shift_threshold: float = 0.2  # Clutch value needed to shift
+@export var rpm_blend_speed: float = 4.0       # How fast RPM blends when clutch slipping
+@export var throttle_response: float = 3.0     # How fast engine responds to throttle (lower = slower revs)
 
 # Shared state
 var state: BikeState
@@ -27,6 +30,8 @@ var current_gear: int = 1
 var current_rpm: float = 0.0
 var is_stalled: bool = false
 var clutch_value: float = 0.0
+var clutch_hold_time: float = 0.0
+var smoothed_throttle_rpm: float = 0.0
 
 
 func setup(bike_state: BikeState, physics: BikePhysics):
@@ -41,18 +46,24 @@ func sync_to_state():
     state.is_stalled = is_stalled
 
 
-func update_clutch(delta, input: BikeInput):
-    clutch_value = move_toward(clutch_value, input.clutch, clutch_speed * delta)
+func update_clutch(delta: float, input: BikeInput):
+    if input.clutch_held:
+        clutch_hold_time += delta
+        if input.clutch_just_pressed:
+            # Tap: instantly add to clutch value
+            clutch_value = minf(clutch_value + clutch_tap_amount, 1.0)
+        elif clutch_hold_time >= clutch_hold_delay:
+            # Held past delay: pull in fully
+            clutch_value = move_toward(clutch_value, 1.0, clutch_engage_speed * delta)
+    else:
+        clutch_hold_time = 0.0
+        # Release: slowly let clutch out
+        clutch_value = move_toward(clutch_value, 0.0, clutch_release_speed * delta)
 
 
 func get_clutch_engagement() -> float:
-    """Returns 0-1 engagement with friction zone curve (not linear)"""
-    if clutch_value >= friction_zone_end:
-        return 0.0  # Clutch fully disengaged (pulled in)
-    if clutch_value <= friction_zone_start:
-        return 1.0  # Clutch fully engaged (released)
-    # Friction zone: smooth transition
-    return 1.0 - (clutch_value - friction_zone_start) / (friction_zone_end - friction_zone_start)
+    """Returns 0-1 where 0 = clutch pulled in (disengaged), 1 = clutch released (engaged to wheel)"""
+    return 1.0 - clutch_value
 
 
 func handle_gear_shifting(input: BikeInput):
@@ -78,7 +89,7 @@ func get_max_speed_for_gear() -> float:
     return bike_physics.max_speed * (lowest_ratio / gear_ratio)
 
 
-func update_rpm(input: BikeInput):
+func update_rpm(delta: float, input: BikeInput):
     if is_stalled:
         current_rpm = 0.0
         # Restart engine with throttle + clutch while stalled
@@ -88,34 +99,34 @@ func update_rpm(input: BikeInput):
             engine_started.emit()
         return
 
-    # Calculate free-rev RPM (throttle controls directly when clutch in)
-    var free_rev_rpm = lerpf(idle_rpm, max_rpm, input.throttle)
+    var engagement = get_clutch_engagement()
 
-    # Calculate engaged RPM (locked to wheel speed)
+    # Calculate wheel-driven RPM based on wheel speed
     var gear_max_speed = get_max_speed_for_gear()
     var speed_ratio = state.speed / gear_max_speed if gear_max_speed > 0 else 0.0
-    var engaged_rpm = lerpf(idle_rpm, max_rpm, clamp(speed_ratio, 0.0, 1.0))
+    var wheel_rpm = speed_ratio * max_rpm
 
-    # Blend between free-rev and engaged based on friction zone engagement
-    var engagement = get_clutch_engagement()
-    var target_rpm = lerpf(free_rev_rpm, engaged_rpm, engagement)
+    # Calculate throttle-driven RPM with smooth response (engine has inertia)
+    var target_throttle_rpm = lerpf(idle_rpm, max_rpm, input.throttle)
+    smoothed_throttle_rpm = lerpf(smoothed_throttle_rpm, target_throttle_rpm, throttle_response * delta)
 
-    # Smooth RPM transitions (faster when free revving)
-    var rpm_lerp_speed = lerpf(0.25, 0.1, engagement)
-    current_rpm = lerpf(current_rpm, target_rpm, rpm_lerp_speed)
+    # Blend between throttle RPM and wheel RPM based on clutch engagement
+    # engagement = 0: fully disengaged, engine follows throttle
+    # engagement = 1: fully engaged, engine locked to wheel
+    var target_rpm = lerpf(smoothed_throttle_rpm, wheel_rpm, engagement)
 
-    # Check for stall (only when clutch is engaging and RPM drops too low)
-    # Must check before clamping to idle_rpm
-    if get_clutch_engagement() > 0.5 and current_rpm < stall_rpm:
+    # Smooth final RPM transitions
+    current_rpm = lerpf(current_rpm, target_rpm, rpm_blend_speed * delta)
+
+    # Check for stall when clutch is mostly engaged and RPM too low
+    if engagement > 0.9 and current_rpm < stall_rpm:
         is_stalled = true
         current_gear = 1
         engine_stalled.emit()
         return
 
-    # Clamp RPM
     current_rpm = clamp(current_rpm, idle_rpm, max_rpm)
 
-# Note: current_rpm should be set by speed / gear
 func get_rpm_ratio() -> float:
     if max_rpm <= idle_rpm:
         return 0.0
@@ -149,6 +160,8 @@ func is_clutch_dump(last_clutch: float, throttle: float) -> bool:
 func reset():
     current_gear = 1
     current_rpm = idle_rpm
+    smoothed_throttle_rpm = idle_rpm
     is_stalled = false
     clutch_value = 0.0
+    clutch_hold_time = 0.0
     sync_to_state()

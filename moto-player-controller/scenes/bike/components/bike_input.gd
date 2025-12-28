@@ -13,8 +13,9 @@ var steer: float = 0.0
 # Lean (-1 to 1, forward to back)
 var lean: float = 0.0
 
-# Clutch (0-1)
-var clutch: float = 0.0
+# Clutch button state
+var clutch_held: bool = false
+var clutch_just_pressed: bool = false
 
 # Gear shifting (just pressed this frame)
 var gear_up_pressed: bool = false
@@ -36,7 +37,8 @@ func update_input():
     steer = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
     lean = Input.get_action_strength("lean_back") - Input.get_action_strength("lean_forward")
 
-    clutch = Input.get_action_strength("clutch")
+    clutch_held = Input.is_action_pressed("clutch")
+    clutch_just_pressed = Input.is_action_just_pressed("clutch")
 
     gear_up_pressed = Input.is_action_just_pressed("gear_up")
     gear_down_pressed = Input.is_action_just_pressed("gear_down")

@@ -140,6 +140,14 @@ size_flags_horizontal = 8
 max_value = 1.0
 show_percentage = false
 
+[node name="ClutchBar" type="ProgressBar" parent="MotoUI/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 12)
+layout_mode = 2
+size_flags_horizontal = 8
+max_value = 1.0
+show_percentage = false
+
 [node name="DifficultyLabel" type="Label" parent="MotoUI/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2

@@ -12,6 +12,7 @@ class_name PlayerController extends CharacterBody3D
 @onready var speed_label: Label = %SpeedLabel
 @onready var throttle_bar: ProgressBar = %ThrottleBar
 @onready var brake_danger_bar: ProgressBar = %BrakeDangerBar
+@onready var clutch_bar: ProgressBar = %ClutchBar
 @onready var difficulty_label: Label = %DifficultyLabel
 
 # Components
@@ -49,7 +50,7 @@ func _ready():
     bike_tricks.setup(state, bike_physics)
     bike_crash.setup(state, bike_physics)
     bike_audio.setup(state, engine_sound, tire_screech, engine_grind)
-    bike_ui.setup(state, bike_input, bike_crash, bike_tricks, gear_label, speed_label, throttle_bar, brake_danger_bar, difficulty_label)
+    bike_ui.setup(state, bike_input, bike_crash, bike_tricks, gear_label, speed_label, throttle_bar, brake_danger_bar, clutch_bar, difficulty_label)
 
     # Connect component signals
     bike_gearing.gear_grind.connect(_on_gear_grind)
@@ -70,7 +71,7 @@ func _physics_process(delta):
     # Gearing
     bike_gearing.update_clutch(delta, bike_input)
     bike_gearing.handle_gear_shifting(bike_input)
-    bike_gearing.update_rpm(bike_input)
+    bike_gearing.update_rpm(delta, bike_input)
     bike_gearing.sync_to_state()
 
     # Physics / acceleration
