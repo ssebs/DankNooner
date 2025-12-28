@@ -12,14 +12,19 @@ class_name PlayerController extends CharacterBody3D
 @onready var speed_label: Label = %SpeedLabel
 @onready var throttle_bar: ProgressBar = %ThrottleBar
 @onready var brake_danger_bar: ProgressBar = %BrakeDangerBar
+@onready var difficulty_label: Label = %DifficultyLabel
 
 # Components
+@onready var bike_input: BikeInput = %BikeInput
 @onready var bike_gearing: BikeGearing = %BikeGearing
 @onready var bike_tricks: BikeTricks = %BikeTricks
 @onready var bike_physics: BikePhysics = %BikePhysics
 @onready var bike_crash: BikeCrash = %BikeCrash
 @onready var bike_audio: BikeAudio = %BikeAudio
 @onready var bike_ui: BikeUI = %BikeUI
+
+# Shared state
+var state: BikeState = BikeState.new()
 
 # Skid marks
 @export var skidmark_texture = preload("res://assets/skidmarktex.png")
@@ -33,294 +38,296 @@ var ground_pitch: float = 0.0
 var spawn_position: Vector3
 var spawn_rotation: Vector3
 
+
 func _ready():
-    spawn_position = global_position
-    spawn_rotation = rotation
+	spawn_position = global_position
+	spawn_rotation = rotation
 
-    # Setup bike_audio and UI components with node references
-    bike_audio.setup(engine_sound, tire_screech, engine_grind)
-    bike_ui.setup(gear_label, speed_label, throttle_bar, brake_danger_bar)
+	# Setup all components with shared state
+	bike_physics.setup(state)
+	bike_gearing.setup(state)
+	bike_tricks.setup(state)
+	bike_crash.setup(state)
+	bike_audio.setup(state, engine_sound, tire_screech, engine_grind)
+	bike_ui.setup(state, gear_label, speed_label, throttle_bar, brake_danger_bar, difficulty_label)
 
-    # Connect component signals
-    bike_gearing.gear_grind.connect(_on_gear_grind)
-    bike_gearing.engine_stalled.connect(_on_engine_stalled)
-    bike_tricks.skid_mark_requested.connect(_on_skid_mark_requested)
-    bike_tricks.tire_screech_start.connect(_on_tire_screech_start)
-    bike_tricks.tire_screech_stop.connect(_on_tire_screech_stop)
-    bike_tricks.stoppie_stopped.connect(_on_stoppie_stopped)
-    bike_physics.brake_stopped.connect(_on_brake_stopped)
-    bike_crash.crashed.connect(_on_crashed)
+	# Initialize difficulty from gearing setting
+	bike_ui.set_difficulty(bike_gearing.dont_require_clutch)
+
+	# Connect component signals
+	bike_gearing.gear_grind.connect(_on_gear_grind)
+	bike_gearing.engine_stalled.connect(_on_engine_stalled)
+	bike_tricks.skid_mark_requested.connect(_on_skid_mark_requested)
+	bike_tricks.tire_screech_start.connect(_on_tire_screech_start)
+	bike_tricks.tire_screech_stop.connect(_on_tire_screech_stop)
+	bike_tricks.stoppie_stopped.connect(_on_stoppie_stopped)
+	bike_physics.brake_stopped.connect(_on_brake_stopped)
+	bike_crash.crashed.connect(_on_crashed)
+
+
+func _input(event):
+	if event.is_action_pressed("change_difficulty"):
+		toggle_difficulty()
+
+
+func toggle_difficulty():
+	bike_gearing.dont_require_clutch = not bike_gearing.dont_require_clutch
+	bike_ui.set_difficulty(bike_gearing.dont_require_clutch)
+
 
 func _physics_process(delta):
-    if bike_crash.is_crashed:
-        _handle_crash_state(delta)
-        return
+	if bike_crash.is_crashed:
+		_handle_crash_state(delta)
+		return
 
-    # Input gathering
-    var throttle = Input.get_action_strength("throttle_pct")
-    var front_brake = Input.get_action_strength("brake_front_pct")
-    var rear_brake = Input.get_action_strength("brake_rear")
-    var steer_input = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
+	# Gearing
+	bike_gearing.update_clutch(delta, bike_input)
+	bike_gearing.handle_gear_shifting(bike_input)
+	bike_gearing.update_rpm(bike_input)
+	bike_gearing.sync_to_state()
 
-    # Gearing
-    bike_gearing.handle_gear_shifting()
-    bike_gearing.update_rpm(throttle)
+	# Physics / acceleration
+	bike_physics.handle_acceleration(
+		delta, bike_input,
+		bike_gearing.get_power_output(bike_input.throttle),
+		bike_gearing.get_max_speed_for_gear(),
+		bike_gearing.clutch_value,
+		bike_gearing.is_stalled,
+		bike_crash.is_front_wheel_locked()
+	)
 
-    # Physics / acceleration
-    bike_physics.handle_acceleration(
-        delta, throttle, front_brake, rear_brake,
-        bike_gearing.get_power_output(throttle),
-        bike_gearing.get_max_speed_for_gear(),
-        bike_gearing.clutch_value,
-        bike_gearing.is_stalled,
-        bike_crash.is_front_wheel_locked()
-    )
+	# Steering and lean
+	bike_physics.handle_steering(delta, bike_input)
+	bike_physics.update_lean(delta, bike_input)
+	bike_physics.handle_idle_tipping(delta, bike_input)
+	bike_physics.sync_to_state()
 
-    # Steering
-    bike_physics.handle_steering(delta)
-    bike_physics.update_lean(delta, steer_input)
+	# Tricks (wheelies, stoppies, skidding)
+	bike_tricks.handle_wheelie_stoppie(
+		delta, bike_input,
+		bike_gearing.get_rpm_ratio(),
+		bike_gearing.clutch_value,
+		bike_physics.is_turning(),
+		bike_crash.is_front_wheel_locked(),
+		not is_on_floor()
+	)
+	bike_tricks.handle_skidding(
+		delta, bike_input,
+		rear_wheel.global_position,
+		front_wheel.global_position,
+		global_rotation,
+		is_on_floor()
+	)
+	bike_tricks.sync_to_state()
 
-    # Tricks (wheelies, stoppies, skidding)
-    bike_tricks.handle_wheelie_stoppie(
-        delta,
-        bike_gearing.get_rpm_ratio(),
-        bike_gearing.clutch_value,
-        bike_physics.is_turning(),
-        bike_crash.is_front_wheel_locked(),
-        not is_on_floor()
-    )
-    bike_tricks.handle_skidding(delta, rear_wheel.global_position, front_wheel.global_position, global_rotation, is_on_floor(), bike_crash.is_front_wheel_locked())
+	# Check for controlled brake stop
+	bike_physics.check_brake_stop(bike_input)
 
-    # Idle tipping
-    bike_physics.handle_idle_tipping(delta, throttle, steer_input)
+	# Crash detection
+	if is_on_floor():
+		bike_crash.check_crash_conditions(
+			delta, bike_input,
+			bike_tricks.pitch_angle,
+			bike_physics.lean_angle,
+			bike_physics.idle_tip_angle,
+			bike_physics.steering_angle
+		)
+	else:
+		bike_crash.check_airborne_crash(
+			bike_physics.lean_angle,
+			bike_physics.idle_tip_angle,
+			bike_tricks.pitch_angle
+		)
+	bike_crash.sync_to_state()
 
-    # Check for controlled brake stop
-    bike_physics.check_brake_stop()
+	# Force stoppie if brake danger while going straight
+	if bike_crash.should_force_stoppie(bike_input):
+		bike_tricks.force_pitch(-bike_crash.crash_stoppie_threshold * 1.2, 4.0, delta)
 
-    # Crash detection
-    if is_on_floor():
-        bike_crash.check_crash_conditions(
-            delta,
-            bike_tricks.pitch_angle,
-            bike_physics.lean_angle,
-            bike_physics.idle_tip_angle,
-            bike_physics.steering_angle,
-            front_brake
-        )
-    else:
-        # Check for airborne crash (leaning too far while in the air)
-        bike_crash.check_airborne_crash(
-            bike_physics.lean_angle,
-            bike_physics.idle_tip_angle,
-            bike_tricks.pitch_angle
-        )
+	# Movement
+	_apply_movement(delta)
+	_apply_mesh_rotation()
 
-    # Force stoppie if brake danger while going straight
-    if bike_crash.should_force_stoppie():
-        bike_tricks.force_pitch(-bike_crash.crash_stoppie_threshold * 1.2, 4.0, delta)
+	# Audio and UI
+	bike_audio.update_engine_audio(bike_input)
+	bike_ui.update_ui(bike_input)
 
-    # Movement
-    _apply_movement(delta)
-    _apply_mesh_rotation()
+	move_and_slide()
 
-    # Audio and UI
-    bike_audio.update_engine_audio(throttle)
-    bike_ui.update_ui()
+	# Align to ground
+	_align_to_ground(delta)
 
-    move_and_slide()
-
-    # Align to ground
-    _align_to_ground(delta)
-
-    # Check for collisions - crash if we hit something while moving
-    _check_collision_crash()
+	# Check for collisions
+	_check_collision_crash()
 
 
 func _check_collision_crash():
-    if bike_crash.is_crashed:
-        return
+	if bike_crash.is_crashed:
+		return
 
-    for i in get_slide_collision_count():
-        var collision = get_slide_collision(i)
-        var collider = collision.get_collider()
+	for i in get_slide_collision_count():
+		var collision = get_slide_collision(i)
+		var collider = collision.get_collider()
 
-        # Check if collider is on layer 2 (bit 1)
-        var is_crash_layer = false
-        if collider is CollisionObject3D:
-            is_crash_layer = collider.get_collision_layer_value(2)
-        elif collider is CSGShape3D and collider.use_collision:
-            is_crash_layer = (collider.collision_layer & 2) != 0
+		# Check if collider is on layer 2 (bit 1)
+		var is_crash_layer = false
+		if collider is CollisionObject3D:
+			is_crash_layer = collider.get_collision_layer_value(2)
+		elif collider is CSGShape3D and collider.use_collision:
+			is_crash_layer = (collider.collision_layer & 2) != 0
 
-        if is_crash_layer:
-            var normal = collision.get_normal()
-
-            # Need some speed to crash
-            if bike_physics.speed > 5:
-                # Transform normal to local space for direction detection
-                var local_normal = global_transform.basis.inverse() * normal
-                bike_crash.trigger_collision_crash(local_normal)
-                return
+		if is_crash_layer:
+			var normal = collision.get_normal()
+			if bike_physics.speed > 5:
+				var local_normal = global_transform.basis.inverse() * normal
+				bike_crash.trigger_collision_crash(local_normal)
+				return
 
 
 func _align_to_ground(delta):
-    if is_on_floor():
-        var floor_normal = get_floor_normal()
-        # Calculate target pitch from floor normal
-        var forward_dir = - global_transform.basis.z
-        # Project floor normal onto forward axis to get pitch
-        var forward_dot = forward_dir.dot(floor_normal)
-        var target_pitch = asin(clamp(forward_dot, -1.0, 1.0))
-        ground_pitch = lerp(ground_pitch, target_pitch, ground_align_speed * delta)
-    else:
-        # Gradually return to level when airborne
-        ground_pitch = lerp(ground_pitch, 0.0, ground_align_speed * 0.5 * delta)
+	if is_on_floor():
+		var floor_normal = get_floor_normal()
+		var forward_dir = -global_transform.basis.z
+		var forward_dot = forward_dir.dot(floor_normal)
+		var target_pitch = asin(clamp(forward_dot, -1.0, 1.0))
+		ground_pitch = lerp(ground_pitch, target_pitch, ground_align_speed * delta)
+	else:
+		ground_pitch = lerp(ground_pitch, 0.0, ground_align_speed * 0.5 * delta)
 
 
 func _apply_movement(delta):
-    var forward = - global_transform.basis.z
+	var forward = -global_transform.basis.z
 
-    if bike_physics.speed > 0.5:
-        var turn_rate = bike_physics.get_turn_rate()
-        rotate_y(-bike_physics.steering_angle * turn_rate * delta)
+	if bike_physics.speed > 0.5:
+		var turn_rate = bike_physics.get_turn_rate()
+		rotate_y(-bike_physics.steering_angle * turn_rate * delta)
 
-        # Fishtail rotation and speed loss
-        if abs(bike_tricks.fishtail_angle) > 0.01:
-            rotate_y(bike_tricks.fishtail_angle * delta * 1.5)
-            bike_physics.apply_fishtail_friction(delta, bike_tricks.get_fishtail_speed_loss(delta))
+		if abs(bike_tricks.fishtail_angle) > 0.01:
+			rotate_y(bike_tricks.fishtail_angle * delta * 1.5)
+			bike_physics.apply_fishtail_friction(delta, bike_tricks.get_fishtail_speed_loss(delta))
 
-    var vertical_velocity = velocity.y
-    velocity = forward * bike_physics.speed
-    velocity.y = vertical_velocity
-    velocity = bike_physics.apply_gravity(delta, velocity, is_on_floor())
+	var vertical_velocity = velocity.y
+	velocity = forward * bike_physics.speed
+	velocity.y = vertical_velocity
+	velocity = bike_physics.apply_gravity(delta, velocity, is_on_floor())
 
 
 func _apply_mesh_rotation():
-    mesh.transform = Transform3D.IDENTITY
+	mesh.transform = Transform3D.IDENTITY
 
-    # Apply ground alignment pitch first
-    if ground_pitch != 0:
-        mesh.rotate_x(-ground_pitch)
+	if ground_pitch != 0:
+		mesh.rotate_x(-ground_pitch)
 
-    # Pitch pivot selection for tricks
-    var pivot: Vector3
-    if bike_tricks.pitch_angle >= 0:
-        pivot = rear_wheel.position
-    else:
-        pivot = front_wheel.position
+	var pivot: Vector3
+	if bike_tricks.pitch_angle >= 0:
+		pivot = rear_wheel.position
+	else:
+		pivot = front_wheel.position
 
-    # Apply trick pitch (wheelies/stoppies)
-    if bike_tricks.pitch_angle != 0:
-        _rotate_mesh_around_pivot(pivot, Vector3.RIGHT, bike_tricks.pitch_angle)
+	if bike_tricks.pitch_angle != 0:
+		_rotate_mesh_around_pivot(pivot, Vector3.RIGHT, bike_tricks.pitch_angle)
 
-    # Apply lean (including idle tip)
-    var total_lean = bike_physics.lean_angle + bike_physics.idle_tip_angle
-    if total_lean != 0:
-        mesh.rotate_z(total_lean)
+	var total_lean = bike_physics.lean_angle + bike_physics.idle_tip_angle
+	if total_lean != 0:
+		mesh.rotate_z(total_lean)
 
 
 func _rotate_mesh_around_pivot(pivot: Vector3, axis: Vector3, angle: float):
-    var t = mesh.transform
-    t.origin -= pivot
-    t = t.rotated(axis, angle)
-    t.origin += pivot
-    mesh.transform = t
+	var t = mesh.transform
+	t.origin -= pivot
+	t = t.rotated(axis, angle)
+	t.origin += pivot
+	mesh.transform = t
 
 
 func _handle_crash_state(delta):
-    if bike_crash.handle_crash_state(delta):
-        _respawn()
-        return
+	if bike_crash.handle_crash_state(delta, bike_physics.speed):
+		_respawn()
+		return
 
-    # Animate bike_crash
-    if bike_crash.crash_pitch_direction != 0:
-        bike_tricks.force_pitch(bike_crash.crash_pitch_direction * deg_to_rad(90), 3.0, delta)
-    elif bike_crash.crash_lean_direction != 0:
-        bike_physics.lean_angle = move_toward(bike_physics.lean_angle, bike_crash.crash_lean_direction * deg_to_rad(90), 3.0 * delta)
+	if bike_crash.crash_pitch_direction != 0:
+		bike_tricks.force_pitch(bike_crash.crash_pitch_direction * deg_to_rad(90), 3.0, delta)
+	elif bike_crash.crash_lean_direction != 0:
+		bike_physics.lean_angle = move_toward(bike_physics.lean_angle, bike_crash.crash_lean_direction * deg_to_rad(90), 3.0 * delta)
 
-        # Slide with friction during lowside
-        if bike_physics.speed > 0.1:
-            var forward = - global_transform.basis.z
-            velocity = forward * bike_physics.speed
-            bike_physics.speed = move_toward(bike_physics.speed, 0, 20.0 * delta)
-            move_and_slide()
+		if bike_physics.speed > 0.1:
+			var forward = -global_transform.basis.z
+			velocity = forward * bike_physics.speed
+			bike_physics.speed = move_toward(bike_physics.speed, 0, 20.0 * delta)
+			move_and_slide()
 
-    _apply_mesh_rotation()
+	_apply_mesh_rotation()
 
 
 func _respawn():
-    global_position = spawn_position
-    rotation = spawn_rotation
-    velocity = Vector3.ZERO
-    mesh.transform = Transform3D.IDENTITY
+	global_position = spawn_position
+	rotation = spawn_rotation
+	velocity = Vector3.ZERO
+	mesh.transform = Transform3D.IDENTITY
 
-    # Reset all components
-    bike_gearing.reset()
-    bike_physics.reset()
-    bike_tricks.reset()
-    bike_physics.reset()
-    bike_crash.reset()
-    bike_ui.stop_vibration()
+	# Reset all components (removed duplicate bike_physics.reset())
+	bike_gearing.reset()
+	bike_physics.reset()
+	bike_tricks.reset()
+	bike_crash.reset()
+	bike_ui.stop_vibration()
 
 
 # Signal handlers
 func _on_gear_grind():
-    bike_audio.play_gear_grind()
+	bike_audio.play_gear_grind()
 
 
 func _on_engine_stalled():
-    bike_audio.stop_engine()
+	bike_audio.stop_engine()
 
 
 func _on_skid_mark_requested(pos: Vector3, rot: Vector3):
-    _spawn_skid_mark(pos, rot)
+	_spawn_skid_mark(pos, rot)
 
 
 func _on_tire_screech_start(volume: float):
-    bike_audio.play_tire_screech(volume)
+	bike_audio.play_tire_screech(volume)
 
 
 func _on_tire_screech_stop():
-    bike_audio.stop_tire_screech()
+	bike_audio.stop_tire_screech()
 
 
 func _on_stoppie_stopped():
-    # Soft reset: like stalling but keep engine running
-    bike_physics.reset()
-    bike_physics.speed = 0.0
-    bike_physics.idle_tip_angle = 0.0
-    velocity = Vector3.ZERO
+	bike_physics.reset()
+	bike_physics.speed = 0.0
+	bike_physics.idle_tip_angle = 0.0
+	velocity = Vector3.ZERO
 
 
 func _on_brake_stopped():
-    # Soft reset: bike stopped via braking while upright
-    bike_physics.reset()
-    velocity = Vector3.ZERO
+	bike_physics.reset()
+	velocity = Vector3.ZERO
 
 
 func _on_crashed(pitch_dir: float, lean_dir: float):
-    # Keep speed for lowside crashes
-    if lean_dir != 0 and pitch_dir == 0:
-        bike_physics.speed *= 0.7
-    else:
-        bike_physics.speed = 0.0
-        velocity = Vector3.ZERO
+	if lean_dir != 0 and pitch_dir == 0:
+		bike_physics.speed *= 0.7
+	else:
+		bike_physics.speed = 0.0
+		velocity = Vector3.ZERO
 
-    # Play tire screech for lowside
-    if lean_dir != 0:
-        tire_screech.volume_db = 0.0
-        tire_screech.play()
+	if lean_dir != 0:
+		tire_screech.volume_db = 0.0
+		tire_screech.play()
 
 
 func _spawn_skid_mark(pos: Vector3, rot: Vector3):
-    var decal = Decal.new()
-    decal.texture_albedo = skidmark_texture
-    decal.size = Vector3(0.15, 0.5, 0.4)
-    decal.cull_mask = 1
+	var decal = Decal.new()
+	decal.texture_albedo = skidmark_texture
+	decal.size = Vector3(0.15, 0.5, 0.4)
+	decal.cull_mask = 1
 
-    get_tree().current_scene.add_child(decal)
+	get_tree().current_scene.add_child(decal)
 
-    decal.global_position = Vector3(pos.x, pos.y - 0.05, pos.z)
-    decal.global_rotation = rot
+	decal.global_position = Vector3(pos.x, pos.y - 0.05, pos.z)
+	decal.global_rotation = rot
 
-    var timer = get_tree().create_timer(SKID_MARK_LIFETIME)
-    timer.timeout.connect(func(): if is_instance_valid(decal): decal.queue_free())
+	var timer = get_tree().create_timer(SKID_MARK_LIFETIME)
+	timer.timeout.connect(func(): if is_instance_valid(decal): decal.queue_free())
