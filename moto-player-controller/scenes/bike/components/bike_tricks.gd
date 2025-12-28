@@ -11,6 +11,10 @@ signal stoppie_stopped  # Emitted when bike comes to rest during a stoppie
 @export var rotation_speed: float = 2.0
 @export var return_speed: float = 3.0
 
+# Wheelie RPM tuning - wheelies start at this RPM ratio and scale up to max at redline
+@export var wheelie_rpm_threshold: float = 0.65  # RPM ratio where wheelies can start
+@export var wheelie_rpm_full: float = 0.95  # RPM ratio for maximum wheelie effect
+
 # Fishtail/drift tuning
 @export var max_fishtail_angle: float = deg_to_rad(90)
 @export var fishtail_speed: float = 8.0
@@ -51,14 +55,21 @@ func handle_wheelie_stoppie(delta, rpm_ratio: float, clutch_value: float, is_tur
 	var is_in_stoppie = pitch_angle < deg_to_rad(-5)
 	var can_start_trick = not is_turning
 
-	# Wheelie logic
+	# Wheelie logic - wheelies scale with RPM above threshold
 	var wheelie_target = 0.0
-	var at_high_rpm = rpm_ratio > 0.85
-	var can_pop_wheelie = lean_input > 0.3 and throttle > 0.7 and (at_high_rpm or clutch_dump)
+	var rpm_above_threshold = rpm_ratio >= wheelie_rpm_threshold
+	var can_pop_wheelie = lean_input > 0.3 and throttle > 0.7 and (rpm_above_threshold or clutch_dump)
+
+	# Calculate how much wheelie power based on where we are in the RPM range
+	# 0 at threshold, 1 at full RPM
+	var rpm_wheelie_factor = 0.0
+	if rpm_ratio >= wheelie_rpm_threshold:
+		rpm_wheelie_factor = clamp((rpm_ratio - wheelie_rpm_threshold) / (wheelie_rpm_full - wheelie_rpm_threshold), 0.0, 1.0)
 
 	if bike_physics.speed > 1 and (is_in_wheelie or (can_pop_wheelie and can_start_trick)):
 		if throttle > 0.3:
-			wheelie_target = max_wheelie_angle * throttle * (1.0 - total_brake)
+			# Wheelie intensity scales with both throttle AND rpm position in the power band
+			wheelie_target = max_wheelie_angle * throttle * rpm_wheelie_factor * (1.0 - total_brake)
 			wheelie_target += max_wheelie_angle * lean_input * 0.15
 
 	# Stoppie logic - only works with progressive braking (not grabbed)
