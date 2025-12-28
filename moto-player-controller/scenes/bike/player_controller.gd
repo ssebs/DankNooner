@@ -8,6 +8,8 @@ class_name PlayerController extends CharacterBody3D
 
 @onready var gear_label = %GearLabel
 @onready var speed_label = %SpeedLabel
+@onready var throttle_bar = %ThrottleBar
+@onready var brake_danger_bar = %BrakeDangerBar
 
 # Skid marks
 var skidmark_texture = preload("res://assets/skidmarktex.png")
@@ -43,9 +45,9 @@ var fishtail_angle: float = 0.0  # Rear-end slide angle when drifting
 @export var turn_speed: float = 2.0  # How fast the bike actually turns
 
 # Fishtail/drift tuning
-@export var max_fishtail_angle: float = deg_to_rad(45)  # Max rear-end slide angle
-@export var fishtail_speed: float = 3.0  # How fast fishtail builds
-@export var fishtail_recovery_speed: float = 4.0  # How fast fishtail recovers
+@export var max_fishtail_angle: float = deg_to_rad(90)  # Max rear-end slide angle
+@export var fishtail_speed: float = 8.0  # How fast fishtail builds
+@export var fishtail_recovery_speed: float = 3.0  # How fast fishtail recovers
 
 # Crash tuning
 @export var crash_wheelie_threshold: float = deg_to_rad(75)  # Wheelie too far
@@ -74,10 +76,12 @@ var is_crashed: bool = false
 var crash_timer: float = 0.0
 var crash_pitch_direction: float = 0.0  # Non-zero for wheelie/stoppie crashes
 var crash_lean_direction: float = 0.0   # Non-zero for sideways crashes
-var last_front_brake_input: float = 0.0
 var last_throttle_input: float = 0.0
 var last_clutch_input: float = 0.0
 var idle_tip_angle: float = 0.0
+var has_started_moving: bool = false  # Track if bike has moved yet (stable at spawn)
+var front_brake_hold_time: float = 0.0  # How long front brake held at high speed
+var brake_danger_level: float = 0.0  # 0-1, how close to brake crash
 var spawn_position: Vector3
 var spawn_rotation: Vector3
 
@@ -173,6 +177,7 @@ func update_rpm():
     # Check for stall - below minimum speed for current gear without clutch
     if not is_stalled and clutch < 0.5 and speed < gear_min_speed and current_gear > 1:
         is_stalled = true
+        current_gear = 1  # Reset to 1st gear when stalling
         engine_sound.stop()
 
     # Restart engine with throttle + clutch while stalled
@@ -295,10 +300,16 @@ func handle_lean_input(delta):
     if speed > 1:
         turn_lean = -steering_angle * 0.6  # Auto-lean into turns
 
-    # More lean at low speeds (under 5)
-    var low_speed_lean_mult = 1.0 + (1.0 - clamp(speed / 5.0, 0.0, 1.0)) * 0.8  # Up to 1.8x lean at very low speed
+    # At low speed, leaning is dangerous - you can fall over
+    # Throttle helps keep the bike upright (gyroscopic effect from wheels)
+    var low_speed_threshold = 5.0  # ~18 km/h
+    var target_lean = -max_lean_angle * steer_input * 0.4 + turn_lean
 
-    var target_lean = (-max_lean_angle * steer_input * 0.4 + turn_lean) * low_speed_lean_mult
+    if speed < low_speed_threshold:
+        # Reduce steering authority at low speed
+        var speed_authority = clamp(speed / low_speed_threshold, 0.1, 1.0)
+        target_lean *= speed_authority
+
     lean_angle = move_toward(lean_angle, target_lean, rotation_speed * delta)
 
 
@@ -315,22 +326,27 @@ func handle_skidding(delta):
             skid_spawn_timer = 0.0
             spawn_skid_mark()
 
-        # Fishtail when turning while skidding
-        if abs(steering_angle) > 0.1:
-            # Fishtail in the opposite direction of the turn (rear swings out)
-            var target_fishtail = -sign(steering_angle) * max_fishtail_angle * rear_brake
-            # More fishtail at higher speeds
-            var speed_factor = clamp(speed / 30.0, 0.3, 1.0)
-            target_fishtail *= speed_factor
-            fishtail_angle = move_toward(fishtail_angle, target_fishtail, fishtail_speed * delta)
+        # Fishtail - rear end swings out dramatically when skidding
+        # Even without steering, the rear wants to come around
+        var steer_influence = steering_angle / max_steering_angle  # -1 to 1
 
-            # Play tire screech while fishtailing
-            if not tire_screech.playing:
-                tire_screech.volume_db = linear_to_db(0.6)
-                tire_screech.play()
-        else:
-            # Recover fishtail when not turning
-            fishtail_angle = move_toward(fishtail_angle, 0, fishtail_recovery_speed * delta)
+        # Base fishtail from steering direction (rear swings opposite to turn)
+        var target_fishtail = -steer_influence * max_fishtail_angle * rear_brake
+
+        # More fishtail at higher speeds
+        var speed_factor = clamp(speed / 20.0, 0.5, 1.5)
+        target_fishtail *= speed_factor
+
+        # Add instability - rear wants to swing out even more once started
+        if abs(fishtail_angle) > deg_to_rad(15):
+            target_fishtail *= 1.3  # Amplify once sliding
+
+        fishtail_angle = move_toward(fishtail_angle, target_fishtail, fishtail_speed * delta)
+
+        # Play tire screech while fishtailing
+        if not tire_screech.playing:
+            tire_screech.volume_db = linear_to_db(0.7)
+            tire_screech.play()
     else:
         skid_spawn_timer = 0.0
         # Recover fishtail when not skidding
@@ -372,9 +388,13 @@ func apply_movement(delta):
         # Normal steering rotation
         rotate_y(-steering_angle * turn_rate * delta)
 
-        # Fishtail adds extra rotation (rear sliding out)
+        # Fishtail adds dramatic extra rotation (rear sliding out hard)
+        # But also scrubs speed since you're sliding sideways
         if abs(fishtail_angle) > 0.01:
-            rotate_y(fishtail_angle * delta * 2.0)
+            rotate_y(fishtail_angle * delta * 4.0)
+            # Lose speed proportional to slide angle (sliding = friction)
+            var slide_friction = abs(fishtail_angle) / max_fishtail_angle
+            speed = move_toward(speed, 0, slide_friction * 15.0 * delta)
 
     velocity = forward * speed
 
@@ -417,6 +437,53 @@ func update_ui():
         gear_label.text = "Gear: %d" % current_gear
     speed_label.text = "Speed: %d km/h" % int(speed * 3.6)  # Convert m/s to km/h
 
+    # Throttle bar - green color, red at redline
+    var throttle = Input.get_action_strength("throttle_pct")
+    throttle_bar.value = throttle
+    var rpm_ratio = (current_rpm - idle_rpm) / (max_rpm - idle_rpm)
+    if rpm_ratio > 0.9:
+        throttle_bar.modulate = Color(1.0, 0.2, 0.2)  # Red at redline
+    else:
+        throttle_bar.modulate = Color(0.2, 0.8, 0.2)  # Green
+
+    # Brake danger bar - shows front brake, color changes with danger
+    var front_brake = Input.get_action_strength("brake_front_pct")
+    brake_danger_bar.value = front_brake
+    if brake_danger_level > 0.1:
+        # Color from yellow to red as danger increases
+        var danger_color = Color(1.0, 1.0 - brake_danger_level, 0.0)  # Yellow -> Orange -> Red
+        brake_danger_bar.modulate = danger_color
+    else:
+        # Normal brake color (blue-ish)
+        brake_danger_bar.modulate = Color(0.3, 0.5, 0.9)
+
+    # Controller vibration - combine multiple sources
+    var weak_total = 0.0
+    var strong_total = 0.0
+
+    # Brake danger vibration
+    if brake_danger_level > 0.1:
+        weak_total += brake_danger_level * 1.0
+        strong_total += brake_danger_level * brake_danger_level * 1.0
+
+    # Fishtail vibration - rumble proportional to slide angle
+    var fishtail_intensity = abs(fishtail_angle) / max_fishtail_angle
+    if fishtail_intensity > 0.1:
+        weak_total += fishtail_intensity * 0.6  # Moderate weak motor
+        strong_total += fishtail_intensity * fishtail_intensity * 0.8  # Strong rumble when sliding hard
+
+    # Redline vibration - engine buzzing at high RPM
+    if rpm_ratio > 0.85 and not is_stalled:
+        var redline_intensity = (rpm_ratio - 0.85) / 0.15  # 0-1 from 85% to 100% RPM
+        weak_total += redline_intensity * 0.4  # Light buzz
+        strong_total += redline_intensity * 0.2  # Subtle deep rumble
+
+    # Apply combined vibration (clamp to max 1.0)
+    if weak_total > 0.01 or strong_total > 0.01:
+        Input.start_joy_vibration(0, clamp(weak_total, 0.0, 1.0), clamp(strong_total, 0.0, 1.0), 0.15)
+    else:
+        Input.stop_joy_vibration(0)
+
 
 func update_audio():
     var throttle = Input.get_action_strength("throttle_pct")
@@ -443,24 +510,49 @@ func update_audio():
 
 func handle_idle_tipping(delta):
     var throttle = Input.get_action_strength("throttle_pct")
+    var low_speed_threshold = 5.0  # ~18 km/h
 
-    if speed < idle_tip_speed_threshold and throttle == 0:
-        # Start tipping over when idle with no throttle
-        if idle_tip_angle == 0:
-            # Pick a random direction to tip
-            idle_tip_angle = 0.01 if randf() > 0.5 else -0.01
-        idle_tip_angle = move_toward(idle_tip_angle, sign(idle_tip_angle) * crash_lean_threshold, idle_tip_rate * delta)
+    # Track if bike has ever started moving - once it has, tipping can occur
+    if speed > 3.0:
+        has_started_moving = true
+
+    # At spawn or standstill before moving, stay perfectly upright
+    if not has_started_moving:
+        idle_tip_angle = 0.0
+        return
+
+    if speed < low_speed_threshold:
+        # At low speed, lean angle contributes to tipping
+        # If you're leaned over and not accelerating, you'll fall
+        var lean_tip_contribution = 0.0
+        if throttle < 0.3:
+            # Lean angle pushes you toward falling in that direction
+            lean_tip_contribution = lean_angle * 0.5  # Lean converts to tip
+
+        if speed < idle_tip_speed_threshold and throttle == 0:
+            # Very slow / stopped - random tip direction if not already tipping
+            if idle_tip_angle == 0 and abs(lean_angle) < deg_to_rad(5):
+                idle_tip_angle = 0.01 if randf() > 0.5 else -0.01
+            elif abs(lean_angle) >= deg_to_rad(5):
+                # Tip in the direction you're leaned
+                idle_tip_angle = move_toward(idle_tip_angle, lean_angle, idle_tip_rate * 2.0 * delta)
+
+        # Apply tipping (accelerated by lean)
+        var tip_target = sign(idle_tip_angle + lean_tip_contribution) * crash_lean_threshold
+        var tip_rate = idle_tip_rate * (1.0 + abs(lean_angle) / max_lean_angle)  # Faster tip when leaned
+        idle_tip_angle = move_toward(idle_tip_angle, tip_target, tip_rate * delta)
+
+        # Throttle fights the tip - gyroscopic effect straightens bike
+        if throttle > 0.3:
+            var recovery_rate = idle_tip_rate * 3.0 * throttle
+            idle_tip_angle = move_toward(idle_tip_angle, 0, recovery_rate * delta)
     else:
-        # Throttle or speed prevents/reverts tipping
-        idle_tip_angle = move_toward(idle_tip_angle, 0, idle_tip_rate * 2.0 * delta)
+        # At speed, no tipping - recover any existing tip
+        idle_tip_angle = move_toward(idle_tip_angle, 0, idle_tip_rate * 3.0 * delta)
 
 
 func check_crash_conditions(delta):
     var front_brake = Input.get_action_strength("brake_front_pct")
-
-    # Check front brake input rate (too sudden = crash) - rear brake causes fishtail, not crash
-    var front_brake_rate = abs(front_brake - last_front_brake_input) / delta
-    last_front_brake_input = front_brake
 
     var crash_reason = ""
 
@@ -476,23 +568,33 @@ func check_crash_conditions(delta):
         crash_pitch_direction = -1  # Fall forward
         crash_lean_direction = 0
 
-    # Front brake too hard too fast - threshold scales inversely with speed
-    # At low speed: very high threshold (hard to crash)
-    # At high speed: low threshold (easy to crash)
-    # Rear brake doesn't cause crash - it causes fishtail/drift instead
-    var speed_factor = clamp(speed / max_speed, 0.0, 1.0)
-    var dynamic_brake_threshold = crash_brake_rate_threshold * (1.0 + (1.0 - speed_factor) * 9.0)  # 10x threshold at low speed
-    if front_brake_rate > dynamic_brake_threshold and speed > 10:
-        crash_reason = "brake"
-        crash_pitch_direction = 0
-        # Fall in steering direction, or random if not steering
-        if steering_angle != 0:
-            crash_lean_direction = sign(steering_angle)
-        else:
-            crash_lean_direction = 1 if randf() > 0.5 else -1
-        # Play tire screech at full volume for brake crash
-        tire_screech.volume_db = 0.0
-        tire_screech.play()
+    # Front brake crash - slamming front brake at high speed
+    # Track how long brake is held hard at speed (works for both keyboard and analog)
+    if front_brake > 0.8 and speed > 25:
+        front_brake_hold_time += delta
+        # Crash after holding front brake too long at high speed
+        # Higher speed = less time before crash
+        var speed_factor = clamp(speed / max_speed, 0.0, 1.0)
+        var crash_time_threshold = 0.3 * (1.0 - speed_factor * 0.5)  # 0.15s at max speed, 0.3s at 25
+
+        # Calculate danger level (0-1)
+        brake_danger_level = clamp(front_brake_hold_time / crash_time_threshold, 0.0, 1.0)
+
+        if front_brake_hold_time > crash_time_threshold:
+            crash_reason = "brake"
+            crash_pitch_direction = 0
+            # Fall in steering direction, or random if not steering
+            if steering_angle != 0:
+                crash_lean_direction = -sign(steering_angle)  # Negative because lean is opposite to steering
+            else:
+                crash_lean_direction = 1 if randf() > 0.5 else -1
+            # Play tire screech at full volume for brake crash
+            tire_screech.volume_db = 0.0
+            tire_screech.play()
+    else:
+        front_brake_hold_time = 0.0
+        # Fade danger level when not in danger
+        brake_danger_level = move_toward(brake_danger_level, 0.0, 5.0 * delta)
 
     # Idle tipping over
     if crash_reason == "" and abs(idle_tip_angle) >= crash_lean_threshold:
@@ -545,7 +647,8 @@ func respawn():
     speed = 0.0
     velocity = Vector3.ZERO
     fishtail_angle = 0.0
-    last_front_brake_input = 0.0
+    front_brake_hold_time = 0.0
+    brake_danger_level = 0.0
     last_throttle_input = 0.0
     last_clutch_input = 0.0
     crash_pitch_direction = 0.0
@@ -553,4 +656,5 @@ func respawn():
     current_gear = 1
     current_rpm = idle_rpm
     is_stalled = false
+    has_started_moving = false  # Reset so bike is stable at respawn
     mesh.transform = Transform3D.IDENTITY
