@@ -25,11 +25,13 @@ signal brake_stopped
 @export var crash_lean_threshold: float = deg_to_rad(80)
 @export var throttle_recovery_amount: float = 2.0
 
-# State
+# Shared state
+var state: BikeState
+
+# Local state
 var speed: float = 0.0
 var idle_tip_angle: float = 0.0
 var has_started_moving: bool = false
-
 var steering_angle: float = 0.0
 var lean_angle: float = 0.0
 
@@ -37,14 +39,27 @@ var lean_angle: float = 0.0
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 
-func handle_acceleration(delta, throttle: float, front_brake: float, rear_brake: float,
-						  power_output: float, gear_max_speed: float, clutch_engaged: float, is_stalled: bool,
-						  front_wheel_locked: bool = false):
+func setup(bike_state: BikeState):
+	state = bike_state
+	state.max_speed = max_speed
+	state.max_steering_angle = max_steering_angle
+	state.crash_lean_threshold = crash_lean_threshold
+
+
+func sync_to_state():
+	state.speed = speed
+	state.steering_angle = steering_angle
+	state.lean_angle = lean_angle
+	state.idle_tip_angle = idle_tip_angle
+
+
+func handle_acceleration(delta, input: BikeInput, power_output: float, gear_max_speed: float,
+						  clutch_engaged: float, is_stalled: bool, front_wheel_locked: bool = false):
 	# Braking
-	if front_brake > 0 or rear_brake > 0:
+	if input.front_brake > 0 or input.rear_brake > 0:
 		var front_effectiveness = 0.6 if front_wheel_locked else 1.0
-		var rear_effectiveness = 0.6 if rear_brake > 0.5 else 1.0
-		var total_braking = clamp(front_brake * front_effectiveness + rear_brake * rear_effectiveness, 0, 1)
+		var rear_effectiveness = 0.6 if input.rear_brake > 0.5 else 1.0
+		var total_braking = clamp(input.front_brake * front_effectiveness + input.rear_brake * rear_effectiveness, 0, 1)
 		speed = move_toward(speed, 0, brake_strength * total_braking * delta)
 
 	if is_stalled:
@@ -60,12 +75,12 @@ func handle_acceleration(delta, throttle: float, front_brake: float, rear_brake:
 			speed = move_toward(speed, gear_max_speed, friction * 2.0 * delta)
 
 	# Friction when coasting
-	if throttle == 0 and front_brake == 0 and rear_brake == 0:
+	if input.throttle == 0 and input.front_brake == 0 and input.rear_brake == 0:
 		var drag = friction * (1.5 - clutch_engaged * 0.5)
 		speed = move_toward(speed, 0, drag * delta)
 
 
-func handle_idle_tipping(delta, throttle: float, _steer_input: float):
+func handle_idle_tipping(delta, input: BikeInput):
 	if speed > 0.25:
 		has_started_moving = true
 
@@ -86,23 +101,19 @@ func handle_idle_tipping(delta, throttle: float, _steer_input: float):
 		idle_tip_angle += fall_acceleration * delta
 
 	# Recovery from throttle (rider stabilizing)
-	if throttle > 0:
-		idle_tip_angle = move_toward(idle_tip_angle, 0, throttle * throttle_recovery_amount * delta)
+	if input.throttle > 0:
+		idle_tip_angle = move_toward(idle_tip_angle, 0, input.throttle * throttle_recovery_amount * delta)
 
 
 func apply_fishtail_friction(_delta, fishtail_speed_loss: float):
 	speed = move_toward(speed, 0, fishtail_speed_loss)
 
 
-func check_brake_stop():
-	var front_brake = Input.get_action_strength("brake_front_pct")
-	var rear_brake = Input.get_action_strength("brake_rear")
-	var total_brake = front_brake + rear_brake
-
+func check_brake_stop(input: BikeInput):
 	var is_upright = abs(lean_angle + idle_tip_angle) < deg_to_rad(15)
 	var is_straight = abs(steering_angle) < deg_to_rad(10)
 
-	if speed < 0.5 and total_brake > 0.3 and is_upright and is_straight and has_started_moving:
+	if speed < 0.5 and input.total_brake > 0.3 and is_upright and is_straight and has_started_moving:
 		speed = 0.0
 		idle_tip_angle = 0.0
 		has_started_moving = false
@@ -115,22 +126,20 @@ func apply_gravity(delta, velocity: Vector3, is_on_floor: bool) -> Vector3:
 	return velocity
 
 
-func handle_steering(delta):
-	var steer_input = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
-
+func handle_steering(delta, input: BikeInput):
 	# Tip angle pulls steering in that direction (bike falls, bars turn)
 	var tip_induced_steer = - idle_tip_angle * 0.5
-	var target_steer = clamp(max_steering_angle * steer_input + tip_induced_steer, -max_steering_angle, max_steering_angle)
+	var target_steer = clamp(max_steering_angle * input.steer + tip_induced_steer, -max_steering_angle, max_steering_angle)
 
 	# Smooth interpolation to target
 	steering_angle = lerpf(steering_angle, target_steer, steering_speed * delta)
 
 
-func update_lean(delta, steer_input: float):
+func update_lean(delta, input: BikeInput):
 	# Lean from steering input and turn
 	var speed_factor = clamp(speed / 20.0, 0.0, 1.0)
 	var steer_lean = - steering_angle * speed_factor * 1.2
-	var input_lean = - steer_input * max_lean_angle * 0.3
+	var input_lean = - input.steer * max_lean_angle * 0.3
 
 	# Tip angle adds directly to lean
 	var target_lean = steer_lean + input_lean + idle_tip_angle * 0.5
@@ -156,3 +165,4 @@ func reset():
 	has_started_moving = false
 	steering_angle = 0.0
 	lean_angle = 0.0
+	sync_to_state()

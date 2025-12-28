@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bmqevs0vheol7"]
+[gd_scene load_steps=14 format=3 uid="uid://bmqevs0vheol7"]
 
 [ext_resource type="Script" uid="uid://c331s8cm2gjtp" path="res://scenes/bike/player_controller.gd" id="1_5uol1"]
 [ext_resource type="PackedScene" uid="uid://7etgly8gokpl" path="res://assets/bikes/GoogleMotorcycleSportbike.glb" id="1_ujl86"]
@@ -11,6 +11,7 @@
 [ext_resource type="AudioStream" uid="uid://c61khm016rfjr" path="res://assets/tire-screech-short.ogg" id="11_pgn4o"]
 [ext_resource type="Script" uid="uid://pc1xy500s1vu" path="res://scenes/bike/components/bike_ui.gd" id="11_ui"]
 [ext_resource type="AudioStream" uid="uid://tkuif41xejv4" path="res://assets/grinding-gear.ogg" id="12_pgn4o"]
+[ext_resource type="Script" uid="uid://deoncd44247pm" path="res://scenes/bike/components/bike_input.gd" id="13_input"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ujl86"]
 size = Vector3(0.68, 1.05, 2)
@@ -21,6 +22,10 @@ script = ExtResource("1_5uol1")
 
 [node name="Functionality" type="Node" parent="."]
 
+[node name="BikeInput" type="Node" parent="Functionality"]
+unique_name_in_owner = true
+script = ExtResource("13_input")
+
 [node name="BikePhysics" type="Node" parent="Functionality"]
 unique_name_in_owner = true
 script = ExtResource("8_physics")
@@ -28,29 +33,10 @@ script = ExtResource("8_physics")
 [node name="BikeGearing" type="Node" parent="Functionality"]
 unique_name_in_owner = true
 script = ExtResource("5_gearing")
-num_gears = null
-max_rpm = null
-idle_rpm = null
-stall_rpm = null
-gear_ratios = null
-clutch_speed = null
-friction_zone_start = null
-friction_zone_end = null
-gear_shift_threshold = null
 
 [node name="BikeTricks" type="Node" parent="Functionality"]
 unique_name_in_owner = true
 script = ExtResource("7_tricks")
-max_wheelie_angle = null
-max_stoppie_angle = null
-rotation_speed = null
-return_speed = null
-wheelie_rpm_threshold = null
-wheelie_rpm_full = null
-max_fishtail_angle = null
-fishtail_speed = null
-fishtail_recovery_speed = null
-skid_volume = null
 
 [node name="BikeCrash" type="Node" parent="Functionality"]
 unique_name_in_owner = true
@@ -63,6 +49,25 @@ script = ExtResource("10_audio")
 [node name="BikeUI" type="Node" parent="Functionality"]
 unique_name_in_owner = true
 script = ExtResource("11_ui")
+
+[node name="Sounds" type="Node" parent="."]
+
+[node name="EngineSound" type="AudioStreamPlayer" parent="Sounds"]
+unique_name_in_owner = true
+stream = ExtResource("10_t042m")
+volume_db = -25.0
+pitch_scale = 0.76
+
+[node name="TireScreechSound" type="AudioStreamPlayer" parent="Sounds"]
+unique_name_in_owner = true
+stream = ExtResource("11_pgn4o")
+volume_db = -15.0
+pitch_scale = 0.9
+
+[node name="EngineGrindSound" type="AudioStreamPlayer" parent="Sounds"]
+unique_name_in_owner = true
+stream = ExtResource("12_pgn4o")
+volume_db = -10.0
 
 [node name="Markers" type="Node3D" parent="."]
 
@@ -86,23 +91,6 @@ transform = Transform3D(0.015421053, 0, 0, 0, 0.015421053, 0, 0, 0, 0.015421053,
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.525, 0)
 shape = SubResource("BoxShape3D_ujl86")
-
-[node name="EngineSound" type="AudioStreamPlayer" parent="."]
-unique_name_in_owner = true
-stream = ExtResource("10_t042m")
-volume_db = -25.0
-pitch_scale = 0.76
-
-[node name="TireScreechSound" type="AudioStreamPlayer" parent="."]
-unique_name_in_owner = true
-stream = ExtResource("11_pgn4o")
-volume_db = -15.0
-pitch_scale = 0.9
-
-[node name="EngineGrindSound" type="AudioStreamPlayer" parent="."]
-unique_name_in_owner = true
-stream = ExtResource("12_pgn4o")
-volume_db = -10.0
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.999762, 0.0049998993, -0.021233821, 0.00051584863, 0.9676885, 0.25214824, 0.021808445, -0.25209916, 0.9674556, -0.23836821, 1.2938731, 2.5680387)
@@ -151,3 +139,9 @@ layout_mode = 2
 size_flags_horizontal = 8
 max_value = 1.0
 show_percentage = false
+
+[node name="DifficultyLabel" type="Label" parent="MotoUI/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Easy"
