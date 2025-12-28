@@ -4,23 +4,26 @@
 
 - [ ] Tweak values til they feel good
 
-  - [ ] Gearing / speed / rpm doesn't feel good
+  - [ ] Gearing / speed
+  - [ ] rpm / sound
   - [x] Steering at low speeds
-  - [ ] falling at low speeds
+  - [ ] falling at low speeds (fix idle tip in)
   - [ ] wheelie / stoppie control
 
 - [ ] Fix bugs / understand the refactored code
-
-  - [ ] **physics** (`bike_physics.gd`) - fall when too slow, lean up when accelerating, idle tipping
-  - [ ] **gearing** (`bike_gearing.gd`) - clutch, throttle, gas, rpm, speed, gear shifting
-  - [ ] **steering** (`bike_steering.gd`) - lean / steer input, steer angle based on speed
-  - [ ] **crash checks + animations** (`bike_crash.gd`) - crash detection and respawn
-  - [ ] **trick checks** (`bike_tricks.gd`) - wheelies / stoppies - pitch control
-    - [ ] Skidding & Fishtail - rear brake skids, fishtail drift physics, speed scrubbing
-      - Skid marks - decal spawning at rear wheel, timed cleanup
-  - [ ] **Audio** (`bike_audio.gd`) - engine sound pitch based on RPM, tire screech on skids/stoppies/gear grind
-  - [ ] **UI** (`bike_ui.gd`) - gear display, speedometer, throttle bar (with redline color), brake danger bar
-  - [ ] Controller vibration - brake danger, fishtail, redline rumble (in `bike_ui.gd`)
+- [ ] User stories:
+  - [ ] bike should fall when too slow
+  - [ ] bike should lean up when accelerating
+  - [ ] bike should tip-in / countersteer when leaning
+  - [ ] the steer angle + lean angle should be based on speed
+  - [ ] crash detection and respawn
+  - [x] wheelies / stoppies - pitch control during each
+  - [x] Skidding / fishtail - rear brake skids, fishtail drift physics w/ skidmarks
+  - [x] engine sound pitch based on RPM
+  - [x] tire screech on skids/stoppies
+  - [x] gear grind sound
+  - [x] gear display, speedometer, throttle bar (with redline color), brake danger bar
+  - [x] Controller vibration - brake danger, fishtail, redline
 
 ## TODO:
 

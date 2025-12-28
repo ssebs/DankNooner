@@ -5,7 +5,7 @@ signal respawned
 
 # Crash thresholds
 @export var crash_wheelie_threshold: float = deg_to_rad(75)
-@export var crash_stoppie_threshold: float = deg_to_rad(45)
+@export var crash_stoppie_threshold: float = deg_to_rad(55)
 @export var crash_lean_threshold: float = deg_to_rad(80)
 @export var respawn_delay: float = 2.0
 
