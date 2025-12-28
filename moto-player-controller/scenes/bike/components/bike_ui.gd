@@ -79,12 +79,12 @@ func _update_vibration():
         weak_total += fishtail_intensity * 0.6
         strong_total += fishtail_intensity * fishtail_intensity * 0.8
 
-    # Redline vibration
-    var rpm_ratio = (bike_gearing.current_rpm - bike_gearing.idle_rpm) / (bike_gearing.max_rpm - bike_gearing.idle_rpm)
-    if rpm_ratio > 0.85 and !bike_gearing.is_stalled:
-        var redline_intensity = (rpm_ratio - 0.85) / 0.15
-        weak_total += redline_intensity * 0.4
-        strong_total += redline_intensity * 0.2
+    # # Redline vibration
+    # var rpm_ratio = (bike_gearing.current_rpm - bike_gearing.idle_rpm) / (bike_gearing.max_rpm - bike_gearing.idle_rpm)
+    # if rpm_ratio > 0.85 and !bike_gearing.is_stalled:
+    #     var redline_intensity = (rpm_ratio - 0.85) / 0.15
+    #     weak_total += redline_intensity * 0.4
+    #     strong_total += redline_intensity * 0.2
 
     # Apply vibration
     if weak_total > 0.01 or strong_total > 0.01:
