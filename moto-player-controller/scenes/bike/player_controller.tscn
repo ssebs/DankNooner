@@ -42,7 +42,7 @@ volume_db = -20.0
 [node name="TireScreechSound" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
 stream = ExtResource("4_fi808")
-volume_db = -10.0
+volume_db = -15.0
 pitch_scale = 0.9
 
 [node name="Camera3D" type="Camera3D" parent="."]
