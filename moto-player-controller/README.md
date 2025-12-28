@@ -16,6 +16,10 @@
     - [ ] Controller vibration - brake danger, fishtail, redline rumble
 
 - [ ] Tweak values til they feel good
+  - [ ] Gearing / speed / rpm doesn't feel good
+  - [ ] Steering at low speeds
+  - [ ] falling at low speeds
+  - [ ] wheelie / stoppie control 
 
 ## TODO:
 
