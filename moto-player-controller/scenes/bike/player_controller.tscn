@@ -34,13 +34,43 @@ transform = Transform3D(0.015421053, 0, 0, 0, 0.015421053, 0, 0, 0, 0.015421053,
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.525, 0)
 shape = SubResource("BoxShape3D_ujl86")
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="EngineSound" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
 stream = ExtResource("3_ppvd4")
+volume_db = -5.0
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.99976206, 0.0049999002, -0.021233825, 0, 0.9733793, 0.22920032, 0.021814544, -0.22914577, 0.9731477, -0.23836821, 1.2938731, 2.1143897)
 fov = 70.0
 
-[node name="TireScreetchSound" type="AudioStreamPlayer" parent="."]
+[node name="TireScreechSound" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
 stream = ExtResource("4_fi808")
+
+[node name="MotoUI" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 64
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 64
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MotoUI"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="GearLabel" type="Label" parent="MotoUI/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Gear:"
+
+[node name="SpeedLabel" type="Label" parent="MotoUI/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Speed:"

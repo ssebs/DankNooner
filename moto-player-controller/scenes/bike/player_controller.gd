@@ -3,7 +3,11 @@ class_name PlayerController extends CharacterBody3D
 @onready var mesh = %Mesh
 @onready var rear_wheel = %RearWheelMarker
 @onready var front_wheel = %FrontWheelMarker
-@onready var audio_player = %AudioStreamPlayer
+@onready var engine_sound = %EngineSound
+@onready var tire_screech = %TireScreetchSound
+
+@onready var gear_label = %GearLabel
+@onready var speed_label = %SpeedLabel
 
 # Rotation angles
 var pitch_angle: float = 0.0
@@ -40,6 +44,14 @@ var steering_angle: float = 0.0
 @export var crash_lean_threshold: float = deg_to_rad(80)  # Fall over at this lean
 @export var respawn_delay: float = 2.0
 
+# Gear system
+@export var num_gears: int = 6
+@export var max_rpm: float = 8000.0
+@export var idle_rpm: float = 1000.0
+@export var gear_ratios: Array[float] = [3.5, 2.5, 1.8, 1.4, 1.1, 0.9]  # Higher = more torque, less top speed
+var current_gear: int = 1
+var current_rpm: float = 0.0
+
 # Gravity
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
@@ -62,6 +74,7 @@ func _physics_process(delta):
         handle_crash_state(delta)
         return
 
+    handle_gear_shifting()
     handle_acceleration(delta)
     handle_steering(delta)
     handle_lean_input(delta)
@@ -69,24 +82,78 @@ func _physics_process(delta):
     check_crash_conditions(delta)
     apply_movement(delta)
     apply_mesh_rotation()
+    update_rpm()
     update_audio()
     move_and_slide()
+
+
+func handle_gear_shifting():
+    var clutch = Input.get_action_strength("clutch")
+
+    if Input.is_action_just_pressed("gear_up"):
+        if clutch > 0.5:
+            if current_gear < num_gears:
+                current_gear += 1
+        else:
+            # Grind gears - play screech sound
+            tire_screech.volume_db = linear_to_db(0.3)
+            tire_screech.play()
+
+    if Input.is_action_just_pressed("gear_down"):
+        if clutch > 0.5:
+            if current_gear > 1:
+                current_gear -= 1
+        else:
+            # Grind gears - play screech sound
+            tire_screech.volume_db = linear_to_db(0.3)
+            tire_screech.play()
+
+
+func get_max_speed_for_gear() -> float:
+    # Each gear has a different top speed based on its ratio
+    # Lower gears (higher ratio) = lower top speed but more acceleration
+    var gear_ratio = gear_ratios[current_gear - 1]
+    var base_top_speed = max_speed / gear_ratios[0]  # Normalize to first gear
+    return base_top_speed * gear_ratio
+
+
+func update_rpm():
+    var throttle = Input.get_action_strength("throttle_pct")
+    var gear_max_speed = get_max_speed_for_gear()
+
+    # RPM based on speed relative to current gear's max speed
+    var speed_ratio = speed / gear_max_speed if gear_max_speed > 0 else 0.0
+    current_rpm = lerpf(idle_rpm, max_rpm, clamp(speed_ratio, 0.0, 1.0))
+
+    # Rev higher when throttle is applied but not moving much (revving in neutral/clutch in)
+    var clutch = Input.get_action_strength("clutch")
+    if clutch > 0.5 and throttle > 0:
+        current_rpm = lerpf(current_rpm, max_rpm * throttle, 0.5)
 
 
 func handle_acceleration(delta):
     var throttle = Input.get_action_strength("throttle_pct")
     var front_brake = Input.get_action_strength("brake_front_pct")
     var rear_brake = Input.get_action_strength("brake_rear")
-    
-    # Accelerate
+    var clutch = Input.get_action_strength("clutch")
+
+    # Get max speed for current gear
+    var gear_max_speed = get_max_speed_for_gear()
+
+    # Accelerate (reduced power when clutch is held)
     if throttle > 0:
-        speed = move_toward(speed, max_speed * throttle, acceleration * delta)
-    
+        var effective_throttle = throttle * (1.0 - clutch * 0.8)  # 80% power loss with full clutch
+        var target_speed = min(max_speed * effective_throttle, gear_max_speed)
+
+        # Don't accelerate past gear's max speed (at max RPM)
+        if speed < gear_max_speed or current_rpm < max_rpm:
+            speed = move_toward(speed, target_speed, acceleration * delta)
+
     # Brake
     var total_brake = clamp(front_brake + rear_brake, 0, 1)
     if total_brake > 0:
         speed = move_toward(speed, 0, brake_strength * total_brake * delta)
-    
+
     # Natural friction when no input
     if throttle == 0 and total_brake == 0:
         speed = move_toward(speed, 0, friction * delta)
@@ -119,8 +186,15 @@ func handle_lean_input(delta):
     elif lean_input < 0 and is_braking and speed > 1:
         # Stoppie - only when braking and moving
         pitch_angle = move_toward(pitch_angle, -max_stoppie_angle * abs(lean_input), rotation_speed * delta)
+        # Play tire screech at half volume during stoppie
+        if not tire_screech.playing:
+            tire_screech.volume_db = linear_to_db(0.5)
+            tire_screech.play()
     else:
         pitch_angle = move_toward(pitch_angle, 0, return_speed * delta)
+        # Stop tire screech when not in stoppie
+        if tire_screech.playing:
+            tire_screech.stop()
     
     # Side lean (mix of input and speed-based auto-lean in turns)
     var turn_lean = 0.0
@@ -177,22 +251,22 @@ func rotate_mesh_around_pivot(pivot: Vector3, axis: Vector3, angle: float):
     mesh.transform = t
 
 
+
 func update_audio():
     var throttle = Input.get_action_strength("throttle_pct")
 
-    # RPM Audio Pitch
-    if throttle > 0:
-        if not audio_player.playing:
-            audio_player.play()
-        audio_player.pitch_scale = clampf(throttle, 0.5, 3.0)
-    elif speed > 0.5:
-        # Engine winds down gradually when coasting
-        if not audio_player.playing:
-            audio_player.play()
-        audio_player.pitch_scale = move_toward(audio_player.pitch_scale, 0.5, 0.02)
+    # Engine runs when moving or throttle applied
+    if speed > 0.5 or throttle > 0:
+        if not engine_sound.playing:
+            engine_sound.play()
+
+        # Pitch based on RPM (0.8 at idle, up to 1.6 at max RPM)
+        var rpm_ratio = (current_rpm - idle_rpm) / (max_rpm - idle_rpm)
+        var target_pitch = lerpf(0.8, 1.6, clamp(rpm_ratio, 0.0, 1.0))
+        engine_sound.pitch_scale = target_pitch
     else:
-        if audio_player.playing:
-            audio_player.stop()
+        if engine_sound.playing:
+            engine_sound.stop()
 
 
 func handle_idle_tipping(delta):
@@ -236,20 +310,27 @@ func check_crash_conditions(delta):
         crash_pitch_direction = -1  # Fall forward
         crash_lean_direction = 0
 
-    # Brake too hard too fast
-    elif brake_rate > crash_brake_rate_threshold and speed > 5:
+    # Brake too hard too fast - threshold scales inversely with speed
+    # At low speed: very high threshold (hard to crash)
+    # At high speed: low threshold (easy to crash)
+    var speed_factor = clamp(speed / max_speed, 0.0, 1.0)
+    var dynamic_brake_threshold = crash_brake_rate_threshold * (1.0 + (1.0 - speed_factor) * 4.0)  # 5x threshold at low speed
+    if brake_rate > dynamic_brake_threshold and speed > 5:
         crash_reason = "brake"
         crash_pitch_direction = 0
         crash_lean_direction = 1 if randf() > 0.5 else -1
+        # Play tire screech at full volume for brake crash
+        tire_screech.volume_db = 0.0
+        tire_screech.play()
 
     # Idle tipping over
-    elif abs(idle_tip_angle) >= crash_lean_threshold:
+    if crash_reason == "" and abs(idle_tip_angle) >= crash_lean_threshold:
         crash_reason = "idle_tip"
         crash_pitch_direction = 0
         crash_lean_direction = sign(idle_tip_angle)
 
     # Total lean too far (from steering + idle tip)
-    elif abs(lean_angle + idle_tip_angle) >= crash_lean_threshold:
+    if crash_reason == "" and abs(lean_angle + idle_tip_angle) >= crash_lean_threshold:
         crash_reason = "lean"
         crash_pitch_direction = 0
         crash_lean_direction = sign(lean_angle + idle_tip_angle)
@@ -295,4 +376,6 @@ func respawn():
     last_brake_input = 0.0
     crash_pitch_direction = 0.0
     crash_lean_direction = 0.0
+    current_gear = 1
+    current_rpm = idle_rpm
     mesh.transform = Transform3D.IDENTITY
