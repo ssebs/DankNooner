@@ -180,3 +180,45 @@ func reset():
 func is_front_wheel_locked() -> bool:
 	"""Returns true if front brake was grabbed hard enough to lock wheel (skid)"""
 	return brake_grab_level > BRAKE_GRAB_CRASH_THRESHOLD
+
+
+func check_airborne_crash(lean_angle: float, idle_tip_angle: float, pitch_angle: float) -> bool:
+	"""Check if bike should crash when landing from a jump while leaning"""
+	var total_lean = abs(lean_angle + idle_tip_angle)
+
+	# Crash if leaning too far while airborne - will crash on landing
+	if total_lean > deg_to_rad(45):
+		crash_pitch_direction = 0
+		crash_lean_direction = sign(lean_angle + idle_tip_angle)
+		trigger_crash()
+		return true
+
+	# Also crash if pitched too far
+	if pitch_angle > crash_wheelie_threshold * 0.8 or pitch_angle < -crash_stoppie_threshold * 0.8:
+		crash_pitch_direction = sign(pitch_angle)
+		crash_lean_direction = 0
+		trigger_crash()
+		return true
+
+	return false
+
+
+func trigger_collision_crash(collision_normal: Vector3):
+	"""Trigger crash from hitting an obstacle"""
+	# Determine crash direction from collision normal
+	var local_normal = collision_normal
+
+	# If hit from front, flip over handlebars
+	if local_normal.z > 0.5:
+		crash_pitch_direction = -1
+		crash_lean_direction = 0
+	# If hit from side, lowside in that direction
+	elif abs(local_normal.x) > 0.3:
+		crash_pitch_direction = 0
+		crash_lean_direction = sign(local_normal.x)
+	# Otherwise default to forward flip
+	else:
+		crash_pitch_direction = -1
+		crash_lean_direction = 0
+
+	trigger_crash()

@@ -94,14 +94,22 @@ func _physics_process(delta):
     bike_physics.check_brake_stop(bike_steering.steering_angle, bike_steering.lean_angle)
 
     # Crash detection
-    bike_crash.check_crash_conditions(
-        delta,
-        bike_tricks.pitch_angle,
-        bike_steering.lean_angle,
-        bike_physics.idle_tip_angle,
-        bike_steering.steering_angle,
-        front_brake
-    )
+    if is_on_floor():
+        bike_crash.check_crash_conditions(
+            delta,
+            bike_tricks.pitch_angle,
+            bike_steering.lean_angle,
+            bike_physics.idle_tip_angle,
+            bike_steering.steering_angle,
+            front_brake
+        )
+    else:
+        # Check for airborne crash (leaning too far while in the air)
+        bike_crash.check_airborne_crash(
+            bike_steering.lean_angle,
+            bike_physics.idle_tip_angle,
+            bike_tricks.pitch_angle
+        )
 
     # Force stoppie if brake danger while going straight
     if bike_crash.should_force_stoppie():
@@ -116,6 +124,35 @@ func _physics_process(delta):
     bike_ui.update_ui()
 
     move_and_slide()
+
+    # Check for collisions - crash if we hit something while moving
+    _check_collision_crash()
+
+
+func _check_collision_crash():
+    if bike_crash.is_crashed:
+        return
+
+    for i in get_slide_collision_count():
+        var collision = get_slide_collision(i)
+        var collider = collision.get_collider()
+
+        # Check if collider is on layer 2 (bit 1)
+        var is_crash_layer = false
+        if collider is CollisionObject3D:
+            is_crash_layer = collider.get_collision_layer_value(2)
+        elif collider is CSGShape3D and collider.use_collision:
+            is_crash_layer = (collider.collision_layer & 2) != 0
+
+        if is_crash_layer:
+            var normal = collision.get_normal()
+
+            # Need some speed to crash
+            if bike_physics.speed > 5:
+                # Transform normal to local space for direction detection
+                var local_normal = global_transform.basis.inverse() * normal
+                bike_crash.trigger_collision_crash(local_normal)
+                return
 
 
 func _apply_movement(delta):
