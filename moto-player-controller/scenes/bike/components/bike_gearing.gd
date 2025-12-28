@@ -11,7 +11,6 @@ signal gear_grind # Tried to shift without clutch
 @export var idle_rpm: float = 1000.0
 @export var stall_rpm: float = 500.0
 @export var gear_ratios: Array[float] = [2.92, 2.05, 1.6, 1.46, 1.15, 1.0]
-@export var dont_require_clutch: bool = false
 
 # Clutch tuning
 @export var clutch_speed: float = 15.0
@@ -59,14 +58,14 @@ func get_clutch_engagement() -> float:
 
 func handle_gear_shifting(input: BikeInput):
     if input.gear_up_pressed:
-        if clutch_value > gear_shift_threshold || dont_require_clutch:
+        if clutch_value > gear_shift_threshold || state.is_easy_mode:
             if current_gear < num_gears:
                 current_gear += 1
                 gear_changed.emit(current_gear)
         else:
             gear_grind.emit()
     elif input.gear_down_pressed:
-        if clutch_value > gear_shift_threshold || dont_require_clutch:
+        if clutch_value > gear_shift_threshold || state.is_easy_mode:
             if current_gear > 1:
                 current_gear -= 1
                 gear_changed.emit(current_gear)
