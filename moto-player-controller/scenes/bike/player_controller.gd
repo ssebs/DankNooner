@@ -71,6 +71,10 @@ var is_stalled: bool = false
 # Gravity
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
+# Clutch (smoothed from button press)
+var clutch_value: float = 0.0
+const CLUTCH_SPEED: float = 8.0  # How fast clutch engages/disengages
+
 # Crash state
 var is_crashed: bool = false
 var crash_timer: float = 0.0
@@ -90,6 +94,8 @@ func _ready():
     spawn_rotation = rotation
 
 func _physics_process(delta):
+    update_clutch(delta)
+
     if is_crashed:
         handle_crash_state(delta)
         return
@@ -109,11 +115,14 @@ func _physics_process(delta):
     move_and_slide()
 
 
-func handle_gear_shifting():
-    var clutch = Input.get_action_strength("clutch")
+func update_clutch(delta):
+    var clutch_input = Input.get_action_strength("clutch")
+    clutch_value = move_toward(clutch_value, clutch_input, CLUTCH_SPEED * delta)
 
+
+func handle_gear_shifting():
     if Input.is_action_just_pressed("gear_up"):
-        if clutch > 0.5:
+        if clutch_value > 0.5:
             if current_gear < num_gears:
                 current_gear += 1
         else:
@@ -122,7 +131,7 @@ func handle_gear_shifting():
             tire_screech.play()
 
     if Input.is_action_just_pressed("gear_down"):
-        if clutch > 0.5:
+        if clutch_value > 0.5:
             if current_gear > 1:
                 current_gear -= 1
         else:
@@ -142,93 +151,93 @@ func get_max_speed_for_gear(gear: int = -1) -> float:
     return max_speed * (lowest_ratio / gear_ratio)
 
 
-func get_min_speed_for_gear() -> float:
-    # Minimum speed for a gear before stalling
-    # 1st gear has no minimum
-    if current_gear == 1:
-        return 0.0
-    return get_max_speed_for_gear(current_gear - 1) * 0.25  # 25% of previous gear's max
-
-
-func get_acceleration_for_gear() -> float:
-    # Lower gears (higher ratio) = more acceleration
-    var gear_ratio = gear_ratios[current_gear - 1]
-    var base_ratio = gear_ratios[num_gears - 1]  # Normalize to highest gear
-    return acceleration * (gear_ratio / base_ratio)
-
-
 func update_rpm():
     var throttle = Input.get_action_strength("throttle_pct")
-    var clutch = Input.get_action_strength("clutch")
+
+    if is_stalled:
+        current_rpm = 0.0
+        # Restart engine with throttle + clutch while stalled
+        if clutch_value > 0.5 and throttle > 0.3:
+            is_stalled = false
+            current_rpm = idle_rpm
+        return
+
+    # Clutch controls how much the engine is connected to the wheels
+    # clutch_value = 1.0 means fully disengaged (free revving)
+    # clutch_value = 0.0 means fully engaged (RPM locked to wheel speed)
+
+    # Calculate what RPM would be if fully disengaged (throttle controls directly)
+    var free_rev_rpm = lerpf(idle_rpm, max_rpm, throttle)
+
+    # Calculate what RPM would be if fully engaged (locked to wheel speed)
     var gear_max_speed = get_max_speed_for_gear()
-    var gear_min_speed = get_min_speed_for_gear()
+    var speed_ratio = speed / gear_max_speed if gear_max_speed > 0 else 0.0
+    var engaged_rpm = lerpf(idle_rpm, max_rpm, clamp(speed_ratio, 0.0, 1.0))
 
-    # When clutch is held, RPM is directly controlled by throttle (free revving)
-    if clutch > 0.5:
-        var target_rpm = lerpf(idle_rpm, max_rpm, throttle)
-        current_rpm = lerpf(current_rpm, target_rpm, 0.2)  # Smooth transition
-    else:
-        # RPM based on speed relative to current gear's speed band
-        var speed_in_band = clamp(speed - gear_min_speed, 0.0, gear_max_speed - gear_min_speed)
-        var band_size = gear_max_speed - gear_min_speed
-        var speed_ratio = speed_in_band / band_size if band_size > 0 else 0.0
-        var target_rpm = lerpf(idle_rpm, max_rpm, clamp(speed_ratio, 0.0, 1.0))
-        current_rpm = lerpf(current_rpm, target_rpm, 0.1)  # Smooth RPM climb
+    # Blend between free-rev and engaged based on clutch position
+    var target_rpm = lerpf(engaged_rpm, free_rev_rpm, clutch_value)
 
-    # Check for stall - below minimum speed for current gear without clutch
-    if not is_stalled and clutch < 0.5 and speed < gear_min_speed and current_gear > 1:
+    # Smooth RPM transitions (faster when free revving)
+    var rpm_lerp_speed = lerpf(0.1, 0.25, clutch_value)
+    current_rpm = lerpf(current_rpm, target_rpm, rpm_lerp_speed)
+
+    # Clamp RPM
+    current_rpm = clamp(current_rpm, idle_rpm, max_rpm)
+
+    # Check for stall - RPM drops too low when engaged
+    if clutch_value < 0.3 and current_rpm < stall_rpm and speed < 1.0:
         is_stalled = true
-        current_gear = 1  # Reset to 1st gear when stalling
+        current_gear = 1
         engine_sound.stop()
-
-    # Restart engine with throttle + clutch while stalled
-    if is_stalled and clutch > 0.5 and throttle > 0.3:
-        is_stalled = false
-        current_rpm = idle_rpm
 
 
 func handle_acceleration(delta):
     var throttle = Input.get_action_strength("throttle_pct")
     var front_brake = Input.get_action_strength("brake_front_pct")
     var rear_brake = Input.get_action_strength("brake_rear")
-    var clutch = Input.get_action_strength("clutch")
 
-    # Get speed band for current gear
     var gear_max_speed = get_max_speed_for_gear()
-    var gear_min_speed = get_min_speed_for_gear()
 
-    # Can't accelerate when stalled
-    if is_stalled:
-        throttle = 0
-
-    # Accelerate (reduced power when clutch is held)
-    if throttle > 0:
-        var effective_throttle = throttle * (1.0 - clutch * 0.8)  # 80% power loss with full clutch
-        var target_speed = gear_max_speed * effective_throttle
-
-        # Acceleration rate - matches RPM lerp feel
-        # Lower gears accelerate faster (higher ratio = more torque)
-        var gear_ratio = gear_ratios[current_gear - 1]
-        var base_ratio = gear_ratios[num_gears - 1]
-        var accel_rate = 0.08 * (gear_ratio / base_ratio)  # ~0.08 base, scales with gear
-
-        # Reduce acceleration when below gear's minimum speed (lugging the engine)
-        if speed < gear_min_speed and current_gear > 1:
-            var lug_factor = speed / gear_min_speed if gear_min_speed > 0 else 0.0
-            accel_rate *= lug_factor * 0.3  # Very weak acceleration when lugging
-
-        # Don't accelerate past gear's max speed (at max RPM)
-        if speed < gear_max_speed or current_rpm < max_rpm:
-            speed = lerpf(speed, target_speed, accel_rate)
-
-    # Brake
+    # Brake first (always applies)
     var total_brake = clamp(front_brake + rear_brake, 0, 1)
     if total_brake > 0:
         speed = move_toward(speed, 0, brake_strength * total_brake * delta)
 
-    # Natural friction when no input
-    if throttle == 0 and total_brake == 0:
+    # Can't accelerate when stalled
+    if is_stalled:
         speed = move_toward(speed, 0, friction * delta)
+        return
+
+    # Power delivery depends on clutch engagement and RPM
+    # Clutch out = power goes to wheels, Clutch in = no power
+    var engagement = 1.0 - clutch_value  # 0 = disengaged, 1 = fully engaged
+
+    if throttle > 0 and engagement > 0.1:
+        # Power is based on current RPM (higher RPM = more power, up to a point)
+        var rpm_ratio = (current_rpm - idle_rpm) / (max_rpm - idle_rpm)
+        var power_curve = rpm_ratio * (2.0 - rpm_ratio)  # Peaks around 75% RPM, drops at redline
+
+        # Gear ratio affects torque (lower gears = more torque = faster acceleration)
+        var gear_ratio = gear_ratios[current_gear - 1]
+        var base_ratio = gear_ratios[num_gears - 1]
+        var torque_multiplier = gear_ratio / base_ratio
+
+        # Calculate acceleration force
+        var accel_force = acceleration * throttle * power_curve * torque_multiplier * engagement
+
+        # Apply acceleration (can't exceed gear's max speed)
+        if speed < gear_max_speed:
+            speed += accel_force * delta
+            speed = min(speed, gear_max_speed)
+        elif speed > gear_max_speed:
+            # Over-revving - speed limited by gear, engine braking kicks in
+            speed = move_toward(speed, gear_max_speed, friction * 2.0 * delta)
+
+    # Natural friction/engine braking when no throttle
+    if throttle == 0 and total_brake == 0:
+        # Engine braking when engaged, less friction when clutch is in
+        var drag = friction * (1.0 + engagement * 0.5)
+        speed = move_toward(speed, 0, drag * delta)
 
 
 func handle_steering(delta):
@@ -248,15 +257,14 @@ func handle_lean_input(delta):
     var lean_input = Input.get_action_strength("lean_back") - Input.get_action_strength("lean_forward")
     var steer_input = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
     var throttle = Input.get_action_strength("throttle_pct")
-    var clutch = Input.get_action_strength("clutch")
     var front_brake = Input.get_action_strength("brake_front_pct")
     var rear_brake = Input.get_action_strength("brake_rear")
     var total_brake = clamp(front_brake + rear_brake, 0.0, 1.0)
 
     # Detect clutch dump (clutch released quickly while revving)
-    var clutch_dump = last_clutch_input > 0.7 and clutch < 0.3 and throttle > 0.5
+    var clutch_dump = last_clutch_input > 0.7 and clutch_value < 0.3 and throttle > 0.5
     last_throttle_input = throttle
-    last_clutch_input = clutch
+    last_clutch_input = clutch_value
 
     # Can't START a wheelie/stoppie while turning, but can continue one
     var is_in_wheelie = pitch_angle > deg_to_rad(5)
@@ -688,6 +696,7 @@ func respawn():
     brake_danger_level = 0.0
     last_throttle_input = 0.0
     last_clutch_input = 0.0
+    clutch_value = 0.0
     crash_pitch_direction = 0.0
     crash_lean_direction = 0.0
     current_gear = 1
