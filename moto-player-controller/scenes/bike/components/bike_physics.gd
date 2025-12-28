@@ -12,6 +12,7 @@ signal brake_stopped
 @export var idle_tip_speed_threshold: float = 10.0
 @export var idle_tip_rate: float = 0.8
 @export var crash_lean_threshold: float = deg_to_rad(80)
+@export var throttle_recovery_amount: float = 2.0
 
 # State
 var speed: float = 0.0
@@ -50,8 +51,8 @@ func handle_acceleration(delta, throttle: float, front_brake: float, rear_brake:
 		speed = move_toward(speed, 0, drag * delta)
 
 
-func handle_idle_tipping(delta, throttle: float, steer_input: float, lean_angle: float):
-	if speed > 1.0:
+func handle_idle_tipping(delta, throttle: float, _steer_input: float, lean_angle: float):
+	if speed > 0.25:
 		has_started_moving = true
 
 	if !has_started_moving:
@@ -70,17 +71,17 @@ func handle_idle_tipping(delta, throttle: float, steer_input: float, lean_angle:
 		var fall_acceleration = total_lean * idle_tip_rate * (1.0 - stability)
 		idle_tip_angle += fall_acceleration * delta
 
-	# Clamp to crash threshold
-	idle_tip_angle = clamp(idle_tip_angle, -crash_lean_threshold, crash_lean_threshold)
+	# # Clamp to crash threshold
+	# idle_tip_angle = clamp(idle_tip_angle, -crash_lean_threshold, crash_lean_threshold)
 
 	# Recovery from throttle (rider stabilizing) - only when not steering
-	if throttle > 0 and abs(steer_input) < 0.1:
-		idle_tip_angle = move_toward(idle_tip_angle, 0, throttle * 3.0 * delta)
+	if throttle > 0 :#and abs(steer_input) < 0.1:
+		idle_tip_angle = move_toward(idle_tip_angle, 0, throttle * throttle_recovery_amount * delta)
 
-	# Recovery from speed (gyroscopic) - only when not actively leaning
-	# Rider must be going straight for gyro to stabilize
-	if stability > 0 and abs(steer_input) < 0.1 and abs(lean_angle) < deg_to_rad(10):
-		idle_tip_angle = move_toward(idle_tip_angle, 0, stability * 2.0 * delta)
+	# # Recovery from speed (gyroscopic) - only when not actively leaning
+	# # Rider must be going straight for gyro to stabilize
+	# if stability > 0 and abs(steer_input) < 0.1 and abs(lean_angle) < deg_to_rad(10):
+	# 	idle_tip_angle = move_toward(idle_tip_angle, 0, stability * 2.0 * delta)
 
 
 func apply_fishtail_friction(_delta, fishtail_speed_loss: float):

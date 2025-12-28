@@ -7,7 +7,7 @@ signal gear_grind # Tried to shift without clutch
 
 # Gear system
 @export var num_gears: int = 6
-@export var max_rpm: float = 8000.0
+@export var max_rpm: float = 9000.0
 @export var idle_rpm: float = 1000.0
 @export var stall_rpm: float = 500.0
 @export var gear_ratios: Array[float] = [2.8, 1.9, 1.4, 1.1, 0.95, 0.8]
