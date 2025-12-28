@@ -6,9 +6,6 @@ class_name BikeUI extends Node
 @onready var brake_danger_bar: ProgressBar = null
 @onready var difficulty_label: Label = null
 
-# Vibration settings
-@export var vibration_duration: float = 0.15
-
 # Shared state
 var state: BikeState
 
