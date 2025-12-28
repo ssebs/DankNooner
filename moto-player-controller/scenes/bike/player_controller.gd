@@ -167,7 +167,9 @@ func _apply_movement(delta):
             rotate_y(bike_tricks.fishtail_angle * delta * 1.5)
             bike_physics.apply_fishtail_friction(delta, bike_tricks.get_fishtail_speed_loss(delta))
 
+    var vertical_velocity = velocity.y
     velocity = forward * bike_physics.speed
+    velocity.y = vertical_velocity
     velocity = bike_physics.apply_gravity(delta, velocity, is_on_floor())
 
 
