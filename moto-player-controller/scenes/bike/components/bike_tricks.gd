@@ -40,12 +40,19 @@ var last_throttle_input: float = 0.0
 var last_clutch_input: float = 0.0
 
 
-func handle_wheelie_stoppie(delta, rpm_ratio: float, clutch_value: float, is_turning: bool, front_wheel_locked: bool = false):
+func handle_wheelie_stoppie(delta, rpm_ratio: float, clutch_value: float, is_turning: bool, front_wheel_locked: bool = false, is_airborne: bool = false):
 	var lean_input = Input.get_action_strength("lean_back") - Input.get_action_strength("lean_forward")
 	var throttle = Input.get_action_strength("throttle_pct")
 	var front_brake = Input.get_action_strength("brake_front_pct")
 	var rear_brake = Input.get_action_strength("brake_rear")
 	var total_brake = clamp(front_brake + rear_brake, 0.0, 1.0)
+
+	# Airborne pitch control - free rotation with lean input
+	if is_airborne:
+		if abs(lean_input) > 0.1:
+			var air_pitch_target = lean_input * max_wheelie_angle
+			pitch_angle = move_toward(pitch_angle, air_pitch_target, rotation_speed * 1.5 * delta)
+		return
 
 	# Detect clutch dump
 	var clutch_dump = last_clutch_input > 0.7 and clutch_value < 0.3 and throttle > 0.5
