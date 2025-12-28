@@ -126,7 +126,7 @@ func _apply_movement(delta):
 
         # Fishtail rotation and speed loss
         if abs(bike_tricks.fishtail_angle) > 0.01:
-            rotate_y(bike_tricks.fishtail_angle * delta * 4.0)
+            rotate_y(bike_tricks.fishtail_angle * delta * 1.5)
             bike_physics.apply_fishtail_friction(delta, bike_tricks.get_fishtail_speed_loss(delta))
 
     velocity = forward * bike_physics.speed

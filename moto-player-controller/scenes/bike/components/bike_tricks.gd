@@ -112,9 +112,16 @@ func handle_skidding(delta, rear_wheel_position: Vector3, front_wheel_position: 
 			skid_spawn_timer = 0.0
 			skid_mark_requested.emit(rear_wheel_position, bike_rotation)
 
-		# Fishtail calculation
+		# Fishtail calculation - steering induces fishtail direction
 		var steer_influence = bike_steering.steering_angle / bike_steering.max_steering_angle
 		var target_fishtail = -steer_influence * max_fishtail_angle * rear_brake
+
+		# Small natural wobble when skidding straight (random direction, small amplitude)
+		if abs(steer_influence) < 0.1:
+			var wobble_direction = 1.0 if fishtail_angle >= 0 else -1.0
+			if abs(fishtail_angle) < deg_to_rad(2):
+				wobble_direction = [-1.0, 1.0][randi() % 2]
+			target_fishtail = wobble_direction * deg_to_rad(8) * rear_brake
 
 		var speed_factor = clamp(bike_physics.speed / 20.0, 0.5, 1.5)
 		target_fishtail *= speed_factor
