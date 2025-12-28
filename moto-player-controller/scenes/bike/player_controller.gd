@@ -6,6 +6,7 @@ class_name PlayerController extends CharacterBody3D
 @onready var front_wheel: Marker3D = %FrontWheelMarker
 @onready var engine_sound: AudioStreamPlayer = %EngineSound
 @onready var tire_screech: AudioStreamPlayer = %TireScreechSound
+@onready var engine_grind: AudioStreamPlayer = %EngineGrindSound
 
 @onready var gear_label: Label = %GearLabel
 @onready var speed_label: Label = %SpeedLabel
@@ -34,7 +35,7 @@ func _ready():
     spawn_rotation = rotation
 
     # Setup bike_audio and UI components with node references
-    bike_audio.setup(engine_sound, tire_screech)
+    bike_audio.setup(engine_sound, tire_screech, engine_grind)
     bike_ui.setup(gear_label, speed_label, throttle_bar, brake_danger_bar)
 
     # Connect component signals

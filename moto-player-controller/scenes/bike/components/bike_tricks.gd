@@ -3,7 +3,7 @@ class_name BikeTricks extends Node
 signal skid_mark_requested(position: Vector3, rotation: Vector3)
 signal tire_screech_start(volume: float)
 signal tire_screech_stop
-signal stoppie_stopped  # Emitted when bike comes to rest during a stoppie
+signal stoppie_stopped # Emitted when bike comes to rest during a stoppie
 
 # Rotation tuning
 @export var max_wheelie_angle: float = deg_to_rad(80)
@@ -12,13 +12,15 @@ signal stoppie_stopped  # Emitted when bike comes to rest during a stoppie
 @export var return_speed: float = 3.0
 
 # Wheelie RPM tuning - wheelies start at this RPM ratio and scale up to max at redline
-@export var wheelie_rpm_threshold: float = 0.65  # RPM ratio where wheelies can start
-@export var wheelie_rpm_full: float = 0.95  # RPM ratio for maximum wheelie effect
+@export var wheelie_rpm_threshold: float = 0.65 # RPM ratio where wheelies can start
+@export var wheelie_rpm_full: float = 0.95 # RPM ratio for maximum wheelie effect
 
 # Fishtail/drift tuning
 @export var max_fishtail_angle: float = deg_to_rad(90)
 @export var fishtail_speed: float = 8.0
 @export var fishtail_recovery_speed: float = 3.0
+
+@export var skid_volume: float = 0.5
 
 # Component references
 @onready var bike_physics: BikePhysics = %BikePhysics
@@ -78,7 +80,7 @@ func handle_wheelie_stoppie(delta, rpm_ratio: float, clutch_value: float, is_tur
 	if not front_wheel_locked:
 		var wants_stoppie = lean_input < -0.1 and front_brake > 0.5
 		if bike_physics.speed > 1 and (is_in_stoppie or (wants_stoppie and can_start_trick)):
-			stoppie_target = -max_stoppie_angle * front_brake * (1.0 - throttle * 0.5)
+			stoppie_target = - max_stoppie_angle * front_brake * (1.0 - throttle * 0.5)
 			stoppie_target += -max_stoppie_angle * (-lean_input) * 0.15
 
 	# Apply pitch
@@ -88,7 +90,7 @@ func handle_wheelie_stoppie(delta, rpm_ratio: float, clutch_value: float, is_tur
 	elif stoppie_target < 0:
 		pitch_angle = move_toward(pitch_angle, stoppie_target, rotation_speed * delta)
 		if not was_in_stoppie:
-			tire_screech_start.emit(0.5)
+			tire_screech_start.emit(skid_volume)
 		# Check if bike stopped during stoppie - soft reset without position change
 		if bike_physics.speed < 0.5 and is_in_stoppie:
 			pitch_angle = 0.0
@@ -114,7 +116,7 @@ func handle_skidding(delta, rear_wheel_position: Vector3, front_wheel_position: 
 
 		# Fishtail calculation - steering induces fishtail direction
 		var steer_influence = bike_steering.steering_angle / bike_steering.max_steering_angle
-		var target_fishtail = -steer_influence * max_fishtail_angle * rear_brake
+		var target_fishtail = - steer_influence * max_fishtail_angle * rear_brake
 
 		# Small natural wobble when skidding straight (random direction, small amplitude)
 		if abs(steer_influence) < 0.1:
@@ -127,7 +129,7 @@ func handle_skidding(delta, rear_wheel_position: Vector3, front_wheel_position: 
 		target_fishtail *= speed_factor
 
 		if abs(fishtail_angle) > deg_to_rad(15):
-			target_fishtail *= 1.1  # Amplify once sliding
+			target_fishtail *= 1.1 # Amplify once sliding
 
 		fishtail_angle = move_toward(fishtail_angle, target_fishtail, fishtail_speed * delta)
 	else:
@@ -140,13 +142,13 @@ func handle_skidding(delta, rear_wheel_position: Vector3, front_wheel_position: 
 		if front_skid_spawn_timer >= SKID_SPAWN_INTERVAL:
 			front_skid_spawn_timer = 0.0
 			skid_mark_requested.emit(front_wheel_position, bike_rotation)
-		tire_screech_start.emit(0.8)
+		tire_screech_start.emit(skid_volume)
 	else:
 		front_skid_spawn_timer = 0.0
 
 	# Tire screech for rear skid (only if not already screeching from front)
 	if is_rear_skidding and not is_front_skidding:
-		tire_screech_start.emit(0.7)
+		tire_screech_start.emit(skid_volume)
 
 
 func get_fishtail_speed_loss(delta) -> float:

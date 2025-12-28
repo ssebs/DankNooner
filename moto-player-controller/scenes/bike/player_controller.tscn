@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://c331s8cm2gjtp" path="res://scenes/bike/player_controller.gd" id="1_5uol1"]
 [ext_resource type="PackedScene" uid="uid://7etgly8gokpl" path="res://assets/bikes/GoogleMotorcycleSportbike.glb" id="1_ujl86"]
-[ext_resource type="AudioStream" uid="uid://bf4prq84nmkpn" path="res://assets/rubber-tire-screech.mp3" id="4_fi808"]
 [ext_resource type="Script" uid="uid://l500tpp42su8" path="res://scenes/bike/components/bike_gearing.gd" id="5_gearing"]
 [ext_resource type="Script" uid="uid://svd12jpd5cxn" path="res://scenes/bike/components/bike_steering.gd" id="6_steering"]
 [ext_resource type="Script" uid="uid://bpqhimqk1dt2d" path="res://scenes/bike/components/bike_tricks.gd" id="7_tricks"]
@@ -10,6 +9,7 @@
 [ext_resource type="Script" uid="uid://bbk0xwdxhsifa" path="res://scenes/bike/components/bike_crash.gd" id="9_crash"]
 [ext_resource type="Script" uid="uid://b662mtkdepm0j" path="res://scenes/bike/components/bike_audio.gd" id="10_audio"]
 [ext_resource type="AudioStream" uid="uid://dn6ey2jxm33vt" path="res://assets/motorcycle-stable-rpm.ogg" id="10_t042m"]
+[ext_resource type="AudioStream" uid="uid://c61khm016rfjr" path="res://assets/tire-screech-short.ogg" id="11_pgn4o"]
 [ext_resource type="Script" uid="uid://pc1xy500s1vu" path="res://scenes/bike/components/bike_ui.gd" id="11_ui"]
 [ext_resource type="AudioStream" uid="uid://tkuif41xejv4" path="res://assets/grinding-gear.ogg" id="12_pgn4o"]
 
@@ -88,7 +88,7 @@ volume_db = -25.0
 
 [node name="TireScreechSound" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
-stream = ExtResource("4_fi808")
+stream = ExtResource("11_pgn4o")
 volume_db = -15.0
 pitch_scale = 0.9
 
