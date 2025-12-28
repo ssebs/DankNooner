@@ -46,3 +46,8 @@ transform = Transform3D(-6.800001, 0, -5.94475e-07, 0, 6.800001, 0, 5.94475e-07,
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FloorBounds"]
 shape = SubResource("WorldBoundaryShape3D_114d3")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5825806, 0.5, -11.583963)
+use_collision = true
+size = Vector3(8.165161, 1, 1)

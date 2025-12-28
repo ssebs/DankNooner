@@ -9,7 +9,7 @@ signal brake_stopped  # Emitted when bike comes to a controlled stop via braking
 @export var friction: float = 5.0
 
 # Idle tipping
-@export var idle_tip_speed_threshold: float = 5.0
+@export var idle_tip_speed_threshold: float = 10.0
 @export var idle_tip_rate: float = 0.65
 @export var crash_lean_threshold: float = deg_to_rad(80)
 @export var throttle_recovery_multiplier: float = 8.0
@@ -102,7 +102,7 @@ func handle_idle_tipping(delta, throttle: float, steer_input: float, lean_angle:
 
 	# Tip rate: base rate * instability, accelerates with angle (gravity effect)
 	var angle_ratio = abs(idle_tip_angle) / crash_lean_threshold
-	var gravity_acceleration = 1.0 + angle_ratio * 3.0  # Further angle = faster fall
+	var gravity_acceleration = 1.0 + angle_ratio * 1.5  # Further angle = faster fall (reduced)
 	var base_tip_rate = idle_tip_rate * instability * gravity_acceleration
 
 	# Steering effectiveness scales with speed (need momentum to countersteer)

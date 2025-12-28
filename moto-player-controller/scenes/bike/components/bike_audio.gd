@@ -2,6 +2,7 @@ class_name BikeAudio extends Node
 
 @onready var engine_sound: AudioStreamPlayer = null
 @onready var tire_screech: AudioStreamPlayer = null
+@onready var engine_grind: AudioStreamPlayer = null
 
 # Audio settings
 @export var engine_min_pitch: float = 0.8
@@ -15,9 +16,10 @@ class_name BikeAudio extends Node
 @onready var bike_gearing: BikeGearing = %BikeGearing
 
 
-func setup(engine: AudioStreamPlayer, screech: AudioStreamPlayer):
+func setup(engine: AudioStreamPlayer, screech: AudioStreamPlayer, grind: AudioStreamPlayer):
 	engine_sound = engine
 	tire_screech = screech
+	engine_grind = grind
 
 
 func update_engine_audio(throttle: float):
@@ -57,10 +59,10 @@ func stop_tire_screech():
 
 
 func play_gear_grind():
-	if !tire_screech:
+	if !engine_grind:
 		return
-	tire_screech.volume_db = linear_to_db(gear_grind_volume)
-	tire_screech.play()
+	engine_grind.volume_db = linear_to_db(gear_grind_volume)
+	engine_grind.play()
 
 
 func stop_engine():

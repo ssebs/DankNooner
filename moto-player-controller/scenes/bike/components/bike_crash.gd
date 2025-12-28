@@ -24,8 +24,8 @@ var brake_danger_level: float = 0.0
 # Brake grab detection
 var last_front_brake: float = 0.0
 var brake_grab_level: float = 0.0  # How aggressively brake was grabbed (0-1)
-const BRAKE_GRAB_THRESHOLD: float = 2.0  # Rate per second that counts as "grabbing"
-const BRAKE_GRAB_CRASH_THRESHOLD: float = 0.8  # Grab level that causes instant crash/skid
+const BRAKE_GRAB_THRESHOLD: float = 4.0  # Rate per second that counts as "grabbing"
+const BRAKE_GRAB_CRASH_THRESHOLD: float = 0.9  # Grab level that causes instant crash/skid
 
 
 func check_crash_conditions(delta, pitch_angle: float, lean_angle: float, idle_tip_angle: float,
@@ -87,8 +87,8 @@ func _update_brake_danger(delta, front_brake: float, steering_angle: float, lean
 	var instability = max(turn_factor, lean_factor)
 
 	# Instant crash if brake grabbed while turning
-	if brake_grab_level > BRAKE_GRAB_CRASH_THRESHOLD and bike_physics.speed > 15:
-		if instability > 0.2:
+	if brake_grab_level > BRAKE_GRAB_CRASH_THRESHOLD and bike_physics.speed > 20:
+		if instability > 0.4:
 			# Lowside crash from grabbing brake in turn
 			crash_pitch_direction = 0
 			crash_lean_direction = -sign(steering_angle) if steering_angle != 0 else sign(lean_angle)
@@ -96,19 +96,19 @@ func _update_brake_danger(delta, front_brake: float, steering_angle: float, lean
 			return true
 
 	# Original hold-time based danger (for sustained hard braking)
-	if front_brake > 0.5 and bike_physics.speed > 20:
+	if front_brake > 0.7 and bike_physics.speed > 25:
 		front_brake_hold_time += delta
 
-		var speed_factor = clamp((bike_physics.speed - 20) / (bike_physics.max_speed - 20), 0.0, 1.0)
-		var base_threshold = 0.5 * (1.0 - speed_factor * 0.3)
-		var crash_time_threshold = base_threshold * (1.0 - instability * 0.7)
+		var speed_factor = clamp((bike_physics.speed - 25) / (bike_physics.max_speed - 25), 0.0, 1.0)
+		var base_threshold = 0.8 * (1.0 - speed_factor * 0.3)
+		var crash_time_threshold = base_threshold * (1.0 - instability * 0.5)
 
 		# Brake grab makes danger build faster
-		var grab_multiplier = 1.0 + brake_grab_level * 2.0
+		var grab_multiplier = 1.0 + brake_grab_level * 1.5
 		brake_danger_level = clamp((front_brake_hold_time * grab_multiplier) / crash_time_threshold, 0.0, 1.0)
 
 		if front_brake_hold_time > crash_time_threshold:
-			if instability > 0.3:
+			if instability > 0.5:
 				# Lowside crash
 				crash_pitch_direction = 0
 				crash_lean_direction = -sign(steering_angle) if steering_angle != 0 else sign(lean_angle)
@@ -127,9 +127,9 @@ func should_force_stoppie() -> bool:
 	var front_brake = Input.get_action_strength("brake_front_pct")
 	var steer_input = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
 
-	if front_brake > 0.5 and bike_physics.speed > 20 and brake_danger_level >= 1.0:
+	if front_brake > 0.8 and bike_physics.speed > 25 and brake_danger_level >= 1.0:
 		var turn_factor = abs(steer_input)
-		return turn_factor <= 0.3  # Only when going straight
+		return turn_factor <= 0.2  # Only when going straight
 	return false
 
 
