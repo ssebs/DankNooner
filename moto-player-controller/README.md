@@ -1,6 +1,8 @@
 # Moto Player Controller
 
 ## In Progress:
+https://itch.io/search?classification=assets&type=games&q=race+track
+
 - [ ] Fix bugs / understand the code
   - [x] Merge bike_steering & bike_physics
   - [ ] Cleanup player controller
@@ -56,7 +58,7 @@
 - [x] Create basic world
 - [x] Create godot project
 - [x] Control map:
-  - [ ] IMG: https://www.padcrafter.com/?templates=Controller+Scheme+1&leftTrigger=Front+Brake&rightTrigger=Throttle&leftBumper=Clutch&leftStick=Steer+%26+Lean&dpadUp=Shift+Up&dpadRight=Shift+Down&aButton=Rear+Brake
+  - [ ] IMG: https://www.padcrafter.com/?templates=Controller+Scheme+1&leftTrigger=Front+Brake&rightTrigger=Throttle&leftBumper=Clutch&leftStick=Steer+%26+Lean&dpadUp=&dpadRight=&aButton=Shift+Up&yButton=Rear+Brake&xButton=Shift+Down&bButton=Shift+Up&rightBumper=Trick&rightStick=Camera
   - Gamepad
     - Throttle `throttle_pct`
       - Gamepad: **RT**

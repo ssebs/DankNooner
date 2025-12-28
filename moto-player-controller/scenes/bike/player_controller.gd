@@ -99,7 +99,7 @@ func _physics_process(delta):
 	# Steering and lean
 	bike_physics.handle_steering(delta, bike_input)
 	bike_physics.update_lean(delta, bike_input)
-	bike_physics.handle_idle_tipping(delta, bike_input)
+	bike_physics.handle_fall_physics(delta, bike_input)
 	bike_physics.sync_to_state()
 
 	# Tricks (wheelies, stoppies, skidding)
@@ -129,13 +129,13 @@ func _physics_process(delta):
 			delta, bike_input,
 			bike_tricks.pitch_angle,
 			bike_physics.lean_angle,
-			bike_physics.idle_tip_angle,
+			bike_physics.fall_angle,
 			bike_physics.steering_angle
 		)
 	else:
 		bike_crash.check_airborne_crash(
 			bike_physics.lean_angle,
-			bike_physics.idle_tip_angle,
+			bike_physics.fall_angle,
 			bike_tricks.pitch_angle
 		)
 	bike_crash.sync_to_state()
@@ -227,7 +227,7 @@ func _apply_mesh_rotation():
 	if bike_tricks.pitch_angle != 0:
 		_rotate_mesh_around_pivot(pivot, Vector3.RIGHT, bike_tricks.pitch_angle)
 
-	var total_lean = bike_physics.lean_angle + bike_physics.idle_tip_angle
+	var total_lean = bike_physics.lean_angle + bike_physics.fall_angle
 	if total_lean != 0:
 		mesh.rotate_z(total_lean)
 
@@ -248,7 +248,7 @@ func _handle_crash_state(delta):
 	if bike_crash.crash_pitch_direction != 0:
 		bike_tricks.force_pitch(bike_crash.crash_pitch_direction * deg_to_rad(90), 3.0, delta)
 	elif bike_crash.crash_lean_direction != 0:
-		bike_physics.lean_angle = move_toward(bike_physics.lean_angle, bike_crash.crash_lean_direction * deg_to_rad(90), 3.0 * delta)
+		bike_physics.fall_angle = move_toward(bike_physics.fall_angle, bike_crash.crash_lean_direction * deg_to_rad(90), 3.0 * delta)
 
 		if bike_physics.speed > 0.1:
 			var forward = -global_transform.basis.z
@@ -297,7 +297,7 @@ func _on_tire_screech_stop():
 func _on_stoppie_stopped():
 	bike_physics.reset()
 	bike_physics.speed = 0.0
-	bike_physics.idle_tip_angle = 0.0
+	bike_physics.fall_angle = 0.0
 	velocity = Vector3.ZERO
 
 
