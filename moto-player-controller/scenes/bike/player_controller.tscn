@@ -18,25 +18,27 @@ size = Vector3(0.68, 1.05, 2)
 [node name="PlayerController" type="CharacterBody3D"]
 script = ExtResource("1_5uol1")
 
-[node name="BikeGearing" type="Node" parent="."]
+[node name="Functionality" type="Node" parent="."]
+
+[node name="BikeGearing" type="Node" parent="Functionality"]
 script = ExtResource("5_gearing")
 
-[node name="BikeSteering" type="Node" parent="."]
+[node name="BikeSteering" type="Node" parent="Functionality"]
 script = ExtResource("6_steering")
 
-[node name="BikeTricks" type="Node" parent="."]
+[node name="BikeTricks" type="Node" parent="Functionality"]
 script = ExtResource("7_tricks")
 
-[node name="BikePhysics" type="Node" parent="."]
+[node name="BikePhysics" type="Node" parent="Functionality"]
 script = ExtResource("8_physics")
 
-[node name="BikeCrash" type="Node" parent="."]
+[node name="BikeCrash" type="Node" parent="Functionality"]
 script = ExtResource("9_crash")
 
-[node name="BikeAudio" type="Node" parent="."]
+[node name="BikeAudio" type="Node" parent="Functionality"]
 script = ExtResource("10_audio")
 
-[node name="BikeUI" type="Node" parent="."]
+[node name="BikeUI" type="Node" parent="Functionality"]
 script = ExtResource("11_ui")
 
 [node name="Markers" type="Node3D" parent="."]
