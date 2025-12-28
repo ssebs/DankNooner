@@ -4,7 +4,7 @@ class_name PlayerController extends CharacterBody3D
 @onready var rear_wheel = %RearWheelMarker
 @onready var front_wheel = %FrontWheelMarker
 @onready var engine_sound = %EngineSound
-@onready var tire_screech = %TireScreetchSound
+@onready var tire_screech = %TireScreechSound
 
 @onready var gear_label = %GearLabel
 @onready var speed_label = %SpeedLabel
@@ -84,6 +84,7 @@ func _physics_process(delta):
     apply_mesh_rotation()
     update_rpm()
     update_audio()
+    update_ui()
     move_and_slide()
 
 
@@ -112,9 +113,17 @@ func handle_gear_shifting():
 func get_max_speed_for_gear() -> float:
     # Each gear has a different top speed based on its ratio
     # Lower gears (higher ratio) = lower top speed but more acceleration
+    # Higher gears (lower ratio) = higher top speed but less acceleration
     var gear_ratio = gear_ratios[current_gear - 1]
-    var base_top_speed = max_speed / gear_ratios[0]  # Normalize to first gear
-    return base_top_speed * gear_ratio
+    var lowest_ratio = gear_ratios[num_gears - 1]  # Highest gear has lowest ratio
+    return max_speed * (lowest_ratio / gear_ratio)
+
+
+func get_acceleration_for_gear() -> float:
+    # Lower gears (higher ratio) = more acceleration
+    var gear_ratio = gear_ratios[current_gear - 1]
+    var base_ratio = gear_ratios[num_gears - 1]  # Normalize to highest gear
+    return acceleration * (gear_ratio / base_ratio)
 
 
 func update_rpm():
@@ -143,11 +152,12 @@ func handle_acceleration(delta):
     # Accelerate (reduced power when clutch is held)
     if throttle > 0:
         var effective_throttle = throttle * (1.0 - clutch * 0.8)  # 80% power loss with full clutch
-        var target_speed = min(max_speed * effective_throttle, gear_max_speed)
+        var target_speed = gear_max_speed * effective_throttle
+        var gear_accel = get_acceleration_for_gear()
 
         # Don't accelerate past gear's max speed (at max RPM)
         if speed < gear_max_speed or current_rpm < max_rpm:
-            speed = move_toward(speed, target_speed, acceleration * delta)
+            speed = move_toward(speed, target_speed, gear_accel * delta)
 
     # Brake
     var total_brake = clamp(front_brake + rear_brake, 0, 1)
@@ -250,6 +260,10 @@ func rotate_mesh_around_pivot(pivot: Vector3, axis: Vector3, angle: float):
     t.origin += pivot
     mesh.transform = t
 
+
+func update_ui():
+    gear_label.text = "Gear: %d" % current_gear
+    speed_label.text = "Speed: %d km/h" % int(speed * 3.6)  # Convert m/s to km/h
 
 
 func update_audio():
