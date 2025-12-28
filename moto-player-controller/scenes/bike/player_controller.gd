@@ -9,6 +9,12 @@ class_name PlayerController extends CharacterBody3D
 @onready var gear_label = %GearLabel
 @onready var speed_label = %SpeedLabel
 
+# Skid marks
+var skidmark_texture = preload("res://assets/skidmarktex.png")
+var skid_spawn_timer: float = 0.0
+const SKID_SPAWN_INTERVAL: float = 0.05  # Spawn a mark every 50ms while skidding
+const SKID_MARK_LIFETIME: float = 5.0
+
 # Rotation angles
 var pitch_angle: float = 0.0
 var lean_angle: float = 0.0
@@ -16,6 +22,7 @@ var lean_angle: float = 0.0
 # Movement
 var speed: float = 0.0
 var steering_angle: float = 0.0
+var fishtail_angle: float = 0.0  # Rear-end slide angle when drifting
 
 # Rotation tuning
 @export var max_wheelie_angle: float = deg_to_rad(80)
@@ -34,6 +41,11 @@ var steering_angle: float = 0.0
 @export var steering_speed: float = 5.5
 @export var max_steering_angle: float = deg_to_rad(35)
 @export var turn_speed: float = 2.0  # How fast the bike actually turns
+
+# Fishtail/drift tuning
+@export var max_fishtail_angle: float = deg_to_rad(45)  # Max rear-end slide angle
+@export var fishtail_speed: float = 3.0  # How fast fishtail builds
+@export var fishtail_recovery_speed: float = 4.0  # How fast fishtail recovers
 
 # Crash tuning
 @export var crash_wheelie_threshold: float = deg_to_rad(75)  # Wheelie too far
@@ -62,7 +74,9 @@ var is_crashed: bool = false
 var crash_timer: float = 0.0
 var crash_pitch_direction: float = 0.0  # Non-zero for wheelie/stoppie crashes
 var crash_lean_direction: float = 0.0   # Non-zero for sideways crashes
-var last_brake_input: float = 0.0
+var last_front_brake_input: float = 0.0
+var last_throttle_input: float = 0.0
+var last_clutch_input: float = 0.0
 var idle_tip_angle: float = 0.0
 var spawn_position: Vector3
 var spawn_rotation: Vector3
@@ -81,6 +95,7 @@ func _physics_process(delta):
     handle_steering(delta)
     handle_lean_input(delta)
     handle_idle_tipping(delta)
+    handle_skidding(delta)
     check_crash_conditions(delta)
     apply_movement(delta)
     apply_mesh_rotation()
@@ -144,15 +159,16 @@ func update_rpm():
     var gear_max_speed = get_max_speed_for_gear()
     var gear_min_speed = get_min_speed_for_gear()
 
-    # RPM based on speed relative to current gear's speed band
-    var speed_in_band = clamp(speed - gear_min_speed, 0.0, gear_max_speed - gear_min_speed)
-    var band_size = gear_max_speed - gear_min_speed
-    var speed_ratio = speed_in_band / band_size if band_size > 0 else 0.0
-    current_rpm = lerpf(idle_rpm, max_rpm, clamp(speed_ratio, 0.0, 1.0))
-
-    # Rev higher when throttle is applied but not moving much (revving in neutral/clutch in)
-    if clutch > 0.5 and throttle > 0:
-        current_rpm = lerpf(current_rpm, max_rpm * throttle, 0.5)
+    # When clutch is held, RPM is directly controlled by throttle (free revving)
+    if clutch > 0.5:
+        var target_rpm = lerpf(idle_rpm, max_rpm, throttle)
+        current_rpm = lerpf(current_rpm, target_rpm, 0.15)  # Smooth transition
+    else:
+        # RPM based on speed relative to current gear's speed band
+        var speed_in_band = clamp(speed - gear_min_speed, 0.0, gear_max_speed - gear_min_speed)
+        var band_size = gear_max_speed - gear_min_speed
+        var speed_ratio = speed_in_band / band_size if band_size > 0 else 0.0
+        current_rpm = lerpf(idle_rpm, max_rpm, clamp(speed_ratio, 0.0, 1.0))
 
     # Check for stall - below minimum speed for current gear without clutch
     if not is_stalled and clutch < 0.5 and speed < gear_min_speed and current_gear > 1:
@@ -221,30 +237,56 @@ func handle_lean_input(delta):
     var lean_input = Input.get_action_strength("lean_back") - Input.get_action_strength("lean_forward")
     var steer_input = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
     var throttle = Input.get_action_strength("throttle_pct")
+    var clutch = Input.get_action_strength("clutch")
     var front_brake = Input.get_action_strength("brake_front_pct")
     var rear_brake = Input.get_action_strength("brake_rear")
-    var is_braking = (front_brake + rear_brake) > 0
+    var total_brake = clamp(front_brake + rear_brake, 0.0, 1.0)
+
+    # Detect clutch dump (clutch released quickly while revving)
+    var clutch_dump = last_clutch_input > 0.7 and clutch < 0.3 and throttle > 0.5
+    last_throttle_input = throttle
+    last_clutch_input = clutch
 
     # Can't START a wheelie/stoppie while turning, but can continue one
-    var is_in_wheelie = pitch_angle > deg_to_rad(10)
-    var is_in_stoppie = pitch_angle < deg_to_rad(-10)
+    var is_in_wheelie = pitch_angle > deg_to_rad(5)
+    var is_in_stoppie = pitch_angle < deg_to_rad(-5)
     var is_turning = abs(steering_angle) > 0.2
     var can_start_trick = not is_turning
 
-    # Pitch (wheelie/stoppie)
-    if lean_input > 0 and speed > 1 and throttle > 0.3 and (is_in_wheelie or can_start_trick):
-        # Wheelie - only when moving, accelerating, and (going straight OR already in wheelie)
-        pitch_angle = move_toward(pitch_angle, max_wheelie_angle * lean_input, rotation_speed * delta)
-    elif lean_input < 0 and is_braking and speed > 1 and (is_in_stoppie or can_start_trick):
-        # Stoppie - only when braking, moving, and (going straight OR already in stoppie)
-        pitch_angle = move_toward(pitch_angle, -max_stoppie_angle * abs(lean_input), rotation_speed * delta)
-        # Play tire screech at half volume during stoppie
+    # Wheelie: need high RPM OR clutch dump to pop one
+    # Once in wheelie, throttle maintains it, releasing gas or braking lowers it
+    var wheelie_target = 0.0
+    var rpm_ratio = (current_rpm - idle_rpm) / (max_rpm - idle_rpm)
+    var at_high_rpm = rpm_ratio > 0.85  # Near redline
+    var can_pop_wheelie = lean_input > 0.3 and throttle > 0.7 and (at_high_rpm or clutch_dump)
+
+    if speed > 1 and (is_in_wheelie or (can_pop_wheelie and can_start_trick)):
+        if throttle > 0.3:
+            # Throttle maintains wheelie height, brake counters it
+            wheelie_target = max_wheelie_angle * throttle * (1.0 - total_brake)
+            # Lean input adds minor influence
+            wheelie_target += max_wheelie_angle * lean_input * 0.15
+        # else: wheelie_target stays 0, wheelie will lower
+
+    # Stoppie: requires lean forward to start, then brake controls height
+    var stoppie_target = 0.0
+    var wants_stoppie = lean_input < -0.3 and front_brake > 0.7
+    if speed > 1 and (is_in_stoppie or (wants_stoppie and can_start_trick)):
+        # Front brake controls stoppie, throttle counters it
+        stoppie_target = -max_stoppie_angle * front_brake * (1.0 - throttle * 0.5)
+        # Lean input adds minor influence
+        stoppie_target += -max_stoppie_angle * (-lean_input) * 0.15
+
+    # Apply pitch based on which trick is active
+    if wheelie_target > 0:
+        pitch_angle = move_toward(pitch_angle, wheelie_target, rotation_speed * delta)
+    elif stoppie_target < 0:
+        pitch_angle = move_toward(pitch_angle, stoppie_target, rotation_speed * delta)
         if not tire_screech.playing:
             tire_screech.volume_db = linear_to_db(0.5)
             tire_screech.play()
     else:
         pitch_angle = move_toward(pitch_angle, 0, return_speed * delta)
-        # Stop tire screech when not in stoppie
         if tire_screech.playing:
             tire_screech.stop()
     
@@ -259,18 +301,83 @@ func handle_lean_input(delta):
     var target_lean = (-max_lean_angle * steer_input * 0.4 + turn_lean) * low_speed_lean_mult
     lean_angle = move_toward(lean_angle, target_lean, rotation_speed * delta)
 
+
+func handle_skidding(delta):
+    var rear_brake = Input.get_action_strength("brake_rear")
+
+    # Skid when rear brake is held and moving
+    var is_skidding = rear_brake > 0.5 and speed > 2 and is_on_floor()
+
+    if is_skidding:
+        # Spawn skid marks
+        skid_spawn_timer += delta
+        if skid_spawn_timer >= SKID_SPAWN_INTERVAL:
+            skid_spawn_timer = 0.0
+            spawn_skid_mark()
+
+        # Fishtail when turning while skidding
+        if abs(steering_angle) > 0.1:
+            # Fishtail in the opposite direction of the turn (rear swings out)
+            var target_fishtail = -sign(steering_angle) * max_fishtail_angle * rear_brake
+            # More fishtail at higher speeds
+            var speed_factor = clamp(speed / 30.0, 0.3, 1.0)
+            target_fishtail *= speed_factor
+            fishtail_angle = move_toward(fishtail_angle, target_fishtail, fishtail_speed * delta)
+
+            # Play tire screech while fishtailing
+            if not tire_screech.playing:
+                tire_screech.volume_db = linear_to_db(0.6)
+                tire_screech.play()
+        else:
+            # Recover fishtail when not turning
+            fishtail_angle = move_toward(fishtail_angle, 0, fishtail_recovery_speed * delta)
+    else:
+        skid_spawn_timer = 0.0
+        # Recover fishtail when not skidding
+        fishtail_angle = move_toward(fishtail_angle, 0, fishtail_recovery_speed * delta)
+
+
+func spawn_skid_mark():
+    # Create a decal at the rear wheel position
+    var decal = Decal.new()
+    decal.texture_albedo = skidmark_texture
+    decal.size = Vector3(0.15, 0.5, 0.4)  # Width, height (into ground), length
+    decal.cull_mask = 1  # Only affect default layer
+
+    # Store transform values before adding to tree
+    var rear_wheel_global = rear_wheel.global_position
+    var bike_rotation = global_rotation
+
+    # Add to scene tree first (required before setting global transforms)
+    get_tree().current_scene.add_child(decal)
+
+    # Now set global transforms (node is in tree)
+    decal.global_position = Vector3(rear_wheel_global.x, rear_wheel_global.y - 0.05, rear_wheel_global.z)
+    decal.global_rotation = bike_rotation
+
+    # Create timer to remove after lifetime
+    var timer = get_tree().create_timer(SKID_MARK_LIFETIME)
+    timer.timeout.connect(func(): if is_instance_valid(decal): decal.queue_free())
+
+
 func apply_movement(delta):
     var forward = -global_transform.basis.z
-    
+
     if speed > 0.5:
         # Lerp between tight and wide turns based on speed
         var speed_pct = speed / max_speed
         var turn_radius = lerp(min_turn_radius, max_turn_radius, speed_pct)
         var turn_rate = turn_speed / turn_radius
+
+        # Normal steering rotation
         rotate_y(-steering_angle * turn_rate * delta)
-    
+
+        # Fishtail adds extra rotation (rear sliding out)
+        if abs(fishtail_angle) > 0.01:
+            rotate_y(fishtail_angle * delta * 2.0)
+
     velocity = forward * speed
-    
+
     if not is_on_floor():
         velocity.y -= gravity * delta
 
@@ -350,18 +457,12 @@ func handle_idle_tipping(delta):
 
 func check_crash_conditions(delta):
     var front_brake = Input.get_action_strength("brake_front_pct")
-    var rear_brake = Input.get_action_strength("brake_rear")
-    var total_brake = clamp(front_brake + rear_brake, 0, 1)
 
-    # Check brake input rate (too sudden = crash)
-    var brake_rate = abs(total_brake - last_brake_input) / delta
-    last_brake_input = total_brake
+    # Check front brake input rate (too sudden = crash) - rear brake causes fishtail, not crash
+    var front_brake_rate = abs(front_brake - last_front_brake_input) / delta
+    last_front_brake_input = front_brake
 
     var crash_reason = ""
-
-    # debugs
-    print("brake_rate")
-    print(brake_rate)
 
     # Wheelie too far
     if pitch_angle > crash_wheelie_threshold:
@@ -375,12 +476,13 @@ func check_crash_conditions(delta):
         crash_pitch_direction = -1  # Fall forward
         crash_lean_direction = 0
 
-    # Brake too hard too fast - threshold scales inversely with speed
+    # Front brake too hard too fast - threshold scales inversely with speed
     # At low speed: very high threshold (hard to crash)
     # At high speed: low threshold (easy to crash)
+    # Rear brake doesn't cause crash - it causes fishtail/drift instead
     var speed_factor = clamp(speed / max_speed, 0.0, 1.0)
     var dynamic_brake_threshold = crash_brake_rate_threshold * (1.0 + (1.0 - speed_factor) * 9.0)  # 10x threshold at low speed
-    if brake_rate > dynamic_brake_threshold and speed > 10:
+    if front_brake_rate > dynamic_brake_threshold and speed > 10:
         crash_reason = "brake"
         crash_pitch_direction = 0
         # Fall in steering direction, or random if not steering
@@ -442,7 +544,10 @@ func respawn():
     steering_angle = 0.0
     speed = 0.0
     velocity = Vector3.ZERO
-    last_brake_input = 0.0
+    fishtail_angle = 0.0
+    last_front_brake_input = 0.0
+    last_throttle_input = 0.0
+    last_clutch_input = 0.0
     crash_pitch_direction = 0.0
     crash_lean_direction = 0.0
     current_gear = 1
