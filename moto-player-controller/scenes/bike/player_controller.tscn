@@ -1,8 +1,7 @@
-[gd_scene load_steps=13 format=3 uid="uid://bmqevs0vheol7"]
+[gd_scene load_steps=14 format=3 uid="uid://bmqevs0vheol7"]
 
 [ext_resource type="Script" uid="uid://c331s8cm2gjtp" path="res://scenes/bike/player_controller.gd" id="1_5uol1"]
 [ext_resource type="PackedScene" uid="uid://7etgly8gokpl" path="res://assets/bikes/GoogleMotorcycleSportbike.glb" id="1_ujl86"]
-[ext_resource type="AudioStream" uid="uid://cncnt6kih2g31" path="res://assets/motorcycle-running.ogg" id="3_ppvd4"]
 [ext_resource type="AudioStream" uid="uid://bf4prq84nmkpn" path="res://assets/rubber-tire-screech.mp3" id="4_fi808"]
 [ext_resource type="Script" uid="uid://l500tpp42su8" path="res://scenes/bike/components/bike_gearing.gd" id="5_gearing"]
 [ext_resource type="Script" uid="uid://svd12jpd5cxn" path="res://scenes/bike/components/bike_steering.gd" id="6_steering"]
@@ -10,7 +9,9 @@
 [ext_resource type="Script" uid="uid://cgy5mk1x6lanu" path="res://scenes/bike/components/bike_physics.gd" id="8_physics"]
 [ext_resource type="Script" uid="uid://bbk0xwdxhsifa" path="res://scenes/bike/components/bike_crash.gd" id="9_crash"]
 [ext_resource type="Script" uid="uid://b662mtkdepm0j" path="res://scenes/bike/components/bike_audio.gd" id="10_audio"]
+[ext_resource type="AudioStream" uid="uid://dn6ey2jxm33vt" path="res://assets/motorcycle-stable-rpm.ogg" id="10_t042m"]
 [ext_resource type="Script" uid="uid://pc1xy500s1vu" path="res://scenes/bike/components/bike_ui.gd" id="11_ui"]
+[ext_resource type="AudioStream" uid="uid://tkuif41xejv4" path="res://assets/grinding-gear.ogg" id="12_pgn4o"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ujl86"]
 size = Vector3(0.68, 1.05, 2)
@@ -82,7 +83,7 @@ shape = SubResource("BoxShape3D_ujl86")
 
 [node name="EngineSound" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
-stream = ExtResource("3_ppvd4")
+stream = ExtResource("10_t042m")
 volume_db = -25.0
 
 [node name="TireScreechSound" type="AudioStreamPlayer" parent="."]
@@ -90,6 +91,11 @@ unique_name_in_owner = true
 stream = ExtResource("4_fi808")
 volume_db = -15.0
 pitch_scale = 0.9
+
+[node name="EngineGrindSound" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("12_pgn4o")
+volume_db = -10.0
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.999762, 0.0049998993, -0.021233821, 0.00051584863, 0.9676885, 0.25214824, 0.021808445, -0.25209916, 0.9674556, -0.23836821, 1.2938731, 2.5680387)

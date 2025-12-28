@@ -9,8 +9,8 @@ signal brake_stopped  # Emitted when bike comes to a controlled stop via braking
 @export var friction: float = 5.0
 
 # Idle tipping
-@export var idle_tip_speed_threshold: float = 8.0
-@export var idle_tip_rate: float = 0.75
+@export var idle_tip_speed_threshold: float = 5.0
+@export var idle_tip_rate: float = 0.65
 @export var crash_lean_threshold: float = deg_to_rad(80)
 @export var throttle_recovery_multiplier: float = 8.0
 
@@ -26,14 +26,19 @@ var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 func handle_acceleration(delta, throttle: float, front_brake: float, rear_brake: float,
 						  power_output: float, gear_max_speed: float, clutch_engaged: float, is_stalled: bool,
 						  front_wheel_locked: bool = false):
-	# Brake first
-	var total_brake = clamp(front_brake + rear_brake, 0, 1)
-	if total_brake > 0:
-		# Front wheel lock reduces braking effectiveness (skidding is worse than rolling)
-		var brake_effectiveness = 1.0
-		if front_wheel_locked:
-			brake_effectiveness = 0.6  # Locked wheel = 60% as effective
-		speed = move_toward(speed, 0, brake_strength * total_brake * brake_effectiveness * delta)
+	# Brake - each wheel contributes separately with different effectiveness
+	if front_brake > 0 or rear_brake > 0:
+		# Front brake: full power unless wheel locked (skidding)
+		var front_effectiveness = 0.6 if front_wheel_locked else 1.0
+		var front_braking = front_brake * front_effectiveness
+
+		# Rear brake: less effective when skidding (> 0.5 = locked/skidding)
+		var rear_skidding = rear_brake > 0.5
+		var rear_effectiveness = 0.6 if rear_skidding else 1.0  # Rear skid = 60% effective
+		var rear_braking = rear_brake * rear_effectiveness
+
+		var total_braking = clamp(front_braking + rear_braking, 0, 1)
+		speed = move_toward(speed, 0, brake_strength * total_braking * delta)
 
 	# Can't accelerate when stalled
 	if is_stalled:
@@ -50,7 +55,7 @@ func handle_acceleration(delta, throttle: float, front_brake: float, rear_brake:
 			speed = move_toward(speed, gear_max_speed, friction * 2.0 * delta)
 
 	# Natural friction when no throttle/brake
-	if throttle == 0 and total_brake == 0:
+	if throttle == 0 and front_brake == 0 and rear_brake == 0:
 		var engagement = 1.0 - clutch_engaged
 		var drag = friction * (1.0 + engagement * 0.5)
 		speed = move_toward(speed, 0, drag * delta)
@@ -126,8 +131,8 @@ func handle_idle_tipping(delta, throttle: float, steer_input: float, lean_angle:
 	idle_tip_angle = move_toward(idle_tip_angle, 0, gyro_recovery * delta)
 
 
-func apply_fishtail_friction(delta, fishtail_speed_loss: float):
-	speed = move_toward(speed * delta, 0, fishtail_speed_loss)
+func apply_fishtail_friction(_delta, fishtail_speed_loss: float):
+	speed = move_toward(speed, 0, fishtail_speed_loss)
 
 
 func check_brake_stop(steering_angle: float, lean_angle: float):
