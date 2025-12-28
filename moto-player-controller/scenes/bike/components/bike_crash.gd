@@ -45,6 +45,12 @@ func check_crash_conditions(delta, pitch_angle: float, lean_angle: float, idle_t
 		crash_pitch_direction = -1
 		crash_lean_direction = 0
 
+	# Turning while in a stoppie - lowside crash
+	elif pitch_angle < deg_to_rad(-15) and abs(steering_angle) > deg_to_rad(15):
+		crash_reason = "stoppie_turn"
+		crash_pitch_direction = 0
+		crash_lean_direction = sign(steering_angle)
+
 	# Front brake danger
 	_update_brake_danger(delta, front_brake, steering_angle, lean_angle)
 
