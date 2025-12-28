@@ -5,11 +5,11 @@ class_name BikeAudio extends Node
 @onready var engine_grind: AudioStreamPlayer = null
 
 # Audio settings
-@export var engine_min_pitch: float = 0.8
+@export var engine_min_pitch: float = 0.44
 @export var engine_max_pitch: float = 1.6
 @export var gear_grind_volume: float = 0.3
-@export var stoppie_volume: float = 0.5
-@export var fishtail_volume: float = 0.7
+@export var stoppie_volume: float = 0.4
+@export var fishtail_volume: float = 0.4
 
 # Shared state
 var state: BikeState
@@ -22,7 +22,7 @@ func setup(bike_state: BikeState, engine: AudioStreamPlayer, screech: AudioStrea
 	engine_grind = grind
 
 
-func update_engine_audio(input: BikeInput):
+func update_engine_audio(input: BikeInput, rpm_ratio: float):
 	if !engine_sound:
 		return
 
@@ -35,7 +35,6 @@ func update_engine_audio(input: BikeInput):
 		if !engine_sound.playing:
 			engine_sound.play()
 
-		var rpm_ratio = state.get_rpm_ratio()
 		var target_pitch = lerpf(engine_min_pitch, engine_max_pitch, clamp(rpm_ratio, 0.0, 1.0))
 		engine_sound.pitch_scale = target_pitch
 	else:

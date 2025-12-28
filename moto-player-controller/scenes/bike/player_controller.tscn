@@ -56,7 +56,7 @@ script = ExtResource("11_ui")
 unique_name_in_owner = true
 stream = ExtResource("10_t042m")
 volume_db = -25.0
-pitch_scale = 0.76
+pitch_scale = 0.49
 
 [node name="TireScreechSound" type="AudioStreamPlayer" parent="Sounds"]
 unique_name_in_owner = true
