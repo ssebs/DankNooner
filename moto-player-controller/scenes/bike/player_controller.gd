@@ -36,7 +36,7 @@ var fishtail_angle: float = 0.0  # Rear-end slide angle when drifting
 @export var max_turn_radius: float = 3.0   # Wide turns at high speed
 
 # Movement tuning
-@export var max_speed: float = 50.0
+@export var max_speed: float = 60.0
 @export var acceleration: float = 15.0
 @export var brake_strength: float = 25.0
 @export var friction: float = 5.0
@@ -166,13 +166,14 @@ func update_rpm():
     # When clutch is held, RPM is directly controlled by throttle (free revving)
     if clutch > 0.5:
         var target_rpm = lerpf(idle_rpm, max_rpm, throttle)
-        current_rpm = lerpf(current_rpm, target_rpm, 0.15)  # Smooth transition
+        current_rpm = lerpf(current_rpm, target_rpm, 0.2)  # Smooth transition
     else:
         # RPM based on speed relative to current gear's speed band
         var speed_in_band = clamp(speed - gear_min_speed, 0.0, gear_max_speed - gear_min_speed)
         var band_size = gear_max_speed - gear_min_speed
         var speed_ratio = speed_in_band / band_size if band_size > 0 else 0.0
-        current_rpm = lerpf(idle_rpm, max_rpm, clamp(speed_ratio, 0.0, 1.0))
+        var target_rpm = lerpf(idle_rpm, max_rpm, clamp(speed_ratio, 0.0, 1.0))
+        current_rpm = lerpf(current_rpm, target_rpm, 0.1)  # Smooth RPM climb
 
     # Check for stall - below minimum speed for current gear without clutch
     if not is_stalled and clutch < 0.5 and speed < gear_min_speed and current_gear > 1:
@@ -204,16 +205,21 @@ func handle_acceleration(delta):
     if throttle > 0:
         var effective_throttle = throttle * (1.0 - clutch * 0.8)  # 80% power loss with full clutch
         var target_speed = gear_max_speed * effective_throttle
-        var gear_accel = get_acceleration_for_gear()
+
+        # Acceleration rate - matches RPM lerp feel
+        # Lower gears accelerate faster (higher ratio = more torque)
+        var gear_ratio = gear_ratios[current_gear - 1]
+        var base_ratio = gear_ratios[num_gears - 1]
+        var accel_rate = 0.08 * (gear_ratio / base_ratio)  # ~0.08 base, scales with gear
 
         # Reduce acceleration when below gear's minimum speed (lugging the engine)
         if speed < gear_min_speed and current_gear > 1:
             var lug_factor = speed / gear_min_speed if gear_min_speed > 0 else 0.0
-            gear_accel *= lug_factor * 0.3  # Very weak acceleration when lugging
+            accel_rate *= lug_factor * 0.3  # Very weak acceleration when lugging
 
         # Don't accelerate past gear's max speed (at max RPM)
         if speed < gear_max_speed or current_rpm < max_rpm:
-            speed = move_toward(speed, target_speed, gear_accel * delta)
+            speed = lerpf(speed, target_speed, accel_rate)
 
     # Brake
     var total_brake = clamp(front_brake + rear_brake, 0, 1)
@@ -568,29 +574,39 @@ func check_crash_conditions(delta):
         crash_pitch_direction = -1  # Fall forward
         crash_lean_direction = 0
 
-    # Front brake crash - slamming front brake at high speed
-    # Track how long brake is held hard at speed (works for both keyboard and analog)
-    if front_brake > 0.8 and speed > 25:
+    # Front brake danger - different outcomes based on lean/steering
+    # Turning while braking hard = lowside crash
+    # Straight braking = stoppie (which can lead to stoppie crash)
+    if front_brake > 0.7 and speed > 20:
         front_brake_hold_time += delta
-        # Crash after holding front brake too long at high speed
-        # Higher speed = less time before crash
-        var speed_factor = clamp(speed / max_speed, 0.0, 1.0)
-        var crash_time_threshold = 0.3 * (1.0 - speed_factor * 0.5)  # 0.15s at max speed, 0.3s at 25
+
+        # Turning makes it much more dangerous
+        var turn_factor = abs(steering_angle) / max_steering_angle  # 0-1
+        var lean_factor = abs(lean_angle) / max_lean_angle  # 0-1
+        var instability = max(turn_factor, lean_factor)
+
+        # Base threshold - reduced by speed and instability
+        var speed_factor = clamp((speed - 20) / (max_speed - 20), 0.0, 1.0)
+        var base_threshold = 0.5 * (1.0 - speed_factor * 0.3)  # 0.35s at max speed, 0.5s at 20
+
+        # Turning/leaning reduces threshold dramatically
+        var crash_time_threshold = base_threshold * (1.0 - instability * 0.7)  # Up to 70% reduction when turning hard
 
         # Calculate danger level (0-1)
         brake_danger_level = clamp(front_brake_hold_time / crash_time_threshold, 0.0, 1.0)
 
         if front_brake_hold_time > crash_time_threshold:
-            crash_reason = "brake"
-            crash_pitch_direction = 0
-            # Fall in steering direction, or random if not steering
-            if steering_angle != 0:
-                crash_lean_direction = -sign(steering_angle)  # Negative because lean is opposite to steering
+            if instability > 0.3:
+                # Turning/leaning = lowside crash
+                crash_reason = "brake"
+                crash_pitch_direction = 0
+                crash_lean_direction = -sign(steering_angle) if steering_angle != 0 else sign(lean_angle)
+                tire_screech.volume_db = 0.0
+                tire_screech.play()
             else:
-                crash_lean_direction = 1 if randf() > 0.5 else -1
-            # Play tire screech at full volume for brake crash
-            tire_screech.volume_db = 0.0
-            tire_screech.play()
+                # Straight braking = force into stoppie (let stoppie crash handle the rest)
+                # Rapidly pitch forward
+                pitch_angle = move_toward(pitch_angle, -crash_stoppie_threshold * 1.2, 4.0 * delta)
     else:
         front_brake_hold_time = 0.0
         # Fade danger level when not in danger
@@ -615,8 +631,13 @@ func check_crash_conditions(delta):
 func trigger_crash():
     is_crashed = true
     crash_timer = 0.0
-    speed = 0.0
-    velocity = Vector3.ZERO
+    # Keep speed for lowside crashes (sliding momentum), zero for others
+    if crash_lean_direction != 0 and crash_pitch_direction == 0:
+        # Lowside - keep momentum but reduce it
+        speed *= 0.7
+    else:
+        speed = 0.0
+        velocity = Vector3.ZERO
 
 
 func handle_crash_state(delta):
@@ -627,13 +648,29 @@ func handle_crash_state(delta):
         # Wheelie/stoppie crash - continue rotating in pitch direction
         pitch_angle = move_toward(pitch_angle, crash_pitch_direction * deg_to_rad(90), 3.0 * delta)
     elif crash_lean_direction != 0:
-        # Sideways crash - fall over to the side
+        # Lowside crash - fall over to the side while sliding
         lean_angle = move_toward(lean_angle, crash_lean_direction * deg_to_rad(90), 3.0 * delta)
+
+        # Slide with friction - bike keeps moving but slows down
+        if speed > 0.1:
+            var forward = -global_transform.basis.z
+            velocity = forward * speed
+            speed = move_toward(speed, 0, 20.0 * delta)  # Strong friction while sliding
+            move_and_slide()
 
     apply_mesh_rotation()
 
-    if crash_timer >= respawn_delay:
-        respawn()
+    # Respawn conditions:
+    # - Lowside: when bike stops sliding
+    # - Other crashes: after respawn_delay
+    if crash_lean_direction != 0 and crash_pitch_direction == 0:
+        # Lowside - respawn when stopped
+        if speed < 0.1:
+            respawn()
+    else:
+        # Wheelie/stoppie crashes - use timer
+        if crash_timer >= respawn_delay:
+            respawn()
 
 
 func respawn():
