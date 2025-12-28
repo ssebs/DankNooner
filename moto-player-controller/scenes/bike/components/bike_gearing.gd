@@ -100,14 +100,16 @@ func update_rpm(throttle: float):
     var rpm_lerp_speed = lerpf(0.25, 0.1, engagement)
     current_rpm = lerpf(current_rpm, target_rpm, rpm_lerp_speed)
 
-    # Clamp RPM
-    current_rpm = clamp(current_rpm, idle_rpm, max_rpm)
-
     # Check for stall (only when clutch is engaging and RPM drops too low)
+    # Must check before clamping to idle_rpm
     if get_clutch_engagement() > 0.5 and current_rpm < stall_rpm and bike_physics.speed < 1.0:
         is_stalled = true
         current_gear = 1
         engine_stalled.emit()
+        return
+
+    # Clamp RPM
+    current_rpm = clamp(current_rpm, idle_rpm, max_rpm)
 
 
 func get_rpm_ratio() -> float:

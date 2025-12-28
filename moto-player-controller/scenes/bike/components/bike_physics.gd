@@ -71,17 +71,9 @@ func handle_idle_tipping(delta, throttle: float, _steer_input: float, lean_angle
 		var fall_acceleration = total_lean * idle_tip_rate * (1.0 - stability)
 		idle_tip_angle += fall_acceleration * delta
 
-	# # Clamp to crash threshold
-	# idle_tip_angle = clamp(idle_tip_angle, -crash_lean_threshold, crash_lean_threshold)
-
-	# Recovery from throttle (rider stabilizing) - only when not steering
-	if throttle > 0 :#and abs(steer_input) < 0.1:
+	# Recovery from throttle (rider stabilizing)
+	if throttle > 0:
 		idle_tip_angle = move_toward(idle_tip_angle, 0, throttle * throttle_recovery_amount * delta)
-
-	# # Recovery from speed (gyroscopic) - only when not actively leaning
-	# # Rider must be going straight for gyro to stabilize
-	# if stability > 0 and abs(steer_input) < 0.1 and abs(lean_angle) < deg_to_rad(10):
-	# 	idle_tip_angle = move_toward(idle_tip_angle, 0, stability * 2.0 * delta)
 
 
 func apply_fishtail_friction(_delta, fishtail_speed_loss: float):
