@@ -1,7 +1,9 @@
 # Moto Player Controller
 
 ## In Progress:
+
 - [ ] Tweak values til they feel good
+
   - [ ] Gearing / speed / rpm doesn't feel good
   - [x] Steering at low speeds
   - [ ] falling at low speeds
@@ -20,7 +22,6 @@
   - [ ] **UI** (`bike_ui.gd`) - gear display, speedometer, throttle bar (with redline color), brake danger bar
   - [ ] Controller vibration - brake danger, fishtail, redline rumble (in `bike_ui.gd`)
 
-
 ## TODO:
 
 - [ ] Create rigged character
@@ -30,6 +31,7 @@
   - [ ] Sync'd animations
   - [ ] tricks
   - [ ] Ragdoll
+- [ ] if the front tire skids and regains traction, the bike should porpoise. causing a high-side crash.
 
 ## Done:
 

@@ -84,7 +84,7 @@ func _physics_process(delta):
         bike_steering.is_turning(),
         bike_crash.is_front_wheel_locked()
     )
-    bike_tricks.handle_skidding(delta, rear_wheel.global_position, global_rotation, is_on_floor())
+    bike_tricks.handle_skidding(delta, rear_wheel.global_position, front_wheel.global_position, global_rotation, is_on_floor(), bike_crash.is_front_wheel_locked())
 
     # Idle tipping
     bike_physics.handle_idle_tipping(delta, throttle, steer_input, bike_steering.lean_angle)

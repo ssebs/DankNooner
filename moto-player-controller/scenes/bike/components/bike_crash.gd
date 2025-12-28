@@ -77,9 +77,10 @@ func _update_brake_danger(delta, front_brake: float, steering_angle: float, lean
 		# Accumulate grab level based on how aggressive the grab is
 		var grab_intensity = (brake_rate - BRAKE_GRAB_THRESHOLD) / BRAKE_GRAB_THRESHOLD
 		brake_grab_level = clamp(brake_grab_level + grab_intensity * delta * 5.0, 0.0, 1.0)
-	else:
-		# Decay grab level when not grabbing
-		brake_grab_level = move_toward(brake_grab_level, 0.0, 2.0 * delta)
+	elif front_brake < 0.3:
+		# Only decay grab level when brake is mostly released
+		brake_grab_level = move_toward(brake_grab_level, 0.0, 3.0 * delta)
+	# else: brake is held but not increasing - maintain current grab level
 
 	var turn_factor = abs(steering_angle) / bike_steering.max_steering_angle
 	var lean_factor = abs(lean_angle) / crash_lean_threshold
