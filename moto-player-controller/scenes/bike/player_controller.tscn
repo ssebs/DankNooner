@@ -1,9 +1,8 @@
-[gd_scene load_steps=14 format=3 uid="uid://bmqevs0vheol7"]
+[gd_scene load_steps=13 format=3 uid="uid://bmqevs0vheol7"]
 
 [ext_resource type="Script" uid="uid://c331s8cm2gjtp" path="res://scenes/bike/player_controller.gd" id="1_5uol1"]
 [ext_resource type="PackedScene" uid="uid://7etgly8gokpl" path="res://assets/bikes/GoogleMotorcycleSportbike.glb" id="1_ujl86"]
 [ext_resource type="Script" uid="uid://l500tpp42su8" path="res://scenes/bike/components/bike_gearing.gd" id="5_gearing"]
-[ext_resource type="Script" uid="uid://svd12jpd5cxn" path="res://scenes/bike/components/bike_steering.gd" id="6_steering"]
 [ext_resource type="Script" uid="uid://bpqhimqk1dt2d" path="res://scenes/bike/components/bike_tricks.gd" id="7_tricks"]
 [ext_resource type="Script" uid="uid://cgy5mk1x6lanu" path="res://scenes/bike/components/bike_physics.gd" id="8_physics"]
 [ext_resource type="Script" uid="uid://bbk0xwdxhsifa" path="res://scenes/bike/components/bike_crash.gd" id="9_crash"]
@@ -39,13 +38,19 @@ friction_zone_start = null
 friction_zone_end = null
 gear_shift_threshold = null
 
-[node name="BikeSteering" type="Node" parent="Functionality"]
-unique_name_in_owner = true
-script = ExtResource("6_steering")
-
 [node name="BikeTricks" type="Node" parent="Functionality"]
 unique_name_in_owner = true
 script = ExtResource("7_tricks")
+max_wheelie_angle = null
+max_stoppie_angle = null
+rotation_speed = null
+return_speed = null
+wheelie_rpm_threshold = null
+wheelie_rpm_full = null
+max_fishtail_angle = null
+fishtail_speed = null
+fishtail_recovery_speed = null
+skid_volume = null
 
 [node name="BikeCrash" type="Node" parent="Functionality"]
 unique_name_in_owner = true

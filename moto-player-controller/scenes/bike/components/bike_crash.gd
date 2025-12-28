@@ -11,7 +11,6 @@ signal respawned
 
 # Component references
 @onready var bike_physics: BikePhysics = %BikePhysics
-@onready var bike_steering: BikeSteering = %BikeSteering
 
 # State
 var is_crashed: bool = false
@@ -88,7 +87,7 @@ func _update_brake_danger(delta, front_brake: float, steering_angle: float, lean
 		brake_grab_level = move_toward(brake_grab_level, 0.0, 3.0 * delta)
 	# else: brake is held but not increasing - maintain current grab level
 
-	var turn_factor = abs(steering_angle) / bike_steering.max_steering_angle
+	var turn_factor = abs(steering_angle) / bike_physics.max_steering_angle
 	var lean_factor = abs(lean_angle) / crash_lean_threshold
 	var instability = max(turn_factor, lean_factor)
 

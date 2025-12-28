@@ -2,7 +2,7 @@
 
 ## In Progress:
 - [ ] Fix bugs / understand the code
-  - [WIP] Merge bike_steering & bike_physics
+  - [x] Merge bike_steering & bike_physics
   - [ ] Cleanup player controller
   - [ ] Fix lean / tip in / steering feeling
   - [ ] Fix brake slam / crashing
