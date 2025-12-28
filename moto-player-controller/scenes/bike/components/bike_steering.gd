@@ -3,7 +3,8 @@ class_name BikeSteering extends Node
 # Steering tuning
 @export var steering_speed: float = 5.5
 @export var max_steering_angle: float = deg_to_rad(35)
-@export var max_lean_angle: float = deg_to_rad(50)
+@export var low_speed_lean_angle: float = deg_to_rad(70)   # Max lean at low speed
+@export var high_speed_lean_angle: float = deg_to_rad(15)  # Max lean at max speed
 @export var rotation_speed: float = 2.0
 
 # Turn radius (affects actual turning, not just visual steering)
@@ -40,18 +41,20 @@ func handle_steering(delta, idle_tip_angle: float):
 
 func update_lean(delta, steer_input: float, pitch_angle: float, idle_tip_angle: float):
 	"""Update lean angle based on steering and speed"""
+	# Speed-based lean limit (inverse: more lean allowed at low speed, less at high speed)
+	var speed_ratio = clamp(bike_physics.speed / bike_physics.max_speed, 0.0, 1.0)
+	var effective_max_lean = lerpf(low_speed_lean_angle, high_speed_lean_angle, speed_ratio)
+
 	# Auto-lean into turns when moving
 	var turn_lean = 0.0
 	if bike_physics.speed > 1:
 		turn_lean = -steering_angle * 0.6
 
-	# At low speed, leaning is dangerous
-	var low_speed_threshold = 5.0
-	var target_lean = -max_lean_angle * steer_input * 0.4 + turn_lean
+	# Calculate target lean from input and turn
+	var target_lean = -effective_max_lean * steer_input * 0.4 + turn_lean
 
-	if bike_physics.speed < low_speed_threshold:
-		var speed_authority = clamp(bike_physics.speed / low_speed_threshold, 0.1, 1.0)
-		target_lean *= speed_authority
+	# Clamp to speed-based limit
+	target_lean = clamp(target_lean, -effective_max_lean, effective_max_lean)
 
 	lean_angle = move_toward(lean_angle, target_lean, rotation_speed * delta)
 
