@@ -51,9 +51,6 @@ func _ready():
     bike_audio.setup(state, engine_sound, tire_screech, engine_grind)
     bike_ui.setup(state, bike_input, bike_crash, bike_tricks, gear_label, speed_label, throttle_bar, brake_danger_bar, difficulty_label)
 
-    # Initialize difficulty from gearing setting
-    bike_ui.set_difficulty(bike_gearing.dont_require_clutch)
-
     # Connect component signals
     bike_gearing.gear_grind.connect(_on_gear_grind)
     bike_gearing.engine_stalled.connect(_on_engine_stalled)
@@ -63,16 +60,6 @@ func _ready():
     bike_tricks.stoppie_stopped.connect(_on_stoppie_stopped)
     bike_physics.brake_stopped.connect(_on_brake_stopped)
     bike_crash.crashed.connect(_on_crashed)
-
-
-func _input(event):
-    if event.is_action_pressed("change_difficulty"):
-        toggle_difficulty()
-
-
-func toggle_difficulty():
-    bike_gearing.dont_require_clutch = not bike_gearing.dont_require_clutch
-    bike_ui.set_difficulty(bike_gearing.dont_require_clutch)
 
 
 func _physics_process(delta):

@@ -29,6 +29,8 @@ func setup(bike_state: BikeState, input: BikeInput, crash: BikeCrash, tricks: Bi
     brake_danger_bar = brake
     difficulty_label = difficulty
 
+    bike_input.difficulty_toggled.connect(_on_difficulty_toggled)
+
 
 func update_ui(input: BikeInput, rpm_ratio: float):
     _update_labels()
@@ -92,8 +94,8 @@ func _update_vibration():
     bike_input.add_vibration(weak_total, strong_total)
 
 
-func set_difficulty(easy: bool):
-    state.is_easy_mode = easy
+func _on_difficulty_toggled():
+    state.is_easy_mode = !state.is_easy_mode
     _update_difficulty_display()
 
 

@@ -1,5 +1,7 @@
 class_name BikeInput extends Node
 
+signal difficulty_toggled
+
 # Throttle and brakes (0-1 range)
 var throttle: float = 0.0
 var front_brake: float = 0.0
@@ -17,7 +19,6 @@ var clutch: float = 0.0
 # Gear shifting (just pressed this frame)
 var gear_up_pressed: bool = false
 var gear_down_pressed: bool = false
-
 
 # Vibration settings
 @export var vibration_duration: float = 0.15
@@ -39,6 +40,9 @@ func update_input():
 
     gear_up_pressed = Input.is_action_just_pressed("gear_up")
     gear_down_pressed = Input.is_action_just_pressed("gear_down")
+
+    if Input.is_action_just_pressed("change_difficulty"):
+        difficulty_toggled.emit()
 
 
 func add_vibration(weak: float, strong: float):
