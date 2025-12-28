@@ -15,7 +15,7 @@ The player controller ([player_controller.gd](scenes/bike/player_controller.gd))
 | Component | Responsibility |
 |-----------|----------------|
 | `BikePhysics` | Speed, acceleration, braking, steering, lean angles, countersteering/fall physics, gravity |
-| `BikeGearing` | 6-speed transmission, RPM, clutch engagement, gear shifting |
+| `BikeGearing` | 6-speed transmission, RPM, clutch with rev-matching, gear shifting |
 | `BikeTricks` | Wheelies, stoppies, fishtail/skid physics, skid mark spawning |
 | `BikeCrash` | Crash detection thresholds, respawn timer, collision handling |
 | `BikeAudio` | Engine pitch scaling, tire screech, gear grinding sounds |
@@ -48,13 +48,22 @@ All physics updates occur in `_physics_process(delta)` with this flow:
 ## Key Physics Values
 
 - **BikePhysics:** max_speed=60, acceleration=20, brake_force=25, max_steering=35°, max_lean=45°, gyro_stability_speed=15, fall_acceleration=2.0, countersteer_factor=0.8
-- **BikeGearing:** gear_ratios=[2.8, 1.9, 1.4, 1.1, 0.95, 0.8], idle_rpm=1000, max_rpm=9000
+- **BikeGearing:** gear_ratios=[2.92, 2.05, 1.6, 1.46, 1.15, 1.0], idle_rpm=1000, max_rpm=9000, stall_rpm=800, throttle_response=3.0, rpm_blend_speed=4.0
 - **BikeTricks:** max_wheelie=80°, max_stoppie=50°, wheelie_rpm_range=65%-95%
 - **BikeCrash:** wheelie_crash=75°, stoppie_crash=55°, lean_crash=80°
 
+## Clutch System
+
+The clutch uses a button-based input with tap/hold behavior:
+- **Tap**: Instantly adds `clutch_tap_amount` (0.35) to clutch value
+- **Hold**: After `clutch_hold_delay` (0.05s), pulls clutch in at `clutch_engage_speed` (6.0/s)
+- **Release**: Clutch slowly releases at `clutch_release_speed` (2.5/s)
+
+Clutch engagement is linear: `clutch_value` 0→1 maps directly to disengagement (0 = engaged to wheel, 1 = disengaged/free rev). RPM blends smoothly between throttle-driven and wheel-driven based on clutch position, enabling rev-matching for smooth shifts and launches.
+
 ## Input Actions
 
-Defined in `project.godot`. Main inputs: `throttle_pct`, `brake_front_pct`, `brake_rear`, `steer_left/right`, `lean_forward/back`, `clutch`, `gear_up/down`, `trick`, `pause`
+Defined in `project.godot`. Main inputs: `throttle_pct`, `brake_front_pct`, `brake_rear`, `steer_left/right`, `lean_forward/back`, `clutch` (button), `gear_up/down`, `trick`, `pause`
 
 ## Collision Layers
 
