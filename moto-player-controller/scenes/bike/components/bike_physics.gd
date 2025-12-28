@@ -7,9 +7,10 @@ class_name BikePhysics extends Node
 @export var friction: float = 5.0
 
 # Idle tipping
-@export var idle_tip_speed_threshold: float = 3.0
-@export var idle_tip_rate: float = 0.5
+@export var idle_tip_speed_threshold: float = 8.0
+@export var idle_tip_rate: float = 0.75
 @export var crash_lean_threshold: float = deg_to_rad(80)
+@export var throttle_recovery_multiplier: float = 8.0
 
 # State
 var speed: float = 0.0
@@ -48,11 +49,9 @@ func handle_acceleration(delta, throttle: float, front_brake: float, rear_brake:
 		speed = move_toward(speed, 0, drag * delta)
 
 
-func handle_idle_tipping(delta, throttle: float, lean_angle: float, max_lean_angle: float):
-	var low_speed_threshold = 10.0
-
+func handle_idle_tipping(delta, throttle: float, steer_input: float, lean_angle: float):
 	# Track if bike has ever started moving
-	if speed > 3.0:
+	if speed > 1.0:
 		has_started_moving = true
 
 	# At spawn or standstill before moving, stay upright
@@ -60,27 +59,64 @@ func handle_idle_tipping(delta, throttle: float, lean_angle: float, max_lean_ang
 		idle_tip_angle = 0.0
 		return
 
-	if speed < low_speed_threshold:
-		var lean_tip_contribution = 0.0
-		if throttle < 0.3:
-			lean_tip_contribution = lean_angle * 0.5
+	# Gyroscopic stability: faster = more stable (0 at idle, 1 at max speed)
+	var stability = clamp(speed / max_speed, 0.0, 1.0)
+	var instability = 1.0 - stability
 
-		if speed < idle_tip_speed_threshold and throttle == 0:
-			if idle_tip_angle == 0 and abs(lean_angle) < deg_to_rad(5):
+	# Throttle provides stabilizing force (simulates rider control/balance)
+	var throttle_stability = throttle * throttle  # Quadratic for smoother response
+
+	# Total lean angle (input lean + tip angle)
+	var total_lean = lean_angle + idle_tip_angle
+
+	# At very low speed with no throttle, bike wants to fall over
+	if speed < idle_tip_speed_threshold and throttle < 0.1:
+		# Initialize tip direction based on lean or random
+		if idle_tip_angle == 0:
+			if abs(total_lean) > 0.01:
+				idle_tip_angle = sign(total_lean) * 0.01
+			else:
 				idle_tip_angle = 0.01 if randf() > 0.5 else -0.01
-			elif abs(lean_angle) >= deg_to_rad(5):
-				idle_tip_angle = move_toward(idle_tip_angle, lean_angle, idle_tip_rate * 2.0 * delta)
 
-		var tip_target = sign(idle_tip_angle + lean_tip_contribution) * crash_lean_threshold
-		var tip_rate = idle_tip_rate * (1.0 + abs(lean_angle) / max_lean_angle)
-		idle_tip_angle = move_toward(idle_tip_angle, tip_target, tip_rate * delta)
+	# Steering affects balance: turning into the fall recovers, turning away accelerates fall
+	# Falling left (negative) + steer left (negative) = same sign = recovery
+	# Falling left (negative) + steer right (positive) = opposite sign = worse
+	var steer_tip_interaction = steer_input * sign(idle_tip_angle) if idle_tip_angle != 0 else 0.0
+	# steer_tip_interaction > 0 when steering into fall (recovery)
+	# steer_tip_interaction < 0 when steering away from fall (worse)
 
-		# Throttle fights the tip
-		if throttle > 0.3:
-			var recovery_rate = idle_tip_rate * 3.0 * throttle
-			idle_tip_angle = move_toward(idle_tip_angle, 0, recovery_rate * delta)
-	else:
-		idle_tip_angle = move_toward(idle_tip_angle, 0, idle_tip_rate * 3.0 * delta)
+	# Calculate tip target (gravity pulling toward ground)
+	var tip_target = sign(idle_tip_angle) * crash_lean_threshold if idle_tip_angle != 0 else 0.0
+
+	# Tip rate: base rate * instability, accelerates with angle (gravity effect)
+	var angle_ratio = abs(idle_tip_angle) / crash_lean_threshold
+	var gravity_acceleration = 1.0 + angle_ratio * 3.0  # Further angle = faster fall
+	var base_tip_rate = idle_tip_rate * instability * gravity_acceleration
+
+	# Steering effectiveness scales with speed (need momentum to countersteer)
+	var steer_effectiveness = clamp(speed / idle_tip_speed_threshold, 0.0, 1.0)
+
+	# Steering can reduce or increase tip rate
+	var steer_modifier = 1.0 - steer_tip_interaction * steer_effectiveness
+	steer_modifier = clamp(steer_modifier, 0.5, 1.5)
+	var tip_rate = base_tip_rate * steer_modifier
+
+	# Apply tipping
+	idle_tip_angle = move_toward(idle_tip_angle, tip_target, tip_rate * delta)
+
+	# Steering recovery: any steering input helps right the bike (needs speed to work)
+	# Steering into fall is more effective, countersteering still helps but less
+	var steer_recovery_multiplier = 2.0 if steer_tip_interaction > 0 else 1.0
+	var steer_recovery = idle_tip_rate * steer_recovery_multiplier * abs(steer_input) * steer_effectiveness
+	idle_tip_angle = move_toward(idle_tip_angle, 0, steer_recovery * delta)
+
+	# Throttle-based recovery (rider accelerating to regain balance)
+	var recovery_rate = idle_tip_rate * throttle_recovery_multiplier * throttle_stability * (1.0 + stability)
+	idle_tip_angle = move_toward(idle_tip_angle, 0, recovery_rate * delta)
+
+	# Speed-based recovery (gyroscopic effect straightens the bike)
+	var gyro_recovery = idle_tip_rate * stability * 2.0
+	idle_tip_angle = move_toward(idle_tip_angle, 0, gyro_recovery * delta)
 
 
 func apply_fishtail_friction(delta, fishtail_speed_loss: float):
