@@ -8,6 +8,17 @@ signal brake_stopped
 @export var brake_strength: float = 25.0
 @export var friction: float = 5.0
 
+# Steering tuning
+@export var steering_speed: float = 4.0
+@export var max_steering_angle: float = deg_to_rad(35)
+@export var max_lean_angle: float = deg_to_rad(45)
+@export var lean_speed: float = 2.5
+
+# Turn radius
+@export var min_turn_radius: float = 0.25
+@export var max_turn_radius: float = 3.0
+@export var turn_speed: float = 2.0
+
 # Idle tipping
 @export var idle_tip_speed_threshold: float = 10.0
 @export var idle_tip_rate: float = 0.8
@@ -18,6 +29,9 @@ signal brake_stopped
 var speed: float = 0.0
 var idle_tip_angle: float = 0.0
 var has_started_moving: bool = false
+
+var steering_angle: float = 0.0
+var lean_angle: float = 0.0
 
 # Gravity
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -51,7 +65,7 @@ func handle_acceleration(delta, throttle: float, front_brake: float, rear_brake:
 		speed = move_toward(speed, 0, drag * delta)
 
 
-func handle_idle_tipping(delta, throttle: float, _steer_input: float, lean_angle: float):
+func handle_idle_tipping(delta, throttle: float, _steer_input: float):
 	if speed > 0.25:
 		has_started_moving = true
 
@@ -80,7 +94,7 @@ func apply_fishtail_friction(_delta, fishtail_speed_loss: float):
 	speed = move_toward(speed, 0, fishtail_speed_loss)
 
 
-func check_brake_stop(steering_angle: float, lean_angle: float):
+func check_brake_stop():
 	var front_brake = Input.get_action_strength("brake_front_pct")
 	var rear_brake = Input.get_action_strength("brake_rear")
 	var total_brake = front_brake + rear_brake
@@ -101,7 +115,44 @@ func apply_gravity(delta, velocity: Vector3, is_on_floor: bool) -> Vector3:
 	return velocity
 
 
+func handle_steering(delta):
+	var steer_input = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
+
+	# Tip angle pulls steering in that direction (bike falls, bars turn)
+	var tip_induced_steer = - idle_tip_angle * 0.5
+	var target_steer = clamp(max_steering_angle * steer_input + tip_induced_steer, -max_steering_angle, max_steering_angle)
+
+	# Smooth interpolation to target
+	steering_angle = lerpf(steering_angle, target_steer, steering_speed * delta)
+
+
+func update_lean(delta, steer_input: float):
+	# Lean from steering input and turn
+	var speed_factor = clamp(speed / 20.0, 0.0, 1.0)
+	var steer_lean = - steering_angle * speed_factor * 1.2
+	var input_lean = - steer_input * max_lean_angle * 0.3
+
+	# Tip angle adds directly to lean
+	var target_lean = steer_lean + input_lean + idle_tip_angle * 0.5
+	target_lean = clamp(target_lean, -max_lean_angle, max_lean_angle)
+
+	# Smooth interpolation
+	lean_angle = lerpf(lean_angle, target_lean, lean_speed * delta)
+
+
+func get_turn_rate() -> float:
+	var speed_pct = speed / max_speed
+	var turn_radius = lerpf(min_turn_radius, max_turn_radius, speed_pct)
+	return turn_speed / turn_radius
+
+
+func is_turning() -> bool:
+	return abs(steering_angle) > 0.2
+
+
 func reset():
 	speed = 0.0
 	idle_tip_angle = 0.0
 	has_started_moving = false
+	steering_angle = 0.0
+	lean_angle = 0.0

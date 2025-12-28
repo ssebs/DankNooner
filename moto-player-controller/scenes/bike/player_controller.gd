@@ -15,7 +15,6 @@ class_name PlayerController extends CharacterBody3D
 
 # Components
 @onready var bike_gearing: BikeGearing = %BikeGearing
-@onready var bike_steering: BikeSteering = %BikeSteering
 @onready var bike_tricks: BikeTricks = %BikeTricks
 @onready var bike_physics: BikePhysics = %BikePhysics
 @onready var bike_crash: BikeCrash = %BikeCrash
@@ -61,7 +60,7 @@ func _physics_process(delta):
     var throttle = Input.get_action_strength("throttle_pct")
     var front_brake = Input.get_action_strength("brake_front_pct")
     var rear_brake = Input.get_action_strength("brake_rear")
-    var steer_input = bike_steering.get_steer_input()
+    var steer_input = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
 
     # Gearing
     bike_gearing.handle_gear_shifting()
@@ -78,40 +77,40 @@ func _physics_process(delta):
     )
 
     # Steering
-    bike_steering.handle_steering(delta, bike_physics.idle_tip_angle)
-    bike_steering.update_lean(delta, steer_input, bike_tricks.pitch_angle, bike_physics.idle_tip_angle)
+    bike_physics.handle_steering(delta)
+    bike_physics.update_lean(delta, steer_input)
 
     # Tricks (wheelies, stoppies, skidding)
     bike_tricks.handle_wheelie_stoppie(
         delta,
         bike_gearing.get_rpm_ratio(),
         bike_gearing.clutch_value,
-        bike_steering.is_turning(),
+        bike_physics.is_turning(),
         bike_crash.is_front_wheel_locked(),
         not is_on_floor()
     )
     bike_tricks.handle_skidding(delta, rear_wheel.global_position, front_wheel.global_position, global_rotation, is_on_floor(), bike_crash.is_front_wheel_locked())
 
     # Idle tipping
-    bike_physics.handle_idle_tipping(delta, throttle, steer_input, bike_steering.lean_angle)
+    bike_physics.handle_idle_tipping(delta, throttle, steer_input)
 
     # Check for controlled brake stop
-    bike_physics.check_brake_stop(bike_steering.steering_angle, bike_steering.lean_angle)
+    bike_physics.check_brake_stop()
 
     # Crash detection
     if is_on_floor():
         bike_crash.check_crash_conditions(
             delta,
             bike_tricks.pitch_angle,
-            bike_steering.lean_angle,
+            bike_physics.lean_angle,
             bike_physics.idle_tip_angle,
-            bike_steering.steering_angle,
+            bike_physics.steering_angle,
             front_brake
         )
     else:
         # Check for airborne crash (leaning too far while in the air)
         bike_crash.check_airborne_crash(
-            bike_steering.lean_angle,
+            bike_physics.lean_angle,
             bike_physics.idle_tip_angle,
             bike_tricks.pitch_angle
         )
@@ -167,7 +166,7 @@ func _align_to_ground(delta):
     if is_on_floor():
         var floor_normal = get_floor_normal()
         # Calculate target pitch from floor normal
-        var forward_dir = -global_transform.basis.z
+        var forward_dir = - global_transform.basis.z
         # Project floor normal onto forward axis to get pitch
         var forward_dot = forward_dir.dot(floor_normal)
         var target_pitch = asin(clamp(forward_dot, -1.0, 1.0))
@@ -181,8 +180,8 @@ func _apply_movement(delta):
     var forward = - global_transform.basis.z
 
     if bike_physics.speed > 0.5:
-        var turn_rate = bike_steering.get_turn_rate()
-        rotate_y(-bike_steering.steering_angle * turn_rate * delta)
+        var turn_rate = bike_physics.get_turn_rate()
+        rotate_y(-bike_physics.steering_angle * turn_rate * delta)
 
         # Fishtail rotation and speed loss
         if abs(bike_tricks.fishtail_angle) > 0.01:
@@ -214,7 +213,7 @@ func _apply_mesh_rotation():
         _rotate_mesh_around_pivot(pivot, Vector3.RIGHT, bike_tricks.pitch_angle)
 
     # Apply lean (including idle tip)
-    var total_lean = bike_steering.lean_angle + bike_physics.idle_tip_angle
+    var total_lean = bike_physics.lean_angle + bike_physics.idle_tip_angle
     if total_lean != 0:
         mesh.rotate_z(total_lean)
 
@@ -236,7 +235,7 @@ func _handle_crash_state(delta):
     if bike_crash.crash_pitch_direction != 0:
         bike_tricks.force_pitch(bike_crash.crash_pitch_direction * deg_to_rad(90), 3.0, delta)
     elif bike_crash.crash_lean_direction != 0:
-        bike_steering.lean_angle = move_toward(bike_steering.lean_angle, bike_crash.crash_lean_direction * deg_to_rad(90), 3.0 * delta)
+        bike_physics.lean_angle = move_toward(bike_physics.lean_angle, bike_crash.crash_lean_direction * deg_to_rad(90), 3.0 * delta)
 
         # Slide with friction during lowside
         if bike_physics.speed > 0.1:
@@ -256,7 +255,7 @@ func _respawn():
 
     # Reset all components
     bike_gearing.reset()
-    bike_steering.reset()
+    bike_physics.reset()
     bike_tricks.reset()
     bike_physics.reset()
     bike_crash.reset()
@@ -286,7 +285,7 @@ func _on_tire_screech_stop():
 
 func _on_stoppie_stopped():
     # Soft reset: like stalling but keep engine running
-    bike_steering.reset()
+    bike_physics.reset()
     bike_physics.speed = 0.0
     bike_physics.idle_tip_angle = 0.0
     velocity = Vector3.ZERO
@@ -294,7 +293,7 @@ func _on_stoppie_stopped():
 
 func _on_brake_stopped():
     # Soft reset: bike stopped via braking while upright
-    bike_steering.reset()
+    bike_physics.reset()
     velocity = Vector3.ZERO
 
 
