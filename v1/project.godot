@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="DankNooner"
+config/name="DankNooner-v1"
 run/main_scene="uid://bt8t0gafmsf2w"
 config/features=PackedStringArray("4.5", "Mobile")
 boot_splash/show_image=false
