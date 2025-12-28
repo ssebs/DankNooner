@@ -3,6 +3,18 @@
 ## In Progress:
 
 - [ ] Cleanup / refactor vibe coded `player_controller.gd`
+  - [ ] Move to its own node/script:
+    - [ ] **physics** (fall when too slow, lean up when accelerating, etc.)
+    - [ ] **gearing** (clutch, throttle, gas, rpm, speed)
+    - [ ] **steering** (lean / steer input, steer angle based on speed)
+    - [ ] **crash checks + animations**
+    - [ ] **trick checks** (wheelies / stoppies - pitch control)
+      - [ ] Skidding & Fishtail - rear brake skids, fishtail drift physics, speed scrubbing
+        - Skid marks - decal spawning at rear wheel, timed cleanup
+    - [ ] **Audio** - engine sound pitch based on RPM, tire screech on skids/stoppies/gear grind
+    - [ ] **UI** - gear display, speedometer, throttle bar (with redline color), brake danger bar
+    - [ ] Controller vibration - brake danger, fishtail, redline rumble
+
 - [ ] Tweak values til they feel good
 
 ## TODO:
