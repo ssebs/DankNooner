@@ -17,7 +17,6 @@ size = Vector3(0.68, 1.05, 2)
 
 [node name="PlayerController" type="CharacterBody3D"]
 script = ExtResource("1_5uol1")
-skidmark_texture = null
 
 [node name="Functionality" type="Node" parent="."]
 
@@ -28,6 +27,15 @@ script = ExtResource("8_physics")
 [node name="BikeGearing" type="Node" parent="Functionality"]
 unique_name_in_owner = true
 script = ExtResource("5_gearing")
+num_gears = null
+max_rpm = null
+idle_rpm = null
+stall_rpm = null
+gear_ratios = null
+clutch_speed = null
+friction_zone_start = null
+friction_zone_end = null
+gear_shift_threshold = null
 
 [node name="BikeSteering" type="Node" parent="Functionality"]
 unique_name_in_owner = true
