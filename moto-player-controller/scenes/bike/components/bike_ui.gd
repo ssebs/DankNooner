@@ -9,14 +9,23 @@ class_name BikeUI extends Node
 # Shared state
 var state: BikeState
 
+# Component references for vibration
+var bike_input: BikeInput
+var bike_crash: BikeCrash
+var bike_tricks: BikeTricks
 
-func setup(bike_state: BikeState, gear: Label, spd: Label, throttle: ProgressBar, brake: ProgressBar, difficulty: Label):
+
+func setup(bike_state: BikeState, gear: Label, spd: Label, throttle: ProgressBar, brake: ProgressBar, difficulty: Label,
+		   input: BikeInput = null, crash: BikeCrash = null, tricks: BikeTricks = null):
 	state = bike_state
 	gear_label = gear
 	speed_label = spd
 	throttle_bar = throttle
 	brake_danger_bar = brake
 	difficulty_label = difficulty
+	bike_input = input
+	bike_crash = crash
+	bike_tricks = tricks
 
 
 func update_ui(input: BikeInput):
@@ -60,30 +69,25 @@ func _update_bars(input: BikeInput):
 
 
 func _update_vibration():
+	if !bike_input:
+		return
+
 	var weak_total = 0.0
 	var strong_total = 0.0
-	var _brake_vibe_intensity = 2.0
 
-	# Brake danger vibration
-	if state.brake_danger_level > 0.1:
-		weak_total += state.brake_danger_level * _brake_vibe_intensity
-		strong_total += state.brake_danger_level * state.brake_danger_level * _brake_vibe_intensity
+	# Get vibration from components
+	if bike_crash:
+		var brake_vibe = bike_crash.get_brake_vibration()
+		weak_total += brake_vibe.x
+		strong_total += brake_vibe.y
 
-	# Fishtail vibration
-	var fishtail_intensity = abs(state.fishtail_angle) / state.max_fishtail_angle if state.max_fishtail_angle > 0 else 0.0
-	if fishtail_intensity > 0.1:
-		weak_total += fishtail_intensity * 0.6
-		strong_total += fishtail_intensity * fishtail_intensity * 0.8
+	if bike_tricks:
+		var fishtail_vibe = bike_tricks.get_fishtail_vibration()
+		weak_total += fishtail_vibe.x
+		strong_total += fishtail_vibe.y
 
-	# Apply vibration
-	if weak_total > 0.01 or strong_total > 0.01:
-		Input.start_joy_vibration(0, clamp(weak_total, 0.0, 1.0), clamp(strong_total, 0.0, 1.0), vibration_duration)
-	else:
-		stop_vibration()
-
-
-func stop_vibration():
-	Input.stop_joy_vibration(0)
+	# Apply vibration through input component
+	bike_input.add_vibration(weak_total, strong_total)
 
 
 func set_difficulty(easy: bool):
