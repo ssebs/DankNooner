@@ -91,6 +91,7 @@ shape = SubResource("BoxShape3D_ujl86")
 unique_name_in_owner = true
 stream = ExtResource("10_t042m")
 volume_db = -25.0
+pitch_scale = 0.76
 
 [node name="TireScreechSound" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
