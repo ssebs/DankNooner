@@ -3,7 +3,7 @@ class_name BikeSteering extends Node
 # Steering tuning
 @export var steering_speed: float = 5.5
 @export var max_steering_angle: float = deg_to_rad(35)
-@export var max_lean_angle: float = deg_to_rad(40)
+@export var max_lean_angle: float = deg_to_rad(50)
 @export var rotation_speed: float = 2.0
 
 # Turn radius (affects actual turning, not just visual steering)
@@ -19,15 +19,21 @@ var steering_angle: float = 0.0
 var lean_angle: float = 0.0
 
 
-func handle_steering(delta):
+func handle_steering(delta, idle_tip_angle: float):
 	var steer_input = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
 
 	# Snappier steering at low speeds
 	var speed_factor = 1.0 + (1.0 - clamp(bike_physics.speed / 10.0, 0.0, 1.0)) * 1.5
 	var effective_steering_speed = steering_speed * speed_factor
 
-	if steer_input != 0:
-		steering_angle = move_toward(steering_angle, max_steering_angle * steer_input, effective_steering_speed * delta)
+	# Lean/tip induces steering (bike steers into the lean)
+	var lean_induced_steer = -idle_tip_angle * 0.5
+
+	var target_steer = max_steering_angle * steer_input + lean_induced_steer
+	target_steer = clamp(target_steer, -max_steering_angle, max_steering_angle)
+
+	if steer_input != 0 or abs(idle_tip_angle) > 0.01:
+		steering_angle = move_toward(steering_angle, target_steer, effective_steering_speed * delta)
 	else:
 		steering_angle = move_toward(steering_angle, 0, effective_steering_speed * 2 * delta)
 

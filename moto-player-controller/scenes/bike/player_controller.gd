@@ -70,7 +70,7 @@ func _physics_process(delta):
     )
 
     # Steering
-    bike_steering.handle_steering(delta)
+    bike_steering.handle_steering(delta, bike_physics.idle_tip_angle)
     bike_steering.update_lean(delta, steer_input, bike_tricks.pitch_angle, bike_physics.idle_tip_angle)
 
     # Tricks (wheelies, stoppies, skidding)
@@ -83,7 +83,7 @@ func _physics_process(delta):
     bike_tricks.handle_skidding(delta, rear_wheel.global_position, global_rotation, is_on_floor())
 
     # Idle tipping
-    bike_physics.handle_idle_tipping(delta, throttle, bike_steering.lean_angle, bike_steering.max_lean_angle)
+    bike_physics.handle_idle_tipping(delta, throttle, steer_input, bike_steering.lean_angle)
 
     # Crash detection
     bike_crash.check_crash_conditions(
