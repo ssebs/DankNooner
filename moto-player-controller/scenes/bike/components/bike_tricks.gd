@@ -3,6 +3,7 @@ class_name BikeTricks extends Node
 signal skid_mark_requested(position: Vector3, rotation: Vector3)
 signal tire_screech_start(volume: float)
 signal tire_screech_stop
+signal stoppie_stopped  # Emitted when bike comes to rest during a stoppie
 
 # Rotation tuning
 @export var max_wheelie_angle: float = deg_to_rad(80)
@@ -32,7 +33,7 @@ var last_throttle_input: float = 0.0
 var last_clutch_input: float = 0.0
 
 
-func handle_wheelie_stoppie(delta, rpm_ratio: float, clutch_value: float, is_turning: bool):
+func handle_wheelie_stoppie(delta, rpm_ratio: float, clutch_value: float, is_turning: bool, front_wheel_locked: bool = false):
 	var lean_input = Input.get_action_strength("lean_back") - Input.get_action_strength("lean_forward")
 	var throttle = Input.get_action_strength("throttle_pct")
 	var front_brake = Input.get_action_strength("brake_front_pct")
@@ -59,12 +60,18 @@ func handle_wheelie_stoppie(delta, rpm_ratio: float, clutch_value: float, is_tur
 			wheelie_target = max_wheelie_angle * throttle * (1.0 - total_brake)
 			wheelie_target += max_wheelie_angle * lean_input * 0.15
 
-	# Stoppie logic
+	# Stoppie logic - only works with progressive braking (not grabbed)
+	# If front wheel is locked (brake grabbed), no stoppie - just skid
 	var stoppie_target = 0.0
-	var wants_stoppie = lean_input < -0.3 and front_brake > 0.7
+	var wants_stoppie = lean_input < -0.1 and front_brake > 0.5 and not front_wheel_locked
 	if bike_physics.speed > 1 and (is_in_stoppie or (wants_stoppie and can_start_trick)):
-		stoppie_target = -max_stoppie_angle * front_brake * (1.0 - throttle * 0.5)
-		stoppie_target += -max_stoppie_angle * (-lean_input) * 0.15
+		# Can't maintain stoppie if wheel locks mid-trick
+		if front_wheel_locked:
+			# Wheel locked - abort stoppie, bike drops back down
+			stoppie_target = 0.0
+		else:
+			stoppie_target = -max_stoppie_angle * front_brake * (1.0 - throttle * 0.5)
+			stoppie_target += -max_stoppie_angle * (-lean_input) * 0.15
 
 	# Apply pitch
 	var was_in_stoppie = pitch_angle < deg_to_rad(-5)
@@ -74,6 +81,11 @@ func handle_wheelie_stoppie(delta, rpm_ratio: float, clutch_value: float, is_tur
 		pitch_angle = move_toward(pitch_angle, stoppie_target, rotation_speed * delta)
 		if not was_in_stoppie:
 			tire_screech_start.emit(0.5)
+		# Check if bike stopped during stoppie - soft reset without position change
+		if bike_physics.speed < 0.5 and is_in_stoppie:
+			pitch_angle = 0.0
+			tire_screech_stop.emit()
+			stoppie_stopped.emit()
 	else:
 		pitch_angle = move_toward(pitch_angle, 0, return_speed * delta)
 		if was_in_stoppie and pitch_angle >= deg_to_rad(-5):

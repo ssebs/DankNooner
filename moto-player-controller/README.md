@@ -1,6 +1,11 @@
 # Moto Player Controller
 
 ## In Progress:
+- [ ] Tweak values til they feel good
+  - [ ] Gearing / speed / rpm doesn't feel good
+  - [x] Steering at low speeds
+  - [ ] falling at low speeds
+  - [ ] wheelie / stoppie control
 
 - [ ] Fix bugs / understand the refactored code
 
@@ -15,11 +20,6 @@
   - [ ] **UI** (`bike_ui.gd`) - gear display, speedometer, throttle bar (with redline color), brake danger bar
   - [ ] Controller vibration - brake danger, fishtail, redline rumble (in `bike_ui.gd`)
 
-- [ ] Tweak values til they feel good
-  - [ ] Gearing / speed / rpm doesn't feel good
-  - [ ] Steering at low speeds
-  - [ ] falling at low speeds
-  - [ ] wheelie / stoppie control
 
 ## TODO:
 
