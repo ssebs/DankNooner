@@ -48,9 +48,11 @@ var steering_angle: float = 0.0
 @export var num_gears: int = 6
 @export var max_rpm: float = 8000.0
 @export var idle_rpm: float = 1000.0
-@export var gear_ratios: Array[float] = [3.5, 2.5, 1.8, 1.4, 1.1, 0.9]  # Higher = more torque, less top speed
+@export var stall_rpm: float = 500.0  # Engine stalls below this RPM
+@export var gear_ratios: Array[float] = [2.8, 1.9, 1.4, 1.1, 0.95, 0.8]  # Higher = more torque, less top speed
 var current_gear: int = 1
 var current_rpm: float = 0.0
+var is_stalled: bool = false
 
 # Gravity
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -110,13 +112,23 @@ func handle_gear_shifting():
             tire_screech.play()
 
 
-func get_max_speed_for_gear() -> float:
+func get_max_speed_for_gear(gear: int = -1) -> float:
     # Each gear has a different top speed based on its ratio
     # Lower gears (higher ratio) = lower top speed but more acceleration
     # Higher gears (lower ratio) = higher top speed but less acceleration
-    var gear_ratio = gear_ratios[current_gear - 1]
+    if gear == -1:
+        gear = current_gear
+    var gear_ratio = gear_ratios[gear - 1]
     var lowest_ratio = gear_ratios[num_gears - 1]  # Highest gear has lowest ratio
     return max_speed * (lowest_ratio / gear_ratio)
+
+
+func get_min_speed_for_gear() -> float:
+    # Minimum speed for a gear before stalling
+    # 1st gear has no minimum
+    if current_gear == 1:
+        return 0.0
+    return get_max_speed_for_gear(current_gear - 1) * 0.25  # 25% of previous gear's max
 
 
 func get_acceleration_for_gear() -> float:
@@ -128,16 +140,29 @@ func get_acceleration_for_gear() -> float:
 
 func update_rpm():
     var throttle = Input.get_action_strength("throttle_pct")
+    var clutch = Input.get_action_strength("clutch")
     var gear_max_speed = get_max_speed_for_gear()
+    var gear_min_speed = get_min_speed_for_gear()
 
-    # RPM based on speed relative to current gear's max speed
-    var speed_ratio = speed / gear_max_speed if gear_max_speed > 0 else 0.0
+    # RPM based on speed relative to current gear's speed band
+    var speed_in_band = clamp(speed - gear_min_speed, 0.0, gear_max_speed - gear_min_speed)
+    var band_size = gear_max_speed - gear_min_speed
+    var speed_ratio = speed_in_band / band_size if band_size > 0 else 0.0
     current_rpm = lerpf(idle_rpm, max_rpm, clamp(speed_ratio, 0.0, 1.0))
 
     # Rev higher when throttle is applied but not moving much (revving in neutral/clutch in)
-    var clutch = Input.get_action_strength("clutch")
     if clutch > 0.5 and throttle > 0:
         current_rpm = lerpf(current_rpm, max_rpm * throttle, 0.5)
+
+    # Check for stall - below minimum speed for current gear without clutch
+    if not is_stalled and clutch < 0.5 and speed < gear_min_speed and current_gear > 1:
+        is_stalled = true
+        engine_sound.stop()
+
+    # Restart engine with throttle + clutch while stalled
+    if is_stalled and clutch > 0.5 and throttle > 0.3:
+        is_stalled = false
+        current_rpm = idle_rpm
 
 
 func handle_acceleration(delta):
@@ -146,14 +171,24 @@ func handle_acceleration(delta):
     var rear_brake = Input.get_action_strength("brake_rear")
     var clutch = Input.get_action_strength("clutch")
 
-    # Get max speed for current gear
+    # Get speed band for current gear
     var gear_max_speed = get_max_speed_for_gear()
+    var gear_min_speed = get_min_speed_for_gear()
+
+    # Can't accelerate when stalled
+    if is_stalled:
+        throttle = 0
 
     # Accelerate (reduced power when clutch is held)
     if throttle > 0:
         var effective_throttle = throttle * (1.0 - clutch * 0.8)  # 80% power loss with full clutch
         var target_speed = gear_max_speed * effective_throttle
         var gear_accel = get_acceleration_for_gear()
+
+        # Reduce acceleration when below gear's minimum speed (lugging the engine)
+        if speed < gear_min_speed and current_gear > 1:
+            var lug_factor = speed / gear_min_speed if gear_min_speed > 0 else 0.0
+            gear_accel *= lug_factor * 0.3  # Very weak acceleration when lugging
 
         # Don't accelerate past gear's max speed (at max RPM)
         if speed < gear_max_speed or current_rpm < max_rpm:
@@ -185,16 +220,23 @@ func handle_steering(delta):
 func handle_lean_input(delta):
     var lean_input = Input.get_action_strength("lean_back") - Input.get_action_strength("lean_forward")
     var steer_input = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
+    var throttle = Input.get_action_strength("throttle_pct")
     var front_brake = Input.get_action_strength("brake_front_pct")
     var rear_brake = Input.get_action_strength("brake_rear")
     var is_braking = (front_brake + rear_brake) > 0
 
+    # Can't START a wheelie/stoppie while turning, but can continue one
+    var is_in_wheelie = pitch_angle > deg_to_rad(10)
+    var is_in_stoppie = pitch_angle < deg_to_rad(-10)
+    var is_turning = abs(steering_angle) > 0.2
+    var can_start_trick = not is_turning
+
     # Pitch (wheelie/stoppie)
-    if lean_input > 0 and speed > 1:
-        # Wheelie - only when moving
+    if lean_input > 0 and speed > 1 and throttle > 0.3 and (is_in_wheelie or can_start_trick):
+        # Wheelie - only when moving, accelerating, and (going straight OR already in wheelie)
         pitch_angle = move_toward(pitch_angle, max_wheelie_angle * lean_input, rotation_speed * delta)
-    elif lean_input < 0 and is_braking and speed > 1:
-        # Stoppie - only when braking and moving
+    elif lean_input < 0 and is_braking and speed > 1 and (is_in_stoppie or can_start_trick):
+        # Stoppie - only when braking, moving, and (going straight OR already in stoppie)
         pitch_angle = move_toward(pitch_angle, -max_stoppie_angle * abs(lean_input), rotation_speed * delta)
         # Play tire screech at half volume during stoppie
         if not tire_screech.playing:
@@ -262,12 +304,21 @@ func rotate_mesh_around_pivot(pivot: Vector3, axis: Vector3, angle: float):
 
 
 func update_ui():
-    gear_label.text = "Gear: %d" % current_gear
+    if is_stalled:
+        gear_label.text = "STALLED"
+    else:
+        gear_label.text = "Gear: %d" % current_gear
     speed_label.text = "Speed: %d km/h" % int(speed * 3.6)  # Convert m/s to km/h
 
 
 func update_audio():
     var throttle = Input.get_action_strength("throttle_pct")
+
+    # No engine sound when stalled
+    if is_stalled:
+        if engine_sound.playing:
+            engine_sound.stop()
+        return
 
     # Engine runs when moving or throttle applied
     if speed > 0.5 or throttle > 0:
@@ -328,11 +379,15 @@ func check_crash_conditions(delta):
     # At low speed: very high threshold (hard to crash)
     # At high speed: low threshold (easy to crash)
     var speed_factor = clamp(speed / max_speed, 0.0, 1.0)
-    var dynamic_brake_threshold = crash_brake_rate_threshold * (1.0 + (1.0 - speed_factor) * 4.0)  # 5x threshold at low speed
-    if brake_rate > dynamic_brake_threshold and speed > 5:
+    var dynamic_brake_threshold = crash_brake_rate_threshold * (1.0 + (1.0 - speed_factor) * 9.0)  # 10x threshold at low speed
+    if brake_rate > dynamic_brake_threshold and speed > 10:
         crash_reason = "brake"
         crash_pitch_direction = 0
-        crash_lean_direction = 1 if randf() > 0.5 else -1
+        # Fall in steering direction, or random if not steering
+        if steering_angle != 0:
+            crash_lean_direction = sign(steering_angle)
+        else:
+            crash_lean_direction = 1 if randf() > 0.5 else -1
         # Play tire screech at full volume for brake crash
         tire_screech.volume_db = 0.0
         tire_screech.play()
@@ -392,4 +447,5 @@ func respawn():
     crash_lean_direction = 0.0
     current_gear = 1
     current_rpm = idle_rpm
+    is_stalled = false
     mesh.transform = Transform3D.IDENTITY

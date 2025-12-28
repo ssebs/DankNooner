@@ -37,12 +37,12 @@ shape = SubResource("BoxShape3D_ujl86")
 [node name="EngineSound" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
 stream = ExtResource("3_ppvd4")
-volume_db = -8.0
+volume_db = -10.0
 
 [node name="TireScreechSound" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
 stream = ExtResource("4_fi808")
-volume_db = -5.0
+volume_db = -8.0
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.99976206, 0.0049999002, -0.021233825, 0, 0.9733793, 0.22920032, 0.021814544, -0.22914577, 0.9731477, -0.23836821, 1.2938731, 2.1143897)
