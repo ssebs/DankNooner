@@ -15,6 +15,10 @@ signal tire_screech_stop
 @export var fishtail_speed: float = 8.0
 @export var fishtail_recovery_speed: float = 3.0
 
+# Component references
+@onready var bike_physics: BikePhysics = %BikePhysics
+@onready var bike_steering: BikeSteering = %BikeSteering
+
 # Skid marks
 const SKID_SPAWN_INTERVAL: float = 0.025
 var skid_spawn_timer: float = 0.0
@@ -26,11 +30,6 @@ var fishtail_angle: float = 0.0
 # Input tracking for clutch dump detection
 var last_throttle_input: float = 0.0
 var last_clutch_input: float = 0.0
-
-# External state (set by parent)
-var speed: float = 0.0
-var steering_angle: float = 0.0
-var max_steering_angle: float = deg_to_rad(35)
 
 
 func handle_wheelie_stoppie(delta, rpm_ratio: float, clutch_value: float, is_turning: bool):
@@ -55,7 +54,7 @@ func handle_wheelie_stoppie(delta, rpm_ratio: float, clutch_value: float, is_tur
 	var at_high_rpm = rpm_ratio > 0.85
 	var can_pop_wheelie = lean_input > 0.3 and throttle > 0.7 and (at_high_rpm or clutch_dump)
 
-	if speed > 1 and (is_in_wheelie or (can_pop_wheelie and can_start_trick)):
+	if bike_physics.speed > 1 and (is_in_wheelie or (can_pop_wheelie and can_start_trick)):
 		if throttle > 0.3:
 			wheelie_target = max_wheelie_angle * throttle * (1.0 - total_brake)
 			wheelie_target += max_wheelie_angle * lean_input * 0.15
@@ -63,7 +62,7 @@ func handle_wheelie_stoppie(delta, rpm_ratio: float, clutch_value: float, is_tur
 	# Stoppie logic
 	var stoppie_target = 0.0
 	var wants_stoppie = lean_input < -0.3 and front_brake > 0.7
-	if speed > 1 and (is_in_stoppie or (wants_stoppie and can_start_trick)):
+	if bike_physics.speed > 1 and (is_in_stoppie or (wants_stoppie and can_start_trick)):
 		stoppie_target = -max_stoppie_angle * front_brake * (1.0 - throttle * 0.5)
 		stoppie_target += -max_stoppie_angle * (-lean_input) * 0.15
 
@@ -83,7 +82,7 @@ func handle_wheelie_stoppie(delta, rpm_ratio: float, clutch_value: float, is_tur
 
 func handle_skidding(delta, rear_wheel_position: Vector3, bike_rotation: Vector3, is_on_floor: bool):
 	var rear_brake = Input.get_action_strength("brake_rear")
-	var is_skidding = rear_brake > 0.5 and speed > 2 and is_on_floor
+	var is_skidding = rear_brake > 0.5 and bike_physics.speed > 2 and is_on_floor
 
 	if is_skidding:
 		# Spawn skid marks
@@ -93,10 +92,10 @@ func handle_skidding(delta, rear_wheel_position: Vector3, bike_rotation: Vector3
 			skid_mark_requested.emit(rear_wheel_position, bike_rotation)
 
 		# Fishtail calculation
-		var steer_influence = steering_angle / max_steering_angle
+		var steer_influence = bike_steering.steering_angle / bike_steering.max_steering_angle
 		var target_fishtail = -steer_influence * max_fishtail_angle * rear_brake
 
-		var speed_factor = clamp(speed / 20.0, 0.5, 1.5)
+		var speed_factor = clamp(bike_physics.speed / 20.0, 0.5, 1.5)
 		target_fishtail *= speed_factor
 
 		if abs(fishtail_angle) > deg_to_rad(15):

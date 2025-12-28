@@ -9,6 +9,10 @@ signal respawned
 @export var crash_lean_threshold: float = deg_to_rad(80)
 @export var respawn_delay: float = 2.0
 
+# Component references
+@onready var bike_physics: BikePhysics = %BikePhysics
+@onready var bike_steering: BikeSteering = %BikeSteering
+
 # State
 var is_crashed: bool = false
 var crash_timer: float = 0.0
@@ -16,11 +20,6 @@ var crash_pitch_direction: float = 0.0
 var crash_lean_direction: float = 0.0
 var front_brake_hold_time: float = 0.0
 var brake_danger_level: float = 0.0
-
-# External state (set by parent)
-var speed: float = 0.0
-var max_speed: float = 60.0
-var max_steering_angle: float = deg_to_rad(35)
 
 
 func check_crash_conditions(delta, pitch_angle: float, lean_angle: float, idle_tip_angle: float,
@@ -63,14 +62,14 @@ func check_crash_conditions(delta, pitch_angle: float, lean_angle: float, idle_t
 
 func _update_brake_danger(delta, front_brake: float, steering_angle: float, lean_angle: float) -> bool:
 	"""Returns true if brake crash should occur"""
-	if front_brake > 0.7 and speed > 20:
+	if front_brake > 0.7 and bike_physics.speed > 20:
 		front_brake_hold_time += delta
 
-		var turn_factor = abs(steering_angle) / max_steering_angle
+		var turn_factor = abs(steering_angle) / bike_steering.max_steering_angle
 		var lean_factor = abs(lean_angle) / crash_lean_threshold
 		var instability = max(turn_factor, lean_factor)
 
-		var speed_factor = clamp((speed - 20) / (max_speed - 20), 0.0, 1.0)
+		var speed_factor = clamp((bike_physics.speed - 20) / (bike_physics.max_speed - 20), 0.0, 1.0)
 		var base_threshold = 0.5 * (1.0 - speed_factor * 0.3)
 		var crash_time_threshold = base_threshold * (1.0 - instability * 0.7)
 
@@ -94,10 +93,10 @@ func _update_brake_danger(delta, front_brake: float, steering_angle: float, lean
 func should_force_stoppie() -> bool:
 	"""Returns true if brake danger should force into stoppie"""
 	var front_brake = Input.get_action_strength("brake_front_pct")
-	var steering_angle = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
+	var steer_input = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
 
-	if front_brake > 0.7 and speed > 20 and brake_danger_level >= 1.0:
-		var turn_factor = abs(steering_angle)
+	if front_brake > 0.7 and bike_physics.speed > 20 and brake_danger_level >= 1.0:
+		var turn_factor = abs(steer_input)
 		return turn_factor <= 0.3  # Only when going straight
 	return false
 
@@ -114,7 +113,7 @@ func handle_crash_state(delta) -> bool:
 
 	# Lowside respawn condition: when bike stops
 	if crash_lean_direction != 0 and crash_pitch_direction == 0:
-		if speed < 0.1:
+		if bike_physics.speed < 0.1:
 			return true
 	else:
 		# Wheelie/stoppie crashes: use timer

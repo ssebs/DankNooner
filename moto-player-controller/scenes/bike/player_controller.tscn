@@ -20,25 +20,32 @@ script = ExtResource("1_5uol1")
 
 [node name="Functionality" type="Node" parent="."]
 
+[node name="BikePhysics" type="Node" parent="Functionality"]
+unique_name_in_owner = true
+script = ExtResource("8_physics")
+
 [node name="BikeGearing" type="Node" parent="Functionality"]
+unique_name_in_owner = true
 script = ExtResource("5_gearing")
 
 [node name="BikeSteering" type="Node" parent="Functionality"]
+unique_name_in_owner = true
 script = ExtResource("6_steering")
 
 [node name="BikeTricks" type="Node" parent="Functionality"]
+unique_name_in_owner = true
 script = ExtResource("7_tricks")
 
-[node name="BikePhysics" type="Node" parent="Functionality"]
-script = ExtResource("8_physics")
-
 [node name="BikeCrash" type="Node" parent="Functionality"]
+unique_name_in_owner = true
 script = ExtResource("9_crash")
 
 [node name="BikeAudio" type="Node" parent="Functionality"]
+unique_name_in_owner = true
 script = ExtResource("10_audio")
 
 [node name="BikeUI" type="Node" parent="Functionality"]
+unique_name_in_owner = true
 script = ExtResource("11_ui")
 
 [node name="Markers" type="Node3D" parent="."]
