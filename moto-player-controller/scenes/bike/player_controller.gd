@@ -43,6 +43,8 @@ func _ready():
     bike_tricks.skid_mark_requested.connect(_on_skid_mark_requested)
     bike_tricks.tire_screech_start.connect(_on_tire_screech_start)
     bike_tricks.tire_screech_stop.connect(_on_tire_screech_stop)
+    bike_tricks.stoppie_stopped.connect(_on_stoppie_stopped)
+    bike_physics.brake_stopped.connect(_on_brake_stopped)
     bike_crash.crashed.connect(_on_crashed)
 
 func _physics_process(delta):
@@ -66,7 +68,8 @@ func _physics_process(delta):
         bike_gearing.get_power_output(throttle),
         bike_gearing.get_max_speed_for_gear(),
         bike_gearing.clutch_value,
-        bike_gearing.is_stalled
+        bike_gearing.is_stalled,
+        bike_crash.is_front_wheel_locked()
     )
 
     # Steering
@@ -78,12 +81,16 @@ func _physics_process(delta):
         delta,
         bike_gearing.get_rpm_ratio(),
         bike_gearing.clutch_value,
-        bike_steering.is_turning()
+        bike_steering.is_turning(),
+        bike_crash.is_front_wheel_locked()
     )
     bike_tricks.handle_skidding(delta, rear_wheel.global_position, global_rotation, is_on_floor())
 
     # Idle tipping
     bike_physics.handle_idle_tipping(delta, throttle, steer_input, bike_steering.lean_angle)
+
+    # Check for controlled brake stop
+    bike_physics.check_brake_stop(bike_steering.steering_angle, bike_steering.lean_angle)
 
     # Crash detection
     bike_crash.check_crash_conditions(
@@ -209,6 +216,20 @@ func _on_tire_screech_start(volume: float):
 
 func _on_tire_screech_stop():
     bike_audio.stop_tire_screech()
+
+
+func _on_stoppie_stopped():
+    # Soft reset: like stalling but keep engine running
+    bike_steering.reset()
+    bike_physics.speed = 0.0
+    bike_physics.idle_tip_angle = 0.0
+    velocity = Vector3.ZERO
+
+
+func _on_brake_stopped():
+    # Soft reset: bike stopped via braking while upright
+    bike_steering.reset()
+    velocity = Vector3.ZERO
 
 
 func _on_crashed(pitch_dir: float, lean_dir: float):

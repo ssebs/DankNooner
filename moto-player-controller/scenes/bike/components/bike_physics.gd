@@ -1,5 +1,7 @@
 class_name BikePhysics extends Node
 
+signal brake_stopped  # Emitted when bike comes to a controlled stop via braking
+
 # Movement tuning
 @export var max_speed: float = 60.0
 @export var acceleration: float = 15.0
@@ -22,11 +24,16 @@ var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 
 func handle_acceleration(delta, throttle: float, front_brake: float, rear_brake: float,
-						  power_output: float, gear_max_speed: float, clutch_engaged: float, is_stalled: bool):
+						  power_output: float, gear_max_speed: float, clutch_engaged: float, is_stalled: bool,
+						  front_wheel_locked: bool = false):
 	# Brake first
 	var total_brake = clamp(front_brake + rear_brake, 0, 1)
 	if total_brake > 0:
-		speed = move_toward(speed, 0, brake_strength * total_brake * delta)
+		# Front wheel lock reduces braking effectiveness (skidding is worse than rolling)
+		var brake_effectiveness = 1.0
+		if front_wheel_locked:
+			brake_effectiveness = 0.6  # Locked wheel = 60% as effective
+		speed = move_toward(speed, 0, brake_strength * total_brake * brake_effectiveness * delta)
 
 	# Can't accelerate when stalled
 	if is_stalled:
@@ -121,6 +128,27 @@ func handle_idle_tipping(delta, throttle: float, steer_input: float, lean_angle:
 
 func apply_fishtail_friction(delta, fishtail_speed_loss: float):
 	speed = move_toward(speed * delta, 0, fishtail_speed_loss)
+
+
+func check_brake_stop(steering_angle: float, lean_angle: float):
+	"""Check if bike just came to a controlled stop via braking"""
+	var front_brake = Input.get_action_strength("brake_front_pct")
+	var rear_brake = Input.get_action_strength("brake_rear")
+	var total_brake = front_brake + rear_brake
+
+	# Conditions for controlled brake stop:
+	# - Speed just dropped to near zero
+	# - Brakes are applied
+	# - No significant steering
+	# - Lean within 15 degrees
+	var is_upright = abs(lean_angle + idle_tip_angle) < deg_to_rad(15)
+	var is_straight = abs(steering_angle) < deg_to_rad(10)
+
+	if speed < 0.5 and total_brake > 0.3 and is_upright and is_straight and has_started_moving:
+		speed = 0.0
+		idle_tip_angle = 0.0
+		has_started_moving = false
+		brake_stopped.emit()
 
 
 func apply_gravity(delta, velocity: Vector3, is_on_floor: bool) -> Vector3:
