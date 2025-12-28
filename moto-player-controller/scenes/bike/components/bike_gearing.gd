@@ -3,7 +3,7 @@ class_name BikeGearing extends Node
 signal gear_changed(new_gear: int)
 signal engine_stalled
 signal engine_started
-signal gear_grind  # Tried to shift without clutch
+signal gear_grind # Tried to shift without clutch
 
 # Gear system
 @export var num_gears: int = 6
@@ -18,7 +18,7 @@ var current_rpm: float = 0.0
 var is_stalled: bool = false
 var clutch_value: float = 0.0
 
-const CLUTCH_SPEED: float = 8.0
+const CLUTCH_SPEED: float = 12.0
 
 # External state (set by parent)
 var speed: float = 0.0
@@ -33,30 +33,23 @@ func update_clutch(delta):
 	var clutch_input = Input.get_action_strength("clutch")
 	clutch_value = move_toward(clutch_value, clutch_input, CLUTCH_SPEED * delta)
 
-
-func handle_gear_shifting() -> bool:
-	"""Returns true if gear grind occurred (for audio feedback)"""
-	var grind_occurred = false
-
+# Checks input for changing gears
+# Emits gear_changed(current_gear) or gear_grind() depending on clutch_value
+func handle_gear_shifting():
 	if Input.is_action_just_pressed("gear_up"):
 		if clutch_value > 0.5:
 			if current_gear < num_gears:
 				current_gear += 1
 				gear_changed.emit(current_gear)
 		else:
-			grind_occurred = true
 			gear_grind.emit()
-
-	if Input.is_action_just_pressed("gear_down"):
+	elif Input.is_action_just_pressed("gear_down"):
 		if clutch_value > 0.5:
 			if current_gear > 1:
 				current_gear -= 1
 				gear_changed.emit(current_gear)
 		else:
-			grind_occurred = true
 			gear_grind.emit()
-
-	return grind_occurred
 
 
 func get_max_speed_for_gear(gear: int = -1) -> float:
@@ -116,7 +109,7 @@ func get_power_output(throttle: float) -> float:
 		return 0.0
 
 	var rpm_ratio = get_rpm_ratio()
-	var power_curve = rpm_ratio * (2.0 - rpm_ratio)  # Peaks around 75% RPM
+	var power_curve = rpm_ratio * (2.0 - rpm_ratio) # Peaks around 75% RPM
 
 	var gear_ratio = gear_ratios[current_gear - 1]
 	var base_ratio = gear_ratios[num_gears - 1]

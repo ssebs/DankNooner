@@ -16,7 +16,7 @@ signal tire_screech_stop
 @export var fishtail_recovery_speed: float = 3.0
 
 # Skid marks
-const SKID_SPAWN_INTERVAL: float = 0.05
+const SKID_SPAWN_INTERVAL: float = 0.025
 var skid_spawn_timer: float = 0.0
 
 # State
@@ -100,7 +100,7 @@ func handle_skidding(delta, rear_wheel_position: Vector3, bike_rotation: Vector3
 		target_fishtail *= speed_factor
 
 		if abs(fishtail_angle) > deg_to_rad(15):
-			target_fishtail *= 1.3  # Amplify once sliding
+			target_fishtail *= 1.1  # Amplify once sliding
 
 		fishtail_angle = move_toward(fishtail_angle, target_fishtail, fishtail_speed * delta)
 

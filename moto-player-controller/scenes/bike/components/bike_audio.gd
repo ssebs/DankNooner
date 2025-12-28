@@ -24,16 +24,16 @@ func setup(engine: AudioStreamPlayer, screech: AudioStreamPlayer):
 
 
 func update_engine_audio(throttle: float):
+	if !engine_sound:
+		return
+	
 	if is_stalled:
-		if engine_sound and engine_sound.playing:
+		if engine_sound.playing:
 			engine_sound.stop()
 		return
 
-	if not engine_sound:
-		return
-
 	if speed > 0.5 or throttle > 0:
-		if not engine_sound.playing:
+		if !engine_sound.playing:
 			engine_sound.play()
 
 		var rpm_ratio = (current_rpm - idle_rpm) / (max_rpm - idle_rpm)
@@ -45,22 +45,29 @@ func update_engine_audio(throttle: float):
 
 
 func play_tire_screech(volume: float):
-	if tire_screech and not tire_screech.playing:
+	if !tire_screech:
+		return
+	if !tire_screech.playing:
 		tire_screech.volume_db = linear_to_db(volume)
 		tire_screech.play()
 
 
 func stop_tire_screech():
-	if tire_screech and tire_screech.playing:
+	if !tire_screech:
+		return
+	if tire_screech.playing:
 		tire_screech.stop()
 
 
 func play_gear_grind():
-	if tire_screech:
-		tire_screech.volume_db = linear_to_db(gear_grind_volume)
-		tire_screech.play()
+	if !tire_screech:
+		return
+	tire_screech.volume_db = linear_to_db(gear_grind_volume)
+	tire_screech.play()
 
 
 func stop_engine():
-	if engine_sound and engine_sound.playing:
+	if !engine_sound:
+		return
+	if engine_sound.playing:
 		engine_sound.stop()

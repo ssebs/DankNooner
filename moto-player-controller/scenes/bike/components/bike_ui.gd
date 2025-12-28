@@ -34,11 +34,11 @@ func update_ui():
 
 
 func _update_labels():
-	if not gear_label or not speed_label:
+	if !gear_label or !speed_label:
 		return
 
 	if is_stalled:
-		gear_label.text = "STALLED"
+		gear_label.text = "STALLED\nGear: %d" % current_gear
 	else:
 		gear_label.text = "Gear: %d" % current_gear
 
@@ -46,7 +46,7 @@ func _update_labels():
 
 
 func _update_bars():
-	if not throttle_bar or not brake_danger_bar:
+	if !throttle_bar or !brake_danger_bar:
 		return
 
 	var throttle = Input.get_action_strength("throttle_pct")
@@ -54,9 +54,9 @@ func _update_bars():
 
 	var rpm_ratio = (current_rpm - idle_rpm) / (max_rpm - idle_rpm)
 	if rpm_ratio > 0.9:
-		throttle_bar.modulate = Color(1.0, 0.2, 0.2)  # Red at redline
+		throttle_bar.modulate = Color(1.0, 0.2, 0.2) # Red at redline
 	else:
-		throttle_bar.modulate = Color(0.2, 0.8, 0.2)  # Green
+		throttle_bar.modulate = Color(0.2, 0.8, 0.2) # Green
 
 	var front_brake = Input.get_action_strength("brake_front_pct")
 	brake_danger_bar.value = front_brake
@@ -71,11 +71,12 @@ func _update_bars():
 func _update_vibration():
 	var weak_total = 0.0
 	var strong_total = 0.0
+	var _brake_vibe_intensity = 2.0
 
 	# Brake danger vibration
 	if brake_danger_level > 0.1:
-		weak_total += brake_danger_level * 1.0
-		strong_total += brake_danger_level * brake_danger_level * 1.0
+		weak_total += brake_danger_level * _brake_vibe_intensity
+		strong_total += brake_danger_level * brake_danger_level * _brake_vibe_intensity
 
 	# Fishtail vibration
 	var fishtail_intensity = abs(fishtail_angle) / max_fishtail_angle
@@ -85,7 +86,7 @@ func _update_vibration():
 
 	# Redline vibration
 	var rpm_ratio = (current_rpm - idle_rpm) / (max_rpm - idle_rpm)
-	if rpm_ratio > 0.85 and not is_stalled:
+	if rpm_ratio > 0.85 and !is_stalled:
 		var redline_intensity = (rpm_ratio - 0.85) / 0.15
 		weak_total += redline_intensity * 0.4
 		strong_total += redline_intensity * 0.2
@@ -94,7 +95,7 @@ func _update_vibration():
 	if weak_total > 0.01 or strong_total > 0.01:
 		Input.start_joy_vibration(0, clamp(weak_total, 0.0, 1.0), clamp(strong_total, 0.0, 1.0), vibration_duration)
 	else:
-		Input.stop_joy_vibration(0)
+		stop_vibration()
 
 
 func stop_vibration():
