@@ -10,12 +10,9 @@ class_name BikeAudio extends Node
 @export var stoppie_volume: float = 0.5
 @export var fishtail_volume: float = 0.7
 
-# External state (set by parent)
-var speed: float = 0.0
-var current_rpm: float = 0.0
-var idle_rpm: float = 1000.0
-var max_rpm: float = 8000.0
-var is_stalled: bool = false
+# Component references
+@onready var bike_physics: BikePhysics = %BikePhysics
+@onready var bike_gearing: BikeGearing = %BikeGearing
 
 
 func setup(engine: AudioStreamPlayer, screech: AudioStreamPlayer):
@@ -27,16 +24,16 @@ func update_engine_audio(throttle: float):
 	if !engine_sound:
 		return
 	
-	if is_stalled:
+	if bike_gearing.is_stalled:
 		if engine_sound.playing:
 			engine_sound.stop()
 		return
 
-	if speed > 0.5 or throttle > 0:
+	if bike_physics.speed > 0.5 or throttle > 0:
 		if !engine_sound.playing:
 			engine_sound.play()
 
-		var rpm_ratio = (current_rpm - idle_rpm) / (max_rpm - idle_rpm)
+		var rpm_ratio = (bike_gearing.current_rpm - bike_gearing.idle_rpm) / (bike_gearing.max_rpm - bike_gearing.idle_rpm)
 		var target_pitch = lerpf(engine_min_pitch, engine_max_pitch, clamp(rpm_ratio, 0.0, 1.0))
 		engine_sound.pitch_scale = target_pitch
 	else:

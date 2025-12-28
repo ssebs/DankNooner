@@ -49,14 +49,14 @@ func handle_acceleration(delta, throttle: float, front_brake: float, rear_brake:
 
 
 func handle_idle_tipping(delta, throttle: float, lean_angle: float, max_lean_angle: float):
-	var low_speed_threshold = 5.0
+	var low_speed_threshold = 10.0
 
 	# Track if bike has ever started moving
 	if speed > 3.0:
 		has_started_moving = true
 
 	# At spawn or standstill before moving, stay upright
-	if not has_started_moving:
+	if !has_started_moving:
 		idle_tip_angle = 0.0
 		return
 
@@ -84,11 +84,11 @@ func handle_idle_tipping(delta, throttle: float, lean_angle: float, max_lean_ang
 
 
 func apply_fishtail_friction(delta, fishtail_speed_loss: float):
-	speed = move_toward(speed, 0, fishtail_speed_loss)
+	speed = move_toward(speed * delta, 0, fishtail_speed_loss)
 
 
 func apply_gravity(delta, velocity: Vector3, is_on_floor: bool) -> Vector3:
-	if not is_on_floor:
+	if !is_on_floor:
 		velocity.y -= gravity * delta
 	return velocity
 
