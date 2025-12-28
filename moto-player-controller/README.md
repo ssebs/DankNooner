@@ -51,6 +51,7 @@
 - [x] Create basic world
 - [x] Create godot project
 - [x] Control map:
+  - [ ] IMG: https://www.padcrafter.com/?templates=Controller+Scheme+1&leftTrigger=Front+Brake&rightTrigger=Throttle&leftBumper=Clutch&leftStick=Steer+%26+Lean&dpadUp=Shift+Up&dpadRight=Shift+Down&aButton=Rear+Brake
   - Gamepad
     - Throttle `throttle_pct`
       - Gamepad: **RT**
