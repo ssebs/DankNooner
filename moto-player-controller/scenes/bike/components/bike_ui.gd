@@ -13,20 +13,20 @@ class_name BikeUI extends Node
 var state: BikeState
 
 
-func setup(bike_state: BikeState, gear: Label, spd: Label, throttle: ProgressBar, brake: ProgressBar, difficulty: Label = null):
+func setup(bike_state: BikeState, gear: Label, spd: Label, throttle: ProgressBar, brake: ProgressBar, difficulty: Label):
 	state = bike_state
 	gear_label = gear
 	speed_label = spd
 	throttle_bar = throttle
 	brake_danger_bar = brake
 	difficulty_label = difficulty
-	_update_difficulty_display()
 
 
 func update_ui(input: BikeInput):
 	_update_labels()
 	_update_bars(input)
 	_update_vibration()
+	_update_difficulty_display()
 
 
 func _update_labels():
@@ -77,13 +77,6 @@ func _update_vibration():
 	if fishtail_intensity > 0.1:
 		weak_total += fishtail_intensity * 0.6
 		strong_total += fishtail_intensity * fishtail_intensity * 0.8
-
-	# # Redline vibration
-	# var rpm_ratio = state.get_rpm_ratio()
-	# if rpm_ratio > 0.85 and !state.is_stalled:
-	#     var redline_intensity = (rpm_ratio - 0.85) / 0.15
-	#     weak_total += redline_intensity * 0.4
-	#     strong_total += redline_intensity * 0.2
 
 	# Apply vibration
 	if weak_total > 0.01 or strong_total > 0.01:

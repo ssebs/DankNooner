@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://j2ul15tv0gig"]
+[gd_scene load_steps=10 format=3 uid="uid://j2ul15tv0gig"]
 
 [ext_resource type="PackedScene" uid="uid://cn1f0g4b2vnrf" path="res://assets/city.glb" id="1_114d3"]
 [ext_resource type="Script" uid="uid://dcgws53fimvpw" path="res://scenes/level/main_level.gd" id="1_sc48v"]
 [ext_resource type="PackedScene" uid="uid://bmqevs0vheol7" path="res://scenes/bike/player_controller.tscn" id="2_p3kgh"]
 [ext_resource type="PackedScene" uid="uid://bdv4bgnhiss2w" path="res://scenes/level/main_menu.tscn" id="3_hv5hi"]
+[ext_resource type="PackedScene" uid="uid://cqu70d4qtshe4" path="res://assets/Albert Park Street Circuit.glb" id="5_o6ikn"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_p3kgh"]
 sky_top_color = Color(0.32572097, 0.30821416, 0.29118663, 1)
@@ -70,3 +71,6 @@ shape = SubResource("WorldBoundaryShape3D_114d3")
 
 [node name="MainMenu" parent="." instance=ExtResource("3_hv5hi")]
 unique_name_in_owner = true
+
+[node name="Albert Park Street Circuit" parent="." instance=ExtResource("5_o6ikn")]
+transform = Transform3D(0.80726945, 0, 0.5901831, 0, 1, 0, -0.5901831, 0, 0.80726945, 175.39331, 0.33003616, -380.81274)

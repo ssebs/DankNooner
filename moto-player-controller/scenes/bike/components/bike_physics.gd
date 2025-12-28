@@ -19,18 +19,18 @@ signal brake_stopped
 @export var max_turn_radius: float = 3.0
 @export var turn_speed: float = 2.0
 
-# Idle tipping
-@export var idle_tip_speed_threshold: float = 10.0
-@export var idle_tip_rate: float = 0.8
+# Fall physics
+@export var fall_rate: float = 1.5  # How fast bike falls over at zero speed
+@export var stability_speed: float = 10.0  # Speed where bike becomes stable
 @export var crash_lean_threshold: float = deg_to_rad(80)
-@export var throttle_recovery_amount: float = 2.0
+@export var countersteer_factor: float = 0.8  # How much lean induces automatic steering
 
 # Shared state
 var state: BikeState
 
 # Local state
 var speed: float = 0.0
-var idle_tip_angle: float = 0.0
+var fall_angle: float = 0.0  # How far bike has fallen over
 var has_started_moving: bool = false
 var steering_angle: float = 0.0
 var lean_angle: float = 0.0
@@ -50,7 +50,7 @@ func sync_to_state():
 	state.speed = speed
 	state.steering_angle = steering_angle
 	state.lean_angle = lean_angle
-	state.idle_tip_angle = idle_tip_angle
+	state.fall_angle = fall_angle
 
 
 func handle_acceleration(delta, input: BikeInput, power_output: float, gear_max_speed: float,
@@ -80,29 +80,31 @@ func handle_acceleration(delta, input: BikeInput, power_output: float, gear_max_
 		speed = move_toward(speed, 0, drag * delta)
 
 
-func handle_idle_tipping(delta, input: BikeInput):
+func handle_fall_physics(delta, _input: BikeInput):
+	"""
+	Simple fall physics:
+	- Below stability_speed: bike falls over at fall_rate
+	- Above stability_speed: bike stays upright
+	"""
 	if speed > 0.25:
 		has_started_moving = true
 
 	if !has_started_moving:
-		idle_tip_angle = 0.0
+		fall_angle = 0.0
 		return
 
-	# Stability from speed (gyroscopic effect)
-	var stability = clamp(speed / idle_tip_speed_threshold, 0.0, 1.0)
+	# How stable is the bike? 0 = falling, 1 = stable
+	var stability = clamp(speed / stability_speed, 0.0, 1.0)
 
-	# Combined lean (steering lean + tip) determines fall direction
-	var total_lean = lean_angle + idle_tip_angle
-
-	# At low speed, gravity pulls bike over - accelerating fall
-	if speed < idle_tip_speed_threshold:
-		# Fall accelerates based on how far you're leaning (like a pendulum)
-		var fall_acceleration = total_lean * idle_tip_rate * (1.0 - stability)
-		idle_tip_angle += fall_acceleration * delta
-
-	# Recovery from throttle (rider stabilizing)
-	if input.throttle > 0:
-		idle_tip_angle = move_toward(idle_tip_angle, 0, input.throttle * throttle_recovery_amount * delta)
+	# Target: upright (0) when stable, keep falling when not
+	if stability > 0.9:
+		# Fast enough - pull upright
+		fall_angle = move_toward(fall_angle, 0, fall_rate * 2.0 * delta)
+	else:
+		# Too slow - fall in current direction
+		var fall_direction = sign(fall_angle) if abs(fall_angle) > 0.01 else sign(lean_angle + 0.001)
+		var fall_strength = (1.0 - stability) * fall_rate
+		fall_angle += fall_direction * fall_strength * delta
 
 
 func apply_fishtail_friction(_delta, fishtail_speed_loss: float):
@@ -110,12 +112,12 @@ func apply_fishtail_friction(_delta, fishtail_speed_loss: float):
 
 
 func check_brake_stop(input: BikeInput):
-	var is_upright = abs(lean_angle + idle_tip_angle) < deg_to_rad(15)
+	var is_upright = abs(lean_angle + fall_angle) < deg_to_rad(15)
 	var is_straight = abs(steering_angle) < deg_to_rad(10)
 
 	if speed < 0.5 and input.total_brake > 0.3 and is_upright and is_straight and has_started_moving:
 		speed = 0.0
-		idle_tip_angle = 0.0
+		fall_angle = 0.0
 		has_started_moving = false
 		brake_stopped.emit()
 
@@ -127,22 +129,42 @@ func apply_gravity(delta, velocity: Vector3, is_on_floor: bool) -> Vector3:
 
 
 func handle_steering(delta, input: BikeInput):
-	# Tip angle pulls steering in that direction (bike falls, bars turn)
-	var tip_induced_steer = - idle_tip_angle * 0.5
-	var target_steer = clamp(max_steering_angle * input.steer + tip_induced_steer, -max_steering_angle, max_steering_angle)
+	"""
+	Countersteering: lean angle induces automatic steering in that direction.
+	When you lean right, the bike naturally steers right (turns into the lean).
+	Steering radius depends on lean angle and speed.
+	"""
+	# Total lean (visual lean + fall) drives automatic countersteer
+	var total_lean = lean_angle + fall_angle
+
+	# Countersteer: lean induces steering in same direction
+	# More lean = tighter turn radius (more steering)
+	var lean_induced_steer = -total_lean * countersteer_factor
+
+	# Player input adds to the automatic countersteer
+	var input_steer = max_steering_angle * input.steer
+
+	# At higher speeds, countersteer effect is stronger (bike turns more from lean)
+	var speed_factor = clamp(speed / 20.0, 0.3, 1.0)
+	var target_steer = clamp(input_steer + lean_induced_steer * speed_factor, -max_steering_angle, max_steering_angle)
 
 	# Smooth interpolation to target
 	steering_angle = lerpf(steering_angle, target_steer, steering_speed * delta)
 
 
 func update_lean(delta, input: BikeInput):
-	# Lean from steering input and turn
+	"""
+	Visual lean angle based on steering and player input.
+	Fall angle is added separately in mesh rotation.
+	"""
+	# Lean from steering (centripetal force in turns)
 	var speed_factor = clamp(speed / 20.0, 0.0, 1.0)
-	var steer_lean = - steering_angle * speed_factor * 1.2
-	var input_lean = - input.steer * max_lean_angle * 0.3
+	var steer_lean = -steering_angle * speed_factor * 1.2
 
-	# Tip angle adds directly to lean
-	var target_lean = steer_lean + input_lean + idle_tip_angle * 0.5
+	# Direct player lean input
+	var input_lean = -input.steer * max_lean_angle * 0.3
+
+	var target_lean = steer_lean + input_lean
 	target_lean = clamp(target_lean, -max_lean_angle, max_lean_angle)
 
 	# Smooth interpolation
@@ -161,7 +183,7 @@ func is_turning() -> bool:
 
 func reset():
 	speed = 0.0
-	idle_tip_angle = 0.0
+	fall_angle = 0.0
 	has_started_moving = false
 	steering_angle = 0.0
 	lean_angle = 0.0

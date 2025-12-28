@@ -6,7 +6,7 @@ var max_speed: float = 60.0
 var steering_angle: float = 0.0
 var max_steering_angle: float = deg_to_rad(35)
 var lean_angle: float = 0.0
-var idle_tip_angle: float = 0.0
+var fall_angle: float = 0.0  # Bike falling over due to lack of gyroscopic stability
 
 # Gearing state
 var current_gear: int = 1

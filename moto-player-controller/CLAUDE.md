@@ -14,7 +14,7 @@ The player controller ([player_controller.gd](scenes/bike/player_controller.gd))
 
 | Component | Responsibility |
 |-----------|----------------|
-| `BikePhysics` | Speed, acceleration, braking, steering, lean angles, gravity |
+| `BikePhysics` | Speed, acceleration, braking, steering, lean angles, countersteering/fall physics, gravity |
 | `BikeGearing` | 6-speed transmission, RPM, clutch engagement, gear shifting |
 | `BikeTricks` | Wheelies, stoppies, fishtail/skid physics, skid mark spawning |
 | `BikeCrash` | Crash detection thresholds, respawn timer, collision handling |
@@ -47,7 +47,7 @@ All physics updates occur in `_physics_process(delta)` with this flow:
 
 ## Key Physics Values
 
-- **BikePhysics:** max_speed=60, acceleration=20, brake_force=25, max_steering=35°, max_lean=45°
+- **BikePhysics:** max_speed=60, acceleration=20, brake_force=25, max_steering=35°, max_lean=45°, gyro_stability_speed=15, fall_acceleration=2.0, countersteer_factor=0.8
 - **BikeGearing:** gear_ratios=[2.8, 1.9, 1.4, 1.1, 0.95, 0.8], idle_rpm=1000, max_rpm=9000
 - **BikeTricks:** max_wheelie=80°, max_stoppie=50°, wheelie_rpm_range=65%-95%
 - **BikeCrash:** wheelie_crash=75°, stoppie_crash=55°, lean_crash=80°

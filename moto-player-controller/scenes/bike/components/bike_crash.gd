@@ -39,7 +39,7 @@ func sync_to_state():
 
 
 func check_crash_conditions(delta, input: BikeInput, pitch_angle: float, lean_angle: float,
-							idle_tip_angle: float, steering_angle: float) -> String:
+							fall_angle: float, steering_angle: float) -> String:
 	"""Returns crash reason or empty string if no crash"""
 	var crash_reason = ""
 
@@ -64,17 +64,17 @@ func check_crash_conditions(delta, input: BikeInput, pitch_angle: float, lean_an
 	# Front brake danger
 	_update_brake_danger(delta, input, steering_angle, lean_angle)
 
-	# Idle tipping over
-	if crash_reason == "" and abs(idle_tip_angle) >= crash_lean_threshold:
-		crash_reason = "idle_tip"
+	# Falling over (gyro instability)
+	if crash_reason == "" and abs(fall_angle) >= crash_lean_threshold:
+		crash_reason = "fall"
 		crash_pitch_direction = 0
-		crash_lean_direction = sign(idle_tip_angle)
+		crash_lean_direction = sign(fall_angle)
 
 	# Total lean too far
-	if crash_reason == "" and abs(lean_angle + idle_tip_angle) >= crash_lean_threshold:
+	if crash_reason == "" and abs(lean_angle + fall_angle) >= crash_lean_threshold:
 		crash_reason = "lean"
 		crash_pitch_direction = 0
-		crash_lean_direction = sign(lean_angle + idle_tip_angle)
+		crash_lean_direction = sign(lean_angle + fall_angle)
 
 	if crash_reason != "":
 		trigger_crash()
@@ -190,14 +190,14 @@ func is_front_wheel_locked() -> bool:
 	return brake_grab_level > BRAKE_GRAB_CRASH_THRESHOLD
 
 
-func check_airborne_crash(lean_angle: float, idle_tip_angle: float, pitch_angle: float) -> bool:
+func check_airborne_crash(lean_angle: float, fall_angle: float, pitch_angle: float) -> bool:
 	"""Check if bike should crash when landing from a jump while leaning"""
-	var total_lean = abs(lean_angle + idle_tip_angle)
+	var total_lean = abs(lean_angle + fall_angle)
 
 	# Crash if leaning too far while airborne - will crash on landing
 	if total_lean > deg_to_rad(45):
 		crash_pitch_direction = 0
-		crash_lean_direction = sign(lean_angle + idle_tip_angle)
+		crash_lean_direction = sign(lean_angle + fall_angle)
 		trigger_crash()
 		return true
 
