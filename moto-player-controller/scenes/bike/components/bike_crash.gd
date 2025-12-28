@@ -190,6 +190,16 @@ func is_front_wheel_locked() -> bool:
 	return brake_grab_level > BRAKE_GRAB_CRASH_THRESHOLD
 
 
+func get_brake_vibration() -> Vector2:
+	"""Returns vibration intensity (weak, strong) for brake danger"""
+	if brake_danger_level > 0.1:
+		var intensity = 2.0
+		var weak = brake_danger_level * intensity
+		var strong = brake_danger_level * brake_danger_level * intensity
+		return Vector2(weak, strong)
+	return Vector2.ZERO
+
+
 func check_airborne_crash(lean_angle: float, fall_angle: float, pitch_angle: float) -> bool:
 	"""Check if bike should crash when landing from a jump while leaning"""
 	var total_lean = abs(lean_angle + fall_angle)

@@ -183,6 +183,16 @@ func force_pitch(target: float, rate: float, delta):
 	pitch_angle = move_toward(pitch_angle, target, rate * delta)
 
 
+func get_fishtail_vibration() -> Vector2:
+	"""Returns vibration intensity (weak, strong) for fishtail skidding"""
+	var fishtail_intensity = abs(fishtail_angle) / max_fishtail_angle if max_fishtail_angle > 0 else 0.0
+	if fishtail_intensity > 0.1:
+		var weak = fishtail_intensity * 0.6
+		var strong = fishtail_intensity * fishtail_intensity * 0.8
+		return Vector2(weak, strong)
+	return Vector2.ZERO
+
+
 func reset():
 	pitch_angle = 0.0
 	fishtail_angle = 0.0
