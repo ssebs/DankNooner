@@ -24,26 +24,37 @@ The player controller ([player_controller.gd](scenes/bike/player_controller.gd))
 ### Communication Pattern
 
 Components communicate via Godot signals. Key signal flows:
+- `bike_input.*_changed` signals → components receive input state
 - `bike_gearing.gear_grind` → `bike_audio.play_gear_grind()`
-- `bike_tricks.skid_mark_requested` → spawns Decal in scene
 - `bike_crash.crashed` → triggers crash animation and respawn
+
+### Input System
+
+`BikeInput` emits signals for all input state changes each physics frame:
+- `throttle_changed(value)`, `front_brake_changed(value)`, `rear_brake_changed(value)`
+- `steer_changed(value)`, `lean_changed(value)`
+- `clutch_held_changed(held, just_pressed)`
+- `gear_up_pressed`, `gear_down_pressed`, `difficulty_toggled`
+
+Components subscribe to these signals in their `setup()` function and store input values locally. This decouples components from direct input access.
 
 ### Node References
 
-Uses Godot's unique name syntax (`%NodeName`) for reliable node access. Components receive their dependencies via `setup()` calls in `_ready()`.
+Uses Godot's unique name syntax (`%NodeName`) for reliable node access. Components receive shared state, physics reference, and input signals via `setup()` calls in `_ready()`.
 
 ### Physics Loop
 
 All physics updates occur in `_physics_process(delta)` with this flow:
 1. Check crash state (early return if crashed)
-2. Gather input
-3. Update gearing/RPM
-4. Physics calculations (acceleration, steering, lean)
-5. Trick handling (wheelies, stoppies, skidding)
-6. Crash detection
-7. Apply movement and mesh rotation
-8. Update audio/UI
-9. `move_and_slide()` and ground alignment
+2. Update gearing/RPM
+3. Physics calculations (acceleration, steering, lean)
+4. Trick handling (wheelies, stoppies, skidding)
+5. Crash detection
+6. Apply movement and mesh rotation
+7. Update audio/UI
+8. `move_and_slide()` and ground alignment
+
+Note: Input is gathered via signals from `BikeInput` which updates in its own `_physics_process()`.
 
 ## Key Physics Values
 
