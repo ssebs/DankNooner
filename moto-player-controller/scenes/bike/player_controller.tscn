@@ -1,8 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://bmqevs0vheol7"]
+[gd_scene load_steps=17 format=3 uid="uid://bmqevs0vheol7"]
 
 [ext_resource type="Script" uid="uid://c331s8cm2gjtp" path="res://scenes/bike/player_controller.gd" id="1_5uol1"]
 [ext_resource type="PackedScene" uid="uid://7etgly8gokpl" path="res://assets/bikes/GoogleMotorcycleSportbike.glb" id="1_ujl86"]
 [ext_resource type="PackedScene" uid="uid://cou3wm3hydmdp" path="res://assets/characters/Animated Men Characters - Feb 2019/Male_Shirt.glb" id="3_sdhfr"]
+[ext_resource type="Script" uid="uid://ct5kbf1mujm7r" path="res://scenes/bike/components/player_animation_controller.gd" id="4_n1tms"]
 [ext_resource type="Script" uid="uid://l500tpp42su8" path="res://scenes/bike/components/bike_gearing.gd" id="5_gearing"]
 [ext_resource type="Script" uid="uid://bpqhimqk1dt2d" path="res://scenes/bike/components/bike_tricks.gd" id="7_tricks"]
 [ext_resource type="Script" uid="uid://cgy5mk1x6lanu" path="res://scenes/bike/components/bike_physics.gd" id="8_physics"]
@@ -78,6 +79,10 @@ bones/38/position = Vector3(-0.44756043, 0.0600924, -0.08570628)
 bones/38/rotation = Quaternion(-0.05649689, 0.69339544, 0.7162534, 0.054699033)
 
 [node name="Functionality" type="Node" parent="."]
+
+[node name="PlayerAnimationController" type="Node" parent="Functionality"]
+unique_name_in_owner = true
+script = ExtResource("4_n1tms")
 
 [node name="BikeInput" type="Node" parent="Functionality"]
 unique_name_in_owner = true
