@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bmqevs0vheol7"]
+[gd_scene load_steps=15 format=3 uid="uid://bmqevs0vheol7"]
 
 [ext_resource type="Script" uid="uid://c331s8cm2gjtp" path="res://scenes/bike/player_controller.gd" id="1_5uol1"]
 [ext_resource type="PackedScene" uid="uid://7etgly8gokpl" path="res://assets/bikes/GoogleMotorcycleSportbike.glb" id="1_ujl86"]
@@ -10,6 +10,7 @@
 [ext_resource type="AudioStream" uid="uid://dn6ey2jxm33vt" path="res://assets/motorcycle-stable-rpm.ogg" id="10_t042m"]
 [ext_resource type="AudioStream" uid="uid://c61khm016rfjr" path="res://assets/tire-screech-short.ogg" id="11_pgn4o"]
 [ext_resource type="Script" uid="uid://pc1xy500s1vu" path="res://scenes/bike/components/bike_ui.gd" id="11_ui"]
+[ext_resource type="AudioStream" uid="uid://fghbqufnqde0" path="res://assets/exhaust-pops.ogg" id="12_nkid5"]
 [ext_resource type="AudioStream" uid="uid://tkuif41xejv4" path="res://assets/grinding-gear.ogg" id="12_pgn4o"]
 [ext_resource type="Script" uid="uid://deoncd44247pm" path="res://scenes/bike/components/bike_input.gd" id="13_input"]
 
@@ -19,6 +20,8 @@ size = Vector3(0.68, 1.05, 2)
 [node name="PlayerController" type="CharacterBody3D"]
 collision_mask = 3
 script = ExtResource("1_5uol1")
+skidmark_texture = null
+ground_align_speed = null
 
 [node name="Functionality" type="Node" parent="."]
 
@@ -68,6 +71,11 @@ pitch_scale = 0.9
 unique_name_in_owner = true
 stream = ExtResource("12_pgn4o")
 volume_db = -10.0
+
+[node name="ExhaustPopsSound" type="AudioStreamPlayer" parent="Sounds"]
+unique_name_in_owner = true
+stream = ExtResource("12_nkid5")
+volume_db = 2.5
 
 [node name="Markers" type="Node3D" parent="."]
 

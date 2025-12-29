@@ -5,15 +5,15 @@ signal brake_stopped
 
 # Movement tuning
 @export var max_speed: float = 60.0
-@export var acceleration: float = 20.0
+@export var acceleration: float = 15.0
 @export var brake_strength: float = 25.0
-@export var friction: float = 5.0
+@export var friction: float = 8.0
 
 # Steering tuning
 @export var steering_speed: float = 4.0
 @export var max_steering_angle: float = deg_to_rad(35)
 @export var max_lean_angle: float = deg_to_rad(45)
-@export var lean_speed: float = 2.5
+@export var lean_speed: float = 3.5
 
 # Turn radius
 @export var min_turn_radius: float = 0.25
@@ -21,10 +21,10 @@ signal brake_stopped
 @export var turn_speed: float = 2.0
 
 # Fall physics
-@export var fall_rate: float = 1.5 # How fast bike falls over at zero speed
+@export var fall_rate: float = 0.5 # How fast bike falls over at zero speed
 @export var stability_speed: float = 10.0 # Speed where bike becomes stable
 @export var crash_lean_threshold: float = deg_to_rad(80)
-@export var countersteer_factor: float = 0.8 # How much lean induces automatic steering
+@export var countersteer_factor: float = 1.2 # How much lean induces automatic steering
 
 # Shared state
 var state: BikeState
