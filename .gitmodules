@@ -1,3 +1,7 @@
 [submodule "multiplayer-poc-godot"]
 	path = multiplayer-poc-godot
 	url = https://github.com/ssebs/multiplayer-poc-godot.git
+
+[submodule "moto-player-controller-godot"]
+	path = moto-player-controller-godot
+	url = https://github.com/ssebs/moto-player-controller-godot.git
