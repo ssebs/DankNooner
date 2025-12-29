@@ -31,18 +31,12 @@ shape = SubResource("CapsuleShape3D_nkid5")
 transform = Transform3D(0.99976206, 0.0049999, -0.021233829, 0.0005158487, 0.9676885, 0.25214824, 0.021808447, -0.25209916, 0.9674557, -0.23836821, 1.2938731, 2.5680387)
 fov = 70.0
 
-[node name="Mesh" type="Node3D" parent="."]
-unique_name_in_owner = true
+[node name="CharacterMesh" type="Node3D" parent="."]
 
-[node name="GoogleMotorcycleSportbike" parent="Mesh" instance=ExtResource("1_ujl86")]
-transform = Transform3D(0.015421053, 0, 0, 0, 0.015421053, 0, 0, 0, 0.015421053, 0, 0, 0)
+[node name="Male_Shirt" parent="CharacterMesh" instance=ExtResource("3_sdhfr")]
+transform = Transform3D(-0.3, 0, 0, 0, 0.3, 0, 0, 0, -0.3, 0, 0, 0)
 
-[node name="CharacterMesh" type="Node3D" parent="Mesh"]
-
-[node name="Male_Shirt" parent="Mesh/CharacterMesh" instance=ExtResource("3_sdhfr")]
-transform = Transform3D(-0.3, 0, -2.6226834e-08, 0, 0.3, 0, 2.6226834e-08, 0, -0.3, 0, 0, 0)
-
-[node name="Skeleton3D" parent="Mesh/CharacterMesh/Male_Shirt/HumanArmature" index="0"]
+[node name="Skeleton3D" parent="CharacterMesh/Male_Shirt/HumanArmature" index="0"]
 bones/1/position = Vector3(0.42588353, 0.060092404, -0.13045949)
 bones/1/rotation = Quaternion(0.12549406, 0.6848578, 0.70743346, -0.12148646)
 bones/3/position = Vector3(0.006549302, 2.0757346, 0.29191217)
@@ -77,6 +71,12 @@ bones/33/rotation = Quaternion(0.9942129, -0.029265786, -0.01727251, 0.10191173)
 bones/34/rotation = Quaternion(0.24500185, -1.0981002e-07, 2.5184544e-08, 0.96952266)
 bones/38/position = Vector3(-0.44756043, 0.0600924, -0.08570628)
 bones/38/rotation = Quaternion(-0.05649689, 0.69339544, 0.7162534, 0.054699033)
+
+[node name="Mesh" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="GoogleMotorcycleSportbike" parent="Mesh" instance=ExtResource("1_ujl86")]
+transform = Transform3D(0.015421053, 0, 0, 0, 0.015421053, 0, 0, 0, 0.015421053, 0, 0, 0)
 
 [node name="Functionality" type="Node" parent="."]
 
@@ -226,4 +226,4 @@ layout_mode = 2
 size_flags_horizontal = 8
 text = "Easy"
 
-[editable path="Mesh/CharacterMesh/Male_Shirt"]
+[editable path="CharacterMesh/Male_Shirt"]

@@ -9,6 +9,12 @@ class_name PlayerController extends CharacterBody3D
 @onready var engine_grind: AudioStreamPlayer = %EngineGrindSound
 @onready var exhaust_pops: AudioStreamPlayer = %ExhaustPopsSound
 
+# Character markers and skeleton
+@onready var right_handlebar_marker: Marker3D = %RightHandleBarMarker
+@onready var left_handlebar_marker: Marker3D = %LeftHandleBarMarker
+@onready var seat_marker: Marker3D = %SeatMarker
+@onready var character_skeleton: Skeleton3D = $CharacterMesh/Male_Shirt/HumanArmature/Skeleton3D
+
 @onready var gear_label: Label = %GearLabel
 @onready var speed_label: Label = %SpeedLabel
 @onready var throttle_bar: ProgressBar = %ThrottleBar
@@ -24,6 +30,7 @@ class_name PlayerController extends CharacterBody3D
 @onready var bike_crash: BikeCrash = %BikeCrash
 @onready var bike_audio: BikeAudio = %BikeAudio
 @onready var bike_ui: BikeUI = %BikeUI
+@onready var player_animation: PlayerAnimationController = %PlayerAnimationController
 
 # Shared state
 var state: BikeState = BikeState.new()
@@ -47,6 +54,7 @@ func _ready():
     bike_crash.setup(state, bike_physics, bike_input)
     bike_audio.setup(state, bike_input, engine_sound, tire_screech, engine_grind, exhaust_pops)
     bike_ui.setup(state, bike_input, bike_crash, bike_tricks, gear_label, speed_label, throttle_bar, brake_danger_bar, clutch_bar, difficulty_label)
+    player_animation.setup(state, bike_input, character_skeleton, right_handlebar_marker, left_handlebar_marker, seat_marker)
 
     # Connect component signals
     bike_gearing.gear_grind.connect(_on_gear_grind)
@@ -236,6 +244,7 @@ func _respawn():
     bike_tricks.reset()
     bike_crash.reset()
     bike_input.reset()
+    player_animation.reset()
 
 
 # Signal handlers
