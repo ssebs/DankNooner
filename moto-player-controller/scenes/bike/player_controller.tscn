@@ -14,12 +14,26 @@
 [ext_resource type="AudioStream" uid="uid://tkuif41xejv4" path="res://assets/grinding-gear.ogg" id="12_pgn4o"]
 [ext_resource type="Script" uid="uid://deoncd44247pm" path="res://scenes/bike/components/bike_input.gd" id="13_input"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_ujl86"]
-size = Vector3(0.68, 1.05, 2)
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_nkid5"]
+radius = 0.4
 
 [node name="PlayerController" type="CharacterBody3D"]
 collision_mask = 3
 script = ExtResource("1_5uol1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.4, 0)
+shape = SubResource("CapsuleShape3D_nkid5")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.99976206, 0.0049999, -0.021233829, 0.0005158487, 0.9676885, 0.25214824, 0.021808447, -0.25209916, 0.9674557, -0.23836821, 1.2938731, 2.5680387)
+fov = 70.0
+
+[node name="Mesh" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="GoogleMotorcycleSportbike" parent="Mesh" instance=ExtResource("1_ujl86")]
+transform = Transform3D(0.015421053, 0, 0, 0, 0.015421053, 0, 0, 0, 0.015421053, 0, 0, 0)
 
 [node name="Functionality" type="Node" parent="."]
 
@@ -87,20 +101,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.7181249)
 
 [node name="OriginMarker" type="Marker3D" parent="Markers"]
 unique_name_in_owner = true
-
-[node name="Mesh" type="Node3D" parent="."]
-unique_name_in_owner = true
-
-[node name="GoogleMotorcycleSportbike" parent="Mesh" instance=ExtResource("1_ujl86")]
-transform = Transform3D(0.015421053, 0, 0, 0, 0.015421053, 0, 0, 0, 0.015421053, 0, 0, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.525, 0)
-shape = SubResource("BoxShape3D_ujl86")
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.999762, 0.0049998993, -0.021233821, 0.00051584863, 0.9676885, 0.25214824, 0.021808445, -0.25209916, 0.9674556, -0.23836821, 1.2938731, 2.5680387)
-fov = 70.0
 
 [node name="MotoUI" type="MarginContainer" parent="."]
 anchors_preset = 15

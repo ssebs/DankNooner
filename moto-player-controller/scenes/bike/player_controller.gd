@@ -40,12 +40,12 @@ func _ready():
     spawn_position = global_position
     spawn_rotation = rotation
 
-    # Setup all components with shared state
-    bike_physics.setup(state)
-    bike_gearing.setup(state, bike_physics)
-    bike_tricks.setup(state, bike_physics)
-    bike_crash.setup(state, bike_physics)
-    bike_audio.setup(state, engine_sound, tire_screech, engine_grind, exhaust_pops)
+    # Setup all components with shared state and input signals
+    bike_physics.setup(state, bike_input)
+    bike_gearing.setup(state, bike_physics, bike_input)
+    bike_tricks.setup(state, bike_physics, bike_input)
+    bike_crash.setup(state, bike_physics, bike_input)
+    bike_audio.setup(state, bike_input, engine_sound, tire_screech, engine_grind, exhaust_pops)
     bike_ui.setup(state, bike_input, bike_crash, bike_tricks, gear_label, speed_label, throttle_bar, brake_danger_bar, clutch_bar, difficulty_label)
 
     # Connect component signals
@@ -65,32 +65,31 @@ func _physics_process(delta):
         return
 
     # Gearing
-    bike_gearing.update_clutch(delta, bike_input)
-    bike_gearing.handle_gear_shifting(bike_input)
-    bike_gearing.update_rpm(delta, bike_input)
+    bike_gearing.update_clutch(delta)
+    bike_gearing.update_rpm(delta)
 
     # Physics / acceleration
     bike_physics.handle_acceleration(
-        delta, bike_input,
-        bike_gearing.get_power_output(bike_input.throttle),
+        delta,
+        bike_gearing.get_power_output(),
         bike_gearing.get_max_speed_for_gear(),
         bike_crash.is_front_wheel_locked()
     )
 
     # Steering and lean
-    bike_physics.handle_steering(delta, bike_input)
-    bike_physics.update_lean(delta, bike_input)
-    bike_physics.handle_fall_physics(delta, bike_input)
+    bike_physics.handle_steering(delta)
+    bike_physics.update_lean(delta)
+    bike_physics.handle_fall_physics(delta)
 
     # Tricks (wheelies, stoppies, skidding)
     bike_tricks.handle_wheelie_stoppie(
-        delta, bike_input,
+        delta,
         bike_gearing.get_rpm_ratio(),
         bike_crash.is_front_wheel_locked(),
         !is_on_floor()
     )
     bike_tricks.handle_skidding(
-        delta, bike_input,
+        delta,
         bike_crash.is_front_wheel_locked(),
         rear_wheel.global_position,
         front_wheel.global_position,
@@ -99,15 +98,15 @@ func _physics_process(delta):
     )
 
     # Check for controlled brake stop
-    bike_physics.check_brake_stop(bike_input)
+    bike_physics.check_brake_stop()
 
     # Crash detection
     if is_on_floor():
-        bike_crash.check_crash_conditions(delta, bike_input)
+        bike_crash.check_crash_conditions(delta)
 
 
     # Force stoppie if brake danger while going straight
-    if bike_crash.should_force_stoppie(bike_input):
+    if bike_crash.should_force_stoppie():
         bike_tricks.force_pitch(-bike_crash.crash_stoppie_threshold * 1.2, 4.0, delta)
 
     # Movement
@@ -115,8 +114,8 @@ func _physics_process(delta):
     _apply_mesh_rotation()
 
     # Audio and UI
-    bike_audio.update_engine_audio(delta, bike_input, bike_gearing.get_rpm_ratio())
-    bike_ui.update_ui(bike_input, bike_gearing.get_rpm_ratio())
+    bike_audio.update_engine_audio(delta, bike_gearing.get_rpm_ratio())
+    bike_ui.update_ui(bike_gearing.get_rpm_ratio())
 
     move_and_slide()
 

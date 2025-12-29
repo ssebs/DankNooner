@@ -24,19 +24,51 @@ signal gear_grind # Tried to shift without clutch
 var state: BikeState
 var bike_physics: BikePhysics
 
+# Input state (from signals)
+var throttle: float = 0.0
+var clutch_held: bool = false
+var clutch_just_pressed: bool = false
+
 # Local state
 var clutch_hold_time: float = 0.0
 
 
-func setup(bike_state: BikeState, physics: BikePhysics):
+func setup(bike_state: BikeState, physics: BikePhysics, input: BikeInput):
     state = bike_state
     bike_physics = physics
+    input.throttle_changed.connect(func(v): throttle = v)
+    input.clutch_held_changed.connect(_on_clutch_input)
+    input.gear_up_pressed.connect(_on_gear_up)
+    input.gear_down_pressed.connect(_on_gear_down)
 
 
-func update_clutch(delta: float, input: BikeInput):
-    if input.clutch_held:
+func _on_clutch_input(held: bool, just_pressed: bool):
+    clutch_held = held
+    clutch_just_pressed = just_pressed
+
+
+func _on_gear_up():
+    if state.clutch_value > gear_shift_threshold || state.is_easy_mode:
+        if state.current_gear < num_gears:
+            state.current_gear += 1
+            gear_changed.emit(state.current_gear)
+    else:
+        gear_grind.emit()
+
+
+func _on_gear_down():
+    if state.clutch_value > gear_shift_threshold || state.is_easy_mode:
+        if state.current_gear > 1:
+            state.current_gear -= 1
+            gear_changed.emit(state.current_gear)
+    else:
+        gear_grind.emit()
+
+
+func update_clutch(delta: float):
+    if clutch_held:
         clutch_hold_time += delta
-        if input.clutch_just_pressed:
+        if clutch_just_pressed:
             # Tap: instantly add to clutch value
             state.clutch_value = minf(state.clutch_value + clutch_tap_amount, 1.0)
         elif clutch_hold_time >= clutch_hold_delay:
@@ -53,34 +85,17 @@ func get_clutch_engagement() -> float:
     return 1.0 - state.clutch_value
 
 
-func handle_gear_shifting(input: BikeInput):
-    if input.gear_up_pressed:
-        if state.clutch_value > gear_shift_threshold || state.is_easy_mode:
-            if state.current_gear < num_gears:
-                state.current_gear += 1
-                gear_changed.emit(state.current_gear)
-        else:
-            gear_grind.emit()
-    elif input.gear_down_pressed:
-        if state.clutch_value > gear_shift_threshold || state.is_easy_mode:
-            if state.current_gear > 1:
-                state.current_gear -= 1
-                gear_changed.emit(state.current_gear)
-        else:
-            gear_grind.emit()
-
-
 func get_max_speed_for_gear() -> float:
     var gear_ratio = gear_ratios[state.current_gear - 1]
     var lowest_ratio = gear_ratios[num_gears - 1]
     return bike_physics.max_speed * (lowest_ratio / gear_ratio)
 
 
-func update_rpm(delta: float, input: BikeInput):
+func update_rpm(delta: float):
     if state.is_stalled:
         state.current_rpm = 0.0
         # Restart engine with throttle + clutch while stalled
-        if state.clutch_value > 0.5 and input.throttle > 0.3:
+        if state.clutch_value > 0.5 and throttle > 0.3:
             state.is_stalled = false
             state.current_rpm = idle_rpm
             engine_started.emit()
@@ -94,7 +109,7 @@ func update_rpm(delta: float, input: BikeInput):
     var wheel_rpm = speed_ratio * max_rpm
 
     # Throttle-driven RPM (instant - no smoothing, engine revs freely)
-    var throttle_rpm = lerpf(idle_rpm, max_rpm, input.throttle)
+    var throttle_rpm = lerpf(idle_rpm, max_rpm, throttle)
 
     # Blend between throttle RPM and wheel RPM based on clutch engagement
     # engagement = 0: clutch in, engine free-revs (fast response)
@@ -120,7 +135,7 @@ func get_rpm_ratio() -> float:
     return (state.current_rpm - idle_rpm) / (max_rpm - idle_rpm)
 
 
-func get_power_output(throttle: float) -> float:
+func get_power_output() -> float:
     """Returns power multiplier based on current RPM and gear"""
     if state.is_stalled:
         return 0.0
@@ -139,7 +154,7 @@ func get_power_output(throttle: float) -> float:
     return throttle * power_curve * torque_multiplier * engagement
 
 
-func is_clutch_dump(last_clutch: float, throttle: float) -> bool:
+func is_clutch_dump(last_clutch: float) -> bool:
     """Returns true if clutch was just dumped while revving"""
     return last_clutch > 0.7 and state.clutch_value < 0.3 and throttle > 0.5
 

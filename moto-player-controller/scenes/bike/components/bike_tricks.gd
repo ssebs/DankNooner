@@ -25,6 +25,12 @@ signal stoppie_stopped # Emitted when bike comes to rest during a stoppie
 var state: BikeState
 var bike_physics: BikePhysics
 
+# Input state (from signals)
+var throttle: float = 0.0
+var front_brake: float = 0.0
+var rear_brake: float = 0.0
+var lean: float = 0.0
+
 # Skid marks
 @export var skidmark_texture = preload("res://assets/skidmarktex.png")
 
@@ -38,23 +44,27 @@ var last_throttle_input: float = 0.0
 var last_clutch_input: float = 0.0
 
 
-func setup(bike_state: BikeState, physics: BikePhysics):
+func setup(bike_state: BikeState, physics: BikePhysics, input: BikeInput):
     state = bike_state
     bike_physics = physics
+    input.throttle_changed.connect(func(v): throttle = v)
+    input.front_brake_changed.connect(func(v): front_brake = v)
+    input.rear_brake_changed.connect(func(v): rear_brake = v)
+    input.lean_changed.connect(func(v): lean = v)
 
 
-func handle_wheelie_stoppie(delta, input: BikeInput, rpm_ratio: float,
+func handle_wheelie_stoppie(delta, rpm_ratio: float,
                              front_wheel_locked: bool = false, is_airborne: bool = false):
     # Airborne pitch control - free rotation with lean input
     if is_airborne:
-        if abs(input.lean) > 0.1:
-            var air_pitch_target = input.lean * max_wheelie_angle
+        if abs(lean) > 0.1:
+            var air_pitch_target = lean * max_wheelie_angle
             state.pitch_angle = move_toward(state.pitch_angle, air_pitch_target, rotation_speed * 1.5 * delta)
         return
 
     # Detect clutch dump
-    var clutch_dump = last_clutch_input > 0.7 and state.clutch_value < 0.3 and input.throttle > 0.5
-    last_throttle_input = input.throttle
+    var clutch_dump = last_clutch_input > 0.7 and state.clutch_value < 0.3 and throttle > 0.5
+    last_throttle_input = throttle
     last_clutch_input = state.clutch_value
 
     # Can't START a wheelie/stoppie while turning, but can continue one
@@ -65,7 +75,7 @@ func handle_wheelie_stoppie(delta, input: BikeInput, rpm_ratio: float,
     # Wheelie logic - wheelies scale with RPM above threshold
     var wheelie_target = 0.0
     var rpm_above_threshold = rpm_ratio >= wheelie_rpm_threshold
-    var can_pop_wheelie = input.lean > 0.3 and input.throttle > 0.7 and (rpm_above_threshold or clutch_dump)
+    var can_pop_wheelie = lean > 0.3 and throttle > 0.7 and (rpm_above_threshold or clutch_dump)
 
     # Calculate how much wheelie power based on where we are in the RPM range
     # 0 at threshold, 1 at full RPM
@@ -74,19 +84,19 @@ func handle_wheelie_stoppie(delta, input: BikeInput, rpm_ratio: float,
         rpm_wheelie_factor = clamp((rpm_ratio - wheelie_rpm_threshold) / (wheelie_rpm_full - wheelie_rpm_threshold), 0.0, 1.0)
 
     if state.speed > 1 and (currently_in_wheelie or (can_pop_wheelie and can_start_trick)):
-        if input.throttle > 0.3:
+        if throttle > 0.3:
             # Wheelie intensity scales with both throttle AND rpm position in the power band
-            wheelie_target = max_wheelie_angle * input.throttle * rpm_wheelie_factor
-            wheelie_target += max_wheelie_angle * input.lean * 0.15
+            wheelie_target = max_wheelie_angle * throttle * rpm_wheelie_factor
+            wheelie_target += max_wheelie_angle * lean * 0.15
 
     # Stoppie logic - only works with progressive braking (not grabbed)
     # If front wheel is locked (brake grabbed), no stoppie - just skid
     var stoppie_target = 0.0
     if not front_wheel_locked:
-        var wants_stoppie = input.lean < -0.1 and input.front_brake > 0.5
+        var wants_stoppie = lean < -0.1 and front_brake > 0.5
         if state.speed > 1 and (currently_in_stoppie or (wants_stoppie and can_start_trick)):
-            stoppie_target = - max_stoppie_angle * input.front_brake * (1.0 - input.throttle * 0.5)
-            stoppie_target += -max_stoppie_angle * (-input.lean) * 0.15
+            stoppie_target = - max_stoppie_angle * front_brake * (1.0 - throttle * 0.5)
+            stoppie_target += -max_stoppie_angle * (-lean) * 0.15
 
     # Apply pitch
     var was_in_stoppie = state.pitch_angle < deg_to_rad(-5)
@@ -107,9 +117,9 @@ func handle_wheelie_stoppie(delta, input: BikeInput, rpm_ratio: float,
             tire_screech_stop.emit()
 
 
-func handle_skidding(delta, input: BikeInput, is_front_wheel_locked: bool, rear_wheel_position: Vector3,
+func handle_skidding(delta, is_front_wheel_locked: bool, rear_wheel_position: Vector3,
                       front_wheel_position: Vector3, bike_rotation: Vector3, is_on_floor: bool):
-    var is_rear_skidding = input.rear_brake > 0.5 and state.speed > 2 and is_on_floor
+    var is_rear_skidding = rear_brake > 0.5 and state.speed > 2 and is_on_floor
     var is_front_skidding = is_front_wheel_locked and state.speed > 2 and is_on_floor
 
     # Rear wheel skid
@@ -121,14 +131,14 @@ func handle_skidding(delta, input: BikeInput, is_front_wheel_locked: bool, rear_
 
         # Fishtail calculation - steering induces fishtail direction
         var steer_influence = state.steering_angle / bike_physics.max_steering_angle
-        var target_fishtail = - steer_influence * max_fishtail_angle * input.rear_brake
+        var target_fishtail = - steer_influence * max_fishtail_angle * rear_brake
 
         # Small natural wobble when skidding straight (random direction, small amplitude)
         if abs(steer_influence) < 0.1:
             var wobble_direction = 1.0 if state.fishtail_angle >= 0 else -1.0
             if abs(state.fishtail_angle) < deg_to_rad(2):
                 wobble_direction = [-1.0, 1.0][randi() % 2]
-            target_fishtail = wobble_direction * deg_to_rad(8) * input.rear_brake
+            target_fishtail = wobble_direction * deg_to_rad(8) * rear_brake
 
         var speed_factor = clamp(state.speed / 20.0, 0.5, 1.5)
         target_fishtail *= speed_factor
