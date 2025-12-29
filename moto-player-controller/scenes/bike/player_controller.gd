@@ -28,10 +28,6 @@ class_name PlayerController extends CharacterBody3D
 # Shared state
 var state: BikeState = BikeState.new()
 
-# Skid marks
-@export var skidmark_texture = preload("res://assets/skidmarktex.png")
-const SKID_MARK_LIFETIME: float = 5.0
-
 # Ground alignment
 @export var ground_align_speed: float = 10.0
 var ground_pitch: float = 0.0
@@ -39,7 +35,6 @@ var ground_pitch: float = 0.0
 # Spawn tracking
 var spawn_position: Vector3
 var spawn_rotation: Vector3
-
 
 func _ready():
     spawn_position = global_position
@@ -57,7 +52,6 @@ func _ready():
     bike_gearing.gear_grind.connect(_on_gear_grind)
     bike_gearing.gear_changed.connect(_on_gear_changed)
     bike_gearing.engine_stalled.connect(_on_engine_stalled)
-    bike_tricks.skid_mark_requested.connect(_on_skid_mark_requested)
     bike_tricks.tire_screech_start.connect(_on_tire_screech_start)
     bike_tricks.tire_screech_stop.connect(_on_tire_screech_stop)
     bike_tricks.stoppie_stopped.connect(_on_stoppie_stopped)
@@ -258,10 +252,6 @@ func _on_engine_stalled():
     bike_audio.stop_engine()
 
 
-func _on_skid_mark_requested(pos: Vector3, rot: Vector3):
-    _spawn_skid_mark(pos, rot)
-
-
 func _on_tire_screech_start(volume: float):
     bike_audio.play_tire_screech(volume)
 
@@ -292,18 +282,3 @@ func _on_crashed(pitch_dir: float, lean_dir: float):
     if lean_dir != 0:
         tire_screech.volume_db = 0.0
         tire_screech.play()
-
-
-func _spawn_skid_mark(pos: Vector3, rot: Vector3):
-    var decal = Decal.new()
-    decal.texture_albedo = skidmark_texture
-    decal.size = Vector3(0.15, 0.5, 0.4)
-    decal.cull_mask = 1
-
-    get_tree().current_scene.add_child(decal)
-
-    decal.global_position = Vector3(pos.x, pos.y - 0.05, pos.z)
-    decal.global_rotation = rot
-
-    var timer = get_tree().create_timer(SKID_MARK_LIFETIME)
-    timer.timeout.connect(func(): if is_instance_valid(decal): decal.queue_free())

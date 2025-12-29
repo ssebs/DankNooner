@@ -1,6 +1,5 @@
 class_name BikeTricks extends Node
 
-signal skid_mark_requested(position: Vector3, rotation: Vector3)
 signal tire_screech_start(volume: float)
 signal tire_screech_stop
 signal stoppie_stopped # Emitted when bike comes to rest during a stoppie
@@ -27,7 +26,10 @@ var state: BikeState
 var bike_physics: BikePhysics
 
 # Skid marks
+@export var skidmark_texture = preload("res://assets/skidmarktex.png")
+
 const SKID_SPAWN_INTERVAL: float = 0.025
+const SKID_MARK_LIFETIME: float = 5.0
 var skid_spawn_timer: float = 0.0
 var front_skid_spawn_timer: float = 0.0
 
@@ -115,7 +117,7 @@ func handle_skidding(delta, input: BikeInput, is_front_wheel_locked: bool, rear_
         skid_spawn_timer += delta
         if skid_spawn_timer >= SKID_SPAWN_INTERVAL:
             skid_spawn_timer = 0.0
-            skid_mark_requested.emit(rear_wheel_position, bike_rotation)
+            _spawn_skid_mark(rear_wheel_position, bike_rotation)
 
         # Fishtail calculation - steering induces fishtail direction
         var steer_influence = state.steering_angle / bike_physics.max_steering_angle
@@ -144,7 +146,7 @@ func handle_skidding(delta, input: BikeInput, is_front_wheel_locked: bool, rear_
         front_skid_spawn_timer += delta
         if front_skid_spawn_timer >= SKID_SPAWN_INTERVAL:
             front_skid_spawn_timer = 0.0
-            skid_mark_requested.emit(front_wheel_position, bike_rotation)
+            _spawn_skid_mark(front_wheel_position, bike_rotation)
         tire_screech_start.emit(skid_volume)
     else:
         front_skid_spawn_timer = 0.0
@@ -183,6 +185,21 @@ func get_fishtail_vibration() -> Vector2:
         var strong = fishtail_intensity * fishtail_intensity * 0.8
         return Vector2(weak, strong)
     return Vector2.ZERO
+
+func _spawn_skid_mark(pos: Vector3, rot: Vector3):
+    var decal = Decal.new()
+    decal.texture_albedo = skidmark_texture
+    decal.size = Vector3(0.15, 0.5, 0.4)
+    decal.cull_mask = 1
+
+    get_tree().current_scene.add_child(decal)
+
+    decal.global_position = Vector3(pos.x, pos.y - 0.05, pos.z)
+    decal.global_rotation = rot
+
+    var timer = get_tree().create_timer(SKID_MARK_LIFETIME)
+    timer.timeout.connect(func(): if is_instance_valid(decal): decal.queue_free())
+
 
 
 func reset():
