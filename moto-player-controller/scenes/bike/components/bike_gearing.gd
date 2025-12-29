@@ -18,7 +18,7 @@ signal gear_grind # Tried to shift without clutch
 @export var clutch_tap_amount: float = 0.35    # How much a tap adds to clutch value
 @export var clutch_hold_delay: float = 0.05    # Seconds before hold starts engaging fully
 @export var gear_shift_threshold: float = 0.2  # Clutch value needed to shift
-@export var rpm_blend_speed: float = 6.0       # How fast RPM changes when clutch engaged
+@export var rpm_blend_speed: float = 4.0       # How fast RPM changes when clutch engaged
 
 # Shared state
 var state: BikeState
