@@ -1,5 +1,7 @@
 class_name BikeInput extends Node
 
+# TODO migrate to all signals instead of components reading the vals
+
 signal difficulty_toggled
 
 # Throttle and brakes (0-1 range)

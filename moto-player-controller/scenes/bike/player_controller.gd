@@ -66,7 +66,7 @@ func _ready():
 
 
 func _physics_process(delta):
-    if bike_crash.is_crashed:
+    if state.is_crashed:
         _handle_crash_state(delta)
         return
 
@@ -74,15 +74,12 @@ func _physics_process(delta):
     bike_gearing.update_clutch(delta, bike_input)
     bike_gearing.handle_gear_shifting(bike_input)
     bike_gearing.update_rpm(delta, bike_input)
-    bike_gearing.sync_to_state()
 
     # Physics / acceleration
     bike_physics.handle_acceleration(
         delta, bike_input,
         bike_gearing.get_power_output(bike_input.throttle),
         bike_gearing.get_max_speed_for_gear(),
-        bike_gearing.clutch_value,
-        bike_gearing.is_stalled,
         bike_crash.is_front_wheel_locked()
     )
 
@@ -95,39 +92,25 @@ func _physics_process(delta):
     bike_tricks.handle_wheelie_stoppie(
         delta, bike_input,
         bike_gearing.get_rpm_ratio(),
-        bike_gearing.clutch_value,
-        bike_physics.is_turning(),
         bike_crash.is_front_wheel_locked(),
-        not is_on_floor()
+        !is_on_floor()
     )
     bike_tricks.handle_skidding(
         delta, bike_input,
+        bike_crash.is_front_wheel_locked(),
         rear_wheel.global_position,
         front_wheel.global_position,
         global_rotation,
         is_on_floor()
     )
-    bike_tricks.sync_to_state()
 
     # Check for controlled brake stop
     bike_physics.check_brake_stop(bike_input)
 
     # Crash detection
     if is_on_floor():
-        bike_crash.check_crash_conditions(
-            delta, bike_input,
-            bike_tricks.pitch_angle,
-            state.lean_angle,
-            state.fall_angle,
-            state.steering_angle
-        )
-    else:
-        bike_crash.check_airborne_crash(
-            state.lean_angle,
-            state.fall_angle,
-            bike_tricks.pitch_angle
-        )
-    bike_crash.sync_to_state()
+        bike_crash.check_crash_conditions(delta, bike_input)
+
 
     # Force stoppie if brake danger while going straight
     if bike_crash.should_force_stoppie(bike_input):
@@ -151,7 +134,7 @@ func _physics_process(delta):
 
 
 func _check_collision_crash():
-    if bike_crash.is_crashed:
+    if state.is_crashed:
         return
 
     for i in get_slide_collision_count():
@@ -191,8 +174,8 @@ func _apply_movement(delta):
         var turn_rate = bike_physics.get_turn_rate()
         rotate_y(-state.steering_angle * turn_rate * delta)
 
-        if abs(bike_tricks.fishtail_angle) > 0.01:
-            rotate_y(bike_tricks.fishtail_angle * delta * 1.5)
+        if abs(state.fishtail_angle) > 0.01:
+            rotate_y(state.fishtail_angle * delta * 1.5)
             bike_physics.apply_fishtail_friction(delta, bike_tricks.get_fishtail_speed_loss(delta))
 
     var vertical_velocity = velocity.y
@@ -208,13 +191,13 @@ func _apply_mesh_rotation():
         mesh.rotate_x(-ground_pitch)
 
     var pivot: Vector3
-    if bike_tricks.pitch_angle >= 0:
+    if state.pitch_angle >= 0:
         pivot = rear_wheel.position
     else:
         pivot = front_wheel.position
 
-    if bike_tricks.pitch_angle != 0:
-        _rotate_mesh_around_pivot(pivot, Vector3.RIGHT, bike_tricks.pitch_angle)
+    if state.pitch_angle != 0:
+        _rotate_mesh_around_pivot(pivot, Vector3.RIGHT, state.pitch_angle)
 
     var total_lean = state.lean_angle + state.fall_angle
     if total_lean != 0:
@@ -230,7 +213,7 @@ func _rotate_mesh_around_pivot(pivot: Vector3, axis: Vector3, angle: float):
 
 
 func _handle_crash_state(delta):
-    if bike_crash.handle_crash_state(delta, state.speed):
+    if bike_crash.handle_crash_state(delta):
         _respawn()
         return
 
