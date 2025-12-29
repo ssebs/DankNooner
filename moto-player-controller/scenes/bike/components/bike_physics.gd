@@ -23,6 +23,7 @@ signal brake_stopped
 # Fall physics
 @export var fall_rate: float = 0.5 # How fast bike falls over at zero speed
 @export var stability_speed: float = 10.0 # Speed where bike becomes stable
+@export var high_speed_instability_start: float = 45.0 # Speed where instability begins again
 @export var crash_lean_threshold: float = deg_to_rad(80)
 @export var countersteer_factor: float = 1.2 # How much lean induces automatic steering
 
@@ -81,9 +82,10 @@ func handle_acceleration(delta, input: BikeInput, power_output: float, gear_max_
 
 func handle_fall_physics(delta, _input: BikeInput):
     """
-    Simple fall physics:
-    - Below stability_speed: bike falls over at fall_rate
-    - Above stability_speed: bike stays upright
+    Fall physics with speed-based stability curve:
+    - Below stability_speed: bike falls over (low speed wobble)
+    - Between stability_speed and high_speed_instability_start: stable zone
+    - Above high_speed_instability_start: high speed wobble begins
     """
     if speed > 0.25:
         has_started_moving = true
@@ -92,15 +94,24 @@ func handle_fall_physics(delta, _input: BikeInput):
         fall_angle = 0.0
         return
 
-    # How stable is the bike? 0 = falling, 1 = stable
-    var stability = clamp(speed / stability_speed, 0.0, 1.0)
+    # Calculate stability based on speed
+    # Low speed: unstable (0 to 1 as speed increases to stability_speed)
+    var low_speed_stability = clamp(speed / stability_speed, 0.0, 1.0)
+
+    # High speed: unstable again (1 to 0 as speed goes from high_speed_instability_start to max_speed)
+    var high_speed_instability = 0.0
+    if speed > high_speed_instability_start:
+        high_speed_instability = clamp((speed - high_speed_instability_start) / (max_speed - high_speed_instability_start), 0.0, 1.0)
+
+    # Combined stability: stable in the middle, unstable at both extremes
+    var stability = low_speed_stability * (1.0 - high_speed_instability)
 
     # Target: upright (0) when stable, keep falling when not
     if stability > 0.9:
-        # Fast enough - pull upright
+        # Stable zone - pull upright
         fall_angle = move_toward(fall_angle, 0, fall_rate * 2.0 * delta)
     else:
-        # Too slow - fall in current direction
+        # Unstable - fall in current direction
         var fall_direction = sign(fall_angle) if abs(fall_angle) > 0.01 else sign(lean_angle + 0.001)
         var fall_strength = (1.0 - stability) * fall_rate
         fall_angle += fall_direction * fall_strength * delta
@@ -133,7 +144,13 @@ func handle_steering(delta, input: BikeInput):
     Countersteering: lean angle induces automatic steering in that direction.
     When you lean right, the bike naturally steers right (turns into the lean).
     Steering radius depends on lean angle and speed.
+    Releasing steer while on throttle straightens the bike.
     """
+    # If no steer input and throttle is applied, straighten out
+    if abs(input.steer) < 0.1 and input.throttle > 0.1:
+        steering_angle = lerpf(steering_angle, 0, steering_speed * delta)
+        return
+
     # Total lean (visual lean + fall) drives automatic countersteer
     var total_lean = lean_angle + fall_angle
 
