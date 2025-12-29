@@ -13,6 +13,8 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
 
 ## Rewrite / V2 / Future of the game
 
+Differentiates itself from Ride 5 (and others) since it's not just racing, it's tricks and stunting too.
+
 ### Goals
 - Have more stunts
 - Animations
@@ -34,6 +36,7 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
   - Riding around the world
   - Wheelies/other trick challenges (missions)
     - e.g. start on bike, 1st challenge is do a wheelie. (learn how + unlock it + get cash for customization)
+  - Street race mode (dodge traffic/weave w/ friends)
   - Upgrade menu
   - Customize menu
   - Traveling to next objective
