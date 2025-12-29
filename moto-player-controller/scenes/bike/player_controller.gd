@@ -90,7 +90,6 @@ func _physics_process(delta):
     bike_physics.handle_steering(delta, bike_input)
     bike_physics.update_lean(delta, bike_input)
     bike_physics.handle_fall_physics(delta, bike_input)
-    bike_physics.sync_to_state()
 
     # Tricks (wheelies, stoppies, skidding)
     bike_tricks.handle_wheelie_stoppie(
@@ -118,14 +117,14 @@ func _physics_process(delta):
         bike_crash.check_crash_conditions(
             delta, bike_input,
             bike_tricks.pitch_angle,
-            bike_physics.lean_angle,
-            bike_physics.fall_angle,
-            bike_physics.steering_angle
+            state.lean_angle,
+            state.fall_angle,
+            state.steering_angle
         )
     else:
         bike_crash.check_airborne_crash(
-            bike_physics.lean_angle,
-            bike_physics.fall_angle,
+            state.lean_angle,
+            state.fall_angle,
             bike_tricks.pitch_angle
         )
     bike_crash.sync_to_state()
@@ -168,7 +167,7 @@ func _check_collision_crash():
 
         if is_crash_layer:
             var normal = collision.get_normal()
-            if bike_physics.speed > 5:
+            if state.speed > 5:
                 var local_normal = global_transform.basis.inverse() * normal
                 bike_crash.trigger_collision_crash(local_normal)
                 return
@@ -188,16 +187,16 @@ func _align_to_ground(delta):
 func _apply_movement(delta):
     var forward = - global_transform.basis.z
 
-    if bike_physics.speed > 0.5:
+    if state.speed > 0.5:
         var turn_rate = bike_physics.get_turn_rate()
-        rotate_y(-bike_physics.steering_angle * turn_rate * delta)
+        rotate_y(-state.steering_angle * turn_rate * delta)
 
         if abs(bike_tricks.fishtail_angle) > 0.01:
             rotate_y(bike_tricks.fishtail_angle * delta * 1.5)
             bike_physics.apply_fishtail_friction(delta, bike_tricks.get_fishtail_speed_loss(delta))
 
     var vertical_velocity = velocity.y
-    velocity = forward * bike_physics.speed
+    velocity = forward * state.speed
     velocity.y = vertical_velocity
     velocity = bike_physics.apply_gravity(delta, velocity, is_on_floor())
 
@@ -217,7 +216,7 @@ func _apply_mesh_rotation():
     if bike_tricks.pitch_angle != 0:
         _rotate_mesh_around_pivot(pivot, Vector3.RIGHT, bike_tricks.pitch_angle)
 
-    var total_lean = bike_physics.lean_angle + bike_physics.fall_angle
+    var total_lean = state.lean_angle + state.fall_angle
     if total_lean != 0:
         mesh.rotate_z(total_lean)
 
@@ -231,19 +230,19 @@ func _rotate_mesh_around_pivot(pivot: Vector3, axis: Vector3, angle: float):
 
 
 func _handle_crash_state(delta):
-    if bike_crash.handle_crash_state(delta, bike_physics.speed):
+    if bike_crash.handle_crash_state(delta, state.speed):
         _respawn()
         return
 
     if bike_crash.crash_pitch_direction != 0:
         bike_tricks.force_pitch(bike_crash.crash_pitch_direction * deg_to_rad(90), 3.0, delta)
     elif bike_crash.crash_lean_direction != 0:
-        bike_physics.fall_angle = move_toward(bike_physics.fall_angle, bike_crash.crash_lean_direction * deg_to_rad(90), 3.0 * delta)
+        state.fall_angle = move_toward(state.fall_angle, bike_crash.crash_lean_direction * deg_to_rad(90), 3.0 * delta)
 
-        if bike_physics.speed > 0.1:
+        if state.speed > 0.1:
             var forward = - global_transform.basis.z
-            velocity = forward * bike_physics.speed
-            bike_physics.speed = move_toward(bike_physics.speed, 0, 20.0 * delta)
+            velocity = forward * state.speed
+            state.speed = move_toward(state.speed, 0, 20.0 * delta)
             move_and_slide()
 
     _apply_mesh_rotation()
@@ -290,8 +289,8 @@ func _on_tire_screech_stop():
 
 func _on_stoppie_stopped():
     bike_physics.reset()
-    bike_physics.speed = 0.0
-    bike_physics.fall_angle = 0.0
+    state.speed = 0.0
+    state.fall_angle = 0.0
     velocity = Vector3.ZERO
 
 
@@ -302,9 +301,9 @@ func _on_brake_stopped():
 
 func _on_crashed(pitch_dir: float, lean_dir: float):
     if lean_dir != 0 and pitch_dir == 0:
-        bike_physics.speed *= 0.7
+        state.speed *= 0.7
     else:
-        bike_physics.speed = 0.0
+        state.speed = 0.0
         velocity = Vector3.ZERO
 
     if lean_dir != 0:
