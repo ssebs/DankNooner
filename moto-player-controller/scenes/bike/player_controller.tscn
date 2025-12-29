@@ -20,8 +20,6 @@ size = Vector3(0.68, 1.05, 2)
 [node name="PlayerController" type="CharacterBody3D"]
 collision_mask = 3
 script = ExtResource("1_5uol1")
-skidmark_texture = null
-ground_align_speed = null
 
 [node name="Functionality" type="Node" parent="."]
 
