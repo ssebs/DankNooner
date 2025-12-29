@@ -13,22 +13,18 @@ signal gear_grind # Tried to shift without clutch
 @export var gear_ratios: Array[float] = [2.92, 2.05, 1.6, 1.46, 1.15, 1.0]
 
 # Clutch tuning
-@export var clutch_engage_speed: float = 6.0   # How fast clutch pulls in when held
-@export var clutch_release_speed: float = 2.5  # How fast clutch releases when not held
-@export var clutch_tap_amount: float = 0.35    # How much a tap adds to clutch value
-@export var clutch_hold_delay: float = 0.05    # Seconds before hold starts engaging fully
-@export var gear_shift_threshold: float = 0.2  # Clutch value needed to shift
-@export var rpm_blend_speed: float = 4.0       # How fast RPM changes when clutch engaged
+@export var clutch_engage_speed: float = 6.0 # How fast clutch pulls in when held
+@export var clutch_release_speed: float = 2.5 # How fast clutch releases when not held
+@export var clutch_tap_amount: float = 0.35 # How much a tap adds to clutch value
+@export var clutch_hold_delay: float = 0.05 # Seconds before hold starts engaging fully
+@export var gear_shift_threshold: float = 0.2 # Clutch value needed to shift
+@export var rpm_blend_speed: float = 4.0 # How fast RPM changes when clutch engaged
 
 # Shared state
 var state: BikeState
 var bike_physics: BikePhysics
 
 # Local state
-var current_gear: int = 1
-var current_rpm: float = 0.0
-var is_stalled: bool = false
-var clutch_value: float = 0.0
 var clutch_hold_time: float = 0.0
 
 
@@ -37,63 +33,56 @@ func setup(bike_state: BikeState, physics: BikePhysics):
     bike_physics = physics
 
 
-func sync_to_state():
-    state.current_gear = current_gear
-    state.current_rpm = current_rpm
-    state.clutch_value = clutch_value
-    state.is_stalled = is_stalled
-
-
 func update_clutch(delta: float, input: BikeInput):
     if input.clutch_held:
         clutch_hold_time += delta
         if input.clutch_just_pressed:
             # Tap: instantly add to clutch value
-            clutch_value = minf(clutch_value + clutch_tap_amount, 1.0)
+            state.clutch_value = minf(state.clutch_value + clutch_tap_amount, 1.0)
         elif clutch_hold_time >= clutch_hold_delay:
             # Held past delay: pull in fully
-            clutch_value = move_toward(clutch_value, 1.0, clutch_engage_speed * delta)
+            state.clutch_value = move_toward(state.clutch_value, 1.0, clutch_engage_speed * delta)
     else:
         clutch_hold_time = 0.0
         # Release: slowly let clutch out
-        clutch_value = move_toward(clutch_value, 0.0, clutch_release_speed * delta)
+        state.clutch_value = move_toward(state.clutch_value, 0.0, clutch_release_speed * delta)
 
 
 func get_clutch_engagement() -> float:
     """Returns 0-1 where 0 = clutch pulled in (disengaged), 1 = clutch released (engaged to wheel)"""
-    return 1.0 - clutch_value
+    return 1.0 - state.clutch_value
 
 
 func handle_gear_shifting(input: BikeInput):
     if input.gear_up_pressed:
-        if clutch_value > gear_shift_threshold || state.is_easy_mode:
-            if current_gear < num_gears:
-                current_gear += 1
-                gear_changed.emit(current_gear)
+        if state.clutch_value > gear_shift_threshold || state.is_easy_mode:
+            if state.current_gear < num_gears:
+                state.current_gear += 1
+                gear_changed.emit(state.current_gear)
         else:
             gear_grind.emit()
     elif input.gear_down_pressed:
-        if clutch_value > gear_shift_threshold || state.is_easy_mode:
-            if current_gear > 1:
-                current_gear -= 1
-                gear_changed.emit(current_gear)
+        if state.clutch_value > gear_shift_threshold || state.is_easy_mode:
+            if state.current_gear > 1:
+                state.current_gear -= 1
+                gear_changed.emit(state.current_gear)
         else:
             gear_grind.emit()
 
 
 func get_max_speed_for_gear() -> float:
-    var gear_ratio = gear_ratios[current_gear - 1]
+    var gear_ratio = gear_ratios[state.current_gear - 1]
     var lowest_ratio = gear_ratios[num_gears - 1]
     return bike_physics.max_speed * (lowest_ratio / gear_ratio)
 
 
 func update_rpm(delta: float, input: BikeInput):
-    if is_stalled:
-        current_rpm = 0.0
+    if state.is_stalled:
+        state.current_rpm = 0.0
         # Restart engine with throttle + clutch while stalled
-        if clutch_value > 0.5 and input.throttle > 0.3:
-            is_stalled = false
-            current_rpm = idle_rpm
+        if state.clutch_value > 0.5 and input.throttle > 0.3:
+            state.is_stalled = false
+            state.current_rpm = idle_rpm
             engine_started.emit()
         return
 
@@ -114,26 +103,26 @@ func update_rpm(delta: float, input: BikeInput):
 
     # RPM blend speed: fast when free-revving, slower when engaged to wheel
     var blend_speed = lerpf(12.0, rpm_blend_speed, engagement)
-    current_rpm = lerpf(current_rpm, target_rpm, blend_speed * delta)
+    state.current_rpm = lerpf(state.current_rpm, target_rpm, blend_speed * delta)
 
     # Check for stall when clutch is mostly engaged and RPM too low
-    if engagement > 0.9 and current_rpm < stall_rpm:
-        is_stalled = true
-        current_gear = 1
+    if engagement > 0.9 and state.current_rpm < stall_rpm:
+        state.is_stalled = true
+        state.current_gear = 1
         engine_stalled.emit()
         return
 
-    current_rpm = clamp(current_rpm, idle_rpm, max_rpm)
+    state.current_rpm = clamp(state.current_rpm, idle_rpm, max_rpm)
 
 func get_rpm_ratio() -> float:
     if max_rpm <= idle_rpm:
         return 0.0
-    return (current_rpm - idle_rpm) / (max_rpm - idle_rpm)
+    return (state.current_rpm - idle_rpm) / (max_rpm - idle_rpm)
 
 
 func get_power_output(throttle: float) -> float:
     """Returns power multiplier based on current RPM and gear"""
-    if is_stalled:
+    if state.is_stalled:
         return 0.0
 
     var engagement = get_clutch_engagement()
@@ -143,7 +132,7 @@ func get_power_output(throttle: float) -> float:
     var rpm_ratio = get_rpm_ratio()
     var power_curve = rpm_ratio * (2.0 - rpm_ratio) # Peaks around 75% RPM
 
-    var gear_ratio = gear_ratios[current_gear - 1]
+    var gear_ratio = gear_ratios[state.current_gear - 1]
     var base_ratio = gear_ratios[num_gears - 1]
     var torque_multiplier = gear_ratio / base_ratio
 
@@ -152,13 +141,12 @@ func get_power_output(throttle: float) -> float:
 
 func is_clutch_dump(last_clutch: float, throttle: float) -> bool:
     """Returns true if clutch was just dumped while revving"""
-    return last_clutch > 0.7 and clutch_value < 0.3 and throttle > 0.5
+    return last_clutch > 0.7 and state.clutch_value < 0.3 and throttle > 0.5
 
 
 func reset():
-    current_gear = 1
-    current_rpm = idle_rpm
-    is_stalled = false
-    clutch_value = 0.0
+    state.current_gear = 1
+    state.current_rpm = idle_rpm
+    state.is_stalled = false
+    state.clutch_value = 0.0
     clutch_hold_time = 0.0
-    sync_to_state()

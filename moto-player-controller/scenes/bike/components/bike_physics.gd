@@ -39,7 +39,7 @@ func setup(bike_state: BikeState):
 
 
 func handle_acceleration(delta, input: BikeInput, power_output: float, gear_max_speed: float,
-                          clutch_engaged: float, is_stalled: bool, front_wheel_locked: bool = false):
+                           front_wheel_locked: bool = false):
     # Braking
     if input.front_brake > 0 or input.rear_brake > 0:
         var front_effectiveness = 0.6 if front_wheel_locked else 1.0
@@ -47,7 +47,7 @@ func handle_acceleration(delta, input: BikeInput, power_output: float, gear_max_
         var total_braking = clamp(input.front_brake * front_effectiveness + input.rear_brake * rear_effectiveness, 0, 1)
         state.speed = move_toward(state.speed, 0, brake_strength * total_braking * delta)
 
-    if is_stalled:
+    if state.is_stalled:
         state.speed = move_toward(state.speed, 0, friction * delta)
         return
 
@@ -61,7 +61,7 @@ func handle_acceleration(delta, input: BikeInput, power_output: float, gear_max_
 
     # Friction when coasting
     if input.throttle == 0 and input.front_brake == 0 and input.rear_brake == 0:
-        var drag = friction * (1.5 - clutch_engaged * 0.5)
+        var drag = friction * (1.5 - state.clutch_value * 0.5)
         state.speed = move_toward(state.speed, 0, drag * delta)
 
 

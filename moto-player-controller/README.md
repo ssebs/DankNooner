@@ -5,7 +5,7 @@ https://itch.io/search?classification=assets&type=games&q=race+track
 
 - [ ] Fix bugs / understand the code
   - [x] Merge bike_steering & bike_physics
-  - [ ] Cleanup player controller
+  - [x] Cleanup player controller
   - [ ] Fix lean / tip in / steering feeling
   - [ ] Fix brake slam / crashing
 
