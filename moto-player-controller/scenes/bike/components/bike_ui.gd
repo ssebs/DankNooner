@@ -10,6 +10,10 @@ class_name BikeUI extends Node
 # Shared state
 var state: BikeState
 
+# Input state (from signals)
+var throttle: float = 0.0
+var front_brake: float = 0.0
+
 # Component references for vibration
 var bike_input: BikeInput
 var bike_crash: BikeCrash
@@ -17,7 +21,7 @@ var bike_tricks: BikeTricks
 
 
 func setup(bike_state: BikeState, input: BikeInput, crash: BikeCrash, tricks: BikeTricks,
-        gear: Label, spd: Label, throttle: ProgressBar, brake: ProgressBar, clutch: ProgressBar, difficulty: Label
+        gear: Label, spd: Label, throttle_b: ProgressBar, brake: ProgressBar, clutch: ProgressBar, difficulty: Label
     ):
     state = bike_state
     bike_input = input
@@ -26,17 +30,19 @@ func setup(bike_state: BikeState, input: BikeInput, crash: BikeCrash, tricks: Bi
 
     gear_label = gear
     speed_label = spd
-    throttle_bar = throttle
+    throttle_bar = throttle_b
     brake_danger_bar = brake
     clutch_bar = clutch
     difficulty_label = difficulty
 
-    bike_input.difficulty_toggled.connect(_on_difficulty_toggled)
+    input.throttle_changed.connect(func(v): throttle = v)
+    input.front_brake_changed.connect(func(v): front_brake = v)
+    input.difficulty_toggled.connect(_on_difficulty_toggled)
 
 
-func update_ui(input: BikeInput, rpm_ratio: float):
+func update_ui(rpm_ratio: float):
     _update_labels()
-    _update_bars(input, rpm_ratio)
+    _update_bars(rpm_ratio)
     _update_vibration()
     _update_difficulty_display()
 
@@ -53,18 +59,18 @@ func _update_labels():
     speed_label.text = "Speed: %d" % int(state.speed)
 
 
-func _update_bars(input: BikeInput, rpm_ratio: float):
+func _update_bars(rpm_ratio: float):
     if !throttle_bar or !brake_danger_bar:
         return
 
-    throttle_bar.value = input.throttle
+    throttle_bar.value = throttle
 
     if rpm_ratio > 0.9:
         throttle_bar.modulate = Color(1.0, 0.2, 0.2) # Red at redline
     else:
         throttle_bar.modulate = Color(0.2, 0.8, 0.2) # Green
 
-    brake_danger_bar.value = input.front_brake
+    brake_danger_bar.value = front_brake
 
     if state.brake_danger_level > 0.1:
         var danger_color = Color(1.0, 1.0 - state.brake_danger_level, 0.0)

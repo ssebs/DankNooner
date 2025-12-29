@@ -21,20 +21,24 @@ class_name BikeAudio extends Node
 # Shared state
 var state: BikeState
 
+# Input state (from signals)
+var throttle: float = 0.0
+
 # Exhaust pop tracking
 var last_rpm_ratio: float = 0.0
 var exhaust_pop_timer: float = 0.0
 
 
-func setup(bike_state: BikeState, engine: AudioStreamPlayer, screech: AudioStreamPlayer, grind: AudioStreamPlayer, pops: AudioStreamPlayer):
+func setup(bike_state: BikeState, input: BikeInput, engine: AudioStreamPlayer, screech: AudioStreamPlayer, grind: AudioStreamPlayer, pops: AudioStreamPlayer):
 	state = bike_state
+	input.throttle_changed.connect(func(v): throttle = v)
 	engine_sound = engine
 	tire_screech = screech
 	engine_grind = grind
 	exhaust_pops = pops
 
 
-func update_engine_audio(delta: float, input: BikeInput, rpm_ratio: float):
+func update_engine_audio(delta: float, rpm_ratio: float):
 	if !engine_sound:
 		return
 
@@ -45,7 +49,7 @@ func update_engine_audio(delta: float, input: BikeInput, rpm_ratio: float):
 		last_rpm_ratio = 0.0
 		return
 
-	if state.speed > 0.5 or input.throttle > 0:
+	if state.speed > 0.5 or throttle > 0:
 		if !engine_sound.playing:
 			engine_sound.play()
 

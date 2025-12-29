@@ -1,7 +1,7 @@
 # Moto Player Controller
 
 ## In Progress:
-https://itch.io/search?classification=assets&type=games&q=race+track
+- [ ] Custom "bike_handler" physics update function - instead of calling handleX and handleY in physics on player_controller, call 1 func that does all of that.
 
 - [ ] Fix bugs / understand the code
   - [x] Merge bike_steering & bike_physics
