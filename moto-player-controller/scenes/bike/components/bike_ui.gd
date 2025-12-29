@@ -50,7 +50,7 @@ func _update_labels():
     else:
         gear_label.text = "Gear: %d" % state.current_gear
 
-    speed_label.text = "Speed: %d km/h" % int(state.speed * 3.6)
+    speed_label.text = "Speed: %d" % int(state.speed)
 
 
 func _update_bars(input: BikeInput, rpm_ratio: float):

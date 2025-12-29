@@ -7,6 +7,7 @@ class_name PlayerController extends CharacterBody3D
 @onready var engine_sound: AudioStreamPlayer = %EngineSound
 @onready var tire_screech: AudioStreamPlayer = %TireScreechSound
 @onready var engine_grind: AudioStreamPlayer = %EngineGrindSound
+@onready var exhaust_pops: AudioStreamPlayer = %ExhaustPopsSound
 
 @onready var gear_label: Label = %GearLabel
 @onready var speed_label: Label = %SpeedLabel
@@ -49,11 +50,12 @@ func _ready():
     bike_gearing.setup(state, bike_physics)
     bike_tricks.setup(state, bike_physics)
     bike_crash.setup(state, bike_physics)
-    bike_audio.setup(state, engine_sound, tire_screech, engine_grind)
+    bike_audio.setup(state, engine_sound, tire_screech, engine_grind, exhaust_pops)
     bike_ui.setup(state, bike_input, bike_crash, bike_tricks, gear_label, speed_label, throttle_bar, brake_danger_bar, clutch_bar, difficulty_label)
 
     # Connect component signals
     bike_gearing.gear_grind.connect(_on_gear_grind)
+    bike_gearing.gear_changed.connect(_on_gear_changed)
     bike_gearing.engine_stalled.connect(_on_engine_stalled)
     bike_tricks.skid_mark_requested.connect(_on_skid_mark_requested)
     bike_tricks.tire_screech_start.connect(_on_tire_screech_start)
@@ -137,7 +139,7 @@ func _physics_process(delta):
     _apply_mesh_rotation()
 
     # Audio and UI
-    bike_audio.update_engine_audio(bike_input, bike_gearing.get_rpm_ratio())
+    bike_audio.update_engine_audio(delta, bike_input, bike_gearing.get_rpm_ratio())
     bike_ui.update_ui(bike_input, bike_gearing.get_rpm_ratio())
 
     move_and_slide()
@@ -264,6 +266,10 @@ func _respawn():
 # Signal handlers
 func _on_gear_grind():
     bike_audio.play_gear_grind()
+
+
+func _on_gear_changed(_new_gear: int):
+    bike_audio.on_gear_changed()
 
 
 func _on_engine_stalled():

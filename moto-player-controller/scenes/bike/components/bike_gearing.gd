@@ -18,8 +18,7 @@ signal gear_grind # Tried to shift without clutch
 @export var clutch_tap_amount: float = 0.35    # How much a tap adds to clutch value
 @export var clutch_hold_delay: float = 0.05    # Seconds before hold starts engaging fully
 @export var gear_shift_threshold: float = 0.2  # Clutch value needed to shift
-@export var rpm_blend_speed: float = 4.0       # How fast RPM blends when clutch slipping
-@export var throttle_response: float = 3.0     # How fast engine responds to throttle (lower = slower revs)
+@export var rpm_blend_speed: float = 6.0       # How fast RPM changes when clutch engaged
 
 # Shared state
 var state: BikeState
@@ -31,7 +30,6 @@ var current_rpm: float = 0.0
 var is_stalled: bool = false
 var clutch_value: float = 0.0
 var clutch_hold_time: float = 0.0
-var smoothed_throttle_rpm: float = 0.0
 
 
 func setup(bike_state: BikeState, physics: BikePhysics):
@@ -106,17 +104,17 @@ func update_rpm(delta: float, input: BikeInput):
     var speed_ratio = state.speed / gear_max_speed if gear_max_speed > 0 else 0.0
     var wheel_rpm = speed_ratio * max_rpm
 
-    # Calculate throttle-driven RPM with smooth response (engine has inertia)
-    var target_throttle_rpm = lerpf(idle_rpm, max_rpm, input.throttle)
-    smoothed_throttle_rpm = lerpf(smoothed_throttle_rpm, target_throttle_rpm, throttle_response * delta)
+    # Throttle-driven RPM (instant - no smoothing, engine revs freely)
+    var throttle_rpm = lerpf(idle_rpm, max_rpm, input.throttle)
 
     # Blend between throttle RPM and wheel RPM based on clutch engagement
-    # engagement = 0: fully disengaged, engine follows throttle
-    # engagement = 1: fully engaged, engine locked to wheel
-    var target_rpm = lerpf(smoothed_throttle_rpm, wheel_rpm, engagement)
+    # engagement = 0: clutch in, engine free-revs (fast response)
+    # engagement = 1: clutch out, engine locked to wheel (follows wheel speed)
+    var target_rpm = lerpf(throttle_rpm, wheel_rpm, engagement)
 
-    # Smooth final RPM transitions
-    current_rpm = lerpf(current_rpm, target_rpm, rpm_blend_speed * delta)
+    # RPM blend speed: fast when free-revving, slower when engaged to wheel
+    var blend_speed = lerpf(12.0, rpm_blend_speed, engagement)
+    current_rpm = lerpf(current_rpm, target_rpm, blend_speed * delta)
 
     # Check for stall when clutch is mostly engaged and RPM too low
     if engagement > 0.9 and current_rpm < stall_rpm:
@@ -160,7 +158,6 @@ func is_clutch_dump(last_clutch: float, throttle: float) -> bool:
 func reset():
     current_gear = 1
     current_rpm = idle_rpm
-    smoothed_throttle_rpm = idle_rpm
     is_stalled = false
     clutch_value = 0.0
     clutch_hold_time = 0.0
