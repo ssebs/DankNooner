@@ -40,6 +40,7 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
   - Upgrade menu
   - Customize menu
   - Traveling to next objective
+  - Hide license plate / police chase feature
 - Mechanics
   - Fun but challenging
     - Multiple difficult levels
@@ -50,6 +51,8 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
   - Falling / crashing has ragdoll physics, player goes flying until they stop moving (or press btn)
 - Gameplay
   - Doing wheelies gives you NOS
+  - Score system for doing tricks
+    - +200, combos, etc.
   - Controls:
     - Gamepad preferred
       - Front Brake `LT`
