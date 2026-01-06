@@ -29,6 +29,7 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
   - Progress from bicycle to scooter to dirt bike to sport bike
 - Open world
     - City
+    - MEGARAMP
     - Hillside (like real moto, for races)
     - Race Track
     - Dirt Track
