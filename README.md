@@ -152,6 +152,29 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
 - **Cutscenes / Story**
 - **Polish / Add life (NPCs)**
 
+### All Tricks
+- [ ] Basic Wheelie (sitting)
+- [ ] Basic stoppie
+- [ ] Standing wheelie
+- [ ] One leg over wheelie
+- [ ] Stoppie to 180
+- [ ] Drift
+- [ ] Burnout
+- [ ] Biker Boyz w/ 2 legs over the side (sparks)
+- [ ] FMX tricks (only off **Ramps**)
+  - [ ] Back / Front flip
+  - [ ] 360 / 180 turns
+  - [ ] Whip (table)
+  - [ ] Superman (no hand spread eagle)
+- [ ] Skate tricks for memez (only off **Ramps**)
+  - > hop on top of bike, then do it like skater
+  - [ ] kickflip/heelflip
+  - [ ] pop shuvit
+  - [ ] hardflip
+  - [ ] 360flip
+  - [ ] nollie lazerflip
+
+
 ## Timeline
 1-2 years, from 1/1/2026
 
