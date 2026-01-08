@@ -15,6 +15,13 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
 
 Differentiates itself from Ride 5 (and others) since it's not just racing, it's tricks and stunting too.
 
+## TODO
+- [ ] figure out: why should people play Dank Nooner. Gameplay is fun, but to what end? 
+    - story? 
+    - progression? Bicycle to low power bike to dirt to sport? 
+    - Modes? Singleplayer/progression + quick server play like GTA Online?
+- [ ] how to market the game?
+
 ### Goals
 - Have more stunts
 - Animations
@@ -73,8 +80,9 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
 - Artstyle:
   - Cell Shaded (not just overlay like Guac & Load, but built in to materials)
   - Low Poly
-  - Cute/Bubbly?
-  - Aggressive/Sharp?
+  - Neon / Night vibes
+    - e.g. life could be a dream from Cars https://youtu.be/Kzy3n-8A-vA?si=4geX5_eVg_qv6hsg&t=107
+    - e.g. tuner scene from Cars https://www.youtube.com/watch?v=tVm6OWbUTG0
 - Race duration 2-5 mins
 - End goals for gamer:
   - Be the best racer in town 😎
