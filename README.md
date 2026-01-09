@@ -1,10 +1,12 @@
 # Dank Nooner
 
 ## Current status:
-- Moto Player Controller
+- Proof-of-Concept almost complete
+  - Moto Player Controller
 - Planning
 
 ## What is Dank Nooner?
+
 **Dank Nooner** is a motorcycle stunt game built in Godot. The current V1 proof of concept is a simple wheelie balance challenge—hold a wheelie as long as you can and earn points to upgrade your bike.
 
 The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll progress from a bicycle up to sport bikes, learning new tricks and completing missions along the way. The physics should feel fun but challenging—managing clutch, throttle, and balance—with ragdoll crashes when you bail. Doing wheelies fills your NOS meter. Planned features include upgrades, customization, multiplayer (races, co-op, free roam), and eventually a story mode.
@@ -15,14 +17,39 @@ The goal for V2 is a full rewrite expanding into an open-world 3D game. You'll p
 
 Differentiates itself from Ride 5 (and others) since it's not just racing, it's tricks and stunting too.
 
-## TODO
-- [ ] figure out: why should people play Dank Nooner. Gameplay is fun, but to what end? 
-    - story? 
-    - progression? Bicycle to low power bike to dirt to sport? 
-    - Modes? Singleplayer/progression + quick server play like GTA Online?
+### Marketing
+
 - [ ] how to market the game?
+- [ ] figure out: why should people play Dank Nooner. Gameplay is fun, but to what end?
+  - story?
+  - progression? Bicycle to low power bike to dirt to sport?
+  - Modes? Singleplayer/progression + quick server play like GTA Online?
+- [ ] think of clippable moments for dank nooner
+  - [ ] e.g. first crash & ragdoll
+  - [ ] e.g. first dank wheelie fx
+  - [ ] going on your phone during a ride turns into a crash
+    - [ ] why do you need to do this? Some menu? Tuning?
+  - [ ] E.g. wheelie => 360 flip trick in trailer w/ friend crashing during a race
+- [ ] trailer + free multiplayer demo out now!
+  - [ ] high quality demo, only planned jank
+- [ ] hooks
+  - [ ] 2-3 seconds to get attention on short form
+  - [ ] do all the stupid stuff on a motorcycle from the safety of your home
+  - [ ] mom said don't do wheelies
+  - [ ] real bike mechanics, real crazy tricks
+  - [ ] high skill ceiling to perfect your tricks
+  - [ ] entertain first, then promote
+  - [ ] post on EVERY platform
+  - [ ] highlight what makes it different
+
+### Stuff to Organize
+
+- [ ] Add dopamine sounds (sfx on points, etc)
+- [ ] easy to connect with friends
+- [ ] easy to join open lobby
 
 ### Goals
+
 - Have more stunts
 - Animations
   - IK to animate to hold on to handlebars / lean
@@ -35,11 +62,11 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
 - Story?
   - Progress from bicycle to scooter to dirt bike to sport bike
 - Open world
-    - City
-    - MEGARAMP
-    - Hillside (like real moto, for races)
-    - Race Track
-    - Dirt Track
+  - City
+  - MEGARAMP
+  - Hillside (like real moto, for races)
+  - Race Track
+  - Dirt Track
 - Different gameplay loops
   - Riding around the world
   - Wheelies/other trick challenges (missions)
@@ -92,9 +119,10 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
       - Need to do tricks to get NOS, needed to win
     - Get golds / trophies
 
-
 ### Milestones
+
 #### POC
+
 - **Multiplayer POC** - [COMPLETE]
   - > Start on separate project
   - See [multiplayer-poc-godot](https://github.com/ssebs/multiplayer-poc-godot.git)
@@ -120,7 +148,9 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
   - Tricks (stoppie, ramp + backflip, can-can?, tabletop?)
   - Ragdoll (crash + ragdoll)
   - Code cleanup
+
 #### MVP
+
 - **Start "real" project**
   - > Start on separate (main) project
   - Major planning:
@@ -154,6 +184,7 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
   - tbd
 
 #### Full game
+
 - **Tricks** (in air tricks, more than just wheelie)
 - **Unlocks / Customization**
 - **Quests**
@@ -161,6 +192,7 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
 - **Polish / Add life (NPCs)**
 
 ### All Tricks
+
 - [ ] Basic Wheelie (sitting)
 - [ ] Basic stoppie
 - [ ] Standing wheelie
@@ -182,9 +214,10 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
   - [ ] 360flip
   - [ ] nollie lazerflip
 
-
 ## Timeline
+
 1-2 years, from 1/1/2026
 
 ## License
+
 [AGPL](./LICENSE)
