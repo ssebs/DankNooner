@@ -47,7 +47,9 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
 - [ ] Add dopamine sounds (sfx on points, etc)
 - [ ] easy to connect with friends
 - [ ] easy to join open lobby
-
+- [ ] tutorial via challenges
+  - [ ] Teach how to shift, do tricks, and physics of braking via examples.
+  - [ ] (Speed up to 60 then take this corner at the apex, brake progressively)
 ### Goals
 
 - Have more stunts
@@ -141,7 +143,6 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
   - Riding bike Animations (lean/steer, wheelie, start/stop w/ leg down)
   - Sync'd animations w/ state machine
   - Code cleanup
-- **Complex animations**
   - > continue from player controller project
   - With IK?
   - More bike animations (brakes, clutch, gear shift, throttle)
@@ -170,6 +171,7 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
   - Import Scenes from past 2 projects (multiplayer, player controller)
   - Create UI / Game managers / Globals / Lobby / etc
   - Follow the plan... (and update this doc)
+  - Play with art style, try to make it look good
 - **Freeroam + tricks MP demo**
   - Playable demo with:
     - Multiplayer (can play with friends)
@@ -198,6 +200,7 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
 - [ ] Standing wheelie
 - [ ] One leg over wheelie
 - [ ] Stoppie to 180
+- [ ] two legs up doing a wheelie
 - [ ] Drift
 - [ ] Burnout
 - [ ] Biker Boyz w/ 2 legs over the side (sparks)
