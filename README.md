@@ -1,6 +1,7 @@
 # Dank Nooner
 
 ## Current status:
+
 - Proof-of-Concept almost complete
   - Moto Player Controller
 - Planning
@@ -50,6 +51,12 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
 - [ ] tutorial via challenges
   - [ ] Teach how to shift, do tricks, and physics of braking via examples.
   - [ ] (Speed up to 60 then take this corner at the apex, brake progressively)
+- [ ] release dank nooner v2 demo MP on itch. This is p0 to get critical feedback about game feel
+  - [ ] think of what should be in the demo, what modes, etc.
+  - [ ] make sure it's fun & polished
+- [ ] create color palette for dank nooner
+- [ ] textured low poly? Aka paint lines on 3d models
+
 ### Goals
 
 - Have more stunts
