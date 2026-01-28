@@ -57,6 +57,21 @@ Differentiates itself from Ride 5 (and others) since it's not just racing, it's 
 - [ ] create color palette for dank nooner
 - [ ] textured low poly? Aka paint lines on 3d models
 
+### Peer Feedback from moto-player-controller
+
+- Pedro doesn't like:
+  - the camera snaps back when letting go
+- Pedro ideas:
+  - helldivers like combos
+  - Bobble head cosmetic
+  - "Jiggle Physics" cosmetics see - Marvel Rivals
+  - Upload PNG for face, or logo, etc.
+- Me:
+  - Reduce FOV speed change on mini bike
+  - Leaning animation broken after some time
+  - Transparent cosmetic - or xray / etc
+
+
 ### Goals
 
 - Have more stunts
