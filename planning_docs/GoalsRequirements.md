@@ -14,6 +14,7 @@
   - lobby / peer to peer joining
   - easy to connect with friends
   - easy to join open lobby (like GTAO lobby)
+  - WebRTC if possible for web
 - Game modes:
   - free-ride
   - stunt race
