@@ -23,7 +23,12 @@ An open-world motorcycle game about doing every stupid thing you'd never try in 
 | **V2 — MVP**       | In Progress | Multiplayer open-world rewrite with expanded tricks, racing, and progression                     |
 | **V3 — Full Game** | Planned     | Story mode, quests, cutscenes, full trick system, polish                                         |
 
-> v1 source code is in [v1/](./v1/) - v2 development is in the project root.
+## Source Code
+
+| Version | Directory       |
+| ------- | --------------- |
+| V1      | [v1/](./v1/)   |
+| V2      | [v2/](./v2/)   |
 
 ## Related Projects
 
