@@ -38,6 +38,7 @@
     - Race track
     - Dirt / jump track
     - Megaramp
+- Localization
 - Sounds:
   - Better sounding engines / sfx than current
   - dopamine sounds (sfx on points, etc)
