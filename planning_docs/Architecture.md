@@ -15,9 +15,9 @@
 - How different systems work together
 - Save system (use my own json instead of following godot's recursive way like G&L)
 - NPC AI (traffic)
+- MORE
 
 ## Features to plan out:
 - Tutorials via challenges
   - Teach how to shift, do tricks, and physics of braking via examples.
   - Speed up to 60 then take this corner at the apex, brake progressively
-- 
