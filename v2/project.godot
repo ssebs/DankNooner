@@ -12,10 +12,15 @@ config_version=5
 
 config/name="DankNooner"
 config/description="An open-world motorcycle game about doing every stupid thing you'd never try in real life. Realistic controls meet arcade-style tricks — progressive braking, limited grip, and ragdoll crashes. Weave through traffic doing wheelies, pull skate-style tricks off ramps, race friends online, and progress from a bicycle to a fully customized sport bike."
+run/main_scene="uid://bi5r4eng0hofw"
 config/custom_user_dir_name="DankNooner"
 config/features=PackedStringArray("4.6", "Forward Plus")
 boot_splash/show_image=false
 config/icon="res://icon.svg"
+
+[autoload]
+
+UtilsDebug="*uid://daxbcxulq5oyq"
 
 [debug]
 
@@ -156,4 +161,5 @@ switch_cam={
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+textures/vram_compression/import_etc2_astc=true
 occlusion_culling/use_occlusion_culling=true

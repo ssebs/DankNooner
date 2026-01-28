@@ -1,5 +1,4 @@
 {
-    "godotTools.editorPath.godot4": "/usr/bin/godot",
     "godotFormatter.useSpaces": true,
     "editor.detectIndentation": false,
     "files.exclude": {
