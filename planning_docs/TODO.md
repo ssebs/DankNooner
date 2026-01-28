@@ -4,6 +4,7 @@
 
 ## In Progress 🚀
 - [ ] Update project plan
+- [ ] Git LFS https://www.youtube.com/watch?v=4Ln6iRh_LTo
 
 ## Backlog 📋
 - [ ] Create Architecture doc
