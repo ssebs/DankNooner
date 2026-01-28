@@ -21,7 +21,7 @@
 - Release on Steam if people like it
 
 ## Notes
-
+- [ ] weave through traffic doing wheelies to build clout
 - [ ] Differentiates itself from Ride 5 (and others) since it's not just racing, it's tricks and stunting too.
 - [ ] release dank nooner v2 demo MP on itch. This is p0 to get critical feedback about game feel
   - [ ] think of what should be in the demo, what modes, etc.

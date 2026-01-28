@@ -1,22 +1,37 @@
 # Dank Nooner
 
-**Dank Nooner** is a physics-based motorcycle stunt game built in Godot. Do tricks, race friends, and ragdoll when you inevitably bail.
+**A physics-based motorcycle stunt game. Wheelies, wrecks, and questionable decisions.**
 
-- Wheelies, stoppies, backflips, combos, and skate-style ramp tricks
-- Multiplayer free roam, races, and trick challenges
-- Singleplayer progression from bicycle to sport bike
+An open-world motorcycle game about doing every stupid thing you'd never try in real life. Realistic controls meet arcade-style tricks — progressive braking, limited grip, and ragdoll crashes. Weave through traffic doing wheelies, pull skate-style tricks off ramps, race friends online, and progress from a bicycle to a fully customized sport bike.
 
-**Status:** Early development (V2). POC is [playable on Itch.io](https://theofficialssebs.itch.io/dank-nooner).
+> **Play the v1 POC:** [Itch.io](https://theofficialssebs.itch.io/dank-nooner)
 
-## Status
+## Highlights
 
-- **V1 (POC)** — Complete. A playable wheelie balance game. [Play on Itch.io](https://theofficialssebs.itch.io/dank-nooner)
-- **V2** — In development. A multiplayer open-world rewrite with expanded tricks, racing, progression, and a singleplayer story mode.
+- **Tricks & combos** — Wheelies, stoppies, backflips, drifts, burnouts, and ramp tricks with a combo chain system
+- **Multiplayer** — Ride with friends or drop into open lobbies
+- **Game modes** — Free roam, street races, stunt races, track races, S.K.A.T.E.-style trick challenges, and traffic weaving
+- **Open world** — Island map with city, suburbs, mountain roads, race track, dirt jumps, and a megaramp
+- **Progression** — Start on a bicycle, unlock bikes up to sport bikes, earn cash for upgrades and customization
+- **Singleplayer** — Story mode planned for full release
 
-## Media
+## Roadmap
 
-<!-- TODO: Add YouTube trailer / gameplay video -->
-<!-- TODO: Add screenshots -->
+| Phase              | Status      | Description                                                                                      |
+| ------------------ | ----------- | ------------------------------------------------------------------------------------------------ |
+| **V1 — POC**       | Complete    | Wheelie balance game on [Itch.io](https://theofficialssebs.itch.io/dank-nooner) + full player controller POC ([download v1.0](https://github.com/ssebs/moto-player-controller-godot/releases/tag/v1.0)) |
+| **V2 — MVP**       | In Progress | Multiplayer open-world rewrite with expanded tricks, racing, and progression                     |
+| **V3 — Full Game** | Planned     | Story mode, quests, cutscenes, full trick system, polish                                         |
+
+> v1 source code is in [v1/](./v1/) - v2 development is in the project root.
+
+## Related Projects
+
+POC repos that fed into V2:
+
+- [multiplayer-poc-godot](https://github.com/ssebs/multiplayer-poc-godot) — Lobby and player sync prototype
+- [inverse-kinematics-poc](https://github.com/ssebs/inverse-kinematics-poc) — IK rider animations
+- [moto-player-controller-godot](https://github.com/ssebs/moto-player-controller-godot) — Player controls, physics, tricks, and ragdoll
 
 ## Planning Docs
 
@@ -28,6 +43,16 @@ See [planning_docs/](./planning_docs/) for detailed design and project status:
 - [Architecture / Design](./planning_docs/Architecture.md)
 - [Marketing](./planning_docs/Marketing.md)
 - [Story / Singleplayer](./planning_docs/StorySingleplayer.md)
+
+## Media
+
+#### Gameplay Demo from `moto-player-controller`:
+
+[![Gameplay Demo (moto-player-controller)](https://img.youtube.com/vi/zCvxL6z0aGQ/hqdefault.jpg)](https://youtu.be/zCvxL6z0aGQ)
+
+#### Multiplayer Demo from `multiplayer-poc-godot`:
+
+![Multiplayer Demo (multiplayer-poc-godot)](https://raw.githubusercontent.com/ssebs/multiplayer-poc-godot/main/img/Multiplayer-POC.gif)
 
 ## License
 
