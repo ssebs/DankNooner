@@ -1,24 +1,33 @@
 # Dank Nooner
 
-## Current status:
+**Dank Nooner** is a physics-based motorcycle stunt game built in Godot. Do tricks, race friends, and ragdoll when you inevitably bail.
 
-- **Planning**
-- **Start on fresh Godot 4.6 project**
+- Wheelies, stoppies, backflips, combos, and skate-style ramp tricks
+- Multiplayer free roam, races, and trick challenges
+- Singleplayer progression from bicycle to sport bike
 
-## What is Dank Nooner?
+**Status:** Early development (V2). POC is [playable on Itch.io](https://theofficialssebs.itch.io/dank-nooner).
 
-**Dank Nooner** is a motorcycle stunt game built in Godot. The current V1 proof of concept is a simple wheelie balance challenge—hold a wheelie as long as you can and earn points to upgrade your bike.
+## Status
 
-The goal for V2 is a full rewrite expanding into an open-world 3D game. The physics should feel fun but challenging—managing clutch, throttle, and balance, with ragdoll crashes when you bail. Doing wheelies fills your boost meter. Planned features include upgrades, customization, multiplayer (races, co-op, free roam), and eventually a story mode. In the story mode, you'll progress from a bicycle up to sport bikes, learning new tricks and completing missions along the way.
+- **V1 (POC)** — Complete. A playable wheelie balance game. [Play on Itch.io](https://theofficialssebs.itch.io/dank-nooner)
+- **V2** — In development. A multiplayer open-world rewrite with expanded tricks, racing, progression, and a singleplayer story mode.
 
-[V1 POC on Itch.io](https://theofficialssebs.itch.io/dank-nooner) | [GitHub](https://github.com/ssebs/danknooner)
+## Media
 
-## Rewrite / V2 / Future of the game
+<!-- TODO: Add YouTube trailer / gameplay video -->
+<!-- TODO: Add screenshots -->
 
+## Planning Docs
 
-## Timeline
+See [planning_docs/](./planning_docs/) for detailed design and project status:
 
-1-2 years, from 1/1/2026
+- [TODO](./planning_docs/TODO.md)
+- [Milestones](./planning_docs/Milestones.md)
+- [Goals & Requirements](./planning_docs/GoalsRequirements.md)
+- [Architecture / Design](./planning_docs/Architecture.md)
+- [Marketing](./planning_docs/Marketing.md)
+- [Story / Singleplayer](./planning_docs/StorySingleplayer.md)
 
 ## License
 
