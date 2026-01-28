@@ -64,6 +64,7 @@
 ## Misc fun ideas:
 
 - Hide license plate / police chase feature
+- Gas station
 
 ## Tricks
 
