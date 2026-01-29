@@ -37,10 +37,9 @@ func deregister_state(state: State):
     state.transitioned.disconnect(_transition_to)
     states.erase(state.state_name)
 
-## TBD, but shouldn't be used
+## Transition to new_state, not to be called from children!
 func request_state_change(new_state: State):
-    print_debug("you should not be calling this! %s" % new_state)
-    return
+    _transition_to(new_state)
 
 #endregion
 

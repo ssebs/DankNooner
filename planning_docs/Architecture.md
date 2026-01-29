@@ -30,3 +30,12 @@
   - Speed up to 60 then take this corner at the apex, brake progressively
 
 ### Nitty-Gritty
+
+### State Machine
+- Managers can have a State Machine, this will transition between different states
+  - e.g. MenuManager can be in MainMenuState, or SettingsMenuState, etc.
+- How to use:
+  - Create Node, attach StateMachine script
+  - Children of this Node that are States will automatically be registered
+  - Transitioning of states happens via State.transitioned() signal, or request_state_change() func
+  - New States can be registered / deregistered to be managed by the state machine
