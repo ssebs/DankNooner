@@ -59,3 +59,22 @@
   - Children of this Node that are States will automatically be registered
   - Transitioning of states happens via State.transitioned() signal, or request_state_change() func
   - New States can be registered / deregistered to be managed by the state machine
+
+### Menus
+
+- Menu States:
+  - OutOfGame
+    - MainMenu
+    - SettingsMenu
+    - LobbyMenu
+  - InGame
+    - PauseMenu
+    - RespawnMenu
+    - UpgradeMenu
+    - CustomizationMenu
+    - LobbyGameModeSelectMenu
+
+- Example flow:
+  - MainMenu (default)
+    - SettingsMenu
+    - LobbyMenu
