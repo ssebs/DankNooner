@@ -3,7 +3,6 @@
 > Actual To-Do list
 
 ## In Progress 🚀
-- [ ] Basic Localization
 
 ## Up Next 📋
 - [ ] Create MenuManager
@@ -31,6 +30,7 @@
 
 ## Done ✅
 
+- [x] Basic Localization
 - [x] Create ManagerManager
 - [x] Create StateMachine
 - [x] Update project plan

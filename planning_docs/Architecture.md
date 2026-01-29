@@ -35,6 +35,15 @@
 
 - `utils/constants.gd` has a map of Group name to group name. This should be used whenever accessing a group name so we're sure it exists.
 
+### Translation / Localization
+
+- Source for strings is `localization/localization.csv`
+  - This CSV is auto-imported to .translation files
+- Using in UI:
+  - Use the key_name from the csv, it should auto-swap.
+- Using in code:
+  - `print(tr("<key_name>"))`
+
 ### Managers
 
 - Managers should have a state machine, and are in the "**Managers**" group. _See constants.gd_
