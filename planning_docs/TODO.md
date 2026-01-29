@@ -3,7 +3,7 @@
 > Actual To-Do list
 
 ## In Progress 🚀
-
+- [ ] Create StateMachine
 - [ ] Create ManagerManager
 
 ## Up Next 📋
