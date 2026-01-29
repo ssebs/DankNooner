@@ -4,40 +4,36 @@
 
 ## In Progress 🚀
 
-- [ ] vscode extension to have Markdown/todo file in secondary side bar
-- [ ] Update project plan
-  - [ ] Create Architecture doc
-
-## Backlog 📋
-
-### Up Next
-
 - [ ] Create ManagerManager
-  - [ ] Create MenuManager
-  - [ ] Create LevelManager
-  - [ ] Create InputManager
-  - [ ] Create NetworkManager
-  - [ ] Create GamemodeManager
-  - [ ] Create SpawnManager
-  - [ ] Create TrickManager
-  - > connect signals
+
+## Up Next 📋
+
+- [ ] Create MenuManager
+  - [ ] Navigate between Menus
+- [ ] Create LevelManager
+- [ ] Create InputManager
+- [ ] Create NetworkManager
+- [ ] Create GamemodeManager
+- [ ] Create SpawnManager
+- [ ] Create TrickManager
+- [ ] Connect signals between all managers in ManagerManager
 - [ ] Create Menus
   - [ ] Create MainMenu
   - [ ] Create SettingsMenu
   - [ ] Create LobbyMenu
   - [ ] Create PauseMenu
-  - > navigate between them
 - [ ] Create Entities/Player
 - [ ] Create test_level
 - [ ] Git LFS https://www.youtube.com/watch?v=4Ln6iRh_LTo
 
-### Later
+## Backlog
 
 - [ ] Setup cloudflare image upload in vscode
 - [ ] ~Import~ Recreate stuff from moto-player-controller
 
 ## Done ✅
 
+- [x] Update project plan
 - [x] Create godot 4.6 project
 - [x] Create folder structure
 - [x] Create planning docs
