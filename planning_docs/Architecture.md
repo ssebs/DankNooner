@@ -29,9 +29,20 @@
   - Teach how to shift, do tricks, and physics of braking via examples.
   - Speed up to 60 then take this corner at the apex, brake progressively
 
-### Nitty-Gritty
+## Nitty-Gritty
+
+### Godot groups
+
+- `utils/constants.gd` has a map of Group name to group name. This should be used whenever accessing a group name so we're sure it exists.
+
+### Managers
+
+- Managers should have a state machine, and are in the "**Managers**" group. _See constants.gd_
+- How to use:
+  - Create Node under `ManagerManager` Node, rename to class name of the manager. e.g. `MenuManager` node uses `menu_manager.gd` which is `MenuManager` `class_name`
 
 ### State Machine
+
 - Managers can have a State Machine, this will transition between different states
   - e.g. MenuManager can be in MainMenuState, or SettingsMenuState, etc.
 - How to use:
