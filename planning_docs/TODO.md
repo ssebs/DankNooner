@@ -3,13 +3,21 @@
 > Actual To-Do list
 
 ## In Progress 🚀
+
+- [ ] vscode extension to have Markdown/todo file in secondary side bar
 - [ ] Update project plan
-- [ ] Git LFS https://www.youtube.com/watch?v=4Ln6iRh_LTo
-- [ ] Setup cloudflare image upload in vscode
+  - [ ] Create Architecture doc
 
 ## Backlog 📋
-- [ ] Create Architecture doc
-- [ ] Import stuff from moto-player-controller
+
+### Up Next
+
+- [ ] Git LFS https://www.youtube.com/watch?v=4Ln6iRh_LTo
+
+### Later
+
+- [ ] Setup cloudflare image upload in vscode
+- [ ] ~Import~ Recreate stuff from moto-player-controller
 
 ## Done ✅
 
