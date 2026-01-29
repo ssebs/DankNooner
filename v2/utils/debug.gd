@@ -1,3 +1,2 @@
-#Autoload: UtilsDebug 
-extends Node
+class_name UtilsDebug extends Node
 

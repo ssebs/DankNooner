@@ -7,7 +7,7 @@
 - [ ] Create ManagerManager
 
 ## Up Next 📋
-
+- [ ] Basic Localization
 - [ ] Create MenuManager
   - [ ] Navigate between Menus
 - [ ] Create LevelManager
