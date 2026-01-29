@@ -145,6 +145,10 @@ switch_cam={
 ]
 }
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://localization/localization.en.translation", "res://localization/localization.es.translation")
+
 [layer_names]
 
 3d_physics/layer_2="crash_collision"
