@@ -1,4 +1,3 @@
-#Autoload: UtilsConstants 
-extends Node
+class_name UtilsConstants extends Node
 
 const PORT = 42068
