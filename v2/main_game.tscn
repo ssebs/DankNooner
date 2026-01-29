@@ -6,6 +6,8 @@
 [ext_resource type="Script" uid="uid://ba7kyb4p3trb1" path="res://utils/state_machine/state_machine.gd" id="4_6bm6p"]
 [ext_resource type="Script" uid="uid://cv4bvroelqvpy" path="res://menus/out_of_game/main_menu/scripts/main_menu_state.gd" id="5_dugkq"]
 [ext_resource type="PackedScene" uid="uid://ds8xwygeh5ykm" path="res://menus/out_of_game/main_menu/scenes/main_menu.tscn" id="6_2pltu"]
+[ext_resource type="Script" uid="uid://b6tnccpx0gwjg" path="res://menus/out_of_game/settings_menu/scripts/settings_menu_state.gd" id="6_f52ns"]
+[ext_resource type="PackedScene" uid="uid://tbsm4ckff72l" path="res://menus/out_of_game/settings_menu/scenes/settings_menu.tscn" id="8_l5ukw"]
 
 [node name="MainGame" type="Node" unique_id=936339405]
 script = ExtResource("1_1oj5k")
@@ -26,6 +28,10 @@ initial_state = NodePath("MainMenuState")
 script = ExtResource("5_dugkq")
 menu_scene = NodePath("../../../../Menus/MainMenu")
 
+[node name="SettingsMenuState" type="Node" parent="ManagerManager/MenuManager/StateMachine" unique_id=2004656817 node_paths=PackedStringArray("menu_scene")]
+script = ExtResource("6_f52ns")
+menu_scene = NodePath("../../../../Menus/SettingsMenu")
+
 [node name="Menus" type="Control" parent="." unique_id=680872978]
 unique_name_in_owner = true
 layout_mode = 3
@@ -36,6 +42,9 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MainMenu" parent="Menus" unique_id=318249922 instance=ExtResource("6_2pltu")]
+layout_mode = 1
+
+[node name="SettingsMenu" parent="Menus" unique_id=991544091 instance=ExtResource("8_l5ukw")]
 layout_mode = 1
 
 [node name="DEBUG_UI" type="Control" parent="." unique_id=510892389]

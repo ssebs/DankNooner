@@ -30,6 +30,8 @@ func register_state(new_state: State):
     if !ok:
         printerr("Failed to register state %s" % new_state)
         return
+    
+    new_state.state_machine_ref = self
     new_state.transitioned.connect(_transition_to)
 
 ## Remove state from Dict & disconnect transitioned signal

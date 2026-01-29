@@ -7,6 +7,7 @@ var state_name: String:
     set(val):
         state_name = UtilsStrings.clean_for_node_name(val)
         name = state_name
+var state_machine_ref: StateMachine
 
 func _init():
     if name != state_name:
@@ -32,4 +33,4 @@ func _to_string() -> String:
     return state_name
 
 func _hide_lint_warning():
-    transitioned.emit(self, null)
+    transitioned.emit(self , null)
