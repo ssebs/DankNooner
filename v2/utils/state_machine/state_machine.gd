@@ -41,6 +41,10 @@ func deregister_state(state: State):
 func request_state_change(new_state: State):
     _transition_to(new_state)
 
+## Get a State in this State Machine by the State's state_name
+func get_state_by_name(state_name: String) -> State:
+    return states.get(UtilsStrings.clean_for_node_name(state_name))
+
 #endregion
 
 ## Updates current_state to new_state, runs Exit() on old and Enter() on new
