@@ -6,27 +6,32 @@ class_name StateMachine extends Node
 ## After Enter() of new transition
 signal state_transitioned(new_state: State)
 
+## _transition_to is deferred on _ready
 @export var initial_state: State
-@export var is_debug: bool = true
+@export var is_debug: bool = false
 
 ## When a new State is registered, add it to the dictionary
 var states: Dictionary[String, State] = {}
 var current_state: State
 
 func _ready():
+    load_child_states()
+    if initial_state:
+        # _transition_to(initial_state)
+        call_deferred("_transition_to", initial_state)
+
+#region Public API
+## Register states from this node's children
+func load_child_states():
     for child in get_children():
         if child is State:
             if is_debug:
-                print("Found %s, registering to this state machine", % child)
+                print("Found %s, registering to this state machine" % child)
             register_state(child)
-    
-    if initial_state:
-        _transition_to(initial_state)
 
-#region Public API
 ## Add state to Dict & connect the transitioned signal
 func register_state(new_state: State):
-    var ok = states.set(new_state.state_name, new_state)
+    var ok = states.set(new_state.name, new_state)
     if !ok:
         printerr("Failed to register state %s" % new_state)
         return
@@ -37,24 +42,27 @@ func register_state(new_state: State):
 ## Remove state from Dict & disconnect transitioned signal
 func deregister_state(state: State):
     state.transitioned.disconnect(_transition_to)
-    states.erase(state.state_name)
+    states.erase(state.name)
 
 ## Transition to new_state, not to be called from children!
 func request_state_change(new_state: State):
     _transition_to(new_state)
 
-## Get a State in this State Machine by the State's state_name
+## Get a State in this State Machine by the State's name
 func get_state_by_name(state_name: String) -> State:
-    return states.get(UtilsStrings.clean_for_node_name(state_name))
+    var st = states.get(state_name)
+    if st == null:
+        printerr("Could not get state %s" % state_name)
+    return st
 
 #endregion
 
 ## Updates current_state to new_state, runs Exit() on old and Enter() on new
 func _transition_to(new_state: State):
     if is_debug:
-        print("transition_to: %s", new_state)
+        print("transition_to: %s" % new_state)
     
-    var ok = states.has(new_state)
+    var ok = states.has(new_state.name)
     if !ok:
         printerr("Could not find %s in state machine" % new_state)
         return

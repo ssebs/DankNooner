@@ -24,12 +24,14 @@ state_machine = NodePath("StateMachine")
 script = ExtResource("4_6bm6p")
 initial_state = NodePath("MainMenuState")
 
-[node name="MainMenuState" type="Node" parent="ManagerManager/MenuManager/StateMachine" unique_id=1404984498 node_paths=PackedStringArray("menu_scene")]
+[node name="MainMenuState" type="Node" parent="ManagerManager/MenuManager/StateMachine" unique_id=1404984498 node_paths=PackedStringArray("menu_manager", "menu_scene")]
 script = ExtResource("5_dugkq")
+menu_manager = NodePath("../..")
 menu_scene = NodePath("../../../../Menus/MainMenu")
 
-[node name="SettingsMenuState" type="Node" parent="ManagerManager/MenuManager/StateMachine" unique_id=2004656817 node_paths=PackedStringArray("menu_scene")]
+[node name="SettingsMenuState" type="Node" parent="ManagerManager/MenuManager/StateMachine" unique_id=2004656817 node_paths=PackedStringArray("menu_manager", "menu_scene")]
 script = ExtResource("6_f52ns")
+menu_manager = NodePath("../..")
 menu_scene = NodePath("../../../../Menus/SettingsMenu")
 
 [node name="Menus" type="Control" parent="." unique_id=680872978]
@@ -42,9 +44,11 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MainMenu" parent="Menus" unique_id=318249922 instance=ExtResource("6_2pltu")]
+visible = false
 layout_mode = 1
 
 [node name="SettingsMenu" parent="Menus" unique_id=991544091 instance=ExtResource("8_l5ukw")]
+visible = false
 layout_mode = 1
 
 [node name="DEBUG_UI" type="Control" parent="." unique_id=510892389]
