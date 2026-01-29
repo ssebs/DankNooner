@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://cv4bvroelqvpy" path="res://menus/out_of_game/main_menu/scripts/main_menu_state.gd" id="5_dugkq"]
 [ext_resource type="PackedScene" uid="uid://ds8xwygeh5ykm" path="res://menus/out_of_game/main_menu/scenes/main_menu.tscn" id="6_2pltu"]
 [ext_resource type="Script" uid="uid://b6tnccpx0gwjg" path="res://menus/out_of_game/settings_menu/scripts/settings_menu_state.gd" id="6_f52ns"]
-[ext_resource type="Theme" uid="uid://cpjm3dxepmgf0" path="res://resources/themes/breeze_editor_theme.res" id="7_4srsv"]
+[ext_resource type="Theme" uid="uid://dhsrms7w7vxyc" path="res://resources/themes/default_editor_theme.res" id="7_4srsv"]
 [ext_resource type="PackedScene" uid="uid://tbsm4ckff72l" path="res://menus/out_of_game/settings_menu/scenes/settings_menu.tscn" id="8_l5ukw"]
 
 [node name="MainGame" type="Node" unique_id=936339405]
