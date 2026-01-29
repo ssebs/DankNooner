@@ -14,6 +14,7 @@
 
 ## Up Next 📋
 
+- [ ] Find way to not get node like `settings_menu_state.gd`
 - [ ] Create LevelManager
 - [ ] Create InputManager
 - [ ] Create NetworkManager
