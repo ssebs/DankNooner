@@ -4,6 +4,8 @@
 [ext_resource type="Script" uid="uid://dm0vkjkxnoe42" path="res://managers/manager_manager.gd" id="2_yx7mw"]
 [ext_resource type="Script" uid="uid://277pfnhexwcq" path="res://managers/menu/menu_manager.gd" id="3_ykeeq"]
 [ext_resource type="Script" uid="uid://ba7kyb4p3trb1" path="res://utils/state_machine/state_machine.gd" id="4_6bm6p"]
+[ext_resource type="Script" uid="uid://cv4bvroelqvpy" path="res://menus/out_of_game/main_menu/scripts/main_menu_state.gd" id="5_dugkq"]
+[ext_resource type="PackedScene" uid="uid://ds8xwygeh5ykm" path="res://menus/out_of_game/main_menu/scenes/main_menu.tscn" id="6_2pltu"]
 
 [node name="MainGame" type="Node" unique_id=936339405]
 script = ExtResource("1_1oj5k")
@@ -11,14 +13,18 @@ script = ExtResource("1_1oj5k")
 [node name="ManagerManager" type="Node" parent="." unique_id=1214717395]
 script = ExtResource("2_yx7mw")
 
-[node name="MenuManager" type="Node" parent="ManagerManager" unique_id=284078827 node_paths=PackedStringArray("menus")]
+[node name="MenuManager" type="Node" parent="ManagerManager" unique_id=284078827 node_paths=PackedStringArray("menus", "state_machine")]
 script = ExtResource("3_ykeeq")
 menus = NodePath("../../Menus")
+state_machine = NodePath("StateMachine")
 
-[node name="StateMachine" type="Node" parent="ManagerManager/MenuManager" unique_id=544508199]
+[node name="StateMachine" type="Node" parent="ManagerManager/MenuManager" unique_id=544508199 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("4_6bm6p")
+initial_state = NodePath("MainMenuState")
 
-[node name="Node" type="Node" parent="ManagerManager/MenuManager/StateMachine" unique_id=1404984498]
+[node name="MainMenuState" type="Node" parent="ManagerManager/MenuManager/StateMachine" unique_id=1404984498 node_paths=PackedStringArray("menu_scene")]
+script = ExtResource("5_dugkq")
+menu_scene = NodePath("../../../../Menus/MainMenu")
 
 [node name="Menus" type="Control" parent="." unique_id=680872978]
 unique_name_in_owner = true
@@ -28,6 +34,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="MainMenu" parent="Menus" unique_id=318249922 instance=ExtResource("6_2pltu")]
+layout_mode = 1
 
 [node name="DEBUG_UI" type="Control" parent="." unique_id=510892389]
 visible = false

@@ -27,6 +27,7 @@
 
 ## Backlog
 
+- [ ] Create UI Theme
 - [ ] Setup cloudflare image upload in vscode
 - [ ] ~Import~ Recreate stuff from moto-player-controller
 
