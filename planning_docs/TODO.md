@@ -4,9 +4,16 @@
 
 ## In Progress 🚀
 
-## Up Next 📋
 - [ ] Create MenuManager
   - [ ] Navigate between Menus
+  - [ ] Create Menus
+  - [ ] Create MainMenu
+  - [ ] Create SettingsMenu
+  - [ ] Create LobbyMenu
+  - [ ] Create PauseMenu
+
+## Up Next 📋
+
 - [ ] Create LevelManager
 - [ ] Create InputManager
 - [ ] Create NetworkManager
@@ -14,11 +21,6 @@
 - [ ] Create SpawnManager
 - [ ] Create TrickManager
 - [ ] Connect signals between all managers in ManagerManager
-- [ ] Create Menus
-  - [ ] Create MainMenu
-  - [ ] Create SettingsMenu
-  - [ ] Create LobbyMenu
-  - [ ] Create PauseMenu
 - [ ] Create Entities/Player
 - [ ] Create test_level
 - [ ] Git LFS https://www.youtube.com/watch?v=4Ln6iRh_LTo
