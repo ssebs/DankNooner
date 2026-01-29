@@ -3,11 +3,9 @@
 > Actual To-Do list
 
 ## In Progress 🚀
-- [ ] Create StateMachine
-- [ ] Create ManagerManager
+- [ ] Basic Localization
 
 ## Up Next 📋
-- [ ] Basic Localization
 - [ ] Create MenuManager
   - [ ] Navigate between Menus
 - [ ] Create LevelManager
@@ -33,6 +31,8 @@
 
 ## Done ✅
 
+- [x] Create ManagerManager
+- [x] Create StateMachine
 - [x] Update project plan
 - [x] Create godot 4.6 project
 - [x] Create folder structure
