@@ -1,5 +1,6 @@
 class_name SettingsMenuState extends State
 
+@export var menu_manager: MenuManager
 @export var menu_scene: BaseMenu
 
 var back_btn: Button = null
@@ -9,9 +10,11 @@ func _ready():
     back_btn = menu_scene.get_node("%BackBtn")
 
 func Enter():
+    menu_scene.show()
     back_btn.pressed.connect(_on_back_pressed)
 
 func Exit():
+    menu_scene.hide()
     if back_btn:
         back_btn.pressed.disconnect(_on_back_pressed)
 

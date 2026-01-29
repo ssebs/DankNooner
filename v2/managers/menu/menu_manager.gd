@@ -1,3 +1,4 @@
+@tool
 class_name MenuManager extends Node
 
 @export var menus: Control
@@ -11,13 +12,19 @@ enum MenuGameState {
 var menu_game_state: MenuGameState = MenuGameState.OutOfGame
 
 func _ready():
-    hide_all_menus(state_machine.current_state)
+    hide_all_menus()
+    
+    if Engine.is_editor_hint():
+        return
+    
+    state_machine.state_transitioned.connect(_on_state_transitioned)
 
-## Will hide all menus except `except_this_one`, if exists. 
-func hide_all_menus(except_this_one: State):
+func _on_state_transitioned(_new_state: State):
+    pass
+
+## Will hide all menus
+func hide_all_menus():
     for child in menus.get_children():
+        if !child is BaseMenu:
+            continue
         child.hide()
-        
-        # HACK - not sure if this works.
-        if child == except_this_one:
-            child.show()

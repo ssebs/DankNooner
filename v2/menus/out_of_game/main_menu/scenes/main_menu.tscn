@@ -34,3 +34,8 @@ text = "GAME_TITLE"
 unique_name_in_owner = true
 layout_mode = 2
 text = "SETTINGS_LABEL"
+
+[node name="QuitBtn" type="Button" parent="VBoxContainer" unique_id=1042468218]
+unique_name_in_owner = true
+layout_mode = 2
+text = "QUIT_LABEL"
