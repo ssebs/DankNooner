@@ -61,6 +61,7 @@
       - **Hard** - Manual, can fall (e.g. low side crash if leaning and grabbing a fist full of brake)
   - Manage clutch, balancing, throttle, steering (need to be smooth, don't just slam it.)
   - Falling / crashing has ragdoll physics, player goes flying until they stop moving (or press btn)
+- Have to dodge Teslas that try and run into you
 
 ## Misc fun ideas:
 
