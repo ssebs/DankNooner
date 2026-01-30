@@ -4,14 +4,7 @@
 
 ## In Progress 🚀
 
-- [ ] Fix Menu HACKS / Cleanup
-  - [ ] Should BaseMenu exist?
-  - [ ] Find way to not get node like `settings_menu_state.gd`
-  - [ ] Maybe move Menu Scripts Under MenuManager?
-  - [ ] Move MenuManager to its own Scene?
-  - [ ] See [scratchpad](./ScratchPad.md)
-  - > Can't use @onready in current setup
-- Update Architecture doc w/ final setup
+- [ ] Update Architecture doc w/ final setup
 
 ## Up Next 📋
 
@@ -46,6 +39,7 @@
 
 ## Done ✅
 
+- [x] Fix Menu HACKS / Cleanup
 - [x] Create MenuManager
 - [x] Navigate between Menus
 - [x] Basic Localization
