@@ -9,6 +9,7 @@
   - [ ] Find way to not get node like `settings_menu_state.gd`
   - [ ] Maybe move Menu Scripts Under MenuManager?
   - [ ] Move MenuManager to its own Scene?
+  - [ ] See [scratchpad](./ScratchPad.md)
   - > Can't use @onready in current setup
 - Update Architecture doc w/ final setup
 
@@ -22,6 +23,7 @@
 ## Backlog
 
 - [ ] Create LevelManager
+- [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
 - [ ] Create InputManager
 - [ ] Create NetworkManager
 - [ ] Create GamemodeManager
@@ -29,7 +31,14 @@
 - [ ] Create TrickManager
 - [ ] Connect signals between all managers in ManagerManager
 - [ ] Create Entities/Player
-- [ ] Create test_level
+- [ ] Create Test Levels
+  - [ ] Gym - player controller, with tp. Basically in game documentation. 
+    - (E.g. How far can you jump)
+  - [ ] Zoo - all relevant models/scenes in 3d space to easily compare 
+    - (E.g. diff bikes/mods on each bike)
+    - There's a godot plugin for this
+  - [ ] Museum - functionally show how systems work, text explaining the systems. 
+    - (E.g. showing physics demos, how scripted sequences work)
 - [ ] Git LFS https://www.youtube.com/watch?v=4Ln6iRh_LTo
 - [ ] Create UI Theme
 - [ ] Setup cloudflare image upload in vscode

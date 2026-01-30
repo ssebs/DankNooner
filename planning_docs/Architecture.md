@@ -9,6 +9,7 @@
 - [ ] Think about how to use composition in game, like x has a y. Think golang struct has a struct. I.e. dog has age/walk anim/collider handler/etc components. When something spawns in, it has a popanim component that plays,
 - [ ] I don't have to write code the godot way, e.g. load/save my own files without nodes. Use until funcs
 - [ ] hand write the code & plan structure. Don't import moto-poc, but re-create it using better systems
+- Use spatial comments (debug notes in the level itself)
 
 ### Stuff to plan out:
 
