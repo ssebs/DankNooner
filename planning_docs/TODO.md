@@ -4,7 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] Update Architecture doc w/ final setup
 
 ## Up Next 📋
 
@@ -40,6 +39,7 @@
 ## Done ✅
 
 - [x] Fix Menu HACKS / Cleanup
+  - [x] Update Architecture doc w/ final setup
 - [x] Create MenuManager
 - [x] Navigate between Menus
 - [x] Basic Localization

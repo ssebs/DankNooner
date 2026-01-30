@@ -61,21 +61,30 @@
   - Transitioning of states happens via State.transitioned() signal, or request_state_change() func
   - New States can be registered / deregistered to be managed by the state machine
 
-### Menus
+### Menu State Machine System
 
-- Menu States:
-  - OutOfGame
-    - MainMenu
-    - SettingsMenu
-    - LobbyMenu
-  - InGame
-    - PauseMenu
-    - RespawnMenu
-    - UpgradeMenu
-    - CustomizationMenu
-    - LobbyGameModeSelectMenu
+Menus use the state machine pattern where each screen is a `MenuState` extending `State`.
 
-- Example flow:
-  - MainMenu (default)
-    - SettingsMenu
-    - LobbyMenu
+#### Creating a New Menu State
+
+> Follow other files for example.
+
+- Create new scene > `MenuState` type
+  - Name it `<TYPE>MenuState`, save to `menus/...` as `<type>_menu_state.tscn`
+- Create script with `<type>_menu_state.gd` as the name
+  - Give it the `class_name` `<TYPE>MenuState` extends `MenuState`
+- Add a `Control` node, name it `%UI`
+
+- `@export var menu_manager: MenuManager` + target states. (see other files)
+  - In `Enter()`: call `ui.show()`, connect button signals
+  - In `Exit()`: call `ui.hide()`, disconnect button signals
+  - Transition via `transitioned.emit(target_state)`
+- Add this new scene in the state machine
+  - Add as a child of the StateMachine node
+  - Wire up the exports in inspector (menu_manager, navigation targets)
+
+#### Key Rules
+
+- All MenuStates **must** have a `%UI` Control node (unique name)
+- Set `initial_state` on StateMachine to define the default menu
+- Connect signals in `Enter()`, disconnect in `Exit()` to avoid duplicate connections
