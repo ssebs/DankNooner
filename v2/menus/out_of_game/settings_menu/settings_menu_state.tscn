@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://tbsm4ckff72l"]
+
+[ext_resource type="Script" uid="uid://b6tnccpx0gwjg" path="res://menus/out_of_game/settings_menu/settings_menu_state.gd" id="1_hdace"]
+
+[node name="SettingsMenuState" type="Node" unique_id=207724047]
+script = ExtResource("1_hdace")
+metadata/_custom_type_script = "uid://b6tnccpx0gwjg"
+
+[node name="UI" type="Control" parent="." unique_id=991544091]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI" unique_id=1674008939]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -31.0
+offset_top = -20.0
+offset_right = 31.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleLabel" type="Label" parent="UI/VBoxContainer" unique_id=2095145418]
+layout_mode = 2
+text = "SETTINGS_LABEL"
+
+[node name="BackBtn" type="Button" parent="UI/VBoxContainer" unique_id=1870693339]
+unique_name_in_owner = true
+layout_mode = 2
+text = "BACK_LABEL"
