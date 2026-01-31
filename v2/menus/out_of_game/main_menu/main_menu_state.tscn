@@ -15,35 +15,37 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI" unique_id=321861134]
+[node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=1205553562]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -51.5
-offset_top = -20.0
-offset_right = 51.5
-offset_bottom = 20.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TitleLabel" type="Label" parent="UI/VBoxContainer" unique_id=989311752]
+[node name="TitleLabel" type="Label" parent="UI/MarginContainer" unique_id=989311752]
 layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_type_variation = &"TitleLabel"
 text = "GAME_TITLE"
 
-[node name="PlayBtn" type="Button" parent="UI/VBoxContainer" unique_id=573512346]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer" unique_id=321861134]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="PlayBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=573512346]
 unique_name_in_owner = true
 layout_mode = 2
 text = "PLAY_LABEL"
 
-[node name="SettingsBtn" type="Button" parent="UI/VBoxContainer" unique_id=358161549]
+[node name="SettingsBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=358161549]
 unique_name_in_owner = true
 layout_mode = 2
 text = "SETTINGS_LABEL"
 
-[node name="QuitBtn" type="Button" parent="UI/VBoxContainer" unique_id=1042468218]
+[node name="QuitBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=1042468218]
 unique_name_in_owner = true
 layout_mode = 2
 text = "QUIT_LABEL"

@@ -20,7 +20,7 @@ func Enter():
 func Exit():
 	ui.hide()
 
-	play_btn.pressed.connect(_on_play_pressed)
+	play_btn.pressed.disconnect(_on_play_pressed)
 	settings_btn.pressed.disconnect(_on_settings_pressed)
 	quit_btn.pressed.disconnect(_on_quit_pressed)
 
