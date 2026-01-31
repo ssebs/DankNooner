@@ -12,6 +12,14 @@
 [node name="MainGame" type="Node" unique_id=936339405]
 script = ExtResource("1_1oj5k")
 
+[node name="BGClear" type="ColorRect" parent="." unique_id=365551084]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08, 0.08, 0.08, 1)
+
 [node name="ManagerManager" type="Node" parent="." unique_id=1214717395]
 script = ExtResource("2_yx7mw")
 
