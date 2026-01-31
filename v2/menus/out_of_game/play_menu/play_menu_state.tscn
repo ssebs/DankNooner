@@ -15,46 +15,56 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI" unique_id=1674008939]
+[node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=294073097]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -34.0
-offset_top = -64.5
-offset_right = 34.0
-offset_bottom = 64.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TitleLabel" type="Label" parent="UI/VBoxContainer" unique_id=2095145418]
+[node name="TitleLabel" type="Label" parent="UI/MarginContainer" unique_id=2095145418]
 layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_type_variation = &"TitleLabel"
 text = "PLAY_LABEL"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/VBoxContainer" unique_id=234802966]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer" unique_id=1674008939]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer" unique_id=234802966]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
-[node name="LevelSelectBtn" type="OptionButton" parent="UI/VBoxContainer/VBoxContainer" unique_id=1007007876]
+[node name="LevelSelectBtn" type="OptionButton" parent="UI/MarginContainer/VBoxContainer/VBoxContainer" unique_id=1007007876]
 unique_name_in_owner = true
 layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "LEVEL_SELECT_LABEL"
+popup/item_0/id = 0
+popup/item_0/disabled = true
+popup/item_1/text = "LEVEL_TEST_1_LABEL"
+popup/item_1/id = 1
 
-[node name="HostBtn" type="Button" parent="UI/VBoxContainer/VBoxContainer" unique_id=709225504]
+[node name="HostBtn" type="Button" parent="UI/MarginContainer/VBoxContainer/VBoxContainer" unique_id=709225504]
 layout_mode = 2
 text = "HOST_LABEL"
 
-[node name="IPEntry" type="LineEdit" parent="UI/VBoxContainer/VBoxContainer" unique_id=1871235480]
+[node name="IPEntry" type="LineEdit" parent="UI/MarginContainer/VBoxContainer/VBoxContainer" unique_id=1871235480]
 layout_mode = 2
 placeholder_text = "IP_LABEL"
+clear_button_enabled = true
 
-[node name="LobbyBtn" type="Button" parent="UI/VBoxContainer" unique_id=1426407535]
+[node name="LobbyBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=1426407535]
 unique_name_in_owner = true
 layout_mode = 2
 text = "LOBBY_LABEL"
 
-[node name="BackBtn" type="Button" parent="UI/VBoxContainer" unique_id=1870693339]
+[node name="BackBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=1870693339]
 unique_name_in_owner = true
 layout_mode = 2
 text = "BACK_LABEL"
