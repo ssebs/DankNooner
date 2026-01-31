@@ -4,14 +4,23 @@
 
 ## In Progress 🚀
 
+- [ ] Create basic LobbyMenu scene/ui
+  - [x] Create scene
+  - [ ] Improve the UI
+
 - [ ] Create LevelManager
 
 ## Up Next 📋
 
 - [ ] Create basic MainMenu scene/ui
+  - [x] Create scene
+  - [ ] Improve the UI
 - [ ] Create basic SettingsMenu scene/ui
-- [ ] Create basic LobbyMenu scene/ui
+  - [x] Create scene
+  - [ ] Improve the UI
 - [ ] Create basic PauseMenu scene/ui
+  - [x] Create scene
+  - [ ] Improve the UI
 
 ## Backlog
 

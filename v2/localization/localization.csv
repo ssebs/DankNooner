@@ -4,3 +4,7 @@ GAME_DESC,"A physics-based motorcycle stunt game. Wheelies, wrecks, and question
 SETTINGS_LABEL,Settings,"Configuración"
 BACK_LABEL,Back,"De Vuelta"
 QUIT_LABEL,Quit,"La Salida"
+PLAY_LABEL,Play,"Jugar"
+HOST_LABEL,Host,"Anfitrión"
+JOIN_LABEL,Join,"Unirse"
+IP_LABEL,"IP Address","Dirección IP"

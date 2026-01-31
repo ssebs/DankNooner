@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://x3ylknc7a413"]
+
+[ext_resource type="Script" uid="uid://b1lg4r4nesptx" path="res://menus/out_of_game/play_menu/play_menu_state.gd" id="1_cqw7y"]
+
+[node name="PlayMenuState" type="Node" unique_id=207724047]
+script = ExtResource("1_cqw7y")
+metadata/_custom_type_script = "uid://b6tnccpx0gwjg"
+
+[node name="UI" type="Control" parent="." unique_id=991544091]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI" unique_id=1674008939]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -34.0
+offset_top = -64.5
+offset_right = 34.0
+offset_bottom = 64.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleLabel" type="Label" parent="UI/VBoxContainer" unique_id=2095145418]
+layout_mode = 2
+text = "PLAY_LABEL"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/VBoxContainer" unique_id=234802966]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="LevelSelectBtn" type="OptionButton" parent="UI/VBoxContainer/VBoxContainer" unique_id=1007007876]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HostBtn" type="Button" parent="UI/VBoxContainer/VBoxContainer" unique_id=709225504]
+layout_mode = 2
+text = "HOST_LABEL"
+
+[node name="IPEntry" type="LineEdit" parent="UI/VBoxContainer/VBoxContainer" unique_id=1871235480]
+layout_mode = 2
+placeholder_text = "IP_LABEL"
+
+[node name="BackBtn" type="Button" parent="UI/VBoxContainer" unique_id=1870693339]
+unique_name_in_owner = true
+layout_mode = 2
+text = "BACK_LABEL"

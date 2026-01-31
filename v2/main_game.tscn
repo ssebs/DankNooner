@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://ba7kyb4p3trb1" path="res://utils/state_machine/state_machine.gd" id="4_6bm6p"]
 [ext_resource type="PackedScene" uid="uid://ds8xwygeh5ykm" path="res://menus/out_of_game/main_menu/main_menu_state.tscn" id="6_2pltu"]
 [ext_resource type="PackedScene" uid="uid://tbsm4ckff72l" path="res://menus/out_of_game/settings_menu/settings_menu_state.tscn" id="6_f52ns"]
+[ext_resource type="PackedScene" uid="uid://x3ylknc7a413" path="res://menus/out_of_game/play_menu/play_menu_state.tscn" id="7_f52ns"]
 
 [node name="MainGame" type="Node" unique_id=936339405]
 script = ExtResource("1_1oj5k")
@@ -21,11 +22,16 @@ state_machine = NodePath("StateMachine")
 script = ExtResource("4_6bm6p")
 initial_state = NodePath("MainMenuState")
 
-[node name="MainMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=494197480 node_paths=PackedStringArray("menu_manager", "settings_menu_state") instance=ExtResource("6_2pltu")]
+[node name="MainMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=494197480 node_paths=PackedStringArray("menu_manager", "settings_menu_state", "play_menu_state") instance=ExtResource("6_2pltu")]
 menu_manager = NodePath("../..")
 settings_menu_state = NodePath("../SettingsMenuState")
+play_menu_state = NodePath("../PlayMenuState")
 
-[node name="SettingsMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=207724047 node_paths=PackedStringArray("menu_manager", "main_menu_state") instance=ExtResource("6_f52ns")]
+[node name="PlayMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=207724047 node_paths=PackedStringArray("menu_manager", "main_menu_state") instance=ExtResource("7_f52ns")]
+menu_manager = NodePath("../..")
+main_menu_state = NodePath("../MainMenuState")
+
+[node name="SettingsMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1653152871 node_paths=PackedStringArray("menu_manager", "main_menu_state") instance=ExtResource("6_f52ns")]
 menu_manager = NodePath("../..")
 main_menu_state = NodePath("../MainMenuState")
 
