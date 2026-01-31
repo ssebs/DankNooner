@@ -13,7 +13,7 @@ script = ExtResource("1_1oj5k")
 [node name="ManagerManager" type="Node" parent="." unique_id=1214717395]
 script = ExtResource("2_yx7mw")
 
-[node name="MenuManager" type="Node" parent="ManagerManager" unique_id=284078827 node_paths=PackedStringArray("state_machine")]
+[node name="MenuManager" type="Node" parent="ManagerManager" unique_id=284078827 node_paths=PackedStringArray("state_machine") groups=["Managers"]]
 script = ExtResource("3_ykeeq")
 state_machine = NodePath("StateMachine")
 

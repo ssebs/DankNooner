@@ -1,3 +1,4 @@
+@tool
 ## All Menu objects should inherit from this
 class_name MenuState extends State
 

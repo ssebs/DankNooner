@@ -1,3 +1,4 @@
+@tool
 class_name MainMenuState extends MenuState
 
 @export var menu_manager: MenuManager

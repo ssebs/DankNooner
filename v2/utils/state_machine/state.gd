@@ -1,3 +1,4 @@
+@tool
 ## The name of this state is "name", so be sure to name the node after the class_name!
 class_name State extends Node
 
