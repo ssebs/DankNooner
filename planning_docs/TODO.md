@@ -15,9 +15,6 @@
 
 ## Up Next 📋
 
-- [ ] Create basic MainMenu scene/ui
-  - [x] Create scene
-  - [x] Improve the UI
 - [ ] Create basic SettingsMenu scene/ui
   - [x] Create scene
   - [ ] Improve the UI
@@ -51,6 +48,10 @@
 - [ ] ~Import~ Recreate stuff from moto-player-controller
 
 ## Done ✅
+
+- [x] Create basic MainMenu scene/ui
+  - [x] Create scene
+  - [x] Improve the UI
 
 - [x] Fix Menu HACKS / Cleanup
   - [x] Update Architecture doc w/ final setup

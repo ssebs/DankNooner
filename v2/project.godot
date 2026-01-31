@@ -15,8 +15,8 @@ config/description="An open-world motorcycle game about doing every stupid thing
 run/main_scene="uid://bi5r4eng0hofw"
 config/custom_user_dir_name="DankNooner"
 config/features=PackedStringArray("4.6", "Forward Plus")
-boot_splash/image="uid://bucasypwld3mg"
-config/icon="uid://bucasypwld3mg"
+boot_splash/show_image=false
+config/icon="uid://cwf7vhr6hpjoj"
 
 [debug]
 
