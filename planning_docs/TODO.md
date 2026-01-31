@@ -4,11 +4,13 @@
 
 ## In Progress 🚀
 
+- [ ] Create basic PlayMenu scene/ui
+  - [ ] Create scene / ui
+  - [ ] create all components (see excalidraw)
+
 - [ ] Create basic LobbyMenu scene/ui
   - [x] Create scene
   - [x] Improve the UI
-  - [x] create play menu
-  - [x] create diagram
   - [ ] Add all components
 
 - [ ] Create LevelManager
@@ -32,6 +34,7 @@
 - [ ] Create SpawnManager
 - [ ] Create TrickManager
 - [ ] Connect signals between all managers in ManagerManager
+
 - [ ] Create Entities/Player
 - [ ] Create Test Levels
   - [ ] Gym - player controller, with tp. Basically in game documentation.
@@ -46,6 +49,8 @@
 - [ ] ~Import~ Recreate stuff from moto-player-controller
 
 ## Done ✅
+
+- [x] create menu uidiagram
 
 - [x] Create UI Theme
 
