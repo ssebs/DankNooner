@@ -40,6 +40,7 @@
     - Dirt / jump track
     - Megaramp
 - Localization
+- Add "juice" (little bits of polish/micro interactions)
 - Sounds:
   - Better sounding engines / sfx than current
   - dopamine sounds (sfx on points, etc)
@@ -54,6 +55,7 @@
   - Base tricks (wheelie) + modifier tricks (wheelie + heel clicker)
   - See [tricks list](#tricks-list)
 - Mechanics (already implemented in `moto-player-controller-godot`)
+  - First person POV
   - Fun but challenging
     - Multiple difficult levels
       - **Easy** - Automatic, can't fall off bike unless crashing

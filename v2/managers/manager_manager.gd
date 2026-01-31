@@ -1,3 +1,4 @@
+@tool
 ## Manages other managers (init, etc.)
 ## Other managers should be nested under this node
 ## All children will be added to the "Managers" Group
