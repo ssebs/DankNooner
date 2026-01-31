@@ -17,11 +17,10 @@
 
 - [ ] Create basic SettingsMenu scene/ui
   - [x] Create scene
-  - [ ] Improve the UI
+  - [x] Improve the UI
   - [ ] Add all components
 - [ ] Create basic PauseMenu scene/ui
   - [ ] Create scene
-  - [ ] Improve the UI
   - [ ] New task
 
 ## Backlog
@@ -43,11 +42,12 @@
   - [ ] Museum - functionally show how systems work, text explaining the systems.
     - (E.g. showing physics demos, how scripted sequences work)
 - [ ] Git LFS https://www.youtube.com/watch?v=4Ln6iRh_LTo
-- [ ] Create UI Theme
 - [ ] Setup cloudflare image upload in vscode
 - [ ] ~Import~ Recreate stuff from moto-player-controller
 
 ## Done ✅
+
+- [x] Create UI Theme
 
 - [x] Create basic MainMenu scene/ui
   - [x] Create scene
