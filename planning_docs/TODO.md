@@ -6,7 +6,10 @@
 
 - [ ] Create basic LobbyMenu scene/ui
   - [x] Create scene
-  - [ ] Improve the UI
+  - [x] Improve the UI
+  - [x] create play menu
+  - [x] create diagram
+  - [ ] Add all components
 
 - [ ] Create LevelManager
 
@@ -14,13 +17,15 @@
 
 - [ ] Create basic MainMenu scene/ui
   - [x] Create scene
-  - [ ] Improve the UI
+  - [x] Improve the UI
 - [ ] Create basic SettingsMenu scene/ui
   - [x] Create scene
   - [ ] Improve the UI
+  - [ ] Add all components
 - [ ] Create basic PauseMenu scene/ui
-  - [x] Create scene
+  - [ ] Create scene
   - [ ] Improve the UI
+  - [ ] New task
 
 ## Backlog
 
