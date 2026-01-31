@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://b1lg4r4nesptx" path="res://menus/out_of_game/play_menu/play_menu_state.gd" id="1_cqw7y"]
 
-[node name="PlayMenuState" type="Node" unique_id=207724047]
+[node name="PlayMenuState" type="Node" unique_id=1827031507]
 script = ExtResource("1_cqw7y")
-metadata/_custom_type_script = "uid://b6tnccpx0gwjg"
+metadata/_custom_type_script = "uid://b1lg4r4nesptx"
 
 [node name="UI" type="Control" parent="." unique_id=991544091]
 unique_name_in_owner = true
@@ -48,6 +48,11 @@ text = "HOST_LABEL"
 [node name="IPEntry" type="LineEdit" parent="UI/VBoxContainer/VBoxContainer" unique_id=1871235480]
 layout_mode = 2
 placeholder_text = "IP_LABEL"
+
+[node name="LobbyBtn" type="Button" parent="UI/VBoxContainer" unique_id=1426407535]
+unique_name_in_owner = true
+layout_mode = 2
+text = "LOBBY_LABEL"
 
 [node name="BackBtn" type="Button" parent="UI/VBoxContainer" unique_id=1870693339]
 unique_name_in_owner = true
