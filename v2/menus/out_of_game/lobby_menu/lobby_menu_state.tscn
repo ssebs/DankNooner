@@ -1,6 +1,45 @@
 [gd_scene format=3 uid="uid://bl26780k5sr"]
 
 [ext_resource type="Script" uid="uid://d3f7uthyd114r" path="res://menus/out_of_game/lobby_menu/lobby_menu_state.gd" id="1_1jh13"]
+[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_lphm8"]
+[ext_resource type="Texture2D" uid="uid://b4v2pgrppd0tq" path="res://resources/img/test_level_select_img.png" id="2_yu1h4"]
+[ext_resource type="PackedScene" uid="uid://fohtho5rqpxo" path="res://menus/out_of_game/lobby_menu/player_list_item.tscn" id="4_wpkl5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lphm8"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.25490198, 0.6862745, 1, 1)
+border_blend = true
+corner_radius_top_left = 16
+corner_radius_top_right = 4
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 4
+expand_margin_left = 12.0
+expand_margin_right = 12.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wpkl5"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.25490198, 0.6862745, 1, 1)
+border_blend = true
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="LobbyMenuState" type="Node" unique_id=1093433336]
 script = ExtResource("1_1jh13")
@@ -22,11 +61,18 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_lphm8")
 
-[node name="LevelSelectBtn" type="OptionButton" parent="UI/MarginContainer" unique_id=1081541879]
-unique_name_in_owner = true
+[node name="LevelSelectContainer" type="VBoxContainer" parent="UI/MarginContainer" unique_id=590154309]
 layout_mode = 2
 size_flags_horizontal = 8
+size_flags_vertical = 4
+alignment = 1
+
+[node name="LevelSelectBtn" type="OptionButton" parent="UI/MarginContainer/LevelSelectContainer" unique_id=1081541879]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 4
 selected = 0
 item_count = 2
@@ -36,19 +82,99 @@ popup/item_0/disabled = true
 popup/item_1/text = "LEVEL_TEST_1_LABEL"
 popup/item_1/id = 1
 
-[node name="TitleLabel" type="Label" parent="UI/MarginContainer" unique_id=1260742798]
+[node name="PanelContainer" type="PanelContainer" parent="UI/MarginContainer/LevelSelectContainer" unique_id=1121328565]
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lphm8")
+
+[node name="LevelPreview" type="TextureRect" parent="UI/MarginContainer/LevelSelectContainer/PanelContainer" unique_id=370183041]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(512, 512)
+layout_mode = 2
+texture = ExtResource("2_yu1h4")
+expand_mode = 5
+stretch_mode = 6
+
+[node name="StartBtn" type="Button" parent="UI/MarginContainer/LevelSelectContainer" unique_id=1428764379]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_type_variation = &"PrimaryButton"
+theme_override_font_sizes/font_size = 32
+text = "START_LABEL"
+
+[node name="SPFreeRoam" type="Control" parent="UI/MarginContainer" unique_id=1062874427]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/MarginContainer/SPFreeRoam" unique_id=1979153626]
+layout_mode = 0
+offset_right = 227.0
+offset_bottom = 122.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_type_variation = &"TitleLabel"
+text = "FREE_ROAM_LABEL"
+
+[node name="MPLobby" type="Control" parent="UI/MarginContainer" unique_id=904581325]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/MarginContainer/MPLobby" unique_id=1260742798]
+layout_mode = 0
+offset_right = 227.0
+offset_bottom = 122.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_type_variation = &"TitleLabel"
 text = "LOBBY_LABEL"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer" unique_id=1674008939]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/MPLobby" unique_id=816754844]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -37.5
+offset_right = 236.0
+offset_bottom = 37.5
+grow_vertical = 2
 
-[node name="BackBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=1870693339]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/MarginContainer/MPLobby/VBoxContainer" unique_id=1630994285]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="IPLabel" type="Label" parent="UI/MarginContainer/MPLobby/VBoxContainer/HBoxContainer" unique_id=110855405]
 unique_name_in_owner = true
 layout_mode = 2
+text = "IP: 0.0.0.0"
+
+[node name="IPCopyBtn" type="Button" parent="UI/MarginContainer/MPLobby/VBoxContainer/HBoxContainer" unique_id=256877172]
+unique_name_in_owner = true
+layout_mode = 2
+text = "COPY_LABEL"
+
+[node name="InviteBtn" type="Button" parent="UI/MarginContainer/MPLobby/VBoxContainer/HBoxContainer" unique_id=568535846]
+unique_name_in_owner = true
+layout_mode = 2
+text = "INVITE_LABEL"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/MarginContainer/MPLobby/VBoxContainer" unique_id=2077582748]
+custom_minimum_size = Vector2(600, 400)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wpkl5")
+vertical_scroll_mode = 2
+
+[node name="PlayersList" type="VBoxContainer" parent="UI/MarginContainer/MPLobby/VBoxContainer/ScrollContainer" unique_id=493926022]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PlayerListItem" parent="UI/MarginContainer/MPLobby/VBoxContainer/ScrollContainer/PlayersList" unique_id=1860626553 instance=ExtResource("4_wpkl5")]
+layout_mode = 2
+
+[node name="BackBtn" type="Button" parent="UI/MarginContainer" unique_id=1870693339]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
 text = "BACK_LABEL"

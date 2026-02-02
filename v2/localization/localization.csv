@@ -14,6 +14,8 @@ SINGLEPLAYER_LABEL,Solo,Solo
 MULTIPLAYER_LABEL,Multiplayer,Multijugador
 FREE_ROAM_LABEL,"Free Ride","Paseo Gratis"
 STORY_LABEL,"Story Mode","Modo Historia"
-
+START_LABEL,"Start Game","Iniciar juego"
+COPY_LABEL,Copy,"Copiar"
+INVITE_LABEL,Invite,"Invitar"
 LEVEL_SELECT_LABEL,"Level Select","Selección de nivel"
 LEVEL_TEST_1_LABEL,"Test Level 1","Nivel de prueba 1"
