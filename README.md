@@ -6,6 +6,8 @@ An open-world motorcycle game about doing every stupid thing you'd never try in 
 
 > **Play the v1 POC:** [Itch.io](https://theofficialssebs.itch.io/dank-nooner)
 
+Check the latest dev build! Download the **.zip** for your platform [here](https://github.com/ssebs/DankNooner/releases)
+
 ## Highlights
 
 - **Tricks & combos** — Wheelies, stoppies, backflips, drifts, burnouts, and ramp tricks with a combo chain system
