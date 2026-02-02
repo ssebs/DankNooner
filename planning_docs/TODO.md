@@ -4,14 +4,11 @@
 
 ## In Progress 🚀
 
-- [ ] Create basic PlayMenu scene/ui
-  - [x] Create scene / ui
-  - [ ] create all components (see excalidraw)
-
-- [ ] Create basic LobbyMenu scene/ui
-  - [x] Create scene
-  - [x] Improve the UI
-  - [ ] Add all components
+- [ ] Add toasts
+- [ ] Finish UI routing
+  - [ ] Pass params to states?
+  - [ ] nav to lobby / level select depending on which button you choose
+  - [ ] figure out how to spawn players in lobby without adding too much code
 
 - [ ] Create LevelManager
   - [ ] Move BGClear Rect as a level type
@@ -51,6 +48,15 @@
 - [ ] ~Import~ Recreate stuff from moto-player-controller
 
 ## Done ✅
+
+- [x] Create basic LobbyMenu scene/ui
+  - [x] Create scene
+  - [x] Improve the UI
+  - [x] Add all components
+
+- [x] Create basic PlayMenu scene/ui
+  - [x] Create scene / ui
+  - [x] create all components (see excalidraw)
 
 - [x] PrimaryBtn style
 

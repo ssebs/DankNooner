@@ -5,7 +5,7 @@
 class_name StateMachine extends Node
 
 ## After Enter() of new transition
-signal state_transitioned(new_state: State)
+signal state_transitioned(old_state: State, new_state: State)
 
 ## _transition_to is deferred on _ready
 @export var initial_state: State
@@ -85,13 +85,13 @@ func _transition_to(new_state: State):
         if is_debug:
             print("Leaving: ", current_state)
         current_state.Exit()
-
+    var old_state = current_state
     current_state = new_state
     if is_debug:
         print("Entering: ", current_state.name)
     new_state.Enter()
 
-    state_transitioned.emit(new_state)
+    state_transitioned.emit(old_state, new_state)
 
 
 ## Runs current_state.Update()

@@ -18,4 +18,4 @@ func Exit():
 
 
 func _on_back_pressed():
-	transitioned.emit(play_menu_state)
+	transitioned.emit(menu_manager.prev_state)
