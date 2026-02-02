@@ -16,11 +16,11 @@ class_name LobbyMenuState extends MenuState
 @onready var back_btn: Button = %BackBtn
 @onready var level_select_btn: OptionButton = %LevelSelectBtn
 @onready var level_preview_tex: TextureRect = %LevelPreview
-@onready var start_btn: Button = %StartBtn
+# @onready var start_btn: Button = %StartBtn
 
 @onready var ip_label: Label = %IPLabel
-@onready var ip_copy_btn: Button = %IPCopyBtn
-@onready var invite_btn: Button = %InviteBtn
+# @onready var ip_copy_btn: Button = %IPCopyBtn
+# @onready var invite_btn: Button = %InviteBtn
 @onready var player_list: VBoxContainer = %PlayersList
 
 var ctx: LobbyStateContext
