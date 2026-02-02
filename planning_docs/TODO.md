@@ -4,13 +4,15 @@
 
 ## In Progress 🚀
 
+- [ ] Quit on Web should just escape fullscreen
+- [ ] Add toast UI
+
 - [ ] Create LevelManager
   - [ ] Move BGClear Rect as a level type
-  - [ ] Add customize menu bg as level type
+  - [ ] create first 3d test level
+  - [ ] Add customize menu bg as 3d level type
 
 ## Up Next 📋
-
-- [ ] Add toasts
 
 - [ ] Create basic SettingsMenu scene/ui
   - [x] Create scene
