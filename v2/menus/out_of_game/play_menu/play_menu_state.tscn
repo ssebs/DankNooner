@@ -34,42 +34,70 @@ text = "PLAY_LABEL"
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
+theme_override_constants/separation = 32
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer" unique_id=234802966]
-custom_minimum_size = Vector2(200, 0)
+[node name="SP" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer" unique_id=234802966]
 layout_mode = 2
+size_flags_horizontal = 0
 
-[node name="LevelSelectBtn" type="OptionButton" parent="UI/MarginContainer/VBoxContainer/VBoxContainer" unique_id=1007007876]
+[node name="SINGLEPLAYER_LABEL" type="Label" parent="UI/MarginContainer/VBoxContainer/SP" unique_id=828676260]
+layout_mode = 2
+text = "SINGLEPLAYER_LABEL"
+
+[node name="FreeRoamBtn" type="Button" parent="UI/MarginContainer/VBoxContainer/SP" unique_id=1870592676]
 unique_name_in_owner = true
 layout_mode = 2
-selected = 0
-item_count = 2
-popup/item_0/text = "LEVEL_SELECT_LABEL"
-popup/item_0/id = 0
-popup/item_0/disabled = true
-popup/item_1/text = "LEVEL_TEST_1_LABEL"
-popup/item_1/id = 1
+text = "FREE_ROAM_LABEL"
 
-[node name="HostBtn" type="Button" parent="UI/MarginContainer/VBoxContainer/VBoxContainer" unique_id=709225504]
+[node name="StoryBtn" type="Button" parent="UI/MarginContainer/VBoxContainer/SP" unique_id=276871775]
+unique_name_in_owner = true
 layout_mode = 2
+disabled = true
+text = "STORY_LABEL"
+
+[node name="MP" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer" unique_id=963881499]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="MULTIPLAYER_LABEL" type="Label" parent="UI/MarginContainer/VBoxContainer/MP" unique_id=1953561949]
+layout_mode = 2
+text = "MULTIPLAYER_LABEL"
+
+[node name="HostBtn" type="Button" parent="UI/MarginContainer/VBoxContainer/MP" unique_id=709225504]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
 text = "HOST_LABEL"
 
-[node name="IPEntry" type="LineEdit" parent="UI/MarginContainer/VBoxContainer/VBoxContainer" unique_id=1871235480]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/MarginContainer/VBoxContainer/MP" unique_id=1513694560]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="IPEntry" type="LineEdit" parent="UI/MarginContainer/VBoxContainer/MP/HBoxContainer" unique_id=1871235480]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 placeholder_text = "IP_LABEL"
 clear_button_enabled = true
 
-[node name="LobbyBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=1426407535]
+[node name="JoinBtn" type="Button" parent="UI/MarginContainer/VBoxContainer/MP/HBoxContainer" unique_id=1406859642]
 unique_name_in_owner = true
 layout_mode = 2
-text = "LOBBY_LABEL"
+disabled = true
+text = "JOIN_LABEL"
 
-[node name="CustomizeBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=1947018203]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer" unique_id=235352440]
+layout_mode = 2
+
+[node name="CustomizeBtn" type="Button" parent="UI/MarginContainer/VBoxContainer/VBoxContainer" unique_id=1947018203]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
 text = "CUSTOMIZE_LABEL"
 
-[node name="BackBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=1870693339]
+[node name="BackBtn" type="Button" parent="UI/MarginContainer/VBoxContainer/VBoxContainer" unique_id=1870693339]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 0
 text = "BACK_LABEL"
