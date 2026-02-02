@@ -106,6 +106,7 @@ text = "START_LABEL"
 
 [node name="SingleplayerUI" type="Control" parent="UI/MarginContainer" unique_id=1062874427]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 

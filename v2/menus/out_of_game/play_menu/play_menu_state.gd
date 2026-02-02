@@ -58,7 +58,7 @@ func _on_join_btn_pressed():
 	if !ip_entry.text.is_valid_ip_address():
 		printerr("IP Address is invalid")  # TODO: add toast
 		return
-	var ctx = LobbyStateContext.NewHost(ip_entry.text)
+	var ctx = LobbyStateContext.NewJoin(ip_entry.text)
 	transitioned.emit(lobby_menu_state, ctx)
 
 
