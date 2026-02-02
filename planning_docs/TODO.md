@@ -4,11 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] Finish UI routing
-  - [x] Pass params to states via context
-  - [x] nav to lobby / level select depending on which button you choose
-  - [ ] connect all the buttons
-
 - [ ] Create LevelManager
   - [ ] Move BGClear Rect as a level type
   - [ ] Add customize menu bg as level type
@@ -31,6 +26,7 @@
 - [ ] Create InputManager
 - [ ] Create NetworkManager
   - [ ] figure out how to spawn players in lobby without adding too much code
+  - [ ] Implement Lobby functionality
 
 - [ ] Create GamemodeManager
 - [ ] Create SpawnManager
@@ -51,6 +47,11 @@
 - [ ] ~Import~ Recreate stuff from moto-player-controller
 
 ## Done ✅
+
+- [x] Finish UI routing
+  - [x] Pass params to states via context
+  - [x] nav to lobby / level select depending on which button you choose
+  - [x] connect all the buttons
 
 - [x] Create basic LobbyMenu scene/ui
   - [x] Create scene
