@@ -4,17 +4,18 @@
 
 ## In Progress 🚀
 
-- [ ] Add toasts
 - [ ] Finish UI routing
-  - [ ] Pass params to states?
+  - [x] Pass params to states via context
   - [ ] nav to lobby / level select depending on which button you choose
-  - [ ] figure out how to spawn players in lobby without adding too much code
+  - [ ] connect all the buttons
 
 - [ ] Create LevelManager
   - [ ] Move BGClear Rect as a level type
   - [ ] Add customize menu bg as level type
 
 ## Up Next 📋
+
+- [ ] Add toasts
 
 - [ ] Create basic SettingsMenu scene/ui
   - [x] Create scene
@@ -29,6 +30,8 @@
 - [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
 - [ ] Create InputManager
 - [ ] Create NetworkManager
+  - [ ] figure out how to spawn players in lobby without adding too much code
+
 - [ ] Create GamemodeManager
 - [ ] Create SpawnManager
 - [ ] Create TrickManager

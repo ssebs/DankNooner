@@ -51,8 +51,8 @@ func deregister_state(state: State):
 
 
 ## Transition to new_state, not to be called from children!
-func request_state_change(new_state: State):
-    _transition_to(new_state)
+func request_state_change(new_state: State, state_context: StateContext):
+    _transition_to(new_state, state_context)
 
 
 ## Get a State in this State Machine by the State's name
@@ -67,7 +67,7 @@ func get_state_by_name(state_name: String) -> State:
 
 
 ## Updates current_state to new_state, runs Exit() on old and Enter() on new
-func _transition_to(new_state: State):
+func _transition_to(new_state: State, state_context: StateContext = null):
     if is_debug:
         print("transition_to: %s" % new_state)
 
@@ -84,12 +84,12 @@ func _transition_to(new_state: State):
     if current_state:
         if is_debug:
             print("Leaving: ", current_state)
-        current_state.Exit()
+        current_state.Exit(state_context)
     var old_state = current_state
     current_state = new_state
     if is_debug:
         print("Entering: ", current_state.name)
-    new_state.Enter()
+    new_state.Enter(state_context)
 
     state_transitioned.emit(old_state, new_state)
 

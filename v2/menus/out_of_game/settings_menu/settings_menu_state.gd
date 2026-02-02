@@ -7,15 +7,15 @@ class_name SettingsMenuState extends MenuState
 @onready var back_btn: Button = %BackBtn
 
 
-func Enter():
-    ui.show()
-    back_btn.pressed.connect(_on_back_pressed)
+func Enter(_state_context: StateContext):
+	ui.show()
+	back_btn.pressed.connect(_on_back_pressed)
 
 
-func Exit():
-    ui.hide()
-    back_btn.pressed.disconnect(_on_back_pressed)
+func Exit(_state_context: StateContext):
+	ui.hide()
+	back_btn.pressed.disconnect(_on_back_pressed)
 
 
 func _on_back_pressed():
-    transitioned.emit(main_menu_state)
+	transitioned.emit(main_menu_state, null)
