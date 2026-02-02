@@ -32,10 +32,11 @@ state_machine = NodePath("StateMachine")
 script = ExtResource("4_6bm6p")
 initial_state = NodePath("MainMenuState")
 
-[node name="MainMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=494197480 node_paths=PackedStringArray("menu_manager", "settings_menu_state", "play_menu_state") instance=ExtResource("6_2pltu")]
+[node name="MainMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=494197480 node_paths=PackedStringArray("menu_manager", "settings_menu_state", "play_menu_state", "customize_menu_state") instance=ExtResource("6_2pltu")]
 menu_manager = NodePath("../..")
 settings_menu_state = NodePath("../SettingsMenuState")
 play_menu_state = NodePath("../PlayMenuState")
+customize_menu_state = NodePath("../CustomizeMenuState")
 
 [node name="PlayMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=207724047 node_paths=PackedStringArray("menu_manager", "main_menu_state", "lobby_menu_state", "customize_menu_state") instance=ExtResource("7_f52ns")]
 menu_manager = NodePath("../..")

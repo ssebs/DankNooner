@@ -56,6 +56,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "SETTINGS_LABEL"
 
+[node name="CustomizeBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=1131295413]
+unique_name_in_owner = true
+layout_mode = 2
+text = "CUSTOMIZE_LABEL"
+
 [node name="QuitBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=1042468218]
 unique_name_in_owner = true
 layout_mode = 2

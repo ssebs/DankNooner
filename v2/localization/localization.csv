@@ -1,6 +1,8 @@
 keys,en,es
 GAME_TITLE,"Dank Nooner","Al Doce"
 GAME_DESC,"A physics-based motorcycle stunt game. Wheelies, wrecks, and questionable decisions","Un juego de acrobacias en moto basado en la física. Caballitos, choques y decisiones cuestionables."
+LEVEL_SELECT_LABEL,"Level Select","Selección de nivel"
+LEVEL_TEST_1_LABEL,"Test Level 1","Nivel de prueba 1"
 SETTINGS_LABEL,Settings,"Configuración"
 BACK_LABEL,Back,"De Vuelta"
 QUIT_LABEL,Quit,"La Salida"
@@ -17,5 +19,4 @@ STORY_LABEL,"Story Mode","Modo Historia"
 START_LABEL,"Start Game","Iniciar juego"
 COPY_LABEL,Copy,"Copiar"
 INVITE_LABEL,Invite,"Invitar"
-LEVEL_SELECT_LABEL,"Level Select","Selección de nivel"
-LEVEL_TEST_1_LABEL,"Test Level 1","Nivel de prueba 1"
+
