@@ -6,7 +6,7 @@
 
 - [ ] Finish UI routing
   - [x] Pass params to states via context
-  - [ ] nav to lobby / level select depending on which button you choose
+  - [x] nav to lobby / level select depending on which button you choose
   - [ ] connect all the buttons
 
 - [ ] Create LevelManager

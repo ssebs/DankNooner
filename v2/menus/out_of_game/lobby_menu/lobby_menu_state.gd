@@ -23,14 +23,33 @@ class_name LobbyMenuState extends MenuState
 @onready var invite_btn: Button = %InviteBtn
 @onready var player_list: VBoxContainer = %PlayersList
 
+var ctx: LobbyStateContext
 
-func Enter(_state_context: StateContext):
+
+func Enter(state_context: StateContext):
+	if state_context is not LobbyStateContext:
+		printerr("Must pass LobbyStateContext type when transitioning to LobbyMenuState")
+		return
+
+	ctx = state_context
 	ui.show()
 	back_btn.pressed.connect(_on_back_pressed)
+	set_panel_rename_me()
+
+
+func set_panel_rename_me():
+	match ctx.mode:
+		LobbyStateContext.Mode.FREEROAM:
+			multiplayer_ui.hide()
+			singleplayer_ui.show()
+		_:
+			singleplayer_ui.hide()
+			multiplayer_ui.show()
 
 
 func Exit(_state_context: StateContext):
 	ui.hide()
+	ctx = null
 	back_btn.pressed.disconnect(_on_back_pressed)
 
 
