@@ -5,10 +5,15 @@ SETTINGS_LABEL,Settings,"Configuración"
 BACK_LABEL,Back,"De Vuelta"
 QUIT_LABEL,Quit,"La Salida"
 PLAY_LABEL,Play,"Jugar"
-HOST_LABEL,Host,"Anfitrión"
-JOIN_LABEL,Join,"Unirse"
+HOST_LABEL,"Host Game","Organizar Juego"
+JOIN_LABEL,"Join Game","Unirse al Juego"
 IP_LABEL,"IP Address","Dirección IP"
 LOBBY_LABEL,Lobby,"Vestíbulo"
 CUSTOMIZE_LABEL,Customize,"Personalizar"
+SINGLEPLAYER_LABEL,Solo,Solo
+MULTIPLAYER_LABEL,Multiplayer,Multijugador
+FREE_ROAM_LABEL,"Free Ride","Paseo Gratis"
+STORY_LABEL,"Story Mode","Modo Historia"
+
 LEVEL_SELECT_LABEL,"Level Select","Selección de nivel"
 LEVEL_TEST_1_LABEL,"Test Level 1","Nivel de prueba 1"

@@ -14,6 +14,8 @@
   - [ ] Add all components
 
 - [ ] Create LevelManager
+  - [ ] Move BGClear Rect as a level type
+  - [ ] Add customize menu bg as level type
 
 ## Up Next 📋
 

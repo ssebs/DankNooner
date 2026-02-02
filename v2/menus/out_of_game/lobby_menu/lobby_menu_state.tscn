@@ -23,6 +23,19 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="LevelSelectBtn" type="OptionButton" parent="UI/MarginContainer" unique_id=1081541879]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+selected = 0
+item_count = 2
+popup/item_0/text = "LEVEL_SELECT_LABEL"
+popup/item_0/id = 0
+popup/item_0/disabled = true
+popup/item_1/text = "LEVEL_TEST_1_LABEL"
+popup/item_1/id = 1
+
 [node name="TitleLabel" type="Label" parent="UI/MarginContainer" unique_id=1260742798]
 layout_mode = 2
 size_flags_horizontal = 0

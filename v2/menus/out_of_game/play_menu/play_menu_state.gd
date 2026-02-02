@@ -9,21 +9,21 @@ class_name PlayMenuState extends MenuState
 @export var customize_menu_state: MenuState
 
 @onready var back_btn: Button = %BackBtn
-@onready var lobby_btn: Button = %LobbyBtn
+# @onready var lobby_btn: Button = %LobbyBtn
 @onready var customize_btn: Button = %CustomizeBtn
 
 
 func Enter():
 	ui.show()
 	back_btn.pressed.connect(_on_back_pressed)
-	lobby_btn.pressed.connect(_on_lobby_pressed)
+	# lobby_btn.pressed.connect(_on_lobby_pressed)
 	customize_btn.pressed.connect(_on_customize_pressed)
 
 
 func Exit():
 	ui.hide()
 	back_btn.pressed.disconnect(_on_back_pressed)
-	lobby_btn.pressed.disconnect(_on_lobby_pressed)
+	# lobby_btn.pressed.disconnect(_on_lobby_pressed)
 	customize_btn.pressed.disconnect(_on_customize_pressed)
 
 
