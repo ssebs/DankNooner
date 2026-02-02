@@ -12,7 +12,7 @@ class_name MainMenuState extends MenuState
 @onready var quit_btn: Button = %QuitBtn
 
 
-func Enter():
+func Enter(_state_context: StateContext):
 	ui.show()
 	play_btn.pressed.connect(_on_play_btn_pressed)
 	settings_btn.pressed.connect(_on_settings_btn_pressed)
@@ -20,7 +20,7 @@ func Enter():
 	customize_btn.pressed.connect(_on_customize_btn_pressed)
 
 
-func Exit():
+func Exit(_state_context: StateContext):
 	ui.hide()
 
 	play_btn.pressed.disconnect(_on_play_btn_pressed)
@@ -30,15 +30,15 @@ func Exit():
 
 
 func _on_customize_btn_pressed():
-	transitioned.emit(customize_menu_state)
+	transitioned.emit(customize_menu_state, null)
 
 
 func _on_play_btn_pressed():
-	transitioned.emit(play_menu_state)
+	transitioned.emit(play_menu_state, null)
 
 
 func _on_settings_btn_pressed():
-	transitioned.emit(settings_menu_state)
+	transitioned.emit(settings_menu_state, null)
 
 
 func _on_quit_btn_pressed():

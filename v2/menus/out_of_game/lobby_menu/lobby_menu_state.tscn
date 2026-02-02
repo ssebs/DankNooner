@@ -103,12 +103,12 @@ theme_type_variation = &"PrimaryButton"
 theme_override_font_sizes/font_size = 32
 text = "START_LABEL"
 
-[node name="SPFreeRoam" type="Control" parent="UI/MarginContainer" unique_id=1062874427]
+[node name="SingleplayerUI" type="Control" parent="UI/MarginContainer" unique_id=1062874427]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="TitleLabel" type="Label" parent="UI/MarginContainer/SPFreeRoam" unique_id=1979153626]
+[node name="TitleLabel" type="Label" parent="UI/MarginContainer/SingleplayerUI" unique_id=1979153626]
 layout_mode = 0
 offset_right = 227.0
 offset_bottom = 122.0

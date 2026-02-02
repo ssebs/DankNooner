@@ -18,7 +18,7 @@ class_name PlayMenuState extends MenuState
 @onready var ip_entry: LineEdit = %IPEntry
 
 
-func Enter():
+func Enter(_state_context: StateContext):
 	ui.show()
 	back_btn.pressed.connect(_on_back_pressed)
 	customize_btn.pressed.connect(_on_customize_pressed)
@@ -27,7 +27,7 @@ func Enter():
 	join_btn.pressed.connect(_on_join_btn_pressed)
 
 
-func Exit():
+func Exit(_state_context: StateContext):
 	ui.hide()
 	back_btn.pressed.disconnect(_on_back_pressed)
 	customize_btn.pressed.disconnect(_on_customize_pressed)
@@ -37,33 +37,30 @@ func Exit():
 
 
 func is_ip_valid() -> bool:
-	# TODO: implement
-	return true
+	return ip_entry.text.is_valid_ip_address()
 
 
 #region button handlers
 func _on_host_btn_pressed():
-	# TODO: add vars here
-	transitioned.emit(lobby_menu_state)
+	transitioned.emit(lobby_menu_state, LobbyStateContext.NewHost("0.0.0.0"))
 
 
 func _on_join_btn_pressed():
-	# TODO: make sure ip_entry has an IP
 	if !is_ip_valid():
 		printerr("IP Address is invalid")  # TODO: add toast
 		return
-	# TODO: add vars here
-	transitioned.emit(lobby_menu_state)
+	var ctx = LobbyStateContext.NewHost(ip_entry.text)
+	transitioned.emit(lobby_menu_state, ctx)
 
 
 func _on_free_roam_btn_pressed():
-	transitioned.emit(lobby_menu_state)
+	transitioned.emit(lobby_menu_state, LobbyStateContext.NewFreeRoam())
 
 
 func _on_customize_pressed():
-	transitioned.emit(customize_menu_state)
+	transitioned.emit(customize_menu_state, null)
 
 
 func _on_back_pressed():
-	transitioned.emit(main_menu_state)
+	transitioned.emit(main_menu_state, null)
 #endregion
