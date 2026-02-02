@@ -5,7 +5,7 @@
 ## In Progress 🚀
 
 - [ ] Create basic PlayMenu scene/ui
-  - [ ] Create scene / ui
+  - [x] Create scene / ui
   - [ ] create all components (see excalidraw)
 
 - [ ] Create basic LobbyMenu scene/ui
@@ -51,6 +51,8 @@
 - [ ] ~Import~ Recreate stuff from moto-player-controller
 
 ## Done ✅
+
+- [x] PrimaryBtn style
 
 - [x] create menu uidiagram
 
