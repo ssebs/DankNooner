@@ -45,6 +45,13 @@
 - Using in code:
   - `print(tr("<key_name>"))`
 
+### Editor Validation
+
+- Click "Run Validation" on the `MainGame` node inspector to check for common wiring bugs
+- Validates: null `@export` objects, missing `@onready %UniqueNode` references, `@onready` Buttons without `_on_<name>_pressed()` handlers
+- Comment out `@onready` declarations to skip validation on WIP features
+- See `utils/validation/auto_validator.gd` for implementation
+
 ### Managers
 
 - Managers should have a state machine, and are in the "**Managers**" group. _See constants.gd_

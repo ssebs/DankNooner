@@ -5,6 +5,10 @@ class_name MenuState extends State
 @onready var ui: Control = %UI
 
 
+func _ready():
+	add_to_group(UtilsConstants.GROUPS["Validate"])
+
+
 func hide_ui():
 	ui.hide()
 

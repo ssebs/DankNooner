@@ -43,7 +43,6 @@ corner_radius_bottom_left = 4
 
 [node name="LobbyMenuState" type="Node" unique_id=1093433336]
 script = ExtResource("1_1jh13")
-player_list_item_scene = null
 metadata/_custom_type_script = "uid://d3f7uthyd114r"
 
 [node name="UI" type="Control" parent="." unique_id=991544091]
