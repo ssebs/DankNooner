@@ -8,6 +8,21 @@ An open-world motorcycle game about doing every stupid thing you'd never try in 
 
 Check the latest dev build! Download the **.zip** for your platform [here](https://github.com/ssebs/DankNooner/releases)
 
+<details>
+<summary>
+Note for Mac users:
+</summary>
+
+You will need to allow the app explicitly.
+- Double click to extract the .zip
+- Double click to run **DankNooner.app**
+- Open **System Settings** > **Privacy & Security** > Scroll down to **Security**
+- You should see `"DankNooner" was blocked to protect your Mac.`, click the **Open Anyway** button to the right
+
+![MacInstallStep.png](img/MacInstallStep.png)
+
+</details>
+
 ## Highlights
 
 - **Tricks & combos** — Wheelies, stoppies, backflips, drifts, burnouts, and ramp tricks with a combo chain system
