@@ -1,13 +1,3 @@
 {
-    "godotTools.editorPath.godot4": "c:\\Users\\ssebs\\Desktop\\Godot_v4.6-stable_win64.exe",
-    "godotFormatter.useSpaces": true,
-    "editor.detectIndentation": false,
-    "files.exclude": {
-        "**/.git": true,
-        "**/.DS_Store": true,
-        "**/Thumbs.db": true,
-        "**/*.uid": true,
-        "**/*.import": true,
-        "**/*.stub": true,
-    }
+    "todoSidebar.activeFile": "f:\\LocalProgramming\\DankNooner\\planning_docs\\TODO.md"
 }

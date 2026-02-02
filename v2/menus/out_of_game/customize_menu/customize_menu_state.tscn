@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://b8wtld34amu44"]
+
+[ext_resource type="Script" uid="uid://7ucyugkoihsv" path="res://menus/out_of_game/customize_menu/customize_menu_state.gd" id="1_hwmj7"]
+
+[node name="CustomizeMenuState" type="Node" unique_id=1710077363]
+script = ExtResource("1_hwmj7")
+
+[node name="UI" type="Control" parent="." unique_id=555581335]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=316995615]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleLabel" type="Label" parent="UI/MarginContainer" unique_id=373470256]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_type_variation = &"TitleLabel"
+text = "CUSTOMIZE_LABEL"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer" unique_id=1196898275]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="BackBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=1727863120]
+unique_name_in_owner = true
+layout_mode = 2
+text = "BACK_LABEL"
