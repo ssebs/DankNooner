@@ -60,6 +60,10 @@
   - Children of this Node that are States will automatically be registered
   - Transitioning of states happens via State.transitioned() signal, or request_state_change() func
   - New States can be registered / deregistered to be managed by the state machine
+  - States can receive data via `StateContext` - a base class for passing typed data between states
+    - Create a subclass with properties and static factory methods (see `lobby_state_context.gd`)
+    - Pass context when emitting: `transitioned.emit(target_state, MyContext.New(...))`
+    - Receive in `Enter(state_context: StateContext)` and cast to your type
 
 ### Menu State Machine System
 
@@ -78,7 +82,7 @@ Menus use the state machine pattern where each screen is a `MenuState` extending
 - `@export var menu_manager: MenuManager` + target states. (see other files)
   - In `Enter()`: call `ui.show()`, connect button signals
   - In `Exit()`: call `ui.hide()`, disconnect button signals
-  - Transition via `transitioned.emit(target_state)`
+  - Transition via `transitioned.emit(target_state)` or `transitioned.emit(target_state, context)`
 - Add this new scene in the state machine
   - Add as a child of the StateMachine node
   - Wire up the exports in inspector (menu_manager, navigation targets)
