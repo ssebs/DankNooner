@@ -43,6 +43,7 @@ corner_radius_bottom_left = 4
 
 [node name="LobbyMenuState" type="Node" unique_id=1093433336]
 script = ExtResource("1_1jh13")
+player_list_item_scene = null
 metadata/_custom_type_script = "uid://d3f7uthyd114r"
 
 [node name="UI" type="Control" parent="." unique_id=991544091]
@@ -117,12 +118,12 @@ size_flags_vertical = 0
 theme_type_variation = &"TitleLabel"
 text = "FREE_ROAM_LABEL"
 
-[node name="MPLobby" type="Control" parent="UI/MarginContainer" unique_id=904581325]
+[node name="MultiplayerUI" type="Control" parent="UI/MarginContainer" unique_id=904581325]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="TitleLabel" type="Label" parent="UI/MarginContainer/MPLobby" unique_id=1260742798]
+[node name="TitleLabel" type="Label" parent="UI/MarginContainer/MultiplayerUI" unique_id=1260742798]
 layout_mode = 0
 offset_right = 227.0
 offset_bottom = 122.0
@@ -131,7 +132,7 @@ size_flags_vertical = 0
 theme_type_variation = &"TitleLabel"
 text = "LOBBY_LABEL"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/MPLobby" unique_id=816754844]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/MultiplayerUI" unique_id=816754844]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
@@ -141,36 +142,36 @@ offset_right = 236.0
 offset_bottom = 37.5
 grow_vertical = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/MarginContainer/MPLobby/VBoxContainer" unique_id=1630994285]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/MarginContainer/MultiplayerUI/VBoxContainer" unique_id=1630994285]
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="IPLabel" type="Label" parent="UI/MarginContainer/MPLobby/VBoxContainer/HBoxContainer" unique_id=110855405]
+[node name="IPLabel" type="Label" parent="UI/MarginContainer/MultiplayerUI/VBoxContainer/HBoxContainer" unique_id=110855405]
 unique_name_in_owner = true
 layout_mode = 2
 text = "IP: 0.0.0.0"
 
-[node name="IPCopyBtn" type="Button" parent="UI/MarginContainer/MPLobby/VBoxContainer/HBoxContainer" unique_id=256877172]
+[node name="IPCopyBtn" type="Button" parent="UI/MarginContainer/MultiplayerUI/VBoxContainer/HBoxContainer" unique_id=256877172]
 unique_name_in_owner = true
 layout_mode = 2
 text = "COPY_LABEL"
 
-[node name="InviteBtn" type="Button" parent="UI/MarginContainer/MPLobby/VBoxContainer/HBoxContainer" unique_id=568535846]
+[node name="InviteBtn" type="Button" parent="UI/MarginContainer/MultiplayerUI/VBoxContainer/HBoxContainer" unique_id=568535846]
 unique_name_in_owner = true
 layout_mode = 2
 text = "INVITE_LABEL"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="UI/MarginContainer/MPLobby/VBoxContainer" unique_id=2077582748]
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/MarginContainer/MultiplayerUI/VBoxContainer" unique_id=2077582748]
 custom_minimum_size = Vector2(600, 400)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_wpkl5")
 vertical_scroll_mode = 2
 
-[node name="PlayersList" type="VBoxContainer" parent="UI/MarginContainer/MPLobby/VBoxContainer/ScrollContainer" unique_id=493926022]
+[node name="PlayersList" type="VBoxContainer" parent="UI/MarginContainer/MultiplayerUI/VBoxContainer/ScrollContainer" unique_id=493926022]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="PlayerListItem" parent="UI/MarginContainer/MPLobby/VBoxContainer/ScrollContainer/PlayersList" unique_id=1860626553 instance=ExtResource("4_wpkl5")]
+[node name="PlayerListItem" parent="UI/MarginContainer/MultiplayerUI/VBoxContainer/ScrollContainer/PlayersList" unique_id=1860626553 instance=ExtResource("4_wpkl5")]
 layout_mode = 2
 
 [node name="BackBtn" type="Button" parent="UI/MarginContainer" unique_id=1870693339]
