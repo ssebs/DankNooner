@@ -99,3 +99,28 @@ Menus use the state machine pattern where each screen is a `MenuState` extending
 - All MenuStates **must** have a `%UI` Control node (unique name)
 - Set `initial_state` on StateMachine to define the default menu
 - Connect signals in `Enter()`, disconnect in `Exit()` to avoid duplicate connections
+
+### Level Manager
+
+Levels are managed via `LevelManager` and selected through the `LobbyMenuState` MenuState. Levels are PackedScenes that are loaded & configured in `level_manager.gd`
+
+#### Components
+
+- **LevelManager** (`managers/level_manager.gd`)
+  - `LevelName` enum - defines all available levels
+  - `possible_levels` - Dictionary mapping `LevelName` → preloaded `PackedScene`
+  - `level_name_map` - Dictionary mapping `LevelName` → display string
+  - `spawn_node` - Node3D where levels are instantiated
+
+> Note - Level idx 0 is the "Select a level" string for the dropdown
+
+- **LobbyMenuState** (`menus/out_of_game/lobby_menu/`) - Level selection UI
+  - `LevelSelectBtn` (OptionButton) - Dropdown for level selection
+  - `StartBtn` - Triggers level spawn
+
+#### Adding a New Level
+
+1. Create level scene extending `LevelDefinition`
+2. Add entry to `LevelName` enum in `level_manager.gd`
+3. Add entry to `level_name_map` (enum → localization key)
+4. Add entry to `possible_levels` (enum → `preload("res://path/to/level.tscn")`)

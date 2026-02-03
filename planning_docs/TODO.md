@@ -4,14 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] Create LevelManager
-  - [x] base class / states
-  - [x] Move BGClear Rect as a level type
-  - [x] create first 3d test level
-  - [x] auto validation
-  - [x] Make level select work
-  - [ ] Update Architecture.md
-
 ## Up Next 📋
 
 - [ ] Create basic PauseMenu scene/ui
@@ -60,6 +52,14 @@
 - [ ] ~Import~ Recreate stuff from moto-player-controller
 
 ## Done ✅
+
+- [x] Create LevelManager
+  - [x] base class / states
+  - [x] Move BGClear Rect as a level type
+  - [x] create first 3d test level
+  - [x] auto validation
+  - [x] Make level select work
+  - [x] Update Architecture.md
 
 - [x] Add toast UI
 
