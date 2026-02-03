@@ -1,4 +1,5 @@
-class_name LevelManager extends Node
+@tool
+class_name LevelManager extends BaseManager
 
 enum LevelName {
 	TEST_LEVEL_01,
