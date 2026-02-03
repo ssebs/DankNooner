@@ -3,6 +3,7 @@ class_name LevelManager extends BaseManager
 
 enum LevelName {
 	BG_GRAY_LEVEL,
+	# MAIN_MENU_LEVEL,
 	TEST_LEVEL_01,
 }
 

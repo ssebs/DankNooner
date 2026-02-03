@@ -26,6 +26,7 @@ static func _validate(node: Node) -> void:
     errors.append_array(_check_exports(node))
     errors.append_array(_check_unique_nodes(node))
     errors.append_array(_check_button_handlers(node))
+    errors.append_array(_check_level_manager_sync(node))
 
     for error in errors:
         push_error("%s: %s" % [node.name, error])
@@ -150,5 +151,101 @@ static func _find_button_handler(node: Node, var_name: String) -> String:
             return candidate
 
     return ""
+
+#endregion
+
+
+#region LevelManager Sync Validation
+## Validates that LevelName enum, possible_levels dict, and level_name_map dict are in sync
+static func _check_level_manager_sync(node: Node) -> Array[String]:
+    var errors: Array[String] = []
+    var script: Script = node.get_script()
+
+    if script == null:
+        return errors
+
+    var source = script.source_code
+    if source == null or source.is_empty():
+        return errors
+
+    # Only check scripts with LevelName enum
+    if not source.contains("enum LevelName"):
+        return errors
+
+    var enum_values = _parse_enum_values(source, "LevelName")
+    var possible_levels_keys = _parse_dict_keys(source, "possible_levels")
+    var level_name_map_keys = _parse_dict_keys(source, "level_name_map")
+
+    # Check that all enum values exist in both dictionaries
+    for enum_val in enum_values:
+        if enum_val not in possible_levels_keys:
+            errors.append("LevelName.%s missing from possible_levels" % enum_val)
+        if enum_val not in level_name_map_keys:
+            errors.append("LevelName.%s missing from level_name_map" % enum_val)
+
+    # Check that all possible_levels keys exist in enum and level_name_map
+    for key in possible_levels_keys:
+        if key not in enum_values:
+            errors.append("possible_levels key '%s' is not in LevelName enum" % key)
+        if key not in level_name_map_keys:
+            errors.append("possible_levels key '%s' missing from level_name_map" % key)
+
+    # Check that all level_name_map keys exist in enum and possible_levels
+    for key in level_name_map_keys:
+        if key not in enum_values:
+            errors.append("level_name_map key '%s' is not in LevelName enum" % key)
+        if key not in possible_levels_keys:
+            errors.append("level_name_map key '%s' missing from possible_levels" % key)
+
+    return errors
+
+
+## Parses enum values from source code
+static func _parse_enum_values(source: String, enum_name: String) -> Array[String]:
+    var values: Array[String] = []
+    var regex = RegEx.new()
+    regex.compile("enum\\s+" + enum_name + "\\s*\\{([^}]+)\\}")
+
+    var result = regex.search(source)
+    if result == null:
+        return values
+
+    var enum_body_start = result.get_start(1)
+    var enum_body = result.get_string(1)
+    var value_regex = RegEx.new()
+    value_regex.compile("(\\w+)")
+
+    for match in value_regex.search_all(enum_body):
+        if _is_in_comment(source, enum_body_start + match.get_start()):
+            continue
+        var val = match.get_string(1)
+        if not val.is_empty():
+            values.append(val)
+
+    return values
+
+
+## Parses dictionary keys that use LevelName.XXX format
+static func _parse_dict_keys(source: String, dict_name: String) -> Array[String]:
+    var keys: Array[String] = []
+    var regex = RegEx.new()
+    # Match: var dict_name ... = { ... } or dict_name: Dictionary... = { ... }
+    regex.compile("(?:var\\s+)?" + dict_name + "[^=]*=\\s*\\{([^}]+)\\}")
+
+    var result = regex.search(source)
+    if result == null:
+        return keys
+
+    var dict_body_start = result.get_start(1)
+    var dict_body = result.get_string(1)
+    var key_regex = RegEx.new()
+    key_regex.compile("LevelName\\.(\\w+)")
+
+    for match in key_regex.search_all(dict_body):
+        if _is_in_comment(source, dict_body_start + match.get_start()):
+            continue
+        keys.append(match.get_string(1))
+
+    return keys
 
 #endregion
