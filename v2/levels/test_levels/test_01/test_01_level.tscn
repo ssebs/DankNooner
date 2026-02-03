@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://dj8yd118p20oa"]
+
+[ext_resource type="Script" uid="uid://44kdiwhdt512" path="res://levels/test_levels/test_01/test_01_level.gd" id="1_evjrj"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_evjrj"]
+size = Vector2(64, 64)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3jscr"]
+albedo_color = Color(0.13333334, 0.13333334, 0.13333334, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3jscr"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_avllc"]
+
+[node name="Test_01_Level" type="Node3D" unique_id=898545864]
+script = ExtResource("1_evjrj")
+metadata/_custom_type_script = "uid://dv0brm8irhlth"
+
+[node name="Items" type="Node3D" parent="." unique_id=804449511]
+
+[node name="Floor" type="MeshInstance3D" parent="Items" unique_id=625219041]
+mesh = SubResource("PlaneMesh_evjrj")
+surface_material_override/0 = SubResource("StandardMaterial3D_3jscr")
+
+[node name="Box" type="MeshInstance3D" parent="Items" unique_id=2129556034]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_3jscr")
+
+[node name="Colliders" type="Node3D" parent="." unique_id=1468499634]
+
+[node name="Floor" type="StaticBody3D" parent="Colliders" unique_id=996549259]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Colliders/Floor" unique_id=827725858]
+shape = SubResource("WorldBoundaryShape3D_avllc")

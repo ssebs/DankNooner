@@ -55,7 +55,6 @@ func _on_host_btn_pressed():
     UiToast.ShowToast("Hosting game!", UiToast.ToastLevel.NORMAL, 5)
 
 
-
 func _on_join_btn_pressed():
     var ctx = LobbyStateContext.NewJoin(ip_entry.text)
     transitioned.emit(lobby_menu_state, ctx)
