@@ -4,9 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] Quit on Web should just escape fullscreen
-- [ ] Add toast UI
-
 - [ ] Create LevelManager
   - [ ] Move BGClear Rect as a level type
   - [ ] create first 3d test level
@@ -23,6 +20,8 @@
   - [ ] New task
 
 ## Backlog
+
+- [ ] Quit on Web should just escape fullscreen
 
 - [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
 - [ ] Create InputManager
@@ -49,6 +48,8 @@
 - [ ] ~Import~ Recreate stuff from moto-player-controller
 
 ## Done ✅
+
+- [x] Add toast UI
 
 - [x] Finish UI routing
   - [x] Pass params to states via context

@@ -19,57 +19,56 @@ class_name PlayMenuState extends MenuState
 
 
 func Enter(_state_context: StateContext):
-	ui.show()
+    ui.show()
 
-	back_btn.pressed.connect(_on_back_pressed)
-	customize_btn.pressed.connect(_on_customize_pressed)
-	free_roam_btn.pressed.connect(_on_free_roam_btn_pressed)
-	host_btn.pressed.connect(_on_host_btn_pressed)
-	join_btn.pressed.connect(_on_join_btn_pressed)
+    back_btn.pressed.connect(_on_back_pressed)
+    customize_btn.pressed.connect(_on_customize_pressed)
+    free_roam_btn.pressed.connect(_on_free_roam_btn_pressed)
+    host_btn.pressed.connect(_on_host_btn_pressed)
+    join_btn.pressed.connect(_on_join_btn_pressed)
 
-	ip_entry.text_changed.connect(_on_ip_text_changed)
-	join_btn.disabled = true
+    ip_entry.text_changed.connect(_on_ip_text_changed)
+    join_btn.disabled = true
 
 
 func Exit(_state_context: StateContext):
-	ui.hide()
-	back_btn.pressed.disconnect(_on_back_pressed)
-	customize_btn.pressed.disconnect(_on_customize_pressed)
-	free_roam_btn.pressed.disconnect(_on_free_roam_btn_pressed)
-	host_btn.pressed.disconnect(_on_host_btn_pressed)
-	join_btn.pressed.disconnect(_on_join_btn_pressed)
+    ui.hide()
+    back_btn.pressed.disconnect(_on_back_pressed)
+    customize_btn.pressed.disconnect(_on_customize_pressed)
+    free_roam_btn.pressed.disconnect(_on_free_roam_btn_pressed)
+    host_btn.pressed.disconnect(_on_host_btn_pressed)
+    join_btn.pressed.disconnect(_on_join_btn_pressed)
 
-	ip_entry.text_changed.disconnect(_on_ip_text_changed)
+    ip_entry.text_changed.disconnect(_on_ip_text_changed)
 
 
 func _on_ip_text_changed(new_text: String):
-	if new_text.is_valid_ip_address():
-		join_btn.disabled = false
-	else:
-		join_btn.disabled = true
+    if new_text.is_valid_ip_address():
+        join_btn.disabled = false
+    else:
+        join_btn.disabled = true
 
 
 #region button handlers
 func _on_host_btn_pressed():
-	transitioned.emit(lobby_menu_state, LobbyStateContext.NewHost("0.0.0.0"))
+    transitioned.emit(lobby_menu_state, LobbyStateContext.NewHost("0.0.0.0"))
+    UiToast.ShowToast("Hosting game!", UiToast.ToastLevel.NORMAL, 5)
+
 
 
 func _on_join_btn_pressed():
-	if !ip_entry.text.is_valid_ip_address():
-		printerr("IP Address is invalid")  # TODO: add toast
-		return
-	var ctx = LobbyStateContext.NewJoin(ip_entry.text)
-	transitioned.emit(lobby_menu_state, ctx)
+    var ctx = LobbyStateContext.NewJoin(ip_entry.text)
+    transitioned.emit(lobby_menu_state, ctx)
 
 
 func _on_free_roam_btn_pressed():
-	transitioned.emit(lobby_menu_state, LobbyStateContext.NewFreeRoam())
+    transitioned.emit(lobby_menu_state, LobbyStateContext.NewFreeRoam())
 
 
 func _on_customize_pressed():
-	transitioned.emit(customize_menu_state, null)
+    transitioned.emit(customize_menu_state, null)
 
 
 func _on_back_pressed():
-	transitioned.emit(main_menu_state, null)
+    transitioned.emit(main_menu_state, null)
 #endregion
