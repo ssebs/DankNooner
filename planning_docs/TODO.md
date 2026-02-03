@@ -5,6 +5,7 @@
 ## In Progress 🚀
 
 - [ ] Create LevelManager
+  - [ ] base class / states
   - [ ] Move BGClear Rect as a level type
   - [ ] create first 3d test level
   - [ ] Add customize menu bg as 3d level type
