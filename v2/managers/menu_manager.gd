@@ -1,5 +1,5 @@
 @tool
-class_name MenuManager extends Node
+class_name MenuManager extends BaseManager
 
 @export var state_machine: StateMachine
 

@@ -15,6 +15,7 @@
 script = ExtResource("1_1oj5k")
 
 [node name="BGClear" type="ColorRect" parent="." unique_id=744434124]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -57,7 +58,7 @@ main_menu_state = NodePath("../MainMenuState")
 menu_manager = NodePath("../..")
 play_menu_state = NodePath("../PlayMenuState")
 
-[node name="LevelManager" type="Node" parent="ManagerManager" unique_id=572419191 node_paths=PackedStringArray("spawn_node")]
+[node name="LevelManager" type="Node" parent="ManagerManager" unique_id=572419191 node_paths=PackedStringArray("spawn_node") groups=["Managers"]]
 script = ExtResource("10_mf81u")
 spawn_node = NodePath("LevelSpawn")
 
