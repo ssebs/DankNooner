@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://cpnvtdw28xn2p"]
+
+[ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_pmxdy"]
+
+[node name="BgGrayLevel" type="Node" unique_id=267153279]
+script = ExtResource("1_pmxdy")
+metadata/_custom_type_script = "uid://dv0brm8irhlth"
+
+[node name="BGClear" type="ColorRect" parent="." unique_id=1068101641]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08, 0.08, 0.08, 1)

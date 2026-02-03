@@ -5,22 +5,21 @@
 ## In Progress 🚀
 
 - [ ] Create LevelManager
-  - [ ] base class / states
-  - [ ] Move BGClear Rect as a level type
-  - [ ] create first 3d test level
-  - [ ] Add customize menu bg as 3d level type
+  - [x] base class / states
+  - [x] Move BGClear Rect as a level type
+  - [x] create first 3d test level
+  - [ ] Make level select work
 
 ## Up Next 📋
 
-- [ ] Create basic SettingsMenu scene/ui
-  - [x] Create scene
-  - [x] Improve the UI
-  - [ ] Add all components
 - [ ] Create basic PauseMenu scene/ui
   - [ ] Create scene
-  - [ ] New task
+  - [ ] Option to go back to main menu
+  - [ ] Pause / resume functionality
 
 ## Backlog
+
+- [ ] Git LFS https://www.youtube.com/watch?v=4Ln6iRh_LTo
 
 - [ ] Quit on Web should just escape fullscreen
 
@@ -33,6 +32,12 @@
 - [ ] Create GamemodeManager
 - [ ] Create SpawnManager
 - [ ] Create TrickManager
+- [ ] Create basic SettingsMenu scene/ui
+  - [x] Create scene
+  - [x] Improve the UI
+  - [ ] Add all components
+  - [ ] Functional settings
+
 - [ ] Connect signals between all managers in ManagerManager
 
 - [ ] Create Entities/Player
@@ -44,7 +49,11 @@
     - There's a godot plugin for this
   - [ ] Museum - functionally show how systems work, text explaining the systems.
     - (E.g. showing physics demos, how scripted sequences work)
-- [ ] Git LFS https://www.youtube.com/watch?v=4Ln6iRh_LTo
+- [ ] Customization
+  - [ ] Character customization
+  - [ ] Add customize menu bg as 3d level type
+  - [ ] Bike customization
+
 - [ ] Setup cloudflare image upload in vscode
 - [ ] ~Import~ Recreate stuff from moto-player-controller
 
