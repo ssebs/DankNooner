@@ -1,8 +1,6 @@
 @tool
 class_name PlayMenuState extends MenuState
 
-# SEE planning_docs\diagrams\play-menu-ui.excalidraw
-
 @export var menu_manager: MenuManager
 @export var main_menu_state: MenuState
 @export var lobby_menu_state: MenuState

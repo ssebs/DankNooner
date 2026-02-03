@@ -10,5 +10,6 @@
         "**/*.godot": true,
         "**/*.stub": true,
     },
-    "godotTools.editorPath.godot4": "c:\\Users\\ssebs\\Desktop\\Godot_v4.6-stable_win64.exe"
+    "godotTools.editorPath.godot4": "c:\\Users\\ssebs\\Desktop\\Godot_v4.6-stable_win64.exe",
+    "todoSidebar.activeFile": "f:\\LocalProgramming\\DankNooner\\planning_docs\\TODO.md"
 }
