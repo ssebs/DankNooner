@@ -9,7 +9,7 @@
   - [x] Move BGClear Rect as a level type
   - [x] create first 3d test level
   - [x] auto validation
-  - [ ] Make level select work
+  - [x] Make level select work
   - [ ] Update Architecture.md
 
 ## Up Next 📋

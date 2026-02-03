@@ -2,6 +2,7 @@
 class_name LevelManager extends BaseManager
 
 enum LevelName {
+	LEVEL_SELECT_LABEL, # not a level
 	BG_GRAY_LEVEL,
 	# MAIN_MENU_LEVEL,
 	TEST_LEVEL_01,
@@ -12,17 +13,18 @@ enum LevelName {
 
 ## PackedScene of type LevelDefinition
 var possible_levels: Dictionary[LevelName, PackedScene] = {
+	LevelName.LEVEL_SELECT_LABEL: null,
 	LevelName.BG_GRAY_LEVEL: preload("res://levels/menu_levels/bg_gray/bg_gray_level.tscn"),
 	LevelName.TEST_LEVEL_01: preload("res://levels/test_levels/test_01/test_01_level.tscn")
 }
 ## LevelName enum => localization.csv's key name
 var level_name_map: Dictionary[LevelName, String] = {
+	LevelName.LEVEL_SELECT_LABEL: "LEVEL_SELECT_LABEL",
 	LevelName.BG_GRAY_LEVEL: "BgGrayLevel",
 	LevelName.TEST_LEVEL_01: "LEVEL_TEST_1_LABEL",
 }
 
 var current_level: LevelName
-
 
 func spawn_level(level_name: LevelName):
 	if !possible_levels.has(level_name):
@@ -36,6 +38,13 @@ func spawn_level(level_name: LevelName):
 	spawned_level.level_manager = self
 	spawn_node.add_child(spawned_level)
 	current_level = level_name
+
+
+func get_levels_as_option_items() -> Dictionary[String, int]:
+	var options: Dictionary[String, int] = {}
+	for v in level_name_map.values():
+		options[v] = level_name_map.find_key(v)
+	return options
 
 # ## Get a map of LevelName => LevelState for all children of this mgr
 # func get_all_levels() -> Dictionary[String, LevelState]:
