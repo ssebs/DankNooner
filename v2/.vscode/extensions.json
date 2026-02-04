@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "pkief.material-icon-theme",
+    "sebastiansafari.todo-sidebar-md",
+    "pomdtr.excalidraw-editor",
+    "sebastiansafari.ssebs-theme",
+    "yzhang.markdown-all-in-one",
+    "CodeSmith.markdown-inline-editor-vscode",
+    "EddieDover.gdscript-formatter-linter",
+    "geequlim.godot-tools",
+  ]
+}
