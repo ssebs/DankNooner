@@ -5,7 +5,7 @@
 ## In Progress 🚀
 
 - [ ] Create basic PauseMenu scene/ui
-  - [ ] Create scene
+  - [x] Create scene/script
   - [ ] Option to go back to main menu
   - [ ] Pause / resume functionality
 

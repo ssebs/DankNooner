@@ -1,5 +1,4 @@
 {
-    "godotFormatter.useSpaces": true,
     "editor.detectIndentation": false,
     "files.exclude": {
         "**/.git": true,
