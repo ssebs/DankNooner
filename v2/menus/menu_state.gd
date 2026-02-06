@@ -15,3 +15,13 @@ func hide_ui():
 
 func show_ui():
 	ui.show()
+
+
+# ON UI BACK, NAV to PREV
+
+
+func get_first_button_for_focus() -> Button:
+	var buttons = find_children("*", "Button", true, true)
+	if len(buttons) == 0:
+		return null
+	return buttons[0]

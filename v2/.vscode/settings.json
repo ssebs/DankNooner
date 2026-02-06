@@ -1,5 +1,5 @@
 {
-    "editor.detectIndentation": false,
+    "editor.detectIndentation": true,
     "files.exclude": {
         "**/.git": true,
         "**/.DS_Store": true,

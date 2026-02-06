@@ -15,8 +15,19 @@ func _ready():
 	state_machine.state_transitioned.connect(_on_state_transitioned)
 
 
-func _on_state_transitioned(old_state: State, _new_state: State):
+func _on_state_transitioned(old_state: State, new_state: State):
 	prev_state = old_state
+	grab_focus_to_first_btn(new_state)
+
+
+func grab_focus_to_first_btn(m_state: MenuState):
+	print("grab_focus_to_first_btn")
+	var btn = m_state.get_first_button_for_focus()
+	if btn == null:
+		print("Could not find btn")
+		return
+
+	btn.grab_focus()
 
 
 ## Will hide all menus

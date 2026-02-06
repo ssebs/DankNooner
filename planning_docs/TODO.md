@@ -4,17 +4,18 @@
 
 ## In Progress 🚀
 
-- [ ] Create basic PauseMenu scene/ui
-  - [x] Create scene/script
-  - [ ] Option to go back to main menu
-  - [ ] Pause / resume functionality
 - [ ] Create InputManager
   - [ ] Mouse / Gamepad switching
-  - [ ] Gamepad to control Menus
+  - [x] Gamepad to control Menus
   - [ ] Show/Hide the cursor
   - [ ] In game:
     - [ ] camera control
     - [ ] bike control
+
+- [ ] Create basic PauseMenu scene/ui
+  - [x] Create scene/script
+  - [ ] Option to go back to main menu
+  - [ ] Pause / resume functionality
 
 ## Up Next 📋
 
