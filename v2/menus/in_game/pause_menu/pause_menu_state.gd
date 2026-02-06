@@ -2,6 +2,10 @@
 class_name PauseMenuState extends MenuState
 
 @export var menu_manager: MenuManager
+@export var level_manager: LevelManager
+@export var input_manager: InputManager
+@export var pause_manager: PauseManager
+
 @export var main_menu_state: MenuState
 
 @onready var resume_btn: Button = %ResumeBtn
@@ -26,14 +30,14 @@ func Exit(_state_context: StateContext):
 
 
 func _on_resume_pressed():
-	menu_manager.manager_manager.pause_manager.do_unpause()
+	pause_manager.do_unpause()
 
 
 func _on_main_menu_pressed():
-	menu_manager.manager_manager.pause_manager.is_paused = false
+	pause_manager.is_paused = false
 	transitioned.emit(main_menu_state, null)
-	menu_manager.manager_manager.input_manager.current_input_state = InputManager.InputState.IN_MENU
-	menu_manager.manager_manager.level_manager.spawn_menu_level()
+	input_manager.current_input_state = InputManager.InputState.IN_MENU
+	level_manager.spawn_menu_level()
 
 
 # func _on_back_pressed():
