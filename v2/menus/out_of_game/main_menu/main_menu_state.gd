@@ -2,6 +2,7 @@
 class_name MainMenuState extends MenuState
 
 @export var menu_manager: MenuManager
+@export var level_manager: LevelManager
 @export var settings_menu_state: MenuState
 @export var play_menu_state: MenuState
 @export var customize_menu_state: MenuState
@@ -19,7 +20,7 @@ func Enter(_state_context: StateContext):
 	quit_btn.pressed.connect(_on_quit_btn_pressed)
 	customize_btn.pressed.connect(_on_customize_btn_pressed)
 
-	menu_manager.manager_manager.level_manager.spawn_menu_level()
+	level_manager.spawn_menu_level()
 
 
 func Exit(_state_context: StateContext):

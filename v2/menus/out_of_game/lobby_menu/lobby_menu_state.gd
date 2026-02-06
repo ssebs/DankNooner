@@ -2,6 +2,9 @@
 class_name LobbyMenuState extends MenuState
 
 @export var menu_manager: MenuManager
+@export var level_manager: LevelManager
+@export var input_manager: InputManager
+
 @export var play_menu_state: MenuState
 
 @export var player_list_item_scene: PackedScene = preload(
@@ -50,9 +53,8 @@ func Exit(_state_context: StateContext):
 	level_select_btn.item_selected.disconnect(_on_level_selected)
 
 
-## Generate level select items from manager_manager.level_manager
+## Generate level select items from level_manager
 func set_levels_in_dropdown():
-	var level_manager = menu_manager.manager_manager.level_manager
 	var items = level_manager.get_levels_as_option_items()
 
 	level_select_btn.clear()
@@ -85,11 +87,9 @@ func _on_level_selected(idx: int):
 func _on_start_pressed():
 	menu_manager.hide_all_menus()
 
-	var level_manager = menu_manager.manager_manager.level_manager
-
 	# note - level_select_btn's items are generated from level_manager
 	level_manager.spawn_level(level_select_btn.selected)
-	menu_manager.manager_manager.input_manager.current_input_state = InputManager.InputState.IN_GAME
+	input_manager.current_input_state = InputManager.InputState.IN_GAME
 
 
 func _on_back_pressed():
