@@ -2,6 +2,7 @@
 class_name MenuManager extends BaseManager
 
 @export var state_machine: StateMachine
+@export var pause_menu_state: MenuState
 
 var prev_state: MenuState
 
@@ -13,12 +14,6 @@ func _ready():
 		return
 
 	state_machine.state_transitioned.connect(_on_state_transitioned)
-	manager_manager.input_manager.input_state_changed.connect(_on_input_state_changed)
-
-
-func _unhandled_input(event: InputEvent):
-	if event.is_action_pressed("ui_cancel"):
-		state_machine.current_state.on_cancel_key_pressed()
 
 
 func _on_state_transitioned(old_state: State, new_state: State):
@@ -26,17 +21,13 @@ func _on_state_transitioned(old_state: State, new_state: State):
 	grab_focus_to_first_btn(new_state)
 
 
-func _on_input_state_changed(new_state: InputManager.InputState):
-	match new_state:
-		InputManager.InputState.IN_MENU:
-			enable_input_and_processing()
-		InputManager.InputState.IN_GAME, InputManager.InputState.DISABLED:
-			disable_input_and_processing()
+## Load pause_menu_state as current state
+func switch_to_pause_menu():
+	state_machine.request_state_change(pause_menu_state, null)
 
 
 ## Focuses the top btn so the player can control w/ controller
 func grab_focus_to_first_btn(m_state: MenuState):
-	print("grab_focus_to_first_btn")
 	var btn = m_state.get_first_button_for_focus()
 	if btn == null:
 		print("Could not find btn")

@@ -2,7 +2,7 @@
 class_name LevelManager extends BaseManager
 
 enum LevelName {
-	LEVEL_SELECT_LABEL, # not a level
+	LEVEL_SELECT_LABEL,  # not a level
 	BG_GRAY_LEVEL,
 	# MAIN_MENU_LEVEL,
 	TEST_LEVEL_01,
@@ -24,14 +24,14 @@ var level_name_map: Dictionary[LevelName, String] = {
 	LevelName.TEST_LEVEL_01: "LEVEL_TEST_1_LABEL",
 }
 
-var current_level: LevelName
+var current_level: LevelName = LevelName.LEVEL_SELECT_LABEL
+
 
 func spawn_level(level_name: LevelName):
 	if !possible_levels.has(level_name):
 		printerr("Could not find LevelName.%s in possible_levels" % level_name)
 
-	for child in spawn_node.get_children():
-		child.queue_free()
+	despawn_level()
 
 	var spawned_level = possible_levels[level_name].instantiate()
 	spawned_level.name = level_name_map.get(level_name)
@@ -40,11 +40,24 @@ func spawn_level(level_name: LevelName):
 	current_level = level_name
 
 
+func despawn_level(reset_level_name: bool = false):
+	for child in spawn_node.get_children():
+		child.queue_free()
+
+	if reset_level_name:
+		current_level = LevelName.LEVEL_SELECT_LABEL
+
+
 func get_levels_as_option_items() -> Dictionary[String, int]:
 	var options: Dictionary[String, int] = {}
 	for v in level_name_map.values():
 		options[v] = level_name_map.find_key(v)
 	return options
+
+## Spawn the menu level
+func spawn_menu_level():
+	spawn_level(LevelName.BG_GRAY_LEVEL)
+
 
 # ## Get a map of LevelName => LevelState for all children of this mgr
 # func get_all_levels() -> Dictionary[String, LevelState]:

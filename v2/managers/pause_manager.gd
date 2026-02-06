@@ -13,28 +13,32 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 
-	manager_manager.input_manager.input_state_changed.connect(_on_input_state_changed)
-
 
 func _unhandled_input(event: InputEvent):
-	if event.is_action_pressed("ui_cancel"):
-		if is_paused:
-			do_pause()
-		else:
-			do_unpause()
-
-
-func _on_input_state_changed(new_state: InputManager.InputState):
-	match new_state:
-		InputManager.InputState.IN_MENU, InputManager.InputState.DISABLED:
-			disable_input_and_processing()
-		InputManager.InputState.IN_GAME:
-			enable_input_and_processing()
+	match manager_manager.input_manager.current_input_state:
+		InputManager.InputState.DISABLED:
+			return
+		InputManager.InputState.IN_MENU, InputManager.InputState.IN_GAME:
+			if event.is_action_pressed("pause"):
+				if is_paused:
+					do_unpause()
+				else:
+					do_pause()
 
 
 func do_pause():
-	pass
+	is_paused = true
+	manager_manager.input_manager.current_input_state = InputManager.InputState.IN_MENU
+	manager_manager.menu_manager.switch_to_pause_menu()
+	manager_manager.menu_manager.enable_input_and_processing()
+	manager_manager.level_manager.disable_input_and_processing()
 
 
 func do_unpause():
-	pass
+	is_paused = false
+	manager_manager.input_manager.current_input_state = (
+		manager_manager.input_manager.prev_input_state
+	)  # either IN_GAME or DISABLED
+	manager_manager.menu_manager.hide_all_menus()
+	manager_manager.menu_manager.disable_input_and_processing()
+	manager_manager.level_manager.enable_input_and_processing()

@@ -19,7 +19,7 @@ func Enter(_state_context: StateContext):
 	quit_btn.pressed.connect(_on_quit_btn_pressed)
 	customize_btn.pressed.connect(_on_customize_btn_pressed)
 
-	spawn_menu_level()
+	menu_manager.manager_manager.level_manager.spawn_menu_level()
 
 
 func Exit(_state_context: StateContext):
@@ -29,11 +29,6 @@ func Exit(_state_context: StateContext):
 	settings_btn.pressed.disconnect(_on_settings_btn_pressed)
 	quit_btn.pressed.disconnect(_on_quit_btn_pressed)
 	customize_btn.pressed.disconnect(_on_customize_btn_pressed)
-
-
-func spawn_menu_level():
-	var level_manager = menu_manager.manager_manager.level_manager
-	level_manager.spawn_level(level_manager.LevelName.BG_GRAY_LEVEL)
 
 
 #region button handlers
