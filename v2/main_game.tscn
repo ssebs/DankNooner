@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://bl26780k5sr" path="res://menus/out_of_game/lobby_menu/lobby_menu_state.tscn" id="7_l5ukw"]
 [ext_resource type="PackedScene" uid="uid://b8wtld34amu44" path="res://menus/out_of_game/customize_menu/customize_menu_state.tscn" id="9_4srsv"]
 [ext_resource type="Script" uid="uid://dihgiqkhwdsf6" path="res://managers/level_manager.gd" id="10_mf81u"]
+[ext_resource type="Script" uid="uid://b2j8gbb336wwq" path="res://managers/pause_manager.gd" id="12_aomqu"]
 
 [node name="MainGame" type="Node" unique_id=936339405]
 script = ExtResource("1_1oj5k")
@@ -58,3 +59,7 @@ play_menu_state = NodePath("../PlayMenuState")
 
 [node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager") instance=ExtResource("6_02kkc")]
 menu_manager = NodePath("../..")
+
+[node name="PauseManager" type="Node" parent="ManagerManager" unique_id=704027696 groups=["Managers"]]
+script = ExtResource("12_aomqu")
+metadata/_custom_type_script = "uid://b2j8gbb336wwq"
