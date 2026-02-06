@@ -6,7 +6,7 @@ signal pause_mode_changed(is_paused: bool)
 var is_paused := false:
 	set(val):
 		is_paused = val
-		pause_mode_changed.emit()
+		pause_mode_changed.emit(val)
 
 
 func _ready():

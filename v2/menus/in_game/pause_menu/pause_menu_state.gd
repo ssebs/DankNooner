@@ -6,7 +6,7 @@ class_name PauseMenuState extends MenuState
 
 @onready var resume_btn: Button = %ResumeBtn
 @onready var main_menu_btn: Button = %MainMenuBtn
-@onready var back_btn: Button = %BackBtn
+# @onready var back_btn: Button = %BackBtn
 
 # See managers/pause_manager.gd
 
@@ -15,14 +15,14 @@ func Enter(_state_context: StateContext):
 	ui.show()
 	resume_btn.pressed.connect(_on_resume_pressed)
 	main_menu_btn.pressed.connect(_on_main_menu_pressed)
-	back_btn.pressed.connect(_on_back_pressed)
+	# back_btn.pressed.connect(_on_back_pressed)
 
 
 func Exit(_state_context: StateContext):
 	ui.hide()
 	resume_btn.pressed.disconnect(_on_resume_pressed)
 	main_menu_btn.pressed.disconnect(_on_main_menu_pressed)
-	back_btn.pressed.disconnect(_on_back_pressed)
+	# back_btn.pressed.disconnect(_on_back_pressed)
 
 
 func _on_resume_pressed():
@@ -30,13 +30,14 @@ func _on_resume_pressed():
 
 
 func _on_main_menu_pressed():
+	menu_manager.manager_manager.pause_manager.is_paused = false
 	transitioned.emit(main_menu_state, null)
 	menu_manager.manager_manager.input_manager.current_input_state = InputManager.InputState.IN_MENU
 	menu_manager.manager_manager.level_manager.spawn_menu_level()
 
 
-func _on_back_pressed():
-	print("back pressed")
+# func _on_back_pressed():
+# 	print("back pressed")
 
 
 #override

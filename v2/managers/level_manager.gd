@@ -30,6 +30,7 @@ var current_level: LevelName = LevelName.LEVEL_SELECT_LABEL
 func spawn_level(level_name: LevelName):
 	if !possible_levels.has(level_name):
 		printerr("Could not find LevelName.%s in possible_levels" % level_name)
+		return
 
 	despawn_level()
 
@@ -40,12 +41,9 @@ func spawn_level(level_name: LevelName):
 	current_level = level_name
 
 
-func despawn_level(reset_level_name: bool = false):
+func despawn_level():
 	for child in spawn_node.get_children():
 		child.queue_free()
-
-	if reset_level_name:
-		current_level = LevelName.LEVEL_SELECT_LABEL
 
 
 func get_levels_as_option_items() -> Dictionary[String, int]:
