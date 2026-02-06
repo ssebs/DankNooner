@@ -15,12 +15,14 @@
 - [ ] Create Player pt 1
   - [ ] Player scene + component script
     - [ ] See moto-player-controller
+  - [ ] https://youtu.be/MbaPDWfbNLo?si=p5ybcrLUJje_nBgd
 - [ ] Create InputManager
   - [ ] camera control
   - [ ] bike control
 - [ ] Create Test Level - Zoo - all relevant models/scenes in 3d space to easily compare
   - (E.g. diff bikes/mods on each bike)
   - There's a godot plugin for this
+  - https://binbun3d.itch.io/godot-ultimate-toon-shader
 - [ ] Create Player pt 2
   - [ ] character from selection
     - [ ] character base (select male/female)
@@ -33,7 +35,7 @@
 - [ ] Player pt 3
   - [ ] bike physics / movement / gearing
   - [ ] animation w/ IK
-  - [ ] few tricks 
+  - [ ] few tricks
 
 ## Backlog
 
@@ -60,21 +62,24 @@
   - [ ] free roam w/ friends
   - [ ] race
 - [ ] Create basic SettingsMenu scene/ui
+
   - [x] Create scene
   - [x] Improve the UI
   - [ ] Add all components
   - [ ] Functional settings
 
 - [ ] Customization
+
   - [ ] Add customize menu UI
-  - [ ] Add customize menu background scene 
+  - [ ] Add customize menu background scene
   - [ ] More Character customization
   - [ ] More Bike customization
   - [ ] Save on client for now - but make abstract enough for future server saving
 
-
 - [ ] Create Test Level - Museum - functionally show how systems work, text explaining the systems.
   - (E.g. showing physics demos, how scripted sequences work)
+- [ ] Create Island Level
+  - [ ] render trees/etc. with multi mesh
 
 ## Polish / Bugs
 
