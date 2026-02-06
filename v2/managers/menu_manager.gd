@@ -13,6 +13,7 @@ func _ready():
 		return
 
 	state_machine.state_transitioned.connect(_on_state_transitioned)
+	manager_manager.input_manager.input_state_changed.connect(_on_input_state_changed)
 
 
 func _unhandled_input(event: InputEvent):
@@ -23,6 +24,14 @@ func _unhandled_input(event: InputEvent):
 func _on_state_transitioned(old_state: State, new_state: State):
 	prev_state = old_state
 	grab_focus_to_first_btn(new_state)
+
+
+func _on_input_state_changed(new_state: InputManager.InputState):
+	match new_state:
+		InputManager.InputState.IN_MENU:
+			enable_input_and_processing()
+		InputManager.InputState.IN_GAME, InputManager.InputState.DISABLED:
+			disable_input_and_processing()
 
 
 ## Focuses the top btn so the player can control w/ controller
