@@ -23,7 +23,7 @@ func _on_state_transitioned(old_state: State, new_state: State):
 
 ## Load pause_menu_state as current state
 func switch_to_pause_menu():
-	state_machine.request_state_change(pause_menu_state, null)
+	state_machine.request_state_change(pause_menu_state, null, true)
 
 
 ## Focuses the top btn so the player can control w/ controller
