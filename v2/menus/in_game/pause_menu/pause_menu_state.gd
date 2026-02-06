@@ -7,6 +7,7 @@ class_name PauseMenuState extends MenuState
 
 # See managers/pause_manager.gd
 
+
 func Enter(_state_context: StateContext):
 	ui.show()
 	back_btn.pressed.connect(_on_back_pressed)
@@ -19,3 +20,8 @@ func Exit(_state_context: StateContext):
 
 func _on_back_pressed():
 	print("back pressed")
+
+
+#override
+func on_cancel_key_pressed():
+	_on_back_pressed()

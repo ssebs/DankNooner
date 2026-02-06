@@ -19,3 +19,8 @@ func Exit(_state_context: StateContext):
 
 func _on_back_pressed():
 	transitioned.emit(main_menu_state, null)
+
+
+#override
+func on_cancel_key_pressed():
+	_on_back_pressed()

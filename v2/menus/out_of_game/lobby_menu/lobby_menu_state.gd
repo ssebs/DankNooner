@@ -94,3 +94,7 @@ func _on_start_pressed():
 func _on_back_pressed():
 	transitioned.emit(play_menu_state, null)
 #endregion
+
+#override
+func on_cancel_key_pressed():
+	_on_back_pressed()
