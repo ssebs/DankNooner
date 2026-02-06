@@ -34,6 +34,16 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 
+[node name="ResumeBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=843270122]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RESUME_LABEL"
+
+[node name="MainMenuBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=588914279]
+unique_name_in_owner = true
+layout_mode = 2
+text = "MAIN_MENU_LABEL"
+
 [node name="BackBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=1875851933]
 unique_name_in_owner = true
 layout_mode = 2

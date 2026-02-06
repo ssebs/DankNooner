@@ -11,9 +11,13 @@ enum InputState {
 
 var current_input_state = InputState.IN_MENU:
 	set(val):
+		prev_input_state = current_input_state
 		current_input_state = val
 		showhide_mouse_cursor()
 		input_state_changed.emit(val)
+
+var prev_input_state: InputState = InputState.IN_MENU
+
 
 ## Shows or hides mouse cursor depending on current_input_state
 func showhide_mouse_cursor():
