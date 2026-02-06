@@ -5,6 +5,7 @@ class_name PauseMenuState extends MenuState
 
 @onready var back_btn: Button = %BackBtn
 
+# See managers/pause_manager.gd
 
 func Enter(_state_context: StateContext):
 	ui.show()
