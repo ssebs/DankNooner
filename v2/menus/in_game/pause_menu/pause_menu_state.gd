@@ -34,7 +34,6 @@ func _on_resume_pressed():
 
 
 func _on_main_menu_pressed():
-	pause_manager.is_paused = false
 	transitioned.emit(main_menu_state, null)
 	input_manager.current_input_state = InputManager.InputState.IN_MENU
 	level_manager.spawn_menu_level()
