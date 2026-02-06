@@ -4,14 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] Create InputManager
-  - [x] Mouse / Gamepad switching
-  - [x] Gamepad to control Menus
-  - [ ] Show/Hide the cursor
-  - [ ] In game:
-    - [ ] camera control
-    - [ ] bike control
-
 - [ ] Create basic PauseMenu scene/ui
   - [x] Create scene/script
   - [ ] Option to go back to main menu
@@ -31,6 +23,9 @@
   - [ ] character from selection
     - [ ] character base (select male/female)
     - [ ] accessories (cosmetics, etc.) (**basic customization**)
+  - [ ] InputManager in game
+    - [ ] camera control
+    - [ ] bike control
   - [ ] bike from selection
     - [ ] bike base (select bike)
     - [ ] mods (color, actual mods) (**basic customization**)
@@ -93,6 +88,11 @@
 - [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
 
 ## Done ✅
+
+- [x] Create InputManager
+  - [x] Mouse / Gamepad switching
+  - [x] Gamepad to control Menus
+  - [x] Show/Hide the cursor
 
 - [x] Connect signals between all managers in ManagerManager
 
