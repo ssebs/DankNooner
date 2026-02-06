@@ -5,7 +5,7 @@
 ## In Progress 🚀
 
 - [ ] Create InputManager
-  - [ ] Mouse / Gamepad switching
+  - [x] Mouse / Gamepad switching
   - [x] Gamepad to control Menus
   - [ ] Show/Hide the cursor
   - [ ] In game:
