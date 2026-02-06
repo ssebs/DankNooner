@@ -8,17 +8,20 @@
   - [x] Create scene/script
   - [ ] Option to go back to main menu
   - [ ] Pause / resume functionality
+- [ ] Create InputManager
+  - [ ] Mouse / Gamepad switching
+  - [ ] Gamepad to control Menus
+  - [ ] Show/Hide the cursor
+  - [ ] In game:
+    - [ ] camera control
+    - [ ] bike control
 
 ## Up Next 📋
 
-- [ ] Git LFS https://www.youtube.com/watch?v=4Ln6iRh_LTo
 - [ ] Create Player pt 1
   - [ ] Player scene + component script
     - [ ] See moto-player-controller
   - [ ] https://youtu.be/MbaPDWfbNLo?si=p5ybcrLUJje_nBgd
-- [ ] Create InputManager
-  - [ ] camera control
-  - [ ] bike control
 - [ ] Create Test Level - Zoo - all relevant models/scenes in 3d space to easily compare
   - (E.g. diff bikes/mods on each bike)
   - There's a godot plugin for this
@@ -62,6 +65,7 @@
   - [ ] free roam w/ friends
   - [ ] race
 - [ ] Create basic SettingsMenu scene/ui
+  - [ ] Make this work with pause menu (compose this somehow)
 
   - [x] Create scene
   - [x] Improve the UI
