@@ -18,7 +18,17 @@ func _unhandled_input(event: InputEvent):
 	match manager_manager.input_manager.current_input_state:
 		InputManager.InputState.DISABLED:
 			return
-		InputManager.InputState.IN_MENU, InputManager.InputState.IN_GAME:
+		InputManager.InputState.IN_MENU:
+			if (
+				manager_manager.menu_manager.state_machine.current_state
+				== manager_manager.menu_manager.pause_menu_state
+			):
+				if event.is_action_pressed("pause"):
+					if is_paused:
+						do_unpause()
+					else:
+						do_pause()
+		InputManager.InputState.IN_GAME:
 			if event.is_action_pressed("pause"):
 				if is_paused:
 					do_unpause()
@@ -36,9 +46,7 @@ func do_pause():
 
 func do_unpause():
 	is_paused = false
-	manager_manager.input_manager.current_input_state = (
-		manager_manager.input_manager.prev_input_state
-	)  # either IN_GAME or DISABLED
+	manager_manager.input_manager.current_input_state = InputManager.InputState.IN_GAME
 	manager_manager.menu_manager.hide_all_menus()
 	manager_manager.menu_manager.disable_input_and_processing()
 	manager_manager.level_manager.enable_input_and_processing()

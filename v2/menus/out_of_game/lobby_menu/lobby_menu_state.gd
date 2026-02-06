@@ -89,11 +89,15 @@ func _on_start_pressed():
 
 	# note - level_select_btn's items are generated from level_manager
 	level_manager.spawn_level(level_select_btn.selected)
+	menu_manager.manager_manager.input_manager.current_input_state = InputManager.InputState.IN_GAME
 
 
 func _on_back_pressed():
 	transitioned.emit(play_menu_state, null)
+
+
 #endregion
+
 
 #override
 func on_cancel_key_pressed():
