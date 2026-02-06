@@ -72,11 +72,11 @@
     - Pass context when emitting: `transitioned.emit(target_state, MyContext.New(...))`
     - Receive in `Enter(state_context: StateContext)` and cast to your type
 
-### Menu State Machine System
+#### Menu State Machine System
 
 Menus use the state machine pattern where each screen is a `MenuState` extending `State`.
 
-#### Creating a New Menu State
+##### Creating a New Menu State
 
 > Follow other files for example.
 
@@ -124,3 +124,36 @@ Levels are managed via `LevelManager` and selected through the `LobbyMenuState` 
 2. Add entry to `LevelName` enum in `level_manager.gd`
 3. Add entry to `level_name_map` (enum → localization key)
 4. Add entry to `possible_levels` (enum → `preload("res://path/to/level.tscn")`)
+
+### Pause System
+
+User stories:
+
+- In SP or MP, hitting **PAUSE** should:
+  - Open the pause menu
+  - Show the Mouse / allow gamepad to control menus
+  - Allow you to change settings
+  - Allow you to go to the main menu
+  - Customize your character (progression depends on mode)
+- In Singleplayer, hitting **PAUSE** should:
+  - Freeze the gameplay & pause whole world
+  - Allow you to save game
+  - Allow you to load game
+- In Multiplayer, hitting **PAUSE** should:
+  - Freeze your character? Turn half-invisible w/o hitbox
+  - Allow you to invite friends to server
+  - Allow you to change servers
+
+### Unlocks / progression
+
+#### WIP NOTES
+- Singleplayer unlocks mods / cosmetics (aka 100% skin), and that unlocks skins for SP and MP
+- Bikes unlock per SP/MP
+
+- Playing SP unlocks bikes for MP?
+- Playing MP unlocks skins for SP, but not bikes
+
+### Customizing
+
+- Have an in-world garage like LS Customs
+- Pause menu btn teleports you to the garage

@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://dm0vkjkxnoe42" path="res://managers/manager_manager.gd" id="2_yx7mw"]
 [ext_resource type="Script" uid="uid://277pfnhexwcq" path="res://managers/menu_manager.gd" id="3_ykeeq"]
 [ext_resource type="Script" uid="uid://ba7kyb4p3trb1" path="res://utils/state_machine/state_machine.gd" id="4_6bm6p"]
+[ext_resource type="PackedScene" uid="uid://d0jwfmklbjcoo" path="res://menus/in_game/pause_menu/pause_menu_state.tscn" id="6_02kkc"]
 [ext_resource type="PackedScene" uid="uid://ds8xwygeh5ykm" path="res://menus/out_of_game/main_menu/main_menu_state.tscn" id="6_2pltu"]
 [ext_resource type="PackedScene" uid="uid://tbsm4ckff72l" path="res://menus/out_of_game/settings_menu/settings_menu_state.tscn" id="6_f52ns"]
 [ext_resource type="PackedScene" uid="uid://x3ylknc7a413" path="res://menus/out_of_game/play_menu/play_menu_state.tscn" id="7_f52ns"]
@@ -54,3 +55,6 @@ main_menu_state = NodePath("../MainMenuState")
 [node name="CustomizeMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1710077363 node_paths=PackedStringArray("menu_manager", "play_menu_state") instance=ExtResource("9_4srsv")]
 menu_manager = NodePath("../..")
 play_menu_state = NodePath("../PlayMenuState")
+
+[node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager") instance=ExtResource("6_02kkc")]
+menu_manager = NodePath("../..")
