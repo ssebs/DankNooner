@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dj8yd118p20oa"]
 
 [ext_resource type="Script" uid="uid://44kdiwhdt512" path="res://levels/test_levels/test_01/test_01_level.gd" id="1_evjrj"]
+[ext_resource type="PackedScene" uid="uid://d0rgswc73h64f" path="res://entities/player/player_entity.tscn" id="2_6hu6n"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jmk2t"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -25,16 +26,15 @@ albedo_color = Color(0.13333334, 0.13333334, 0.13333334, 1)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_avllc"]
 
-[node name="Test_01_Level" type="Node3D" unique_id=898545864]
+[node name="Test_01_Level" type="Node3D" unique_id=898545864 node_paths=PackedStringArray("player_spawn_pos")]
 script = ExtResource("1_evjrj")
+player_entity_scene = ExtResource("2_6hu6n")
+player_spawn_pos = NodePath("PlayerSpawn")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="PlayerSpawn" type="Marker3D" parent="." unique_id=840084747]
 unique_name_in_owner = true
-transform = Transform3D(-0.61566144, 0, -0.7880108, 0, 1, 0, 0.7880108, 0, -0.61566144, 7, 0, 7)
-
-[node name="Players" type="Node" parent="." unique_id=1592012600]
-unique_name_in_owner = true
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, 7, 0, 7)
 
 [node name="LevelItemsAndStuff" type="Node3D" parent="." unique_id=804449511]
 

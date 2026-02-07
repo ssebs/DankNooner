@@ -13,7 +13,7 @@
     - [ ] movement
     - [ ] gearing
   - [ ] basic character selection (select male/female)
-  - [ ] basic bike selection (select bike)
+  - [x] basic bike selection (select bike)
   - [ ] InputManager in game
     - [ ] camera control
     - [ ] bike control

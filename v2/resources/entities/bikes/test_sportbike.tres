@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="BikeDefinition" format=3 uid="uid://4pwnilv3r1u3"]
+
+[ext_resource type="PackedScene" uid="uid://bgr8550flctkg" path="res://entities/player/bikes/assets/sports_bike/scene.gltf" id="1_18l3w"]
+[ext_resource type="Script" uid="uid://dl8qtx86j2iex" path="res://entities/player/bikes/bike_definition.gd" id="2_tfxux"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hgb8f"]
+radius = 0.4
+
+[resource]
+script = ExtResource("2_tfxux")
+mesh_scene = ExtResource("1_18l3w")
+mesh_rotation_offset_degrees = Vector3(0, 180, 0)
+collision_shape = SubResource("CapsuleShape3D_hgb8f")
+collision_position_offset = Vector3(0, 0.4, 0)
+collision_rotation_offset_degrees = Vector3(90, 0, 0)
+metadata/_custom_type_script = "uid://dl8qtx86j2iex"
