@@ -34,8 +34,7 @@ jobs:
           relative_project_path: ./v2
           archive_output: true
           cache: true
-          # Export all 4 presets: Linux, Windows Desktop, Web, macOS
-          presets_to_export: "Linux, Windows Desktop, Web, macOS"
+          presets_to_export: "DankNoonerLinux, DankNoonerWindows, DankNoonerWeb, DankNoonerMac"
           wine_path: ${{ steps.wine_install.outputs.WINE_PATH }} # set the wine path here which is the output of the wine_install step
       - name: create release
         uses: ncipollo/release-action@v1.18.0

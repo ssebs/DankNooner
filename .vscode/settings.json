@@ -1,3 +1,4 @@
 {
-    "todoSidebar.activeFile": "./planning_docs/TODO.md"
+    "todoSidebar.onDoneAction": "move",
+    "todoSidebar.activeFile": "./v2/planning_docs/TODO.md"
 }

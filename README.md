@@ -57,14 +57,14 @@ POC repos that fed into V2:
 
 ## Planning Docs
 
-See [planning_docs/](./planning_docs/) for detailed design and project status:
+See [v2/planning_docs/](./v2/planning_docs/) for detailed design and project status:
 
-- [TODO](./planning_docs/TODO.md)
-- [Milestones](./planning_docs/Milestones.md)
-- [Goals & Requirements](./planning_docs/GoalsRequirements.md)
-- [Architecture / Design](./planning_docs/Architecture.md)
-- [Marketing](./planning_docs/Marketing.md)
-- [Story / Singleplayer](./planning_docs/StorySingleplayer.md)
+- [TODO](./v2/planning_docs/TODO.md)
+- [Milestones](./v2/planning_docs/Milestones.md)
+- [Goals & Requirements](./v2/planning_docs/GoalsRequirements.md)
+- [Architecture / Design](./v2/planning_docs/Architecture.md)
+- [Marketing](./v2/planning_docs/Marketing.md)
+- [Story / Singleplayer](./v2/planning_docs/StorySingleplayer.md)
 
 ## Media
 
