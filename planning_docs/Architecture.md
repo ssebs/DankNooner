@@ -52,13 +52,13 @@
 ### Editor Validation
 
 - Click "Run Validation" on the `MainGame` node inspector to check for common wiring bugs
-- Validates: null `@export` objects, missing `@onready %UniqueNode` references, `@onready` Buttons without `_on_<name>_pressed()` handlers
+- Validates: null `@export` objects, missing `@onready %UniqueNode` references, `@onready` Buttons without `_on_<name>_pressed()` handlers, LevelManager enum/dict sync
 - Comment out `@onready` declarations to skip validation on WIP features
 - See `utils/validation/auto_validator.gd` for implementation
 
 ### Managers
 
-- Managers should have a state machine, and are in the "**Managers**" group. _See constants.gd_
+- Managers extend `BaseManager` and are in the "**Managers**" group. _See constants.gd_
 - How to use:
   - Create Node under `ManagerManager` Node, rename to class name of the manager. e.g. `MenuManager` node uses `menu_manager.gd` which is `MenuManager` `class_name`
 
@@ -73,8 +73,9 @@
   - New States can be registered / deregistered to be managed by the state machine
   - States can receive data via `StateContext` - a base class for passing typed data between states
     - Create a subclass with properties and static factory methods (see `lobby_state_context.gd`)
-    - Pass context when emitting: `transitioned.emit(target_state, MyContext.New(...))`
+    - Pass context when emitting: `transitioned.emit(target_state, MyContext.NewSomething(...))`
     - Receive in `Enter(state_context: StateContext)` and cast to your type
+  - States get a `state_machine_ref` property set on registration
 
 #### Menu State Machine System
 
@@ -113,10 +114,10 @@ Levels are managed via `LevelManager` and selected through the `LobbyMenuState` 
 - **LevelManager** (`managers/level_manager.gd`)
   - `LevelName` enum - defines all available levels
   - `possible_levels` - Dictionary mapping `LevelName` → preloaded `PackedScene`
-  - `level_name_map` - Dictionary mapping `LevelName` → display string
-  - `spawn_node` - Node3D where levels are instantiated
+  - `level_name_map` - Dictionary mapping `LevelName` → localization key string
+  - `@export spawn_node` - Node3D where levels are instantiated
 
-> Note - Level idx 0 is the "Select a level" string for the dropdown
+> Note - Level enum idx 0 is `LEVEL_SELECT_LABEL` (not a real level, used for dropdown default)
 
 - **LobbyMenuState** (`menus/out_of_game/lobby_menu/`) - Level selection UI
   - `LevelSelectBtn` (OptionButton) - Dropdown for level selection
@@ -124,7 +125,7 @@ Levels are managed via `LevelManager` and selected through the `LobbyMenuState` 
 
 #### Adding a New Level
 
-1. Create level scene extending `LevelDefinition`
+1. Create level scene extending `LevelDefinition` (no need to wire `level_manager` export - it's set automatically on spawn)
 2. Add entry to `LevelName` enum in `level_manager.gd`
 3. Add entry to `level_name_map` (enum → localization key)
 4. Add entry to `possible_levels` (enum → `preload("res://path/to/level.tscn")`)
