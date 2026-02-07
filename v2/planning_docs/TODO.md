@@ -66,6 +66,7 @@ since I will have multiple bike types, colors, and mods for each type.
 
 ## Backlog
 
+- [ ] Audio Manager
 - [ ] Create TrickManager
   - [ ] connect w/ NetworkManager
   - [ ] trick detection in player component

@@ -17,6 +17,10 @@ func _ready():
 	_init_collision_shape()
 
 
+func _get_player_inputs_for_movement():
+	pass
+
+
 func _init_collision_shape():
 	collision_shape_3d.shape = bike_definition.collision_shape
 
