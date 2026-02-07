@@ -4,6 +4,7 @@
 
 ## In Progress 🚀
 
+- [ ] Git LFS
 - [ ] Create Player Part 1
   - > no animations for now
   - [ ] Singleplayer / Multiplayer code separation

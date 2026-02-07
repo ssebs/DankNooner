@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://d0rgswc73h64f"]
+
+[ext_resource type="Script" uid="uid://b7ge4vto3017o" path="res://entities/player/player.gd" id="1_symyc"]
+[ext_resource type="PackedScene" uid="uid://4m8or6jc5xbd" path="res://entities/player/components/camera_controller.tscn" id="2_bls4j"]
+[ext_resource type="PackedScene" uid="uid://wtoa0qil5jn5" path="res://entities/entity_mesh.tscn" id="2_sglur"]
+[ext_resource type="PackedScene" uid="uid://bgr8550flctkg" path="res://entities/player/bikes/assets/sports_bike/scene.gltf" id="3_bls4j"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sfv1e"]
+
+[node name="Player" type="RigidBody3D" unique_id=1711182397]
+mass = 200.0
+script = ExtResource("1_symyc")
+
+[node name="_Components" type="Node" parent="." unique_id=1248012405]
+
+[node name="CameraController" parent="_Components" unique_id=816730707 node_paths=PackedStringArray("fps_marker", "tps_marker") instance=ExtResource("2_bls4j")]
+fps_marker = NodePath("../../Markers/FPSCamMarker")
+tps_marker = NodePath("../../Markers/TPSCamMarker")
+
+[node name="FPSCam" parent="_Components/CameraController" index="0" unique_id=634464672]
+transform = Transform3D(1, 0, 0, 0, 0.9659259, 0.25881904, 0, -0.25881904, 0.9659259, 0, 1.2464378, -0.14704515)
+
+[node name="TPSCam" parent="_Components/CameraController" index="1" unique_id=1953618350]
+transform = Transform3D(1, 0, 0, 0, 0.86602545, 0.5, 0, -0.5, 0.86602545, 0, 1.5572858, 1.7655815)
+
+[node name="Markers" type="Node" parent="." unique_id=1213495647]
+
+[node name="FPSCamMarker" type="Marker3D" parent="Markers" unique_id=2035762363]
+transform = Transform3D(1, 0, 0, 0, 0.96592575, 0.258819, 0, -0.258819, 0.96592575, 0, 1.2021662, 0)
+
+[node name="TPSCamMarker" type="Marker3D" parent="Markers" unique_id=748255221]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 1.273824, 1.1753491)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1862065901]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.5, 0)
+shape = SubResource("CapsuleShape3D_sfv1e")
+
+[node name="EntityMesh" parent="." unique_id=1821118312 instance=ExtResource("2_sglur")]
+mesh_scene = ExtResource("3_bls4j")
+mesh_rotation_degrees = Vector3(0, 180, 0)
+
+[editable path="_Components/CameraController"]

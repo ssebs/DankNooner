@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://4m8or6jc5xbd"]
+
+[ext_resource type="Script" uid="uid://coopftft0wwho" path="res://entities/player/components/camera_controller.gd" id="1_x3pwk"]
+
+[node name="CameraController" type="Node3D" unique_id=816730707 node_paths=PackedStringArray("fps_cam", "tps_cam")]
+script = ExtResource("1_x3pwk")
+fps_cam = NodePath("FPSCam")
+tps_cam = NodePath("TPSCam")
+
+[node name="FPSCam" type="Camera3D" parent="." unique_id=634464672]
+
+[node name="TPSCam" type="Camera3D" parent="." unique_id=1953618350]
