@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://wtoa0qil5jn5"]
-
-[ext_resource type="Script" uid="uid://bmba2ns8tm70u" path="res://entities/entity_mesh.gd" id="1_em4jr"]
-
-[node name="EntityMesh" type="Node3D" unique_id=1821118312]
-script = ExtResource("1_em4jr")
