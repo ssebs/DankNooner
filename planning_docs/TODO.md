@@ -4,33 +4,38 @@
 
 ## In Progress 🚀
 
+- [ ] Create Player Part 1
+  - > no animations for now
+  - [ ] Singleplayer / Multiplayer code separation
+  - [ ] Player scene + component scripts
+    - > See moto-player-controller
+    - [ ] physics
+    - [ ] movement
+    - [ ] gearing
+  - [ ] basic character selection (select male/female)
+  - [ ] basic bike selection (select bike)
+  - [ ] InputManager in game
+    - [ ] camera control
+    - [ ] bike control
+- [ ] Create Player Part 2
+  - [ ] IK https://youtu.be/MbaPDWfbNLo?si=p5ybcrLUJje_nBgd animations
+  - [ ] **Basic customization**
+    - [ ] character accessories (cosmetics, etc.)
+    - [ ] bike mods (color, actual mods) (**basic customization**)
+
 ## Up Next 📋
 
-- [ ] Create Player pt 1
-  - [ ] Singleplayer / Multiplayer code separation
-  - [ ] Player scene + component script
-    - [ ] See moto-player-controller
-  - [ ] https://youtu.be/MbaPDWfbNLo?si=p5ybcrLUJje_nBgd
+- [ ] Create Test Level - Gym - player controller, with tp. Basically in game documentation.
+  - (E.g. How far can you jump)
+- [ ] Trick Manager + tricks
+  - [ ] trick system
+  - [ ] wheelie / stoppie tricks
+  - [ ] ramp tricks
+  - [ ] ground tricks
 - [ ] Create Test Level - Zoo - all relevant models/scenes in 3d space to easily compare
   - (E.g. diff bikes/mods on each bike)
   - There's a godot plugin for this
   - https://binbun3d.itch.io/godot-ultimate-toon-shader
-- [ ] Create Player pt 2
-  - [ ] character from selection
-    - [ ] character base (select male/female)
-    - [ ] accessories (cosmetics, etc.) (**basic customization**)
-  - [ ] InputManager in game
-    - [ ] camera control
-    - [ ] bike control
-  - [ ] bike from selection
-    - [ ] bike base (select bike)
-    - [ ] mods (color, actual mods) (**basic customization**)
-- [ ] Create Test Level - Gym - player controller, with tp. Basically in game documentation.
-  - (E.g. How far can you jump)
-- [ ] Player pt 3
-  - [ ] bike physics / movement / gearing
-  - [ ] animation w/ IK
-  - [ ] few tricks
 
 ## Backlog
 
@@ -57,6 +62,7 @@
   - [ ] free roam w/ friends
   - [ ] race
 - [ ] Create basic SettingsMenu scene/ui
+
   - [ ] Make this work with pause menu (compose this somehow)
 
   - [x] Create scene
@@ -86,11 +92,13 @@
 ## Done ✅
 
 - [x] Create basic PauseMenu scene/ui
+
   - [x] Create scene/script
   - [x] Option to go back to main menu
   - [x] Pause / resume functionality
 
 - [x] Create InputManager
+
   - [x] Mouse / Gamepad switching
   - [x] Gamepad to control Menus
   - [x] Show/Hide the cursor
