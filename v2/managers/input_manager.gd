@@ -36,6 +36,11 @@ var current_input_state = InputState.IN_MENU:
 		input_state_changed.emit(val)
 var is_gamepad := false
 
+
+func _ready():
+	add_to_group(UtilsConstants.GROUPS["InputManager"], true)
+
+
 #region Input vars that aren't bools
 var throttle: float = 0.0:
 	set(value):
@@ -63,6 +68,7 @@ var lean: float = 0.0:
 #endregion
 
 
+#region input detection & signal emission
 func _process(_delta: float):
 	_update_input()
 
@@ -88,18 +94,7 @@ func _update_input():
 		cam_switch_pressed.emit()
 
 
-## Add vibration intensity. Call this each frame vibration is needed.
-func add_vibration(weak: float, strong: float):
-	if weak > 0.01 or strong > 0.01:
-		Input.start_joy_vibration(
-			0, clamp(weak, 0.0, 1.0), clamp(strong, 0.0, 1.0), vibration_duration
-		)
-	else:
-		stop_vibration()
-
-
-func stop_vibration():
-	Input.stop_joy_vibration(0)
+#endregion
 
 
 #region InputState (in game vs in menu)
@@ -136,4 +131,20 @@ func _detect_gamepad_or_kbm(event: InputEvent):
 		is_gamepad = false
 	elif event is InputEventJoypadButton or event is InputEventJoypadMotion:
 		is_gamepad = true
+
+
 #endregion
+
+
+## Add vibration intensity. Call this each frame vibration is needed.
+func add_vibration(weak: float, strong: float):
+	if weak > 0.01 or strong > 0.01:
+		Input.start_joy_vibration(
+			0, clamp(weak, 0.0, 1.0), clamp(strong, 0.0, 1.0), vibration_duration
+		)
+	else:
+		stop_vibration()
+
+
+func stop_vibration():
+	Input.stop_joy_vibration(0)
