@@ -1,14 +1,15 @@
 {
-    "editor.detectIndentation": true,
-    "files.exclude": {
-        "**/.git": true,
-        "**/.DS_Store": true,
-        "**/Thumbs.db": true,
-        "**/*.uid": true,
-        "**/*.import": true,
-        "**/*.godot": true,
-        "**/*.stub": true,
-    },
-    "godotTools.editorPath.godot4": "c:\\Users\\ssebs\\Desktop\\Godot_v4.6-stable_win64.exe",
-    "todoSidebar.activeFile": "../planning_docs/TODO.md",
+  "editor.detectIndentation": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/*.uid": true,
+    "**/*.import": true,
+    "**/*.godot": true,
+    "**/*.stub": true
+  },
+  "editor.formatOnSave": true,
+  "godotTools.editorPath.godot4": "c:\\Users\\ssebs\\Desktop\\Godot_v4.6-stable_win64.exe",
+  "todoSidebar.activeFile": "./planning_docs/TODO.md"
 }

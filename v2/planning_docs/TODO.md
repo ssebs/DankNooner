@@ -4,7 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] format on save
 - [ ] Create Player Part 1
   - > no animations for now
   - [ ] Singleplayer / Multiplayer code separation
@@ -93,6 +92,8 @@
 - [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
 
 ## Done ✅
+
+- [x] format on save
 
 - [x] Move planning docs to v2 folder (also update README.md)
 
