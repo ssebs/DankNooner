@@ -6,7 +6,7 @@
     "**/Thumbs.db": true,
     "**/*.uid": true,
     "**/*.import": true,
-    "**/*.godot": true,
+    "**/*.godot/*": true,
     "**/*.stub": true
   },
   "editor.formatOnSave": true,

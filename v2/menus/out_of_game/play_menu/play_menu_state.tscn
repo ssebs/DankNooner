@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://x3ylknc7a413"]
 
 [ext_resource type="Script" uid="uid://b1lg4r4nesptx" path="res://menus/out_of_game/play_menu/play_menu_state.gd" id="1_cqw7y"]
+[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_rcsfi"]
 
 [node name="PlayMenuState" type="Node" unique_id=1827031507]
 script = ExtResource("1_cqw7y")
@@ -14,91 +15,96 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_rcsfi")
 
-[node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=294073097]
+[node name="AspectContainer" type="AspectRatioContainer" parent="UI" unique_id=845119760]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+ratio = 1.778
 
-[node name="TitleLabel" type="Label" parent="UI/MarginContainer" unique_id=2095145418]
+[node name="MarginContainer" type="MarginContainer" parent="UI/AspectContainer" unique_id=294073097]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/AspectContainer/MarginContainer" unique_id=2095145418]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_type_variation = &"TitleLabel"
 text = "PLAY_LABEL"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer" unique_id=1674008939]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1674008939]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
 theme_override_constants/separation = 32
 
-[node name="SP" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer" unique_id=234802966]
+[node name="SP" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=234802966]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="SINGLEPLAYER_LABEL" type="Label" parent="UI/MarginContainer/VBoxContainer/SP" unique_id=828676260]
+[node name="SINGLEPLAYER_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer/SP" unique_id=828676260]
 layout_mode = 2
 text = "SINGLEPLAYER_LABEL"
 
-[node name="FreeRoamBtn" type="Button" parent="UI/MarginContainer/VBoxContainer/SP" unique_id=1870592676]
+[node name="FreeRoamBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer/SP" unique_id=1870592676]
 unique_name_in_owner = true
 layout_mode = 2
 text = "FREE_ROAM_LABEL"
 
-[node name="StoryBtn" type="Button" parent="UI/MarginContainer/VBoxContainer/SP" unique_id=276871775]
+[node name="StoryBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer/SP" unique_id=276871775]
 unique_name_in_owner = true
 layout_mode = 2
 disabled = true
 text = "STORY_LABEL"
 
-[node name="MP" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer" unique_id=963881499]
+[node name="MP" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=963881499]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="MULTIPLAYER_LABEL" type="Label" parent="UI/MarginContainer/VBoxContainer/MP" unique_id=1953561949]
+[node name="MULTIPLAYER_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP" unique_id=1953561949]
 layout_mode = 2
 text = "MULTIPLAYER_LABEL"
 
-[node name="HostBtn" type="Button" parent="UI/MarginContainer/VBoxContainer/MP" unique_id=709225504]
+[node name="HostBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP" unique_id=709225504]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 text = "HOST_LABEL"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/MarginContainer/VBoxContainer/MP" unique_id=1513694560]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP" unique_id=1513694560]
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="IPEntry" type="LineEdit" parent="UI/MarginContainer/VBoxContainer/MP/HBoxContainer" unique_id=1871235480]
+[node name="IPEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP/HBoxContainer" unique_id=1871235480]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 placeholder_text = "IP_LABEL"
 clear_button_enabled = true
 
-[node name="JoinBtn" type="Button" parent="UI/MarginContainer/VBoxContainer/MP/HBoxContainer" unique_id=1406859642]
+[node name="JoinBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP/HBoxContainer" unique_id=1406859642]
 unique_name_in_owner = true
 layout_mode = 2
 disabled = true
 text = "JOIN_LABEL"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/MarginContainer" unique_id=235352440]
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=235352440]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 
-[node name="CustomizeBtn" type="Button" parent="UI/MarginContainer/VBoxContainer2" unique_id=1947018203]
+[node name="CustomizeBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1947018203]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
 text = "CUSTOMIZE_LABEL"
 
-[node name="BackBtn" type="Button" parent="UI/MarginContainer/VBoxContainer2" unique_id=1870693339]
+[node name="BackBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1870693339]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0

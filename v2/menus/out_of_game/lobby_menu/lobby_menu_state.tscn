@@ -53,23 +53,28 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_lphm8")
 
-[node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=443320684]
+[node name="AspectContainer" type="AspectRatioContainer" parent="UI" unique_id=1404863820]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+ratio = 1.778
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/AspectContainer" unique_id=443320684]
+layout_mode = 2
 theme = ExtResource("2_lphm8")
 
-[node name="LevelSelectContainer" type="VBoxContainer" parent="UI/MarginContainer" unique_id=590154309]
+[node name="LevelSelectContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=590154309]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
 alignment = 1
 
-[node name="LevelSelectBtn" type="OptionButton" parent="UI/MarginContainer/LevelSelectContainer" unique_id=1081541879]
+[node name="LevelSelectBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/LevelSelectContainer" unique_id=1081541879]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
@@ -82,11 +87,11 @@ popup/item_0/disabled = true
 popup/item_1/text = "LEVEL_TEST_1_LABEL"
 popup/item_1/id = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="UI/MarginContainer/LevelSelectContainer" unique_id=1121328565]
+[node name="PanelContainer" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/LevelSelectContainer" unique_id=1121328565]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lphm8")
 
-[node name="LevelPreview" type="TextureRect" parent="UI/MarginContainer/LevelSelectContainer/PanelContainer" unique_id=370183041]
+[node name="LevelPreview" type="TextureRect" parent="UI/AspectContainer/MarginContainer/LevelSelectContainer/PanelContainer" unique_id=370183041]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(512, 512)
 layout_mode = 2
@@ -94,7 +99,7 @@ texture = ExtResource("2_yu1h4")
 expand_mode = 5
 stretch_mode = 6
 
-[node name="StartBtn" type="Button" parent="UI/MarginContainer/LevelSelectContainer" unique_id=1428764379]
+[node name="StartBtn" type="Button" parent="UI/AspectContainer/MarginContainer/LevelSelectContainer" unique_id=1428764379]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
@@ -103,13 +108,13 @@ theme_type_variation = &"PrimaryButton"
 theme_override_font_sizes/font_size = 32
 text = "START_LABEL"
 
-[node name="SingleplayerUI" type="Control" parent="UI/MarginContainer" unique_id=1062874427]
+[node name="SingleplayerUI" type="Control" parent="UI/AspectContainer/MarginContainer" unique_id=1062874427]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="TitleLabel" type="Label" parent="UI/MarginContainer/SingleplayerUI" unique_id=1979153626]
+[node name="TitleLabel" type="Label" parent="UI/AspectContainer/MarginContainer/SingleplayerUI" unique_id=1979153626]
 layout_mode = 0
 offset_right = 227.0
 offset_bottom = 122.0
@@ -118,12 +123,12 @@ size_flags_vertical = 0
 theme_type_variation = &"TitleLabel"
 text = "FREE_ROAM_LABEL"
 
-[node name="MultiplayerUI" type="Control" parent="UI/MarginContainer" unique_id=904581325]
+[node name="MultiplayerUI" type="Control" parent="UI/AspectContainer/MarginContainer" unique_id=904581325]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="TitleLabel" type="Label" parent="UI/MarginContainer/MultiplayerUI" unique_id=1260742798]
+[node name="TitleLabel" type="Label" parent="UI/AspectContainer/MarginContainer/MultiplayerUI" unique_id=1260742798]
 layout_mode = 0
 offset_right = 227.0
 offset_bottom = 122.0
@@ -132,7 +137,7 @@ size_flags_vertical = 0
 theme_type_variation = &"TitleLabel"
 text = "LOBBY_LABEL"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/MultiplayerUI" unique_id=816754844]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/MultiplayerUI" unique_id=816754844]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
@@ -142,39 +147,39 @@ offset_right = 236.0
 offset_bottom = 37.5
 grow_vertical = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/MarginContainer/MultiplayerUI/VBoxContainer" unique_id=1630994285]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer" unique_id=1630994285]
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="IPLabel" type="Label" parent="UI/MarginContainer/MultiplayerUI/VBoxContainer/HBoxContainer" unique_id=110855405]
+[node name="IPLabel" type="Label" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer/HBoxContainer" unique_id=110855405]
 unique_name_in_owner = true
 layout_mode = 2
 text = "IP: 0.0.0.0"
 
-[node name="IPCopyBtn" type="Button" parent="UI/MarginContainer/MultiplayerUI/VBoxContainer/HBoxContainer" unique_id=256877172]
+[node name="IPCopyBtn" type="Button" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer/HBoxContainer" unique_id=256877172]
 unique_name_in_owner = true
 layout_mode = 2
 text = "COPY_LABEL"
 
-[node name="InviteBtn" type="Button" parent="UI/MarginContainer/MultiplayerUI/VBoxContainer/HBoxContainer" unique_id=568535846]
+[node name="InviteBtn" type="Button" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer/HBoxContainer" unique_id=568535846]
 unique_name_in_owner = true
 layout_mode = 2
 text = "INVITE_LABEL"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="UI/MarginContainer/MultiplayerUI/VBoxContainer" unique_id=2077582748]
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer" unique_id=2077582748]
 custom_minimum_size = Vector2(600, 400)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_wpkl5")
 vertical_scroll_mode = 2
 
-[node name="PlayersList" type="VBoxContainer" parent="UI/MarginContainer/MultiplayerUI/VBoxContainer/ScrollContainer" unique_id=493926022]
+[node name="PlayersList" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer/ScrollContainer" unique_id=493926022]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="PlayerListItem" parent="UI/MarginContainer/MultiplayerUI/VBoxContainer/ScrollContainer/PlayersList" unique_id=1860626553 instance=ExtResource("4_wpkl5")]
+[node name="PlayerListItem" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer/ScrollContainer/PlayersList" unique_id=1860626553 instance=ExtResource("4_wpkl5")]
 layout_mode = 2
 
-[node name="BackBtn" type="Button" parent="UI/MarginContainer" unique_id=1870693339]
+[node name="BackBtn" type="Button" parent="UI/AspectContainer/MarginContainer" unique_id=1870693339]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
