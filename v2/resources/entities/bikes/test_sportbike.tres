@@ -1,16 +1,15 @@
 [gd_resource type="Resource" script_class="BikeDefinition" format=3 uid="uid://4pwnilv3r1u3"]
 
-[ext_resource type="PackedScene" uid="uid://bgr8550flctkg" path="res://entities/player/bikes/assets/sports_bike/scene.gltf" id="1_18l3w"]
-[ext_resource type="Script" uid="uid://dl8qtx86j2iex" path="res://entities/player/bikes/bike_definition.gd" id="2_tfxux"]
+[ext_resource type="Resource" uid="uid://i3jsrx38dc40" path="res://resources/entities/bikes/test_sportbike_mesh.tres" id="1_18l3w"]
+[ext_resource type="Script" uid="uid://byqlh6e8c6qvl" path="res://resources/entities/bikes/bike_definition.gd" id="2_tfxux"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hgb8f"]
 radius = 0.4
 
 [resource]
 script = ExtResource("2_tfxux")
-mesh_scene = ExtResource("1_18l3w")
-mesh_rotation_offset_degrees = Vector3(0, 180, 0)
+bike_mesh_definition = ExtResource("1_18l3w")
 collision_shape = SubResource("CapsuleShape3D_hgb8f")
 collision_position_offset = Vector3(0, 0.4, 0)
 collision_rotation_offset_degrees = Vector3(90, 0, 0)
-metadata/_custom_type_script = "uid://dl8qtx86j2iex"
+metadata/_custom_type_script = "uid://byqlh6e8c6qvl"
