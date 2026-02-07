@@ -32,6 +32,7 @@
     - [ ] host chooses level, others can see
   - [ ] refactor if needed
 - [ ] Create SpawnManager
+
   - [ ] spawn players in game
     - [ ] Should show their customizations
   - [ ] sync player positions
@@ -42,6 +43,16 @@
   - [ ] **Basic customization**
     - [ ] character accessories (cosmetics, etc.)
     - [ ] bike mods (color, actual mods) (**basic customization**)
+  - [ ] **BikeDefinition** with component definitions under it
+    - [ ] base mesh **MeshDefinition**
+    - [ ] color override
+    - [ ] BikeMod list
+      - [ ] **ModDefinition**
+        - [ ] **MeshDefinition**
+        - [ ] **Marker3D**
+        - [ ] script
+
+since I will have multiple bike types, colors, and mods for each type.
 
 - [ ] Trick Manager + tricks
   - [ ] trick system
