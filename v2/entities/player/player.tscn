@@ -1,27 +1,43 @@
 [gd_scene format=3 uid="uid://d0rgswc73h64f"]
 
-[ext_resource type="Script" uid="uid://b7ge4vto3017o" path="res://entities/player/player.gd" id="1_symyc"]
+[ext_resource type="Script" uid="uid://bnop7vr1q4gwg" path="res://entities/player/player_entity.gd" id="1_bls4j"]
 [ext_resource type="PackedScene" uid="uid://4m8or6jc5xbd" path="res://entities/player/components/camera_controller.tscn" id="2_bls4j"]
+[ext_resource type="PackedScene" uid="uid://2nnr6ecxbcgo" path="res://entities/player/components/movement_controller.tscn" id="2_fkugw"]
 [ext_resource type="PackedScene" uid="uid://wtoa0qil5jn5" path="res://entities/entity_mesh.tscn" id="2_sglur"]
 [ext_resource type="PackedScene" uid="uid://bgr8550flctkg" path="res://entities/player/bikes/assets/sports_bike/scene.gltf" id="3_bls4j"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sfv1e"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8fjmc"]
+radius = 0.4
 
-[node name="Player" type="RigidBody3D" unique_id=1711182397]
-mass = 200.0
-script = ExtResource("1_symyc")
+[node name="PlayerEntity" type="Node3D" unique_id=204509243 node_paths=PackedStringArray("camera_controller", "movement_controller")]
+script = ExtResource("1_bls4j")
+camera_controller = NodePath("_Components/CameraController")
+movement_controller = NodePath("_Components/MovementController")
 
 [node name="_Components" type="Node" parent="." unique_id=1248012405]
+
+[node name="MovementController" parent="_Components" unique_id=1521291056 instance=ExtResource("2_fkugw")]
+collision_shape = SubResource("CapsuleShape3D_8fjmc")
+shape_global_position = Vector3(0, 0.4, 0)
+shape_rotation_degrees = Vector3(90, 0, 0)
+
+[node name="CollisionShape3D" parent="_Components/MovementController" index="0" unique_id=1231567512]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.4, 0)
+shape = SubResource("CapsuleShape3D_8fjmc")
 
 [node name="CameraController" parent="_Components" unique_id=816730707 node_paths=PackedStringArray("fps_marker", "tps_marker") instance=ExtResource("2_bls4j")]
 fps_marker = NodePath("../../Markers/FPSCamMarker")
 tps_marker = NodePath("../../Markers/TPSCamMarker")
 
 [node name="FPSCam" parent="_Components/CameraController" index="0" unique_id=634464672]
-transform = Transform3D(1, 0, 0, 0, 0.9659259, 0.25881904, 0, -0.25881904, 0.9659259, 0, 1.2464378, -0.14704515)
+transform = Transform3D(1, 0, 0, 0, 0.96592575, 0.258819, 0, -0.258819, 0.96592575, 0, 1.2021662, 0)
 
 [node name="TPSCam" parent="_Components/CameraController" index="1" unique_id=1953618350]
-transform = Transform3D(1, 0, 0, 0, 0.86602545, 0.5, 0, -0.5, 0.86602545, 0, 1.5572858, 1.7655815)
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 1.273824, 1.1753491)
+
+[node name="EntityMesh" parent="_Components" unique_id=1821118312 instance=ExtResource("2_sglur")]
+mesh_scene = ExtResource("3_bls4j")
+mesh_rotation_degrees = Vector3(0, 180, 0)
 
 [node name="Markers" type="Node" parent="." unique_id=1213495647]
 
@@ -31,12 +47,5 @@ transform = Transform3D(1, 0, 0, 0, 0.96592575, 0.258819, 0, -0.258819, 0.965925
 [node name="TPSCamMarker" type="Marker3D" parent="Markers" unique_id=748255221]
 transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 1.273824, 1.1753491)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1862065901]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.5, 0)
-shape = SubResource("CapsuleShape3D_sfv1e")
-
-[node name="EntityMesh" parent="." unique_id=1821118312 instance=ExtResource("2_sglur")]
-mesh_scene = ExtResource("3_bls4j")
-mesh_rotation_degrees = Vector3(0, 180, 0)
-
+[editable path="_Components/MovementController"]
 [editable path="_Components/CameraController"]
