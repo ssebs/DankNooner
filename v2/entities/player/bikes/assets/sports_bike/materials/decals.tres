@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://oo6cwiyur4kv"]
+
+[ext_resource type="Texture2D" uid="uid://c3y14ox2lts64" path="res://entities/player/bikes/assets/sports_bike/textures/decals_baseColor.png" id="1_kctr6"]
+
+[resource]
+resource_name = "decals"
+cull_mode = 2
+albedo_texture = ExtResource("1_kctr6")
+roughness = 0.0
