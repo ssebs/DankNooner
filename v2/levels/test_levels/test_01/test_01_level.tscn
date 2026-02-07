@@ -29,23 +29,27 @@ albedo_color = Color(0.13333334, 0.13333334, 0.13333334, 1)
 script = ExtResource("1_evjrj")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=210724302]
+[node name="PlayerSpawn" type="Marker3D" parent="." unique_id=840084747]
+unique_name_in_owner = true
+transform = Transform3D(-0.61566144, 0, -0.7880108, 0, 1, 0, 0.7880108, 0, -0.61566144, 7, 0, 7)
+
+[node name="Players" type="Node" parent="." unique_id=1592012600]
+unique_name_in_owner = true
+
+[node name="LevelItemsAndStuff" type="Node3D" parent="." unique_id=804449511]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="LevelItemsAndStuff" unique_id=210724302]
 environment = SubResource("Environment_5q1pe")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1880516053]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="LevelItemsAndStuff" unique_id=1880516053]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
 
-[node name="TESTCAMERA" type="Camera3D" parent="." unique_id=55306272]
-transform = Transform3D(0.69279927, -0.16096604, 0.70293605, 0, 0.9747696, 0.22321346, -0.7211305, -0.15464212, 0.6753197, 3.3788757, 1.7820837, 3.18228)
-
-[node name="Items" type="Node3D" parent="." unique_id=804449511]
-
-[node name="Floor" type="MeshInstance3D" parent="Items" unique_id=625219041]
+[node name="Floor" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=625219041]
 mesh = SubResource("PlaneMesh_evjrj")
 surface_material_override/0 = SubResource("StandardMaterial3D_3jscr")
 
-[node name="Box" type="MeshInstance3D" parent="Items" unique_id=2129556034]
+[node name="Box" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=2129556034]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 mesh = SubResource("BoxMesh_3jscr")
 
