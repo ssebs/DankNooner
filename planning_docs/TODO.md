@@ -4,6 +4,7 @@
 
 ## In Progress 🚀
 
+- [ ] Move planning docs to v2 folder (also update README.md)
 - [ ] Create Player Part 1
   - > no animations for now
   - [ ] Singleplayer / Multiplayer code separation
