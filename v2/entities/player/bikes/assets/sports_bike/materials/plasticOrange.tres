@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dqtse45xvgu2c"]
+
+[resource]
+resource_name = "plasticOrange"
+cull_mode = 2
+albedo_color = Color(0.9878131, 0.89042616, 0.4170057, 1)
+metallic = 1.0
+roughness = 0.47733173
