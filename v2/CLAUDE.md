@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 DankNooner is a multiplayer motorcycle stunt game built in Godot 4.6 (GDScript). The project is in active development with Claude assisting on planning and implementation.
 
-**Source of Truth**: Always review `F:\LocalProgramming\DankNooner\planning_docs\Architecture.md` for current system designs and implementation details. The TODO.md in the same folder tracks active work.
+**Source of Truth**: Always review `./planning_docs/Architecture.md` for current system designs and implementation details. The TODO.md in the same folder tracks active work.
 
 ## Working Style
 

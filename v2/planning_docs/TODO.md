@@ -4,7 +4,7 @@
 
 ## In Progress 🚀
 
-- [ ] Move planning docs to v2 folder (also update README.md)
+- [ ] format on save
 - [ ] Create Player Part 1
   - > no animations for now
   - [ ] Singleplayer / Multiplayer code separation
@@ -18,27 +18,10 @@
   - [ ] InputManager in game
     - [ ] camera control
     - [ ] bike control
-- [ ] Create Player Part 2
-  - [ ] IK https://youtu.be/MbaPDWfbNLo?si=p5ybcrLUJje_nBgd animations
-  - [ ] **Basic customization**
-    - [ ] character accessories (cosmetics, etc.)
-    - [ ] bike mods (color, actual mods) (**basic customization**)
-
-## Up Next 📋
-
 - [ ] Create Test Level - Gym - player controller, with tp. Basically in game documentation.
   - (E.g. How far can you jump)
-- [ ] Trick Manager + tricks
-  - [ ] trick system
-  - [ ] wheelie / stoppie tricks
-  - [ ] ramp tricks
-  - [ ] ground tricks
-- [ ] Create Test Level - Zoo - all relevant models/scenes in 3d space to easily compare
-  - (E.g. diff bikes/mods on each bike)
-  - There's a godot plugin for this
-  - https://binbun3d.itch.io/godot-ultimate-toon-shader
 
-## Backlog
+## Up Next 📋
 
 - [ ] Create NetworkManager
   - [ ] Create lobby
@@ -54,6 +37,25 @@
     - [ ] Should show their customizations
   - [ ] sync player positions
   - [ ] sync animations (tricks)
+
+- [ ] Create Player Part 2
+  - [ ] IK https://youtu.be/MbaPDWfbNLo?si=p5ybcrLUJje_nBgd animations
+  - [ ] **Basic customization**
+    - [ ] character accessories (cosmetics, etc.)
+    - [ ] bike mods (color, actual mods) (**basic customization**)
+
+- [ ] Trick Manager + tricks
+  - [ ] trick system
+  - [ ] wheelie / stoppie tricks
+  - [ ] ramp tricks
+  - [ ] ground tricks
+- [ ] Create Test Level - Zoo - all relevant models/scenes in 3d space to easily compare
+  - (E.g. diff bikes/mods on each bike)
+  - There's a godot plugin for this
+  - https://binbun3d.itch.io/godot-ultimate-toon-shader
+
+## Backlog
+
 - [ ] Create TrickManager
   - [ ] connect w/ NetworkManager
   - [ ] trick detection in player component
@@ -91,6 +93,8 @@
 - [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
 
 ## Done ✅
+
+- [x] Move planning docs to v2 folder (also update README.md)
 
 - [x] mouse capture broken
 
