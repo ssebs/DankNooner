@@ -85,11 +85,7 @@ func _on_level_selected(idx: int):
 
 
 func _on_start_pressed():
-	menu_manager.hide_all_menus()
-
-	# note - level_select_btn's items are generated from level_manager
-	level_manager.spawn_level(level_select_btn.selected)
-	input_manager.current_input_state = InputManager.InputState.IN_GAME
+	level_manager.spawn_level(level_select_btn.selected, InputManager.InputState.IN_GAME)
 
 
 func _on_back_pressed():

@@ -32,9 +32,11 @@ level_manager = NodePath("../LevelManager")
 input_manager = NodePath("../InputManager")
 metadata/_custom_type_script = "uid://b2j8gbb336wwq"
 
-[node name="LevelManager" type="Node" parent="ManagerManager" unique_id=572419191 node_paths=PackedStringArray("spawn_node") groups=["Managers"]]
+[node name="LevelManager" type="Node" parent="ManagerManager" unique_id=572419191 node_paths=PackedStringArray("spawn_node", "menu_manager", "input_manager") groups=["Managers"]]
 script = ExtResource("10_mf81u")
 spawn_node = NodePath("LevelSpawn")
+menu_manager = NodePath("../MenuManager")
+input_manager = NodePath("../InputManager")
 
 [node name="LevelSpawn" type="Node3D" parent="ManagerManager/LevelManager" unique_id=1580791442]
 

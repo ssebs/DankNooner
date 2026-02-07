@@ -8,8 +8,9 @@ enum LevelName {
 	TEST_LEVEL_01,
 }
 
-# @export var state_machine: StateMachine
 @export var spawn_node: Node3D
+@export var menu_manager: MenuManager
+@export var input_manager: InputManager
 
 ## PackedScene of type LevelDefinition
 var possible_levels: Dictionary[LevelName, PackedScene] = {
@@ -27,7 +28,15 @@ var level_name_map: Dictionary[LevelName, String] = {
 var current_level: LevelName = LevelName.LEVEL_SELECT_LABEL
 
 
-func spawn_level(level_name: LevelName):
+func _ready():
+	if Engine.is_editor_hint():
+		return
+	Console.add_command("dbg_gym", spawn_gym_test_level)
+
+
+## Despawns any existing levels, then spawns level_name
+## NOTE - also hides menus, and sets current_input_state
+func spawn_level(level_name: LevelName, input_state: InputManager.InputState):
 	if !possible_levels.has(level_name):
 		printerr("Could not find LevelName.%s in possible_levels" % level_name)
 		return
@@ -39,6 +48,10 @@ func spawn_level(level_name: LevelName):
 	spawned_level.level_manager = self
 	spawn_node.add_child(spawned_level)
 	current_level = level_name
+
+	input_manager.current_input_state = input_state
+	if input_state == InputManager.InputState.IN_GAME:
+		menu_manager.hide_all_menus()
 
 
 func despawn_level():
@@ -52,10 +65,15 @@ func get_levels_as_option_items() -> Dictionary[String, int]:
 		options[v] = level_name_map.find_key(v)
 	return options
 
+
 ## Spawn the menu level
 func spawn_menu_level():
-	spawn_level(LevelName.BG_GRAY_LEVEL)
+	spawn_level(LevelName.BG_GRAY_LEVEL, InputManager.InputState.IN_MENU)
 
+
+## for quick debugging
+func spawn_gym_test_level():
+	spawn_level(LevelName.TEST_LEVEL_01, InputManager.InputState.IN_GAME)
 
 # ## Get a map of LevelName => LevelState for all children of this mgr
 # func get_all_levels() -> Dictionary[String, LevelState]:
