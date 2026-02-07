@@ -111,6 +111,8 @@ since I will have multiple bike types, colors, and mods for each type.
 
 ## Done ✅
 
+- [x] 21x9 support
+
 - [x] format on save
 
 - [x] Move planning docs to v2 folder (also update README.md)

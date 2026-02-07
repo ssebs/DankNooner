@@ -8,7 +8,7 @@
 script = ExtResource("1_k7k4a")
 metadata/_custom_type_script = "uid://cv4bvroelqvpy"
 
-[node name="UI" type="Control" parent="." unique_id=1188915724]
+[node name="UI" type="Control" parent="." unique_id=297389048]
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
@@ -18,16 +18,19 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_3qbku")
 
-[node name="TitleLogo" type="TextureRect" parent="UI" unique_id=1293896948]
-layout_mode = 0
-offset_left = 68.0
-offset_top = 43.0
-offset_right = 541.0031
-offset_bottom = 155.0
-texture = ExtResource("2_k7k4a")
-stretch_mode = 4
+[node name="AspectContainer" type="AspectRatioContainer" parent="UI" unique_id=2056197589]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+ratio = 1.778
 
-[node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=1205553562]
+[node name="Content" type="Control" parent="UI/AspectContainer" unique_id=1083411317]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/AspectContainer/Content" unique_id=1205553562]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -35,7 +38,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TitleLabel" type="Label" parent="UI/MarginContainer" unique_id=42565368]
+[node name="TitleLogo" type="TextureRect" parent="UI/AspectContainer/Content/MarginContainer" unique_id=1293896948]
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture = ExtResource("2_k7k4a")
+expand_mode = 5
+stretch_mode = 4
+
+[node name="TitleLabel" type="Label" parent="UI/AspectContainer/Content/MarginContainer" unique_id=42565368]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 0
@@ -43,27 +55,27 @@ size_flags_vertical = 0
 theme_type_variation = &"TitleLabel"
 text = "Dank"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer" unique_id=321861134]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/Content/MarginContainer" unique_id=321861134]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
 
-[node name="PlayBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=573512346]
+[node name="PlayBtn" type="Button" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer" unique_id=573512346]
 unique_name_in_owner = true
 layout_mode = 2
 text = "PLAY_LABEL"
 
-[node name="SettingsBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=358161549]
+[node name="SettingsBtn" type="Button" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer" unique_id=358161549]
 unique_name_in_owner = true
 layout_mode = 2
 text = "SETTINGS_LABEL"
 
-[node name="CustomizeBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=1131295413]
+[node name="CustomizeBtn" type="Button" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer" unique_id=1131295413]
 unique_name_in_owner = true
 layout_mode = 2
 text = "CUSTOMIZE_LABEL"
 
-[node name="QuitBtn" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=1042468218]
+[node name="QuitBtn" type="Button" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer" unique_id=1042468218]
 unique_name_in_owner = true
 layout_mode = 2
 text = "QUIT_LABEL"
