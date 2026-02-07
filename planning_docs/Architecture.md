@@ -125,6 +125,42 @@ Levels are managed via `LevelManager` and selected through the `LobbyMenuState` 
 3. Add entry to `level_name_map` (enum → localization key)
 4. Add entry to `possible_levels` (enum → `preload("res://path/to/level.tscn")`)
 
+### Input System
+
+The `InputManager` (`managers/input_manager.gd`) is a centralized input handler that routes input based on the current game context.
+
+#### Input States
+
+```gdscript
+enum InputState {
+    IN_MENU,           # Player is in a menu, ESC navigates menus
+    IN_GAME,           # Player is playing, ESC triggers pause
+    IN_GAME_PAUSED,    # Game is paused, ESC resumes game
+    DISABLED,          # All input is disabled
+}
+```
+
+#### Input Routing
+
+The InputManager uses `_unhandled_input()` to process events based on `current_input_state`:
+
+- **IN_GAME**: "pause" action → emits `pause_requested` signal
+- **IN_GAME_PAUSED**: "pause" action → emits `unpause_requested` signal
+- **IN_MENU**: "ui_cancel" action → delegates to current MenuState's `on_cancel_key_pressed()`
+- **DISABLED**: Ignores all input
+
+#### Mouse Cursor Control
+
+Mouse visibility is managed based on input state:
+- **IN_MENU** or **IN_GAME_PAUSED**: Mouse visible (`MOUSE_MODE_VISIBLE`)
+- **IN_GAME** or **DISABLED**: Mouse captured (`MOUSE_MODE_CAPTURED`)
+
+#### Signals
+
+- `input_state_changed(new_state: InputState)` - Fired when state changes
+- `pause_requested` - Fired when player wants to pause (IN_GAME + pause action)
+- `unpause_requested` - Fired when player wants to resume (IN_GAME_PAUSED + pause action)
+
 ### Pause System
 
 User stories:
@@ -143,6 +179,15 @@ User stories:
   - Freeze your character? Turn half-invisible w/o hitbox
   - Allow you to invite friends to server
   - Allow you to change servers
+
+#### Input & Pause Interaction
+
+The `PauseManager` (`managers/pause_manager.gd`) coordinates InputManager, MenuManager, and LevelManager:
+
+- **Pause** (`pause_requested`): Sets state to `IN_GAME_PAUSED`, shows pause menu, enables MenuManager processing, disables LevelManager processing
+- **Unpause** (`unpause_requested`): Sets state to `IN_GAME`, hides menus, disables MenuManager processing, enables LevelManager processing
+
+The same "pause" action triggers different behavior based on `InputState`.
 
 ### Unlocks / progression
 

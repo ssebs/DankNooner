@@ -4,14 +4,10 @@
 
 ## In Progress 🚀
 
-- [ ] Create basic PauseMenu scene/ui
-  - [x] Create scene/script
-  - [ ] Option to go back to main menu
-  - [ ] Pause / resume functionality
-
 ## Up Next 📋
 
 - [ ] Create Player pt 1
+  - [ ] Singleplayer / Multiplayer code separation
   - [ ] Player scene + component script
     - [ ] See moto-player-controller
   - [ ] https://youtu.be/MbaPDWfbNLo?si=p5ybcrLUJje_nBgd
@@ -88,6 +84,11 @@
 - [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
 
 ## Done ✅
+
+- [x] Create basic PauseMenu scene/ui
+  - [x] Create scene/script
+  - [x] Option to go back to main menu
+  - [x] Pause / resume functionality
 
 - [x] Create InputManager
   - [x] Mouse / Gamepad switching
