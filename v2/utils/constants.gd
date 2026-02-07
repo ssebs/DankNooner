@@ -4,6 +4,7 @@ const PORT = 42068
 
 ## Godot Group names.
 const GROUPS = {
-    "Managers": "Managers",
-    "Validate": "Validate",
+	"Managers": "Managers",
+	"Validate": "Validate",
+	"InputManager": "InputManager",
 }

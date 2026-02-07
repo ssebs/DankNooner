@@ -11,14 +11,79 @@ class_name PlayerEntity extends RigidBody3D
 @export var mesh_node: Node3D
 @export var collision_shape_3d: CollisionShape3D
 
+var input_manager: InputManager
+
 
 func _ready():
 	mesh_component.mesh_definition = bike_definition.bike_mesh_definition
 	_init_collision_shape()
 
+	if Engine.is_editor_hint():
+		return
 
-func _get_player_inputs_for_movement():
+	_init_input_handlers()
+
+
+func _init_input_handlers():
+	input_manager = get_tree().root.get_first_node_in_group(UtilsConstants.GROUPS["InputManager"])
+	if input_manager == null:
+		printerr("cant find input_manager in PlayerEntity")
+		return
+
+	input_manager.throttle_changed.connect(_on_throttle_changed)
+	input_manager.front_brake_changed.connect(_on_front_brake_changed)
+	input_manager.steer_changed.connect(_on_steer_changed)
+	input_manager.lean_changed.connect(_on_lean_changed)
+	input_manager.rear_brake_pressed.connect(_on_rear_brake_pressed)
+	input_manager.trick_mod_pressed.connect(_on_trick_mod_pressed)
+	input_manager.clutch_pressed.connect(_on_clutch_pressed)
+	input_manager.gear_up_pressed.connect(_on_gear_up_pressed)
+	input_manager.gear_down_pressed.connect(_on_gear_down_pressed)
+	input_manager.cam_switch_pressed.connect(_on_cam_switch_pressed)
+
+
+#region input handlers
+func _on_throttle_changed(_value: float):
 	pass
+
+
+func _on_front_brake_changed(_value: float):
+	pass
+
+
+func _on_steer_changed(_value: float):
+	pass
+
+
+func _on_lean_changed(_value: float):
+	pass
+
+
+func _on_rear_brake_pressed():
+	pass
+
+
+func _on_trick_mod_pressed():
+	pass
+
+
+func _on_clutch_pressed():
+	pass
+
+
+func _on_gear_up_pressed():
+	pass
+
+
+func _on_gear_down_pressed():
+	pass
+
+
+func _on_cam_switch_pressed():
+	pass
+
+
+#endregion
 
 
 func _init_collision_shape():
