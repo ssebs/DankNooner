@@ -11,6 +11,10 @@
 - [ ] hand write the code & plan structure. Don't import moto-poc, but re-create it using better systems
 - Use spatial comments (debug notes in the level itself)
 
+#### Debug levels
+- See @level_manager's Console cmd
+  - \` then `dbg_gym` to load that test level right from the main menu
+
 ### Stuff to plan out:
 
 - Filesystem / folder structure

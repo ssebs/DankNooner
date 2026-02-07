@@ -91,6 +91,8 @@
 
 ## Done ✅
 
+- [x] mouse capture broken
+
 - [x] Git LFS
 
 - [x] Create basic PauseMenu scene/ui
