@@ -71,9 +71,16 @@ since I will have multiple bike types, colors, and mods for each type.
   - [ ] trick detection in player component
   - [ ] trick scoring in own script
 - [ ] Create Save System
+- [ ] Create traffic / AI system
+  - [ ] basic traffic sim
+  - [ ] implement A\* pathfinding? w/ state machine?
+    - [ ] drive, stopped at light, parked, etc.
+  - [ ] create sequence system?
 - [ ] Create GamemodeManager
+  - [ ] create system
   - [ ] free roam w/ friends
-  - [ ] race
+  - [ ] street race in traffic as demo mode (+fps mode)
+  - [ ] stunt race? Or high score mode?
 - [ ] Create basic SettingsMenu scene/ui
 
   - [ ] Make this work with pause menu (compose this somehow)

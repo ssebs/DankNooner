@@ -34,6 +34,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("movement_controller must not be empty")
 	if bike_definition == null:
 		issues.append("bike_definition must not be empty")
+	if mesh_component == null:
+		issues.append("mesh_component must not be empty")
 	if mesh_node == null:
 		issues.append("mesh_node must not be empty")
 	if collision_shape_3d == null:
