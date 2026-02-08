@@ -20,7 +20,7 @@ script = ExtResource("1_1oj5k")
 [node name="ManagerManager" type="Node" parent="." unique_id=1214717395]
 script = ExtResource("2_yx7mw")
 
-[node name="InputManager" type="Node" parent="ManagerManager" unique_id=646488000 node_paths=PackedStringArray("menu_manager") groups=["Managers"]]
+[node name="InputManager" type="Node" parent="ManagerManager" unique_id=646488000 node_paths=PackedStringArray("menu_manager") groups=["InputManager", "Managers"]]
 script = ExtResource("3_krmtw")
 menu_manager = NodePath("../MenuManager")
 metadata/_custom_type_script = "uid://b766m1s624u36"

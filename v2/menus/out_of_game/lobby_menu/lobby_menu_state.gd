@@ -75,6 +75,16 @@ func set_panel_rename_me():
 			multiplayer_ui.show()
 
 
+## Add ID as a player_list_item_scene to the player_list
+func add_player_to_lobby(id: int):
+	# TODO: get PlayerDefinition from server... somehow
+	var player_li = player_list_item_scene.instantiate() as PlayerListItem
+	player_li.player_definition.username = str(id)
+	player_li.update_ui_from_player_definition()
+
+	player_list.add_child(player_li)
+
+
 #region button handlers
 func _on_level_selected(idx: int):
 	if idx == 0:

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PlayerDefinition" format=3 uid="uid://ba1bidrtscoc7"]
+
+[ext_resource type="Script" uid="uid://283a7n5utttx" path="res://resources/entities/player/player_definition.gd" id="1_nop61"]
+[ext_resource type="Texture2D" uid="uid://cwf7vhr6hpjoj" path="res://resources/img/Logo.svg" id="2_hooav"]
+
+[resource]
+script = ExtResource("1_nop61")
+ui_icon = ExtResource("2_hooav")
+username = "player_name"
+metadata/_custom_type_script = "uid://283a7n5utttx"

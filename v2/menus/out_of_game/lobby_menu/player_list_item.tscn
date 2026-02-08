@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://fohtho5rqpxo"]
 
 [ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="1_p7spx"]
+[ext_resource type="Script" uid="uid://d2naekejlkomd" path="res://menus/out_of_game/lobby_menu/player_list_item.gd" id="1_vlnsy"]
+[ext_resource type="Resource" uid="uid://ba1bidrtscoc7" path="res://resources/entities/player/default_player_definition.tres" id="2_fp5ot"]
 [ext_resource type="Texture2D" uid="uid://cwf7vhr6hpjoj" path="res://resources/img/Logo.svg" id="2_vlnsy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fp5ot"]
@@ -24,7 +26,7 @@ expand_margin_top = 4.0
 expand_margin_right = 4.0
 expand_margin_bottom = 4.0
 
-[node name="MarginContainer" type="MarginContainer" unique_id=1716978132]
+[node name="PlayerListItem" type="MarginContainer" unique_id=1716978132]
 offset_left = 12.0
 offset_top = 12.0
 offset_right = 489.0
@@ -33,22 +35,24 @@ theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
+script = ExtResource("1_vlnsy")
+player_definition = ExtResource("2_fp5ot")
 
-[node name="PlayerListItem" type="PanelContainer" parent="." unique_id=1860626553]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1860626553]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = ExtResource("1_p7spx")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PlayerListItem" unique_id=1368577702]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=1368577702]
 layout_mode = 2
 theme_override_constants/separation = 24
 
-[node name="PanelContainer" type="PanelContainer" parent="PlayerListItem/HBoxContainer" unique_id=110244629]
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/HBoxContainer" unique_id=110244629]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_fp5ot")
 
-[node name="PlayerIcon" type="TextureRect" parent="PlayerListItem/HBoxContainer/PanelContainer" unique_id=1232060762]
+[node name="PlayerIcon" type="TextureRect" parent="PanelContainer/HBoxContainer/PanelContainer" unique_id=1232060762]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
@@ -57,12 +61,12 @@ size_flags_vertical = 4
 texture = ExtResource("2_vlnsy")
 expand_mode = 3
 
-[node name="PlayerName" type="Label" parent="PlayerListItem/HBoxContainer" unique_id=1488068940]
+[node name="PlayerName" type="Label" parent="PanelContainer/HBoxContainer" unique_id=1488068940]
 unique_name_in_owner = true
 layout_mode = 2
-text = "player_name"
+text = "DEFAULT"
 
-[node name="PingLabel" type="Label" parent="PlayerListItem/HBoxContainer" unique_id=992432967]
+[node name="PingLabel" type="Label" parent="PanelContainer/HBoxContainer" unique_id=992432967]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 1, 0, 1)
