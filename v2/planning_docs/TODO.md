@@ -4,11 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] Create Test Level - Gym - player controller, with tp. Basically in game documentation.
-  - (E.g. How far can you jump)
-
-## Up Next 📋
-
 - [ ] Create NetworkManager
   - [ ] Create lobby
     - [ ] Web RTC if possible for web export?
@@ -18,7 +13,13 @@
     - [ ] only host can start game
     - [ ] host chooses level, others can see
   - [ ] refactor if needed
+  - [ ] nat punch
+
+## Up Next 📋
+
 - [ ] Create SpawnManager & sync players
+- [ ] Create Test Level - Gym - player controller, with tp. Basically in game documentation.
+  - (E.g. How far can you jump)
 
   - [ ] spawn players in game
     - [ ] Should show their customizations
