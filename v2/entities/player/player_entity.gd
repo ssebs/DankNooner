@@ -1,5 +1,5 @@
 @tool
-class_name PlayerEntity extends RigidBody3D
+class_name PlayerEntity extends CharacterBody3D
 
 @export var bike_definition: BikeDefinition
 
@@ -25,14 +25,12 @@ func _ready():
 
 
 func _init_input_handlers():
-	input_manager = get_tree().root.get_first_node_in_group(UtilsConstants.GROUPS["InputManager"])
+	input_manager = get_tree().get_first_node_in_group(UtilsConstants.GROUPS["InputManager"])
 	if input_manager == null:
 		printerr("cant find input_manager in PlayerEntity")
 		return
 
-	input_manager.throttle_changed.connect(_on_throttle_changed)
-	input_manager.front_brake_changed.connect(_on_front_brake_changed)
-	input_manager.steer_changed.connect(_on_steer_changed)
+	# Note - throttle, brake, and steer are handled in movement_controller
 	input_manager.lean_changed.connect(_on_lean_changed)
 	input_manager.rear_brake_pressed.connect(_on_rear_brake_pressed)
 	input_manager.trick_mod_pressed.connect(_on_trick_mod_pressed)
@@ -43,18 +41,6 @@ func _init_input_handlers():
 
 
 #region input handlers
-func _on_throttle_changed(_value: float):
-	pass
-
-
-func _on_front_brake_changed(_value: float):
-	pass
-
-
-func _on_steer_changed(_value: float):
-	pass
-
-
 func _on_lean_changed(_value: float):
 	pass
 
@@ -80,7 +66,7 @@ func _on_gear_down_pressed():
 
 
 func _on_cam_switch_pressed():
-	pass
+	camera_controller.toggle_cam()
 
 
 #endregion

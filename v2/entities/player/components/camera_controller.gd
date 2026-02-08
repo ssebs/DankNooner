@@ -11,6 +11,7 @@ enum CameraMode { FPS, TPS }
 @export var tps_marker: Marker3D
 
 var current_camera: Camera3D
+var current_cam_mode: CameraMode
 
 
 func _ready():
@@ -34,12 +35,21 @@ func switch_to_fps_cam():
 	fps_cam.current = true
 	tps_cam.current = false
 	current_camera = fps_cam
+	current_cam_mode = CameraMode.FPS
 
 
 func switch_to_tps_cam():
 	tps_cam.current = true
 	fps_cam.current = false
 	current_camera = tps_cam
+	current_cam_mode = CameraMode.TPS
+
+
+func toggle_cam():
+	if current_cam_mode == CameraMode.FPS:
+		switch_to_tps_cam()
+	else:
+		switch_to_fps_cam()
 
 
 func _get_configuration_warnings() -> PackedStringArray:
