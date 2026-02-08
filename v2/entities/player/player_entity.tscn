@@ -1,18 +1,18 @@
 [gd_scene format=3 uid="uid://d0rgswc73h64f"]
 
-[ext_resource type="Script" uid="uid://bnop7vr1q4gwg" path="res://entities/player/player_entity.gd" id="1_bls4j"]
+[ext_resource type="Script" uid="uid://bnop7vr1q4gwg" path="res://entities/player/player_entity.gd" id="1_0jc3c"]
+[ext_resource type="Resource" uid="uid://4pwnilv3r1u3" path="res://resources/entities/bikes/test_sportbike.tres" id="2_3s3kv"]
 [ext_resource type="PackedScene" uid="uid://4m8or6jc5xbd" path="res://entities/player/components/camera_controller.tscn" id="2_bls4j"]
 [ext_resource type="PackedScene" uid="uid://2nnr6ecxbcgo" path="res://entities/player/components/movement_controller.tscn" id="2_fkugw"]
-[ext_resource type="Resource" uid="uid://4pwnilv3r1u3" path="res://resources/entities/bikes/test_sportbike.tres" id="2_wubyk"]
 [ext_resource type="Script" uid="uid://0q8vxps631w4" path="res://entities/components/mesh_component.gd" id="3_0jc3c"]
 [ext_resource type="Resource" uid="uid://i3jsrx38dc40" path="res://resources/entities/bikes/test_sportbike_mesh.tres" id="4_3s3kv"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hgb8f"]
 radius = 0.4
 
-[node name="PlayerEntity" type="RigidBody3D" unique_id=1599473263 node_paths=PackedStringArray("camera_controller", "movement_controller", "mesh_component", "mesh_node", "collision_shape_3d")]
-script = ExtResource("1_bls4j")
-bike_definition = ExtResource("2_wubyk")
+[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("camera_controller", "movement_controller", "mesh_component", "mesh_node", "collision_shape_3d")]
+script = ExtResource("1_0jc3c")
+bike_definition = ExtResource("2_3s3kv")
 camera_controller = NodePath("_Components/CameraController")
 movement_controller = NodePath("_Components/MovementController")
 mesh_component = NodePath("MeshComponent")
@@ -21,8 +21,12 @@ collision_shape_3d = NodePath("CollisionShape3D")
 metadata/_custom_type_script = "uid://bnop7vr1q4gwg"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=412612653]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.4, 0)
 shape = SubResource("CapsuleShape3D_hgb8f")
+
+[node name="MeshNode" type="Node3D" parent="." unique_id=430093319]
+unique_name_in_owner = true
 
 [node name="MeshComponent" type="Node3D" parent="." unique_id=1152989109 node_paths=PackedStringArray("mesh_node")]
 script = ExtResource("3_0jc3c")
@@ -30,12 +34,13 @@ mesh_definition = ExtResource("4_3s3kv")
 mesh_node = NodePath("../MeshNode")
 metadata/_custom_type_script = "uid://0q8vxps631w4"
 
-[node name="MeshNode" type="Node3D" parent="." unique_id=430093319]
-
 [node name="_Components" type="Node3D" parent="." unique_id=1446485892]
 
 [node name="MovementController" parent="_Components" unique_id=1521291056 node_paths=PackedStringArray("player_entity") instance=ExtResource("2_fkugw")]
 player_entity = NodePath("../..")
+acceleration = 20.0
+brake_decel = 40.0
+turn_speed = 2.0
 
 [node name="CameraController" parent="_Components" unique_id=816730707 node_paths=PackedStringArray("fps_marker", "tps_marker") instance=ExtResource("2_bls4j")]
 fps_marker = NodePath("../../Markers/FPSCamMarker")

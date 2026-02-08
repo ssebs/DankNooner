@@ -6,17 +6,11 @@
 
 - [ ] Create Player Part 1
   - > no animations for now
-  - [ ] Singleplayer / Multiplayer code separation
-  - [ ] Player scene + component scripts
-    - > See moto-player-controller
-    - [ ] physics
+  - [x] Player scene + component scripts
     - [ ] movement
-    - [ ] gearing
-  - [ ] basic character selection (select male/female)
   - [x] basic bike selection (select bike)
   - [ ] InputManager in game
-    - [ ] camera control
-    - [ ] bike control
+    - [x] bike control
 - [ ] Create Test Level - Gym - player controller, with tp. Basically in game documentation.
   - (E.g. How far can you jump)
 
@@ -31,14 +25,19 @@
     - [ ] only host can start game
     - [ ] host chooses level, others can see
   - [ ] refactor if needed
-- [ ] Create SpawnManager
+- [ ] Create SpawnManager & sync players
 
   - [ ] spawn players in game
     - [ ] Should show their customizations
+  - [ ] Singleplayer / Multiplayer player_entity code separation
   - [ ] sync player positions
   - [ ] sync animations (tricks)
 
 - [ ] Create Player Part 2
+  - [ ] physics
+  - [ ] gearing
+  - [ ] basic character selection (select male/female)
+- [ ] Create Player Part 3
   - [ ] IK https://youtu.be/MbaPDWfbNLo?si=p5ybcrLUJje_nBgd animations
   - [ ] **Basic customization**
     - [ ] character accessories (cosmetics, etc.)
@@ -66,6 +65,7 @@ since I will have multiple bike types, colors, and mods for each type.
 
 ## Backlog
 
+- [ ] camera control
 - [ ] Audio Manager
 - [ ] Create TrickManager
   - [ ] connect w/ NetworkManager

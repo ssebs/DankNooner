@@ -166,6 +166,21 @@ Mouse visibility is managed based on input state:
 - `pause_requested` - Fired when player wants to pause (IN_GAME + pause action)
 - `unpause_requested` - Fired when player wants to resume (IN_GAME_PAUSED + pause action)
 
+### Player Entity
+
+`PlayerEntity` is a `CharacterBody3D` using composition with `@export` component references:
+- `CameraController` - camera follow/control
+- `MovementController` - handles movement with manual inertia
+- `BikeDefinition` - resource with mesh/collision data
+- `MeshComponent` - renders the bike mesh
+
+#### MovementController
+
+Uses `CharacterBody3D` with manual inertia simulation instead of physics forces:
+- `current_speed` and `angular_velocity` are lerped for smooth acceleration/deceleration
+- `apply_engine_braking()` - passive slowdown when no input
+- Tunable exports: `acceleration`, `brake_decel`, `engine_brake_decel`, `turn_speed`, `turn_friction`
+
 ### Pause System
 
 User stories:
