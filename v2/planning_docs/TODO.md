@@ -4,13 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] Create Player Part 1
-  - > no animations for now
-  - [x] Player scene + component scripts
-    - [ ] movement
-  - [x] basic bike selection (select bike)
-  - [ ] InputManager in game
-    - [x] bike control
 - [ ] Create Test Level - Gym - player controller, with tp. Basically in game documentation.
   - (E.g. How far can you jump)
 
@@ -111,6 +104,14 @@ since I will have multiple bike types, colors, and mods for each type.
 - [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
 
 ## Done ✅
+
+- [x] Create Player Part 1
+  - > no animations for now
+  - [x] Player scene + component scripts
+    - [x] movement
+  - [x] basic bike selection (select bike)
+  - [x] InputManager in game
+    - [x] bike control
 
 - [x] 21x9 support
 
