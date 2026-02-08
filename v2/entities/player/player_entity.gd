@@ -11,6 +11,8 @@ class_name PlayerEntity extends CharacterBody3D
 @export var mesh_node: Node3D
 @export var collision_shape_3d: CollisionShape3D
 
+@onready var name_label: Label3D = %NameLabel
+
 var input_manager: InputManager
 
 
@@ -38,6 +40,10 @@ func _init_input_handlers():
 	input_manager.gear_up_pressed.connect(_on_gear_up_pressed)
 	input_manager.gear_down_pressed.connect(_on_gear_down_pressed)
 	input_manager.cam_switch_pressed.connect(_on_cam_switch_pressed)
+
+
+func _set_username_label(username: String):
+	name_label.text = username
 
 
 #region input handlers

@@ -17,12 +17,18 @@ tonemap_mode = 2
 glow_enabled = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_evjrj"]
-size = Vector2(64, 64)
+size = Vector2(200, 200)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3jscr"]
 albedo_color = Color(0.13333334, 0.13333334, 0.13333334, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_3jscr"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_6hu6n"]
+size = Vector3(1, 10, 200)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6hu6n"]
+size = Vector3(1, 10, 200)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_avllc"]
 
@@ -52,6 +58,42 @@ surface_material_override/0 = SubResource("StandardMaterial3D_3jscr")
 [node name="Box" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=2129556034]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 mesh = SubResource("BoxMesh_3jscr")
+
+[node name="wall" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=1973805590]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 0.5, 0)
+mesh = SubResource("BoxMesh_6hu6n")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="LevelItemsAndStuff/wall" unique_id=2069310709]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelItemsAndStuff/wall/StaticBody3D" unique_id=272686621]
+shape = SubResource("BoxShape3D_6hu6n")
+
+[node name="wall2" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=1109978214]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 0.5, 0)
+mesh = SubResource("BoxMesh_6hu6n")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="LevelItemsAndStuff/wall2" unique_id=942059252]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelItemsAndStuff/wall2/StaticBody3D" unique_id=1738840558]
+shape = SubResource("BoxShape3D_6hu6n")
+
+[node name="wall3" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=1712534818]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0.5, 100)
+mesh = SubResource("BoxMesh_6hu6n")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="LevelItemsAndStuff/wall3" unique_id=1176136535]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelItemsAndStuff/wall3/StaticBody3D" unique_id=1152339808]
+shape = SubResource("BoxShape3D_6hu6n")
+
+[node name="wall4" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=45835402]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0.5, -100)
+mesh = SubResource("BoxMesh_6hu6n")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="LevelItemsAndStuff/wall4" unique_id=1282503750]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelItemsAndStuff/wall4/StaticBody3D" unique_id=95101383]
+shape = SubResource("BoxShape3D_6hu6n")
 
 [node name="Colliders" type="Node3D" parent="." unique_id=1468499634]
 

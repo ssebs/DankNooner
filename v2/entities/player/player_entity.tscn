@@ -40,6 +40,7 @@ metadata/_custom_type_script = "uid://0q8vxps631w4"
 player_entity = NodePath("../..")
 acceleration = 20.0
 brake_decel = 40.0
+engine_brake_decel = 5.0
 turn_speed = 2.0
 
 [node name="CameraController" parent="_Components" unique_id=816730707 node_paths=PackedStringArray("fps_marker", "tps_marker") instance=ExtResource("2_bls4j")]
@@ -51,7 +52,7 @@ transform = Transform3D(1, 0, 0, 0, 0.96592575, 0.258819, 0, -0.258819, 0.965925
 current = true
 
 [node name="TPSCam" parent="_Components/CameraController" index="1" unique_id=1953618350]
-transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 1.5105743, 1.7631481)
+transform = Transform3D(1, 0, 0, 0, 0.9370628, 0.34916094, 0, -0.34916094, 0.9370628, 0, 1.391123, 1.7631481)
 
 [node name="Markers" type="Node3D" parent="." unique_id=894866869]
 
@@ -59,7 +60,12 @@ transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.965
 transform = Transform3D(1, 0, 0, 0, 0.96592575, 0.258819, 0, -0.258819, 0.96592575, 0, 1.2021662, 0)
 
 [node name="TPSCamMarker" type="Marker3D" parent="Markers" unique_id=748255221]
-transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 1.5105743, 1.7631481)
+transform = Transform3D(1, 0, 0, 0, 0.9370628, 0.34916094, 0, -0.34916094, 0.9370628, 0, 1.391123, 1.7631481)
+
+[node name="NameLabel" type="Label3D" parent="." unique_id=1811367941]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7594975, 0)
+text = "USERNAME"
 
 [editable path="_Components/MovementController"]
 [editable path="_Components/CameraController"]
