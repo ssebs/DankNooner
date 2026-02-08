@@ -4,6 +4,7 @@
 
 ## In Progress 🚀
 
+- [ ] Connect _on_peer_connected to add_player_to_lobby
 - [ ] Create NetworkManager
   - [ ] Create lobby
     - [ ] Web RTC if possible for web export?
