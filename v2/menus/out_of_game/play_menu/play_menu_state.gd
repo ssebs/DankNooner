@@ -27,7 +27,8 @@ func Enter(_state_context: StateContext):
 	join_btn.pressed.connect(_on_join_btn_pressed)
 
 	ip_entry.text_changed.connect(_on_ip_text_changed)
-	join_btn.disabled = true
+	# Default text is 127.0.0.1
+	join_btn.disabled = false
 
 
 func Exit(_state_context: StateContext):
@@ -50,9 +51,9 @@ func _on_ip_text_changed(new_text: String):
 
 #region button handlers
 func _on_host_btn_pressed():
-	multiplayer_manager.start_server()
-	UiToast.ShowToast("Hosting game!", UiToast.ToastLevel.NORMAL, 5)
+	# UiToast.ShowToast("Hosting game!", UiToast.ToastLevel.NORMAL, 5)
 	transitioned.emit(lobby_menu_state, LobbyStateContext.NewHost("0.0.0.0"))
+	multiplayer_manager.start_server()
 
 
 func _on_join_btn_pressed():

@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://d3f7uthyd114r" path="res://menus/out_of_game/lobby_menu/lobby_menu_state.gd" id="1_1jh13"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_lphm8"]
 [ext_resource type="Texture2D" uid="uid://b4v2pgrppd0tq" path="res://resources/img/test_level_select_img.png" id="2_yu1h4"]
-[ext_resource type="PackedScene" uid="uid://fohtho5rqpxo" path="res://menus/out_of_game/lobby_menu/player_list_item.tscn" id="4_wpkl5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lphm8"]
 content_margin_left = 12.0
@@ -176,9 +175,6 @@ vertical_scroll_mode = 2
 
 [node name="PlayersList" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer/ScrollContainer" unique_id=493926022]
 unique_name_in_owner = true
-layout_mode = 2
-
-[node name="PlayerListItem" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer/ScrollContainer/PlayersList" unique_id=1860626553 instance=ExtResource("4_wpkl5")]
 layout_mode = 2
 
 [node name="BackBtn" type="Button" parent="UI/AspectContainer/MarginContainer" unique_id=1870693339]
