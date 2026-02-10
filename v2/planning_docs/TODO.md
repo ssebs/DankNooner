@@ -5,19 +5,19 @@
 ## In Progress 🚀
 
 - [ ] Create NetworkManager
-  - [ ] Web RTC if possible for web export?
   - [x] Create lobby
     - [x] players can join / be seen
   - [x] plan MP authority
     - [x] only host can start game
     - [x] host chooses level, others can see
+  - [ ] Create SpawnManager & sync players
   - [ ] refactor if needed
-  - [ ] nat punch
-  - [ ] cleanup player_entity so only local cams are used, etc.
+    - [ ] cleanup player_entity so only local cams are used, etc.
+      - [ ] set username
+    - [ ] multiplayer / spawn mgr cleanup
 
 ## Up Next 📋
 
-- [ ] Create SpawnManager & sync players
 - [ ] Create Test Level - Gym - player controller, with tp. Basically in game documentation.
   - (E.g. How far can you jump)
 
@@ -58,6 +58,8 @@ since I will have multiple bike types, colors, and mods for each type.
   - https://binbun3d.itch.io/godot-ultimate-toon-shader
 
 ## Backlog
+
+- [ ] nat punch
 
 - [ ] text chat
 
@@ -101,6 +103,8 @@ since I will have multiple bike types, colors, and mods for each type.
   - [ ] render trees/etc. with multi mesh
 
 ## Polish / Bugs
+
+- [ ] Web RTC?
 
 - [ ] Setup cloudflare image upload in vscode
 - [ ] Quit on Web should just escape fullscreen
