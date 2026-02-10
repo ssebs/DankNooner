@@ -83,6 +83,7 @@ theme_override_constants/separation = 32
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
+text = "127.0.0.1"
 placeholder_text = "IP_LABEL"
 clear_button_enabled = true
 

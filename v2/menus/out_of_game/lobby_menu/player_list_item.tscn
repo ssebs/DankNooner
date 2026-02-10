@@ -2,7 +2,6 @@
 
 [ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="1_p7spx"]
 [ext_resource type="Script" uid="uid://d2naekejlkomd" path="res://menus/out_of_game/lobby_menu/player_list_item.gd" id="1_vlnsy"]
-[ext_resource type="Resource" uid="uid://ba1bidrtscoc7" path="res://resources/entities/player/default_player_definition.tres" id="2_fp5ot"]
 [ext_resource type="Texture2D" uid="uid://cwf7vhr6hpjoj" path="res://resources/img/Logo.svg" id="2_vlnsy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fp5ot"]
@@ -36,7 +35,6 @@ theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 script = ExtResource("1_vlnsy")
-player_definition = ExtResource("2_fp5ot")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1860626553]
 layout_mode = 2
@@ -64,7 +62,7 @@ expand_mode = 3
 [node name="PlayerName" type="Label" parent="PanelContainer/HBoxContainer" unique_id=1488068940]
 unique_name_in_owner = true
 layout_mode = 2
-text = "DEFAULT"
+text = "player_name"
 
 [node name="PingLabel" type="Label" parent="PanelContainer/HBoxContainer" unique_id=992432967]
 unique_name_in_owner = true

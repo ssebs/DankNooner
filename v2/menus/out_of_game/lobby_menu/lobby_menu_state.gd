@@ -40,6 +40,9 @@ func Enter(state_context: StateContext):
 	start_btn.pressed.connect(_on_start_pressed)
 	level_select_btn.item_selected.connect(_on_level_selected)
 
+	# Multiplayer :D
+	multiplayer_manager.player_connected.connect(_on_player_connected)
+
 	start_btn.disabled = true  # enable when level is selected
 
 	set_single_or_multiplayer_ui()
@@ -52,6 +55,44 @@ func Exit(_state_context: StateContext):
 	back_btn.pressed.disconnect(_on_back_pressed)
 	start_btn.pressed.disconnect(_on_start_pressed)
 	level_select_btn.item_selected.disconnect(_on_level_selected)
+
+	multiplayer_manager.player_connected.disconnect(_on_player_connected)
+
+
+#region multiplayer
+
+
+func _on_player_connected(_id: int, all_players: Array[int]):
+	if multiplayer.is_server():
+		set_lobby_players.rpc(all_players)
+
+
+## Add username as a player_list_item_scene to the player_list
+func add_player_listitem_to_lobby(username: String):
+	# TODO: get PlayerDefinition from server... somehow
+	var player_li = player_list_item_scene.instantiate() as PlayerListItem
+	player_li.player_definition.username = str(username)
+	player_list.add_child(player_li)
+	player_li.name = username
+	player_li.update_ui_from_player_definition()
+
+
+@rpc("call_local", "reliable")
+func set_lobby_players(player_names: Array[int]):
+	for player_id in player_names:
+		var player_name = str(player_id)
+		if player_list.has_node(player_name):
+			continue
+
+		add_player_listitem_to_lobby(player_name)
+
+
+func clear_lobby_players():
+	for child in player_list.get_children():
+		child.queue_free()
+
+
+#endregion
 
 
 ## Generate level select items from level_manager
@@ -75,16 +116,6 @@ func set_single_or_multiplayer_ui():
 		_:
 			singleplayer_ui.hide()
 			multiplayer_ui.show()
-
-
-## Add ID as a player_list_item_scene to the player_list
-func add_player_to_lobby(id: int):
-	# TODO: get PlayerDefinition from server... somehow
-	var player_li = player_list_item_scene.instantiate() as PlayerListItem
-	player_li.player_definition.username = str(id)
-	player_li.update_ui_from_player_definition()
-
-	player_list.add_child(player_li)
 
 
 #region button handlers
