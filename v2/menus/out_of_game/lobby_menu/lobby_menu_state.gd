@@ -154,16 +154,25 @@ func _on_level_selected(idx: int):
 	if idx == 0:
 		return
 
-	# TODO: Check w/ Multiplayer authority
-	start_btn.disabled = false
+	if multiplayer.is_server():
+		start_btn.disabled = false
 
 
 func _on_start_pressed():
+	# TODO: call RPC for all clients to spawn the level
 	level_manager.spawn_level(level_select_btn.selected, InputManager.InputState.IN_GAME)
 	multiplayer_manager.spawn_players()
 
 
 func _on_back_pressed():
+	# Disconnect based on whether we're host or client
+	if multiplayer.is_server():
+		multiplayer_manager.stop_server()  # you'd need to add this
+	else:
+		multiplayer_manager.disconnect_client()
+
+	clear_lobby_players()
+
 	transitioned.emit(play_menu_state, null)
 
 

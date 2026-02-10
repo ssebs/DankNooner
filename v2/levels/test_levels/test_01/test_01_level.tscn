@@ -38,6 +38,10 @@ player_entity_scene = ExtResource("2_6hu6n")
 player_spawn_pos = NodePath("PlayerSpawn")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1077869687]
+_spawnable_scenes = PackedStringArray("uid://d0rgswc73h64f")
+spawn_path = NodePath("../PlayerSpawn")
+
 [node name="PlayerSpawn" type="Marker3D" parent="." unique_id=840084747]
 unique_name_in_owner = true
 transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, 7, 0, 7)
