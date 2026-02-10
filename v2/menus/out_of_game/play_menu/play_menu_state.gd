@@ -2,6 +2,7 @@
 class_name PlayMenuState extends MenuState
 
 @export var menu_manager: MenuManager
+@export var multiplayer_manager: MultiplayerManager
 @export var main_menu_state: MenuState
 @export var lobby_menu_state: MenuState
 @export var customize_menu_state: MenuState
@@ -49,12 +50,14 @@ func _on_ip_text_changed(new_text: String):
 
 #region button handlers
 func _on_host_btn_pressed():
-	transitioned.emit(lobby_menu_state, LobbyStateContext.NewHost("0.0.0.0"))
+	multiplayer_manager.start_server()
 	UiToast.ShowToast("Hosting game!", UiToast.ToastLevel.NORMAL, 5)
+	transitioned.emit(lobby_menu_state, LobbyStateContext.NewHost("0.0.0.0"))
 
 
 func _on_join_btn_pressed():
 	var ctx = LobbyStateContext.NewJoin(ip_entry.text)
+	multiplayer_manager.connect_client(ip_entry.text)
 	transitioned.emit(lobby_menu_state, ctx)
 
 
@@ -76,3 +79,20 @@ func _on_back_pressed():
 #override
 func on_cancel_key_pressed():
 	_on_back_pressed()
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var issues = []
+
+	if menu_manager == null:
+		issues.append("menu_manager must not be empty")
+	if multiplayer_manager == null:
+		issues.append("multiplayer_manager must not be empty")
+	if main_menu_state == null:
+		issues.append("main_menu_state must not be empty")
+	if lobby_menu_state == null:
+		issues.append("lobby_menu_state must not be empty")
+	if customize_menu_state == null:
+		issues.append("customize_menu_state must not be empty")
+
+	return issues

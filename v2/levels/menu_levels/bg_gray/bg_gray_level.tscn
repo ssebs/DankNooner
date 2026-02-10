@@ -4,6 +4,7 @@
 
 [node name="BgGrayLevel" type="Node" unique_id=267153279]
 script = ExtResource("1_pmxdy")
+no_player_spawn_needed = true
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="BGClear" type="ColorRect" parent="." unique_id=1068101641]

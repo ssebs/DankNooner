@@ -25,7 +25,8 @@ var level_name_map: Dictionary[LevelName, String] = {
 	LevelName.TEST_LEVEL_01: "LEVEL_TEST_1_LABEL",
 }
 
-var current_level: LevelName = LevelName.LEVEL_SELECT_LABEL
+var current_level_name: LevelName = LevelName.LEVEL_SELECT_LABEL
+var current_level: LevelDefinition
 
 
 func _ready():
@@ -43,11 +44,12 @@ func spawn_level(level_name: LevelName, input_state: InputManager.InputState):
 
 	despawn_level()
 
-	var spawned_level = possible_levels[level_name].instantiate()
+	var spawned_level = possible_levels[level_name].instantiate() as LevelDefinition
 	spawned_level.name = level_name_map.get(level_name)
 	spawned_level.level_manager = self
 	spawn_node.add_child(spawned_level)
-	current_level = level_name
+	current_level = spawned_level
+	current_level_name = level_name
 
 	input_manager.current_input_state = input_state
 	if input_state == InputManager.InputState.IN_GAME:

@@ -2,6 +2,7 @@
 class_name LobbyMenuState extends MenuState
 
 @export var menu_manager: MenuManager
+@export var multiplayer_manager: MultiplayerManager
 @export var level_manager: LevelManager
 @export var input_manager: InputManager
 
@@ -41,7 +42,7 @@ func Enter(state_context: StateContext):
 
 	start_btn.disabled = true  # enable when level is selected
 
-	set_panel_rename_me()
+	set_single_or_multiplayer_ui()
 	set_levels_in_dropdown()
 
 
@@ -65,7 +66,8 @@ func set_levels_in_dropdown():
 	level_select_btn.set_item_disabled(0, true)  # Always set to LEVEL_SELECT_LABEL
 
 
-func set_panel_rename_me():
+## Hide or Show the singleplayer / multiplayer ui depending on ctx.mode
+func set_single_or_multiplayer_ui():
 	match ctx.mode:
 		LobbyStateContext.Mode.FREEROAM:
 			multiplayer_ui.hide()
@@ -96,6 +98,7 @@ func _on_level_selected(idx: int):
 
 func _on_start_pressed():
 	level_manager.spawn_level(level_select_btn.selected, InputManager.InputState.IN_GAME)
+	multiplayer_manager.spawn_players()
 
 
 func _on_back_pressed():
@@ -108,3 +111,20 @@ func _on_back_pressed():
 #override
 func on_cancel_key_pressed():
 	_on_back_pressed()
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var issues = []
+
+	if menu_manager == null:
+		issues.append("menu_manager must not be empty")
+	if multiplayer_manager == null:
+		issues.append("multiplayer_manager must not be empty")
+	if level_manager == null:
+		issues.append("level_manager must not be empty")
+	if input_manager == null:
+		issues.append("input_manager must not be empty")
+	if play_menu_state == null:
+		issues.append("play_menu_state must not be empty")
+
+	return issues
