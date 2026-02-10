@@ -5,9 +5,9 @@ class-definitions-order:
 - docstrings
 - signals
 - enums
+- exports
 - consts
 - staticvars
-- exports
 - onreadypubvars
 - onreadyprvvars
 - pubvars

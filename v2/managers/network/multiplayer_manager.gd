@@ -1,15 +1,16 @@
-class_name MultiplayerManager extends Node
+@tool
+class_name MultiplayerManager extends BaseManager
 
 signal player_connected(id: int, all_players: Array[int])
 signal player_disconnected(id: int)
 signal server_disconnected
 
+@export var menu_manager: MenuManager
+@export var level_manager: LevelManager
+@export var player_scene = preload("res://entities/player/player_entity.tscn")
+
 const PORT: int = 42068
 
-@export var player_scene = preload("res://entities/player/player_entity.tscn")
-# @export var game_main: GameMai
-
-var players_spawn_node: Node3D
 var lobby_players: Array[int] = []
 
 
@@ -40,12 +41,8 @@ func connect_client(ip_addr: String = "127.0.0.1"):
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 
 
-## Spawns all lobby players. Called when game starts.
+## Spawns players in lobby_players. Called when game starts.
 func spawn_players():
-	if players_spawn_node == null:
-		printerr("players_spawn_node == null")
-		return
-
 	for p in lobby_players:
 		_spawn_player(p)
 
@@ -59,22 +56,14 @@ func _spawn_player(id: int):
 
 	var player_to_add = player_scene.instantiate() as PlayerEntity
 	player_to_add.name = str(id)
-	player_to_add.tree_exiting.connect(_on_player_died.bind(id))
 
-	players_spawn_node.add_child(player_to_add, true)
+	level_manager.current_level.player_spawn_pos.add_child(player_to_add, true)
 
 
 #endregion
 
 
 #region Event Handlers
-func _on_player_died(id: int):
-	if multiplayer.is_server():
-		print("Player %s died, respawning in 2 seconds" % id)
-		await get_tree().create_timer(2.0).timeout
-		_spawn_player(id)
-
-
 func _on_peer_connected(id: int):
 	print("Player %s connected" % id)
 	lobby_players.append(id)
@@ -85,13 +74,27 @@ func _on_peer_disconnected(id: int):
 	print("Player %s disconnected" % id)
 	player_disconnected.emit(id)
 
-	if players_spawn_node == null || !players_spawn_node.has_node(str(id)):
+	if !level_manager.current_level.player_spawn_pos.has_node(str(id)):
 		return
-	players_spawn_node.get_node(str(id)).queue_free()
+
+	level_manager.current_level.player_spawn_pos.get_node(str(id)).queue_free()
 
 
 func _on_server_disconnected():
 	print("Disconnected from server")
 	server_disconnected.emit()
 	multiplayer.multiplayer_peer = null
+
+
 #endregion
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var issues = []
+
+	if menu_manager == null:
+		issues.append("menu_manager must not be empty")
+	if level_manager == null:
+		issues.append("level_manager must not be empty")
+
+	return issues

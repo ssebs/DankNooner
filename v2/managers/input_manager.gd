@@ -36,11 +36,6 @@ var current_input_state = InputState.IN_MENU:
 		input_state_changed.emit(val)
 var is_gamepad := false
 
-
-func _ready():
-	add_to_group(UtilsConstants.GROUPS["InputManager"], true)
-
-
 #region Input vars that aren't bools
 var throttle: float = 0.0:
 	set(value):
@@ -65,11 +60,17 @@ var lean: float = 0.0:
 		if lean != value:
 			lean = value
 			lean_changed.emit(value)
+
+
 #endregion
+func _ready():
+	add_to_group(UtilsConstants.GROUPS["InputManager"], true)
 
 
 #region input detection & signal emission
 func _process(_delta: float):
+	if Engine.is_editor_hint():
+		return
 	_update_input()
 
 
