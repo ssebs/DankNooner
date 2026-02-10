@@ -118,6 +118,12 @@ func rm_lobby_player(username: String):
 	rm_player_listitem_from_lobby(username)
 
 
+@rpc("call_local", "reliable")
+func start_game():
+	level_manager.spawn_level(level_select_btn.selected, InputManager.InputState.IN_GAME)
+	multiplayer_manager.spawn_players()
+
+
 func clear_lobby_players():
 	for child in player_list.get_children():
 		child.queue_free()
@@ -156,12 +162,17 @@ func _on_level_selected(idx: int):
 
 	if multiplayer.is_server():
 		start_btn.disabled = false
+		share_with_clients.rpc(idx)
+
+
+@rpc("reliable")
+func share_with_clients(idx: int):
+	level_select_btn.selected = idx
 
 
 func _on_start_pressed():
-	# TODO: call RPC for all clients to spawn the level
-	level_manager.spawn_level(level_select_btn.selected, InputManager.InputState.IN_GAME)
-	multiplayer_manager.spawn_players()
+	if multiplayer.is_server():
+		start_game.rpc()
 
 
 func _on_back_pressed():
