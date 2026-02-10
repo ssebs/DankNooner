@@ -41,6 +41,10 @@ func connect_client(ip_addr: String = "127.0.0.1"):
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 
 
+func disconnect_client():
+	multiplayer.multiplayer_peer = null
+
+
 ## Spawns players in lobby_players. Called when game starts.
 func spawn_players():
 	for p in lobby_players:
@@ -74,6 +78,8 @@ func _on_peer_disconnected(id: int):
 	print("Player %s disconnected" % id)
 	player_disconnected.emit(id)
 
+	if level_manager.current_level.no_player_spawn_needed:
+		return
 	if !level_manager.current_level.player_spawn_pos.has_node(str(id)):
 		return
 
