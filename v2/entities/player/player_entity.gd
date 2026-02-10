@@ -23,7 +23,13 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 
-	_init_input_handlers()
+	# Only the local client is running code here
+	if get_multiplayer_authority() != multiplayer.get_unique_id():
+		set_process(false)
+		set_physics_process(false)
+		# TODO: disable cameras
+	else:
+		_init_input_handlers()
 
 
 func _init_input_handlers():

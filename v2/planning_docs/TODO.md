@@ -4,17 +4,16 @@
 
 ## In Progress 🚀
 
-- [ ] Connect _on_peer_connected to add_player_to_lobby
 - [ ] Create NetworkManager
-  - [ ] Create lobby
-    - [ ] Web RTC if possible for web export?
-    - [ ] players can join / be seen
-    - [ ] text chat
-  - [ ] plan MP authority
-    - [ ] only host can start game
-    - [ ] host chooses level, others can see
+  - [ ] Web RTC if possible for web export?
+  - [x] Create lobby
+    - [x] players can join / be seen
+  - [x] plan MP authority
+    - [x] only host can start game
+    - [x] host chooses level, others can see
   - [ ] refactor if needed
   - [ ] nat punch
+  - [ ] cleanup player_entity so only local cams are used, etc.
 
 ## Up Next 📋
 
@@ -59,6 +58,8 @@ since I will have multiple bike types, colors, and mods for each type.
   - https://binbun3d.itch.io/godot-ultimate-toon-shader
 
 ## Backlog
+
+- [ ] text chat
 
 - [ ] camera control
 - [ ] Audio Manager
@@ -106,6 +107,8 @@ since I will have multiple bike types, colors, and mods for each type.
 - [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
 
 ## Done ✅
+
+- [x] Connect _on_peer_connected to add_player_to_lobby
 
 - [x] Create Player Part 1
   - > no animations for now
