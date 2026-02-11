@@ -39,34 +39,35 @@
   - [ ] Save bike definitions on disk
   - [ ] Save custom username for lobbies
 
+## Backlog
+
 - [ ] Customization UI / menu
 
   - [ ] Add customize menu UI
   - [ ] Add customize menu background scene
-  - [ ] Add Character customization
+  - [ ] Save on client- but make abstract enough for future server saving
+  - [ ] when spawning player in game, show their customizations
   - [ ] Add Bike customization
-  - [ ] Save on client for now - but make abstract enough for future server saving
-  - [ ] **BikeDefinition** with component definitions under it since I will have multiple bike types, colors, and mods for each type.
-    - [ ] character accessories (cosmetics, etc.)
-    - [ ] bike mods (color, actual mods) (**basic customization**)
-    - [ ] base mesh **MeshDefinition**
-    - [ ] color override
-    - [ ] BikeMod list
-      - [ ] **ModDefinition**
-        - [ ] **MeshDefinition**
-        - [ ] **Marker3D**
-        - [ ] script
-    - [ ] when spawning player in game, show their customizations
+    - [ ] **BikeDefinition** with component definitions under it since I will have multiple bike types, colors, and mods for each type.
+      - [ ] character accessories (cosmetics, etc.)
+      - [ ] bike mods (color, actual mods) (**basic customization**)
+      - [ ] base mesh **MeshDefinition**
+      - [ ] color override
+      - [ ] BikeMod list
+        - [ ] **ModDefinition**
+          - [ ] **MeshDefinition**
+          - [ ] **Marker3D**
+          - [ ] script
+  - [ ] Add Character customization (choose character for now)
 
 - [ ] Trick Manager + tricks
+
   - [ ] trick system
   - [ ] wheelie / stoppie tricks
   - [ ] ramp tricks
   - [ ] ground tricks
   - [ ] trick detection in player component
   - [ ] trick scoring in own script
-
-## Backlog
 
 - [ ] Create Test Level - Gym - player controller, with tp. Basically in game documentation. (E.g. How far can you jump)
 
@@ -77,16 +78,21 @@
   - https://binbun3d.itch.io/godot-ultimate-toon-shader
 
 - [ ] Camera control
+
 - [ ] Create traffic / AI system
+
   - [ ] basic traffic sim
   - [ ] implement A\* pathfinding? w/ state machine?
     - [ ] drive, stopped at light, parked, etc.
   - [ ] create sequence system?
+
 - [ ] Create GamemodeManager
+
   - [ ] create system
   - [ ] free roam w/ friends
   - [ ] street race in traffic as demo mode (+fps mode)
   - [ ] stunt race? Or high score mode?
+
 - [ ] Create basic SettingsMenu scene/ui
 
   - [ ] Make this work with pause menu (compose this somehow)
@@ -98,16 +104,18 @@
 - [ ] Create Test Level - Museum - functionally show how systems work, text explaining the systems.
   - (E.g. showing physics demos, how scripted sequences work)
 - [ ] Create Island Level
+
   - [ ] render trees/etc. with multi mesh
-- [ ] nat punch (netfox.noray)
+
+- [ ] Add nat punch (netfox.noray) to make lobbies
 
 ## Polish / Bugs
 
-- [ ] text chat
-- [ ] Web RTC?
-- [ ] Setup cloudflare image upload in vscode
-- [ ] Quit on Web should just escape fullscreen
 - [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
+- [ ] Add text chat
+- [ ] Web
+  - [ ] WebRTC (?)
+  - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
 
