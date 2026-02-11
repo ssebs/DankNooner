@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://2nnr6ecxbcgo" path="res://entities/player/components/movement_controller.tscn" id="2_fkugw"]
 [ext_resource type="Script" uid="uid://0q8vxps631w4" path="res://entities/components/mesh_component.gd" id="3_0jc3c"]
 [ext_resource type="Resource" uid="uid://i3jsrx38dc40" path="res://resources/entities/bikes/test_sportbike_mesh.tres" id="4_3s3kv"]
+[ext_resource type="Script" uid="uid://d37r06yj5krm" path="res://entities/player/components/input_controller.gd" id="7_mrv5j"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3s3kv"]
 properties/0/path = NodePath(".:position")
@@ -18,11 +19,12 @@ properties/1/replication_mode = 1
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hgb8f"]
 radius = 0.4
 
-[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("camera_controller", "movement_controller", "mesh_component", "mesh_node", "collision_shape_3d")]
+[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("camera_controller", "movement_controller", "input_controller", "mesh_component", "mesh_node", "collision_shape_3d")]
 script = ExtResource("1_0jc3c")
 bike_definition = ExtResource("2_3s3kv")
 camera_controller = NodePath("_Components/CameraController")
 movement_controller = NodePath("_Components/MovementController")
+input_controller = NodePath("_Components/InputController")
 mesh_component = NodePath("MeshComponent")
 mesh_node = NodePath("MeshNode")
 collision_shape_3d = NodePath("CollisionShape3D")
@@ -47,8 +49,13 @@ metadata/_custom_type_script = "uid://0q8vxps631w4"
 
 [node name="_Components" type="Node3D" parent="." unique_id=1446485892]
 
-[node name="MovementController" parent="_Components" unique_id=1521291056 node_paths=PackedStringArray("player_entity") instance=ExtResource("2_fkugw")]
+[node name="InputController" type="Node3D" parent="_Components" unique_id=745640607 node_paths=PackedStringArray("player_entity")]
+script = ExtResource("7_mrv5j")
 player_entity = NodePath("../..")
+
+[node name="MovementController" parent="_Components" unique_id=1521291056 node_paths=PackedStringArray("player_entity", "input_controller") instance=ExtResource("2_fkugw")]
+player_entity = NodePath("../..")
+input_controller = NodePath("../InputController")
 acceleration = 20.0
 brake_decel = 40.0
 engine_brake_decel = 5.0
