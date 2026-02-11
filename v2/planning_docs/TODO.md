@@ -4,9 +4,8 @@
 
 ## In Progress 🚀
 
-- [ ] camera switching
 - [ ] multiplayer / spawn mgr cleanup
-  - [ ] close server when going to main menu
+  - [x] close server when going to main menu
 
 ## Up Next 📋
 
@@ -104,6 +103,8 @@ since I will have multiple bike types, colors, and mods for each type.
 - [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
 
 ## Done ✅
+
+- [x] camera switching
 
 - [x] Make server authoritative
   > cleanup player_entity so only local cams are used, etc.

@@ -14,12 +14,6 @@ const PORT: int = 42068
 var lobby_players: Array[int] = []
 
 
-func _ready():
-	# Only server spawns enemies
-	if multiplayer.is_server():
-		pass
-
-
 #region Public API
 ## Starts the ENet server and listens for connections.
 func start_server():
@@ -33,6 +27,15 @@ func start_server():
 	_on_peer_connected(1)
 
 
+## Stops the running server & disconnects signals
+func stop_server():
+	multiplayer.peer_connected.disconnect(_on_peer_connected)
+	multiplayer.peer_disconnected.disconnect(_on_peer_disconnected)
+
+	multiplayer.multiplayer_peer = null
+	lobby_players.clear()
+
+
 ## Connects to a server at the given IP.
 func connect_client(ip_addr: String = "127.0.0.1"):
 	var peer = ENetMultiplayerPeer.new()
@@ -41,6 +44,7 @@ func connect_client(ip_addr: String = "127.0.0.1"):
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 
 
+## Disconnects from server
 func disconnect_client():
 	multiplayer.server_disconnected.disconnect(_on_server_disconnected)
 	multiplayer.multiplayer_peer = null
@@ -56,7 +60,6 @@ func spawn_players():
 #endregion
 
 
-#region Spawning (local)
 func _spawn_player(id: int):
 	print("Spawning Player: %s" % id)
 
@@ -66,10 +69,6 @@ func _spawn_player(id: int):
 	level_manager.current_level.player_spawn_pos.add_child(player_to_add, true)
 
 
-#endregion
-
-
-#region Event Handlers
 func _on_peer_connected(id: int):
 	print("Player %s connected" % id)
 	lobby_players.append(id)
@@ -95,9 +94,7 @@ func _on_server_disconnected():
 	print("Disconnected from server")
 	server_disconnected.emit()
 	multiplayer.multiplayer_peer = null
-
-
-#endregion
+	lobby_players.clear()
 
 
 func _get_configuration_warnings() -> PackedStringArray:

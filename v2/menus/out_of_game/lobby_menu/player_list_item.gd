@@ -8,6 +8,7 @@ class_name PlayerListItem extends MarginContainer
 @onready var icon: TextureRect = %PlayerIcon
 @onready var player_name: Label = %PlayerName
 @onready var ping: Label = %PingLabel
+@onready var host_label: Label = %HostLabel
 
 
 func _ready():
