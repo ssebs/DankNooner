@@ -12,8 +12,11 @@ class_name MovementController extends Node
 @export var turn_speed: float = 5
 @export var turn_friction: float = 4
 
+# sync'd with netfox
 var current_speed: float = 0
 var angular_velocity: float = 0
+
+# not
 var spawn_timer: float = 1.0
 
 

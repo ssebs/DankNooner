@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://0q8vxps631w4" path="res://entities/components/mesh_component.gd" id="3_0jc3c"]
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_faflk"]
 [ext_resource type="Resource" uid="uid://i3jsrx38dc40" path="res://resources/entities/bikes/test_sportbike_mesh.tres" id="4_3s3kv"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_ri2qi"]
 [ext_resource type="Script" uid="uid://d37r06yj5krm" path="res://entities/player/components/input_controller.gd" id="7_mrv5j"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hgb8f"]
@@ -27,9 +28,16 @@ metadata/_custom_type_script = "uid://bnop7vr1q4gwg"
 unique_name_in_owner = true
 script = ExtResource("3_faflk")
 root = NodePath("..")
+enable_prediction = true
 state_properties = Array[String]([":global_transform", ":velocity", "%MovementController:current_speed", "%MovementController:angular_velocity"])
 input_properties = Array[String](["%InputController:throttle", "%InputController:front_brake", "%InputController:steer", "%InputController:lean"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
+
+[node name="TickInterpolator" type="Node" parent="." unique_id=977812349 node_paths=PackedStringArray("root")]
+script = ExtResource("4_ri2qi")
+root = NodePath("..")
+properties = Array[String]([":global_transform", ":velocity", "%MovementController:current_speed", "%MovementController:angular_velocity"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=412612653]
 unique_name_in_owner = true

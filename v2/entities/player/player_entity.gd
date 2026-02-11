@@ -58,7 +58,8 @@ func _init_input_handlers():
 
 
 func _on_cam_switch_pressed():
-	camera_controller.toggle_cam()
+	if is_local_client:
+		camera_controller.toggle_cam()
 
 
 #region unused input handlers
