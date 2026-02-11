@@ -29,6 +29,8 @@ func _ready():
 func _physics_process(delta: float):
 	if Engine.is_editor_hint():
 		return
+	if !player_entity.is_local_client:
+		return
 
 	# Gravity
 	if not player_entity.is_on_floor():
