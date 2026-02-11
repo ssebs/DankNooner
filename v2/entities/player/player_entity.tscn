@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://4m8or6jc5xbd" path="res://entities/player/components/camera_controller.tscn" id="2_bls4j"]
 [ext_resource type="PackedScene" uid="uid://2nnr6ecxbcgo" path="res://entities/player/components/movement_controller.tscn" id="2_fkugw"]
 [ext_resource type="Script" uid="uid://0q8vxps631w4" path="res://entities/components/mesh_component.gd" id="3_0jc3c"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_faflk"]
 [ext_resource type="Resource" uid="uid://i3jsrx38dc40" path="res://resources/entities/bikes/test_sportbike_mesh.tres" id="4_3s3kv"]
 [ext_resource type="Script" uid="uid://d37r06yj5krm" path="res://entities/player/components/input_controller.gd" id="7_mrv5j"]
 
@@ -32,6 +33,11 @@ metadata/_custom_type_script = "uid://bnop7vr1q4gwg"
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=28436029]
 replication_config = SubResource("SceneReplicationConfig_3s3kv")
+
+[node name="RollbackSynchronizer" type="Node" parent="." unique_id=609748778 node_paths=PackedStringArray("root")]
+script = ExtResource("3_faflk")
+root = NodePath("..")
+metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=412612653]
 unique_name_in_owner = true
