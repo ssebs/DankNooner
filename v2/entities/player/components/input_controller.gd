@@ -19,7 +19,7 @@ signal cam_switch_pressed
 
 var is_gamepad := false
 
-#region Input vars that aren't bools
+#region Input vars sync'd with netfox
 var throttle: float = 0.0:
 	set(value):
 		if throttle != value:
@@ -56,11 +56,17 @@ func _gather():
 	if not is_multiplayer_authority():
 		return
 
-	_update_input()
+	_update_input_for_server()
 
 
-## Update input vars & emit signals during _process
-func _update_input():
+## local input
+func _process(_delta):
+	if Input.is_action_just_pressed("switch_cam"):
+		cam_switch_pressed.emit()
+
+
+## Update input vars & emit signals
+func _update_input_for_server():
 	throttle = Input.get_action_strength("throttle_pct")
 	front_brake = Input.get_action_strength("brake_front_pct")
 	steer = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
@@ -76,8 +82,6 @@ func _update_input():
 		gear_up_pressed.emit()
 	if Input.is_action_just_pressed("gear_down"):
 		gear_down_pressed.emit()
-	if Input.is_action_just_pressed("switch_cam"):
-		cam_switch_pressed.emit()
 
 
 func _unhandled_input(event: InputEvent):
