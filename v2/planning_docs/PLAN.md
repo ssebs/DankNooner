@@ -1,67 +1,102 @@
-# Multiplayer Authority Refactor Plan
+# Netfox Integration Plan
 
-Server-authoritative physics with client input. Prep for netfox integration.
+Server-authoritative physics with client-side prediction using netfox.
 
-## Phase 1: Authority Change
+## Phase 1: Addon Setup
 
-- [ ] `player_entity.gd` `_enter_tree()`: change to `set_multiplayer_authority(1)`
+- [ ] Enable netfox plugin in Project Settings
+- [ ] Verify NetworkTime and NetworkRollback autoloads are active
+
+## Phase 2: Player Scene Restructure
+
+- [ ] `player_entity.gd` `_enter_tree()`: set `set_multiplayer_authority(1)` (server owns player body)
 - [ ] Keep `is_local_client` check (still needed for camera/input capture)
-
-## Phase 2: Input RPC
-
-- [ ] `input_controller.gd`: add input buffer dict at top of file
+- [ ] Remove or disable `MultiplayerSynchronizer` (RollbackSynchronizer replaces it)
+- [ ] Configure `RollbackSynchronizer` state properties (CharacterBody3D-compatible):
+  - `.:global_transform`
+  - `.:velocity`
+  - `MovementController:current_speed`
+  - `MovementController:angular_velocity`
+- [ ] Set input authority: player owns their `InputController`
   ```gdscript
-  static var server_input_buffer: Dictionary = {}  # peer_id -> input_state
+  input_controller.set_multiplayer_authority(peer_id)
   ```
-- [ ] Add `receive_input()` RPC:
+- [ ] Configure input properties on RollbackSynchronizer:
+  - `InputController:throttle`
+  - `InputController:front_brake`
+  - `InputController:steer`
+  - `InputController:lean`
+
+## Phase 3: Input Controller Changes
+
+- [ ] Change authority check from `is_local_client` to `is_multiplayer_authority()`:
   ```gdscript
-  @rpc("any_peer", "unreliable_ordered")
-  func receive_input(input_state: Dictionary):
-      var sender_id = multiplayer.get_remote_sender_id()
-      server_input_buffer[sender_id] = input_state
+  func _process(delta: float) -> void:
+      if not is_multiplayer_authority():
+          return
+      _update_input()
   ```
-- [ ] In `_process()`: after `_update_input()`, send to server:
+- [ ] Remove `@export var player_entity` dependency for authority check
+- [ ] Ensure input properties are plain vars (netfox syncs them automatically)
+- [ ] Keep signals for local effects (camera switch, etc.) - these don't need sync
+
+## Phase 4: Movement Controller Changes
+
+- [ ] Remove `is_local_client` guard - `_rollback_tick()` runs on ALL peers
+- [ ] Replace `_physics_process()` with `_rollback_tick()`:
+
   ```gdscript
-  if multiplayer.is_server():
-      server_input_buffer[multiplayer.get_unique_id()] = _get_input_state()
-  else:
-      receive_input.rpc_id(1, _get_input_state())
+  func _rollback_tick(delta: float, tick: int, is_fresh: bool) -> void:
+      # Read input from InputController (synced by RollbackSynchronizer)
+      var throttle_val = input_controller.throttle
+      var steer_val = input_controller.steer
+      var brake_val = input_controller.front_brake
+
+      # Existing physics logic (acceleration, steering, etc.)
+      # ...
+
+      # Apply velocity and move
+      player_entity.velocity = calculated_velocity
+      player_entity.move_and_slide()
   ```
-- [ ] Add helper:
+
+- [ ] Use `is_fresh` to gate sounds/particles (prevent replay during rollback):
   ```gdscript
-  func _get_input_state() -> Dictionary:
-      return {"throttle": throttle, "front_brake": front_brake, "steer": steer, "lean": lean}
+  if is_fresh:
+      # Play engine sound, spawn particles, etc.
   ```
+- [ ] Handle collisions in rollback-safe way
 
-## Phase 3: Server-Side Movement
+## Phase 5: Spawn & Authority Setup
 
-- [ ] `movement_controller.gd` `_physics_process()`: change guard to:
+- [ ] In `multiplayer_manager.gd` `_spawn_player()`, after adding to scene:
+
   ```gdscript
-  if not multiplayer.is_server():
-      return
+  # Server owns the player body
+  player.set_multiplayer_authority(1)
+
+  # Player owns their input
+  player.input_controller.set_multiplayer_authority(peer_id)
+
+  # Initialize rollback synchronizer
+  player.rollback_synchronizer.process_settings()
+  player.rollback_synchronizer.process_authority()
   ```
-- [ ] Get input from buffer instead of `input_controller` directly:
-  ```gdscript
-  var peer_id = int(player_entity.name)
-  var input = InputController.server_input_buffer.get(peer_id, {})
-  var throttle_val = input.get("throttle", 0.0)
-  # etc...
-  ```
 
-## Phase 4: Position Sync
+- [ ] Add `@onready var rollback_synchronizer` reference to PlayerEntity
 
-- [ ] Add `MultiplayerSynchronizer` as child of `PlayerEntity` in scene
-- [ ] Configure sync properties: `position`, `rotation`, `velocity`
-- [ ] Set replication interval (~20-30ms for smooth updates)
+## Phase 6: Test
 
-## Phase 5: Test
+- [ ] Host + 1 client: verify both players move smoothly
+- [ ] Check input responsiveness (should feel local despite server authority)
+- [ ] Verify no jitter/rubber-banding under normal conditions
+- [ ] Test with simulated latency if possible (netfox has debug tools)
 
-- [ ] Host + 1 client: verify host sees client move
-- [ ] Verify client sees host move
-- [ ] Check input responsiveness
+## Notes
 
-## Later: Netfox Integration
-
-- [ ] Add tick number to input_state
-- [ ] Replace `MultiplayerSynchronizer` with netfox `RollbackSynchronizer`
-- [ ] Implement client-side prediction replay
+- `RollbackSynchronizer` replaces `MultiplayerSynchronizer` for player entities
+- Input properties and state properties can be on different nodes (avoids ownership conflict)
+- `_rollback_tick()` runs on ALL peers - server is authoritative, clients predict
+- CharacterBody3D uses `velocity` + `move_and_slide()`, not RigidBody3D physics
+- `current_speed` and `angular_velocity` in MovementController are manual floats, must be synced
+- `is_local_client` still needed for camera setup, but NOT for input authority checks
