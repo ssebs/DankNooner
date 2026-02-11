@@ -3,7 +3,7 @@ class_name PauseMenuState extends MenuState
 
 @export var menu_manager: MenuManager
 @export var level_manager: LevelManager
-@export var input_manager: InputManager
+@export var input_state_manager: InputStateManager
 @export var pause_manager: PauseManager
 
 @export var main_menu_state: MenuState
@@ -35,7 +35,7 @@ func _on_resume_pressed():
 
 func _on_main_menu_pressed():
 	transitioned.emit(main_menu_state, null)
-	input_manager.current_input_state = InputManager.InputState.IN_MENU
+	input_state_manager.current_input_state = InputStateManager.InputState.IN_MENU
 	level_manager.spawn_menu_level()
 
 

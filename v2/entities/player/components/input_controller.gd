@@ -1,10 +1,5 @@
 @tool
-## Manages InputState (in menu or in game) + sends input signals
-class_name InputManager extends BaseManager
-
-signal input_state_changed(new_state: InputState)
-signal pause_requested
-signal unpause_requested
+class_name InputController extends Node3D
 
 signal throttle_changed(value: float)
 signal front_brake_changed(value: float)
@@ -19,21 +14,8 @@ signal cam_switch_pressed
 # signal difficulty_pressed
 # signal bike_switch_pressed
 
-enum InputState {
-	IN_MENU,
-	IN_GAME,
-	IN_GAME_PAUSED,
-	DISABLED,
-}
-
-@export var menu_manager: MenuManager
 @export var vibration_duration: float = 0.15
 
-var current_input_state = InputState.IN_MENU:
-	set(val):
-		current_input_state = val
-		showhide_mouse_cursor()
-		input_state_changed.emit(val)
 var is_gamepad := false
 
 #region Input vars that aren't bools
@@ -60,11 +42,6 @@ var lean: float = 0.0:
 		if lean != value:
 			lean = value
 			lean_changed.emit(value)
-
-
-#endregion
-func _ready():
-	add_to_group(UtilsConstants.GROUPS["InputManager"], true)
 
 
 #region input detection & signal emission
@@ -95,36 +72,8 @@ func _update_input():
 		cam_switch_pressed.emit()
 
 
-#endregion
-
-
-#region InputState (in game vs in menu)
 func _unhandled_input(event: InputEvent):
 	_detect_gamepad_or_kbm(event)
-
-	match current_input_state:
-		InputManager.InputState.DISABLED:
-			return
-		InputManager.InputState.IN_GAME:
-			if event.is_action_pressed("pause"):
-				pause_requested.emit()
-		InputManager.InputState.IN_GAME_PAUSED:
-			if event.is_action_pressed("pause"):
-				unpause_requested.emit()
-		InputManager.InputState.IN_MENU:
-			if event.is_action_pressed("ui_cancel"):
-				var current_state = menu_manager.state_machine.current_state as MenuState
-				if current_state:
-					current_state.on_cancel_key_pressed()
-
-
-## Shows or hides mouse cursor depending on current_input_state
-func showhide_mouse_cursor():
-	match current_input_state:
-		InputManager.InputState.IN_MENU, InputManager.InputState.IN_GAME_PAUSED:
-			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		InputManager.InputState.IN_GAME, InputManager.InputState.DISABLED:
-			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
 func _detect_gamepad_or_kbm(event: InputEvent):

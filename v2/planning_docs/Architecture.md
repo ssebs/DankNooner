@@ -12,6 +12,7 @@
 - Use spatial comments (debug notes in the level itself)
 
 #### Debug levels
+
 - See @level_manager's Console cmd
   - \` then `dbg_gym` to load that test level right from the main menu
 
@@ -130,9 +131,9 @@ Levels are managed via `LevelManager` and selected through the `LobbyMenuState` 
 3. Add entry to `level_name_map` (enum → localization key)
 4. Add entry to `possible_levels` (enum → `preload("res://path/to/level.tscn")`)
 
-### Input System
+### Input System <<< THIS IS OUT OF DATE >>>
 
-The `InputManager` (`managers/input_manager.gd`) is a centralized input handler that routes input based on the current game context.
+The `InputStateManager` (`managers/input_state_manager.gd`) is a centralized input handler that routes input based on the current game context.
 
 #### Input States
 
@@ -157,6 +158,7 @@ The InputManager uses `_unhandled_input()` to process events based on `current_i
 #### Mouse Cursor Control
 
 Mouse visibility is managed based on input state:
+
 - **IN_MENU** or **IN_GAME_PAUSED**: Mouse visible (`MOUSE_MODE_VISIBLE`)
 - **IN_GAME** or **DISABLED**: Mouse captured (`MOUSE_MODE_CAPTURED`)
 
@@ -169,6 +171,7 @@ Mouse visibility is managed based on input state:
 ### Player Entity
 
 `PlayerEntity` is a `CharacterBody3D` using composition with `@export` component references:
+
 - `CameraController` - camera follow/control
 - `MovementController` - handles movement with manual inertia
 - `BikeDefinition` - resource with mesh/collision data
@@ -177,6 +180,7 @@ Mouse visibility is managed based on input state:
 #### MovementController
 
 Uses `CharacterBody3D` with manual inertia simulation instead of physics forces:
+
 - `current_speed` and `angular_velocity` are lerped for smooth acceleration/deceleration
 - `apply_engine_braking()` - passive slowdown when no input
 - Tunable exports: `acceleration`, `brake_decel`, `engine_brake_decel`, `turn_speed`, `turn_friction`
@@ -212,6 +216,7 @@ The same "pause" action triggers different behavior based on `InputState`.
 ### Unlocks / progression
 
 #### WIP NOTES
+
 - Singleplayer unlocks mods / cosmetics (aka 100% skin), and that unlocks skins for SP and MP
 - Bikes unlock per SP/MP
 

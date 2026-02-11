@@ -6,5 +6,5 @@ const PORT = 42068
 const GROUPS = {
 	"Managers": "Managers",
 	"Validate": "Validate",
-	"InputManager": "InputManager",
+	"InputStateManager": "InputStateManager",
 }

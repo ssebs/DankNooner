@@ -4,7 +4,7 @@ class_name LobbyMenuState extends MenuState
 @export var menu_manager: MenuManager
 @export var multiplayer_manager: MultiplayerManager
 @export var level_manager: LevelManager
-@export var input_manager: InputManager
+@export var input_state_manager: InputStateManager
 
 @export var play_menu_state: MenuState
 
@@ -118,7 +118,7 @@ func rm_lobby_player(username: String):
 
 @rpc("call_local", "reliable")
 func start_game():
-	level_manager.spawn_level(level_select_btn.selected, InputManager.InputState.IN_GAME)
+	level_manager.spawn_level(level_select_btn.selected, InputStateManager.InputState.IN_GAME)
 	multiplayer_manager.spawn_players()
 
 
@@ -206,8 +206,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("multiplayer_manager must not be empty")
 	if level_manager == null:
 		issues.append("level_manager must not be empty")
-	if input_manager == null:
-		issues.append("input_manager must not be empty")
+	if input_state_manager == null:
+		issues.append("input_state_manager must not be empty")
 	if play_menu_state == null:
 		issues.append("play_menu_state must not be empty")
 
