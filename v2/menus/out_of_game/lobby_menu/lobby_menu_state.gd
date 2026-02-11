@@ -43,6 +43,7 @@ func Enter(state_context: StateContext):
 	# Multiplayer :D
 	multiplayer_manager.player_connected.connect(_on_player_connected)
 	multiplayer_manager.player_disconnected.connect(_on_player_disconnected)
+	multiplayer_manager.server_disconnected.connect(_on_server_disconnected)
 
 	set_single_or_multiplayer_ui()
 	set_levels_in_dropdown(2)
@@ -58,6 +59,8 @@ func Exit(_state_context: StateContext):
 	multiplayer_manager.player_connected.disconnect(_on_player_connected)
 	multiplayer_manager.player_disconnected.disconnect(_on_player_disconnected)
 
+	multiplayer_manager.server_disconnected.disconnect(_on_server_disconnected)
+
 
 #region multiplayer
 
@@ -71,36 +74,11 @@ func _on_player_disconnected(id: int):
 	rm_lobby_player.rpc(str(id))
 
 
-func TODO(test: bool):
-	pass
-	# # Reset stuff when the server disconnects you
-	# multiplayer_manager.server_disconnected.connect(
-	# 	func():
-	# 		if level != null:
-	# 			level.queue_free()
-	# 		lobby_ui.show()
-	# 		lobby_ui.clear_lobby_players()
-	# 		text_chat_ui.clear_chat()
-	# )
+func _on_server_disconnected():
+	_on_back_pressed()
 
 
-## Add username as a player_list_item_scene to the player_list
-func add_player_listitem_to_lobby(username: String):
-	# TODO: get PlayerDefinition from server... somehow
-	var player_li = player_list_item_scene.instantiate() as PlayerListItem
-	player_li.player_definition.username = str(username)
-	player_list.add_child(player_li)
-	player_li.name = username
-	player_li.update_ui_from_player_definition()
-
-
-## Remove username from player_list. e.g. to show they disconnected
-func rm_player_listitem_from_lobby(username: String):
-	for child in player_list.get_children():
-		if child.name == username:
-			child.queue_free()
-
-
+## Adds all connected players to player_list
 @rpc("call_local", "reliable")
 func set_lobby_players(player_names: Array[int]):
 	for player_id in player_names:
@@ -111,6 +89,7 @@ func set_lobby_players(player_names: Array[int]):
 		add_player_listitem_to_lobby(player_name)
 
 
+## Removes player from player_list
 @rpc("call_local", "reliable")
 func rm_lobby_player(username: String):
 	rm_player_listitem_from_lobby(username)
@@ -122,12 +101,73 @@ func start_game():
 	multiplayer_manager.spawn_players()
 
 
-func clear_lobby_players():
-	for child in player_list.get_children():
-		child.queue_free()
+@rpc("reliable")
+func share_selected_level_with_clients(idx: int):
+	level_select_btn.selected = idx
 
 
 #endregion
+
+
+#region button handlers
+func _on_level_selected(idx: int):
+	if idx == 0:
+		return
+
+	if multiplayer.multiplayer_peer && multiplayer.is_server():
+		start_btn.disabled = false
+		share_selected_level_with_clients.rpc(idx)
+
+
+func _on_start_pressed():
+	if multiplayer.multiplayer_peer && multiplayer.is_server():
+		start_game.rpc()
+
+
+## cleanup before going back
+func _on_back_pressed():
+	if multiplayer.multiplayer_peer != null:
+		if multiplayer.is_server():
+			multiplayer_manager.stop_server()
+		else:
+			multiplayer_manager.disconnect_client()
+
+	clear_lobby_players()
+
+	transitioned.emit(play_menu_state, null)
+
+
+#endregion
+#region UI helpers
+## Add username as a player_list_item_scene to the player_list
+func add_player_listitem_to_lobby(username: String):
+	# TODO: get PlayerDefinition from server... somehow
+	var player_li = player_list_item_scene.instantiate() as PlayerListItem
+	player_li.player_definition.username = str(username)
+	player_list.add_child(player_li)
+	player_li.name = username
+
+	if username == "1":
+		player_li.host_label.text = "PLAYER_IS_HOST_LABEL"
+	elif int(username) == multiplayer.get_unique_id():
+		player_li.host_label.text = "YOU_LABEL"
+	else:
+		player_li.host_label.text = ""
+
+	player_li.update_ui_from_player_definition()
+
+
+## Remove username from player_list. e.g. to show they disconnected
+func rm_player_listitem_from_lobby(username: String):
+	for child in player_list.get_children():
+		if child.name == username:
+			child.queue_free()
+
+
+## Empty player_list
+func clear_lobby_players():
+	for child in player_list.get_children():
+		child.queue_free()
 
 
 ## Generate level select items from level_manager
@@ -156,37 +196,8 @@ func set_single_or_multiplayer_ui():
 			singleplayer_ui.hide()
 			multiplayer_ui.show()
 
-
-#region button handlers
-func _on_level_selected(idx: int):
-	if idx == 0:
-		return
-
-	if multiplayer.is_server():
-		start_btn.disabled = false
-		share_with_clients.rpc(idx)
-
-
-@rpc("reliable")
-func share_with_clients(idx: int):
-	level_select_btn.selected = idx
-
-
-func _on_start_pressed():
-	if multiplayer.is_server():
-		start_game.rpc()
-
-
-func _on_back_pressed():
-	# Disconnect based on whether we're host or client
-	if multiplayer.is_server():
-		multiplayer_manager.stop_server()  # you'd need to add this
-	else:
-		multiplayer_manager.disconnect_client()
-
-	clear_lobby_players()
-
-	transitioned.emit(play_menu_state, null)
+			if multiplayer.multiplayer_peer && !multiplayer.is_server():
+				start_btn.disabled = true
 
 
 #endregion

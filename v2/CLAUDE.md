@@ -58,6 +58,18 @@ Uses composition - `PlayerEntity` (RigidBody3D) has `@export` component referenc
 - `MovementController`
 - `BikeDefinition` (resource with mesh/collision data)
 
+### Multiplayer / Netcode
+
+Uses **netfox** addon for rollback-based networking:
+
+- **Server-authoritative**: Physics runs on server, clients predict locally
+- **RollbackSynchronizer**: Per-entity sync with client-side prediction and automatic reconciliation
+- **TickInterpolator**: Smooths remote player visuals between network ticks
+- `MultiplayerManager` handles ENet peer connections and player spawning
+- Input flows: Client captures → RPC to server → Server applies → Broadcasts state
+
+See `Architecture.md` for detailed diagrams and RPC signatures.
+
 ## Code Style
 
 - Use `@tool` for editor scripts
