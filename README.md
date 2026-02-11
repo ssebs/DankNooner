@@ -4,7 +4,7 @@
 
 An open-world motorcycle game about doing every stupid thing you'd never try in real life. Realistic controls meet arcade-style tricks — progressive braking, limited grip, and ragdoll crashes. Weave through traffic doing wheelies, pull skate-style tricks off ramps, race friends online, and progress from a bicycle to a fully customized sport bike.
 
-> **Play the v1 POC:** [Itch.io](https://theofficialssebs.itch.io/dank-nooner)
+> **Play the v1 POC:** [Itch.io](https://theofficialssebs.itch.io/dank-nooner-poc)
 
 Check the latest dev build! Download the **.zip** for your platform [here](https://github.com/ssebs/DankNooner/releases)
 
