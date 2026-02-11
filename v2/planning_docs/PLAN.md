@@ -9,19 +9,19 @@ Server-authoritative physics with client-side prediction using netfox.
 
 ## Phase 2: Player Scene Restructure
 
-- [ ] `player_entity.gd` `_enter_tree()`: set `set_multiplayer_authority(1)` (server owns player body)
-- [ ] Keep `is_local_client` check (still needed for camera/input capture)
-- [ ] Remove or disable `MultiplayerSynchronizer` (RollbackSynchronizer replaces it)
-- [ ] Configure `RollbackSynchronizer` state properties (CharacterBody3D-compatible):
+- [x] `player_entity.gd` `_enter_tree()`: set `set_multiplayer_authority(1)` (server owns player body)
+- [x] Keep `is_local_client` check (still needed for camera/input capture)
+- [x] Remove or disable `MultiplayerSynchronizer` (RollbackSynchronizer replaces it)
+- [x] Configure `RollbackSynchronizer` state properties (CharacterBody3D-compatible):
   - `.:global_transform`
   - `.:velocity`
   - `MovementController:current_speed`
   - `MovementController:angular_velocity`
-- [ ] Set input authority: player owns their `InputController`
+- [x] Set input authority: player owns their `InputController`
   ```gdscript
   input_controller.set_multiplayer_authority(peer_id)
   ```
-- [ ] Configure input properties on RollbackSynchronizer:
+- [x] Configure input properties on RollbackSynchronizer:
   - `InputController:throttle`
   - `InputController:front_brake`
   - `InputController:steer`
@@ -29,21 +29,21 @@ Server-authoritative physics with client-side prediction using netfox.
 
 ## Phase 3: Input Controller Changes
 
-- [ ] Change authority check from `is_local_client` to `is_multiplayer_authority()`:
+- [x] Change authority check from `is_local_client` to `is_multiplayer_authority()`:
   ```gdscript
   func _process(delta: float) -> void:
       if not is_multiplayer_authority():
           return
       _update_input()
   ```
-- [ ] Remove `@export var player_entity` dependency for authority check
-- [ ] Ensure input properties are plain vars (netfox syncs them automatically)
-- [ ] Keep signals for local effects (camera switch, etc.) - these don't need sync
+- [x] Remove `@export var player_entity` dependency for authority check
+- [x] Ensure input properties are plain vars (netfox syncs them automatically)
+- [x] Keep signals for local effects (camera switch, etc.) - these don't need sync
 
 ## Phase 4: Movement Controller Changes
 
-- [ ] Remove `is_local_client` guard - `_rollback_tick()` runs on ALL peers
-- [ ] Replace `_physics_process()` with `_rollback_tick()`:
+- [x] Remove `is_local_client` guard - `_rollback_tick()` runs on ALL peers
+- [x] Replace `_physics_process()` with `_rollback_tick()`:
 
   ```gdscript
   func _rollback_tick(delta: float, tick: int, is_fresh: bool) -> void:

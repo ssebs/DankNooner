@@ -13,23 +13,25 @@ class_name PlayerEntity extends CharacterBody3D
 @export var collision_shape_3d: CollisionShape3D
 
 @onready var name_label: Label3D = %NameLabel
+@onready var rollback_sync: RollbackSynchronizer = %RollbackSynchronizer
 
 var is_local_client: bool = false
 
 
-func _enter_tree() -> void:
-	set_multiplayer_authority(int(name))
-
-
 func _ready():
-	mesh_component.mesh_definition = bike_definition.bike_mesh_definition
+	_init_mesh()
 	_init_collision_shape()
 
 	if Engine.is_editor_hint():
 		return
 
-	# Only the local client is running code here
-	print("%s %s" % [int(name), multiplayer.get_unique_id()])
+	# await get_tree().process_frame
+
+	# Network authority
+	set_multiplayer_authority(1)
+	input_controller.set_multiplayer_authority(int(name))
+	rollback_sync.process_settings()
+
 	if int(name) == multiplayer.get_unique_id():
 		is_local_client = true
 		camera_controller.switch_to_tps_cam()
@@ -55,11 +57,11 @@ func _init_input_handlers():
 	input_controller.cam_switch_pressed.connect(_on_cam_switch_pressed)
 
 
-func _set_username_label(username: String):
-	name_label.text = username
+func _on_cam_switch_pressed():
+	camera_controller.toggle_cam()
 
 
-#region input handlers
+#region unused input handlers
 func _on_lean_changed(_value: float):
 	pass
 
@@ -84,11 +86,11 @@ func _on_gear_down_pressed():
 	pass
 
 
-func _on_cam_switch_pressed():
-	camera_controller.toggle_cam()
-
-
 #endregion
+
+
+func _init_mesh():
+	mesh_component.mesh_definition = bike_definition.bike_mesh_definition
 
 
 func _init_collision_shape():
@@ -97,6 +99,10 @@ func _init_collision_shape():
 	collision_shape_3d.position = bike_definition.collision_position_offset
 	collision_shape_3d.rotation_degrees = bike_definition.collision_rotation_offset_degrees
 	collision_shape_3d.scale = bike_definition.collision_scale_multiplier
+
+
+func _set_username_label(username: String):
+	name_label.text = username
 
 
 func _get_configuration_warnings() -> PackedStringArray:

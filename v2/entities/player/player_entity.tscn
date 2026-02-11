@@ -9,14 +9,6 @@
 [ext_resource type="Resource" uid="uid://i3jsrx38dc40" path="res://resources/entities/bikes/test_sportbike_mesh.tres" id="4_3s3kv"]
 [ext_resource type="Script" uid="uid://d37r06yj5krm" path="res://entities/player/components/input_controller.gd" id="7_mrv5j"]
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3s3kv"]
-properties/0/path = NodePath(".:position")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:rotation")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hgb8f"]
 radius = 0.4
 
@@ -31,12 +23,12 @@ mesh_node = NodePath("MeshNode")
 collision_shape_3d = NodePath("CollisionShape3D")
 metadata/_custom_type_script = "uid://bnop7vr1q4gwg"
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=28436029]
-replication_config = SubResource("SceneReplicationConfig_3s3kv")
-
 [node name="RollbackSynchronizer" type="Node" parent="." unique_id=609748778 node_paths=PackedStringArray("root")]
+unique_name_in_owner = true
 script = ExtResource("3_faflk")
 root = NodePath("..")
+state_properties = Array[String]([":global_transform", ":velocity", "%MovementController:current_speed", "%MovementController:angular_velocity"])
+input_properties = Array[String](["%InputController:throttle", "%InputController:front_brake", "%InputController:steer", "%InputController:lean"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=412612653]
@@ -56,10 +48,12 @@ metadata/_custom_type_script = "uid://0q8vxps631w4"
 [node name="_Components" type="Node3D" parent="." unique_id=1446485892]
 
 [node name="InputController" type="Node3D" parent="_Components" unique_id=745640607 node_paths=PackedStringArray("player_entity")]
+unique_name_in_owner = true
 script = ExtResource("7_mrv5j")
 player_entity = NodePath("../..")
 
 [node name="MovementController" parent="_Components" unique_id=1521291056 node_paths=PackedStringArray("player_entity", "input_controller") instance=ExtResource("2_fkugw")]
+unique_name_in_owner = true
 player_entity = NodePath("../..")
 input_controller = NodePath("../InputController")
 acceleration = 20.0
