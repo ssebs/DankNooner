@@ -17,6 +17,10 @@ class_name PlayerEntity extends CharacterBody3D
 var is_local_client: bool = false
 
 
+func _enter_tree() -> void:
+	set_multiplayer_authority(int(name))
+
+
 func _ready():
 	mesh_component.mesh_definition = bike_definition.bike_mesh_definition
 	_init_collision_shape()
@@ -34,8 +38,6 @@ func _ready():
 		camera_controller.disable_cameras()
 
 	_set_username_label("Player: %s" % name)
-
-	# MOVE INPUT_MANAGER UNDER PLAYER ENTITY
 
 
 func _init_input_handlers():

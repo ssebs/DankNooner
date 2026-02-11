@@ -63,12 +63,13 @@ func _spawn_player(id: int):
 	var player_to_add = player_scene.instantiate() as PlayerEntity
 	player_to_add.name = str(id)
 
-	# Spawn offset
-	var index = lobby_players.find(id)
-	var offset = Vector3(index * 3.0, 0, 0)  # 3 units apart on X
-	player_to_add.position = offset
-
 	level_manager.current_level.player_spawn_pos.add_child(player_to_add, true)
+
+	# # Only authority can set offset
+	# if multiplayer.is_server():
+	# 	var index = lobby_players.find(id)
+	# 	var offset = Vector3(index * 4.0, 0, 0)  # 3 units apart on X
+	# 	player_to_add.position = offset
 
 
 #endregion

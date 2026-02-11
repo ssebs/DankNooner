@@ -14,6 +14,7 @@ signal cam_switch_pressed
 # signal difficulty_pressed
 # signal bike_switch_pressed
 
+@export var player_entity: PlayerEntity
 @export var vibration_duration: float = 0.15
 
 var is_gamepad := false
@@ -42,12 +43,16 @@ var lean: float = 0.0:
 		if lean != value:
 			lean = value
 			lean_changed.emit(value)
+#endregion
 
 
 #region input detection & signal emission
 func _process(_delta: float):
 	if Engine.is_editor_hint():
 		return
+	if !player_entity.is_local_client:
+		return
+
 	_update_input()
 
 
@@ -73,6 +78,8 @@ func _update_input():
 
 
 func _unhandled_input(event: InputEvent):
+	if !player_entity.is_local_client:
+		return
 	_detect_gamepad_or_kbm(event)
 
 
@@ -86,6 +93,7 @@ func _detect_gamepad_or_kbm(event: InputEvent):
 #endregion
 
 
+#region controller vibration
 ## Add vibration intensity. Call this each frame vibration is needed.
 func add_vibration(weak: float, strong: float):
 	if weak > 0.01 or strong > 0.01:
@@ -98,3 +106,15 @@ func add_vibration(weak: float, strong: float):
 
 func stop_vibration():
 	Input.stop_joy_vibration(0)
+
+
+#endregion
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var issues = []
+
+	if player_entity == null:
+		issues.append("player_entity must not be empty")
+
+	return issues
