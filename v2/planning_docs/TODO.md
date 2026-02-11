@@ -12,13 +12,22 @@
     - [x] host chooses level, others can see
   - [x] Create SpawnManager & sync players
   - [x] set username
-  - [ ] refactor if needed
-    - [ ] cleanup player_entity so only local cams are used, etc.
-    - [ ] multiplayer / spawn mgr cleanup
+- [ ] Make server authoritative
+  > cleanup player_entity so only local cams are used, etc.
+  - [ ] Change `PlayerEntity._enter_tree()` to `set_multiplayer_authority(1)` (server owns all)
+  - [ ] Add `receive_input()` RPC to `InputController`
+  - [ ] In `InputController._process()`: if local, send input to server via `receive_input.rpc_id(1, ...)`
+  - [ ] Store received input per-player on server (Dictionary keyed by peer ID)
+  - [ ] Move `MovementController._physics_process()` to only run on server
+  - [ ] `MovementController` reads input from server's input buffer instead of local `InputController`
+  - [ ] Add `MultiplayerSynchronizer` to `PlayerEntity` for position/rotation
+  - [ ] (Later) Integrate netfox for client prediction + rollback reconciliation
+- [ ] multiplayer / spawn mgr cleanup
 
 ## Up Next 📋
 
 - [ ] Create Test Level - Gym - player controller, with tp. Basically in game documentation.
+
   - (E.g. How far can you jump)
 
   - [ ] spawn players in game
@@ -59,7 +68,7 @@ since I will have multiple bike types, colors, and mods for each type.
 
 ## Backlog
 
-- [ ] nat punch
+- [ ] nat punch (netfox.noray)
 
 - [ ] text chat
 
@@ -112,9 +121,10 @@ since I will have multiple bike types, colors, and mods for each type.
 
 ## Done ✅
 
-- [x] Connect _on_peer_connected to add_player_to_lobby
+- [x] Connect \_on_peer_connected to add_player_to_lobby
 
 - [x] Create Player Part 1
+
   - > no animations for now
   - [x] Player scene + component scripts
     - [x] movement

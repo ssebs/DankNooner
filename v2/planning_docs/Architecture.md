@@ -227,3 +227,87 @@ The same "pause" action triggers different behavior based on `InputState`.
 
 - Have an in-world garage like LS Customs
 - Pause menu btn teleports you to the garage
+
+## Multiplayer Networking Architecture
+
+### Authority Model: Client-Predicted, Server-Authoritative
+
+```mermaid
+sequenceDiagram
+    participant C as Client (Local)
+    participant S as Server (Host)
+    participant O as Other Clients
+
+    Note over C: Frame N
+    C->>C: Capture input locally
+    C->>C: Apply input (prediction)
+    C->>S: send_input.rpc_id(1, input_state)
+
+    Note over S: Server processes
+    S->>S: Receive input for player
+    S->>S: Apply input to player entity
+    S->>S: Run physics (authoritative)
+
+    Note over S,O: Broadcast state
+    S-->>C: Position/rotation sync
+    S-->>O: Position/rotation sync
+
+    Note over C: Reconciliation
+    C->>C: Compare server state vs prediction
+    C->>C: Correct if mismatch (netfox rollback)
+```
+
+### What Runs Where
+
+```mermaid
+flowchart LR
+    subgraph Client["Client (Each Player)"]
+        IC[InputController]
+        Predict[Local Prediction]
+        Cam[CameraController]
+    end
+
+    subgraph Server["Server (Host)"]
+        MC[MovementController]
+        Physics[Authoritative Physics]
+        Sync[State Broadcast]
+    end
+
+    IC -->|"send_input.rpc_id(1)"| MC
+    IC --> Predict
+    MC --> Physics
+    Physics --> Sync
+    Sync -->|"MultiplayerSynchronizer"| Client
+```
+
+### Authority Summary
+
+| Component                    | Runs On               | Authority                     |
+| ---------------------------- | --------------------- | ----------------------------- |
+| `InputController` (capture)  | Local client only     | Client                        |
+| `InputController` (send RPC) | Local client → Server | Client sends, Server receives |
+| `MovementController`         | Server only           | Server                        |
+| `CameraController`           | Local client only     | Client                        |
+| Position/Rotation            | Server broadcasts     | Server                        |
+| Lobby state                  | Server broadcasts     | Server                        |
+
+### RPC Signatures
+
+**InputController** - Client → Server:
+
+```gdscript
+## Sent every physics frame from client to server
+## Server applies this to the correct player's MovementController
+@rpc("any_peer", "unreliable_ordered")
+func receive_input(input_state: Dictionary):
+    # input_state = {
+    #   "tick": int,           # For netfox rollback
+    #   "throttle": float,     # 0.0 - 1.0
+    #   "front_brake": float,  # 0.0 - 1.0
+    #   "steer": float,        # -1.0 to 1.0
+    #   "lean": float,         # -1.0 to 1.0
+    # }
+    pass
+```
+
+**Why Dictionary?** Netfox needs tick numbers for rollback. Dictionary is extensible for future inputs (rear brake, tricks, etc).
