@@ -15,6 +15,8 @@ class_name PlayerEntity extends CharacterBody3D
 
 var input_manager: InputManager
 
+var is_local_client: bool = false
+
 
 func _ready():
 	mesh_component.mesh_definition = bike_definition.bike_mesh_definition
@@ -24,11 +26,17 @@ func _ready():
 		return
 
 	# Only the local client is running code here
+	print("%s %s" % [int(name), multiplayer.get_unique_id()])
 	if int(name) == multiplayer.get_unique_id():
+		is_local_client = true
 		camera_controller.switch_to_tps_cam()
 		_init_input_handlers()
 	else:
 		camera_controller.disable_cameras()
+
+	_set_username_label("Player: %s" % name)
+
+	# MOVE INPUT_MANAGER UNDER PLAYER ENTITY
 
 
 func _init_input_handlers():
