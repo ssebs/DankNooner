@@ -24,12 +24,11 @@ func _ready():
 		return
 
 	# Only the local client is running code here
-	if get_multiplayer_authority() != multiplayer.get_unique_id():
-		set_process(false)
-		set_physics_process(false)
-		# TODO: disable cameras
-	else:
+	if int(name) == multiplayer.get_unique_id():
+		camera_controller.switch_to_tps_cam()
 		_init_input_handlers()
+	else:
+		camera_controller.disable_cameras()
 
 
 func _init_input_handlers():
