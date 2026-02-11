@@ -5,6 +5,7 @@ class_name PlayerEntity extends CharacterBody3D
 
 @export var camera_controller: CameraController
 @export var movement_controller: MovementController
+@export var input_controller: InputController
 
 @export var mesh_component: MeshComponent
 
@@ -12,8 +13,6 @@ class_name PlayerEntity extends CharacterBody3D
 @export var collision_shape_3d: CollisionShape3D
 
 @onready var name_label: Label3D = %NameLabel
-
-var input_manager: InputManager
 
 var is_local_client: bool = false
 
@@ -40,19 +39,18 @@ func _ready():
 
 
 func _init_input_handlers():
-	input_manager = get_tree().get_first_node_in_group(UtilsConstants.GROUPS["InputManager"])
-	if input_manager == null:
-		printerr("cant find input_manager in PlayerEntity")
+	if input_controller == null:
+		printerr("cant find input_controller in PlayerEntity")
 		return
 
 	# Note - throttle, brake, and steer are handled in movement_controller
-	input_manager.lean_changed.connect(_on_lean_changed)
-	input_manager.rear_brake_pressed.connect(_on_rear_brake_pressed)
-	input_manager.trick_mod_pressed.connect(_on_trick_mod_pressed)
-	input_manager.clutch_pressed.connect(_on_clutch_pressed)
-	input_manager.gear_up_pressed.connect(_on_gear_up_pressed)
-	input_manager.gear_down_pressed.connect(_on_gear_down_pressed)
-	input_manager.cam_switch_pressed.connect(_on_cam_switch_pressed)
+	input_controller.lean_changed.connect(_on_lean_changed)
+	input_controller.rear_brake_pressed.connect(_on_rear_brake_pressed)
+	input_controller.trick_mod_pressed.connect(_on_trick_mod_pressed)
+	input_controller.clutch_pressed.connect(_on_clutch_pressed)
+	input_controller.gear_up_pressed.connect(_on_gear_up_pressed)
+	input_controller.gear_down_pressed.connect(_on_gear_down_pressed)
+	input_controller.cam_switch_pressed.connect(_on_cam_switch_pressed)
 
 
 func _set_username_label(username: String):
@@ -106,6 +104,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("camera_controller must not be empty")
 	if movement_controller == null:
 		issues.append("movement_controller must not be empty")
+	if input_controller == null:
+		issues.append("input_controller must not be empty")
 	if bike_definition == null:
 		issues.append("bike_definition must not be empty")
 	if mesh_component == null:

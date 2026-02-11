@@ -7,7 +7,7 @@ class_name ManagerManager extends Node
 var level_manager: LevelManager
 var menu_manager: MenuManager
 var pause_manager: PauseManager
-var input_manager: InputManager
+var input_state_manager: InputStateManager
 
 
 func _ready():
@@ -21,8 +21,8 @@ func _ready():
 			menu_manager = child
 		elif child is PauseManager:
 			pause_manager = child
-		elif child is InputManager:
-			input_manager = child
+		elif child is InputStateManager:
+			input_state_manager = child
 
 		child.add_to_group(UtilsConstants.GROUPS["Managers"], true)
 		child.manager_manager = self
