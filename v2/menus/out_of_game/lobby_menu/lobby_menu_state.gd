@@ -44,10 +44,8 @@ func Enter(state_context: StateContext):
 	multiplayer_manager.player_connected.connect(_on_player_connected)
 	multiplayer_manager.player_disconnected.connect(_on_player_disconnected)
 
-	start_btn.disabled = true  # enable when level is selected
-
 	set_single_or_multiplayer_ui()
-	set_levels_in_dropdown()
+	set_levels_in_dropdown(2)
 
 
 func Exit(_state_context: StateContext):
@@ -133,7 +131,7 @@ func clear_lobby_players():
 
 
 ## Generate level select items from level_manager
-func set_levels_in_dropdown():
+func set_levels_in_dropdown(default_id: int):
 	var items = level_manager.get_levels_as_option_items()
 
 	level_select_btn.clear()
@@ -142,6 +140,10 @@ func set_levels_in_dropdown():
 		level_select_btn.add_item(level_name_str, items[level_name_str])
 
 	level_select_btn.set_item_disabled(0, true)  # Always set to LEVEL_SELECT_LABEL
+
+	# set default
+	level_select_btn.selected = default_id
+	_on_level_selected(default_id)
 
 
 ## Hide or Show the singleplayer / multiplayer ui depending on ctx.mode

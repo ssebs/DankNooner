@@ -21,7 +21,12 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 
-	switch_to_cam(default_camera_mode)
+	# switch_to_cam(default_camera_mode)
+
+
+func disable_cameras():
+	tps_cam.current = false
+	fps_cam.current = false
 
 
 func switch_to_cam(cam_mode: CameraMode):
