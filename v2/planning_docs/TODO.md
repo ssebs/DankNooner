@@ -4,14 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] Create NetworkManager
-  - [x] Create lobby
-    - [x] players can join / be seen
-  - [x] plan MP authority
-    - [x] only host can start game
-    - [x] host chooses level, others can see
-  - [x] Create SpawnManager & sync players
-  - [x] set username
 - [ ] Make server authoritative
   > cleanup player_entity so only local cams are used, etc.
   - [ ] Change `PlayerEntity._enter_tree()` to `set_multiplayer_authority(1)` (server owns all)
@@ -120,6 +112,15 @@ since I will have multiple bike types, colors, and mods for each type.
 - [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
 
 ## Done ✅
+
+- [x] Create NetworkManager
+  - [x] Create lobby
+    - [x] players can join / be seen
+  - [x] plan MP authority
+    - [x] only host can start game
+    - [x] host chooses level, others can see
+  - [x] Create SpawnManager & sync players
+  - [x] set username
 
 - [x] Connect \_on_peer_connected to add_player_to_lobby
 
