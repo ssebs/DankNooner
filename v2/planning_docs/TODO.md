@@ -10,10 +10,10 @@
   - [x] plan MP authority
     - [x] only host can start game
     - [x] host chooses level, others can see
-  - [ ] Create SpawnManager & sync players
+  - [x] Create SpawnManager & sync players
+  - [x] set username
   - [ ] refactor if needed
     - [ ] cleanup player_entity so only local cams are used, etc.
-      - [ ] set username
     - [ ] multiplayer / spawn mgr cleanup
 
 ## Up Next 📋
