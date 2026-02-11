@@ -22,10 +22,8 @@ func _ready():
 		return
 
 
-func _physics_process(delta: float):
+func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
 	if Engine.is_editor_hint():
-		return
-	if !player_entity.is_local_client:
 		return
 
 	# Gravity
@@ -52,7 +50,10 @@ func _physics_process(delta: float):
 	player_entity.velocity.x = forward.x * current_speed
 	player_entity.velocity.z = forward.z * current_speed
 
+	# Netfox fix
+	player_entity.velocity *= NetworkTime.physics_factor
 	player_entity.move_and_slide()
+	player_entity.velocity /= NetworkTime.physics_factor
 
 	_handle_player_collision(delta)
 

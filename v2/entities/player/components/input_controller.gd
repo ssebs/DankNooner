@@ -46,11 +46,14 @@ var lean: float = 0.0:
 #endregion
 
 
-#region input detection & signal emission
-func _process(_delta: float):
+func _ready():
+	NetworkTime.before_tick_loop.connect(_gather)
+
+
+func _gather():
 	if Engine.is_editor_hint():
 		return
-	if !player_entity.is_local_client:
+	if not is_multiplayer_authority():
 		return
 
 	_update_input()
@@ -88,9 +91,6 @@ func _detect_gamepad_or_kbm(event: InputEvent):
 		is_gamepad = false
 	elif event is InputEventJoypadButton or event is InputEventJoypadMotion:
 		is_gamepad = true
-
-
-#endregion
 
 
 #region controller vibration
