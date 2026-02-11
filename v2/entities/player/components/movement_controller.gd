@@ -14,6 +14,7 @@ class_name MovementController extends Node
 
 var current_speed: float = 0
 var angular_velocity: float = 0
+var spawn_timer: float = 1.0
 
 
 func _ready():
@@ -52,6 +53,26 @@ func _physics_process(delta: float):
 	player_entity.velocity.z = forward.z * current_speed
 
 	player_entity.move_and_slide()
+
+	_handle_player_collision(delta)
+
+
+func _handle_player_collision(delta: float):
+	if spawn_timer <= 0:
+		return
+
+	spawn_timer -= delta
+
+	var collision = player_entity.get_last_slide_collision()
+	if collision == null:
+		return
+
+	var collider = collision.get_collider()
+	if collider is PlayerEntity:
+		# Move randomly by 1m in XZ plane
+		var random_angle = randf() * TAU
+		var offset = Vector3(cos(random_angle), 0, sin(random_angle))
+		player_entity.global_position += offset
 
 
 func _get_configuration_warnings() -> PackedStringArray:
