@@ -2,6 +2,7 @@
 class_name PauseMenuState extends MenuState
 
 @export var menu_manager: MenuManager
+@export var multiplayer_manager: MultiplayerManager
 @export var level_manager: LevelManager
 @export var input_state_manager: InputStateManager
 @export var pause_manager: PauseManager
@@ -34,6 +35,8 @@ func _on_resume_pressed():
 
 
 func _on_main_menu_pressed():
+	multiplayer_manager.disconnect_sp_or_mp()
+
 	transitioned.emit(main_menu_state, null)
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_MENU
 	level_manager.spawn_menu_level()
