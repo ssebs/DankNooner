@@ -85,8 +85,9 @@ main_menu_state = NodePath("../MainMenuState")
 menu_manager = NodePath("../..")
 play_menu_state = NodePath("../PlayMenuState")
 
-[node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "level_manager", "input_state_manager", "pause_manager", "main_menu_state") instance=ExtResource("6_02kkc")]
+[node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "multiplayer_manager", "level_manager", "input_state_manager", "pause_manager", "main_menu_state") instance=ExtResource("6_02kkc")]
 menu_manager = NodePath("../..")
+multiplayer_manager = NodePath("../../../MultiplayerManager")
 level_manager = NodePath("../../../LevelManager")
 input_state_manager = NodePath("../../../InputStateManager")
 pause_manager = NodePath("../../../PauseManager")

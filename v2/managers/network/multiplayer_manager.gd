@@ -51,6 +51,14 @@ func disconnect_client():
 	lobby_players.clear()
 
 
+func disconnect_sp_or_mp():
+	if multiplayer.multiplayer_peer != null:
+		if multiplayer.is_server():
+			stop_server()
+		else:
+			disconnect_client()
+
+
 ## Spawns players in lobby_players. Called when game starts.
 func spawn_players():
 	for p in lobby_players:

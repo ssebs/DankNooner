@@ -8,7 +8,6 @@
   - [x] close server when going to main menu
   - [ ] review all code & cleanup to call authority done
   - [ ] update Architecture.md
-- [ ] singleplayer mode logic (just host! & be a server)
 
 ## Up Next 📋
 
@@ -118,6 +117,8 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] singleplayer mode logic (just host! & be a server)
 
 - [x] camera switching
 - [x] Make server authoritative

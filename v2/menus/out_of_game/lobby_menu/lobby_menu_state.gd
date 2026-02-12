@@ -126,11 +126,7 @@ func _on_start_pressed():
 
 ## cleanup before going back
 func _on_back_pressed():
-	if multiplayer.multiplayer_peer != null:
-		if multiplayer.is_server():
-			multiplayer_manager.stop_server()
-		else:
-			multiplayer_manager.disconnect_client()
+	multiplayer_manager.disconnect_sp_or_mp()
 
 	clear_lobby_players()
 
@@ -192,6 +188,7 @@ func set_single_or_multiplayer_ui():
 		LobbyStateContext.Mode.FREEROAM:
 			multiplayer_ui.hide()
 			singleplayer_ui.show()
+			multiplayer_manager.start_server()
 		_:
 			singleplayer_ui.hide()
 			multiplayer_ui.show()
