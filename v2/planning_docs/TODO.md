@@ -4,6 +4,8 @@
 
 ## In Progress 🚀
 
+- [ ] noray bug on client connect sometimes: Invalid access of index '1' on a base object of type: 'PackedStringArray'.
+  - [ ] maybe when game id is wrong
 - [ ] add noray relay host in config file for game
 - [ ] copy game id when hosting right away
 - [ ] noray timeout
