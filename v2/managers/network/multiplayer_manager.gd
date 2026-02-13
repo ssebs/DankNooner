@@ -11,6 +11,8 @@ signal game_id_set(noray_oid: String)
 @export var player_scene = preload("res://entities/player/player_entity.tscn")
 @export var noray_host: String = "tomfol.io"
 
+@export var force_relay_mode: bool = true
+
 # const PORT: int = 42068
 var lobby_players: Array[int] = []
 var noray_oid: String:
@@ -63,7 +65,10 @@ func connect_client(noray_host_oid: String):
 	noray_oid = noray_host_oid
 
 	var err = OK
-	err = Noray.connect_nat(noray_oid)
+	if force_relay_mode:
+		err = Noray.connect_relay(noray_oid)
+	else:
+		err = Noray.connect_nat(noray_oid)
 	if err != OK:
 		printerr("failed to connect_nat")
 		return

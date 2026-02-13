@@ -24,6 +24,7 @@ class_name LobbyMenuState extends MenuState
 @onready var ip_copy_btn: Button = %IPCopyBtn
 # @onready var invite_btn: Button = %InviteBtn
 @onready var player_list: VBoxContainer = %PlayersList
+@onready var loading_ui: ColorRect = %LoadingUI
 
 var ctx: LobbyStateContext
 
@@ -35,6 +36,7 @@ func Enter(state_context: StateContext):
 
 	ctx = state_context
 	ui.show()
+	loading_ui.hide()
 
 	back_btn.pressed.connect(_on_back_pressed)
 	start_btn.pressed.connect(_on_start_pressed)
@@ -87,6 +89,7 @@ func _on_server_disconnected():
 ## Adds all connected players to player_list
 @rpc("call_local", "reliable")
 func set_lobby_players(player_names: Array[int]):
+	loading_ui.hide()
 	for player_id in player_names:
 		var player_name = str(player_id)
 		if player_list.has_node(player_name):
@@ -203,6 +206,7 @@ func set_single_or_multiplayer_ui():
 		_:
 			singleplayer_ui.hide()
 			multiplayer_ui.show()
+			loading_ui.show()
 
 			if multiplayer.multiplayer_peer:
 				if !multiplayer.is_server():
