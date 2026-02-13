@@ -4,6 +4,10 @@
 
 ## In Progress 🚀
 
+- [ ] add noray relay host in config file for game
+- [ ] copy game id when hosting right away
+- [ ] noray timeout
+
 - [ ] multiplayer / spawn mgr cleanup
   - [x] close server when going to main menu
   - [ ] review all code & cleanup to call authority done
@@ -11,7 +15,6 @@
 
 ## Up Next 📋
 
-- [ ] deploy noray server
 - [ ] Audio Manager
 
   - [ ] Client side
@@ -117,6 +120,8 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] deploy noray server
 
 - [x] Add nat punch (netfox.noray) to make lobbies
 
