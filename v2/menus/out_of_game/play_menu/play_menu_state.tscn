@@ -79,12 +79,17 @@ text = "HOST_LABEL"
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="IPEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP/HBoxContainer" unique_id=1871235480]
+[node name="CodeEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP/HBoxContainer" unique_id=1871235480]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
-placeholder_text = "IP_LABEL"
+placeholder_text = "GAME_CODE_PLACEHOLDER"
 clear_button_enabled = true
+
+[node name="PasteBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP/HBoxContainer" unique_id=827439361]
+unique_name_in_owner = true
+layout_mode = 2
+text = "PASTE_LABEL"
 
 [node name="JoinBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP/HBoxContainer" unique_id=1406859642]
 unique_name_in_owner = true
