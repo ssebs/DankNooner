@@ -9,6 +9,10 @@
     "**/*.godot/*": true,
     "**/*.stub": true
   },
+  "[gdscript]": {
+    "editor.defaultFormatter": "geequlim.godot-tools"
+  },
+  "godotFormatter.useSpaces": false,
   "editor.formatOnSave": true,
   "godotTools.editorPath.godot4": "/usr/bin/godot",
   "todoSidebar.activeFile": "./planning_docs/TODO.md"
