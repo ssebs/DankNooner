@@ -21,7 +21,7 @@ class_name LobbyMenuState extends MenuState
 @onready var start_btn: Button = %StartBtn
 
 @onready var ip_label: Label = %IPLabel
-# @onready var ip_copy_btn: Button = %IPCopyBtn
+@onready var ip_copy_btn: Button = %IPCopyBtn
 # @onready var invite_btn: Button = %InviteBtn
 @onready var player_list: VBoxContainer = %PlayersList
 
@@ -39,11 +39,13 @@ func Enter(state_context: StateContext):
 	back_btn.pressed.connect(_on_back_pressed)
 	start_btn.pressed.connect(_on_start_pressed)
 	level_select_btn.item_selected.connect(_on_level_selected)
+	ip_copy_btn.pressed.connect(_on_copy_ip_pressed)
 
 	# Multiplayer :D
 	multiplayer_manager.player_connected.connect(_on_player_connected)
 	multiplayer_manager.player_disconnected.connect(_on_player_disconnected)
 	multiplayer_manager.server_disconnected.connect(_on_server_disconnected)
+	multiplayer_manager.game_id_set.connect(_on_game_id_set)
 
 	set_single_or_multiplayer_ui()
 	set_levels_in_dropdown(2)
@@ -55,14 +57,18 @@ func Exit(_state_context: StateContext):
 	back_btn.pressed.disconnect(_on_back_pressed)
 	start_btn.pressed.disconnect(_on_start_pressed)
 	level_select_btn.item_selected.disconnect(_on_level_selected)
+	ip_copy_btn.pressed.disconnect(_on_copy_ip_pressed)
 
 	multiplayer_manager.player_connected.disconnect(_on_player_connected)
 	multiplayer_manager.player_disconnected.disconnect(_on_player_disconnected)
-
 	multiplayer_manager.server_disconnected.disconnect(_on_server_disconnected)
+	multiplayer_manager.game_id_set.disconnect(_on_game_id_set)
 
 
 #region multiplayer
+func _on_game_id_set(noray_oid: String):
+	ip_label.text = multiplayer_manager.noray_oid
+	ip_copy_btn.disabled = false
 
 
 func _on_player_connected(_id: int, all_players: Array[int]):
@@ -133,6 +139,11 @@ func _on_back_pressed():
 	transitioned.emit(play_menu_state, null)
 
 
+func _on_copy_ip_pressed():
+	DisplayServer.clipboard_set(ip_label.text)
+	UiToast.ShowToast("GameID copied to clipboard!")
+
+
 #endregion
 #region UI helpers
 ## Add username as a player_list_item_scene to the player_list
@@ -193,8 +204,9 @@ func set_single_or_multiplayer_ui():
 			singleplayer_ui.hide()
 			multiplayer_ui.show()
 
-			if multiplayer.multiplayer_peer && !multiplayer.is_server():
-				start_btn.disabled = true
+			if multiplayer.multiplayer_peer:
+				if !multiplayer.is_server():
+					start_btn.disabled = true
 
 
 #endregion

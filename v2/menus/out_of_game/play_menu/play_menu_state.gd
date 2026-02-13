@@ -42,11 +42,14 @@ func Exit(_state_context: StateContext):
 	ip_entry.text_changed.disconnect(_on_ip_text_changed)
 
 
-func _on_ip_text_changed(new_text: String):
-	if new_text.is_valid_ip_address():
+func _on_ip_text_changed(_new_text: String):
+	# TODO: validate oid
+	if join_btn.disabled:
 		join_btn.disabled = false
-	else:
-		join_btn.disabled = true
+	# if new_text.is_valid_ip_address():
+	# 	join_btn.disabled = false
+	# else:
+	# 	join_btn.disabled = true
 
 
 #region button handlers

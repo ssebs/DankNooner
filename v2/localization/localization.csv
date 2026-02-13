@@ -14,7 +14,7 @@ HOST_LABEL,"Host Game","Organizar Juego"
 PLAYER_IS_HOST_LABEL,"Host","Organizar"
 YOU_LABEL,"(you)","(tu)"
 JOIN_LABEL,"Join Game","Unirse al Juego"
-IP_LABEL,"IP Address","Dirección IP"
+IP_LABEL,"Game ID","Identificación del juego"
 LOBBY_LABEL,Lobby,"Vestíbulo"
 CUSTOMIZE_LABEL,Customize,"Personalizar"
 SINGLEPLAYER_LABEL,Solo,Solo
