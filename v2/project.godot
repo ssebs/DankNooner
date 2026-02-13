@@ -28,6 +28,8 @@ NetworkTimeSynchronizer="*uid://5rmn2ik3kjo8"
 NetworkRollback="*uid://gas743comroj"
 NetworkEvents="*uid://bdmobxxptryj0"
 NetworkPerformance="*uid://cqgf7aqmjfoa3"
+Noray="*uid://gu4bv4tgms3x"
+PacketHandshake="*uid://tt3j25a05n7c"
 
 [debug]
 
@@ -46,7 +48,7 @@ window/stretch/aspect="keep_width"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/console/plugin.cfg", "res://addons/netfox.internals/plugin.cfg", "res://addons/netfox/plugin.cfg", "res://addons/toastparty/plugin.cfg")
+enabled=PackedStringArray("res://addons/console/plugin.cfg", "res://addons/netfox.internals/plugin.cfg", "res://addons/netfox.noray/plugin.cfg", "res://addons/netfox/plugin.cfg", "res://addons/toastparty/plugin.cfg")
 
 [filesystem]
 

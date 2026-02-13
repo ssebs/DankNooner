@@ -40,6 +40,7 @@
 
 ## Backlog
 
+- [ ] level select img
 - [ ] Customization UI / menu
 
   - [ ] Add customize menu UI
@@ -106,8 +107,6 @@
 
   - [ ] render trees/etc. with multi mesh
 
-- [ ] Add nat punch (netfox.noray) to make lobbies
-
 ## Polish / Bugs
 
 - [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
@@ -117,6 +116,8 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] Add nat punch (netfox.noray) to make lobbies
 
 - [x] singleplayer mode logic (just host! & be a server)
 
