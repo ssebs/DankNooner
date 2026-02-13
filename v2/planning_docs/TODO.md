@@ -11,6 +11,7 @@
 
 ## Up Next 📋
 
+- [ ] deploy noray server
 - [ ] Audio Manager
 
   - [ ] Client side
