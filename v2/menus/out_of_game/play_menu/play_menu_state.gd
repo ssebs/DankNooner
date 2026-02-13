@@ -7,14 +7,17 @@ class_name PlayMenuState extends MenuState
 @export var lobby_menu_state: MenuState
 @export var customize_menu_state: MenuState
 
+const NORAY_OID_LENGTH := 21
+const NORAY_OID_CHARSET := "useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict"
+
 @onready var back_btn: Button = %BackBtn
 @onready var customize_btn: Button = %CustomizeBtn
 @onready var free_roam_btn: Button = %FreeRoamBtn
 # @onready var story_btn: Button = %StoryBtn
 @onready var host_btn: Button = %HostBtn
 @onready var join_btn: Button = %JoinBtn
-
-@onready var ip_entry: LineEdit = %IPEntry
+@onready var paste_btn: Button = %PasteBtn
+@onready var code_entry: LineEdit = %CodeEntry
 
 
 func Enter(_state_context: StateContext):
@@ -25,10 +28,10 @@ func Enter(_state_context: StateContext):
 	free_roam_btn.pressed.connect(_on_free_roam_btn_pressed)
 	host_btn.pressed.connect(_on_host_btn_pressed)
 	join_btn.pressed.connect(_on_join_btn_pressed)
+	paste_btn.pressed.connect(_on_paste_btn_pressed)
+	code_entry.text_changed.connect(_on_code_text_changed)
 
-	ip_entry.text_changed.connect(_on_ip_text_changed)
-	# Default text is 127.0.0.1
-	join_btn.disabled = false
+	_validate_code()
 
 
 func Exit(_state_context: StateContext):
@@ -38,18 +41,31 @@ func Exit(_state_context: StateContext):
 	free_roam_btn.pressed.disconnect(_on_free_roam_btn_pressed)
 	host_btn.pressed.disconnect(_on_host_btn_pressed)
 	join_btn.pressed.disconnect(_on_join_btn_pressed)
+	paste_btn.pressed.disconnect(_on_paste_btn_pressed)
+	code_entry.text_changed.disconnect(_on_code_text_changed)
 
-	ip_entry.text_changed.disconnect(_on_ip_text_changed)
+
+func _on_paste_btn_pressed():
+	code_entry.text = DisplayServer.clipboard_get()
+	_validate_code()
 
 
-func _on_ip_text_changed(_new_text: String):
-	# TODO: validate oid
-	if join_btn.disabled:
-		join_btn.disabled = false
-	# if new_text.is_valid_ip_address():
-	# 	join_btn.disabled = false
-	# else:
-	# 	join_btn.disabled = true
+func _on_code_text_changed(_new_text: String):
+	_validate_code()
+
+
+func _validate_code():
+	join_btn.disabled = not _is_valid_noray_oid(code_entry.text)
+
+
+func _is_valid_noray_oid(text: String) -> bool:
+	var trimmed := text.strip_edges()
+	if trimmed.length() != NORAY_OID_LENGTH:
+		return false
+	for c in trimmed:
+		if c not in NORAY_OID_CHARSET:
+			return false
+	return true
 
 
 #region button handlers
@@ -60,8 +76,9 @@ func _on_host_btn_pressed():
 
 
 func _on_join_btn_pressed():
-	var ctx = LobbyStateContext.NewJoin(ip_entry.text)
-	multiplayer_manager.connect_client(ip_entry.text)
+	var oid := code_entry.text.strip_edges()
+	var ctx = LobbyStateContext.NewJoin(oid)
+	multiplayer_manager.connect_client(oid)
 	transitioned.emit(lobby_menu_state, ctx)
 
 

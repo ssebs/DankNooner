@@ -24,4 +24,6 @@ STORY_LABEL,"Story Mode","Modo Historia"
 START_LABEL,"Start Game","Iniciar juego"
 COPY_LABEL,Copy,"Copiar"
 INVITE_LABEL,Invite,"Invitar"
+PASTE_LABEL,Paste,"Pegar"
+GAME_CODE_PLACEHOLDER,"Enter game code","Ingresa código de juego"
 
