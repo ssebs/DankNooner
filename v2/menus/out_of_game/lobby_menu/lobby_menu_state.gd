@@ -41,7 +41,7 @@ func Enter(state_context: StateContext):
 	back_btn.pressed.connect(_on_back_pressed)
 	start_btn.pressed.connect(_on_start_pressed)
 	level_select_btn.item_selected.connect(_on_level_selected)
-	ip_copy_btn.pressed.connect(_on_copy_ip_pressed)
+	ip_copy_btn.pressed.connect(_on_ip_copy_btn_pressed)
 
 	# Multiplayer :D
 	multiplayer_manager.player_connected.connect(_on_player_connected)
@@ -59,7 +59,7 @@ func Exit(_state_context: StateContext):
 	back_btn.pressed.disconnect(_on_back_pressed)
 	start_btn.pressed.disconnect(_on_start_pressed)
 	level_select_btn.item_selected.disconnect(_on_level_selected)
-	ip_copy_btn.pressed.disconnect(_on_copy_ip_pressed)
+	ip_copy_btn.pressed.disconnect(_on_ip_copy_btn_pressed)
 
 	multiplayer_manager.player_connected.disconnect(_on_player_connected)
 	multiplayer_manager.player_disconnected.disconnect(_on_player_disconnected)
@@ -142,7 +142,7 @@ func _on_back_pressed():
 	transitioned.emit(play_menu_state, null)
 
 
-func _on_copy_ip_pressed():
+func _on_ip_copy_btn_pressed():
 	DisplayServer.clipboard_set(ip_label.text)
 	UiToast.ShowToast("GameID copied to clipboard!")
 
@@ -189,7 +189,7 @@ func set_levels_in_dropdown(default_id: int):
 	for level_name_str in items:
 		level_select_btn.add_item(level_name_str, items[level_name_str])
 
-	level_select_btn.set_item_disabled(0, true)  # Always set to LEVEL_SELECT_LABEL
+	level_select_btn.set_item_disabled(0, true) # Always set to LEVEL_SELECT_LABEL
 
 	# set default
 	level_select_btn.selected = default_id
