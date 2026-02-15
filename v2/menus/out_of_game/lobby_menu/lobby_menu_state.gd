@@ -48,6 +48,7 @@ func Enter(state_context: StateContext):
 	multiplayer_manager.player_disconnected.connect(_on_player_disconnected)
 	multiplayer_manager.server_disconnected.connect(_on_server_disconnected)
 	multiplayer_manager.game_id_set.connect(_on_game_id_set)
+	multiplayer_manager.client_connection_failed.connect(_on_client_connection_failed)
 
 	set_single_or_multiplayer_ui()
 	set_levels_in_dropdown(2)
@@ -65,6 +66,7 @@ func Exit(_state_context: StateContext):
 	multiplayer_manager.player_disconnected.disconnect(_on_player_disconnected)
 	multiplayer_manager.server_disconnected.disconnect(_on_server_disconnected)
 	multiplayer_manager.game_id_set.disconnect(_on_game_id_set)
+	multiplayer_manager.client_connection_failed.disconnect(_on_client_connection_failed)
 
 
 #region multiplayer
@@ -83,6 +85,11 @@ func _on_player_disconnected(id: int):
 
 
 func _on_server_disconnected():
+	_on_back_pressed()
+
+
+func _on_client_connection_failed(reason: String):
+	UiToast.ShowToast("Connection failed: %s" % reason, UiToast.ToastLevel.ERR)
 	_on_back_pressed()
 
 

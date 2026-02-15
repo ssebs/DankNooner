@@ -5,6 +5,7 @@ signal player_connected(id: int, all_players: Array[int])
 signal player_disconnected(id: int)
 signal server_disconnected
 signal game_id_set(noray_oid: String)
+signal client_connection_failed(reason: String)
 
 @export var menu_manager: MenuManager
 @export var level_manager: LevelManager
@@ -59,29 +60,39 @@ func stop_server():
 	lobby_players.clear()
 
 
-## Connects to a server at the given IP.
-func connect_client(noray_host_oid: String):
+## Connects to a server at the given IP. Returns OK on success, or an error code on failure.
+func connect_client(noray_host_oid: String) -> Error:
+	var err = await _register_with_noray()
+	if err != OK:
+		client_connection_failed.emit("Failed to register w/ noray server")
+		return err
+
 	Noray.on_connect_nat.connect(_handle_noray_connect_nat)
 	Noray.on_connect_relay.connect(_handle_noray_connect)
-
-	await _register_with_noray()
+	Noray.on_command.connect(_handle_noray_command)
 	noray_oid = noray_host_oid
 
-	var err = OK
+
 	if force_relay_mode:
 		err = Noray.connect_relay(noray_oid)
 	else:
 		err = Noray.connect_nat(noray_oid)
 	if err != OK:
 		printerr("failed to connect_nat")
-		return
+		Noray.on_connect_nat.disconnect(_handle_noray_connect_nat)
+		Noray.on_connect_relay.disconnect(_handle_noray_connect)
+		Noray.on_command.disconnect(_handle_noray_command)
+		# client_connection_failed.emit("Failed to initiate connection")
+		return err
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
+	return OK
 
 
 ## Disconnects from server
 func disconnect_client():
 	Noray.on_connect_nat.disconnect(_handle_noray_connect_nat)
 	Noray.on_connect_relay.disconnect(_handle_noray_connect)
+	Noray.on_command.disconnect(_handle_noray_command)
 
 	multiplayer.server_disconnected.disconnect(_on_server_disconnected)
 	multiplayer.multiplayer_peer = null
@@ -128,12 +139,11 @@ func _on_server_disconnected():
 
 
 #region noray
-func _register_with_noray():
-	var err = OK
-	err = await Noray.connect_to_host(noray_host, 8890)
+func _register_with_noray() -> Error:
+	var err = await Noray.connect_to_host(noray_host, 8890)
 	if err != OK:
 		printerr("noray failed to connect to noray @ %s" % noray_host)
-		return
+		return err
 
 	Noray.register_host()
 	await Noray.on_pid
@@ -142,7 +152,9 @@ func _register_with_noray():
 	err = await Noray.register_remote()
 	if err != OK:
 		printerr("noray failed to connect to register_remote")
-		return
+		return err
+
+	return OK
 
 
 func _handle_noray_client_connect(address: String, port: int):
@@ -179,6 +191,12 @@ func _handle_noray_connect(address: String, port: int) -> Error:
 
 	multiplayer.multiplayer_peer = peer
 	return OK
+
+
+func _handle_noray_command(command: String, data: String):
+	if command == "error":
+		printerr("Noray error: %s" % data)
+		client_connection_failed.emit(data)
 
 
 #endregion

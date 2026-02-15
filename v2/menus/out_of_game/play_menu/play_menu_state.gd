@@ -77,8 +77,11 @@ func _on_host_btn_pressed():
 
 func _on_join_btn_pressed():
 	var oid := code_entry.text.strip_edges()
+	var err = await multiplayer_manager.connect_client(oid)
+	if err != OK:
+		UiToast.ShowToast("Failed to connect to server", UiToast.ToastLevel.ERR, 3)
+		return
 	var ctx = LobbyStateContext.NewJoin(oid)
-	multiplayer_manager.connect_client(oid)
 	transitioned.emit(lobby_menu_state, ctx)
 
 
