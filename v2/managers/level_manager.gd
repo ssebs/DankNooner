@@ -2,7 +2,7 @@
 class_name LevelManager extends BaseManager
 
 enum LevelName {
-	LEVEL_SELECT_LABEL,  # not a level
+	LEVEL_SELECT_LABEL, # not a level
 	BG_GRAY_LEVEL,
 	# MAIN_MENU_LEVEL,
 	TEST_LEVEL_01,
@@ -10,6 +10,7 @@ enum LevelName {
 
 @export var spawn_node: Node3D
 @export var menu_manager: MenuManager
+@export var multiplayer_manager: MultiplayerManager
 @export var input_state_manager: InputStateManager
 
 ## PackedScene of type LevelDefinition
@@ -64,9 +65,24 @@ func despawn_level():
 func get_levels_as_option_items() -> Dictionary[String, int]:
 	var options: Dictionary[String, int] = {}
 	for v in level_name_map.values():
+		# TODO: check if menu_level is in there
 		options[v] = level_name_map.find_key(v)
 	return options
 
+func spawn_players():
+	for p in multiplayer_manager.lobby_players:
+		_spawn_player(p)
+
+func _spawn_player(id: int):
+	print("Spawning Player: %s" % id)
+
+	var player_to_add = multiplayer_manager.player_scene.instantiate() as PlayerEntity
+	player_to_add.name = str(id)
+
+	current_level.player_spawn_pos.add_child(player_to_add, true)
+
+
+#region specific level function calls
 
 ## Spawn the menu level
 func spawn_menu_level():
@@ -76,6 +92,7 @@ func spawn_menu_level():
 ## for quick debugging
 func spawn_gym_test_level():
 	spawn_level(LevelName.TEST_LEVEL_01, InputStateManager.InputState.IN_GAME)
+#endregion
 
 # ## Get a map of LevelName => LevelState for all children of this mgr
 # func get_all_levels() -> Dictionary[String, LevelState]:
@@ -83,3 +100,19 @@ func spawn_gym_test_level():
 
 # func get_level_by_name(name_to_check: String) -> LevelState:
 # 	return level_name_state_map.get(name_to_check)
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var issues = []
+
+
+	if spawn_node == null:
+		issues.append("spawn_node must not be empty")
+	if multiplayer_manager == null:
+		issues.append("multiplayer_manager must not be empty")
+	if menu_manager == null:
+		issues.append("menu_manager must not be empty")
+	if input_state_manager == null:
+		issues.append("input_state_manager must not be empty")
+
+	return issues
