@@ -15,6 +15,7 @@
   - easy to connect with friends
   - easy to join open lobby (like GTAO lobby)
   - WebRTC if possible for web
+- Make progression feel worth it, make players want to unlock something
 - Game modes:
   - free-ride
   - stunt race
