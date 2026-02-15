@@ -4,6 +4,7 @@
 
 ## In Progress 🚀
 
+- [ ] dont allow players to select menu levels
 - [ ] noray bug on client connect sometimes: Invalid access of index '1' on a base object of type: 'PackedStringArray'.
   - [ ] maybe when game id is wrong
 - [ ] add noray relay host in config file for game
