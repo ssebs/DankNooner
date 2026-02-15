@@ -5,9 +5,11 @@
 ## In Progress 🚀
 
 - [ ] Noray / lobby improvements
+
   - [x] noray bug on client connect sometimes: Invalid access of index '1' on a base object of type: 'PackedStringArray'.
     - [x] maybe when game id is wrong?
-  - [ ] on connect, make players virtually press c
+  - [ ] on spawn, make players virtually press c
+
     - [ ] by default they're looking at the hosts camera
 
   - [ ] toggle between port/ip & noray mode

@@ -53,19 +53,23 @@ Pattern: `@export` navigation targets and managers, wire in inspector.
 
 ### Player Entity
 
-Uses composition - `PlayerEntity` (RigidBody3D) has `@export` component references:
-- `CameraController`
-- `MovementController`
-- `BikeDefinition` (resource with mesh/collision data)
+Uses composition - `PlayerEntity` has `@export` component references:
+
+- `CameraController` - camera follow/control
+- `MovementController` - handles physics-based movement
+- `BikeDefinition` - resource with mesh/collision data
+- `MeshComponent` - renders the bike mesh
 
 ### Multiplayer / Netcode
 
-Uses **netfox** addon for rollback-based networking:
+Uses **netfox** addon with **Noray** for NAT traversal:
 
 - **Server-authoritative**: Physics runs on server, clients predict locally
 - **RollbackSynchronizer**: Per-entity sync with client-side prediction and automatic reconciliation
 - **TickInterpolator**: Smooths remote player visuals between network ticks
-- `MultiplayerManager` handles ENet peer connections and player spawning
+- **Noray**: NAT punch-through with relay fallback for peer connections
+- `MultiplayerManager` handles ENet peer connections via Noray
+- `LevelManager.spawn_players()` spawns player entities when level loads
 - Input flows: Client captures → RPC to server → Server applies → Broadcasts state
 
 See `Architecture.md` for detailed diagrams and RPC signatures.
