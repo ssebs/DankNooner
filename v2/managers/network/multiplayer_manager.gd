@@ -10,7 +10,7 @@ signal game_id_set(noray_oid: String)
 @export var level_manager: LevelManager
 @export var player_scene = preload("res://entities/player/player_entity.tscn")
 @export var noray_host: String = "home.ssebs.com"
-# @export var noray_host: String = "noray.casa.ssebs.com"
+# @export var noray_host: String = "noray.casa.ssebs.com" # if at home network
 # @export var noray_host: String = "tomfol.io"
 
 @export var force_relay_mode: bool = false
