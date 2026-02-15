@@ -4,13 +4,17 @@
 
 ## In Progress 🚀
 
-- [ ] dont allow players to select menu levels
-- [ ] noray bug on client connect sometimes: Invalid access of index '1' on a base object of type: 'PackedStringArray'.
-  - [ ] maybe when game id is wrong
-- [ ] add noray relay host in config file for game
-- [ ] copy game id when hosting right away
-- [ ] noray timeout
+- [ ] Noray / lobby improvements
 
+  - [ ] toggle between port/ip & noray mode
+  - [ ] noray timeout
+  - [ ] dont allow players to select menu levels
+  - [ ] noray bug on client connect sometimes: Invalid access of index '1' on a base object of type: 'PackedStringArray'.
+    - [ ] maybe when game id is wrong?
+  - [ ] copy game id when hosting right away
+
+- [ ] Create settings json w/ save loader
+  - [ ] add noray relay host in config file for game
 - [ ] multiplayer / spawn mgr cleanup
   - [x] close server when going to main menu
   - [ ] review all code & cleanup to call authority done
@@ -47,6 +51,8 @@
 
 ## Backlog
 
+- [ ] software is open source, but assets aren't public
+
 - [ ] level select img
 - [ ] Customization UI / menu
 
@@ -77,6 +83,9 @@
   - [ ] trick scoring in own script
 
 - [ ] Create Test Level - Gym - player controller, with tp. Basically in game documentation. (E.g. How far can you jump)
+
+  - [] Make the world fit around the player controller.
+  - [ ] [ramp physics](https://www.reddit.com/r/godot/s/O6aKthtk9i)
 
 - [ ] Create Test Level - Zoo - all relevant models/scenes in 3d space to easily compare
 
@@ -116,6 +125,7 @@
 
 ## Polish / Bugs
 
+- [ ] reactive sounds (play when player does something) = juice
 - [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
 - [ ] Add text chat
 - [ ] Web
