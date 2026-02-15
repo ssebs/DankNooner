@@ -191,6 +191,10 @@ func _handle_commands(command: String, data: String):
 		_logger.debug("Saved PID: %s", [pid])
 	elif command == "connect":
 		var parts = data.split(":")
+		if parts.size() < 2:
+			_logger.error("Invalid connect command data: %s", [data])
+			on_command.emit("error", "Invalid connect data: %s" % data)
+			return
 		var host = parts[0]
 		var port = parts[1].to_int()
 		_logger.debug("Received connect command to %s:%s", [host, port])
