@@ -9,8 +9,8 @@ signal game_id_set(noray_oid: String)
 @export var menu_manager: MenuManager
 @export var level_manager: LevelManager
 @export var player_scene = preload("res://entities/player/player_entity.tscn")
-@export var noray_host: String = "home.ssebs.com"
-# @export var noray_host: String = "noray.casa.ssebs.com" # if at home network
+# @export var noray_host: String = "home.ssebs.com"
+@export var noray_host: String = "noray.casa.ssebs.com" # if at home network
 # @export var noray_host: String = "tomfol.io"
 
 @export var force_relay_mode: bool = false
@@ -55,6 +55,7 @@ func stop_server():
 	multiplayer.peer_disconnected.disconnect(_on_peer_disconnected)
 
 	multiplayer.multiplayer_peer = null
+	noray_oid = ""
 	lobby_players.clear()
 
 
@@ -79,8 +80,12 @@ func connect_client(noray_host_oid: String):
 
 ## Disconnects from server
 func disconnect_client():
+	Noray.on_connect_nat.disconnect(_handle_noray_connect_nat)
+	Noray.on_connect_relay.disconnect(_handle_noray_connect)
+
 	multiplayer.server_disconnected.disconnect(_on_server_disconnected)
 	multiplayer.multiplayer_peer = null
+	noray_oid = ""
 	lobby_players.clear()
 
 
@@ -92,22 +97,7 @@ func disconnect_sp_or_mp():
 			disconnect_client()
 
 
-## Spawns players in lobby_players. Called when game starts.
-func spawn_players():
-	for p in lobby_players:
-		_spawn_player(p)
-
-
 #endregion
-
-
-func _spawn_player(id: int):
-	print("Spawning Player: %s" % id)
-
-	var player_to_add = player_scene.instantiate() as PlayerEntity
-	player_to_add.name = str(id)
-
-	level_manager.current_level.player_spawn_pos.add_child(player_to_add, true)
 
 
 func _on_peer_connected(id: int):
@@ -133,9 +123,8 @@ func _on_peer_disconnected(id: int):
 
 func _on_server_disconnected():
 	print("Disconnected from server")
+	disconnect_client()
 	server_disconnected.emit()
-	multiplayer.multiplayer_peer = null
-	lobby_players.clear()
 
 
 #region noray

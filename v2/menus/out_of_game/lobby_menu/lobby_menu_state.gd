@@ -107,7 +107,7 @@ func rm_lobby_player(username: String):
 @rpc("call_local", "reliable")
 func start_game():
 	level_manager.spawn_level(level_select_btn.selected, InputStateManager.InputState.IN_GAME)
-	multiplayer_manager.spawn_players()
+	level_manager.spawn_players()
 
 
 @rpc("reliable")

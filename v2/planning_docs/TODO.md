@@ -5,16 +5,21 @@
 ## In Progress 🚀
 
 - [ ] Noray / lobby improvements
+  - [ ] noray bug on client connect sometimes: Invalid access of index '1' on a base object of type: 'PackedStringArray'.
+    - [ ] maybe when game id is wrong?
+  - [ ] on connect, make players virtually press c
+    - [ ] by default they're looking at the hosts camera
 
   - [ ] toggle between port/ip & noray mode
   - [ ] noray timeout
   - [ ] dont allow players to select menu levels
-  - [ ] noray bug on client connect sometimes: Invalid access of index '1' on a base object of type: 'PackedStringArray'.
-    - [ ] maybe when game id is wrong?
   - [ ] copy game id when hosting right away
+  - [ ] leave game = reset network settings to default
 
 - [ ] Create settings json w/ save loader
   - [ ] add noray relay host in config file for game
+- [ ] respawn in pause menu
+
 - [ ] multiplayer / spawn mgr cleanup
   - [x] close server when going to main menu
   - [ ] review all code & cleanup to call authority done
