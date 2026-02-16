@@ -28,6 +28,7 @@
 - [ ] Create Player Part 2
 
   - [ ] import features from moto-player-controller
+    - [ ] planning_docs\MIGRATE_FROM_MOTO_CONTROLLER.md
     - [ ] gearing
     - [ ] physics
     - [ ] sound
