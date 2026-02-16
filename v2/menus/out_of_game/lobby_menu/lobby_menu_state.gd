@@ -53,7 +53,7 @@ func Enter(state_context: StateContext):
 	timeout_timer.timeout.connect(_on_timeout)
 
 	set_single_or_multiplayer_ui()
-	set_levels_in_dropdown(2)
+	set_levels_in_dropdown(1)
 
 
 func Exit(_state_context: StateContext):
@@ -80,8 +80,12 @@ func _on_game_id_set(conn_addr: String):
 	print("conn_addr: %s" % conn_addr)
 	ip_label.text = conn_addr
 	ip_copy_btn.disabled = false
-	if multiplayer.multiplayer_peer && multiplayer.is_server():
-		_on_ip_copy_btn_pressed()
+	if multiplayer.multiplayer_peer:
+		if multiplayer.is_server():
+			_on_ip_copy_btn_pressed()
+		else:
+			print("disable start btn")
+			start_btn.disabled = true
 
 
 func _on_player_connected(_id: int, all_players: Array[int]):
@@ -132,7 +136,7 @@ func start_game():
 	level_manager.spawn_players()
 
 
-@rpc("reliable")
+@rpc("call_local", "reliable")
 func share_selected_level_with_clients(idx: int):
 	level_select_btn.selected = idx
 
@@ -230,10 +234,6 @@ func set_single_or_multiplayer_ui():
 			multiplayer_ui.show()
 			loading_ui.show()
 			timeout_timer.start()
-
-			if multiplayer.multiplayer_peer:
-				if !multiplayer.is_server():
-					start_btn.disabled = true
 
 
 #endregion

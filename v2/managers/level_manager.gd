@@ -2,7 +2,7 @@
 class_name LevelManager extends BaseManager
 
 enum LevelName {
-	LEVEL_SELECT_LABEL, # not a level
+	LEVEL_SELECT_LABEL,  # not a level
 	BG_GRAY_LEVEL,
 	# MAIN_MENU_LEVEL,
 	TEST_LEVEL_01,
@@ -25,6 +25,10 @@ var level_name_map: Dictionary[LevelName, String] = {
 	LevelName.BG_GRAY_LEVEL: "BgGrayLevel",
 	LevelName.TEST_LEVEL_01: "LEVEL_TEST_1_LABEL",
 }
+var levels_names_in_level_select: Array[String] = [
+	"LEVEL_SELECT_LABEL",
+	"LEVEL_TEST_1_LABEL",
+]
 
 var current_level_name: LevelName = LevelName.LEVEL_SELECT_LABEL
 var current_level: LevelDefinition
@@ -64,14 +68,15 @@ func despawn_level():
 
 func get_levels_as_option_items() -> Dictionary[String, int]:
 	var options: Dictionary[String, int] = {}
-	for v in level_name_map.values():
-		# TODO: check if menu_level is in there
-		options[v] = level_name_map.find_key(v)
+	for lvl_name in levels_names_in_level_select:
+		options[lvl_name] = level_name_map.find_key(lvl_name)
 	return options
+
 
 func spawn_players():
 	for p in multiplayer_manager.lobby_players:
 		_spawn_player(p)
+
 
 func _spawn_player(id: int):
 	print("Spawning Player: %s" % id)
@@ -84,6 +89,7 @@ func _spawn_player(id: int):
 
 #region specific level function calls
 
+
 ## Spawn the menu level
 func spawn_menu_level():
 	spawn_level(LevelName.BG_GRAY_LEVEL, InputStateManager.InputState.IN_MENU)
@@ -92,6 +98,8 @@ func spawn_menu_level():
 ## for quick debugging
 func spawn_gym_test_level():
 	spawn_level(LevelName.TEST_LEVEL_01, InputStateManager.InputState.IN_GAME)
+
+
 #endregion
 
 # ## Get a map of LevelName => LevelState for all children of this mgr
@@ -104,7 +112,6 @@ func spawn_gym_test_level():
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
-
 
 	if spawn_node == null:
 		issues.append("spawn_node must not be empty")

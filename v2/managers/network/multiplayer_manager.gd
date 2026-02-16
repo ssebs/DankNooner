@@ -7,7 +7,7 @@ signal server_disconnected
 signal game_id_set(conn_addr: String)
 signal client_connection_failed(reason: String)
 
-enum ConnectionMode {NORAY, IP_PORT}
+enum ConnectionMode { NORAY, IP_PORT }
 
 @export var menu_manager: MenuManager
 @export var level_manager: LevelManager
@@ -106,13 +106,14 @@ func disconnect_sp_or_mp():
 		disconnect_client()
 
 
+#endregion
+
+
+## return MultiplayerNoray or MultiplayerIPPort depending on connection_mode
 func _get_handler():
 	if connection_mode == ConnectionMode.NORAY:
 		return noray_handler
 	return ipport_handler
-
-
-#endregion
 
 
 func _on_peer_connected(id: int):
