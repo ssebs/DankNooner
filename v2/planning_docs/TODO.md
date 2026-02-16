@@ -4,6 +4,14 @@
 
 ## In Progress 🚀
 
+- [ ] Create GamemodeManager
+
+  - [ ] create system
+  - [ ] Move spawning logic from level manager to gamemode manager
+    - [ ] Make test level default free roam mode
+  - [ ] street race in traffic as demo mode (+fps mode)
+  - [ ] stunt race? Or high score mode?
+
 - [ ] multiplayer / spawn mgr cleanup
   - [x] close server when going to main menu
   - [ ] join game during play
@@ -12,14 +20,6 @@
   - [ ] update Architecture.md
 
 ## Up Next 📋
-
-- [ ] Create GamemodeManager
-
-  - [ ] create system
-  - [ ] Move spawning logic from level manager to gamemode manager
-    - [ ] Make test level default free roam mode
-  - [ ] street race in traffic as demo mode (+fps mode)
-  - [ ] stunt race? Or high score mode?
 
 - [ ] Audio Manager
 

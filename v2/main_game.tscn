@@ -17,6 +17,7 @@
 [ext_resource type="Script" uid="uid://dihgiqkhwdsf6" path="res://managers/level_manager.gd" id="10_mf81u"]
 [ext_resource type="Script" uid="uid://b2j8gbb336wwq" path="res://managers/pause_manager.gd" id="12_aomqu"]
 [ext_resource type="Script" uid="uid://cvf883jhga841" path="res://managers/settings_manager.gd" id="17_borgi"]
+[ext_resource type="Script" uid="uid://dxn3rquhf7sfs" path="res://managers/gamemodes/gamemode_manager.gd" id="18_ih6an"]
 
 [node name="MainGame" type="Node" unique_id=936339405]
 script = ExtResource("1_1oj5k")
@@ -114,3 +115,11 @@ main_menu_state = NodePath("../MainMenuState")
 [node name="SettingsManager" type="Node" parent="ManagerManager" unique_id=82913213 groups=["Managers"]]
 script = ExtResource("17_borgi")
 metadata/_custom_type_script = "uid://cvf883jhga841"
+
+[node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "multiplayer_manager", "level_manager", "input_state_manager") groups=["Managers"]]
+script = ExtResource("18_ih6an")
+menu_manager = NodePath("../MenuManager")
+settings_manager = NodePath("../SettingsManager")
+multiplayer_manager = NodePath("../MultiplayerManager")
+level_manager = NodePath("../LevelManager")
+input_state_manager = NodePath("../InputStateManager")
