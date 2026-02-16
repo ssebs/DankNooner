@@ -176,6 +176,14 @@ func _on_handler_connection_failed(reason: String):
 
 
 func _on_handler_connection_succeeded():
+	# Wait for ENet to actually connect before emitting
+	if multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
+		multiplayer.connected_to_server.connect(_on_enet_connected, CONNECT_ONE_SHOT)
+	else:
+		_on_enet_connected()
+
+
+func _on_enet_connected():
 	client_connection_succeeded.emit()
 
 
