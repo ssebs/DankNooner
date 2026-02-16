@@ -2,11 +2,16 @@ class_name MultiplayerNoray extends Node
 
 signal connection_failed(reason: String)
 
-@export var noray_host: String = "noray.casa.ssebs.com"
+@export var noray_host: String = "noray.ssebs.com"
+# @export var noray_host: String = "noray.casa.ssebs.com"
 @export var force_relay_mode: bool = false
 
 var oid: String = ""
 
+func _ready():
+	if OS.is_debug_build():
+		print("replacing noray_host for debug")
+		noray_host = "noray.casa.ssebs.com"
 
 ## Registers with Noray and returns an ENet server peer.
 func start_server() -> ENetMultiplayerPeer:

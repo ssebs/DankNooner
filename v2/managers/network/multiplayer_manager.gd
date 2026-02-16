@@ -4,7 +4,7 @@ class_name MultiplayerManager extends BaseManager
 signal player_connected(id: int, all_players: Array[int])
 signal player_disconnected(id: int)
 signal server_disconnected
-signal game_id_set(noray_oid: String)
+signal game_id_set(conn_addr: String)
 signal client_connection_failed(reason: String)
 
 enum ConnectionMode {NORAY, IP_PORT}
@@ -17,9 +17,10 @@ enum ConnectionMode {NORAY, IP_PORT}
 @export var ipport_handler: MultiplayerIPPort
 
 var lobby_players: Array[int] = []
-var noray_oid: String:
+## either ip addr or noray oid
+var conn_addr: String:
 	set(val):
-		noray_oid = val
+		conn_addr = val
 		game_id_set.emit(val)
 
 
@@ -30,10 +31,10 @@ func start_server():
 	if connection_mode == ConnectionMode.NORAY:
 		peer = await noray_handler.start_server()
 		noray_handler.connection_failed.connect(_on_handler_connection_failed)
-		noray_oid = noray_handler.get_oid()
+		conn_addr = noray_handler.get_oid()
 	else:
-		ipport_handler.server_started.connect(_on_ipport_server_started)
-		peer = ipport_handler.start_server()
+		peer = await ipport_handler.start_server()
+		conn_addr = ipport_handler.get_ip()
 
 	if peer == null:
 		printerr("failed to create server")
@@ -43,6 +44,7 @@ func start_server():
 
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
+
 
 	_on_peer_connected(1)
 
@@ -60,7 +62,7 @@ func stop_server():
 	multiplayer.peer_disconnected.disconnect(_on_peer_disconnected)
 
 	multiplayer.multiplayer_peer = null
-	noray_oid = ""
+	conn_addr = ""
 	lobby_players.clear()
 
 
@@ -75,13 +77,13 @@ func connect_client(address: String) -> Error:
 			if noray_handler.connection_failed.is_connected(_on_handler_connection_failed):
 				noray_handler.connection_failed.disconnect(_on_handler_connection_failed)
 			return err
-		noray_oid = address
+		conn_addr = address
 	else:
 		err = ipport_handler.connect_client(address)
 		if err != OK:
 			client_connection_failed.emit("Failed to connect to %s:%d" % [address, UtilsConstants.PORT])
 			return err
-		noray_oid = address
+		conn_addr = address
 
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 	return OK
@@ -98,7 +100,7 @@ func disconnect_client():
 
 	multiplayer.server_disconnected.disconnect(_on_server_disconnected)
 	multiplayer.multiplayer_peer = null
-	noray_oid = ""
+	conn_addr = ""
 	lobby_players.clear()
 
 
@@ -142,11 +144,6 @@ func _on_server_disconnected():
 
 func _on_handler_connection_failed(reason: String):
 	client_connection_failed.emit(reason)
-
-
-func _on_ipport_server_started(public_ip: String):
-	noray_oid = public_ip
-	ipport_handler.server_started.disconnect(_on_ipport_server_started)
 
 
 func _get_configuration_warnings() -> PackedStringArray:
