@@ -17,6 +17,9 @@ class_name PlayerEntity extends CharacterBody3D
 
 var is_local_client: bool = false
 
+# rollback_tick vars
+var rb_do_respawn: bool = false
+
 
 func _ready():
 	_init_mesh()
@@ -40,6 +43,12 @@ func _ready():
 		camera_controller.disable_cameras()
 
 	_set_username_label("Player: %s" % name)
+
+
+func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool):
+	if rb_do_respawn:
+		on_respawn()
+		rb_do_respawn = false
 
 
 func _init_input_handlers():
@@ -91,7 +100,11 @@ func _on_gear_down_pressed():
 
 
 func on_respawn():
+	global_transform = get_parent().global_transform
+	velocity = Vector3.ZERO
 	movement_controller.spawn_timer = movement_controller.default_spawn_timer
+	movement_controller.angular_velocity = 0
+	movement_controller.current_speed = 0
 
 
 func _init_mesh():

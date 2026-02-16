@@ -60,6 +60,33 @@ Uses composition - `PlayerEntity` has `@export` component references:
 - `BikeDefinition` - resource with mesh/collision data
 - `MeshComponent` - renders the bike mesh
 
+#### Netfox + RPC Pattern
+
+For actions that need rollback sync (called via RPC), use this pattern in `PlayerEntity`:
+
+1. **Setter var**: `var rb_<action>: bool = false` (e.g., `rb_do_respawn`)
+2. **Handler func**: `func on_<action>():` containing the actual logic
+3. **In `_rollback_tick()`**: Check the setter, call handler, reset setter
+
+```gdscript
+# Setter var
+var rb_do_respawn: bool = false
+
+# Handler in _rollback_tick
+func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool):
+    if rb_do_respawn:
+        on_respawn()
+        rb_do_respawn = false
+
+# Handler func
+func on_respawn():
+    global_transform = get_parent().global_transform
+    velocity = Vector3.ZERO
+    # ... reset other state
+```
+
+External systems set the `rb_*` var; netfox handles sync and rollback automatically.
+
 ### Multiplayer / Netcode
 
 Uses **netfox** addon with **Noray** for NAT traversal:
