@@ -18,6 +18,14 @@
 
 ## Up Next 📋
 
+- [ ] Create GamemodeManager
+
+  - [ ] create system
+  - [ ] Move spawning logic from level manager to gamemode manager
+    - [ ] Make test level default free roam mode
+  - [ ] street race in traffic as demo mode (+fps mode)
+  - [ ] stunt race? Or high score mode?
+
 - [ ] Audio Manager
 
   - [ ] Client side
@@ -99,13 +107,6 @@
   - [ ] implement A\* pathfinding? w/ state machine?
     - [ ] drive, stopped at light, parked, etc.
   - [ ] create sequence system?
-
-- [ ] Create GamemodeManager
-
-  - [ ] create system
-  - [ ] free roam w/ friends
-  - [ ] street race in traffic as demo mode (+fps mode)
-  - [ ] stunt race? Or high score mode?
 
 - [ ] Create basic SettingsMenu scene/ui
 
