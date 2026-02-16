@@ -25,6 +25,7 @@ class_name LobbyMenuState extends MenuState
 # @onready var invite_btn: Button = %InviteBtn
 @onready var player_list: VBoxContainer = %PlayersList
 @onready var loading_ui: ColorRect = %LoadingUI
+@onready var timeout_timer: Timer = %TimeoutTimer
 
 var ctx: LobbyStateContext
 
@@ -49,6 +50,7 @@ func Enter(state_context: StateContext):
 	multiplayer_manager.server_disconnected.connect(_on_server_disconnected)
 	multiplayer_manager.game_id_set.connect(_on_game_id_set)
 	multiplayer_manager.client_connection_failed.connect(_on_client_connection_failed)
+	timeout_timer.timeout.connect(_on_timeout)
 
 	set_single_or_multiplayer_ui()
 	set_levels_in_dropdown(2)
@@ -69,6 +71,8 @@ func Exit(_state_context: StateContext):
 	multiplayer_manager.server_disconnected.disconnect(_on_server_disconnected)
 	multiplayer_manager.game_id_set.disconnect(_on_game_id_set)
 	multiplayer_manager.client_connection_failed.disconnect(_on_client_connection_failed)
+	timeout_timer.timeout.disconnect(_on_timeout)
+	timeout_timer.stop()
 
 
 #region multiplayer
@@ -98,10 +102,16 @@ func _on_client_connection_failed(reason: String):
 	_on_back_pressed()
 
 
+func _on_timeout():
+	UiToast.ShowToast("Connection timed out", UiToast.ToastLevel.ERR)
+	_on_back_pressed()
+
+
 ## Adds all connected players to player_list
 @rpc("call_local", "reliable")
 func set_lobby_players(player_names: Array[int]):
 	loading_ui.hide()
+	timeout_timer.stop()
 	for player_id in player_names:
 		var player_name = str(player_id)
 		if player_list.has_node(player_name):
@@ -219,6 +229,7 @@ func set_single_or_multiplayer_ui():
 			singleplayer_ui.hide()
 			multiplayer_ui.show()
 			loading_ui.show()
+			timeout_timer.start()
 
 			if multiplayer.multiplayer_peer:
 				if !multiplayer.is_server():

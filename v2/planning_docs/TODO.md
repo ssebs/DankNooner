@@ -14,7 +14,7 @@
 
   - [x] auto detect game join code or ip address
   - [x] toggle between port/ip & noray mode
-  - [ ] noray timeout
+  - [x] noray timeout
   - [x] client doesnt see invite code/ip
   - [ ] dont allow players to select menu levels
   - [x] copy game id when hosting right away
