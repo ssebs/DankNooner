@@ -3,17 +3,33 @@ class_name MultiplayerNoray extends Node
 signal connection_failed(reason: String)
 signal connection_succeeded
 
-@export var noray_host: String = "noray.ssebs.com"
-# @export var noray_host: String = "noray.casa.ssebs.com"
+@export var settings_manager: SettingsManager
 @export var force_relay_mode: bool = false
 
 var oid: String = ""
 
+var noray_host: String = ""
+
 
 func _ready():
-	if OS.is_debug_build():
-		print("replacing noray_host for debug")
-		noray_host = "noray.casa.ssebs.com"
+	if Engine.is_editor_hint():
+		return
+	settings_manager.setting_updated.connect(_on_setting_updated)
+	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
+
+
+#region settings updated handler
+func _on_all_settings_changed(_current_settings: Dictionary):
+	noray_host = settings_manager.current_settings["noray_relay_host"]
+
+
+func _on_setting_updated(_key: String, _value: Variant):
+	noray_host = settings_manager.current_settings["noray_relay_host"]
+
+
+#endregion
+
+#region public api
 
 
 ## Registers with Noray and returns an ENet server peer.
@@ -83,10 +99,13 @@ func get_addr() -> String:
 	return oid
 
 
+#endregion
+
 #region Internal
 
 
 func _register_with_noray() -> Error:
+	print("noray_host %s" % noray_host)
 	var err = await Noray.connect_to_host(noray_host, 8890)
 	if err != OK:
 		printerr("noray failed to connect to noray @ %s" % noray_host)

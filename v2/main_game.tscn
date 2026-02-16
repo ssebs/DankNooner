@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://b8wtld34amu44" path="res://menus/out_of_game/customize_menu/customize_menu_state.tscn" id="9_4srsv"]
 [ext_resource type="Script" uid="uid://dihgiqkhwdsf6" path="res://managers/level_manager.gd" id="10_mf81u"]
 [ext_resource type="Script" uid="uid://b2j8gbb336wwq" path="res://managers/pause_manager.gd" id="12_aomqu"]
+[ext_resource type="Script" uid="uid://cvf883jhga841" path="res://managers/settings_manager.gd" id="17_borgi"]
 
 [node name="MainGame" type="Node" unique_id=936339405]
 script = ExtResource("1_1oj5k")
@@ -43,8 +44,9 @@ noray_handler = NodePath("MultiplayerNoray")
 ipport_handler = NodePath("MultiplayerIPPort")
 metadata/_custom_type_script = "uid://dccs16kf6k4v2"
 
-[node name="MultiplayerNoray" type="Node" parent="ManagerManager/MultiplayerManager" unique_id=664319890]
+[node name="MultiplayerNoray" type="Node" parent="ManagerManager/MultiplayerManager" unique_id=664319890 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("6_an1vu")
+settings_manager = NodePath("../../SettingsManager")
 metadata/_custom_type_script = "uid://bwjhjq5qatrks"
 
 [node name="MultiplayerIPPort" type="Node" parent="ManagerManager/MultiplayerManager" unique_id=901234466]
@@ -90,8 +92,9 @@ level_manager = NodePath("../../../LevelManager")
 input_state_manager = NodePath("../../../InputStateManager")
 play_menu_state = NodePath("../PlayMenuState")
 
-[node name="SettingsMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1653152871 node_paths=PackedStringArray("menu_manager", "main_menu_state") instance=ExtResource("6_f52ns")]
+[node name="SettingsMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1653152871 node_paths=PackedStringArray("menu_manager", "settings_manager", "main_menu_state") instance=ExtResource("6_f52ns")]
 menu_manager = NodePath("../..")
+settings_manager = NodePath("../../../SettingsManager")
 main_menu_state = NodePath("../MainMenuState")
 
 [node name="CustomizeMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1710077363 node_paths=PackedStringArray("menu_manager", "play_menu_state") instance=ExtResource("9_4srsv")]
@@ -105,3 +108,7 @@ level_manager = NodePath("../../../LevelManager")
 input_state_manager = NodePath("../../../InputStateManager")
 pause_manager = NodePath("../../../PauseManager")
 main_menu_state = NodePath("../MainMenuState")
+
+[node name="SettingsManager" type="Node" parent="ManagerManager" unique_id=82913213 groups=["Managers"]]
+script = ExtResource("17_borgi")
+metadata/_custom_type_script = "uid://cvf883jhga841"
