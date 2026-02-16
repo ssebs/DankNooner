@@ -14,6 +14,6 @@
   },
   "godotFormatter.useSpaces": false,
   "editor.formatOnSave": true,
-  "godotTools.editorPath.godot4": "/usr/bin/godot",
+  "godotTools.editorPath.godot4": "c:\\Users\\ssebs\\Desktop\\Godot_v4.6-stable_win64.exe",
   "todoSidebar.activeFile": "./planning_docs/TODO.md"
 }
