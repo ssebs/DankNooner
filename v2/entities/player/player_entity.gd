@@ -35,6 +35,10 @@ func _ready():
 	input_controller.set_multiplayer_authority(int(name))
 	rollback_sync.process_settings()
 
+	call_deferred("_deferred_init")
+
+
+func _deferred_init():
 	if int(name) == multiplayer.get_unique_id():
 		is_local_client = true
 		camera_controller.switch_to_tps_cam()
