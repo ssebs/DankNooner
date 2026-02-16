@@ -96,6 +96,8 @@ func _on_player_disconnected(id: int):
 
 
 func _on_server_disconnected():
+	print("_on_server_disconnected")
+
 	_on_back_pressed()
 
 
@@ -172,6 +174,8 @@ func _on_back_pressed():
 	multiplayer_manager.disconnect_sp_or_mp()
 
 	clear_lobby_players()
+	if level_manager.current_level_name != LevelManager.LevelName.BG_GRAY_LEVEL:
+		level_manager.spawn_menu_level()
 
 	transitioned.emit(play_menu_state, null)
 
@@ -241,6 +245,7 @@ func set_single_or_multiplayer_ui():
 			multiplayer_ui.show()
 			loading_ui.show()
 			timeout_timer.start()
+			start_btn.disabled = false
 
 
 #endregion
