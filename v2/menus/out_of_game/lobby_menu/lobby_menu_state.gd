@@ -73,10 +73,10 @@ func Exit(_state_context: StateContext):
 
 #region multiplayer
 func _on_game_id_set(conn_addr: String):
-	print("conn_addr: %s"%conn_addr)
+	print("conn_addr: %s" % conn_addr)
 	ip_label.text = conn_addr
 	ip_copy_btn.disabled = false
-	if multiplayer.is_server():
+	if multiplayer.multiplayer_peer && multiplayer.is_server():
 		_on_ip_copy_btn_pressed()
 
 
@@ -201,7 +201,7 @@ func set_levels_in_dropdown(default_id: int):
 	for level_name_str in items:
 		level_select_btn.add_item(level_name_str, items[level_name_str])
 
-	level_select_btn.set_item_disabled(0, true) # Always set to LEVEL_SELECT_LABEL
+	level_select_btn.set_item_disabled(0, true)  # Always set to LEVEL_SELECT_LABEL
 
 	# set default
 	level_select_btn.selected = default_id

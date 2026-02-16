@@ -10,7 +10,7 @@
     "**/*.stub": true
   },
   "[gdscript]": {
-    "editor.defaultFormatter": "geequlim.godot-tools"
+    "editor.defaultFormatter": "EddieDover.gdscript-formatter-linter"
   },
   "godotFormatter.useSpaces": false,
   "editor.formatOnSave": true,

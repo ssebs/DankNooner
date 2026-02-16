@@ -2,6 +2,8 @@
 
 [ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="1_bvbyg"]
 [ext_resource type="FontFile" uid="uid://8tlasykxhy4g" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-SemiBold.ttf" id="1_kytw6"]
+[ext_resource type="Texture2D" uid="uid://drilpv5hu6f3o" path="res://resources/icons/checkbox-checked.svg" id="2_hydtf"]
+[ext_resource type="Texture2D" uid="uid://bpsmj74n6f4lq" path="res://resources/icons/checkbox-unchecked.svg" id="3_7depn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vtut7"]
 content_margin_left = 12.0
@@ -182,6 +184,10 @@ Button/styles/hover = SubResource("StyleBoxFlat_hydtf")
 Button/styles/hover_pressed = SubResource("StyleBoxFlat_yn56u")
 Button/styles/normal = ExtResource("1_bvbyg")
 Button/styles/pressed = SubResource("StyleBoxFlat_7depn")
+CheckBox/constants/icon_max_width = 36
+CheckBox/icons/checked = ExtResource("2_hydtf")
+CheckBox/icons/unchecked = ExtResource("3_7depn")
+CheckBox/styles/normal = ExtResource("1_bvbyg")
 HBoxContainer/constants/separation = 12
 LineEdit/styles/focus = SubResource("StyleBoxFlat_wtkwa")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_gbla1")

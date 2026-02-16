@@ -69,17 +69,21 @@ size_flags_horizontal = 0
 layout_mode = 2
 text = "MULTIPLAYER_LABEL"
 
-[node name="HostBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP" unique_id=709225504]
+[node name="HostContainer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP" unique_id=316739378]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 32
+
+[node name="HostBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP/HostContainer" unique_id=709225504]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 text = "HOST_LABEL"
 
-[node name="IpPortToggle" type="CheckBox" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP" unique_id=2001563070]
+[node name="IpPortToggle" type="CheckBox" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP/HostContainer" unique_id=98726948]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
-text = "USE_IPPORT_LABEL"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP" unique_id=1513694560]
 layout_mode = 2
