@@ -4,6 +4,7 @@
 
 ## In Progress 🚀
 
+- [ ] on server disconnect, reload bg-menu-level for clients
 - [ ] Noray / lobby improvements
 
   - [x] noray bug on client connect sometimes: Invalid access of index '1' on a base object of type: 'PackedStringArray'.
@@ -16,7 +17,7 @@
   - [x] toggle between port/ip & noray mode
   - [x] noray timeout
   - [x] client doesnt see invite code/ip
-  - [ ] dont allow players to select menu levels
+  - [x] dont allow players to select menu levels
   - [x] copy game id when hosting right away
   - [x] leave game = reset network settings to default
 

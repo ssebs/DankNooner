@@ -6,6 +6,7 @@ signal player_disconnected(id: int)
 signal server_disconnected
 signal game_id_set(conn_addr: String)
 signal client_connection_failed(reason: String)
+signal client_connection_succeeded
 
 enum ConnectionMode { NORAY, IP_PORT }
 
@@ -67,10 +68,13 @@ func stop_server():
 func connect_client(address: String) -> Error:
 	var handler = _get_handler()
 	handler.connection_failed.connect(_on_handler_connection_failed)
+	handler.connection_succeeded.connect(_on_handler_connection_succeeded)
 	var err: Error = await handler.connect_client(address)
 	if err != OK:
 		if handler.connection_failed.is_connected(_on_handler_connection_failed):
 			handler.connection_failed.disconnect(_on_handler_connection_failed)
+		if handler.connection_succeeded.is_connected(_on_handler_connection_succeeded):
+			handler.connection_succeeded.disconnect(_on_handler_connection_succeeded)
 		return err
 	conn_addr = address
 
@@ -83,6 +87,8 @@ func disconnect_client():
 	var handler = _get_handler()
 	if handler.connection_failed.is_connected(_on_handler_connection_failed):
 		handler.connection_failed.disconnect(_on_handler_connection_failed)
+	if handler.connection_succeeded.is_connected(_on_handler_connection_succeeded):
+		handler.connection_succeeded.disconnect(_on_handler_connection_succeeded)
 	handler.disconnect_client()
 
 	if multiplayer.server_disconnected.is_connected(_on_server_disconnected):
@@ -145,6 +151,10 @@ func _on_server_disconnected():
 
 func _on_handler_connection_failed(reason: String):
 	client_connection_failed.emit(reason)
+
+
+func _on_handler_connection_succeeded():
+	client_connection_succeeded.emit()
 
 
 func _get_configuration_warnings() -> PackedStringArray:
