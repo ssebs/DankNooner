@@ -4,8 +4,6 @@
 
 ## In Progress 🚀
 
-- [x] when host ALT+F4's run server_disconnect.
-
 - [ ] on spawn, make players virtually press c
 
   - [ ] by default they're looking at the hosts camera
@@ -132,6 +130,8 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] when host ALT+F4's run server_disconnect.
 
 - [x] Noray / lobby improvements
   - [x] noray bug on client connect sometimes: Invalid access of index '1' on a base object of type: 'PackedStringArray'.

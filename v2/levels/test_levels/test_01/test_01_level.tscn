@@ -39,6 +39,7 @@ player_spawn_pos = NodePath("PlayerSpawn")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1077869687]
+unique_name_in_owner = true
 _spawnable_scenes = PackedStringArray("uid://d0rgswc73h64f")
 spawn_path = NodePath("../PlayerSpawn")
 

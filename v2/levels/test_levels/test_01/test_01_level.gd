@@ -1,15 +1,18 @@
 @tool
 extends LevelDefinition
 
-var player: PlayerEntity
+@onready var multiplayer_spawner: MultiplayerSpawner = %MultiplayerSpawner
 
 
 func _ready():
-	pass
-	# TODO: if singleplayer, run spawn_player()
+	if Engine.is_editor_hint():
+		return
+
+	multiplayer_spawner.despawned.connect(_on_spawner_despawned)
 
 
-func spawn_player() -> PlayerEntity:
-	player = player_entity_scene.instantiate()
-	player_spawn_pos.add_child(player)
-	return player
+## MultiplayerSpawner despawns nodes when server disconnects
+## Emit server_disconnected to trigger menu transition
+func _on_spawner_despawned(_node: Node):
+	if level_manager and level_manager.multiplayer_manager:
+		level_manager.multiplayer_manager.server_disconnected.emit()

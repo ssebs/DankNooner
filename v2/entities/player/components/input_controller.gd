@@ -47,6 +47,8 @@ var lean: float = 0.0:
 
 
 func _ready():
+	if Engine.is_editor_hint():
+		return
 	NetworkTime.before_tick_loop.connect(_gather)
 
 
@@ -61,6 +63,8 @@ func _gather():
 
 ## local input
 func _process(_delta):
+	if Engine.is_editor_hint():
+		return
 	if Input.is_action_just_pressed("switch_cam"):
 		cam_switch_pressed.emit()
 

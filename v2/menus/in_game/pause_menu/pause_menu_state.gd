@@ -20,6 +20,7 @@ func Enter(_state_context: StateContext):
 	ui.show()
 	resume_btn.pressed.connect(_on_resume_pressed)
 	main_menu_btn.pressed.connect(_on_main_menu_pressed)
+	multiplayer_manager.server_disconnected.connect(_on_server_disconnected)
 	# back_btn.pressed.connect(_on_back_pressed)
 
 
@@ -27,6 +28,8 @@ func Exit(_state_context: StateContext):
 	ui.hide()
 	resume_btn.pressed.disconnect(_on_resume_pressed)
 	main_menu_btn.pressed.disconnect(_on_main_menu_pressed)
+	if multiplayer_manager.server_disconnected.is_connected(_on_server_disconnected):
+		multiplayer_manager.server_disconnected.disconnect(_on_server_disconnected)
 	# back_btn.pressed.disconnect(_on_back_pressed)
 
 
@@ -40,6 +43,10 @@ func _on_main_menu_pressed():
 	transitioned.emit(main_menu_state, null)
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_MENU
 	level_manager.spawn_menu_level()
+
+
+func _on_server_disconnected():
+	_on_main_menu_pressed()
 
 
 # func _on_back_pressed():
