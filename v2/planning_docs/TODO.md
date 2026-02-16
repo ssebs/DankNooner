@@ -14,7 +14,7 @@
 
   - [x] toggle between port/ip & noray mode
   - [ ] noray timeout
-  - [ ] client doesnt see invite code/ip
+  - [x] client doesnt see invite code/ip
   - [ ] dont allow players to select menu levels
   - [x] copy game id when hosting right away
   - [ ] leave game = reset network settings to default

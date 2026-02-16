@@ -33,7 +33,6 @@ func Enter(_state_context: StateContext):
 	code_entry.text_changed.connect(_on_code_text_changed)
 	ipport_toggle.toggled.connect(_on_ipport_toggled)
 
-
 	_on_ipport_toggled(ipport_toggle.button_pressed)
 
 
@@ -95,19 +94,19 @@ func _is_valid_noray_oid(text: String) -> bool:
 
 #region button handlers
 func _on_host_btn_pressed():
-	# UiToast.ShowToast("Hosting game!", UiToast.ToastLevel.NORMAL, 5)
 	transitioned.emit(lobby_menu_state, LobbyStateContext.NewHost("0.0.0.0"))
 	multiplayer_manager.start_server()
 
 
 func _on_join_btn_pressed():
-	var oid := code_entry.text.strip_edges()
-	var err = await multiplayer_manager.connect_client(oid)
+	var game_id := code_entry.text.strip_edges()
+	var ctx = LobbyStateContext.NewJoin(game_id)
+	transitioned.emit(lobby_menu_state, ctx) # must be before connecting client for ip to show
+
+	var err = await multiplayer_manager.connect_client(game_id)
 	if err != OK:
 		UiToast.ShowToast("Failed to connect to server", UiToast.ToastLevel.ERR, 3)
 		return
-	var ctx = LobbyStateContext.NewJoin(oid)
-	transitioned.emit(lobby_menu_state, ctx)
 
 
 func _on_free_roam_btn_pressed():
