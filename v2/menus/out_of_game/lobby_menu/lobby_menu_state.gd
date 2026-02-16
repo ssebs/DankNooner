@@ -50,6 +50,7 @@ func Enter(state_context: StateContext):
 	multiplayer_manager.server_disconnected.connect(_on_server_disconnected)
 	multiplayer_manager.game_id_set.connect(_on_game_id_set)
 	multiplayer_manager.client_connection_failed.connect(_on_client_connection_failed)
+	multiplayer_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
 	timeout_timer.timeout.connect(_on_timeout)
 
 	set_single_or_multiplayer_ui()
@@ -71,6 +72,7 @@ func Exit(_state_context: StateContext):
 	multiplayer_manager.server_disconnected.disconnect(_on_server_disconnected)
 	multiplayer_manager.game_id_set.disconnect(_on_game_id_set)
 	multiplayer_manager.client_connection_failed.disconnect(_on_client_connection_failed)
+	multiplayer_manager.client_connection_succeeded.disconnect(_on_client_connection_succeeded)
 	timeout_timer.timeout.disconnect(_on_timeout)
 	timeout_timer.stop()
 
@@ -80,12 +82,8 @@ func _on_game_id_set(conn_addr: String):
 	print("conn_addr: %s" % conn_addr)
 	ip_label.text = conn_addr
 	ip_copy_btn.disabled = false
-	if multiplayer.multiplayer_peer:
-		if multiplayer.is_server():
-			_on_ip_copy_btn_pressed()
-		else:
-			print("disable start btn")
-			start_btn.disabled = true
+	if multiplayer.multiplayer_peer && multiplayer.is_server():
+		_on_ip_copy_btn_pressed()
 
 
 func _on_player_connected(_id: int, all_players: Array[int]):
@@ -104,6 +102,13 @@ func _on_server_disconnected():
 func _on_client_connection_failed(reason: String):
 	UiToast.ShowToast("Connection failed: %s" % reason, UiToast.ToastLevel.ERR)
 	_on_back_pressed()
+
+
+func _on_client_connection_succeeded():
+	loading_ui.hide()
+	timeout_timer.stop()
+	if !multiplayer.is_server():
+		start_btn.disabled = true
 
 
 func _on_timeout():
@@ -132,7 +137,10 @@ func rm_lobby_player(username: String):
 
 @rpc("call_local", "reliable")
 func start_game():
-	level_manager.spawn_level(level_select_btn.selected, InputStateManager.InputState.IN_GAME)
+	# Get level name from selected
+	var level_name = level_select_btn.get_item_id(level_select_btn.selected)
+
+	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
 	level_manager.spawn_players()
 
 
@@ -219,7 +227,6 @@ func set_levels_in_dropdown(default_id: int):
 
 	# set default
 	level_select_btn.selected = default_id
-	_on_level_selected(default_id)
 
 
 ## Hide or Show the singleplayer / multiplayer ui depending on ctx.mode
