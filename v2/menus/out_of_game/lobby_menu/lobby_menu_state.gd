@@ -57,6 +57,8 @@ func Enter(state_context: StateContext):
 func Exit(_state_context: StateContext):
 	ui.hide()
 	ctx = null
+	clear_lobby_players()
+
 	back_btn.pressed.disconnect(_on_back_pressed)
 	start_btn.pressed.disconnect(_on_start_pressed)
 	level_select_btn.item_selected.disconnect(_on_level_selected)
