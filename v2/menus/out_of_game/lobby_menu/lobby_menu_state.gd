@@ -73,7 +73,7 @@ func Exit(_state_context: StateContext):
 
 #region multiplayer
 func _on_game_id_set(noray_oid: String):
-	ip_label.text = multiplayer_manager.noray_oid
+	ip_label.text = noray_oid
 	ip_copy_btn.disabled = false
 	_on_ip_copy_btn_pressed()
 
