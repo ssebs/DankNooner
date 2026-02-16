@@ -1,5 +1,7 @@
 class_name MultiplayerIPPort extends Node
 
+signal connection_failed(reason: String)
+
 var ip_addr: String = "127.0.0.1"
 
 ## Creates and returns an ENet server peer on UtilsConstants.PORT.
@@ -27,6 +29,7 @@ func connect_client(ip: String) -> Error:
 	var err = peer.create_client(ip, UtilsConstants.PORT)
 
 	if err != OK:
+		connection_failed.emit("Failed to connect to %s:%d" % [ip, UtilsConstants.PORT])
 		return err
 
 	multiplayer.multiplayer_peer = peer
@@ -37,7 +40,7 @@ func connect_client(ip: String) -> Error:
 func disconnect_client():
 	pass
 
-func get_ip():
+func get_addr():
 	return ip_addr
 
 ## Fetches public IP address. Returns private IP in debug builds.

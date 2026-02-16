@@ -18,7 +18,7 @@
   - [x] client doesnt see invite code/ip
   - [ ] dont allow players to select menu levels
   - [x] copy game id when hosting right away
-  - [ ] leave game = reset network settings to default
+  - [x] leave game = reset network settings to default
 
 - [ ] Create settings json w/ save loader
   - [ ] add noray relay host in config file for game

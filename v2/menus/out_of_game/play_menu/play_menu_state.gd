@@ -105,7 +105,7 @@ func _is_valid_noray_oid(text: String) -> bool:
 #region button handlers
 func _on_host_btn_pressed():
 	transitioned.emit(lobby_menu_state, LobbyStateContext.NewHost("0.0.0.0"))
-	multiplayer_manager.start_server()
+	await multiplayer_manager.start_server()
 
 
 func _on_join_btn_pressed():
