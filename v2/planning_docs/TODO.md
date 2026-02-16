@@ -12,6 +12,7 @@
 
     - [ ] by default they're looking at the hosts camera
 
+  - [x] auto detect game join code or ip address
   - [x] toggle between port/ip & noray mode
   - [ ] noray timeout
   - [x] client doesnt see invite code/ip

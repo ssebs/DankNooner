@@ -33,7 +33,8 @@ func Enter(_state_context: StateContext):
 	code_entry.text_changed.connect(_on_code_text_changed)
 	ipport_toggle.toggled.connect(_on_ipport_toggled)
 
-	_on_ipport_toggled(ipport_toggle.button_pressed)
+	_update_ipport_tooltip()
+	_update_placeholder()
 
 
 func Exit(_state_context: StateContext):
@@ -50,36 +51,45 @@ func Exit(_state_context: StateContext):
 
 func _on_paste_btn_pressed():
 	code_entry.text = DisplayServer.clipboard_get()
-	_validate_code()
+	_on_code_text_changed(code_entry.text)
 
 
-func _on_code_text_changed(_new_text: String):
-	_validate_code()
+func _on_code_text_changed(new_text: String):
+	var text := new_text.strip_edges()
+
+	_auto_detect_connection_mode(text)
+	_validate_code(text)
 
 
-func _on_ipport_toggled(toggled_on: bool):
-	if toggled_on:
+func _auto_detect_connection_mode(text: String):
+	if text.is_empty():
+		return
+
+	if text.is_valid_ip_address():
 		multiplayer_manager.connection_mode = MultiplayerManager.ConnectionMode.IP_PORT
-		ipport_toggle.text = tr("USE_NORAY_LABEL")
-	else:
+	elif _is_valid_noray_oid(text):
 		multiplayer_manager.connection_mode = MultiplayerManager.ConnectionMode.NORAY
-		ipport_toggle.text = tr("USE_IPPORT_LABEL")
-	_update_placeholder()
-	_validate_code()
 
 
 func _update_placeholder():
-	if multiplayer_manager.connection_mode == MultiplayerManager.ConnectionMode.NORAY:
-		code_entry.placeholder_text = tr("GAME_CODE_PLACEHOLDER")
-	else:
-		code_entry.placeholder_text = tr("IP_PLACEHOLDER")
+	code_entry.placeholder_text = tr("GAME_CODE_PLACEHOLDER")
 
 
-func _validate_code():
-	if multiplayer_manager.connection_mode == MultiplayerManager.ConnectionMode.NORAY:
-		join_btn.disabled = !_is_valid_noray_oid(code_entry.text)
+func _on_ipport_toggled(_toggled_on: bool):
+	_update_ipport_tooltip()
+
+
+func _update_ipport_tooltip():
+	if ipport_toggle.button_pressed:
+		multiplayer_manager.connection_mode = MultiplayerManager.ConnectionMode.IP_PORT
+		ipport_toggle.tooltip_text = tr("USE_NORAY_LABEL")
 	else:
-		join_btn.disabled = !code_entry.text.is_valid_ip_address()
+		multiplayer_manager.connection_mode = MultiplayerManager.ConnectionMode.NORAY
+		ipport_toggle.tooltip_text = tr("USE_IPPORT_LABEL")
+
+
+func _validate_code(text: String):
+	join_btn.disabled = !text.is_valid_ip_address() and !_is_valid_noray_oid(text)
 
 
 func _is_valid_noray_oid(text: String) -> bool:
@@ -101,7 +111,7 @@ func _on_host_btn_pressed():
 func _on_join_btn_pressed():
 	var game_id := code_entry.text.strip_edges()
 	var ctx = LobbyStateContext.NewJoin(game_id)
-	transitioned.emit(lobby_menu_state, ctx) # must be before connecting client for ip to show
+	transitioned.emit(lobby_menu_state, ctx)  # must be before connecting client for ip to show
 
 	var err = await multiplayer_manager.connect_client(game_id)
 	if err != OK:
