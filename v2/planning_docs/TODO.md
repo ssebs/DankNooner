@@ -4,10 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] on spawn, make players virtually press c
-
-  - [ ] by default they're looking at the hosts camera
-
 - [ ] Create settings json w/ save loader
 
   - [ ] add noray relay host in config file for game
@@ -131,6 +127,10 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] on spawn, make players virtually press c
+
+  - [ ] by default they're looking at the hosts camera
 
 - [x] respawn in pause menu
 
