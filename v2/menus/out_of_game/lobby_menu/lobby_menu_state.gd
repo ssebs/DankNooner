@@ -2,6 +2,7 @@
 class_name LobbyMenuState extends MenuState
 
 @export var menu_manager: MenuManager
+@export var settings_manager: SettingsManager
 @export var multiplayer_manager: MultiplayerManager
 @export var level_manager: LevelManager
 @export var input_state_manager: InputStateManager
@@ -51,6 +52,8 @@ func Enter(state_context: StateContext):
 	multiplayer_manager.game_id_set.connect(_on_game_id_set)
 	multiplayer_manager.client_connection_failed.connect(_on_client_connection_failed)
 	multiplayer_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
+	multiplayer_manager.lobby_players_updated.connect(_on_lobby_players_updated)
+
 	timeout_timer.timeout.connect(_on_timeout)
 
 	set_single_or_multiplayer_ui()
@@ -73,6 +76,8 @@ func Exit(_state_context: StateContext):
 	multiplayer_manager.game_id_set.disconnect(_on_game_id_set)
 	multiplayer_manager.client_connection_failed.disconnect(_on_client_connection_failed)
 	multiplayer_manager.client_connection_succeeded.disconnect(_on_client_connection_succeeded)
+	multiplayer_manager.lobby_players_updated.disconnect(_on_lobby_players_updated)
+
 	timeout_timer.timeout.disconnect(_on_timeout)
 	timeout_timer.stop()
 
@@ -86,13 +91,39 @@ func _on_game_id_set(conn_addr: String):
 		_on_ip_copy_btn_pressed()
 
 
-func _on_player_connected(_id: int, all_players: Array[int]):
-	if multiplayer.is_server():
-		set_lobby_players.rpc(all_players)
+func _on_player_connected(_id: int, _all_players: Dictionary):
+	# Server will broadcast updated lobby_players via sync_lobby_players after username is set
+	pass
 
 
-func _on_player_disconnected(id: int):
-	rm_lobby_player.rpc(str(id))
+func _on_player_disconnected(_id: int):
+	# Server will broadcast updated lobby_players via sync_lobby_players
+	pass
+
+
+func _on_lobby_players_updated(players: Dictionary):
+	loading_ui.hide()
+	timeout_timer.stop()
+
+	# Remove players no longer in the dict
+	for child in player_list.get_children():
+		var child_id = int(child.name)
+		if !players.has(child_id):
+			child.queue_free()
+
+	# Add or update players
+	for player_id in players:
+		var username: String = players[player_id]
+		var node_name = str(player_id)
+
+		if player_list.has_node(node_name):
+			# Update existing player's username
+			var player_li = player_list.get_node(node_name) as PlayerListItem
+			player_li.player_definition.username = username
+			player_li.update_ui_from_player_definition()
+		else:
+			# Add new player
+			add_player_listitem_to_lobby(player_id, username)
 
 
 func _on_server_disconnected():
@@ -112,29 +143,14 @@ func _on_client_connection_succeeded():
 	if !multiplayer.is_server():
 		start_btn.disabled = true
 
+	multiplayer_manager.update_username.rpc_id(
+		1, multiplayer.get_unique_id(), settings_manager.current_settings["username"]
+	)
+
 
 func _on_timeout():
 	UiToast.ShowToast("Connection timed out", UiToast.ToastLevel.ERR)
 	_on_back_pressed()
-
-
-## Adds all connected players to player_list
-@rpc("call_local", "reliable")
-func set_lobby_players(player_names: Array[int]):
-	loading_ui.hide()
-	timeout_timer.stop()
-	for player_id in player_names:
-		var player_name = str(player_id)
-		if player_list.has_node(player_name):
-			continue
-
-		add_player_listitem_to_lobby(player_name)
-
-
-## Removes player from player_list
-@rpc("call_local", "reliable")
-func rm_lobby_player(username: String):
-	rm_player_listitem_from_lobby(username)
 
 
 @rpc("call_local", "reliable")
@@ -187,29 +203,21 @@ func _on_ip_copy_btn_pressed():
 
 #endregion
 #region UI helpers
-## Add username as a player_list_item_scene to the player_list
-func add_player_listitem_to_lobby(username: String):
-	# TODO: get PlayerDefinition from server... somehow
+## Add player to player_list UI
+func add_player_listitem_to_lobby(player_id: int, username: String):
 	var player_li = player_list_item_scene.instantiate() as PlayerListItem
-	player_li.player_definition.username = str(username)
+	player_li.player_definition.username = username
 	player_list.add_child(player_li)
-	player_li.name = username
+	player_li.name = str(player_id)
 
-	if username == "1":
+	if player_id == 1:
 		player_li.host_label.text = "PLAYER_IS_HOST_LABEL"
-	elif int(username) == multiplayer.get_unique_id():
+	elif player_id == multiplayer.get_unique_id():
 		player_li.host_label.text = "YOU_LABEL"
 	else:
 		player_li.host_label.text = ""
 
 	player_li.update_ui_from_player_definition()
-
-
-## Remove username from player_list. e.g. to show they disconnected
-func rm_player_listitem_from_lobby(username: String):
-	for child in player_list.get_children():
-		if child.name == username:
-			child.queue_free()
 
 
 ## Empty player_list
@@ -267,6 +275,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("level_manager must not be empty")
 	if input_state_manager == null:
 		issues.append("input_state_manager must not be empty")
+	if settings_manager == null:
+		issues.append("settings_manager must not be empty")
 	if play_menu_state == null:
 		issues.append("play_menu_state must not be empty")
 

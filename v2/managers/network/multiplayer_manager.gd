@@ -1,23 +1,26 @@
 @tool
 class_name MultiplayerManager extends BaseManager
 
-signal player_connected(id: int, all_players: Array[int])
+signal player_connected(id: int, all_players: Dictionary)
 signal player_disconnected(id: int)
 signal server_disconnected
 signal game_id_set(conn_addr: String)
 signal client_connection_failed(reason: String)
 signal client_connection_succeeded
+signal lobby_players_updated(players: Dictionary)
 
 enum ConnectionMode { NORAY, IP_PORT }
 
 @export var menu_manager: MenuManager
+@export var settings_manager: SettingsManager
 @export var level_manager: LevelManager
 @export var player_scene = preload("res://entities/player/player_entity.tscn")
 @export var connection_mode: ConnectionMode = ConnectionMode.NORAY
 @export var noray_handler: MultiplayerNoray
 @export var ipport_handler: MultiplayerIPPort
 
-var lobby_players: Array[int] = []
+## Maps player ID → username (server-authoritative, synced to clients via RPC)
+var lobby_players: Dictionary = {}
 ## either ip addr or noray oid
 var conn_addr: String:
 	set(val):
@@ -43,6 +46,7 @@ func start_server():
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
 	_on_peer_connected(1)
+	update_username.rpc_id(1, 1, settings_manager.current_settings["username"])
 
 
 ## Stops the running server & disconnects signals
@@ -124,7 +128,7 @@ func _get_handler():
 
 func _on_peer_connected(id: int):
 	print("Player %s connected" % id)
-	lobby_players.append(id)
+	lobby_players[id] = ""
 	player_connected.emit(id, lobby_players)
 
 
@@ -133,6 +137,7 @@ func _on_peer_disconnected(id: int):
 	player_disconnected.emit(id)
 
 	lobby_players.erase(id)
+	sync_lobby_players.rpc(lobby_players)
 
 	if level_manager.current_level.no_player_spawn_needed:
 		return
@@ -141,6 +146,23 @@ func _on_peer_disconnected(id: int):
 		return
 
 	level_manager.current_level.player_spawn_pos.get_node(str(id)).queue_free()
+
+
+## Client calls this to send username to server; server updates dict and broadcasts to all
+@rpc("any_peer", "call_local", "reliable")
+func update_username(id: int, username: String):
+	if !multiplayer.is_server():
+		return
+
+	lobby_players[id] = username
+	sync_lobby_players.rpc(lobby_players)
+
+
+## Server broadcasts full lobby_players dict to all clients
+@rpc("call_local", "reliable")
+func sync_lobby_players(players: Dictionary):
+	lobby_players = players
+	lobby_players_updated.emit(players)
 
 
 func _on_server_disconnected():
@@ -164,6 +186,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("menu_manager must not be empty")
 	if level_manager == null:
 		issues.append("level_manager must not be empty")
+	if settings_manager == null:
+		issues.append("settings_manager must not be empty")
 	if noray_handler == null:
 		issues.append("noray_handler must not be empty")
 	if ipport_handler == null:
