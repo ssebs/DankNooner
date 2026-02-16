@@ -72,10 +72,12 @@ func Exit(_state_context: StateContext):
 
 
 #region multiplayer
-func _on_game_id_set(noray_oid: String):
-	ip_label.text = noray_oid
+func _on_game_id_set(conn_addr: String):
+	print("conn_addr: %s"%conn_addr)
+	ip_label.text = conn_addr
 	ip_copy_btn.disabled = false
-	_on_ip_copy_btn_pressed()
+	if multiplayer.is_server():
+		_on_ip_copy_btn_pressed()
 
 
 func _on_player_connected(_id: int, all_players: Array[int]):
