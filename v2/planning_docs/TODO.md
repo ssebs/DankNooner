@@ -4,9 +4,11 @@
 
 ## In Progress 🚀
 
+- [ ] username in lobby
 - [ ] multiplayer / spawn mgr cleanup
   - [x] close server when going to main menu
   - [ ] join game during play
+  - [ ] return to lobby (force everyone)
   - [ ] review all code & cleanup to call authority done
   - [ ] update Architecture.md
 
