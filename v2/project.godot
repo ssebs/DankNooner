@@ -196,6 +196,12 @@ locale/translations=PackedStringArray("res://localization/localization.en.transl
 3d_physics/layer_2="crash_collision"
 3d_physics/layer_3="ragdoll_bones"
 
+[netfox]
+
+logging/log_level=4
+logging/netfox_noray_log_level=4
+logging/netfox_log_level=4
+
 [physics]
 
 3d/physics_engine="Jolt Physics"
