@@ -4,9 +4,11 @@
 
 ## In Progress 🚀
 
-- [ ] Create settings json w/ save loader
+- [ ] Create settings save system
 
+  - [ ] Save custom username for lobbies
   - [ ] add noray relay host in config file for game
+  - [ ] window settings (fullscreen or not)
 
 - [ ] multiplayer / spawn mgr cleanup
   - [x] close server when going to main menu
@@ -38,10 +40,11 @@
     - [ ] Choose a bike + color
     - [ ] Choose a character (male/female)
 
-- [ ] Create Save System
+- [ ] Create Save System for in-game
 
   - [ ] Save bike definitions on disk
-  - [ ] Save custom username for lobbies
+  - [ ] Save mods / etc
+  - [ ] Save levels / player stuff
 
 ## Backlog
 
