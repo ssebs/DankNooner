@@ -75,6 +75,12 @@ layout_mode = 2
 size_flags_horizontal = 0
 text = "HOST_LABEL"
 
+[node name="IpPortToggle" type="CheckBox" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP" unique_id=2001563070]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+text = "USE_IPPORT_LABEL"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP" unique_id=1513694560]
 layout_mode = 2
 theme_override_constants/separation = 32

@@ -18,6 +18,7 @@ const NORAY_OID_CHARSET := "useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfgh
 @onready var join_btn: Button = %JoinBtn
 @onready var paste_btn: Button = %PasteBtn
 @onready var code_entry: LineEdit = %CodeEntry
+@onready var ipport_toggle: CheckBox = %IpPortToggle
 
 
 func Enter(_state_context: StateContext):
@@ -30,8 +31,10 @@ func Enter(_state_context: StateContext):
 	join_btn.pressed.connect(_on_join_btn_pressed)
 	paste_btn.pressed.connect(_on_paste_btn_pressed)
 	code_entry.text_changed.connect(_on_code_text_changed)
+	ipport_toggle.toggled.connect(_on_ipport_toggled)
 
-	_validate_code()
+
+	_on_ipport_toggled(ipport_toggle.button_pressed)
 
 
 func Exit(_state_context: StateContext):
@@ -43,6 +46,7 @@ func Exit(_state_context: StateContext):
 	join_btn.pressed.disconnect(_on_join_btn_pressed)
 	paste_btn.pressed.disconnect(_on_paste_btn_pressed)
 	code_entry.text_changed.disconnect(_on_code_text_changed)
+	ipport_toggle.toggled.disconnect(_on_ipport_toggled)
 
 
 func _on_paste_btn_pressed():
@@ -52,6 +56,24 @@ func _on_paste_btn_pressed():
 
 func _on_code_text_changed(_new_text: String):
 	_validate_code()
+
+
+func _on_ipport_toggled(toggled_on: bool):
+	if toggled_on:
+		multiplayer_manager.connection_mode = MultiplayerManager.ConnectionMode.IP_PORT
+		ipport_toggle.text = tr("USE_NORAY_LABEL")
+	else:
+		multiplayer_manager.connection_mode = MultiplayerManager.ConnectionMode.NORAY
+		ipport_toggle.text = tr("USE_IPPORT_LABEL")
+	_update_placeholder()
+	_validate_code()
+
+
+func _update_placeholder():
+	if multiplayer_manager.connection_mode == MultiplayerManager.ConnectionMode.NORAY:
+		code_entry.placeholder_text = tr("GAME_CODE_PLACEHOLDER")
+	else:
+		code_entry.placeholder_text = tr("IP_PLACEHOLDER")
 
 
 func _validate_code():

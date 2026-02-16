@@ -12,10 +12,11 @@
 
     - [ ] by default they're looking at the hosts camera
 
-  - [ ] toggle between port/ip & noray mode
+  - [x] toggle between port/ip & noray mode
   - [ ] noray timeout
+  - [ ] client doesnt see invite code/ip
   - [ ] dont allow players to select menu levels
-  - [ ] copy game id when hosting right away
+  - [x] copy game id when hosting right away
   - [ ] leave game = reset network settings to default
 
 - [ ] Create settings json w/ save loader
