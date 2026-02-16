@@ -75,6 +75,7 @@ func Exit(_state_context: StateContext):
 func _on_game_id_set(noray_oid: String):
 	ip_label.text = multiplayer_manager.noray_oid
 	ip_copy_btn.disabled = false
+	_on_ip_copy_btn_pressed()
 
 
 func _on_player_connected(_id: int, all_players: Array[int]):

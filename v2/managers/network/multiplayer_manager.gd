@@ -81,6 +81,7 @@ func connect_client(address: String) -> Error:
 		if err != OK:
 			client_connection_failed.emit("Failed to connect to %s:%d" % [address, UtilsConstants.PORT])
 			return err
+		noray_oid = address
 
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 	return OK
