@@ -46,7 +46,7 @@ func _deferred_init():
 	else:
 		camera_controller.disable_cameras()
 
-	_set_username_label("Player: %s" % name)
+	# set_username_label("Player: %s" % name)
 
 
 func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool):
@@ -123,7 +123,7 @@ func _init_collision_shape():
 	collision_shape_3d.scale = bike_definition.collision_scale_multiplier
 
 
-func _set_username_label(username: String):
+func set_username_label(username: String):
 	name_label.text = username
 
 

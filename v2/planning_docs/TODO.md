@@ -4,7 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] username in lobby
 - [ ] multiplayer / spawn mgr cleanup
   - [x] close server when going to main menu
   - [ ] join game during play
@@ -128,6 +127,8 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] username in lobby
 
 - [x] Create settings save system
 

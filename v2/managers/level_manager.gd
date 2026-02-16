@@ -89,12 +89,14 @@ func spawn_players():
 
 
 func _spawn_player(id: int):
-	print("Spawning Player: %s" % id)
+	var uname = multiplayer_manager.lobby_players[id]
+	print("Spawning Player: %s - %s" % [id, uname])
 
 	var player_to_add = multiplayer_manager.player_scene.instantiate() as PlayerEntity
 	player_to_add.name = str(id)
 
 	current_level.player_spawn_pos.add_child(player_to_add, true)
+	player_to_add.set_username_label(uname)
 
 
 #region specific level function calls
