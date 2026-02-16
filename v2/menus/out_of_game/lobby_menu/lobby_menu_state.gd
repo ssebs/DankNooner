@@ -214,7 +214,7 @@ func set_single_or_multiplayer_ui():
 		LobbyStateContext.Mode.FREEROAM:
 			multiplayer_ui.hide()
 			singleplayer_ui.show()
-			multiplayer_manager.start_server()
+			await multiplayer_manager.start_server()
 		_:
 			singleplayer_ui.hide()
 			multiplayer_ui.show()

@@ -30,8 +30,10 @@ func start_server() -> ENetMultiplayerPeer:
 
 ## Disconnects Noray signals for server mode.
 func stop_server():
-	Noray.on_connect_nat.disconnect(_handle_noray_client_connect)
-	Noray.on_connect_relay.disconnect(_handle_noray_client_connect)
+	if Noray.on_connect_nat.is_connected(_handle_noray_client_connect):
+		Noray.on_connect_nat.disconnect(_handle_noray_client_connect)
+	if Noray.on_connect_relay.is_connected(_handle_noray_client_connect):
+		Noray.on_connect_relay.disconnect(_handle_noray_client_connect)
 	oid = ""
 
 
@@ -64,14 +66,17 @@ func connect_client(noray_host_oid: String) -> Error:
 
 ## Disconnects Noray signals for client mode.
 func disconnect_client():
-	Noray.on_connect_nat.disconnect(_handle_noray_connect_nat)
-	Noray.on_connect_relay.disconnect(_handle_noray_connect)
-	Noray.on_command.disconnect(_handle_noray_command)
+	if Noray.on_connect_nat.is_connected(_handle_noray_connect_nat):
+		Noray.on_connect_nat.disconnect(_handle_noray_connect_nat)
+	if Noray.on_connect_relay.is_connected(_handle_noray_connect):
+		Noray.on_connect_relay.disconnect(_handle_noray_connect)
+	if Noray.on_command.is_connected(_handle_noray_command):
+		Noray.on_command.disconnect(_handle_noray_command)
 	oid = ""
 
 
 ## Returns current Noray OID.
-func get_oid() -> String:
+func get_addr() -> String:
 	return oid
 
 
