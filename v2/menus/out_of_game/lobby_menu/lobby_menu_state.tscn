@@ -3,7 +3,9 @@
 [ext_resource type="Script" uid="uid://d3f7uthyd114r" path="res://menus/out_of_game/lobby_menu/lobby_menu_state.gd" id="1_1jh13"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_lphm8"]
 [ext_resource type="Texture2D" uid="uid://b4v2pgrppd0tq" path="res://resources/img/test_level_select_img.png" id="2_yu1h4"]
+[ext_resource type="Script" uid="uid://brx40gas5ijp5" path="res://menus/out_of_game/lobby_menu/level_select_ui.gd" id="4_jwemv"]
 [ext_resource type="Script" uid="uid://muodw5580tnr" path="res://addons/tattomoosa.spinner/spinner.gd" id="4_wpkl5"]
+[ext_resource type="Script" uid="uid://c0mme4m8qonki" path="res://menus/out_of_game/lobby_menu/player_list_ui.gd" id="6_qnklb"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lphm8"]
 content_margin_left = 12.0
@@ -178,6 +180,7 @@ popup/item_0/id = 0
 popup/item_0/disabled = true
 popup/item_1/text = "LEVEL_TEST_1_LABEL"
 popup/item_1/id = 1
+script = ExtResource("4_jwemv")
 
 [node name="PanelContainer" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/LevelSelectContainer" unique_id=1121328565]
 layout_mode = 2
@@ -269,6 +272,7 @@ vertical_scroll_mode = 2
 [node name="PlayersList" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer/ScrollContainer" unique_id=493926022]
 unique_name_in_owner = true
 layout_mode = 2
+script = ExtResource("6_qnklb")
 
 [node name="BackBtn" type="Button" parent="UI/AspectContainer/MarginContainer" unique_id=1870693339]
 unique_name_in_owner = true
