@@ -9,11 +9,12 @@
   - [ ] by default they're looking at the hosts camera
 
 - [ ] Create settings json w/ save loader
+
   - [ ] add noray relay host in config file for game
-- [ ] respawn in pause menu
 
 - [ ] multiplayer / spawn mgr cleanup
   - [x] close server when going to main menu
+  - [ ] join game during play
   - [ ] review all code & cleanup to call authority done
   - [ ] update Architecture.md
 
@@ -130,6 +131,8 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] respawn in pause menu
 
 - [x] when host ALT+F4's run server_disconnect.
 

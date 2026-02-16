@@ -80,11 +80,7 @@ func respawn_player(player_peer_id: int):
 
 	var player_node := get_player_by_peer_id(player_peer_id)
 
-	player_node.global_transform = current_level.player_spawn_pos.global_transform
-	player_node.velocity = Vector3.ZERO
-	player_node.on_respawn()
-	NetworkRollback.mutate(player_node)
-	NetworkRollback.mutate(player_node.movement_controller)
+	player_node.rb_do_respawn = true
 
 
 func spawn_players():
