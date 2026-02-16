@@ -4,15 +4,10 @@
 
 ## In Progress 🚀
 
-- [ ] on server disconnect, reload bg-menu-level for clients
-- [ ] Noray / lobby improvements
+- [ ] when host ALT+F4's run server_disconnect.
 
   - [x] noray bug on client connect sometimes: Invalid access of index '1' on a base object of type: 'PackedStringArray'.
     - [x] maybe when game id is wrong?
-  - [ ] on spawn, make players virtually press c
-
-    - [ ] by default they're looking at the hosts camera
-
   - [x] auto detect game join code or ip address
   - [x] toggle between port/ip & noray mode
   - [x] noray timeout
@@ -20,6 +15,10 @@
   - [x] dont allow players to select menu levels
   - [x] copy game id when hosting right away
   - [x] leave game = reset network settings to default
+
+- [ ] on spawn, make players virtually press c
+
+  - [ ] by default they're looking at the hosts camera
 
 - [ ] Create settings json w/ save loader
   - [ ] add noray relay host in config file for game
@@ -143,6 +142,10 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] Noray / lobby improvements
+
+- [x] on server disconnect, reload bg-menu-level for clients
 
 - [x] deploy noray server
 
