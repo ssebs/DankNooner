@@ -4,12 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] Create settings save system
-
-  - [ ] Save custom username for lobbies
-  - [ ] add noray relay host in config file for game
-  - [ ] window settings (fullscreen or not)
-
 - [ ] multiplayer / spawn mgr cleanup
   - [x] close server when going to main menu
   - [ ] join game during play
@@ -132,6 +126,12 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] Create settings save system
+
+  - [x] Save custom username for lobbies
+  - [x] add noray relay host in config file for game
+  - [x] window settings (fullscreen or not)
 
 - [x] on spawn, make players virtually press c
 

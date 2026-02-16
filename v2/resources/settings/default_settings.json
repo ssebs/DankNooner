@@ -1,9 +1,0 @@
-{
-  "version": 1,
-  "username": "",
-  "noray_relay_host": "home.ssebs.com",
-  "display": {
-    "resolution": "1920x1080",
-    "fullscreen_mode": "windowed" // or "fullscreen" or "borderless"
-  }
-}

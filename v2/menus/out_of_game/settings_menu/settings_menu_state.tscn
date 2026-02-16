@@ -3,6 +3,14 @@
 [ext_resource type="Script" uid="uid://b6tnccpx0gwjg" path="res://menus/out_of_game/settings_menu/settings_menu_state.gd" id="1_hdace"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_hdace"]
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_hdace"]
+content_margin_left = 4.0
+content_margin_top = 0.0
+content_margin_right = 4.0
+content_margin_bottom = 0.0
+color = Color(0.5, 0.5, 0.5, 1)
+thickness = 0
+
 [node name="SettingsMenuState" type="Node" unique_id=207724047]
 script = ExtResource("1_hdace")
 metadata/_custom_type_script = "uid://b6tnccpx0gwjg"
@@ -41,7 +49,47 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 
+[node name="SaveBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1073023423]
+unique_name_in_owner = true
+layout_mode = 2
+text = "SAVE_LABEL"
+
 [node name="BackBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1870693339]
 unique_name_in_owner = true
 layout_mode = 2
 text = "BACK_LABEL"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1034889296]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="username_label" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1793125687]
+layout_mode = 2
+text = "USERNAME_LABEL"
+
+[node name="UsernameEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=907425723]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "e.g. hunter2"
+
+[node name="noray_host_label" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=677060126]
+layout_mode = 2
+text = "NORAY_HOST_LABEL"
+
+[node name="NorayHostEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=132303083]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "home.ssebs.com"
+
+[node name="HSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1039528216]
+layout_mode = 2
+theme_override_constants/separation = 24
+theme_override_styles/separator = SubResource("StyleBoxLine_hdace")
+
+[node name="ResetBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=462288263]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+text = "RESET_SETTINGS_LABEL"
