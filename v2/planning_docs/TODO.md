@@ -4,17 +4,7 @@
 
 ## In Progress 🚀
 
-- [ ] when host ALT+F4's run server_disconnect.
-
-  - [x] noray bug on client connect sometimes: Invalid access of index '1' on a base object of type: 'PackedStringArray'.
-    - [x] maybe when game id is wrong?
-  - [x] auto detect game join code or ip address
-  - [x] toggle between port/ip & noray mode
-  - [x] noray timeout
-  - [x] client doesnt see invite code/ip
-  - [x] dont allow players to select menu levels
-  - [x] copy game id when hosting right away
-  - [x] leave game = reset network settings to default
+- [x] when host ALT+F4's run server_disconnect.
 
 - [ ] on spawn, make players virtually press c
 
@@ -144,7 +134,15 @@
 ## Done ✅
 
 - [x] Noray / lobby improvements
-
+  - [x] noray bug on client connect sometimes: Invalid access of index '1' on a base object of type: 'PackedStringArray'.
+    - [x] maybe when game id is wrong?
+  - [x] auto detect game join code or ip address
+  - [x] toggle between port/ip & noray mode
+  - [x] noray timeout
+  - [x] client doesnt see invite code/ip
+  - [x] dont allow players to select menu levels
+  - [x] copy game id when hosting right away
+  - [x] leave game = reset network settings to default
 - [x] on server disconnect, reload bg-menu-level for clients
 
 - [x] deploy noray server
