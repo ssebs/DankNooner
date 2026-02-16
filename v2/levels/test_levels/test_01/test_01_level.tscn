@@ -106,3 +106,27 @@ shape = SubResource("BoxShape3D_6hu6n")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Colliders/Floor" unique_id=827725858]
 shape = SubResource("WorldBoundaryShape3D_avllc")
+
+[node name="wall" type="StaticBody3D" parent="Colliders" unique_id=1229256167]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 100, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Colliders/wall" unique_id=15663760]
+shape = SubResource("WorldBoundaryShape3D_avllc")
+
+[node name="wall4" type="StaticBody3D" parent="Colliders" unique_id=1737847065]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -100, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Colliders/wall4" unique_id=1415632002]
+shape = SubResource("WorldBoundaryShape3D_avllc")
+
+[node name="wall2" type="StaticBody3D" parent="Colliders" unique_id=873186915]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 100)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Colliders/wall2" unique_id=186053624]
+shape = SubResource("WorldBoundaryShape3D_avllc")
+
+[node name="wall3" type="StaticBody3D" parent="Colliders" unique_id=1164481322]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -100)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Colliders/wall3" unique_id=952695972]
+shape = SubResource("WorldBoundaryShape3D_avllc")

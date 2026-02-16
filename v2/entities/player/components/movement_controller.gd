@@ -17,7 +17,8 @@ var current_speed: float = 0
 var angular_velocity: float = 0
 
 # not
-var spawn_timer: float = 1.0
+var default_spawn_timer: float = 1.0
+var spawn_timer: float = default_spawn_timer
 
 
 func _ready():

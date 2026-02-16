@@ -55,3 +55,13 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "BACK_LABEL"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=414822224]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="RespawnBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1557111191]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RESPAWN_LABEL"
