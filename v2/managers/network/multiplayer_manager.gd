@@ -7,16 +7,15 @@ signal server_disconnected
 signal game_id_set(noray_oid: String)
 signal client_connection_failed(reason: String)
 
+enum ConnectionMode {NORAY, IP_PORT}
+
 @export var menu_manager: MenuManager
 @export var level_manager: LevelManager
 @export var player_scene = preload("res://entities/player/player_entity.tscn")
-# @export var noray_host: String = "home.ssebs.com"
-@export var noray_host: String = "noray.casa.ssebs.com" # if at home network
-# @export var noray_host: String = "tomfol.io"
+@export var connection_mode: ConnectionMode = ConnectionMode.NORAY
+@export var noray_handler: MultiplayerNoray
+@export var ipport_handler: MultiplayerIPPort
 
-@export var force_relay_mode: bool = false
-
-# const PORT: int = 42068
 var lobby_players: Array[int] = []
 var noray_oid: String:
 	set(val):
@@ -27,15 +26,16 @@ var noray_oid: String:
 #region Public API
 ## Starts the ENet server and listens for connections.
 func start_server():
-	Noray.on_connect_nat.connect(_handle_noray_client_connect)
-	Noray.on_connect_relay.connect(_handle_noray_client_connect)
+	var peer: ENetMultiplayerPeer
+	if connection_mode == ConnectionMode.NORAY:
+		peer = await noray_handler.start_server()
+		noray_handler.connection_failed.connect(_on_handler_connection_failed)
+		noray_oid = noray_handler.get_oid()
+	else:
+		ipport_handler.server_started.connect(_on_ipport_server_started)
+		peer = ipport_handler.start_server()
 
-	await _register_with_noray()
-
-	var err = OK
-	var peer = ENetMultiplayerPeer.new()
-	err = peer.create_server(Noray.local_port)
-	if err != OK:
+	if peer == null:
 		printerr("failed to create server")
 		return
 
@@ -49,8 +49,12 @@ func start_server():
 
 ## Stops the running server & disconnects signals
 func stop_server():
-	Noray.on_connect_nat.disconnect(_handle_noray_client_connect)
-	Noray.on_connect_relay.disconnect(_handle_noray_client_connect)
+	if connection_mode == ConnectionMode.NORAY:
+		if noray_handler.connection_failed.is_connected(_on_handler_connection_failed):
+			noray_handler.connection_failed.disconnect(_on_handler_connection_failed)
+		noray_handler.stop_server()
+	else:
+		ipport_handler.stop_server()
 
 	multiplayer.peer_connected.disconnect(_on_peer_connected)
 	multiplayer.peer_disconnected.disconnect(_on_peer_disconnected)
@@ -60,39 +64,36 @@ func stop_server():
 	lobby_players.clear()
 
 
-## Connects to a server at the given IP. Returns OK on success, or an error code on failure.
-func connect_client(noray_host_oid: String) -> Error:
-	var err = await _register_with_noray()
-	if err != OK:
-		client_connection_failed.emit("Failed to register w/ noray server")
-		return err
-
-	Noray.on_connect_nat.connect(_handle_noray_connect_nat)
-	Noray.on_connect_relay.connect(_handle_noray_connect)
-	Noray.on_command.connect(_handle_noray_command)
-	noray_oid = noray_host_oid
-
-
-	if force_relay_mode:
-		err = Noray.connect_relay(noray_oid)
+## Connects to a server at the given address. Returns OK on success, or an error code on failure.
+## Address is Noray OID or IP depending on connection_mode.
+func connect_client(address: String) -> Error:
+	var err: Error
+	if connection_mode == ConnectionMode.NORAY:
+		noray_handler.connection_failed.connect(_on_handler_connection_failed)
+		err = await noray_handler.connect_client(address)
+		if err != OK:
+			if noray_handler.connection_failed.is_connected(_on_handler_connection_failed):
+				noray_handler.connection_failed.disconnect(_on_handler_connection_failed)
+			return err
+		noray_oid = address
 	else:
-		err = Noray.connect_nat(noray_oid)
-	if err != OK:
-		printerr("failed to connect_nat")
-		Noray.on_connect_nat.disconnect(_handle_noray_connect_nat)
-		Noray.on_connect_relay.disconnect(_handle_noray_connect)
-		Noray.on_command.disconnect(_handle_noray_command)
-		# client_connection_failed.emit("Failed to initiate connection")
-		return err
+		err = ipport_handler.connect_client(address)
+		if err != OK:
+			client_connection_failed.emit("Failed to connect to %s:%d" % [address, UtilsConstants.PORT])
+			return err
+
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 	return OK
 
 
 ## Disconnects from server
 func disconnect_client():
-	Noray.on_connect_nat.disconnect(_handle_noray_connect_nat)
-	Noray.on_connect_relay.disconnect(_handle_noray_connect)
-	Noray.on_command.disconnect(_handle_noray_command)
+	if connection_mode == ConnectionMode.NORAY:
+		if noray_handler.connection_failed.is_connected(_on_handler_connection_failed):
+			noray_handler.connection_failed.disconnect(_on_handler_connection_failed)
+		noray_handler.disconnect_client()
+	else:
+		ipport_handler.disconnect_client()
 
 	multiplayer.server_disconnected.disconnect(_on_server_disconnected)
 	multiplayer.multiplayer_peer = null
@@ -138,68 +139,13 @@ func _on_server_disconnected():
 	server_disconnected.emit()
 
 
-#region noray
-func _register_with_noray() -> Error:
-	var err = await Noray.connect_to_host(noray_host, 8890)
-	if err != OK:
-		printerr("noray failed to connect to noray @ %s" % noray_host)
-		return err
-
-	Noray.register_host()
-	await Noray.on_pid
-	noray_oid = Noray.oid
-
-	err = await Noray.register_remote()
-	if err != OK:
-		printerr("noray failed to connect to register_remote")
-		return err
-
-	return OK
+func _on_handler_connection_failed(reason: String):
+	client_connection_failed.emit(reason)
 
 
-func _handle_noray_client_connect(address: String, port: int):
-	var peer = multiplayer.multiplayer_peer as ENetMultiplayerPeer
-	var err = await PacketHandshake.over_enet(peer.host, address, port)
-	if err != OK:
-		printerr("noray packed handshake failed")
-
-
-func _handle_noray_connect_nat(address: String, port: int):
-	var err = await _handle_noray_connect(address, port)
-	if err != OK:
-		printerr("NAT connection failed, trying relay")
-		Noray.connect_relay(noray_oid)
-
-
-func _handle_noray_connect(address: String, port: int) -> Error:
-	var udp = PacketPeerUDP.new()
-	udp.bind(Noray.local_port)
-	udp.set_dest_address(address, port)
-
-	var err = await PacketHandshake.over_packet_peer(udp)
-	udp.close()
-
-	if err != OK:
-		return err
-
-	# Connect to host
-	var peer = ENetMultiplayerPeer.new()
-	err = peer.create_client(address, port, 0, 0, 0, Noray.local_port)
-
-	if err != OK:
-		return err
-
-	multiplayer.multiplayer_peer = peer
-	return OK
-
-
-func _handle_noray_command(command: String, data: String):
-	if command == "error":
-		printerr("Noray error: %s" % data)
-		client_connection_failed.emit(data)
-
-
-#endregion
+func _on_ipport_server_started(public_ip: String):
+	noray_oid = public_ip
+	ipport_handler.server_started.disconnect(_on_ipport_server_started)
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -209,5 +155,9 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("menu_manager must not be empty")
 	if level_manager == null:
 		issues.append("level_manager must not be empty")
+	if noray_handler == null:
+		issues.append("noray_handler must not be empty")
+	if ipport_handler == null:
+		issues.append("ipport_handler must not be empty")
 
 	return issues

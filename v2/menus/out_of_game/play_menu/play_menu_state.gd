@@ -55,7 +55,10 @@ func _on_code_text_changed(_new_text: String):
 
 
 func _validate_code():
-	join_btn.disabled = not _is_valid_noray_oid(code_entry.text)
+	if multiplayer_manager.connection_mode == MultiplayerManager.ConnectionMode.NORAY:
+		join_btn.disabled = !_is_valid_noray_oid(code_entry.text)
+	else:
+		join_btn.disabled = !code_entry.text.is_valid_ip_address()
 
 
 func _is_valid_noray_oid(text: String) -> bool:
