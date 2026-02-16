@@ -11,6 +11,7 @@ class_name PauseMenuState extends MenuState
 
 @onready var resume_btn: Button = %ResumeBtn
 @onready var main_menu_btn: Button = %MainMenuBtn
+@onready var respawn_btn: Button = %RespawnBtn
 # @onready var back_btn: Button = %BackBtn
 
 # See managers/pause_manager.gd
@@ -20,6 +21,8 @@ func Enter(_state_context: StateContext):
 	ui.show()
 	resume_btn.pressed.connect(_on_resume_pressed)
 	main_menu_btn.pressed.connect(_on_main_menu_pressed)
+	respawn_btn.pressed.connect(_on_respawn_pressed)
+
 	multiplayer_manager.server_disconnected.connect(_on_server_disconnected)
 	# back_btn.pressed.connect(_on_back_pressed)
 
@@ -28,9 +31,14 @@ func Exit(_state_context: StateContext):
 	ui.hide()
 	resume_btn.pressed.disconnect(_on_resume_pressed)
 	main_menu_btn.pressed.disconnect(_on_main_menu_pressed)
-	if multiplayer_manager.server_disconnected.is_connected(_on_server_disconnected):
-		multiplayer_manager.server_disconnected.disconnect(_on_server_disconnected)
+	respawn_btn.pressed.disconnect(_on_respawn_pressed)
+
+	multiplayer_manager.server_disconnected.disconnect(_on_server_disconnected)
 	# back_btn.pressed.disconnect(_on_back_pressed)
+
+
+func _on_respawn_pressed():
+	level_manager.respawn_player.rpc_id(1, multiplayer.get_unique_id())
 
 
 func _on_resume_pressed():

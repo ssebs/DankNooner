@@ -90,6 +90,10 @@ func _on_gear_down_pressed():
 #endregion
 
 
+func on_respawn():
+	movement_controller.spawn_timer = movement_controller.default_spawn_timer
+
+
 func _init_mesh():
 	mesh_component.mesh_definition = bike_definition.bike_mesh_definition
 

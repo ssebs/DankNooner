@@ -73,6 +73,20 @@ func get_levels_as_option_items() -> Dictionary[String, int]:
 	return options
 
 
+@rpc("any_peer", "call_local", "reliable")
+func respawn_player(player_peer_id: int):
+	if !multiplayer.is_server():
+		return
+
+	var player_node := get_player_by_peer_id(player_peer_id)
+
+	player_node.global_transform = current_level.player_spawn_pos.global_transform
+	player_node.velocity = Vector3.ZERO
+	player_node.on_respawn()
+	NetworkRollback.mutate(player_node)
+	NetworkRollback.mutate(player_node.movement_controller)
+
+
 func spawn_players():
 	for p in multiplayer_manager.lobby_players:
 		_spawn_player(p)
@@ -101,6 +115,17 @@ func spawn_gym_test_level():
 
 
 #endregion
+
+
+func get_player_by_peer_id(player_peer_id: int) -> PlayerEntity:
+	var player_node: PlayerEntity
+	for child in current_level.player_spawn_pos.get_children():
+		if child is PlayerEntity:
+			if child.name == str(player_peer_id):
+				player_node = child
+				break
+	return player_node
+
 
 # ## Get a map of LevelName => LevelState for all children of this mgr
 # func get_all_levels() -> Dictionary[String, LevelState]:
