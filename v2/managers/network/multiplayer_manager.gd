@@ -14,7 +14,6 @@ enum ConnectionMode { NORAY, IP_PORT }
 @export var menu_manager: MenuManager
 @export var settings_manager: SettingsManager
 @export var level_manager: LevelManager
-@export var player_scene = preload("res://entities/player/player_entity.tscn")
 @export var connection_mode: ConnectionMode = ConnectionMode.NORAY
 @export var noray_handler: MultiplayerNoray
 @export var ipport_handler: MultiplayerIPPort
@@ -167,11 +166,6 @@ func _on_peer_disconnected(id: int):
 
 	lobby_players.erase(id)
 	sync_lobby_players.rpc(lobby_players)
-
-	if level_manager.current_level.no_player_spawn_needed:
-		return
-
-	level_manager.despawn_player(id)
 
 
 func _on_handler_connection_failed(reason: String):

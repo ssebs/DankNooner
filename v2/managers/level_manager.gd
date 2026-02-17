@@ -77,25 +77,25 @@ func respawn_player(player_peer_id: int):
 	player_node.rb_do_respawn = true
 
 
-func spawn_player(id: int):
-	if !multiplayer.is_server():
-		return
+## Instantiate and add player node locally (no authority check)
+## Called by GamemodeManager RPC on all peers
+func add_player_locally(peer_id: int, username: String):
+	print("Adding player locally: %s - %s" % [peer_id, username])
 
-	var uname = multiplayer_manager.lobby_players[id]
-	print("Spawning Player: %s - %s" % [id, uname])
-
-	var player_to_add = multiplayer_manager.player_scene.instantiate() as PlayerEntity
-	player_to_add.name = str(id)
+	var player_to_add = current_level.player_entity_scene.instantiate() as PlayerEntity
+	player_to_add.name = str(peer_id)
 
 	current_level.player_spawn_pos.add_child(player_to_add, true)
-	player_to_add.set_username_label(uname)
+	player_to_add.set_username_label(username)
 
 
-func despawn_player(id: int):
-	if !current_level.player_spawn_pos.has_node(str(id)):
+## Remove player node locally (no authority check)
+## Called by GamemodeManager RPC on all peers
+func remove_player_locally(peer_id: int):
+	if !current_level.player_spawn_pos.has_node(str(peer_id)):
 		return
 
-	current_level.player_spawn_pos.get_node(str(id)).queue_free()
+	current_level.player_spawn_pos.get_node(str(peer_id)).queue_free()
 
 
 #region specific level function calls
