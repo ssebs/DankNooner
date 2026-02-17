@@ -75,7 +75,6 @@ tps_marker = NodePath("../../Markers/TPSCamMarker")
 
 [node name="FPSCam" parent="_Components/CameraController" index="0" unique_id=634464672]
 transform = Transform3D(1, 0, 0, 0, 0.96592575, 0.258819, 0, -0.258819, 0.96592575, 0, 1.2021662, 0)
-current = true
 
 [node name="TPSCam" parent="_Components/CameraController" index="1" unique_id=1953618350]
 transform = Transform3D(1, 0, 0, 0, 0.9370628, 0.34916094, 0, -0.34916094, 0.9370628, 0, 1.391123, 1.7631481)

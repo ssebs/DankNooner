@@ -6,8 +6,8 @@
 
 - [ ] multiplayer / spawn mgr cleanup
   - [x] close server when going to main menu
-  - [ ] join game during play
-    - [ ] WIP - **MUST REVIEW THE CODE MYSELF**
+  - [x] join game during play
+    - [x] WIP - **MUST REVIEW THE CODE MYSELF**
   - [ ] return to lobby (force everyone)
   - [ ] review all code & cleanup to call authority done
   - [ ] update Architecture.md
