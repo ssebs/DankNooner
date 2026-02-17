@@ -1,7 +1,7 @@
 class_name MultiplayerIPPort extends Node
 
 signal connection_failed(reason: String)
-signal connection_succeeded
+signal connection_succeeded(peer_id: int)
 
 var ip_addr: String = "0.0.0.0"
 
@@ -35,7 +35,7 @@ func connect_client(ip: String) -> Error:
 		return err
 
 	multiplayer.multiplayer_peer = peer
-	connection_succeeded.emit()
+	connection_succeeded.emit(peer.get_unique_id())
 	return OK
 
 
