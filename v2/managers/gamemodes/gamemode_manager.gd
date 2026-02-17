@@ -23,6 +23,7 @@ func _ready():
 		return
 	multiplayer_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
 	multiplayer_manager.player_connected.connect(_on_player_connected)
+	multiplayer_manager.player_disconnected.connect(_on_player_disconnected)
 
 
 ## Called by server to start the game for all players
@@ -41,12 +42,24 @@ func end_game():
 
 
 func _spawn_all_players():
-	for p in multiplayer_manager.lobby_players:
-		level_manager.spawn_player(p)
+	if !multiplayer.is_server():
+		return
+
+	for peer_id in multiplayer_manager.lobby_players:
+		var username = multiplayer_manager.lobby_players[peer_id]
+		_rpc_spawn_player.rpc(peer_id, username)
 
 
 func _on_player_connected(peer_id: int, _all_players: Dictionary):
 	_on_client_connection_succeeded(peer_id)
+
+
+func _on_player_disconnected(peer_id: int):
+	if !multiplayer.is_server():
+		return
+
+	if match_state == MatchState.IN_GAME:
+		_rpc_despawn_player.rpc(peer_id)
 
 
 func _on_client_connection_succeeded(peer_id: int):
@@ -69,6 +82,8 @@ func _sync_game_to_late_joiner(level_name: LevelManager.LevelName):
 
 	# Wait a frame for the level scene tree to be ready before spawning
 	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
 
 	# Request server to spawn our player after level is loaded
 	_request_late_spawn.rpc_id(1, multiplayer.get_unique_id())
@@ -79,7 +94,29 @@ func _sync_game_to_late_joiner(level_name: LevelManager.LevelName):
 func _request_late_spawn(peer_id: int):
 	if !multiplayer.is_server():
 		return
-	level_manager.spawn_player(peer_id)
+
+	# Spawn the new player for everyone
+	var username = multiplayer_manager.lobby_players[peer_id]
+	_rpc_spawn_player.rpc(peer_id, username)
+
+	# Send existing players to the late-joiner
+	for existing_id in multiplayer_manager.lobby_players:
+		if existing_id == peer_id:
+			continue
+		var existing_username = multiplayer_manager.lobby_players[existing_id]
+		_rpc_spawn_player.rpc_id(peer_id, existing_id, existing_username)
+
+
+## Server broadcasts to all peers to spawn a player
+@rpc("call_local", "reliable")
+func _rpc_spawn_player(peer_id: int, username: String):
+	level_manager.add_player_locally(peer_id, username)
+
+
+## Server broadcasts to all peers to despawn a player
+@rpc("call_local", "reliable")
+func _rpc_despawn_player(peer_id: int):
+	level_manager.remove_player_locally(peer_id)
 
 
 func _get_configuration_warnings() -> PackedStringArray:
