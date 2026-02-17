@@ -22,7 +22,7 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 	multiplayer_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
-	# multiplayer_manager.player_connected.connect(_on_player_connected)
+	multiplayer_manager.player_connected.connect(_on_player_connected)
 
 
 ## Called by server to start the game for all players
@@ -43,6 +43,10 @@ func end_game():
 func _spawn_all_players():
 	for p in multiplayer_manager.lobby_players:
 		level_manager.spawn_player(p)
+
+
+func _on_player_connected(peer_id: int, _all_players: Dictionary):
+	_on_client_connection_succeeded(peer_id)
 
 
 func _on_client_connection_succeeded(peer_id: int):
