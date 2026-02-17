@@ -21,6 +21,7 @@ var current_level_name: LevelManager.LevelName = LevelManager.LevelName.LEVEL_SE
 func _ready():
 	if Engine.is_editor_hint():
 		return
+	multiplayer_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
 	multiplayer_manager.player_connected.connect(_on_player_connected)
 
 
@@ -44,11 +45,16 @@ func _spawn_all_players():
 		level_manager.spawn_player(p)
 
 
+func _on_client_connection_succeeded():
+	pass
+
+
 func _on_player_connected(id: int, _all_players: Dictionary):
 	if !multiplayer.is_server():
 		return
 
 	if match_state == MatchState.IN_GAME:
+		print("[GamemodeManager] Server: Detected late-joiner %s, sending sync RPC" % id)
 		# Late-joiner: tell them to load the level, then spawn them
 		_sync_game_to_late_joiner.rpc_id(id, current_level_name)
 

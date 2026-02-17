@@ -27,6 +27,27 @@ var conn_addr: String:
 		conn_addr = val
 		game_id_set.emit(val)
 
+#region RPCs
+
+## Client calls this to send username to server; server updates dict and broadcasts to all
+@rpc("any_peer", "call_local", "reliable")
+func update_username(id: int, username: String):
+	if !multiplayer.is_server():
+		return
+
+	lobby_players[id] = username
+	sync_lobby_players.rpc(lobby_players)
+
+
+## Server broadcasts full lobby_players dict to all clients
+@rpc("call_local", "reliable")
+func sync_lobby_players(players: Dictionary):
+	lobby_players = players
+	lobby_players_updated.emit(players)
+
+
+#endregion
+
 
 #region Public API
 ## Starts the ENet server and listens for connections.
@@ -46,7 +67,8 @@ func start_server():
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
 	_on_peer_connected(1)
-	update_username.rpc_id(1, 1, settings_manager.current_settings["username"])
+	# emit signal as if the server connected as a client
+	client_connection_succeeded.emit()
 
 
 ## Stops the running server & disconnects signals
@@ -126,6 +148,13 @@ func _get_handler():
 	return ipport_handler
 
 
+#region signal handlers
+func _on_server_disconnected():
+	print("Disconnected from server")
+	disconnect_client()
+	server_disconnected.emit()
+
+
 func _on_peer_connected(id: int):
 	print("Player %s connected" % id)
 	lobby_players[id] = ""
@@ -142,33 +171,7 @@ func _on_peer_disconnected(id: int):
 	if level_manager.current_level.no_player_spawn_needed:
 		return
 
-	if !level_manager.current_level.player_spawn_pos.has_node(str(id)):
-		return
-
-	level_manager.current_level.player_spawn_pos.get_node(str(id)).queue_free()
-
-
-## Client calls this to send username to server; server updates dict and broadcasts to all
-@rpc("any_peer", "call_local", "reliable")
-func update_username(id: int, username: String):
-	if !multiplayer.is_server():
-		return
-
-	lobby_players[id] = username
-	sync_lobby_players.rpc(lobby_players)
-
-
-## Server broadcasts full lobby_players dict to all clients
-@rpc("call_local", "reliable")
-func sync_lobby_players(players: Dictionary):
-	lobby_players = players
-	lobby_players_updated.emit(players)
-
-
-func _on_server_disconnected():
-	print("Disconnected from server")
-	disconnect_client()
-	server_disconnected.emit()
+	level_manager.despawn_player(id)
 
 
 func _on_handler_connection_failed(reason: String):
@@ -185,6 +188,9 @@ func _on_handler_connection_succeeded():
 
 func _on_enet_connected():
 	client_connection_succeeded.emit()
+
+
+#endregion
 
 
 func _get_configuration_warnings() -> PackedStringArray:
