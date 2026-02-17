@@ -66,13 +66,6 @@ func despawn_level():
 		child.queue_free()
 
 
-func get_levels_as_option_items() -> Dictionary[String, int]:
-	var options: Dictionary[String, int] = {}
-	for lvl_name in levels_names_in_level_select:
-		options[lvl_name] = level_name_map.find_key(lvl_name)
-	return options
-
-
 @rpc("any_peer", "call_local", "reliable")
 func respawn_player(player_peer_id: int):
 	if !multiplayer.is_server():
@@ -97,9 +90,14 @@ func spawn_player(id: int):
 	player_to_add.set_username_label(uname)
 
 
+func despawn_player(id: int):
+	if !current_level.player_spawn_pos.has_node(str(id)):
+		return
+
+	current_level.player_spawn_pos.get_node(str(id)).queue_free()
+
+
 #region specific level function calls
-
-
 ## Spawn the menu level
 func spawn_menu_level():
 	spawn_level(LevelName.BG_GRAY_LEVEL, InputStateManager.InputState.IN_MENU)
@@ -113,6 +111,14 @@ func spawn_gym_test_level():
 #endregion
 
 
+#region helpers
+func get_levels_as_option_items() -> Dictionary[String, int]:
+	var options: Dictionary[String, int] = {}
+	for lvl_name in levels_names_in_level_select:
+		options[lvl_name] = level_name_map.find_key(lvl_name)
+	return options
+
+
 func get_player_by_peer_id(player_peer_id: int) -> PlayerEntity:
 	var player_node: PlayerEntity
 	for child in current_level.player_spawn_pos.get_children():
@@ -123,12 +129,7 @@ func get_player_by_peer_id(player_peer_id: int) -> PlayerEntity:
 	return player_node
 
 
-# ## Get a map of LevelName => LevelState for all children of this mgr
-# func get_all_levels() -> Dictionary[String, LevelState]:
-# 	return level_name_state_map
-
-# func get_level_by_name(name_to_check: String) -> LevelState:
-# 	return level_name_state_map.get(name_to_check)
+#endregion
 
 
 func _get_configuration_warnings() -> PackedStringArray:

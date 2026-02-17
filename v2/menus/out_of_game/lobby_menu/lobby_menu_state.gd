@@ -79,29 +79,32 @@ func Exit(_state_context: StateContext):
 #endregion
 
 
-#region button handlers
+#region button handlers (can call rpc)
+## server only, calls rpc for all
 func _on_level_selected(_level_id: int):
 	if multiplayer.multiplayer_peer && multiplayer.is_server():
 		start_btn.disabled = false
 		share_selected_level_with_clients.rpc(level_select_btn.selected)
 
 
+## server only, calls rpc for all
 func _on_start_pressed():
 	if multiplayer.multiplayer_peer && multiplayer.is_server():
-		_start_game()
+		gamemode_manager.start_game.rpc(level_select_btn.get_selected_level_id())
 
 
 ## cleanup before going back
 func _on_back_pressed():
 	multiplayer_manager.disconnect_sp_or_mp()
-
 	player_list.clear()
+
 	if level_manager.current_level_name != LevelManager.LevelName.BG_GRAY_LEVEL:
 		level_manager.spawn_menu_level()
 
 	transitioned.emit(play_menu_state, null)
 
 
+## copy game id to clipboard
 func _on_ip_copy_btn_pressed():
 	DisplayServer.clipboard_set(ip_label.text)
 	UiToast.ShowToast("Game ID copied to clipboard!")
@@ -111,6 +114,7 @@ func _on_ip_copy_btn_pressed():
 
 
 #region network signal handlers
+## set game join id in ui & enable clipboard btn
 func _on_game_id_set(conn_addr: String):
 	ip_label.text = conn_addr
 	ip_copy_btn.disabled = false
@@ -118,15 +122,13 @@ func _on_game_id_set(conn_addr: String):
 		_on_ip_copy_btn_pressed()
 
 
+## set player list from server's lobby_players
 func _on_lobby_players_updated(players: Dictionary):
-	loading_ui.hide()
-	timeout_timer.stop()
 	player_list.update_from_dict(players)
 
 
 func _on_server_disconnected():
-	print("_on_server_disconnected")
-
+	UiToast.ShowToast("Server disconnected")
 	_on_back_pressed()
 
 
@@ -153,12 +155,7 @@ func _on_timeout():
 
 #endregion
 
-#region RPC calls
-func _start_game():
-	var level_name = level_select_btn.get_selected_level_id()
-	gamemode_manager.start_game.rpc(level_name)
-
-
+#region local RPCs
 @rpc("call_local", "reliable")
 func share_selected_level_with_clients(idx: int):
 	level_select_btn.set_selected_index(idx)

@@ -18,6 +18,7 @@ class_name PlayerEntity extends CharacterBody3D
 var is_local_client: bool = false
 
 # rollback_tick vars
+## rollback do respawn
 var rb_do_respawn: bool = false
 
 
