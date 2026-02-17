@@ -80,11 +80,6 @@ func _sync_game_to_late_joiner(level_name: LevelManager.LevelName):
 	current_level_name = level_name
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
 
-	# Wait a frame for the level scene tree to be ready before spawning
-	await get_tree().process_frame
-	await get_tree().process_frame
-	await get_tree().process_frame
-
 	# Request server to spawn our player after level is loaded
 	_request_late_spawn.rpc_id(1, multiplayer.get_unique_id())
 
