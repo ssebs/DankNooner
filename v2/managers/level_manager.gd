@@ -58,6 +58,7 @@ func spawn_level(level_name: LevelName, input_state: InputStateManager.InputStat
 
 	input_state_manager.current_input_state = input_state
 	if input_state == InputStateManager.InputState.IN_GAME:
+		menu_manager.switch_to_pause_menu()
 		menu_manager.hide_all_menus()
 
 

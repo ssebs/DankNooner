@@ -48,22 +48,17 @@ func _spawn_all_players():
 func _on_client_connection_succeeded(peer_id: int):
 	if !multiplayer.is_server():
 		return
+
+	print("_on_client_connection_succeeded %s" % peer_id)
+
 	if match_state == MatchState.IN_GAME:
 		_sync_game_to_late_joiner.rpc_id(peer_id, current_level_name)
 
 
-# func _on_player_connected(id: int, _all_players: Dictionary):
-# 	if !multiplayer.is_server():
-# 		return
-
-# 	if match_state == MatchState.IN_GAME:
-# 		print("[GamemodeManager] Server: Detected late-joiner %s, sending sync RPC" % id)
-# 		# Late-joiner: tell them to load the level, then spawn them
-# 		_sync_game_to_late_joiner.rpc_id(id, current_level_name)
-
 ## Server calls this on a late-joining client to sync them into the active game
-@rpc("authority", "call_remote", "reliable")
+@rpc("any_peer", "reliable")
 func _sync_game_to_late_joiner(level_name: LevelManager.LevelName):
+	print("_sync_game_to_late_joiner")
 	match_state = MatchState.IN_GAME
 	current_level_name = level_name
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
