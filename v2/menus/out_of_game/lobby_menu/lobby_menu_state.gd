@@ -137,14 +137,14 @@ func _on_client_connection_failed(reason: String):
 	_on_back_pressed()
 
 
-func _on_client_connection_succeeded():
+func _on_client_connection_succeeded(peer_id: int):
 	loading_ui.hide()
 	timeout_timer.stop()
 	if !multiplayer.is_server():
 		start_btn.disabled = true
 
 	multiplayer_manager.update_username.rpc_id(
-		1, multiplayer.get_unique_id(), settings_manager.current_settings["username"]
+		1, peer_id, settings_manager.current_settings["username"]
 	)
 
 

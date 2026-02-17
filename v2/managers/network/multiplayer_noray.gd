@@ -1,7 +1,7 @@
 class_name MultiplayerNoray extends Node
 
 signal connection_failed(reason: String)
-signal connection_succeeded
+signal connection_succeeded(peer_id: int)
 
 @export var settings_manager: SettingsManager
 @export var force_relay_mode: bool = false
@@ -156,7 +156,7 @@ func _handle_noray_connect(address: String, port: int) -> Error:
 		return err
 
 	multiplayer.multiplayer_peer = peer
-	connection_succeeded.emit()
+	connection_succeeded.emit(peer.get_unique_id())
 	return OK
 
 

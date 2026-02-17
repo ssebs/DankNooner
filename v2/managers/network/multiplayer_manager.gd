@@ -6,7 +6,7 @@ signal player_disconnected(id: int)
 signal server_disconnected
 signal game_id_set(conn_addr: String)
 signal client_connection_failed(reason: String)
-signal client_connection_succeeded
+signal client_connection_succeeded(peer_id: int)
 signal lobby_players_updated(players: Dictionary)
 
 enum ConnectionMode { NORAY, IP_PORT }
@@ -68,7 +68,7 @@ func start_server():
 
 	_on_peer_connected(1)
 	# emit signal as if the server connected as a client
-	client_connection_succeeded.emit()
+	client_connection_succeeded.emit(1)
 
 
 ## Stops the running server & disconnects signals
@@ -178,16 +178,16 @@ func _on_handler_connection_failed(reason: String):
 	client_connection_failed.emit(reason)
 
 
-func _on_handler_connection_succeeded():
+func _on_handler_connection_succeeded(peer_id: int):
 	# Wait for ENet to actually connect before emitting
 	if multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
-		multiplayer.connected_to_server.connect(_on_enet_connected, CONNECT_ONE_SHOT)
+		multiplayer.connected_to_server.connect(_on_enet_connected.bind(peer_id), CONNECT_ONE_SHOT)
 	else:
-		_on_enet_connected()
+		_on_enet_connected(peer_id)
 
 
-func _on_enet_connected():
-	client_connection_succeeded.emit()
+func _on_enet_connected(peer_id: int):
+	client_connection_succeeded.emit(peer_id)
 
 
 #endregion

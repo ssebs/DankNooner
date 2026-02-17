@@ -37,6 +37,7 @@ func grab_focus_to_first_btn(m_state: MenuState):
 
 
 ## Will hide all menus
+## stays in current menu state
 func hide_all_menus():
 	for child in state_machine.get_children():
 		if !child is MenuState:
