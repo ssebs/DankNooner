@@ -87,12 +87,13 @@ main_menu_state = NodePath("../MainMenuState")
 lobby_menu_state = NodePath("../LobbyMenuState")
 customize_menu_state = NodePath("../CustomizeMenuState")
 
-[node name="LobbyMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1270583406 node_paths=PackedStringArray("menu_manager", "settings_manager", "multiplayer_manager", "level_manager", "input_state_manager", "play_menu_state") instance=ExtResource("7_l5ukw")]
+[node name="LobbyMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1270583406 node_paths=PackedStringArray("menu_manager", "settings_manager", "multiplayer_manager", "level_manager", "input_state_manager", "gamemode_manager", "play_menu_state") instance=ExtResource("7_l5ukw")]
 menu_manager = NodePath("../..")
 settings_manager = NodePath("../../../SettingsManager")
 multiplayer_manager = NodePath("../../../MultiplayerManager")
 level_manager = NodePath("../../../LevelManager")
 input_state_manager = NodePath("../../../InputStateManager")
+gamemode_manager = NodePath("../../../GamemodeManager")
 play_menu_state = NodePath("../PlayMenuState")
 
 [node name="SettingsMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1653152871 node_paths=PackedStringArray("menu_manager", "settings_manager", "main_menu_state") instance=ExtResource("6_f52ns")]
@@ -104,12 +105,13 @@ main_menu_state = NodePath("../MainMenuState")
 menu_manager = NodePath("../..")
 play_menu_state = NodePath("../PlayMenuState")
 
-[node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "multiplayer_manager", "level_manager", "input_state_manager", "pause_manager", "main_menu_state") instance=ExtResource("6_02kkc")]
+[node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "multiplayer_manager", "level_manager", "input_state_manager", "pause_manager", "gamemode_manager", "main_menu_state") instance=ExtResource("6_02kkc")]
 menu_manager = NodePath("../..")
 multiplayer_manager = NodePath("../../../MultiplayerManager")
 level_manager = NodePath("../../../LevelManager")
 input_state_manager = NodePath("../../../InputStateManager")
 pause_manager = NodePath("../../../PauseManager")
+gamemode_manager = NodePath("../../../GamemodeManager")
 main_menu_state = NodePath("../MainMenuState")
 
 [node name="SettingsManager" type="Node" parent="ManagerManager" unique_id=82913213 groups=["Managers"]]

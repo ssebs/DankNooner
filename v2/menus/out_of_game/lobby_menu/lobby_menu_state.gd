@@ -6,6 +6,7 @@ class_name LobbyMenuState extends MenuState
 @export var multiplayer_manager: MultiplayerManager
 @export var level_manager: LevelManager
 @export var input_state_manager: InputStateManager
+@export var gamemode_manager: GamemodeManager
 
 @export var play_menu_state: MenuState
 
@@ -87,7 +88,7 @@ func _on_level_selected(_level_id: int):
 
 func _on_start_pressed():
 	if multiplayer.multiplayer_peer && multiplayer.is_server():
-		start_game.rpc()
+		_start_game()
 
 
 ## cleanup before going back
@@ -153,11 +154,9 @@ func _on_timeout():
 #endregion
 
 #region RPC calls
-@rpc("call_local", "reliable")
-func start_game():
+func _start_game():
 	var level_name = level_select_btn.get_selected_level_id()
-	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
-	level_manager.spawn_players()
+	gamemode_manager.start_game.rpc(level_name)
 
 
 @rpc("call_local", "reliable")
@@ -201,6 +200,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_state_manager must not be empty")
 	if settings_manager == null:
 		issues.append("settings_manager must not be empty")
+	if gamemode_manager == null:
+		issues.append("gamemode_manager must not be empty")
 	if play_menu_state == null:
 		issues.append("play_menu_state must not be empty")
 

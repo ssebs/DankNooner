@@ -83,12 +83,10 @@ func respawn_player(player_peer_id: int):
 	player_node.rb_do_respawn = true
 
 
-func spawn_players():
-	for p in multiplayer_manager.lobby_players:
-		_spawn_player(p)
+func spawn_player(id: int):
+	if !multiplayer.is_server():
+		return
 
-
-func _spawn_player(id: int):
 	var uname = multiplayer_manager.lobby_players[id]
 	print("Spawning Player: %s - %s" % [id, uname])
 
