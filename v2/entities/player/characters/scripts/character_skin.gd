@@ -3,11 +3,11 @@ class_name CharacterSkin extends Node3D
 
 @export
 var mesh_res: PackedScene = preload("res://entities/player/characters/assets/clanker/Clanker.glb")
+
+# @export var scale
+
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var mesh_node: Node3D = %MeshNode
-
-# @onready var mesh_instance: MeshInstance3D = %MeshInstance3D
-# @onready var skel: Skeleton3D = %Skeleton
 
 
 func _ready():
