@@ -1,12 +1,10 @@
 [gd_scene format=3 uid="uid://cuqtwh0saekmw"]
 
 [ext_resource type="Script" uid="uid://bakxxvsooac7k" path="res://entities/player/characters/scripts/character_skin.gd" id="2_lm8ah"]
-[ext_resource type="PackedScene" uid="uid://q6lu86hwsqa6" path="res://entities/player/characters/assets/astronaut/Astronaut.glb" id="2_ycg01"]
 [ext_resource type="AnimationLibrary" uid="uid://bd4erc5yrp7ta" path="res://entities/player/characters/assets/biker/biker_anim_lib.res" id="3_lm8ah"]
 
 [node name="CharacterSkin" type="Node3D" unique_id=259227641]
 script = ExtResource("2_lm8ah")
-mesh_res = ExtResource("2_ycg01")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2071931266]
 unique_name_in_owner = true
