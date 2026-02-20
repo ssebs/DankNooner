@@ -2,8 +2,7 @@
 
 ## Models
 
-- Download GLB
-- Drag to folder
+- Download GLB & drag to folder in godot
 - Double click .glb to open advanced import
 - Click Skeleton
   - Retarget > Create BoneMap
