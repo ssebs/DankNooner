@@ -51,7 +51,7 @@ window/stretch/aspect="keep_width"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/awaitable_http_request/plugin.cfg", "res://addons/console/plugin.cfg", "res://addons/netfox.internals/plugin.cfg", "res://addons/netfox.noray/plugin.cfg", "res://addons/netfox/plugin.cfg", "res://addons/tattomoosa.spinner/plugin.cfg", "res://addons/toastparty/plugin.cfg")
+enabled=PackedStringArray("res://addons/awaitable_http_request/plugin.cfg", "res://addons/console/plugin.cfg", "res://addons/mixamo_animation_retargeter/plugin.cfg", "res://addons/netfox.internals/plugin.cfg", "res://addons/netfox.noray/plugin.cfg", "res://addons/netfox/plugin.cfg", "res://addons/tattomoosa.spinner/plugin.cfg", "res://addons/toastparty/plugin.cfg")
 
 [filesystem]
 
