@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://cuqtwh0saekmw"]
+
+[ext_resource type="Script" uid="uid://bakxxvsooac7k" path="res://entities/player/characters/scripts/character_skin.gd" id="2_lm8ah"]
+[ext_resource type="PackedScene" uid="uid://bp182fgvg0ub6" path="res://entities/player/characters/assets/biker/Biker.glb" id="2_ycg01"]
+[ext_resource type="AnimationLibrary" uid="uid://bd4erc5yrp7ta" path="res://entities/player/characters/assets/biker/biker_anim_lib.res" id="3_lm8ah"]
+
+[node name="CharacterSkin" type="Node3D" unique_id=259227641]
+script = ExtResource("2_lm8ah")
+
+[node name="Biker" parent="." unique_id=1492660151 instance=ExtResource("2_ycg01")]
+
+[node name="Skeleton" parent="Biker/Armature" parent_id_path=PackedInt32Array(1492660151, 550890257) index="0" unique_id=1464631785]
+bones/0/position = Vector3(-0.03895227, 0.87930447, -0.002129443)
+bones/14/scale = Vector3(1.0000122, 0.99998736, 0.9999997)
+bones/15/scale = Vector3(1.0000194, 0.9999809, 1)
+bones/16/rotation = Quaternion(0.6738872, 0.67388725, 0.21418679, -0.21418688)
+bones/66/rotation = Quaternion(6.984918e-10, 0, 1, 7.436028e-09)
+bones/71/rotation = Quaternion(0.10141063, 0.7009589, 0.70236504, 0.071104296)
+
+[node name="AnimationPlayer" parent="Biker" index="1" unique_id=2071931266]
+libraries/Biker = ExtResource("3_lm8ah")
+
+[editable path="Biker"]
