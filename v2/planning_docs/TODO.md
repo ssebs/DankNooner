@@ -18,14 +18,6 @@
   - [ ] add IK & basic test animation
   - [ ] add ragdoll
 
-- [ ] multiplayer / spawn mgr cleanup
-  - [x] close server when going to main menu
-  - [x] join game during play
-    - [x] WIP - **MUST REVIEW THE CODE MYSELF**
-  - [ ] return to lobby (force everyone)
-  - [ ] review all code & cleanup to call authority done
-  - [ ] update Architecture.md
-
 ## Up Next 📋
 
 - [ ] Audio Manager
@@ -56,6 +48,11 @@
   - [ ] Save bike definitions on disk
   - [ ] Save mods / etc
   - [ ] Save levels / player stuff
+
+- [ ] Multiplayer improvements
+  - [ ] return to lobby (force everyone)
+  - [ ] review all code & cleanup to call authority done
+  - [ ] update Architecture.md
 
 ## Backlog
 
@@ -137,6 +134,12 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] multiplayer / spawn mgr cleanup
+
+  - [x] close server when going to main menu
+  - [x] join game during play
+    - [x] WIP - **MUST REVIEW THE CODE MYSELF**
 
 - [x] Create GamemodeManager
 
