@@ -38,6 +38,26 @@ materials/extract=1
 materials/extract_format=0
 materials/extract_path="res://entities/player/characters/assets/biker/clanker"
 _subresources={
+"meshes": {
+"Clanker_Beta_Joints": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://entities/player/characters/assets/clanker/Clanker_Beta_Joints.res",
+"save_to_file/path": "uid://c0d62g1dhwwn"
+},
+"Clanker_Beta_Surface": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://entities/player/characters/assets/clanker/Clanker_Beta_Surface.res",
+"save_to_file/path": "uid://dc27yjftra8hn"
+}
+},
 "nodes": {
 "PATH:Armature/Skeleton3D": {
 "retarget/bone_map": Object(BoneMap,"resource_local_to_scene":false,"resource_name":"","profile":Object(SkeletonProfileHumanoid,"resource_local_to_scene":false,"resource_name":"","root_bone":&"Root","scale_base_bone":&"Hips","group_size":4,"bone_size":56,"script":null)
