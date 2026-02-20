@@ -2,6 +2,8 @@
 
 ## Models
 
+> Should be rigged like Mixamo!
+
 - Download GLB & drag to folder in godot
 - Double click .glb to open advanced import
 - Click Skeleton
