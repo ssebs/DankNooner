@@ -24,6 +24,7 @@
   - track race
   - Missions (like simpsons hit & run)
     - Singleplayer - start on bike, 1st challenge is do a wheelie. (learn how + unlock it + get cash for customization)
+- After race, winner plays chosen dance emote animation
 - Art:
   - create color palette for dank nooner
   - Low-poly style?
