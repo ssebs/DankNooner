@@ -38,6 +38,8 @@
 
 - [ ] Create Player Part 3
 
+  - [ ] place characterskin on the bike
+  - [ ] create bikeskin the same way characterskin works
   - [ ] IK animations https://youtu.be/MbaPDWfbNLo?si=p5ybcrLUJje_nBgd
   - [ ] **Basic customization**
     - [ ] Choose a bike + color
