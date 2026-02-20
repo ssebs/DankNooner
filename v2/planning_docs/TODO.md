@@ -4,6 +4,20 @@
 
 ## In Progress 🚀
 
+- [ ] CharacterSkin / mesh
+
+  - [x] Find a good way to import meshes with rigs
+  - [x] Import animations in a uniform way
+  - [x] document
+  - [ ] change material (colors)
+  - [ ] use resources to control
+  - [ ] add marker3d in resource to place accessories
+  - [ ] add accessories
+    - [ ] helmet
+    - [ ] backpack
+  - [ ] add IK & basic test animation
+  - [ ] add ragdoll
+
 - [ ] multiplayer / spawn mgr cleanup
   - [x] close server when going to main menu
   - [x] join game during play
