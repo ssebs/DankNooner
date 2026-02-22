@@ -10,9 +10,8 @@
 render_priority = 0
 shader = ExtResource("1_mnqm6")
 shader_parameter/replacement_color = Color(1, 0, 0, 1)
-shader_parameter/target_color = Color(1, 0, 1, 1)
 shader_parameter/albedo_texture = ExtResource("2_deod7")
 shader_parameter/normal_texture = ExtResource("4_k07f4")
 shader_parameter/glossiness_texture = ExtResource("3_bm2j8")
 shader_parameter/specular_texture = ExtResource("5_8m6q8")
-shader_parameter/tolerance = 0.05
+shader_parameter/tolerance = 0.20000000298023
