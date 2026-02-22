@@ -50,29 +50,16 @@ func update_setting(
 
 ## write current_settings to settings.json
 func save_settings():
-	var file = FileAccess.open(settings_path, FileAccess.WRITE)
-	if file == null:
-		printerr("failed to open %s" % settings_path)
-		return
-
-	var json_str = JSON.stringify(current_settings)
-	file.store_string(json_str)
-	file.close()
+	DictJSONSaverLoader.save_json_to_file(settings_path, current_settings)
 
 
 ## load settings.json into current_settings
 ## emits all_settings_changed
 func load_settings():
-	var file = FileAccess.open(settings_path, FileAccess.READ)
-	if file == null:
-		printerr("failed to open %s" % settings_path)
-		return
-
-	var json_dict = JSON.parse_string(file.get_as_text())
-	if json_dict == null:
+	var json_dict = DictJSONSaverLoader.load_json_from_file(settings_path)
+	if json_dict == {}:
 		printerr("failed to parse json from %s" % settings_path)
 		return
-	file.close()
 
 	if json_dict["version"] != settings_version:
 		printerr(

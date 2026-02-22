@@ -5,6 +5,7 @@
 
 [resource]
 script = ExtResource("2_2uocw")
+skin_name = "biker"
 mesh_res = ExtResource("1_fmu5x")
 primary_color = Color(0.25490198, 0.6862745, 1, 1)
 back_marker_position = Vector3(0, 1.5575237, -0.14157149)

@@ -10,6 +10,11 @@ class_name CharacterSkin extends Node3D
 @export_tool_button("Save Markers") var save_markers_btn = _save_markers_to_resource
 @export_tool_button("Load Markers") var load_markers_btn = _load_markers_from_resource
 
+@export_tool_button("Save skin to disk") var save_skin_btn = _save_skin_to_disk
+@export_tool_button("Load skin from disk") var load_skin_btn = _load_skin_to_disk
+
+@export var skin_name_for_loading_test = "biker"
+
 const HEIGHT: float = 2.0
 
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
@@ -23,19 +28,25 @@ func _ready():
 	_apply_definition()
 
 
+#region resource/definition
 func _apply_definition():
 	spawn_mesh()
 	set_mesh_colors()
 	_load_markers_from_resource()
 
 
-func set_marker_positions():
-	back_marker.position = skin_definition.back_marker_position
-	back_marker.rotation_degrees = skin_definition.back_marker_rotation_degrees
+func _save_skin_to_disk():
+	skin_definition.save_to_disk()
+
+
+func _load_skin_to_disk():
+	skin_definition.skin_name = skin_name_for_loading_test
+	skin_definition.load_from_disk()
 
 
 func _load_markers_from_resource():
-	set_marker_positions()
+	back_marker.position = skin_definition.back_marker_position
+	back_marker.rotation_degrees = skin_definition.back_marker_rotation_degrees
 
 
 func _save_markers_to_resource():
@@ -49,6 +60,10 @@ func _save_markers_to_resource():
 		push_error("CharacterSkin: Failed to save resource, error: ", err)
 
 
+#endregion
+
+
+#region mesh init
 func set_mesh_colors():
 	if skin_definition.primary_color != Color.TRANSPARENT:
 		mesh_skin.update_primary_color(skin_definition.primary_color)
@@ -67,6 +82,9 @@ func spawn_mesh():
 	# retarget AnimationMixer => Root Node to new mesh
 	anim_player.root_node = mesh_skin.get_path()
 	anim_player.play("Biker/reset")
+
+
+#endregion
 
 
 #region mesh scaling
