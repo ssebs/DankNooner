@@ -12,20 +12,10 @@
   - [x] change material (colors)
   - [x] use resources to control
   - [x] add marker3d in resource to place accessories
-  - [ ] add accessories
-    - [ ] helmet
-    - [ ] backpack
   - [ ] add IK & basic test animation
   - [ ] add ragdoll
 
 ## Up Next 📋
-
-- [ ] Audio Manager
-
-  - [ ] Client side
-    - [ ] Global audio buses (music, sfx)
-  - [ ] Server side
-    - [ ] 3D spatial audio bus (for bikes in world)
 
 - [ ] Create Player Part 2
 
@@ -36,14 +26,26 @@
     - [ ] sound
     - [ ] dont worry about tricks other than wheelies
 
+- [ ] Audio Manager
+
+  - [ ] Client side
+    - [ ] Global audio buses (music, sfx)
+  - [ ] Server side
+    - [ ] 3D spatial audio bus (for bikes in world)
+
 - [ ] Create Player Part 3
 
   - [ ] place characterskin on the bike
   - [ ] create bikeskin the same way characterskin works
   - [ ] IK animations https://youtu.be/MbaPDWfbNLo?si=p5ybcrLUJje_nBgd
-  - [ ] **Basic customization**
-    - [ ] Choose a bike + color
-    - [ ] Choose a character (male/female)
+
+- [ ] Basic customization menu / UI
+
+  - [ ] Create customize menu UI
+  - [ ] Create customize menu background scene
+  - [ ] when spawning player in game, show their customizations
+  - [ ] Choose a bike + color
+  - [ ] Choose a character (male/female)
 
 - [ ] Create Save System for in-game
 
@@ -64,15 +66,13 @@
 - [ ] software is open source, but assets aren't public
 
 - [ ] level select img
-- [ ] Customization UI / menu
+- [ ] More Customization UI / menu
 
-  - [ ] Add customize menu UI
-  - [ ] Add customize menu background scene
-  - [ ] Save on client- but make abstract enough for future server saving
-  - [ ] when spawning player in game, show their customizations
   - [ ] Add Bike customization
     - [ ] **BikeDefinition** with component definitions under it since I will have multiple bike types, colors, and mods for each type.
       - [ ] character accessories (cosmetics, etc.)
+        - [ ] helmet
+        - [ ] backpack
       - [ ] bike mods (color, actual mods) (**basic customization**)
       - [ ] base mesh **MeshDefinition**
       - [ ] color override
