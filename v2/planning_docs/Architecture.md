@@ -192,6 +192,7 @@ Uses `CharacterBody3D` with manual inertia simulation instead of physics forces:
   - Replace color in albedo/diffuse texture with #FF00FF
     - Select > Color Range
     - Edit > Fill (w/ pink)
+  - Use this pink color to make things dynamic in game
 - If not:
   - use albedo_only_skin_color.tres instead of skin_color in future steps
 - Save to disk

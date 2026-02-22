@@ -9,7 +9,7 @@
   - [x] Find a good way to import meshes with rigs
   - [x] Import animations in a uniform way
   - [x] document
-  - [ ] change material (colors)
+  - [x] change material (colors)
   - [ ] use resources to control
   - [ ] add marker3d in resource to place accessories
   - [ ] add accessories
