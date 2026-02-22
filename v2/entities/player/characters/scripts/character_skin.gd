@@ -26,6 +26,24 @@ var skel_3d: Skeleton3D
 ## Needs to be generated in code, used in ragdoll simulation
 var skel_root: PhysicalBoneSimulator3D = PhysicalBoneSimulator3D.new()
 
+var root_bone_name = "Hips"
+var ragdoll_bone_names = {
+	"Spine": {"type": "CONE", "min_bounds": [-0.5, -0.4, -0.6], "max_bounds": [1, 0.4, 0.6]},
+	"Chest": {"type": "HINGE_Y", "min_bounds": [], "max_bounds": []},
+	"UpperChest": {"type": "HINGE_X", "min_bounds": [], "max_bounds": []},
+	"Head": {"type": "CONE", "min_bounds": [], "max_bounds": []},
+	"LeftUpperArm": {"type": "CONE", "min_bounds": [], "max_bounds": []},
+	"LeftLowerArm": {"type": "CONE", "min_bounds": [], "max_bounds": []},
+	"LeftHand": {"type": "CONE", "min_bounds": [], "max_bounds": []},
+	"RightUpperArm": {"type": "CONE", "min_bounds": [], "max_bounds": []},
+	"RightLowerArm": {"type": "CONE", "min_bounds": [], "max_bounds": []},
+	"RightHand": {"type": "CONE", "min_bounds": [], "max_bounds": []},
+	"LeftUpperLeg": {"type": "HINGE_Y", "min_bounds": [], "max_bounds": []},
+	"LeftLowerLeg":
+	{"type": "HINGE", "min_bounds": [null, null, 0], "max_bounds": [null, null, -1.4]},
+	"LeftFoot": {"type": "CONE", "min_bounds": [], "max_bounds": []},
+}
+
 
 func _ready():
 	_apply_definition()
@@ -61,6 +79,7 @@ func populate_skeleton_for_ragdoll():
 
 		var b_name = skel_3d.get_bone_name(i)
 		one_physical_bone.bone_name = b_name
+		print(b_name)
 		var rest_bone: Transform3D = skel_3d.get_bone_global_rest(i)
 		one_physical_bone.transform = rest_bone
 
@@ -73,10 +92,6 @@ func populate_skeleton_for_ragdoll():
 
 		one_physical_bone.set_joint_type(PhysicalBone3D.JOINT_TYPE_CONE)
 
-
-"""
-skel_root.physical_bones_start_simulation()
-"""
 
 #endregion
 
