@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CharacterSkinDefinition" format=3 uid="uid://2af1lwc0vbaw"]
+
+[ext_resource type="PackedScene" uid="uid://dyb003q5xadyq" path="res://entities/player/characters/scenes/clanker_skin.tscn" id="1_1vc34"]
+[ext_resource type="Script" uid="uid://bh7rf77tqy8xb" path="res://resources/entities/player/character_skin_definition.gd" id="2_m7by8"]
+
+[resource]
+script = ExtResource("2_m7by8")
+skin_name = "clanker_blue"
+mesh_res = ExtResource("1_1vc34")
+primary_color = Color(0.25490198, 0.6862745, 1, 1)
+secondary_color = Color(0, 0.1265642, 0.21883303, 1)
+back_marker_position = Vector3(0, 1.5575522, -0.1533502)
+back_marker_rotation_degrees = Vector3(0, 179.99998, 0)
+metadata/_custom_type_script = "uid://bh7rf77tqy8xb"

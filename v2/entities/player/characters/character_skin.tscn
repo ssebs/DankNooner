@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cuqtwh0saekmw"]
 
 [ext_resource type="Script" uid="uid://bakxxvsooac7k" path="res://entities/player/characters/scripts/character_skin.gd" id="2_lm8ah"]
-[ext_resource type="Resource" uid="uid://dugcuccseinkn" path="res://resources/entities/player/skins/biker_default_skin_definition.tres" id="2_ycg01"]
+[ext_resource type="Resource" uid="uid://2af1lwc0vbaw" path="res://resources/entities/player/skins/clanker_blue_skin_definition.tres" id="2_ycg01"]
 [ext_resource type="AnimationLibrary" uid="uid://bd4erc5yrp7ta" path="res://entities/player/characters/assets/biker/biker_anim_lib.res" id="3_lm8ah"]
 
 [node name="CharacterSkin" type="Node3D" unique_id=259227641]
@@ -11,7 +11,7 @@ skin_name_for_loading_test = "biker_blue"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2071931266]
 unique_name_in_owner = true
-root_node = NodePath("/root/@EditorNode@18066/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/CharacterSkin/MeshNode/Biker")
+root_node = NodePath("/root/@EditorNode@18066/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/CharacterSkin/MeshNode/@Node3D@151888")
 libraries/Biker = ExtResource("3_lm8ah")
 
 [node name="MeshNode" type="Node3D" parent="." unique_id=1624205252]
@@ -19,4 +19,4 @@ unique_name_in_owner = true
 
 [node name="BackAccessoryMarker" type="Marker3D" parent="." unique_id=478042608]
 unique_name_in_owner = true
-transform = Transform3D(-1, 0, -3.8941437e-07, 0, 1, 0, 3.8941437e-07, 0, -1, 0, 1.5575237, -0.14157149)
+transform = Transform3D(-1, 0, 3.8941437e-07, 0, 1, 0, -3.8941437e-07, 0, -1, 0, 1.5575522, -0.1533502)
