@@ -204,19 +204,39 @@ Uses `CharacterBody3D` with manual inertia simulation instead of physics forces:
 - Save
 - Use this in character_skin.tscn
 
-#### Character_skin Workflow:
+#### Character Skin System
 
-1. **Create a resource:** Right-click in FileSystem -> New Resource -> CharacterSkinDefinition -> save as
+Skins use a resource-based system: `CharacterSkin` (scene) displays a `CharacterSkinDefinition` (resource).
 
-2. **Assign to scene:** Select CharacterSkin node -> drag `.tres` to `skin_definition` export
+##### Creating a New Skin
 
-3. **Visual editing:**
+1. Open `character_skin.tscn`
+2. Create new `CharacterSkinDefinition` resource in inspector
+3. Set `skin_name`, assign `mesh_res` (must be a `SkinColor` scene), set colors
+4. Save resource as `resources/entities/player/skins/{skin_name}_default_skin_definition.tres`
+5. Move `BackAccessoryMarker` to correct position / rotation in 3D viewport
+6. Click **Save Markers to resource** button in inspector
+7. Save the skin resource
 
-   - Move `BackAccessoryMarker` in 3D viewport to desired position
-   - In Inspector, click `Save Markers To Resource` button
-   - Values are written to the `.tres` file
+##### Creating Color Variants
 
-4. **Reset to saved:** Click `Load Markers From Resource` button to revert to saved values
+1. Load existing skin definition
+2. Change `skin_name` to new variant name (e.g. `biker_red`)
+3. Adjust `primary_color` / `secondary_color`
+4. Save As -> `resources/entities/player/skins/{skin_name}_{color}_skin_definition.tres`
+
+##### Save/Load to User Directory
+
+Skins can be saved/loaded from `user://skins/` for runtime customization:
+
+- **Save:** Click **Save skin to u:disk** or call `skin_definition.save_to_disk()`
+  - Files saved as `character_skin_{skin_name}.tres`
+- **Load:** Set `skin_name_for_loading_test` to a skin name found on disk, click **Load skin from u:disk** or call `skin_definition.load_from_disk()`
+- This will load in the inspector
+
+##### Serialization
+
+`CharacterSkinDefinition` has `to_dict()` / `from_dict()` for JSON serialization via `DictJSONSaverLoader`.
 
 ### Pause System
 

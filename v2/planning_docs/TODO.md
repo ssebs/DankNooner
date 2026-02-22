@@ -10,8 +10,8 @@
   - [x] Import animations in a uniform way
   - [x] document
   - [x] change material (colors)
-  - [ ] use resources to control
-  - [ ] add marker3d in resource to place accessories
+  - [x] use resources to control
+  - [x] add marker3d in resource to place accessories
   - [ ] add accessories
     - [ ] helmet
     - [ ] backpack
