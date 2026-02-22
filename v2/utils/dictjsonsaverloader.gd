@@ -31,3 +31,25 @@ static func load_json_from_file(path: String) -> Dictionary:
 	file.close()
 
 	return json_dict
+
+
+#region (de)serializers
+static func color_to_dict(c: Color) -> Dictionary:
+	return {"r": c.r, "g": c.g, "b": c.b, "a": c.a}
+
+
+static func dict_to_color(d: Dictionary) -> Color:
+	if d.is_empty():
+		return Color.TRANSPARENT
+	return Color(d.get("r", 0.0), d.get("g", 0.0), d.get("b", 0.0), d.get("a", 1.0))
+
+
+static func vec3_to_dict(v: Vector3) -> Dictionary:
+	return {"x": v.x, "y": v.y, "z": v.z}
+
+
+static func dict_to_vec3(d: Dictionary) -> Vector3:
+	if d.is_empty():
+		return Vector3.ZERO
+	return Vector3(d.get("x", 0.0), d.get("y", 0.0), d.get("z", 0.0))
+#endregion
