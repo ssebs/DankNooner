@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/player/characters/scripts/skin_color.gd" id="2_uii8v"]
 [ext_resource type="Material" uid="uid://dsy30ovt7hcgy" path="res://entities/player/characters/assets/biker/biker_shader_mat.tres" id="3_uii8v"]
 [ext_resource type="Shader" uid="uid://djo3ltfju324e" path="res://entities/player/characters/shaders/skin_color.gdshader" id="4_1kih7"]
-[ext_resource type="Texture2D" uid="uid://c711wg1mcx0h6" path="res://entities/player/characters/assets/biker/Biker_Pink_Diffuse.png" id="5_1kih7"]
+[ext_resource type="Texture2D" uid="uid://dtlssvamnmhsc" path="res://entities/player/characters/assets/biker/Biker_Pink_Diffuse.png" id="5_1kih7"]
 [ext_resource type="Texture2D" uid="uid://ce5utmplwg6j7" path="res://entities/player/characters/assets/biker/Biker_Ch20_1001_Glossiness.png" id="6_a4jph"]
 [ext_resource type="Texture2D" uid="uid://cyxwvgjq76enw" path="res://entities/player/characters/assets/biker/Biker_Ch20_1001_Normal.png" id="7_ng0ve"]
 [ext_resource type="Texture2D" uid="uid://bmrj84ospc20f" path="res://entities/player/characters/assets/biker/Biker_Ch20_1001_Specular.png" id="8_ustxj"]
