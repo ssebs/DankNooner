@@ -8,12 +8,11 @@ class_name CharacterSkin extends Node3D
 			_apply_definition()
 
 @export_tool_button("Save Markers to resource") var save_markers_btn = _save_markers_to_resource
-@export_tool_button("Load Markers to resource") var load_markers_btn = _load_markers_from_resource
+@export_tool_button("Load Markers from resource") var load_markers_btn = _load_markers_from_resource
 
 @export_tool_button("Save skin to u:disk") var save_skin_btn = _save_skin_to_disk
-@export_tool_button("Load skin from u:disk") var load_skin_btn = _load_skin_to_disk
-
 @export var skin_name_for_loading_test = "biker_default"
+@export_tool_button("Load skin from u:disk") var load_skin_btn = _load_skin_to_disk
 
 const HEIGHT: float = 2.0
 

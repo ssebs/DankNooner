@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CharacterSkinDefinition" format=3 uid="uid://d3v0btsnsgpb3"]
+
+[ext_resource type="PackedScene" uid="uid://dvk30v3uxddp1" path="res://entities/player/characters/scenes/astronaut_skin.tscn" id="1_3slnl"]
+[ext_resource type="Script" uid="uid://bh7rf77tqy8xb" path="res://resources/entities/player/character_skin_definition.gd" id="2_g8gpo"]
+
+[resource]
+script = ExtResource("2_g8gpo")
+skin_name = "astronaut"
+mesh_res = ExtResource("1_3slnl")
+back_marker_position = Vector3(-1.4947399e-09, 1.6011683, -0.3223374)
+back_marker_rotation_degrees = Vector3(0, -179.99998, 0)
+metadata/_custom_type_script = "uid://bh7rf77tqy8xb"
