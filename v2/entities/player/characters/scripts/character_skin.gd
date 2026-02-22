@@ -27,21 +27,20 @@ var skel_3d: Skeleton3D
 var skel_root: PhysicalBoneSimulator3D = PhysicalBoneSimulator3D.new()
 
 var root_bone_name = "Hips"
-var ragdoll_bone_names = {
+# TODO: - have claude update the skeleton gen to only create bones if names match &
+# 	set rotation params based on this Dict
+#   copy Left to Right
+var ragdoll_bone_names_constraints = {
 	"Spine": {"type": "CONE", "min_bounds": [-0.5, -0.4, -0.6], "max_bounds": [1, 0.4, 0.6]},
-	"Chest": {"type": "HINGE_Y", "min_bounds": [], "max_bounds": []},
-	"UpperChest": {"type": "HINGE_X", "min_bounds": [], "max_bounds": []},
-	"Head": {"type": "CONE", "min_bounds": [], "max_bounds": []},
-	"LeftUpperArm": {"type": "CONE", "min_bounds": [], "max_bounds": []},
-	"LeftLowerArm": {"type": "CONE", "min_bounds": [], "max_bounds": []},
-	"LeftHand": {"type": "CONE", "min_bounds": [], "max_bounds": []},
-	"RightUpperArm": {"type": "CONE", "min_bounds": [], "max_bounds": []},
-	"RightLowerArm": {"type": "CONE", "min_bounds": [], "max_bounds": []},
-	"RightHand": {"type": "CONE", "min_bounds": [], "max_bounds": []},
-	"LeftUpperLeg": {"type": "HINGE_Y", "min_bounds": [], "max_bounds": []},
-	"LeftLowerLeg":
-	{"type": "HINGE", "min_bounds": [null, null, 0], "max_bounds": [null, null, -1.4]},
-	"LeftFoot": {"type": "CONE", "min_bounds": [], "max_bounds": []},
+	# "Chest": {"type": "HINGE", "min_bounds": [], "max_bounds": []},
+	# "UpperChest": {"type": "HINGE_X", "min_bounds": [], "max_bounds": []},
+	"Head": {"type": "CONE", "min_bounds": [-0.6, -0.6, -0.3], "max_bounds": [0.35, 0.6, 0.3]},
+	"LeftUpperArm": {"type": "CONE", "min_bounds": [-0.3, 1, -0.8], "max_bounds": [1.0, 1, 0.8]},
+	"LeftLowerArm": {"type": "CONE", "min_bounds": [-0.1, -2, -2], "max_bounds": [2.5, -0.7, 2]},
+	"LeftHand": {"type": "CONE", "min_bounds": [-0.3, 0, -0.3], "max_bounds": [0.5, 3, 0.3]},
+	"LeftUpperLeg": {"type": "CONE", "min_bounds": [-0.7, -0.8, 1], "max_bounds": [0.7, 1.2, 1]},
+	"LeftLowerLeg": {"type": "HINGE", "min_bounds": [0, 1, 0], "max_bounds": [0, 1, -1.5]},
+	"LeftFoot": {"type": "CONE", "min_bounds": [-0.4, 1.5, -1.4], "max_bounds": [0.4, 0.3, 0]},
 }
 
 
@@ -52,7 +51,7 @@ func _ready():
 		# Show the biker mesh in the editor
 		mesh_skin.owner = self
 
-	create_skeleton_for_ragdoll()
+	# create_skeleton_for_ragdoll()
 
 
 #region ragdoll
