@@ -185,6 +185,21 @@ Uses `CharacterBody3D` with manual inertia simulation instead of physics forces:
 - `apply_engine_braking()` - passive slowdown when no input
 - Tunable exports: `acceleration`, `brake_decel`, `engine_brake_decel`, `turn_speed`, `turn_friction`
 
+#### How to create skin color changing material
+
+- Import model to godot, make sure to export textures
+- Replace color in albedo/diffuse texture with #FF00FF
+  - Select > Color Range
+  - Edit > Fill (w/ pink)
+- Save to disk
+- Open skin_color.tres, save as new material
+- Update the textures for the material for that mesh
+- Create inherited scene from the .glb, save to characters/scenes
+- Attach SkinColor script to the root node
+- Update values
+- Save
+- Use this in character_skin.tscn
+
 ### Pause System
 
 User stories:

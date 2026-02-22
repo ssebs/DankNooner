@@ -2,21 +2,18 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bmrj84ospc20f"
-path.s3tc="res://.godot/imported/Biker_Ch20_1001_Specular.png-7309861ea19100ff517f1e9ef70e6b2d.s3tc.ctex"
-path.etc2="res://.godot/imported/Biker_Ch20_1001_Specular.png-7309861ea19100ff517f1e9ef70e6b2d.etc2.ctex"
+uid="uid://c711wg1mcx0h6"
+path.s3tc="res://.godot/imported/Biker_Pink_Diffuse.png-2cc2ee7a3f6be95e9692684105c2b2ed.s3tc.ctex"
+path.etc2="res://.godot/imported/Biker_Pink_Diffuse.png-2cc2ee7a3f6be95e9692684105c2b2ed.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
-generator_parameters={
-"md5": "57fb27ae03946968e016dc970587f200"
-}
 
 [deps]
 
-source_file="res://entities/player/characters/assets/biker/Biker_Ch20_1001_Specular.png"
-dest_files=["res://.godot/imported/Biker_Ch20_1001_Specular.png-7309861ea19100ff517f1e9ef70e6b2d.s3tc.ctex", "res://.godot/imported/Biker_Ch20_1001_Specular.png-7309861ea19100ff517f1e9ef70e6b2d.etc2.ctex"]
+source_file="res://entities/player/characters/assets/biker/Biker_Pink_Diffuse.png"
+dest_files=["res://.godot/imported/Biker_Pink_Diffuse.png-2cc2ee7a3f6be95e9692684105c2b2ed.s3tc.ctex", "res://.godot/imported/Biker_Pink_Diffuse.png-2cc2ee7a3f6be95e9692684105c2b2ed.etc2.ctex"]
 
 [params]
 

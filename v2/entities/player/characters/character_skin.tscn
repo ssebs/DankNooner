@@ -1,14 +1,16 @@
 [gd_scene format=3 uid="uid://cuqtwh0saekmw"]
 
 [ext_resource type="Script" uid="uid://bakxxvsooac7k" path="res://entities/player/characters/scripts/character_skin.gd" id="2_lm8ah"]
+[ext_resource type="PackedScene" uid="uid://bp182fgvg0ub6" path="res://entities/player/characters/assets/biker/Biker.glb" id="2_ycg01"]
 [ext_resource type="AnimationLibrary" uid="uid://bd4erc5yrp7ta" path="res://entities/player/characters/assets/biker/biker_anim_lib.res" id="3_lm8ah"]
 
 [node name="CharacterSkin" type="Node3D" unique_id=259227641]
 script = ExtResource("2_lm8ah")
+mesh_res = ExtResource("2_ycg01")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2071931266]
 unique_name_in_owner = true
-root_node = NodePath("/root/@EditorNode@18066/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/CharacterSkin/MeshNode/Clanker")
+root_node = NodePath("/root/@EditorNode@18066/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/CharacterSkin/MeshNode/Biker")
 libraries/Biker = ExtResource("3_lm8ah")
 
 [node name="MeshNode" type="Node3D" parent="." unique_id=1624205252]

@@ -1,0 +1,18 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dsy30ovt7hcgy"]
+
+[ext_resource type="Shader" uid="uid://djo3ltfju324e" path="res://entities/player/characters/shaders/skin_color.gdshader" id="1_mnqm6"]
+[ext_resource type="Texture2D" uid="uid://c711wg1mcx0h6" path="res://entities/player/characters/assets/biker/Biker_Pink_Diffuse.png" id="2_deod7"]
+[ext_resource type="Texture2D" uid="uid://ce5utmplwg6j7" path="res://entities/player/characters/assets/biker/Biker_Ch20_1001_Glossiness.png" id="3_bm2j8"]
+[ext_resource type="Texture2D" uid="uid://cyxwvgjq76enw" path="res://entities/player/characters/assets/biker/Biker_Ch20_1001_Normal.png" id="4_k07f4"]
+[ext_resource type="Texture2D" uid="uid://bmrj84ospc20f" path="res://entities/player/characters/assets/biker/Biker_Ch20_1001_Specular.png" id="5_8m6q8"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_mnqm6")
+shader_parameter/replacement_color = Color(1, 0, 0, 1)
+shader_parameter/target_color = Color(1, 0, 1, 1)
+shader_parameter/albedo_texture = ExtResource("2_deod7")
+shader_parameter/normal_texture = ExtResource("4_k07f4")
+shader_parameter/glossiness_texture = ExtResource("3_bm2j8")
+shader_parameter/specular_texture = ExtResource("5_8m6q8")
+shader_parameter/tolerance = 0.05
