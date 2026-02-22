@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://cyjm6m4wo0kbe"]
+
+[ext_resource type="Shader" uid="uid://dt2y4oio3box3" path="res://entities/player/characters/shaders/albedo_only_skin_color.gdshader" id="1_35px2"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_35px2")
+shader_parameter/color = Color(1, 0, 0, 1)

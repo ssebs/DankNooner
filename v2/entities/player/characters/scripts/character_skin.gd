@@ -8,7 +8,9 @@ class_name CharacterSkin extends Node3D
 			assert(instance is SkinColor, "Wrong scene type!")
 			instance.free()
 		mesh_res = value
-@export var primary_color: Color = Color.RED
+@export var primary_color: Color = Color.TRANSPARENT
+## only used if mesh_res.has_secondary
+@export var secondary_color: Color = Color.TRANSPARENT
 
 const HEIGHT: float = 2.0
 
@@ -20,7 +22,15 @@ var mesh_skin: SkinColor
 
 func _ready():
 	spawn_mesh()
-	mesh_skin.update_primary_color(primary_color)
+
+	set_mesh_colors()
+
+
+func set_mesh_colors():
+	if primary_color != Color.TRANSPARENT:
+		mesh_skin.update_primary_color(primary_color)
+	if mesh_skin.has_secondary && secondary_color != Color.TRANSPARENT:
+		mesh_skin.update_secondary_color(secondary_color)
 
 
 func spawn_mesh():
