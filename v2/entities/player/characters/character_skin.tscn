@@ -18,4 +18,4 @@ unique_name_in_owner = true
 
 [node name="BackAccessoryMarker" type="Marker3D" parent="." unique_id=478042608]
 unique_name_in_owner = true
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1.5575237, -0.14157149)
+transform = Transform3D(-1, 0, -3.8941437e-07, 0, 1, 0, 3.8941437e-07, 0, -1, 0, 1.5575237, -0.14157149)
