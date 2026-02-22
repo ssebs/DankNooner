@@ -114,8 +114,8 @@ Levels are managed via `LevelManager` and selected through the `LobbyMenuState` 
 
 - **LevelManager** (`managers/level_manager.gd`)
   - `LevelName` enum - defines all available levels
-  - `possible_levels` - Dictionary mapping `LevelName` → preloaded `PackedScene`
-  - `level_name_map` - Dictionary mapping `LevelName` → localization key string
+  - `possible_levels` - Dictionary mapping `LevelName` -> preloaded `PackedScene`
+  - `level_name_map` - Dictionary mapping `LevelName` -> localization key string
   - `@export spawn_node` - Node3D where levels are instantiated
 
 > Note - Level enum idx 0 is `LEVEL_SELECT_LABEL` (not a real level, used for dropdown default)
@@ -128,8 +128,8 @@ Levels are managed via `LevelManager` and selected through the `LobbyMenuState` 
 
 1. Create level scene extending `LevelDefinition` (no need to wire `level_manager` export - it's set automatically on spawn)
 2. Add entry to `LevelName` enum in `level_manager.gd`
-3. Add entry to `level_name_map` (enum → localization key)
-4. Add entry to `possible_levels` (enum → `preload("res://path/to/level.tscn")`)
+3. Add entry to `level_name_map` (enum -> localization key)
+4. Add entry to `possible_levels` (enum -> `preload("res://path/to/level.tscn")`)
 
 ### Input System <<< THIS IS OUT OF DATE >>>
 
@@ -150,9 +150,9 @@ enum InputState {
 
 The InputManager uses `_unhandled_input()` to process events based on `current_input_state`:
 
-- **IN_GAME**: "pause" action → emits `pause_requested` signal
-- **IN_GAME_PAUSED**: "pause" action → emits `unpause_requested` signal
-- **IN_MENU**: "ui_cancel" action → delegates to current MenuState's `on_cancel_key_pressed()`
+- **IN_GAME**: "pause" action -> emits `pause_requested` signal
+- **IN_GAME_PAUSED**: "pause" action -> emits `unpause_requested` signal
+- **IN_MENU**: "ui_cancel" action -> delegates to current MenuState's `on_cancel_key_pressed()`
 - **DISABLED**: Ignores all input
 
 #### Mouse Cursor Control
@@ -203,6 +203,20 @@ Uses `CharacterBody3D` with manual inertia simulation instead of physics forces:
 - Update values
 - Save
 - Use this in character_skin.tscn
+
+#### Character_skin Workflow:
+
+1. **Create a resource:** Right-click in FileSystem -> New Resource -> CharacterSkinDefinition -> save as
+
+2. **Assign to scene:** Select CharacterSkin node -> drag `.tres` to `skin_definition` export
+
+3. **Visual editing:**
+
+   - Move `BackAccessoryMarker` in 3D viewport to desired position
+   - In Inspector, click `Save Markers To Resource` button
+   - Values are written to the `.tres` file
+
+4. **Reset to saved:** Click `Load Markers From Resource` button to revert to saved values
 
 ### Pause System
 
@@ -301,18 +315,18 @@ flowchart LR
 
 ### Authority Summary
 
-| Component                    | Runs On               | Authority                     |
-| ---------------------------- | --------------------- | ----------------------------- |
-| `InputController` (capture)  | Local client only     | Client                        |
-| `InputController` (send RPC) | Local client → Server | Client sends, Server receives |
-| `MovementController`         | Server only           | Server                        |
-| `CameraController`           | Local client only     | Client                        |
-| Position/Rotation            | Server broadcasts     | Server                        |
-| Lobby state                  | Server broadcasts     | Server                        |
+| Component                    | Runs On                | Authority                     |
+| ---------------------------- | ---------------------- | ----------------------------- |
+| `InputController` (capture)  | Local client only      | Client                        |
+| `InputController` (send RPC) | Local client -> Server | Client sends, Server receives |
+| `MovementController`         | Server only            | Server                        |
+| `CameraController`           | Local client only      | Client                        |
+| Position/Rotation            | Server broadcasts      | Server                        |
+| Lobby state                  | Server broadcasts      | Server                        |
 
 ### RPC Signatures
 
-**InputController** - Client → Server:
+**InputController** - Client -> Server:
 
 ```gdscript
 ## Sent every physics frame from client to server
