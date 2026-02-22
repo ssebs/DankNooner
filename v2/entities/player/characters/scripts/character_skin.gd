@@ -1,16 +1,14 @@
 @tool
 class_name CharacterSkin extends Node3D
 
-@export var mesh_res: PackedScene:
+@export var skin_definition: CharacterSkinDefinition:
 	set(value):
-		if value:
-			var instance = value.instantiate()
-			assert(instance is SkinColor, "Wrong scene type!")
-			instance.free()
-		mesh_res = value
-@export var primary_color: Color = Color.TRANSPARENT
-## only used if mesh_res.has_secondary
-@export var secondary_color: Color = Color.TRANSPARENT
+		skin_definition = value
+		if Engine.is_editor_hint() and is_node_ready():
+			_apply_definition()
+
+@export_tool_button("Save Markers") var save_markers_btn = _save_markers_to_resource
+@export_tool_button("Load Markers") var load_markers_btn = _load_markers_from_resource
 
 const HEIGHT: float = 2.0
 
@@ -22,28 +20,46 @@ var mesh_skin: SkinColor
 
 
 func _ready():
-	spawn_mesh()
+	_apply_definition()
 
+
+func _apply_definition():
+	spawn_mesh()
 	set_mesh_colors()
-	set_marker_positions()
+	_load_markers_from_resource()
 
 
 func set_marker_positions():
-	# TODO - set back_marker.position from a resource
-	pass
+	back_marker.position = skin_definition.back_marker_position
+	back_marker.rotation_degrees = skin_definition.back_marker_rotation_degrees
+
+
+func _load_markers_from_resource():
+	set_marker_positions()
+
+
+func _save_markers_to_resource():
+	skin_definition.back_marker_position = back_marker.position
+	skin_definition.back_marker_rotation_degrees = back_marker.rotation_degrees
+
+	var err = ResourceSaver.save(skin_definition)
+	if err == OK:
+		print("CharacterSkin: Saved marker positions to ", skin_definition.resource_path)
+	else:
+		push_error("CharacterSkin: Failed to save resource, error: ", err)
 
 
 func set_mesh_colors():
-	if primary_color != Color.TRANSPARENT:
-		mesh_skin.update_primary_color(primary_color)
-	if mesh_skin.has_secondary && secondary_color != Color.TRANSPARENT:
-		mesh_skin.update_secondary_color(secondary_color)
+	if skin_definition.primary_color != Color.TRANSPARENT:
+		mesh_skin.update_primary_color(skin_definition.primary_color)
+	if mesh_skin.has_secondary and skin_definition.secondary_color != Color.TRANSPARENT:
+		mesh_skin.update_secondary_color(skin_definition.secondary_color)
 
 
 func spawn_mesh():
 	for child in mesh_node.get_children():
 		child.queue_free()
-	mesh_skin = mesh_res.instantiate()
+	mesh_skin = skin_definition.mesh_res.instantiate()
 	mesh_node.add_child(mesh_skin)
 
 	scale_to_height(mesh_skin, HEIGHT)
@@ -91,8 +107,6 @@ func get_combined_aabb(node: Node3D) -> AABB:
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
-
-	if mesh_res == null:
-		issues.append("mesh_res must not be empty, and must be a SkinColor")
-
+	if skin_definition == null:
+		issues.append("skin_definition must be set")
 	return issues
