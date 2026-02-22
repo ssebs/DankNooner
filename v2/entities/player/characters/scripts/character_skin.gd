@@ -1,28 +1,38 @@
 @tool
 class_name CharacterSkin extends Node3D
 
-@export
-var mesh_res: PackedScene = preload("res://entities/player/characters/assets/clanker/Clanker.glb")
+@export var mesh_res: PackedScene:
+	set(value):
+		if value:
+			var instance = value.instantiate()
+			assert(instance is SkinColor, "Wrong scene type!")
+			instance.free()
+		mesh_res = value
+@export var primary_color: Color = Color.RED
 
-@export var height: float = 2.0
+const HEIGHT: float = 2.0
+
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var mesh_node: Node3D = %MeshNode
+
+var mesh_skin: SkinColor
 
 
 func _ready():
 	spawn_mesh()
+	mesh_skin.update_primary_color(primary_color)
 
 
 func spawn_mesh():
 	for child in mesh_node.get_children():
 		child.queue_free()
-	var m = mesh_res.instantiate()
-	mesh_node.add_child(m)
+	mesh_skin = mesh_res.instantiate()
+	mesh_node.add_child(mesh_skin)
 
-	scale_to_height(m, height)
+	scale_to_height(mesh_skin, HEIGHT)
 
 	# retarget AnimationMixer => Root Node to new mesh
-	anim_player.root_node = m.get_path()
+	anim_player.root_node = mesh_skin.get_path()
 	anim_player.play("Biker/reset")
 
 
@@ -57,4 +67,15 @@ func get_combined_aabb(node: Node3D) -> AABB:
 				else:
 					combined = combined.merge(transformed)
 	return combined
+
+
 #endregion
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var issues = []
+
+	if mesh_res == null:
+		issues.append("mesh_res must not be empty, and must be a SkinColor")
+
+	return issues

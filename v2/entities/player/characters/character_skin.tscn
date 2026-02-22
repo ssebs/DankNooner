@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cuqtwh0saekmw"]
 
 [ext_resource type="Script" uid="uid://bakxxvsooac7k" path="res://entities/player/characters/scripts/character_skin.gd" id="2_lm8ah"]
-[ext_resource type="PackedScene" uid="uid://bp182fgvg0ub6" path="res://entities/player/characters/assets/biker/Biker.glb" id="2_ycg01"]
+[ext_resource type="PackedScene" uid="uid://cn55y1jxvs5l2" path="res://entities/player/characters/scenes/biker_skin.tscn" id="2_ycg01"]
 [ext_resource type="AnimationLibrary" uid="uid://bd4erc5yrp7ta" path="res://entities/player/characters/assets/biker/biker_anim_lib.res" id="3_lm8ah"]
 
 [node name="CharacterSkin" type="Node3D" unique_id=259227641]
