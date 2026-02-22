@@ -6,3 +6,5 @@ class_name PlayerDefinition extends Resource
 @export var username: String
 @export var money: int
 @export var xp: int
+
+@export var skin: CharacterSkinDefinition

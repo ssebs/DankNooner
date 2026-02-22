@@ -24,13 +24,46 @@ class_name CharacterSkinDefinition extends Resource
 @export var back_marker_position: Vector3 = Vector3.ZERO
 @export var back_marker_rotation_degrees: Vector3 = Vector3.ZERO
 
-## ZZZ replaced with skin_name
-const SAVE_PATH: String = "user://character_skin_ZZZ.json"
-const SAVE_VERSION: int = 1
+const USER_SKIN_DIR: String = "user://skins/"
+const SKIN_PFX: String = "character_skin_"
 
 
 func save_to_disk():
-	var json_dict = {
+	DirAccess.make_dir_recursive_absolute(USER_SKIN_DIR)
+	var path = USER_SKIN_DIR + SKIN_PFX + skin_name.to_snake_case() + ".tres"
+	var err = ResourceSaver.save(self, path)
+	if err == OK:
+		print("CharacterSkinDefinition: Saved to ", path)
+	else:
+		push_error("CharacterSkinDefinition: Failed to save, error: ", err)
+
+
+## skin_name must be set before calling!
+func load_from_disk() -> bool:
+	var path = USER_SKIN_DIR + SKIN_PFX + skin_name.to_snake_case() + ".tres"
+	if not ResourceLoader.exists(path):
+		push_error("CharacterSkinDefinition: File not found: ", path)
+		return false
+	var loaded = ResourceLoader.load(path) as CharacterSkinDefinition
+	if not loaded:
+		push_error("CharacterSkinDefinition: Failed to load: ", path)
+		return false
+	_copy_from(loaded)
+	return true
+
+
+func _copy_from(other: CharacterSkinDefinition):
+	skin_name = other.skin_name
+	mesh_res = other.mesh_res
+	primary_color = other.primary_color
+	secondary_color = other.secondary_color
+	back_marker_position = other.back_marker_position
+	back_marker_rotation_degrees = other.back_marker_rotation_degrees
+
+
+#region to/from Dictionary
+func to_dict() -> Dictionary:
+	return {
 		"skin_name": skin_name,
 		"mesh_res": mesh_res.resource_path,
 		"primary_color": DictJSONSaverLoader.color_to_dict(primary_color),
@@ -39,28 +72,17 @@ func save_to_disk():
 		"back_marker_rotation_degrees":
 		DictJSONSaverLoader.vec3_to_dict(back_marker_rotation_degrees)
 	}
-	var path = SAVE_PATH.replace("ZZZ", skin_name.to_snake_case())
-	DictJSONSaverLoader.save_json_to_file(path, json_dict)
 
 
-## skin_name must be set before calling!
-func load_from_disk():
-	var path = SAVE_PATH.replace("ZZZ", skin_name.to_snake_case())
-
-	var json_dict = DictJSONSaverLoader.load_json_from_file(path)
-	if json_dict == {}:
-		printerr("failed to parse json from %s" % path)
-		return
-
-	skin_name = json_dict.get("skin_name", "failed_to_load")
+func from_dict(dict: Dictionary):
+	skin_name = dict.get("skin_name", "failed_to_load")
 	mesh_res = load(
-		json_dict.get("mesh_res", "res://entities/player/characters/scenes/clanker_skin.tscn")
+		dict.get("mesh_res", "res://entities/player/characters/scenes/clanker_skin.tscn")
 	)
-	primary_color = DictJSONSaverLoader.dict_to_color(json_dict.get("primary_color", {}))
-	secondary_color = DictJSONSaverLoader.dict_to_color(json_dict.get("secondary_color", {}))
-	back_marker_position = DictJSONSaverLoader.dict_to_vec3(
-		json_dict.get("back_marker_position", {})
-	)
+	primary_color = DictJSONSaverLoader.dict_to_color(dict.get("primary_color", {}))
+	secondary_color = DictJSONSaverLoader.dict_to_color(dict.get("secondary_color", {}))
+	back_marker_position = DictJSONSaverLoader.dict_to_vec3(dict.get("back_marker_position", {}))
 	back_marker_rotation_degrees = DictJSONSaverLoader.dict_to_vec3(
-		json_dict.get("back_marker_rotation_degrees", {})
+		dict.get("back_marker_rotation_degrees", {})
 	)
+#endregion
