@@ -21,7 +21,7 @@ shader_parameter/tolerance = 0.20000000298023
 
 [node name="Biker" unique_id=1492660151 node_paths=PackedStringArray("primary_mesh") instance=ExtResource("1_nabnx")]
 script = ExtResource("2_uii8v")
-primary_color = Color(0.7411765, 0, 0, 1)
+primary_color = Color(0.20486054, 0.4396772, 0.38732785, 1)
 primary_shader_material = ExtResource("3_uii8v")
 primary_mesh = NodePath("Armature/Skeleton/Ch20")
 

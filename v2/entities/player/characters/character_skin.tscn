@@ -16,3 +16,6 @@ libraries/Biker = ExtResource("3_lm8ah")
 
 [node name="MeshNode" type="Node3D" parent="." unique_id=1624205252]
 unique_name_in_owner = true
+
+[node name="BackAccessoryMarker" type="Marker3D" parent="." unique_id=478042608]
+unique_name_in_owner = true

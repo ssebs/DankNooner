@@ -16,6 +16,7 @@ const HEIGHT: float = 2.0
 
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var mesh_node: Node3D = %MeshNode
+@onready var back_marker: Marker3D = %BackAccessoryMarker
 
 var mesh_skin: SkinColor
 
@@ -24,6 +25,12 @@ func _ready():
 	spawn_mesh()
 
 	set_mesh_colors()
+	set_marker_positions()
+
+
+func set_marker_positions():
+	# TODO - set back_marker.position from a resource
+	pass
 
 
 func set_mesh_colors():
