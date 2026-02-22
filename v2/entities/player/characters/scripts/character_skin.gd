@@ -26,6 +26,10 @@ var mesh_skin: SkinColor
 func _ready():
 	_apply_definition()
 
+	if Engine.is_editor_hint():
+		# Show the biker mesh in the editor
+		mesh_skin.owner = self
+
 
 #region resource/definition
 func _apply_definition():
