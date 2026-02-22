@@ -3,13 +3,17 @@
 class_name SkinColor extends Node3D
 
 @export var primary_color: Color
-
 ## should be a shader texture, see characters/shaders/skin_color.tres
 @export var primary_shader_material: ShaderMaterial
-
 @export var primary_mesh: MeshInstance3D
 
+@export var has_secondary: bool = false
+@export var secondary_color: Color
+@export var secondary_shader_material: ShaderMaterial
+@export var secondary_mesh: MeshInstance3D
+
 var primary_material: ShaderMaterial
+var secondary_material: ShaderMaterial
 
 
 func _ready():
@@ -17,10 +21,20 @@ func _ready():
 	primary_mesh.set_surface_override_material(0, primary_material)
 	update_primary_color(primary_color)
 
+	if has_secondary:
+		secondary_material = secondary_shader_material.duplicate()
+		secondary_mesh.set_surface_override_material(0, secondary_material)
+		update_secondary_color(secondary_color)
+
 
 func update_primary_color(color: Color):
 	primary_color = color
 	primary_material.set_shader_parameter("replacement_color", Vector3(color.r, color.g, color.b))
+
+
+func update_secondary_color(color: Color):
+	secondary_color = color
+	secondary_material.set_shader_parameter("replacement_color", Vector3(color.r, color.g, color.b))
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -32,5 +46,13 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("primary_shader_material must not be empty")
 	if primary_color == null:
 		issues.append("primary_color must not be empty")
+
+	if has_secondary:
+		if secondary_mesh == null:
+			issues.append("secondary_mesh must not be empty")
+		if secondary_shader_material == null:
+			issues.append("secondary_shader_material must not be empty")
+		if secondary_color == null:
+			issues.append("secondary_color must not be empty")
 
 	return issues

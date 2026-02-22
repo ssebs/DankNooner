@@ -17,12 +17,18 @@ shader_parameter/albedo_texture = ExtResource("5_1kih7")
 shader_parameter/normal_texture = ExtResource("7_ng0ve")
 shader_parameter/glossiness_texture = ExtResource("6_a4jph")
 shader_parameter/specular_texture = ExtResource("8_ustxj")
-shader_parameter/tolerance = 0.05
+shader_parameter/tolerance = 0.20000000298023
 
 [node name="Biker" unique_id=1492660151 node_paths=PackedStringArray("primary_mesh") instance=ExtResource("1_nabnx")]
 script = ExtResource("2_uii8v")
+primary_color = Color(0.7411765, 0, 0, 1)
 primary_shader_material = ExtResource("3_uii8v")
 primary_mesh = NodePath("Armature/Skeleton/Ch20")
 
-[node name="Ch20" parent="Armature/Skeleton" parent_id_path=PackedInt32Array(1464631785) index="0" unique_id=173751882]
+[node name="Skeleton" parent="Armature" parent_id_path=PackedInt32Array(550890257) index="0" unique_id=1464631785]
+bones/16/rotation = Quaternion(0.6738872, 0.67388725, 0.21418679, -0.21418688)
+bones/66/rotation = Quaternion(6.984918e-10, 0, 1, 7.436028e-09)
+bones/71/rotation = Quaternion(0.10141063, 0.7009589, 0.70236504, 0.071104296)
+
+[node name="Ch20" parent="Armature/Skeleton" index="0" unique_id=173751882]
 surface_material_override/0 = SubResource("ShaderMaterial_1kih7")

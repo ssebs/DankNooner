@@ -188,9 +188,12 @@ Uses `CharacterBody3D` with manual inertia simulation instead of physics forces:
 #### How to create skin color changing material
 
 - Import model to godot, make sure to export textures
-- Replace color in albedo/diffuse texture with #FF00FF
-  - Select > Color Range
-  - Edit > Fill (w/ pink)
+- If there's an actual texture:
+  - Replace color in albedo/diffuse texture with #FF00FF
+    - Select > Color Range
+    - Edit > Fill (w/ pink)
+- If not:
+  - use albedo_only_skin_color.tres instead of skin_color in future steps
 - Save to disk
 - Open skin_color.tres, save as new material
 - Update the textures for the material for that mesh
