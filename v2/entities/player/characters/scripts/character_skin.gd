@@ -4,6 +4,7 @@ class_name CharacterSkin extends Node3D
 @export
 var mesh_res: PackedScene = preload("res://entities/player/characters/assets/clanker/Clanker.glb")
 
+@export var height: float = 2.0
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var mesh_node: Node3D = %MeshNode
 
@@ -17,7 +18,8 @@ func spawn_mesh():
 		child.queue_free()
 	var m = mesh_res.instantiate()
 	mesh_node.add_child(m)
-	scale_to_height(m, 2.0)
+
+	scale_to_height(m, height)
 
 	# retarget AnimationMixer => Root Node to new mesh
 	anim_player.root_node = m.get_path()

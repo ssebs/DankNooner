@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bmrj84ospc20f"
-path="res://.godot/imported/Biker_Ch20_1001_Specular.png-7309861ea19100ff517f1e9ef70e6b2d.ctex"
+path.s3tc="res://.godot/imported/Biker_Ch20_1001_Specular.png-7309861ea19100ff517f1e9ef70e6b2d.s3tc.ctex"
+path.etc2="res://.godot/imported/Biker_Ch20_1001_Specular.png-7309861ea19100ff517f1e9ef70e6b2d.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "57fb27ae03946968e016dc970587f200"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://entities/player/characters/assets/biker/Biker_Ch20_1001_Specular.png"
-dest_files=["res://.godot/imported/Biker_Ch20_1001_Specular.png-7309861ea19100ff517f1e9ef70e6b2d.ctex"]
+dest_files=["res://.godot/imported/Biker_Ch20_1001_Specular.png-7309861ea19100ff517f1e9ef70e6b2d.s3tc.ctex", "res://.godot/imported/Biker_Ch20_1001_Specular.png-7309861ea19100ff517f1e9ef70e6b2d.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +42,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

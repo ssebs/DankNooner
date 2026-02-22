@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://cn55y1jxvs5l2"]
+
+[ext_resource type="PackedScene" uid="uid://bp182fgvg0ub6" path="res://entities/player/characters/assets/biker/Biker.glb" id="1_nabnx"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/player/characters/scripts/skin_color.gd" id="2_uii8v"]
+[ext_resource type="Material" uid="uid://dsy30ovt7hcgy" path="res://entities/player/characters/assets/biker/biker_shader_mat.tres" id="3_uii8v"]
+[ext_resource type="Shader" uid="uid://djo3ltfju324e" path="res://entities/player/characters/shaders/skin_color.gdshader" id="4_1kih7"]
+[ext_resource type="Texture2D" uid="uid://c711wg1mcx0h6" path="res://entities/player/characters/assets/biker/Biker_Pink_Diffuse.png" id="5_1kih7"]
+[ext_resource type="Texture2D" uid="uid://ce5utmplwg6j7" path="res://entities/player/characters/assets/biker/Biker_Ch20_1001_Glossiness.png" id="6_a4jph"]
+[ext_resource type="Texture2D" uid="uid://cyxwvgjq76enw" path="res://entities/player/characters/assets/biker/Biker_Ch20_1001_Normal.png" id="7_ng0ve"]
+[ext_resource type="Texture2D" uid="uid://bmrj84ospc20f" path="res://entities/player/characters/assets/biker/Biker_Ch20_1001_Specular.png" id="8_ustxj"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1kih7"]
+render_priority = 0
+shader = ExtResource("4_1kih7")
+shader_parameter/replacement_color = Color(1, 0, 0, 1)
+shader_parameter/albedo_texture = ExtResource("5_1kih7")
+shader_parameter/normal_texture = ExtResource("7_ng0ve")
+shader_parameter/glossiness_texture = ExtResource("6_a4jph")
+shader_parameter/specular_texture = ExtResource("8_ustxj")
+shader_parameter/tolerance = 0.05
+
+[node name="Biker" unique_id=1492660151 node_paths=PackedStringArray("primary_mesh") instance=ExtResource("1_nabnx")]
+script = ExtResource("2_uii8v")
+primary_color = Color(0.21295613, 0.5188462, 0.4680242, 1)
+primary_shader_material = ExtResource("3_uii8v")
+primary_mesh = NodePath("Armature/Skeleton/Ch20")
+
+[node name="Ch20" parent="Armature/Skeleton" parent_id_path=PackedInt32Array(1464631785) index="0" unique_id=173751882]
+surface_material_override/0 = SubResource("ShaderMaterial_1kih7")
