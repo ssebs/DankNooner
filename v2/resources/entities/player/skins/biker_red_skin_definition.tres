@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CharacterSkinDefinition" format=3 uid="uid://cf31yg2kuiwd7"]
+
+[ext_resource type="PackedScene" uid="uid://cn55y1jxvs5l2" path="res://entities/player/characters/scenes/biker_skin.tscn" id="1_y5i37"]
+[ext_resource type="Script" uid="uid://bh7rf77tqy8xb" path="res://resources/entities/player/character_skin_definition.gd" id="2_3yvo7"]
+
+[resource]
+script = ExtResource("2_3yvo7")
+skin_name = "biker_red"
+mesh_res = ExtResource("1_y5i37")
+primary_color = Color(1, 0, 0, 1)
+back_marker_position = Vector3(0, 1.5575237, -0.14157149)
+back_marker_rotation_degrees = Vector3(0, -179.99998, 0)
+metadata/_custom_type_script = "uid://bh7rf77tqy8xb"
