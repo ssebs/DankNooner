@@ -22,6 +22,10 @@ const HEIGHT: float = 2.0
 
 var mesh_skin: SkinColor
 
+var skel_3d: Skeleton3D
+## Needs to be generated in code, used in ragdoll simulation
+var skel_root: PhysicalBoneSimulator3D = PhysicalBoneSimulator3D.new()
+
 
 func _ready():
 	_apply_definition()
@@ -29,6 +33,52 @@ func _ready():
 	if Engine.is_editor_hint():
 		# Show the biker mesh in the editor
 		mesh_skin.owner = self
+
+	create_skeleton_for_ragdoll()
+
+
+#region ragdoll
+
+
+func create_skeleton_for_ragdoll():
+	skel_3d = mesh_skin.find_child("Skeleton") as Skeleton3D
+	if skel_3d == null:
+		printerr("could not find skeleton in mesh_skin")
+		return
+
+	skel_3d.add_child(skel_root)
+	# show in the editor
+	skel_root.owner = mesh_skin
+	populate_skeleton_for_ragdoll()
+
+
+func populate_skeleton_for_ragdoll():
+	for i in skel_3d.get_bone_count():
+		var one_physical_bone: PhysicalBone3D = PhysicalBone3D.new()
+
+		skel_root.add_child(one_physical_bone)
+		one_physical_bone.owner = skel_3d.get_parent().get_parent()
+
+		var b_name = skel_3d.get_bone_name(i)
+		one_physical_bone.bone_name = b_name
+		var rest_bone: Transform3D = skel_3d.get_bone_global_rest(i)
+		one_physical_bone.transform = rest_bone
+
+		var capsule_mesh: CapsuleShape3D = CapsuleShape3D.new()
+		capsule_mesh.height = .2
+		capsule_mesh.radius = .2
+		var colission_shape: CollisionShape3D = CollisionShape3D.new()
+		colission_shape.shape = capsule_mesh
+		one_physical_bone.add_child(colission_shape)
+
+		one_physical_bone.set_joint_type(PhysicalBone3D.JOINT_TYPE_CONE)
+
+
+"""
+skel_root.physical_bones_start_simulation()
+"""
+
+#endregion
 
 
 #region resource/definition
