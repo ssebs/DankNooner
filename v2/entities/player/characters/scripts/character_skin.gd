@@ -23,10 +23,19 @@ const JOINT_TYPE_MAP = {
 
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var mesh_node: Node3D = %MeshNode
+
+# Accessory markers
 @onready var back_marker: Marker3D = %BackAccessoryMarker
+
+# IK markers
+@onready var ik_left_arm_magnet: Marker3D = %LeftArmMagnet
+@onready var ik_left_hand: Marker3D = %LeftHand
+@onready var ik_right_arm_magnet: Marker3D = %RightArmMagnet
+@onready var ik_right_hand: Marker3D = %RightHand
 
 var mesh_skin: SkinColor
 
+var fabrik_ik: FABRIK3D = FABRIK3D.new()
 var skel_3d: Skeleton3D
 ## Needs to be generated in code, used in ragdoll simulation
 var skel_root: PhysicalBoneSimulator3D = PhysicalBoneSimulator3D.new()
@@ -44,6 +53,27 @@ var ragdoll_bone_constraints_base = {
 }
 
 var ragdoll_bone_constraints: Dictionary = {}
+
+var ik_settings_map: Dictionary = {
+	"angular_delta_limit": 90,  #deg
+	"deterministic": true,
+	"settings":
+	[
+		# Must be in magnet, then end order.
+		{
+			"target": ik_left_arm_magnet,
+			"root_bone_name": "LeftUpperArm",
+			"end_bone_name": "LeftLowerArm"
+		},
+		{"target": ik_left_hand, "root_bone_name": "LeftUpperArm", "end_bone_name": "LeftHand"},
+		{
+			"target": ik_right_arm_magnet,
+			"root_bone_name": "RightUpperArm",
+			"end_bone_name": "RightLowerArm"
+		},
+		{"target": ik_right_hand, "root_bone_name": "RightUpperArm", "end_bone_name": "RightHand"},
+	]
+}
 
 
 func _ready():
