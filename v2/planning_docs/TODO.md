@@ -12,8 +12,9 @@
   - [x] change material (colors)
   - [x] use resources to control
   - [x] add marker3d in resource to place accessories
-  - [ ] add IK & basic test animation
-  - [ ] add ragdoll
+  - [x] add ragdoll
+  - [ ] add IK
+  - [ ] add basic test animation
 
 ## Up Next 📋
 
