@@ -49,12 +49,9 @@ var ragdoll_bone_constraints: Dictionary = {}
 func _ready():
 	_apply_definition()
 
-	if Engine.is_editor_hint():
-		# Show the biker mesh in the editor
-		mesh_skin.owner = self
-
 	_create_skeleton_for_ragdoll()
-	start_ragdoll()
+	if !Engine.is_editor_hint():
+		start_ragdoll()
 
 
 #region ragdoll
@@ -141,6 +138,8 @@ func _apply_definition():
 	spawn_mesh()
 	set_mesh_colors()
 	_load_markers_from_resource()
+	# Show the biker mesh in the editor
+	mesh_skin.owner = self
 
 
 func _save_skin_to_disk():
