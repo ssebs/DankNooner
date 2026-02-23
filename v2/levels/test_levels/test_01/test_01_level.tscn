@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://cuqtwh0saekmw" path="res://entities/player/characters/character_skin.tscn" id="3_5q1pe"]
 [ext_resource type="Resource" uid="uid://dqh5h78glj4ju" path="res://resources/entities/player/skins/clanker_red_skin_definition.tres" id="4_m4ipn"]
 [ext_resource type="Resource" uid="uid://d3v0btsnsgpb3" path="res://resources/entities/player/skins/astronaut_default_skin_definition.tres" id="5_51jyr"]
+[ext_resource type="Resource" uid="uid://cqthri007ak8l" path="res://resources/entities/player/skins/biker_blue_skin_definition.tres" id="6_51jyr"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jmk2t"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -26,6 +27,8 @@ size = Vector2(200, 200)
 albedo_color = Color(0.13333334, 0.13333334, 0.13333334, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_3jscr"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_51jyr"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_6hu6n"]
 size = Vector3(1, 10, 200)
@@ -61,6 +64,11 @@ surface_material_override/0 = SubResource("StandardMaterial3D_3jscr")
 [node name="Box" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=2129556034]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 mesh = SubResource("BoxMesh_3jscr")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="LevelItemsAndStuff/Box" unique_id=1619175165]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelItemsAndStuff/Box/StaticBody3D" unique_id=306021907]
+shape = SubResource("BoxShape3D_51jyr")
 
 [node name="wall" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=1973805590]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 0.5, 0)
@@ -130,12 +138,16 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0
 shape = SubResource("WorldBoundaryShape3D_avllc")
 
 [node name="CharacterSkin" parent="." unique_id=259227641 instance=ExtResource("3_5q1pe")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.340528, 0.014027845, -11.2351265)
+transform = Transform3D(0.96932966, 0.20904028, 0.129237, -0.2457642, 0.82448524, 0.50972944, 0, -0.5258577, 0.8505726, 0.2448411, 2.4549186, 0.2344842)
 
 [node name="CharacterSkin2" parent="." unique_id=903915714 instance=ExtResource("3_5q1pe")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.560265, 0.014027845, -10.668495)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.464578, 0.014027845, -2.9414272)
 skin_definition = ExtResource("4_m4ipn")
 
 [node name="CharacterSkin3" parent="." unique_id=2063317879 instance=ExtResource("3_5q1pe")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.517376, 0.014027845, -12.2672415)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4216895, 0.014027845, -4.5401735)
 skin_definition = ExtResource("5_51jyr")
+
+[node name="CharacterSkin4" parent="." unique_id=1740117121 instance=ExtResource("3_5q1pe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7855887, 3.320699, -1.2002106)
+skin_definition = ExtResource("6_51jyr")
