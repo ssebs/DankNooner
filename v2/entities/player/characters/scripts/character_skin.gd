@@ -55,8 +55,6 @@ func _ready():
 
 
 #region ragdoll
-
-
 func start_ragdoll():
 	skel_root.physical_bones_start_simulation()
 
