@@ -14,6 +14,10 @@
   - [x] add marker3d in resource to place accessories
   - [x] add ragdoll
   - [ ] add IK
+    - [x] generation process
+    - [x] arms
+    - [ ] legs
+    - [ ] head/look at
   - [ ] add basic test animation
 
 ## Up Next 📋
