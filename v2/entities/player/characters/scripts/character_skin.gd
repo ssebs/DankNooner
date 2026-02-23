@@ -54,32 +54,14 @@ var ragdoll_bone_constraints_base = {
 
 var ragdoll_bone_constraints: Dictionary = {}
 
-var ik_settings_map: Dictionary = {
-	"angular_delta_limit": 90,  #deg
-	"deterministic": true,
-	"settings":
-	[
-		# Must be in magnet, then end order.
-		{
-			"target": ik_left_arm_magnet,
-			"root_bone_name": "LeftUpperArm",
-			"end_bone_name": "LeftLowerArm"
-		},
-		{"target": ik_left_hand, "root_bone_name": "LeftUpperArm", "end_bone_name": "LeftHand"},
-		{
-			"target": ik_right_arm_magnet,
-			"root_bone_name": "RightUpperArm",
-			"end_bone_name": "RightLowerArm"
-		},
-		{"target": ik_right_hand, "root_bone_name": "RightUpperArm", "end_bone_name": "RightHand"},
-	]
-}
+var ik_settings_map: Dictionary = {}
 
 
 func _ready():
 	_apply_definition()
 
 	_create_skeleton_for_ragdoll()
+	_create_ik()
 	if !Engine.is_editor_hint():
 		start_ragdoll()
 
@@ -253,6 +235,66 @@ func get_combined_aabb(node: Node3D) -> AABB:
 				else:
 					combined = combined.merge(transformed)
 	return combined
+
+
+#endregion
+
+
+#region IK
+func _create_ik() -> void:
+	if skel_3d == null:
+		printerr("Cannot create IK: skel_3d is null")
+		return
+
+	_build_ik_settings_map()
+
+	fabrik_ik.angular_delta_limit = deg_to_rad(90)
+	fabrik_ik.deterministic = true
+
+	var settings: Array = ik_settings_map.get("settings", [])
+	fabrik_ik.setting_count = settings.size()
+
+	for i in settings.size():
+		var setting: Dictionary = settings[i]
+		var target: Node3D = setting.get("target")
+		var root_bone_name: String = setting.get("root_bone_name", "")
+		var end_bone_name: String = setting.get("end_bone_name", "")
+
+		if target == null:
+			printerr("IK setting missing target at index ", i)
+			continue
+
+		fabrik_ik.set_root_bone_name(i, root_bone_name)
+		fabrik_ik.set_end_bone_name(i, end_bone_name)
+		fabrik_ik.set_target_node(i, target.get_path())
+
+	skel_3d.add_child(fabrik_ik)
+	fabrik_ik.owner = mesh_skin
+
+
+func _build_ik_settings_map() -> void:
+	ik_settings_map = {
+		"settings":
+		[
+			# Must be in magnet, then end order.
+			{
+				"target": ik_left_arm_magnet,
+				"root_bone_name": "LeftUpperArm",
+				"end_bone_name": "LeftLowerArm"
+			},
+			{"target": ik_left_hand, "root_bone_name": "LeftUpperArm", "end_bone_name": "LeftHand"},
+			{
+				"target": ik_right_arm_magnet,
+				"root_bone_name": "RightUpperArm",
+				"end_bone_name": "RightLowerArm"
+			},
+			{
+				"target": ik_right_hand,
+				"root_bone_name": "RightUpperArm",
+				"end_bone_name": "RightHand"
+			},
+		]
+	}
 
 
 #endregion
