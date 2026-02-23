@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://44kdiwhdt512" path="res://levels/test_levels/test_01/test_01_level.gd" id="1_evjrj"]
 [ext_resource type="PackedScene" uid="uid://d0rgswc73h64f" path="res://entities/player/player_entity.tscn" id="2_6hu6n"]
+[ext_resource type="PackedScene" uid="uid://cuqtwh0saekmw" path="res://entities/player/characters/character_skin.tscn" id="3_5q1pe"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jmk2t"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -125,3 +126,6 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Colliders/wall3" unique_id=952695972]
 shape = SubResource("WorldBoundaryShape3D_avllc")
+
+[node name="CharacterSkin" parent="." unique_id=259227641 instance=ExtResource("3_5q1pe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.286606, 0.014027845, -12.80077)
