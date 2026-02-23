@@ -51,7 +51,23 @@ window/stretch/aspect="keep_width"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/awaitable_http_request/plugin.cfg", "res://addons/console/plugin.cfg", "res://addons/mixamo_animation_retargeter/plugin.cfg", "res://addons/netfox.internals/plugin.cfg", "res://addons/netfox.noray/plugin.cfg", "res://addons/netfox/plugin.cfg", "res://addons/tattomoosa.spinner/plugin.cfg", "res://addons/toastparty/plugin.cfg")
+enabled=PackedStringArray("res://addons/awaitable_http_request/plugin.cfg", "res://addons/console/plugin.cfg", "res://addons/fancy_folder_colors/plugin.cfg", "res://addons/mixamo_animation_retargeter/plugin.cfg", "res://addons/netfox.internals/plugin.cfg", "res://addons/netfox.noray/plugin.cfg", "res://addons/netfox/plugin.cfg", "res://addons/tattomoosa.spinner/plugin.cfg", "res://addons/toastparty/plugin.cfg")
+
+[file_customization]
+
+folder_colors={
+"res://addons/": "gray",
+"res://dist/": "gray",
+"res://entities/": "blue",
+"res://entities/player/": "teal",
+"res://levels/": "orange",
+"res://localization/": "gray",
+"res://managers/": "pink",
+"res://menus/": "orange",
+"res://planning_docs/": "gray",
+"res://resources/": "green",
+"res://resources/entities/player/": "teal"
+}
 
 [filesystem]
 
