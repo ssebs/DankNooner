@@ -138,7 +138,7 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0
 shape = SubResource("WorldBoundaryShape3D_avllc")
 
 [node name="CharacterSkin" parent="." unique_id=259227641 instance=ExtResource("3_5q1pe")]
-transform = Transform3D(0.96932966, 0.20904028, 0.129237, -0.2457642, 0.82448524, 0.50972944, 0, -0.5258577, 0.8505726, 0.2448411, 2.4549186, 0.2344842)
+transform = Transform3D(0.96932966, 0.20904028, 0.129237, -0.2457642, 0.82448524, 0.50972944, 0, -0.5258577, 0.8505726, 0.2448411, 2.4549186, -0.09213209)
 
 [node name="CharacterSkin2" parent="." unique_id=903915714 instance=ExtResource("3_5q1pe")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.464578, 0.014027845, -2.9414272)
