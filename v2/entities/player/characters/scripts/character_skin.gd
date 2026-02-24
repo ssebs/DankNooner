@@ -33,6 +33,14 @@ const JOINT_TYPE_MAP = {
 @onready var ik_right_arm_magnet: Marker3D = %RightArmMagnet
 @onready var ik_right_hand: Marker3D = %RightHand
 
+@onready var ik_left_leg_magnet: Marker3D = %LeftLegMagnet
+@onready var ik_left_foot: Marker3D = %LeftFoot
+@onready var ik_right_leg_magnet: Marker3D = %RightLegMagnet
+@onready var ik_right_foot: Marker3D = %RightFoot
+
+@onready var ik_chest: Marker3D = %ChestTarget
+@onready var ik_head: Marker3D = %HeadTarget
+
 var mesh_skin: SkinColor
 
 var fabrik_ik: FABRIK3D = FABRIK3D.new()
@@ -274,6 +282,8 @@ func _create_ik() -> void:
 func _build_ik_settings_map() -> void:
 	ik_settings_map = [
 		# Must be in magnet, then end order.
+		{"target": ik_head, "root_bone_name": "Neck", "end_bone_name": "Head"},
+		{"target": ik_chest, "root_bone_name": "Hips", "end_bone_name": "Spine"},
 		{
 			"target": ik_left_arm_magnet,
 			"root_bone_name": "LeftUpperArm",
@@ -286,6 +296,18 @@ func _build_ik_settings_map() -> void:
 			"end_bone_name": "RightLowerArm"
 		},
 		{"target": ik_right_hand, "root_bone_name": "RightUpperArm", "end_bone_name": "RightHand"},
+		{
+			"target": ik_left_leg_magnet,
+			"root_bone_name": "LeftUpperLeg",
+			"end_bone_name": "LeftLowerLeg"
+		},
+		{"target": ik_left_foot, "root_bone_name": "LeftUpperLeg", "end_bone_name": "LeftFoot"},
+		{
+			"target": ik_right_leg_magnet,
+			"root_bone_name": "RightUpperLeg",
+			"end_bone_name": "RightLowerLeg"
+		},
+		{"target": ik_right_foot, "root_bone_name": "RightUpperLeg", "end_bone_name": "RightFoot"},
 	]
 
 
