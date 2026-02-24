@@ -21,12 +21,36 @@ class_name IKController extends Node3D
 var fabrik_ik: FABRIK3D = FABRIK3D.new()
 var ik_settings_map: Array[Dictionary] = []
 
+var can_move_butt: bool = true
+
 
 func _physics_process(_delta):
-	move_hips_to_butt_target()
+	if can_move_butt:
+		_move_hips_to_butt_target()
 
 
-func move_hips_to_butt_target():
+func enable_ik():
+	fabrik_ik.active = true
+	enable_butt_placement()
+
+
+func disable_ik():
+	fabrik_ik.active = false
+	disable_butt_placement()
+
+
+func enable_butt_placement():
+	can_move_butt = true
+
+
+func disable_butt_placement():
+	can_move_butt = false
+
+
+#region internal
+
+
+func _move_hips_to_butt_target():
 	var skel_3d = char_skin.skel_3d
 	if skel_3d == null:
 		return
@@ -106,6 +130,9 @@ func _build_ik_settings_map() -> void:
 		},
 		{"target": ik_right_foot, "root_bone_name": "RightUpperLeg", "end_bone_name": "RightFoot"},
 	]
+
+
+#endregion
 
 
 func _get_configuration_warnings() -> PackedStringArray:
