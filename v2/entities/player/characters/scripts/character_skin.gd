@@ -66,8 +66,8 @@ func stop_ragdoll():
 
 #region resource/definition
 func _apply_definition():
-	spawn_mesh()
-	set_mesh_colors()
+	_spawn_mesh()
+	_set_mesh_colors()
 	_load_markers_from_resource()
 	# Show the biker mesh in the editor
 	mesh_skin.owner = self
@@ -102,20 +102,20 @@ func _save_markers_to_resource():
 
 
 #region mesh init
-func set_mesh_colors():
+func _set_mesh_colors():
 	if skin_definition.primary_color != Color.TRANSPARENT:
 		mesh_skin.update_primary_color(skin_definition.primary_color)
 	if mesh_skin.has_secondary and skin_definition.secondary_color != Color.TRANSPARENT:
 		mesh_skin.update_secondary_color(skin_definition.secondary_color)
 
 
-func spawn_mesh():
+func _spawn_mesh():
 	for child in mesh_node.get_children():
 		child.queue_free()
 	mesh_skin = skin_definition.mesh_res.instantiate()
 	mesh_node.add_child(mesh_skin)
 
-	scale_to_height(mesh_skin, HEIGHT)
+	_scale_to_height(mesh_skin, HEIGHT)
 
 	# retarget AnimationMixer => Root Node to new mesh
 	anim_player.root_node = mesh_skin.get_path()
@@ -126,15 +126,15 @@ func spawn_mesh():
 
 
 #region mesh scaling
-func scale_to_height(node: Node3D, target_height: float) -> void:
-	var aabb := get_combined_aabb(node)
+func _scale_to_height(node: Node3D, target_height: float) -> void:
+	var aabb := _get_combined_aabb(node)
 	if aabb.size.y <= 0:
 		return
 	var scale_factor := target_height / aabb.size.y
 	node.scale *= scale_factor
 
 
-func get_combined_aabb(node: Node3D) -> AABB:
+func _get_combined_aabb(node: Node3D) -> AABB:
 	var combined := AABB()
 	var first := true
 	for child in node.get_children():
@@ -147,7 +147,7 @@ func get_combined_aabb(node: Node3D) -> AABB:
 			else:
 				combined = combined.merge(transformed)
 		if child is Node3D:
-			var child_aabb: AABB = get_combined_aabb(child)
+			var child_aabb: AABB = _get_combined_aabb(child)
 			if child_aabb.size != Vector3.ZERO:
 				var transformed: AABB = child.transform * child_aabb
 				if first:
