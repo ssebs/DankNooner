@@ -140,4 +140,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
 	if skin_definition == null:
 		issues.append("skin_definition must be set")
+	if ik_controller == null:
+		issues.append("ik_controller must be set")
+	if ragdoll_controller == null:
+		issues.append("ragdoll_controller must be set")
 	return issues

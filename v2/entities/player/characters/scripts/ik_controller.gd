@@ -1,3 +1,4 @@
+@tool
 class_name IKController extends Node3D
 
 @export var char_skin: CharacterSkin
@@ -26,6 +27,9 @@ func _physics_process(_delta):
 
 
 func move_hips_to_butt_target():
+	var skel_3d = char_skin.skel_3d
+	if skel_3d == null:
+		return
 	var hips_idx = skel_3d.find_bone("Hips")
 	if hips_idx == -1:
 		printerr("could not find Hips bone in skel_3d")
@@ -41,6 +45,8 @@ func move_hips_to_butt_target():
 
 
 func _create_ik() -> void:
+	var skel_3d = char_skin.skel_3d
+	var mesh_skin = char_skin.mesh_skin
 	if skel_3d == null:
 		printerr("Cannot create IK: skel_3d is null")
 		return
@@ -100,3 +106,32 @@ func _build_ik_settings_map() -> void:
 		},
 		{"target": ik_right_foot, "root_bone_name": "RightUpperLeg", "end_bone_name": "RightFoot"},
 	]
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var issues = []
+	if char_skin == null:
+		issues.append("char_skin must be set")
+	if ik_left_arm_magnet == null:
+		issues.append("ik_left_arm_magnet must be set")
+	if ik_left_hand == null:
+		issues.append("ik_left_hand must be set")
+	if ik_right_arm_magnet == null:
+		issues.append("ik_right_arm_magnet must be set")
+	if ik_right_hand == null:
+		issues.append("ik_right_hand must be set")
+	if ik_left_leg_magnet == null:
+		issues.append("ik_left_leg_magnet must be set")
+	if ik_left_foot == null:
+		issues.append("ik_left_foot must be set")
+	if ik_right_leg_magnet == null:
+		issues.append("ik_right_leg_magnet must be set")
+	if ik_right_foot == null:
+		issues.append("ik_right_foot must be set")
+	if ik_chest == null:
+		issues.append("ik_chest must be set")
+	if ik_head == null:
+		issues.append("ik_head must be set")
+	if butt_pos == null:
+		issues.append("butt_pos must be set")
+	return issues
