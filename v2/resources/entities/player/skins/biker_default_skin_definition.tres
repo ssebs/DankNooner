@@ -8,5 +8,5 @@ script = ExtResource("2_20s4l")
 skin_name = "biker_default"
 mesh_res = ExtResource("1_vrjt7")
 back_marker_position = Vector3(0, 1.5575237, -0.14157149)
-back_marker_rotation_degrees = Vector3(0, -179.99998, 0)
+back_marker_rotation_degrees = Vector3(0, -179.99997, 0)
 metadata/_custom_type_script = "uid://bh7rf77tqy8xb"

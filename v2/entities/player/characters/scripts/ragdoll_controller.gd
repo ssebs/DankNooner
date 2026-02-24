@@ -1,3 +1,4 @@
+@tool
 class_name RagdollController extends Node3D
 
 @export var char_skin: CharacterSkin
@@ -35,7 +36,9 @@ func stop_ragdoll():
 
 
 func _create_skeleton_for_ragdoll():
-	skel_3d = mesh_skin.find_child("Skeleton") as Skeleton3D
+	var mesh_skin = char_skin.mesh_skin
+	var skel_3d = mesh_skin.find_child("Skeleton") as Skeleton3D
+	char_skin.skel_3d = skel_3d
 	if skel_3d == null:
 		printerr("could not find skeleton in mesh_skin")
 		return
@@ -48,6 +51,7 @@ func _create_skeleton_for_ragdoll():
 
 
 func _populate_skeleton_for_ragdoll():
+	var skel_3d = char_skin.skel_3d
 	for i in skel_3d.get_bone_count():
 		var b_name = skel_3d.get_bone_name(i)
 
@@ -97,3 +101,10 @@ func _build_ragdoll_constraints() -> void:
 			ragdoll_bone_constraints[right_name] = (
 				ragdoll_bone_constraints_base[bone_name].duplicate()
 			)
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var issues = []
+	if char_skin == null:
+		issues.append("char_skin must be set")
+	return issues
