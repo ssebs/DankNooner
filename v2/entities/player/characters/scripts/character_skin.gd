@@ -40,6 +40,7 @@ const JOINT_TYPE_MAP = {
 
 @onready var ik_chest: Marker3D = %ChestTarget
 @onready var ik_head: Marker3D = %HeadTarget
+@onready var butt_pos: Marker3D = %ButtPosition
 
 var mesh_skin: SkinColor
 
@@ -72,6 +73,25 @@ func _ready():
 	_create_ik()
 	if !Engine.is_editor_hint():
 		start_ragdoll()
+
+
+func _physics_process(_delta):
+	move_hips_to_butt_target()
+
+
+func move_hips_to_butt_target():
+	var hips_idx = skel_3d.find_bone("Hips")
+	if hips_idx == -1:
+		printerr("could not find Hips bone in skel_3d")
+		return
+
+	# Set the Hips bone's global position to match butt_pos
+	var hips_global_pose = skel_3d.global_transform * skel_3d.get_bone_global_pose(hips_idx)
+	var offset = butt_pos.global_position - hips_global_pose.origin
+
+	var current_pose = skel_3d.get_bone_pose(hips_idx)
+	current_pose.origin += skel_3d.global_transform.basis.inverse() * offset
+	skel_3d.set_bone_pose(hips_idx, current_pose)
 
 
 #region ragdoll

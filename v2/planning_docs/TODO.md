@@ -5,7 +5,7 @@
 ## In Progress 🚀
 
 - [ ] CharacterSkin / mesh
-  - [ ] move butt w/ marker
+  - [x] move butt w/ marker
 
   - [x] Find a good way to import meshes with rigs
   - [x] Import animations in a uniform way
