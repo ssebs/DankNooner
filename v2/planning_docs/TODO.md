@@ -6,11 +6,13 @@
 
 - [ ] Bike definition
   - [x] bike model
-  - [ ] stats
   - [x] color
-  - [ ] markers (hand, pegs, seat, mods)
-  - [ ] actually use the skins in player entity
   - [ ] use all unused vars
+  - [ ] markers (hand, pegs, seat, mods)
+  - [ ] stats
+  - [ ] fix player entity
+  - [ ] actually use the skins in player entity
+
 ## Up Next 📋
 
 - [ ] Create Player Part 2
@@ -134,6 +136,7 @@
 ## Done ✅
 
 - [x] CharacterSkin / mesh
+
   - [x] move butt w/ marker
 
   - [x] Find a good way to import meshes with rigs
