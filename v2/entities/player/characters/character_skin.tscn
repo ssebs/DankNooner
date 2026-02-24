@@ -290,9 +290,10 @@ _data = {
 &"test": SubResource("Animation_skpe0")
 }
 
-[sub_resource type="Resource" id="Resource_ng0ve"]
+[sub_resource type="Resource" id="Resource_6a7n1"]
+resource_local_to_scene = true
 script = ExtResource("8_6a7n1")
-color = Color(1, 0, 0, 1)
+color = Color(0.2856, 0.68, 0.51566666, 1)
 shader_material = ExtResource("6_skpe0")
 metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 
@@ -326,7 +327,7 @@ metadata/_custom_type_script = "uid://d0emq7f6owo2m"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2071931266]
 unique_name_in_owner = true
-root_node = NodePath("/root/@EditorNode@18066/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/CharacterSkin/MeshNode/@Node3D@73547")
+root_node = NodePath("/root/@EditorNode@18066/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/CharacterSkin/MeshNode/@Node3D@130269")
 libraries/ = SubResource("AnimationLibrary_w42oj")
 libraries/Biker = ExtResource("3_lm8ah")
 libraries/IK = SubResource("AnimationLibrary_6a7n1")
@@ -334,10 +335,10 @@ libraries/IK = SubResource("AnimationLibrary_6a7n1")
 [node name="MeshNode" type="Node3D" parent="." unique_id=1624205252]
 unique_name_in_owner = true
 
-[node name="@Node3D@73547" type="Node3D" parent="MeshNode" unique_id=1492660151 node_paths=PackedStringArray("meshes") instance=ExtResource("4_8lbgm")]
+[node name="@Node3D@130269" type="Node3D" parent="MeshNode" unique_id=1492660151 node_paths=PackedStringArray("meshes") instance=ExtResource("4_8lbgm")]
 transform = Transform3D(1.1199048, 0, 0, 0, 1.1199048, 0, 0, 0, 1.1199048, 0, 0, 0)
 script = ExtResource("5_uvy6g")
-slots = Array[ExtResource("8_6a7n1")]([SubResource("Resource_ng0ve")])
+slots = Array[ExtResource("8_6a7n1")]([SubResource("Resource_6a7n1")])
 meshes = [NodePath("Armature/Skeleton/Ch20")]
 
 [node name="BackAccessoryMarker" type="Marker3D" parent="." unique_id=478042608]

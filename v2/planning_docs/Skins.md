@@ -60,6 +60,7 @@ Node3D at `entities/components/skin_color.gd`:
 3. Create SkinSlot resources with `use_standard_material = true`
 4. Assign a `StandardMaterial3D` to each slot (duplicated at runtime)
 5. The slot's color will set the material's `albedo_color`
+6. Make sure the Resource is Local to Scene in the SkinColor scene!
 
 ### Configuring SkinSlots in Inspector
 
