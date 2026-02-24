@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dvk30v3uxddp1"]
 
 [ext_resource type="PackedScene" uid="uid://q6lu86hwsqa6" path="res://entities/player/characters/assets/astronaut/Astronaut.glb" id="1_dv2tn"]
-[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/player/characters/scripts/skin_color.gd" id="2_edgp8"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/components/skin_color.gd" id="2_edgp8"]
 [ext_resource type="Material" uid="uid://pjceb1dcwtbs" path="res://entities/player/characters/assets/astronaut/astronaut_shader_mat.tres" id="3_o0g71"]
 
 [node name="Astronaut" unique_id=1246070521 node_paths=PackedStringArray("primary_mesh") instance=ExtResource("1_dv2tn")]

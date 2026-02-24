@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://dyb003q5xadyq"]
 
 [ext_resource type="PackedScene" uid="uid://b3ih23n1jjkj0" path="res://entities/player/characters/assets/clanker/Clanker.glb" id="1_hlq6h"]
-[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/player/characters/scripts/skin_color.gd" id="2_1dusr"]
-[ext_resource type="Material" uid="uid://cyjm6m4wo0kbe" path="res://entities/player/characters/shaders/albedo_only_skin_color.tres" id="3_ia0ko"]
-[ext_resource type="Shader" uid="uid://dt2y4oio3box3" path="res://entities/player/characters/shaders/albedo_only_skin_color.gdshader" id="4_1dusr"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/components/skin_color.gd" id="2_1dusr"]
+[ext_resource type="Material" uid="uid://cyjm6m4wo0kbe" path="res://resources/shaders/albedo_only_skin_color.tres" id="3_ia0ko"]
+[ext_resource type="Shader" uid="uid://dt2y4oio3box3" path="res://resources/shaders/albedo_only_skin_color.gdshader" id="4_1dusr"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1dusr"]
 render_priority = 0

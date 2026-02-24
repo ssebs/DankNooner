@@ -17,12 +17,12 @@ class_name BikeSkinDefinition extends Resource
 @export var mesh_rotation_offset_degrees: Vector3 = Vector3.ZERO
 @export var mesh_scale_multiplier: Vector3 = Vector3.ONE
 
-## Primary color (use TRANSPARENT to skip)
-@export var primary_color: Color = Color.TRANSPARENT
-## Secondary color - only used if mesh has_secondary
-@export var secondary_color: Color = Color.TRANSPARENT
+## SkinSlot colors (use TRANSPARENT to skip a slot)
+## See skin_color.gd
+@export var colors: Array[Color] = []
 
 @export_group("Collision")
+# TODO: use this
 @export var collision_shape: Shape3D
 @export var collision_position_offset: Vector3 = Vector3.ZERO
 @export var collision_rotation_offset_degrees: Vector3 = Vector3.ZERO
@@ -30,6 +30,7 @@ class_name BikeSkinDefinition extends Resource
 
 ## Marker positions
 @export_group("Markers")
+# TODO: use this
 @export var training_wheels_marker_position: Vector3 = Vector3.ZERO
 @export var training_wheels_marker_rotation_degrees: Vector3 = Vector3.ZERO
 

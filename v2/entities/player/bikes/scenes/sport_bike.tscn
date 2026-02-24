@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://54ehro5jqyxu"]
 
-[ext_resource type="PackedScene" uid="uid://2q50108qnrhg" path="res://entities/player/bikes/assets/sport/SportBike.glb" id="1_rw1ah"]
-[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/player/characters/scripts/skin_color.gd" id="2_4okic"]
-[ext_resource type="Material" uid="uid://bftxruaqkncro" path="res://entities/player/bikes/assets/sport/sport_shader_material.tres" id="3_82gmx"]
-[ext_resource type="Shader" uid="uid://djo3ltfju324e" path="res://entities/player/characters/shaders/skin_color.gdshader" id="4_82gmx"]
-[ext_resource type="Texture2D" uid="uid://bmaqnthntqi5y" path="res://entities/player/bikes/assets/sport/OUTPUT.png" id="5_br1d3"]
+[ext_resource type="PackedScene" path="res://entities/player/bikes/assets/sport/SportBike.glb" id="1_rw1ah"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/components/skin_color.gd" id="2_4okic"]
+[ext_resource type="Material" path="res://entities/player/bikes/assets/sport/sport_shader_material.tres" id="3_82gmx"]
+[ext_resource type="Shader" uid="uid://djo3ltfju324e" path="res://resources/shaders/skin_color.gdshader" id="4_82gmx"]
+[ext_resource type="Texture2D" path="res://entities/player/bikes/assets/sport/OUTPUT.png" id="5_br1d3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dng7u"]
 render_priority = 0

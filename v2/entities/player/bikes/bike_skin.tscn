@@ -1,19 +1,33 @@
 [gd_scene format=3 uid="uid://bmyba87m3xuaa"]
 
 [ext_resource type="Script" uid="uid://bon57cam3dod2" path="res://entities/player/bikes/scripts/bike_skin.gd" id="1_n5uf3"]
-[ext_resource type="Script" uid="uid://bh7rf77tqy8xb" path="res://resources/entities/player/character_skin_definition.gd" id="2_6fxvi"]
+[ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/entities/bikes/skins/naked_default_skin_definition.tres" id="2_c5axj"]
+[ext_resource type="PackedScene" uid="uid://8l877wswufci" path="res://entities/player/bikes/scenes/naked_bike.tscn" id="2_t6gny"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/components/skin_color.gd" id="4_c5axj"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://entities/components/skin_slot.gd" id="5_e6q4j"]
 
-[sub_resource type="Resource" id="Resource_t6gny"]
-script = ExtResource("2_6fxvi")
-skin_name = "sport_default"
-metadata/_custom_type_script = "uid://bh7rf77tqy8xb"
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_di6m0"]
+
+[sub_resource type="Resource" id="Resource_c5axj"]
+resource_local_to_scene = true
+script = ExtResource("5_e6q4j")
+color = Color(1, 0, 0, 1)
+use_standard_material = true
+surface_index = 1
+standard_material = SubResource("StandardMaterial3D_di6m0")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 
 [node name="BikeSkin" type="Node3D" unique_id=1727462617]
 script = ExtResource("1_n5uf3")
-skin_definition = SubResource("Resource_t6gny")
+skin_definition = ExtResource("2_c5axj")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1873192684]
 unique_name_in_owner = true
 
 [node name="MeshNode" type="Node3D" parent="." unique_id=1984999037]
 unique_name_in_owner = true
+
+[node name="@Node3D@34116" type="Node3D" parent="MeshNode" unique_id=904807422 node_paths=PackedStringArray("meshes") instance=ExtResource("2_t6gny")]
+script = ExtResource("4_c5axj")
+slots = Array[ExtResource("5_e6q4j")]([SubResource("Resource_c5axj")])
+meshes = [NodePath("Plane")]

@@ -4,7 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://4m8or6jc5xbd" path="res://entities/player/components/camera_controller.tscn" id="2_bls4j"]
 [ext_resource type="PackedScene" uid="uid://bgr8550flctkg" path="res://entities/player/bikes/assets/sports_bike/scene.gltf" id="2_faflk"]
 [ext_resource type="PackedScene" uid="uid://2nnr6ecxbcgo" path="res://entities/player/components/movement_controller.tscn" id="2_fkugw"]
-[ext_resource type="Script" uid="uid://0q8vxps631w4" path="res://entities/components/mesh_component.gd" id="3_0jc3c"]
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_faflk"]
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_ri2qi"]
 [ext_resource type="Script" uid="uid://d37r06yj5krm" path="res://entities/player/components/input_controller.gd" id="7_mrv5j"]
@@ -58,13 +57,12 @@ collision_position_offset = Vector3(0, 0.4, 0)
 collision_rotation_offset_degrees = Vector3(90, 0, 0)
 metadata/_custom_type_script = "uid://byqlh6e8c6qvl"
 
-[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("camera_controller", "movement_controller", "input_controller", "mesh_component", "mesh_node", "collision_shape_3d")]
+[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("camera_controller", "movement_controller", "input_controller", "mesh_node", "collision_shape_3d")]
 script = ExtResource("1_0jc3c")
 bike_definition = SubResource("Resource_lfjd4")
 camera_controller = NodePath("_Components/CameraController")
 movement_controller = NodePath("_Components/MovementController")
 input_controller = NodePath("_Components/InputController")
-mesh_component = NodePath("MeshComponent")
 mesh_node = NodePath("MeshNode")
 collision_shape_3d = NodePath("CollisionShape3D")
 metadata/_custom_type_script = "uid://bnop7vr1q4gwg"

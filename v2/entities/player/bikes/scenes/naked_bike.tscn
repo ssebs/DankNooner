@@ -1,20 +1,27 @@
 [gd_scene format=3 uid="uid://8l877wswufci"]
 
 [ext_resource type="PackedScene" uid="uid://xuvew0ttdjgq" path="res://entities/player/bikes/assets/nakedbike/Untitled.glb" id="1_di6m0"]
-[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/player/characters/scripts/skin_color.gd" id="2_qqbuq"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/components/skin_color.gd" id="2_qqbuq"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://entities/components/skin_slot.gd" id="3_di6m0"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_di6m0"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4rjjc"]
-albedo_color = Color(0.2646, 0.54, 0.43902, 1)
+[sub_resource type="Resource" id="Resource_di6m0"]
+resource_local_to_scene = true
+script = ExtResource("3_di6m0")
+color = Color(0.11028292, 0.6258798, 0.47056687, 1)
+use_standard_material = true
+surface_index = 1
+standard_material = SubResource("StandardMaterial3D_di6m0")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 
-[node name="NakedBike" unique_id=990461999 node_paths=PackedStringArray("primary_mesh") instance=ExtResource("1_di6m0")]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qqbuq"]
+albedo_color = Color(0.11028292, 0.6258798, 0.47056687, 1)
+
+[node name="NakedBike" unique_id=904807422 node_paths=PackedStringArray("meshes") instance=ExtResource("1_di6m0")]
 script = ExtResource("2_qqbuq")
-primary_color = Color(0.2646, 0.54, 0.43902, 1)
-primary_use_standard_material = true
-primary_surface_index = 1
-primary_standard_material = SubResource("StandardMaterial3D_di6m0")
-primary_mesh = NodePath("Plane")
+slots = Array[ExtResource("3_di6m0")]([SubResource("Resource_di6m0")])
+meshes = [NodePath("Plane")]
 
-[node name="Plane" parent="." index="0" unique_id=747893315]
-surface_material_override/1 = SubResource("StandardMaterial3D_4rjjc")
+[node name="Plane" parent="." index="0" unique_id=762809783]
+surface_material_override/1 = SubResource("StandardMaterial3D_qqbuq")
