@@ -1,0 +1,102 @@
+class_name IKController extends Node3D
+
+@export var char_skin: CharacterSkin
+
+# IK target markers
+@export var ik_left_arm_magnet: Marker3D
+@export var ik_left_hand: Marker3D
+@export var ik_right_arm_magnet: Marker3D
+@export var ik_right_hand: Marker3D
+
+@export var ik_left_leg_magnet: Marker3D
+@export var ik_left_foot: Marker3D
+@export var ik_right_leg_magnet: Marker3D
+@export var ik_right_foot: Marker3D
+
+@export var ik_chest: Marker3D
+@export var ik_head: Marker3D
+@export var butt_pos: Marker3D
+
+var fabrik_ik: FABRIK3D = FABRIK3D.new()
+var ik_settings_map: Array[Dictionary] = []
+
+
+func _physics_process(_delta):
+	move_hips_to_butt_target()
+
+
+func move_hips_to_butt_target():
+	var hips_idx = skel_3d.find_bone("Hips")
+	if hips_idx == -1:
+		printerr("could not find Hips bone in skel_3d")
+		return
+
+	# Set the Hips bone's global position to match butt_pos
+	var hips_global_pose = skel_3d.global_transform * skel_3d.get_bone_global_pose(hips_idx)
+	var offset = butt_pos.global_position - hips_global_pose.origin
+
+	var current_pose = skel_3d.get_bone_pose(hips_idx)
+	current_pose.origin += skel_3d.global_transform.basis.inverse() * offset
+	skel_3d.set_bone_pose(hips_idx, current_pose)
+
+
+func _create_ik() -> void:
+	if skel_3d == null:
+		printerr("Cannot create IK: skel_3d is null")
+		return
+
+	_build_ik_settings_map()
+
+	fabrik_ik.angular_delta_limit = deg_to_rad(90)
+	fabrik_ik.deterministic = true
+
+	fabrik_ik.setting_count = ik_settings_map.size()
+
+	for i in ik_settings_map.size():
+		var setting: Dictionary = ik_settings_map[i]
+		var target: Node3D = setting.get("target")
+		var root_bone_name: String = setting.get("root_bone_name", "")
+		var end_bone_name: String = setting.get("end_bone_name", "")
+
+		if target == null:
+			printerr("IK setting missing target at index ", i)
+			continue
+
+		fabrik_ik.set_root_bone_name(i, root_bone_name)
+		fabrik_ik.set_end_bone_name(i, end_bone_name)
+		fabrik_ik.set_target_node(i, target.get_path())
+
+	skel_3d.add_child(fabrik_ik)
+	fabrik_ik.owner = mesh_skin
+
+
+func _build_ik_settings_map() -> void:
+	ik_settings_map = [
+		# Must be in magnet, then end order.
+		{"target": ik_head, "root_bone_name": "Neck", "end_bone_name": "Head"},
+		{"target": ik_chest, "root_bone_name": "Hips", "end_bone_name": "Spine"},
+		{
+			"target": ik_left_arm_magnet,
+			"root_bone_name": "LeftUpperArm",
+			"end_bone_name": "LeftLowerArm"
+		},
+		{"target": ik_left_hand, "root_bone_name": "LeftUpperArm", "end_bone_name": "LeftHand"},
+		{
+			"target": ik_right_arm_magnet,
+			"root_bone_name": "RightUpperArm",
+			"end_bone_name": "RightLowerArm"
+		},
+		{"target": ik_right_hand, "root_bone_name": "RightUpperArm", "end_bone_name": "RightHand"},
+		{
+			"target": ik_left_leg_magnet,
+			"root_bone_name": "LeftUpperLeg",
+			"end_bone_name": "LeftLowerLeg"
+		},
+		{"target": ik_left_foot, "root_bone_name": "LeftUpperLeg", "end_bone_name": "LeftFoot"},
+		{
+			"target": ik_right_leg_magnet,
+			"root_bone_name": "RightUpperLeg",
+			"end_bone_name": "RightLowerLeg"
+		},
+		{"target": ik_right_foot, "root_bone_name": "RightUpperLeg", "end_bone_name": "RightFoot"},
+	]
