@@ -10,6 +10,11 @@ class_name CharacterSkin extends Node3D
 @export var ik_controller: IKController
 @export var ragdoll_controller: RagdollController
 
+@export_tool_button("Enable IK") var enable_ik_btn = enable_ik
+@export_tool_button("Disable IK") var disable_ik_btn = disable_ik
+@export_tool_button("Enable Ragdoll") var enable_ragdoll_btn = start_ragdoll
+@export_tool_button("Disable Ragdoll") var disable_ragdoll_btn = stop_ragdoll
+
 @export_tool_button("Save Markers to resource") var save_markers_btn = _save_markers_to_resource
 @export_tool_button("Load Markers from resource") var load_markers_btn = _load_markers_from_resource
 
@@ -26,8 +31,7 @@ const HEIGHT: float = 2.0
 @onready var back_marker: Marker3D = %BackAccessoryMarker
 
 var mesh_skin: SkinColor
-
-var skel_3d: Skeleton3D  ## to be used in ik_controller & ragdoll_controller
+var skel_3d: Skeleton3D  ## Used in ik_controller & ragdoll_controller
 
 
 func _ready():
@@ -36,7 +40,28 @@ func _ready():
 	ragdoll_controller._create_skeleton_for_ragdoll()
 	ik_controller._create_ik()
 	if !Engine.is_editor_hint():
-		ragdoll_controller.start_ragdoll()
+		disable_ik()
+		start_ragdoll()
+
+
+#region public api
+func enable_ik():
+	ik_controller.enable_ik()
+
+
+func disable_ik():
+	ik_controller.disable_ik()
+
+
+func start_ragdoll():
+	ragdoll_controller.start_ragdoll()
+
+
+func stop_ragdoll():
+	ragdoll_controller.stop_ragdoll()
+
+
+#endregion
 
 
 #region resource/definition
