@@ -4,6 +4,11 @@
 
 ## In Progress 🚀
 
+- [ ] Bike definition
+  - [ ] bike model
+  - [ ] stats
+  - [ ] color
+  - [ ] markers (hand, pegs, seat, mods)
 ## Up Next 📋
 
 - [ ] Create Player Part 2
