@@ -103,10 +103,10 @@ func _save_markers_to_resource():
 
 #region mesh init
 func _set_mesh_colors():
-	if skin_definition.primary_color != Color.TRANSPARENT:
-		mesh_skin.update_primary_color(skin_definition.primary_color)
-	if mesh_skin.has_secondary and skin_definition.secondary_color != Color.TRANSPARENT:
-		mesh_skin.update_secondary_color(skin_definition.secondary_color)
+	var colors: Array[Color] = skin_definition.colors
+	for i in range(colors.size()):
+		if colors[i] != Color.TRANSPARENT:
+			mesh_skin.update_slot_color(i, colors[i])
 
 
 func _spawn_mesh():

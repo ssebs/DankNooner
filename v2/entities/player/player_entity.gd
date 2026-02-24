@@ -8,8 +8,6 @@ class_name PlayerEntity extends CharacterBody3D
 @export var movement_controller: MovementController
 @export var input_controller: InputController
 
-@export var mesh_component: MeshComponent
-
 @export var mesh_node: Node3D
 @export var collision_shape_3d: CollisionShape3D
 
@@ -24,7 +22,7 @@ var rb_do_respawn: bool = false
 
 
 func _ready():
-	_init_mesh()
+	# _init_mesh()
 	_init_collision_shape()
 
 	if Engine.is_editor_hint():
@@ -113,10 +111,6 @@ func on_respawn():
 	movement_controller.current_speed = 0
 
 
-func _init_mesh():
-	mesh_component.mesh_definition = bike_definition.bike_mesh_definition
-
-
 func _init_collision_shape():
 	collision_shape_3d.shape = bike_definition.collision_shape
 
@@ -140,8 +134,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_controller must not be empty")
 	if bike_definition == null:
 		issues.append("bike_definition must not be empty")
-	if mesh_component == null:
-		issues.append("mesh_component must not be empty")
 	if mesh_node == null:
 		issues.append("mesh_node must not be empty")
 	if collision_shape_3d == null:
