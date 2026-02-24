@@ -1,7 +1,8 @@
 @tool
 class_name PlayerEntity extends CharacterBody3D
 
-@export var bike_definition: BikeDefinition
+@export var bike_definition: BikeSkinDefinition
+@export var character_definition: CharacterSkinDefinition
 
 @export var camera_controller: CameraController
 @export var movement_controller: MovementController

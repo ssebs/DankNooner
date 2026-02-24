@@ -1,21 +1,66 @@
 [gd_scene format=3 uid="uid://d0rgswc73h64f"]
 
 [ext_resource type="Script" uid="uid://bnop7vr1q4gwg" path="res://entities/player/player_entity.gd" id="1_0jc3c"]
-[ext_resource type="Resource" uid="uid://4pwnilv3r1u3" path="res://resources/entities/bikes/test_sportbike.tres" id="2_3s3kv"]
 [ext_resource type="PackedScene" uid="uid://4m8or6jc5xbd" path="res://entities/player/components/camera_controller.tscn" id="2_bls4j"]
+[ext_resource type="PackedScene" uid="uid://bgr8550flctkg" path="res://entities/player/bikes/assets/sports_bike/scene.gltf" id="2_faflk"]
 [ext_resource type="PackedScene" uid="uid://2nnr6ecxbcgo" path="res://entities/player/components/movement_controller.tscn" id="2_fkugw"]
 [ext_resource type="Script" uid="uid://0q8vxps631w4" path="res://entities/components/mesh_component.gd" id="3_0jc3c"]
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_faflk"]
-[ext_resource type="Resource" uid="uid://i3jsrx38dc40" path="res://resources/entities/bikes/test_sportbike_mesh.tres" id="4_3s3kv"]
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_ri2qi"]
 [ext_resource type="Script" uid="uid://d37r06yj5krm" path="res://entities/player/components/input_controller.gd" id="7_mrv5j"]
+
+[sub_resource type="GDScript" id="GDScript_ri2qi"]
+script/source = "@tool
+## All mesh objects should be defined from this
+class_name MeshDefinition extends Resource
+
+@export var mesh_scene: PackedScene
+@export var mesh_position_offset: Vector3 = Vector3.ZERO
+@export var mesh_rotation_offset_degrees: Vector3 = Vector3.ZERO
+@export var mesh_scale_multiplier: Vector3 = Vector3.ONE
+"
+
+[sub_resource type="Resource" id="Resource_37iic"]
+script = SubResource("GDScript_ri2qi")
+mesh_scene = ExtResource("2_faflk")
+mesh_rotation_offset_degrees = Vector3(0, 180, 0)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hgb8f"]
 radius = 0.4
 
+[sub_resource type="GDScript" id="GDScript_1vqn6"]
+script/source = "@tool
+## All Bike objects should be defined from this
+class_name BikeDefinition extends Resource
+
+@export var bike_mesh_definition: MeshDefinition
+
+@export_group(\"Bike Collision\")
+@export var collision_shape: Shape3D
+@export var collision_position_offset: Vector3 = Vector3.ZERO
+@export var collision_rotation_offset_degrees: Vector3 = Vector3.ZERO
+@export var collision_scale_multiplier: Vector3 = Vector3.ONE
+
+# TBD:
+# @export var color_override: Color
+# @export var mods: Array[BikeMod]
+# BikeMod is a MeshDefinition with an attachment point Marker3D w/ script
+
+# transforms...
+# player_entity.gd should use this to set vals from
+"
+
+[sub_resource type="Resource" id="Resource_lfjd4"]
+script = SubResource("GDScript_1vqn6")
+bike_mesh_definition = SubResource("Resource_37iic")
+collision_shape = SubResource("CapsuleShape3D_hgb8f")
+collision_position_offset = Vector3(0, 0.4, 0)
+collision_rotation_offset_degrees = Vector3(90, 0, 0)
+metadata/_custom_type_script = "uid://byqlh6e8c6qvl"
+
 [node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("camera_controller", "movement_controller", "input_controller", "mesh_component", "mesh_node", "collision_shape_3d")]
 script = ExtResource("1_0jc3c")
-bike_definition = ExtResource("2_3s3kv")
+bike_definition = SubResource("Resource_lfjd4")
 camera_controller = NodePath("_Components/CameraController")
 movement_controller = NodePath("_Components/MovementController")
 input_controller = NodePath("_Components/InputController")
@@ -49,7 +94,7 @@ unique_name_in_owner = true
 
 [node name="MeshComponent" type="Node3D" parent="." unique_id=1152989109 node_paths=PackedStringArray("mesh_node")]
 script = ExtResource("3_0jc3c")
-mesh_definition = ExtResource("4_3s3kv")
+mesh_definition = SubResource("Resource_37iic")
 mesh_node = NodePath("../MeshNode")
 metadata/_custom_type_script = "uid://0q8vxps631w4"
 
