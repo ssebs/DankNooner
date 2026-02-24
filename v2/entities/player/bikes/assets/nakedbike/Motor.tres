@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bdvq5x6swd6mj"]
+
+[resource]
+resource_name = "Motor"
+cull_mode = 2
+albedo_color = Color(0.35038367, 0.3599832, 0.3599832, 1)
+metallic = 0.9448819
+roughness = 0.39763778

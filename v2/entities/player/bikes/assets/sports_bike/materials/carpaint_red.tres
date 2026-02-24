@@ -1,7 +1,0 @@
-[gd_resource type="StandardMaterial3D" format=3 uid="uid://b84h874f6m7mk"]
-
-[resource]
-resource_name = "carpaint_red"
-cull_mode = 2
-albedo_color = Color(0.6070343, 0, 0.010168608, 1)
-roughness = 0.0

@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://uykt3jihnxig"]
+
+[resource]
+resource_name = "luzes de tras"
+cull_mode = 2
+albedo_color = Color(0.57999116, 0, 0.06627959, 1)
+roughness = 0.45275593
+emission_enabled = true
+emission = Color(0.41330194, 0.15186042, 0, 1)

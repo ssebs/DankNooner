@@ -1,7 +1,0 @@
-[gd_resource type="StandardMaterial3D" format=3 uid="uid://cxfkl2un8qc64"]
-
-[resource]
-resource_name = "paintRed"
-cull_mode = 2
-albedo_color = Color(0.8893806, 0, 0, 1)
-roughness = 0.5260938

@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bxkhybn2ehf27"]
+
+[resource]
+resource_name = "PAINEL"
+cull_mode = 2
+albedo_color = Color(0.23730858, 0.7190234, 0.9063318, 1)
+roughness = 0.5

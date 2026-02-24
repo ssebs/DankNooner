@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://8l877wswufci"]
+
+[ext_resource type="PackedScene" uid="uid://xuvew0ttdjgq" path="res://entities/player/bikes/assets/nakedbike/Untitled.glb" id="1_di6m0"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/player/characters/scripts/skin_color.gd" id="2_qqbuq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_di6m0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4rjjc"]
+albedo_color = Color(0.2646, 0.54, 0.43902, 1)
+
+[node name="NakedBike" unique_id=990461999 node_paths=PackedStringArray("primary_mesh") instance=ExtResource("1_di6m0")]
+script = ExtResource("2_qqbuq")
+primary_color = Color(0.2646, 0.54, 0.43902, 1)
+primary_use_standard_material = true
+primary_surface_index = 1
+primary_standard_material = SubResource("StandardMaterial3D_di6m0")
+primary_mesh = NodePath("Plane")
+
+[node name="Plane" parent="." index="0" unique_id=747893315]
+surface_material_override/1 = SubResource("StandardMaterial3D_4rjjc")

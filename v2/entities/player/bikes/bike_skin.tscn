@@ -1,9 +1,16 @@
 [gd_scene format=3 uid="uid://bmyba87m3xuaa"]
 
 [ext_resource type="Script" uid="uid://bon57cam3dod2" path="res://entities/player/bikes/scripts/bike_skin.gd" id="1_n5uf3"]
+[ext_resource type="Script" uid="uid://bh7rf77tqy8xb" path="res://resources/entities/player/character_skin_definition.gd" id="2_6fxvi"]
+
+[sub_resource type="Resource" id="Resource_t6gny"]
+script = ExtResource("2_6fxvi")
+skin_name = "sport_default"
+metadata/_custom_type_script = "uid://bh7rf77tqy8xb"
 
 [node name="BikeSkin" type="Node3D" unique_id=1727462617]
 script = ExtResource("1_n5uf3")
+skin_definition = SubResource("Resource_t6gny")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1873192684]
 unique_name_in_owner = true
