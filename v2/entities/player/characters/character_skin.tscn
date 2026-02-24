@@ -7,7 +7,6 @@
 [ext_resource type="Script" uid="uid://d0emq7f6owo2m" path="res://entities/player/characters/scripts/ik_controller.gd" id="4_6a7n1"]
 [ext_resource type="PackedScene" uid="uid://cn55y1jxvs5l2" path="res://entities/player/characters/scenes/biker_skin.tscn" id="4_8lbgm"]
 [ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/components/skin_color.gd" id="5_uvy6g"]
-[ext_resource type="Material" uid="uid://dsy30ovt7hcgy" path="res://entities/player/characters/assets/biker/biker_shader_mat.tres" id="6_skpe0"]
 
 [sub_resource type="Animation" id="Animation_6a7n1"]
 length = 0.001
@@ -327,16 +326,9 @@ libraries/IK = SubResource("AnimationLibrary_6a7n1")
 [node name="MeshNode" type="Node3D" parent="." unique_id=1624205252]
 unique_name_in_owner = true
 
-[node name="Biker" type="Node3D" parent="MeshNode" unique_id=1492660151 node_paths=PackedStringArray("primary_mesh") instance=ExtResource("4_8lbgm")]
+[node name="Biker" type="Node3D" parent="MeshNode" unique_id=1492660151 instance=ExtResource("4_8lbgm")]
 transform = Transform3D(1.1199048, 0, 0, 0, 1.1199048, 0, 0, 0, 1.1199048, 0, 0, 0)
 script = ExtResource("5_uvy6g")
-primary_color = Color(0.20486054, 0.4396772, 0.38732785, 1)
-primary_use_standard_material = null
-primary_surface_index = null
-primary_shader_material = ExtResource("6_skpe0")
-primary_mesh = NodePath("Armature/Skeleton/Ch20")
-secondary_use_standard_material = null
-secondary_surface_index = null
 
 [node name="BackAccessoryMarker" type="Marker3D" parent="." unique_id=478042608]
 unique_name_in_owner = true

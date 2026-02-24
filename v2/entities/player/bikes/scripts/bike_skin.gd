@@ -18,7 +18,7 @@ class_name BikeSkin extends Node3D
 @onready var mesh_node: Node3D = %MeshNode
 
 # Accessory markers
-@onready var training_wheels_marker: Marker3D = %BackAccessoryMarker
+@onready var training_wheels_marker: Marker3D = %TrainingWheelsModsMarker
 
 var mesh_skin: SkinColor
 

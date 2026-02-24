@@ -13,11 +13,9 @@ class_name CharacterSkinDefinition extends Resource
 			instance.free()
 		mesh_res = value
 
-## Primary color (use TRANSPARENT to skip)
-@export var primary_color: Color = Color.TRANSPARENT
-
-## Secondary color - only used if mesh has_secondary
-@export var secondary_color: Color = Color.TRANSPARENT
+## SkinSlot colors (use TRANSPARENT to skip a slot)
+## See skin_color.gd
+@export var colors: Array[Color] = []
 
 ## Marker positions
 @export_group("Markers")
@@ -55,19 +53,20 @@ func load_from_disk() -> bool:
 func _copy_from(other: CharacterSkinDefinition):
 	skin_name = other.skin_name
 	mesh_res = other.mesh_res
-	primary_color = other.primary_color
-	secondary_color = other.secondary_color
+	colors = other.colors.duplicate()
 	back_marker_position = other.back_marker_position
 	back_marker_rotation_degrees = other.back_marker_rotation_degrees
 
 
 #region to/from Dictionary
 func to_dict() -> Dictionary:
+	var colors_arr: Array = []
+	for c in colors:
+		colors_arr.append(DictJSONSaverLoader.color_to_dict(c))
 	return {
 		"skin_name": skin_name,
 		"mesh_res": mesh_res.resource_path,
-		"primary_color": DictJSONSaverLoader.color_to_dict(primary_color),
-		"secondary_color": DictJSONSaverLoader.color_to_dict(secondary_color),
+		"colors": colors_arr,
 		"back_marker_position": DictJSONSaverLoader.vec3_to_dict(back_marker_position),
 		"back_marker_rotation_degrees":
 		DictJSONSaverLoader.vec3_to_dict(back_marker_rotation_degrees)
@@ -79,8 +78,10 @@ func from_dict(dict: Dictionary):
 	mesh_res = load(
 		dict.get("mesh_res", "res://entities/player/characters/scenes/clanker_skin.tscn")
 	)
-	primary_color = DictJSONSaverLoader.dict_to_color(dict.get("primary_color", {}))
-	secondary_color = DictJSONSaverLoader.dict_to_color(dict.get("secondary_color", {}))
+	colors.clear()
+	var colors_arr: Array = dict.get("colors", [])
+	for c_dict in colors_arr:
+		colors.append(DictJSONSaverLoader.dict_to_color(c_dict))
 	back_marker_position = DictJSONSaverLoader.dict_to_vec3(dict.get("back_marker_position", {}))
 	back_marker_rotation_degrees = DictJSONSaverLoader.dict_to_vec3(
 		dict.get("back_marker_rotation_degrees", {})
