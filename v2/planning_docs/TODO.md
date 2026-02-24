@@ -5,6 +5,7 @@
 ## In Progress 🚀
 
 - [ ] CharacterSkin / mesh
+  - [ ] move butt w/ marker
 
   - [x] Find a good way to import meshes with rigs
   - [x] Import animations in a uniform way
@@ -13,11 +14,11 @@
   - [x] use resources to control
   - [x] add marker3d in resource to place accessories
   - [x] add ragdoll
-  - [ ] add IK
+  - [x] add IK
     - [x] generation process
     - [x] arms
-    - [ ] legs
-    - [ ] head/look at
+    - [x] legs
+    - [x] head/look at
   - [ ] add basic test animation
 
 ## Up Next 📋
