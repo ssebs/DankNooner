@@ -67,7 +67,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17, 0.9636276, 0.53199065)
 
 [node name="ChestTarget" type="Marker3D" parent="IKTargets" unique_id=749031780]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4769999, 0.047137976)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3166139, 0)
 
 [node name="HeadTarget" type="Marker3D" parent="IKTargets" unique_id=2052814980]
 unique_name_in_owner = true
@@ -75,3 +75,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1561427, 0.06812918)
 
 [node name="ButtPosition" type="Marker3D" parent="IKTargets" unique_id=38485936]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0229475, 0.03988558)
