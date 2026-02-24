@@ -2,9 +2,28 @@
 
 [ext_resource type="PackedScene" uid="uid://q6lu86hwsqa6" path="res://entities/player/characters/assets/astronaut/Astronaut.glb" id="1_dv2tn"]
 [ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/components/skin_color.gd" id="2_edgp8"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://entities/components/skin_slot.gd" id="3_edgp8"]
 [ext_resource type="Material" uid="uid://pjceb1dcwtbs" path="res://entities/player/characters/assets/astronaut/astronaut_shader_mat.tres" id="3_o0g71"]
+[ext_resource type="Shader" uid="uid://djo3ltfju324e" path="res://resources/shaders/skin_color.gdshader" id="5_00b4i"]
+[ext_resource type="Texture2D" uid="uid://o173g3dln6d8" path="res://entities/player/characters/assets/astronaut/Astronaut_Astronaut_BaseColor.png" id="6_xbdbw"]
 
-[node name="Astronaut" unique_id=1246070521 node_paths=PackedStringArray("primary_mesh") instance=ExtResource("1_dv2tn")]
+[sub_resource type="Resource" id="Resource_o0g71"]
+script = ExtResource("3_edgp8")
+color = Color(1, 1, 1, 0)
+shader_material = ExtResource("3_o0g71")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_52vhu"]
+render_priority = 0
+shader = ExtResource("5_00b4i")
+shader_parameter/replacement_color = Color(1, 0, 0, 1)
+shader_parameter/albedo_texture = ExtResource("6_xbdbw")
+shader_parameter/tolerance = 0.3
+
+[node name="Astronaut" unique_id=1246070521 node_paths=PackedStringArray("meshes") instance=ExtResource("1_dv2tn")]
 script = ExtResource("2_edgp8")
-primary_shader_material = ExtResource("3_o0g71")
-primary_mesh = NodePath("Armature/Skeleton/Astronaut_mesh_001")
+slots = Array[ExtResource("3_edgp8")]([SubResource("Resource_o0g71")])
+meshes = [NodePath("Armature/Skeleton/Astronaut_mesh_001")]
+
+[node name="Astronaut_mesh_001" parent="Armature/Skeleton" parent_id_path=PackedInt32Array(95669135) index="0" unique_id=439297329]
+surface_material_override/0 = SubResource("ShaderMaterial_52vhu")
