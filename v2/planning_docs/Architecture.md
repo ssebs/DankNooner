@@ -185,60 +185,9 @@ Uses `CharacterBody3D` with manual inertia simulation instead of physics forces:
 - `apply_engine_braking()` - passive slowdown when no input
 - Tunable exports: `acceleration`, `brake_decel`, `engine_brake_decel`, `turn_speed`, `turn_friction`
 
-#### How to create skin color changing material
+#### Skin system
 
-> Creating a new SkinColor Scene
-
-- Import model to godot, make sure to export textures
-- If there's an actual texture:
-  - Replace color in albedo/diffuse texture with #FF00FF
-    - Select > Color Range
-    - Edit > Fill (w/ pink)
-  - Use this pink color to make things dynamic in game
-- If not:
-  - use albedo_only_skin_color.tres instead of skin_color in future steps
-- Save to disk
-- Open skin_color.tres, save as new material
-- Update the textures for the material for that mesh
-- Create inherited scene from the .glb, save to characters/scenes
-- Attach SkinColor script to the root node
-- Update values
-- Save
-- Use this in character_skin.tscn
-
-#### Character Skin System
-
-Skins use a resource-based system: `CharacterSkin` (scene) displays a `CharacterSkinDefinition` (resource).
-
-##### Creating a New Skin
-
-1. Open `character_skin.tscn`
-2. Create new `CharacterSkinDefinition` resource in inspector
-3. Set `skin_name`, assign `mesh_res` (must be a `SkinColor` scene), set colors
-4. Save resource as `resources/entities/player/skins/{skin_name}_default_skin_definition.tres`
-5. Move `BackAccessoryMarker` to correct position / rotation in 3D viewport
-6. Click **Save Markers to resource** button in inspector
-7. Save the skin resource
-
-##### Creating Color Variants
-
-1. Load existing skin definition
-2. Change `skin_name` to new variant name (e.g. `biker_red`)
-3. Adjust `primary_color` / `secondary_color`
-4. Save As -> `resources/entities/player/skins/{skin_name}_{color}_skin_definition.tres`
-
-##### Save/Load to User Directory
-
-Skins can be saved/loaded from `user://skins/` for runtime customization:
-
-- **Save:** Click **Save skin to u:disk** or call `skin_definition.save_to_disk()`
-  - Files saved as `character_skin_{skin_name}.tres`
-- **Load:** Set `skin_name_for_loading_test` to a skin name found on disk, click **Load skin from u:disk** or call `skin_definition.load_from_disk()`
-- This will load in the inspector
-
-##### Serialization
-
-`CharacterSkinDefinition` has `to_dict()` / `from_dict()` for JSON serialization via `DictJSONSaverLoader`.
+See [Skins.md](./Skins.md)
 
 ### Pause System
 
