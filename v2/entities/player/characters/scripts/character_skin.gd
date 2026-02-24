@@ -7,6 +7,9 @@ class_name CharacterSkin extends Node3D
 		if Engine.is_editor_hint() and is_node_ready():
 			_apply_definition()
 
+@export var ik_controller: IKController
+@export var ragdoll_controller: RagdollController
+
 @export_tool_button("Save Markers to resource") var save_markers_btn = _save_markers_to_resource
 @export_tool_button("Load Markers from resource") var load_markers_btn = _load_markers_from_resource
 
@@ -15,11 +18,6 @@ class_name CharacterSkin extends Node3D
 @export_tool_button("Load skin from u:disk") var load_skin_btn = _load_skin_to_disk
 
 const HEIGHT: float = 2.0
-const ROOT_BONE_NAME = "Hips"
-const JOINT_TYPE_MAP = {
-	"CONE": PhysicalBone3D.JOINT_TYPE_CONE,
-	"HINGE": PhysicalBone3D.JOINT_TYPE_HINGE,
-}
 
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var mesh_node: Node3D = %MeshNode
@@ -27,148 +25,18 @@ const JOINT_TYPE_MAP = {
 # Accessory markers
 @onready var back_marker: Marker3D = %BackAccessoryMarker
 
-# IK markers
-@onready var ik_left_arm_magnet: Marker3D = %LeftArmMagnet
-@onready var ik_left_hand: Marker3D = %LeftHand
-@onready var ik_right_arm_magnet: Marker3D = %RightArmMagnet
-@onready var ik_right_hand: Marker3D = %RightHand
-
-@onready var ik_left_leg_magnet: Marker3D = %LeftLegMagnet
-@onready var ik_left_foot: Marker3D = %LeftFoot
-@onready var ik_right_leg_magnet: Marker3D = %RightLegMagnet
-@onready var ik_right_foot: Marker3D = %RightFoot
-
-@onready var ik_chest: Marker3D = %ChestTarget
-@onready var ik_head: Marker3D = %HeadTarget
-@onready var butt_pos: Marker3D = %ButtPosition
-
 var mesh_skin: SkinColor
 
-var fabrik_ik: FABRIK3D = FABRIK3D.new()
-var skel_3d: Skeleton3D
-## Needs to be generated in code, used in ragdoll simulation
-var skel_root: PhysicalBoneSimulator3D = PhysicalBoneSimulator3D.new()
-
-## Only Left-side bones need to be defined; Right variants are mirrored automatically
-var ragdoll_bone_constraints_base = {
-	"Spine": {"type": "CONE", "min_bounds": [-0.5, -0.4, -0.6], "max_bounds": [1, 0.4, 0.6]},
-	"Head": {"type": "CONE", "min_bounds": [-0.6, -0.6, -0.3], "max_bounds": [0.35, 0.6, 0.3]},
-	"LeftUpperArm": {"type": "CONE", "min_bounds": [-0.3, 1, -0.8], "max_bounds": [1.0, 1, 0.8]},
-	"LeftLowerArm": {"type": "CONE", "min_bounds": [-0.1, -2, -2], "max_bounds": [2.5, -0.7, 2]},
-	"LeftHand": {"type": "CONE", "min_bounds": [-0.3, 0, -0.3], "max_bounds": [0.5, 3, 0.3]},
-	"LeftUpperLeg": {"type": "CONE", "min_bounds": [-0.7, -0.8, 1], "max_bounds": [0.7, 1.2, 1]},
-	"LeftLowerLeg": {"type": "HINGE", "min_bounds": [0, 1, 0], "max_bounds": [0, 1, -1.5]},
-	"LeftFoot": {"type": "CONE", "min_bounds": [-0.4, 1.5, -1.4], "max_bounds": [0.4, 0.3, 0]},
-}
-
-var ragdoll_bone_constraints: Dictionary = {}
-
-var ik_settings_map: Array[Dictionary] = []
+var skel_3d: Skeleton3D  ## to be used in ik_controller & ragdoll_controller
 
 
 func _ready():
 	_apply_definition()
 
-	_create_skeleton_for_ragdoll()
-	_create_ik()
+	ragdoll_controller._create_skeleton_for_ragdoll()
+	ik_controller._create_ik()
 	if !Engine.is_editor_hint():
-		start_ragdoll()
-
-
-func _physics_process(_delta):
-	move_hips_to_butt_target()
-
-
-func move_hips_to_butt_target():
-	var hips_idx = skel_3d.find_bone("Hips")
-	if hips_idx == -1:
-		printerr("could not find Hips bone in skel_3d")
-		return
-
-	# Set the Hips bone's global position to match butt_pos
-	var hips_global_pose = skel_3d.global_transform * skel_3d.get_bone_global_pose(hips_idx)
-	var offset = butt_pos.global_position - hips_global_pose.origin
-
-	var current_pose = skel_3d.get_bone_pose(hips_idx)
-	current_pose.origin += skel_3d.global_transform.basis.inverse() * offset
-	skel_3d.set_bone_pose(hips_idx, current_pose)
-
-
-#region ragdoll
-func start_ragdoll():
-	skel_root.physical_bones_start_simulation()
-
-
-func stop_ragdoll():
-	skel_root.physical_bones_stop_simulation()
-
-
-func _create_skeleton_for_ragdoll():
-	skel_3d = mesh_skin.find_child("Skeleton") as Skeleton3D
-	if skel_3d == null:
-		printerr("could not find skeleton in mesh_skin")
-		return
-
-	_build_ragdoll_constraints()
-	skel_3d.add_child(skel_root)
-	# show in the editor
-	skel_root.owner = mesh_skin
-	_populate_skeleton_for_ragdoll()
-
-
-func _populate_skeleton_for_ragdoll():
-	for i in skel_3d.get_bone_count():
-		var b_name = skel_3d.get_bone_name(i)
-
-		# Skip bones not in our constraint dict (except root bone)
-		var is_root = b_name == ROOT_BONE_NAME
-		if not is_root and not ragdoll_bone_constraints.has(b_name):
-			continue
-
-		var one_physical_bone: PhysicalBone3D = PhysicalBone3D.new()
-		skel_root.add_child(one_physical_bone)
-		one_physical_bone.owner = skel_3d.get_parent().get_parent()
-		one_physical_bone.bone_name = b_name
-		one_physical_bone.collision_layer = 1 << 2  # Layer 3
-		one_physical_bone.collision_mask = (1 << 0) | (1 << 2)  # Layers 1 and 3
-
-		var rest_bone: Transform3D = skel_3d.get_bone_global_rest(i)
-		one_physical_bone.transform = rest_bone
-
-		var capsule_shape: CapsuleShape3D = CapsuleShape3D.new()
-		capsule_shape.height = 0.2
-		capsule_shape.radius = 0.2
-		var collision_shape: CollisionShape3D = CollisionShape3D.new()
-		collision_shape.shape = capsule_shape
-		one_physical_bone.add_child(collision_shape)
-
-		# Root bone has no joint constraints
-		if is_root:
-			one_physical_bone.set_joint_type(PhysicalBone3D.JOINT_TYPE_PIN)
-			continue
-
-		# Apply joint type and bounds from constraint dict
-		var constraint = ragdoll_bone_constraints[b_name]
-		var joint_type = JOINT_TYPE_MAP.get(constraint["type"], PhysicalBone3D.JOINT_TYPE_CONE)
-		one_physical_bone.set_joint_type(joint_type)
-
-		var min_bounds: Array = constraint.get("min_bounds", [0, 0, 0])
-		one_physical_bone.set_joint_rotation(Vector3(min_bounds[0], min_bounds[1], min_bounds[2]))
-
-
-func _build_ragdoll_constraints() -> void:
-	ragdoll_bone_constraints.clear()
-	# Copy base constraints and mirror Left -> Right
-	for bone_name in ragdoll_bone_constraints_base:
-		ragdoll_bone_constraints[bone_name] = ragdoll_bone_constraints_base[bone_name].duplicate()
-		if bone_name.begins_with("Left"):
-			var right_name = bone_name.replace("Left", "Right")
-			ragdoll_bone_constraints[right_name] = (
-				ragdoll_bone_constraints_base[bone_name].duplicate()
-			)
-
-
-#endregion
+		ragdoll_controller.start_ragdoll()
 
 
 #region resource/definition
@@ -263,72 +131,6 @@ func get_combined_aabb(node: Node3D) -> AABB:
 				else:
 					combined = combined.merge(transformed)
 	return combined
-
-
-#endregion
-
-
-#region IK
-func _create_ik() -> void:
-	if skel_3d == null:
-		printerr("Cannot create IK: skel_3d is null")
-		return
-
-	_build_ik_settings_map()
-
-	fabrik_ik.angular_delta_limit = deg_to_rad(90)
-	fabrik_ik.deterministic = true
-
-	fabrik_ik.setting_count = ik_settings_map.size()
-
-	for i in ik_settings_map.size():
-		var setting: Dictionary = ik_settings_map[i]
-		var target: Node3D = setting.get("target")
-		var root_bone_name: String = setting.get("root_bone_name", "")
-		var end_bone_name: String = setting.get("end_bone_name", "")
-
-		if target == null:
-			printerr("IK setting missing target at index ", i)
-			continue
-
-		fabrik_ik.set_root_bone_name(i, root_bone_name)
-		fabrik_ik.set_end_bone_name(i, end_bone_name)
-		fabrik_ik.set_target_node(i, target.get_path())
-
-	skel_3d.add_child(fabrik_ik)
-	fabrik_ik.owner = mesh_skin
-
-
-func _build_ik_settings_map() -> void:
-	ik_settings_map = [
-		# Must be in magnet, then end order.
-		{"target": ik_head, "root_bone_name": "Neck", "end_bone_name": "Head"},
-		{"target": ik_chest, "root_bone_name": "Hips", "end_bone_name": "Spine"},
-		{
-			"target": ik_left_arm_magnet,
-			"root_bone_name": "LeftUpperArm",
-			"end_bone_name": "LeftLowerArm"
-		},
-		{"target": ik_left_hand, "root_bone_name": "LeftUpperArm", "end_bone_name": "LeftHand"},
-		{
-			"target": ik_right_arm_magnet,
-			"root_bone_name": "RightUpperArm",
-			"end_bone_name": "RightLowerArm"
-		},
-		{"target": ik_right_hand, "root_bone_name": "RightUpperArm", "end_bone_name": "RightHand"},
-		{
-			"target": ik_left_leg_magnet,
-			"root_bone_name": "LeftUpperLeg",
-			"end_bone_name": "LeftLowerLeg"
-		},
-		{"target": ik_left_foot, "root_bone_name": "LeftUpperLeg", "end_bone_name": "LeftFoot"},
-		{
-			"target": ik_right_leg_magnet,
-			"root_bone_name": "RightUpperLeg",
-			"end_bone_name": "RightLowerLeg"
-		},
-		{"target": ik_right_foot, "root_bone_name": "RightUpperLeg", "end_bone_name": "RightFoot"},
-	]
 
 
 #endregion
