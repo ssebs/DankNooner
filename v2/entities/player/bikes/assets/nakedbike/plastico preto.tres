@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bsbfd3jvjcp10"]
+
+[resource]
+resource_name = "plastico preto"
+cull_mode = 2
+albedo_color = Color(0.1266579, 0.12427137, 0.117476806, 1)
+metallic = 0.3464567
+roughness = 0.48425195

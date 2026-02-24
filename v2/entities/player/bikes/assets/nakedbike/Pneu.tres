@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://c5w1dj70kev5"]
+
+[resource]
+resource_name = "Pneu"
+cull_mode = 2
+albedo_color = Color(0.15332435, 0.15332435, 0.15332435, 1)
+metallic = 0.6456693
+roughness = 0.71259844

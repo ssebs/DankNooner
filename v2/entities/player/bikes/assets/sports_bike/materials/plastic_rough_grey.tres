@@ -1,7 +1,0 @@
-[gd_resource type="StandardMaterial3D" format=3 uid="uid://c7pllnjj7qmwp"]
-
-[resource]
-resource_name = "plastic_rough_grey"
-cull_mode = 2
-albedo_color = Color(0.16078438, 0.16078438, 0.16078438, 1)
-roughness = 0.51390326

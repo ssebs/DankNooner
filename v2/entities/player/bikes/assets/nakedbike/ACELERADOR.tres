@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dcwwywfdohfgt"]
+
+[resource]
+resource_name = "ACELERADOR"
+cull_mode = 2
+albedo_color = Color(0.086655505, 0.086655505, 0.086655505, 1)
+metallic = 0.41732284
+roughness = 0.5

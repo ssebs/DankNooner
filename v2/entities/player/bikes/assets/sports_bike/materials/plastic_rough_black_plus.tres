@@ -1,8 +1,0 @@
-[gd_resource type="StandardMaterial3D" format=3 uid="uid://c5vt54hedcro1"]
-
-[resource]
-resource_name = "plastic_rough_black_plus"
-cull_mode = 2
-albedo_color = Color(0.071768746, 0.071768746, 0.071768746, 1)
-metallic = 1.0
-roughness = 0.0

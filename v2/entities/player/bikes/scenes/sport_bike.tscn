@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://54ehro5jqyxu"]
+
+[ext_resource type="PackedScene" uid="uid://2q50108qnrhg" path="res://entities/player/bikes/assets/sport/SportBike.glb" id="1_rw1ah"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/player/characters/scripts/skin_color.gd" id="2_4okic"]
+[ext_resource type="Material" uid="uid://bftxruaqkncro" path="res://entities/player/bikes/assets/sport/sport_shader_material.tres" id="3_82gmx"]
+[ext_resource type="Shader" uid="uid://djo3ltfju324e" path="res://entities/player/characters/shaders/skin_color.gdshader" id="4_82gmx"]
+[ext_resource type="Texture2D" uid="uid://bmaqnthntqi5y" path="res://entities/player/bikes/assets/sport/OUTPUT.png" id="5_br1d3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dng7u"]
+render_priority = 0
+shader = ExtResource("4_82gmx")
+shader_parameter/replacement_color = Color(1, 0, 0, 1)
+shader_parameter/albedo_texture = ExtResource("5_br1d3")
+shader_parameter/tolerance = 0.3
+
+[node name="SportBike" unique_id=1713235511 node_paths=PackedStringArray("primary_mesh") instance=ExtResource("1_rw1ah")]
+script = ExtResource("2_4okic")
+primary_shader_material = ExtResource("3_82gmx")
+primary_mesh = NodePath("Sketchfab_model/Bike_FBX/RootNode/Car Rig/carpaint_body_front_001/carpaint_body_front_001_carpaint_red_0")
+
+[node name="carpaint_body_front_001_carpaint_red_0" parent="Sketchfab_model/Bike_FBX/RootNode/Car Rig/carpaint_body_front_001" parent_id_path=PackedInt32Array(5378650) index="0" unique_id=88810975]
+surface_material_override/0 = SubResource("ShaderMaterial_dng7u")

@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bh2ccclrcqjha"]
+
+[resource]
+resource_name = "farol"
+cull_mode = 2
+albedo_color = Color(0.9063355, 0.788603, 0.28037062, 1)
+roughness = 0.5

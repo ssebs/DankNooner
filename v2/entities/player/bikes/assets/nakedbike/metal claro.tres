@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bu0olnrgwdghc"]
+
+[resource]
+resource_name = "metal claro"
+cull_mode = 2
+albedo_color = Color(0.46580628, 0.4666027, 0.4526913, 1)
+metallic = 0.87401575
+roughness = 0.57086617

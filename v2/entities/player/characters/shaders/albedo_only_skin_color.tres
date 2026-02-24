@@ -5,4 +5,4 @@
 [resource]
 render_priority = 0
 shader = ExtResource("1_35px2")
-shader_parameter/color = Color(1, 0, 0, 1)
+shader_parameter/replacement_color = Color(0.25011376, 0.6102236, 0.49637932, 1)

@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bgusjtpepvgwg"]
+
+[resource]
+resource_name = "banco"
+cull_mode = 2
+albedo_color = Color(0.14665872, 0.14078416, 0.14078416, 1)
+metallic = 0.48031497
+roughness = 0.42125985

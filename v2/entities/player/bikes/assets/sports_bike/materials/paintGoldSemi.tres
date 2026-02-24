@@ -1,8 +1,0 @@
-[gd_resource type="StandardMaterial3D" format=3 uid="uid://wj6jra2tq5ej"]
-
-[resource]
-resource_name = "paintGoldSemi"
-cull_mode = 2
-albedo_color = Color(0.76917964, 0.65326935, 0.3893113, 1)
-metallic = 1.0
-roughness = 0.3005693

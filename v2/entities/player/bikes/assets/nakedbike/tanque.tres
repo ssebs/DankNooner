@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bqh408xrrpr0l"]
+
+[resource]
+resource_name = "tanque"
+cull_mode = 2
+albedo_color = Color(1, 0, 1, 1)
+metallic = 0.22047244
+roughness = 0.5

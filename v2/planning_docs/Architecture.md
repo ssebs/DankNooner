@@ -187,6 +187,8 @@ Uses `CharacterBody3D` with manual inertia simulation instead of physics forces:
 
 #### How to create skin color changing material
 
+> Creating a new SkinColor Scene
+
 - Import model to godot, make sure to export textures
 - If there's an actual texture:
   - Replace color in albedo/diffuse texture with #FF00FF

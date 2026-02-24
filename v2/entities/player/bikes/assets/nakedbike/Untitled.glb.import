@@ -1,0 +1,100 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://xuvew0ttdjgq"
+path="res://.godot/imported/Untitled.glb-2f06aff44e974dd62f66925cd1f216be.scn"
+
+[deps]
+
+source_file="res://entities/player/bikes/assets/nakedbike/Untitled.glb"
+dest_files=["res://.godot/imported/Untitled.glb-2f06aff44e974dd62f66925cd1f216be.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/root_script=null
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
+_subresources={
+"materials": {
+"ACELERADOR": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://entities/player/bikes/assets/nakedbike/ACELERADOR.tres",
+"use_external/path": "uid://dcwwywfdohfgt"
+},
+"Motor": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://entities/player/bikes/assets/nakedbike/Motor.tres",
+"use_external/path": "uid://bdvq5x6swd6mj"
+},
+"PAINEL": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://entities/player/bikes/assets/nakedbike/PAINEL.tres",
+"use_external/path": "uid://bxkhybn2ehf27"
+},
+"Pneu": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://entities/player/bikes/assets/nakedbike/Pneu.tres",
+"use_external/path": "uid://c5w1dj70kev5"
+},
+"RETROVIZOR": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://entities/player/bikes/assets/nakedbike/RETROVIZOR.tres",
+"use_external/path": "uid://xwqnaf7taup7"
+},
+"banco": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://entities/player/bikes/assets/nakedbike/banco.tres",
+"use_external/path": "uid://bgusjtpepvgwg"
+},
+"farol": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://entities/player/bikes/assets/nakedbike/farol.tres",
+"use_external/path": "uid://bh2ccclrcqjha"
+},
+"luzes de tras": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://entities/player/bikes/assets/nakedbike/luzes de tras.tres",
+"use_external/path": "uid://uykt3jihnxig"
+},
+"metal claro": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://entities/player/bikes/assets/nakedbike/metal claro.tres",
+"use_external/path": "uid://bu0olnrgwdghc"
+},
+"plastico preto": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://entities/player/bikes/assets/nakedbike/plastico preto.tres",
+"use_external/path": "uid://bsbfd3jvjcp10"
+},
+"tanque": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://entities/player/bikes/assets/nakedbike/tanque.tres",
+"use_external/path": "uid://bqh408xrrpr0l"
+}
+}
+}
+gltf/naming_version=2
+gltf/embedded_image_handling=1
