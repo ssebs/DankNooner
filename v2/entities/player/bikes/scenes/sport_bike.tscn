@@ -1,22 +1,40 @@
 [gd_scene format=3 uid="uid://54ehro5jqyxu"]
 
-[ext_resource type="PackedScene" path="res://entities/player/bikes/assets/sport/SportBike.glb" id="1_rw1ah"]
+[ext_resource type="PackedScene" uid="uid://qrohq27ndoou" path="res://entities/player/bikes/assets/sportbike/Untitled.glb" id="1_rw1ah"]
 [ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/components/skin_color.gd" id="2_4okic"]
-[ext_resource type="Material" path="res://entities/player/bikes/assets/sport/sport_shader_material.tres" id="3_82gmx"]
-[ext_resource type="Shader" uid="uid://djo3ltfju324e" path="res://resources/shaders/skin_color.gdshader" id="4_82gmx"]
-[ext_resource type="Texture2D" path="res://entities/player/bikes/assets/sport/OUTPUT.png" id="5_br1d3"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://entities/components/skin_slot.gd" id="3_82gmx"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_dng7u"]
-render_priority = 0
-shader = ExtResource("4_82gmx")
-shader_parameter/replacement_color = Color(1, 0, 0, 1)
-shader_parameter/albedo_texture = ExtResource("5_br1d3")
-shader_parameter/tolerance = 0.3
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rw1ah"]
 
-[node name="SportBike" unique_id=1713235511 node_paths=PackedStringArray("primary_mesh") instance=ExtResource("1_rw1ah")]
+[sub_resource type="Resource" id="Resource_4okic"]
+script = ExtResource("3_82gmx")
+color = Color(0.8, 0.8, 0.8, 1)
+use_standard_material = true
+surface_index = 1
+standard_material = SubResource("StandardMaterial3D_rw1ah")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_82gmx"]
+
+[sub_resource type="Resource" id="Resource_br1d3"]
+script = ExtResource("3_82gmx")
+color = Color(0.92, 0.22340666, 0.21160002, 1)
+use_standard_material = true
+surface_index = 2
+standard_material = SubResource("StandardMaterial3D_82gmx")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4okic"]
+albedo_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_br1d3"]
+albedo_color = Color(0.92, 0.22340666, 0.21160002, 1)
+
+[node name="SportBike" unique_id=201545758 node_paths=PackedStringArray("meshes") instance=ExtResource("1_rw1ah")]
 script = ExtResource("2_4okic")
-primary_shader_material = ExtResource("3_82gmx")
-primary_mesh = NodePath("Sketchfab_model/Bike_FBX/RootNode/Car Rig/carpaint_body_front_001/carpaint_body_front_001_carpaint_red_0")
+slots = Array[ExtResource("3_82gmx")]([SubResource("Resource_4okic"), SubResource("Resource_br1d3")])
+meshes = [NodePath("sportbike"), NodePath("sportbike")]
 
-[node name="carpaint_body_front_001_carpaint_red_0" parent="Sketchfab_model/Bike_FBX/RootNode/Car Rig/carpaint_body_front_001" parent_id_path=PackedInt32Array(5378650) index="0" unique_id=88810975]
-surface_material_override/0 = SubResource("ShaderMaterial_dng7u")
+[node name="sportbike" parent="." index="0" unique_id=1506769164]
+surface_material_override/1 = SubResource("StandardMaterial3D_4okic")
+surface_material_override/2 = SubResource("StandardMaterial3D_br1d3")

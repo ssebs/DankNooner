@@ -36,7 +36,7 @@ Node3D at `entities/components/skin_color.gd`:
 - `update_slot_color(index: int, color: Color)` - Update a specific slot
 - `update_all_colors(colors: Array[Color])` - Update all slots at once
 
-## Creating a New SkinColor Scene
+## Creating a New SkinColor Scene (skin scene)
 
 ### For Textured Meshes (Shader-Based)
 

@@ -7,8 +7,10 @@
 - [ ] Bike definition
   - [x] bike model
   - [ ] stats
-  - [ ] color
+  - [x] color
   - [ ] markers (hand, pegs, seat, mods)
+  - [ ] actually use the skins in player entity
+  - [ ] use all unused vars
 ## Up Next 📋
 
 - [ ] Create Player Part 2

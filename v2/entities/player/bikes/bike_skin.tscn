@@ -1,20 +1,29 @@
 [gd_scene format=3 uid="uid://bmyba87m3xuaa"]
 
 [ext_resource type="Script" uid="uid://bon57cam3dod2" path="res://entities/player/bikes/scripts/bike_skin.gd" id="1_n5uf3"]
-[ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/entities/bikes/skins/naked_default_skin_definition.tres" id="2_c5axj"]
-[ext_resource type="PackedScene" uid="uid://8l877wswufci" path="res://entities/player/bikes/scenes/naked_bike.tscn" id="2_t6gny"]
+[ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/entities/bikes/skins/sport_default_skin_definition.tres" id="2_c5axj"]
+[ext_resource type="PackedScene" uid="uid://54ehro5jqyxu" path="res://entities/player/bikes/scenes/sport_bike.tscn" id="3_e6q4j"]
 [ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/components/skin_color.gd" id="4_c5axj"]
 [ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://entities/components/skin_slot.gd" id="5_e6q4j"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_di6m0"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rw1ah"]
 
-[sub_resource type="Resource" id="Resource_c5axj"]
-resource_local_to_scene = true
+[sub_resource type="Resource" id="Resource_4okic"]
 script = ExtResource("5_e6q4j")
-color = Color(1, 0, 0, 1)
+color = Color(0.71, 0.71, 0.71, 1)
 use_standard_material = true
 surface_index = 1
-standard_material = SubResource("StandardMaterial3D_di6m0")
+standard_material = SubResource("StandardMaterial3D_rw1ah")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_82gmx"]
+
+[sub_resource type="Resource" id="Resource_br1d3"]
+script = ExtResource("5_e6q4j")
+color = Color(0.7058824, 0, 0, 1)
+use_standard_material = true
+surface_index = 2
+standard_material = SubResource("StandardMaterial3D_82gmx")
 metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 
 [node name="BikeSkin" type="Node3D" unique_id=1727462617]
@@ -27,10 +36,10 @@ unique_name_in_owner = true
 [node name="MeshNode" type="Node3D" parent="." unique_id=1984999037]
 unique_name_in_owner = true
 
-[node name="NakedBike" type="Node3D" parent="MeshNode" unique_id=904807422 node_paths=PackedStringArray("meshes") instance=ExtResource("2_t6gny")]
+[node name="SportBike" type="Node3D" parent="MeshNode" unique_id=201545758 node_paths=PackedStringArray("meshes") instance=ExtResource("3_e6q4j")]
 script = ExtResource("4_c5axj")
-slots = Array[ExtResource("5_e6q4j")]([SubResource("Resource_c5axj")])
-meshes = [NodePath("Plane")]
+slots = Array[ExtResource("5_e6q4j")]([SubResource("Resource_4okic"), SubResource("Resource_br1d3")])
+meshes = [NodePath("sportbike"), NodePath("sportbike")]
 
 [node name="TrainingWheelsModsMarker" type="Marker3D" parent="." unique_id=2011032736]
 unique_name_in_owner = true
