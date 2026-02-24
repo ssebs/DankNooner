@@ -5,7 +5,7 @@
 ## In Progress 🚀
 
 - [ ] Bike definition
-  - [ ] bike model
+  - [x] bike model
   - [ ] stats
   - [ ] color
   - [ ] markers (hand, pegs, seat, mods)

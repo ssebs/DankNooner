@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" format=3 uid="uid://pjceb1dcwtbs"]
 
-[ext_resource type="Shader" uid="uid://djo3ltfju324e" path="res://entities/player/characters/shaders/skin_color.gdshader" id="1_me4t4"]
+[ext_resource type="Shader" uid="uid://djo3ltfju324e" path="res://resources/shaders/skin_color.gdshader" id="1_me4t4"]
 [ext_resource type="Texture2D" uid="uid://o173g3dln6d8" path="res://entities/player/characters/assets/astronaut/Astronaut_Astronaut_BaseColor.png" id="2_vihaq"]
 
 [resource]
