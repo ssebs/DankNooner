@@ -9,6 +9,5 @@
 script = ExtResource("2_4wyad")
 skin_name = "naked_default"
 mesh_res = ExtResource("1_hvuo0")
-colors = Array[Color]([Color(1, 0, 0, 1)])
 collision_shape = SubResource("CapsuleShape3D_hvuo0")
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"
