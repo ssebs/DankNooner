@@ -4,23 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] CharacterSkin / mesh
-  - [x] move butt w/ marker
-
-  - [x] Find a good way to import meshes with rigs
-  - [x] Import animations in a uniform way
-  - [x] document
-  - [x] change material (colors)
-  - [x] use resources to control
-  - [x] add marker3d in resource to place accessories
-  - [x] add ragdoll
-  - [x] add IK
-    - [x] generation process
-    - [x] arms
-    - [x] legs
-    - [x] head/look at
-  - [ ] add basic test animation
-
 ## Up Next 📋
 
 - [ ] Create Player Part 2
@@ -142,6 +125,23 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] CharacterSkin / mesh
+  - [x] move butt w/ marker
+
+  - [x] Find a good way to import meshes with rigs
+  - [x] Import animations in a uniform way
+  - [x] document
+  - [x] change material (colors)
+  - [x] use resources to control
+  - [x] add marker3d in resource to place accessories
+  - [x] add ragdoll
+  - [x] add IK
+    - [x] generation process
+    - [x] arms
+    - [x] legs
+    - [x] head/look at
+  - [x] add basic test animation
 
 - [x] multiplayer / spawn mgr cleanup
 
