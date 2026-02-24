@@ -10,13 +10,14 @@
 [ext_resource type="Texture2D" uid="uid://cyxwvgjq76enw" path="res://entities/player/characters/assets/biker/Biker_Ch20_1001_Normal.png" id="7_ng0ve"]
 [ext_resource type="Texture2D" uid="uid://bmrj84ospc20f" path="res://entities/player/characters/assets/biker/Biker_Ch20_1001_Specular.png" id="8_ustxj"]
 
-[sub_resource type="Resource" id="Resource_ng0ve"]
+[sub_resource type="Resource" id="Resource_a4jph"]
+resource_local_to_scene = true
 script = ExtResource("3_a4jph")
 color = Color(0.2856, 0.68, 0.51566666, 1)
 shader_material = ExtResource("3_uii8v")
 metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_a4jph"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ng0ve"]
 render_priority = 0
 shader = ExtResource("4_1kih7")
 shader_parameter/replacement_color = Color(1, 0, 0, 1)
@@ -28,7 +29,7 @@ shader_parameter/tolerance = 0.20000000298023
 
 [node name="Biker" unique_id=1492660151 node_paths=PackedStringArray("meshes") instance=ExtResource("1_nabnx")]
 script = ExtResource("2_uii8v")
-slots = Array[ExtResource("3_a4jph")]([SubResource("Resource_ng0ve")])
+slots = Array[ExtResource("3_a4jph")]([SubResource("Resource_a4jph")])
 meshes = [NodePath("Armature/Skeleton/Ch20")]
 
 [node name="Skeleton" parent="Armature" parent_id_path=PackedInt32Array(550890257) index="0" unique_id=1464631785]
@@ -37,4 +38,4 @@ bones/66/rotation = Quaternion(6.984918e-10, 0, 1, 7.436028e-09)
 bones/71/rotation = Quaternion(0.10141063, 0.7009589, 0.70236504, 0.071104296)
 
 [node name="Ch20" parent="Armature/Skeleton" index="0" unique_id=173751882]
-surface_material_override/0 = SubResource("ShaderMaterial_a4jph")
+surface_material_override/0 = SubResource("ShaderMaterial_ng0ve")
