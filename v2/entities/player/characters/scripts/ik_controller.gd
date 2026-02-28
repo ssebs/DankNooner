@@ -75,6 +75,11 @@ func _create_ik() -> void:
 		printerr("Cannot create IK: skel_3d is null")
 		return
 
+	# Clear old fabrik_ik if it exists
+	if fabrik_ik != null and is_instance_valid(fabrik_ik):
+		fabrik_ik.queue_free()
+	fabrik_ik = FABRIK3D.new()
+
 	_build_ik_settings_map()
 
 	fabrik_ik.angular_delta_limit = deg_to_rad(90)
