@@ -25,7 +25,7 @@ class_name BikeSkinDefinition extends Resource
 # TODO: use this
 @export
 var collision_shape: Shape3D = preload("res://resources/entities/bikes/hitbox/bike_hitbox.tres")
-@export var collision_position_offset: Vector3 = Vector3.ZERO
+@export var collision_position_offset: Vector3 = Vector3(0, 0.44, 0)
 @export var collision_rotation_offset_degrees: Vector3 = Vector3(90, 0, 0)
 @export var collision_scale_multiplier: Vector3 = Vector3.ONE
 

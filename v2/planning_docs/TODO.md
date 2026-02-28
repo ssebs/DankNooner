@@ -10,7 +10,6 @@
 
 look at my architecture, im OK with it but it doesn't look like it will be easy to update IK / animation for each bike / character, there are some magnet ik values that should be tweaked, and rotations that should happen
 
-- [ ] singleplayer doesn't spawn
 - [ ] Bike definition
   - [x] bike model
   - [x] color
@@ -142,6 +141,8 @@ look at my architecture, im OK with it but it doesn't look like it will be easy 
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] singleplayer doesn't spawn
 
 - [x] CharacterSkin / mesh
 
