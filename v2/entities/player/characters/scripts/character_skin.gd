@@ -44,8 +44,10 @@ func apply_definition():
 	_spawn_mesh()
 	_set_mesh_colors()
 	_load_markers_from_resource()
-	# Show the biker mesh in the editor
-	mesh_skin.owner = self
+
+	# NOTE - only do this when testing, uncomment else you'll get invalid owner
+	# # Show the biker mesh in the editor
+	# mesh_skin.owner = self
 
 	ragdoll_controller._create_skeleton_for_ragdoll()
 	ik_controller._create_ik()

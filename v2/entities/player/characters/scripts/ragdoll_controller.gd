@@ -43,6 +43,11 @@ func _create_skeleton_for_ragdoll():
 		printerr("could not find skeleton in mesh_skin")
 		return
 
+	# Clear old skel_root if it exists
+	if skel_root != null and is_instance_valid(skel_root):
+		skel_root.queue_free()
+	skel_root = PhysicalBoneSimulator3D.new()
+
 	_build_ragdoll_constraints()
 	skel_3d.add_child(skel_root)
 	# show in the editor
