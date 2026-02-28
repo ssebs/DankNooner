@@ -25,6 +25,7 @@ var rb_do_respawn: bool = false
 func _ready():
 	_init_mesh()
 	_init_collision_shape()
+	_init_ik()
 
 	if Engine.is_editor_hint():
 		return
@@ -37,6 +38,15 @@ func _ready():
 	rollback_sync.process_settings()
 
 	call_deferred("_deferred_init")
+
+
+func _init_ik():
+	character_skin.set_ik_targets_for_bike(
+		bike_definition.seat_marker_position,
+		bike_definition.left_handlebar_marker_position,
+		bike_definition.left_peg_marker_position
+	)
+	character_skin.enable_ik()
 
 
 func _init_mesh():
