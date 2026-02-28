@@ -4,6 +4,7 @@
 
 ## In Progress 🚀
 
+- [ ] singleplayer doesn't spawn
 - [ ] Bike definition
   - [x] bike model
   - [x] color
@@ -12,6 +13,7 @@
   - [ ] fix player entity
   - [ ] use all unused vars
   - [ ] stats
+  - [ ] weirdness with IK / mapping on bike
 
 ## Up Next 📋
 
