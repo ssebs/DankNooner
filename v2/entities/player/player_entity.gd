@@ -8,9 +8,10 @@ class_name PlayerEntity extends CharacterBody3D
 @export var movement_controller: MovementController
 @export var input_controller: InputController
 
-@export var mesh_node: Node3D
 @export var collision_shape_3d: CollisionShape3D
 
+@onready var character_skin: CharacterSkin = %CharacterSkin
+@onready var bike_skin: BikeSkin = %BikeSkin
 @onready var name_label: Label3D = %NameLabel
 @onready var rollback_sync: RollbackSynchronizer = %RollbackSynchronizer
 
@@ -22,7 +23,7 @@ var rb_do_respawn: bool = false
 
 
 func _ready():
-	# _init_mesh()
+	_init_mesh()
 	_init_collision_shape()
 
 	if Engine.is_editor_hint():
@@ -36,6 +37,19 @@ func _ready():
 	rollback_sync.process_settings()
 
 	call_deferred("_deferred_init")
+
+
+func _init_mesh():
+	character_skin.skin_definition = character_definition
+	bike_skin.skin_definition = bike_definition
+
+
+func _init_collision_shape():
+	collision_shape_3d.shape = bike_definition.collision_shape
+
+	collision_shape_3d.position = bike_definition.collision_position_offset
+	collision_shape_3d.rotation_degrees = bike_definition.collision_rotation_offset_degrees
+	collision_shape_3d.scale = bike_definition.collision_scale_multiplier
 
 
 func _deferred_init():
@@ -111,14 +125,6 @@ func on_respawn():
 	movement_controller.current_speed = 0
 
 
-func _init_collision_shape():
-	collision_shape_3d.shape = bike_definition.collision_shape
-
-	collision_shape_3d.position = bike_definition.collision_position_offset
-	collision_shape_3d.rotation_degrees = bike_definition.collision_rotation_offset_degrees
-	collision_shape_3d.scale = bike_definition.collision_scale_multiplier
-
-
 func set_username_label(username: String):
 	name_label.text = username
 
@@ -134,8 +140,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_controller must not be empty")
 	if bike_definition == null:
 		issues.append("bike_definition must not be empty")
-	if mesh_node == null:
-		issues.append("mesh_node must not be empty")
 	if collision_shape_3d == null:
 		issues.append("collision_shape_3d must not be empty")
 

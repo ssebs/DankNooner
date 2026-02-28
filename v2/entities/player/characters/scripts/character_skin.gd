@@ -5,10 +5,9 @@ class_name CharacterSkin extends Node3D
 	set(value):
 		skin_definition = value
 		if Engine.is_editor_hint() and is_node_ready():
-			_apply_definition()
+			apply_definition()
 
-@export var ik_controller: IKController
-@export var ragdoll_controller: RagdollController
+@export var debug_auto_ragdoll: bool = false
 
 @export_tool_button("Enable IK") var enable_ik_btn = enable_ik
 @export_tool_button("Disable IK") var disable_ik_btn = disable_ik
@@ -24,6 +23,8 @@ class_name CharacterSkin extends Node3D
 
 const HEIGHT: float = 2.0
 
+@onready var ik_controller: IKController = %IKController
+@onready var ragdoll_controller: RagdollController = %RagdollController
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var mesh_node: Node3D = %MeshNode
 
@@ -35,16 +36,26 @@ var skel_3d: Skeleton3D  ## Used in ik_controller & ragdoll_controller
 
 
 func _ready():
-	_apply_definition()
-
-	ragdoll_controller._create_skeleton_for_ragdoll()
-	ik_controller._create_ik()
-	if !Engine.is_editor_hint():
-		disable_ik()
-		start_ragdoll()
+	apply_definition()
 
 
 #region public api
+func apply_definition():
+	_spawn_mesh()
+	_set_mesh_colors()
+	_load_markers_from_resource()
+	# Show the biker mesh in the editor
+	mesh_skin.owner = self
+
+	ragdoll_controller._create_skeleton_for_ragdoll()
+	ik_controller._create_ik()
+
+	if !Engine.is_editor_hint():
+		if debug_auto_ragdoll:
+			disable_ik()
+			start_ragdoll()
+
+
 func enable_ik():
 	ik_controller.enable_ik()
 
@@ -65,14 +76,6 @@ func stop_ragdoll():
 
 
 #region resource/definition
-func _apply_definition():
-	_spawn_mesh()
-	_set_mesh_colors()
-	_load_markers_from_resource()
-	# Show the biker mesh in the editor
-	mesh_skin.owner = self
-
-
 func _save_skin_to_disk():
 	skin_definition.save_to_disk()
 

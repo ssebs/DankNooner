@@ -1,5 +1,6 @@
 [gd_resource type="Resource" script_class="BikeSkinDefinition" format=3 uid="uid://bu5x25m0vsrv3"]
 
+[ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/entities/bikes/hitbox/bike_hitbox.tres" id="1_3klvi"]
 [ext_resource type="PackedScene" uid="uid://54ehro5jqyxu" path="res://entities/player/bikes/scenes/sport_bike.tscn" id="1_uy60g"]
 [ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/entities/bikes/bike_skin_definition.gd" id="2_3klvi"]
 
@@ -8,4 +9,5 @@ script = ExtResource("2_3klvi")
 skin_name = "sport_default"
 mesh_res = ExtResource("1_uy60g")
 colors = Array[Color]([Color(0.71, 0.71, 0.71, 1), Color(0.7058824, 0, 0, 1)])
+collision_rotation_offset_degrees = Vector3(90, 0, 0)
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"
