@@ -25,6 +25,7 @@ var mesh_skin: SkinColor
 
 func _ready():
 	_apply_definition()
+	# apply scale
 
 
 #region resource/definition
