@@ -170,6 +170,7 @@ func set_single_or_multiplayer_ui():
 		LobbyStateContext.Mode.FREEROAM:
 			multiplayer_ui.hide()
 			singleplayer_ui.show()
+			multiplayer_manager.connection_mode = MultiplayerManager.ConnectionMode.IP_PORT
 			await multiplayer_manager.start_server()
 		_:
 			singleplayer_ui.hide()
