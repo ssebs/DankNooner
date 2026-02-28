@@ -22,8 +22,7 @@ const LENGTH: float = 2.0
 # Accessory markers
 @onready var training_wheels_marker: Marker3D = %TrainingWheelsModsMarker
 
-# TODO - save other markers! copy left to right but offset by -1 on x
-@onready var seat_marker: Marker3D = $SeatMarker
+@onready var seat_marker: Marker3D = %SeatMarker
 @onready var left_handlebar_marker: Marker3D = %LeftHandleBarMarker
 @onready var left_peg_marker: Marker3D = $LeftPegMarker
 
@@ -32,7 +31,6 @@ var mesh_skin: SkinColor
 
 func _ready():
 	_apply_definition()
-	# apply scale
 
 
 #region resource/definition
@@ -58,6 +56,12 @@ func _load_markers_from_resource():
 	training_wheels_marker.rotation_degrees = (
 		skin_definition.training_wheels_marker_rotation_degrees
 	)
+	seat_marker.position = skin_definition.seat_marker_position
+	seat_marker.rotation_degrees = skin_definition.seat_marker_rotation_degrees
+	left_handlebar_marker.position = skin_definition.left_handlebar_marker_position
+	left_handlebar_marker.rotation_degrees = skin_definition.left_handlebar_marker_rotation_degrees
+	left_peg_marker.position = skin_definition.left_peg_marker_position
+	left_peg_marker.rotation_degrees = skin_definition.left_peg_marker_rotation_degrees
 
 
 func _save_markers_to_resource():
@@ -65,6 +69,12 @@ func _save_markers_to_resource():
 	skin_definition.training_wheels_marker_rotation_degrees = (
 		training_wheels_marker.rotation_degrees
 	)
+	skin_definition.seat_marker_position = seat_marker.position
+	skin_definition.seat_marker_rotation_degrees = seat_marker.rotation_degrees
+	skin_definition.left_handlebar_marker_position = left_handlebar_marker.position
+	skin_definition.left_handlebar_marker_rotation_degrees = left_handlebar_marker.rotation_degrees
+	skin_definition.left_peg_marker_position = left_peg_marker.position
+	skin_definition.left_peg_marker_rotation_degrees = left_peg_marker.rotation_degrees
 
 	var err = ResourceSaver.save(skin_definition)
 	if err == OK:

@@ -34,6 +34,12 @@ var collision_shape: Shape3D = preload("res://resources/entities/bikes/hitbox/bi
 # TODO: use this
 @export var training_wheels_marker_position: Vector3 = Vector3.ZERO
 @export var training_wheels_marker_rotation_degrees: Vector3 = Vector3.ZERO
+@export var seat_marker_position: Vector3 = Vector3.ZERO
+@export var seat_marker_rotation_degrees: Vector3 = Vector3.ZERO
+@export var left_handlebar_marker_position: Vector3 = Vector3.ZERO
+@export var left_handlebar_marker_rotation_degrees: Vector3 = Vector3.ZERO
+@export var left_peg_marker_position: Vector3 = Vector3.ZERO
+@export var left_peg_marker_rotation_degrees: Vector3 = Vector3.ZERO
 
 const USER_SKIN_DIR: String = "user://skins/"
 const SKIN_PFX: String = "bike_skin_"

@@ -10,4 +10,7 @@ skin_name = "naked_white"
 mesh_res = ExtResource("1_eidqq")
 mesh_scale_multiplier = Vector3(0.85, 0.85, 0.85)
 colors = Array[Color]([Color(0.9166399, 0.91663986, 0.9166398, 1)])
+seat_marker_position = Vector3(0, 0.60020787, -0.2435642)
+left_handlebar_marker_position = Vector3(0.32367456, 0.81761855, 0.48758724)
+left_peg_marker_position = Vector3(0.20825413, 0.10847086, -0.036867976)
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"
