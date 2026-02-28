@@ -1,14 +1,13 @@
 [gd_resource type="Resource" script_class="BikeSkinDefinition" format=3 uid="uid://bk7kv3qi134nu"]
 
+[ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/entities/bikes/hitbox/bike_hitbox.tres" id="1_3klvi"]
 [ext_resource type="PackedScene" uid="uid://8l877wswufci" path="res://entities/player/bikes/scenes/naked_bike.tscn" id="1_eidqq"]
 [ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/entities/bikes/bike_skin_definition.gd" id="2_jvt48"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hvuo0"]
 
 [resource]
 script = ExtResource("2_jvt48")
 skin_name = "naked_white"
 mesh_res = ExtResource("1_eidqq")
 colors = Array[Color]([Color(0.9166399, 0.91663986, 0.9166398, 1)])
-collision_shape = SubResource("CapsuleShape3D_hvuo0")
+collision_rotation_offset_degrees = Vector3(90, 0, 0)
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"

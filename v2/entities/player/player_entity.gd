@@ -40,8 +40,8 @@ func _ready():
 
 
 func _init_mesh():
-	character_skin.skin_definition = character_definition
 	bike_skin.skin_definition = bike_definition
+	character_skin.skin_definition = character_definition
 
 
 func _init_collision_shape():
