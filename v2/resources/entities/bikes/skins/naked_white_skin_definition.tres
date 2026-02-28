@@ -8,6 +8,6 @@
 script = ExtResource("2_jvt48")
 skin_name = "naked_white"
 mesh_res = ExtResource("1_eidqq")
+mesh_scale_multiplier = Vector3(0.85, 0.85, 0.85)
 colors = Array[Color]([Color(0.9166399, 0.91663986, 0.9166398, 1)])
-collision_rotation_offset_degrees = Vector3(90, 0, 0)
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"

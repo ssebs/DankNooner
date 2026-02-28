@@ -8,5 +8,5 @@
 script = ExtResource("2_4wyad")
 skin_name = "naked_default"
 mesh_res = ExtResource("1_hvuo0")
-collision_rotation_offset_degrees = Vector3(90, 0, 0)
+mesh_scale_multiplier = Vector3(0.85, 0.85, 0.85)
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"

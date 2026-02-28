@@ -36,7 +36,7 @@ unique_name_in_owner = true
 [node name="MeshNode" type="Node3D" parent="." unique_id=1984999037]
 unique_name_in_owner = true
 
-[node name="@Node3D@18906" type="Node3D" parent="MeshNode" unique_id=201545758 node_paths=PackedStringArray("meshes") instance=ExtResource("3_e6q4j")]
+[node name="SportBike" type="Node3D" parent="MeshNode" unique_id=201545758 node_paths=PackedStringArray("meshes") instance=ExtResource("3_e6q4j")]
 script = ExtResource("4_c5axj")
 slots = Array[ExtResource("5_e6q4j")]([SubResource("Resource_4okic"), SubResource("Resource_br1d3")])
 meshes = [NodePath("sportbike"), NodePath("sportbike")]

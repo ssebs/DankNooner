@@ -9,5 +9,4 @@ script = ExtResource("2_3klvi")
 skin_name = "sport_default"
 mesh_res = ExtResource("1_uy60g")
 colors = Array[Color]([Color(0.71, 0.71, 0.71, 1), Color(0.7058824, 0, 0, 1)])
-collision_rotation_offset_degrees = Vector3(90, 0, 0)
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"

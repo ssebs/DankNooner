@@ -4,11 +4,10 @@
 [ext_resource type="PackedScene" uid="uid://8l877wswufci" path="res://entities/player/bikes/scenes/naked_bike.tscn" id="1_wvm42"]
 [ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/entities/bikes/bike_skin_definition.gd" id="2_od3ma"]
 
-
 [resource]
 script = ExtResource("2_od3ma")
 skin_name = "naked_default"
 mesh_res = ExtResource("1_wvm42")
+mesh_scale_multiplier = Vector3(0.85, 0.85, 0.85)
 colors = Array[Color]([Color(1, 0, 0, 1)])
-collision_rotation_offset_degrees = Vector3(90, 0, 0)
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"

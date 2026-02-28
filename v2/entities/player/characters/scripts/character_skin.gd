@@ -128,40 +128,12 @@ func _spawn_mesh():
 	anim_player.play("Biker/reset")
 
 
-#endregion
-
-
-#region mesh scaling
 func _scale_to_height(node: Node3D, target_height: float) -> void:
-	var aabb := _get_combined_aabb(node)
+	var aabb: AABB = UtilsMesh.get_combined_aabb(node)
 	if aabb.size.y <= 0:
 		return
 	var scale_factor := target_height / aabb.size.y
 	node.scale *= scale_factor
-
-
-func _get_combined_aabb(node: Node3D) -> AABB:
-	var combined := AABB()
-	var first := true
-	for child in node.get_children():
-		if child is MeshInstance3D:
-			var mesh_aabb: AABB = child.get_aabb()
-			var transformed: AABB = child.transform * mesh_aabb
-			if first:
-				combined = transformed
-				first = false
-			else:
-				combined = combined.merge(transformed)
-		if child is Node3D:
-			var child_aabb: AABB = _get_combined_aabb(child)
-			if child_aabb.size != Vector3.ZERO:
-				var transformed: AABB = child.transform * child_aabb
-				if first:
-					combined = transformed
-					first = false
-				else:
-					combined = combined.merge(transformed)
-	return combined
 
 
 #endregion

@@ -14,6 +14,8 @@ class_name BikeSkin extends Node3D
 @export var skin_name_for_loading_test = "sport_default"
 @export_tool_button("Load skin from u:disk") var load_skin_btn = _load_skin_to_disk
 
+const LENGTH: float = 2.0
+
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var mesh_node: Node3D = %MeshNode
 
@@ -83,8 +85,7 @@ func _spawn_mesh():
 	mesh_skin = skin_definition.mesh_res.instantiate()
 	mesh_node.add_child(mesh_skin)
 
-	# scale_to_height(mesh_skin, HEIGHT)
-	# TODO use bike_skin_definition scaling!
+	mesh_skin.scale *= skin_definition.mesh_scale_multiplier
 
 	# # retarget AnimationMixer => Root Node to new mesh
 	# anim_player.root_node = mesh_skin.get_path()

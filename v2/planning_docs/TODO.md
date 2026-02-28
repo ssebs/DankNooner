@@ -8,7 +8,7 @@
   - [x] bike model
   - [x] color
   - [ ] use all unused vars
-  - [ ] markers (hand, pegs, seat, mods)
+  - [ ] markers (hand, pegs, seat/butt pos , mods)
   - [ ] stats
   - [ ] fix player entity
   - [ ] actually use the skins in player entity
