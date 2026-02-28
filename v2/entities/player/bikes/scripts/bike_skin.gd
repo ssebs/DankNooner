@@ -22,6 +22,11 @@ const LENGTH: float = 2.0
 # Accessory markers
 @onready var training_wheels_marker: Marker3D = %TrainingWheelsModsMarker
 
+# TODO - save other markers! copy left to right but offset by -1 on x
+@onready var seat_marker: Marker3D = $SeatMarker
+@onready var left_handlebar_marker: Marker3D = %LeftHandleBarMarker
+@onready var left_peg_marker: Marker3D = $LeftPegMarker
+
 var mesh_skin: SkinColor
 
 
