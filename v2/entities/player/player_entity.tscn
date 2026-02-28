@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bnop7vr1q4gwg" path="res://entities/player/player_entity.gd" id="1_0jc3c"]
 [ext_resource type="PackedScene" uid="uid://4m8or6jc5xbd" path="res://entities/player/components/camera_controller.tscn" id="2_bls4j"]
 [ext_resource type="PackedScene" uid="uid://2nnr6ecxbcgo" path="res://entities/player/components/movement_controller.tscn" id="2_fkugw"]
-[ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/entities/bikes/skins/naked_default_skin_definition.tres" id="2_rc8bg"]
+[ext_resource type="Resource" uid="uid://dbfv3lbss4ecn" path="res://resources/entities/bikes/skins/naked_red_skin_definition.tres" id="2_rc8bg"]
 [ext_resource type="Resource" uid="uid://d2u40ds684dd5" path="res://resources/entities/player/skins/clanker_default_skin_definition.tres" id="3_1vqn6"]
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_faflk"]
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_ri2qi"]
