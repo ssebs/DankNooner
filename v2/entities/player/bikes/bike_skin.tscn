@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bmyba87m3xuaa"]
 
 [ext_resource type="Script" uid="uid://bon57cam3dod2" path="res://entities/player/bikes/scripts/bike_skin.gd" id="1_n5uf3"]
-[ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/entities/bikes/skins/sport_default_skin_definition.tres" id="2_c5axj"]
+[ext_resource type="Resource" uid="uid://b3ke78m6lin1o" path="res://resources/entities/bikes/skins/sport_red_skin_definition.tres" id="2_c5axj"]
 [ext_resource type="PackedScene" uid="uid://54ehro5jqyxu" path="res://entities/player/bikes/scenes/sport_bike.tscn" id="3_e6q4j"]
 [ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://entities/components/skin_color.gd" id="4_c5axj"]
 [ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://entities/components/skin_slot.gd" id="5_e6q4j"]
@@ -10,7 +10,7 @@
 
 [sub_resource type="Resource" id="Resource_4okic"]
 script = ExtResource("5_e6q4j")
-color = Color(0.71, 0.71, 0.71, 1)
+color = Color(0.8156863, 0, 0, 1)
 use_standard_material = true
 surface_index = 1
 standard_material = SubResource("StandardMaterial3D_rw1ah")
