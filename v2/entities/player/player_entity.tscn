@@ -10,8 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://cuqtwh0saekmw" path="res://entities/player/characters/character_skin.tscn" id="6_1vqn6"]
 [ext_resource type="PackedScene" uid="uid://bmyba87m3xuaa" path="res://entities/player/bikes/bike_skin.tscn" id="7_lfjd4"]
 [ext_resource type="Script" uid="uid://d37r06yj5krm" path="res://entities/player/components/input_controller.gd" id="7_mrv5j"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hvuo0"]
+[ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/entities/bikes/hitbox/bike_hitbox.tres" id="8_1vqn6"]
 
 [node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("camera_controller", "movement_controller", "input_controller", "collision_shape_3d")]
 script = ExtResource("1_0jc3c")
@@ -48,7 +47,8 @@ skin_definition = ExtResource("2_rc8bg")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=412612653]
 unique_name_in_owner = true
-shape = SubResource("CapsuleShape3D_hvuo0")
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+shape = ExtResource("8_1vqn6")
 
 [node name="_Components" type="Node3D" parent="." unique_id=1446485892]
 
