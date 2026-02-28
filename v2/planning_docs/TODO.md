@@ -4,6 +4,12 @@
 
 ## In Progress 🚀
 
+- [ ] todo
+  - [ ] @CLAUDE.md review @entities/player/player_entity.tscn @entities/player/player_entity.gd @entities/player/characters/character_skin.tscn @entities/player/characters/scripts/character_skin.gd @resources/entities/player/character_skin_definition.gd @entities/player/bikes/bike_skin.tscn @entities/player/bikes/bike_skin.gd @resources/entities/bikes/bike_skin_definition.gd
+  - [ ] things need to be dynamic
+
+look at my architecture, im OK with it but it doesn't look like it will be easy to update IK / animation for each bike / character, there are some magnet ik values that should be tweaked, and rotations that should happen
+
 - [ ] singleplayer doesn't spawn
 - [ ] Bike definition
   - [x] bike model
