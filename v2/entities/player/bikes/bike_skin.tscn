@@ -43,3 +43,15 @@ meshes = [NodePath("sportbike"), NodePath("sportbike")]
 
 [node name="TrainingWheelsModsMarker" type="Marker3D" parent="." unique_id=2011032736]
 unique_name_in_owner = true
+
+[node name="SeatMarker" type="Marker3D" parent="." unique_id=725378963]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8378124, -0.35789177)
+
+[node name="LeftHandleBarMarker" type="Marker3D" parent="." unique_id=1482040679]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.28665084, 0.95283574, 0.35880893)
+
+[node name="LeftPegMarker" type="Marker3D" parent="." unique_id=401987139]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.24367344, 0.35812563, -0.2558015)
