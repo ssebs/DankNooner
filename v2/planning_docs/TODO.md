@@ -7,11 +7,11 @@
 - [ ] Bike definition
   - [x] bike model
   - [x] color
-  - [ ] use all unused vars
-  - [ ] markers (hand, pegs, seat/butt pos , mods)
-  - [ ] stats
+  - [x] markers (hand, pegs, seat/butt pos , mods)
+  - [x] actually use the skins in player entity
   - [ ] fix player entity
-  - [ ] actually use the skins in player entity
+  - [ ] use all unused vars
+  - [ ] stats
 
 ## Up Next 📋
 

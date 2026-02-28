@@ -3,9 +3,9 @@
 [ext_resource type="Script" uid="uid://bnop7vr1q4gwg" path="res://entities/player/player_entity.gd" id="1_0jc3c"]
 [ext_resource type="PackedScene" uid="uid://4m8or6jc5xbd" path="res://entities/player/components/camera_controller.tscn" id="2_bls4j"]
 [ext_resource type="PackedScene" uid="uid://2nnr6ecxbcgo" path="res://entities/player/components/movement_controller.tscn" id="2_fkugw"]
-[ext_resource type="Resource" uid="uid://dbfv3lbss4ecn" path="res://resources/entities/bikes/skins/naked_red_skin_definition.tres" id="2_rc8bg"]
-[ext_resource type="Resource" uid="uid://d2u40ds684dd5" path="res://resources/entities/player/skins/clanker_default_skin_definition.tres" id="3_1vqn6"]
+[ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/entities/bikes/skins/sport_default_skin_definition.tres" id="2_lfjd4"]
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_faflk"]
+[ext_resource type="Resource" uid="uid://dugcuccseinkn" path="res://resources/entities/player/skins/biker_default_skin_definition.tres" id="3_lfjd4"]
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_ri2qi"]
 [ext_resource type="PackedScene" uid="uid://cuqtwh0saekmw" path="res://entities/player/characters/character_skin.tscn" id="6_1vqn6"]
 [ext_resource type="PackedScene" uid="uid://bmyba87m3xuaa" path="res://entities/player/bikes/bike_skin.tscn" id="7_lfjd4"]
@@ -14,8 +14,8 @@
 
 [node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("camera_controller", "movement_controller", "input_controller", "collision_shape_3d")]
 script = ExtResource("1_0jc3c")
-bike_definition = ExtResource("2_rc8bg")
-character_definition = ExtResource("3_1vqn6")
+bike_definition = ExtResource("2_lfjd4")
+character_definition = ExtResource("3_lfjd4")
 camera_controller = NodePath("_Components/CameraController")
 movement_controller = NodePath("_Components/MovementController")
 input_controller = NodePath("_Components/InputController")
@@ -39,11 +39,10 @@ metadata/_custom_type_script = "uid://dour8fehaaugp"
 
 [node name="CharacterSkin" parent="." unique_id=259227641 instance=ExtResource("6_1vqn6")]
 unique_name_in_owner = true
-skin_definition = ExtResource("3_1vqn6")
 
 [node name="BikeSkin" parent="." unique_id=1727462617 instance=ExtResource("7_lfjd4")]
 unique_name_in_owner = true
-skin_definition = ExtResource("2_rc8bg")
+skin_definition = ExtResource("2_lfjd4")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=412612653]
 unique_name_in_owner = true
