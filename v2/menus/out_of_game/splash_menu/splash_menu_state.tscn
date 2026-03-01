@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://l1jc4wphn5vt"]
+
+[ext_resource type="Script" uid="uid://dscubnqixeg5d" path="res://menus/out_of_game/splash_menu/splash_menu_state.gd" id="1_4ta0w"]
+[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_id3t2"]
+[ext_resource type="Texture2D" uid="uid://b26ogu1ndl1rv" path="res://resources/img/GodotSplash.png" id="3_y56m1"]
+[ext_resource type="Texture2D" uid="uid://cwb2vqitbhf5o" path="res://resources/img/fmod_splash.png" id="4_edtrn"]
+
+[node name="SplashMenuState" type="Node" unique_id=2055861891]
+script = ExtResource("1_4ta0w")
+
+[node name="UI" type="Control" parent="." unique_id=555581335]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AspectContainer" type="AspectRatioContainer" parent="UI" unique_id=1411030700]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+ratio = 1.778
+
+[node name="SplashesToShow" type="MarginContainer" parent="UI/AspectContainer" unique_id=316995615]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_id3t2")
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="Splash01" type="TextureRect" parent="UI/AspectContainer/SplashesToShow" unique_id=661161262]
+layout_mode = 2
+texture = ExtResource("3_y56m1")
+expand_mode = 2
+
+[node name="Splash02" type="TextureRect" parent="UI/AspectContainer/SplashesToShow" unique_id=472846276]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+texture = ExtResource("4_edtrn")
+expand_mode = 2
+
+[node name="Label" type="Label" parent="UI/AspectContainer/SplashesToShow/Splash02" unique_id=1128948927]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -347.5
+offset_top = 90.432495
+offset_right = 347.5
+offset_bottom = 129.4325
+grow_horizontal = 2
+grow_vertical = 2
+text = "Made using FMOD Studio by Firelight Technologies Pty Ltd."
+
+[node name="Timer" type="Timer" parent="." unique_id=1491517648]
+unique_name_in_owner = true
