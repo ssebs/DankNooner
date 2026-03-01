@@ -41,6 +41,12 @@ var collision_shape: Shape3D = preload("res://resources/entities/bikes/hitbox/bi
 @export var left_peg_marker_position: Vector3 = Vector3.ZERO
 @export var left_peg_marker_rotation_degrees: Vector3 = Vector3.ZERO
 
+@export_group("Animation")
+## Multiplier for rider lean animation when steering
+@export var lean_multiplier: float = 1.0
+## Multiplier for rider weight shift animation (forward/back)
+@export var weight_shift_multiplier: float = 1.0
+
 const USER_SKIN_DIR: String = "user://skins/"
 const SKIN_PFX: String = "bike_skin_"
 

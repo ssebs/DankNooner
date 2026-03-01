@@ -7,6 +7,7 @@ class_name PlayerEntity extends CharacterBody3D
 @export var camera_controller: CameraController
 @export var movement_controller: MovementController
 @export var input_controller: InputController
+@export var animation_controller: AnimationController
 
 @export var collision_shape_3d: CollisionShape3D
 
@@ -47,6 +48,7 @@ func _init_ik():
 		bike_definition.left_peg_marker_position
 	)
 	character_skin.enable_ik()
+	animation_controller.initialize()
 
 
 func _init_mesh():
@@ -148,6 +150,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("movement_controller must not be empty")
 	if input_controller == null:
 		issues.append("input_controller must not be empty")
+	if animation_controller == null:
+		issues.append("animation_controller must not be empty")
 	if bike_definition == null:
 		issues.append("bike_definition must not be empty")
 	if collision_shape_3d == null:
