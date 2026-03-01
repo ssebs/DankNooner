@@ -4,57 +4,69 @@
 
 ## In Progress 🚀
 
-- [ ] todo
-  - [ ] @CLAUDE.md review @entities/player/player_entity.tscn @entities/player/player_entity.gd @entities/player/characters/character_skin.tscn @entities/player/characters/scripts/character_skin.gd @resources/entities/player/character_skin_definition.gd @entities/player/bikes/bike_skin.tscn @entities/player/bikes/bike_skin.gd @resources/entities/bikes/bike_skin_definition.gd
-  - [ ] things need to be dynamic
+- [ ] improved character/bike animation controls
 
-look at my architecture, im OK with it but it doesn't look like it will be easy to update IK / animation for each bike / character, there are some magnet ik values that should be tweaked, and rotations that should happen
-
-- [ ] Bike definition
-  - [x] bike model
-  - [x] color
-  - [x] markers (hand, pegs, seat/butt pos , mods)
-  - [x] actually use the skins in player entity
-  - [ ] fix player entity
-  - [ ] use all unused vars
-  - [ ] stats
-  - [ ] weirdness with IK / mapping on bike
+  - [ ] See planning_docs/AnimationController.md
 
 ## Up Next 📋
 
 - [ ] Create Player Part 2
 
-  - [ ] import features from moto-player-controller
-    - [ ] planning_docs\MIGRATE_FROM_MOTO_CONTROLLER.md
-    - [ ] gearing
-    - [ ] physics
-    - [ ] sound
-    - [ ] dont worry about tricks other than wheelies
+  - > import features from moto-player-controller
+  - > see planning_docs\MIGRATE_FROM_MOTO_CONTROLLER.md (update first)
+  - > no sound for now
+  - [ ] stats saved to bike_definition res
+  - [ ] gearing
+  - [ ] physics
+  - [ ] animations w/ AnimationController
+
+- [ ] Trick Manager + tricks
+
+  - [ ] trick system
+  - [ ] wheelie / stoppie tricks
+  - [ ] ramp tricks
+  - [ ] ground tricks
+  - [ ] trick detection in player component?
+  - [ ] trick scoring in own script?
+
+- [ ] Basic core gameplay loop
+
+  - [ ] basic map big enough for game modes
+  - [ ] traffic AI
+    - [ ] collision working (causes crash)
+    - [ ] basic for now, only move along path or something to start
+      - [ ] or just play animation to move their coord?
+  - [ ] ramps to do tricks
+  - [ ] 3d place to interact to start game mode
+  - [ ] Game modes:
+    - [ ] street race in traffic as demo mode (+fps cam mode)
+    - [ ] stunt race? Or high score mode?
+  - [ ] Do something with score / find whats fun
 
 - [ ] Audio Manager
 
+  - [ ] fmod bike sounds
   - [ ] Client side
     - [ ] Global audio buses (music, sfx)
   - [ ] Server side
     - [ ] 3D spatial audio bus (for bikes in world)
 
-- [ ] Create Player Part 3
-
-  - [ ] place characterskin on the bike
-  - [ ] create bikeskin the same way characterskin works
-  - [ ] IK animations https://youtu.be/MbaPDWfbNLo?si=p5ybcrLUJje_nBgd
-
 - [ ] Basic customization menu / UI
 
   - [ ] Create customize menu UI
   - [ ] Create customize menu background scene
-  - [ ] when spawning player in game, show their customizations
-  - [ ] Choose a bike + color
-  - [ ] Choose a character (male/female)
+    - [ ] show character / bike in garage
+  - [ ] Choose a bike skin
+  - [ ] Choose a character skin
+  - [ ] Save chosen skin
+    - [ ] path to skin_def for now, no custom json
+    - [ ] called in player_entity_save_skin
+      - [ ] Also have a load_skin
+  - [ ] when spawning player in game, show their customizations via load_skin
 
 - [ ] Create Save System for in-game
 
-  - [ ] Save bike definitions on disk
+  - [x] Save bike definitions on disk
   - [ ] Save mods / etc
   - [ ] Save levels / player stuff
 
@@ -65,9 +77,6 @@ look at my architecture, im OK with it but it doesn't look like it will be easy 
 
 ## Backlog
 
-- [ ] More game modes
-  - [ ] street race in traffic as demo mode (+fps mode)
-  - [ ] stunt race? Or high score mode?
 - [ ] software is open source, but assets aren't public
 
 - [ ] level select img
@@ -87,15 +96,7 @@ look at my architecture, im OK with it but it doesn't look like it will be easy 
           - [ ] **Marker3D**
           - [ ] script
   - [ ] Add Character customization (choose character for now)
-
-- [ ] Trick Manager + tricks
-
-  - [ ] trick system
-  - [ ] wheelie / stoppie tricks
-  - [ ] ramp tricks
-  - [ ] ground tricks
-  - [ ] trick detection in player component
-  - [ ] trick scoring in own script
+  - [ ] Change color w/ color picker
 
 - [ ] Create Test Level - Gym - player controller, with tp. Basically in game documentation. (E.g. How far can you jump)
 
@@ -110,7 +111,7 @@ look at my architecture, im OK with it but it doesn't look like it will be easy 
 
 - [ ] Camera control
 
-- [ ] Create traffic / AI system
+- [ ] Create complex traffic / AI system
 
   - [ ] basic traffic sim
   - [ ] implement A\* pathfinding? w/ state machine?
@@ -142,7 +143,22 @@ look at my architecture, im OK with it but it doesn't look like it will be easy 
 
 ## Done ✅
 
+- [x] Create Player Part 3
+
+  - [x] place characterskin on the bike
+  - [x] create bikeskin the same way characterskin works
+  - [x] IK animations https://youtu.be/MbaPDWfbNLo?si=p5ybcrLUJje_nBgd
+
+- [x] Bike definition
+
+  - [x] bike model
+  - [x] color
+  - [x] markers (hand, pegs, seat/butt pos , mods)
+  - [x] actually use the skins in player entity
+  - [x] fix player entity
+
 - [x] Splash screen / animation
+
   - [x] Add as the splash_loading_menu
   - [x] Option to press any btn to skip
 
