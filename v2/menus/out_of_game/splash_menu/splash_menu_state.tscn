@@ -7,6 +7,7 @@
 
 [node name="SplashMenuState" type="Node" unique_id=2055861891]
 script = ExtResource("1_4ta0w")
+splash_duration = 2.0
 
 [node name="UI" type="Control" parent="." unique_id=555581335]
 unique_name_in_owner = true
@@ -63,3 +64,4 @@ text = "Made using FMOD Studio by Firelight Technologies Pty Ltd."
 
 [node name="Timer" type="Timer" parent="." unique_id=1491517648]
 unique_name_in_owner = true
+wait_time = 2.0
