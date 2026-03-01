@@ -5,6 +5,7 @@
 ## In Progress 🚀
 
 - [ ] improved character/bike animation controls
+
   - [x] claude created a system
   - [ ] Review planning_docs/AnimationController.md
   - [ ] Create way to play specific animations from name/var
@@ -20,6 +21,10 @@
   - [ ] Create crash animation
     - [ ] Maybe multiple?
     - [ ] proceedural
+
+- [ ] bugs
+  - [ ] set max char limit for name
+  - [ ] First launch noray setting is not working, can't host properly. 2nd launch it works
 
 ## Up Next 📋
 
