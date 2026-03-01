@@ -4,6 +4,7 @@
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_id3t2"]
 [ext_resource type="Texture2D" uid="uid://b26ogu1ndl1rv" path="res://resources/img/GodotSplash.png" id="3_y56m1"]
 [ext_resource type="Texture2D" uid="uid://cwb2vqitbhf5o" path="res://resources/img/fmod_splash.png" id="4_edtrn"]
+[ext_resource type="Texture2D" uid="uid://bemuhperq1pyq" path="res://resources/img/ssebs_splash.png" id="5_5g6xa"]
 
 [node name="SplashMenuState" type="Node" unique_id=2055861891]
 script = ExtResource("1_4ta0w")
@@ -42,6 +43,7 @@ texture = ExtResource("3_y56m1")
 expand_mode = 2
 
 [node name="Splash02" type="TextureRect" parent="UI/AspectContainer/SplashesToShow" unique_id=472846276]
+visible = false
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 texture = ExtResource("4_edtrn")
@@ -61,6 +63,31 @@ offset_bottom = 129.4325
 grow_horizontal = 2
 grow_vertical = 2
 text = "Made using FMOD Studio by Firelight Technologies Pty Ltd."
+
+[node name="Splash03" type="TextureRect" parent="UI/AspectContainer/SplashesToShow" unique_id=993923213]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+texture = ExtResource("5_5g6xa")
+expand_mode = 2
+
+[node name="Label" type="Label" parent="UI/AspectContainer/SplashesToShow/Splash03" unique_id=465921873]
+custom_minimum_size = Vector2(1.835, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -347.5
+offset_top = 131.4325
+offset_right = 347.5
+offset_bottom = 238.4325
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "Made by @ssebs
+Sebastian Safari"
+horizontal_alignment = 1
 
 [node name="Timer" type="Timer" parent="." unique_id=1491517648]
 unique_name_in_owner = true
