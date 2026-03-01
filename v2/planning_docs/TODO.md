@@ -23,7 +23,7 @@
     - [ ] proceedural
 
 - [ ] bugs
-  - [ ] set max char limit for name
+  - [x] set max char limit for name
   - [ ] First launch noray setting is not working, can't host properly. 2nd launch it works
 
 ## Up Next 📋
