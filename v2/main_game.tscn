@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://bl26780k5sr" path="res://menus/out_of_game/lobby_menu/lobby_menu_state.tscn" id="7_l5ukw"]
 [ext_resource type="PackedScene" uid="uid://b8wtld34amu44" path="res://menus/out_of_game/customize_menu/customize_menu_state.tscn" id="9_4srsv"]
 [ext_resource type="Script" uid="uid://dihgiqkhwdsf6" path="res://managers/level_manager.gd" id="10_mf81u"]
+[ext_resource type="PackedScene" uid="uid://l1jc4wphn5vt" path="res://menus/out_of_game/splash_menu/splash_menu_state.tscn" id="11_umrn2"]
 [ext_resource type="Script" uid="uid://b2j8gbb336wwq" path="res://managers/pause_manager.gd" id="12_aomqu"]
 [ext_resource type="Script" uid="uid://cvf883jhga841" path="res://managers/settings_manager.gd" id="17_borgi"]
 [ext_resource type="Script" uid="uid://dxn3rquhf7sfs" path="res://managers/gamemodes/gamemode_manager.gd" id="18_ih6an"]
@@ -72,6 +73,10 @@ pause_menu_state = NodePath("StateMachine/PauseMenuState")
 [node name="StateMachine" type="Node" parent="ManagerManager/MenuManager" unique_id=544508199 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("4_6bm6p")
 initial_state = NodePath("MainMenuState")
+
+[node name="SplashMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=2055861891 node_paths=PackedStringArray("menu_manager", "main_menu_state") instance=ExtResource("11_umrn2")]
+menu_manager = NodePath("../..")
+main_menu_state = NodePath("../MainMenuState")
 
 [node name="MainMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=494197480 node_paths=PackedStringArray("menu_manager", "level_manager", "settings_menu_state", "play_menu_state", "customize_menu_state") instance=ExtResource("6_2pltu")]
 menu_manager = NodePath("../..")
