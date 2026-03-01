@@ -205,6 +205,12 @@ func _update_procedural_animation(delta: float) -> void:
 		_current_weight_shift, target_weight_shift, weight_shift_smoothing * delta
 	)
 
+	# wheelie stoppie
+	# todo: make wheelies use offsets
+	visual_root.rotation.x = _current_weight_shift
+
+	# set_bike_pitch(_current_weight_shift)
+
 	# Calculate offsets
 	var lean_offset_x = _current_lean * _lean_multiplier * -0.25  # max 0.25m
 	var weight_offset_z = _current_weight_shift * _weight_shift_multiplier * 0.1  # Max 10cm

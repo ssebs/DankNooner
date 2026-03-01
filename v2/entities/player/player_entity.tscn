@@ -62,9 +62,10 @@ unique_name_in_owner = true
 script = ExtResource("7_mrv5j")
 player_entity = NodePath("../..")
 
-[node name="AnimationController" type="Node" parent="_Controllers" unique_id=727350187 node_paths=PackedStringArray("character_skin", "bike_skin", "movement_controller", "input_controller")]
+[node name="AnimationController" type="Node" parent="_Controllers" unique_id=727350187 node_paths=PackedStringArray("visual_root", "character_skin", "bike_skin", "movement_controller", "input_controller")]
 unique_name_in_owner = true
 script = ExtResource("9_anim")
+visual_root = NodePath("../../VisualRoot")
 character_skin = NodePath("../../VisualRoot/CharacterSkin")
 bike_skin = NodePath("../../VisualRoot/BikeSkin")
 movement_controller = NodePath("../MovementController")
