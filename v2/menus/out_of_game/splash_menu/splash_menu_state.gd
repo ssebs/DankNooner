@@ -33,7 +33,7 @@ func Enter(_state_context: StateContext):
 		_show_current_splash()
 	else:
 		printerr("splash_children not populated!")
-		_skip_to_end()
+		_finish_splashes()
 
 
 func Exit(_state_context: StateContext):
@@ -64,14 +64,16 @@ func _hide_current_splash():
 
 
 func _finish_splashes():
-	# is_showing_splashes = false
+	timer.stop()
+	for child in splash_children:
+		child.hide()
+	splash_children.clear()
 	transitioned.emit(main_menu_state, null)
 
 
 func _unhandled_input(event: InputEvent):
 	if Engine.is_editor_hint():
 		return
-
 	if !is_showing_splashes:
 		return
 	if !debug_skip_ok:
@@ -80,19 +82,10 @@ func _unhandled_input(event: InputEvent):
 	# Skip to end on any button press
 	if event is InputEventKey or event is InputEventMouseButton or event is InputEventJoypadButton:
 		if event.is_pressed():
-			_skip_to_end()
-
-
-func _skip_to_end():
-	timer.stop()
-	# Hide all splashes
-	for child in splash_children:
-		if child is Control:
-			child.hide()
-	_finish_splashes()
+			_finish_splashes()
 
 
 #override
 func on_cancel_key_pressed():
 	if debug_skip_ok:
-		_skip_to_end()
+		_finish_splashes()
