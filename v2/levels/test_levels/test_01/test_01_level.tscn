@@ -70,6 +70,15 @@ mesh = SubResource("BoxMesh_3jscr")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="LevelItemsAndStuff/Box/StaticBody3D" unique_id=306021907]
 shape = SubResource("BoxShape3D_51jyr")
 
+[node name="Box2" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=161633906]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5566535, 0.5, -13.580391)
+mesh = SubResource("BoxMesh_3jscr")
+
+[node name="StaticBody3D" type="RigidBody3D" parent="LevelItemsAndStuff/Box2" unique_id=1418540046]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelItemsAndStuff/Box2/StaticBody3D" unique_id=52954094]
+shape = SubResource("BoxShape3D_51jyr")
+
 [node name="wall" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=1973805590]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 0.5, 0)
 mesh = SubResource("BoxMesh_6hu6n")
