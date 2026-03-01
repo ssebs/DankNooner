@@ -27,6 +27,8 @@ var can_move_butt: bool = true
 func _physics_process(_delta):
 	if can_move_butt:
 		_move_hips_to_butt_target()
+	if fabrik_ik.active:
+		_apply_end_bone_rotations()
 
 
 func enable_ik():
@@ -66,6 +68,39 @@ func _move_hips_to_butt_target():
 	var current_pose = skel_3d.get_bone_pose(hips_idx)
 	current_pose.origin += skel_3d.global_transform.basis.inverse() * offset
 	skel_3d.set_bone_pose(hips_idx, current_pose)
+
+
+func _apply_end_bone_rotations():
+	# Rotate end bones to match marker rotations (FABRIK only handles position)
+	_rotate_bone_to_marker("LeftHand", ik_left_hand)
+	_rotate_bone_to_marker("RightHand", ik_right_hand)
+	_rotate_bone_to_marker("LeftFoot", ik_left_foot)
+	_rotate_bone_to_marker("RightFoot", ik_right_foot)
+	_rotate_bone_to_marker("Spine", ik_chest)
+	_rotate_bone_to_marker("Head", ik_head)
+
+
+func _rotate_bone_to_marker(bone_name: String, marker: Marker3D):
+	var skel_3d = char_skin.skel_3d
+	if skel_3d == null:
+		return
+	var bone_idx = skel_3d.find_bone(bone_name)
+	if bone_idx == -1:
+		return
+
+	var parent_idx = skel_3d.get_bone_parent(bone_idx)
+	if parent_idx == -1:
+		return
+
+	# Get marker's target rotation in skeleton-local space
+	var target_global_basis = marker.global_transform.basis
+	var parent_global_pose = skel_3d.get_bone_global_pose(parent_idx)
+	var parent_global_basis = skel_3d.global_transform.basis * parent_global_pose.basis
+
+	# Convert to bone-local rotation
+	var pose = skel_3d.get_bone_pose(bone_idx)
+	pose.basis = parent_global_basis.inverse() * target_global_basis
+	skel_3d.set_bone_pose(bone_idx, pose)
 
 
 func _create_ik() -> void:

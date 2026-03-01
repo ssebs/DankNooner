@@ -39,7 +39,7 @@ metadata/_custom_type_script = "uid://dour8fehaaugp"
 
 [node name="CharacterSkin" parent="." unique_id=259227641 instance=ExtResource("6_1vqn6")]
 unique_name_in_owner = true
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0, 0)
 
 [node name="BikeSkin" parent="." unique_id=1727462617 instance=ExtResource("7_lfjd4")]
 unique_name_in_owner = true
@@ -48,7 +48,7 @@ skin_definition = ExtResource("2_lfjd4")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=412612653]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.44, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.22, 0)
 shape = ExtResource("8_1vqn6")
 
 [node name="_Components" type="Node3D" parent="." unique_id=1446485892]

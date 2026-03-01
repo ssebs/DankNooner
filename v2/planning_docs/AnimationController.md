@@ -2,6 +2,21 @@
 
 Central API for all rider animation - procedural dynamics, polish animations, and tricks.
 
+## IK Rotation Support
+
+FABRIK only handles position. Post-IK rotation is applied in `IKController._apply_end_bone_rotations()`:
+
+| Bone | Marker | Purpose |
+|------|--------|---------|
+| LeftHand | ik_left_hand | Grip handlebar angle |
+| RightHand | ik_right_hand | Grip handlebar angle |
+| LeftFoot | ik_left_foot | Foot peg angle |
+| RightFoot | ik_right_foot | Foot peg angle |
+| Spine | ik_chest | Torso lean/twist |
+| Head | ik_head | Look direction |
+
+Marker rotations are converted to bone-local space and applied after FABRIK solves positions.
+
 ## Architecture
 
 ```
@@ -173,3 +188,95 @@ Procedural animation is cosmetic-only (doesn't affect physics), so:
 - Input/movement state already synced, procedural derives from that
 
 Tricks that affect physics (if any) would need the `rb_*` pattern from CLAUDE.md.
+
+---
+
+## Coding Patterns
+
+Follow existing component conventions when implementing AnimationController.
+
+### File Structure
+```gdscript
+@tool
+class_name AnimationController extends Node
+
+# Exports for inspector wiring (dependencies first)
+@export var character_skin: CharacterSkin
+@export var bike_skin: BikeSkin
+@export var movement_controller: MovementController
+@export var input_controller: InputController
+
+# Config exports
+@export var idle_timeout: float = 3.0
+
+# Internal state vars
+var current_state: RiderState = RiderState.RIDING
+var base_butt_pos: Vector3
+var idle_timer: float = 0.0
+
+
+func _ready():
+    if Engine.is_editor_hint():
+        return
+    # init code...
+
+
+func _physics_process(delta):
+    if Engine.is_editor_hint():
+        return
+    # procedural code...
+```
+
+### Conventions
+- `@tool` at top for editor preview/validation
+- Guard `_ready()` and `_physics_process()` with `Engine.is_editor_hint()` check
+- `@export` dependencies, wire in inspector (not hardcoded paths)
+- `@onready var x: Type = %UniqueName` for internal child nodes
+- `_get_configuration_warnings()` to validate required exports
+- `#region` / `#endregion` for logical groupings
+- Signals for state changes other systems need to react to
+- Prefix underscore for private/internal funcs
+
+### Signal Pattern (from InputController)
+```gdscript
+signal state_changed(new_state: RiderState)
+
+var current_state: RiderState = RiderState.RIDING:
+    set(value):
+        if current_state != value:
+            current_state = value
+            state_changed.emit(value)
+```
+
+### Public API Pattern (from CameraController)
+```gdscript
+# Public methods - clean verbs, no underscore prefix
+func play_trick(trick_name: String):
+    _transition_to_trick()
+    _play_trick_animation(trick_name)
+
+# Private helpers - underscore prefix
+func _transition_to_trick():
+    current_state = RiderState.TRICK
+    character_skin.disable_ik()
+```
+
+### Configuration Warnings
+```gdscript
+func _get_configuration_warnings() -> PackedStringArray:
+    var issues = []
+    if character_skin == null:
+        issues.append("character_skin must be set")
+    if bike_skin == null:
+        issues.append("bike_skin must be set")
+    if movement_controller == null:
+        issues.append("movement_controller must be set")
+    if input_controller == null:
+        issues.append("input_controller must be set")
+    return issues
+```
+
+### Scene Location
+- Script: `entities/player/components/animation_controller.gd`
+- Add as child of `_Components` in `player_entity.tscn`
+- Wire exports in inspector to sibling components and skin nodes
