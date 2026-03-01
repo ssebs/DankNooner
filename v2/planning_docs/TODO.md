@@ -55,6 +55,8 @@
     - [ ] street race in traffic as demo mode (+fps cam mode)
     - [ ] stunt race? Or high score mode?
   - [ ] Do something with score / find whats fun
+    - [ ] Unlock tricks w/ skill tree/money/something
+    - [ ] get rewarded for doing things
 
 - [ ] Audio Manager
 
@@ -63,6 +65,16 @@
     - [ ] Global audio buses (music, sfx)
   - [ ] Server side
     - [ ] 3D spatial audio bus (for bikes in world)
+  - [ ] Use fmod to blend sounds @ rpm
+  - [ ] Record my bike for sounds
+    - [ ] Wind sounds at high speed
+    - [ ] startup
+    - [ ] idle
+    - [ ] holding rev at diff rpm, switch files in game
+    - [ ] full rev
+    - [ ] exhaust pops
+    - [ ] downshift/rev match
+    - [ ] shifting gears
 
 - [ ] Basic customization menu / UI
 
@@ -87,10 +99,24 @@
   - [ ] return to lobby (force everyone)
   - [ ] review all code & cleanup to call authority done
   - [ ] update Architecture.md
+  - [ ] saving settings doesnt update noray host
 
 ## Backlog
 
 - [ ] software is open source, but assets aren't public
+- [ ] Pizza Delivery game mode
+
+  - [ ] start at Pizza shop & use scooter to make deliveries across town in time.
+  - [ ] Multiplayer too, they have different houses to go to
+    - [ ] Or compete to get there first
+
+- [ ] map
+
+  - [ ] Outline of island is the shape of an F1 track, and is drivable. The inside is the island map itself
+    - [ ] Brazil track
+    - [ ] Moom map? Low gravity
+    - [ ] 3D printer map => level is 3d printed in real time
+    - [ ] start with graybox/repeating grid texture to plan out maps before are is decided , use multiple colors & labels
 
 - [ ] level select img
 - [ ] More Customization UI / menu
@@ -111,6 +137,10 @@
   - [ ] Add Character customization (choose character for now)
   - [ ] Change color w/ color picker
 
+- [ ] Tutorial level 1
+  - [ ] Explain how to progressively brake
+  - [ ] Go this fast & brake, don't squeeze hard asap, slowly squeeze.
+  - [ ] Force them to try again til they get it
 - [ ] Create Test Level - Gym - player controller, with tp. Basically in game documentation. (E.g. How far can you jump)
 
   - [] Make the world fit around the player controller.
@@ -123,7 +153,12 @@
   - https://binbun3d.itch.io/godot-ultimate-toon-shader
 
 - [ ] Camera control
-
+- [ ] Dedicated server
+  - [ ] Lobby is created, then sends it's IP to a matchmaking server (http)
+  - [ ] When creating lobby, add invite only mode or open lobby
+  - [ ] Server browser can list all servers that register
+  - [ ] Add game mode for open lobby (for server to reset to with 0 players) or just go to free roam?
+  - [ ] Quick join lobby
 - [ ] Create complex traffic / AI system
 
   - [ ] basic traffic sim
