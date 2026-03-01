@@ -5,7 +5,7 @@
 ## In Progress 🚀
 
 - [ ] improved character/bike animation controls
-  - [ ] claude created a system
+  - [x] claude created a system
   - [ ] Review planning_docs/AnimationController.md
   - [ ] Create way to play specific animations from name/var
     - [ ] Multiple at once?
