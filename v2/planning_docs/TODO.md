@@ -5,8 +5,21 @@
 ## In Progress 🚀
 
 - [ ] improved character/bike animation controls
-
-  - [ ] See planning_docs/AnimationController.md
+  - [ ] claude created a system
+  - [ ] Review planning_docs/AnimationController.md
+  - [ ] Create way to play specific animations from name/var
+    - [ ] Multiple at once?
+    - [ ] proceedural happen during other animations if flag is set
+    - [ ] animation player for custom
+    - [ ] player_entity relies on this to manage animations
+  - [ ] Create lean (turning) animation
+  - [ ] Create stopped / idle animation
+  - [ ] Create wheelie/stoppie animation
+  - [ ] Create Heel clicker animation
+  - [ ] Create wheelie + DOWN animation (wheelie + right hand touches ground)
+  - [ ] Create crash animation
+    - [ ] Maybe multiple?
+    - [ ] proceedural
 
 ## Up Next 📋
 
@@ -18,7 +31,7 @@
   - [ ] stats saved to bike_definition res
   - [ ] gearing
   - [ ] physics
-  - [ ] animations w/ AnimationController
+  - [ ] use animations from AnimationController
 
 - [ ] Trick Manager + tricks
 

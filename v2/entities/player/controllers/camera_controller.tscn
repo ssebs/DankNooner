@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://4m8or6jc5xbd"]
 
-[ext_resource type="Script" uid="uid://coopftft0wwho" path="res://entities/player/components/camera_controller.gd" id="1_x3pwk"]
+[ext_resource type="Script" uid="uid://coopftft0wwho" path="res://entities/player/controllers/camera_controller.gd" id="1_x3pwk"]
 
 [node name="CameraController" type="Node3D" unique_id=816730707 node_paths=PackedStringArray("fps_cam", "tps_cam")]
 script = ExtResource("1_x3pwk")

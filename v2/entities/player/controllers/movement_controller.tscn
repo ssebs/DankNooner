@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://2nnr6ecxbcgo"]
 
-[ext_resource type="Script" uid="uid://bi0gffmw6lupt" path="res://entities/player/components/movement_controller.gd" id="1_b2p5j"]
+[ext_resource type="Script" uid="uid://bi0gffmw6lupt" path="res://entities/player/controllers/movement_controller.gd" id="1_b2p5j"]
 
 [node name="MovementController" type="Node" unique_id=1345567662]
 script = ExtResource("1_b2p5j")
