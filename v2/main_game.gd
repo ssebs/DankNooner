@@ -7,6 +7,10 @@ class_name MainGame extends Node
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
+
+	if OS.has_feature("editor"):
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+
 	print(tr("GAME_TITLE"))
 
 
