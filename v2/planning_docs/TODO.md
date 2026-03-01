@@ -4,6 +4,10 @@
 
 ## In Progress 🚀
 
+- [ ] Splash screen / animation
+  - [ ] Add as the splash_loading_menu
+  - [ ] AnimationPlayer oneshot, on complete transition to main menu
+  - [ ] Option to press any btn to skip
 - [ ] todo
   - [ ] @CLAUDE.md review @entities/player/player_entity.tscn @entities/player/player_entity.gd @entities/player/characters/character_skin.tscn @entities/player/characters/scripts/character_skin.gd @resources/entities/player/character_skin_definition.gd @entities/player/bikes/bike_skin.tscn @entities/player/bikes/bike_skin.gd @resources/entities/bikes/bike_skin_definition.gd
   - [ ] things need to be dynamic
