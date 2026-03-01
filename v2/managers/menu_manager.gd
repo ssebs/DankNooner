@@ -4,6 +4,8 @@ class_name MenuManager extends BaseManager
 @export var state_machine: StateMachine
 @export var pause_menu_state: MenuState
 
+@export var is_verbose: bool = false
+
 var prev_state: MenuState
 
 
@@ -30,7 +32,8 @@ func switch_to_pause_menu():
 func grab_focus_to_first_btn(m_state: MenuState):
 	var btn = m_state.get_first_button_for_focus()
 	if btn == null:
-		print("Could not find btn")
+		if is_verbose:
+			print("Could not find btn")
 		return
 
 	btn.grab_focus()

@@ -11,14 +11,16 @@
 [ext_resource type="PackedScene" uid="uid://bmyba87m3xuaa" path="res://entities/player/bikes/bike_skin.tscn" id="7_lfjd4"]
 [ext_resource type="Script" uid="uid://d37r06yj5krm" path="res://entities/player/components/input_controller.gd" id="7_mrv5j"]
 [ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/entities/bikes/hitbox/bike_hitbox.tres" id="8_1vqn6"]
+[ext_resource type="Script" uid="uid://b37it1dg63lir" path="res://entities/player/components/animation_controller.gd" id="9_anim"]
 
-[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("camera_controller", "movement_controller", "input_controller", "collision_shape_3d")]
+[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("camera_controller", "movement_controller", "input_controller", "animation_controller", "collision_shape_3d")]
 script = ExtResource("1_0jc3c")
 bike_definition = ExtResource("2_lfjd4")
 character_definition = ExtResource("3_lfjd4")
 camera_controller = NodePath("_Components/CameraController")
 movement_controller = NodePath("_Components/MovementController")
 input_controller = NodePath("_Components/InputController")
+animation_controller = NodePath("_Components/AnimationController")
 collision_shape_3d = NodePath("CollisionShape3D")
 metadata/_custom_type_script = "uid://bnop7vr1q4gwg"
 
@@ -57,6 +59,14 @@ shape = ExtResource("8_1vqn6")
 unique_name_in_owner = true
 script = ExtResource("7_mrv5j")
 player_entity = NodePath("../..")
+
+[node name="AnimationController" type="Node" parent="_Components" unique_id=727350187 node_paths=PackedStringArray("character_skin", "bike_skin", "movement_controller", "input_controller")]
+unique_name_in_owner = true
+script = ExtResource("9_anim")
+character_skin = NodePath("../../CharacterSkin")
+bike_skin = NodePath("../../BikeSkin")
+movement_controller = NodePath("../MovementController")
+input_controller = NodePath("../InputController")
 
 [node name="MovementController" parent="_Components" unique_id=1521291056 node_paths=PackedStringArray("player_entity", "input_controller") instance=ExtResource("2_fkugw")]
 unique_name_in_owner = true
