@@ -11,6 +11,7 @@ class_name PlayerEntity extends CharacterBody3D
 
 @export var collision_shape_3d: CollisionShape3D
 
+@onready var visual_root: Node3D = %VisualRoot
 @onready var character_skin: CharacterSkin = %CharacterSkin
 @onready var bike_skin: BikeSkin = %BikeSkin
 @onready var name_label: Label3D = %NameLabel

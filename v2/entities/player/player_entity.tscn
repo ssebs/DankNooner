@@ -1,26 +1,26 @@
 [gd_scene format=3 uid="uid://d0rgswc73h64f"]
 
 [ext_resource type="Script" uid="uid://bnop7vr1q4gwg" path="res://entities/player/player_entity.gd" id="1_0jc3c"]
-[ext_resource type="PackedScene" uid="uid://4m8or6jc5xbd" path="res://entities/player/components/camera_controller.tscn" id="2_bls4j"]
-[ext_resource type="PackedScene" uid="uid://2nnr6ecxbcgo" path="res://entities/player/components/movement_controller.tscn" id="2_fkugw"]
+[ext_resource type="PackedScene" uid="uid://4m8or6jc5xbd" path="res://entities/player/controllers/camera_controller.tscn" id="2_bls4j"]
+[ext_resource type="PackedScene" uid="uid://2nnr6ecxbcgo" path="res://entities/player/controllers/movement_controller.tscn" id="2_fkugw"]
 [ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/entities/bikes/skins/sport_default_skin_definition.tres" id="2_lfjd4"]
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_faflk"]
 [ext_resource type="Resource" uid="uid://dugcuccseinkn" path="res://resources/entities/player/skins/biker_default_skin_definition.tres" id="3_lfjd4"]
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_ri2qi"]
 [ext_resource type="PackedScene" uid="uid://cuqtwh0saekmw" path="res://entities/player/characters/character_skin.tscn" id="6_1vqn6"]
 [ext_resource type="PackedScene" uid="uid://bmyba87m3xuaa" path="res://entities/player/bikes/bike_skin.tscn" id="7_lfjd4"]
-[ext_resource type="Script" uid="uid://d37r06yj5krm" path="res://entities/player/components/input_controller.gd" id="7_mrv5j"]
+[ext_resource type="Script" uid="uid://d37r06yj5krm" path="res://entities/player/controllers/input_controller.gd" id="7_mrv5j"]
 [ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/entities/bikes/hitbox/bike_hitbox.tres" id="8_1vqn6"]
-[ext_resource type="Script" uid="uid://b37it1dg63lir" path="res://entities/player/components/animation_controller.gd" id="9_anim"]
+[ext_resource type="Script" uid="uid://b37it1dg63lir" path="res://entities/player/controllers/animation_controller.gd" id="9_anim"]
 
 [node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("camera_controller", "movement_controller", "input_controller", "animation_controller", "collision_shape_3d")]
 script = ExtResource("1_0jc3c")
 bike_definition = ExtResource("2_lfjd4")
 character_definition = ExtResource("3_lfjd4")
-camera_controller = NodePath("_Components/CameraController")
-movement_controller = NodePath("_Components/MovementController")
-input_controller = NodePath("_Components/InputController")
-animation_controller = NodePath("_Components/AnimationController")
+camera_controller = NodePath("_Controllers/CameraController")
+movement_controller = NodePath("_Controllers/MovementController")
+input_controller = NodePath("_Controllers/InputController")
+animation_controller = NodePath("_Controllers/AnimationController")
 collision_shape_3d = NodePath("CollisionShape3D")
 metadata/_custom_type_script = "uid://bnop7vr1q4gwg"
 
@@ -39,13 +39,15 @@ root = NodePath("..")
 properties = Array[String]([":global_transform", ":velocity", "%MovementController:current_speed", "%MovementController:angular_velocity"])
 metadata/_custom_type_script = "uid://dour8fehaaugp"
 
-[node name="CharacterSkin" parent="." unique_id=259227641 instance=ExtResource("6_1vqn6")]
-unique_name_in_owner = true
-transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0, 0)
-
-[node name="BikeSkin" parent="." unique_id=1727462617 instance=ExtResource("7_lfjd4")]
+[node name="VisualRoot" type="Node3D" parent="." unique_id=53014519]
 unique_name_in_owner = true
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+
+[node name="CharacterSkin" parent="VisualRoot" unique_id=259227641 instance=ExtResource("6_1vqn6")]
+unique_name_in_owner = true
+
+[node name="BikeSkin" parent="VisualRoot" unique_id=1727462617 instance=ExtResource("7_lfjd4")]
+unique_name_in_owner = true
 skin_definition = ExtResource("2_lfjd4")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=412612653]
@@ -53,22 +55,22 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.22, 0)
 shape = ExtResource("8_1vqn6")
 
-[node name="_Components" type="Node3D" parent="." unique_id=1446485892]
+[node name="_Controllers" type="Node3D" parent="." unique_id=1446485892]
 
-[node name="InputController" type="Node3D" parent="_Components" unique_id=745640607 node_paths=PackedStringArray("player_entity")]
+[node name="InputController" type="Node3D" parent="_Controllers" unique_id=745640607 node_paths=PackedStringArray("player_entity")]
 unique_name_in_owner = true
 script = ExtResource("7_mrv5j")
 player_entity = NodePath("../..")
 
-[node name="AnimationController" type="Node" parent="_Components" unique_id=727350187 node_paths=PackedStringArray("character_skin", "bike_skin", "movement_controller", "input_controller")]
+[node name="AnimationController" type="Node" parent="_Controllers" unique_id=727350187 node_paths=PackedStringArray("character_skin", "bike_skin", "movement_controller", "input_controller")]
 unique_name_in_owner = true
 script = ExtResource("9_anim")
-character_skin = NodePath("../../CharacterSkin")
-bike_skin = NodePath("../../BikeSkin")
+character_skin = NodePath("../../VisualRoot/CharacterSkin")
+bike_skin = NodePath("../../VisualRoot/BikeSkin")
 movement_controller = NodePath("../MovementController")
 input_controller = NodePath("../InputController")
 
-[node name="MovementController" parent="_Components" unique_id=1521291056 node_paths=PackedStringArray("player_entity", "input_controller") instance=ExtResource("2_fkugw")]
+[node name="MovementController" parent="_Controllers" unique_id=1521291056 node_paths=PackedStringArray("player_entity", "input_controller") instance=ExtResource("2_fkugw")]
 unique_name_in_owner = true
 player_entity = NodePath("../..")
 input_controller = NodePath("../InputController")
@@ -77,14 +79,14 @@ brake_decel = 40.0
 engine_brake_decel = 5.0
 turn_speed = 2.0
 
-[node name="CameraController" parent="_Components" unique_id=816730707 node_paths=PackedStringArray("fps_marker", "tps_marker") instance=ExtResource("2_bls4j")]
+[node name="CameraController" parent="_Controllers" unique_id=816730707 node_paths=PackedStringArray("fps_marker", "tps_marker") instance=ExtResource("2_bls4j")]
 fps_marker = NodePath("../../Markers/FPSCamMarker")
 tps_marker = NodePath("../../Markers/TPSCamMarker")
 
-[node name="FPSCam" parent="_Components/CameraController" index="0" unique_id=634464672]
+[node name="FPSCam" parent="_Controllers/CameraController" index="0" unique_id=634464672]
 transform = Transform3D(1, 0, 0, 0, 0.96592575, 0.258819, 0, -0.258819, 0.96592575, 0, 1.2021662, 0)
 
-[node name="TPSCam" parent="_Components/CameraController" index="1" unique_id=1953618350]
+[node name="TPSCam" parent="_Controllers/CameraController" index="1" unique_id=1953618350]
 transform = Transform3D(1, 0, 0, 0, 0.9370628, 0.34916094, 0, -0.34916094, 0.9370628, 0, 1.391123, 1.7631481)
 
 [node name="Markers" type="Node3D" parent="." unique_id=894866869]
@@ -101,5 +103,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1839552, 0)
 billboard = 2
 text = "USERNAME"
 
-[editable path="_Components/MovementController"]
-[editable path="_Components/CameraController"]
+[editable path="_Controllers/MovementController"]
+[editable path="_Controllers/CameraController"]

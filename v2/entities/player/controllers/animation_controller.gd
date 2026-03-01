@@ -1,6 +1,7 @@
 @tool
 ## Central API for all rider animation - procedural dynamics, polish animations, and tricks.
 class_name AnimationController extends Node
+
 signal state_changed(new_state: RiderState)
 
 enum RiderState {
@@ -10,6 +11,7 @@ enum RiderState {
 	RAGDOLL,  # Everything disabled
 }
 
+@export var visual_root: Node3D
 @export var character_skin: CharacterSkin
 @export var bike_skin: BikeSkin
 @export var movement_controller: MovementController
@@ -19,6 +21,8 @@ enum RiderState {
 @export var idle_timeout: float = 3.0
 @export var lean_smoothing: float = 8.0
 @export var weight_shift_smoothing: float = 6.0
+@export var max_lean_angle: float = 25.0  ## Max lean angle in degrees
+@export var max_bike_pitch: float = 30.0  ## Max bike-only pitch in degrees
 
 var current_state: RiderState = RiderState.RIDING:
 	set(value):
@@ -29,9 +33,11 @@ var current_state: RiderState = RiderState.RIDING:
 #region Internal State
 var _base_butt_pos: Vector3
 var _base_chest_pos: Vector3
+var _base_visual_root_rotation: Vector3
 var _idle_timer: float = 0.0
 var _current_lean: float = 0.0
 var _current_weight_shift: float = 0.0
+var _current_bike_pitch: float = 0.0  # Bike-only rotation (wheelie/stoppie)
 var _procedural_enabled: bool = true
 
 # Multipliers from bike definition
@@ -62,15 +68,17 @@ func _physics_process(delta: float):
 
 ## Initialize the animation controller. Call after IK targets are set.
 func initialize() -> void:
-	if character_skin == null or bike_skin == null:
-		printerr("AnimationController: Missing character_skin or bike_skin")
+	if character_skin == null or bike_skin == null or visual_root == null:
+		printerr("AnimationController: Missing character_skin, bike_skin, or visual_root")
 		return
 
-	# Store base positions for offset calculations
+	# Store base positions/rotations for offset calculations
 	var ik_ctrl = character_skin.ik_controller
 	if ik_ctrl:
 		_base_butt_pos = ik_ctrl.butt_pos.position
 		_base_chest_pos = ik_ctrl.ik_chest.position
+
+	_base_visual_root_rotation = visual_root.rotation
 
 	# Load multipliers from bike definition
 	var bike_def = bike_skin.skin_definition
@@ -96,6 +104,11 @@ func set_lean(amount: float) -> void:
 ## Set weight shift amount (-1 to 1, back to forward)
 func set_weight_shift(amount: float) -> void:
 	_current_weight_shift = clamp(amount, -1.0, 1.0)
+
+
+## Set bike-only pitch (-1 to 1, stoppie to wheelie)
+func set_bike_pitch(amount: float) -> void:
+	_current_bike_pitch = clamp(amount, -1.0, 1.0)
 
 
 ## Play an idle animation (fidget, look around, etc.)
@@ -175,6 +188,8 @@ func _transition_to_trick() -> void:
 func _update_procedural_animation(delta: float) -> void:
 	if character_skin == null or input_controller == null or movement_controller == null:
 		return
+	if visual_root == null or bike_skin == null:
+		return
 
 	var ik_ctrl = character_skin.ik_controller
 	if ik_ctrl == null:
@@ -191,7 +206,7 @@ func _update_procedural_animation(delta: float) -> void:
 	)
 
 	# Calculate offsets
-	var lean_offset_x = _current_lean * _lean_multiplier * -0.25  # max 0.25
+	var lean_offset_x = _current_lean * _lean_multiplier * -0.25  # max 0.25m
 	var weight_offset_z = _current_weight_shift * _weight_shift_multiplier * 0.1  # Max 10cm
 
 	# Apply butt position - combine lean (x) and weight shift (z)
@@ -200,7 +215,16 @@ func _update_procedural_animation(delta: float) -> void:
 	)
 
 	# Rotate chest for visual lean
-	ik_ctrl.ik_chest.rotation.y = _current_lean * _lean_multiplier * deg_to_rad(15)  # Max 15 degrees
+	var chest_lean = _current_lean * _lean_multiplier * deg_to_rad(15)
+	ik_ctrl.ik_chest.rotation.y = chest_lean
+
+	# Apply lean rotation to visual_root (rotates both bike + rider)
+	var lean_angle = _current_lean * deg_to_rad(max_lean_angle)
+	visual_root.rotation.z = _base_visual_root_rotation.z + lean_angle
+
+	# Apply bike-only pitch (wheelie/stoppie)
+	var pitch_angle = _current_bike_pitch * deg_to_rad(max_bike_pitch)
+	bike_skin.rotation.x = pitch_angle
 
 
 func _update_idle_timer(delta: float) -> void:
@@ -225,8 +249,13 @@ func _reset_to_base_positions() -> void:
 		ik_ctrl.butt_pos.position = _base_butt_pos
 		ik_ctrl.ik_chest.position = _base_chest_pos
 		ik_ctrl.ik_chest.rotation = Vector3.ZERO
+	if visual_root:
+		visual_root.rotation = _base_visual_root_rotation
+	if bike_skin:
+		bike_skin.rotation.x = 0.0
 	_current_lean = 0.0
 	_current_weight_shift = 0.0
+	_current_bike_pitch = 0.0
 
 
 #endregion
@@ -234,6 +263,8 @@ func _reset_to_base_positions() -> void:
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
+	if visual_root == null:
+		issues.append("visual_root must be set")
 	if character_skin == null:
 		issues.append("character_skin must be set")
 	if bike_skin == null:
