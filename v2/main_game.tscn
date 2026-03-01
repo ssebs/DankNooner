@@ -72,7 +72,7 @@ pause_menu_state = NodePath("StateMachine/PauseMenuState")
 
 [node name="StateMachine" type="Node" parent="ManagerManager/MenuManager" unique_id=544508199 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("4_6bm6p")
-initial_state = NodePath("MainMenuState")
+initial_state = NodePath("SplashMenuState")
 
 [node name="SplashMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=2055861891 node_paths=PackedStringArray("menu_manager", "main_menu_state") instance=ExtResource("11_umrn2")]
 menu_manager = NodePath("../..")
