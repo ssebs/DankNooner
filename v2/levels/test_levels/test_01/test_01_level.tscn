@@ -139,15 +139,19 @@ shape = SubResource("WorldBoundaryShape3D_avllc")
 
 [node name="CharacterSkin" parent="." unique_id=259227641 instance=ExtResource("3_5q1pe")]
 transform = Transform3D(0.96932966, 0.20904028, 0.129237, -0.2457642, 0.82448524, 0.50972944, 0, -0.5258577, 0.8505726, 0.2448411, 2.4549186, -0.09213209)
+debug_auto_ragdoll = true
 
 [node name="CharacterSkin2" parent="." unique_id=903915714 instance=ExtResource("3_5q1pe")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.464578, 0.014027845, -2.9414272)
 skin_definition = ExtResource("4_m4ipn")
+debug_auto_ragdoll = true
 
 [node name="CharacterSkin3" parent="." unique_id=2063317879 instance=ExtResource("3_5q1pe")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4216895, 0.014027845, -4.5401735)
 skin_definition = ExtResource("5_51jyr")
+debug_auto_ragdoll = true
 
 [node name="CharacterSkin4" parent="." unique_id=1740117121 instance=ExtResource("3_5q1pe")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7855887, 3.320699, -1.2002106)
 skin_definition = ExtResource("6_51jyr")
+debug_auto_ragdoll = true

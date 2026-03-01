@@ -72,6 +72,7 @@ text = "SETTINGS_LABEL"
 
 [node name="CustomizeBtn" type="Button" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer" unique_id=1131295413]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 text = "CUSTOMIZE_LABEL"
 
