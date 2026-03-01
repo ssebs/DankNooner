@@ -16,6 +16,9 @@ var is_showing_splashes: bool = false
 
 
 func Enter(_state_context: StateContext):
+	if Engine.is_editor_hint():
+		_finish_splashes()
+		return
 	ui.show()
 	current_splash_index = 0
 	splash_children = []
