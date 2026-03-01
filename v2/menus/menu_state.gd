@@ -16,10 +16,12 @@ func hide_ui():
 func show_ui():
 	ui.show()
 
+
 ## Override this, used to press back btn / close menu / etc when ESC is pressed
 ## Called from menu_manager when ui_cancel is pressed
 func on_cancel_key_pressed():
 	pass
+
 
 func get_first_button_for_focus() -> Button:
 	var buttons = find_children("*", "Button", true, true)
