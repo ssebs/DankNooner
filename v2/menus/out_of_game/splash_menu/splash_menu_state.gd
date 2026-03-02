@@ -3,6 +3,7 @@ class_name SplashMenuState extends MenuState
 
 @export var menu_manager: MenuManager
 @export var main_menu_state: MenuState
+@export var audio_manager: AudioManager
 
 @export var debug_skip_ok: bool = true
 @export var splash_duration: float = 1.0
@@ -19,6 +20,9 @@ func Enter(_state_context: StateContext):
 	if Engine.is_editor_hint():
 		_finish_splashes()
 		return
+
+	audio_manager.play_startup()
+
 	ui.show()
 	current_splash_index = 0
 	splash_children = []

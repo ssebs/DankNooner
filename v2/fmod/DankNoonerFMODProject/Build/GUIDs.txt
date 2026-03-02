@@ -1,0 +1,6 @@
+{8b533711-9093-47be-ab13-c95a80ef5a89} bank:/Master
+{134e17c5-e1e8-0bfc-2d5a-43a4711c5c11} bank:/Master.strings
+{de9a586f-8f5a-4b6e-a1d8-de390355c329} bank:/SFX
+{bde24f6d-3a67-4a22-b1af-b7a8cfd46c3e} bus:/
+{2cd87a7f-f5d7-4f40-b5d3-0e6045fa9f34} bus:/Reverb
+{1db5a582-85b0-451b-8549-93bd2664940a} event:/StartupSound
