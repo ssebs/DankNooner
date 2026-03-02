@@ -19,6 +19,7 @@
 [ext_resource type="Script" uid="uid://b2j8gbb336wwq" path="res://managers/pause_manager.gd" id="12_aomqu"]
 [ext_resource type="Script" uid="uid://cvf883jhga841" path="res://managers/settings_manager.gd" id="17_borgi"]
 [ext_resource type="Script" uid="uid://dxn3rquhf7sfs" path="res://managers/gamemodes/gamemode_manager.gd" id="18_ih6an"]
+[ext_resource type="Script" uid="uid://d2dfqo7sswuem" path="res://managers/audio_manager.gd" id="20_2i4tw"]
 
 [node name="MainGame" type="Node" unique_id=936339405]
 script = ExtResource("1_1oj5k")
@@ -74,9 +75,10 @@ pause_menu_state = NodePath("StateMachine/PauseMenuState")
 script = ExtResource("4_6bm6p")
 initial_state = NodePath("SplashMenuState")
 
-[node name="SplashMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=2055861891 node_paths=PackedStringArray("menu_manager", "main_menu_state") instance=ExtResource("11_umrn2")]
+[node name="SplashMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=2055861891 node_paths=PackedStringArray("menu_manager", "main_menu_state", "audio_manager") instance=ExtResource("11_umrn2")]
 menu_manager = NodePath("../..")
 main_menu_state = NodePath("../MainMenuState")
+audio_manager = NodePath("../../../AudioManager")
 
 [node name="MainMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=494197480 node_paths=PackedStringArray("menu_manager", "level_manager", "settings_menu_state", "play_menu_state", "customize_menu_state") instance=ExtResource("6_2pltu")]
 menu_manager = NodePath("../..")
@@ -130,3 +132,15 @@ settings_manager = NodePath("../SettingsManager")
 multiplayer_manager = NodePath("../MultiplayerManager")
 level_manager = NodePath("../LevelManager")
 input_state_manager = NodePath("../InputStateManager")
+
+[node name="AudioManager" type="Node" parent="ManagerManager" unique_id=1523188708 groups=["Managers"]]
+script = ExtResource("20_2i4tw")
+
+[node name="FmodBankLoader" type="FmodBankLoader" parent="ManagerManager/AudioManager" unique_id=1130780527]
+bank_paths = ["res://fmod/DankNoonerFMODProject/Build/Desktop/Master.strings.bank", "res://fmod/DankNoonerFMODProject/Build/Desktop/Master.bank", "res://fmod/DankNoonerFMODProject/Build/Desktop/SFX.bank"]
+
+[node name="Startup" type="FmodEventEmitter3D" parent="ManagerManager/AudioManager" unique_id=533315845]
+event_name = "event:/StartupSound"
+event_guid = "{1db5a582-85b0-451b-8549-93bd2664940a}"
+attached = false
+unique_name_in_owner = true

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{c057f0d7-ac64-41fb-8ed8-58d0f72d676a}">
+		<property name="assetPath">
+			<value>ninja500-loop.ogg</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>3.9841496598639456</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{958d7491-9a1b-4872-82c8-62a9246ec6ba}</destination>
+		</relationship>
+	</object>
+</objects>

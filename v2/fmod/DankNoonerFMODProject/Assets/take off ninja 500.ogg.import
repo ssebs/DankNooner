@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://bg6r3jpjexsjf"
+path="res://.godot/imported/take off ninja 500.ogg-74d4d005263921ec82020959ae81531f.oggvorbisstr"
+
+[deps]
+
+source_file="res://fmod/DankNoonerFMODProject/Assets/take off ninja 500.ogg"
+dest_files=["res://.godot/imported/take off ninja 500.ogg-74d4d005263921ec82020959ae81531f.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
