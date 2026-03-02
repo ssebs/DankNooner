@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{7df168d7-aafd-4e7d-8866-36a73a1649cd}">
+		<property name="assetPath">
+			<value>2stroke.ogg</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.55108843537414964</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{958d7491-9a1b-4872-82c8-62a9246ec6ba}</destination>
+		</relationship>
+	</object>
+</objects>
