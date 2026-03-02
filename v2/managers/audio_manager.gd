@@ -1,7 +1,7 @@
 @tool
 class_name AudioManager extends BaseManager
 
-@export_tool_button("Play Startup") var _ps_btn = play_startup
+@export_tool_button("Play Startup") var tool_btn_1 = play_startup
 
 @onready var startup: FmodEventEmitter3D = %Startup
 
