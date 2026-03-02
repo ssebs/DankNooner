@@ -4,6 +4,7 @@
 
 ## In Progress 🚀
 
+- [ ] FMod bike sound - make seamless loop & use that
 - [ ] improved character/bike animation controls
 
   - [x] claude created a system
