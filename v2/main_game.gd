@@ -12,6 +12,7 @@ func _ready() -> void:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 
 	print(tr("GAME_TITLE"))
+	print(ProjectSettings.get_setting("application/config/version"))
 
 
 func _run_validation() -> void:

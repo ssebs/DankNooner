@@ -11,6 +11,11 @@ class_name MainMenuState extends MenuState
 @onready var play_btn: Button = %PlayBtn
 @onready var customize_btn: Button = %CustomizeBtn
 @onready var quit_btn: Button = %QuitBtn
+@onready var version_label: Label = %VersionLabel
+
+
+func _ready():
+	version_label.text = ProjectSettings.get_setting("application/config/version")
 
 
 func Enter(_state_context: StateContext):
