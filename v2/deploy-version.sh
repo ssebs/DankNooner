@@ -24,8 +24,12 @@ confirm=${confirm:-Y}
 
 if [[ "$confirm" =~ ^[Yy]$ ]]; then
     sed -i "s/config\/version=\"[^\"]*\"/config\/version=\"$NEW_TAG\"/" ./project.godot
+
+    git add ./project.godot
+    git commit -m "$NEW_TAG release"
     git tag "$NEW_TAG"
     git push origin "$NEW_TAG"
+    git push origin main
     echo "Deployed $NEW_TAG to https://github.com/ssebs/DankNooner/"
 else
     echo "Aborted."
