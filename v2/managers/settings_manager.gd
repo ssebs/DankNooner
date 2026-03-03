@@ -29,6 +29,10 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 
+	self.call_deferred("deferred_init")
+
+
+func deferred_init():
 	if FileAccess.file_exists(settings_path):
 		load_settings()
 	else:
