@@ -47,6 +47,36 @@ var collision_shape: Shape3D = preload("res://resources/entities/bikes/hitbox/bi
 ## Multiplier for rider weight shift animation (forward/back)
 @export var weight_shift_multiplier: float = 1.0
 
+@export_group("Gearing")
+@export var gear_ratios: Array[float] = [2.92, 2.05, 1.6, 1.46, 1.15, 1.0]
+@export var num_gears: int = 6
+@export var max_rpm: float = 11000.0
+@export var idle_rpm: float = 1000.0
+@export var stall_rpm: float = 800.0
+
+@export_group("Physics")
+@export var max_speed: float = 120.0
+@export var acceleration: float = 12.0
+@export var brake_strength: float = 20.0
+@export var friction: float = 2.0
+@export var engine_brake_strength: float = 12.0
+@export var max_lean_angle_deg: float = 45.0
+@export var lean_speed: float = 2.5
+@export var min_turn_radius: float = 0.25
+@export var max_turn_radius: float = 3.0
+@export var turn_speed: float = 2.0
+
+@export_group("Tricks")
+@export var max_wheelie_angle_deg: float = 85.0
+@export var max_stoppie_angle_deg: float = 55.0
+@export var wheelie_rpm_threshold: float = 0.65
+@export var wheelie_balance_point_deg: float = 60.0
+@export var rotation_speed: float = 2.0
+@export var return_speed: float = 3.0
+
+var max_lean_angle_rad: float:
+	get: return deg_to_rad(max_lean_angle_deg)
+
 const USER_SKIN_DIR: String = "user://skins/"
 const SKIN_PFX: String = "bike_skin_"
 

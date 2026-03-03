@@ -4,8 +4,7 @@
 
 ## In Progress 🚀
 
-- [ ] FMod bike sound - make seamless loop & use that
-- [ ] improved character/bike animation controls
+- [ ] Review Animation Controller & Create animations
 
   - [x] claude created a system
   - [ ] Review planning_docs/AnimationController.md
@@ -23,6 +22,34 @@
     - [ ] Maybe multiple?
     - [ ] proceedural
 
+- [ ] Create Player Part 2
+
+  - [x] > import features from moto-player-controller
+  - > see planning_docs\MIGRATE_FROM_MOTO_CONTROLLER.md (update first)
+  - > no sound for now
+  - [x] stats saved to bike_definition res
+  - [x] gearing
+  - [x] physics
+  - [x] trick
+  - [x] crash
+  - [ ] use animations from AnimationController + make animations
+  - [ ] review & clean code
+    - [ ] bike_skin_definition.gd
+    - [ ] player_entity.gd
+    - [ ] movement_controller.gd
+    - [ ] crash_controller.gd
+    - [ ] gearing_controller.gd
+    - [ ] input_controller.gd
+    - [ ] trick_controller.gd
+  - [ ] Make sure MP authority is set
+
+- [ ] Audio Manager
+
+  - [ ] fmod bike sounds
+    - [ ] Seamless loop w/ RPM
+    - [ ] Crash
+    - [ ] Tire Screetch
+
 - [ ] bugs
   - [x] Add version # + version check in game
   - [x] set max char limit for name
@@ -30,17 +57,10 @@
     - [x] implement
     - [ ] TEST
 
-## Up Next 📋
+## Up Next (Finish POC MP Gameplay Demo) 📋
 
-- [ ] Create Player Part 2
-
-  - > import features from moto-player-controller
-  - > see planning_docs\MIGRATE_FROM_MOTO_CONTROLLER.md (update first)
-  - > no sound for now
-  - [ ] stats saved to bike_definition res
-  - [ ] gearing
-  - [ ] physics
-  - [ ] use animations from AnimationController
+> POC = playable gamemodes w/ friends, see if core gameplay loop works
+> video record this once playing with everyone, save log files
 
 - [ ] Trick Manager + tricks
 
@@ -50,30 +70,84 @@
   - [ ] ground tricks
   - [ ] trick detection in player component?
   - [ ] trick scoring in own script?
+    - [ ] e.g. player emits trick_done & gamemode manager does something with it.
+      - [ ] e.g. race/freeroam => boost
+      - [ ] e.g. stunt race => combo counter
 
-- [ ] Basic core gameplay loop
+- [ ] Basic customization menu / UI
 
-  - [ ] basic map big enough for game modes
-  - [ ] traffic AI
-    - [ ] collision working (causes crash)
-    - [ ] basic for now, only move along path or something to start
-      - [ ] or just play animation to move their coord?
-  - [ ] ramps to do tricks
-  - [ ] 3d place to interact to start game mode
+  - [ ] Create customize menu background scene
+    - [ ] Garage scene
+    - [ ] show character
+    - [ ] show bike
+  - [ ] Save chosen skin to disk
+    - [ ] path to skin_def for now, no custom json yet
+    - [ ] player_entity
+      - [ ] save_skin
+      - [ ] load_skin
+    - [ ] when spawning player in game, show their customizations via load_skin
+  - [ ] Create customize menu UI
+    - [ ] Tab for shop
+      - [ ] List purchasable skins
+      - [ ] Purchase bike skins
+      - [ ] Purchase character skins
+    - [ ] Tab for "my stuff"
+      - [ ] List purchasedskins
+      - [ ] Choose a bike skin
+      - [ ] Choose a character skin
+
+- [ ] Basic test map
+
+  - [ ] big enough for game modes w/ friends
+  - [ ] Option to enable/disable traffic
+  - [ ] test_street_race_01
+  - [ ] test_freeroam_01
+
+- [ ] Basic Traffic AI
+
+  - [ ] Collisions w/ bikers (causes a crash)
+  - [ ] Navigates in Loops, dumb AI
+    - [ ] Maybe along path?
+    - [ ] Maybe use AnimationPlayer?
+
+- [ ] Create Save System for in-game
+
+  - [x] Save bike definitions on disk
+  - [ ] Save mods / etc
+  - [ ] Save levels / player stuff
+
+- [ ] Basic core gameplay loop / implement gamemodes
+
+  - [ ] start gamemodes via map select
   - [ ] Game modes:
-    - [ ] street race in traffic as demo mode (+fps cam mode)
-    - [ ] stunt race? Or high score mode?
-  - [ ] Do something with score / find whats fun
-    - [ ] Unlock tricks w/ skill tree/money/something
-    - [ ] get rewarded for doing things
+    - [ ] Free roam
+      - [ ] Get Score saved to disk for tricks
+    - [ ] Street race
+      - [ ] w/ and w/o traffic
+      - [ ] Podium scene after race ends
+      - [ ] Get Score saved to disk w/ bonus for podium
+  - [ ] Unlock Skins w/ Score from disk & spend
 
-- [ ] Audio Manager
+## Backlog
 
-  - [ ] fmod bike sounds
-  - [ ] Client side
-    - [ ] Global audio buses (music, sfx)
-  - [ ] Server side
-    - [ ] 3D spatial audio bus (for bikes in world)
+- [ ] Gamemode / Score / XP / $ v2
+
+  - [ ] Collect via challenges in gamemodes
+    - [ ] Freeroam:
+      - [ ] Collect items
+      - [ ] Lobby Leaderboard Challenges (longest wheelie on server, biggest crash, etc.)
+      - [ ] Weekly Challenges (5x crashes, hold wheelie for 20s, etc.)
+    - [ ] Race:
+      - [ ] Podium finish
+      - [ ] Lobby Leaderboard Challenges (fastest lap time, top speed, most crashes)
+      - [ ] Weekly Challenges (wheelie during a race, boost 5 times, etc.)
+  - [ ] Spend
+    - [ ] Unlock tricks
+    - [ ] Unlock cosmetics
+    - [ ] Unlock performance mods
+
+- [ ] Audio Manager v2
+
   - [ ] Use fmod to blend sounds @ rpm
   - [ ] Record my bike for sounds
     - [ ] Wind sounds at high speed
@@ -84,34 +158,17 @@
     - [ ] exhaust pops
     - [ ] downshift/rev match
     - [ ] shifting gears
-
-- [ ] Basic customization menu / UI
-
-  - [ ] Create customize menu UI
-  - [ ] Create customize menu background scene
-    - [ ] show character / bike in garage
-  - [ ] Choose a bike skin
-  - [ ] Choose a character skin
-  - [ ] Save chosen skin
-    - [ ] path to skin_def for now, no custom json
-    - [ ] called in player_entity_save_skin
-      - [ ] Also have a load_skin
-  - [ ] when spawning player in game, show their customizations via load_skin
-
-- [ ] Create Save System for in-game
-
-  - [x] Save bike definitions on disk
-  - [ ] Save mods / etc
-  - [ ] Save levels / player stuff
+  - [ ] Make audio buses
+    - [ ] 2d - SFX (ui sounds, timers, etc.)
+    - [ ] 3d - SFX (RPM / bike)
+    - [ ] 2d - Music
+  - [ ] Different bikes use different audio samples
 
 - [ ] Multiplayer improvements
   - [ ] return to lobby (force everyone)
   - [ ] review all code & cleanup to call authority done
   - [ ] update Architecture.md
-  - [ ] saving settings doesnt update noray host
-
-## Backlog
-
+  - [x] saving settings doesnt update noray host
 - [ ] software is open source, but assets aren't public
 - [ ] Pizza Delivery game mode
 
@@ -160,6 +217,8 @@
   - (E.g. diff bikes/mods on each bike)
   - There's a godot plugin for this
   - https://binbun3d.itch.io/godot-ultimate-toon-shader
+
+- [ ] stunt race / high score mode
 
 - [ ] Camera control
 - [ ] Dedicated server

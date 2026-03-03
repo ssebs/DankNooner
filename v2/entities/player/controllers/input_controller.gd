@@ -5,14 +5,10 @@ signal throttle_changed(value: float)
 signal front_brake_changed(value: float)
 signal steer_changed(value: float)  # lean left/right
 signal lean_changed(value: float)  # lean back/fwd
-signal rear_brake_pressed
-signal trick_mod_pressed
-signal clutch_pressed
+signal clutch_held_changed(held: bool, just_pressed: bool)
 signal gear_up_pressed
 signal gear_down_pressed
 signal cam_switch_pressed
-# signal difficulty_pressed
-# signal bike_switch_pressed
 
 @export var player_entity: PlayerEntity
 @export var vibration_duration: float = 0.15
@@ -43,6 +39,15 @@ var lean: float = 0.0:
 		if lean != value:
 			lean = value
 			lean_changed.emit(value)
+
+var rear_brake: float = 0.0
+
+var trick: bool = false
+
+var gear_up: bool = false
+var gear_down: bool = false
+
+var clutch_held: bool = false
 #endregion
 
 
@@ -73,18 +78,23 @@ func _process(_delta):
 func _update_input_for_server():
 	throttle = Input.get_action_strength("throttle_pct")
 	front_brake = Input.get_action_strength("brake_front_pct")
+	rear_brake = Input.get_action_strength("brake_rear")
 	steer = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
 	lean = Input.get_action_strength("lean_forward") - Input.get_action_strength("lean_back")
+	trick = Input.is_action_pressed("trick_mod")
 
-	if Input.get_action_strength("brake_rear"):
-		rear_brake_pressed.emit()
-	if Input.is_action_pressed("clutch"):
-		clutch_pressed.emit()
-	if Input.is_action_pressed("trick_mod"):
-		trick_mod_pressed.emit()
-	if Input.is_action_just_pressed("gear_up"):
+	# Clutch handling (tap vs hold)
+	var clutch_now = Input.is_action_pressed("clutch")
+	if clutch_now != clutch_held:
+		clutch_held = clutch_now
+		clutch_held_changed.emit(clutch_held, clutch_now)
+
+	# Gear shifting as synced input properties (rollback-safe)
+	gear_up = Input.is_action_just_pressed("gear_up")
+	gear_down = Input.is_action_just_pressed("gear_down")
+	if gear_up:
 		gear_up_pressed.emit()
-	if Input.is_action_just_pressed("gear_down"):
+	if gear_down:
 		gear_down_pressed.emit()
 
 

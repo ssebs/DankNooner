@@ -11,6 +11,10 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 
+	var args := OS.get_cmdline_user_args()
+	if "--disable-audio" in args:
+		FmodServer.mute_all_events()
+
 
 func play_startup():
 	startup.play()

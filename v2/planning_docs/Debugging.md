@@ -15,6 +15,8 @@
   - > Enable both
   - `--position 5,0 --resolution 1280x800`
   - `--position 1290,0 --resolution 1280x800`
+  - User args: (needs to be after `--`)
+    - `--disable-audio` to disable audio
 
 ### Reloading a saved scene
 
