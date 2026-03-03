@@ -315,3 +315,12 @@ func receive_input(input_state: Dictionary):
 ```
 
 **Why Dictionary?** Netfox needs tick numbers for rollback. Dictionary is extensible for future inputs (rear brake, tricks, etc).
+
+### Deployment / builds
+
+- Godot 4.6+ is required
+- FMOD is required
+  - Use File > build before it can be used in game
+- Deploying new version
+  - Run `./deploy-version.sh` (any OS) to create a new version tag & push to github to run CI
+  - See [build.yml](../../.github/workflows/build.yml)

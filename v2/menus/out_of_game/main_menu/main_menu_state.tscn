@@ -80,3 +80,10 @@ text = "CUSTOMIZE_LABEL"
 unique_name_in_owner = true
 layout_mode = 2
 text = "QUIT_LABEL"
+
+[node name="VersionLabel" type="Label" parent="UI/AspectContainer/Content/MarginContainer" unique_id=503333881]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "VERSION"
