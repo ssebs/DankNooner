@@ -16,6 +16,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		return issues
 
 	if level_manager == null:
+		# TODO - only check this if we're in the main_game scene
 		issues.append("level_manager must not be empty")
 	if player_entity_scene == null:
 		issues.append("player_entity_scene must not be empty")
