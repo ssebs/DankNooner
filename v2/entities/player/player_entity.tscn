@@ -17,6 +17,7 @@
 [ext_resource type="Script" uid="uid://cfpb4scu8hdy4" path="res://entities/player/controllers/crash_controller.gd" id="12_crash"]
 
 [node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("camera_controller", "movement_controller", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "collision_shape_3d")]
+safe_margin = 0.01
 script = ExtResource("1_0jc3c")
 bike_definition = ExtResource("2_lfjd4")
 character_definition = ExtResource("3_lfjd4")
