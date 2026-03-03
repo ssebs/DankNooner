@@ -27,6 +27,8 @@
   - [ ] Add version # + version check in game
   - [x] set max char limit for name
   - [ ] First launch noray setting is not working, can't host properly. 2nd launch it works
+    - [x] implement
+    - [ ] TEST
 
 ## Up Next 📋
 

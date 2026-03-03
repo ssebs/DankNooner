@@ -17,6 +17,8 @@ func _ready():
 	settings_manager.setting_updated.connect(_on_setting_updated)
 	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
 
+	noray_host = settings_manager.default_settings["noray_relay_host"]
+
 
 #region settings updated handler
 func _on_all_settings_changed(_current_settings: Dictionary):
