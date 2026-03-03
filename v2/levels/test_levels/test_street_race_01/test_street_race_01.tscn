@@ -2,10 +2,17 @@
 
 [ext_resource type="Script" uid="uid://bruu6bm1ycym3" path="res://levels/test_levels/test_street_race_01/test_street_race_01.gd" id="1_68mp5"]
 [ext_resource type="PackedScene" uid="uid://d0rgswc73h64f" path="res://entities/player/player_entity.tscn" id="2_6hu6n"]
-[ext_resource type="PackedScene" uid="uid://cuqtwh0saekmw" path="res://entities/player/characters/character_skin.tscn" id="3_5q1pe"]
-[ext_resource type="Resource" uid="uid://dqh5h78glj4ju" path="res://resources/entities/player/skins/clanker_red_skin_definition.tres" id="4_m4ipn"]
-[ext_resource type="Resource" uid="uid://d3v0btsnsgpb3" path="res://resources/entities/player/skins/astronaut_default_skin_definition.tres" id="5_51jyr"]
-[ext_resource type="Resource" uid="uid://cqthri007ak8l" path="res://resources/entities/player/skins/biker_blue_skin_definition.tres" id="6_51jyr"]
+[ext_resource type="Script" uid="uid://4hy24ng8v60q" path="res://addons/zylann.hterrain/hterrain.gd" id="3_68mp5"]
+[ext_resource type="Resource" uid="uid://dypi0q1sjqlnv" path="res://levels/test_levels/test_street_race_01/terrain/data.hterrain" id="4_t5m3v"]
+[ext_resource type="Script" uid="uid://b8syyiek8wppi" path="res://addons/zylann.hterrain/hterrain_texture_set.gd" id="5_q3chg"]
+[ext_resource type="Texture2D" uid="uid://bnw6jj1bvrtxi" path="res://resources/terrain_tex/test_street_race_01_slot0_albedo_bump.png" id="6_l8duo"]
+[ext_resource type="Texture2D" uid="uid://dr4n4etshelvl" path="res://resources/terrain_tex/test_street_race_01_slot1_albedo_bump.png" id="7_t7gf7"]
+[ext_resource type="Texture2D" uid="uid://cqqvbw3q2mo0e" path="res://resources/terrain_tex/test_street_race_01_slot2_albedo_bump.png" id="8_d3itq"]
+[ext_resource type="Texture2D" uid="uid://bsf10gbiw5fs0" path="res://resources/terrain_tex/test_street_race_01_slot3_albedo_bump.png" id="9_l8hgi"]
+[ext_resource type="Texture2D" uid="uid://bi37dd26acx1c" path="res://resources/terrain_tex/test_street_race_01_slot0_normal_roughness.png" id="10_f3eyy"]
+[ext_resource type="Texture2D" uid="uid://c4oiwcdg2koqw" path="res://resources/terrain_tex/test_street_race_01_slot1_normal_roughness.png" id="11_5mrub"]
+[ext_resource type="Texture2D" uid="uid://bx8a2tedyqouq" path="res://resources/terrain_tex/test_street_race_01_slot2_normal_roughness.png" id="12_vmame"]
+[ext_resource type="Texture2D" uid="uid://bi2ok0t5kpay8" path="res://resources/terrain_tex/test_street_race_01_slot3_normal_roughness.png" id="13_8k236"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jmk2t"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -20,23 +27,95 @@ sky = SubResource("Sky_6hu6n")
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_evjrj"]
-size = Vector2(200, 200)
+[sub_resource type="Resource" id="Resource_rpvmj"]
+script = ExtResource("5_q3chg")
+mode = 0
+textures = [[ExtResource("6_l8duo"), ExtResource("7_t7gf7"), ExtResource("8_d3itq"), ExtResource("9_l8hgi")], [ExtResource("10_f3eyy"), ExtResource("11_5mrub"), ExtResource("12_vmame"), ExtResource("13_8k236")]]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3jscr"]
-albedo_color = Color(0.13333334, 0.13333334, 0.13333334, 1)
+[sub_resource type="Gradient" id="Gradient_l8duo"]
+offsets = PackedFloat32Array(0, 0.0037037036, 0.8888889)
+colors = PackedColorArray(0, 0, 0, 1, 0.19259259, 0.19259259, 0.19259259, 1, 1, 1, 1, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_3jscr"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_t7gf7"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_51jyr"]
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_d3itq"]
+noise = SubResource("FastNoiseLite_t7gf7")
+color_ramp = SubResource("Gradient_l8duo")
+seamless = true
+seamless_blend_skirt = 1.0
 
-[sub_resource type="BoxMesh" id="BoxMesh_6hu6n"]
-size = Vector3(1, 10, 200)
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_l8hgi"]
+seed = 5
+frequency = 0.0344
+offset = Vector3(4.9444013, 7.416415, 0)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_6hu6n"]
-size = Vector3(1, 10, 200)
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_l8duo"]
+width = 1024
+height = 1024
+noise = SubResource("FastNoiseLite_l8hgi")
+seamless = true
+as_normal_map = true
+seamless_blend_skirt = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t7gf7"]
+albedo_color = Color(0.38, 0.5556667, 1, 1)
+albedo_texture = SubResource("NoiseTexture2D_d3itq")
+roughness = 0.0
+normal_enabled = true
+normal_texture = SubResource("NoiseTexture2D_l8duo")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_d3itq"]
+material = SubResource("StandardMaterial3D_t7gf7")
+size = Vector2(1000, 1000)
+
+[sub_resource type="Animation" id="Animation_t7gf7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:mesh:material:uv1_offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_l8duo"]
+resource_name = "water_flow"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:mesh:material:uv1_offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(1, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_t7gf7"]
+_data = {
+&"RESET": SubResource("Animation_t7gf7"),
+&"water_flow": SubResource("Animation_l8duo")
+}
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_avllc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_68mp5"]
+albedo_color = Color(0.45410997, 0.48807043, 0.88506603, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_t5m3v"]
+material = SubResource("StandardMaterial3D_68mp5")
+
+[sub_resource type="BoxMesh" id="BoxMesh_68mp5"]
+material = SubResource("StandardMaterial3D_68mp5")
+size = Vector3(100, 1, 1)
 
 [node name="Test_StreetRace_01_Level" type="Node3D" unique_id=898545864 node_paths=PackedStringArray("player_spawn_pos")]
 script = ExtResource("1_68mp5")
@@ -46,7 +125,7 @@ metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="PlayerSpawn" type="Marker3D" parent="." unique_id=840084747]
 unique_name_in_owner = true
-transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, 7, 0, 7)
+transform = Transform3D(-0.20948204, 0, 0.97781247, 0, 1, 0, -0.97781247, 0, -0.20948204, 165.41905, 9.645201, 20.389439)
 
 [node name="LevelItemsAndStuff" type="Node3D" parent="." unique_id=804449511]
 
@@ -57,110 +136,45 @@ environment = SubResource("Environment_5q1pe")
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Floor" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=625219041]
-mesh = SubResource("PlaneMesh_evjrj")
-surface_material_override/0 = SubResource("StandardMaterial3D_3jscr")
+[node name="HTerrain" type="Node3D" parent="LevelItemsAndStuff" unique_id=532250866]
+script = ExtResource("3_68mp5")
+centered = true
+_terrain_data = ExtResource("4_t5m3v")
+chunk_size = 32
+collision_enabled = true
+collision_layer = 1
+collision_mask = 1
+shader_type = "Classic4"
+custom_shader = null
+custom_globalmap_shader = null
+texture_set = SubResource("Resource_rpvmj")
+render_layers = 1
+cast_shadow = 1
+shader_params/u_ground_uv_scale_per_texture = null
+shader_params/u_depth_blending = true
+shader_params/u_triplanar = null
+shader_params/u_tile_reduction = null
+shader_params/u_globalmap_blend_start = null
+shader_params/u_globalmap_blend_distance = null
+shader_params/u_colormap_opacity_per_texture = null
+metadata/_custom_type_script = "uid://4hy24ng8v60q"
 
-[node name="Box" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=2129556034]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-mesh = SubResource("BoxMesh_3jscr")
+[node name="WaterLineMesh" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=96655809]
+mesh = SubResource("PlaneMesh_d3itq")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="LevelItemsAndStuff/Box" unique_id=1619175165]
+[node name="WaterAnimationPlayer" type="AnimationPlayer" parent="LevelItemsAndStuff/WaterLineMesh" unique_id=1787972103]
+libraries/ = SubResource("AnimationLibrary_t7gf7")
+speed_scale = 0.01
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelItemsAndStuff/Box/StaticBody3D" unique_id=306021907]
-shape = SubResource("BoxShape3D_51jyr")
+[node name="Ground" type="StaticBody3D" parent="LevelItemsAndStuff" unique_id=996549259]
 
-[node name="Box2" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=161633906]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5566535, 0.5, -13.580391)
-mesh = SubResource("BoxMesh_3jscr")
-
-[node name="StaticBody3D" type="RigidBody3D" parent="LevelItemsAndStuff/Box2" unique_id=1418540046]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelItemsAndStuff/Box2/StaticBody3D" unique_id=52954094]
-shape = SubResource("BoxShape3D_51jyr")
-
-[node name="wall" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=1973805590]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 0.5, 0)
-mesh = SubResource("BoxMesh_6hu6n")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="LevelItemsAndStuff/wall" unique_id=2069310709]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelItemsAndStuff/wall/StaticBody3D" unique_id=272686621]
-shape = SubResource("BoxShape3D_6hu6n")
-
-[node name="wall2" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=1109978214]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 0.5, 0)
-mesh = SubResource("BoxMesh_6hu6n")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="LevelItemsAndStuff/wall2" unique_id=942059252]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelItemsAndStuff/wall2/StaticBody3D" unique_id=1738840558]
-shape = SubResource("BoxShape3D_6hu6n")
-
-[node name="wall3" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=1712534818]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0.5, 100)
-mesh = SubResource("BoxMesh_6hu6n")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="LevelItemsAndStuff/wall3" unique_id=1176136535]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelItemsAndStuff/wall3/StaticBody3D" unique_id=1152339808]
-shape = SubResource("BoxShape3D_6hu6n")
-
-[node name="wall4" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=45835402]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0.5, -100)
-mesh = SubResource("BoxMesh_6hu6n")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="LevelItemsAndStuff/wall4" unique_id=1282503750]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelItemsAndStuff/wall4/StaticBody3D" unique_id=95101383]
-shape = SubResource("BoxShape3D_6hu6n")
-
-[node name="Colliders" type="Node3D" parent="." unique_id=1468499634]
-
-[node name="Floor" type="StaticBody3D" parent="Colliders" unique_id=996549259]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Colliders/Floor" unique_id=827725858]
+[node name="WorldBoundryCollider" type="CollisionShape3D" parent="LevelItemsAndStuff/Ground" unique_id=827725858]
 shape = SubResource("WorldBoundaryShape3D_avllc")
 
-[node name="wall" type="StaticBody3D" parent="Colliders" unique_id=1229256167]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 100, 0, 0)
+[node name="1mCube" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=1058647216]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 183.78293, 9.770098, 3.9100084)
+mesh = SubResource("BoxMesh_t5m3v")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Colliders/wall" unique_id=15663760]
-shape = SubResource("WorldBoundaryShape3D_avllc")
-
-[node name="wall4" type="StaticBody3D" parent="Colliders" unique_id=1737847065]
-transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -100, 0, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Colliders/wall4" unique_id=1415632002]
-shape = SubResource("WorldBoundaryShape3D_avllc")
-
-[node name="wall2" type="StaticBody3D" parent="Colliders" unique_id=873186915]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 100)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Colliders/wall2" unique_id=186053624]
-shape = SubResource("WorldBoundaryShape3D_avllc")
-
-[node name="wall3" type="StaticBody3D" parent="Colliders" unique_id=1164481322]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -100)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Colliders/wall3" unique_id=952695972]
-shape = SubResource("WorldBoundaryShape3D_avllc")
-
-[node name="CharacterSkin" parent="." unique_id=259227641 instance=ExtResource("3_5q1pe")]
-transform = Transform3D(0.96932966, 0.20904028, 0.129237, -0.2457642, 0.82448524, 0.50972944, 0, -0.5258577, 0.8505726, 0.2448411, 2.4549186, -0.09213209)
-debug_auto_ragdoll = true
-
-[node name="CharacterSkin2" parent="." unique_id=903915714 instance=ExtResource("3_5q1pe")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.464578, 0.014027845, -2.9414272)
-skin_definition = ExtResource("4_m4ipn")
-debug_auto_ragdoll = true
-
-[node name="CharacterSkin3" parent="." unique_id=2063317879 instance=ExtResource("3_5q1pe")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4216895, 0.014027845, -4.5401735)
-skin_definition = ExtResource("5_51jyr")
-debug_auto_ragdoll = true
-
-[node name="CharacterSkin4" parent="." unique_id=1740117121 instance=ExtResource("3_5q1pe")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7855887, 3.320699, -1.2002106)
-skin_definition = ExtResource("6_51jyr")
-debug_auto_ragdoll = true
+[node name="100mWide" type="MeshInstance3D" parent="LevelItemsAndStuff" unique_id=317146357]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 210.49417, 9.769986, 7.243332)
+mesh = SubResource("BoxMesh_68mp5")
