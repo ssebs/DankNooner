@@ -19,7 +19,7 @@
 [ext_resource type="Script" uid="uid://b2j8gbb336wwq" path="res://managers/pause_manager.gd" id="12_aomqu"]
 [ext_resource type="Script" uid="uid://cvf883jhga841" path="res://managers/settings_manager.gd" id="17_borgi"]
 [ext_resource type="Script" uid="uid://dxn3rquhf7sfs" path="res://managers/gamemodes/gamemode_manager.gd" id="18_ih6an"]
-[ext_resource type="Script" uid="uid://d2dfqo7sswuem" path="res://managers/audio_manager.gd" id="20_2i4tw"]
+[ext_resource type="PackedScene" uid="uid://b27jgs5kv1310" path="res://managers/audio_manager.tscn" id="20_2i4tw"]
 
 [node name="MainGame" type="Node" unique_id=936339405]
 script = ExtResource("1_1oj5k")
@@ -133,14 +133,4 @@ multiplayer_manager = NodePath("../MultiplayerManager")
 level_manager = NodePath("../LevelManager")
 input_state_manager = NodePath("../InputStateManager")
 
-[node name="AudioManager" type="Node" parent="ManagerManager" unique_id=1523188708 groups=["Managers"]]
-script = ExtResource("20_2i4tw")
-
-[node name="FmodBankLoader" type="FmodBankLoader" parent="ManagerManager/AudioManager" unique_id=1130780527]
-bank_paths = ["res://fmod/DankNoonerFMODProject/Build/Desktop/Master.strings.bank", "res://fmod/DankNoonerFMODProject/Build/Desktop/Master.bank", "res://fmod/DankNoonerFMODProject/Build/Desktop/SFX.bank"]
-
-[node name="Startup" type="FmodEventEmitter3D" parent="ManagerManager/AudioManager" unique_id=533315845]
-event_name = "event:/StartupSound"
-event_guid = "{1db5a582-85b0-451b-8549-93bd2664940a}"
-attached = false
-unique_name_in_owner = true
+[node name="AudioManager" parent="ManagerManager" unique_id=625309404 instance=ExtResource("20_2i4tw")]
