@@ -32,7 +32,8 @@ func start_game(level_name: LevelManager.LevelName):
 	current_level_name = level_name
 	match_state = MatchState.IN_GAME
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
-	_spawn_all_players()
+
+	_spawn_all_players()  # TODO - use gamemodemanager to spawn!
 
 
 ## Called when returning to lobby
@@ -50,6 +51,7 @@ func _spawn_all_players():
 		_rpc_spawn_player.rpc(peer_id, username)
 
 
+#region network handlers
 func _on_player_connected(peer_id: int, _all_players: Dictionary):
 	_on_client_connection_succeeded(peer_id)
 
@@ -72,6 +74,9 @@ func _on_client_connection_succeeded(peer_id: int):
 		_sync_game_to_late_joiner.rpc_id(peer_id, current_level_name)
 
 
+#endregion
+
+#region spawn RPCs
 ## Server calls this on a late-joining client to sync them into the active game
 @rpc("any_peer", "reliable")
 func _sync_game_to_late_joiner(level_name: LevelManager.LevelName):
@@ -112,6 +117,9 @@ func _rpc_spawn_player(peer_id: int, username: String):
 @rpc("call_local", "reliable")
 func _rpc_despawn_player(peer_id: int):
 	level_manager.remove_player_locally(peer_id)
+
+
+#endregion
 
 
 func _get_configuration_warnings() -> PackedStringArray:
