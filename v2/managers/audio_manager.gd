@@ -3,6 +3,7 @@ class_name AudioManager extends BaseManager
 
 @export_tool_button("Play Startup") var tool_btn_1 = play_startup
 
+@onready var sounds_container: Node = %Sounds
 @onready var startup: FmodEventEmitter3D = %Startup
 
 
@@ -12,7 +13,10 @@ func _ready():
 
 
 func play_startup():
-	if startup:
-		startup.play()
-	else:
-		print("startup var empty")
+	startup.play()
+
+
+func stop_all():
+	for sound in sounds_container.get_children():
+		if sound is FmodEventEmitter3D || sound is FmodEventEmitter2D:
+			sound.stop()

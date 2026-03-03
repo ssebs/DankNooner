@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://b27jgs5kv1310"]
+
+[ext_resource type="Script" uid="uid://d2dfqo7sswuem" path="res://managers/audio_manager.gd" id="1_1k0gc"]
+
+[node name="AudioManager" type="Node" unique_id=625309404 groups=["Managers"]]
+script = ExtResource("1_1k0gc")
+
+[node name="FmodBankLoader" type="FmodBankLoader" parent="." unique_id=552225803]
+bank_paths = ["res://fmod/DankNoonerFMODProject/Build/Desktop/Master.strings.bank", "res://fmod/DankNoonerFMODProject/Build/Desktop/Master.bank", "res://fmod/DankNoonerFMODProject/Build/Desktop/SFX.bank"]
+
+[node name="Sounds" type="Node" parent="." unique_id=2084581084]
+unique_name_in_owner = true
+
+[node name="Startup" type="FmodEventEmitter3D" parent="Sounds" unique_id=1082903853]
+event_name = "event:/StartupSound"
+event_guid = "{1db5a582-85b0-451b-8549-93bd2664940a}"
+attached = false
+unique_name_in_owner = true
