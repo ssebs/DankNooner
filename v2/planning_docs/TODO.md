@@ -4,6 +4,15 @@
 
 ## In Progress 🚀
 
+- [ ] Basic test map
+
+  - zylann/godot_heightmap_plugin
+    - Fix collision
+  - [ ] big enough for game modes w/ friends
+  - [ ] Option to enable/disable traffic
+  - [ ] test_street_race_01
+  - [ ] test_freeroam_01
+
 - [ ] Review Animation Controller & Create animations
 
   - [x] claude created a system
@@ -95,13 +104,6 @@
       - [ ] List purchasedskins
       - [ ] Choose a bike skin
       - [ ] Choose a character skin
-
-- [ ] Basic test map
-
-  - [ ] big enough for game modes w/ friends
-  - [ ] Option to enable/disable traffic
-  - [ ] test_street_race_01
-  - [ ] test_freeroam_01
 
 - [ ] Basic Traffic AI
 
