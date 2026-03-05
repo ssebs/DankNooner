@@ -128,6 +128,8 @@
       - [ ] w/ and w/o traffic
       - [ ] Podium scene after race ends
       - [ ] Get Score saved to disk w/ bonus for podium
+    - [ ] Stunt race
+      - [ ] Mario kart like - get items to attack players or help self, but do tricks to get items. More complex tricks = better items
   - [ ] Unlock Skins w/ Score from disk & spend
 
 ## Backlog

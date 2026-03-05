@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://b1v8hwhmk785q"]
 
-[ext_resource type="Script" uid="uid://bruu6bm1ycym3" path="res://levels/test_levels/test_street_race_01/test_street_race_01.gd" id="1_68mp5"]
-[ext_resource type="PackedScene" uid="uid://d0rgswc73h64f" path="res://entities/player/player_entity.tscn" id="2_6hu6n"]
+[ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_b02n4"]
 [ext_resource type="Script" uid="uid://4hy24ng8v60q" path="res://addons/zylann.hterrain/hterrain.gd" id="3_68mp5"]
 [ext_resource type="Resource" uid="uid://dypi0q1sjqlnv" path="res://levels/test_levels/test_street_race_01/terrain/data.hterrain" id="4_t5m3v"]
 [ext_resource type="Script" uid="uid://b8syyiek8wppi" path="res://addons/zylann.hterrain/hterrain_texture_set.gd" id="5_q3chg"]
@@ -117,9 +116,8 @@ material = SubResource("StandardMaterial3D_68mp5")
 material = SubResource("StandardMaterial3D_68mp5")
 size = Vector3(100, 1, 1)
 
-[node name="Test_StreetRace_01_Level" type="Node3D" unique_id=898545864 node_paths=PackedStringArray("player_spawn_pos")]
-script = ExtResource("1_68mp5")
-player_entity_scene = ExtResource("2_6hu6n")
+[node name="Test_StreetRace_01_Level" type="Node3D" unique_id=1408827492 node_paths=PackedStringArray("player_spawn_pos")]
+script = ExtResource("1_b02n4")
 player_spawn_pos = NodePath("PlayerSpawn")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
