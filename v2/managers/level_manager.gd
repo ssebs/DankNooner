@@ -7,6 +7,7 @@ enum LevelName {
 	# MAIN_MENU_LEVEL,
 	TEST_LEVEL_01,
 	TEST_STREETRACE_01,
+	TEST_CITY_01,
 }
 
 @export var spawn_node: Node3D
@@ -20,7 +21,8 @@ var possible_levels: Dictionary[LevelName, PackedScene] = {
 	LevelName.BG_GRAY_LEVEL: preload("res://levels/menu_levels/bg_gray/bg_gray_level.tscn"),
 	LevelName.TEST_LEVEL_01: preload("res://levels/test_levels/test_01/test_01_level.tscn"),
 	LevelName.TEST_STREETRACE_01:
-	preload("res://levels/test_levels/test_street_race_01/test_street_race_01.tscn")
+	preload("res://levels/test_levels/test_street_race_01/test_street_race_01.tscn"),
+	LevelName.TEST_CITY_01: preload("res://levels/test_levels/test_city_01/test_city_01.tscn"),
 }
 ## LevelName enum => localization.csv's key name
 var level_name_map: Dictionary[LevelName, String] = {
@@ -28,11 +30,13 @@ var level_name_map: Dictionary[LevelName, String] = {
 	LevelName.BG_GRAY_LEVEL: "BgGrayLevel",
 	LevelName.TEST_LEVEL_01: "LEVEL_TEST_1_LABEL",
 	LevelName.TEST_STREETRACE_01: "LEVEL_TEST_STREETRACE_01",
+	LevelName.TEST_CITY_01: "LEVEL_TEST_CITY_01",
 }
 var levels_names_in_level_select: Array[String] = [
 	"LEVEL_SELECT_LABEL",
 	"LEVEL_TEST_1_LABEL",
 	"LEVEL_TEST_STREETRACE_01",
+	"LEVEL_TEST_CITY_01",
 ]
 
 var current_level_name: LevelName = LevelName.LEVEL_SELECT_LABEL

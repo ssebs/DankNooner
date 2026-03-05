@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://dyrrl34ljb2yd"]
+
+[ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_qt85o"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2lumj"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_6hu6n"]
+sky_material = SubResource("ProceduralSkyMaterial_2lumj")
+
+[sub_resource type="Environment" id="Environment_ffs5v"]
+background_mode = 2
+sky = SubResource("Sky_6hu6n")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="Test_City_01" type="Node3D" unique_id=721643000 node_paths=PackedStringArray("player_spawn_pos")]
+script = ExtResource("1_qt85o")
+player_spawn_pos = NodePath("PlayerSpawn")
+metadata/_custom_type_script = "uid://dv0brm8irhlth"
+
+[node name="PlayerSpawn" type="Marker3D" parent="." unique_id=2018268121]
+unique_name_in_owner = true
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, 7, 0, 7)
+
+[node name="LevelItemsAndStuff" type="Node3D" parent="." unique_id=730657186]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="LevelItemsAndStuff" unique_id=1628856091]
+environment = SubResource("Environment_ffs5v")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="LevelItemsAndStuff" unique_id=868540756]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
