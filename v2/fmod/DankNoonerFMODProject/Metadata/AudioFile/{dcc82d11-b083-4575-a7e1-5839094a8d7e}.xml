@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{dcc82d11-b083-4575-a7e1-5839094a8d7e}">
+		<property name="assetPath">
+			<value>Ninja500/idle-loop-ninja-500.ogg</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>2.0304081632653062</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{958d7491-9a1b-4872-82c8-62a9246ec6ba}</destination>
+		</relationship>
+	</object>
+</objects>
