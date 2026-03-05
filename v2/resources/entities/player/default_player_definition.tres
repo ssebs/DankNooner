@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://283a7n5utttx" path="res://resources/entities/player/player_definition.gd" id="1_nop61"]
 [ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/entities/bikes/skins/naked_default_skin_definition.tres" id="1_tgx2e"]
-[ext_resource type="Texture2D" uid="uid://cwf7vhr6hpjoj" path="res://resources/img/Logo.svg" id="2_hooav"]
+[ext_resource type="Texture2D" uid="uid://cwf7vhr6hpjoj" path="res://resources/img/Logos/Logo.svg" id="2_hooav"]
 [ext_resource type="Resource" uid="uid://dugcuccseinkn" path="res://resources/entities/player/skins/biker_default_skin_definition.tres" id="2_tgx2e"]
 
 [resource]

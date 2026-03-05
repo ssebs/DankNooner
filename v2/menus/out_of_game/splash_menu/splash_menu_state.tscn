@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://dscubnqixeg5d" path="res://menus/out_of_game/splash_menu/splash_menu_state.gd" id="1_4ta0w"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_id3t2"]
-[ext_resource type="Texture2D" uid="uid://b26ogu1ndl1rv" path="res://resources/img/GodotSplash.png" id="3_y56m1"]
-[ext_resource type="Texture2D" uid="uid://cwb2vqitbhf5o" path="res://resources/img/fmod_splash.png" id="4_edtrn"]
-[ext_resource type="Texture2D" uid="uid://bemuhperq1pyq" path="res://resources/img/ssebs_splash.png" id="5_5g6xa"]
+[ext_resource type="Texture2D" uid="uid://b26ogu1ndl1rv" path="res://resources/img/SplashScreen/GodotSplash.png" id="3_y56m1"]
+[ext_resource type="Texture2D" uid="uid://cwb2vqitbhf5o" path="res://resources/img/SplashScreen/fmod_splash.png" id="4_edtrn"]
+[ext_resource type="Texture2D" uid="uid://bemuhperq1pyq" path="res://resources/img/SplashScreen/ssebs_splash.png" id="5_5g6xa"]
 
 [node name="SplashMenuState" type="Node" unique_id=2055861891]
 script = ExtResource("1_4ta0w")
