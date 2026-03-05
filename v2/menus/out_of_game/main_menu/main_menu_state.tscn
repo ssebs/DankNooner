@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cv4bvroelqvpy" path="res://menus/out_of_game/main_menu/main_menu_state.gd" id="1_k7k4a"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_3qbku"]
-[ext_resource type="Texture2D" uid="uid://bucasypwld3mg" path="res://resources/img/DankNoonerLogo.png" id="2_k7k4a"]
+[ext_resource type="Texture2D" uid="uid://bucasypwld3mg" path="res://resources/img/Logos/DankNoonerLogo.png" id="2_k7k4a"]
 
 [node name="MainMenuState" type="Node" unique_id=494197480]
 script = ExtResource("1_k7k4a")
