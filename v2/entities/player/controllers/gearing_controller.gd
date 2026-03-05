@@ -4,6 +4,7 @@ class_name GearingController extends Node
 signal gear_changed(new_gear: int)
 signal engine_stalled
 signal engine_started
+signal rpm_updated(rpm_ratio: float)
 
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
@@ -28,6 +29,7 @@ func process_gearing(delta: float):
 	_blend_rpm_to_target(delta)
 	_apply_rpm_limits()
 	player_entity.rpm_ratio = _get_rpm_ratio()
+	rpm_updated.emit(player_entity.rpm_ratio)
 
 
 func _update_clutch(delta: float):

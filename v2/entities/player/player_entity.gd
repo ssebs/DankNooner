@@ -22,6 +22,7 @@ class_name PlayerEntity extends CharacterBody3D
 @onready var hud: Control = %HUD
 
 var is_local_client: bool = false
+var audio_manager: AudioManager
 
 # Debug HUD elements
 var _debug_speed_label: Label
@@ -114,11 +115,24 @@ func _deferred_init():
 		camera_controller.switch_to_tps_cam()
 		_init_input_handlers()
 		_init_debug_hud()
+		_init_audio()
 	else:
 		camera_controller.disable_cameras()
 		hud.visible = false
 
 	# set_username_label("Player: %s" % name)
+
+
+func _init_audio():
+	if audio_manager == null:
+		return
+	gearing_controller.rpm_updated.connect(_on_rpm_updated)
+	audio_manager.play_ninja500_revs()
+
+
+func _on_rpm_updated(new_rpm_ratio: float):
+	if audio_manager:
+		audio_manager.update_ninja500_rpm(new_rpm_ratio)
 
 
 func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool):

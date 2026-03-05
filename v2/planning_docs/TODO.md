@@ -45,6 +45,7 @@
   - [ ] Make sure MP authority is set
 
 - [ ] Audio Manager
+  - [ ] volume settings
 
   - [ ] fmod bike sounds
     - [ ] Seamless loop w/ RPM
