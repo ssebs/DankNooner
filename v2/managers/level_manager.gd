@@ -14,6 +14,7 @@ enum LevelName {
 @export var menu_manager: MenuManager
 @export var multiplayer_manager: MultiplayerManager
 @export var input_state_manager: InputStateManager
+@export var audio_manager: AudioManager
 
 ## PackedScene of type LevelDefinition
 var possible_levels: Dictionary[LevelName, PackedScene] = {
@@ -93,6 +94,7 @@ func add_player_locally(peer_id: int, username: String):
 
 	var player_to_add = current_level.player_entity_scene.instantiate() as PlayerEntity
 	player_to_add.name = str(peer_id)
+	player_to_add.audio_manager = audio_manager  # HACL
 
 	current_level.player_spawn_pos.add_child(player_to_add, true)
 	player_to_add.set_username_label(username)
