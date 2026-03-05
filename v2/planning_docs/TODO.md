@@ -4,16 +4,8 @@
 
 ## In Progress 🚀
 
-- [ ] Basic test map
-
-  - zylann/godot_heightmap_plugin
-    - Fix collision
-  - [ ] big enough for game modes w/ friends
-  - [ ] Option to enable/disable traffic
-  - [ ] test_street_race_01
-  - [ ] test_freeroam_01
-
 - [ ] Review Animation Controller & Create animations
+  - [ ] Fix collision
 
   - [x] claude created a system
   - [ ] Review planning_docs/AnimationController.md
@@ -262,6 +254,14 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] Basic test map
+
+  - zylann/godot_heightmap_plugin
+  - [ ] big enough for game modes w/ friends
+  - [ ] Option to enable/disable traffic
+  - [ ] test_street_race_01
+  - [ ] test_freeroam_01
 
 - [x] Create Player Part 3
 
