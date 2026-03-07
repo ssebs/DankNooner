@@ -107,10 +107,12 @@ func _process(_delta: float) -> void:
 
 
 #region init
-## set definitions
+## set definitions and apply mesh/colors/markers
 func _init_mesh():
 	bike_skin.skin_definition = bike_definition
+	bike_skin._apply_definition()
 	character_skin.skin_definition = character_definition
+	character_skin.apply_definition()
 
 
 ## set collision shape from bike_definition
