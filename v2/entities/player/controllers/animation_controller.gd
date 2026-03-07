@@ -254,7 +254,7 @@ func _update_wheelie_arm(pitch: float) -> void:
 
 func _update_idle_timer(delta: float) -> void:
 	# Check if player is mostly stationary
-	var is_idle = movement_controller.current_speed < 1.0 and abs(input_controller.steer) < 0.1
+	var is_idle = player_entity.speed < 1.0 and abs(input_controller.steer) < 0.1
 
 	if is_idle:
 		_idle_timer += delta
