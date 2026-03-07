@@ -123,7 +123,7 @@ metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="PlayerSpawn" type="Marker3D" parent="." unique_id=840084747]
 unique_name_in_owner = true
-transform = Transform3D(-0.20948204, 0, 0.97781247, 0, 1, 0, -0.97781247, 0, -0.20948204, 165.41905, 9.645201, 20.389439)
+transform = Transform3D(-0.20948204, 0, 0.97781247, 0, 1, 0, -0.97781247, 0, -0.20948204, 165.41905, 9.270001, 20.389439)
 
 [node name="LevelItemsAndStuff" type="Node3D" parent="." unique_id=804449511]
 
