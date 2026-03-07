@@ -295,11 +295,8 @@ func _update_procedural_animation(delta: float) -> void:
 		_current_weight_shift, target_weight_shift, weight_shift_smoothing * delta
 	)
 
-	# wheelie stoppie
-	# todo: make wheelies use offsets
-	visual_root.rotation.x = _current_weight_shift
-
-	# set_bike_pitch(_current_weight_shift)
+	# Lean visual root back/forward for wheelie/stoppie (driven by trick_controller via set_bike_pitch)
+	visual_root.rotation.x = -_current_bike_pitch * deg_to_rad(max_bike_pitch)
 
 	# Calculate offsets
 	var lean_offset_x = _current_lean * _lean_multiplier * -0.25  # max 0.25m
@@ -321,6 +318,23 @@ func _update_procedural_animation(delta: float) -> void:
 	# Apply bike-only pitch (wheelie/stoppie)
 	var pitch_angle = _current_bike_pitch * deg_to_rad(max_bike_pitch)
 	bike_skin.rotation.x = pitch_angle
+
+	_update_wheelie_arm(_current_bike_pitch)
+
+
+func _update_wheelie_arm(pitch: float) -> void:
+	var anim_player = character_skin.ik_anim_player
+	if anim_player == null:
+		return
+	var anim_name = "IK_anim_lib/wheelie_arm_drag"
+	if not anim_player.has_animation(anim_name):
+		return
+	if anim_player.current_animation != anim_name:
+		anim_player.play(anim_name)
+	# Only extend arm when trick_mod held during a wheelie, otherwise return to default (t=0)
+	var in_wheelie = pitch > 0.0
+	var ratio = clamp(pitch, 0.0, 1.0) if (in_wheelie and input_controller.trick) else 0.0
+	anim_player.seek(ratio, true)
 
 
 func _update_idle_timer(delta: float) -> void:
