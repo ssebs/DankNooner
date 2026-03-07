@@ -18,6 +18,10 @@ enum Trick { NONE, WHEELIE_SITTING, WHEELIE_STANDING, STOPPIE, FISHTAIL }
 
 var _boost_timer: float = 0.0
 var _last_trick: Trick = Trick.NONE
+var _clutch_kick_window: float = 0.0
+var _prev_clutch_held: bool = false
+
+const CLUTCH_KICK_WINDOW: float = 0.4  # seconds after clutch dump to allow wheelie pop
 
 
 func _ready():
@@ -43,11 +47,17 @@ func _update_wheelie(delta: float):
 	var bd = player_entity.bike_definition
 	var in_wheelie = player_entity.pitch_angle > deg_to_rad(15)
 
-	# Wheelie initiation: lean back (lean < 0 in v2) + high RPM + throttle
-	var rpm_above_threshold = player_entity.rpm_ratio >= bd.wheelie_rpm_threshold
-	var can_pop = (input_controller.lean < -0.3 and
-				   input_controller.throttle > 0.7 and
-				   rpm_above_threshold)
+	# Clutch-kick: detect clutch release this tick and open pop window if RPM was high
+	var clutch_just_released = _prev_clutch_held and not input_controller.clutch_held
+	_prev_clutch_held = input_controller.clutch_held
+	if clutch_just_released and player_entity.rpm_ratio >= bd.wheelie_rpm_threshold:
+		_clutch_kick_window = CLUTCH_KICK_WINDOW
+	_clutch_kick_window = maxf(_clutch_kick_window - delta, 0.0)
+
+	var clutch_kick = _clutch_kick_window > 0.0
+	var power_wheelie = (player_entity.rpm_ratio >= bd.wheelie_rpm_threshold and
+						 input_controller.throttle > 0.7)
+	var can_pop = (input_controller.lean < -0.3 and (clutch_kick or power_wheelie))
 	var fast_enough = player_entity.speed > 1
 
 	var wheelie_target = 0.0

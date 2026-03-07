@@ -8,9 +8,17 @@ Central API for all rider animation - procedural dynamics, polish animations, an
 PlayerEntity
 ├── VisualRoot (Node3D)           # Rotates for lean (bike + rider together)
 │   ├── CharacterSkin
-│   │   ├── IKController          # Markers + FABRIK
-│   │   ├── IKAnimationPlayer     # IK marker animations (polish)
-│   │   └── AnimationPlayer       # Skeleton animations (tricks)
+│   │   ├── IKController          # FABRIK solver, holds @export refs to IKTargets/*
+│   │   ├── IKAnimationPlayer     # IK marker animations (polish/tricks)
+│   │   ├── AnimationPlayer       # Skeleton animations
+│   │   └── IKTargets/            # Actual marker nodes animated by IKAnimationPlayer
+│   │       ├── ButtPosition
+│   │       ├── ChestTarget
+│   │       ├── HeadTarget
+│   │       ├── LeftHand / RightHand
+│   │       ├── LeftArmMagnet / RightArmMagnet
+│   │       ├── LeftFoot / RightFoot
+│   │       └── LeftLegMagnet / RightLegMagnet
 │   └── BikeSkin                  # Rotates independently for wheelie/stoppie
 │
 └── _Components
@@ -86,17 +94,17 @@ animation_controller.set_bike_pitch(-0.3) # Slight stoppie
 
 ### IK Markers
 
-Located in `CharacterSkin` scene under `IKController`:
+Located in `CharacterSkin` scene under `IKTargets` (sibling of `IKController`, not a child of it). `IKController` holds `@export` references pointing to them:
 
-| Marker | Controls | Used For |
-|--------|----------|----------|
-| `butt_pos` | Hips bone position | Seat position, lean offset |
-| `ik_chest` | Spine bone rotation | Torso lean/twist |
-| `ik_head` | Head bone rotation | Look direction |
-| `ik_left_hand` / `ik_right_hand` | Hand position + rotation | Grip handlebars |
-| `ik_left_arm_magnet` / `ik_right_arm_magnet` | Elbow position | Arm bend direction |
-| `ik_left_foot` / `ik_right_foot` | Foot position + rotation | Foot pegs |
-| `ik_left_leg_magnet` / `ik_right_leg_magnet` | Knee position | Leg bend direction |
+| Node name (in `IKTargets`) | GDScript ref (on `IKController`) | Controls | Used For |
+|----------------------------|----------------------------------|----------|----------|
+| `ButtPosition` | `butt_pos` | Hips bone position | Seat position, lean offset |
+| `ChestTarget` | `ik_chest` | Spine bone rotation | Torso lean/twist |
+| `HeadTarget` | `ik_head` | Head bone rotation | Look direction |
+| `LeftHand` / `RightHand` | `ik_left_hand` / `ik_right_hand` | Hand position + rotation | Grip handlebars |
+| `LeftArmMagnet` / `RightArmMagnet` | `ik_left_arm_magnet` / `ik_right_arm_magnet` | Elbow position | Arm bend direction |
+| `LeftFoot` / `RightFoot` | `ik_left_foot` / `ik_right_foot` | Foot position + rotation | Foot pegs |
+| `LeftLegMagnet` / `RightLegMagnet` | `ik_left_leg_magnet` / `ik_right_leg_magnet` | Knee position | Leg bend direction |
 
 ### Bone-to-Marker Mapping
 
@@ -116,19 +124,24 @@ RightFoot    <- ik_right_foot (position + rotation)
 
 IK animations animate the **markers**, not the skeleton directly. This works for any character skin since all skins use the same marker structure.
 
-### Step 1: Open Character Skin Scene
+### Step 1: Open the Scene
 
-Open `character_skin.tscn` in the editor. The IK markers are children of `IKController`.
+Prefer opening `player_entity.tscn` — this lets you see the character on the bike. You can also open `character_skin.tscn` directly. The IK markers are under `IKTargets` (a direct child of `CharacterSkin`, sibling of `IKController`).
 
 ### Step 2: Create Animation in IKAnimationPlayer
 
 1. Select `IKAnimationPlayer` node
-2. Create new animation (e.g., "idle_fidget")
-3. Add tracks for marker transforms:
-   - `IKController/ik_head:position`
-   - `IKController/ik_head:rotation`
-   - `IKController/ik_chest:rotation`
-   - etc.
+2. In the Animation panel: **Animation > New**, name it, save it **under `IK_anim_lib`**
+3. Add tracks for marker transforms using the actual node names under `IKTargets`:
+   - `IKTargets/HeadTarget:position` / `IKTargets/HeadTarget:rotation`
+   - `IKTargets/ChestTarget:position` / `IKTargets/ChestTarget:rotation`
+   - `IKTargets/ButtPosition:position`
+   - `IKTargets/LeftHand:position` / `IKTargets/LeftHand:rotation`
+   - `IKTargets/RightHand:position` / `IKTargets/RightHand:rotation`
+   - `IKTargets/LeftFoot:position` / `IKTargets/LeftFoot:rotation`
+   - `IKTargets/RightFoot:position` / `IKTargets/RightFoot:rotation`
+   - `IKTargets/LeftArmMagnet:position`, `IKTargets/RightArmMagnet:position`
+   - `IKTargets/LeftLegMagnet:position`, `IKTargets/RightLegMagnet:position`
 
 ### Step 3: Keyframe Marker Positions/Rotations
 
@@ -233,12 +246,15 @@ Open `player_entity.tscn` to author animations with the character on the bike.
 3. Manually adjust marker rotations in the viewport (grip angle, foot angle, etc.)
 4. Click **"Save Default Pose"** — saves position + rotation of all 11 IK targets as `"default_pose"` in `IK_anim_lib.res`
 
-### Authoring each animation
+### Authoring each animation (e.g. a trick)
 1. Click **"Reset to Default Pose"** — restores markers to the saved base
-2. Select `IKAnimationPlayer` and create/open an animation
-3. Move/rotate IK target markers in the viewport
-4. Keyframe `position` and `rotation` tracks for changed markers
-5. Animations are bike-agnostic — base positions come from the current bike's markers at runtime
+2. Select `IKAnimationPlayer` in the scene tree
+3. In the Animation panel: **Animation > New** — name it and save it **under `IK_anim_lib`** (the library name must match)
+4. At **time=0**, keyframe `position` and `rotation` for all markers you intend to animate — this locks in the base/default state
+5. Scrub to **time=1**, move/rotate the desired markers to the trick pose, then update those keyframes
+6. Animations are bike-agnostic — base positions come from the current bike's markers at runtime
+
+> **Why keyframe at t=0?** The `IKAnimationPlayer` is seeked by ratio (e.g. `wheelie_arm_drag` is seeked 0→1 based on pitch). Without t=0 keyframes the animation has no defined start, causing snapping when it first plays. Always bookend both ends.
 
 ---
 

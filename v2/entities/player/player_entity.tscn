@@ -116,8 +116,8 @@ unique_name_in_owner = true
 script = ExtResource("3_faflk")
 root = NodePath("..")
 enable_prediction = true
-state_properties = Array[String]([":global_transform", ":velocity", ":speed", ":lean_angle", ":pitch_angle", ":fishtail_angle", ":current_gear", ":current_rpm", ":clutch_value", ":is_boosting", ":is_crashed", "%MovementController:current_speed", "%MovementController:angular_velocity"])
-input_properties = Array[String](["%InputController:throttle", "%InputController:front_brake", "%InputController:rear_brake", "%InputController:steer", "%InputController:lean", "%InputController:trick", "%InputController:gear_up", "%InputController:gear_down"])
+state_properties = Array[String]([":global_transform", ":velocity", ":speed", ":lean_angle", ":pitch_angle", ":fishtail_angle", ":current_gear", ":current_rpm", ":clutch_value", ":is_boosting", ":is_crashed", "%MovementController:current_speed", "%MovementController:angular_velocity", "%TrickController:_clutch_kick_window", "%TrickController:_prev_clutch_held"])
+input_properties = Array[String](["%InputController:throttle", "%InputController:front_brake", "%InputController:rear_brake", "%InputController:steer", "%InputController:lean", "%InputController:trick", "%InputController:gear_up", "%InputController:gear_down", "%InputController:clutch_held"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="TickInterpolator" type="Node" parent="." unique_id=977812349 node_paths=PackedStringArray("root")]
@@ -146,7 +146,7 @@ transform = Transform3D(-0.22298142, 0.9632416, -0.14981724, -0.21753988, -0.198
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42771637, 0.852384, -0.5457224)
 
 [node name="RightHand" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="2" unique_id=300039024]
-transform = Transform3D(-0.008549988, -0.97650266, 0.21533649, -0.41056708, -0.19292802, -0.8911864, 0.9117903, -0.09602974, -0.39927018, -0.3032672, 1.0500246, 0.27497217)
+transform = Transform3D(-0.008549988, -0.97650266, 0.21533647, -0.41056708, -0.19292802, -0.89118636, 0.9117903, -0.09602974, -0.39927018, -0.3032672, 1.0500246, 0.27497217)
 
 [node name="RightArmMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="3" unique_id=1090132691]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35496345, 0.98080707, -0.3138903)

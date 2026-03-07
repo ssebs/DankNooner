@@ -20,7 +20,7 @@ unique_name_in_owner = true
 [node name="Ninja500Revs" type="FmodEventEmitter3D" parent="Sounds" unique_id=866670601]
 event_name = "event:/Ninja500Revs"
 event_guid = "{cb006e0b-c724-48ba-93bf-35b91cda5e9c}"
-volume = 0.8
+volume = 0.6
 fmod_parameters/RPM/id = -9088701629334172805
 fmod_parameters/RPM = 0.0
 fmod_parameters/RPM/variant_type = 3

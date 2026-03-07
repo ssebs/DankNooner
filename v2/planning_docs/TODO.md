@@ -9,9 +9,9 @@
   - [ ] Fix collision
 
   - [x] claude created a system
-  - [ ] Review planning_docs/AnimationController.md
-  - [ ] Create way to play specific animations from name/var
-    - [ ] Multiple at once?
+  - [x] Review planning_docs/AnimationController.md
+  - [x] Create way to play specific animations from name/var
+    - [x] Multiple at once?
     - [ ] proceedural happen during other animations if flag is set
     - [ ] animation player for custom
     - [ ] player_entity relies on this to manage animations
