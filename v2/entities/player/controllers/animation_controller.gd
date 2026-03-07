@@ -166,13 +166,13 @@ func _update_procedural_animation(delta: float) -> void:
 	var ik_ctrl = character_skin.ik_controller
 
 	# Smooth toward physics values at render rate
-	var smooth_speed := 15.0 * delta
+	var smooth_speed := 10 * delta
 	_visual_lean = lerpf(_visual_lean, player_entity.lean_angle, smooth_speed)
 	_visual_pitch = lerpf(_visual_pitch, player_entity.pitch_angle, smooth_speed)
 
-	# Smooth steering yaw — chase entity rotation, apply difference to visual_root
-	# _visual_yaw = lerp_angle(_visual_yaw, player_entity.rotation.y, smooth_speed)
-	# visual_root.rotation.y = player_entity.rotation.y - _visual_yaw
+	# Smooth entity steering rotation at render rate (rollback restores physics value before ticks)
+	_visual_yaw = lerp_angle(_visual_yaw, player_entity.rotation.y, smooth_speed)
+	player_entity.rotation.y = _visual_yaw
 
 	# Pitch visual_root for wheelie/stoppie
 	visual_root.rotation.x = -clamp(
@@ -236,7 +236,7 @@ func _reset_to_base_positions() -> void:
 	player_entity.lean_angle = 0.0
 	_visual_lean = 0.0
 	_visual_pitch = 0.0
-	# _visual_yaw = player_entity.rotation.y
+	_visual_yaw = player_entity.rotation.y
 
 
 #endregion
