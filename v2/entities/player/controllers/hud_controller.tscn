@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://dvkip6up3p1qg"]
+
+[ext_resource type="Script" uid="uid://civ7dg4q23qwd" path="res://entities/player/controllers/hud_controller.gd" id="1_bxvjo"]
+
+[node name="HUDController" type="Control" unique_id=2128080993]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bxvjo")
