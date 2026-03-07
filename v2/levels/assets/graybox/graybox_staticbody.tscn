@@ -9,6 +9,9 @@
 
 [node name="GrayBox_StaticBody" type="StaticBody3D" unique_id=1485126779]
 script = ExtResource("1_ufpa7")
+width = 1.0
+height = 1.0
+depth = 1.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1922891733]
 unique_name_in_owner = true

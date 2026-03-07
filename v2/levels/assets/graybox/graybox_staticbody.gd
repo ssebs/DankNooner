@@ -3,17 +3,17 @@ class_name GrayBoxStaticBody extends StaticBody3D
 
 enum GrayBoxColor { DARK_GRAY, LIGHT_GRAY, GREEN, BLUE, RED, PURPLE }
 
-@export var width: float = 1.0:
+@export var width: float = 2.0:
 	set(v):
 		width = v
 		apply_shape()
 
-@export var height: float = 1.0:
+@export var height: float = 2.0:
 	set(v):
 		height = v
 		apply_shape()
 
-@export var depth: float = 1.0:
+@export var depth: float = 2.0:
 	set(v):
 		depth = v
 		apply_shape()
@@ -56,5 +56,10 @@ func apply_color():
 		return
 
 	var mat := meshinstance.get_surface_override_material(0) as StandardMaterial3D
-	if mat:
-		mat.albedo_color = COLOR_VALUES.get(color_preset, Color.WHITE)
+	if not mat:
+		mat = StandardMaterial3D.new()
+		meshinstance.set_surface_override_material(0, mat)
+	else:
+		mat = mat.duplicate()
+		meshinstance.set_surface_override_material(0, mat)
+	mat.albedo_color = COLOR_VALUES.get(color_preset, Color.WHITE)
