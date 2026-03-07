@@ -5,6 +5,7 @@
 ## In Progress 🚀
 
 - [ ] Review Animation Controller & Create animations
+
   - [ ] Fix collision
 
   - [x] claude created a system
@@ -32,7 +33,9 @@
   - [x] gearing
   - [x] physics
   - [x] trick
-  - [x] crash
+  - [ ] crash
+    - [x] Brake
+    - [ ] Layer 2 collision
   - [ ] use animations from AnimationController + make animations
   - [ ] review & clean code
     - [ ] bike_skin_definition.gd
@@ -45,6 +48,7 @@
   - [ ] Make sure MP authority is set
 
 - [ ] Audio Manager
+
   - [ ] volume settings
 
   - [ ] fmod bike sounds
