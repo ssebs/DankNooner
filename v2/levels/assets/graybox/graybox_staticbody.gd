@@ -1,7 +1,7 @@
 @tool
 class_name GrayBoxStaticBody extends StaticBody3D
 
-enum GrayBoxColor { DARK_GRAY, LIGHT_GRAY, GREEN, BLUE, RED, PURPLE }
+enum GrayBoxColor { DARK_GRAY, LIGHT_GRAY, GREEN, BLUE, RED, PURPLE, TAN }
 
 @export var width: float = 2.0:
 	set(v):
@@ -30,6 +30,7 @@ const COLOR_VALUES: Dictionary = {
 	GrayBoxColor.BLUE: Color(0.365, 1.787, 1.857),
 	GrayBoxColor.RED: Color(1.975, 0.209, 0.209),
 	GrayBoxColor.PURPLE: Color(2.113, 1.029, 2.418),
+	GrayBoxColor.TAN: Color(2.807, 2.352, 1.369)
 }
 
 @onready var meshinstance: MeshInstance3D = %MeshInstance3D

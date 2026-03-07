@@ -25,7 +25,7 @@ metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="PlayerSpawn" type="Marker3D" parent="." unique_id=2018268121]
 unique_name_in_owner = true
-transform = Transform3D(1.192488e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 1.192488e-08, 0, 0.04999733, 0)
+transform = Transform3D(1.192488e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 1.192488e-08, -10.999999, 0.049999952, 10.999999)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=20150230]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
@@ -302,10 +302,71 @@ height = 0.1
 depth = 60.0
 color_preset = 2
 
+[node name="GBGrass2" parent="." unique_id=545940584 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 243, 0, -90)
+width = 78.0
+height = 0.1
+depth = 30.0
+color_preset = 2
+
+[node name="GBSand" parent="." unique_id=1412146464 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 125, 0, -90)
+width = 160.0
+height = 0.1
+depth = 30.0
+color_preset = 6
+
+[node name="GBSand2" parent="." unique_id=220659895 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 132, 0, 280)
+width = 300.0
+height = 0.1
+depth = 30.0
+color_preset = 6
+
+[node name="GBSand3" parent="." unique_id=1458641003 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -3.0000005, 0, 165)
+width = 200.0
+height = 0.1
+depth = 30.0
+color_preset = 6
+
+[node name="GBWater" parent="." unique_id=1871786576 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 132, 0, -155)
+collision_layer = 3
+width = 300.0
+height = 0.1
+depth = 100.0
+color_preset = 3
+
+[node name="GBWater3" parent="." unique_id=83787268 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 132, 0, 345)
+collision_layer = 3
+width = 300.0
+height = 0.1
+depth = 100.0
+color_preset = 3
+
+[node name="GBWater2" parent="." unique_id=1280059567 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -68, 0, 95)
+collision_layer = 3
+width = 600.0
+height = 0.1
+depth = 100.0
+color_preset = 3
+
+[node name="GBWater4" parent="." unique_id=1531541775 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 332, 0, 94.999985)
+collision_layer = 3
+width = 600.0
+height = 0.1
+depth = 100.0
+color_preset = 3
+
 [node name="GBBuildings" type="Node3D" parent="." unique_id=102442404]
 
 [node name="GrayBox_StaticBody" parent="GBBuildings" unique_id=10331220 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39, 2.93, 13)
+collision_layer = 3
 width = 6.0
 height = 6.0
 depth = 10.0
@@ -313,6 +374,7 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody2" parent="GBBuildings" unique_id=1094365733 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31, 2.93, 11)
+collision_layer = 3
 width = 6.0
 height = 6.0
 depth = 6.0
@@ -320,6 +382,7 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody3" parent="GBBuildings" unique_id=564722236 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 1.9300001, 11)
+collision_layer = 3
 width = 12.0
 height = 4.0
 depth = 6.0
@@ -327,6 +390,7 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody17" parent="GBBuildings" unique_id=1051896822 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 60.5, 2.93, -46.5)
+collision_layer = 3
 width = 6.0
 height = 6.0
 depth = 6.0
@@ -334,6 +398,7 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody19" parent="GBBuildings" unique_id=1315848539 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 60, 2.93, -10)
+collision_layer = 3
 width = 6.0
 height = 6.0
 depth = 6.0
@@ -341,6 +406,7 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody18" parent="GBBuildings" unique_id=2101463971 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 60.5, 1.9300001, -37.5)
+collision_layer = 3
 width = 12.0
 height = 4.0
 depth = 6.0
@@ -348,6 +414,7 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody4" parent="GBBuildings" unique_id=1449625463 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31, 3.93, -72)
+collision_layer = 3
 width = 6.0
 height = 8.0
 depth = 6.0
@@ -355,6 +422,7 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody5" parent="GBBuildings" unique_id=1617363234 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 2.93, -72)
+collision_layer = 3
 width = 16.0
 height = 6.0
 depth = 6.0
@@ -362,13 +430,39 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody16" parent="GBBuildings" unique_id=1458521258 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 67, 2.93, -58)
+collision_layer = 3
 width = 16.0
+height = 6.0
+depth = 10.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody20" parent="GBBuildings" unique_id=1713450654 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 180.5, 2.93, -22.5)
+collision_layer = 3
+width = 6.0
+height = 6.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody21" parent="GBBuildings" unique_id=140280227 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 180.5, 1.9300001, -13.5)
+collision_layer = 3
+width = 12.0
+height = 4.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody22" parent="GBBuildings" unique_id=161659708 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 183, 2.93, -34)
+collision_layer = 3
+width = 10.0
 height = 6.0
 depth = 10.0
 color_preset = 3
 
 [node name="GrayBox_StaticBody10" parent="GBBuildings" unique_id=1105354089 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.93, -85)
+collision_layer = 3
 width = 16.0
 height = 6.0
 depth = 6.0
@@ -376,6 +470,7 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody6" parent="GBBuildings" unique_id=2108562388 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 4.93, -72)
+collision_layer = 3
 width = 6.0
 height = 10.0
 depth = 6.0
@@ -383,6 +478,7 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody8" parent="GBBuildings" unique_id=1292823396 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 4.93, -82)
+collision_layer = 3
 width = 6.0
 height = 10.0
 depth = 6.0
@@ -390,6 +486,7 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody9" parent="GBBuildings" unique_id=1110014166 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 5.9299994, -86)
+collision_layer = 3
 width = 6.0
 height = 12.0
 depth = 6.0
@@ -397,6 +494,7 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody7" parent="GBBuildings" unique_id=2043741129 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 3.9299998, -72)
+collision_layer = 3
 width = 16.0
 height = 8.0
 depth = 6.0
@@ -404,6 +502,7 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody11" parent="GBBuildings" unique_id=363833423 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.93, 23)
+collision_layer = 3
 width = 16.0
 height = 6.0
 depth = 6.0
@@ -411,6 +510,7 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody12" parent="GBBuildings" unique_id=124166170 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 4.93, 26)
+collision_layer = 3
 width = 6.0
 height = 10.0
 depth = 6.0
@@ -418,6 +518,7 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody15" parent="GBBuildings" unique_id=1076733796 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 4.93, 13)
+collision_layer = 3
 width = 6.0
 height = 10.0
 depth = 6.0
@@ -425,6 +526,7 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody13" parent="GBBuildings" unique_id=741838494 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 5.9299994, 22)
+collision_layer = 3
 width = 6.0
 height = 12.0
 depth = 6.0
@@ -432,6 +534,7 @@ color_preset = 3
 
 [node name="GrayBox_StaticBody14" parent="GBBuildings" unique_id=724917493 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 3.9299998, 36)
+collision_layer = 3
 width = 16.0
 height = 8.0
 depth = 6.0
@@ -487,6 +590,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 165, 0, 65)
 
 [node name="GrayBox_StaticBody" parent="GasStation" unique_id=1722060374 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 1.4299998, -17)
+collision_layer = 3
 width = 10.0
 height = 3.0
 depth = 4.0
@@ -494,6 +598,7 @@ color_preset = 5
 
 [node name="GrayBox_StaticBody2" parent="GasStation" unique_id=1778805785 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -25, 1.4299998, -14)
+collision_layer = 3
 width = 10.0
 height = 3.0
 depth = 4.0
@@ -501,21 +606,25 @@ color_preset = 5
 
 [node name="GrayBox_StaticBody3" parent="GasStation" unique_id=348410795 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -18, 1.4299998, -10)
+collision_layer = 3
 height = 3.0
 color_preset = 5
 
 [node name="GrayBox_StaticBody4" parent="GasStation" unique_id=1648200915 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -14, 1.4299998, -10)
+collision_layer = 3
 height = 3.0
 color_preset = 5
 
 [node name="GrayBox_StaticBody5" parent="GasStation" unique_id=1922173800 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -18, 1.4299998, -6)
+collision_layer = 3
 height = 3.0
 color_preset = 5
 
 [node name="GrayBox_StaticBody9" parent="GasStation" unique_id=660112868 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -14, 3.03, -8)
+collision_layer = 3
 width = 8.0
 height = 0.2
 depth = 11.0
@@ -523,11 +632,13 @@ color_preset = 5
 
 [node name="GrayBox_StaticBody6" parent="GasStation" unique_id=1878896616 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -14, 1.4299998, -6)
+collision_layer = 3
 height = 3.0
 color_preset = 5
 
 [node name="GrayBox_StaticBody10" parent="GasStation" unique_id=1254680375 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3, 1.05, -3)
+collision_layer = 3
 width = 2.0
 height = 2.0
 depth = 2.0
@@ -535,11 +646,13 @@ color_preset = 5
 
 [node name="GrayBox_StaticBody7" parent="GasStation" unique_id=214504360 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -10, 1.4299998, -10)
+collision_layer = 3
 height = 3.0
 color_preset = 5
 
 [node name="GrayBox_StaticBody8" parent="GasStation" unique_id=1492166001 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -10, 1.4299998, -6)
+collision_layer = 3
 height = 3.0
 color_preset = 5
 
@@ -572,6 +685,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 185, 0, 245)
 
 [node name="GrayBox_StaticBody" parent="GasStation2" unique_id=68830667 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 1.4299998, -17)
+collision_layer = 3
 width = 10.0
 height = 3.0
 depth = 4.0
@@ -579,6 +693,7 @@ color_preset = 5
 
 [node name="GrayBox_StaticBody2" parent="GasStation2" unique_id=554549191 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -25, 1.4299998, -14)
+collision_layer = 3
 width = 10.0
 height = 3.0
 depth = 4.0
@@ -586,21 +701,25 @@ color_preset = 5
 
 [node name="GrayBox_StaticBody3" parent="GasStation2" unique_id=2129554869 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -18, 1.4299998, -10)
+collision_layer = 3
 height = 3.0
 color_preset = 5
 
 [node name="GrayBox_StaticBody4" parent="GasStation2" unique_id=304467714 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -14, 1.4299998, -10)
+collision_layer = 3
 height = 3.0
 color_preset = 5
 
 [node name="GrayBox_StaticBody5" parent="GasStation2" unique_id=888359768 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -18, 1.4299998, -6)
+collision_layer = 3
 height = 3.0
 color_preset = 5
 
 [node name="GrayBox_StaticBody9" parent="GasStation2" unique_id=1714096123 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -14, 3.03, -8)
+collision_layer = 3
 width = 8.0
 height = 0.2
 depth = 11.0
@@ -608,11 +727,13 @@ color_preset = 5
 
 [node name="GrayBox_StaticBody6" parent="GasStation2" unique_id=910171671 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -14, 1.4299998, -6)
+collision_layer = 3
 height = 3.0
 color_preset = 5
 
 [node name="GrayBox_StaticBody10" parent="GasStation2" unique_id=716254773 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3, 1.05, -3)
+collision_layer = 3
 width = 2.0
 height = 2.0
 depth = 2.0
@@ -620,11 +741,13 @@ color_preset = 5
 
 [node name="GrayBox_StaticBody7" parent="GasStation2" unique_id=1207053094 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -10, 1.4299998, -10)
+collision_layer = 3
 height = 3.0
 color_preset = 5
 
 [node name="GrayBox_StaticBody8" parent="GasStation2" unique_id=1332027774 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -10, 1.4299998, -6)
+collision_layer = 3
 height = 3.0
 color_preset = 5
 
@@ -657,6 +780,7 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 165,
 
 [node name="GrayBox_StaticBody" parent="SmolShop" unique_id=1808021560 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.4299998, -17)
+collision_layer = 3
 width = 10.0
 height = 3.0
 depth = 4.0
@@ -664,6 +788,7 @@ color_preset = 4
 
 [node name="GrayBox_StaticBody2" parent="SmolShop" unique_id=1908249152 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -13, 1.4299998, -8)
+collision_layer = 3
 width = 12.0
 height = 3.0
 depth = 4.0
@@ -686,6 +811,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 105, 0, -5)
 
 [node name="GrayBox_StaticBody" parent="BigShop" unique_id=1728651466 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.9300003, -13)
+collision_layer = 3
 width = 16.0
 height = 8.0
 depth = 20.0
@@ -693,6 +819,7 @@ color_preset = 4
 
 [node name="GrayBox_StaticBody3" parent="BigShop" unique_id=1594681272 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -11, 3.9299998, -34)
+collision_layer = 3
 width = 16.0
 height = 8.0
 depth = 18.0
@@ -700,6 +827,7 @@ color_preset = 4
 
 [node name="GrayBox_StaticBody2" parent="BigShop" unique_id=487722323 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 5.9300003, -36)
+collision_layer = 3
 width = 16.0
 height = 12.0
 depth = 20.0
@@ -723,11 +851,57 @@ width = 8.0
 height = 0.1
 depth = 2.0
 
+[node name="BigShop2" type="Node3D" parent="." unique_id=1907023873]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 215, 0, -65)
+
+[node name="GrayBox_StaticBody" parent="BigShop2" unique_id=1120533400 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.9300003, -13)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 20.0
+color_preset = 4
+
+[node name="GrayBox_StaticBody3" parent="BigShop2" unique_id=388014432 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -11, 3.9299998, -32)
+collision_layer = 3
+width = 12.0
+height = 8.0
+depth = 18.0
+color_preset = 4
+
+[node name="GrayBox_StaticBody2" parent="BigShop2" unique_id=509795879 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -46, 5.9300003, -13)
+collision_layer = 3
+width = 16.0
+height = 12.0
+depth = 20.0
+color_preset = 4
+
+[node name="gas station lot" parent="BigShop2" unique_id=611308207 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -13)
+width = 16.0
+height = 0.1
+depth = 22.0
+
+[node name="gas station lot4" parent="BigShop2" unique_id=350102888 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -18)
+width = 2.0
+height = 0.1
+depth = 8.0
+
+[node name="gas station lot5" parent="BigShop2" unique_id=341165217 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -1)
+width = 8.0
+height = 0.1
+depth = 2.0
+
 [node name="SmolShop2" type="Node3D" parent="." unique_id=1592944754]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 55, 0, 5)
 
 [node name="GrayBox_StaticBody" parent="SmolShop2" unique_id=1437546725 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.4299998, -17)
+collision_layer = 3
 width = 10.0
 height = 3.0
 depth = 4.0
@@ -735,6 +909,7 @@ color_preset = 4
 
 [node name="GrayBox_StaticBody2" parent="SmolShop2" unique_id=556278055 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -13, 1.4299998, -8)
+collision_layer = 3
 width = 12.0
 height = 3.0
 depth = 4.0
@@ -763,6 +938,7 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 161,
 
 [node name="GrayBox_StaticBody" parent="SmolShop3" unique_id=1750351728 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.4299998, -17)
+collision_layer = 3
 width = 10.0
 height = 3.0
 depth = 4.0
@@ -770,6 +946,7 @@ color_preset = 4
 
 [node name="GrayBox_StaticBody2" parent="SmolShop3" unique_id=271306538 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -13, 1.4299998, -8)
+collision_layer = 3
 width = 12.0
 height = 3.0
 depth = 4.0
@@ -792,3 +969,27 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -1)
 width = 4.0
 height = 0.1
 depth = 2.0
+
+[node name="seawall" parent="." unique_id=2058962865 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.9, 0.13, -20)
+collision_layer = 3
+width = 0.2
+height = 0.4
+depth = 170.0
+color_preset = 1
+
+[node name="seawall3" parent="." unique_id=1820555827 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 281.9, 0.13, 95)
+collision_layer = 3
+width = 0.2
+height = 0.4
+depth = 340.0
+color_preset = 1
+
+[node name="seawall2" parent="." unique_id=1649755146 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 13, 0.13000007, -104.9)
+collision_layer = 3
+width = 0.2
+height = 0.4
+depth = 62.0
+color_preset = 1
