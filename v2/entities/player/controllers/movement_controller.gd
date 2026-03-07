@@ -8,10 +8,6 @@ class_name MovementController extends Node
 @export var trick_controller: TrickController
 @export var crash_controller: CrashController
 
-# sync'd with netfox
-var current_speed: float = 0
-var angular_velocity: float = 0
-
 # spawn protection
 var default_spawn_timer: float = 1.0
 var spawn_timer: float = default_spawn_timer
@@ -26,19 +22,22 @@ func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
 	if Engine.is_editor_hint():
 		return
 
-	# Handle respawn BEFORE the is_crashed early return
 	if player_entity.rb_do_respawn:
-		player_entity.on_respawn()
+		player_entity.do_respawn()
 		player_entity.rb_do_respawn = false
 
 	if player_entity.is_crashed:
 		return
 
 	# Handle discrete actions
+
+	# TODO - use gear_up_pressed signal instead!
 	if input_controller.gear_up:
 		gearing_controller.shift_gear(1)
 	if input_controller.gear_down:
 		gearing_controller.shift_gear(-1)
+	#endTODO
+
 	if player_entity.rb_activate_boost:
 		trick_controller.activate_boost()
 		player_entity.rb_activate_boost = false
@@ -46,7 +45,7 @@ func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
 	# Process systems (ORDER MATTERS)
 	gearing_controller.process_gearing(delta)
 	trick_controller.process_tricks(delta)
-	_process_physics(delta)
+	_physics_calculations(delta)
 	crash_controller.check_crash(delta)
 
 	# Apply movement
@@ -57,7 +56,7 @@ func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
 	_handle_player_collision(delta)
 
 
-func _process_physics(delta: float):
+func _physics_calculations(delta: float):
 	var bd = player_entity.bike_definition
 
 	# Gravity
@@ -81,12 +80,7 @@ func _process_physics(delta: float):
 		)
 	elif input_controller.throttle == 0:
 		# Engine braking
-		player_entity.speed = move_toward(
-			player_entity.speed, 0, bd.engine_brake_strength * delta
-		)
-
-	# Keep current_speed in sync for netfox/TickInterpolator
-	current_speed = player_entity.speed
+		player_entity.speed = move_toward(player_entity.speed, 0, bd.engine_brake_strength * delta)
 
 	# Steering (only when moving)
 	if player_entity.speed > 2:
@@ -97,16 +91,14 @@ func _process_physics(delta: float):
 	var target_lean = input_controller.steer * bd.max_lean_angle_rad
 	if player_entity.is_boosting:
 		target_lean *= 0.5  # Reduce steering during boost
-	player_entity.lean_angle = lerpf(
-		player_entity.lean_angle, target_lean, bd.lean_speed * delta
-	)
+	player_entity.lean_angle = lerpf(player_entity.lean_angle, target_lean, bd.lean_speed * delta)
 
 	# Apply velocity following slope
 	var forward = -player_entity.global_transform.basis.z
 	if player_entity.is_on_floor():
-		player_entity.velocity = forward.slide(
-			player_entity.get_floor_normal()
-		).normalized() * player_entity.speed
+		player_entity.velocity = (
+			forward.slide(player_entity.get_floor_normal()).normalized() * player_entity.speed
+		)
 	else:
 		player_entity.velocity = forward * player_entity.speed
 
