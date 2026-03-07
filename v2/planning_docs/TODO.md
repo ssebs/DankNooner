@@ -4,6 +4,8 @@
 
 ## In Progress 🚀
 
+- [ ] debug wheelie animation
+
 - [ ] Review Animation Controller & Create animations
 
   - [x] claude created a system
