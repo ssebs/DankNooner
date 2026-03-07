@@ -36,7 +36,7 @@
   - [ ] crash
     - [x] Brake
     - [ ] Layer 2 collision
-  - [ ] Move hud
+  - [x] Move hud
   - [ ] use animations from AnimationController + make animations
   - [ ] review & clean code
     - [ ] bike_skin_definition.gd

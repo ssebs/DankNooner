@@ -51,16 +51,6 @@ var grip_usage: float = 0.0
 var rb_do_respawn: bool = false
 var rb_activate_boost: bool = false
 
-# Debug HUD elements
-var _debug_speed_label: Label
-var _debug_gear_label: Label
-var _debug_rpm_bar: ProgressBar
-var _debug_throttle_bar: ProgressBar
-var _debug_clutch_bar: ProgressBar
-var _debug_grip_bar: ProgressBar
-var _debug_trick_label: Label
-var _debug_boost_label: Label
-
 
 func _ready():
 	_init_mesh()
@@ -84,6 +74,24 @@ func _ready():
 func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool):
 	# All rollback logic delegated to MovementController._rollback_tick()
 	pass
+
+
+func _process(_delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
+	if !is_local_client or hud_controller == null:
+		return
+	hud_controller.speed = speed
+	hud_controller.current_gear = current_gear
+	hud_controller.is_stalled = gearing_controller.is_stalled if gearing_controller else false
+	hud_controller.rpm_ratio = rpm_ratio
+	hud_controller.throttle = input_controller.throttle if input_controller else 0.0
+	hud_controller.clutch_value = clutch_value
+	hud_controller.grip_usage = grip_usage
+	hud_controller.last_trick = trick_controller._last_trick if trick_controller else 0
+	hud_controller.boost_count = boost_count
+	hud_controller.is_boosting = is_boosting
+	hud_controller.is_crashed = is_crashed
 
 
 #region init
@@ -117,11 +125,11 @@ func _deferred_init():
 		is_local_client = true
 		camera_controller.switch_to_tps_cam()
 		_init_input_handlers()
-		# _init_debug_hud()
 		_init_audio()
+		hud_controller.show_hud()
 	else:
 		camera_controller.disable_cameras()
-		# hud.visible = false
+		hud_controller.hide_hud()
 
 
 #endregion
@@ -179,140 +187,6 @@ func on_respawn():
 
 #endregion
 
-#region Debug HUD
-# func _init_debug_hud():
-# 	var vbox = VBoxContainer.new()
-# 	vbox.anchor_left = 0.0
-# 	vbox.anchor_top = 0.0
-# 	vbox.anchor_right = 0.0
-# 	vbox.anchor_bottom = 0.0
-# 	vbox.offset_left = 16
-# 	vbox.offset_top = 16
-# 	vbox.offset_right = 250
-# 	vbox.add_theme_constant_override("separation", 4)
-# 	hud.add_child(vbox)
-
-# 	_debug_speed_label = Label.new()
-# 	vbox.add_child(_debug_speed_label)
-
-# 	_debug_gear_label = Label.new()
-# 	vbox.add_child(_debug_gear_label)
-
-# 	# RPM bar
-# 	var rpm_label = Label.new()
-# 	rpm_label.text = "RPM"
-# 	vbox.add_child(rpm_label)
-# 	_debug_rpm_bar = ProgressBar.new()
-# 	_debug_rpm_bar.custom_minimum_size = Vector2(200, 20)
-# 	_debug_rpm_bar.max_value = 1.0
-# 	_debug_rpm_bar.step = 0.01
-# 	_debug_rpm_bar.show_percentage = false
-# 	vbox.add_child(_debug_rpm_bar)
-
-# 	# Throttle bar
-# 	var throttle_label = Label.new()
-# 	throttle_label.text = "Throttle"
-# 	vbox.add_child(throttle_label)
-# 	_debug_throttle_bar = ProgressBar.new()
-# 	_debug_throttle_bar.custom_minimum_size = Vector2(200, 20)
-# 	_debug_throttle_bar.max_value = 1.0
-# 	_debug_throttle_bar.step = 0.01
-# 	_debug_throttle_bar.show_percentage = false
-# 	vbox.add_child(_debug_throttle_bar)
-
-# 	# Clutch bar
-# 	var clutch_label = Label.new()
-# 	clutch_label.text = "Clutch"
-# 	vbox.add_child(clutch_label)
-# 	_debug_clutch_bar = ProgressBar.new()
-# 	_debug_clutch_bar.custom_minimum_size = Vector2(200, 20)
-# 	_debug_clutch_bar.max_value = 1.0
-# 	_debug_clutch_bar.step = 0.01
-# 	_debug_clutch_bar.show_percentage = false
-# 	vbox.add_child(_debug_clutch_bar)
-
-# 	# Brake danger bar
-# 	var grip_label = Label.new()
-# 	grip_label.text = "Brake Danger"
-# 	vbox.add_child(grip_label)
-# 	_debug_grip_bar = ProgressBar.new()
-# 	_debug_grip_bar.custom_minimum_size = Vector2(200, 20)
-# 	_debug_grip_bar.max_value = 1.0
-# 	_debug_grip_bar.step = 0.01
-# 	_debug_grip_bar.show_percentage = false
-# 	vbox.add_child(_debug_grip_bar)
-
-# 	_debug_trick_label = Label.new()
-# 	vbox.add_child(_debug_trick_label)
-
-# 	_debug_boost_label = Label.new()
-# 	vbox.add_child(_debug_boost_label)
-
-# func _process(_delta: float):
-# 	if Engine.is_editor_hint():
-# 		return
-# 	if not is_local_client:
-# 		return
-# 	_update_debug_hud()
-
-# func _update_debug_hud():
-# 	if _debug_speed_label == null:
-# 		return
-
-# 	_debug_speed_label.text = "Speed: %d" % int(speed)
-
-# 	if gearing_controller and gearing_controller.is_stalled:
-# 		_debug_gear_label.text = "STALLED - Gear: %d" % current_gear
-# 	else:
-# 		_debug_gear_label.text = "Gear: %d" % current_gear
-
-# 	_debug_rpm_bar.value = rpm_ratio
-# 	if rpm_ratio > 0.9:
-# 		_debug_rpm_bar.modulate = Color(1.0, 0.2, 0.2)
-# 	elif rpm_ratio > 0.7:
-# 		_debug_rpm_bar.modulate = Color(1.0, 0.8, 0.2)
-# 	else:
-# 		_debug_rpm_bar.modulate = Color(0.2, 0.6, 1.0)
-
-# 	_debug_throttle_bar.value = input_controller.throttle
-# 	if rpm_ratio > 0.9:
-# 		_debug_throttle_bar.modulate = Color(1.0, 0.2, 0.2)
-# 	else:
-# 		_debug_throttle_bar.modulate = Color(0.2, 0.8, 0.2)
-
-# 	_debug_clutch_bar.value = clutch_value
-# 	_debug_clutch_bar.modulate = Color(0.8, 0.6, 0.2)
-
-# 	_debug_grip_bar.value = grip_usage
-# 	if grip_usage > 0.8:
-# 		_debug_grip_bar.modulate = Color(1.0, 0.1, 0.1)
-# 	elif grip_usage > 0.5:
-# 		_debug_grip_bar.modulate = Color(1.0, 0.6, 0.0)
-# 	else:
-# 		_debug_grip_bar.modulate = Color(0.2, 0.8, 0.2)
-
-# 	# Trick display
-# 	if trick_controller:
-# 		var trick_name = TrickController.Trick.keys()[trick_controller._last_trick]
-# 		if trick_controller._last_trick != TrickController.Trick.NONE:
-# 			_debug_trick_label.text = trick_name
-# 			_debug_trick_label.visible = true
-# 		else:
-# 			_debug_trick_label.visible = false
-
-# 	# Boost display
-# 	_debug_boost_label.text = "Boost: %d" % boost_count
-# 	if is_boosting:
-# 		_debug_boost_label.text += " [ACTIVE]"
-# 		_debug_boost_label.modulate = Color(1.0, 0.8, 0.0)
-# 	else:
-# 		_debug_boost_label.modulate = Color.WHITE
-
-# 	if is_crashed:
-# 		_debug_speed_label.text = "CRASHED - Respawning..."
-
-#endregion
-
 
 #region public api
 func set_username_label(username: String):
@@ -339,6 +213,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("trick_controller must not be empty")
 	if crash_controller == null:
 		issues.append("crash_controller must not be empty")
+	if hud_controller == null:
+		issues.append("hud_controller must not be empty")
 	if bike_definition == null:
 		issues.append("bike_definition must not be empty")
 	if collision_shape_3d == null:
