@@ -214,13 +214,12 @@ script = ExtResource("10_gear")
 player_entity = NodePath("../..")
 input_controller = NodePath("../InputController")
 
-[node name="TrickController" type="Node" parent="_Controllers" unique_id=504066215 node_paths=PackedStringArray("player_entity", "input_controller", "gearing_controller", "animation_controller")]
+[node name="TrickController" type="Node" parent="_Controllers" unique_id=504066215 node_paths=PackedStringArray("player_entity", "input_controller", "gearing_controller")]
 unique_name_in_owner = true
 script = ExtResource("11_trick")
 player_entity = NodePath("../..")
 input_controller = NodePath("../InputController")
 gearing_controller = NodePath("../GearingController")
-animation_controller = NodePath("../AnimationController")
 
 [node name="CrashController" type="Node" parent="_Controllers" unique_id=1441970825 node_paths=PackedStringArray("player_entity", "input_controller", "animation_controller")]
 unique_name_in_owner = true

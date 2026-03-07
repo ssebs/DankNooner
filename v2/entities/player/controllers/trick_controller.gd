@@ -11,17 +11,16 @@ enum Trick { NONE, WHEELIE_SITTING, WHEELIE_STANDING, STOPPIE, FISHTAIL }
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
 @export var gearing_controller: GearingController
-@export var animation_controller: AnimationController
 
 @export var boost_duration: float = 2.0
 @export var boost_speed_multiplier: float = 1.5
+
+const CLUTCH_KICK_WINDOW: float = 0.4  # seconds after clutch dump to allow wheelie pop
 
 var _boost_timer: float = 0.0
 var _last_trick: Trick = Trick.NONE
 var _clutch_kick_window: float = 0.0
 var _prev_clutch_held: bool = false
-
-const CLUTCH_KICK_WINDOW: float = 0.4  # seconds after clutch dump to allow wheelie pop
 
 
 func _ready():
@@ -36,12 +35,6 @@ func process_tricks(delta: float):
 	_update_boost(delta)
 	_detect_trick_changes()
 
-	# Update visual via AnimationController API
-	var bd = player_entity.bike_definition
-	var max_angle = maxf(deg_to_rad(bd.max_wheelie_angle_deg), deg_to_rad(bd.max_stoppie_angle_deg))
-	var normalized_pitch = player_entity.pitch_angle / max_angle if max_angle > 0 else 0.0
-	animation_controller.set_bike_pitch(normalized_pitch)
-
 
 func _update_wheelie(delta: float):
 	var bd = player_entity.bike_definition
@@ -55,9 +48,10 @@ func _update_wheelie(delta: float):
 	_clutch_kick_window = maxf(_clutch_kick_window - delta, 0.0)
 
 	var clutch_kick = _clutch_kick_window > 0.0
-	var power_wheelie = (player_entity.rpm_ratio >= bd.wheelie_rpm_threshold and
-						 input_controller.throttle > 0.7)
-	var can_pop = (input_controller.lean < -0.3 and (clutch_kick or power_wheelie))
+	var power_wheelie = (
+		player_entity.rpm_ratio >= bd.wheelie_rpm_threshold and input_controller.throttle > 0.7
+	)
+	var can_pop = input_controller.lean < -0.3 and (clutch_kick or power_wheelie)
 	var fast_enough = player_entity.speed > 1
 
 	var wheelie_target = 0.0
@@ -66,7 +60,9 @@ func _update_wheelie(delta: float):
 			wheelie_target = deg_to_rad(bd.max_wheelie_angle_deg) * input_controller.throttle
 			if input_controller.lean < 0:
 				# Leaning back adds to wheelie target
-				wheelie_target += deg_to_rad(bd.max_wheelie_angle_deg) * abs(input_controller.lean) * 0.15
+				wheelie_target += (
+					deg_to_rad(bd.max_wheelie_angle_deg) * abs(input_controller.lean) * 0.15
+				)
 
 	# Apply wheelie pitch
 	if wheelie_target > 0:
@@ -88,8 +84,7 @@ func _update_stoppie(delta: float):
 	var in_stoppie = player_entity.pitch_angle < deg_to_rad(-10)
 
 	# Stoppie: lean forward (lean > 0 in v2) + front brake
-	var wants_stoppie = (input_controller.lean > 0.1 and
-						 input_controller.front_brake > 0.5)
+	var wants_stoppie = input_controller.lean > 0.1 and input_controller.front_brake > 0.5
 
 	# Scale max angle by speed
 	var speed_scale = clamp(player_entity.speed / 15.0, 0.0, 1.0)
@@ -167,6 +162,4 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_controller must not be empty")
 	if gearing_controller == null:
 		issues.append("gearing_controller must not be empty")
-	if animation_controller == null:
-		issues.append("animation_controller must not be empty")
 	return issues

@@ -175,13 +175,10 @@ func _transition_to_trick() -> void:
 func _update_procedural_animation(_delta: float) -> void:
 	var ik_ctrl = character_skin.ik_controller
 
-	# # Smooth the values
-	# _current_weight_shift = lerp(
-	# 	_current_weight_shift, target_weight_shift, weight_shift_smoothing * delta
-	# )
-
-	# Lean visual root back/forward for wheelie/stoppie (driven by trick_controller via set_bike_pitch)
-	visual_root.rotation.x = -player_entity.pitch_angle * deg_to_rad(max_bike_pitch)
+	# Pitch visual_root for wheelie/stoppie — pitch_angle is in radians, cap visually to max_bike_pitch
+	visual_root.rotation.x = -clamp(
+		player_entity.pitch_angle, -deg_to_rad(max_bike_pitch), deg_to_rad(max_bike_pitch)
+	)
 
 	# Rotate chest for visual lean
 	var chest_lean = player_entity.lean_angle * _lean_multiplier * deg_to_rad(15)
@@ -190,8 +187,6 @@ func _update_procedural_animation(_delta: float) -> void:
 	# Apply lean rotation to visual_root (rotates both bike + rider)
 	var lean_angle = player_entity.lean_angle * deg_to_rad(max_lean_angle)
 	visual_root.rotation.z = _base_visual_root_rotation.z + lean_angle
-
-	visual_root.rotation.x = player_entity.pitch_angle
 
 	_update_wheelie_arm()
 
