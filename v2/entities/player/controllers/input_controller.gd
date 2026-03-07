@@ -83,6 +83,8 @@ func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool):
 func _process(_delta):
 	if Engine.is_editor_hint():
 		return
+	if not is_multiplayer_authority():
+		return
 	if Input.is_action_just_pressed("switch_cam"):
 		cam_switch_pressed.emit()
 	if Input.is_action_just_pressed("gear_up"):
