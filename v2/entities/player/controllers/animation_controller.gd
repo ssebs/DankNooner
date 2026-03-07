@@ -17,6 +17,10 @@ enum RiderState {
 @export var movement_controller: MovementController
 @export var input_controller: InputController
 
+@export_tool_button("Init IK from Bike") var init_ik_btn = _editor_init_ik_from_bike
+@export_tool_button("Save Default Pose") var save_pose_btn = _editor_save_default_pose
+@export_tool_button("Reset to Default Pose") var reset_pose_btn = _editor_reset_to_default_pose
+
 @export_group("Procedural Settings")
 @export var idle_timeout: float = 3.0
 @export var lean_smoothing: float = 8.0
@@ -43,6 +47,91 @@ var _procedural_enabled: bool = true
 # Multipliers from bike definition
 var _lean_multiplier: float = 1.0
 var _weight_shift_multiplier: float = 1.0
+#endregion
+
+#region Editor Tools
+
+
+func _editor_init_ik_from_bike() -> void:
+	if bike_skin == null or character_skin == null:
+		printerr("AnimationController: bike_skin and character_skin must be set")
+		return
+	var def = bike_skin.skin_definition
+	character_skin.set_ik_targets_for_bike(
+		def.seat_marker_position, def.left_handlebar_marker_position, def.left_peg_marker_position
+	)
+	character_skin.enable_ik()
+
+
+func _editor_save_default_pose() -> void:
+	var ik_ctrl = character_skin.ik_controller
+	var anim_player = character_skin.ik_anim_player
+	if ik_ctrl == null or anim_player == null:
+		printerr("AnimationController: missing ik_controller or ik_anim_player")
+		return
+
+	var lib_name = "IK_anim_lib"
+	var anim_name = "default_pose"
+
+	if not anim_player.has_animation_library(lib_name):
+		printerr("AnimationController: animation library '%s' not found" % lib_name)
+		return
+
+	var lib: AnimationLibrary = anim_player.get_animation_library(lib_name)
+	if not lib.has_animation(anim_name):
+		lib.add_animation(anim_name, Animation.new())
+	var anim: Animation = lib.get_animation(anim_name)
+	anim.clear()
+	anim.length = 0.1
+
+	var markers := {
+		"IKTargets/ButtPosition": ik_ctrl.butt_pos,
+		"IKTargets/ChestTarget": ik_ctrl.ik_chest,
+		"IKTargets/HeadTarget": ik_ctrl.ik_head,
+		"IKTargets/LeftHand": ik_ctrl.ik_left_hand,
+		"IKTargets/RightHand": ik_ctrl.ik_right_hand,
+		"IKTargets/LeftArmMagnet": ik_ctrl.ik_left_arm_magnet,
+		"IKTargets/RightArmMagnet": ik_ctrl.ik_right_arm_magnet,
+		"IKTargets/LeftFoot": ik_ctrl.ik_left_foot,
+		"IKTargets/RightFoot": ik_ctrl.ik_right_foot,
+		"IKTargets/LeftLegMagnet": ik_ctrl.ik_left_leg_magnet,
+		"IKTargets/RightLegMagnet": ik_ctrl.ik_right_leg_magnet,
+	}
+
+	for node_path in markers:
+		_keyframe_marker(anim, node_path, markers[node_path])
+
+	var err = ResourceSaver.save(lib)
+	if err == OK:
+		print("AnimationController: Saved default_pose to IK_anim_lib.res")
+	else:
+		printerr("AnimationController: Failed to save IK_anim_lib.res, error: ", err)
+
+
+func _keyframe_marker(anim: Animation, node_path: String, marker: Marker3D) -> void:
+	var pos_track := anim.add_track(Animation.TYPE_VALUE)
+	anim.track_set_path(pos_track, node_path + ":position")
+	anim.track_insert_key(pos_track, 0.0, marker.position)
+
+	var rot_track := anim.add_track(Animation.TYPE_VALUE)
+	anim.track_set_path(rot_track, node_path + ":rotation")
+	anim.track_insert_key(rot_track, 0.0, marker.rotation)
+
+
+func _editor_reset_to_default_pose() -> void:
+	var anim_player = character_skin.ik_anim_player
+	if anim_player == null:
+		printerr("AnimationController: missing ik_anim_player")
+		return
+	var full_name = "IK_anim_lib/default_pose"
+	if not anim_player.has_animation(full_name):
+		printerr("AnimationController: no default_pose saved - run Save Default Pose first")
+		return
+	anim_player.play(full_name)
+	anim_player.seek(0.0, true)
+	anim_player.stop()
+
+
 #endregion
 
 

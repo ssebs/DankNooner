@@ -53,6 +53,39 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0
 [node name="CharacterSkin" parent="VisualRoot" unique_id=259227641 instance=ExtResource("6_1vqn6")]
 unique_name_in_owner = true
 
+[node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@220224")
+
+[node name="LeftHand" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="0" unique_id=348437814]
+transform = Transform3D(-0.22298148, 0.9632414, -0.14981726, -0.21753992, -0.19898003, -0.95555407, -0.95023984, -0.1804796, 0.25391236, 0.28665084, 1.0029572, 0.26224983)
+
+[node name="LeftArmMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="1" unique_id=1835903969]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4277163, 0.852384, 0.09434937)
+
+[node name="RightHand" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="2" unique_id=300039024]
+transform = Transform3D(-0.008549988, -0.97650266, 0.2153365, -0.41056708, -0.19292802, -0.8911865, 0.9117903, -0.09602974, -0.3992702, -0.3032672, 0.9897052, 0.27497217)
+
+[node name="RightArmMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="3" unique_id=1090132691]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35496345, 0.98080707, -0.3138903)
+
+[node name="LeftFoot" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="4" unique_id=1249832749]
+transform = Transform3D(-0.9958446, 0.090517245, 0.009993159, -1.656938e-08, -0.10973406, 0.993961, 0.091067195, 0.98983073, 0.109278105, 0.24367344, 0.51058465, -0.2558015)
+
+[node name="LeftLegMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="5" unique_id=875795090]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.46395656, 0.5692559, 0.42930415)
+
+[node name="RightFoot" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="6" unique_id=70882427]
+transform = Transform3D(-0.9998421, 0.017659439, 0.0019495991, -1.6569382e-08, -0.10973407, 0.9939609, 0.017766729, 0.9938041, 0.10971674, -0.24367344, 0.50530505, -0.2558015)
+
+[node name="RightLegMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="7" unique_id=1454334473]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.464, 0.569, 0.429)
+
+[node name="HeadTarget" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="9" unique_id=2052814980]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.8296124e-09, 1.8260808, -0.47977012)
+
+[node name="ButtPosition" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="10" unique_id=38485936]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.94954467, -0.35789177)
+
 [node name="BikeSkin" parent="VisualRoot" unique_id=1727462617 instance=ExtResource("7_lfjd4")]
 unique_name_in_owner = true
 skin_definition = ExtResource("2_lfjd4")
@@ -140,5 +173,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[editable path="VisualRoot/CharacterSkin"]
 [editable path="_Controllers/MovementController"]
 [editable path="_Controllers/CameraController"]
