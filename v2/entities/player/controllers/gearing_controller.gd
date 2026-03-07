@@ -2,8 +2,8 @@
 class_name GearingController extends Node
 
 signal gear_changed(new_gear: int)
-signal engine_stalled
-signal engine_started
+# signal engine_stalled
+# signal engine_started
 signal rpm_updated(rpm_ratio: float)
 
 @export var player_entity: PlayerEntity
@@ -21,6 +21,8 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 	input_controller.clutch_held_changed.connect(_on_clutch_input)
+	input_controller.gear_up_pressed.connect(shift_gear.bind(1))
+	input_controller.gear_down_pressed.connect(shift_gear.bind(-1))
 
 
 ## Called from MovementController._rollback_tick()
@@ -101,12 +103,11 @@ func get_clutch_engagement() -> float:
 
 func _on_clutch_input(_held: bool, just_pressed: bool):
 	if just_pressed:
-		player_entity.clutch_value = minf(
-			player_entity.clutch_value + clutch_tap_amount, 1.0
-		)
+		player_entity.clutch_value = minf(player_entity.clutch_value + clutch_tap_amount, 1.0)
 
 
 func shift_gear(direction: int):
+	print("shift gear")
 	var bd = player_entity.bike_definition
 	var new_gear = clampi(player_entity.current_gear + direction, 1, bd.num_gears)
 	if new_gear != player_entity.current_gear:

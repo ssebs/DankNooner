@@ -6,9 +6,9 @@ signal front_brake_changed(value: float)
 signal steer_changed(value: float)  # lean left/right
 signal lean_changed(value: float)  # lean back/fwd
 signal clutch_held_changed(held: bool, just_pressed: bool)
+signal cam_switch_pressed
 signal gear_up_pressed
 signal gear_down_pressed
-signal cam_switch_pressed
 
 @export var player_entity: PlayerEntity
 @export var vibration_duration: float = 0.15
@@ -44,10 +44,11 @@ var rear_brake: float = 0.0
 
 var trick: bool = false
 
-var gear_up: bool = false
-var gear_down: bool = false
-
 var clutch_held: bool = false
+
+# Discrete actions (rb_* pattern)
+var rb_gear_up: bool = false
+var rb_gear_down: bool = false
 #endregion
 
 
@@ -66,12 +67,28 @@ func _gather():
 	_update_input_for_server()
 
 
+func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool):
+	if Engine.is_editor_hint():
+		return
+
+	if rb_gear_up:
+		gear_up_pressed.emit()
+		rb_gear_up = false
+	if rb_gear_down:
+		gear_down_pressed.emit()
+		rb_gear_down = false
+
+
 ## local input
 func _process(_delta):
 	if Engine.is_editor_hint():
 		return
 	if Input.is_action_just_pressed("switch_cam"):
 		cam_switch_pressed.emit()
+	if Input.is_action_just_pressed("gear_up"):
+		rb_gear_up = true
+	if Input.is_action_just_pressed("gear_down"):
+		rb_gear_down = true
 
 
 ## Update input vars & emit signals
@@ -88,14 +105,6 @@ func _update_input_for_server():
 	if clutch_now != clutch_held:
 		clutch_held = clutch_now
 		clutch_held_changed.emit(clutch_held, clutch_now)
-
-	# Gear shifting as synced input properties (rollback-safe)
-	gear_up = Input.is_action_just_pressed("gear_up")
-	gear_down = Input.is_action_just_pressed("gear_down")
-	if gear_up:
-		gear_up_pressed.emit()
-	if gear_down:
-		gear_down_pressed.emit()
 
 
 func _unhandled_input(event: InputEvent):

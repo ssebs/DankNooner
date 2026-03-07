@@ -24,9 +24,6 @@ enum RiderState {
 
 @export_group("Procedural Settings")
 @export var idle_timeout: float = 3.0
-@export var lean_smoothing: float = 8.0
-@export var weight_shift_smoothing: float = 6.0
-@export var max_lean_angle: float = 25.0  ## Max lean angle in degrees
 @export var max_bike_pitch: float = 30.0  ## Max bike-only pitch in degrees
 
 var current_state: RiderState = RiderState.RIDING:
@@ -41,10 +38,10 @@ var _base_chest_pos: Vector3
 var _base_visual_root_rotation: Vector3
 var _idle_timer: float = 0.0
 var _procedural_enabled: bool = true
+var _visual_lean: float = 0.0
+var _visual_pitch: float = 0.0
+var _visual_yaw: float = 0.0
 
-# Multipliers from bike definition
-var _lean_multiplier: float = 1.0
-var _weight_shift_multiplier: float = 1.0
 #endregion
 
 
@@ -53,7 +50,7 @@ func _ready():
 		return
 
 
-func _physics_process(delta: float):
+func _process(delta: float):
 	if Engine.is_editor_hint():
 		return
 	if current_state != RiderState.RIDING:
@@ -81,14 +78,7 @@ func initialize() -> void:
 		_base_chest_pos = ik_ctrl.ik_chest.position
 
 	_base_visual_root_rotation = visual_root.rotation
-
-	# Load multipliers from bike definition
-	var bike_def = bike_skin.skin_definition
-	if bike_def:
-		_lean_multiplier = bike_def.lean_multiplier if "lean_multiplier" in bike_def else 1.0
-		_weight_shift_multiplier = (
-			bike_def.weight_shift_multiplier if "weight_shift_multiplier" in bike_def else 1.0
-		)
+	_visual_yaw = player_entity.rotation.y
 
 
 ## Enable or disable procedural animation
@@ -172,21 +162,28 @@ func _transition_to_trick() -> void:
 #region Procedural Animation
 
 
-func _update_procedural_animation(_delta: float) -> void:
+func _update_procedural_animation(delta: float) -> void:
 	var ik_ctrl = character_skin.ik_controller
 
-	# Pitch visual_root for wheelie/stoppie — pitch_angle is in radians, cap visually to max_bike_pitch
+	# Smooth toward physics values at render rate
+	var smooth_speed := 15.0 * delta
+	_visual_lean = lerpf(_visual_lean, player_entity.lean_angle, smooth_speed)
+	_visual_pitch = lerpf(_visual_pitch, player_entity.pitch_angle, smooth_speed)
+
+	# Smooth steering yaw — chase entity rotation, apply difference to visual_root
+	# _visual_yaw = lerp_angle(_visual_yaw, player_entity.rotation.y, smooth_speed)
+	# visual_root.rotation.y = player_entity.rotation.y - _visual_yaw
+
+	# Pitch visual_root for wheelie/stoppie
 	visual_root.rotation.x = -clamp(
-		player_entity.pitch_angle, -deg_to_rad(max_bike_pitch), deg_to_rad(max_bike_pitch)
+		_visual_pitch, -deg_to_rad(max_bike_pitch), deg_to_rad(max_bike_pitch)
 	)
 
 	# Rotate chest for visual lean
-	var chest_lean = player_entity.lean_angle * _lean_multiplier * deg_to_rad(15)
-	ik_ctrl.ik_chest.rotation.y = chest_lean
+	ik_ctrl.ik_chest.rotation.y = _visual_lean * deg_to_rad(15)
 
 	# Apply lean rotation to visual_root (rotates both bike + rider)
-	var lean_angle = player_entity.lean_angle * deg_to_rad(max_lean_angle)
-	visual_root.rotation.z = _base_visual_root_rotation.z + lean_angle
+	visual_root.rotation.z = _base_visual_root_rotation.z + _visual_lean
 
 	_update_wheelie_arm()
 
@@ -237,6 +234,9 @@ func _reset_to_base_positions() -> void:
 	if bike_skin:
 		bike_skin.rotation.x = 0.0
 	player_entity.lean_angle = 0.0
+	_visual_lean = 0.0
+	_visual_pitch = 0.0
+	# _visual_yaw = player_entity.rotation.y
 
 
 #endregion

@@ -29,15 +29,6 @@ func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
 	if player_entity.is_crashed:
 		return
 
-	# Handle discrete actions
-
-	# TODO - use gear_up_pressed signal instead!
-	if input_controller.gear_up:
-		gearing_controller.shift_gear(1)
-	if input_controller.gear_down:
-		gearing_controller.shift_gear(-1)
-	#endTODO
-
 	if player_entity.rb_activate_boost:
 		trick_controller.activate_boost()
 		player_entity.rb_activate_boost = false
