@@ -63,8 +63,11 @@ var collision_shape: Shape3D = preload("res://resources/entities/bikes/hitbox/bi
 @export var max_lean_angle_deg: float = 45.0
 @export var lean_speed: float = 6.0
 @export var min_turn_radius: float = 0.25
-@export var max_turn_radius: float = 3.0
+@export var max_turn_radius: float = 2.0
 @export var turn_speed: float = 2.0
+## Lean amount vs speed (X=speed%, Y=lean multiplier)
+@export
+var lean_curve: Curve = preload("res://entities/player/bikes/resources/lean_speed_curve.tres")
 
 @export_group("Tricks")
 @export var max_wheelie_angle_deg: float = 85.0

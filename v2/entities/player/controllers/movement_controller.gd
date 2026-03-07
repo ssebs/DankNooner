@@ -76,13 +76,17 @@ func _physics_calculations(delta: float):
 		# Engine braking
 		player_entity.speed = move_toward(player_entity.speed, 0, bd.engine_brake_strength * delta)
 
+	# Curve-based speed factor for steering and lean
+	var speed_pct = clampf(player_entity.speed / bd.max_speed, 0.0, 1.0)
+	var lean_factor = bd.lean_curve.sample(speed_pct)
+
 	# Steering (only when moving)
 	if player_entity.speed > 2:
 		var turn_rate = _get_turn_rate()
 		player_entity.rotate_y(-player_entity.lean_angle * turn_rate * delta)
 
 	# Lean
-	var target_lean = input_controller.steer * bd.max_lean_angle_rad
+	var target_lean = input_controller.steer * bd.max_lean_angle_rad * lean_factor
 	if player_entity.is_boosting:
 		target_lean *= 0.5  # Reduce steering during boost
 	player_entity.lean_angle = lerpf(player_entity.lean_angle, target_lean, bd.lean_speed * delta)
