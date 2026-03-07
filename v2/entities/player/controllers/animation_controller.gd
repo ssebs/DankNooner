@@ -11,6 +11,7 @@ enum RiderState {
 	RAGDOLL,  # Everything disabled
 }
 
+@export var player_entity: PlayerEntity
 @export var visual_root: Node3D
 @export var character_skin: CharacterSkin
 @export var bike_skin: BikeSkin
