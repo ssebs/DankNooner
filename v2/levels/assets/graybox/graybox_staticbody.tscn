@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://brxybm0yftn41"]
+
+[ext_resource type="Material" uid="uid://bdn26favvnenb" path="res://levels/assets/graybox/repeating_gray.tres" id="1_u8bc1"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ufpa7"]
+size = Vector3(10, 5, 10)
+
+[node name="StaticBody3D" type="StaticBody3D" unique_id=1485126779]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1922891733]
+mesh = SubResource("BoxMesh_ufpa7")
+surface_material_override/0 = ExtResource("1_u8bc1")
