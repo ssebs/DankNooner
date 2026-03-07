@@ -183,7 +183,7 @@ func _on_rpm_updated(new_rpm_ratio: float):
 #region public api
 
 
-func on_respawn():
+func do_respawn():
 	global_transform = get_parent().global_transform
 	velocity = Vector3.ZERO
 	speed = 0.0
