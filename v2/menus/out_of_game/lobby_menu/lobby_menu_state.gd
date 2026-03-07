@@ -147,6 +147,13 @@ func _on_client_connection_succeeded(peer_id: int):
 		1, peer_id, settings_manager.current_settings["username"]
 	)
 
+	gamemode_manager.update_player_skins.rpc_id(
+		1,
+		peer_id,
+		settings_manager.current_settings["bike_skin"],
+		settings_manager.current_settings["character_skin"]
+	)
+
 
 func _on_timeout():
 	UiToast.ShowToast("Connection timed out", UiToast.ToastLevel.ERR)

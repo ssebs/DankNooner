@@ -17,6 +17,9 @@ var match_state: MatchState = MatchState.IN_LOBBY
 var game_mode: GameMode = GameMode.FREE_FROAM
 var current_level_name: LevelManager.LevelName = LevelManager.LevelName.LEVEL_SELECT_LABEL
 
+# peer_id -> [bike_skin_path, character_skin_path]
+var _player_skins: Dictionary = {}
+
 
 func _ready():
 	if Engine.is_editor_hint():
@@ -24,6 +27,14 @@ func _ready():
 	multiplayer_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
 	multiplayer_manager.player_connected.connect(_on_player_connected)
 	multiplayer_manager.player_disconnected.connect(_on_player_disconnected)
+
+
+## Called by lobby menu to report a player's skin choices to the server
+@rpc("call_local", "any_peer", "reliable")
+func update_player_skins(peer_id: int, bike_skin_path: String, character_skin_path: String):
+	if !multiplayer.is_server():
+		return
+	_player_skins[peer_id] = [bike_skin_path, character_skin_path]
 
 
 ## Called by server to start the game for all players
@@ -48,7 +59,8 @@ func _spawn_all_players():
 
 	for peer_id in multiplayer_manager.lobby_players:
 		var username = multiplayer_manager.lobby_players[peer_id]
-		_rpc_spawn_player.rpc(peer_id, username)
+		var skins = _player_skins.get(peer_id, ["", ""])
+		_rpc_spawn_player.rpc(peer_id, username, skins[0], skins[1])
 
 
 #region network handlers
@@ -59,6 +71,8 @@ func _on_player_connected(peer_id: int, _all_players: Dictionary):
 func _on_player_disconnected(peer_id: int):
 	if !multiplayer.is_server():
 		return
+
+	_player_skins.erase(peer_id)
 
 	if match_state == MatchState.IN_GAME:
 		_rpc_despawn_player.rpc(peer_id)
@@ -97,20 +111,26 @@ func _request_late_spawn(peer_id: int):
 
 	# Spawn the new player for everyone
 	var username = multiplayer_manager.lobby_players[peer_id]
-	_rpc_spawn_player.rpc(peer_id, username)
+	var skins = _player_skins.get(peer_id, ["", ""])
+	_rpc_spawn_player.rpc(peer_id, username, skins[0], skins[1])
 
 	# Send existing players to the late-joiner
 	for existing_id in multiplayer_manager.lobby_players:
 		if existing_id == peer_id:
 			continue
 		var existing_username = multiplayer_manager.lobby_players[existing_id]
-		_rpc_spawn_player.rpc_id(peer_id, existing_id, existing_username)
+		var existing_skins = _player_skins.get(existing_id, ["", ""])
+		_rpc_spawn_player.rpc_id(
+			peer_id, existing_id, existing_username, existing_skins[0], existing_skins[1]
+		)
 
 
 ## Server broadcasts to all peers to spawn a player
 @rpc("call_local", "reliable")
-func _rpc_spawn_player(peer_id: int, username: String):
-	level_manager.add_player_locally(peer_id, username)
+func _rpc_spawn_player(
+	peer_id: int, username: String, bike_skin_path: String, character_skin_path: String
+):
+	level_manager.add_player_locally(peer_id, username, bike_skin_path, character_skin_path)
 
 
 ## Server broadcasts to all peers to despawn a player
