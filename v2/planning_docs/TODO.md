@@ -6,15 +6,9 @@
 
 - [ ] Review Animation Controller & Create animations
 
-  - [ ] Fix collision
-
   - [x] claude created a system
   - [x] Review planning_docs/AnimationController.md
-  - [x] Create way to play specific animations from name/var
-    - [x] Multiple at once?
-    - [ ] proceedural happen during other animations if flag is set
-    - [ ] animation player for custom
-    - [ ] player_entity relies on this to manage animations
+  - [x] Create way to play specific animations
   - [ ] Create lean (turning) animation
   - [ ] Create stopped / idle animation
   - [ ] Create wheelie/stoppie animation
@@ -30,6 +24,7 @@
   - > see planning_docs\MIGRATE_FROM_MOTO_CONTROLLER.md (update first)
   - > no sound for now
   - [x] stats saved to bike_definition res
+  - [ ] Fix collision
   - [x] gearing
   - [x] physics
   - [x] trick

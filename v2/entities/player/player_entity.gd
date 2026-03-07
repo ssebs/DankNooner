@@ -22,7 +22,16 @@ class_name PlayerEntity extends CharacterBody3D
 @onready var rollback_sync: RollbackSynchronizer = %RollbackSynchronizer
 
 var is_local_client: bool = false
+
+#region HACK - set from level_manager
 var audio_manager: AudioManager
+var username: String:
+	set(v):
+		username = v
+		if is_node_ready():
+			name_label.text = username
+# `name` is also set from level_manager
+#endregion
 
 # Physics state (synced via RollbackSynchronizer state_properties)
 var speed: float = 0.0
@@ -79,8 +88,9 @@ func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool):
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
-	if !is_local_client or hud_controller == null:
+	if !is_local_client:
 		return
+
 	hud_controller.speed = speed
 	hud_controller.current_gear = current_gear
 	hud_controller.is_stalled = gearing_controller.is_stalled if gearing_controller else false
@@ -165,6 +175,11 @@ func _on_rpm_updated(new_rpm_ratio: float):
 		audio_manager.update_ninja500_rpm(new_rpm_ratio)
 
 
+#endregion
+
+#region public api
+
+
 func on_respawn():
 	global_transform = get_parent().global_transform
 	velocity = Vector3.ZERO
@@ -183,14 +198,6 @@ func on_respawn():
 	movement_controller.current_speed = 0
 	if animation_controller:
 		animation_controller.stop_ragdoll()
-
-
-#endregion
-
-
-#region public api
-func set_username_label(username: String):
-	name_label.text = username
 
 
 #endregion
@@ -219,5 +226,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("bike_definition must not be empty")
 	if collision_shape_3d == null:
 		issues.append("collision_shape_3d must not be empty")
-
+	if audio_manager == null:
+		issues.append("audio_manager must not be empty")
 	return issues
