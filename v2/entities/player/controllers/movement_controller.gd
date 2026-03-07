@@ -59,6 +59,9 @@ func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
 func _physics_calculations(delta: float):
 	var bd = player_entity.bike_definition
 
+	# Derive speed from synced velocity
+	player_entity.speed = Vector2(player_entity.velocity.x, player_entity.velocity.z).length()
+
 	# Gravity
 	if not player_entity.is_on_floor():
 		player_entity.velocity.y -= 9.8 * delta * 4.0

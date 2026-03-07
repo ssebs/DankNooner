@@ -197,8 +197,6 @@ func do_respawn():
 	is_boosting = false
 	is_crashed = false
 	movement_controller.spawn_timer = movement_controller.default_spawn_timer
-	movement_controller.angular_velocity = 0
-	movement_controller.current_speed = 0
 	if animation_controller:
 		animation_controller.stop_ragdoll()
 
