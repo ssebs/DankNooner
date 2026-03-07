@@ -40,9 +40,6 @@ var _base_butt_pos: Vector3
 var _base_chest_pos: Vector3
 var _base_visual_root_rotation: Vector3
 var _idle_timer: float = 0.0
-var _current_lean: float = 0.0
-var _current_weight_shift: float = 0.0
-var _current_bike_pitch: float = 0.0  # Bike-only rotation (wheelie/stoppie)
 var _procedural_enabled: bool = true
 
 # Multipliers from bike definition
@@ -99,21 +96,6 @@ func set_procedural_enabled(enabled: bool) -> void:
 	_procedural_enabled = enabled
 	if enabled:
 		_reset_to_base_positions()
-
-
-## Set lean amount (-1 to 1, left to right)
-func set_lean(amount: float) -> void:
-	_current_lean = clamp(amount, -1.0, 1.0)
-
-
-## Set weight shift amount (-1 to 1, back to forward)
-func set_weight_shift(amount: float) -> void:
-	_current_weight_shift = clamp(amount, -1.0, 1.0)
-
-
-## Set bike-only pitch (-1 to 1, stoppie to wheelie)
-func set_bike_pitch(amount: float) -> void:
-	_current_bike_pitch = clamp(amount, -1.0, 1.0)
 
 
 ## Play an idle animation (fidget, look around, etc.)
@@ -190,54 +172,31 @@ func _transition_to_trick() -> void:
 #region Procedural Animation
 
 
-func _update_procedural_animation(delta: float) -> void:
-	if character_skin == null or input_controller == null or movement_controller == null:
-		return
-	if visual_root == null or bike_skin == null:
-		return
-
+func _update_procedural_animation(_delta: float) -> void:
 	var ik_ctrl = character_skin.ik_controller
-	if ik_ctrl == null:
-		return
 
-	# Get input values
-	var target_lean = input_controller.steer
-	var target_weight_shift = input_controller.lean  # Forward/back lean input
-
-	# Smooth the values
-	_current_lean = lerp(_current_lean, target_lean, lean_smoothing * delta)
-	_current_weight_shift = lerp(
-		_current_weight_shift, target_weight_shift, weight_shift_smoothing * delta
-	)
+	# # Smooth the values
+	# _current_weight_shift = lerp(
+	# 	_current_weight_shift, target_weight_shift, weight_shift_smoothing * delta
+	# )
 
 	# Lean visual root back/forward for wheelie/stoppie (driven by trick_controller via set_bike_pitch)
-	visual_root.rotation.x = -_current_bike_pitch * deg_to_rad(max_bike_pitch)
-
-	# Calculate offsets
-	var lean_offset_x = _current_lean * _lean_multiplier * -0.25  # max 0.25m
-	var weight_offset_z = _current_weight_shift * _weight_shift_multiplier * 0.1  # Max 10cm
-
-	# Apply butt position - combine lean (x) and weight shift (z)
-	ik_ctrl.butt_pos.position = Vector3(
-		_base_butt_pos.x + lean_offset_x, _base_butt_pos.y, _base_butt_pos.z + weight_offset_z
-	)
+	visual_root.rotation.x = -player_entity.pitch_angle * deg_to_rad(max_bike_pitch)
 
 	# Rotate chest for visual lean
-	var chest_lean = _current_lean * _lean_multiplier * deg_to_rad(15)
+	var chest_lean = player_entity.lean_angle * _lean_multiplier * deg_to_rad(15)
 	ik_ctrl.ik_chest.rotation.y = chest_lean
 
 	# Apply lean rotation to visual_root (rotates both bike + rider)
-	var lean_angle = _current_lean * deg_to_rad(max_lean_angle)
+	var lean_angle = player_entity.lean_angle * deg_to_rad(max_lean_angle)
 	visual_root.rotation.z = _base_visual_root_rotation.z + lean_angle
 
-	# Apply bike-only pitch (wheelie/stoppie)
-	var pitch_angle = _current_bike_pitch * deg_to_rad(max_bike_pitch)
-	bike_skin.rotation.x = pitch_angle
+	visual_root.rotation.x = player_entity.pitch_angle
 
-	_update_wheelie_arm(_current_bike_pitch)
+	_update_wheelie_arm()
 
 
-func _update_wheelie_arm(pitch: float) -> void:
+func _update_wheelie_arm() -> void:
 	var anim_player = character_skin.ik_anim_player
 	if anim_player == null:
 		return
@@ -247,8 +206,12 @@ func _update_wheelie_arm(pitch: float) -> void:
 	if anim_player.current_animation != anim_name:
 		anim_player.play(anim_name)
 	# Only extend arm when trick_mod held during a wheelie, otherwise return to default (t=0)
-	var in_wheelie = pitch > 0.0
-	var ratio = clamp(pitch, 0.0, 1.0) if (in_wheelie and input_controller.trick) else 0.0
+	var in_wheelie = player_entity.pitch_angle > 0.0
+	var ratio = (
+		clamp(player_entity.pitch_angle, 0.0, 1.0)
+		if (in_wheelie and input_controller.trick)
+		else 0.0
+	)
 	anim_player.seek(ratio, true)
 
 
@@ -278,9 +241,7 @@ func _reset_to_base_positions() -> void:
 		visual_root.rotation = _base_visual_root_rotation
 	if bike_skin:
 		bike_skin.rotation.x = 0.0
-	_current_lean = 0.0
-	_current_weight_shift = 0.0
-	_current_bike_pitch = 0.0
+	player_entity.lean_angle = 0.0
 
 
 #endregion
