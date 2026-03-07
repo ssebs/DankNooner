@@ -223,6 +223,25 @@ In `AnimationController` inspector:
 
 ---
 
+## Editor Workflow (Authoring from player_entity.tscn)
+
+Open `player_entity.tscn` to author animations with the character on the bike.
+
+### Setup (once per bike)
+1. Select `AnimationController` in the scene tree
+2. Click **"Init IK from Bike"** — positions IK targets from the bike's attachment markers
+3. Manually adjust marker rotations in the viewport (grip angle, foot angle, etc.)
+4. Click **"Save Default Pose"** — saves position + rotation of all 11 IK targets as `"default_pose"` in `IK_anim_lib.res`
+
+### Authoring each animation
+1. Click **"Reset to Default Pose"** — restores markers to the saved base
+2. Select `IKAnimationPlayer` and create/open an animation
+3. Move/rotate IK target markers in the viewport
+4. Keyframe `position` and `rotation` tracks for changed markers
+5. Animations are bike-agnostic — base positions come from the current bike's markers at runtime
+
+---
+
 ## Netfox Considerations
 
 - Procedural animation is **cosmetic-only** (doesn't affect physics)
