@@ -44,6 +44,7 @@
     - [ ] input_controller.gd
     - [ ] trick_controller.gd
   - [ ] Make sure MP authority is set
+  - [ ] be able to ride up ramps
 
 - [ ] Audio Manager
 
