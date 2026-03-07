@@ -1,4 +1,6 @@
 @tool
+## make sure to set HACK region's vars!
+## audio_manager & username
 class_name PlayerEntity extends CharacterBody3D
 
 @export var bike_definition: BikeSkinDefinition
@@ -147,7 +149,7 @@ func _deferred_init():
 
 #region local init (deferred)
 func _init_audio():
-	if audio_manager == null:
+	if !audio_manager:
 		return
 	gearing_controller.rpm_updated.connect(_on_rpm_updated)
 	audio_manager.play_ninja500_revs()
@@ -171,8 +173,9 @@ func _on_cam_switch_pressed():
 
 
 func _on_rpm_updated(new_rpm_ratio: float):
-	if audio_manager:
-		audio_manager.update_ninja500_rpm(new_rpm_ratio)
+	if !audio_manager:
+		return
+	audio_manager.update_ninja500_rpm(new_rpm_ratio)
 
 
 #endregion
@@ -226,6 +229,4 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("bike_definition must not be empty")
 	if collision_shape_3d == null:
 		issues.append("collision_shape_3d must not be empty")
-	if audio_manager == null:
-		issues.append("audio_manager must not be empty")
 	return issues
