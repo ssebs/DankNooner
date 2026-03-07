@@ -16,7 +16,6 @@ class_name BikeSkin extends Node3D
 
 const LENGTH: float = 2.0
 
-@onready var anim_player: AnimationPlayer = %AnimationPlayer
 @onready var mesh_node: Node3D = %MeshNode
 
 # Accessory markers
@@ -101,10 +100,6 @@ func _spawn_mesh():
 	mesh_node.add_child(mesh_skin)
 
 	mesh_skin.scale *= skin_definition.mesh_scale_multiplier
-
-	# # retarget AnimationMixer => Root Node to new mesh
-	# anim_player.root_node = mesh_skin.get_path()
-	# anim_player.play("Biker/reset")
 
 
 #endregion
