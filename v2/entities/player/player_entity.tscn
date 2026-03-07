@@ -15,6 +15,7 @@
 [ext_resource type="Script" uid="uid://c2c38w5opks8m" path="res://entities/player/controllers/gearing_controller.gd" id="10_gear"]
 [ext_resource type="Script" uid="uid://t5igmn16n20c" path="res://entities/player/controllers/trick_controller.gd" id="11_trick"]
 [ext_resource type="Script" uid="uid://cfpb4scu8hdy4" path="res://entities/player/controllers/crash_controller.gd" id="12_crash"]
+[ext_resource type="Script" uid="uid://civ7dg4q23qwd" path="res://entities/player/controllers/hud_controller.gd" id="16_wqpss"]
 
 [sub_resource type="Animation" id="Animation_tivla"]
 length = 0.001
@@ -96,7 +97,7 @@ _data = {
 &"RESET": SubResource("Animation_tivla")
 }
 
-[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("camera_controller", "movement_controller", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "collision_shape_3d")]
+[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("camera_controller", "movement_controller", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "hud_controller", "collision_shape_3d")]
 safe_margin = 0.01
 script = ExtResource("1_0jc3c")
 bike_definition = ExtResource("2_lfjd4")
@@ -108,6 +109,7 @@ animation_controller = NodePath("_Controllers/AnimationController")
 gearing_controller = NodePath("_Controllers/GearingController")
 trick_controller = NodePath("_Controllers/TrickController")
 crash_controller = NodePath("_Controllers/CrashController")
+hud_controller = NodePath("_Controllers/HUDController")
 collision_shape_3d = NodePath("CollisionShape3D")
 metadata/_custom_type_script = "uid://bnop7vr1q4gwg"
 
@@ -134,31 +136,31 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@237437")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@262757")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
 
 [node name="LeftHand" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="0" unique_id=348437814]
-transform = Transform3D(-0.22298142, 0.9632416, -0.14981724, -0.21753988, -0.19898008, -0.95555395, -0.9502396, -0.18047963, 0.25391233, 0.27682096, 1.4870298, -0.82909733)
+transform = Transform3D(-0.22298145, 0.9632416, -0.14981724, -0.21753989, -0.19898008, -0.95555395, -0.9502397, -0.18047963, 0.25391233, 0.27682096, 1.4870298, -0.82909733)
 
 [node name="LeftArmMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="1" unique_id=1835903969]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42771637, 0.852384, -0.5457224)
 
 [node name="RightHand" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="2" unique_id=300039024]
-transform = Transform3D(-0.008549988, -0.97650266, 0.21533647, -0.41056708, -0.19292802, -0.89118636, 0.9117903, -0.09602974, -0.39927018, -0.3032672, 1.0500246, 0.27497217)
+transform = Transform3D(-0.008550018, -0.97650266, 0.21533641, -0.410567, -0.19292797, -0.89118636, 0.9117904, -0.096029714, -0.39927006, -0.3032672, 1.0500246, 0.27497217)
 
 [node name="RightArmMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="3" unique_id=1090132691]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35496345, 0.98080707, -0.3138903)
 
 [node name="LeftFoot" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="4" unique_id=1249832749]
-transform = Transform3D(-0.9958446, 0.090517245, 0.009993159, -1.656938e-08, -0.10973406, 0.993961, 0.091067195, 0.98983073, 0.109278105, 0.24367344, 0.51058465, -0.2558015)
+transform = Transform3D(-0.9958446, 0.09051723, 0.009993158, -1.656938e-08, -0.10973406, 0.993961, 0.09106718, 0.98983073, 0.109278105, 0.24367344, 0.35812563, -0.2558015)
 
 [node name="LeftLegMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="5" unique_id=875795090]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.46395656, 0.5692559, 0.42930415)
 
 [node name="RightFoot" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="6" unique_id=70882427]
-transform = Transform3D(-0.9998421, 0.017659439, 0.0019495991, -1.6569382e-08, -0.10973407, 0.9939609, 0.017766729, 0.9938041, 0.10971674, -0.24367344, 0.50530505, -0.2558015)
+transform = Transform3D(-0.9998421, 0.017659439, 0.0019495991, -1.6569382e-08, -0.10973407, 0.9939609, 0.017766729, 0.9938041, 0.10971674, -0.24367344, 0.35812563, -0.2558015)
 
 [node name="RightLegMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="7" unique_id=1454334473]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.464, 0.569, 0.429)
@@ -167,7 +169,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.464, 0.569, 0.429)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4972486e-08, 1.3166139, -0.17337562)
 
 [node name="HeadTarget" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="9" unique_id=2052814980]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.8296124e-09, 1.8260808, -0.47977012)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8378124, -0.5578918)
 
 [node name="ButtPosition" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="10" unique_id=38485936]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8312537e-09, 0.94954467, -0.42459354)
@@ -237,6 +239,17 @@ transform = Transform3D(1, 0, 0, 0, 0.96592575, 0.258819, 0, -0.258819, 0.965925
 [node name="TPSCam" parent="_Controllers/CameraController" index="1" unique_id=1953618350]
 transform = Transform3D(1, 0, 0, 0, 0.9370628, 0.34916094, 0, -0.34916094, 0.9370628, 0, 1.391123, 1.7631481)
 
+[node name="HUDController" type="Control" parent="_Controllers" unique_id=938483265]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("16_wqpss")
+metadata/_custom_type_script = "uid://civ7dg4q23qwd"
+
 [node name="Markers" type="Node3D" parent="." unique_id=894866869]
 
 [node name="FPSCamMarker" type="Marker3D" parent="Markers" unique_id=2035762363]
@@ -250,15 +263,6 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1839552, 0)
 billboard = 2
 text = "USERNAME"
-
-[node name="HUD" type="Control" parent="." unique_id=2049840914]
-unique_name_in_owner = true
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [editable path="VisualRoot/CharacterSkin"]
 [editable path="_Controllers/MovementController"]
