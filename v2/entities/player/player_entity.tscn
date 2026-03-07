@@ -15,7 +15,7 @@
 [ext_resource type="Script" uid="uid://c2c38w5opks8m" path="res://entities/player/controllers/gearing_controller.gd" id="10_gear"]
 [ext_resource type="Script" uid="uid://t5igmn16n20c" path="res://entities/player/controllers/trick_controller.gd" id="11_trick"]
 [ext_resource type="Script" uid="uid://cfpb4scu8hdy4" path="res://entities/player/controllers/crash_controller.gd" id="12_crash"]
-[ext_resource type="Script" uid="uid://civ7dg4q23qwd" path="res://entities/player/controllers/hud_controller.gd" id="16_wqpss"]
+[ext_resource type="PackedScene" uid="uid://dvkip6up3p1qg" path="res://entities/player/controllers/hud_controller.tscn" id="16_wqpss"]
 
 [sub_resource type="Animation" id="Animation_tivla"]
 length = 0.001
@@ -136,13 +136,13 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@262757")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@299740")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
 
 [node name="LeftHand" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="0" unique_id=348437814]
-transform = Transform3D(-0.22298145, 0.9632416, -0.14981724, -0.21753989, -0.19898008, -0.95555395, -0.9502397, -0.18047963, 0.25391233, 0.27682096, 1.4870298, -0.82909733)
+transform = Transform3D(-0.22298148, 0.9632416, -0.14981724, -0.21753992, -0.19898008, -0.95555395, -0.95023984, -0.18047963, 0.25391233, 0.27682096, 1.4870298, -0.82909733)
 
 [node name="LeftArmMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="1" unique_id=1835903969]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42771637, 0.852384, -0.5457224)
@@ -154,7 +154,7 @@ transform = Transform3D(-0.008550018, -0.97650266, 0.21533641, -0.410567, -0.192
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35496345, 0.98080707, -0.3138903)
 
 [node name="LeftFoot" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="4" unique_id=1249832749]
-transform = Transform3D(-0.9958446, 0.09051723, 0.009993158, -1.656938e-08, -0.10973406, 0.993961, 0.09106718, 0.98983073, 0.109278105, 0.24367344, 0.35812563, -0.2558015)
+transform = Transform3D(-0.9958446, 0.09051722, 0.009993157, -1.656938e-08, -0.10973406, 0.993961, 0.09106717, 0.98983073, 0.109278105, 0.24367344, 0.35812563, -0.2558015)
 
 [node name="LeftLegMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="5" unique_id=875795090]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.46395656, 0.5692559, 0.42930415)
@@ -239,16 +239,9 @@ transform = Transform3D(1, 0, 0, 0, 0.96592575, 0.258819, 0, -0.258819, 0.965925
 [node name="TPSCam" parent="_Controllers/CameraController" index="1" unique_id=1953618350]
 transform = Transform3D(1, 0, 0, 0, 0.9370628, 0.34916094, 0, -0.34916094, 0.9370628, 0, 1.391123, 1.7631481)
 
-[node name="HUDController" type="Control" parent="_Controllers" unique_id=938483265]
+[node name="HUDController" parent="_Controllers" unique_id=938483265 node_paths=PackedStringArray("player_entity") instance=ExtResource("16_wqpss")]
 unique_name_in_owner = true
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("16_wqpss")
-metadata/_custom_type_script = "uid://civ7dg4q23qwd"
+player_entity = NodePath("../..")
 
 [node name="Markers" type="Node3D" parent="." unique_id=894866869]
 

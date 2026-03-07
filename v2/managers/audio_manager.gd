@@ -18,7 +18,8 @@ func _ready():
 		FmodServer.mute_all_events()
 
 
-func play_ninja500_revs():
+func play_ninja500_revs(volume: float = 0.6):
+	ninja500_revs.volume = volume
 	ninja500_revs.play()
 
 

@@ -2,11 +2,85 @@
 
 [ext_resource type="Script" uid="uid://civ7dg4q23qwd" path="res://entities/player/controllers/hud_controller.gd" id="1_bxvjo"]
 
-[node name="HUDController" type="Control" unique_id=2128080993]
+[node name="HUDController" type="Control" unique_id=1416178663]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("1_bxvjo")
+metadata/_custom_type_script = "uid://civ7dg4q23qwd"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1797666318]
+layout_mode = 1
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 250.0
+offset_bottom = 400.0
+theme_override_constants/separation = 4
+
+[node name="SpeedLabel" type="Label" parent="VBoxContainer" unique_id=1018572007]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Speed: 0"
+
+[node name="GearLabel" type="Label" parent="VBoxContainer" unique_id=1572303633]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Gear: 1"
+
+[node name="RPMLabel" type="Label" parent="VBoxContainer" unique_id=304090407]
+layout_mode = 2
+text = "RPM"
+
+[node name="RPMBar" type="ProgressBar" parent="VBoxContainer" unique_id=694236375]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 20)
+layout_mode = 2
+max_value = 1.0
+show_percentage = false
+
+[node name="ThrottleLabel" type="Label" parent="VBoxContainer" unique_id=232599221]
+layout_mode = 2
+text = "Throttle"
+
+[node name="ThrottleBar" type="ProgressBar" parent="VBoxContainer" unique_id=770428162]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 20)
+layout_mode = 2
+max_value = 1.0
+show_percentage = false
+
+[node name="ClutchLabel" type="Label" parent="VBoxContainer" unique_id=1196173021]
+layout_mode = 2
+text = "Clutch"
+
+[node name="ClutchBar" type="ProgressBar" parent="VBoxContainer" unique_id=1040699557]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 20)
+layout_mode = 2
+max_value = 1.0
+show_percentage = false
+
+[node name="GripLabel" type="Label" parent="VBoxContainer" unique_id=1975659528]
+layout_mode = 2
+text = "Brake Danger"
+
+[node name="GripBar" type="ProgressBar" parent="VBoxContainer" unique_id=539598302]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 20)
+layout_mode = 2
+max_value = 1.0
+show_percentage = false
+
+[node name="TrickLabel" type="Label" parent="VBoxContainer" unique_id=873278562]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="BoostLabel" type="Label" parent="VBoxContainer" unique_id=2060847634]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Boost: 2"
