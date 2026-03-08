@@ -1,25 +1,26 @@
-[gd_scene load_steps=4 format=3 uid="uid://bfnj2xve84rvc"]
+[gd_scene format=3 uid="uid://bfnj2xve84rvc"]
 
 [ext_resource type="Script" uid="uid://dacpe4563g5x2" path="res://addons/asset_placer/ui/components/asset_resource_preview.gd" id="1_q3676"]
 [ext_resource type="Texture2D" uid="uid://be61c5ff55gfo" path="res://addons/asset_placer/icon.png" id="2_55ohh"]
 [ext_resource type="Script" uid="uid://dephufwlu765k" path="res://addons/asset_placer/ui/components/asset_thumbnail.gd" id="2_xdgah"]
 
-[node name="AssetResourcePreview" type="MarginContainer"]
+[node name="AssetResourcePreview" type="MarginContainer" unique_id=1675250015]
 custom_minimum_size = Vector2(150, 200)
 offset_right = 150.0
 offset_bottom = 200.0
+mouse_filter = 0
 script = ExtResource("1_q3676")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1987488703]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1760914699]
 layout_mode = 2
 
-[node name="AssetThumbnail" type="TextureRect" parent="MarginContainer/VBoxContainer"]
+[node name="AssetThumbnail" type="TextureRect" parent="MarginContainer/VBoxContainer" unique_id=1719162104]
 unique_name_in_owner = true
 layout_mode = 2
 texture = ExtResource("2_55ohh")
@@ -27,7 +28,7 @@ expand_mode = 4
 script = ExtResource("2_xdgah")
 metadata/_custom_type_script = "uid://dephufwlu765k"
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=992620555]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
@@ -39,7 +40,7 @@ autowrap_mode = 1
 justification_flags = 227
 text_overrun_behavior = 3
 
-[node name="Button" type="Button" parent="."]
+[node name="Button" type="Button" parent="." unique_id=712208939]
 unique_name_in_owner = true
 show_behind_parent = true
 layout_mode = 2

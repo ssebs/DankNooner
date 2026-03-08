@@ -1,15 +1,16 @@
-[gd_resource type="StandardMaterial3D" format=3]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://djchowpgbyjbj"]
 
-[ext_resource type="Texture2D" path="./WoodFloor071_2K-JPG_Color.jpg" id="Color"]
-[ext_resource type="Texture2D" path="./WoodFloor071_2K-JPG_Displacement.jpg" id="Displacement"]
-[ext_resource type="Texture2D" path="./WoodFloor071_2K-JPG_Roughness.jpg" id="Roughness"]
-[ext_resource type="Texture2D" path="./WoodFloor071_2K-JPG_NormalGL.jpg" id="NormalGL"]
+[ext_resource type="Texture2D" uid="uid://bg4cui0cue1hx" path="res://resources/terrain_tex/WoodFloor071_2K-JPG/WoodFloor071_2K-JPG_Color.jpg" id="Color"]
+[ext_resource type="Texture2D" uid="uid://bvvften2juk1w" path="res://resources/terrain_tex/WoodFloor071_2K-JPG/WoodFloor071_2K-JPG_Displacement.jpg" id="Displacement"]
+[ext_resource type="Texture2D" uid="uid://d3og85d4r06j3" path="res://resources/terrain_tex/WoodFloor071_2K-JPG/WoodFloor071_2K-JPG_NormalGL.jpg" id="NormalGL"]
+[ext_resource type="Texture2D" uid="uid://cw20qvyrhjy8t" path="res://resources/terrain_tex/WoodFloor071_2K-JPG/WoodFloor071_2K-JPG_Roughness.jpg" id="Roughness"]
+
 [resource]
 albedo_texture = ExtResource("Color")
 roughness_texture = ExtResource("Roughness")
 roughness_texture_channel = 4
-normal_texture = ExtResource("NormalGL")
 normal_enabled = true
-heightmap_texture = ExtResource("Displacement")
-heightmap_scale = 1.0
+normal_texture = ExtResource("NormalGL")
 heightmap_enabled = true
+heightmap_scale = 1.0
+heightmap_texture = ExtResource("Displacement")

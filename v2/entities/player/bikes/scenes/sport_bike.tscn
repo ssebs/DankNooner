@@ -35,6 +35,6 @@ script = ExtResource("2_4okic")
 slots = Array[ExtResource("3_82gmx")]([SubResource("Resource_4okic"), SubResource("Resource_br1d3")])
 meshes = [NodePath("sportbike"), NodePath("sportbike")]
 
-[node name="sportbike" parent="." index="0" unique_id=1506769164]
+[node name="sportbike" parent="." index="0" unique_id=850619870]
 surface_material_override/1 = SubResource("StandardMaterial3D_4okic")
 surface_material_override/2 = SubResource("StandardMaterial3D_br1d3")

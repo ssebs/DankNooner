@@ -1,7 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://skp8awewyl85"]
+[gd_scene format=3 uid="uid://skp8awewyl85"]
 
 [ext_resource type="PackedScene" uid="uid://cppeyr1ke5wre" path="res://addons/fmod/tool/ui/EventParametersDisplay.tscn" id="1_clkxg"]
 
-[node name="EventParametersWindow" type="Window"]
+[node name="EventParametersWindow" type="Window" unique_id=537867171]
+oversampling_override = 1.0
 
-[node name="EventParametersDisplay" parent="." instance=ExtResource("1_clkxg")]
+[node name="EventParametersDisplay" parent="." unique_id=1290489581 instance=ExtResource("1_clkxg")]

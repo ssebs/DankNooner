@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://nr38urn226al"]
+[gd_scene format=3 uid="uid://nr38urn226al"]
 
 [ext_resource type="Script" uid="uid://b5xgbibc3amtk" path="res://addons/fmod/tool/ui/FmodBankExplorer.gd" id="1_ekqus"]
 [ext_resource type="Script" uid="uid://vgmq7hfrbddw" path="res://addons/fmod/tool/ui/EventPlayControls.gd" id="2_mleop"]
@@ -48,31 +48,31 @@ corner_radius_bottom_left = 5
 [sub_resource type="DPITexture" id="DPITexture_potss"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#e0e0e0\" d=\"M2 1a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h1V3h9V2a1 1 0 0 0-1-1zm3 3a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1zm1 2h7v7H6z\"/></svg>
 "
-base_scale = 1.25
+saturation = 2.0
 color_map = {
 Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
 Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
-Color(1, 0.8666667, 0.39607844, 1): Color(1, 0.87, 0.4, 1)
+Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
 }
 
 [sub_resource type="DPITexture" id="DPITexture_piloo"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#e0e0e0\" d=\"M4 12a1 1 0 0 0 1.555.832l6-4a1 1 0 0 0 0-1.664l-6-4A1 1 0 0 0 4 4z\"/></svg>
 "
-base_scale = 1.25
+saturation = 2.0
 color_map = {
 Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
 Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
-Color(1, 0.8666667, 0.39607844, 1): Color(1, 0.87, 0.4, 1)
+Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
 }
 
 [sub_resource type="DPITexture" id="DPITexture_02ixt"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><rect width=\"10\" height=\"10\" x=\"3\" y=\"3\" fill=\"#e0e0e0\" rx=\"1\"/></svg>
 "
-base_scale = 1.25
+saturation = 2.0
 color_map = {
 Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
 Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
-Color(1, 0.8666667, 0.39607844, 1): Color(1, 0.87, 0.4, 1)
+Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
 }
 
 [sub_resource type="InputEventKey" id="InputEventKey_w47tf"]
@@ -82,14 +82,14 @@ keycode = 4194305
 [sub_resource type="Shortcut" id="Shortcut_rarey"]
 events = [SubResource("InputEventKey_w47tf")]
 
-[node name="FmodBankExplorer" type="Window"]
+[node name="FmodBankExplorer" type="Window" unique_id=1715961640]
 oversampling_override = 1.0
 title = "Fmod banks explorer"
 initial_position = 2
-size = Vector2i(1280, 673)
+size = Vector2i(1720, 684)
 script = ExtResource("1_ekqus")
 
-[node name="BGPanel" type="Panel" parent="."]
+[node name="BGPanel" type="Panel" parent="." unique_id=1641718570]
 unique_name_in_owner = true
 anchors_preset = 15
 anchor_right = 1.0
@@ -97,7 +97,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="WindowMargin" type="MarginContainer" parent="."]
+[node name="WindowMargin" type="MarginContainer" parent="." unique_id=460606031]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -109,20 +109,20 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="WindowMargin"]
+[node name="VBoxContainer" type="VBoxContainer" parent="WindowMargin" unique_id=353472592]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TopPanel" type="PanelContainer" parent="WindowMargin/VBoxContainer"]
+[node name="TopPanel" type="PanelContainer" parent="WindowMargin/VBoxContainer" unique_id=1117629830]
 custom_minimum_size = Vector2(0, 42.315)
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="WindowMargin/VBoxContainer/TopPanel"]
+[node name="HBoxContainer" type="HBoxContainer" parent="WindowMargin/VBoxContainer/TopPanel" unique_id=1277595562]
 layout_mode = 2
 alignment = 2
 
-[node name="SearchField" type="LineEdit" parent="WindowMargin/VBoxContainer/TopPanel/HBoxContainer"]
+[node name="SearchField" type="LineEdit" parent="WindowMargin/VBoxContainer/TopPanel/HBoxContainer" unique_id=230230340]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
@@ -130,18 +130,18 @@ size_flags_horizontal = 2
 placeholder_text = "Search.."
 context_menu_enabled = false
 
-[node name="RefreshBanksButton" type="Button" parent="WindowMargin/VBoxContainer/TopPanel/HBoxContainer"]
+[node name="RefreshBanksButton" type="Button" parent="WindowMargin/VBoxContainer/TopPanel/HBoxContainer" unique_id=802264257]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Refresh Banks"
 
-[node name="BaseColorPanel" type="PanelContainer" parent="WindowMargin/VBoxContainer"]
+[node name="BaseColorPanel" type="PanelContainer" parent="WindowMargin/VBoxContainer" unique_id=981265456]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_wrr0m")
 
-[node name="MarginContainer" type="MarginContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel" unique_id=16902944]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 8
@@ -149,10 +149,10 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="HSplitContainer" type="HSplitContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer"]
+[node name="HSplitContainer" type="HSplitContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer" unique_id=970449113]
 layout_mode = 2
 
-[node name="Tree" type="Tree" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer"]
+[node name="Tree" type="Tree" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer" unique_id=725263526]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -161,7 +161,7 @@ size_flags_stretch_ratio = 0.54
 theme_override_styles/panel = SubResource("StyleBoxEmpty_2pbsy")
 hide_root = true
 
-[node name="MarginContainer" type="MarginContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer" unique_id=1363882609]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 8
@@ -169,12 +169,12 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="RightPanelContent" type="VBoxContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer"]
+[node name="RightPanelContent" type="VBoxContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer" unique_id=1218266997]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="PathsLabel" type="Label" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent"]
+[node name="PathsLabel" type="Label" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent" unique_id=1160449356]
 visible = false
 layout_mode = 2
 size_flags_vertical = 1
@@ -182,50 +182,50 @@ text = "ID:"
 label_settings = SubResource("LabelSettings_3jkpq")
 justification_flags = 35
 
-[node name="PathsBG" type="PanelContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent"]
+[node name="PathsBG" type="PanelContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent" unique_id=1001114758]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_0awfk")
 
-[node name="MarginContainer" type="MarginContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG"]
+[node name="MarginContainer" type="MarginContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG" unique_id=385558877]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="PathContainer" type="HBoxContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer"]
+[node name="PathContainer" type="HBoxContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer" unique_id=918368546]
 layout_mode = 2
 
-[node name="TitleLabelContainer" type="VBoxContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer/PathContainer"]
+[node name="TitleLabelContainer" type="VBoxContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer/PathContainer" unique_id=1745804706]
 layout_mode = 2
 
-[node name="PathTitleLabel" type="Label" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer/PathContainer/TitleLabelContainer"]
+[node name="PathTitleLabel" type="Label" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer/PathContainer/TitleLabelContainer" unique_id=850507889]
 layout_mode = 2
 size_flags_vertical = 6
 text = "Path:"
 label_settings = SubResource("LabelSettings_d4isr")
 
-[node name="GuidTitleLabel" type="Label" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer/PathContainer/TitleLabelContainer"]
+[node name="GuidTitleLabel" type="Label" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer/PathContainer/TitleLabelContainer" unique_id=518480780]
 layout_mode = 2
 size_flags_vertical = 6
 text = "GUID: "
 label_settings = SubResource("LabelSettings_d4isr")
 
-[node name="ValueContainer" type="VBoxContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer/PathContainer"]
+[node name="ValueContainer" type="VBoxContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer/PathContainer" unique_id=1897894295]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PathLabel" type="Label" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer/PathContainer/ValueContainer"]
+[node name="PathLabel" type="Label" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer/PathContainer/ValueContainer" unique_id=1390918907]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 6
 text = "asdfasdfasdfasdf"
 
-[node name="CopyPathLabel" type="Button" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer/PathContainer/ValueContainer/PathLabel"]
+[node name="CopyPathLabel" type="Button" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer/PathContainer/ValueContainer/PathLabel" unique_id=926680508]
 visible = false
 layout_mode = 1
 anchors_preset = 6
@@ -241,7 +241,7 @@ grow_horizontal = 0
 grow_vertical = 2
 icon = SubResource("DPITexture_potss")
 
-[node name="GuidLabel" type="Label" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer/PathContainer/ValueContainer"]
+[node name="GuidLabel" type="Label" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer/PathContainer/ValueContainer" unique_id=335461249]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
@@ -249,7 +249,7 @@ size_flags_vertical = 6
 text = "asdfasdf"
 vertical_alignment = 1
 
-[node name="CopyGuidLabel" type="Button" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer/PathContainer/ValueContainer/GuidLabel"]
+[node name="CopyGuidLabel" type="Button" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/PathsBG/MarginContainer/PathContainer/ValueContainer/GuidLabel" unique_id=1119392030]
 visible = false
 layout_mode = 1
 anchors_preset = 6
@@ -265,7 +265,7 @@ grow_horizontal = 0
 grow_vertical = 2
 icon = SubResource("DPITexture_potss")
 
-[node name="ParametersLabel" type="Label" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent"]
+[node name="ParametersLabel" type="Label" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent" unique_id=380997986]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(0, 45)
@@ -274,25 +274,25 @@ text = "Parameters:"
 label_settings = SubResource("LabelSettings_3jkpq")
 vertical_alignment = 2
 
-[node name="ParametersContainer" type="PanelContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent"]
+[node name="ParametersContainer" type="PanelContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent" unique_id=1819201563]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_0awfk")
 
-[node name="MarginContainer" type="MarginContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/ParametersContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/ParametersContainer" unique_id=961525103]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="EventParametersDisplay" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/ParametersContainer/MarginContainer" instance=ExtResource("2_uoyg8")]
+[node name="EventParametersDisplay" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/ParametersContainer/MarginContainer" unique_id=1694605546 instance=ExtResource("2_uoyg8")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="EventPlayControls" type="PanelContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent" node_paths=PackedStringArray("play_button", "stop_button", "fade_out_toggle")]
+[node name="EventPlayControls" type="PanelContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent" unique_id=627290724 node_paths=PackedStringArray("play_button", "stop_button", "fade_out_toggle")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(0, 55.44)
@@ -305,56 +305,56 @@ play_button = NodePath("MarginContainer/HBoxContainer/PlayEventButton")
 stop_button = NodePath("MarginContainer/HBoxContainer/StopEventButton")
 fade_out_toggle = NodePath("MarginContainer/HBoxContainer/FadeoutToggle")
 
-[node name="MarginContainer" type="MarginContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/EventPlayControls"]
+[node name="MarginContainer" type="MarginContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/EventPlayControls" unique_id=609009211]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/EventPlayControls/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/EventPlayControls/MarginContainer" unique_id=1061179872]
 layout_mode = 2
 
-[node name="PlayEventButton" type="Button" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/EventPlayControls/MarginContainer/HBoxContainer"]
+[node name="PlayEventButton" type="Button" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/EventPlayControls/MarginContainer/HBoxContainer" unique_id=1429525696]
 layout_mode = 2
 text = "Play"
 icon = SubResource("DPITexture_piloo")
 
-[node name="StopEventButton" type="Button" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/EventPlayControls/MarginContainer/HBoxContainer"]
+[node name="StopEventButton" type="Button" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/EventPlayControls/MarginContainer/HBoxContainer" unique_id=728683056]
 layout_mode = 2
 text = "Stop"
 icon = SubResource("DPITexture_02ixt")
 
-[node name="FadeoutToggle" type="CheckButton" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/EventPlayControls/MarginContainer/HBoxContainer"]
+[node name="FadeoutToggle" type="CheckButton" parent="WindowMargin/VBoxContainer/BaseColorPanel/MarginContainer/HSplitContainer/MarginContainer/RightPanelContent/EventPlayControls/MarginContainer/HBoxContainer" unique_id=1331049884]
 layout_mode = 2
 text = "Allow fade out"
 
-[node name="MarginContainer" type="MarginContainer" parent="WindowMargin/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="WindowMargin/VBoxContainer" unique_id=521942777]
 layout_mode = 2
 theme_override_constants/margin_top = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="WindowMargin/VBoxContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="WindowMargin/VBoxContainer/MarginContainer" unique_id=1804259225]
 layout_mode = 2
 alignment = 1
 
-[node name="MarginContainer2" type="MarginContainer" parent="WindowMargin/VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="WindowMargin/VBoxContainer/MarginContainer/HBoxContainer" unique_id=542648901]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_right = 8
 
-[node name="SelectButton" type="Button" parent="WindowMargin/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer2"]
+[node name="SelectButton" type="Button" parent="WindowMargin/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer2" unique_id=258620313]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Select"
 
-[node name="MarginContainer" type="MarginContainer" parent="WindowMargin/VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="WindowMargin/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1405331664]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_right = 8
 
-[node name="CloseButton" type="Button" parent="WindowMargin/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer"]
+[node name="CloseButton" type="Button" parent="WindowMargin/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer" unique_id=1573223089]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4

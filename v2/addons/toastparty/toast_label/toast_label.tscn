@@ -1,8 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dugii0837nslt"]
+[gd_scene format=3 uid="uid://dugii0837nslt"]
 
 [ext_resource type="StyleBox" uid="uid://blt5gbhfsd0p5" path="res://addons/toastparty/toast_label/toast_label_style.tres" id="1_0l35p"]
-[ext_resource type="FontFile" path="res://addons/toastparty/fonts/Light.ttf" id="2_xpkfi"]
-[ext_resource type="Script" path="res://addons/toastparty/toast_label/ToastLabel.gd" id="3_vwlmp"]
+[ext_resource type="FontFile" uid="uid://2uw7rfi4t3cw" path="res://addons/toastparty/fonts/Light.ttf" id="2_xpkfi"]
+[ext_resource type="Script" uid="uid://dg2h2st7pbfiv" path="res://addons/toastparty/toast_label/ToastLabel.gd" id="3_vwlmp"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_o6str"]
 resource_local_to_scene = true
@@ -12,7 +12,7 @@ font_size = 18
 font_color = Color(0.94902, 0.94902, 0.94902, 1)
 shadow_size = 0
 
-[node name="Label" type="Label"]
+[node name="Label" type="Label" unique_id=1998997122]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5

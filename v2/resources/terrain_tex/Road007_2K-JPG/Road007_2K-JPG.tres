@@ -1,15 +1,16 @@
-[gd_resource type="StandardMaterial3D" format=3]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://wo7o2w1hq7t5"]
 
-[ext_resource type="Texture2D" path="./Road007_2K-JPG_Color.jpg" id="Color"]
-[ext_resource type="Texture2D" path="./Road007_2K-JPG_Displacement.jpg" id="Displacement"]
-[ext_resource type="Texture2D" path="./Road007_2K-JPG_Roughness.jpg" id="Roughness"]
-[ext_resource type="Texture2D" path="./Road007_2K-JPG_NormalGL.jpg" id="NormalGL"]
+[ext_resource type="Texture2D" uid="uid://k3uk5ii5dakx" path="res://resources/terrain_tex/Road007_2K-JPG/Road007_2K-JPG_Color.jpg" id="Color"]
+[ext_resource type="Texture2D" uid="uid://c57v4p1gupmcv" path="res://resources/terrain_tex/Road007_2K-JPG/Road007_2K-JPG_Displacement.jpg" id="Displacement"]
+[ext_resource type="Texture2D" uid="uid://k1ktrhhiujry" path="res://resources/terrain_tex/Road007_2K-JPG/Road007_2K-JPG_NormalGL.jpg" id="NormalGL"]
+[ext_resource type="Texture2D" uid="uid://dn426xefd7ss0" path="res://resources/terrain_tex/Road007_2K-JPG/Road007_2K-JPG_Roughness.jpg" id="Roughness"]
+
 [resource]
 albedo_texture = ExtResource("Color")
 roughness_texture = ExtResource("Roughness")
 roughness_texture_channel = 4
-normal_texture = ExtResource("NormalGL")
 normal_enabled = true
-heightmap_texture = ExtResource("Displacement")
-heightmap_scale = 1.0
+normal_texture = ExtResource("NormalGL")
 heightmap_enabled = true
+heightmap_scale = 1.0
+heightmap_texture = ExtResource("Displacement")

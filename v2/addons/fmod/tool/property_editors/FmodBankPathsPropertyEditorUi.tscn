@@ -1,17 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://dtlwk8wdeal3h"]
+[gd_scene format=3 uid="uid://dtlwk8wdeal3h"]
 
 [ext_resource type="Texture2D" uid="uid://o2chsr07oeqs" path="res://addons/fmod/icons/bank_icon.svg" id="1_11c48"]
 
-[node name="FmodBankPathsPropertyEditorUi" type="VBoxContainer"]
+[node name="FmodBankPathsPropertyEditorUi" type="VBoxContainer" unique_id=1347415852]
 offset_right = 92.0
 offset_bottom = 43.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1278114155]
 layout_mode = 2
 
-[node name="AddButton" type="Button" parent="HBoxContainer"]
+[node name="AddButton" type="Button" parent="HBoxContainer" unique_id=1192403816]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -19,42 +19,42 @@ text = "+"
 icon = ExtResource("1_11c48")
 icon_alignment = 2
 
-[node name="RemoveButton" type="Button" parent="HBoxContainer"]
+[node name="RemoveButton" type="Button" parent="HBoxContainer" unique_id=2106667924]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "-"
 
-[node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer" unique_id=528184554]
 layout_mode = 2
 
-[node name="UpButton" type="Button" parent="HBoxContainer"]
+[node name="UpButton" type="Button" parent="HBoxContainer" unique_id=809517773]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "↑"
 
-[node name="DownButton" type="Button" parent="HBoxContainer"]
+[node name="DownButton" type="Button" parent="HBoxContainer" unique_id=955864763]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "↓"
 
-[node name="BankList" type="ItemList" parent="."]
+[node name="BankList" type="ItemList" parent="." unique_id=1207449495]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 auto_height = true
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+[node name="HBoxContainer2" type="HBoxContainer" parent="." unique_id=1683139402]
 layout_mode = 2
 
-[node name="ManualAddLineEdit" type="LineEdit" parent="HBoxContainer2"]
+[node name="ManualAddLineEdit" type="LineEdit" parent="HBoxContainer2" unique_id=1568215867]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ManualAddButton" type="Button" parent="HBoxContainer2"]
+[node name="ManualAddButton" type="Button" parent="HBoxContainer2" unique_id=652708501]
 unique_name_in_owner = true
 layout_mode = 2
 text = "+"

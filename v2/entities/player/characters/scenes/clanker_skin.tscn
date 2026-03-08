@@ -35,8 +35,8 @@ script = ExtResource("2_1dusr")
 slots = Array[ExtResource("3_1dusr")]([SubResource("Resource_hlq6h"), SubResource("Resource_1dusr")])
 meshes = [NodePath("Armature/Skeleton/Beta_Surface"), NodePath("Armature/Skeleton/Beta_Joints")]
 
-[node name="Beta_Joints" parent="Armature/Skeleton" parent_id_path=PackedInt32Array(410301347) index="0" unique_id=1550107788]
+[node name="Beta_Joints" parent="Armature/Skeleton" parent_id_path=PackedInt32Array(65324414) index="0" unique_id=1357334723]
 surface_material_override/0 = SubResource("StandardMaterial3D_xwt0o")
 
-[node name="Beta_Surface" parent="Armature/Skeleton" parent_id_path=PackedInt32Array(410301347) index="1" unique_id=530431457]
+[node name="Beta_Surface" parent="Armature/Skeleton" parent_id_path=PackedInt32Array(65324414) index="1" unique_id=313283510]
 surface_material_override/0 = SubResource("StandardMaterial3D_u2me7")

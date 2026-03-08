@@ -4,11 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://b68iqecgl4fjk"
-valid=false
+path="res://.godot/imported/Moonwalk.fbx-8f2d35d75f9f87bfa2cc91e9dc41fa36.scn"
 
 [deps]
 
 source_file="res://entities/player/characters/assets/anim/Moonwalk.fbx"
+dest_files=["res://.godot/imported/Moonwalk.fbx-8f2d35d75f9f87bfa2cc91e9dc41fa36.scn"]
 
 [params]
 

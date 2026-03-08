@@ -23,5 +23,5 @@ script = ExtResource("2_qqbuq")
 slots = Array[ExtResource("3_di6m0")]([SubResource("Resource_di6m0")])
 meshes = [NodePath("Plane")]
 
-[node name="Plane" parent="." index="0" unique_id=762809783]
+[node name="Plane" parent="." index="0" unique_id=1695160208]
 surface_material_override/1 = SubResource("StandardMaterial3D_qqbuq")

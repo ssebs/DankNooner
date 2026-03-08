@@ -1,19 +1,20 @@
-[gd_resource type="StandardMaterial3D" format=3]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://hvmgv2l4yfyt"]
 
-[ext_resource type="Texture2D" path="./Metal062C_2K-JPG_Color.jpg" id="Color"]
-[ext_resource type="Texture2D" path="./Metal062C_2K-JPG_Metalness.jpg" id="Metalness"]
-[ext_resource type="Texture2D" path="./Metal062C_2K-JPG_Displacement.jpg" id="Displacement"]
-[ext_resource type="Texture2D" path="./Metal062C_2K-JPG_Roughness.jpg" id="Roughness"]
-[ext_resource type="Texture2D" path="./Metal062C_2K-JPG_NormalGL.jpg" id="NormalGL"]
+[ext_resource type="Texture2D" uid="uid://c8si3h86fi55g" path="res://resources/terrain_tex/Metal062C_2K-JPG/Metal062C_2K-JPG_Color.jpg" id="Color"]
+[ext_resource type="Texture2D" uid="uid://c1opeuk4dty7b" path="res://resources/terrain_tex/Metal062C_2K-JPG/Metal062C_2K-JPG_Displacement.jpg" id="Displacement"]
+[ext_resource type="Texture2D" uid="uid://dgicws2sxbok" path="res://resources/terrain_tex/Metal062C_2K-JPG/Metal062C_2K-JPG_Metalness.jpg" id="Metalness"]
+[ext_resource type="Texture2D" uid="uid://cpynvllo86yv4" path="res://resources/terrain_tex/Metal062C_2K-JPG/Metal062C_2K-JPG_NormalGL.jpg" id="NormalGL"]
+[ext_resource type="Texture2D" uid="uid://d3psnenxqvxlh" path="res://resources/terrain_tex/Metal062C_2K-JPG/Metal062C_2K-JPG_Roughness.jpg" id="Roughness"]
+
 [resource]
 albedo_texture = ExtResource("Color")
-metallic_texture = ExtResource("Metalness")
 metallic = 1.0
+metallic_texture = ExtResource("Metalness")
 metallic_texture_channel = 4
 roughness_texture = ExtResource("Roughness")
 roughness_texture_channel = 4
-normal_texture = ExtResource("NormalGL")
 normal_enabled = true
-heightmap_texture = ExtResource("Displacement")
-heightmap_scale = 1.0
+normal_texture = ExtResource("NormalGL")
 heightmap_enabled = true
+heightmap_scale = 1.0
+heightmap_texture = ExtResource("Displacement")

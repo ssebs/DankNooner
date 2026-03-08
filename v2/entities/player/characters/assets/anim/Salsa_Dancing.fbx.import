@@ -4,11 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://c2v5le6ejxwtr"
-valid=false
+path="res://.godot/imported/Salsa_Dancing.fbx-a450ba39863517cc94643245616b4b7e.scn"
 
 [deps]
 
 source_file="res://entities/player/characters/assets/anim/Salsa_Dancing.fbx"
+dest_files=["res://.godot/imported/Salsa_Dancing.fbx-a450ba39863517cc94643245616b4b7e.scn"]
 
 [params]
 
