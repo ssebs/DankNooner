@@ -59,54 +59,87 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "BACK_LABEL"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1034889296]
-custom_minimum_size = Vector2(300, 0)
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1088139743]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
+theme_override_constants/separation = 64
 
-[node name="username_label" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1793125687]
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/HBoxContainer" unique_id=1034889296]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="username_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1793125687]
 layout_mode = 2
 text = "USERNAME_LABEL"
 
-[node name="UsernameEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=907425723]
+[node name="UsernameEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=907425723]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "e.g. hunter2"
 max_length = 32
 
-[node name="noray_host_label" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=677060126]
+[node name="noray_host_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=677060126]
 layout_mode = 2
 text = "NORAY_HOST_LABEL"
 
-[node name="NorayHostEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=132303083]
+[node name="NorayHostEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=132303083]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "home.ssebs.com"
 
-[node name="window_label" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1233927487]
+[node name="window_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1233927487]
 layout_mode = 2
 text = "WINDOW_SETTINGS_LABEL"
 
-[node name="WindowModeOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1732712393]
+[node name="WindowModeOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1732712393]
 unique_name_in_owner = true
 layout_mode = 2
 selected = 0
 item_count = 3
-popup/item_0/text = "windowed"
+popup/item_0/text = "Windowed"
 popup/item_0/id = 0
-popup/item_1/text = "fullscreen"
+popup/item_1/text = "Fullscreen (Exclusive)"
 popup/item_1/id = 3
-popup/item_2/text = "borderless"
+popup/item_2/text = "Fullscreen (Borderless)"
 popup/item_2/id = 4
 
-[node name="HSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1039528216]
+[node name="HSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1039528216]
 layout_mode = 2
 theme_override_constants/separation = 24
 theme_override_styles/separator = SubResource("StyleBoxLine_hdace")
 
-[node name="ResetBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=462288263]
+[node name="ResetBtn" type="Button" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=462288263]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 text = "RESET_SETTINGS_LABEL"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/HBoxContainer" unique_id=1712998538]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="master_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=330750496]
+layout_mode = 2
+text = "MASTER_VOLUME_LABEL"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1884397480]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="HSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1475189282]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+value = 50.0
+ticks_on_borders = true
+
+[node name="music_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=55761047]
+layout_mode = 2
+text = "MUSIC_VOLUME_LABEL"
+
+[node name="sfx_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1442766106]
+layout_mode = 2
+text = "SFX_VOLUME_LABEL"
