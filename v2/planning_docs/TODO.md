@@ -4,6 +4,7 @@
 
 ## In Progress 🚀
 
+- [ ] fix github actions ci
 - [ ] debug wheelie animation
 
 - [ ] Review Animation Controller & Create animations
