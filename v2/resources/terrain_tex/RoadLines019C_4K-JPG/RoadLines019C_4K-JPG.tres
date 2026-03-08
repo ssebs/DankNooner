@@ -1,19 +1,20 @@
-[gd_resource type="StandardMaterial3D" format=3]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://ddvpyuyf2nao3"]
 
-[ext_resource type="Texture2D" path="./RoadLines019C_4K-JPG_Color.jpg" id="Color"]
-[ext_resource type="Texture2D" path="./RoadLines019C_4K-JPG_AmbientOcclusion.jpg" id="AmbientOcclusion"]
-[ext_resource type="Texture2D" path="./RoadLines019C_4K-JPG_Displacement.jpg" id="Displacement"]
-[ext_resource type="Texture2D" path="./RoadLines019C_4K-JPG_Roughness.jpg" id="Roughness"]
-[ext_resource type="Texture2D" path="./RoadLines019C_4K-JPG_NormalGL.jpg" id="NormalGL"]
+[ext_resource type="Texture2D" uid="uid://dgsmnxj8f6dsx" path="res://resources/terrain_tex/RoadLines019C_4K-JPG/RoadLines019C_4K-JPG_AmbientOcclusion.jpg" id="AmbientOcclusion"]
+[ext_resource type="Texture2D" uid="uid://ceny4jai4w1os" path="res://resources/terrain_tex/RoadLines019C_4K-JPG/RoadLines019C_4K-JPG_Color.jpg" id="Color"]
+[ext_resource type="Texture2D" uid="uid://cxqrxrdqu42vm" path="res://resources/terrain_tex/RoadLines019C_4K-JPG/RoadLines019C_4K-JPG_Displacement.jpg" id="Displacement"]
+[ext_resource type="Texture2D" uid="uid://k13wwmryi70j" path="res://resources/terrain_tex/RoadLines019C_4K-JPG/RoadLines019C_4K-JPG_NormalGL.jpg" id="NormalGL"]
+[ext_resource type="Texture2D" uid="uid://eghucpp73e0d" path="res://resources/terrain_tex/RoadLines019C_4K-JPG/RoadLines019C_4K-JPG_Roughness.jpg" id="Roughness"]
+
 [resource]
 albedo_texture = ExtResource("Color")
+roughness_texture = ExtResource("Roughness")
+roughness_texture_channel = 4
+normal_enabled = true
+normal_texture = ExtResource("NormalGL")
 ao_enabled = true
 ao_texture = ExtResource("AmbientOcclusion")
 ao_texture_channel = 4
-roughness_texture = ExtResource("Roughness")
-roughness_texture_channel = 4
-normal_texture = ExtResource("NormalGL")
-normal_enabled = true
-heightmap_texture = ExtResource("Displacement")
-heightmap_scale = 1.0
 heightmap_enabled = true
+heightmap_scale = 1.0
+heightmap_texture = ExtResource("Displacement")

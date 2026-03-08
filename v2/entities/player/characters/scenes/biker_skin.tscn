@@ -32,10 +32,10 @@ script = ExtResource("2_uii8v")
 slots = Array[ExtResource("3_a4jph")]([SubResource("Resource_a4jph")])
 meshes = [NodePath("Armature/Skeleton/Ch20")]
 
-[node name="Skeleton" parent="Armature" parent_id_path=PackedInt32Array(550890257) index="0" unique_id=1464631785]
+[node name="Skeleton" parent="Armature" parent_id_path=PackedInt32Array(1215350638) index="0" unique_id=1249126679]
 bones/16/rotation = Quaternion(0.6738872, 0.67388725, 0.21418679, -0.21418688)
 bones/66/rotation = Quaternion(6.984918e-10, 0, 1, 7.436028e-09)
 bones/71/rotation = Quaternion(0.10141063, 0.7009589, 0.70236504, 0.071104296)
 
-[node name="Ch20" parent="Armature/Skeleton" index="0" unique_id=173751882]
+[node name="Ch20" parent="Armature/Skeleton" index="0" unique_id=1083295038]
 surface_material_override/0 = SubResource("ShaderMaterial_ng0ve")

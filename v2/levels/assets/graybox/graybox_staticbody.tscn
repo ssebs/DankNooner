@@ -1,11 +1,15 @@
 [gd_scene format=3 uid="uid://brxybm0yftn41"]
 
-[ext_resource type="Material" uid="uid://bdn26favvnenb" path="res://levels/assets/graybox/repeating_gray.tres" id="1_u8bc1"]
 [ext_resource type="Script" uid="uid://blou0ljp3v30w" path="res://levels/assets/graybox/graybox_staticbody.gd" id="1_ufpa7"]
+[ext_resource type="Texture2D" uid="uid://dcebi3svjvqs3" path="res://levels/assets/kenney_prototype-textures/PNG/Dark/texture_04.png" id="2_ufpa7"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_ufpa7"]
+[sub_resource type="BoxMesh" id="BoxMesh_0l3j2"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_0l3j2"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_esfoe"]
+albedo_texture = ExtResource("2_ufpa7")
+uv1_triplanar = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tpdp1"]
 
 [node name="GrayBox_StaticBody" type="StaticBody3D" unique_id=1485126779]
 script = ExtResource("1_ufpa7")
@@ -15,9 +19,9 @@ depth = 1.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1922891733]
 unique_name_in_owner = true
-mesh = SubResource("BoxMesh_ufpa7")
-surface_material_override/0 = ExtResource("1_u8bc1")
+mesh = SubResource("BoxMesh_0l3j2")
+surface_material_override/0 = SubResource("StandardMaterial3D_esfoe")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1147968358]
 unique_name_in_owner = true
-shape = SubResource("BoxShape3D_0l3j2")
+shape = SubResource("BoxShape3D_tpdp1")

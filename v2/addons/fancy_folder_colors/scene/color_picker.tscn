@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cgdf8veovle7r"]
+[gd_scene format=3 uid="uid://cgdf8veovle7r"]
 
 [ext_resource type="Script" uid="uid://colt6ke7lcirr" path="res://addons/fancy_folder_colors/scene/color_picker.gd" id="1_3ys24"]
 [ext_resource type="Shader" uid="uid://bcrqo67nwx4p7" path="res://addons/fancy_folder_colors/scene/color_picker.gdshader" id="2_y6el2"]
@@ -24,13 +24,14 @@ fill_to = Vector2(0.5, 1)
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0a7rr"]
 texture = SubResource("GradientTexture2D_y6el2")
 
-[node name="ColorPicker" type="Window"]
+[node name="ColorPicker" type="Window" unique_id=1622069361]
+oversampling_override = 1.0
 title = "Choose Color"
 initial_position = 4
 size = Vector2i(443, 656)
 script = ExtResource("1_3ys24")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=744282197]
 material = SubResource("ShaderMaterial_0a7rr")
 anchors_preset = 15
 anchor_right = 1.0
@@ -39,35 +40,35 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_0a7rr")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=665760814]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="VC" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+[node name="VC" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=1851568247]
 layout_mode = 2
 
-[node name="ColorPicker" type="ColorPicker" parent="PanelContainer/MarginContainer/VC"]
+[node name="ColorPicker" type="ColorPicker" parent="PanelContainer/MarginContainer/VC" unique_id=1763376421]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VC"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VC" unique_id=1868687975]
 custom_minimum_size = Vector2(0, 15)
 layout_mode = 2
 
-[node name="accept" type="Button" parent="PanelContainer/MarginContainer/VC/HBoxContainer"]
+[node name="accept" type="Button" parent="PanelContainer/MarginContainer/VC/HBoxContainer" unique_id=432528911]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Accept"
 
-[node name="remove" type="Button" parent="PanelContainer/MarginContainer/VC/HBoxContainer"]
+[node name="remove" type="Button" parent="PanelContainer/MarginContainer/VC/HBoxContainer" unique_id=1288238102]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Remove"
 
-[node name="cancel" type="Button" parent="PanelContainer/MarginContainer/VC/HBoxContainer"]
+[node name="cancel" type="Button" parent="PanelContainer/MarginContainer/VC/HBoxContainer" unique_id=134108149]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Cancel

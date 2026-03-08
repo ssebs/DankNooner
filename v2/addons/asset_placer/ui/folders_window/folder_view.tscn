@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://d7ay5upbgnx0"]
+[gd_scene format=3 uid="uid://d7ay5upbgnx0"]
 
 [ext_resource type="Script" uid="uid://dclcoehldtdcd" path="res://addons/asset_placer/ui/folders_window/folder_view.gd" id="1_q40po"]
 [ext_resource type="Script" uid="uid://dmicn3kmr620j" path="res://addons/asset_placer/utils/system_icon.gd" id="2_q40po"]
@@ -52,69 +52,69 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[node name="FolderView" type="PanelContainer"]
+[node name="FolderView" type="PanelContainer" unique_id=639795970]
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_q40po")
 script = ExtResource("1_q40po")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1831087985]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=226554242]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="PathLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="PathLabel" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1168286028]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Folder path"
 
-[node name="SubfoldersCheckbox" type="CheckBox" parent="VBoxContainer/HBoxContainer"]
+[node name="SubfoldersCheckbox" type="CheckBox" parent="VBoxContainer/HBoxContainer" unique_id=1963623456]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Include sub folders"
 
-[node name="RulesButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="RulesButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1946246416]
 unique_name_in_owner = true
 layout_mode = 2
 text = "No rules"
 icon = SubResource("Texture2D_rules")
 
-[node name="SyncButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="SyncButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=618917566]
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Reload"
 icon = SubResource("Texture2D_q40po")
 
-[node name="DeleteButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="DeleteButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1380715504]
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Remove"
 icon = SubResource("Texture2D_ojff7")
 
-[node name="RulesMargin" type="MarginContainer" parent="VBoxContainer"]
+[node name="RulesMargin" type="MarginContainer" parent="VBoxContainer" unique_id=82090330]
 visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_right = 24
 
-[node name="RulesContainer" type="PanelContainer" parent="VBoxContainer/RulesMargin"]
+[node name="RulesContainer" type="PanelContainer" parent="VBoxContainer/RulesMargin" unique_id=981167591]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rules")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/RulesMargin/RulesContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/RulesMargin/RulesContainer" unique_id=1025723856]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="RulesList" type="VBoxContainer" parent="VBoxContainer/RulesMargin/RulesContainer/VBoxContainer"]
+[node name="RulesList" type="VBoxContainer" parent="VBoxContainer/RulesMargin/RulesContainer/VBoxContainer" unique_id=7448428]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="AddRuleButton" type="MenuButton" parent="VBoxContainer/RulesMargin/RulesContainer/VBoxContainer"]
+[node name="AddRuleButton" type="MenuButton" parent="VBoxContainer/RulesMargin/RulesContainer/VBoxContainer" unique_id=1533623528]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0

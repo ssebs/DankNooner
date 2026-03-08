@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://bfdldojk5i6u3"]
+[gd_scene format=3 uid="uid://bfdldojk5i6u3"]
 
 [ext_resource type="Script" uid="uid://ve6g43nb1hdd" path="res://addons/fmod/tool/ui/ParameterDisplay.gd" id="1_fxyw8"]
 
-[node name="ParameterDisplay" type="MarginContainer"]
+[node name="ParameterDisplay" type="MarginContainer" unique_id=2110345461]
 visible = false
 offset_right = 168.0
 offset_bottom = 160.0
@@ -13,48 +13,48 @@ theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 script = ExtResource("1_fxyw8")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1783956415]
 layout_mode = 2
 
-[node name="VBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="VBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1489931023]
 layout_mode = 2
 
-[node name="TitleContainer" type="VBoxContainer" parent="VBoxContainer/VBoxContainer"]
+[node name="TitleContainer" type="VBoxContainer" parent="VBoxContainer/VBoxContainer" unique_id=1818852280]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="NameTitle" type="Label" parent="VBoxContainer/VBoxContainer/TitleContainer"]
+[node name="NameTitle" type="Label" parent="VBoxContainer/VBoxContainer/TitleContainer" unique_id=1436732440]
 layout_mode = 2
 size_flags_vertical = 10
 text = "Name: "
 
-[node name="IdTitle" type="Label" parent="VBoxContainer/VBoxContainer/TitleContainer"]
+[node name="IdTitle" type="Label" parent="VBoxContainer/VBoxContainer/TitleContainer" unique_id=884338720]
 layout_mode = 2
 size_flags_vertical = 10
 text = "ID: "
 
-[node name="RangeTitle" type="Label" parent="VBoxContainer/VBoxContainer/TitleContainer"]
+[node name="RangeTitle" type="Label" parent="VBoxContainer/VBoxContainer/TitleContainer" unique_id=582068294]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 10
 text = "Range: "
 
-[node name="DefaultValueTitle" type="Label" parent="VBoxContainer/VBoxContainer/TitleContainer"]
+[node name="DefaultValueTitle" type="Label" parent="VBoxContainer/VBoxContainer/TitleContainer" unique_id=1145716392]
 layout_mode = 2
 size_flags_vertical = 10
 text = "Default value: "
 
-[node name="ContentContainer" type="VBoxContainer" parent="VBoxContainer/VBoxContainer"]
+[node name="ContentContainer" type="VBoxContainer" parent="VBoxContainer/VBoxContainer" unique_id=1347211218]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="NameLabel" type="Label" parent="VBoxContainer/VBoxContainer/ContentContainer"]
+[node name="NameLabel" type="Label" parent="VBoxContainer/VBoxContainer/ContentContainer" unique_id=166297703]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 10
 
-[node name="NameCopyButton" type="Button" parent="VBoxContainer/VBoxContainer/ContentContainer/NameLabel"]
+[node name="NameCopyButton" type="Button" parent="VBoxContainer/VBoxContainer/ContentContainer/NameLabel" unique_id=1110222950]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 6
@@ -70,13 +70,13 @@ grow_horizontal = 0
 grow_vertical = 2
 size_flags_vertical = 10
 
-[node name="IdLabel" type="Label" parent="VBoxContainer/VBoxContainer/ContentContainer"]
+[node name="IdLabel" type="Label" parent="VBoxContainer/VBoxContainer/ContentContainer" unique_id=2102318461]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 10
 
-[node name="IdCopyButton" type="Button" parent="VBoxContainer/VBoxContainer/ContentContainer/IdLabel"]
+[node name="IdCopyButton" type="Button" parent="VBoxContainer/VBoxContainer/ContentContainer/IdLabel" unique_id=1034894286]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 6
@@ -92,55 +92,55 @@ grow_horizontal = 0
 grow_vertical = 2
 size_flags_vertical = 10
 
-[node name="RangeLabel" type="Label" parent="VBoxContainer/VBoxContainer/ContentContainer"]
+[node name="RangeLabel" type="Label" parent="VBoxContainer/VBoxContainer/ContentContainer" unique_id=1981113769]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 10
 
-[node name="DefaultValueLabel" type="Label" parent="VBoxContainer/VBoxContainer/ContentContainer"]
+[node name="DefaultValueLabel" type="Label" parent="VBoxContainer/VBoxContainer/ContentContainer" unique_id=1231573944]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 10
 
-[node name="ValueSetterContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="ValueSetterContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=1659019991]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer/ValueSetterContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/ValueSetterContainer" unique_id=552047869]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ValueSetterContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ValueSetterContainer" unique_id=1673501610]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/ValueSetterContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/ValueSetterContainer/HBoxContainer" unique_id=1703599131]
 layout_mode = 2
 text = "Set value: "
 
-[node name="ValueSlider" type="HSlider" parent="VBoxContainer/ValueSetterContainer/HBoxContainer"]
+[node name="ValueSlider" type="HSlider" parent="VBoxContainer/ValueSetterContainer/HBoxContainer" unique_id=1427013634]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 
-[node name="BackToDefaultButton" type="Button" parent="VBoxContainer/ValueSetterContainer/HBoxContainer"]
+[node name="BackToDefaultButton" type="Button" parent="VBoxContainer/ValueSetterContainer/HBoxContainer" unique_id=1017062179]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Default"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/ValueSetterContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/ValueSetterContainer" unique_id=1978968511]
 layout_mode = 2
 
-[node name="CurrentValueTitleLabel" type="Label" parent="VBoxContainer/ValueSetterContainer/HBoxContainer2"]
+[node name="CurrentValueTitleLabel" type="Label" parent="VBoxContainer/ValueSetterContainer/HBoxContainer2" unique_id=1402023268]
 layout_mode = 2
 text = "Current value: "
 
-[node name="CurrentValueLabel" type="Label" parent="VBoxContainer/ValueSetterContainer/HBoxContainer2"]
+[node name="CurrentValueLabel" type="Label" parent="VBoxContainer/ValueSetterContainer/HBoxContainer2" unique_id=298396704]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Button" type="Button" parent="VBoxContainer/ValueSetterContainer"]
+[node name="Button" type="Button" parent="VBoxContainer/ValueSetterContainer" unique_id=233764142]
 layout_mode = 2
 text = "Select"

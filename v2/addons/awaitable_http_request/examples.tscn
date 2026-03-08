@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://bnqsp15ey3wrl"]
+[gd_scene format=3 uid="uid://bnqsp15ey3wrl"]
 
-[ext_resource type="Script" path="res://addons/awaitable_http_request/awaitable_http_request.gd" id="1_b05hb"]
+[ext_resource type="Script" uid="uid://bb2vm2760evdf" path="res://addons/awaitable_http_request/awaitable_http_request.gd" id="1_b05hb"]
 
 [sub_resource type="GDScript" id="GDScript_qphse"]
 resource_name = "example"
@@ -71,10 +71,10 @@ func request_image() -> PackedByteArray:
 #endregion
 "
 
-[node name="Press F6 to run examples" type="Node" node_paths=PackedStringArray("http")]
+[node name="Press F6 to run examples" type="Node" unique_id=1071588990 node_paths=PackedStringArray("http")]
 editor_description = "This scene is not required and may be deleted freely."
 script = SubResource("GDScript_qphse")
 http = NodePath("AwaitableHTTPRequest")
 
-[node name="AwaitableHTTPRequest" type="HTTPRequest" parent="."]
+[node name="AwaitableHTTPRequest" type="HTTPRequest" parent="." unique_id=552327328]
 script = ExtResource("1_b05hb")

@@ -26,5 +26,5 @@ script = ExtResource("2_edgp8")
 slots = Array[ExtResource("3_edgp8")]([SubResource("Resource_00b4i")])
 meshes = [NodePath("Armature/Skeleton/Astronaut_mesh_001")]
 
-[node name="Astronaut_mesh_001" parent="Armature/Skeleton" parent_id_path=PackedInt32Array(95669135) index="0" unique_id=439297329]
+[node name="Astronaut_mesh_001" parent="Armature/Skeleton" parent_id_path=PackedInt32Array(868612187) index="0" unique_id=1884476712]
 surface_material_override/0 = SubResource("ShaderMaterial_xbdbw")

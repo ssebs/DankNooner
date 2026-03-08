@@ -4,11 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cpt0cd5k6r52t"
-valid=false
+path="res://.godot/imported/YMCA_Dance.fbx-d816b43a3722232472ab2d7e5df18d78.scn"
 
 [deps]
 
 source_file="res://entities/player/characters/assets/anim/YMCA_Dance.fbx"
+dest_files=["res://.godot/imported/YMCA_Dance.fbx-d816b43a3722232472ab2d7e5df18d78.scn"]
 
 [params]
 

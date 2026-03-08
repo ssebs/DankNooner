@@ -1,19 +1,20 @@
-[gd_resource type="StandardMaterial3D" format=3]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://c7r011xvhw6e6"]
 
-[ext_resource type="Texture2D" path="./Bricks102_2K-JPG_Color.jpg" id="Color"]
-[ext_resource type="Texture2D" path="./Bricks102_2K-JPG_AmbientOcclusion.jpg" id="AmbientOcclusion"]
-[ext_resource type="Texture2D" path="./Bricks102_2K-JPG_Displacement.jpg" id="Displacement"]
-[ext_resource type="Texture2D" path="./Bricks102_2K-JPG_Roughness.jpg" id="Roughness"]
-[ext_resource type="Texture2D" path="./Bricks102_2K-JPG_NormalGL.jpg" id="NormalGL"]
+[ext_resource type="Texture2D" uid="uid://t6pdm1xkn72j" path="res://resources/terrain_tex/Bricks102_2K-JPG/Bricks102_2K-JPG_AmbientOcclusion.jpg" id="AmbientOcclusion"]
+[ext_resource type="Texture2D" uid="uid://qw2hiwc7rt8n" path="res://resources/terrain_tex/Bricks102_2K-JPG/Bricks102_2K-JPG_Color.jpg" id="Color"]
+[ext_resource type="Texture2D" uid="uid://b4ekwaydt2dtt" path="res://resources/terrain_tex/Bricks102_2K-JPG/Bricks102_2K-JPG_Displacement.jpg" id="Displacement"]
+[ext_resource type="Texture2D" uid="uid://fqf5s2sv4fll" path="res://resources/terrain_tex/Bricks102_2K-JPG/Bricks102_2K-JPG_NormalGL.jpg" id="NormalGL"]
+[ext_resource type="Texture2D" uid="uid://bsdnxcm3nci6w" path="res://resources/terrain_tex/Bricks102_2K-JPG/Bricks102_2K-JPG_Roughness.jpg" id="Roughness"]
+
 [resource]
 albedo_texture = ExtResource("Color")
+roughness_texture = ExtResource("Roughness")
+roughness_texture_channel = 4
+normal_enabled = true
+normal_texture = ExtResource("NormalGL")
 ao_enabled = true
 ao_texture = ExtResource("AmbientOcclusion")
 ao_texture_channel = 4
-roughness_texture = ExtResource("Roughness")
-roughness_texture_channel = 4
-normal_texture = ExtResource("NormalGL")
-normal_enabled = true
-heightmap_texture = ExtResource("Displacement")
-heightmap_scale = 1.0
 heightmap_enabled = true
+heightmap_scale = 1.0
+heightmap_texture = ExtResource("Displacement")
