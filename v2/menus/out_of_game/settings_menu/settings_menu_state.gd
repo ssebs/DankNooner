@@ -11,6 +11,13 @@ class_name SettingsMenuState extends MenuState
 
 @onready var username_entry: LineEdit = %UsernameEntry
 @onready var noray_host_entry: LineEdit = %NorayHostEntry
+@onready var window_mode_opt: OptionButton = %WindowModeOpt
+
+
+func _ready():
+	window_mode_opt.clear()
+	for mode_str in SettingsManager.WINDOW_MODES.keys():
+		window_mode_opt.add_item(mode_str, SettingsManager.WINDOW_MODES[mode_str])
 
 
 func Enter(_state_context: StateContext):
@@ -39,6 +46,10 @@ func load_settings_into_ui():
 	username_entry.text = settings_manager.current_settings["username"]
 	noray_host_entry.text = settings_manager.current_settings["noray_relay_host"]
 
+	window_mode_opt.select(
+		SettingsManager.WINDOW_MODES.get(settings_manager.current_settings["fullscreen_mode"])
+	)
+
 
 func _on_all_settings_changed(_current_settings: Dictionary):
 	load_settings_into_ui()
@@ -51,6 +62,11 @@ func _on_setting_updated(_key: String, _value: Variant):
 func _on_save_pressed():
 	settings_manager.update_setting("username", username_entry.text, false)
 	settings_manager.update_setting("noray_relay_host", noray_host_entry.text, false)
+
+	settings_manager.update_setting(
+		"fullscreen_mode", SettingsManager.windowmode_to_str(window_mode_opt.get_selected_id())
+	)
+
 	settings_manager.save_settings()
 
 	UiToast.ShowToast(tr("SAVED_SETTINGS_LABEL"))

@@ -4,6 +4,10 @@
 
 ## In Progress 🚀
 
+- [ ] window settings, not updating ui when saving
+- [ ] saving not loading into selected item in ui
+
+- [ ] customization resources aren't found at export/build time
 - [ ] fix github actions ci
 - [ ] debug wheelie animation
 

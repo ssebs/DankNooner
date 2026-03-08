@@ -84,6 +84,22 @@ unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "home.ssebs.com"
 
+[node name="window_label" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1233927487]
+layout_mode = 2
+text = "WINDOW_SETTINGS_LABEL"
+
+[node name="WindowModeOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1732712393]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "windowed"
+popup/item_0/id = 0
+popup/item_1/text = "fullscreen"
+popup/item_1/id = 3
+popup/item_2/text = "borderless"
+popup/item_2/id = 4
+
 [node name="HSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1039528216]
 layout_mode = 2
 theme_override_constants/separation = 24
