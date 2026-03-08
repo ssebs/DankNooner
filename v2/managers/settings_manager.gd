@@ -91,3 +91,15 @@ func save_default_settings():
 func load_default_settings():
 	current_settings = default_settings
 	all_settings_changed.emit(current_settings)
+
+
+## convert windowmode to string from WINDOW_MODES map
+static func windowmode_to_str(wmode: int) -> String:
+	match wmode:
+		DisplayServer.WINDOW_MODE_WINDOWED:
+			return "windowed"
+		DisplayServer.WINDOW_MODE_FULLSCREEN:
+			return "borderless"
+		DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN:
+			return "fullscreen"
+	return ""
