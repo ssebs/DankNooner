@@ -53,14 +53,17 @@ func _scan_skin_dir(dir_path: String) -> Dictionary:
 		printerr("Failed to open skin directory: %s" % dir_path)
 		return result
 
+	var is_exported := !OS.has_feature("editor")
+	var extension := ".tres.remap" if is_exported else ".tres"
+
 	dir.list_dir_begin()
 	var file_name := dir.get_next()
 	while file_name != "":
-		if not dir.current_is_dir() and file_name.ends_with(".tres"):
-			var full_path := dir_path + file_name
-			var res := ResourceLoader.load(full_path)
+		if not dir.current_is_dir() and file_name.ends_with(extension):
+			var res_path := dir_path + file_name.replace(".remap", "")
+			var res := ResourceLoader.load(res_path)
 			if res and "skin_name" in res:
-				result[res.skin_name] = full_path
+				result[res.skin_name] = res_path
 		file_name = dir.get_next()
 	dir.list_dir_end()
 	return result

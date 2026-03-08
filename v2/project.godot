@@ -11,7 +11,6 @@ config_version=5
 [Fmod]
 
 General/banks_path="res://fmod/DankNoonerFMODProject/Build/Desktop"
-General/should_load_by_name=true
 
 [application]
 
