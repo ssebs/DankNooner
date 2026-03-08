@@ -7,6 +7,13 @@ signal setting_updated(key: String, value: Variant)
 @export var settings_path: String = "user://settings.json"
 @export var settings_version: int = 1
 
+# display labels for the dropdown (localization keys)
+const WINDOW_MODE_LABELS: Dictionary = {
+	"windowed": "WINDOW_MODE_WINDOWED",
+	"fullscreen": "WINDOW_MODE_FULLSCREEN_EXCLUSIVE",
+	"borderless": "WINDOW_MODE_FULLSCREEN_BORDERLESS",
+}
+
 # json stores the string, this maps to the godot enum
 const WINDOW_MODES: Dictionary = {
 	"windowed": DisplayServer.WINDOW_MODE_WINDOWED,
@@ -19,7 +26,7 @@ var default_settings: Dictionary = {
 	"username": "change_me",
 	"noray_relay_host": "home.ssebs.com",  # noray.casa.ssebs.com, 192.168.1.247
 	"resolution": "1920x1080",
-	"fullscreen_mode": "windowed",  # or "fullscreen" or "borderless"
+	"fullscreen_mode": "borderless",  # or "fullscreen" or "borderless"
 	"bike_skin": "res://resources/entities/bikes/skins/sport_default_skin_definition.tres",
 	"character_skin": "res://resources/entities/player/skins/biker_default_skin_definition.tres",
 }

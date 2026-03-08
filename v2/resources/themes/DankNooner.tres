@@ -4,6 +4,7 @@
 [ext_resource type="FontFile" uid="uid://8tlasykxhy4g" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-SemiBold.ttf" id="1_kytw6"]
 [ext_resource type="Texture2D" uid="uid://drilpv5hu6f3o" path="res://resources/icons/checkbox-checked.svg" id="2_hydtf"]
 [ext_resource type="Texture2D" uid="uid://bpsmj74n6f4lq" path="res://resources/icons/checkbox-unchecked.svg" id="3_7depn"]
+[ext_resource type="Texture2D" uid="uid://vvvtkn4b0s0q" path="res://resources/img/Icons/circleIcon.png" id="4_7depn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vtut7"]
 content_margin_left = 12.0
@@ -100,6 +101,25 @@ corner_radius_bottom_left = 4
 expand_margin_left = 12.0
 expand_margin_right = 12.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k75rx"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.18, 0.4950001, 0.72, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.25490198, 0.6862745, 1, 1)
+border_blend = true
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 4
+expand_margin_left = 12.0
+expand_margin_right = 6.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wtkwa"]
 content_margin_left = 12.0
 content_margin_top = 12.0
@@ -189,6 +209,9 @@ CheckBox/icons/checked = ExtResource("2_hydtf")
 CheckBox/icons/unchecked = ExtResource("3_7depn")
 CheckBox/styles/normal = ExtResource("1_bvbyg")
 HBoxContainer/constants/separation = 12
+HSlider/icons/grabber = ExtResource("4_7depn")
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_k75rx")
+HSlider/styles/slider = ExtResource("1_bvbyg")
 LineEdit/styles/focus = SubResource("StyleBoxFlat_wtkwa")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_gbla1")
 MarginContainer/constants/margin_bottom = 64

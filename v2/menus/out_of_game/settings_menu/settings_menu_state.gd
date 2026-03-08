@@ -17,7 +17,9 @@ class_name SettingsMenuState extends MenuState
 func _ready():
 	window_mode_opt.clear()
 	for mode_str in SettingsManager.WINDOW_MODES.keys():
-		window_mode_opt.add_item(mode_str, SettingsManager.WINDOW_MODES[mode_str])
+		window_mode_opt.add_item(
+			tr(SettingsManager.WINDOW_MODE_LABELS[mode_str]), SettingsManager.WINDOW_MODES[mode_str]
+		)
 
 
 func Enter(_state_context: StateContext):
