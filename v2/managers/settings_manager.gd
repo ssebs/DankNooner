@@ -99,7 +99,12 @@ static func windowmode_to_str(wmode: int) -> String:
 		DisplayServer.WINDOW_MODE_WINDOWED:
 			return "windowed"
 		DisplayServer.WINDOW_MODE_FULLSCREEN:
-			return "borderless"
-		DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN:
 			return "fullscreen"
+		DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN:
+			return "borderless"
 	return ""
+
+
+## convert string to windowmode from WINDOW_MODES map
+static func str_to_windowmode(mode_str: String) -> int:
+	return WINDOW_MODES.get(mode_str, DisplayServer.WINDOW_MODE_WINDOWED)

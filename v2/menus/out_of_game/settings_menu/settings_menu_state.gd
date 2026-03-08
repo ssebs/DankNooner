@@ -46,9 +46,13 @@ func load_settings_into_ui():
 	username_entry.text = settings_manager.current_settings["username"]
 	noray_host_entry.text = settings_manager.current_settings["noray_relay_host"]
 
-	window_mode_opt.select(
-		SettingsManager.WINDOW_MODES.get(settings_manager.current_settings["fullscreen_mode"])
+	var wmode_id := SettingsManager.str_to_windowmode(
+		settings_manager.current_settings["fullscreen_mode"]
 	)
+	for i in window_mode_opt.item_count:
+		if window_mode_opt.get_item_id(i) == wmode_id:
+			window_mode_opt.select(i)
+			break
 
 
 func _on_all_settings_changed(_current_settings: Dictionary):
