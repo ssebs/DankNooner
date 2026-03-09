@@ -27,6 +27,9 @@ var default_settings: Dictionary = {
 	"noray_relay_host": "home.ssebs.com",  # noray.casa.ssebs.com, 192.168.1.247
 	"resolution": "1920x1080",
 	"fullscreen_mode": "borderless",  # or "fullscreen" or "borderless"
+	"master_vol": 0.8,
+	"music_vol": 1.0,
+	"sfx_vol": 1.0,
 	"bike_skin": "res://resources/entities/bikes/skins/sport_default_skin_definition.tres",
 	"character_skin": "res://resources/entities/player/skins/biker_default_skin_definition.tres",
 }
