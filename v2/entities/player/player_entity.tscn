@@ -12,10 +12,10 @@
 [ext_resource type="Script" uid="uid://d37r06yj5krm" path="res://entities/player/controllers/input_controller.gd" id="7_mrv5j"]
 [ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/entities/bikes/hitbox/bike_hitbox.tres" id="8_1vqn6"]
 [ext_resource type="Script" uid="uid://b37it1dg63lir" path="res://entities/player/controllers/animation_controller.gd" id="9_anim"]
+[ext_resource type="PackedScene" uid="uid://dvkip6up3p1qg" path="res://entities/player/controllers/hud_controller.tscn" id="9_wqpss"]
 [ext_resource type="Script" uid="uid://c2c38w5opks8m" path="res://entities/player/controllers/gearing_controller.gd" id="10_gear"]
 [ext_resource type="Script" uid="uid://t5igmn16n20c" path="res://entities/player/controllers/trick_controller.gd" id="11_trick"]
 [ext_resource type="Script" uid="uid://cfpb4scu8hdy4" path="res://entities/player/controllers/crash_controller.gd" id="12_crash"]
-[ext_resource type="PackedScene" uid="uid://dvkip6up3p1qg" path="res://entities/player/controllers/hud_controller.tscn" id="16_wqpss"]
 
 [sub_resource type="Animation" id="Animation_tivla"]
 length = 0.001
@@ -137,7 +137,7 @@ transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@20545")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@28750")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
@@ -185,6 +185,9 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0
 shape = ExtResource("8_1vqn6")
 
 [node name="_Controllers" type="Node3D" parent="." unique_id=1446485892]
+
+[node name="HUDController" parent="_Controllers" unique_id=1263233564 node_paths=PackedStringArray("player_entity") instance=ExtResource("9_wqpss")]
+player_entity = NodePath("../..")
 
 [node name="InputController" type="Node3D" parent="_Controllers" unique_id=745640607 node_paths=PackedStringArray("player_entity")]
 unique_name_in_owner = true
@@ -238,10 +241,6 @@ transform = Transform3D(1, 0, 0, 0, 0.96592575, 0.258819, 0, -0.258819, 0.965925
 
 [node name="TPSCam" parent="_Controllers/CameraController" index="1" unique_id=1953618350]
 transform = Transform3D(1, 0, 0, 0, 0.9370628, 0.34916094, 0, -0.34916094, 0.9370628, 0, 1.391123, 1.7631481)
-
-[node name="HUDController" parent="_Controllers" unique_id=938483265 node_paths=PackedStringArray("player_entity") instance=ExtResource("16_wqpss")]
-unique_name_in_owner = true
-player_entity = NodePath("../..")
 
 [node name="Markers" type="Node3D" parent="." unique_id=894866869]
 

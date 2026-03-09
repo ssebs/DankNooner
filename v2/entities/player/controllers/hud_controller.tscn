@@ -2,7 +2,8 @@
 
 [ext_resource type="Script" uid="uid://civ7dg4q23qwd" path="res://entities/player/controllers/hud_controller.gd" id="1_bxvjo"]
 
-[node name="HUDController" type="Control" unique_id=1416178663]
+[node name="HUDController" type="Control" unique_id=1263233564]
+physics_interpolation_mode = 0
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,7 +15,7 @@ script = ExtResource("1_bxvjo")
 metadata/_custom_type_script = "uid://civ7dg4q23qwd"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1797666318]
-layout_mode = 1
+layout_mode = 0
 offset_left = 16.0
 offset_top = 16.0
 offset_right = 250.0
