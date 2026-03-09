@@ -1,8 +1,6 @@
 @tool
 class_name HUDController extends Control
 
-@export var player_entity: PlayerEntity
-
 #region export setter values
 @export var speed: float = 0.0:
 	set(v):
