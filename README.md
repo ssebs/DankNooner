@@ -1,5 +1,7 @@
 # Dank Nooner
 
+[![.github/workflows/build.yml](https://github.com/ssebs/DankNooner/actions/workflows/build.yml/badge.svg)](https://github.com/ssebs/DankNooner/actions/workflows/build.yml)
+
 **A physics-based motorcycle stunt game. Wheelies, wrecks, and questionable decisions.**
 
 An open-world motorcycle game about doing every stupid thing you'd never try in real life. Realistic controls meet arcade-style tricks — progressive braking, limited grip, and ragdoll crashes. Weave through traffic doing wheelies, pull skate-style tricks off ramps, race friends online, and progress from a bicycle to a fully customized sport bike.
@@ -14,6 +16,7 @@ Note for Mac users:
 </summary>
 
 You will need to allow the app explicitly.
+
 - Double click to extract the .zip
 - Double click to run **DankNooner.app**
 - Open **System Settings** > **Privacy & Security** > Scroll down to **Security**
@@ -34,18 +37,18 @@ You will need to allow the app explicitly.
 
 ## Roadmap
 
-| Phase              | Status      | Description                                                                                      |
-| ------------------ | ----------- | ------------------------------------------------------------------------------------------------ |
+| Phase              | Status      | Description                                                                                                                                                                                             |
+| ------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **V1 — POC**       | Complete    | Wheelie balance game on [Itch.io](https://theofficialssebs.itch.io/dank-nooner) + full player controller POC ([download v1.0](https://github.com/ssebs/moto-player-controller-godot/releases/tag/v1.0)) |
-| **V2 — MVP**       | In Progress | Multiplayer open-world rewrite with expanded tricks, racing, and progression                     |
-| **V3 — Full Game** | Planned     | Story mode, quests, cutscenes, full trick system, polish                                         |
+| **V2 — MVP**       | In Progress | Multiplayer open-world rewrite with expanded tricks, racing, and progression                                                                                                                            |
+| **V3 — Full Game** | Planned     | Story mode, quests, cutscenes, full trick system, polish                                                                                                                                                |
 
 ## Source Code
 
-| Version | Directory       |
-| ------- | --------------- |
-| V1      | [v1/](./v1/)   |
-| V2      | [v2/](./v2/)   |
+| Version | Directory    |
+| ------- | ------------ |
+| V1      | [v1/](./v1/) |
+| V2      | [v2/](./v2/) |
 
 ## Related Projects
 
