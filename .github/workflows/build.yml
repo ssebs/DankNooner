@@ -10,12 +10,12 @@ jobs:
       contents: write
     name: Export Game
     steps:
-      - name: install wine
+      - name: install wine & audio deps
         id: wine_install
         run: |
           sudo dpkg --add-architecture i386
           sudo apt update
-          sudo apt install -y wine64 wine32
+          sudo apt install -y wine64 wine32 libasound2-dev libpulse-dev
           echo "WINE_PATH=$(which wine)" >> $GITHUB_OUTPUT
 
       - name: checkout
