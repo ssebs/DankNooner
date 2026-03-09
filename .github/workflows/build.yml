@@ -15,8 +15,14 @@ jobs:
         run: |
           sudo dpkg --add-architecture i386
           sudo apt update
-          sudo apt install -y wine64 wine32 libasound2-dev libpulse-dev
+          sudo apt install -y wine64 wine32 libasound2-dev libpulse-dev pulseaudio
           echo "WINE_PATH=$(which wine)" >> $GITHUB_OUTPUT
+
+      - name: start virtual audio device for FMOD
+        run: |
+          pulseaudio --start --exit-idle-time=-1
+          pactl load-module module-null-sink sink_name=virtual_speaker
+          pactl set-default-sink virtual_speaker
 
       - name: checkout
         uses: actions/checkout@v5
