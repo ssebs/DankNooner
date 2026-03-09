@@ -13,7 +13,7 @@ class_name PlayerEntity extends CharacterBody3D
 @export var trick_controller: TrickController
 @export var crash_controller: CrashController
 
-@onready var hud_controller: HUDController = %HUDController
+# @onready var hud_controller: HUDController = %HUDController
 @onready var movement_controller: MovementController = %MovementController
 @onready var camera_controller: CameraController = %CameraController
 
@@ -93,17 +93,17 @@ func _process(_delta: float) -> void:
 	if !is_local_client:
 		return
 
-	hud_controller.speed = speed
-	hud_controller.current_gear = current_gear
-	hud_controller.is_stalled = gearing_controller.is_stalled if gearing_controller else false
-	hud_controller.rpm_ratio = rpm_ratio
-	hud_controller.throttle = input_controller.throttle if input_controller else 0.0
-	hud_controller.clutch_value = clutch_value
-	hud_controller.grip_usage = grip_usage
-	hud_controller.last_trick = trick_controller._last_trick if trick_controller else 0
-	hud_controller.boost_count = boost_count
-	hud_controller.is_boosting = is_boosting
-	hud_controller.is_crashed = is_crashed
+	# hud_controller.speed = speed
+	# hud_controller.current_gear = current_gear
+	# hud_controller.is_stalled = gearing_controller.is_stalled if gearing_controller else false
+	# hud_controller.rpm_ratio = rpm_ratio
+	# hud_controller.throttle = input_controller.throttle if input_controller else 0.0
+	# hud_controller.clutch_value = clutch_value
+	# hud_controller.grip_usage = grip_usage
+	# hud_controller.last_trick = trick_controller._last_trick if trick_controller else 0
+	# hud_controller.boost_count = boost_count
+	# hud_controller.is_boosting = is_boosting
+	# hud_controller.is_crashed = is_crashed
 
 
 #region init
@@ -140,10 +140,10 @@ func _deferred_init():
 		camera_controller.switch_to_tps_cam()
 		_init_input_handlers()
 		_init_audio()
-		hud_controller.show_hud()
+		# hud_controller.show_hud()
 	else:
 		camera_controller.disable_cameras()
-		hud_controller.hide_hud()
+		# hud_controller.hide_hud()
 
 
 #endregion

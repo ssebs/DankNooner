@@ -67,6 +67,7 @@ func update_setting(
 ## write current_settings to settings.json
 func save_settings():
 	DictJSONSaverLoader.save_json_to_file(settings_path, current_settings)
+	all_settings_changed.emit(current_settings)
 
 
 ## load settings.json into current_settings
