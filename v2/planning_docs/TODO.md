@@ -4,14 +4,9 @@
 
 ## In Progress 🚀
 
-- [x] setting window mode doesn't update when saved in game
 - [ ] make working volume settings
-- [ ] fix github actions ci
-
 - [ ] customization resources aren't found at export/build time
-
 - [ ] Create Player Part 2
-
   - [ ] **Delete** all imported stuff and start clean. Use old code as reference
   - [ ] Refactor/cleanup
   - [ ] Make sure MP authority is set
@@ -23,11 +18,8 @@
     - [ ] Brake
     - [ ] Layer 2 collision
   - [ ] be able to ride up ramps
-
 - [ ] debug wheelie animation
-
 - [ ] Review Animation Controller & Create animations
-
   - [x] claude created a system
   - [x] Review planning_docs/AnimationController.md
   - [x] Create way to play specific animations
@@ -249,6 +241,8 @@
 
 ## Done ✅
 
+- [x] setting window mode doesn't update when saved in game
+- [x] fix github actions ci
 - [x] Audio Manager
 
   - [x] fmod bike sounds
