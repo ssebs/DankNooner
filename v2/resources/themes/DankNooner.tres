@@ -114,11 +114,26 @@ border_width_bottom = 4
 border_color = Color(0.25490198, 0.6862745, 1, 1)
 border_blend = true
 corner_radius_top_left = 16
-corner_radius_top_right = 16
+corner_radius_top_right = 4
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 4
-expand_margin_left = 12.0
-expand_margin_right = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iu7fo"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.13333334, 0.13333334, 0.13333334, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.25490198, 0.6862745, 1, 1)
+border_blend = true
+corner_radius_top_left = 16
+corner_radius_top_right = 4
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wtkwa"]
 content_margin_left = 12.0
@@ -213,7 +228,7 @@ HSlider/icons/grabber = ExtResource("4_7depn")
 HSlider/icons/grabber_highlight = ExtResource("4_7depn")
 HSlider/styles/grabber_area = SubResource("StyleBoxFlat_k75rx")
 HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_k75rx")
-HSlider/styles/slider = ExtResource("1_bvbyg")
+HSlider/styles/slider = SubResource("StyleBoxFlat_iu7fo")
 LineEdit/styles/focus = SubResource("StyleBoxFlat_wtkwa")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_gbla1")
 MarginContainer/constants/margin_bottom = 64

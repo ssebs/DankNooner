@@ -125,21 +125,38 @@ size_flags_horizontal = 0
 layout_mode = 2
 text = "MASTER_VOLUME_LABEL"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1884397480]
-layout_mode = 2
-theme_override_constants/separation = 24
-
-[node name="HSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1475189282]
+[node name="MasterVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1475189282]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
-value = 50.0
-ticks_on_borders = true
+max_value = 1.0
+step = 0.1
+value = 0.5
 
 [node name="music_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=55761047]
 layout_mode = 2
 text = "MUSIC_VOLUME_LABEL"
 
+[node name="MusicVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1911176273]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.1
+value = 0.5
+
 [node name="sfx_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1442766106]
 layout_mode = 2
 text = "SFX_VOLUME_LABEL"
+
+[node name="SFXVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=349890090]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.1
+value = 0.5
+ticks_on_borders = true
