@@ -4,11 +4,25 @@
 
 ## In Progress 🚀
 
-- [ ] window settings, not updating ui when saving
-- [ ] saving not loading into selected item in ui
+- [ ] make working volume settings
+- [ ] fix github actions ci
 
 - [ ] customization resources aren't found at export/build time
-- [ ] fix github actions ci
+
+- [ ] Create Player Part 2
+
+  - [ ] **Delete** all imported stuff and start clean. Use old code as reference
+  - [ ] Refactor/cleanup
+  - [ ] Make sure MP authority is set
+  - [ ] Fix collision
+  - [ ] gearing
+  - [ ] physics
+  - [ ] trick
+  - [ ] crash
+    - [ ] Brake
+    - [ ] Layer 2 collision
+  - [ ] be able to ride up ramps
+
 - [ ] debug wheelie animation
 
 - [ ] Review Animation Controller & Create animations
@@ -25,52 +39,17 @@
     - [ ] Maybe multiple?
     - [ ] proceedural
 
-- [ ] Create Player Part 2
-
-  - [x] > import features from moto-player-controller
-  - > see planning_docs\MIGRATE_FROM_MOTO_CONTROLLER.md (update first)
-  - > no sound for now
-  - [x] stats saved to bike_definition res
-  - [ ] Fix collision
-  - [x] gearing
-  - [x] physics
-  - [x] trick
-  - [ ] crash
-    - [x] Brake
-    - [ ] Layer 2 collision
-  - [x] Move hud
-  - [ ] use animations from AnimationController + make animations
-  - [ ] review & clean code
-    - [ ] bike_skin_definition.gd
-    - [ ] player_entity.gd
-    - [ ] movement_controller.gd
-    - [ ] crash_controller.gd
-    - [ ] gearing_controller.gd
-    - [ ] input_controller.gd
-    - [ ] trick_controller.gd
-  - [ ] Make sure MP authority is set
-  - [ ] be able to ride up ramps
-
-- [ ] Audio Manager
-
-  - [ ] volume settings
-
-  - [ ] fmod bike sounds
-    - [ ] Seamless loop w/ RPM
-    - [ ] Crash
-    - [ ] Tire Screetch
-
-- [ ] bugs
-  - [x] Add version # + version check in game
-  - [x] set max char limit for name
-  - [ ] First launch noray setting is not working, can't host properly. 2nd launch it works
-    - [x] implement
-    - [ ] TEST
-
 ## Up Next (Finish POC MP Gameplay Demo) 📋
 
 > POC = playable gamemodes w/ friends, see if core gameplay loop works
 > video record this once playing with everyone, save log files
+
+- [ ] noray => WebRTC
+
+  - Use webrtc for nat punch thru with stun/turn server
+  - https://github.com/godotengine/godot-demo-projects/tree/master/networking/webrtc_signaling
+  - https://www.reddit.com/r/gamedev/comments/1872muu/nat_traversal_solutions_for_multiplayer_in_godot/
+  - Coturn docker to host
 
 - [ ] Trick Manager + tricks
 
@@ -132,6 +111,9 @@
     - [ ] Stunt race
       - [ ] Mario kart like - get items to attack players or help self, but do tricks to get items. More complex tricks = better items
   - [ ] Unlock Skins w/ Score from disk & spend
+
+- [ ] Crash SFX
+- [ ] Tire Screetch SFX
 
 ## Backlog
 
@@ -208,6 +190,8 @@
   - [ ] Add Character customization (choose character for now)
   - [ ] Change color w/ color picker
 
+- [ ] Vibe code a painterly shader I can add as an extra pass. Add brush stroke lines
+
 - [ ] Tutorial level 1
   - [ ] Explain how to progressively brake
   - [ ] Go this fast & brake, don't squeeze hard asap, slowly squeeze.
@@ -263,6 +247,23 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] Audio Manager
+
+  - [x] fmod bike sounds
+    - [x] Seamless loop w/ RPM
+
+- [x] bugs
+
+  - [x] Add version # + version check in game
+  - [x] set max char limit for name
+  - [x] First launch noray setting is not working, can't host properly. 2nd launch it works
+    - [x] implement
+    - [ ] TEST
+
+- [x] saving not loading into selected item in ui
+
+- [x] window settings, not updating ui when saving
 
 - [x] Basic test map
 
