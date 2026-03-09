@@ -97,21 +97,18 @@ _data = {
 &"RESET": SubResource("Animation_tivla")
 }
 
-[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("camera_controller", "movement_controller", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "hud_controller", "collision_shape_3d")]
+[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("collision_shape_3d", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller")]
 floor_block_on_wall = false
 safe_margin = 0.01
 script = ExtResource("1_0jc3c")
 bike_definition = ExtResource("2_lfjd4")
 character_definition = ExtResource("3_lfjd4")
-camera_controller = NodePath("_Controllers/CameraController")
-movement_controller = NodePath("_Controllers/MovementController")
+collision_shape_3d = NodePath("CollisionShape3D")
 input_controller = NodePath("_Controllers/InputController")
 animation_controller = NodePath("_Controllers/AnimationController")
 gearing_controller = NodePath("_Controllers/GearingController")
 trick_controller = NodePath("_Controllers/TrickController")
 crash_controller = NodePath("_Controllers/CrashController")
-hud_controller = NodePath("_Controllers/HUDController")
-collision_shape_3d = NodePath("CollisionShape3D")
 metadata/_custom_type_script = "uid://bnop7vr1q4gwg"
 
 [node name="RollbackSynchronizer" type="Node" parent="." unique_id=609748778 node_paths=PackedStringArray("root")]
@@ -137,7 +134,7 @@ transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@28750")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@84785")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
@@ -186,8 +183,8 @@ shape = ExtResource("8_1vqn6")
 
 [node name="_Controllers" type="Node3D" parent="." unique_id=1446485892]
 
-[node name="HUDController" parent="_Controllers" unique_id=1263233564 node_paths=PackedStringArray("player_entity") instance=ExtResource("9_wqpss")]
-player_entity = NodePath("../..")
+[node name="HUDController" parent="_Controllers" unique_id=1263233564 instance=ExtResource("9_wqpss")]
+unique_name_in_owner = true
 
 [node name="InputController" type="Node3D" parent="_Controllers" unique_id=745640607 node_paths=PackedStringArray("player_entity")]
 unique_name_in_owner = true
@@ -233,6 +230,7 @@ input_controller = NodePath("../InputController")
 animation_controller = NodePath("../AnimationController")
 
 [node name="CameraController" parent="_Controllers" unique_id=816730707 node_paths=PackedStringArray("fps_marker", "tps_marker") instance=ExtResource("2_bls4j")]
+unique_name_in_owner = true
 fps_marker = NodePath("../../Markers/FPSCamMarker")
 tps_marker = NodePath("../../Markers/TPSCamMarker")
 

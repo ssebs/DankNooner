@@ -5,17 +5,17 @@ class_name PlayerEntity extends CharacterBody3D
 
 @export var bike_definition: BikeSkinDefinition
 @export var character_definition: CharacterSkinDefinition
+@export var collision_shape_3d: CollisionShape3D
 
-@export var camera_controller: CameraController
-@export var movement_controller: MovementController
 @export var input_controller: InputController
 @export var animation_controller: AnimationController
 @export var gearing_controller: GearingController
 @export var trick_controller: TrickController
 @export var crash_controller: CrashController
-@export var hud_controller: HUDController
 
-@export var collision_shape_3d: CollisionShape3D
+@onready var hud_controller: HUDController = %HUDController
+@onready var movement_controller: MovementController = %MovementController
+@onready var camera_controller: CameraController = %CameraController
 
 @onready var visual_root: Node3D = %VisualRoot
 @onready var character_skin: CharacterSkin = %CharacterSkin
@@ -209,8 +209,6 @@ func do_respawn():
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
 
-	if camera_controller == null:
-		issues.append("camera_controller must not be empty")
 	if movement_controller == null:
 		issues.append("movement_controller must not be empty")
 	if input_controller == null:
@@ -223,8 +221,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("trick_controller must not be empty")
 	if crash_controller == null:
 		issues.append("crash_controller must not be empty")
-	if hud_controller == null:
-		issues.append("hud_controller must not be empty")
 	if bike_definition == null:
 		issues.append("bike_definition must not be empty")
 	if collision_shape_3d == null:
