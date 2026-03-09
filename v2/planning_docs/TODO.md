@@ -4,7 +4,7 @@
 
 ## In Progress 🚀
 
-- [ ] setting window mode doesn't update when saved in game
+- [x] setting window mode doesn't update when saved in game
 - [ ] make working volume settings
 - [ ] fix github actions ci
 

@@ -167,8 +167,8 @@ func _reprocess_settings() -> void:
 	process_settings()
 
 func _broadcast_state(tick: int, state: _PropertySnapshot) -> void:
-	var is_sending_diffs := NetworkRollback.enable_diff_states # TODO: Don't tie to a rollback setting?
-	var is_full_state_tick := not is_sending_diffs or (full_state_interval > 0 and tick > _next_full_state_tick)
+	var is_sending_diffs: bool = NetworkRollback.enable_diff_states # TODO: Don't tie to a rollback setting?
+	var is_full_state_tick: bool = not is_sending_diffs or (full_state_interval > 0 and tick > _next_full_state_tick)
 
 	if is_full_state_tick:
 		# Broadcast new full state
