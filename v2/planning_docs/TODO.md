@@ -4,8 +4,7 @@
 
 ## In Progress 🚀
 
-- [ ] fix github actions ci
-
+- [ ] make working volume settings
 - [ ] Create Player Part 2
 
   - [ ] **Delete** all imported stuff and start clean. Use old code as reference
@@ -245,9 +244,9 @@
 
 ## Done ✅
 
-- [x] customization resources aren't found at export/build time
+- [x] fix github actions ci
 
-- [x] make working volume settings
+- [x] customization resources aren't found at export/build time
 
 - [x] Audio Manager
 

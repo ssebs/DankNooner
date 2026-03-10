@@ -18,7 +18,6 @@ var is_showing_splashes: bool = false
 
 func Enter(_state_context: StateContext):
 	if Engine.is_editor_hint():
-		_finish_splashes()
 		return
 
 	audio_manager.play_startup()
