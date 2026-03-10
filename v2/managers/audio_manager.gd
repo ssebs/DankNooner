@@ -59,15 +59,17 @@ func _on_setting_updated(setting_key: String, setting_value: Variant):
 		printerr("could not find vca name %s" % vca_name)
 		return
 
-	if vca_name.contains("vca:/"):
-		_apply_vca_volume(vca_name, setting_value)
-
-	elif vca_name == "MASTER":
-		pass
+	_apply_vca_volume(vca_name, setting_value)
 
 
 ## vca_name => vca:/NAME
 func _apply_vca_volume(vca_name: String, volume: float):
+	if vca_name == "MASTER":
+		# TODO - set master vol
+		return
+	if !vca_name.contains("vca:/"):
+		return
+
 	var vca: FmodVCA = FmodServer.get_vca(vca_name)
 	if vca == null:
 		printerr("could not load vca from name %s" % vca_name)
