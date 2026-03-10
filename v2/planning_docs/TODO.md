@@ -4,7 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] make working volume settings
 - [ ] Create Player Part 2
 
   - [ ] **Delete** all imported stuff and start clean. Use old code as reference
@@ -243,6 +242,8 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] make working volume settings
 
 - [x] fix github actions ci
 
