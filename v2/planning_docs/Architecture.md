@@ -131,7 +131,7 @@ Levels are managed via `LevelManager` and selected through the `LobbyMenuState` 
 3. Add entry to `level_name_map` (enum -> localization key)
 4. Add entry to `possible_levels` (enum -> `preload("res://path/to/level.tscn")`)
 
-### Input System <<< THIS IS OUT OF DATE >>>
+### Input System
 
 The `InputStateManager` (`managers/input_state_manager.gd`) is a centralized input handler that routes input based on the current game context.
 
@@ -148,7 +148,7 @@ enum InputState {
 
 #### Input Routing
 
-The InputManager uses `_unhandled_input()` to process events based on `current_input_state`:
+The InputStateManager uses `_unhandled_input()` to process events based on `current_input_state`:
 
 - **IN_GAME**: "pause" action -> emits `pause_requested` signal
 - **IN_GAME_PAUSED**: "pause" action -> emits `unpause_requested` signal
@@ -170,22 +170,74 @@ Mouse visibility is managed based on input state:
 
 ### Player Entity
 
-`PlayerEntity` is a `CharacterBody3D` using composition with `@export` component references:
+`PlayerEntity` is a `CharacterBody3D` using composition with `@export` component references. All controllers are called sequentially from `_rollback_tick()` via their `on_movement_rollback_tick()` methods.
 
-- `CameraController` - camera follow/control
-- `MovementController` - handles movement with manual inertia
-- `BikeDefinition` - resource with mesh/collision data
-- `MeshComponent` - renders the bike mesh
+For detailed design docs see:
+- [PlayerController.md](./PlayerController.md) - movement, gearing, tricks, crash subsystems
+- [AnimationController.md](./AnimationController.md) - procedural animation, IK, ragdoll
 
-#### MovementController
+#### Component Controllers
 
-Uses `CharacterBody3D` with manual inertia simulation instead of physics forces:
+| Controller | File | Purpose |
+|------------|------|---------|
+| `InputController` | `controllers/input_controller.gd` | Gathers input, syncs via RollbackSynchronizer |
+| `MovementController` | `controllers/movement_controller.gd` | Physics-based movement, speed, steering, lean, velocity |
+| `GearingController` | `controllers/gearing_controller.gd` | Clutch engagement, RPM blending, power output |
+| `TrickController` | `controllers/trick_controller.gd` | Detects wheelie/stoppie, updates pitch_angle |
+| `CrashController` | `controllers/crash_controller.gd` | Brake grab detection, crash detection, auto-respawn |
+| `CameraController` | `controllers/camera_controller.gd` | FPS/TPS camera switching |
+| `AnimationController` | `controllers/animation_controller.gd` | Procedural animation blending, IK, ragdoll |
 
-- `current_speed` and `angular_velocity` are lerped for smooth acceleration/deceleration
-- `apply_engine_braking()` - passive slowdown when no input
-- Tunable exports: `acceleration`, `brake_decel`, `engine_brake_decel`, `turn_speed`, `turn_friction`
+#### Synced State (via RollbackSynchronizer)
 
-#### Skin system
+- **Physics**: `speed`, `lean_angle`, `pitch_angle`, `fishtail_angle`, `ground_pitch`
+- **Gearing**: `current_gear`, `current_rpm`, `clutch_value`, `rpm_ratio`
+- **Tricks**: `is_boosting`, `boost_count`
+- **Crashes**: `is_crashed`
+- **Discrete actions**: `rb_do_respawn`, `rb_gear_up`, `rb_gear_down` (uses rollback pattern)
+
+#### GearingController
+
+- Tracks clutch engagement (0-1), blends between throttle-driven and wheel-driven RPM
+- Gear shifts via `rb_gear_up` / `rb_gear_down` discrete actions on PlayerEntity
+- Power output = throttle x power_curve x torque_multiplier x engagement
+- Gear ratios, max_rpm, idle_rpm, stall_rpm are defined in `BikeSkinDefinition`
+
+#### TrickController
+
+```gdscript
+enum TrickState { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE }
+```
+
+- Detects tricks via `pitch_angle` threshold checks against bike definition limits
+- Wheelie: RPM + throttle + lean detection + clutch-kick window (0.4s)
+- Stoppie: Front brake + forward lean
+- Emits `trick_started`, `trick_ended` signals
+- Auto-balances pitch on ground with `move_toward()` smoothing
+
+#### CrashController
+
+Monitors for crash conditions:
+- Lean angle > 80 degrees
+- Pitch angle > max_wheelie_angle_deg or < -max_stoppie_angle_deg
+- Brake grab while turning (rapid brake engage + lean > 15 degrees)
+
+`trigger_crash()` sets `is_crashed = true`, starts ragdoll, 3s auto-respawn timer.
+
+#### AnimationController
+
+```gdscript
+enum RiderState { RIDING, IDLE, TRICK, RAGDOLL }
+```
+
+- **Procedural animation**: Smooths visual_lean, visual_pitch, visual_yaw each frame
+  - `visual_root.rotation.x` = pitch (wheelie/stoppie)
+  - `visual_root.rotation.z` = lean (turning)
+  - Chest rotates with lean for rider weight shift
+- **IK**: `IKController` handles hand/foot/head positions via markers on BikeSkinDefinition
+- **Ragdoll**: `RagdollController` creates skeleton bodies for crash physics
+
+#### Skin System
 
 See [Skins.md](./Skins.md)
 
@@ -216,6 +268,32 @@ The `PauseManager` (`managers/pause_manager.gd`) coordinates InputManager, MenuM
 - **Unpause** (`unpause_requested`): Sets state to `IN_GAME`, hides menus, disables MenuManager processing, enables LevelManager processing
 
 The same "pause" action triggers different behavior based on `InputState`.
+
+### Audio Manager
+
+- `AudioManager` (`managers/audio_manager.gd`) - FMOD integration
+- Maps settings keys to VCA paths (e.g. `"master_vol"` → `"MASTER"`)
+- `update_ninja500_rpm(rpm_ratio)` - sets RPM parameter for seamless engine sound looping
+- Listens to `SettingsManager.setting_updated` to sync VCA volumes
+
+### Settings Manager
+
+- `SettingsManager` (`managers/settings_manager.gd`) - JSON persistence to `user://settings.json`
+- Default settings: username, noray_relay_host, resolution, fullscreen_mode, master_vol, music_vol, menu_vol, sfx_vol, bike_skin, character_skin
+- Signals: `setting_updated(key, value)`, `all_settings_changed(dict)`
+- Used by AudioManager (volume), MultiplayerManager (noray host), CustomizeMenuState (skins)
+
+### Gamemode Manager
+
+- `GamemodeManager` (`managers/gamemodes/gamemode_manager.gd`) - manages match state and player spawning
+- Spawning logic moved here from LevelManager
+- RPCs for multiplayer sync:
+  - `update_player_skins(peer_id, bike_skin_path, character_skin_path)` - client sends skins to server
+  - `start_game(level_name)` - server calls on all peers
+  - `_rpc_spawn_player(peer_id, username, bike_skin, character_skin)` - spawn broadcast
+  - `_rpc_despawn_player(peer_id)` - despawn broadcast
+  - `_sync_game_to_late_joiner(level_name)` - sync level to late-joining client
+  - `_request_late_spawn(peer_id)` - late-joiner requests their player spawn
 
 ### Unlocks / progression
 
@@ -289,32 +367,42 @@ flowchart LR
 | Component                    | Runs On                | Authority                     |
 | ---------------------------- | ---------------------- | ----------------------------- |
 | `InputController` (capture)  | Local client only      | Client                        |
-| `InputController` (send RPC) | Local client -> Server | Client sends, Server receives |
+| `InputController` (sync)     | Local client -> Server | Client sends, netfox syncs    |
 | `MovementController`         | Server only            | Server                        |
+| `GearingController`          | Server only            | Server                        |
+| `TrickController`            | Server only            | Server                        |
+| `CrashController`            | Server only            | Server                        |
+| `AnimationController`        | Local client only      | Client (visual only)          |
 | `CameraController`           | Local client only      | Client                        |
 | Position/Rotation            | Server broadcasts      | Server                        |
 | Lobby state                  | Server broadcasts      | Server                        |
 
+### Connection Modes
+
+- **NORAY**: Uses netfox.noray addon for NAT punch-through + relay fallback
+  - `Noray.connect_to_host()`, `Noray.register_host()`, `Noray.register_remote()`
+  - OID = Object ID (21-char string) used as invite code
+- **IP_PORT**: Direct IP connection to port 42068
+  - Fetches public IP via ipify.org API (or private IP in debug)
+
 ### RPC Signatures
 
-**InputController** - Client -> Server:
+**InputController** - Client -> Server (synced via RollbackSynchronizer):
 
-```gdscript
-## Sent every physics frame from client to server
-## Server applies this to the correct player's MovementController
-@rpc("any_peer", "unreliable_ordered")
-func receive_input(input_state: Dictionary):
-    # input_state = {
-    #   "tick": int,           # For netfox rollback
-    #   "throttle": float,     # 0.0 - 1.0
-    #   "front_brake": float,  # 0.0 - 1.0
-    #   "steer": float,        # -1.0 to 1.0
-    #   "lean": float,         # -1.0 to 1.0
-    # }
-    pass
-```
+Input is gathered locally by `InputController._gather()` and synced automatically by netfox's `RollbackSynchronizer`. No manual RPC needed - netfox handles input sync and rollback.
 
-**Why Dictionary?** Netfox needs tick numbers for rollback. Dictionary is extensible for future inputs (rear brake, tricks, etc).
+**MultiplayerManager** RPCs:
+- `update_username(id, username)` - client sends username to server
+- `sync_lobby_players(players)` - server broadcasts full lobby dict
+
+**GamemodeManager** RPCs:
+- `update_player_skins(peer_id, bike_skin_path, character_skin_path)` - skins to server
+- `start_game(level_name)` - server calls on all peers
+- `_rpc_spawn_player(peer_id, username, bike_skin, character_skin)` - spawn broadcast
+- `_rpc_despawn_player(peer_id)` - despawn broadcast
+
+**LevelManager** RPCs:
+- `respawn_player(peer_id)` - server respawns a specific player
 
 ### Deployment / builds
 

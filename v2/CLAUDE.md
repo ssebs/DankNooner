@@ -50,16 +50,23 @@ Pattern: `@export` navigation targets and managers, wire in inspector.
 
 ### Input System
 
-`InputManager` routes input based on `InputState` enum (IN_MENU, IN_GAME, IN_GAME_PAUSED, DISABLED).
+`InputStateManager` routes input based on `InputState` enum (IN_MENU, IN_GAME, IN_GAME_PAUSED, DISABLED).
 
 ### Player Entity
 
-Uses composition - `PlayerEntity` has `@export` component references:
+Uses composition - `PlayerEntity` (CharacterBody3D) has `@export` component references:
 
-- `CameraController` - camera follow/control
-- `MovementController` - handles physics-based movement
-- `BikeDefinition` - resource with mesh/collision data
-- `MeshComponent` - renders the bike mesh
+- `InputController` - gathers input, syncs via RollbackSynchronizer
+- `MovementController` - physics-based movement, speed, steering, lean
+- `GearingController` - clutch engagement, RPM blending, power output
+- `TrickController` - detects wheelie/stoppie, updates pitch_angle
+- `CrashController` - brake grab detection, crash detection, auto-respawn
+- `CameraController` - FPS/TPS camera switching
+- `AnimationController` - procedural animation blending, IK, ragdoll
+- `BikeSkinDefinition` - resource with mesh/collision/gearing/physics data
+- `CharacterSkinDefinition` - resource with character mesh/colors
+
+All controllers are called sequentially from `PlayerEntity._rollback_tick()` via their `on_movement_rollback_tick()` methods.
 
 #### Netfox + RPC Pattern
 
@@ -88,6 +95,20 @@ func on_respawn():
 
 External systems set the `rb_*` var; netfox handles sync and rollback automatically.
 
+### Skin System
+
+See `planning_docs/Skins.md` for details.
+
+### Audio & Settings
+
+- `AudioManager` - FMOD integration, VCA volume mapping, engine sound RPM parameter
+- `SettingsManager` - JSON persistence to `user://settings.json`, emits `setting_updated` / `all_settings_changed`
+
+### Gamemode System
+
+- `GamemodeManager` - manages match state, RPC player spawning/despawning, skin sync, late-joiner support
+- Spawning moved from LevelManager to GamemodeManager
+
 ### Multiplayer / Netcode
 
 Uses **netfox** addon with **Noray** for NAT traversal:
@@ -96,8 +117,9 @@ Uses **netfox** addon with **Noray** for NAT traversal:
 - **RollbackSynchronizer**: Per-entity sync with client-side prediction and automatic reconciliation
 - **TickInterpolator**: Smooths remote player visuals between network ticks
 - **Noray**: NAT punch-through with relay fallback for peer connections
-- `MultiplayerManager` handles ENet peer connections via Noray
-- `LevelManager.spawn_players()` spawns player entities when level loads
+- **IP/Port mode**: Direct connection alternative to Noray (port 42068)
+- `MultiplayerManager` handles ENet peer connections via Noray or IP/Port
+- `GamemodeManager` handles player spawning/despawning via RPCs
 - Input flows: Client captures → RPC to server → Server applies → Broadcasts state
 
 See `Architecture.md` for detailed diagrams and RPC signatures.
