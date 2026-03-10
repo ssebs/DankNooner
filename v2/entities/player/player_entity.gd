@@ -154,6 +154,9 @@ func _init_audio():
 	if !audio_manager:
 		return
 	gearing_controller.rpm_updated.connect(_on_rpm_updated)
+
+	# TODO - add clunk sound when changing gears
+	# gearing_controller.rpm_updated.connect(_on_rpm_updated)
 	audio_manager.play_ninja500_revs()
 
 

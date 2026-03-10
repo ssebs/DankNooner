@@ -34,10 +34,10 @@ func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
 		player_entity.rb_activate_boost = false
 
 	# Process systems (ORDER MATTERS)
-	gearing_controller.process_gearing(delta)
-	trick_controller.process_tricks(delta)
+	gearing_controller.on_movement_rollback_tick(delta)
+	trick_controller.on_movement_rollback_tick(delta)
 	_physics_calculations(delta)
-	crash_controller.check_crash(delta)
+	crash_controller.on_movement_rollback_tick(delta)
 
 	# Apply movement
 	player_entity.velocity *= NetworkTime.physics_factor

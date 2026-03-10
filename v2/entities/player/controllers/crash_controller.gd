@@ -23,7 +23,7 @@ func _ready():
 
 
 ## Called from MovementController after physics
-func check_crash(delta: float):
+func on_movement_rollback_tick(delta: float):
 	if player_entity.is_crashed:
 		return
 

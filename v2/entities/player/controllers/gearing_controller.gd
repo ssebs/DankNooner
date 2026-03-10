@@ -2,8 +2,6 @@
 class_name GearingController extends Node
 
 signal gear_changed(new_gear: int)
-# signal engine_stalled
-# signal engine_started
 signal rpm_updated(rpm_ratio: float)
 
 @export var player_entity: PlayerEntity
@@ -21,20 +19,38 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 	input_controller.clutch_held_changed.connect(_on_clutch_input)
-	input_controller.gear_up_pressed.connect(shift_gear.bind(1))
-	input_controller.gear_down_pressed.connect(shift_gear.bind(-1))
+	input_controller.gear_up_pressed.connect(_on_gear_shift.bind(1))
+	input_controller.gear_down_pressed.connect(_on_gear_shift.bind(-1))
+
+
+#region input handlers
+## direction must be `1` or `-1` (fwd/back)
+func _on_gear_shift(direction: int):
+	var bd = player_entity.bike_definition
+	var new_gear = clampi(player_entity.current_gear + direction, 1, bd.num_gears)
+	if new_gear != player_entity.current_gear:
+		player_entity.current_gear = new_gear
+		gear_changed.emit(new_gear)
+
+
+func _on_clutch_input(_held: bool, just_pressed: bool):
+	if just_pressed:
+		player_entity.clutch_value = minf(player_entity.clutch_value + clutch_tap_amount, 1.0)
+
+
+#endregion
 
 
 ## Called from MovementController._rollback_tick()
-func process_gearing(delta: float):
-	_update_clutch(delta)
+func on_movement_rollback_tick(delta: float):
+	_update_clutch_hold_time(delta)
 	_blend_rpm_to_target(delta)
-	_apply_rpm_limits()
+
 	player_entity.rpm_ratio = _get_rpm_ratio()
 	rpm_updated.emit(player_entity.rpm_ratio)
 
 
-func _update_clutch(delta: float):
+func _update_clutch_hold_time(delta: float):
 	if input_controller.clutch_held:
 		clutch_hold_time += delta
 		player_entity.clutch_value = move_toward(
@@ -64,9 +80,7 @@ func _blend_rpm_to_target(delta: float):
 	var target_rpm = lerpf(throttle_rpm, wheel_rpm, engagement)
 	player_entity.current_rpm = lerpf(player_entity.current_rpm, target_rpm, 8.0 * delta)
 
-
-func _apply_rpm_limits():
-	var bd = player_entity.bike_definition
+	# Limit RPM
 	player_entity.current_rpm = clamp(player_entity.current_rpm, bd.idle_rpm, bd.max_rpm)
 
 
@@ -77,6 +91,7 @@ func _get_rpm_ratio() -> float:
 	return (player_entity.current_rpm - bd.idle_rpm) / (bd.max_rpm - bd.idle_rpm)
 
 
+#region public api
 ## Returns power multiplier (0-1) based on current RPM and gear
 func get_power_output() -> float:
 	if is_stalled:
@@ -101,18 +116,7 @@ func get_clutch_engagement() -> float:
 	return 1.0 - player_entity.clutch_value
 
 
-func _on_clutch_input(_held: bool, just_pressed: bool):
-	if just_pressed:
-		player_entity.clutch_value = minf(player_entity.clutch_value + clutch_tap_amount, 1.0)
-
-
-func shift_gear(direction: int):
-	print("shift gear")
-	var bd = player_entity.bike_definition
-	var new_gear = clampi(player_entity.current_gear + direction, 1, bd.num_gears)
-	if new_gear != player_entity.current_gear:
-		player_entity.current_gear = new_gear
-		gear_changed.emit(new_gear)
+#endregion
 
 
 func _get_configuration_warnings() -> PackedStringArray:
