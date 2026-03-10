@@ -33,6 +33,7 @@
     - Set `player_entity.rotation`
     - Set `player_entity.lean_angle`
   - Apply movement from calculations
+  - Handle `on_crashed()`
   - **GearingController**
     - Checks input_controller's values
       - Set local clutch_hold_time
@@ -51,3 +52,7 @@
         - Set `player_entity.pitch_angle`
   - **CrashController**
     - Checks input_controller's values from `on_movement_rollback_tick()`
+    - Update brake grab values
+      - Set `player_entity.grip_usage`
+    - Detect crash & `trigger_crash()` if one is happening
+      - Emit `crashed(reason)`
