@@ -17,35 +17,17 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 
+	player_entity.respawned.connect(_on_respawn)
 
-func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
-	if Engine.is_editor_hint():
-		return
 
-	if player_entity.rb_do_respawn:
-		player_entity.do_respawn()
-		player_entity.rb_do_respawn = false
-
-	# TODO - move this check to each file
-	# if player_entity.is_crashed:
-	# 	return
-
-	# Run other controllers (ORDER MATTERS)
-	gearing_controller.on_movement_rollback_tick(delta)
-	trick_controller.on_movement_rollback_tick(delta)
-	_physics_calculations(delta)
-	crash_controller.on_movement_rollback_tick(delta)
-
-	# Apply movement
-	player_entity.velocity *= NetworkTime.physics_factor
-	player_entity.move_and_slide()
-	player_entity.velocity /= NetworkTime.physics_factor
-
-	_handle_player_collision(delta)
+func _on_respawn():
+	spawn_timer = default_spawn_timer
 
 
 ## TODO - split this into multiple funcs for each thing that it does
-func _physics_calculations(delta: float):
+func on_movement_rollback_tick(delta: float):
+	if Engine.is_editor_hint():
+		return
 	var bd = player_entity.bike_definition
 
 	# Derive speed from synced velocity
@@ -96,6 +78,13 @@ func _physics_calculations(delta: float):
 		)
 	else:
 		player_entity.velocity = forward * player_entity.speed
+
+	# Apply movement
+	player_entity.velocity *= NetworkTime.physics_factor
+	player_entity.move_and_slide()
+	player_entity.velocity /= NetworkTime.physics_factor
+
+	_handle_player_collision(delta)
 
 
 func _get_turn_rate() -> float:
