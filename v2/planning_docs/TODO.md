@@ -19,7 +19,7 @@
   - [ ] be able to ride up ramps
 
 - [ ] debug wheelie animation
-
+- [ ] add clunk sound when changing gears
 - [ ] Review Animation Controller & Create animations
 
   - [x] claude created a system

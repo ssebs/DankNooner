@@ -29,7 +29,7 @@ func _ready():
 
 
 ## Called from MovementController._rollback_tick()
-func process_tricks(delta: float):
+func on_movement_rollback_tick(delta: float):
 	_update_wheelie(delta)
 	_update_stoppie(delta)
 	_update_boost(delta)
