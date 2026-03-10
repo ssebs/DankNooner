@@ -2,14 +2,13 @@
 class_name CrashController extends Node
 
 signal crashed
-signal respawned
 
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
 @export var animation_controller: AnimationController
 
 @export var crash_lean_threshold_deg: float = 80.0
-@export var brake_grab_time_threshold: float = 0.4
+@export var brake_grab_time_threshold: float = 0.8
 @export var brake_lean_sensitivity: float = 0.7
 
 var _brake_grab_timer: float = 0.0
@@ -29,26 +28,7 @@ func on_movement_rollback_tick(delta: float):
 
 	_update_brake_grab(delta)
 
-	var bd = player_entity.bike_definition
-
-	# Wheelie crash
-	if player_entity.pitch_angle > deg_to_rad(bd.max_wheelie_angle_deg):
-		trigger_crash()
-		return
-
-	# Stoppie crash
-	if player_entity.pitch_angle < -deg_to_rad(bd.max_stoppie_angle_deg):
-		trigger_crash()
-		return
-
-	# Lean crash
-	if abs(player_entity.lean_angle) >= deg_to_rad(crash_lean_threshold_deg):
-		trigger_crash()
-		return
-
-	# Brake grab while turning
-	if _brake_was_grabbed and abs(player_entity.lean_angle) > deg_to_rad(15):
-		trigger_crash()
+	_detect_crash()
 
 
 func _update_brake_grab(delta: float):
@@ -73,6 +53,29 @@ func _update_brake_grab(delta: float):
 		player_entity.grip_usage = clamp(front_brake / max(max_safe_brake, 0.01), 0.0, 1.0)
 	else:
 		player_entity.grip_usage = move_toward(player_entity.grip_usage, 0.0, 3.0 * delta)
+
+
+func _detect_crash():
+	var bd = player_entity.bike_definition
+
+	# Wheelie crash
+	if player_entity.pitch_angle > deg_to_rad(bd.max_wheelie_angle_deg):
+		trigger_crash()
+		return
+
+	# Stoppie crash
+	if player_entity.pitch_angle < -deg_to_rad(bd.max_stoppie_angle_deg):
+		trigger_crash()
+		return
+
+	# Lean crash
+	if abs(player_entity.lean_angle) >= deg_to_rad(crash_lean_threshold_deg):
+		trigger_crash()
+		return
+
+	# Brake grab while turning
+	if _brake_was_grabbed and abs(player_entity.lean_angle) > deg_to_rad(15):
+		trigger_crash()
 
 
 func trigger_crash():
