@@ -60,7 +60,6 @@ var grip_usage: float = 0.0
 
 # Discrete actions (rb_* pattern)
 var rb_do_respawn: bool = false
-var rb_activate_boost: bool = false
 
 
 func _ready():

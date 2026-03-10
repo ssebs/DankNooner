@@ -26,14 +26,11 @@ func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
 		player_entity.do_respawn()
 		player_entity.rb_do_respawn = false
 
-	if player_entity.is_crashed:
-		return
+	# TODO - move this check to each file
+	# if player_entity.is_crashed:
+	# 	return
 
-	if player_entity.rb_activate_boost:
-		trick_controller.activate_boost()
-		player_entity.rb_activate_boost = false
-
-	# Process systems (ORDER MATTERS)
+	# Run other controllers (ORDER MATTERS)
 	gearing_controller.on_movement_rollback_tick(delta)
 	trick_controller.on_movement_rollback_tick(delta)
 	_physics_calculations(delta)
@@ -47,6 +44,7 @@ func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
 	_handle_player_collision(delta)
 
 
+## TODO - split this into multiple funcs for each thing that it does
 func _physics_calculations(delta: float):
 	var bd = player_entity.bike_definition
 
@@ -60,11 +58,10 @@ func _physics_calculations(delta: float):
 
 	# Acceleration (uses gearing power output)
 	var power = gearing_controller.get_power_output()
-	var effective_max = trick_controller.get_effective_max_speed()
 
-	if power > 0 and player_entity.speed < effective_max:
+	if power > 0 and player_entity.speed < bd.max_speed:
 		player_entity.speed += bd.acceleration * power * delta
-		player_entity.speed = minf(player_entity.speed, effective_max)
+		player_entity.speed = minf(player_entity.speed, bd.max_speed)
 
 	# Braking
 	var total_brake = input_controller.front_brake + input_controller.rear_brake
