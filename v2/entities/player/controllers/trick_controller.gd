@@ -32,7 +32,7 @@ func on_movement_rollback_tick(delta: float):
 			_update_wheelie(delta)
 		Trick.STOPPIE:
 			_update_stoppie(delta)
-		null:
+		Trick.NONE:
 			return
 		_:
 			print(

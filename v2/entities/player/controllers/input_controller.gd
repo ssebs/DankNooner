@@ -81,9 +81,9 @@ func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool):
 
 ## local input
 func _process(_delta):
-	if Engine.is_editor_hint():
+	if Engine.is_editor_hint() or multiplayer.multiplayer_peer == null:
 		return
-	if not is_multiplayer_authority():
+	if !is_multiplayer_authority():
 		return
 	if Input.is_action_just_pressed("switch_cam"):
 		cam_switch_pressed.emit()
