@@ -3,8 +3,9 @@
 {de9a586f-8f5a-4b6e-a1d8-de390355c329} bank:/SFX
 {bde24f6d-3a67-4a22-b1af-b7a8cfd46c3e} bus:/
 {2cd87a7f-f5d7-4f40-b5d3-0e6045fa9f34} bus:/Reverb
-{9af5a9d8-a0cd-4141-9c65-d7ff3bc983d6} event:/BikeRevLoop
-{58277d2d-4879-4c1c-8d26-36e3d0f97df3} event:/BikeRevNonLoop
 {cb006e0b-c724-48ba-93bf-35b91cda5e9c} event:/Ninja500Revs
 {1db5a582-85b0-451b-8549-93bd2664940a} event:/StartupSound
 {d38cb1fc-1306-40ce-bbf4-b521566a79f1} parameter:/RPM
+{6689840c-4a01-4660-8d1a-5e7fe60e608a} vca:/Menu
+{e0a731a1-2551-4cdb-ae2e-712a61e6a62e} vca:/Music
+{37a2f059-3705-4a80-bef4-068a3202714f} vca:/SFX

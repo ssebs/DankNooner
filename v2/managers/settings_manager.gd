@@ -29,6 +29,7 @@ var default_settings: Dictionary = {
 	"fullscreen_mode": "borderless",  # or "fullscreen" or "borderless"
 	"master_vol": 0.8,
 	"music_vol": 1.0,
+	"menu_vol": 1.0,
 	"sfx_vol": 1.0,
 	"bike_skin": "res://resources/entities/bikes/skins/sport_default_skin_definition.tres",
 	"character_skin": "res://resources/entities/player/skins/biker_default_skin_definition.tres",
