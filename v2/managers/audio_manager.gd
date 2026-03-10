@@ -4,6 +4,7 @@ class_name AudioManager extends BaseManager
 @export var settings_manager: SettingsManager
 @export_tool_button("Play Startup") var tool_btn_1 = play_startup
 
+## map of settings_manager's key to the vca name from vca.get_path()
 const VCA_SETTING_MAP: Dictionary = {
 	"master_vol": "MASTER",
 	"menu_vol": "vca:/Menu",
@@ -62,11 +63,16 @@ func _on_setting_updated(setting_key: String, setting_value: Variant):
 	_apply_vca_volume(vca_name, setting_value)
 
 
-## vca_name => vca:/NAME
+## vca_name should be in `vca:/NAME` format, or `MASTER`
 func _apply_vca_volume(vca_name: String, volume: float):
 	if vca_name == "MASTER":
-		# TODO - set master vol
+		var master_bus: FmodBus = FmodServer.get_bus("bus:/")
+		if master_bus == null:
+			printerr("could not get fmod master bus")
+			return
+		master_bus.volume = volume
 		return
+
 	if !vca_name.contains("vca:/"):
 		return
 
