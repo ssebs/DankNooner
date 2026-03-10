@@ -160,3 +160,17 @@ max_value = 1.0
 step = 0.1
 value = 0.5
 ticks_on_borders = true
+
+[node name="menu_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1261293644]
+layout_mode = 2
+text = "MENU_VOLUME_LABEL"
+
+[node name="MenuVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=744152966]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.1
+value = 0.5
+ticks_on_borders = true

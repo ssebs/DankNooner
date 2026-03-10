@@ -21,6 +21,7 @@ const WINDOW_MODES: Dictionary = {
 	"borderless": DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
 }
 
+## NOTE - key names (str) are hard coded in lots of places!
 var default_settings: Dictionary = {
 	"version": settings_version,
 	"username": "change_me",
