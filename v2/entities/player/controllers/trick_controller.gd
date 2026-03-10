@@ -32,11 +32,13 @@ func on_movement_rollback_tick(delta: float):
 			_update_wheelie(delta)
 		Trick.STOPPIE:
 			_update_stoppie(delta)
+		null:
+			return
 		_:
 			print(
 				(
-					"_current_trick %s has no match in "
-					+ "trick_controller on_movement_rollback_tick" % _current_trick
+					"_current_trick %s has no match in trick_controller on_movement_rollback_tick"
+					% _current_trick
 				)
 			)
 

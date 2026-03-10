@@ -116,7 +116,7 @@ script = ExtResource("3_faflk")
 root = NodePath("..")
 enable_prediction = true
 state_properties = Array[String]([":global_transform", ":velocity", ":lean_angle", ":pitch_angle", ":fishtail_angle", ":current_gear", ":current_rpm", ":clutch_value", ":is_boosting", ":is_crashed", "%TrickController:_clutch_kick_window", "%TrickController:_prev_clutch_held"])
-input_properties = Array[String](["%InputController:throttle", "%InputController:front_brake", "%InputController:rear_brake", "%InputController:steer", "%InputController:lean", "%InputController:trick", "%InputController:clutch_held"])
+input_properties = Array[String](["%InputController:throttle", "%InputController:front_brake", "%InputController:rear_brake", "%InputController:steer", "%InputController:lean", "%InputController:trick_mod", "%InputController:clutch_held"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="TickInterpolator" type="Node" parent="." unique_id=977812349 node_paths=PackedStringArray("root")]
@@ -224,6 +224,7 @@ script = ExtResource("12_crash")
 player_entity = NodePath("../..")
 input_controller = NodePath("../InputController")
 animation_controller = NodePath("../AnimationController")
+brake_grab_time_threshold = 0.4
 
 [node name="CameraController" parent="_Controllers" unique_id=816730707 node_paths=PackedStringArray("fps_marker", "tps_marker") instance=ExtResource("2_bls4j")]
 unique_name_in_owner = true

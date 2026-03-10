@@ -3,6 +3,8 @@
 ## audio_manager & username
 class_name PlayerEntity extends CharacterBody3D
 
+signal respawned(peer_id: int)
+
 @export var bike_definition: BikeSkinDefinition
 @export var character_definition: CharacterSkinDefinition
 @export var collision_shape_3d: CollisionShape3D
@@ -81,9 +83,19 @@ func _ready():
 	call_deferred("_deferred_init")
 
 
-func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool):
-	# All rollback logic delegated to MovementController._rollback_tick()
-	pass
+func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
+	if Engine.is_editor_hint():
+		return
+
+	if rb_do_respawn:
+		do_respawn()
+		rb_do_respawn = false
+
+	# Run other controllers (ORDER MATTERS)
+	gearing_controller.on_movement_rollback_tick(delta)
+	trick_controller.on_movement_rollback_tick(delta)
+	movement_controller.on_movement_rollback_tick(delta)
+	crash_controller.on_movement_rollback_tick(delta)
 
 
 func _process(_delta: float) -> void:
@@ -200,9 +212,9 @@ func do_respawn():
 	rpm_ratio = 0.0
 	is_boosting = false
 	is_crashed = false
-	movement_controller.spawn_timer = movement_controller.default_spawn_timer
 	if animation_controller:
 		animation_controller.stop_ragdoll()
+	respawned.emit()
 
 
 #endregion
