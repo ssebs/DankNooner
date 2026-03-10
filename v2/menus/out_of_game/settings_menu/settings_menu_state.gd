@@ -15,6 +15,7 @@ class_name SettingsMenuState extends MenuState
 @onready var master_vol_slider: HSlider = %MasterVolSlider
 @onready var music_vol_slider: HSlider = %MusicVolSlider
 @onready var sfx_vol_slider: HSlider = %SFXVolSlider
+@onready var menu_vol_slider: HSlider = %MenuVolSlider
 
 
 func _ready():
@@ -62,6 +63,7 @@ func load_settings_into_ui():
 	master_vol_slider.value = settings_manager.current_settings["master_vol"]
 	music_vol_slider.value = settings_manager.current_settings["music_vol"]
 	sfx_vol_slider.value = settings_manager.current_settings["sfx_vol"]
+	menu_vol_slider.value = settings_manager.current_settings["menu_vol"]
 
 
 func _on_all_settings_changed(_current_settings: Dictionary):
@@ -85,6 +87,7 @@ func _on_save_pressed():
 	settings_manager.update_setting("master_vol", master_vol_slider.value, false)
 	settings_manager.update_setting("music_vol", music_vol_slider.value, false)
 	settings_manager.update_setting("sfx_vol", sfx_vol_slider.value, false)
+	settings_manager.update_setting("menu_vol", menu_vol_slider.value, false)
 
 	settings_manager.save_settings()
 
