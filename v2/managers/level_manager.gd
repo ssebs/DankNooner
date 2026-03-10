@@ -34,6 +34,12 @@ var levels_names_in_level_select: Array[String] = [
 	"LEVEL_TEST_1_LABEL",
 	"LEVEL_TEST_CITY_01",
 ]
+## LevelName enum => image used in level preview
+# TODO - don't use this! try to load "res://levels/previews/LEVEL_TEST_1_LABEL.jpg"
+# var level_img_map:Dictionary[LevelName,Texture]={
+# 	LevelName.TEST_LEVEL_01, preload(),
+# 	LevelName.TEST_CITY_01, preload(),
+# }
 
 var current_level_name: LevelName = LevelName.LEVEL_SELECT_LABEL
 var current_level: LevelDefinition
@@ -42,7 +48,7 @@ var current_level: LevelDefinition
 func _ready():
 	if Engine.is_editor_hint():
 		return
-	Console.add_command("dbg_gym", spawn_gym_test_level)
+	# Console.add_command("dbg_gym", spawn_gym_test_level) # broken
 
 
 ## Despawns any existing levels, then spawns level_name
@@ -56,6 +62,7 @@ func spawn_level(level_name: LevelName, input_state: InputStateManager.InputStat
 
 	var spawned_level = possible_levels[level_name].instantiate() as LevelDefinition
 	spawned_level.name = level_name_map.get(level_name)
+	spawned_level.level_name = level_name
 	spawned_level.level_manager = self
 	spawn_node.add_child(spawned_level)
 	current_level = spawned_level
