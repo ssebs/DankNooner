@@ -136,4 +136,5 @@ multiplayer_manager = NodePath("../MultiplayerManager")
 level_manager = NodePath("../LevelManager")
 input_state_manager = NodePath("../InputStateManager")
 
-[node name="AudioManager" parent="ManagerManager" unique_id=625309404 instance=ExtResource("20_2i4tw")]
+[node name="AudioManager" parent="ManagerManager" unique_id=625309404 node_paths=PackedStringArray("settings_manager") instance=ExtResource("20_2i4tw")]
+settings_manager = NodePath("../SettingsManager")
