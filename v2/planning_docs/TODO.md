@@ -4,35 +4,38 @@
 
 ## In Progress 🚀
 
+- [ ] Make SettingsMenu work with pause menu (compose this somehow)
+
+- [ ] level select img
 - [ ] Create Player Part 2
 
-  - [ ] **Delete** all imported stuff and start clean. Use old code as reference
-  - [ ] Refactor/cleanup
-  - [ ] Make sure MP authority is set
-  - [ ] Fix collision
-  - [ ] gearing
-  - [ ] physics
-  - [ ] trick
-  - [ ] crash
-    - [ ] Brake
-    - [ ] Layer 2 collision
-  - [ ] be able to ride up ramps
+  - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
+  - [x] Refactor/cleanup
+  - [x] Fix collision
+  - [ ] Create [doc](./PlayerController.md)
+  - [ ] Decide what should be client side vs server side
+    - [ ] Make sure MP authority is set properly
+  - [ ] Add HUD
+  - [ ] Redo movement_controller
+    - [ ] finish cleanup (function split)
+    - [ ] improve physics
+    - [ ] be able to ride up ramps (maybe raycast to rotate to normal?)
+  - [ ] AnimationController + Trick integration
+    - [ ] debug wheelie animation
+  - [ ] AnimationController + Crash integration
+    - [ ] Create crash animation (procedural)
+  - [ ] Improve crash_controller
+    - [ ] Brake danger
+    - [ ] Layer 2 collision (with objects)
 
-- [ ] debug wheelie animation
-- [ ] add clunk sound when changing gears
 - [ ] Review Animation Controller & Create animations
 
+  - [ ] Create lean (turning) animation
+  - [ ] Create stopped/idle animation
+  - [ ] Create wheelie/stoppie animation
   - [x] claude created a system
   - [x] Review planning_docs/AnimationController.md
   - [x] Create way to play specific animations
-  - [ ] Create lean (turning) animation
-  - [ ] Create stopped / idle animation
-  - [ ] Create wheelie/stoppie animation
-  - [ ] Create Heel clicker animation
-  - [ ] Create wheelie + DOWN animation (wheelie + right hand touches ground)
-  - [ ] Create crash animation
-    - [ ] Maybe multiple?
-    - [ ] proceedural
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
 
@@ -50,27 +53,30 @@
 - [ ] Trick Manager + tricks
 
   - [ ] trick system
-  - [ ] wheelie / stoppie tricks
-  - [ ] ramp tricks
-  - [ ] ground tricks
-  - [ ] trick detection in player component?
-  - [ ] trick scoring in own script?
+    - [ ] migrate wheelie / stoppie tricks
+    - [ ] ramp tricks
+    - [ ] ground tricks
+  - [ ] trick detection in trick_controller
+  - [ ] trick scoring in separate system
     - [ ] e.g. player emits trick_done & gamemode manager does something with it.
       - [ ] e.g. race/freeroam => boost
       - [ ] e.g. stunt race => combo counter
+  - [ ] Create wheelie + DOWN animation (wheelie + right hand touches ground)
+  - [ ] Create Heel clicker / other trick animations
 
 - [ ] Basic customization menu / UI
 
+  - [x] Super basic customize ui
+  - [x] Save chosen skin to disk
+    - [x] path to skin_def for now, no custom json yet
+    - [x] player_entity
+      - [x] save_skin
+      - [x] load_skin
+    - [x] when spawning player in game, show their customizations via load_skin
   - [ ] Create customize menu background scene
     - [ ] Garage scene
     - [ ] show character
     - [ ] show bike
-  - [ ] Save chosen skin to disk
-    - [ ] path to skin_def for now, no custom json yet
-    - [ ] player_entity
-      - [ ] save_skin
-      - [ ] load_skin
-    - [ ] when spawning player in game, show their customizations via load_skin
   - [ ] Create customize menu UI
     - [ ] Tab for shop
       - [ ] List purchasable skins
@@ -108,8 +114,12 @@
       - [ ] Mario kart like - get items to attack players or help self, but do tricks to get items. More complex tricks = better items
   - [ ] Unlock Skins w/ Score from disk & spend
 
-- [ ] Crash SFX
-- [ ] Tire Screetch SFX
+- [ ] More audio
+  - [ ] add clunk sound when changing gears
+  - [ ] Crash SFX
+  - [ ] Tire Screetch SFX
+  - [ ] Menu click sounds
+  - [ ] Music?
 
 ## Backlog
 
@@ -134,17 +144,17 @@
   - [ ] Use fmod to blend sounds @ rpm
   - [ ] Record my bike for sounds
     - [ ] Wind sounds at high speed
-    - [ ] startup
-    - [ ] idle
+    - [x] startup
+    - [x] idle
     - [ ] holding rev at diff rpm, switch files in game
     - [ ] full rev
     - [ ] exhaust pops
     - [ ] downshift/rev match
     - [ ] shifting gears
-  - [ ] Make audio buses
-    - [ ] 2d - SFX (ui sounds, timers, etc.)
-    - [ ] 3d - SFX (RPM / bike)
-    - [ ] 2d - Music
+  - [x] Make audio buses
+    - [x] 2d - SFX (ui sounds, timers, etc.)
+    - [x] 3d - SFX (RPM / bike)
+    - [x] 2d - Music
   - [ ] Different bikes use different audio samples
 
 - [ ] Multiplayer improvements
@@ -167,7 +177,6 @@
     - [ ] 3D printer map => level is 3d printed in real time
     - [ ] start with graybox/repeating grid texture to plan out maps before are is decided , use multiple colors & labels
 
-- [ ] level select img
 - [ ] More Customization UI / menu
 
   - [ ] Add Bike customization
@@ -203,29 +212,21 @@
   - There's a godot plugin for this
   - https://binbun3d.itch.io/godot-ultimate-toon-shader
 
-- [ ] stunt race / high score mode
-
 - [ ] Camera control
 - [ ] Dedicated server
+
   - [ ] Lobby is created, then sends it's IP to a matchmaking server (http)
   - [ ] When creating lobby, add invite only mode or open lobby
   - [ ] Server browser can list all servers that register
   - [ ] Add game mode for open lobby (for server to reset to with 0 players) or just go to free roam?
   - [ ] Quick join lobby
+
 - [ ] Create complex traffic / AI system
 
   - [ ] basic traffic sim
   - [ ] implement A\* pathfinding? w/ state machine?
     - [ ] drive, stopped at light, parked, etc.
   - [ ] create sequence system?
-
-- [ ] Create basic SettingsMenu scene/ui
-
-  - [ ] Make this work with pause menu (compose this somehow)
-  - [x] Create scene
-  - [x] Improve the UI
-  - [ ] Add all components
-  - [ ] Functional settings
 
 - [ ] Create Test Level - Museum - functionally show how systems work, text explaining the systems.
   - (E.g. showing physics demos, how scripted sequences work)
@@ -243,6 +244,13 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] Create basic SettingsMenu scene/ui
+
+  - [x] Create scene
+  - [x] Improve the UI
+  - [x] Add all components
+  - [x] Functional settings
 
 - [x] make working volume settings
 

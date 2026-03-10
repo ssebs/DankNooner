@@ -33,11 +33,6 @@ func on_movement_rollback_tick(delta: float):
 	# Derive speed from synced velocity
 	player_entity.speed = Vector2(player_entity.velocity.x, player_entity.velocity.z).length()
 
-	# Gravity
-	if not player_entity.is_on_floor():
-		player_entity.velocity.y -= 9.8 * delta * 4.0
-		return
-
 	# Acceleration (uses gearing power output)
 	var power = gearing_controller.get_power_output()
 
@@ -78,6 +73,10 @@ func on_movement_rollback_tick(delta: float):
 		)
 	else:
 		player_entity.velocity = forward * player_entity.speed
+
+	# Gravity
+	if !player_entity.is_on_floor():
+		player_entity.velocity.y -= 9.8 * delta * 4.0
 
 	# Apply movement
 	player_entity.velocity *= NetworkTime.physics_factor
