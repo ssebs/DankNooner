@@ -10,6 +10,7 @@ class_name LevelDefinition extends Node3D
 
 ## Set in level_manager
 var level_manager: LevelManager
+var level_name: LevelManager.LevelName
 
 
 func _get_configuration_warnings() -> PackedStringArray:
