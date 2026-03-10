@@ -3,21 +3,16 @@ class_name TrickController extends Node
 
 signal trick_started(trick_type: int)
 signal trick_ended(trick_type: int)
-signal boost_started
-signal boost_ended
 
-enum Trick { NONE, WHEELIE_SITTING, WHEELIE_STANDING, STOPPIE, FISHTAIL }
+enum Trick { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE }
 
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
 @export var gearing_controller: GearingController
 
-@export var boost_duration: float = 2.0
-@export var boost_speed_multiplier: float = 1.5
-
 const CLUTCH_KICK_WINDOW: float = 0.4  # seconds after clutch dump to allow wheelie pop
 
-var _boost_timer: float = 0.0
+var _current_trick: Trick = Trick.NONE
 var _last_trick: Trick = Trick.NONE
 var _clutch_kick_window: float = 0.0
 var _prev_clutch_held: bool = false
@@ -30,10 +25,41 @@ func _ready():
 
 ## Called from MovementController._rollback_tick()
 func on_movement_rollback_tick(delta: float):
-	_update_wheelie(delta)
-	_update_stoppie(delta)
-	_update_boost(delta)
-	_detect_trick_changes()
+	_update_current_and_last_tricks()
+
+	match _current_trick:
+		Trick.WHEELIE_SITTING, Trick.WHEELIE_MOD:
+			_update_wheelie(delta)
+		Trick.STOPPIE:
+			_update_stoppie(delta)
+		_:
+			print(
+				(
+					"_current_trick %s has no match in "
+					+ "trick_controller on_movement_rollback_tick" % _current_trick
+				)
+			)
+
+
+func _update_current_and_last_tricks():
+	_current_trick = _detect_current_trick()
+	if _current_trick != _last_trick:
+		if _last_trick != Trick.NONE:
+			trick_ended.emit(_last_trick)
+		if _current_trick != Trick.NONE:
+			trick_started.emit(_current_trick)
+		_last_trick = _current_trick
+
+
+func _detect_current_trick() -> Trick:
+	if player_entity.pitch_angle > deg_to_rad(15):
+		if input_controller.trick_mod:
+			return Trick.WHEELIE_MOD
+		return Trick.WHEELIE_SITTING
+
+	if player_entity.pitch_angle < deg_to_rad(-10):
+		return Trick.STOPPIE
+	return Trick.NONE
 
 
 func _update_wheelie(delta: float):
@@ -103,55 +129,6 @@ func _update_stoppie(delta: float):
 		player_entity.pitch_angle = move_toward(
 			player_entity.pitch_angle, 0, bd.return_speed * delta
 		)
-
-
-func _update_boost(delta: float):
-	if not player_entity.is_boosting:
-		return
-
-	_boost_timer -= delta
-	if _boost_timer <= 0:
-		player_entity.is_boosting = false
-		boost_ended.emit()
-
-
-func activate_boost():
-	if player_entity.is_boosting or player_entity.boost_count <= 0:
-		return
-
-	player_entity.boost_count -= 1
-	player_entity.is_boosting = true
-	_boost_timer = boost_duration
-	boost_started.emit()
-
-
-func get_effective_max_speed() -> float:
-	var bd = player_entity.bike_definition
-	if player_entity.is_boosting:
-		return bd.max_speed * boost_speed_multiplier
-	return bd.max_speed
-
-
-func _detect_trick_changes():
-	var current = _detect_current_trick()
-	if current != _last_trick:
-		if _last_trick != Trick.NONE:
-			trick_ended.emit(_last_trick)
-		if current != Trick.NONE:
-			trick_started.emit(current)
-		_last_trick = current
-
-
-func _detect_current_trick() -> Trick:
-	if player_entity.pitch_angle > deg_to_rad(15):
-		if input_controller.trick:
-			return Trick.WHEELIE_STANDING
-		return Trick.WHEELIE_SITTING
-	elif player_entity.pitch_angle < deg_to_rad(-10):
-		return Trick.STOPPIE
-	elif abs(player_entity.fishtail_angle) > deg_to_rad(10):
-		return Trick.FISHTAIL
-	return Trick.NONE
 
 
 func _get_configuration_warnings() -> PackedStringArray:

@@ -42,7 +42,7 @@ var lean: float = 0.0:
 
 var rear_brake: float = 0.0
 
-var trick: bool = false
+var trick_mod: bool = false
 
 var clutch_held: bool = false
 
@@ -100,7 +100,7 @@ func _update_input_for_server():
 	rear_brake = Input.get_action_strength("brake_rear")
 	steer = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
 	lean = Input.get_action_strength("lean_forward") - Input.get_action_strength("lean_back")
-	trick = Input.is_action_pressed("trick_mod")
+	trick_mod = Input.is_action_pressed("trick_mod")
 
 	# Clutch handling (tap vs hold)
 	var clutch_now = Input.is_action_pressed("clutch")

@@ -201,7 +201,7 @@ func _update_wheelie_arm() -> void:
 	var in_wheelie = player_entity.pitch_angle > 0.0
 	var ratio = (
 		clamp(player_entity.pitch_angle, 0.0, 1.0)
-		if (in_wheelie and input_controller.trick)
+		if (in_wheelie and input_controller.trick_mod)
 		else 0.0
 	)
 	anim_player.seek(ratio, true)
