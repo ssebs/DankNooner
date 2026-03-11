@@ -245,6 +245,7 @@
 ## Done ✅
 
 - [x] level select img
+
   - [x] Load folder's images in menu
   - [x] Add doc
 
