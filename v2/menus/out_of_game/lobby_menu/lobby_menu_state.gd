@@ -144,6 +144,7 @@ func _on_client_connection_succeeded(peer_id: int):
 	timeout_timer.stop()
 	if !multiplayer.is_server():
 		start_btn.disabled = true
+		level_select_btn.disabled = true
 
 	multiplayer_manager.update_username.rpc_id(
 		1, peer_id, settings_manager.current_settings["username"]
