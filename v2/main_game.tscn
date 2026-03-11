@@ -20,7 +20,6 @@
 [ext_resource type="Script" uid="uid://cvf883jhga841" path="res://managers/settings_manager.gd" id="17_borgi"]
 [ext_resource type="Script" uid="uid://dxn3rquhf7sfs" path="res://managers/gamemodes/gamemode_manager.gd" id="18_ih6an"]
 [ext_resource type="PackedScene" uid="uid://b27jgs5kv1310" path="res://managers/audio_manager.tscn" id="20_2i4tw"]
-[ext_resource type="PackedScene" uid="uid://cb4pfocgu08og" path="res://utils/editor_tools/LevelPreviewImgGen.tscn" id="21_euc45"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("1_1oj5k")
@@ -139,14 +138,3 @@ input_state_manager = NodePath("../InputStateManager")
 
 [node name="AudioManager" parent="ManagerManager" unique_id=625309404 node_paths=PackedStringArray("settings_manager") instance=ExtResource("20_2i4tw")]
 settings_manager = NodePath("../SettingsManager")
-
-[node name="_Editor_Tools" type="Node" parent="." unique_id=1057095509]
-unique_name_in_owner = true
-
-[node name="LevelPreviewImgGen" parent="_Editor_Tools" unique_id=1392758872 node_paths=PackedStringArray("level_manager", "cam") instance=ExtResource("21_euc45")]
-level_manager = NodePath("../../ManagerManager/LevelManager")
-level_name = 3
-cam = NodePath("Camera3D")
-
-[node name="Camera3D" type="Camera3D" parent="_Editor_Tools/LevelPreviewImgGen" unique_id=9091594]
-transform = Transform3D(0.39680716, 0.03530369, -0.91722286, 0, 0.9992601, 0.038461287, 0.917902, -0.0152617125, 0.39651355, -10.492165, 4.9676905, 9.636194)

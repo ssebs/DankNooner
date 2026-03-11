@@ -35,11 +35,10 @@ var levels_names_in_level_select: Array[String] = [
 	"LEVEL_TEST_CITY_01",
 ]
 ## LevelName enum => image used in level preview
-# TODO - don't use this! try to load "res://levels/previews/LEVEL_TEST_1_LABEL.jpg"
-# var level_img_map:Dictionary[LevelName,Texture]={
-# 	LevelName.TEST_LEVEL_01, preload(),
-# 	LevelName.TEST_CITY_01, preload(),
-# }
+var level_img_map: Dictionary[LevelName,Texture] = {
+	LevelName.TEST_LEVEL_01: preload("res://resources/img/level_previews/TEST_LEVEL_01.jpg"),
+	LevelName.TEST_CITY_01: preload("res://resources/img/level_previews/TEST_CITY_01.jpg"),
+}
 
 var current_level_name: LevelName = LevelName.LEVEL_SELECT_LABEL
 var current_level: LevelDefinition
