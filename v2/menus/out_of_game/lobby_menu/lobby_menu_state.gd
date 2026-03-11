@@ -191,7 +191,7 @@ func set_single_or_multiplayer_ui():
 			timeout_timer.start()
 			start_btn.disabled = false
 
-	_set_preview_img()
+	call_deferred("_set_preview_img")
 
 
 func _set_preview_img():

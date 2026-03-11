@@ -30,7 +30,7 @@ func Enter(_state_context: StateContext):
 	multiplayer_manager.server_disconnected.connect(_on_server_disconnected)
 	settings_btn.pressed.connect(_on_settings_pressed)
 
-	respawn_btn.grab_focus()
+	respawn_btn.call_deferred("grab_focus")
 
 
 func Exit(_state_context: StateContext):
