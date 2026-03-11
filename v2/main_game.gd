@@ -5,15 +5,10 @@ class_name MainGame extends Node
 
 @export_tool_button("Run Validation") var run_validation = _run_validation
 
-@onready var editor_tools_node: Node = %_Editor_Tools
-
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
-
-	# Remove editor tools
-	editor_tools_node.queue_free()
 
 	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
 	settings_manager.setting_updated.connect(_on_setting_updated)

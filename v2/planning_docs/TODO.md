@@ -5,9 +5,6 @@
 ## In Progress 🚀
 
 - [ ] level select img
-  - [ ] @level_manager.gd, @level_preview_img_gen.gd
-  - [x] Create tool script
-  - [ ] Make it save a screenshot to folder
   - [ ] Load folder's images in menu
   - [ ] Add doc
 - [ ] Make SettingsMenu work with pause menu (compose this somehow)

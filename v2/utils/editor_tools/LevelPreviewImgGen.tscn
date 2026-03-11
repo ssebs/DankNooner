@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://cb4pfocgu08og"]
-
-[ext_resource type="Script" uid="uid://bb8kuvaue0d75" path="res://utils/editor_tools/level_preview_img_gen.gd" id="1_kdbx5"]
-
-[node name="LevelPreviewImgGen" type="Node" unique_id=1392758872]
-script = ExtResource("1_kdbx5")
