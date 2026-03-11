@@ -9,11 +9,14 @@ class_name PauseMenuState extends MenuState
 @export var gamemode_manager: GamemodeManager
 
 @export var main_menu_state: MenuState
+@export var settings_menu_state: MenuState
 
 @onready var resume_btn: Button = %ResumeBtn
 @onready var main_menu_btn: Button = %MainMenuBtn
 @onready var respawn_btn: Button = %RespawnBtn
-# @onready var back_btn: Button = %BackBtn
+@onready var settings_btn: Button = %SettingsBtn
+
+@onready var bg_tint: ColorRect = %BGTint
 
 # See managers/pause_manager.gd
 
@@ -25,7 +28,9 @@ func Enter(_state_context: StateContext):
 	respawn_btn.pressed.connect(_on_respawn_pressed)
 
 	multiplayer_manager.server_disconnected.connect(_on_server_disconnected)
-	# back_btn.pressed.connect(_on_back_pressed)
+	settings_btn.pressed.connect(_on_settings_pressed)
+
+	respawn_btn.grab_focus()
 
 
 func Exit(_state_context: StateContext):
@@ -35,7 +40,7 @@ func Exit(_state_context: StateContext):
 	respawn_btn.pressed.disconnect(_on_respawn_pressed)
 
 	multiplayer_manager.server_disconnected.disconnect(_on_server_disconnected)
-	# back_btn.pressed.disconnect(_on_back_pressed)
+	settings_btn.pressed.disconnect(_on_settings_pressed)
 
 
 func _on_respawn_pressed():
@@ -53,6 +58,10 @@ func _on_main_menu_pressed():
 	transitioned.emit(main_menu_state, null)
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_MENU
 	level_manager.spawn_menu_level()
+
+
+func _on_settings_pressed():
+	transitioned.emit(settings_menu_state, SettingsStateContext.NewFromPause(self, true))
 
 
 func _on_server_disconnected():

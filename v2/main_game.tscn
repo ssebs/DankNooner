@@ -115,7 +115,7 @@ menu_manager = NodePath("../..")
 settings_manager = NodePath("../../../SettingsManager")
 play_menu_state = NodePath("../PlayMenuState")
 
-[node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "multiplayer_manager", "level_manager", "input_state_manager", "pause_manager", "gamemode_manager", "main_menu_state") instance=ExtResource("6_02kkc")]
+[node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "multiplayer_manager", "level_manager", "input_state_manager", "pause_manager", "gamemode_manager", "main_menu_state", "settings_menu_state") instance=ExtResource("6_02kkc")]
 menu_manager = NodePath("../..")
 multiplayer_manager = NodePath("../../../MultiplayerManager")
 level_manager = NodePath("../../../LevelManager")
@@ -123,6 +123,7 @@ input_state_manager = NodePath("../../../InputStateManager")
 pause_manager = NodePath("../../../PauseManager")
 gamemode_manager = NodePath("../../../GamemodeManager")
 main_menu_state = NodePath("../MainMenuState")
+settings_menu_state = NodePath("../SettingsMenuState")
 
 [node name="SettingsManager" type="Node" parent="ManagerManager" unique_id=82913213 groups=["Managers"]]
 script = ExtResource("17_borgi")
