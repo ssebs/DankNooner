@@ -24,3 +24,4 @@ TODO - add info here!
 - A file exporer opens, rename the image to the level name (localization.csv's key name)
 - Delete the node
 - Add to the `level_img_map`
+- Revert PreSteps to reenable gizmos

@@ -15,7 +15,7 @@ class_name LobbyMenuState extends MenuState
 
 @onready var back_btn: Button = %BackBtn
 @onready var level_select_btn: OptionButton = %LevelSelectBtn  # LevelSelectUI script
-@onready var level_preview_tex: TextureRect = %LevelPreview
+@onready var level_preview_img: TextureRect = %LevelPreview
 @onready var start_btn: Button = %StartBtn
 
 @onready var ip_label: Label = %IPLabel
@@ -118,6 +118,8 @@ func _on_ip_copy_btn_pressed():
 func _on_game_id_set(conn_addr: String):
 	ip_label.text = conn_addr
 	ip_copy_btn.disabled = false
+	_set_preview_img()
+
 	if multiplayer.multiplayer_peer && multiplayer.is_server():
 		_on_ip_copy_btn_pressed()
 
@@ -167,6 +169,8 @@ func _on_timeout():
 func share_selected_level_with_clients(idx: int):
 	level_select_btn.set_selected_index(idx)
 
+	_set_preview_img()
+
 
 #endregion
 
@@ -185,6 +189,19 @@ func set_single_or_multiplayer_ui():
 			loading_ui.show()
 			timeout_timer.start()
 			start_btn.disabled = false
+
+	_set_preview_img()
+
+
+func _set_preview_img():
+	var preview_texture: Texture = level_manager.level_img_map.get(
+		level_select_btn.get_selected_level_id()
+	)
+
+	if preview_texture:
+		level_preview_img.texture = preview_texture
+	else:
+		level_preview_img.texture = load("res://resources/img/test_level_select_img.png")
 
 
 #override

@@ -4,9 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] level select img
-  - [ ] Load folder's images in menu
-  - [ ] Add doc
 - [ ] Make SettingsMenu work with pause menu (compose this somehow)
 
 - [ ] Create Player Part 2
@@ -246,6 +243,10 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] level select img
+  - [x] Load folder's images in menu
+  - [x] Add doc
 
 - [x] Create basic SettingsMenu scene/ui
 
