@@ -17,6 +17,10 @@ class_name SettingsMenuState extends MenuState
 @onready var sfx_vol_slider: HSlider = %SFXVolSlider
 @onready var menu_vol_slider: HSlider = %MenuVolSlider
 
+@onready var bg_tint: ColorRect = %BGTint
+
+var return_state: MenuState
+
 
 func _ready():
 	window_mode_opt.clear()
@@ -26,7 +30,14 @@ func _ready():
 		)
 
 
-func Enter(_state_context: StateContext):
+func Enter(state_context: StateContext):
+	if state_context is SettingsStateContext:
+		return_state = state_context.return_state
+		bg_tint.visible = state_context.show_bg_tint
+	else:
+		return_state = main_menu_state
+		bg_tint.visible = false
+
 	ui.show()
 	back_btn.pressed.connect(_on_back_pressed)
 	save_btn.pressed.connect(_on_save_pressed)
@@ -99,7 +110,7 @@ func _on_reset_pressed():
 
 
 func _on_back_pressed():
-	transitioned.emit(main_menu_state, null)
+	transitioned.emit(return_state, null)
 
 
 #override

@@ -4,8 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] Make SettingsMenu work with pause menu (compose this somehow)
-
 - [ ] Create Player Part 2
 
   - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
@@ -243,6 +241,8 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] Make SettingsMenu work with pause menu (compose this somehow)
 
 - [x] level select img
 
