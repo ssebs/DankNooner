@@ -242,6 +242,8 @@
 
 ## Done ✅
 
+- [x] move spawn to spawn manager from level manager
+
 - [x] Make SettingsMenu work with pause menu (compose this somehow)
 
 - [x] level select img
