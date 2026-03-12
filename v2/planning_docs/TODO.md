@@ -4,13 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] Create PlayerDefinition & Save system
-
-  - [ ] save selected skins
-  - [ ] save username
-  - [ ] save money
-  - [ ] save unlocked tricks, mods, etc.
-
 - [ ] Create Player Part 2
 
   - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
@@ -101,8 +94,8 @@
 - [ ] Create Save System for in-game
 
   - [x] Save bike definitions on disk
-  - [ ] Save mods / etc
-  - [ ] Save levels / player stuff
+  - [ ] save unlocked tricks, mods, etc.
+  - [x] Save levels / player stuff
 
 - [ ] Basic core gameplay loop / implement gamemodes
 
@@ -248,6 +241,14 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] cleanup lobby / joining w/ player definition
+
+- [x] Create PlayerDefinition & Save system
+
+  - [x] save selected skins
+  - [x] save username
+  - [x] save money
 
 - [x] move spawn to spawn manager from level manager
 
