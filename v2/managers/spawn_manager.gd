@@ -5,12 +5,13 @@ class_name SpawnManager extends BaseManager
 @export var level_manager: LevelManager
 @export var audio_manager: AudioManager
 
+## Set player's rb_do_respawn to true
 @rpc("any_peer", "call_local", "reliable")
 func respawn_player(player_peer_id: int):
 	if !multiplayer.is_server():
 		return
 
-	var player_node := get_player_by_peer_id(player_peer_id)
+	var player_node := _get_player_by_peer_id(player_peer_id)
 
 	player_node.rb_do_respawn = true
 
@@ -42,16 +43,6 @@ func add_player_locally(
 	player_to_add.username = username
 
 
-func get_player_by_peer_id(player_peer_id: int) -> PlayerEntity:
-	var player_node: PlayerEntity
-	for child in level_manager.current_level.player_spawn_pos.get_children():
-		if child is PlayerEntity:
-			if child.name == str(player_peer_id):
-				player_node = child
-				break
-	return player_node
-
-
 ## Remove player node locally (no authority check)
 ## Called by GamemodeManager RPC on all peers
 func remove_player_locally(peer_id: int):
@@ -59,6 +50,17 @@ func remove_player_locally(peer_id: int):
 		return
 
 	level_manager.current_level.player_spawn_pos.get_node(str(peer_id)).queue_free()
+
+
+## Get player from multiplayer peer id found in level_manager.current_level
+func _get_player_by_peer_id(player_peer_id: int) -> PlayerEntity:
+	var player_node: PlayerEntity
+	for child in level_manager.current_level.player_spawn_pos.get_children():
+		if child is PlayerEntity:
+			if child.name == str(player_peer_id):
+				player_node = child
+				break
+	return player_node
 
 
 func _get_configuration_warnings() -> PackedStringArray:
