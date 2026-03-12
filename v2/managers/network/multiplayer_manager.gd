@@ -18,48 +18,13 @@ enum ConnectionMode { NORAY, IP_PORT }
 @export var noray_handler: MultiplayerNoray
 @export var ipport_handler: MultiplayerIPPort
 
-## Maps player ID → PlayerDefinition (server-authoritative, synced to clients via RPC)
-var lobby_players: Dictionary = {}
+## Maps peer ID (int) → PlayerDefinition
+var lobby_players: Dictionary[int, PlayerDefinition] = {}
 ## either ip addr or noray oid
 var conn_addr: String:
 	set(val):
 		conn_addr = val
 		game_id_set.emit(val)
-
-#region RPCs
-
-## Client calls this to send their PlayerDefinition to server; server updates dict and broadcasts
-@rpc("any_peer", "call_local", "reliable")
-func update_player_metadata(peer_id: int, player_def_dict: Dictionary):
-	if !multiplayer.is_server():
-		return
-
-	var player_def = PlayerDefinition.new()
-	player_def.from_dict(player_def_dict)
-	lobby_players[peer_id] = player_def
-	_sync_lobby_players.rpc(_lobby_players_to_dict())
-
-
-## Server broadcasts full lobby_players dict to all clients
-@rpc("call_local", "reliable")
-func _sync_lobby_players(players_dict: Dictionary):
-	lobby_players.clear()
-	for peer_id_str in players_dict:
-		var peer_id = int(peer_id_str)
-		var player_def = PlayerDefinition.new()
-		player_def.from_dict(players_dict[peer_id_str])
-		lobby_players[peer_id] = player_def
-	lobby_players_updated.emit(lobby_players)
-
-
-func _lobby_players_to_dict() -> Dictionary:
-	var result = {}
-	for peer_id in lobby_players:
-		result[peer_id] = lobby_players[peer_id].to_dict()
-	return result
-
-
-#endregion
 
 
 #region Public API
@@ -151,7 +116,30 @@ func disconnect_sp_or_mp():
 		disconnect_client()
 
 
+## Client calls this to send their PlayerDefinition to server; server updates dict and broadcasts
+@rpc("any_peer", "call_local", "reliable")
+func update_player_metadata(peer_id: int, player_def_dict: Dictionary):
+	if !multiplayer.is_server():
+		return
+
+	var player_def = PlayerDefinition.new()
+	player_def.from_dict(player_def_dict)
+	lobby_players[peer_id] = player_def
+	_sync_lobby_players.rpc(_lobby_players_to_dict())
+
+
 #endregion
+
+## Server broadcasts full lobby_players dict to all clients
+@rpc("call_local", "reliable")
+func _sync_lobby_players(players_dict: Dictionary):
+	lobby_players.clear()
+	for peer_id_str in players_dict:
+		var peer_id = int(peer_id_str)
+		var player_def = PlayerDefinition.new()
+		player_def.from_dict(players_dict[peer_id_str])
+		lobby_players[peer_id] = player_def
+	lobby_players_updated.emit(lobby_players)
 
 
 ## return MultiplayerNoray or MultiplayerIPPort depending on connection_mode
@@ -159,6 +147,13 @@ func _get_handler():
 	if connection_mode == ConnectionMode.NORAY:
 		return noray_handler
 	return ipport_handler
+
+
+func _lobby_players_to_dict() -> Dictionary:
+	var result = {}
+	for peer_id in lobby_players:
+		result[peer_id] = lobby_players[peer_id].to_dict()
+	return result
 
 
 #region signal handlers
@@ -170,6 +165,7 @@ func _on_server_disconnected():
 
 func _on_peer_connected(id: int):
 	print("Player %s connected" % id)
+	NetworkTime.start()
 	lobby_players[id] = PlayerDefinition.new()
 	player_connected.emit(id, lobby_players)
 

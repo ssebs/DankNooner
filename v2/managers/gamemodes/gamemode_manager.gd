@@ -35,7 +35,7 @@ func start_game(level_name: LevelManager.LevelName):
 	match_state = MatchState.IN_GAME
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
 
-	_spawn_all_players()  # TODO - use gamemodemanager to spawn!
+	_spawn_all_players()  # TODO - use actual game mode to spawn!
 
 
 ## Called when returning to lobby
