@@ -165,7 +165,6 @@ func _on_server_disconnected():
 
 func _on_peer_connected(id: int):
 	print("Player %s connected" % id)
-	NetworkTime.start()
 	lobby_players[id] = PlayerDefinition.new()
 	player_connected.emit(id, lobby_players)
 
