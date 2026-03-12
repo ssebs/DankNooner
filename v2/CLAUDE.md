@@ -106,8 +106,8 @@ See `planning_docs/Skins.md` for details.
 
 ### Gamemode System
 
-- `GamemodeManager` - manages match state, RPC player spawning/despawning, skin sync, late-joiner support
-- Spawning moved from LevelManager to GamemodeManager
+- `GamemodeManager` - manages match state, late-joiner sync, coordinates level/spawn
+- `SpawnManager` - spawn/despawn RPCs + local player instantiation
 
 ### Multiplayer / Netcode
 
@@ -118,8 +118,10 @@ Uses **netfox** addon with **Noray** for NAT traversal:
 - **TickInterpolator**: Smooths remote player visuals between network ticks
 - **Noray**: NAT punch-through with relay fallback for peer connections
 - **IP/Port mode**: Direct connection alternative to Noray (port 42068)
-- `MultiplayerManager` handles ENet peer connections via Noray or IP/Port
-- `GamemodeManager` handles player spawning/despawning via RPCs
+- `ConnectionManager` handles ENet peer connections via Noray or IP/Port
+- `LobbyManager` handles lobby_players dict and PlayerDefinition sync
+- `GamemodeManager` coordinates match state and late-joiner sync
+- `SpawnManager` handles player spawning/despawning via RPCs
 - Input flows: Client captures → RPC to server → Server applies → Broadcasts state
 
 See `Architecture.md` for detailed diagrams and RPC signatures.
