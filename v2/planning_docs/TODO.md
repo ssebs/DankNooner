@@ -4,6 +4,16 @@
 
 ## In Progress 🚀
 
+- [ ] noray host setting update doesn't save
+
+- [ ] noray => WebRTC
+
+  - Use webrtc for nat punch thru with stun/turn server
+  - https://github.com/jonandrewdavis/andoodev-godot-web-rtc-p2p
+  - https://github.com/godotengine/godot-demo-projects/tree/master/networking/webrtc_signaling
+  - https://www.reddit.com/r/gamedev/comments/1872muu/nat_traversal_solutions_for_multiplayer_in_godot/
+  - Coturn docker to host
+
 - [ ] Create Player Part 2
 
   - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
@@ -38,14 +48,6 @@
 
 > POC = playable gamemodes w/ friends, see if core gameplay loop works
 > video record this once playing with everyone, save log files
-
-- [ ] noray => WebRTC
-
-  - Use webrtc for nat punch thru with stun/turn server
-  - https://github.com/jonandrewdavis/andoodev-godot-web-rtc-p2p
-  - https://github.com/godotengine/godot-demo-projects/tree/master/networking/webrtc_signaling
-  - https://www.reddit.com/r/gamedev/comments/1872muu/nat_traversal_solutions_for_multiplayer_in_godot/
-  - Coturn docker to host
 
 - [ ] Trick Manager + tricks
 
