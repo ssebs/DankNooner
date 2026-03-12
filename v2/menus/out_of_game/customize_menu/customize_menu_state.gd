@@ -3,6 +3,7 @@ class_name CustomizeMenuState extends MenuState
 
 @export var menu_manager: MenuManager
 @export var settings_manager: SettingsManager
+@export var save_manager: SaveManager
 @export var play_menu_state: MenuState
 
 const BIKE_SKINS_DIR := "res://resources/entities/bikes/skins/"
