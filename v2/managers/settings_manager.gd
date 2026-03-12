@@ -53,6 +53,7 @@ func deferred_init():
 		save_default_settings()
 
 
+# TODO - this may cause a dupe emit bug since save_settings also emits a signal
 func update_setting(
 	key: String,
 	value: Variant,
