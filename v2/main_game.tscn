@@ -5,7 +5,8 @@
 [ext_resource type="Script" uid="uid://b766m1s624u36" path="res://managers/input_state_manager.gd" id="3_krmtw"]
 [ext_resource type="Script" uid="uid://277pfnhexwcq" path="res://managers/menu_manager.gd" id="3_ykeeq"]
 [ext_resource type="Script" uid="uid://ba7kyb4p3trb1" path="res://utils/state_machine/state_machine.gd" id="4_6bm6p"]
-[ext_resource type="Script" uid="uid://dccs16kf6k4v2" path="res://managers/network/multiplayer_manager.gd" id="5_jgkyn"]
+[ext_resource type="Script" uid="uid://bci0n50harx7j" path="res://managers/network/lobby_manager.gd" id="5_lobby"]
+[ext_resource type="Script" uid="uid://6drc05oyeb7b" path="res://managers/network/connection_manager.gd" id="5_pk5u2"]
 [ext_resource type="PackedScene" uid="uid://d0jwfmklbjcoo" path="res://menus/in_game/pause_menu/pause_menu_state.tscn" id="6_02kkc"]
 [ext_resource type="PackedScene" uid="uid://ds8xwygeh5ykm" path="res://menus/out_of_game/main_menu/main_menu_state.tscn" id="6_2pltu"]
 [ext_resource type="Script" uid="uid://bwjhjq5qatrks" path="res://managers/network/multiplayer_noray.gd" id="6_an1vu"]
@@ -43,23 +44,27 @@ level_manager = NodePath("../LevelManager")
 input_state_manager = NodePath("../InputStateManager")
 metadata/_custom_type_script = "uid://b2j8gbb336wwq"
 
-[node name="MultiplayerManager" type="Node" parent="ManagerManager" unique_id=1170905979 node_paths=PackedStringArray("menu_manager", "settings_manager", "level_manager", "noray_handler", "ipport_handler") groups=["Managers"]]
-script = ExtResource("5_jgkyn")
+[node name="ConnectionManager" type="Node" parent="ManagerManager" unique_id=79087304 node_paths=PackedStringArray("menu_manager", "settings_manager", "level_manager", "noray_handler", "ipport_handler") groups=["Managers"]]
+script = ExtResource("5_pk5u2")
 menu_manager = NodePath("../MenuManager")
 settings_manager = NodePath("../SettingsManager")
 level_manager = NodePath("../LevelManager")
 noray_handler = NodePath("MultiplayerNoray")
 ipport_handler = NodePath("MultiplayerIPPort")
-metadata/_custom_type_script = "uid://dccs16kf6k4v2"
+metadata/_custom_type_script = "uid://6drc05oyeb7b"
 
-[node name="MultiplayerNoray" type="Node" parent="ManagerManager/MultiplayerManager" unique_id=664319890 node_paths=PackedStringArray("settings_manager")]
+[node name="MultiplayerNoray" type="Node" parent="ManagerManager/ConnectionManager" unique_id=664319890 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("6_an1vu")
 settings_manager = NodePath("../../SettingsManager")
 metadata/_custom_type_script = "uid://bwjhjq5qatrks"
 
-[node name="MultiplayerIPPort" type="Node" parent="ManagerManager/MultiplayerManager" unique_id=901234466]
+[node name="MultiplayerIPPort" type="Node" parent="ManagerManager/ConnectionManager" unique_id=901234466]
 script = ExtResource("7_borgi")
 metadata/_custom_type_script = "uid://iqvglquvlctu"
+
+[node name="LobbyManager" type="Node" parent="ManagerManager" unique_id=676024663 node_paths=PackedStringArray("connection_manager") groups=["Managers"]]
+script = ExtResource("5_lobby")
+connection_manager = NodePath("../ConnectionManager")
 
 [node name="LevelManager" type="Node" parent="ManagerManager" unique_id=572419191 node_paths=PackedStringArray("spawn_node", "menu_manager", "input_state_manager") groups=["Managers"]]
 script = ExtResource("10_mf81u")
@@ -90,17 +95,18 @@ settings_menu_state = NodePath("../SettingsMenuState")
 play_menu_state = NodePath("../PlayMenuState")
 customize_menu_state = NodePath("../CustomizeMenuState")
 
-[node name="PlayMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=207724047 node_paths=PackedStringArray("menu_manager", "multiplayer_manager", "main_menu_state", "lobby_menu_state", "customize_menu_state") instance=ExtResource("7_f52ns")]
+[node name="PlayMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=207724047 node_paths=PackedStringArray("menu_manager", "connection_manager", "main_menu_state", "lobby_menu_state", "customize_menu_state") instance=ExtResource("7_f52ns")]
 menu_manager = NodePath("../..")
-multiplayer_manager = NodePath("../../../MultiplayerManager")
+connection_manager = NodePath("../../../ConnectionManager")
 main_menu_state = NodePath("../MainMenuState")
 lobby_menu_state = NodePath("../LobbyMenuState")
 customize_menu_state = NodePath("../CustomizeMenuState")
 
-[node name="LobbyMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1270583406 node_paths=PackedStringArray("menu_manager", "settings_manager", "multiplayer_manager", "level_manager", "input_state_manager", "gamemode_manager", "save_manager", "play_menu_state") instance=ExtResource("7_l5ukw")]
+[node name="LobbyMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1270583406 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "input_state_manager", "gamemode_manager", "save_manager", "play_menu_state") instance=ExtResource("7_l5ukw")]
 menu_manager = NodePath("../..")
 settings_manager = NodePath("../../../SettingsManager")
-multiplayer_manager = NodePath("../../../MultiplayerManager")
+connection_manager = NodePath("../../../ConnectionManager")
+lobby_manager = NodePath("../../../LobbyManager")
 level_manager = NodePath("../../../LevelManager")
 input_state_manager = NodePath("../../../InputStateManager")
 gamemode_manager = NodePath("../../../GamemodeManager")
@@ -117,9 +123,9 @@ menu_manager = NodePath("../..")
 save_manager = NodePath("../../../SaveManager")
 play_menu_state = NodePath("../PlayMenuState")
 
-[node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "multiplayer_manager", "level_manager", "input_state_manager", "pause_manager", "gamemode_manager", "spawn_manager", "main_menu_state", "settings_menu_state") instance=ExtResource("6_02kkc")]
+[node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "connection_manager", "level_manager", "input_state_manager", "pause_manager", "gamemode_manager", "spawn_manager", "main_menu_state", "settings_menu_state") instance=ExtResource("6_02kkc")]
 menu_manager = NodePath("../..")
-multiplayer_manager = NodePath("../../../MultiplayerManager")
+connection_manager = NodePath("../../../ConnectionManager")
 level_manager = NodePath("../../../LevelManager")
 input_state_manager = NodePath("../../../InputStateManager")
 pause_manager = NodePath("../../../PauseManager")
@@ -137,11 +143,12 @@ script = ExtResource("19_wt57k")
 default_player_definition = ExtResource("20_pk5u2")
 metadata/_custom_type_script = "uid://didbm7t5dal30"
 
-[node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "multiplayer_manager", "level_manager", "spawn_manager", "audio_manager", "input_state_manager") groups=["Managers"]]
+[node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "spawn_manager", "audio_manager", "input_state_manager") groups=["Managers"]]
 script = ExtResource("18_ih6an")
 menu_manager = NodePath("../MenuManager")
 settings_manager = NodePath("../SettingsManager")
-multiplayer_manager = NodePath("../MultiplayerManager")
+connection_manager = NodePath("../ConnectionManager")
+lobby_manager = NodePath("../LobbyManager")
 level_manager = NodePath("../LevelManager")
 spawn_manager = NodePath("../SpawnManager")
 audio_manager = NodePath("../AudioManager")
@@ -150,9 +157,9 @@ input_state_manager = NodePath("../InputStateManager")
 [node name="AudioManager" parent="ManagerManager" unique_id=625309404 node_paths=PackedStringArray("settings_manager") instance=ExtResource("20_2i4tw")]
 settings_manager = NodePath("../SettingsManager")
 
-[node name="SpawnManager" type="Node" parent="ManagerManager" unique_id=1424921597 node_paths=PackedStringArray("multiplayer_manager", "level_manager", "audio_manager") groups=["Managers"]]
+[node name="SpawnManager" type="Node" parent="ManagerManager" unique_id=1424921597 node_paths=PackedStringArray("lobby_manager", "level_manager", "audio_manager") groups=["Managers"]]
 script = ExtResource("21_euc45")
-multiplayer_manager = NodePath("../MultiplayerManager")
+lobby_manager = NodePath("../LobbyManager")
 level_manager = NodePath("../LevelManager")
 audio_manager = NodePath("../AudioManager")
 metadata/_custom_type_script = "uid://cug5kob8cndk4"
