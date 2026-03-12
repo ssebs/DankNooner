@@ -129,13 +129,14 @@ settings_menu_state = NodePath("../SettingsMenuState")
 script = ExtResource("17_borgi")
 metadata/_custom_type_script = "uid://cvf883jhga841"
 
-[node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "multiplayer_manager", "level_manager", "spawn_manager", "input_state_manager") groups=["Managers"]]
+[node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "multiplayer_manager", "level_manager", "spawn_manager", "audio_manager", "input_state_manager") groups=["Managers"]]
 script = ExtResource("18_ih6an")
 menu_manager = NodePath("../MenuManager")
 settings_manager = NodePath("../SettingsManager")
 multiplayer_manager = NodePath("../MultiplayerManager")
 level_manager = NodePath("../LevelManager")
 spawn_manager = NodePath("../SpawnManager")
+audio_manager = NodePath("../AudioManager")
 input_state_manager = NodePath("../InputStateManager")
 
 [node name="AudioManager" parent="ManagerManager" unique_id=625309404 node_paths=PackedStringArray("settings_manager") instance=ExtResource("20_2i4tw")]
