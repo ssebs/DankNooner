@@ -111,9 +111,9 @@ menu_manager = NodePath("../..")
 settings_manager = NodePath("../../../SettingsManager")
 main_menu_state = NodePath("../MainMenuState")
 
-[node name="CustomizeMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1710077363 node_paths=PackedStringArray("menu_manager", "settings_manager", "play_menu_state") instance=ExtResource("9_4srsv")]
+[node name="CustomizeMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1710077363 node_paths=PackedStringArray("menu_manager", "save_manager", "play_menu_state") instance=ExtResource("9_4srsv")]
 menu_manager = NodePath("../..")
-settings_manager = NodePath("../../../SettingsManager")
+save_manager = NodePath("../../../SaveManager")
 play_menu_state = NodePath("../PlayMenuState")
 
 [node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "multiplayer_manager", "level_manager", "input_state_manager", "pause_manager", "gamemode_manager", "spawn_manager", "main_menu_state", "settings_menu_state") instance=ExtResource("6_02kkc")]

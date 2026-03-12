@@ -2,7 +2,6 @@
 class_name CustomizeMenuState extends MenuState
 
 @export var menu_manager: MenuManager
-@export var settings_manager: SettingsManager
 @export var save_manager: SaveManager
 @export var play_menu_state: MenuState
 
@@ -11,6 +10,7 @@ const CHARACTER_SKINS_DIR := "res://resources/entities/player/skins/"
 
 @onready var back_btn: Button = %BackBtn
 @onready var save_btn: Button = %SaveBtn
+@onready var username_entry: LineEdit = %UsernameEntry
 @onready var bike_skin_btn: OptionButton = %BikeSkinBtn
 @onready var character_skin_btn: OptionButton = %CharacterSkinBtn
 
@@ -71,8 +71,11 @@ func _scan_skin_dir(dir_path: String) -> Dictionary:
 
 
 func _load_current_selections():
-	var saved_bike := settings_manager.current_settings.get("bike_skin", "") as String
-	var saved_character := settings_manager.current_settings.get("character_skin", "") as String
+	var player_def := save_manager.get_player_definition()
+	username_entry.text = player_def.username
+
+	var saved_bike := player_def.bike_skin.resource_path if player_def.bike_skin else ""
+	var saved_character := player_def.character_skin.resource_path if player_def.character_skin else ""
 
 	_select_option_by_value(bike_skin_btn, bike_skins, saved_bike)
 	_select_option_by_value(character_skin_btn, character_skins, saved_character)
@@ -89,18 +92,21 @@ func _select_option_by_value(btn: OptionButton, skins: Dictionary, saved_path: S
 
 
 func _on_save_pressed():
+	var player_def := save_manager.get_player_definition()
+	player_def.username = username_entry.text
+
 	var bike_idx := bike_skin_btn.selected
 	var char_idx := character_skin_btn.selected
 
 	if bike_idx >= 0:
 		var bike_name := bike_skin_btn.get_item_text(bike_idx)
-		settings_manager.update_setting("bike_skin", bike_skins[bike_name], false)
+		player_def.bike_skin = load(bike_skins[bike_name])
 
 	if char_idx >= 0:
 		var char_name := character_skin_btn.get_item_text(char_idx)
-		settings_manager.update_setting("character_skin", character_skins[char_name], false)
+		player_def.character_skin = load(character_skins[char_name])
 
-	settings_manager.save_settings()
+	save_manager.update_save("player_definition", player_def, true, true)
 	UiToast.ShowToast(tr("SAVED_SETTINGS_LABEL"))
 
 
