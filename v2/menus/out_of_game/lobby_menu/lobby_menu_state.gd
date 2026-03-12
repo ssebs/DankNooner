@@ -3,7 +3,8 @@ class_name LobbyMenuState extends MenuState
 
 @export var menu_manager: MenuManager
 @export var settings_manager: SettingsManager
-@export var multiplayer_manager: MultiplayerManager
+@export var connection_manager: ConnectionManager
+@export var lobby_manager: LobbyManager
 @export var level_manager: LevelManager
 @export var input_state_manager: InputStateManager
 @export var gamemode_manager: GamemodeManager
@@ -44,12 +45,14 @@ func Enter(state_context: StateContext):
 	level_select_btn.level_selected.connect(_on_level_selected)
 	ip_copy_btn.pressed.connect(_on_ip_copy_btn_pressed)
 
-	# Multiplayer :D
-	multiplayer_manager.server_disconnected.connect(_on_server_disconnected)
-	multiplayer_manager.game_id_set.connect(_on_game_id_set)
-	multiplayer_manager.client_connection_failed.connect(_on_client_connection_failed)
-	multiplayer_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
-	multiplayer_manager.lobby_players_updated.connect(_on_lobby_players_updated)
+	# Connection signals
+	connection_manager.server_disconnected.connect(_on_server_disconnected)
+	connection_manager.game_id_set.connect(_on_game_id_set)
+	connection_manager.client_connection_failed.connect(_on_client_connection_failed)
+	connection_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
+
+	# Lobby signals
+	lobby_manager.lobby_players_updated.connect(_on_lobby_players_updated)
 
 	timeout_timer.timeout.connect(_on_timeout)
 
@@ -67,11 +70,12 @@ func Exit(_state_context: StateContext):
 	level_select_btn.level_selected.disconnect(_on_level_selected)
 	ip_copy_btn.pressed.disconnect(_on_ip_copy_btn_pressed)
 
-	multiplayer_manager.server_disconnected.disconnect(_on_server_disconnected)
-	multiplayer_manager.game_id_set.disconnect(_on_game_id_set)
-	multiplayer_manager.client_connection_failed.disconnect(_on_client_connection_failed)
-	multiplayer_manager.client_connection_succeeded.disconnect(_on_client_connection_succeeded)
-	multiplayer_manager.lobby_players_updated.disconnect(_on_lobby_players_updated)
+	connection_manager.server_disconnected.disconnect(_on_server_disconnected)
+	connection_manager.game_id_set.disconnect(_on_game_id_set)
+	connection_manager.client_connection_failed.disconnect(_on_client_connection_failed)
+	connection_manager.client_connection_succeeded.disconnect(_on_client_connection_succeeded)
+
+	lobby_manager.lobby_players_updated.disconnect(_on_lobby_players_updated)
 
 	timeout_timer.timeout.disconnect(_on_timeout)
 	timeout_timer.stop()
@@ -96,7 +100,7 @@ func _on_start_pressed():
 
 ## cleanup before going back
 func _on_back_pressed():
-	multiplayer_manager.disconnect_sp_or_mp()
+	connection_manager.disconnect_sp_or_mp()
 	player_list.clear()
 
 	if level_manager.current_level_name != LevelManager.LevelName.BG_GRAY_LEVEL:
@@ -148,7 +152,7 @@ func _on_client_connection_succeeded(peer_id: int):
 		level_select_btn.disabled = true
 
 	var player_def = save_manager.get_player_definition()
-	multiplayer_manager.update_player_metadata.rpc_id(1, peer_id, player_def.to_dict())
+	lobby_manager.update_player_metadata.rpc_id(1, peer_id, player_def.to_dict())
 
 
 func _on_timeout():
@@ -175,8 +179,8 @@ func set_single_or_multiplayer_ui():
 		LobbyStateContext.Mode.FREEROAM:
 			multiplayer_ui.hide()
 			singleplayer_ui.show()
-			multiplayer_manager.connection_mode = MultiplayerManager.ConnectionMode.IP_PORT
-			await multiplayer_manager.start_server()
+			connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
+			await connection_manager.start_server()
 		_:
 			singleplayer_ui.hide()
 			multiplayer_ui.show()
@@ -208,8 +212,10 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 	if menu_manager == null:
 		issues.append("menu_manager must not be empty")
-	if multiplayer_manager == null:
-		issues.append("multiplayer_manager must not be empty")
+	if connection_manager == null:
+		issues.append("connection_manager must not be empty")
+	if lobby_manager == null:
+		issues.append("lobby_manager must not be empty")
 	if level_manager == null:
 		issues.append("level_manager must not be empty")
 	if input_state_manager == null:

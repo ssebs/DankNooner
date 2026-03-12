@@ -2,7 +2,7 @@
 class_name PauseMenuState extends MenuState
 
 @export var menu_manager: MenuManager
-@export var multiplayer_manager: MultiplayerManager
+@export var connection_manager: ConnectionManager
 @export var level_manager: LevelManager
 @export var input_state_manager: InputStateManager
 @export var pause_manager: PauseManager
@@ -28,7 +28,7 @@ func Enter(_state_context: StateContext):
 	main_menu_btn.pressed.connect(_on_main_menu_pressed)
 	respawn_btn.pressed.connect(_on_respawn_pressed)
 
-	multiplayer_manager.server_disconnected.connect(_on_server_disconnected)
+	connection_manager.server_disconnected.connect(_on_server_disconnected)
 	settings_btn.pressed.connect(_on_settings_pressed)
 
 	respawn_btn.call_deferred("grab_focus")
@@ -40,7 +40,7 @@ func Exit(_state_context: StateContext):
 	main_menu_btn.pressed.disconnect(_on_main_menu_pressed)
 	respawn_btn.pressed.disconnect(_on_respawn_pressed)
 
-	multiplayer_manager.server_disconnected.disconnect(_on_server_disconnected)
+	connection_manager.server_disconnected.disconnect(_on_server_disconnected)
 	settings_btn.pressed.disconnect(_on_settings_pressed)
 
 
@@ -53,7 +53,7 @@ func _on_resume_pressed():
 
 
 func _on_main_menu_pressed():
-	multiplayer_manager.disconnect_sp_or_mp()
+	connection_manager.disconnect_sp_or_mp()
 	gamemode_manager.end_game()
 
 	transitioned.emit(main_menu_state, null)

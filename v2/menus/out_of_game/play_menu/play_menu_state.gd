@@ -2,7 +2,7 @@
 class_name PlayMenuState extends MenuState
 
 @export var menu_manager: MenuManager
-@export var multiplayer_manager: MultiplayerManager
+@export var connection_manager: ConnectionManager
 @export var main_menu_state: MenuState
 @export var lobby_menu_state: MenuState
 @export var customize_menu_state: MenuState
@@ -66,9 +66,9 @@ func _auto_detect_connection_mode(text: String):
 		return
 
 	if text.is_valid_ip_address():
-		multiplayer_manager.connection_mode = MultiplayerManager.ConnectionMode.IP_PORT
+		connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
 	elif _is_valid_noray_oid(text):
-		multiplayer_manager.connection_mode = MultiplayerManager.ConnectionMode.NORAY
+		connection_manager.connection_mode = ConnectionManager.ConnectionMode.NORAY
 
 
 func _update_placeholder():
@@ -81,10 +81,10 @@ func _on_ipport_toggled(_toggled_on: bool):
 
 func _update_ipport_tooltip():
 	if ipport_toggle.button_pressed:
-		multiplayer_manager.connection_mode = MultiplayerManager.ConnectionMode.IP_PORT
+		connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
 		ipport_toggle.tooltip_text = tr("USE_NORAY_LABEL")
 	else:
-		multiplayer_manager.connection_mode = MultiplayerManager.ConnectionMode.NORAY
+		connection_manager.connection_mode = ConnectionManager.ConnectionMode.NORAY
 		ipport_toggle.tooltip_text = tr("USE_IPPORT_LABEL")
 
 
@@ -105,7 +105,7 @@ func _is_valid_noray_oid(text: String) -> bool:
 #region button handlers
 func _on_host_btn_pressed():
 	transitioned.emit(lobby_menu_state, LobbyStateContext.NewHost("0.0.0.0"))
-	await multiplayer_manager.start_server()
+	await connection_manager.start_server()
 
 
 func _on_join_btn_pressed():
@@ -113,7 +113,7 @@ func _on_join_btn_pressed():
 	var ctx = LobbyStateContext.NewJoin(game_id)
 	transitioned.emit(lobby_menu_state, ctx)  # must be before connecting client for ip to show
 
-	var err = await multiplayer_manager.connect_client(game_id)
+	var err = await connection_manager.connect_client(game_id)
 	if err != OK:
 		UiToast.ShowToast("Failed to connect to server", UiToast.ToastLevel.ERR, 3)
 		return
@@ -144,8 +144,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 	if menu_manager == null:
 		issues.append("menu_manager must not be empty")
-	if multiplayer_manager == null:
-		issues.append("multiplayer_manager must not be empty")
+	if connection_manager == null:
+		issues.append("connection_manager must not be empty")
 	if main_menu_state == null:
 		issues.append("main_menu_state must not be empty")
 	if lobby_menu_state == null:

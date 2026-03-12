@@ -1,9 +1,32 @@
 @tool
 class_name SpawnManager extends BaseManager
 
-@export var multiplayer_manager: MultiplayerManager
+@export var lobby_manager: LobbyManager
 @export var level_manager: LevelManager
 @export var audio_manager: AudioManager
+
+
+## Spawn all players from lobby_players dict (server only)
+func spawn_all_players():
+	if !multiplayer.is_server():
+		return
+
+	for peer_id in lobby_manager.lobby_players:
+		var player_def: PlayerDefinition = lobby_manager.lobby_players[peer_id]
+		rpc_spawn_player.rpc(peer_id, player_def.to_dict())
+
+
+## Server broadcasts to all peers to spawn a player
+@rpc("call_local", "reliable")
+func rpc_spawn_player(peer_id: int, player_def_dict: Dictionary):
+	add_player_locally(peer_id, player_def_dict)
+
+
+## Server broadcasts to all peers to despawn a player
+@rpc("call_local", "reliable")
+func rpc_despawn_player(peer_id: int):
+	remove_player_locally(peer_id)
+
 
 ## Set player's rb_do_respawn to true
 @rpc("any_peer", "call_local", "reliable")
@@ -17,7 +40,6 @@ func respawn_player(player_peer_id: int):
 
 
 ## Instantiate and add player node locally (no authority check)
-## Called by GamemodeManager RPC on all peers
 func add_player_locally(peer_id: int, player_def_dict: Dictionary):
 	var player_def = PlayerDefinition.new()
 	player_def.from_dict(player_def_dict)
@@ -37,7 +59,6 @@ func add_player_locally(peer_id: int, player_def_dict: Dictionary):
 
 
 ## Remove player node locally (no authority check)
-## Called by GamemodeManager RPC on all peers
 func remove_player_locally(peer_id: int):
 	if !level_manager.current_level.player_spawn_pos.has_node(str(peer_id)):
 		return
@@ -61,8 +82,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 	if audio_manager == null:
 		issues.append("audio_manager must not be empty")
-	if multiplayer_manager == null:
-		issues.append("multiplayer_manager must not be empty")
+	if lobby_manager == null:
+		issues.append("lobby_manager must not be empty")
 	if level_manager == null:
 		issues.append("level_manager must not be empty")
 
