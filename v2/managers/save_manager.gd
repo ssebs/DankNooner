@@ -4,12 +4,15 @@ class_name SaveManager extends BaseManager
 signal save_changed(current_save: Dictionary)
 signal save_item_updated(save_key: String, save_value: Variant)
 
-@export var save_path: String = "user://savegame_.json"
 @export var save_slot: int = 1
 @export var save_version: int = 1
 @export var default_player_definition: PlayerDefinition = load(
 	"res://resources/entities/player/default_player_definition.tres"
 )
+
+var save_path: String:
+	get:
+		return "user://savegame_%d.json" % save_slot
 
 ## NOTE - key names (str) are hard coded in lots of places!
 ## if using a Definition, be sure to call to_dict/from_dict when save/loading it in the impl
