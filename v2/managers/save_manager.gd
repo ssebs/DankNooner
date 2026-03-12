@@ -34,7 +34,7 @@ func deferred_init():
 	if FileAccess.file_exists(save_path):
 		load_save()
 	else:
-		save_default_save()
+		_save_default_save()
 
 
 # TODO - this may cause a dupe emit bug since save_settings also emits a signal
@@ -86,7 +86,7 @@ func load_save():
 
 
 ## save_save() with default_save
-func save_default_save():
+func _save_default_save():
 	load_default_save()
 	save_save()
 
