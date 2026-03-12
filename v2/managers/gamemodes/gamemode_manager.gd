@@ -11,6 +11,7 @@ enum GameMode { FREE_FROAM, STREET_RACE, STUNT_RACE, TRACK_RACE }
 @export var settings_manager: SettingsManager
 @export var multiplayer_manager: MultiplayerManager
 @export var level_manager: LevelManager
+@export var spawn_manager: SpawnManager
 @export var input_state_manager: InputStateManager
 
 var match_state: MatchState = MatchState.IN_LOBBY
@@ -130,13 +131,13 @@ func _request_late_spawn(peer_id: int):
 func _rpc_spawn_player(
 	peer_id: int, username: String, bike_skin_path: String, character_skin_path: String
 ):
-	level_manager.add_player_locally(peer_id, username, bike_skin_path, character_skin_path)
+	spawn_manager.add_player_locally(peer_id, username, bike_skin_path, character_skin_path)
 
 
 ## Server broadcasts to all peers to despawn a player
 @rpc("call_local", "reliable")
 func _rpc_despawn_player(peer_id: int):
-	level_manager.remove_player_locally(peer_id)
+	spawn_manager.remove_player_locally(peer_id)
 
 
 #endregion
@@ -155,5 +156,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("level_manager must not be empty")
 	if input_state_manager == null:
 		issues.append("input_state_manager must not be empty")
+	if spawn_manager == null:
+		issues.append("spawn_manager must not be empty")
 
 	return issues

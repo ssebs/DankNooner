@@ -7,6 +7,7 @@ class_name PauseMenuState extends MenuState
 @export var input_state_manager: InputStateManager
 @export var pause_manager: PauseManager
 @export var gamemode_manager: GamemodeManager
+@export var spawn_manager: SpawnManager
 
 @export var main_menu_state: MenuState
 @export var settings_menu_state: MenuState
@@ -44,7 +45,7 @@ func Exit(_state_context: StateContext):
 
 
 func _on_respawn_pressed():
-	level_manager.respawn_player.rpc_id(1, multiplayer.get_unique_id())
+	spawn_manager.respawn_player.rpc_id(1, multiplayer.get_unique_id())
 
 
 func _on_resume_pressed():

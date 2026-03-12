@@ -11,9 +11,7 @@ enum LevelName {
 
 @export var spawn_node: Node3D
 @export var menu_manager: MenuManager
-@export var multiplayer_manager: MultiplayerManager
 @export var input_state_manager: InputStateManager
-@export var audio_manager: AudioManager
 
 ## PackedScene of type LevelDefinition
 var possible_levels: Dictionary[LevelName, PackedScene] = {
@@ -50,6 +48,9 @@ func _ready():
 	# Console.add_command("dbg_gym", spawn_gym_test_level) # broken
 
 
+#region public api
+
+
 ## Despawns any existing levels, then spawns level_name
 ## NOTE - also hides menus, and sets current_input_state
 func spawn_level(level_name: LevelName, input_state: InputStateManager.InputState):
@@ -78,80 +79,16 @@ func despawn_level():
 		child.queue_free()
 
 
-@rpc("any_peer", "call_local", "reliable")
-func respawn_player(player_peer_id: int):
-	if !multiplayer.is_server():
-		return
-
-	var player_node := get_player_by_peer_id(player_peer_id)
-
-	player_node.rb_do_respawn = true
-
-
-## Instantiate and add player node locally (no authority check)
-## Called by GamemodeManager RPC on all peers
-func add_player_locally(
-	peer_id: int, username: String, bike_skin_path: String = "", character_skin_path: String = ""
-):
-	print("Adding player locally: %s - %s" % [peer_id, username])
-
-	var player_to_add = current_level.player_entity_scene.instantiate() as PlayerEntity
-	player_to_add.name = str(peer_id)
-	player_to_add.audio_manager = audio_manager  # HACK
-
-	if bike_skin_path != "":
-		var bike_res = ResourceLoader.load(bike_skin_path)
-		if bike_res is BikeSkinDefinition:
-			player_to_add.bike_definition = bike_res
-
-	if character_skin_path != "":
-		var char_res = ResourceLoader.load(character_skin_path)
-		if char_res is CharacterSkinDefinition:
-			player_to_add.character_definition = char_res
-
-	current_level.player_spawn_pos.add_child(player_to_add, true)
-	player_to_add.username = username
-
-
-## Remove player node locally (no authority check)
-## Called by GamemodeManager RPC on all peers
-func remove_player_locally(peer_id: int):
-	if !current_level.player_spawn_pos.has_node(str(peer_id)):
-		return
-
-	current_level.player_spawn_pos.get_node(str(peer_id)).queue_free()
-
-
-#region specific level function calls
 ## Spawn the menu level
 func spawn_menu_level():
 	spawn_level(LevelName.BG_GRAY_LEVEL, InputStateManager.InputState.IN_MENU)
 
 
-## for quick debugging
-func spawn_gym_test_level():
-	spawn_level(LevelName.TEST_LEVEL_01, InputStateManager.InputState.IN_GAME)
-
-
-#endregion
-
-
-#region helpers
 func get_levels_as_option_items() -> Dictionary[String, int]:
 	var options: Dictionary[String, int] = {}
 	for lvl_name in levels_names_in_level_select:
 		options[lvl_name] = level_name_map.find_key(lvl_name)
 	return options
-
-
-func get_player_by_peer_id(player_peer_id: int) -> PlayerEntity:
-	var player_node: PlayerEntity
-	for child in current_level.player_spawn_pos.get_children():
-		if child is PlayerEntity:
-			if child.name == str(player_peer_id):
-				player_node = child
-				break
-	return player_node
 
 
 #endregion
@@ -162,8 +99,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 	if spawn_node == null:
 		issues.append("spawn_node must not be empty")
-	if multiplayer_manager == null:
-		issues.append("multiplayer_manager must not be empty")
 	if menu_manager == null:
 		issues.append("menu_manager must not be empty")
 	if input_state_manager == null:
