@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://iqvglquvlctu" path="res://managers/network/multiplayer_ipport.gd" id="7_borgi"]
 [ext_resource type="PackedScene" uid="uid://x3ylknc7a413" path="res://menus/out_of_game/play_menu/play_menu_state.tscn" id="7_f52ns"]
 [ext_resource type="PackedScene" uid="uid://bl26780k5sr" path="res://menus/out_of_game/lobby_menu/lobby_menu_state.tscn" id="7_l5ukw"]
+[ext_resource type="Script" uid="uid://7gki47geancm" path="res://managers/network/multiplayer_webrtc.gd" id="8_lght5"]
 [ext_resource type="PackedScene" uid="uid://b8wtld34amu44" path="res://menus/out_of_game/customize_menu/customize_menu_state.tscn" id="9_4srsv"]
 [ext_resource type="Script" uid="uid://dihgiqkhwdsf6" path="res://managers/level_manager.gd" id="10_mf81u"]
 [ext_resource type="PackedScene" uid="uid://l1jc4wphn5vt" path="res://menus/out_of_game/splash_menu/splash_menu_state.tscn" id="11_umrn2"]
@@ -44,13 +45,14 @@ level_manager = NodePath("../LevelManager")
 input_state_manager = NodePath("../InputStateManager")
 metadata/_custom_type_script = "uid://b2j8gbb336wwq"
 
-[node name="ConnectionManager" type="Node" parent="ManagerManager" unique_id=79087304 node_paths=PackedStringArray("menu_manager", "settings_manager", "level_manager", "noray_handler", "ipport_handler") groups=["Managers"]]
+[node name="ConnectionManager" type="Node" parent="ManagerManager" unique_id=79087304 node_paths=PackedStringArray("menu_manager", "settings_manager", "level_manager", "noray_handler", "ipport_handler", "webrtc_handler") groups=["Managers"]]
 script = ExtResource("5_pk5u2")
 menu_manager = NodePath("../MenuManager")
 settings_manager = NodePath("../SettingsManager")
 level_manager = NodePath("../LevelManager")
 noray_handler = NodePath("MultiplayerNoray")
 ipport_handler = NodePath("MultiplayerIPPort")
+webrtc_handler = NodePath("MultiplayerWebRTC")
 metadata/_custom_type_script = "uid://6drc05oyeb7b"
 
 [node name="MultiplayerNoray" type="Node" parent="ManagerManager/ConnectionManager" unique_id=664319890 node_paths=PackedStringArray("settings_manager")]
@@ -61,6 +63,9 @@ metadata/_custom_type_script = "uid://bwjhjq5qatrks"
 [node name="MultiplayerIPPort" type="Node" parent="ManagerManager/ConnectionManager" unique_id=901234466]
 script = ExtResource("7_borgi")
 metadata/_custom_type_script = "uid://iqvglquvlctu"
+
+[node name="MultiplayerWebRTC" type="Node" parent="ManagerManager/ConnectionManager" unique_id=862694197]
+script = ExtResource("8_lght5")
 
 [node name="LobbyManager" type="Node" parent="ManagerManager" unique_id=676024663 node_paths=PackedStringArray("connection_manager") groups=["Managers"]]
 script = ExtResource("5_lobby")

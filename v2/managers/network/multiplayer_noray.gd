@@ -35,7 +35,7 @@ func _on_setting_updated(_key: String, _value: Variant):
 
 
 ## Registers with Noray and returns an ENet server peer.
-func start_server() -> ENetMultiplayerPeer:
+func start_server() -> MultiplayerPeer:
 	Noray.on_connect_nat.connect(_handle_noray_client_connect)
 	Noray.on_connect_relay.connect(_handle_noray_client_connect)
 

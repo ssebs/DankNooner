@@ -9,7 +9,7 @@ signal client_connection_failed(reason: String)
 signal client_connection_succeeded(peer_id: int)
 signal connection_reset
 
-enum ConnectionMode { NORAY, IP_PORT }
+enum ConnectionMode { NORAY, IP_PORT, WEBRTC }
 
 @export var menu_manager: MenuManager
 @export var settings_manager: SettingsManager
@@ -17,6 +17,7 @@ enum ConnectionMode { NORAY, IP_PORT }
 @export var connection_mode: ConnectionMode = ConnectionMode.NORAY
 @export var noray_handler: MultiplayerNoray
 @export var ipport_handler: MultiplayerIPPort
+@export var webrtc_handler: MultiplayerWebRTC
 
 ## either ip addr or noray oid
 var conn_addr: String:
@@ -29,7 +30,7 @@ var conn_addr: String:
 ## Starts the ENet server and listens for connections.
 func start_server():
 	var handler = _get_handler()
-	var peer: ENetMultiplayerPeer = await handler.start_server()
+	var peer: MultiplayerPeer = await handler.start_server()
 	handler.connection_failed.connect(_on_handler_connection_failed)
 	conn_addr = handler.get_addr()
 
@@ -117,10 +118,15 @@ func disconnect_sp_or_mp():
 #endregion
 
 
-## return MultiplayerNoray or MultiplayerIPPort depending on connection_mode
+## return MultiplayerNoray, MultiplayerIPPort, or MultiplayerWebRTC depending on connection_mode
 func _get_handler():
-	if connection_mode == ConnectionMode.NORAY:
-		return noray_handler
+	match connection_mode:
+		ConnectionMode.NORAY:
+			return noray_handler
+		ConnectionMode.IP_PORT:
+			return ipport_handler
+		ConnectionMode.WEBRTC:
+			return webrtc_handler
 	return ipport_handler
 
 
@@ -173,5 +179,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("noray_handler must not be empty")
 	if ipport_handler == null:
 		issues.append("ipport_handler must not be empty")
+	if webrtc_handler == null:
+		issues.append("webrtc_handler must not be empty")
 
 	return issues
