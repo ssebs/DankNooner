@@ -85,6 +85,10 @@ func load_save():
 			current_save[key] = json_dict.get(key, default_save[key])
 
 
+func get_player_definition() -> PlayerDefinition:
+	return current_save["player_definition"]
+
+
 ## save_save() with default_save
 func _save_default_save():
 	load_default_save()

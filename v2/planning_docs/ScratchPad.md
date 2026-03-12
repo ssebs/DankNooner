@@ -21,17 +21,17 @@ Player metadata is fragmented:
 
 ### Todos
 
-- [ ] **Create SaveManager**
+- [x] **Create SaveManager**
 
   - Mirror SettingsManager pattern
   - Load/save `user://savegame.json`
   - Store local `PlayerDefinition` (username, bike_skin path, character_skin path, money, xp)
   - Add `get_local_player_definition() -> PlayerDefinition` helper
 
-- [ ] **Add serialization to PlayerDefinition**
+- [x] **Add serialization to PlayerDefinition**
 
-  - `to_network_dict() -> Dictionary`
-  - `static from_network_dict(data: Dictionary) -> PlayerDefinition`
+  - `to_dict() -> Dictionary`
+  - `static from_dict(data: Dictionary) -> PlayerDefinition`
 
 - [ ] **Consolidate RPCs in MultiplayerManager**
 
