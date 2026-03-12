@@ -18,29 +18,22 @@ func respawn_player(player_peer_id: int):
 
 ## Instantiate and add player node locally (no authority check)
 ## Called by GamemodeManager RPC on all peers
-func add_player_locally(
-	peer_id: int, username: String, bike_skin_path: String = "", character_skin_path: String = ""
-):
-	print("Adding player locally: %s - %s" % [peer_id, username])
+func add_player_locally(peer_id: int, player_def_dict: Dictionary):
+	var player_def = PlayerDefinition.new()
+	player_def.from_dict(player_def_dict)
+
+	print("Adding player locally: %s - %s" % [peer_id, player_def.username])
 
 	var player_to_add = (
 		level_manager.current_level.player_entity_scene.instantiate() as PlayerEntity
 	)
 	player_to_add.name = str(peer_id)
 	player_to_add.audio_manager = audio_manager  # HACK
-
-	if bike_skin_path != "":
-		var bike_res = ResourceLoader.load(bike_skin_path)
-		if bike_res is BikeSkinDefinition:
-			player_to_add.bike_definition = bike_res
-
-	if character_skin_path != "":
-		var char_res = ResourceLoader.load(character_skin_path)
-		if char_res is CharacterSkinDefinition:
-			player_to_add.character_definition = char_res
+	player_to_add.bike_definition = player_def.bike_skin
+	player_to_add.character_definition = player_def.character_skin
 
 	level_manager.current_level.player_spawn_pos.add_child(player_to_add, true)
-	player_to_add.username = username
+	player_to_add.username = player_def.username
 
 
 ## Remove player node locally (no authority check)

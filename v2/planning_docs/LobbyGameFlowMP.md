@@ -51,10 +51,10 @@ sequenceDiagram
     Handler-->>MM: ENetMultiplayerPeer + OID/IP
     MM->>MM: _on_peer_connected(1)
     Note right of MM: Host is always peer ID 1
-    MM->>MM: update_username.rpc_id(1, 1, "HostName")
+    MM->>MM: update_player_metadata.rpc_id(1, 1, player_def.to_dict())
     MM-->>Lobby: game_id_set("abc123-OID")
     Lobby->>Lobby: Display OID, copy to clipboard
-    MM-->>Lobby: lobby_players_updated({1: "HostName"})
+    MM-->>Lobby: lobby_players_updated({1: PlayerDefinition})
     Lobby->>Lobby: player_list shows host
 ```
 
@@ -84,13 +84,13 @@ sequenceDiagram
     MM->>MM: Wait for connected_to_server if needed
     MM->>MM: _on_enet_connected()
 
-    Lobby->>HostMM: update_username.rpc_id(1, my_id, "ClientName")
-    HostMM->>HostMM: lobby_players[client_id] = "ClientName"
-    HostMM-->>Lobby: sync_lobby_players.rpc(full_dict)
+    Lobby->>HostMM: update_player_metadata.rpc_id(1, my_id, player_def.to_dict())
+    HostMM->>HostMM: lobby_players[client_id] = PlayerDefinition
+    HostMM-->>Lobby: _sync_lobby_players.rpc(serialized_dict)
     Lobby->>Lobby: player_list shows all players
 ```
 
-**Result**: Both host and client see full player list with usernames.
+**Result**: Both host and client see full player list with usernames and skins.
 
 ---
 
@@ -155,10 +155,10 @@ sequenceDiagram
     end
 
     rect rgb(60, 60, 40)
-        Note over Handler,Lobby: Stage 4: Username Synced
-        Lobby->>MM: update_username RPC
+        Note over Handler,Lobby: Stage 4: Player Metadata Synced
+        Lobby->>MM: update_player_metadata RPC
         MM-->>Lobby: lobby_players_updated
-        Note right of Lobby: UI shows player with name
+        Note right of Lobby: UI shows player with name/skins
     end
 ```
 
@@ -181,7 +181,7 @@ flowchart TD
     B -->|Yes| D[_on_enet_connected]
     C --> D
     D -->|"Emit client_connection_succeeded"| E[Lobby receives signal]
-    E -->|"Safe now"| F[Send username RPC]
+    E -->|"Safe now"| F[Send player_metadata RPC]
 ```
 
 Edge cases handled:
@@ -207,26 +207,26 @@ func _on_enet_connected():
 
 ---
 
-## Deep Dive: Username RPC Flow
+## Deep Dive: Player Metadata RPC Flow
 
 ```mermaid
 flowchart TB
     subgraph Client["Client Side"]
-        C1[_on_enet_connected]
-        C2["update_username.rpc_id(1, my_id, my_name)"]
+        C1[_on_client_connection_succeeded]
+        C2["update_player_metadata.rpc_id(1, my_id, player_def.to_dict())"]
         C1 --> C2
     end
 
     subgraph Server["Server Side"]
-        S1["update_username() handler"]
-        S2["lobby_players[id] = name"]
-        S3["sync_lobby_players.rpc(dict)"]
+        S1["update_player_metadata() handler"]
+        S2["lobby_players[id] = PlayerDefinition.from_dict()"]
+        S3["_sync_lobby_players.rpc(serialized_dict)"]
         S1 --> S2 --> S3
     end
 
     subgraph All["All Peers"]
-        A1["sync_lobby_players() handler"]
-        A2["lobby_players = dict"]
+        A1["_sync_lobby_players() handler"]
+        A2["Deserialize dict → PlayerDefinition for each peer"]
         A3["lobby_players_updated.emit()"]
         A4["player_list.update_from_dict()"]
         A1 --> A2 --> A3 --> A4
@@ -239,23 +239,32 @@ flowchart TB
 ### RPC Signatures
 
 ```gdscript
-# Client → Server
+# Client → Server (sends full PlayerDefinition as dict)
 @rpc("any_peer", "call_local", "reliable")
-func update_username(id: int, username: String):
+func update_player_metadata(peer_id: int, player_def_dict: Dictionary):
     if !multiplayer.is_server(): return
-    lobby_players[id] = username
-    sync_lobby_players.rpc(lobby_players)
+    var player_def = PlayerDefinition.new()
+    player_def.from_dict(player_def_dict)
+    lobby_players[peer_id] = player_def
+    _sync_lobby_players.rpc(_lobby_players_to_dict())
 
-# Server → All
+# Server → All (broadcasts serialized lobby_players)
 @rpc("call_local", "reliable")
-func sync_lobby_players(players: Dictionary):
-    lobby_players = players
-    lobby_players_updated.emit(players)
+func _sync_lobby_players(players_dict: Dictionary):
+    lobby_players.clear()
+    for peer_id_str in players_dict:
+        var peer_id = int(peer_id_str)
+        var player_def = PlayerDefinition.new()
+        player_def.from_dict(players_dict[peer_id_str])
+        lobby_players[peer_id] = player_def
+    lobby_players_updated.emit(lobby_players)
 ```
 
 **Why this pattern?**
 
 - Server is authoritative (single source of truth)
+- `PlayerDefinition` contains username, skins, and future metadata (money, xp)
+- Single RPC replaces separate username + skin RPCs
 - Full dict sync prevents delta bugs
 - `call_local` ensures server updates its own UI
 - `reliable` ensures critical data arrives
@@ -290,22 +299,33 @@ Clients see the same level selected, but only host can change it.
 
 ```mermaid
 flowchart TB
-    A["start_game.rpc()"] --> B["level_manager.spawn_level()"]
-    B --> C["level_manager.spawn_players()"]
-    C --> D["for id in lobby_players"]
-    D --> E["_spawn_player(id)"]
-    E --> F["PlayerEntity.instantiate()"]
-    F --> G["node.name = str(id)"]
-    G --> H["set_username_label(name)"]
+    A["start_game.rpc()"] --> B["gamemode_manager._spawn_all_players()"]
+    B --> C["for id in lobby_players"]
+    C --> D["_rpc_spawn_player.rpc(id, player_def.to_dict())"]
+    D --> E["spawn_manager.add_player_locally()"]
+    E --> F["PlayerDefinition.from_dict()"]
+    F --> G["PlayerEntity.instantiate()"]
+    G --> H["Apply bike_skin, character_skin, username"]
 ```
 
 ```gdscript
-func _spawn_player(id: int):
-    var uname = multiplayer_manager.lobby_players[id]
-    var player = player_scene.instantiate() as PlayerEntity
-    player.name = str(id)  # Critical for netfox sync
-    current_level.player_spawn_pos.add_child(player, true)
-    player.set_username_label(uname)
+# GamemodeManager broadcasts spawn to all peers
+func _spawn_all_players():
+    for peer_id in multiplayer_manager.lobby_players:
+        var player_def: PlayerDefinition = multiplayer_manager.lobby_players[peer_id]
+        _rpc_spawn_player.rpc(peer_id, player_def.to_dict())
+
+# SpawnManager creates player locally
+func add_player_locally(peer_id: int, player_def_dict: Dictionary):
+    var player_def = PlayerDefinition.new()
+    player_def.from_dict(player_def_dict)
+
+    var player_to_add = level_manager.current_level.player_entity_scene.instantiate()
+    player_to_add.name = str(peer_id)  # Critical for netfox sync
+    player_to_add.bike_definition = player_def.bike_skin
+    player_to_add.character_definition = player_def.character_skin
+    level_manager.current_level.player_spawn_pos.add_child(player_to_add, true)
+    player_to_add.username = player_def.username
 ```
 
 **Key detail**: Node name = peer ID, which netfox uses for rollback sync.
@@ -396,14 +416,14 @@ func _auto_detect_connection_mode(text: String):
 
 ## Key Code Locations
 
-| Component           | File                   | Lines   |
-| ------------------- | ---------------------- | ------- |
-| Host button         | play_menu_state.gd     | 106-108 |
-| Join button         | play_menu_state.gd     | 111-119 |
-| Server startup      | multiplayer_manager.gd | 33-49   |
-| Client connect      | multiplayer_manager.gd | 70-86   |
-| Username RPC        | multiplayer_manager.gd | 152-165 |
-| Connection handling | multiplayer_manager.gd | 178-186 |
-| Game start RPC      | lobby_menu_state.gd    | 164-168 |
-| Player spawning     | level_manager.gd       | 86-99   |
-| Player list UI      | player_list_ui.gd      | 15-36   |
+| Component              | File                   | Description                              |
+| ---------------------- | ---------------------- | ---------------------------------------- |
+| PlayerDefinition       | player_definition.gd   | Resource with username, skins, to_dict() |
+| SaveManager            | save_manager.gd        | Persists local PlayerDefinition          |
+| Server startup         | multiplayer_manager.gd | start_server(), lobby_players dict       |
+| Client connect         | multiplayer_manager.gd | connect_client()                         |
+| Player metadata RPC    | multiplayer_manager.gd | update_player_metadata(), _sync_lobby_players() |
+| Connection handling    | multiplayer_manager.gd | _on_handler_connection_succeeded()       |
+| Game start RPC         | gamemode_manager.gd    | start_game(), _spawn_all_players()       |
+| Player spawning        | spawn_manager.gd       | add_player_locally()                     |
+| Player list UI         | player_list_ui.gd      | update_from_dict() with PlayerDefinition |
