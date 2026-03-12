@@ -22,17 +22,8 @@ Player metadata is fragmented:
 ### Todos
 
 - [x] **Create SaveManager**
-
-  - Mirror SettingsManager pattern
-  - Load/save `user://savegame.json`
-  - Store local `PlayerDefinition` (username, bike_skin path, character_skin path, money, xp)
-  - Add `get_local_player_definition() -> PlayerDefinition` helper
-
 - [x] **Add serialization to PlayerDefinition**
-
-  - `to_dict() -> Dictionary`
-  - `static from_dict(data: Dictionary) -> PlayerDefinition`
-
+- [ ] **Update customization ui to load/save playerdefinition**
 - [ ] **Consolidate RPCs in MultiplayerManager**
 
   - Change `lobby_players` type: `Dict[int, String]` → `Dict[int, PlayerDefinition]`

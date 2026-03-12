@@ -19,7 +19,9 @@
 [ext_resource type="Script" uid="uid://b2j8gbb336wwq" path="res://managers/pause_manager.gd" id="12_aomqu"]
 [ext_resource type="Script" uid="uid://cvf883jhga841" path="res://managers/settings_manager.gd" id="17_borgi"]
 [ext_resource type="Script" uid="uid://dxn3rquhf7sfs" path="res://managers/gamemodes/gamemode_manager.gd" id="18_ih6an"]
+[ext_resource type="Script" uid="uid://didbm7t5dal30" path="res://managers/save_manager.gd" id="19_wt57k"]
 [ext_resource type="PackedScene" uid="uid://b27jgs5kv1310" path="res://managers/audio_manager.tscn" id="20_2i4tw"]
+[ext_resource type="Resource" uid="uid://ba1bidrtscoc7" path="res://resources/entities/player/default_player_definition.tres" id="20_pk5u2"]
 [ext_resource type="Script" uid="uid://cug5kob8cndk4" path="res://managers/spawn_manager.gd" id="21_euc45"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
@@ -128,6 +130,11 @@ settings_menu_state = NodePath("../SettingsMenuState")
 [node name="SettingsManager" type="Node" parent="ManagerManager" unique_id=82913213 groups=["Managers"]]
 script = ExtResource("17_borgi")
 metadata/_custom_type_script = "uid://cvf883jhga841"
+
+[node name="SaveManager" type="Node" parent="ManagerManager" unique_id=1113043161 groups=["Managers"]]
+script = ExtResource("19_wt57k")
+default_player_definition = ExtResource("20_pk5u2")
+metadata/_custom_type_script = "uid://didbm7t5dal30"
 
 [node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "multiplayer_manager", "level_manager", "spawn_manager", "audio_manager", "input_state_manager") groups=["Managers"]]
 script = ExtResource("18_ih6an")
