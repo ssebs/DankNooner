@@ -6,7 +6,7 @@ class_name PlayerListUI extends VBoxContainer
 )
 
 
-## Update the player list UI from a dictionary of player_id -> username
+## Update the player list UI from a dictionary of player_id -> PlayerDefinition
 func update_from_dict(players: Dictionary):
 	# Remove players no longer in the dict
 	for child in get_children():
@@ -16,17 +16,17 @@ func update_from_dict(players: Dictionary):
 
 	# Add or update players
 	for player_id in players:
-		var username: String = players[player_id]
+		var player_def: PlayerDefinition = players[player_id]
 		var node_name = str(player_id)
 
 		if has_node(node_name):
-			# Update existing player's username
+			# Update existing player
 			var player_li = get_node(node_name) as PlayerListItem
-			player_li.player_definition.username = username
+			player_li.player_definition = player_def
 			player_li.update_ui_from_player_definition()
 		else:
 			# Add new player
-			_add_player_item(player_id, username)
+			_add_player_item(player_id, player_def)
 
 
 ## Clear all players from the list
@@ -36,9 +36,9 @@ func clear():
 
 
 ## Add a player item to the list
-func _add_player_item(player_id: int, username: String):
+func _add_player_item(player_id: int, player_def: PlayerDefinition):
 	var player_li = player_list_item_scene.instantiate() as PlayerListItem
-	player_li.player_definition.username = username
+	player_li.player_definition = player_def
 	add_child(player_li)
 	player_li.name = str(player_id)
 

@@ -7,6 +7,7 @@ class_name LobbyMenuState extends MenuState
 @export var level_manager: LevelManager
 @export var input_state_manager: InputStateManager
 @export var gamemode_manager: GamemodeManager
+@export var save_manager: SaveManager
 
 @export var play_menu_state: MenuState
 
@@ -146,16 +147,8 @@ func _on_client_connection_succeeded(peer_id: int):
 		start_btn.disabled = true
 		level_select_btn.disabled = true
 
-	multiplayer_manager.update_username.rpc_id(
-		1, peer_id, settings_manager.current_settings["username"]
-	)
-
-	gamemode_manager.update_player_skins.rpc_id(
-		1,
-		peer_id,
-		settings_manager.current_settings["bike_skin"],
-		settings_manager.current_settings["character_skin"]
-	)
+	var player_def = save_manager.get_player_definition()
+	multiplayer_manager.update_player_metadata.rpc_id(1, peer_id, player_def.to_dict())
 
 
 func _on_timeout():
@@ -225,6 +218,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("settings_manager must not be empty")
 	if gamemode_manager == null:
 		issues.append("gamemode_manager must not be empty")
+	if save_manager == null:
+		issues.append("save_manager must not be empty")
 	if play_menu_state == null:
 		issues.append("play_menu_state must not be empty")
 
