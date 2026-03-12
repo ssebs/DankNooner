@@ -42,19 +42,22 @@ When the host clicks "Host" in PlayMenu:
 sequenceDiagram
     participant Play as PlayMenuState
     participant Lobby as LobbyMenuState
-    participant MM as MultiplayerManager
+    participant CM as ConnectionManager
+    participant LM as LobbyManager
     participant Handler as Noray/IPPort Handler
 
     Play->>Lobby: transitioned(LobbyStateContext.NewHost)
-    Lobby->>MM: start_server()
-    MM->>Handler: start_server()
-    Handler-->>MM: ENetMultiplayerPeer + OID/IP
-    MM->>MM: _on_peer_connected(1)
-    Note right of MM: Host is always peer ID 1
-    MM->>MM: update_player_metadata.rpc_id(1, 1, player_def.to_dict())
-    MM-->>Lobby: game_id_set("abc123-OID")
+    Lobby->>CM: start_server()
+    CM->>Handler: start_server()
+    Handler-->>CM: ENetMultiplayerPeer + OID/IP
+    CM->>CM: _on_peer_connected(1)
+    Note right of CM: Host is always peer ID 1
+    CM-->>LM: player_connected(1)
+    LM->>LM: lobby_players[1] = PlayerDefinition.new()
+    Lobby->>LM: update_player_metadata.rpc_id(1, 1, player_def.to_dict())
+    CM-->>Lobby: game_id_set("abc123-OID")
     Lobby->>Lobby: Display OID, copy to clipboard
-    MM-->>Lobby: lobby_players_updated({1: PlayerDefinition})
+    LM-->>Lobby: lobby_players_updated({1: PlayerDefinition})
     Lobby->>Lobby: player_list shows host
 ```
 
@@ -70,23 +73,24 @@ When client enters the invite code and clicks "Join":
 sequenceDiagram
     participant Play as PlayMenuState
     participant Lobby as LobbyMenuState
-    participant MM as MultiplayerManager
+    participant CM as ConnectionManager
+    participant LM as LobbyManager
     participant Handler as Handler
-    participant HostMM as Host's MultiplayerManager
+    participant HostLM as Host's LobbyManager
 
     Play->>Lobby: transitioned(LobbyStateContext.NewJoin)
-    Play->>MM: connect_client("abc123-OID")
-    MM->>Handler: connect_client()
-    Handler-->>MM: connection_succeeded
-    MM-->>Lobby: client_connection_succeeded
+    Play->>CM: connect_client("abc123-OID")
+    CM->>Handler: connect_client()
+    Handler-->>CM: connection_succeeded
+    CM-->>Lobby: client_connection_succeeded
 
-    Note over MM: Check if ENet fully connected
-    MM->>MM: Wait for connected_to_server if needed
-    MM->>MM: _on_enet_connected()
+    Note over CM: Check if ENet fully connected
+    CM->>CM: Wait for connected_to_server if needed
+    CM->>CM: _on_enet_connected()
 
-    Lobby->>HostMM: update_player_metadata.rpc_id(1, my_id, player_def.to_dict())
-    HostMM->>HostMM: lobby_players[client_id] = PlayerDefinition
-    HostMM-->>Lobby: _sync_lobby_players.rpc(serialized_dict)
+    Lobby->>HostLM: update_player_metadata.rpc_id(1, my_id, player_def.to_dict())
+    HostLM->>HostLM: lobby_players[client_id] = PlayerDefinition
+    HostLM-->>Lobby: _sync_lobby_players.rpc(serialized_dict)
     Lobby->>Lobby: player_list shows all players
 ```
 
@@ -130,47 +134,50 @@ The system has multiple connection signals. Here's why each exists:
 ```mermaid
 sequenceDiagram
     participant Handler as Handler
-    participant MM as MultiplayerManager
+    participant CM as ConnectionManager
+    participant LM as LobbyManager
     participant Godot as Godot Multiplayer
     participant Lobby as LobbyMenuState
 
     rect rgb(40, 40, 60)
         Note over Handler,Lobby: Stage 1: Handler Success
-        Handler->>MM: connection_succeeded
-        Note right of MM: ENet peer created<br/>Handshake may be in progress
+        Handler->>CM: connection_succeeded
+        Note right of CM: ENet peer created<br/>Handshake may be in progress
     end
 
     rect rgb(40, 60, 40)
         Note over Handler,Lobby: Stage 2: ENet Connected
-        Godot->>MM: connected_to_server (if needed)
-        MM->>MM: _on_enet_connected()
-        MM-->>Lobby: client_connection_succeeded
+        Godot->>CM: connected_to_server (if needed)
+        CM->>CM: _on_enet_connected()
+        CM-->>Lobby: client_connection_succeeded
         Note right of Lobby: NOW safe to send RPCs
     end
 
     rect rgb(60, 40, 40)
         Note over Handler,Lobby: Stage 3: Server Sees Peer
-        Godot->>MM: peer_connected(client_id)
-        MM->>MM: Add to lobby_players dict
+        Godot->>CM: peer_connected(client_id)
+        CM-->>LM: player_connected(client_id)
+        LM->>LM: Add to lobby_players dict
     end
 
     rect rgb(60, 60, 40)
         Note over Handler,Lobby: Stage 4: Player Metadata Synced
-        Lobby->>MM: update_player_metadata RPC
-        MM-->>Lobby: lobby_players_updated
+        Lobby->>LM: update_player_metadata RPC
+        LM-->>Lobby: lobby_players_updated
         Note right of Lobby: UI shows player with name/skins
     end
 ```
 
 ### Signal Reference
 
-| Signal                        | Source             | When                 | Purpose               |
-| ----------------------------- | ------------------ | -------------------- | --------------------- |
-| `connection_succeeded`        | Handler            | ENet peer created    | Low-level success     |
-| `client_connection_succeeded` | MultiplayerManager | ENet fully connected | **Safe for RPCs**     |
-| `peer_connected(id)`          | Godot              | Server sees peer     | Add to lobby dict     |
-| `game_id_set(addr)`           | MultiplayerManager | Got OID/IP           | Display invite code   |
-| `lobby_players_updated`       | MultiplayerManager | After sync RPC       | Update player list UI |
+| Signal                        | Source              | When                 | Purpose               |
+| ----------------------------- | ------------------- | -------------------- | --------------------- |
+| `connection_succeeded`        | Handler             | ENet peer created    | Low-level success     |
+| `client_connection_succeeded` | ConnectionManager   | ENet fully connected | **Safe for RPCs**     |
+| `player_connected(id)`        | ConnectionManager   | Server sees peer     | LobbyManager listens  |
+| `game_id_set(addr)`           | ConnectionManager   | Got OID/IP           | Display invite code   |
+| `lobby_players_updated`       | LobbyManager        | After sync RPC       | Update player list UI |
+| `connection_reset`            | ConnectionManager   | Server/client stops  | LobbyManager clears   |
 
 ### Why Two Stages?
 
@@ -190,19 +197,19 @@ Edge cases handled:
 2. ENet connects but server doesn't acknowledge
 3. Client tries RPC before channel ready
 
-The ENet ready check is handled inside `MultiplayerManager._on_handler_connection_succeeded()`, so `client_connection_succeeded` only fires once the peer is fully connected and RPCs are safe to send.
+The ENet ready check is handled inside `ConnectionManager._on_handler_connection_succeeded()`, so `client_connection_succeeded` only fires once the peer is fully connected and RPCs are safe to send.
 
-Code pattern in `multiplayer_manager.gd:178-186`:
+Code pattern in `connection_manager.gd`:
 
 ```gdscript
-func _on_handler_connection_succeeded():
+func _on_handler_connection_succeeded(peer_id: int):
     if multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
-        multiplayer.connected_to_server.connect(_on_enet_connected, CONNECT_ONE_SHOT)
+        multiplayer.connected_to_server.connect(_on_enet_connected.bind(peer_id), CONNECT_ONE_SHOT)
     else:
-        _on_enet_connected()
+        _on_enet_connected(peer_id)
 
-func _on_enet_connected():
-    client_connection_succeeded.emit()
+func _on_enet_connected(peer_id: int):
+    client_connection_succeeded.emit(peer_id)
 ```
 
 ---
@@ -211,20 +218,20 @@ func _on_enet_connected():
 
 ```mermaid
 flowchart TB
-    subgraph Client["Client Side"]
+    subgraph Client["Client Side (LobbyMenuState)"]
         C1[_on_client_connection_succeeded]
-        C2["update_player_metadata.rpc_id(1, my_id, player_def.to_dict())"]
+        C2["lobby_manager.update_player_metadata.rpc_id(1, my_id, player_def.to_dict())"]
         C1 --> C2
     end
 
-    subgraph Server["Server Side"]
+    subgraph Server["Server Side (LobbyManager)"]
         S1["update_player_metadata() handler"]
         S2["lobby_players[id] = PlayerDefinition.from_dict()"]
         S3["_sync_lobby_players.rpc(serialized_dict)"]
         S1 --> S2 --> S3
     end
 
-    subgraph All["All Peers"]
+    subgraph All["All Peers (LobbyManager)"]
         A1["_sync_lobby_players() handler"]
         A2["Deserialize dict → PlayerDefinition for each peer"]
         A3["lobby_players_updated.emit()"]
@@ -239,6 +246,8 @@ flowchart TB
 ### RPC Signatures
 
 ```gdscript
+# In LobbyManager (lobby_manager.gd)
+
 # Client → Server (sends full PlayerDefinition as dict)
 @rpc("any_peer", "call_local", "reliable")
 func update_player_metadata(peer_id: int, player_def_dict: Dictionary):
@@ -299,21 +308,21 @@ Clients see the same level selected, but only host can change it.
 
 ```mermaid
 flowchart TB
-    A["start_game.rpc()"] --> B["gamemode_manager._spawn_all_players()"]
-    B --> C["for id in lobby_players"]
-    C --> D["_rpc_spawn_player.rpc(id, player_def.to_dict())"]
-    D --> E["spawn_manager.add_player_locally()"]
+    A["start_game.rpc()"] --> B["spawn_manager.spawn_all_players()"]
+    B --> C["for id in lobby_manager.lobby_players"]
+    C --> D["rpc_spawn_player.rpc(id, player_def.to_dict())"]
+    D --> E["add_player_locally()"]
     E --> F["PlayerDefinition.from_dict()"]
     F --> G["PlayerEntity.instantiate()"]
     G --> H["Apply bike_skin, character_skin, username"]
 ```
 
 ```gdscript
-# GamemodeManager broadcasts spawn to all peers
-func _spawn_all_players():
-    for peer_id in multiplayer_manager.lobby_players:
-        var player_def: PlayerDefinition = multiplayer_manager.lobby_players[peer_id]
-        _rpc_spawn_player.rpc(peer_id, player_def.to_dict())
+# SpawnManager broadcasts spawn to all peers
+func spawn_all_players():
+    for peer_id in lobby_manager.lobby_players:
+        var player_def: PlayerDefinition = lobby_manager.lobby_players[peer_id]
+        rpc_spawn_player.rpc(peer_id, player_def.to_dict())
 
 # SpawnManager creates player locally
 func add_player_locally(peer_id: int, player_def_dict: Dictionary):
@@ -382,12 +391,12 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant Godot as Godot Multiplayer
-    participant MM as MultiplayerManager
+    participant CM as ConnectionManager
     participant Lobby as LobbyMenuState
 
-    Godot->>MM: server_disconnected
-    MM->>MM: disconnect_client()
-    MM-->>Lobby: server_disconnected
+    Godot->>CM: server_disconnected
+    CM->>CM: disconnect_client()
+    CM-->>Lobby: server_disconnected
     Lobby->>Lobby: _on_back_pressed()
 ```
 
@@ -407,9 +416,9 @@ flowchart LR
 ```gdscript
 func _auto_detect_connection_mode(text: String):
     if text.is_valid_ip_address():
-        multiplayer_manager.connection_mode = ConnectionMode.IP_PORT
+        connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
     elif _is_valid_noray_oid(text):
-        multiplayer_manager.connection_mode = ConnectionMode.NORAY
+        connection_manager.connection_mode = ConnectionManager.ConnectionMode.NORAY
 ```
 
 ---
@@ -420,10 +429,9 @@ func _auto_detect_connection_mode(text: String):
 | ---------------------- | ---------------------- | ---------------------------------------- |
 | PlayerDefinition       | player_definition.gd   | Resource with username, skins, to_dict() |
 | SaveManager            | save_manager.gd        | Persists local PlayerDefinition          |
-| Server startup         | multiplayer_manager.gd | start_server(), lobby_players dict       |
-| Client connect         | multiplayer_manager.gd | connect_client()                         |
-| Player metadata RPC    | multiplayer_manager.gd | update_player_metadata(), _sync_lobby_players() |
-| Connection handling    | multiplayer_manager.gd | _on_handler_connection_succeeded()       |
-| Game start RPC         | gamemode_manager.gd    | start_game(), _spawn_all_players()       |
-| Player spawning        | spawn_manager.gd       | add_player_locally()                     |
+| Server startup         | connection_manager.gd  | start_server(), connect_client()         |
+| Connection handling    | connection_manager.gd  | _on_handler_connection_succeeded()       |
+| Lobby players dict     | lobby_manager.gd       | lobby_players, update_player_metadata(), _sync_lobby_players() |
+| Game start RPC         | gamemode_manager.gd    | start_game(), late-joiner sync           |
+| Player spawning        | spawn_manager.gd       | spawn_all_players(), rpc_spawn_player(), add_player_locally() |
 | Player list UI         | player_list_ui.gd      | update_from_dict() with PlayerDefinition |

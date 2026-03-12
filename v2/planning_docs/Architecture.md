@@ -281,19 +281,24 @@ The same "pause" action triggers different behavior based on `InputState`.
 - `SettingsManager` (`managers/settings_manager.gd`) - JSON persistence to `user://settings.json`
 - Default settings: username, noray_relay_host, resolution, fullscreen_mode, master_vol, music_vol, menu_vol, sfx_vol, bike_skin, character_skin
 - Signals: `setting_updated(key, value)`, `all_settings_changed(dict)`
-- Used by AudioManager (volume), MultiplayerManager (noray host), CustomizeMenuState (skins)
+- Used by AudioManager (volume), ConnectionManager (noray host), CustomizeMenuState (skins)
 
 ### Gamemode Manager
 
-- `GamemodeManager` (`managers/gamemodes/gamemode_manager.gd`) - manages match state and player spawning
-- Spawning logic moved here from LevelManager
+- `GamemodeManager` (`managers/gamemodes/gamemode_manager.gd`) - manages match state, coordinates level/spawn
 - RPCs for multiplayer sync:
-  - `update_player_skins(peer_id, bike_skin_path, character_skin_path)` - client sends skins to server
   - `start_game(level_name)` - server calls on all peers
-  - `_rpc_spawn_player(peer_id, username, bike_skin, character_skin)` - spawn broadcast
-  - `_rpc_despawn_player(peer_id)` - despawn broadcast
   - `_sync_game_to_late_joiner(level_name)` - sync level to late-joining client
   - `_request_late_spawn(peer_id)` - late-joiner requests their player spawn
+
+### Spawn Manager
+
+- `SpawnManager` (`managers/spawn_manager.gd`) - player spawning/despawning
+- RPCs:
+  - `rpc_spawn_player(peer_id, player_def_dict)` - spawn broadcast
+  - `rpc_despawn_player(peer_id)` - despawn broadcast
+  - `respawn_player(peer_id)` - server respawns a specific player
+- Local helpers: `add_player_locally()`, `remove_player_locally()`, `spawn_all_players()`
 
 ### Unlocks / progression
 
@@ -391,17 +396,18 @@ flowchart LR
 
 Input is gathered locally by `InputController._gather()` and synced automatically by netfox's `RollbackSynchronizer`. No manual RPC needed - netfox handles input sync and rollback.
 
-**MultiplayerManager** RPCs:
-- `update_username(id, username)` - client sends username to server
-- `sync_lobby_players(players)` - server broadcasts full lobby dict
+**LobbyManager** RPCs:
+- `update_player_metadata(peer_id, player_def_dict)` - client sends PlayerDefinition to server
+- `_sync_lobby_players(players_dict)` - server broadcasts full lobby dict
 
 **GamemodeManager** RPCs:
-- `update_player_skins(peer_id, bike_skin_path, character_skin_path)` - skins to server
 - `start_game(level_name)` - server calls on all peers
-- `_rpc_spawn_player(peer_id, username, bike_skin, character_skin)` - spawn broadcast
-- `_rpc_despawn_player(peer_id)` - despawn broadcast
+- `_sync_game_to_late_joiner(level_name)` - sync level to late-joining client
+- `_request_late_spawn(peer_id)` - late-joiner requests their player spawn
 
-**LevelManager** RPCs:
+**SpawnManager** RPCs:
+- `rpc_spawn_player(peer_id, player_def_dict)` - spawn broadcast
+- `rpc_despawn_player(peer_id)` - despawn broadcast
 - `respawn_player(peer_id)` - server respawns a specific player
 
 ### Deployment / builds
