@@ -4,6 +4,13 @@
 
 ## In Progress 🚀
 
+- [ ] Create PlayerDefinition & Save system
+
+  - [ ] save selected skins
+  - [ ] save username
+  - [ ] save money
+  - [ ] save unlocked tricks, mods, etc.
+
 - [ ] Create Player Part 2
 
   - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
