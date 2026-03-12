@@ -50,7 +50,7 @@ func deferred_init():
 	if FileAccess.file_exists(settings_path):
 		load_settings()
 	else:
-		save_default_settings()
+		_save_default_settings()
 
 
 # TODO - this may cause a dupe emit bug since save_settings also emits a signal
@@ -95,7 +95,7 @@ func load_settings():
 
 
 ## save_settings() with default_settings
-func save_default_settings():
+func _save_default_settings():
 	load_default_settings()
 	save_settings()
 
