@@ -4,14 +4,18 @@ class_name SaveManager extends BaseManager
 signal save_changed(current_save: Dictionary)
 signal save_item_updated(save_key: String, save_value: Variant)
 
-@export var save_path: String = "user://savegame01.json"
+@export var save_path: String = "user://savegame_.json"
+@export var save_slot: int = 1
 @export var save_version: int = 1
-@export var player_definition: PlayerDefinition = load(
+@export var default_player_definition: PlayerDefinition = load(
 	"res://resources/entities/player/default_player_definition.tres"
 )
 
 ## NOTE - key names (str) are hard coded in lots of places!
-var default_save: Dictionary = {"version": save_version, "player_definition": player_definition}
+## if using a Definition, be sure to call to_dict/from_dict when save/loading it in the impl
+var default_save: Dictionary = {
+	"version": save_version, "player_definition": default_player_definition
+}
 
 var current_save: Dictionary
 
@@ -46,7 +50,12 @@ func update_save(
 
 ## write current_save to save_path
 func save_save():
-	DictJSONSaverLoader.save_json_to_file(save_path, current_save)
+	var save_dict = current_save.duplicate()
+
+	# Convert Resource to dict
+	save_dict["player_definition"] = current_save["player_definition"].to_dict()
+
+	DictJSONSaverLoader.save_json_to_file(save_path, save_dict)
 	save_changed.emit(current_save)
 
 
@@ -64,7 +73,13 @@ func load_save():
 		return
 
 	for key in default_save.keys():
-		current_save[key] = json_dict.get(key, default_save[key])
+		if key == "player_definition":
+			# Convert dict back to resource
+			var player_def = PlayerDefinition.new()
+			player_def.from_dict(json_dict.get("player_definition", default_player_definition))
+			current_save["player_definition"] = player_def
+		else:
+			current_save[key] = json_dict.get(key, default_save[key])
 
 
 ## save_save() with default_save
