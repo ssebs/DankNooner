@@ -9,10 +9,15 @@
 - [ ] noray => WebRTC
 
   - Use webrtc for nat punch thru with stun/turn server
-  - https://github.com/jonandrewdavis/andoodev-godot-web-rtc-p2p
-  - https://github.com/godotengine/godot-demo-projects/tree/master/networking/webrtc_signaling
-  - https://www.reddit.com/r/gamedev/comments/1872muu/nat_traversal_solutions_for_multiplayer_in_godot/
   - Coturn docker to host
+    - https://github.com/coturn/coturn/blob/master/docker/coturn/README.md
+  - Signaling / matchmaking server in go? or is this possible in godot?
+  - https://github.com/godotengine/godot-demo-projects/tree/master/networking/webrtc_signaling
+    - server/
+    - client/
+  - https://github.com/jonandrewdavis/andoodev-godot-web-rtc-p2p
+    - full demo, but not using std tools
+  - https://www.reddit.com/r/gamedev/comments/1872muu/nat_traversal_solutions_for_multiplayer_in_godot/
 
 - [ ] Create Player Part 2
 
