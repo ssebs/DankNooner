@@ -2,12 +2,16 @@
 ## All player objects should be defined from this
 class_name PlayerDefinition extends Resource
 
-@export var ui_icon: Texture
-@export var username: String
-@export var money: int
+@export var ui_icon: Texture = preload("res://resources/img/Logos/Logo.svg")
+@export var username: String = "replace_me"
+@export var money: float = 0.0
 
-@export var character_skin: CharacterSkinDefinition
-@export var bike_skin: BikeSkinDefinition
+@export var character_skin: CharacterSkinDefinition = preload(
+	"res://resources/entities/player/skins/biker_default_skin_definition.tres"
+)
+@export var bike_skin: BikeSkinDefinition = preload(
+	"res://resources/entities/bikes/skins/sport_default_skin_definition.tres"
+)
 
 
 #region to/from Dictionary
