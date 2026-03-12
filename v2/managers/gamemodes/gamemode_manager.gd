@@ -12,6 +12,7 @@ enum GameMode { FREE_FROAM, STREET_RACE, STUNT_RACE, TRACK_RACE }
 @export var multiplayer_manager: MultiplayerManager
 @export var level_manager: LevelManager
 @export var spawn_manager: SpawnManager
+@export var audio_manager: AudioManager
 @export var input_state_manager: InputStateManager
 
 var match_state: MatchState = MatchState.IN_LOBBY
@@ -52,6 +53,8 @@ func start_game(level_name: LevelManager.LevelName):
 func end_game():
 	match_state = MatchState.IN_LOBBY
 	current_level_name = LevelManager.LevelName.LEVEL_SELECT_LABEL
+
+	audio_manager.stop_all()
 
 
 func _spawn_all_players():
