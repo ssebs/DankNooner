@@ -84,12 +84,16 @@ func _update_ipport_tooltip():
 		connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
 		ipport_toggle.tooltip_text = tr("USE_NORAY_LABEL")
 	else:
-		connection_manager.connection_mode = ConnectionManager.ConnectionMode.NORAY
+		# HACK
+		connection_manager.connection_mode = ConnectionManager.ConnectionMode.WEBRTC
 		ipport_toggle.tooltip_text = tr("USE_IPPORT_LABEL")
 
 
 func _validate_code(text: String):
-	join_btn.disabled = !text.is_valid_ip_address() and !_is_valid_noray_oid(text)
+	# join_btn.disabled = !text.is_valid_ip_address() and !_is_valid_noray_oid(text)
+	# HACK
+	print("todo- validate code")
+	join_btn.disabled = false
 
 
 func _is_valid_noray_oid(text: String) -> bool:
