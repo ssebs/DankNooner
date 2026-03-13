@@ -57,6 +57,7 @@ POC repos that fed into V2:
 - [multiplayer-poc-godot](https://github.com/ssebs/multiplayer-poc-godot) — Lobby and player sync prototype
 - [inverse-kinematics-poc](https://github.com/ssebs/inverse-kinematics-poc) — IK rider animations
 - [moto-player-controller-godot](https://github.com/ssebs/moto-player-controller-godot) — Player controls, physics, tricks, and ragdoll
+- [danknoonersignalserver](https://github.com/ssebs/danknoonersignalserver/) — WebRTC signaling server for NAT traversal and peer connection brokering; deploy via `docker pull ssebs/danknoonersignalserver:latest`
 
 ## Planning Docs
 

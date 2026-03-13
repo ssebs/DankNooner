@@ -4,10 +4,12 @@ This document explains the complete flow of the multiplayer lobby system, from h
 
 ## Overview
 
-The lobby system uses ENet for networking with two connection modes:
+The lobby system uses WebRTC for networking with two connection modes:
 
-- **Noray**: NAT traversal via relay server (default)
-- **IP/Port**: Direct connection (requires port forwarding)
+- **WebRTC**: P2P via custom signaling server (default) — [danknoonersignalserver](https://github.com/ssebs/danknoonersignalserver/)
+- **IP/Port**: Direct ENet connection (requires port forwarding)
+
+> **Note:** Noray is deprecated. `MultiplayerNoray` still exists in code but is no longer the default.
 
 ---
 
@@ -28,8 +30,8 @@ flowchart LR
 
 Three phases:
 
-1. **[Phase 1: Host Starts Server](#phase-1-host-starts-server)** - Host creates server, gets invite code
-2. **[Phase 2: Client Joins](#phase-2-client-joins)** - Client connects using invite code
+1. **[Phase 1: Host Starts Server](#phase-1-host-starts-server)** - Host creates server, gets lobby code
+2. **[Phase 2: Client Joins](#phase-2-client-joins)** - Client connects using lobby code
 3. **[Phase 3: Game Starts](#phase-3-game-starts)** - Host starts, all peers spawn into level
 
 ---
@@ -44,30 +46,34 @@ sequenceDiagram
     participant Lobby as LobbyMenuState
     participant CM as ConnectionManager
     participant LM as LobbyManager
-    participant Handler as Noray/IPPort Handler
+    participant Handler as WebRTC/IPPort Handler
+    participant Signal as Signal Server
 
     Play->>Lobby: transitioned(LobbyStateContext.NewHost)
     Lobby->>CM: start_server()
     CM->>Handler: start_server()
-    Handler-->>CM: ENetMultiplayerPeer + OID/IP
+    Handler->>Signal: WebSocket connect → JOIN (empty code)
+    Signal-->>Handler: ID (peer_id=1, lobby_code)
+    Handler->>Handler: WebRTCMultiplayerPeer.create_server()
+    Handler-->>CM: connection_succeeded + lobby code
     CM->>CM: _on_peer_connected(1)
     Note right of CM: Host is always peer ID 1
     CM-->>LM: player_connected(1)
     LM->>LM: lobby_players[1] = PlayerDefinition.new()
     Lobby->>LM: update_player_metadata.rpc_id(1, 1, player_def.to_dict())
-    CM-->>Lobby: game_id_set("abc123-OID")
-    Lobby->>Lobby: Display OID, copy to clipboard
+    CM-->>Lobby: game_id_set("ABCD...32chars")
+    Lobby->>Lobby: Display lobby code, copy to clipboard
     LM-->>Lobby: lobby_players_updated({1: PlayerDefinition})
     Lobby->>Lobby: player_list shows host
 ```
 
-**Result**: Host sees lobby with their name, invite code displayed and copied to clipboard.
+**Result**: Host sees lobby with their name, 32-char lobby code displayed and copied to clipboard.
 
 ---
 
 ## Phase 2: Client Joins
 
-When client enters the invite code and clicks "Join":
+When client enters the lobby code and clicks "Join":
 
 ```mermaid
 sequenceDiagram
@@ -75,19 +81,26 @@ sequenceDiagram
     participant Lobby as LobbyMenuState
     participant CM as ConnectionManager
     participant LM as LobbyManager
-    participant Handler as Handler
+    participant Handler as WebRTC/IPPort Handler
+    participant Signal as Signal Server
     participant HostLM as Host's LobbyManager
 
     Play->>Lobby: transitioned(LobbyStateContext.NewJoin)
-    Play->>CM: connect_client("abc123-OID")
+    Play->>CM: connect_client("ABCD...32chars")
     CM->>Handler: connect_client()
+    Handler->>Signal: WebSocket connect → JOIN (lobby_code)
+    Signal-->>Handler: ID (peer_id=N)
+    Signal-->>Handler: PEER_CONNECT (host peer)
+    Note over Handler: SDP offer/answer + ICE exchange
+    Handler->>Handler: OFFER / ANSWER / CANDIDATE relay via signal server
+    Handler->>Handler: P2P connection established
     Handler-->>CM: connection_succeeded
-    CM-->>Lobby: client_connection_succeeded
 
-    Note over CM: Check if ENet fully connected
+    Note over CM: Check if WebRTC fully connected
     CM->>CM: Wait for connected_to_server if needed
     CM->>CM: _on_enet_connected()
 
+    CM-->>Lobby: client_connection_succeeded
     Lobby->>HostLM: update_player_metadata.rpc_id(1, my_id, player_def.to_dict())
     HostLM->>HostLM: lobby_players[client_id] = PlayerDefinition
     HostLM-->>Lobby: _sync_lobby_players.rpc(serialized_dict)
@@ -125,6 +138,32 @@ sequenceDiagram
 
 ---
 
+## Deep Dive: Signal Server Protocol
+
+The [danknoonersignalserver](https://github.com/ssebs/danknoonersignalserver/) is a Go-based WebSocket server that brokers WebRTC peer connections. It is **only needed during the handshake** — once peers connect, all game traffic flows P2P.
+
+**Default endpoint:** `wss://signal.ssebs.com` (override via `signal_relay_host` setting)
+
+**Message format:** JSON over WebSocket
+```json
+{ "type": <int>, "id": <int>, "data": "<string>" }
+```
+
+| Type | Value | Direction | Purpose |
+|------|-------|-----------|---------|
+| `JOIN` | 0 | C→S / S→C | Create or join lobby; `data` = code (empty = create new) |
+| `ID` | 1 | S→C | Server assigns peer ID; `data` = "true" if host |
+| `PEER_CONNECT` | 2 | S→C | New peer joined the lobby |
+| `PEER_DISCONNECT` | 3 | S→C | Peer left |
+| `OFFER` | 4 | relay | WebRTC SDP offer |
+| `ANSWER` | 5 | relay | WebRTC SDP answer |
+| `CANDIDATE` | 6 | relay | ICE candidate (`mid\nindex\nsdp`) |
+| `SEAL` | 7 | C→S / S→C | Close lobby to new joiners |
+
+**Peer connection rule:** The peer with the lower ID always creates the SDP offer.
+
+---
+
 ## Deep Dive: Connection Signals
 
 The system has multiple connection signals. Here's why each exists:
@@ -142,11 +181,11 @@ sequenceDiagram
     rect rgb(40, 40, 60)
         Note over Handler,Lobby: Stage 1: Handler Success
         Handler->>CM: connection_succeeded
-        Note right of CM: ENet peer created<br/>Handshake may be in progress
+        Note right of CM: WebRTC peer created<br/>Handshake may be in progress
     end
 
     rect rgb(40, 60, 40)
-        Note over Handler,Lobby: Stage 2: ENet Connected
+        Note over Handler,Lobby: Stage 2: WebRTC Connected
         Godot->>CM: connected_to_server (if needed)
         CM->>CM: _on_enet_connected()
         CM-->>Lobby: client_connection_succeeded
@@ -172,10 +211,10 @@ sequenceDiagram
 
 | Signal                        | Source              | When                 | Purpose               |
 | ----------------------------- | ------------------- | -------------------- | --------------------- |
-| `connection_succeeded`        | Handler             | ENet peer created    | Low-level success     |
-| `client_connection_succeeded` | ConnectionManager   | ENet fully connected | **Safe for RPCs**     |
+| `connection_succeeded`        | Handler             | Peer created         | Low-level success     |
+| `client_connection_succeeded` | ConnectionManager   | Fully connected      | **Safe for RPCs**     |
 | `player_connected(id)`        | ConnectionManager   | Server sees peer     | LobbyManager listens  |
-| `game_id_set(addr)`           | ConnectionManager   | Got OID/IP           | Display invite code   |
+| `game_id_set(addr)`           | ConnectionManager   | Got lobby code       | Display invite code   |
 | `lobby_players_updated`       | LobbyManager        | After sync RPC       | Update player list UI |
 | `connection_reset`            | ConnectionManager   | Server/client stops  | LobbyManager clears   |
 
@@ -183,7 +222,7 @@ sequenceDiagram
 
 ```mermaid
 flowchart TD
-    A[Handler: connection_succeeded] -->|"ENet peer exists"| B{Bidirectional ready?}
+    A[Handler: connection_succeeded] -->|"Peer exists"| B{Bidirectional ready?}
     B -->|No| C[Wait for connected_to_server]
     B -->|Yes| D[_on_enet_connected]
     C --> D
@@ -193,11 +232,9 @@ flowchart TD
 
 Edge cases handled:
 
-1. Handler succeeds but ENet handshake fails
-2. ENet connects but server doesn't acknowledge
+1. Handler succeeds but WebRTC handshake fails
+2. WebRTC connects but server doesn't acknowledge
 3. Client tries RPC before channel ready
-
-The ENet ready check is handled inside `ConnectionManager._on_handler_connection_succeeded()`, so `client_connection_succeeded` only fires once the peer is fully connected and RPCs are safe to send.
 
 Code pattern in `connection_manager.gd`:
 
@@ -408,30 +445,37 @@ sequenceDiagram
 flowchart LR
     Input[User enters code] --> Check{Valid IP?}
     Check -->|"192.168.1.1"| IP[IP/Port Mode]
-    Check -->|No| Check2{21-char OID?}
-    Check2 -->|"abc123..."| Noray[Noray Mode]
+    Check -->|No| Check2{32-char alphanumeric?}
+    Check2 -->|"ABCD...32chars"| WebRTC[WebRTC Mode]
     Check2 -->|No| Invalid[Invalid]
 ```
 
 ```gdscript
 func _auto_detect_connection_mode(text: String):
+    if text.is_empty():
+        return
+
     if text.is_valid_ip_address():
         connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
-    elif _is_valid_noray_oid(text):
-        connection_manager.connection_mode = ConnectionManager.ConnectionMode.NORAY
+    elif _is_valid_webrtc_id(text):
+        connection_manager.connection_mode = ConnectionManager.ConnectionMode.WEBRTC
 ```
 
 ---
 
 ## Key Code Locations
 
-| Component              | File                   | Description                              |
-| ---------------------- | ---------------------- | ---------------------------------------- |
-| PlayerDefinition       | player_definition.gd   | Resource with username, skins, to_dict() |
-| SaveManager            | save_manager.gd        | Persists local PlayerDefinition          |
-| Server startup         | connection_manager.gd  | start_server(), connect_client()         |
-| Connection handling    | connection_manager.gd  | _on_handler_connection_succeeded()       |
-| Lobby players dict     | lobby_manager.gd       | lobby_players, update_player_metadata(), _sync_lobby_players() |
-| Game start RPC         | gamemode_manager.gd    | start_game(), late-joiner sync           |
-| Player spawning        | spawn_manager.gd       | spawn_all_players(), rpc_spawn_player(), add_player_locally() |
-| Player list UI         | player_list_ui.gd      | update_from_dict() with PlayerDefinition |
+| Component              | File                        | Description                              |
+| ---------------------- | --------------------------- | ---------------------------------------- |
+| PlayerDefinition       | player_definition.gd        | Resource with username, skins, to_dict() |
+| SaveManager            | save_manager.gd             | Persists local PlayerDefinition          |
+| Server startup         | connection_manager.gd       | start_server(), connect_client()         |
+| Connection handling    | connection_manager.gd       | _on_handler_connection_succeeded()       |
+| WebRTC signaling       | multiplayer_webrtc.gd       | WebSocket + SDP/ICE exchange             |
+| IP/Port handler        | multiplayer_ipport.gd       | Direct ENet connection                   |
+| Noray handler          | multiplayer_noray.gd        | **Deprecated** — do not use              |
+| Lobby players dict     | lobby_manager.gd            | lobby_players, update_player_metadata(), _sync_lobby_players() |
+| Game start RPC         | gamemode_manager.gd         | start_game(), late-joiner sync           |
+| Player spawning        | spawn_manager.gd            | spawn_all_players(), rpc_spawn_player(), add_player_locally() |
+| Player list UI         | player_list_ui.gd           | update_from_dict() with PlayerDefinition |
+| Signal server          | [danknoonersignalserver](https://github.com/ssebs/danknoonersignalserver/) | WebRTC broker (Go) |
