@@ -1,58 +1,31 @@
 # WebRTC Multiplayer Setup
 
-## How it works
+## Goal
 
-The host's game instance runs an embedded WebSocket signaling server (port 9080). Clients connect to it to exchange WebRTC offers/answers/ICE candidates, then communicate peer-to-peer.
+Replace Noray NAT traversal with WebRTC. No port forwarding required for host or clients. A standalone signaling server on `ssebs.com` handles lobby creation and SDP/ICE relay. Once WebRTC connects, all game traffic is peer-to-peer.
 
-The STUN/TURN server helps peers discover their public IPs and punch through NAT. If direct P2P fails, TURN relays traffic as a fallback.
+## Architecture
+
+```
+Host  ──ws──►  Signaling Server (ssebs.com)  ◄──ws──  Client
+                   (lobby + SDP/ICE relay)
+  │                                                      │
+  └──────────── WebRTC (via STUN/TURN) ─────────────────┘
+                 (game data, peer-to-peer)
+```
+
+- **Signaling server** — standalone WebSocket service on `ssebs.com`. Manages lobbies, relays SDP offers/answers and ICE candidates between peers. Very lightweight, no game data passes through it.
+- **STUN/TURN server** — coturn on `stun.ssebs.com`. STUN discovers public IPs for NAT punch-through. TURN relays as fallback if direct P2P fails.
+- **Game clients** — both host and joining players connect to the signaling server as WebSocket clients. No one runs a server locally.
+
+## What needs to happen
+
+1. **Build standalone signaling server** — extract the embedded signaling logic from `multiplayer_webrtc.gd` (the `SignalingPeer`/`SignalingLobby` classes, `_poll_signaling_server`, `_sig_parse_msg`, etc.) into a standalone service. Run it alongside coturn on `ssebs.com`.
+2. **Refactor `multiplayer_webrtc.gd`** — remove embedded signaling server code. Both host and client connect to the remote signaling server via WebSocket. Host creates a lobby, client joins by code.
+3. **Address format** — lobby code only (no IP needed since everyone connects to the same signaling server).
 
 ## What you need
 
-1. **STUN/TURN server** running on `stun.ssebs.com` via coturn
-2. **Port 9080 open** on the host machine (for the signaling WebSocket server)
+1. **Signaling server** running on `ssebs.com` (WebSocket, port TBD)
+2. **STUN/TURN server** running on `stun.ssebs.com` via coturn
 3. **`webrtc-native` GDExtension** installed in the Godot project (required for desktop builds)
-
-## coturn setup
-
-Install and run coturn on your server. Minimal `/etc/turnserver.conf`:
-
-```
-listening-port=3478
-realm=ssebs.com
-server-name=stun.ssebs.com
-
-# For STUN only, no credentials needed.
-# For TURN relay, uncomment and set credentials:
-# lt-cred-mech
-# user=myuser:mypassword
-```
-
-Docker alternative:
-
-```bash
-docker run -d --network=host coturn/coturn \
-  -n --listening-port=3478 --realm=ssebs.com
-```
-
-## Godot project setup
-
-1. Add a `MultiplayerWebRTC` node as a child of `ConnectionManager` in the scene tree
-2. Wire the `webrtc_handler` export on `ConnectionManager` to point to it
-3. Set `connection_mode` to `WEBRTC` in the inspector
-4. Configure exports on `MultiplayerWebRTC`:
-   - `signaling_port`: 9080 (default)
-   - `stun_server`: `stun:stun.ssebs.com:3478` (default)
-   - `turn_server`: (optional) `turn:stun.ssebs.com:3478` if you enable TURN
-   - `turn_username` / `turn_credential`: match coturn config
-
-## Connection flow
-
-1. Host: `start_server()` → starts signaling server on port 9080, fetches public IP, connects to itself, creates lobby → returns `ip:lobby_code`
-2. Client: `connect_client("ip:lobby_code")` → connects to host's signaling server via WebSocket, joins lobby, exchanges WebRTC negotiation, establishes P2P connection
-
-## Ports
-
-| Port | Protocol | Purpose |
-|------|----------|---------|
-| 9080 | TCP | WebSocket signaling (host machine) |
-| 3478 | UDP | STUN/TURN (stun.ssebs.com) |
