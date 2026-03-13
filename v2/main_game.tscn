@@ -67,9 +67,6 @@ metadata/_custom_type_script = "uid://iqvglquvlctu"
 [node name="MultiplayerWebRTC" type="Node" parent="ManagerManager/ConnectionManager" unique_id=862694197]
 script = ExtResource("8_lght5")
 stun_server = "stun:192.168.1.247:3478"
-turn_server = "stun:192.168.1.247:3478"
-turn_username = "danknooner"
-turn_credential = "passTEST"
 
 [node name="LobbyManager" type="Node" parent="ManagerManager" unique_id=676024663 node_paths=PackedStringArray("connection_manager") groups=["Managers"]]
 script = ExtResource("5_lobby")

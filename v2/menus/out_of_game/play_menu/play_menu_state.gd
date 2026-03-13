@@ -10,6 +10,9 @@ class_name PlayMenuState extends MenuState
 const NORAY_OID_LENGTH := 21
 const NORAY_OID_CHARSET := "useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict"
 
+const WEBRTC_CODE_LENGTH := 32
+const WEBRTC_CODE_CHARSET := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
 @onready var back_btn: Button = %BackBtn
 @onready var customize_btn: Button = %CustomizeBtn
 @onready var free_roam_btn: Button = %FreeRoamBtn
@@ -69,6 +72,8 @@ func _auto_detect_connection_mode(text: String):
 		connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
 	elif _is_valid_noray_oid(text):
 		connection_manager.connection_mode = ConnectionManager.ConnectionMode.NORAY
+	elif _is_valid_webrtc_id(text):
+		connection_manager.connection_mode = ConnectionManager.ConnectionMode.WEBRTC
 
 
 func _update_placeholder():
@@ -82,7 +87,7 @@ func _on_ipport_toggled(_toggled_on: bool):
 func _update_ipport_tooltip():
 	if ipport_toggle.button_pressed:
 		connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
-		ipport_toggle.tooltip_text = tr("USE_NORAY_LABEL")
+		ipport_toggle.tooltip_text = tr("USE_WEBRTC_LABEL")
 	else:
 		# HACK
 		connection_manager.connection_mode = ConnectionManager.ConnectionMode.WEBRTC
@@ -90,10 +95,19 @@ func _update_ipport_tooltip():
 
 
 func _validate_code(text: String):
-	# join_btn.disabled = !text.is_valid_ip_address() and !_is_valid_noray_oid(text)
-	# HACK
-	print("todo- validate code")
-	join_btn.disabled = false
+	join_btn.disabled = not (
+		text.is_valid_ip_address() or _is_valid_noray_oid(text) or _is_valid_webrtc_id(text)
+	)
+
+
+func _is_valid_webrtc_id(text: String) -> bool:
+	var trimmed := text.strip_edges()
+	if trimmed.length() != WEBRTC_CODE_LENGTH:
+		return false
+	for c in trimmed:
+		if c not in WEBRTC_CODE_CHARSET:
+			return false
+	return true
 
 
 func _is_valid_noray_oid(text: String) -> bool:

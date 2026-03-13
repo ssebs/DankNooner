@@ -126,7 +126,6 @@ func _get_handler():
 		ConnectionMode.IP_PORT:
 			return ipport_handler
 		ConnectionMode.WEBRTC:
-			print("using webrtc handler")
 			return webrtc_handler
 	return ipport_handler
 

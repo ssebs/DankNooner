@@ -1,3 +1,4 @@
+## DEPRECATED - Use MultiplayerWebRTC
 class_name MultiplayerNoray extends Node
 
 signal connection_failed(reason: String)
@@ -17,16 +18,16 @@ func _ready():
 	settings_manager.setting_updated.connect(_on_setting_updated)
 	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
 
-	noray_host = settings_manager.default_settings["noray_relay_host"]
+	noray_host = settings_manager.default_settings["signal_relay_host"]
 
 
 #region settings updated handler
 func _on_all_settings_changed(_current_settings: Dictionary):
-	noray_host = settings_manager.current_settings["noray_relay_host"]
+	noray_host = settings_manager.current_settings["signal_relay_host"]
 
 
 func _on_setting_updated(_key: String, _value: Variant):
-	noray_host = settings_manager.current_settings["noray_relay_host"]
+	noray_host = settings_manager.current_settings["signal_relay_host"]
 
 
 #endregion

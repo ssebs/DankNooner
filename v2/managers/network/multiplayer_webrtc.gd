@@ -25,9 +25,9 @@ enum Message {
 @export var stun_server: String = "stun:stun.ssebs.com:3478"
 
 ## Optional TURN server URL (for relay fallback behind symmetric NAT)
-@export var turn_server: String = ""
-@export var turn_username: String = ""
-@export var turn_credential: String = ""
+@export var turn_server: String = "turn:stun.ssebs.com:3478"
+@export var turn_username: String = "danknooner"
+@export var turn_credential: String = "passTEST"
 
 const SETUP_TIMEOUT_MS = 10000
 

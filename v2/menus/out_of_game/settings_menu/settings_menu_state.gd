@@ -9,7 +9,7 @@ class_name SettingsMenuState extends MenuState
 @onready var save_btn: Button = %SaveBtn
 @onready var reset_btn: Button = %ResetBtn
 
-@onready var noray_host_entry: LineEdit = %NorayHostEntry
+@onready var signal_host_entry: LineEdit = %SignalHostEntry
 @onready var window_mode_opt: OptionButton = %WindowModeOpt
 @onready var master_vol_slider: HSlider = %MasterVolSlider
 @onready var music_vol_slider: HSlider = %MusicVolSlider
@@ -59,7 +59,7 @@ func Exit(_state_context: StateContext):
 
 
 func load_settings_into_ui():
-	noray_host_entry.text = settings_manager.current_settings["noray_relay_host"]
+	signal_host_entry.text = settings_manager.current_settings["signal_relay_host"]
 
 	var wmode_id := SettingsManager.str_to_windowmode(
 		settings_manager.current_settings["fullscreen_mode"]
@@ -84,7 +84,7 @@ func _on_setting_updated(_key: String, _value: Variant):
 
 
 func _on_save_pressed():
-	settings_manager.update_setting("noray_relay_host", noray_host_entry.text, false)
+	settings_manager.update_setting("signal_relay_host", signal_host_entry.text, false)
 
 	settings_manager.update_setting(
 		"fullscreen_mode",
