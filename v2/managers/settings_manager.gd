@@ -25,7 +25,7 @@ const WINDOW_MODES: Dictionary = {
 var default_settings: Dictionary = {
 	"version": settings_version,
 	# "username": "change_me",
-	"noray_relay_host": "home.ssebs.com",  # noray.casa.ssebs.com, 192.168.1.247
+	"signal_relay_host": "home.ssebs.com",  # noray.casa.ssebs.com, 192.168.1.247
 	"resolution": "1920x1080",
 	"fullscreen_mode": "borderless",  # or "fullscreen" or "borderless"
 	"master_vol": 0.8,
