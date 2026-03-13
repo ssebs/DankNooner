@@ -6,19 +6,6 @@
 
 - [ ] noray host setting update doesn't save
 
-- [ ] noray => WebRTC
-
-  - Use webrtc for nat punch thru with stun/turn server
-  - Coturn docker to host
-    - https://github.com/coturn/coturn/blob/master/docker/coturn/README.md
-  - Signaling / matchmaking server in go? or is this possible in godot?
-  - https://github.com/godotengine/godot-demo-projects/tree/master/networking/webrtc_signaling
-    - server/
-    - client/
-  - https://github.com/jonandrewdavis/andoodev-godot-web-rtc-p2p
-    - full demo, but not using std tools
-  - https://www.reddit.com/r/gamedev/comments/1872muu/nat_traversal_solutions_for_multiplayer_in_godot/
-
 - [ ] Create Player Part 2
 
   - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
@@ -244,10 +231,23 @@
 - [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
 - [ ] Add text chat
 - [ ] Web
-  - [ ] WebRTC (?)
+  - [x] WebRTC (?)
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] noray => WebRTC
+
+  - Use webrtc for nat punch thru with stun/turn server
+  - Coturn docker to host
+    - https://github.com/coturn/coturn/blob/master/docker/coturn/README.md
+  - Signaling / matchmaking server in go? or is this possible in godot?
+  - https://github.com/godotengine/godot-demo-projects/tree/master/networking/webrtc_signaling
+    - server/
+    - client/
+  - https://github.com/jonandrewdavis/andoodev-godot-web-rtc-p2p
+    - full demo, but not using std tools
+  - https://www.reddit.com/r/gamedev/comments/1872muu/nat_traversal_solutions_for_multiplayer_in_godot/
 
 - [x] cleanup lobby / joining w/ player definition
 
