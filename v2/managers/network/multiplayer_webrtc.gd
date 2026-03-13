@@ -18,6 +18,8 @@ enum Message {
 	SEAL,
 }
 
+@export var settings_manager: SettingsManager
+
 ## URL of the remote signaling server
 @export var signaling_url: String = "wss://signal.ssebs.com"
 
@@ -38,6 +40,29 @@ var _rtc_mp: WebRTCMultiplayerPeer
 var _is_server: bool = false
 var _peer_ready: bool = false
 var _setup_in_progress: bool = false
+
+
+func _ready() -> void:
+	if settings_manager == null:
+		return
+	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
+	settings_manager.setting_updated.connect(_on_setting_updated)
+
+
+func _on_all_settings_changed(settings: Dictionary) -> void:
+	if settings.has("signal_relay_host"):
+		_apply_relay_host(settings["signal_relay_host"])
+
+
+func _on_setting_updated(key: String, value: Variant) -> void:
+	if key == "signal_relay_host":
+		_apply_relay_host(str(value))
+
+
+func _apply_relay_host(host: String) -> void:
+	stun_server = "stun:%s:3478" % host
+	turn_server = "turn:%s:3478" % host
+
 
 #region Public API (handler interface)
 
