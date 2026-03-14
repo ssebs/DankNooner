@@ -29,6 +29,8 @@
     - [ ] handle gravity manually.
     - [ ] Slow down as you go up in angle
   - [ ] 2 difficulties, arcade & sim. Sim grants 1.5x score
+    - [ ] arcade still has gear changes, no clutch except to start wheelie
+      - [ ] WASD support
 
 - [ ] Create Player part 3
 
@@ -253,9 +255,11 @@
 ## Done ✅
 
 - [x] disconnect after some period of time
+
   - [x] Lobby closes?
 
 - [x] customize skin from pause menu
+
   - [x] menu context
   - [x] actually update in game
 

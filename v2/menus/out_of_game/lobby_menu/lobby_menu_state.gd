@@ -179,7 +179,11 @@ func set_single_or_multiplayer_ui():
 		LobbyStateContext.Mode.FREEROAM:
 			multiplayer_ui.hide()
 			singleplayer_ui.show()
-			connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
+			# ENet doesn't work on web — use WebRTC there
+			if OS.has_feature("web"):
+				connection_manager.connection_mode = ConnectionManager.ConnectionMode.WEBRTC
+			else:
+				connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
 			await connection_manager.start_server()
 		_:
 			singleplayer_ui.hide()
