@@ -4,6 +4,8 @@
 
 ## In Progress 🚀
 
+- [ ] Add loading UI
+  - [ ] Show when swtiching levels
 - [ ] Create Player Part 2
 
   - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
