@@ -30,6 +30,7 @@ enum Message {
 @export var turn_server: String = "turn:stun.ssebs.com:3478"
 @export var turn_username: String = "danknooner"
 @export var turn_credential: String = "passTEST"
+@export var is_debug: bool = false
 
 const SETUP_TIMEOUT_MS = 15000
 
@@ -43,6 +44,8 @@ var _setup_in_progress: bool = false
 
 
 func _ready() -> void:
+	if OS.is_debug_build():
+		is_debug = true
 	if settings_manager == null:
 		return
 	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
@@ -57,6 +60,11 @@ func _on_all_settings_changed(settings: Dictionary) -> void:
 func _on_setting_updated(key: String, value: Variant) -> void:
 	if key == "signal_relay_host":
 		_apply_relay_host(str(value))
+
+
+func _dbg(msg: String) -> void:
+	if is_debug:
+		print(msg)
 
 
 func _apply_relay_host(host: String) -> void:
@@ -132,7 +140,7 @@ func connect_client(address: String) -> Error:
 	multiplayer.multiplayer_peer = _rtc_mp
 
 	# Phase 2: Wait for actual WebRTC data channel to open (ICE negotiation)
-	print("WebRTC: signaling ready, waiting for ICE connection...")
+	_dbg("WebRTC: signaling ready, waiting for ICE connection...")
 	while _rtc_mp.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTING:
 		if Time.get_ticks_msec() - start_time > SETUP_TIMEOUT_MS:
 			printerr("WebRTC: ICE negotiation timed out (no data channel opened)")
@@ -153,7 +161,7 @@ func connect_client(address: String) -> Error:
 		return ERR_CONNECTION_ERROR
 
 	_setup_in_progress = false
-	print("WebRTC: fully connected as peer %d" % _rtc_mp.get_unique_id())
+	_dbg("WebRTC: fully connected as peer %d" % _rtc_mp.get_unique_id())
 	connection_succeeded.emit(_rtc_mp.get_unique_id())
 	return OK
 
@@ -222,7 +230,7 @@ func _parse_msg() -> bool:
 			_on_id_received(src_id, data == "true")
 		Message.JOIN:
 			_lobby_code = data
-			print("WebRTC: joined lobby '%s'" % _lobby_code)
+			_dbg("WebRTC: joined lobby '%s'" % _lobby_code)
 		Message.SEAL:
 			pass
 		Message.PEER_CONNECT:
@@ -286,20 +294,20 @@ func _get_ice_servers() -> Array:
 func _create_rtc_peer(id: int) -> WebRTCPeerConnection:
 	var peer := WebRTCPeerConnection.new()
 	var ice_servers := _get_ice_servers()
-	print("WebRTC: creating peer %d with ICE servers: %s" % [id, JSON.stringify(ice_servers)])
+	_dbg("WebRTC: creating peer %d with ICE servers: %s" % [id, JSON.stringify(ice_servers)])
 	peer.initialize({"iceServers": ice_servers})
 	peer.session_description_created.connect(_on_session_description.bind(id))
 	peer.ice_candidate_created.connect(_on_ice_candidate.bind(id))
 	_rtc_mp.add_peer(peer, id)
 	# Lower ID initiates the offer
 	if id < _rtc_mp.get_unique_id():
-		print("WebRTC: creating offer (our id %d > peer id %d)" % [_rtc_mp.get_unique_id(), id])
+		_dbg("WebRTC: creating offer (our id %d > peer id %d)" % [_rtc_mp.get_unique_id(), id])
 		peer.create_offer()
 	return peer
 
 
 func _on_id_received(id: int, _use_mesh: bool) -> void:
-	print("WebRTC: signaling assigned ID %d" % id)
+	_dbg("WebRTC: signaling assigned ID %d" % id)
 	if id == 1:
 		_rtc_mp.create_server()
 	else:
@@ -308,31 +316,31 @@ func _on_id_received(id: int, _use_mesh: bool) -> void:
 
 
 func _on_peer_connected(id: int) -> void:
-	print("WebRTC: peer %d connected to signaling, creating RTC peer" % id)
+	_dbg("WebRTC: peer %d connected to signaling, creating RTC peer" % id)
 	_create_rtc_peer(id)
 
 
 func _on_peer_disconnected(id: int) -> void:
-	print("WebRTC: peer %d disconnected" % id)
+	_dbg("WebRTC: peer %d disconnected" % id)
 	if _rtc_mp.has_peer(id):
 		_rtc_mp.remove_peer(id)
 
 
 func _on_offer_received(id: int, offer: String) -> void:
-	print("WebRTC: received offer from peer %d (have peer: %s)" % [id, _rtc_mp.has_peer(id)])
+	_dbg("WebRTC: received offer from peer %d (have peer: %s)" % [id, _rtc_mp.has_peer(id)])
 	if _rtc_mp.has_peer(id):
 		_rtc_mp.get_peer(id).connection.set_remote_description("offer", offer)
 
 
 func _on_answer_received(id: int, answer: String) -> void:
-	print("WebRTC: received answer from peer %d (have peer: %s)" % [id, _rtc_mp.has_peer(id)])
+	_dbg("WebRTC: received answer from peer %d (have peer: %s)" % [id, _rtc_mp.has_peer(id)])
 	if _rtc_mp.has_peer(id):
 		_rtc_mp.get_peer(id).connection.set_remote_description("answer", answer)
 
 
 func _on_candidate_received(id: int, mid: String, index: int, sdp: String) -> void:
 	if not _rtc_mp.has_peer(id):
-		print("WebRTC: DROPPED candidate from unknown peer %d" % id)
+		_dbg("WebRTC: DROPPED candidate from unknown peer %d" % id)
 		return
 	var cand_type := "unknown"
 	if "typ host" in sdp:
@@ -341,7 +349,7 @@ func _on_candidate_received(id: int, mid: String, index: int, sdp: String) -> vo
 		cand_type = "srflx"
 	elif "typ relay" in sdp:
 		cand_type = "relay"
-	print("WebRTC: received ICE candidate [%s] from peer %d" % [cand_type, id])
+	_dbg("WebRTC: received ICE candidate [%s] from peer %d" % [cand_type, id])
 	_rtc_mp.get_peer(id).connection.add_ice_candidate(mid, index, sdp)
 
 
@@ -364,7 +372,7 @@ func _on_ice_candidate(mid: String, index: int, sdp: String, id: int) -> void:
 		cand_type = "srflx (STUN)"
 	elif "typ relay" in sdp:
 		cand_type = "relay (TURN)"
-	print("WebRTC: ICE candidate [%s] for peer %d: %s" % [cand_type, id, sdp])
+	_dbg("WebRTC: ICE candidate [%s] for peer %d: %s" % [cand_type, id, sdp])
 	_send_msg(Message.CANDIDATE, id, "%s\n%d\n%s" % [mid, index, sdp])
 
 
