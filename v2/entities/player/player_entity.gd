@@ -27,14 +27,14 @@ signal respawned(peer_id: int)
 
 var is_local_client: bool = false
 
-#region HACK - set from level_manager
+#region HACK - set from spawn_manager
 var audio_manager: AudioManager
 var username: String:
 	set(v):
 		username = v
 		if is_node_ready():
 			name_label.text = username
-# `name` is also set from level_manager
+# `name` is also set from spawn_manager
 #endregion
 
 # Physics state (synced via RollbackSynchronizer state_properties)
