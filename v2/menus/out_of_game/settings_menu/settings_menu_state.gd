@@ -18,7 +18,7 @@ class_name SettingsMenuState extends MenuState
 
 @onready var bg_tint: ColorRect = %BGTint
 
-var return_state: MenuState
+var return_state: MenuState  # TODO - add to MenuState
 
 
 func _ready():
