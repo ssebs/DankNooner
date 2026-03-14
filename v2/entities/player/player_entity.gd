@@ -199,6 +199,14 @@ func _on_rpm_updated(new_rpm_ratio: float):
 #region public api
 
 
+func update_skins(new_bike_def: BikeSkinDefinition, new_char_def: CharacterSkinDefinition):
+	bike_definition = new_bike_def
+	character_definition = new_char_def
+	_init_mesh()
+	_init_collision_shape()
+	_init_ik()
+
+
 func do_respawn():
 	global_transform = get_parent().global_transform
 	velocity = Vector3.ZERO

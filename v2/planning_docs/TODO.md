@@ -4,9 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] customize skin from pause menu
-  - [x] menu context
-  - [ ] actually update in game
 - [ ] disconnect after some period of time
   - [ ] Lobby closes?
 - [ ] Create Player Part 2
@@ -256,6 +253,10 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] customize skin from pause menu
+  - [x] menu context
+  - [x] actually update in game
 
 - [x] fix webrtc WAN not connecting => it was dns
 
