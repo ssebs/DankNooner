@@ -22,6 +22,7 @@ enum Message {
 
 ## URL of the remote signaling server
 @export var signaling_url: String = "wss://signal.ssebs.com"
+# @export var signaling_url: String = "ws://192.168.1.117:9080" # Localhost doesn't work on my PC
 
 ## STUN/TURN server URL for ICE negotiation
 @export var stun_server: String = "stun:stun.ssebs.com:3478"
