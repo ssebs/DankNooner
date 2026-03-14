@@ -6,6 +6,12 @@ class_name SpawnManager extends BaseManager
 @export var audio_manager: AudioManager
 
 
+func _ready():
+	if Engine.is_editor_hint():
+		return
+	lobby_manager.lobby_players_updated.connect(_on_lobby_players_updated)
+
+
 ## Spawn all players from lobby_players dict (server only)
 func spawn_all_players():
 	if !multiplayer.is_server():
@@ -26,6 +32,16 @@ func rpc_spawn_player(peer_id: int, player_def_dict: Dictionary):
 @rpc("call_local", "reliable")
 func rpc_despawn_player(peer_id: int):
 	remove_player_locally(peer_id)
+
+
+## Update all spawned players' skins from lobby data.
+func _on_lobby_players_updated(players: Dictionary):
+	if level_manager.current_level.no_player_spawn_needed:
+		return
+
+	for peer_id in players:
+		var player := _get_player_by_peer_id(peer_id)
+		player.update_skins(players[peer_id].bike_skin, players[peer_id].character_skin)
 
 
 ## Set player's rb_do_respawn to true

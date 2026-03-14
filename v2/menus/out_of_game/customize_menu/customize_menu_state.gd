@@ -121,8 +121,6 @@ func _on_save_pressed():
 
 	save_manager.update_save("player_definition", player_def, true, true)
 
-	# TODO - if we're in a lobby/server, update metadata so the skin can be changed in game
-
 	UiToast.ShowToast(tr("SAVED_SETTINGS_LABEL"))
 
 

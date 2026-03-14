@@ -69,9 +69,10 @@ script = ExtResource("8_lght5")
 settings_manager = NodePath("../../SettingsManager")
 stun_server = "stun:192.168.1.247:3478"
 
-[node name="LobbyManager" type="Node" parent="ManagerManager" unique_id=676024663 node_paths=PackedStringArray("connection_manager") groups=["Managers"]]
+[node name="LobbyManager" type="Node" parent="ManagerManager" unique_id=676024663 node_paths=PackedStringArray("connection_manager", "save_manager") groups=["Managers"]]
 script = ExtResource("5_lobby")
 connection_manager = NodePath("../ConnectionManager")
+save_manager = NodePath("../SaveManager")
 
 [node name="LevelManager" type="Node" parent="ManagerManager" unique_id=572419191 node_paths=PackedStringArray("spawn_node", "menu_manager", "input_state_manager") groups=["Managers"]]
 script = ExtResource("10_mf81u")
