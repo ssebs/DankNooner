@@ -4,6 +4,8 @@
 
 ## In Progress 🚀
 
+- [ ] disconnect after some period of time
+  - [ ] Lobby closes?
 - [ ] Create Player Part 2
 
   - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
