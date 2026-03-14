@@ -25,6 +25,8 @@ var conn_addr: String:
 		conn_addr = val
 		game_id_set.emit(val)
 
+var _enet_connected_callable: Callable
+
 
 #region Public API
 ## Starts the ENet server and listens for connections.
@@ -96,6 +98,7 @@ func disconnect_client():
 
 	if multiplayer.server_disconnected.is_connected(_on_server_disconnected):
 		multiplayer.server_disconnected.disconnect(_on_server_disconnected)
+	_cleanup_enet_connected_signal()
 	NetworkTime.stop()
 	multiplayer.multiplayer_peer = null
 	conn_addr = ""
@@ -148,19 +151,32 @@ func _on_peer_disconnected(id: int):
 
 
 func _on_handler_connection_failed(reason: String):
+	_cleanup_enet_connected_signal()
 	client_connection_failed.emit(reason)
 
 
 func _on_handler_connection_succeeded(peer_id: int):
 	# Wait for ENet to actually connect before emitting
 	if multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
-		multiplayer.connected_to_server.connect(_on_enet_connected.bind(peer_id), CONNECT_ONE_SHOT)
+		_cleanup_enet_connected_signal()
+		_enet_connected_callable = _on_enet_connected.bind(peer_id)
+		multiplayer.connected_to_server.connect(_enet_connected_callable, CONNECT_ONE_SHOT)
 	else:
 		_on_enet_connected(peer_id)
 
 
 func _on_enet_connected(peer_id: int):
+	_enet_connected_callable = Callable()
 	client_connection_succeeded.emit(peer_id)
+
+
+func _cleanup_enet_connected_signal():
+	if (
+		_enet_connected_callable.is_valid()
+		and multiplayer.connected_to_server.is_connected(_enet_connected_callable)
+	):
+		multiplayer.connected_to_server.disconnect(_enet_connected_callable)
+	_enet_connected_callable = Callable()
 
 
 #endregion
