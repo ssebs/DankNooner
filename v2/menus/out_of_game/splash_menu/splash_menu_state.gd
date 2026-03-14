@@ -20,7 +20,8 @@ func Enter(_state_context: StateContext):
 	if Engine.is_editor_hint():
 		return
 
-	audio_manager.play_startup()
+	if !OS.has_feature("web"):
+		audio_manager.play_startup()
 
 	ui.show()
 	current_splash_index = 0
