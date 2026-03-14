@@ -4,21 +4,35 @@
 
 ## In Progress 🚀
 
-- [ ] noray host setting update doesn't save
-
 - [ ] Create Player Part 2
 
   - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
   - [x] Refactor/cleanup
   - [x] Fix collision
-  - [ ] Create [doc](./PlayerController.md)
   - [ ] Decide what should be client side vs server side
     - [ ] Make sure MP authority is set properly
+    - [ ] Sync as little as possible
+      - no input/movement/gear calculations
+      - no sound for other players for now
+      - sync animations (procedural position)
+      - sync bike pos/rot
+  - [ ] Update [doc](./PlayerController.md)
+
+- [ ] Redo movement_controller
+
+  - [ ] finish cleanup (function split)
+  - [ ] improve physics
+  - [ ] be able to ride up ramps
+    - [ ] (maybe raycast to rotate to normal?) one for each wheel?
+    - [ ] Use speed/momentup to stay on ramps (e.g. loop)
+    - [ ] ignore 15deg for wall
+    - [ ] handle gravity manually.
+    - [ ] Slow down as you go up in angle
+  - [ ] 2 difficulties, arcade & sim. Sim grants 1.5x score
+
+- [ ] Create Player part 3
+
   - [ ] Add HUD
-  - [ ] Redo movement_controller
-    - [ ] finish cleanup (function split)
-    - [ ] improve physics
-    - [ ] be able to ride up ramps (maybe raycast to rotate to normal?)
   - [ ] AnimationController + Trick integration
     - [ ] debug wheelie animation
   - [ ] AnimationController + Crash integration
@@ -28,13 +42,14 @@
     - [ ] Layer 2 collision (with objects)
 
 - [ ] Review Animation Controller & Create animations
-
   - [ ] Create lean (turning) animation
   - [ ] Create stopped/idle animation
   - [ ] Create wheelie/stoppie animation
   - [x] claude created a system
   - [x] Review planning_docs/AnimationController.md
   - [x] Create way to play specific animations
+- [ ] signal relay host setting update doesn't save ? Double check!
+- [ ] review webrtc gen code myself (security)
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
 
@@ -235,6 +250,8 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] fix webrtc WAN not connecting => it was dns
 
 - [x] noray => WebRTC
 
