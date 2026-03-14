@@ -4,8 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] disconnect after some period of time
-  - [ ] Lobby closes?
 - [ ] Create Player Part 2
 
   - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
@@ -253,6 +251,9 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] disconnect after some period of time
+  - [x] Lobby closes?
 
 - [x] customize skin from pause menu
   - [x] menu context
