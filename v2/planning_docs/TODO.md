@@ -4,6 +4,7 @@
 
 ## In Progress 🚀
 
+- [ ] customize skin from pause menu
 - [ ] disconnect after some period of time
   - [ ] Lobby closes?
 - [ ] Create Player Part 2
@@ -37,6 +38,7 @@
   - [ ] Add HUD
   - [ ] AnimationController + Trick integration
     - [ ] debug wheelie animation
+    - [ ] debug naked bike init ik / load default animation not working
   - [ ] AnimationController + Crash integration
     - [ ] Create crash animation (procedural)
   - [ ] Improve crash_controller
