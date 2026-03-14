@@ -126,12 +126,55 @@ Uses **netfox** addon with **Noray** for NAT traversal:
 
 See `Architecture.md` for detailed diagrams and RPC signatures.
 
+## Project Structure
+
+- `main_game.tscn` - root scene, composes all managers
+- `managers/` - all managers (`network/`, `gamemodes/` subdirs)
+- `entities/player/` - PlayerEntity + `controllers/`
+- `menus/out_of_game/` - pre-game menus (lobby, customize, settings)
+- `menus/in_game/` - in-game overlays (pause, respawn)
+- `levels/` - all levels extend `LevelDefinition`
+- `resources/entities/` - `BikeSkinDefinition` / `CharacterSkinDefinition` `.tres` files
+- `utils/state_machine/` - base `State`, `StateMachine`, `StateContext` classes
+- `utils/constants.gd` - global constants/enums
+- `planning_docs/` - `Architecture.md` (source of truth), `TODO.md`
+
 ## Code Style
 
 - Use `@tool` for editor scripts
 - Use `@export` for inspector wiring between managers/states
 - Use `@onready var x: Type = %UniqueName` for internal node refs
-- Use `_get_configuration_warnings()` to validate required exports
+- Use `_get_configuration_warnings()` to validate required exports — if the file already has it, add your checks there
 - Group constants in `utils/constants.gd`
 - Localization strings in `localization/localization.csv`, access via `tr("KEY")`
 - Use context clues in the file you're working on if possible
+- Reuse existing code, signals, and patterns before adding new ones. Check what's already available in the codebase — new methods, exports, or helpers should be a  
+  last resort.
+
+### Fail Loudly — No Silent Null Returns
+
+**Do not guard against null with early returns.** Code like this hides bugs:
+
+```gdscript
+# BAD - silently does nothing if player is missing
+var player := _get_player_by_peer_id(peer_id)
+if player == null:
+    return
+player.do_thing()
+```
+
+Instead, call directly and let Godot crash with a real error:
+
+```gdscript
+# GOOD - crashes immediately with a clear null reference error
+_get_player_by_peer_id(peer_id).do_thing()
+```
+
+If null is truly expected/valid, add a comment explaining why:
+
+```gdscript
+# Player may not be spawned yet during late-join sync — skip is intentional
+var player := _get_player_by_peer_id(peer_id)
+if player == null:
+    return
+```
