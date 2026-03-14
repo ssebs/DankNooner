@@ -17,6 +17,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="BGTint" type="ColorRect" parent="UI" unique_id=1543716163]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.78431374)
+
 [node name="AspectContainer" type="AspectRatioContainer" parent="UI" unique_id=1411030700]
 layout_mode = 1
 anchors_preset = 15
@@ -42,11 +52,11 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
 
-[node name="UsernameLabel" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2"]
+[node name="UsernameLabel" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=2124238731]
 layout_mode = 2
 text = "USERNAME_LABEL"
 
-[node name="UsernameEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/VBoxContainer2"]
+[node name="UsernameEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1151535776]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "e.g. hunter2"

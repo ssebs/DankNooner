@@ -14,12 +14,23 @@ const CHARACTER_SKINS_DIR := "res://resources/entities/player/skins/"
 @onready var bike_skin_btn: OptionButton = %BikeSkinBtn
 @onready var character_skin_btn: OptionButton = %CharacterSkinBtn
 
+@onready var bg_tint: ColorRect = %BGTint
+
 # skin_name -> res path
 var bike_skins: Dictionary = {}
 var character_skins: Dictionary = {}
 
+var return_state: MenuState  # TODO - add to MenuState
 
-func Enter(_state_context: StateContext):
+
+func Enter(state_context: StateContext):
+	if state_context is PauseStateContext:
+		return_state = state_context.return_state
+		bg_tint.visible = state_context.show_bg_tint
+	else:
+		return_state = menu_manager.prev_state
+		bg_tint.visible = false
+
 	ui.show()
 	back_btn.pressed.connect(_on_back_pressed)
 	save_btn.pressed.connect(_on_save_pressed)
@@ -75,7 +86,9 @@ func _load_current_selections():
 	username_entry.text = player_def.username
 
 	var saved_bike := player_def.bike_skin.resource_path if player_def.bike_skin else ""
-	var saved_character := player_def.character_skin.resource_path if player_def.character_skin else ""
+	var saved_character := (
+		player_def.character_skin.resource_path if player_def.character_skin else ""
+	)
 
 	_select_option_by_value(bike_skin_btn, bike_skins, saved_bike)
 	_select_option_by_value(character_skin_btn, character_skins, saved_character)
@@ -107,11 +120,14 @@ func _on_save_pressed():
 		player_def.character_skin = load(character_skins[char_name])
 
 	save_manager.update_save("player_definition", player_def, true, true)
+
+	# TODO - if we're in a lobby/server, update metadata so the skin can be changed in game
+
 	UiToast.ShowToast(tr("SAVED_SETTINGS_LABEL"))
 
 
 func _on_back_pressed():
-	transitioned.emit(menu_manager.prev_state, null)
+	transitioned.emit(return_state, null)
 
 
 #override

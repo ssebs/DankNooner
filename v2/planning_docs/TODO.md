@@ -5,6 +5,8 @@
 ## In Progress 🚀
 
 - [ ] customize skin from pause menu
+  - [x] menu context
+  - [ ] actually update in game
 - [ ] disconnect after some period of time
   - [ ] Lobby closes?
 - [ ] Create Player Part 2
