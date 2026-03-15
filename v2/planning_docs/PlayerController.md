@@ -21,7 +21,27 @@
   - **RollbackSynchronizer** (vars to sync w/ lag comp)
     - Client-side prediction and Server reconciliation = Rollback
     - `input_controller.gd` "gathers" input for this process
+      - `nfx_` vars are sync'd for use in `_rollback_tick()`
+      - `rb_` vars are sync'd in the same file to emit signals
   - **TickInterpolator** (smooth'd vars from above)
+- Server side:
+  - `nfx_` sync'd
+    - Vars
+      - Transforms (location & rotation)
+      - Velocity
+    - MovementController
+    - AnimationController
+  - `rb_` oneshots
+    - CurrentTrick
+    - **TODO** emit Crashed signal for gamemode manager
+    - **TODO** Move Respawn to gamemode manager
+- Client side:
+  - **TODO** Move from server side:
+    - lean_angle => roll
+    - pitch_angle => pitch
+    - fishtail_angle => yaw
+    - Gearing, trick detection, crash detection
+  - Audio local for now
 
 ## Controllers:
 
