@@ -116,7 +116,7 @@ script = ExtResource("3_faflk")
 root = NodePath("..")
 enable_prediction = true
 state_properties = Array[String]([":global_transform", ":velocity", ":lean_angle", ":pitch_angle", ":fishtail_angle", ":current_gear", ":current_rpm", ":clutch_value", ":is_boosting", ":is_crashed", "%TrickController:_clutch_kick_window", "%TrickController:_prev_clutch_held"])
-input_properties = Array[String](["%InputController:throttle", "%InputController:front_brake", "%InputController:rear_brake", "%InputController:steer", "%InputController:lean", "%InputController:trick_mod", "%InputController:clutch_held", "%InputController:cam_horizontal", "%InputController:cam_vertical"])
+input_properties = Array[String](["%InputController:nfx_throttle", "%InputController:nfx_front_brake", "%InputController:nfx_rear_brake", "%InputController:nfx_steer", "%InputController:nfx_lean", "%InputController:nfx_trick_held", "%InputController:nfx_clutch_held", "%InputController:nfx_cam_horizontal", "%InputController:nfx_cam_vertical"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="TickInterpolator" type="Node" parent="." unique_id=977812349 node_paths=PackedStringArray("root")]

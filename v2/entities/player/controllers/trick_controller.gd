@@ -27,6 +27,9 @@ func _ready():
 func on_movement_rollback_tick(delta: float):
 	_update_current_and_last_tricks()
 
+	if input_controller.nfx_trick_held:
+		print("trick_held")
+
 	match _current_trick:
 		Trick.WHEELIE_SITTING, Trick.WHEELIE_MOD:
 			_update_wheelie(delta)
@@ -55,7 +58,7 @@ func _update_current_and_last_tricks():
 
 func _detect_current_trick() -> Trick:
 	if player_entity.pitch_angle > deg_to_rad(15):
-		if input_controller.trick_mod:
+		if input_controller.nfx_trick_held:
 			return Trick.WHEELIE_MOD
 		return Trick.WHEELIE_SITTING
 
@@ -69,27 +72,27 @@ func _update_wheelie(delta: float):
 	var in_wheelie = player_entity.pitch_angle > deg_to_rad(15)
 
 	# Clutch-kick: detect clutch release this tick and open pop window if RPM was high
-	var clutch_just_released = _prev_clutch_held and not input_controller.clutch_held
-	_prev_clutch_held = input_controller.clutch_held
+	var clutch_just_released = _prev_clutch_held and not input_controller.nfx_clutch_held
+	_prev_clutch_held = input_controller.nfx_clutch_held
 	if clutch_just_released and player_entity.rpm_ratio >= bd.wheelie_rpm_threshold:
 		_clutch_kick_window = CLUTCH_KICK_WINDOW
 	_clutch_kick_window = maxf(_clutch_kick_window - delta, 0.0)
 
 	var clutch_kick = _clutch_kick_window > 0.0
 	var power_wheelie = (
-		player_entity.rpm_ratio >= bd.wheelie_rpm_threshold and input_controller.throttle > 0.7
+		player_entity.rpm_ratio >= bd.wheelie_rpm_threshold and input_controller.nfx_throttle > 0.7
 	)
-	var can_pop = input_controller.lean < -0.3 and (clutch_kick or power_wheelie)
+	var can_pop = input_controller.nfx_lean < -0.3 and (clutch_kick or power_wheelie)
 	var fast_enough = player_entity.speed > 1
 
 	var wheelie_target = 0.0
 	if fast_enough and player_entity.is_on_floor() and (in_wheelie or can_pop):
-		if input_controller.throttle > 0.3:
-			wheelie_target = deg_to_rad(bd.max_wheelie_angle_deg) * input_controller.throttle
-			if input_controller.lean < 0:
+		if input_controller.nfx_throttle > 0.3:
+			wheelie_target = deg_to_rad(bd.max_wheelie_angle_deg) * input_controller.nfx_throttle
+			if input_controller.nfx_lean < 0:
 				# Leaning back adds to wheelie target
 				wheelie_target += (
-					deg_to_rad(bd.max_wheelie_angle_deg) * abs(input_controller.lean) * 0.15
+					deg_to_rad(bd.max_wheelie_angle_deg) * abs(input_controller.nfx_lean) * 0.15
 				)
 
 	# Apply wheelie pitch
@@ -100,8 +103,8 @@ func _update_wheelie(delta: float):
 	elif player_entity.pitch_angle > 0:
 		# Return to ground, lean forward (lean > 0) helps bring wheel down
 		var return_mult = 1.0
-		if input_controller.lean > 0:
-			return_mult = 1.0 + abs(input_controller.lean) * 2.0
+		if input_controller.nfx_lean > 0:
+			return_mult = 1.0 + abs(input_controller.nfx_lean) * 2.0
 		player_entity.pitch_angle = move_toward(
 			player_entity.pitch_angle, 0, bd.return_speed * return_mult * delta
 		)
@@ -112,7 +115,7 @@ func _update_stoppie(delta: float):
 	var in_stoppie = player_entity.pitch_angle < deg_to_rad(-10)
 
 	# Stoppie: lean forward (lean > 0 in v2) + front brake
-	var wants_stoppie = input_controller.lean > 0.1 and input_controller.front_brake > 0.5
+	var wants_stoppie = input_controller.nfx_lean > 0.1 and input_controller.nfx_front_brake > 0.5
 
 	# Scale max angle by speed
 	var speed_scale = clamp(player_entity.speed / 15.0, 0.0, 1.0)
@@ -120,7 +123,7 @@ func _update_stoppie(delta: float):
 
 	var stoppie_target = 0.0
 	if player_entity.speed > 1 and player_entity.is_on_floor() and (in_stoppie or wants_stoppie):
-		stoppie_target = -effective_max * input_controller.front_brake
+		stoppie_target = -effective_max * input_controller.nfx_front_brake
 
 	# Apply stoppie pitch
 	if stoppie_target < 0:

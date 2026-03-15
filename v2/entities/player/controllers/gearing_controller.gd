@@ -26,6 +26,7 @@ func _ready():
 #region input handlers
 ## direction must be `1` or `-1` (fwd/back)
 func _on_gear_shift(direction: int):
+	# print("_on_gear_shift %d" % direction)
 	var bd = player_entity.bike_definition
 	var new_gear = clampi(player_entity.current_gear + direction, 1, bd.num_gears)
 	if new_gear != player_entity.current_gear:
@@ -51,7 +52,7 @@ func on_movement_rollback_tick(delta: float):
 
 
 func _update_clutch_hold_time(delta: float):
-	if input_controller.clutch_held:
+	if input_controller.nfx_clutch_held:
 		clutch_hold_time += delta
 		player_entity.clutch_value = move_toward(
 			player_entity.clutch_value, 1.0, clutch_engage_speed * delta
@@ -74,7 +75,7 @@ func _blend_rpm_to_target(delta: float):
 	var wheel_rpm = speed_ratio * bd.max_rpm
 
 	# Throttle-driven RPM
-	var throttle_rpm = lerpf(bd.idle_rpm, bd.max_rpm, input_controller.throttle)
+	var throttle_rpm = lerpf(bd.idle_rpm, bd.max_rpm, input_controller.nfx_throttle)
 
 	# Blend based on clutch engagement
 	var target_rpm = lerpf(throttle_rpm, wheel_rpm, engagement)
@@ -109,7 +110,7 @@ func get_power_output() -> float:
 	var base_ratio = bd.gear_ratios[bd.num_gears - 1]
 	var torque_multiplier = gear_ratio / base_ratio
 
-	return input_controller.throttle * power_curve * torque_multiplier * engagement
+	return input_controller.nfx_throttle * power_curve * torque_multiplier * engagement
 
 
 func get_clutch_engagement() -> float:

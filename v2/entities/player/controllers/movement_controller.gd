@@ -41,12 +41,12 @@ func on_movement_rollback_tick(delta: float):
 		player_entity.speed = minf(player_entity.speed, bd.max_speed)
 
 	# Braking
-	var total_brake = input_controller.front_brake + input_controller.rear_brake
+	var total_brake = input_controller.nfx_front_brake + input_controller.nfx_rear_brake
 	if total_brake > 0:
 		player_entity.speed = move_toward(
 			player_entity.speed, 0, bd.brake_strength * total_brake * delta
 		)
-	elif input_controller.throttle == 0:
+	elif input_controller.nfx_throttle == 0:
 		# Engine braking
 		player_entity.speed = move_toward(player_entity.speed, 0, bd.engine_brake_strength * delta)
 
@@ -60,7 +60,7 @@ func on_movement_rollback_tick(delta: float):
 		player_entity.rotate_y(-player_entity.lean_angle * turn_rate * delta)
 
 	# Lean
-	var target_lean = input_controller.steer * bd.max_lean_angle_rad * lean_factor
+	var target_lean = input_controller.nfx_steer * bd.max_lean_angle_rad * lean_factor
 	if player_entity.is_boosting:
 		target_lean *= 0.5  # Reduce steering during boost
 	player_entity.lean_angle = lerpf(player_entity.lean_angle, target_lean, bd.lean_speed * delta)
