@@ -15,6 +15,14 @@
 
 **PlayerEntity** Runs other controllers' `on_movement_rollback_tick()` in a specific order
 
+## Netcode
+
+- **PlayerEntity** has
+  - **RollbackSynchronizer** (vars to sync w/ lag comp)
+    - Client-side prediction and Server reconciliation = Rollback
+    - `input_controller.gd` "gathers" input for this process
+  - **TickInterpolator** (smooth'd vars from above)
+
 ## Controllers:
 
 - **InputController**

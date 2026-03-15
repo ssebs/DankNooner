@@ -33,7 +33,7 @@ var steer: float = 0.0:
 		if steer != value:
 			steer = value
 			steer_changed.emit(value)
-
+# TODO: check inverted
 var lean: float = 0.0:
 	set(value):
 		if lean != value:
@@ -41,10 +41,12 @@ var lean: float = 0.0:
 			lean_changed.emit(value)
 
 var rear_brake: float = 0.0
-
 var trick_mod: bool = false
-
 var clutch_held: bool = false
+
+var cam_horizontal: float = 0.0
+# TODO: check inverted
+var cam_vertical: float = 0.0
 
 # Discrete actions (rb_* pattern)
 var rb_gear_up: bool = false
@@ -58,15 +60,32 @@ func _ready():
 	NetworkTime.before_tick_loop.connect(_gather)
 
 
+## Netfox's input hook
+## Update input vars & emit signals
 func _gather():
 	if Engine.is_editor_hint():
 		return
 	if not is_multiplayer_authority():
 		return
 
-	_update_input_for_server()
+	throttle = Input.get_action_strength("throttle_pct")
+	front_brake = Input.get_action_strength("brake_front_pct")
+	rear_brake = Input.get_action_strength("brake_rear")
+	steer = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
+	lean = Input.get_action_strength("lean_forward") - Input.get_action_strength("lean_back")
+	trick_mod = Input.is_action_pressed("trick_mod")
+
+	cam_horizontal = Input.get_action_strength("cam_right") - Input.get_action_strength("cam_left")
+	cam_vertical = Input.get_action_strength("cam_up") - Input.get_action_strength("cam_down")
+
+	# Clutch handling (tap vs hold)
+	var clutch_now = Input.is_action_pressed("clutch")
+	if clutch_now != clutch_held:
+		clutch_held = clutch_now
+		clutch_held_changed.emit(clutch_held, clutch_now)
 
 
+## Netfox's rollback
 func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool):
 	if Engine.is_editor_hint():
 		return
@@ -91,22 +110,6 @@ func _process(_delta):
 		rb_gear_up = true
 	if Input.is_action_just_pressed("gear_down"):
 		rb_gear_down = true
-
-
-## Update input vars & emit signals
-func _update_input_for_server():
-	throttle = Input.get_action_strength("throttle_pct")
-	front_brake = Input.get_action_strength("brake_front_pct")
-	rear_brake = Input.get_action_strength("brake_rear")
-	steer = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
-	lean = Input.get_action_strength("lean_forward") - Input.get_action_strength("lean_back")
-	trick_mod = Input.is_action_pressed("trick_mod")
-
-	# Clutch handling (tap vs hold)
-	var clutch_now = Input.is_action_pressed("clutch")
-	if clutch_now != clutch_held:
-		clutch_held = clutch_now
-		clutch_held_changed.emit(clutch_held, clutch_now)
 
 
 func _unhandled_input(event: InputEvent):

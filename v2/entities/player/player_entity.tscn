@@ -116,7 +116,7 @@ script = ExtResource("3_faflk")
 root = NodePath("..")
 enable_prediction = true
 state_properties = Array[String]([":global_transform", ":velocity", ":lean_angle", ":pitch_angle", ":fishtail_angle", ":current_gear", ":current_rpm", ":clutch_value", ":is_boosting", ":is_crashed", "%TrickController:_clutch_kick_window", "%TrickController:_prev_clutch_held"])
-input_properties = Array[String](["%InputController:throttle", "%InputController:front_brake", "%InputController:rear_brake", "%InputController:steer", "%InputController:lean", "%InputController:trick_mod", "%InputController:clutch_held"])
+input_properties = Array[String](["%InputController:throttle", "%InputController:front_brake", "%InputController:rear_brake", "%InputController:steer", "%InputController:lean", "%InputController:trick_mod", "%InputController:clutch_held", "%InputController:cam_horizontal", "%InputController:cam_vertical"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="TickInterpolator" type="Node" parent="." unique_id=977812349 node_paths=PackedStringArray("root")]
@@ -133,7 +133,7 @@ transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@43191")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@18928")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")

@@ -4,8 +4,6 @@
 
 ## In Progress 🚀
 
-- [ ] Add loading UI
-  - [ ] Show when swtiching levels
 - [ ] Create Player Part 2
 
   - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
@@ -19,6 +17,8 @@
       - sync animations (procedural position)
       - sync bike pos/rot
   - [ ] Update [doc](./PlayerController.md)
+  - [ ] Be able to reverse (play animation)
+    - [ ] Hold clutch, brake to reverse
 
 - [ ] Redo movement_controller
 
@@ -246,6 +246,10 @@
   - [ ] render trees/etc. with multi mesh
 
 ## Polish / Bugs
+
+- [ ] Add loading UI
+
+  - [ ] Show when swtiching levels
 
 - [ ] reactive sounds (play when player does something) = juice
 - [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
