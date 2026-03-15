@@ -1,12 +1,10 @@
 @tool
 class_name InputController extends Node3D
 
-signal throttle_changed(value: float)
-signal front_brake_changed(value: float)
-signal steer_changed(value: float)  # lean left/right
-signal lean_changed(value: float)  # lean back/fwd
 signal clutch_held_changed(held: bool, just_pressed: bool)
+# local signals
 signal cam_switch_pressed
+# oneshot signals
 signal gear_up_pressed
 signal gear_down_pressed
 
@@ -16,37 +14,19 @@ signal gear_down_pressed
 var is_gamepad := false
 
 #region Input vars sync'd with netfox
-var throttle: float = 0.0:
-	set(value):
-		if throttle != value:
-			throttle = value
-			throttle_changed.emit(value)
-
-var front_brake: float = 0.0:
-	set(value):
-		if front_brake != value:
-			front_brake = value
-			front_brake_changed.emit(value)
-
-var steer: float = 0.0:
-	set(value):
-		if steer != value:
-			steer = value
-			steer_changed.emit(value)
+var nfx_throttle: float = 0.0
+var nfx_front_brake: float = 0.0
+var nfx_rear_brake: float = 0.0
+var nfx_steer: float = 0.0
 # TODO: check inverted
-var lean: float = 0.0:
-	set(value):
-		if lean != value:
-			lean = value
-			lean_changed.emit(value)
+var nfx_lean: float = 0.0
 
-var rear_brake: float = 0.0
-var trick_mod: bool = false
-var clutch_held: bool = false
+var nfx_trick_held: bool = false
+var nfx_clutch_held: bool = false
 
-var cam_horizontal: float = 0.0
+var nfx_cam_horizontal: float = 0.0
 # TODO: check inverted
-var cam_vertical: float = 0.0
+var nfx_cam_vertical: float = 0.0
 
 # Discrete actions (rb_* pattern)
 var rb_gear_up: bool = false
@@ -61,28 +41,30 @@ func _ready():
 
 
 ## Netfox's input hook
-## Update input vars & emit signals
+## Update input vars (nfx_) & emit signals
 func _gather():
 	if Engine.is_editor_hint():
 		return
 	if not is_multiplayer_authority():
 		return
 
-	throttle = Input.get_action_strength("throttle_pct")
-	front_brake = Input.get_action_strength("brake_front_pct")
-	rear_brake = Input.get_action_strength("brake_rear")
-	steer = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
-	lean = Input.get_action_strength("lean_forward") - Input.get_action_strength("lean_back")
-	trick_mod = Input.is_action_pressed("trick_mod")
+	nfx_throttle = Input.get_action_strength("throttle_pct")
+	nfx_front_brake = Input.get_action_strength("brake_front_pct")
+	nfx_rear_brake = Input.get_action_strength("brake_rear")
+	nfx_steer = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
+	nfx_lean = Input.get_action_strength("lean_forward") - Input.get_action_strength("lean_back")
+	nfx_trick_held = Input.is_action_pressed("trick_mod")
 
-	cam_horizontal = Input.get_action_strength("cam_right") - Input.get_action_strength("cam_left")
-	cam_vertical = Input.get_action_strength("cam_up") - Input.get_action_strength("cam_down")
+	nfx_cam_horizontal = (
+		Input.get_action_strength("cam_right") - Input.get_action_strength("cam_left")
+	)
+	nfx_cam_vertical = Input.get_action_strength("cam_up") - Input.get_action_strength("cam_down")
 
-	# Clutch handling (tap vs hold)
+	# Clutch handling
 	var clutch_now = Input.is_action_pressed("clutch")
-	if clutch_now != clutch_held:
-		clutch_held = clutch_now
-		clutch_held_changed.emit(clutch_held, clutch_now)
+	if clutch_now != nfx_clutch_held:
+		clutch_held_changed.emit(nfx_clutch_held, clutch_now)
+		nfx_clutch_held = clutch_now
 
 
 ## Netfox's rollback
@@ -98,7 +80,7 @@ func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool):
 		rb_gear_down = false
 
 
-## local input
+## Local input + rb_ oneshot style vars
 func _process(_delta):
 	if Engine.is_editor_hint() or multiplayer.multiplayer_peer == null:
 		return
@@ -112,6 +94,7 @@ func _process(_delta):
 		rb_gear_down = true
 
 
+#region KBM/Gamepad switching
 func _unhandled_input(event: InputEvent):
 	if !player_entity.is_local_client:
 		return
@@ -123,6 +106,9 @@ func _detect_gamepad_or_kbm(event: InputEvent):
 		is_gamepad = false
 	elif event is InputEventJoypadButton or event is InputEventJoypadMotion:
 		is_gamepad = true
+
+
+#endregion
 
 
 #region controller vibration

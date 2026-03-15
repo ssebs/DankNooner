@@ -201,7 +201,7 @@ func _update_wheelie_arm() -> void:
 	var in_wheelie = player_entity.pitch_angle > 0.0
 	var ratio = (
 		clamp(player_entity.pitch_angle, 0.0, 1.0)
-		if (in_wheelie and input_controller.trick_mod)
+		if (in_wheelie and input_controller.nfx_trick_held)
 		else 0.0
 	)
 	anim_player.seek(ratio, true)
@@ -209,7 +209,7 @@ func _update_wheelie_arm() -> void:
 
 func _update_idle_timer(delta: float) -> void:
 	# Check if player is mostly stationary
-	var is_idle = player_entity.speed < 1.0 and abs(input_controller.steer) < 0.1
+	var is_idle = player_entity.speed < 1.0 and abs(input_controller.nfx_steer) < 0.1
 
 	if is_idle:
 		_idle_timer += delta

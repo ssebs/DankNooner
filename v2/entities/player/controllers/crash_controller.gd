@@ -32,7 +32,7 @@ func on_movement_rollback_tick(delta: float):
 
 
 func _update_brake_grab(delta: float):
-	var front_brake = input_controller.front_brake
+	var front_brake = input_controller.nfx_front_brake
 
 	if front_brake < 0.5:
 		_brake_was_zero = true
