@@ -55,9 +55,10 @@ func _speed_calc(delta: float):
 
 	# Acceleration (uses gearing power output)
 	var power = gearing_controller.get_power_output()
-	if power > 0 and speed < bd.max_speed:
+	var gear_max_speed = gearing_controller.get_gear_max_speed()
+	if power > 0 and speed < gear_max_speed:
 		speed += bd.acceleration * power * delta
-		speed = minf(speed, bd.max_speed)
+		speed = minf(speed, gear_max_speed)
 	# Engine braking — applies when not on throttle, stronger at higher RPM
 	elif power <= 0 and speed > 0.5:
 		# print("engine brake")

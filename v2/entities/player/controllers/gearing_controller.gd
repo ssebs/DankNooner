@@ -77,7 +77,7 @@ func _blend_rpm(delta: float):
 
 	# Loaded: wheel locks RPM to ground speed, throttle adds slip above it (allows starting)
 	var slip_rpm = input_controller.nfx_throttle * (bd.max_rpm - bd.idle_rpm) * 0.3
-	var loaded_rpm = wheel_rpm + slip_rpm
+	var loaded_rpm = minf(wheel_rpm + slip_rpm, bd.max_rpm)
 
 	# Blend target between free-rev and loaded based on clutch
 	var target_rpm = lerpf(free_rpm, loaded_rpm, engagement)
@@ -101,6 +101,13 @@ func _get_rpm_ratio() -> float:
 
 
 #region public api
+## Max speed the current gear can achieve
+func get_gear_max_speed() -> float:
+	var bd = player_entity.bike_definition
+	var gear_ratio = bd.gear_ratios[_current_gear - 1]
+	return bd.max_speed * (bd.gear_ratios[bd.num_gears - 1] / gear_ratio)
+
+
 ## Returns power multiplier (0-1) based on current RPM and gear
 func get_power_output() -> float:
 	if _is_stalled:
