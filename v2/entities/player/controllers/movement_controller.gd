@@ -125,7 +125,11 @@ func _pitch_angle_calc(delta: float):
 	var in_wheelie = pitch_angle > deg_to_rad(15)
 	var in_balance_point = pitch_angle > deg_to_rad(bd.wheelie_balance_point_deg)
 
-	var wheelie_target = _calc_wheelie_target(delta)
+	var wheelie_target = 0.0
+	if _can_initiate_wheelie(in_wheelie):
+		wheelie_target = _calc_normal_wheelie_target(bd)
+		if in_balance_point:
+			wheelie_target = _calc_balance_point_target(bd, wheelie_target, delta)
 
 	print(
 		(
@@ -146,7 +150,16 @@ func _pitch_angle_calc(delta: float):
 			pitch_angle, 0, bd.return_speed * input_controller.nfx_lean * 2.0 * delta
 		)
 
-	# Apply wheelie pitch
+	_apply_wheelie_pitch(bd, wheelie_target, in_balance_point, delta)
+
+	# TODO: rear brake pull-down
+	# TODO: easy mode clamp
+
+
+## Apply wheelie pitch toward target, or decay back to 0
+func _apply_wheelie_pitch(
+	bd: BikeSkinDefinition, wheelie_target: float, in_balance_point: bool, delta: float
+):
 	if wheelie_target > 0:
 		var spd = (
 			bd.rotation_speed * _balance_point_decay_mult if in_balance_point else bd.rotation_speed
@@ -162,9 +175,6 @@ func _pitch_angle_calc(delta: float):
 		)
 		pitch_angle = move_toward(pitch_angle, 0, decay_speed * delta)
 
-	# TODO: rear brake pull-down
-	# TODO: easy mode clamp
-
 
 ## Detect clutch dump (held → released while on throttle) and manage kick window
 func _update_clutch_dump_detection():
@@ -179,19 +189,17 @@ func _update_clutch_dump_detection():
 	_prev_clutch_held = clutch_held
 
 
-## Calculate wheelie target angle based on RPM, throttle, lean, and balance point
-func _calc_wheelie_target(delta: float) -> float:
+## Check if a wheelie can start or is already in progress
+func _can_initiate_wheelie(in_wheelie: bool) -> bool:
 	var bd = player_entity.bike_definition
-	var max_wheelie_rad = deg_to_rad(bd.max_wheelie_angle_deg)
-	var balance_point_rad = deg_to_rad(bd.wheelie_balance_point_deg)
-	var in_wheelie = pitch_angle > deg_to_rad(15)
 
-	# Initiation checks
-	var rpm_above_threshold = gearing_controller._get_rpm_ratio() >= bd.wheelie_rpm_threshold
-	var clutch_kick_active = _clutch_kick_window > 0
+	if speed <= 1:
+		return false
+	if in_wheelie:
+		return true
 
 	# Clutch dump pop — just needs throttle, no lean-back required
-	var clutch_pop = clutch_kick_active and input_controller.nfx_throttle > 0.5
+	var clutch_pop = _clutch_kick_window > 0 and input_controller.nfx_throttle > 0.5
 
 	# Power wheelie — lean back + throttle + RPM (threshold eases at higher speed)
 	var speed_ratio = clampf(speed / bd.max_speed, 0.0, 1.0)
@@ -203,40 +211,42 @@ func _calc_wheelie_target(delta: float) -> float:
 		input_controller.nfx_lean < -0.3 and input_controller.nfx_throttle > 0.7 and rpm_for_power
 	)
 
-	var can_pop = clutch_pop or power_pop
-	# Can't START while turning, but can continue
+	# Can't START while turning
 	var can_start = abs(roll_angle) < deg_to_rad(10)
-	var fast_enough = speed > 1
+	return (clutch_pop or power_pop) and can_start
 
-	if not fast_enough:
-		return 0.0
-	if not in_wheelie and not (can_pop and can_start):
-		return 0.0
 
-	# Normal zone — below balance point
+## Calculate wheelie target in the normal zone (below balance point)
+func _calc_normal_wheelie_target(bd: BikeSkinDefinition) -> float:
+	var max_wheelie_rad = deg_to_rad(bd.max_wheelie_angle_deg)
 	var wheelie_target = max_wheelie_rad * input_controller.nfx_throttle
 	if input_controller.nfx_lean < 0:
 		wheelie_target += max_wheelie_rad * abs(input_controller.nfx_lean) * 0.15
-
-	# Balance point zone — above balance_point_deg
-	var in_balance_point = pitch_angle > balance_point_rad
-	if in_balance_point:
-		var lean_influence = input_controller.nfx_lean * (max_wheelie_rad - balance_point_rad)
-		var balance_target = pitch_angle + lean_influence * 0.75
-
-		if input_controller.nfx_throttle >= 0.5:
-			wheelie_target = maxf(wheelie_target, balance_target)
-		else:
-			# Unstable — drifts toward edges
-			var midpoint = (balance_point_rad + max_wheelie_rad) / 2
-			if balance_target < midpoint:
-				wheelie_target = move_toward(balance_target, 0, delta)
-			elif balance_target > midpoint:
-				wheelie_target = move_toward(balance_target, max_wheelie_rad + deg_to_rad(1), delta)
-			else:
-				wheelie_target += randf_range(deg_to_rad(-25), deg_to_rad(25))
-
 	return wheelie_target
+
+
+## Override wheelie target when above balance point — unstable without throttle
+func _calc_balance_point_target(
+	bd: BikeSkinDefinition, normal_target: float, delta: float
+) -> float:
+	var max_wheelie_rad = deg_to_rad(bd.max_wheelie_angle_deg)
+	var balance_point_rad = deg_to_rad(bd.wheelie_balance_point_deg)
+
+	var lean_influence = input_controller.nfx_lean * (max_wheelie_rad - balance_point_rad)
+	var balance_target = pitch_angle + lean_influence * 0.75
+
+	if input_controller.nfx_throttle >= 0.5:
+		return maxf(normal_target, balance_target)
+
+	# Unstable — drifts toward edges
+	var midpoint = (balance_point_rad + max_wheelie_rad) / 2
+	if balance_target < midpoint:
+		return move_toward(balance_target, 0, delta)
+
+	if balance_target > midpoint:
+		return move_toward(balance_target, max_wheelie_rad + deg_to_rad(1), delta)
+
+	return normal_target + randf_range(deg_to_rad(-25), deg_to_rad(25))
 
 
 ## Stops players from spawning in eachother during _spawn_timer
