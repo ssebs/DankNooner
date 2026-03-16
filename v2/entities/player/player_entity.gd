@@ -191,6 +191,11 @@ func do_respawn():
 	velocity = Vector3.ZERO
 	is_boosting = false
 	is_crashed = false
+	movement_controller.do_reset()
+	gearing_controller.do_reset()
+	trick_controller.do_reset()
+	crash_controller.do_reset()
+	animation_controller.do_reset()
 	if animation_controller:
 		animation_controller.stop_ragdoll()
 	respawned.emit()

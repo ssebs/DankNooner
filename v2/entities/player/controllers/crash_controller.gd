@@ -107,7 +107,9 @@ func _auto_respawn():
 
 ## Called from player_entity.gd's do_respawn
 func do_reset():
-	pass
+	_brake_grab_timer = 0.0
+	_brake_was_zero = true
+	_brake_was_grabbed = false
 
 
 func _get_configuration_warnings() -> PackedStringArray:
