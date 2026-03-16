@@ -4,6 +4,7 @@
 
 ## In Progress 🚀
 
+- [ ] bikeskin have front & rear wheel markers for wheelie / stoppie offsets
 - [ ] Create Player Part 2
 
   - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
@@ -16,7 +17,7 @@
     - [x] GearingController
     - [x] MovementController
       - [x] WIP, can't run due to animation controller
-    - [ ] AnimationController
+    - [x] AnimationController
     - [ ] TrickController
     - [ ] CrashController
   - [ ] Sync as little as possible
@@ -29,7 +30,7 @@
 - [ ] Move respawn logic to gamemode controller, using new signals
 - [ ] Redo movement_controller
 
-  - [ ] finish cleanup (function split)
+  - [x] finish cleanup (function split)
   - [ ] improve physics
   - [ ] be able to ride up ramps
     - [ ] (maybe raycast to rotate to normal?) one for each wheel?

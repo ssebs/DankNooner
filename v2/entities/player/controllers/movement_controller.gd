@@ -37,6 +37,7 @@ func on_movement_rollback_tick(delta: float):
 	_speed_calc(delta)
 	_steer_calc(delta)
 	_velocity_calc(delta)
+	_pitch_angle_calc(delta)
 
 	# Apply movement
 	player_entity.velocity *= NetworkTime.physics_factor
@@ -106,6 +107,12 @@ func _velocity_calc(delta: float):
 	# Gravity
 	if !player_entity.is_on_floor():
 		player_entity.velocity.y -= 9.8 * delta * 4.0
+
+
+func _pitch_angle_calc(delta: float):
+	print("nfx_lean")
+	print(input_controller.nfx_lean)
+	pitch_angle -= input_controller.nfx_lean * delta
 
 
 ## Stops players from spawning in eachother during _spawn_timer
