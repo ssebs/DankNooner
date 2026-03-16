@@ -133,7 +133,7 @@ transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@47506")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@55632")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
@@ -151,13 +151,13 @@ transform = Transform3D(-0.008549988, -0.97650266, 0.21533646, -0.41056708, -0.1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35496345, 0.98080707, -0.3138903)
 
 [node name="LeftFoot" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="4" unique_id=1249832749]
-transform = Transform3D(-0.9958446, 0.09051723, 0.009993158, -1.656938e-08, -0.10973406, 0.993961, 0.09106718, 0.98983073, 0.109278105, 0.24367344, 0.35812563, -0.2558015)
+transform = Transform3D(-0.9958446, 0.090517245, 0.009993159, -1.656938e-08, -0.10973406, 0.993961, 0.091067195, 0.98983073, 0.109278105, 0.24367344, 0.51058465, -0.2558015)
 
 [node name="LeftLegMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="5" unique_id=875795090]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.46395656, 0.5692559, 0.42930415)
 
 [node name="RightFoot" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="6" unique_id=70882427]
-transform = Transform3D(-0.9998421, 0.017659439, 0.0019495991, -1.6569382e-08, -0.10973407, 0.9939609, 0.017766729, 0.9938041, 0.10971674, -0.24367344, 0.35812563, -0.2558015)
+transform = Transform3D(-0.9998421, 0.017659439, 0.0019495991, -1.6569382e-08, -0.10973407, 0.9939609, 0.017766729, 0.9938041, 0.10971674, -0.24367344, 0.50530505, -0.2558015)
 
 [node name="RightLegMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="7" unique_id=1454334473]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.464, 0.569, 0.429)
@@ -166,7 +166,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.464, 0.569, 0.429)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4972486e-08, 1.3166139, -0.17337562)
 
 [node name="HeadTarget" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="9" unique_id=2052814980]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8378124, -0.5578918)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.8296124e-09, 1.8260808, -0.47977012)
 
 [node name="ButtPosition" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="10" unique_id=38485936]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8312537e-09, 0.94954467, -0.42459354)
@@ -212,12 +212,13 @@ player_entity = NodePath("../..")
 input_controller = NodePath("../InputController")
 rpm_loaded_speed = 0.8
 
-[node name="TrickController" type="Node" parent="_Controllers" unique_id=504066215 node_paths=PackedStringArray("player_entity", "input_controller", "gearing_controller")]
+[node name="TrickController" type="Node" parent="_Controllers" unique_id=504066215 node_paths=PackedStringArray("player_entity", "input_controller", "gearing_controller", "movement_controller")]
 unique_name_in_owner = true
 script = ExtResource("11_trick")
 player_entity = NodePath("../..")
 input_controller = NodePath("../InputController")
 gearing_controller = NodePath("../GearingController")
+movement_controller = NodePath("../MovementController")
 
 [node name="CrashController" type="Node" parent="_Controllers" unique_id=1441970825 node_paths=PackedStringArray("player_entity", "input_controller", "animation_controller", "movement_controller")]
 unique_name_in_owner = true
