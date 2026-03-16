@@ -17,6 +17,8 @@
 
 ## Netcode
 
+> Hybrid: server-authoritative physics, client-local derived state
+
 - **PlayerEntity** has
   - **RollbackSynchronizer** (vars to sync w/ lag comp)
     - Client-side prediction and Server reconciliation = Rollback
@@ -24,24 +26,27 @@
       - `nfx_` vars are sync'd for use in `_rollback_tick()`
       - `rb_` vars are sync'd in the same file to emit signals
   - **TickInterpolator** (smooth'd vars from above)
-- Server side:
-  - `nfx_` sync'd
-    - Vars
-      - Transforms (location & rotation)
-      - Velocity
-    - MovementController
-    - AnimationController
+- Client => Server (input via RollbackSynchronizer):
+  - `nfx_` input vars
+    - `nfx_throttle`, `nfx_brake`, `nfx_steer`, `nfx_lean`
+    - `nfx_gear_ratio` (final ratio, computed client-side by GearingController)
   - `rb_` oneshots
-    - CurrentTrick
-    - **TODO** emit Crashed signal for gamemode manager
-    - **TODO** Move Respawn to gamemode manager
-- Client side:
-  - **TODO** Move from server side:
-    - lean_angle => roll
-    - pitch_angle => pitch
-    - fishtail_angle => yaw
-    - Gearing, trick detection, crash detection
-  - Audio local for now
+    - `rb_current_trick` — broadcast for remote display/scoring
+    - `rb_crashed` — notify GamemodeManager of crash
+    - `rb_do_respawn` — triggered by GamemodeManager (owns respawn logic)
+- Server => Clients (authoritative physics via RollbackSynchronizer):
+  - `global_transform` (position & rotation)
+  - `velocity`
+  - `speed`
+  - TickInterpolator smooths: `global_transform`, `velocity`
+- Client-local (derived from synced physics state, no sync needed):
+  - GearingController — clutch, gear shifts, RPM blend => produces `nfx_gear_ratio`
+  - TrickController — wheelie/stoppie detection, `pitch_angle`
+  - CrashController — brake grab, crash detection, emits `crashed(reason)`
+  - AnimationController — procedural animation, lean/pitch/fishtail visual angles
+  - CameraController — FPS/TPS switching
+  - Audio — engine sound RPM parameter
+  - Visual angles: `lean_angle`, `pitch_angle`, `fishtail_angle` (derived from velocity/speed/ground)
 
 ## Controllers:
 
