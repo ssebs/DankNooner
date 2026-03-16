@@ -45,12 +45,6 @@ var username: String:
 #endregion
 
 #region DELETE_ME
-# Physics state (synced via RollbackSynchronizer state_properties)
-var speed: float = 0.0
-var lean_angle: float = 0.0
-var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
-var fishtail_angle: float = 0.0
-var ground_pitch: float = 0.0  # Slope alignment
 
 # Trick/boost state (synced)
 var is_boosting: bool = false
@@ -159,10 +153,6 @@ func _deferred_init():
 		# hud_controller.hide_hud()
 
 
-#endregion
-
-
-#region local init (deferred)
 func _init_audio():
 	if !audio_manager:
 		return
@@ -199,10 +189,6 @@ func update_skins(new_bike_def: BikeSkinDefinition, new_char_def: CharacterSkinD
 func do_respawn():
 	global_transform = get_parent().global_transform
 	velocity = Vector3.ZERO
-	speed = 0.0
-	lean_angle = 0.0
-	pitch_angle = 0.0
-	fishtail_angle = 0.0
 	is_boosting = false
 	is_crashed = false
 	if animation_controller:
