@@ -8,7 +8,7 @@ signal crashed
 @export var animation_controller: AnimationController
 
 @export var crash_lean_threshold_deg: float = 80.0
-@export var brake_grab_time_threshold: float = 0.8
+@export var brake_grab_time_threshold: float = 0.85
 @export var brake_lean_sensitivity: float = 0.7
 
 var _brake_grab_timer: float = 0.0
@@ -27,10 +27,10 @@ func on_movement_rollback_tick(delta: float):
 		return
 
 	_update_brake_grab(delta)
-
 	_detect_crash()
 
 
+## Sets player_entity.grip_usage
 func _update_brake_grab(delta: float):
 	var front_brake = input_controller.nfx_front_brake
 
@@ -60,31 +60,35 @@ func _detect_crash():
 
 	# Wheelie crash
 	if player_entity.pitch_angle > deg_to_rad(bd.max_wheelie_angle_deg):
+		print("wheelie crash")
 		trigger_crash()
 		return
 
 	# Stoppie crash
 	if player_entity.pitch_angle < -deg_to_rad(bd.max_stoppie_angle_deg):
+		print("stoppie crash")
 		trigger_crash()
 		return
 
 	# Lean crash
 	if abs(player_entity.lean_angle) >= deg_to_rad(crash_lean_threshold_deg):
+		print("lean crash")
 		trigger_crash()
 		return
 
 	# Brake grab while turning
 	if _brake_was_grabbed and abs(player_entity.lean_angle) > deg_to_rad(15):
+		print("brake grab crash")
 		trigger_crash()
 
 
 func trigger_crash():
 	player_entity.is_crashed = true
-	player_entity.speed = 0
 	player_entity.velocity = Vector3.ZERO
 	animation_controller.start_ragdoll()
 	crashed.emit()
 
+	# TODO - move logic to gamemode manager using crashed signal
 	# Auto-respawn after delay
 	get_tree().create_timer(3.0).timeout.connect(_auto_respawn)
 
@@ -92,10 +96,6 @@ func trigger_crash():
 func _auto_respawn():
 	if player_entity.is_crashed:
 		player_entity.rb_do_respawn = true
-
-
-func is_front_wheel_locked() -> bool:
-	return _brake_was_grabbed
 
 
 ## Called from player_entity.gd's do_respawn

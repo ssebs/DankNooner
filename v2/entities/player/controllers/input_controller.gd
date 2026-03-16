@@ -1,8 +1,6 @@
 @tool
 class_name InputController extends Node3D
 
-signal clutch_held_changed(held: bool, just_pressed: bool)
-
 # Local oneshot signals
 ## -1 for back, 1 for fwd
 signal gear_change_pressed(direction: int)
@@ -66,15 +64,10 @@ func _process(_delta):
 		gear_change_pressed.emit(-1)
 
 	trick_held = Input.is_action_pressed("trick")
+	clutch_held = Input.is_action_pressed("clutch")
 
 	cam_x = (Input.get_action_strength("cam_right") - Input.get_action_strength("cam_left"))
 	cam_y = Input.get_action_strength("cam_up") - Input.get_action_strength("cam_down")
-
-	# Clutch handling, has some buffer
-	var clutch_now = Input.is_action_pressed("clutch")
-	if clutch_now != clutch_held:
-		clutch_held_changed.emit(clutch_held, clutch_now)
-		clutch_held = clutch_now
 
 
 #region KBM/Gamepad switching
