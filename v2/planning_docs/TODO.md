@@ -11,6 +11,13 @@
   - [x] Fix collision
   - [x] Decide what should be client side vs server side
   - [x] Make sure MP authority is set properly
+  - [ ] New netcode changes / authority:
+    - [ ] InputController
+    - [ ] MovementController
+    - [ ] GearingController
+    - [ ] TrickController
+    - [ ] CrashController
+    - [ ] AnimationController
   - [ ] Sync as little as possible
     - no input/movement/gear calculations
     - no sound for other players for now
