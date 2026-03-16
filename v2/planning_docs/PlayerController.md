@@ -28,25 +28,34 @@
   - **TickInterpolator** (smooth'd vars from above)
 - Client => Server (input via RollbackSynchronizer):
   - `nfx_` input vars
-    - `nfx_throttle`, `nfx_brake`, `nfx_steer`, `nfx_lean`
+    - `nfx_throttle`, `nfx_brake(s)`, `nfx_steer`, `nfx_lean`
     - `nfx_gear_ratio` (final ratio, computed client-side by GearingController)
   - `rb_` oneshots
-    - `rb_current_trick` — broadcast for remote display/scoring
-    - `rb_crashed` — notify GamemodeManager of crash
     - `rb_do_respawn` — triggered by GamemodeManager (owns respawn logic)
+    - Signals:
+      - `respawned`
+      - `crashed`
+      - `trick_(started|ended)`
 - Server => Clients (authoritative physics via RollbackSynchronizer):
   - `global_transform` (position & rotation)
   - `velocity`
   - `speed`
   - TickInterpolator smooths: `global_transform`, `velocity`
 - Client-local (derived from synced physics state, no sync needed):
+  - Local InputController
+    - `trick_held`
+    - `cam_<dir>`
+    - `clutch_held`
+    - `gear_up`
+    - `gear_down`
+    - `cam_pressed`
   - GearingController — clutch, gear shifts, RPM blend => produces `nfx_gear_ratio`
   - TrickController — wheelie/stoppie detection, `pitch_angle`
   - CrashController — brake grab, crash detection, emits `crashed(reason)`
-  - AnimationController — procedural animation, lean/pitch/fishtail visual angles
+  - AnimationController — procedural animation, roll/pitch/yaw visual angles
   - CameraController — FPS/TPS switching
   - Audio — engine sound RPM parameter
-  - Visual angles: `lean_angle`, `pitch_angle`, `fishtail_angle` (derived from velocity/speed/ground)
+  - Visual angles: `lean_angle`, `pitch_angle`, `fishtail_angle` (renamed to roll/pitch/yaw)
 
 ## Controllers:
 

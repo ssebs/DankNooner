@@ -4,6 +4,9 @@
 class_name PlayerEntity extends CharacterBody3D
 
 signal respawned(peer_id: int)
+signal crashed(peer_id: int)
+signal trick_started(peer_id: int, trick_type: int)
+signal trick_ended(peer_id: int, trick_type: int)
 
 @export var bike_definition: BikeSkinDefinition
 @export var character_definition: CharacterSkinDefinition
@@ -35,6 +38,11 @@ var username: String:
 		if is_node_ready():
 			name_label.text = username
 # `name` is also set from spawn_manager
+#endregion
+
+#region Netfox sync'd
+var nfx_gear_ratio: float = 0.0
+# `global_transform`, `velocity` also sync'd
 #endregion
 
 # Physics state (synced via RollbackSynchronizer state_properties)

@@ -21,6 +21,7 @@ var nfx_steer: float = 0.0
 # TODO: check inverted
 var nfx_lean: float = 0.0
 
+## TODO - change to local ##
 var nfx_trick_held: bool = false
 var nfx_clutch_held: bool = false
 
@@ -53,7 +54,7 @@ func _gather():
 	nfx_rear_brake = Input.get_action_strength("brake_rear")
 	nfx_steer = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
 	nfx_lean = Input.get_action_strength("lean_forward") - Input.get_action_strength("lean_back")
-	nfx_trick_held = Input.is_action_pressed("trick_mod")
+	nfx_trick_held = Input.is_action_pressed("trick")
 
 	nfx_cam_horizontal = (
 		Input.get_action_strength("cam_right") - Input.get_action_strength("cam_left")
