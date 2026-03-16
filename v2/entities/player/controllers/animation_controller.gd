@@ -25,6 +25,7 @@ enum RiderState {
 @export_group("Procedural Settings")
 @export var idle_timeout: float = 3.0
 @export var max_bike_pitch: float = 30.0  ## Max bike-only pitch in degrees
+@export var max_butt_offset := 0.12
 
 var current_state: RiderState = RiderState.RIDING:
 	set(value):
@@ -62,7 +63,7 @@ func _process(delta: float):
 #region Procedural Animation
 func _update_procedural_animation(delta: float) -> void:
 	var ik_ctrl = character_skin.ik_controller
-	var blend = clampf(10.0 * delta, 0.0, 1.0)
+	var blend = clampf(5.0 * delta, 0.0, 1.0)
 
 	# Pitch visual_root for wheelie/stoppie
 	var target_pitch = -clamp(
@@ -71,32 +72,40 @@ func _update_procedural_animation(delta: float) -> void:
 	visual_root.rotation.x = lerpf(visual_root.rotation.x, target_pitch, blend)
 
 	# Rotate chest for visual lean
-	var target_chest = movement_controller.roll_angle * deg_to_rad(15)
+	var target_chest = movement_controller.roll_angle * deg_to_rad(30)
 	ik_ctrl.ik_chest.rotation.y = lerpf(ik_ctrl.ik_chest.rotation.y, target_chest, blend)
 
 	# Apply lean rotation to visual_root (rotates both bike + rider)
 	visual_root.rotation.z = lerpf(visual_root.rotation.z, movement_controller.roll_angle, blend)
 
-	_update_wheelie_arm()
+	# _update_wheelie_arm()
 
-
-func _update_wheelie_arm() -> void:
-	var anim_player = character_skin.ik_anim_player
-	if anim_player == null:
-		return
-	var anim_name = "IK_anim_lib/wheelie_arm_drag"
-	if not anim_player.has_animation(anim_name):
-		return
-	if anim_player.current_animation != anim_name:
-		anim_player.play(anim_name)
-	# Only extend arm when trick_mod held during a wheelie, otherwise return to default (t=0)
-	var in_wheelie = movement_controller.pitch_angle > 0.0
-	var ratio = (
-		clamp(movement_controller.pitch_angle, 0.0, 1.0)
-		if (in_wheelie and input_controller.nfx_trick_held)
-		else 0.0
+	# Shift booty over
+	var target_butt_x = (
+		# _base_butt_pos.x - clampf(movement_controller.roll_angle, -max_butt_offset, max_butt_offset)
+		_base_butt_pos.x
+		- clampf(visual_root.rotation.z, -max_butt_offset, max_butt_offset)
 	)
-	anim_player.seek(ratio, true)
+	ik_ctrl.butt_pos.position.x = lerpf(ik_ctrl.butt_pos.position.x, target_butt_x, blend)
+
+
+# func _update_wheelie_arm() -> void:
+# 	var anim_player = character_skin.ik_anim_player
+# 	if anim_player == null:
+# 		return
+# 	var anim_name = "IK_anim_lib/wheelie_arm_drag"
+# 	if not anim_player.has_animation(anim_name):
+# 		return
+# 	if anim_player.current_animation != anim_name:
+# 		anim_player.play(anim_name)
+# 	# Only extend arm when trick_mod held during a wheelie, otherwise return to default (t=0)
+# 	var in_wheelie = movement_controller.pitch_angle > 0.0
+# 	var ratio = (
+# 		clamp(movement_controller.pitch_angle, 0.0, 1.0)
+# 		if (in_wheelie and input_controller.nfx_trick_held)
+# 		else 0.0
+# 	)
+# 	anim_player.seek(ratio, true)
 
 
 func _update_idle_timer(delta: float) -> void:
@@ -145,6 +154,7 @@ func initialize() -> void:
 		_base_chest_pos = ik_ctrl.ik_chest.position
 
 	_base_visual_root_rotation = visual_root.rotation
+	character_skin.ik_anim_player.play("IK_anim_lib/default_pose")
 
 
 ## Enable or disable procedural animation
