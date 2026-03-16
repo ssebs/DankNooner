@@ -21,7 +21,7 @@ var _spawn_timer: float = _default_spawn_timer
 # Wheelie physics
 var _prev_clutch_held: bool = false
 var _clutch_kick_window: float = 0.0
-var _balance_point_decay_mult: float = 0.25
+var _balance_point_decay_mult: float = 0.2
 
 
 func _ready():
@@ -38,6 +38,8 @@ func _on_respawn():
 ## TODO - split this into multiple funcs for each thing that it does
 func on_movement_rollback_tick(delta: float):
 	if Engine.is_editor_hint():
+		return
+	if player_entity.is_crashed:
 		return
 
 	_speed_calc(delta)
@@ -149,6 +151,10 @@ func _pitch_angle_calc(delta: float):
 		var spd = (
 			bd.rotation_speed * _balance_point_decay_mult if in_balance_point else bd.rotation_speed
 		)
+		# Clutch dump torque boost — massive at low speed, fades with speed
+		if _clutch_kick_window > 0:
+			var speed_falloff = 1.0 - clampf(speed / (bd.max_speed * 0.3), 0.0, 1.0)
+			spd += bd.rotation_speed * 2.0 * speed_falloff
 		pitch_angle = move_toward(pitch_angle, wheelie_target, spd * delta)
 	elif pitch_angle > 0:
 		var decay_speed = (
@@ -183,11 +189,21 @@ func _calc_wheelie_target(delta: float) -> float:
 	# Initiation checks
 	var rpm_above_threshold = gearing_controller._get_rpm_ratio() >= bd.wheelie_rpm_threshold
 	var clutch_kick_active = _clutch_kick_window > 0
-	var can_pop = (
-		input_controller.nfx_lean < -0.3
-		and input_controller.nfx_throttle > 0.7
-		and (rpm_above_threshold or clutch_kick_active)
+
+	# Clutch dump pop — just needs throttle, no lean-back required
+	var clutch_pop = clutch_kick_active and input_controller.nfx_throttle > 0.5
+
+	# Power wheelie — lean back + throttle + RPM (threshold eases at higher speed)
+	var speed_ratio = clampf(speed / bd.max_speed, 0.0, 1.0)
+	var effective_rpm_threshold = lerpf(
+		bd.wheelie_rpm_threshold, bd.wheelie_rpm_threshold * 0.5, speed_ratio
 	)
+	var rpm_for_power = gearing_controller._get_rpm_ratio() >= effective_rpm_threshold
+	var power_pop = (
+		input_controller.nfx_lean < -0.3 and input_controller.nfx_throttle > 0.7 and rpm_for_power
+	)
+
+	var can_pop = clutch_pop or power_pop
 	# Can't START while turning, but can continue
 	var can_start = abs(roll_angle) < deg_to_rad(10)
 	var fast_enough = speed > 1
