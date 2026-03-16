@@ -14,8 +14,8 @@
   - [ ] New netcode changes / authority:
     - [x] InputController
     - [x] GearingController
-    - [ ] MovementController
-      - [ ] WIP, can't run due to animation controller
+    - [x] MovementController
+      - [x] WIP, can't run due to animation controller
     - [ ] TrickController
     - [ ] CrashController
     - [ ] AnimationController
