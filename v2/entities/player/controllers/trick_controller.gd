@@ -11,12 +11,8 @@ enum Trick { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE }
 @export var gearing_controller: GearingController
 @export var movement_controller: MovementController
 
-const CLUTCH_KICK_WINDOW: float = 0.4  # seconds after clutch dump to allow wheelie pop
-
 var current_trick: Trick = Trick.NONE
 var _last_trick: Trick = Trick.NONE
-var _clutch_kick_window: float = 0.0
-var _prev_clutch_held: bool = false
 
 
 func _ready():
@@ -44,8 +40,6 @@ func _detect_current_trick() -> Trick:
 func do_reset():
 	current_trick = Trick.NONE
 	_last_trick = Trick.NONE
-	_clutch_kick_window = 0.0
-	_prev_clutch_held = false
 	movement_controller.pitch_angle = 0
 
 

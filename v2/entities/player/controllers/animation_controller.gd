@@ -24,7 +24,6 @@ enum RiderState {
 
 @export_group("Procedural Settings")
 @export var idle_timeout: float = 3.0
-@export var max_bike_pitch: float = 30.0  ## Max bike-only pitch in degrees
 @export var max_butt_offset := 0.12
 
 var current_state: RiderState = RiderState.RIDING:
@@ -66,8 +65,9 @@ func _update_procedural_animation(delta: float) -> void:
 	var blend = clampf(5.0 * delta, 0.0, 1.0)
 
 	# Pitch visual_root for wheelie/stoppie
+	var max_pitch_rad = deg_to_rad(player_entity.bike_definition.max_wheelie_angle_deg)
 	var target_pitch = -clamp(
-		movement_controller.pitch_angle, -deg_to_rad(max_bike_pitch), deg_to_rad(max_bike_pitch)
+		movement_controller.pitch_angle, -max_pitch_rad, max_pitch_rad
 	)
 	visual_root.rotation.x = lerpf(visual_root.rotation.x, target_pitch, blend)
 
