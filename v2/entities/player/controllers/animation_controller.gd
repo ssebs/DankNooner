@@ -44,6 +44,10 @@ var _visual_yaw: float = 0.0
 
 #endregion
 
+###
+# TODO - replace player_entity.pitch_angle with movement_controller.pitch_angle, etc.
+###
+
 
 func _ready():
 	if Engine.is_editor_hint():

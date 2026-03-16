@@ -119,7 +119,9 @@ func get_power_output() -> float:
 	var base_ratio = bd.gear_ratios[bd.num_gears - 1]
 	var torque_multiplier = gear_ratio / base_ratio
 
-	return input_controller.nfx_throttle * power_curve * torque_multiplier * engagement
+	var output = input_controller.nfx_throttle * power_curve * torque_multiplier * engagement
+	print("power output: %.2f" % output)
+	return output
 
 
 ## Called from player_entity.gd's do_respawn
