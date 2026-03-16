@@ -59,6 +59,76 @@ func _process(delta: float):
 	_update_idle_timer(delta)
 
 
+#region Procedural Animation
+func _update_procedural_animation(delta: float) -> void:
+	var ik_ctrl = character_skin.ik_controller
+	var blend = clampf(10.0 * delta, 0.0, 1.0)
+
+	# Pitch visual_root for wheelie/stoppie
+	var target_pitch = -clamp(
+		movement_controller.pitch_angle, -deg_to_rad(max_bike_pitch), deg_to_rad(max_bike_pitch)
+	)
+	visual_root.rotation.x = lerpf(visual_root.rotation.x, target_pitch, blend)
+
+	# Rotate chest for visual lean
+	var target_chest = movement_controller.roll_angle * deg_to_rad(15)
+	ik_ctrl.ik_chest.rotation.y = lerpf(ik_ctrl.ik_chest.rotation.y, target_chest, blend)
+
+	# Apply lean rotation to visual_root (rotates both bike + rider)
+	visual_root.rotation.z = lerpf(visual_root.rotation.z, movement_controller.roll_angle, blend)
+
+	_update_wheelie_arm()
+
+
+func _update_wheelie_arm() -> void:
+	var anim_player = character_skin.ik_anim_player
+	if anim_player == null:
+		return
+	var anim_name = "IK_anim_lib/wheelie_arm_drag"
+	if not anim_player.has_animation(anim_name):
+		return
+	if anim_player.current_animation != anim_name:
+		anim_player.play(anim_name)
+	# Only extend arm when trick_mod held during a wheelie, otherwise return to default (t=0)
+	var in_wheelie = movement_controller.pitch_angle > 0.0
+	var ratio = (
+		clamp(movement_controller.pitch_angle, 0.0, 1.0)
+		if (in_wheelie and input_controller.nfx_trick_held)
+		else 0.0
+	)
+	anim_player.seek(ratio, true)
+
+
+func _update_idle_timer(delta: float) -> void:
+	# Check if player is mostly stationary
+	var is_idle = movement_controller.speed < 1.0 and abs(input_controller.nfx_steer) < 0.1
+
+	if is_idle:
+		_idle_timer += delta
+		if _idle_timer >= idle_timeout and current_state == RiderState.RIDING:
+			# TODO: Play random idle animation when they exist
+			# play_idle_animation("idle_fidget")
+			pass
+	else:
+		_idle_timer = 0.0
+		if current_state == RiderState.IDLE:
+			_transition_to_riding()
+
+
+func _reset_to_base_positions() -> void:
+	var ik_ctrl = character_skin.ik_controller
+	if ik_ctrl:
+		ik_ctrl.butt_pos.position = _base_butt_pos
+		ik_ctrl.ik_chest.position = _base_chest_pos
+		ik_ctrl.ik_chest.rotation = Vector3.ZERO
+	if visual_root:
+		visual_root.rotation = _base_visual_root_rotation
+	if bike_skin:
+		bike_skin.rotation.x = 0.0
+
+
+#endregion
+
 #region Public API
 
 
@@ -155,80 +225,6 @@ func _transition_to_trick() -> void:
 	current_state = RiderState.TRICK
 	character_skin.disable_ik()
 	_procedural_enabled = false
-
-
-#endregion
-
-#region Procedural Animation
-
-
-func _update_procedural_animation(delta: float) -> void:
-	var ik_ctrl = character_skin.ik_controller
-
-	# Pitch visual_root for wheelie/stoppie
-	visual_root.rotation.x = (
-		-clamp(
-			movement_controller.pitch_angle, -deg_to_rad(max_bike_pitch), deg_to_rad(max_bike_pitch)
-		)
-		* delta
-	)
-
-	# Rotate chest for visual lean
-	ik_ctrl.ik_chest.rotation.y = movement_controller.roll_angle * deg_to_rad(15) * delta
-
-	# Apply lean rotation to visual_root (rotates both bike + rider)
-	# visual_root.rotation.z = _base_visual_root_rotation.z + movement_controller.roll_angle * delta
-	visual_root.rotation.z = movement_controller.roll_angle
-	# visual_root.rotation *= delta
-
-	_update_wheelie_arm()
-
-
-func _update_wheelie_arm() -> void:
-	var anim_player = character_skin.ik_anim_player
-	if anim_player == null:
-		return
-	var anim_name = "IK_anim_lib/wheelie_arm_drag"
-	if not anim_player.has_animation(anim_name):
-		return
-	if anim_player.current_animation != anim_name:
-		anim_player.play(anim_name)
-	# Only extend arm when trick_mod held during a wheelie, otherwise return to default (t=0)
-	var in_wheelie = movement_controller.pitch_angle > 0.0
-	var ratio = (
-		clamp(movement_controller.pitch_angle, 0.0, 1.0)
-		if (in_wheelie and input_controller.nfx_trick_held)
-		else 0.0
-	)
-	anim_player.seek(ratio, true)
-
-
-func _update_idle_timer(delta: float) -> void:
-	# Check if player is mostly stationary
-	var is_idle = movement_controller.speed < 1.0 and abs(input_controller.nfx_steer) < 0.1
-
-	if is_idle:
-		_idle_timer += delta
-		if _idle_timer >= idle_timeout and current_state == RiderState.RIDING:
-			# TODO: Play random idle animation when they exist
-			# play_idle_animation("idle_fidget")
-			pass
-	else:
-		_idle_timer = 0.0
-		if current_state == RiderState.IDLE:
-			_transition_to_riding()
-
-
-func _reset_to_base_positions() -> void:
-	var ik_ctrl = character_skin.ik_controller
-	if ik_ctrl:
-		ik_ctrl.butt_pos.position = _base_butt_pos
-		ik_ctrl.ik_chest.position = _base_chest_pos
-		ik_ctrl.ik_chest.rotation = Vector3.ZERO
-	if visual_root:
-		visual_root.rotation = _base_visual_root_rotation
-	if bike_skin:
-		bike_skin.rotation.x = 0.0
 
 
 #endregion
