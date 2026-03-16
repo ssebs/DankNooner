@@ -210,6 +210,7 @@ unique_name_in_owner = true
 script = ExtResource("10_gear")
 player_entity = NodePath("../..")
 input_controller = NodePath("../InputController")
+rpm_loaded_speed = 0.8
 
 [node name="TrickController" type="Node" parent="_Controllers" unique_id=504066215 node_paths=PackedStringArray("player_entity", "input_controller", "gearing_controller")]
 unique_name_in_owner = true

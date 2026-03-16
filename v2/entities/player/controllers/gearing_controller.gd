@@ -62,31 +62,32 @@ func _update_clutch_hold_time(delta: float):
 
 
 ## Sets _current_rpm
-## We need to be in rollback tick
 func _blend_rpm(delta: float):
 	var bd = player_entity.bike_definition
-	var engagement = 1.0 - _clutch_value
-	var speed = player_entity.velocity.length()
+	var engagement = 1.0 - _clutch_value  # 0 = clutch in, 1 = clutch out
 
-	# Calculate wheel-driven RPM
+	# What RPM the wheel is forcing the engine to
 	var gear_ratio = bd.gear_ratios[_current_gear - 1]
 	var gear_max_speed = bd.max_speed * (bd.gear_ratios[bd.num_gears - 1] / gear_ratio)
-	var speed_ratio = speed / gear_max_speed if gear_max_speed > 0 else 0.0
-	var wheel_rpm = speed_ratio * bd.max_rpm
+	var speed_ratio = player_entity.velocity.length() / gear_max_speed if gear_max_speed > 0 else 0.0
+	var wheel_rpm = lerpf(bd.idle_rpm, bd.max_rpm, speed_ratio)
 
-	# Throttle-driven RPM
-	var throttle_rpm = lerpf(bd.idle_rpm, bd.max_rpm, input_controller.nfx_throttle)
+	# What RPM the throttle wants
+	var free_rpm = lerpf(bd.idle_rpm, bd.max_rpm, input_controller.nfx_throttle)
 
-	# Engaged RPM: wheel speed sets floor, throttle can push above it (accelerating from standstill)
-	var engaged_rpm = maxf(wheel_rpm, throttle_rpm * 0.5)
-	# Clutch pressed = free-rev at throttle_rpm; clutch released = loaded at engaged_rpm
-	var target_rpm = lerpf(throttle_rpm, engaged_rpm, engagement)
-	var loaded_speed = rpm_loaded_speed if _current_rpm <= target_rpm else rpm_free_rev_speed
-	var rpm_speed = lerpf(rpm_free_rev_speed, loaded_speed, engagement)
+	# Loaded: wheel locks RPM to ground speed, throttle adds slip above it (allows starting)
+	var slip_rpm = input_controller.nfx_throttle * (bd.max_rpm - bd.idle_rpm) * 0.3
+	var loaded_rpm = wheel_rpm + slip_rpm
+
+	# Blend target between free-rev and loaded based on clutch
+	var target_rpm = lerpf(free_rpm, loaded_rpm, engagement)
+
+	# Approach speed: faster when free-revving, slower when loaded
+	var rising = _current_rpm <= target_rpm
+	var loaded_rate = rpm_loaded_speed if rising else rpm_free_rev_speed
+	var rpm_speed = lerpf(rpm_free_rev_speed, loaded_rate, engagement)
 
 	_current_rpm = lerpf(_current_rpm, target_rpm, rpm_speed * delta)
-
-	# Limit RPM
 	_current_rpm = clamp(_current_rpm, bd.idle_rpm, bd.max_rpm)
 	print("RPM %.2f" % _current_rpm)
 
