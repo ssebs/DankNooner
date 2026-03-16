@@ -9,9 +9,9 @@ class_name MovementController extends Node
 @export var crash_controller: CrashController
 
 var speed: float = 0.0
-var roll_angle: float = 0.0
+var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
-var yaw_angle: float = 0.0
+var yaw_angle: float = 0.0  # twist left/right
 
 # spawn protection - todo move?
 var _default_spawn_timer: float = 1.0
