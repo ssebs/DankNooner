@@ -16,9 +16,11 @@
     - [x] InputController
     - [x] GearingController
     - [x] MovementController
-      - [x] WIP, can't run due to animation controller
+      - [ ] Move pitch_angle/lean_angle out to player_entity since they're sync'd
     - [x] AnimationController
     - [ ] TrickController
+      - [ ] Move wheelie logic from movement controller
+      - [ ] Add stoppie logic
     - [ ] CrashController
   - [ ] Sync as little as possible
     - no input/movement/gear calculations

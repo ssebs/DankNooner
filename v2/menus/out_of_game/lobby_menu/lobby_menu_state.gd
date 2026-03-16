@@ -126,7 +126,7 @@ func _on_game_id_set(conn_addr: String):
 	_set_preview_img()
 
 	if multiplayer.multiplayer_peer && multiplayer.is_server():
-		_on_ip_copy_btn_pressed()
+		call_deferred("_on_ip_copy_btn_pressed")
 
 
 ## set player list from server's lobby_players
