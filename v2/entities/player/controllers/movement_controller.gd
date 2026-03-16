@@ -8,6 +8,7 @@ class_name MovementController extends Node
 @export var trick_controller: TrickController
 @export var crash_controller: CrashController
 
+var speed: float = 0.0
 var roll_angle: float = 0.0
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
 var yaw_angle: float = 0.0
@@ -15,8 +16,6 @@ var yaw_angle: float = 0.0
 # spawn protection - todo move?
 var _default_spawn_timer: float = 1.0
 var _spawn_timer: float = _default_spawn_timer
-
-var _speed: float = 0.0
 
 
 func _ready():
@@ -47,40 +46,42 @@ func on_movement_rollback_tick(delta: float):
 	_handle_player_collision(delta)
 
 
-## Calculate _speed from input / power output
+## Calculate speed from input / power output
 func _speed_calc(delta: float):
 	var bd = player_entity.bike_definition
 
-	# Derive _speed from synced velocity
-	_speed = Vector2(player_entity.velocity.x, player_entity.velocity.z).length()
+	# Derive speed from synced velocity
+	speed = Vector2(player_entity.velocity.x, player_entity.velocity.z).length()
 
 	# Acceleration (uses gearing power output)
 	var power = gearing_controller.get_power_output()
-	if power > 0 and _speed < bd.max_speed:
-		_speed += bd.acceleration * power * delta
-		_speed = minf(_speed, bd.max_speed)
+	if power > 0 and speed < bd.max_speed:
+		speed += bd.acceleration * power * delta
+		speed = minf(speed, bd.max_speed)
+	# Engine braking — applies when not on throttle, stronger at higher RPM
+	elif power <= 0 and speed > 0.5:
+		# print("engine brake")
+		var rpm_factor = gearing_controller._get_rpm_ratio()
+		speed = move_toward(speed, 0, bd.engine_brake_strength * rpm_factor * delta)
 
 	# Braking
 	var total_brake = input_controller.nfx_front_brake + input_controller.nfx_rear_brake
 	if total_brake > 0:
-		_speed = move_toward(_speed, 0, bd.brake_strength * total_brake * delta)
+		speed = move_toward(speed, 0, bd.brake_strength * total_brake * delta)
 
-	# Engine braking
-	_speed = move_toward(
-		_speed, 0, (bd.engine_brake_strength * gearing_controller._get_rpm_ratio()) * delta
-	)
+	print("speed %.2f" % speed)
 
 
 ## Calculate roll_angle & set player_entity.rotation
 func _steer_calc(delta: float):
 	var bd = player_entity.bike_definition
 
-	# Curve-based _speed factor for steering and lean
-	var speed_pct = clampf(_speed / bd.max_speed, 0.0, 1.0)
+	# Curve-based speed factor for steering and lean
+	var speed_pct = clampf(speed / bd.max_speed, 0.0, 1.0)
 	var lean_factor = bd.lean_curve.sample(speed_pct)
 
 	# Steering (only when moving)
-	if _speed > 0.5:
+	if speed > 0.5:
 		var turn_radius = lerpf(bd.min_turn_radius, bd.max_turn_radius, speed_pct)
 		var turn_rate = bd.turn_speed / turn_radius
 		player_entity.rotate_y(-roll_angle * turn_rate * delta)
@@ -90,16 +91,16 @@ func _steer_calc(delta: float):
 	roll_angle = lerpf(roll_angle, target_lean, bd.lean_speed * delta)
 
 
-## Calculate player_entity.velocity
+## Calculate player_entity.velocity & set slope angle
 func _velocity_calc(delta: float):
 	# Apply velocity following slope
 	var forward = -player_entity.global_transform.basis.z
 	if player_entity.is_on_floor():
 		player_entity.velocity = (
-			forward.slide(player_entity.get_floor_normal()).normalized() * _speed
+			forward.slide(player_entity.get_floor_normal()).normalized() * speed
 		)
 	else:
-		player_entity.velocity = forward * _speed
+		player_entity.velocity = forward * speed
 
 	# Gravity
 	if !player_entity.is_on_floor():
@@ -126,7 +127,7 @@ func _handle_player_collision(delta: float):
 
 ## Called from player_entity.gd's do_respawn
 func do_reset():
-	_speed = 0.0
+	speed = 0.0
 	roll_angle = 0.0
 	pitch_angle = 0.0
 	yaw_angle = 0.0

@@ -44,14 +44,9 @@ func _on_gear_change(direction: int):
 #endregion
 
 
-func _physics_process(delta):
-	if Engine.is_editor_hint():
-		return
-	_update_clutch_hold_time(delta)
-
-
 ## Called from MovementController._rollback_tick()
 func on_movement_rollback_tick(delta: float):
+	_update_clutch_hold_time(delta)
 	_blend_rpm(delta)
 
 	rpm_updated.emit(_get_rpm_ratio())
@@ -65,7 +60,7 @@ func _update_clutch_hold_time(delta: float):
 		_clutch_hold_time = 0.0
 		_clutch_value = move_toward(_clutch_value, 0.0, clutch_release_speed * delta)
 
-	print("clutch: %.1f" % _clutch_value)
+	print("_clutch_value: %.1f" % _clutch_value)
 
 
 ## Sets _current_rpm
@@ -107,7 +102,7 @@ func get_power_output() -> float:
 		return 0.0
 
 	var engagement = 1.0 - _clutch_value
-	if _clutch_value > 0.05:
+	if _clutch_value > 0.5:
 		return 0.0
 
 	var ratio = _get_rpm_ratio()
@@ -119,7 +114,8 @@ func get_power_output() -> float:
 	var base_ratio = bd.gear_ratios[bd.num_gears - 1]
 	var torque_multiplier = gear_ratio / base_ratio
 
-	var output = input_controller.nfx_throttle * power_curve * torque_multiplier * engagement
+	# var output = input_controller.nfx_throttle * power_curve * torque_multiplier * engagement
+	var output = input_controller.nfx_throttle
 	print("power output: %.2f" % output)
 	return output
 

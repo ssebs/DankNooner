@@ -38,15 +38,8 @@ var _base_chest_pos: Vector3
 var _base_visual_root_rotation: Vector3
 var _idle_timer: float = 0.0
 var _procedural_enabled: bool = true
-var _visual_lean: float = 0.0
-var _visual_pitch: float = 0.0
-var _visual_yaw: float = 0.0
 
 #endregion
-
-###
-# TODO - replace player_entity.pitch_angle with movement_controller.pitch_angle, etc.
-###
 
 
 func _ready():
@@ -82,7 +75,6 @@ func initialize() -> void:
 		_base_chest_pos = ik_ctrl.ik_chest.position
 
 	_base_visual_root_rotation = visual_root.rotation
-	_visual_yaw = player_entity.rotation.y
 
 
 ## Enable or disable procedural animation
@@ -174,25 +166,20 @@ func _transition_to_trick() -> void:
 func _update_procedural_animation(delta: float) -> void:
 	var ik_ctrl = character_skin.ik_controller
 
-	# Smooth toward physics values at render rate
-	var smooth_speed := 10 * delta
-	_visual_lean = lerpf(_visual_lean, player_entity.lean_angle, smooth_speed)
-	_visual_pitch = lerpf(_visual_pitch, player_entity.pitch_angle, smooth_speed)
-
-	# Smooth entity steering rotation at render rate (rollback restores physics value before ticks)
-	_visual_yaw = lerp_angle(_visual_yaw, player_entity.rotation.y, smooth_speed)
-	player_entity.rotation.y = _visual_yaw
-
 	# Pitch visual_root for wheelie/stoppie
-	visual_root.rotation.x = -clamp(
-		_visual_pitch, -deg_to_rad(max_bike_pitch), deg_to_rad(max_bike_pitch)
+	visual_root.rotation.x = (
+		-clamp(
+			movement_controller.pitch_angle, -deg_to_rad(max_bike_pitch), deg_to_rad(max_bike_pitch)
+		)
+		* delta
 	)
 
 	# Rotate chest for visual lean
-	ik_ctrl.ik_chest.rotation.y = _visual_lean * deg_to_rad(15)
+	ik_ctrl.ik_chest.rotation.y = movement_controller.roll_angle * deg_to_rad(15) * delta
 
 	# Apply lean rotation to visual_root (rotates both bike + rider)
-	visual_root.rotation.z = _base_visual_root_rotation.z + _visual_lean
+	visual_root.rotation.z = _base_visual_root_rotation.z + movement_controller.roll_angle * delta
+	# visual_root.rotation *= delta
 
 	_update_wheelie_arm()
 
@@ -207,9 +194,9 @@ func _update_wheelie_arm() -> void:
 	if anim_player.current_animation != anim_name:
 		anim_player.play(anim_name)
 	# Only extend arm when trick_mod held during a wheelie, otherwise return to default (t=0)
-	var in_wheelie = player_entity.pitch_angle > 0.0
+	var in_wheelie = movement_controller.pitch_angle > 0.0
 	var ratio = (
-		clamp(player_entity.pitch_angle, 0.0, 1.0)
+		clamp(movement_controller.pitch_angle, 0.0, 1.0)
 		if (in_wheelie and input_controller.nfx_trick_held)
 		else 0.0
 	)
@@ -218,7 +205,7 @@ func _update_wheelie_arm() -> void:
 
 func _update_idle_timer(delta: float) -> void:
 	# Check if player is mostly stationary
-	var is_idle = player_entity.speed < 1.0 and abs(input_controller.nfx_steer) < 0.1
+	var is_idle = movement_controller.speed < 1.0 and abs(input_controller.nfx_steer) < 0.1
 
 	if is_idle:
 		_idle_timer += delta
@@ -242,10 +229,6 @@ func _reset_to_base_positions() -> void:
 		visual_root.rotation = _base_visual_root_rotation
 	if bike_skin:
 		bike_skin.rotation.x = 0.0
-	player_entity.lean_angle = 0.0
-	_visual_lean = 0.0
-	_visual_pitch = 0.0
-	_visual_yaw = player_entity.rotation.y
 
 
 #endregion
