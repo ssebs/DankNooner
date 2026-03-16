@@ -8,6 +8,8 @@ DankNooner is a multiplayer motorcycle stunt game built in Godot 4.6 (GDScript).
 
 **Source of Truth**: Always review `./planning_docs/Architecture.md` for current system designs and implementation details. The TODO.md in the same folder tracks active work.
 
+Use haiku subagents when searching files
+
 ## Working Style
 
 - Don't always jump to coding first - help plan and design systems before implementation
