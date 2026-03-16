@@ -10,6 +10,8 @@ signal rpm_updated(rpm_ratio: float)
 @export var clutch_engage_speed: float = 6.0
 @export var clutch_release_speed: float = 2.5
 @export var clutch_tap_amount: float = 0.35
+@export var rpm_free_rev_speed: float = 4.0
+@export var rpm_loaded_speed: float = 0.8
 
 var _clutch_hold_time: float = 0.0
 
@@ -18,10 +20,6 @@ var _current_rpm: float = 1000.0
 var _clutch_value: float = 0.0
 var _rpm_ratio: float = 0.0
 var _is_stalled: bool = false
-
-##
-# TODO - make sure to set player_entity's `nfx_gear_ratio`
-##
 
 
 func _ready():
@@ -79,9 +77,12 @@ func _blend_rpm(delta: float):
 	# Throttle-driven RPM
 	var throttle_rpm = lerpf(bd.idle_rpm, bd.max_rpm, input_controller.nfx_throttle)
 
-	# Blend based on clutch engagement
-	var target_rpm = lerpf(throttle_rpm, wheel_rpm, engagement)
-	_current_rpm = lerpf(_current_rpm, target_rpm, 8.0 * delta)
+	# Engaged RPM: wheel speed sets floor, throttle can push above it (accelerating from standstill)
+	var engaged_rpm = maxf(wheel_rpm, throttle_rpm * 0.5)
+	# Clutch pressed = free-rev at throttle_rpm; clutch released = loaded at engaged_rpm
+	var target_rpm = lerpf(throttle_rpm, engaged_rpm, engagement)
+	var rpm_speed = lerpf(rpm_free_rev_speed, rpm_loaded_speed, engagement)
+	_current_rpm = lerpf(_current_rpm, target_rpm, rpm_speed * delta)
 
 	# Limit RPM
 	_current_rpm = clamp(_current_rpm, bd.idle_rpm, bd.max_rpm)
@@ -114,8 +115,7 @@ func get_power_output() -> float:
 	var base_ratio = bd.gear_ratios[bd.num_gears - 1]
 	var torque_multiplier = gear_ratio / base_ratio
 
-	# var output = input_controller.nfx_throttle * power_curve * torque_multiplier * engagement
-	var output = input_controller.nfx_throttle
+	var output = input_controller.nfx_throttle * power_curve * torque_multiplier * engagement
 	print("power output: %.2f" % output)
 	return output
 
