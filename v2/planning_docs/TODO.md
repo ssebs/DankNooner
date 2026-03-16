@@ -16,9 +16,9 @@
     - [x] GearingController
     - [x] MovementController
       - [x] WIP, can't run due to animation controller
+    - [ ] AnimationController
     - [ ] TrickController
     - [ ] CrashController
-    - [ ] AnimationController
   - [ ] Sync as little as possible
     - no input/movement/gear calculations
     - no sound for other players for now

@@ -138,9 +138,8 @@ func do_reset():
 
 #endregion
 
+
 #region State Transitions
-
-
 func _transition_to_riding() -> void:
 	current_state = RiderState.RIDING
 	character_skin.enable_ik()
@@ -178,7 +177,8 @@ func _update_procedural_animation(delta: float) -> void:
 	ik_ctrl.ik_chest.rotation.y = movement_controller.roll_angle * deg_to_rad(15) * delta
 
 	# Apply lean rotation to visual_root (rotates both bike + rider)
-	visual_root.rotation.z = _base_visual_root_rotation.z + movement_controller.roll_angle * delta
+	# visual_root.rotation.z = _base_visual_root_rotation.z + movement_controller.roll_angle * delta
+	visual_root.rotation.z = movement_controller.roll_angle
 	# visual_root.rotation *= delta
 
 	_update_wheelie_arm()
