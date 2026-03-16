@@ -6,6 +6,7 @@ signal crashed
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
 @export var animation_controller: AnimationController
+@export var movement_controller: MovementController
 
 @export var crash_lean_threshold_deg: float = 80.0
 @export var brake_grab_time_threshold: float = 0.85
@@ -47,7 +48,7 @@ func _update_brake_grab(delta: float):
 			_brake_was_grabbed = _brake_grab_timer < brake_grab_time_threshold
 
 	# Compute brake danger (grip_usage) for HUD display
-	var lean_ratio = abs(player_entity.lean_angle) / deg_to_rad(crash_lean_threshold_deg)
+	var lean_ratio = abs(movement_controller.roll_angle) / deg_to_rad(crash_lean_threshold_deg)
 	var max_safe_brake = 1.0 - (lean_ratio * brake_lean_sensitivity)
 	if front_brake > 0.1:
 		player_entity.grip_usage = clamp(front_brake / max(max_safe_brake, 0.01), 0.0, 1.0)
@@ -59,25 +60,25 @@ func _detect_crash():
 	var bd = player_entity.bike_definition
 
 	# Wheelie crash
-	if player_entity.pitch_angle > deg_to_rad(bd.max_wheelie_angle_deg):
+	if movement_controller.pitch_angle > deg_to_rad(bd.max_wheelie_angle_deg):
 		print("wheelie crash")
 		trigger_crash()
 		return
 
 	# Stoppie crash
-	if player_entity.pitch_angle < -deg_to_rad(bd.max_stoppie_angle_deg):
+	if movement_controller.pitch_angle < -deg_to_rad(bd.max_stoppie_angle_deg):
 		print("stoppie crash")
 		trigger_crash()
 		return
 
 	# Lean crash
-	if abs(player_entity.lean_angle) >= deg_to_rad(crash_lean_threshold_deg):
+	if abs(movement_controller.roll_angle) >= deg_to_rad(crash_lean_threshold_deg):
 		print("lean crash")
 		trigger_crash()
 		return
 
 	# Brake grab while turning
-	if _brake_was_grabbed and abs(player_entity.lean_angle) > deg_to_rad(15):
+	if _brake_was_grabbed and abs(movement_controller.roll_angle) > deg_to_rad(15):
 		print("brake grab crash")
 		trigger_crash()
 
@@ -111,4 +112,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_controller must not be empty")
 	if animation_controller == null:
 		issues.append("animation_controller must not be empty")
+	if movement_controller == null:
+		issues.append("movement_controller must not be empty")
 	return issues
