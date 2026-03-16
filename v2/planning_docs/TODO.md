@@ -9,17 +9,16 @@
   - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
   - [x] Refactor/cleanup
   - [x] Fix collision
-  - [ ] Decide what should be client side vs server side
-    - [ ] Make sure MP authority is set properly
-    - [ ] Sync as little as possible
-      - no input/movement/gear calculations
-      - no sound for other players for now
-      - sync animations (procedural position)
-      - sync bike pos/rot
+  - [x] Decide what should be client side vs server side
+  - [x] Make sure MP authority is set properly
+  - [ ] Sync as little as possible
+    - no input/movement/gear calculations
+    - no sound for other players for now
+    - sync animations (procedural position)
+    - sync bike pos/rot
   - [ ] Update [doc](./PlayerController.md)
-  - [ ] Be able to reverse (play animation)
-    - [ ] Hold clutch, brake to reverse
 
+- [ ] Move respawn logic to gamemode controller, using new signals
 - [ ] Redo movement_controller
 
   - [ ] finish cleanup (function split)
@@ -45,6 +44,8 @@
   - [ ] Improve crash_controller
     - [ ] Brake danger
     - [ ] Layer 2 collision (with objects)
+  - [ ] Be able to reverse (play animation)
+    - [ ] Hold clutch, brake to reverse
 
 - [ ] Review Animation Controller & Create animations
   - [ ] Create lean (turning) animation
