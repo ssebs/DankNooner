@@ -86,6 +86,7 @@ func _blend_rpm(delta: float):
 
 	# Limit RPM
 	_current_rpm = clamp(_current_rpm, bd.idle_rpm, bd.max_rpm)
+	print("RPM %.2f" % _current_rpm)
 
 
 ## Get pct of rpm : max rpm
