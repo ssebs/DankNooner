@@ -27,7 +27,6 @@ var _is_stalled: bool = false
 func _ready():
 	if Engine.is_editor_hint():
 		return
-	input_controller.clutch_held_changed.connect(_on_clutch_input)
 	input_controller.gear_change_pressed.connect(_on_gear_change)
 
 
@@ -42,15 +41,12 @@ func _on_gear_change(direction: int):
 		gear_changed.emit(new_gear)
 
 
-func _on_clutch_input(_held: bool, just_pressed: bool):
-	if just_pressed:
-		_clutch_value = minf(_clutch_value + clutch_tap_amount, 1.0)
-
-
 #endregion
 
 
 func _physics_process(delta):
+	if Engine.is_editor_hint():
+		return
 	_update_clutch_hold_time(delta)
 
 
@@ -68,6 +64,8 @@ func _update_clutch_hold_time(delta: float):
 	else:
 		_clutch_hold_time = 0.0
 		_clutch_value = move_toward(_clutch_value, 0.0, clutch_release_speed * delta)
+
+	print("clutch: %.1f" % _clutch_value)
 
 
 ## Sets _current_rpm
