@@ -225,6 +225,7 @@ player_entity = NodePath("../..")
 input_controller = NodePath("../InputController")
 animation_controller = NodePath("../AnimationController")
 movement_controller = NodePath("../MovementController")
+is_sim_difficulty = null
 brake_grab_time_threshold = 0.4
 
 [node name="CameraController" parent="_Controllers" unique_id=816730707 node_paths=PackedStringArray("player_entity", "input_controller", "fps_marker", "tps_marker") instance=ExtResource("2_bls4j")]
