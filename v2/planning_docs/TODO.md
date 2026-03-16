@@ -22,12 +22,12 @@
       - [ ] Move wheelie logic from movement controller
       - [ ] Add stoppie logic
     - [ ] CrashController
-  - [ ] Sync as little as possible
+  - [x] Sync as little as possible
     - no input/movement/gear calculations
     - no sound for other players for now
     - sync animations (procedural position)
     - sync bike pos/rot
-  - [ ] Update [doc](./PlayerController.md)
+  - [x] Update [doc](./PlayerController.md)
 
 - [ ] Move respawn logic to gamemode controller, using new signals
 - [ ] Redo movement_controller
