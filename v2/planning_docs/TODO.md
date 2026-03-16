@@ -12,9 +12,9 @@
   - [x] Decide what should be client side vs server side
   - [x] Make sure MP authority is set properly
   - [ ] New netcode changes / authority:
-    - [ ] InputController
-    - [ ] MovementController
+    - [x] InputController
     - [ ] GearingController
+    - [ ] MovementController
     - [ ] TrickController
     - [ ] CrashController
     - [ ] AnimationController

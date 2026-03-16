@@ -2,36 +2,31 @@
 class_name InputController extends Node3D
 
 signal clutch_held_changed(held: bool, just_pressed: bool)
-# local signals
+
+# Local oneshot signals
+## -1 for back, 1 for fwd
+signal gear_change_pressed(direction: int)
 signal cam_switch_pressed
-# oneshot signals
-signal gear_up_pressed
-signal gear_down_pressed
 
 @export var player_entity: PlayerEntity
 @export var vibration_duration: float = 0.15
 
 var is_gamepad := false
 
-#region Input vars sync'd with netfox
+#region Netfox sync'd Input vars
 var nfx_throttle: float = 0.0
 var nfx_front_brake: float = 0.0
 var nfx_rear_brake: float = 0.0
 var nfx_steer: float = 0.0
-# TODO: check inverted
-var nfx_lean: float = 0.0
+var nfx_lean: float = 0.0  # TODO: check inverted
 
-## TODO - change to local ##
-var nfx_trick_held: bool = false
-var nfx_clutch_held: bool = false
+#endregion
+#region Local Input vars
+var trick_held: bool = false
+var clutch_held: bool = false
 
-var nfx_cam_horizontal: float = 0.0
-# TODO: check inverted
-var nfx_cam_vertical: float = 0.0
-
-# Discrete actions (rb_* pattern)
-var rb_gear_up: bool = false
-var rb_gear_down: bool = false
+var cam_x: float = 0.0
+var cam_y: float = 0.0  # TODO: check inverted
 #endregion
 
 
@@ -42,11 +37,11 @@ func _ready():
 
 
 ## Netfox's input hook
-## Update input vars (nfx_) & emit signals
+## Update input vars (nfx_)
 func _gather():
-	if Engine.is_editor_hint():
+	if Engine.is_editor_hint() or multiplayer.multiplayer_peer == null:
 		return
-	if not is_multiplayer_authority():
+	if !is_multiplayer_authority():
 		return
 
 	nfx_throttle = Input.get_action_strength("throttle_pct")
@@ -54,45 +49,32 @@ func _gather():
 	nfx_rear_brake = Input.get_action_strength("brake_rear")
 	nfx_steer = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
 	nfx_lean = Input.get_action_strength("lean_forward") - Input.get_action_strength("lean_back")
-	nfx_trick_held = Input.is_action_pressed("trick")
-
-	nfx_cam_horizontal = (
-		Input.get_action_strength("cam_right") - Input.get_action_strength("cam_left")
-	)
-	nfx_cam_vertical = Input.get_action_strength("cam_up") - Input.get_action_strength("cam_down")
-
-	# Clutch handling
-	var clutch_now = Input.is_action_pressed("clutch")
-	if clutch_now != nfx_clutch_held:
-		clutch_held_changed.emit(nfx_clutch_held, clutch_now)
-		nfx_clutch_held = clutch_now
 
 
-## Netfox's rollback
-func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool):
-	if Engine.is_editor_hint():
-		return
-
-	if rb_gear_up:
-		gear_up_pressed.emit()
-		rb_gear_up = false
-	if rb_gear_down:
-		gear_down_pressed.emit()
-		rb_gear_down = false
-
-
-## Local input + rb_ oneshot style vars
+## Local input
 func _process(_delta):
 	if Engine.is_editor_hint() or multiplayer.multiplayer_peer == null:
 		return
 	if !is_multiplayer_authority():
 		return
+
 	if Input.is_action_just_pressed("switch_cam"):
 		cam_switch_pressed.emit()
 	if Input.is_action_just_pressed("gear_up"):
-		rb_gear_up = true
+		gear_change_pressed.emit(1)
 	if Input.is_action_just_pressed("gear_down"):
-		rb_gear_down = true
+		gear_change_pressed.emit(-1)
+
+	trick_held = Input.is_action_pressed("trick")
+
+	cam_x = (Input.get_action_strength("cam_right") - Input.get_action_strength("cam_left"))
+	cam_y = Input.get_action_strength("cam_up") - Input.get_action_strength("cam_down")
+
+	# Clutch handling, has some buffer
+	var clutch_now = Input.is_action_pressed("clutch")
+	if clutch_now != clutch_held:
+		clutch_held_changed.emit(clutch_held, clutch_now)
+		clutch_held = clutch_now
 
 
 #region KBM/Gamepad switching
