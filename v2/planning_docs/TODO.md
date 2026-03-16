@@ -13,7 +13,7 @@
   - [x] Make sure MP authority is set properly
   - [ ] New netcode changes / authority:
     - [x] InputController
-    - [ ] GearingController
+    - [x] GearingController
     - [ ] MovementController
     - [ ] TrickController
     - [ ] CrashController
