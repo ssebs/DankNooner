@@ -115,7 +115,7 @@ unique_name_in_owner = true
 script = ExtResource("3_faflk")
 root = NodePath("..")
 enable_prediction = true
-state_properties = Array[String]([":global_transform", ":velocity", ":nfx_gear_ratio"])
+state_properties = Array[String]([":global_transform", ":velocity"])
 input_properties = Array[String](["%InputController:nfx_throttle", "%InputController:nfx_front_brake", "%InputController:nfx_rear_brake", "%InputController:nfx_steer", "%InputController:nfx_lean"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 

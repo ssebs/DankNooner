@@ -3,6 +3,9 @@ class_name CameraController extends Node3D
 
 enum CameraMode { FPS, TPS }
 
+@export var player_entity: PlayerEntity
+@export var input_controller: InputController
+
 @export var default_camera_mode: CameraMode = CameraMode.TPS
 @export var fps_cam: Camera3D
 @export var tps_cam: Camera3D
@@ -15,13 +18,26 @@ var current_cam_mode: CameraMode
 
 
 func _ready():
-	fps_cam.global_transform = fps_marker.global_transform
-	tps_cam.global_transform = tps_marker.global_transform
+	set_cam_transforms_from_markers()
 
 	if Engine.is_editor_hint():
 		return
 
-	# switch_to_cam(default_camera_mode)
+	call_deferred("_deferred_init")
+
+
+func _deferred_init():
+	if player_entity.is_local_client:
+		do_reset()
+		input_controller.cam_switch_pressed.connect(toggle_cam)
+	else:
+		disable_cameras()
+
+
+#region public API
+func set_cam_transforms_from_markers():
+	fps_cam.global_transform = fps_marker.global_transform
+	tps_cam.global_transform = tps_marker.global_transform
 
 
 func disable_cameras():
@@ -59,7 +75,11 @@ func toggle_cam():
 
 ## Called from player_entity.gd's do_respawn
 func do_reset():
-	pass
+	# TODO - set this from a setting, not always to TPS
+	switch_to_tps_cam()
+
+
+#endregion
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -73,5 +93,9 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("fps_marker must not be empty")
 	if tps_marker == null:
 		issues.append("tps_marker must not be empty")
+	if player_entity == null:
+		issues.append("player_entity must not be empty")
+	if input_controller == null:
+		issues.append("input_controller must not be empty")
 
 	return issues

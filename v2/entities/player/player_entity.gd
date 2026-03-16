@@ -41,7 +41,6 @@ var username: String:
 #endregion
 
 #region Netfox sync'd
-var nfx_gear_ratio: float = 0.0
 # `global_transform`, `velocity` also sync'd
 #endregion
 
@@ -152,12 +151,11 @@ func _init_ik():
 func _deferred_init():
 	if int(name) == multiplayer.get_unique_id():
 		is_local_client = true
-		camera_controller.switch_to_tps_cam()
-		_init_input_handlers()
+		camera_controller.do_reset()
 		_init_audio()
 		# hud_controller.show_hud()
 	else:
-		camera_controller.disable_cameras()
+		pass
 		# hud_controller.hide_hud()
 
 
@@ -175,23 +173,10 @@ func _init_audio():
 	audio_manager.play_ninja500_revs()
 
 
-func _init_input_handlers():
-	if input_controller == null:
-		printerr("cant find input_controller in PlayerEntity")
-		return
-
-	input_controller.cam_switch_pressed.connect(_on_cam_switch_pressed)
-
-
 #endregion
 
 
 #region handlers
-func _on_cam_switch_pressed():
-	if is_local_client:
-		camera_controller.toggle_cam()
-
-
 func _on_rpm_updated(new_rpm_ratio: float):
 	if !audio_manager:
 		return

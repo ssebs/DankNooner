@@ -29,7 +29,6 @@
 - Client => Server (input via RollbackSynchronizer):
   - `nfx_` input vars
     - `nfx_throttle`, `nfx_brake(s)`, `nfx_steer`, `nfx_lean`
-    - `nfx_gear_ratio` (final ratio, computed client-side by GearingController)
   - `rb_` oneshots
     - `rb_do_respawn` — triggered by GamemodeManager (owns respawn logic)
     - Signals:
