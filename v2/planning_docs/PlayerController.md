@@ -39,7 +39,6 @@
 - Server => Clients (authoritative physics via RollbackSynchronizer):
   - `global_transform` (position & rotation)
   - `velocity`
-  - `speed`
   - TickInterpolator smooths: `global_transform`, `velocity`
 - Client-local (derived from synced physics state, no sync needed):
   - Local InputController
