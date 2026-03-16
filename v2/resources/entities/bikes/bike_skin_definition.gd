@@ -55,7 +55,7 @@ var collision_shape: Shape3D = preload("res://resources/entities/bikes/hitbox/bi
 @export var stall_rpm: float = 800.0
 
 @export_group("Physics")
-@export var max_speed: float = 68.0
+@export var max_speed: float = 88.0
 @export var acceleration: float = 12.0
 @export var brake_strength: float = 40.0
 @export var friction: float = 2.0
