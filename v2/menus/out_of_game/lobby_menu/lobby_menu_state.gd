@@ -185,6 +185,7 @@ func set_single_or_multiplayer_ui():
 			else:
 				connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
 			await connection_manager.start_server()
+			start_btn.call_deferred("grab_focus")
 		_:
 			singleplayer_ui.hide()
 			multiplayer_ui.show()
