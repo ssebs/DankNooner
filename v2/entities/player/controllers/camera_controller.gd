@@ -57,6 +57,11 @@ func toggle_cam():
 		switch_to_fps_cam()
 
 
+## Called from player_entity.gd's do_respawn
+func do_reset():
+	pass
+
+
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
 

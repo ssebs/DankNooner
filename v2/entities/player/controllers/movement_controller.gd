@@ -110,6 +110,11 @@ func _handle_player_collision(delta: float):
 		player_entity.global_position += offset
 
 
+## Called from player_entity.gd's do_respawn
+func do_reset():
+	pass
+
+
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
 	if player_entity == null:

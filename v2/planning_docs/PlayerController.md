@@ -58,6 +58,8 @@
 
 ## Controllers:
 
+On `do_respawn`, player entity will call all controller's `do_reset()`
+
 - **InputController**
   - Local to client
   - Send values to server via `RollbackSynchronizer`

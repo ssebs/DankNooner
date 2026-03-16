@@ -12,7 +12,16 @@ signal rpm_updated(rpm_ratio: float)
 @export var clutch_tap_amount: float = 0.35
 
 var clutch_hold_time: float = 0.0
+
+var current_gear: int = 1
+var current_rpm: float = 1000.0
+var clutch_value: float = 0.0
+var rpm_ratio: float = 0.0
 var is_stalled: bool = false
+
+##
+# TODO - make sure to set player_entity's `nfx_gear_ratio`
+##
 
 
 func _ready():
@@ -115,6 +124,16 @@ func get_power_output() -> float:
 
 func get_clutch_engagement() -> float:
 	return 1.0 - player_entity.clutch_value
+
+
+## Called from player_entity.gd's do_respawn
+func do_reset():
+	current_gear = 1
+	current_rpm = (
+		player_entity.bike_definition.idle_rpm if player_entity.bike_definition else 1000.0
+	)
+	clutch_value = 0.0
+	rpm_ratio = 0.0
 
 
 #endregion

@@ -98,6 +98,11 @@ func is_front_wheel_locked() -> bool:
 	return _brake_was_grabbed
 
 
+## Called from player_entity.gd's do_respawn
+func do_reset():
+	pass
+
+
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
 	if player_entity == null:
