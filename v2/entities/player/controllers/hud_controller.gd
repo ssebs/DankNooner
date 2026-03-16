@@ -156,3 +156,8 @@ func _update_boost_label() -> void:
 		_boost_label.modulate = Color(1.0, 0.8, 0.0)
 	else:
 		_boost_label.modulate = Color.WHITE
+
+
+## Called from player_entity.gd's do_respawn
+func do_reset():
+	pass

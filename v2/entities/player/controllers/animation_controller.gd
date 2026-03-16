@@ -135,6 +135,11 @@ func stop_ragdoll() -> void:
 	current_state = RiderState.RIDING
 
 
+## Called from player_entity.gd's do_respawn
+func do_reset():
+	pass
+
+
 #endregion
 
 #region State Transitions

@@ -45,18 +45,13 @@ var nfx_gear_ratio: float = 0.0
 # `global_transform`, `velocity` also sync'd
 #endregion
 
+#region DELETE_ME
 # Physics state (synced via RollbackSynchronizer state_properties)
 var speed: float = 0.0
 var lean_angle: float = 0.0
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
 var fishtail_angle: float = 0.0
 var ground_pitch: float = 0.0  # Slope alignment
-
-# Gearing state (synced)
-var current_gear: int = 1
-var current_rpm: float = 1000.0
-var clutch_value: float = 0.0
-var rpm_ratio: float = 0.0
 
 # Trick/boost state (synced)
 var is_boosting: bool = false
@@ -67,6 +62,7 @@ var is_crashed: bool = false
 
 # Brake danger (local, display only)
 var grip_usage: float = 0.0
+#endregion
 
 # Discrete actions (rb_* pattern)
 var rb_do_respawn: bool = false
@@ -222,10 +218,6 @@ func do_respawn():
 	lean_angle = 0.0
 	pitch_angle = 0.0
 	fishtail_angle = 0.0
-	current_gear = 1
-	current_rpm = bike_definition.idle_rpm if bike_definition else 1000.0
-	clutch_value = 0.0
-	rpm_ratio = 0.0
 	is_boosting = false
 	is_crashed = false
 	if animation_controller:
