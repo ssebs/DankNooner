@@ -8,6 +8,7 @@ signal crashed
 @export var animation_controller: AnimationController
 @export var movement_controller: MovementController
 
+@export var is_sim_difficulty: bool = false
 @export var crash_lean_threshold_deg: float = 80.0
 @export var brake_grab_time_threshold: float = 0.85
 @export var brake_lean_sensitivity: float = 0.7
@@ -77,8 +78,13 @@ func _detect_crash():
 		trigger_crash()
 		return
 
-	# Brake grab while turning
-	if _brake_was_grabbed and abs(movement_controller.roll_angle) > deg_to_rad(15):
+	# Brake grab while turning (sim difficulty + gamepad only)
+	if (
+		is_sim_difficulty
+		and _brake_was_grabbed
+		and input_controller.is_gamepad
+		and abs(movement_controller.roll_angle) > deg_to_rad(15)
+	):
 		print("brake grab crash")
 		trigger_crash()
 
