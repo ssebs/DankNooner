@@ -35,6 +35,14 @@ func stop_ragdoll():
 	skel_root.physical_bones_stop_simulation()
 
 
+## Returns global position of the Hips PhysicalBone3D, or Vector3.ZERO if not found
+func get_hips_global_position() -> Vector3:
+	for child in skel_root.get_children():
+		if child is PhysicalBone3D and child.bone_name == ROOT_BONE_NAME:
+			return child.global_position
+	return Vector3.ZERO
+
+
 func _create_skeleton_for_ragdoll():
 	var mesh_skin = char_skin.mesh_skin
 	var skel_3d = mesh_skin.find_child("Skeleton") as Skeleton3D
