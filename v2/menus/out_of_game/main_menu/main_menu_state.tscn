@@ -82,7 +82,7 @@ text = "CUSTOMIZE_LABEL"
 [node name="QuitBtn" type="Button" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer" unique_id=1042468218]
 unique_name_in_owner = true
 layout_mode = 2
-text = "WEB_QUIT_LABEL"
+text = "QUIT_LABEL"
 
 [node name="VersionLabel" type="Label" parent="UI/AspectContainer/Content/MarginContainer" unique_id=503333881]
 unique_name_in_owner = true

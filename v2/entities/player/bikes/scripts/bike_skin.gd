@@ -23,7 +23,9 @@ const LENGTH: float = 2.0
 
 @onready var seat_marker: Marker3D = %SeatMarker
 @onready var left_handlebar_marker: Marker3D = %LeftHandleBarMarker
-@onready var left_peg_marker: Marker3D = $LeftPegMarker
+@onready var left_peg_marker: Marker3D = %LeftPegMarker
+@onready var front_wheel_ground_marker: Marker3D = %FrontWheelGroundMarker
+@onready var rear_wheel_ground_marker: Marker3D = %RearWheelGroundMarker
 
 var mesh_skin: SkinColor
 
@@ -61,6 +63,8 @@ func _load_markers_from_resource():
 	left_handlebar_marker.rotation_degrees = skin_definition.left_handlebar_marker_rotation_degrees
 	left_peg_marker.position = skin_definition.left_peg_marker_position
 	left_peg_marker.rotation_degrees = skin_definition.left_peg_marker_rotation_degrees
+	front_wheel_ground_marker.position = skin_definition.front_wheel_ground_position
+	rear_wheel_ground_marker.position = skin_definition.rear_wheel_ground_position
 
 
 func _save_markers_to_resource():
@@ -74,6 +78,8 @@ func _save_markers_to_resource():
 	skin_definition.left_handlebar_marker_rotation_degrees = left_handlebar_marker.rotation_degrees
 	skin_definition.left_peg_marker_position = left_peg_marker.position
 	skin_definition.left_peg_marker_rotation_degrees = left_peg_marker.rotation_degrees
+	skin_definition.front_wheel_ground_position = front_wheel_ground_marker.position
+	skin_definition.rear_wheel_ground_position = rear_wheel_ground_marker.position
 
 	var err = ResourceSaver.save(skin_definition)
 	if err == OK:
