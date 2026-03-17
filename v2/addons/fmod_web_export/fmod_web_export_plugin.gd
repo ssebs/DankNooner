@@ -1,6 +1,8 @@
 @tool
 extends EditorPlugin
-
+###
+##  TODO - https://github.com/utopia-rise/fmod-gdextension/pull/210#issuecomment-3717948490
+###
 
 var _export_plugin: _FmodWebExportPlugin
 
@@ -15,14 +17,17 @@ func _exit_tree() -> void:
 	remove_export_plugin(_export_plugin)
 
 
-class _FmodWebExportPlugin extends EditorExportPlugin:
+class _FmodWebExportPlugin:
+	extends EditorExportPlugin
 	var _export_dir: String = ""
 	var _is_web: bool = false
 
 	func _get_name() -> String:
 		return "FmodWebExport"
 
-	func _export_begin(features: PackedStringArray, _is_debug: bool, path: String, _flags: int) -> void:
+	func _export_begin(
+		features: PackedStringArray, _is_debug: bool, path: String, _flags: int
+	) -> void:
 		_is_web = features.has("web")
 		_export_dir = ProjectSettings.globalize_path(path).get_base_dir()
 		print("FmodWebExportPlugin: _export_begin is_web=%s export_dir=%s" % [_is_web, _export_dir])
@@ -47,7 +52,12 @@ class _FmodWebExportPlugin extends EditorExportPlugin:
 		if not DirAccess.dir_exists_absolute(banks_output_dir):
 			var err := DirAccess.make_dir_absolute(banks_output_dir)
 			if err != OK:
-				push_error("FmodWebExportPlugin: Failed to create dir %s (error %d)" % [banks_output_dir, err])
+				push_error(
+					(
+						"FmodWebExportPlugin: Failed to create dir %s (error %d)"
+						% [banks_output_dir, err]
+					)
+				)
 				return
 
 		dir.list_dir_begin()
@@ -58,7 +68,9 @@ class _FmodWebExportPlugin extends EditorExportPlugin:
 				var dst := banks_output_dir.path_join(file_name)
 				var err := DirAccess.copy_absolute(src, dst)
 				if err != OK:
-					push_error("FmodWebExportPlugin: Failed to copy %s -> %s (error %d)" % [src, dst, err])
+					push_error(
+						"FmodWebExportPlugin: Failed to copy %s -> %s (error %d)" % [src, dst, err]
+					)
 				else:
 					print("FmodWebExportPlugin: Copied %s" % file_name)
 			file_name = dir.get_next()
