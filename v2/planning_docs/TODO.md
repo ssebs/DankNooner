@@ -6,10 +6,6 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] sounds for web
-- [ ] web updates:
-  - [ ] rm quit button, replace with Press ESC x2 to quit
-  - [ ] don't go fullscreen in default settings
 - [ ] Mac build won't run
 - [ ] holding clutch while reving makes you move when it shouldn't
 - [ ] bikeskin have front & rear wheel markers for wheelie / stoppie offsets
@@ -155,6 +151,8 @@
 
 ## Backlog
 
+- [ ] sounds for web
+
 - [ ] Friends + invites
 - [ ] Gamemode / Score / XP / $ v2
 
@@ -276,11 +274,18 @@
 - [ ] reactive sounds (play when player does something) = juice
 - [ ] Add transition animations (e.g. circle in/out) between Menu States / Loading states
 - [ ] Add text chat
-- [ ] Web
-  - [x] WebRTC (?)
-  - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] web updates:
+
+  - [x] rm quit button, replace with Press ESC x2 to quit
+  - [x] don't go fullscreen in default settings
+
+- [x] Web
+
+  - [x] WebRTC (?)
+  - [x] Quit on Web should just escape fullscreen
 
 - [x] Deploy web to github.io
 

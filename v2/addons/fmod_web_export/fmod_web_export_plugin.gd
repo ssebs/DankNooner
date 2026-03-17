@@ -2,6 +2,7 @@
 extends EditorPlugin
 ###
 ##  TODO - https://github.com/utopia-rise/fmod-gdextension/pull/210#issuecomment-3717948490
+# also re-enable res://web/custom_shell.html on export setting for web
 ###
 
 var _export_plugin: _FmodWebExportPlugin

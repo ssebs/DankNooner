@@ -17,6 +17,12 @@ class_name MainMenuState extends MenuState
 func _ready():
 	version_label.text = ProjectSettings.get_setting("application/config/version")
 
+	if OS.has_feature("web"):
+		quit_btn.text = "WEB_QUIT_LABEL"
+		quit_btn.disabled = true
+	else:
+		quit_btn.text = "QUIT_LABEL"
+
 
 func Enter(_state_context: StateContext):
 	ui.show()

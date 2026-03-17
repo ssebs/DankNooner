@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://b27jgs5kv1310"]
 
 [ext_resource type="Script" uid="uid://d2dfqo7sswuem" path="res://managers/audio_manager.gd" id="1_1k0gc"]
-[ext_resource type="AudioStream" uid="uid://behl1tw27yc8k" path="res://fmod/DankNoonerFMODProject/Assets/startup.mp3" id="2_o384a"]
 
 [node name="AudioManager" type="Node" unique_id=625309404 groups=["Managers"]]
 script = ExtResource("1_1k0gc")
@@ -25,15 +24,4 @@ attached = false
 fmod_parameters/RPM/id = -9088701629334172805
 fmod_parameters/RPM = 0.0
 fmod_parameters/RPM/variant_type = 3
-unique_name_in_owner = true
-
-[node name="WebOnlySounds" type="Node" parent="." unique_id=208813376]
-unique_name_in_owner = true
-
-[node name="StartupWeb" type="AudioStreamPlayer" parent="WebOnlySounds" unique_id=2029552389]
-unique_name_in_owner = true
-stream = ExtResource("2_o384a")
-volume_db = -11.0
-
-[node name="Ninja500RevsWeb" type="AudioStreamPlayer" parent="WebOnlySounds" unique_id=861650217]
 unique_name_in_owner = true
