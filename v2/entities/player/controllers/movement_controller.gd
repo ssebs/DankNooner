@@ -79,7 +79,7 @@ func _speed_calc(delta: float):
 	if total_brake > 0:
 		speed = move_toward(speed, 0, bd.brake_strength * total_brake * delta)
 
-	print("speed %.2f" % speed)
+	# print("speed %.2f" % speed)
 
 
 ## Calculate roll_angle & set player_entity.rotation
@@ -133,18 +133,19 @@ func _pitch_angle_calc(delta: float):
 		if in_balance_point:
 			wheelie_target = _calc_balance_point_target(bd, wheelie_target, delta)
 
-	print(
-		(
-			"pitch_angle: %.2f | wheelie_target: %.2f | balance_point: %.2f | max_wheelie: %.2f | in_bp: %s"
-			% [
-				rad_to_deg(pitch_angle),
-				rad_to_deg(wheelie_target),
-				bd.wheelie_balance_point_deg,
-				bd.max_wheelie_angle_deg,
-				in_balance_point
-			]
-		)
-	)
+	# print(
+	# 	(
+	# 		"pitch_angle: %.2f | wheelie_target: %.2f | balance_point: %.2f | \
+	# max_wheelie: %.2f | in_bp: %s"
+	# 		% [
+	# 			rad_to_deg(pitch_angle),
+	# 			rad_to_deg(wheelie_target),
+	# 			bd.wheelie_balance_point_deg,
+	# 			bd.max_wheelie_angle_deg,
+	# 			in_balance_point
+	# 		]
+	# 	)
+	# )
 
 	# Lean forward recovery — pull the front wheel down
 	if input_controller.nfx_lean > 0 and in_wheelie:

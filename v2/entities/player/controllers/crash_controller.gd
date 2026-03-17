@@ -78,10 +78,24 @@ func _detect_crash():
 		trigger_crash()
 		return
 
+	# Collision with layer 2 obstacle — only head-on hits at speed
+	if movement_controller.speed >= 10.0:
+		for i in player_entity.get_slide_collision_count():
+			var collision = player_entity.get_slide_collision(i)
+			var collider = collision.get_collider()
+			if collider is CollisionObject3D and collider.collision_layer & 2:
+				var angle = rad_to_deg(
+					collision.get_normal().angle_to(-player_entity.velocity.normalized())
+				)
+				if angle < 60.0:
+					print("obstacle crash (angle=%.1f)" % angle)
+					trigger_crash()
+					return
+
 	# Brake grab while turning (sim difficulty + gamepad only)
 	if (
-		is_sim_difficulty
-		and _brake_was_grabbed
+		_brake_was_grabbed
+		# and is_sim_difficulty
 		and input_controller.is_gamepad
 		and abs(movement_controller.roll_angle) > deg_to_rad(15)
 	):

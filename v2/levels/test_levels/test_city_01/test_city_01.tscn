@@ -36,6 +36,7 @@ environment = SubResource("Environment_ffs5v")
 
 [node name="KillboxTODOIMPLEMENT" type="StaticBody3D" parent="." unique_id=1604397840]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
+collision_layer = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="KillboxTODOIMPLEMENT" unique_id=1405482787]
 shape = SubResource("WorldBoundaryShape3D_qt85o")

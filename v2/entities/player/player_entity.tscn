@@ -97,6 +97,7 @@ _data = {
 }
 
 [node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("collision_shape_3d", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller")]
+collision_mask = 3
 floor_block_on_wall = false
 safe_margin = 0.01
 script = ExtResource("1_0jc3c")
