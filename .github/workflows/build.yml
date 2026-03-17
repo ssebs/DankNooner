@@ -3,11 +3,14 @@ on:
     tags:
       - "v*"
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   export_game:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     name: Export Game
     steps:
       - name: install wine & audio deps
@@ -49,3 +52,25 @@ jobs:
           generateReleaseNotes: true
           tag: ${{ github.ref_name }}
           artifacts: ${{ steps.export.outputs.archive_directory }}/*
+
+      - name: extract web build for pages
+        run: |
+          mkdir -p /tmp/web-pages
+          unzip "${{ steps.export.outputs.archive_directory }}/DankNoonerWeb.zip" -d /tmp/web-pages
+
+      - name: upload pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: /tmp/web-pages
+
+  deploy_pages:
+    needs: export_game
+    runs-on: ubuntu-latest
+    name: Deploy to GitHub Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: deploy to github pages
+        id: deployment
+        uses: actions/deploy-pages@v4
