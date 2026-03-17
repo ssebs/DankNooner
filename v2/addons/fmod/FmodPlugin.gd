@@ -11,6 +11,7 @@ var bank_explorer: FmodBankExplorer
 var fmod_button: Button
 var export_plugin: FmodEditorExportPlugin = FmodEditorExportPlugin.new()
 var android_export_plugin: FmodAndroidExportPlugin = FmodAndroidExportPlugin.new()
+
 var emitter_inspector_plugin: FmodEmitterPropertyInspectorPlugin = FmodEmitterPropertyInspectorPlugin.new(self)
 var bank_loader_inspector_plugin: FmodBankLoaderPropertyInspectorPlugin = FmodBankLoaderPropertyInspectorPlugin.new(self)
 
@@ -37,9 +38,9 @@ func _enter_tree() -> void:
 func _exit_tree() -> void:
 	remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, fmod_button)
 	fmod_button.queue_free()
-	
+
 	bank_explorer.queue_free()
-	
+
 	remove_inspector_plugin(emitter_inspector_plugin)
 	remove_inspector_plugin(bank_loader_inspector_plugin)
 

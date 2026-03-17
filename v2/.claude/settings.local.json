@@ -7,7 +7,9 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(grep -r \"wss://\\\\|stun:\\\\|turn:\" \"F:\\\\LocalProgramming\\\\DankNooner\\\\v2\" --include=\"*.gd\" --include=\"*.md\" 2>/dev/null | head -20)",
       "Bash(ls:*)",
-      "Bash(grep -r \"server_disconnected\" \"F:\\\\LocalProgramming\\\\DankNooner\\\\v2\" --include=\"*.gd\" 2>/dev/null | head -20)"
+      "Bash(grep -r \"server_disconnected\" \"F:\\\\LocalProgramming\\\\DankNooner\\\\v2\" --include=\"*.gd\" 2>/dev/null | head -20)",
+      "WebSearch",
+      "WebFetch(domain:godotengine.org)"
     ]
   }
 }
