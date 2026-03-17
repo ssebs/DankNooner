@@ -67,8 +67,9 @@ func _update_procedural_animation(delta: float) -> void:
 
 	# Pitch visual_root for wheelie/stoppie, pivoting around wheel ground contact
 	var bd = player_entity.bike_definition
-	var max_pitch_rad = deg_to_rad(bd.max_wheelie_angle_deg)
-	var target_pitch = -clamp(movement_controller.pitch_angle, -max_pitch_rad, max_pitch_rad)
+	var max_wheelie_rad = deg_to_rad(bd.max_wheelie_angle_deg)
+	var max_stoppie_rad = deg_to_rad(bd.max_stoppie_angle_deg)
+	var target_pitch = -clamp(movement_controller.pitch_angle, -max_stoppie_rad, max_wheelie_rad)
 	visual_root.rotation.x = lerpf(visual_root.rotation.x, target_pitch, blend)
 
 	# Pivot offset: rotate around rear wheel (wheelie) or front wheel (stoppie)

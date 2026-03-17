@@ -117,16 +117,18 @@ func _velocity_calc(delta: float):
 		player_entity.velocity.y -= 9.8 * delta * 4.0
 
 
-## Orchestrates pitch_angle: clutch detection → wheelie target → apply
+## Orchestrates pitch_angle: clutch detection → wheelie target → stoppie → apply
 func _pitch_angle_calc(delta: float):
 	_update_clutch_dump_detection()
 
 	var bd = player_entity.bike_definition
 	var in_wheelie = pitch_angle > deg_to_rad(15)
+	var in_stoppie = pitch_angle < deg_to_rad(-5)
 	var in_balance_point = pitch_angle > deg_to_rad(bd.wheelie_balance_point_deg)
 
+	# --- Wheelie ---
 	var wheelie_target = 0.0
-	if _can_initiate_wheelie(in_wheelie):
+	if _can_initiate_wheelie(in_wheelie) and not in_stoppie:
 		wheelie_target = _calc_normal_wheelie_target(bd)
 		if in_balance_point:
 			wheelie_target = _calc_balance_point_target(bd, wheelie_target, delta)
@@ -152,7 +154,10 @@ func _pitch_angle_calc(delta: float):
 
 	_apply_wheelie_pitch(bd, wheelie_target, in_balance_point, delta)
 
-	# TODO: rear brake pull-down
+	# --- Stoppie ---
+	if not in_wheelie:
+		_stoppie_calc(bd, in_stoppie, delta)
+
 	# TODO: easy mode clamp
 
 
@@ -174,6 +179,42 @@ func _apply_wheelie_pitch(
 			bd.return_speed * _balance_point_decay_mult if in_balance_point else bd.return_speed
 		)
 		pitch_angle = move_toward(pitch_angle, 0, decay_speed * delta)
+
+
+## Stoppie physics: brake hard + lean forward to lift the rear wheel
+func _stoppie_calc(bd: BikeSkinDefinition, in_stoppie: bool, delta: float):
+	var total_brake = input_controller.nfx_front_brake + input_controller.nfx_rear_brake
+	var max_stoppie_rad = deg_to_rad(bd.max_stoppie_angle_deg)
+
+	# Dynamic brake threshold: need more brake to start, less to sustain at deeper angles
+	var stoppie_ratio = clampf(abs(pitch_angle) / max_stoppie_rad, 0.0, 1.0)
+	var required_brake = lerpf(0.5, 0.15, stoppie_ratio)
+
+	var can_stoppie = (
+		total_brake > required_brake
+		and input_controller.nfx_lean > 0.3
+		and speed > 3.0
+		and abs(roll_angle) < deg_to_rad(10)
+	)
+
+	if can_stoppie or in_stoppie:
+		# Target deepens with brake + lean — speed just needs a minimum
+		var speed_factor = clampf(speed / (bd.max_speed * 0.25), 0.0, 1.0)
+		var brake_pct = clampf(total_brake * 1.5, 0.0, 1.0)
+		# Target can exceed max — crash controller will trigger if you go over
+		var stoppie_target = -max_stoppie_rad * (0.5 + brake_pct * 0.7) * speed_factor
+
+		# Lean back recovery — push the rear wheel down
+		if input_controller.nfx_lean < 0 and in_stoppie:
+			pitch_angle = move_toward(
+				pitch_angle, 0, bd.return_speed * abs(input_controller.nfx_lean) * 2.0 * delta
+			)
+
+		if can_stoppie:
+			pitch_angle = move_toward(pitch_angle, stoppie_target, bd.rotation_speed * 1.5 * delta)
+		elif in_stoppie:
+			# Brake dropped below threshold — decay back to 0
+			pitch_angle = move_toward(pitch_angle, 0, bd.return_speed * delta)
 
 
 ## Detect clutch dump (held → released while on throttle) and manage kick window
