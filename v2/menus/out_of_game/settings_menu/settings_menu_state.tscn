@@ -97,13 +97,15 @@ text = "WINDOW_SETTINGS_LABEL"
 unique_name_in_owner = true
 layout_mode = 2
 selected = 0
-item_count = 3
+item_count = 4
 popup/item_0/text = "Windowed"
 popup/item_0/id = 0
 popup/item_1/text = "Fullscreen (Exclusive)"
 popup/item_1/id = 3
 popup/item_2/text = "Fullscreen (Borderless)"
 popup/item_2/id = 4
+popup/item_3/text = "Windowed (Maximized)"
+popup/item_3/id = 2
 
 [node name="HSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1039528216]
 layout_mode = 2
