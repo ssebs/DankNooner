@@ -8,7 +8,7 @@ An open-world motorcycle game about doing every stupid thing you'd never try in 
 
 > **Play the v1 POC:** [Itch.io](https://theofficialssebs.itch.io/dank-nooner-poc)
 
-Check the latest dev build! Download the **.zip** for your platform [here](https://github.com/ssebs/DankNooner/releases)
+Check the latest dev build! Download the **.zip** for your platform [here](https://github.com/ssebs/DankNooner/releases), or play the [web version](https://ssebs.github.io/DankNooner/) in the browser!
 
 <details>
 <summary>

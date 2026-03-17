@@ -6,7 +6,7 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] Deploy web to github.io
+- [ ] sounds for web
 - [ ] Mac build won't run
 - [ ] holding clutch while reving makes you move when it shouldn't
 - [ ] bikeskin have front & rear wheel markers for wheelie / stoppie offsets
@@ -72,6 +72,7 @@
   - [x] Create way to play specific animations
 - [ ] signal relay host setting update doesn't save ? Double check!
 - [ ] review webrtc gen code myself (security)
+- [ ] https://github.com/utopia-rise/fmod-gdextension/pull/210#issuecomment-3717948490
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
 
@@ -276,6 +277,8 @@
   - [ ] Quit on Web should just escape fullscreen
 
 ## Done ✅
+
+- [x] Deploy web to github.io
 
 - [x] disconnect after some period of time
 
