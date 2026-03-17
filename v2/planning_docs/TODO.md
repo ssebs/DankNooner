@@ -6,8 +6,6 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] Mac build won't run
-- [ ] holding clutch while reving makes you move when it shouldn't
 - [ ] Create Player Part 2
 
   - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
@@ -276,6 +274,10 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] holding clutch while reving makes you move when it shouldn't
+
+- [x] Mac build won't run
 
 - [x] bikeskin have front & rear wheel markers for wheelie / stoppie offsets
 

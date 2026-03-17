@@ -1,4 +1,5 @@
 {
+    "todoSidebar.onDoneAction": "move",
   "editor.detectIndentation": true,
   "files.exclude": {
     "**/.git": true,

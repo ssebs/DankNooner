@@ -115,9 +115,10 @@ func get_power_output() -> float:
 	if _is_stalled:
 		return 0.0
 
-	var engagement = 1.0 - _clutch_value
-	if _clutch_value > 0.5:
+	# Pulling the clutch lever is an instant disconnect
+	if input_controller.clutch_held:
 		return 0.0
+	var engagement = 1.0 - _clutch_value
 
 	var ratio = _get_rpm_ratio()
 	# TODO - use actual curve
