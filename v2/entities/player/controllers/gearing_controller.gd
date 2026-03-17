@@ -31,7 +31,7 @@ func _ready():
 #region Local input handlers
 ## direction must be `1` or `-1` (fwd/back)
 func _on_gear_change(direction: int):
-	print("_on_gear_change %d" % direction)
+	# print("_on_gear_change %d" % direction)
 	var bd = player_entity.bike_definition
 	var new_gear = clampi(_current_gear + direction, 1, bd.num_gears)
 	if new_gear != _current_gear:
@@ -58,7 +58,7 @@ func _update_clutch_hold_time(delta: float):
 		_clutch_hold_time = 0.0
 		_clutch_value = move_toward(_clutch_value, 0.0, clutch_release_speed * delta)
 
-	print("_clutch_value: %.1f" % _clutch_value)
+	# print("_clutch_value: %.1f" % _clutch_value)
 
 
 ## Sets _current_rpm
@@ -69,7 +69,9 @@ func _blend_rpm(delta: float):
 	# What RPM the wheel is forcing the engine to
 	var gear_ratio = bd.gear_ratios[_current_gear - 1]
 	var gear_max_speed = bd.max_speed * (bd.gear_ratios[bd.num_gears - 1] / gear_ratio)
-	var speed_ratio = player_entity.velocity.length() / gear_max_speed if gear_max_speed > 0 else 0.0
+	var speed_ratio = (
+		player_entity.velocity.length() / gear_max_speed if gear_max_speed > 0 else 0.0
+	)
 	var wheel_rpm = lerpf(bd.idle_rpm, bd.max_rpm, speed_ratio)
 
 	# What RPM the throttle wants
@@ -89,7 +91,7 @@ func _blend_rpm(delta: float):
 
 	_current_rpm = lerpf(_current_rpm, target_rpm, rpm_speed * delta)
 	_current_rpm = clamp(_current_rpm, bd.idle_rpm, bd.max_rpm)
-	print("RPM %.2f" % _current_rpm)
+	# print("RPM %.2f" % _current_rpm)
 
 
 ## Get pct of rpm : max rpm
@@ -127,7 +129,7 @@ func get_power_output() -> float:
 	var torque_multiplier = gear_ratio / base_ratio
 
 	var output = input_controller.nfx_throttle * power_curve * torque_multiplier * engagement
-	print("power output: %.2f" % output)
+	# print("power output: %.2f" % output)
 	return output
 
 

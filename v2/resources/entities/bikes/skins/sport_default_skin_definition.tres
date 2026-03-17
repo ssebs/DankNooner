@@ -15,4 +15,5 @@ left_handlebar_marker_position = Vector3(0.28665084, 0.95283574, 0.35880893)
 left_peg_marker_position = Vector3(0.24367344, 0.35812563, -0.2558015)
 front_wheel_ground_position = Vector3(0, 0, 0.727424)
 rear_wheel_ground_position = Vector3(0, 0, -0.7474911)
+max_stoppie_angle_deg = 55.0
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"
