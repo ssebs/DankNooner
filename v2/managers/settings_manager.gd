@@ -12,13 +12,15 @@ const WINDOW_MODE_LABELS: Dictionary = {
 	"windowed": "WINDOW_MODE_WINDOWED",
 	"fullscreen": "WINDOW_MODE_FULLSCREEN_EXCLUSIVE",
 	"borderless": "WINDOW_MODE_FULLSCREEN_BORDERLESS",
+	"maximized": "WINDOW_MODE_MAXIMIZED",
 }
 
 # json stores the string, this maps to the godot enum
 const WINDOW_MODES: Dictionary = {
 	"windowed": DisplayServer.WINDOW_MODE_WINDOWED,
 	"fullscreen": DisplayServer.WINDOW_MODE_FULLSCREEN,
-	"borderless": DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
+	"borderless": DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN,
+	"maximized": DisplayServer.WINDOW_MODE_MAXIMIZED,
 }
 
 ## NOTE - key names (str) are hard coded in lots of places!
@@ -27,7 +29,7 @@ var default_settings: Dictionary = {
 	# "username": "change_me",
 	"signal_relay_host": "stun.ssebs.com",  # stun.casa.ssebs.com, 192.168.1.247
 	"resolution": "1920x1080",
-	"fullscreen_mode": "borderless",  # or "fullscreen" or "borderless"
+	"fullscreen_mode": "borderless",  # "fullscreen" or "borderless" or "windowed" or "maximized"
 	"master_vol": 0.8,
 	"music_vol": 1.0,
 	"menu_vol": 1.0,
@@ -42,6 +44,9 @@ var current_settings: Dictionary
 func _ready():
 	if Engine.is_editor_hint():
 		return
+
+	if OS.has_feature("web"):
+		default_settings["fullscreen_mode"] = "windowed"
 
 	self.call_deferred("deferred_init")
 
@@ -116,6 +121,8 @@ static func windowmode_to_str(wmode: int) -> String:
 			return "fullscreen"
 		DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN:
 			return "borderless"
+		DisplayServer.WINDOW_MODE_MAXIMIZED:
+			return "maximized"
 	return ""
 
 
