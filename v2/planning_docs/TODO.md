@@ -4,6 +4,11 @@
 
 ## In Progress 🚀
 
+> Take it slow, fix bugs and add polish to player controller
+
+- [ ] Deploy web to github.io
+- [ ] Mac build won't run
+- [ ] holding clutch while reving makes you move when it shouldn't
 - [ ] bikeskin have front & rear wheel markers for wheelie / stoppie offsets
 - [ ] Create Player Part 2
 
