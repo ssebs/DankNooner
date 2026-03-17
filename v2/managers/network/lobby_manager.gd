@@ -65,7 +65,10 @@ func _on_save_changed(current_save: Dictionary):
 
 
 func _push_player_metadata(player_def: PlayerDefinition):
-	if multiplayer.multiplayer_peer == null:
+	if (
+		multiplayer.multiplayer_peer == null
+		or multiplayer.multiplayer_peer is OfflineMultiplayerPeer
+	):
 		return
 	update_player_metadata.rpc_id(1, multiplayer.get_unique_id(), player_def.to_dict())
 
