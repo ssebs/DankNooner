@@ -10,12 +10,14 @@ signal crashed
 
 @export var is_sim_difficulty: bool = false
 @export var crash_lean_threshold_deg: float = 80.0
-@export var brake_grab_time_threshold: float = 0.85
+@export var brake_grab_rate_threshold: float = 20
 @export var brake_lean_sensitivity: float = 0.7
 
-var _brake_grab_timer: float = 0.0
-var _brake_was_zero: bool = true
+var _prev_front_brake: float = 0.0
 var _brake_was_grabbed: bool = false
+
+var _crash_min_speed: float = 10.0
+var _crash_angle: float = 60.0
 
 
 func _ready():
@@ -36,17 +38,13 @@ func on_movement_rollback_tick(delta: float):
 func _update_brake_grab(delta: float):
 	var front_brake = input_controller.nfx_front_brake
 
-	if front_brake < 0.5:
-		_brake_was_zero = true
-		_brake_grab_timer = 0.0
+	var brake_delta = (front_brake - _prev_front_brake) / delta
+	_prev_front_brake = front_brake
+
+	if front_brake < 0.2:
 		_brake_was_grabbed = false
-	elif _brake_was_zero and front_brake > 0.1:
-		_brake_was_zero = false
-		_brake_grab_timer = 0.0
-	elif not _brake_was_zero:
-		_brake_grab_timer += delta
-		if front_brake > 0.9 and not _brake_was_grabbed:
-			_brake_was_grabbed = _brake_grab_timer < brake_grab_time_threshold
+	elif front_brake > 0.9 and brake_delta > brake_grab_rate_threshold:
+		_brake_was_grabbed = true
 
 	# Compute brake danger (grip_usage) for HUD display
 	var lean_ratio = abs(movement_controller.roll_angle) / deg_to_rad(crash_lean_threshold_deg)
@@ -79,7 +77,7 @@ func _detect_crash():
 		return
 
 	# Collision with layer 2 obstacle — only head-on hits at speed
-	if movement_controller.speed >= 10.0:
+	if movement_controller.speed >= _crash_min_speed:
 		for i in player_entity.get_slide_collision_count():
 			var collision = player_entity.get_slide_collision(i)
 			var collider = collision.get_collider()
@@ -87,10 +85,11 @@ func _detect_crash():
 				var angle = rad_to_deg(
 					collision.get_normal().angle_to(-player_entity.velocity.normalized())
 				)
-				if angle < 60.0:
+				if angle < _crash_angle:
 					print("obstacle crash (angle=%.1f)" % angle)
 					trigger_crash()
 					return
+				print("no crash (angle=%.1f)" % angle)
 
 	# Brake grab while turning (sim difficulty + gamepad only)
 	if (
@@ -121,8 +120,7 @@ func _auto_respawn():
 
 ## Called from player_entity.gd's do_respawn
 func do_reset():
-	_brake_grab_timer = 0.0
-	_brake_was_zero = true
+	_prev_front_brake = 0.0
 	_brake_was_grabbed = false
 
 
