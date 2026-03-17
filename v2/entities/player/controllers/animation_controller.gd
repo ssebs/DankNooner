@@ -35,6 +35,7 @@ var current_state: RiderState = RiderState.RIDING:
 #region Internal State
 var _base_butt_pos: Vector3
 var _base_chest_pos: Vector3
+var _base_visual_root_position: Vector3
 var _base_visual_root_rotation: Vector3
 var _idle_timer: float = 0.0
 var _procedural_enabled: bool = true
@@ -64,12 +65,21 @@ func _update_procedural_animation(delta: float) -> void:
 	var ik_ctrl = character_skin.ik_controller
 	var blend = clampf(5.0 * delta, 0.0, 1.0)
 
-	# Pitch visual_root for wheelie/stoppie
-	var max_pitch_rad = deg_to_rad(player_entity.bike_definition.max_wheelie_angle_deg)
-	var target_pitch = -clamp(
-		movement_controller.pitch_angle, -max_pitch_rad, max_pitch_rad
-	)
+	# Pitch visual_root for wheelie/stoppie, pivoting around wheel ground contact
+	var bd = player_entity.bike_definition
+	var max_pitch_rad = deg_to_rad(bd.max_wheelie_angle_deg)
+	var target_pitch = -clamp(movement_controller.pitch_angle, -max_pitch_rad, max_pitch_rad)
 	visual_root.rotation.x = lerpf(visual_root.rotation.x, target_pitch, blend)
+
+	# Pivot offset: rotate around rear wheel (wheelie) or front wheel (stoppie)
+
+	var pivot: Vector3
+	if visual_root.rotation.x < 0:
+		pivot = bd.rear_wheel_ground_position
+	else:
+		pivot = bd.front_wheel_ground_position
+	var rotated_pivot = Basis(Vector3.RIGHT, visual_root.rotation.x) * pivot
+	visual_root.position = _base_visual_root_position + pivot - rotated_pivot
 
 	# Rotate chest for visual lean
 	var target_chest = movement_controller.roll_angle * deg_to_rad(30)
@@ -131,6 +141,7 @@ func _reset_to_base_positions() -> void:
 		ik_ctrl.ik_chest.position = _base_chest_pos
 		ik_ctrl.ik_chest.rotation = Vector3.ZERO
 	if visual_root:
+		visual_root.position = _base_visual_root_position
 		visual_root.rotation = _base_visual_root_rotation
 	if bike_skin:
 		bike_skin.rotation.x = 0.0
@@ -153,6 +164,7 @@ func initialize() -> void:
 		_base_butt_pos = ik_ctrl.butt_pos.position
 		_base_chest_pos = ik_ctrl.ik_chest.position
 
+	_base_visual_root_position = visual_root.position
 	_base_visual_root_rotation = visual_root.rotation
 	character_skin.ik_anim_player.play("IK_anim_lib/default_pose")
 

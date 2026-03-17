@@ -8,7 +8,6 @@
 
 - [ ] Mac build won't run
 - [ ] holding clutch while reving makes you move when it shouldn't
-- [ ] bikeskin have front & rear wheel markers for wheelie / stoppie offsets
 - [ ] Create Player Part 2
 
   - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
@@ -276,6 +275,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] bikeskin have front & rear wheel markers for wheelie / stoppie offsets
 
 - [x] web updates:
 
