@@ -7,6 +7,9 @@
 > Take it slow, fix bugs and add polish to player controller
 
 - [ ] sounds for web
+- [ ] web updates:
+  - [ ] rm quit button, replace with Press ESC x2 to quit
+  - [ ] don't go fullscreen in default settings
 - [ ] Mac build won't run
 - [ ] holding clutch while reving makes you move when it shouldn't
 - [ ] bikeskin have front & rear wheel markers for wheelie / stoppie offsets
@@ -152,6 +155,7 @@
 
 ## Backlog
 
+- [ ] Friends + invites
 - [ ] Gamemode / Score / XP / $ v2
 
   - [ ] Collect via challenges in gamemodes
