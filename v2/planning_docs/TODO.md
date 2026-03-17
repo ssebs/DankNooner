@@ -25,6 +25,7 @@
       - [ ] Move wheelie logic from movement controller
       - [ ] Add stoppie logic
     - [ ] CrashController
+      - [ ] Swap to rigidbody, make bounding box of mesh & apply velocity to bike & collision
   - [x] Sync as little as possible
     - no input/movement/gear calculations
     - no sound for other players for now
