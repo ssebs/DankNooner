@@ -18,6 +18,7 @@ Use haiku subagents when searching files
 - Use spatial comments (debug notes in levels) for in-world documentation
 - Don't remove TODO comments unless you're implementing the whole system.
 - Don't remove print() debug statements
+- Don't run `gh` or `git` commands
 
 ## Running the Project
 
