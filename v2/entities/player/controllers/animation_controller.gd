@@ -99,6 +99,13 @@ func _update_procedural_animation(delta: float) -> void:
 	)
 	ik_ctrl.butt_pos.position.x = lerpf(ik_ctrl.butt_pos.position.x, target_butt_x, blend)
 
+	# Shift chest to match butt
+	var target_chest_x = (
+		_base_chest_pos.x
+		- clampf(visual_root.rotation.z, -max_butt_offset, max_butt_offset)
+	)
+	ik_ctrl.ik_chest.position.x = lerpf(ik_ctrl.ik_chest.position.x, target_chest_x, blend)
+
 
 # func _update_wheelie_arm() -> void:
 # 	var anim_player = character_skin.ik_anim_player
