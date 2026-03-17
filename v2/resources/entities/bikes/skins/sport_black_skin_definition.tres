@@ -13,4 +13,6 @@ colors = Array[Color]([Color(0.03, 0.03, 0.03, 1), Color(0.185, 0.5087501, 0.74,
 seat_marker_position = Vector3(0, 0.8378124, -0.35789177)
 left_handlebar_marker_position = Vector3(0.28665084, 0.95283574, 0.35880893)
 left_peg_marker_position = Vector3(0.24367344, 0.35812563, -0.2558015)
+front_wheel_ground_position = Vector3(0, 0, 0.727424)
+rear_wheel_ground_position = Vector3(0, 0, -0.7474911)
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"

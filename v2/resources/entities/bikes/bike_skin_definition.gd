@@ -40,6 +40,8 @@ var collision_shape: Shape3D = preload("res://resources/entities/bikes/hitbox/bi
 @export var left_handlebar_marker_rotation_degrees: Vector3 = Vector3.ZERO
 @export var left_peg_marker_position: Vector3 = Vector3.ZERO
 @export var left_peg_marker_rotation_degrees: Vector3 = Vector3.ZERO
+@export var front_wheel_ground_position: Vector3 = Vector3.ZERO
+@export var rear_wheel_ground_position: Vector3 = Vector3.ZERO
 
 @export_group("Animation")
 ## Multiplier for rider lean animation when steering
