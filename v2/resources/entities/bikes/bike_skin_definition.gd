@@ -73,7 +73,7 @@ var lean_curve: Curve = preload("res://entities/player/bikes/resources/lean_spee
 
 @export_group("Tricks")
 @export var max_wheelie_angle_deg: float = 85.0
-@export var max_stoppie_angle_deg: float = 55.0
+@export var max_stoppie_angle_deg: float = 75.0
 @export var wheelie_rpm_threshold: float = 0.65
 @export var wheelie_balance_point_deg: float = 60.0
 @export var rotation_speed: float = 2.0
