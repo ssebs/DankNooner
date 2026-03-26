@@ -13,10 +13,9 @@ signal rpm_updated(rpm_ratio: float)
 @export var rpm_free_rev_speed: float = 4.0
 @export var rpm_loaded_speed: float = 1.5
 
-var _clutch_hold_time: float = 0.0
-
 var _current_gear: int = 1
 var _current_rpm: float = 1000.0
+var _clutch_hold_time: float = 0.0
 var _clutch_value: float = 0.0
 var _rpm_ratio: float = 0.0
 var _is_stalled: bool = false
@@ -28,8 +27,8 @@ func _ready():
 	input_controller.gear_change_pressed.connect(_on_gear_change)
 
 
-#region Local input handlers
 ## direction must be `1` or `-1` (fwd/back)
+## Runs from _rollback_tick in input_controller
 func _on_gear_change(direction: int):
 	# print("_on_gear_change %d" % direction)
 	var bd = player_entity.bike_definition
@@ -37,9 +36,6 @@ func _on_gear_change(direction: int):
 	if new_gear != _current_gear:
 		_current_gear = new_gear
 		gear_changed.emit(new_gear)
-
-
-#endregion
 
 
 ## Called from MovementController._rollback_tick()
