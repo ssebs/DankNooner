@@ -6,17 +6,19 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
+- [ ] Camera should not rotate with player (e.g. loops, ramps)
 - [ ] Redo movement_controller
 
   - [x] finish cleanup (function split)
-  - [ ] basic wheelies / stoppies
-  - [ ] improve physics
-  - [ ] be able to ride up ramps
-    - [ ] (maybe raycast to rotate to normal?) one for each wheel?
-    - [ ] Use speed/momentup to stay on ramps (e.g. loop)
-    - [ ] ignore 15deg for wall
-    - [ ] handle gravity manually.
-    - [ ] Slow down as you go up in angle
+  - [x] basic wheelies / stoppies
+  - [x] improve physics
+  - [x] be able to ride up ramps
+    - [x] (maybe raycast to rotate to normal?) one for each wheel?
+    - [x] Use speed/momentup to stay on ramps (e.g. loop)
+    - [x] handle gravity manually.
+    - [x] Slow down as you go up in angle
+  - [ ] Launch off ramps to catch "hang time" (adjust gravity)
+  - [ ] Review loop de loop code
   - [ ] 2 difficulties, arcade & sim. Sim grants 1.5x score
     - [ ] arcade still has gear changes, no clutch except to start wheelie
       - [ ] WASD support
