@@ -48,6 +48,24 @@ func do_reset():
 	_last_trick = Trick.NONE
 
 
+static func trick_to_str(trick: Trick) -> String:
+	match trick:
+		Trick.NONE: return "NONE"
+		Trick.WHEELIE_SITTING: return "WHEELIE_SITTING"
+		Trick.WHEELIE_MOD: return "WHEELIE_MOD"
+		Trick.STOPPIE: return "STOPPIE"
+	return "NONE"
+
+
+static func str_to_trick(s: String) -> Trick:
+	match s:
+		"NONE": return Trick.NONE
+		"WHEELIE_SITTING": return Trick.WHEELIE_SITTING
+		"WHEELIE_MOD": return Trick.WHEELIE_MOD
+		"STOPPIE": return Trick.STOPPIE
+	return Trick.NONE
+
+
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
 	if player_entity == null:
