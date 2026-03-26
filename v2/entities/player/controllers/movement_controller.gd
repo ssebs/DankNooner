@@ -12,9 +12,9 @@ const CLUTCH_KICK_WINDOW: float = 0.4
 const FALL_GRAVITY: float = 256.0
 const RAMP_GRAVITY: float = 128.0
 const SURFACE_BLEND_SPEED: float = 8.0  # how fast up_direction aligns to surface
-const WALL_REJECT_ANGLE: float = 170.0  # only reject near-straight-down surfaces (degrees)
+# const WALL_REJECT_ANGLE: float = 170.0  # only reject near-straight-down surfaces (degrees)
 const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
-const MIN_LOOP_SPEED: float = 10.0  # minimum speed to stick to steep/inverted surfaces
+const MIN_LOOP_SPEED: float = 20.0  # minimum speed to stick to steep/inverted surfaces
 var speed: float = 0.0
 var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
@@ -81,10 +81,11 @@ func _update_surface_alignment(delta: float):
 			)
 		)
 
-		# Ignore near-vertical walls
-		if surface_angle > deg_to_rad(WALL_REJECT_ANGLE):
-			_detach_from_surface(delta)
-			return
+		# # Ignore near-vertical walls
+		# !broken!
+		# if surface_angle > deg_to_rad(WALL_REJECT_ANGLE):
+		# 	_detach_from_surface(delta)
+		# 	return
 
 		# Speed-based adhesion on steep/inverted surfaces
 		if surface_angle > deg_to_rad(45) and speed < MIN_LOOP_SPEED:
