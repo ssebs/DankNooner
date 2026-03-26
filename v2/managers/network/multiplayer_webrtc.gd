@@ -25,12 +25,15 @@ enum Message {
 # @export var signaling_url: String = "ws://192.168.1.117:9080" # Localhost doesn't work on my PC
 
 ## STUN/TURN server URL for ICE negotiation
-@export var stun_server: String = "stun:stun.ssebs.com:3478"
+# See https://dashboard.metered.ca/turnserver/ & _get_ice_servers()
+# below is outdated, setting no longer used
+
+# @export var stun_server: String = "stun:stun.ssebs.com:3478"
 
 ## Optional TURN server URL (for relay fallback behind symmetric NAT)
-@export var turn_server: String = "turn:stun.ssebs.com:3478"
-@export var turn_username: String = "danknooner"
-@export var turn_credential: String = "passTEST"
+# @export var turn_server: String = "turn:stun.ssebs.com:3478"
+# @export var turn_username: String = "danknooner"
+# @export var turn_credential: String = "passTEST"
 @export var is_debug: bool = false
 
 const SETUP_TIMEOUT_MS = 15000
@@ -49,18 +52,17 @@ func _ready() -> void:
 		is_debug = true
 	if settings_manager == null:
 		return
-	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
-	settings_manager.setting_updated.connect(_on_setting_updated)
+	# settings_manager.all_settings_changed.connect(_on_all_settings_changed)
+	# settings_manager.setting_updated.connect(_on_setting_updated)
 
 
-func _on_all_settings_changed(settings: Dictionary) -> void:
-	if settings.has("signal_relay_host"):
-		_apply_relay_host(settings["signal_relay_host"])
+# func _on_all_settings_changed(settings: Dictionary) -> void:
+# 	if settings.has("signal_relay_host"):
+# 		_apply_relay_host(settings["signal_relay_host"])
 
-
-func _on_setting_updated(key: String, value: Variant) -> void:
-	if key == "signal_relay_host":
-		_apply_relay_host(str(value))
+# func _on_setting_updated(key: String, value: Variant) -> void:
+# 	if key == "signal_relay_host":
+# 		_apply_relay_host(str(value))
 
 
 func _dbg(msg: String) -> void:
@@ -68,10 +70,9 @@ func _dbg(msg: String) -> void:
 		print(msg)
 
 
-func _apply_relay_host(host: String) -> void:
-	stun_server = "stun:%s:3478" % host
-	turn_server = "turn:%s:3478" % host
-
+# func _apply_relay_host(host: String) -> void:
+# 	stun_server = "stun:%s:3478" % host
+# 	turn_server = "turn:%s:3478" % host
 
 #region Public API (handler interface)
 
@@ -277,19 +278,44 @@ func _send_msg(type: int, id: int, data: String = "") -> Error:
 
 
 func _get_ice_servers() -> Array:
-	var servers: Array = [{"urls": [stun_server]}]
-	if not turn_server.is_empty():
-		(
-			servers
-			. append(
-				{
-					"urls": [turn_server],
-					"username": turn_username,
-					"credential": turn_credential,
-				}
-			)
-		)
-	return servers
+	# var servers: Array = [{"urls": [stun_server]}]
+	# if not turn_server.is_empty():
+	# 	(
+	# 		servers
+	# 		. append(
+	# 			{
+	# 				"urls": [turn_server],
+	# 				"username": turn_username,
+	# 				"credential": turn_credential,
+	# 			}
+	# 		)
+	# 	)
+	# return servers
+	return [
+		{
+			"urls": "stun:stun.relay.metered.ca:80",
+		},
+		{
+			"urls": "turn:standard.relay.metered.ca:80",
+			"username": "cead62ad5423641ed5fd8ffc",
+			"credential": "6z59P3ogc9VkwQwL",
+		},
+		{
+			"urls": "turn:standard.relay.metered.ca:80?transport=tcp",
+			"username": "cead62ad5423641ed5fd8ffc",
+			"credential": "6z59P3ogc9VkwQwL",
+		},
+		{
+			"urls": "turn:standard.relay.metered.ca:443",
+			"username": "cead62ad5423641ed5fd8ffc",
+			"credential": "6z59P3ogc9VkwQwL",
+		},
+		{
+			"urls": "turns:standard.relay.metered.ca:443?transport=tcp",
+			"username": "cead62ad5423641ed5fd8ffc",
+			"credential": "6z59P3ogc9VkwQwL",
+		},
+	]
 
 
 func _create_rtc_peer(id: int) -> WebRTCPeerConnection:
