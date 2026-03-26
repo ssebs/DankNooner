@@ -10,10 +10,10 @@ class_name MovementController extends Node
 
 const CLUTCH_KICK_WINDOW: float = 0.4
 const GRAVITY: float = 128.0
-const SURFACE_BLEND_SPEED: float = 8.0  # how fast up_direction aligns to surface
-const WALL_REJECT_ANGLE: float = 90.0  # detach above this angle — can't ride past vertical
+const SURFACE_BLEND_SPEED: float = 15.0  # how fast up_direction aligns to surface
+const WALL_REJECT_ANGLE: float = 170.0  # only reject near-straight-down surfaces (degrees)
 const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
-const DETACH_CURVE_RADIUS: float = 10.0  # estimated curve radius for centripetal calc
+const MIN_LOOP_SPEED: float = 10.0  # minimum speed to stick to steep/inverted surfaces
 var speed: float = 0.0
 var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
@@ -86,15 +86,16 @@ func _update_surface_alignment(delta: float):
 			return
 
 		# Speed-based adhesion on steep/inverted surfaces
-		if surface_angle > deg_to_rad(45):
-			var detach_force = _calc_detach_force(floor_normal)
-			var centripetal = (speed * speed) / DETACH_CURVE_RADIUS
-			if centripetal < detach_force:
-				_detach_from_surface(delta)
-				return
+		if surface_angle > deg_to_rad(45) and speed < MIN_LOOP_SPEED:
+			# Too slow — slowly slerp up_direction toward global UP so gravity
+			# rotates downward and peels the bike off the surface naturally
+			var peel_speed = 2.0  # slow slerp — just enough to unstick
+			pe.up_direction = pe.up_direction.slerp(Vector3.UP, peel_speed * delta).normalized()
+			print("_detach (too slow) speed=%.1f" % speed)
+			return
 
-		# Snap up_direction to surface normal
-		pe.up_direction = floor_normal
+		# Blend up_direction toward surface normal (smooths out mesh seam jitter)
+		pe.up_direction = pe.up_direction.slerp(floor_normal, SURFACE_BLEND_SPEED * delta).normalized()
 	else:
 		_detach_from_surface(delta)
 
@@ -132,8 +133,9 @@ func _calc_detach_force(floor_normal: Vector3) -> float:
 func _speed_calc(delta: float):
 	var bd = player_entity.bike_definition
 
-	# Derive speed from synced velocity
-	speed = Vector2(player_entity.velocity.x, player_entity.velocity.z).length()
+	# Derive speed from velocity projected onto forward direction (works on walls/ceilings)
+	var forward = -player_entity.global_transform.basis.z
+	speed = maxf(player_entity.velocity.dot(forward), 0.0)
 
 	# Acceleration (uses gearing power output)
 	var power = gearing_controller.get_power_output()
