@@ -18,14 +18,19 @@ glow_enabled = true
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_qt85o"]
 
-[node name="Test_City_01" type="Node3D" unique_id=721643000 node_paths=PackedStringArray("player_spawn_pos")]
+[node name="Test_City_01" type="Node3D" unique_id=721643000 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug")]
 script = ExtResource("1_qt85o")
 player_spawn_pos = NodePath("PlayerSpawn")
+player_spawn_pos_debug = NodePath("PlayerSpawnTest")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="PlayerSpawn" type="Marker3D" parent="." unique_id=2018268121]
 unique_name_in_owner = true
 transform = Transform3D(1.192488e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 1.192488e-08, -10.999999, 0.049999952, 10.999999)
+
+[node name="PlayerSpawnTest" type="Marker3D" parent="." unique_id=1392137367]
+unique_name_in_owner = true
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 111.99999, 0.050000012, 65.99999)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=20150230]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
