@@ -6,35 +6,10 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] Create Player Part 2
-
-  - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
-  - [x] Refactor/cleanup
-  - [x] Fix collision
-  - [x] Decide what should be client side vs server side
-  - [x] Make sure MP authority is set properly
-  - [ ] New netcode changes / authority:
-    - [x] InputController
-    - [x] GearingController
-    - [x] MovementController
-      - [ ] Move pitch_angle/lean_angle out to player_entity since they're sync'd
-    - [x] AnimationController
-    - [ ] TrickController
-      - [ ] Move wheelie logic from movement controller
-      - [ ] Add stoppie logic
-    - [ ] CrashController
-      - [ ] Swap to rigidbody, make bounding box of mesh & apply velocity to bike & collision
-  - [x] Sync as little as possible
-    - no input/movement/gear calculations
-    - no sound for other players for now
-    - sync animations (procedural position)
-    - sync bike pos/rot
-  - [x] Update [doc](./PlayerController.md)
-
-- [ ] Move respawn logic to gamemode controller, using new signals
 - [ ] Redo movement_controller
 
   - [x] finish cleanup (function split)
+  - [ ] basic wheelies / stoppies
   - [ ] improve physics
   - [ ] be able to ride up ramps
     - [ ] (maybe raycast to rotate to normal?) one for each wheel?
@@ -45,51 +20,50 @@
   - [ ] 2 difficulties, arcade & sim. Sim grants 1.5x score
     - [ ] arcade still has gear changes, no clutch except to start wheelie
       - [ ] WASD support
-
-- [ ] Create Player part 3
-
-  - [ ] Add HUD
-  - [ ] AnimationController + Trick integration
-    - [ ] debug wheelie animation
-    - [ ] debug naked bike init ik / load default animation not working
-  - [ ] AnimationController + Crash integration
-    - [ ] Create crash animation (procedural)
-  - [ ] Improve crash_controller
-    - [ ] Brake danger
-    - [ ] Layer 2 collision (with objects)
   - [ ] Be able to reverse (play animation)
     - [ ] Hold clutch, brake to reverse
 
-- [ ] Review Animation Controller & Create animations
-  - [ ] Create lean (turning) animation
-  - [ ] Create stopped/idle animation
-  - [ ] Create wheelie/stoppie animation
-  - [x] claude created a system
-  - [x] Review planning_docs/AnimationController.md
-  - [x] Create way to play specific animations
-- [ ] signal relay host setting update doesn't save ? Double check!
-- [ ] review webrtc gen code myself (security)
-- [ ] https://github.com/utopia-rise/fmod-gdextension/pull/210#issuecomment-3717948490
+- [ ] Add HUD for player
+- [ ] Review webrtc gen code for security
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
 
 > POC = playable gamemodes w/ friends, see if core gameplay loop works
 > video record this once playing with everyone, save log files
 
+- [ ] Improve CrashController
+  - [ ] Brake danger
+  - [x] Layer 2 collision (with objects & players)
+  - [ ] Sync w/ players
+    - [ ] crashing into player => both should be affected
+  - [ ] Swap to rigidbody, make bounding box of mesh & apply velocity to bike & collision
+  - [ ] Emit signals to gamemode controller
+  - [ ] Move respawn logic to gamemode controller, using new signals
+- [ ] Review Animation Controller & Create animations
+  - [ ] AnimationController + Trick integration
+    - [ ] debug wheelie animation
+    - [ ] debug naked bike init ik / load default animation not working
+  - [ ] AnimationController + Crash integration
+    - [ ] Create crash animation (procedural)
+  - [ ] Create lean (turning) animation
+  - [ ] Create stopped/idle animation
+  - [ ] Create wheelie/stoppie animation
+  - [x] claude created a system
+  - [x] Review planning_docs/AnimationController.md
+  - [x] Create way to play specific animations
 - [ ] Trick Manager + tricks
-
+  - [ ] Move wheelie logic from movement controller
   - [ ] trick system
     - [ ] migrate wheelie / stoppie tricks
     - [ ] ramp tricks
     - [ ] ground tricks
-  - [ ] trick detection in trick_controller
-  - [ ] trick scoring in separate system
+  - [x] trick detection in trick_controller
+  - [ ] trick scoring in separate script
     - [ ] e.g. player emits trick_done & gamemode manager does something with it.
       - [ ] e.g. race/freeroam => boost
       - [ ] e.g. stunt race => combo counter
   - [ ] Create wheelie + DOWN animation (wheelie + right hand touches ground)
   - [ ] Create Heel clicker / other trick animations
-
 - [ ] Basic customization menu / UI
 
   - [x] Super basic customize ui
@@ -128,6 +102,7 @@
 
 - [ ] Basic core gameplay loop / implement gamemodes
 
+  - [ ] Review gamemode controller + signals emitted for spawning/crashing/trick scoring
   - [ ] start gamemodes via map select
   - [ ] Game modes:
     - [ ] Free roam
@@ -146,12 +121,11 @@
   - [ ] Tire Screetch SFX
   - [ ] Menu click sounds
   - [ ] Music?
+  - [ ] [Web](https://github.com/utopia-rise/fmod-gdextension/pull/210#issuecomment-3717948490)
 
 ## Backlog
 
-- [ ] sounds for web
-
-- [ ] Friends + invites
+- [ ] Friends + invites + server browser
 - [ ] Gamemode / Score / XP / $ v2
 
   - [ ] Collect via challenges in gamemodes
@@ -274,6 +248,30 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] signal relay host setting update doesn't save ? Double check!
+
+- [x] Create Player Part 2
+
+  - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
+  - [x] Refactor/cleanup
+  - [x] Fix collision
+  - [x] Decide what should be client side vs server side
+  - [x] Make sure MP authority is set properly
+  - [ ] New netcode changes / authority:
+
+    - [x] InputController
+    - [x] GearingController
+    - [x] MovementController
+      - [ ] Move pitch_angle/lean_angle out to player_entity since they're sync'd
+    - [x] AnimationController
+
+  - [x] Sync as little as possible
+    - no input/movement/gear calculations
+    - no sound for other players for now
+    - sync animations (procedural position)
+    - sync bike pos/rot
+  - [x] Update [doc](./PlayerController.md)
 
 - [x] Sync clutch inputs & gear changes w/ server
 
