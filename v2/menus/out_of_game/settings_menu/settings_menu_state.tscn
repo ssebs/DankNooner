@@ -81,11 +81,13 @@ layout_mode = 2
 size_flags_horizontal = 0
 
 [node name="signal_host_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=677060126]
+visible = false
 layout_mode = 2
 text = "WEBRTC_HOST_LABEL"
 
 [node name="SignalHostEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=132303083]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 placeholder_text = "home.ssebs.com"
 
