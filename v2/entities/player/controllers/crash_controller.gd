@@ -76,6 +76,13 @@ func _detect_crash():
 		trigger_crash()
 		return
 
+	# Upside-down landing — bike's up_direction vs global UP > 120°
+	var bike_up_angle = player_entity.up_direction.angle_to(Vector3.UP)
+	if bike_up_angle > deg_to_rad(120) and movement_controller.is_on_floor_netfox():
+		print("upside-down crash (angle=%.1f°)" % rad_to_deg(bike_up_angle))
+		trigger_crash()
+		return
+
 	# Collision with layer 2 obstacle — only head-on hits at speed
 	if movement_controller.speed >= _crash_min_speed:
 		for i in player_entity.get_slide_collision_count():
