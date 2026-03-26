@@ -9,8 +9,9 @@ class_name MovementController extends Node
 @export var crash_controller: CrashController
 
 const CLUTCH_KICK_WINDOW: float = 0.4
-const GRAVITY: float = 128.0
-const SURFACE_BLEND_SPEED: float = 15.0  # how fast up_direction aligns to surface
+const FALL_GRAVITY: float = 256.0
+const RAMP_GRAVITY: float = 128.0
+const SURFACE_BLEND_SPEED: float = 8.0  # how fast up_direction aligns to surface
 const WALL_REJECT_ANGLE: float = 170.0  # only reject near-straight-down surfaces (degrees)
 const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
 const MIN_LOOP_SPEED: float = 10.0  # minimum speed to stick to steep/inverted surfaces
@@ -95,7 +96,9 @@ func _update_surface_alignment(delta: float):
 			return
 
 		# Blend up_direction toward surface normal (smooths out mesh seam jitter)
-		pe.up_direction = pe.up_direction.slerp(floor_normal, SURFACE_BLEND_SPEED * delta).normalized()
+		pe.up_direction = (
+			pe.up_direction.slerp(floor_normal, SURFACE_BLEND_SPEED * delta).normalized()
+		)
 	else:
 		_detach_from_surface(delta)
 
@@ -126,7 +129,7 @@ func _detach_from_surface(delta: float):
 func _calc_detach_force(floor_normal: Vector3) -> float:
 	# Dot: 1.0 on ceiling (full pull-away), 0.0 on wall, -1.0 on flat ground
 	var pull_away = (-Vector3.UP).dot(floor_normal)
-	return maxf(pull_away, 0.0) * GRAVITY
+	return maxf(pull_away, 0.0) * RAMP_GRAVITY
 
 
 ## Calculate speed from input / power output
@@ -135,7 +138,13 @@ func _speed_calc(delta: float):
 
 	# Derive speed from velocity projected onto forward direction (works on walls/ceilings)
 	var forward = -player_entity.global_transform.basis.z
-	speed = maxf(player_entity.velocity.dot(forward), 0.0)
+	var dot_speed = player_entity.velocity.dot(forward)
+	# On steep surfaces, use velocity magnitude to avoid speed loss from basis slerp lag
+	var surface_angle = player_entity.up_direction.angle_to(Vector3.UP)
+	if surface_angle > deg_to_rad(30) and dot_speed > 0:
+		speed = maxf(player_entity.velocity.length(), 0.0)
+	else:
+		speed = maxf(dot_speed, 0.0)
 
 	# Acceleration (uses gearing power output)
 	var power = gearing_controller.get_power_output()
@@ -198,7 +207,7 @@ func _velocity_calc(delta: float):
 
 	# Gravity — pulls toward -up_direction (supports ramp/loop riding)
 	if !is_on_floor_netfox():
-		player_entity.velocity -= player_entity.up_direction * GRAVITY * delta
+		player_entity.velocity -= player_entity.up_direction * FALL_GRAVITY * delta
 
 
 ## Orchestrates pitch_angle: clutch detection → wheelie target → stoppie → apply
