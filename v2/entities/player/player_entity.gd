@@ -4,9 +4,9 @@
 class_name PlayerEntity extends CharacterBody3D
 
 signal respawned(peer_id: int)
-signal crashed(peer_id: int)
-signal trick_started(peer_id: int, trick_type: int)
-signal trick_ended(peer_id: int, trick_type: int)
+# signal crashed(peer_id: int)
+# signal trick_started(peer_id: int, trick_type: int)
+# signal trick_ended(peer_id: int, trick_type: int)
 
 @export var bike_definition: BikeSkinDefinition
 @export var character_definition: CharacterSkinDefinition
@@ -17,10 +17,11 @@ signal trick_ended(peer_id: int, trick_type: int)
 @export var gearing_controller: GearingController
 @export var trick_controller: TrickController
 @export var crash_controller: CrashController
+@export var movement_controller: MovementController
+@export var camera_controller: CameraController
 
+@onready var controllers_node: Node3D = %_Controllers
 # @onready var hud_controller: HUDController = %HUDController
-@onready var movement_controller: MovementController = %MovementController
-@onready var camera_controller: CameraController = %CameraController
 
 @onready var visual_root: Node3D = %VisualRoot
 @onready var character_skin: CharacterSkin = %CharacterSkin
@@ -65,6 +66,7 @@ func _ready():
 	_init_mesh()
 	_init_collision_shape()
 	_init_ik()
+	_init_controller_handlers()
 	animation_controller.initialize()
 
 	if Engine.is_editor_hint():
@@ -89,9 +91,9 @@ func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
 		rb_do_respawn = false
 
 	# Run other controllers (ORDER MATTERS)
+	movement_controller.on_movement_rollback_tick(delta)
 	gearing_controller.on_movement_rollback_tick(delta)
 	trick_controller.on_movement_rollback_tick(delta)
-	movement_controller.on_movement_rollback_tick(delta)
 	crash_controller.on_movement_rollback_tick(delta)
 
 
@@ -159,8 +161,12 @@ func _init_audio():
 	gearing_controller.rpm_updated.connect(_on_rpm_updated)
 
 	# TODO - add clunk sound when changing gears
-	# gearing_controller.rpm_updated.connect(_on_rpm_updated)
 	audio_manager.play_ninja500_revs()
+
+
+func _init_controller_handlers():
+	gearing_controller.gear_changed.connect(_on_gear_changed)
+	trick_controller.trick_started.connect(_on_trick_started)
 
 
 #endregion
@@ -171,6 +177,14 @@ func _on_rpm_updated(new_rpm_ratio: float):
 	if !audio_manager:
 		return
 	audio_manager.update_ninja500_rpm(new_rpm_ratio)
+
+
+func _on_gear_changed(new_gear: int):
+	print("Gear: %d" % new_gear)
+
+
+func _on_trick_started(trick_type: TrickController.Trick):
+	print("Trick: %s" % TrickController.trick_to_str(trick_type))
 
 
 #endregion
@@ -191,11 +205,15 @@ func do_respawn():
 	velocity = Vector3.ZERO
 	is_boosting = false
 	is_crashed = false
-	movement_controller.do_reset()
-	gearing_controller.do_reset()
-	trick_controller.do_reset()
-	crash_controller.do_reset()
-	animation_controller.do_reset()
+	for child in controllers_node.get_children():
+		if !child.has_method("do_reset"):
+			continue
+		child.do_reset()
+	# movement_controller.do_reset()
+	# gearing_controller.do_reset()
+	# trick_controller.do_reset()
+	# crash_controller.do_reset()
+	# animation_controller.do_reset()
 	if animation_controller:
 		animation_controller.stop_ragdoll()
 	respawned.emit()
