@@ -64,6 +64,7 @@ var rb_do_respawn: bool = false
 
 
 func _ready():
+	floor_max_angle = deg_to_rad(170.0)  # allow riding on steep ramps, loops, ceilings
 	_init_mesh()
 	_init_collision_shape()
 	_init_ik()

@@ -10,6 +10,10 @@ class_name MovementController extends Node
 
 const CLUTCH_KICK_WINDOW: float = 0.4
 const GRAVITY: float = 128.0
+const SURFACE_BLEND_SPEED: float = 8.0  # how fast up_direction aligns to surface
+const WALL_REJECT_ANGLE: float = 90.0  # detach above this angle — can't ride past vertical
+const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
+const DETACH_CURVE_RADIUS: float = 10.0  # estimated curve radius for centripetal calc
 var speed: float = 0.0
 var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
@@ -43,6 +47,7 @@ func on_movement_rollback_tick(delta: float):
 	if player_entity.is_crashed:
 		return
 
+	_update_surface_alignment(delta)
 	_speed_calc(delta)
 	_steer_calc(delta)
 	_velocity_calc(delta)
@@ -54,6 +59,73 @@ func on_movement_rollback_tick(delta: float):
 	player_entity.velocity /= NetworkTime.physics_factor
 
 	_handle_player_collision(delta)
+
+
+## Align bike's up_direction to surface normal for ramp/loop riding
+func _update_surface_alignment(delta: float):
+	var pe = player_entity
+
+	if is_on_floor_netfox():
+		var floor_normal = pe.get_floor_normal()
+		var surface_angle = floor_normal.angle_to(Vector3.UP)
+		print(
+			(
+				"surface: on_floor=true normal=%s angle=%.1f° up_dir=%s floor_max=%.1f°"
+				% [
+					floor_normal,
+					rad_to_deg(surface_angle),
+					pe.up_direction,
+					rad_to_deg(pe.floor_max_angle)
+				]
+			)
+		)
+
+		# Ignore near-vertical walls
+		if surface_angle > deg_to_rad(WALL_REJECT_ANGLE):
+			_detach_from_surface(delta)
+			return
+
+		# Speed-based adhesion on steep/inverted surfaces
+		if surface_angle > deg_to_rad(45):
+			var detach_force = _calc_detach_force(floor_normal)
+			var centripetal = (speed * speed) / DETACH_CURVE_RADIUS
+			if centripetal < detach_force:
+				_detach_from_surface(delta)
+				return
+
+		# Snap up_direction to surface normal
+		pe.up_direction = floor_normal
+	else:
+		_detach_from_surface(delta)
+
+
+## Blend up_direction back to global up (airborne or detaching)
+## Lean forward/back rotates the bike so you can land right-side-up
+func _detach_from_surface(delta: float):
+	print("_detach_from_surface")
+	# Lean input rotates up_direction around the bike's right axis
+	var lean = input_controller.nfx_lean
+	if abs(lean) > 0.1:
+		var right_axis = player_entity.global_transform.basis.x.normalized()
+		var rotation_speed = 3.0  # radians/sec — tuning value
+		player_entity.up_direction = (
+			player_entity
+			. up_direction
+			. rotated(right_axis, lean * rotation_speed * delta)
+			. normalized()
+		)
+	else:
+		# No input — drift back toward global up
+		player_entity.up_direction = (
+			player_entity.up_direction.slerp(Vector3.UP, SURFACE_BLEND_SPEED * delta).normalized()
+		)
+
+
+## How much global gravity pulls the bike away from the current surface
+func _calc_detach_force(floor_normal: Vector3) -> float:
+	# Dot: 1.0 on ceiling (full pull-away), 0.0 on wall, -1.0 on flat ground
+	var pull_away = (-Vector3.UP).dot(floor_normal)
+	return maxf(pull_away, 0.0) * GRAVITY
 
 
 ## Calculate speed from input / power output
@@ -101,6 +173,15 @@ func _steer_calc(delta: float):
 	var target_lean = input_controller.nfx_steer * bd.max_lean_angle_rad * lean_factor
 	roll_angle = lerpf(roll_angle, target_lean, bd.lean_speed * delta)
 
+	# Align bike basis so local Y points along up_direction (ramp riding)
+	var target_up = player_entity.up_direction
+	var current_forward = -player_entity.global_transform.basis.z
+	var right = current_forward.cross(target_up)
+	if right.length_squared() > 0.001:
+		right = right.normalized()
+		var adjusted_forward = target_up.cross(right).normalized()
+		player_entity.global_transform.basis = Basis(right, target_up, -adjusted_forward)
+
 
 ## Calculate player_entity.velocity & set slope angle
 func _velocity_calc(delta: float):
@@ -113,9 +194,9 @@ func _velocity_calc(delta: float):
 	else:
 		player_entity.velocity = forward * speed
 
-	# Gravity
+	# Gravity — pulls toward -up_direction (supports ramp/loop riding)
 	if !is_on_floor_netfox():
-		player_entity.velocity.y -= delta * GRAVITY
+		player_entity.velocity -= player_entity.up_direction * GRAVITY * delta
 
 
 ## Orchestrates pitch_angle: clutch detection → wheelie target → stoppie → apply
@@ -127,8 +208,12 @@ func _pitch_angle_calc(delta: float):
 	var in_stoppie = pitch_angle < deg_to_rad(-5)
 	var in_balance_point = pitch_angle > deg_to_rad(bd.wheelie_balance_point_deg)
 
-	# --- Adjust angle to ramp (using normal) ---
-	# use player_entity.ground_raycast
+	# Disable tricks on steep surfaces — decay pitch back to neutral
+	var surface_angle = player_entity.up_direction.angle_to(Vector3.UP)
+	if surface_angle > deg_to_rad(TRICK_DISABLE_ANGLE):
+		if pitch_angle != 0:
+			pitch_angle = move_toward(pitch_angle, 0, bd.return_speed * delta)
+		return
 
 	# --- Wheelie ---
 	var wheelie_target = 0.0
@@ -331,6 +416,7 @@ func do_reset():
 	yaw_angle = 0.0
 	_prev_clutch_held = false
 	_clutch_kick_window = 0.0
+	player_entity.up_direction = Vector3.UP
 
 
 func _get_configuration_warnings() -> PackedStringArray:
