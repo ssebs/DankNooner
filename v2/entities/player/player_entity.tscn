@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://bnop7vr1q4gwg" path="res://entities/player/player_entity.gd" id="1_0jc3c"]
 [ext_resource type="PackedScene" uid="uid://4m8or6jc5xbd" path="res://entities/player/controllers/camera_controller.tscn" id="2_bls4j"]
-[ext_resource type="PackedScene" uid="uid://2nnr6ecxbcgo" path="res://entities/player/controllers/movement_controller.tscn" id="2_fkugw"]
 [ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/entities/bikes/skins/sport_default_skin_definition.tres" id="2_lfjd4"]
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_faflk"]
 [ext_resource type="Resource" uid="uid://dugcuccseinkn" path="res://resources/entities/player/skins/biker_default_skin_definition.tres" id="3_lfjd4"]
@@ -13,6 +12,7 @@
 [ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/entities/bikes/hitbox/bike_hitbox.tres" id="8_1vqn6"]
 [ext_resource type="Script" uid="uid://b37it1dg63lir" path="res://entities/player/controllers/animation_controller.gd" id="9_anim"]
 [ext_resource type="Script" uid="uid://c2c38w5opks8m" path="res://entities/player/controllers/gearing_controller.gd" id="10_gear"]
+[ext_resource type="Script" uid="uid://bi0gffmw6lupt" path="res://entities/player/controllers/movement_controller.gd" id="11_tivla"]
 [ext_resource type="Script" uid="uid://t5igmn16n20c" path="res://entities/player/controllers/trick_controller.gd" id="11_trick"]
 [ext_resource type="Script" uid="uid://cfpb4scu8hdy4" path="res://entities/player/controllers/crash_controller.gd" id="12_crash"]
 
@@ -134,7 +134,7 @@ transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@18942")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@26481")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
@@ -198,13 +198,15 @@ bike_skin = NodePath("../../VisualRoot/BikeSkin")
 movement_controller = NodePath("../MovementController")
 input_controller = NodePath("../InputController")
 
-[node name="MovementController" parent="_Controllers" unique_id=1521291056 node_paths=PackedStringArray("player_entity", "input_controller", "gearing_controller", "trick_controller", "crash_controller") instance=ExtResource("2_fkugw")]
+[node name="MovementController" type="Node" parent="_Controllers" unique_id=220903559 node_paths=PackedStringArray("player_entity", "input_controller", "gearing_controller", "trick_controller", "crash_controller")]
 unique_name_in_owner = true
+script = ExtResource("11_tivla")
 player_entity = NodePath("../..")
 input_controller = NodePath("../InputController")
 gearing_controller = NodePath("../GearingController")
 trick_controller = NodePath("../TrickController")
 crash_controller = NodePath("../CrashController")
+metadata/_custom_type_script = "uid://bi0gffmw6lupt"
 
 [node name="GearingController" type="Node" parent="_Controllers" unique_id=2064362163 node_paths=PackedStringArray("player_entity", "input_controller")]
 unique_name_in_owner = true
@@ -257,5 +259,4 @@ billboard = 2
 text = "USERNAME"
 
 [editable path="VisualRoot/CharacterSkin"]
-[editable path="_Controllers/MovementController"]
 [editable path="_Controllers/CameraController"]
