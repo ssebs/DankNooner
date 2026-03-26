@@ -20,7 +20,7 @@ glow_enabled = true
 
 [node name="Test_City_01" type="Node3D" unique_id=721643000 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug")]
 script = ExtResource("1_qt85o")
-player_spawn_pos = NodePath("PlayerSpawn")
+player_spawn_pos = NodePath("PlayerSpawnTest")
 player_spawn_pos_debug = NodePath("PlayerSpawnTest")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
@@ -1041,6 +1041,39 @@ width = 4.0
 height = 0.1
 depth = 2.0
 
+[node name="Ramp8" type="Node3D" parent="Stuff" unique_id=177161557]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 134, -0.02000001, 116)
+
+[node name="ramp1" parent="Stuff/Ramp8" unique_id=75706757 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+width = 4.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp2" parent="Stuff/Ramp8" unique_id=613719522 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, -1, 0, 1)
+width = 4.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp3" parent="Stuff/Ramp8" unique_id=1196235064 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, -1, 0.25881904, 1.9659258)
+width = 4.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp4" parent="Stuff/Ramp8" unique_id=1493294902 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 0.7071067, 0.70710677, 0, -0.70710677, 0.7071067, -1, 0.75881904, 2.8319511)
+width = 4.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp5" parent="Stuff/Ramp8" unique_id=504817327 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, -1, 1.4659258, 3.5390577)
+width = 4.0
+height = 0.1
+depth = 2.0
+
 [node name="Ramp5" type="Node3D" parent="Stuff" unique_id=364614658]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 118, -0.02000001, 116)
 
@@ -1110,150 +1143,219 @@ width = 4.0
 height = 0.1
 depth = 2.0
 
-[node name="Ramp6" type="Node3D" parent="Stuff" unique_id=1402504740]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 122, -0.02000001, 116)
+[node name="Ramp7" type="Node3D" parent="Stuff" unique_id=1223162247]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 130, -0.02000001, 116)
 
-[node name="ramp1" parent="Stuff/Ramp6" unique_id=13672220 instance=ExtResource("17_cf4ia")]
+[node name="ramp1" parent="Stuff/Ramp7" unique_id=1680768861 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
 width = 4.0
 height = 0.1
 depth = 2.0
 
-[node name="ramp2" parent="Stuff/Ramp6" unique_id=969812085 instance=ExtResource("17_cf4ia")]
+[node name="ramp2" parent="Stuff/Ramp7" unique_id=1697052100 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, -1, 0, 1)
 width = 4.0
 height = 0.1
 depth = 2.0
 
-[node name="ramp3" parent="Stuff/Ramp6" unique_id=1873947028 instance=ExtResource("17_cf4ia")]
+[node name="ramp3" parent="Stuff/Ramp7" unique_id=53383814 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, -1, 0.25881904, 1.9659258)
 width = 4.0
 height = 0.1
 depth = 2.0
 
-[node name="ramp4" parent="Stuff/Ramp6" unique_id=1360533753 instance=ExtResource("17_cf4ia")]
+[node name="ramp4" parent="Stuff/Ramp7" unique_id=1034689623 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 0.7071067, 0.70710677, 0, -0.70710677, 0.7071067, -1, 0.75881904, 2.8319511)
 width = 4.0
 height = 0.1
 depth = 2.0
 
-[node name="ramp5" parent="Stuff/Ramp6" unique_id=1315870500 instance=ExtResource("17_cf4ia")]
+[node name="ramp5" parent="Stuff/Ramp7" unique_id=2139825572 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, -1, 1.4659258, 3.5390577)
 width = 4.0
 height = 0.1
 depth = 2.0
 
-[node name="ramp6" parent="Stuff/Ramp6" unique_id=2066189916 instance=ExtResource("17_cf4ia")]
+[node name="ramp6" parent="Stuff/Ramp7" unique_id=836736242 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 0.25881898, 0.9659258, 0, -0.9659258, 0.25881898, -1, 2.3319511, 4.0390577)
 width = 4.0
 height = 0.1
 depth = 2.0
 
-[node name="ramp7" parent="Stuff/Ramp6" unique_id=762944844 instance=ExtResource("17_cf4ia")]
+[node name="ramp7" parent="Stuff/Ramp7" unique_id=1182956484 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, -5.9604645e-08, 0.99999994, 0, -0.99999994, -5.9604645e-08, -1, 3.2978768, 4.297877)
 width = 4.0
 height = 0.1
 depth = 2.0
 
-[node name="ramp8" parent="Stuff/Ramp6" unique_id=1493239666 instance=ExtResource("17_cf4ia")]
+[node name="ramp8" parent="Stuff/Ramp7" unique_id=1472732813 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, -0.25881907, 0.96592575, 0, -0.96592575, -0.25881907, -1, 4.297877, 4.297877)
 width = 4.0
 height = 0.1
 depth = 2.0
 
-[node name="ramp9" parent="Stuff/Ramp6" unique_id=816200308 instance=ExtResource("17_cf4ia")]
+[node name="ramp9" parent="Stuff/Ramp7" unique_id=712137637 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, -0.5, 0.8660253, 0, -0.8660253, -0.5, -1, 5.2638025, 4.0390577)
 width = 4.0
 height = 0.1
 depth = 2.0
 
-[node name="ramp10" parent="Stuff/Ramp6" unique_id=1728657378 instance=ExtResource("17_cf4ia")]
+[node name="ramp10" parent="Stuff/Ramp7" unique_id=738935824 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, -0.70710677, 0.7071067, 0, -0.7071067, -0.70710677, -1, 6.129828, 3.5390577)
 width = 4.0
 height = 0.1
 depth = 2.0
 
-[node name="ramp11" parent="Stuff/Ramp6" unique_id=98114667 instance=ExtResource("17_cf4ia")]
+[node name="ramp11" parent="Stuff/Ramp7" unique_id=1674316385 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, -0.8660253, 0.4999999, 0, -0.4999999, -0.8660253, -1, 6.8369346, 2.831951)
 width = 4.0
 height = 0.1
 depth = 2.0
 
+[node name="Ramp6" type="Node3D" parent="Stuff" unique_id=1402504740]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 124, -0.02000001, 116)
+
+[node name="ramp1" parent="Stuff/Ramp6" unique_id=13672220 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+width = 8.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp2" parent="Stuff/Ramp6" unique_id=969812085 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, -1, 0, 1)
+width = 8.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp3" parent="Stuff/Ramp6" unique_id=1873947028 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, -1, 0.25881904, 1.9659258)
+width = 8.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp4" parent="Stuff/Ramp6" unique_id=1360533753 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 0.7071067, 0.70710677, 0, -0.70710677, 0.7071067, -1, 0.75881904, 2.8319511)
+width = 8.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp5" parent="Stuff/Ramp6" unique_id=1315870500 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, -1, 1.4659258, 3.5390577)
+width = 8.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp6" parent="Stuff/Ramp6" unique_id=2066189916 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 0.25881898, 0.9659258, 0, -0.9659258, 0.25881898, -1, 2.3319511, 4.0390577)
+width = 8.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp7" parent="Stuff/Ramp6" unique_id=762944844 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, -5.9604645e-08, 0.99999994, 0, -0.99999994, -5.9604645e-08, -1, 3.2978768, 4.297877)
+width = 8.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp8" parent="Stuff/Ramp6" unique_id=1493239666 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, -0.25881907, 0.96592575, 0, -0.96592575, -0.25881907, -1, 4.297877, 4.297877)
+width = 8.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp9" parent="Stuff/Ramp6" unique_id=816200308 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, -0.5, 0.8660253, 0, -0.8660253, -0.5, -1, 5.2638025, 4.0390577)
+width = 8.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp10" parent="Stuff/Ramp6" unique_id=1728657378 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, -0.70710677, 0.7071067, 0, -0.7071067, -0.70710677, -1, 6.129828, 3.5390577)
+width = 8.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp11" parent="Stuff/Ramp6" unique_id=98114667 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, -0.8660253, 0.4999999, 0, -0.4999999, -0.8660253, -1, 6.8369346, 2.831951)
+width = 8.0
+height = 0.1
+depth = 2.0
+
 [node name="ramp12" parent="Stuff/Ramp6" unique_id=247158216 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, -0.9659257, 0.25881898, 0, -0.25881898, -0.9659257, -1, 7.3369346, 1.9659256)
-width = 4.0
+width = 8.0
 height = 0.1
 depth = 2.0
 
 [node name="ramp13" parent="Stuff/Ramp6" unique_id=2123199302 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, -0.9999998, -2.9802322e-08, 0, 2.9802322e-08, -0.9999998, -1, 7.5957537, 0.9999999)
-width = 4.0
+width = 8.0
 height = 0.1
 depth = 2.0
 
 [node name="ramp14" parent="Stuff/Ramp6" unique_id=633668758 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, -0.96592563, -0.258819, 0, 0.258819, -0.96592563, -1, 7.5957537, 5.9604645e-08)
-width = 4.0
+width = 8.0
 height = 0.1
 depth = 2.0
 
 [node name="ramp15" parent="Stuff/Ramp6" unique_id=297262557 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, -0.8660252, -0.49999994, 0, 0.49999994, -0.8660252, -1, 7.3369346, -0.9659256)
-width = 4.0
+width = 8.0
 height = 0.1
 depth = 2.0
 
 [node name="ramp16" parent="Stuff/Ramp6" unique_id=1318794211 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, -0.7071066, -0.70710665, 0, 0.70710665, -0.7071066, -1, 6.8369346, -1.8319508)
-width = 4.0
+width = 8.0
 height = 0.1
 depth = 2.0
 
 [node name="ramp17" parent="Stuff/Ramp6" unique_id=280678459 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, -0.49999982, -0.8660252, 0, 0.8660252, -0.49999982, -1, 6.129828, -2.5390573)
-width = 4.0
+width = 8.0
 height = 0.1
 depth = 2.0
 
 [node name="ramp18" parent="Stuff/Ramp6" unique_id=388817548 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, -0.25881892, -0.9659256, 0, 0.9659256, -0.25881892, -1, 5.2638025, -3.039057)
-width = 4.0
+width = 8.0
 height = 0.1
 depth = 2.0
 
 [node name="ramp19" parent="Stuff/Ramp6" unique_id=1579226095 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 5.9604645e-08, -0.9999997, 0, 0.9999997, 5.9604645e-08, -1, 4.297877, -3.297876)
-width = 4.0
+width = 8.0
 height = 0.1
 depth = 2.0
 
 [node name="ramp20" parent="Stuff/Ramp6" unique_id=542513798 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 0.258819, -0.9659255, 0, 0.9659255, 0.258819, -1, 3.297877, -3.297876)
-width = 4.0
+width = 8.0
 height = 0.1
 depth = 2.0
 
 [node name="ramp21" parent="Stuff/Ramp6" unique_id=1195563419 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 0.49999988, -0.8660251, 0, 0.8660251, 0.49999988, -1, 2.3319516, -3.0390568)
-width = 4.0
+width = 8.0
 height = 0.1
 depth = 2.0
 
 [node name="ramp22" parent="Stuff/Ramp6" unique_id=1408318164 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 0.7071066, -0.7071065, 0, 0.7071065, 0.7071066, -1, 1.4659265, -2.5390568)
-width = 4.0
+width = 8.0
 height = 0.1
 depth = 2.0
 
 [node name="ramp23" parent="Stuff/Ramp6" unique_id=34621338 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 0.8660251, -0.4999997, 0, 0.4999997, 0.8660251, -1, 0.75882006, -1.8319502)
-width = 4.0
+width = 8.0
 height = 0.1
 depth = 2.0
 
 [node name="ramp24" parent="Stuff/Ramp6" unique_id=1344826207 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 0.9659254, -0.2588188, 0, 0.2588188, 0.9659254, -1, 0.25882035, -0.9659251)
-width = 4.0
+width = 8.0
 height = 0.1
 depth = 2.0
 
