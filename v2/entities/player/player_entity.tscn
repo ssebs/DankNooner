@@ -97,7 +97,9 @@ _data = {
 }
 
 [node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("collision_shape_3d", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller")]
+collision_layer = 3
 collision_mask = 3
+motion_mode = 1
 floor_block_on_wall = false
 safe_margin = 0.01
 script = ExtResource("1_0jc3c")
@@ -117,13 +119,13 @@ script = ExtResource("3_faflk")
 root = NodePath("..")
 enable_prediction = true
 state_properties = Array[String]([":global_transform", ":velocity", "%MovementController:pitch_angle", "%MovementController:roll_angle"])
-input_properties = Array[String](["%InputController:nfx_throttle", "%InputController:nfx_front_brake", "%InputController:nfx_rear_brake", "%InputController:nfx_steer", "%InputController:nfx_lean"])
+input_properties = Array[String](["%InputController:nfx_throttle", "%InputController:nfx_front_brake", "%InputController:nfx_rear_brake", "%InputController:nfx_steer", "%InputController:nfx_lean", "%InputController:nfx_trick_held", "%InputController:nfx_clutch_held", "%InputController:nfx_cam_x", "%InputController:nfx_cam_y"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="TickInterpolator" type="Node" parent="." unique_id=977812349 node_paths=PackedStringArray("root")]
 script = ExtResource("4_ri2qi")
 root = NodePath("..")
-properties = Array[String]([":global_transform", ":velocity", "%MovementController:pitch_angle", "%MovementController:roll_angle"])
+properties = Array[String]([":global_transform"])
 metadata/_custom_type_script = "uid://dour8fehaaugp"
 
 [node name="VisualRoot" type="Node3D" parent="." unique_id=53014519]

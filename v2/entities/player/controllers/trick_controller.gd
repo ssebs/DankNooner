@@ -27,7 +27,7 @@ func on_movement_rollback_tick(_delta: float):
 
 func _detect_current_trick() -> Trick:
 	if movement_controller.pitch_angle > deg_to_rad(15):
-		if input_controller.trick_held:
+		if input_controller.nfx_trick_held:
 			return Trick.WHEELIE_MOD
 		return Trick.WHEELIE_SITTING
 

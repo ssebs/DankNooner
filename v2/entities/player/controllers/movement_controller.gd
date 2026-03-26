@@ -220,7 +220,7 @@ func _stoppie_calc(bd: BikeSkinDefinition, in_stoppie: bool, delta: float):
 
 ## Detect clutch dump (held → released while on throttle) and manage kick window
 func _update_clutch_dump_detection():
-	var clutch_held = input_controller.clutch_held
+	var clutch_held = input_controller.nfx_clutch_held
 
 	if _prev_clutch_held and not clutch_held and input_controller.nfx_throttle > 0.5:
 		_clutch_kick_window = CLUTCH_KICK_WINDOW
