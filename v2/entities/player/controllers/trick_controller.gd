@@ -11,7 +11,7 @@ enum Trick { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE }
 @export var gearing_controller: GearingController
 @export var movement_controller: MovementController
 
-var current_trick: Trick = Trick.NONE
+var _current_trick: Trick = Trick.NONE
 var _last_trick: Trick = Trick.NONE
 
 
@@ -22,7 +22,13 @@ func _ready():
 
 ## Called from MovementController._rollback_tick()
 func on_movement_rollback_tick(_delta: float):
-	current_trick = _detect_current_trick()
+	_current_trick = _detect_current_trick()
+	if _current_trick == Trick.NONE:
+		trick_ended.emit(_last_trick)
+	elif _current_trick != _last_trick:
+		_last_trick = _current_trick
+		trick_ended.emit(_last_trick)
+		trick_started.emit(_current_trick)
 
 
 func _detect_current_trick() -> Trick:
@@ -38,9 +44,8 @@ func _detect_current_trick() -> Trick:
 
 ## Called from player_entity.gd's do_respawn
 func do_reset():
-	current_trick = Trick.NONE
+	_current_trick = Trick.NONE
 	_last_trick = Trick.NONE
-	movement_controller.pitch_angle = 0
 
 
 func _get_configuration_warnings() -> PackedStringArray:
