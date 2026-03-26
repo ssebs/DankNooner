@@ -51,7 +51,7 @@ func on_movement_rollback_tick(delta: float):
 
 
 func _update_clutch_hold_time(delta: float):
-	if input_controller.clutch_held:
+	if input_controller.nfx_clutch_held:
 		_clutch_hold_time += delta
 		_clutch_value = move_toward(_clutch_value, 1.0, clutch_engage_speed * delta)
 	else:
@@ -116,7 +116,7 @@ func get_power_output() -> float:
 		return 0.0
 
 	# Pulling the clutch lever is an instant disconnect
-	if input_controller.clutch_held:
+	if input_controller.nfx_clutch_held:
 		return 0.0
 	var engagement = 1.0 - _clutch_value
 

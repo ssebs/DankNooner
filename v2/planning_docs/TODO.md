@@ -6,7 +6,6 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] Sync clutch inputs & gear changes w/ server
 - [ ] Create Player Part 2
 
   - [x] ~~**Delete** all imported stuff and start clean. Use old code as reference~~
@@ -275,6 +274,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Sync clutch inputs & gear changes w/ server
 
 - [x] holding clutch while reving makes you move when it shouldn't
 
