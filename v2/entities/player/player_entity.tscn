@@ -263,5 +263,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1839552, 0)
 billboard = 2
 text = "USERNAME"
 
+[node name="GroundRayCast" type="RayCast3D" parent="." unique_id=1983600718]
+unique_name_in_owner = true
+
 [editable path="VisualRoot/CharacterSkin"]
 [editable path="_Controllers/CameraController"]

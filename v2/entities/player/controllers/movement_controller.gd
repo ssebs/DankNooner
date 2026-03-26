@@ -127,6 +127,9 @@ func _pitch_angle_calc(delta: float):
 	var in_stoppie = pitch_angle < deg_to_rad(-5)
 	var in_balance_point = pitch_angle > deg_to_rad(bd.wheelie_balance_point_deg)
 
+	# --- Adjust angle to ramp (using normal) ---
+	# use player_entity.ground_raycast
+
 	# --- Wheelie ---
 	var wheelie_target = 0.0
 	if _can_initiate_wheelie(in_wheelie) and not in_stoppie:

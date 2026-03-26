@@ -27,6 +27,7 @@ signal respawned(peer_id: int)
 @onready var character_skin: CharacterSkin = %CharacterSkin
 @onready var bike_skin: BikeSkin = %BikeSkin
 @onready var name_label: Label3D = %NameLabel
+@onready var ground_raycast: RayCast3D = %GroundRayCast
 @onready var rollback_sync: RollbackSynchronizer = %RollbackSynchronizer
 
 var is_local_client: bool = false
