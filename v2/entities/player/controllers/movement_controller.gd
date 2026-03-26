@@ -9,6 +9,7 @@ class_name MovementController extends Node
 @export var crash_controller: CrashController
 
 const CLUTCH_KICK_WINDOW: float = 0.4
+const GRAVITY: float = 128.0
 var speed: float = 0.0
 var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
@@ -105,7 +106,7 @@ func _steer_calc(delta: float):
 func _velocity_calc(delta: float):
 	# Apply velocity following slope
 	var forward = -player_entity.global_transform.basis.z
-	if player_entity.is_on_floor():
+	if is_on_floor_netfox():
 		player_entity.velocity = (
 			forward.slide(player_entity.get_floor_normal()).normalized() * speed
 		)
@@ -113,8 +114,8 @@ func _velocity_calc(delta: float):
 		player_entity.velocity = forward * speed
 
 	# Gravity
-	if !player_entity.is_on_floor():
-		player_entity.velocity.y -= 9.8 * delta * 4.0
+	if !is_on_floor_netfox():
+		player_entity.velocity.y -= delta * GRAVITY
 
 
 ## Orchestrates pitch_angle: clutch detection → wheelie target → stoppie → apply
@@ -307,6 +308,16 @@ func _handle_player_collision(delta: float):
 		var random_angle = randf() * TAU
 		var offset = Vector3(cos(random_angle), 0.5, sin(random_angle))
 		player_entity.global_position += offset
+
+
+## Netfox's version of is_on_floor()
+func is_on_floor_netfox() -> bool:
+	var old_velocity = player_entity.velocity
+	player_entity.velocity = Vector3.ZERO
+	player_entity.move_and_slide()
+	player_entity.velocity = old_velocity
+
+	return player_entity.is_on_floor()
 
 
 ## Called from player_entity.gd's do_respawn
