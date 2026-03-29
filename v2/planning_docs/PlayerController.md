@@ -57,6 +57,8 @@
   - CrashController — brake grab, crash detection, emits `crashed`
   - AnimationController — procedural animation (lean, pitch, butt shift), RiderState machine
   - CameraController — FPS/TPS switching
+  - HUDController — polls controllers for continuous values, signal-driven for discrete events
+  - HUDController — polls controllers in `_process()`, listens to discrete signals
   - Audio — engine sound RPM parameter via `rpm_updated` signal
 
 ## State owned by each component
@@ -138,3 +140,10 @@ On `do_respawn`, PlayerEntity calls all controllers' `do_reset()`
   - `trigger_crash()` — sets `is_crashed`, zeros velocity, starts ragdoll
   - Auto-respawn after 3s via timer (TODO: move to GamemodeManager)
   - Emits `crashed`
+- **HUDController** (`hud_controller.gd`)
+  - Local to client, extends Control, child of `_Controllers`
+  - `@export` refs to: `player_entity`, `movement_controller`, `input_controller`, `gearing_controller`, `trick_controller`, `crash_controller`
+  - Continuous values polled in `_process()`: speed, throttle, brake, clutch, grip
+  - Discrete events via signals: `gear_changed`, `trick_started`, `trick_ended`, `crashed`, `respawned`
+  - All display strings use `tr()` localization keys (HUD_THROTTLE, HUD_SPEED, etc.)
+  - `show_hud()` / `hide_hud()` called from `PlayerEntity._deferred_init()` based on `is_local_client`

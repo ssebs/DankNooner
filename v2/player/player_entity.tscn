@@ -139,7 +139,7 @@ transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@52776")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@100069")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
@@ -236,7 +236,7 @@ input_controller = NodePath("../InputController")
 animation_controller = NodePath("../AnimationController")
 movement_controller = NodePath("../MovementController")
 
-[node name="HUDController" type="Control" parent="_Controllers" unique_id=651235913 node_paths=PackedStringArray("player_entity")]
+[node name="HUDController" type="Control" parent="_Controllers" unique_id=651235913 node_paths=PackedStringArray("player_entity", "movement_controller", "input_controller", "gearing_controller", "trick_controller", "crash_controller")]
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
@@ -247,6 +247,11 @@ grow_vertical = 2
 theme = ExtResource("16_uthnt")
 script = ExtResource("17_fiihv")
 player_entity = NodePath("../..")
+movement_controller = NodePath("../MovementController")
+input_controller = NodePath("../InputController")
+gearing_controller = NodePath("../GearingController")
+trick_controller = NodePath("../TrickController")
+crash_controller = NodePath("../CrashController")
 
 [node name="AspectContainer" type="AspectRatioContainer" parent="_Controllers/HUDController" unique_id=810684012]
 layout_mode = 1
