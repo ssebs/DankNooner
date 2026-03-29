@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://dj8yd118p20oa"]
 
 [ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_m4ipn"]
-[ext_resource type="PackedScene" uid="uid://cuqtwh0saekmw" path="res://entities/player/characters/character_skin.tscn" id="3_5q1pe"]
-[ext_resource type="Resource" uid="uid://dqh5h78glj4ju" path="res://resources/entities/player/skins/clanker_red_skin_definition.tres" id="4_m4ipn"]
-[ext_resource type="Resource" uid="uid://d3v0btsnsgpb3" path="res://resources/entities/player/skins/astronaut_default_skin_definition.tres" id="5_51jyr"]
-[ext_resource type="Resource" uid="uid://cqthri007ak8l" path="res://resources/entities/player/skins/biker_blue_skin_definition.tres" id="6_51jyr"]
+[ext_resource type="PackedScene" uid="uid://cuqtwh0saekmw" path="res://player/characters/character_skin.tscn" id="3_5q1pe"]
+[ext_resource type="Resource" uid="uid://dqh5h78glj4ju" path="res://resources/player/skins/clanker_red_skin_definition.tres" id="4_m4ipn"]
+[ext_resource type="Resource" uid="uid://d3v0btsnsgpb3" path="res://resources/player/skins/astronaut_default_skin_definition.tres" id="5_51jyr"]
+[ext_resource type="Resource" uid="uid://cqthri007ak8l" path="res://resources/player/skins/biker_blue_skin_definition.tres" id="6_51jyr"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jmk2t"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)

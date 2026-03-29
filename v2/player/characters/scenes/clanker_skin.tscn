@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://dyb003q5xadyq"]
+
+[ext_resource type="PackedScene" uid="uid://b3ih23n1jjkj0" path="res://player/characters/assets/clanker/Clanker.glb" id="1_hlq6h"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="2_1dusr"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="3_1dusr"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ia0ko"]
+
+[sub_resource type="Resource" id="Resource_hlq6h"]
+resource_local_to_scene = true
+script = ExtResource("3_1dusr")
+color = Color(0.86454535, 0.5190187, 0.7078191, 1)
+use_standard_material = true
+standard_material = SubResource("StandardMaterial3D_ia0ko")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_upsxi"]
+
+[sub_resource type="Resource" id="Resource_1dusr"]
+resource_local_to_scene = true
+script = ExtResource("3_1dusr")
+color = Color(0.31, 0.186, 0.25419995, 1)
+use_standard_material = true
+standard_material = SubResource("StandardMaterial3D_upsxi")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xwt0o"]
+albedo_color = Color(0.31, 0.186, 0.25419995, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u2me7"]
+albedo_color = Color(0.86454535, 0.5190187, 0.7078191, 1)
+
+[node name="Clanker" unique_id=981962744 node_paths=PackedStringArray("meshes") instance=ExtResource("1_hlq6h")]
+script = ExtResource("2_1dusr")
+slots = Array[ExtResource("3_1dusr")]([SubResource("Resource_hlq6h"), SubResource("Resource_1dusr")])
+meshes = [NodePath("Armature/Skeleton/Beta_Surface"), NodePath("Armature/Skeleton/Beta_Joints")]
+
+[node name="Beta_Joints" parent="Armature/Skeleton" parent_id_path=PackedInt32Array(65324414) index="0" unique_id=1357334723]
+surface_material_override/0 = SubResource("StandardMaterial3D_xwt0o")
+
+[node name="Beta_Surface" parent="Armature/Skeleton" parent_id_path=PackedInt32Array(65324414) index="1" unique_id=313283510]
+surface_material_override/0 = SubResource("StandardMaterial3D_u2me7")

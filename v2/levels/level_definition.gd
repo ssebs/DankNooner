@@ -5,7 +5,7 @@ class_name LevelDefinition extends Node3D
 
 ## Hack - for ui background levels where the player doesn't need to spawn
 @export var no_player_spawn_needed: bool
-@export var player_entity_scene: PackedScene = preload("res://entities/player/player_entity.tscn")
+@export var player_entity_scene: PackedScene = preload("res://player/player_entity.tscn")
 @export var player_spawn_pos: Marker3D
 @export var player_spawn_pos_debug: Marker3D
 

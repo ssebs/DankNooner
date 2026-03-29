@@ -7,7 +7,7 @@ signal save_item_updated(save_key: String, save_value: Variant)
 @export var save_slot: int = 1
 @export var save_version: int = 1
 @export var default_player_definition: PlayerDefinition = load(
-	"res://resources/entities/player/default_player_definition.tres"
+	"res://resources/player/default_player_definition.tres"
 )
 
 var save_path: String:

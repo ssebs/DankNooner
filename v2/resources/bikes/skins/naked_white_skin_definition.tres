@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="BikeSkinDefinition" format=3 uid="uid://bk7kv3qi134nu"]
+
+[ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/bikes/hitbox/bike_hitbox.tres" id="1_3klvi"]
+[ext_resource type="PackedScene" uid="uid://8l877wswufci" path="res://player/bikes/scenes/naked_bike.tscn" id="1_eidqq"]
+[ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/bikes/bike_skin_definition.gd" id="2_jvt48"]
+[ext_resource type="Curve" uid="uid://bc4775t6u5ngh" path="res://player/bikes/resources/lean_speed_curve.tres" id="2_y77nj"]
+
+[resource]
+script = ExtResource("2_jvt48")
+skin_name = "naked_white"
+mesh_res = ExtResource("1_eidqq")
+mesh_scale_multiplier = Vector3(0.85, 0.85, 0.85)
+colors = Array[Color]([Color(0.9166399, 0.91663986, 0.9166398, 1)])
+collision_position_offset = Vector3(0, 0.12, 0)
+seat_marker_position = Vector3(0, 0.60020787, -0.2435642)
+left_handlebar_marker_position = Vector3(0.32367456, 0.81761855, 0.48758724)
+left_peg_marker_position = Vector3(0.20825413, 0.10847086, -0.036867976)
+front_wheel_ground_position = Vector3(0, -0.2984948, 0.95066833)
+rear_wheel_ground_position = Vector3(0, -0.30351135, -0.6596986)
+metadata/_custom_type_script = "uid://bqkmh4ppf72gt"

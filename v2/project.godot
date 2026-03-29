@@ -65,14 +65,14 @@ folder_colors={
 "res://addons/": "gray",
 "res://dist/": "gray",
 "res://entities/": "blue",
-"res://entities/player/": "teal",
 "res://levels/": "orange",
 "res://localization/": "gray",
 "res://managers/": "pink",
 "res://menus/": "orange",
 "res://planning_docs/": "gray",
+"res://player/": "teal",
 "res://resources/": "green",
-"res://resources/entities/player/": "teal"
+"res://resources/player/": "teal"
 }
 
 [filesystem]
