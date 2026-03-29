@@ -226,6 +226,10 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("trick_controller must not be empty")
 	if crash_controller == null:
 		issues.append("crash_controller must not be empty")
+	if camera_controller == null:
+		issues.append("camera_controller must not be empty")
+	if hud_controller == null:
+		issues.append("hud_controller must not be empty")
 	if bike_definition == null:
 		issues.append("bike_definition must not be empty")
 	if collision_shape_3d == null:
