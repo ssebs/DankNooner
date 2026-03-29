@@ -69,17 +69,17 @@ func _update_surface_alignment(delta: float):
 	if is_on_floor_netfox():
 		var floor_normal = pe.get_floor_normal()
 		var surface_angle = floor_normal.angle_to(Vector3.UP)
-		print(
-			(
-				"surface: on_floor=true normal=%s angle=%.1f° up_dir=%s floor_max=%.1f°"
-				% [
-					floor_normal,
-					rad_to_deg(surface_angle),
-					pe.up_direction,
-					rad_to_deg(pe.floor_max_angle)
-				]
-			)
-		)
+		# print(
+		# 	(
+		# 		"surface: on_floor=true normal=%s angle=%.1f° up_dir=%s floor_max=%.1f°"
+		# 		% [
+		# 			floor_normal,
+		# 			rad_to_deg(surface_angle),
+		# 			pe.up_direction,
+		# 			rad_to_deg(pe.floor_max_angle)
+		# 		]
+		# 	)
+		# )
 
 		# # Ignore near-vertical walls
 		# !broken!
