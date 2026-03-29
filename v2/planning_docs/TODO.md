@@ -6,6 +6,31 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
+- [ ] Add HUD for player
+
+  - ![ride-hud.png](./img/ride-hud.png)
+
+  - Reqd:
+    - [ ] Throttle
+    - [ ] Speed
+    - [ ] Brake
+    - [ ] Clutch
+    - [ ] Gear
+    - [ ] Grip (danger)
+    - [ ] Place for trick messages
+    - [ ] Place for gamemode messages (place, lap time, etc.)
+    - [ ] Place for challenges panel
+    - [ ] Overlay layer for tutorial
+  - Ideas:
+    - In-world UI
+    - Bottom right has guages like IRL bike (analog)
+    - Center has guages like TFT (digital)
+    - Grip / danger:
+      - Bottom, wide red line
+      - Red overlay like COD dmg
+      - Guages have red overlay & change size
+    - Mini Map? or Compass w/ arrow
+
 - [ ] Camera should not rotate with player (e.g. loops, ramps)
 - [ ] Redo movement_controller
 
@@ -25,7 +50,6 @@
   - [ ] Be able to reverse (play animation)
     - [ ] Hold clutch, brake to reverse
 
-- [ ] Add HUD for player
 - [ ] Review webrtc gen code for security
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
@@ -125,6 +149,11 @@
   - [ ] Menu click sounds
   - [ ] Music?
   - [ ] [Web](https://github.com/utopia-rise/fmod-gdextension/pull/210#issuecomment-3717948490)
+
+- [ ] Basic tutorial
+
+  - [ ] riding mechanics
+  - [ ] use HUD overlay layer
 
 - [ ] WebRTC doesn't ALWAYS work?
   - [ ] Lobby code works, but TURN/STUN doesn't
