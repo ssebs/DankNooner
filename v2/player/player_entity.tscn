@@ -15,6 +15,8 @@
 [ext_resource type="Script" uid="uid://bi0gffmw6lupt" path="res://player/controllers/movement_controller.gd" id="11_tivla"]
 [ext_resource type="Script" uid="uid://t5igmn16n20c" path="res://player/controllers/trick_controller.gd" id="11_trick"]
 [ext_resource type="Script" uid="uid://cfpb4scu8hdy4" path="res://player/controllers/crash_controller.gd" id="12_crash"]
+[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="16_uthnt"]
+[ext_resource type="Script" uid="uid://civ7dg4q23qwd" path="res://player/controllers/hud_controller.gd" id="17_fiihv"]
 
 [sub_resource type="Animation" id="Animation_tivla"]
 length = 0.001
@@ -137,7 +139,7 @@ transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@25076")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@52776")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
@@ -233,6 +235,97 @@ player_entity = NodePath("../..")
 input_controller = NodePath("../InputController")
 animation_controller = NodePath("../AnimationController")
 movement_controller = NodePath("../MovementController")
+
+[node name="HUDController" type="Control" parent="_Controllers" unique_id=651235913 node_paths=PackedStringArray("player_entity")]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("16_uthnt")
+script = ExtResource("17_fiihv")
+player_entity = NodePath("../..")
+
+[node name="AspectContainer" type="AspectRatioContainer" parent="_Controllers/HUDController" unique_id=810684012]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+ratio = 1.778
+
+[node name="MarginContainer" type="MarginContainer" parent="_Controllers/HUDController/AspectContainer" unique_id=373454583]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1228497548]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+
+[node name="HUD_THROTTLE" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer" unique_id=1492251170]
+unique_name_in_owner = true
+layout_mode = 2
+text = "HUD_THROTTLE"
+
+[node name="HUD_BRAKE" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer" unique_id=375350254]
+unique_name_in_owner = true
+layout_mode = 2
+text = "HUD_BRAKE"
+
+[node name="HUD_CLUTCH" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer" unique_id=484430070]
+unique_name_in_owner = true
+layout_mode = 2
+text = "HUD_CLUTCH"
+
+[node name="HUD_SPEED" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer" unique_id=1162278585]
+unique_name_in_owner = true
+layout_mode = 2
+text = "HUD_SPEED"
+
+[node name="HUD_GEAR" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer" unique_id=561200398]
+unique_name_in_owner = true
+layout_mode = 2
+text = "HUD_GEAR"
+
+[node name="HUD_GRIP_DGR" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer" unique_id=1282391971]
+unique_name_in_owner = true
+layout_mode = 2
+text = "HUD_GRIP_DGR"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1468401151]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="HUD_TRICK_MSG" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer2" unique_id=807369729]
+unique_name_in_owner = true
+layout_mode = 2
+text = "HUD_TRICK_MSG"
+
+[node name="HUD_GAME_MSG" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1279622325]
+unique_name_in_owner = true
+layout_mode = 2
+text = "HUD_GAME_MSG"
+
+[node name="HUD_CHALLENGE_MSG" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer2" unique_id=345391560]
+unique_name_in_owner = true
+layout_mode = 2
+text = "HUD_CHALLENGE_MSG"
+
+[node name="TutorialOverlay" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1728547112]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TUT_MSG_1" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/TutorialOverlay" unique_id=1637961489]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 153.0
+offset_right = 272.0
+offset_bottom = 192.0
+text = "TUT_MSG_1"
 
 [node name="CameraController" parent="_Controllers" unique_id=816730707 node_paths=PackedStringArray("player_entity", "input_controller", "fps_marker", "tps_marker") instance=ExtResource("2_bls4j")]
 unique_name_in_owner = true
