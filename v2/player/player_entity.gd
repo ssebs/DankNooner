@@ -21,7 +21,7 @@ signal respawned(peer_id: int)
 @export var camera_controller: CameraController
 
 @onready var controllers_node: Node3D = %_Controllers
-# @onready var hud_controller: HUDController = %HUDController
+@onready var hud_controller: HUDController = %HUDController
 
 @onready var visual_root: Node3D = %VisualRoot
 @onready var character_skin: CharacterSkin = %CharacterSkin
@@ -105,18 +105,6 @@ func _process(_delta: float) -> void:
 	if !is_local_client:
 		return
 
-	# hud_controller.speed = speed
-	# hud_controller.current_gear = current_gear
-	# hud_controller.is_stalled = gearing_controller.is_stalled if gearing_controller else false
-	# hud_controller.rpm_ratio = rpm_ratio
-	# hud_controller.throttle = input_controller.throttle if input_controller else 0.0
-	# hud_controller.clutch_value = clutch_value
-	# hud_controller.grip_usage = grip_usage
-	# hud_controller.last_trick = trick_controller._last_trick if trick_controller else 0
-	# hud_controller.boost_count = boost_count
-	# hud_controller.is_boosting = is_boosting
-	# hud_controller.is_crashed = is_crashed
-
 
 #region init
 ## set definitions and apply mesh/colors/markers
@@ -151,10 +139,9 @@ func _deferred_init():
 		is_local_client = true
 		camera_controller.do_reset()
 		_init_audio()
-		# hud_controller.show_hud()
+		hud_controller.show_hud()
 	else:
-		pass
-		# hud_controller.hide_hud()
+		hud_controller.hide_hud()
 
 
 func _init_audio():
