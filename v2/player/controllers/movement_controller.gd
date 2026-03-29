@@ -107,7 +107,7 @@ func _update_surface_alignment(delta: float):
 ## Blend up_direction back to global up (airborne or detaching)
 ## Lean forward/back rotates the bike so you can land right-side-up
 func _detach_from_surface(delta: float):
-	print("_detach_from_surface")
+	# print("_detach_from_surface")
 	# Lean input rotates up_direction around the bike's right axis
 	var lean = input_controller.nfx_lean
 	if abs(lean) > 0.1:
