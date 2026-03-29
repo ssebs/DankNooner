@@ -9,17 +9,17 @@
 - [ ] Add HUD for player
 
   - ![ride-hud.png](./img/ride-hud.png)
-
+  - [x] Basic text only HUD
   - Reqd:
-    - [ ] Throttle
-    - [ ] Speed
-    - [ ] Brake
-    - [ ] Clutch
-    - [ ] Gear
-    - [ ] Grip (danger)
-    - [ ] Place for trick messages
-    - [ ] Place for gamemode messages (place, lap time, etc.)
-    - [ ] Place for challenges panel
+    - [x] Throttle
+    - [x] Speed
+    - [x] Brake
+    - [x] Clutch
+    - [x] Gear
+    - [x] Grip (danger)
+    - [x] Place for trick messages
+    - [x] Place for gamemode messages (place, lap time, etc.)
+    - [x] Place for challenges panel
     - [ ] Overlay layer for tutorial
   - Ideas:
     - In-world UI
