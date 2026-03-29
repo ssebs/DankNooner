@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://d0rgswc73h64f"]
 
 [ext_resource type="Script" uid="uid://bnop7vr1q4gwg" path="res://player/player_entity.gd" id="1_0jc3c"]
-[ext_resource type="PackedScene" uid="uid://4m8or6jc5xbd" path="res://player/controllers/camera_controller.tscn" id="2_bls4j"]
 [ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/bikes/skins/sport_default_skin_definition.tres" id="2_lfjd4"]
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_faflk"]
 [ext_resource type="Resource" uid="uid://dugcuccseinkn" path="res://resources/player/skins/biker_default_skin_definition.tres" id="3_lfjd4"]
@@ -16,6 +15,7 @@
 [ext_resource type="Script" uid="uid://t5igmn16n20c" path="res://player/controllers/trick_controller.gd" id="11_trick"]
 [ext_resource type="Script" uid="uid://cfpb4scu8hdy4" path="res://player/controllers/crash_controller.gd" id="12_crash"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="16_uthnt"]
+[ext_resource type="Script" uid="uid://coopftft0wwho" path="res://player/controllers/camera_controller.gd" id="17_0jgj5"]
 [ext_resource type="Script" uid="uid://civ7dg4q23qwd" path="res://player/controllers/hud_controller.gd" id="17_fiihv"]
 
 [sub_resource type="Animation" id="Animation_tivla"]
@@ -98,7 +98,7 @@ _data = {
 &"RESET": SubResource("Animation_tivla")
 }
 
-[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("collision_shape_3d", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "movement_controller", "camera_controller")]
+[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("collision_shape_3d", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "movement_controller")]
 collision_layer = 3
 collision_mask = 3
 floor_block_on_wall = false
@@ -114,7 +114,6 @@ gearing_controller = NodePath("_Controllers/GearingController")
 trick_controller = NodePath("_Controllers/TrickController")
 crash_controller = NodePath("_Controllers/CrashController")
 movement_controller = NodePath("_Controllers/MovementController")
-camera_controller = NodePath("_Controllers/CameraController")
 
 [node name="RollbackSynchronizer" type="Node" parent="." unique_id=609748778 node_paths=PackedStringArray("root")]
 unique_name_in_owner = true
@@ -139,7 +138,7 @@ transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@100069")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@108229")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
@@ -332,17 +331,21 @@ offset_right = 272.0
 offset_bottom = 192.0
 text = "TUT_MSG_1"
 
-[node name="CameraController" parent="_Controllers" unique_id=816730707 node_paths=PackedStringArray("player_entity", "input_controller", "fps_marker", "tps_marker") instance=ExtResource("2_bls4j")]
+[node name="CameraController" type="Node3D" parent="_Controllers" unique_id=1983563789 node_paths=PackedStringArray("player_entity", "input_controller", "fps_cam", "tps_cam", "fps_marker", "tps_marker")]
 unique_name_in_owner = true
+script = ExtResource("17_0jgj5")
 player_entity = NodePath("../..")
 input_controller = NodePath("../InputController")
+fps_cam = NodePath("FPSCam")
+tps_cam = NodePath("TPSCam")
 fps_marker = NodePath("../../Markers/FPSCamMarker")
 tps_marker = NodePath("../../Markers/TPSCamMarker")
+metadata/_custom_type_script = "uid://coopftft0wwho"
 
-[node name="FPSCam" parent="_Controllers/CameraController" index="0" unique_id=634464672]
+[node name="FPSCam" type="Camera3D" parent="_Controllers/CameraController" unique_id=240466741]
 transform = Transform3D(1, 0, 0, 0, 0.96592575, 0.258819, 0, -0.258819, 0.96592575, 0, 1.2021662, 0)
 
-[node name="TPSCam" parent="_Controllers/CameraController" index="1" unique_id=1953618350]
+[node name="TPSCam" type="Camera3D" parent="_Controllers/CameraController" unique_id=1200816402]
 transform = Transform3D(1, 0, 0, 0, 0.9370628, 0.34916094, 0, -0.34916094, 0.9370628, 0, 1.391123, 1.7631481)
 
 [node name="Markers" type="Node3D" parent="." unique_id=894866869]
@@ -363,4 +366,3 @@ text = "USERNAME"
 unique_name_in_owner = true
 
 [editable path="VisualRoot/CharacterSkin"]
-[editable path="_Controllers/CameraController"]
