@@ -23,7 +23,7 @@
 [ext_resource type="Script" uid="uid://dxn3rquhf7sfs" path="res://managers/gamemodes/gamemode_manager.gd" id="18_ih6an"]
 [ext_resource type="Script" uid="uid://didbm7t5dal30" path="res://managers/save_manager.gd" id="19_wt57k"]
 [ext_resource type="PackedScene" uid="uid://b27jgs5kv1310" path="res://managers/audio_manager.tscn" id="20_2i4tw"]
-[ext_resource type="Resource" uid="uid://ba1bidrtscoc7" path="res://resources/entities/player/default_player_definition.tres" id="20_pk5u2"]
+[ext_resource type="Resource" uid="uid://ba1bidrtscoc7" path="res://resources/player/default_player_definition.tres" id="20_pk5u2"]
 [ext_resource type="Script" uid="uid://cug5kob8cndk4" path="res://managers/spawn_manager.gd" id="21_euc45"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]

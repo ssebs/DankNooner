@@ -5,8 +5,8 @@ class_name CustomizeMenuState extends MenuState
 @export var save_manager: SaveManager
 @export var play_menu_state: MenuState
 
-const BIKE_SKINS_DIR := "res://resources/entities/bikes/skins/"
-const CHARACTER_SKINS_DIR := "res://resources/entities/player/skins/"
+const BIKE_SKINS_DIR := "res://resources/bikes/skins/"
+const CHARACTER_SKINS_DIR := "res://resources/player/skins/"
 
 @onready var back_btn: Button = %BackBtn
 @onready var save_btn: Button = %SaveBtn

@@ -12,7 +12,7 @@ The skin system allows runtime color customization of character and bike meshes 
 
 ### SkinSlot
 
-Resource at `entities/components/skin_slot.gd`:
+Resource at `components/skin_slot.gd`:
 
 | Property                | Type               | Description                                                     |
 | ----------------------- | ------------------ | --------------------------------------------------------------- |
@@ -24,7 +24,7 @@ Resource at `entities/components/skin_slot.gd`:
 
 ### SkinColor
 
-Node3D at `entities/components/skin_color.gd`:
+Node3D at `components/skin_color.gd`:
 
 | Property | Type                  | Description                                                  |
 | -------- | --------------------- | ------------------------------------------------------------ |
@@ -79,7 +79,7 @@ Skins use a resource-based system: `CharacterSkin` (scene) displays a `Character
 
 ### CharacterSkinDefinition
 
-Resource at `resources/entities/player/character_skin_definition.gd`:
+Resource at `resources/player/character_skin_definition.gd`:
 
 | Property                       | Type         | Description                           |
 | ------------------------------ | ------------ | ------------------------------------- |
@@ -95,7 +95,7 @@ Resource at `resources/entities/player/character_skin_definition.gd`:
 2. Create new `CharacterSkinDefinition` resource in inspector
 3. Set `skin_name`, assign `mesh_res` (must be a SkinColor scene)
 4. Set `colors` array with desired slot colors
-5. Save resource as `resources/entities/player/skins/{skin_name}_default_skin_definition.tres`
+5. Save resource as `resources/player/skins/{skin_name}_default_skin_definition.tres`
 6. Move `BackAccessoryMarker` to correct position/rotation in 3D viewport
 7. Click **Save Markers to resource** button in inspector
 8. Save the skin resource
@@ -105,7 +105,7 @@ Resource at `resources/entities/player/character_skin_definition.gd`:
 1. Load existing skin definition
 2. Change `skin_name` to new variant name (e.g. `biker_red`)
 3. Modify entries in `colors` array
-4. Save As -> `resources/entities/player/skins/{skin_name}_{color}_skin_definition.tres`
+4. Save As -> `resources/player/skins/{skin_name}_{color}_skin_definition.tres`
 
 ## Bike Skin System
 
@@ -113,7 +113,7 @@ Works identically to character skins: `BikeSkin` (scene) displays a `BikeSkinDef
 
 ### BikeSkinDefinition
 
-Resource at `resources/entities/bikes/bike_skin_definition.gd`:
+Resource at `resources/bikes/bike_skin_definition.gd`:
 
 | Property                       | Type         | Description                           |
 | ------------------------------ | ------------ | ------------------------------------- |

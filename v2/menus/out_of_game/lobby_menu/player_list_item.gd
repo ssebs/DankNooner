@@ -2,7 +2,7 @@
 class_name PlayerListItem extends MarginContainer
 
 @export var player_definition: PlayerDefinition = preload(
-	"res://resources/entities/player/default_player_definition.tres"
+	"res://resources/player/default_player_definition.tres"
 )
 
 @onready var icon: TextureRect = %PlayerIcon

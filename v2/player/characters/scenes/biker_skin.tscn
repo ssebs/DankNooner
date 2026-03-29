@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://cn55y1jxvs5l2"]
+
+[ext_resource type="PackedScene" uid="uid://bp182fgvg0ub6" path="res://player/characters/assets/biker/Biker.glb" id="1_nabnx"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="2_uii8v"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="3_a4jph"]
+[ext_resource type="Material" uid="uid://dsy30ovt7hcgy" path="res://player/characters/assets/biker/biker_shader_mat.tres" id="3_uii8v"]
+[ext_resource type="Shader" uid="uid://djo3ltfju324e" path="res://resources/shaders/skin_color.gdshader" id="4_1kih7"]
+[ext_resource type="Texture2D" uid="uid://dtlssvamnmhsc" path="res://player/characters/assets/biker/Biker_Pink_Diffuse.png" id="5_1kih7"]
+[ext_resource type="Texture2D" uid="uid://ce5utmplwg6j7" path="res://player/characters/assets/biker/Biker_Ch20_1001_Glossiness.png" id="6_a4jph"]
+[ext_resource type="Texture2D" uid="uid://cyxwvgjq76enw" path="res://player/characters/assets/biker/Biker_Ch20_1001_Normal.png" id="7_ng0ve"]
+[ext_resource type="Texture2D" uid="uid://bmrj84ospc20f" path="res://player/characters/assets/biker/Biker_Ch20_1001_Specular.png" id="8_ustxj"]
+
+[sub_resource type="Resource" id="Resource_a4jph"]
+resource_local_to_scene = true
+script = ExtResource("3_a4jph")
+color = Color(0.2856, 0.68, 0.51566666, 1)
+shader_material = ExtResource("3_uii8v")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ng0ve"]
+render_priority = 0
+shader = ExtResource("4_1kih7")
+shader_parameter/replacement_color = Color(1, 0, 0, 1)
+shader_parameter/albedo_texture = ExtResource("5_1kih7")
+shader_parameter/normal_texture = ExtResource("7_ng0ve")
+shader_parameter/glossiness_texture = ExtResource("6_a4jph")
+shader_parameter/specular_texture = ExtResource("8_ustxj")
+shader_parameter/tolerance = 0.20000000298023
+
+[node name="Biker" unique_id=1492660151 node_paths=PackedStringArray("meshes") instance=ExtResource("1_nabnx")]
+script = ExtResource("2_uii8v")
+slots = Array[ExtResource("3_a4jph")]([SubResource("Resource_a4jph")])
+meshes = [NodePath("Armature/Skeleton/Ch20")]
+
+[node name="Skeleton" parent="Armature" parent_id_path=PackedInt32Array(1215350638) index="0" unique_id=1249126679]
+bones/16/rotation = Quaternion(0.6738872, 0.67388725, 0.21418679, -0.21418688)
+bones/66/rotation = Quaternion(6.984918e-10, 0, 1, 7.436028e-09)
+bones/71/rotation = Quaternion(0.10141063, 0.7009589, 0.70236504, 0.071104296)
+
+[node name="Ch20" parent="Armature/Skeleton" index="0" unique_id=1083295038]
+surface_material_override/0 = SubResource("ShaderMaterial_ng0ve")

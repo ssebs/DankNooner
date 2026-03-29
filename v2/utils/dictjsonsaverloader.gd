@@ -52,4 +52,10 @@ static func dict_to_vec3(d: Dictionary) -> Vector3:
 	if d.is_empty():
 		return Vector3.ZERO
 	return Vector3(d.get("x", 0.0), d.get("y", 0.0), d.get("z", 0.0))
+
+
+## Try to load a resource path from dict[dict_key], fall back to default_path on failure
+static func try_load(dict: Dictionary, dict_key: String, default_path: String) -> Resource:
+	var loaded = load(dict.get(dict_key, ""))
+	return loaded if loaded else load(default_path)
 #endregion

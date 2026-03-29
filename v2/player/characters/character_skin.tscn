@@ -1,0 +1,98 @@
+[gd_scene format=3 uid="uid://cuqtwh0saekmw"]
+
+[ext_resource type="Script" uid="uid://bakxxvsooac7k" path="res://player/characters/scripts/character_skin.gd" id="2_lm8ah"]
+[ext_resource type="Resource" uid="uid://dugcuccseinkn" path="res://resources/player/skins/biker_default_skin_definition.tres" id="2_ycg01"]
+[ext_resource type="AnimationLibrary" uid="uid://bd4erc5yrp7ta" path="res://player/characters/assets/biker/biker_anim_lib.res" id="3_lm8ah"]
+[ext_resource type="Script" uid="uid://bi68ajnu0uufl" path="res://player/characters/scripts/ragdoll_controller.gd" id="3_skpe0"]
+[ext_resource type="Script" uid="uid://d0emq7f6owo2m" path="res://player/characters/scripts/ik_controller.gd" id="4_6a7n1"]
+[ext_resource type="AnimationLibrary" uid="uid://dp50xurmv35hh" path="res://player/characters/assets/anim/IK_anim_lib.res" id="6_8lbgm"]
+
+[node name="CharacterSkin" type="Node3D" unique_id=259227641]
+script = ExtResource("2_lm8ah")
+skin_definition = ExtResource("2_ycg01")
+skin_name_for_loading_test = "biker_blue"
+
+[node name="RagdollController" type="Node3D" parent="." unique_id=892761422 node_paths=PackedStringArray("char_skin")]
+unique_name_in_owner = true
+script = ExtResource("3_skpe0")
+char_skin = NodePath("..")
+metadata/_custom_type_script = "uid://bi68ajnu0uufl"
+
+[node name="IKController" type="Node3D" parent="." unique_id=248044684 node_paths=PackedStringArray("char_skin", "ik_left_arm_magnet", "ik_left_hand", "ik_right_arm_magnet", "ik_right_hand", "ik_left_leg_magnet", "ik_left_foot", "ik_right_leg_magnet", "ik_right_foot", "ik_chest", "ik_head", "butt_pos")]
+unique_name_in_owner = true
+script = ExtResource("4_6a7n1")
+char_skin = NodePath("..")
+ik_left_arm_magnet = NodePath("../IKTargets/LeftArmMagnet")
+ik_left_hand = NodePath("../IKTargets/LeftHand")
+ik_right_arm_magnet = NodePath("../IKTargets/RightArmMagnet")
+ik_right_hand = NodePath("../IKTargets/RightHand")
+ik_left_leg_magnet = NodePath("../IKTargets/LeftLegMagnet")
+ik_left_foot = NodePath("../IKTargets/LeftFoot")
+ik_right_leg_magnet = NodePath("../IKTargets/RightLegMagnet")
+ik_right_foot = NodePath("../IKTargets/RightFoot")
+ik_chest = NodePath("../IKTargets/ChestTarget")
+ik_head = NodePath("../IKTargets/HeadTarget")
+butt_pos = NodePath("../IKTargets/ButtPosition")
+metadata/_custom_type_script = "uid://d0emq7f6owo2m"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2071931266]
+unique_name_in_owner = true
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/CharacterSkin/MeshNode/Biker")
+libraries/Biker = ExtResource("3_lm8ah")
+
+[node name="IKAnimationPlayer" type="AnimationPlayer" parent="." unique_id=188385301]
+unique_name_in_owner = true
+libraries/IK_anim_lib = ExtResource("6_8lbgm")
+
+[node name="MeshNode" type="Node3D" parent="." unique_id=1624205252]
+unique_name_in_owner = true
+
+[node name="BackAccessoryMarker" type="Marker3D" parent="." unique_id=478042608]
+unique_name_in_owner = true
+transform = Transform3D(-1, 0, -6.2783295e-07, 0, 1, 0, 6.2783295e-07, 0, -1, 0, 1.5575237, -0.14157149)
+
+[node name="IKTargets" type="Node3D" parent="." unique_id=1976697917]
+
+[node name="LeftHand" type="Marker3D" parent="IKTargets" unique_id=348437814]
+unique_name_in_owner = true
+transform = Transform3D(-0.26723832, -0.9636305, 0, 0.34690395, -0.09620495, -0.93295354, 0.89902246, -0.24932094, 0.35999686, 0.34758556, 1.4337901, 0.35376078)
+
+[node name="LeftArmMagnet" type="Marker3D" parent="IKTargets" unique_id=1835903969]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6350902, 1.4101113, 0.094349384)
+
+[node name="RightHand" type="Marker3D" parent="IKTargets" unique_id=300039024]
+unique_name_in_owner = true
+transform = Transform3D(-0.26723832, -0.9636305, 0, 0.34690395, -0.09620495, -0.93295354, 0.89902246, -0.24932094, 0.35999686, -0.4560541, 1.3732792, 0.18365413)
+
+[node name="RightArmMagnet" type="Marker3D" parent="IKTargets" unique_id=1090132691]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.51445603, 1.3144373, -0.31389034)
+
+[node name="LeftFoot" type="Marker3D" parent="IKTargets" unique_id=1249832749]
+unique_name_in_owner = true
+transform = Transform3D(-0.9477684, -0.31703314, -0.035000775, 0, -0.10973428, 0.993961, -0.31895936, 0.9420448, 0.104002684, 0.23615919, 5.9604645e-08, 0.23619422)
+
+[node name="LeftLegMagnet" type="Marker3D" parent="IKTargets" unique_id=875795090]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16988, 0.9638889, 0.4656673)
+
+[node name="RightFoot" type="Marker3D" parent="IKTargets" unique_id=70882427]
+unique_name_in_owner = true
+transform = Transform3D(-0.94776833, 0.31703314, 0.035000775, 0, -0.10973428, 0.993961, 0.31895933, 0.9420448, 0.104002684, -0.2617092, 0, 0.12982255)
+
+[node name="RightLegMagnet" type="Marker3D" parent="IKTargets" unique_id=1454334473]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17, 0.9636276, 0.53199065)
+
+[node name="ChestTarget" type="Marker3D" parent="IKTargets" unique_id=749031780]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3166139, 0.112276316)
+
+[node name="HeadTarget" type="Marker3D" parent="IKTargets" unique_id=2052814980]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1561427, 0.16246796)
+
+[node name="ButtPosition" type="Marker3D" parent="IKTargets" unique_id=38485936]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0229475, 0.11716908)
