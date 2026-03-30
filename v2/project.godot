@@ -233,4 +233,6 @@ logging/netfox_log_level=4
 
 rendering_device/driver.windows="d3d12"
 textures/vram_compression/import_etc2_astc=true
+anti_aliasing/quality/screen_space_aa=1
+anti_aliasing/quality/use_taa=true
 occlusion_culling/use_occlusion_culling=true

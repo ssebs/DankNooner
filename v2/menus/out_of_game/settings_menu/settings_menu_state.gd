@@ -16,6 +16,13 @@ class_name SettingsMenuState extends MenuState
 @onready var sfx_vol_slider: HSlider = %SFXVolSlider
 @onready var menu_vol_slider: HSlider = %MenuVolSlider
 
+@onready var resolution_scale: HSlider = %ResolutionScaleSlider
+@onready var joy_cam_sens: HSlider = %JoyCamSensSlider
+@onready var mouse_cam_sens: HSlider = %MouseCamSensSlider
+@onready var invert_cam: CheckBox = %InvertCamCheck
+## 0 is easy, 1 is hard. TODO make enum
+@onready var difficulty_opt: OptionButton = %DifficultyOptBtn
+
 @onready var bg_tint: ColorRect = %BGTint
 
 var return_state: MenuState  # TODO - add to MenuState

@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://b6tnccpx0gwjg" path="res://menus/out_of_game/settings_menu/settings_menu_state.gd" id="1_hdace"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_hdace"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hdace"]
+
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_hdace"]
 content_margin_left = 4.0
 content_margin_top = 0.0
@@ -80,6 +82,16 @@ custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 
+[node name="DISPLAY_SETTINGS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=569494662]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "DISPLAY_SETTINGS_LABEL"
+
+[node name="VSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1044217289]
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_hdace")
+
 [node name="signal_host_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=677060126]
 visible = false
 layout_mode = 2
@@ -90,6 +102,21 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 placeholder_text = "home.ssebs.com"
+
+[node name="resolution_scale_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1674945763]
+layout_mode = 2
+text = "RESOLUTION_SCALE_LABEL"
+
+[node name="ResolutionScaleSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1590972204]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = 0.25
+max_value = 4.0
+step = 0.25
+value = 1.0
+ticks_on_borders = true
 
 [node name="window_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1233927487]
 layout_mode = 2
@@ -125,6 +152,16 @@ custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 
+[node name="VOLUME_SETTINGS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1729310472]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "VOLUME_SETTINGS_LABEL"
+
+[node name="VSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1291269399]
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_hdace")
+
 [node name="master_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=330750496]
 layout_mode = 2
 text = "MASTER_VOLUME_LABEL"
@@ -135,7 +172,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 max_value = 1.0
-step = 0.1
+step = 0.05
 value = 0.5
 
 [node name="music_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=55761047]
@@ -148,7 +185,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 max_value = 1.0
-step = 0.1
+step = 0.05
 value = 0.5
 
 [node name="sfx_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1442766106]
@@ -161,7 +198,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 max_value = 1.0
-step = 0.1
+step = 0.05
 value = 0.5
 ticks_on_borders = true
 
@@ -175,6 +212,70 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 max_value = 1.0
-step = 0.1
+step = 0.05
 value = 0.5
 ticks_on_borders = true
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/HBoxContainer" unique_id=659821076]
+layout_mode = 2
+
+[node name="GAMEPLAY_SETTINGS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1777761172]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "GAMEPLAY_SETTINGS_LABEL"
+
+[node name="VSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1965111176]
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_hdace")
+
+[node name="difficulty_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1699862036]
+layout_mode = 2
+text = "DIFFICULTY_LABEL"
+
+[node name="DifficultyOptBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=686647650]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "DIFFICULTY_EASY"
+popup/item_0/id = 0
+popup/item_1/text = "DIFFICULTY_HARD"
+popup/item_1/id = 1
+
+[node name="JOY_CAM_SENS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1201152798]
+layout_mode = 2
+text = "JOY_CAM_SENS_LABEL"
+
+[node name="JoyCamSensSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=316649520]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.01
+value = 0.5
+ticks_on_borders = true
+
+[node name="MOUSE_CAM_SENS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=696720195]
+layout_mode = 2
+text = "MOUSE_CAM_SENS_LABEL"
+
+[node name="MouseCamSensSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=605227675]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.01
+value = 0.5
+ticks_on_borders = true
+
+[node name="INVERT_CAM_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1054639833]
+layout_mode = 2
+text = "INVERT_CAM_LABEL"
+
+[node name="InvertCamCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=259754545]
+unique_name_in_owner = true
+layout_mode = 2
+text = "TRUE"

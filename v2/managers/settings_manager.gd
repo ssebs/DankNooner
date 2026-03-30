@@ -28,12 +28,15 @@ var default_settings: Dictionary = {
 	"version": settings_version,
 	# "username": "change_me",
 	"signal_relay_host": "stun.ssebs.com",  # stun.casa.ssebs.com, 192.168.1.247
-	"resolution": "1920x1080",
+	"resolution_scale": 1.0,
 	"fullscreen_mode": "borderless",  # "fullscreen" or "borderless" or "windowed" or "maximized"
 	"master_vol": 0.8,
 	"music_vol": 1.0,
 	"menu_vol": 1.0,
 	"sfx_vol": 1.0,
+	"invert_cam": false,
+	"mouse_cam_sens": 0.5,
+	"joy_cam_sens": 2.0
 	# "bike_skin": "res://resources/bikes/skins/sport_default_skin_definition.tres",
 	# "character_skin": "res://resources/player/skins/biker_default_skin_definition.tres",
 }
