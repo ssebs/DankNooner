@@ -4,6 +4,7 @@
 
 ## In Progress 🚀
 
+- [ ] if window is maximized, save that as default, or find another way to not resize to current when settings updated has been emitted. e.g. change camera should not resize window if i maximized it after setting to windowed
 > Take it slow, fix bugs and add polish to player controller
 
 - [ ] Camera improvements
