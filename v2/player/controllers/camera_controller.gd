@@ -13,10 +13,6 @@ enum CameraMode { FPS, TPS }
 @export var fps_marker: Marker3D
 @export var tps_marker: Marker3D
 
-@export_group("Sensitivity")
-@export var mouse_cam_sens: float = 0.0015
-@export var joy_cam_sens: float = 2.0
-
 @export_group("TPS Orbit")
 @export var pitch_min_deg: float = -20.0
 @export var pitch_max_deg: float = 60.0
@@ -31,11 +27,17 @@ enum CameraMode { FPS, TPS }
 @export var reset_delay: float = 3.0
 @export var reset_speed: float = 3.0
 
+## Base values when slider is at 0.5 (middle)
+const MOUSE_SENS_SCALE: float = 0.003
+const JOY_SENS_SCALE: float = 6.0
+
 var current_cam_mode: CameraMode
 var invert_cam: int = -1:
 	set(value):
 		invert_cam = 1 if value else -1
 
+var _mouse_cam_sens: float = 0.0015
+var _joy_cam_sens: float = 2.0
 var _orbit_yaw: float = 0.0
 var _orbit_pitch: float = 0.0
 var _default_orbit_pitch: float = 0.0
@@ -47,15 +49,23 @@ var _fps_pitch_offset: float = 0.0
 var _fps_cam_offset := 0.75
 
 # TODO - zoom out w/ speed / current_trick != None
-# TODO - use player_entity.settings_manager to set:
-# "invert_cam": false,
-# "mouse_cam_sens": 0.5,
-# "joy_cam_sens": 2.0
 
 
 func _ready():
 	if Engine.is_editor_hint():
 		return
+
+
+func _load_cam_settings():
+	var settings := player_entity.settings_manager.current_settings
+	_mouse_cam_sens = settings["mouse_cam_sens"] * MOUSE_SENS_SCALE
+	_joy_cam_sens = settings["joy_cam_sens"] * JOY_SENS_SCALE
+	invert_cam = settings["invert_cam"]
+
+
+func _on_setting_updated(key: String, _value: Variant):
+	if key in ["mouse_cam_sens", "joy_cam_sens", "invert_cam"]:
+		_load_cam_settings()
 
 
 func _input(event: InputEvent):
@@ -97,11 +107,11 @@ func _has_cam_input(mouse: Vector2) -> bool:
 #region TPS orbit
 func _update_tps_input(delta: float, mouse: Vector2):
 	if _has_cam_input(mouse):
-		_orbit_yaw -= mouse.x * mouse_cam_sens
-		_orbit_pitch -= mouse.y * mouse_cam_sens
+		_orbit_yaw -= mouse.x * _mouse_cam_sens
+		_orbit_pitch -= mouse.y * _mouse_cam_sens
 
-		_orbit_yaw -= input_controller.nfx_cam_x * joy_cam_sens * delta
-		_orbit_pitch += input_controller.nfx_cam_y * invert_cam * joy_cam_sens * delta
+		_orbit_yaw -= input_controller.nfx_cam_x * _joy_cam_sens * delta
+		_orbit_pitch += input_controller.nfx_cam_y * invert_cam * _joy_cam_sens * delta
 
 		_orbit_pitch = clampf(_orbit_pitch, deg_to_rad(pitch_min_deg), deg_to_rad(pitch_max_deg))
 		_orbit_yaw = wrapf(_orbit_yaw, -PI, PI)
@@ -136,12 +146,12 @@ func _update_tps_camera():
 #region FPS look
 func _update_fps_input(delta: float, mouse: Vector2):
 	if _has_cam_input(mouse):
-		_fps_yaw_offset -= mouse.x * mouse_cam_sens
-		_fps_pitch_offset -= mouse.y * mouse_cam_sens
+		_fps_yaw_offset -= mouse.x * _mouse_cam_sens
+		_fps_pitch_offset -= mouse.y * _mouse_cam_sens
 
-		_fps_yaw_offset -= input_controller.nfx_cam_x * joy_cam_sens * _fps_cam_offset * delta
+		_fps_yaw_offset -= input_controller.nfx_cam_x * _joy_cam_sens * _fps_cam_offset * delta
 		_fps_pitch_offset += (
-			input_controller.nfx_cam_y * invert_cam * joy_cam_sens * _fps_cam_offset * delta
+			input_controller.nfx_cam_y * invert_cam * _joy_cam_sens * _fps_cam_offset * delta
 		)
 
 		_fps_yaw_offset = clampf(
@@ -175,6 +185,9 @@ func deferred_init():
 		do_reset()
 		input_controller.cam_switch_pressed.connect(toggle_cam)
 		input_controller.reset_cam_pressed.connect(_on_reset_cam_pressed)
+		player_entity.settings_manager.setting_updated.connect(_on_setting_updated)
+		player_entity.settings_manager.all_settings_changed.connect(func(_s): _load_cam_settings())
+		_load_cam_settings()
 	else:
 		disable_cameras()
 
