@@ -165,9 +165,10 @@ input_state_manager = NodePath("../InputStateManager")
 [node name="AudioManager" parent="ManagerManager" unique_id=625309404 node_paths=PackedStringArray("settings_manager") instance=ExtResource("20_2i4tw")]
 settings_manager = NodePath("../SettingsManager")
 
-[node name="SpawnManager" type="Node" parent="ManagerManager" unique_id=1424921597 node_paths=PackedStringArray("lobby_manager", "level_manager", "audio_manager") groups=["Managers"]]
+[node name="SpawnManager" type="Node" parent="ManagerManager" unique_id=1424921597 node_paths=PackedStringArray("lobby_manager", "level_manager", "audio_manager", "settings_manager") groups=["Managers"]]
 script = ExtResource("21_euc45")
 lobby_manager = NodePath("../LobbyManager")
 level_manager = NodePath("../LevelManager")
 audio_manager = NodePath("../AudioManager")
+settings_manager = NodePath("../SettingsManager")
 metadata/_custom_type_script = "uid://cug5kob8cndk4"
