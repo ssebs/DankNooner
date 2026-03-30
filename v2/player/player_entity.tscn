@@ -141,13 +141,13 @@ transform = Transform3D(-1, -5.2721823e-08, 1.4149255e-07, 0, 0.9370628, 0.34916
 
 [node name="FPSCamMarker" type="Marker3D" parent="VisualRoot" unique_id=2035762363]
 unique_name_in_owner = true
-transform = Transform3D(-1, 1.6081536e-08, -8.5930935e-08, 0, 0.9829353, 0.18395133, 8.742278e-08, 0.18395133, -0.9829353, 0, 1.179, 0.175)
+transform = Transform3D(-1, 2.7775881e-08, -1.4841912e-07, 0, 0.98293537, 0.18395135, 1.509958e-07, 0.18395135, -0.98293537, 0, 1.179, 0.175)
 
 [node name="CharacterSkin" parent="VisualRoot" unique_id=259227641 instance=ExtResource("6_1vqn6")]
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@137975")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@140658")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
@@ -361,15 +361,7 @@ fps_cam = NodePath("../../FPSCam")
 tps_cam = NodePath("../../TPSCam")
 fps_marker = NodePath("../../VisualRoot/FPSCamMarker")
 tps_marker = NodePath("../../VisualRoot/TPSCamMarker")
-tps_height = 1.382
 tps_look_height = 0.7
-reset_delay = null
-reset_speed = null
-fps_mouse_sensitivity = null
-fps_stick_speed = null
-fps_pitch_min_deg = null
-fps_pitch_max_deg = null
-fps_yaw_limit_deg = null
 metadata/_custom_type_script = "uid://coopftft0wwho"
 
 [node name="NameLabel" type="Label3D" parent="." unique_id=1811367941]

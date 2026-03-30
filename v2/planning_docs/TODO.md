@@ -32,6 +32,7 @@
     - Mini Map? or Compass w/ arrow
 
 - [ ] Camera should not rotate with player (e.g. loops, ramps)
+- [ ] player can fly if rotating cam when launching off loop
 - [ ] Redo movement_controller
 
   - [x] finish cleanup (function split)

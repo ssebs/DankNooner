@@ -34,6 +34,7 @@ var is_local_client: bool = false
 
 #region HACK - set from spawn_manager
 var audio_manager: AudioManager
+var settings_manager: SettingsManager
 var username: String:
 	set(v):
 		username = v
