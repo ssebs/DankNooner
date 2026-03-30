@@ -137,7 +137,7 @@ func _init_ik():
 func _deferred_init():
 	if int(name) == multiplayer.get_unique_id():
 		is_local_client = true
-		camera_controller.do_reset()
+		camera_controller.deferred_init()
 		_init_audio()
 		hud_controller.show_hud()
 	else:

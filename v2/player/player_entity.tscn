@@ -98,7 +98,7 @@ _data = {
 &"RESET": SubResource("Animation_tivla")
 }
 
-[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("collision_shape_3d", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "movement_controller")]
+[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("collision_shape_3d", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "movement_controller", "camera_controller")]
 collision_layer = 3
 collision_mask = 3
 floor_block_on_wall = false
@@ -114,6 +114,7 @@ gearing_controller = NodePath("_Controllers/GearingController")
 trick_controller = NodePath("_Controllers/TrickController")
 crash_controller = NodePath("_Controllers/CrashController")
 movement_controller = NodePath("_Controllers/MovementController")
+camera_controller = NodePath("_Controllers/CameraController")
 
 [node name="RollbackSynchronizer" type="Node" parent="." unique_id=609748778 node_paths=PackedStringArray("root")]
 unique_name_in_owner = true
@@ -134,11 +135,19 @@ metadata/_custom_type_script = "uid://dour8fehaaugp"
 unique_name_in_owner = true
 transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0, 0)
 
+[node name="TPSCamMarker" type="Marker3D" parent="VisualRoot" unique_id=748255221]
+unique_name_in_owner = true
+transform = Transform3D(-1, -5.2721838e-08, 1.4149255e-07, 0, 0.9370628, 0.34916094, -1.509958e-07, 0.34916094, -0.9370628, 0.071073286, 1.307, -1.773)
+
+[node name="FPSCamMarker" type="Marker3D" parent="VisualRoot" unique_id=2035762363]
+unique_name_in_owner = true
+transform = Transform3D(-1, -3.9080586e-08, 1.4585075e-07, 0, 0.9659258, 0.258819, -1.509958e-07, 0.258819, -0.9659258, -4.2246345e-08, 1.1750777, 0.2797849)
+
 [node name="CharacterSkin" parent="VisualRoot" unique_id=259227641 instance=ExtResource("6_1vqn6")]
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@108229")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@123073")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
@@ -338,23 +347,20 @@ player_entity = NodePath("../..")
 input_controller = NodePath("../InputController")
 fps_cam = NodePath("FPSCam")
 tps_cam = NodePath("TPSCam")
-fps_marker = NodePath("../../Markers/FPSCamMarker")
-tps_marker = NodePath("../../Markers/TPSCamMarker")
+fps_marker = NodePath("../../VisualRoot/FPSCamMarker")
+tps_marker = NodePath("../../VisualRoot/TPSCamMarker")
 metadata/_custom_type_script = "uid://coopftft0wwho"
 
 [node name="FPSCam" type="Camera3D" parent="_Controllers/CameraController" unique_id=240466741]
-transform = Transform3D(1, 0, 0, 0, 0.96592575, 0.258819, 0, -0.258819, 0.96592575, 0, 1.2021662, 0)
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.258819, 0, -0.258819, 0.9659258, 0, 1.1750777, -0.2797849)
+top_level = true
+fov = 95.0
 
 [node name="TPSCam" type="Camera3D" parent="_Controllers/CameraController" unique_id=1200816402]
-transform = Transform3D(1, 0, 0, 0, 0.9370628, 0.34916094, 0, -0.34916094, 0.9370628, 0, 1.391123, 1.7631481)
-
-[node name="Markers" type="Node3D" parent="." unique_id=894866869]
-
-[node name="FPSCamMarker" type="Marker3D" parent="Markers" unique_id=2035762363]
-transform = Transform3D(1, 0, 0, 0, 0.96592575, 0.258819, 0, -0.258819, 0.96592575, 0, 1.2021662, 0)
-
-[node name="TPSCamMarker" type="Marker3D" parent="Markers" unique_id=748255221]
-transform = Transform3D(1, 0, 0, 0, 0.9370628, 0.34916094, 0, -0.34916094, 0.9370628, 0, 1.391123, 1.7631481)
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.9370628, 0.34916094, 0, -0.34916094, 0.9370628, -0.07107302, 1.307, 1.773)
+top_level = true
 
 [node name="NameLabel" type="Label3D" parent="." unique_id=1811367941]
 unique_name_in_owner = true
