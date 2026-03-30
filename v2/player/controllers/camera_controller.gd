@@ -14,9 +14,8 @@ enum CameraMode { FPS, TPS }
 @export var tps_marker: Marker3D
 
 @export_group("Sensitivity")
-@export var mouse_sensitivity: float = 0.0015
-@export var tps_stick_speed: float = 2.0
-@export var fps_stick_speed: float = 1.5
+@export var mouse_cam_sens: float = 0.0015
+@export var joy_cam_sens: float = 2.0
 
 @export_group("TPS Orbit")
 @export var pitch_min_deg: float = -20.0
@@ -45,9 +44,13 @@ var _no_input_timer: float = 0.0
 
 var _fps_yaw_offset: float = 0.0
 var _fps_pitch_offset: float = 0.0
+var _fps_cam_offset := 0.75
 
 # TODO - zoom out w/ speed / current_trick != None
-# TODO - use player_entity.settings_manager to set invert_cam
+# TODO - use player_entity.settings_manager to set:
+# "invert_cam": false,
+# "mouse_cam_sens": 0.5,
+# "joy_cam_sens": 2.0
 
 
 func _ready():
@@ -94,11 +97,11 @@ func _has_cam_input(mouse: Vector2) -> bool:
 #region TPS orbit
 func _update_tps_input(delta: float, mouse: Vector2):
 	if _has_cam_input(mouse):
-		_orbit_yaw -= mouse.x * mouse_sensitivity
-		_orbit_pitch -= mouse.y * mouse_sensitivity
+		_orbit_yaw -= mouse.x * mouse_cam_sens
+		_orbit_pitch -= mouse.y * mouse_cam_sens
 
-		_orbit_yaw -= input_controller.nfx_cam_x * tps_stick_speed * delta
-		_orbit_pitch += input_controller.nfx_cam_y * invert_cam * tps_stick_speed * delta
+		_orbit_yaw -= input_controller.nfx_cam_x * joy_cam_sens * delta
+		_orbit_pitch += input_controller.nfx_cam_y * invert_cam * joy_cam_sens * delta
 
 		_orbit_pitch = clampf(_orbit_pitch, deg_to_rad(pitch_min_deg), deg_to_rad(pitch_max_deg))
 		_orbit_yaw = wrapf(_orbit_yaw, -PI, PI)
@@ -133,11 +136,13 @@ func _update_tps_camera():
 #region FPS look
 func _update_fps_input(delta: float, mouse: Vector2):
 	if _has_cam_input(mouse):
-		_fps_yaw_offset -= mouse.x * mouse_sensitivity
-		_fps_pitch_offset -= mouse.y * mouse_sensitivity
+		_fps_yaw_offset -= mouse.x * mouse_cam_sens
+		_fps_pitch_offset -= mouse.y * mouse_cam_sens
 
-		_fps_yaw_offset -= input_controller.nfx_cam_x * fps_stick_speed * delta
-		_fps_pitch_offset += input_controller.nfx_cam_y * invert_cam * fps_stick_speed * delta
+		_fps_yaw_offset -= input_controller.nfx_cam_x * joy_cam_sens * _fps_cam_offset * delta
+		_fps_pitch_offset += (
+			input_controller.nfx_cam_y * invert_cam * joy_cam_sens * _fps_cam_offset * delta
+		)
 
 		_fps_yaw_offset = clampf(
 			_fps_yaw_offset, deg_to_rad(-fps_yaw_limit_deg), deg_to_rad(fps_yaw_limit_deg)
