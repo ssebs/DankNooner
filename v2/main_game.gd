@@ -22,6 +22,10 @@ func _on_all_settings_changed(new_settings: Dictionary):
 		SettingsManager.str_to_windowmode(new_settings["fullscreen_mode"])
 	)
 
+	get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
+	get_viewport().scaling_3d_scale = new_settings.get("resolution_scale", 1.0)
+	print("VP scaling: %.2f" % get_viewport().scaling_3d_scale)
+
 
 func _on_setting_updated(key: String, value: Variant):
 	if key == "fullscreen_mode":

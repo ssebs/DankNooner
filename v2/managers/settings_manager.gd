@@ -36,7 +36,8 @@ var default_settings: Dictionary = {
 	"sfx_vol": 1.0,
 	"invert_cam": false,
 	"mouse_cam_sens": 0.5,
-	"joy_cam_sens": 2.0
+	"joy_cam_sens": 0.5,
+	"difficulty": 0,  # 0 is easy, 1 is hard. TODO make enum
 	# "bike_skin": "res://resources/bikes/skins/sport_default_skin_definition.tres",
 	# "character_skin": "res://resources/player/skins/biker_default_skin_definition.tres",
 }

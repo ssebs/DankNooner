@@ -16,6 +16,7 @@ class_name SettingsMenuState extends MenuState
 @onready var sfx_vol_slider: HSlider = %SFXVolSlider
 @onready var menu_vol_slider: HSlider = %MenuVolSlider
 
+@onready var resolution_scale_label: Label = %RESOLUTION_SCALE_LABEL
 @onready var resolution_scale: HSlider = %ResolutionScaleSlider
 @onready var joy_cam_sens: HSlider = %JoyCamSensSlider
 @onready var mouse_cam_sens: HSlider = %MouseCamSensSlider
@@ -52,6 +53,8 @@ func Enter(state_context: StateContext):
 	settings_manager.setting_updated.connect(_on_setting_updated)
 	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
 
+	resolution_scale.value_changed.connect(_on_resolution_scale_changed)
+
 	settings_manager.load_settings()
 
 
@@ -63,6 +66,8 @@ func Exit(_state_context: StateContext):
 
 	settings_manager.setting_updated.disconnect(_on_setting_updated)
 	settings_manager.all_settings_changed.disconnect(_on_all_settings_changed)
+
+	resolution_scale.value_changed.disconnect(_on_resolution_scale_changed)
 
 
 func load_settings_into_ui():
@@ -81,6 +86,13 @@ func load_settings_into_ui():
 	sfx_vol_slider.value = settings_manager.current_settings["sfx_vol"]
 	menu_vol_slider.value = settings_manager.current_settings["menu_vol"]
 
+	resolution_scale.value = settings_manager.current_settings["resolution_scale"]
+	_on_resolution_scale_changed(resolution_scale.value)
+	joy_cam_sens.value = settings_manager.current_settings["joy_cam_sens"]
+	mouse_cam_sens.value = settings_manager.current_settings["mouse_cam_sens"]
+	invert_cam.button_pressed = settings_manager.current_settings["invert_cam"]
+	difficulty_opt.selected = settings_manager.current_settings["difficulty"]
+
 
 func _on_all_settings_changed(_current_settings: Dictionary):
 	load_settings_into_ui()
@@ -88,6 +100,11 @@ func _on_all_settings_changed(_current_settings: Dictionary):
 
 func _on_setting_updated(_key: String, _value: Variant):
 	load_settings_into_ui()
+
+
+func _on_resolution_scale_changed(val: float):
+	var s = "%.2f" % val
+	resolution_scale_label.text = tr("RESOLUTION_SCALE_LABEL") % s.rstrip("0").rstrip(".")
 
 
 func _on_save_pressed():
@@ -103,6 +120,12 @@ func _on_save_pressed():
 	settings_manager.update_setting("music_vol", music_vol_slider.value, false)
 	settings_manager.update_setting("sfx_vol", sfx_vol_slider.value, false)
 	settings_manager.update_setting("menu_vol", menu_vol_slider.value, false)
+
+	settings_manager.update_setting("resolution_scale", resolution_scale.value, false)
+	settings_manager.update_setting("joy_cam_sens", joy_cam_sens.value, false)
+	settings_manager.update_setting("mouse_cam_sens", mouse_cam_sens.value, false)
+	settings_manager.update_setting("invert_cam", invert_cam.button_pressed, false)
+	settings_manager.update_setting("difficulty", difficulty_opt.selected, false)
 
 	settings_manager.save_settings()
 
