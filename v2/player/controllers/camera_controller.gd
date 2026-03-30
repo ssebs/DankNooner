@@ -1,7 +1,7 @@
 @tool
 class_name CameraController extends Node3D
 
-enum CameraMode { FPS, TPS }
+enum CameraMode { TPS = 0, FPS, NONE }
 
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
@@ -54,18 +54,6 @@ var _fps_cam_offset := 0.75
 func _ready():
 	if Engine.is_editor_hint():
 		return
-
-
-func _load_cam_settings():
-	var settings := player_entity.settings_manager.current_settings
-	_mouse_cam_sens = settings["mouse_cam_sens"] * MOUSE_SENS_SCALE
-	_joy_cam_sens = settings["joy_cam_sens"] * JOY_SENS_SCALE
-	invert_cam = settings["invert_cam"]
-
-
-func _on_setting_updated(key: String, _value: Variant):
-	if key in ["mouse_cam_sens", "joy_cam_sens", "invert_cam"]:
-		_load_cam_settings()
 
 
 func _input(event: InputEvent):
@@ -183,7 +171,7 @@ func _update_fps_camera():
 func deferred_init():
 	if player_entity.is_local_client:
 		do_reset()
-		input_controller.cam_switch_pressed.connect(toggle_cam)
+		input_controller.cam_switch_pressed.connect(_on_cam_switch_pressed)
 		input_controller.reset_cam_pressed.connect(_on_reset_cam_pressed)
 		player_entity.settings_manager.setting_updated.connect(_on_setting_updated)
 		player_entity.settings_manager.all_settings_changed.connect(func(_s): _load_cam_settings())
@@ -204,11 +192,19 @@ func switch_to_cam(cam_mode: CameraMode):
 	current_cam_mode = cam_mode
 
 
-func toggle_cam():
-	if current_cam_mode == CameraMode.FPS:
-		switch_to_cam(CameraMode.TPS)
-	else:
-		switch_to_cam(CameraMode.FPS)
+## Called from player_entity.gd's do_respawn
+func do_reset():
+	_default_orbit_pitch = deg_to_rad(10.0)
+	_on_reset_cam_pressed()
+	switch_to_cam(_int_to_cam_mode(player_entity.settings_manager.current_settings["cam_mode"]))
+
+
+#endregion
+
+
+func _on_cam_switch_pressed():
+	var new_cam_mode: int = 1 if current_cam_mode == 0 else 0
+	player_entity.settings_manager.update_setting("cam_mode", new_cam_mode, true, true)
 
 
 func _on_reset_cam_pressed():
@@ -219,15 +215,28 @@ func _on_reset_cam_pressed():
 	_fps_pitch_offset = 0.0
 
 
-## Called from player_entity.gd's do_respawn
-func do_reset():
-	_default_orbit_pitch = deg_to_rad(10.0)
-	_on_reset_cam_pressed()
-	# TODO - set this from a setting, not always to TPS
-	switch_to_cam(CameraMode.TPS)
+func _load_cam_settings():
+	var settings := player_entity.settings_manager.current_settings
+	_mouse_cam_sens = settings["mouse_cam_sens"] * MOUSE_SENS_SCALE
+	_joy_cam_sens = settings["joy_cam_sens"] * JOY_SENS_SCALE
+	invert_cam = settings["invert_cam"]
+
+	current_cam_mode = _int_to_cam_mode(settings["cam_mode"])
+	switch_to_cam(current_cam_mode)
 
 
-#endregion
+func _int_to_cam_mode(inp: int) -> CameraMode:
+	match inp:
+		0:
+			return CameraMode.TPS
+		1:
+			return CameraMode.FPS
+	return CameraMode.NONE
+
+
+func _on_setting_updated(key: String, _value: Variant):
+	if key in ["mouse_cam_sens", "joy_cam_sens", "invert_cam"]:
+		_load_cam_settings()
 
 
 func _get_configuration_warnings() -> PackedStringArray:

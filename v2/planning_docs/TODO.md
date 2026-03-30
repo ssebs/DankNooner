@@ -6,6 +6,10 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
+- [ ] Camera improvements
+  - [ ] # TODO - zoom out w/ speed / current_trick != None
+  - [x] rotate w/ mouse/joystick
+  - [x] settings for sensitivity/invert/tps|fps mode
 - [ ] Add HUD for player
 
   - ![ride-hud.png](./img/ride-hud.png)
@@ -275,6 +279,7 @@
 
 ## Polish / Bugs
 
+- [ ] Update settings via controller
 - [ ] Add loading UI
 
   - [ ] Show when swtiching levels
