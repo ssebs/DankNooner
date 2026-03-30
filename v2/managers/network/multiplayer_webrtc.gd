@@ -300,21 +300,7 @@ func _get_ice_servers() -> Array:
 			"username": "cead62ad5423641ed5fd8ffc",
 			"credential": "6z59P3ogc9VkwQwL",
 		},
-		{
-			"urls": "turn:standard.relay.metered.ca:80?transport=tcp",
-			"username": "cead62ad5423641ed5fd8ffc",
-			"credential": "6z59P3ogc9VkwQwL",
-		},
-		{
-			"urls": "turn:standard.relay.metered.ca:443",
-			"username": "cead62ad5423641ed5fd8ffc",
-			"credential": "6z59P3ogc9VkwQwL",
-		},
-		{
-			"urls": "turns:standard.relay.metered.ca:443?transport=tcp",
-			"username": "cead62ad5423641ed5fd8ffc",
-			"credential": "6z59P3ogc9VkwQwL",
-		},
+		# TCP/TLS TURN not supported by libjuice (Godot's WebRTC ICE backend)
 	]
 
 
