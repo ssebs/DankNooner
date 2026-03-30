@@ -5,6 +5,7 @@ class_name InputController extends Node3D
 ## -1 for back, 1 for fwd
 signal gear_change_pressed(direction: int)
 signal cam_switch_pressed
+signal reset_cam_pressed
 
 @export var player_entity: PlayerEntity
 @export var vibration_duration: float = 0.15
@@ -76,6 +77,8 @@ func _process(_delta):
 
 	if Input.is_action_just_pressed("switch_cam"):
 		cam_switch_pressed.emit()
+	if Input.is_action_just_pressed("reset_cam"):
+		reset_cam_pressed.emit()
 
 	if Input.is_action_just_pressed("gear_up"):
 		rb_gear_up_pressed = true

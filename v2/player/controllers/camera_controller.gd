@@ -13,29 +13,155 @@ enum CameraMode { FPS, TPS }
 @export var fps_marker: Marker3D
 @export var tps_marker: Marker3D
 
-@export_tool_button("SetCamToMarker") var b_sctm = func(): set_cam_transforms_from_markers(-1)
+@export_group("TPS Orbit")
+@export var orbit_stick_speed: float = 2.0
+@export var orbit_mouse_sensitivity: float = 0.003
+@export var pitch_min_deg: float = -20.0
+@export var pitch_max_deg: float = 60.0
+@export var tps_distance: float = 1.678
+@export var tps_height: float = 0.8
+@export var tps_look_height: float = 0.5
+
+@export_group("Camera Reset")
+@export var reset_delay: float = 3.0
+@export var reset_speed: float = 3.0
+
+@export_group("FPS Look")
+@export var fps_mouse_sensitivity: float = 0.002
+@export var fps_stick_speed: float = 1.5
+@export var fps_pitch_min_deg: float = -30.0
+@export var fps_pitch_max_deg: float = 45.0
+@export var fps_yaw_limit_deg: float = 120.0
 
 var current_camera: Camera3D
 var current_cam_mode: CameraMode
+var invert_y: bool = false
 
-var _cam_tracking: bool = true
+var _orbit_yaw: float = 0.0
+var _orbit_pitch: float = 0.0
+var _default_orbit_pitch: float = 0.0
+var _mouse_delta: Vector2 = Vector2.ZERO
+var _tps_no_input_timer: float = 0.0
 
-var _fps_offset: Transform3D
-var _tps_offset: Transform3D
+var _fps_yaw_offset: float = 0.0
+var _fps_pitch_offset: float = 0.0
+var _fps_no_input_timer: float = 0.0
 
 
 func _ready():
-	_fps_offset = player_entity.global_transform.affine_inverse() * fps_marker.global_transform
-	_tps_offset = player_entity.global_transform.affine_inverse() * tps_marker.global_transform
-	set_cam_transforms_from_markers(-1)
-
 	if Engine.is_editor_hint():
 		return
 
 
+func _input(event: InputEvent):
+	if Engine.is_editor_hint():
+		return
+	if !player_entity.is_local_client:
+		return
+	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		_mouse_delta += event.relative
+
+
 func _process(delta: float):
-	if _cam_tracking:
-		set_cam_transforms_from_markers(delta)
+	if Engine.is_editor_hint():
+		return
+	if !player_entity.is_local_client:
+		return
+
+	var y_sign: float = 1.0 if invert_y else -1.0
+	var adjusted_mouse := Vector2(_mouse_delta.x, _mouse_delta.y * y_sign)
+
+	match current_cam_mode:
+		CameraMode.TPS:
+			_update_tps_input(delta, adjusted_mouse, y_sign)
+			_update_tps_camera()
+		CameraMode.FPS:
+			_update_fps_input(delta, adjusted_mouse, y_sign)
+			_update_fps_camera()
+
+	_mouse_delta = Vector2.ZERO
+
+
+#region TPS orbit
+func _update_tps_input(delta: float, mouse: Vector2, y_sign: float):
+	var has_input: bool = (
+		mouse.length_squared() > 0.01
+		or absf(input_controller.nfx_cam_x) > 0.05
+		or absf(input_controller.nfx_cam_y) > 0.05
+	)
+
+	if has_input:
+		_orbit_yaw -= mouse.x * orbit_mouse_sensitivity
+		_orbit_pitch -= mouse.y * orbit_mouse_sensitivity
+
+		_orbit_yaw -= input_controller.nfx_cam_x * orbit_stick_speed * delta
+		_orbit_pitch += input_controller.nfx_cam_y * y_sign * orbit_stick_speed * delta
+
+		_orbit_pitch = clampf(_orbit_pitch, deg_to_rad(pitch_min_deg), deg_to_rad(pitch_max_deg))
+		_orbit_yaw = wrapf(_orbit_yaw, -PI, PI)
+		_tps_no_input_timer = 0.0
+	else:
+		_tps_no_input_timer += delta
+		if _tps_no_input_timer >= reset_delay:
+			var t: float = reset_speed * delta
+			_orbit_yaw = lerpf(_orbit_yaw, 0.0, t)
+			_orbit_pitch = lerpf(_orbit_pitch, _default_orbit_pitch, t)
+
+
+func _update_tps_camera():
+	var look_target: Vector3 = player_entity.global_position + Vector3.UP * tps_look_height
+	var yaw: float = player_entity.global_rotation.y + _orbit_yaw
+
+	var orbit_rot := Basis(Vector3.UP, yaw) * Basis(Vector3.RIGHT, -_orbit_pitch)
+	var cam_offset: Vector3 = orbit_rot * Vector3(0, 0, tps_distance)
+	cam_offset.y += tps_height
+
+	tps_cam.global_position = player_entity.global_position + cam_offset
+	tps_cam.look_at(look_target)
+
+
+#endregion
+
+
+#region FPS look
+func _update_fps_input(delta: float, mouse: Vector2, y_sign: float):
+	var has_input: bool = (
+		mouse.length_squared() > 0.01
+		or absf(input_controller.nfx_cam_x) > 0.05
+		or absf(input_controller.nfx_cam_y) > 0.05
+	)
+
+	if has_input:
+		_fps_yaw_offset -= mouse.x * fps_mouse_sensitivity
+		_fps_pitch_offset -= mouse.y * fps_mouse_sensitivity
+
+		_fps_yaw_offset -= input_controller.nfx_cam_x * fps_stick_speed * delta
+		_fps_pitch_offset += input_controller.nfx_cam_y * y_sign * fps_stick_speed * delta
+
+		_fps_yaw_offset = clampf(
+			_fps_yaw_offset, deg_to_rad(-fps_yaw_limit_deg), deg_to_rad(fps_yaw_limit_deg)
+		)
+		_fps_pitch_offset = clampf(
+			_fps_pitch_offset, deg_to_rad(fps_pitch_min_deg), deg_to_rad(fps_pitch_max_deg)
+		)
+		_fps_no_input_timer = 0.0
+	else:
+		_fps_no_input_timer += delta
+		if _fps_no_input_timer >= reset_delay:
+			var t: float = reset_speed * delta
+			_fps_yaw_offset = lerpf(_fps_yaw_offset, 0.0, t)
+			_fps_pitch_offset = lerpf(_fps_pitch_offset, 0.0, t)
+
+
+func _update_fps_camera():
+	# Start from marker transform (position + base rotation from VisualRoot)
+	fps_cam.global_transform = fps_marker.global_transform
+	# Apply look offsets on top
+	fps_cam.rotate_object_local(Vector3.UP, _fps_yaw_offset)
+	fps_cam.rotate_object_local(Vector3.RIGHT, _fps_pitch_offset)
+
+
+#endregion
 
 
 #region public API
@@ -44,46 +170,9 @@ func deferred_init():
 	if player_entity.is_local_client:
 		do_reset()
 		input_controller.cam_switch_pressed.connect(toggle_cam)
+		input_controller.reset_cam_pressed.connect(_on_reset_cam_pressed)
 	else:
 		disable_cameras()
-
-
-func set_cam_tracking(val: bool):
-	_cam_tracking = val
-
-
-func set_cam_transforms_from_markers(delta: float):
-	if delta == -1:
-		fps_cam.global_transform = fps_marker.global_transform
-		tps_cam.global_transform = tps_marker.global_transform
-		return
-
-	# LERP from current pos to marker pos
-	# FPS
-	# follow fully
-	var weight: float = clampf(delta * 90.0, 0.0, 1.0)
-	fps_cam.global_transform = fps_cam.global_transform.interpolate_with(
-		fps_marker.global_transform, weight
-	)
-	tps_cam.global_transform = tps_cam.global_transform.interpolate_with(
-		tps_marker.global_transform, weight
-	)
-
-	# # TPS
-	# # only follow Y rotation (yaw) — ignore pitch (X) and roll (Z)
-	# # tps_cam.global_position = tps_cam.global_position.lerp(tps_marker.global_position, weight)
-	# var target_pos = tps_cam.global_position.lerp(tps_marker.global_position, weight)
-	# tps_cam.global_position = Vector3(
-	# 	target_pos.x, tps_cam.global_position.y * _tps_offset.origin.y, target_pos.z
-	# )
-
-	# var target_y: float = lerp_angle(
-	# 	tps_cam.global_rotation.y, tps_marker.global_rotation.y, weight
-	# )
-	# var target_x: float = lerp_angle(
-	# 	tps_cam.global_rotation.x, player_entity.global_rotation.x, weight
-	# )
-	# tps_cam.global_rotation = Vector3(target_x, target_y, tps_cam.global_rotation.z)
 
 
 func disable_cameras():
@@ -119,8 +208,19 @@ func toggle_cam():
 		switch_to_fps_cam()
 
 
+func _on_reset_cam_pressed():
+	_orbit_yaw = 0.0
+	_orbit_pitch = _default_orbit_pitch
+	_tps_no_input_timer = 0.0
+	_fps_yaw_offset = 0.0
+	_fps_pitch_offset = 0.0
+	_fps_no_input_timer = 0.0
+
+
 ## Called from player_entity.gd's do_respawn
 func do_reset():
+	_default_orbit_pitch = deg_to_rad(10.0)
+	_on_reset_cam_pressed()
 	# TODO - set this from a setting, not always to TPS
 	switch_to_tps_cam()
 
