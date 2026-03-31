@@ -4,11 +4,14 @@
 
 ## In Progress 🚀
 
-- [ ] if window is maximized, save that as default, or find another way to not resize to current when settings updated has been emitted. e.g. change camera should not resize window if i maximized it after setting to windowed
 > Take it slow, fix bugs and add polish to player controller
 
+- [ ] if window is maximized, save that as default, or find another way to not resize to current when settings updated has been emitted. e.g. change camera should not resize window if i maximized it after setting to windowed
+
 - [ ] Camera improvements
+  - [ ] Fix camera follows wrong person!
   - [ ] # TODO - zoom out w/ speed / current_trick != None
+  - [ ] Pausing loses mouse for rotating camera
   - [x] rotate w/ mouse/joystick
   - [x] settings for sensitivity/invert/tps|fps mode
 - [ ] Add HUD for player
