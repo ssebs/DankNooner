@@ -6,7 +6,11 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] if window is maximized, save that as default, or find another way to not resize to current when settings updated has been emitted. e.g. change camera should not resize window if i maximized it after setting to windowed
+- [ ] WebRTC doesn't ALWAYS work?
+
+  - [ ] Lobby code works, but TURN/STUN doesn't
+  - [ ] Check connection outside of home wifi
+  - [ ] Review webrtc gen code for security
 
 - [ ] Camera improvements
   - [ ] Fix camera follows wrong person!
@@ -14,6 +18,7 @@
   - [ ] Pausing loses mouse for rotating camera
   - [x] rotate w/ mouse/joystick
   - [x] settings for sensitivity/invert/tps|fps mode
+  - [ ] Camera should not rotate with player (e.g. loops, ramps)
 - [ ] Add HUD for player
 
   - ![ride-hud.png](./img/ride-hud.png)
@@ -39,10 +44,15 @@
       - Guages have red overlay & change size
     - Mini Map? or Compass w/ arrow
 
-- [ ] Camera should not rotate with player (e.g. loops, ramps)
-- [ ] player can fly if rotating cam when launching off loop
+## Up Next (Finish POC MP Gameplay Demo) 📋
+
+> POC = playable gamemodes w/ friends, see if core gameplay loop works
+> video record this once playing with everyone, save log files
+
+- [ ] if window is maximized, save that as default, or find another way to not resize to current when settings updated has been emitted. e.g. change camera should not resize window if i maximized it after setting to windowed
 - [ ] Redo movement_controller
 
+  - [ ] player can fly if leaning when launching off loop
   - [x] finish cleanup (function split)
   - [x] basic wheelies / stoppies
   - [x] improve physics
@@ -58,13 +68,6 @@
       - [ ] WASD support
   - [ ] Be able to reverse (play animation)
     - [ ] Hold clutch, brake to reverse
-
-- [ ] Review webrtc gen code for security
-
-## Up Next (Finish POC MP Gameplay Demo) 📋
-
-> POC = playable gamemodes w/ friends, see if core gameplay loop works
-> video record this once playing with everyone, save log files
 
 - [ ] Improve CrashController
   - [ ] Brake danger
@@ -150,6 +153,8 @@
       - [ ] Mario kart like - get items to attack players or help self, but do tricks to get items. More complex tricks = better items
   - [ ] Unlock Skins w/ Score from disk & spend
 
+- [ ] find hook for dank nooner, what makes it cool!
+
 - [ ] More audio
 
   - [ ] add clunk sound when changing gears
@@ -163,9 +168,6 @@
 
   - [ ] riding mechanics
   - [ ] use HUD overlay layer
-
-- [ ] WebRTC doesn't ALWAYS work?
-  - [ ] Lobby code works, but TURN/STUN doesn't
 
 ## Backlog
 
