@@ -196,6 +196,8 @@ func switch_to_cam(cam_mode: CameraMode):
 
 ## Called from player_entity.gd's do_respawn
 func do_reset():
+	if !player_entity.is_local_client:
+		return
 	_default_orbit_pitch = deg_to_rad(10.0)
 	_on_reset_cam_pressed()
 	switch_to_cam(_int_to_cam_mode(player_entity.settings_manager.current_settings["cam_mode"]))
