@@ -9,12 +9,14 @@ class_name MovementController extends Node
 @export var crash_controller: CrashController
 
 const CLUTCH_KICK_WINDOW: float = 0.4
-const FALL_GRAVITY: float = 256.0
-const RAMP_GRAVITY: float = 128.0
+const FALL_GRAVITY: float = 68
+const RAMP_GRAVITY: float = 9.8
 const SURFACE_BLEND_SPEED: float = 8.0  # how fast up_direction aligns to surface
+const SURFACE_BLEND_SPEED_FALL: float = 0.25  # how fast up_direction aligns to surface
 # const WALL_REJECT_ANGLE: float = 170.0  # only reject near-straight-down surfaces (degrees)
 const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
 const MIN_LOOP_SPEED: float = 20.0  # minimum speed to stick to steep/inverted surfaces
+const AIR_DRAG: float = 24.0  # speed loss per second while airborne
 var speed: float = 0.0
 var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
@@ -28,6 +30,8 @@ var _spawn_timer: float = _default_spawn_timer
 var _prev_clutch_held: bool = false
 var _clutch_kick_window: float = 0.0
 var _balance_point_decay_mult: float = 0.2
+var _air_forward: Vector3 = Vector3.FORWARD  # forward direction when leaving a surface
+var _is_on_floor: bool = false  # cached once per tick to avoid redundant move_and_slide calls
 
 
 func _ready():
@@ -48,6 +52,7 @@ func on_movement_rollback_tick(delta: float):
 	if player_entity.is_crashed:
 		return
 
+	_is_on_floor = is_on_floor_netfox()
 	_update_surface_alignment(delta)
 	_speed_calc(delta)
 	_steer_calc(delta)
@@ -66,20 +71,20 @@ func on_movement_rollback_tick(delta: float):
 func _update_surface_alignment(delta: float):
 	var pe = player_entity
 
-	if is_on_floor_netfox():
+	if _is_on_floor:
 		var floor_normal = pe.get_floor_normal()
 		var surface_angle = floor_normal.angle_to(Vector3.UP)
-		# print(
-		# 	(
-		# 		"surface: on_floor=true normal=%s angle=%.1f° up_dir=%s floor_max=%.1f°"
-		# 		% [
-		# 			floor_normal,
-		# 			rad_to_deg(surface_angle),
-		# 			pe.up_direction,
-		# 			rad_to_deg(pe.floor_max_angle)
-		# 		]
-		# 	)
-		# )
+		print(
+			(
+				"surface: on_floor=true normal=%s angle=%.1f° up_dir=%s floor_max=%.1f°"
+				% [
+					floor_normal,
+					rad_to_deg(surface_angle),
+					pe.up_direction,
+					rad_to_deg(pe.floor_max_angle)
+				]
+			)
+		)
 
 		# # Ignore near-vertical walls
 		# !broken!
@@ -100,30 +105,16 @@ func _update_surface_alignment(delta: float):
 		pe.up_direction = (
 			pe.up_direction.slerp(floor_normal, SURFACE_BLEND_SPEED * delta).normalized()
 		)
-	else:
+	else:  # not _is_on_floor
 		_detach_from_surface(delta)
 
 
 ## Blend up_direction back to global up (airborne or detaching)
-## Lean forward/back rotates the bike so you can land right-side-up
 func _detach_from_surface(delta: float):
 	# print("_detach_from_surface")
-	# Lean input rotates up_direction around the bike's right axis
-	var lean = input_controller.nfx_lean
-	if abs(lean) > 0.1:
-		var right_axis = player_entity.global_transform.basis.x.normalized()
-		var rotation_speed = 3.0  # radians/sec — tuning value
-		player_entity.up_direction = (
-			player_entity
-			. up_direction
-			. rotated(right_axis, lean * rotation_speed * delta)
-			. normalized()
-		)
-	else:
-		# No input — drift back toward global up
-		player_entity.up_direction = (
-			player_entity.up_direction.slerp(Vector3.UP, SURFACE_BLEND_SPEED * delta).normalized()
-		)
+	player_entity.up_direction = (
+		player_entity.up_direction.slerp(Vector3.UP, SURFACE_BLEND_SPEED_FALL * delta).normalized()
+	)
 
 
 ## How much global gravity pulls the bike away from the current surface
@@ -142,7 +133,8 @@ func _speed_calc(delta: float):
 	var dot_speed = player_entity.velocity.dot(forward)
 	# On steep surfaces, use velocity magnitude to avoid speed loss from basis slerp lag
 	var surface_angle = player_entity.up_direction.angle_to(Vector3.UP)
-	if surface_angle > deg_to_rad(30) and dot_speed > 0:
+	# velocity.length() includes gravity accumulation — only safe to use on-floor
+	if surface_angle > deg_to_rad(30) and dot_speed > 0 and _is_on_floor:
 		speed = maxf(player_entity.velocity.length(), 0.0)
 	else:
 		speed = maxf(dot_speed, 0.0)
@@ -164,6 +156,7 @@ func _speed_calc(delta: float):
 	if total_brake > 0:
 		speed = move_toward(speed, 0, bd.brake_strength * total_brake * delta)
 
+	speed = minf(speed, bd.max_speed)
 	# print("speed %.2f" % speed)
 
 
@@ -199,16 +192,19 @@ func _steer_calc(delta: float):
 func _velocity_calc(delta: float):
 	# Apply velocity following slope
 	var forward = -player_entity.global_transform.basis.z
-	if is_on_floor_netfox():
+	if _is_on_floor:
+		_air_forward = forward  # capture launch direction for airborne use
 		player_entity.velocity = (
 			forward.slide(player_entity.get_floor_normal()).normalized() * speed
 		)
 	else:
-		player_entity.velocity = forward * speed
+		# Use the last on-surface forward so basis slerp doesn't deflect trajectory mid-air
+		speed = move_toward(speed, 0, AIR_DRAG * delta)
+		player_entity.velocity = _air_forward * speed
 
 	# Gravity — pulls toward -up_direction (supports ramp/loop riding)
-	if !is_on_floor_netfox():
-		player_entity.velocity -= player_entity.up_direction * FALL_GRAVITY * delta
+	if !_is_on_floor:
+		player_entity.velocity -= player_entity.up_direction * FALL_GRAVITY
 
 
 ## Orchestrates pitch_angle: clutch detection → wheelie target → stoppie → apply
@@ -428,6 +424,7 @@ func do_reset():
 	yaw_angle = 0.0
 	_prev_clutch_held = false
 	_clutch_kick_window = 0.0
+	_air_forward = Vector3.FORWARD
 	player_entity.up_direction = Vector3.UP
 
 

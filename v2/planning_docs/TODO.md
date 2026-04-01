@@ -45,6 +45,9 @@
   - [ ] Check connection outside of home wifi
   - [ ] Review webrtc gen code for security
 
+- [ ] Make tutorial level co-op
+  - [ ] Host on 1 server, different tutorials put you on different parts of the map. each tutorial HUD / in game pointerts are local, no tutorial state is sent to server.
+
 ## Up Next (Finish POC MP Gameplay Demo) 📋
 
 > POC = playable gamemodes w/ friends, see if core gameplay loop works
