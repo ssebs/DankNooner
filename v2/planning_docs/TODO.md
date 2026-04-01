@@ -9,13 +9,14 @@
 - [ ] Camera improvements
   - [x] Fix camera follows wrong person!
   - [ ] # TODO - zoom out w/ speed / current_trick != None
-  - [ ] Pausing loses mouse for rotating camera
+  - [x] Pausing loses mouse for rotating camera
   - [x] rotate w/ mouse/joystick
   - [x] settings for sensitivity/invert/tps|fps mode
   - [ ] Camera should not rotate with player (e.g. loops, ramps)
 - [ ] Add HUD for player
 
   - ![ride-hud.png](./img/ride-hud.png)
+  - See [tps-hud.excalidraw](./diagrams/tps-hud.excalidraw)
   - [x] Basic text only HUD
   - Reqd:
     - [x] Throttle
