@@ -27,6 +27,12 @@ func _ready():
 	add_to_group(UtilsConstants.GROUPS["InputStateManager"], true)
 
 
+func _input(event: InputEvent):
+	# Web browsers require mouse capture to happen inside an input event callback
+	if event is InputEventMouseButton and event.pressed:
+		showhide_mouse_cursor()
+
+
 #region InputState (in game vs in menu)
 func _unhandled_input(event: InputEvent):
 	match current_input_state:
