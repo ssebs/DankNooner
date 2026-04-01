@@ -7,7 +7,7 @@
 > Take it slow, fix bugs and add polish to player controller
 
 - [ ] Camera improvements
-  - [ ] Fix camera follows wrong person!
+  - [x] Fix camera follows wrong person!
   - [ ] # TODO - zoom out w/ speed / current_trick != None
   - [ ] Pausing loses mouse for rotating camera
   - [x] rotate w/ mouse/joystick
