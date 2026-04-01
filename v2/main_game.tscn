@@ -90,8 +90,9 @@ pause_menu_state = NodePath("StateMachine/PauseMenuState")
 script = ExtResource("4_6bm6p")
 initial_state = NodePath("SplashMenuState")
 
-[node name="SplashMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=2055861891 node_paths=PackedStringArray("menu_manager", "main_menu_state", "audio_manager") instance=ExtResource("11_umrn2")]
+[node name="SplashMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=2055861891 node_paths=PackedStringArray("menu_manager", "level_manager", "main_menu_state", "audio_manager") instance=ExtResource("11_umrn2")]
 menu_manager = NodePath("../..")
+level_manager = NodePath("../../../LevelManager")
 main_menu_state = NodePath("../MainMenuState")
 audio_manager = NodePath("../../../AudioManager")
 

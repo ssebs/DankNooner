@@ -21,6 +21,7 @@ run/main_scene="uid://bi5r4eng0hofw"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="DankNooner"
 config/features=PackedStringArray("4.6", "Forward Plus")
+boot_splash/bg_color=Color(0.078431375, 0.078431375, 0.078431375, 1)
 boot_splash/show_image=false
 boot_splash/image="uid://dlnqminq87toq"
 config/icon="uid://cwf7vhr6hpjoj"
