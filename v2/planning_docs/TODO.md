@@ -6,12 +6,6 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] WebRTC doesn't ALWAYS work?
-
-  - [ ] Lobby code works, but TURN/STUN doesn't
-  - [ ] Check connection outside of home wifi
-  - [ ] Review webrtc gen code for security
-
 - [ ] Camera improvements
   - [ ] Fix camera follows wrong person!
   - [ ] # TODO - zoom out w/ speed / current_trick != None
@@ -43,6 +37,12 @@
       - Red overlay like COD dmg
       - Guages have red overlay & change size
     - Mini Map? or Compass w/ arrow
+
+- [ ] WebRTC doesn't ALWAYS work?
+
+  - [ ] Lobby code works, but TURN/STUN doesn't
+  - [ ] Check connection outside of home wifi
+  - [ ] Review webrtc gen code for security
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
 

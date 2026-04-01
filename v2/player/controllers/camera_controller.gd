@@ -160,7 +160,7 @@ func _update_fps_input(delta: float, mouse: Vector2):
 func _update_fps_camera():
 	fps_cam.global_transform = fps_marker.global_transform
 	fps_cam.rotate_object_local(Vector3.UP, _fps_yaw_offset)
-	fps_cam.rotate_object_local(Vector3.RIGHT, _fps_pitch_offset)
+	fps_cam.rotate_object_local(Vector3.RIGHT, -_fps_pitch_offset)
 
 
 #endregion
