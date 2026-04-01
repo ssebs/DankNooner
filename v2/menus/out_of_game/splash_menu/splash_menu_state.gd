@@ -2,6 +2,7 @@
 class_name SplashMenuState extends MenuState
 
 @export var menu_manager: MenuManager
+@export var level_manager: LevelManager
 @export var main_menu_state: MenuState
 @export var audio_manager: AudioManager
 
@@ -41,6 +42,8 @@ func Enter(_state_context: StateContext):
 	else:
 		printerr("splash_children not populated!")
 		_finish_splashes()
+
+	level_manager.spawn_menu_level()
 
 
 func Exit(_state_context: StateContext):

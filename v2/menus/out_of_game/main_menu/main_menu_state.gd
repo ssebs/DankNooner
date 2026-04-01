@@ -31,7 +31,8 @@ func Enter(_state_context: StateContext):
 	quit_btn.pressed.connect(_on_quit_btn_pressed)
 	customize_btn.pressed.connect(_on_customize_btn_pressed)
 
-	level_manager.spawn_menu_level()
+	if level_manager.current_level_name != LevelManager.LevelName.BG_GRAY_LEVEL:
+		level_manager.spawn_menu_level()
 
 
 func Exit(_state_context: StateContext):

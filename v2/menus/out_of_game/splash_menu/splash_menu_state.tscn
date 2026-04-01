@@ -38,6 +38,7 @@ theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 0
 
 [node name="Splash01" type="TextureRect" parent="UI/AspectContainer/SplashesToShow" unique_id=661161262]
+visible = false
 layout_mode = 2
 texture = ExtResource("3_y56m1")
 expand_mode = 2
@@ -65,6 +66,7 @@ grow_vertical = 2
 text = "Made using FMOD Studio by Firelight Technologies Pty Ltd."
 
 [node name="Splash03" type="TextureRect" parent="UI/AspectContainer/SplashesToShow" unique_id=993923213]
+visible = false
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 texture = ExtResource("5_5g6xa")
