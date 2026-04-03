@@ -6,6 +6,7 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
+- [ ] add rpm guage from pics
 - [ ] Redo movement_controller
 
   - [ ] player can fly if leaning when launching off loop
