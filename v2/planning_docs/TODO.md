@@ -25,14 +25,19 @@
   - [ ] Be able to reverse (play animation)
     - [ ] Hold clutch, brake to reverse
 
-- [ ] Make tutorial level co-op
-  - [ ] Host on 1 server, different tutorials put you on different parts of the map. each tutorial HUD / in game pointerts are local, no tutorial state is sent to server.
-  - [ ] Maybe use mission system?
-    - [ ] Go to a marker in the map to start tutorial_01. If already completed, you can play it again.
-    - [ ] Going to the mission start marker => shows list of missions. Can do tut1 or tut2, etc. Replay them from there
+- [ ] Basic controls overlay
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
 
+- [ ] Single player mission system
+
+  - [ ] e.g. tutorial -
+    - [ ] Go to a marker in the map to start tutorial_01. If already completed, you can play it again.
+    - [ ] Going to the mission start marker => shows list of missions. Can do tut1 or tut2, etc. Replay them from there
+
+- [ ] Basic tutorial
+  - [ ] riding mechanics
+  - [ ] use HUD overlay layer
 - [ ] zoom out cam FOV w/ speed / current_trick != None
 - [ ] Review webrtc gen code for security
 - [ ] Improved (non-text) HUD
@@ -141,6 +146,10 @@
   - [ ] Unlock Skins w/ Score from disk & spend
 
 - [ ] find hook for dank nooner, what makes it cool!
+- [ ] Co-op mission system
+
+  - [ ] See "Single player mission system"
+  - [ ] Host on 1 server, different tutorials put you on different parts of the map. each tutorial HUD / in game pointerts are local, no tutorial state is sent to server.
 
 - [ ] More audio
 
@@ -151,11 +160,6 @@
   - [ ] Menu click sounds
   - [ ] Music?
   - [ ] [Web](https://github.com/utopia-rise/fmod-gdextension/pull/210#issuecomment-3717948490)
-
-- [ ] Basic tutorial
-
-  - [ ] riding mechanics
-  - [ ] use HUD overlay layer
 
 ## Backlog
 
