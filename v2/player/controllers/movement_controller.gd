@@ -10,12 +10,16 @@ class_name MovementController extends Node
 
 const CLUTCH_KICK_WINDOW: float = 0.4
 const FALL_GRAVITY: float = 9.8
-const SURFACE_BLEND_SPEED: float = 8.0  # how fast up_direction aligns to surface
-const SURFACE_BLEND_SPEED_FALL: float = 0.25  # how fast up_direction aligns to surface
-# const WALL_REJECT_ANGLE: float = 170.0  # only reject near-straight-down surfaces (degrees)
-const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
-const MIN_LOOP_SPEED: float = 20.0  # minimum speed to stick to steep/inverted surfaces
 const AIR_DRAG: float = 12.0  # speed loss per second while airborne
+# Ramp / loop tuning
+const SURFACE_BLEND_SPEED_MIN: float = 3.0  # up_direction alignment speed at rest
+const SURFACE_BLEND_SPEED_MAX: float = 25.0  # alignment speed at full speed (must track loops)
+const SURFACE_BLEND_SPEED_FALL: float = 0.25  # airborne alignment back to global UP
+const ADHESION_ANGLE: float = 80.0  # degrees — adhesion speed check kicks in here
+const RAMP_SLOWDOWN: float = 0.5  # multiplier on slope gravity (1.0 = realistic, lower = more arcade)
+const MIN_LOOP_SPEED: float = 20.0  # speed needed at fully inverted (180°)
+# Trick tuning
+const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
 var speed: float = 0.0
 var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
@@ -75,36 +79,30 @@ func _update_surface_alignment(delta: float):
 		var surface_angle = floor_normal.angle_to(Vector3.UP)
 		print(
 			(
-				"surface: on_floor=true normal=%s angle=%.1f° up_dir=%s floor_max=%.1f°"
-				% [
-					floor_normal,
-					rad_to_deg(surface_angle),
-					pe.up_direction,
-					rad_to_deg(pe.floor_max_angle)
-				]
+				"surface: on_floor=true normal=%s angle=%.1f° up_dir=%s speed=%.1f"
+				% [floor_normal, rad_to_deg(surface_angle), pe.up_direction, speed]
 			)
 		)
 
-		# # Ignore near-vertical walls
-		# !broken!
-		# if surface_angle > deg_to_rad(WALL_REJECT_ANGLE):
-		# 	_detach_from_surface(delta)
-		# 	return
+		# Adhesion check — need enough speed to ride steep/inverted surfaces
+		if surface_angle > deg_to_rad(ADHESION_ANGLE):
+			var steepness = clampf(
+				(surface_angle - deg_to_rad(ADHESION_ANGLE)) / deg_to_rad(180.0 - ADHESION_ANGLE),
+				0.0,
+				1.0
+			)
+			var required_speed = MIN_LOOP_SPEED * steepness
+			if speed < required_speed:
+				# Too slow — peel off the surface
+				pe.up_direction = pe.up_direction.slerp(Vector3.UP, 2.0 * delta).normalized()
+				print("peel off: speed=%.1f required=%.1f" % [speed, required_speed])
+				return
 
-		# Speed-based adhesion on steep/inverted surfaces
-		if surface_angle > deg_to_rad(45) and speed < MIN_LOOP_SPEED:
-			# Too slow — slowly slerp up_direction toward global UP so gravity
-			# rotates downward and peels the bike off the surface naturally
-			var peel_speed = 2.0  # slow slerp — just enough to unstick
-			pe.up_direction = pe.up_direction.slerp(Vector3.UP, peel_speed * delta).normalized()
-			print("_detach (too slow) speed=%.1f" % speed)
-			return
-
-		# Blend up_direction toward surface normal (smooths out mesh seam jitter)
-		pe.up_direction = (
-			pe.up_direction.slerp(floor_normal, SURFACE_BLEND_SPEED * delta).normalized()
-		)
-	else:  # not _is_on_floor
+		# Blend up_direction toward surface normal — faster at speed (must track loops)
+		var speed_pct = clampf(speed / player_entity.bike_definition.max_speed, 0.0, 1.0)
+		var blend_speed = lerpf(SURFACE_BLEND_SPEED_MIN, SURFACE_BLEND_SPEED_MAX, speed_pct)
+		pe.up_direction = (pe.up_direction.slerp(floor_normal, blend_speed * delta).normalized())
+	else:
 		_detach_from_surface(delta)
 
 
@@ -120,18 +118,11 @@ func _detach_from_surface(delta: float):
 func _speed_calc(delta: float):
 	var bd = player_entity.bike_definition
 
-	# Derive speed from velocity projected onto forward direction (works on walls/ceilings)
 	var forward = -player_entity.global_transform.basis.z
-	# Airborne: dot against _air_forward (basis rotates as up_direction slerps back)
-	var speed_forward = _air_forward if not _is_on_floor else forward
-	var dot_speed = player_entity.velocity.dot(speed_forward)
-	# On steep surfaces, use velocity magnitude to avoid speed loss from basis slerp lag
-	var surface_angle = player_entity.up_direction.angle_to(Vector3.UP)
-	# velocity.length() includes gravity accumulation — only safe to use on-floor
-	if surface_angle > deg_to_rad(30) and dot_speed > 0 and _is_on_floor:
-		speed = maxf(player_entity.velocity.length(), 0.0)
-	else:
-		speed = maxf(dot_speed, 0.0)
+	# Airborne: re-derive speed from velocity along launch heading
+	# On floor: keep previous speed — move_and_slide clips velocity on surface seams
+	if not _is_on_floor:
+		speed = maxf(player_entity.velocity.dot(_air_forward), 0.0)
 
 	# Acceleration (uses gearing power output)
 	var power = gearing_controller.get_power_output()
@@ -150,8 +141,15 @@ func _speed_calc(delta: float):
 	if total_brake > 0:
 		speed = move_toward(speed, 0, bd.brake_strength * total_brake * delta)
 
+	# Slope gravity — uses floor normal + velocity direction (immune to basis lag)
+	if _is_on_floor and player_entity.velocity.length_squared() > 0.01:
+		var floor_normal = player_entity.get_floor_normal()
+		var gravity_on_surface = Vector3.DOWN - floor_normal * Vector3.DOWN.dot(floor_normal)
+		var vel_dir = player_entity.velocity.normalized()
+		speed += FALL_GRAVITY * gravity_on_surface.dot(vel_dir) * RAMP_SLOWDOWN * delta
+		speed = maxf(speed, 0.0)
+
 	speed = minf(speed, bd.max_speed)
-	# print("speed %.2f" % speed)
 
 
 ## Calculate roll_angle & set player_entity.rotation
@@ -196,9 +194,9 @@ func _velocity_calc(delta: float):
 		speed = move_toward(speed, 0, AIR_DRAG * delta)
 		player_entity.velocity = _air_forward * speed
 
-	# Gravity — pulls toward -up_direction (supports ramp/loop riding)
+	# Gravity — straight down when airborne (slope speed handled in _speed_calc)
 	if !_is_on_floor:
-		player_entity.velocity -= player_entity.up_direction * FALL_GRAVITY
+		player_entity.velocity += Vector3.DOWN * FALL_GRAVITY
 
 
 ## Orchestrates pitch_angle: clutch detection → wheelie target → stoppie → apply
