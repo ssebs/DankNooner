@@ -30,6 +30,7 @@ enum CameraMode { TPS = 0, FPS, NONE }
 ## Base values when slider is at 0.5 (middle)
 const MOUSE_SENS_SCALE: float = 0.003
 const JOY_SENS_SCALE: float = 6.0
+const DEFAULT_ORBIT_PITCH: float = -0.5
 
 var current_cam_mode: CameraMode
 var invert_cam: int = -1:
@@ -40,7 +41,7 @@ var _mouse_cam_sens: float = 0.0015
 var _joy_cam_sens: float = 2.0
 var _orbit_yaw: float = 0.0
 var _orbit_pitch: float = 0.0
-var _default_orbit_pitch: float = 0.0
+var _default_orbit_pitch: float = -15
 var _mouse_delta: Vector2 = Vector2.ZERO
 var _no_input_timer: float = 0.0
 
@@ -198,7 +199,7 @@ func switch_to_cam(cam_mode: CameraMode):
 func do_reset():
 	if !player_entity.is_local_client:
 		return
-	_default_orbit_pitch = deg_to_rad(10.0)
+	_default_orbit_pitch = deg_to_rad(DEFAULT_ORBIT_PITCH)
 	_on_reset_cam_pressed()
 	switch_to_cam(_int_to_cam_mode(player_entity.settings_manager.current_settings["cam_mode"]))
 
