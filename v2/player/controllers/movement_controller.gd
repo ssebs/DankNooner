@@ -9,14 +9,13 @@ class_name MovementController extends Node
 @export var crash_controller: CrashController
 
 const CLUTCH_KICK_WINDOW: float = 0.4
-const FALL_GRAVITY: float = 68
-const RAMP_GRAVITY: float = 9.8
+const FALL_GRAVITY: float = 9.8
 const SURFACE_BLEND_SPEED: float = 8.0  # how fast up_direction aligns to surface
 const SURFACE_BLEND_SPEED_FALL: float = 0.25  # how fast up_direction aligns to surface
 # const WALL_REJECT_ANGLE: float = 170.0  # only reject near-straight-down surfaces (degrees)
 const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
 const MIN_LOOP_SPEED: float = 20.0  # minimum speed to stick to steep/inverted surfaces
-const AIR_DRAG: float = 24.0  # speed loss per second while airborne
+const AIR_DRAG: float = 12.0  # speed loss per second while airborne
 var speed: float = 0.0
 var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
@@ -117,20 +116,15 @@ func _detach_from_surface(delta: float):
 	)
 
 
-## How much global gravity pulls the bike away from the current surface
-func _calc_detach_force(floor_normal: Vector3) -> float:
-	# Dot: 1.0 on ceiling (full pull-away), 0.0 on wall, -1.0 on flat ground
-	var pull_away = (-Vector3.UP).dot(floor_normal)
-	return maxf(pull_away, 0.0) * RAMP_GRAVITY
-
-
 ## Calculate speed from input / power output
 func _speed_calc(delta: float):
 	var bd = player_entity.bike_definition
 
 	# Derive speed from velocity projected onto forward direction (works on walls/ceilings)
 	var forward = -player_entity.global_transform.basis.z
-	var dot_speed = player_entity.velocity.dot(forward)
+	# Airborne: dot against _air_forward (basis rotates as up_direction slerps back)
+	var speed_forward = _air_forward if not _is_on_floor else forward
+	var dot_speed = player_entity.velocity.dot(speed_forward)
 	# On steep surfaces, use velocity magnitude to avoid speed loss from basis slerp lag
 	var surface_angle = player_entity.up_direction.angle_to(Vector3.UP)
 	# velocity.length() includes gravity accumulation — only safe to use on-floor
