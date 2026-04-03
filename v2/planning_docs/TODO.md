@@ -6,51 +6,6 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] Camera improvements
-  - [x] Fix camera follows wrong person!
-  - [ ] # TODO - zoom out w/ speed / current_trick != None
-  - [x] Pausing loses mouse for rotating camera
-  - [x] rotate w/ mouse/joystick
-  - [x] settings for sensitivity/invert/tps|fps mode
-  - [ ] Camera should not rotate with player (e.g. loops, ramps)
-- [ ] Add HUD for player
-
-  - ![ride-hud.png](./img/ride-hud.png)
-  - See [tps-hud.excalidraw](./diagrams/tps-hud.excalidraw)
-  - [x] Basic text only HUD
-  - Reqd:
-    - [x] Throttle
-    - [x] Speed
-    - [x] Brake
-    - [x] Clutch
-    - [x] Gear
-    - [x] Grip (danger)
-    - [x] Place for trick messages
-    - [x] Place for gamemode messages (place, lap time, etc.)
-    - [x] Place for challenges panel
-    - [ ] Overlay layer for tutorial
-  - Ideas:
-    - In-world UI
-    - Bottom right has guages like IRL bike (analog)
-    - Center has guages like TFT (digital)
-    - Grip / danger:
-      - Bottom, wide red line
-      - Red overlay like COD dmg
-      - Guages have red overlay & change size
-    - Mini Map? or Compass w/ arrow
-
-- [ ] WebRTC doesn't ALWAYS work?
-
-  - [ ] Lobby code works, but TURN/STUN doesn't
-  - [ ] Check connection outside of home wifi
-  - [ ] Review webrtc gen code for security
-
-## Up Next (Finish POC MP Gameplay Demo) 📋
-
-> POC = playable gamemodes w/ friends, see if core gameplay loop works
-> video record this once playing with everyone, save log files
-
-- [ ] if window is maximized, save that as default, or find another way to not resize to current when settings updated has been emitted. e.g. change camera should not resize window if i maximized it after setting to windowed
 - [ ] Redo movement_controller
 
   - [ ] player can fly if leaning when launching off loop
@@ -70,6 +25,41 @@
   - [ ] Be able to reverse (play animation)
     - [ ] Hold clutch, brake to reverse
 
+- [ ] Basic controls overlay
+
+## Up Next (Finish POC MP Gameplay Demo) 📋
+
+- [ ] Single player mission system
+
+  - [ ] e.g. tutorial -
+    - [ ] Go to a marker in the map to start tutorial_01. If already completed, you can play it again.
+    - [ ] Going to the mission start marker => shows list of missions. Can do tut1 or tut2, etc. Replay them from there
+
+- [ ] Basic tutorial
+  - [ ] riding mechanics
+  - [ ] use HUD overlay layer
+- [ ] zoom out cam FOV w/ speed / current_trick != None
+- [ ] Review webrtc gen code for security
+- [ ] Improved (non-text) HUD
+
+  - [ ] Overlay layer for tutorial
+  - Ideas:
+    - In-world UI
+    - Bottom right has guages like IRL bike (analog)
+    - Center has guages like TFT (digital)
+    - Grip / danger:
+      - Bottom, wide red line
+      - Red overlay like COD dmg
+      - Guages have red overlay & change size
+    - Mini Map? or Compass w/ arrow
+
+> POC = playable gamemodes w/ friends, see if core gameplay loop works
+> video record this once playing with everyone, save log files
+
+- [ ] Resizing window should save in settings => windowed/maximized
+
+  - i.e. change camera should not resize window if i maximized it after setting to windowed
+
 - [ ] Improve CrashController
   - [ ] Brake danger
   - [x] Layer 2 collision (with objects & players)
@@ -87,6 +77,7 @@
   - [ ] Create lean (turning) animation
   - [ ] Create stopped/idle animation
   - [ ] Create wheelie/stoppie animation
+  - [ ] Add pull/lean back animation when starting a wheelie
   - [x] claude created a system
   - [x] Review planning_docs/AnimationController.md
   - [x] Create way to play specific animations
@@ -155,20 +146,20 @@
   - [ ] Unlock Skins w/ Score from disk & spend
 
 - [ ] find hook for dank nooner, what makes it cool!
+- [ ] Co-op mission system
+
+  - [ ] See "Single player mission system"
+  - [ ] Host on 1 server, different tutorials put you on different parts of the map. each tutorial HUD / in game pointerts are local, no tutorial state is sent to server.
 
 - [ ] More audio
 
+  - [ ] Soundscapes for ambient sounds, get diff clips and play them in different orders, at random times to set mood & add sound variety
   - [ ] add clunk sound when changing gears
   - [ ] Crash SFX
   - [ ] Tire Screetch SFX
   - [ ] Menu click sounds
   - [ ] Music?
   - [ ] [Web](https://github.com/utopia-rise/fmod-gdextension/pull/210#issuecomment-3717948490)
-
-- [ ] Basic tutorial
-
-  - [ ] riding mechanics
-  - [ ] use HUD overlay layer
 
 ## Backlog
 
@@ -296,6 +287,35 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] WebRTC doesn't ALWAYS work?
+
+  - [x] Lobby code works, but TURN/STUN doesn't
+  - [x] Check connection outside of home wifi
+
+- [x] Camera improvements
+
+  - [x] Fix camera follows wrong person!
+  - [x] Pausing loses mouse for rotating camera
+  - [x] rotate w/ mouse/joystick
+  - [x] settings for sensitivity/invert/tps|fps mode
+  - [ ] Camera should not rotate with player (e.g. loops, ramps)
+
+- [x] Add HUD for player
+
+  - ![ride-hud.png](./img/ride-hud.png)
+  - See [tps-hud.excalidraw](./diagrams/tps-hud.excalidraw)
+  - [x] Basic text only HUD
+  - Reqd:
+    - [x] Throttle
+    - [x] Speed
+    - [x] Brake
+    - [x] Clutch
+    - [x] Gear
+    - [x] Grip (danger)
+    - [x] Place for trick messages
+    - [x] Place for gamemode messages (place, lap time, etc.)
+    - [x] Place for challenges panel
 
 - [x] signal relay host setting update doesn't save ? Double check!
 

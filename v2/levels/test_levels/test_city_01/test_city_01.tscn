@@ -20,7 +20,7 @@ glow_enabled = true
 
 [node name="Test_City_01" type="Node3D" unique_id=721643000 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug")]
 script = ExtResource("1_qt85o")
-player_spawn_pos = NodePath("PlayerSpawnTest")
+player_spawn_pos = NodePath("PlayerSpawn")
 player_spawn_pos_debug = NodePath("PlayerSpawnTest")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
