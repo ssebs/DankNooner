@@ -162,6 +162,10 @@
 
 ## Backlog
 
+- [ ] touchscreen controls for mobile
+- [ ] https://docs.discord.com/developers/resources/invite
+- [ ] Slow down time when launching off ramps to do tricks - client side somehow?
+
 - [ ] Friends + invites + server browser
 - [ ] Gamemode / Score / XP / $ v2
 
