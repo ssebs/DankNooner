@@ -37,7 +37,7 @@ func start_server():
 	conn_addr = handler.get_addr()
 
 	if peer == null:
-		printerr("failed to create server")
+		DebugUtils.DebugErrMsg("failed to create server")
 		return
 
 	multiplayer.multiplayer_peer = peer
@@ -135,18 +135,18 @@ func _get_handler():
 
 #region signal handlers
 func _on_server_disconnected():
-	print("Disconnected from server")
+	DebugUtils.DebugMsg("Disconnected from server")
 	disconnect_client()
 	server_disconnected.emit()
 
 
 func _on_peer_connected(id: int):
-	print("Player %s connected" % id)
+	DebugUtils.DebugMsg("Player %s connected" % id)
 	player_connected.emit(id)
 
 
 func _on_peer_disconnected(id: int):
-	print("Player %s disconnected" % id)
+	DebugUtils.DebugMsg("Player %s disconnected" % id)
 	player_disconnected.emit(id)
 
 

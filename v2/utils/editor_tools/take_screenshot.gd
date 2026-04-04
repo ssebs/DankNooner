@@ -11,6 +11,6 @@ func _take_screenshot():
 	var img = viewport.get_texture().get_image()
 	img.save_jpg(path)
 
-	print("Saved screenshot to %s" % path)
+	DebugUtils.DebugMsg("Saved screenshot to %s" % path)
 
 	OS.shell_show_in_file_manager(ProjectSettings.globalize_path(path))

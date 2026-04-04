@@ -40,7 +40,7 @@ func Enter(_state_context: StateContext):
 		timer.timeout.connect(_on_timer_timeout)
 		_show_current_splash()
 	else:
-		printerr("splash_children not populated!")
+		DebugUtils.DebugErrMsg("splash_children not populated!")
 		_finish_splashes()
 
 	level_manager.spawn_menu_level()

@@ -171,7 +171,7 @@ func _update_fps_camera():
 ## HACK - called from player_entity
 func deferred_init():
 	if player_entity.is_local_client:
-		print("is_local_client %s" % multiplayer.multiplayer_peer.get_unique_id())
+		DebugUtils.DebugMsg("is_local_client %s" % multiplayer.multiplayer_peer.get_unique_id())
 		do_reset()
 		input_controller.cam_switch_pressed.connect(_on_cam_switch_pressed)
 		input_controller.reset_cam_pressed.connect(_on_reset_cam_pressed)
@@ -179,7 +179,7 @@ func deferred_init():
 		player_entity.settings_manager.all_settings_changed.connect(func(_s): _load_cam_settings())
 		_load_cam_settings()
 	else:
-		print("disable_cameras %s" % multiplayer.multiplayer_peer.get_unique_id())
+		DebugUtils.DebugMsg("disable_cameras %s" % multiplayer.multiplayer_peer.get_unique_id())
 		disable_cameras()
 
 

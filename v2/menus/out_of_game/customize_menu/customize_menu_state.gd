@@ -62,7 +62,7 @@ func _scan_skin_dir(dir_path: String) -> Dictionary:
 	var result: Dictionary = {}
 	var dir := DirAccess.open(dir_path)
 	if dir == null:
-		printerr("Failed to open skin directory: %s" % dir_path)
+		DebugUtils.DebugErrMsg("Failed to open skin directory: %s" % dir_path)
 		return result
 
 	var is_exported := !OS.has_feature("editor")

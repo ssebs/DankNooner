@@ -33,7 +33,9 @@ var ctx: LobbyStateContext
 #region state lifecycle
 func Enter(state_context: StateContext):
 	if state_context is not LobbyStateContext:
-		printerr("Must pass LobbyStateContext type when transitioning to LobbyMenuState")
+		DebugUtils.DebugErrMsg(
+			"Must pass LobbyStateContext type when transitioning to LobbyMenuState"
+		)
 		return
 
 	ctx = state_context

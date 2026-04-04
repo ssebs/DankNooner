@@ -101,8 +101,7 @@ func _update_procedural_animation(delta: float) -> void:
 
 	# Shift chest to match butt
 	var target_chest_x = (
-		_base_chest_pos.x
-		- clampf(visual_root.rotation.z, -max_butt_offset, max_butt_offset)
+		_base_chest_pos.x - clampf(visual_root.rotation.z, -max_butt_offset, max_butt_offset)
 	)
 	ik_ctrl.ik_chest.position.x = lerpf(ik_ctrl.ik_chest.position.x, target_chest_x, blend)
 
@@ -163,7 +162,9 @@ func _reset_to_base_positions() -> void:
 ## Initialize the animation controller. Call after IK targets are set.
 func initialize() -> void:
 	if character_skin == null or bike_skin == null or visual_root == null:
-		printerr("AnimationController: Missing character_skin, bike_skin, or visual_root")
+		DebugUtils.DebugErrMsg(
+			"AnimationController: Missing character_skin, bike_skin, or visual_root"
+		)
 		return
 
 	# Store base positions/rotations for offset calculations
@@ -263,7 +264,7 @@ func _transition_to_trick() -> void:
 #region Editor Tools
 func _editor_init_ik_from_bike() -> void:
 	if bike_skin == null or character_skin == null:
-		printerr("AnimationController: bike_skin and character_skin must be set")
+		DebugUtils.DebugErrMsg("AnimationController: bike_skin and character_skin must be set")
 		return
 	var def = bike_skin.skin_definition
 	character_skin.set_ik_targets_for_bike(
@@ -276,14 +277,14 @@ func _editor_save_default_pose() -> void:
 	var ik_ctrl = character_skin.ik_controller
 	var anim_player = character_skin.ik_anim_player
 	if ik_ctrl == null or anim_player == null:
-		printerr("AnimationController: missing ik_controller or ik_anim_player")
+		DebugUtils.DebugErrMsg("AnimationController: missing ik_controller or ik_anim_player")
 		return
 
 	var lib_name = "IK_anim_lib"
 	var anim_name = "default_pose"
 
 	if not anim_player.has_animation_library(lib_name):
-		printerr("AnimationController: animation library '%s' not found" % lib_name)
+		DebugUtils.DebugErrMsg("AnimationController: animation library '%s' not found" % lib_name)
 		return
 
 	var lib: AnimationLibrary = anim_player.get_animation_library(lib_name)
@@ -312,9 +313,11 @@ func _editor_save_default_pose() -> void:
 
 	var err = ResourceSaver.save(lib)
 	if err == OK:
-		print("AnimationController: Saved default_pose to IK_anim_lib.res")
+		DebugUtils.DebugMsg("AnimationController: Saved default_pose to IK_anim_lib.res")
 	else:
-		printerr("AnimationController: Failed to save IK_anim_lib.res, error: ", err)
+		DebugUtils.DebugErrMsg(
+			"AnimationController: Failed to save IK_anim_lib.res, error: %s" % err
+		)
 
 
 func _keyframe_marker(anim: Animation, node_path: String, marker: Marker3D) -> void:
@@ -330,11 +333,13 @@ func _keyframe_marker(anim: Animation, node_path: String, marker: Marker3D) -> v
 func _editor_reset_to_default_pose() -> void:
 	var anim_player = character_skin.ik_anim_player
 	if anim_player == null:
-		printerr("AnimationController: missing ik_anim_player")
+		DebugUtils.DebugErrMsg("AnimationController: missing ik_anim_player")
 		return
 	var full_name = "IK_anim_lib/default_pose"
 	if not anim_player.has_animation(full_name):
-		printerr("AnimationController: no default_pose saved - run Save Default Pose first")
+		DebugUtils.DebugErrMsg(
+			"AnimationController: no default_pose saved - run Save Default Pose first"
+		)
 		return
 	anim_player.play(full_name)
 	anim_player.seek(0.0, true)

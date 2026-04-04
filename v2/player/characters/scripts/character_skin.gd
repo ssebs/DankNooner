@@ -123,9 +123,11 @@ func _save_markers_to_resource():
 
 	var err = ResourceSaver.save(skin_definition)
 	if err == OK:
-		print("CharacterSkin: Saved marker positions to ", skin_definition.resource_path)
+		DebugUtils.DebugMsg(
+			"CharacterSkin: Saved marker positions to %s" % skin_definition.resource_path
+		)
 	else:
-		push_error("CharacterSkin: Failed to save resource, error: ", err)
+		DebugUtils.DebugErrMsg("CharacterSkin: Failed to save resource, error: %s" % err)
 
 
 #endregion

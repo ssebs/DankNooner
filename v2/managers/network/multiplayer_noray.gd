@@ -45,7 +45,7 @@ func start_server() -> MultiplayerPeer:
 	var peer = ENetMultiplayerPeer.new()
 	var err = peer.create_server(Noray.local_port)
 	if err != OK:
-		printerr("failed to create server on Noray port %d" % Noray.local_port)
+		DebugUtils.DebugErrMsg("failed to create server on Noray port %d" % Noray.local_port)
 		return null
 	return peer
 
@@ -77,7 +77,7 @@ func connect_client(noray_host_oid: String) -> Error:
 		err = Noray.connect_nat(oid)
 
 	if err != OK:
-		printerr("failed to connect_nat")
+		DebugUtils.DebugErrMsg("failed to connect_nat")
 		Noray.on_connect_nat.disconnect(_handle_noray_connect_nat)
 		Noray.on_connect_relay.disconnect(_handle_noray_connect)
 		Noray.on_command.disconnect(_handle_noray_command)
@@ -108,10 +108,10 @@ func get_addr() -> String:
 
 
 func _register_with_noray() -> Error:
-	print("noray_host %s" % noray_host)
+	DebugUtils.DebugMsg("noray_host %s" % noray_host)
 	var err = await Noray.connect_to_host(noray_host, 8890)
 	if err != OK:
-		printerr("noray failed to connect to noray @ %s" % noray_host)
+		DebugUtils.DebugErrMsg("noray failed to connect to noray @ %s" % noray_host)
 		return err
 
 	Noray.register_host()
@@ -120,7 +120,7 @@ func _register_with_noray() -> Error:
 
 	err = await Noray.register_remote()
 	if err != OK:
-		printerr("noray failed to connect to register_remote")
+		DebugUtils.DebugErrMsg("noray failed to connect to register_remote")
 		return err
 
 	return OK
@@ -130,13 +130,13 @@ func _handle_noray_client_connect(address: String, port: int):
 	var peer = multiplayer.multiplayer_peer as ENetMultiplayerPeer
 	var err = await PacketHandshake.over_enet(peer.host, address, port)
 	if err != OK:
-		printerr("noray packed handshake failed")
+		DebugUtils.DebugErrMsg("noray packed handshake failed")
 
 
 func _handle_noray_connect_nat(address: String, port: int):
 	var err = await _handle_noray_connect(address, port)
 	if err != OK:
-		printerr("NAT connection failed, trying relay")
+		DebugUtils.DebugErrMsg("NAT connection failed. Trying relay")
 		Noray.connect_relay(oid)
 
 
@@ -165,7 +165,7 @@ func _handle_noray_connect(address: String, port: int) -> Error:
 
 func _handle_noray_command(command: String, data: String):
 	if command == "error":
-		printerr("Noray error: %s" % data)
+		DebugUtils.DebugErrMsg("Noray error: %s" % data)
 		connection_failed.emit(data)
 
 #endregion

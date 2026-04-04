@@ -30,7 +30,7 @@ func _ready():
 	_is_web = OS.has_feature("web")
 
 	if _is_web:
-		print("AudioManager: Web platform detected, FMOD disabled")
+		DebugUtils.DebugMsg("AudioManager: Web platform detected, FMOD disabled")
 		# Remove FMOD nodes that were added in the scene
 		for child in get_children():
 			if child.get_class().begins_with("Fmod"):
@@ -82,7 +82,7 @@ func _on_setting_updated(setting_key: String, setting_value: Variant):
 
 	var vca_name: String = VCA_SETTING_MAP[setting_key]
 	if vca_name == null:
-		printerr("could not find vca name %s" % vca_name)
+		DebugUtils.DebugErrMsg("could not find vca name %s" % vca_name)
 		return
 
 	_apply_vca_volume(vca_name, setting_value)
@@ -99,7 +99,7 @@ func _apply_vca_volume(vca_name: String, volume: float):
 	if vca_name == "MASTER":
 		var master_bus = fmod_server.get_bus("bus:/")
 		if master_bus == null:
-			printerr("could not get fmod master bus")
+			DebugUtils.DebugErrMsg("could not get fmod master bus")
 			return
 		master_bus.volume = volume
 		return
@@ -109,7 +109,7 @@ func _apply_vca_volume(vca_name: String, volume: float):
 
 	var vca = fmod_server.get_vca(vca_name)
 	if vca == null:
-		printerr("could not load vca from name %s" % vca_name)
+		DebugUtils.DebugErrMsg("could not load vca from name %s" % vca_name)
 		return
 	vca.volume = volume
 

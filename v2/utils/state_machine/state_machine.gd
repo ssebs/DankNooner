@@ -29,7 +29,7 @@ func load_child_states():
 	for child in get_children():
 		if child is State:
 			if is_debug:
-				print("Found %s, registering to this state machine" % child)
+				DebugUtils.DebugMsg("Found %s, registering to this state machine" % child)
 			register_state(child)
 
 
@@ -37,7 +37,7 @@ func load_child_states():
 func register_state(new_state: State):
 	var ok = states.set(new_state.name, new_state)
 	if !ok:
-		printerr("Failed to register state %s" % new_state)
+		DebugUtils.DebugErrMsg("Failed to register state %s" % new_state)
 		return
 
 	new_state.state_machine_ref = self
@@ -62,7 +62,7 @@ func request_state_change(
 func get_state_by_name(state_name: String) -> State:
 	var st = states.get(state_name)
 	if st == null:
-		printerr("Could not get state %s" % state_name)
+		DebugUtils.DebugErrMsg("Could not get state %s" % state_name)
 	return st
 
 
@@ -72,27 +72,27 @@ func get_state_by_name(state_name: String) -> State:
 ## Updates current_state to new_state, runs Exit() on old and Enter() on new
 func _transition_to(new_state: State, state_context: StateContext = null, force: bool = false):
 	if is_debug:
-		print("transition_to: %s" % new_state)
+		DebugUtils.DebugMsg("transition_to: %s" % new_state)
 
 	var ok = states.has(new_state.name)
 	if !ok:
-		printerr("Could not find %s in state machine" % new_state)
+		DebugUtils.DebugErrMsg("Could not find %s in state machine" % new_state)
 		return
 
 	if new_state == current_state:
 		if is_debug:
-			print("transition_to: %s states match, not transitioning" % current_state)
+			DebugUtils.DebugMsg("transition_to: %s states match, not transitioning" % current_state)
 		if !force:
 			return
 
 	if current_state:
 		if is_debug:
-			print("Leaving: ", current_state)
+			DebugUtils.DebugMsg("Leaving: %s" % current_state)
 		current_state.Exit(state_context)
 	var old_state = current_state
 	current_state = new_state
 	if is_debug:
-		print("Entering: ", current_state.name)
+		DebugUtils.DebugMsg("Entering: %s " % current_state.name)
 	new_state.Enter(state_context)
 
 	state_transitioned.emit(old_state, new_state)

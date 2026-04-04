@@ -88,11 +88,11 @@ func save_settings():
 func load_settings():
 	var json_dict = DictJSONSaverLoader.load_json_from_file(settings_path)
 	if json_dict == {}:
-		printerr("failed to parse json from %s" % settings_path)
+		DebugUtils.DebugErrMsg("failed to parse json from %s" % settings_path)
 		return
 
 	if json_dict["version"] != settings_version:
-		printerr(
+		DebugUtils.DebugErrMsg(
 			"settings.json version mismatch, %s != %s" % [json_dict["version"], settings_version]
 		)
 		# TODO: migrate version

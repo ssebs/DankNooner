@@ -1,7 +1,6 @@
 @tool
 class_name FmodWebExportPlugin extends EditorExportPlugin
 
-
 var _export_dir: String = ""
 var _is_web: bool = false
 
@@ -15,12 +14,17 @@ func _export_begin(features: PackedStringArray, _is_debug: bool, path: String, _
 	# path is the full export path (e.g. "F:/...dist/dank-nooner-web/index.html")
 	# but may also be res:// — globalize to be safe
 	_export_dir = ProjectSettings.globalize_path(path).get_base_dir()
-	print("FmodWebExportPlugin: _export_begin called, is_web=%s, path=%s, export_dir=%s" % [_is_web, path, _export_dir])
-	print("FmodWebExportPlugin: features=%s" % [features])
+	DebugUtils.DebugMsg(
+		(
+			"FmodWebExportPlugin: _export_begin called, is_web=%s, path=%s, export_dir=%s"
+			% [_is_web, path, _export_dir]
+		)
+	)
+	DebugUtils.DebugMsg("FmodWebExportPlugin: features=%s" % [features])
 
 
 func _export_end() -> void:
-	print("FmodWebExportPlugin: _export_end called, is_web=%s" % _is_web)
+	DebugUtils.DebugMsg("FmodWebExportPlugin: _export_end called, is_web=%s" % _is_web)
 	if not _is_web:
 		return
 
@@ -47,8 +51,10 @@ func _export_end() -> void:
 			var dst := banks_output_dir.path_join(file_name)
 			var err := DirAccess.copy_absolute(src, dst)
 			if err != OK:
-				push_error("FmodWebExportPlugin: Failed to copy %s -> %s (error %d)" % [src, dst, err])
+				push_error(
+					"FmodWebExportPlugin: Failed to copy %s -> %s (error %d)" % [src, dst, err]
+				)
 			else:
-				print("FmodWebExportPlugin: Copied %s" % file_name)
+				DebugUtils.DebugMsg("FmodWebExportPlugin: Copied %s" % file_name)
 		file_name = dir.get_next()
 	dir.list_dir_end()

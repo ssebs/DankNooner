@@ -12,7 +12,7 @@ func start_server() -> ENetMultiplayerPeer:
 	var peer = ENetMultiplayerPeer.new()
 	var err = peer.create_server(UtilsConstants.PORT)
 	if err != OK:
-		printerr("failed to create server on port %d" % UtilsConstants.PORT)
+		DebugUtils.DebugErrMsg("failed to create server on port %d" % UtilsConstants.PORT)
 		return null
 
 	# Fetch public IP in background and emit when ready
@@ -69,7 +69,7 @@ func _get_public_ip_addr() -> String:
 	if resp.success() and resp.status_ok():
 		return resp.body_as_string()
 
-	printerr("Failed to fetch public IP address")
+	DebugUtils.DebugErrMsg("Failed to fetch public IP address")
 	return ""
 
 

@@ -33,7 +33,7 @@ func grab_focus_to_first_btn(m_state: MenuState):
 	var btn = m_state.get_first_button_for_focus()
 	if btn == null:
 		if is_verbose:
-			print("Could not find btn")
+			DebugUtils.DebugMsg("Could not find btn")
 		return
 
 	btn.grab_focus()

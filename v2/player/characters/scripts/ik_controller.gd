@@ -58,7 +58,7 @@ func _move_hips_to_butt_target():
 		return
 	var hips_idx = skel_3d.find_bone("Hips")
 	if hips_idx == -1:
-		printerr("could not find Hips bone in skel_3d")
+		DebugUtils.DebugErrMsg("could not find Hips bone in skel_3d")
 		return
 
 	# Set the Hips bone's global position to match butt_pos
@@ -107,7 +107,7 @@ func _create_ik() -> void:
 	var skel_3d = char_skin.skel_3d
 	var mesh_skin = char_skin.mesh_skin
 	if skel_3d == null:
-		printerr("Cannot create IK: skel_3d is null")
+		DebugUtils.DebugErrMsg("Cannot create IK: skel_3d is null")
 		return
 
 	# Clear old fabrik_ik if it exists
@@ -129,7 +129,7 @@ func _create_ik() -> void:
 		var end_bone_name: String = setting.get("end_bone_name", "")
 
 		if target == null:
-			printerr("IK setting missing target at index ", i)
+			DebugUtils.DebugErrMsg("IK setting missing target at index %s" % i)
 			continue
 
 		fabrik_ik.set_root_bone_name(i, root_bone_name)

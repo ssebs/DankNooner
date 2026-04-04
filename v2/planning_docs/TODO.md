@@ -12,12 +12,12 @@
   - [ ] Wheelie-ing by riding then tapping clutch once will hold it perfectly
   - [ ] Super laggy when riding w/ friends
     - [ ] Rubber banding is crazy here
-  - [ ] Code is AI gen - rewrite myself!
   - [ ] 2 difficulties, arcade & sim. Sim grants 1.5x score
     - [ ] arcade still has gear changes, no clutch except to start wheelie
       - [ ] WASD support
   - [ ] Be able to reverse (play animation)
     - [ ] Hold clutch, brake to reverse
+  - [ ] Code is AI gen - rewrite myself!
 
 - [ ] Basic show controls UI
 

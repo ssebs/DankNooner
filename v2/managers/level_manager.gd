@@ -57,7 +57,7 @@ func _ready():
 ## NOTE - also hides menus, and sets current_input_state
 func spawn_level(level_name: LevelName, input_state: InputStateManager.InputState):
 	if !possible_levels.has(level_name):
-		printerr("Could not find LevelName.%s in possible_levels" % level_name)
+		DebugUtils.DebugErrMsg("Could not find LevelName.%s in possible_levels" % level_name)
 		return
 
 	despawn_level()

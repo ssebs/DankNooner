@@ -31,7 +31,7 @@ func save_to_disk():
 	var path = USER_SKIN_DIR + SKIN_PFX + skin_name.to_snake_case() + ".tres"
 	var err = ResourceSaver.save(self, path)
 	if err == OK:
-		print("CharacterSkinDefinition: Saved to ", path)
+		DebugUtils.DebugMsg("CharacterSkinDefinition: Saved to ", path)
 	else:
 		push_error("CharacterSkinDefinition: Failed to save, error: ", err)
 
