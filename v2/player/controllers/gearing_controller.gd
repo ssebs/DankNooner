@@ -16,6 +16,7 @@ signal rpm_updated(rpm_ratio: float)
 var current_gear: int = 1
 var current_rpm: float = 1000.0
 var clutch_value: float = 0.0
+var is_rev_limited: bool = false
 var _clutch_hold_time: float = 0.0
 var _rpm_ratio: float = 0.0
 var _is_stalled: bool = false
@@ -89,6 +90,19 @@ func _blend_rpm(delta: float):
 	current_rpm = clamp(current_rpm, bd.idle_rpm, bd.max_rpm)
 	# DebugUtils.DebugMsg("RPM %.2f" % current_rpm)
 
+	# Rev limiter — fuel cut at redline, hysteresis so RPM bounces
+	if not is_rev_limited and get_rpm_ratio() >= 0.95:
+		is_rev_limited = true
+	elif is_rev_limited and get_rpm_ratio() < 0.9:
+		is_rev_limited = false
+
+	if is_rev_limited:
+		current_rpm = lerpf(
+			current_rpm,
+			rpm_from_ratio(0.85),
+			rpm_free_rev_speed * 5 * delta,
+		)
+
 
 #region public api
 ## Get pct of rpm : max rpm
@@ -97,6 +111,12 @@ func get_rpm_ratio() -> float:
 	if bd.max_rpm <= bd.idle_rpm:
 		return 0.0
 	return (current_rpm - bd.idle_rpm) / (bd.max_rpm - bd.idle_rpm)
+
+
+## Convert a 0-1 ratio back to an RPM value
+func rpm_from_ratio(ratio: float) -> float:
+	var bd = player_entity.bike_definition
+	return bd.idle_rpm + (bd.max_rpm - bd.idle_rpm) * ratio
 
 
 ## Max speed the current gear can achieve
@@ -108,7 +128,7 @@ func get_gear_max_speed() -> float:
 
 ## Returns power multiplier (0-1) based on current RPM and gear
 func get_power_output() -> float:
-	if _is_stalled:
+	if _is_stalled or is_rev_limited:
 		return 0.0
 
 	# Pulling the clutch lever is an instant disconnect
@@ -138,6 +158,7 @@ func do_reset():
 	)
 	clutch_value = 0.0
 	_rpm_ratio = 0.0
+	is_rev_limited = false
 
 
 #endregion
