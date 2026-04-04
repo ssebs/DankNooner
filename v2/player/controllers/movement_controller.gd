@@ -36,6 +36,8 @@ var _prev_clutch_held: bool = false
 var _clutch_kick_window: float = 0.0
 var _balance_point_decay_mult: float = 0.2
 var _is_on_floor: bool = false  # cached once per tick to avoid redundant move_and_slide calls
+var _floor_normal: Vector3 = Vector3.UP  # cached per tick — only valid when _is_on_floor
+var _speed_pct: float = 0.0  # speed / max_speed, cached per tick
 
 
 func _ready():
@@ -57,8 +59,11 @@ func on_movement_rollback_tick(delta: float):
 		return
 
 	_is_on_floor = is_on_floor_netfox()
-	_update_surface_alignment(delta)
+	if _is_on_floor:
+		_floor_normal = _get_blended_surface_normal()
 	_speed_calc(delta)
+	_speed_pct = clampf(speed / player_entity.bike_definition.max_speed, 0.0, 1.0)
+	_update_surface_alignment(delta)
 	_steer_calc(delta)
 	_velocity_calc(delta)
 	_pitch_angle_calc(delta)
@@ -97,15 +102,14 @@ func _update_surface_alignment(delta: float):
 	var pe = player_entity
 
 	if _is_on_floor:
-		var floor_normal = _get_blended_surface_normal()
-		var surface_angle = floor_normal.angle_to(Vector3.UP)
+		var surface_angle = _floor_normal.angle_to(Vector3.UP)
 		if surface_angle > deg_to_rad(5.0):
 			DebugUtils.DebugMsg(
 				(
 					"Surface: angle=%.1f° normal=%s F=%s R=%s"
 					% [
 						rad_to_deg(surface_angle),
-						floor_normal.snapped(Vector3.ONE * 0.01),
+						_floor_normal.snapped(Vector3.ONE * 0.01),
 						front_raycast.is_colliding(),
 						rear_raycast.is_colliding()
 					]
@@ -129,11 +133,10 @@ func _update_surface_alignment(delta: float):
 
 		# Blend up_direction toward surface normal — faster at speed (must track loops)
 		# Skip slerp when vectors are nearly identical (avoids non-normalized axis error)
-		if pe.up_direction.dot(floor_normal) < 0.9999:
-			var speed_pct = clampf(speed / player_entity.bike_definition.max_speed, 0.0, 1.0)
-			var blend_speed = lerpf(SURFACE_BLEND_SPEED_MIN, SURFACE_BLEND_SPEED_MAX, speed_pct)
+		if pe.up_direction.dot(_floor_normal) < 0.9999:
+			var blend_speed = lerpf(SURFACE_BLEND_SPEED_MIN, SURFACE_BLEND_SPEED_MAX, _speed_pct)
 			var t = clampf(blend_speed * delta, 0.0, 1.0)
-			pe.up_direction = pe.up_direction.slerp(floor_normal, t).normalized()
+			pe.up_direction = pe.up_direction.slerp(_floor_normal, t).normalized()
 	else:
 		_detach_from_surface(delta)
 
@@ -179,8 +182,7 @@ func _speed_calc(delta: float):
 
 	# Slope gravity — uses blended surface normal + velocity direction
 	if _is_on_floor and player_entity.velocity.length_squared() > 0.01:
-		var floor_normal = _get_blended_surface_normal()
-		var gravity_on_surface = Vector3.DOWN - floor_normal * Vector3.DOWN.dot(floor_normal)
+		var gravity_on_surface = Vector3.DOWN - _floor_normal * Vector3.DOWN.dot(_floor_normal)
 		var vel_dir = player_entity.velocity.normalized()
 		speed += FALL_GRAVITY * gravity_on_surface.dot(vel_dir) * RAMP_SLOWDOWN * delta
 		speed = maxf(speed, 0.0)
@@ -193,17 +195,16 @@ func _steer_calc(delta: float):
 	var bd = player_entity.bike_definition
 
 	# Curve-based speed factor for steering and lean
-	var speed_pct = clampf(speed / bd.max_speed, 0.0, 1.0)
-	var lean_factor = bd.lean_curve.sample(speed_pct)
+	var lean_factor = bd.lean_curve.sample(_speed_pct)
 
 	# Steering — bell curve: low at standstill, peaks mid-low speed, tapers at top speed
 	if speed > 0.5:
-		var steer_factor = bd.steer_curve.sample(speed_pct) if bd.steer_curve else 1.0
+		var steer_factor = bd.steer_curve.sample(_speed_pct) if bd.steer_curve else 1.0
 		var turn_rate = bd.turn_speed * steer_factor
 		DebugUtils.DebugMsg(
 			(
 				"Steer: spd=%.1f spd%%=%.0f%% curve=%.2f rate=%.2f"
-				% [speed, speed_pct * 100, steer_factor, turn_rate]
+				% [speed, _speed_pct * 100, steer_factor, turn_rate]
 			)
 		)
 		player_entity.rotate_y(-roll_angle * turn_rate * delta)
@@ -231,7 +232,7 @@ func _velocity_calc(delta: float):
 			air_forward = player_entity.velocity.normalized()
 		else:
 			air_forward = forward
-		player_entity.velocity = (forward.slide(_get_blended_surface_normal()).normalized() * speed)
+		player_entity.velocity = forward.slide(_floor_normal).normalized() * speed
 	else:
 		# Use the last on-surface forward so basis slerp doesn't deflect trajectory mid-air
 		speed = move_toward(speed, 0, AIR_DRAG * delta)
@@ -267,7 +268,7 @@ func _pitch_angle_calc(delta: float):
 		wheelie_target = _calc_normal_wheelie_target(bd)
 		if in_balance_point or above_balance_point:
 			wheelie_target = _calc_balance_point_target(
-				bd, wheelie_target, in_balance_point, bp_low, bp_high, delta
+				bd, in_balance_point, bp_low, bp_high
 			)
 
 	# DebugUtils.DebugMsg(
@@ -388,9 +389,8 @@ func _can_initiate_wheelie(in_wheelie: bool) -> bool:
 	var clutch_pop = _clutch_kick_window > 0 and input_controller.nfx_throttle > 0.5
 
 	# Power wheelie — lean back + throttle + RPM (threshold eases at higher speed)
-	var speed_ratio = clampf(speed / bd.max_speed, 0.0, 1.0)
 	var effective_rpm_threshold = lerpf(
-		bd.wheelie_rpm_threshold, bd.wheelie_rpm_threshold * 0.5, speed_ratio
+		bd.wheelie_rpm_threshold, bd.wheelie_rpm_threshold * 0.5, _speed_pct
 	)
 	var rpm_for_power = gearing_controller._get_rpm_ratio() >= effective_rpm_threshold
 	var power_pop = (
@@ -420,11 +420,9 @@ func _calc_normal_wheelie_target(bd: BikeSkinDefinition) -> float:
 ## - Above range: unstable — drifts toward crash unless rider corrects
 func _calc_balance_point_target(
 	bd: BikeSkinDefinition,
-	normal_target: float,
 	in_range: bool,
 	bp_low: float,
 	bp_high: float,
-	delta: float,
 ) -> float:
 	var max_wheelie_rad = deg_to_rad(bd.max_wheelie_angle_deg)
 	var balance_center = (bp_low + bp_high) / 2.0
