@@ -7,7 +7,7 @@
 script = ExtResource("2_1b44s")
 skin_name = "clanker_red"
 mesh_res = ExtResource("1_rroru")
-colors = Array[Color]([Color(1, 0, 0, 1)])
+colors = Array[Color]([Color(1, 0.41000003, 0.41000003, 1)])
 back_marker_position = Vector3(0, 1.5575522, -0.1533502)
 back_marker_rotation_degrees = Vector3(0, 179.99998, 0)
 metadata/_custom_type_script = "uid://bh7rf77tqy8xb"

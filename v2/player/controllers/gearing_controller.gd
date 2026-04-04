@@ -13,10 +13,10 @@ signal rpm_updated(rpm_ratio: float)
 @export var rpm_free_rev_speed: float = 4.0
 @export var rpm_loaded_speed: float = 1.5
 
-var _current_gear: int = 1
-var _current_rpm: float = 1000.0
+var current_gear: int = 1
+var current_rpm: float = 1000.0
 var _clutch_hold_time: float = 0.0
-var _clutch_value: float = 0.0
+var clutch_value: float = 0.0
 var _rpm_ratio: float = 0.0
 var _is_stalled: bool = false
 
@@ -32,9 +32,9 @@ func _ready():
 func _on_gear_change(direction: int):
 	# DebugUtils.DebugMsg("_on_gear_change %d" % direction)
 	var bd = player_entity.bike_definition
-	var new_gear = clampi(_current_gear + direction, 1, bd.num_gears)
-	if new_gear != _current_gear:
-		_current_gear = new_gear
+	var new_gear = clampi(current_gear + direction, 1, bd.num_gears)
+	if new_gear != current_gear:
+		current_gear = new_gear
 		gear_changed.emit(new_gear)
 
 
@@ -49,21 +49,21 @@ func on_movement_rollback_tick(delta: float):
 func _update_clutch_hold_time(delta: float):
 	if input_controller.nfx_clutch_held:
 		_clutch_hold_time += delta
-		_clutch_value = move_toward(_clutch_value, 1.0, clutch_engage_speed * delta)
+		clutch_value = move_toward(clutch_value, 1.0, clutch_engage_speed * delta)
 	else:
 		_clutch_hold_time = 0.0
-		_clutch_value = move_toward(_clutch_value, 0.0, clutch_release_speed * delta)
+		clutch_value = move_toward(clutch_value, 0.0, clutch_release_speed * delta)
 
-	# DebugUtils.DebugMsg("_clutch_value: %.1f" % _clutch_value)
+	# DebugUtils.DebugMsg("clutch_value: %.1f" % clutch_value)
 
 
-## Sets _current_rpm
+## Sets current_rpm
 func _blend_rpm(delta: float):
 	var bd = player_entity.bike_definition
-	var engagement = 1.0 - _clutch_value  # 0 = clutch in, 1 = clutch out
+	var engagement = 1.0 - clutch_value  # 0 = clutch in, 1 = clutch out
 
 	# What RPM the wheel is forcing the engine to
-	var gear_ratio = bd.gear_ratios[_current_gear - 1]
+	var gear_ratio = bd.gear_ratios[current_gear - 1]
 	var gear_max_speed = bd.max_speed * (bd.gear_ratios[bd.num_gears - 1] / gear_ratio)
 	var speed_ratio = (
 		player_entity.velocity.length() / gear_max_speed if gear_max_speed > 0 else 0.0
@@ -81,13 +81,13 @@ func _blend_rpm(delta: float):
 	var target_rpm = lerpf(free_rpm, loaded_rpm, engagement)
 
 	# Approach speed: faster when free-revving, slower when loaded
-	var rising = _current_rpm <= target_rpm
+	var rising = current_rpm <= target_rpm
 	var loaded_rate = rpm_loaded_speed if rising else rpm_free_rev_speed
 	var rpm_speed = lerpf(rpm_free_rev_speed, loaded_rate, engagement)
 
-	_current_rpm = lerpf(_current_rpm, target_rpm, rpm_speed * delta)
-	_current_rpm = clamp(_current_rpm, bd.idle_rpm, bd.max_rpm)
-	# DebugUtils.DebugMsg("RPM %.2f" % _current_rpm)
+	current_rpm = lerpf(current_rpm, target_rpm, rpm_speed * delta)
+	current_rpm = clamp(current_rpm, bd.idle_rpm, bd.max_rpm)
+	# DebugUtils.DebugMsg("RPM %.2f" % current_rpm)
 
 
 ## Get pct of rpm : max rpm
@@ -95,14 +95,14 @@ func _get_rpm_ratio() -> float:
 	var bd = player_entity.bike_definition
 	if bd.max_rpm <= bd.idle_rpm:
 		return 0.0
-	return (_current_rpm - bd.idle_rpm) / (bd.max_rpm - bd.idle_rpm)
+	return (current_rpm - bd.idle_rpm) / (bd.max_rpm - bd.idle_rpm)
 
 
 #region public api
 ## Max speed the current gear can achieve
 func get_gear_max_speed() -> float:
 	var bd = player_entity.bike_definition
-	var gear_ratio = bd.gear_ratios[_current_gear - 1]
+	var gear_ratio = bd.gear_ratios[current_gear - 1]
 	return bd.max_speed * (bd.gear_ratios[bd.num_gears - 1] / gear_ratio)
 
 
@@ -114,14 +114,14 @@ func get_power_output() -> float:
 	# Pulling the clutch lever is an instant disconnect
 	if input_controller.nfx_clutch_held:
 		return 0.0
-	var engagement = 1.0 - _clutch_value
+	var engagement = 1.0 - clutch_value
 
 	var ratio = _get_rpm_ratio()
 	# TODO - use actual curve
 	var power_curve = ratio * (2.0 - ratio)  # Peaks around 75% RPM
 
 	var bd = player_entity.bike_definition
-	var gear_ratio = bd.gear_ratios[_current_gear - 1]
+	var gear_ratio = bd.gear_ratios[current_gear - 1]
 	var base_ratio = bd.gear_ratios[bd.num_gears - 1]
 	var torque_multiplier = gear_ratio / base_ratio
 
@@ -132,11 +132,11 @@ func get_power_output() -> float:
 
 ## Called from player_entity.gd's do_respawn
 func do_reset():
-	_current_gear = 1
-	_current_rpm = (
+	current_gear = 1
+	current_rpm = (
 		player_entity.bike_definition.idle_rpm if player_entity.bike_definition else 1000.0
 	)
-	_clutch_value = 0.0
+	clutch_value = 0.0
 	_rpm_ratio = 0.0
 
 

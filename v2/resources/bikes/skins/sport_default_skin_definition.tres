@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://54ehro5jqyxu" path="res://player/bikes/scenes/sport_bike.tscn" id="1_uy60g"]
 [ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/bikes/bike_skin_definition.gd" id="2_3klvi"]
 [ext_resource type="Curve" uid="uid://bc4775t6u5ngh" path="res://player/bikes/resources/lean_speed_curve.tres" id="2_mg0ht"]
+[ext_resource type="Curve" uid="uid://ct2j0k3sl7m3u" path="res://player/bikes/resources/steer_speed_curve.tres" id="5_v4igm"]
 
 [resource]
 script = ExtResource("2_3klvi")

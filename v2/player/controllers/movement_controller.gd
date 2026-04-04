@@ -7,10 +7,12 @@ class_name MovementController extends Node
 @export var gearing_controller: GearingController
 @export var trick_controller: TrickController
 @export var crash_controller: CrashController
+@export var rear_raycast: RayCast3D
+@export var front_raycast: RayCast3D
 
-const CLUTCH_KICK_WINDOW: float = 0.4
+const CLUTCH_KICK_WINDOW: float = 0.2
 const FALL_GRAVITY: float = 9.8
-const AIR_DRAG: float = 12.0  # speed loss per second while airborne
+const AIR_DRAG: float = 4.0  # speed loss per second while airborne
 # Ramp / loop tuning
 const SURFACE_BLEND_SPEED_MIN: float = 3.0  # up_direction alignment speed at rest
 const SURFACE_BLEND_SPEED_MAX: float = 40.0  # alignment speed at full speed (must track loops)
@@ -25,6 +27,8 @@ var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
 var yaw_angle: float = 0.0  # twist left/right
 
+var air_forward: Vector3 = Vector3.FORWARD  # forward direction when leaving a surface
+
 # spawn protection - todo move?
 var _default_spawn_timer: float = 1.0
 var _spawn_timer: float = _default_spawn_timer
@@ -33,7 +37,6 @@ var _spawn_timer: float = _default_spawn_timer
 var _prev_clutch_held: bool = false
 var _clutch_kick_window: float = 0.0
 var _balance_point_decay_mult: float = 0.2
-var _air_forward: Vector3 = Vector3.FORWARD  # forward direction when leaving a surface
 var _is_on_floor: bool = false  # cached once per tick to avoid redundant move_and_slide calls
 
 
@@ -70,19 +73,46 @@ func on_movement_rollback_tick(delta: float):
 	_handle_player_collision(delta)
 
 
+## Blend normals from front + rear raycasts for smoother ramp transitions.
+## Falls back to CharacterBody3D floor normal if neither raycast hits.
+func _get_blended_surface_normal() -> Vector3:
+	var front_hit = front_raycast.is_colliding()
+	var rear_hit = rear_raycast.is_colliding()
+
+	if front_hit and rear_hit:
+		return (
+			front_raycast
+			. get_collision_normal()
+			. lerp(rear_raycast.get_collision_normal(), 0.5)
+			. normalized()
+		)
+	if front_hit:
+		return front_raycast.get_collision_normal()
+	if rear_hit:
+		return rear_raycast.get_collision_normal()
+
+	return player_entity.get_floor_normal()
+
+
 ## Align bike's up_direction to surface normal for ramp/loop riding
 func _update_surface_alignment(delta: float):
 	var pe = player_entity
 
 	if _is_on_floor:
-		var floor_normal = pe.get_floor_normal()
+		var floor_normal = _get_blended_surface_normal()
 		var surface_angle = floor_normal.angle_to(Vector3.UP)
-		DebugUtils.DebugMsg(
-			(
-				"surface: on_floor=true normal=%s angle=%.1f° up_dir=%s speed=%.1f"
-				% [floor_normal, rad_to_deg(surface_angle), pe.up_direction, speed]
+		if surface_angle > deg_to_rad(5.0):
+			DebugUtils.DebugMsg(
+				(
+					"Surface: angle=%.1f° normal=%s F=%s R=%s"
+					% [
+						rad_to_deg(surface_angle),
+						floor_normal.snapped(Vector3.ONE * 0.01),
+						front_raycast.is_colliding(),
+						rear_raycast.is_colliding()
+					]
+				)
 			)
-		)
 
 		# Adhesion check — need enough speed to ride steep/inverted surfaces
 		if surface_angle > deg_to_rad(ADHESION_ANGLE):
@@ -106,11 +136,16 @@ func _update_surface_alignment(delta: float):
 		_detach_from_surface(delta)
 
 
-## Blend up_direction back to global up (airborne or detaching)
+## Blend up_direction back to global up (airborne or detaching).
+## More inverted = slower correction — rider falls on their head off a loop.
 func _detach_from_surface(delta: float):
-	# DebugUtils.DebugMsg("_detach_from_surface")
+	var inversion = player_entity.up_direction.angle_to(Vector3.UP) / PI  # 0=upright, 1=inverted
+	# Upright: corrects quickly. Fully inverted: nearly frozen so they fall on their head.
+	var correction_speed = lerpf(
+		SURFACE_BLEND_SPEED_FALL, SURFACE_BLEND_SPEED_FALL * 0.05, inversion
+	)
 	player_entity.up_direction = (
-		player_entity.up_direction.slerp(Vector3.UP, SURFACE_BLEND_SPEED_FALL * delta).normalized()
+		player_entity.up_direction.slerp(Vector3.UP, correction_speed * delta).normalized()
 	)
 
 
@@ -118,11 +153,10 @@ func _detach_from_surface(delta: float):
 func _speed_calc(delta: float):
 	var bd = player_entity.bike_definition
 
-	var forward = -player_entity.global_transform.basis.z
 	# Airborne: re-derive speed from velocity along launch heading
 	# On floor: keep previous speed — move_and_slide clips velocity on surface seams
 	if not _is_on_floor:
-		speed = maxf(player_entity.velocity.dot(_air_forward), 0.0)
+		speed = maxf(player_entity.velocity.dot(air_forward), 0.0)
 
 	# Acceleration (uses gearing power output)
 	var power = gearing_controller.get_power_output()
@@ -141,9 +175,9 @@ func _speed_calc(delta: float):
 	if total_brake > 0:
 		speed = move_toward(speed, 0, bd.brake_strength * total_brake * delta)
 
-	# Slope gravity — uses floor normal + velocity direction (immune to basis lag)
+	# Slope gravity — uses blended surface normal + velocity direction
 	if _is_on_floor and player_entity.velocity.length_squared() > 0.01:
-		var floor_normal = player_entity.get_floor_normal()
+		var floor_normal = _get_blended_surface_normal()
 		var gravity_on_surface = Vector3.DOWN - floor_normal * Vector3.DOWN.dot(floor_normal)
 		var vel_dir = player_entity.velocity.normalized()
 		speed += FALL_GRAVITY * gravity_on_surface.dot(vel_dir) * RAMP_SLOWDOWN * delta
@@ -160,10 +194,16 @@ func _steer_calc(delta: float):
 	var speed_pct = clampf(speed / bd.max_speed, 0.0, 1.0)
 	var lean_factor = bd.lean_curve.sample(speed_pct)
 
-	# Steering (only when moving)
+	# Steering — bell curve: low at standstill, peaks mid-low speed, tapers at top speed
 	if speed > 0.5:
-		var turn_radius = lerpf(bd.min_turn_radius, bd.max_turn_radius, speed_pct)
-		var turn_rate = bd.turn_speed / turn_radius
+		var steer_factor = bd.steer_curve.sample(speed_pct) if bd.steer_curve else 1.0
+		var turn_rate = bd.turn_speed * steer_factor
+		DebugUtils.DebugMsg(
+			(
+				"Steer: spd=%.1f spd%%=%.0f%% curve=%.2f rate=%.2f"
+				% [speed, speed_pct * 100, steer_factor, turn_rate]
+			)
+		)
 		player_entity.rotate_y(-roll_angle * turn_rate * delta)
 
 	# Lean
@@ -185,14 +225,15 @@ func _velocity_calc(delta: float):
 	# Apply velocity following slope
 	var forward = -player_entity.global_transform.basis.z
 	if _is_on_floor:
-		_air_forward = forward  # capture launch direction for airborne use
-		player_entity.velocity = (
-			forward.slide(player_entity.get_floor_normal()).normalized() * speed
-		)
+		if player_entity.velocity.length_squared() > 0.01:
+			air_forward = player_entity.velocity.normalized()
+		else:
+			air_forward = forward
+		player_entity.velocity = (forward.slide(_get_blended_surface_normal()).normalized() * speed)
 	else:
 		# Use the last on-surface forward so basis slerp doesn't deflect trajectory mid-air
 		speed = move_toward(speed, 0, AIR_DRAG * delta)
-		player_entity.velocity = _air_forward * speed
+		player_entity.velocity = air_forward * speed
 
 	# Gravity — straight down when airborne (slope speed handled in _speed_calc)
 	if !_is_on_floor:
@@ -367,15 +408,20 @@ func _calc_balance_point_target(
 	var balance_target = pitch_angle + lean_influence * 0.75
 
 	if input_controller.nfx_throttle >= 0.5:
-		return maxf(normal_target, balance_target)
+		if input_controller.nfx_lean < -0.1:
+			return maxf(normal_target, balance_target)
+
+		return move_toward(balance_target, 0, bd.return_speed * 0.3 * delta)
 
 	# Unstable — drifts toward edges
 	var midpoint = (balance_point_rad + max_wheelie_rad) / 2
 	if balance_target < midpoint:
-		return move_toward(balance_target, 0, delta)
+		return move_toward(balance_target, 0, bd.return_speed * 0.5 * delta)
 
 	if balance_target > midpoint:
-		return move_toward(balance_target, max_wheelie_rad + deg_to_rad(1), delta)
+		return move_toward(
+			balance_target, max_wheelie_rad + deg_to_rad(1), bd.return_speed * 0.5 * delta
+		)
 
 	return normal_target + randf_range(deg_to_rad(-25), deg_to_rad(25))
 
@@ -416,7 +462,7 @@ func do_reset():
 	yaw_angle = 0.0
 	_prev_clutch_held = false
 	_clutch_kick_window = 0.0
-	_air_forward = Vector3.FORWARD
+	air_forward = Vector3.FORWARD
 	player_entity.up_direction = Vector3.UP
 
 
@@ -432,4 +478,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("trick_controller must not be empty")
 	if crash_controller == null:
 		issues.append("crash_controller must not be empty")
+	if rear_raycast == null:
+		issues.append("rear_raycast must not be empty")
+	if front_raycast == null:
+		issues.append("front_raycast must not be empty")
 	return issues
