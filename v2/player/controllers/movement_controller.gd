@@ -172,7 +172,7 @@ func _speed_calc(delta: float):
 	# Engine braking — applies when not on throttle, stronger at higher RPM
 	elif power <= 0 and speed > 0.5:
 		# DebugUtils.DebugMsg("engine brake")
-		var rpm_factor = gearing_controller._get_rpm_ratio()
+		var rpm_factor = gearing_controller.get_rpm_ratio()
 		speed = move_toward(speed, 0, bd.engine_brake_strength * rpm_factor * delta)
 
 	# Braking
@@ -267,9 +267,7 @@ func _pitch_angle_calc(delta: float):
 	if _can_initiate_wheelie(in_wheelie) and not in_stoppie:
 		wheelie_target = _calc_normal_wheelie_target(bd)
 		if in_balance_point or above_balance_point:
-			wheelie_target = _calc_balance_point_target(
-				bd, in_balance_point, bp_low, bp_high
-			)
+			wheelie_target = _calc_balance_point_target(bd, in_balance_point, bp_low, bp_high)
 
 	# DebugUtils.DebugMsg(
 	# 	(
@@ -300,7 +298,7 @@ func _pitch_angle_calc(delta: float):
 
 	# Rev limiter drop — hitting the top of a gear during a wheelie kills the power
 	# Rider needs to shift up or back off throttle to maintain the wheelie
-	if in_wheelie and gearing_controller._get_rpm_ratio() >= 0.95:
+	if in_wheelie and gearing_controller.get_rpm_ratio() >= 0.95:
 		var drop_speed = bd.return_speed * 3.0
 		pitch_angle = move_toward(pitch_angle, 0, drop_speed * delta)
 		speed = move_toward(speed, speed * 0.95, bd.max_speed * 0.1 * delta)
@@ -399,7 +397,7 @@ func _can_initiate_wheelie(in_wheelie: bool) -> bool:
 	var effective_rpm_threshold = lerpf(
 		bd.wheelie_rpm_threshold, bd.wheelie_rpm_threshold * 0.5, _speed_pct
 	)
-	var rpm_for_power = gearing_controller._get_rpm_ratio() >= effective_rpm_threshold
+	var rpm_for_power = gearing_controller.get_rpm_ratio() >= effective_rpm_threshold
 	var power_pop = (
 		input_controller.nfx_lean < -0.3 and input_controller.nfx_throttle > 0.7 and rpm_for_power
 	)

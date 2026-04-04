@@ -8,9 +8,10 @@
 
 - [ ] Redo movement_controller
 
+  - [ ] Improve RPM Blending
   - [ ] Launching off ramp kills speed
   - [x] player can fly if leaning when launching off loop
-  - [ ] Wheelie-ing by riding then tapping clutch once will hold it perfectly
+  - [x] Stop Wheelie-ing by riding then tapping clutch once will hold it perfectly
   - [ ] Super laggy when riding w/ friends
     - [ ] Rubber banding is crazy here
   - [ ] 2 difficulties, arcade & sim. Sim grants 1.5x score
