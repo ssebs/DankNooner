@@ -30,7 +30,7 @@ func _ready():
 ## direction must be `1` or `-1` (fwd/back)
 ## Runs from _rollback_tick in input_controller
 func _on_gear_change(direction: int):
-	# print("_on_gear_change %d" % direction)
+	# DebugUtils.DebugMsg("_on_gear_change %d" % direction)
 	var bd = player_entity.bike_definition
 	var new_gear = clampi(_current_gear + direction, 1, bd.num_gears)
 	if new_gear != _current_gear:
@@ -54,7 +54,7 @@ func _update_clutch_hold_time(delta: float):
 		_clutch_hold_time = 0.0
 		_clutch_value = move_toward(_clutch_value, 0.0, clutch_release_speed * delta)
 
-	# print("_clutch_value: %.1f" % _clutch_value)
+	# DebugUtils.DebugMsg("_clutch_value: %.1f" % _clutch_value)
 
 
 ## Sets _current_rpm
@@ -87,7 +87,7 @@ func _blend_rpm(delta: float):
 
 	_current_rpm = lerpf(_current_rpm, target_rpm, rpm_speed * delta)
 	_current_rpm = clamp(_current_rpm, bd.idle_rpm, bd.max_rpm)
-	# print("RPM %.2f" % _current_rpm)
+	# DebugUtils.DebugMsg("RPM %.2f" % _current_rpm)
 
 
 ## Get pct of rpm : max rpm
@@ -126,7 +126,7 @@ func get_power_output() -> float:
 	var torque_multiplier = gear_ratio / base_ratio
 
 	var output = input_controller.nfx_throttle * power_curve * torque_multiplier * engagement
-	# print("power output: %.2f" % output)
+	# DebugUtils.DebugMsg("power output: %.2f" % output)
 	return output
 
 

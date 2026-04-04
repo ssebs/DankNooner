@@ -60,19 +60,19 @@ func _detect_crash():
 
 	# Wheelie crash
 	if movement_controller.pitch_angle > deg_to_rad(bd.max_wheelie_angle_deg):
-		print("wheelie crash")
+		DebugUtils.DebugMsg("wheelie crash")
 		trigger_crash()
 		return
 
 	# Stoppie crash
 	if movement_controller.pitch_angle < -deg_to_rad(bd.max_stoppie_angle_deg):
-		print("stoppie crash")
+		DebugUtils.DebugMsg("stoppie crash")
 		trigger_crash()
 		return
 
 	# Lean crash
 	if abs(movement_controller.roll_angle) >= deg_to_rad(crash_lean_threshold_deg):
-		print("lean crash")
+		DebugUtils.DebugMsg("lean crash")
 		trigger_crash()
 		return
 
@@ -82,7 +82,7 @@ func _detect_crash():
 	if bike_up_angle > deg_to_rad(120) and movement_controller.is_on_floor_netfox():
 		var surface_angle = player_entity.get_floor_normal().angle_to(Vector3.UP)
 		if surface_angle < deg_to_rad(45):
-			print("upside-down crash (angle=%.1f°)" % rad_to_deg(bike_up_angle))
+			DebugUtils.DebugMsg("upside-down crash (angle=%.1f°)" % rad_to_deg(bike_up_angle))
 			trigger_crash()
 			return
 
@@ -96,10 +96,10 @@ func _detect_crash():
 					collision.get_normal().angle_to(-player_entity.velocity.normalized())
 				)
 				if angle < _crash_angle:
-					print("obstacle crash (angle=%.1f)" % angle)
+					DebugUtils.DebugMsg("obstacle crash (angle=%.1f)" % angle)
 					trigger_crash()
 					return
-				print("no crash (angle=%.1f)" % angle)
+				DebugUtils.DebugMsg("no crash (angle=%.1f)" % angle)
 
 	# Brake grab while turning (sim difficulty + gamepad only)
 	if (
@@ -108,7 +108,7 @@ func _detect_crash():
 		and input_controller.is_gamepad
 		and abs(movement_controller.roll_angle) > deg_to_rad(15)
 	):
-		print("brake grab crash")
+		DebugUtils.DebugMsg("brake grab crash")
 		trigger_crash()
 
 

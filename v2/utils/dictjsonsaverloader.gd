@@ -5,7 +5,7 @@ class_name DictJSONSaverLoader extends RefCounted
 static func save_json_to_file(path: String, dict: Dictionary) -> Error:
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	if file == null:
-		printerr("failed to open %s" % path)
+		DebugUtils.DebugErrMsg("failed to open %s" % path)
 		return ERR_FILE_CANT_OPEN
 
 	var json_str = JSON.stringify(dict)
@@ -21,12 +21,12 @@ static func save_json_to_file(path: String, dict: Dictionary) -> Error:
 static func load_json_from_file(path: String) -> Dictionary:
 	var file = FileAccess.open(path, FileAccess.READ)
 	if file == null:
-		printerr("failed to open %s" % path)
+		DebugUtils.DebugErrMsg("failed to open %s" % path)
 		return {}
 
 	var json_dict = JSON.parse_string(file.get_as_text())
 	if json_dict == null:
-		printerr("failed to parse json from %s" % path)
+		DebugUtils.DebugErrMsg("failed to parse json from %s" % path)
 		return {}
 	file.close()
 

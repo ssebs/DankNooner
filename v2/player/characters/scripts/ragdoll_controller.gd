@@ -48,7 +48,7 @@ func _create_skeleton_for_ragdoll():
 	var skel_3d = mesh_skin.find_child("Skeleton") as Skeleton3D
 	char_skin.skel_3d = skel_3d
 	if skel_3d == null:
-		printerr("could not find skeleton in mesh_skin")
+		DebugUtils.DebugErrMsg("could not find skeleton in mesh_skin")
 		return
 
 	# Clear old skel_root if it exists

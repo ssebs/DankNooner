@@ -48,7 +48,7 @@
 - Using in UI:
   - Use the key_name from the csv, it should auto-swap.
 - Using in code:
-  - `print(tr("<key_name>"))`
+  - `DebugUtils.DebugMsg(tr("<key_name>"))`
 
 ### Editor Validation
 
@@ -173,20 +173,21 @@ Mouse visibility is managed based on input state:
 `PlayerEntity` is a `CharacterBody3D` using composition with `@export` component references. All controllers are called sequentially from `_rollback_tick()` via their `on_movement_rollback_tick()` methods.
 
 For detailed design docs see:
+
 - [PlayerController.md](./PlayerController.md) - movement, gearing, tricks, crash subsystems
 - [AnimationController.md](./AnimationController.md) - procedural animation, IK, ragdoll
 
 #### Component Controllers
 
-| Controller | File | Purpose |
-|------------|------|---------|
-| `InputController` | `controllers/input_controller.gd` | Gathers input, syncs via RollbackSynchronizer |
-| `MovementController` | `controllers/movement_controller.gd` | Physics-based movement, speed, steering, lean, velocity |
-| `GearingController` | `controllers/gearing_controller.gd` | Clutch engagement, RPM blending, power output |
-| `TrickController` | `controllers/trick_controller.gd` | Detects wheelie/stoppie, updates pitch_angle |
-| `CrashController` | `controllers/crash_controller.gd` | Brake grab detection, crash detection, auto-respawn |
-| `CameraController` | `controllers/camera_controller.gd` | FPS/TPS camera switching |
-| `AnimationController` | `controllers/animation_controller.gd` | Procedural animation blending, IK, ragdoll |
+| Controller            | File                                  | Purpose                                                 |
+| --------------------- | ------------------------------------- | ------------------------------------------------------- |
+| `InputController`     | `controllers/input_controller.gd`     | Gathers input, syncs via RollbackSynchronizer           |
+| `MovementController`  | `controllers/movement_controller.gd`  | Physics-based movement, speed, steering, lean, velocity |
+| `GearingController`   | `controllers/gearing_controller.gd`   | Clutch engagement, RPM blending, power output           |
+| `TrickController`     | `controllers/trick_controller.gd`     | Detects wheelie/stoppie, updates pitch_angle            |
+| `CrashController`     | `controllers/crash_controller.gd`     | Brake grab detection, crash detection, auto-respawn     |
+| `CameraController`    | `controllers/camera_controller.gd`    | FPS/TPS camera switching                                |
+| `AnimationController` | `controllers/animation_controller.gd` | Procedural animation blending, IK, ragdoll              |
 
 #### Synced State (via RollbackSynchronizer)
 
@@ -218,6 +219,7 @@ enum TrickState { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE }
 #### CrashController
 
 Monitors for crash conditions:
+
 - Lean angle > 80 degrees
 - Pitch angle > max_wheelie_angle_deg or < -max_stoppie_angle_deg
 - Brake grab while turning (rapid brake engage + lean > 15 degrees)
@@ -369,18 +371,18 @@ flowchart LR
 
 ### Authority Summary
 
-| Component                    | Runs On                | Authority                     |
-| ---------------------------- | ---------------------- | ----------------------------- |
-| `InputController` (capture)  | Local client only      | Client                        |
-| `InputController` (sync)     | Local client -> Server | Client sends, netfox syncs    |
-| `MovementController`         | Server only            | Server                        |
-| `GearingController`          | Server only            | Server                        |
-| `TrickController`            | Server only            | Server                        |
-| `CrashController`            | Server only            | Server                        |
-| `AnimationController`        | Local client only      | Client (visual only)          |
-| `CameraController`           | Local client only      | Client                        |
-| Position/Rotation            | Server broadcasts      | Server                        |
-| Lobby state                  | Server broadcasts      | Server                        |
+| Component                   | Runs On                | Authority                  |
+| --------------------------- | ---------------------- | -------------------------- |
+| `InputController` (capture) | Local client only      | Client                     |
+| `InputController` (sync)    | Local client -> Server | Client sends, netfox syncs |
+| `MovementController`        | Server only            | Server                     |
+| `GearingController`         | Server only            | Server                     |
+| `TrickController`           | Server only            | Server                     |
+| `CrashController`           | Server only            | Server                     |
+| `AnimationController`       | Local client only      | Client (visual only)       |
+| `CameraController`          | Local client only      | Client                     |
+| Position/Rotation           | Server broadcasts      | Server                     |
+| Lobby state                 | Server broadcasts      | Server                     |
 
 ### Connection Modes
 
@@ -397,15 +399,18 @@ flowchart LR
 Input is gathered locally by `InputController._gather()` and synced automatically by netfox's `RollbackSynchronizer`. No manual RPC needed - netfox handles input sync and rollback.
 
 **LobbyManager** RPCs:
+
 - `update_player_metadata(peer_id, player_def_dict)` - client sends PlayerDefinition to server
 - `_sync_lobby_players(players_dict)` - server broadcasts full lobby dict
 
 **GamemodeManager** RPCs:
+
 - `start_game(level_name)` - server calls on all peers
 - `_sync_game_to_late_joiner(level_name)` - sync level to late-joining client
 - `_request_late_spawn(peer_id)` - late-joiner requests their player spawn
 
 **SpawnManager** RPCs:
+
 - `rpc_spawn_player(peer_id, player_def_dict)` - spawn broadcast
 - `rpc_despawn_player(peer_id)` - despawn broadcast
 - `respawn_player(peer_id)` - server respawns a specific player

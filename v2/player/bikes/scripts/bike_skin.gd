@@ -83,7 +83,9 @@ func _save_markers_to_resource():
 
 	var err = ResourceSaver.save(skin_definition)
 	if err == OK:
-		print("BikeSkin: Saved marker positions to ", skin_definition.resource_path)
+		DebugUtils.DebugMsg(
+			"BikeSkin: Saved marker positions to %s" % skin_definition.resource_path
+		)
 	else:
 		push_error("BikeSkin: Failed to save resource, error: ", err)
 

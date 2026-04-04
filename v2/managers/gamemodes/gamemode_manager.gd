@@ -64,7 +64,7 @@ func _on_client_connection_succeeded(peer_id: int):
 	if !multiplayer.is_server():
 		return
 
-	print("_on_client_connection_succeeded %s" % peer_id)
+	DebugUtils.DebugMsg("_on_client_connection_succeeded %s" % peer_id)
 
 	if match_state == MatchState.IN_GAME:
 		_sync_game_to_late_joiner.rpc_id(peer_id, current_level_name)
@@ -76,7 +76,7 @@ func _on_client_connection_succeeded(peer_id: int):
 ## Server calls this on a late-joining client to sync them into the active game
 @rpc("any_peer", "reliable")
 func _sync_game_to_late_joiner(level_name: LevelManager.LevelName):
-	print("_sync_game_to_late_joiner")
+	DebugUtils.DebugMsg("_sync_game_to_late_joiner")
 	match_state = MatchState.IN_GAME
 	current_level_name = level_name
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)

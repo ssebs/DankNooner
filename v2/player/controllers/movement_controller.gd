@@ -77,7 +77,7 @@ func _update_surface_alignment(delta: float):
 	if _is_on_floor:
 		var floor_normal = pe.get_floor_normal()
 		var surface_angle = floor_normal.angle_to(Vector3.UP)
-		print(
+		DebugUtils.DebugMsg(
 			(
 				"surface: on_floor=true normal=%s angle=%.1f° up_dir=%s speed=%.1f"
 				% [floor_normal, rad_to_deg(surface_angle), pe.up_direction, speed]
@@ -95,7 +95,7 @@ func _update_surface_alignment(delta: float):
 			if speed < required_speed:
 				# Too slow — peel off the surface
 				pe.up_direction = pe.up_direction.slerp(Vector3.UP, 2.0 * delta).normalized()
-				print("peel off: speed=%.1f required=%.1f" % [speed, required_speed])
+				DebugUtils.DebugMsg("peel off: speed=%.1f required=%.1f" % [speed, required_speed])
 				return
 
 		# Blend up_direction toward surface normal — faster at speed (must track loops)
@@ -108,7 +108,7 @@ func _update_surface_alignment(delta: float):
 
 ## Blend up_direction back to global up (airborne or detaching)
 func _detach_from_surface(delta: float):
-	# print("_detach_from_surface")
+	# DebugUtils.DebugMsg("_detach_from_surface")
 	player_entity.up_direction = (
 		player_entity.up_direction.slerp(Vector3.UP, SURFACE_BLEND_SPEED_FALL * delta).normalized()
 	)
@@ -132,7 +132,7 @@ func _speed_calc(delta: float):
 		speed = minf(speed, gear_max_speed)
 	# Engine braking — applies when not on throttle, stronger at higher RPM
 	elif power <= 0 and speed > 0.5:
-		# print("engine brake")
+		# DebugUtils.DebugMsg("engine brake")
 		var rpm_factor = gearing_controller._get_rpm_ratio()
 		speed = move_toward(speed, 0, bd.engine_brake_strength * rpm_factor * delta)
 
@@ -222,7 +222,7 @@ func _pitch_angle_calc(delta: float):
 		if in_balance_point:
 			wheelie_target = _calc_balance_point_target(bd, wheelie_target, delta)
 
-	# print(
+	# DebugUtils.DebugMsg(
 	# 	(
 	# 		"pitch_angle: %.2f | wheelie_target: %.2f | balance_point: %.2f | \
 	# max_wheelie: %.2f | in_bp: %s"

@@ -170,11 +170,11 @@ func _on_rpm_updated(new_rpm_ratio: float):
 
 
 func _on_gear_changed(new_gear: int):
-	print("Gear: %d" % new_gear)
+	DebugUtils.DebugMsg("Gear: %d" % new_gear)
 
 
 func _on_trick_started(trick_type: TrickController.Trick):
-	print("Trick: %s" % TrickController.trick_to_str(trick_type))
+	DebugUtils.DebugMsg("Trick: %s" % TrickController.trick_to_str(trick_type))
 
 
 #endregion

@@ -13,8 +13,8 @@ func _ready() -> void:
 	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
 	settings_manager.setting_updated.connect(_on_setting_updated)
 
-	print(tr("GAME_TITLE"))
-	print(ProjectSettings.get_setting("application/config/version"))
+	DebugUtils.DebugMsg(tr("GAME_TITLE"))
+	DebugUtils.DebugMsg(ProjectSettings.get_setting("application/config/version"))
 
 
 func _on_all_settings_changed(new_settings: Dictionary):
@@ -24,7 +24,7 @@ func _on_all_settings_changed(new_settings: Dictionary):
 
 	get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
 	get_viewport().scaling_3d_scale = new_settings.get("resolution_scale", 1.0)
-	print("VP scaling: %.2f" % get_viewport().scaling_3d_scale)
+	DebugUtils.DebugMsg("VP scaling: %.2f" % get_viewport().scaling_3d_scale)
 
 
 func _on_setting_updated(key: String, value: Variant):
@@ -35,4 +35,4 @@ func _on_setting_updated(key: String, value: Variant):
 func _run_validation() -> void:
 	var validator = load("res://utils/validation/auto_validator.gd")
 	validator.validate_tree(get_tree())
-	print("Validation complete!")
+	DebugUtils.DebugMsg("Validation complete!")

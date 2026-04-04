@@ -61,7 +61,7 @@ func add_player_locally(peer_id: int, player_def_dict: Dictionary):
 	var player_def = PlayerDefinition.new()
 	player_def.from_dict(player_def_dict)
 
-	print("Adding player locally: %s - %s" % [peer_id, player_def.username])
+	DebugUtils.DebugMsg("Adding player locally: %s - %s" % [peer_id, player_def.username])
 
 	var player_to_add = (
 		level_manager.current_level.player_entity_scene.instantiate() as PlayerEntity

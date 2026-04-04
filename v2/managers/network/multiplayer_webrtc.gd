@@ -67,7 +67,7 @@ func _ready() -> void:
 
 func _dbg(msg: String) -> void:
 	if is_debug:
-		print(msg)
+		DebugUtils.DebugMsg(msg)
 
 
 # func _apply_relay_host(host: String) -> void:
@@ -93,7 +93,7 @@ func start_server() -> MultiplayerPeer:
 	var start_time := Time.get_ticks_msec()
 	while not _peer_ready:
 		if Time.get_ticks_msec() - start_time > SETUP_TIMEOUT_MS:
-			printerr("WebRTC: server setup timed out")
+			DebugUtils.DebugErrMsg("WebRTC: server setup timed out")
 			_setup_in_progress = false
 			return null
 		await get_tree().process_frame
@@ -130,7 +130,7 @@ func connect_client(address: String) -> Error:
 	# Phase 1: Wait for signaling ID assignment
 	while not _peer_ready:
 		if Time.get_ticks_msec() - start_time > SETUP_TIMEOUT_MS:
-			printerr("WebRTC: signaling timed out")
+			DebugUtils.DebugErrMsg("WebRTC: signaling timed out")
 			connection_failed.emit("Signaling timed out")
 			_cleanup()
 			_setup_in_progress = false
@@ -145,7 +145,7 @@ func connect_client(address: String) -> Error:
 	_dbg("WebRTC: signaling ready, waiting for ICE connection...")
 	while _rtc_mp.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTING:
 		if Time.get_ticks_msec() - start_time > SETUP_TIMEOUT_MS:
-			printerr("WebRTC: ICE negotiation timed out (no data channel opened)")
+			DebugUtils.DebugErrMsg("WebRTC: ICE negotiation timed out (no data channel opened)")
 			connection_failed.emit("ICE connection timed out")
 			multiplayer.multiplayer_peer = null
 			_cleanup()
@@ -155,7 +155,9 @@ func connect_client(address: String) -> Error:
 		_poll_ws()
 
 	if _rtc_mp.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
-		printerr("WebRTC: connection failed (status: %d)" % _rtc_mp.get_connection_status())
+		DebugUtils.DebugErrMsg(
+			"WebRTC: connection failed (status: %d)" % _rtc_mp.get_connection_status()
+		)
 		connection_failed.emit("WebRTC connection failed")
 		multiplayer.multiplayer_peer = null
 		_cleanup()
@@ -203,7 +205,7 @@ func _poll_ws() -> void:
 	# Parse incoming messages
 	while state == WebSocketPeer.STATE_OPEN and _ws.get_available_packet_count():
 		if not _parse_msg():
-			printerr("WebRTC signaling: failed to parse message")
+			DebugUtils.DebugErrMsg("WebRTC signaling: failed to parse message")
 
 	# Handle disconnect
 	if state != _ws_old_state and state == WebSocketPeer.STATE_CLOSED:

@@ -67,11 +67,13 @@ func save_save():
 func load_save():
 	var json_dict = DictJSONSaverLoader.load_json_from_file(save_path)
 	if json_dict == {}:
-		printerr("failed to parse json from %s" % save_path)
+		DebugUtils.DebugErrMsg("failed to parse json from %s" % save_path)
 		return
 
 	if json_dict["version"] != save_version:
-		printerr("savegame.json version mismatch, %s != %s" % [json_dict["version"], save_version])
+		DebugUtils.DebugErrMsg(
+			"savegame.json version mismatch, %s != %s" % [json_dict["version"], save_version]
+		)
 		# TODO: migrate version
 		return
 
