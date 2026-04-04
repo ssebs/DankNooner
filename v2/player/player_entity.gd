@@ -27,7 +27,8 @@ signal respawned(peer_id: int)
 @onready var character_skin: CharacterSkin = %CharacterSkin
 @onready var bike_skin: BikeSkin = %BikeSkin
 @onready var name_label: Label3D = %NameLabel
-@onready var ground_raycast: RayCast3D = %GroundRayCast
+@onready var rear_raycast: RayCast3D = %RearRayCast
+@onready var front_raycast: RayCast3D = %FrontRayCast
 @onready var rollback_sync: RollbackSynchronizer = %RollbackSynchronizer
 
 var is_local_client: bool = false
@@ -69,6 +70,7 @@ func _ready():
 	_init_mesh()
 	_init_collision_shape()
 	_init_ik()
+	_init_raycasts()
 	_init_controller_handlers()
 	animation_controller.initialize()
 
@@ -123,6 +125,14 @@ func _init_collision_shape():
 	collision_shape_3d.position = bike_definition.collision_position_offset
 	collision_shape_3d.rotation_degrees = bike_definition.collision_rotation_offset_degrees
 	collision_shape_3d.scale = bike_definition.collision_scale_multiplier
+
+
+## Position ground raycasts at wheel positions from bike_definition
+func _init_raycasts():
+	front_raycast.position = bike_definition.front_wheel_ground_position + Vector3.UP * 0.5
+	front_raycast.target_position = Vector3.DOWN * 1.5
+	rear_raycast.position = bike_definition.rear_wheel_ground_position + Vector3.UP * 0.5
+	rear_raycast.target_position = Vector3.DOWN * 1.5
 
 
 ## set ik targets, enable ik
@@ -188,6 +198,7 @@ func update_skins(new_bike_def: BikeSkinDefinition, new_char_def: CharacterSkinD
 	_init_mesh()
 	_init_collision_shape()
 	_init_ik()
+	_init_raycasts()
 
 
 func do_respawn():

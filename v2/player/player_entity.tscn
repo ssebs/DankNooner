@@ -121,7 +121,7 @@ unique_name_in_owner = true
 script = ExtResource("3_faflk")
 root = NodePath("..")
 enable_prediction = true
-state_properties = Array[String]([":global_transform", ":velocity", "%MovementController:pitch_angle", "%MovementController:roll_angle", "%MovementController:speed"])
+state_properties = Array[String]([":global_transform", ":velocity", ":up_direction", ":is_crashed", "%MovementController:pitch_angle", "%MovementController:roll_angle", "%MovementController:speed", "%MovementController:air_forward", "%GearingController:current_gear", "%GearingController:current_rpm", "%GearingController:clutch_value"])
 input_properties = Array[String](["%InputController:nfx_throttle", "%InputController:nfx_front_brake", "%InputController:nfx_rear_brake", "%InputController:nfx_steer", "%InputController:nfx_lean", "%InputController:nfx_trick_held", "%InputController:nfx_clutch_held", "%InputController:nfx_cam_x", "%InputController:nfx_cam_y"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
@@ -147,7 +147,7 @@ transform = Transform3D(-1, 2.7775881e-08, -1.4841912e-07, 0, 0.98293537, 0.1839
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@20864")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@47563")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
@@ -223,7 +223,7 @@ bike_skin = NodePath("../../VisualRoot/BikeSkin")
 movement_controller = NodePath("../MovementController")
 input_controller = NodePath("../InputController")
 
-[node name="MovementController" type="Node" parent="_Controllers" unique_id=220903559 node_paths=PackedStringArray("player_entity", "input_controller", "gearing_controller", "trick_controller", "crash_controller")]
+[node name="MovementController" type="Node" parent="_Controllers" unique_id=220903559 node_paths=PackedStringArray("player_entity", "input_controller", "gearing_controller", "trick_controller", "crash_controller", "rear_raycast", "front_raycast")]
 unique_name_in_owner = true
 script = ExtResource("11_tivla")
 player_entity = NodePath("../..")
@@ -231,6 +231,8 @@ input_controller = NodePath("../InputController")
 gearing_controller = NodePath("../GearingController")
 trick_controller = NodePath("../TrickController")
 crash_controller = NodePath("../CrashController")
+rear_raycast = NodePath("../../RearRayCast")
+front_raycast = NodePath("../../FrontRayCast")
 
 [node name="GearingController" type="Node" parent="_Controllers" unique_id=2064362163 node_paths=PackedStringArray("player_entity", "input_controller")]
 unique_name_in_owner = true
@@ -370,7 +372,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1839552, 0)
 billboard = 2
 text = "USERNAME"
 
-[node name="GroundRayCast" type="RayCast3D" parent="." unique_id=1983600718]
+[node name="RearRayCast" type="RayCast3D" parent="." unique_id=1983600718]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.7474911)
+target_position = Vector3(0, -1.5, 0)
+
+[node name="FrontRayCast" type="RayCast3D" parent="." unique_id=391878602]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.727424)
+target_position = Vector3(0, -1.5, 0)
 
 [editable path="VisualRoot/CharacterSkin"]

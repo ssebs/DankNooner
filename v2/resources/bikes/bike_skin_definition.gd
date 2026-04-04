@@ -63,11 +63,12 @@ class_name BikeSkinDefinition extends Resource
 @export var engine_brake_strength: float = 12.0
 @export var max_lean_angle_deg: float = 50.0
 @export var lean_speed: float = 6.0
-@export var min_turn_radius: float = 0.25
-@export var max_turn_radius: float = 2.0
 @export var turn_speed: float = 2.0
 ## Lean amount vs speed (X=speed%, Y=lean multiplier)
 @export var lean_curve: Curve = preload("res://player/bikes/resources/lean_speed_curve.tres")
+## Steer responsiveness vs speed (X=speed%, Y=steer multiplier) — bell curve shape
+## Low at standstill, peaks ~20mph equiv, tapers at top speed
+@export var steer_curve: Curve = preload("res://player/bikes/resources/steer_speed_curve.tres")
 
 @export_group("Tricks")
 @export var max_wheelie_angle_deg: float = 85.0
