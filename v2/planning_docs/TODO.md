@@ -6,29 +6,25 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] add rpm guage from pics
 - [ ] Redo movement_controller
 
   - [ ] player can fly if leaning when launching off loop
-  - [x] finish cleanup (function split)
-  - [x] basic wheelies / stoppies
-  - [x] improve physics
-  - [x] be able to ride up ramps
-    - [x] (maybe raycast to rotate to normal?) one for each wheel?
-    - [x] Use speed/momentup to stay on ramps (e.g. loop)
-    - [x] handle gravity manually.
-    - [x] Slow down as you go up in angle
-  - [ ] Launch off ramps to catch "hang time" (adjust gravity)
-  - [ ] Review loop de loop code
+  - [ ] Wheelie-ing by riding then tapping clutch once will hold it perfectly
+  - [ ] Super laggy when riding w/ friends
+    - [ ] Rubber banding is crazy here
+  - [ ] Code is AI gen - rewrite myself!
   - [ ] 2 difficulties, arcade & sim. Sim grants 1.5x score
     - [ ] arcade still has gear changes, no clutch except to start wheelie
       - [ ] WASD support
   - [ ] Be able to reverse (play animation)
     - [ ] Hold clutch, brake to reverse
 
-- [ ] Basic controls overlay
+- [ ] Basic show controls UI
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
+
+> POC = playable gamemodes w/ friends, see if core gameplay loop works
+> video record this once playing with everyone, save log files
 
 - [ ] Single player mission system
 
@@ -36,53 +32,8 @@
     - [ ] Go to a marker in the map to start tutorial_01. If already completed, you can play it again.
     - [ ] Going to the mission start marker => shows list of missions. Can do tut1 or tut2, etc. Replay them from there
 
-- [ ] Basic tutorial
-  - [ ] riding mechanics
-  - [ ] use HUD overlay layer
-- [ ] zoom out cam FOV w/ speed / current_trick != None
-- [ ] Review webrtc gen code for security
-- [ ] Improved (non-text) HUD
-
-  - [ ] Overlay layer for tutorial
-  - Ideas:
-    - In-world UI
-    - Bottom right has guages like IRL bike (analog)
-    - Center has guages like TFT (digital)
-    - Grip / danger:
-      - Bottom, wide red line
-      - Red overlay like COD dmg
-      - Guages have red overlay & change size
-    - Mini Map? or Compass w/ arrow
-
-> POC = playable gamemodes w/ friends, see if core gameplay loop works
-> video record this once playing with everyone, save log files
-
-- [ ] Resizing window should save in settings => windowed/maximized
-
-  - i.e. change camera should not resize window if i maximized it after setting to windowed
-
-- [ ] Improve CrashController
-  - [ ] Brake danger
-  - [x] Layer 2 collision (with objects & players)
-  - [ ] Sync w/ players
-    - [ ] crashing into player => both should be affected
-  - [ ] Swap to rigidbody, make bounding box of mesh & apply velocity to bike & collision
-  - [ ] Emit signals to gamemode controller
-  - [ ] Move respawn logic to gamemode controller, using new signals
-- [ ] Review Animation Controller & Create animations
-  - [ ] AnimationController + Trick integration
-    - [ ] debug wheelie animation
-    - [ ] debug naked bike init ik / load default animation not working
-  - [ ] AnimationController + Crash integration
-    - [ ] Create crash animation (procedural)
-  - [ ] Create lean (turning) animation
-  - [ ] Create stopped/idle animation
-  - [ ] Create wheelie/stoppie animation
-  - [ ] Add pull/lean back animation when starting a wheelie
-  - [x] claude created a system
-  - [x] Review planning_docs/AnimationController.md
-  - [x] Create way to play specific animations
 - [ ] Trick Manager + tricks
+
   - [ ] Move wheelie logic from movement controller
   - [ ] trick system
     - [ ] migrate wheelie / stoppie tricks
@@ -95,8 +46,87 @@
       - [ ] e.g. stunt race => combo counter
   - [ ] Create wheelie + DOWN animation (wheelie + right hand touches ground)
   - [ ] Create Heel clicker / other trick animations
+
+- [ ] Basic tutorial
+
+  - [ ] riding mechanics
+  - [ ] use HUD overlay layer
+
+- [ ] Co-op mission system for core gameplay
+
+  - [ ] See "Single player mission system"
+  - [ ] Host on 1 server, different tutorials put you on different parts of the map. each tutorial HUD / in game pointerts are local, no tutorial state is sent to server.
+
+- [ ] Basic core gameplay loop / implement gamemodes
+
+  - [ ] Review gamemode controller + signals emitted for spawning/crashing/trick scoring
+  - [ ] start gamemodes via map select
+  - [ ] Game modes:
+    - [ ] Free roam
+      - [ ] Get Score saved to disk for tricks
+    - [ ] Street race
+      - [ ] w/ and w/o traffic
+      - [ ] Podium scene after race ends
+      - [ ] Get Score saved to disk w/ bonus for podium
+    - [ ] Stunt race
+      - [ ] Mario kart like - get items to attack players or help self, but do tricks to get items. More complex tricks = better items
+  - [ ] Unlock Skins w/ Score from disk & spend
+
+- [ ] Improved (non-text) HUD
+
+  - [ ] add rpm guage from pics
+  - [ ] Overlay layer for tutorial
+  - Ideas:
+    - In-world UI
+    - Bottom right has guages like IRL bike (analog)
+    - Center has guages like TFT (digital)
+    - Grip / danger:
+      - Bottom, wide red line
+      - Red overlay like COD dmg
+      - Guages have red overlay & change size
+    - Mini Map? or Compass w/ arrow
+
+- [ ] Improve CrashController
+
+  - [ ] Brake danger
+  - [x] Layer 2 collision (with objects & players)
+  - [ ] Sync w/ players
+    - [ ] crashing into player => both should be affected
+  - [ ] Swap to rigidbody, make bounding box of mesh & apply velocity to bike & collision
+  - [ ] Emit signals to gamemode controller
+  - [ ] Move respawn logic to gamemode controller, using new signals
+
+- [ ] Review Animation Controller & Create animations
+
+  - [ ] AnimationController + Trick integration
+    - [ ] debug wheelie animation
+    - [ ] debug naked bike init ik / load default animation not working
+  - [ ] AnimationController + Crash integration
+    - [ ] Create crash animation (procedural)
+  - [ ] Create lean (turning) animation
+  - [ ] Create stopped/idle animation
+  - [ ] Create wheelie/stoppie animation
+  - [ ] Add pull/lean back animation when starting a wheelie
+  - [x] claude created a system
+  - [x] Review planning_docs/AnimationController.md
+  - [x] Create way to play specific animations
+
+- [ ] Basic Traffic AI
+
+  - [ ] Collisions w/ bikers (causes a crash)
+  - [ ] Navigates in Loops, dumb AI
+    - [ ] Maybe along path?
+    - [ ] Maybe use AnimationPlayer?
+
+- [ ] Create Save System for in-game
+
+  - [x] Save bike definitions on disk
+  - [ ] save unlocked tricks, mods, etc.
+  - [x] Save levels / player stuff
+
 - [ ] Basic customization menu / UI
 
+  - [ ] Subview port to make icons - for bike skin selection
   - [x] Super basic customize ui
   - [x] Save chosen skin to disk
     - [x] path to skin_def for now, no custom json yet
@@ -118,40 +148,8 @@
       - [ ] Choose a bike skin
       - [ ] Choose a character skin
 
-- [ ] Basic Traffic AI
-
-  - [ ] Collisions w/ bikers (causes a crash)
-  - [ ] Navigates in Loops, dumb AI
-    - [ ] Maybe along path?
-    - [ ] Maybe use AnimationPlayer?
-
-- [ ] Create Save System for in-game
-
-  - [x] Save bike definitions on disk
-  - [ ] save unlocked tricks, mods, etc.
-  - [x] Save levels / player stuff
-
-- [ ] Basic core gameplay loop / implement gamemodes
-
-  - [ ] Review gamemode controller + signals emitted for spawning/crashing/trick scoring
-  - [ ] start gamemodes via map select
-  - [ ] Game modes:
-    - [ ] Free roam
-      - [ ] Get Score saved to disk for tricks
-    - [ ] Street race
-      - [ ] w/ and w/o traffic
-      - [ ] Podium scene after race ends
-      - [ ] Get Score saved to disk w/ bonus for podium
-    - [ ] Stunt race
-      - [ ] Mario kart like - get items to attack players or help self, but do tricks to get items. More complex tricks = better items
-  - [ ] Unlock Skins w/ Score from disk & spend
-
 - [ ] find hook for dank nooner, what makes it cool!
-- [ ] Co-op mission system
-
-  - [ ] See "Single player mission system"
-  - [ ] Host on 1 server, different tutorials put you on different parts of the map. each tutorial HUD / in game pointerts are local, no tutorial state is sent to server.
-
+- [ ] Review webrtc gen code for security
 - [ ] More audio
 
   - [ ] Soundscapes for ambient sounds, get diff clips and play them in different orders, at random times to set mood & add sound variety
@@ -278,6 +276,12 @@
 
 ## Polish / Bugs
 
+- [ ] Resizing window should save in settings => windowed/maximized
+
+  - i.e. change camera should not resize window if i maximized it after setting to windowed
+
+- [ ] Camera zoom out cam FOV w/ speed / current_trick != None
+
 - [ ] Update settings via controller
 - [ ] Add loading UI
 
@@ -288,6 +292,19 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] movement_controller updates
+
+  - [x] finish cleanup (function split)
+  - [x] basic wheelies / stoppies
+  - [x] improve physics
+  - [x] be able to ride up ramps
+    - [x] (maybe raycast to rotate to normal?) one for each wheel?
+    - [x] Use speed/momentup to stay on ramps (e.g. loop)
+    - [x] handle gravity manually.
+    - [x] Slow down as you go up in angle
+  - [x] Launch off ramps to catch "hang time" (adjust gravity)
+  - [x] loop de loop code
 
 - [x] WebRTC doesn't ALWAYS work?
 
