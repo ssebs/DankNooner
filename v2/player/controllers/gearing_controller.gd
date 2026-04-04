@@ -15,8 +15,8 @@ signal rpm_updated(rpm_ratio: float)
 
 var current_gear: int = 1
 var current_rpm: float = 1000.0
-var _clutch_hold_time: float = 0.0
 var clutch_value: float = 0.0
+var _clutch_hold_time: float = 0.0
 var _rpm_ratio: float = 0.0
 var _is_stalled: bool = false
 
@@ -43,7 +43,7 @@ func on_movement_rollback_tick(delta: float):
 	_update_clutch_hold_time(delta)
 	_blend_rpm(delta)
 
-	rpm_updated.emit(_get_rpm_ratio())
+	rpm_updated.emit(get_rpm_ratio())
 
 
 func _update_clutch_hold_time(delta: float):
@@ -90,15 +90,15 @@ func _blend_rpm(delta: float):
 	# DebugUtils.DebugMsg("RPM %.2f" % current_rpm)
 
 
+#region public api
 ## Get pct of rpm : max rpm
-func _get_rpm_ratio() -> float:
+func get_rpm_ratio() -> float:
 	var bd = player_entity.bike_definition
 	if bd.max_rpm <= bd.idle_rpm:
 		return 0.0
 	return (current_rpm - bd.idle_rpm) / (bd.max_rpm - bd.idle_rpm)
 
 
-#region public api
 ## Max speed the current gear can achieve
 func get_gear_max_speed() -> float:
 	var bd = player_entity.bike_definition
@@ -116,7 +116,7 @@ func get_power_output() -> float:
 		return 0.0
 	var engagement = 1.0 - clutch_value
 
-	var ratio = _get_rpm_ratio()
+	var ratio = get_rpm_ratio()
 	# TODO - use actual curve
 	var power_curve = ratio * (2.0 - ratio)  # Peaks around 75% RPM
 

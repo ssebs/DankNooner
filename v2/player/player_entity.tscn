@@ -296,6 +296,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_THROTTLE"
 
+[node name="HUD_RPM" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer" unique_id=1753672987]
+unique_name_in_owner = true
+layout_mode = 2
+text = "HUD_RPM"
+
 [node name="HUD_BRAKE" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer" unique_id=375350254]
 unique_name_in_owner = true
 layout_mode = 2

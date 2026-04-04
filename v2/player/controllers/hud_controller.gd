@@ -9,6 +9,7 @@ class_name HUDController extends Control
 @export var crash_controller: CrashController
 
 @onready var _throttle_label: Label = %HUD_THROTTLE
+@onready var _rpm_label: Label = %HUD_RPM
 @onready var _brake_label: Label = %HUD_BRAKE
 @onready var _clutch_label: Label = %HUD_CLUTCH
 @onready var _speed_label: Label = %HUD_SPEED
@@ -51,6 +52,7 @@ func _process(_delta: float):
 	else:
 		_clutch_label.text = tr("HUD_CLUTCH_OUT")
 
+	_rpm_label.text = tr("HUD_RPM") % int(gearing_controller.get_rpm_ratio() * 100)
 	_speed_label.text = tr("HUD_SPEED") % int(movement_controller.speed)
 	_grip_label.text = tr("HUD_GRIP") % int(player_entity.grip_usage * 100)
 
