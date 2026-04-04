@@ -5,7 +5,6 @@ class_name MovementController extends Node
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
 @export var gearing_controller: GearingController
-@export var trick_controller: TrickController
 @export var crash_controller: CrashController
 @export var rear_raycast: RayCast3D
 @export var front_raycast: RayCast3D
@@ -25,7 +24,6 @@ const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
 var speed: float = 0.0
 var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
-var yaw_angle: float = 0.0  # twist left/right
 
 var air_forward: Vector3 = Vector3.FORWARD  # forward direction when leaving a surface
 
@@ -111,7 +109,8 @@ func _update_surface_alignment(delta: float):
 						front_raycast.is_colliding(),
 						rear_raycast.is_colliding()
 					]
-				)
+				),
+				OS.has_feature("debug")
 			)
 
 		# Adhesion check — need enough speed to ride steep/inverted surfaces
@@ -129,9 +128,12 @@ func _update_surface_alignment(delta: float):
 				return
 
 		# Blend up_direction toward surface normal — faster at speed (must track loops)
-		var speed_pct = clampf(speed / player_entity.bike_definition.max_speed, 0.0, 1.0)
-		var blend_speed = lerpf(SURFACE_BLEND_SPEED_MIN, SURFACE_BLEND_SPEED_MAX, speed_pct)
-		pe.up_direction = (pe.up_direction.slerp(floor_normal, blend_speed * delta).normalized())
+		# Skip slerp when vectors are nearly identical (avoids non-normalized axis error)
+		if pe.up_direction.dot(floor_normal) < 0.9999:
+			var speed_pct = clampf(speed / player_entity.bike_definition.max_speed, 0.0, 1.0)
+			var blend_speed = lerpf(SURFACE_BLEND_SPEED_MIN, SURFACE_BLEND_SPEED_MAX, speed_pct)
+			var t = clampf(blend_speed * delta, 0.0, 1.0)
+			pe.up_direction = pe.up_direction.slerp(floor_normal, t).normalized()
 	else:
 		_detach_from_surface(delta)
 
@@ -247,7 +249,10 @@ func _pitch_angle_calc(delta: float):
 	var bd = player_entity.bike_definition
 	var in_wheelie = pitch_angle > deg_to_rad(15)
 	var in_stoppie = pitch_angle < deg_to_rad(-5)
-	var in_balance_point = pitch_angle > deg_to_rad(bd.wheelie_balance_point_deg)
+	var bp_low = deg_to_rad(bd.wheelie_balance_point_deg - bd.wheelie_balance_point_width_deg)
+	var bp_high = deg_to_rad(bd.wheelie_balance_point_deg + bd.wheelie_balance_point_width_deg)
+	var in_balance_point = pitch_angle >= bp_low and pitch_angle <= bp_high
+	var above_balance_point = pitch_angle > bp_high
 
 	# Disable tricks on steep surfaces — decay pitch back to neutral
 	var surface_angle = player_entity.up_direction.angle_to(Vector3.UP)
@@ -260,8 +265,10 @@ func _pitch_angle_calc(delta: float):
 	var wheelie_target = 0.0
 	if _can_initiate_wheelie(in_wheelie) and not in_stoppie:
 		wheelie_target = _calc_normal_wheelie_target(bd)
-		if in_balance_point:
-			wheelie_target = _calc_balance_point_target(bd, wheelie_target, delta)
+		if in_balance_point or above_balance_point:
+			wheelie_target = _calc_balance_point_target(
+				bd, wheelie_target, in_balance_point, bp_low, bp_high, delta
+			)
 
 	# DebugUtils.DebugMsg(
 	# 	(
@@ -282,6 +289,13 @@ func _pitch_angle_calc(delta: float):
 		pitch_angle = move_toward(
 			pitch_angle, 0, bd.return_speed * input_controller.nfx_lean * 2.0 * delta
 		)
+
+	# Speed-dependent wheelie gravity — less speed = front wheel drops
+	# Only applies when rider isn't actively pulling back or flooring throttle
+	if in_wheelie and input_controller.nfx_lean >= 0 and input_controller.nfx_throttle < 0.5:
+		var speed_ratio = clampf(speed / (bd.max_speed * 0.5), 0.0, 1.0)
+		var wheelie_gravity = bd.return_speed * (1.0 - speed_ratio)
+		pitch_angle = move_toward(pitch_angle, 0, wheelie_gravity / 2 * delta)
 
 	_apply_wheelie_pitch(bd, wheelie_target, in_balance_point, delta)
 
@@ -388,42 +402,49 @@ func _can_initiate_wheelie(in_wheelie: bool) -> bool:
 	return (clutch_pop or power_pop) and can_start
 
 
-## Calculate wheelie target in the normal zone (below balance point)
+## Calculate wheelie target in the normal zone (below balance point).
+## Lean-back is the primary driver; throttle alone only provides a small assist.
 func _calc_normal_wheelie_target(bd: BikeSkinDefinition) -> float:
 	var max_wheelie_rad = deg_to_rad(bd.max_wheelie_angle_deg)
-	var wheelie_target = max_wheelie_rad * input_controller.nfx_throttle
+	# Throttle torque lifts the front — too much gas loops you out
+	var throttle_lift = max_wheelie_rad * input_controller.nfx_throttle * 0.4
+	# Lean-back is the main driver for reaching and holding higher angles
+	var lean_lift = 0.0
 	if input_controller.nfx_lean < 0:
-		wheelie_target += max_wheelie_rad * abs(input_controller.nfx_lean) * 0.15
-	return wheelie_target
+		lean_lift = max_wheelie_rad * abs(input_controller.nfx_lean) * 0.75
+	return throttle_lift + lean_lift
 
 
-## Override wheelie target when above balance point — unstable without throttle
+## Three-zone balance point:
+## - In range (bp_low..bp_high): stable sweet spot — drifts toward center, but lean can push past
+## - Above range: unstable — drifts toward crash unless rider corrects
 func _calc_balance_point_target(
-	bd: BikeSkinDefinition, normal_target: float, delta: float
+	bd: BikeSkinDefinition,
+	normal_target: float,
+	in_range: bool,
+	bp_low: float,
+	bp_high: float,
+	delta: float,
 ) -> float:
 	var max_wheelie_rad = deg_to_rad(bd.max_wheelie_angle_deg)
-	var balance_point_rad = deg_to_rad(bd.wheelie_balance_point_deg)
+	var balance_center = (bp_low + bp_high) / 2.0
 
-	var lean_influence = input_controller.nfx_lean * (max_wheelie_rad - balance_point_rad)
-	var balance_target = pitch_angle + lean_influence * 0.75
+	if in_range:
+		# Sweet spot — bike wants to settle here, but lean and throttle push past it
+		var target = balance_center
+		target -= input_controller.nfx_lean * (max_wheelie_rad - bp_low)
+		target += input_controller.nfx_throttle * (max_wheelie_rad - bp_low) * 0.5
+		target += randf_range(deg_to_rad(-2.0), deg_to_rad(2.0))
+		return target
 
-	if input_controller.nfx_throttle >= 0.5:
-		if input_controller.nfx_lean < -0.1:
-			return maxf(normal_target, balance_target)
-
-		return move_toward(balance_target, 0, bd.return_speed * 0.3 * delta)
-
-	# Unstable — drifts toward edges
-	var midpoint = (balance_point_rad + max_wheelie_rad) / 2
-	if balance_target < midpoint:
-		return move_toward(balance_target, 0, bd.return_speed * 0.5 * delta)
-
-	if balance_target > midpoint:
-		return move_toward(
-			balance_target, max_wheelie_rad + deg_to_rad(1), bd.return_speed * 0.5 * delta
-		)
-
-	return normal_target + randf_range(deg_to_rad(-25), deg_to_rad(25))
+	# Above balance point — unstable, drifts toward crash
+	var drift_target = max_wheelie_rad + deg_to_rad(1)
+	if input_controller.nfx_lean > 0:
+		return balance_center
+	if input_controller.nfx_lean < 0:
+		return drift_target
+	# No input — drifts toward crash on its own
+	return drift_target
 
 
 ## Stops players from spawning in eachother during _spawn_timer
@@ -459,7 +480,6 @@ func do_reset():
 	speed = 0.0
 	roll_angle = 0.0
 	pitch_angle = 0.0
-	yaw_angle = 0.0
 	_prev_clutch_held = false
 	_clutch_kick_window = 0.0
 	air_forward = Vector3.FORWARD
@@ -474,8 +494,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_controller must not be empty")
 	if gearing_controller == null:
 		issues.append("gearing_controller must not be empty")
-	if trick_controller == null:
-		issues.append("trick_controller must not be empty")
 	if crash_controller == null:
 		issues.append("crash_controller must not be empty")
 	if rear_raycast == null:

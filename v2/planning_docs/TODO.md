@@ -8,7 +8,8 @@
 
 - [ ] Redo movement_controller
 
-  - [ ] player can fly if leaning when launching off loop
+  - [ ] Launching off ramp kills speed
+  - [x] player can fly if leaning when launching off loop
   - [ ] Wheelie-ing by riding then tapping clutch once will hold it perfectly
   - [ ] Super laggy when riding w/ friends
     - [ ] Rubber banding is crazy here
