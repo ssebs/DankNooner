@@ -8,7 +8,7 @@
 
 - [ ] Redo movement_controller
 
-  - [ ] Improve RPM Blending
+  - [x] Improve RPM Blending
   - [ ] Launching off ramp kills speed
   - [x] player can fly if leaning when launching off loop
   - [x] Stop Wheelie-ing by riding then tapping clutch once will hold it perfectly
