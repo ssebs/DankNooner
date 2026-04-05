@@ -6,8 +6,13 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-### Bugs from playtest:
+- [ ] Actually sync rb\_\* pattern vars via RPC
 
+  - [ ] Gear changes
+  - [ ] Respawning + move to spawn manager & gamemode manager
+  - [ ] Move respawn logic out of player_entity.do_crash into spawn_manager
+
+- Bugs / feedback from playtest:
 - [ ] clients:
   - [ ] When crashing into something during a wheelie
     - [ ] spawning into wheelie
