@@ -167,6 +167,7 @@ func _init_audio():
 func _init_controller_handlers():
 	gearing_controller.gear_changed.connect(_on_gear_changed)
 	trick_controller.trick_started.connect(_on_trick_started)
+	trick_controller.trick_ended.connect(_on_trick_ended)
 
 
 #endregion
@@ -184,7 +185,11 @@ func _on_gear_changed(new_gear: int):
 
 
 func _on_trick_started(trick_type: TrickController.Trick):
-	DebugUtils.DebugMsg("Trick: %s" % TrickController.trick_to_str(trick_type))
+	DebugUtils.DebugMsg("Trick Started: %s" % TrickController.trick_to_str(trick_type))
+
+
+func _on_trick_ended(trick_type: TrickController.Trick):
+	DebugUtils.DebugMsg("Trick Ended: %s" % TrickController.trick_to_str(trick_type))
 
 
 #endregion

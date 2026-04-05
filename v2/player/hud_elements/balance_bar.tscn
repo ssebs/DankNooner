@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://cof5vsd00u8ob"]
 
+[ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="1_kua53"]
 [ext_resource type="Script" uid="uid://bmisbmtbq4qv2" path="res://player/hud_elements/balance_bar.gd" id="1_mkrw0"]
 
 [sub_resource type="Gradient" id="Gradient_0jgj5"]
@@ -20,8 +21,16 @@ colors = PackedColorArray(0.25490198, 0.6862745, 1, 1)
 gradient = SubResource("Gradient_75npo")
 width = 1
 
-[node name="BalanceBar" type="TextureProgressBar" unique_id=1249265550]
-custom_minimum_size = Vector2(512, 64)
+[node name="BalancePointContainer" type="PanelContainer" unique_id=108705249]
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_styles/panel = ExtResource("1_kua53")
+script = ExtResource("1_mkrw0")
+
+[node name="TexBar" type="TextureProgressBar" parent="." unique_id=1249265550]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(512, 32)
+layout_mode = 2
 value = 16.0
 fill_mode = 6
 nine_patch_stretch = true
@@ -30,4 +39,3 @@ stretch_margin_right = 128
 texture_under = SubResource("GradientTexture1D_htgu7")
 texture_over = SubResource("GradientTexture1D_htgu7")
 texture_progress = SubResource("GradientTexture1D_8la7j")
-script = ExtResource("1_mkrw0")

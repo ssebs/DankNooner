@@ -17,6 +17,7 @@ class_name HUDController extends Control
 @onready var _grip_label: Label = %HUD_GRIP_DGR
 @onready var _trick_msg: Label = %HUD_TRICK_MSG
 @onready var _game_msg: Label = %HUD_GAME_MSG
+@onready var _balance_bar: BalanceBar = %BalanceBar
 
 
 func _ready():
@@ -31,6 +32,7 @@ func _ready():
 
 	# Manual inits
 	_on_gear_changed(1)
+	_balance_bar.hide()
 
 
 func _process(_delta: float):
@@ -55,6 +57,27 @@ func _process(_delta: float):
 	_rpm_label.text = tr("HUD_RPM") % int(gearing_controller.get_rpm_ratio() * 100)
 	_speed_label.text = tr("HUD_SPEED") % int(movement_controller.speed)
 	_grip_label.text = tr("HUD_GRIP") % int(player_entity.grip_usage * 100)
+	_balance_bar.current_val = rad_to_deg(movement_controller.pitch_angle)
+
+
+func _init_balance_bar(trick_type: TrickController.Trick):
+	var bd = player_entity.bike_definition
+	match trick_type:
+		TrickController.Trick.STOPPIE:
+			_balance_bar.min_val = -bd.max_stoppie_angle_deg
+			_balance_bar.max_val = 0.0
+			# # No dedicated stoppie balance point — warn band sits in the usable middle
+			# _balance_bar.warn_low_val = -bd.max_stoppie_angle_deg * 0.8
+			# _balance_bar.warn_high_val = -bd.max_stoppie_angle_deg * 0.3
+		TrickController.Trick.WHEELIE_MOD, TrickController.Trick.WHEELIE_SITTING:
+			_balance_bar.min_val = 0.0
+			_balance_bar.max_val = bd.max_wheelie_angle_deg
+			_balance_bar.warn_low_val = (
+				bd.wheelie_balance_point_deg - bd.wheelie_balance_point_width_deg
+			)
+			_balance_bar.warn_high_val = (
+				bd.wheelie_balance_point_deg + bd.wheelie_balance_point_width_deg
+			)
 
 
 #region signal handlers
@@ -66,9 +89,21 @@ func _on_trick_started(trick_type: TrickController.Trick):
 	_trick_msg.text = TrickController.Trick.keys()[trick_type]
 	_trick_msg.visible = true
 
+	if (
+		trick_type
+		in [
+			TrickController.Trick.WHEELIE_SITTING,
+			TrickController.Trick.WHEELIE_MOD,
+			TrickController.Trick.STOPPIE
+		]
+	):
+		_init_balance_bar(trick_type)
+		_balance_bar.show()
+
 
 func _on_trick_ended(_trick_type: TrickController.Trick):
 	_trick_msg.visible = false
+	_balance_bar.hide()
 
 
 func _on_crashed():
