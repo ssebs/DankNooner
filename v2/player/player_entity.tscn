@@ -17,6 +17,8 @@
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="16_uthnt"]
 [ext_resource type="Script" uid="uid://coopftft0wwho" path="res://player/controllers/camera_controller.gd" id="17_0jgj5"]
 [ext_resource type="Script" uid="uid://civ7dg4q23qwd" path="res://player/controllers/hud_controller.gd" id="17_fiihv"]
+[ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="17_htgu7"]
+[ext_resource type="PackedScene" uid="uid://cof5vsd00u8ob" path="res://player/hud_elements/balance_bar.tscn" id="18_htgu7"]
 
 [sub_resource type="Animation" id="Animation_tivla"]
 length = 0.001
@@ -286,62 +288,62 @@ ratio = 1.778
 [node name="MarginContainer" type="MarginContainer" parent="_Controllers/HUDController/AspectContainer" unique_id=373454583]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1228497548]
+[node name="bottom right vbox" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1228497548]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 
-[node name="HUD_THROTTLE" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer" unique_id=1492251170]
+[node name="HUD_THROTTLE" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/bottom right vbox" unique_id=1492251170]
 unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_THROTTLE"
 
-[node name="HUD_RPM" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer" unique_id=1753672987]
+[node name="HUD_RPM" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/bottom right vbox" unique_id=1753672987]
 unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_RPM"
 
-[node name="HUD_BRAKE" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer" unique_id=375350254]
+[node name="HUD_BRAKE" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/bottom right vbox" unique_id=375350254]
 unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_BRAKE"
 
-[node name="HUD_CLUTCH" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer" unique_id=484430070]
+[node name="HUD_CLUTCH" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/bottom right vbox" unique_id=484430070]
 unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_CLUTCH"
 
-[node name="HUD_SPEED" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer" unique_id=1162278585]
+[node name="HUD_SPEED" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/bottom right vbox" unique_id=1162278585]
 unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_SPEED"
 
-[node name="HUD_GEAR" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer" unique_id=561200398]
+[node name="HUD_GEAR" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/bottom right vbox" unique_id=561200398]
 unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_GEAR"
 
-[node name="HUD_GRIP_DGR" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer" unique_id=1282391971]
+[node name="HUD_GRIP_DGR" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/bottom right vbox" unique_id=1282391971]
 unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_GRIP_DGR"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1468401151]
+[node name="top left vbox" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1468401151]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
-[node name="HUD_TRICK_MSG" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer2" unique_id=807369729]
+[node name="HUD_TRICK_MSG" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/top left vbox" unique_id=807369729]
 unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_TRICK_MSG"
 
-[node name="HUD_GAME_MSG" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1279622325]
+[node name="HUD_GAME_MSG" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/top left vbox" unique_id=1279622325]
 unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_GAME_MSG"
 
-[node name="HUD_CHALLENGE_MSG" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/VBoxContainer2" unique_id=345391560]
+[node name="HUD_CHALLENGE_MSG" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/top left vbox" unique_id=345391560]
 unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_CHALLENGE_MSG"
@@ -357,6 +359,16 @@ offset_top = 153.0
 offset_right = 272.0
 offset_bottom = 192.0
 text = "TUT_MSG_1"
+
+[node name="BalancePointContainer" type="PanelContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1665546528]
+custom_minimum_size = Vector2(512, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_styles/panel = ExtResource("17_htgu7")
+
+[node name="BalanceBar" parent="_Controllers/HUDController/AspectContainer/MarginContainer/BalancePointContainer" unique_id=1249265550 instance=ExtResource("18_htgu7")]
+layout_mode = 2
 
 [node name="CameraController" type="Node3D" parent="_Controllers" unique_id=1983563789 node_paths=PackedStringArray("player_entity", "input_controller", "fps_cam", "tps_cam", "fps_marker", "tps_marker")]
 unique_name_in_owner = true

@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://cof5vsd00u8ob"]
+
+[ext_resource type="Script" uid="uid://bmisbmtbq4qv2" path="res://player/hud_elements/balance_bar.gd" id="1_mkrw0"]
+
+[sub_resource type="Gradient" id="Gradient_0jgj5"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.29, 0.29, 0.29, 0.39215687)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_htgu7"]
+gradient = SubResource("Gradient_0jgj5")
+width = 1
+
+[sub_resource type="Gradient" id="Gradient_75npo"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.25490198, 0.6862745, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_8la7j"]
+gradient = SubResource("Gradient_75npo")
+width = 1
+
+[node name="BalanceBar" type="TextureProgressBar" unique_id=1249265550]
+custom_minimum_size = Vector2(512, 64)
+value = 16.0
+fill_mode = 6
+nine_patch_stretch = true
+stretch_margin_left = 128
+stretch_margin_right = 128
+texture_under = SubResource("GradientTexture1D_htgu7")
+texture_over = SubResource("GradientTexture1D_htgu7")
+texture_progress = SubResource("GradientTexture1D_8la7j")
+script = ExtResource("1_mkrw0")
