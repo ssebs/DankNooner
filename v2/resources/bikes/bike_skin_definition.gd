@@ -71,10 +71,10 @@ class_name BikeSkinDefinition extends Resource
 @export var steer_curve: Curve = preload("res://player/bikes/resources/steer_speed_curve.tres")
 
 @export_group("Tricks")
-@export var max_wheelie_angle_deg: float = 85.0
-@export var max_stoppie_angle_deg: float = 75.0
+@export var max_wheelie_angle_deg: float = 95.0
+@export var max_stoppie_angle_deg: float = 85.0
 @export var wheelie_rpm_threshold: float = 0.65
-@export var wheelie_balance_point_deg: float = 60.0
+@export var wheelie_balance_point_deg: float = 70.0
 ## Half-width of the balance point sweet spot (total range = balance_point ± this)
 @export var wheelie_balance_point_width_deg: float = 5.0
 @export var rotation_speed: float = 2.0
