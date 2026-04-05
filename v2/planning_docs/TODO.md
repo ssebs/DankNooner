@@ -8,11 +8,12 @@
 
 ### Bugs from playtest:
 
-- [ ] When crashing into something during a wheelie
-  - [ ] spawning into wheelie
-  - [ ] spawning without body
-    - [ ] Crashed...respawning
-- [ ] clients cant change gears
+- [ ] clients:
+  - [ ] When crashing into something during a wheelie
+    - [ ] spawning into wheelie
+    - [ ] spawning without body
+      - [ ] "Crashed...respawning" in HUD
+  - [ ] cant change gears after going from 1=>2
 - [ ] more wheelie angle overall
 - [ ] wheelie turning animation should be different, should yaw
 - [ ] Make loopdeloop larger
