@@ -29,6 +29,7 @@ func on_movement_rollback_tick(_delta: float):
 		_last_trick = _current_trick
 		trick_ended.emit(_last_trick)
 		trick_started.emit(_current_trick)
+		do_reset()
 
 
 func _detect_current_trick() -> Trick:
@@ -50,19 +51,27 @@ func do_reset():
 
 static func trick_to_str(trick: Trick) -> String:
 	match trick:
-		Trick.NONE: return "NONE"
-		Trick.WHEELIE_SITTING: return "WHEELIE_SITTING"
-		Trick.WHEELIE_MOD: return "WHEELIE_MOD"
-		Trick.STOPPIE: return "STOPPIE"
+		Trick.NONE:
+			return "NONE"
+		Trick.WHEELIE_SITTING:
+			return "WHEELIE_SITTING"
+		Trick.WHEELIE_MOD:
+			return "WHEELIE_MOD"
+		Trick.STOPPIE:
+			return "STOPPIE"
 	return "NONE"
 
 
 static func str_to_trick(s: String) -> Trick:
 	match s:
-		"NONE": return Trick.NONE
-		"WHEELIE_SITTING": return Trick.WHEELIE_SITTING
-		"WHEELIE_MOD": return Trick.WHEELIE_MOD
-		"STOPPIE": return Trick.STOPPIE
+		"NONE":
+			return Trick.NONE
+		"WHEELIE_SITTING":
+			return Trick.WHEELIE_SITTING
+		"WHEELIE_MOD":
+			return Trick.WHEELIE_MOD
+		"STOPPIE":
+			return Trick.STOPPIE
 	return Trick.NONE
 
 

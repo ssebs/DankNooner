@@ -17,7 +17,6 @@
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="16_uthnt"]
 [ext_resource type="Script" uid="uid://coopftft0wwho" path="res://player/controllers/camera_controller.gd" id="17_0jgj5"]
 [ext_resource type="Script" uid="uid://civ7dg4q23qwd" path="res://player/controllers/hud_controller.gd" id="17_fiihv"]
-[ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="17_htgu7"]
 [ext_resource type="PackedScene" uid="uid://cof5vsd00u8ob" path="res://player/hud_elements/balance_bar.tscn" id="18_htgu7"]
 
 [sub_resource type="Animation" id="Animation_tivla"]
@@ -149,7 +148,7 @@ transform = Transform3D(-1, 2.7775881e-08, -1.4841912e-07, 0, 0.98293537, 0.1839
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@24716")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@110115")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
@@ -234,6 +233,7 @@ gearing_controller = NodePath("../GearingController")
 crash_controller = NodePath("../CrashController")
 rear_raycast = NodePath("../../RearRayCast")
 front_raycast = NodePath("../../FrontRayCast")
+debug = null
 
 [node name="GearingController" type="Node" parent="_Controllers" unique_id=2064362163 node_paths=PackedStringArray("player_entity", "input_controller")]
 unique_name_in_owner = true
@@ -360,14 +360,8 @@ offset_right = 272.0
 offset_bottom = 192.0
 text = "TUT_MSG_1"
 
-[node name="BalancePointContainer" type="PanelContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1665546528]
-custom_minimum_size = Vector2(512, 64)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-theme_override_styles/panel = ExtResource("17_htgu7")
-
-[node name="BalanceBar" parent="_Controllers/HUDController/AspectContainer/MarginContainer/BalancePointContainer" unique_id=1249265550 instance=ExtResource("18_htgu7")]
+[node name="BalanceBar" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1249265550 instance=ExtResource("18_htgu7")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="CameraController" type="Node3D" parent="_Controllers" unique_id=1983563789 node_paths=PackedStringArray("player_entity", "input_controller", "fps_cam", "tps_cam", "fps_marker", "tps_marker")]
