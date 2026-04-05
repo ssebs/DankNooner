@@ -23,9 +23,7 @@ var nfx_trick_held: bool = false
 var nfx_clutch_held: bool = false
 var nfx_cam_x: float = 0.0
 var nfx_cam_y: float = 0.0  # TODO: check inverted
-#endregion
 
-#region rb_* pattern sync'd vars
 var rb_gear_up_pressed: float = false
 var rb_gear_down_pressed: float = false
 #endregion

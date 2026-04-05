@@ -8,7 +8,7 @@
 
 - [ ] Actually sync rb\_\* pattern vars via RPC
 
-  - [ ] Gear changes
+  - [x] Gear changes
   - [ ] Respawning + move to spawn manager & gamemode manager
   - [ ] Move respawn logic out of player_entity.do_crash into spawn_manager
 
