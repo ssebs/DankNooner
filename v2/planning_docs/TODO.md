@@ -6,6 +6,7 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
+- [ ] adjust pitch mid air
 - [ ] Actually sync rb\_\* pattern vars via RPC
 
   - [x] Gear changes
@@ -21,15 +22,17 @@
   - [x] cant change gears after going from 1=>2
 - [x] more wheelie angle overall
 - [ ] wheelie turning animation should be different, should yaw
-- [ ] Make loopdeloop larger
+- [x] Make loopdeloop larger
 - [x] Balance point showed like grinding balance in tony hawks pro skater in HUD
+- [ ] customize menu => play menu is broken, have to hit esc
+  - [ ] double check this is where / how it happens!
 
 Ragdoll launch game mode
 
 - [ ] Redo movement_controller
 
   - [x] Improve RPM Blending
-  - [ ] Launching off ramp kills speed
+  - [x] Launching off ramp kills speed
   - [x] player can fly if leaning when launching off loop
   - [x] Stop Wheelie-ing by riding then tapping clutch once will hold it perfectly
   - [ ] Super laggy when riding w/ friends

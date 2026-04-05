@@ -13,7 +13,7 @@ class_name MovementController extends Node
 
 const CLUTCH_KICK_WINDOW: float = 0.2
 const FALL_GRAVITY: float = 9.8
-const AIR_DRAG: float = 4.0  # speed loss per second while airborne
+const AIR_DRAG: float = 20.0  # speed loss while airborne
 # Ramp / loop tuning
 const SURFACE_BLEND_SPEED_MIN: float = 3.0  # up_direction alignment speed at rest
 const SURFACE_BLEND_SPEED_MAX: float = 40.0  # alignment speed at full speed (must track loops)
@@ -160,10 +160,9 @@ func _detach_from_surface(delta: float):
 func _speed_calc(delta: float):
 	var bd = player_entity.bike_definition
 
-	# Airborne: re-derive speed from velocity along launch heading
-	# On floor: keep previous speed — move_and_slide clips velocity on surface seams
+	# Airborne
 	if not _is_on_floor:
-		speed = maxf(player_entity.velocity.dot(air_forward), 0.0)
+		return
 
 	# Acceleration (uses gearing power output)
 	var power = gearing_controller.get_power_output()
