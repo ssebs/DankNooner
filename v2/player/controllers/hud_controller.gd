@@ -98,6 +98,7 @@ func _on_trick_started(trick_type: TrickController.Trick):
 		]
 	):
 		_init_balance_bar(trick_type)
+		_balance_bar._update_warn_markers()
 		_balance_bar.show()
 
 
