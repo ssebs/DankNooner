@@ -16,6 +16,7 @@ signal rpm_updated(rpm_ratio: float)
 var current_gear: int = 1
 var current_rpm: float = 1000.0
 var clutch_value: float = 0.0
+
 var is_rev_limited: bool = false
 var _clutch_hold_time: float = 0.0
 var _rpm_ratio: float = 0.0
