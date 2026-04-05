@@ -19,10 +19,10 @@
     - [ ] spawning without body
       - [ ] "Crashed...respawning" in HUD
   - [x] cant change gears after going from 1=>2
-- [ ] more wheelie angle overall
+- [x] more wheelie angle overall
 - [ ] wheelie turning animation should be different, should yaw
 - [ ] Make loopdeloop larger
-- [ ] Balance point showed like grinding balance in tony hawks pro skater in HUD
+- [x] Balance point showed like grinding balance in tony hawks pro skater in HUD
 
 Ragdoll launch game mode
 
