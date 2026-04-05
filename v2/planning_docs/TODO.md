@@ -6,6 +6,20 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
+### Bugs from playtest:
+
+- [ ] When crashing into something during a wheelie
+  - [ ] spawning into wheelie
+  - [ ] spawning without body
+    - [ ] Crashed...respawning
+- [ ] clients cant change gears
+- [ ] more wheelie angle overall
+- [ ] wheelie turning animation should be different, should yaw
+- [ ] Make loopdeloop larger
+- [ ] Balance point showed like grinding balance in tony hawks pro skater
+
+Ragdoll launch game mode
+
 - [ ] Redo movement_controller
 
   - [x] Improve RPM Blending
