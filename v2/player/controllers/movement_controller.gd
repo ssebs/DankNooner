@@ -34,7 +34,7 @@ var _spawn_timer: float = _default_spawn_timer
 # Wheelie physics
 var _prev_clutch_held: bool = false
 var _clutch_kick_window: float = 0.0
-var _balance_point_decay_mult: float = 0.2
+var _balance_point_decay_mult: float = 0.85
 var _is_on_floor: bool = false  # cached once per tick to avoid redundant move_and_slide calls
 var _floor_normal: Vector3 = Vector3.UP  # cached per tick — only valid when _is_on_floor
 var _speed_pct: float = 0.0  # speed / max_speed, cached per tick
@@ -269,19 +269,19 @@ func _pitch_angle_calc(delta: float):
 		if in_balance_point or above_balance_point:
 			wheelie_target = _calc_balance_point_target(bd, in_balance_point, bp_low, bp_high)
 
-	# DebugUtils.DebugMsg(
-	# 	(
-	# 		"pitch_angle: %.2f | wheelie_target: %.2f | balance_point: %.2f | \
-	# max_wheelie: %.2f | in_bp: %s"
-	# 		% [
-	# 			rad_to_deg(pitch_angle),
-	# 			rad_to_deg(wheelie_target),
-	# 			bd.wheelie_balance_point_deg,
-	# 			bd.max_wheelie_angle_deg,
-	# 			in_balance_point
-	# 		]
-	# 	)
-	# )
+	DebugUtils.DebugMsg(
+		(
+			"pitch_angle: %.2f | wheelie_target: %.2f | balance_point: %.2f | \
+	max_wheelie: %.2f | in_bp: %s"
+			% [
+				rad_to_deg(pitch_angle),
+				rad_to_deg(wheelie_target),
+				bd.wheelie_balance_point_deg,
+				bd.max_wheelie_angle_deg,
+				in_balance_point
+			]
+		)
+	)
 
 	# Lean forward recovery — pull the front wheel down
 	if input_controller.nfx_lean > 0 and in_wheelie:
@@ -294,6 +294,9 @@ func _pitch_angle_calc(delta: float):
 	if in_wheelie and input_controller.nfx_lean >= 0 and input_controller.nfx_throttle < 0.5:
 		var speed_ratio = clampf(speed / (bd.max_speed * 0.5), 0.0, 1.0)
 		var wheelie_gravity = bd.return_speed * (1.0 - speed_ratio)
+		# Balance point stabilizes the wheelie — gravity is dampened here too
+		if in_balance_point:
+			wheelie_gravity *= _balance_point_decay_mult * 2.0
 		pitch_angle = move_toward(pitch_angle, 0, wheelie_gravity / 2 * delta)
 
 	# Rev limiter drop — banging the limiter during a wheelie kills the power
@@ -433,11 +436,14 @@ func _calc_balance_point_target(
 	var balance_center = (bp_low + bp_high) / 2.0
 
 	if in_range:
-		# Sweet spot — bike wants to settle here, but lean and throttle push past it
+		# Sweet spot — bike wants to settle here, but lean and throttle push past it.
+		# Inputs are dampened in the balance point so riders can hold it without twitching out.
 		var target = balance_center
-		target -= input_controller.nfx_lean * (max_wheelie_rad - bp_low)
-		target += input_controller.nfx_throttle * (max_wheelie_rad - bp_low) * 0.5
-		target += randf_range(deg_to_rad(-2.0), deg_to_rad(2.0))
+		target -= input_controller.nfx_lean * (max_wheelie_rad - bp_low) * _balance_point_decay_mult
+		target += (
+			input_controller.nfx_throttle * (max_wheelie_rad - bp_low) * 0.5 * _balance_point_decay_mult
+		)
+		target += randf_range(deg_to_rad(-10.0), deg_to_rad(10.0))
 		return target
 
 	# Above balance point — unstable, drifts toward crash
