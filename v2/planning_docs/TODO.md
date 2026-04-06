@@ -24,8 +24,8 @@
   - [x] Launching off ramp kills speed
   - [x] player can fly if leaning when launching off loop
   - [x] Stop Wheelie-ing by riding then tapping clutch once will hold it perfectly
-  - [ ] Super laggy when riding w/ friends
-    - [ ] Rubber banding is crazy here
+  - [x] Super laggy when riding w/ friends
+    - [x] Rubber banding is crazy here
   - [ ] 2 difficulties, arcade & sim. Sim grants 1.5x score
     - [ ] arcade still has gear changes, no clutch except to start wheelie
       - [ ] WASD support
