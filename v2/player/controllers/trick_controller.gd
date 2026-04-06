@@ -33,6 +33,10 @@ func on_movement_rollback_tick(_delta: float):
 
 
 func _detect_current_trick() -> Trick:
+	# Air tricks don't count as wheelies/stoppies
+	if not movement_controller._is_on_floor:
+		return Trick.NONE
+
 	if movement_controller.pitch_angle > deg_to_rad(15):
 		if input_controller.nfx_trick_held:
 			return Trick.WHEELIE_MOD
