@@ -6,6 +6,7 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
+- [ ] Free play => back => host game broken, creates dupe multiplayer init
 - [ ] on clients:
 
   - [ ] When crashing into something during a wheelie, you respawn broken.
@@ -13,6 +14,7 @@
     - [ ] "Crashed...respawning" in HUD
   - [x] cant change gears after going from 1=>2
 
+- [ ] back from lobby => customize goes to play menu instead of lobby menu
 - [ ] broken back button via: play => lobby => back => customize => back
 
 - [ ] Redo movement_controller
@@ -293,6 +295,10 @@
   - [ ] render trees/etc. with multi mesh
 
 ## Polish / Bugs
+
+- [ ] add to MenuState validation, somehow.
+
+  - "Be sure to set return_state on Enter()!"
 
 - [ ] Resizing window should save in settings => windowed/maximized
 

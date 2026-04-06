@@ -122,13 +122,13 @@ func _is_valid_noray_oid(text: String) -> bool:
 
 #region button handlers
 func _on_host_btn_pressed():
-	transitioned.emit(lobby_menu_state, LobbyStateContext.NewHost("0.0.0.0"))
+	transitioned.emit(lobby_menu_state, LobbyStateContext.NewHost(self, "0.0.0.0"))
 	await connection_manager.start_server()
 
 
 func _on_join_btn_pressed():
 	var game_id := code_entry.text.strip_edges()
-	var ctx = LobbyStateContext.NewJoin(game_id)
+	var ctx = LobbyStateContext.NewJoin(self, game_id)
 	transitioned.emit(lobby_menu_state, ctx)  # must be before connecting client for ip to show
 
 	var err = await connection_manager.connect_client(game_id)
@@ -138,15 +138,15 @@ func _on_join_btn_pressed():
 
 
 func _on_free_roam_btn_pressed():
-	transitioned.emit(lobby_menu_state, LobbyStateContext.NewFreeRoam())
+	transitioned.emit(lobby_menu_state, LobbyStateContext.NewFreeRoam(self))
 
 
 func _on_customize_pressed():
-	transitioned.emit(customize_menu_state, null)
+	transitioned.emit(customize_menu_state, StateContext.NewWithReturn(self))
 
 
 func _on_back_pressed():
-	transitioned.emit(main_menu_state, null)
+	transitioned.emit(main_menu_state, StateContext.NewWithReturn(self))
 
 
 #endregion

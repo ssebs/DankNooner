@@ -46,15 +46,15 @@ func Exit(_state_context: StateContext):
 
 #region button handlers
 func _on_customize_btn_pressed():
-	transitioned.emit(customize_menu_state, null)
+	transitioned.emit(customize_menu_state, StateContext.NewWithReturn(self))
 
 
 func _on_play_btn_pressed():
-	transitioned.emit(play_menu_state, null)
+	transitioned.emit(play_menu_state, StateContext.NewWithReturn(self))
 
 
 func _on_settings_btn_pressed():
-	transitioned.emit(settings_menu_state, null)
+	transitioned.emit(settings_menu_state, StateContext.NewWithReturn(self))
 
 
 func _on_quit_btn_pressed():
