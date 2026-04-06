@@ -33,7 +33,7 @@ var _target_tint := COLOR_COOL
 
 func _ready():
 	tex_bar.value = prog_width_pct
-	_update_warn_markers()
+	update_warn_markers()
 
 
 func _process(delta: float):
@@ -64,7 +64,7 @@ func _update_bar():
 		_target_tint = COLOR_WARM.lerp(COLOR_HOT, heat - 1.0)
 
 
-func _update_warn_markers():
+func update_warn_markers():
 	var bar_width := tex_bar.size.x
 	var bar_height := tex_bar.size.y
 	var bp_center := (warn_low_val + warn_high_val) / 2.0
