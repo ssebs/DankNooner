@@ -1,8 +1,12 @@
 @tool
 ## All Menu objects should inherit from this
+## Be sure to set return_state on Enter()!
 class_name MenuState extends State
 
 @onready var ui: Control = %UI
+
+var return_state: MenuState  # Use in Enter(), see @settings_menu_state.gd
+var return_ctx: StateContext  # Use in Enter(), see @customize_menu_state.gd
 
 
 func _ready():

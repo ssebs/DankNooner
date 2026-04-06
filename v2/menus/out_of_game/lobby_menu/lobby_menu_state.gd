@@ -11,6 +11,7 @@ class_name LobbyMenuState extends MenuState
 @export var save_manager: SaveManager
 
 @export var play_menu_state: MenuState
+@export var customize_menu_state: MenuState
 
 @onready var singleplayer_ui: Control = %SingleplayerUI
 @onready var multiplayer_ui: Control = %MultiplayerUI
@@ -19,6 +20,7 @@ class_name LobbyMenuState extends MenuState
 @onready var level_select_btn: OptionButton = %LevelSelectBtn  # LevelSelectUI script
 @onready var level_preview_img: TextureRect = %LevelPreview
 @onready var start_btn: Button = %StartBtn
+@onready var customize_btn: Button = %CustomizeBtn
 
 @onready var ip_label: Label = %IPLabel
 @onready var ip_copy_btn: Button = %IPCopyBtn
@@ -26,8 +28,6 @@ class_name LobbyMenuState extends MenuState
 @onready var player_list: VBoxContainer = %PlayersList  # PlayerListUI script
 @onready var loading_ui: ColorRect = %LoadingUI
 @onready var timeout_timer: Timer = %TimeoutTimer
-
-var ctx: LobbyStateContext
 
 
 #region state lifecycle
@@ -38,7 +38,9 @@ func Enter(state_context: StateContext):
 		)
 		return
 
-	ctx = state_context
+	return_ctx = state_context
+	return_state = state_context.return_state
+
 	ui.show()
 	loading_ui.hide()
 
@@ -46,6 +48,7 @@ func Enter(state_context: StateContext):
 	start_btn.pressed.connect(_on_start_pressed)
 	level_select_btn.level_selected.connect(_on_level_selected)
 	ip_copy_btn.pressed.connect(_on_ip_copy_btn_pressed)
+	customize_btn.pressed.connect(_on_customize_pressed)
 
 	# Connection signals
 	connection_manager.server_disconnected.connect(_on_server_disconnected)
@@ -64,13 +67,14 @@ func Enter(state_context: StateContext):
 
 func Exit(_state_context: StateContext):
 	ui.hide()
-	ctx = null
+	# return_ctx = null
 	player_list.clear()
 
 	back_btn.pressed.disconnect(_on_back_pressed)
 	start_btn.pressed.disconnect(_on_start_pressed)
 	level_select_btn.level_selected.disconnect(_on_level_selected)
 	ip_copy_btn.pressed.disconnect(_on_ip_copy_btn_pressed)
+	customize_btn.pressed.disconnect(_on_customize_pressed)
 
 	connection_manager.server_disconnected.disconnect(_on_server_disconnected)
 	connection_manager.game_id_set.disconnect(_on_game_id_set)
@@ -108,13 +112,20 @@ func _on_back_pressed():
 	if level_manager.current_level_name != LevelManager.LevelName.BG_GRAY_LEVEL:
 		level_manager.spawn_menu_level()
 
-	transitioned.emit(play_menu_state, null)
+	transitioned.emit(return_state, return_ctx)
 
 
 ## copy game id to clipboard
 func _on_ip_copy_btn_pressed():
 	DisplayServer.clipboard_set(ip_label.text)
 	UiToast.ShowToast("Game ID copied to clipboard!")
+
+
+func _on_customize_pressed():
+	# transitioned.emit(customize_menu_state, return_ctx)
+	transitioned.emit(
+		customize_menu_state, StateContext.NewWithReturnAndContext(return_state, return_ctx)
+	)
 
 
 #endregion
@@ -175,9 +186,9 @@ func share_selected_level_with_clients(idx: int):
 #endregion
 
 
-## Hide or Show the singleplayer / multiplayer ui depending on ctx.mode
+## Hide or Show the singleplayer / multiplayer ui depending on return_ctx.mode
 func set_single_or_multiplayer_ui():
-	match ctx.mode:
+	match return_ctx.mode:
 		LobbyStateContext.Mode.FREEROAM:
 			multiplayer_ui.hide()
 			singleplayer_ui.show()
@@ -233,6 +244,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("gamemode_manager must not be empty")
 	if save_manager == null:
 		issues.append("save_manager must not be empty")
+	if customize_menu_state == null:
+		issues.append("customize_menu_state must not be empty")
 	if play_menu_state == null:
 		issues.append("play_menu_state must not be empty")
 

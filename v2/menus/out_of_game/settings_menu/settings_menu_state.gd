@@ -26,8 +26,6 @@ class_name SettingsMenuState extends MenuState
 
 @onready var bg_tint: ColorRect = %BGTint
 
-var return_state: MenuState  # TODO - add to MenuState
-
 
 func _ready():
 	window_mode_opt.clear()
@@ -38,11 +36,12 @@ func _ready():
 
 
 func Enter(state_context: StateContext):
+	return_ctx = state_context
+	return_state = state_context.return_state
+
 	if state_context is SettingsStateContext:
-		return_state = state_context.return_state
 		bg_tint.visible = state_context.show_bg_tint
 	else:
-		return_state = main_menu_state
 		bg_tint.visible = false
 
 	ui.show()
@@ -137,7 +136,7 @@ func _on_reset_pressed():
 
 
 func _on_back_pressed():
-	transitioned.emit(return_state, null)
+	transitioned.emit(return_state, StateContext.NewWithReturn(self))
 
 
 #override

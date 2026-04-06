@@ -20,16 +20,16 @@ const CHARACTER_SKINS_DIR := "res://resources/player/skins/"
 var bike_skins: Dictionary = {}
 var character_skins: Dictionary = {}
 
-var return_state: MenuState  # TODO - add to MenuState
-
 
 func Enter(state_context: StateContext):
+	bg_tint.visible = false
+	return_ctx = state_context
+	return_state = state_context.return_state
+
 	if state_context is PauseStateContext:
-		return_state = state_context.return_state
 		bg_tint.visible = state_context.show_bg_tint
-	else:
-		return_state = menu_manager.prev_state
-		bg_tint.visible = false
+	# else:
+	# 	return_state = menu_manager.prev_state
 
 	ui.show()
 	back_btn.pressed.connect(_on_back_pressed)
@@ -125,7 +125,7 @@ func _on_save_pressed():
 
 
 func _on_back_pressed():
-	transitioned.emit(return_state, null)
+	transitioned.emit(return_state, return_ctx)
 
 
 #override
