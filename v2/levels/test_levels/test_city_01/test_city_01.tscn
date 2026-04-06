@@ -30,7 +30,7 @@ transform = Transform3D(1.192488e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 1.
 
 [node name="PlayerSpawnTest" type="Marker3D" parent="." unique_id=1392137367]
 unique_name_in_owner = true
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 111.99999, 0.050000012, 65.99999)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 272, 0.050000012, -2.0000076)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=20150230]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
@@ -40,7 +40,7 @@ shadow_enabled = true
 environment = SubResource("Environment_ffs5v")
 
 [node name="KillboxTODOIMPLEMENT" type="StaticBody3D" parent="." unique_id=1604397840]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -54, 0)
 collision_layer = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="KillboxTODOIMPLEMENT" unique_id=1405482787]
@@ -105,20 +105,14 @@ height = 0.1
 depth = 20.0
 
 [node name="Road_GrayBox_StaticBody33" parent="Stuff/GBRoads" unique_id=794965058 instance=ExtResource("17_cf4ia")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 235, 0, 0)
-width = 20.0
-height = 0.1
-depth = 10.0
-
-[node name="Road_GrayBox_StaticBody34" parent="Stuff/GBRoads" unique_id=2007501260 instance=ExtResource("17_cf4ia")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 260, 0, 125)
-width = 220.0
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 244, 0, 0)
+width = 38.0
 height = 0.1
 depth = 10.0
 
 [node name="Road_GrayBox_StaticBody35" parent="Stuff/GBRoads" unique_id=668498500 instance=ExtResource("17_cf4ia")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 255, 0, 5)
-width = 20.0
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 272.5, 0, 5)
+width = 19.0
 height = 0.1
 depth = 20.0
 
@@ -284,6 +278,12 @@ width = 10.0
 height = 0.1
 depth = 60.0
 
+[node name="Road_GrayBox_StaticBody44" parent="Stuff/GBRoads" unique_id=1290458051 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 273, 0, 213)
+width = 20.0
+height = 0.1
+depth = 104.0
+
 [node name="Road_GrayBox_StaticBody37" parent="Stuff/GBRoads" unique_id=54302697 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 145, 0, 250)
 width = 10.0
@@ -303,8 +303,8 @@ height = 0.1
 depth = 60.0
 
 [node name="GBSidewalk" parent="Stuff" unique_id=2145357445 instance=ExtResource("17_cf4ia")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 132, -0.12, 95)
-width = 300.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 123, -0.12, 95)
+width = 280.0
 height = 0.1
 depth = 400.0
 color_preset = 1
@@ -321,6 +321,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 243, 0, -90)
 width = 78.0
 height = 0.1
 depth = 30.0
+color_preset = 2
+
+[node name="GBGrass3" parent="Stuff" unique_id=1777291380 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 273, 0, -40)
+width = 20.0
+height = 0.1
+depth = 70.0
 color_preset = 2
 
 [node name="GBSand" parent="Stuff" unique_id=1412146464 instance=ExtResource("17_cf4ia")]
@@ -1259,3 +1266,59 @@ transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, -1, 0.93
 width = 4.0
 height = 0.1
 depth = 4.0
+
+[node name="MegaRamp" type="Node3D" parent="Stuff" unique_id=400827057]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, 0, 125)
+
+[node name="Road_GrayBox_StaticBody34" parent="Stuff/MegaRamp" unique_id=2007501260 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0.25881904, 0.9659258, 1.131334e-08, -0.9659258, 0.25881904, -4.222196e-08, 17, -7.775, -81.045)
+width = 60.0
+height = 0.1
+depth = 20.0
+
+[node name="Road_GrayBox_StaticBody35" parent="Stuff/MegaRamp" unique_id=148279450 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(-4.2221956e-08, -1.1313339e-08, 1, -0.258819, 0.96592575, 0, -0.96592575, -0.258819, -4.371139e-08, 17, -7.775, 7.955002)
+width = 60.0
+height = 0.1
+depth = 20.0
+
+[node name="Ramp" type="Node3D" parent="Stuff/MegaRamp" unique_id=1034330973]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, -0.02000001, -51)
+
+[node name="ramp1" parent="Stuff/MegaRamp/Ramp" unique_id=875539081 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -15.552177, -0.09185791)
+width = 20.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp2" parent="Stuff/MegaRamp/Ramp" unique_id=441127682 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, -1, -15.552177, 0.9081421)
+width = 20.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp3" parent="Stuff/MegaRamp/Ramp" unique_id=809987282 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, -1, -15.293358, 1.8740692)
+width = 20.0
+height = 0.1
+depth = 2.0
+
+[node name="ramp4" parent="Stuff/MegaRamp/Ramp" unique_id=726445787 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 0.7071067, 0.70710677, 0, -0.70710677, 0.7071067, -1, -13.46932, 4.0861206)
+width = 20.0
+height = 0.1
+depth = 4.0
+
+[node name="GrayBox_StaticBody3" parent="Stuff/MegaRamp" unique_id=966022775 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -11, 0)
+collision_layer = 3
+height = 20.0
+depth = 200.0
+color_preset = 4
+
+[node name="GrayBox_StaticBody4" parent="Stuff/MegaRamp" unique_id=1119081514 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, -11, 0)
+collision_layer = 3
+height = 20.0
+depth = 200.0
+color_preset = 4

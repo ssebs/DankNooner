@@ -58,33 +58,45 @@ func _update_brake_grab(delta: float):
 func _detect_crash():
 	var bd = player_entity.bike_definition
 
-	# Wheelie crash
-	if movement_controller.pitch_angle > deg_to_rad(bd.max_wheelie_angle_deg):
-		DebugUtils.DebugMsg("wheelie crash")
-		trigger_crash()
-		return
-
-	# Stoppie crash
-	if movement_controller.pitch_angle < -deg_to_rad(bd.max_stoppie_angle_deg):
-		DebugUtils.DebugMsg("stoppie crash")
-		trigger_crash()
-		return
-
-	# Lean crash
-	if abs(movement_controller.roll_angle) >= deg_to_rad(crash_lean_threshold_deg):
-		DebugUtils.DebugMsg("lean crash")
-		trigger_crash()
-		return
-
-	# Upside-down landing — bike's up_direction vs global UP > 120°
-	# Skip if riding a steep surface (loop) — inverted up_direction is expected there
-	var bike_up_angle = player_entity.up_direction.angle_to(Vector3.UP)
-	if bike_up_angle > deg_to_rad(120) and movement_controller.is_on_floor_netfox():
-		var surface_angle = player_entity.get_floor_normal().angle_to(Vector3.UP)
-		if surface_angle < deg_to_rad(45):
-			DebugUtils.DebugMsg("upside-down crash (angle=%.1f°)" % rad_to_deg(bike_up_angle))
+	# If in air, don't crash by angle
+	if movement_controller._is_on_floor:
+		# Wheelie crash
+		if movement_controller.pitch_angle > deg_to_rad(bd.max_wheelie_angle_deg):
+			DebugUtils.DebugMsg("wheelie crash")
 			trigger_crash()
 			return
+
+		# Stoppie crash
+		if movement_controller.pitch_angle < -deg_to_rad(bd.max_stoppie_angle_deg):
+			DebugUtils.DebugMsg("stoppie crash")
+			trigger_crash()
+			return
+
+		# Lean crash
+		if abs(movement_controller.roll_angle) >= deg_to_rad(crash_lean_threshold_deg):
+			DebugUtils.DebugMsg("lean crash")
+			trigger_crash()
+			return
+
+		# Upside-down landing — bike's up_direction vs global UP > 120°
+		# Skip if riding a steep surface (loop) — inverted up_direction is expected there
+		var bike_up_angle = player_entity.up_direction.angle_to(Vector3.UP)
+		if bike_up_angle > deg_to_rad(120) and movement_controller.is_on_floor_netfox():
+			var surface_angle = player_entity.get_floor_normal().angle_to(Vector3.UP)
+			if surface_angle < deg_to_rad(45):
+				DebugUtils.DebugMsg("upside-down crash (angle=%.1f°)" % rad_to_deg(bike_up_angle))
+				trigger_crash()
+				return
+
+		# Brake grab while turning (sim difficulty + gamepad only)
+		if (
+			_brake_was_grabbed
+			# and is_sim_difficulty
+			and input_controller.is_gamepad
+			and abs(movement_controller.roll_angle) > deg_to_rad(15)
+		):
+			DebugUtils.DebugMsg("brake grab crash")
+			trigger_crash()
 
 	# Collision with layer 2 obstacle — only head-on hits at speed
 	if movement_controller.speed >= _crash_min_speed:
@@ -100,16 +112,6 @@ func _detect_crash():
 					trigger_crash()
 					return
 				DebugUtils.DebugMsg("no crash (angle=%.1f)" % angle)
-
-	# Brake grab while turning (sim difficulty + gamepad only)
-	if (
-		_brake_was_grabbed
-		# and is_sim_difficulty
-		and input_controller.is_gamepad
-		and abs(movement_controller.roll_angle) > deg_to_rad(15)
-	):
-		DebugUtils.DebugMsg("brake grab crash")
-		trigger_crash()
 
 
 func trigger_crash():

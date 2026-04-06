@@ -4,7 +4,7 @@ class_name TrickController extends Node
 signal trick_started(trick_type: Trick)
 signal trick_ended(trick_type: Trick)
 
-enum Trick { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE }
+enum Trick { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, THREESIXTY }
 
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
@@ -13,6 +13,7 @@ enum Trick { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE }
 
 var _current_trick: Trick = Trick.NONE
 var _last_trick: Trick = Trick.NONE
+var _flip_emitted: bool = false  # prevent re-emitting the same flip while still airborne
 
 
 func _ready():
@@ -33,9 +34,11 @@ func on_movement_rollback_tick(_delta: float):
 
 
 func _detect_current_trick() -> Trick:
-	# Air tricks don't count as wheelies/stoppies
-	if not movement_controller._is_on_floor:
-		return Trick.NONE
+	if !movement_controller._is_on_floor:
+		return _detect_air_trick()
+
+	# Reset flip tracking on landing
+	_flip_emitted = false
 
 	if movement_controller.pitch_angle > deg_to_rad(15):
 		if input_controller.nfx_trick_held:
@@ -47,10 +50,26 @@ func _detect_current_trick() -> Trick:
 	return Trick.NONE
 
 
+func _detect_air_trick() -> Trick:
+	if movement_controller.air_pitch_total < (TAU * 0.9):
+		return Trick.NONE
+
+	# Full flip completed — determine direction from pitch_angle sign
+	if _flip_emitted:
+		return Trick.NONE
+
+	_flip_emitted = true
+	if movement_controller.pitch_angle > 0:
+		return Trick.BACKFLIP
+
+	return Trick.FRONTFLIP
+
+
 ## Called from player_entity.gd's do_respawn
 func do_reset():
 	_current_trick = Trick.NONE
 	_last_trick = Trick.NONE
+	_flip_emitted = false
 
 
 static func trick_to_str(trick: Trick) -> String:
@@ -63,6 +82,12 @@ static func trick_to_str(trick: Trick) -> String:
 			return "WHEELIE_MOD"
 		Trick.STOPPIE:
 			return "STOPPIE"
+		Trick.BACKFLIP:
+			return "BACKFLIP"
+		Trick.FRONTFLIP:
+			return "FRONTFLIP"
+		Trick.THREESIXTY:
+			return "THREESIXTY"
 	return "NONE"
 
 
@@ -76,6 +101,12 @@ static func str_to_trick(s: String) -> Trick:
 			return Trick.WHEELIE_MOD
 		"STOPPIE":
 			return Trick.STOPPIE
+		"BACKFLIP":
+			return Trick.BACKFLIP
+		"FRONTFLIP":
+			return Trick.FRONTFLIP
+		"THREESIXTY":
+			return Trick.THREESIXTY
 	return Trick.NONE
 
 

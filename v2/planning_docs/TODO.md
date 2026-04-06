@@ -6,6 +6,7 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
+- [ ] backflip landing is snappy
 - [ ] Free play => back => host game broken, creates dupe multiplayer init
 - [ ] on clients:
 
