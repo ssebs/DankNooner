@@ -58,7 +58,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/awaitable_http_request/plugin.cfg", "res://addons/console/plugin.cfg", "res://addons/fancy_folder_colors/plugin.cfg", "res://addons/fmod/plugin.cfg", "res://addons/mixamo_animation_retargeter/plugin.cfg", "res://addons/netfox.internals/plugin.cfg", "res://addons/netfox.noray/plugin.cfg", "res://addons/netfox/plugin.cfg", "res://addons/tattomoosa.spinner/plugin.cfg", "res://addons/toastparty/plugin.cfg")
+enabled=PackedStringArray("res://addons/awaitable_http_request/plugin.cfg", "res://addons/console/plugin.cfg", "res://addons/fancy_folder_colors/plugin.cfg", "res://addons/fmod/plugin.cfg", "res://addons/mixamo_animation_retargeter/plugin.cfg", "res://addons/netfox.internals/plugin.cfg", "res://addons/netfox.noray/plugin.cfg", "res://addons/netfox/plugin.cfg", "res://addons/tattomoosa.spinner/plugin.cfg", "res://addons/toastparty/plugin.cfg", "res://addons/virtual_joystick/plugin.cfg")
 
 [file_customization]
 
@@ -210,6 +210,11 @@ reset_cam={
 , Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":3,"canceled":false,"pressed":false,"double_click":false,"script":null)
 ]
 }
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+pointing/emulate_mouse_from_touch=false
 
 [internationalization]
 

@@ -18,11 +18,16 @@ class_name HUDController extends Control
 @onready var _trick_msg: Label = %HUD_TRICK_MSG
 @onready var _game_msg: Label = %HUD_GAME_MSG
 @onready var _balance_bar: BalanceBar = %BalanceBar
+@onready var _mobile_controls: Control = %MobileControls
 
 
 func _ready():
 	if Engine.is_editor_hint():
 		return
+
+	if not OS.has_feature("mobile"):
+		_mobile_controls.queue_free()
+
 	# Discrete events via signals
 	gearing_controller.gear_changed.connect(_on_gear_changed)
 	trick_controller.trick_started.connect(_on_trick_started)
@@ -98,7 +103,7 @@ func _on_trick_started(trick_type: TrickController.Trick):
 		]
 	):
 		_init_balance_bar(trick_type)
-		_balance_bar._update_warn_markers()
+		_balance_bar.update_warn_markers()
 		_balance_bar.show()
 
 

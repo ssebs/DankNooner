@@ -17,7 +17,14 @@
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="16_uthnt"]
 [ext_resource type="Script" uid="uid://coopftft0wwho" path="res://player/controllers/camera_controller.gd" id="17_0jgj5"]
 [ext_resource type="Script" uid="uid://civ7dg4q23qwd" path="res://player/controllers/hud_controller.gd" id="17_fiihv"]
+[ext_resource type="Texture2D" uid="uid://b0hn1bebf5jgf" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_a.png" id="18_75npo"]
+[ext_resource type="Texture2D" uid="uid://c0w578hmfft6u" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_lb.png" id="18_am3pr"]
+[ext_resource type="Texture2D" uid="uid://3e18qxk3u0k6" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_rb.png" id="18_hqggp"]
 [ext_resource type="PackedScene" uid="uid://cof5vsd00u8ob" path="res://player/hud_elements/balance_bar.tscn" id="18_htgu7"]
+[ext_resource type="Texture2D" uid="uid://duuquimo77bkv" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_b.png" id="19_75npo"]
+[ext_resource type="Texture2D" uid="uid://cqq425x7j1o01" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_x.png" id="20_8la7j"]
+[ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://addons/virtual_joystick/virtual_joystick_scene.tscn" id="23_am3pr"]
+[ext_resource type="Texture2D" uid="uid://8i4urqqivwil" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_menu.png" id="24_744ak"]
 
 [sub_resource type="Animation" id="Animation_tivla"]
 length = 0.001
@@ -99,6 +106,9 @@ _data = {
 &"RESET": SubResource("Animation_tivla")
 }
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_htgu7"]
+radius = 64.0
+
 [node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("collision_shape_3d", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "movement_controller", "camera_controller")]
 collision_layer = 3
 collision_mask = 3
@@ -148,7 +158,7 @@ transform = Transform3D(-1, 2.7775881e-08, -1.4841912e-07, 0, 0.98293537, 0.1839
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@110115")
+root_node = NodePath("/root/@EditorNode@18070/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9321/@VSplitContainer@9104/@HSplitContainer@9106/@HSplitContainer@9108/@Control@9109/@SubViewportContainer@9110/@SubViewport@9111/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@21583")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
@@ -233,7 +243,6 @@ gearing_controller = NodePath("../GearingController")
 crash_controller = NodePath("../CrashController")
 rear_raycast = NodePath("../../RearRayCast")
 front_raycast = NodePath("../../FrontRayCast")
-debug = null
 
 [node name="GearingController" type="Node" parent="_Controllers" unique_id=2064362163 node_paths=PackedStringArray("player_entity", "input_controller")]
 unique_name_in_owner = true
@@ -363,6 +372,127 @@ text = "TUT_MSG_1"
 [node name="BalanceBar" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1249265550 instance=ExtResource("18_htgu7")]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="MobileControls" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=275464545]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls" unique_id=1617473206]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -268.0
+offset_bottom = 408.0
+grow_horizontal = 0
+alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer" unique_id=1361659284]
+layout_mode = 2
+
+[node name="BtnContainer4" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer2" unique_id=1782930745]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="LBBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer2/BtnContainer4" unique_id=1669101773]
+texture_normal = ExtResource("18_am3pr")
+shape = SubResource("CircleShape2D_htgu7")
+action = "clutch"
+
+[node name="BtnContainer5" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer2" unique_id=1787280875]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="RBBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer2/BtnContainer5" unique_id=858205438]
+texture_normal = ExtResource("18_hqggp")
+shape = SubResource("CircleShape2D_htgu7")
+action = "trick"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer" unique_id=1150399475]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="BtnContainer2" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer" unique_id=1385436551]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+
+[node name="BBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer/BtnContainer2" unique_id=288112531]
+texture_normal = ExtResource("19_75npo")
+shape = SubResource("CircleShape2D_htgu7")
+action = "gear_up"
+
+[node name="BtnContainer3" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer" unique_id=596826694]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+
+[node name="XBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer/BtnContainer3" unique_id=761836458]
+texture_normal = ExtResource("20_8la7j")
+shape = SubResource("CircleShape2D_htgu7")
+action = "gear_down"
+
+[node name="BtnContainer" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer" unique_id=453097553]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+
+[node name="ABtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/BtnContainer" unique_id=1769493698]
+texture_normal = ExtResource("18_75npo")
+shape = SubResource("CircleShape2D_htgu7")
+action = "brake_rear"
+
+[node name="BtnContainer4" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls" unique_id=1768758885]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -64.0
+offset_right = 64.0
+offset_bottom = 128.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+
+[node name="ESCBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/BtnContainer4" unique_id=813301896]
+texture_normal = ExtResource("24_744ak")
+shape = SubResource("CircleShape2D_htgu7")
+action = "pause"
+
+[node name="MoveJoyStick" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls" unique_id=987581372 instance=ExtResource("23_am3pr")]
+unique_name_in_owner = true
+layout_mode = 1
+offset_top = -300.0
+offset_bottom = 0.0
+clampzone_size = 128.0
+joystick_mode = 2
+action_left = "steer_left"
+action_right = "steer_right"
+action_up = "throttle_pct"
+action_down = "brake_front_pct"
+
+[node name="LeanBrakeJoyStick" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls" unique_id=405697082 instance=ExtResource("23_am3pr")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -515.0
+offset_top = -276.0675
+offset_right = -215.0
+offset_bottom = 23.932495
+grow_horizontal = 0
+clampzone_size = 128.0
+joystick_mode = 2
+action_left = "cam_left"
+action_right = "cam_right"
+action_up = "lean_forward"
+action_down = "lean_back"
 
 [node name="CameraController" type="Node3D" parent="_Controllers" unique_id=1983563789 node_paths=PackedStringArray("player_entity", "input_controller", "fps_cam", "tps_cam", "fps_marker", "tps_marker")]
 unique_name_in_owner = true
