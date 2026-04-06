@@ -23,6 +23,7 @@ const RAMP_SLOWDOWN: float = 0.25  # multiplier on slope gravity
 const MIN_LOOP_SPEED: float = 20.0  # speed needed at fully inverted (180°)
 # Trick tuning
 const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
+const AIR_TRICK_ROTATION_SPEED: float = 3.0  # rad/s pitch control while airborne
 var speed: float = 0.0
 var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
@@ -247,6 +248,13 @@ func _velocity_calc(delta: float):
 ## Orchestrates pitch_angle: clutch detection → wheelie target → stoppie → apply
 func _pitch_angle_calc(delta: float):
 	_update_clutch_dump_detection()
+
+	# Airborne trick control — lean to flip, no decay (weightless)
+	if not _is_on_floor:
+		if input_controller.nfx_lean != 0:
+			# Lean back (negative) = backflip (positive pitch), lean forward = frontflip
+			pitch_angle -= input_controller.nfx_lean * AIR_TRICK_ROTATION_SPEED * delta
+		return
 
 	var bd = player_entity.bike_definition
 	var in_wheelie = pitch_angle > deg_to_rad(15)

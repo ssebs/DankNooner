@@ -6,7 +6,6 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] adjust pitch mid air
 - [ ] Actually sync rb\_\* pattern vars via RPC
 
   - [x] Gear changes
@@ -14,20 +13,18 @@
   - [ ] Move respawn logic out of player_entity.do_crash into spawn_manager
 
 - Bugs / feedback from playtest:
-- [ ] clients:
-  - [ ] When crashing into something during a wheelie
-    - [ ] spawning into wheelie
-    - [ ] spawning without body
-      - [ ] "Crashed...respawning" in HUD
-  - [x] cant change gears after going from 1=>2
-- [x] more wheelie angle overall
 - [ ] wheelie turning animation should be different, should yaw
-- [x] Make loopdeloop larger
-- [x] Balance point showed like grinding balance in tony hawks pro skater in HUD
-- [ ] customize menu => play menu is broken, have to hit esc
-  - [ ] double check this is where / how it happens!
 
-Ragdoll launch game mode
+- [ ] on clients:
+
+  - [ ] When crashing into something during a wheelie, you respawn broken.
+    - [ ] in half wheelie anim, without body
+    - [ ] "Crashed...respawning" in HUD
+  - [x] cant change gears after going from 1=>2
+
+- [ ] customize menu => play menu is broken, have to hit esc
+
+  - [ ] double check this is where / how it happens!
 
 - [ ] Redo movement_controller
 
@@ -95,6 +92,8 @@ Ragdoll launch game mode
       - [ ] Get Score saved to disk w/ bonus for podium
     - [ ] Stunt race
       - [ ] Mario kart like - get items to attack players or help self, but do tricks to get items. More complex tricks = better items
+    - [ ] Ragdoll launch game mode
+      - [ ] Like hall of meat
   - [ ] Unlock Skins w/ Score from disk & spend
 
 - [ ] Improved (non-text) HUD
@@ -321,6 +320,14 @@ Ragdoll launch game mode
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Balance point showed like grinding balance in tony hawks pro skater in HUD
+
+- [x] Make loopdeloop larger
+
+- [x] more wheelie angle overall
+
+- [x] adjust pitch mid air
 
 - [x] movement_controller updates
 

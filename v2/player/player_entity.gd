@@ -181,15 +181,19 @@ func _on_rpm_updated(new_rpm_ratio: float):
 
 
 func _on_gear_changed(new_gear: int):
-	DebugUtils.DebugMsg("Gear: %d" % new_gear)
+	DebugUtils.DebugMsg("Gear: %d" % new_gear, OS.has_feature("debug"))
 
 
 func _on_trick_started(trick_type: TrickController.Trick):
-	DebugUtils.DebugMsg("Trick Started: %s" % TrickController.trick_to_str(trick_type))
+	DebugUtils.DebugMsg(
+		"Trick Started: %s" % TrickController.trick_to_str(trick_type), OS.has_feature("debug")
+	)
 
 
 func _on_trick_ended(trick_type: TrickController.Trick):
-	DebugUtils.DebugMsg("Trick Ended: %s" % TrickController.trick_to_str(trick_type))
+	DebugUtils.DebugMsg(
+		"Trick Ended: %s" % TrickController.trick_to_str(trick_type), OS.has_feature("debug")
+	)
 
 
 #endregion

@@ -50,6 +50,7 @@ func Exit(_state_context: StateContext):
 
 func _on_respawn_pressed():
 	spawn_manager.respawn_player.rpc_id(1, multiplayer.get_unique_id())
+	_on_resume_pressed()
 
 
 func _on_resume_pressed():
