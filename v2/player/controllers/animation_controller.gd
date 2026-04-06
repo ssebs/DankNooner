@@ -69,7 +69,16 @@ func _update_procedural_animation(delta: float) -> void:
 	var bd = player_entity.bike_definition
 	var max_wheelie_rad = deg_to_rad(bd.max_wheelie_angle_deg)
 	var max_stoppie_rad = deg_to_rad(bd.max_stoppie_angle_deg)
-	var target_pitch = -clamp(movement_controller.pitch_angle, -max_stoppie_rad, max_wheelie_rad)
+	var target_pitch: float
+	if movement_controller._is_on_floor:
+		target_pitch = -clamp(movement_controller.pitch_angle, -max_stoppie_rad, max_wheelie_rad)
+	else:
+		target_pitch = -movement_controller.pitch_angle
+	# Keep visual_root.rotation.x within PI of target so lerp takes the short path
+	while visual_root.rotation.x - target_pitch > PI:
+		visual_root.rotation.x -= TAU
+	while visual_root.rotation.x - target_pitch < -PI:
+		visual_root.rotation.x += TAU
 	visual_root.rotation.x = lerpf(visual_root.rotation.x, target_pitch, blend)
 
 	# Pivot offset: rotate around rear wheel (wheelie) or front wheel (stoppie)

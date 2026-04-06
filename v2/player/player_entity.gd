@@ -192,7 +192,8 @@ func _on_trick_started(trick_type: TrickController.Trick):
 
 func _on_trick_ended(trick_type: TrickController.Trick):
 	DebugUtils.DebugMsg(
-		"Trick Ended: %s" % TrickController.trick_to_str(trick_type), OS.has_feature("debug")
+		"Trick Ended: %s" % TrickController.trick_to_str(trick_type),
+		OS.has_feature("debug") and false
 	)
 
 

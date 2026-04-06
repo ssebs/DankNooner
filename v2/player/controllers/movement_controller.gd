@@ -9,7 +9,7 @@ class_name MovementController extends Node
 @export var rear_raycast: RayCast3D
 @export var front_raycast: RayCast3D
 
-@export var debug:bool=false
+@export var debug_verbose:bool=false
 
 const CLUTCH_KICK_WINDOW: float = 0.2
 const FALL_GRAVITY: float = 9.8
@@ -23,12 +23,13 @@ const RAMP_SLOWDOWN: float = 0.25  # multiplier on slope gravity
 const MIN_LOOP_SPEED: float = 20.0  # speed needed at fully inverted (180°)
 # Trick tuning
 const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
-const AIR_TRICK_ROTATION_SPEED: float = 3.0  # rad/s pitch control while airborne
+const AIR_TRICK_ROTATION_SPEED: float = 4.0  # rad/s pitch control while airborne
 var speed: float = 0.0
 var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
 
 var air_forward: Vector3 = Vector3.FORWARD  # forward direction when leaving a surface
+var air_pitch_total: float = 0.0  # cumulative pitch rotation while airborne (for flip counting)
 
 # spawn protection - todo move?
 var _default_spawn_timer: float = 1.0
@@ -38,6 +39,7 @@ var _spawn_timer: float = _default_spawn_timer
 var _prev_clutch_held: bool = false
 var _clutch_kick_window: float = 0.0
 var _balance_point_decay_mult: float = 0.85
+var _was_on_floor: bool = false  # previous tick's floor state (for landing detection)
 var _is_on_floor: bool = false  # cached once per tick to avoid redundant move_and_slide calls
 var _floor_normal: Vector3 = Vector3.UP  # cached per tick — only valid when _is_on_floor
 var _speed_pct: float = 0.0  # speed / max_speed, cached per tick
@@ -61,9 +63,23 @@ func on_movement_rollback_tick(delta: float):
 	if player_entity.is_crashed:
 		return
 
+	_was_on_floor = _is_on_floor
 	_is_on_floor = is_on_floor_netfox()
 	if _is_on_floor:
 		_floor_normal = _get_blended_surface_normal()
+		# Landing — normalize pitch to effective angle from upright
+		# e.g. 290° → -70° (70° from ground), full 360° → ~0°
+		if not _was_on_floor:
+			pitch_angle = fmod(pitch_angle, TAU)
+			if pitch_angle > PI:
+				pitch_angle -= TAU
+			elif pitch_angle < -PI:
+				pitch_angle += TAU
+			air_pitch_total = 0.0
+	else:
+		# Reset air rotation tracker on takeoff
+		if _was_on_floor:
+			air_pitch_total = 0.0
 	_speed_calc(delta)
 	_speed_pct = clampf(speed / player_entity.bike_definition.max_speed, 0.0, 1.0)
 	_update_surface_alignment(delta)
@@ -117,7 +133,7 @@ func _update_surface_alignment(delta: float):
 						rear_raycast.is_colliding()
 					]
 				),
-				OS.has_feature("debug") and debug
+				OS.has_feature("debug_verbose") and debug_verbose
 			)
 
 		# Adhesion check — need enough speed to ride steep/inverted surfaces
@@ -207,7 +223,7 @@ func _steer_calc(delta: float):
 				"Steer: spd=%.1f spd%%=%.0f%% curve=%.2f rate=%.2f"
 				% [speed, _speed_pct * 100, steer_factor, turn_rate]
 			),
-			OS.has_feature("debug") and debug
+			OS.has_feature("debug_verbose") and debug_verbose
 		)
 		player_entity.rotate_y(-roll_angle * turn_rate * delta)
 
@@ -253,7 +269,9 @@ func _pitch_angle_calc(delta: float):
 	if not _is_on_floor:
 		if input_controller.nfx_lean != 0:
 			# Lean back (negative) = backflip (positive pitch), lean forward = frontflip
-			pitch_angle -= input_controller.nfx_lean * AIR_TRICK_ROTATION_SPEED * delta
+			var rotation_delta = input_controller.nfx_lean * AIR_TRICK_ROTATION_SPEED * delta
+			pitch_angle -= rotation_delta
+			air_pitch_total += abs(rotation_delta)
 		return
 
 	var bd = player_entity.bike_definition
@@ -290,7 +308,7 @@ func _pitch_angle_calc(delta: float):
 				in_balance_point
 			]
 		),
-		OS.has_feature("debug")and debug
+		OS.has_feature("debug_verbose")and debug_verbose
 	)
 
 	# Lean forward recovery — pull the front wheel down
@@ -499,9 +517,11 @@ func do_reset():
 	speed = 0.0
 	roll_angle = 0.0
 	pitch_angle = 0.0
+	_was_on_floor = false
 	_prev_clutch_held = false
 	_clutch_kick_window = 0.0
 	air_forward = Vector3.FORWARD
+	air_pitch_total = 0.0
 	player_entity.up_direction = Vector3.UP
 
 
