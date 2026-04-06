@@ -67,8 +67,8 @@ func _init_balance_bar(trick_type: TrickController.Trick):
 			_balance_bar.min_val = -bd.max_stoppie_angle_deg
 			_balance_bar.max_val = 0.0
 			# # No dedicated stoppie balance point — warn band sits in the usable middle
-			# _balance_bar.warn_low_val = -bd.max_stoppie_angle_deg * 0.8
-			# _balance_bar.warn_high_val = -bd.max_stoppie_angle_deg * 0.3
+			_balance_bar.warn_low_val = -bd.max_stoppie_angle_deg * 0.8
+			_balance_bar.warn_high_val = -bd.max_stoppie_angle_deg * 0.3
 		TrickController.Trick.WHEELIE_MOD, TrickController.Trick.WHEELIE_SITTING:
 			_balance_bar.min_val = 0.0
 			_balance_bar.max_val = bd.max_wheelie_angle_deg

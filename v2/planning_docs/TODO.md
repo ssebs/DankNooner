@@ -311,6 +311,8 @@
 
 ## Done ✅
 
+- [x] Stoppie balance bar broken
+
 - [x] Balance point showed like grinding balance in tony hawks pro skater in HUD
 
 - [x] Make loopdeloop larger
