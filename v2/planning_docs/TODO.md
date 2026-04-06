@@ -5,7 +5,7 @@
 ## In Progress 🚀
 
 > Take it slow, fix bugs and add polish to player controller
-
+- [ ] can't crash upside down anymore, look at backflip code in crash_controller
 - [ ] backflip landing is snappy
 - [ ] Free play => back => host game broken, creates dupe multiplayer init
 - [ ] on clients:
