@@ -6,15 +6,6 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] Actually sync rb\_\* pattern vars via RPC
-
-  - [x] Gear changes
-  - [ ] Respawning + move to spawn manager & gamemode manager
-  - [ ] Move respawn logic out of player_entity.do_crash into spawn_manager
-
-- Bugs / feedback from playtest:
-- [ ] wheelie turning animation should be different, should yaw
-
 - [ ] on clients:
 
   - [ ] When crashing into something during a wheelie, you respawn broken.
@@ -22,9 +13,7 @@
     - [ ] "Crashed...respawning" in HUD
   - [x] cant change gears after going from 1=>2
 
-- [ ] customize menu => play menu is broken, have to hit esc
-
-  - [ ] double check this is where / how it happens!
+- [ ] broken back button via: play => lobby => back => customize => back
 
 - [ ] Redo movement_controller
 
@@ -131,6 +120,7 @@
   - [ ] Create stopped/idle animation
   - [ ] Create wheelie/stoppie animation
   - [ ] Add pull/lean back animation when starting a wheelie
+  - [ ] wheelie turning animation should be different, should yaw
   - [x] claude created a system
   - [x] Review planning_docs/AnimationController.md
   - [x] Create way to play specific animations
