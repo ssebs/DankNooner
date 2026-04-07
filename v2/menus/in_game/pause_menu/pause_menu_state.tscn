@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://b1lxeaxjibabl" path="res://menus/in_game/pause_menu/pause_menu_state.gd" id="1_fhu3k"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_wn568"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wn568"]
+
 [node name="PauseMenuState" type="Node" unique_id=1626689768]
 script = ExtResource("1_fhu3k")
 
@@ -50,6 +52,16 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 
+[node name="RespawnBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1557111191]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RESPAWN_LABEL"
+
+[node name="HSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=35406676]
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_wn568")
+
 [node name="ResumeBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=843270122]
 unique_name_in_owner = true
 layout_mode = 2
@@ -70,12 +82,9 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "MAIN_MENU_LABEL"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=414822224]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="RespawnBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1557111191]
+[node name="HelpBtn" type="Button" parent="UI/AspectContainer/MarginContainer" unique_id=1170908104]
 unique_name_in_owner = true
 layout_mode = 2
-text = "RESPAWN_LABEL"
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "HELP_LABEL"

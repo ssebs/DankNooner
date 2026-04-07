@@ -23,6 +23,7 @@
 [ext_resource type="Script" uid="uid://dxn3rquhf7sfs" path="res://managers/gamemodes/gamemode_manager.gd" id="18_ih6an"]
 [ext_resource type="Script" uid="uid://didbm7t5dal30" path="res://managers/save_manager.gd" id="19_wt57k"]
 [ext_resource type="PackedScene" uid="uid://b27jgs5kv1310" path="res://managers/audio_manager.tscn" id="20_2i4tw"]
+[ext_resource type="PackedScene" uid="uid://c0bqe8cdfu540" path="res://menus/in_game/help_menu/help_menu_state.tscn" id="20_lfj8l"]
 [ext_resource type="Resource" uid="uid://ba1bidrtscoc7" path="res://resources/player/default_player_definition.tres" id="20_pk5u2"]
 [ext_resource type="Script" uid="uid://cug5kob8cndk4" path="res://managers/spawn_manager.gd" id="21_euc45"]
 
@@ -132,7 +133,7 @@ menu_manager = NodePath("../..")
 save_manager = NodePath("../../../SaveManager")
 play_menu_state = NodePath("../PlayMenuState")
 
-[node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "connection_manager", "level_manager", "input_state_manager", "pause_manager", "gamemode_manager", "spawn_manager", "main_menu_state", "settings_menu_state", "customize_menu_state") instance=ExtResource("6_02kkc")]
+[node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "connection_manager", "level_manager", "input_state_manager", "pause_manager", "gamemode_manager", "spawn_manager", "main_menu_state", "settings_menu_state", "customize_menu_state", "help_menu_state") instance=ExtResource("6_02kkc")]
 menu_manager = NodePath("../..")
 connection_manager = NodePath("../../../ConnectionManager")
 level_manager = NodePath("../../../LevelManager")
@@ -143,6 +144,10 @@ spawn_manager = NodePath("../../../SpawnManager")
 main_menu_state = NodePath("../MainMenuState")
 settings_menu_state = NodePath("../SettingsMenuState")
 customize_menu_state = NodePath("../CustomizeMenuState")
+help_menu_state = NodePath("../HelpMenuState")
+
+[node name="HelpMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=64073042 node_paths=PackedStringArray("menu_manager") instance=ExtResource("20_lfj8l")]
+menu_manager = NodePath("../..")
 
 [node name="SettingsManager" type="Node" parent="ManagerManager" unique_id=82913213 groups=["Managers"]]
 script = ExtResource("17_borgi")

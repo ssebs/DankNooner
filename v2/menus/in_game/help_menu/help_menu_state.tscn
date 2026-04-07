@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://c0bqe8cdfu540"]
+
+[ext_resource type="Script" uid="uid://bov8d0bxdald0" path="res://menus/in_game/help_menu/help_menu_state.gd" id="1_help"]
+[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://vl827k4qolh6" path="res://resources/img/ControlsOverlay/GamepadControls.png" id="3_gamepad"]
+[ext_resource type="Texture2D" uid="uid://c6fvfgvumpue" path="res://resources/img/ControlsOverlay/KBMControls.png" id="4_kbm"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_help"]
+
+[node name="HelpMenuState" type="Node" unique_id=64073042]
+script = ExtResource("1_help")
+
+[node name="UI" type="Control" parent="." unique_id=1402096687]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="BGTint" type="ColorRect" parent="UI" unique_id=1349753632]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.78431374)
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="UI" unique_id=2057790513]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+ratio = 1.778
+
+[node name="GamepadImg" type="TextureRect" parent="UI/AspectRatioContainer" unique_id=110839311]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("3_gamepad")
+expand_mode = 2
+
+[node name="KBMImg" type="TextureRect" parent="UI/AspectRatioContainer" unique_id=1986348871]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("4_kbm")
+expand_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/AspectRatioContainer" unique_id=1143942039]
+layout_mode = 2
+theme = ExtResource("2_theme")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer" unique_id=877154623]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="GamepadBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer/VBoxContainer" unique_id=215182231]
+unique_name_in_owner = true
+layout_mode = 2
+text = "GAMEPAD_LABEL"
+
+[node name="KBMBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer/VBoxContainer" unique_id=294980886]
+unique_name_in_owner = true
+layout_mode = 2
+text = "KBM_LABEL"
+
+[node name="HSeparator" type="HSeparator" parent="UI/AspectRatioContainer/MarginContainer/VBoxContainer" unique_id=264969408]
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_help")
+
+[node name="CloseHelpBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer/VBoxContainer" unique_id=280540503]
+unique_name_in_owner = true
+layout_mode = 2
+text = "CLOSE_LABEL"
