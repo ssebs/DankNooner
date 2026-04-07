@@ -97,12 +97,13 @@ level_manager = NodePath("../../../LevelManager")
 main_menu_state = NodePath("../MainMenuState")
 audio_manager = NodePath("../../../AudioManager")
 
-[node name="MainMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=494197480 node_paths=PackedStringArray("menu_manager", "level_manager", "settings_menu_state", "play_menu_state", "customize_menu_state") instance=ExtResource("6_2pltu")]
+[node name="MainMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=494197480 node_paths=PackedStringArray("menu_manager", "level_manager", "settings_menu_state", "play_menu_state", "customize_menu_state", "help_menu_state") instance=ExtResource("6_2pltu")]
 menu_manager = NodePath("../..")
 level_manager = NodePath("../../../LevelManager")
 settings_menu_state = NodePath("../SettingsMenuState")
 play_menu_state = NodePath("../PlayMenuState")
 customize_menu_state = NodePath("../CustomizeMenuState")
+help_menu_state = NodePath("../HelpMenuState")
 
 [node name="PlayMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=207724047 node_paths=PackedStringArray("menu_manager", "connection_manager", "main_menu_state", "lobby_menu_state", "customize_menu_state") instance=ExtResource("7_f52ns")]
 menu_manager = NodePath("../..")
