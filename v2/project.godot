@@ -16,7 +16,7 @@ General/banks_path="res://fmod/DankNoonerFMODProject/Build/Desktop"
 
 config/name="DankNooner"
 config/description="An open-world motorcycle game about doing every stupid thing you'd never try in real life. Realistic controls meet arcade-style tricks — progressive braking, limited grip, and ragdoll crashes. Weave through traffic doing wheelies, pull skate-style tricks off ramps, race friends online, and progress from a bicycle to a fully customized sport bike."
-config/version="v0.0.43"
+config/version="v0.0.44"
 run/main_scene="uid://bi5r4eng0hofw"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="DankNooner"
