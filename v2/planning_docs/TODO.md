@@ -5,7 +5,12 @@
 ## In Progress 🚀
 
 > Take it slow, fix bugs and add polish to player controller
+
+- [ ] Touch controls don't work
+  - [x] Should work on web on phone
+  - [ ] Maybe build apk too
 - [ ] can't crash upside down anymore, look at backflip code in crash_controller
+- [ ] Reduce air drag, test on mega ramp
 - [ ] backflip landing is snappy
 - [ ] Free play => back => host game broken, creates dupe multiplayer init
 - [ ] on clients:
@@ -60,6 +65,7 @@
       - [ ] e.g. stunt race => combo counter
   - [ ] Create wheelie + DOWN animation (wheelie + right hand touches ground)
   - [ ] Create Heel clicker / other trick animations
+  - [ ] Land into wheelie / stoppie should be a trick
 
 - [ ] Basic tutorial
 

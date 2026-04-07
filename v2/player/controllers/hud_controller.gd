@@ -8,6 +8,8 @@ class_name HUDController extends Control
 @export var trick_controller: TrickController
 @export var crash_controller: CrashController
 
+@export var debug_mobile := false
+
 @onready var _throttle_label: Label = %HUD_THROTTLE
 @onready var _rpm_label: Label = %HUD_RPM
 @onready var _brake_label: Label = %HUD_BRAKE
@@ -25,7 +27,7 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 
-	if not OS.has_feature("mobile"):
+	if !OS.has_feature("mobile") and !debug_mobile:
 		_mobile_controls.queue_free()
 
 	# Discrete events via signals
