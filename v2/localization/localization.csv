@@ -67,3 +67,7 @@ JOY_CAM_SENS_LABEL,"Joystick Camera Sensitivity","Sensibilidad de la cámara del
 MOUSE_CAM_SENS_LABEL,"Mouse Camera Sensitivity","Sensibilidad de la cámara del ratón"
 INVERT_CAM_LABEL,"Invert Camera","Invertir cámara"
 RESOLUTION_SCALE_LABEL,"Resolution Scale %sx","Escala de resolución %sx"
+HELP_LABEL,"Help & Controls","Ayudar y controles"
+GAMEPAD_LABEL,"Controller View","Vista del controlador"
+KBM_LABEL,"Keyboard View","Vista de teclado"
+CLOSE_LABEL,"Close","Cerca"
