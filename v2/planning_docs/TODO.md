@@ -5,7 +5,7 @@
 ## In Progress 🚀
 
 > Take it slow, fix bugs and add polish to player controller
-
+- [ ] Android setup keystore & add to github secrets & enable in build.yml
 - [ ] disable current option when using help / controls menu, change type to radio/toggle
 - [ ] backflip landing is snappy, and always lands in wheelie/stoppie
 - [ ] Free play => back => host game broken, creates dupe multiplayer init
