@@ -6,9 +6,6 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] Touch controls don't work
-  - [x] Should work on web on phone
-  - [x] Maybe build apk too
 - [ ] can't crash upside down anymore, look at backflip code in crash_controller
 - [ ] Reduce air drag, test on mega ramp
 - [ ] backflip landing is snappy
@@ -323,6 +320,10 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Touch controls don't work
+  - [x] Should work on web on phone
+  - [x] Maybe build apk too
 
 - [x] Stoppie balance bar broken
 
