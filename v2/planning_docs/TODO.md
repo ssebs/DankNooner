@@ -7,7 +7,6 @@
 > Take it slow, fix bugs and add polish to player controller
 
 - [ ] can't crash upside down anymore, look at backflip code in crash_controller
-- [ ] Reduce air drag, test on mega ramp
 - [ ] backflip landing is snappy
 - [ ] Free play => back => host game broken, creates dupe multiplayer init
 - [ ] on clients:
@@ -320,6 +319,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Reduce air drag, test on mega ramp
 
 - [x] Touch controls don't work
   - [x] Should work on web on phone
