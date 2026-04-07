@@ -6,7 +6,7 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] backflip landing is snappy
+- [ ] backflip landing is snappy, and always lands in wheelie/stoppie
 - [ ] Free play => back => host game broken, creates dupe multiplayer init
 - [ ] on clients:
 
@@ -324,6 +324,7 @@
 - [x] Reduce air drag, test on mega ramp
 
 - [x] Touch controls don't work
+
   - [x] Should work on web on phone
   - [x] Maybe build apk too
 
