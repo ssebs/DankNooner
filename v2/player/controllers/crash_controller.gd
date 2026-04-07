@@ -78,16 +78,6 @@ func _detect_crash():
 			trigger_crash()
 			return
 
-		# Upside-down landing — bike's up_direction vs global UP > 120°
-		# Skip if riding a steep surface (loop) — inverted up_direction is expected there
-		var bike_up_angle = player_entity.up_direction.angle_to(Vector3.UP)
-		if bike_up_angle > deg_to_rad(120) and movement_controller.is_on_floor_netfox():
-			var surface_angle = player_entity.get_floor_normal().angle_to(Vector3.UP)
-			if surface_angle < deg_to_rad(45):
-				DebugUtils.DebugMsg("upside-down crash (angle=%.1f°)" % rad_to_deg(bike_up_angle))
-				trigger_crash()
-				return
-
 		# Brake grab while turning (sim difficulty + gamepad only)
 		if (
 			_brake_was_grabbed
@@ -97,6 +87,17 @@ func _detect_crash():
 		):
 			DebugUtils.DebugMsg("brake grab crash")
 			trigger_crash()
+
+	# Upside-down landing — checked separately because inverted up_direction breaks is_on_floor()
+	# Skip on steep surfaces (loops) — inverted up_direction is expected there
+	var bike_up_angle = player_entity.up_direction.angle_to(Vector3.UP)
+	if bike_up_angle > deg_to_rad(120):
+		for i in player_entity.get_slide_collision_count():
+			var collision = player_entity.get_slide_collision(i)
+			if collision.get_normal().angle_to(Vector3.UP) < deg_to_rad(45):
+				DebugUtils.DebugMsg("upside-down crash (angle=%.1f°)" % rad_to_deg(bike_up_angle))
+				trigger_crash()
+				return
 
 	# Collision with layer 2 obstacle — only head-on hits at speed
 	if movement_controller.speed >= _crash_min_speed:
