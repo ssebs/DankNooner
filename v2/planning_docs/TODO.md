@@ -7,7 +7,6 @@
 > Take it slow, fix bugs and add polish to player controller
 
 - [x] web mobile seems to crash? Spawn in with no controls hud or body
-- [ ] don't copy IP to clipboard if free play
 - [ ] Android setup keystore & add to github secrets & enable in build.yml
 - [ ] disable current option when using help / controls menu, change type to radio/toggle
 - [ ] backflip landing is snappy, and always lands in wheelie/stoppie
@@ -322,6 +321,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] don't copy IP to clipboard if free play
 
 - [x] can't crash upside down anymore, look at backflip code in crash_controller
 
