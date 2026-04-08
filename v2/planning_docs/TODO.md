@@ -6,18 +6,10 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] Mission System
+- [ ] GamemodeEvent System & First tutorial
 
-  - [ ] e.g. tutorial -
-    - [ ] Go to a marker in the map to start tutorial_01. If already completed, you can play it again.
-    - [ ] Going to the mission start marker => shows list of missions. Can do tut1 or tut2, etc. Replay them from there
-  - [ ] Co-op:
-    - [ ] Host on 1 server, different tutorials put you on different parts of the map. each tutorial HUD / in game pointerts are local, no tutorial state is sent to server.
-
-- [ ] Basic tutorial
-
-  - [ ] riding mechanics
-  - [ ] use HUD overlay layer
+  - See [planning_docs\GamemodeSystem.md](./planning_docs/GamemodeSystem.md)
+  - TODOs found there!
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
 

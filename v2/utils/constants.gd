@@ -7,4 +7,5 @@ const GROUPS = {
 	"Managers": "Managers",
 	"Validate": "Validate",
 	"InputStateManager": "InputStateManager",
+	"EventCircles": "EventCircles",
 }

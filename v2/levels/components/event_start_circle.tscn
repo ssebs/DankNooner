@@ -11,7 +11,7 @@ albedo_color = Color(0.9440789, 0.44619766, 1.0851281, 0.615)
 material = SubResource("StandardMaterial3D_2lumj")
 top_radius = 4.0
 bottom_radius = 4.0
-height = 8.0
+height = 4.0
 radial_segments = 16
 rings = 1
 cap_top = false
@@ -25,7 +25,7 @@ collision_layer = 8
 script = ExtResource("1_3ysdx")
 
 [node name="Cyl" type="MeshInstance3D" parent="." unique_id=394970070]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.05, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0499997, 0)
 mesh = SubResource("CylinderMesh_2lumj")
 
 [node name="Floor" parent="." unique_id=1485126779 instance=ExtResource("1_mvmlf")]
@@ -37,3 +37,12 @@ color_preset = 5
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=703346514]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
 shape = SubResource("CylinderShape3D_3ysdx")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=2069409638]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+billboard = 1
+double_sided = false
+text = "EVENT_LABEL_NAME"
+font_size = 128
+outline_size = 32

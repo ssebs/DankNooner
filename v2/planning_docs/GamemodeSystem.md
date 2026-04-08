@@ -2,6 +2,31 @@
 
 ---
 
+## IMPL
+
+- [x] Move respawn to gamemode manager
+- [x] Create Free Mode GameMode
+- [ ] Create Event system
+  - [x] Gamemode manager
+  - [x] Event Start Circle
+  - [ ] Gamemode UI
+  - [ ] Use entered/exited event to show UI when entering circle
+  - [ ] Select event
+  - [ ] Connect UI to gamemode & RPC
+  - [ ] Start event
+- [ ] New menu type
+  - [ ] Create loading inbetween screen
+  - [ ] Create win/lose inbetween screen
+- [ ] Create Tutorial 01 event
+  - [ ] Basic controls tutorial
+    - [ ] Create event / mission system
+      - [ ] MissionType
+        - [ ] Do this, then that, can't do that til this, retry, respawn locations, etc.
+      - [ ] RaceType
+        - [ ] Add way to track laps (go over checkpoint markers, respawn checkpoints, place, win, lose)
+
+> See event_start_circle.gd & tutorial_gamemode.gd & free_roam_gamemode.gd & gamemode_event.gd
+
 ## Way to create game mode / sessions / events / missions
 
 - Drive to location, press Y to open gamemode select menu
