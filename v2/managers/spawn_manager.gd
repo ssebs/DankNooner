@@ -1,6 +1,8 @@
 @tool
 class_name SpawnManager extends BaseManager
 
+signal player_spawned(player: PlayerEntity)
+
 @export var lobby_manager: LobbyManager
 @export var level_manager: LevelManager
 @export var audio_manager: AudioManager
@@ -74,6 +76,7 @@ func add_player_locally(peer_id: int, player_def_dict: Dictionary):
 
 	level_manager.current_level.player_spawn_pos.add_child(player_to_add, true)
 	player_to_add.username = player_def.username
+	player_spawned.emit(player_to_add)
 
 
 ## Remove player node locally (no authority check)

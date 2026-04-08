@@ -7,7 +7,7 @@ class_name PlayerEntity extends CharacterBody3D
 signal respawned(peer_id: int)
 
 ## Used for GameMode
-# signal crashed(peer_id: int)
+signal crashed(peer_id: int)
 # signal trick_started(peer_id: int, trick_type: int)
 # signal trick_ended(peer_id: int, trick_type: int)
 
@@ -67,6 +67,9 @@ var grip_usage: float = 0.0
 # Discrete actions (rb_* pattern)
 var rb_do_respawn: bool = false
 
+# Process-side state tracking (not sync'd)
+var _prev_is_crashed: bool = false
+
 
 func _ready():
 	floor_max_angle = deg_to_rad(170.0)  # allow riding on steep ramps, loops, ceilings
@@ -108,6 +111,12 @@ func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
+
+	# Detect crash state transition outside rollback (safe for signals/RPCs)
+	if is_crashed and !_prev_is_crashed:
+		crashed.emit(int(name))
+	_prev_is_crashed = is_crashed
+
 	if !is_local_client:
 		return
 

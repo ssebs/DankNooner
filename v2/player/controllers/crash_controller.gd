@@ -121,15 +121,6 @@ func trigger_crash():
 	animation_controller.start_ragdoll()
 	crashed.emit()
 
-	# TODO - move logic to gamemode manager using crashed signal
-	# Auto-respawn after delay
-	get_tree().create_timer(3.0).timeout.connect(_auto_respawn)
-
-
-func _auto_respawn():
-	if player_entity.is_crashed:
-		player_entity.rb_do_respawn = true
-
 
 ## Called from player_entity.gd's do_respawn
 func do_reset():

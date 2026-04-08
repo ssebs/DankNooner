@@ -1,5 +1,8 @@
 class_name GameMode extends Node
 
+@export var gamemode_manager: GamemodeManager
 
-func on_movement_rollback_tick(_delta: float):
+
+func _ready():
 	pass
+	# TODO - move to Enter() ?, connect signals from gamemode manager
