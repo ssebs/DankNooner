@@ -138,7 +138,11 @@ func _on_game_id_set(conn_addr: String):
 	ip_copy_btn.disabled = false
 	_set_preview_img()
 
-	if multiplayer.multiplayer_peer && multiplayer.is_server():
+	if (
+		multiplayer.multiplayer_peer
+		&& multiplayer.is_server()
+		&& return_ctx.mode != LobbyStateContext.Mode.FREEROAM
+	):
 		call_deferred("_on_ip_copy_btn_pressed")
 
 

@@ -138,6 +138,9 @@ func _on_join_btn_pressed():
 
 
 func _on_free_roam_btn_pressed():
+	# Force IP mode
+	ipport_toggle.button_pressed = true
+	_update_ipport_tooltip()
 	transitioned.emit(lobby_menu_state, LobbyStateContext.NewFreeRoam(self))
 
 
