@@ -1,11 +1,16 @@
 @tool
 class_name GamemodeManager extends BaseManager
 
+signal player_spawned(peer_id: int)
+signal player_crashed(peer_id: int)
+signal player_latejoined(peer_id: int)
+signal player_disconnected(peer_id: int)
+
 enum MatchState {
 	IN_LOBBY,
 	IN_GAME,
 }
-enum TGameMode { FREE_FROAM, STREET_RACE, STUNT_RACE, TRACK_RACE }
+enum TGameMode { FREE_FROAM, STREET_RACE, STUNT_RACE, TUTORIAL }
 
 @export var menu_manager: MenuManager
 @export var settings_manager: SettingsManager
@@ -18,29 +23,35 @@ enum TGameMode { FREE_FROAM, STREET_RACE, STUNT_RACE, TRACK_RACE }
 
 @export var free_roam_mode: FreeRoamGameMode
 @export var street_race_mode: StreetRaceGameMode
+@export var tutorial_mode: TutorialGameMode
 
 var match_state: MatchState = MatchState.IN_LOBBY
 var current_game_mode: TGameMode = TGameMode.FREE_FROAM
 var current_level_name: LevelManager.LevelName = LevelManager.LevelName.LEVEL_SELECT_LABEL
 
-var _gamemode_map: Dictionary[TGameMode,GameMode] = {
-	TGameMode.FREE_FROAM: free_roam_mode, TGameMode.STREET_RACE: street_race_mode
-}
+var _gamemode_map: Dictionary[TGameMode,GameMode] = {}
+var _respawn_delay: float = 3.0
 
 
 func _ready():
 	if Engine.is_editor_hint():
 		return
+
+	_gamemode_map = {
+		TGameMode.FREE_FROAM: free_roam_mode,
+		TGameMode.STREET_RACE: street_race_mode,
+		TGameMode.TUTORIAL: tutorial_mode,
+	}
+
+	# Wire spawn_manager into gamemodes
+	for mode in _gamemode_map.values():
+		mode.spawn_manager = spawn_manager
+		mode.gamemode_manager = self
+
 	connection_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
 	connection_manager.player_connected.connect(_on_player_connected)
 	connection_manager.player_disconnected.connect(_on_player_disconnected)
-
-
-func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
-	if Engine.is_editor_hint():
-		return
-	## Call current gamemode's tick
-	_gamemode_map[current_game_mode].on_movement_rollback_tick(delta)
+	spawn_manager.player_spawned.connect(_on_player_spawned)
 
 
 ## Called by server to start the game for all players
@@ -62,17 +73,35 @@ func end_game():
 	audio_manager.stop_all()
 
 
+func _on_player_spawned(player: PlayerEntity):
+	if !multiplayer.is_server():
+		return
+	player_spawned.emit(player.name)  # TODO - verify
+	player.crashed.connect(_on_player_crashed)
+
+
+func _on_player_crashed(peer_id: int):
+	if !multiplayer.is_server():
+		return
+	player_crashed.emit(peer_id)
+	get_tree().create_timer(_respawn_delay).timeout.connect(
+		func(): spawn_manager.respawn_player.rpc(peer_id), CONNECT_ONE_SHOT
+	)
+
+
 #region network handlers
-func _on_player_connected(peer_id: int):
-	_on_client_connection_succeeded(peer_id)
-
-
 func _on_player_disconnected(peer_id: int):
 	if !multiplayer.is_server():
 		return
 
+	player_disconnected.emit(peer_id)
+
 	if match_state == MatchState.IN_GAME:
 		spawn_manager.rpc_despawn_player.rpc(peer_id)
+
+
+func _on_player_connected(peer_id: int):
+	_on_client_connection_succeeded(peer_id)
 
 
 func _on_client_connection_succeeded(peer_id: int):
@@ -106,6 +135,8 @@ func _sync_game_to_late_joiner(level_name: LevelManager.LevelName):
 func _request_late_spawn(peer_id: int):
 	if !multiplayer.is_server():
 		return
+
+	player_latejoined.emit(peer_id)
 
 	# Spawn the new player for everyone
 	var player_def: PlayerDefinition = lobby_manager.lobby_players[peer_id]
@@ -143,5 +174,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("free_roam_mode must not be empty")
 	if street_race_mode == null:
 		issues.append("street_race_mode must not be empty")
+	if tutorial_mode == null:
+		issues.append("tutorial_mode must not be empty")
 
 	return issues

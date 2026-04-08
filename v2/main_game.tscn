@@ -28,6 +28,7 @@
 [ext_resource type="Script" uid="uid://cug5kob8cndk4" path="res://managers/spawn_manager.gd" id="21_euc45"]
 [ext_resource type="Script" uid="uid://yp4h0tghigit" path="res://managers/gamemodes/free_roam/free_roam_gamemode.gd" id="25_6krrg"]
 [ext_resource type="Script" uid="uid://5xa3xuln57nw" path="res://managers/gamemodes/street_race/street_race_gamemode.gd" id="26_8slmw"]
+[ext_resource type="Script" uid="uid://2sjea5ct6un7" path="res://managers/gamemodes/tutorial/tutorial_gamemode.gd" id="27_8slmw"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("1_1oj5k")
@@ -161,7 +162,7 @@ script = ExtResource("19_wt57k")
 default_player_definition = ExtResource("20_pk5u2")
 metadata/_custom_type_script = "uid://didbm7t5dal30"
 
-[node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "spawn_manager", "audio_manager", "input_state_manager", "free_roam_mode", "street_race_mode") groups=["Managers"]]
+[node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "spawn_manager", "audio_manager", "input_state_manager", "free_roam_mode", "street_race_mode", "tutorial_mode") groups=["Managers"]]
 script = ExtResource("18_ih6an")
 menu_manager = NodePath("../MenuManager")
 settings_manager = NodePath("../SettingsManager")
@@ -173,12 +174,20 @@ audio_manager = NodePath("../AudioManager")
 input_state_manager = NodePath("../InputStateManager")
 free_roam_mode = NodePath("FreeRoamGameMode")
 street_race_mode = NodePath("StreetRaceGameMode")
+tutorial_mode = NodePath("TutorialGameMode")
 
-[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager" unique_id=989468386]
+[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager" unique_id=989468386 node_paths=PackedStringArray("gamemode_manager")]
 script = ExtResource("25_6krrg")
+gamemode_manager = NodePath("..")
 
-[node name="StreetRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager" unique_id=1858784240]
+[node name="StreetRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager" unique_id=1858784240 node_paths=PackedStringArray("gamemode_manager")]
 script = ExtResource("26_8slmw")
+gamemode_manager = NodePath("..")
+
+[node name="TutorialGameMode" type="Node" parent="ManagerManager/GamemodeManager" unique_id=1184474950 node_paths=PackedStringArray("gamemode_manager")]
+script = ExtResource("27_8slmw")
+gamemode_manager = NodePath("..")
+metadata/_custom_type_script = "uid://2sjea5ct6un7"
 
 [node name="AudioManager" parent="ManagerManager" unique_id=625309404 node_paths=PackedStringArray("settings_manager") instance=ExtResource("20_2i4tw")]
 settings_manager = NodePath("../SettingsManager")
