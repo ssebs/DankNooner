@@ -176,17 +176,20 @@ free_roam_mode = NodePath("FreeRoamGameMode")
 street_race_mode = NodePath("StreetRaceGameMode")
 tutorial_mode = NodePath("TutorialGameMode")
 
-[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager" unique_id=989468386 node_paths=PackedStringArray("gamemode_manager")]
+[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager" unique_id=989468386 node_paths=PackedStringArray("gamemode_manager", "spawn_manager")]
 script = ExtResource("25_6krrg")
 gamemode_manager = NodePath("..")
+spawn_manager = NodePath("../../SpawnManager")
 
-[node name="StreetRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager" unique_id=1858784240 node_paths=PackedStringArray("gamemode_manager")]
+[node name="StreetRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager" unique_id=1858784240 node_paths=PackedStringArray("gamemode_manager", "spawn_manager")]
 script = ExtResource("26_8slmw")
 gamemode_manager = NodePath("..")
+spawn_manager = NodePath("../../SpawnManager")
 
-[node name="TutorialGameMode" type="Node" parent="ManagerManager/GamemodeManager" unique_id=1184474950 node_paths=PackedStringArray("gamemode_manager")]
+[node name="TutorialGameMode" type="Node" parent="ManagerManager/GamemodeManager" unique_id=1184474950 node_paths=PackedStringArray("gamemode_manager", "spawn_manager")]
 script = ExtResource("27_8slmw")
 gamemode_manager = NodePath("..")
+spawn_manager = NodePath("../../SpawnManager")
 metadata/_custom_type_script = "uid://2sjea5ct6un7"
 
 [node name="AudioManager" parent="ManagerManager" unique_id=625309404 node_paths=PackedStringArray("settings_manager") instance=ExtResource("20_2i4tw")]
