@@ -1,0 +1,88 @@
+[gd_scene format=3 uid="uid://b5warr5dox3bd"]
+
+[ext_resource type="Script" uid="uid://brhiom1lagj80" path="res://managers/gamemodes/hud/game_mode_hud.gd" id="1_65m1f"]
+[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="1_itqmu"]
+[ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="3_ett1j"]
+
+[node name="GameModeHUD" type="Control" unique_id=844708804]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_itqmu")
+script = ExtResource("1_65m1f")
+
+[node name="AspectContainer" type="AspectRatioContainer" parent="." unique_id=1070923131]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+ratio = 1.778
+
+[node name="MarginContainer" type="MarginContainer" parent="AspectContainer" unique_id=241509155]
+layout_mode = 2
+theme = ExtResource("1_itqmu")
+theme_override_constants/margin_left = 128
+theme_override_constants/margin_top = 128
+theme_override_constants/margin_right = 128
+theme_override_constants/margin_bottom = 128
+
+[node name="PanelContainer" type="PanelContainer" parent="AspectContainer/MarginContainer" unique_id=600253178]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("3_ett1j")
+
+[node name="MarginContainer2" type="MarginContainer" parent="AspectContainer/MarginContainer/PanelContainer" unique_id=1556726122]
+layout_mode = 2
+theme = ExtResource("1_itqmu")
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 64
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 64
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="AspectContainer/MarginContainer/PanelContainer/MarginContainer2" unique_id=1799834661]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="GamemodeName" type="Label" parent="AspectContainer/MarginContainer/PanelContainer/MarginContainer2/VBoxContainer2" unique_id=1622990918]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_type_variation = &"Heading1Label"
+text = "GAMEMODE_LABEL"
+
+[node name="GamemodeDesc" type="Label" parent="AspectContainer/MarginContainer/PanelContainer/MarginContainer2/VBoxContainer2" unique_id=564594915]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_type_variation = &"Heading2Label"
+text = "GAMEMODE_LABEL"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AspectContainer/MarginContainer/PanelContainer/MarginContainer2" unique_id=1174846257]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_constants/separation = 32
+
+[node name="SubmitBtn" type="Button" parent="AspectContainer/MarginContainer/PanelContainer/MarginContainer2/HBoxContainer" unique_id=817092111]
+unique_name_in_owner = true
+layout_mode = 2
+text = "START_LABEL"
+
+[node name="CloseBtn" type="Button" parent="AspectContainer/MarginContainer/PanelContainer/MarginContainer2/HBoxContainer" unique_id=557344837]
+unique_name_in_owner = true
+layout_mode = 2
+text = "CLOSE_LABEL"
+
+[node name="BGTint" type="ColorRect" parent="AspectContainer/MarginContainer" unique_id=1690127899]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+color = Color(0, 0, 0, 0.78431374)
