@@ -1,7 +1,9 @@
 @tool
 class_name GamemodeManager extends BaseManager
 
+## connected to player_crashed
 signal player_spawned(peer_id: int)
+## connected to player_spawned
 signal player_crashed(peer_id: int)
 signal player_latejoined(peer_id: int)
 signal player_disconnected(peer_id: int)
@@ -21,6 +23,8 @@ enum TGameMode { FREE_FROAM, STREET_RACE, STUNT_RACE, TUTORIAL }
 @export var audio_manager: AudioManager
 @export var input_state_manager: InputStateManager
 
+@export var state_machine: StateMachine
+
 @export var free_roam_mode: FreeRoamGameMode
 @export var street_race_mode: StreetRaceGameMode
 @export var tutorial_mode: TutorialGameMode
@@ -30,7 +34,6 @@ var current_game_mode: TGameMode = TGameMode.FREE_FROAM
 var current_level_name: LevelManager.LevelName = LevelManager.LevelName.LEVEL_SELECT_LABEL
 
 var _gamemode_map: Dictionary[TGameMode,GameMode] = {}
-var _respawn_delay: float = 3.0
 
 
 func _ready():
@@ -56,9 +59,6 @@ func start_game(level_name: LevelManager.LevelName):
 	match_state = MatchState.IN_GAME
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
 
-	current_game_mode = TGameMode.FREE_FROAM
-	spawn_manager.spawn_all_players()  # TODO - use actual game mode to spawn!
-
 
 ## Called when returning to lobby
 func end_game():
@@ -66,6 +66,20 @@ func end_game():
 	current_level_name = LevelManager.LevelName.LEVEL_SELECT_LABEL
 
 	audio_manager.stop_all()
+
+
+## Actually tell spawn manager to spawn all players in lobby_manager, RPC around
+func latespawn_player(peer_id: int):
+	# Spawn the new player for everyone
+	var player_def: PlayerDefinition = lobby_manager.lobby_players[peer_id]
+	spawn_manager.rpc_spawn_player.rpc(peer_id, player_def.to_dict())
+
+	# Send existing players to the late-joiner
+	for existing_id in lobby_manager.lobby_players:
+		if existing_id == peer_id:
+			continue
+		var existing_player_def: PlayerDefinition = lobby_manager.lobby_players[existing_id]
+		spawn_manager.rpc_spawn_player.rpc_id(peer_id, existing_id, existing_player_def.to_dict())
 
 
 func _on_player_spawned(player: PlayerEntity):
@@ -79,9 +93,6 @@ func _on_player_crashed(peer_id: int):
 	if !multiplayer.is_server():
 		return
 	player_crashed.emit(peer_id)
-	get_tree().create_timer(_respawn_delay).timeout.connect(
-		func(): spawn_manager.respawn_player.rpc(peer_id), CONNECT_ONE_SHOT
-	)
 
 
 #region network handlers
@@ -90,9 +101,6 @@ func _on_player_disconnected(peer_id: int):
 		return
 
 	player_disconnected.emit(peer_id)
-
-	if match_state == MatchState.IN_GAME:
-		spawn_manager.rpc_despawn_player.rpc(peer_id)
 
 
 func _on_player_connected(peer_id: int):
@@ -133,17 +141,6 @@ func _request_late_spawn(peer_id: int):
 
 	player_latejoined.emit(peer_id)
 
-	# Spawn the new player for everyone
-	var player_def: PlayerDefinition = lobby_manager.lobby_players[peer_id]
-	spawn_manager.rpc_spawn_player.rpc(peer_id, player_def.to_dict())
-
-	# Send existing players to the late-joiner
-	for existing_id in lobby_manager.lobby_players:
-		if existing_id == peer_id:
-			continue
-		var existing_player_def: PlayerDefinition = lobby_manager.lobby_players[existing_id]
-		spawn_manager.rpc_spawn_player.rpc_id(peer_id, existing_id, existing_player_def.to_dict())
-
 
 #endregion
 
@@ -171,5 +168,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("street_race_mode must not be empty")
 	if tutorial_mode == null:
 		issues.append("tutorial_mode must not be empty")
+	if state_machine == null:
+		issues.append("state_machine must not be empty")
 
 	return issues
