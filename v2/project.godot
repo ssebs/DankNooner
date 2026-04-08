@@ -227,8 +227,8 @@ locale/translations=PackedStringArray("res://localization/localization.en.transl
 [netfox]
 
 logging/log_level=4
-logging/netfox_noray_log_level=4
 logging/netfox_log_level=4
+logging/netfox_noray_log_level=4
 
 [physics]
 

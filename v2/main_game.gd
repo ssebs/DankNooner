@@ -10,6 +10,9 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 
+	if OS.has_feature("web"):
+		ProjectSettings.set_setting("netfox/time/tickrate", 20)
+
 	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
 	settings_manager.setting_updated.connect(_on_setting_updated)
 
