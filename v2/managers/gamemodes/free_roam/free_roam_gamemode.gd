@@ -1,6 +1,8 @@
 @tool
 class_name FreeRoamGameMode extends GameMode
 
+@export var game_mode_event_confirm_hud: GameModeEventConfirmHUD
+
 var _respawn_delay: float = 3.0
 
 
@@ -9,7 +11,7 @@ func Enter(_state_context: StateContext):
 		return
 
 	gamemode_manager.current_game_mode = GamemodeManager.TGameMode.FREE_FROAM
-	print("FreeRoam")
+	DebugUtils.DebugMsg("FreeRoam Mode")
 
 	gamemode_manager.player_crashed.connect(_on_player_crashed)
 	gamemode_manager.player_disconnected.connect(_on_player_disconnected)
@@ -67,3 +69,12 @@ func _on_player_latejoined(peer_id: int):
 func _on_player_disconnected(peer_id: int):
 	if gamemode_manager.match_state == GamemodeManager.MatchState.IN_GAME:
 		spawn_manager.rpc_despawn_player.rpc(peer_id)
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var issues = []
+
+	if game_mode_event_confirm_hud == null:
+		issues.append("game_mode_event_confirm_hud must not be empty")
+
+	return issues

@@ -1,10 +1,10 @@
-[gd_scene format=3 uid="uid://b5warr5dox3bd"]
+[gd_scene format=3 uid="uid://dr5dms10u4b2o"]
 
-[ext_resource type="Script" uid="uid://brhiom1lagj80" path="res://managers/gamemodes/hud/game_mode_hud.gd" id="1_65m1f"]
+[ext_resource type="Script" uid="uid://bgj1pegnomj3n" path="res://managers/gamemodes/hud/game_mode_event_confirm_hud.gd" id="1_65m1f"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="1_itqmu"]
 [ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="3_ett1j"]
 
-[node name="GameModeHUD" type="Control" unique_id=844708804]
+[node name="GameModeEventConfirmHUD" type="Control" unique_id=844708804]
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
@@ -55,7 +55,6 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_type_variation = &"Heading1Label"
-text = "GAMEMODE_LABEL"
 
 [node name="GamemodeDesc" type="Label" parent="AspectContainer/MarginContainer/PanelContainer/MarginContainer2/VBoxContainer2" unique_id=564594915]
 unique_name_in_owner = true
@@ -63,7 +62,6 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_type_variation = &"Heading2Label"
-text = "GAMEMODE_LABEL"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="AspectContainer/MarginContainer/PanelContainer/MarginContainer2" unique_id=1174846257]
 layout_mode = 2
