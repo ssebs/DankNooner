@@ -43,7 +43,10 @@ func _on_lobby_players_updated(players: Dictionary):
 		return
 
 	for peer_id in players:
+		# Player may not be spawned yet during late-join sync — skip is intentional
 		var player := _get_player_by_peer_id(peer_id)
+		if player == null:
+			continue
 		player.update_skins(players[peer_id].bike_skin, players[peer_id].character_skin)
 
 
