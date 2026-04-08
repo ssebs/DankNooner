@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://fohtho5rqpxo"]
 
 [ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="1_p7spx"]
-[ext_resource type="Script" uid="uid://d2naekejlkomd" path="res://menus/out_of_game/lobby_menu/player_list_item.gd" id="1_vlnsy"]
+[ext_resource type="Script" uid="uid://d2naekejlkomd" path="res://menus/lobby_menu/player_list_item.gd" id="1_vlnsy"]
 [ext_resource type="Texture2D" uid="uid://cwf7vhr6hpjoj" path="res://resources/img/Logos/Logo.svg" id="2_vlnsy"]
 [ext_resource type="FontFile" uid="uid://tyej4l632h7k" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-Regular.ttf" id="4_fp5ot"]
 
