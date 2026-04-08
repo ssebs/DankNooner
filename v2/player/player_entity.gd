@@ -3,7 +3,10 @@
 ## audio_manager & username
 class_name PlayerEntity extends CharacterBody3D
 
+## Used for internals
 signal respawned(peer_id: int)
+
+## Used for GameMode
 # signal crashed(peer_id: int)
 # signal trick_started(peer_id: int, trick_type: int)
 # signal trick_ended(peer_id: int, trick_type: int)
