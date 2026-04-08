@@ -39,6 +39,7 @@ func _ready():
 func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
 	if Engine.is_editor_hint():
 		return
+	## Call current gamemode's tick
 	_gamemode_map[current_game_mode].on_movement_rollback_tick(delta)
 
 
