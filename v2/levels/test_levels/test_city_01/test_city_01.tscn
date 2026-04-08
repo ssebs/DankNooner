@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_qt85o"]
 [ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://levels/components/event_start_circle.tscn" id="3_ffs5v"]
+[ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://resources/events/gamemode_event.gd" id="4_dr5sf"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="17_cf4ia"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2lumj"]
@@ -18,6 +19,11 @@ tonemap_mode = 2
 glow_enabled = true
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_qt85o"]
+
+[sub_resource type="Resource" id="Resource_asds5"]
+script = ExtResource("4_dr5sf")
+name = "Tutorial: Moto 101"
+metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [node name="Test_City_01" type="Node3D" unique_id=721643000 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug")]
 script = ExtResource("1_qt85o")
@@ -1595,5 +1601,6 @@ height = 20.0
 depth = 200.0
 color_preset = 4
 
-[node name="EventStartCircle" parent="." unique_id=1014716352 instance=ExtResource("3_ffs5v")]
+[node name="EventStartCircle" parent="." unique_id=1014716352 groups=["EventCircles"] instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 88, 0, 91)
+gamemode_event = SubResource("Resource_asds5")
