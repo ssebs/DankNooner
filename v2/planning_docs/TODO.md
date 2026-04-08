@@ -6,8 +6,6 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] disable current option when using help / controls menu, change type to radio/toggle
-
 - [ ] Redo movement_controller
 
   - [x] Improve RPM Blending
@@ -315,6 +313,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] disable current option when using help / controls menu, change type to radio/toggle
 
 - [x] Basic show controls UI
 
