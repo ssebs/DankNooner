@@ -58,6 +58,7 @@ func start_game(level_name: LevelManager.LevelName):
 	current_level_name = level_name
 	match_state = MatchState.IN_GAME
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
+	state_machine.request_state_change(free_roam_mode)
 
 
 ## Called when returning to lobby

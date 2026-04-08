@@ -177,9 +177,8 @@ free_roam_mode = NodePath("StateMachine/FreeRoamGameMode")
 street_race_mode = NodePath("StateMachine/StreetRaceGameMode")
 tutorial_mode = NodePath("StateMachine/TutorialGameMode")
 
-[node name="StateMachine" type="Node" parent="ManagerManager/GamemodeManager" unique_id=445664816 node_paths=PackedStringArray("initial_state")]
+[node name="StateMachine" type="Node" parent="ManagerManager/GamemodeManager" unique_id=445664816]
 script = ExtResource("4_6bm6p")
-initial_state = NodePath("FreeRoamGameMode")
 metadata/_custom_type_script = "uid://ba7kyb4p3trb1"
 
 [node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("gamemode_manager", "spawn_manager")]
