@@ -223,6 +223,7 @@ locale/translations=PackedStringArray("res://localization/localization.en.transl
 
 3d_physics/layer_2="crash_collision"
 3d_physics/layer_3="ragdoll_bones"
+3d_physics/layer_4="event_start"
 
 [netfox]
 

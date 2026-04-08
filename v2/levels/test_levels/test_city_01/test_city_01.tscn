@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dyrrl34ljb2yd"]
 
 [ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_qt85o"]
+[ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://levels/components/event_start_circle.tscn" id="3_ffs5v"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="17_cf4ia"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2lumj"]
@@ -1593,3 +1594,6 @@ collision_layer = 3
 height = 20.0
 depth = 200.0
 color_preset = 4
+
+[node name="EventStartCircle" parent="." unique_id=1014716352 instance=ExtResource("3_ffs5v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 88, 0, 91)

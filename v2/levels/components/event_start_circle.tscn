@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://hxxsuaaohfd7"]
+
+[ext_resource type="Script" uid="uid://0i4uny3m27jm" path="res://levels/components/event_start_circle.gd" id="1_3ysdx"]
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_mvmlf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2lumj"]
+transparency = 1
+albedo_color = Color(0.9440789, 0.44619766, 1.0851281, 0.615)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_2lumj"]
+material = SubResource("StandardMaterial3D_2lumj")
+top_radius = 4.0
+bottom_radius = 4.0
+height = 8.0
+radial_segments = 16
+rings = 1
+cap_top = false
+cap_bottom = false
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_3ysdx"]
+radius = 4.0
+
+[node name="EventStartCircle" type="Area3D" unique_id=459761741]
+collision_layer = 8
+script = ExtResource("1_3ysdx")
+
+[node name="Cyl" type="MeshInstance3D" parent="." unique_id=394970070]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.05, 0)
+mesh = SubResource("CylinderMesh_2lumj")
+
+[node name="Floor" parent="." unique_id=1485126779 instance=ExtResource("1_mvmlf")]
+width = 12.0
+height = 0.1
+depth = 12.0
+color_preset = 5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=703346514]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
+shape = SubResource("CylinderShape3D_3ysdx")
