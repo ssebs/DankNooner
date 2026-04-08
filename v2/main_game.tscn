@@ -28,6 +28,7 @@
 [ext_resource type="Script" uid="uid://cug5kob8cndk4" path="res://managers/spawn_manager.gd" id="21_euc45"]
 [ext_resource type="Script" uid="uid://yp4h0tghigit" path="res://managers/gamemodes/free_roam/free_roam_gamemode.gd" id="25_6krrg"]
 [ext_resource type="Script" uid="uid://5xa3xuln57nw" path="res://managers/gamemodes/street_race/street_race_gamemode.gd" id="26_8slmw"]
+[ext_resource type="PackedScene" uid="uid://b5warr5dox3bd" path="res://managers/gamemodes/hud/game_mode_hud.tscn" id="26_u7wvl"]
 [ext_resource type="Script" uid="uid://2sjea5ct6un7" path="res://managers/gamemodes/tutorial/tutorial_gamemode.gd" id="27_8slmw"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
@@ -185,6 +186,8 @@ metadata/_custom_type_script = "uid://ba7kyb4p3trb1"
 script = ExtResource("25_6krrg")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
+
+[node name="GameModeHUD" parent="ManagerManager/GamemodeManager/StateMachine/FreeRoamGameMode" unique_id=844708804 instance=ExtResource("26_u7wvl")]
 
 [node name="TutorialGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1184474950 node_paths=PackedStringArray("gamemode_manager", "spawn_manager")]
 script = ExtResource("27_8slmw")
