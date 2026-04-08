@@ -5,7 +5,7 @@ enum MatchState {
 	IN_LOBBY,
 	IN_GAME,
 }
-enum GameMode { FREE_FROAM, STREET_RACE, STUNT_RACE, TRACK_RACE }
+enum TGameMode { FREE_FROAM, STREET_RACE, STUNT_RACE, TRACK_RACE }
 
 @export var menu_manager: MenuManager
 @export var settings_manager: SettingsManager
@@ -16,9 +16,16 @@ enum GameMode { FREE_FROAM, STREET_RACE, STUNT_RACE, TRACK_RACE }
 @export var audio_manager: AudioManager
 @export var input_state_manager: InputStateManager
 
+@export var free_roam_mode: FreeRoamGameMode
+@export var street_race_mode: StreetRaceGameMode
+
 var match_state: MatchState = MatchState.IN_LOBBY
-var game_mode: GameMode = GameMode.FREE_FROAM
+var current_game_mode: TGameMode = TGameMode.FREE_FROAM
 var current_level_name: LevelManager.LevelName = LevelManager.LevelName.LEVEL_SELECT_LABEL
+
+var _gamemode_map: Dictionary[TGameMode,GameMode] = {
+	TGameMode.FREE_FROAM: free_roam_mode, TGameMode.STREET_RACE: street_race_mode
+}
 
 
 func _ready():
@@ -29,6 +36,12 @@ func _ready():
 	connection_manager.player_disconnected.connect(_on_player_disconnected)
 
 
+func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
+	if Engine.is_editor_hint():
+		return
+	_gamemode_map[current_game_mode].on_movement_rollback_tick(delta)
+
+
 ## Called by server to start the game for all players
 @rpc("call_local", "reliable")
 func start_game(level_name: LevelManager.LevelName):
@@ -36,6 +49,7 @@ func start_game(level_name: LevelManager.LevelName):
 	match_state = MatchState.IN_GAME
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
 
+	current_game_mode = TGameMode.FREE_FROAM
 	spawn_manager.spawn_all_players()  # TODO - use actual game mode to spawn!
 
 
@@ -67,6 +81,7 @@ func _on_client_connection_succeeded(peer_id: int):
 	DebugUtils.DebugMsg("_on_client_connection_succeeded %s" % peer_id)
 
 	if match_state == MatchState.IN_GAME:
+		# TODO - depend on gamemode
 		_sync_game_to_late_joiner.rpc_id(peer_id, current_level_name)
 
 
@@ -123,5 +138,9 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_state_manager must not be empty")
 	if spawn_manager == null:
 		issues.append("spawn_manager must not be empty")
+	if free_roam_mode == null:
+		issues.append("free_roam_mode must not be empty")
+	if street_race_mode == null:
+		issues.append("street_race_mode must not be empty")
 
 	return issues

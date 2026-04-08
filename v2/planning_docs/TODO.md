@@ -6,6 +6,8 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
+- [ ] Move respawn logic to gamemode controller, using new signals
+
 - [ ] Mission System
 
   - [ ] e.g. tutorial -
@@ -69,7 +71,6 @@
     - [ ] crashing into player => both should be affected
   - [ ] Swap to rigidbody, make bounding box of mesh & apply velocity to bike & collision
   - [ ] Emit signals to gamemode controller
-  - [ ] Move respawn logic to gamemode controller, using new signals
 
 - [ ] Review Animation Controller & Create animations
 
