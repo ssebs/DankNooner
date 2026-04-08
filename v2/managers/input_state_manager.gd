@@ -30,7 +30,10 @@ var is_mobile := false
 func _ready():
 	add_to_group(UtilsConstants.GROUPS["InputStateManager"], true)
 
-	if OS.has_feature("mobile") or debug_mobile:
+	if (
+		(OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios"))
+		or debug_mobile
+	):
 		is_mobile = true
 
 
