@@ -15,16 +15,23 @@ enum InputState {
 
 @export var menu_manager: MenuManager
 
+# @export var debug_mobile := true
+@export var debug_mobile := false
+
 var current_input_state = InputState.IN_MENU:
 	set(val):
 		current_input_state = val
 		showhide_mouse_cursor()
 		input_state_changed.emit(val)
 
+var is_mobile := false
 
-#endregion
+
 func _ready():
 	add_to_group(UtilsConstants.GROUPS["InputStateManager"], true)
+
+	if OS.has_feature("mobile") or debug_mobile:
+		is_mobile = true
 
 
 func _input(event: InputEvent):
@@ -57,6 +64,7 @@ func showhide_mouse_cursor():
 		InputStateManager.InputState.IN_MENU, InputStateManager.InputState.IN_GAME_PAUSED:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		InputStateManager.InputState.IN_GAME, InputStateManager.InputState.DISABLED:
-			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+			if !is_mobile:
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 #endregion
