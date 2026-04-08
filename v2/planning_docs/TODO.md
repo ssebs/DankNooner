@@ -6,58 +6,23 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] Redo movement_controller
-
-  - [x] Improve RPM Blending
-  - [x] Launching off ramp kills speed
-  - [x] player can fly if leaning when launching off loop
-  - [x] Stop Wheelie-ing by riding then tapping clutch once will hold it perfectly
-  - [x] Super laggy when riding w/ friends
-    - [x] Rubber banding is crazy here
-  - [ ] 2 difficulties, arcade & sim. Sim grants 1.5x score
-    - [ ] arcade still has gear changes, no clutch except to start wheelie
-  - [x] WASD support
-  - [ ] Be able to reverse (play animation)
-    - [ ] Hold clutch, brake to reverse
-
-## Up Next (Finish POC MP Gameplay Demo) 📋
-
-- [ ] backflip landing is snappy, and always lands in wheelie/stoppie
-
-> POC = playable gamemodes w/ friends, see if core gameplay loop works
-> video record this once playing with everyone, save log files
-
-- [ ] Single player mission system
+- [ ] Mission System
 
   - [ ] e.g. tutorial -
     - [ ] Go to a marker in the map to start tutorial_01. If already completed, you can play it again.
     - [ ] Going to the mission start marker => shows list of missions. Can do tut1 or tut2, etc. Replay them from there
-
-- [ ] Trick Manager + tricks
-
-  - [ ] Move wheelie logic from movement controller
-  - [ ] trick system
-    - [ ] migrate wheelie / stoppie tricks
-    - [ ] ramp tricks
-    - [ ] ground tricks
-  - [x] trick detection in trick_controller
-  - [ ] trick scoring in separate script
-    - [ ] e.g. player emits trick_done & gamemode manager does something with it.
-      - [ ] e.g. race/freeroam => boost
-      - [ ] e.g. stunt race => combo counter
-  - [ ] Create wheelie + DOWN animation (wheelie + right hand touches ground)
-  - [ ] Create Heel clicker / other trick animations
-  - [ ] Land into wheelie / stoppie should be a trick
+  - [ ] Co-op:
+    - [ ] Host on 1 server, different tutorials put you on different parts of the map. each tutorial HUD / in game pointerts are local, no tutorial state is sent to server.
 
 - [ ] Basic tutorial
 
   - [ ] riding mechanics
   - [ ] use HUD overlay layer
 
-- [ ] Co-op mission system for core gameplay
+## Up Next (Finish POC MP Gameplay Demo) 📋
 
-  - [ ] See "Single player mission system"
-  - [ ] Host on 1 server, different tutorials put you on different parts of the map. each tutorial HUD / in game pointerts are local, no tutorial state is sent to server.
+> POC = playable gamemodes w/ friends, see if core gameplay loop works
+> video record this once playing with everyone, save log files
 
 - [ ] Basic core gameplay loop / implement gamemodes
 
@@ -76,19 +41,25 @@
       - [ ] Like hall of meat
   - [ ] Unlock Skins w/ Score from disk & spend
 
-- [ ] Improved (non-text) HUD
+- [ ] 2 difficulties, arcade & sim. Sim grants 1.5x score
+  - [ ] arcade still has gear changes, no clutch except to start wheelie
+- [ ] Be able to reverse (play animation)
+  - [ ] Hold clutch, brake to reverse
+- [ ] Trick Manager + tricks
 
-  - [ ] add rpm guage from pics
-  - [ ] Overlay layer for tutorial
-  - Ideas:
-    - In-world UI
-    - Bottom right has guages like IRL bike (analog)
-    - Center has guages like TFT (digital)
-    - Grip / danger:
-      - Bottom, wide red line
-      - Red overlay like COD dmg
-      - Guages have red overlay & change size
-    - Mini Map? or Compass w/ arrow
+  - [ ] Move wheelie logic from movement controller
+  - [ ] trick system
+    - [ ] migrate wheelie / stoppie tricks
+    - [ ] ramp tricks
+    - [ ] ground tricks
+  - [x] trick detection in trick_controller
+  - [ ] trick scoring in separate script
+    - [ ] e.g. player emits trick_done & gamemode manager does something with it.
+      - [ ] e.g. race/freeroam => boost
+      - [ ] e.g. stunt race => combo counter
+  - [ ] Create wheelie + DOWN animation (wheelie + right hand touches ground)
+  - [ ] Create Heel clicker / other trick animations
+  - [ ] Land into wheelie / stoppie should be a trick
 
 - [ ] Improve CrashController
 
@@ -111,6 +82,7 @@
   - [ ] Create stopped/idle animation
   - [ ] Create wheelie/stoppie animation
   - [ ] Add pull/lean back animation when starting a wheelie
+  - [ ] backflip landing is snappy, and always lands in wheelie/stoppie
   - [ ] wheelie turning animation should be different, should yaw
   - [x] claude created a system
   - [x] Review planning_docs/AnimationController.md
@@ -153,7 +125,6 @@
       - [ ] Choose a bike skin
       - [ ] Choose a character skin
 
-- [ ] find hook for dank nooner, what makes it cool!
 - [ ] Review webrtc gen code for security
 - [ ] More audio
 
@@ -169,7 +140,6 @@
 
 - [ ] Android setup keystore & add to github secrets & enable in build.yml
 
-- [ ] touchscreen controls for mobile
 - [ ] https://docs.discord.com/developers/resources/invite
 - [ ] Slow down time when launching off ramps to do tricks - client side somehow?
 
@@ -287,6 +257,8 @@
 
 ## Polish / Bugs
 
+- [ ] find hook for dank nooner, what makes it cool!
+
 - [ ] broken back button via: play => lobby => back => customize => back
 
 - [ ] back from lobby => customize goes to play menu instead of lobby menu
@@ -313,6 +285,32 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Improved (non-text) HUD
+
+  - [x] add rpm guage from pics
+  - [x] Overlay layer for tutorial
+  - Ideas:
+    - In-world UI
+    - Bottom right has guages like IRL bike (analog)
+    - Center has guages like TFT (digital)
+    - Grip / danger:
+      - Bottom, wide red line
+      - Red overlay like COD dmg
+      - Guages have red overlay & change size
+    - Mini Map? or Compass w/ arrow
+
+- [x] touchscreen controls for mobile
+
+- [x] Redo movement_controller
+
+  - [x] Improve RPM Blending
+  - [x] Launching off ramp kills speed
+  - [x] player can fly if leaning when launching off loop
+  - [x] Stop Wheelie-ing by riding then tapping clutch once will hold it perfectly
+  - [x] Super laggy when riding w/ friends
+    - [x] Rubber banding is crazy here
+  - [x] WASD support
 
 - [x] disable current option when using help / controls menu, change type to radio/toggle
 
