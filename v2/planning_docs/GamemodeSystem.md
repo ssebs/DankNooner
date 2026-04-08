@@ -7,6 +7,7 @@
 - [x] Move respawn to gamemode manager
 - [x] Create Free Mode GameMode
 - [ ] Create Event system
+
   - [x] Gamemode manager
   - [x] Event Start Circle
   - [ ] Gamemode UI
@@ -14,6 +15,7 @@
   - [ ] Select event
   - [ ] Connect UI to gamemode & RPC
   - [ ] Start event
+
 - [ ] New menu type
   - [ ] Create loading inbetween screen
   - [ ] Create win/lose inbetween screen
