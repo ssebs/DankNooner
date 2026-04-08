@@ -43,11 +43,6 @@ func _ready():
 		TGameMode.TUTORIAL: tutorial_mode,
 	}
 
-	# Wire spawn_manager into gamemodes
-	for mode in _gamemode_map.values():
-		mode.spawn_manager = spawn_manager
-		mode.gamemode_manager = self
-
 	connection_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
 	connection_manager.player_connected.connect(_on_player_connected)
 	connection_manager.player_disconnected.connect(_on_player_disconnected)
