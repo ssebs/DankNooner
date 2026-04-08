@@ -6,20 +6,7 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [x] web mobile seems to crash? Spawn in with no controls hud or body
-- [ ] Android setup keystore & add to github secrets & enable in build.yml
 - [ ] disable current option when using help / controls menu, change type to radio/toggle
-- [ ] backflip landing is snappy, and always lands in wheelie/stoppie
-- [ ] Free play => back => host game broken, creates dupe multiplayer init
-- [ ] on clients:
-
-  - [ ] When crashing into something during a wheelie, you respawn broken.
-    - [ ] in half wheelie anim, without body
-    - [ ] "Crashed...respawning" in HUD
-  - [x] cant change gears after going from 1=>2
-
-- [ ] back from lobby => customize goes to play menu instead of lobby menu
-- [ ] broken back button via: play => lobby => back => customize => back
 
 - [ ] Redo movement_controller
 
@@ -31,14 +18,13 @@
     - [x] Rubber banding is crazy here
   - [ ] 2 difficulties, arcade & sim. Sim grants 1.5x score
     - [ ] arcade still has gear changes, no clutch except to start wheelie
-      - [ ] WASD support
+  - [x] WASD support
   - [ ] Be able to reverse (play animation)
     - [ ] Hold clutch, brake to reverse
-  - [ ] Code is AI gen - rewrite myself!
-
-- [ ] Basic show controls UI
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
+
+- [ ] backflip landing is snappy, and always lands in wheelie/stoppie
 
 > POC = playable gamemodes w/ friends, see if core gameplay loop works
 > video record this once playing with everyone, save log files
@@ -183,6 +169,8 @@
 
 ## Backlog
 
+- [ ] Android setup keystore & add to github secrets & enable in build.yml
+
 - [ ] touchscreen controls for mobile
 - [ ] https://docs.discord.com/developers/resources/invite
 - [ ] Slow down time when launching off ramps to do tricks - client side somehow?
@@ -301,6 +289,12 @@
 
 ## Polish / Bugs
 
+- [ ] broken back button via: play => lobby => back => customize => back
+
+- [ ] back from lobby => customize goes to play menu instead of lobby menu
+
+- [ ] Free play => back => host game broken, creates dupe multiplayer init
+
 - [ ] add to MenuState validation, somehow.
 
   - "Be sure to set return_state on Enter()!"
@@ -321,6 +315,17 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Basic show controls UI
+
+- [x] on clients:
+
+  - [ ] When crashing into something during a wheelie, you respawn broken.
+    - [ ] in half wheelie anim, without body
+    - [ ] "Crashed...respawning" in HUD
+  - [x] cant change gears after going from 1=>2
+
+- [x] web mobile seems to crash? Spawn in with no controls hud or body
 
 - [x] don't copy IP to clipboard if free play
 
