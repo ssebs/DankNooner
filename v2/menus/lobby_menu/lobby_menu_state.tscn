@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://bl26780k5sr"]
 
-[ext_resource type="Script" uid="uid://d3f7uthyd114r" path="res://menus/out_of_game/lobby_menu/lobby_menu_state.gd" id="1_1jh13"]
+[ext_resource type="Script" uid="uid://d3f7uthyd114r" path="res://menus/lobby_menu/lobby_menu_state.gd" id="1_1jh13"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_lphm8"]
 [ext_resource type="Texture2D" uid="uid://b4v2pgrppd0tq" path="res://resources/img/test_level_select_img.png" id="2_yu1h4"]
-[ext_resource type="Script" uid="uid://brx40gas5ijp5" path="res://menus/out_of_game/lobby_menu/level_select_ui.gd" id="4_jwemv"]
+[ext_resource type="Script" uid="uid://brx40gas5ijp5" path="res://menus/lobby_menu/level_select_ui.gd" id="4_jwemv"]
 [ext_resource type="Script" uid="uid://muodw5580tnr" path="res://addons/tattomoosa.spinner/spinner.gd" id="4_wpkl5"]
-[ext_resource type="Script" uid="uid://c0mme4m8qonki" path="res://menus/out_of_game/lobby_menu/player_list_ui.gd" id="6_qnklb"]
+[ext_resource type="Script" uid="uid://c0mme4m8qonki" path="res://menus/lobby_menu/player_list_ui.gd" id="6_qnklb"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lphm8"]
 content_margin_left = 12.0

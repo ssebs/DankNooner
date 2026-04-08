@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://x3ylknc7a413"]
 
-[ext_resource type="Script" uid="uid://b1lg4r4nesptx" path="res://menus/out_of_game/play_menu/play_menu_state.gd" id="1_cqw7y"]
+[ext_resource type="Script" uid="uid://b1lg4r4nesptx" path="res://menus/play_menu/play_menu_state.gd" id="1_cqw7y"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_rcsfi"]
 
 [node name="PlayMenuState" type="Node" unique_id=1827031507]

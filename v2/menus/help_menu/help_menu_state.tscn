@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c0bqe8cdfu540"]
 
-[ext_resource type="Script" uid="uid://bov8d0bxdald0" path="res://menus/in_game/help_menu/help_menu_state.gd" id="1_help"]
+[ext_resource type="Script" uid="uid://bov8d0bxdald0" path="res://menus/help_menu/help_menu_state.gd" id="1_help"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://vl827k4qolh6" path="res://resources/img/ControlsOverlay/GamepadControls.png" id="3_gamepad"]
 [ext_resource type="Texture2D" uid="uid://c6fvfgvumpue" path="res://resources/img/ControlsOverlay/KBMControls.png" id="4_kbm"]

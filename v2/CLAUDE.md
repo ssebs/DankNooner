@@ -135,8 +135,7 @@ See `Architecture.md` for detailed diagrams and RPC signatures.
 - `main_game.tscn` - root scene, composes all managers
 - `managers/` - all managers (`network/`, `gamemodes/` subdirs)
 - `player/` - PlayerEntity + `controllers/`
-- `menus/out_of_game/` - pre-game menus (lobby, customize, settings)
-- `menus/in_game/` - in-game overlays (pause, respawn)
+- `menus/` - menus (lobby, customize, settings, pause, respawn)
 - `levels/` - all levels extend `LevelDefinition`
 - `resources/` - `BikeSkinDefinition` / `CharacterSkinDefinition` `.tres` files
 - `utils/state_machine/` - base `State`, `StateMachine`, `StateContext` classes

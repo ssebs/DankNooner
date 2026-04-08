@@ -1,9 +1,8 @@
 @tool
 class_name PlayerListUI extends VBoxContainer
 
-@export var player_list_item_scene: PackedScene = preload(
-	"res://menus/out_of_game/lobby_menu/player_list_item.tscn"
-)
+@export
+var player_list_item_scene: PackedScene = preload("res://menus/lobby_menu/player_list_item.tscn")
 
 
 ## Update the player list UI from a dictionary of player_id -> PlayerDefinition

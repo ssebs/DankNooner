@@ -120,7 +120,7 @@ Levels are managed via `LevelManager` and selected through the `LobbyMenuState` 
 
 > Note - Level enum idx 0 is `LEVEL_SELECT_LABEL` (not a real level, used for dropdown default)
 
-- **LobbyMenuState** (`menus/out_of_game/lobby_menu/`) - Level selection UI
+- **LobbyMenuState** (`menus/lobby_menu/`) - Level selection UI
   - `LevelSelectBtn` (OptionButton) - Dropdown for level selection
   - `StartBtn` - Triggers level spawn
 

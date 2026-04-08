@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://tbsm4ckff72l"]
 
-[ext_resource type="Script" uid="uid://b6tnccpx0gwjg" path="res://menus/out_of_game/settings_menu/settings_menu_state.gd" id="1_hdace"]
+[ext_resource type="Script" uid="uid://b6tnccpx0gwjg" path="res://menus/settings_menu/settings_menu_state.gd" id="1_hdace"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_hdace"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hdace"]

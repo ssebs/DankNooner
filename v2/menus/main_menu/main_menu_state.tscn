@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ds8xwygeh5ykm"]
 
-[ext_resource type="Script" uid="uid://cv4bvroelqvpy" path="res://menus/out_of_game/main_menu/main_menu_state.gd" id="1_k7k4a"]
+[ext_resource type="Script" uid="uid://cv4bvroelqvpy" path="res://menus/main_menu/main_menu_state.gd" id="1_k7k4a"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_3qbku"]
 [ext_resource type="Texture2D" uid="uid://bucasypwld3mg" path="res://resources/img/Logos/DankNoonerLogo.png" id="2_k7k4a"]
 
@@ -100,4 +100,4 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
-text = "v0.0.42"
+text = "v0.0.43"
