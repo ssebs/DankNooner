@@ -2,6 +2,7 @@
 class_name FreeRoamGameMode extends GameMode
 
 @export var game_mode_event_confirm_hud: GameModeEventConfirmHUD
+@export var input_state_manager: InputStateManager
 
 var _respawn_delay: float = 3.0
 
@@ -36,12 +37,34 @@ func _signals_event_circles(should_connect: bool):
 
 func _on_event_circle_entered(peer_id: int, gamemode_event: GameModeEvent):
 	DebugUtils.DebugMsg("%d entered eventcircle: %s" % [peer_id, gamemode_event.name])
-	# TODO - show UI
+
+	game_mode_event_confirm_hud.set_gamemode_hud_and_show_ui(
+		gamemode_event.name, gamemode_event.description
+	)
+
+	game_mode_event_confirm_hud.hud_submitted.connect(_on_game_mode_event_confirm_hud_submitted)
+	game_mode_event_confirm_hud.hud_closed.connect(_on_game_mode_event_confirm_hud_closed)
+
+	# TODO - set player velocity to 0
+	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME_PAUSED
 
 
 func _on_event_circle_exited(peer_id: int, gamemode_event: GameModeEvent):
 	DebugUtils.DebugMsg("%d exited eventcircle: %s" % [peer_id, gamemode_event.name])
-	# TODO - hide UI
+
+	game_mode_event_confirm_hud.hud_submitted.disconnect(_on_game_mode_event_confirm_hud_submitted)
+	game_mode_event_confirm_hud.hud_closed.disconnect(_on_game_mode_event_confirm_hud_closed)
+
+	_on_game_mode_event_confirm_hud_closed()
+
+
+func _on_game_mode_event_confirm_hud_submitted():
+	DebugUtils.DebugMsg("Starting Event...")
+
+
+func _on_game_mode_event_confirm_hud_closed():
+	game_mode_event_confirm_hud.hide_ui()
+	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
 
 
 func Exit(_state_context: StateContext):
@@ -76,5 +99,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 	if game_mode_event_confirm_hud == null:
 		issues.append("game_mode_event_confirm_hud must not be empty")
+	if input_state_manager == null:
+		issues.append("input_state_manager must not be empty")
 
 	return issues

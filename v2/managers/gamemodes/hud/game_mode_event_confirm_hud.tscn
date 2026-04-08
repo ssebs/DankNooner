@@ -2,7 +2,25 @@
 
 [ext_resource type="Script" uid="uid://bgj1pegnomj3n" path="res://managers/gamemodes/hud/game_mode_event_confirm_hud.gd" id="1_65m1f"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="1_itqmu"]
-[ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="3_ett1j"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lg564"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0, 0, 0, 0.78431374)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.25490198, 0.6862745, 1, 1)
+border_blend = true
+corner_radius_top_left = 16
+corner_radius_top_right = 4
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 4
+expand_margin_left = 12.0
+expand_margin_right = 12.0
 
 [node name="GameModeEventConfirmHUD" type="Control" unique_id=844708804]
 unique_name_in_owner = true
@@ -27,14 +45,14 @@ ratio = 1.778
 [node name="MarginContainer" type="MarginContainer" parent="AspectContainer" unique_id=241509155]
 layout_mode = 2
 theme = ExtResource("1_itqmu")
-theme_override_constants/margin_left = 128
-theme_override_constants/margin_top = 128
-theme_override_constants/margin_right = 128
-theme_override_constants/margin_bottom = 128
+theme_override_constants/margin_left = 400
+theme_override_constants/margin_top = 256
+theme_override_constants/margin_right = 400
+theme_override_constants/margin_bottom = 256
 
 [node name="PanelContainer" type="PanelContainer" parent="AspectContainer/MarginContainer" unique_id=600253178]
 layout_mode = 2
-theme_override_styles/panel = ExtResource("3_ett1j")
+theme_override_styles/panel = SubResource("StyleBoxFlat_lg564")
 
 [node name="MarginContainer2" type="MarginContainer" parent="AspectContainer/MarginContainer/PanelContainer" unique_id=1556726122]
 layout_mode = 2
@@ -78,9 +96,3 @@ text = "START_LABEL"
 unique_name_in_owner = true
 layout_mode = 2
 text = "CLOSE_LABEL"
-
-[node name="BGTint" type="ColorRect" parent="AspectContainer/MarginContainer" unique_id=1690127899]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-color = Color(0, 0, 0, 0.78431374)

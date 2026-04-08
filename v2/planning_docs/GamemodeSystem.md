@@ -10,9 +10,10 @@
 
   - [x] Gamemode manager
   - [x] Event Start Circle
-  - [ ] Gamemode UI
-  - [ ] Use entered/exited event to show UI when entering circle
-  - [ ] Select event
+  - [x] Gamemode UI
+  - [x] Use entered/exited event to show UI when entering circle
+  - [ ] Set player velocity to 0
+  - [ ] Select event (start)
   - [ ] Connect UI to gamemode & RPC
   - [ ] Start event
 
