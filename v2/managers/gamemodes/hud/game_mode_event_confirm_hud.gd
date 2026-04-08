@@ -10,13 +10,9 @@ signal hud_submitted
 @onready var gm_name: Label = %GamemodeName
 @onready var gm_desc: Label = %GamemodeDesc
 
-var _gamemode_name: String
-var _gamemode_description: String
-
 
 func _ready():
-	gm_name.text = tr(_gamemode_name)
-	gm_desc.text = tr(_gamemode_description)
+	hide_ui()
 
 
 func show_ui():
@@ -27,13 +23,15 @@ func show_ui():
 
 func hide_ui():
 	self.hide()
-	submit_btn.pressed.disconnect(_on_submit_pressed)
-	close_btn.pressed.disconnect(_on_close_pressed)
+	if submit_btn.pressed.has_connections():
+		submit_btn.pressed.disconnect(_on_submit_pressed)
+	if close_btn.pressed.has_connections():
+		close_btn.pressed.disconnect(_on_close_pressed)
 
 
-func set_gamemode_hud_and_show(gamemode_name: String, gamemode_description: String):
-	_gamemode_name = gamemode_name
-	_gamemode_description = gamemode_description
+func set_gamemode_hud_and_show_ui(gamemode_name: String, gamemode_description: String):
+	gm_name.text = tr(gamemode_name)
+	gm_desc.text = tr(gamemode_description)
 	show_ui()
 
 
