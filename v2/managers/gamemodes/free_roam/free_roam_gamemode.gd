@@ -20,10 +20,11 @@ func Enter(_state_context: StateContext):
 	spawn_manager.spawn_all_players()
 
 
-func _signals_event_circles(connect: bool):
+## param is whether to connect() or disconnect()
+func _signals_event_circles(should_connect: bool):
 	for event_start_circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
 		event_start_circle = event_start_circle as EventStartCircle
-		if connect:
+		if should_connect:
 			event_start_circle.entered_event_circle.connect(_on_event_circle_entered)
 			event_start_circle.exited_event_circle.connect(_on_event_circle_exited)
 		else:
@@ -32,12 +33,12 @@ func _signals_event_circles(connect: bool):
 
 
 func _on_event_circle_entered(peer_id: int, gamemode_event: GameModeEvent):
-	pass
+	DebugUtils.DebugMsg("%d entered eventcircle: %s" % [peer_id, gamemode_event.name])
 	# TODO - show UI
 
 
 func _on_event_circle_exited(peer_id: int, gamemode_event: GameModeEvent):
-	pass
+	DebugUtils.DebugMsg("%d exited eventcircle: %s" % [peer_id, gamemode_event.name])
 	# TODO - hide UI
 
 

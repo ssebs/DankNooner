@@ -18,15 +18,15 @@ func _ready():
 	event_label.text = tr(gamemode_event.name)
 
 
-func _on_body_exited(body: Node3D):
-	if !body is PlayerEntity:
-		return
-	print(body.name + " exited start circle")
-	exited_event_circle.emit(body.name)
-
-
 func _on_body_entered(body: Node3D):
 	if !body is PlayerEntity:
 		return
-	print(body.name + " entered start circle")
-	entered_event_circle.emit(body.name)
+	# DebugUtils.DebugMsg(body.name + " entered start circle")
+	entered_event_circle.emit(int(body.name), gamemode_event)
+
+
+func _on_body_exited(body: Node3D):
+	if !body is PlayerEntity:
+		return
+	# DebugUtils.DebugMsg(body.name + " exited start circle")
+	exited_event_circle.emit(int(body.name), gamemode_event)
