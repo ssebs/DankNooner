@@ -6,7 +6,7 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] DN build failing Android & web mobile seems to crash? Spawn in with no controls hud or body
+- [x] web mobile seems to crash? Spawn in with no controls hud or body
 - [ ] don't copy IP to clipboard if free play
 - [ ] Android setup keystore & add to github secrets & enable in build.yml
 - [ ] disable current option when using help / controls menu, change type to radio/toggle
