@@ -6,8 +6,6 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] Move respawn logic to gamemode controller, using new signals
-- [ ] Pause => show lobby
 - [ ] Mission System
 
   - [ ] e.g. tutorial -
@@ -22,6 +20,8 @@
   - [ ] use HUD overlay layer
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
+
+- [ ] Pause => show lobby
 
 > POC = playable gamemodes w/ friends, see if core gameplay loop works
 > video record this once playing with everyone, save log files
@@ -286,6 +286,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [ ] Move respawn logic to gamemode controller, using new signals
 
 - [x] Improved (non-text) HUD
 
