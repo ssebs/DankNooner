@@ -1,8 +1,8 @@
 @tool
 class_name EventStartCircle extends Area3D
 
-signal entered_event(peer_id: int, gamemode_event: GameModeEvent)
-signal exited_event(peer_id: int, gamemode_event: GameModeEvent)
+signal entered_event_circle(peer_id: int, gamemode_event: GameModeEvent)
+signal exited_event_circle(peer_id: int, gamemode_event: GameModeEvent)
 
 ## TODO - show multiple events & be able to select them
 @export var gamemode_event: GameModeEvent
@@ -22,11 +22,11 @@ func _on_body_exited(body: Node3D):
 	if !body is PlayerEntity:
 		return
 	print(body.name + " exited start circle")
-	exited_event.emit(body.name)
+	exited_event_circle.emit(body.name)
 
 
 func _on_body_entered(body: Node3D):
 	if !body is PlayerEntity:
 		return
 	print(body.name + " entered start circle")
-	entered_event.emit(body.name)
+	entered_event_circle.emit(body.name)

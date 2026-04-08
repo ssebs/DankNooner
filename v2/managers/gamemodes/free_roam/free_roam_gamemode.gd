@@ -15,7 +15,30 @@ func Enter(_state_context: StateContext):
 	gamemode_manager.player_disconnected.connect(_on_player_disconnected)
 	gamemode_manager.player_latejoined.connect(_on_player_latejoined)
 
+	_signals_event_circles(true)
+
 	spawn_manager.spawn_all_players()
+
+
+func _signals_event_circles(connect: bool):
+	for event_start_circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
+		event_start_circle = event_start_circle as EventStartCircle
+		if connect:
+			event_start_circle.entered_event_circle.connect(_on_event_circle_entered)
+			event_start_circle.exited_event_circle.connect(_on_event_circle_exited)
+		else:
+			event_start_circle.entered_event_circle.disconnect(_on_event_circle_entered)
+			event_start_circle.exited_event_circle.disconnect(_on_event_circle_exited)
+
+
+func _on_event_circle_entered(peer_id: int, gamemode_event: GameModeEvent):
+	pass
+	# TODO - show UI
+
+
+func _on_event_circle_exited(peer_id: int, gamemode_event: GameModeEvent):
+	pass
+	# TODO - hide UI
 
 
 func Exit(_state_context: StateContext):
@@ -24,6 +47,8 @@ func Exit(_state_context: StateContext):
 	gamemode_manager.player_crashed.disconnect(_on_player_crashed)
 	gamemode_manager.player_disconnected.disconnect(_on_player_disconnected)
 	gamemode_manager.player_latejoined.disconnect(_on_player_latejoined)
+
+	_signals_event_circles(false)
 
 
 func _on_player_crashed(peer_id: int):
