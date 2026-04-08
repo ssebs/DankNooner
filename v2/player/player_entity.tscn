@@ -17,6 +17,7 @@
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="16_uthnt"]
 [ext_resource type="Script" uid="uid://coopftft0wwho" path="res://player/controllers/camera_controller.gd" id="17_0jgj5"]
 [ext_resource type="Script" uid="uid://civ7dg4q23qwd" path="res://player/controllers/hud_controller.gd" id="17_fiihv"]
+[ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="17_pv2x4"]
 [ext_resource type="Texture2D" uid="uid://b0hn1bebf5jgf" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_a.png" id="18_75npo"]
 [ext_resource type="Texture2D" uid="uid://c0w578hmfft6u" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_lb.png" id="18_am3pr"]
 [ext_resource type="Texture2D" uid="uid://3e18qxk3u0k6" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_rb.png" id="18_hqggp"]
@@ -105,6 +106,25 @@ tracks/5/keys = {
 _data = {
 &"RESET": SubResource("Animation_tivla")
 }
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8urt2"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.103055954, 0.5546875, 0.052001953, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.25490198, 0.6862745, 1, 1)
+border_blend = true
+corner_radius_top_left = 16
+corner_radius_top_right = 4
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 4
+expand_margin_left = 12.0
+expand_margin_right = 12.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_htgu7"]
 radius = 64.0
@@ -297,42 +317,109 @@ ratio = 1.778
 [node name="MarginContainer" type="MarginContainer" parent="_Controllers/HUDController/AspectContainer" unique_id=373454583]
 layout_mode = 2
 
-[node name="bottom right vbox" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1228497548]
+[node name="GuageCluster" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1899896695]
 layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 8
+theme = ExtResource("16_uthnt")
 
-[node name="HUD_THROTTLE" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/bottom right vbox" unique_id=1492251170]
+[node name="PanelContainer" type="PanelContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster" unique_id=678475646]
 unique_name_in_owner = true
-layout_mode = 2
-text = "HUD_THROTTLE"
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -465.0
+offset_top = -331.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = ExtResource("17_pv2x4")
 
-[node name="HUD_RPM" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/bottom right vbox" unique_id=1753672987]
+[node name="HBoxContainer" type="HBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer" unique_id=1695208322]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 32
+
+[node name="VBoxContainer" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer" unique_id=763671866]
+layout_mode = 2
+
+[node name="ThrottleLabel" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer" unique_id=148446078]
+layout_mode = 2
+text = "THR"
+
+[node name="HUD_ThrottleProgress" type="ProgressBar" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer" unique_id=209147153]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 256)
 layout_mode = 2
-text = "HUD_RPM"
+size_flags_horizontal = 0
+theme_override_styles/background = ExtResource("17_pv2x4")
+theme_override_styles/fill = SubResource("StyleBoxFlat_8urt2")
+step = 1.0
+value = 60.0
+rounded = true
+allow_greater = true
+fill_mode = 3
 
-[node name="HUD_BRAKE" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/bottom right vbox" unique_id=375350254]
+[node name="VBoxContainer2" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer" unique_id=1320213754]
+layout_mode = 2
+
+[node name="SpeedLabel" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer2" unique_id=2104620848]
+layout_mode = 2
+text = "SPD"
+
+[node name="HUD_SpeedProgress" type="ProgressBar" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer2" unique_id=346131774]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 256)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/background = ExtResource("17_pv2x4")
+theme_override_styles/fill = SubResource("StyleBoxFlat_8urt2")
+step = 1.0
+value = 60.0
+rounded = true
+allow_greater = true
+fill_mode = 3
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer" unique_id=544624310]
+layout_mode = 2
+
+[node name="RPMLabel" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer3" unique_id=1600894768]
+layout_mode = 2
+text = "RPM"
+
+[node name="HUD_RPMProgress" type="ProgressBar" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer3" unique_id=1747031452]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 256)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/background = ExtResource("17_pv2x4")
+theme_override_styles/fill = SubResource("StyleBoxFlat_8urt2")
+step = 1.0
+value = 60.0
+rounded = true
+allow_greater = true
+fill_mode = 3
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer" unique_id=1099301206]
+layout_mode = 2
+
+[node name="HUD_BRAKE" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer4" unique_id=375350254]
 unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_BRAKE"
 
-[node name="HUD_CLUTCH" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/bottom right vbox" unique_id=484430070]
+[node name="HUD_CLUTCH" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer4" unique_id=484430070]
 unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_CLUTCH"
 
-[node name="HUD_SPEED" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/bottom right vbox" unique_id=1162278585]
-unique_name_in_owner = true
-layout_mode = 2
-text = "HUD_SPEED"
-
-[node name="HUD_GEAR" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/bottom right vbox" unique_id=561200398]
+[node name="HUD_GEAR" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer4" unique_id=561200398]
 unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_GEAR"
 
-[node name="HUD_GRIP_DGR" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/bottom right vbox" unique_id=1282391971]
+[node name="HUD_GRIP_DGR" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer4" unique_id=1282391971]
 unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_GRIP_DGR"
@@ -359,7 +446,9 @@ text = "HUD_CHALLENGE_MSG"
 
 [node name="TutorialOverlay" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1728547112]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
+mouse_filter = 2
 
 [node name="TUT_MSG_1" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/TutorialOverlay" unique_id=1637961489]
 unique_name_in_owner = true
@@ -375,6 +464,7 @@ layout_mode = 2
 
 [node name="MobileControls" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=275464545]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls" unique_id=1617473206]

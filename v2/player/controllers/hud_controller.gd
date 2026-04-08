@@ -8,11 +8,11 @@ class_name HUDController extends Control
 @export var trick_controller: TrickController
 @export var crash_controller: CrashController
 
-@onready var _throttle_label: Label = %HUD_THROTTLE
-@onready var _rpm_label: Label = %HUD_RPM
+@onready var _throttle_bar: ProgressBar = %HUD_ThrottleProgress
+@onready var _rpm_bar: ProgressBar = %HUD_RPMProgress
 @onready var _brake_label: Label = %HUD_BRAKE
 @onready var _clutch_label: Label = %HUD_CLUTCH
-@onready var _speed_label: Label = %HUD_SPEED
+@onready var _speed_bar: ProgressBar = %HUD_SpeedProgress
 @onready var _gear_label: Label = %HUD_GEAR
 @onready var _grip_label: Label = %HUD_GRIP_DGR
 @onready var _trick_msg: Label = %HUD_TRICK_MSG
@@ -49,7 +49,7 @@ func _process(_delta: float):
 		return
 
 	# Poll continuous values directly from controllers
-	_throttle_label.text = tr("HUD_THROTTLE") % int(input_controller.nfx_throttle * 100)
+	_throttle_bar.value = int(input_controller.nfx_throttle * 100)
 	_brake_label.text = (
 		tr("HUD_BRAKE_F")
 		% [
@@ -63,8 +63,8 @@ func _process(_delta: float):
 	else:
 		_clutch_label.text = tr("HUD_CLUTCH_OUT")
 
-	_rpm_label.text = tr("HUD_RPM") % int(gearing_controller.get_rpm_ratio() * 100)
-	_speed_label.text = tr("HUD_SPEED") % int(movement_controller.speed)
+	_rpm_bar.value = int(gearing_controller.get_rpm_ratio() * 100)
+	_speed_bar.value = int(movement_controller.speed)
 	_grip_label.text = tr("HUD_GRIP") % int(player_entity.grip_usage * 100)
 	_balance_bar.current_val = rad_to_deg(movement_controller.pitch_angle)
 
