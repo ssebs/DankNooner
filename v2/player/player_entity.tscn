@@ -24,6 +24,8 @@
 [ext_resource type="PackedScene" uid="uid://cof5vsd00u8ob" path="res://player/hud_elements/balance_bar.tscn" id="18_htgu7"]
 [ext_resource type="Texture2D" uid="uid://duuquimo77bkv" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_b.png" id="19_75npo"]
 [ext_resource type="Texture2D" uid="uid://cqq425x7j1o01" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_x.png" id="20_8la7j"]
+[ext_resource type="Texture2D" uid="uid://c3x4cgt2aebjy" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_view.png" id="20_tc2m1"]
+[ext_resource type="Texture2D" uid="uid://ca0sqawt6rdwg" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_y.png" id="22_8urt2"]
 [ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://addons/virtual_joystick/virtual_joystick_scene.tscn" id="23_am3pr"]
 [ext_resource type="Texture2D" uid="uid://8i4urqqivwil" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_menu.png" id="24_744ak"]
 
@@ -178,7 +180,7 @@ transform = Transform3D(-1, 2.7775881e-08, -1.4841912e-07, 0, 0.98293537, 0.1839
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@18936")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@18938")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
@@ -446,7 +448,6 @@ text = "HUD_CHALLENGE_MSG"
 
 [node name="TutorialOverlay" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1728547112]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 mouse_filter = 2
 
@@ -464,106 +465,124 @@ layout_mode = 2
 
 [node name="MobileControls" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=275464545]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls" unique_id=1617473206]
 layout_mode = 1
-anchors_preset = 6
+anchors_preset = 1
 anchor_left = 1.0
-anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -242.0
-offset_top = -284.5675
-offset_right = 26.0
-offset_bottom = 123.432495
+offset_left = -268.0
+offset_bottom = 584.0
 grow_horizontal = 0
-grow_vertical = 2
+theme_override_constants/separation = 24
 alignment = 1
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer" unique_id=1361659284]
+[node name="HBoxContainer" type="HBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer" unique_id=131994787]
 layout_mode = 2
 
-[node name="BtnContainer4" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer2" unique_id=1782930745]
+[node name="BtnContainer4" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer" unique_id=1768758885]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+
+[node name="ESCBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer/BtnContainer4" unique_id=813301896]
+texture_normal = ExtResource("24_744ak")
+shape = SubResource("CircleShape2D_htgu7")
+action = "pause"
+
+[node name="BtnContainer5" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer" unique_id=1603366128]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="LBBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer2/BtnContainer4" unique_id=1669101773]
-texture_normal = ExtResource("18_am3pr")
+[node name="SelectBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer/BtnContainer5" unique_id=202530625]
+texture_normal = ExtResource("20_tc2m1")
 shape = SubResource("CircleShape2D_htgu7")
-action = "clutch"
+action = "switch_cam"
 
-[node name="BtnContainer5" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer2" unique_id=1787280875]
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="RBBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer2/BtnContainer5" unique_id=858205438]
-texture_normal = ExtResource("18_hqggp")
-shape = SubResource("CircleShape2D_htgu7")
-action = "trick"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer" unique_id=1150399475]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="BtnContainer3" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer" unique_id=596826694]
-custom_minimum_size = Vector2(128, 128)
+[node name="HBoxContainer2" type="HBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer" unique_id=481660540]
 layout_mode = 2
 
-[node name="XBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer/BtnContainer3" unique_id=761836458]
-texture_normal = ExtResource("20_8la7j")
-shape = SubResource("CircleShape2D_htgu7")
-action = "gear_down"
-
-[node name="BtnContainer2" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer" unique_id=1385436551]
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 2
-
-[node name="BBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer/BtnContainer2" unique_id=288112531]
-texture_normal = ExtResource("19_75npo")
-shape = SubResource("CircleShape2D_htgu7")
-action = "gear_up"
-
-[node name="BtnContainer" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer" unique_id=453097553]
+[node name="BtnContainer" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer2" unique_id=453097553]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 6
 
-[node name="ABtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/BtnContainer" unique_id=1769493698]
+[node name="ABtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer2/BtnContainer" unique_id=1769493698]
 texture_normal = ExtResource("18_75npo")
 shape = SubResource("CircleShape2D_htgu7")
 action = "brake_rear"
 
-[node name="BtnContainer4" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls" unique_id=1768758885]
+[node name="BtnContainer2" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer2" unique_id=576692699]
 custom_minimum_size = Vector2(128, 128)
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -64.0
-offset_right = 64.0
-offset_bottom = 128.0
-grow_horizontal = 2
+layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 0
+size_flags_vertical = 6
 
-[node name="ESCBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/BtnContainer4" unique_id=813301896]
-texture_normal = ExtResource("24_744ak")
+[node name="YBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/HBoxContainer2/BtnContainer2" unique_id=1286301173]
+texture_normal = ExtResource("22_8urt2")
 shape = SubResource("CircleShape2D_htgu7")
-action = "pause"
+action = "switch_bike"
+
+[node name="lbrb" type="HBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer" unique_id=1361659284]
+layout_mode = 2
+
+[node name="BtnContainer4" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/lbrb" unique_id=1782930745]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="LBBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/lbrb/BtnContainer4" unique_id=1669101773]
+texture_normal = ExtResource("18_am3pr")
+shape = SubResource("CircleShape2D_htgu7")
+action = "clutch"
+
+[node name="BtnContainer5" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/lbrb" unique_id=1787280875]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="RBBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/lbrb/BtnContainer5" unique_id=858205438]
+texture_normal = ExtResource("18_hqggp")
+shape = SubResource("CircleShape2D_htgu7")
+action = "trick"
+
+[node name="xb" type="HBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer" unique_id=1150399475]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="BtnContainer3" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/xb" unique_id=596826694]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+
+[node name="XBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/xb/BtnContainer3" unique_id=761836458]
+texture_normal = ExtResource("20_8la7j")
+shape = SubResource("CircleShape2D_htgu7")
+action = "gear_down"
+
+[node name="BtnContainer2" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/xb" unique_id=1385436551]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+
+[node name="BBtnTouch" type="TouchScreenButton" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls/VBoxContainer/xb/BtnContainer2" unique_id=288112531]
+texture_normal = ExtResource("19_75npo")
+shape = SubResource("CircleShape2D_htgu7")
+action = "gear_up"
 
 [node name="MoveJoyStick" parent="_Controllers/HUDController/AspectContainer/MarginContainer/MobileControls" unique_id=987581372 instance=ExtResource("23_am3pr")]
 unique_name_in_owner = true
 layout_mode = 1
-offset_top = -300.0
-offset_bottom = 0.0
+offset_left = 422.0
+offset_top = -297.0675
+offset_right = 722.0
+offset_bottom = 2.932495
 clampzone_size = 128.0
 action_left = "steer_left"
 action_right = "steer_right"
@@ -576,10 +595,10 @@ layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -515.0
-offset_top = -276.0675
-offset_right = -215.0
-offset_bottom = 23.932495
+offset_left = -733.0
+offset_top = -310.0675
+offset_right = -433.0
+offset_bottom = -10.067505
 grow_horizontal = 0
 clampzone_size = 128.0
 action_left = "steer_left"
