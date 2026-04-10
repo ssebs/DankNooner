@@ -6,6 +6,9 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
+- [ ] mobile, move LB to left..
+- [ ] gamemode select hud shows on all clients
+
 - [ ] GamemodeEvent System & First tutorial
 
   - See [planning_docs\GamemodeSystem.md](./planning_docs/GamemodeSystem.md)
