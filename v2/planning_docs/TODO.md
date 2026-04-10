@@ -11,6 +11,15 @@
   - See [planning_docs\GamemodeSystem.md](./planning_docs/GamemodeSystem.md)
   - TODOs found there!
 
+- Gamemode ideas
+  - Unlock mods to progress
+  - Surf like gamemode, replay rounds to get better on leaderboard. More time = more skill = higher rank
+    - Adds replayability, can do it casually while listening to music/on toilet/etc.
+    - E.g. flappy birds replayability
+  - Fuel mechanic, do tricks to get fuel. Level ends when you run out of fuel
+  - Make it a roguelite? But how will items work..
+  - Open world "menu level". If you want to do dirt bike race, go to that part of town to start, if you want track, go to the track, if you want to customize, go to the garage, etc.
+
 ## Up Next (Finish POC MP Gameplay Demo) 📋
 
 - [ ] Pause => show lobby
