@@ -1,8 +1,8 @@
 @tool
 class_name GameModeEventConfirmHUD extends Control
 
-signal hud_closed
-signal hud_submitted
+signal hud_closed(peer_id: int)
+signal hud_submitted(peer_id: int)
 
 @onready var submit_btn: Button = %SubmitBtn
 @onready var close_btn: Button = %CloseBtn
@@ -15,10 +15,41 @@ func _ready():
 	hide_ui()
 
 
+@rpc("any_peer", "call_local", "reliable")
+func on_player_entered_circle(peer_id: int, gamemode_name: String, gamemode_description: String):
+	if !multiplayer.is_server():
+		return
+
+	set_gamemode_hud_and_show_ui.rpc_id(peer_id, gamemode_name, gamemode_description)
+
+
+@rpc("call_local", "reliable")
+func set_gamemode_hud_and_show_ui(gamemode_name: String, gamemode_description: String):
+	gm_name.text = tr(gamemode_name)
+	gm_desc.text = tr(gamemode_description)
+	show_ui()
+
+
+@rpc("any_peer", "call_local", "reliable")
+func on_player_close_pressed(peer_id: int):
+	if !multiplayer.is_server():
+		return
+
+	hide_ui_for_peer.rpc_id(peer_id)
+	hud_closed.emit(peer_id)
+
+
+@rpc("call_local", "reliable")
+func hide_ui_for_peer():
+	hide_ui()
+
+
 func show_ui():
 	self.show()
-	submit_btn.pressed.connect(_on_submit_pressed)
-	close_btn.pressed.connect(_on_close_pressed)
+	if !submit_btn.pressed.is_connected(_on_submit_pressed):
+		submit_btn.pressed.connect(_on_submit_pressed)
+	if !close_btn.pressed.is_connected(_on_close_pressed):
+		close_btn.pressed.connect(_on_close_pressed)
 
 
 func hide_ui():
@@ -29,15 +60,9 @@ func hide_ui():
 		close_btn.pressed.disconnect(_on_close_pressed)
 
 
-func set_gamemode_hud_and_show_ui(gamemode_name: String, gamemode_description: String):
-	gm_name.text = tr(gamemode_name)
-	gm_desc.text = tr(gamemode_description)
-	show_ui()
-
-
 func _on_submit_pressed():
-	hud_submitted.emit()
+	hud_submitted.emit(multiplayer.multiplayer_peer.get_unique_id())
 
 
 func _on_close_pressed():
-	hud_closed.emit()
+	on_player_close_pressed.rpc_id(1, multiplayer.multiplayer_peer.get_unique_id())
