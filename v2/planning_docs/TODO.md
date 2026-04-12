@@ -6,9 +6,9 @@
 
 > Take it slow, fix bugs and add polish to player controller
 
-- [ ] mobile, move LB to left..
 - [ ] gamemode select hud shows on all clients
-
+  - [x] basic
+  - [ ] Mouse cursor showing/hiding should be handled in gamemodeeventconfirmhud via rpc insetad of in freeroamgamemode
 - [ ] GamemodeEvent System & First tutorial
 
   - See [planning_docs\GamemodeSystem.md](./planning_docs/GamemodeSystem.md)
@@ -290,6 +290,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] mobile, move LB to left..
 
 - [ ] Move respawn logic to gamemode controller, using new signals
 

@@ -190,7 +190,6 @@ gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
 [node name="GameModeEventConfirmHUD" parent="ManagerManager/GamemodeManager/StateMachine/FreeRoamGameMode" unique_id=844708804 instance=ExtResource("26_u7wvl")]
-visible = false
 
 [node name="TutorialGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1184474950 node_paths=PackedStringArray("gamemode_manager", "spawn_manager")]
 script = ExtResource("27_8slmw")

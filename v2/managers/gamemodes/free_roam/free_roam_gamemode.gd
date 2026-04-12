@@ -38,8 +38,8 @@ func _signals_event_circles(should_connect: bool):
 func _on_event_circle_entered(peer_id: int, gamemode_event: GameModeEvent):
 	DebugUtils.DebugMsg("%d entered eventcircle: %s" % [peer_id, gamemode_event.name])
 
-	game_mode_event_confirm_hud.set_gamemode_hud_and_show_ui(
-		gamemode_event.name, gamemode_event.description
+	game_mode_event_confirm_hud.on_player_entered_circle.rpc_id(
+		1, peer_id, gamemode_event.name, gamemode_event.description
 	)
 
 	game_mode_event_confirm_hud.hud_submitted.connect(_on_game_mode_event_confirm_hud_submitted)
@@ -55,15 +55,14 @@ func _on_event_circle_exited(peer_id: int, gamemode_event: GameModeEvent):
 	game_mode_event_confirm_hud.hud_submitted.disconnect(_on_game_mode_event_confirm_hud_submitted)
 	game_mode_event_confirm_hud.hud_closed.disconnect(_on_game_mode_event_confirm_hud_closed)
 
-	_on_game_mode_event_confirm_hud_closed()
+	game_mode_event_confirm_hud.on_player_close_pressed.rpc_id(1, peer_id)
 
 
-func _on_game_mode_event_confirm_hud_submitted():
-	DebugUtils.DebugMsg("Starting Event...")
+func _on_game_mode_event_confirm_hud_submitted(peer_id: int):
+	DebugUtils.DebugMsg("Starting Event... %d" % peer_id)
 
 
-func _on_game_mode_event_confirm_hud_closed():
-	game_mode_event_confirm_hud.hide_ui()
+func _on_game_mode_event_confirm_hud_closed(_peer_id: int):
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
 
 
