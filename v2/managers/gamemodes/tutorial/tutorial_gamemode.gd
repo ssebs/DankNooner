@@ -13,6 +13,7 @@ var _respawn_delay: float = 3.0
 var _countdown: float = -1.0
 var _countdown_total: float = 3.0
 var _started: bool = false
+var _active_trick: TrickController.Trick = TrickController.Trick.NONE
 
 
 func Enter(state_context: StateContext):
@@ -58,6 +59,7 @@ func Update(delta: float):
 			_countdown = -1.0
 			_started = true
 			_set_all_players_input_disabled(false)
+			_connect_trick_signals()
 			_start_step(_current_index)
 		return
 
@@ -78,7 +80,15 @@ func Update(delta: float):
 	if step_def.get_progress.is_valid():
 		tutorial_hud.rpc_update_progress.rpc(step_def.get_progress.call())
 
-	if step_def.check.call(player, delta):
+	DebugUtils.DebugMsg("TUT Update | step=%d | trick=%s | delta=%.4f | wheelie_t=%.2f | stoppie_t=%.2f" % [
+		_current_index,
+		TrickController.trick_to_str(_active_trick),
+		delta,
+		_steps_lib._wheelie_time,
+		_steps_lib._stoppie_time,
+	])
+
+	if step_def.check.call(player, delta, _active_trick):
 		if step_def.on_exit.is_valid():
 			step_def.on_exit.call()
 		_current_index += 1
@@ -99,6 +109,31 @@ func _teleport_players_to_start():
 	var marker := _get_start_marker()
 	for peer_id in lobby_manager.lobby_players:
 		spawn_manager.respawn_player_at.rpc(peer_id, marker.global_position, marker.global_basis)
+
+
+func _connect_trick_signals():
+	var player := spawn_manager._get_player_by_peer_id(_target_peer_id)
+	player.trick_controller.trick_started.connect(_on_trick_started)
+	player.trick_controller.trick_ended.connect(_on_trick_ended)
+
+
+func _disconnect_trick_signals():
+	var player := spawn_manager._get_player_by_peer_id(_target_peer_id)
+	# Player may have been despawned on disconnect — skip is intentional
+	if player == null:
+		return
+	if player.trick_controller.trick_started.is_connected(_on_trick_started):
+		player.trick_controller.trick_started.disconnect(_on_trick_started)
+	if player.trick_controller.trick_ended.is_connected(_on_trick_ended):
+		player.trick_controller.trick_ended.disconnect(_on_trick_ended)
+
+
+func _on_trick_started(trick_type: TrickController.Trick):
+	_active_trick = trick_type
+
+
+func _on_trick_ended(_trick_type: TrickController.Trick):
+	_active_trick = TrickController.Trick.NONE
 
 
 func _set_all_players_input_disabled(disabled: bool):
@@ -127,13 +162,17 @@ func _start_step(index: int):
 	var step_def := _steps_lib.defs[step_enum]
 	if step_def.on_enter.is_valid():
 		step_def.on_enter.call()
-	tutorial_hud.rpc_show_step.rpc(index, _current_sequence.size(), step_def.objective_text, step_def.hint_text)
+	tutorial_hud.rpc_show_step.rpc(
+		index, _current_sequence.size(), step_def.objective_text, step_def.hint_text
+	)
 
 
 func _return_to_free_roam():
 	var ctx := GamemodeStateContext.new()
 	ctx.peer_id = _target_peer_id
-	gamemode_manager._rpc_transition_gamemode.rpc(GamemodeManager.TGameMode.FREE_FROAM as int, _target_peer_id)
+	gamemode_manager._rpc_transition_gamemode.rpc(
+		GamemodeManager.TGameMode.FREE_FROAM as int, _target_peer_id
+	)
 
 
 func Exit(_state_context: StateContext):
@@ -144,6 +183,7 @@ func Exit(_state_context: StateContext):
 	gamemode_manager.player_latejoined.disconnect(_on_player_latejoined)
 
 	if multiplayer.is_server():
+		_disconnect_trick_signals()
 		_set_all_players_input_disabled(false)
 	tutorial_hud.rpc_hide.rpc()
 
@@ -153,7 +193,11 @@ func _on_player_crashed(peer_id: int):
 		return
 	var marker := _get_start_marker()
 	get_tree().create_timer(_respawn_delay).timeout.connect(
-		func(): spawn_manager.respawn_player_at.rpc(peer_id, marker.global_position, marker.global_basis), CONNECT_ONE_SHOT
+		func():
+			spawn_manager.respawn_player_at.rpc(
+				peer_id, marker.global_position, marker.global_basis
+			),
+		CONNECT_ONE_SHOT
 	)
 
 

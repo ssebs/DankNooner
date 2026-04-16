@@ -21,7 +21,9 @@ func Enter(_state_context: StateContext):
 
 	_signals_event_circles(true)
 
-	spawn_manager.spawn_all_players()
+	# Only spawn if players aren't already in the level (e.g. coming from another gamemode)
+	if spawn_manager._get_player_by_peer_id(multiplayer.get_unique_id()) == null:
+		spawn_manager.spawn_all_players()
 
 
 ## param is whether to connect() or disconnect()
