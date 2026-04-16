@@ -80,4 +80,10 @@
 - Running from the cops
   - More danger = more wanted level / Cop chases
   - they put up obstacles that you can stunt around
-
+- Unlock mods to progress
+- Surf like gamemode, replay rounds to get better on leaderboard. More time = more skill = higher rank
+  - Adds replayability, can do it casually while listening to music/on toilet/etc.
+  - E.g. flappy birds replayability
+- Fuel mechanic, do tricks to get fuel. Level ends when you run out of fuel
+- Make it a roguelite? But how will items work..
+- Open world "menu level". If you want to do dirt bike race, go to that part of town to start, if you want track, go to the track, if you want to customize, go to the garage, etc.
