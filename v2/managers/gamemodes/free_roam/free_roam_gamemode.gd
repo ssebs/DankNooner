@@ -47,8 +47,10 @@ func _on_event_circle_entered(peer_id: int, gamemode_event: GameModeEvent):
 		1, peer_id, gamemode_event.name, gamemode_event.description
 	)
 
-	game_mode_event_confirm_hud.hud_submitted.connect(_on_game_mode_event_confirm_hud_submitted)
-	game_mode_event_confirm_hud.hud_closed.connect(_on_game_mode_event_confirm_hud_closed)
+	if not game_mode_event_confirm_hud.hud_submitted.is_connected(_on_game_mode_event_confirm_hud_submitted):
+		game_mode_event_confirm_hud.hud_submitted.connect(_on_game_mode_event_confirm_hud_submitted)
+	if not game_mode_event_confirm_hud.hud_closed.is_connected(_on_game_mode_event_confirm_hud_closed):
+		game_mode_event_confirm_hud.hud_closed.connect(_on_game_mode_event_confirm_hud_closed)
 
 	# TODO - set player velocity to 0
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME_PAUSED
