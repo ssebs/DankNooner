@@ -1603,9 +1603,82 @@ height = 20.0
 depth = 200.0
 color_preset = 4
 
-[node name="Tutorial01StartMarker" type="Marker3D" parent="." unique_id=492544271]
+[node name="Tut01Location" type="Node3D" parent="Stuff" unique_id=799554907]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 214, 0, 110)
+
+[node name="Tutorial01StartMarker" type="Marker3D" parent="Stuff/Tut01Location" unique_id=492544271]
 unique_name_in_owner = true
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 51, 0, 70)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="GrayBox_StaticBody" parent="Stuff/Tut01Location" unique_id=1280414458 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 5.9300003, 0)
+width = 2.0
+height = 12.0
+depth = 20.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody6" parent="Stuff/Tut01Location" unique_id=347476723 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -98, 5.9300003, 40)
+width = 10.0
+height = 12.0
+depth = 20.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody4" parent="Stuff/Tut01Location" unique_id=1539488629 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -71, 5.9300003, 10)
+width = 2.0
+height = 12.0
+depth = 40.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody9" parent="Stuff/Tut01Location" unique_id=1308677790 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -78, 5.9300003, 72)
+width = 16.0
+height = 12.0
+depth = 40.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody10" parent="Stuff/Tut01Location" unique_id=557801508 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 5.9300003, 61)
+width = 20.0
+height = 12.0
+depth = 66.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody2" parent="Stuff/Tut01Location" unique_id=738918424 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 5.9300003, -11)
+width = 80.0
+height = 12.0
+depth = 2.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody3" parent="Stuff/Tut01Location" unique_id=1765002117 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 5.9300003, 19)
+width = 48.0
+height = 12.0
+depth = 20.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody5" parent="Stuff/Tut01Location" unique_id=1062875429 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -55, 5.9300003, 98)
+width = 42.0
+height = 12.0
+depth = 12.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody7" parent="Stuff/Tut01Location" unique_id=759280154 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -86.5, 5.9300003, 51)
+width = 33.0
+height = 12.0
+depth = 2.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody8" parent="Stuff/Tut01Location" unique_id=2073915117 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -83, 5.9300003, 24)
+width = 22.0
+height = 12.0
+depth = 12.0
+color_preset = 3
 
 [node name="Tutorial01EventStartCircle" parent="." unique_id=1014716352 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 81)

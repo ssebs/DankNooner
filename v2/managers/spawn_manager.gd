@@ -61,6 +61,17 @@ func respawn_player(player_peer_id: int):
 	player_node.rb_do_respawn = true
 
 
+## Respawn player at a specific transform instead of their spawn point
+@rpc("any_peer", "call_local", "reliable")
+func respawn_player_at(player_peer_id: int, pos: Vector3, basis: Basis):
+	if !multiplayer.is_server():
+		return
+
+	var player_node := _get_player_by_peer_id(player_peer_id)
+	player_node.rb_respawn_transform = Transform3D(basis, pos)
+	player_node.rb_do_respawn = true
+
+
 ## Instantiate and add player node locally (no authority check)
 func add_player_locally(peer_id: int, player_def_dict: Dictionary):
 	var player_def = PlayerDefinition.new()

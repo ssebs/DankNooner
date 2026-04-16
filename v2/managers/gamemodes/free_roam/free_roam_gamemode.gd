@@ -63,6 +63,8 @@ func _on_event_circle_exited(peer_id: int, gamemode_event: GameModeEvent):
 
 func _on_game_mode_event_confirm_hud_submitted(peer_id: int):
 	DebugUtils.DebugMsg("Starting Event... %d" % peer_id)
+	game_mode_event_confirm_hud.on_player_close_pressed.rpc_id(1, peer_id)
+	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
 	gamemode_manager.change_gamemode.rpc_id(1, _pending_event.target_gamemode as int, peer_id)
 
 

@@ -11,6 +11,15 @@ func _ready():
 	rpc_hide()
 
 
+func rpc_show_countdown(seconds: int):
+	step_label.hide()
+	hint_label.hide()
+	complete_label.hide()
+	objective_label.text = str(seconds)
+	objective_label.show()
+	self.show()
+
+
 @rpc("call_local", "reliable")
 func rpc_show_step(step_index: int, total: int, objective_key: String, hint_key: String):
 	complete_label.hide()
