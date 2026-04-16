@@ -9,7 +9,9 @@
   - [x] basic
   - [ ] Mouse cursor showing/hiding should be handled in gamemodeeventconfirmhud via rpc insetad of in freeroamgamemode
 - [ ] GamemodeEvent System & First tutorial
-
+  - [ ] Review tutorial code
+  - [ ] Review gamemode transition code when entering circle to starting tutorial mode
+  - [ ] Check with multiple players
   - See [GamemodeSystem.md](./GamemodeSystem.md)
   - TODOs found there!
 

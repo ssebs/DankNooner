@@ -32,6 +32,11 @@ func rpc_show_step(step_index: int, total: int, objective_key: String, hint_key:
 	self.show()
 
 
+@rpc("call_local", "unreliable")
+func rpc_update_progress(progress_text: String):
+	hint_label.text = progress_text
+
+
 @rpc("call_local", "reliable")
 func rpc_show_complete():
 	step_label.hide()

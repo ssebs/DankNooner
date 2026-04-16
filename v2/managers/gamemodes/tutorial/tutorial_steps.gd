@@ -16,6 +16,7 @@ class StepDef:
 	var check: Callable          # (player: PlayerEntity, delta: float) -> bool
 	var on_enter: Callable       # optional setup
 	var on_exit: Callable        # optional cleanup
+	var get_progress: Callable   # optional () -> String, shows time countup etc.
 
 ## Step registry, keyed by enum
 var defs: Dictionary[Step, StepDef] = {}
@@ -30,13 +31,14 @@ func _init():
 func _register_all():
 	defs[Step.PRESS_RT] = _make(Step.PRESS_RT, "TUT_PRESS_RT", "TUT_HINT_PRESS_RT", _check_press_rt)
 	defs[Step.REACH_SPEED] = _make(Step.REACH_SPEED, "TUT_REACH_SPEED", "TUT_HINT_REACH_SPEED", _check_reach_speed)
-	defs[Step.DO_WHEELIE] = _make(Step.DO_WHEELIE, "TUT_DO_WHEELIE", "TUT_HINT_DO_WHEELIE", _check_wheelie, _reset_wheelie)
-	defs[Step.DO_STOPPIE] = _make(Step.DO_STOPPIE, "TUT_DO_STOPPIE", "TUT_HINT_DO_STOPPIE", _check_stoppie, _reset_stoppie)
+	defs[Step.DO_WHEELIE] = _make(Step.DO_WHEELIE, "TUT_DO_WHEELIE", "TUT_HINT_DO_WHEELIE", _check_wheelie, _reset_wheelie, Callable(), _get_wheelie_progress)
+	defs[Step.DO_STOPPIE] = _make(Step.DO_STOPPIE, "TUT_DO_STOPPIE", "TUT_HINT_DO_STOPPIE", _check_stoppie, _reset_stoppie, Callable(), _get_stoppie_progress)
 
-func _make(s, obj, hint, check, on_enter = Callable(), on_exit = Callable()) -> StepDef:
+func _make(s, obj, hint, check, on_enter = Callable(), on_exit = Callable(), get_progress = Callable()) -> StepDef:
 	var d = StepDef.new()
 	d.step = s; d.objective_text = obj; d.hint_text = hint
 	d.check = check; d.on_enter = on_enter; d.on_exit = on_exit
+	d.get_progress = get_progress
 	return d
 
 ## ========== COMMON REUSABLE CHECKS ==========
@@ -86,6 +88,12 @@ func _check_stoppie(player: PlayerEntity, delta: float) -> bool:
 
 func _reset_wheelie(): _wheelie_time = 0.0
 func _reset_stoppie(): _stoppie_time = 0.0
+
+func _get_wheelie_progress() -> String:
+	return "%.1f / 3.0s" % _wheelie_time
+
+func _get_stoppie_progress() -> String:
+	return "%.1f / 1.0s" % _stoppie_time
 
 ## ========== TUTORIAL SEQUENCES ==========
 ## Each tutorial selects steps in order
