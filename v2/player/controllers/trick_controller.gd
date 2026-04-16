@@ -24,13 +24,12 @@ func _ready():
 ## Called from MovementController._rollback_tick()
 func on_movement_rollback_tick(_delta: float):
 	_current_trick = _detect_current_trick()
-	if _current_trick == Trick.NONE:
-		trick_ended.emit(_last_trick)
-	elif _current_trick != _last_trick:
+	if _current_trick != _last_trick:
+		if _last_trick != Trick.NONE:
+			trick_ended.emit(_last_trick)
+		if _current_trick != Trick.NONE:
+			trick_started.emit(_current_trick)
 		_last_trick = _current_trick
-		trick_ended.emit(_last_trick)
-		trick_started.emit(_current_trick)
-		do_reset()
 
 
 func _detect_current_trick() -> Trick:
