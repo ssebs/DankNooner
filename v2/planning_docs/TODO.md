@@ -99,6 +99,10 @@
   - [ ] Navigates in Loops, dumb AI
     - [ ] Maybe along path?
     - [ ] Maybe use AnimationPlayer?
+  - [ ] Near-Miss trick
+    - [ ] riding close by without touching = points
+    - [ ] Doing a wheelie & riding close will do a new trick
+    - [ ] anim: touch hand against car like trick tweak
 
 - [ ] Create Save System for in-game
 
