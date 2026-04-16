@@ -54,11 +54,36 @@ func _ready():
 
 ## Called by server to start the game for all players
 @rpc("call_local", "reliable")
-func start_game(level_name: LevelManager.LevelName):
+func start_game(level_name: LevelManager.LevelName, gamemode: TGameMode = TGameMode.FREE_FROAM):
 	current_level_name = level_name
+	current_game_mode = gamemode
 	match_state = MatchState.IN_GAME
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
-	state_machine.request_state_change(free_roam_mode)
+	state_machine.request_state_change(_gamemode_map[gamemode])
+
+
+## Server receives request to change gamemode, broadcasts to all peers
+@rpc("any_peer", "call_local", "reliable")
+func change_gamemode(gamemode_enum: int, peer_id: int):
+	if !multiplayer.is_server():
+		return
+
+	var gamemode := gamemode_enum as TGameMode
+	var ctx := GamemodeStateContext.new()
+	ctx.peer_id = peer_id
+	current_game_mode = gamemode
+
+	_rpc_transition_gamemode.rpc(gamemode_enum, peer_id)
+
+
+## All peers transition their state machine to the new gamemode
+@rpc("call_local", "reliable")
+func _rpc_transition_gamemode(gamemode_enum: int, peer_id: int):
+	var gamemode := gamemode_enum as TGameMode
+	var ctx := GamemodeStateContext.new()
+	ctx.peer_id = peer_id
+	current_game_mode = gamemode
+	state_machine.request_state_change(_gamemode_map[gamemode], ctx)
 
 
 ## Called when returning to lobby
@@ -115,8 +140,7 @@ func _on_client_connection_succeeded(peer_id: int):
 	DebugUtils.DebugMsg("_on_client_connection_succeeded %s" % peer_id)
 
 	if match_state == MatchState.IN_GAME:
-		# TODO - depend on gamemode
-		_sync_game_to_late_joiner.rpc_id(peer_id, current_level_name)
+		_sync_game_to_late_joiner.rpc_id(peer_id, current_level_name, current_game_mode as int)
 
 
 #endregion
@@ -124,11 +148,13 @@ func _on_client_connection_succeeded(peer_id: int):
 #region late-joiner sync
 ## Server calls this on a late-joining client to sync them into the active game
 @rpc("any_peer", "reliable")
-func _sync_game_to_late_joiner(level_name: LevelManager.LevelName):
+func _sync_game_to_late_joiner(level_name: LevelManager.LevelName, gamemode_enum: int = 0):
 	DebugUtils.DebugMsg("_sync_game_to_late_joiner")
 	match_state = MatchState.IN_GAME
 	current_level_name = level_name
+	current_game_mode = gamemode_enum as TGameMode
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
+	state_machine.request_state_change(_gamemode_map[current_game_mode])
 
 	# Request server to spawn our player after level is loaded
 	_request_late_spawn.rpc_id(1, multiplayer.get_unique_id())
