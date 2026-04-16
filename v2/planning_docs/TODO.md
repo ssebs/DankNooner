@@ -131,6 +131,7 @@
       - [ ] Choose a character skin
 
 - [ ] Review webrtc gen code for security
+- [ ] Competitive modes
 - [ ] More audio
 
   - [ ] Soundscapes for ambient sounds, get diff clips and play them in different orders, at random times to set mood & add sound variety
