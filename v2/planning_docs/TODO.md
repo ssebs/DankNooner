@@ -5,7 +5,7 @@
 ## In Progress 🚀
 
 > Take it slow, fix bugs and add polish to player controller
-- [ ] trick started keeps emitting/printing during the trick, should only happen once...
+- [x] trick started keeps emitting/printing during the trick, should only happen once...
 - [ ] gamemode select hud shows on all clients
   - [x] basic
   - [ ] Mouse cursor showing/hiding should be handled in gamemodeeventconfirmhud via rpc insetad of in freeroamgamemode

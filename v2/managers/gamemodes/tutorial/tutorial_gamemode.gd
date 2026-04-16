@@ -191,6 +191,13 @@ func Exit(_state_context: StateContext):
 func _on_player_crashed(peer_id: int):
 	if !multiplayer.is_server():
 		return
+
+	# Reset trick progress for the tutorial player so crashing doesn't count
+	if peer_id == _target_peer_id:
+		_active_trick = TrickController.Trick.NONE
+		_steps_lib._wheelie_time = 0.0
+		_steps_lib._stoppie_time = 0.0
+
 	var marker := _get_start_marker()
 	get_tree().create_timer(_respawn_delay).timeout.connect(
 		func():
