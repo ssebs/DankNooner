@@ -18,9 +18,34 @@
 
 ## Co-op gameplay
 
-### Street Race
+### Free Roam in lobby leaderboard
+- e.g. Longest Wheelie distance shows player + distance in lobby leaderboard
+- Most points trick, fastest near miss, etc.
 
-### Stunt Race
+### Score Attack / Trick Battle
+- This is your "prove the core loop is fun" mode
+- Timed round (60-90s), highest trick score wins
+- You already have trick detection — just need a round timer + scoreboard
+- Multiple locations that offer different ramps/possibilities, using the event_start_circles
+
+### Follow the Leader / H.O.R.S.E.
+- One player is "it", rides wherever they want
+- Other players:
+  - must follow the same line
+  - must match or beat it
+- Turn-based within a round — very social, very replayable
+
+### Crash Launching
+- Players drag race & hit low fence, sending bodies flying.
+- Furthest body wins
+
+### Cops & Robbers
+- One team does tricks & does delivery missions, other team tries to crash into them as a police cop
+
+### Racing
+- Street - w/ traffic
+- Sactioned Street - w/o traffic
+- Stunt Race - w/ items
 
 ### Club / coop story
 - Friends all work for a company, deliver more dangerous items as you level up for more money
