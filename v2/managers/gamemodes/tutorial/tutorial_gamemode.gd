@@ -10,6 +10,9 @@ var _current_sequence: Array[TutorialSteps.Step] = []
 var _current_index: int = 0
 var _target_peer_id: int = -1
 var _respawn_delay: float = 3.0
+var _countdown: float = -1.0
+var _countdown_total: float = 3.0
+var _started: bool = false
 
 
 func Enter(state_context: StateContext):
@@ -31,15 +34,34 @@ func Enter(state_context: StateContext):
 	_steps_lib = TutorialSteps.new()
 	_current_sequence = TutorialSteps.THE_BASICS
 	_current_index = 0
+	_started = false
 
 	spawn_manager.spawn_all_players()
 
 	if multiplayer.is_server():
-		_start_step(_current_index)
+		_teleport_players_to_start()
+		_countdown = _countdown_total
+		_rpc_show_countdown.rpc(ceili(_countdown))
 
 
 func Update(delta: float):
 	if !multiplayer.is_server():
+		return
+
+	# Countdown phase
+	if _countdown > 0.0:
+		var prev_sec := ceili(_countdown)
+		_countdown -= delta
+		var curr_sec := ceili(_countdown)
+		if curr_sec != prev_sec and curr_sec > 0:
+			_rpc_show_countdown.rpc(curr_sec)
+		if _countdown <= 0.0:
+			_countdown = -1.0
+			_started = true
+			_start_step(_current_index)
+		return
+
+	if !_started:
 		return
 
 	if _current_index >= _current_sequence.size():
@@ -64,6 +86,21 @@ func Update(delta: float):
 			)
 		else:
 			_start_step(_current_index)
+
+
+func _get_start_marker() -> Marker3D:
+	return gamemode_manager.level_manager.current_level.get_node("%Tutorial01StartMarker")
+
+
+func _teleport_players_to_start():
+	var marker := _get_start_marker()
+	for peer_id in lobby_manager.lobby_players:
+		spawn_manager.respawn_player_at.rpc(peer_id, marker.global_position, marker.global_basis)
+
+
+@rpc("call_local", "reliable")
+func _rpc_show_countdown(seconds: int):
+	tutorial_hud.rpc_show_countdown(seconds)
 
 
 func _start_step(index: int):
@@ -93,8 +130,9 @@ func Exit(_state_context: StateContext):
 func _on_player_crashed(peer_id: int):
 	if !multiplayer.is_server():
 		return
+	var marker := _get_start_marker()
 	get_tree().create_timer(_respawn_delay).timeout.connect(
-		func(): spawn_manager.respawn_player.rpc(peer_id), CONNECT_ONE_SHOT
+		func(): spawn_manager.respawn_player_at.rpc(peer_id, marker.global_position, marker.global_basis), CONNECT_ONE_SHOT
 	)
 
 

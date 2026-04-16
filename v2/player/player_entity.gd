@@ -66,6 +66,7 @@ var grip_usage: float = 0.0
 
 # Discrete actions (rb_* pattern)
 var rb_do_respawn: bool = false
+var rb_respawn_transform: Transform3D = Transform3D()  # override spawn point when set
 
 # Process-side state tracking (not sync'd)
 var _prev_is_crashed: bool = false
@@ -224,7 +225,11 @@ func update_skins(new_bike_def: BikeSkinDefinition, new_char_def: CharacterSkinD
 
 
 func do_respawn():
-	global_transform = get_parent().global_transform
+	if rb_respawn_transform != Transform3D():
+		global_transform = rb_respawn_transform
+		rb_respawn_transform = Transform3D()
+	else:
+		global_transform = get_parent().global_transform
 	velocity = Vector3.ZERO
 	is_boosting = false
 	is_crashed = false
