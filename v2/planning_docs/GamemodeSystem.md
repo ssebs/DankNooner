@@ -3,6 +3,7 @@
 ---
 
 ## IMPL
+- [ ] IMPL ../PLAN.md to connect & create tutorial
 
 - [x] Move respawn to gamemode manager
 - [x] Create Free Mode GameMode
@@ -20,13 +21,6 @@
 - [ ] New menu type
   - [ ] Create loading inbetween screen
   - [ ] Create win/lose inbetween screen
-- [ ] Create Tutorial 01 event
-  - [ ] Basic controls tutorial
-    - [ ] Create event / mission system
-      - [ ] MissionType
-        - [ ] Do this, then that, can't do that til this, retry, respawn locations, etc.
-      - [ ] RaceType
-        - [ ] Add way to track laps (go over checkpoint markers, respawn checkpoints, place, win, lose)
 
 > See event_start_circle.gd & tutorial_gamemode.gd & free_roam_gamemode.gd & gamemode_event.gd
 
