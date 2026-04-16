@@ -3,10 +3,18 @@
 ## Tutorials
 > Skate 3 style vibe
 
-### Tutorial: Moto 101
-> Learn the basics to get your M1 license.
+### Tutorial: The basics
+> Learn the basics of riding a motorcycle to get your M1 license.
 
-### Tutorial: Wheelies 101
+### Tutorial: Wheelies
+> Learn how to clutch kick, and hold balance point
+
+### Tutorial: Air Tricks
+> Learn how to do classic FMX tricks
+
+### Tutorial: Trick Tweaks
+> Learn how to tweak your wheelies to get higher score
+
 
 ## Co-op gameplay
 
