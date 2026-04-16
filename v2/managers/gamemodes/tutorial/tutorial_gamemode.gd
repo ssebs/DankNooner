@@ -36,9 +36,8 @@ func Enter(state_context: StateContext):
 	_current_index = 0
 	_started = false
 
-	spawn_manager.spawn_all_players()
-
 	if multiplayer.is_server():
+		_set_all_players_input_disabled(true)
 		_teleport_players_to_start()
 		_countdown = _countdown_total
 		_rpc_show_countdown.rpc(ceili(_countdown))
@@ -58,6 +57,7 @@ func Update(delta: float):
 		if _countdown <= 0.0:
 			_countdown = -1.0
 			_started = true
+			_set_all_players_input_disabled(false)
 			_start_step(_current_index)
 		return
 
@@ -74,6 +74,9 @@ func Update(delta: float):
 	var player := spawn_manager._get_player_by_peer_id(_target_peer_id)
 	if player == null:
 		return
+
+	if step_def.get_progress.is_valid():
+		tutorial_hud.rpc_update_progress.rpc(step_def.get_progress.call())
 
 	if step_def.check.call(player, delta):
 		if step_def.on_exit.is_valid():
@@ -96,6 +99,22 @@ func _teleport_players_to_start():
 	var marker := _get_start_marker()
 	for peer_id in lobby_manager.lobby_players:
 		spawn_manager.respawn_player_at.rpc(peer_id, marker.global_position, marker.global_basis)
+
+
+func _set_all_players_input_disabled(disabled: bool):
+	for peer_id in lobby_manager.lobby_players:
+		var player := spawn_manager._get_player_by_peer_id(peer_id)
+		# Player may not be spawned yet — skip is intentional
+		if player == null:
+			continue
+		player.input_controller.input_disabled = disabled
+		if disabled:
+			# Zero out current input so they stop moving
+			player.input_controller.nfx_throttle = 0.0
+			player.input_controller.nfx_front_brake = 0.0
+			player.input_controller.nfx_rear_brake = 0.0
+			player.input_controller.nfx_steer = 0.0
+			player.input_controller.nfx_lean = 0.0
 
 
 @rpc("call_local", "reliable")
@@ -124,6 +143,8 @@ func Exit(_state_context: StateContext):
 	gamemode_manager.player_disconnected.disconnect(_on_player_disconnected)
 	gamemode_manager.player_latejoined.disconnect(_on_player_latejoined)
 
+	if multiplayer.is_server():
+		_set_all_players_input_disabled(false)
 	tutorial_hud.rpc_hide.rpc()
 
 

@@ -11,6 +11,7 @@ signal reset_cam_pressed
 @export var vibration_duration: float = 0.15
 
 var is_gamepad := false
+var input_disabled := false
 
 #region Netfox sync'd Input vars
 var nfx_throttle: float = 0.0
@@ -41,6 +42,8 @@ func _gather():
 	if Engine.is_editor_hint() or multiplayer.multiplayer_peer == null:
 		return
 	if !is_multiplayer_authority():
+		return
+	if input_disabled:
 		return
 
 	nfx_throttle = Input.get_action_strength("throttle_pct")
