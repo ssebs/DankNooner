@@ -5,6 +5,7 @@ class_name FreeRoamGameMode extends GameMode
 @export var input_state_manager: InputStateManager
 
 var _respawn_delay: float = 3.0
+var _pending_event: GameModeEvent
 
 
 func Enter(_state_context: StateContext):
@@ -38,6 +39,8 @@ func _signals_event_circles(should_connect: bool):
 func _on_event_circle_entered(peer_id: int, gamemode_event: GameModeEvent):
 	DebugUtils.DebugMsg("%d entered eventcircle: %s" % [peer_id, gamemode_event.name])
 
+	_pending_event = gamemode_event
+
 	game_mode_event_confirm_hud.on_player_entered_circle.rpc_id(
 		1, peer_id, gamemode_event.name, gamemode_event.description
 	)
@@ -60,6 +63,7 @@ func _on_event_circle_exited(peer_id: int, gamemode_event: GameModeEvent):
 
 func _on_game_mode_event_confirm_hud_submitted(peer_id: int):
 	DebugUtils.DebugMsg("Starting Event... %d" % peer_id)
+	gamemode_manager.change_gamemode.rpc_id(1, _pending_event.target_gamemode as int, peer_id)
 
 
 func _on_game_mode_event_confirm_hud_closed(_peer_id: int):

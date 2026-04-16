@@ -24,6 +24,7 @@ glow_enabled = true
 script = ExtResource("4_dr5sf")
 name = "Tutorial: Moto 101"
 description = "Learn the basics to get your M1 license."
+target_gamemode = 3
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [node name="Test_City_01" type="Node3D" unique_id=721643000 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug")]
@@ -1602,6 +1603,10 @@ height = 20.0
 depth = 200.0
 color_preset = 4
 
-[node name="EventStartCircle" parent="." unique_id=1014716352 instance=ExtResource("3_ffs5v")]
+[node name="Tutorial01StartMarker" type="Marker3D" parent="." unique_id=492544271]
+unique_name_in_owner = true
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 51, 0, 70)
+
+[node name="Tutorial01EventStartCircle" parent="." unique_id=1014716352 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 81)
 gamemode_event = SubResource("Resource_asds5")

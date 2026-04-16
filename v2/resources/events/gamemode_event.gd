@@ -5,3 +5,4 @@ class_name GameModeEvent extends Resource
 @export var name: String
 @export
 var description: String = "Sunt nisi id proident veniam ad laboris pariatur minim eu commodo aliquip."
+@export var target_gamemode: GamemodeManager.TGameMode
