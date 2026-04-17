@@ -23,6 +23,9 @@ func _ready():
 
 ## Called from MovementController._rollback_tick()
 func on_movement_rollback_tick(_delta: float):
+	if player_entity.is_crashed:
+		return
+
 	_current_trick = _detect_current_trick()
 	if _current_trick != _last_trick:
 		if _last_trick != Trick.NONE:
@@ -66,6 +69,9 @@ func _detect_air_trick() -> Trick:
 
 ## Called from player_entity.gd's do_respawn
 func do_reset():
+	# Drain any active trick so listeners (HUD balance bar, etc.) clean up
+	if _last_trick != Trick.NONE:
+		trick_ended.emit(_last_trick)
 	_current_trick = Trick.NONE
 	_last_trick = Trick.NONE
 	_flip_emitted = false
