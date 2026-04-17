@@ -3,10 +3,11 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀
+- [ ] start circle hud, leaving doesn't reset mouse back. 
 - [ ] Option to change localization language
 - [ ] Crash on the back of ramps
 - [ ] Close tutorial when leaving game
-- [ ] tutorial press RT/B should be dependent on controlscheme
+- [ ] tutorial press RT/B should be dependent on controlscheme, and be shown in more steps
 - [ ] tutorial gamemode - _ctx doesnt make sense
 > Take it slow, fix bugs and add polish to player controller
 - [ ] GamemodeEvent System & First tutorial
