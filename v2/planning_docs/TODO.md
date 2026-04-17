@@ -3,7 +3,6 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀
-- [ ] reduce brake amount
 - [ ] Option to change localization language
 - [ ] Crash on the back of ramps
 - [ ] Close tutorial when leaving game
@@ -293,6 +292,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] reduce brake amount
 
 - [x] when crashing upside down, the wheelie balance bar shows up on respawn
 
