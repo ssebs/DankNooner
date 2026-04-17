@@ -15,7 +15,6 @@
   - [ ] Single/multiplayer support
 - [ ] Tutorials should be single player, but server should still know. only RPC to that peer though.
   - [ ] Add choice to send to single peer, or all in lobby. e.g. race vs tutorial
-- [ ] Bug: Crash respawn when client messes up rotation/animation
 - [ ] New menu type
   - [ ] Create loading inbetween screen
   - [ ] Create win/lose inbetween screen
@@ -294,6 +293,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Bug: Crash respawn when client messes up rotation/animation
 
 - [x] uncheck ip/port btn when going from free roam to play menu
 
