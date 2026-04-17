@@ -4,6 +4,8 @@
 
 ## In Progress 🚀
 
+- [ ] tutorial press RT/B should be dependent on controlscheme
+- [ ] tutorial gamemode - _ctx doesnt make sense
 > Take it slow, fix bugs and add polish to player controller
 - [ ] GamemodeEvent System & First tutorial
   - [x] vibe code tutorial / connect systems from [GamemodeSystem.md](./GamemodeSystem.md)

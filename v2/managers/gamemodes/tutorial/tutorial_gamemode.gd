@@ -5,37 +5,38 @@ class_name TutorialGameMode extends GameMode
 @export var input_state_manager: InputStateManager
 @export var lobby_manager: LobbyManager
 
-var _steps_lib: TutorialSteps
-var _current_sequence: Array[TutorialSteps.Step] = []
-var _current_index: int = 0
-var _target_peer_id: int = -1
+var _tutorial_steps: TutorialSteps
+var _current_tutorial_sequence: Array[TutorialSteps.Step] = []
+var _current_tutorial_index: int = 0
 var _respawn_delay: float = 3.0
 var _countdown: float = -1.0
 var _countdown_total: float = 3.0
-var _started: bool = false
+var _tutorial_started: bool = false
 var _active_trick: TrickController.Trick = TrickController.Trick.NONE
+
+var _ctx: GamemodeStateContext
 
 
 func Enter(state_context: StateContext):
 	if Engine.is_editor_hint():
 		return
+	if state_context is GamemodeStateContext:
+		_ctx = state_context
+	else:
+		_ctx = GamemodeStateContext.new()
+		_ctx.peer_id = multiplayer.get_unique_id()
 
 	gamemode_manager.current_game_mode = GamemodeManager.TGameMode.TUTORIAL
 	DebugUtils.DebugMsg("Tutorial Mode")
-
-	if state_context is GamemodeStateContext:
-		_target_peer_id = state_context.peer_id
-	else:
-		_target_peer_id = multiplayer.get_unique_id()
 
 	gamemode_manager.player_crashed.connect(_on_player_crashed)
 	gamemode_manager.player_disconnected.connect(_on_player_disconnected)
 	gamemode_manager.player_latejoined.connect(_on_player_latejoined)
 
-	_steps_lib = TutorialSteps.new()
-	_current_sequence = TutorialSteps.THE_BASICS
-	_current_index = 0
-	_started = false
+	_tutorial_steps = TutorialSteps.new()
+	_current_tutorial_sequence = TutorialSteps.THE_BASICS  # TODO - get from context!
+	_current_tutorial_index = 0
+	_tutorial_started = false
 
 	if multiplayer.is_server():
 		_set_all_players_input_disabled(true)
@@ -57,48 +58,56 @@ func Update(delta: float):
 			_rpc_show_countdown.rpc(curr_sec)
 		if _countdown <= 0.0:
 			_countdown = -1.0
-			_started = true
+			_tutorial_started = true
 			_set_all_players_input_disabled(false)
 			_connect_trick_signals()
-			_start_step(_current_index)
+			_start_step(_current_tutorial_index)
 		return
 
-	if !_started:
+	if !_tutorial_started:
 		return
 
-	if _current_index >= _current_sequence.size():
+	if _current_tutorial_index >= _current_tutorial_sequence.size():
 		return
 
-	var step_enum := _current_sequence[_current_index]
-	var step_def := _steps_lib.defs[step_enum]
+	var step_enum := _current_tutorial_sequence[_current_tutorial_index]
+	var step_def := _tutorial_steps.defs[step_enum]
 
 	# Player may not be spawned yet during late-join sync — skip is intentional
-	var player := spawn_manager._get_player_by_peer_id(_target_peer_id)
+	var player := spawn_manager._get_player_by_peer_id(_ctx.peer_id)
 	if player == null:
 		return
 
 	if step_def.get_progress.is_valid():
 		tutorial_hud.rpc_update_progress.rpc(step_def.get_progress.call())
 
-	DebugUtils.DebugMsg("TUT Update | step=%d | trick=%s | delta=%.4f | wheelie_t=%.2f | stoppie_t=%.2f" % [
-		_current_index,
-		TrickController.trick_to_str(_active_trick),
-		delta,
-		_steps_lib._wheelie_time,
-		_steps_lib._stoppie_time,
-	])
+	# (
+	# 	DebugUtils
+	# 	. DebugMsg(
+	# 		(
+	# 			"TUT Update | step=%d | trick=%s | delta=%.4f | wheelie_t=%.2f | stoppie_t=%.2f"
+	# 			% [
+	# 				_current_tutorial_index,
+	# 				TrickController.trick_to_str(_active_trick),
+	# 				delta,
+	# 				_tutorial_steps._wheelie_time,
+	# 				_tutorial_steps._stoppie_time,
+	# 			]
+	# 		)
+	# 	)
+	# )
 
 	if step_def.check.call(player, delta, _active_trick):
 		if step_def.on_exit.is_valid():
 			step_def.on_exit.call()
-		_current_index += 1
-		if _current_index >= _current_sequence.size():
+		_current_tutorial_index += 1
+		if _current_tutorial_index >= _current_tutorial_sequence.size():
 			tutorial_hud.rpc_show_complete.rpc()
 			get_tree().create_timer(3.0).timeout.connect(
 				func(): _return_to_free_roam(), CONNECT_ONE_SHOT
 			)
 		else:
-			_start_step(_current_index)
+			_start_step(_current_tutorial_index)
 
 
 func _get_start_marker() -> Marker3D:
@@ -112,13 +121,13 @@ func _teleport_players_to_start():
 
 
 func _connect_trick_signals():
-	var player := spawn_manager._get_player_by_peer_id(_target_peer_id)
+	var player := spawn_manager._get_player_by_peer_id(_ctx.peer_id)
 	player.trick_controller.trick_started.connect(_on_trick_started)
 	player.trick_controller.trick_ended.connect(_on_trick_ended)
 
 
 func _disconnect_trick_signals():
-	var player := spawn_manager._get_player_by_peer_id(_target_peer_id)
+	var player := spawn_manager._get_player_by_peer_id(_ctx.peer_id)
 	# Player may have been despawned on disconnect — skip is intentional
 	if player == null:
 		return
@@ -158,20 +167,18 @@ func _rpc_show_countdown(seconds: int):
 
 
 func _start_step(index: int):
-	var step_enum := _current_sequence[index]
-	var step_def := _steps_lib.defs[step_enum]
+	var step_enum := _current_tutorial_sequence[index]
+	var step_def := _tutorial_steps.defs[step_enum]
 	if step_def.on_enter.is_valid():
 		step_def.on_enter.call()
 	tutorial_hud.rpc_show_step.rpc(
-		index, _current_sequence.size(), step_def.objective_text, step_def.hint_text
+		index, _current_tutorial_sequence.size(), step_def.objective_text, step_def.hint_text
 	)
 
 
 func _return_to_free_roam():
-	var ctx := GamemodeStateContext.new()
-	ctx.peer_id = _target_peer_id
 	gamemode_manager._rpc_transition_gamemode.rpc(
-		GamemodeManager.TGameMode.FREE_FROAM as int, _target_peer_id
+		GamemodeManager.TGameMode.FREE_FROAM, _ctx.peer_id
 	)
 
 
@@ -193,10 +200,10 @@ func _on_player_crashed(peer_id: int):
 		return
 
 	# Reset trick progress for the tutorial player so crashing doesn't count
-	if peer_id == _target_peer_id:
+	if peer_id == _ctx.peer_id:
 		_active_trick = TrickController.Trick.NONE
-		_steps_lib._wheelie_time = 0.0
-		_steps_lib._stoppie_time = 0.0
+		_tutorial_steps._wheelie_time = 0.0
+		_tutorial_steps._stoppie_time = 0.0
 
 	var marker := _get_start_marker()
 	get_tree().create_timer(_respawn_delay).timeout.connect(
@@ -217,7 +224,7 @@ func _on_player_disconnected(peer_id: int):
 		spawn_manager.rpc_despawn_player.rpc(peer_id)
 
 	# If the tutorial player disconnected, return to free roam
-	if peer_id == _target_peer_id and multiplayer.is_server():
+	if peer_id == _ctx.peer_id and multiplayer.is_server():
 		_return_to_free_roam()
 
 

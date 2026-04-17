@@ -94,7 +94,9 @@ func check_speed_below(player: PlayerEntity, threshold: float) -> bool:
 
 ## Returns true if active trick is a wheelie (sitting or mod)
 func check_is_wheelie(active_trick: TrickController.Trick) -> bool:
-	return active_trick in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]
+	return (
+		active_trick in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]
+	)
 
 
 ## Returns true if active trick is a stoppie
@@ -107,15 +109,21 @@ func check_is_stoppie(active_trick: TrickController.Trick) -> bool:
 ## Only checks the specific peer's player, NOT all players
 
 
-func _check_press_rt(player: PlayerEntity, _delta: float, _active_trick: TrickController.Trick) -> bool:
+func _check_press_rt(
+	player: PlayerEntity, _delta: float, _active_trick: TrickController.Trick
+) -> bool:
 	return check_speed_above(player, 2.0)
 
 
-func _check_reach_speed(player: PlayerEntity, _delta: float, _active_trick: TrickController.Trick) -> bool:
+func _check_reach_speed(
+	player: PlayerEntity, _delta: float, _active_trick: TrickController.Trick
+) -> bool:
 	return check_speed_above(player, 30)  # ~30 km/h
 
 
-func _check_wheelie(_player: PlayerEntity, delta: float, active_trick: TrickController.Trick) -> bool:
+func _check_wheelie(
+	_player: PlayerEntity, delta: float, active_trick: TrickController.Trick
+) -> bool:
 	if check_is_wheelie(active_trick):
 		_wheelie_time += delta
 		return _wheelie_time >= 3.0
@@ -123,7 +131,9 @@ func _check_wheelie(_player: PlayerEntity, delta: float, active_trick: TrickCont
 	return false
 
 
-func _check_stoppie(_player: PlayerEntity, delta: float, active_trick: TrickController.Trick) -> bool:
+func _check_stoppie(
+	_player: PlayerEntity, delta: float, active_trick: TrickController.Trick
+) -> bool:
 	if check_is_stoppie(active_trick):
 		_stoppie_time += delta
 		return _stoppie_time >= 1.0
@@ -140,11 +150,11 @@ func _reset_stoppie():
 
 
 func _get_wheelie_progress() -> String:
-	return "%.1f / 3.0s" % _wheelie_time
+	return "%s\n%.1f / 3.0s" % [tr("TUT_HINT_DO_WHEELIE"), _wheelie_time]
 
 
 func _get_stoppie_progress() -> String:
-	return "%.1f / 1.0s" % _stoppie_time
+	return "%s\n%.1f / 1.0s" % [tr("TUT_HINT_DO_STOPPIE"), _stoppie_time]
 
 ## ========== TUTORIAL SEQUENCES ==========
 ## Each tutorial selects steps in order

@@ -5,13 +5,18 @@ class_name FreeRoamGameMode extends GameMode
 @export var input_state_manager: InputStateManager
 
 var _respawn_delay: float = 3.0
-var _pending_event: GameModeEvent
+
+var _ctx: GamemodeStateContext
 
 
 func Enter(state_context: StateContext):
 	if Engine.is_editor_hint():
 		return
-
+	if state_context is GamemodeStateContext:
+		_ctx = state_context
+	else:
+		_ctx = GamemodeStateContext.new()
+		_ctx.peer_id = multiplayer.get_unique_id()
 	gamemode_manager.current_game_mode = GamemodeManager.TGameMode.FREE_FROAM
 	DebugUtils.DebugMsg("FreeRoam Mode")
 
@@ -24,11 +29,10 @@ func Enter(state_context: StateContext):
 	# Only spawn if players aren't already in the level (e.g. coming from another gamemode)
 	if spawn_manager._get_player_by_peer_id(multiplayer.get_unique_id()) == null:
 		spawn_manager.spawn_all_players()
-	elif multiplayer.is_server() and state_context is GamemodeStateContext:
-		# Coming from another gamemode — respawn the target peer at the free roam spawn
-		var ctx := state_context as GamemodeStateContext
-		if ctx.peer_id > 0:
-			spawn_manager.respawn_player.rpc(ctx.peer_id)
+
+	if multiplayer.is_server():
+		# Coming from another gamemode — respawn the target peer
+		spawn_manager.respawn_player.rpc(_ctx.peer_id)
 
 
 ## param is whether to connect() or disconnect()
@@ -46,15 +50,20 @@ func _signals_event_circles(should_connect: bool):
 func _on_event_circle_entered(peer_id: int, gamemode_event: GameModeEvent):
 	DebugUtils.DebugMsg("%d entered eventcircle: %s" % [peer_id, gamemode_event.name])
 
-	_pending_event = gamemode_event
+	_ctx.gamemode_event = gamemode_event
 
 	game_mode_event_confirm_hud.on_player_entered_circle.rpc_id(
 		1, peer_id, gamemode_event.name, gamemode_event.description
 	)
 
-	if not game_mode_event_confirm_hud.hud_submitted.is_connected(_on_game_mode_event_confirm_hud_submitted):
+	# connect hud signals
+	if not game_mode_event_confirm_hud.hud_submitted.is_connected(
+		_on_game_mode_event_confirm_hud_submitted
+	):
 		game_mode_event_confirm_hud.hud_submitted.connect(_on_game_mode_event_confirm_hud_submitted)
-	if not game_mode_event_confirm_hud.hud_closed.is_connected(_on_game_mode_event_confirm_hud_closed):
+	if not game_mode_event_confirm_hud.hud_closed.is_connected(
+		_on_game_mode_event_confirm_hud_closed
+	):
 		game_mode_event_confirm_hud.hud_closed.connect(_on_game_mode_event_confirm_hud_closed)
 
 	# TODO - set player velocity to 0
@@ -74,7 +83,7 @@ func _on_game_mode_event_confirm_hud_submitted(peer_id: int):
 	DebugUtils.DebugMsg("Starting Event... %d" % peer_id)
 	game_mode_event_confirm_hud.on_player_close_pressed.rpc_id(1, peer_id)
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
-	gamemode_manager.change_gamemode.rpc_id(1, _pending_event.target_gamemode as int, peer_id)
+	gamemode_manager.change_gamemode.rpc_id(1, _ctx.gamemode_event.target_gamemode, peer_id)
 
 
 func _on_game_mode_event_confirm_hud_closed(_peer_id: int):
@@ -94,6 +103,7 @@ func Exit(_state_context: StateContext):
 func _on_player_crashed(peer_id: int):
 	if !multiplayer.is_server():
 		return
+
 	get_tree().create_timer(_respawn_delay).timeout.connect(
 		func(): spawn_manager.respawn_player.rpc(peer_id), CONNECT_ONE_SHOT
 	)
