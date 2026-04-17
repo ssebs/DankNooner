@@ -36,6 +36,8 @@ func Enter(_state_context: StateContext):
 	code_entry.text_changed.connect(_on_code_text_changed)
 	ipport_toggle.toggled.connect(_on_ipport_toggled)
 
+	# Undo the force-IP done by _on_free_roam_btn_pressed when returning here
+	ipport_toggle.button_pressed = false
 	_update_ipport_tooltip()
 	_update_placeholder()
 
