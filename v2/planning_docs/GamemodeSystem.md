@@ -3,8 +3,9 @@
 ---
 
 ## IMPL
-- [ ] IMPL ../PLAN.md to connect & create tutorial
-
+- [x] IMPL ../PLAN.md to connect & create tutorial
+- [ ] Tutorials should be single player, but server should still know. only RPC to that peer though.
+  - [ ] Add choice to send to single peer, or all in lobby. e.g. race vs tutorial
 - [x] Move respawn to gamemode manager
 - [x] Create Free Mode GameMode
 - [ ] Create Event system

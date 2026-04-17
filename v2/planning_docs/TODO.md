@@ -5,7 +5,7 @@
 ## In Progress 🚀
 
 > Take it slow, fix bugs and add polish to player controller
-- [x] trick started keeps emitting/printing during the trick, should only happen once...
+- [ ] Add colors to redline RPM
 - [ ] gamemode select hud shows on all clients
   - [x] basic
   - [ ] Mouse cursor showing/hiding should be handled in gamemodeeventconfirmhud via rpc insetad of in freeroamgamemode
@@ -15,6 +15,7 @@
   - [ ] Check with multiple players
   - See [GamemodeSystem.md](./GamemodeSystem.md)
   - TODOs found there!
+- [ ] Bug: Crash respawn when client messes up rotation/animation
 
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
@@ -289,6 +290,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] trick started keeps emitting/printing during the trick, should only happen once...
 
 - [x] mobile, move LB to left..
 
