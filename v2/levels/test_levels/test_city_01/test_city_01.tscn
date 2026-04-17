@@ -50,7 +50,7 @@ environment = SubResource("Environment_ffs5v")
 
 [node name="KillboxTODOIMPLEMENT" type="StaticBody3D" parent="." unique_id=1604397840]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -54, 0)
-collision_layer = 3
+collision_layer = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="KillboxTODOIMPLEMENT" unique_id=1405482787]
 shape = SubResource("WorldBoundaryShape3D_qt85o")
@@ -1617,6 +1617,7 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 247,
 
 [node name="borderwall0" parent="Stuff/Tut01Location" unique_id=1563737870 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -255, 6.049988, 0)
+collision_layer = 3
 width = 2.0
 height = 12.0
 depth = 252.0
@@ -1624,6 +1625,7 @@ color_preset = 3
 
 [node name="borderwall1" parent="Stuff/Tut01Location" unique_id=1280414458 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 255, 6.05, 0)
+collision_layer = 3
 width = 2.0
 height = 12.0
 depth = 252.0
@@ -1631,6 +1633,7 @@ color_preset = 3
 
 [node name="borderwall2" parent="Stuff/Tut01Location" unique_id=738918424 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.05, -127)
+collision_layer = 3
 width = 512.0
 height = 12.0
 depth = 2.0
@@ -1638,6 +1641,7 @@ color_preset = 3
 
 [node name="borderwall3" parent="Stuff/Tut01Location" unique_id=605876305 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.05, 127)
+collision_layer = 3
 width = 512.0
 height = 12.0
 depth = 2.0
@@ -1645,6 +1649,7 @@ color_preset = 3
 
 [node name="wall" parent="Stuff/Tut01Location" unique_id=1367724436 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 214, 6.049988, -113)
+collision_layer = 3
 width = 80.0
 height = 12.0
 depth = 2.0
