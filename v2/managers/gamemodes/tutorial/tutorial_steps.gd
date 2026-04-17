@@ -4,6 +4,7 @@ class_name TutorialSteps extends RefCounted
 enum Step {
 	PRESS_RT,
 	REACH_SPEED,
+	CHANGE_GEAR,
 	DO_WHEELIE,
 	DO_STOPPIE,
 }
@@ -12,6 +13,7 @@ const THE_BASICS: Array[Step] = [
 	Step.PRESS_RT,
 	Step.REACH_SPEED,
 	Step.DO_WHEELIE,
+	Step.CHANGE_GEAR,
 	Step.DO_STOPPIE,
 ]
 
@@ -33,6 +35,7 @@ var defs: Dictionary[Step, StepDef] = {}
 ## --- Duration tracking for common checks ---
 var _wheelie_time: float = 0.0
 var _stoppie_time: float = 0.0
+var _initial_gear: int = -1
 
 
 func _init():
@@ -43,6 +46,13 @@ func _register_all():
 	defs[Step.PRESS_RT] = _make(Step.PRESS_RT, "TUT_PRESS_RT", "TUT_HINT_PRESS_RT", _check_press_rt)
 	defs[Step.REACH_SPEED] = _make(
 		Step.REACH_SPEED, "TUT_REACH_SPEED", "TUT_HINT_REACH_SPEED", _check_reach_speed
+	)
+	defs[Step.CHANGE_GEAR] = _make(
+		Step.CHANGE_GEAR,
+		"TUT_CHANGE_GEAR",
+		"TUT_HINT_CHANGE_GEAR",
+		_check_change_gear,
+		_reset_change_gear
 	)
 	defs[Step.DO_WHEELIE] = _make(
 		Step.DO_WHEELIE,
@@ -121,6 +131,14 @@ func _check_reach_speed(
 	return check_speed_above(player, 30)  # ~30 km/h
 
 
+func _check_change_gear(
+	player: PlayerEntity, _delta: float, _active_trick: TrickController.Trick
+) -> bool:
+	if _initial_gear == -1:
+		_initial_gear = player.gearing_controller.current_gear
+	return player.gearing_controller.current_gear != _initial_gear
+
+
 func _check_wheelie(
 	_player: PlayerEntity, delta: float, active_trick: TrickController.Trick
 ) -> bool:
@@ -139,6 +157,10 @@ func _check_stoppie(
 		return _stoppie_time >= 1.0
 	_stoppie_time = 0.0
 	return false
+
+
+func _reset_change_gear():
+	_initial_gear = -1
 
 
 func _reset_wheelie():
