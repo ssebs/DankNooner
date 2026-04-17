@@ -315,7 +315,7 @@ The same "pause" action triggers different behavior based on `InputState`.
 - RPCs:
   - `rpc_spawn_player(peer_id, player_def_dict)` - spawn broadcast
   - `rpc_despawn_player(peer_id)` - despawn broadcast
-  - `respawn_player(peer_id)` - server respawns a specific player
+  - `respawn_player(peer_id)` - broadcast: every peer sets `rb_do_respawn` on their local player so `do_respawn()` runs everywhere (resets ragdoll/visual state on clients, not just server-synced transform)
 - Local helpers: `add_player_locally()`, `remove_player_locally()`, `spawn_all_players()`
 
 ### Unlocks / progression
