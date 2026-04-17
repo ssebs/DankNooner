@@ -188,26 +188,31 @@ For detailed design docs see:
 | `CrashController`     | `controllers/crash_controller.gd`     | Brake grab detection, crash detection, auto-respawn     |
 | `CameraController`    | `controllers/camera_controller.gd`    | FPS/TPS camera switching                                |
 | `AnimationController` | `controllers/animation_controller.gd` | Procedural animation blending, IK, ragdoll              |
+| `HUDController`       | `controllers/hud_controller.gd`       | Wires controller signals to on-screen HUD               |
+
+`IKController` (FABRIK solver) and `RagdollController` (PhysicalBone3D skeleton) live under `player/characters/scripts/` and are driven by `AnimationController`.
 
 #### Synced State (via RollbackSynchronizer)
 
-- **Physics**: `speed`, `lean_angle`, `pitch_angle`, `fishtail_angle`, `ground_pitch`
-- **Gearing**: `current_gear`, `current_rpm`, `clutch_value`, `rpm_ratio`
+- **Physics**: `speed`, `roll_angle`, `pitch_angle`
+- **Gearing**: `current_gear`, `current_rpm`, `clutch_value`
 - **Tricks**: `is_boosting`, `boost_count`
 - **Crashes**: `is_crashed`
-- **Discrete actions**: `rb_do_respawn`, `rb_gear_up`, `rb_gear_down` (uses rollback pattern)
+- **Discrete actions**: `rb_do_respawn`, `rb_gear_up_pressed`, `rb_gear_down_pressed` (rollback pattern)
+
+> Note: `rb_gear_up_pressed` / `rb_gear_down_pressed` are currently typed `float` in `input_controller.gd` — should be `bool` per the pattern. TODO: fix typing.
 
 #### GearingController
 
 - Tracks clutch engagement (0-1), blends between throttle-driven and wheel-driven RPM
-- Gear shifts via `rb_gear_up` / `rb_gear_down` discrete actions on PlayerEntity
+- Gear shifts via `rb_gear_up_pressed` / `rb_gear_down_pressed` discrete actions on PlayerEntity
 - Power output = throttle x power_curve x torque_multiplier x engagement
 - Gear ratios, max_rpm, idle_rpm, stall_rpm are defined in `BikeSkinDefinition`
 
 #### TrickController
 
 ```gdscript
-enum TrickState { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE }
+enum TrickState { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, THREESIXTY }
 ```
 
 - Detects tricks via `pitch_angle` threshold checks against bike definition limits
@@ -287,11 +292,22 @@ The same "pause" action triggers different behavior based on `InputState`.
 
 ### Gamemode Manager
 
-- `GamemodeManager` (`managers/gamemodes/gamemode_manager.gd`) - manages match state, coordinates level/spawn
+- `GamemodeManager` (`managers/gamemodes/gamemode_manager.gd`) - manages match state, coordinates level/spawn. Runs a **state machine of gamemodes**.
+- **Gamemode states** (extend base `GameMode`, live in `managers/gamemodes/`):
+  - `FreeRoamGameMode` - open play, event circles trigger mode switches, respawn on crash
+  - `StreetRaceGameMode` - stub
+  - `TutorialGameMode` - step-by-step progression with countdown + trick detection (see `TutorialSteps`, `TutorialHUD`)
+- Context passed between gamemode states via `GamemodeStateContext`
 - RPCs for multiplayer sync:
   - `start_game(level_name)` - server calls on all peers
   - `_sync_game_to_late_joiner(level_name)` - sync level to late-joining client
   - `_request_late_spawn(peer_id)` - late-joiner requests their player spawn
+
+### Save Manager
+
+- `SaveManager` (`managers/save_manager.gd`) - JSON persistence of player save data with version tracking
+- Owns the local `PlayerDefinition` (username, bike/character skins, progression)
+- Distinct from `SettingsManager` (which handles device/UI settings)
 
 ### Spawn Manager
 
@@ -386,10 +402,13 @@ flowchart LR
 
 ### Connection Modes
 
-- **NORAY**: Uses netfox.noray addon for NAT punch-through + relay fallback
+All modes are **server-authoritative** — the host runs physics, clients predict + reconcile. Mode only affects transport.
+
+- **WEBRTC** *(preferred)*: WebRTC peer connections, works for both native and browser clients. Handled by `MultiplayerWebRTC`.
+- **NORAY**: Uses netfox.noray addon for NAT punch-through + relay fallback. Handled by `MultiplayerNoray`.
   - `Noray.connect_to_host()`, `Noray.register_host()`, `Noray.register_remote()`
   - OID = Object ID (21-char string) used as invite code
-- **IP_PORT**: Direct IP connection to port 42068
+- **IP_PORT**: Direct IP/ENet connection to port 42068. Handled by `MultiplayerIPPort`.
   - Fetches public IP via ipify.org API (or private IP in debug)
 
 ### RPC Signatures

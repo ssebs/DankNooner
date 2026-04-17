@@ -58,46 +58,18 @@ Pattern: `@export` navigation targets and managers, wire in inspector.
 
 ### Player Entity
 
-Uses composition - `PlayerEntity` (CharacterBody3D) has `@export` component references:
+`PlayerEntity` (CharacterBody3D) uses composition via `@export` component references:
+`InputController`, `MovementController`, `GearingController`, `TrickController`, `CrashController`, `CameraController`, `AnimationController`, `HUDController`, plus `BikeSkinDefinition` / `CharacterSkinDefinition` resources. `IKController` / `RagdollController` live under `player/characters/scripts/`.
 
-- `InputController` - gathers input, syncs via RollbackSynchronizer
-- `MovementController` - physics-based movement, speed, steering, lean
-- `GearingController` - clutch engagement, RPM blending, power output
-- `TrickController` - detects wheelie/stoppie, updates pitch_angle
-- `CrashController` - brake grab detection, crash detection, auto-respawn
-- `CameraController` - FPS/TPS camera switching
-- `AnimationController` - procedural animation blending, IK, ragdoll
-- `BikeSkinDefinition` - resource with mesh/collision/gearing/physics data
-- `CharacterSkinDefinition` - resource with character mesh/colors
-
-All controllers are called sequentially from `PlayerEntity._rollback_tick()` via their `on_movement_rollback_tick()` methods.
+Controllers are called sequentially from `PlayerEntity._rollback_tick()` via their `on_movement_rollback_tick()` methods. See `planning_docs/Architecture.md` for synced state vars and detailed subsystem docs.
 
 #### Netfox + RPC Pattern
 
-For actions that need rollback sync (called via RPC), use this pattern in `PlayerEntity`:
+For actions needing rollback sync on `PlayerEntity`:
 
-1. **Setter var**: `var rb_<action>: bool = false` (e.g., `rb_do_respawn`)
-2. **Handler func**: `func on_<action>():` containing the actual logic
-3. **In `_rollback_tick()`**: Check the setter, call handler, reset setter
-
-```gdscript
-# Setter var
-var rb_do_respawn: bool = false
-
-# Handler in _rollback_tick
-func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool):
-    if rb_do_respawn:
-        on_respawn()
-        rb_do_respawn = false
-
-# Handler func
-func on_respawn():
-    global_transform = get_parent().global_transform
-    velocity = Vector3.ZERO
-    # ... reset other state
-```
-
-External systems set the `rb_*` var; netfox handles sync and rollback automatically.
+1. **Setter var**: `rb_<action>` (e.g. `rb_do_respawn`) — external systems set it
+2. **Handler func**: `on_<action>()` — does the work
+3. In `_rollback_tick()`: check setter, call handler, reset setter
 
 ### Skin System
 
@@ -110,32 +82,22 @@ See `planning_docs/Skins.md` for details.
 
 ### Gamemode System
 
-- `GamemodeManager` - manages match state, late-joiner sync, coordinates level/spawn
+- `GamemodeManager` - match state, late-joiner sync, runs a state machine of gamemodes (base `GameMode` → `FreeRoamGameMode`, `StreetRaceGameMode`, `TutorialGameMode`)
 - `SpawnManager` - spawn/despawn RPCs + local player instantiation
+- `SaveManager` - JSON persistence of `PlayerDefinition` (username, skins, etc.)
 
 ### Multiplayer / Netcode
 
-Uses **netfox** addon with **Noray** for NAT traversal:
+**Server-authoritative** using **netfox** (RollbackSynchronizer + TickInterpolator). Clients predict locally and reconcile. `ConnectionManager` supports three modes: **WebRTC** (preferred), **Noray**, and direct **IP/Port**. `LobbyManager`, `GamemodeManager`, and `SpawnManager` handle the lobby/match/spawn layers.
 
-- **Server-authoritative**: Physics runs on server, clients predict locally
-- **RollbackSynchronizer**: Per-entity sync with client-side prediction and automatic reconciliation
-- **TickInterpolator**: Smooths remote player visuals between network ticks
-- **Noray**: NAT punch-through with relay fallback for peer connections
-- **IP/Port mode**: Direct connection alternative to Noray (port 42068)
-- `ConnectionManager` handles ENet peer connections via Noray or IP/Port
-- `LobbyManager` handles lobby_players dict and PlayerDefinition sync
-- `GamemodeManager` coordinates match state and late-joiner sync
-- `SpawnManager` handles player spawning/despawning via RPCs
-- Input flows: Client captures → RPC to server → Server applies → Broadcasts state
-
-See `Architecture.md` for detailed diagrams and RPC signatures.
+See `Architecture.md` for diagrams and RPC signatures.
 
 ## Project Structure
 
 - `main_game.tscn` - root scene, composes all managers
 - `managers/` - all managers (`network/`, `gamemodes/` subdirs)
 - `player/` - PlayerEntity + `controllers/`
-- `menus/` - menus (lobby, customize, settings, pause, respawn)
+- `menus/` - menu states (main, splash, play, lobby, customize, settings, pause, help)
 - `levels/` - all levels extend `LevelDefinition`
 - `resources/` - `BikeSkinDefinition` / `CharacterSkinDefinition` `.tres` files
 - `utils/state_machine/` - base `State`, `StateMachine`, `StateContext` classes
