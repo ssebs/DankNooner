@@ -58,7 +58,7 @@ class_name BikeSkinDefinition extends Resource
 @export_group("Physics")
 @export var max_speed: float = 88.0
 @export var acceleration: float = 12.0
-@export var brake_strength: float = 40.0
+@export var brake_strength: float = 30.0
 @export var friction: float = 2.0
 @export var engine_brake_strength: float = 12.0
 @export var max_lean_angle_deg: float = 50.0
