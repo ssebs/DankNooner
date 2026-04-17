@@ -10,6 +10,11 @@ class_name HUDController extends Control
 
 @onready var _throttle_bar: ProgressBar = %HUD_ThrottleProgress
 @onready var _rpm_bar: ProgressBar = %HUD_RPMProgress
+@onready var _rpm_fill_style: StyleBoxFlat = (
+	_rpm_bar.get_theme_stylebox("fill").duplicate() as StyleBoxFlat
+)
+const _RPM_COLOR_LOW := Color(0.103055954, 0.5546875, 0.052001953, 1)
+const _RPM_COLOR_HIGH := Color(0.85, 0.1, 0.1, 1)
 @onready var _brake_label: Label = %HUD_BRAKE
 @onready var _clutch_label: Label = %HUD_CLUTCH
 @onready var _speed_bar: ProgressBar = %HUD_SpeedProgress
@@ -31,6 +36,8 @@ func _ready():
 
 	if !input_state_mgr.is_mobile:
 		_mobile_controls.queue_free()
+
+	_rpm_bar.add_theme_stylebox_override("fill", _rpm_fill_style)
 
 	# Discrete events via signals
 	gearing_controller.gear_changed.connect(_on_gear_changed)
@@ -63,7 +70,9 @@ func _process(_delta: float):
 	else:
 		_clutch_label.text = tr("HUD_CLUTCH_OUT")
 
-	_rpm_bar.value = int(gearing_controller.get_rpm_ratio() * 100)
+	var rpm_ratio := gearing_controller.get_rpm_ratio()
+	_rpm_bar.value = int(rpm_ratio * 100)
+	_rpm_fill_style.bg_color = _RPM_COLOR_LOW.lerp(_RPM_COLOR_HIGH, clampf(rpm_ratio, 0.0, 1.0))
 	_speed_bar.value = int(movement_controller.speed)
 	_grip_label.text = tr("HUD_GRIP") % int(player_entity.grip_usage * 100)
 	_balance_bar.current_val = rad_to_deg(movement_controller.pitch_angle)

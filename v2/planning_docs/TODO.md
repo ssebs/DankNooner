@@ -5,7 +5,6 @@
 ## In Progress 🚀
 
 > Take it slow, fix bugs and add polish to player controller
-- [ ] Add colors to redline RPM
 - [ ] GamemodeEvent System & First tutorial
   - [x] vibe code tutorial / connect systems from [GamemodeSystem.md](./GamemodeSystem.md)
   - [ ] Review tutorial code
@@ -292,6 +291,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Add colors to redline RPM
 
 - [x] gamemode select hud shows on all clients
   - [x] basic
