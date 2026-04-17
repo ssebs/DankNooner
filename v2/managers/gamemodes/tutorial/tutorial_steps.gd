@@ -2,6 +2,7 @@ class_name TutorialSteps extends RefCounted
 
 ## Every possible tutorial step
 enum Step {
+	SHOW_HELP,
 	PRESS_RT,
 	REACH_SPEED,
 	CHANGE_GEAR,
@@ -10,6 +11,7 @@ enum Step {
 }
 # Tutorial
 const THE_BASICS: Array[Step] = [
+	Step.SHOW_HELP,
 	Step.PRESS_RT,
 	Step.REACH_SPEED,
 	Step.DO_WHEELIE,
@@ -36,6 +38,7 @@ var defs: Dictionary[Step, StepDef] = {}
 var _wheelie_time: float = 0.0
 var _stoppie_time: float = 0.0
 var _initial_gear: int = -1
+var _help_closed: bool = false
 
 
 func _init():
@@ -43,6 +46,9 @@ func _init():
 
 
 func _register_all():
+	defs[Step.SHOW_HELP] = _make(
+		Step.SHOW_HELP, "TUT_SHOW_HELP", "TUT_HINT_SHOW_HELP", _check_show_help, _reset_show_help
+	)
 	defs[Step.PRESS_RT] = _make(Step.PRESS_RT, "TUT_PRESS_RT", "TUT_HINT_PRESS_RT", _check_press_rt)
 	defs[Step.REACH_SPEED] = _make(
 		Step.REACH_SPEED, "TUT_REACH_SPEED", "TUT_HINT_REACH_SPEED", _check_reach_speed
@@ -119,6 +125,12 @@ func check_is_stoppie(active_trick: TrickController.Trick) -> bool:
 ## Only checks the specific peer's player, NOT all players
 
 
+func _check_show_help(
+	_player: PlayerEntity, _delta: float, _active_trick: TrickController.Trick
+) -> bool:
+	return _help_closed
+
+
 func _check_press_rt(
 	player: PlayerEntity, _delta: float, _active_trick: TrickController.Trick
 ) -> bool:
@@ -157,6 +169,10 @@ func _check_stoppie(
 		return _stoppie_time >= 1.0
 	_stoppie_time = 0.0
 	return false
+
+
+func _reset_show_help():
+	_help_closed = false
 
 
 func _reset_change_gear():

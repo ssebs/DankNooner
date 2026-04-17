@@ -4,6 +4,8 @@ class_name TutorialGameMode extends GameMode
 @export var tutorial_hud: TutorialHUD
 @export var input_state_manager: InputStateManager
 @export var lobby_manager: LobbyManager
+@export var menu_manager: MenuManager
+@export var help_menu_state: HelpMenuState
 
 var _tutorial_steps: TutorialSteps
 var _current_tutorial_sequence: Array[TutorialSteps.Step] = []
@@ -174,6 +176,47 @@ func _start_step(index: int):
 	tutorial_hud.rpc_show_step.rpc(
 		index, _current_tutorial_sequence.size(), step_def.objective_text, step_def.hint_text
 	)
+	if step_enum == TutorialSteps.Step.SHOW_HELP:
+		_rpc_show_help_menu.rpc_id(_ctx.peer_id)
+
+
+@rpc("call_local", "reliable")
+func _rpc_show_help_menu():
+	# Freeze the bike while reading
+	var player := spawn_manager._get_player_by_peer_id(multiplayer.get_unique_id())
+	player.input_controller.input_disabled = true
+
+	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME_PAUSED
+	menu_manager.enable_input_and_processing()
+	help_menu_state.ui.show()
+	help_menu_state._show_controls_for_current_device()
+
+	help_menu_state.close_help_btn.pressed.connect(_on_tutorial_help_closed, CONNECT_ONE_SHOT)
+	# Pause-key would fire unpause_requested → pause_manager.do_unpause() and steal the menu.
+	# Treat it as a close too so the tutorial advances cleanly.
+	input_state_manager.unpause_requested.connect(_on_tutorial_help_closed, CONNECT_ONE_SHOT)
+
+
+func _on_tutorial_help_closed():
+	# Disconnect whichever signal didn't fire
+	if help_menu_state.close_help_btn.pressed.is_connected(_on_tutorial_help_closed):
+		help_menu_state.close_help_btn.pressed.disconnect(_on_tutorial_help_closed)
+	if input_state_manager.unpause_requested.is_connected(_on_tutorial_help_closed):
+		input_state_manager.unpause_requested.disconnect(_on_tutorial_help_closed)
+
+	help_menu_state.ui.hide()
+	menu_manager.disable_input_and_processing()
+	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
+
+	var player := spawn_manager._get_player_by_peer_id(multiplayer.get_unique_id())
+	player.input_controller.input_disabled = false
+
+	_rpc_help_menu_closed.rpc_id(1)
+
+
+@rpc("call_local", "any_peer", "reliable")
+func _rpc_help_menu_closed():
+	_tutorial_steps._help_closed = true
 
 
 func _return_to_free_roam():
@@ -237,5 +280,9 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_state_manager must not be empty")
 	if lobby_manager == null:
 		issues.append("lobby_manager must not be empty")
+	if menu_manager == null:
+		issues.append("menu_manager must not be empty")
+	if help_menu_state == null:
+		issues.append("help_menu_state must not be empty")
 
 	return issues

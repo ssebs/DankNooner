@@ -4,6 +4,7 @@
 
 ## In Progress 🚀
 
+- [ ] uncheck ip/port btn when going from freee roam to play menu
 - [ ] tutorial press RT/B should be dependent on controlscheme
 - [ ] tutorial gamemode - _ctx doesnt make sense
 > Take it slow, fix bugs and add polish to player controller

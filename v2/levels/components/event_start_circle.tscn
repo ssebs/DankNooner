@@ -5,7 +5,7 @@
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2lumj"]
 transparency = 1
-albedo_color = Color(0.38326755, 0.99332047, 1.4369954, 0.5411765)
+albedo_color = Color(0.38326755, 0.99332047, 1.4369954, 0.10980392)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_2lumj"]
 material = SubResource("StandardMaterial3D_2lumj")
@@ -39,7 +39,7 @@ shape = SubResource("CylinderShape3D_3ysdx")
 
 [node name="Label3D" type="Label3D" parent="." unique_id=2069409638]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
 billboard = 1
 double_sided = false
 text = "EVENT_LABEL_NAME"

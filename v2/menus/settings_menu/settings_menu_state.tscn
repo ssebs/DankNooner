@@ -64,11 +64,13 @@ size_flags_vertical = 8
 [node name="SaveBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1073023423]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "SAVE_LABEL"
 
 [node name="BackBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1870693339]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "BACK_LABEL"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1088139743]
@@ -113,6 +115,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
+mouse_default_cursor_shape = 10
 min_value = 0.25
 max_value = 4.0
 step = 0.25
@@ -126,6 +129,7 @@ text = "WINDOW_SETTINGS_LABEL"
 [node name="WindowModeOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1732712393]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 selected = 0
 item_count = 4
 popup/item_0/text = "Windowed"
@@ -146,6 +150,7 @@ theme_override_styles/separator = SubResource("StyleBoxLine_hdace")
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
+mouse_default_cursor_shape = 2
 text = "RESET_SETTINGS_LABEL"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/HBoxContainer" unique_id=1712998538]
@@ -172,6 +177,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
+mouse_default_cursor_shape = 10
 max_value = 1.0
 step = 0.05
 value = 0.5
@@ -185,6 +191,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
+mouse_default_cursor_shape = 10
 max_value = 1.0
 step = 0.05
 value = 0.5
@@ -198,6 +205,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
+mouse_default_cursor_shape = 10
 max_value = 1.0
 step = 0.05
 value = 0.5
@@ -212,6 +220,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
+mouse_default_cursor_shape = 10
 max_value = 1.0
 step = 0.05
 value = 0.5
@@ -237,6 +246,7 @@ text = "DIFFICULTY_LABEL"
 [node name="DifficultyOptBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=686647650]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 selected = 0
 item_count = 2
 popup/item_0/text = "DIFFICULTY_EASY"
@@ -253,6 +263,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
+mouse_default_cursor_shape = 10
 max_value = 1.0
 step = 0.01
 value = 0.5
@@ -267,6 +278,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
+mouse_default_cursor_shape = 10
 max_value = 1.0
 step = 0.01
 value = 0.5
@@ -279,4 +291,5 @@ text = "INVERT_CAM_LABEL"
 [node name="InvertCamCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=259754545]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "TRUE"

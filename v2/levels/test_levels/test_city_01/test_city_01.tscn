@@ -35,11 +35,11 @@ metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="PlayerSpawn" type="Marker3D" parent="." unique_id=2018268121]
 unique_name_in_owner = true
-transform = Transform3D(-0.99999994, 0, 3.1786506e-08, 0, 1, 0, -3.1786506e-08, 0, -0.99999994, 107.99999, 0.049999952, 40.999996)
+transform = Transform3D(-0.99999994, 0, 3.1786506e-08, 0, 1, 0, -3.1786506e-08, 0, -0.99999994, 107.99999, 0.049999952, 36.999996)
 
 [node name="PlayerSpawnTest" type="Marker3D" parent="." unique_id=1392137367]
 unique_name_in_owner = true
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 89, 0.049999952, 72.00001)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 89, 0.049999952, 74.00001)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=20150230]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)

@@ -182,7 +182,7 @@ transform = Transform3D(-1, 2.7775881e-08, -1.4841912e-07, 0, 0.98293537, 0.1839
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@18938")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@114727")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
@@ -365,26 +365,6 @@ rounded = true
 allow_greater = true
 fill_mode = 3
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer" unique_id=1320213754]
-layout_mode = 2
-
-[node name="SpeedLabel" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer2" unique_id=2104620848]
-layout_mode = 2
-text = "SPD"
-
-[node name="HUD_SpeedProgress" type="ProgressBar" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer2" unique_id=346131774]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(48, 256)
-layout_mode = 2
-size_flags_horizontal = 0
-theme_override_styles/background = ExtResource("17_pv2x4")
-theme_override_styles/fill = SubResource("StyleBoxFlat_8urt2")
-step = 1.0
-value = 60.0
-rounded = true
-allow_greater = true
-fill_mode = 3
-
 [node name="VBoxContainer3" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer" unique_id=544624310]
 layout_mode = 2
 
@@ -404,6 +384,43 @@ value = 60.0
 rounded = true
 allow_greater = true
 fill_mode = 3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer" unique_id=1320213754]
+layout_mode = 2
+
+[node name="SpeedLabel" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer2" unique_id=2104620848]
+layout_mode = 2
+text = "SPD"
+
+[node name="HUD_SpeedProgress" type="ProgressBar" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer2" unique_id=346131774]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 256)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/background = ExtResource("17_pv2x4")
+theme_override_styles/fill = SubResource("StyleBoxFlat_8urt2")
+max_value = 140.0
+step = 1.0
+value = 60.0
+rounded = true
+allow_greater = true
+fill_mode = 3
+show_percentage = false
+
+[node name="SpeedLabel2" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer2/HUD_SpeedProgress" unique_id=1005100431]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -19.5
+offset_right = 24.0
+offset_bottom = 19.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "HUD_SPEED_NUM"
 
 [node name="VBoxContainer4" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer" unique_id=1099301206]
 layout_mode = 2
@@ -445,21 +462,9 @@ text = "HUD_GAME_MSG"
 
 [node name="HUD_CHALLENGE_MSG" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/top left vbox" unique_id=345391560]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 text = "HUD_CHALLENGE_MSG"
-
-[node name="TutorialOverlay" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1728547112]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 2
-
-[node name="TUT_MSG_1" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/TutorialOverlay" unique_id=1637961489]
-unique_name_in_owner = true
-layout_mode = 0
-offset_top = 153.0
-offset_right = 272.0
-offset_bottom = 192.0
-text = "TUT_MSG_1"
 
 [node name="BalanceBar" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1249265550 instance=ExtResource("18_htgu7")]
 unique_name_in_owner = true

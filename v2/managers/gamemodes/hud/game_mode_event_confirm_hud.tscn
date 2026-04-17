@@ -24,6 +24,7 @@ expand_margin_right = 12.0
 
 [node name="GameModeEventConfirmHUD" type="Control" unique_id=844708804]
 unique_name_in_owner = true
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -90,9 +91,11 @@ theme_override_constants/separation = 32
 [node name="SubmitBtn" type="Button" parent="AspectContainer/MarginContainer/PanelContainer/MarginContainer2/HBoxContainer" unique_id=817092111]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "START_LABEL"
 
 [node name="CloseBtn" type="Button" parent="AspectContainer/MarginContainer/PanelContainer/MarginContainer2/HBoxContainer" unique_id=557344837]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "CLOSE_LABEL"
