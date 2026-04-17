@@ -8,13 +8,12 @@ class_name HUDController extends Control
 @export var trick_controller: TrickController
 @export var crash_controller: CrashController
 
-@onready var _throttle_bar: ProgressBar = %HUD_ThrottleProgress
-@onready var _rpm_bar: ProgressBar = %HUD_RPMProgress
-@onready var _rpm_fill_style: StyleBoxFlat = (
-	_rpm_bar.get_theme_stylebox("fill").duplicate() as StyleBoxFlat
-)
 const _RPM_COLOR_LOW := Color(0.103055954, 0.5546875, 0.052001953, 1)
 const _RPM_COLOR_HIGH := Color(0.85, 0.1, 0.1, 1)
+
+@onready var _throttle_bar: ProgressBar = %HUD_ThrottleProgress
+@onready var _rpm_bar: ProgressBar = %HUD_RPMProgress
+
 @onready var _brake_label: Label = %HUD_BRAKE
 @onready var _clutch_label: Label = %HUD_CLUTCH
 @onready var _speed_bar: ProgressBar = %HUD_SpeedProgress
@@ -26,6 +25,7 @@ const _RPM_COLOR_HIGH := Color(0.85, 0.1, 0.1, 1)
 @onready var _mobile_controls: Control = %MobileControls
 
 var input_state_mgr: InputStateManager = null
+var _rpm_fill_style: StyleBoxFlat = null
 
 
 func _ready():
@@ -37,6 +37,7 @@ func _ready():
 	if !input_state_mgr.is_mobile:
 		_mobile_controls.queue_free()
 
+	_rpm_fill_style = _rpm_bar.get_theme_stylebox("fill").duplicate() as StyleBoxFlat
 	_rpm_bar.add_theme_stylebox_override("fill", _rpm_fill_style)
 
 	# Discrete events via signals

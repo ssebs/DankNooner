@@ -173,6 +173,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 selected = 0
 item_count = 2
 popup/item_0/text = "LEVEL_SELECT_LABEL"
@@ -199,6 +200,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
+mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
 theme_override_font_sizes/font_size = 32
 text = "START_LABEL"
@@ -254,12 +256,14 @@ text = "IP: 0.0.0.0"
 [node name="IPCopyBtn" type="Button" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer/HBoxContainer" unique_id=256877172]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 disabled = true
 text = "COPY_LABEL"
 
 [node name="InviteBtn" type="Button" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer/HBoxContainer" unique_id=568535846]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 disabled = true
 text = "INVITE_LABEL"
 
@@ -284,6 +288,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 text = "CUSTOMIZE_LABEL"
 
 [node name="BackBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1870693339]
@@ -291,6 +296,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
+mouse_default_cursor_shape = 2
 text = "BACK_LABEL"
 
 [node name="TimeoutTimer" type="Timer" parent="." unique_id=2081652172]

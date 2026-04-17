@@ -53,11 +53,13 @@ text = "SINGLEPLAYER_LABEL"
 [node name="FreeRoamBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer/SP" unique_id=1870592676]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "FREE_ROAM_LABEL"
 
 [node name="StoryBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer/SP" unique_id=276871775]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 disabled = true
 text = "STORY_LABEL"
 
@@ -78,12 +80,14 @@ theme_override_constants/separation = 32
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
+mouse_default_cursor_shape = 2
 text = "HOST_LABEL"
 
 [node name="IpPortToggle" type="CheckBox" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP/HostContainer" unique_id=98726948]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
+mouse_default_cursor_shape = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP" unique_id=1513694560]
 layout_mode = 2
@@ -99,11 +103,13 @@ clear_button_enabled = true
 [node name="PasteBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP/HBoxContainer" unique_id=827439361]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "PASTE_LABEL"
 
 [node name="JoinBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP/HBoxContainer" unique_id=1406859642]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 disabled = true
 text = "JOIN_LABEL"
 
@@ -117,10 +123,12 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 text = "CUSTOMIZE_LABEL"
 
 [node name="BackBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1870693339]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
+mouse_default_cursor_shape = 2
 text = "BACK_LABEL"
