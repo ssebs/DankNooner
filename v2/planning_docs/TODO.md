@@ -3,7 +3,9 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀
-- [ ] start circle hud, leaving doesn't reset mouse back. 
+
+- [ ] Mouse cursor showing/hiding in gamemode event should be handled in gamemodeeventconfirmhud via rpc insetad of in freeroamgamemode
+  - [ ] start circle hud, leaving doesn't reset mouse back to original captured state
 - [ ] Option to change localization language
 - [ ] Crash on the back of ramps
 - [ ] Close tutorial when leaving game
@@ -265,7 +267,7 @@
 
 ## Polish / Bugs
 
-- [ ] Nit: Mouse cursor showing/hiding in gamemode event should be handled in gamemodeeventconfirmhud via rpc insetad of in freeroamgamemode
+
 
 - [ ] find hook for dank nooner, what makes it cool!
 

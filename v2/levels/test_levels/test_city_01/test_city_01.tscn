@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dyrrl34ljb2yd"]
 
 [ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_qt85o"]
+[ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://levels/components/killbox.tscn" id="2_asds5"]
 [ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://levels/components/event_start_circle.tscn" id="3_ffs5v"]
 [ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://resources/events/gamemode_event.gd" id="4_dr5sf"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="17_cf4ia"]
@@ -17,8 +18,6 @@ background_mode = 2
 sky = SubResource("Sky_6hu6n")
 tonemap_mode = 2
 glow_enabled = true
-
-[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_qt85o"]
 
 [sub_resource type="Resource" id="Resource_asds5"]
 script = ExtResource("4_dr5sf")
@@ -48,12 +47,8 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1628856091]
 environment = SubResource("Environment_ffs5v")
 
-[node name="KillboxTODOIMPLEMENT" type="StaticBody3D" parent="." unique_id=1604397840]
+[node name="Killbox" parent="." unique_id=1054789626 instance=ExtResource("2_asds5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -54, 0)
-collision_layer = 2
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="KillboxTODOIMPLEMENT" unique_id=1405482787]
-shape = SubResource("WorldBoundaryShape3D_qt85o")
 
 [node name="Stuff" type="Node3D" parent="." unique_id=2102151921]
 
