@@ -3,9 +3,9 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀
-- [ ] Option to change localization language
-- [ ] Crash on the back of ramps
-- [ ] Close tutorial when leaving game
+- [ ] Tutorials should be single player, but server should still know. only RPC to that peer though.
+  - [ ] Add choice to send to single peer, or all in lobby. e.g. race vs tutorial
+- [ ] Close tutorial hud when leaving game
 - [ ] tutorial press RT/B should be dependent on controlscheme, and be shown in more steps
 - [ ] tutorial gamemode - _ctx doesnt make sense
 > Take it slow, fix bugs and add polish to player controller
@@ -14,13 +14,14 @@
   - [ ] Review tutorial code
   - [ ] Review gamemode transition code when entering circle to starting tutorial mode
   - [ ] Single/multiplayer support
-- [ ] Tutorials should be single player, but server should still know. only RPC to that peer though.
-  - [ ] Add choice to send to single peer, or all in lobby. e.g. race vs tutorial
+
 - [ ] New menu type
   - [ ] Create loading inbetween screen
   - [ ] Create win/lose inbetween screen
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
+
+- [ ] Option to change localization language
 
 - [ ] Pause => show lobby
 
@@ -292,6 +293,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Crash on the back of ramps
 
 - [x] reduce brake amount
 
