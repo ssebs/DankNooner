@@ -407,20 +407,18 @@ allow_greater = true
 fill_mode = 3
 show_percentage = false
 
-[node name="SpeedLabel2" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer2/HUD_SpeedProgress" unique_id=1005100431]
+[node name="HUD_SPEED_NUM" type="Label" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer2/HUD_SpeedProgress" unique_id=1005100431]
+unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -24.0
-offset_top = -19.5
-offset_right = 24.0
-offset_bottom = 19.5
+offset_left = -26.0
+offset_right = 26.0
+offset_bottom = 39.0
 grow_horizontal = 2
-grow_vertical = 2
-text = "HUD_SPEED_NUM"
+text = "#"
+horizontal_alignment = 1
 
 [node name="VBoxContainer4" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer" unique_id=1099301206]
 layout_mode = 2
