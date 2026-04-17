@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://bxjk6as3o5j26"]
+
+[ext_resource type="Script" uid="uid://cn6stb5w0757" path="res://levels/components/killbox.gd" id="1_xgkep"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_qt85o"]
+
+[node name="Killbox" type="StaticBody3D" unique_id=1054789626]
+collision_layer = 2
+script = ExtResource("1_xgkep")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1313263384]
+shape = SubResource("WorldBoundaryShape3D_qt85o")
