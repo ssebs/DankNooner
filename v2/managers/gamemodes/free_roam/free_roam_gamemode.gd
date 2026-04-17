@@ -8,7 +8,7 @@ var _respawn_delay: float = 3.0
 var _pending_event: GameModeEvent
 
 
-func Enter(_state_context: StateContext):
+func Enter(state_context: StateContext):
 	if Engine.is_editor_hint():
 		return
 
@@ -24,6 +24,11 @@ func Enter(_state_context: StateContext):
 	# Only spawn if players aren't already in the level (e.g. coming from another gamemode)
 	if spawn_manager._get_player_by_peer_id(multiplayer.get_unique_id()) == null:
 		spawn_manager.spawn_all_players()
+	elif multiplayer.is_server() and state_context is GamemodeStateContext:
+		# Coming from another gamemode — respawn the target peer at the free roam spawn
+		var ctx := state_context as GamemodeStateContext
+		if ctx.peer_id > 0:
+			spawn_manager.respawn_player.rpc(ctx.peer_id)
 
 
 ## param is whether to connect() or disconnect()
