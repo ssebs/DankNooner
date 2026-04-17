@@ -6,17 +6,17 @@
 
 > Take it slow, fix bugs and add polish to player controller
 - [ ] Add colors to redline RPM
-- [ ] gamemode select hud shows on all clients
-  - [x] basic
-  - [ ] Mouse cursor showing/hiding should be handled in gamemodeeventconfirmhud via rpc insetad of in freeroamgamemode
 - [ ] GamemodeEvent System & First tutorial
+  - [x] vibe code tutorial / connect systems from [GamemodeSystem.md](./GamemodeSystem.md)
   - [ ] Review tutorial code
   - [ ] Review gamemode transition code when entering circle to starting tutorial mode
-  - [ ] Check with multiple players
-  - See [GamemodeSystem.md](./GamemodeSystem.md)
-  - TODOs found there!
+  - [ ] Single/multiplayer support
+- [ ] Tutorials should be single player, but server should still know. only RPC to that peer though.
+  - [ ] Add choice to send to single peer, or all in lobby. e.g. race vs tutorial
 - [ ] Bug: Crash respawn when client messes up rotation/animation
-
+- [ ] New menu type
+  - [ ] Create loading inbetween screen
+  - [ ] Create win/lose inbetween screen
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
 
@@ -262,6 +262,8 @@
 
 ## Polish / Bugs
 
+- [ ] Nit: Mouse cursor showing/hiding in gamemode event should be handled in gamemodeeventconfirmhud via rpc insetad of in freeroamgamemode
+
 - [ ] find hook for dank nooner, what makes it cool!
 
 - [ ] broken back button via: play => lobby => back => customize => back
@@ -290,6 +292,9 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] gamemode select hud shows on all clients
+  - [x] basic
 
 - [x] trick started keeps emitting/printing during the trick, should only happen once...
 
