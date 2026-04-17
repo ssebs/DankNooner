@@ -50,23 +50,17 @@ func _on_lobby_players_updated(players: Dictionary):
 		player.update_skins(players[peer_id].bike_skin, players[peer_id].character_skin)
 
 
-## Set player's rb_do_respawn to true
+## Set player's rb_do_respawn to true on every peer so each runs do_respawn() locally.
+## Required so client-only state (ragdoll bones, controller-local vars) gets reset alongside
+## the server-synced global_transform / is_crashed.
 @rpc("any_peer", "call_local", "reliable")
 func respawn_player(player_peer_id: int):
-	if !multiplayer.is_server():
-		return
-
-	var player_node := _get_player_by_peer_id(player_peer_id)
-
-	player_node.rb_do_respawn = true
+	_get_player_by_peer_id(player_peer_id).rb_do_respawn = true
 
 
-## Respawn player at a specific transform instead of their spawn point
+## Respawn player at a specific transform instead of their spawn point. Runs on every peer.
 @rpc("any_peer", "call_local", "reliable")
 func respawn_player_at(player_peer_id: int, pos: Vector3, basis: Basis):
-	if !multiplayer.is_server():
-		return
-
 	var player_node := _get_player_by_peer_id(player_peer_id)
 	player_node.rb_respawn_transform = Transform3D(basis, pos)
 	player_node.rb_do_respawn = true

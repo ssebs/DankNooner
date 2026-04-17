@@ -3,7 +3,8 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀
-
+- [ ] Crash on the back of ramps
+- [ ] Close tutorial when leaving game
 - [ ] tutorial press RT/B should be dependent on controlscheme
 - [ ] tutorial gamemode - _ctx doesnt make sense
 > Take it slow, fix bugs and add polish to player controller
