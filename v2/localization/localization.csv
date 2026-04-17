@@ -82,5 +82,5 @@ TUT_HINT_DO_WHEELIE,"Lean back while accelerating","Tira hacia atrás mientras a
 TUT_CHANGE_GEAR,"Shift gears to get to higher speeds","Cambia de marcha para alcanzar velocidades más altas"
 TUT_HINT_CHANGE_GEAR,"Press B to shift up, press X to shift down","Presiona B para subir de marcha; presiona X para bajar de marcha"
 TUT_DO_STOPPIE,"Do a stoppie for 1 second","Haz un stoppie por 1 segundo"
-TUT_HINT_DO_STOPPIE,"Lean forward while tapping the front brake at speed, in 2nd gear","Inclínate hacia adelante mientras das toques al freno delantero a velocidad, en segunda marcha"
+TUT_HINT_DO_STOPPIE,"Lean forward while tapping the front brake at speed, in 3rd gear","Inclínate hacia adelante mientras das toques al freno delantero a velocidad, en tercera marcha"
 TUT_COMPLETE,"Tutorial Complete!","¡Tutorial Completado!"
