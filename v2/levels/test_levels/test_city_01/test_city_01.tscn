@@ -1650,6 +1650,30 @@ height = 12.0
 depth = 2.0
 color_preset = 3
 
+[node name="rampwall" parent="Stuff" unique_id=873398629 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 119, 4.0499997, 108.64206)
+collision_layer = 3
+width = 8.0
+height = 8.0
+depth = 0.1
+color_preset = 1
+
+[node name="rampwall2" parent="Stuff" unique_id=1074572289 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 119, 4.0499997, 123.74618)
+collision_layer = 3
+width = 24.0
+height = 8.0
+depth = 0.1
+color_preset = 1
+
+[node name="rampwall3" parent="Stuff" unique_id=2085340060 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 99, 0.6799998, 119.993164)
+collision_layer = 3
+width = 16.0
+height = 1.5
+depth = 0.1
+color_preset = 1
+
 [node name="Tutorial01EventStartCircle" parent="." unique_id=1014716352 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 81)
 gamemode_event = SubResource("Resource_asds5")
