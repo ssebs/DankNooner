@@ -64,22 +64,17 @@ func start_game(level_name: LevelManager.LevelName, gamemode: TGameMode = TGameM
 
 ## Server receives request to change gamemode, broadcasts to all peers
 @rpc("any_peer", "call_local", "reliable")
-func change_gamemode(gamemode_enum: int, peer_id: int):
+func change_gamemode(gamemode: TGameMode, peer_id: int):
 	if !multiplayer.is_server():
 		return
 
-	var gamemode := gamemode_enum as TGameMode
-	var ctx := GamemodeStateContext.new()
-	ctx.peer_id = peer_id
 	current_game_mode = gamemode
-
-	_rpc_transition_gamemode.rpc(gamemode_enum, peer_id)
+	_rpc_transition_gamemode.rpc(gamemode, peer_id)
 
 
 ## All peers transition their state machine to the new gamemode
 @rpc("call_local", "reliable")
-func _rpc_transition_gamemode(gamemode_enum: int, peer_id: int):
-	var gamemode := gamemode_enum as TGameMode
+func _rpc_transition_gamemode(gamemode: TGameMode, peer_id: int):
 	var ctx := GamemodeStateContext.new()
 	ctx.peer_id = peer_id
 	current_game_mode = gamemode
@@ -148,11 +143,13 @@ func _on_client_connection_succeeded(peer_id: int):
 #region late-joiner sync
 ## Server calls this on a late-joining client to sync them into the active game
 @rpc("any_peer", "reliable")
-func _sync_game_to_late_joiner(level_name: LevelManager.LevelName, gamemode_enum: int = 0):
+func _sync_game_to_late_joiner(
+	level_name: LevelManager.LevelName, gamemode: TGameMode = TGameMode.FREE_FROAM
+):
 	DebugUtils.DebugMsg("_sync_game_to_late_joiner")
 	match_state = MatchState.IN_GAME
 	current_level_name = level_name
-	current_game_mode = gamemode_enum as TGameMode
+	current_game_mode = gamemode as TGameMode
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
 	state_machine.request_state_change(_gamemode_map[current_game_mode])
 

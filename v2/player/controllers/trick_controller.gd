@@ -39,7 +39,7 @@ func _detect_current_trick() -> Trick:
 	# Reset flip tracking on landing
 	_flip_emitted = false
 
-	if movement_controller.pitch_angle > deg_to_rad(15):
+	if movement_controller.pitch_angle > deg_to_rad(10):
 		if input_controller.nfx_trick_held:
 			return Trick.WHEELIE_MOD
 		return Trick.WHEELIE_SITTING
