@@ -17,6 +17,7 @@ const _RPM_COLOR_HIGH := Color(0.85, 0.1, 0.1, 1)
 @onready var _brake_label: Label = %HUD_BRAKE
 @onready var _clutch_label: Label = %HUD_CLUTCH
 @onready var _speed_bar: ProgressBar = %HUD_SpeedProgress
+@onready var _speed_num: Label = %HUD_SPEED_NUM
 @onready var _gear_label: Label = %HUD_GEAR
 @onready var _grip_label: Label = %HUD_GRIP_DGR
 @onready var _trick_msg: Label = %HUD_TRICK_MSG
@@ -75,6 +76,7 @@ func _process(_delta: float):
 	_rpm_bar.value = int(rpm_ratio * 100)
 	_rpm_fill_style.bg_color = _RPM_COLOR_LOW.lerp(_RPM_COLOR_HIGH, clampf(rpm_ratio, 0.0, 1.0))
 	_speed_bar.value = int(movement_controller.speed)
+	_speed_num.text = "%d" % int(movement_controller.speed)
 	_grip_label.text = tr("HUD_GRIP") % int(player_entity.grip_usage * 100)
 	_balance_bar.current_val = rad_to_deg(movement_controller.pitch_angle)
 
