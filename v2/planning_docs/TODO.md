@@ -3,9 +3,9 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀
-
-- [ ] Mouse cursor showing/hiding in gamemode event should be handled in gamemodeeventconfirmhud via rpc insetad of in freeroamgamemode
-  - [ ] start circle hud, leaving doesn't reset mouse back to original captured state
+- [ ] when crashing upside down, the wheelie balance bar shows up on respawn
+- [x] Mouse cursor showing/hiding in gamemode event should be handled in gamemodeeventconfirmhud via rpc insetad of in freeroamgamemode
+  - [x] start circle hud, leaving doesn't reset mouse back to original captured state
 - [ ] Option to change localization language
 - [ ] Crash on the back of ramps
 - [ ] Close tutorial when leaving game

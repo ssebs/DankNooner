@@ -4,6 +4,8 @@ class_name GameModeEventConfirmHUD extends Control
 signal hud_closed(peer_id: int)
 signal hud_submitted(peer_id: int)
 
+@export var input_state_manager: InputStateManager
+
 @onready var submit_btn: Button = %SubmitBtn
 @onready var close_btn: Button = %CloseBtn
 
@@ -27,6 +29,7 @@ func on_player_entered_circle(peer_id: int, gamemode_name: String, gamemode_desc
 func set_gamemode_hud_and_show_ui(gamemode_name: String, gamemode_description: String):
 	gm_name.text = tr(gamemode_name)
 	gm_desc.text = tr(gamemode_description)
+	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME_PAUSED
 	show_ui()
 
 
@@ -41,6 +44,7 @@ func on_player_close_pressed(peer_id: int):
 
 @rpc("call_local", "reliable")
 func hide_ui_for_peer():
+	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
 	hide_ui()
 
 
@@ -66,3 +70,10 @@ func _on_submit_pressed():
 
 func _on_close_pressed():
 	on_player_close_pressed.rpc_id(1, multiplayer.multiplayer_peer.get_unique_id())
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var issues = []
+	if input_state_manager == null:
+		issues.append("input_state_manager must not be empty")
+	return issues

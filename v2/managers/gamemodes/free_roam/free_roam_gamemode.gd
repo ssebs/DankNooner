@@ -2,7 +2,6 @@
 class_name FreeRoamGameMode extends GameMode
 
 @export var game_mode_event_confirm_hud: GameModeEventConfirmHUD
-@export var input_state_manager: InputStateManager
 
 var _respawn_delay: float = 3.0
 
@@ -61,20 +60,17 @@ func _on_event_circle_entered(peer_id: int, gamemode_event: GameModeEvent):
 		_on_game_mode_event_confirm_hud_submitted
 	):
 		game_mode_event_confirm_hud.hud_submitted.connect(_on_game_mode_event_confirm_hud_submitted)
-	if not game_mode_event_confirm_hud.hud_closed.is_connected(
-		_on_game_mode_event_confirm_hud_closed
-	):
-		game_mode_event_confirm_hud.hud_closed.connect(_on_game_mode_event_confirm_hud_closed)
 
 	# TODO - set player velocity to 0
-	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME_PAUSED
 
 
 func _on_event_circle_exited(peer_id: int, gamemode_event: GameModeEvent):
 	DebugUtils.DebugMsg("%d exited eventcircle: %s" % [peer_id, gamemode_event.name])
 
-	game_mode_event_confirm_hud.hud_submitted.disconnect(_on_game_mode_event_confirm_hud_submitted)
-	game_mode_event_confirm_hud.hud_closed.disconnect(_on_game_mode_event_confirm_hud_closed)
+	if game_mode_event_confirm_hud.hud_submitted.is_connected(
+		_on_game_mode_event_confirm_hud_submitted
+	):
+		game_mode_event_confirm_hud.hud_submitted.disconnect(_on_game_mode_event_confirm_hud_submitted)
 
 	game_mode_event_confirm_hud.on_player_close_pressed.rpc_id(1, peer_id)
 
@@ -82,12 +78,7 @@ func _on_event_circle_exited(peer_id: int, gamemode_event: GameModeEvent):
 func _on_game_mode_event_confirm_hud_submitted(peer_id: int):
 	DebugUtils.DebugMsg("Starting Event... %d" % peer_id)
 	game_mode_event_confirm_hud.on_player_close_pressed.rpc_id(1, peer_id)
-	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
 	gamemode_manager.change_gamemode.rpc_id(1, _ctx.gamemode_event.target_gamemode, peer_id)
-
-
-func _on_game_mode_event_confirm_hud_closed(_peer_id: int):
-	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
 
 
 func Exit(_state_context: StateContext):
@@ -123,7 +114,5 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 	if game_mode_event_confirm_hud == null:
 		issues.append("game_mode_event_confirm_hud must not be empty")
-	if input_state_manager == null:
-		issues.append("input_state_manager must not be empty")
 
 	return issues
