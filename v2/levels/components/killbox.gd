@@ -1,0 +1,1 @@
+class_name Killbox extends StaticBody3D

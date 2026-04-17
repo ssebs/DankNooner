@@ -58,6 +58,14 @@ func _update_brake_grab(delta: float):
 func _detect_crash():
 	var bd = player_entity.bike_definition
 
+	# Killbox — always crash regardless of speed/angle
+	for i in player_entity.get_slide_collision_count():
+		var collision = player_entity.get_slide_collision(i)
+		if collision.get_collider() is Killbox:
+			DebugUtils.DebugMsg("killbox crash")
+			trigger_crash()
+			return
+
 	# If in air, don't crash by angle
 	if movement_controller._is_on_floor:
 		# Wheelie crash
