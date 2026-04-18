@@ -83,26 +83,22 @@ func _blend_rpm(delta: float):
 	var target_rpm = lerpf(free_rpm, loaded_rpm, engagement)
 
 	# Approach speed: faster when free-revving, slower when loaded
+	# Use fast rate near redline so rev limiter bounces quickly
 	var rising = current_rpm <= target_rpm
-	var loaded_rate = rpm_loaded_speed if rising else rpm_free_rev_speed
+	var near_redline = get_rpm_ratio() > 0.9
+	var loaded_rate = rpm_loaded_speed if rising and not near_redline else rpm_free_rev_speed
 	var rpm_speed = lerpf(rpm_free_rev_speed, loaded_rate, engagement)
 
 	current_rpm = lerpf(current_rpm, target_rpm, rpm_speed * delta)
 	current_rpm = clamp(current_rpm, bd.idle_rpm, bd.max_rpm)
 	# DebugUtils.DebugMsg("RPM %.2f" % current_rpm)
 
-	# Rev limiter — fuel cut at redline, hysteresis so RPM bounces
-	if not is_rev_limited and get_rpm_ratio() >= 0.95:
+	# Rev limiter — fuel cut at redline, instant drop to simulate ignition cut
+	if not is_rev_limited and get_rpm_ratio() >= 0.98:
 		is_rev_limited = true
-	elif is_rev_limited and get_rpm_ratio() < 0.9:
+		current_rpm = rpm_from_ratio(0.94)
+	elif is_rev_limited and get_rpm_ratio() < 0.96:
 		is_rev_limited = false
-
-	if is_rev_limited:
-		current_rpm = lerpf(
-			current_rpm,
-			rpm_from_ratio(0.85),
-			rpm_free_rev_speed * 5 * delta,
-		)
 
 
 #region public api
