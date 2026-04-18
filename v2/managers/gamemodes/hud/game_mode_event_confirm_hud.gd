@@ -22,6 +22,10 @@ func on_player_entered_circle(peer_id: int, gamemode_name: String, gamemode_desc
 	if !multiplayer.is_server():
 		return
 
+	# Only show event popup to the host
+	if peer_id != 1:
+		return
+
 	set_gamemode_hud_and_show_ui.rpc_id(peer_id, gamemode_name, gamemode_description)
 
 

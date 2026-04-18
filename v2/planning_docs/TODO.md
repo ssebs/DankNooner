@@ -3,6 +3,9 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀
+
+- [ ] speed it capped at 30 in 1st gear, but RPM keeps climbing these should happen at the same time
+
 - [ ] Gamemode select on map select
   - [ ] e.g. tutorial 01 plays that gamemode on a specific map, update the leveldefinitions to support this
     - [ ] Update tutorial mode to choose tutorial steps

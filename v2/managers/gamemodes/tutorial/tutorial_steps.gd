@@ -25,7 +25,7 @@ class StepDef:
 	var step: Step
 	var objective_text: String  # localization key
 	var hint_text: String  # localization key
-	var check: Callable  # (player: PlayerEntity, delta: float, active_trick: TrickController.Trick) -> bool
+	var check: Callable  # (player: PlayerEntity, delta: float) -> bool
 	var on_enter: Callable  # optional setup
 	var on_exit: Callable  # optional cleanup
 	var get_progress: Callable  # optional () -> String, shows time countup etc.
@@ -109,62 +109,51 @@ func check_speed_below(player: PlayerEntity, threshold: float) -> bool:
 
 
 ## Returns true if active trick is a wheelie (sitting or mod)
-func check_is_wheelie(active_trick: TrickController.Trick) -> bool:
+func check_is_wheelie(player: PlayerEntity) -> bool:
 	return (
-		active_trick in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]
+		player.trick_controller.current_trick
+		in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]
 	)
 
 
 ## Returns true if active trick is a stoppie
-func check_is_stoppie(active_trick: TrickController.Trick) -> bool:
-	return active_trick == TrickController.Trick.STOPPIE
+func check_is_stoppie(player: PlayerEntity) -> bool:
+	return player.trick_controller.current_trick == TrickController.Trick.STOPPIE
 
 
 ## ========== STEP CHECK FUNCTIONS ==========
-## Each takes (player: PlayerEntity, delta: float, active_trick: TrickController.Trick) -> bool
+## Each takes (player: PlayerEntity, delta: float) -> bool
 ## Only checks the specific peer's player, NOT all players
 
 
-func _check_show_help(
-	_player: PlayerEntity, _delta: float, _active_trick: TrickController.Trick
-) -> bool:
+func _check_show_help(_player: PlayerEntity, _delta: float) -> bool:
 	return _help_closed
 
 
-func _check_press_rt(
-	player: PlayerEntity, _delta: float, _active_trick: TrickController.Trick
-) -> bool:
+func _check_press_rt(player: PlayerEntity, _delta: float) -> bool:
 	return check_speed_above(player, 2.0)
 
 
-func _check_reach_speed(
-	player: PlayerEntity, _delta: float, _active_trick: TrickController.Trick
-) -> bool:
+func _check_reach_speed(player: PlayerEntity, _delta: float) -> bool:
 	return check_speed_above(player, 30)  # ~30 km/h
 
 
-func _check_change_gear(
-	player: PlayerEntity, _delta: float, _active_trick: TrickController.Trick
-) -> bool:
+func _check_change_gear(player: PlayerEntity, _delta: float) -> bool:
 	if _initial_gear == -1:
 		_initial_gear = player.gearing_controller.current_gear
 	return player.gearing_controller.current_gear != _initial_gear
 
 
-func _check_wheelie(
-	_player: PlayerEntity, delta: float, active_trick: TrickController.Trick
-) -> bool:
-	if check_is_wheelie(active_trick):
+func _check_wheelie(_player: PlayerEntity, delta: float) -> bool:
+	if check_is_wheelie(_player):
 		_wheelie_time += delta
 		return _wheelie_time >= 3.0
 	_wheelie_time = 0.0
 	return false
 
 
-func _check_stoppie(
-	_player: PlayerEntity, delta: float, active_trick: TrickController.Trick
-) -> bool:
-	if check_is_stoppie(active_trick):
+func _check_stoppie(_player: PlayerEntity, delta: float) -> bool:
+	if check_is_stoppie(_player):
 		_stoppie_time += delta
 		return _stoppie_time >= 1.0
 	_stoppie_time = 0.0

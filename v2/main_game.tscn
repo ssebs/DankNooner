@@ -31,6 +31,7 @@
 [ext_resource type="PackedScene" uid="uid://dr5dms10u4b2o" path="res://managers/gamemodes/hud/game_mode_event_confirm_hud.tscn" id="26_u7wvl"]
 [ext_resource type="Script" uid="uid://2sjea5ct6un7" path="res://managers/gamemodes/tutorial/tutorial_gamemode.gd" id="27_8slmw"]
 [ext_resource type="PackedScene" uid="uid://dmq80r6t0kwp5" path="res://managers/gamemodes/tutorial/tutorial_hud.tscn" id="28_onx7j"]
+[ext_resource type="PackedScene" uid="uid://c1rey02kvrh1h" path="res://managers/gamemodes/hud/results_hud.tscn" id="29_o8ab5"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("1_1oj5k")
@@ -192,9 +193,10 @@ spawn_manager = NodePath("../../../SpawnManager")
 [node name="GameModeEventConfirmHUD" parent="ManagerManager/GamemodeManager/StateMachine/FreeRoamGameMode" unique_id=844708804 node_paths=PackedStringArray("input_state_manager") instance=ExtResource("26_u7wvl")]
 input_state_manager = NodePath("../../../../InputStateManager")
 
-[node name="TutorialGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1184474950 node_paths=PackedStringArray("tutorial_hud", "input_state_manager", "lobby_manager", "menu_manager", "help_menu_state", "gamemode_manager", "spawn_manager")]
+[node name="TutorialGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1184474950 node_paths=PackedStringArray("tutorial_hud", "results_hud", "input_state_manager", "lobby_manager", "menu_manager", "help_menu_state", "gamemode_manager", "spawn_manager")]
 script = ExtResource("27_8slmw")
 tutorial_hud = NodePath("TutorialHUD")
+results_hud = NodePath("ResultsHUD")
 input_state_manager = NodePath("../../../InputStateManager")
 lobby_manager = NodePath("../../../LobbyManager")
 menu_manager = NodePath("../../../MenuManager")
@@ -204,6 +206,9 @@ spawn_manager = NodePath("../../../SpawnManager")
 metadata/_custom_type_script = "uid://2sjea5ct6un7"
 
 [node name="TutorialHUD" parent="ManagerManager/GamemodeManager/StateMachine/TutorialGameMode" unique_id=777399642 instance=ExtResource("28_onx7j")]
+visible = false
+
+[node name="ResultsHUD" parent="ManagerManager/GamemodeManager/StateMachine/TutorialGameMode" unique_id=289541554 instance=ExtResource("29_o8ab5")]
 visible = false
 
 [node name="StreetRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1858784240 node_paths=PackedStringArray("gamemode_manager", "spawn_manager")]
