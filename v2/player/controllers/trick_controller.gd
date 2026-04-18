@@ -11,7 +11,7 @@ enum Trick { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, T
 @export var gearing_controller: GearingController
 @export var movement_controller: MovementController
 
-var _current_trick: Trick = Trick.NONE
+var current_trick: Trick = Trick.NONE
 var _last_trick: Trick = Trick.NONE
 var _flip_emitted: bool = false  # prevent re-emitting the same flip while still airborne
 
@@ -26,13 +26,13 @@ func on_movement_rollback_tick(_delta: float):
 	if player_entity.is_crashed:
 		return
 
-	_current_trick = _detect_current_trick()
-	if _current_trick != _last_trick:
+	current_trick = _detect_current_trick()
+	if current_trick != _last_trick:
 		if _last_trick != Trick.NONE:
 			trick_ended.emit(_last_trick)
-		if _current_trick != Trick.NONE:
-			trick_started.emit(_current_trick)
-		_last_trick = _current_trick
+		if current_trick != Trick.NONE:
+			trick_started.emit(current_trick)
+		_last_trick = current_trick
 
 
 func _detect_current_trick() -> Trick:
@@ -72,7 +72,7 @@ func do_reset():
 	# Drain any active trick so listeners (HUD balance bar, etc.) clean up
 	if _last_trick != Trick.NONE:
 		trick_ended.emit(_last_trick)
-	_current_trick = Trick.NONE
+	current_trick = Trick.NONE
 	_last_trick = Trick.NONE
 	_flip_emitted = false
 

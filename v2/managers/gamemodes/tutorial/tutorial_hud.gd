@@ -48,5 +48,15 @@ func rpc_show_complete():
 
 
 @rpc("call_local", "reliable")
+func rpc_show_waiting():
+	step_label.hide()
+	objective_label.hide()
+	hint_label.hide()
+	complete_label.text = tr("TUT_WAITING_FOR_OTHERS")
+	complete_label.show()
+	self.show()
+
+
+@rpc("call_local", "reliable")
 func rpc_hide():
 	self.hide()

@@ -6,3 +6,4 @@ class_name GameModeEvent extends Resource
 @export
 var description: String = "Sunt nisi id proident veniam ad laboris pariatur minim eu commodo aliquip."
 @export var target_gamemode: GamemodeManager.TGameMode
+@export var tutorial_sequence: Array[TutorialSteps.Step]

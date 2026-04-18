@@ -33,6 +33,7 @@ var match_state: MatchState = MatchState.IN_LOBBY
 var current_game_mode: TGameMode = TGameMode.FREE_FROAM
 var current_level_name: LevelManager.LevelName = LevelManager.LevelName.LEVEL_SELECT_LABEL
 
+var pending_gamemode_event: GameModeEvent
 var _gamemode_map: Dictionary[TGameMode,GameMode] = {}
 
 
@@ -77,6 +78,9 @@ func change_gamemode(gamemode: TGameMode, peer_id: int):
 func _rpc_transition_gamemode(gamemode: TGameMode, peer_id: int):
 	var ctx := GamemodeStateContext.new()
 	ctx.peer_id = peer_id
+	if pending_gamemode_event:
+		ctx.gamemode_event = pending_gamemode_event
+		pending_gamemode_event = null
 	current_game_mode = gamemode
 	state_machine.request_state_change(_gamemode_map[gamemode], ctx)
 

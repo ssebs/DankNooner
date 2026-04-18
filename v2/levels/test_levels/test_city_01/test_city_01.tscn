@@ -24,6 +24,7 @@ script = ExtResource("4_dr5sf")
 name = "Tutorial: Moto 101"
 description = "Learn the basics to get your M1 license."
 target_gamemode = 3
+tutorial_sequence = Array[int]([0, 1, 2, 4, 3, 5])
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [node name="Test_City_01" type="Node3D" unique_id=721643000 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug")]
