@@ -24,6 +24,7 @@ script = ExtResource("4_dr5sf")
 name = "Tutorial: TEST"
 description = "Only 1 thing..."
 target_gamemode = 3
+countdown_seconds = 0.0
 tutorial_sequence = Array[int]([1])
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 

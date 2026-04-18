@@ -12,7 +12,6 @@ var _player_states: Dictionary[int, TutorialPlayerState] = {}
 var _sequence: Array[TutorialSteps.Step] = []
 var _respawn_delay: float = 3.0
 var _countdown: float = -1.0
-var _countdown_total: float = 3.0
 var _results_countdown: float = -1.0
 var _results_countdown_total: float = 10.0
 
@@ -23,7 +22,8 @@ func Enter(state_context: StateContext):
 	gamemode_manager.current_game_mode = GamemodeManager.TGameMode.TUTORIAL
 	DebugUtils.DebugMsg("Tutorial Mode")
 
-	_sequence = _get_sequence(state_context)
+	var event := _get_event(state_context)
+	_sequence = _get_sequence(event)
 	_build_player_states()
 
 	gamemode_manager.player_crashed.connect(_on_player_crashed)
@@ -32,10 +32,13 @@ func Enter(state_context: StateContext):
 	results_hud.skip_pressed.connect(_on_results_skip_pressed)
 
 	if multiplayer.is_server():
-		_set_all_players_input_disabled(true)
 		_teleport_players_to_start()
-		_countdown = _countdown_total
-		_rpc_show_countdown.rpc(ceili(_countdown))
+		if event.countdown_seconds > 0.0:
+			_set_all_players_input_disabled(true)
+			_countdown = event.countdown_seconds
+			_rpc_show_countdown.rpc(ceili(_countdown))
+		else:
+			_on_countdown_finished()
 
 
 func Update(delta: float):
@@ -75,14 +78,22 @@ func Exit(_state_context: StateContext):
 #region Setup helpers
 
 
-func _get_sequence(state_context: StateContext) -> Array[TutorialSteps.Step]:
+func _get_event(state_context: StateContext) -> GameModeEvent:
 	if state_context is GamemodeStateContext:
 		var ctx := state_context as GamemodeStateContext
-		if ctx.gamemode_event and ctx.gamemode_event.tutorial_sequence.size() > 0:
-			return ctx.gamemode_event.tutorial_sequence
-	# Clients don't receive the event through RPC — only the server needs the sequence
+		if ctx.gamemode_event:
+			return ctx.gamemode_event
+	# Clients don't receive the event through RPC — only the server needs it
 	if multiplayer.is_server():
-		DebugUtils.DebugErrMsg("failed to load GamemodeStateContext in tutorial_gamemode/_get_sequence")
+		DebugUtils.DebugErrMsg(
+			"failed to load GamemodeStateContext in tutorial_gamemode/_get_event"
+		)
+	return null
+
+
+func _get_sequence(event: GameModeEvent) -> Array[TutorialSteps.Step]:
+	if event and event.tutorial_sequence.size() > 0:
+		return event.tutorial_sequence
 	return []
 
 
