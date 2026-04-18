@@ -25,6 +25,12 @@ enum RiderState {
 @export_group("Procedural Settings")
 @export var idle_timeout: float = 3.0
 @export var max_butt_offset := 0.12
+## Max chest pitch (deg) when leaning fwd/back. Negate to flip direction.
+@export var max_chest_lean_pitch_deg: float = -15.0
+## Max chest z shift when leaning fwd/back. Negate to flip direction.
+@export var max_chest_z_offset: float = 0.5
+## Max butt z shift when leaning fwd/back. Negate to flip direction.
+@export var max_butt_z_offset: float = 0.1
 
 var current_state: RiderState = RiderState.RIDING:
 	set(value):
@@ -35,6 +41,7 @@ var current_state: RiderState = RiderState.RIDING:
 #region Internal State
 var _base_butt_pos: Vector3
 var _base_chest_pos: Vector3
+var _base_chest_rot: Vector3
 var _base_visual_root_position: Vector3
 var _base_visual_root_rotation: Vector3
 var _idle_timer: float = 0.0
@@ -114,6 +121,23 @@ func _update_procedural_animation(delta: float) -> void:
 	)
 	ik_ctrl.ik_chest.position.x = lerpf(ik_ctrl.ik_chest.position.x, target_chest_x, blend)
 
+	_update_lean_animation(blend)
+
+
+## Lean rider fwd/back from nfx_lean: pitch chest and shift butt along z.
+func _update_lean_animation(blend: float) -> void:
+	var ik_ctrl = character_skin.ik_controller
+	var lean_input = input_controller.nfx_lean  # +1 fwd, -1 back
+
+	var target_chest_pitch = _base_chest_rot.x - lean_input * deg_to_rad(max_chest_lean_pitch_deg)
+	ik_ctrl.ik_chest.rotation.x = lerpf(ik_ctrl.ik_chest.rotation.x, target_chest_pitch, blend)
+
+	var target_chest_z = _base_chest_pos.z + lean_input * max_chest_z_offset
+	ik_ctrl.ik_chest.position.z = lerpf(ik_ctrl.ik_chest.position.z, target_chest_z, blend)
+
+	var target_butt_z = _base_butt_pos.z + lean_input * max_butt_z_offset
+	ik_ctrl.butt_pos.position.z = lerpf(ik_ctrl.butt_pos.position.z, target_butt_z, blend)
+
 
 # func _update_wheelie_arm() -> void:
 # 	var anim_player = character_skin.ik_anim_player
@@ -155,7 +179,7 @@ func _reset_to_base_positions() -> void:
 	if ik_ctrl:
 		ik_ctrl.butt_pos.position = _base_butt_pos
 		ik_ctrl.ik_chest.position = _base_chest_pos
-		ik_ctrl.ik_chest.rotation = Vector3.ZERO
+		ik_ctrl.ik_chest.rotation = _base_chest_rot
 	if visual_root:
 		visual_root.position = _base_visual_root_position
 		visual_root.rotation = _base_visual_root_rotation
@@ -176,15 +200,23 @@ func initialize() -> void:
 		)
 		return
 
+	# Apply default_pose synchronously so base positions reflect the pose,
+	# not scene-default marker transforms.
+	var anim_player = character_skin.ik_anim_player
+	if anim_player and anim_player.has_animation("IK_anim_lib/default_pose"):
+		anim_player.play("IK_anim_lib/default_pose")
+		anim_player.seek(0.0, true)
+		anim_player.stop()
+
 	# Store base positions/rotations for offset calculations
 	var ik_ctrl = character_skin.ik_controller
 	if ik_ctrl:
 		_base_butt_pos = ik_ctrl.butt_pos.position
 		_base_chest_pos = ik_ctrl.ik_chest.position
+		_base_chest_rot = ik_ctrl.ik_chest.rotation
 
 	_base_visual_root_position = visual_root.position
 	_base_visual_root_rotation = visual_root.rotation
-	character_skin.ik_anim_player.play("IK_anim_lib/default_pose")
 
 
 ## Enable or disable procedural animation
