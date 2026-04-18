@@ -3,14 +3,13 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀
-
 - [ ] speed it capped at 30 in 1st gear, but RPM keeps climbing these should happen at the same time
-
-- [ ] Gamemode select on map select
+- [ ] tutorial finished MP => clients dont respawn back in free roam
+- [WIP] Gamemode select on map select
+  - [ ] crashing during tutorial doesn't stop timers
   - [ ] e.g. tutorial 01 plays that gamemode on a specific map, update the leveldefinitions to support this
-    - [ ] Update tutorial mode to choose tutorial steps
-- [ ] Tutorials should be single player, but server should still know. only RPC to that peer though.
-  - [ ] Add choice to send to single peer, or all in lobby. e.g. race vs tutorial
+  - [x] Update tutorial mode to choose tutorial steps
+- [ ] Tutorials should be single playerish, but server should still know. only RPC to that peer though.
 - [ ] Close tutorial hud when leaving game
 - [ ] tutorial press RT/B should be dependent on controlscheme, and be shown in more steps
 - [ ] tutorial gamemode - _ctx doesnt make sense
