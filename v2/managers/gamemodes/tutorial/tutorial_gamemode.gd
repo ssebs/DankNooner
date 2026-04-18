@@ -29,6 +29,7 @@ func Enter(state_context: StateContext):
 	gamemode_manager.player_crashed.connect(_on_player_crashed)
 	gamemode_manager.player_disconnected.connect(_on_player_disconnected)
 	gamemode_manager.player_latejoined.connect(_on_player_latejoined)
+	results_hud.skip_pressed.connect(_on_results_skip_pressed)
 
 	if multiplayer.is_server():
 		_set_all_players_input_disabled(true)
@@ -62,6 +63,7 @@ func Exit(_state_context: StateContext):
 	gamemode_manager.player_crashed.disconnect(_on_player_crashed)
 	gamemode_manager.player_disconnected.disconnect(_on_player_disconnected)
 	gamemode_manager.player_latejoined.disconnect(_on_player_latejoined)
+	results_hud.skip_pressed.disconnect(_on_results_skip_pressed)
 
 	if multiplayer.is_server():
 		_set_all_players_input_disabled(false)
@@ -229,6 +231,13 @@ func _show_results():
 	_results_countdown = _results_countdown_total
 	tutorial_hud.rpc_hide.rpc()
 	results_hud.rpc_show_results.rpc(data.to_dict(), _results_countdown_total)
+
+
+func _on_results_skip_pressed():
+	if !multiplayer.is_server():
+		return
+	_results_countdown = -1.0
+	_return_to_free_roam()
 
 
 #endregion
