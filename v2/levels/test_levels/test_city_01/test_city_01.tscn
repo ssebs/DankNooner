@@ -19,6 +19,14 @@ sky = SubResource("Sky_6hu6n")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="Resource" id="Resource_i711f"]
+script = ExtResource("4_dr5sf")
+name = "Tutorial: TEST"
+description = "Only 1 thing..."
+target_gamemode = 3
+tutorial_sequence = Array[int]([1])
+metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
+
 [sub_resource type="Resource" id="Resource_asds5"]
 script = ExtResource("4_dr5sf")
 name = "Tutorial: Moto 101"
@@ -1677,4 +1685,8 @@ color_preset = 1
 
 [node name="Tutorial01EventStartCircle" parent="." unique_id=1014716352 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 81)
+gamemode_event = SubResource("Resource_i711f")
+
+[node name="Tutorial01EventStartCircle2" parent="." unique_id=459761741 instance=ExtResource("3_ffs5v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 93)
 gamemode_event = SubResource("Resource_asds5")

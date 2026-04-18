@@ -208,8 +208,9 @@ metadata/_custom_type_script = "uid://2sjea5ct6un7"
 [node name="TutorialHUD" parent="ManagerManager/GamemodeManager/StateMachine/TutorialGameMode" unique_id=777399642 instance=ExtResource("28_onx7j")]
 visible = false
 
-[node name="ResultsHUD" parent="ManagerManager/GamemodeManager/StateMachine/TutorialGameMode" unique_id=289541554 instance=ExtResource("29_o8ab5")]
+[node name="ResultsHUD" parent="ManagerManager/GamemodeManager/StateMachine/TutorialGameMode" unique_id=289541554 node_paths=PackedStringArray("input_state_manager") instance=ExtResource("29_o8ab5")]
 visible = false
+input_state_manager = NodePath("../../../../InputStateManager")
 
 [node name="StreetRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1858784240 node_paths=PackedStringArray("gamemode_manager", "spawn_manager")]
 script = ExtResource("26_8slmw")
