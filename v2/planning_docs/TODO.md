@@ -3,6 +3,9 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀
+- [ ] Gamemode select on map select
+  - [ ] e.g. tutorial 01 plays that gamemode on a specific map, update the leveldefinitions to support this
+    - [ ] Update tutorial mode to choose tutorial steps
 - [ ] Tutorials should be single player, but server should still know. only RPC to that peer though.
   - [ ] Add choice to send to single peer, or all in lobby. e.g. race vs tutorial
 - [ ] Close tutorial hud when leaving game
