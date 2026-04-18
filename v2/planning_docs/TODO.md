@@ -83,8 +83,8 @@
     - [ ] Create crash animation (procedural)
   - [ ] Create lean (turning) animation
   - [ ] Create stopped/idle animation
-  - [ ] Create wheelie/stoppie animation
-  - [ ] Add pull/lean back animation when starting a wheelie
+  - [x] Create wheelie/stoppie animation
+  - [x] Add pull/lean back animation when starting a wheelie
   - [ ] backflip landing is snappy, and always lands in wheelie/stoppie
   - [ ] wheelie turning animation should be different, should yaw
   - [x] claude created a system
@@ -293,6 +293,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Lean back/fwd animation
 
 - [x] Crash on the back of ramps
 
