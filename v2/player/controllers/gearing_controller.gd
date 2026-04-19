@@ -11,7 +11,6 @@ signal rpm_updated(rpm_ratio: float)
 @export var clutch_release_speed: float = 2.5
 @export var clutch_tap_amount: float = 0.35
 @export var rpm_free_rev_speed: float = 4.0
-@export var rpm_loaded_speed: float = 1.5
 
 var current_gear: int = 1
 var current_rpm: float = 1000.0
@@ -64,32 +63,20 @@ func _blend_rpm(delta: float):
 	var bd = player_entity.bike_definition
 	var engagement = 1.0 - clutch_value  # 0 = clutch in, 1 = clutch out
 
-	# What RPM the wheel is forcing the engine to
+	# RPM locked to wheel speed via gear ratio
 	var gear_ratio = bd.gear_ratios[current_gear - 1]
 	var gear_max_speed = bd.max_speed * (bd.gear_ratios[bd.num_gears - 1] / gear_ratio)
 	var speed_ratio = (
 		player_entity.velocity.length() / gear_max_speed if gear_max_speed > 0 else 0.0
 	)
-	var wheel_rpm = lerpf(bd.idle_rpm, bd.max_rpm, speed_ratio)
+	var wheel_rpm = lerpf(bd.idle_rpm, bd.max_rpm, clampf(speed_ratio, 0.0, 1.0))
 
-	# What RPM the throttle wants
+	# Free-rev RPM from throttle (clutch pulled)
 	var free_rpm = lerpf(bd.idle_rpm, bd.max_rpm, input_controller.nfx_throttle)
+	var smooth_free = lerpf(current_rpm, free_rpm, rpm_free_rev_speed * delta)
 
-	# Loaded: wheel locks RPM to ground speed, throttle adds slip above it (allows starting)
-	var slip_rpm = input_controller.nfx_throttle * (bd.max_rpm - bd.idle_rpm) * 0.3
-	var loaded_rpm = minf(wheel_rpm + slip_rpm, bd.max_rpm)
-
-	# Blend target between free-rev and loaded based on clutch
-	var target_rpm = lerpf(free_rpm, loaded_rpm, engagement)
-
-	# Approach speed: faster when free-revving, slower when loaded
-	# Use fast rate near redline so rev limiter bounces quickly
-	var rising = current_rpm <= target_rpm
-	var near_redline = get_rpm_ratio() > 0.9
-	var loaded_rate = rpm_loaded_speed if rising and not near_redline else rpm_free_rev_speed
-	var rpm_speed = lerpf(rpm_free_rev_speed, loaded_rate, engagement)
-
-	current_rpm = lerpf(current_rpm, target_rpm, rpm_speed * delta)
+	# Engaged = locked to wheel speed, disengaged = free-rev
+	current_rpm = lerpf(smooth_free, wheel_rpm, engagement)
 	current_rpm = clamp(current_rpm, bd.idle_rpm, bd.max_rpm)
 	# DebugUtils.DebugMsg("RPM %.2f" % current_rpm)
 
@@ -136,6 +123,7 @@ func get_power_output() -> float:
 	var ratio = get_rpm_ratio()
 	# TODO - use actual curve
 	var power_curve = ratio * (2.0 - ratio)  # Peaks around 75% RPM
+	power_curve = maxf(power_curve, 0.15)
 
 	var bd = player_entity.bike_definition
 	var gear_ratio = bd.gear_ratios[current_gear - 1]

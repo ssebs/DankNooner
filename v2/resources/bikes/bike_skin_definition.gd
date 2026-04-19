@@ -74,7 +74,7 @@ class_name BikeSkinDefinition extends Resource
 @export var wheelie_balance_point_deg: float = 70.0
 @export var max_wheelie_angle_deg: float = 115.0
 @export var max_stoppie_angle_deg: float = 105.0
-@export var wheelie_rpm_threshold: float = 0.65
+@export var wheelie_rpm_threshold: float = 0.4
 ## Half-width of the balance point sweet spot (total range = balance_point ± this)
 @export var wheelie_balance_point_width_deg: float = 10.0
 @export var rotation_speed: float = 2.0
