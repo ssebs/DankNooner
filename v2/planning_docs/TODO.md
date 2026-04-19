@@ -3,7 +3,6 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀
-- [ ] speed it capped at 30 in 1st gear, but RPM keeps climbing these should happen at the same time
 - [ ] tutorial finished MP => clients dont respawn back in free roam
 - [WIP] Gamemode select on map select
   - [ ] crashing during tutorial doesn't stop timers
@@ -298,6 +297,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] speed it capped at 30 in 1st gear, but RPM keeps climbing these should happen at the same time
 
 - [x] Lean back/fwd animation
 
