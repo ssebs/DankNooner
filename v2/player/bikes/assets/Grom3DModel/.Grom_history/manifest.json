@@ -3,12 +3,23 @@
     "versions": [
         {
             "id": "autosave",
-            "timestamp": "2026-04-19 21:40:47",
+            "timestamp": "2026-04-19 22:00:48",
             "note": "Auto Save",
             "thumbnail": "autosave/thumbnail.png",
             "blend": "autosave/snapshot.blend_snapshot",
-            "object_count": 22,
-            "file_size": 151150,
+            "object_count": 23,
+            "file_size": 160496,
+            "is_protected": false,
+            "tag": "NONE"
+        },
+        {
+            "id": "v002",
+            "timestamp": "2026-04-19 22:00:20",
+            "note": "Exhaust",
+            "thumbnail": "v002/thumbnail.png",
+            "blend": "v002/snapshot.blend_snapshot",
+            "object_count": 23,
+            "file_size": 159295,
             "is_protected": false,
             "tag": "NONE"
         },

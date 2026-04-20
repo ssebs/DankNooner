@@ -123,6 +123,9 @@ func _update_procedural_animation(delta: float) -> void:
 
 	_update_lean_animation(blend)
 
+	bike_skin.rotate_steering(input_controller.nfx_steer, delta)
+	bike_skin.rotate_wheels(movement_controller.speed, delta)
+
 
 ## Lean rider fwd/back from nfx_lean: pitch chest and shift butt along z.
 func _update_lean_animation(blend: float) -> void:
