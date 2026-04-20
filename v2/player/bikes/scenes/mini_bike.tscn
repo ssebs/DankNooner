@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://baudp5rgxd4fd"]
+
+[ext_resource type="PackedScene" uid="uid://o2at6a5t4dik" path="res://player/bikes/assets/Grom3DModel/Grom.glb" id="1_kl2q6"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="2_cvxtv"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="3_1jg8m"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kl2q6"]
+
+[sub_resource type="Resource" id="Resource_cvxtv"]
+script = ExtResource("3_1jg8m")
+color = Color(0.25490198, 0.6862745, 1, 1)
+use_standard_material = true
+standard_material = SubResource("StandardMaterial3D_kl2q6")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cvxtv"]
+albedo_color = Color(0.25490198, 0.6862745, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1jg8m"]
+albedo_color = Color(0.25490198, 0.6862745, 1, 1)
+
+[node name="Grom" unique_id=1279882932 node_paths=PackedStringArray("meshes") instance=ExtResource("1_kl2q6")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.575, 0)
+script = ExtResource("2_cvxtv")
+slots = Array[ExtResource("3_1jg8m")]([SubResource("Resource_cvxtv"), SubResource("Resource_cvxtv")])
+meshes = [NodePath("PaintedBody"), NodePath("RotationPoint/Frontfender")]
+
+[node name="Frontfender" parent="RotationPoint" parent_id_path=PackedInt32Array(1360319960) index="4" unique_id=1560699575]
+surface_material_override/0 = SubResource("StandardMaterial3D_cvxtv")
+
+[node name="PaintedBody" parent="." index="1" unique_id=1281332839]
+surface_material_override/0 = SubResource("StandardMaterial3D_1jg8m")

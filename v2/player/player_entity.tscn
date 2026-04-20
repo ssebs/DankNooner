@@ -1,14 +1,13 @@
 [gd_scene format=3 uid="uid://d0rgswc73h64f"]
 
 [ext_resource type="Script" uid="uid://bnop7vr1q4gwg" path="res://player/player_entity.gd" id="1_0jc3c"]
-[ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/bikes/skins/sport_default_skin_definition.tres" id="2_lfjd4"]
+[ext_resource type="Resource" uid="uid://cvkjasqlccy3m" path="res://resources/bikes/skins/mini_default_skin_definition.tres" id="2_3kl2f"]
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_faflk"]
 [ext_resource type="Resource" uid="uid://dugcuccseinkn" path="res://resources/player/skins/biker_default_skin_definition.tres" id="3_lfjd4"]
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_ri2qi"]
 [ext_resource type="PackedScene" uid="uid://cuqtwh0saekmw" path="res://player/characters/character_skin.tscn" id="6_1vqn6"]
 [ext_resource type="PackedScene" uid="uid://bmyba87m3xuaa" path="res://player/bikes/bike_skin.tscn" id="7_lfjd4"]
 [ext_resource type="Script" uid="uid://d37r06yj5krm" path="res://player/controllers/input_controller.gd" id="7_mrv5j"]
-[ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/bikes/hitbox/bike_hitbox.tres" id="8_1vqn6"]
 [ext_resource type="Script" uid="uid://b37it1dg63lir" path="res://player/controllers/animation_controller.gd" id="9_anim"]
 [ext_resource type="Script" uid="uid://c2c38w5opks8m" path="res://player/controllers/gearing_controller.gd" id="10_gear"]
 [ext_resource type="Script" uid="uid://bi0gffmw6lupt" path="res://player/controllers/movement_controller.gd" id="11_tivla"]
@@ -109,6 +108,10 @@ _data = {
 &"RESET": SubResource("Animation_tivla")
 }
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oq5os"]
+radius = 0.4
+height = 1.8
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8urt2"]
 content_margin_left = 12.0
 content_margin_top = 12.0
@@ -140,7 +143,7 @@ floor_block_on_wall = false
 floor_max_angle = 2.9670596
 safe_margin = 0.01
 script = ExtResource("1_0jc3c")
-bike_definition = ExtResource("2_lfjd4")
+bike_definition = ExtResource("2_3kl2f")
 character_definition = ExtResource("3_lfjd4")
 collision_shape_3d = NodePath("CollisionShape3D")
 input_controller = NodePath("_Controllers/InputController")
@@ -182,31 +185,31 @@ transform = Transform3D(-1, 2.7775881e-08, -1.4841912e-07, 0, 0.98293537, 0.1839
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@18948")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@124164")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
 
 [node name="LeftHand" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="0" unique_id=348437814]
-transform = Transform3D(-0.22298148, 0.9632416, -0.14981724, -0.21753992, -0.19898008, -0.95555395, -0.95023984, -0.18047963, 0.25391233, 0.27682096, 1.4870298, -0.82909733)
+transform = Transform3D(-0.22298147, 0.96324146, -0.14981726, -0.2175399, -0.19898005, -0.95555407, -0.9502398, -0.18047962, 0.25391236, 0.27682096, 1.4870298, -0.82909733)
 
 [node name="LeftArmMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="1" unique_id=1835903969]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42771637, 0.852384, -0.5457224)
 
 [node name="RightHand" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="2" unique_id=300039024]
-transform = Transform3D(-0.008549988, -0.97650266, 0.21533646, -0.41056708, -0.19292802, -0.8911863, 0.9117903, -0.09602974, -0.39927012, -0.3032672, 1.0500246, 0.27497217)
+transform = Transform3D(0.13926613, -0.97515005, 0.17230105, -0.57611567, -0.22130604, -0.786838, 0.8054162, 0.010314557, -0.5926195, -0.3032672, 1.0500246, 0.27497217)
 
 [node name="RightArmMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="3" unique_id=1090132691]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35496345, 0.98080707, -0.3138903)
 
 [node name="LeftFoot" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="4" unique_id=1249832749]
-transform = Transform3D(-0.9958446, 0.090517245, 0.009993159, -1.656938e-08, -0.10973406, 0.993961, 0.091067195, 0.98983073, 0.109278105, 0.24367344, 0.51058465, -0.2558015)
+transform = Transform3D(-0.8152021, 0.29538184, -0.49819198, -0.49453044, 0.09274244, 0.8641982, 0.30147192, 0.9508676, 0.070471436, 0.14995427, 0.39848205, -0.23408636)
 
 [node name="LeftLegMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="5" unique_id=875795090]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.46395656, 0.5692559, 0.42930415)
 
 [node name="RightFoot" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="6" unique_id=70882427]
-transform = Transform3D(-0.9998421, 0.017659439, 0.0019495991, -1.6569382e-08, -0.10973407, 0.9939609, 0.017766729, 0.9938041, 0.10971674, -0.24367344, 0.50530505, -0.2558015)
+transform = Transform3D(-0.82877964, -0.2339844, 0.5083064, 0.44418985, 0.27736667, 0.85191727, -0.34032258, 0.93183637, -0.12594236, -0.14995423, 0.38574803, -0.25547108)
 
 [node name="RightLegMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="7" unique_id=1454334473]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.464, 0.569, 0.429)
@@ -215,14 +218,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.464, 0.569, 0.429)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4972486e-08, 1.3166139, -0.17337562)
 
 [node name="HeadTarget" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="9" unique_id=2052814980]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.8296124e-09, 1.8260808, -0.47977012)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6275095e-08, 1.7612169, -0.4362936)
 
 [node name="ButtPosition" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="10" unique_id=38485936]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8312537e-09, 0.94954467, -0.42459354)
 
 [node name="BikeSkin" parent="VisualRoot" unique_id=1727462617 instance=ExtResource("7_lfjd4")]
 unique_name_in_owner = true
-skin_definition = ExtResource("2_lfjd4")
 
 [node name="TPSCam" type="Camera3D" parent="." unique_id=1200816402]
 unique_name_in_owner = true
@@ -237,8 +239,8 @@ near = 0.115
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=412612653]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.44, 0)
-shape = ExtResource("8_1vqn6")
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.4, -0.02)
+shape = SubResource("CapsuleShape3D_oq5os")
 
 [node name="_Controllers" type="Node3D" parent="." unique_id=1446485892]
 unique_name_in_owner = true
@@ -658,12 +660,12 @@ text = "USERNAME"
 
 [node name="RearRayCast" type="RayCast3D" parent="." unique_id=1983600718]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.7474911)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.50869423, -0.5582465)
 target_position = Vector3(0, -1.5, 0)
 
 [node name="FrontRayCast" type="RayCast3D" parent="." unique_id=391878602]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.727424)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.50869423, 0.58524156)
 target_position = Vector3(0, -1.5, 0)
 
 [editable path="VisualRoot/CharacterSkin"]
