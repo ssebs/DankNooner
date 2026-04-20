@@ -34,6 +34,14 @@ func _ready():
 	_apply_definition()
 
 
+func rotate_steering(angle_deg: float, delta: float):
+	pass
+
+
+func rotate_wheels(angle_deg: float, delta: float):
+	pass
+
+
 #region resource/definition
 func _apply_definition():
 	_spawn_mesh()
