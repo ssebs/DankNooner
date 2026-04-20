@@ -3,6 +3,8 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀
+- [ ] Use Curves to create roads
+  - [ ] In godot or blender?
 - [ ] tutorial finished MP => clients dont respawn back in free roam
 - [WIP] Gamemode select on map select
   - [ ] crashing during tutorial doesn't stop timers
