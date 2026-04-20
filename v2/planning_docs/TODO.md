@@ -3,9 +3,8 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀
+- [ ] Rotating wheelie puts you in the ground - find / fix solution
 - [ ] arms must follow handlebars better
-- [ ] Use Curves to create roads
-  - [ ] In godot or blender?
 - [ ] tutorial finished MP => clients dont respawn back in free roam
 - [WIP] Gamemode select on map select
   - [ ] crashing during tutorial doesn't stop timers
@@ -27,6 +26,9 @@
   - [ ] Create win/lose inbetween screen
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
+
+- [ ] Use Curves to create roads
+  - [ ] In godot or blender?
 
 - [ ] Option to change localization language
 
