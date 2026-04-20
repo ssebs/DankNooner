@@ -3,7 +3,7 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀
-- [ ] rotate handlebars & tires
+- [ ] arms must follow handlebars better
 - [ ] Use Curves to create roads
   - [ ] In godot or blender?
 - [ ] tutorial finished MP => clients dont respawn back in free roam
