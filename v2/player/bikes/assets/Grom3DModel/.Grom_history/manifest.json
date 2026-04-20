@@ -1,0 +1,29 @@
+{
+    "parent_file": "C:\\Users\\ssebs\\Desktop\\Grom3DModel\\Grom.blend",
+    "versions": [
+        {
+            "id": "autosave",
+            "timestamp": "2026-04-19 20:47:00",
+            "note": "Auto Save",
+            "thumbnail": "autosave/thumbnail.png",
+            "blend": "autosave/snapshot.blend_snapshot",
+            "object_count": 22,
+            "file_size": 151308,
+            "is_protected": false,
+            "tag": "NONE"
+        },
+        {
+            "id": "v001",
+            "timestamp": "2026-04-19 20:37:53",
+            "note": "Mostly Complete, not applied mirrors yet",
+            "thumbnail": "v001/thumbnail.png",
+            "blend": "v001/snapshot.blend_snapshot",
+            "object_count": 21,
+            "file_size": 157661,
+            "is_protected": false,
+            "tag": "NONE"
+        }
+    ],
+    "schema_version": 1,
+    "project_uuid": "443d0053-d099-4664-940f-7c3c1730dc48"
+}

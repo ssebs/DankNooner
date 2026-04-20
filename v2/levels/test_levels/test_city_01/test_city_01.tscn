@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://levels/components/killbox.tscn" id="2_asds5"]
 [ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://levels/components/event_start_circle.tscn" id="3_ffs5v"]
 [ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://resources/events/gamemode_event.gd" id="4_dr5sf"]
+[ext_resource type="PackedScene" uid="uid://bmyba87m3xuaa" path="res://player/bikes/bike_skin.tscn" id="6_rgqfv"]
+[ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/bikes/skins/sport_default_skin_definition.tres" id="7_hf47t"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="17_cf4ia"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2lumj"]
@@ -38,7 +40,7 @@ metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [node name="Test_City_01" type="Node3D" unique_id=721643000 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug")]
 script = ExtResource("1_qt85o")
-player_spawn_pos = NodePath("PlayerSpawn")
+player_spawn_pos = NodePath("PlayerSpawnTest")
 player_spawn_pos_debug = NodePath("PlayerSpawnTest")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
@@ -1691,3 +1693,10 @@ gamemode_event = SubResource("Resource_i711f")
 [node name="Tutorial01EventStartCircle2" parent="." unique_id=459761741 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 93)
 gamemode_event = SubResource("Resource_asds5")
+
+[node name="BikeSkin" parent="." unique_id=1727462617 instance=ExtResource("6_rgqfv")]
+transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 99.35, 0.61974645, 83)
+
+[node name="BikeSkin2" parent="." unique_id=275830062 instance=ExtResource("6_rgqfv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 0.05021918, 83)
+skin_definition = ExtResource("7_hf47t")

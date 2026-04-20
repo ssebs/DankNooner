@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="BikeSkinDefinition" format=3 uid="uid://cvkjasqlccy3m"]
+
+[ext_resource type="Curve" uid="uid://bc4775t6u5ngh" path="res://player/bikes/resources/lean_speed_curve.tres" id="2_bu6nc"]
+[ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/bikes/bike_skin_definition.gd" id="3_0j748"]
+[ext_resource type="PackedScene" uid="uid://baudp5rgxd4fd" path="res://player/bikes/scenes/mini_bike.tscn" id="3_bu6nc"]
+[ext_resource type="Curve" uid="uid://ct2j0k3sl7m3u" path="res://player/bikes/resources/steer_speed_curve.tres" id="4_us0rk"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oq5os"]
+radius = 0.4
+height = 1.8
+
+[resource]
+script = ExtResource("3_0j748")
+skin_name = "mini_default"
+mesh_res = ExtResource("3_bu6nc")
+mesh_scale_multiplier = Vector3(0.35, 0.35, 0.35)
+colors = Array[Color]([Color(0.25490198, 0.6862745, 1, 1)])
+collision_shape = SubResource("CapsuleShape3D_oq5os")
+collision_position_offset = Vector3(0, 0.4, -0.02)
+training_wheels_marker_position = Vector3(0, 0.27718958, -0.28938082)
+seat_marker_position = Vector3(0, 0.7762196, -0.34407872)
+left_handlebar_marker_position = Vector3(0.31141454, 0.9258767, 0.26914814)
+left_peg_marker_position = Vector3(0.14995426, 0.27153388, -0.13470688)
+front_wheel_ground_position = Vector3(0, 0.0086942315, 0.58524156)
+rear_wheel_ground_position = Vector3(0, 0.0086942315, -0.5582465)
+gear_ratios = Array[float]([2.92, 2.05, 1.6, 1.0])
+num_gears = 4
+max_rpm = 8000.0
+max_speed = 60.0
+acceleration = 8.0
+metadata/_custom_type_script = "uid://bqkmh4ppf72gt"
