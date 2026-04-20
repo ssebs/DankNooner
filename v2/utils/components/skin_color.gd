@@ -1,10 +1,18 @@
 @tool
 ## Meshes that you want to change the skin color should use this script
+## Also houses metadata
 class_name SkinColor extends Node3D
 
 @export var slots: Array[SkinSlot]
 ## Meshes corresponding to each slot (must match slots array length)
 @export var meshes: Array[MeshInstance3D]
+
+@export_category("BikeSpecifics")
+@export var steering_rotation_node: Node3D
+@export var front_wheel_node: Node3D
+@export var rear_wheel_node: Node3D
+@export var steering_rot_axis: Vector3 = Vector3.UP
+@export var wheel_rot_axis: Vector3 = Vector3.RIGHT
 
 
 func _ready() -> void:

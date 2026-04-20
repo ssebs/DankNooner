@@ -19,14 +19,19 @@ albedo_color = Color(0.25490198, 0.6862745, 1, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1jg8m"]
 albedo_color = Color(0.25490198, 0.6862745, 1, 1)
 
-[node name="Grom" unique_id=1279882932 node_paths=PackedStringArray("meshes") instance=ExtResource("1_kl2q6")]
+[node name="Grom" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("1_kl2q6")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.575, 0)
 script = ExtResource("2_cvxtv")
 slots = Array[ExtResource("3_1jg8m")]([SubResource("Resource_cvxtv"), SubResource("Resource_cvxtv")])
-meshes = [NodePath("PaintedBody"), NodePath("RotationPoint/Frontfender")]
+meshes = [null, null]
+steering_rotation_node = NodePath("RotationPoint")
+front_wheel_node = NodePath("RotationPoint/FrontWheel")
+rear_wheel_node = NodePath("RearWheel")
+steering_rot_axis = null
+wheel_rot_axis = null
 
-[node name="Frontfender" parent="RotationPoint" parent_id_path=PackedInt32Array(1360319960) index="4" unique_id=1560699575]
+[node name="Frontfender" parent="RotationPoint" parent_id_path=PackedInt32Array(1714749149) index="4" unique_id=1589766807]
 surface_material_override/0 = SubResource("StandardMaterial3D_cvxtv")
 
-[node name="PaintedBody" parent="." index="1" unique_id=1281332839]
+[node name="PaintedBody" parent="." index="1" unique_id=337046803]
 surface_material_override/0 = SubResource("StandardMaterial3D_1jg8m")
