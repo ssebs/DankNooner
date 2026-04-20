@@ -42,6 +42,8 @@ var current_state: RiderState = RiderState.RIDING:
 var _base_butt_pos: Vector3
 var _base_chest_pos: Vector3
 var _base_chest_rot: Vector3
+var _base_left_hand_pos: Vector3
+var _base_right_hand_pos: Vector3
 var _base_visual_root_position: Vector3
 var _base_visual_root_rotation: Vector3
 var _idle_timer: float = 0.0
@@ -123,8 +125,9 @@ func _update_procedural_animation(delta: float) -> void:
 
 	_update_lean_animation(blend)
 
-	bike_skin.rotate_steering(input_controller.nfx_steer, delta)
+	bike_skin.rotate_steering(movement_controller.roll_angle, delta)
 	bike_skin.rotate_wheels(movement_controller.speed, delta)
+	_update_hand_ik_from_steering(ik_ctrl, blend)
 
 
 ## Lean rider fwd/back from nfx_lean: pitch chest and shift butt along z.
@@ -140,6 +143,19 @@ func _update_lean_animation(blend: float) -> void:
 
 	var target_butt_z = _base_butt_pos.z + lean_input * max_butt_z_offset
 	ik_ctrl.butt_pos.position.z = lerpf(ik_ctrl.butt_pos.position.z, target_butt_z, blend)
+
+
+func _update_hand_ik_from_steering(ik_ctrl: IKController, blend: float) -> void:
+	if not bike_skin.has_steering():
+		return
+	var pivot = bike_skin.get_steering_pivot_local()
+	var steer_basis = Basis.from_euler(bike_skin.get_steering_rotation())
+	var left_offset = _base_left_hand_pos - pivot
+	var right_offset = _base_right_hand_pos - pivot
+	var target_left = pivot + steer_basis * left_offset
+	var target_right = pivot + steer_basis * right_offset
+	ik_ctrl.ik_left_hand.position = ik_ctrl.ik_left_hand.position.lerp(target_left, blend)
+	ik_ctrl.ik_right_hand.position = ik_ctrl.ik_right_hand.position.lerp(target_right, blend)
 
 
 # func _update_wheelie_arm() -> void:
@@ -183,6 +199,8 @@ func _reset_to_base_positions() -> void:
 		ik_ctrl.butt_pos.position = _base_butt_pos
 		ik_ctrl.ik_chest.position = _base_chest_pos
 		ik_ctrl.ik_chest.rotation = _base_chest_rot
+		ik_ctrl.ik_left_hand.position = _base_left_hand_pos
+		ik_ctrl.ik_right_hand.position = _base_right_hand_pos
 	if visual_root:
 		visual_root.position = _base_visual_root_position
 		visual_root.rotation = _base_visual_root_rotation
@@ -217,6 +235,8 @@ func initialize() -> void:
 		_base_butt_pos = ik_ctrl.butt_pos.position
 		_base_chest_pos = ik_ctrl.ik_chest.position
 		_base_chest_rot = ik_ctrl.ik_chest.rotation
+		_base_left_hand_pos = ik_ctrl.ik_left_hand.position
+		_base_right_hand_pos = ik_ctrl.ik_right_hand.position
 
 	_base_visual_root_position = visual_root.position
 	_base_visual_root_rotation = visual_root.rotation
