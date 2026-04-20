@@ -15,6 +15,9 @@ class_name BikeSkin extends Node3D
 @export_tool_button("Load skin from u:disk") var load_skin_btn = _load_skin_to_disk
 
 const LENGTH: float = 2.0
+const MAX_STEERING_ANGLE_DEG: float = 35.0
+const WHEEL_SPIN_MULTIPLIER: float = 3.0
+const STEERING_LERP_SPEED: float = 10.0
 
 @onready var mesh_node: Node3D = %MeshNode
 
@@ -34,12 +37,25 @@ func _ready():
 	_apply_definition()
 
 
-func rotate_steering(angle_deg: float, delta: float):
-	pass
+func rotate_steering(steer_input: float, delta: float):
+	# Steering node is optional per-bike mesh
+	if mesh_skin == null or mesh_skin.steering_rotation_node == null:
+		return
+	var target = -mesh_skin.steering_rot_axis * deg_to_rad(steer_input * MAX_STEERING_ANGLE_DEG)
+	mesh_skin.steering_rotation_node.rotation = mesh_skin.steering_rotation_node.rotation.lerp(
+		target, STEERING_LERP_SPEED * delta
+	)
 
 
-func rotate_wheels(angle_deg: float, delta: float):
-	pass
+func rotate_wheels(speed: float, delta: float):
+	if mesh_skin == null:
+		return
+	var spin = -mesh_skin.wheel_rot_axis * speed * WHEEL_SPIN_MULTIPLIER * delta
+	# Wheel nodes are optional per-bike mesh
+	if mesh_skin.front_wheel_node:
+		mesh_skin.front_wheel_node.rotation += spin
+	if mesh_skin.rear_wheel_node:
+		mesh_skin.rear_wheel_node.rotation += spin
 
 
 #region resource/definition
