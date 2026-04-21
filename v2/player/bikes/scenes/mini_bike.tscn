@@ -28,8 +28,8 @@ steering_rotation_node = NodePath("RotationPoint")
 front_wheel_node = NodePath("RotationPoint/FrontWheel")
 rear_wheel_node = NodePath("RearWheel")
 
-[node name="Frontfender" parent="RotationPoint" parent_id_path=PackedInt32Array(514791173) index="5" unique_id=562694776]
+[node name="Frontfender" parent="RotationPoint" parent_id_path=PackedInt32Array(1031484188) index="5" unique_id=1756580941]
 surface_material_override/0 = SubResource("StandardMaterial3D_cvxtv")
 
-[node name="PaintedBody" parent="." index="1" unique_id=1330380335]
+[node name="PaintedBody" parent="." index="1" unique_id=1587550447]
 surface_material_override/0 = SubResource("StandardMaterial3D_1jg8m")

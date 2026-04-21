@@ -180,7 +180,7 @@ func _create_proxy(source: Marker3D, proxy_name: String, parent: Node3D) -> Mark
 	var proxy = Marker3D.new()
 	proxy.name = proxy_name
 	parent.add_child(proxy)
-	proxy.position = source.position
+	proxy.transform = source.transform
 	return proxy
 
 
@@ -192,7 +192,7 @@ func _create_mirrored_proxy(source: Marker3D, proxy_name: String, parent: Node3D
 	var proxy = Marker3D.new()
 	proxy.name = proxy_name
 	parent.add_child(proxy)
-	proxy.position = source.position
+	proxy.transform = source.transform
 	proxy.position.x = -source.position.x
 	return proxy
 
