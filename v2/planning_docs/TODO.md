@@ -12,9 +12,6 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-
-## HI-PRI‼️
-
 - [ ] Animation Controller:
   - [ ] Fix wheelie rotation / placement (puts you in the ground - find / fix solution)
   - [ ] Better IK
@@ -22,6 +19,10 @@
     - [ ] arms must follow handlebars
     - [ ] Create stopped/idle animation
   - [ ] steering animation shouldn't happen at low speed so much
+  - [ ] Crash animation
+
+## HI-PRI‼️
+
 
 - [ ] Finish tutorial:
   - [ ] clutch-up tutorial & speed management
