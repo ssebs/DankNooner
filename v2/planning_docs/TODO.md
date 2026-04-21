@@ -1,80 +1,70 @@
 # TODO
-
 > Don't forget, have fun :D
 
 ## In Progress 🚀
-- [ ] mute when out of focus
-- [ ] mute option in settings
-- [ ] Rotating wheelie puts you in the ground - find / fix solution
-- [ ] arms must follow handlebars better
-- [ ] tutorial finished MP => clients dont respawn back in free roam
-- [WIP] Gamemode select on map select
-  - [ ] crashing during tutorial doesn't stop timers
-  - [ ] e.g. tutorial 01 plays that gamemode on a specific map, update the leveldefinitions to support this
-  - [x] Update tutorial mode to choose tutorial steps
-- [ ] Tutorials should be single playerish, but server should still know. only RPC to that peer though.
-- [ ] Close tutorial hud when leaving game
-- [ ] tutorial press RT/B should be dependent on controlscheme, and be shown in more steps
-- [ ] tutorial gamemode - _ctx doesnt make sense
-> Take it slow, fix bugs and add polish to player controller
-- [ ] GamemodeEvent System & First tutorial
-  - [x] vibe code tutorial / connect systems from [GamemodeSystem.md](./GamemodeSystem.md)
-  - [ ] Review tutorial code
-  - [ ] Review gamemode transition code when entering circle to starting tutorial mode
-  - [ ] Single/multiplayer support
+> Take it slow, fix bugs
+### EPIC
+- [ ] Basic core gameplay loop & implement gamemodes
+  - [x] start gamemodes via ~~map select~~ start circles
+  - [ ] Game modes:
+    - [x] Free roam
+    - [ ] Street race (w/o traffic)
+    - [ ] Ragdoll launch game mode (hall of meat)
 
-- [ ] New menu type
-  - [ ] Create loading inbetween screen
-  - [ ] Create win/lose inbetween screen
+### WIP
+- [ ] Organize todos
+
+## HI-PRI‼️
+
+- [ ] Animation Controller:
+  - [ ] Fix wheelie rotation / placement (puts you in the ground - find / fix solution)
+  - [ ] Better IK
+    - [ ] debug bike IK placement / playing procedural w/ offsets
+    - [ ] arms must follow handlebars
+    - [ ] Create stopped/idle animation
+  - [ ] steering animation shouldn't happen at low speed so much
+
+- [ ] Finish tutorial:
+  - [ ] clutch-up tutorial & speed management
+  - [ ] crashing during tutorial doesn't stop timers
+  - [ ] tutorial press RT/B should be dependent on controlscheme, and be shown in more steps
+  - [ ] don't just show text on the left, make it more interactive
+
+- [ ] Gamemode switching cleanup:
+  - [ ] controller support on HUD buttons in event start circle/winlose screen (move to menu system?)
+  - [ ] tutorial finished MP => clients dont respawn back in free roam
+  - [ ] Close tutorial hud when leaving game
+  - [ ] tutorial gamemode - _ctx doesnt make sense
+
+- [ ] Trick Manager + tricks
+
+  - [x] wheelie / stoppie detection
+  - [x] flip detection
+  - [ ] in-air tricks
+    - [ ] Create Heel clicker / other trick animations (RB+DOWN)
+  - [ ] more ground tricks
+  - [ ] trick scoring & combos
+  - [ ] trick tweaks
+    - [ ] Land into wheelie / stoppie should be a trick
+    - [ ] Create wheelie + DOWN animation (wheelie + right hand touches ground)
+
+- [ ] Trick Battle / Score Attack gamemode
+  - [ ] 3 rounds, highest score in 60s wins round, best 2/3 wins game
+  - [ ] Live scoreboard / trickfeed
+  - [ ] 2 locations for variety
+
+- [ ] Street Race
+  - [ ] Create lap system & show placement live in scoreboard
+  - [ ] Doing tricks gives respect/xp/currency that act as a bonus (to unlock items in the future, gold star for now)
+  - [ ] Be able to place checkpoint markers
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
-
-- [ ] Use Curves to create roads
-  - [ ] In godot or blender?
-
-- [ ] Option to change localization language
-
-- [ ] Pause => show lobby
 
 > POC = playable gamemodes w/ friends, see if core gameplay loop works
 > video record this once playing with everyone, save log files
 
-- [ ] Basic core gameplay loop / implement gamemodes
-
-  - [ ] Review gamemode controller + signals emitted for spawning/crashing/trick scoring
-  - [ ] start gamemodes via map select
-  - [ ] Game modes:
-    - [ ] Free roam
-      - [ ] Get Score saved to disk for tricks
-    - [ ] Street race
-      - [ ] w/ and w/o traffic
-      - [ ] Podium scene after race ends
-      - [ ] Get Score saved to disk w/ bonus for podium
-    - [ ] Stunt race
-      - [ ] Mario kart like - get items to attack players or help self, but do tricks to get items. More complex tricks = better items
-    - [ ] Ragdoll launch game mode
-      - [ ] Like hall of meat
-  - [ ] Unlock Skins w/ Score from disk & spend
-
-- [ ] 2 difficulties, arcade & sim. Sim grants 1.5x score
-  - [ ] arcade still has gear changes, no clutch except to start wheelie
 - [ ] Be able to reverse (play animation)
   - [ ] Hold clutch, brake to reverse
-- [ ] Trick Manager + tricks
-
-  - [ ] Move wheelie logic from movement controller
-  - [ ] trick system
-    - [ ] migrate wheelie / stoppie tricks
-    - [ ] ramp tricks
-    - [ ] ground tricks
-  - [x] trick detection in trick_controller
-  - [ ] trick scoring in separate script
-    - [ ] e.g. player emits trick_done & gamemode manager does something with it.
-      - [ ] e.g. race/freeroam => boost
-      - [ ] e.g. stunt race => combo counter
-  - [ ] Create wheelie + DOWN animation (wheelie + right hand touches ground)
-  - [ ] Create Heel clicker / other trick animations
-  - [ ] Land into wheelie / stoppie should be a trick
 
 - [ ] Improve CrashController
 
@@ -85,22 +75,15 @@
   - [ ] Swap to rigidbody, make bounding box of mesh & apply velocity to bike & collision
   - [ ] Emit signals to gamemode controller
 
-- [ ] Review Animation Controller & Create animations
+- [ ] Create Save System for in-game
 
-  - [ ] AnimationController + Trick integration
-    - [ ] debug wheelie animation
-    - [ ] debug naked bike init ik / load default animation not working
-  - [ ] AnimationController + Crash integration
-    - [ ] Create crash animation (procedural)
-  - [ ] Create lean (turning) animation
-  - [ ] Create stopped/idle animation
-  - [x] Create wheelie/stoppie animation
-  - [x] Add pull/lean back animation when starting a wheelie
-  - [ ] backflip landing is snappy, and always lands in wheelie/stoppie
-  - [ ] wheelie turning animation should be different, should yaw
-  - [x] claude created a system
-  - [x] Review planning_docs/AnimationController.md
-  - [x] Create way to play specific animations
+  - [x] Save bike definitions on disk
+  - [ ] save player score / $ / progression
+  - [ ] Save gamemode outcomes
+  - [ ] Save total trick history (total time played, total wheelies, etc.)
+  - [ ] save unlocked tricks, mods, etc.
+  - [x] Save levels / player stuff
+
 
 - [ ] Basic Traffic AI
 
@@ -112,12 +95,7 @@
     - [ ] riding close by without touching = points
     - [ ] Doing a wheelie & riding close will do a new trick
     - [ ] anim: touch hand against car like trick tweak
-
-- [ ] Create Save System for in-game
-
-  - [x] Save bike definitions on disk
-  - [ ] save unlocked tricks, mods, etc.
-  - [x] Save levels / player stuff
+  - [ ] Add traffic street race gamemode
 
 - [ ] Basic customization menu / UI
 
@@ -142,9 +120,9 @@
       - [ ] List purchasedskins
       - [ ] Choose a bike skin
       - [ ] Choose a character skin
-
+- [ ] Stunt race
+  - [ ] Mario kart like - get items to attack players or help self, but do tricks to get items. More complex tricks = better items
 - [ ] Review webrtc gen code for security
-- [ ] Competitive modes
 - [ ] More audio
 
   - [ ] Soundscapes for ambient sounds, get diff clips and play them in different orders, at random times to set mood & add sound variety
@@ -156,6 +134,30 @@
   - [ ] [Web](https://github.com/utopia-rise/fmod-gdextension/pull/210#issuecomment-3717948490)
 
 ## Backlog
+- [ ] Animation Controller contd.
+  - [ ] AnimationController + Trick tweak integration
+  - [ ] AnimationController + Crash integration
+    - [ ] Create crash animation (procedural)
+  - [ ] backflip landing is snappy, and always lands in wheelie/stoppie
+  - [ ] wheelie turning animation should be different, should yaw
+
+- [ ] Competitive modes
+- [ ] 2 difficulties, arcade & sim. Sim grants 1.5x score
+  - [ ] arcade still has gear changes, no clutch except to start wheelie
+- [ ] Unlock Skins w/ Score from disk & spend
+
+- [ ] Review code!
+- [ ] Option to change localization language
+
+- [ ] Use Curves to create roads
+  - [ ] In godot or blender?
+
+- [ ] New menu type
+  - [ ] Create loading inbetween screen
+  - [x] Create win/lose inbetween screen
+
+- [ ] Gamemode select on map select
+  - [ ] e.g. tutorial 01 plays that gamemode on a specific map, update the leveldefinitions to support this
 
 - [ ] Android setup keystore & add to github secrets & enable in build.yml
 
@@ -276,6 +278,12 @@
 
 ## Polish / Bugs
 
+- [ ] Pause => show lobby
+
+- [ ] mute option in settings
+
+- [ ] mute when out of focus
+
 - [ ] find hook for dank nooner, what makes it cool!
 
 - [ ] broken back button via: play => lobby => back => customize => back
@@ -304,6 +312,22 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Review Animation Controller & Create animations
+  - [x] Create lean (turning) animation
+  - [x] Create wheelie/stoppie animation
+  - [x] Add pull/lean back animation when starting a wheelie
+  - [x] claude created a system
+  - [x] Review planning_docs/AnimationController.md
+  - [x] Create way to play specific animations
+
+- [x] GamemodeEvent System & First tutorial
+  - [x] vibe code tutorial / connect systems from [GamemodeSystem.md](./GamemodeSystem.md)
+  - [x] Review tutorial code
+  - [x] Review gamemode transition code when entering circle to starting tutorial mode
+  - [x] Single/multiplayer support
+
+- [x] Update tutorial mode to choose tutorial steps
 
 - [x] speed it capped at 30 in 1st gear, but RPM keeps climbing these should happen at the same time
 
