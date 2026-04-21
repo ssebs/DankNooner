@@ -3,6 +3,8 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀
+- [ ] mute when out of focus
+- [ ] mute option in settings
 - [ ] Rotating wheelie puts you in the ground - find / fix solution
 - [ ] arms must follow handlebars better
 - [ ] tutorial finished MP => clients dont respawn back in free roam
