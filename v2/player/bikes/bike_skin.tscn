@@ -22,7 +22,7 @@ skin_definition = ExtResource("2_ryc4d")
 [node name="MeshNode" type="Node3D" parent="." unique_id=1984999037]
 unique_name_in_owner = true
 
-[node name="@Node3D@47889" type="Node3D" parent="MeshNode" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("3_qeo2q")]
+[node name="Grom" type="Node3D" parent="MeshNode" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("3_qeo2q")]
 transform = Transform3D(-0.35, 0, -5.284853e-08, 0, 0.35, 0, 5.284853e-08, 0, -0.35, 0, 0.575, 0)
 script = ExtResource("4_c5axj")
 slots = Array[ExtResource("5_e6q4j")]([SubResource("Resource_cvxtv"), SubResource("Resource_cvxtv")])
@@ -41,7 +41,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.76550496, -0.17694597)
 
 [node name="LeftHandleBarMarker" type="Marker3D" parent="." unique_id=1482040679]
 unique_name_in_owner = true
-transform = Transform3D(0.96592575, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.96592575, 0.32571524, 0.9496769, 0.23173288)
+transform = Transform3D(-0.49725756, -0.8664896, 0.04394007, -0.4734374, 0.22855717, -0.85065764, 0.7270432, -0.4437989, -0.52388036, 0.32571524, 0.9496769, 0.23173288)
 
 [node name="LeftPegMarker" type="Marker3D" parent="." unique_id=401987139]
 unique_name_in_owner = true

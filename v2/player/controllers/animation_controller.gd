@@ -316,16 +316,17 @@ func _editor_init_ik_from_bike() -> void:
 	var ik_ctrl = character_skin.ik_controller
 	var def = bike_skin.skin_definition
 
-	# Set bike-owned targets directly from markers (handlebar proxy follows steering)
-	var left_hand = bike_skin.steering_handlebar_marker
+	# Create proxy markers for all limbs so rotations are independent from bike markers
+	var handlebar = bike_skin.steering_handlebar_marker
+	var peg = bike_skin.left_peg_marker
 	(
 		ik_ctrl
 		. set_bike_markers(
 			bike_skin.seat_marker,
-			left_hand,
-			_editor_get_or_create_mirror(left_hand, "RightHandProxy", left_hand.get_parent()),
-			bike_skin.left_peg_marker,
-			_editor_get_or_create_mirror(bike_skin.left_peg_marker, "RightFootProxy", bike_skin),
+			_editor_get_or_create_proxy(handlebar, "LeftHandProxy", handlebar.get_parent()),
+			_editor_get_or_create_mirror(handlebar, "RightHandProxy", handlebar.get_parent()),
+			_editor_get_or_create_proxy(peg, "LeftFootProxy", bike_skin),
+			_editor_get_or_create_mirror(peg, "RightFootProxy", bike_skin),
 		)
 	)
 
@@ -346,8 +347,28 @@ func _editor_init_ik_from_bike() -> void:
 		ik_ctrl.ik_left_leg_magnet.position = def.left_leg_magnet_position
 	if def.right_leg_magnet_position is Vector3 and def.right_leg_magnet_position != Vector3.ZERO:
 		ik_ctrl.ik_right_leg_magnet.position = def.right_leg_magnet_position
+	if def.left_hand_rotation is Vector3 and def.left_hand_rotation != Vector3.ZERO:
+		ik_ctrl.ik_left_hand.rotation = def.left_hand_rotation
+	if def.right_hand_rotation is Vector3 and def.right_hand_rotation != Vector3.ZERO:
+		ik_ctrl.ik_right_hand.rotation = def.right_hand_rotation
+	if def.left_foot_rotation is Vector3 and def.left_foot_rotation != Vector3.ZERO:
+		ik_ctrl.ik_left_foot.rotation = def.left_foot_rotation
+	if def.right_foot_rotation is Vector3 and def.right_foot_rotation != Vector3.ZERO:
+		ik_ctrl.ik_right_foot.rotation = def.right_foot_rotation
 
+	ik_ctrl._create_ik()
 	character_skin.enable_ik()
+
+
+func _editor_get_or_create_proxy(source: Marker3D, proxy_name: String, parent: Node3D) -> Marker3D:
+	var existing = parent.get_node_or_null(proxy_name)
+	if existing:
+		existing.queue_free()
+	var proxy = Marker3D.new()
+	proxy.name = proxy_name
+	parent.add_child(proxy)
+	proxy.position = source.position
+	return proxy
 
 
 func _editor_get_or_create_mirror(source: Marker3D, proxy_name: String, parent: Node3D) -> Marker3D:
@@ -357,7 +378,7 @@ func _editor_get_or_create_mirror(source: Marker3D, proxy_name: String, parent: 
 	var proxy = Marker3D.new()
 	proxy.name = proxy_name
 	parent.add_child(proxy)
-	proxy.transform = source.transform
+	proxy.position = source.position
 	proxy.position.x = -source.position.x
 	return proxy
 
@@ -378,6 +399,14 @@ func _editor_save_default_pose() -> void:
 	def.right_arm_magnet_position = ik_ctrl.ik_right_arm_magnet.position
 	def.left_leg_magnet_position = ik_ctrl.ik_left_leg_magnet.position
 	def.right_leg_magnet_position = ik_ctrl.ik_right_leg_magnet.position
+	if ik_ctrl.ik_left_hand:
+		def.left_hand_rotation = ik_ctrl.ik_left_hand.rotation
+	if ik_ctrl.ik_right_hand:
+		def.right_hand_rotation = ik_ctrl.ik_right_hand.rotation
+	if ik_ctrl.ik_left_foot:
+		def.left_foot_rotation = ik_ctrl.ik_left_foot.rotation
+	if ik_ctrl.ik_right_foot:
+		def.right_foot_rotation = ik_ctrl.ik_right_foot.rotation
 
 	var err = ResourceSaver.save(def)
 	if err == OK:
@@ -411,6 +440,14 @@ func _editor_reset_to_default_pose() -> void:
 		ik_ctrl.ik_left_leg_magnet.position = def.left_leg_magnet_position
 	if def.right_leg_magnet_position is Vector3:
 		ik_ctrl.ik_right_leg_magnet.position = def.right_leg_magnet_position
+	if def.left_hand_rotation is Vector3 and ik_ctrl.ik_left_hand:
+		ik_ctrl.ik_left_hand.rotation = def.left_hand_rotation
+	if def.right_hand_rotation is Vector3 and ik_ctrl.ik_right_hand:
+		ik_ctrl.ik_right_hand.rotation = def.right_hand_rotation
+	if def.left_foot_rotation is Vector3 and ik_ctrl.ik_left_foot:
+		ik_ctrl.ik_left_foot.rotation = def.left_foot_rotation
+	if def.right_foot_rotation is Vector3 and ik_ctrl.ik_right_foot:
+		ik_ctrl.ik_right_foot.rotation = def.right_foot_rotation
 
 
 #endregion
