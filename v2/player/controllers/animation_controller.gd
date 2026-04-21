@@ -28,7 +28,7 @@ enum RiderState {
 ## Max chest pitch (deg) when leaning fwd/back. Negate to flip direction.
 @export var max_chest_lean_pitch_deg: float = -15.0
 ## Max chest z shift when leaning fwd/back. Negate to flip direction.
-@export var max_chest_z_offset: float = 0.5
+@export var max_chest_z_offset: float = 0.2
 ## Max butt z shift when leaning fwd/back. Negate to flip direction.
 @export var max_butt_z_offset: float = 0.1
 
@@ -42,8 +42,6 @@ var current_state: RiderState = RiderState.RIDING:
 var _base_butt_pos: Vector3
 var _base_chest_pos: Vector3
 var _base_chest_rot: Vector3
-var _base_left_hand_pos: Vector3
-var _base_right_hand_pos: Vector3
 var _base_visual_root_position: Vector3
 var _base_visual_root_rotation: Vector3
 var _idle_timer: float = 0.0
@@ -54,11 +52,13 @@ var _procedural_enabled: bool = true
 
 func _ready():
 	if Engine.is_editor_hint():
+		call_deferred("_editor_auto_init")
 		return
 
 
 func _process(delta: float):
 	if Engine.is_editor_hint():
+		_editor_sync_proxies()
 		return
 	if current_state != RiderState.RIDING:
 		return
@@ -90,13 +90,23 @@ func _update_procedural_animation(delta: float) -> void:
 		visual_root.rotation.x += TAU
 	visual_root.rotation.x = lerpf(visual_root.rotation.x, target_pitch, blend)
 
-	# Pivot offset: rotate around rear wheel (wheelie) or front wheel (stoppie)
-
+	# Pivot offset: lerp along tire contact arc based on pitch
+	var pitch_ratio = clamp(abs(visual_root.rotation.x) / (PI / 2.0), 0.0, 1.0)
+	var rear_back = (
+		bd.rear_wheel_back_position
+		if bd.rear_wheel_back_position is Vector3
+		else bd.rear_wheel_ground_position
+	)
+	var front_front = (
+		bd.front_wheel_front_position
+		if bd.front_wheel_front_position is Vector3
+		else bd.front_wheel_ground_position
+	)
 	var pivot: Vector3
 	if visual_root.rotation.x < 0:
-		pivot = bd.rear_wheel_ground_position
+		pivot = bd.rear_wheel_ground_position.lerp(rear_back, pitch_ratio)
 	else:
-		pivot = bd.front_wheel_ground_position
+		pivot = bd.front_wheel_ground_position.lerp(front_front, pitch_ratio)
 	var rotated_pivot = Basis(Vector3.RIGHT, visual_root.rotation.x) * pivot
 	visual_root.position = _base_visual_root_position + pivot - rotated_pivot
 
@@ -127,7 +137,6 @@ func _update_procedural_animation(delta: float) -> void:
 
 	bike_skin.rotate_steering(movement_controller.roll_angle, delta)
 	bike_skin.rotate_wheels(movement_controller.speed, delta)
-	_update_hand_ik_from_steering(ik_ctrl, blend)
 
 
 ## Lean rider fwd/back from nfx_lean: pitch chest and shift butt along z.
@@ -138,24 +147,23 @@ func _update_lean_animation(blend: float) -> void:
 	var target_chest_pitch = _base_chest_rot.x - lean_input * deg_to_rad(max_chest_lean_pitch_deg)
 	ik_ctrl.ik_chest.rotation.x = lerpf(ik_ctrl.ik_chest.rotation.x, target_chest_pitch, blend)
 
-	var target_chest_z = _base_chest_pos.z + lean_input * max_chest_z_offset
+	var target_chest_z = _base_chest_pos.z + (lean_input * max_chest_z_offset)
 	ik_ctrl.ik_chest.position.z = lerpf(ik_ctrl.ik_chest.position.z, target_chest_z, blend)
+	# DebugUtils.DebugMsg(
+	# 	(
+	# 		"lean_input=%.2f base_z=%.3f target_z=%.3f actual_z=%.3f offset=%.2f"
+	# 		% [
+	# 			lean_input,
+	# 			_base_chest_pos.z,
+	# 			target_chest_z,
+	# 			ik_ctrl.ik_chest.position.z,
+	# 			max_chest_z_offset
+	# 		]
+	# 	)
+	# )
 
 	var target_butt_z = _base_butt_pos.z + lean_input * max_butt_z_offset
 	ik_ctrl.butt_pos.position.z = lerpf(ik_ctrl.butt_pos.position.z, target_butt_z, blend)
-
-
-func _update_hand_ik_from_steering(ik_ctrl: IKController, blend: float) -> void:
-	if not bike_skin.has_steering():
-		return
-	var pivot = bike_skin.get_steering_pivot_local()
-	var steer_basis = Basis.from_euler(bike_skin.get_steering_rotation())
-	var left_offset = _base_left_hand_pos - pivot
-	var right_offset = _base_right_hand_pos - pivot
-	var target_left = pivot + steer_basis * left_offset
-	var target_right = pivot + steer_basis * right_offset
-	ik_ctrl.ik_left_hand.position = ik_ctrl.ik_left_hand.position.lerp(target_left, blend)
-	ik_ctrl.ik_right_hand.position = ik_ctrl.ik_right_hand.position.lerp(target_right, blend)
 
 
 # func _update_wheelie_arm() -> void:
@@ -199,8 +207,6 @@ func _reset_to_base_positions() -> void:
 		ik_ctrl.butt_pos.position = _base_butt_pos
 		ik_ctrl.ik_chest.position = _base_chest_pos
 		ik_ctrl.ik_chest.rotation = _base_chest_rot
-		ik_ctrl.ik_left_hand.position = _base_left_hand_pos
-		ik_ctrl.ik_right_hand.position = _base_right_hand_pos
 	if visual_root:
 		visual_root.position = _base_visual_root_position
 		visual_root.rotation = _base_visual_root_rotation
@@ -221,22 +227,12 @@ func initialize() -> void:
 		)
 		return
 
-	# Apply default_pose synchronously so base positions reflect the pose,
-	# not scene-default marker transforms.
-	var anim_player = character_skin.ik_anim_player
-	if anim_player and anim_player.has_animation("IK_anim_lib/default_pose"):
-		anim_player.play("IK_anim_lib/default_pose")
-		anim_player.seek(0.0, true)
-		anim_player.stop()
-
 	# Store base positions/rotations for offset calculations
 	var ik_ctrl = character_skin.ik_controller
 	if ik_ctrl:
 		_base_butt_pos = ik_ctrl.butt_pos.position
 		_base_chest_pos = ik_ctrl.ik_chest.position
 		_base_chest_rot = ik_ctrl.ik_chest.rotation
-		_base_left_hand_pos = ik_ctrl.ik_left_hand.position
-		_base_right_hand_pos = ik_ctrl.ik_right_hand.position
 
 	_base_visual_root_position = visual_root.position
 	_base_visual_root_rotation = visual_root.rotation
@@ -326,88 +322,214 @@ func _transition_to_trick() -> void:
 
 
 #region Editor Tools
+func _editor_auto_init() -> void:
+	if bike_skin == null or character_skin == null:
+		return
+	if character_skin.ik_controller == null:
+		return
+	_editor_init_ik_from_bike()
+
+
+func _editor_sync_proxies() -> void:
+	if bike_skin == null or character_skin == null:
+		return
+	var ik_ctrl = character_skin.ik_controller
+	if ik_ctrl == null or ik_ctrl.ik_left_hand == null:
+		return
+	# Sync hand proxies from handlebar marker (user edits this)
+	ik_ctrl.ik_left_hand.global_transform = bike_skin.left_handlebar_marker.global_transform
+	ik_ctrl.ik_right_hand.global_transform = _mirror_transform_x(
+		bike_skin.left_handlebar_marker.global_transform
+	)
+	# Sync foot proxies from peg marker
+	ik_ctrl.ik_left_foot.global_transform = bike_skin.left_peg_marker.global_transform
+	ik_ctrl.ik_right_foot.global_transform = _mirror_transform_x(
+		bike_skin.left_peg_marker.global_transform
+	)
+
+
+func _editor_sync_pose_from_definition() -> void:
+	if bike_skin == null or character_skin == null:
+		return
+	var ik_ctrl = character_skin.ik_controller
+	if ik_ctrl == null or ik_ctrl.butt_pos == null:
+		return
+	var def = bike_skin.skin_definition
+	if def == null:
+		return
+
+	if ik_ctrl.ik_chest:
+		ik_ctrl.ik_chest.position = def.chest_position
+		ik_ctrl.ik_chest.rotation = def.chest_rotation
+	if ik_ctrl.ik_head:
+		ik_ctrl.ik_head.position = def.head_position
+		ik_ctrl.ik_head.rotation = def.head_rotation
+	if ik_ctrl.ik_left_arm_magnet:
+		ik_ctrl.ik_left_arm_magnet.position = def.left_arm_magnet_position
+	if ik_ctrl.ik_right_arm_magnet:
+		ik_ctrl.ik_right_arm_magnet.position = def.right_arm_magnet_position
+	if ik_ctrl.ik_left_leg_magnet:
+		ik_ctrl.ik_left_leg_magnet.position = def.left_leg_magnet_position
+	if ik_ctrl.ik_right_leg_magnet:
+		ik_ctrl.ik_right_leg_magnet.position = def.right_leg_magnet_position
+	if ik_ctrl.ik_left_hand:
+		ik_ctrl.ik_left_hand.rotation = def.left_hand_rotation
+	if ik_ctrl.ik_right_hand:
+		ik_ctrl.ik_right_hand.rotation = def.right_hand_rotation
+	if ik_ctrl.ik_left_foot:
+		ik_ctrl.ik_left_foot.rotation = def.left_foot_rotation
+	if ik_ctrl.ik_right_foot:
+		ik_ctrl.ik_right_foot.rotation = def.right_foot_rotation
+
+
 func _editor_init_ik_from_bike() -> void:
 	if bike_skin == null or character_skin == null:
 		DebugUtils.DebugErrMsg("AnimationController: bike_skin and character_skin must be set")
 		return
+
+	var ik_ctrl = character_skin.ik_controller
 	var def = bike_skin.skin_definition
-	character_skin.set_ik_targets_for_bike(
-		def.seat_marker_position, def.left_handlebar_marker_position, def.left_peg_marker_position
+
+	# Create proxy markers for all limbs so rotations are independent from bike markers
+	var handlebar = bike_skin.steering_handlebar_marker
+	var peg = bike_skin.left_peg_marker
+	(
+		ik_ctrl
+		. set_bike_markers(
+			bike_skin.seat_marker,
+			_editor_get_or_create_proxy(handlebar, "LeftHandProxy", handlebar.get_parent()),
+			_editor_get_or_create_mirror(handlebar, "RightHandProxy", handlebar.get_parent()),
+			_editor_get_or_create_proxy(peg, "LeftFootProxy", bike_skin),
+			_editor_get_or_create_mirror(peg, "RightFootProxy", bike_skin),
+		)
 	)
+
+	# Load rider pose fields from BikeSkinDefinition if they've been saved
+	if def.chest_position is Vector3 and def.chest_position != Vector3.ZERO:
+		ik_ctrl.ik_chest.position = def.chest_position
+	if def.chest_rotation is Vector3 and def.chest_rotation != Vector3.ZERO:
+		ik_ctrl.ik_chest.rotation = def.chest_rotation
+	if def.head_position is Vector3 and def.head_position != Vector3.ZERO:
+		ik_ctrl.ik_head.position = def.head_position
+	if def.head_rotation is Vector3 and def.head_rotation != Vector3.ZERO:
+		ik_ctrl.ik_head.rotation = def.head_rotation
+	if def.left_arm_magnet_position is Vector3 and def.left_arm_magnet_position != Vector3.ZERO:
+		ik_ctrl.ik_left_arm_magnet.position = def.left_arm_magnet_position
+	if def.right_arm_magnet_position is Vector3 and def.right_arm_magnet_position != Vector3.ZERO:
+		ik_ctrl.ik_right_arm_magnet.position = def.right_arm_magnet_position
+	if def.left_leg_magnet_position is Vector3 and def.left_leg_magnet_position != Vector3.ZERO:
+		ik_ctrl.ik_left_leg_magnet.position = def.left_leg_magnet_position
+	if def.right_leg_magnet_position is Vector3 and def.right_leg_magnet_position != Vector3.ZERO:
+		ik_ctrl.ik_right_leg_magnet.position = def.right_leg_magnet_position
+	if def.left_hand_rotation is Vector3 and def.left_hand_rotation != Vector3.ZERO:
+		ik_ctrl.ik_left_hand.rotation = def.left_hand_rotation
+	if def.right_hand_rotation is Vector3 and def.right_hand_rotation != Vector3.ZERO:
+		ik_ctrl.ik_right_hand.rotation = def.right_hand_rotation
+	if def.left_foot_rotation is Vector3 and def.left_foot_rotation != Vector3.ZERO:
+		ik_ctrl.ik_left_foot.rotation = def.left_foot_rotation
+	if def.right_foot_rotation is Vector3 and def.right_foot_rotation != Vector3.ZERO:
+		ik_ctrl.ik_right_foot.rotation = def.right_foot_rotation
+
+	ik_ctrl._create_ik()
 	character_skin.enable_ik()
+
+
+func _editor_get_or_create_proxy(source: Marker3D, proxy_name: String, parent: Node3D) -> Marker3D:
+	var existing = parent.get_node_or_null(proxy_name)
+	if existing:
+		existing.queue_free()
+	var proxy = Marker3D.new()
+	proxy.name = proxy_name
+	parent.add_child(proxy)
+	proxy.global_transform = source.global_transform
+	return proxy
+
+
+func _editor_get_or_create_mirror(source: Marker3D, proxy_name: String, parent: Node3D) -> Marker3D:
+	var existing = parent.get_node_or_null(proxy_name)
+	if existing:
+		existing.queue_free()
+	var proxy = Marker3D.new()
+	proxy.name = proxy_name
+	parent.add_child(proxy)
+	proxy.global_transform = _mirror_transform_x(source.global_transform)
+	return proxy
+
+
+static func _mirror_transform_x(t: Transform3D) -> Transform3D:
+	t.origin.x = -t.origin.x
+	t.basis.x.y = -t.basis.x.y
+	t.basis.x.z = -t.basis.x.z
+	t.basis.y.x = -t.basis.y.x
+	t.basis.z.x = -t.basis.z.x
+	return t
 
 
 func _editor_save_default_pose() -> void:
 	var ik_ctrl = character_skin.ik_controller
-	var anim_player = character_skin.ik_anim_player
-	if ik_ctrl == null or anim_player == null:
-		DebugUtils.DebugErrMsg("AnimationController: missing ik_controller or ik_anim_player")
+	if ik_ctrl == null:
+		DebugUtils.DebugErrMsg("AnimationController: missing ik_controller")
 		return
 
-	var lib_name = "IK_anim_lib"
-	var anim_name = "default_pose"
+	var def = bike_skin.skin_definition
 
-	if not anim_player.has_animation_library(lib_name):
-		DebugUtils.DebugErrMsg("AnimationController: animation library '%s' not found" % lib_name)
-		return
+	def.chest_position = ik_ctrl.ik_chest.position
+	def.chest_rotation = ik_ctrl.ik_chest.rotation
+	def.head_position = ik_ctrl.ik_head.position
+	def.head_rotation = ik_ctrl.ik_head.rotation
+	def.left_arm_magnet_position = ik_ctrl.ik_left_arm_magnet.position
+	def.right_arm_magnet_position = ik_ctrl.ik_right_arm_magnet.position
+	def.left_leg_magnet_position = ik_ctrl.ik_left_leg_magnet.position
+	def.right_leg_magnet_position = ik_ctrl.ik_right_leg_magnet.position
+	if ik_ctrl.ik_left_hand:
+		def.left_hand_rotation = ik_ctrl.ik_left_hand.rotation
+	if ik_ctrl.ik_right_hand:
+		def.right_hand_rotation = ik_ctrl.ik_right_hand.rotation
+	if ik_ctrl.ik_left_foot:
+		def.left_foot_rotation = ik_ctrl.ik_left_foot.rotation
+	if ik_ctrl.ik_right_foot:
+		def.right_foot_rotation = ik_ctrl.ik_right_foot.rotation
 
-	var lib: AnimationLibrary = anim_player.get_animation_library(lib_name)
-	if not lib.has_animation(anim_name):
-		lib.add_animation(anim_name, Animation.new())
-	var anim: Animation = lib.get_animation(anim_name)
-	anim.clear()
-	anim.length = 0.1
-
-	var markers := {
-		"IKTargets/ButtPosition": ik_ctrl.butt_pos,
-		"IKTargets/ChestTarget": ik_ctrl.ik_chest,
-		"IKTargets/HeadTarget": ik_ctrl.ik_head,
-		"IKTargets/LeftHand": ik_ctrl.ik_left_hand,
-		"IKTargets/RightHand": ik_ctrl.ik_right_hand,
-		"IKTargets/LeftArmMagnet": ik_ctrl.ik_left_arm_magnet,
-		"IKTargets/RightArmMagnet": ik_ctrl.ik_right_arm_magnet,
-		"IKTargets/LeftFoot": ik_ctrl.ik_left_foot,
-		"IKTargets/RightFoot": ik_ctrl.ik_right_foot,
-		"IKTargets/LeftLegMagnet": ik_ctrl.ik_left_leg_magnet,
-		"IKTargets/RightLegMagnet": ik_ctrl.ik_right_leg_magnet,
-	}
-
-	for node_path in markers:
-		_keyframe_marker(anim, node_path, markers[node_path])
-
-	var err = ResourceSaver.save(lib)
+	var err = ResourceSaver.save(def)
 	if err == OK:
-		DebugUtils.DebugMsg("AnimationController: Saved default_pose to IK_anim_lib.res")
+		DebugUtils.DebugMsg("AnimationController: Saved rider pose to %s" % def.resource_path)
 	else:
 		DebugUtils.DebugErrMsg(
-			"AnimationController: Failed to save IK_anim_lib.res, error: %s" % err
+			"AnimationController: Failed to save BikeSkinDefinition, error: %s" % err
 		)
-
-
-func _keyframe_marker(anim: Animation, node_path: String, marker: Marker3D) -> void:
-	var pos_track := anim.add_track(Animation.TYPE_VALUE)
-	anim.track_set_path(pos_track, node_path + ":position")
-	anim.track_insert_key(pos_track, 0.0, marker.position)
-
-	var rot_track := anim.add_track(Animation.TYPE_VALUE)
-	anim.track_set_path(rot_track, node_path + ":rotation")
-	anim.track_insert_key(rot_track, 0.0, marker.rotation)
 
 
 func _editor_reset_to_default_pose() -> void:
-	var anim_player = character_skin.ik_anim_player
-	if anim_player == null:
-		DebugUtils.DebugErrMsg("AnimationController: missing ik_anim_player")
+	var ik_ctrl = character_skin.ik_controller
+	var def = bike_skin.skin_definition
+	if ik_ctrl == null or def == null:
+		DebugUtils.DebugErrMsg("AnimationController: missing ik_controller or bike_skin definition")
 		return
-	var full_name = "IK_anim_lib/default_pose"
-	if not anim_player.has_animation(full_name):
-		DebugUtils.DebugErrMsg(
-			"AnimationController: no default_pose saved - run Save Default Pose first"
-		)
-		return
-	anim_player.play(full_name)
-	anim_player.seek(0.0, true)
-	anim_player.stop()
+
+	if def.chest_position is Vector3:
+		ik_ctrl.ik_chest.position = def.chest_position
+	if def.chest_rotation is Vector3:
+		ik_ctrl.ik_chest.rotation = def.chest_rotation
+	if def.head_position is Vector3:
+		ik_ctrl.ik_head.position = def.head_position
+	if def.head_rotation is Vector3:
+		ik_ctrl.ik_head.rotation = def.head_rotation
+	if def.left_arm_magnet_position is Vector3:
+		ik_ctrl.ik_left_arm_magnet.position = def.left_arm_magnet_position
+	if def.right_arm_magnet_position is Vector3:
+		ik_ctrl.ik_right_arm_magnet.position = def.right_arm_magnet_position
+	if def.left_leg_magnet_position is Vector3:
+		ik_ctrl.ik_left_leg_magnet.position = def.left_leg_magnet_position
+	if def.right_leg_magnet_position is Vector3:
+		ik_ctrl.ik_right_leg_magnet.position = def.right_leg_magnet_position
+	if def.left_hand_rotation is Vector3 and ik_ctrl.ik_left_hand:
+		ik_ctrl.ik_left_hand.rotation = def.left_hand_rotation
+	if def.right_hand_rotation is Vector3 and ik_ctrl.ik_right_hand:
+		ik_ctrl.ik_right_hand.rotation = def.right_hand_rotation
+	if def.left_foot_rotation is Vector3 and ik_ctrl.ik_left_foot:
+		ik_ctrl.ik_left_foot.rotation = def.left_foot_rotation
+	if def.right_foot_rotation is Vector3 and ik_ctrl.ik_right_foot:
+		ik_ctrl.ik_right_foot.rotation = def.right_foot_rotation
 
 
 #endregion
