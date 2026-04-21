@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d0rgswc73h64f"]
 
 [ext_resource type="Script" uid="uid://bnop7vr1q4gwg" path="res://player/player_entity.gd" id="1_0jc3c"]
-[ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/bikes/skins/naked_default_skin_definition.tres" id="2_xm7jy"]
+[ext_resource type="Resource" uid="uid://cvkjasqlccy3m" path="res://resources/bikes/skins/mini_default_skin_definition.tres" id="2_3kl2f"]
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_faflk"]
 [ext_resource type="Resource" uid="uid://dugcuccseinkn" path="res://resources/player/skins/biker_default_skin_definition.tres" id="3_lfjd4"]
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_ri2qi"]
@@ -12,7 +12,6 @@
 [ext_resource type="Script" uid="uid://b37it1dg63lir" path="res://player/controllers/animation_controller.gd" id="9_anim"]
 [ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="9_xm7jy"]
 [ext_resource type="Script" uid="uid://c2c38w5opks8m" path="res://player/controllers/gearing_controller.gd" id="10_gear"]
-[ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/bikes/hitbox/bike_hitbox.tres" id="10_xm7jy"]
 [ext_resource type="Script" uid="uid://bi0gffmw6lupt" path="res://player/controllers/movement_controller.gd" id="11_tivla"]
 [ext_resource type="Script" uid="uid://t5igmn16n20c" path="res://player/controllers/trick_controller.gd" id="11_trick"]
 [ext_resource type="Script" uid="uid://cfpb4scu8hdy4" path="res://player/controllers/crash_controller.gd" id="12_crash"]
@@ -39,16 +38,18 @@ _data = {
 &"RESET": SubResource("Animation_tivla")
 }
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_di6m0"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kl2q6"]
 
-[sub_resource type="Resource" id="Resource_xm7jy"]
-resource_local_to_scene = true
+[sub_resource type="Resource" id="Resource_cvxtv"]
 script = ExtResource("9_xm7jy")
-color = Color(0.11028292, 0.6258798, 0.47056687, 1)
+color = Color(0.25490198, 0.6862745, 1, 1)
 use_standard_material = true
-surface_index = 1
-standard_material = SubResource("StandardMaterial3D_di6m0")
+standard_material = SubResource("StandardMaterial3D_kl2q6")
 metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oq5os"]
+radius = 0.4
+height = 1.8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8urt2"]
 content_margin_left = 12.0
@@ -81,7 +82,7 @@ floor_block_on_wall = false
 floor_max_angle = 2.9670596
 safe_margin = 0.01
 script = ExtResource("1_0jc3c")
-bike_definition = ExtResource("2_xm7jy")
+bike_definition = ExtResource("2_3kl2f")
 character_definition = ExtResource("3_lfjd4")
 collision_shape_3d = NodePath("CollisionShape3D")
 input_controller = NodePath("_Controllers/InputController")
@@ -123,7 +124,7 @@ transform = Transform3D(-1, 2.7775881e-08, -1.4841912e-07, 0, 0.98293537, 0.1839
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@74203")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@78584")
 
 [node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
 libraries/ = SubResource("AnimationLibrary_wqpss")
@@ -141,28 +142,32 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.46395656, 0.5692559, 0.4293
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.464, 0.569, 0.429)
 
 [node name="ChestTarget" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="4" unique_id=749031780]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.4172537e-09, 1.1547965, 0.021263823)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5598196e-11, 1.1466553, -0.008623444)
 
 [node name="HeadTarget" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="5" unique_id=2052814980]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5670119e-07, 1.7314824, -0.2957811)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7281673e-07, 1.7506322, -0.1890527)
 
 [node name="BikeSkin" parent="VisualRoot" unique_id=1727462617 instance=ExtResource("7_lfjd4")]
 unique_name_in_owner = true
+skin_definition = ExtResource("2_3kl2f")
 
-[node name="@Node3D@74169" parent="VisualRoot/BikeSkin/MeshNode" parent_id_path=PackedInt32Array(1727462617, 1984999037) index="0" unique_id=904807422 node_paths=PackedStringArray("meshes")]
-transform = Transform3D(0.85, 0, 0, 0, 0.85, 0, 0, 0, 0.85, 0, 0, 0)
+[node name="@Node3D@78550" parent="VisualRoot/BikeSkin/MeshNode" parent_id_path=PackedInt32Array(1727462617, 1984999037) index="0" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node")]
+transform = Transform3D(-0.35, 0, -5.284853e-08, 0, 0.35, 0, 5.284853e-08, 0, -0.35, 0, 0.575, 0)
 script = ExtResource("8_3kl2f")
-slots = Array[ExtResource("9_xm7jy")]([SubResource("Resource_xm7jy")])
-meshes = [NodePath("Plane")]
+slots = Array[ExtResource("9_xm7jy")]([SubResource("Resource_cvxtv"), SubResource("Resource_cvxtv")])
+meshes = [NodePath("RotationPoint/Frontfender"), NodePath("PaintedBody")]
+steering_rotation_node = NodePath("RotationPoint")
+front_wheel_node = NodePath("RotationPoint/FrontWheel")
+rear_wheel_node = NodePath("RearWheel")
 
 [node name="SeatMarker" parent="VisualRoot/BikeSkin" index="2" unique_id=725378963]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.08944e-09, 0.72241604, -0.25032827)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2187675e-09, 0.84548926, -0.1953055)
 
 [node name="LeftHandleBarMarker" parent="VisualRoot/BikeSkin" index="3" unique_id=1482040679]
-transform = Transform3D(-0.46607926, 0.7917464, 0.39485118, 0.109107256, 0.49431825, -0.8624064, -0.87798935, -0.3588688, -0.31677678, 0.2906422, 0.885465, 0.3342912)
+transform = Transform3D(-0.46607926, 0.7917464, 0.39485118, 0.109107256, 0.49431825, -0.8624064, -0.87798935, -0.3588688, -0.31677678, 0.29064223, 0.9562068, 0.18692446)
 
 [node name="LeftPegMarker" parent="VisualRoot/BikeSkin" index="4" unique_id=401987139]
-transform = Transform3D(-0.9574183, -0.249409, -0.14541325, -0.20021868, 0.21073318, 0.9568198, -0.20799609, 0.9451913, -0.25169638, 0.23107576, 0.24818093, -0.15550014)
+transform = Transform3D(-0.9574183, -0.249409, -0.14541325, -0.20021868, 0.21073318, 0.9568198, -0.20799609, 0.9451913, -0.25169638, 0.23107576, 0.39506754, -0.16492465)
 
 [node name="TPSCam" type="Camera3D" parent="." unique_id=1200816402]
 unique_name_in_owner = true
@@ -177,8 +182,8 @@ near = 0.115
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=412612653]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.12, 0)
-shape = ExtResource("10_xm7jy")
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.4, -0.02)
+shape = SubResource("CapsuleShape3D_oq5os")
 
 [node name="_Controllers" type="Node3D" parent="." unique_id=1446485892]
 unique_name_in_owner = true
@@ -599,12 +604,12 @@ text = "USERNAME"
 
 [node name="RearRayCast" type="RayCast3D" parent="." unique_id=1983600718]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.197, -0.65626776)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.50608426, -0.5565065)
 target_position = Vector3(0, -1.5, 0)
 
 [node name="FrontRayCast" type="RayCast3D" parent="." unique_id=391878602]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.19675535, 0.953828)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.506, 0.59)
 target_position = Vector3(0, -1.5, 0)
 
 [editable path="VisualRoot/CharacterSkin"]
