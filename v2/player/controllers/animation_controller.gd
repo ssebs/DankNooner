@@ -28,7 +28,7 @@ enum RiderState {
 ## Max chest pitch (deg) when leaning fwd/back. Negate to flip direction.
 @export var max_chest_lean_pitch_deg: float = -15.0
 ## Max chest z shift when leaning fwd/back. Negate to flip direction.
-@export var max_chest_z_offset: float = 0.25
+@export var max_chest_z_offset: float = 0.2
 ## Max butt z shift when leaning fwd/back. Negate to flip direction.
 @export var max_butt_z_offset: float = 0.1
 
@@ -147,8 +147,20 @@ func _update_lean_animation(blend: float) -> void:
 	var target_chest_pitch = _base_chest_rot.x - lean_input * deg_to_rad(max_chest_lean_pitch_deg)
 	ik_ctrl.ik_chest.rotation.x = lerpf(ik_ctrl.ik_chest.rotation.x, target_chest_pitch, blend)
 
-	var target_chest_z = _base_chest_pos.z + lean_input * max_chest_z_offset
+	var target_chest_z = _base_chest_pos.z + (lean_input * max_chest_z_offset)
 	ik_ctrl.ik_chest.position.z = lerpf(ik_ctrl.ik_chest.position.z, target_chest_z, blend)
+	# DebugUtils.DebugMsg(
+	# 	(
+	# 		"lean_input=%.2f base_z=%.3f target_z=%.3f actual_z=%.3f offset=%.2f"
+	# 		% [
+	# 			lean_input,
+	# 			_base_chest_pos.z,
+	# 			target_chest_z,
+	# 			ik_ctrl.ik_chest.position.z,
+	# 			max_chest_z_offset
+	# 		]
+	# 	)
+	# )
 
 	var target_butt_z = _base_butt_pos.z + lean_input * max_butt_z_offset
 	ik_ctrl.butt_pos.position.z = lerpf(ik_ctrl.butt_pos.position.z, target_butt_z, blend)
