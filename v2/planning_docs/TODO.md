@@ -53,10 +53,14 @@
   - [ ] Live scoreboard / trickfeed
   - [ ] 2 locations for variety
 
-- [ ] Street Race
+- [ ] Street Race gamemode
   - [ ] Create lap system & show placement live in scoreboard
   - [ ] Doing tricks gives respect/xp/currency that act as a bonus (to unlock items in the future, gold star for now)
   - [ ] Be able to place checkpoint markers
+
+- [ ] Crash Launch gamemode
+ - [ ] Players drag race & hit low fence, sending bodies flying.
+ - [ ] Furthest body wins
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
 
