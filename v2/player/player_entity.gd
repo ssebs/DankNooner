@@ -192,7 +192,7 @@ func _create_mirrored_proxy(source: Marker3D, proxy_name: String, parent: Node3D
 	var proxy = Marker3D.new()
 	proxy.name = proxy_name
 	parent.add_child(proxy)
-	proxy.global_transform = AnimationController._mirror_transform_x(source.global_transform)
+	proxy.transform = AnimationController._mirror_transform_x(source.transform)
 	return proxy
 
 
