@@ -13,10 +13,10 @@
 
 ### WIP
 - [ ] Animation Controller:
-  - [ ] Fix wheelie rotation / placement (puts you in the ground - find / fix solution)
-  - [ ] Better IK
-    - [ ] debug bike IK placement / playing procedural w/ offsets
-    - [ ] arms must follow handlebars
+  - [x] Fix wheelie rotation / placement (puts you in the ground - find / fix solution)
+  - [x] Better IK
+    - [x] debug bike IK placement / playing procedural w/ offsets
+    - [x] arms must follow handlebars
     - [ ] Create stopped/idle animation
   - [ ] steering animation shouldn't happen at low speed so much
   - [ ] Crash animation

@@ -330,7 +330,7 @@ func _pitch_angle_calc(delta: float):
 	# Rev limiter drop — banging the limiter during a wheelie kills the power
 	# Rider needs to shift up or back off throttle to maintain the wheelie
 	if in_wheelie and gearing_controller.is_rev_limited:
-		var drop_speed = bd.return_speed * 9.0
+		var drop_speed = bd.return_speed * 5.0
 		pitch_angle = move_toward(pitch_angle, 0, drop_speed * delta)
 		speed = move_toward(speed, speed * 0.95, bd.max_speed * 0.1 * delta)
 

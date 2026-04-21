@@ -29,8 +29,11 @@ const STEERING_LERP_SPEED: float = 10.0
 @onready var left_peg_marker: Marker3D = %LeftPegMarker
 @onready var front_wheel_ground_marker: Marker3D = %FrontWheelGroundMarker
 @onready var rear_wheel_ground_marker: Marker3D = %RearWheelGroundMarker
+@onready var rear_wheel_back_marker: Marker3D = %RearWheelBackMarker
+@onready var front_wheel_front_marker: Marker3D = %FrontWheelFrontMarker
 
 var mesh_skin: SkinColor
+var steering_handlebar_marker: Marker3D
 
 
 func _ready():
@@ -74,9 +77,11 @@ func rotate_wheels(speed: float, delta: float):
 func _apply_definition():
 	_spawn_mesh()
 	_set_mesh_colors()
-	_load_markers_from_resource()
-	# Show the biker mesh in the editor
-	mesh_skin.owner = self
+	if not Engine.is_editor_hint():
+		_load_markers_from_resource()
+	_create_steering_handlebar_proxy()
+	if Engine.is_editor_hint():
+		mesh_skin.owner = self
 
 
 func _save_skin_to_disk():
@@ -101,6 +106,8 @@ func _load_markers_from_resource():
 	left_peg_marker.rotation_degrees = skin_definition.left_peg_marker_rotation_degrees
 	front_wheel_ground_marker.position = skin_definition.front_wheel_ground_position
 	rear_wheel_ground_marker.position = skin_definition.rear_wheel_ground_position
+	rear_wheel_back_marker.position = skin_definition.rear_wheel_back_position
+	front_wheel_front_marker.position = skin_definition.front_wheel_front_position
 
 
 func _save_markers_to_resource():
@@ -116,6 +123,8 @@ func _save_markers_to_resource():
 	skin_definition.left_peg_marker_rotation_degrees = left_peg_marker.rotation_degrees
 	skin_definition.front_wheel_ground_position = front_wheel_ground_marker.position
 	skin_definition.rear_wheel_ground_position = rear_wheel_ground_marker.position
+	skin_definition.rear_wheel_back_position = rear_wheel_back_marker.position
+	skin_definition.front_wheel_front_position = front_wheel_front_marker.position
 
 	var err = ResourceSaver.save(skin_definition)
 	if err == OK:
@@ -127,6 +136,19 @@ func _save_markers_to_resource():
 
 
 #endregion
+
+
+func _create_steering_handlebar_proxy():
+	if not has_steering():
+		steering_handlebar_marker = left_handlebar_marker
+		return
+	var steering_node = mesh_skin.steering_rotation_node
+	var proxy = Marker3D.new()
+	proxy.name = "SteeringHandleBarProxy"
+	steering_node.add_child(proxy)
+	# Position proxy so its global transform matches the handlebar marker
+	proxy.global_transform = left_handlebar_marker.global_transform
+	steering_handlebar_marker = proxy
 
 
 #region mesh init

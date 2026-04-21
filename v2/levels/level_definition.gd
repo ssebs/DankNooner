@@ -15,6 +15,8 @@ var level_name: LevelManager.LevelName
 
 
 func _ready():
+	if Engine.is_editor_hint():
+		return
 	if OS.has_feature("debug"):
 		player_spawn_pos = player_spawn_pos_debug
 
