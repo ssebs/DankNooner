@@ -148,14 +148,63 @@ func _init_raycasts():
 	rear_raycast.target_position = Vector3.DOWN * 1.5
 
 
-## set ik targets, enable ik
+## Set up IK by passing bike markers to IKController, creating mirrored proxies for right side
 func _init_ik():
-	character_skin.set_ik_targets_for_bike(
-		bike_definition.seat_marker_position,
-		bike_definition.left_handlebar_marker_position,
-		bike_definition.left_peg_marker_position
-	)
+	var ik_ctrl = character_skin.ik_controller
+
+	# Use the bike's steering-attached handlebar proxy so hands follow steering
+	var left_hand = bike_skin.steering_handlebar_marker
+	var left_foot = bike_skin.left_peg_marker
+	var seat = bike_skin.seat_marker
+
+	# Create mirrored proxy markers for right side (children of steering parent)
+	var right_hand = _create_mirrored_proxy(left_hand, "RightHandProxy", left_hand.get_parent())
+	var right_foot = _create_mirrored_proxy(left_foot, "RightFootProxy", bike_skin)
+
+	ik_ctrl.set_bike_markers(seat, left_hand, right_hand, left_foot, right_foot)
+
+	# Apply rider pose from BikeSkinDefinition
+	_apply_rider_pose_from_definition()
+
+	# Recreate IK now that bike markers are set (initial _create_ik ran before markers existed)
+	ik_ctrl._create_ik()
 	character_skin.enable_ik()
+
+
+func _create_mirrored_proxy(source: Marker3D, proxy_name: String, parent: Node3D) -> Marker3D:
+	# Remove existing proxy if re-initializing
+	var existing = parent.get_node_or_null(proxy_name)
+	if existing:
+		existing.queue_free()
+
+	var proxy = Marker3D.new()
+	proxy.name = proxy_name
+	parent.add_child(proxy)
+	proxy.transform = source.transform
+	proxy.position.x = -source.position.x
+	return proxy
+
+
+func _apply_rider_pose_from_definition():
+	var ik_ctrl = character_skin.ik_controller
+	var bd = bike_definition
+
+	if bd.chest_position is Vector3 and bd.chest_position != Vector3.ZERO:
+		ik_ctrl.ik_chest.position = bd.chest_position
+	if bd.chest_rotation is Vector3 and bd.chest_rotation != Vector3.ZERO:
+		ik_ctrl.ik_chest.rotation = bd.chest_rotation
+	if bd.head_position is Vector3 and bd.head_position != Vector3.ZERO:
+		ik_ctrl.ik_head.position = bd.head_position
+	if bd.head_rotation is Vector3 and bd.head_rotation != Vector3.ZERO:
+		ik_ctrl.ik_head.rotation = bd.head_rotation
+	if bd.left_arm_magnet_position is Vector3 and bd.left_arm_magnet_position != Vector3.ZERO:
+		ik_ctrl.ik_left_arm_magnet.position = bd.left_arm_magnet_position
+	if bd.right_arm_magnet_position is Vector3 and bd.right_arm_magnet_position != Vector3.ZERO:
+		ik_ctrl.ik_right_arm_magnet.position = bd.right_arm_magnet_position
+	if bd.left_leg_magnet_position is Vector3 and bd.left_leg_magnet_position != Vector3.ZERO:
+		ik_ctrl.ik_left_leg_magnet.position = bd.left_leg_magnet_position
+	if bd.right_leg_magnet_position is Vector3 and bd.right_leg_magnet_position != Vector3.ZERO:
+		ik_ctrl.ik_right_leg_magnet.position = bd.right_leg_magnet_position
 
 
 func _deferred_init():

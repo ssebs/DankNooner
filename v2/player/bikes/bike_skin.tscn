@@ -22,35 +22,43 @@ skin_definition = ExtResource("2_ryc4d")
 [node name="MeshNode" type="Node3D" parent="." unique_id=1984999037]
 unique_name_in_owner = true
 
-[node name="Grom" type="Node3D" parent="MeshNode" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("3_qeo2q")]
+[node name="@Node3D@47889" type="Node3D" parent="MeshNode" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("3_qeo2q")]
 transform = Transform3D(-0.35, 0, -5.284853e-08, 0, 0.35, 0, 5.284853e-08, 0, -0.35, 0, 0.575, 0)
 script = ExtResource("4_c5axj")
 slots = Array[ExtResource("5_e6q4j")]([SubResource("Resource_cvxtv"), SubResource("Resource_cvxtv")])
-meshes = [null, null]
+meshes = [NodePath("RotationPoint/Frontfender"), NodePath("PaintedBody")]
 steering_rotation_node = NodePath("RotationPoint")
 front_wheel_node = NodePath("RotationPoint/FrontWheel")
 rear_wheel_node = NodePath("RearWheel")
 
 [node name="TrainingWheelsModsMarker" type="Marker3D" parent="." unique_id=2011032736]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.27718958, -0.28938082)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.23491925, -0.5567336)
 
 [node name="SeatMarker" type="Marker3D" parent="." unique_id=725378963]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7762196, -0.34407872)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.76550496, -0.17694597)
 
 [node name="LeftHandleBarMarker" type="Marker3D" parent="." unique_id=1482040679]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.31141454, 0.9258767, 0.26914814)
+transform = Transform3D(0.96592575, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.96592575, 0.32571524, 0.9496769, 0.23173288)
 
 [node name="LeftPegMarker" type="Marker3D" parent="." unique_id=401987139]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.14995426, 0.27153388, -0.13470688)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15430418, 0.26865453, -0.13579424)
 
 [node name="FrontWheelGroundMarker" type="Marker3D" parent="." unique_id=1577651889]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0086942315, 0.58524156)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0052142963, 0.59017146)
+
+[node name="FrontWheelFrontMarker" type="Marker3D" parent="." unique_id=56310884]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.23646757, 0.81865835)
 
 [node name="RearWheelGroundMarker" type="Marker3D" parent="." unique_id=1968711523]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0086942315, -0.5582465)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.006084278, -0.5565065)
+
+[node name="RearWheelBackMarker" type="Marker3D" parent="." unique_id=1440219555]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.23333497, -0.783827)

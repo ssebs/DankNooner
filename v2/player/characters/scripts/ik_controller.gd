@@ -3,20 +3,20 @@ class_name IKController extends Node3D
 
 @export var char_skin: CharacterSkin
 
-# IK target markers
+# Character-owned IK target markers (set via @export in editor)
 @export var ik_left_arm_magnet: Marker3D
-@export var ik_left_hand: Marker3D
 @export var ik_right_arm_magnet: Marker3D
-@export var ik_right_hand: Marker3D
-
 @export var ik_left_leg_magnet: Marker3D
-@export var ik_left_foot: Marker3D
 @export var ik_right_leg_magnet: Marker3D
-@export var ik_right_foot: Marker3D
-
 @export var ik_chest: Marker3D
 @export var ik_head: Marker3D
-@export var butt_pos: Marker3D
+
+# Bike-owned IK targets (set at runtime via set_bike_markers)
+var ik_left_hand: Marker3D
+var ik_right_hand: Marker3D
+var ik_left_foot: Marker3D
+var ik_right_foot: Marker3D
+var butt_pos: Marker3D
 
 var fabrik_ik: FABRIK3D = FABRIK3D.new()
 var ik_settings_map: Array[Dictionary] = []
@@ -29,6 +29,20 @@ func _physics_process(_delta):
 		_move_hips_to_butt_target()
 	if fabrik_ik.active:
 		_apply_end_bone_rotations()
+
+
+func set_bike_markers(
+	seat: Marker3D,
+	left_hand: Marker3D,
+	right_hand: Marker3D,
+	left_foot: Marker3D,
+	right_foot: Marker3D
+) -> void:
+	butt_pos = seat
+	ik_left_hand = left_hand
+	ik_right_hand = right_hand
+	ik_left_foot = left_foot
+	ik_right_foot = right_foot
 
 
 func enable_ik():
@@ -53,6 +67,9 @@ func disable_butt_placement():
 
 
 func _move_hips_to_butt_target():
+	# butt_pos is set at runtime via set_bike_markers — null before init
+	if butt_pos == null:
+		return
 	var skel_3d = char_skin.skel_3d
 	if skel_3d == null:
 		return
@@ -72,10 +89,15 @@ func _move_hips_to_butt_target():
 
 func _apply_end_bone_rotations():
 	# Rotate end bones to match marker rotations (FABRIK only handles position)
-	_rotate_bone_to_marker("LeftHand", ik_left_hand)
-	_rotate_bone_to_marker("RightHand", ik_right_hand)
-	_rotate_bone_to_marker("LeftFoot", ik_left_foot)
-	_rotate_bone_to_marker("RightFoot", ik_right_foot)
+	# Hand/foot markers are set at runtime — skip if not yet initialized
+	if ik_left_hand:
+		_rotate_bone_to_marker("LeftHand", ik_left_hand)
+	if ik_right_hand:
+		_rotate_bone_to_marker("RightHand", ik_right_hand)
+	if ik_left_foot:
+		_rotate_bone_to_marker("LeftFoot", ik_left_foot)
+	if ik_right_foot:
+		_rotate_bone_to_marker("RightFoot", ik_right_foot)
 	_rotate_bone_to_marker("Spine", ik_chest)
 	_rotate_bone_to_marker("Head", ik_head)
 
@@ -181,24 +203,14 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("char_skin must be set")
 	if ik_left_arm_magnet == null:
 		issues.append("ik_left_arm_magnet must be set")
-	if ik_left_hand == null:
-		issues.append("ik_left_hand must be set")
 	if ik_right_arm_magnet == null:
 		issues.append("ik_right_arm_magnet must be set")
-	if ik_right_hand == null:
-		issues.append("ik_right_hand must be set")
 	if ik_left_leg_magnet == null:
 		issues.append("ik_left_leg_magnet must be set")
-	if ik_left_foot == null:
-		issues.append("ik_left_foot must be set")
 	if ik_right_leg_magnet == null:
 		issues.append("ik_right_leg_magnet must be set")
-	if ik_right_foot == null:
-		issues.append("ik_right_foot must be set")
 	if ik_chest == null:
 		issues.append("ik_chest must be set")
 	if ik_head == null:
 		issues.append("ik_head must be set")
-	if butt_pos == null:
-		issues.append("butt_pos must be set")
 	return issues
