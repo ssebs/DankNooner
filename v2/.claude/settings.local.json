@@ -9,7 +9,9 @@
       "Bash(ls:*)",
       "Bash(grep -r \"server_disconnected\" \"F:\\\\LocalProgramming\\\\DankNooner\\\\v2\" --include=\"*.gd\" 2>/dev/null | head -20)",
       "WebSearch",
-      "WebFetch(domain:godotengine.org)"
+      "WebFetch(domain:godotengine.org)",
+      "Bash(xargs grep *)",
+      "Bash(grep *)"
     ]
   }
 }

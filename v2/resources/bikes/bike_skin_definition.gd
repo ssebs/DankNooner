@@ -51,6 +51,10 @@ class_name BikeSkinDefinition extends Resource
 @export var head_rotation: Vector3 = Vector3.ZERO
 @export var left_arm_magnet_position: Vector3 = Vector3.ZERO
 @export var right_arm_magnet_position: Vector3 = Vector3.ZERO
+@export var left_hand_rotation: Vector3 = Vector3.ZERO
+@export var right_hand_rotation: Vector3 = Vector3.ZERO
+@export var left_foot_rotation: Vector3 = Vector3.ZERO
+@export var right_foot_rotation: Vector3 = Vector3.ZERO
 @export var left_leg_magnet_position: Vector3 = Vector3.ZERO
 @export var right_leg_magnet_position: Vector3 = Vector3.ZERO
 

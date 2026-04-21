@@ -71,4 +71,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3166139, 0.112276316)
 [node name="HeadTarget" type="Marker3D" parent="IKTargets" unique_id=2052814980]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1561427, 0.16246796)
-
