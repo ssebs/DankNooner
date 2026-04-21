@@ -12,7 +12,6 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] Organize todos
 
 ## HI-PRI‼️
 
@@ -87,7 +86,6 @@
   - [ ] Save total trick history (total time played, total wheelies, etc.)
   - [ ] save unlocked tricks, mods, etc.
   - [x] Save levels / player stuff
-
 
 - [ ] Basic Traffic AI
 
@@ -316,6 +314,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Organize todos
 
 - [x] Review Animation Controller & Create animations
   - [x] Create lean (turning) animation
