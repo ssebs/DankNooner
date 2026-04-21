@@ -326,10 +326,14 @@ func _editor_sync_proxies() -> void:
 		return
 	# Sync hand proxies from handlebar marker (user edits this)
 	ik_ctrl.ik_left_hand.global_transform = bike_skin.left_handlebar_marker.global_transform
-	ik_ctrl.ik_right_hand.global_transform = _mirror_transform_x(bike_skin.left_handlebar_marker.global_transform)
+	ik_ctrl.ik_right_hand.global_transform = _mirror_transform_x(
+		bike_skin.left_handlebar_marker.global_transform
+	)
 	# Sync foot proxies from peg marker
 	ik_ctrl.ik_left_foot.global_transform = bike_skin.left_peg_marker.global_transform
-	ik_ctrl.ik_right_foot.global_transform = _mirror_transform_x(bike_skin.left_peg_marker.global_transform)
+	ik_ctrl.ik_right_foot.global_transform = _mirror_transform_x(
+		bike_skin.left_peg_marker.global_transform
+	)
 
 
 func _editor_sync_pose_from_definition() -> void:
