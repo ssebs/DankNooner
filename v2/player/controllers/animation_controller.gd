@@ -326,12 +326,10 @@ func _editor_sync_proxies() -> void:
 		return
 	# Sync hand proxies from handlebar marker (user edits this)
 	ik_ctrl.ik_left_hand.global_transform = bike_skin.left_handlebar_marker.global_transform
-	ik_ctrl.ik_right_hand.global_transform = bike_skin.left_handlebar_marker.global_transform
-	ik_ctrl.ik_right_hand.global_position.x = -bike_skin.left_handlebar_marker.global_position.x
+	ik_ctrl.ik_right_hand.global_transform = _mirror_transform_x(bike_skin.left_handlebar_marker.global_transform)
 	# Sync foot proxies from peg marker
 	ik_ctrl.ik_left_foot.global_transform = bike_skin.left_peg_marker.global_transform
-	ik_ctrl.ik_right_foot.global_transform = bike_skin.left_peg_marker.global_transform
-	ik_ctrl.ik_right_foot.global_position.x = -bike_skin.left_peg_marker.global_position.x
+	ik_ctrl.ik_right_foot.global_transform = _mirror_transform_x(bike_skin.left_peg_marker.global_transform)
 
 
 func _editor_sync_pose_from_definition() -> void:
@@ -438,9 +436,17 @@ func _editor_get_or_create_mirror(source: Marker3D, proxy_name: String, parent: 
 	var proxy = Marker3D.new()
 	proxy.name = proxy_name
 	parent.add_child(proxy)
-	proxy.global_transform = source.global_transform
-	proxy.global_position.x = -source.global_position.x
+	proxy.global_transform = _mirror_transform_x(source.global_transform)
 	return proxy
+
+
+static func _mirror_transform_x(t: Transform3D) -> Transform3D:
+	t.origin.x = -t.origin.x
+	t.basis.x.y = -t.basis.x.y
+	t.basis.x.z = -t.basis.x.z
+	t.basis.y.x = -t.basis.y.x
+	t.basis.z.x = -t.basis.z.x
+	return t
 
 
 func _editor_save_default_pose() -> void:
