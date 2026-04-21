@@ -114,8 +114,8 @@ func _rotate_bone_to_marker(bone_name: String, marker: Marker3D):
 	if parent_idx == -1:
 		return
 
-	# Get marker's target rotation in skeleton-local space
-	var target_global_basis = marker.global_transform.basis
+	# Get marker's target rotation in skeleton-local space (strip scale)
+	var target_global_basis = marker.global_transform.basis.orthonormalized()
 	var parent_global_pose = skel_3d.get_bone_global_pose(parent_idx)
 	var parent_global_basis = skel_3d.global_transform.basis * parent_global_pose.basis
 

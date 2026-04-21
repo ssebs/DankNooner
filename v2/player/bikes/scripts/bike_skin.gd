@@ -77,10 +77,11 @@ func rotate_wheels(speed: float, delta: float):
 func _apply_definition():
 	_spawn_mesh()
 	_set_mesh_colors()
-	_load_markers_from_resource()
+	if not Engine.is_editor_hint():
+		_load_markers_from_resource()
 	_create_steering_handlebar_proxy()
-	# Show the biker mesh in the editor
-	mesh_skin.owner = self
+	if Engine.is_editor_hint():
+		mesh_skin.owner = self
 
 
 func _save_skin_to_disk():

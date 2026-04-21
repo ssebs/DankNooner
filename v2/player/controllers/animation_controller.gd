@@ -28,7 +28,7 @@ enum RiderState {
 ## Max chest pitch (deg) when leaning fwd/back. Negate to flip direction.
 @export var max_chest_lean_pitch_deg: float = -15.0
 ## Max chest z shift when leaning fwd/back. Negate to flip direction.
-@export var max_chest_z_offset: float = 0.5
+@export var max_chest_z_offset: float = 0.25
 ## Max butt z shift when leaning fwd/back. Negate to flip direction.
 @export var max_butt_z_offset: float = 0.1
 
@@ -52,11 +52,13 @@ var _procedural_enabled: bool = true
 
 func _ready():
 	if Engine.is_editor_hint():
+		call_deferred("_editor_auto_init")
 		return
 
 
 func _process(delta: float):
 	if Engine.is_editor_hint():
+		_editor_sync_proxies()
 		return
 	if current_state != RiderState.RIDING:
 		return
@@ -308,6 +310,64 @@ func _transition_to_trick() -> void:
 
 
 #region Editor Tools
+func _editor_auto_init() -> void:
+	if bike_skin == null or character_skin == null:
+		return
+	if character_skin.ik_controller == null:
+		return
+	_editor_init_ik_from_bike()
+
+
+func _editor_sync_proxies() -> void:
+	if bike_skin == null or character_skin == null:
+		return
+	var ik_ctrl = character_skin.ik_controller
+	if ik_ctrl == null or ik_ctrl.ik_left_hand == null:
+		return
+	# Sync hand proxies from handlebar marker (user edits this)
+	ik_ctrl.ik_left_hand.global_transform = bike_skin.left_handlebar_marker.global_transform
+	ik_ctrl.ik_right_hand.global_transform = bike_skin.left_handlebar_marker.global_transform
+	ik_ctrl.ik_right_hand.global_position.x = -bike_skin.left_handlebar_marker.global_position.x
+	# Sync foot proxies from peg marker
+	ik_ctrl.ik_left_foot.global_transform = bike_skin.left_peg_marker.global_transform
+	ik_ctrl.ik_right_foot.global_transform = bike_skin.left_peg_marker.global_transform
+	ik_ctrl.ik_right_foot.global_position.x = -bike_skin.left_peg_marker.global_position.x
+
+
+func _editor_sync_pose_from_definition() -> void:
+	if bike_skin == null or character_skin == null:
+		return
+	var ik_ctrl = character_skin.ik_controller
+	if ik_ctrl == null or ik_ctrl.butt_pos == null:
+		return
+	var def = bike_skin.skin_definition
+	if def == null:
+		return
+
+	if ik_ctrl.ik_chest:
+		ik_ctrl.ik_chest.position = def.chest_position
+		ik_ctrl.ik_chest.rotation = def.chest_rotation
+	if ik_ctrl.ik_head:
+		ik_ctrl.ik_head.position = def.head_position
+		ik_ctrl.ik_head.rotation = def.head_rotation
+	if ik_ctrl.ik_left_arm_magnet:
+		ik_ctrl.ik_left_arm_magnet.position = def.left_arm_magnet_position
+	if ik_ctrl.ik_right_arm_magnet:
+		ik_ctrl.ik_right_arm_magnet.position = def.right_arm_magnet_position
+	if ik_ctrl.ik_left_leg_magnet:
+		ik_ctrl.ik_left_leg_magnet.position = def.left_leg_magnet_position
+	if ik_ctrl.ik_right_leg_magnet:
+		ik_ctrl.ik_right_leg_magnet.position = def.right_leg_magnet_position
+	if ik_ctrl.ik_left_hand:
+		ik_ctrl.ik_left_hand.rotation = def.left_hand_rotation
+	if ik_ctrl.ik_right_hand:
+		ik_ctrl.ik_right_hand.rotation = def.right_hand_rotation
+	if ik_ctrl.ik_left_foot:
+		ik_ctrl.ik_left_foot.rotation = def.left_foot_rotation
+	if ik_ctrl.ik_right_foot:
+		ik_ctrl.ik_right_foot.rotation = def.right_foot_rotation
+
+
 func _editor_init_ik_from_bike() -> void:
 	if bike_skin == null or character_skin == null:
 		DebugUtils.DebugErrMsg("AnimationController: bike_skin and character_skin must be set")
@@ -367,7 +427,7 @@ func _editor_get_or_create_proxy(source: Marker3D, proxy_name: String, parent: N
 	var proxy = Marker3D.new()
 	proxy.name = proxy_name
 	parent.add_child(proxy)
-	proxy.position = source.position
+	proxy.global_transform = source.global_transform
 	return proxy
 
 
@@ -378,8 +438,8 @@ func _editor_get_or_create_mirror(source: Marker3D, proxy_name: String, parent: 
 	var proxy = Marker3D.new()
 	proxy.name = proxy_name
 	parent.add_child(proxy)
-	proxy.position = source.position
-	proxy.position.x = -source.position.x
+	proxy.global_transform = source.global_transform
+	proxy.global_position.x = -source.global_position.x
 	return proxy
 
 
