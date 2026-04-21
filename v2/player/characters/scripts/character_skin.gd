@@ -67,30 +67,6 @@ func disable_ik():
 	ik_controller.disable_ik()
 
 
-func set_ik_targets_for_bike(
-	seat_marker_position: Vector3, left_handlebar_marker: Vector3, left_peg_marker: Vector3
-) -> void:
-	# Set seat position (butt)
-	ik_controller.butt_pos.position = seat_marker_position
-
-	# Set hand positions - mirror right side by negating x
-	ik_controller.ik_left_hand.position = left_handlebar_marker
-	ik_controller.ik_right_hand.position = Vector3(
-		-left_handlebar_marker.x, left_handlebar_marker.y, left_handlebar_marker.z
-	)
-
-	# Set foot positions - mirror right side by negating x
-	ik_controller.ik_left_foot.position = left_peg_marker
-	ik_controller.ik_right_foot.position = Vector3(
-		-left_peg_marker.x, left_peg_marker.y, left_peg_marker.z
-	)
-
-	# Set head position above hands (centered x, +0.2m in y)
-	ik_controller.ik_head.position = Vector3(
-		0.0, seat_marker_position.y + 1, seat_marker_position.z - 0.2
-	)
-
-
 func start_ragdoll():
 	ragdoll_controller.start_ragdoll()
 
