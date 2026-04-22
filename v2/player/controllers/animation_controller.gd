@@ -48,6 +48,15 @@ var _base_visual_root_rotation: Vector3
 var _idle_timer: float = 0.0
 var _procedural_enabled: bool = true
 
+# Cached refs (set in initialize)
+var _ik_ctrl: IKController
+var _bd: BikeSkinDefinition
+
+# Per-tick cached inputs (set at top of _update_riding)
+var _blend: float
+var _roll: float
+var _pitch: float
+
 #endregion
 
 
@@ -61,110 +70,128 @@ func _process(delta: float):
 	if Engine.is_editor_hint():
 		_editor_sync_proxies()
 		return
-	if current_state != RiderState.RIDING:
-		return
 	if not _procedural_enabled:
 		return
 
-	_update_procedural_animation(delta)
-	_update_idle_timer(delta)
+	match current_state:
+		RiderState.IDLE:
+			_update_idle(delta)
+		RiderState.RIDING:
+			_update_riding(delta)
+		RiderState.TRICK:
+			_update_trick(delta)
+		RiderState.RAGDOLL:
+			pass
 
 
 #region Procedural Animation
-func _update_procedural_animation(delta: float) -> void:
-	var ik_ctrl = character_skin.ik_controller
-	var blend = clampf(5.0 * delta, 0.0, 1.0)
+func _update_idle(delta: float) -> void:
+	_update_idle_timer(delta)
 
-	# Pitch visual_root for wheelie/stoppie, pivoting around wheel ground contact
-	var bd = player_entity.bike_definition
-	var max_wheelie_rad = deg_to_rad(bd.max_wheelie_angle_deg)
-	var max_stoppie_rad = deg_to_rad(bd.max_stoppie_angle_deg)
-	var target_pitch: float
-	if movement_controller._is_on_floor:
-		target_pitch = -clamp(movement_controller.pitch_angle, -max_stoppie_rad, max_wheelie_rad)
+
+func _update_trick(_delta: float) -> void:
+	# Skeleton AnimationPlayer drives the pose; nothing procedural to do.
+	pass
+
+
+func _update_riding(delta: float) -> void:
+	_blend = clampf(5.0 * delta, 0.0, 1.0)
+	_roll = movement_controller.roll_angle
+	_pitch = movement_controller.pitch_angle
+
+	_riding_common(delta)
+
+	if not movement_controller._is_on_floor:
+		_riding_air(delta)
+	elif trick_controller.is_in_wheelie():
+		_riding_wheelie(delta)
+	elif trick_controller.current_trick == TrickController.Trick.STOPPIE:
+		_riding_stoppie(delta)
 	else:
-		target_pitch = -movement_controller.pitch_angle
-	# Keep visual_root.rotation.x within PI of target so lerp takes the short path
-	while visual_root.rotation.x - target_pitch > PI:
-		visual_root.rotation.x -= TAU
-	while visual_root.rotation.x - target_pitch < -PI:
-		visual_root.rotation.x += TAU
-	visual_root.rotation.x = lerpf(visual_root.rotation.x, target_pitch, blend)
+		_riding_basic(delta)
 
-	# Pivot offset: lerp along tire contact arc based on pitch
-	var pitch_ratio = clamp(abs(visual_root.rotation.x) / (PI / 2.0), 0.0, 1.0)
-	var rear_back = (
-		bd.rear_wheel_back_position
-		if bd.rear_wheel_back_position is Vector3
-		else bd.rear_wheel_ground_position
-	)
-	var front_front = (
-		bd.front_wheel_front_position
-		if bd.front_wheel_front_position is Vector3
-		else bd.front_wheel_ground_position
-	)
-	var pivot: Vector3
-	if visual_root.rotation.x < 0:
-		pivot = bd.rear_wheel_ground_position.lerp(rear_back, pitch_ratio)
-	else:
-		pivot = bd.front_wheel_ground_position.lerp(front_front, pitch_ratio)
-	var rotated_pivot = Basis(Vector3.RIGHT, visual_root.rotation.x) * pivot
-	visual_root.position = _base_visual_root_position + pivot - rotated_pivot
+	# Pivot offset tracks current pitch every frame so position unwinds smoothly
+	# as rotation.x lerps back to 0 when leaving a wheelie/stoppie.
+	_apply_pivot_offset()
 
-	# Rotate chest for visual lean
-	var target_chest = movement_controller.roll_angle * deg_to_rad(30)
-	ik_ctrl.ik_chest.rotation.y = lerpf(ik_ctrl.ik_chest.rotation.y, target_chest, blend)
+	_update_idle_timer(delta)
 
-	# Apply lean rotation to visual_root (rotates both bike + rider)
-	visual_root.rotation.z = lerpf(visual_root.rotation.z, movement_controller.roll_angle, blend)
 
-	# _update_wheelie_arm()
+## Always-on bits: steering, wheels, lean rotation, chest/butt X shift, fwd/back lean.
+func _riding_common(delta: float) -> void:
+	# Lean rotation on visual_root (bike + rider tilt together)
+	visual_root.rotation.z = lerpf(visual_root.rotation.z, _roll, _blend)
 
-	# Shift booty over
-	var target_butt_x = (
-		# _base_butt_pos.x - clampf(movement_controller.roll_angle, -max_butt_offset, max_butt_offset)
-		_base_butt_pos.x
-		- clampf(visual_root.rotation.z, -max_butt_offset, max_butt_offset)
-	)
-	ik_ctrl.butt_pos.position.x = lerpf(ik_ctrl.butt_pos.position.x, target_butt_x, blend)
+	# Chest Y rotation for visual lean
+	var target_chest_y = _roll * deg_to_rad(30)
+	_ik_ctrl.ik_chest.rotation.y = lerpf(_ik_ctrl.ik_chest.rotation.y, target_chest_y, _blend)
 
-	# Shift chest to match butt
-	var target_chest_x = (
-		_base_chest_pos.x - clampf(visual_root.rotation.z, -max_butt_offset, max_butt_offset)
-	)
-	ik_ctrl.ik_chest.position.x = lerpf(ik_ctrl.ik_chest.position.x, target_chest_x, blend)
+	# Shift butt + chest X to match lean
+	var lean_x_offset = clampf(visual_root.rotation.z, -max_butt_offset, max_butt_offset)
+	var target_butt_x = _base_butt_pos.x - lean_x_offset
+	var target_chest_x = _base_chest_pos.x - lean_x_offset
+	_ik_ctrl.butt_pos.position.x = lerpf(_ik_ctrl.butt_pos.position.x, target_butt_x, _blend)
+	_ik_ctrl.ik_chest.position.x = lerpf(_ik_ctrl.ik_chest.position.x, target_chest_x, _blend)
 
-	_update_lean_animation(blend)
+	# Fwd/back rider lean from nfx_lean
+	var lean_input = input_controller.nfx_lean  # +1 fwd, -1 back
+	var target_chest_pitch = _base_chest_rot.x - lean_input * deg_to_rad(max_chest_lean_pitch_deg)
+	var target_chest_z = _base_chest_pos.z + lean_input * max_chest_z_offset
+	var target_butt_z = _base_butt_pos.z + lean_input * max_butt_z_offset
+	_ik_ctrl.ik_chest.rotation.x = lerpf(_ik_ctrl.ik_chest.rotation.x, target_chest_pitch, _blend)
+	_ik_ctrl.ik_chest.position.z = lerpf(_ik_ctrl.ik_chest.position.z, target_chest_z, _blend)
+	_ik_ctrl.butt_pos.position.z = lerpf(_ik_ctrl.butt_pos.position.z, target_butt_z, _blend)
 
-	bike_skin.rotate_steering(movement_controller.roll_angle, delta)
+	bike_skin.rotate_steering(_roll, delta)
 	bike_skin.rotate_wheels(movement_controller.speed, delta, trick_controller.is_in_wheelie())
 
 
-## Lean rider fwd/back from nfx_lean: pitch chest and shift butt along z.
-func _update_lean_animation(blend: float) -> void:
-	var ik_ctrl = character_skin.ik_controller
-	var lean_input = input_controller.nfx_lean  # +1 fwd, -1 back
+## On ground, no trick — pitch still follows movement_controller (for sub-threshold wobble).
+func _riding_basic(_delta: float) -> void:
+	_lerp_ground_pitch()
 
-	var target_chest_pitch = _base_chest_rot.x - lean_input * deg_to_rad(max_chest_lean_pitch_deg)
-	ik_ctrl.ik_chest.rotation.x = lerpf(ik_ctrl.ik_chest.rotation.x, target_chest_pitch, blend)
 
-	var target_chest_z = _base_chest_pos.z + (lean_input * max_chest_z_offset)
-	ik_ctrl.ik_chest.position.z = lerpf(ik_ctrl.ik_chest.position.z, target_chest_z, blend)
-	# DebugUtils.DebugMsg(
-	# 	(
-	# 		"lean_input=%.2f base_z=%.3f target_z=%.3f actual_z=%.3f offset=%.2f"
-	# 		% [
-	# 			lean_input,
-	# 			_base_chest_pos.z,
-	# 			target_chest_z,
-	# 			ik_ctrl.ik_chest.position.z,
-	# 			max_chest_z_offset
-	# 		]
-	# 	)
-	# )
+func _riding_wheelie(_delta: float) -> void:
+	_lerp_ground_pitch()
 
-	var target_butt_z = _base_butt_pos.z + lean_input * max_butt_z_offset
-	ik_ctrl.butt_pos.position.z = lerpf(ik_ctrl.butt_pos.position.z, target_butt_z, blend)
+
+func _riding_stoppie(_delta: float) -> void:
+	_lerp_ground_pitch()
+
+
+func _riding_air(_delta: float) -> void:
+	visual_root.rotation.x = lerp_angle(visual_root.rotation.x, -_pitch, _blend)
+
+
+## Shared ground pitch target: follow movement_controller.pitch_angle, clamped to bike limits.
+func _lerp_ground_pitch() -> void:
+	var max_wheelie_rad = deg_to_rad(_bd.max_wheelie_angle_deg)
+	var max_stoppie_rad = deg_to_rad(_bd.max_stoppie_angle_deg)
+	var target = -clampf(_pitch, -max_stoppie_rad, max_wheelie_rad)
+	visual_root.rotation.x = lerp_angle(visual_root.rotation.x, target, _blend)
+
+
+## Pivot visual_root around the tire contact arc. Arc is picked by trick_controller state;
+## when not in a trick, sign of rotation.x handles mid-transition unwind (prevents snapping).
+func _apply_pivot_offset() -> void:
+	var rot_x = visual_root.rotation.x
+	var pitch_ratio = clampf(absf(rot_x) / (PI / 2.0), 0.0, 1.0)
+	var use_rear: bool
+	match trick_controller.current_trick:
+		TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD:
+			use_rear = true
+		TrickController.Trick.STOPPIE:
+			use_rear = false
+		_:
+			use_rear = rot_x < 0.0
+
+	var pivot: Vector3
+	if use_rear:
+		pivot = _bd.rear_wheel_ground_position.lerp(_bd.rear_wheel_back_position, pitch_ratio)
+	else:
+		pivot = _bd.front_wheel_ground_position.lerp(_bd.front_wheel_front_position, pitch_ratio)
+	var rotated_pivot = Basis(Vector3.RIGHT, rot_x) * pivot
+	visual_root.position = _base_visual_root_position + pivot - rotated_pivot
 
 
 # func _update_wheelie_arm() -> void:
@@ -203,11 +230,10 @@ func _update_idle_timer(delta: float) -> void:
 
 
 func _reset_to_base_positions() -> void:
-	var ik_ctrl = character_skin.ik_controller
-	if ik_ctrl:
-		ik_ctrl.butt_pos.position = _base_butt_pos
-		ik_ctrl.ik_chest.position = _base_chest_pos
-		ik_ctrl.ik_chest.rotation = _base_chest_rot
+	if _ik_ctrl:
+		_ik_ctrl.butt_pos.position = _base_butt_pos
+		_ik_ctrl.ik_chest.position = _base_chest_pos
+		_ik_ctrl.ik_chest.rotation = _base_chest_rot
 	if visual_root:
 		visual_root.position = _base_visual_root_position
 		visual_root.rotation = _base_visual_root_rotation
@@ -228,12 +254,15 @@ func initialize() -> void:
 		)
 		return
 
+	# Cache frequently-accessed refs
+	_ik_ctrl = character_skin.ik_controller
+	_bd = player_entity.bike_definition
+
 	# Store base positions/rotations for offset calculations
-	var ik_ctrl = character_skin.ik_controller
-	if ik_ctrl:
-		_base_butt_pos = ik_ctrl.butt_pos.position
-		_base_chest_pos = ik_ctrl.ik_chest.position
-		_base_chest_rot = ik_ctrl.ik_chest.rotation
+	if _ik_ctrl:
+		_base_butt_pos = _ik_ctrl.butt_pos.position
+		_base_chest_pos = _ik_ctrl.ik_chest.position
+		_base_chest_rot = _ik_ctrl.ik_chest.rotation
 
 	_base_visual_root_position = visual_root.position
 	_base_visual_root_rotation = visual_root.rotation
