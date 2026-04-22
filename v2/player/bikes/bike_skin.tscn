@@ -1,20 +1,18 @@
 [gd_scene format=3 uid="uid://bmyba87m3xuaa"]
 
 [ext_resource type="Script" uid="uid://bon57cam3dod2" path="res://player/bikes/scripts/bike_skin.gd" id="1_n5uf3"]
-[ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/bikes/skins/naked_default_skin_definition.tres" id="2_qeo2q"]
-[ext_resource type="PackedScene" uid="uid://8l877wswufci" path="res://player/bikes/scenes/naked_bike.tscn" id="3_0q805"]
+[ext_resource type="Resource" uid="uid://cvkjasqlccy3m" path="res://resources/bikes/skins/mini_default_skin_definition.tres" id="2_qeo2q"]
+[ext_resource type="PackedScene" uid="uid://baudp5rgxd4fd" path="res://player/bikes/scenes/mini_bike.tscn" id="3_0q805"]
 [ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="4_c5axj"]
 [ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="5_e6q4j"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_di6m0"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kl2q6"]
 
-[sub_resource type="Resource" id="Resource_6rdgu"]
-resource_local_to_scene = true
+[sub_resource type="Resource" id="Resource_cvxtv"]
 script = ExtResource("5_e6q4j")
-color = Color(0.11028292, 0.6258798, 0.47056687, 1)
+color = Color(0.25490198, 0.6862745, 1, 1)
 use_standard_material = true
-surface_index = 1
-standard_material = SubResource("StandardMaterial3D_di6m0")
+standard_material = SubResource("StandardMaterial3D_kl2q6")
 metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 
 [node name="BikeSkin" type="Node3D" unique_id=1727462617]
@@ -24,11 +22,14 @@ skin_definition = ExtResource("2_qeo2q")
 [node name="MeshNode" type="Node3D" parent="." unique_id=1984999037]
 unique_name_in_owner = true
 
-[node name="NakedBike" type="Node3D" parent="MeshNode" unique_id=904807422 node_paths=PackedStringArray("meshes") instance=ExtResource("3_0q805")]
-transform = Transform3D(0.85, 0, 0, 0, 0.85, 0, 0, 0, 0.85, 0, 0, 0)
+[node name="@Node3D@30108" type="Node3D" parent="MeshNode" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("3_0q805")]
+transform = Transform3D(-0.35, 0, -5.284853e-08, 0, 0.35, 0, 5.284853e-08, 0, -0.35, 0, 0.575, 0)
 script = ExtResource("4_c5axj")
-slots = Array[ExtResource("5_e6q4j")]([SubResource("Resource_6rdgu")])
-meshes = [NodePath("Plane")]
+slots = Array[ExtResource("5_e6q4j")]([SubResource("Resource_cvxtv"), SubResource("Resource_cvxtv")])
+meshes = [NodePath("RotationPoint/Frontfender"), NodePath("PaintedBody")]
+steering_rotation_node = NodePath("RotationPoint")
+front_wheel_node = NodePath("RotationPoint/FrontWheel")
+rear_wheel_node = NodePath("RearWheel")
 
 [node name="TrainingWheelsModsMarker" type="Marker3D" parent="." unique_id=2011032736]
 unique_name_in_owner = true
@@ -36,28 +37,28 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.045939356, -0.65252227)
 
 [node name="SeatMarker" type="Marker3D" parent="." unique_id=725378963]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6342484, -0.13471022)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.73353416, -0.14923981)
 
 [node name="LeftHandleBarMarker" type="Marker3D" parent="." unique_id=1482040679]
 unique_name_in_owner = true
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 0.26456982, 0.8705275, 0.3934109)
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 0.30712324, 0.9407541, 0.21663362)
 
 [node name="LeftPegMarker" type="Marker3D" parent="." unique_id=401987139]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15430419, 0.18527463, -0.1091305)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15430419, 0.28916526, -0.13832629)
 
 [node name="FrontWheelGroundMarker" type="Marker3D" parent="." unique_id=1577651889]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.30324465, 0.953828)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0053385496, 0.59188473)
 
 [node name="FrontWheelFrontMarker" type="Marker3D" parent="." unique_id=56310884]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.303, 1.2875884)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005583197, 0.814649)
 
 [node name="RearWheelGroundMarker" type="Marker3D" parent="." unique_id=1968711523]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.303, -0.65626776)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005583197, -0.56457543)
 
 [node name="RearWheelBackMarker" type="Marker3D" parent="." unique_id=1440219555]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.303, -0.9975091)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005583197, -0.7803432)
