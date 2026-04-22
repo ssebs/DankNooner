@@ -77,6 +77,10 @@ func do_reset():
 	_flip_emitted = false
 
 
+func is_in_wheelie() -> bool:
+	return current_trick in [Trick.WHEELIE_SITTING, Trick.WHEELIE_MOD]
+
+
 static func trick_to_str(trick: Trick) -> String:
 	match trick:
 		Trick.NONE:
