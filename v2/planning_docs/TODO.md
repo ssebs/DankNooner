@@ -17,6 +17,7 @@
   - [x] Better IK
     - [x] debug bike IK placement / playing procedural w/ offsets
     - [x] arms must follow handlebars
+    - [ ] Learn how the steering/wheel spinning animations work
     - [ ] Create stopped/idle animation
   - [ ] steering animation shouldn't happen at low speed so much
   - [ ] Crash animation
@@ -66,6 +67,8 @@
 
 > POC = playable gamemodes w/ friends, see if core gameplay loop works
 > video record this once playing with everyone, save log files
+
+- [ ] Remap controls for leaning back/fwd, use mouse? or arrow keys
 
 - [ ] Be able to reverse (play animation)
   - [ ] Hold clutch, brake to reverse
