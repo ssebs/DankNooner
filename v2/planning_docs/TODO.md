@@ -17,7 +17,7 @@
   - [x] Better IK
     - [x] debug bike IK placement / playing procedural w/ offsets
     - [x] arms must follow handlebars
-    - [ ] Learn how the steering/wheel spinning animations work
+    - [x] Learn how the steering/wheel spinning animations work
     - [ ] Create stopped/idle animation
   - [ ] steering animation shouldn't happen at low speed so much
   - [ ] Crash animation

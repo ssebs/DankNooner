@@ -16,6 +16,7 @@ enum RiderState {
 @export var character_skin: CharacterSkin
 @export var bike_skin: BikeSkin
 @export var movement_controller: MovementController
+@export var trick_controller: TrickController
 @export var input_controller: InputController
 
 @export_tool_button("Init IK from Bike") var init_ik_btn = _editor_init_ik_from_bike
@@ -136,7 +137,7 @@ func _update_procedural_animation(delta: float) -> void:
 	_update_lean_animation(blend)
 
 	bike_skin.rotate_steering(movement_controller.roll_angle, delta)
-	bike_skin.rotate_wheels(movement_controller.speed, delta)
+	bike_skin.rotate_wheels(movement_controller.speed, delta, trick_controller.is_in_wheelie())
 
 
 ## Lean rider fwd/back from nfx_lean: pitch chest and shift butt along z.

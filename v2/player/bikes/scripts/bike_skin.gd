@@ -62,13 +62,17 @@ func rotate_steering(roll_angle: float, delta: float):
 	)
 
 
-func rotate_wheels(speed: float, delta: float):
+func rotate_wheels(speed: float, delta: float, is_in_wheelie: bool = false):
 	if mesh_skin == null:
 		return
 	var spin = -mesh_skin.wheel_rot_axis * speed * WHEEL_SPIN_MULTIPLIER * delta
-	# Wheel nodes are optional per-bike mesh
 	if mesh_skin.front_wheel_node:
-		mesh_skin.front_wheel_node.rotation += spin
+		if is_in_wheelie:
+			mesh_skin.front_wheel_node.rotation = mesh_skin.front_wheel_node.rotation.lerp(
+				Vector3.ZERO, WHEEL_SPIN_MULTIPLIER * delta
+			)
+		else:
+			mesh_skin.front_wheel_node.rotation += spin
 	if mesh_skin.rear_wheel_node:
 		mesh_skin.rear_wheel_node.rotation += spin
 
