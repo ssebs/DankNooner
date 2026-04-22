@@ -1,24 +1,23 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code when working with code in this repository.
 
 ## Project Overview
 
 DankNooner is a multiplayer motorcycle stunt game built in Godot 4.6 (GDScript). The project is in active development with Claude assisting on planning and implementation.
 
-**Source of Truth**: Always review `./planning_docs/Architecture.md` for current system designs and implementation details. The TODO.md in the same folder tracks active work.
-
-Use haiku subagents when searching files
+**Source of Truth**: Always review `./planning_docs/Architecture.md` for current system designs and implementation details. The TODO.md in the same folder tracks active work. Other .md files in planning_docs/ will explain how various systems work.
 
 ## Working Style
 
 - Don't always jump to coding first - help plan and design systems before implementation
-- Be concise in responses
+- Be CONCISE in responses
 - Don't take the folder structure too seriously - it's flexible
 - Use spatial comments (debug notes in levels) for in-world documentation
 - Don't remove TODO comments unless you're implementing the whole system.
-- Don't remove DebugUtils.DebugMsg() debug statements
+- Use `DebugUtils.DebugMsg()` for debug/print statements
 - Don't run `gh` or `git` commands
+- Follow existing patterns, do not add duplicate logic that is found in another file / controller.
 
 ## Running the Project
 
@@ -31,13 +30,13 @@ Use haiku subagents when searching files
 All systems use a **Manager + State Machine** pattern:
 
 - `ManagerManager` - root node, wires signals between all managers
-- Managers extend `BaseManager`, belong to "Managers" group
+- Managers extend `BaseManager`
 - Each manager can have a `StateMachine` with child `State` nodes
 
 ### State Machine
 
 - States emit `transitioned` signal or call `request_state_change()` to transition
-- Pass typed data via `StateContext` subclasses (see `lobby_state_context.gd`)
+- Pass typed data via `StateContext` subclasses (ex: `lobby_state_context.gd`)
 - Connect signals in `Enter()`, disconnect in `Exit()`
 
 ### Menu System
@@ -55,6 +54,8 @@ Pattern: `@export` navigation targets and managers, wire in inspector.
 ### Input System
 
 `InputStateManager` routes input based on `InputState` enum (IN_MENU, IN_GAME, IN_GAME_PAUSED, DISABLED).
+
+Actual keypresses are managed in the `PlayerEntity`'s `InputController`
 
 ### Player Entity
 
@@ -83,6 +84,7 @@ See `planning_docs/Skins.md` for details.
 ### Gamemode System
 
 - `GamemodeManager` - match state, late-joiner sync, runs a state machine of gamemodes (base `GameMode` → `FreeRoamGameMode`, `StreetRaceGameMode`, `TutorialGameMode`)
+  - See [GamemodeSystem](./planning_docs/GamemodeSystem.md) and [GameplayAndModes](./planning_docs/GameplayAndModes.md)
 - `SpawnManager` - spawn/despawn RPCs + local player instantiation
 - `SaveManager` - JSON persistence of `PlayerDefinition` (username, skins, etc.)
 
@@ -102,19 +104,21 @@ See `Architecture.md` for diagrams and RPC signatures.
 - `resources/` - `BikeSkinDefinition` / `CharacterSkinDefinition` `.tres` files
 - `utils/state_machine/` - base `State`, `StateMachine`, `StateContext` classes
 - `utils/constants.gd` - global constants/enums
-- `planning_docs/` - `Architecture.md` (source of truth), `TODO.md`
+- `planning_docs/` - Many relevant docs
 
 ## Code Style
 
 - Use `@tool` for editor scripts
-- Use `@export` for inspector wiring between managers/states
+- Use `@export` for inspector wiring between managers/states, esp in composed nodes
 - Use `@onready var x: Type = %UniqueName` for internal node refs
 - Use `_get_configuration_warnings()` to validate required exports — if the file already has it, add your checks there
 - Group constants in `utils/constants.gd`
 - Localization strings in `localization/localization.csv`, access via `tr("KEY")`
 - Use context clues in the file you're working on if possible
-- Reuse existing code, signals, and patterns before adding new ones. Check what's already available in the codebase — new methods, exports, or helpers should be a  
-  last resort.
+- IMPORTANT:
+  - Reuse existing code, signals, and patterns before adding new ones
+  - Check what's already available in the codebase
+  - New methods, exports, or helpers should be a last resort
 
 ### Fail Loudly — No Silent Null Returns
 
