@@ -5,7 +5,6 @@
 [ext_resource type="AnimationLibrary" uid="uid://bd4erc5yrp7ta" path="res://player/characters/assets/biker/biker_anim_lib.res" id="3_lm8ah"]
 [ext_resource type="Script" uid="uid://bi68ajnu0uufl" path="res://player/characters/scripts/ragdoll_controller.gd" id="3_skpe0"]
 [ext_resource type="Script" uid="uid://d0emq7f6owo2m" path="res://player/characters/scripts/ik_controller.gd" id="4_6a7n1"]
-[ext_resource type="AnimationLibrary" uid="uid://dp50xurmv35hh" path="res://player/characters/assets/anim/IK_anim_lib.res" id="6_8lbgm"]
 
 [node name="CharacterSkin" type="Node3D" unique_id=259227641]
 script = ExtResource("2_lm8ah")
@@ -34,10 +33,6 @@ metadata/_custom_type_script = "uid://d0emq7f6owo2m"
 unique_name_in_owner = true
 root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/CharacterSkin/MeshNode/Biker")
 libraries/Biker = ExtResource("3_lm8ah")
-
-[node name="IKAnimationPlayer" type="AnimationPlayer" parent="." unique_id=188385301]
-unique_name_in_owner = true
-libraries/IK_anim_lib = ExtResource("6_8lbgm")
 
 [node name="MeshNode" type="Node3D" parent="." unique_id=1624205252]
 unique_name_in_owner = true
