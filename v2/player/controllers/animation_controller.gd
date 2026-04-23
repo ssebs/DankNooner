@@ -25,7 +25,7 @@ enum RiderState {
 @export_tool_button("Play Default Pose") var reset_pose_btn = _editor_reset_to_default_pose
 
 @export_group("Procedural Settings")
-@export var idle_timeout: float = 3.0
+@export var idle_timeout: float = 1.0
 @export var max_butt_offset := 0.12
 ## Max chest pitch (deg) when leaning fwd/back. Negate to flip direction.
 @export var max_chest_lean_pitch_deg: float = -15.0
@@ -227,15 +227,14 @@ func _apply_pivot_offset() -> void:
 
 func _update_idle_timer(delta: float) -> void:
 	# Check if player is mostly stationary
-	var is_idle = movement_controller.speed < 1.0 and abs(input_controller.nfx_steer) < 0.1
-
-	if is_idle:
+	if movement_controller.speed < 0.5 and abs(input_controller.nfx_steer) < 0.1:
 		_idle_timer += delta
-		if _idle_timer >= idle_timeout and current_state == RiderState.RIDING:
-			# TODO: Play random idle animation when they exist
-			# play_idle_animation("idle_fidget")
-			pass
-			ik_anim_player.play("idle")
+		if _idle_timer >= idle_timeout:
+			if current_state == RiderState.RIDING:
+				_transition_to_idle()
+			else:
+				_idle_timer = 0.0
+
 	else:
 		_idle_timer = 0.0
 		if current_state == RiderState.IDLE:
@@ -363,22 +362,6 @@ func disable_proxy_markers() -> void:
 	_proxy_markers_enabled = false
 
 
-## Play an idle animation (fidget, look around, etc.)
-func play_idle_animation(anim_name: String) -> void:
-	if current_state == RiderState.RAGDOLL:
-		return
-	_transition_to_idle()
-	if ik_anim_player:
-		ik_anim_player.play(anim_name)
-
-
-## Play landing settle animation
-func play_land_settle() -> void:
-	if current_state == RiderState.RAGDOLL:
-		return
-	# TODO: Implement when IK animations are created
-
-
 ## Play a trick animation (full skeleton override)
 func play_trick(trick_name: String) -> void:
 	if current_state == RiderState.RAGDOLL:
@@ -420,16 +403,24 @@ func do_reset():
 
 #region State Transitions
 func _transition_to_riding() -> void:
-	current_state = RiderState.RIDING
-	character_skin.enable_ik()
+	print("_transition_to_riding")
+
+	# ik_anim_player.play_backwards("idle")
+	ik_anim_player.play("idle", -1, -2.0, true)  # play backwds, 2x speed
+	await get_tree().create_timer(ik_anim_player.current_animation_length / 2).timeout
 	_procedural_enabled = true
+
+	current_state = RiderState.RIDING
+	ik_anim_player.stop()
+	character_skin.enable_ik()
 	enable_proxy_markers()
 
 
 func _transition_to_idle() -> void:
 	current_state = RiderState.IDLE
-	_procedural_enabled = false
+	_procedural_enabled = true
 	disable_proxy_markers()
+	ik_anim_player.play("idle")
 
 
 func _transition_to_trick() -> void:
