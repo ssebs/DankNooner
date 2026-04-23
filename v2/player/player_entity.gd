@@ -23,6 +23,14 @@ signal crashed(peer_id: int)
 @export var movement_controller: MovementController
 @export var camera_controller: CameraController
 
+## IK proxy markers for hands/feet. Live under VisualRoot so AnimationPlayer (with root_node
+## set to VisualRoot) can animate them via stable NodePaths. AnimationController syncs their
+## transforms from the bike's handlebar/peg markers each tick while proxies are enabled.
+@export var left_hand_proxy: Marker3D
+@export var right_hand_proxy: Marker3D
+@export var left_foot_proxy: Marker3D
+@export var right_foot_proxy: Marker3D
+
 @onready var controllers_node: Node3D = %_Controllers
 @onready var hud_controller: HUDController = %HUDController
 
@@ -148,52 +156,19 @@ func _init_raycasts():
 	rear_raycast.target_position = Vector3.DOWN * 1.5
 
 
-## Set up IK by passing bike markers to IKController, creating proxy markers for limbs
+## Set up IK by passing the authored proxy markers (under VisualRoot) to IKController.
+## AnimationController syncs these proxies to the bike's handlebar/peg markers each tick.
 func _init_ik():
 	var ik_ctrl = character_skin.ik_controller
+	ik_ctrl.set_bike_markers(
+		bike_skin.seat_marker, left_hand_proxy, right_hand_proxy, left_foot_proxy, right_foot_proxy
+	)
 
-	var handlebar = bike_skin.steering_handlebar_marker
-	var peg = bike_skin.left_peg_marker
-	var seat = bike_skin.seat_marker
-
-	# Create proxy markers for all limbs so rotations are independent from bike markers
-	var left_hand = _create_proxy(handlebar, "LeftHandProxy", handlebar.get_parent())
-	var right_hand = _create_mirrored_proxy(handlebar, "RightHandProxy", handlebar.get_parent())
-	var left_foot = _create_proxy(peg, "LeftFootProxy", bike_skin)
-	var right_foot = _create_mirrored_proxy(peg, "RightFootProxy", bike_skin)
-
-	ik_ctrl.set_bike_markers(seat, left_hand, right_hand, left_foot, right_foot)
-
-	# Apply rider pose from BikeSkinDefinition
 	_apply_rider_pose_from_definition()
 
 	# Recreate IK now that bike markers are set (initial _create_ik ran before markers existed)
 	ik_ctrl._create_ik()
 	character_skin.enable_ik()
-
-
-func _create_proxy(source: Marker3D, proxy_name: String, parent: Node3D) -> Marker3D:
-	var existing = parent.get_node_or_null(proxy_name)
-	if existing:
-		existing.queue_free()
-
-	var proxy = Marker3D.new()
-	proxy.name = proxy_name
-	parent.add_child(proxy)
-	proxy.transform = source.transform
-	return proxy
-
-
-func _create_mirrored_proxy(source: Marker3D, proxy_name: String, parent: Node3D) -> Marker3D:
-	var existing = parent.get_node_or_null(proxy_name)
-	if existing:
-		existing.queue_free()
-
-	var proxy = Marker3D.new()
-	proxy.name = proxy_name
-	parent.add_child(proxy)
-	proxy.transform = AnimationController._mirror_transform_x(source.transform)
-	return proxy
 
 
 func _apply_rider_pose_from_definition():
@@ -341,4 +316,12 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("bike_definition must not be empty")
 	if collision_shape_3d == null:
 		issues.append("collision_shape_3d must not be empty")
+	if left_hand_proxy == null:
+		issues.append("left_hand_proxy must not be empty")
+	if right_hand_proxy == null:
+		issues.append("right_hand_proxy must not be empty")
+	if left_foot_proxy == null:
+		issues.append("left_foot_proxy must not be empty")
+	if right_foot_proxy == null:
+		issues.append("right_foot_proxy must not be empty")
 	return issues

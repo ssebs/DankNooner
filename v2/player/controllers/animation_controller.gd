@@ -48,6 +48,7 @@ var _base_visual_root_position: Vector3
 var _base_visual_root_rotation: Vector3
 var _idle_timer: float = 0.0
 var _procedural_enabled: bool = true
+var _proxy_markers_enabled: bool = true
 
 # Cached refs (set in initialize)
 var _ik_ctrl: IKController
@@ -69,7 +70,7 @@ func _ready():
 
 func _process(delta: float):
 	if Engine.is_editor_hint():
-		_editor_sync_proxies()
+		# Proxies are owned by the editor / AnimationPlayer — never auto-sync in editor.
 		return
 	if not _procedural_enabled:
 		return
@@ -143,8 +144,16 @@ func _riding_common(delta: float) -> void:
 	_ik_ctrl.ik_chest.position.z = lerpf(_ik_ctrl.ik_chest.position.z, target_chest_z, _blend)
 	_ik_ctrl.butt_pos.position.z = lerpf(_ik_ctrl.butt_pos.position.z, target_butt_z, _blend)
 
-	bike_skin.rotate_steering(_roll, delta)
+	# When proxies are disabled (idle / trick / air), hold bars straight so IK anims have a
+	# stable base to offset from.
+	var steer_input := _roll if _proxy_markers_enabled else 0.0
+	bike_skin.rotate_steering(steer_input, delta)
 	bike_skin.rotate_wheels(movement_controller.speed, delta, trick_controller.is_in_wheelie())
+
+	# Sync hand/foot proxies to the (now-rotated) bike markers so IK tracks steering.
+	# Skipped when disabled — AnimationPlayer owns the proxy transforms in that case.
+	if _proxy_markers_enabled:
+		_sync_proxies_from_bike()
 
 
 ## On ground, no trick — pitch still follows movement_controller (for sub-threshold wobble).
@@ -161,11 +170,13 @@ func _riding_stoppie(_delta: float) -> void:
 
 
 func _riding_air(_delta: float) -> void:
+	disable_proxy_markers()
 	visual_root.rotation.x = lerp_angle(visual_root.rotation.x, -_pitch, _blend)
 
 
 ## Shared ground pitch target: follow movement_controller.pitch_angle, clamped to bike limits.
 func _lerp_ground_pitch() -> void:
+	enable_proxy_markers()
 	var max_wheelie_rad = deg_to_rad(_bd.max_wheelie_angle_deg)
 	var max_stoppie_rad = deg_to_rad(_bd.max_stoppie_angle_deg)
 	var target = -clampf(_pitch, -max_stoppie_rad, max_wheelie_rad)
@@ -268,12 +279,87 @@ func initialize() -> void:
 	_base_visual_root_position = visual_root.position
 	_base_visual_root_rotation = visual_root.rotation
 
+	# AnimationPlayer animates the proxies under VisualRoot — point its root_node there so
+	# track paths like "LeftHandProxy:position" resolve cleanly.
+	if ik_anim_player:
+		ik_anim_player.root_node = ik_anim_player.get_path_to(visual_root)
+
+	# Seed proxies to the bike markers so the first IK solve has a sane pose.
+	_sync_proxies_from_bike()
+
+
+## Copy bike handlebar/peg marker transforms onto the hand/foot proxies. Called every tick
+## while procedural riding owns the proxies; skipped when AnimationPlayer is driving them.
+## Uses local-space mirror so it works regardless of where the bike is in the world.
+## Per-limb rotation overrides from BikeSkinDefinition are applied as local-space basis
+## replacements (mirroring the old `ik_<limb>.rotation = def.<limb>_rotation` behavior).
+func _sync_proxies_from_bike() -> void:
+	var ik_ctrl: IKController = (
+		_ik_ctrl if _ik_ctrl else (character_skin.ik_controller if character_skin else null)
+	)
+	if ik_ctrl == null or bike_skin == null:
+		return
+	if ik_ctrl.ik_left_hand == null or ik_ctrl.ik_left_foot == null:
+		return
+	var hb: Marker3D = bike_skin.steering_handlebar_marker
+	if hb == null:
+		hb = bike_skin.left_handlebar_marker
+	var peg: Marker3D = bike_skin.left_peg_marker
+	if hb == null or peg == null:
+		return
+
+	var def: BikeSkinDefinition = _bd if _bd else bike_skin.skin_definition
+
+	var hb_parent := hb.get_parent() as Node3D
+	var peg_parent := peg.get_parent() as Node3D
+
+	var left_hand_local := _local_with_rotation_override(
+		hb.transform, def.left_hand_rotation if def else Vector3.ZERO
+	)
+	var right_hand_local := _local_with_rotation_override(
+		_mirror_transform_x(hb.transform), def.right_hand_rotation if def else Vector3.ZERO
+	)
+	var left_foot_local := _local_with_rotation_override(
+		peg.transform, def.left_foot_rotation if def else Vector3.ZERO
+	)
+	var right_foot_local := _local_with_rotation_override(
+		_mirror_transform_x(peg.transform), def.right_foot_rotation if def else Vector3.ZERO
+	)
+
+	ik_ctrl.ik_left_hand.global_transform = hb_parent.global_transform * left_hand_local
+	ik_ctrl.ik_right_hand.global_transform = hb_parent.global_transform * right_hand_local
+	ik_ctrl.ik_left_foot.global_transform = peg_parent.global_transform * left_foot_local
+	ik_ctrl.ik_right_foot.global_transform = peg_parent.global_transform * right_foot_local
+
+
+## If rotation_override is non-zero, replace the local basis with it (preserving origin).
+## Matches the old behavior where def.<limb>_rotation was written straight into the proxy's
+## local rotation, overriding the bike marker's authored basis.
+static func _local_with_rotation_override(
+	base: Transform3D, rotation_override: Vector3
+) -> Transform3D:
+	if rotation_override == Vector3.ZERO:
+		return base
+	return Transform3D(Basis.from_euler(rotation_override), base.origin)
+
 
 ## Enable or disable procedural animation
 func set_procedural_enabled(enabled: bool) -> void:
 	_procedural_enabled = enabled
 	if enabled:
 		_reset_to_base_positions()
+
+
+## Hand ownership of the hand/foot proxies back to procedural riding. Next tick's
+## _sync_proxies_from_bike() snaps them to the bike's handlebar/peg markers.
+func enable_proxy_markers() -> void:
+	_proxy_markers_enabled = true
+
+
+## Release the hand/foot proxies so an AnimationPlayer track can drive their transforms.
+## Sync is skipped while disabled.
+func disable_proxy_markers() -> void:
+	_proxy_markers_enabled = false
 
 
 ## Play an idle animation (fidget, look around, etc.)
@@ -336,17 +422,20 @@ func _transition_to_riding() -> void:
 	current_state = RiderState.RIDING
 	character_skin.enable_ik()
 	_procedural_enabled = true
+	enable_proxy_markers()
 
 
 func _transition_to_idle() -> void:
 	current_state = RiderState.IDLE
 	_procedural_enabled = false
+	disable_proxy_markers()
 
 
 func _transition_to_trick() -> void:
 	current_state = RiderState.TRICK
 	character_skin.disable_ik()
 	_procedural_enabled = false
+	disable_proxy_markers()
 
 
 #endregion
@@ -359,24 +448,6 @@ func _editor_auto_init() -> void:
 	if character_skin.ik_controller == null:
 		return
 	_editor_init_ik_from_bike()
-
-
-func _editor_sync_proxies() -> void:
-	if bike_skin == null or character_skin == null:
-		return
-	var ik_ctrl = character_skin.ik_controller
-	if ik_ctrl == null or ik_ctrl.ik_left_hand == null:
-		return
-	# Sync hand proxies from handlebar marker (user edits this)
-	ik_ctrl.ik_left_hand.global_transform = bike_skin.left_handlebar_marker.global_transform
-	ik_ctrl.ik_right_hand.global_transform = _mirror_transform_x(
-		bike_skin.left_handlebar_marker.global_transform
-	)
-	# Sync foot proxies from peg marker
-	ik_ctrl.ik_left_foot.global_transform = bike_skin.left_peg_marker.global_transform
-	ik_ctrl.ik_right_foot.global_transform = _mirror_transform_x(
-		bike_skin.left_peg_marker.global_transform
-	)
 
 
 func _editor_sync_pose_from_definition() -> void:
@@ -421,19 +492,21 @@ func _editor_init_ik_from_bike() -> void:
 	var ik_ctrl = character_skin.ik_controller
 	var def = bike_skin.skin_definition
 
-	# Create proxy markers for all limbs so rotations are independent from bike markers
-	var handlebar = bike_skin.steering_handlebar_marker
-	var peg = bike_skin.left_peg_marker
+	# Use the authored proxies under VisualRoot (wired via @export on PlayerEntity)
+	if player_entity == null:
+		DebugUtils.DebugErrMsg("AnimationController: player_entity must be set for editor init")
+		return
 	(
 		ik_ctrl
 		. set_bike_markers(
 			bike_skin.seat_marker,
-			_editor_get_or_create_proxy(handlebar, "LeftHandProxy", handlebar.get_parent()),
-			_editor_get_or_create_mirror(handlebar, "RightHandProxy", handlebar.get_parent()),
-			_editor_get_or_create_proxy(peg, "LeftFootProxy", bike_skin),
-			_editor_get_or_create_mirror(peg, "RightFootProxy", bike_skin),
+			player_entity.left_hand_proxy,
+			player_entity.right_hand_proxy,
+			player_entity.left_foot_proxy,
+			player_entity.right_foot_proxy,
 		)
 	)
+	_sync_proxies_from_bike()
 
 	# Load rider pose fields from BikeSkinDefinition if they've been saved
 	if def.chest_position is Vector3 and def.chest_position != Vector3.ZERO:
@@ -452,39 +525,12 @@ func _editor_init_ik_from_bike() -> void:
 		ik_ctrl.ik_left_leg_magnet.position = def.left_leg_magnet_position
 	if def.right_leg_magnet_position is Vector3 and def.right_leg_magnet_position != Vector3.ZERO:
 		ik_ctrl.ik_right_leg_magnet.position = def.right_leg_magnet_position
-	if def.left_hand_rotation is Vector3 and def.left_hand_rotation != Vector3.ZERO:
-		ik_ctrl.ik_left_hand.rotation = def.left_hand_rotation
-	if def.right_hand_rotation is Vector3 and def.right_hand_rotation != Vector3.ZERO:
-		ik_ctrl.ik_right_hand.rotation = def.right_hand_rotation
-	if def.left_foot_rotation is Vector3 and def.left_foot_rotation != Vector3.ZERO:
-		ik_ctrl.ik_left_foot.rotation = def.left_foot_rotation
-	if def.right_foot_rotation is Vector3 and def.right_foot_rotation != Vector3.ZERO:
-		ik_ctrl.ik_right_foot.rotation = def.right_foot_rotation
+	# Hand/foot rotations are applied by _sync_proxies_from_bike() above (in the bike
+	# marker's parent space). Don't overwrite them here in visual_root local space.
 
 	ik_ctrl._create_ik()
 	character_skin.enable_ik()
-
-
-func _editor_get_or_create_proxy(source: Marker3D, proxy_name: String, parent: Node3D) -> Marker3D:
-	var existing = parent.get_node_or_null(proxy_name)
-	if existing:
-		existing.queue_free()
-	var proxy = Marker3D.new()
-	proxy.name = proxy_name
-	parent.add_child(proxy)
-	proxy.global_transform = source.global_transform
-	return proxy
-
-
-func _editor_get_or_create_mirror(source: Marker3D, proxy_name: String, parent: Node3D) -> Marker3D:
-	var existing = parent.get_node_or_null(proxy_name)
-	if existing:
-		existing.queue_free()
-	var proxy = Marker3D.new()
-	proxy.name = proxy_name
-	parent.add_child(proxy)
-	proxy.global_transform = _mirror_transform_x(source.global_transform)
-	return proxy
+	disable_proxy_markers()
 
 
 static func _mirror_transform_x(t: Transform3D) -> Transform3D:
