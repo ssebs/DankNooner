@@ -20,6 +20,7 @@
     - [x] Learn how the steering/wheel spinning animations work
     - [x] animation controller cleanup
     - [ ] Create stopped/idle animation
+    - [ ] Update docs for animation controller => must set reset position using proxy markers & save default pose for IK
   - [ ] steering animation shouldn't happen at low speed so much
   - [ ] Crash animation
 

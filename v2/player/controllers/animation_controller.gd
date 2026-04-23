@@ -235,6 +235,7 @@ func _update_idle_timer(delta: float) -> void:
 			# TODO: Play random idle animation when they exist
 			# play_idle_animation("idle_fidget")
 			pass
+			ik_anim_player.play("idle")
 	else:
 		_idle_timer = 0.0
 		if current_state == RiderState.IDLE:
@@ -474,14 +475,8 @@ func _editor_sync_pose_from_definition() -> void:
 		ik_ctrl.ik_left_leg_magnet.position = def.left_leg_magnet_position
 	if ik_ctrl.ik_right_leg_magnet:
 		ik_ctrl.ik_right_leg_magnet.position = def.right_leg_magnet_position
-	if ik_ctrl.ik_left_hand:
-		ik_ctrl.ik_left_hand.rotation = def.left_hand_rotation
-	if ik_ctrl.ik_right_hand:
-		ik_ctrl.ik_right_hand.rotation = def.right_hand_rotation
-	if ik_ctrl.ik_left_foot:
-		ik_ctrl.ik_left_foot.rotation = def.left_foot_rotation
-	if ik_ctrl.ik_right_foot:
-		ik_ctrl.ik_right_foot.rotation = def.right_foot_rotation
+	# Hand/foot rotations are stored in hb_parent space — apply via sync, not directly.
+	_sync_proxies_from_bike()
 
 
 func _editor_init_ik_from_bike() -> void:
@@ -496,6 +491,11 @@ func _editor_init_ik_from_bike() -> void:
 	if player_entity == null:
 		DebugUtils.DebugErrMsg("AnimationController: player_entity must be set for editor init")
 		return
+
+	# Hard reset: clear any animation the editor is previewing so it doesn't immediately
+	# stomp the proxy rotations we're about to set from the bike markers.
+	if ik_anim_player:
+		ik_anim_player.stop()
 	(
 		ik_ctrl
 		. set_bike_markers(
@@ -533,6 +533,14 @@ func _editor_init_ik_from_bike() -> void:
 	disable_proxy_markers()
 
 
+## Inverse of _local_with_rotation_override: extract the euler that, when plugged into
+## Basis.from_euler() and multiplied by parent.global.basis, reproduces marker.global.basis.
+static func _rotation_in_parent_space(marker: Node3D, parent: Node3D) -> Vector3:
+	var parent_basis := parent.global_transform.basis.orthonormalized()
+	var marker_basis := marker.global_transform.basis.orthonormalized()
+	return (parent_basis.inverse() * marker_basis).get_euler()
+
+
 static func _mirror_transform_x(t: Transform3D) -> Transform3D:
 	t.origin.x = -t.origin.x
 	t.basis.x.y = -t.basis.x.y
@@ -558,14 +566,22 @@ func _editor_save_default_pose() -> void:
 	def.right_arm_magnet_position = ik_ctrl.ik_right_arm_magnet.position
 	def.left_leg_magnet_position = ik_ctrl.ik_left_leg_magnet.position
 	def.right_leg_magnet_position = ik_ctrl.ik_right_leg_magnet.position
+	# Save hand/foot rotations in the bike marker's parent space so they round-trip
+	# through _sync_proxies_from_bike(), which applies them via hb_parent.global * euler(rot).
+	var hb: Marker3D = bike_skin.steering_handlebar_marker
+	if hb == null:
+		hb = bike_skin.left_handlebar_marker
+	var peg: Marker3D = bike_skin.left_peg_marker
+	var hb_parent := hb.get_parent() as Node3D
+	var peg_parent := peg.get_parent() as Node3D
 	if ik_ctrl.ik_left_hand:
-		def.left_hand_rotation = ik_ctrl.ik_left_hand.rotation
+		def.left_hand_rotation = _rotation_in_parent_space(ik_ctrl.ik_left_hand, hb_parent)
 	if ik_ctrl.ik_right_hand:
-		def.right_hand_rotation = ik_ctrl.ik_right_hand.rotation
+		def.right_hand_rotation = _rotation_in_parent_space(ik_ctrl.ik_right_hand, hb_parent)
 	if ik_ctrl.ik_left_foot:
-		def.left_foot_rotation = ik_ctrl.ik_left_foot.rotation
+		def.left_foot_rotation = _rotation_in_parent_space(ik_ctrl.ik_left_foot, peg_parent)
 	if ik_ctrl.ik_right_foot:
-		def.right_foot_rotation = ik_ctrl.ik_right_foot.rotation
+		def.right_foot_rotation = _rotation_in_parent_space(ik_ctrl.ik_right_foot, peg_parent)
 
 	var err = ResourceSaver.save(def)
 	if err == OK:
@@ -599,14 +615,8 @@ func _editor_reset_to_default_pose() -> void:
 		ik_ctrl.ik_left_leg_magnet.position = def.left_leg_magnet_position
 	if def.right_leg_magnet_position is Vector3:
 		ik_ctrl.ik_right_leg_magnet.position = def.right_leg_magnet_position
-	if def.left_hand_rotation is Vector3 and ik_ctrl.ik_left_hand:
-		ik_ctrl.ik_left_hand.rotation = def.left_hand_rotation
-	if def.right_hand_rotation is Vector3 and ik_ctrl.ik_right_hand:
-		ik_ctrl.ik_right_hand.rotation = def.right_hand_rotation
-	if def.left_foot_rotation is Vector3 and ik_ctrl.ik_left_foot:
-		ik_ctrl.ik_left_foot.rotation = def.left_foot_rotation
-	if def.right_foot_rotation is Vector3 and ik_ctrl.ik_right_foot:
-		ik_ctrl.ik_right_foot.rotation = def.right_foot_rotation
+	# Hand/foot rotations are stored in hb_parent space — apply via sync, not directly.
+	_sync_proxies_from_bike()
 
 
 #endregion
