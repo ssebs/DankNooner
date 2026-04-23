@@ -19,9 +19,13 @@
     - [x] arms must follow handlebars
     - [x] Learn how the steering/wheel spinning animations work
     - [x] animation controller cleanup
-    - [ ] Create stopped/idle animation
-    - [ ] Update docs for animation controller => must set reset position using proxy markers & save default pose for IK
-  - [ ] steering animation shouldn't happen at low speed so much
+    - [x] Create stopped/idle animation
+    - [ ] init IK does not save per bike, switching positions from sportbike to mini is broken, uses prev value!
+    - [ ] Fix jerkyness from transitioning between IK animation & procedural, do some blending?
+      - [ ] e.g. steering, then going to idle, butt shifts weird
+      - [ ] e.g. leaning during steering, then going to idle
+    - [ ] steering (leaning) animation should depend on speed
+  - [ ] Update docs for animation controller => must set reset position using proxy markers & save default pose for IK
   - [ ] Crash animation
 
 ## HI-PRI‼️
