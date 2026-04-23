@@ -64,6 +64,8 @@
  - [ ] Players drag race & hit low fence, sending bodies flying.
  - [ ] Furthest body wins
 
+- [ ] Wheelie battle gamemode
+
 ## Up Next (Finish POC MP Gameplay Demo) 📋
 
 > POC = playable gamemodes w/ friends, see if core gameplay loop works

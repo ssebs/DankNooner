@@ -30,14 +30,6 @@
 [ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://addons/virtual_joystick/virtual_joystick_scene.tscn" id="23_am3pr"]
 [ext_resource type="Texture2D" uid="uid://8i4urqqivwil" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_menu.png" id="24_744ak"]
 
-[sub_resource type="Animation" id="Animation_tivla"]
-length = 0.001
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_wqpss"]
-_data = {
-&"RESET": SubResource("Animation_tivla")
-}
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kl2q6"]
 
 [sub_resource type="Resource" id="Resource_cvxtv"]
@@ -124,10 +116,7 @@ transform = Transform3D(-1, 2.7775881e-08, -1.4841912e-07, 0, 0.98293537, 0.1839
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@31425")
-
-[node name="IKAnimationPlayer" parent="VisualRoot/CharacterSkin" index="3" unique_id=188385301]
-libraries/ = SubResource("AnimationLibrary_wqpss")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@25174")
 
 [node name="LeftArmMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="0" unique_id=1835903969]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.624374, 1.0740347, -0.011527802)
@@ -150,7 +139,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7281673e-07, 1.7506322, -0
 [node name="BikeSkin" parent="VisualRoot" unique_id=1727462617 instance=ExtResource("7_lfjd4")]
 unique_name_in_owner = true
 
-[node name="@Node3D@31391" parent="VisualRoot/BikeSkin/MeshNode" parent_id_path=PackedInt32Array(1727462617, 1984999037) index="0" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node")]
+[node name="@Node3D@25140" parent="VisualRoot/BikeSkin/MeshNode" parent_id_path=PackedInt32Array(1727462617, 1984999037) index="0" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node")]
 transform = Transform3D(-0.35, 0, -5.284853e-08, 0, 0.35, 0, 5.284853e-08, 0, -0.35, 0, 0.575, 0)
 script = ExtResource("8_3kl2f")
 slots = Array[ExtResource("9_xm7jy")]([SubResource("Resource_cvxtv"), SubResource("Resource_cvxtv")])
@@ -192,7 +181,7 @@ unique_name_in_owner = true
 script = ExtResource("7_mrv5j")
 player_entity = NodePath("../..")
 
-[node name="AnimationController" type="Node" parent="_Controllers" unique_id=727350187 node_paths=PackedStringArray("player_entity", "visual_root", "character_skin", "bike_skin", "movement_controller", "trick_controller", "input_controller")]
+[node name="AnimationController" type="Node" parent="_Controllers" unique_id=727350187 node_paths=PackedStringArray("player_entity", "visual_root", "character_skin", "bike_skin", "movement_controller", "trick_controller", "input_controller", "ik_anim_player")]
 unique_name_in_owner = true
 script = ExtResource("9_anim")
 player_entity = NodePath("../..")
@@ -202,7 +191,11 @@ bike_skin = NodePath("../../VisualRoot/BikeSkin")
 movement_controller = NodePath("../MovementController")
 trick_controller = NodePath("../TrickController")
 input_controller = NodePath("../InputController")
+ik_anim_player = NodePath("IKAnimationPlayer")
 max_chest_z_offset = 0.25
+
+[node name="IKAnimationPlayer" type="AnimationPlayer" parent="_Controllers/AnimationController" unique_id=292764851]
+root_node = NodePath("../../..")
 
 [node name="MovementController" type="Node" parent="_Controllers" unique_id=220903559 node_paths=PackedStringArray("player_entity", "input_controller", "gearing_controller", "crash_controller", "rear_raycast", "front_raycast")]
 unique_name_in_owner = true

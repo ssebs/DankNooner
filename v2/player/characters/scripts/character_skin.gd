@@ -26,7 +26,6 @@ const HEIGHT: float = 1.65
 @onready var ik_controller: IKController = %IKController
 @onready var ragdoll_controller: RagdollController = %RagdollController
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
-@onready var ik_anim_player: AnimationPlayer = %IKAnimationPlayer
 @onready var mesh_node: Node3D = %MeshNode
 
 # Accessory markers

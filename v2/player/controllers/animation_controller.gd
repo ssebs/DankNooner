@@ -18,6 +18,7 @@ enum RiderState {
 @export var movement_controller: MovementController
 @export var trick_controller: TrickController
 @export var input_controller: InputController
+@export var ik_anim_player: AnimationPlayer
 
 @export_tool_button("Init IK from Bike") var init_ik_btn = _editor_init_ik_from_bike
 @export_tool_button("Save Default Pose") var save_pose_btn = _editor_save_default_pose
@@ -280,8 +281,8 @@ func play_idle_animation(anim_name: String) -> void:
 	if current_state == RiderState.RAGDOLL:
 		return
 	_transition_to_idle()
-	if character_skin.ik_anim_player:
-		character_skin.ik_anim_player.play(anim_name)
+	if ik_anim_player:
+		ik_anim_player.play(anim_name)
 
 
 ## Play landing settle animation
@@ -577,4 +578,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("movement_controller must be set")
 	if input_controller == null:
 		issues.append("input_controller must be set")
+	if ik_anim_player == null:
+		issues.append("ik_anim_player must be set")
 	return issues
