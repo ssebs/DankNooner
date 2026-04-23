@@ -43,69 +43,6 @@ metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 radius = 0.4
 height = 1.8
 
-[sub_resource type="Animation" id="Animation_xm7jy"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("%LeftHandProxy:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0.22363517, 0.8478224, -0.06540004)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("%LeftHandProxy:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(1.0400047, 2.2469194, 0.21723954)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("%LeftFootProxy:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0.40253922, 0.2565831, -0.16492462)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("%CharacterSkin/IKTargets/ChestTarget:position")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(2.2034863e-08, 1.1466554, -0.1412803)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("%CharacterSkin/IKTargets/ChestTarget:rotation")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(1.110223e-16, -1.4210853e-14, 2.0769036e-16)]
-}
-
 [sub_resource type="Animation" id="Animation_3kl2f"]
 resource_name = "idle"
 step = 0.1
@@ -184,7 +121,6 @@ tracks/5/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xm7jy"]
 _data = {
-&"RESET": SubResource("Animation_xm7jy"),
 &"idle": SubResource("Animation_3kl2f")
 }
 
@@ -263,25 +199,25 @@ transform = Transform3D(-1, 2.7775881e-08, -1.4841912e-07, 0, 0.98293537, 0.1839
 
 [node name="LeftHandProxy" type="Marker3D" parent="VisualRoot" unique_id=811111111]
 unique_name_in_owner = true
-transform = Transform3D(-0.16312777, 0.27711135, 0.13819784, 0.03818753, 0.17301136, -0.3018423, -0.30729637, -0.12560411, -0.110871874, 0.22363517, 0.8478224, -0.06540004)
+transform = Transform3D(-0.102439806, 0.32000086, 0.098007895, 0.19055684, 0.14002974, -0.25803053, -0.27512574, -0.022161499, -0.21520849, 0.314918, 0.9937318, 0.20640972)
 
 [node name="RightHandProxy" type="Marker3D" parent="VisualRoot" unique_id=822222222]
 unique_name_in_owner = true
-transform = Transform3D(-0.16312785, -0.27711123, -0.13819781, -0.038187534, 0.17301133, -0.3018423, 0.3072963, -0.12560414, -0.1108719, -0.29061612, 0.95620686, 0.18692455)
+transform = Transform3D(-0.08145585, -0.3397287, -0.02119838, -0.108559646, 0.046586666, -0.32946095, 0.32261395, -0.07010065, -0.11621598, -0.315, 0.994, 0.206)
 
 [node name="LeftFootProxy" type="Marker3D" parent="VisualRoot" unique_id=833333333]
 unique_name_in_owner = true
-transform = Transform3D(-0.9574184, -0.24940902, -0.14541335, -0.20021874, 0.21073325, 0.9568197, -0.207996, 0.9451913, -0.25169626, 0.40253922, 0.2565831, -0.16492462)
+transform = Transform3D(-0.95741844, -0.24940914, -0.14541335, -0.2002188, 0.2107332, 0.9568197, -0.20799619, 0.94519126, -0.25169626, 0.19981939, 0.39506754, -0.16492465)
 
 [node name="RightFootProxy" type="Marker3D" parent="VisualRoot" unique_id=844444444]
 unique_name_in_owner = true
-transform = Transform3D(-0.95741844, 0.24940878, 0.14541341, 0.20021874, 0.21073325, 0.9568197, 0.20799579, 0.9451914, -0.25169623, -0.19981939, 0.39506754, -0.16492465)
+transform = Transform3D(-0.95741844, 0.24940893, 0.14541341, 0.2002188, 0.2107332, 0.9568197, 0.20799592, 0.9451914, -0.25169623, -0.19981939, 0.39506754, -0.16492465)
 
 [node name="CharacterSkin" parent="VisualRoot" unique_id=259227641 instance=ExtResource("6_1vqn6")]
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@38756")
+root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@51183")
 
 [node name="LeftArmMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="0" unique_id=1835903969]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.624374, 1.0740347, -0.011527802)
@@ -296,7 +232,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.46395656, 0.5692559, 0.4293
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.464, 0.569, 0.429)
 
 [node name="ChestTarget" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="4" unique_id=749031780]
-transform = Transform3D(1.0000001, -2.0769039e-16, -1.4210853e-14, 2.0769039e-16, 1.0000001, -1.110223e-16, 1.4210855e-14, 1.1102232e-16, 1, 2.2034863e-08, 1.1466554, -0.1412803)
+transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1, 9.5598196e-11, 1.1466553, -0.008623444)
 
 [node name="HeadTarget" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="5" unique_id=2052814980]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7281673e-07, 1.7506322, -0.1890527)
@@ -304,7 +240,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7281673e-07, 1.7506322, -0
 [node name="BikeSkin" parent="VisualRoot" unique_id=1727462617 instance=ExtResource("7_lfjd4")]
 unique_name_in_owner = true
 
-[node name="@Node3D@38722" parent="VisualRoot/BikeSkin/MeshNode" parent_id_path=PackedInt32Array(1727462617, 1984999037) index="0" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node")]
+[node name="@Node3D@51149" parent="VisualRoot/BikeSkin/MeshNode" parent_id_path=PackedInt32Array(1727462617, 1984999037) index="0" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node")]
 transform = Transform3D(-0.35, 0, -5.284853e-08, 0, 0.35, 0, 5.284853e-08, 0, -0.35, 0, 0.575, 0)
 script = ExtResource("8_3kl2f")
 slots = Array[ExtResource("9_xm7jy")]([SubResource("Resource_cvxtv"), SubResource("Resource_cvxtv")])
@@ -317,10 +253,10 @@ rear_wheel_node = NodePath("RearWheel")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2187675e-09, 0.84548926, -0.1953055)
 
 [node name="LeftHandleBarMarker" parent="VisualRoot/BikeSkin" index="3" unique_id=1482040679]
-transform = Transform3D(-0.46607926, 0.7917464, 0.39485118, 0.109107256, 0.49431825, -0.8624064, -0.87798935, -0.3588688, -0.31677678, 0.29064223, 0.9562068, 0.18692446)
+transform = Transform3D(-0.46607956, 0.79174626, 0.39485103, -0.06925904, -0.4775699, 0.8758595, 0.8820276, 0.38087344, 0.27742133, 0.29064223, 0.9562068, 0.18692446)
 
 [node name="LeftPegMarker" parent="VisualRoot/BikeSkin" index="4" unique_id=401987139]
-transform = Transform3D(-0.9574183, -0.249409, -0.14541325, -0.20021868, 0.21073318, 0.9568198, -0.20799609, 0.9451913, -0.25169638, 0.19981939, 0.39506754, -0.16492465)
+transform = Transform3D(-0.95741826, -0.24940902, -0.14541335, -0.20021872, 0.21073325, 0.9568197, -0.20799598, 0.9451913, -0.25169626, 0.19981939, 0.39506754, -0.16492465)
 
 [node name="TPSCam" type="Camera3D" parent="." unique_id=1200816402]
 unique_name_in_owner = true
