@@ -37,9 +37,10 @@ size = Vector3(1, 10, 200)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_avllc"]
 
-[node name="Test_01_Level" type="Node3D" unique_id=1283225083 node_paths=PackedStringArray("player_spawn_pos")]
+[node name="Test_01_Level" type="Node3D" unique_id=1283225083 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug")]
 script = ExtResource("1_m4ipn")
 player_spawn_pos = NodePath("PlayerSpawn")
+player_spawn_pos_debug = NodePath("PlayerSpawn")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="PlayerSpawn" type="Marker3D" parent="." unique_id=840084747]

@@ -25,6 +25,8 @@ enum TGameMode { FREE_FROAM, STREET_RACE, STUNT_RACE, TUTORIAL }
 
 @export var state_machine: StateMachine
 
+@export var loading_menu_state: MenuState
+
 @export var free_roam_mode: FreeRoamGameMode
 @export var street_race_mode: StreetRaceGameMode
 @export var tutorial_mode: TutorialGameMode
@@ -59,6 +61,8 @@ func start_game(level_name: LevelManager.LevelName, gamemode: TGameMode = TGameM
 	current_level_name = level_name
 	current_game_mode = gamemode
 	match_state = MatchState.IN_GAME
+	menu_manager.state_machine.request_state_change(loading_menu_state)
+	await RenderingServer.frame_post_draw
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
 	state_machine.request_state_change(_gamemode_map[gamemode])
 
@@ -154,6 +158,8 @@ func _sync_game_to_late_joiner(
 	match_state = MatchState.IN_GAME
 	current_level_name = level_name
 	current_game_mode = gamemode as TGameMode
+	menu_manager.state_machine.request_state_change(loading_menu_state)
+	await RenderingServer.frame_post_draw
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
 	state_machine.request_state_change(_gamemode_map[current_game_mode])
 
@@ -190,6 +196,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_state_manager must not be empty")
 	if spawn_manager == null:
 		issues.append("spawn_manager must not be empty")
+	if loading_menu_state == null:
+		issues.append("loading_menu_state must not be empty")
 	if free_roam_mode == null:
 		issues.append("free_roam_mode must not be empty")
 	if street_race_mode == null:
