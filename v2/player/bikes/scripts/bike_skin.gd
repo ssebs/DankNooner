@@ -7,9 +7,6 @@ class_name BikeSkin extends Node3D
 		if Engine.is_editor_hint() and is_node_ready():
 			_apply_definition()
 
-@export_tool_button("Save Markers to resource") var save_markers_btn = _save_markers_to_resource
-@export_tool_button("Load Markers from resource") var load_markers_btn = _load_markers_from_resource
-
 @export_tool_button("Save skin to u:disk") var save_skin_btn = _save_skin_to_disk
 @export var skin_name_for_loading_test = "sport_default"
 @export_tool_button("Load skin from u:disk") var load_skin_btn = _load_skin_to_disk
@@ -20,17 +17,6 @@ const STEERING_VISUAL_MULTIPLIER: float = 1.0
 const STEERING_LERP_SPEED: float = 10.0
 
 @onready var mesh_node: Node3D = %MeshNode
-
-# Accessory markers
-@onready var training_wheels_marker: Marker3D = %TrainingWheelsModsMarker
-
-@onready var seat_marker: Marker3D = %SeatMarker
-@onready var left_handlebar_marker: Marker3D = %LeftHandleBarMarker
-@onready var left_peg_marker: Marker3D = %LeftPegMarker
-@onready var front_wheel_ground_marker: Marker3D = %FrontWheelGroundMarker
-@onready var rear_wheel_ground_marker: Marker3D = %RearWheelGroundMarker
-@onready var rear_wheel_back_marker: Marker3D = %RearWheelBackMarker
-@onready var front_wheel_front_marker: Marker3D = %FrontWheelFrontMarker
 
 var mesh_skin: SkinColor
 var steering_handlebar_marker: Marker3D
@@ -81,8 +67,6 @@ func rotate_wheels(speed: float, delta: float, is_in_wheelie: bool = false):
 func _apply_definition():
 	_spawn_mesh()
 	_set_mesh_colors()
-	if not Engine.is_editor_hint():
-		_load_markers_from_resource()
 	_create_steering_handlebar_proxy()
 	if Engine.is_editor_hint():
 		mesh_skin.owner = self
@@ -97,61 +81,24 @@ func _load_skin_to_disk():
 	skin_definition.load_from_disk()
 
 
-func _load_markers_from_resource():
-	training_wheels_marker.position = skin_definition.training_wheels_marker_position
-	training_wheels_marker.rotation_degrees = (
-		skin_definition.training_wheels_marker_rotation_degrees
-	)
-	seat_marker.position = skin_definition.seat_marker_position
-	seat_marker.rotation_degrees = skin_definition.seat_marker_rotation_degrees
-	left_handlebar_marker.position = skin_definition.left_handlebar_marker_position
-	left_handlebar_marker.rotation_degrees = skin_definition.left_handlebar_marker_rotation_degrees
-	left_peg_marker.position = skin_definition.left_peg_marker_position
-	left_peg_marker.rotation_degrees = skin_definition.left_peg_marker_rotation_degrees
-	front_wheel_ground_marker.position = skin_definition.front_wheel_ground_position
-	rear_wheel_ground_marker.position = skin_definition.rear_wheel_ground_position
-	rear_wheel_back_marker.position = skin_definition.rear_wheel_back_position
-	front_wheel_front_marker.position = skin_definition.front_wheel_front_position
-
-
-func _save_markers_to_resource():
-	skin_definition.training_wheels_marker_position = training_wheels_marker.position
-	skin_definition.training_wheels_marker_rotation_degrees = (
-		training_wheels_marker.rotation_degrees
-	)
-	skin_definition.seat_marker_position = seat_marker.position
-	skin_definition.seat_marker_rotation_degrees = seat_marker.rotation_degrees
-	skin_definition.left_handlebar_marker_position = left_handlebar_marker.position
-	skin_definition.left_handlebar_marker_rotation_degrees = left_handlebar_marker.rotation_degrees
-	skin_definition.left_peg_marker_position = left_peg_marker.position
-	skin_definition.left_peg_marker_rotation_degrees = left_peg_marker.rotation_degrees
-	skin_definition.front_wheel_ground_position = front_wheel_ground_marker.position
-	skin_definition.rear_wheel_ground_position = rear_wheel_ground_marker.position
-	skin_definition.rear_wheel_back_position = rear_wheel_back_marker.position
-	skin_definition.front_wheel_front_position = front_wheel_front_marker.position
-
-	var err = ResourceSaver.save(skin_definition)
-	if err == OK:
-		DebugUtils.DebugMsg(
-			"BikeSkin: Saved marker positions to %s" % skin_definition.resource_path
-		)
-	else:
-		push_error("BikeSkin: Failed to save resource, error: ", err)
-
-
 #endregion
 
 
 func _create_steering_handlebar_proxy():
 	if not has_steering():
-		steering_handlebar_marker = left_handlebar_marker
+		steering_handlebar_marker = null
 		return
 	var steering_node = mesh_skin.steering_rotation_node
 	var proxy = Marker3D.new()
 	proxy.name = "SteeringHandleBarProxy"
 	steering_node.add_child(proxy)
-	# Position proxy so its global transform matches the handlebar marker
-	proxy.global_transform = left_handlebar_marker.global_transform
+	# Position proxy from definition values in BikeSkin local space
+	var hb_pos = skin_definition.left_handlebar_marker_position
+	var hb_rot_deg = skin_definition.left_handlebar_marker_rotation_degrees
+	var hb_rot = Vector3(
+		deg_to_rad(hb_rot_deg.x), deg_to_rad(hb_rot_deg.y), deg_to_rad(hb_rot_deg.z)
+	)
+	proxy.global_transform = global_transform * Transform3D(Basis.from_euler(hb_rot), hb_pos)
 	steering_handlebar_marker = proxy
 
 

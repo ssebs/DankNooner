@@ -3,15 +3,13 @@ class_name IKController extends Node3D
 
 @export var char_skin: CharacterSkin
 
-# Character-owned IK target markers (set via @export in editor)
-@export var ik_left_arm_magnet: Marker3D
-@export var ik_right_arm_magnet: Marker3D
-@export var ik_left_leg_magnet: Marker3D
-@export var ik_right_leg_magnet: Marker3D
-@export var ik_chest: Marker3D
-@export var ik_head: Marker3D
-
-# Bike-owned IK targets (set at runtime via set_bike_markers)
+# All IK targets — set at runtime via set_targets()
+var ik_left_arm_magnet: Marker3D
+var ik_right_arm_magnet: Marker3D
+var ik_left_leg_magnet: Marker3D
+var ik_right_leg_magnet: Marker3D
+var ik_chest: Marker3D
+var ik_head: Marker3D
 var ik_left_hand: Marker3D
 var ik_right_hand: Marker3D
 var ik_left_foot: Marker3D
@@ -31,18 +29,30 @@ func _physics_process(_delta):
 		_apply_end_bone_rotations()
 
 
-func set_bike_markers(
+func set_targets(
 	seat: Marker3D,
 	left_hand: Marker3D,
 	right_hand: Marker3D,
 	left_foot: Marker3D,
-	right_foot: Marker3D
+	right_foot: Marker3D,
+	chest: Marker3D,
+	head: Marker3D,
+	left_arm_magnet: Marker3D,
+	right_arm_magnet: Marker3D,
+	left_leg_magnet: Marker3D,
+	right_leg_magnet: Marker3D
 ) -> void:
 	butt_pos = seat
 	ik_left_hand = left_hand
 	ik_right_hand = right_hand
 	ik_left_foot = left_foot
 	ik_right_foot = right_foot
+	ik_chest = chest
+	ik_head = head
+	ik_left_arm_magnet = left_arm_magnet
+	ik_right_arm_magnet = right_arm_magnet
+	ik_left_leg_magnet = left_leg_magnet
+	ik_right_leg_magnet = right_leg_magnet
 
 
 func enable_ik():
@@ -67,7 +77,7 @@ func disable_butt_placement():
 
 
 func _move_hips_to_butt_target():
-	# butt_pos is set at runtime via set_bike_markers — null before init
+	# butt_pos is set at runtime via set_targets() — null before init
 	if butt_pos == null:
 		return
 	var skel_3d = char_skin.skel_3d
@@ -201,16 +211,4 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
 	if char_skin == null:
 		issues.append("char_skin must be set")
-	if ik_left_arm_magnet == null:
-		issues.append("ik_left_arm_magnet must be set")
-	if ik_right_arm_magnet == null:
-		issues.append("ik_right_arm_magnet must be set")
-	if ik_left_leg_magnet == null:
-		issues.append("ik_left_leg_magnet must be set")
-	if ik_right_leg_magnet == null:
-		issues.append("ik_right_leg_magnet must be set")
-	if ik_chest == null:
-		issues.append("ik_chest must be set")
-	if ik_head == null:
-		issues.append("ik_head must be set")
 	return issues

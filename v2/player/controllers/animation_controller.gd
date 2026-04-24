@@ -48,7 +48,7 @@ var _base_visual_root_position: Vector3
 var _base_visual_root_rotation: Vector3
 var _idle_timer: float = 0.0
 var _procedural_enabled: bool = true
-var _proxy_markers_enabled: bool = true
+var _targets_synced_from_bike: bool = true
 
 # Cached refs (set in initialize)
 var _ik_ctrl: IKController
@@ -121,39 +121,39 @@ func _update_riding(delta: float) -> void:
 
 ## Always-on bits: steering, wheels, lean rotation, chest/butt X shift, fwd/back lean.
 func _riding_common(delta: float) -> void:
-	# Lean rotation on visual_root (bike + rider tilt together)
 	visual_root.rotation.z = lerpf(visual_root.rotation.z, _roll, _blend)
 
-	# Chest Y rotation for visual lean
 	var target_chest_y = _roll * deg_to_rad(30)
-	_ik_ctrl.ik_chest.rotation.y = lerpf(_ik_ctrl.ik_chest.rotation.y, target_chest_y, _blend)
+	player_entity.chest_target.rotation.y = lerpf(
+		player_entity.chest_target.rotation.y, target_chest_y, _blend
+	)
 
-	# Shift butt + chest X to match lean
 	var lean_x_offset = clampf(visual_root.rotation.z, -max_butt_offset, max_butt_offset)
 	var target_butt_x = _base_butt_pos.x - lean_x_offset
 	var target_chest_x = _base_chest_pos.x - lean_x_offset
 	_ik_ctrl.butt_pos.position.x = lerpf(_ik_ctrl.butt_pos.position.x, target_butt_x, _blend)
-	_ik_ctrl.ik_chest.position.x = lerpf(_ik_ctrl.ik_chest.position.x, target_chest_x, _blend)
+	player_entity.chest_target.position.x = lerpf(
+		player_entity.chest_target.position.x, target_chest_x, _blend
+	)
 
-	# Fwd/back rider lean from nfx_lean
-	var lean_input = input_controller.nfx_lean  # +1 fwd, -1 back
+	var lean_input = input_controller.nfx_lean
 	var target_chest_pitch = _base_chest_rot.x - lean_input * deg_to_rad(max_chest_lean_pitch_deg)
 	var target_chest_z = _base_chest_pos.z + lean_input * max_chest_z_offset
 	var target_butt_z = _base_butt_pos.z + lean_input * max_butt_z_offset
-	_ik_ctrl.ik_chest.rotation.x = lerpf(_ik_ctrl.ik_chest.rotation.x, target_chest_pitch, _blend)
-	_ik_ctrl.ik_chest.position.z = lerpf(_ik_ctrl.ik_chest.position.z, target_chest_z, _blend)
+	player_entity.chest_target.rotation.x = lerpf(
+		player_entity.chest_target.rotation.x, target_chest_pitch, _blend
+	)
+	player_entity.chest_target.position.z = lerpf(
+		player_entity.chest_target.position.z, target_chest_z, _blend
+	)
 	_ik_ctrl.butt_pos.position.z = lerpf(_ik_ctrl.butt_pos.position.z, target_butt_z, _blend)
 
-	# When proxies are disabled (idle / trick / air), hold bars straight so IK anims have a
-	# stable base to offset from.
-	var steer_input := _roll if _proxy_markers_enabled else 0.0
+	var steer_input := _roll if _targets_synced_from_bike else 0.0
 	bike_skin.rotate_steering(steer_input, delta)
 	bike_skin.rotate_wheels(movement_controller.speed, delta, trick_controller.is_in_wheelie())
 
-	# Sync hand/foot proxies to the (now-rotated) bike markers so IK tracks steering.
-	# Skipped when disabled — AnimationPlayer owns the proxy transforms in that case.
-	if _proxy_markers_enabled:
-		_sync_proxies_from_bike()
+	if _targets_synced_from_bike:
+		_sync_targets_from_bike()
 
 
 ## On ground, no trick — pitch still follows movement_controller (for sub-threshold wobble).
@@ -170,13 +170,13 @@ func _riding_stoppie(_delta: float) -> void:
 
 
 func _riding_air(_delta: float) -> void:
-	disable_proxy_markers()
+	disable_target_sync()
 	visual_root.rotation.x = lerp_angle(visual_root.rotation.x, -_pitch, _blend)
 
 
 ## Shared ground pitch target: follow movement_controller.pitch_angle, clamped to bike limits.
 func _lerp_ground_pitch() -> void:
-	enable_proxy_markers()
+	enable_target_sync()
 	var max_wheelie_rad = deg_to_rad(_bd.max_wheelie_angle_deg)
 	var max_stoppie_rad = deg_to_rad(_bd.max_stoppie_angle_deg)
 	var target = -clampf(_pitch, -max_stoppie_rad, max_wheelie_rad)
@@ -242,10 +242,11 @@ func _update_idle_timer(delta: float) -> void:
 
 
 func _reset_to_base_positions() -> void:
-	if _ik_ctrl:
+	if _ik_ctrl and _ik_ctrl.butt_pos:
 		_ik_ctrl.butt_pos.position = _base_butt_pos
-		_ik_ctrl.ik_chest.position = _base_chest_pos
-		_ik_ctrl.ik_chest.rotation = _base_chest_rot
+	if player_entity.chest_target:
+		player_entity.chest_target.position = _base_chest_pos
+		player_entity.chest_target.rotation = _base_chest_rot
 	if visual_root:
 		visual_root.position = _base_visual_root_position
 		visual_root.rotation = _base_visual_root_rotation
@@ -266,52 +267,47 @@ func initialize() -> void:
 		)
 		return
 
-	# Cache frequently-accessed refs
 	_ik_ctrl = character_skin.ik_controller
 	_bd = player_entity.bike_definition
 
-	# Store base positions/rotations for offset calculations
-	if _ik_ctrl:
+	if _ik_ctrl and _ik_ctrl.butt_pos:
 		_base_butt_pos = _ik_ctrl.butt_pos.position
-		_base_chest_pos = _ik_ctrl.ik_chest.position
-		_base_chest_rot = _ik_ctrl.ik_chest.rotation
+	if player_entity.chest_target:
+		_base_chest_pos = player_entity.chest_target.position
+		_base_chest_rot = player_entity.chest_target.rotation
 
 	_base_visual_root_position = visual_root.position
 	_base_visual_root_rotation = visual_root.rotation
 
-	# AnimationPlayer animates the proxies under VisualRoot — point its root_node there so
-	# track paths like "LeftHandProxy:position" resolve cleanly.
 	if ik_anim_player:
 		ik_anim_player.root_node = ik_anim_player.get_path_to(visual_root)
 
-	# Seed proxies to the bike markers so the first IK solve has a sane pose.
-	_sync_proxies_from_bike()
+	_sync_targets_from_bike()
 
 
-## Copy bike handlebar/peg marker transforms onto the hand/foot proxies. Called every tick
-## while procedural riding owns the proxies; skipped when AnimationPlayer is driving them.
-## Uses local-space mirror so it works regardless of where the bike is in the world.
-## Per-limb rotation overrides from BikeSkinDefinition are applied as local-space basis
-## replacements (mirroring the old `ik_<limb>.rotation = def.<limb>_rotation` behavior).
-func _sync_proxies_from_bike() -> void:
-	var ik_ctrl: IKController = (
-		_ik_ctrl if _ik_ctrl else (character_skin.ik_controller if character_skin else null)
-	)
-	if ik_ctrl == null or bike_skin == null:
+## Sync hand/foot target transforms from the bike's steering handlebar proxy and peg
+## definition values. Called every tick while target sync is enabled; skipped when
+## AnimationPlayer is driving the targets.
+func _sync_targets_from_bike() -> void:
+	if bike_skin == null:
 		return
-	if ik_ctrl.ik_left_hand == null or ik_ctrl.ik_left_foot == null:
-		return
+	# Steering handlebar proxy still lives on bike_skin (rotates with steering)
 	var hb: Marker3D = bike_skin.steering_handlebar_marker
 	if hb == null:
-		hb = bike_skin.left_handlebar_marker
-	var peg: Marker3D = bike_skin.left_peg_marker
-	if hb == null or peg == null:
 		return
 
-	var def: BikeSkinDefinition = _bd if _bd else bike_skin.skin_definition
-
 	var hb_parent := hb.get_parent() as Node3D
-	var peg_parent := peg.get_parent() as Node3D
+
+	# Peg transform computed from definition (no marker node needed)
+	var peg_pos = _bd.left_peg_marker_position
+	var peg_rot_deg = _bd.left_peg_marker_rotation_degrees
+	var peg_rot = Vector3(
+		deg_to_rad(peg_rot_deg.x), deg_to_rad(peg_rot_deg.y), deg_to_rad(peg_rot_deg.z)
+	)
+	var peg_local = Transform3D(Basis.from_euler(peg_rot), peg_pos)
+	var peg_parent = bike_skin
+
+	var def: BikeSkinDefinition = _bd if _bd else bike_skin.skin_definition
 
 	var left_hand_local := _local_with_rotation_override(
 		hb.transform, def.left_hand_rotation if def else Vector3.ZERO
@@ -320,16 +316,16 @@ func _sync_proxies_from_bike() -> void:
 		_mirror_transform_x(hb.transform), def.right_hand_rotation if def else Vector3.ZERO
 	)
 	var left_foot_local := _local_with_rotation_override(
-		peg.transform, def.left_foot_rotation if def else Vector3.ZERO
+		peg_local, def.left_foot_rotation if def else Vector3.ZERO
 	)
 	var right_foot_local := _local_with_rotation_override(
-		_mirror_transform_x(peg.transform), def.right_foot_rotation if def else Vector3.ZERO
+		_mirror_transform_x(peg_local), def.right_foot_rotation if def else Vector3.ZERO
 	)
 
-	ik_ctrl.ik_left_hand.global_transform = hb_parent.global_transform * left_hand_local
-	ik_ctrl.ik_right_hand.global_transform = hb_parent.global_transform * right_hand_local
-	ik_ctrl.ik_left_foot.global_transform = peg_parent.global_transform * left_foot_local
-	ik_ctrl.ik_right_foot.global_transform = peg_parent.global_transform * right_foot_local
+	player_entity.left_hand_target.global_transform = hb_parent.global_transform * left_hand_local
+	player_entity.right_hand_target.global_transform = hb_parent.global_transform * right_hand_local
+	player_entity.left_foot_target.global_transform = peg_parent.global_transform * left_foot_local
+	player_entity.right_foot_target.global_transform = peg_parent.global_transform * right_foot_local
 
 
 ## If rotation_override is non-zero, replace the local basis with it (preserving origin).
@@ -350,16 +346,16 @@ func set_procedural_enabled(enabled: bool) -> void:
 		_reset_to_base_positions()
 
 
-## Hand ownership of the hand/foot proxies back to procedural riding. Next tick's
-## _sync_proxies_from_bike() snaps them to the bike's handlebar/peg markers.
-func enable_proxy_markers() -> void:
-	_proxy_markers_enabled = true
+## Hand ownership of the hand/foot targets back to procedural riding. Next tick's
+## _sync_targets_from_bike() snaps them to the bike's handlebar/peg positions.
+func enable_target_sync() -> void:
+	_targets_synced_from_bike = true
 
 
-## Release the hand/foot proxies so an AnimationPlayer track can drive their transforms.
+## Release the hand/foot targets so an AnimationPlayer track can drive their transforms.
 ## Sync is skipped while disabled.
-func disable_proxy_markers() -> void:
-	_proxy_markers_enabled = false
+func disable_target_sync() -> void:
+	_targets_synced_from_bike = false
 
 
 ## Play a trick animation (full skeleton override)
@@ -413,13 +409,13 @@ func _transition_to_riding() -> void:
 	current_state = RiderState.RIDING
 	ik_anim_player.stop()
 	character_skin.enable_ik()
-	enable_proxy_markers()
+	enable_target_sync()
 
 
 func _transition_to_idle() -> void:
 	current_state = RiderState.IDLE
 	_procedural_enabled = true
-	disable_proxy_markers()
+	disable_target_sync()
 	ik_anim_player.play("idle")
 
 
@@ -427,7 +423,7 @@ func _transition_to_trick() -> void:
 	current_state = RiderState.TRICK
 	character_skin.disable_ik()
 	_procedural_enabled = false
-	disable_proxy_markers()
+	disable_target_sync()
 
 
 #endregion
@@ -443,85 +439,73 @@ func _editor_auto_init() -> void:
 
 
 func _editor_sync_pose_from_definition() -> void:
-	if bike_skin == null or character_skin == null:
-		return
-	var ik_ctrl = character_skin.ik_controller
-	if ik_ctrl == null or ik_ctrl.butt_pos == null:
+	if bike_skin == null or player_entity == null:
 		return
 	var def = bike_skin.skin_definition
 	if def == null:
 		return
 
-	if ik_ctrl.ik_chest:
-		ik_ctrl.ik_chest.position = def.chest_position
-		ik_ctrl.ik_chest.rotation = def.chest_rotation
-	if ik_ctrl.ik_head:
-		ik_ctrl.ik_head.position = def.head_position
-		ik_ctrl.ik_head.rotation = def.head_rotation
-	if ik_ctrl.ik_left_arm_magnet:
-		ik_ctrl.ik_left_arm_magnet.position = def.left_arm_magnet_position
-	if ik_ctrl.ik_right_arm_magnet:
-		ik_ctrl.ik_right_arm_magnet.position = def.right_arm_magnet_position
-	if ik_ctrl.ik_left_leg_magnet:
-		ik_ctrl.ik_left_leg_magnet.position = def.left_leg_magnet_position
-	if ik_ctrl.ik_right_leg_magnet:
-		ik_ctrl.ik_right_leg_magnet.position = def.right_leg_magnet_position
-	# Hand/foot rotations are stored in hb_parent space — apply via sync, not directly.
-	_sync_proxies_from_bike()
+	player_entity.chest_target.position = def.chest_position
+	player_entity.chest_target.rotation = def.chest_rotation
+	player_entity.head_target.position = def.head_position
+	player_entity.head_target.rotation = def.head_rotation
+	player_entity.left_arm_magnet.position = def.left_arm_magnet_position
+	player_entity.right_arm_magnet.position = def.right_arm_magnet_position
+	player_entity.left_leg_magnet.position = def.left_leg_magnet_position
+	player_entity.right_leg_magnet.position = def.right_leg_magnet_position
+	_sync_targets_from_bike()
 
 
 func _editor_init_ik_from_bike() -> void:
 	if bike_skin == null or character_skin == null:
 		DebugUtils.DebugErrMsg("AnimationController: bike_skin and character_skin must be set")
 		return
-
-	var ik_ctrl = character_skin.ik_controller
-	var def = bike_skin.skin_definition
-
-	# Use the authored proxies under VisualRoot (wired via @export on PlayerEntity)
 	if player_entity == null:
 		DebugUtils.DebugErrMsg("AnimationController: player_entity must be set for editor init")
 		return
 
-	# Hard reset: clear any animation the editor is previewing so it doesn't immediately
-	# stomp the proxy rotations we're about to set from the bike markers.
+	var ik_ctrl = character_skin.ik_controller
+	var def = bike_skin.skin_definition
+
 	if ik_anim_player:
 		ik_anim_player.stop()
-	(
-		ik_ctrl
-		. set_bike_markers(
-			bike_skin.seat_marker,
-			player_entity.left_hand_proxy,
-			player_entity.right_hand_proxy,
-			player_entity.left_foot_proxy,
-			player_entity.right_foot_proxy,
-		)
-	)
-	_sync_proxies_from_bike()
 
-	# Load rider pose fields from BikeSkinDefinition if they've been saved
+	# Position butt from definition
+	player_entity.butt_target.position = def.seat_marker_position
+
+	# Pass all markers to IKController
+	ik_ctrl.set_targets(
+		player_entity.butt_target,
+		player_entity.left_hand_target, player_entity.right_hand_target,
+		player_entity.left_foot_target, player_entity.right_foot_target,
+		player_entity.chest_target, player_entity.head_target,
+		player_entity.left_arm_magnet, player_entity.right_arm_magnet,
+		player_entity.left_leg_magnet, player_entity.right_leg_magnet
+	)
+
+	_sync_targets_from_bike()
+
+	# Load rider pose from definition
 	if def.chest_position is Vector3 and def.chest_position != Vector3.ZERO:
-		ik_ctrl.ik_chest.position = def.chest_position
+		player_entity.chest_target.position = def.chest_position
 	if def.chest_rotation is Vector3 and def.chest_rotation != Vector3.ZERO:
-		ik_ctrl.ik_chest.rotation = def.chest_rotation
+		player_entity.chest_target.rotation = def.chest_rotation
 	if def.head_position is Vector3 and def.head_position != Vector3.ZERO:
-		ik_ctrl.ik_head.position = def.head_position
+		player_entity.head_target.position = def.head_position
 	if def.head_rotation is Vector3 and def.head_rotation != Vector3.ZERO:
-		ik_ctrl.ik_head.rotation = def.head_rotation
+		player_entity.head_target.rotation = def.head_rotation
 	if def.left_arm_magnet_position is Vector3 and def.left_arm_magnet_position != Vector3.ZERO:
-		ik_ctrl.ik_left_arm_magnet.position = def.left_arm_magnet_position
+		player_entity.left_arm_magnet.position = def.left_arm_magnet_position
 	if def.right_arm_magnet_position is Vector3 and def.right_arm_magnet_position != Vector3.ZERO:
-		ik_ctrl.ik_right_arm_magnet.position = def.right_arm_magnet_position
+		player_entity.right_arm_magnet.position = def.right_arm_magnet_position
 	if def.left_leg_magnet_position is Vector3 and def.left_leg_magnet_position != Vector3.ZERO:
-		ik_ctrl.ik_left_leg_magnet.position = def.left_leg_magnet_position
+		player_entity.left_leg_magnet.position = def.left_leg_magnet_position
 	if def.right_leg_magnet_position is Vector3 and def.right_leg_magnet_position != Vector3.ZERO:
-		ik_ctrl.ik_right_leg_magnet.position = def.right_leg_magnet_position
-	# Hand/foot rotations are applied by _sync_proxies_from_bike() above (in the bike
-	# marker's parent space). Don't overwrite them here in visual_root local space.
+		player_entity.right_leg_magnet.position = def.right_leg_magnet_position
 
 	ik_ctrl._create_ik()
 	character_skin.enable_ik()
-	disable_proxy_markers()
+	disable_target_sync()
 
 
 ## Inverse of _local_with_rotation_override: extract the euler that, when plugged into
@@ -542,37 +526,43 @@ static func _mirror_transform_x(t: Transform3D) -> Transform3D:
 
 
 func _editor_save_default_pose() -> void:
-	var ik_ctrl = character_skin.ik_controller
-	if ik_ctrl == null:
-		DebugUtils.DebugErrMsg("AnimationController: missing ik_controller")
+	var def = bike_skin.skin_definition
+	if def == null:
+		DebugUtils.DebugErrMsg("AnimationController: missing bike_skin definition")
 		return
 
-	var def = bike_skin.skin_definition
+	def.chest_position = player_entity.chest_target.position
+	def.chest_rotation = player_entity.chest_target.rotation
+	def.head_position = player_entity.head_target.position
+	def.head_rotation = player_entity.head_target.rotation
+	def.left_arm_magnet_position = player_entity.left_arm_magnet.position
+	def.right_arm_magnet_position = player_entity.right_arm_magnet.position
+	def.left_leg_magnet_position = player_entity.left_leg_magnet.position
+	def.right_leg_magnet_position = player_entity.right_leg_magnet.position
+	# Save butt position as seat marker
+	def.seat_marker_position = player_entity.butt_target.position
 
-	def.chest_position = ik_ctrl.ik_chest.position
-	def.chest_rotation = ik_ctrl.ik_chest.rotation
-	def.head_position = ik_ctrl.ik_head.position
-	def.head_rotation = ik_ctrl.ik_head.rotation
-	def.left_arm_magnet_position = ik_ctrl.ik_left_arm_magnet.position
-	def.right_arm_magnet_position = ik_ctrl.ik_right_arm_magnet.position
-	def.left_leg_magnet_position = ik_ctrl.ik_left_leg_magnet.position
-	def.right_leg_magnet_position = ik_ctrl.ik_right_leg_magnet.position
-	# Save hand/foot rotations in the bike marker's parent space so they round-trip
-	# through _sync_proxies_from_bike(), which applies them via hb_parent.global * euler(rot).
+	# Hand/foot rotations in bike marker parent space
 	var hb: Marker3D = bike_skin.steering_handlebar_marker
-	if hb == null:
-		hb = bike_skin.left_handlebar_marker
-	var peg: Marker3D = bike_skin.left_peg_marker
-	var hb_parent := hb.get_parent() as Node3D
-	var peg_parent := peg.get_parent() as Node3D
-	if ik_ctrl.ik_left_hand:
-		def.left_hand_rotation = _rotation_in_parent_space(ik_ctrl.ik_left_hand, hb_parent)
-	if ik_ctrl.ik_right_hand:
-		def.right_hand_rotation = _rotation_in_parent_space(ik_ctrl.ik_right_hand, hb_parent)
-	if ik_ctrl.ik_left_foot:
-		def.left_foot_rotation = _rotation_in_parent_space(ik_ctrl.ik_left_foot, peg_parent)
-	if ik_ctrl.ik_right_foot:
-		def.right_foot_rotation = _rotation_in_parent_space(ik_ctrl.ik_right_foot, peg_parent)
+	var hb_parent := hb.get_parent() as Node3D if hb else bike_skin as Node3D
+	var peg_parent := bike_skin as Node3D
+
+	if player_entity.left_hand_target:
+		def.left_hand_rotation = _rotation_in_parent_space(
+			player_entity.left_hand_target, hb_parent
+		)
+	if player_entity.right_hand_target:
+		def.right_hand_rotation = _rotation_in_parent_space(
+			player_entity.right_hand_target, hb_parent
+		)
+	if player_entity.left_foot_target:
+		def.left_foot_rotation = _rotation_in_parent_space(
+			player_entity.left_foot_target, peg_parent
+		)
+	if player_entity.right_foot_target:
+		def.right_foot_rotation = _rotation_in_parent_space(
+			player_entity.right_foot_target, peg_parent
+		)
 
 	var err = ResourceSaver.save(def)
 	if err == OK:
@@ -584,30 +574,29 @@ func _editor_save_default_pose() -> void:
 
 
 func _editor_reset_to_default_pose() -> void:
-	var ik_ctrl = character_skin.ik_controller
 	var def = bike_skin.skin_definition
-	if ik_ctrl == null or def == null:
-		DebugUtils.DebugErrMsg("AnimationController: missing ik_controller or bike_skin definition")
+	if def == null:
+		DebugUtils.DebugErrMsg("AnimationController: missing bike_skin definition")
 		return
 
 	if def.chest_position is Vector3:
-		ik_ctrl.ik_chest.position = def.chest_position
+		player_entity.chest_target.position = def.chest_position
 	if def.chest_rotation is Vector3:
-		ik_ctrl.ik_chest.rotation = def.chest_rotation
+		player_entity.chest_target.rotation = def.chest_rotation
 	if def.head_position is Vector3:
-		ik_ctrl.ik_head.position = def.head_position
+		player_entity.head_target.position = def.head_position
 	if def.head_rotation is Vector3:
-		ik_ctrl.ik_head.rotation = def.head_rotation
+		player_entity.head_target.rotation = def.head_rotation
 	if def.left_arm_magnet_position is Vector3:
-		ik_ctrl.ik_left_arm_magnet.position = def.left_arm_magnet_position
+		player_entity.left_arm_magnet.position = def.left_arm_magnet_position
 	if def.right_arm_magnet_position is Vector3:
-		ik_ctrl.ik_right_arm_magnet.position = def.right_arm_magnet_position
+		player_entity.right_arm_magnet.position = def.right_arm_magnet_position
 	if def.left_leg_magnet_position is Vector3:
-		ik_ctrl.ik_left_leg_magnet.position = def.left_leg_magnet_position
+		player_entity.left_leg_magnet.position = def.left_leg_magnet_position
 	if def.right_leg_magnet_position is Vector3:
-		ik_ctrl.ik_right_leg_magnet.position = def.right_leg_magnet_position
-	# Hand/foot rotations are stored in hb_parent space — apply via sync, not directly.
-	_sync_proxies_from_bike()
+		player_entity.right_leg_magnet.position = def.right_leg_magnet_position
+	player_entity.butt_target.position = def.seat_marker_position
+	_sync_targets_from_bike()
 
 
 #endregion
@@ -615,6 +604,8 @@ func _editor_reset_to_default_pose() -> void:
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
+	if player_entity == null:
+		issues.append("player_entity must be set")
 	if visual_root == null:
 		issues.append("visual_root must be set")
 	if character_skin == null:
