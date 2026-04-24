@@ -200,7 +200,7 @@ transform = Transform3D(-1, 2.7775881e-08, -1.4841912e-07, 0, 0.98293537, 0.1839
 
 [node name="LeftHandProxy" type="Marker3D" parent="VisualRoot" unique_id=811111111]
 unique_name_in_owner = true
-transform = Transform3D(-0.102439806, 0.32000086, 0.098007895, 0.19055684, 0.14002974, -0.25803053, -0.27512574, -0.022161499, -0.21520849, 0.29064223, 0.95620686, 0.18692446)
+transform = Transform3D(-0.102439806, 0.32000086, 0.0980079, 0.19055685, 0.14002976, -0.25803053, -0.27512574, -0.022161499, -0.2152085, 0.29064223, 0.95620686, 0.18692446)
 
 [node name="RightHandProxy" type="Marker3D" parent="VisualRoot" unique_id=822222222]
 unique_name_in_owner = true
@@ -218,7 +218,7 @@ transform = Transform3D(-0.95741844, 0.24940902, 0.14541341, 0.20021881, 0.21073
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" parent="VisualRoot/CharacterSkin" index="2" unique_id=2071931266]
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@63550")
+root_node = NodePath("/root/@EditorNode@18070/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9321/@VSplitContainer@9104/@HSplitContainer@9106/@HSplitContainer@9108/@Control@9109/@SubViewportContainer@9110/@SubViewport@9111/PlayerEntity/VisualRoot/CharacterSkin/MeshNode/@Node3D@18982")
 
 [node name="LeftArmMagnet" parent="VisualRoot/CharacterSkin/IKTargets" parent_id_path=PackedInt32Array(259227641, 1976697917) index="0" unique_id=1835903969]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.624374, 1.0740347, -0.011527802)
@@ -241,7 +241,7 @@ transform = Transform3D(1, 0, -1.4210855e-14, 0, 1, 0, 1.4210855e-14, 0, 1, -1.7
 [node name="BikeSkin" parent="VisualRoot" unique_id=1727462617 instance=ExtResource("7_lfjd4")]
 unique_name_in_owner = true
 
-[node name="@Node3D@63516" parent="VisualRoot/BikeSkin/MeshNode" parent_id_path=PackedInt32Array(1727462617, 1984999037) index="0" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node")]
+[node name="@Node3D@18948" parent="VisualRoot/BikeSkin/MeshNode" parent_id_path=PackedInt32Array(1727462617, 1984999037) index="0" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node")]
 transform = Transform3D(-0.35, 0, -5.284853e-08, 0, 0.35, 0, 5.284853e-08, 0, -0.35, 0, 0.575, 0)
 script = ExtResource("8_3kl2f")
 slots = Array[ExtResource("9_xm7jy")]([SubResource("Resource_cvxtv"), SubResource("Resource_cvxtv")])

@@ -30,7 +30,6 @@
 
 ## HI-PRI‼️
 
-- [ ] Loading Menu
 - [ ] First launch is v slow ([compiling shaders](https://docs.godotengine.org/en/stable/tutorials/performance/pipeline_compilations.html))
   - [ ] Freezes on my Mac when using exported binary 
 
@@ -327,6 +326,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Loading Menu
 
 - [x] Organize todos
 
