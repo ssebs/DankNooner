@@ -30,6 +30,9 @@
 
 ## HI-PRI‼️
 
+- [ ] Loading Menu
+- [ ] First launch is v slow ([compiling shaders](https://docs.godotengine.org/en/stable/tutorials/performance/pipeline_compilations.html))
+  - [ ] Freezes on my Mac when using exported binary 
 
 - [ ] Finish tutorial:
   - [ ] clutch-up tutorial & speed management
@@ -166,9 +169,7 @@
 - [ ] Use Curves to create roads
   - [ ] In godot or blender?
 
-- [ ] New menu type
-  - [ ] Create loading inbetween screen
-  - [x] Create win/lose inbetween screen
+- [x] Create win/lose inbetween screen
 
 - [ ] Gamemode select on map select
   - [ ] e.g. tutorial 01 plays that gamemode on a specific map, update the leveldefinitions to support this
