@@ -88,6 +88,11 @@ func _process(delta: float):
 
 #region Procedural Animation
 func _update_idle(delta: float) -> void:
+	# Ease wheelie/stoppie pitch back to 0 so the bike settles to ground.
+	# _apply_pivot_offset() reads rotation.x, so position unwinds with it.
+	var blend = clampf(5.0 * delta, 0.0, 1.0)
+	visual_root.rotation.x = lerp_angle(visual_root.rotation.x, 0.0, blend)
+	_apply_pivot_offset()
 	_update_idle_timer(delta)
 
 

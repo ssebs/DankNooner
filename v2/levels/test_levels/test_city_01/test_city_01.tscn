@@ -1609,7 +1609,7 @@ depth = 200.0
 color_preset = 4
 
 [node name="Tut01Location" type="Node3D" parent="Stuff" unique_id=799554907]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 400, -1108)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -624, 51, -1977)
 
 [node name="Ground" parent="Stuff/Tut01Location" unique_id=977666578 instance=ExtResource("17_cf4ia")]
 width = 512.0
