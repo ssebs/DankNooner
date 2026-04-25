@@ -14,12 +14,18 @@ signal crashed(peer_id: int)
 @export var bike_definition: BikeSkinDefinition:
 	set(value):
 		bike_definition = value
-		# In editor: keep BikeSkin.skin_definition in sync so the mesh + steering proxy
-		# match. Without this, switching bike_definition leaves bike_skin pointed at the old
-		# .tres and IK editor tools (Init/Save) read stale data.
-		if Engine.is_editor_hint() and is_node_ready() and bike_skin and bike_skin.skin_definition != value:
-			bike_skin.skin_definition = value
-@export var character_definition: CharacterSkinDefinition
+		if Engine.is_editor_hint() and is_node_ready():
+			_editor_refresh_from_bike_definition()
+@export var character_definition: CharacterSkinDefinition:
+	set(value):
+		character_definition = value
+		if (
+			Engine.is_editor_hint()
+			and is_node_ready()
+			and character_skin
+			and character_skin.skin_definition != value
+		):
+			character_skin.skin_definition = value
 @export var collision_shape_3d: CollisionShape3D
 
 @export var input_controller: InputController
@@ -152,6 +158,23 @@ func _process(_delta: float) -> void:
 
 
 #region init
+## Editor-only: keep bike-derived state in sync when bike_definition is swapped in the
+## inspector. Without this, mesh/steering update via BikeSkin's setter but wheel markers,
+## collision, raycasts and IK pose stay pointed at the old .tres.
+func _editor_refresh_from_bike_definition() -> void:
+	if bike_definition == null:
+		return
+	if bike_skin and bike_skin.skin_definition != bike_definition:
+		bike_skin.skin_definition = bike_definition
+	if collision_shape_3d:
+		_init_collision_shape()
+	if front_raycast and rear_raycast:
+		_init_raycasts()
+	# AnimationController._editor_auto_init() handles wheel markers, IK pose, hand/foot sync.
+	if animation_controller:
+		animation_controller._editor_auto_init()
+
+
 ## set definitions and apply mesh/colors/markers
 func _init_mesh():
 	bike_skin.skin_definition = bike_definition
@@ -285,6 +308,9 @@ func update_skins(new_bike_def: BikeSkinDefinition, new_char_def: CharacterSkinD
 	_init_collision_shape()
 	_init_ik()
 	_init_raycasts()
+	# AnimationController caches _bd + base pose positions in initialize(); re-run so they
+	# pick up the new bike's wheel positions, chest/butt offsets, etc.
+	animation_controller.initialize()
 
 
 func do_respawn():
