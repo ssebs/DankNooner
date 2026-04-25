@@ -12,6 +12,10 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
+- [ ] fix clutch dump from 0 speed
+- [ ] Crash animation
+  - [ ] Follow camera
+  - [ ] bike falls?
 - [ ] Skin variants should use the same offset values, colors should not need to update every skin color
   - [x] **impl planning_docs/PLAN.md**
   - [x] Delete other variants
@@ -38,7 +42,7 @@
     - [ ] steering (leaning) animation should depend on speed
 
   - [ ] Update docs for animation controller => must set reset position using proxy markers & save default pose for IK
-  - [ ] Crash animation
+
 
 ## HI-PRI‼️
 
