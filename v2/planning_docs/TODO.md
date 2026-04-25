@@ -31,7 +31,7 @@
     - [x] animation controller cleanup
     - [x] Create stopped/idle animation
     - [x] init IK does not save per bike, switching positions from sportbike to mini is broken, uses prev value!
-    - [ ] wheelie => 0 speed in wheelie => idle animation => starts floating?!
+    - [x] wheelie => 0 speed in wheelie => idle animation => starts floating?!
     - [ ] Fix jerkyness from transitioning between IK animation & procedural, do some blending?
       - [ ] e.g. steering, then going to idle, butt shifts weird
       - [ ] e.g. leaning during steering, then going to idle
