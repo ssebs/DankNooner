@@ -421,24 +421,6 @@ func _editor_auto_init() -> void:
 	_editor_init_ik_from_bike()
 
 
-func _editor_sync_pose_from_definition() -> void:
-	if bike_skin == null or player_entity == null:
-		return
-	var def = bike_skin.skin_definition
-	if def == null:
-		return
-
-	player_entity.chest_target.position = def.chest_position
-	player_entity.chest_target.rotation = def.chest_rotation
-	player_entity.head_target.position = def.head_position
-	player_entity.head_target.rotation = def.head_rotation
-	player_entity.left_arm_magnet.position = def.left_arm_magnet_position
-	player_entity.right_arm_magnet.position = def.right_arm_magnet_position
-	player_entity.left_leg_magnet.position = def.left_leg_magnet_position
-	player_entity.right_leg_magnet.position = def.right_leg_magnet_position
-	_sync_targets_from_bike()
-
-
 func _editor_init_ik_from_bike() -> void:
 	if bike_skin == null or character_skin == null:
 		DebugUtils.DebugErrMsg("AnimationController: bike_skin and character_skin must be set")

@@ -84,21 +84,17 @@ func _load_skin_to_disk():
 #endregion
 
 
+## Zero-offset Marker3D child of the mesh's steering rotation node. AnimationController's
+## hand sync uses `steering_handlebar_marker.get_parent()` (i.e. the steering rotation node)
+## as the parent space for saved hand_position/rotation values, so the marker itself only
+## exists to expose that parent — its own transform is unused.
 func _create_steering_handlebar_proxy():
 	if not has_steering():
 		steering_handlebar_marker = null
 		return
-	var steering_node = mesh_skin.steering_rotation_node
 	var proxy = Marker3D.new()
 	proxy.name = "SteeringHandleBarProxy"
-	steering_node.add_child(proxy)
-	# Position proxy from definition values in BikeSkin local space
-	var hb_pos = skin_definition.left_handlebar_marker_position
-	var hb_rot_deg = skin_definition.left_handlebar_marker_rotation_degrees
-	var hb_rot = Vector3(
-		deg_to_rad(hb_rot_deg.x), deg_to_rad(hb_rot_deg.y), deg_to_rad(hb_rot_deg.z)
-	)
-	proxy.global_transform = global_transform * Transform3D(Basis.from_euler(hb_rot), hb_pos)
+	mesh_skin.steering_rotation_node.add_child(proxy)
 	steering_handlebar_marker = proxy
 
 

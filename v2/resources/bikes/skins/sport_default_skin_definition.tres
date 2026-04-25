@@ -11,7 +11,6 @@ script = ExtResource("2_3klvi")
 skin_name = "sport_default"
 mesh_res = ExtResource("1_uy60g")
 colors = Array[Color]([Color(0.71, 0.71, 0.71, 1), Color(0.7058824, 0, 0, 1)])
-collision_scale_multiplier = Vector3(1, 1.1, 1)
 seat_marker_position = Vector3(1.768495e-08, 0.92681575, -0.33374453)
 seat_marker_rotation_degrees = Vector3(0, -8.1422195e-13, 0)
 left_handlebar_marker_position = Vector3(0.29064223, 0.9562068, 0.18692446)

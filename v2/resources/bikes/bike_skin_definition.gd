@@ -34,11 +34,6 @@ class_name BikeSkinDefinition extends Resource
 @export var training_wheels_marker_position: Vector3 = Vector3.ZERO
 @export var training_wheels_marker_rotation_degrees: Vector3 = Vector3.ZERO
 @export var seat_marker_position: Vector3 = Vector3.ZERO
-@export var seat_marker_rotation_degrees: Vector3 = Vector3.ZERO
-@export var left_handlebar_marker_position: Vector3 = Vector3.ZERO
-@export var left_handlebar_marker_rotation_degrees: Vector3 = Vector3.ZERO
-@export var left_peg_marker_position: Vector3 = Vector3.ZERO
-@export var left_peg_marker_rotation_degrees: Vector3 = Vector3.ZERO
 @export var front_wheel_ground_position: Vector3 = Vector3.ZERO
 @export var rear_wheel_ground_position: Vector3 = Vector3.ZERO
 @export var rear_wheel_back_position: Vector3 = Vector3.ZERO
