@@ -6,19 +6,26 @@
 
 - PlayerEntity (CharacterBody3D)
   - Netfox Syncs (RollbackSynchronizer, TickInterpolator)
-  - VisualRoot
-    - CharacterSkin
-    - BikeSkin
+  - VisualRoot (Node3D) — rotates for lean (Z) and pitch (X), bike + rider together
+    - CharacterSkin (with IKController + skeleton AnimationPlayer)
+    - BikeSkin (visual mesh + steering proxy + wheels)
+  - IKTargets/ — all IK markers (butt, chest, head, L/R hand/foot, L/R arm/leg magnets)
+  - WheelMarkers/ — editor-authored wheel pivot markers
+  - IKAnimationPlayer — IK marker animations (idle, polish)
   - NameLabel (Label3D)
   - CollisionShape3D
-  - Controllers:
-    - `<see below>`
+  - Front/RearRayCast
+  - _Controllers/ — see below
 
-**PlayerEntity** Runs other controllers' `on_movement_rollback_tick()` in a specific order:
-1. GearingController
-2. TrickController
-3. MovementController
+`PlayerEntity._rollback_tick()` runs controllers in this order:
+1. MovementController
+2. GearingController
+3. TrickController
 4. CrashController
+
+(InputController gathers input on `NetworkTime.before_tick_loop`, before the rollback tick.)
+
+`bike_definition` and `character_definition` are `@export`'d on `PlayerEntity` and drive everything per-bike (mesh, collision, raycasts, rider pose, wheel markers, gearing, physics, trick limits — see [Skins.md](./Skins.md)).
 
 ## Netcode
 
@@ -55,9 +62,8 @@
   - GearingController — clutch, gear shifts, RPM blend => `get_power_output()`, `get_gear_max_speed()`
   - TrickController — detects current trick from `movement_controller.pitch_angle`
   - CrashController — brake grab, crash detection, emits `crashed`
-  - AnimationController — procedural animation (lean, pitch, butt shift), RiderState machine
+  - AnimationController — procedural animation + RiderState machine + IK target sync
   - CameraController — FPS/TPS switching
-  - HUDController — polls controllers for continuous values, signal-driven for discrete events
   - HUDController — polls controllers in `_process()`, listens to discrete signals
   - Audio — engine sound RPM parameter via `rpm_updated` signal
 
@@ -67,10 +73,11 @@
   - `is_boosting`, `boost_count` (DELETE_ME)
   - `is_crashed` (DELETE_ME)
   - `grip_usage` (DELETE_ME — display only)
+  - Owns IK marker nodes (`IKTargets/*`) and wheel markers (`WheelMarkers/*`)
 - **MovementController** (local, derived from physics)
   - `speed` — scalar speed from velocity
   - `roll_angle` — lean left/right
-  - `pitch_angle` — wheelie (+) / stoppie (-)
+  - `pitch_angle` — wheelie (+) / stoppie (-), in **radians**
   - `yaw_angle` — twist left/right (unused currently)
 - **GearingController** (local)
   - `_current_gear`, `_current_rpm`, `_clutch_value`, `_rpm_ratio`
@@ -78,10 +85,11 @@
   - `current_trick` (Trick enum: NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE)
 - **AnimationController** (local)
   - `current_state` (RiderState enum: RIDING, IDLE, TRICK, RAGDOLL)
+  - `_targets_synced_from_bike` flag
 
 ## Controllers
 
-On `do_respawn`, PlayerEntity calls all controllers' `do_reset()`
+On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_reset()` on any that have it.
 
 - **InputController** (`input_controller.gd`)
   - Local to client, extends Node3D
@@ -92,15 +100,17 @@ On `do_respawn`, PlayerEntity calls all controllers' `do_reset()`
 - **CameraController**
   - Local to client
   - Directly set current_camera on client
-- **AnimationController** (`animation_controller.gd`)
+- **AnimationController** (`animation_controller.gd`) — see [AnimationController.md](./AnimationController.md)
   - Local to client, runs in `_process()` (not rollback)
   - RiderState machine: RIDING → IDLE → TRICK → RAGDOLL
-  - Procedural animation in RIDING state:
-    - `visual_root.rotation.x` ← pitch (wheelie/stoppie) from `movement_controller.pitch_angle`
+  - In RIDING:
+    - `visual_root.rotation.x` ← pitch (wheelie/stoppie), with pivot offset along the tire arc
     - `visual_root.rotation.z` ← lean from `movement_controller.roll_angle`
-    - `ik_chest.rotation.y` ← visual chest lean
-    - `butt_pos.position.x` ← butt shift into turns
-  - Editor tools: Init IK from Bike, Save/Play Default Pose
+    - Procedural butt shift (lateral) and chest/butt fwd-back weight shift from `nfx_lean`
+    - `_sync_targets_from_bike()` rebuilds hand/foot global transforms each tick from `BikeSkinDefinition` values, anchored to the steering handlebar parent (hands) and `bike_skin` (feet) — so steering flows through for free
+  - IDLE: target sync OFF, plays IK "idle" animation
+  - TRICK: IK off, skeleton AnimationPlayer drives pose
+  - Editor tools: Init IK from Bike, Save Default Pose, Play Default Pose
 - **MovementController** (`movement_controller.gd`)
   - Runs in `_rollback_tick()` via `on_movement_rollback_tick()`
   - `_speed_calc()` — derives speed from velocity, applies acceleration from `gearing_controller.get_power_output()`, engine braking, braking
