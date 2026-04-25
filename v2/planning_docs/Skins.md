@@ -117,6 +117,8 @@ Resource at `resources/bikes/bike_skin_definition.gd`. Grouped in the inspector:
 
 **Mesh** — `mesh_res`, `mesh_position_offset`, `mesh_rotation_offset_degrees`, `mesh_scale_multiplier`, `colors`
 
+**Mods** — `mods: Array[BikeMod]` — applied after base colors at spawn (see [Mods](#mods) below)
+
 **Collision** — `collision_shape`, `collision_position_offset`, `collision_rotation_offset_degrees`, `collision_scale_multiplier`
 
 **Markers** — `seat_marker_position`, `front_wheel_ground_position`, `rear_wheel_ground_position`, `front_wheel_front_position`, `rear_wheel_back_position`, `training_wheels_marker_*`. Wheel positions feed raycasts (`PlayerEntity._init_raycasts`) and the wheelie/stoppie pivot arc.
@@ -141,6 +143,24 @@ IK markers and wheel markers are nodes on `PlayerEntity` (not the bike). To tune
 4. Save the `.tres`.
 
 `PlayerEntity._apply_rider_pose_from_definition()` reapplies these on init / bike swap.
+
+## Mods
+
+`BikeMod` (`resources/bikes/mods/bike_mod.gd`) is a base `Resource` with a single `apply(bike_skin: BikeSkin)` method. Subclass it to create composable overrides that stack on top of the base `BikeSkinDefinition`.
+
+`BikeSkin._apply_definition()` calls `_apply_mods()` after `_set_mesh_colors()`, so mods always win over base colors.
+
+### ColorMod
+
+`ColorMod` (`resources/bikes/mods/color_mod.gd`) overrides slot colors. Set `colors: Array[Color]` — use `Color.TRANSPARENT` to skip a slot (same convention as `BikeSkinDefinition.colors`).
+
+Color variants are standalone `.tres` files under `resources/bikes/skins/color_mods/`. Example: `sport_black_color_mod.tres` replaces the old `sport_black_skin_definition.tres` — add it to a `BikeSkinDefinition.mods` array to apply the black color on top of any base definition.
+
+### Creating a Color Variant
+
+1. Right-click in the FileSystem → **New Resource** → `ColorMod`, save to `resources/bikes/skins/color_mods/{name}_color_mod.tres`.
+2. Set `colors` with the slot values you want to override (TRANSPARENT = skip).
+3. In any `BikeSkinDefinition`, expand **Mods** and add the `ColorMod` to the array.
 
 ## Save/Load to User Directory
 

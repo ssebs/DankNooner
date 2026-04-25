@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ColorMod" format=3 uid="uid://dek4aj5q88dv1"]
+
+[ext_resource type="Script" uid="uid://cek535hcf2i5r" path="res://resources/bikes/mods/color_mod.gd" id="1_8qsy2"]
+
+[resource]
+script = ExtResource("1_8qsy2")
+colors = Array[Color]([Color(0.125, 0.125, 0.125, 1), Color(0.185, 0.5087501, 0.74, 1)])
+metadata/_custom_type_script = "uid://cek535hcf2i5r"

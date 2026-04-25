@@ -67,9 +67,17 @@ func rotate_wheels(speed: float, delta: float, is_in_wheelie: bool = false):
 func _apply_definition():
 	_spawn_mesh()
 	_set_mesh_colors()
+	_apply_mods()
 	_create_steering_handlebar_proxy()
 	if Engine.is_editor_hint():
 		mesh_skin.owner = self
+
+
+func _apply_mods():
+	for mod in skin_definition.mods:
+		if mod == null:
+			continue
+		mod.apply(self)
 
 
 func _save_skin_to_disk():
