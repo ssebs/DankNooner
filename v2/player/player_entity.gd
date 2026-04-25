@@ -36,6 +36,15 @@ signal crashed(peer_id: int)
 @export var left_leg_magnet: Marker3D
 @export var right_leg_magnet: Marker3D
 
+## Editor-only authoring handles for bike wheel positions. Drag in the viewport, then click
+## "Save Default Pose" on AnimationController to write into BikeSkinDefinition. Runtime reads
+## those .tres values directly (raycasts, wheelie/stoppie pivot) — these nodes are not used.
+@export_group("Bike Wheel Markers (editor authoring)")
+@export var front_wheel_ground_marker: Marker3D
+@export var rear_wheel_ground_marker: Marker3D
+@export var front_wheel_front_marker: Marker3D
+@export var rear_wheel_back_marker: Marker3D
+
 @onready var controllers_node: Node3D = %_Controllers
 @onready var hud_controller: HUDController = %HUDController
 

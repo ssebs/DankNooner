@@ -1,18 +1,29 @@
 [gd_scene format=3 uid="uid://bmyba87m3xuaa"]
 
 [ext_resource type="Script" uid="uid://bon57cam3dod2" path="res://player/bikes/scripts/bike_skin.gd" id="1_n5uf3"]
-[ext_resource type="Resource" uid="uid://cvkjasqlccy3m" path="res://resources/bikes/skins/mini_default_skin_definition.tres" id="2_qeo2q"]
-[ext_resource type="PackedScene" uid="uid://baudp5rgxd4fd" path="res://player/bikes/scenes/mini_bike.tscn" id="3_0q805"]
+[ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/bikes/skins/sport_default_skin_definition.tres" id="2_qeo2q"]
+[ext_resource type="PackedScene" uid="uid://54ehro5jqyxu" path="res://player/bikes/scenes/sport_bike.tscn" id="3_0q805"]
 [ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="4_c5axj"]
 [ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="5_e6q4j"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kl2q6"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rw1ah"]
 
-[sub_resource type="Resource" id="Resource_cvxtv"]
+[sub_resource type="Resource" id="Resource_4okic"]
 script = ExtResource("5_e6q4j")
-color = Color(0.25490198, 0.6862745, 1, 1)
+color = Color(0.71, 0.71, 0.71, 1)
 use_standard_material = true
-standard_material = SubResource("StandardMaterial3D_kl2q6")
+surface_index = 1
+standard_material = SubResource("StandardMaterial3D_rw1ah")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_82gmx"]
+
+[sub_resource type="Resource" id="Resource_br1d3"]
+script = ExtResource("5_e6q4j")
+color = Color(0.7058824, 0, 0, 1)
+use_standard_material = true
+surface_index = 2
+standard_material = SubResource("StandardMaterial3D_82gmx")
 metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 
 [node name="BikeSkin" type="Node3D" unique_id=1727462617]
@@ -22,11 +33,7 @@ skin_definition = ExtResource("2_qeo2q")
 [node name="MeshNode" type="Node3D" parent="." unique_id=1984999037]
 unique_name_in_owner = true
 
-[node name="@Node3D@68622" type="Node3D" parent="MeshNode" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("3_0q805")]
-transform = Transform3D(-0.35, 0, -3.059797e-08, 0, 0.35, 0, 3.059797e-08, 0, -0.35, 0, 0.57, 0)
+[node name="@Node3D@84106" type="Node3D" parent="MeshNode" unique_id=201545758 node_paths=PackedStringArray("meshes") instance=ExtResource("3_0q805")]
 script = ExtResource("4_c5axj")
-slots = Array[ExtResource("5_e6q4j")]([SubResource("Resource_cvxtv"), SubResource("Resource_cvxtv")])
-meshes = [NodePath("RotationPoint/Frontfender"), NodePath("PaintedBody")]
-steering_rotation_node = NodePath("RotationPoint")
-front_wheel_node = NodePath("RotationPoint/FrontWheel")
-rear_wheel_node = NodePath("RearWheel")
+slots = Array[ExtResource("5_e6q4j")]([SubResource("Resource_4okic"), SubResource("Resource_br1d3")])
+meshes = [NodePath("sportbike"), NodePath("sportbike")]
