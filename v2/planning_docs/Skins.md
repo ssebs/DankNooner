@@ -1,12 +1,12 @@
 # Skin System
 
-The skin system allows runtime color customization of character and bike meshes using a slot-based approach.
+The skin system allows runtime color customization of character and bike meshes using a slot-based approach. `BikeSkinDefinition` also stores per-bike rider pose, wheel markers, and physics/gearing/trick tuning.
 
 ## Overview
 
 - **SkinSlot** - Resource defining a single color slot configuration
 - **SkinColor** - Node3D that manages multiple SkinSlots on a mesh
-- **SkinDefinition** - Resources storing color arrays for serialization (CharacterSkinDefinition, BikeSkinDefinition)
+- **SkinDefinition** - Resources storing colors + per-bike data (CharacterSkinDefinition, BikeSkinDefinition)
 
 ## Components
 
@@ -75,7 +75,7 @@ Node3D at `components/skin_color.gd`:
 
 ## Character Skin System
 
-Skins use a resource-based system: `CharacterSkin` (scene) displays a `CharacterSkinDefinition` (resource).
+`CharacterSkin` (scene) displays a `CharacterSkinDefinition` (resource).
 
 ### CharacterSkinDefinition
 
@@ -109,22 +109,38 @@ Resource at `resources/player/character_skin_definition.gd`:
 
 ## Bike Skin System
 
-Works identically to character skins: `BikeSkin` (scene) displays a `BikeSkinDefinition` (resource).
+`BikeSkin` (scene) displays a `BikeSkinDefinition` (resource). Unlike characters, the bike definition is the **single source of truth for per-bike tuning** — visuals, collision, rider pose, wheel markers, gearing, physics, and trick limits all live here.
 
 ### BikeSkinDefinition
 
-Resource at `resources/bikes/bike_skin_definition.gd`:
+Resource at `resources/bikes/bike_skin_definition.gd`. Grouped in the inspector:
 
-| Property                       | Type         | Description                           |
-| ------------------------------ | ------------ | ------------------------------------- |
-| `skin_name`                    | String       | Name for saving to disk               |
-| `mesh_res`                     | PackedScene  | The SkinColor scene to instantiate    |
-| `colors`                       | Array[Color] | Slot colors (use TRANSPARENT to skip) |
-| `mesh_position_offset`         | Vector3      | Mesh position adjustment              |
-| `mesh_rotation_offset_degrees` | Vector3      | Mesh rotation adjustment              |
-| `mesh_scale_multiplier`        | Vector3      | Mesh scale adjustment                 |
-| `collision_shape`              | Shape3D      | Physics collision shape               |
-| `training_wheels_marker_*`     | Vector3      | Accessory marker transforms           |
+**Mesh** — `mesh_res`, `mesh_position_offset`, `mesh_rotation_offset_degrees`, `mesh_scale_multiplier`, `colors`
+
+**Collision** — `collision_shape`, `collision_position_offset`, `collision_rotation_offset_degrees`, `collision_scale_multiplier`
+
+**Markers** — `seat_marker_position`, `front_wheel_ground_position`, `rear_wheel_ground_position`, `front_wheel_front_position`, `rear_wheel_back_position`, `training_wheels_marker_*`. Wheel positions feed raycasts (`PlayerEntity._init_raycasts`) and the wheelie/stoppie pivot arc.
+
+**Rider Pose** — chest/head/magnet/hand/foot positions+rotations and arm/leg magnets. Hand and foot transforms are stored in **handlebar-parent / `bike_skin` local space**, so they survive steering rotation when reapplied each tick by `AnimationController._sync_targets_from_bike()`. Authored via the editor tools on `AnimationController` (Save Default Pose / Play Default Pose). See [AnimationController](./AnimationController.md).
+
+**Animation** — `lean_multiplier`, `weight_shift_multiplier`
+
+**Gearing** — `gear_ratios`, `num_gears`, `max_rpm`, `idle_rpm`, `stall_rpm`
+
+**Physics** — `max_speed`, `acceleration`, `brake_strength`, `friction`, `engine_brake_strength`, `max_lean_angle_deg`, `lean_speed`, `turn_speed`, `lean_curve`, `steer_curve`
+
+**Tricks** — `wheelie_balance_point_deg`, `max_wheelie_angle_deg`, `max_stoppie_angle_deg`, `wheelie_rpm_threshold`, `wheelie_balance_point_width_deg`, `rotation_speed`, `return_speed`
+
+### Authoring Per-Bike Pose / Markers
+
+IK markers and wheel markers are nodes on `PlayerEntity` (not the bike). To tune them for a specific bike:
+
+1. Open `player_entity.tscn`, set `bike_definition` to the target `.tres`.
+2. Drag IK markers (`IKTargets/*`) and wheel markers (`WheelMarkers/*`) in the viewport.
+3. On `AnimationController`, click **Save Default Pose** — writes all transforms back into the `BikeSkinDefinition`.
+4. Save the `.tres`.
+
+`PlayerEntity._apply_rider_pose_from_definition()` reapplies these on init / bike swap.
 
 ## Save/Load to User Directory
 
@@ -141,15 +157,14 @@ Skins can be saved/loaded from `user://skins/` for runtime customization:
 - Click **Load skin from u:disk**, or call `skin_definition.load_from_disk()`
 - Loads into the inspector for editing
 
+> `BikeSkinDefinition` save/load + dict serialization is still TODO (see comment in source); `CharacterSkinDefinition` has both.
+
 ## Serialization
 
-Both `CharacterSkinDefinition` and `BikeSkinDefinition` support JSON serialization via `DictJSONSaverLoader`:
+`CharacterSkinDefinition` supports JSON serialization via `DictJSONSaverLoader`:
 
 ```gdscript
-# Save to dictionary
 var data: Dictionary = skin_definition.to_dict()
-
-# Load from dictionary
 skin_definition.from_dict(data)
 ```
 
