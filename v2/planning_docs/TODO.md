@@ -25,6 +25,7 @@
       - [ ] e.g. steering, then going to idle, butt shifts weird
       - [ ] e.g. leaning during steering, then going to idle
     - [ ] steering (leaning) animation should depend on speed
+  - [ ] Skin variants should use the same offset values, colors should not need to update every skin color
   - [ ] Update docs for animation controller => must set reset position using proxy markers & save default pose for IK
   - [ ] Crash animation
 

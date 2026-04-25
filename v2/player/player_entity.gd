@@ -11,7 +11,14 @@ signal crashed(peer_id: int)
 # signal trick_started(peer_id: int, trick_type: int)
 # signal trick_ended(peer_id: int, trick_type: int)
 
-@export var bike_definition: BikeSkinDefinition
+@export var bike_definition: BikeSkinDefinition:
+	set(value):
+		bike_definition = value
+		# In editor: keep BikeSkin.skin_definition in sync so the mesh + steering proxy
+		# match. Without this, switching bike_definition leaves bike_skin pointed at the old
+		# .tres and IK editor tools (Init/Save) read stale data.
+		if Engine.is_editor_hint() and is_node_ready() and bike_skin and bike_skin.skin_definition != value:
+			bike_skin.skin_definition = value
 @export var character_definition: CharacterSkinDefinition
 @export var collision_shape_3d: CollisionShape3D
 
