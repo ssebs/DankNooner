@@ -1,113 +1,37 @@
-# Plan: BikeMod system + ColorMod variants
-
-Replace per-variant `BikeSkinDefinition` clones with a single base definition + composable `BikeMod` resources. First mod is `ColorMod`; future mods (suspension, exhaust, decals) plug into the same array.
+# Color Mod Picker — Customize Menu
 
 ## Goal
 
-- One `BikeSkinDefinition` per bike model (e.g. `sport_default`) holds all positional/physics/pose data.
-- Color variants become tiny standalone `ColorMod` `.tres` files (just `Array[Color]`).
-- `BikeSkinDefinition.mods: Array[BikeMod]` applies on top of the base at spawn.
-- Delete `sport_black_skin_definition.tres`; replace with `sport_black_color_mod.tres`.
+Add a "Color Mod" `OptionButton` to the customize menu so players can choose a color mod per bike skin. The selection persists between sessions.
 
-## File layout
+## Architecture
 
-```
-resources/bikes/
-├── bike_skin_definition.gd       # add `mods` array
-├── mods/
-│   ├── bike_mod.gd               # base Resource
-│   └── color_mod.gd              # overrides colors via SkinColor
-└── skins/
-    ├── sport_default_skin_definition.tres   # unchanged base
-    └── color_mods/
-        └── sport_black_color_mod.tres       # NEW — replaces sport_black skin def
-```
+### Data flow
 
-## Steps
+1. On menu open → `_load_current_selections()` reads `player_def.bike_skin.mods`, finds the first `ColorMod` in the list, matches its `resource_path` against the scanned mod dictionary, and pre-selects it in the OptionButton.
+2. On save → duplicate `player_def.bike_skin`, set `mods = [selected_mod]` (or `[]` for "None"), save duplicate to `user://skins/bike_skin_{skin_name}.tres` via `ResourceSaver.save()`, reload that path into `player_def.bike_skin`, then call `save_manager.update_save(...)` as usual.
+3. At spawn → no changes needed. `BikeSkin._apply_mods()` already reads from `skin_definition.mods` at spawn; the `user://` copy has the mod baked in.
 
-### 1. `resources/bikes/mods/bike_mod.gd` (new)
+### Why duplicate + save to user://
 
-```gdscript
-@tool
-class_name BikeMod extends Resource
+`res://` is read-only in exported builds. Duplicating the definition and saving to `user://` lets us persist the mod without mutating the shared resource. `PlayerDefinition.to_dict()` stores `bike_skin.resource_path`, so a `user://` path round-trips correctly through save/load.
 
-## Apply this mod's effect to a BikeSkin. Override in subclasses.
-func apply(_bike_skin: BikeSkin) -> void:
-    pass
-```
+### Color mod selection updates when bike skin changes
 
-### 2. `resources/bikes/mods/color_mod.gd` (new)
+When the user picks a different bike skin in the OptionButton (before saving), the color mod OptionButton must refresh to show that bike's active mod. Logic: check if `user://skins/bike_skin_{skin_name}.tres` exists; if so, load it and read its `mods`; otherwise fall back to the res:// definition's `mods`. Connect to `bike_skin_btn.item_selected` in `Enter()` / disconnect in `Exit()`.
 
-```gdscript
-@tool
-class_name ColorMod extends BikeMod
+### Display names
 
-## Slot colors (use TRANSPARENT to skip a slot, same convention as BikeSkinDefinition.colors)
-@export var colors: Array[Color] = []
+File name without extension, underscores replaced with spaces, title-cased.
+`black_red_color.tres` → `"Black Red Color"`. "None" is always index 0.
 
-func apply(bike_skin: BikeSkin) -> void:
-    for i in colors.size():
-        if colors[i] != Color.TRANSPARENT:
-            bike_skin.mesh_skin.update_slot_color(i, colors[i])
-```
+## Files Changed
 
-Reuses `SkinColor.update_slot_color()` — no duplication.
+- `menus/customize_menu/customize_menu_state.gd` — scan `color_mods/` dir, load/save selection, duplicate + save definition on save
+- `menus/customize_menu/customize_menu_state.tscn` — add `ColorModLabel` (Label) + `ColorModBtn` (OptionButton)
 
-### 3. `resources/bikes/bike_skin_definition.gd`
+`resources/player/player_definition.gd` — **no changes needed**.
 
-Add under the existing `Mesh` group (or new `Mods` group):
+## Future Constraints (not in scope now)
 
-```gdscript
-@export_group("Mods")
-@export var mods: Array[BikeMod] = []
-```
-
-`colors` field stays as the base/default colors. `ColorMod` overrides per slot.
-
-### 4. `player/bikes/scripts/bike_skin.gd`
-
-Add a new step in `_apply_definition()` after `_set_mesh_colors()`:
-
-```gdscript
-func _apply_definition():
-    _spawn_mesh()
-    _set_mesh_colors()
-    _apply_mods()
-    _create_steering_handlebar_proxy()
-    if Engine.is_editor_hint():
-        mesh_skin.owner = self
-
-
-func _apply_mods():
-    for mod in skin_definition.mods:
-        if mod == null:
-            continue
-        mod.apply(self)
-```
-
-Order matters: base colors first, then mods stack on top.
-
-### 5. Migrate `sport_black`
-
-- Create `resources/bikes/skins/color_mods/sport_black_color_mod.tres` as a `ColorMod` with:
-  ```
-  colors = [Color(0.03, 0.03, 0.03, 1), Color(0.185, 0.5087501, 0.74, 1)]
-  ```
-- Delete `resources/bikes/skins/sport_black_skin_definition.tres`.
-- Anywhere referencing `sport_black_skin_definition.tres`, switch to `sport_default_skin_definition.tres` + push `sport_black_color_mod.tres` into a `mods` array (either on the definition itself for a fixed variant, or per-player at spawn — see follow-up).
-
-### 6. Update docs
-
-- `planning_docs/Skins.md`: add a "Mods" section under `BikeSkinDefinition` describing `mods: Array[BikeMod]`, document `ColorMod`, note that color variants now live as standalone `ColorMod` `.tres` files.
-
-## Verification
-
-- Open `player_entity.tscn`, set `bike_definition` to `sport_default` and add `sport_black_color_mod` to its `mods` array → bike renders black with default pose/markers/physics.
-- Remove the mod → bike returns to default red.
-- Editor reload of `bike_skin.gd` re-applies cleanly (the `skin_definition` setter already calls `_apply_definition` in editor).
-
-## Out of scope (follow-ups)
-
-- Player loadout plumbing (`PlayerDefinition`/`SaveManager`) so each player can pick their own `ColorMod` independent of the base definition. Today the plan only supports mods authored on the definition itself.
-- Save/load of `BikeSkinDefinition` to disk — TODO already noted in the source; not blocked by this plan.
-- Additional mods (`SuspensionMod`, `ExhaustMod`, `DecalMod`) — slot in by extending `BikeMod` and overriding `apply()`.
+Color mods should eventually be filtered by how many color slots the selected bike skin supports (some bikes use 1 slot, some 2+). A `ColorMod` with 2 slot entries shouldn't appear for a 1-slot bike. A `slot_count` property on `BikeSkinDefinition` or `SkinColor` would enable this filtering.

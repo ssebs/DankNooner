@@ -17,6 +17,7 @@ class_name BikeSkinDefinition extends Resource
 @export var mesh_rotation_offset_degrees: Vector3 = Vector3.ZERO
 @export var mesh_scale_multiplier: Vector3 = Vector3.ONE
 
+# TODO: deprecate for colormod
 ## SkinSlot colors (use TRANSPARENT to skip a slot)
 ## See skin_color.gd
 @export var colors: Array[Color] = []
