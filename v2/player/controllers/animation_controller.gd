@@ -491,9 +491,23 @@ func _editor_init_ik_from_bike() -> void:
 	if def.right_leg_magnet_position is Vector3 and def.right_leg_magnet_position != Vector3.ZERO:
 		player_entity.right_leg_magnet.position = def.right_leg_magnet_position
 
+	_load_wheel_markers_from_definition(def)
+
 	ik_ctrl._create_ik()
 	character_skin.enable_ik()
 	disable_target_sync()
+
+
+## Position the editor wheel-authoring markers from .tres values so the user sees current state.
+func _load_wheel_markers_from_definition(def: BikeSkinDefinition) -> void:
+	if player_entity.front_wheel_ground_marker:
+		player_entity.front_wheel_ground_marker.position = def.front_wheel_ground_position
+	if player_entity.rear_wheel_ground_marker:
+		player_entity.rear_wheel_ground_marker.position = def.rear_wheel_ground_position
+	if player_entity.front_wheel_front_marker:
+		player_entity.front_wheel_front_marker.position = def.front_wheel_front_position
+	if player_entity.rear_wheel_back_marker:
+		player_entity.rear_wheel_back_marker.position = def.rear_wheel_back_position
 
 
 ## Inverse of _local_with_rotation_override: extract the euler that, when plugged into
@@ -561,6 +575,16 @@ func _editor_save_default_pose() -> void:
 			player_entity.right_foot_target, peg_parent
 		)
 
+	# Bike wheel marker positions (editor-authored, used at runtime by raycasts + pivot calc)
+	if player_entity.front_wheel_ground_marker:
+		def.front_wheel_ground_position = player_entity.front_wheel_ground_marker.position
+	if player_entity.rear_wheel_ground_marker:
+		def.rear_wheel_ground_position = player_entity.rear_wheel_ground_marker.position
+	if player_entity.front_wheel_front_marker:
+		def.front_wheel_front_position = player_entity.front_wheel_front_marker.position
+	if player_entity.rear_wheel_back_marker:
+		def.rear_wheel_back_position = player_entity.rear_wheel_back_marker.position
+
 	var err = ResourceSaver.save(def)
 	if err == OK:
 		DebugUtils.DebugMsg("AnimationController: Saved rider pose to %s" % def.resource_path)
@@ -593,6 +617,7 @@ func _editor_reset_to_default_pose() -> void:
 	if def.right_leg_magnet_position is Vector3:
 		player_entity.right_leg_magnet.position = def.right_leg_magnet_position
 	player_entity.butt_target.position = def.seat_marker_position
+	_load_wheel_markers_from_definition(def)
 	_sync_targets_from_bike()
 
 
