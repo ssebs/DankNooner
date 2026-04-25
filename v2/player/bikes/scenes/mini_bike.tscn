@@ -20,7 +20,6 @@ albedo_color = Color(0.25490198, 0.6862745, 1, 1)
 albedo_color = Color(0.25490198, 0.6862745, 1, 1)
 
 [node name="Grom" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("1_kl2q6")]
-transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0.575, 0)
 script = ExtResource("2_cvxtv")
 slots = Array[ExtResource("3_1jg8m")]([SubResource("Resource_cvxtv"), SubResource("Resource_cvxtv")])
 meshes = [NodePath("RotationPoint/Frontfender"), NodePath("PaintedBody")]
