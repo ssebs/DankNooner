@@ -18,7 +18,9 @@
   - [x] Save a few variants
   - [ ] Delete bike_def.colors
   - [ ] Update customization menu
-    - [ ] Show bike + list of all color_mods(gotta check for multiple colors for bike type, so set that as a var in the skin_definition & make the color_mod have a matching count. constraints?)
+    - [x] Show bike + list of all color_mods(gotta check for multiple colors for bike type, so set that as a var in the skin_definition & make the color_mod have a matching count. constraints?)
+    - [ ] Add constraints to mods, so certain bikeskins require 2 colors, etc.
+    - [ ] Create custom colors option
 - [ ] Animation Controller:
   - [x] Fix wheelie rotation / placement (puts you in the ground - find / fix solution)
   - [x] Better IK
