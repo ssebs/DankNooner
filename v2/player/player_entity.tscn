@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d0rgswc73h64f"]
 
 [ext_resource type="Script" uid="uid://bnop7vr1q4gwg" path="res://player/player_entity.gd" id="1_0jc3c"]
-[ext_resource type="Resource" uid="uid://cvkjasqlccy3m" path="res://resources/bikes/skins/mini_default_skin_definition.tres" id="2_3kl2f"]
+[ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/bikes/skins/naked_default_skin_definition.tres" id="2_8urt2"]
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_faflk"]
 [ext_resource type="Resource" uid="uid://dugcuccseinkn" path="res://resources/player/skins/biker_default_skin_definition.tres" id="3_lfjd4"]
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_ri2qi"]
@@ -27,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://ca0sqawt6rdwg" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_y.png" id="22_8urt2"]
 [ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://addons/virtual_joystick/virtual_joystick_scene.tscn" id="23_am3pr"]
 [ext_resource type="Texture2D" uid="uid://8i4urqqivwil" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_menu.png" id="24_744ak"]
+[ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/bikes/hitbox/bike_hitbox.tres" id="28_3kl2f"]
 
 [sub_resource type="Animation" id="Animation_3kl2f"]
 resource_name = "idle"
@@ -134,10 +135,6 @@ radius = 64.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8urt2"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oq5os"]
-radius = 0.4
-height = 1.8
-
 [node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("collision_shape_3d", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "movement_controller", "camera_controller", "butt_target", "left_hand_target", "right_hand_target", "left_foot_target", "right_foot_target", "chest_target", "head_target", "left_arm_magnet", "right_arm_magnet", "left_leg_magnet", "right_leg_magnet", "front_wheel_ground_marker", "rear_wheel_ground_marker", "front_wheel_front_marker", "rear_wheel_back_marker")]
 collision_layer = 3
 collision_mask = 3
@@ -145,7 +142,7 @@ floor_block_on_wall = false
 floor_max_angle = 2.9670596
 safe_margin = 0.01
 script = ExtResource("1_0jc3c")
-bike_definition = ExtResource("2_3kl2f")
+bike_definition = ExtResource("2_8urt2")
 character_definition = ExtResource("3_lfjd4")
 collision_shape_3d = NodePath("CollisionShape3D")
 input_controller = NodePath("_Controllers/InputController")
@@ -613,63 +610,63 @@ transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, 0, 0, 
 
 [node name="ButtTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=2080337299]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -7.1054274e-14, 0, 1, 0, 7.1054274e-14, 0, 1, 2.271363e-08, 0.7942474, -0.15042555)
+transform = Transform3D(1, 0, -7.1054274e-14, 0, 1, 0, 7.1054274e-14, 0, 1, 6.049124e-09, 0.864002, -0.25668395)
 
 [node name="ChestTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=1108562279]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, 1.7035244e-08, 1.0785519, -0.112819314)
+transform = Transform3D(1, 0, -5.684342e-14, 0, 1, 0, 5.684342e-14, 0, 1, 1.58426e-08, 1.1710131, -0.11291112)
 
 [node name="HeadTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=190960288]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, 2.396361e-08, 1.4979396, -0.1587038)
+transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, -1.5670119e-07, 1.7314824, -0.2957811)
 
 [node name="LeftHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=811111111]
 unique_name_in_owner = true
-transform = Transform3D(-0.03717321, 0.33543876, 0.092730775, 0.23657624, 0.09275332, -0.24068342, -0.25524464, 0.037116926, -0.23658508, 0.29064223, 0.96515584, 0.17284963)
+transform = Transform3D(-0.1251537, 0.287764, 0.15501104, 0.074471876, 0.18672456, -0.28650984, -0.3182617, -0.069468, -0.12799884, 0.29064223, 0.96515584, 0.17284963)
 
 [node name="RightHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=822222222]
 unique_name_in_owner = true
-transform = Transform3D(-0.039641853, -0.3340677, -0.09657791, -0.26207942, 0.09259039, -0.21270026, 0.22856705, 0.04822642, -0.26063633, -0.29061612, 0.9657479, 0.18931623)
+transform = Transform3D(-0.16675489, -0.26548284, -0.15560102, -0.054724846, 0.19974282, -0.28214887, 0.30281678, -0.11009846, -0.136676, -0.29061612, 0.9657479, 0.18931623)
 
 [node name="LeftFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=833333333]
 unique_name_in_owner = true
-transform = Transform3D(-0.8710659, -0.39240646, -0.2954004, -0.44450417, 0.37394792, 0.8139896, -0.2089504, 0.84034526, -0.50015956, 0.17601499, 0.39506754, -0.16492465)
+transform = Transform3D(-0.95741844, -0.2494092, -0.14541335, -0.20021881, 0.2107332, 0.9568197, -0.20799619, 0.94519126, -0.25169626, 0.17601499, 0.39506754, -0.16492465)
 
 [node name="RightFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=844444444]
 unique_name_in_owner = true
-transform = Transform3D(-0.8716592, 0.27973512, 0.40244067, 0.472666, 0.26266214, 0.84118694, 0.12960365, 0.9234484, -0.36117315, -0.16101696, 0.41390836, -0.16492465)
+transform = Transform3D(-0.9574184, 0.24940887, 0.14541346, 0.20021881, 0.21073318, 0.9568197, 0.2079959, 0.9451914, -0.2516962, -0.16101696, 0.41390836, -0.16492465)
 
 [node name="LeftArmMagnet" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=811601522]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 0.42258745, 0.95855165, 6.3808926e-08)
+transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 0.50935364, 1.0740347, -0.1354702)
 
 [node name="RightArmMagnet" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=593977268]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.423, 0.959, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.509, 1.074, -0.135)
 
 [node name="LeftLegMagnet" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=423836538]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 0.37603816, 0.45350832, 0.2764344)
+transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 0.46395656, 0.5692559, 0.42930415)
 
 [node name="RightLegMagnet" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=132337519]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.376, 0.454, 0.276)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.464, 0.569, 0.429)
 
 [node name="FrontWheelGroundMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=728490293]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, -8.902339e-08, 0, 0.58957523)
+transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 4.063193e-08, 0, 0.6847348)
 
 [node name="FrontWheelFrontMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=140751727]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, -1.2350674e-07, 0, 0.81794816)
+transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, 4.8840363e-08, 0, 0.96413314)
 
 [node name="RearWheelGroundMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=635276085]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, 8.3393445e-08, 0, -0.55228984)
+transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, -2.0521185e-09, 0, -0.6426772)
 
 [node name="RearWheelBackMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=2142896443]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, 1.18580544e-07, 0, -0.78532344)
+transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, -1.1081411e-08, 0, -0.92412007)
 
 [node name="TPSCamMarker" type="Marker3D" parent="VisualRoot" unique_id=748255221]
 unique_name_in_owner = true
@@ -684,7 +681,6 @@ unique_name_in_owner = true
 
 [node name="BikeSkin" parent="VisualRoot" unique_id=1727462617 instance=ExtResource("7_lfjd4")]
 unique_name_in_owner = true
-skin_definition = ExtResource("2_3kl2f")
 
 [node name="TPSCam" type="Camera3D" parent="." unique_id=1200816402]
 unique_name_in_owner = true
@@ -699,8 +695,8 @@ near = 0.115
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=412612653]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.4, -0.01)
-shape = SubResource("CapsuleShape3D_oq5os")
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.44, 0)
+shape = ExtResource("28_3kl2f")
 
 [node name="NameLabel" type="Label3D" parent="." unique_id=1811367941]
 unique_name_in_owner = true
@@ -710,10 +706,10 @@ text = "USERNAME"
 
 [node name="RearRayCast" type="RayCast3D" parent="." unique_id=1983600718]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.3393445e-08, 0.5, -0.55228984)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0521185e-09, 0.5, -0.6426772)
 target_position = Vector3(0, -1.5, 0)
 
 [node name="FrontRayCast" type="RayCast3D" parent="." unique_id=391878602]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.902339e-08, 0.5, 0.58957523)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.063193e-08, 0.5, 0.6847348)
 target_position = Vector3(0, -1.5, 0)

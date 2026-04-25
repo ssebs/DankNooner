@@ -60,6 +60,9 @@ class_name BikeSkinDefinition extends Resource
 @export var left_leg_magnet_position: Vector3 = Vector3.ZERO
 @export var right_leg_magnet_position: Vector3 = Vector3.ZERO
 
+@export_group("Mods")
+@export var mods: Array[BikeMod] = []
+
 @export_group("Animation")
 ## Multiplier for rider lean animation when steering
 @export var lean_multiplier: float = 1.0

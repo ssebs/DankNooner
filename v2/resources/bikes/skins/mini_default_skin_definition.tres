@@ -3,6 +3,8 @@
 [ext_resource type="Curve" uid="uid://bc4775t6u5ngh" path="res://player/bikes/resources/lean_speed_curve.tres" id="2_bu6nc"]
 [ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/bikes/bike_skin_definition.gd" id="3_0j748"]
 [ext_resource type="PackedScene" uid="uid://baudp5rgxd4fd" path="res://player/bikes/scenes/mini_bike.tscn" id="3_bu6nc"]
+[ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_us0rk"]
+[ext_resource type="Resource" uid="uid://i0r5np06lfvi" path="res://resources/bikes/mods/color_mods/blue_color.tres" id="4_0j748"]
 [ext_resource type="Curve" uid="uid://ct2j0k3sl7m3u" path="res://player/bikes/resources/steer_speed_curve.tres" id="4_us0rk"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oq5os"]
@@ -16,15 +18,10 @@ mesh_res = ExtResource("3_bu6nc")
 mesh_position_offset = Vector3(0, 0.57, 0)
 mesh_rotation_offset_degrees = Vector3(0, 180, 0)
 mesh_scale_multiplier = Vector3(0.35, 0.35, 0.35)
-colors = Array[Color]([Color(0.25490198, 0.6862745, 1, 1)])
 collision_shape = SubResource("CapsuleShape3D_oq5os")
 collision_position_offset = Vector3(0, 0.4, -0.01)
 training_wheels_marker_position = Vector3(0, 0.045939356, -0.65252227)
 seat_marker_position = Vector3(2.271363e-08, 0.7942474, -0.15042555)
-left_handlebar_marker_position = Vector3(0.29064223, 0.9562068, 0.18692446)
-left_handlebar_marker_rotation_degrees = Vector3(-61.146877, 54.90823, -171.74826)
-left_peg_marker_position = Vector3(0.19981939, 0.39506754, -0.16492465)
-left_peg_marker_rotation_degrees = Vector3(-73.101204, -149.98354, -43.534367)
 front_wheel_ground_position = Vector3(-8.902339e-08, 0, 0.58957523)
 rear_wheel_ground_position = Vector3(8.3393445e-08, 0, -0.55228984)
 rear_wheel_back_position = Vector3(1.18580544e-07, 0, -0.78532344)
@@ -45,6 +42,7 @@ left_foot_rotation = Vector3(-0.9509876, -2.6081045, -0.8713925)
 right_foot_rotation = Vector3(-0.9994745, 2.3022046, 1.0635848)
 left_leg_magnet_position = Vector3(0.37603816, 0.45350832, 0.2764344)
 right_leg_magnet_position = Vector3(-0.376, 0.454, 0.276)
+mods = Array[ExtResource("3_us0rk")]([ExtResource("4_0j748")])
 gear_ratios = Array[float]([2.92, 2.05, 1.6, 1.0])
 num_gears = 4
 max_rpm = 8000.0

@@ -13,7 +13,12 @@
 
 ### WIP
 - [ ] Skin variants should use the same offset values, colors should not need to update every skin color
-  - [ ] **See planning_docs/PLAN.md**
+  - [x] **impl planning_docs/PLAN.md**
+  - [x] Delete other variants
+  - [x] Save a few variants
+  - [ ] Delete bike_def.colors
+  - [ ] Update customization menu
+    - [ ] Show bike + list of all color_mods(gotta check for multiple colors for bike type, so set that as a var in the skin_definition & make the color_mod have a matching count. constraints?)
 - [ ] Animation Controller:
   - [x] Fix wheelie rotation / placement (puts you in the ground - find / fix solution)
   - [x] Better IK

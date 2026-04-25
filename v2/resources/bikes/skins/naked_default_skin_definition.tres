@@ -4,7 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://8l877wswufci" path="res://player/bikes/scenes/naked_bike.tscn" id="1_hvuo0"]
 [ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/bikes/bike_skin_definition.gd" id="2_4wyad"]
 [ext_resource type="Curve" uid="uid://bc4775t6u5ngh" path="res://player/bikes/resources/lean_speed_curve.tres" id="2_syivs"]
+[ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="4_xypd7"]
 [ext_resource type="Curve" uid="uid://ct2j0k3sl7m3u" path="res://player/bikes/resources/steer_speed_curve.tres" id="5_q40km"]
+[ext_resource type="Resource" uid="uid://fxmg7fyrhfsl" path="res://resources/bikes/mods/color_mods/teal_color.tres" id="5_xypd7"]
 
 [resource]
 script = ExtResource("2_4wyad")
@@ -14,10 +16,6 @@ mesh_position_offset = Vector3(0, 0.255, -0.1)
 mesh_scale_multiplier = Vector3(0.7, 0.7, 0.7)
 training_wheels_marker_position = Vector3(0, 0.045939356, -0.65252227)
 seat_marker_position = Vector3(6.049124e-09, 0.864002, -0.25668395)
-left_handlebar_marker_position = Vector3(0.2906422, 0.885465, 0.3342912)
-left_handlebar_marker_rotation_degrees = Vector3(59.58787, 128.739, 12.446908)
-left_peg_marker_position = Vector3(0.23107576, 0.24818093, -0.15550014)
-left_peg_marker_rotation_degrees = Vector3(-73.101204, -149.98354, -43.53437)
 front_wheel_ground_position = Vector3(4.063193e-08, 0, 0.6847348)
 rear_wheel_ground_position = Vector3(-2.0521185e-09, 0, -0.6426772)
 rear_wheel_back_position = Vector3(-1.1081411e-08, 0, -0.92412007)
@@ -38,4 +36,5 @@ left_foot_rotation = Vector3(-1.2758567, -2.6177065, -0.75981826)
 right_foot_rotation = Vector3(-1.2758567, 2.617706, 0.7598184)
 left_leg_magnet_position = Vector3(0.46395656, 0.5692559, 0.42930415)
 right_leg_magnet_position = Vector3(-0.464, 0.569, 0.429)
+mods = Array[ExtResource("4_xypd7")]([ExtResource("5_xypd7")])
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"
