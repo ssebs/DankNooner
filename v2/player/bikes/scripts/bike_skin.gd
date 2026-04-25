@@ -117,6 +117,8 @@ func _spawn_mesh():
 	mesh_node.add_child(mesh_skin)
 
 	mesh_skin.scale *= skin_definition.mesh_scale_multiplier
+	mesh_skin.position += skin_definition.mesh_position_offset
+	mesh_skin.rotation_degrees += skin_definition.mesh_rotation_offset_degrees
 
 
 #endregion

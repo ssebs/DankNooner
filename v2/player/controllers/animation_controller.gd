@@ -25,7 +25,7 @@ enum RiderState {
 @export_tool_button("Play Default Pose") var reset_pose_btn = _editor_reset_to_default_pose
 
 @export_group("Procedural Settings")
-@export var idle_timeout: float = 1.0
+@export var idle_timeout: float = 0.1
 @export var max_butt_offset := 0.12
 ## Max chest pitch (deg) when leaning fwd/back. Negate to flip direction.
 @export var max_chest_lean_pitch_deg: float = -15.0
@@ -285,58 +285,41 @@ func initialize() -> void:
 	_sync_targets_from_bike()
 
 
-## Sync hand/foot target transforms from the bike's steering handlebar proxy and peg
-## definition values. Called every tick while target sync is enabled; skipped when
-## AnimationPlayer is driving the targets.
+## Sync hand/foot target transforms from saved positions/rotations in BikeSkinDefinition,
+## anchored to the steering handlebar's parent (so steering rotates the hands) and bike_skin
+## (for feet). Called every tick while target sync is enabled.
 func _sync_targets_from_bike() -> void:
 	if bike_skin == null:
 		return
-	# Steering handlebar proxy still lives on bike_skin (rotates with steering)
 	var hb: Marker3D = bike_skin.steering_handlebar_marker
 	if hb == null:
 		return
 
 	var hb_parent := hb.get_parent() as Node3D
-
-	# Peg transform computed from definition (no marker node needed)
-	var peg_pos = _bd.left_peg_marker_position
-	var peg_rot_deg = _bd.left_peg_marker_rotation_degrees
-	var peg_rot = Vector3(
-		deg_to_rad(peg_rot_deg.x), deg_to_rad(peg_rot_deg.y), deg_to_rad(peg_rot_deg.z)
-	)
-	var peg_local = Transform3D(Basis.from_euler(peg_rot), peg_pos)
-	var peg_parent = bike_skin
-
+	var peg_parent: Node3D = bike_skin
 	var def: BikeSkinDefinition = _bd if _bd else bike_skin.skin_definition
+	if def == null:
+		return
 
-	var left_hand_local := _local_with_rotation_override(
-		hb.transform, def.left_hand_rotation if def else Vector3.ZERO
+	var left_hand_local := Transform3D(
+		Basis.from_euler(def.left_hand_rotation), def.left_hand_position
 	)
-	var right_hand_local := _local_with_rotation_override(
-		_mirror_transform_x(hb.transform), def.right_hand_rotation if def else Vector3.ZERO
+	var right_hand_local := Transform3D(
+		Basis.from_euler(def.right_hand_rotation), def.right_hand_position
 	)
-	var left_foot_local := _local_with_rotation_override(
-		peg_local, def.left_foot_rotation if def else Vector3.ZERO
+	var left_foot_local := Transform3D(
+		Basis.from_euler(def.left_foot_rotation), def.left_foot_position
 	)
-	var right_foot_local := _local_with_rotation_override(
-		_mirror_transform_x(peg_local), def.right_foot_rotation if def else Vector3.ZERO
+	var right_foot_local := Transform3D(
+		Basis.from_euler(def.right_foot_rotation), def.right_foot_position
 	)
 
 	player_entity.left_hand_target.global_transform = hb_parent.global_transform * left_hand_local
 	player_entity.right_hand_target.global_transform = hb_parent.global_transform * right_hand_local
 	player_entity.left_foot_target.global_transform = peg_parent.global_transform * left_foot_local
-	player_entity.right_foot_target.global_transform = peg_parent.global_transform * right_foot_local
-
-
-## If rotation_override is non-zero, replace the local basis with it (preserving origin).
-## Matches the old behavior where def.<limb>_rotation was written straight into the proxy's
-## local rotation, overriding the bike marker's authored basis.
-static func _local_with_rotation_override(
-	base: Transform3D, rotation_override: Vector3
-) -> Transform3D:
-	if rotation_override == Vector3.ZERO:
-		return base
-	return Transform3D(Basis.from_euler(rotation_override), base.origin)
+	player_entity.right_foot_target.global_transform = (
+		peg_parent.global_transform * right_foot_local
+	)
 
 
 ## Enable or disable procedural animation
@@ -476,11 +459,16 @@ func _editor_init_ik_from_bike() -> void:
 	# Pass all markers to IKController
 	ik_ctrl.set_targets(
 		player_entity.butt_target,
-		player_entity.left_hand_target, player_entity.right_hand_target,
-		player_entity.left_foot_target, player_entity.right_foot_target,
-		player_entity.chest_target, player_entity.head_target,
-		player_entity.left_arm_magnet, player_entity.right_arm_magnet,
-		player_entity.left_leg_magnet, player_entity.right_leg_magnet
+		player_entity.left_hand_target,
+		player_entity.right_hand_target,
+		player_entity.left_foot_target,
+		player_entity.right_foot_target,
+		player_entity.chest_target,
+		player_entity.head_target,
+		player_entity.left_arm_magnet,
+		player_entity.right_arm_magnet,
+		player_entity.left_leg_magnet,
+		player_entity.right_leg_magnet
 	)
 
 	_sync_targets_from_bike()
@@ -516,13 +504,10 @@ static func _rotation_in_parent_space(marker: Node3D, parent: Node3D) -> Vector3
 	return (parent_basis.inverse() * marker_basis).get_euler()
 
 
-static func _mirror_transform_x(t: Transform3D) -> Transform3D:
-	t.origin.x = -t.origin.x
-	t.basis.x.y = -t.basis.x.y
-	t.basis.x.z = -t.basis.x.z
-	t.basis.y.x = -t.basis.y.x
-	t.basis.z.x = -t.basis.z.x
-	return t
+## Express marker.global.origin in parent's local space, so that
+## parent.global_transform * Transform3D(_, returned_position) reproduces marker.global.origin.
+static func _position_in_parent_space(marker: Node3D, parent: Node3D) -> Vector3:
+	return parent.global_transform.affine_inverse() * marker.global_transform.origin
 
 
 func _editor_save_default_pose() -> void:
@@ -548,18 +533,30 @@ func _editor_save_default_pose() -> void:
 	var peg_parent := bike_skin as Node3D
 
 	if player_entity.left_hand_target:
+		def.left_hand_position = _position_in_parent_space(
+			player_entity.left_hand_target, hb_parent
+		)
 		def.left_hand_rotation = _rotation_in_parent_space(
 			player_entity.left_hand_target, hb_parent
 		)
 	if player_entity.right_hand_target:
+		def.right_hand_position = _position_in_parent_space(
+			player_entity.right_hand_target, hb_parent
+		)
 		def.right_hand_rotation = _rotation_in_parent_space(
 			player_entity.right_hand_target, hb_parent
 		)
 	if player_entity.left_foot_target:
+		def.left_foot_position = _position_in_parent_space(
+			player_entity.left_foot_target, peg_parent
+		)
 		def.left_foot_rotation = _rotation_in_parent_space(
 			player_entity.left_foot_target, peg_parent
 		)
 	if player_entity.right_foot_target:
+		def.right_foot_position = _position_in_parent_space(
+			player_entity.right_foot_target, peg_parent
+		)
 		def.right_foot_rotation = _rotation_in_parent_space(
 			player_entity.right_foot_target, peg_parent
 		)

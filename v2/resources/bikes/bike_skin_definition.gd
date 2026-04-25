@@ -51,8 +51,15 @@ class_name BikeSkinDefinition extends Resource
 @export var head_rotation: Vector3 = Vector3.ZERO
 @export var left_arm_magnet_position: Vector3 = Vector3.ZERO
 @export var right_arm_magnet_position: Vector3 = Vector3.ZERO
+# Hand/foot positions are stored in the handlebar/peg PARENT space (same convention as the
+# rotation fields below) so they roundtrip through _sync_targets_from_bike(), which applies
+# them via hb_parent.global * Transform3D(rot, pos).
+@export var left_hand_position: Vector3 = Vector3.ZERO
+@export var right_hand_position: Vector3 = Vector3.ZERO
 @export var left_hand_rotation: Vector3 = Vector3.ZERO
 @export var right_hand_rotation: Vector3 = Vector3.ZERO
+@export var left_foot_position: Vector3 = Vector3.ZERO
+@export var right_foot_position: Vector3 = Vector3.ZERO
 @export var left_foot_rotation: Vector3 = Vector3.ZERO
 @export var right_foot_rotation: Vector3 = Vector3.ZERO
 @export var left_leg_magnet_position: Vector3 = Vector3.ZERO
