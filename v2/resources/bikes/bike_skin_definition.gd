@@ -109,4 +109,23 @@ var max_lean_angle_rad: float:
 	get:
 		return deg_to_rad(max_lean_angle_deg)
 
-# TODO- copy save_to_disk, load_from_disk, _copy_from, to/from dict...
+
+func get_user_save_path() -> String:
+	return USER_SKIN_DIR + SKIN_PFX + skin_name.to_snake_case() + ".tres"
+
+
+func save_to_disk() -> String:
+	DirAccess.make_dir_recursive_absolute(USER_SKIN_DIR)
+	var path := get_user_save_path()
+	var err := ResourceSaver.save(self, path)
+	if err == OK:
+		# Force the cache to point at this in-memory copy. Without this, subsequent
+		# load(path) calls (e.g. from_dict round-trips during lobby sync) return the
+		# stale cached version instead of the freshly-saved one.
+		take_over_path(path)
+		DebugUtils.DebugMsg("BikeSkinDefinition: Saved to %s" % path)
+		return path
+	push_error("BikeSkinDefinition: Failed to save, error: %d" % err)
+	return ""
+
+# TODO- load_from_disk, _copy_from, to/from dict...

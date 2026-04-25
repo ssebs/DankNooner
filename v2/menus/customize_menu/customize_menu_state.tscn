@@ -84,6 +84,17 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_default_cursor_shape = 2
 
+[node name="ColorModLabel" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1634892041]
+layout_mode = 2
+text = "Color Mod"
+
+[node name="ColorModBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1634892042]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_default_cursor_shape = 2
+
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1196898275]
 layout_mode = 2
 size_flags_horizontal = 0
