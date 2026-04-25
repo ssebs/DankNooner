@@ -11,8 +11,21 @@ signal crashed(peer_id: int)
 # signal trick_started(peer_id: int, trick_type: int)
 # signal trick_ended(peer_id: int, trick_type: int)
 
-@export var bike_definition: BikeSkinDefinition
-@export var character_definition: CharacterSkinDefinition
+@export var bike_definition: BikeSkinDefinition:
+	set(value):
+		bike_definition = value
+		if Engine.is_editor_hint() and is_node_ready():
+			_editor_refresh_from_bike_definition()
+@export var character_definition: CharacterSkinDefinition:
+	set(value):
+		character_definition = value
+		if (
+			Engine.is_editor_hint()
+			and is_node_ready()
+			and character_skin
+			and character_skin.skin_definition != value
+		):
+			character_skin.skin_definition = value
 @export var collision_shape_3d: CollisionShape3D
 
 @export var input_controller: InputController
@@ -23,13 +36,27 @@ signal crashed(peer_id: int)
 @export var movement_controller: MovementController
 @export var camera_controller: CameraController
 
-## IK proxy markers for hands/feet. Live under VisualRoot so AnimationPlayer (with root_node
-## set to VisualRoot) can animate them via stable NodePaths. AnimationController syncs their
-## transforms from the bike's handlebar/peg markers each tick while proxies are enabled.
-@export var left_hand_proxy: Marker3D
-@export var right_hand_proxy: Marker3D
-@export var left_foot_proxy: Marker3D
-@export var right_foot_proxy: Marker3D
+@export_group("IK Targets")
+@export var butt_target: Marker3D
+@export var left_hand_target: Marker3D
+@export var right_hand_target: Marker3D
+@export var left_foot_target: Marker3D
+@export var right_foot_target: Marker3D
+@export var chest_target: Marker3D
+@export var head_target: Marker3D
+@export var left_arm_magnet: Marker3D
+@export var right_arm_magnet: Marker3D
+@export var left_leg_magnet: Marker3D
+@export var right_leg_magnet: Marker3D
+
+## Editor-only authoring handles for bike wheel positions. Drag in the viewport, then click
+## "Save Default Pose" on AnimationController to write into BikeSkinDefinition. Runtime reads
+## those .tres values directly (raycasts, wheelie/stoppie pivot) — these nodes are not used.
+@export_group("Bike Wheel Markers (editor authoring)")
+@export var front_wheel_ground_marker: Marker3D
+@export var rear_wheel_ground_marker: Marker3D
+@export var front_wheel_front_marker: Marker3D
+@export var rear_wheel_back_marker: Marker3D
 
 @onready var controllers_node: Node3D = %_Controllers
 @onready var hud_controller: HUDController = %HUDController
@@ -131,6 +158,23 @@ func _process(_delta: float) -> void:
 
 
 #region init
+## Editor-only: keep bike-derived state in sync when bike_definition is swapped in the
+## inspector. Without this, mesh/steering update via BikeSkin's setter but wheel markers,
+## collision, raycasts and IK pose stay pointed at the old .tres.
+func _editor_refresh_from_bike_definition() -> void:
+	if bike_definition == null:
+		return
+	if bike_skin and bike_skin.skin_definition != bike_definition:
+		bike_skin.skin_definition = bike_definition
+	if collision_shape_3d:
+		_init_collision_shape()
+	if front_raycast and rear_raycast:
+		_init_raycasts()
+	# AnimationController._editor_auto_init() handles wheel markers, IK pose, hand/foot sync.
+	if animation_controller:
+		animation_controller._editor_auto_init()
+
+
 ## set definitions and apply mesh/colors/markers
 func _init_mesh():
 	bike_skin.skin_definition = bike_definition
@@ -156,49 +200,48 @@ func _init_raycasts():
 	rear_raycast.target_position = Vector3.DOWN * 1.5
 
 
-## Set up IK by passing the authored proxy markers (under VisualRoot) to IKController.
-## AnimationController syncs these proxies to the bike's handlebar/peg markers each tick.
 func _init_ik():
 	var ik_ctrl = character_skin.ik_controller
-	ik_ctrl.set_bike_markers(
-		bike_skin.seat_marker, left_hand_proxy, right_hand_proxy, left_foot_proxy, right_foot_proxy
+	butt_target.position = bike_definition.seat_marker_position
+	ik_ctrl.set_targets(
+		butt_target,
+		left_hand_target, right_hand_target,
+		left_foot_target, right_foot_target,
+		chest_target, head_target,
+		left_arm_magnet, right_arm_magnet,
+		left_leg_magnet, right_leg_magnet
 	)
-
 	_apply_rider_pose_from_definition()
-
-	# Recreate IK now that bike markers are set (initial _create_ik ran before markers existed)
 	ik_ctrl._create_ik()
 	character_skin.enable_ik()
 
 
 func _apply_rider_pose_from_definition():
-	var ik_ctrl = character_skin.ik_controller
 	var bd = bike_definition
-
 	if bd.chest_position is Vector3 and bd.chest_position != Vector3.ZERO:
-		ik_ctrl.ik_chest.position = bd.chest_position
+		chest_target.position = bd.chest_position
 	if bd.chest_rotation is Vector3 and bd.chest_rotation != Vector3.ZERO:
-		ik_ctrl.ik_chest.rotation = bd.chest_rotation
+		chest_target.rotation = bd.chest_rotation
 	if bd.head_position is Vector3 and bd.head_position != Vector3.ZERO:
-		ik_ctrl.ik_head.position = bd.head_position
+		head_target.position = bd.head_position
 	if bd.head_rotation is Vector3 and bd.head_rotation != Vector3.ZERO:
-		ik_ctrl.ik_head.rotation = bd.head_rotation
+		head_target.rotation = bd.head_rotation
 	if bd.left_arm_magnet_position is Vector3 and bd.left_arm_magnet_position != Vector3.ZERO:
-		ik_ctrl.ik_left_arm_magnet.position = bd.left_arm_magnet_position
+		left_arm_magnet.position = bd.left_arm_magnet_position
 	if bd.right_arm_magnet_position is Vector3 and bd.right_arm_magnet_position != Vector3.ZERO:
-		ik_ctrl.ik_right_arm_magnet.position = bd.right_arm_magnet_position
+		right_arm_magnet.position = bd.right_arm_magnet_position
 	if bd.left_leg_magnet_position is Vector3 and bd.left_leg_magnet_position != Vector3.ZERO:
-		ik_ctrl.ik_left_leg_magnet.position = bd.left_leg_magnet_position
+		left_leg_magnet.position = bd.left_leg_magnet_position
 	if bd.right_leg_magnet_position is Vector3 and bd.right_leg_magnet_position != Vector3.ZERO:
-		ik_ctrl.ik_right_leg_magnet.position = bd.right_leg_magnet_position
+		right_leg_magnet.position = bd.right_leg_magnet_position
 	if bd.left_hand_rotation is Vector3 and bd.left_hand_rotation != Vector3.ZERO:
-		ik_ctrl.ik_left_hand.rotation = bd.left_hand_rotation
+		left_hand_target.rotation = bd.left_hand_rotation
 	if bd.right_hand_rotation is Vector3 and bd.right_hand_rotation != Vector3.ZERO:
-		ik_ctrl.ik_right_hand.rotation = bd.right_hand_rotation
+		right_hand_target.rotation = bd.right_hand_rotation
 	if bd.left_foot_rotation is Vector3 and bd.left_foot_rotation != Vector3.ZERO:
-		ik_ctrl.ik_left_foot.rotation = bd.left_foot_rotation
+		left_foot_target.rotation = bd.left_foot_rotation
 	if bd.right_foot_rotation is Vector3 and bd.right_foot_rotation != Vector3.ZERO:
-		ik_ctrl.ik_right_foot.rotation = bd.right_foot_rotation
+		right_foot_target.rotation = bd.right_foot_rotation
 
 
 func _deferred_init():
@@ -265,6 +308,9 @@ func update_skins(new_bike_def: BikeSkinDefinition, new_char_def: CharacterSkinD
 	_init_collision_shape()
 	_init_ik()
 	_init_raycasts()
+	# AnimationController caches _bd + base pose positions in initialize(); re-run so they
+	# pick up the new bike's wheel positions, chest/butt offsets, etc.
+	animation_controller.initialize()
 
 
 func do_respawn():
@@ -316,12 +362,26 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("bike_definition must not be empty")
 	if collision_shape_3d == null:
 		issues.append("collision_shape_3d must not be empty")
-	if left_hand_proxy == null:
-		issues.append("left_hand_proxy must not be empty")
-	if right_hand_proxy == null:
-		issues.append("right_hand_proxy must not be empty")
-	if left_foot_proxy == null:
-		issues.append("left_foot_proxy must not be empty")
-	if right_foot_proxy == null:
-		issues.append("right_foot_proxy must not be empty")
+	if butt_target == null:
+		issues.append("butt_target must not be empty")
+	if left_hand_target == null:
+		issues.append("left_hand_target must not be empty")
+	if right_hand_target == null:
+		issues.append("right_hand_target must not be empty")
+	if left_foot_target == null:
+		issues.append("left_foot_target must not be empty")
+	if right_foot_target == null:
+		issues.append("right_foot_target must not be empty")
+	if chest_target == null:
+		issues.append("chest_target must not be empty")
+	if head_target == null:
+		issues.append("head_target must not be empty")
+	if left_arm_magnet == null:
+		issues.append("left_arm_magnet must not be empty")
+	if right_arm_magnet == null:
+		issues.append("right_arm_magnet must not be empty")
+	if left_leg_magnet == null:
+		issues.append("left_leg_magnet must not be empty")
+	if right_leg_magnet == null:
+		issues.append("right_leg_magnet must not be empty")
 	return issues

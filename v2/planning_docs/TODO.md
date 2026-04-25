@@ -20,11 +20,13 @@
     - [x] Learn how the steering/wheel spinning animations work
     - [x] animation controller cleanup
     - [x] Create stopped/idle animation
-    - [ ] init IK does not save per bike, switching positions from sportbike to mini is broken, uses prev value!
+    - [x] init IK does not save per bike, switching positions from sportbike to mini is broken, uses prev value!
+    - [ ] wheelie => 0 speed in wheelie => idle animation => starts floating?!
     - [ ] Fix jerkyness from transitioning between IK animation & procedural, do some blending?
       - [ ] e.g. steering, then going to idle, butt shifts weird
       - [ ] e.g. leaning during steering, then going to idle
     - [ ] steering (leaning) animation should depend on speed
+  - [ ] Skin variants should use the same offset values, colors should not need to update every skin color
   - [ ] Update docs for animation controller => must set reset position using proxy markers & save default pose for IK
   - [ ] Crash animation
 

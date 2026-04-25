@@ -24,10 +24,10 @@ surface_index = 2
 standard_material = SubResource("StandardMaterial3D_82gmx")
 metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4okic"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yvpo1"]
 albedo_color = Color(0.8, 0.8, 0.8, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_br1d3"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8pjdv"]
 albedo_color = Color(0.92, 0.22340666, 0.21160002, 1)
 
 [node name="SportBike" unique_id=201545758 node_paths=PackedStringArray("meshes") instance=ExtResource("1_rw1ah")]
@@ -35,6 +35,6 @@ script = ExtResource("2_4okic")
 slots = Array[ExtResource("3_82gmx")]([SubResource("Resource_4okic"), SubResource("Resource_br1d3")])
 meshes = [NodePath("sportbike"), NodePath("sportbike")]
 
-[node name="sportbike" parent="." index="0" unique_id=850619870]
-surface_material_override/1 = SubResource("StandardMaterial3D_4okic")
-surface_material_override/2 = SubResource("StandardMaterial3D_br1d3")
+[node name="sportbike" parent="." index="0" unique_id=1836968304]
+surface_material_override/1 = SubResource("StandardMaterial3D_yvpo1")
+surface_material_override/2 = SubResource("StandardMaterial3D_8pjdv")
