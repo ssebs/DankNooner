@@ -1,0 +1,18 @@
+{
+    "parent_file": "F:\\LocalProgramming\\DankNooner\\v2\\player\\bikes\\assets\\nakedbike\\NakedBikeModified.blend",
+    "versions": [
+        {
+            "id": "autosave",
+            "timestamp": "2026-04-25 17:54:09",
+            "note": "Auto Save",
+            "thumbnail": "autosave/thumbnail.png",
+            "blend": "autosave/snapshot.blend_snapshot",
+            "object_count": 4,
+            "file_size": 1980902,
+            "is_protected": false,
+            "tag": "NONE"
+        }
+    ],
+    "schema_version": 1,
+    "project_uuid": "c63c36f7-14fd-422f-b137-7ed17f002b60"
+}

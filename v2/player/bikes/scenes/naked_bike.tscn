@@ -1,27 +1,30 @@
-[gd_scene format=3 uid="uid://8l877wswufci"]
+[gd_scene format=3 uid="uid://bbsvg3becn555"]
 
-[ext_resource type="PackedScene" uid="uid://xuvew0ttdjgq" path="res://player/bikes/assets/nakedbike/Untitled.glb" id="1_di6m0"]
+[ext_resource type="PackedScene" uid="uid://igs0nv3uwjrv" path="res://player/bikes/assets/nakedbike/NakedBikeModified.glb" id="1_fmxco"]
 [ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="2_qqbuq"]
 [ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="3_di6m0"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_di6m0"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rolk3"]
 
-[sub_resource type="Resource" id="Resource_di6m0"]
+[sub_resource type="Resource" id="Resource_fmxco"]
 resource_local_to_scene = true
 script = ExtResource("3_di6m0")
 color = Color(0.11028292, 0.6258798, 0.47056687, 1)
 use_standard_material = true
 surface_index = 1
-standard_material = SubResource("StandardMaterial3D_di6m0")
+standard_material = SubResource("StandardMaterial3D_rolk3")
 metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qqbuq"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1yn2c"]
 albedo_color = Color(0.11028292, 0.6258798, 0.47056687, 1)
 
-[node name="NakedBike" unique_id=904807422 node_paths=PackedStringArray("meshes") instance=ExtResource("1_di6m0")]
+[node name="NakedBikeModified" unique_id=1069752024 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("1_fmxco")]
 script = ExtResource("2_qqbuq")
-slots = Array[ExtResource("3_di6m0")]([SubResource("Resource_di6m0")])
-meshes = [NodePath("Plane")]
+slots = Array[ExtResource("3_di6m0")]([SubResource("Resource_fmxco")])
+meshes = [null]
+steering_rotation_node = NodePath("Handlebars")
+front_wheel_node = NodePath("Handlebars/FontWheel")
+rear_wheel_node = NodePath("RearWheel")
 
-[node name="Plane" parent="." index="0" unique_id=1695160208]
-surface_material_override/1 = SubResource("StandardMaterial3D_qqbuq")
+[node name="Body" parent="." index="0" unique_id=1399488673]
+surface_material_override/1 = SubResource("StandardMaterial3D_1yn2c")
