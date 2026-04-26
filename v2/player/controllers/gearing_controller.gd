@@ -121,11 +121,9 @@ func get_power_output() -> float:
 	var engagement = 1.0 - clutch_value
 
 	var ratio = get_rpm_ratio()
-	# TODO - use actual curve
-	var power_curve = ratio * (2.0 - ratio)  # Peaks around 75% RPM
-	power_curve = maxf(power_curve, 0.15)
-
 	var bd = player_entity.bike_definition
+	var power_curve = bd.power_curve.sample(ratio)
+
 	var gear_ratio = bd.gear_ratios[current_gear - 1]
 	var base_ratio = bd.gear_ratios[bd.num_gears - 1]
 	var torque_multiplier = gear_ratio / base_ratio
