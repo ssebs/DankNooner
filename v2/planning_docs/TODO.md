@@ -12,7 +12,6 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] fix clutch dump from 0 speed
 - [ ] Crash animation
   - [ ] Follow camera
   - [ ] bike falls?
@@ -36,13 +35,13 @@
     - [x] Create stopped/idle animation
     - [x] init IK does not save per bike, switching positions from sportbike to mini is broken, uses prev value!
     - [x] wheelie => 0 speed in wheelie => idle animation => starts floating?!
+    - [ ] idle animation janky af, doesn't mix with procedural leaning/etc very well.
     - [ ] Fix jerkyness from transitioning between IK animation & procedural, do some blending?
       - [ ] e.g. steering, then going to idle, butt shifts weird
       - [ ] e.g. leaning during steering, then going to idle
     - [ ] steering (leaning) animation should depend on speed
 
   - [ ] Update docs for animation controller => must set reset position using proxy markers & save default pose for IK
-
 
 ## HI-PRI‼️
 
@@ -342,6 +341,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] fix clutch dump from 0 speed
 
 - [x] Loading Menu
 

@@ -83,7 +83,7 @@ tracks/3/keys = {
 }
 tracks/4/type = "value"
 tracks/4/imported = false
-tracks/4/enabled = true
+tracks/4/enabled = false
 tracks/4/path = NodePath("%ChestTarget:rotation")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
@@ -95,7 +95,7 @@ tracks/4/keys = {
 }
 tracks/5/type = "value"
 tracks/5/imported = false
-tracks/5/enabled = true
+tracks/5/enabled = false
 tracks/5/path = NodePath("%ChestTarget:position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
@@ -614,7 +614,7 @@ transform = Transform3D(1, 0, -7.1054274e-14, 0, 1, 0, 7.1054274e-14, 0, 1, 6.04
 
 [node name="ChestTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=1108562279]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5598196e-11, 1.1466553, -0.008623444)
+transform = Transform3D(1, -2.0769036e-16, -1.4210853e-14, 2.0769036e-16, 1, -1.110223e-16, 1.4210853e-14, 1.110223e-16, 1, 2.2034863e-08, 1.1466554, -0.1412803)
 
 [node name="HeadTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=190960288]
 unique_name_in_owner = true
@@ -622,7 +622,7 @@ transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, -1.567
 
 [node name="LeftHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=811111111]
 unique_name_in_owner = true
-transform = Transform3D(-0.16312781, 0.27711132, 0.13819785, 0.03818754, 0.17301135, -0.30184233, -0.30729643, -0.12560411, -0.11087188, 0.29064223, 0.9562068, 0.18692446)
+transform = Transform3D(0.023822522, 0.2516463, 0.24208808, 0.018730411, 0.2413806, -0.25275403, -0.34868574, 0.030158984, 0.0029624423, 0.26933625, 0.8478224, -0.05482987)
 
 [node name="RightHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=822222222]
 unique_name_in_owner = true
@@ -630,7 +630,7 @@ transform = Transform3D(-0.16675489, -0.26548284, -0.15560102, -0.054724846, 0.1
 
 [node name="LeftFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=833333333]
 unique_name_in_owner = true
-transform = Transform3D(-0.95741844, -0.2494092, -0.14541335, -0.20021881, 0.2107332, 0.9568197, -0.20799619, 0.94519126, -0.25169626, 0.19981939, 0.39506754, -0.16492465)
+transform = Transform3D(-0.95741844, -0.2494092, -0.14541335, -0.20021881, 0.2107332, 0.9568197, -0.20799619, 0.94519126, -0.25169626, 0.2971744, -0.0048778956, -0.16492464)
 
 [node name="RightFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=844444444]
 unique_name_in_owner = true
