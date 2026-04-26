@@ -62,22 +62,22 @@ layout_mode = 2
 placeholder_text = "e.g. hunter2"
 max_length = 32
 
-[node name="BikeSkinLabel" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1091209323]
+[node name="CharacterSkinLabel" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1393932526]
 layout_mode = 2
-text = "Bike Skin"
+text = "Character Skin"
 
-[node name="BikeSkinBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1781161577]
+[node name="CharacterSkinBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1376220749]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_default_cursor_shape = 2
 
-[node name="CharacterSkinLabel" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1393932526]
+[node name="BikeSkinLabel" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1091209323]
 layout_mode = 2
-text = "Character Skin"
+text = "Bike Skin"
 
-[node name="CharacterSkinBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1376220749]
+[node name="BikeSkinBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1781161577]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
