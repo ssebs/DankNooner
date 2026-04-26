@@ -76,6 +76,7 @@ class_name BikeSkinDefinition extends Resource
 @export var max_rpm: float = 11000.0
 @export var idle_rpm: float = 1000.0
 @export var stall_rpm: float = 800.0
+@export var power_curve: Curve = preload("res://resources/bikes/power_curve.tres")
 
 @export_group("Physics")
 @export var max_speed: float = 88.0

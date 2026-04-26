@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="4_xypd7"]
 [ext_resource type="Curve" uid="uid://ct2j0k3sl7m3u" path="res://player/bikes/resources/steer_speed_curve.tres" id="5_q40km"]
 [ext_resource type="Resource" uid="uid://fxmg7fyrhfsl" path="res://resources/bikes/mods/color_mods/teal_color.tres" id="5_xypd7"]
+[ext_resource type="Curve" uid="uid://dlqmqgtip7b61" path="res://resources/bikes/power_curve.tres" id="6_q0a53"]
 
 [resource]
 script = ExtResource("2_4wyad")
