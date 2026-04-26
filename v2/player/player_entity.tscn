@@ -597,7 +597,6 @@ fps_cam = NodePath("../../FPSCam")
 tps_cam = NodePath("../../TPSCam")
 fps_marker = NodePath("../../VisualRoot/FPSCamMarker")
 tps_marker = NodePath("../../VisualRoot/TPSCamMarker")
-tps_look_height = 0.7
 metadata/_custom_type_script = "uid://coopftft0wwho"
 
 [node name="VisualRoot" type="Node3D" parent="." unique_id=53014519]
