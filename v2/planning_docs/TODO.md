@@ -22,6 +22,8 @@
     - [ ] Add constraints to mods, so certain bikeskins require 2 colors, etc.
     - [ ] Create custom colors option
     - [ ] Verify multiplayer
+    - [ ] When updating bike skins (positions) update local files too
+      - [ ] Currently have to reselect skins & save again
 - [ ] Animation Controller:
   - [x] Fix wheelie rotation / placement (puts you in the ground - find / fix solution)
   - [x] Better IK

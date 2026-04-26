@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="BikeSkinDefinition" format=3 uid="uid://dlrtemwuyd7jy"]
 
 [ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/bikes/hitbox/bike_hitbox.tres" id="1_3klvi"]
-[ext_resource type="PackedScene" uid="uid://8l877wswufci" path="res://player/bikes/scenes/naked_bike.tscn" id="1_hvuo0"]
+[ext_resource type="PackedScene" uid="uid://bbsvg3becn555" path="res://player/bikes/scenes/naked_bike.tscn" id="1_hvuo0"]
 [ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/bikes/bike_skin_definition.gd" id="2_4wyad"]
 [ext_resource type="Curve" uid="uid://bc4775t6u5ngh" path="res://player/bikes/resources/lean_speed_curve.tres" id="2_syivs"]
 [ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="4_xypd7"]
@@ -16,7 +16,7 @@ mesh_res = ExtResource("1_hvuo0")
 mesh_position_offset = Vector3(0, 0.255, -0.1)
 mesh_scale_multiplier = Vector3(0.7, 0.7, 0.7)
 training_wheels_marker_position = Vector3(0, 0.045939356, -0.65252227)
-seat_marker_position = Vector3(6.049124e-09, 0.864002, -0.25668395)
+seat_marker_position = Vector3(8.72776e-09, 0.8699445, -0.27442372)
 front_wheel_ground_position = Vector3(4.063193e-08, 0, 0.6847348)
 rear_wheel_ground_position = Vector3(-2.0521185e-09, 0, -0.6426772)
 rear_wheel_back_position = Vector3(-1.1081411e-08, 0, -0.92412007)
@@ -25,16 +25,16 @@ chest_position = Vector3(1.58426e-08, 1.1710131, -0.11291112)
 chest_rotation = Vector3(0, -5.684342e-14, 0)
 head_position = Vector3(-1.5670119e-07, 1.7314824, -0.2957811)
 head_rotation = Vector3(0, -2.842171e-14, 0)
-left_arm_magnet_position = Vector3(0.50935364, 1.0740347, -0.1354702)
-right_arm_magnet_position = Vector3(-0.509, 1.074, -0.135)
-left_hand_position = Vector3(0.29064226, 0.9866936, 0.18265347)
-right_hand_position = Vector3(-0.291, 0.9862102, 0.18296508)
-left_hand_rotation = Vector3(0.95896834, 2.2610366, 0.3794997)
-right_hand_rotation = Vector3(0.93759894, -2.2915344, -0.26741448)
-left_foot_position = Vector3(0.20908888, 0.51754344, -0.20418108)
+left_arm_magnet_position = Vector3(0.50935364, 1.0199555, -0.1354702)
+right_arm_magnet_position = Vector3(-0.509, 1.0199208, -0.135)
+left_hand_position = Vector3(0.4152032, 0.08834636, -0.2878746)
+right_hand_position = Vector3(-0.38, 0.13376522, -0.2606238)
+left_hand_rotation = Vector3(1.0400048, 2.2469194, 0.21723956)
+right_hand_rotation = Vector3(0.937599, -2.2915344, -0.26741445)
+left_foot_position = Vector3(0.19981939, 0.39506754, -0.16492465)
 right_foot_position = Vector3(-0.21216637, 0.5018048, -0.20081648)
-left_foot_rotation = Vector3(-1.2758567, -2.6177065, -0.75981826)
-right_foot_rotation = Vector3(-1.2758567, 2.617706, 0.7598184)
+left_foot_rotation = Vector3(-1.2758567, -2.6177065, -0.7598183)
+right_foot_rotation = Vector3(-1.2758567, 2.617706, 0.7598185)
 left_leg_magnet_position = Vector3(0.46395656, 0.5692559, 0.42930415)
 right_leg_magnet_position = Vector3(-0.464, 0.569, 0.429)
 mods = Array[ExtResource("4_xypd7")]([ExtResource("5_xypd7")])
