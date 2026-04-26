@@ -16,7 +16,7 @@ enum CameraMode { TPS = 0, FPS, NONE }
 @export_group("TPS Orbit")
 @export var pitch_min_deg: float = -20.0
 @export var pitch_max_deg: float = 60.0
-@export var tps_look_height: float = 0.5
+@export var tps_look_height: float = 0.7
 
 @export_group("FPS Look")
 @export var fps_pitch_min_deg: float = -30.0
@@ -118,15 +118,32 @@ func _update_tps_camera():
 	var distance: float = -marker_offset.z
 	var height: float = marker_offset.y
 
-	var look_target: Vector3 = player_entity.global_position + Vector3.UP * tps_look_height
-	var yaw: float = player_entity.global_rotation.y + _orbit_yaw
+	var focus: Vector3 = _get_tps_focus_position()
+	var look_target: Vector3 = focus + Vector3.UP * tps_look_height
+	var yaw: float = _get_tps_base_yaw() + _orbit_yaw
 
 	var orbit_rot := Basis(Vector3.UP, yaw) * Basis(Vector3.RIGHT, -_orbit_pitch)
 	var cam_offset: Vector3 = orbit_rot * Vector3(0, 0, distance)
 	cam_offset.y += height
 
-	tps_cam.global_position = player_entity.global_position + cam_offset
+	tps_cam.global_position = focus + cam_offset
 	tps_cam.look_at(look_target)
+
+
+## When crashed, follow the ragdoll's hips so the camera tracks the tumbling character
+## rather than the frozen player_entity.
+func _get_tps_focus_position() -> Vector3:
+	if player_entity.is_crashed:
+		return player_entity.character_skin.ragdoll_controller.get_hips_global_position()
+	return player_entity.global_position
+
+
+## Player rotation is meaningless once ragdolling — drop the body yaw so the orbit stays
+## stable around the hips instead of snapping with the frozen entity transform.
+func _get_tps_base_yaw() -> float:
+	if player_entity.is_crashed:
+		return 0.0
+	return player_entity.global_rotation.y
 
 
 #endregion
@@ -193,6 +210,14 @@ func switch_to_cam(cam_mode: CameraMode):
 	fps_cam.current = is_fps
 	tps_cam.current = !is_fps
 	current_cam_mode = cam_mode
+
+
+## Force-switch to TPS without persisting to settings — used for crash so the player can
+## see their ragdoll regardless of their saved cam preference.
+func force_tps():
+	if !player_entity.is_local_client:
+		return
+	switch_to_cam(CameraMode.TPS)
 
 
 ## Called from player_entity.gd's do_respawn

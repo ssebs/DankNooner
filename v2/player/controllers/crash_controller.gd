@@ -127,6 +127,7 @@ func trigger_crash():
 	player_entity.is_crashed = true
 	player_entity.velocity = Vector3.ZERO
 	animation_controller.start_ragdoll()
+	player_entity.camera_controller.force_tps()
 	crashed.emit()
 
 

@@ -12,9 +12,6 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] Crash animation
-  - [ ] Follow camera
-  - [ ] bike falls?
 - [ ] Skin variants should use the same offset values, colors should not need to update every skin color
   - [x] **impl planning_docs/PLAN.md**
   - [x] Delete other variants
@@ -341,6 +338,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Crash animation follow camera
 
 - [x] fix clutch dump from 0 speed
 
