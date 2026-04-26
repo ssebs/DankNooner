@@ -416,26 +416,30 @@ func _update_clutch_dump_detection():
 func _can_initiate_wheelie(in_wheelie: bool) -> bool:
 	var bd = player_entity.bike_definition
 
-	if speed <= 1:
-		return false
 	if in_wheelie:
 		return true
 
-	# Clutch dump pop — just needs throttle, no lean-back required
-	var clutch_pop = _clutch_kick_window > 0 and input_controller.nfx_throttle > 0.5
+	# Can't START while turning
+	if abs(roll_angle) >= deg_to_rad(10):
+		return false
 
-	# Power wheelie — lean back + throttle + RPM (threshold eases at higher speed)
+	# Clutch dump pop — works from standstill, just needs throttle
+	var clutch_pop = _clutch_kick_window > 0 and input_controller.nfx_throttle > 0.5
+	if clutch_pop:
+		return true
+
+	# Power wheelie — needs forward motion + lean back + throttle + RPM
+	if speed <= 1:
+		return false
 	var effective_rpm_threshold = lerpf(
 		bd.wheelie_rpm_threshold, bd.wheelie_rpm_threshold * 0.5, _speed_pct
 	)
 	var rpm_for_power = gearing_controller.get_rpm_ratio() >= effective_rpm_threshold
-	var power_pop = (
-		input_controller.nfx_lean < -0.3 and input_controller.nfx_throttle > 0.7 and rpm_for_power
+	return (
+		input_controller.nfx_lean < -0.3
+		and input_controller.nfx_throttle > 0.7
+		and rpm_for_power
 	)
-
-	# Can't START while turning
-	var can_start = abs(roll_angle) < deg_to_rad(10)
-	return (clutch_pop or power_pop) and can_start
 
 
 ## Calculate wheelie target in the normal zone (below balance point).
