@@ -24,12 +24,15 @@ const MIN_LOOP_SPEED: float = 20.0  # speed needed at fully inverted (180°)
 # Trick tuning
 const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
 const AIR_TRICK_ROTATION_SPEED: float = 4.0  # rad/s pitch control while airborne
+const WHEELIE_AIR_GRACE: float = 1.0  # short hops (curbs) keep the wheelie pitch_angle
 var speed: float = 0.0
 var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
 
 var air_forward: Vector3 = Vector3.FORWARD  # forward direction when leaving a surface
 var air_pitch_total: float = 0.0  # cumulative pitch rotation while airborne (for flip counting)
+var _air_time: float = 0.0  # time since takeoff (for wheelie grace window)
+var _wheelie_grace_consumed: bool = false  # true once grace expired and pitch_angle was zeroed
 
 # spawn protection - todo move?
 var _default_spawn_timer: float = 1.0
@@ -76,10 +79,21 @@ func on_movement_rollback_tick(delta: float):
 			elif pitch_angle < -PI:
 				pitch_angle += TAU
 			air_pitch_total = 0.0
+			_air_time = 0.0
+			_wheelie_grace_consumed = false
 	else:
-		# Reset air rotation tracker on takeoff
+		# Takeoff — start grace window. Short hops (e.g. curbs) keep the wheelie;
+		# once grace expires we zero pitch_angle so longer airtime lets air tricks
+		# accumulate from level.
 		if _was_on_floor:
 			air_pitch_total = 0.0
+			_air_time = 0.0
+			_wheelie_grace_consumed = false
+		_air_time += delta
+		if not _wheelie_grace_consumed and _air_time >= WHEELIE_AIR_GRACE:
+			pitch_angle = 0.0
+			air_pitch_total = 0.0
+			_wheelie_grace_consumed = true
 	_speed_calc(delta)
 	_speed_pct = clampf(speed / player_entity.bike_definition.max_speed, 0.0, 1.0)
 	_update_surface_alignment(delta)
@@ -526,6 +540,8 @@ func do_reset():
 	_clutch_kick_window = 0.0
 	air_forward = Vector3.FORWARD
 	air_pitch_total = 0.0
+	_air_time = 0.0
+	_wheelie_grace_consumed = false
 	player_entity.up_direction = Vector3.UP
 
 

@@ -12,8 +12,6 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] account for wheelie angle when doing flips & landing, aka once in air turn off wheelie, make it complete & set wheelie angle to 0
-  - [ ] wheelie + backflip angles should match!
 - [ ] Review AI code - there are bugs!
 - [ ] Skin variants should use the same offset values, colors should not need to update every skin color
   - [x] **impl planning_docs/PLAN.md**
@@ -343,6 +341,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] account for wheelie angle when doing flips & landing, aka once in air turn off wheelie, make it complete & set wheelie angle to 0
 
 - [x] Crash animation follow camera
 
