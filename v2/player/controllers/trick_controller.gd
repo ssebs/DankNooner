@@ -60,8 +60,10 @@ func _detect_current_trick() -> Trick:
 			# RB is held + still in a wheelie. Releasing RB or dropping the wheelie exits.
 			if current_trick == Trick.HIGH_CHAIR:
 				return Trick.HIGH_CHAIR
-			if input_controller.nfx_cam_y < TRICK_CAM_Y_THRESHOLD:
+			if input_controller.nfx_cam_y > -TRICK_CAM_Y_THRESHOLD:
 				return Trick.HIGH_CHAIR
+			if input_controller.nfx_cam_y < TRICK_CAM_Y_THRESHOLD:
+				return Trick.HEEL_CLICKER
 			return Trick.WHEELIE_MOD
 		return Trick.WHEELIE_SITTING
 
@@ -71,9 +73,18 @@ func _detect_current_trick() -> Trick:
 
 
 func _detect_air_trick() -> Trick:
-	# Heel clicker — held while airborne with trick btn + cam stick down
-	if input_controller.nfx_trick_held and input_controller.nfx_cam_y < TRICK_CAM_Y_THRESHOLD:
-		return Trick.HEEL_CLICKER
+	# HIGH_CHAIR (air entry: RB + cam up) — latches while RB held + airborne.
+	# -TRICK_CAM_Y_THRESHOLD == 0.5 (cam stick up).
+	if input_controller.nfx_trick_held:
+		if current_trick == Trick.HIGH_CHAIR:
+			return Trick.HIGH_CHAIR
+
+		if input_controller.nfx_cam_y > -TRICK_CAM_Y_THRESHOLD:
+			return Trick.HIGH_CHAIR
+
+		# Heel clicker — held while airborne with trick btn + cam stick down
+		if input_controller.nfx_cam_y < TRICK_CAM_Y_THRESHOLD:
+			return Trick.HEEL_CLICKER
 
 	if movement_controller.air_pitch_total < (TAU * 0.9):
 		return Trick.NONE
