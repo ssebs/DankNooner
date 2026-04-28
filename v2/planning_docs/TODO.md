@@ -12,19 +12,17 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] Review AI code - there are bugs!
-  - [x] **impl planning_docs/PLAN.md**
-  - [x] Delete other variants
-  - [x] Save a few variants
-  - [x] Delete bike_def.colors
-  - [ ] Update customization menu
-    - [x] Show bike + list of all color_mods(gotta check for multiple colors for bike type, so set that as a var in the skin_definition & make the color_mod have a matching count. constraints?)
-    - [ ] Add constraints to mods, so certain bikeskins require 2 colors, etc.
-    - [ ] Create custom colors option
-    - [ ] Verify multiplayer
-    - [ ] When updating bike skins (positions) update local files too
-      - [ ] Currently have to reselect skins & save again
+- [ ] Update customization menu
+  - [x] Show bike + list of all color_mods(gotta check for multiple colors for bike type, so set that as a var in the skin_definition & make the color_mod have a matching count. constraints?)
+  - [ ] Add constraints to mods, so certain bikeskins require 2 colors, etc.
+  - [ ] Create custom colors option
+  - [ ] Verify multiplayer
+  - [ ] When updating bike skins (positions) update local files too
+    - [ ] Currently have to reselect skins & save again
 - [ ] Animation Controller:
+  - [ ] Create trick animations to use in trick manager
+    - [ ] hand grab
+    - [ ] heel clicker
   - [x] Fix wheelie rotation / placement (puts you in the ground - find / fix solution)
   - [x] Better IK
     - [x] debug bike IK placement / playing procedural w/ offsets
@@ -34,18 +32,24 @@
     - [x] Create stopped/idle animation
     - [x] init IK does not save per bike, switching positions from sportbike to mini is broken, uses prev value!
     - [x] wheelie => 0 speed in wheelie => idle animation => starts floating?!
-    - [ ] idle animation janky af, doesn't mix with procedural leaning/etc very well.
-    - [ ] Blend animations (AnimationTree?)
-    - [ ] Fix jerkyness from transitioning between IK animation & procedural, do some blending?
-      - [ ] e.g. steering, then going to idle, butt shifts weird
-      - [ ] e.g. leaning during steering, then going to idle
-    - [ ] steering (leaning) animation should depend on speed
-  - [ ] Update docs for animation controller => must set reset position using proxy markers & save default pose for IK
+    - [x] idle animation janky af, doesn't mix with procedural leaning/etc very well.
+    - [x] Blend animations (AnimationTree?)
+    - [x] Fix jerkyness from transitioning between IK animation & procedural, do some blending?
+      - [x] e.g. steering, then going to idle, butt shifts weird
+      - [x] e.g. leaning during steering, then going to idle
+- [ ] Trick Manager + tricks
+
+  - [x] wheelie / stoppie detection
+  - [x] flip detection
+  - [ ] in-air tricks
+    - [ ] Create Heel clicker / other trick animations (RB+DOWN)
+  - [ ] more ground tricks
+  - [ ] trick scoring & combos
+  - [ ] trick tweaks
+    - [ ] Land into wheelie / stoppie should be a trick
+    - [ ] Create wheelie + DOWN animation (wheelie + right hand touches ground)
 
 ## HI-PRI‼️
-
-- [ ] First launch is v slow ([compiling shaders](https://docs.godotengine.org/en/stable/tutorials/performance/pipeline_compilations.html))
-  - [ ] Freezes on my Mac when using exported binary 
 
 - [ ] Finish tutorial:
   - [ ] clutch-up tutorial & speed management
@@ -58,18 +62,6 @@
   - [ ] tutorial finished MP => clients dont respawn back in free roam
   - [ ] Close tutorial hud when leaving game
   - [ ] tutorial gamemode - _ctx doesnt make sense
-
-- [ ] Trick Manager + tricks
-
-  - [x] wheelie / stoppie detection
-  - [x] flip detection
-  - [ ] in-air tricks
-    - [ ] Create Heel clicker / other trick animations (RB+DOWN)
-  - [ ] more ground tricks
-  - [ ] trick scoring & combos
-  - [ ] trick tweaks
-    - [ ] Land into wheelie / stoppie should be a trick
-    - [ ] Create wheelie + DOWN animation (wheelie + right hand touches ground)
 
 - [ ] Trick Battle / Score Attack gamemode
   - [ ] 3 rounds, highest score in 60s wins round, best 2/3 wins game
@@ -91,6 +83,9 @@
 
 > POC = playable gamemodes w/ friends, see if core gameplay loop works
 > video record this once playing with everyone, save log files
+
+- [ ] First launch is v slow ([compiling shaders](https://docs.godotengine.org/en/stable/tutorials/performance/pipeline_compilations.html))
+  - [ ] Freezes on my Mac when using exported binary 
 
 - [ ] Remap controls for leaning back/fwd, use mouse? or arrow keys
 
@@ -127,6 +122,7 @@
     - [ ] anim: touch hand against car like trick tweak
   - [ ] Add traffic street race gamemode
 
+- [ ] steering (leaning) animation should depend on speed,update in movement controller
 - [ ] Basic customization menu / UI
 
   - [ ] Subview port to make icons - for bike skin selection
@@ -340,6 +336,16 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Delete bike_def.colors
+
+- [x] Save a few variants
+
+- [x] Delete other variants
+
+- [x] **impl planning_docs/PLAN.md**
+
+- [x] Review AI code - there are bugs!
 
 - [x] account for wheelie angle when doing flips & landing, aka once in air turn off wheelie, make it complete & set wheelie angle to 0
 
