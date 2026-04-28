@@ -86,6 +86,9 @@ func _process(delta: float):
 
 
 func _has_cam_input(mouse: Vector2) -> bool:
+	# Trick mod button repurposes the right stick for trick input — lock the camera.
+	if input_controller.nfx_trick_held:
+		return false
 	return (
 		mouse.length_squared() > 0.01
 		or absf(input_controller.nfx_cam_x) > 0.05

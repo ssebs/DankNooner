@@ -4,7 +4,9 @@ class_name TrickController extends Node
 signal trick_started(trick_type: Trick)
 signal trick_ended(trick_type: Trick)
 
-enum Trick { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, THREESIXTY }
+enum Trick { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, THREESIXTY, HEEL_CLICKER }
+
+const HEEL_CLICKER_CAM_Y_THRESHOLD: float = -0.5
 
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
@@ -53,6 +55,10 @@ func _detect_current_trick() -> Trick:
 
 
 func _detect_air_trick() -> Trick:
+	# Heel clicker — held while airborne with trick btn + cam stick down
+	if input_controller.nfx_trick_held and input_controller.nfx_cam_y < HEEL_CLICKER_CAM_Y_THRESHOLD:
+		return Trick.HEEL_CLICKER
+
 	if movement_controller.air_pitch_total < (TAU * 0.9):
 		return Trick.NONE
 
@@ -97,6 +103,8 @@ static func trick_to_str(trick: Trick) -> String:
 			return "FRONTFLIP"
 		Trick.THREESIXTY:
 			return "THREESIXTY"
+		Trick.HEEL_CLICKER:
+			return "HEEL_CLICKER"
 	return "NONE"
 
 
@@ -116,6 +124,8 @@ static func str_to_trick(s: String) -> Trick:
 			return Trick.FRONTFLIP
 		"THREESIXTY":
 			return Trick.THREESIXTY
+		"HEEL_CLICKER":
+			return Trick.HEEL_CLICKER
 	return Trick.NONE
 
 
