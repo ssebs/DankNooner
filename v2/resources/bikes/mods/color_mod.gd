@@ -7,6 +7,4 @@ class_name ColorMod extends BikeMod
 
 ##override
 func apply(bike_skin: BikeSkin) -> void:
-	for i in colors.size():
-		if colors[i] != Color.TRANSPARENT:
-			bike_skin.mesh_skin.update_slot_color(i, colors[i])
+	bike_skin.mesh_skin.update_all_colors(colors)
