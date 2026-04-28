@@ -52,6 +52,14 @@ const _PATH_LFOOT_POS := ^"IKTargets/LeftFootTarget:position"
 const _PATH_LFOOT_ROT := ^"IKTargets/LeftFootTarget:rotation"
 const _PATH_RFOOT_POS := ^"IKTargets/RightFootTarget:position"
 const _PATH_RFOOT_ROT := ^"IKTargets/RightFootTarget:rotation"
+const _PATH_LARM_MAGNET_POS := ^"IKTargets/LeftArmMagnet:position"
+const _PATH_LARM_MAGNET_ROT := ^"IKTargets/LeftArmMagnet:rotation"
+const _PATH_RARM_MAGNET_POS := ^"IKTargets/RightArmMagnet:position"
+const _PATH_RARM_MAGNET_ROT := ^"IKTargets/RightArmMagnet:rotation"
+const _PATH_LLEG_MAGNET_POS := ^"IKTargets/LeftLegMagnet:position"
+const _PATH_LLEG_MAGNET_ROT := ^"IKTargets/LeftLegMagnet:rotation"
+const _PATH_RLEG_MAGNET_POS := ^"IKTargets/RightLegMagnet:position"
+const _PATH_RLEG_MAGNET_ROT := ^"IKTargets/RightLegMagnet:rotation"
 
 var current_state: RiderState = RiderState.RIDING:
 	set(value):
@@ -65,6 +73,14 @@ var _base_chest_pos: Vector3
 var _base_chest_rot: Vector3
 var _base_visual_root_position: Vector3
 var _base_visual_root_rotation: Vector3
+var _base_left_arm_magnet_pos: Vector3
+var _base_left_arm_magnet_rot: Vector3
+var _base_right_arm_magnet_pos: Vector3
+var _base_right_arm_magnet_rot: Vector3
+var _base_left_leg_magnet_pos: Vector3
+var _base_left_leg_magnet_rot: Vector3
+var _base_right_leg_magnet_pos: Vector3
+var _base_right_leg_magnet_rot: Vector3
 var _idle_timer: float = 0.0
 var _procedural_enabled: bool = true
 var _targets_synced_from_bike: bool = true
@@ -75,6 +91,8 @@ var _bd: BikeSkinDefinition
 var _anim_runner: CustomAnimPlayer
 var _idle_anim: Animation
 var _idle_layer: CustomAnimPlayer.Layer
+var _heel_clicker_anim: Animation
+var _heel_clicker_layer: CustomAnimPlayer.Layer
 
 # Proc pose carried between frames (no anim deltas applied). Keeping this separate
 # from what gets committed to the nodes prevents anim-delta drift across frames —
@@ -318,6 +336,31 @@ func _commit_pose(pose: _RiderPose) -> void:
 	player_entity.left_foot_target.rotation = pose.left_foot_rot
 	player_entity.right_foot_target.position = pose.right_foot_pos
 	player_entity.right_foot_target.rotation = pose.right_foot_rot
+	# Magnets — no procedural state, just base + anim delta
+	player_entity.left_arm_magnet.position = (
+		_base_left_arm_magnet_pos + _anim_runner.sample_vec3(_PATH_LARM_MAGNET_POS)
+	)
+	player_entity.left_arm_magnet.rotation = (
+		_base_left_arm_magnet_rot + _anim_runner.sample_vec3(_PATH_LARM_MAGNET_ROT)
+	)
+	player_entity.right_arm_magnet.position = (
+		_base_right_arm_magnet_pos + _anim_runner.sample_vec3(_PATH_RARM_MAGNET_POS)
+	)
+	player_entity.right_arm_magnet.rotation = (
+		_base_right_arm_magnet_rot + _anim_runner.sample_vec3(_PATH_RARM_MAGNET_ROT)
+	)
+	player_entity.left_leg_magnet.position = (
+		_base_left_leg_magnet_pos + _anim_runner.sample_vec3(_PATH_LLEG_MAGNET_POS)
+	)
+	player_entity.left_leg_magnet.rotation = (
+		_base_left_leg_magnet_rot + _anim_runner.sample_vec3(_PATH_LLEG_MAGNET_ROT)
+	)
+	player_entity.right_leg_magnet.position = (
+		_base_right_leg_magnet_pos + _anim_runner.sample_vec3(_PATH_RLEG_MAGNET_POS)
+	)
+	player_entity.right_leg_magnet.rotation = (
+		_base_right_leg_magnet_rot + _anim_runner.sample_vec3(_PATH_RLEG_MAGNET_ROT)
+	)
 
 
 func _update_idle_timer(delta: float) -> void:
@@ -357,6 +400,14 @@ func initialize() -> void:
 	_base_chest_rot = player_entity.chest_target.rotation
 	_base_visual_root_position = visual_root.position
 	_base_visual_root_rotation = visual_root.rotation
+	_base_left_arm_magnet_pos = player_entity.left_arm_magnet.position
+	_base_left_arm_magnet_rot = player_entity.left_arm_magnet.rotation
+	_base_right_arm_magnet_pos = player_entity.right_arm_magnet.position
+	_base_right_arm_magnet_rot = player_entity.right_arm_magnet.rotation
+	_base_left_leg_magnet_pos = player_entity.left_leg_magnet.position
+	_base_left_leg_magnet_rot = player_entity.left_leg_magnet.rotation
+	_base_right_leg_magnet_pos = player_entity.right_leg_magnet.position
+	_base_right_leg_magnet_rot = player_entity.right_leg_magnet.rotation
 
 	ik_anim_player.root_node = ik_anim_player.get_path_to(visual_root)
 
@@ -368,8 +419,39 @@ func initialize() -> void:
 	# Cache anims off the existing AnimationPlayer's library — keeps editor authoring intact.
 	if ik_anim_player.has_animation("idle"):
 		_idle_anim = ik_anim_player.get_animation("idle")
+		_fixup_anim_paths(_idle_anim)
+	if ik_anim_player.has_animation("heel_clicker"):
+		_heel_clicker_anim = ik_anim_player.get_animation("heel_clicker")
+		_fixup_anim_paths(_heel_clicker_anim)
+
+	if not trick_controller.trick_started.is_connected(_on_trick_started):
+		trick_controller.trick_started.connect(_on_trick_started)
+		trick_controller.trick_ended.connect(_on_trick_ended)
 
 	_sync_targets_from_bike()
+
+
+## Rewrite `%UniqueName:property` track paths to `IKTargets/UniqueName:property` so
+## CustomAnimPlayer.find_track (exact match against _PATH_* constants) resolves them.
+## All IK markers live under VisualRoot/IKTargets, so the rewrite is mechanical.
+func _fixup_anim_paths(anim: Animation) -> void:
+	for i in anim.get_track_count():
+		var path_str := String(anim.track_get_path(i))
+		if path_str.begins_with("%"):
+			anim.track_set_path(i, NodePath("IKTargets/" + path_str.substr(1)))
+
+
+func _on_trick_started(trick_type: TrickController.Trick) -> void:
+	if trick_type == TrickController.Trick.HEEL_CLICKER:
+		# One-shot: plays through fully, auto-fades at end. Don't stop on button release —
+		# trick_ended fires when RB is let go OR on landing, but we want the full anim to play.
+		if _heel_clicker_anim and not movement_controller._is_on_floor:
+			if _heel_clicker_layer == null or not _heel_clicker_layer.is_playing():
+				_heel_clicker_layer = _anim_runner.play(_heel_clicker_anim, 1.0, false)
+
+
+func _on_trick_ended(_trick_type: TrickController.Trick) -> void:
+	pass
 
 
 ## Sync hand/foot target transforms from saved positions/rotations in BikeSkinDefinition,
