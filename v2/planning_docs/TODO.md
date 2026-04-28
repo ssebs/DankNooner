@@ -12,51 +12,27 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] once speed hits 0 mid air, i lose all ability to rotate fwd/back
- - [ ] related to wheelie / playerent angle being diff?
-- [ ] Update customization menu
-  - [x] Show bike + list of all color_mods(gotta check for multiple colors for bike type, so set that as a var in the skin_definition & make the color_mod have a matching count. constraints?)
-  - [ ] Add constraints to mods, so certain bikeskins require 2 colors, etc.
-  - [ ] Create custom colors option
-  - [ ] Verify multiplayer
-  - [ ] When updating bike skins (positions) update local files too
-    - [ ] Currently have to reselect skins & save again
-- [ ] Animation Controller:
-  - [ ] Create trick animations to use in trick manager
-    - [x] `heel_clicker`
-    - [ ] `high_chair` - 4 wheelie
-    - [ ] hand grab
-      - [ ] IK hand twd ground, not just backwds
-  - [x] Fix wheelie rotation / placement (puts you in the ground - find / fix solution)
-  - [x] Better IK
-    - [x] debug bike IK placement / playing procedural w/ offsets
-    - [x] arms must follow handlebars
-    - [x] Learn how the steering/wheel spinning animations work
-    - [x] animation controller cleanup
-    - [x] Create stopped/idle animation
-    - [x] init IK does not save per bike, switching positions from sportbike to mini is broken, uses prev value!
-    - [x] wheelie => 0 speed in wheelie => idle animation => starts floating?!
-    - [x] idle animation janky af, doesn't mix with procedural leaning/etc very well.
-    - [x] Blend animations (AnimationTree?)
-    - [x] Fix jerkyness from transitioning between IK animation & procedural, do some blending?
-      - [x] e.g. steering, then going to idle, butt shifts weird
-      - [x] e.g. leaning during steering, then going to idle
+- [ ] ragdoll doesn't work in MP
+- [ ] Verify customizations in multiplayer
 - [ ] Trick Manager + tricks
-
   - [x] wheelie / stoppie detection
   - [x] flip detection
-  - [ ] in-air tricks
-    - [ ] Create Heel clicker / other trick animations (RB+DOWN)
-  - [ ] more ground tricks
+  - [x] in-air tricks
+    - [x] Create Heel clicker / other trick animations (RB+DOWN)
+  - [x] more ground tricks
+  - [ ] Cleanup trick / animation / movement code (at least review!)
   - [ ] trick scoring & combos
   - [ ] trick tweaks
     - [ ] Land into wheelie / stoppie should be a trick
-    - [ ] Create wheelie + DOWN animation (wheelie + right hand touches ground)
-
+    - [ ] Create wheelie + RIGHT animation (hand grab)
+      - [ ] IK hand twd ground, not just backwds
+  - [ ] once speed hits 0 mid air, i lose all ability to rotate fwd/back
+   - [ ] related to wheelie / playerent angle being diff?
 ## HI-PRI‼️
 
 - [ ] Finish tutorial:
   - [ ] clutch-up tutorial & speed management
+  - [ ] trick mod tutorial
   - [ ] crashing during tutorial doesn't stop timers
   - [ ] tutorial press RT/B should be dependent on controlscheme, and be shown in more steps
   - [ ] don't just show text on the left, make it more interactive
@@ -128,7 +104,8 @@
 
 - [ ] steering (leaning) animation should depend on speed,update in movement controller
 - [ ] Basic customization menu / UI
-
+  - [ ] Add constraints to mods, so certain bikeskins require 2 colors, etc.
+  - [ ] Create custom colors option
   - [ ] Subview port to make icons - for bike skin selection
   - [x] Super basic customize ui
   - [x] Save chosen skin to disk
@@ -340,6 +317,28 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Update customization menu
+  - [x] Show bike + list of all color_mods(gotta check for multiple colors for bike type, so set that as a var in the skin_definition & make the color_mod have a matching count. constraints?)
+
+- [x] Animation Controller:
+  - [x] Create trick animations to use in trick manager
+    - [x] `heel_clicker`
+    - [x] `high_chair` 
+  - [x] Fix wheelie rotation / placement (puts you in the ground - find / fix solution)
+  - [x] Better IK
+    - [x] debug bike IK placement / playing procedural w/ offsets
+    - [x] arms must follow handlebars
+    - [x] Learn how the steering/wheel spinning animations work
+    - [x] animation controller cleanup
+    - [x] Create stopped/idle animation
+    - [x] init IK does not save per bike, switching positions from sportbike to mini is broken, uses prev value!
+    - [x] wheelie => 0 speed in wheelie => idle animation => starts floating?!
+    - [x] idle animation janky af, doesn't mix with procedural leaning/etc very well.
+    - [x] Blend animations (AnimationTree?)
+    - [x] Fix jerkyness from transitioning between IK animation & procedural, do some blending?
+      - [x] e.g. steering, then going to idle, butt shifts weird
+      - [x] e.g. leaning during steering, then going to idle
 
 - [x] Delete bike_def.colors
 

@@ -35,7 +35,8 @@ PlayerEntity
 All IK markers are **owned by `PlayerEntity`** and exported on it directly. Per-bike *values* (positions/rotations) live on `BikeSkinDefinition` and are applied via the pose pipeline at runtime.
 
 - **Hand/foot targets** are reconstructed every tick from `BikeSkinDefinition`, anchored to the steering handlebar's parent (hands) and `bike_skin` (feet) — see `_apply_bike_to_pose()`.
-- **Chest/head/magnets/butt** are positioned once at init from `BikeSkinDefinition`, then driven procedurally and/or by animation deltas.
+- **Chest/head/butt** are positioned once at init from `BikeSkinDefinition`, then driven procedurally and/or by animation deltas.
+- **Arm/leg magnets** are positioned once at init and driven by animation deltas only (no procedural state) — written direct in `_commit_pose` as `base + anim_runner.sample(...)`.
 - Wheel markers are editor handles for pivot/raycast positions; values live on `BikeSkinDefinition`.
 
 ### Steering
@@ -150,7 +151,11 @@ Layer fades in via `fade_speed`, plays once, holds end pose. `stop()` fades it o
 
 `_anim_runner` finds tracks by exact `NodePath` match. `AnimationController` defines constants for each marker path (e.g. `_PATH_LHAND_POS = ^"IKTargets/LeftHandTarget:position"`). Authored anims must use these full paths — **don't use `%UniqueName` shorthand**, it won't match.
 
-If you add a new marker that anims should drive, add a `_PATH_*` const + a line in `_apply_anim_deltas`.
+If you add a new marker that anims should drive, add a `_PATH_*` const + a line in `_apply_anim_deltas` (or in `_commit_pose` for proc-less markers like magnets).
+
+#### Path Fixup
+
+`_fixup_anim_paths()` runs over each cached `Animation` at init and rewrites any track path starting with `%UniqueName:` to `IKTargets/UniqueName:`. This lets anims authored with `%`-shorthand still match the full-path constants — but full paths are still preferred when authoring (see Gotcha #3).
 
 ---
 
@@ -174,7 +179,7 @@ The old `await get_tree().create_timer(...)` half-anim wait is gone — fades ha
 ## Public API
 
 ```gdscript
-func initialize()                           # Caches refs, captures base poses, creates AnimRunner, caches anim resources
+func initialize()                           # Caches refs, captures base poses, creates AnimRunner, caches anim resources, connects trick signals
 func set_procedural_enabled(enabled: bool)  # Reseeds _proc_pose on enable
 
 func enable_target_sync()                   # Hand/foot read from bike each tick
@@ -182,8 +187,12 @@ func disable_target_sync()                  # Skip bike→pose for hands/feet (l
 
 func start_ragdoll()
 func stop_ragdoll()
-func do_reset()                             # Called from PlayerEntity.do_respawn (TODO)
+func do_reset()                             # Called from PlayerEntity.do_respawn — flushes anim layers and reseeds proc pose
 ```
+
+## Trick Animations
+
+`AnimationController` listens to `trick_controller.trick_started` / `trick_ended` and plays/stops cached IK animations via `_anim_runner`. Each trick picks its own play mode (auto-fade one-shot, hold-at-end, looping) based on whether it's a transient gesture or a sustained pose. `do_reset()` clears all layer refs so respawns flush cleanly.
 
 To play arbitrary IK anims from elsewhere, expose `_anim_runner` or wrap with helper methods — same `play()/stop()` API.
 
@@ -301,9 +310,9 @@ Pitfalls that aren't obvious from the code alone — read this before changing t
 
 The runtime computes `delta = sample(t) - sample(0)`. The `t=0` keyframe IS the "default" the layer subtracts. If you forget it, Godot's interpolation falls back to the first existing keyframe, and the layer applies a constant offset forever even at weight 1 — looks like the rider is glued into the start pose.
 
-### 3. Use full track paths, not `%UniqueName` shorthand
+### 3. Prefer full track paths over `%UniqueName` shorthand
 
-`_apply_anim_deltas` looks up tracks by exact `NodePath` match against the constants at the top of the file. Author tracks as `IKTargets/LeftHandTarget:position`, not `%LeftHandTarget:position`. If you see a track in the editor that "should be working" but does nothing, this is almost always why.
+`_apply_anim_deltas` looks up tracks by exact `NodePath` match against the constants at the top of the file. `_fixup_anim_paths()` rewrites `%`-shorthand to full paths at init as a safety net, but authoring with full paths (e.g. `IKTargets/LeftHandTarget:position`) is clearer and avoids relying on the fixup. If a track does nothing despite looking right, check the constant list and that the marker is included in `_apply_anim_deltas` / `_commit_pose`.
 
 ### 4. Pivot wheel is picked by sign of rot_x, NOT by trick state
 
