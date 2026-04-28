@@ -28,6 +28,7 @@
       - [ ] IK hand twd ground, not just backwds
   - [ ] once speed hits 0 mid air, i lose all ability to rotate fwd/back
    - [ ] related to wheelie / playerent angle being diff?
+   - [ ] easier on KBM
 ## HI-PRI‼️
 
 - [ ] Finish tutorial:
