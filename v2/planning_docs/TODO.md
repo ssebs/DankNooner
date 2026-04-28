@@ -13,7 +13,7 @@
 
 ### WIP
 - [ ] once speed hits 0 mid air, i lose all ability to rotate fwd/back
-
+ - [ ] related to wheelie / playerent angle being diff?
 - [ ] Update customization menu
   - [x] Show bike + list of all color_mods(gotta check for multiple colors for bike type, so set that as a var in the skin_definition & make the color_mod have a matching count. constraints?)
   - [ ] Add constraints to mods, so certain bikeskins require 2 colors, etc.
