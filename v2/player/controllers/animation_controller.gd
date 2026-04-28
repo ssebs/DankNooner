@@ -450,7 +450,7 @@ func _on_trick_started(trick_type: TrickController.Trick) -> void:
 	if trick_type == TrickController.Trick.HEEL_CLICKER:
 		# One-shot: plays through fully, auto-fades at end. Don't stop on button release —
 		# trick_ended fires when RB is let go OR on landing, but we want the full anim to play.
-		if _heel_clicker_anim and not movement_controller._is_on_floor:
+		if _heel_clicker_anim:
 			if _heel_clicker_layer == null or not _heel_clicker_layer.is_playing():
 				_heel_clicker_layer = _anim_runner.play(_heel_clicker_anim, 1.0, false)
 	elif trick_type == TrickController.Trick.HIGH_CHAIR:
