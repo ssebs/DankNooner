@@ -12,6 +12,9 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
+- [ ] account for wheelie angle when doing flips & landing, aka once in air turn off wheelie, make it complete & set wheelie angle to 0
+  - [ ] wheelie + backflip angles should match!
+- [ ] Review AI code - there are bugs!
 - [ ] Skin variants should use the same offset values, colors should not need to update every skin color
   - [x] **impl planning_docs/PLAN.md**
   - [x] Delete other variants
@@ -35,6 +38,7 @@
     - [x] init IK does not save per bike, switching positions from sportbike to mini is broken, uses prev value!
     - [x] wheelie => 0 speed in wheelie => idle animation => starts floating?!
     - [ ] idle animation janky af, doesn't mix with procedural leaning/etc very well.
+    - [ ] Blend animations (AnimationTree?)
     - [ ] Fix jerkyness from transitioning between IK animation & procedural, do some blending?
       - [ ] e.g. steering, then going to idle, butt shifts weird
       - [ ] e.g. leaning during steering, then going to idle
