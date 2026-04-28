@@ -13,7 +13,6 @@
 
 ### WIP
 - [ ] Review AI code - there are bugs!
-- [ ] Skin variants should use the same offset values, colors should not need to update every skin color
   - [x] **impl planning_docs/PLAN.md**
   - [x] Delete other variants
   - [x] Save a few variants

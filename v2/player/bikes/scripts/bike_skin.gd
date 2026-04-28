@@ -54,8 +54,8 @@ func rotate_wheels(speed: float, delta: float, is_in_wheelie: bool = false):
 	var spin = -mesh_skin.wheel_rot_axis * speed * WHEEL_SPIN_MULTIPLIER * delta
 	if mesh_skin.front_wheel_node:
 		if is_in_wheelie:
-			mesh_skin.front_wheel_node.rotation = mesh_skin.front_wheel_node.rotation.lerp(
-				Vector3.ZERO, WHEEL_SPIN_MULTIPLIER * delta
+			mesh_skin.front_wheel_node.rotation.x = lerpf(
+				mesh_skin.front_wheel_node.rotation.x, 0.0, WHEEL_SPIN_MULTIPLIER * delta
 			)
 		else:
 			mesh_skin.front_wheel_node.rotation += spin
