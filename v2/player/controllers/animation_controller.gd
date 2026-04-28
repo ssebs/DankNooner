@@ -36,6 +36,23 @@ enum RiderState {
 ## Max butt z shift when leaning fwd/back. Negate to flip direction.
 @export var max_butt_z_offset: float = 0.1
 
+# Animation track paths (relative to visual_root, which is anim root_node).
+# Cached as NodePaths so CustomAnimPlayer.find_track lookups are cheap.
+const _PATH_VISUAL_ROOT_ROT := ^":rotation"
+const _PATH_BUTT_POS := ^"IKTargets/ButtTarget:position"
+const _PATH_CHEST_POS := ^"IKTargets/ChestTarget:position"
+const _PATH_CHEST_ROT := ^"IKTargets/ChestTarget:rotation"
+const _PATH_HEAD_POS := ^"IKTargets/HeadTarget:position"
+const _PATH_HEAD_ROT := ^"IKTargets/HeadTarget:rotation"
+const _PATH_LHAND_POS := ^"IKTargets/LeftHandTarget:position"
+const _PATH_LHAND_ROT := ^"IKTargets/LeftHandTarget:rotation"
+const _PATH_RHAND_POS := ^"IKTargets/RightHandTarget:position"
+const _PATH_RHAND_ROT := ^"IKTargets/RightHandTarget:rotation"
+const _PATH_LFOOT_POS := ^"IKTargets/LeftFootTarget:position"
+const _PATH_LFOOT_ROT := ^"IKTargets/LeftFootTarget:rotation"
+const _PATH_RFOOT_POS := ^"IKTargets/RightFootTarget:position"
+const _PATH_RFOOT_ROT := ^"IKTargets/RightFootTarget:rotation"
+
 var current_state: RiderState = RiderState.RIDING:
 	set(value):
 		if current_state != value:
@@ -55,6 +72,14 @@ var _targets_synced_from_bike: bool = true
 # Cached refs (set in initialize)
 var _ik_ctrl: IKController
 var _bd: BikeSkinDefinition
+var _anim_runner: CustomAnimPlayer
+var _idle_anim: Animation
+var _idle_layer: CustomAnimPlayer.Layer
+
+# Proc pose carried between frames (no anim deltas applied). Keeping this separate
+# from what gets committed to the nodes prevents anim-delta drift across frames —
+# the lerps inside proc need their own continuous state to read from.
+var _proc_pose: _RiderPose
 
 #endregion
 
@@ -81,13 +106,21 @@ func _process(delta: float):
 			pass
 
 
-#region Procedural Animation
+#region Procedural Animation — pose pipeline
+## Each frame builds a _RiderPose, runs it through proc → anim deltas → commit.
+## Proc/anim never write directly to nodes; only _commit_pose() does.
+
+
 func _update_idle(delta: float) -> void:
+	var pose := _next_proc_pose()
 	# Ease wheelie/stoppie pitch back to 0 so the bike settles to ground.
-	# _apply_pivot_offset() reads rotation.x, so position unwinds with it.
 	var blend = clampf(5.0 * delta, 0.0, 1.0)
-	visual_root.rotation.x = lerp_angle(visual_root.rotation.x, 0.0, blend)
-	_apply_pivot_offset()
+	pose.visual_root_rot.x = lerp_angle(pose.visual_root_rot.x, 0.0, blend)
+	_apply_pivot_offset_to_pose(pose)
+	_proc_pose = pose
+	var final_pose := pose.duplicate()
+	_apply_anim_deltas(final_pose, delta)
+	_commit_pose(final_pose)
 	_update_idle_timer(delta)
 
 
@@ -96,101 +129,146 @@ func _update_riding(delta: float) -> void:
 	var roll := movement_controller.roll_angle
 	var pitch := movement_controller.pitch_angle
 
-	_riding_common(delta, blend, roll)
+	var pose := _next_proc_pose()
+	if _targets_synced_from_bike:
+		_apply_bike_to_pose(pose)
+
+	_apply_riding_common(pose, delta, blend, roll)
 
 	if not movement_controller._is_on_floor:
-		_riding_air(blend, pitch)
-	elif trick_controller.is_in_wheelie():
-		_riding_wheelie(blend, pitch)
-	elif trick_controller.current_trick == TrickController.Trick.STOPPIE:
-		_riding_stoppie(blend, pitch)
+		_apply_pitch_air(pose, blend, pitch)
 	else:
-		_riding_basic(blend, pitch)
+		_apply_pitch_ground(pose, blend, pitch)
 
-	# Pivot offset tracks current pitch every frame so position unwinds smoothly
-	# as rotation.x lerps back to 0 when leaving a wheelie/stoppie.
-	_apply_pivot_offset()
+	_apply_pivot_offset_to_pose(pose)
 
-	_update_idle_timer(delta)
-
-
-## Always-on bits: steering, wheels, lean rotation, chest/butt X shift, fwd/back lean.
-func _riding_common(delta: float, blend: float, roll: float) -> void:
-	visual_root.rotation.z = lerpf(visual_root.rotation.z, roll, blend)
-
-	var target_chest_y = roll * deg_to_rad(max_chest_yaw_deg)
-	player_entity.chest_target.rotation.y = lerpf(
-		player_entity.chest_target.rotation.y, target_chest_y, blend
-	)
-
-	var lean_x_offset = clampf(visual_root.rotation.z, -max_butt_offset, max_butt_offset)
-	var target_butt_x = _base_butt_pos.x - lean_x_offset
-	var target_chest_x = _base_chest_pos.x - lean_x_offset
-	_ik_ctrl.butt_pos.position.x = lerpf(_ik_ctrl.butt_pos.position.x, target_butt_x, blend)
-	player_entity.chest_target.position.x = lerpf(
-		player_entity.chest_target.position.x, target_chest_x, blend
-	)
-
-	var lean_input = input_controller.nfx_lean
-	var target_chest_pitch = _base_chest_rot.x - lean_input * deg_to_rad(max_chest_lean_pitch_deg)
-	var target_chest_z = _base_chest_pos.z + lean_input * max_chest_z_offset
-	var target_butt_z = _base_butt_pos.z + lean_input * max_butt_z_offset
-	player_entity.chest_target.rotation.x = lerpf(
-		player_entity.chest_target.rotation.x, target_chest_pitch, blend
-	)
-	player_entity.chest_target.position.z = lerpf(
-		player_entity.chest_target.position.z, target_chest_z, blend
-	)
-	_ik_ctrl.butt_pos.position.z = lerpf(_ik_ctrl.butt_pos.position.z, target_butt_z, blend)
-
+	# Steering + wheels run direct on bike_skin — they're not part of the rider pose.
 	var steer_input := roll if _targets_synced_from_bike else 0.0
 	bike_skin.rotate_steering(steer_input, delta)
 	bike_skin.rotate_wheels(movement_controller.speed, delta, trick_controller.is_in_wheelie())
 
-	if _targets_synced_from_bike:
-		_sync_targets_from_bike()
+	# Snapshot proc-only state for next frame, then layer anim deltas onto a copy.
+	_proc_pose = pose
+	var final_pose := pose.duplicate()
+	_apply_anim_deltas(final_pose, delta)
+	_commit_pose(final_pose)
+
+	_update_idle_timer(delta)
 
 
-## On ground, no trick — pitch still follows movement_controller (for sub-threshold wobble).
-func _riding_basic(blend: float, pitch: float) -> void:
-	_lerp_ground_pitch(blend, pitch)
+## Returns the proc pose to mutate this frame. Carries proc state across frames so
+## lerps are continuous; anim deltas are NOT in here (they're layered after).
+## First call seeds from authored defaults / current bike-derived hand-foot positions.
+func _next_proc_pose() -> _RiderPose:
+	if _proc_pose != null:
+		return _proc_pose.duplicate()
+	var pose := _RiderPose.new()
+	pose.visual_root_pos = _base_visual_root_position
+	pose.visual_root_rot = _base_visual_root_rotation
+	pose.butt_pos = _base_butt_pos
+	pose.chest_pos = _base_chest_pos
+	pose.chest_rot = _base_chest_rot
+	pose.head_pos = player_entity.head_target.position
+	pose.head_rot = player_entity.head_target.rotation
+	pose.left_hand_pos = player_entity.left_hand_target.position
+	pose.left_hand_rot = player_entity.left_hand_target.rotation
+	pose.right_hand_pos = player_entity.right_hand_target.position
+	pose.right_hand_rot = player_entity.right_hand_target.rotation
+	pose.left_foot_pos = player_entity.left_foot_target.position
+	pose.left_foot_rot = player_entity.left_foot_target.rotation
+	pose.right_foot_pos = player_entity.right_foot_target.position
+	pose.right_foot_rot = player_entity.right_foot_target.rotation
+	return pose
 
 
-func _riding_wheelie(blend: float, pitch: float) -> void:
-	_lerp_ground_pitch(blend, pitch)
+## Compute hand/foot local transforms from BikeSkinDefinition + handlebar/peg parents,
+## then convert into IKTargets-parent local space (the marker's parent), so anim deltas
+## (which are local) layer cleanly on top.
+func _apply_bike_to_pose(pose: _RiderPose) -> void:
+	var hb_parent := bike_skin.steering_handlebar_marker.get_parent() as Node3D
+	var peg_parent: Node3D = bike_skin
+	var def: BikeSkinDefinition = _bd if _bd else bike_skin.skin_definition
+	if def == null:
+		return
+
+	_set_pose_local_from_bike(
+		pose, "left_hand", hb_parent, def.left_hand_position, def.left_hand_rotation
+	)
+	_set_pose_local_from_bike(
+		pose, "right_hand", hb_parent, def.right_hand_position, def.right_hand_rotation
+	)
+	_set_pose_local_from_bike(
+		pose, "left_foot", peg_parent, def.left_foot_position, def.left_foot_rotation
+	)
+	_set_pose_local_from_bike(
+		pose, "right_foot", peg_parent, def.right_foot_position, def.right_foot_rotation
+	)
 
 
-func _riding_stoppie(blend: float, pitch: float) -> void:
-	_lerp_ground_pitch(blend, pitch)
+## Helper: write `<key>_pos`/`<key>_rot` on pose, converted from the bike's parent space
+## (handlebar parent for hands, bike_skin for feet) into the marker's own parent space.
+func _set_pose_local_from_bike(
+	pose: _RiderPose, key: String, bike_parent: Node3D, local_pos: Vector3, local_rot: Vector3
+) -> void:
+	var bike_global := (
+		bike_parent.global_transform * Transform3D(Basis.from_euler(local_rot), local_pos)
+	)
+	# Marker's actual parent — IKTargets node — is what marker.position/.rotation are relative to.
+	var marker: Node3D = player_entity.get(key + "_target")
+	var marker_parent := marker.get_parent() as Node3D
+	var local := marker_parent.global_transform.affine_inverse() * bike_global
+	pose.set(key + "_pos", local.origin)
+	pose.set(key + "_rot", local.basis.get_euler())
 
 
-func _riding_air(blend: float, pitch: float) -> void:
-	disable_target_sync()
-	visual_root.rotation.x = lerp_angle(visual_root.rotation.x, -pitch, blend)
+## Lean (Z), chest yaw, butt/chest X+Z weight shift. Reads + writes pose only —
+## NEVER touch the live nodes here, they hold post-anim values from last frame.
+func _apply_riding_common(pose: _RiderPose, _delta: float, blend: float, roll: float) -> void:
+	pose.visual_root_rot.z = lerpf(pose.visual_root_rot.z, roll, blend)
+
+	var target_chest_y = roll * deg_to_rad(max_chest_yaw_deg)
+	pose.chest_rot.y = lerpf(pose.chest_rot.y, target_chest_y, blend)
+
+	var lean_x_offset = clampf(pose.visual_root_rot.z, -max_butt_offset, max_butt_offset)
+	pose.butt_pos.x = lerpf(pose.butt_pos.x, _base_butt_pos.x - lean_x_offset, blend)
+	pose.chest_pos.x = lerpf(pose.chest_pos.x, _base_chest_pos.x - lean_x_offset, blend)
+
+	var lean_input = input_controller.nfx_lean
+	var target_chest_pitch = _base_chest_rot.x - lean_input * deg_to_rad(max_chest_lean_pitch_deg)
+	pose.chest_rot.x = lerpf(pose.chest_rot.x, target_chest_pitch, blend)
+	pose.chest_pos.z = lerpf(
+		pose.chest_pos.z, _base_chest_pos.z + lean_input * max_chest_z_offset, blend
+	)
+	pose.butt_pos.z = lerpf(
+		pose.butt_pos.z, _base_butt_pos.z + lean_input * max_butt_z_offset, blend
+	)
 
 
-## Shared ground pitch target: follow movement_controller.pitch_angle, clamped to bike limits.
-func _lerp_ground_pitch(blend: float, pitch: float) -> void:
+func _apply_pitch_ground(pose: _RiderPose, blend: float, pitch: float) -> void:
 	enable_target_sync()
 	var max_wheelie_rad = deg_to_rad(_bd.max_wheelie_angle_deg)
 	var max_stoppie_rad = deg_to_rad(_bd.max_stoppie_angle_deg)
 	var target = -clampf(pitch, -max_stoppie_rad, max_wheelie_rad)
-	visual_root.rotation.x = lerp_angle(visual_root.rotation.x, target, blend)
+	pose.visual_root_rot.x = lerp_angle(pose.visual_root_rot.x, target, blend)
 
 
-## Pivot visual_root around the tire contact arc. Arc is picked by trick_controller state;
-## when not in a trick, sign of rotation.x handles mid-transition unwind (prevents snapping).
-func _apply_pivot_offset() -> void:
-	var rot_x = visual_root.rotation.x
+func _apply_pitch_air(pose: _RiderPose, blend: float, pitch: float) -> void:
+	disable_target_sync()
+	pose.visual_root_rot.x = lerp_angle(pose.visual_root_rot.x, -pitch, blend)
+
+
+## Pivot visual_root around the tire contact arc — same logic as before but writes
+## into pose.visual_root_pos rather than the node directly.
+##
+## Pivot wheel is picked by the SIGN of rot_x, not by trick state. _apply_pitch_ground
+## maps wheelie target → negative rot_x and stoppie target → positive rot_x, so sign
+## always matches the visible rotation. Picking by trick state instead caused under-ground
+## clipping during wheelie↔stoppie transitions: trick flips instantly but rot_x lerps,
+## so for ~0.2s the wrong wheel pivots through the ground.
+func _apply_pivot_offset_to_pose(pose: _RiderPose) -> void:
+	var rot_x := pose.visual_root_rot.x
 	var pitch_ratio = clampf(absf(rot_x) / (PI / 2.0), 0.0, 1.0)
-	var use_rear: bool
-	match trick_controller.current_trick:
-		TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD:
-			use_rear = true
-		TrickController.Trick.STOPPIE:
-			use_rear = false
-		_:
-			use_rear = rot_x < 0.0
+	var use_rear := rot_x < 0.0
 
 	var pivot: Vector3
 	if use_rear:
@@ -198,7 +276,48 @@ func _apply_pivot_offset() -> void:
 	else:
 		pivot = _bd.front_wheel_ground_position.lerp(_bd.front_wheel_front_position, pitch_ratio)
 	var rotated_pivot = Basis(Vector3.RIGHT, rot_x) * pivot
-	visual_root.position = _base_visual_root_position + pivot - rotated_pivot
+	pose.visual_root_pos = _base_visual_root_position + pivot - rotated_pivot
+
+
+## Sample every active CustomAnimPlayer layer, add its delta-from-default into the pose.
+## Anim tracks key local position/rotation, so deltas just sum into pose fields.
+func _apply_anim_deltas(pose: _RiderPose, delta: float) -> void:
+	_anim_runner.tick(delta)
+	if _anim_runner.get_layers().is_empty():
+		return
+	pose.visual_root_rot += _anim_runner.sample_vec3(_PATH_VISUAL_ROOT_ROT)
+	pose.butt_pos += _anim_runner.sample_vec3(_PATH_BUTT_POS)
+	pose.chest_pos += _anim_runner.sample_vec3(_PATH_CHEST_POS)
+	pose.chest_rot += _anim_runner.sample_vec3(_PATH_CHEST_ROT)
+	pose.head_pos += _anim_runner.sample_vec3(_PATH_HEAD_POS)
+	pose.head_rot += _anim_runner.sample_vec3(_PATH_HEAD_ROT)
+	pose.left_hand_pos += _anim_runner.sample_vec3(_PATH_LHAND_POS)
+	pose.left_hand_rot += _anim_runner.sample_vec3(_PATH_LHAND_ROT)
+	pose.right_hand_pos += _anim_runner.sample_vec3(_PATH_RHAND_POS)
+	pose.right_hand_rot += _anim_runner.sample_vec3(_PATH_RHAND_ROT)
+	pose.left_foot_pos += _anim_runner.sample_vec3(_PATH_LFOOT_POS)
+	pose.left_foot_rot += _anim_runner.sample_vec3(_PATH_LFOOT_ROT)
+	pose.right_foot_pos += _anim_runner.sample_vec3(_PATH_RFOOT_POS)
+	pose.right_foot_rot += _anim_runner.sample_vec3(_PATH_RFOOT_ROT)
+
+
+## Single point of contact with the actual nodes.
+func _commit_pose(pose: _RiderPose) -> void:
+	visual_root.position = pose.visual_root_pos
+	visual_root.rotation = pose.visual_root_rot
+	_ik_ctrl.butt_pos.position = pose.butt_pos
+	player_entity.chest_target.position = pose.chest_pos
+	player_entity.chest_target.rotation = pose.chest_rot
+	player_entity.head_target.position = pose.head_pos
+	player_entity.head_target.rotation = pose.head_rot
+	player_entity.left_hand_target.position = pose.left_hand_pos
+	player_entity.left_hand_target.rotation = pose.left_hand_rot
+	player_entity.right_hand_target.position = pose.right_hand_pos
+	player_entity.right_hand_target.rotation = pose.right_hand_rot
+	player_entity.left_foot_target.position = pose.left_foot_pos
+	player_entity.left_foot_target.rotation = pose.left_foot_rot
+	player_entity.right_foot_target.position = pose.right_foot_pos
+	player_entity.right_foot_target.rotation = pose.right_foot_rot
 
 
 func _update_idle_timer(delta: float) -> void:
@@ -241,6 +360,15 @@ func initialize() -> void:
 
 	ik_anim_player.root_node = ik_anim_player.get_path_to(visual_root)
 
+	# CustomAnimPlayer is created lazily so editor + runtime share the same setup.
+	if _anim_runner == null:
+		_anim_runner = CustomAnimPlayer.new()
+		_anim_runner.name = "AnimRunner"
+		add_child(_anim_runner)
+	# Cache anims off the existing AnimationPlayer's library — keeps editor authoring intact.
+	if ik_anim_player.has_animation("idle"):
+		_idle_anim = ik_anim_player.get_animation("idle")
+
 	_sync_targets_from_bike()
 
 
@@ -281,6 +409,7 @@ func set_procedural_enabled(enabled: bool) -> void:
 	_procedural_enabled = enabled
 	if enabled:
 		_reset_to_base_positions()
+		_proc_pose = null  # reseed from defaults next tick
 
 
 ## Hand ownership of the hand/foot targets back to procedural riding. Next tick's
@@ -307,6 +436,7 @@ func stop_ragdoll() -> void:
 	character_skin.stop_ragdoll()
 	character_skin.enable_ik()
 	_reset_to_base_positions()
+	_proc_pose = null
 	current_state = RiderState.RIDING
 
 
@@ -321,14 +451,10 @@ func do_reset():
 #region State Transitions
 func _transition_to_riding() -> void:
 	DebugUtils.DebugMsg("_transition_to_riding")
-
-	# ik_anim_player.play_backwards("idle")
-	ik_anim_player.play("idle", -1, -2.0, true)  # play backwds, 2x speed
-	await get_tree().create_timer(ik_anim_player.current_animation_length / 2).timeout
-	_procedural_enabled = true
-
+	if _idle_layer != null and _idle_layer.is_playing():
+		_anim_runner.stop(_idle_layer)
+		_idle_layer = null
 	current_state = RiderState.RIDING
-	ik_anim_player.stop()
 	character_skin.enable_ik()
 	enable_target_sync()
 
@@ -337,7 +463,9 @@ func _transition_to_idle() -> void:
 	current_state = RiderState.IDLE
 	_procedural_enabled = true
 	disable_target_sync()
-	ik_anim_player.play("idle")
+	if _idle_anim:
+		# One-shot, holds the end pose. _transition_to_riding fades it out.
+		_idle_layer = _anim_runner.play_one_shot(_idle_anim, 1.0)
 
 
 #endregion
@@ -362,8 +490,11 @@ func _editor_refs_ready() -> bool:
 
 func _editor_init_ik_from_bike() -> void:
 	if not _editor_refs_ready():
-		DebugUtils.DebugErrMsg(
-			"AnimationController: bike_skin, character_skin, player_entity, and IKController must be set"
+		(
+			DebugUtils
+			. DebugErrMsg(
+				"AnimationController: bike_skin, character_skin, player_entity, and IKController must be set"
+			)
 		)
 		return
 
@@ -552,3 +683,44 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if ik_anim_player == null:
 		issues.append("ik_anim_player must be set")
 	return issues
+
+
+## Per-frame snapshot of every value the rider pose pipeline mutates. Pure data;
+## stages read/write its fields and only _commit_pose() touches actual nodes.
+## Hand/foot pos+rot are stored in the marker's parent local space (matches the
+## animation track value space, so anim deltas just sum in).
+class _RiderPose:
+	var visual_root_pos: Vector3
+	var visual_root_rot: Vector3
+	var butt_pos: Vector3
+	var chest_pos: Vector3
+	var chest_rot: Vector3
+	var head_pos: Vector3
+	var head_rot: Vector3
+	var left_hand_pos: Vector3
+	var left_hand_rot: Vector3
+	var right_hand_pos: Vector3
+	var right_hand_rot: Vector3
+	var left_foot_pos: Vector3
+	var left_foot_rot: Vector3
+	var right_foot_pos: Vector3
+	var right_foot_rot: Vector3
+
+	func duplicate() -> _RiderPose:
+		var p := _RiderPose.new()
+		p.visual_root_pos = visual_root_pos
+		p.visual_root_rot = visual_root_rot
+		p.butt_pos = butt_pos
+		p.chest_pos = chest_pos
+		p.chest_rot = chest_rot
+		p.head_pos = head_pos
+		p.head_rot = head_rot
+		p.left_hand_pos = left_hand_pos
+		p.left_hand_rot = left_hand_rot
+		p.right_hand_pos = right_hand_pos
+		p.right_hand_rot = right_hand_rot
+		p.left_foot_pos = left_foot_pos
+		p.left_foot_rot = left_foot_rot
+		p.right_foot_pos = right_foot_pos
+		p.right_foot_rot = right_foot_rot
+		return p
