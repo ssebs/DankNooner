@@ -338,6 +338,9 @@ func do_respawn():
 	# animation_controller.do_reset()
 	if animation_controller:
 		animation_controller.stop_ragdoll()
+	# Re-init IK so markers snap back to base pose (covers respawn from crashes that
+	# leave markers offset by anim layers / ragdoll bone positions).
+	_init_ik()
 	respawned.emit()
 
 

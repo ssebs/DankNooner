@@ -13,7 +13,7 @@ class_name MovementController extends Node
 
 const CLUTCH_KICK_WINDOW: float = 0.2
 const FALL_GRAVITY: float = 16
-const AIR_DRAG: float = 16.0  # speed loss while airborne
+const AIR_DRAG: float = 12.0  # speed loss while airborne
 # Ramp / loop tuning
 const SURFACE_BLEND_SPEED_MIN: float = 3.0  # up_direction alignment speed at rest
 const SURFACE_BLEND_SPEED_MAX: float = 40.0  # alignment speed at full speed (must track loops)

@@ -524,7 +524,13 @@ func stop_ragdoll() -> void:
 
 ## Called from player_entity.gd's do_respawn
 func do_reset():
-	pass
+	# Flush any active anim layers (heel clicker, idle, etc.) so a crash mid-trick
+	# doesn't leave deltas baked into the respawn pose.
+	if _anim_runner:
+		_anim_runner.stop_all()
+	_idle_layer = null
+	_heel_clicker_layer = null
+	_proc_pose = null
 
 
 #endregion
