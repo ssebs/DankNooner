@@ -15,6 +15,7 @@ signal crashed
 
 var _prev_front_brake: float = 0.0
 var _brake_was_grabbed: bool = false
+var _prev_trick: TrickController.Trick = TrickController.Trick.NONE
 
 var _crash_min_speed: float = 10.0
 var _crash_angle: float = 60.0
@@ -31,7 +32,21 @@ func on_movement_rollback_tick(delta: float):
 		return
 
 	_update_brake_grab(delta)
+	_detect_air_trick_landing()
 	_detect_crash()
+	# Cache trick state AFTER detection — trick_controller already ran this tick and
+	# transitioned to ground state on landing, so we use last tick's value to detect "landed mid-trick".
+	_prev_trick = player_entity.trick_controller.current_trick
+
+
+## Crash if we touch down while still mid air-trick (heel clicker etc.)
+func _detect_air_trick_landing():
+	var just_landed = movement_controller._is_on_floor and not movement_controller._was_on_floor
+	if not just_landed:
+		return
+	if _prev_trick == TrickController.Trick.HEEL_CLICKER:
+		DebugUtils.DebugMsg("landed mid air-trick crash (%s)" % TrickController.trick_to_str(_prev_trick))
+		trigger_crash()
 
 
 ## Sets player_entity.grip_usage
@@ -135,6 +150,7 @@ func trigger_crash():
 func do_reset():
 	_prev_front_brake = 0.0
 	_brake_was_grabbed = false
+	_prev_trick = TrickController.Trick.NONE
 
 
 func _get_configuration_warnings() -> PackedStringArray:
