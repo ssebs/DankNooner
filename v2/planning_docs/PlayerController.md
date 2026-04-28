@@ -82,7 +82,7 @@
 - **GearingController** (local)
   - `_current_gear`, `_current_rpm`, `_clutch_value`, `_rpm_ratio`
 - **TrickController** (local)
-  - `current_trick` (Trick enum: NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE)
+  - `current_trick` (Trick enum: NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, THREESIXTY, HEEL_CLICKER, HIGH_CHAIR)
 - **AnimationController** (local)
   - `current_state` (RiderState enum: RIDING, IDLE, TRICK, RAGDOLL)
   - `_targets_synced_from_bike` flag
@@ -133,20 +133,12 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     - `get_gear_max_speed()` — max speed for current gear
   - Emits `gear_changed(new_gear)`, `rpm_updated(rpm_ratio)`
 - **TrickController** (`trick_controller.gd`)
-  - Reads `movement_controller.pitch_angle` to detect current trick
-  - Trick enum: NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE
-  - Wheelie sitting: pitch > 15°
-  - Wheelie mod: pitch > 15° + trick_held
-  - Stoppie: pitch < -10°
-  - Emits `trick_started(trick_type)`, `trick_ended(trick_type)`
+  - Detects ground tricks (wheelie variants, stoppie) from `movement_controller.pitch_angle` and air tricks (flips, heel clicker, high chair) from input + airtime
+  - Some tricks (e.g. high chair) latch — entry on a gesture, persist while the gating input + condition hold
+  - Emits `trick_started(trick_type)` / `trick_ended(trick_type)` on transitions
 - **CrashController** (`crash_controller.gd`)
-  - Runs after MovementController in rollback tick
-  - `_update_brake_grab()` — tracks front brake grab timing, sets `player_entity.grip_usage`
-  - `_detect_crash()` — checks for:
-    - Wheelie crash: `pitch_angle > max_wheelie_angle_deg`
-    - Stoppie crash: `pitch_angle < -max_stoppie_angle_deg`
-    - Lean crash: `roll_angle >= crash_lean_threshold_deg`
-    - Brake grab while turning (sim difficulty + gamepad only)
+  - Runs in rollback tick after the other controllers
+  - Detects crashes from over-rotation (wheelie/stoppie past trick limits, side lean), brake grabs while turning, killbox/obstacle collisions, upside-down landings, and landing while still mid air-trick
   - `trigger_crash()` — sets `is_crashed`, zeros velocity, starts ragdoll
   - Auto-respawn after 3s via timer (TODO: move to GamemodeManager)
   - Emits `crashed`

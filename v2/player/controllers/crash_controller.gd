@@ -16,6 +16,9 @@ signal crashed
 var _prev_front_brake: float = 0.0
 var _brake_was_grabbed: bool = false
 var _prev_trick: TrickController.Trick = TrickController.Trick.NONE
+# True if the player entered HEEL_CLICKER at any point during the current airtime.
+# Latches in air, crashes on touchdown, clears on respawn / next takeoff.
+var _heel_clicker_armed: bool = false
 
 var _crash_min_speed: float = 10.0
 var _crash_angle: float = 60.0
@@ -39,14 +42,26 @@ func on_movement_rollback_tick(delta: float):
 	_prev_trick = player_entity.trick_controller.current_trick
 
 
-## Crash if we touch down while still mid air-trick (heel clicker etc.)
+## Crash if we touch down after starting a heel clicker during this airtime —
+## even if the input was released before landing (the anim is still resolving).
 func _detect_air_trick_landing():
-	var just_landed = movement_controller._is_on_floor and not movement_controller._was_on_floor
-	if not just_landed:
+	var current_trick = player_entity.trick_controller.current_trick
+	if not movement_controller._is_on_floor:
+		# Latch the flag any time HEEL_CLICKER is active mid-air this airtime.
+		if current_trick == TrickController.Trick.HEEL_CLICKER:
+			_heel_clicker_armed = true
 		return
-	if _prev_trick == TrickController.Trick.HEEL_CLICKER:
-		DebugUtils.DebugMsg("landed mid air-trick crash (%s)" % TrickController.trick_to_str(_prev_trick))
+
+	# On the ground — clear arming on takeoff transitions handled below.
+	var just_landed = not movement_controller._was_on_floor
+	if just_landed and _heel_clicker_armed:
+		DebugUtils.DebugMsg("landed mid heel clicker crash")
+		_heel_clicker_armed = false
 		trigger_crash()
+		return
+	# Reset between airtimes regardless (covers respawns, edge cases).
+	if movement_controller._is_on_floor:
+		_heel_clicker_armed = false
 
 
 ## Sets player_entity.grip_usage
@@ -151,6 +166,7 @@ func do_reset():
 	_prev_front_brake = 0.0
 	_brake_was_grabbed = false
 	_prev_trick = TrickController.Trick.NONE
+	_heel_clicker_armed = false
 
 
 func _get_configuration_warnings() -> PackedStringArray:
