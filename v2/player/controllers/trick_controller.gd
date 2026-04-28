@@ -4,9 +4,19 @@ class_name TrickController extends Node
 signal trick_started(trick_type: Trick)
 signal trick_ended(trick_type: Trick)
 
-enum Trick { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, THREESIXTY, HEEL_CLICKER }
+enum Trick {
+	NONE,
+	WHEELIE_SITTING,
+	WHEELIE_MOD,
+	STOPPIE,
+	BACKFLIP,
+	FRONTFLIP,
+	THREESIXTY,
+	HEEL_CLICKER,
+	HIGH_CHAIR,
+}
 
-const HEEL_CLICKER_CAM_Y_THRESHOLD: float = -0.5
+const TRICK_CAM_Y_THRESHOLD: float = -0.5
 
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
@@ -46,6 +56,12 @@ func _detect_current_trick() -> Trick:
 
 	if movement_controller.pitch_angle > deg_to_rad(10):
 		if input_controller.nfx_trick_held:
+			# HIGH_CHAIR latches: once entered (via cam-down flick), stays held while
+			# RB is held + still in a wheelie. Releasing RB or dropping the wheelie exits.
+			if current_trick == Trick.HIGH_CHAIR:
+				return Trick.HIGH_CHAIR
+			if input_controller.nfx_cam_y < TRICK_CAM_Y_THRESHOLD:
+				return Trick.HIGH_CHAIR
 			return Trick.WHEELIE_MOD
 		return Trick.WHEELIE_SITTING
 
@@ -56,7 +72,7 @@ func _detect_current_trick() -> Trick:
 
 func _detect_air_trick() -> Trick:
 	# Heel clicker — held while airborne with trick btn + cam stick down
-	if input_controller.nfx_trick_held and input_controller.nfx_cam_y < HEEL_CLICKER_CAM_Y_THRESHOLD:
+	if input_controller.nfx_trick_held and input_controller.nfx_cam_y < TRICK_CAM_Y_THRESHOLD:
 		return Trick.HEEL_CLICKER
 
 	if movement_controller.air_pitch_total < (TAU * 0.9):
@@ -105,6 +121,8 @@ static func trick_to_str(trick: Trick) -> String:
 			return "THREESIXTY"
 		Trick.HEEL_CLICKER:
 			return "HEEL_CLICKER"
+		Trick.HIGH_CHAIR:
+			return "HIGH_CHAIR"
 	return "NONE"
 
 
@@ -126,6 +144,8 @@ static func str_to_trick(s: String) -> Trick:
 			return Trick.THREESIXTY
 		"HEEL_CLICKER":
 			return Trick.HEEL_CLICKER
+		"HIGH_CHAIR":
+			return Trick.HIGH_CHAIR
 	return Trick.NONE
 
 
