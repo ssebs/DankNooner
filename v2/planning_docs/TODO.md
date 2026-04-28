@@ -23,7 +23,8 @@
     - [ ] Currently have to reselect skins & save again
 - [ ] Animation Controller:
   - [ ] Create trick animations to use in trick manager
-    - [ ] `heel_clicker`
+    - [x] `heel_clicker`
+    - [ ] `high_chair` - 4 wheelie
     - [ ] hand grab
       - [ ] IK hand twd ground, not just backwds
   - [x] Fix wheelie rotation / placement (puts you in the ground - find / fix solution)
