@@ -205,11 +205,16 @@ func _init_ik():
 	butt_target.position = bike_definition.seat_marker_position
 	ik_ctrl.set_targets(
 		butt_target,
-		left_hand_target, right_hand_target,
-		left_foot_target, right_foot_target,
-		chest_target, head_target,
-		left_arm_magnet, right_arm_magnet,
-		left_leg_magnet, right_leg_magnet
+		left_hand_target,
+		right_hand_target,
+		left_foot_target,
+		right_foot_target,
+		chest_target,
+		head_target,
+		left_arm_magnet,
+		right_arm_magnet,
+		left_leg_magnet,
+		right_leg_magnet
 	)
 	_apply_rider_pose_from_definition()
 	ik_ctrl._create_ik()
