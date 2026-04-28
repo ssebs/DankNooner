@@ -93,6 +93,8 @@ var _idle_anim: Animation
 var _idle_layer: CustomAnimPlayer.Layer
 var _heel_clicker_anim: Animation
 var _heel_clicker_layer: CustomAnimPlayer.Layer
+var _high_chair_anim: Animation
+var _high_chair_layer: CustomAnimPlayer.Layer
 
 # Proc pose carried between frames (no anim deltas applied). Keeping this separate
 # from what gets committed to the nodes prevents anim-delta drift across frames —
@@ -423,6 +425,9 @@ func initialize() -> void:
 	if ik_anim_player.has_animation("heel_clicker"):
 		_heel_clicker_anim = ik_anim_player.get_animation("heel_clicker")
 		_fixup_anim_paths(_heel_clicker_anim)
+	if ik_anim_player.has_animation("high_chair"):
+		_high_chair_anim = ik_anim_player.get_animation("high_chair")
+		_fixup_anim_paths(_high_chair_anim)
 
 	if not trick_controller.trick_started.is_connected(_on_trick_started):
 		trick_controller.trick_started.connect(_on_trick_started)
@@ -448,10 +453,27 @@ func _on_trick_started(trick_type: TrickController.Trick) -> void:
 		if _heel_clicker_anim and not movement_controller._is_on_floor:
 			if _heel_clicker_layer == null or not _heel_clicker_layer.is_playing():
 				_heel_clicker_layer = _anim_runner.play(_heel_clicker_anim, 1.0, false)
+	elif trick_type == TrickController.Trick.HIGH_CHAIR:
+		# Settle into pose, hold while latched. If a reverse-out is mid-flight (re-entry
+		# during the unwind), flip it back to forward instead of starting a new layer.
+		if _high_chair_anim == null:
+			return
+		if _high_chair_layer != null and _high_chair_layer.is_playing():
+			_high_chair_layer.speed = 1.0
+			_high_chair_layer.hold_at_end = true
+			_high_chair_layer.target_weight = 1.0
+		else:
+			_high_chair_layer = _anim_runner.play_one_shot(_high_chair_anim, 1.0)
 
 
-func _on_trick_ended(_trick_type: TrickController.Trick) -> void:
-	pass
+func _on_trick_ended(trick_type: TrickController.Trick) -> void:
+	if trick_type == TrickController.Trick.HIGH_CHAIR:
+		# Reverse from current time back to 0 — rider unwinds out of the pose smoothly.
+		# When time hits 0, hold_at_end=false makes the layer auto-fade and clear itself.
+		if _high_chair_layer != null and _high_chair_layer.is_playing():
+			_high_chair_layer.speed = -1.0
+			_high_chair_layer.hold_at_end = false
+			_high_chair_layer.target_weight = 1.0
 
 
 ## Sync hand/foot target transforms from saved positions/rotations in BikeSkinDefinition,
@@ -530,6 +552,7 @@ func do_reset():
 		_anim_runner.stop_all()
 	_idle_layer = null
 	_heel_clicker_layer = null
+	_high_chair_layer = null
 	_proc_pose = null
 
 
