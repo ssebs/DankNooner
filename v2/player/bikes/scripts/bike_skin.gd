@@ -66,7 +66,6 @@ func rotate_wheels(speed: float, delta: float, is_in_wheelie: bool = false):
 #region resource/definition
 func _apply_definition():
 	_spawn_mesh()
-	_set_mesh_colors()
 	_apply_mods()
 	_create_steering_handlebar_proxy()
 	if Engine.is_editor_hint():
@@ -107,13 +106,6 @@ func _create_steering_handlebar_proxy():
 
 
 #region mesh init
-func _set_mesh_colors():
-	var colors: Array[Color] = skin_definition.colors
-	for i in range(colors.size()):
-		if colors[i] != Color.TRANSPARENT:
-			mesh_skin.update_slot_color(i, colors[i])
-
-
 func _spawn_mesh():
 	for child in mesh_node.get_children():
 		child.queue_free()

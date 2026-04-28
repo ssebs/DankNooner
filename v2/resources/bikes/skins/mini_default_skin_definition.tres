@@ -47,5 +47,5 @@ gear_ratios = Array[float]([2.92, 2.05, 1.6, 1.0])
 num_gears = 4
 max_rpm = 8000.0
 max_speed = 60.0
-acceleration = 8.0
+acceleration = 6.0
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"

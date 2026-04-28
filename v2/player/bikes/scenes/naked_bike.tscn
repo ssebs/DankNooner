@@ -21,7 +21,7 @@ albedo_color = Color(0.11028292, 0.6258798, 0.47056687, 1)
 [node name="NakedBikeModified" unique_id=1069752024 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("1_fmxco")]
 script = ExtResource("2_qqbuq")
 slots = Array[ExtResource("3_di6m0")]([SubResource("Resource_fmxco")])
-meshes = [null]
+meshes = [NodePath("Body")]
 steering_rotation_node = NodePath("Handlebars")
 front_wheel_node = NodePath("Handlebars/FontWheel")
 rear_wheel_node = NodePath("RearWheel")

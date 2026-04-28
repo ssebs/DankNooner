@@ -24,11 +24,11 @@ skin_definition = ExtResource("2_qeo2q")
 [node name="MeshNode" type="Node3D" parent="." unique_id=1984999037]
 unique_name_in_owner = true
 
-[node name="NakedBikeModified" type="Node3D" parent="MeshNode" unique_id=1471196166 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("3_0q805")]
+[node name="NakedBikeModified" type="Node3D" parent="MeshNode" unique_id=1069752024 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("3_0q805")]
 transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0.255, -0.1)
 script = ExtResource("4_c5axj")
 slots = Array[ExtResource("5_e6q4j")]([SubResource("Resource_qeo2q")])
 meshes = [NodePath("Body")]
-steering_rotation_node = NodePath("Body/Handlebars")
-front_wheel_node = NodePath("Body/Handlebars/FontWheel")
-rear_wheel_node = NodePath("Body/RearWheel")
+steering_rotation_node = NodePath("Handlebars")
+front_wheel_node = NodePath("Handlebars/FontWheel")
+rear_wheel_node = NodePath("RearWheel")
