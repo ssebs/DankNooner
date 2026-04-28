@@ -7,7 +7,7 @@ signal state_changed(new_state: RiderState)
 enum RiderState {
 	RIDING,  # Procedural active, IK enabled
 	IDLE,  # Procedural paused, playing idle anims
-	TRICK,  # IK disabled, skeleton anim playing
+	# TRICK,  # IK disabled, skeleton anim playing
 	RAGDOLL,  # Everything disabled
 }
 
@@ -27,6 +27,8 @@ enum RiderState {
 @export_group("Procedural Settings")
 @export var idle_timeout: float = 0.1
 @export var max_butt_offset := 0.12
+## Max chest yaw (deg) when leaning into a turn — chest twists toward turn direction.
+@export var max_chest_yaw_deg: float = 30.0
 ## Max chest pitch (deg) when leaning fwd/back. Negate to flip direction.
 @export var max_chest_lean_pitch_deg: float = -15.0
 ## Max chest z shift when leaning fwd/back. Negate to flip direction.
@@ -54,11 +56,6 @@ var _targets_synced_from_bike: bool = true
 var _ik_ctrl: IKController
 var _bd: BikeSkinDefinition
 
-# Per-tick cached inputs (set at top of _update_riding)
-var _blend: float
-var _roll: float
-var _pitch: float
-
 #endregion
 
 
@@ -80,8 +77,6 @@ func _process(delta: float):
 			_update_idle(delta)
 		RiderState.RIDING:
 			_update_riding(delta)
-		RiderState.TRICK:
-			_update_trick(delta)
 		RiderState.RAGDOLL:
 			pass
 
@@ -96,26 +91,21 @@ func _update_idle(delta: float) -> void:
 	_update_idle_timer(delta)
 
 
-func _update_trick(_delta: float) -> void:
-	# Skeleton AnimationPlayer drives the pose; nothing procedural to do.
-	pass
-
-
 func _update_riding(delta: float) -> void:
-	_blend = clampf(5.0 * delta, 0.0, 1.0)
-	_roll = movement_controller.roll_angle
-	_pitch = movement_controller.pitch_angle
+	var blend := clampf(5.0 * delta, 0.0, 1.0)
+	var roll := movement_controller.roll_angle
+	var pitch := movement_controller.pitch_angle
 
-	_riding_common(delta)
+	_riding_common(delta, blend, roll)
 
 	if not movement_controller._is_on_floor:
-		_riding_air(delta)
+		_riding_air(blend, pitch)
 	elif trick_controller.is_in_wheelie():
-		_riding_wheelie(delta)
+		_riding_wheelie(blend, pitch)
 	elif trick_controller.current_trick == TrickController.Trick.STOPPIE:
-		_riding_stoppie(delta)
+		_riding_stoppie(blend, pitch)
 	else:
-		_riding_basic(delta)
+		_riding_basic(blend, pitch)
 
 	# Pivot offset tracks current pitch every frame so position unwinds smoothly
 	# as rotation.x lerps back to 0 when leaving a wheelie/stoppie.
@@ -125,20 +115,20 @@ func _update_riding(delta: float) -> void:
 
 
 ## Always-on bits: steering, wheels, lean rotation, chest/butt X shift, fwd/back lean.
-func _riding_common(delta: float) -> void:
-	visual_root.rotation.z = lerpf(visual_root.rotation.z, _roll, _blend)
+func _riding_common(delta: float, blend: float, roll: float) -> void:
+	visual_root.rotation.z = lerpf(visual_root.rotation.z, roll, blend)
 
-	var target_chest_y = _roll * deg_to_rad(30)
+	var target_chest_y = roll * deg_to_rad(max_chest_yaw_deg)
 	player_entity.chest_target.rotation.y = lerpf(
-		player_entity.chest_target.rotation.y, target_chest_y, _blend
+		player_entity.chest_target.rotation.y, target_chest_y, blend
 	)
 
 	var lean_x_offset = clampf(visual_root.rotation.z, -max_butt_offset, max_butt_offset)
 	var target_butt_x = _base_butt_pos.x - lean_x_offset
 	var target_chest_x = _base_chest_pos.x - lean_x_offset
-	_ik_ctrl.butt_pos.position.x = lerpf(_ik_ctrl.butt_pos.position.x, target_butt_x, _blend)
+	_ik_ctrl.butt_pos.position.x = lerpf(_ik_ctrl.butt_pos.position.x, target_butt_x, blend)
 	player_entity.chest_target.position.x = lerpf(
-		player_entity.chest_target.position.x, target_chest_x, _blend
+		player_entity.chest_target.position.x, target_chest_x, blend
 	)
 
 	var lean_input = input_controller.nfx_lean
@@ -146,14 +136,14 @@ func _riding_common(delta: float) -> void:
 	var target_chest_z = _base_chest_pos.z + lean_input * max_chest_z_offset
 	var target_butt_z = _base_butt_pos.z + lean_input * max_butt_z_offset
 	player_entity.chest_target.rotation.x = lerpf(
-		player_entity.chest_target.rotation.x, target_chest_pitch, _blend
+		player_entity.chest_target.rotation.x, target_chest_pitch, blend
 	)
 	player_entity.chest_target.position.z = lerpf(
-		player_entity.chest_target.position.z, target_chest_z, _blend
+		player_entity.chest_target.position.z, target_chest_z, blend
 	)
-	_ik_ctrl.butt_pos.position.z = lerpf(_ik_ctrl.butt_pos.position.z, target_butt_z, _blend)
+	_ik_ctrl.butt_pos.position.z = lerpf(_ik_ctrl.butt_pos.position.z, target_butt_z, blend)
 
-	var steer_input := _roll if _targets_synced_from_bike else 0.0
+	var steer_input := roll if _targets_synced_from_bike else 0.0
 	bike_skin.rotate_steering(steer_input, delta)
 	bike_skin.rotate_wheels(movement_controller.speed, delta, trick_controller.is_in_wheelie())
 
@@ -162,30 +152,30 @@ func _riding_common(delta: float) -> void:
 
 
 ## On ground, no trick — pitch still follows movement_controller (for sub-threshold wobble).
-func _riding_basic(_delta: float) -> void:
-	_lerp_ground_pitch()
+func _riding_basic(blend: float, pitch: float) -> void:
+	_lerp_ground_pitch(blend, pitch)
 
 
-func _riding_wheelie(_delta: float) -> void:
-	_lerp_ground_pitch()
+func _riding_wheelie(blend: float, pitch: float) -> void:
+	_lerp_ground_pitch(blend, pitch)
 
 
-func _riding_stoppie(_delta: float) -> void:
-	_lerp_ground_pitch()
+func _riding_stoppie(blend: float, pitch: float) -> void:
+	_lerp_ground_pitch(blend, pitch)
 
 
-func _riding_air(_delta: float) -> void:
+func _riding_air(blend: float, pitch: float) -> void:
 	disable_target_sync()
-	visual_root.rotation.x = lerp_angle(visual_root.rotation.x, -_pitch, _blend)
+	visual_root.rotation.x = lerp_angle(visual_root.rotation.x, -pitch, blend)
 
 
 ## Shared ground pitch target: follow movement_controller.pitch_angle, clamped to bike limits.
-func _lerp_ground_pitch() -> void:
+func _lerp_ground_pitch(blend: float, pitch: float) -> void:
 	enable_target_sync()
 	var max_wheelie_rad = deg_to_rad(_bd.max_wheelie_angle_deg)
 	var max_stoppie_rad = deg_to_rad(_bd.max_stoppie_angle_deg)
-	var target = -clampf(_pitch, -max_stoppie_rad, max_wheelie_rad)
-	visual_root.rotation.x = lerp_angle(visual_root.rotation.x, target, _blend)
+	var target = -clampf(pitch, -max_stoppie_rad, max_wheelie_rad)
+	visual_root.rotation.x = lerp_angle(visual_root.rotation.x, target, blend)
 
 
 ## Pivot visual_root around the tire contact arc. Arc is picked by trick_controller state;
@@ -211,35 +201,12 @@ func _apply_pivot_offset() -> void:
 	visual_root.position = _base_visual_root_position + pivot - rotated_pivot
 
 
-# func _update_wheelie_arm() -> void:
-# 	var anim_player = character_skin.ik_anim_player
-# 	if anim_player == null:
-# 		return
-# 	var anim_name = "IK_anim_lib/wheelie_arm_drag"
-# 	if not anim_player.has_animation(anim_name):
-# 		return
-# 	if anim_player.current_animation != anim_name:
-# 		anim_player.play(anim_name)
-# 	# Only extend arm when trick_mod held during a wheelie, otherwise return to default (t=0)
-# 	var in_wheelie = movement_controller.pitch_angle > 0.0
-# 	var ratio = (
-# 		clamp(movement_controller.pitch_angle, 0.0, 1.0)
-# 		if (in_wheelie and input_controller.nfx_trick_held)
-# 		else 0.0
-# 	)
-# 	anim_player.seek(ratio, true)
-
-
 func _update_idle_timer(delta: float) -> void:
 	# Check if player is mostly stationary
 	if movement_controller.speed < 0.5 and abs(input_controller.nfx_steer) < 0.1:
 		_idle_timer += delta
-		if _idle_timer >= idle_timeout:
-			if current_state == RiderState.RIDING:
-				_transition_to_idle()
-			else:
-				_idle_timer = 0.0
-
+		if _idle_timer >= idle_timeout and current_state == RiderState.RIDING:
+			_transition_to_idle()
 	else:
 		_idle_timer = 0.0
 		if current_state == RiderState.IDLE:
@@ -247,16 +214,12 @@ func _update_idle_timer(delta: float) -> void:
 
 
 func _reset_to_base_positions() -> void:
-	if _ik_ctrl and _ik_ctrl.butt_pos:
-		_ik_ctrl.butt_pos.position = _base_butt_pos
-	if player_entity.chest_target:
-		player_entity.chest_target.position = _base_chest_pos
-		player_entity.chest_target.rotation = _base_chest_rot
-	if visual_root:
-		visual_root.position = _base_visual_root_position
-		visual_root.rotation = _base_visual_root_rotation
-	if bike_skin:
-		bike_skin.rotation.x = 0.0
+	_ik_ctrl.butt_pos.position = _base_butt_pos
+	player_entity.chest_target.position = _base_chest_pos
+	player_entity.chest_target.rotation = _base_chest_rot
+	visual_root.position = _base_visual_root_position
+	visual_root.rotation = _base_visual_root_rotation
+	bike_skin.rotation.x = 0.0
 
 
 #endregion
@@ -266,26 +229,17 @@ func _reset_to_base_positions() -> void:
 
 ## Initialize the animation controller. Call after IK targets are set.
 func initialize() -> void:
-	if character_skin == null or bike_skin == null or visual_root == null:
-		DebugUtils.DebugErrMsg(
-			"AnimationController: Missing character_skin, bike_skin, or visual_root"
-		)
-		return
-
+	# Required exports validated via _get_configuration_warnings()
 	_ik_ctrl = character_skin.ik_controller
 	_bd = player_entity.bike_definition
 
-	if _ik_ctrl and _ik_ctrl.butt_pos:
-		_base_butt_pos = _ik_ctrl.butt_pos.position
-	if player_entity.chest_target:
-		_base_chest_pos = player_entity.chest_target.position
-		_base_chest_rot = player_entity.chest_target.rotation
-
+	_base_butt_pos = _ik_ctrl.butt_pos.position
+	_base_chest_pos = player_entity.chest_target.position
+	_base_chest_rot = player_entity.chest_target.rotation
 	_base_visual_root_position = visual_root.position
 	_base_visual_root_rotation = visual_root.rotation
 
-	if ik_anim_player:
-		ik_anim_player.root_node = ik_anim_player.get_path_to(visual_root)
+	ik_anim_player.root_node = ik_anim_player.get_path_to(visual_root)
 
 	_sync_targets_from_bike()
 
@@ -294,14 +248,9 @@ func initialize() -> void:
 ## anchored to the steering handlebar's parent (so steering rotates the hands) and bike_skin
 ## (for feet). Called every tick while target sync is enabled.
 func _sync_targets_from_bike() -> void:
-	if bike_skin == null:
-		return
-	var hb: Marker3D = bike_skin.steering_handlebar_marker
-	if hb == null:
-		return
-
-	var hb_parent := hb.get_parent() as Node3D
+	var hb_parent := bike_skin.steering_handlebar_marker.get_parent() as Node3D
 	var peg_parent: Node3D = bike_skin
+	# In editor, _bd may not be initialized yet — fall back to skin's own definition.
 	var def: BikeSkinDefinition = _bd if _bd else bike_skin.skin_definition
 	if def == null:
 		return
@@ -346,22 +295,6 @@ func disable_target_sync() -> void:
 	_targets_synced_from_bike = false
 
 
-## Play a trick animation (full skeleton override)
-func play_trick(trick_name: String) -> void:
-	if current_state == RiderState.RAGDOLL:
-		return
-	_transition_to_trick()
-	if character_skin.anim_player:
-		character_skin.anim_player.play(trick_name)
-
-
-## Cancel current trick and return to riding
-func cancel_trick() -> void:
-	if current_state != RiderState.TRICK:
-		return
-	_transition_to_riding()
-
-
 ## Start ragdoll mode
 func start_ragdoll() -> void:
 	current_state = RiderState.RAGDOLL
@@ -387,7 +320,7 @@ func do_reset():
 
 #region State Transitions
 func _transition_to_riding() -> void:
-	print("_transition_to_riding")
+	DebugUtils.DebugMsg("_transition_to_riding")
 
 	# ik_anim_player.play_backwards("idle")
 	ik_anim_player.play("idle", -1, -2.0, true)  # play backwds, 2x speed
@@ -407,31 +340,31 @@ func _transition_to_idle() -> void:
 	ik_anim_player.play("idle")
 
 
-func _transition_to_trick() -> void:
-	current_state = RiderState.TRICK
-	character_skin.disable_ik()
-	_procedural_enabled = false
-	disable_target_sync()
-
-
 #endregion
 
 
 #region Editor Tools
 func _editor_auto_init() -> void:
-	if bike_skin == null or character_skin == null:
-		return
-	if character_skin.ik_controller == null:
+	# Silent skip during editor scene load when exports aren't wired yet.
+	if not _editor_refs_ready():
 		return
 	_editor_init_ik_from_bike()
 
 
+func _editor_refs_ready() -> bool:
+	return (
+		bike_skin != null
+		and character_skin != null
+		and player_entity != null
+		and character_skin.ik_controller != null
+	)
+
+
 func _editor_init_ik_from_bike() -> void:
-	if bike_skin == null or character_skin == null:
-		DebugUtils.DebugErrMsg("AnimationController: bike_skin and character_skin must be set")
-		return
-	if player_entity == null:
-		DebugUtils.DebugErrMsg("AnimationController: player_entity must be set for editor init")
+	if not _editor_refs_ready():
+		DebugUtils.DebugErrMsg(
+			"AnimationController: bike_skin, character_skin, player_entity, and IKController must be set"
+		)
 		return
 
 	var ik_ctrl = character_skin.ik_controller
@@ -460,22 +393,22 @@ func _editor_init_ik_from_bike() -> void:
 
 	_sync_targets_from_bike()
 
-	# Load rider pose from definition
-	if def.chest_position is Vector3 and def.chest_position != Vector3.ZERO:
+	# Load rider pose from definition. ZERO means "not yet authored" — skip those.
+	if def.chest_position != Vector3.ZERO:
 		player_entity.chest_target.position = def.chest_position
-	if def.chest_rotation is Vector3 and def.chest_rotation != Vector3.ZERO:
+	if def.chest_rotation != Vector3.ZERO:
 		player_entity.chest_target.rotation = def.chest_rotation
-	if def.head_position is Vector3 and def.head_position != Vector3.ZERO:
+	if def.head_position != Vector3.ZERO:
 		player_entity.head_target.position = def.head_position
-	if def.head_rotation is Vector3 and def.head_rotation != Vector3.ZERO:
+	if def.head_rotation != Vector3.ZERO:
 		player_entity.head_target.rotation = def.head_rotation
-	if def.left_arm_magnet_position is Vector3 and def.left_arm_magnet_position != Vector3.ZERO:
+	if def.left_arm_magnet_position != Vector3.ZERO:
 		player_entity.left_arm_magnet.position = def.left_arm_magnet_position
-	if def.right_arm_magnet_position is Vector3 and def.right_arm_magnet_position != Vector3.ZERO:
+	if def.right_arm_magnet_position != Vector3.ZERO:
 		player_entity.right_arm_magnet.position = def.right_arm_magnet_position
-	if def.left_leg_magnet_position is Vector3 and def.left_leg_magnet_position != Vector3.ZERO:
+	if def.left_leg_magnet_position != Vector3.ZERO:
 		player_entity.left_leg_magnet.position = def.left_leg_magnet_position
-	if def.right_leg_magnet_position is Vector3 and def.right_leg_magnet_position != Vector3.ZERO:
+	if def.right_leg_magnet_position != Vector3.ZERO:
 		player_entity.right_leg_magnet.position = def.right_leg_magnet_position
 
 	_load_wheel_markers_from_definition(def)
@@ -529,9 +462,8 @@ func _editor_save_default_pose() -> void:
 	def.seat_marker_position = player_entity.butt_target.position
 
 	# Hand/foot rotations in bike marker parent space
-	var hb: Marker3D = bike_skin.steering_handlebar_marker
-	var hb_parent := hb.get_parent() as Node3D if hb else bike_skin as Node3D
-	var peg_parent := bike_skin as Node3D
+	var hb_parent := bike_skin.steering_handlebar_marker.get_parent() as Node3D
+	var peg_parent: Node3D = bike_skin
 
 	if player_entity.left_hand_target:
 		def.left_hand_position = _position_in_parent_space(
@@ -587,22 +519,14 @@ func _editor_reset_to_default_pose() -> void:
 		DebugUtils.DebugErrMsg("AnimationController: missing bike_skin definition")
 		return
 
-	if def.chest_position is Vector3:
-		player_entity.chest_target.position = def.chest_position
-	if def.chest_rotation is Vector3:
-		player_entity.chest_target.rotation = def.chest_rotation
-	if def.head_position is Vector3:
-		player_entity.head_target.position = def.head_position
-	if def.head_rotation is Vector3:
-		player_entity.head_target.rotation = def.head_rotation
-	if def.left_arm_magnet_position is Vector3:
-		player_entity.left_arm_magnet.position = def.left_arm_magnet_position
-	if def.right_arm_magnet_position is Vector3:
-		player_entity.right_arm_magnet.position = def.right_arm_magnet_position
-	if def.left_leg_magnet_position is Vector3:
-		player_entity.left_leg_magnet.position = def.left_leg_magnet_position
-	if def.right_leg_magnet_position is Vector3:
-		player_entity.right_leg_magnet.position = def.right_leg_magnet_position
+	player_entity.chest_target.position = def.chest_position
+	player_entity.chest_target.rotation = def.chest_rotation
+	player_entity.head_target.position = def.head_position
+	player_entity.head_target.rotation = def.head_rotation
+	player_entity.left_arm_magnet.position = def.left_arm_magnet_position
+	player_entity.right_arm_magnet.position = def.right_arm_magnet_position
+	player_entity.left_leg_magnet.position = def.left_leg_magnet_position
+	player_entity.right_leg_magnet.position = def.right_leg_magnet_position
 	player_entity.butt_target.position = def.seat_marker_position
 	_load_wheel_markers_from_definition(def)
 	_sync_targets_from_bike()
