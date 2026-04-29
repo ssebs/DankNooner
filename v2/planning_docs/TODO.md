@@ -34,6 +34,12 @@
 ## HI-PRI‼️
 
 - [ ] Finish tutorial:
+  - [ ] Make tutorial part of map, diff circles do diff events
+  - [ ] in-world UI instead of just hud
+  - [ ] Create `GameModeObject` - to be used via @export var, has func to do stuff configurable, etc.
+    - [ ] e.g. `CheckpointMarker` can be used to see if player drove thru, to be used in tutorial / races
+    - [ ] e.g. arrows on the ground that point / light up depending on a func call
+  - [ ] See **planning_docs/PLAN-tut-gamemodeobject.md**
   - [ ] clutch-up tutorial & speed management
   - [ ] trick mod tutorial
   - [ ] crashing during tutorial doesn't stop timers
