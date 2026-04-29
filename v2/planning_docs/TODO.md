@@ -3,6 +3,7 @@
 
 ## In Progress 🚀
 > Take it slow, fix bugs
+
 ### EPIC
 - [ ] Basic core gameplay loop & implement gamemodes
   - [x] start gamemodes via ~~map select~~ start circles
@@ -29,6 +30,7 @@
   - [ ] once speed hits 0 mid air, i lose all ability to rotate fwd/back
    - [ ] related to wheelie / playerent angle being diff?
    - [ ] easier on KBM
+
 ## HI-PRI‼️
 
 - [ ] Finish tutorial:
