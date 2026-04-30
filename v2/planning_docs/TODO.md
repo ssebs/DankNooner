@@ -13,6 +13,7 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
+- [ ] Game won't launch with skin loading
 - [ ] ragdoll doesn't work in MP
 - [ ] Verify customizations in multiplayer
 - [ ] Trick Manager + tricks
