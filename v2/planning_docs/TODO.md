@@ -14,7 +14,7 @@
 
 ### WIP
 - [ ] ragdoll doesn't work in MP
-- [ ] Verify customizations in multiplayer
+- [ ] player is leaning back while doing the idle anim, it shouldnt be
 
 ## HI-PRI‼️
 
