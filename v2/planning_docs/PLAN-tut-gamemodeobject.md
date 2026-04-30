@@ -32,7 +32,7 @@ Common API:
   - `GroundArrow` — visual only, has `set_lit(on: bool)` / `point_to(target: Node3D)`. Driven by tutorial code.
   - (later) `TargetCone`, `BrakeZone` with painted distance markers, etc.
 
-Folder: `levels/components/gamemode_objects/`.
+Folder: `levels/components/`.
 
 ### Layer 2 — Tutorial sequencing (tutorial-only)
 
@@ -71,14 +71,14 @@ Two new resources/nodes:
 
 ## Existing step migration
 
-| Step           | Trigger mode (recommended)                        |
-| -------------- | ------------------------------------------------- |
-| `SHOW_HELP`    | `TIME` (no change)                                |
-| `PRESS_RT`     | `TIME` (no change)                                |
-| `REACH_SPEED`  | `PROP_EVENT` — `CheckpointMarker` + speed check   |
-| `CHANGE_GEAR`  | `TIME` (no change)                                |
-| `DO_WHEELIE`   | `PROP_EVENT` — gate(s) + `is_wheelie` predicate, OR `PROP_BOUNDED` zone for old "hold 3s in area" feel |
-| `DO_STOPPIE`   | `PROP_BOUNDED` — `TriggerZone` + accumulate ≥ 1s  |
+| Step          | Trigger mode (recommended)                                                                             |
+| ------------- | ------------------------------------------------------------------------------------------------------ |
+| `SHOW_HELP`   | `TIME` (no change)                                                                                     |
+| `PRESS_RT`    | `TIME` (no change)                                                                                     |
+| `REACH_SPEED` | `PROP_EVENT` — `CheckpointMarker` + speed check                                                        |
+| `CHANGE_GEAR` | `TIME` (no change)                                                                                     |
+| `DO_WHEELIE`  | `PROP_EVENT` — gate(s) + `is_wheelie` predicate, OR `PROP_BOUNDED` zone for old "hold 3s in area" feel |
+| `DO_STOPPIE`  | `PROP_BOUNDED` — `TriggerZone` + accumulate ≥ 1s                                                       |
 
 ## Open / TBD
 
