@@ -187,6 +187,11 @@ func _save_color_mod(player_def: PlayerDefinition):
 	# Deep duplicate would strip resource paths and embed broken copies.
 	var duped_def := skin_def.duplicate(false) as BikeSkinDefinition
 
+	# Remember the base bike's res:// path so to_dict()/from_dict() can rebuild on remote
+	# peers without depending on the local user:// .tres file.
+	var bike_name := bike_skin_btn.get_item_text(bike_skin_btn.selected)
+	duped_def.base_res_path = bike_skins.get(bike_name, skin_def.base_res_path)
+
 	var mod_name := color_mod_btn.get_item_text(color_mod_btn.selected)
 	if mod_name == "None":
 		duped_def.mods = [] as Array[BikeMod]

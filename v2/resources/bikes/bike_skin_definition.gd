@@ -4,6 +4,11 @@ class_name BikeSkinDefinition extends Resource
 ## Name of the skin for saving to disk
 @export var skin_name: String = "replace_me"
 
+## res:// path of the base bike this customized def was derived from. Tracked so we can
+## rebuild on remote peers (who don't have the local user:// .tres) by loading the base
+## and reapplying mods. Empty for un-customized base defs (fall back to resource_path).
+@export var base_res_path: String = ""
+
 @export_group("Mesh")
 ## The SkinColor scene to instantiate
 @export var mesh_res: PackedScene:
@@ -124,4 +129,123 @@ func save_to_disk() -> String:
 	push_error("BikeSkinDefinition: Failed to save, error: %d" % err)
 	return ""
 
-# TODO- load_from_disk, _copy_from, to/from dict...
+func load_from_disk() -> bool:
+	var path := get_user_save_path()
+	if not ResourceLoader.exists(path):
+		push_error("BikeSkinDefinition: File not found: %s" % path)
+		return false
+	var loaded := ResourceLoader.load(path) as BikeSkinDefinition
+	if not loaded:
+		push_error("BikeSkinDefinition: Failed to load: %s" % path)
+		return false
+	_copy_from(loaded)
+	return true
+
+
+func _copy_from(other: BikeSkinDefinition) -> void:
+	skin_name = other.skin_name
+	base_res_path = other.base_res_path
+	mesh_res = other.mesh_res
+	mesh_position_offset = other.mesh_position_offset
+	mesh_rotation_offset_degrees = other.mesh_rotation_offset_degrees
+	mesh_scale_multiplier = other.mesh_scale_multiplier
+	collision_shape = other.collision_shape
+	collision_position_offset = other.collision_position_offset
+	collision_rotation_offset_degrees = other.collision_rotation_offset_degrees
+	collision_scale_multiplier = other.collision_scale_multiplier
+	training_wheels_marker_position = other.training_wheels_marker_position
+	training_wheels_marker_rotation_degrees = other.training_wheels_marker_rotation_degrees
+	seat_marker_position = other.seat_marker_position
+	front_wheel_ground_position = other.front_wheel_ground_position
+	rear_wheel_ground_position = other.rear_wheel_ground_position
+	rear_wheel_back_position = other.rear_wheel_back_position
+	front_wheel_front_position = other.front_wheel_front_position
+	chest_position = other.chest_position
+	chest_rotation = other.chest_rotation
+	head_position = other.head_position
+	head_rotation = other.head_rotation
+	left_arm_magnet_position = other.left_arm_magnet_position
+	right_arm_magnet_position = other.right_arm_magnet_position
+	left_hand_position = other.left_hand_position
+	right_hand_position = other.right_hand_position
+	left_hand_rotation = other.left_hand_rotation
+	right_hand_rotation = other.right_hand_rotation
+	left_foot_position = other.left_foot_position
+	right_foot_position = other.right_foot_position
+	left_foot_rotation = other.left_foot_rotation
+	right_foot_rotation = other.right_foot_rotation
+	left_leg_magnet_position = other.left_leg_magnet_position
+	right_leg_magnet_position = other.right_leg_magnet_position
+	mods = other.mods.duplicate()
+	lean_multiplier = other.lean_multiplier
+	weight_shift_multiplier = other.weight_shift_multiplier
+	gear_ratios = other.gear_ratios.duplicate()
+	num_gears = other.num_gears
+	max_rpm = other.max_rpm
+	idle_rpm = other.idle_rpm
+	stall_rpm = other.stall_rpm
+	power_curve = other.power_curve
+	max_speed = other.max_speed
+	acceleration = other.acceleration
+	brake_strength = other.brake_strength
+	friction = other.friction
+	engine_brake_strength = other.engine_brake_strength
+	max_lean_angle_deg = other.max_lean_angle_deg
+	lean_speed = other.lean_speed
+	turn_speed = other.turn_speed
+	lean_curve = other.lean_curve
+	steer_curve = other.steer_curve
+	wheelie_balance_point_deg = other.wheelie_balance_point_deg
+	max_wheelie_angle_deg = other.max_wheelie_angle_deg
+	max_stoppie_angle_deg = other.max_stoppie_angle_deg
+	wheelie_rpm_threshold = other.wheelie_rpm_threshold
+	wheelie_balance_point_width_deg = other.wheelie_balance_point_width_deg
+	rotation_speed = other.rotation_speed
+	return_speed = other.return_speed
+
+
+#region to/from Dictionary
+## Network/save serialization. We deliberately do NOT include `resource_path` because it can
+## point at a user:// file that only exists on the local peer. Instead we ship the base
+## bike's res:// path + the list of mod res:// paths; remote peers rebuild via from_dict().
+func to_dict() -> Dictionary:
+	var mod_paths: Array = []
+	for mod in mods:
+		if mod and mod.resource_path != "":
+			mod_paths.append(mod.resource_path)
+	var base := base_res_path
+	if base == "":
+		base = resource_path  # un-customized base def loaded directly from res://
+	return {
+		"skin_name": skin_name,
+		"base_res_path": base,
+		"mod_paths": mod_paths,
+	}
+
+
+## Rebuild from a dict. Loads the base bike from res://, applies mods, then caches to
+## user://skins/ so future loads (and the editor's "Load skin from u:disk") see it.
+func from_dict(dict: Dictionary) -> void:
+	const FALLBACK_BASE := "res://resources/bikes/skins/sport_default_skin_definition.tres"
+	var base_path: String = dict.get("base_res_path", "")
+	var base_def: BikeSkinDefinition = null
+	if base_path != "" and ResourceLoader.exists(base_path):
+		base_def = ResourceLoader.load(base_path) as BikeSkinDefinition
+	if base_def == null:
+		base_def = load(FALLBACK_BASE) as BikeSkinDefinition
+		base_path = FALLBACK_BASE
+	_copy_from(base_def)
+	base_res_path = base_path
+	skin_name = dict.get("skin_name", base_def.skin_name)
+
+	var rebuilt_mods: Array[BikeMod] = []
+	for mp in dict.get("mod_paths", []):
+		if mp == "" or not ResourceLoader.exists(mp):
+			continue
+		var mod := ResourceLoader.load(mp) as BikeMod
+		if mod:
+			rebuilt_mods.append(mod)
+	mods = rebuilt_mods
+
+	save_to_disk()
+#endregion

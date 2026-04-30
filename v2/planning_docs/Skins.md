@@ -177,7 +177,9 @@ Skins can be saved/loaded from `user://skins/` for runtime customization:
 - Click **Load skin from u:disk**, or call `skin_definition.load_from_disk()`
 - Loads into the inspector for editing
 
-> `BikeSkinDefinition` save/load + dict serialization is still TODO (see comment in source); `CharacterSkinDefinition` has both.
+Both `CharacterSkinDefinition` and `BikeSkinDefinition` support save/load + dict serialization.
+
+`BikeSkinDefinition.to_dict()` ships only the **base bike res:// path** + **mod res:// paths** — never `resource_path`, which can be a local `user://` file. `from_dict()` loads the base, applies the mods, then writes the rebuilt def to `user://skins/` on the receiving peer for caching. This is what enables customized bikes to sync across the lobby.
 
 ## Serialization
 
