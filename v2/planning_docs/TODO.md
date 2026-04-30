@@ -13,24 +13,8 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] Game won't launch with skin loading
 - [ ] ragdoll doesn't work in MP
 - [ ] Verify customizations in multiplayer
-- [ ] Trick Manager + tricks
-  - [x] wheelie / stoppie detection
-  - [x] flip detection
-  - [x] in-air tricks
-    - [x] Create Heel clicker / other trick animations (RB+DOWN)
-  - [x] more ground tricks
-  - [ ] Cleanup trick / animation / movement code (at least review!)
-  - [ ] trick scoring & combos
-  - [ ] trick tweaks
-    - [ ] Land into wheelie / stoppie should be a trick
-    - [ ] Create wheelie + RIGHT animation (hand grab)
-      - [ ] IK hand twd ground, not just backwds
-  - [ ] once speed hits 0 mid air, i lose all ability to rotate fwd/back
-   - [ ] related to wheelie / playerent angle being diff?
-   - [ ] easier on KBM
 
 ## HI-PRI‼️
 
@@ -327,6 +311,24 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Trick Manager + tricks
+  - [x] wheelie / stoppie detection
+  - [x] flip detection
+  - [x] in-air tricks
+    - [x] Create Heel clicker / other trick animations (RB+DOWN)
+  - [x] more ground tricks
+  - [ ] Cleanup trick / animation / movement code (at least review!)
+  - [ ] trick scoring & combos
+  - [ ] trick tweaks
+    - [ ] Land into wheelie / stoppie should be a trick
+    - [ ] Create wheelie + RIGHT animation (hand grab)
+      - [ ] IK hand twd ground, not just backwds
+  - [ ] once speed hits 0 mid air, i lose all ability to rotate fwd/back
+   - [ ] related to wheelie / playerent angle being diff?
+   - [ ] easier on KBM
+
+- [x] Game won't launch with skin loading
 
 - [x] Update customization menu
   - [x] Show bike + list of all color_mods(gotta check for multiple colors for bike type, so set that as a var in the skin_definition & make the color_mod have a matching count. constraints?)
