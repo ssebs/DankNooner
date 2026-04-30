@@ -1,5 +1,48 @@
 # PLAN — Tutorial × GameModeObject
 
+STATUS
+
+```
+● Implementation done. Summary:
+
+  New files:
+  - levels/components/gamemode_object.gd — base with entered/exited/hit signals, is_active,
+  activate()/deactivate(). Auto-wires a child Area3D if present (filters to PlayerEntity).
+  - levels/components/trigger_zone.gd + trigger_zone.tscn — Area3D-wrapped zone for PROP_BOUNDED     
+  lessons.
+  - managers/gamemodes/tutorial/tutorial_lesson.gd — Node with step, trigger_mode { TIME, PROP_EVENT,
+   PROP_BOUNDED }, trigger_objects, objective_text_key.
+  - managers/gamemodes/tutorial/tutorial_course.gd — Node with event: GameModeEvent, lessons,        
+  start_marker. Self-registers in TutorialCourses group.
+
+  Edits:
+  - levels/components/checkpoint_marker.gd — extends GameModeObject (signals come from base).        
+  - levels/components/checkpoint_marker.tscn — script wired (you already did this).
+  - utils/constants.gd — TutorialCourses group.
+  - managers/gamemodes/tutorial/tutorial_player_state.gd — added prop_event_fired, inside_zone.      
+  - managers/gamemodes/tutorial/tutorial_gamemode.gd:
+    - Enter finds course via _find_course_for_event (group lookup matched by event resource), wires  
+  entered/exited on every unique trigger object server-side.
+    - _get_sequence derives steps from course.lessons when present; falls back to
+  event.tutorial_sequence.
+    - _get_start_marker uses course.start_marker when present; falls back to %Tutorial01StartMarker. 
+    - _should_eval_predicate gates the existing step_def.check.call(...) per trigger_mode. TIME keeps
+   legacy behavior; PROP_EVENT is one-shot on signal; PROP_BOUNDED requires inside_zone.
+    - Crash and lesson-advance clear the trigger flags.
+    - Exit disconnects all wired callables, clears _course.
+
+  Architectural note (diverges slightly from plan): plan put tutorial_course: TutorialCourse on      
+  GameModeEvent, but Godot Resources can't @export scene-tree nodes. Inverted it:
+  TutorialCourse.event: GameModeEvent + group lookup. Same UX in the inspector.
+
+  To wire in test_city_01: drop a TutorialCourse node into the level, set event to the existing      
+  tutorial sub-resource, set start_marker to Tutorial01StartMarker, then add TutorialLesson children 
+  — for REACH_SPEED set PROP_EVENT + a CheckpointMarker, for DO_STOPPIE set PROP_BOUNDED + a
+  TriggerZone. Other lessons stay TIME.
+
+```
+
+
 > Status: brainstormed, not yet implemented. See `tutorial_steps.gd`, `tutorial_gamemode.gd`, `event_start_circle.gd`, `gamemode_event.gd` for current state.
 
 ## Goal

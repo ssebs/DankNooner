@@ -8,4 +8,5 @@ const GROUPS = {
 	"Validate": "Validate",
 	"InputStateManager": "InputStateManager",
 	"EventCircles": "EventCircles",
+	"TutorialCourses": "TutorialCourses",
 }

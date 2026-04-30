@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://btgrrig0onev1"]
+
+[ext_resource type="Script" path="res://levels/components/trigger_zone.gd" id="1_trgz1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tz1"]
+size = Vector3(10, 4, 10)
+
+[node name="TriggerZone" type="Node3D"]
+script = ExtResource("1_trgz1")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_tz1")

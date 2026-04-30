@@ -10,6 +10,8 @@ class_name TutorialGameMode extends GameMode
 
 var _player_states: Dictionary[int, TutorialPlayerState] = {}
 var _sequence: Array[TutorialSteps.Step] = []
+var _course: TutorialCourse  # null when running a legacy TIME-only sequence
+var _wired_callables: Array = []  # tracked so we can disconnect on Exit
 var _respawn_delay: float = 3.0
 var _countdown: float = -1.0
 var _results_countdown: float = -1.0
@@ -23,8 +25,11 @@ func Enter(state_context: StateContext):
 	DebugUtils.DebugMsg("Tutorial Mode")
 
 	var event := _get_event(state_context)
+	_course = _find_course_for_event(event)
 	_sequence = _get_sequence(event)
 	_build_player_states()
+	if multiplayer.is_server():
+		_wire_course_signals()
 
 	gamemode_manager.player_crashed.connect(_on_player_crashed)
 	gamemode_manager.player_disconnected.connect(_on_player_disconnected)
@@ -70,9 +75,11 @@ func Exit(_state_context: StateContext):
 
 	if multiplayer.is_server():
 		_set_all_players_input_disabled(false)
+		_unwire_course_signals()
 	tutorial_hud.rpc_hide.rpc()
 	results_hud.rpc_hide.rpc()
 	_player_states.clear()
+	_course = null
 
 
 #region Setup helpers
@@ -92,9 +99,23 @@ func _get_event(state_context: StateContext) -> GameModeEvent:
 
 
 func _get_sequence(event: GameModeEvent) -> Array[TutorialSteps.Step]:
+	if _course:
+		var seq: Array[TutorialSteps.Step] = []
+		for lesson in _course.lessons:
+			seq.append(lesson.step)
+		return seq
 	if event and event.tutorial_sequence.size() > 0:
 		return event.tutorial_sequence
 	return []
+
+
+func _find_course_for_event(event: GameModeEvent) -> TutorialCourse:
+	if event == null:
+		return null
+	for c in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["TutorialCourses"]):
+		if c is TutorialCourse and c.event == event:
+			return c
+	return null
 
 
 func _build_player_states():
@@ -104,6 +125,8 @@ func _build_player_states():
 
 
 func _get_start_marker() -> Marker3D:
+	if _course and _course.start_marker:
+		return _course.start_marker
 	return gamemode_manager.level_manager.current_level.get_node("%Tutorial01StartMarker")
 
 
@@ -169,14 +192,40 @@ func _update_player_tutorial(peer_id: int, state: TutorialPlayerState, delta: fl
 	if step_def.get_progress.is_valid():
 		tutorial_hud.rpc_update_progress.rpc_id(peer_id, step_def.get_progress.call())
 
+	if !_should_eval_predicate(state):
+		return
+
 	if step_def.check.call(player, delta):
 		if step_def.on_exit.is_valid():
 			step_def.on_exit.call()
 		_advance_player_step(peer_id, state)
 
 
+## Decides whether to evaluate this peer's step predicate this tick, based on the
+## lesson's trigger_mode. TIME mode (or no course) always evaluates, matching
+## legacy behavior.
+func _should_eval_predicate(state: TutorialPlayerState) -> bool:
+	if _course == null:
+		return true
+	var lesson := _course.lessons[state.current_index]
+	match lesson.trigger_mode:
+		TutorialLesson.TriggerMode.TIME:
+			return true
+		TutorialLesson.TriggerMode.PROP_EVENT:
+			# One-shot: gate fired this tick. Predicate evaluated once; flag clears.
+			if state.prop_event_fired:
+				state.prop_event_fired = false
+				return true
+			return false
+		TutorialLesson.TriggerMode.PROP_BOUNDED:
+			return state.inside_zone
+	return true
+
+
 func _advance_player_step(peer_id: int, state: TutorialPlayerState):
 	state.current_index += 1
+	state.prop_event_fired = false
+	state.inside_zone = false
 	if state.current_index >= _sequence.size():
 		_complete_player(peer_id, state)
 	else:
@@ -199,8 +248,15 @@ func _start_step_for_peer(peer_id: int, state: TutorialPlayerState):
 	var step_def := state.tutorial_steps.defs[step_enum]
 	if step_def.on_enter.is_valid():
 		step_def.on_enter.call()
+
+	var objective_text := step_def.objective_text
+	if _course:
+		var lesson := _course.lessons[state.current_index]
+		if lesson.objective_text_key != "":
+			objective_text = lesson.objective_text_key
+
 	tutorial_hud.rpc_show_step.rpc_id(
-		peer_id, state.current_index, _sequence.size(), step_def.objective_text, step_def.hint_text
+		peer_id, state.current_index, _sequence.size(), objective_text, step_def.hint_text
 	)
 	if step_enum == TutorialSteps.Step.SHOW_HELP:
 		_rpc_show_help_menu.rpc_id(peer_id)
@@ -307,6 +363,10 @@ func _on_player_crashed(peer_id: int):
 		var state := _player_states[peer_id]
 		state.tutorial_steps._wheelie_time = 0.0
 		state.tutorial_steps._stoppie_time = 0.0
+		# Player teleports back to start on crash; clear in/out tracking so the
+		# zone's body_exited (which Godot may not fire on teleport) can't strand us.
+		state.prop_event_fired = false
+		state.inside_zone = false
 
 	var marker := _get_start_marker()
 	get_tree().create_timer(_respawn_delay).timeout.connect(
@@ -365,6 +425,77 @@ func _set_all_players_input_disabled(disabled: bool):
 
 
 #endregion
+
+#region Course signal wiring (server only)
+
+
+## Connects entered/exited signals from every unique GameModeObject referenced
+## by any lesson. Handlers route to the matching peer state via the body name
+## convention used elsewhere (`int(body.name) == peer_id`).
+func _wire_course_signals():
+	if _course == null:
+		return
+	var seen := {}
+	for lesson in _course.lessons:
+		for obj in lesson.trigger_objects:
+			if obj == null or seen.has(obj):
+				continue
+			seen[obj] = true
+			var cb_in := _on_course_obj_entered.bind(obj)
+			var cb_out := _on_course_obj_exited.bind(obj)
+			obj.entered.connect(cb_in)
+			obj.exited.connect(cb_out)
+			_wired_callables.append({"obj": obj, "sig": "entered", "cb": cb_in})
+			_wired_callables.append({"obj": obj, "sig": "exited", "cb": cb_out})
+
+
+func _unwire_course_signals():
+	for w in _wired_callables:
+		var obj: GameModeObject = w["obj"]
+		if w["sig"] == "entered":
+			if obj.entered.is_connected(w["cb"]):
+				obj.entered.disconnect(w["cb"])
+		else:
+			if obj.exited.is_connected(w["cb"]):
+				obj.exited.disconnect(w["cb"])
+	_wired_callables.clear()
+
+
+func _on_course_obj_entered(player: PlayerEntity, obj: GameModeObject):
+	var peer_id := int(player.name)
+	# Body may be a player not in this tutorial (spectator, late-joiner) — skip is intentional
+	if !_player_states.has(peer_id):
+		return
+	var state := _player_states[peer_id]
+	if state.completed or !state.started:
+		return
+	var lesson := _course.lessons[state.current_index]
+	if !lesson.trigger_objects.has(obj):
+		return
+	match lesson.trigger_mode:
+		TutorialLesson.TriggerMode.PROP_EVENT:
+			state.prop_event_fired = true
+		TutorialLesson.TriggerMode.PROP_BOUNDED:
+			state.inside_zone = true
+
+
+func _on_course_obj_exited(player: PlayerEntity, obj: GameModeObject):
+	var peer_id := int(player.name)
+	# Body may be a player not in this tutorial (spectator, late-joiner) — skip is intentional
+	if !_player_states.has(peer_id):
+		return
+	var state := _player_states[peer_id]
+	if state.completed or !state.started:
+		return
+	var lesson := _course.lessons[state.current_index]
+	if !lesson.trigger_objects.has(obj):
+		return
+	if lesson.trigger_mode == TutorialLesson.TriggerMode.PROP_BOUNDED:
+		state.inside_zone = false
+
+
+#endregion
+
 
 @rpc("call_local", "reliable")
 func _rpc_show_countdown(seconds: int):
