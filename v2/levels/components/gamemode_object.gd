@@ -1,0 +1,1 @@
+class_name GameModeObject extends Node3D
