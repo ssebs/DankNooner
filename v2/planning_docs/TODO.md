@@ -13,7 +13,15 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] ragdoll doesn't work in MP
+- [ ] [code review time](./code-review-20260430.md)
+  - [ ] make todo list
+  - [ ] at least:
+    - [ ] split bikeskindefinition, dont have to use suggested names
+    - [ ] signal mismatches
+    - [ ] resoure paths user://
+    - [ ] duplicate logic
+    - [ ] missing _get_configuration_warnings
+    - [ ] todos & dead code
 
 ## HI-PRI‼️
 
