@@ -14,7 +14,6 @@
 
 ### WIP
 - [ ] ragdoll doesn't work in MP
-- [ ] player is leaning back while doing the idle anim, it shouldnt be
 
 ## HI-PRI‼️
 
@@ -311,6 +310,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] player is leaning back while doing the idle anim, it shouldnt be
 
 - [x] Trick Manager + tricks
   - [x] wheelie / stoppie detection
