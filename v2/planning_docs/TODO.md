@@ -24,6 +24,14 @@
     - [ ] e.g. `CheckpointMarker` can be used to see if player drove thru, to be used in tutorial / races
     - [ ] e.g. arrows on the ground that point / light up depending on a func call
   - [ ] See **planning_docs/PLAN-tut-gamemodeobject.md**
+  - [ ] next:
+    - [ ] basic movement
+    - [ ] progressive braking
+    - [ ] how to power wheelie & stoppie
+    - [ ] how to clutch up
+    - [ ] how to stay in balance point
+    - [ ] trick mods
+    - [ ] ramps & air tricks
   - [ ] clutch-up tutorial & speed management
   - [ ] trick mod tutorial
   - [ ] crashing during tutorial doesn't stop timers
