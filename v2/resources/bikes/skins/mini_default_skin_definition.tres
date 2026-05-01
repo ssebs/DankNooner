@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_us0rk"]
 [ext_resource type="Resource" uid="uid://i0r5np06lfvi" path="res://resources/bikes/mods/color_mods/blue_color.tres" id="4_0j748"]
 [ext_resource type="Curve" uid="uid://ct2j0k3sl7m3u" path="res://player/bikes/resources/steer_speed_curve.tres" id="4_us0rk"]
+[ext_resource type="Curve" uid="uid://dlqmqgtip7b61" path="res://resources/bikes/power_curve.tres" id="5_us0rk"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oq5os"]
 radius = 0.4

@@ -6,6 +6,44 @@ Subsystem reviews dispatched in parallel: player controllers, managers/gamemodes
 
 ---
 
+# Architecural
+
+"Code in _rollback_tick may not call randf*, Time.get_ticks_*, or read non-synced state. Use a seeded RNG that's part of synced state if you   
+  ▎ need randomness."  
+
+
+
+  4. Late-join contract for gamemodes.                                                                                                             
+  Your existing TODO has tutorial finished MP => clients dont respawn back in free roam — that's a symptom of the bigger pattern. When you add     
+  Trick Battle, the same class of bug returns (round timer, scores, etc. don't sync to late joiners). Bake serialize_state_for_late_joiner() /     
+  apply_state_from_host() into the base GameMode class once, before adding modes 3-4.                                                            
+                                                                                                                                                   
+  5. Split BikeSkinDefinition now.                                                                                                                 
+  You have 3 bikes. You're adding mods, performance mods, color variants. The longer you wait, the more .tres files you migrate. This is the single
+   architecture refactor with the best ROI right now.      
+    - TODO: separate diff parts to new resources, like powerstats, ikpositions, etc. make more composed
+
+
+
+
+
+1. BikeSkinDefinition is a god-resource                                                                                                          
+   
+  It owns: visuals + collision + rider IK pose + wheel markers + gearing + physics tuning + trick limits. That's five conceptual axes glued        
+  together. Implications:
+                                                                                                                                                   
+  - Modding/cosmetic skins: ColorMod works, but a "performance mod" (e.g. swap power curve) means duplicating the whole .tres for every visual     
+  variant.
+  - Cross-bike tuning sweeps: changing physics for all sport bikes means editing N skins rather than one tuning resource.                          
+  - Network sync: when serializing for MP, you ship a giant blob — already a known concern (the to_dict only ships the path, but per-mod tuning    
+  swap isn't possible).                                                                                                                            
+  - Authoring: your Save Default Pose button writes back into the same resource that owns physics constants. Easy to clobber.                      
+                                                                                                                                                   
+  Split into BikeVisualDefinition (mesh, colors, rider pose markers) + BikeTuningDefinition (gearing, physics, trick limits) +                     
+  BikeChassisDefinition (collision, wheel markers). A bike entity composes one of each. Mods can target one axis without affecting the others. Do  
+  this before you have 20 bikes — refactoring 3 is cheap, refactoring 20 is not. 
+
+
 ## 🔴 Critical (correctness / netcode)
 
 ### Non-determinism in rollback tick
@@ -29,6 +67,8 @@ Subsystem reviews dispatched in parallel: player controllers, managers/gamemodes
 - [`managers/settings_manager.gd:21`](../managers/settings_manager.gd#L21) — `WINDOW_MODES` keys swapped: `"fullscreen"` → `WINDOW_MODE_FULLSCREEN`, `"borderless"` → `WINDOW_MODE_EXCLUSIVE_FULLSCREEN`. Godot's `EXCLUSIVE_FULLSCREEN` is true exclusive, not borderless. Window mode setting will be wrong.
 
 ### `user://` resource path leaks (multiplayer sync risk)
+
+- Manually read the code here so i understand / can decide what i want to do with saving skins to disk/across the net.
 
 - [`resources/player/character_skin_definition.gd:68`](../resources/player/character_skin_definition.gd#L68) — `to_dict()` ships `mesh_res.resource_path` raw.
 - [`resources/player/player_definition.gd:22`](../resources/player/player_definition.gd#L22) — `to_dict()` ships `character_skin.resource_path`.
@@ -68,10 +108,6 @@ Subsystem reviews dispatched in parallel: player controllers, managers/gamemodes
 - [`menus/customize_menu/customize_menu_state.gd`](../menus/customize_menu/customize_menu_state.gd) — `_scan_skin_dir` and `_scan_color_mods` are near-duplicates.
 - [`player/controllers/hud_controller.gd:110`](../player/controllers/hud_controller.gd#L110) — uses `TrickController.Trick.keys()[trick_type]` instead of the existing `trick_to_str()`.
 
-### Side effects in pose pipeline (planning doc violation)
-
-- [`player/controllers/animation_controller.gd:267`](../player/controllers/animation_controller.gd#L267) — `_apply_pitch_ground/_air()` calls `enable/disable_target_sync()` directly inside pose stages. `AnimationController.md` Gotcha #1: stages must not touch live state.
-
 ### Group strings / shared enums
 
 - [`levels/assets/graybox/graybox_staticbody.gd`](../levels/assets/graybox/graybox_staticbody.gd) — local enum `GrayBoxColor`; planning doc says shared enums in `utils/constants.gd`.
@@ -107,7 +143,6 @@ Subsystem reviews dispatched in parallel: player controllers, managers/gamemodes
 
 ### Misc real bugs
 
-- [`player/characters/scripts/character_skin.gd:131`](../player/characters/scripts/character_skin.gd#L131) — plays hardcoded `"Biker/reset"` — wrong for Astronaut/Clanker.
 - [`player/characters/scripts/ik_controller.gd:111`](../player/characters/scripts/ik_controller.gd#L111) — calls `_rotate_bone_to_marker` for chest/head unconditionally while guarding hands/feet — crashes if init order changes.
 - [`player/controllers/camera_controller.gd:35`](../player/controllers/camera_controller.gd#L35) — `invert_cam: int = -1` setter coerces via `1 if value else -1` — initial `-1` is truthy, gets reset to `1` on first setter call.
 - [`player/controllers/camera_controller.gd:239`](../player/controllers/camera_controller.gd#L239) — `_on_cam_switch_pressed` hardcodes `1 if current_cam_mode == 0 else 0`; if `CameraMode.NONE` is current, it silently switches to FPS.
@@ -169,12 +204,3 @@ Subsystem reviews dispatched in parallel: player controllers, managers/gamemodes
 - [`utils/strings.gd`](../utils/strings.gd) — `clean_for_node_name()` is a trivial wrapper, adds no semantic value.
 - [`utils/editor_tools/take_screenshot.gd`](../utils/editor_tools/take_screenshot.gd) — hardcoded `Screenshot_RenameMe.jpg`; repeated runs silently overwrite.
 
----
-
-## Recommended order
-
-1. **Netcode correctness**: random in rollback tick, `rb_gear_*_pressed` types, RPC authority guards on `respawn_player` / `start_game` / `_rpc_transition_gamemode`, the `player_spawned` String/int mismatch.
-2. **Resource leaks**: `CharacterSkinDefinition.to_dict` / `PlayerDefinition.to_dict` `user://` path leak, `BikeSkinDefinition._copy_from` shared Curves.
-3. **Signal hygiene sweep**: `lobby_manager`, `gamemode_manager`, splash/free_roam exit paths.
-4. **Standards cleanup**: silent-null audit (CLAUDE.md fail-loudly), `tr()` audit on UI strings, dedupe `save_manager`/`settings_manager`, dedupe `_sync_targets_from_bike` against `_apply_bike_to_pose`.
-5. **Style nits last.**
