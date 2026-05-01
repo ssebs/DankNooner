@@ -148,7 +148,7 @@ if player == null:
     return
 ```
 
-# IF ASKED TO "USE GOOD STANDARDS", USE THE FOLLOWING
+# IF ASKED TO "USE GOOD STANDARDS" OR "FOLLOW @Claude.md", USE THE FOLLOWING
 
 Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
 
