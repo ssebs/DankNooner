@@ -22,6 +22,7 @@
     - [ ] duplicate logic
     - [ ] missing _get_configuration_warnings
     - [ ] todos & dead code
+- [ ] [FMOD on web export](./fmod-web-fix.md) — build `libGodotFmod.web.*.wasm32.wasm` from PR #210 branch & wire it in
 
 ## HI-PRI‼️
 
