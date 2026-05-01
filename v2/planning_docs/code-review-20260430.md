@@ -6,43 +6,94 @@ Subsystem reviews dispatched in parallel: player controllers, managers/gamemodes
 
 ---
 
-# Architecural
+## 🏛️ Architectural decisions to lock in
 
-"Code in _rollback_tick may not call randf*, Time.get_ticks_*, or read non-synced state. Use a seeded RNG that's part of synced state if you   
-  ▎ need randomness."  
+> Decisions to make *before* building further `TODO.md` items, so you don't redo them. Skipping items already on the TODO (scoring v2, race lap system, ragdoll-in-MP, traffic, friends/server browser, dedicated server, text chat, `update Architecture.md`, `cleanup to call authority done`) — those are *implementation* work. The three below are **shape** decisions that gate them.
+
+### 1. Determinism rules in `_rollback_tick`
+
+Define the rule explicitly so future rollback code can be checked against it. Suggested wording for [`planning_docs/PlayerController.md`](./PlayerController.md) (or a new `Determinism.md`):
+
+> Code reachable from `_rollback_tick` may not call `randf*`, `randi*`, `Time.get_ticks_*`, or read non-synced global state (mouse position, OS clock, `Engine.get_process_frames()`, etc.). When randomness is needed, use a seeded `RandomNumberGenerator` whose seed is part of synced state.
+
+**Existing violation:** [`player/controllers/movement_controller.gd:492`](../player/controllers/movement_controller.gd#L492) — `randf_range(...)` inside `_calc_balance_point_target()`.
+
+**Audit surface as you grow rollback code:**
+- Everything called from [`player/player_entity.gd:141`](../player/player_entity.gd#L141) (`_rollback_tick`) — currently movement → gearing → trick → crash.
+- Any `nfx_*` derivation in [`movement_controller.gd`](../player/controllers/movement_controller.gd), [`gearing_controller.gd`](../player/controllers/gearing_controller.gd), [`trick_controller.gd`](../player/controllers/trick_controller.gd), [`crash_controller.gd`](../player/controllers/crash_controller.gd).
+- The `do_reset()` paths invoked by [`player_entity.gd:333`](../player/player_entity.gd#L333) (`do_respawn`) — also re-run during rollback.
+
+**Visibility:** add a debug overlay surfacing netfox's correction count per second. When Trick Battle ships and feels jittery under latency, you'll have a number to check rather than a vibe. Netfox already exposes the data via its rollback events; thin HUD overlay is enough.
+
+### 2. Late-join contract for gamemodes
+
+Today [`managers/gamemodes/gamemode_manager.gd:157`](../managers/gamemodes/gamemode_manager.gd#L157) (`_sync_game_to_late_joiner`) only ships `level_name`. The TODO item *"tutorial finished MP => clients dont respawn back in free roam"* is one symptom of this missing contract; round timers, scoreboards, and checkpoint progress will hit the same class of bug as more modes land.
+
+Bake the contract into the base [`managers/gamemodes/gamemode.gd`](../managers/gamemodes/gamemode.gd) once (it's already `## Should only be running on server`):
+
+```gdscript
+# Override in subclasses to ship/restore mid-match state to late joiners.
+func serialize_state_for_late_joiner() -> Dictionary: return {}
+func apply_state_from_host(state: Dictionary) -> void: pass
+```
+
+[`gamemode_manager.gd`](../managers/gamemodes/gamemode_manager.gd) calls `serialize` on the active mode before the existing late-join RPC, and `apply` on the receiving peer.
+
+**Concrete state each existing/planned mode would carry:**
+
+| Mode                                                                                   | State to sync                                                   |
+| -------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| [`tutorial_gamemode.gd`](../managers/gamemodes/tutorial/tutorial_gamemode.gd)          | `_sequence`, per-peer `current_index`, countdown remaining      |
+| [`free_roam_gamemode.gd`](../managers/gamemodes/free_roam/free_roam_gamemode.gd)       | None today (intentional)                                        |
+| [`street_race_gamemode.gd`](../managers/gamemodes/street_race/street_race_gamemode.gd) | Per-peer checkpoints completed, lap count, race start tick      |
+| Trick Battle (HI-PRI)                                                                  | Round timer, per-peer score, current round, scoreboard snapshot |
+| Crash Launch (HI-PRI)                                                                  | Round phase (drag/launch/scoring), best distance per peer       |
+
+Bake this in **before** mode #3 lands, otherwise each mode reinvents its own ad-hoc late-join sync and the bug pattern keeps repeating.
+
+### 3. Split `BikeSkinDefinition`
+
+TODO: separate diff parts to new resources, like powerstats, ikpositions, etc. make more composed
 
 
+[`resources/bikes/bike_skin_definition.gd`](../resources/bikes/bike_skin_definition.gd) currently owns five conceptual axes glued together. The `@export_group` blocks in the file already mark the seams:
 
-  4. Late-join contract for gamemodes.                                                                                                             
-  Your existing TODO has tutorial finished MP => clients dont respawn back in free roam — that's a symptom of the bigger pattern. When you add     
-  Trick Battle, the same class of bug returns (round timer, scores, etc. don't sync to late joiners). Bake serialize_state_for_late_joiner() /     
-  apply_state_from_host() into the base GameMode class once, before adding modes 3-4.                                                            
-                                                                                                                                                   
-  5. Split BikeSkinDefinition now.                                                                                                                 
-  You have 3 bikes. You're adding mods, performance mods, color variants. The longer you wait, the more .tres files you migrate. This is the single
-   architecture refactor with the best ROI right now.      
-    - TODO: separate diff parts to new resources, like powerstats, ikpositions, etc. make more composed
+| `@export_group` in file                                                                                                                     | Conceptual axis |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| `Mesh`, `Mods`, `colors` (lines [12](../resources/bikes/bike_skin_definition.gd#L12), [64](../resources/bikes/bike_skin_definition.gd#L64)) | Visual          |
+| `Collision` (line [25](../resources/bikes/bike_skin_definition.gd#L25))                                                                     | Chassis         |
+| `Markers`, `Rider Pose` (lines [33](../resources/bikes/bike_skin_definition.gd#L33), [43](../resources/bikes/bike_skin_definition.gd#L43))  | Pose / IK       |
+| `Animation`, `Physics`, `Gearing`, `Tricks`                                                                                                 | Tuning          |
 
+**Implications you're already hitting:**
 
+- A "performance mod" (e.g. swap `power_curve`) requires duplicating the whole `.tres` for every visual variant. [`resources/bikes/mods/color_mod.gd`](../resources/bikes/mods/color_mod.gd) only handles colors today; adding a `PowerCurveMod` is awkward when the curve is on the same resource as the mesh.
+- The "Save Default Pose" editor button at [`animation_controller.gd:24`](../player/controllers/animation_controller.gd#L24) writes back into the same `.tres` that owns physics tuning → easy to clobber gearing/physics constants while authoring poses.
+- [`bike_skin_definition.gd:_copy_from`](../resources/bikes/bike_skin_definition.gd#L187) has to deep-copy more state as the resource grows. It already missed `power_curve` / `lean_curve` / `steer_curve` (see Critical → Shared mutable resources).
+- Network sync via [`bike_skin_definition.gd:to_dict`](../resources/bikes/bike_skin_definition.gd#L228) ships the base path + mods. Per-axis mod swaps (e.g. "stock chassis with sport tuning") aren't expressible because there's only one base resource.
+- [`Skins.md`](./Skins.md) calls `BikeSkinDefinition` "the single source of truth for per-bike tuning" — that's exactly the problem.
 
+**Proposed split:**
 
+| Resource                | Owns                                                                                                                                                | Consumers                                                                                                                                                                                                   |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `BikeVisualDefinition`  | `mesh_res`, mesh offsets, `colors`, `mods`                                                                                                          | [`bike_skin.gd`](../player/bikes/scripts/bike_skin.gd)                                                                                                                                                      |
+| `BikeChassisDefinition` | `collision_shape` + offsets, wheel markers (front/rear ground/edge)                                                                                 | [`player_entity._init_raycasts`](../player/player_entity.gd), `bike_skin.gd`                                                                                                                                |
+| `BikePoseDefinition`    | rider pose markers (chest / head / hand / foot / butt / arm + leg magnets)                                                                          | [`animation_controller.gd`](../player/controllers/animation_controller.gd)                                                                                                                                  |
+| `BikeTuningDefinition`  | `gear_ratios`, `max_rpm`, `power_curve`, `acceleration`, `max_speed`, lean/steer curves, `max_wheelie_angle_deg`, `wheelie_balance_point_deg`, etc. | [`movement_controller`](../player/controllers/movement_controller.gd), [`gearing_controller`](../player/controllers/gearing_controller.gd), [`trick_controller`](../player/controllers/trick_controller.gd) |
 
-1. BikeSkinDefinition is a god-resource                                                                                                          
-   
-  It owns: visuals + collision + rider IK pose + wheel markers + gearing + physics tuning + trick limits. That's five conceptual axes glued        
-  together. Implications:
-                                                                                                                                                   
-  - Modding/cosmetic skins: ColorMod works, but a "performance mod" (e.g. swap power curve) means duplicating the whole .tres for every visual     
-  variant.
-  - Cross-bike tuning sweeps: changing physics for all sport bikes means editing N skins rather than one tuning resource.                          
-  - Network sync: when serializing for MP, you ship a giant blob — already a known concern (the to_dict only ships the path, but per-mod tuning    
-  swap isn't possible).                                                                                                                            
-  - Authoring: your Save Default Pose button writes back into the same resource that owns physics constants. Easy to clobber.                      
-                                                                                                                                                   
-  Split into BikeVisualDefinition (mesh, colors, rider pose markers) + BikeTuningDefinition (gearing, physics, trick limits) +                     
-  BikeChassisDefinition (collision, wheel markers). A bike entity composes one of each. Mods can target one axis without affecting the others. Do  
-  this before you have 20 bikes — refactoring 3 is cheap, refactoring 20 is not. 
+`BikeSkinDefinition` becomes a thin composer that just holds `@export var visual / chassis / pose / tuning` references. Existing 3 base bikes ([`mini_default`](../resources/bikes/skins/mini_default_skin_definition.tres), [`naked_default`](../resources/bikes/skins/naked_default_skin_definition.tres), [`sport_default`](../resources/bikes/skins/sport_default_skin_definition.tres)) migrate by hand — cheap now, painful at 20.
 
+**Wins:**
+
+- [`BikeMod`](../resources/bikes/mods/bike_mod.gd) subclasses can target one axis (`PowerCurveMod`, `WheelieLimitMod`, `MeshOverrideMod`) without touching unrelated state.
+- "Save Default Pose" only writes to the `BikePoseDefinition`. Tuning constants stay safe.
+- Future server-side anti-cheat just whitelists `res://` paths for `BikeTuningDefinition`. Visual customization remains free for players.
+- [`bike_skin_definition.gd:to_dict / from_dict`](../resources/bikes/bike_skin_definition.gd#L228) becomes per-axis: ship one path for each, plus mods. No more giant blob.
+
+**Do this before** the customization shop / mod-purchase UI lands ([TODO.md HI-PRI](./TODO.md)) — that's when this resource shape gets baked into save data and migrating becomes painful.
+
+---
 
 ## 🔴 Critical (correctness / netcode)
 
@@ -203,4 +254,3 @@ Subsystem reviews dispatched in parallel: player controllers, managers/gamemodes
 - [`resources/player/character_skin_definition.gd:34`](../resources/player/character_skin_definition.gd#L34) — `push_error("...", err)` two-arg form is wrong; `push_error` takes only one String.
 - [`utils/strings.gd`](../utils/strings.gd) — `clean_for_node_name()` is a trivial wrapper, adds no semantic value.
 - [`utils/editor_tools/take_screenshot.gd`](../utils/editor_tools/take_screenshot.gd) — hardcoded `Screenshot_RenameMe.jpg`; repeated runs silently overwrite.
-
