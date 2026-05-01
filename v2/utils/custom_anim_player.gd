@@ -131,6 +131,11 @@ func sample(track_path: NodePath) -> Variant:
 		var track_idx := layer.anim.find_track(track_path, Animation.TYPE_VALUE)
 		if track_idx == -1:
 			continue
+		# value_track_interpolate ignores the track's enabled flag (only AnimationPlayer
+		# honors it), so check it here — otherwise tracks toggled off in the editor still
+		# leak deltas into the pose.
+		if not layer.anim.track_is_enabled(track_idx):
+			continue
 		var sampled = layer.anim.value_track_interpolate(track_idx, layer.time)
 		var base = layer.anim.value_track_interpolate(track_idx, 0.0)
 		var delta_val = sampled - base
