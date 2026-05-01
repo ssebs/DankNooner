@@ -70,8 +70,11 @@ func Exit(_state_context: StateContext):
 
 	if multiplayer.is_server():
 		_set_all_players_input_disabled(false)
-	tutorial_hud.rpc_hide.rpc()
-	results_hud.rpc_hide.rpc()
+	# Hide locally rather than via RPC — when leaving via pause→main menu the peer is
+	# torn down before Exit runs, which silently drops the .rpc() local-call. Each peer
+	# runs Exit() on their own state machine, so a local hide is sufficient.
+	tutorial_hud.hide()
+	results_hud.hide()
 	_player_states.clear()
 
 
@@ -162,6 +165,12 @@ func _update_player_tutorial(peer_id: int, state: TutorialPlayerState, delta: fl
 	# Player may not be spawned yet during late-join sync — skip is intentional
 	var player := spawn_manager._get_player_by_peer_id(peer_id)
 	if player == null:
+		return
+
+	# Pause progress while crashed/respawning. trick_controller freezes current_trick
+	# during a crash, so without this guard a wheelie/stoppie timer would keep ticking
+	# through the respawn delay.
+	if player.is_crashed:
 		return
 
 	var step_def := state.tutorial_steps.defs[_sequence[state.current_index]]
