@@ -15,13 +15,16 @@ enum Trick {
 	HEEL_CLICKER,
 	HIGH_CHAIR,
 }
-
-const TRICK_CAM_Y_THRESHOLD: float = -0.5
-
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
 @export var gearing_controller: GearingController
 @export var movement_controller: MovementController
+
+const TRICK_CAM_Y_THRESHOLD: float = -0.5
+## Pitch (degrees) past which the bike is considered in a wheelie / stoppie.
+## Shared by movement_controller for in_wheelie / in_stoppie checks.
+const WHEELIE_PITCH_THRESHOLD_DEG: float = 10.0
+const STOPPIE_PITCH_THRESHOLD_DEG: float = -10.0
 
 var current_trick: Trick = Trick.NONE
 var _last_trick: Trick = Trick.NONE
@@ -54,7 +57,7 @@ func _detect_current_trick() -> Trick:
 	# Reset flip tracking on landing
 	_flip_emitted = false
 
-	if movement_controller.pitch_angle > deg_to_rad(10):
+	if movement_controller.pitch_angle > deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG):
 		if input_controller.nfx_trick_held:
 			# HIGH_CHAIR latches: once entered (via cam-down flick), stays held while
 			# RB is held + still in a wheelie. Releasing RB or dropping the wheelie exits.
@@ -67,7 +70,7 @@ func _detect_current_trick() -> Trick:
 			return Trick.WHEELIE_MOD
 		return Trick.WHEELIE_SITTING
 
-	if movement_controller.pitch_angle < deg_to_rad(-10):
+	if movement_controller.pitch_angle < deg_to_rad(STOPPIE_PITCH_THRESHOLD_DEG):
 		return Trick.STOPPIE
 	return Trick.NONE
 
