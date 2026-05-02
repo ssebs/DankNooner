@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://levels/components/killbox.tscn" id="2_asds5"]
 [ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://levels/components/event_start_circle.tscn" id="3_ffs5v"]
 [ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://resources/events/gamemode_event.gd" id="4_dr5sf"]
+[ext_resource type="Script" path="res://managers/gamemodes/tutorial/tutorial_course.gd" id="6_i711f"]
+[ext_resource type="Script" path="res://managers/gamemodes/tutorial/tutorial_lesson.gd" id="7_rgqfv"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="17_cf4ia"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2lumj"]
@@ -34,6 +36,15 @@ name = "Tutorial: Moto 101"
 description = "Learn the basics to get your M1 license."
 target_gamemode = 3
 tutorial_sequence = Array[int]([0, 1, 2, 4, 3, 5])
+metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
+
+[sub_resource type="Resource" id="Resource_rgqfv"]
+script = ExtResource("4_dr5sf")
+name = "Basic Riding Course"
+description = "Learn how to ride"
+target_gamemode = 3
+countdown_seconds = 1.0
+tutorial_sequence = Array[int]([0])
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [node name="Test_City_01" type="Node3D" unique_id=721643000 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug")]
@@ -1711,3 +1722,15 @@ gamemode_event = SubResource("Resource_i711f")
 [node name="Tutorial01EventStartCircle2" parent="." unique_id=459761741 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 93)
 gamemode_event = SubResource("Resource_asds5")
+
+[node name="TutorialCourse01" type="Node3D" parent="." unique_id=752175030 node_paths=PackedStringArray("lessons", "start_marker")]
+script = ExtResource("6_i711f")
+event = SubResource("Resource_rgqfv")
+lessons = [NodePath("TutorialLesson")]
+start_marker = NodePath("Start")
+
+[node name="TutorialLesson" type="Node" parent="TutorialCourse01" unique_id=374570637]
+script = ExtResource("7_rgqfv")
+step = 1
+
+[node name="Start" type="Marker3D" parent="TutorialCourse01" unique_id=1728904243]
