@@ -46,13 +46,15 @@ func _signals_event_circles(should_connect: bool):
 			event_start_circle.exited_event_circle.disconnect(_on_event_circle_exited)
 
 
-func _on_event_circle_entered(peer_id: int, gamemode_event: GameModeEvent):
-	DebugUtils.DebugMsg("%d entered eventcircle: %s" % [peer_id, gamemode_event.name])
+func _on_event_circle_entered(peer_id: int, source_circle: EventStartCircle):
+	var ev := source_circle.gamemode_event
+	DebugUtils.DebugMsg("%d entered eventcircle: %s" % [peer_id, ev.name])
 
-	_ctx.gamemode_event = gamemode_event
+	_ctx.gamemode_event = ev
+	_ctx.event_start_circle = source_circle
 
 	game_mode_event_confirm_hud.on_player_entered_circle.rpc_id(
-		1, peer_id, gamemode_event.name, gamemode_event.description
+		1, peer_id, ev.name, ev.description
 	)
 
 	# connect hud signals
@@ -64,8 +66,8 @@ func _on_event_circle_entered(peer_id: int, gamemode_event: GameModeEvent):
 	# TODO - set player velocity to 0
 
 
-func _on_event_circle_exited(peer_id: int, gamemode_event: GameModeEvent):
-	DebugUtils.DebugMsg("%d exited eventcircle: %s" % [peer_id, gamemode_event.name])
+func _on_event_circle_exited(peer_id: int, source_circle: EventStartCircle):
+	DebugUtils.DebugMsg("%d exited eventcircle: %s" % [peer_id, source_circle.gamemode_event.name])
 
 	if game_mode_event_confirm_hud.hud_submitted.is_connected(
 		_on_game_mode_event_confirm_hud_submitted
@@ -79,6 +81,7 @@ func _on_game_mode_event_confirm_hud_submitted(peer_id: int):
 	DebugUtils.DebugMsg("Starting Event... %d" % peer_id)
 	game_mode_event_confirm_hud.on_player_close_pressed.rpc_id(1, peer_id)
 	gamemode_manager.pending_gamemode_event = _ctx.gamemode_event
+	gamemode_manager.pending_event_start_circle = _ctx.event_start_circle
 	gamemode_manager.change_gamemode.rpc_id(1, _ctx.gamemode_event.target_gamemode, peer_id)
 
 

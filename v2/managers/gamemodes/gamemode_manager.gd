@@ -36,6 +36,7 @@ var current_game_mode: TGameMode = TGameMode.FREE_FROAM
 var current_level_name: LevelManager.LevelName = LevelManager.LevelName.LEVEL_SELECT_LABEL
 
 var pending_gamemode_event: GameModeEvent
+var pending_event_start_circle: EventStartCircle
 var _gamemode_map: Dictionary[TGameMode,GameMode] = {}
 
 
@@ -85,6 +86,9 @@ func _rpc_transition_gamemode(gamemode: TGameMode, peer_id: int):
 	if pending_gamemode_event:
 		ctx.gamemode_event = pending_gamemode_event
 		pending_gamemode_event = null
+	if pending_event_start_circle:
+		ctx.event_start_circle = pending_event_start_circle
+		pending_event_start_circle = null
 	current_game_mode = gamemode
 	state_machine.request_state_change(_gamemode_map[gamemode], ctx)
 
