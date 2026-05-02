@@ -12,7 +12,7 @@ class_name MovementController extends Node
 @export var debug_verbose:bool=false
 
 const CLUTCH_KICK_WINDOW: float = 0.2
-const FALL_GRAVITY: float = 16
+const FALL_GRAVITY: float = 20
 const AIR_DRAG: float = 12.0  # speed loss while airborne
 # Ramp / loop tuning
 const SURFACE_BLEND_SPEED_MIN: float = 3.0  # up_direction alignment speed at rest

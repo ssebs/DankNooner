@@ -328,6 +328,8 @@
 
 ## Done ✅
 
+- [x] Always crash after landing a heel clicker, not just during
+
 - [x] player is leaning back while doing the idle anim, it shouldnt be
 
 - [x] Trick Manager + tricks
