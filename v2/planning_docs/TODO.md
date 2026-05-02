@@ -22,7 +22,6 @@
     - [ ] duplicate logic
     - [ ] missing _get_configuration_warnings
     - [ ] todos & dead code
-- [ ] [FMOD on web export](./fmod-web-fix.md) — build `libGodotFmod.web.*.wasm32.wasm` from PR #210 branch & wire it in
 
 ## HI-PRI‼️
 
@@ -73,6 +72,8 @@
 
 > POC = playable gamemodes w/ friends, see if core gameplay loop works
 > video record this once playing with everyone, save log files
+
+- [ ] [FMOD on web export](./fmod-web-fix.md) — build `libGodotFmod.web.*.wasm32.wasm` from PR #210 branch & wire it in
 
 - [ ] First launch is v slow ([compiling shaders](https://docs.godotengine.org/en/stable/tutorials/performance/pipeline_compilations.html))
   - [ ] Freezes on my Mac when using exported binary 
