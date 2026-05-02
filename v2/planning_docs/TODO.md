@@ -13,24 +13,15 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] Game won't launch with skin loading
-- [ ] ragdoll doesn't work in MP
-- [ ] Verify customizations in multiplayer
-- [ ] Trick Manager + tricks
-  - [x] wheelie / stoppie detection
-  - [x] flip detection
-  - [x] in-air tricks
-    - [x] Create Heel clicker / other trick animations (RB+DOWN)
-  - [x] more ground tricks
-  - [ ] Cleanup trick / animation / movement code (at least review!)
-  - [ ] trick scoring & combos
-  - [ ] trick tweaks
-    - [ ] Land into wheelie / stoppie should be a trick
-    - [ ] Create wheelie + RIGHT animation (hand grab)
-      - [ ] IK hand twd ground, not just backwds
-  - [ ] once speed hits 0 mid air, i lose all ability to rotate fwd/back
-   - [ ] related to wheelie / playerent angle being diff?
-   - [ ] easier on KBM
+- [ ] [code review time](./code-review-20260430.md)
+  - [ ] make todo list
+  - [ ] at least:
+    - [ ] split bikeskindefinition, dont have to use suggested names
+    - [ ] signal mismatches
+    - [ ] resoure paths user://
+    - [ ] duplicate logic
+    - [ ] missing _get_configuration_warnings
+    - [ ] todos & dead code
 
 ## HI-PRI‼️
 
@@ -41,6 +32,14 @@
     - [ ] e.g. `CheckpointMarker` can be used to see if player drove thru, to be used in tutorial / races
     - [ ] e.g. arrows on the ground that point / light up depending on a func call
   - [ ] See **planning_docs/PLAN-tut-gamemodeobject.md**
+  - [ ] next:
+    - [ ] basic movement
+    - [ ] progressive braking
+    - [ ] how to power wheelie & stoppie
+    - [ ] how to clutch up
+    - [ ] how to stay in balance point
+    - [ ] trick mods
+    - [ ] ramps & air tricks
   - [ ] clutch-up tutorial & speed management
   - [ ] trick mod tutorial
   - [ ] crashing during tutorial doesn't stop timers
@@ -73,6 +72,8 @@
 
 > POC = playable gamemodes w/ friends, see if core gameplay loop works
 > video record this once playing with everyone, save log files
+
+- [ ] [FMOD on web export](./fmod-web-fix.md) — build `libGodotFmod.web.*.wasm32.wasm` from PR #210 branch & wire it in
 
 - [ ] First launch is v slow ([compiling shaders](https://docs.godotengine.org/en/stable/tutorials/performance/pipeline_compilations.html))
   - [ ] Freezes on my Mac when using exported binary 
@@ -327,6 +328,28 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Always crash after landing a heel clicker, not just during
+
+- [x] player is leaning back while doing the idle anim, it shouldnt be
+
+- [x] Trick Manager + tricks
+  - [x] wheelie / stoppie detection
+  - [x] flip detection
+  - [x] in-air tricks
+    - [x] Create Heel clicker / other trick animations (RB+DOWN)
+  - [x] more ground tricks
+  - [ ] Cleanup trick / animation / movement code (at least review!)
+  - [ ] trick scoring & combos
+  - [ ] trick tweaks
+    - [ ] Land into wheelie / stoppie should be a trick
+    - [ ] Create wheelie + RIGHT animation (hand grab)
+      - [ ] IK hand twd ground, not just backwds
+  - [ ] once speed hits 0 mid air, i lose all ability to rotate fwd/back
+   - [ ] related to wheelie / playerent angle being diff?
+   - [ ] easier on KBM
+
+- [x] Game won't launch with skin loading
 
 - [x] Update customization menu
   - [x] Show bike + list of all color_mods(gotta check for multiple colors for bike type, so set that as a var in the skin_definition & make the color_mod have a matching count. constraints?)

@@ -58,6 +58,16 @@ func request_state_change(
 	_transition_to(new_state, state_context, force)
 
 
+## Exit current_state and clear it. Use when tearing down a flow (e.g. returning to lobby)
+## so the next request_state_change() into the same state still runs Enter().
+func clear_current_state(state_context: StateContext = null):
+	if current_state:
+		if is_debug:
+			DebugUtils.DebugMsg("Clearing current_state: %s" % current_state.name)
+		current_state.Exit(state_context)
+	current_state = null
+
+
 ## Get a State in this State Machine by the State's name
 func get_state_by_name(state_name: String) -> State:
 	var st = states.get(state_name)

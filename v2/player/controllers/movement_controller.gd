@@ -12,7 +12,7 @@ class_name MovementController extends Node
 @export var debug_verbose:bool=false
 
 const CLUTCH_KICK_WINDOW: float = 0.2
-const FALL_GRAVITY: float = 16
+const FALL_GRAVITY: float = 20
 const AIR_DRAG: float = 12.0  # speed loss while airborne
 # Ramp / loop tuning
 const SURFACE_BLEND_SPEED_MIN: float = 3.0  # up_direction alignment speed at rest
@@ -287,10 +287,11 @@ func _pitch_angle_calc(delta: float):
 			pitch_angle -= rotation_delta
 			air_pitch_total += abs(rotation_delta)
 		return
+		
 
 	var bd = player_entity.bike_definition
-	var in_wheelie = pitch_angle > deg_to_rad(15)
-	var in_stoppie = pitch_angle < deg_to_rad(-5)
+	var in_wheelie = pitch_angle > deg_to_rad(TrickController.WHEELIE_PITCH_THRESHOLD_DEG)
+	var in_stoppie = pitch_angle < deg_to_rad(TrickController.STOPPIE_PITCH_THRESHOLD_DEG)
 	var bp_low = deg_to_rad(bd.wheelie_balance_point_deg - bd.wheelie_balance_point_width_deg)
 	var bp_high = deg_to_rad(bd.wheelie_balance_point_deg + bd.wheelie_balance_point_width_deg)
 	var in_balance_point = pitch_angle >= bp_low and pitch_angle <= bp_high
