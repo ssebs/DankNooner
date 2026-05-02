@@ -2,18 +2,22 @@
 
 [![.github/workflows/build.yml](https://github.com/ssebs/DankNooner/actions/workflows/build.yml/badge.svg)](https://github.com/ssebs/DankNooner/actions/workflows/build.yml) [![GitHub Release](https://img.shields.io/github/v/release/ssebs/DankNooner?sort=semver&display_name=release)](https://github.com/ssebs/DankNooner/releases)
 
-**A physics-based motorcycle stunt game. Wheelies, wrecks, and questionable decisions.**
+A physics-based motorcycle stunt game. Wheelies, wrecks, and questionable decisions.
 
-An open-world motorcycle game about doing every stupid thing you'd never try in real life. Realistic controls meet arcade-style tricks — progressive braking, limited grip, and ragdoll crashes. Weave through traffic doing wheelies, pull skate-style tricks off ramps, race friends online, and progress from a bicycle to a fully customized sport bike.
+An open-world motorcycle game about doing every stupid thing you'd never try in real life. Realistic controls meet arcade tricks: progressive braking, limited grip, ragdoll crashes. Weave through traffic doing wheelies, pull skate-style tricks off ramps, race friends online, and progress from a bicycle to a fully customized sport bike.
 
-> **Play the v1 POC:** [Itch.io](https://theofficialssebs.itch.io/dank-nooner-poc)
+<!-- TODO: hero gif/screenshot of v2 gameplay (wheelie or crash loop) -->
 
-Check the latest dev build! Download the **.zip** for your platform [here](https://github.com/ssebs/DankNooner/releases), or play the [web version](https://ssebs.github.io/DankNooner/) in the browser!
+## Play
+
+> Best played with a controller! But Keyboard + Mouse works too
+
+- **Browser (no sound yet):** [ssebs.github.io/DankNooner](https://ssebs.github.io/DankNooner/)
+- **Desktop builds (Win/Mac/Linux):** [latest release](https://github.com/ssebs/DankNooner/releases)
+- **V1 POC (wheelie balance):** [itch.io](https://theofficialssebs.itch.io/dank-nooner-poc)
 
 <details>
-<summary>
-Note for Mac users:
-</summary>
+<summary>Note for Mac users</summary>
 
 You will need to allow the app explicitly.
 
@@ -26,59 +30,78 @@ You will need to allow the app explicitly.
 
 </details>
 
-## Highlights
+## V2 Status
 
-- **Tricks & combos** — Wheelies, stoppies, backflips, drifts, burnouts, and ramp tricks with a combo chain system
-- **Multiplayer** — Ride with friends or drop into open lobbies
-- **Game modes** — Free roam, street races, stunt races, track races, S.K.A.T.E.-style trick challenges, and traffic weaving
-- **Open world** — Island map with city, suburbs, mountain roads, race track, dirt jumps, and a megaramp
-- **Progression** — Start on a bicycle, unlock bikes up to sport bikes, earn cash for upgrades and customization
-- **Singleplayer** — Story mode planned for full release
+V2 is the multiplayer open-world rewrite, in active development. The browser build and desktop releases above are all V2. For live progress see [planning_docs/TODO.md](./v2/planning_docs/TODO.md).
 
-## Roadmap
+What works today:
 
-| Phase              | Status      | Description                                                                                                                                                                                             |
-| ------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **V1 — POC**       | Complete    | Wheelie balance game on [Itch.io](https://theofficialssebs.itch.io/dank-nooner) + full player controller POC ([download v1.0](https://github.com/ssebs/moto-player-controller-godot/releases/tag/v1.0)) |
-| **V2 — MVP**       | In Progress | Multiplayer open-world rewrite with expanded tricks, racing, and progression                                                                                                                            |
-| **V3 — Full Game** | Planned     | Story mode, quests, cutscenes, full trick system, polish                                                                                                                                                |
+- Free roam multiplayer over WebRTC (NAT punch via a signaling server, no port forwarding)
+- Server-authoritative physics with client prediction and rollback (netfox)
+- Wheelies, stoppies, backflips, frontflips, 360s, heel clickers, high chairs
+- Crash detection and ragdoll
+- Manual gearbox with clutch, RPM, and progressive braking
+- IK rider animation that adapts per bike (hand and foot markers per `BikeSkinDefinition`)
+- FMOD engine audio that blends with RPM
+- Basic tutorial gamemode and start-circle gamemode triggers
+- Bike and character skin customization with color slots and mods
 
-## Source Code
+What's next (see [GameplayAndModes.md](./v2/planning_docs/GameplayAndModes.md) for the full design):
 
-| Version | Directory    |
-| ------- | ------------ |
-| V1      | [v1/](./v1/) |
-| V2      | [v2/](./v2/) |
+- Street race, trick battle, and crash-launch gamemodes
+- Traffic AI and near-miss tricks
+- Customization shop, progression, and saved player stats
+- Larger island map
+- Story mode (V3)
 
-## Related Projects
+<!-- TODO: short clip or screenshot of multiplayer free roam -->
 
-POC repos that fed into V2:
+## From V1 to V2
 
-- [multiplayer-poc-godot](https://github.com/ssebs/multiplayer-poc-godot) — Lobby and player sync prototype
-- [inverse-kinematics-poc](https://github.com/ssebs/inverse-kinematics-poc) — IK rider animations
-- [moto-player-controller-godot](https://github.com/ssebs/moto-player-controller-godot) — Player controls, physics, tricks, and ragdoll
-- [danknoonersignalserver](https://github.com/ssebs/danknoonersignalserver/) — WebRTC signaling server for NAT traversal and peer connection brokering; deploy via `docker pull ssebs/danknoonersignalserver:latest`
+V1 was a single-mechanic POC: hold a wheelie as long as you can without flipping. It validated that the balance-point feel was fun on its own ([play it on itch](https://theofficialssebs.itch.io/dank-nooner-poc)). V2 keeps that core feel and builds an open world, multiplayer, and a full trick system around it.
+
+| Phase | Status      | Notes                                                                                                                                        |
+| ----- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| V1    | Complete    | Wheelie balance POC on itch + standalone player controller ([v1.0](https://github.com/ssebs/moto-player-controller-godot/releases/tag/v1.0)) |
+| V2    | In progress | Multiplayer open-world rewrite. Track work in [TODO.md](./v2/planning_docs/TODO.md)                                                          |
+| V3    | Planned     | Story mode, quests, full polish                                                                                                              |
+
+Source for each version lives in [v1/](./v1/) and [v2/](./v2/).
+
+<details>
+<summary>POC repos that fed into V2</summary>
+
+- [multiplayer-poc-godot](https://github.com/ssebs/multiplayer-poc-godot) - lobby and player sync
+- [inverse-kinematics-poc](https://github.com/ssebs/inverse-kinematics-poc) - IK rider animations
+- [moto-player-controller-godot](https://github.com/ssebs/moto-player-controller-godot) - controls, physics, tricks, ragdoll
+- [danknoonersignalserver](https://github.com/ssebs/danknoonersignalserver/) - WebRTC signaling for NAT traversal (`docker pull ssebs/danknoonersignalserver:latest`)
+
+</details>
 
 ## Planning Docs
 
-See [v2/planning_docs/](./v2/planning_docs/) for detailed design and project status:
+Design notes and current status live in [v2/planning_docs/](./v2/planning_docs/):
 
-- [TODO](./v2/planning_docs/TODO.md)
-- [Milestones](./v2/planning_docs/Milestones.md)
+- [TODO](./v2/planning_docs/TODO.md) - active work and backlog
+- [Architecture](./v2/planning_docs/Architecture.md)
+- [GameplayAndModes](./v2/planning_docs/GameplayAndModes.md)
+- [PlayerController](./v2/planning_docs/PlayerController.md)
+- [Skins](./v2/planning_docs/Skins.md)
 - [Goals & Requirements](./v2/planning_docs/GoalsRequirements.md)
-- [Architecture / Design](./v2/planning_docs/Architecture.md)
-- [Marketing](./v2/planning_docs/Marketing.md)
 - [Story / Singleplayer](./v2/planning_docs/StorySingleplayer.md)
+- [Marketing](./v2/planning_docs/Marketing.md)
 
 ## Media
 
-#### Gameplay Demo from `moto-player-controller`:
+V1 player controller demo:
 
 [![Gameplay Demo (moto-player-controller)](https://img.youtube.com/vi/zCvxL6z0aGQ/hqdefault.jpg)](https://youtu.be/zCvxL6z0aGQ)
 
-#### Multiplayer Demo from `multiplayer-poc-godot`:
+V1 multiplayer POC:
 
 ![Multiplayer Demo (multiplayer-poc-godot)](https://raw.githubusercontent.com/ssebs/multiplayer-poc-godot/main/img/Multiplayer-POC.gif)
+
+<!-- TODO: replace/extend with V2 media once something is stable enough to not rot -->
 
 ## License
 
