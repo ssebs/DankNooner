@@ -338,8 +338,9 @@ func do_respawn():
 	# animation_controller.do_reset()
 	if animation_controller:
 		animation_controller.stop_ragdoll()
-	# Re-init IK so markers snap back to base pose (covers respawn from crashes that
-	# leave markers offset by anim layers / ragdoll bone positions).
+	# Re-spawn the bike mesh so any handlebar/wheel children moved by ragdoll/anim are
+	# back to base, then re-init IK so its targets snap to the fresh markers.
+	_init_mesh()
 	_init_ik()
 	respawned.emit()
 

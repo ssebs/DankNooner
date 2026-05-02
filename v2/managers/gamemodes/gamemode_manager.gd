@@ -94,6 +94,10 @@ func end_game():
 	match_state = MatchState.IN_LOBBY
 	current_level_name = LevelManager.LevelName.LEVEL_SELECT_LABEL
 
+	# Exit the active gamemode state so re-entering the same gamemode next match
+	# still runs Enter() (otherwise StateMachine's same-state early-return skips player spawn).
+	state_machine.clear_current_state()
+
 	audio_manager.stop_all()
 
 
