@@ -7,4 +7,3 @@ class_name GameModeEvent extends Resource
 var description: String = "Sunt nisi id proident veniam ad laboris pariatur minim eu commodo aliquip."
 @export var target_gamemode: GamemodeManager.TGameMode
 @export var countdown_seconds: float = 3.0
-@export var tutorial_sequence: Array[TutorialSteps.Step]
