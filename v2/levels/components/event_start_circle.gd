@@ -1,11 +1,15 @@
 @tool
 class_name EventStartCircle extends Area3D
 
-signal entered_event_circle(peer_id: int, gamemode_event: GameModeEvent)
-signal exited_event_circle(peer_id: int, gamemode_event: GameModeEvent)
+## Emitted with a reference to *this* circle so consumers can pull
+## `gamemode_event`, `start_marker`, and `get_lessons()` off it.
+signal entered_event_circle(peer_id: int, event_start_circle: EventStartCircle)
+signal exited_event_circle(peer_id: int, event_start_circle: EventStartCircle)
 
 ## TODO - show multiple events & be able to select them
 @export var gamemode_event: GameModeEvent
+## Where players teleport to when this event's gamemode starts.
+@export var start_marker: Marker3D
 
 @onready var event_label: Label3D = %Label3D
 
@@ -21,12 +25,21 @@ func _ready():
 func _on_body_entered(body: Node3D):
 	if !body is PlayerEntity:
 		return
-	# DebugUtils.DebugMsg(body.name + " entered start circle")
-	entered_event_circle.emit(int(body.name), gamemode_event)
+	entered_event_circle.emit(int(body.name), self)
 
 
 func _on_body_exited(body: Node3D):
 	if !body is PlayerEntity:
 		return
-	# DebugUtils.DebugMsg(body.name + " exited start circle")
-	exited_event_circle.emit(int(body.name), gamemode_event)
+	exited_event_circle.emit(int(body.name), self)
+
+
+## Lessons are children of this circle, in tree order. Other children
+## (CheckpointMarker, TriggerZone, Marker3D) are ignored — they're referenced
+## by individual lessons via @export trigger.
+func get_lessons() -> Array[GameModeLesson]:
+	var out: Array[GameModeLesson] = []
+	for c in get_children():
+		if c is GameModeLesson:
+			out.append(c)
+	return out
