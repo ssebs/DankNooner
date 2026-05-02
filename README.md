@@ -2,11 +2,11 @@
 
 [![.github/workflows/build.yml](https://github.com/ssebs/DankNooner/actions/workflows/build.yml/badge.svg)](https://github.com/ssebs/DankNooner/actions/workflows/build.yml) [![GitHub Release](https://img.shields.io/github/v/release/ssebs/DankNooner?sort=semver&display_name=release)](https://github.com/ssebs/DankNooner/releases)
 
-A physics-based motorcycle stunt game. Wheelies, wrecks, and questionable decisions.
+**An open-world motorcycle game about doing every stupid thing you'd never try in real life.**
 
-An open-world motorcycle game about doing every stupid thing you'd never try in real life. Realistic controls meet arcade tricks: progressive braking, limited grip, ragdoll crashes. Weave through traffic doing wheelies, pull skate-style tricks off ramps, race friends online, and progress from a bicycle to a fully customized sport bike.
+Realistic controls meet arcade tricks: progressive braking, balance point wheelies, ragdoll crashes, and more. Weave through traffic doing 12'oclock wheelies, do FMX tricks off ramps, race friends online, and upgrade your bikes to show them off.
 
-<!-- TODO: hero gif/screenshot of v2 gameplay (wheelie or crash loop) -->
+![gameplay gif from v2.0.66](img/dank-nooner-v66.webp)
 
 ## Play
 
