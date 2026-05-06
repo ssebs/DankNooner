@@ -13,11 +13,8 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] Use [tutorial-gamemode-objects](PLAN-tut-gamemodeobject.md) system
-  - [ ] Issues:
-    - [ ] Shouldn't have to add tutoriallessson node under course & connect. instead just add nested resources...
-    - [ ] TutorialLesson trigger is confusing, and step doesn't 
-    - [ ] How to start TutorialCourse? No event start circle...
+- [ ] Finish / create [PLAN-gamemode-objective-collapse](./PLAN-gamemode-objective-collapse.md) system
+  - [ ] Use checkpoint marker in a step
 
 - [ ] [code review time](./code-review-20260430.md)
   - [ ] make todo list
