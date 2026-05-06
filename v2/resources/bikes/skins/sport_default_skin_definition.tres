@@ -36,4 +36,5 @@ left_leg_magnet_position = Vector3(0.46395656, 0.5692559, 0.42930415)
 right_leg_magnet_position = Vector3(-0.464, 0.569, 0.429)
 mods = Array[ExtResource("4_hx3xb")]([ExtResource("5_hx3xb")])
 max_speed = 120.0
+lean_speed = 4.0
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"

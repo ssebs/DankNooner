@@ -245,15 +245,17 @@ func _set_pose_local_from_bike(
 
 ## Lean (Z), chest yaw, butt/chest X+Z weight shift. Reads + writes pose only —
 ## NEVER touch the live nodes here, they hold post-anim values from last frame.
-func _apply_riding_common(pose: _RiderPose, delta: float, blend: float, roll: float) -> void:
-	var amount_normalized_rename_me := 160.0  # TODO - move to bike_definition
-	if player_entity.trick_controller.current_trick == TrickController.Trick.TWO_LEFT_FEET:
-		print("2lf")
-		amount_normalized_rename_me = 1.0
+func _apply_riding_common(pose: _RiderPose, _delta: float, blend: float, roll: float) -> void:
+	# var amount_normalized_rename_me := 160.0  # TODO - move to bike_definition
+	# if player_entity.trick_controller.current_trick == TrickController.Trick.TWO_LEFT_FEET:
+	# 	print("2lf")
+	# 	amount_normalized_rename_me = 1.0
 
-	pose.visual_root_rot.z = lerpf(
-		pose.visual_root_rot.z, roll, blend * amount_normalized_rename_me * delta
-	)
+	# pose.visual_root_rot.z = lerpf(
+	# 	pose.visual_root_rot.z, roll, blend * amount_normalized_rename_me * delta
+	# )
+
+	pose.visual_root_rot.z = lerpf(pose.visual_root_rot.z, roll, blend)
 
 	var target_chest_y = roll * deg_to_rad(max_chest_yaw_deg)
 	pose.chest_rot.y = lerpf(pose.chest_rot.y, target_chest_y, blend)
