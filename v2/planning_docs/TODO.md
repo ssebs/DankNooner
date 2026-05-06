@@ -14,6 +14,7 @@
 
 ### WIP
 - [ ] Finish / create [PLAN-gamemode-objective-collapse](./PLAN-gamemode-objective-collapse.md) system
+  - [ ] **half-way thru, see branch** `mid-vibe`
   - [ ] Use checkpoint marker in a step
   - [ ] Add TPObjective type - so we can respawn at different locations
 
