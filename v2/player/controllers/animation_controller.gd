@@ -95,6 +95,8 @@ var _heel_clicker_anim: Animation
 var _heel_clicker_layer: CustomAnimPlayer.Layer
 var _high_chair_anim: Animation
 var _high_chair_layer: CustomAnimPlayer.Layer
+var _two_left_feet_anim: Animation
+var _two_left_feet_layer: CustomAnimPlayer.Layer
 
 # Proc pose carried between frames (no anim deltas applied). Keeping this separate
 # from what gets committed to the nodes prevents anim-delta drift across frames —
@@ -243,8 +245,15 @@ func _set_pose_local_from_bike(
 
 ## Lean (Z), chest yaw, butt/chest X+Z weight shift. Reads + writes pose only —
 ## NEVER touch the live nodes here, they hold post-anim values from last frame.
-func _apply_riding_common(pose: _RiderPose, _delta: float, blend: float, roll: float) -> void:
-	pose.visual_root_rot.z = lerpf(pose.visual_root_rot.z, roll, blend)
+func _apply_riding_common(pose: _RiderPose, delta: float, blend: float, roll: float) -> void:
+	var amount_normalized_rename_me := 160.0  # TODO - move to bike_definition
+	if player_entity.trick_controller.current_trick == TrickController.Trick.TWO_LEFT_FEET:
+		print("2lf")
+		amount_normalized_rename_me = 1.0
+
+	pose.visual_root_rot.z = lerpf(
+		pose.visual_root_rot.z, roll, blend * amount_normalized_rename_me * delta
+	)
 
 	var target_chest_y = roll * deg_to_rad(max_chest_yaw_deg)
 	pose.chest_rot.y = lerpf(pose.chest_rot.y, target_chest_y, blend)
@@ -428,6 +437,9 @@ func initialize() -> void:
 	if ik_anim_player.has_animation("high_chair"):
 		_high_chair_anim = ik_anim_player.get_animation("high_chair")
 		_fixup_anim_paths(_high_chair_anim)
+	if ik_anim_player.has_animation("two_left_feet"):
+		_two_left_feet_anim = ik_anim_player.get_animation("two_left_feet")
+		_fixup_anim_paths(_two_left_feet_anim)
 
 	if not trick_controller.trick_started.is_connected(_on_trick_started):
 		trick_controller.trick_started.connect(_on_trick_started)
@@ -464,6 +476,11 @@ func _on_trick_started(trick_type: TrickController.Trick) -> void:
 			_high_chair_layer.target_weight = 1.0
 		else:
 			_high_chair_layer = _anim_runner.play_one_shot(_high_chair_anim, 1.0)
+	elif trick_type == TrickController.Trick.TWO_LEFT_FEET:
+		if _two_left_feet_anim == null:
+			return
+		if _two_left_feet_layer == null or not _two_left_feet_layer.is_playing():
+			_two_left_feet_layer = _anim_runner.play(_two_left_feet_anim, 1.0, false)
 
 
 func _on_trick_ended(trick_type: TrickController.Trick) -> void:

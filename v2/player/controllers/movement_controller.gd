@@ -225,6 +225,10 @@ func _speed_calc(delta: float):
 func _steer_calc(delta: float):
 	var bd = player_entity.bike_definition
 
+	var amount_normalized_rename_me:=1.0
+	if player_entity.trick_controller.current_trick == TrickController.Trick.TWO_LEFT_FEET:
+		amount_normalized_rename_me = 0.25
+
 	# Curve-based speed factor for steering and lean
 	var lean_factor = bd.lean_curve.sample(_speed_pct)
 
