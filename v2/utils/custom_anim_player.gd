@@ -24,6 +24,9 @@ class Layer:
 	var target_weight: float = 1.0
 	var fade_speed: float = DEFAULT_FADE_SPEED
 	var finished: bool = false  ## non-loop anim hit its end and faded out
+	## Cached (node, property_path, track_idx) tuples for tracks not in the pose pipeline's
+	## allowlist. Lazily filled on first apply_to_nodes() call so we don't re-walk per tick.
+	var _extras_resolved: Variant = null
 
 	func get_duration() -> float:
 		return anim.length if anim else 0.0
@@ -156,3 +159,52 @@ func sample_vec3(track_path: NodePath) -> Vector3:
 func sample_float(track_path: NodePath) -> float:
 	var v = sample(track_path)
 	return v if v != null else 0.0
+
+
+## Auto-apply raw track values for anything NOT in the pose pipeline's hardcoded allowlist.
+## Lets animators drop new tracks (VFX emitting, particle positions, materials, etc.) into
+## an animation and have them "just work" without touching this file or AnimationController.
+##
+## - `allowlist`: Dictionary of NodePath → bool for tracks the caller handles via additive deltas.
+## - Resolution per track: base_node.get_node_or_null(path) → find_child(last_name, true, false).
+## - Later layers overwrite earlier ones for the same track (matches add-order priority).
+func apply_to_nodes(base_node: Node, allowlist: Dictionary) -> void:
+	for layer in _layers:
+		if layer.weight <= 0.0:
+			continue
+		if layer._extras_resolved == null:
+			_resolve_layer_extras(layer, base_node, allowlist)
+		for entry in layer._extras_resolved:
+			var node: Node = entry[0]
+			if not is_instance_valid(node):
+				continue
+			var value = layer.anim.value_track_interpolate(entry[2], layer.time)
+			node.set_indexed(entry[1], value)
+
+
+func _resolve_layer_extras(layer: Layer, base_node: Node, allowlist: Dictionary) -> void:
+	layer._extras_resolved = []
+	for i in layer.anim.get_track_count():
+		if layer.anim.track_get_type(i) != Animation.TYPE_VALUE:
+			continue
+		if not layer.anim.track_is_enabled(i):
+			continue
+		var path := layer.anim.track_get_path(i)
+		if allowlist.has(path):
+			continue
+		var path_str := String(path)
+		var colon := path_str.find(":")
+		var node_path := NodePath(path_str.substr(0, colon))
+		var prop_path := NodePath(path_str.substr(colon))
+		var node := base_node.get_node_or_null(node_path)
+		if node == null:
+			# Editor sometimes serializes paths that don't resolve from the anim's root_node
+			# (e.g. a unique-name tracked node living elsewhere in the scene gets saved as a
+			# sibling-relative path). Fall back to a recursive find by last component name.
+			var parts := path_str.substr(0, colon).split("/")
+			var leaf := String(parts[parts.size() - 1]).trim_prefix("%")
+			node = base_node.find_child(leaf, true, false)
+		if node == null:
+			push_warning("CustomAnimPlayer: unresolved track path '%s'" % path)
+			continue
+		layer._extras_resolved.append([node, prop_path, i])
