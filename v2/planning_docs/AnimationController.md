@@ -153,6 +153,12 @@ Layer fades in via `fade_speed`, plays once, holds end pose. `stop()` fades it o
 
 If you add a new marker that anims should drive, add a `_PATH_*` const + a line in `_apply_anim_deltas` (or in `_commit_pose` for proc-less markers like magnets).
 
+#### Non-pose tracks ("just works")
+
+Any track in a played animation whose path is **not** in the `_POSE_PIPELINE_PATHS` allowlist is auto-applied raw to its target node by `CustomAnimPlayer.apply_to_nodes()` after `_commit_pose`. This lets animators key VFX emitting flags, particle positions, materials, etc. directly into the animation without editing the controller.
+
+Resolution per track: `player_entity.get_node_or_null(path)` first, then a recursive `find_child(last_name, true, false)` fallback for tracks Godot serialized with paths that don't resolve cleanly from the anim's root_node (e.g. unique-name tracks for nodes outside `VisualRoot`). Resolved nodes are cached per layer.
+
 #### Path Fixup
 
 `_fixup_anim_paths()` runs over each cached `Animation` at init and rewrites any track path starting with `%UniqueName:` to `IKTargets/UniqueName:`. This lets anims authored with `%`-shorthand still match the full-path constants — but full paths are still preferred when authoring (see Gotcha #3).

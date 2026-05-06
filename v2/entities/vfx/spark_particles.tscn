@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://cu0vh8sgp0l2e"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hyigk"]
+emission_shape_scale = Vector3(2, 1, 1)
+emission_shape = 1
+emission_sphere_radius = 0.2
+gravity = Vector3(0, 1.5, 4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_leyt3"]
+transparency = 2
+alpha_scissor_threshold = 0.44
+alpha_antialiasing_mode = 0
+albedo_color = Color(1, 0, 0, 0.4745098)
+emission_enabled = true
+emission = Color(0.8901961, 0.68753064, 0.14901963, 1)
+emission_energy_multiplier = 2.55
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_youu3"]
+material = SubResource("StandardMaterial3D_leyt3")
+size = Vector2(0.1, 0.15)
+
+[node name="SparkParticles" type="GPUParticles3D" unique_id=1003989945]
+amount = 16
+lifetime = 0.5
+explosiveness = 0.38
+randomness = 0.5
+process_material = SubResource("ParticleProcessMaterial_hyigk")
+draw_pass_1 = SubResource("QuadMesh_youu3")

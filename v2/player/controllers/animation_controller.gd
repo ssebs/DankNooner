@@ -61,6 +61,25 @@ const _PATH_LLEG_MAGNET_ROT := ^"IKTargets/LeftLegMagnet:rotation"
 const _PATH_RLEG_MAGNET_POS := ^"IKTargets/RightLegMagnet:position"
 const _PATH_RLEG_MAGNET_ROT := ^"IKTargets/RightLegMagnet:rotation"
 
+## Allowlist of track paths handled by the additive pose pipeline. Any track in a played
+## animation whose path is NOT in this set is auto-applied raw to its node by
+## CustomAnimPlayer.apply_to_nodes — animators can drop new tracks (VFX emitting flags,
+## particle positions, materials, etc.) without touching this file.
+const _POSE_PIPELINE_PATHS := {
+	_PATH_VISUAL_ROOT_ROT: true,
+	_PATH_BUTT_POS: true,
+	_PATH_CHEST_POS: true, _PATH_CHEST_ROT: true,
+	_PATH_HEAD_POS: true, _PATH_HEAD_ROT: true,
+	_PATH_LHAND_POS: true, _PATH_LHAND_ROT: true,
+	_PATH_RHAND_POS: true, _PATH_RHAND_ROT: true,
+	_PATH_LFOOT_POS: true, _PATH_LFOOT_ROT: true,
+	_PATH_RFOOT_POS: true, _PATH_RFOOT_ROT: true,
+	_PATH_LARM_MAGNET_POS: true, _PATH_LARM_MAGNET_ROT: true,
+	_PATH_RARM_MAGNET_POS: true, _PATH_RARM_MAGNET_ROT: true,
+	_PATH_LLEG_MAGNET_POS: true, _PATH_LLEG_MAGNET_ROT: true,
+	_PATH_RLEG_MAGNET_POS: true, _PATH_RLEG_MAGNET_ROT: true,
+}
+
 var current_state: RiderState = RiderState.RIDING:
 	set(value):
 		if current_state != value:
@@ -146,6 +165,7 @@ func _update_idle(delta: float) -> void:
 	var final_pose := pose.duplicate()
 	_apply_anim_deltas(final_pose, delta)
 	_commit_pose(final_pose)
+	_anim_runner.apply_to_nodes(player_entity, _POSE_PIPELINE_PATHS)
 	_update_idle_timer(delta)
 
 
@@ -177,6 +197,7 @@ func _update_riding(delta: float) -> void:
 	var final_pose := pose.duplicate()
 	_apply_anim_deltas(final_pose, delta)
 	_commit_pose(final_pose)
+	_anim_runner.apply_to_nodes(player_entity, _POSE_PIPELINE_PATHS)
 
 	_update_idle_timer(delta)
 

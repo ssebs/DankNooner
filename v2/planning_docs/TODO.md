@@ -21,7 +21,6 @@
   - [ ] e.g. creating a new trick goes from trick_controller to 4 places in anim controller, lots of duplication
 - [ ] add ground detection to animation controller
   - [ ] e.g. `two_left_feet` - feet should follow ground, e.g. when steering, or disable steering?
-    - [ ] add sparks
   - [ ] e.g. hand drag scraper wheelie
 
 - [ ] [code review time](./code-review-20260430.md)
@@ -339,6 +338,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] add sparks to two_left_feet
 
 - [x] Always crash after landing a heel clicker, not just during
 
