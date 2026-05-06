@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d0rgswc73h64f"]
 
 [ext_resource type="Script" uid="uid://bnop7vr1q4gwg" path="res://player/player_entity.gd" id="1_0jc3c"]
-[ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/bikes/skins/naked_default_skin_definition.tres" id="2_8urt2"]
+[ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/bikes/skins/sport_default_skin_definition.tres" id="2_8urt2"]
 [ext_resource type="Resource" uid="uid://2af1lwc0vbaw" path="res://resources/player/skins/clanker_blue_skin_definition.tres" id="3_3kl2f"]
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_faflk"]
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_ri2qi"]
@@ -809,7 +809,7 @@ step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("%ButtTarget:position")
+tracks/0/path = NodePath("IKTargets/ButtTarget:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -821,7 +821,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("%ChestTarget:position")
+tracks/1/path = NodePath("IKTargets/ChestTarget:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -833,7 +833,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("%HeadTarget:position")
+tracks/2/path = NodePath("IKTargets/HeadTarget:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -845,7 +845,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("%RightHandTarget:position")
+tracks/3/path = NodePath("IKTargets/RightHandTarget:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -857,7 +857,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("%LeftFootTarget:position")
+tracks/4/path = NodePath("IKTargets/LeftFootTarget:position")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -869,7 +869,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("%RightFootTarget:position")
+tracks/5/path = NodePath("IKTargets/RightFootTarget:position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -881,7 +881,7 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("%RightArmMagnet:position")
+tracks/6/path = NodePath("IKTargets/RightArmMagnet:position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
@@ -893,7 +893,7 @@ tracks/6/keys = {
 tracks/7/type = "value"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("%LeftLegMagnet:position")
+tracks/7/path = NodePath("IKTargets/LeftLegMagnet:position")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
@@ -905,7 +905,7 @@ tracks/7/keys = {
 tracks/8/type = "value"
 tracks/8/imported = false
 tracks/8/enabled = true
-tracks/8/path = NodePath("%RightLegMagnet:position")
+tracks/8/path = NodePath("IKTargets/RightLegMagnet:position")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
@@ -917,7 +917,7 @@ tracks/8/keys = {
 tracks/9/type = "value"
 tracks/9/imported = false
 tracks/9/enabled = true
-tracks/9/path = NodePath("%RightHandTarget:rotation")
+tracks/9/path = NodePath("IKTargets/RightHandTarget:rotation")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
 tracks/9/keys = {
@@ -929,7 +929,7 @@ tracks/9/keys = {
 tracks/10/type = "value"
 tracks/10/imported = false
 tracks/10/enabled = true
-tracks/10/path = NodePath("%LeftFootTarget:rotation")
+tracks/10/path = NodePath("IKTargets/LeftFootTarget:rotation")
 tracks/10/interp = 1
 tracks/10/loop_wrap = true
 tracks/10/keys = {
@@ -941,7 +941,7 @@ tracks/10/keys = {
 tracks/11/type = "value"
 tracks/11/imported = false
 tracks/11/enabled = true
-tracks/11/path = NodePath("%RightFootTarget:rotation")
+tracks/11/path = NodePath("IKTargets/RightFootTarget:rotation")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/keys = {
@@ -953,7 +953,7 @@ tracks/11/keys = {
 tracks/12/type = "value"
 tracks/12/imported = false
 tracks/12/enabled = true
-tracks/12/path = NodePath("%RightArmMagnet:rotation")
+tracks/12/path = NodePath("IKTargets/RightArmMagnet:rotation")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
@@ -1474,7 +1474,7 @@ transform = Transform3D(1, 0, -1.4210855e-13, 0, 1, 0, 1.4210855e-13, 0, 1, 8.72
 
 [node name="ChestTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=1108562279]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -7.1054274e-14, 0, 1, 0, 7.1054274e-14, 0, 1, 1.58426e-08, 1.1710131, -0.11291112)
+transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 1.58426e-08, 1.1710131, -0.11291112)
 
 [node name="HeadTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=190960288]
 unique_name_in_owner = true
@@ -1482,23 +1482,23 @@ transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, -1.567
 
 [node name="LeftHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=811111111]
 unique_name_in_owner = true
-transform = Transform3D(-0.32625556, 0.55422264, 0.27639568, 0.07637507, 0.3460227, -0.6036846, -0.61459273, -0.25120822, -0.22174375, 0.29064223, 0.9562068, 0.18692446)
+transform = Transform3D(0.16312778, -0.27711135, -0.1381978, 0.038187526, 0.17301132, -0.30184233, 0.30729637, 0.12560412, 0.110871844, -0.14530805, 0.81079173, 0.4414281)
 
 [node name="RightHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=822222222]
 unique_name_in_owner = true
-transform = Transform3D(-0.33350983, -0.53096586, -0.3112021, -0.109449714, 0.3994858, -0.56429785, 0.6056337, -0.22019699, -0.27335203, -0.266, 0.98800004, 0.20600004)
+transform = Transform3D(-0.16675489, -0.26548284, -0.15560104, -0.054724846, 0.19974282, -0.2821489, 0.30281678, -0.11009846, -0.136676, -0.266, 0.98800004, 0.20600004)
 
 [node name="LeftFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=833333333]
 unique_name_in_owner = true
-transform = Transform3D(-0.93442446, -0.11595163, 0.3367572, 0.3512231, -0.14310646, 0.9252906, -0.059096817, 0.9828915, 0.17444713, 0.19981939, 0.39506754, -0.16492465)
+transform = Transform3D(-0.9344248, -0.11595163, 0.33675724, 0.35122323, -0.14310646, 0.92529064, -0.05909684, 0.9828915, 0.17444715, 0.19981939, 0.39506754, -0.16492465)
 
 [node name="RightFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=844444444]
 unique_name_in_owner = true
-transform = Transform3D(-0.9574182, 0.24940911, 0.14541332, 0.15072922, 0.002242786, 0.98857266, 0.24623278, 0.96839577, -0.039740533, -0.21216637, 0.5018048, -0.20081648)
+transform = Transform3D(-0.95741844, 0.24940906, 0.14541331, 0.15072925, 0.0022427856, 0.98857254, 0.24623284, 0.9683956, -0.03974053, -0.21216637, 0.5018048, -0.20081648)
 
 [node name="LeftArmMagnet" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=811601522]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -5.684342e-14, 0, 1, 0, 5.684342e-14, 0, 1, 0.50935364, 1.0199555, -0.1354702)
+transform = Transform3D(1, 0, -5.684342e-14, 0, 1, 0, 5.684342e-14, 0, 1, 0.41947496, 0.90092236, -0.011527833)
 
 [node name="RightArmMagnet" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=593977268]
 unique_name_in_owner = true
@@ -1514,19 +1514,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.464, 0.569, 0.429)
 
 [node name="FrontWheelGroundMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=728490293]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 4.063193e-08, 0, 0.6847348)
+transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, -2.027462e-08, 0, 0.72615725)
 
 [node name="FrontWheelFrontMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=140751727]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, 4.8840363e-08, 0, 0.96413314)
+transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, -3.217322e-08, 0, 1.0277224)
 
 [node name="RearWheelGroundMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=635276085]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, -2.0521185e-09, 0, -0.6426772)
+transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, 2.7384466e-08, 0, -0.7459345)
 
 [node name="RearWheelBackMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=2142896443]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, -1.1081411e-08, 0, -0.92412007)
+transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, 4.2368406e-08, 0, -1.0609363)
 
 [node name="TPSCamMarker" type="Marker3D" parent="VisualRoot" unique_id=748255221]
 unique_name_in_owner = true
@@ -1542,6 +1542,7 @@ skin_definition = ExtResource("3_3kl2f")
 
 [node name="BikeSkin" parent="VisualRoot" unique_id=1727462617 instance=ExtResource("7_lfjd4")]
 unique_name_in_owner = true
+skin_definition = ExtResource("2_8urt2")
 
 [node name="TPSCam" type="Camera3D" parent="." unique_id=1200816402]
 unique_name_in_owner = true
@@ -1567,10 +1568,10 @@ text = "USERNAME"
 
 [node name="RearRayCast" type="RayCast3D" parent="." unique_id=1983600718]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0521185e-09, 0.5, -0.6426772)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7384466e-08, 0.5, -0.7459345)
 target_position = Vector3(0, -1.5, 0)
 
 [node name="FrontRayCast" type="RayCast3D" parent="." unique_id=391878602]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.063193e-08, 0.5, 0.6847348)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.027462e-08, 0.5, 0.72615725)
 target_position = Vector3(0, -1.5, 0)

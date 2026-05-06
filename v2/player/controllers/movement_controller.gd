@@ -227,10 +227,12 @@ func _steer_calc(delta: float):
 
 	var amount_normalized_rename_me:=1.0
 	if player_entity.trick_controller.current_trick == TrickController.Trick.TWO_LEFT_FEET:
-		amount_normalized_rename_me = 0.25
+		amount_normalized_rename_me = 0.5
 
 	# Curve-based speed factor for steering and lean
 	var lean_factor = bd.lean_curve.sample(_speed_pct)
+	var target_lean = input_controller.nfx_steer * bd.max_lean_angle_rad * lean_factor
+	roll_angle = lerpf(roll_angle, target_lean, bd.lean_speed * delta)*amount_normalized_rename_me
 
 	# Steering — bell curve: low at standstill, peaks mid-low speed, tapers at top speed
 	if speed > 0.5:
@@ -245,10 +247,7 @@ func _steer_calc(delta: float):
 		)
 		player_entity.rotate_y(-roll_angle * turn_rate * delta)
 
-	# Lean
-	var target_lean = input_controller.nfx_steer * bd.max_lean_angle_rad * lean_factor
-	roll_angle = lerpf(roll_angle, target_lean, bd.lean_speed * delta)
-
+	
 	# Align bike basis so local Y points along up_direction (ramp riding)
 	var target_up = player_entity.up_direction
 	var current_forward = -player_entity.global_transform.basis.z

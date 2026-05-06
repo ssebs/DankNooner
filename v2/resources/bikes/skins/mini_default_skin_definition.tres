@@ -49,4 +49,5 @@ num_gears = 4
 max_rpm = 8000.0
 max_speed = 60.0
 acceleration = 6.0
+lean_speed = 4.0
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"

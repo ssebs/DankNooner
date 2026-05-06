@@ -85,7 +85,7 @@ class_name BikeSkinDefinition extends Resource
 @export var friction: float = 2.0
 @export var engine_brake_strength: float = 12.0
 @export var max_lean_angle_deg: float = 50.0
-@export var lean_speed: float = 6.0
+@export var lean_speed: float = 2.6
 @export var turn_speed: float = 2.0
 ## Lean amount vs speed (X=speed%, Y=lean multiplier)
 @export var lean_curve: Curve = preload("res://player/bikes/resources/lean_speed_curve.tres")
@@ -128,6 +128,7 @@ func save_to_disk() -> String:
 		return path
 	push_error("BikeSkinDefinition: Failed to save, error: %d" % err)
 	return ""
+
 
 func load_from_disk() -> bool:
 	var path := get_user_save_path()
