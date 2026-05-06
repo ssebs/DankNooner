@@ -53,9 +53,7 @@ func _on_event_circle_entered(peer_id: int, source_circle: EventStartCircle):
 	_ctx.gamemode_event = ev
 	_ctx.event_start_circle = source_circle
 
-	game_mode_event_confirm_hud.on_player_entered_circle.rpc_id(
-		1, peer_id, ev.name, ev.description
-	)
+	game_mode_event_confirm_hud.on_player_entered_circle.rpc_id(1, peer_id, ev.name, ev.description)
 
 	# connect hud signals
 	if not game_mode_event_confirm_hud.hud_submitted.is_connected(
@@ -72,7 +70,9 @@ func _on_event_circle_exited(peer_id: int, source_circle: EventStartCircle):
 	if game_mode_event_confirm_hud.hud_submitted.is_connected(
 		_on_game_mode_event_confirm_hud_submitted
 	):
-		game_mode_event_confirm_hud.hud_submitted.disconnect(_on_game_mode_event_confirm_hud_submitted)
+		game_mode_event_confirm_hud.hud_submitted.disconnect(
+			_on_game_mode_event_confirm_hud_submitted
+		)
 
 	game_mode_event_confirm_hud.on_player_close_pressed.rpc_id(1, peer_id)
 

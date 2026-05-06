@@ -22,6 +22,17 @@ func _ready():
 	event_label.text = tr(gamemode_event.name)
 
 
+## Lessons are children of this circle, in tree order. Other children
+## (CheckpointMarker, TriggerZone, Marker3D) are ignored — they're referenced
+## by individual lessons via @export trigger.
+func get_lessons() -> Array[GameModeLesson]:
+	var out: Array[GameModeLesson] = []
+	for c in get_children():
+		if c is GameModeLesson:
+			out.append(c)
+	return out
+
+
 func _on_body_entered(body: Node3D):
 	if !body is PlayerEntity:
 		return
@@ -32,14 +43,3 @@ func _on_body_exited(body: Node3D):
 	if !body is PlayerEntity:
 		return
 	exited_event_circle.emit(int(body.name), self)
-
-
-## Lessons are children of this circle, in tree order. Other children
-## (CheckpointMarker, TriggerZone, Marker3D) are ignored — they're referenced
-## by individual lessons via @export trigger.
-func get_lessons() -> Array[GameModeLesson]:
-	var out: Array[GameModeLesson] = []
-	for c in get_children():
-		if c is GameModeLesson:
-			out.append(c)
-	return out
