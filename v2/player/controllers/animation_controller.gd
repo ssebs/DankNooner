@@ -138,6 +138,9 @@ func _update_idle(delta: float) -> void:
 	# Ease wheelie/stoppie pitch back to 0 so the bike settles to ground.
 	var blend = clampf(5.0 * delta, 0.0, 1.0)
 	pose.visual_root_rot.x = lerp_angle(pose.visual_root_rot.x, 0.0, blend)
+
+	_apply_riding_common(pose, delta, blend, movement_controller.roll_angle)
+
 	_apply_pivot_offset_to_pose(pose)
 	_proc_pose = pose
 	var final_pose := pose.duplicate()
@@ -246,15 +249,6 @@ func _set_pose_local_from_bike(
 ## Lean (Z), chest yaw, butt/chest X+Z weight shift. Reads + writes pose only —
 ## NEVER touch the live nodes here, they hold post-anim values from last frame.
 func _apply_riding_common(pose: _RiderPose, _delta: float, blend: float, roll: float) -> void:
-	# var amount_normalized_rename_me := 160.0  # TODO - move to bike_definition
-	# if player_entity.trick_controller.current_trick == TrickController.Trick.TWO_LEFT_FEET:
-	# 	print("2lf")
-	# 	amount_normalized_rename_me = 1.0
-
-	# pose.visual_root_rot.z = lerpf(
-	# 	pose.visual_root_rot.z, roll, blend * amount_normalized_rename_me * delta
-	# )
-
 	pose.visual_root_rot.z = lerpf(pose.visual_root_rot.z, roll, blend)
 
 	var target_chest_y = roll * deg_to_rad(max_chest_yaw_deg)
