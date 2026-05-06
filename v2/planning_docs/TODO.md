@@ -15,6 +15,7 @@
 ### WIP
 - [ ] Finish / create [PLAN-gamemode-objective-collapse](./PLAN-gamemode-objective-collapse.md) system
   - [ ] Use checkpoint marker in a step
+  - [ ] Add TPObjective type - so we can respawn at different locations
 
 - [ ] [code review time](./code-review-20260430.md)
   - [ ] make todo list
