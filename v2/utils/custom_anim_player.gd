@@ -90,6 +90,19 @@ func stop_all() -> void:
 	_layers.clear()
 
 
+## Rewind every layer to t=0, apply once, then drop everything. Use this when
+## interrupting all animations cleanly — non-pose tracks (VFX `emitting` flags,
+## materials, etc.) revert to their authored start value before the layer is
+## cleared, so latched state doesn't survive the stop. Pose-pipeline tracks
+## (in `allowlist`) are skipped here; their deltas at t=0 are zero anyway.
+func stop_all_and_reset(base_node: Node, allowlist: Dictionary) -> void:
+	for layer in _layers:
+		layer.time = 0.0
+		layer.weight = 1.0
+	apply_to_nodes(base_node, allowlist)
+	_layers.clear()
+
+
 func get_layers() -> Array[Layer]:
 	return _layers
 

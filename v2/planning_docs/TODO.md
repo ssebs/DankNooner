@@ -22,6 +22,8 @@
 - [ ] add ground detection to animation controller
   - [ ] e.g. `two_left_feet` - feet should follow ground, e.g. when steering, or disable steering?
   - [ ] e.g. hand drag scraper wheelie
+  - [ ] Make two_left_feet also work on the right
+    - [ ] add anim when switching between them to hop over whole bike
 
 - [ ] [code review time](./code-review-20260430.md)
   - [ ] make todo list
@@ -80,6 +82,7 @@
 
 ## Up Next (Finish POC MP Gameplay Demo) 📋
 
+- [ ] Scraper mod, add sparks
 > POC = playable gamemodes w/ friends, see if core gameplay loop works
 > video record this once playing with everyone, save log files
 
@@ -338,6 +341,8 @@
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Fix sparks when crashing during 2 foot trick mid way
 
 - [x] add sparks to two_left_feet
 
