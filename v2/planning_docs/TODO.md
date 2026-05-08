@@ -37,10 +37,9 @@
   - [ ] Make tutorial part of map, diff circles do diff events
   - [ ] explain RPM vs wheelies in tutorial, balance point
   - [ ] in-world UI instead of just hud
-  - [ ] Create `GameModeObject` - to be used via @export var, has func to do stuff configurable, etc.
-    - [ ] e.g. `CheckpointMarker` can be used to see if player drove thru, to be used in tutorial / races
+  - [x] Create `GameModeObject` - to be used via @export var, has func to do stuff configurable, etc.
+    - [x] e.g. `CheckpointMarker` can be used to see if player drove thru, to be used in tutorial / races
     - [ ] e.g. arrows on the ground that point / light up depending on a func call
-  - [ ] See **planning_docs/PLAN-tut-gamemodeobject.md**
   - [ ] next:
     - [ ] basic movement
     - [ ] progressive braking
