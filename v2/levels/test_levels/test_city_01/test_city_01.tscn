@@ -31,7 +31,6 @@ script = ExtResource("4_dr5sf")
 name = "Tutorial: TEST"
 description = "Only 1 thing..."
 target_gamemode = 3
-countdown_seconds = 0.0
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_asds5"]
@@ -1724,6 +1723,10 @@ hint_key = "TUT_HINT_PRESS_RT"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 93)
 gamemode_event = SubResource("Resource_asds5")
 start_marker = NodePath("../Stuff/Tut01Location/Tutorial01StartMarker")
+
+[node name="CountdownStep1" type="Node" parent="Tutorial01EventStartCircle2" unique_id=1010143940]
+script = ExtResource("9_7dagn")
+seconds = 2.0
 
 [node name="CloseHelp_ShowHelp" type="Node" parent="Tutorial01EventStartCircle2" unique_id=710662388]
 script = ExtResource("8_hlp")
