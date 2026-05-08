@@ -82,6 +82,10 @@ func Exit(_state_context: StateContext):
 	# Hide locally rather than via RPC — when leaving via pause→main menu the peer is
 	# torn down before Exit runs, which silently drops the .rpc() local-call. Each peer
 	# runs Exit() on their own state machine, so a local hide is sufficient.
+	# results_hud sets IN_GAME_PAUSED when it shows; restore IN_GAME on the way out so
+	# the cursor doesn't stay visible after skip→free-roam.
+	if results_hud.visible:
+		input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
 	tutorial_hud.hide()
 	results_hud.hide()
 	for obj in _objectives:

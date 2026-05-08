@@ -21,11 +21,13 @@ func rpc_show_countdown(seconds: int):
 
 
 @rpc("call_local", "reliable")
-func rpc_show_step(step_index: int, total: int, objective_key: String, hint_key: String):
+func rpc_show_step(step_index: int, total: int, objective_text: String, hint_text: String):
+	# objective_text/hint_text are pre-localized by the step (so it can interpolate
+	# its @export values like duration/min_speed). Don't tr() again.
 	complete_label.hide()
 	step_label.text = "%d / %d" % [step_index + 1, total]
-	objective_label.text = tr(objective_key)
-	hint_label.text = tr(hint_key)
+	objective_label.text = objective_text
+	hint_label.text = hint_text
 	step_label.show()
 	objective_label.show()
 	hint_label.show()

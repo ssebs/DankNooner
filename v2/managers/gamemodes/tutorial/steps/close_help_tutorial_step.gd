@@ -17,11 +17,11 @@ func check(_player: PlayerEntity, _delta: float, state: Dictionary) -> bool:
 
 
 func get_objective_text() -> String:
-	return "TUT_SHOW_HELP"
+	return tr("TUT_SHOW_HELP")
 
 
 func get_hint_text() -> String:
-	return "TUT_HINT_SHOW_HELP"
+	return tr("TUT_HINT_SHOW_HELP")
 
 
 @rpc("call_local", "reliable")
