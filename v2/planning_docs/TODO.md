@@ -85,7 +85,9 @@
 
 - [ ] Wheelie battle gamemode
 
-## Up Next (Finish POC MP Gameplay Demo) 📋
+## Up Next (Finish POC MP Gameplay De
+
+mo) 📋
 
 - [ ] Scraper mod, add sparks
 > POC = playable gamemodes w/ friends, see if core gameplay loop works
@@ -254,7 +256,7 @@
     - [ ] start with graybox/repeating grid texture to plan out maps before are is decided , use multiple colors & labels
 
 - [ ] More Customization UI / menu
-
+  - [ ] Show as grid w/ icons (taken in engine) instead of dropdown list
   - [ ] Add Bike customization
     - [ ] **BikeDefinition** with component definitions under it since I will have multiple bike types, colors, and mods for each type.
       - [ ] character accessories (cosmetics, etc.)
