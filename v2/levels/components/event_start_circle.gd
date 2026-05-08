@@ -2,7 +2,7 @@
 class_name EventStartCircle extends Area3D
 
 ## Emitted with a reference to *this* circle so consumers can pull
-## `gamemode_event`, `start_marker`, and `get_lessons()` off it.
+## `gamemode_event`, `start_marker`, and `get_objectives()` off it.
 signal entered_event_circle(peer_id: int, event_start_circle: EventStartCircle)
 signal exited_event_circle(peer_id: int, event_start_circle: EventStartCircle)
 
@@ -22,13 +22,13 @@ func _ready():
 	event_label.text = tr(gamemode_event.name)
 
 
-## Lessons are children of this circle, in tree order. Other children
+## Objectives are children of this circle, in tree order. Other children
 ## (CheckpointMarker, TriggerZone, Marker3D) are ignored — they're referenced
-## by individual lessons via @export trigger.
-func get_lessons() -> Array[GameModeLesson]:
-	var out: Array[GameModeLesson] = []
+## by individual objectives via @export trigger.
+func get_objectives() -> Array[GameModeObjective]:
+	var out: Array[GameModeObjective] = []
 	for c in get_children():
-		if c is GameModeLesson:
+		if c is GameModeObjective:
 			out.append(c)
 	return out
 
