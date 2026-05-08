@@ -13,16 +13,6 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] Finish / create [PLAN-gamemode-objective-collapse](./PLAN-gamemode-objective-collapse.md) system
-  - [x] **half-way thru, see branch** `mid-vibe`
-  - [x] Add TPObjective type - so we can respawn at different locations
-    - [x] Respawn after get up to speed
-    - [x] Move change gears next,
-  - [x] add option to countdown_tutorial_step to not show timer
-  - [x] Move teleport_tutorial_step and countdown_tutorial_step to generic, non tutorial
-  - [ ] rename tutorial in gamemmodemanager to sequential?
-- [x] Is gamemode_objective just a StateMachine?
-- [ ] Use checkpoint marker in a step
 - [ ] Manually cleanup @animation_controller.gd
   - [ ] e.g. creating a new trick goes from trick_controller to 4 places in anim controller, lots of duplication
 - [ ] add ground detection to animation controller
@@ -350,6 +340,19 @@ mo) 📋
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Use checkpoint marker in a step
+
+- [x] Is gamemode_objective just a StateMachine?
+
+- [x] Finish / create [PLAN-gamemode-objective-collapse](./PLAN-gamemode-objective-collapse.md) system
+  - [x] **half-way thru, see branch** `mid-vibe`
+  - [x] Add TPObjective type - so we can respawn at different locations
+    - [x] Respawn after get up to speed
+    - [x] Move change gears next,
+  - [x] add option to countdown_tutorial_step to not show timer
+  - [x] Move teleport_tutorial_step and countdown_tutorial_step to generic, non tutorial
+  - [x] rename tutorial in gamemmodemanager to sequential?
 
 - [x] Fix sparks when crashing during 2 foot trick mid way
 
