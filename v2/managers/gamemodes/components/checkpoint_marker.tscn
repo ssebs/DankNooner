@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://mxwmcd3vtr5w"]
 
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_i65yt"]
-[ext_resource type="Script" uid="uid://dlukxvp4mme8d" path="res://levels/components/checkpoint_marker.gd" id="1_jt853"]
+[ext_resource type="Script" uid="uid://dlukxvp4mme8d" path="res://managers/gamemodes/components/checkpoint_marker.gd" id="1_jt853"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_i65yt"]
 size = Vector3(9, 4, 1)

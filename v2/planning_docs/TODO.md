@@ -16,11 +16,12 @@
 - [ ] Finish / create [PLAN-gamemode-objective-collapse](./PLAN-gamemode-objective-collapse.md) system
   - [x] **half-way thru, see branch** `mid-vibe`
   - [x] Add TPObjective type - so we can respawn at different locations
-    - [ ] Respawn after get up to speed
-    - [ ] Move change gears next, explain RPM
-    - [ ] start wheelie subtext to look out for RPM
+    - [x] Respawn after get up to speed
+    - [x] Move change gears next,
   - [ ] add option to countdown_tutorial_step to not show timer
-  - [ ] Move teleport_tutorial_step and countdown_tutorial_step to generic, non tutorial
+  - [x] Move teleport_tutorial_step and countdown_tutorial_step to generic, non tutorial
+  - [ ] rename tutorial in gamemmodemanager to sequential?
+  - [ ] Is gamemode_objective just a StateMachine?
   - [ ] Use checkpoint marker in a step
 - [ ] Manually cleanup @animation_controller.gd
   - [ ] e.g. creating a new trick goes from trick_controller to 4 places in anim controller, lots of duplication
@@ -44,6 +45,7 @@
 
 - [ ] Finish tutorial:
   - [ ] Make tutorial part of map, diff circles do diff events
+  - [ ] explain RPM vs wheelies in tutorial, balance point
   - [ ] in-world UI instead of just hud
   - [ ] Create `GameModeObject` - to be used via @export var, has func to do stuff configurable, etc.
     - [ ] e.g. `CheckpointMarker` can be used to see if player drove thru, to be used in tutorial / races
