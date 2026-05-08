@@ -30,11 +30,16 @@ albedo_color = Color(0.8, 0.8, 0.8, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8pjdv"]
 albedo_color = Color(0.92, 0.22340666, 0.21160002, 1)
 
-[node name="SportBike" unique_id=201545758 node_paths=PackedStringArray("meshes") instance=ExtResource("1_rw1ah")]
+[node name="SportBike" unique_id=201545758 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("1_rw1ah")]
 script = ExtResource("2_4okic")
 slots = Array[ExtResource("3_82gmx")]([SubResource("Resource_4okic"), SubResource("Resource_br1d3")])
 meshes = [NodePath("sportbike"), NodePath("sportbike")]
+steering_rotation_node = NodePath("Node3D")
+front_wheel_node = NodePath("Node3D")
+rear_wheel_node = NodePath("Node3D")
 
 [node name="sportbike" parent="." index="0" unique_id=1836968304]
 surface_material_override/1 = SubResource("StandardMaterial3D_yvpo1")
 surface_material_override/2 = SubResource("StandardMaterial3D_8pjdv")
+
+[node name="Node3D" type="Node3D" parent="." index="1" unique_id=1726142442]

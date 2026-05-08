@@ -61,6 +61,25 @@ const _PATH_LLEG_MAGNET_ROT := ^"IKTargets/LeftLegMagnet:rotation"
 const _PATH_RLEG_MAGNET_POS := ^"IKTargets/RightLegMagnet:position"
 const _PATH_RLEG_MAGNET_ROT := ^"IKTargets/RightLegMagnet:rotation"
 
+## Allowlist of track paths handled by the additive pose pipeline. Any track in a played
+## animation whose path is NOT in this set is auto-applied raw to its node by
+## CustomAnimPlayer.apply_to_nodes — animators can drop new tracks (VFX emitting flags,
+## particle positions, materials, etc.) without touching this file.
+const _POSE_PIPELINE_PATHS := {
+	_PATH_VISUAL_ROOT_ROT: true,
+	_PATH_BUTT_POS: true,
+	_PATH_CHEST_POS: true, _PATH_CHEST_ROT: true,
+	_PATH_HEAD_POS: true, _PATH_HEAD_ROT: true,
+	_PATH_LHAND_POS: true, _PATH_LHAND_ROT: true,
+	_PATH_RHAND_POS: true, _PATH_RHAND_ROT: true,
+	_PATH_LFOOT_POS: true, _PATH_LFOOT_ROT: true,
+	_PATH_RFOOT_POS: true, _PATH_RFOOT_ROT: true,
+	_PATH_LARM_MAGNET_POS: true, _PATH_LARM_MAGNET_ROT: true,
+	_PATH_RARM_MAGNET_POS: true, _PATH_RARM_MAGNET_ROT: true,
+	_PATH_LLEG_MAGNET_POS: true, _PATH_LLEG_MAGNET_ROT: true,
+	_PATH_RLEG_MAGNET_POS: true, _PATH_RLEG_MAGNET_ROT: true,
+}
+
 var current_state: RiderState = RiderState.RIDING:
 	set(value):
 		if current_state != value:
@@ -95,6 +114,8 @@ var _heel_clicker_anim: Animation
 var _heel_clicker_layer: CustomAnimPlayer.Layer
 var _high_chair_anim: Animation
 var _high_chair_layer: CustomAnimPlayer.Layer
+var _two_left_feet_anim: Animation
+var _two_left_feet_layer: CustomAnimPlayer.Layer
 
 # Proc pose carried between frames (no anim deltas applied). Keeping this separate
 # from what gets committed to the nodes prevents anim-delta drift across frames —
@@ -136,11 +157,15 @@ func _update_idle(delta: float) -> void:
 	# Ease wheelie/stoppie pitch back to 0 so the bike settles to ground.
 	var blend = clampf(5.0 * delta, 0.0, 1.0)
 	pose.visual_root_rot.x = lerp_angle(pose.visual_root_rot.x, 0.0, blend)
+
+	_apply_riding_common(pose, delta, blend, movement_controller.roll_angle)
+
 	_apply_pivot_offset_to_pose(pose)
 	_proc_pose = pose
 	var final_pose := pose.duplicate()
 	_apply_anim_deltas(final_pose, delta)
 	_commit_pose(final_pose)
+	_anim_runner.apply_to_nodes(player_entity, _POSE_PIPELINE_PATHS)
 	_update_idle_timer(delta)
 
 
@@ -172,6 +197,7 @@ func _update_riding(delta: float) -> void:
 	var final_pose := pose.duplicate()
 	_apply_anim_deltas(final_pose, delta)
 	_commit_pose(final_pose)
+	_anim_runner.apply_to_nodes(player_entity, _POSE_PIPELINE_PATHS)
 
 	_update_idle_timer(delta)
 
@@ -428,6 +454,9 @@ func initialize() -> void:
 	if ik_anim_player.has_animation("high_chair"):
 		_high_chair_anim = ik_anim_player.get_animation("high_chair")
 		_fixup_anim_paths(_high_chair_anim)
+	if ik_anim_player.has_animation("two_left_feet"):
+		_two_left_feet_anim = ik_anim_player.get_animation("two_left_feet")
+		_fixup_anim_paths(_two_left_feet_anim)
 
 	if not trick_controller.trick_started.is_connected(_on_trick_started):
 		trick_controller.trick_started.connect(_on_trick_started)
@@ -464,6 +493,11 @@ func _on_trick_started(trick_type: TrickController.Trick) -> void:
 			_high_chair_layer.target_weight = 1.0
 		else:
 			_high_chair_layer = _anim_runner.play_one_shot(_high_chair_anim, 1.0)
+	elif trick_type == TrickController.Trick.TWO_LEFT_FEET:
+		if _two_left_feet_anim == null:
+			return
+		if _two_left_feet_layer == null or not _two_left_feet_layer.is_playing():
+			_two_left_feet_layer = _anim_runner.play(_two_left_feet_anim, 1.0, false)
 
 
 func _on_trick_ended(trick_type: TrickController.Trick) -> void:
@@ -531,6 +565,15 @@ func disable_target_sync() -> void:
 ## Start ragdoll mode
 func start_ragdoll() -> void:
 	current_state = RiderState.RAGDOLL
+	# RAGDOLL stops the pose pipeline (_process is `pass`), so any anim layer
+	# mid-flight freezes — including non-pose tracks like spark `:emitting`
+	# flags that latch true→false. Rewind to t=0 + apply, then drop.
+	if _anim_runner:
+		_anim_runner.stop_all_and_reset(player_entity, _POSE_PIPELINE_PATHS)
+	_idle_layer = null
+	_heel_clicker_layer = null
+	_high_chair_layer = null
+	_two_left_feet_layer = null
 	character_skin.disable_ik()
 	character_skin.start_ragdoll()
 
