@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/bikes/bike_skin_definition.gd" id="2_3klvi"]
 [ext_resource type="Curve" uid="uid://bc4775t6u5ngh" path="res://player/bikes/resources/lean_speed_curve.tres" id="2_mg0ht"]
 [ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="4_hx3xb"]
-[ext_resource type="Resource" uid="uid://bim1oow6ctunj" path="res://resources/bikes/mods/color_mods/white_red_color.tres" id="5_hx3xb"]
+[ext_resource type="Resource" uid="uid://dusov5uralis7" path="res://resources/bikes/mods/color_mods/black_pink_color.tres" id="5_qepda"]
 [ext_resource type="Curve" uid="uid://ct2j0k3sl7m3u" path="res://player/bikes/resources/steer_speed_curve.tres" id="5_v4igm"]
 [ext_resource type="Curve" uid="uid://dlqmqgtip7b61" path="res://resources/bikes/power_curve.tres" id="6_qepda"]
 
@@ -34,7 +34,7 @@ left_foot_rotation = Vector3(-1.275857, -2.0608416, -0.75981855)
 right_foot_rotation = Vector3(-1.2186638, 2.5100298, 0.6246737)
 left_leg_magnet_position = Vector3(0.46395656, 0.5692559, 0.42930415)
 right_leg_magnet_position = Vector3(-0.464, 0.569, 0.429)
-mods = Array[ExtResource("4_hx3xb")]([ExtResource("5_hx3xb")])
+mods = Array[ExtResource("4_hx3xb")]([ExtResource("5_qepda")])
 max_speed = 120.0
 lean_speed = 4.0
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"
