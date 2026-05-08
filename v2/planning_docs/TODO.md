@@ -14,9 +14,12 @@
 
 ### WIP
 - [ ] Finish / create [PLAN-gamemode-objective-collapse](./PLAN-gamemode-objective-collapse.md) system
-  - [ ] **half-way thru, see branch** `mid-vibe`
-  - [ ] Use checkpoint marker in a step
+  - [x] **half-way thru, see branch** `mid-vibe`
   - [ ] Add TPObjective type - so we can respawn at different locations
+    - [ ] Respawn after get up to speed
+    - [ ] Move change gears next, explain RPM
+    - [ ] start wheelie subtext to look out for RPM
+  - [ ] Use checkpoint marker in a step
 - [ ] Manually cleanup @animation_controller.gd
   - [ ] e.g. creating a new trick goes from trick_controller to 4 places in anim controller, lots of duplication
 - [ ] add ground detection to animation controller
