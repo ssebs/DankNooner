@@ -17,7 +17,13 @@ class_name MainMenuState extends MenuState
 
 
 func _ready():
-	version_label.text = ProjectSettings.get_setting("application/config/version")
+	var version: String = ProjectSettings.get_setting("application/config/version")
+	version_label.text = version
+	var digits := RegEx.create_from_string("[^0-9]").sub(version, "", true)
+	if "69" in digits:
+		version_label.mouse_filter = Control.MOUSE_FILTER_STOP
+		version_label.mouse_entered.connect(func(): version_label.text = version + "…nice.")
+		version_label.mouse_exited.connect(func(): version_label.text = version)
 
 	if OS.has_feature("web"):
 		quit_btn.text = "WEB_QUIT_LABEL"
