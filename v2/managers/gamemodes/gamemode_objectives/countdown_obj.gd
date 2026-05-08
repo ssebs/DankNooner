@@ -5,6 +5,7 @@
 class_name CountdownTutorialStep extends GameModeObjective
 
 @export var seconds: float = 3.0
+@export var show_hud: bool = true
 
 
 func on_enter(player: PlayerEntity, state: Dictionary) -> void:
@@ -28,7 +29,8 @@ func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
 	var last: int = state.get("last_shown", -1)
 	if curr != last and curr > 0:
 		state["last_shown"] = curr
-		_rpc_show_countdown.rpc_id(int(player.name), curr)
+		if show_hud:
+			_rpc_show_countdown.rpc_id(int(player.name), curr)
 	return t <= 0.0
 
 
