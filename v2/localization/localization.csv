@@ -83,5 +83,7 @@ TUT_CHANGE_GEAR,"Shift gears to get to higher speeds","Cambia de marcha para alc
 TUT_HINT_CHANGE_GEAR,"Press B to shift up, press X to shift down","Presiona B para subir de marcha; presiona X para bajar de marcha"
 TUT_DO_STOPPIE,"Do a stoppie for {duration}s","Haz un stoppie por {duration}s"
 TUT_HINT_DO_STOPPIE,"Lean forward while tapping the front brake at speed, in 3rd gear","Inclínate hacia adelante mientras das toques al freno delantero a velocidad, en tercera marcha"
+TUT_CHECKPOINT,"Pass through the checkpoint","Pasa por el punto de control"
+TUT_HINT_CHECKPOINT,"Drive through the gate ahead","Conduce a través de la puerta de adelante"
 TUT_COMPLETE,"Tutorial Complete!","¡Tutorial Completado!"
 LOADING_LABEL,"Loading...","Cargando..."
