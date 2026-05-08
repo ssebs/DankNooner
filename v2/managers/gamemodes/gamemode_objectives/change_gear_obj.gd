@@ -1,5 +1,6 @@
+@tool
 ## Records the player's gear on first eval, completes once it changes.
-class_name ChangeGearObjective extends Objective
+class_name ChangeGearTutorialStep extends GameModeObjective
 
 
 func on_enter(_player: PlayerEntity, state: Dictionary) -> void:
@@ -15,8 +16,8 @@ func check(player: PlayerEntity, _delta: float, state: Dictionary) -> bool:
 
 
 func get_objective_text() -> String:
-	return "TUT_CHANGE_GEAR"
+	return tr("TUT_CHANGE_GEAR")
 
 
 func get_hint_text() -> String:
-	return "TUT_HINT_CHANGE_GEAR"
+	return tr("TUT_HINT_CHANGE_GEAR")

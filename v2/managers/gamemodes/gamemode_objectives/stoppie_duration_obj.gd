@@ -1,7 +1,8 @@
+@tool
 ## Hold a stoppie for `duration` seconds.
-class_name StoppieObjective extends Objective
+class_name StoppieDurationTutorialStep extends GameModeObjective
 
-@export var duration: float = 1.0
+@export var duration: float = 0.5
 
 
 func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
@@ -18,8 +19,8 @@ func get_progress(state: Dictionary) -> String:
 
 
 func get_objective_text() -> String:
-	return "TUT_DO_STOPPIE"
+	return tr("TUT_DO_STOPPIE").format({"duration": duration})
 
 
 func get_hint_text() -> String:
-	return "TUT_HINT_DO_STOPPIE"
+	return tr("TUT_HINT_DO_STOPPIE")

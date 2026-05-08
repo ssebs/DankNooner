@@ -59,12 +59,11 @@ func _process(_delta: float):
 
 	# Poll continuous values directly from controllers
 	_throttle_bar.value = int(input_controller.nfx_throttle * 100)
-	_brake_label.text = (
-		tr("HUD_BRAKE_F")
-		% [
-			int(input_controller.nfx_front_brake * 100),
-			int(input_controller.nfx_rear_brake * 100),
-		]
+	_brake_label.text = tr("HUD_BRAKE_F").format(
+		{
+			"front": int(input_controller.nfx_front_brake * 100),
+			"rear": int(input_controller.nfx_rear_brake * 100),
+		}
 	)
 
 	if input_controller.nfx_clutch_held:
@@ -77,7 +76,7 @@ func _process(_delta: float):
 	_rpm_fill_style.bg_color = _RPM_COLOR_LOW.lerp(_RPM_COLOR_HIGH, clampf(rpm_ratio, 0.0, 1.0))
 	_speed_bar.value = int(movement_controller.speed)
 	_speed_num.text = "%d" % int(movement_controller.speed)
-	_grip_label.text = tr("HUD_GRIP") % int(player_entity.grip_usage * 100)
+	_grip_label.text = tr("HUD_GRIP").format({"value": int(player_entity.grip_usage * 100)})
 	_balance_bar.current_val = rad_to_deg(movement_controller.pitch_angle)
 
 
@@ -103,7 +102,7 @@ func _init_balance_bar(trick_type: TrickController.Trick):
 
 #region signal handlers
 func _on_gear_changed(new_gear: int):
-	_gear_label.text = tr("HUD_GEAR") % new_gear
+	_gear_label.text = tr("HUD_GEAR").format({"value": new_gear})
 
 
 func _on_trick_started(trick_type: TrickController.Trick):
@@ -150,7 +149,7 @@ func hide_hud() -> void:
 
 ## Called from player_entity.gd's do_respawn
 func do_reset():
-	_gear_label.text = tr("HUD_GEAR") % 1
+	_gear_label.text = tr("HUD_GEAR").format({"value": 1})
 	_trick_msg.visible = false
 	_game_msg.visible = false
 

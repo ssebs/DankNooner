@@ -14,9 +14,15 @@
 
 ### WIP
 - [ ] Finish / create [PLAN-gamemode-objective-collapse](./PLAN-gamemode-objective-collapse.md) system
-  - [ ] **half-way thru, see branch** `mid-vibe`
-  - [ ] Use checkpoint marker in a step
-  - [ ] Add TPObjective type - so we can respawn at different locations
+  - [x] **half-way thru, see branch** `mid-vibe`
+  - [x] Add TPObjective type - so we can respawn at different locations
+    - [x] Respawn after get up to speed
+    - [x] Move change gears next,
+  - [x] add option to countdown_tutorial_step to not show timer
+  - [x] Move teleport_tutorial_step and countdown_tutorial_step to generic, non tutorial
+  - [ ] rename tutorial in gamemmodemanager to sequential?
+- [x] Is gamemode_objective just a StateMachine?
+- [ ] Use checkpoint marker in a step
 - [ ] Manually cleanup @animation_controller.gd
   - [ ] e.g. creating a new trick goes from trick_controller to 4 places in anim controller, lots of duplication
 - [ ] add ground detection to animation controller
@@ -39,6 +45,7 @@
 
 - [ ] Finish tutorial:
   - [ ] Make tutorial part of map, diff circles do diff events
+  - [ ] explain RPM vs wheelies in tutorial, balance point
   - [ ] in-world UI instead of just hud
   - [ ] Create `GameModeObject` - to be used via @export var, has func to do stuff configurable, etc.
     - [ ] e.g. `CheckpointMarker` can be used to see if player drove thru, to be used in tutorial / races
@@ -80,7 +87,9 @@
 
 - [ ] Wheelie battle gamemode
 
-## Up Next (Finish POC MP Gameplay Demo) 📋
+## Up Next (Finish POC MP Gameplay De
+
+mo) 📋
 
 - [ ] Scraper mod, add sparks
 > POC = playable gamemodes w/ friends, see if core gameplay loop works
@@ -249,7 +258,7 @@
     - [ ] start with graybox/repeating grid texture to plan out maps before are is decided , use multiple colors & labels
 
 - [ ] More Customization UI / menu
-
+  - [ ] Show as grid w/ icons (taken in engine) instead of dropdown list
   - [ ] Add Bike customization
     - [ ] **BikeDefinition** with component definitions under it since I will have multiple bike types, colors, and mods for each type.
       - [ ] character accessories (cosmetics, etc.)
