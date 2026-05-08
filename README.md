@@ -1,4 +1,4 @@
-![DankNoonerLogo](https://github.com/ssebs/DankNooner/blob/main/v2/resources/img/Logos/DankNoonerLogo.png?raw=true)
+# ![DankNoonerLogo](https://github.com/ssebs/DankNooner/blob/main/v2/resources/img/Logos/DankNoonerLogo.png?raw=true)
 
 [![.github/workflows/build.yml](https://github.com/ssebs/DankNooner/actions/workflows/build.yml/badge.svg)](https://github.com/ssebs/DankNooner/actions/workflows/build.yml) [![GitHub Release](https://img.shields.io/github/v/release/ssebs/DankNooner?sort=semver&display_name=release)](https://github.com/ssebs/DankNooner/releases)
 
