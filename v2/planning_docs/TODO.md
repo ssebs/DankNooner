@@ -21,8 +21,8 @@
   - [x] add option to countdown_tutorial_step to not show timer
   - [x] Move teleport_tutorial_step and countdown_tutorial_step to generic, non tutorial
   - [ ] rename tutorial in gamemmodemanager to sequential?
-  - [ ] Is gamemode_objective just a StateMachine?
-  - [ ] Use checkpoint marker in a step
+- [ ] Is gamemode_objective just a StateMachine?
+- [ ] Use checkpoint marker in a step
 - [ ] Manually cleanup @animation_controller.gd
   - [ ] e.g. creating a new trick goes from trick_controller to 4 places in anim controller, lots of duplication
 - [ ] add ground detection to animation controller
