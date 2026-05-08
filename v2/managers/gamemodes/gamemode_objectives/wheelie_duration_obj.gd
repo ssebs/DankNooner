@@ -1,7 +1,8 @@
+@tool
 ## Hold a wheelie (sitting or mod) for `duration` seconds.
-class_name WheelieObjective extends Objective
+class_name WheelieDurationTutorialStep extends GameModeObjective
 
-@export var duration: float = 3.0
+@export var duration: float = 2.0
 
 
 func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
@@ -21,8 +22,8 @@ func get_progress(state: Dictionary) -> String:
 
 
 func get_objective_text() -> String:
-	return "TUT_DO_WHEELIE"
+	return tr("TUT_DO_WHEELIE").format({"duration": duration})
 
 
 func get_hint_text() -> String:
-	return "TUT_HINT_DO_WHEELIE"
+	return tr("TUT_HINT_DO_WHEELIE")

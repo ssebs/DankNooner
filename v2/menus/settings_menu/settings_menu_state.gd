@@ -103,7 +103,7 @@ func _on_setting_updated(_key: String, _value: Variant):
 
 func _on_resolution_scale_changed(val: float):
 	var s = "%.2f" % val
-	resolution_scale_label.text = tr("RESOLUTION_SCALE_LABEL") % s.rstrip("0").rstrip(".")
+	resolution_scale_label.text = tr("RESOLUTION_SCALE_LABEL").format({"scale": s.rstrip("0").rstrip(".")})
 
 
 func _on_save_pressed():

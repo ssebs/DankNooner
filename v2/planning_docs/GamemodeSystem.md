@@ -9,8 +9,8 @@ How `FreeRoamGameMode`, `TutorialGameMode`, `StreetRaceGameMode` (and future eve
 | `GamemodeManager` | `managers/gamemodes/gamemode_manager.gd` | Match state, `TGameMode` enum, hosts the gamemode state machine, late-joiner sync |
 | `GameMode` (base) | `managers/gamemodes/gamemode.gd` | `State` subclass; server-authoritative |
 | `FreeRoamGameMode` | `.../free_roam/` | Default mode. Wires event circles → confirm HUD → transition |
-| `TutorialGameMode` | `.../tutorial/` | Walks `EventStartCircle.get_lessons()` per peer; per-lesson `Objective.check()` |
-| `StreetRaceGameMode` | `.../street_race/` | Stub — will use the same lesson/objective shape for laps/checkpoints |
+| `TutorialGameMode` | `.../tutorial/` | Walks `EventStartCircle.get_objectives()` per peer; per-step `GameModeObjective.check()` |
+| `StreetRaceGameMode` | `.../street_race/` | Stub — will use the same `GameModeObjective` shape for laps/checkpoints |
 | `GameModeEventConfirmHUD` | `managers/gamemodes/hud/` | Per-peer RPC'd confirm dialog |
 | `GamemodeStateContext` | `utils/state_machine/` | Carries `peer_id`, `gamemode_event`, `event_start_circle` through transitions |
 
@@ -52,12 +52,12 @@ For event modes that hold per-peer state (Tutorial), the joiner's `TutorialPlaye
 
 1. Add to `GamemodeManager.TGameMode` enum.
 2. Create `class_name FooGameMode extends GameMode`. Implement `Enter` / `Update` / `Exit`. Guard server-only logic with `multiplayer.is_server()`.
-3. In `Enter`, read `(state_context as GamemodeStateContext).event_start_circle` to get your course root + start marker + lessons.
+3. In `Enter`, read `(state_context as GamemodeStateContext).event_start_circle` to get your course root + start marker + objectives.
 4. Add the node under the state machine in `main_game.tscn`, `@export` it on `GamemodeManager`, and register it in `_gamemode_map` in `_ready()`.
 5. Connect `player_crashed` / `player_disconnected` / `player_latejoined` per the policy you want.
 6. To return to free roam: `gamemode_manager._rpc_transition_gamemode.rpc(FREE_FROAM, peer_id)` (see `TutorialGameMode._return_to_free_roam`).
 
-If your new mode doesn't use the lesson/objective system (e.g. pure timer or score), skip the `event_start_circle.get_lessons()` part and use whatever per-peer structures you need. The lobby + transition + late-join scaffolding is the same.
+If your new mode doesn't use the objective system (e.g. pure timer or score), skip the `event_start_circle.get_objectives()` part and use whatever per-peer structures you need. The lobby + transition + late-join scaffolding is the same.
 
 ## Out of scope
 

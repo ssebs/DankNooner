@@ -1,150 +1,111 @@
-# GameModeEvent / GameModeLesson / Objective
+# GameModeEvent / EventStartCircle / GameModeObjective
 
 How tutorials (and future per-mode courses like races) are authored.
 
-## The four pieces
+## The shape
 
-| Piece | Type | What it is |
-| ----- | ---- | ---------- |
-| `GameModeEvent` | Resource | Metadata for the event: name, description, target gamemode, countdown. No logic. |
-| `EventStartCircle` | Node (Area3D) | Trigger in the world. When a player drives in, free roam offers them this event. **Also acts as the course root** — its child lessons are the steps. |
-| `GameModeLesson` | Node | One step. Holds an `Objective` + when to evaluate it + an optional trigger node. |
-| `Objective` | Resource | The actual rule (wheelie 3s, speed > 30, etc.). Pure logic, reusable across gamemodes. |
+Three pieces, all simple:
+
+| Piece | Type | Role |
+| ----- | ---- | ---- |
+| `GameModeEvent` | Resource | Metadata only — name, description, target gamemode. No logic. |
+| `EventStartCircle` | Node (Area3D) | World trigger that offers the event in free roam. **Also the course root** — its child nodes are the steps. |
+| `GameModeObjective` | Node | One step. Self-contained: own `check`/`on_enter`/`on_exit`, own RPCs, own `@export`s. Subclassed per mechanic. |
+
+The previous split (`Objective` Resource + `GameModeLesson` Node wrapper) is gone. The objective *is* the node, so subclasses can `@rpc` and `@export` whatever they need without leaking logic into the gamemode.
+
+## Authoring a course
+
+Drop typed objective nodes under an `EventStartCircle` in tree order. That's it — no registration, no enum, no factory.
+
+```
+Tutorial01EventStartCircle (EventStartCircle)
+├─ gamemode_event = "Moto 101"   (GameModeEvent resource, target=TUTORIAL)
+├─ start_marker   = ../Tut01StartMarker
+│
+├─ Countdown                 (CountdownTutorialStep, seconds=3.0)
+├─ CloseHelp_ShowHelp        (CloseHelpTutorialStep)
+├─ SpeedAbove_PressRT        (SpeedAboveTutorialStep, min_speed=2.0)
+├─ SpeedAbove_ReachSpeed     (SpeedAboveTutorialStep, min_speed=30.0)
+├─ WheelieDuration_Wheelie   (WheelieDurationTutorialStep, duration=3.0)
+├─ ChangeGear                (ChangeGearTutorialStep)
+└─ StoppieDuration_Stoppie   (StoppieDurationTutorialStep, duration=1.0)
+```
+
+Some objectives (`CountdownTutorialStep`, `TeleportTutorialStep`) are mode-agnostic — usable from race / trick courses too. The `*TutorialStep` class-name suffix is historical, not a constraint.
+
+## Adding a new step type
+
+1. New file in `managers/gamemodes/gamemode_objectives/` (named `*_obj.gd`) extending `GameModeObjective`.
+2. Override the hooks you need (`on_enter`, `check`, `on_exit`, `get_progress`, `get_objective_text`, `get_hint_text`).
+3. Drop the node into an `EventStartCircle` in tree order.
+
+No registration, no enum, no special case in the gamemode.
+
+## Base contract
+
+`managers/gamemodes/gamemode_objectives/gamemode_objective.gd`:
+
+```gdscript
+class_name GameModeObjective extends Node
+
+enum EvalWhen { ALWAYS, ON_ENTER, WHILE_INSIDE }
+
+@export var eval_when: EvalWhen = EvalWhen.ALWAYS
+@export var trigger: GameModeObject  # required for ON_ENTER / WHILE_INSIDE
+
+var _gamemode: GameMode  # injected by the gamemode on Enter
+
+func on_enter(player, state) -> void
+func check(player, delta, state) -> bool   # true = advance
+func on_exit(player, state) -> void
+func get_progress(state) -> String
+func get_objective_text() -> String
+func get_hint_text() -> String
+```
+
+`eval_when` controls when the gamemode evaluates the step:
+- `ALWAYS` — every tick (default).
+- `ON_ENTER` — one-shot, fires when the player enters `trigger`.
+- `WHILE_INSIDE` — only while the player is inside `trigger`.
 
 ## Flow
 
-1. Player enters an `EventStartCircle` in free roam → confirm HUD pops up.
-2. Player confirms → `TutorialGameMode` starts, receives the start circle via `GamemodeStateContext`.
-3. Tutorial reads `start_circle.start_marker` (teleport target) and `start_circle.get_lessons()` (children, in tree order).
-4. Per peer, walks lessons. For each: calls `objective.check(player, delta, state)` according to `eval_when`. On true → advance.
-5. All peers done → results screen.
+1. Player drives into an `EventStartCircle` in free roam → confirm HUD pops up.
+2. Player confirms → `TutorialGameMode` starts with the circle in `GamemodeStateContext`.
+3. Gamemode reads `start_circle.start_marker` (teleport target) and `start_circle.get_objectives()` (children, in tree order).
+4. Gamemode injects `_gamemode = self` on each objective so steps can call back.
+5. Per peer, walks objectives sequentially. For each: `on_enter` → tick `check` per `eval_when` rules → `on_exit` → advance.
+6. All peers done → results screen.
 
-## Authoring a tutorial — `Tutorial01EventStartCircle2` example
+## Per-peer state
 
-This is the "Moto 101" course, 6 lessons.
+Objective Nodes are **shared across all players** — they hold no per-peer state. The scratchpad lives in `tutorial_gamemode._player_states[peer].lesson_state` and is passed into each hook as `state`. Cleared on advance and on crash.
 
-```
-Tutorial01EventStartCircle2 (EventStartCircle)
-├─ gamemode_event   = Resource_asds5  ("Tutorial: Moto 101", target=TUTORIAL)
-├─ start_marker     = ../Stuff/Tut01Location/Tutorial01StartMarker
-│
-├─ Lesson_ShowHelp     (GameModeLesson, objective=CloseHelpObjective)
-├─ Lesson_PressRT      (GameModeLesson, objective=SpeedAboveObjective(min_speed=2.0))
-├─ Lesson_ReachSpeed   (GameModeLesson, objective=SpeedAboveObjective(min_speed=30.0))
-├─ Lesson_Wheelie      (GameModeLesson, objective=WheelieObjective(duration=3.0))
-├─ Lesson_ChangeGear   (GameModeLesson, objective=ChangeGearObjective)
-└─ Lesson_Stoppie      (GameModeLesson, objective=StoppieObjective(duration=1.0))
-```
+Steps that need to ack from a client RPC back to server state call `_gamemode.mark_objective_state(peer_id, key, value)` (e.g. `CloseHelpTutorialStep`).
 
-Steps to build a new one in the editor:
+## Cross-scene wiring
 
-1. Drop an `EventStartCircle` instance in your level scene.
-2. Set `gamemode_event` (inline new sub-resource or reuse). Set `start_marker` (any `Marker3D` in the scene).
-3. Add `GameModeLesson` child Nodes in order. On each, drag in an `Objective` resource (existing or new).
+Steps live in the level scene; managers (input, menu, help) live in `main_game.tscn`. NodePath `@export`s can't bridge the two, so steps that need managers cast `_gamemode` to `TutorialGameMode` and pull from there. The gamemode keeps the manager `@export`s.
 
-That's it. No registration, no group, no enum.
+## Reuse across gamemodes
 
-## `eval_when` — three policies
+Same base contract; the **gamemode** decides traversal:
+- Tutorial: linear, advance per peer when `check()` returns true.
+- Race (future): loop the checkpoint sequence N times, finish line ends the run.
+- Trick combo (future): any-order completion, score-based end.
 
-| Mode | When `check()` runs | Use for |
-| ---- | ------------------- | ------- |
-| `ALWAYS` | Every tick (legacy behavior) | Time-based checks (wheelie 3s anywhere) |
-| `ON_ENTER` | Once, when the trigger's `entered` signal fires | "Wheelie through this gate" — pass-through gates |
-| `WHILE_INSIDE` | Every tick, but only while inside the trigger zone | "Stoppie 1s inside this zone" — bounded checks |
+Mechanic detection (wheelie, stoppie, speed gates) lives in the step itself for now. Once a second consumer appears (e.g. a race gate that needs the same wheelie detection), pull it into a static helper in `utils/` or `gameplay/detectors/`. Don't preemptively extract.
 
-`ON_ENTER` and `WHILE_INSIDE` require the `trigger` field to point at a `GameModeObject` (typically a `CheckpointMarker` or `TriggerZone`).
+## Where things live
 
-## Using triggers (CheckpointMarker / TriggerZone)
+- Base + all objective subclasses: `managers/gamemodes/gamemode_objectives/`
+- Course root / world trigger: `managers/gamemodes/components/event_start_circle.gd`
+- Event metadata resource: `resources/events/gamemode_event.gd`
+- Tutorial gamemode (state machine, traversal, results): `managers/gamemodes/tutorial/tutorial_gamemode.gd`
 
-Both extend `GameModeObject`, which auto-wires a child `Area3D` to fire `entered` / `exited` signals (filtered to `PlayerEntity`).
+## What this bought us
 
-### CheckpointMarker (gate / ring)
-
-Gate the player passes *through*. One-shot signal.
-
-```
-EventStartCircle
-├─ Marker3D (start_marker)
-├─ CheckpointMarker  (instance .tscn — has Area3D + visible posts)
-└─ Lesson_GateWheelie (GameModeLesson)
-   ├─ objective  = WheelieObjective(3.0)
-   ├─ eval_when  = ON_ENTER
-   └─ trigger    = (drag in the CheckpointMarker above)
-```
-
-Player must be wheelying *at the moment they pass through the gate*.
-
-### TriggerZone (volumetric area)
-
-Box-shaped zone. Continuous in/out tracking.
-
-`TriggerZone` has no `.tscn` — you place it as a Node3D, give it a `Script = trigger_zone.gd`, and add an `Area3D + CollisionShape3D` child yourself.
-
-```
-EventStartCircle
-├─ TriggerZone  (with Area3D + Box CollisionShape3D children)
-└─ Lesson_StoppieInZone (GameModeLesson)
-   ├─ objective  = StoppieObjective(1.0)
-   ├─ eval_when  = WHILE_INSIDE
-   └─ trigger    = (drag in the TriggerZone above)
-```
-
-Stoppie timer only ticks while the player is inside the zone.
-
-## Adding a new Objective
-
-A new mechanic = one `.gd` file, ~20 lines.
-
-```gdscript
-# managers/gamemodes/<mode>/objectives/my_objective.gd
-class_name MyObjective extends Objective
-
-@export var some_threshold: float = 5.0
-
-func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
-    state["t"] = state.get("t", 0.0) + delta
-    return state["t"] >= some_threshold
-
-func get_progress(state: Dictionary) -> String:
-    return "%.1f / %.1fs" % [state.get("t", 0.0), some_threshold]
-
-func get_objective_text() -> String: return "MY_OBJECTIVE_KEY"
-func get_hint_text() -> String:      return "MY_HINT_KEY"
-```
-
-Then in the inspector, on any `GameModeLesson`, click `objective` → New `MyObjective` → tweak exports.
-
-### The `state` dictionary
-
-- Owned by the gamemode, scoped to **one player + one lesson**.
-- Cleared on lesson advance and on crash.
-- Mutate freely. Pick your own keys.
-- Use it for accumulators (`state["t"]`), one-time captures (`state["initial_gear"]`), flags (`state["closed"]`).
-
-### The four override hooks
-
-| Hook | When | Common use |
-| ---- | ---- | ---------- |
-| `on_enter(player, state)` | When this lesson becomes the current one for a peer | Init `state` keys; capture initial values |
-| `check(player, delta, state) -> bool` | Per `eval_when` policy | Return true when the objective is complete |
-| `on_exit(player, state)` | Right before advancing to the next lesson | Cleanup; rare |
-| `get_progress(state) -> String` | Every tick (HUD) | "1.4 / 3.0s" — return `""` for no progress display |
-| `get_objective_text()` / `get_hint_text()` | Once on lesson start | Return localization keys for the HUD |
-
-## Reusing this for non-tutorial gamemodes
-
-Same shape works for race, future modes:
-
-- Race lap: `PassThroughObjective` (returns true on any tick) + `eval_when=ON_ENTER` + `CheckpointMarker`. Player drives through → done.
-- "Stay in zone for 10s": `StayInZoneObjective(duration=10)` + `WHILE_INSIDE` + `TriggerZone`.
-- Combo trick: `LandTrickObjective(trick_type=...)` + `ON_ENTER` (zone is the landing area).
-
-The gamemode's `Enter()` reads its `EventStartCircle` from ctx, walks `get_lessons()`, and runs the same loop.
-
-## Common gotchas
-
-- **Lessons are children of the `EventStartCircle`**, not of a separate course node. Tree order = play order.
-- **`ON_ENTER` is one-shot.** The flag clears the moment `check()` is called. If `check()` returns false, the player has to leave and re-enter.
-- **`WHILE_INSIDE` clears state on lesson advance and on crash** — so a teleport-back can't strand you "inside."
-- **The `trigger` ref must be a `GameModeObject` subclass** (`CheckpointMarker`, `TriggerZone`, etc.). Plain `Area3D` won't work.
-- **`gamemode_event.target_gamemode` controls which gamemode runs.** For tutorial courses, set it to `TUTORIAL`. The lessons are picked up regardless of target.
+- `tutorial_gamemode.gd` no longer special-cases `CloseHelpObjective` — help-menu RPCs and exports live entirely on `CloseHelpTutorialStep`.
+- Adding a new step = one `.gd` file + drop-in node. No registration, no enum, no special case.
+- Mode-agnostic objectives (countdown, teleport) drop straight into future race / trick courses unchanged.
