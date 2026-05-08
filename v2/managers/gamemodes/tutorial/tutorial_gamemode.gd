@@ -12,6 +12,8 @@ var _player_states: Dictionary[int, TutorialPlayerState] = {}
 var _start_circle: EventStartCircle
 var _objectives: Array[GameModeObjective] = []
 var _wired_callables: Array = []  # tracked so we can disconnect on Exit
+## Per-peer respawn override set by TeleportTutorialStep. Falls back to start_marker.
+var _respawn_overrides: Dictionary[int, Marker3D] = {}
 var _respawn_delay: float = 3.0
 var _countdown: float = -1.0
 var _results_countdown: float = -1.0
@@ -91,6 +93,7 @@ func Exit(_state_context: StateContext):
 	for obj in _objectives:
 		obj._gamemode = null
 	_player_states.clear()
+	_respawn_overrides.clear()
 	_start_circle = null
 	_objectives = []
 
@@ -102,6 +105,12 @@ func mark_objective_state(peer_id: int, key: String, value: Variant):
 	if !_player_states.has(peer_id):
 		return
 	_player_states[peer_id].lesson_state[key] = value
+
+
+## Called by TeleportTutorialStep to set this peer's crash-respawn target for
+## the rest of the tutorial. Subsequent crashes use this instead of start_marker.
+func set_respawn_marker(peer_id: int, marker: Marker3D):
+	_respawn_overrides[peer_id] = marker
 
 
 #region Setup helpers
@@ -308,7 +317,7 @@ func _on_player_crashed(peer_id: int):
 		state.prop_event_fired = false
 		state.inside_zone = false
 
-	var marker := _start_circle.start_marker
+	var marker: Marker3D = _respawn_overrides.get(peer_id, _start_circle.start_marker)
 	get_tree().create_timer(_respawn_delay).timeout.connect(
 		func():
 			spawn_manager.respawn_player_at.rpc(
@@ -327,6 +336,7 @@ func _on_player_disconnected(peer_id: int):
 		spawn_manager.rpc_despawn_player.rpc(peer_id)
 
 	_player_states.erase(peer_id)
+	_respawn_overrides.erase(peer_id)
 
 	# If the only remaining players are all complete, show results
 	if multiplayer.is_server() and _player_states.size() > 0:

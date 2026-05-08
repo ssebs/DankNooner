@@ -15,10 +15,12 @@
 ### WIP
 - [ ] Finish / create [PLAN-gamemode-objective-collapse](./PLAN-gamemode-objective-collapse.md) system
   - [x] **half-way thru, see branch** `mid-vibe`
-  - [ ] Add TPObjective type - so we can respawn at different locations
+  - [x] Add TPObjective type - so we can respawn at different locations
     - [ ] Respawn after get up to speed
     - [ ] Move change gears next, explain RPM
     - [ ] start wheelie subtext to look out for RPM
+  - [ ] add option to countdown_tutorial_step to not show timer
+  - [ ] Move teleport_tutorial_step and countdown_tutorial_step to generic, non tutorial
   - [ ] Use checkpoint marker in a step
 - [ ] Manually cleanup @animation_controller.gd
   - [ ] e.g. creating a new trick goes from trick_controller to 4 places in anim controller, lots of duplication
