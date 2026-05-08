@@ -15,7 +15,6 @@ var _wired_callables: Array = []  # tracked so we can disconnect on Exit
 ## Per-peer respawn override set by TeleportTutorialStep. Falls back to start_marker.
 var _respawn_overrides: Dictionary[int, Marker3D] = {}
 var _respawn_delay: float = 3.0
-var _countdown: float = -1.0
 var _results_countdown: float = -1.0
 var _results_countdown_total: float = 10.0
 
@@ -43,19 +42,11 @@ func Enter(state_context: StateContext):
 
 	if multiplayer.is_server():
 		_teleport_players_to_start()
-		if event.countdown_seconds > 0.0:
-			_set_all_players_input_disabled(true)
-			_countdown = event.countdown_seconds
-			_rpc_show_countdown.rpc(ceili(_countdown))
-		else:
-			_on_countdown_finished()
+		_on_countdown_finished()
 
 
 func Update(delta: float):
 	if !multiplayer.is_server():
-		return
-
-	if _update_countdown(delta):
 		return
 
 	if _update_results_countdown(delta):
@@ -131,21 +122,6 @@ func _teleport_players_to_start():
 #endregion
 
 #region Countdown phases
-
-
-func _update_countdown(delta: float) -> bool:
-	if _countdown <= 0.0:
-		return false
-
-	var prev_sec := ceili(_countdown)
-	_countdown -= delta
-	var curr_sec := ceili(_countdown)
-	if curr_sec != prev_sec and curr_sec > 0:
-		_rpc_show_countdown.rpc(curr_sec)
-	if _countdown <= 0.0:
-		_countdown = -1.0
-		_on_countdown_finished()
-	return true
 
 
 func _on_countdown_finished():
@@ -443,11 +419,6 @@ func _on_trigger_exited(player: PlayerEntity, obj: GameModeObject):
 
 
 #endregion
-
-@rpc("call_local", "reliable")
-func _rpc_show_countdown(seconds: int):
-	tutorial_hud.rpc_show_countdown(seconds)
-
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []

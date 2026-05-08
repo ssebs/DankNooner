@@ -18,7 +18,7 @@
   - [x] Add TPObjective type - so we can respawn at different locations
     - [x] Respawn after get up to speed
     - [x] Move change gears next,
-  - [ ] add option to countdown_tutorial_step to not show timer
+  - [x] add option to countdown_tutorial_step to not show timer
   - [x] Move teleport_tutorial_step and countdown_tutorial_step to generic, non tutorial
   - [ ] rename tutorial in gamemmodemanager to sequential?
   - [ ] Is gamemode_objective just a StateMachine?
