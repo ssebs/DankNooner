@@ -1,27 +1,24 @@
 [gd_scene format=3 uid="uid://b27jgs5kv1310"]
 
 [ext_resource type="Script" uid="uid://d2dfqo7sswuem" path="res://managers/audio_manager.gd" id="1_1k0gc"]
+[ext_resource type="Script" uid="uid://dk2ghd454wkc2" path="res://utils/custom_audio_middleware/sound_event.gd" id="2_snd"]
+[ext_resource type="AudioStream" uid="uid://kgx3srtrxr5l" path="res://non_fmod_sounds/startup.ogg" id="2_yaisj"]
+[ext_resource type="Script" uid="uid://dkuocwpht87sr" path="res://utils/custom_audio_middleware/engine_sound_event.gd" id="3_eng"]
+[ext_resource type="AudioStream" uid="uid://b6r8tjr3vvkog" path="res://non_fmod_sounds/Ninja500/quieter-loop-ninja-500.ogg" id="4_yaisj"]
 
 [node name="AudioManager" type="Node" unique_id=625309404 groups=["Managers"]]
 script = ExtResource("1_1k0gc")
 
-[node name="FmodBankLoader" type="FmodBankLoader" parent="." unique_id=552225803]
-bank_paths = ["res://fmod/DankNoonerFMODProject/Build/Desktop/Master.strings.bank", "res://fmod/DankNoonerFMODProject/Build/Desktop/Master.bank", "res://fmod/DankNoonerFMODProject/Build/Desktop/SFX.bank"]
-
 [node name="Sounds" type="Node" parent="." unique_id=2084581084]
 unique_name_in_owner = true
 
-[node name="Startup" type="FmodEventEmitter3D" parent="Sounds" unique_id=1082903853]
-event_name = "event:/StartupSound"
-event_guid = "{1db5a582-85b0-451b-8549-93bd2664940a}"
-attached = false
+[node name="Startup" type="AudioStreamPlayer" parent="Sounds" unique_id=1082903853]
 unique_name_in_owner = true
+stream = ExtResource("2_yaisj")
+script = ExtResource("2_snd")
 
-[node name="Ninja500Revs" type="FmodEventEmitter3D" parent="Sounds" unique_id=866670601]
-event_name = "event:/Ninja500Revs"
-event_guid = "{cb006e0b-c724-48ba-93bf-35b91cda5e9c}"
-attached = false
-fmod_parameters/RPM/id = -9088701629334172805
-fmod_parameters/RPM = 0.0
-fmod_parameters/RPM/variant_type = 3
+[node name="Ninja500Revs" type="AudioStreamPlayer" parent="Sounds" unique_id=866670601]
 unique_name_in_owner = true
+stream = ExtResource("4_yaisj")
+script = ExtResource("3_eng")
+loop = true

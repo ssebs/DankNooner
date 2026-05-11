@@ -11,6 +11,8 @@ class_name SplashMenuState extends MenuState
 
 @onready var splashes_to_show: Control = %SplashesToShow
 @onready var timer: Timer = %Timer
+@onready var play_gate: Control = %PlayGate
+@onready var play_button: Button = %PlayButton
 
 var current_splash_index: int = 0
 var splash_children: Array[Node] = []
@@ -21,10 +23,38 @@ func Enter(_state_context: StateContext):
 	if Engine.is_editor_hint():
 		return
 
-	if !OS.has_feature("web"):
-		audio_manager.play_startup()
-
 	ui.show()
+	play_gate.hide()
+	level_manager.spawn_menu_level()
+
+	# Web browsers block audio until a user gesture — gate the splash behind a Play button.
+	if OS.has_feature("web"):
+		play_gate.show()
+		play_button.pressed.connect(_on_play_pressed, CONNECT_ONE_SHOT)
+		return
+
+	_start_splash_sequence()
+
+
+func Exit(_state_context: StateContext):
+	audio_manager.stop_all()
+	ui.hide()
+	is_showing_splashes = false
+	timer.stop()
+	if timer.timeout.is_connected(_on_timer_timeout):
+		timer.timeout.disconnect(_on_timer_timeout)
+	if play_button.pressed.is_connected(_on_play_pressed):
+		play_button.pressed.disconnect(_on_play_pressed)
+
+
+func _on_play_pressed():
+	play_gate.hide()
+	_start_splash_sequence()
+
+
+func _start_splash_sequence():
+	audio_manager.play_startup()
+
 	current_splash_index = 0
 	splash_children = []
 	is_showing_splashes = true
@@ -42,16 +72,6 @@ func Enter(_state_context: StateContext):
 	else:
 		DebugUtils.DebugErrMsg("splash_children not populated!")
 		_finish_splashes()
-
-	level_manager.spawn_menu_level()
-
-
-func Exit(_state_context: StateContext):
-	audio_manager.stop_all()
-	ui.hide()
-	is_showing_splashes = false
-	timer.stop()
-	timer.timeout.disconnect(_on_timer_timeout)
 
 
 func _on_timer_timeout():
