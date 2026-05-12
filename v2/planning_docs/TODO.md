@@ -89,9 +89,6 @@ mo) 📋
 
 - [ ] Remap controls for leaning back/fwd, use mouse? or arrow keys
 
-- [ ] Be able to reverse (play animation)
-  - [ ] Hold clutch, brake to reverse
-
 - [ ] Improve CrashController
 
   - [ ] Brake danger
@@ -337,6 +334,9 @@ mo) 📋
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Be able to reverse (play animation)
+  - [x] Hold clutch, brake to reverse
 
 - [x] [FMOD on web export](./fmod-web-fix.md) — build `libGodotFmod.web.*.wasm32.wasm` from PR #210 branch & wire it in
 
