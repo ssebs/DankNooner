@@ -116,6 +116,11 @@ var _high_chair_anim: Animation
 var _high_chair_layer: CustomAnimPlayer.Layer
 var _two_left_feet_anim: Animation
 var _two_left_feet_layer: CustomAnimPlayer.Layer
+var _back_up_start_anim: Animation
+var _back_up_loop_anim: Animation
+var _back_up_start_layer: CustomAnimPlayer.Layer
+var _back_up_loop_layer: CustomAnimPlayer.Layer
+var _was_reversing: bool = false
 
 # Proc pose carried between frames (no anim deltas applied). Keeping this separate
 # from what gets committed to the nodes prevents anim-delta drift across frames —
@@ -178,7 +183,11 @@ func _update_riding(delta: float) -> void:
 	if _targets_synced_from_bike:
 		_apply_bike_to_pose(pose)
 
-	_apply_riding_common(pose, delta, blend, roll)
+	# Reversing: handlebars still turn (driven by roll_angle via bike_skin.rotate_steering
+	# below) and the body rotates in _steer_calc, but suppress visual lean / chest yaw /
+	# weight shift so the bike stays upright.
+	var pose_roll := 0.0 if movement_controller.is_reversing else roll
+	_apply_riding_common(pose, delta, blend, pose_roll)
 
 	if not movement_controller._is_on_floor:
 		_apply_pitch_air(pose, blend, pitch)
@@ -188,9 +197,15 @@ func _update_riding(delta: float) -> void:
 	_apply_pivot_offset_to_pose(pose)
 
 	# Steering + wheels run direct on bike_skin — they're not part of the rider pose.
+	# Reverse inverts roll_angle (so the body rotates the correct way for input), but the
+	# handlebars should still visually point in the input direction — un-invert here.
 	var steer_input := roll if _targets_synced_from_bike else 0.0
+	if movement_controller.is_reversing:
+		steer_input = -steer_input
 	bike_skin.rotate_steering(steer_input, delta)
 	bike_skin.rotate_wheels(movement_controller.speed, delta, trick_controller.is_in_wheelie())
+
+	_update_reverse_anim()
 
 	# Snapshot proc-only state for next frame, then layer anim deltas onto a copy.
 	_proc_pose = pose
@@ -391,7 +406,39 @@ func _commit_pose(pose: _RiderPose) -> void:
 	)
 
 
+## Drive back_up_start + back_up_loop layers off movement_controller.is_reversing.
+## Enter: play start one-shot (settles + holds). Once it finishes, layer the loop on top.
+## Exit: stop the loop (fades), reverse-play the start back to t=0 (auto-fades).
+func _update_reverse_anim() -> void:
+	var reversing := movement_controller.is_reversing
+	if reversing and not _was_reversing:
+		if _back_up_start_anim:
+			_back_up_start_layer = _anim_runner.play_one_shot(_back_up_start_anim, 1.0)
+	elif not reversing and _was_reversing:
+		if _back_up_loop_layer != null and _back_up_loop_layer.is_playing():
+			_anim_runner.stop(_back_up_loop_layer)
+			_back_up_loop_layer = null
+		if _back_up_start_layer != null and _back_up_start_layer.is_playing():
+			_back_up_start_layer.speed = -1.0
+			_back_up_start_layer.hold_at_end = false
+			_back_up_start_layer.target_weight = 1.0
+
+	# While reversing, kick off the loop once the start anim has settled.
+	if reversing and _back_up_loop_anim and _back_up_start_layer != null:
+		var loop_running := _back_up_loop_layer != null and _back_up_loop_layer.is_playing()
+		if not loop_running and _back_up_start_layer.time >= _back_up_start_layer.get_duration():
+			_back_up_loop_layer = _anim_runner.play(_back_up_loop_anim, 1.0, true)
+
+	_was_reversing = reversing
+
+
 func _update_idle_timer(delta: float) -> void:
+	# Reversing keeps us in RIDING — idle anim would fight the back_up pose.
+	if movement_controller.is_reversing:
+		_idle_timer = 0.0
+		if current_state == RiderState.IDLE:
+			_transition_to_riding()
+		return
 	# Check if player is mostly stationary
 	if movement_controller.speed < 0.5 and abs(input_controller.nfx_steer) < 0.1:
 		_idle_timer += delta
@@ -457,6 +504,12 @@ func initialize() -> void:
 	if ik_anim_player.has_animation("two_left_feet"):
 		_two_left_feet_anim = ik_anim_player.get_animation("two_left_feet")
 		_fixup_anim_paths(_two_left_feet_anim)
+	if ik_anim_player.has_animation("back_up_start"):
+		_back_up_start_anim = ik_anim_player.get_animation("back_up_start")
+		_fixup_anim_paths(_back_up_start_anim)
+	if ik_anim_player.has_animation("back_up_loop"):
+		_back_up_loop_anim = ik_anim_player.get_animation("back_up_loop")
+		_fixup_anim_paths(_back_up_loop_anim)
 
 	if not trick_controller.trick_started.is_connected(_on_trick_started):
 		trick_controller.trick_started.connect(_on_trick_started)
@@ -574,6 +627,9 @@ func start_ragdoll() -> void:
 	_heel_clicker_layer = null
 	_high_chair_layer = null
 	_two_left_feet_layer = null
+	_back_up_start_layer = null
+	_back_up_loop_layer = null
+	_was_reversing = false
 	character_skin.disable_ik()
 	character_skin.start_ragdoll()
 
@@ -596,6 +652,9 @@ func do_reset():
 	_idle_layer = null
 	_heel_clicker_layer = null
 	_high_chair_layer = null
+	_back_up_start_layer = null
+	_back_up_loop_layer = null
+	_was_reversing = false
 	_proc_pose = null
 
 

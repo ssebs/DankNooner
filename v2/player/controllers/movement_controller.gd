@@ -25,6 +25,11 @@ const MIN_LOOP_SPEED: float = 20.0  # speed needed at fully inverted (180°)
 const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
 const AIR_TRICK_ROTATION_SPEED: float = 4.0  # rad/s pitch control while airborne
 const WHEELIE_AIR_GRACE: float = 1.0  # short hops (curbs) keep the wheelie pitch_angle
+# Reverse — hold clutch + any brake to roll backwards from a stop
+const REVERSE_MAX_SPEED: float = 2.0
+const REVERSE_ACCEL: float = 8.0
+const REVERSE_BRAKE_THRESHOLD: float = 0.3
+var is_reversing: bool = false
 var speed: float = 0.0
 var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
@@ -193,6 +198,22 @@ func _speed_calc(delta: float):
 
 	# Airborne
 	if not _is_on_floor:
+		is_reversing = false
+		return
+
+	# Reverse — hold clutch + brake from a near-stop. Bypasses normal accel/brake/slope.
+	var brake_total = input_controller.nfx_front_brake + input_controller.nfx_rear_brake
+	var reverse_input = input_controller.nfx_clutch_held and brake_total > REVERSE_BRAKE_THRESHOLD
+	if reverse_input and (is_reversing or speed <= 0.5):
+		is_reversing = true
+		speed = move_toward(speed, -REVERSE_MAX_SPEED, REVERSE_ACCEL * delta)
+		return
+	elif is_reversing:
+		# Inputs released — decay back to 0, then resume normal logic next tick.
+		speed = move_toward(speed, 0.0, REVERSE_ACCEL * delta)
+		if speed >= 0.0:
+			is_reversing = false
+			speed = 0.0
 		return
 
 	# Acceleration (uses gearing power output)
@@ -228,19 +249,22 @@ func _steer_calc(delta: float):
 	var amount_normalized_rename_me:=1.0
 	if player_entity.trick_controller.current_trick == TrickController.Trick.TWO_LEFT_FEET:
 		amount_normalized_rename_me = 0.5
-	elif speed < 1:
+	elif speed < 1 and not is_reversing:
 		amount_normalized_rename_me = 0.2
 
 	# ONCE STOPPED, LERP BACK TO DEFAULT POSE
 
-	# Curve-based speed factor for steering and lean
-	var lean_factor = bd.lean_curve.sample(_speed_pct)
-	var target_lean = input_controller.nfx_steer * bd.max_lean_angle_rad * lean_factor
+	# Curve-based speed factor for steering and lean. Reverse bypasses the curves —
+	# they're tuned for forward speed and bottom out near 0, so we'd lose all authority.
+	var lean_factor = 1.0 if is_reversing else bd.lean_curve.sample(_speed_pct)
+	var steer_input = -input_controller.nfx_steer if is_reversing else input_controller.nfx_steer
+	var target_lean = steer_input * bd.max_lean_angle_rad * lean_factor
 	roll_angle = lerpf(roll_angle, target_lean, bd.lean_speed * delta)*amount_normalized_rename_me
 
-	# Steering — bell curve: low at standstill, peaks mid-low speed, tapers at top speed
-	if speed > 0.5:
-		var steer_factor = bd.steer_curve.sample(_speed_pct) if bd.steer_curve else 1.0
+	# Steering — bell curve: low at standstill, peaks mid-low speed, tapers at top speed.
+	# Uses abs(speed) so reverse rolling still turns the body.
+	if absf(speed) > 0.5:
+		var steer_factor = 1.0 if is_reversing else (bd.steer_curve.sample(_speed_pct) if bd.steer_curve else 1.0)
 		var turn_rate = bd.turn_speed * steer_factor
 		DebugUtils.DebugMsg(
 			(
@@ -543,6 +567,7 @@ func do_reset():
 	speed = 0.0
 	roll_angle = 0.0
 	pitch_angle = 0.0
+	is_reversing = false
 	_was_on_floor = false
 	_prev_clutch_held = false
 	_clutch_kick_window = 0.0
