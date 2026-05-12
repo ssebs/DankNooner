@@ -37,7 +37,7 @@ func Enter(_state_context: StateContext):
 
 
 func Exit(_state_context: StateContext):
-	audio_manager.stop_all()
+	# audio_manager.stop_all()
 	ui.hide()
 	is_showing_splashes = false
 	timer.stop()
