@@ -15,10 +15,12 @@ unique_name_in_owner = true
 [node name="Startup" type="AudioStreamPlayer" parent="Sounds" unique_id=1082903853]
 unique_name_in_owner = true
 stream = ExtResource("2_yaisj")
+bus = &"Menu"
 script = ExtResource("2_snd")
 
 [node name="Ninja500Revs" type="AudioStreamPlayer" parent="Sounds" unique_id=866670601]
 unique_name_in_owner = true
 stream = ExtResource("4_yaisj")
+bus = &"SFX"
 script = ExtResource("3_eng")
 loop = true
