@@ -79,6 +79,10 @@ func play_ninja500_revs():
 	ninja500_revs.play()
 
 
+func stop_ninja500_revs():
+	ninja500_revs.stop()
+
+
 func update_ninja500_rpm(val: float):
 	ninja500_revs.set_parameter("RPM", val)
 

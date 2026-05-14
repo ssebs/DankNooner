@@ -3,6 +3,7 @@ class_name MainMenuState extends MenuState
 
 @export var menu_manager: MenuManager
 @export var level_manager: LevelManager
+@export var audio_manager: AudioManager
 @export var settings_menu_state: MenuState
 @export var play_menu_state: MenuState
 @export var customize_menu_state: MenuState
@@ -17,6 +18,7 @@ class_name MainMenuState extends MenuState
 
 
 func _ready():
+	super._ready()
 	var version: String = ProjectSettings.get_setting("application/config/version")
 	version_label.text = version
 	var digits := RegEx.create_from_string("[^0-9]").sub(version, "", true)
@@ -42,6 +44,8 @@ func Enter(_state_context: StateContext):
 
 	if level_manager.current_level_name != LevelManager.LevelName.BG_GRAY_LEVEL:
 		level_manager.spawn_menu_level()
+		if audio_manager:
+			audio_manager.play_minimize()
 
 
 func Exit(_state_context: StateContext):

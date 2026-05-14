@@ -11,6 +11,21 @@ var return_ctx: StateContext  # Use in Enter(), see @customize_menu_state.gd
 
 func _ready():
 	add_to_group(UtilsConstants.GROUPS["Validate"])
+	if Engine.is_editor_hint():
+		return
+	_wire_button_click_sounds()
+
+
+func _wire_button_click_sounds():
+	var audio_manager: AudioManager
+	for mgr in get_tree().get_nodes_in_group("Managers"):
+		if mgr is AudioManager:
+			audio_manager = mgr
+			break
+	if audio_manager == null:
+		return
+	for btn in find_children("*", "Button", true, false):
+		(btn as Button).pressed.connect(audio_manager.play_menu_click)
 
 
 func hide_ui():
