@@ -4,6 +4,7 @@ class_name PauseManager extends BaseManager
 @export var menu_manager: MenuManager
 @export var level_manager: LevelManager
 @export var input_state_manager: InputStateManager
+@export var audio_manager: AudioManager
 
 
 func _ready():
@@ -19,6 +20,7 @@ func do_pause():
 	menu_manager.switch_to_pause_menu()
 	menu_manager.enable_input_and_processing()
 	level_manager.disable_input_and_processing()
+	audio_manager.play_maximize()
 
 
 func do_unpause():
@@ -26,3 +28,4 @@ func do_unpause():
 	menu_manager.hide_all_menus()
 	menu_manager.disable_input_and_processing()
 	level_manager.enable_input_and_processing()
+	audio_manager.play_minimize()

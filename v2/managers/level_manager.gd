@@ -12,6 +12,7 @@ enum LevelName {
 @export var spawn_node: Node3D
 @export var menu_manager: MenuManager
 @export var input_state_manager: InputStateManager
+@export var audio_manager: AudioManager
 
 ## PackedScene of type LevelDefinition
 var possible_levels: Dictionary[LevelName, PackedScene] = {
@@ -74,6 +75,8 @@ func spawn_level(level_name: LevelName, input_state: InputStateManager.InputStat
 	if input_state == InputStateManager.InputState.IN_GAME:
 		menu_manager.switch_to_pause_menu()
 		menu_manager.hide_all_menus()
+		if audio_manager:
+			audio_manager.play_maximize()
 
 
 func despawn_level():
@@ -105,5 +108,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("menu_manager must not be empty")
 	if input_state_manager == null:
 		issues.append("input_state_manager must not be empty")
+	if audio_manager == null:
+		issues.append("audio_manager must not be empty")
 
 	return issues

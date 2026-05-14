@@ -26,6 +26,11 @@ var color_map: Dictionary[ToastLevel, Dictionary] = {
 
 
 func ShowToast(msg: String, level: ToastLevel = ToastLevel.NORMAL, duration: int = 2):
+    if level == ToastLevel.ERR:
+        for mgr in get_tree().get_nodes_in_group("Managers"):
+            if mgr is AudioManager:
+                (mgr as AudioManager).play_menu_err()
+                break
     var colors = color_map[level]
     ToastPartyLib.show(
         {

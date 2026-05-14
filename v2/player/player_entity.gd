@@ -151,6 +151,9 @@ func _process(_delta: float) -> void:
 	# Detect crash state transition outside rollback (safe for signals/RPCs)
 	if is_crashed and !_prev_is_crashed:
 		crashed.emit(int(name))
+		if is_local_client and audio_manager:
+			audio_manager.stop_ninja500_revs()
+			audio_manager.play_bowling_crash()
 	_prev_is_crashed = is_crashed
 
 	if !is_local_client:
@@ -286,6 +289,8 @@ func _on_rpm_updated(new_rpm_ratio: float):
 
 func _on_gear_changed(new_gear: int):
 	DebugUtils.DebugMsg("Gear: %d" % new_gear, OS.has_feature("debug"))
+	if is_local_client and audio_manager:
+		audio_manager.play_clunk_gear_change()
 
 
 func _on_trick_started(trick_type: TrickController.Trick):
@@ -338,6 +343,8 @@ func do_respawn():
 	# animation_controller.do_reset()
 	if animation_controller:
 		animation_controller.stop_ragdoll()
+	if is_local_client and audio_manager:
+		audio_manager.play_ninja500_revs()
 	# Re-spawn the bike mesh so any handlebar/wheel children moved by ragdoll/anim are
 	# back to base, then re-init IK so its targets snap to the fresh markers.
 	_init_mesh()
