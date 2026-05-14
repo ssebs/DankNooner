@@ -13,6 +13,22 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
+- [ ] add `scroll_003.ogg` repeating sfx while counting down before event?
+Stop playing idle sound when crashing 
+BowlingCrash when crashing
+MenuClick on BTN click
+MenuErr on UIToast.ShowToast
+Maximize on level load, showing pause
+Minimize on main menu load, hiding pause
+
+
+- [ ] add option to play / stop sound for `GameModeObjective`
+  - [ ] Countdown sfx
+- [ ] More sounds
+  - [ ] Add gear change sound
+  - [ ] Add crash sound
+  - [ ] Add grom sound
+
 - [ ] Manually cleanup @animation_controller.gd
   - [ ] e.g. creating a new trick goes from trick_controller to 4 places in anim controller, lots of duplication
 - [ ] add ground detection to animation controller

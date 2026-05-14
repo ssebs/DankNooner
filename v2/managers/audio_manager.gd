@@ -18,12 +18,30 @@ const VOLUME_SETTING_MAP: Dictionary = {
 var sounds_container: Node
 var startup: SoundEvent
 var ninja500_revs: EngineSoundEvent
+var bowling_crash: SoundEvent
+var countdown_5sec: SoundEvent
+var countdown_loop: SoundEvent
+var menu_click: SoundEvent
+var menu_err: SoundEvent
+var maximize: SoundEvent
+var minimize: SoundEvent
+var mouse_click: SoundEvent
+var clunk_gear_change: SoundEvent
 
 
 func _ready():
 	sounds_container = get_node_or_null("%Sounds")
 	startup = get_node_or_null("%Startup") as SoundEvent
 	ninja500_revs = get_node_or_null("%Ninja500Revs") as EngineSoundEvent
+	bowling_crash = get_node_or_null("%BowlingCrash") as SoundEvent
+	countdown_5sec = get_node_or_null("%Countdown5Sec") as SoundEvent
+	countdown_loop = get_node_or_null("%CountdownLoop") as SoundEvent
+	menu_click = get_node_or_null("%MenuClick") as SoundEvent
+	menu_err = get_node_or_null("%MenuErr") as SoundEvent
+	maximize = get_node_or_null("%Maximize") as SoundEvent
+	minimize = get_node_or_null("%Minimize") as SoundEvent
+	mouse_click = get_node_or_null("%MouseClick") as SoundEvent
+	clunk_gear_change = get_node_or_null("%ClunkGearChange") as SoundEvent
 
 	if Engine.is_editor_hint():
 		return
@@ -67,6 +85,42 @@ func update_ninja500_rpm(val: float):
 
 func play_startup():
 	startup.play()
+
+
+func play_bowling_crash():
+	bowling_crash.play()
+
+
+func play_countdown_5sec():
+	countdown_5sec.play()
+
+
+func play_countdown_loop():
+	countdown_loop.play()
+
+
+func play_menu_click():
+	menu_click.play()
+
+
+func play_menu_err():
+	menu_err.play()
+
+
+func play_maximize():
+	maximize.play()
+
+
+func play_minimize():
+	minimize.play()
+
+
+func play_mouse_click():
+	mouse_click.play()
+
+
+func play_clunk_gear_change():
+	clunk_gear_change.play()
 
 
 func stop_all():
