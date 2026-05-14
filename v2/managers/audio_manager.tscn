@@ -5,6 +5,15 @@
 [ext_resource type="AudioStream" uid="uid://kgx3srtrxr5l" path="res://non_fmod_sounds/startup.ogg" id="2_yaisj"]
 [ext_resource type="Script" uid="uid://dkuocwpht87sr" path="res://utils/custom_audio_middleware/engine_sound_event.gd" id="3_eng"]
 [ext_resource type="AudioStream" uid="uid://b6r8tjr3vvkog" path="res://non_fmod_sounds/Ninja500/quieter-loop-ninja-500.ogg" id="4_yaisj"]
+[ext_resource type="AudioStream" uid="uid://qq4jvxe1uuau" path="res://non_fmod_sounds/SFX/bowling-crash.ogg" id="6_201by"]
+[ext_resource type="AudioStream" uid="uid://d2pjd0cmniysj" path="res://non_fmod_sounds/SFX/overly-intense-5-sec-countdown.mp3" id="7_qquof"]
+[ext_resource type="AudioStream" uid="uid://cwxdb3rkn2bp4" path="res://non_fmod_sounds/SFX/scroll_003.ogg" id="8_vradv"]
+[ext_resource type="AudioStream" uid="uid://lel03mbvx3ip" path="res://non_fmod_sounds/SFX/switch_002.ogg" id="9_ydcbx"]
+[ext_resource type="AudioStream" uid="uid://cg4eulxqmy006" path="res://non_fmod_sounds/SFX/error_003.ogg" id="10_2b6dx"]
+[ext_resource type="AudioStream" uid="uid://cu858mfccfnij" path="res://non_fmod_sounds/SFX/maximize_008.ogg" id="11_tqr3v"]
+[ext_resource type="AudioStream" uid="uid://c05d8kjy8m8db" path="res://non_fmod_sounds/SFX/minimize_008.ogg" id="12_nbuvf"]
+[ext_resource type="AudioStream" uid="uid://bypjsikgd6vlo" path="res://non_fmod_sounds/SFX/mouse-click.mp3" id="13_tqr3v"]
+[ext_resource type="AudioStream" uid="uid://cnt3peoky4ry3" path="res://non_fmod_sounds/SFX/clunk-gear-change.ogg" id="14_nbuvf"]
 
 [node name="AudioManager" type="Node" unique_id=625309404 groups=["Managers"]]
 script = ExtResource("1_1k0gc")
@@ -24,3 +33,77 @@ stream = ExtResource("4_yaisj")
 bus = &"SFX"
 script = ExtResource("3_eng")
 loop = true
+
+[node name="BowlingCrash" type="AudioStreamPlayer" parent="Sounds" unique_id=1740217947]
+unique_name_in_owner = true
+stream = ExtResource("6_201by")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="Countdown5Sec" type="AudioStreamPlayer" parent="Sounds" unique_id=573070884]
+unique_name_in_owner = true
+stream = ExtResource("7_qquof")
+volume_db = -8.0
+bus = &"Menu"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="CountdownLoop" type="AudioStreamPlayer" parent="Sounds" unique_id=1265527518]
+unique_name_in_owner = true
+stream = ExtResource("8_vradv")
+volume_db = -5.0
+bus = &"Menu"
+script = ExtResource("2_snd")
+loop = true
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="MenuClick" type="AudioStreamPlayer" parent="Sounds" unique_id=563181317]
+unique_name_in_owner = true
+stream = ExtResource("9_ydcbx")
+volume_db = -5.0
+bus = &"Menu"
+script = ExtResource("2_snd")
+loop = true
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="MenuErr" type="AudioStreamPlayer" parent="Sounds" unique_id=532610252]
+unique_name_in_owner = true
+stream = ExtResource("10_2b6dx")
+volume_db = -5.0
+bus = &"Menu"
+script = ExtResource("2_snd")
+loop = true
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="Maximize" type="AudioStreamPlayer" parent="Sounds" unique_id=2122922895]
+unique_name_in_owner = true
+stream = ExtResource("11_tqr3v")
+volume_db = -5.0
+bus = &"Menu"
+script = ExtResource("2_snd")
+loop = true
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="Minimize" type="AudioStreamPlayer" parent="Sounds" unique_id=1812486721]
+unique_name_in_owner = true
+stream = ExtResource("12_nbuvf")
+volume_db = -5.0
+bus = &"Menu"
+script = ExtResource("2_snd")
+loop = true
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="MouseClick" type="AudioStreamPlayer" parent="Sounds" unique_id=965558797]
+unique_name_in_owner = true
+stream = ExtResource("13_tqr3v")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="ClunkGearChange" type="AudioStreamPlayer" parent="Sounds" unique_id=1813774597]
+unique_name_in_owner = true
+stream = ExtResource("14_nbuvf")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
