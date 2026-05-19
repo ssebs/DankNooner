@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://managers/gamemodes/resources/gamemode_event_definition.gd" id="4_dr5sf"]
 [ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="4_yaxf8"]
 [ext_resource type="Script" uid="uid://cks7nbapumc55" path="res://managers/gamemodes/tasks/speed_above_task.gd" id="7_spd"]
+[ext_resource type="Script" uid="uid://1hiltkmgy4i3" path="res://managers/gamemodes/runners/concurrent_task_runner.gd" id="8_cf4ia"]
 [ext_resource type="Script" uid="uid://cw2cdgs7dv7ww" path="res://managers/gamemodes/tasks/close_help_task.gd" id="8_hlp"]
 [ext_resource type="Script" uid="uid://8xvij2vjrnn2" path="res://managers/gamemodes/tasks/countdown_task.gd" id="9_7dagn"]
 [ext_resource type="Script" uid="uid://c4b6sy0eliiac" path="res://managers/gamemodes/tasks/teleport_task.gd" id="9_ccoso"]
@@ -1731,23 +1732,19 @@ start_marker = NodePath("../Stuff/Tut01Location/Tutorial01StartMarker")
 script = ExtResource("13_runner")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="SFXTask" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=1939024796]
+[node name="ConcurrentTaskRunner" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=894900473]
+script = ExtResource("8_cf4ia")
+
+[node name="CountdownTask" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=799982134]
+script = ExtResource("9_7dagn")
+seconds = 5.0
+metadata/_custom_type_script = "uid://8xvij2vjrnn2"
+
+[node name="SFXTask" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1939024796]
 script = ExtResource("9_whmyo")
 sound = 2
-advance_mode = 2
-metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
-
-[node name="SpeedAbove_PressRT_Test" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=1555755808]
-script = ExtResource("7_spd")
-min_speed = 2.0
-objective_key = "TUT_PRESS_RT"
-hint_key = "TUT_HINT_PRESS_RT"
-
-[node name="SFXTask2" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=1434665536]
-script = ExtResource("9_whmyo")
-sound = 3
 advance_mode = 1
-duration_sec = 2.0
+duration_sec = 5.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
 [node name="Tutorial01EventStartCircle2" parent="." unique_id=459761741 node_paths=PackedStringArray("start_marker") instance=ExtResource("3_ffs5v")]
@@ -1759,9 +1756,19 @@ start_marker = NodePath("../Stuff/Tut01Location/Tutorial01StartMarker")
 script = ExtResource("13_runner")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="CountdownStep1" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=1010143940]
+[node name="ConcurrentTaskRunner" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=2080321246]
+script = ExtResource("8_cf4ia")
+
+[node name="CountdownStep1" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1010143940]
 script = ExtResource("9_7dagn")
 seconds = 2.0
+
+[node name="SFXTask" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=463781277]
+script = ExtResource("9_whmyo")
+sound = 3
+advance_mode = 1
+duration_sec = 2.0
+metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
 [node name="CloseHelp_ShowHelp" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=710662388]
 script = ExtResource("8_hlp")
@@ -1793,10 +1800,6 @@ script = ExtResource("12_25rwx")
 eval_when = 1
 trigger = NodePath("../../../Stuff/Tut01Location/CheckpointMarker2")
 metadata/_custom_type_script = "uid://c22suxxblut73"
-
-[node name="CountdownStep" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=1553828756]
-script = ExtResource("9_7dagn")
-seconds = 1.0
 
 [node name="Teleport_step" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=146409448 node_paths=PackedStringArray("marker")]
 script = ExtResource("9_ccoso")

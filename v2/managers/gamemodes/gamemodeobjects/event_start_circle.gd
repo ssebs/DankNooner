@@ -25,10 +25,10 @@ func _ready():
 ## Runners are children of this circle, in tree order. Other children
 ## (Marker3D, CheckpointMarker, TriggerZone) are ignored — they're referenced
 ## by individual tasks via @export.
-func get_runners() -> Array[SequentialTaskRunner]:
-	var out: Array[SequentialTaskRunner] = []
+func get_runners() -> Array[TaskRunner]:
+	var out: Array[TaskRunner] = []
 	for c in get_children():
-		if c is SequentialTaskRunner:
+		if c is TaskRunner:
 			out.append(c)
 	return out
 

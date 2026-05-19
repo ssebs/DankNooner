@@ -7,21 +7,7 @@
 ##
 ## A SequentialTaskRunner IS a GameModeTask (composite pattern) — it can be
 ## nested inside another runner as one "step."
-class_name SequentialTaskRunner extends GameModeTask
-
-## Per-peer respawn override set by TeleportTask. Forwarded to the gamemode
-## via `respawn_requested` so the gamemode owns the actual respawn timer.
-signal respawn_requested(peer_id: int, marker: Marker3D)
-
-## Shared deps for child tasks. Tasks reach them via `_runner.spawn_manager` /
-## `_runner.task_hud` instead of downcasting to a specific gamemode.
-##
-## Set by the host gamemode (or a parent runner, for nested cases) before
-## `start()`. Not @exported because the runner lives in a level scene while the
-## managers live in main_game.tscn — cross-scene NodePaths would be fragile.
-var spawn_manager: SpawnManager
-var task_hud: TutorialHUD
-var audio_manager: AudioManager
+class_name SequentialTaskRunner extends TaskRunner
 
 var _player_states: Dictionary[int, PlayerTaskState] = {}
 var _tasks: Array[GameModeTask] = []
@@ -29,12 +15,11 @@ var _respawn_overrides: Dictionary[int, Marker3D] = {}
 var _wired_callables: Array = []
 var _running: bool = false
 
-## When the per-peer walk lands on a child that is itself a SequentialTaskRunner,
-## peers park at that index. Once all non-completed peers are parked there, we
-## start the nested runner and wait for its `all_completed` before advancing.
-var _nested_runner: SequentialTaskRunner
+## When the per-peer walk lands on a child that is itself a TaskRunner, peers
+## park at that index. Once all non-completed peers are parked there, we start
+## the nested runner and wait for its `all_completed` before advancing.
+var _nested_runner: TaskRunner
 var _nested_runner_index: int = -1
-
 
 #region Composite API
 
@@ -53,7 +38,7 @@ func start(peer_ids: Array) -> void:
 	for task in _tasks:
 		task._runner = self
 		# Propagate shared deps into nested runners so they don't need wiring.
-		if task is SequentialTaskRunner:
+		if task is TaskRunner:
 			task.spawn_manager = spawn_manager
 			task.task_hud = task_hud
 			task.audio_manager = audio_manager
@@ -154,7 +139,7 @@ func _collect_tasks() -> void:
 func _update_player(peer_id: int, state: PlayerTaskState, delta: float) -> void:
 	var task := _tasks[state.current_index]
 	# Peer is parked at a nested-runner gate — _try_start_nested_runner handles it.
-	if task is SequentialTaskRunner:
+	if task is TaskRunner:
 		return
 
 	# Player may not be spawned yet during late-join sync — skip is intentional
@@ -229,17 +214,13 @@ func _start_step_for_all() -> void:
 func _start_step_for_peer(peer_id: int, state: PlayerTaskState) -> void:
 	var task := _tasks[state.current_index]
 	# Nested runner — peer just parks here; the runner pushes its own HUD when it starts.
-	if task is SequentialTaskRunner:
+	if task is TaskRunner:
 		return
 	# Player may not be spawned yet during late-join sync — pass null is intentional
 	var player := spawn_manager._get_player_by_peer_id(peer_id)
 	task.on_enter(player, state.lesson_state)
 	task_hud.rpc_show_step.rpc_id(
-		peer_id,
-		state.current_index,
-		_tasks.size(),
-		task.get_objective_text(),
-		task.get_hint_text()
+		peer_id, state.current_index, _tasks.size(), task.get_objective_text(), task.get_hint_text()
 	)
 
 
@@ -248,9 +229,9 @@ func _start_step_for_peer(peer_id: int, state: PlayerTaskState) -> void:
 #region Nested runner gate
 
 
-## Starts a nested SequentialTaskRunner child once every non-completed peer has
-## advanced to its index. Sequential semantics: the gate blocks until everyone
-## has finished the preceding leaf tasks.
+## Starts a nested TaskRunner child once every non-completed peer has advanced
+## to its index. Sequential semantics: the gate blocks until everyone has
+## finished the preceding leaf tasks.
 func _try_start_nested_runner() -> void:
 	if _nested_runner != null:
 		return
@@ -260,7 +241,7 @@ func _try_start_nested_runner() -> void:
 		var s := _player_states[peer_id]
 		if s.completed:
 			continue
-		if _tasks[s.current_index] is SequentialTaskRunner:
+		if _tasks[s.current_index] is TaskRunner:
 			if gate_index == -1:
 				gate_index = s.current_index
 			elif s.current_index != gate_index:
@@ -272,7 +253,7 @@ func _try_start_nested_runner() -> void:
 			return
 	if gate_index == -1 or peers_at_gate.is_empty():
 		return
-	_nested_runner = _tasks[gate_index] as SequentialTaskRunner
+	_nested_runner = _tasks[gate_index] as TaskRunner
 	_nested_runner_index = gate_index
 	_nested_runner.all_completed.connect(_on_nested_runner_completed)
 	_nested_runner.respawn_requested.connect(_forward_nested_respawn)
@@ -369,8 +350,6 @@ func _on_trigger_exited(player: PlayerEntity, obj: GameModeObject) -> void:
 	if task.eval_when == GameModeTask.EvalWhen.WHILE_INSIDE:
 		state.inside_zone = false
 
-
 #endregion
-
 
 ## Deps are injected by the host gamemode at runtime — no editor-time check.

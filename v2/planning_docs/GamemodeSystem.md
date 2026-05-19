@@ -6,7 +6,9 @@
 - **`GamemodeManager`** (`managers/gamemodes/gamemode_manager.gd`) — owns the state machine, match state, late-joiner sync. Maps `Kind` → `GameModeType` instance.
 - **`GameModeEventDefinition`** (`managers/gamemodes/resources/gamemode_event_definition.gd`) — `Resource`. Metadata about a single event: display name/description, `target_gamemode` (a `Kind`), `event_type` (`SEQUENTIAL` / `CONCURRENT` — flag only, runners enforce the actual semantics).
 - **`GameModeTask`** (`managers/gamemodes/tasks/gamemode_task.gd`) — base class for both leaf tasks and runners (composite pattern). Has `eval_when: ALWAYS | ON_ENTER | WHILE_INSIDE` and an optional `trigger: GameModeObject`. Leaf subclasses (`countdown_task`, `speed_above_task`, `wheelie_duration_task`, `stoppie_duration_task`, `change_gear_task`, `checkpoint_task`, `teleport_task`, `close_help_task`) override `on_enter / check / on_exit / get_progress / get_objective_text / get_hint_text`. Holds a `_runner` ref set by the parent runner — leaf tasks reach shared deps via `_runner.spawn_manager` / `_runner.task_hud` rather than downcasting to a specific gamemode.
-- **`SequentialTaskRunner`** (`managers/gamemodes/runners/sequential_task_runner.gd`) — composite `GameModeTask`. Walks its child `GameModeTask`s one per peer, owns per-peer state, eval_when dispatch, and trigger wiring. Supports nesting: a child that is itself a `SequentialTaskRunner` acts as a gate — peers park at it, runner starts once all non-completed peers reach it, parent advances them past it on `all_completed`.
+- **`TaskRunner`** (`managers/gamemodes/runners/task_runner.gd`) — base class for composite runners. Holds the shared deps (`spawn_manager`, `task_hud`, `audio_manager`) and the `respawn_requested` signal so leaf tasks can address them via `_runner.<dep>` regardless of which runner subclass owns them. Don't instantiate directly — use `SequentialTaskRunner` or `ConcurrentTaskRunner`.
+- **`SequentialTaskRunner`** (`managers/gamemodes/runners/sequential_task_runner.gd`) — `TaskRunner` that walks its child `GameModeTask`s one at a time per peer. Owns per-peer state, eval_when dispatch, and trigger wiring. Supports nesting: a child that is itself a `TaskRunner` (sequential or concurrent) acts as a gate — peers park at it, runner starts once all non-completed peers reach it, parent advances them past it on `all_completed`.
+- **`ConcurrentTaskRunner`** (`managers/gamemodes/runners/concurrent_task_runner.gd`) — `TaskRunner` that runs every child `GameModeTask` in parallel per peer. Each child's `on_enter` fires immediately; each `check()` ticks every frame until it returns true; peer completes when every child reports done. Trigger gating is NOT supported — children must use `eval_when = ALWAYS`. Nest a `SequentialTaskRunner` inside if you need trigger-gated steps. Exposes `@export var objective_text` / `hint_text` for the runner-level HUD line (individual children's `get_objective_text()` is ignored).
 - **`PlayerTaskState`** (`managers/gamemodes/runners/player_task_state.gd`) — per-peer runner state (`current_index`, `completed`, `start_time`, `completion_time_ms`, `lesson_state` scratchpad, `prop_event_fired` / `inside_zone` trigger gates).
 - **`GameModeObject`** (`managers/gamemodes/gamemodeobjects/gamemode_object.gd`) — base for level-authored props (rings, gates, checkpoints, killboxes, trigger zones). Dumb props — emit signals, `activate`/`deactivate`, never decide completion.
 - **`EventStartCircle`** (`managers/gamemodes/gamemodeobjects/event_start_circle.gd`) — level-placed `Area3D` carrying a `GameModeEventDefinition`, a `start_marker`, and one or more `SequentialTaskRunner` children. Entering it raises the confirm HUD in free roam. Exposes `get_runners()`.
@@ -24,7 +26,7 @@ managers/gamemodes/
     tutorial/                 # tutorial_gamemode.gd, tutorial_hud.{gd,tscn}
     street_race/street_race_gamemode.gd
   runners/
-    sequential_task_runner.gd
+    task_runner.gd  sequential_task_runner.gd  concurrent_task_runner.gd
     player_task_state.gd
   tasks/
     gamemode_task.gd
@@ -59,7 +61,7 @@ EventStartCircle
 └── SequentialTaskRunner            (race overall)
     ├── TeleportTask                (intro)
     ├── CountdownTask
-    ├── ConcurrentTaskRunner        (race body — TBD, same outer contract)
+    ├── ConcurrentTaskRunner        (race body — all children run in parallel)
     │   ├── CheckLapsTask
     │   ├── CheckPlaceTask
     │   └── OutOfBoundsTask

@@ -10,8 +10,8 @@ class_name TutorialGameMode extends GameModeType
 @export var help_menu_state: HelpMenuState
 
 var _start_circle: EventStartCircle
-var _runners: Array[SequentialTaskRunner] = []
-var _active_runner: SequentialTaskRunner
+var _runners: Array[TaskRunner] = []
+var _active_runner: TaskRunner
 var _active_runner_index: int = -1
 var _respawn_delay: float = 3.0
 var _results_countdown: float = -1.0
@@ -108,7 +108,7 @@ func _on_runner_all_completed():
 		_start_next_runner()
 
 
-func _disconnect_runner(runner: SequentialTaskRunner):
+func _disconnect_runner(runner: TaskRunner):
 	if runner.all_completed.is_connected(_on_runner_all_completed):
 		runner.all_completed.disconnect(_on_runner_all_completed)
 	if runner.respawn_requested.is_connected(_on_runner_respawn_requested):
@@ -130,13 +130,13 @@ func _inject_runner_deps():
 		_inject_task_deps(runner)
 
 
-func _inject_task_deps(runner: SequentialTaskRunner):
+func _inject_task_deps(runner: TaskRunner):
 	for child in runner.get_children():
 		if child is CloseHelpTask:
 			child.input_state_manager = input_state_manager
 			child.menu_manager = menu_manager
 			child.help_menu_state = help_menu_state
-		elif child is SequentialTaskRunner:
+		elif child is TaskRunner:
 			_inject_task_deps(child)
 
 
@@ -170,12 +170,12 @@ func _update_results_countdown(delta: float) -> bool:
 	return true
 
 
-func _show_results(runner: SequentialTaskRunner):
+func _show_results(runner: TaskRunner):
 	var rows: Array[Dictionary] = []
 	for peer_id in runner._player_states:
-		var state := runner._player_states[peer_id]
+		var state = runner._player_states[peer_id] as PlayerTaskState
 		var username: String = lobby_manager.lobby_players[peer_id].username
-		var time_sec := state.completion_time_ms / 1000.0
+		var time_sec: float = state.completion_time_ms / 1000.0
 		(
 			rows
 			. append(
