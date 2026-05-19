@@ -89,7 +89,7 @@ See the `GameModeTask` file header for the full contract.
 
 - Runners and `CloseHelpTask` declare plain `var` (not `@export`) fields.
 - `TutorialGameMode.Enter()` calls `_inject_runner_deps()` which walks every runner (recursively into nested runners) and sets:
-  - `runner.spawn_manager`, `runner.task_hud` on each runner.
+  - `runner.spawn_manager`, `runner.task_hud`, `runner.audio_manager` on each runner.
   - `task.input_state_manager`, `task.menu_manager`, `task.help_menu_state` on each `CloseHelpTask`.
 - Nested runners receive the same deps from their parent runner inside `SequentialTaskRunner.start()` — they propagate automatically once the outermost runner is wired.
 
