@@ -6,6 +6,7 @@ class_name TutorialGameMode extends GameModeType
 @export var input_state_manager: InputStateManager
 @export var lobby_manager: LobbyManager
 @export var menu_manager: MenuManager
+@export var audio_manager: AudioManager
 @export var help_menu_state: HelpMenuState
 
 var _start_circle: EventStartCircle
@@ -125,6 +126,7 @@ func _inject_runner_deps():
 	for runner in _runners:
 		runner.spawn_manager = spawn_manager
 		runner.task_hud = tutorial_hud
+		runner.audio_manager = audio_manager
 		_inject_task_deps(runner)
 
 
@@ -174,12 +176,15 @@ func _show_results(runner: SequentialTaskRunner):
 		var state := runner._player_states[peer_id]
 		var username: String = lobby_manager.lobby_players[peer_id].username
 		var time_sec := state.completion_time_ms / 1000.0
-		rows.append(
-			{
-				"Username": username,
-				"Time": "%.1fs" % time_sec,
-				"_sort_key": state.completion_time_ms,
-			}
+		(
+			rows
+			. append(
+				{
+					"Username": username,
+					"Time": "%.1fs" % time_sec,
+					"_sort_key": state.completion_time_ms,
+				}
+			)
 		)
 	rows.sort_custom(func(a, b): return a["_sort_key"] < b["_sort_key"])
 
@@ -257,6 +262,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("lobby_manager must not be empty")
 	if menu_manager == null:
 		issues.append("menu_manager must not be empty")
+	if audio_manager == null:
+		issues.append("audio_manager must not be empty")
 	if help_menu_state == null:
 		issues.append("help_menu_state must not be empty")
 

@@ -200,13 +200,14 @@ spawn_manager = NodePath("../../../SpawnManager")
 [node name="GameModeEventConfirmHUD" parent="ManagerManager/GamemodeManager/StateMachine/FreeRoamGameMode" unique_id=844708804 node_paths=PackedStringArray("input_state_manager") instance=ExtResource("26_u7wvl")]
 input_state_manager = NodePath("../../../../InputStateManager")
 
-[node name="TutorialGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1184474950 node_paths=PackedStringArray("tutorial_hud", "results_hud", "input_state_manager", "lobby_manager", "menu_manager", "help_menu_state", "gamemode_manager", "spawn_manager")]
+[node name="TutorialGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1184474950 node_paths=PackedStringArray("tutorial_hud", "results_hud", "input_state_manager", "lobby_manager", "menu_manager", "audio_manager", "help_menu_state", "gamemode_manager", "spawn_manager")]
 script = ExtResource("27_8slmw")
 tutorial_hud = NodePath("TutorialHUD")
 results_hud = NodePath("ResultsHUD")
 input_state_manager = NodePath("../../../InputStateManager")
 lobby_manager = NodePath("../../../LobbyManager")
 menu_manager = NodePath("../../../MenuManager")
+audio_manager = NodePath("../../../AudioManager")
 help_menu_state = NodePath("../../../MenuManager/StateMachine/HelpMenuState")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")

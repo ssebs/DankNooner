@@ -21,6 +21,7 @@ signal respawn_requested(peer_id: int, marker: Marker3D)
 ## managers live in main_game.tscn — cross-scene NodePaths would be fragile.
 var spawn_manager: SpawnManager
 var task_hud: TutorialHUD
+var audio_manager: AudioManager
 
 var _player_states: Dictionary[int, PlayerTaskState] = {}
 var _tasks: Array[GameModeTask] = []
@@ -55,6 +56,7 @@ func start(peer_ids: Array) -> void:
 		if task is SequentialTaskRunner:
 			task.spawn_manager = spawn_manager
 			task.task_hud = task_hud
+			task.audio_manager = audio_manager
 	if multiplayer.is_server():
 		_wire_objective_signals()
 	_running = true
