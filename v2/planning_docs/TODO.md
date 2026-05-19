@@ -14,7 +14,13 @@
 
 ### WIP
 - [ ] Cleanup gamemode objective / review code
-  - [ ] See scratchpad.md
+  - [x] See scratchpad.md
+  - [ ] create PLAN.md
+  - [ ] Code / refactor
+  - [ ] Update GamemodeSystem.md
+
+## HI-PRI‼️
+
 - [ ] add option to play / stop sound for `GameModeObjective`
   - [ ] Countdown sfx
 
@@ -35,9 +41,6 @@
     - [ ] duplicate logic
     - [ ] missing _get_configuration_warnings
     - [ ] todos & dead code
-
-## HI-PRI‼️
-
 - [ ] Finish tutorial:
   - [ ] Make tutorial part of map, diff circles do diff events
   - [ ] explain RPM vs wheelies in tutorial, balance point
