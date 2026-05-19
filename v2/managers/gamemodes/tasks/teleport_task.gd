@@ -9,10 +9,9 @@ class_name TeleportTask extends GameModeTask
 
 
 func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
-	var tut := _gamemode as TutorialGameMode
 	var peer_id := int(player.name)
-	tut.set_respawn_marker(peer_id, marker)
-	tut.spawn_manager.respawn_player_at.rpc(peer_id, marker.global_position, marker.global_basis)
+	_runner.set_respawn_marker(peer_id, marker)
+	_runner.spawn_manager.respawn_player_at.rpc(peer_id, marker.global_position, marker.global_basis)
 
 
 func check(_player: PlayerEntity, _delta: float, _state: Dictionary) -> bool:

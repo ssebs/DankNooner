@@ -15,14 +15,16 @@
 ### WIP
 - [ ] Cleanup gamemode objective / review code
   - [x] See scratchpad.md
-  - [ ] create PLAN.md
-  - [ ] Code / refactor
+  - [x] create PLAN.md
+  - [x] Code / refactor
   - [ ] Update GamemodeSystem.md
 
 ## HI-PRI‼️
 
-- [ ] add option to play / stop sound for `GameModeObjective`
+- [ ] add option to play / stop sound for `GameModeTask`
   - [ ] Countdown sfx
+
+- [ ] crashing during mid tutorial respawns you at first location instead of TP location
 
 - [ ] Manually cleanup @animation_controller.gd
   - [ ] e.g. creating a new trick goes from trick_controller to 4 places in anim controller, lots of duplication
