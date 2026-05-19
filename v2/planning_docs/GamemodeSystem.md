@@ -1,65 +1,98 @@
 # Gamemode System
 
-How `FreeRoamGameMode`, `TutorialGameMode`, `StreetRaceGameMode` (and future event-driven modes) hang together. For *authoring* a tutorial / event content, see [GamemodeEventAndGameModeLessonAndTutorial](./GamemodeEventAndGameModeLessonAndTutorial.md).
+## Class taxonomy
 
-## Pieces
+- **`GameModeType`** (`managers/gamemodes/gamemode.gd`) — base class for a gamemode. Subclasses live under `managers/gamemodes/types/` (`FreeRoamGameMode`, `StreetRaceGameMode`, `TutorialGameMode`). The `Kind` enum on this class is the canonical gamemode identifier (`GameModeType.Kind.TUTORIAL`, etc.).
+- **`GamemodeManager`** (`managers/gamemodes/gamemode_manager.gd`) — owns the state machine, match state, late-joiner sync. Maps `Kind` → `GameModeType` instance.
+- **`GameModeEventDefinition`** (`managers/gamemodes/resources/gamemode_event_definition.gd`) — `Resource`. Metadata about a single event: display name/description, `target_gamemode` (a `Kind`), `event_type` (`SEQUENTIAL` / `CONCURRENT` — flag only, runners enforce the actual semantics).
+- **`GameModeTask`** (`managers/gamemodes/tasks/gamemode_task.gd`) — base class for both leaf tasks and runners (composite pattern). Has `eval_when: ALWAYS | ON_ENTER | WHILE_INSIDE` and an optional `trigger: GameModeObject`. Leaf subclasses (`countdown_task`, `speed_above_task`, `wheelie_duration_task`, `stoppie_duration_task`, `change_gear_task`, `checkpoint_task`, `teleport_task`, `close_help_task`) override `on_enter / check / on_exit / get_progress / get_objective_text / get_hint_text`. Holds a `_runner` ref set by the parent runner — leaf tasks reach shared deps via `_runner.spawn_manager` / `_runner.task_hud` rather than downcasting to a specific gamemode.
+- **`TaskRunner`** (`managers/gamemodes/runners/task_runner.gd`) — base class for composite runners. Holds the shared deps (`spawn_manager`, `task_hud`, `audio_manager`) and the `respawn_requested` signal so leaf tasks can address them via `_runner.<dep>` regardless of which runner subclass owns them. Don't instantiate directly — use `SequentialTaskRunner` or `ConcurrentTaskRunner`.
+- **`SequentialTaskRunner`** (`managers/gamemodes/runners/sequential_task_runner.gd`) — `TaskRunner` that walks its child `GameModeTask`s one at a time per peer. Owns per-peer state, eval_when dispatch, and trigger wiring. Supports nesting: a child that is itself a `TaskRunner` (sequential or concurrent) acts as a gate — peers park at it, runner starts once all non-completed peers reach it, parent advances them past it on `all_completed`.
+- **`ConcurrentTaskRunner`** (`managers/gamemodes/runners/concurrent_task_runner.gd`) — `TaskRunner` that runs every child `GameModeTask` in parallel per peer. Each child's `on_enter` fires immediately; each `check()` ticks every frame until it returns true; peer completes when every child reports done. Trigger gating is NOT supported — children must use `eval_when = ALWAYS`. Nest a `SequentialTaskRunner` inside if you need trigger-gated steps. Exposes `@export var objective_text` / `hint_text` for the runner-level HUD line (individual children's `get_objective_text()` is ignored).
+- **`PlayerTaskState`** (`managers/gamemodes/runners/player_task_state.gd`) — per-peer runner state (`current_index`, `completed`, `start_time`, `completion_time_ms`, `lesson_state` scratchpad, `prop_event_fired` / `inside_zone` trigger gates).
+- **`GameModeObject`** (`managers/gamemodes/gamemodeobjects/gamemode_object.gd`) — base for level-authored props (rings, gates, checkpoints, killboxes, trigger zones). Dumb props — emit signals, `activate`/`deactivate`, never decide completion.
+- **`EventStartCircle`** (`managers/gamemodes/gamemodeobjects/event_start_circle.gd`) — level-placed `Area3D` carrying a `GameModeEventDefinition`, a `start_marker`, and one or more `SequentialTaskRunner` children. Entering it raises the confirm HUD in free roam. Exposes `get_runners()`.
+- **`GamemodeStateContext`** (`managers/gamemodes/gamemode_state_context.gd`) — `StateContext` subclass carrying `peer_id`, `gamemode_event`, `event_start_circle` across state transitions.
 
-| Piece | File | Role |
-|---|---|---|
-| `GamemodeManager` | `managers/gamemodes/gamemode_manager.gd` | Match state, `TGameMode` enum, hosts the gamemode state machine, late-joiner sync |
-| `GameMode` (base) | `managers/gamemodes/gamemode.gd` | `State` subclass; server-authoritative |
-| `FreeRoamGameMode` | `.../free_roam/` | Default mode. Wires event circles → confirm HUD → transition |
-| `TutorialGameMode` | `.../tutorial/` | Walks `EventStartCircle.get_objectives()` per peer; per-step `GameModeObjective.check()` |
-| `StreetRaceGameMode` | `.../street_race/` | Stub — will use the same `GameModeObjective` shape for laps/checkpoints |
-| `GameModeEventConfirmHUD` | `managers/gamemodes/hud/` | Per-peer RPC'd confirm dialog |
-| `GamemodeStateContext` | `utils/state_machine/` | Carries `peer_id`, `gamemode_event`, `event_start_circle` through transitions |
+## Folder layout
 
-`TGameMode`: `FREE_FROAM, STREET_RACE, STUNT_RACE, TUTORIAL`. `_gamemode_map` in `GamemodeManager` wires the enum to the `GameMode` node instances exported on the manager.
+```
+managers/gamemodes/
+  gamemode.gd                 # GameModeType + Kind enum
+  gamemode_manager.gd
+  gamemode_state_context.gd
+  types/
+    free_roam/free_roam_gamemode.gd
+    tutorial/                 # tutorial_gamemode.gd, tutorial_hud.{gd,tscn}
+    street_race/street_race_gamemode.gd
+  runners/
+    task_runner.gd  sequential_task_runner.gd  concurrent_task_runner.gd
+    player_task_state.gd
+  tasks/
+    gamemode_task.gd
+    countdown_task.gd  teleport_task.gd  speed_above_task.gd
+    change_gear_task.gd  close_help_task.gd  checkpoint_task.gd
+    wheelie_duration_task.gd  stoppie_duration_task.gd
+  gamemodeobjects/
+    gamemode_object.gd  event_start_circle.{gd,tscn}
+    checkpoint_marker.{gd,tscn}  killbox.{gd,tscn}  trigger_zone.{gd,tscn}
+  resources/
+    gamemode_event_definition.gd
+  hud/                        # game_mode_event_confirm_hud, results_hud
+```
 
-## Lobby integration
+## Scene shape
 
-The lobby is *the* shared roster. All event-mode logic reads from it; nothing else maintains a player list.
+An `EventStartCircle` owns one or more `SequentialTaskRunner` children. Each runner owns its `GameModeTask` children (leaves or nested runners). Tutorial today uses a single runner:
 
-- `LobbyManager.lobby_players: Dictionary[int, PlayerDefinition]` — peer_id → player def. Server-owned, broadcast via `_sync_lobby_players`.
-- `lobby_players_updated` signal — `SpawnManager` listens and adjusts spawn/despawn.
-- Every event-driven gamemode iterates `lobby_manager.lobby_players` to build per-peer state, teleport players, gate input, and tally results. Tutorial does this in `_build_player_states()` / `_teleport_players_to_start()` / `_set_all_players_input_disabled()`.
-- Players who join mid-event come through `player_latejoined` (see below) and are appended to the existing per-peer state on the fly.
+```
+EventStartCircle
+└── SequentialTaskRunner
+    ├── CountdownTask
+    ├── CloseHelpTask
+    ├── SpeedAboveTask
+    └── ...
+```
 
-When the gamemode is over, `_return_to_free_roam()` flips everyone back via `_rpc_transition_gamemode.rpc(FREE_FROAM, peer_id)`. The lobby roster is unchanged — only the active state on each peer's machine.
+A future race can mix runners — outer sequential with a concurrent body:
 
-## Authority
+```
+EventStartCircle
+└── SequentialTaskRunner            (race overall)
+    ├── TeleportTask                (intro)
+    ├── CountdownTask
+    ├── ConcurrentTaskRunner        (race body — all children run in parallel)
+    │   ├── CheckLapsTask
+    │   ├── CheckPlaceTask
+    │   └── OutOfBoundsTask
+    ├── PlayFinishAnimTask          (outro)
+    └── ShowResultsTask
+```
 
-- All event gamemodes are **server-authoritative**. `Update()` early-returns on clients.
-- Transition: client calls `change_gamemode.rpc_id(1, enum, peer_id)` → server fires `_rpc_transition_gamemode.rpc(...)` (`call_local`, reliable) → every peer's state machine transitions in lockstep.
-- `pending_gamemode_event` and `pending_event_start_circle` on `GamemodeManager` are set right before the transition (by free roam on HUD submit) and copied into the new `GamemodeStateContext`. They're one-shot; cleared on read.
+## Flow
 
-## Manager signals (consumed by each GameMode)
+1. **Free roam → event:** player enters an `EventStartCircle`. `FreeRoamGameMode` shows the confirm HUD. On submit it calls `GamemodeManager.change_gamemode(definition.target_gamemode, peer_id)`.
+2. **Transition:** `GamemodeManager` stashes the `GameModeEventDefinition` + `EventStartCircle` on `pending_*` fields and broadcasts `_rpc_transition_gamemode`. Every peer's state machine transitions to the matching `GameModeType` with a populated `GamemodeStateContext`.
+3. **Gamemode enter:** `TutorialGameMode.Enter()` reads `_start_circle.get_runners()`, injects runtime deps (`spawn_manager`, `tutorial_hud` onto each runner; tutorial-specific managers onto `CloseHelpTask` instances — see "Dependency injection" below), teleports all peers to `start_marker`, and starts the first runner.
+4. **Runner walk:** `SequentialTaskRunner.start(peer_ids)` builds `PlayerTaskState` per peer, wires triggers from its leaf children, calls `on_enter` of the first leaf. `Update(delta)` runs `_update_player` per peer: `eval_when` selects continuous (`ALWAYS`), one-shot (`ON_ENTER`), or zone-gated (`WHILE_INSIDE`) evaluation; on `check() == true` the peer advances. Peer completion → `player_completed`; all complete → `all_completed`.
+5. **Nesting gate:** if a leaf advance lands a peer on a child that is itself a `SequentialTaskRunner`, the peer parks. Once all non-completed peers are parked at the same gate index, the parent starts the nested runner with those peers and forwards its `update`/`crash`/`disconnect` calls. On `all_completed` the parent advances every parked peer past the gate.
+6. **Crash respawn:** `TutorialGameMode` listens to `gamemode_manager.player_crashed` and forwards to `runner.notify_crashed(peer_id)`. The runner clears scratchpad, gating, and emits `respawn_requested(peer_id, marker)` (with the per-peer override from `TeleportTask` if set, else `null`). The gamemode owns the actual respawn timer and falls back to `start_marker` when `marker` is null.
+7. **Runner chain & results:** `TutorialGameMode` listens for `all_completed` on the active runner; on signal it advances to the next runner under the circle. On the last runner's completion it builds the `ResultsData` from `runner._player_states`, shows `ResultsHUD`, runs a skip-or-timeout countdown, then transitions back to `FreeRoamGameMode`.
 
-`GamemodeManager` re-emits these for whichever gamemode is active. Connect in `Enter()`, disconnect in `Exit()`.
+## Per-peer scratchpad: `state: Dictionary`
 
-- `player_spawned(peer_id)`
-- `player_crashed(peer_id)` — gamemodes decide respawn policy. FreeRoam: respawn in place after delay. Tutorial: respawn at `start_circle.start_marker` + clear current `lesson_state`.
-- `player_latejoined(peer_id)` — usually forwarded to `gamemode_manager.latespawn_player(peer_id)`.
-- `player_disconnected(peer_id)` — despawn if `IN_GAME`. Event modes also remove the peer from their per-player state dict.
+Each leaf-task hook (`on_enter / check / on_exit / get_progress`) receives a `Dictionary` arg — that peer's `PlayerTaskState.lesson_state`. The runner owns it: cleared on advance to next task and on crash. Tasks pick their own keys; e.g. `StoppieDurationTask` uses `state["t"]` to accumulate elapsed hold time, `ChangeGearTask` uses `state["initial"]` to record the entry gear. Untyped on purpose so each task chooses its own shape.
 
-## Late-joiner sync
+See the `GameModeTask` file header for the full contract.
 
-`GamemodeManager._sync_game_to_late_joiner` (sent by server on client connect when `match_state == IN_GAME`) sets the joiner's level + active gamemode and transitions their state machine. The joiner then RPC's `_request_late_spawn`; the active gamemode handles spawn via `player_latejoined`.
+## Dependency injection
 
-For event modes that hold per-peer state (Tutorial), the joiner's `TutorialPlayerState` is created lazily — currently only via the initial `_build_player_states()`. Late-join into a tutorial mid-run is **not** fully supported (the joiner has no lesson state); they'll spectate until the round ends. Track this when adding new event modes.
+`SequentialTaskRunner` and tutorial-specific tasks (`CloseHelpTask`) live in level scenes; their dependencies (`SpawnManager`, `TutorialHUD`, `MenuManager`, `HelpMenuState`, `InputStateManager`) live in `main_game.tscn`. Cross-scene `@export` NodePaths are fragile, so:
 
-## Adding a new event-driven gamemode
+- Runners and `CloseHelpTask` declare plain `var` (not `@export`) fields.
+- `TutorialGameMode.Enter()` calls `_inject_runner_deps()` which walks every runner (recursively into nested runners) and sets:
+  - `runner.spawn_manager`, `runner.task_hud`, `runner.audio_manager` on each runner.
+  - `task.input_state_manager`, `task.menu_manager`, `task.help_menu_state` on each `CloseHelpTask`.
+- Nested runners receive the same deps from their parent runner inside `SequentialTaskRunner.start()` — they propagate automatically once the outermost runner is wired.
 
-1. Add to `GamemodeManager.TGameMode` enum.
-2. Create `class_name FooGameMode extends GameMode`. Implement `Enter` / `Update` / `Exit`. Guard server-only logic with `multiplayer.is_server()`.
-3. In `Enter`, read `(state_context as GamemodeStateContext).event_start_circle` to get your course root + start marker + objectives.
-4. Add the node under the state machine in `main_game.tscn`, `@export` it on `GamemodeManager`, and register it in `_gamemode_map` in `_ready()`.
-5. Connect `player_crashed` / `player_disconnected` / `player_latejoined` per the policy you want.
-6. To return to free roam: `gamemode_manager._rpc_transition_gamemode.rpc(FREE_FROAM, peer_id)` (see `TutorialGameMode._return_to_free_roam`).
-
-If your new mode doesn't use the objective system (e.g. pure timer or score), skip the `event_start_circle.get_objectives()` part and use whatever per-peer structures you need. The lobby + transition + late-join scaffolding is the same.
-
-## Out of scope
-
-- **Drop-in sessions** (GTA-style): one peer starts a session, others keep riding outside it. Deferred until dedicated servers — peer-to-peer party-within-a-party is awkward.
-- Multiple events per circle with in-circle selection (see TODO on `EventStartCircle.gamemode_event`).
+Things that *are* level-scene-local (markers, triggers, durations, text keys) stay as `@export` on the task node — wired directly inside the level scene.

@@ -13,16 +13,12 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] Cleanup gamemode objective / review code
-  - [x] See scratchpad.md
-  - [ ] create PLAN.md
-  - [ ] Code / refactor
-  - [ ] Update GamemodeSystem.md
 
 ## HI-PRI‼️
 
-- [ ] add option to play / stop sound for `GameModeObjective`
-  - [ ] Countdown sfx
+- [ ] add 3 2 1 countdown from 5 sec clip
+
+- [ ] crashing during mid tutorial respawns you at first location instead of TP location
 
 - [ ] Manually cleanup @animation_controller.gd
   - [ ] e.g. creating a new trick goes from trick_controller to 4 places in anim controller, lots of duplication
@@ -343,6 +339,15 @@ mo) 📋
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Cleanup gamemode objective / review code
+  - [x] See scratchpad.md
+  - [x] create PLAN.md
+  - [x] Code / refactor
+  - [x] Update GamemodeSystem.md
+
+- [x] add option to play / stop sound for `GameModeTask`
+  - [x] Countdown sfx
 
 - [x] Be able to reverse (play animation)
   - [x] Hold clutch, brake to reverse

@@ -18,6 +18,7 @@ DankNooner is a multiplayer motorcycle stunt game built in Godot 4.6 (GDScript).
 - Use `DebugUtils.DebugMsg()` for debug/print statements
 - Don't run `gh` or `git` commands
 - Follow existing patterns, do not add duplicate logic that is found in another file / controller.
+- Do NOT GUESS, VERIFY BY READING EXISTING CODE.
 
 ## Running the Project
 
@@ -83,7 +84,7 @@ See `planning_docs/Skins.md` for details.
 
 ### Gamemode System
 
-- `GamemodeManager` - match state, late-joiner sync, runs a state machine of gamemodes (base `GameMode` → `FreeRoamGameMode`, `StreetRaceGameMode`, `TutorialGameMode`)
+- `GamemodeManager` - match state, late-joiner sync, runs a state machine of gamemodes (base `GameModeType` → `FreeRoamGameMode`, `StreetRaceGameMode`, `TutorialGameMode`)
   - See [GamemodeSystem](./planning_docs/GamemodeSystem.md) and [GameplayAndModes](./planning_docs/GameplayAndModes.md)
 - `SpawnManager` - spawn/despawn RPCs + local player instantiation
 - `SaveManager` - JSON persistence of `PlayerDefinition` (username, skins, etc.)

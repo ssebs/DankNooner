@@ -1,18 +1,21 @@
 [gd_scene format=3 uid="uid://dyrrl34ljb2yd"]
 
 [ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_qt85o"]
-[ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/components/killbox.tscn" id="2_asds5"]
-[ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://managers/gamemodes/components/event_start_circle.tscn" id="3_ffs5v"]
-[ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://resources/events/gamemode_event.gd" id="4_dr5sf"]
-[ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/components/checkpoint_marker.tscn" id="4_yaxf8"]
-[ext_resource type="Script" uid="uid://cks7nbapumc55" path="res://managers/gamemodes/gamemode_objectives/speed_above_obj.gd" id="7_spd"]
-[ext_resource type="Script" uid="uid://cw2cdgs7dv7ww" path="res://managers/gamemodes/gamemode_objectives/close_help_obj.gd" id="8_hlp"]
-[ext_resource type="Script" uid="uid://8xvij2vjrnn2" path="res://managers/gamemodes/gamemode_objectives/countdown_obj.gd" id="9_7dagn"]
-[ext_resource type="Script" uid="uid://c4b6sy0eliiac" path="res://managers/gamemodes/gamemode_objectives/teleport_obj.gd" id="9_ccoso"]
-[ext_resource type="Script" uid="uid://4s0cvl1pm1ae" path="res://managers/gamemodes/gamemode_objectives/change_gear_obj.gd" id="9_gear"]
-[ext_resource type="Script" uid="uid://8jkuycs74mo3" path="res://managers/gamemodes/gamemode_objectives/wheelie_duration_obj.gd" id="10_wh"]
-[ext_resource type="Script" uid="uid://c71ent6f2ecq" path="res://managers/gamemodes/gamemode_objectives/stoppie_duration_obj.gd" id="11_st"]
-[ext_resource type="Script" uid="uid://b40syrl038fb3" path="res://managers/gamemodes/gamemode_objectives/checkpoint_obj.gd" id="12_25rwx"]
+[ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/gamemodeobjects/killbox.tscn" id="2_asds5"]
+[ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.tscn" id="3_ffs5v"]
+[ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://managers/gamemodes/resources/gamemode_event_definition.gd" id="4_dr5sf"]
+[ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="4_yaxf8"]
+[ext_resource type="Script" uid="uid://cks7nbapumc55" path="res://managers/gamemodes/tasks/speed_above_task.gd" id="7_spd"]
+[ext_resource type="Script" uid="uid://1hiltkmgy4i3" path="res://managers/gamemodes/runners/concurrent_task_runner.gd" id="8_cf4ia"]
+[ext_resource type="Script" uid="uid://cw2cdgs7dv7ww" path="res://managers/gamemodes/tasks/close_help_task.gd" id="8_hlp"]
+[ext_resource type="Script" uid="uid://8xvij2vjrnn2" path="res://managers/gamemodes/tasks/countdown_task.gd" id="9_7dagn"]
+[ext_resource type="Script" uid="uid://c4b6sy0eliiac" path="res://managers/gamemodes/tasks/teleport_task.gd" id="9_ccoso"]
+[ext_resource type="Script" uid="uid://4s0cvl1pm1ae" path="res://managers/gamemodes/tasks/change_gear_task.gd" id="9_gear"]
+[ext_resource type="Script" uid="uid://cpdxy3nxph3x0" path="res://managers/gamemodes/tasks/sfx_task.gd" id="9_whmyo"]
+[ext_resource type="Script" uid="uid://8jkuycs74mo3" path="res://managers/gamemodes/tasks/wheelie_duration_task.gd" id="10_wh"]
+[ext_resource type="Script" uid="uid://c71ent6f2ecq" path="res://managers/gamemodes/tasks/stoppie_duration_task.gd" id="11_st"]
+[ext_resource type="Script" uid="uid://b40syrl038fb3" path="res://managers/gamemodes/tasks/checkpoint_task.gd" id="12_25rwx"]
+[ext_resource type="Script" uid="uid://f840hmifnv7g" path="res://managers/gamemodes/runners/sequential_task_runner.gd" id="13_runner"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="17_cf4ia"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2lumj"]
@@ -1725,63 +1728,105 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 81)
 gamemode_event = SubResource("Resource_i711f")
 start_marker = NodePath("../Stuff/Tut01Location/Tutorial01StartMarker")
 
-[node name="SpeedAbove_PressRT_Test" type="Node" parent="Tutorial01EventStartCircle" unique_id=1555755808]
-script = ExtResource("7_spd")
-min_speed = 2.0
-objective_key = "TUT_PRESS_RT"
-hint_key = "TUT_HINT_PRESS_RT"
+[node name="SequentialTaskRunner" type="Node" parent="Tutorial01EventStartCircle" unique_id=2098834758]
+script = ExtResource("13_runner")
+metadata/_custom_type_script = "uid://f840hmifnv7g"
+
+[node name="ConcurrentTaskRunner" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=2080321246]
+script = ExtResource("8_cf4ia")
+
+[node name="CountdownStep1" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1010143940]
+script = ExtResource("9_7dagn")
+seconds = 2.0
+
+[node name="SFXTask" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=463781277]
+script = ExtResource("9_whmyo")
+sound = 3
+advance_mode = 1
+duration_sec = 2.0
+metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
 [node name="Tutorial01EventStartCircle2" parent="." unique_id=459761741 node_paths=PackedStringArray("start_marker") instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 93)
 gamemode_event = SubResource("Resource_asds5")
 start_marker = NodePath("../Stuff/Tut01Location/Tutorial01StartMarker")
 
-[node name="CountdownStep1" type="Node" parent="Tutorial01EventStartCircle2" unique_id=1010143940]
-script = ExtResource("9_7dagn")
-seconds = 2.0
+[node name="SequentialTaskRunner" type="Node" parent="Tutorial01EventStartCircle2" unique_id=1305171110]
+script = ExtResource("13_runner")
+metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="CloseHelp_ShowHelp" type="Node" parent="Tutorial01EventStartCircle2" unique_id=710662388]
+[node name="CloseHelp_ShowHelp" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=710662388]
 script = ExtResource("8_hlp")
 
-[node name="SpeedAbove_PressRT" type="Node" parent="Tutorial01EventStartCircle2" unique_id=1518672603]
+[node name="ConcurrentTaskRunner2" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=894900473]
+script = ExtResource("8_cf4ia")
+
+[node name="CountdownTask" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=799982134]
+script = ExtResource("9_7dagn")
+seconds = 5.0
+metadata/_custom_type_script = "uid://8xvij2vjrnn2"
+
+[node name="SFXTask" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1939024796]
+script = ExtResource("9_whmyo")
+sound = 2
+advance_mode = 1
+duration_sec = 5.0
+metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
+
+[node name="SpeedAbove_PressRT" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=1518672603]
 script = ExtResource("7_spd")
 min_speed = 2.0
 objective_key = "TUT_PRESS_RT"
 hint_key = "TUT_HINT_PRESS_RT"
 
-[node name="SpeedAbove_ReachSpeed" type="Node" parent="Tutorial01EventStartCircle2" unique_id=217992485]
+[node name="SpeedAbove_ReachSpeed" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=217992485]
 script = ExtResource("7_spd")
 
-[node name="ChangeGear" type="Node" parent="Tutorial01EventStartCircle2" unique_id=417285950]
+[node name="ChangeGear" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=417285950]
 script = ExtResource("9_gear")
 
-[node name="Teleport_step2" type="Node" parent="Tutorial01EventStartCircle2" unique_id=550997663 node_paths=PackedStringArray("marker")]
-script = ExtResource("9_ccoso")
-marker = NodePath("../../Stuff/Tut01Location/Tutorial01CheckpointTest")
-
-[node name="EnterCheckpoint1" type="Node" parent="Tutorial01EventStartCircle2" unique_id=1365254219 node_paths=PackedStringArray("trigger")]
-script = ExtResource("12_25rwx")
-eval_when = 1
-trigger = NodePath("../../Stuff/Tut01Location/CheckpointMarker")
-metadata/_custom_type_script = "uid://c22suxxblut73"
-
-[node name="EnterCheckpoint2" type="Node" parent="Tutorial01EventStartCircle2" unique_id=325730336 node_paths=PackedStringArray("trigger")]
-script = ExtResource("12_25rwx")
-eval_when = 1
-trigger = NodePath("../../Stuff/Tut01Location/CheckpointMarker2")
-metadata/_custom_type_script = "uid://c22suxxblut73"
-
-[node name="CountdownStep" type="Node" parent="Tutorial01EventStartCircle2" unique_id=1553828756]
+[node name="CountdownTask" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=686746654]
 script = ExtResource("9_7dagn")
 seconds = 1.0
 show_hud = false
+metadata/_custom_type_script = "uid://8xvij2vjrnn2"
 
-[node name="Teleport_step" type="Node" parent="Tutorial01EventStartCircle2" unique_id=146409448 node_paths=PackedStringArray("marker")]
+[node name="Teleport_step2" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=550997663 node_paths=PackedStringArray("marker")]
 script = ExtResource("9_ccoso")
-marker = NodePath("../../Stuff/Tut01Location/Tutorial01StartMarker")
+marker = NodePath("../../../Stuff/Tut01Location/Tutorial01CheckpointTest")
 
-[node name="WheelieDuration_Wheelie" type="Node" parent="Tutorial01EventStartCircle2" unique_id=2060995372]
+[node name="EnterCheckpoint1" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=1365254219 node_paths=PackedStringArray("trigger")]
+script = ExtResource("12_25rwx")
+eval_when = 1
+trigger = NodePath("../../../Stuff/Tut01Location/CheckpointMarker")
+metadata/_custom_type_script = "uid://c22suxxblut73"
+
+[node name="SFXTask" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=729296987]
+script = ExtResource("9_whmyo")
+sound = 9
+metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
+
+[node name="EnterCheckpoint2" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=325730336 node_paths=PackedStringArray("trigger")]
+script = ExtResource("12_25rwx")
+eval_when = 1
+trigger = NodePath("../../../Stuff/Tut01Location/CheckpointMarker2")
+metadata/_custom_type_script = "uid://c22suxxblut73"
+
+[node name="SFXTask2" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=795043335]
+script = ExtResource("9_whmyo")
+sound = 9
+metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
+
+[node name="Teleport_step" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=146409448 node_paths=PackedStringArray("marker")]
+script = ExtResource("9_ccoso")
+marker = NodePath("../../../Stuff/Tut01Location/Tutorial01StartMarker")
+
+[node name="WheelieDuration_Wheelie" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=2060995372]
 script = ExtResource("10_wh")
 
-[node name="StoppieDuration_Stoppie" type="Node" parent="Tutorial01EventStartCircle2" unique_id=1257142628]
+[node name="Teleport_step3" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=228101148 node_paths=PackedStringArray("marker")]
+script = ExtResource("9_ccoso")
+marker = NodePath("../../../Stuff/Tut01Location/Tutorial01StartMarker")
+
+[node name="StoppieDuration_Stoppie" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=1257142628]
 script = ExtResource("11_st")

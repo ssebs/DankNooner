@@ -13,6 +13,22 @@ const VOLUME_SETTING_MAP: Dictionary = {
 	"music_vol": "Music",
 }
 
+## Generic SFX id for callers (e.g. GameModeTasks) that need to play a sound
+## without holding a typed ref to a specific SoundEvent. Add new entries here
+## and a matching case in `play_sfx()`.
+enum Sfx {
+	STARTUP,
+	BOWLING_CRASH,
+	COUNTDOWN_5SEC,
+	COUNTDOWN_LOOP,
+	MENU_CLICK,
+	MENU_ERR,
+	MAXIMIZE,
+	MINIMIZE,
+	MOUSE_CLICK,
+	CLUNK_GEAR_CHANGE,
+}
+
 # TODO - use InputState to switch which buses are routed where
 
 var sounds_container: Node
@@ -125,6 +141,30 @@ func play_mouse_click():
 
 func play_clunk_gear_change():
 	clunk_gear_change.play()
+
+
+func play_sfx(id: Sfx):
+	get_sound_event(id).play()
+
+
+func stop_sfx(id: Sfx):
+	get_sound_event(id).stop()
+
+
+func get_sound_event(id: Sfx) -> SoundEvent:
+	match id:
+		Sfx.STARTUP: return startup
+		Sfx.BOWLING_CRASH: return bowling_crash
+		Sfx.COUNTDOWN_5SEC: return countdown_5sec
+		Sfx.COUNTDOWN_LOOP: return countdown_loop
+		Sfx.MENU_CLICK: return menu_click
+		Sfx.MENU_ERR: return menu_err
+		Sfx.MAXIMIZE: return maximize
+		Sfx.MINIMIZE: return minimize
+		Sfx.MOUSE_CLICK: return mouse_click
+		Sfx.CLUNK_GEAR_CHANGE: return clunk_gear_change
+	push_error("AudioManager.get_sound_event: unhandled Sfx id %s" % id)
+	return null
 
 
 func stop_all():
