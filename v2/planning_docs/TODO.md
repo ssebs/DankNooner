@@ -13,18 +13,10 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] add `scroll_003.ogg` repeating sfx while counting down before event?
-Stop playing idle sound when crashing, instead play BowlingCrash when crashing
-MenuClick on BTN click
-MenuErr on UIToast.ShowToast
-Maximize on level load, showing pause
-Minimize on main menu load, hiding pause
-
-
+- [ ] Cleanup gamemode objective / review code
+  - [ ] See scratchpad.md
 - [ ] add option to play / stop sound for `GameModeObjective`
   - [ ] Countdown sfx
-
-- [ ] Add grom sound
 
 - [ ] Manually cleanup @animation_controller.gd
   - [ ] e.g. creating a new trick goes from trick_controller to 4 places in anim controller, lots of duplication
@@ -100,6 +92,7 @@ mo) 📋
 - [ ] First launch is v slow ([compiling shaders](https://docs.godotengine.org/en/stable/tutorials/performance/pipeline_compilations.html))
   - [ ] Freezes on my Mac when using exported binary 
 
+- [ ] Add grom sound
 - [ ] Remap controls for leaning back/fwd, use mouse? or arrow keys
 
 - [ ] Improve CrashController
