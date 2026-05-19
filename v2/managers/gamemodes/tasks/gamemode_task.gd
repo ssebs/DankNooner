@@ -25,10 +25,9 @@ enum EvalWhen { ALWAYS, ON_ENTER, WHILE_INSIDE }
 @export var trigger: GameModeObject
 
 ## Set by the parent runner when the task becomes active.
-## Tasks reach shared deps (spawn_manager, task_hud) via this ref instead of
-## downcasting to a specific gamemode.
-var _runner: SequentialTaskRunner
-
+## Tasks reach shared deps (spawn_manager, task_hud, audio_manager) via this ref
+## instead of downcasting to a specific gamemode or runner subclass.
+var _runner: TaskRunner
 
 #region Leaf-task hooks (override in leaf subclasses)
 
