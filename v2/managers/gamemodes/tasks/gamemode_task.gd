@@ -8,7 +8,7 @@
 ##
 ## - eval_when : ALWAYS / ON_ENTER / WHILE_INSIDE
 ## - trigger   : required for ON_ENTER / WHILE_INSIDE — a level-authored GameModeObject
-class_name GameModeObjective extends Node
+class_name GameModeTask extends Node
 
 enum EvalWhen { ALWAYS, ON_ENTER, WHILE_INSIDE }
 
@@ -16,7 +16,7 @@ enum EvalWhen { ALWAYS, ON_ENTER, WHILE_INSIDE }
 @export var trigger: GameModeObject
 
 ## Set by the gamemode on Enter so steps can call back (e.g. server-side ack RPCs).
-var _gamemode: GameMode
+var _gamemode: GameModeType
 
 
 func on_enter(_player: PlayerEntity, _state: Dictionary) -> void:

@@ -1,6 +1,6 @@
 @tool
 ## Hold a stoppie for `duration` seconds.
-class_name StoppieDurationTutorialStep extends GameModeObjective
+class_name StoppieDurationTask extends GameModeTask
 
 @export var duration: float = 0.5
 

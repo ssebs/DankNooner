@@ -1,7 +1,7 @@
 @tool
 ## Completes when the player passes through `trigger` (a CheckPointMarker).
 ## Mode-agnostic — usable from race / trick courses too.
-class_name CheckpointTutorialStep extends GameModeObjective
+class_name CheckpointTask extends GameModeTask
 
 @export var objective_key: String = "TUT_CHECKPOINT"
 @export var hint_key: String = "TUT_HINT_CHECKPOINT"

@@ -4,7 +4,7 @@
 ## Self-contained: holds its own RPCs. Manager refs are pulled from `_gamemode`
 ## (TutorialGameMode) since cross-scene NodePath wiring isn't possible from a
 ## level-authored child.
-class_name CloseHelpTutorialStep extends GameModeObjective
+class_name CloseHelpTask extends GameModeTask
 
 
 func on_enter(player: PlayerEntity, state: Dictionary) -> void:

@@ -84,7 +84,7 @@ See `planning_docs/Skins.md` for details.
 
 ### Gamemode System
 
-- `GamemodeManager` - match state, late-joiner sync, runs a state machine of gamemodes (base `GameMode` → `FreeRoamGameMode`, `StreetRaceGameMode`, `TutorialGameMode`)
+- `GamemodeManager` - match state, late-joiner sync, runs a state machine of gamemodes (base `GameModeType` → `FreeRoamGameMode`, `StreetRaceGameMode`, `TutorialGameMode`)
   - See [GamemodeSystem](./planning_docs/GamemodeSystem.md) and [GameplayAndModes](./planning_docs/GameplayAndModes.md)
 - `SpawnManager` - spawn/despawn RPCs + local player instantiation
 - `SaveManager` - JSON persistence of `PlayerDefinition` (username, skins, etc.)

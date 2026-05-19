@@ -1,5 +1,5 @@
 @tool
-class_name FreeRoamGameMode extends GameMode
+class_name FreeRoamGameMode extends GameModeType
 
 @export var game_mode_event_confirm_hud: GameModeEventConfirmHUD
 
@@ -16,7 +16,7 @@ func Enter(state_context: StateContext):
 	else:
 		_ctx = GamemodeStateContext.new()
 		_ctx.peer_id = multiplayer.get_unique_id()
-	gamemode_manager.current_game_mode = GamemodeManager.TGameMode.FREE_FROAM
+	gamemode_manager.current_game_mode = GameModeType.Kind.FREE_FROAM
 	DebugUtils.DebugMsg("FreeRoam Mode")
 
 	gamemode_manager.player_crashed.connect(_on_player_crashed)

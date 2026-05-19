@@ -1,7 +1,7 @@
 @tool
 ## Player speed (m/s) must exceed `min_speed`. Reused for PRESS_RT (low threshold)
 ## and REACH_SPEED (higher threshold) — text keys are configurable per instance.
-class_name SpeedAboveTutorialStep extends GameModeObjective
+class_name SpeedAboveTask extends GameModeTask
 
 @export var min_speed: float = 20.0
 @export var objective_key: String = "TUT_REACH_SPEED"
