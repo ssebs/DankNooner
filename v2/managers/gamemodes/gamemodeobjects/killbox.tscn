@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bxjk6as3o5j26"]
 
-[ext_resource type="Script" uid="uid://cn6stb5w0757" path="res://managers/gamemodes/components/killbox.gd" id="1_xgkep"]
+[ext_resource type="Script" uid="uid://cn6stb5w0757" path="res://managers/gamemodes/gamemodeobjects/killbox.gd" id="1_xgkep"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_qt85o"]
 

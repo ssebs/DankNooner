@@ -1,6 +1,6 @@
 @tool
 ## Records the player's gear on first eval, completes once it changes.
-class_name ChangeGearTutorialStep extends GameModeObjective
+class_name ChangeGearTask extends GameModeTask
 
 
 func on_enter(_player: PlayerEntity, state: Dictionary) -> void:

@@ -1,5 +1,5 @@
 @tool
-class_name TutorialGameMode extends GameMode
+class_name TutorialGameMode extends GameModeType
 
 @export var tutorial_hud: TutorialHUD
 @export var results_hud: ResultsHUD
@@ -10,9 +10,9 @@ class_name TutorialGameMode extends GameMode
 
 var _player_states: Dictionary[int, TutorialPlayerState] = {}
 var _start_circle: EventStartCircle
-var _objectives: Array[GameModeObjective] = []
+var _tasks: Array[GameModeTask] = []
 var _wired_callables: Array = []  # tracked so we can disconnect on Exit
-## Per-peer respawn override set by TeleportTutorialStep. Falls back to start_marker.
+## Per-peer respawn override set by TeleportTask. Falls back to start_marker.
 var _respawn_overrides: Dictionary[int, Marker3D] = {}
 var _respawn_delay: float = 3.0
 var _results_countdown: float = -1.0
@@ -22,14 +22,14 @@ var _results_countdown_total: float = 10.0
 func Enter(state_context: StateContext):
 	if Engine.is_editor_hint():
 		return
-	gamemode_manager.current_game_mode = GamemodeManager.TGameMode.TUTORIAL
+	gamemode_manager.current_game_mode = GameModeType.Kind.TUTORIAL
 	DebugUtils.DebugMsg("Tutorial Mode")
 
 	var ctx := state_context as GamemodeStateContext
 	_start_circle = ctx.event_start_circle
-	_objectives = _start_circle.get_objectives()  #  - SET THIS IN THE EVENT START CIRCLE
-	for obj in _objectives:
-		obj._gamemode = self
+	_tasks = _start_circle.get_tasks()
+	for task in _tasks:
+		task._gamemode = self
 	_build_player_states()
 	if multiplayer.is_server():
 		_wire_objective_signals()
@@ -80,15 +80,15 @@ func Exit(_state_context: StateContext):
 		input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
 	tutorial_hud.hide()
 	results_hud.hide()
-	for obj in _objectives:
-		obj._gamemode = null
+	for task in _tasks:
+		task._gamemode = null
 	_player_states.clear()
 	_respawn_overrides.clear()
 	_start_circle = null
-	_objectives = []
+	_tasks = []
 
 
-## Called by objectives (e.g. CloseHelpTutorialStep ack RPC) to write into the
+## Called by tasks (e.g. CloseHelpTask ack RPC) to write into the
 ## per-peer scratchpad without coupling the gamemode to the step's logic.
 func mark_objective_state(peer_id: int, key: String, value: Variant):
 	# Player may have disconnected before the ack arrived — skip is intentional
@@ -97,7 +97,7 @@ func mark_objective_state(peer_id: int, key: String, value: Variant):
 	_player_states[peer_id].lesson_state[key] = value
 
 
-## Called by TeleportTutorialStep to set this peer's crash-respawn target for
+## Called by TeleportTask to set this peer's crash-respawn target for
 ## the rest of the tutorial. Subsequent crashes use this instead of start_marker.
 func set_respawn_marker(peer_id: int, marker: Marker3D):
 	_respawn_overrides[peer_id] = marker
@@ -160,7 +160,7 @@ func _update_player_tutorial(peer_id: int, state: TutorialPlayerState, delta: fl
 	if player.is_crashed:
 		return
 
-	var objective := _objectives[state.current_index]
+	var objective := _tasks[state.current_index]
 
 	var progress := objective.get_progress(state.lesson_state)
 	if progress != "":
@@ -176,17 +176,17 @@ func _update_player_tutorial(peer_id: int, state: TutorialPlayerState, delta: fl
 
 ## Decides whether to evaluate this peer's objective this tick, based on the
 ## objective's eval_when policy.
-func _should_eval_predicate(objective: GameModeObjective, state: TutorialPlayerState) -> bool:
+func _should_eval_predicate(objective: GameModeTask, state: TutorialPlayerState) -> bool:
 	match objective.eval_when:
-		GameModeObjective.EvalWhen.ALWAYS:
+		GameModeTask.EvalWhen.ALWAYS:
 			return true
-		GameModeObjective.EvalWhen.ON_ENTER:
+		GameModeTask.EvalWhen.ON_ENTER:
 			# One-shot: gate fired this tick. Evaluated once; flag clears.
 			if state.prop_event_fired:
 				state.prop_event_fired = false
 				return true
 			return false
-		GameModeObjective.EvalWhen.WHILE_INSIDE:
+		GameModeTask.EvalWhen.WHILE_INSIDE:
 			return state.inside_zone
 	return true
 
@@ -196,7 +196,7 @@ func _advance_player_step(peer_id: int, state: TutorialPlayerState):
 	state.lesson_state = {}
 	state.prop_event_fired = false
 	state.inside_zone = false
-	if state.current_index >= _objectives.size():
+	if state.current_index >= _tasks.size():
 		_complete_player(peer_id, state)
 	else:
 		_start_step_for_peer(peer_id, state)
@@ -214,7 +214,7 @@ func _start_step_for_all():
 
 
 func _start_step_for_peer(peer_id: int, state: TutorialPlayerState):
-	var objective := _objectives[state.current_index]
+	var objective := _tasks[state.current_index]
 
 	# Player may not be spawned yet during late-join sync — pass null is intentional
 	var player := spawn_manager._get_player_by_peer_id(peer_id)
@@ -223,7 +223,7 @@ func _start_step_for_peer(peer_id: int, state: TutorialPlayerState):
 	tutorial_hud.rpc_show_step.rpc_id(
 		peer_id,
 		state.current_index,
-		_objectives.size(),
+		_tasks.size(),
 		objective.get_objective_text(),
 		objective.get_hint_text()
 	)
@@ -325,7 +325,7 @@ func _on_player_disconnected(peer_id: int):
 
 func _return_to_free_roam():
 	gamemode_manager._rpc_transition_gamemode.rpc(
-		GamemodeManager.TGameMode.FREE_FROAM, multiplayer.get_unique_id()
+		GameModeType.Kind.FREE_FROAM, multiplayer.get_unique_id()
 	)
 
 
@@ -359,7 +359,7 @@ func _set_all_players_input_disabled(disabled: bool):
 ## name convention (`int(body.name) == peer_id`).
 func _wire_objective_signals():
 	var seen := {}
-	for objective in _objectives:
+	for objective in _tasks:
 		var obj := objective.trigger
 		if obj == null or seen.has(obj):
 			continue
@@ -392,13 +392,13 @@ func _on_trigger_entered(player: PlayerEntity, obj: GameModeObject):
 	var state := _player_states[peer_id]
 	if state.completed or !state.started:
 		return
-	var objective := _objectives[state.current_index]
+	var objective := _tasks[state.current_index]
 	if objective.trigger != obj:
 		return
 	match objective.eval_when:
-		GameModeObjective.EvalWhen.ON_ENTER:
+		GameModeTask.EvalWhen.ON_ENTER:
 			state.prop_event_fired = true
-		GameModeObjective.EvalWhen.WHILE_INSIDE:
+		GameModeTask.EvalWhen.WHILE_INSIDE:
 			state.inside_zone = true
 
 
@@ -410,10 +410,10 @@ func _on_trigger_exited(player: PlayerEntity, obj: GameModeObject):
 	var state := _player_states[peer_id]
 	if state.completed or !state.started:
 		return
-	var objective := _objectives[state.current_index]
+	var objective := _tasks[state.current_index]
 	if objective.trigger != obj:
 		return
-	if objective.eval_when == GameModeObjective.EvalWhen.WHILE_INSIDE:
+	if objective.eval_when == GameModeTask.EvalWhen.WHILE_INSIDE:
 		state.inside_zone = false
 
 

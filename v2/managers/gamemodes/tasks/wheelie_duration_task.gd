@@ -1,6 +1,6 @@
 @tool
 ## Hold a wheelie (sitting or mod) for `duration` seconds.
-class_name WheelieDurationTutorialStep extends GameModeObjective
+class_name WheelieDurationTask extends GameModeTask
 
 @export var duration: float = 2.0
 

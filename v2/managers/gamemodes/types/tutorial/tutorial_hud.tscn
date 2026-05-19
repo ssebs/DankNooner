@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dmq80r6t0kwp5"]
 
-[ext_resource type="Script" uid="uid://x6kf15awpiv4" path="res://managers/gamemodes/tutorial/tutorial_hud.gd" id="2_mklpr"]
+[ext_resource type="Script" uid="uid://x6kf15awpiv4" path="res://managers/gamemodes/types/tutorial/tutorial_hud.gd" id="2_mklpr"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_theme"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mklpr"]

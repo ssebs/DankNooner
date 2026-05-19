@@ -3,7 +3,7 @@
 ## per-peer respawn point for subsequent crashes, and auto-advances. Useful for
 ## breaking long courses into sections so a crash doesn't send players all the
 ## way back to the start.
-class_name TeleportTutorialStep extends GameModeObjective
+class_name TeleportTask extends GameModeTask
 
 @export var marker: Marker3D
 

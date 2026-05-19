@@ -2,7 +2,7 @@
 ---
 
 
-## Cleanup gamemode objective / events
+## ~~Cleanup gamemode objective / events~~ (done — see PLAN.md)
 
 **Problems**:
 - tutorial_gamemode.gd:31 Enter() - should not be setting _gamemode var here, instead do in event start circle

@@ -2,7 +2,7 @@
 ## Pauses the player and shows a numeric countdown on the HUD for `seconds`.
 ## Mirrors the start-of-tutorial countdown — disables input + clears throttle/brake/steer
 ## so the player can't drift through it. Auto-advances when the timer hits 0.
-class_name CountdownTutorialStep extends GameModeObjective
+class_name CountdownTask extends GameModeTask
 
 @export var seconds: float = 3.0
 @export var show_hud: bool = true
