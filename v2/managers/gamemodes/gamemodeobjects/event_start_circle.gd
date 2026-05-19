@@ -2,7 +2,7 @@
 class_name EventStartCircle extends Area3D
 
 ## Emitted with a reference to *this* circle so consumers can pull
-## `gamemode_event`, `start_marker`, and `get_tasks()` off it.
+## `gamemode_event`, `start_marker`, and `get_runners()` off it.
 signal entered_event_circle(peer_id: int, event_start_circle: EventStartCircle)
 signal exited_event_circle(peer_id: int, event_start_circle: EventStartCircle)
 
@@ -22,13 +22,13 @@ func _ready():
 	event_label.text = tr(gamemode_event.name)
 
 
-## Tasks are children of this circle, in tree order. Other children
-## (CheckpointMarker, TriggerZone, Marker3D) are ignored — they're referenced
-## by individual tasks via @export trigger.
-func get_tasks() -> Array[GameModeTask]:
-	var out: Array[GameModeTask] = []
+## Runners are children of this circle, in tree order. Other children
+## (Marker3D, CheckpointMarker, TriggerZone) are ignored — they're referenced
+## by individual tasks via @export.
+func get_runners() -> Array[SequentialTaskRunner]:
+	var out: Array[SequentialTaskRunner] = []
 	for c in get_children():
-		if c is GameModeTask:
+		if c is SequentialTaskRunner:
 			out.append(c)
 	return out
 

@@ -40,5 +40,4 @@ func on_exit(player: PlayerEntity, _state: Dictionary) -> void:
 
 @rpc("call_local", "reliable")
 func _rpc_show_countdown(num: int):
-	var tut := _gamemode as TutorialGameMode
-	tut.tutorial_hud.rpc_show_countdown(num)
+	_runner.task_hud.rpc_show_countdown(num)
