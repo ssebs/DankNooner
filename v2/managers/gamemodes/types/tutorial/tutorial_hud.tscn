@@ -47,14 +47,15 @@ ratio = 1.778
 [node name="MarginContainer" type="MarginContainer" parent="AspectContainer" unique_id=1702221580]
 layout_mode = 2
 size_flags_horizontal = 0
-size_flags_vertical = 4
+size_flags_vertical = 0
 mouse_filter = 2
 theme = ExtResource("2_theme")
 
 [node name="PanelContainer" type="PanelContainer" parent="AspectContainer/MarginContainer" unique_id=992819878]
 custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 4
+size_flags_vertical = 0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_mklpr")
 
@@ -65,23 +66,31 @@ theme_override_constants/separation = 8
 
 [node name="StepLabel" type="Label" parent="AspectContainer/MarginContainer/PanelContainer/VBoxContainer" unique_id=1623376150]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 theme_type_variation = &"Heading2Label"
 horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="ObjectiveLabel" type="Label" parent="AspectContainer/MarginContainer/PanelContainer/VBoxContainer" unique_id=1999194433]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 theme_type_variation = &"Heading1Label"
 horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="HintLabel" type="Label" parent="AspectContainer/MarginContainer/PanelContainer/VBoxContainer" unique_id=794089911]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="CompleteLabel" type="Label" parent="AspectContainer/MarginContainer/PanelContainer/VBoxContainer" unique_id=1629581146]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 theme_type_variation = &"Heading1Label"
 horizontal_alignment = 1
+autowrap_mode = 3

@@ -214,7 +214,6 @@ spawn_manager = NodePath("../../../SpawnManager")
 metadata/_custom_type_script = "uid://2sjea5ct6un7"
 
 [node name="TutorialHUD" parent="ManagerManager/GamemodeManager/StateMachine/TutorialGameMode" unique_id=777399642 instance=ExtResource("28_onx7j")]
-visible = false
 
 [node name="ResultsHUD" parent="ManagerManager/GamemodeManager/StateMachine/TutorialGameMode" unique_id=289541554 node_paths=PackedStringArray("input_state_manager") instance=ExtResource("29_o8ab5")]
 input_state_manager = NodePath("../../../../InputStateManager")
