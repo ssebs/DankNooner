@@ -6,11 +6,11 @@ How tutorials (and future per-mode courses like races) are authored.
 
 Three pieces, all simple:
 
-| Piece | Type | Role |
-| ----- | ---- | ---- |
-| `GameModeEvent` | Resource | Metadata only — name, description, target gamemode. No logic. |
-| `EventStartCircle` | Node (Area3D) | World trigger that offers the event in free roam. **Also the course root** — its child nodes are the steps. |
-| `GameModeObjective` | Node | One step. Self-contained: own `check`/`on_enter`/`on_exit`, own RPCs, own `@export`s. Subclassed per mechanic. |
+| Piece               | Type          | Role                                                                                                           |
+| ------------------- | ------------- | -------------------------------------------------------------------------------------------------------------- |
+| `GameModeEvent`     | Resource      | Metadata only — name, description, target gamemode. No logic.                                                  |
+| `EventStartCircle`  | Node (Area3D) | World trigger that offers the event in free roam. **Also the course root** — its child nodes are the steps.    |
+| `GameModeObjective` | Node          | One step. Self-contained: own `check`/`on_enter`/`on_exit`, own RPCs, own `@export`s. Subclassed per mechanic. |
 
 The previous split (`Objective` Resource + `GameModeLesson` Node wrapper) is gone. The objective *is* the node, so subclasses can `@rpc` and `@export` whatever they need without leaking logic into the gamemode.
 
@@ -32,7 +32,7 @@ Tutorial01EventStartCircle (EventStartCircle)
 └─ StoppieDuration_Stoppie   (StoppieDurationTutorialStep, duration=1.0)
 ```
 
-Some objectives (`CountdownTutorialStep`, `TeleportTutorialStep`) are mode-agnostic — usable from race / trick courses too. The `*TutorialStep` class-name suffix is historical, not a constraint.
+Some objectives (`CountdownTutorialStep`, `TeleportTutorialStep`) are mode-agnostic — usable from race / trick courses too. The `*TutorialStep` class-name suffix is historical, not a constraint, and should be cleaned up.
 
 ## Adding a new step type
 

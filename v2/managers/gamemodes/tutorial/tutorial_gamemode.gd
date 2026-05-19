@@ -28,9 +28,9 @@ func Enter(state_context: StateContext):
 	var ctx := state_context as GamemodeStateContext
 	var event := ctx.gamemode_event
 	_start_circle = ctx.event_start_circle
-	_objectives = _start_circle.get_objectives()
-	for obj in _objectives:
-		obj._gamemode = self
+	# _objectives = _start_circle.get_objectives()  - SET THIS IN THE EVENT START CIRCLE
+	# for obj in _objectives:
+	# 	obj._gamemode = self
 	_build_player_states()
 	if multiplayer.is_server():
 		_wire_objective_signals()
@@ -419,6 +419,7 @@ func _on_trigger_exited(player: PlayerEntity, obj: GameModeObject):
 
 
 #endregion
+
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
