@@ -1,6 +1,6 @@
 # Gamemode System Cleanup Plan
 
-Refactor of the GameMode / GameModeObjective / GameModeEvent stack. Driven by [_ScratchPad.md](./_ScratchPad.md). Companion docs: [GamemodeSystem.md](./GamemodeSystem.md), [GamemodeEventAndGameModeLessonAndTutorial.md](./GamemodeEventAndGameModeLessonAndTutorial.md).
+Refactor of the GameMode / GameModeObjective / GameModeEvent stack. Driven by [_ScratchPad.md](./_ScratchPad.md). Companion docs: [GamemodeSystem.md](./GamemodeSystem.md)
 
 ## READ FIRST — before touching anything
 
@@ -26,7 +26,7 @@ managers/gamemodes/gamemode_objectives/stoppie_duration_obj.gd
 resources/events/gamemode_event.gd
 utils/state_machine/gamemode_state_context.gd
 main_game.tscn (for how nodes are wired)
-levels/**/*.tscn that contain an EventStartCircle (Tutorial01, etc.)
+levels/test_levels/test_01/test_01_level.tscn  contains an EventStartCircle (Tutorial01, etc.)
 ```
 
 Also grep for usages before each rename — names referenced from `.tscn` files won't surface in code search alone.
@@ -35,7 +35,7 @@ Also grep for usages before each rename — names referenced from `.tscn` files 
 
 - **`GameMode` (class) → `GameModeType`**. Enum `TGameMode` moves from `GamemodeManager` into `gamemode.gd` and is renamed `Kind`. Usage: `GameModeType.Kind.TUTORIAL`.
 - **`GameModeEvent` (resource) → `GameModeEventDefinition`**. Adds `event_type: EventType { SEQUENTIAL, CONCURRENT }` field. Data only — no logic this pass.
-- **Merge `GameModeObjective` + the proposed `GameModeRENAMEME`** into one class: **`GameModeTask`**. Covers both "checks" (reach speed, change gear) and "actions" (teleport, countdown, play sound). Order-neutral name on purpose.
+- **Merge `GameModeObjective` + the proposed `GameModeRENAMEME` from the scratchpad** into one class: **`GameModeTask`**. Covers both "checks" (reach speed, change gear) and "actions" (teleport, countdown, play sound). Order-neutral name on purpose.
 - **`GameModeObject` keeps its name.** Level-authored props (rings, gates) — rename later if it still feels wrong after the surrounding noise is gone.
 - **`*TutorialStep` class names → `*Task`** (since `Step` implies sequence and we're adding `CONCURRENT` events).
 - **Files `*_obj.gd` → `*_task.gd`.**
@@ -69,7 +69,7 @@ Also grep for usages before each rename — names referenced from `.tscn` files 
 ## Out of scope (defer)
 
 - Implementing CONCURRENT event traversal — only adding the enum field this pass.
-- Lifting `set_respawn_marker` / `mark_objective_state` / `show_countdown` to base `GameModeType` to kill the `as TutorialGameMode` casts. **Will be addressed reactively** as renames force the issue, but no preemptive design.
+- Lifting `set_respawn_marker` / `mark_objective_state` / `show_countdown` to base `GameModeType` to kill the `as TutorialGameMode` casts. **Will be addressed reactively** as renames force the issue, but no preemptive design. remind the user
 - Renaming `GameModeObject`.
 - Splitting CourseGameMode out of base. One-class hierarchy stays.
 
