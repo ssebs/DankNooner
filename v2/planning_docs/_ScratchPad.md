@@ -12,17 +12,17 @@
   - Too many classes!
 - Code Folder Structure is not ideal, too many diff places for 1 system, and should prob not all be under managers/gamemodes/
 
-**Want I want**:
+**What I want**:
 - `GameMode` => Rename to `GameModeType`
   - e.g. Tutorial, Race, TrickBattle, FreeRoam
-- `GameModeEvent` => Rename to `GameModeMetadata`
+- `GameModeEvent` => Rename to `GameModeEventDefinition`
   - Just metadata about an event
   - e.g. Tutorial 01, City Race, Trick Line 01. 
   - New: can have type: `sequential`, `concurrent`
-- `EventStartCircle` has a `GameModeMetadata`, and `GameModeObjective`s / `GameModeRENAMEME`s under it
+- `EventStartCircle` has a `GameModeEventDefinition`, and `GameModeObjective`s / `GameModeRENAMEME`s under it
 - `GameModeRENAMEME` => To be named, but lives under `EventStartCircle` & controls the gamemode
   - e.g. Teleport player, countdown timer, play sound, play cutscene/anim on objects, update UI (e.g. leaderboard)
-- `GameModeObjective` => Goals / things to check depending on `GameModeMetadata` type
+- `GameModeObjective` => Goals / things to check depending on `GameModeEventDefinition` type
   - e.g. Wheelie duration, max speed, button pressed
   - This could be renamed, and be the same type as `GameModeRENAMEME`?
 - `GameModeObject` => Scenes/Nodes that are used in `GameModeObjective`s / `GameModeRENAMEME`s
