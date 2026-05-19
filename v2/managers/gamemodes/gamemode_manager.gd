@@ -12,7 +12,6 @@ enum MatchState {
 	IN_LOBBY,
 	IN_GAME,
 }
-enum TGameMode { FREE_FROAM, STREET_RACE, STUNT_RACE, TUTORIAL }
 
 @export var menu_manager: MenuManager
 @export var settings_manager: SettingsManager
@@ -32,12 +31,12 @@ enum TGameMode { FREE_FROAM, STREET_RACE, STUNT_RACE, TUTORIAL }
 @export var tutorial_mode: TutorialGameMode
 
 var match_state: MatchState = MatchState.IN_LOBBY
-var current_game_mode: TGameMode = TGameMode.FREE_FROAM
+var current_game_mode: GameModeType.Kind = GameModeType.Kind.FREE_FROAM
 var current_level_name: LevelManager.LevelName = LevelManager.LevelName.LEVEL_SELECT_LABEL
 
-var pending_gamemode_event: GameModeEvent
+var pending_gamemode_event: GameModeEventDefinition
 var pending_event_start_circle: EventStartCircle
-var _gamemode_map: Dictionary[TGameMode,GameMode] = {}
+var _gamemode_map: Dictionary[GameModeType.Kind,GameModeType] = {}
 
 
 func _ready():
@@ -45,9 +44,9 @@ func _ready():
 		return
 
 	_gamemode_map = {
-		TGameMode.FREE_FROAM: free_roam_mode,
-		TGameMode.STREET_RACE: street_race_mode,
-		TGameMode.TUTORIAL: tutorial_mode,
+		GameModeType.Kind.FREE_FROAM: free_roam_mode,
+		GameModeType.Kind.STREET_RACE: street_race_mode,
+		GameModeType.Kind.TUTORIAL: tutorial_mode,
 	}
 
 	connection_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
@@ -58,7 +57,7 @@ func _ready():
 
 ## Called by server to start the game for all players
 @rpc("call_local", "reliable")
-func start_game(level_name: LevelManager.LevelName, gamemode: TGameMode = TGameMode.FREE_FROAM):
+func start_game(level_name: LevelManager.LevelName, gamemode: GameModeType.Kind = GameModeType.Kind.FREE_FROAM):
 	current_level_name = level_name
 	current_game_mode = gamemode
 	match_state = MatchState.IN_GAME
@@ -70,7 +69,7 @@ func start_game(level_name: LevelManager.LevelName, gamemode: TGameMode = TGameM
 
 ## Server receives request to change gamemode, broadcasts to all peers
 @rpc("any_peer", "call_local", "reliable")
-func change_gamemode(gamemode: TGameMode, peer_id: int):
+func change_gamemode(gamemode: GameModeType.Kind, peer_id: int):
 	if !multiplayer.is_server():
 		return
 
@@ -80,7 +79,7 @@ func change_gamemode(gamemode: TGameMode, peer_id: int):
 
 ## All peers transition their state machine to the new gamemode
 @rpc("call_local", "reliable")
-func _rpc_transition_gamemode(gamemode: TGameMode, peer_id: int):
+func _rpc_transition_gamemode(gamemode: GameModeType.Kind, peer_id: int):
 	var ctx := GamemodeStateContext.new()
 	ctx.peer_id = peer_id
 	if pending_gamemode_event:
@@ -160,12 +159,12 @@ func _on_client_connection_succeeded(peer_id: int):
 ## Server calls this on a late-joining client to sync them into the active game
 @rpc("any_peer", "reliable")
 func _sync_game_to_late_joiner(
-	level_name: LevelManager.LevelName, gamemode: TGameMode = TGameMode.FREE_FROAM
+	level_name: LevelManager.LevelName, gamemode: GameModeType.Kind = GameModeType.Kind.FREE_FROAM
 ):
 	DebugUtils.DebugMsg("_sync_game_to_late_joiner")
 	match_state = MatchState.IN_GAME
 	current_level_name = level_name
-	current_game_mode = gamemode as TGameMode
+	current_game_mode = gamemode as GameModeType.Kind
 	menu_manager.state_machine.request_state_change(loading_menu_state)
 	await RenderingServer.frame_post_draw
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
