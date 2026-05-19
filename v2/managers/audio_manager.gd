@@ -144,17 +144,27 @@ func play_clunk_gear_change():
 
 
 func play_sfx(id: Sfx):
+	get_sound_event(id).play()
+
+
+func stop_sfx(id: Sfx):
+	get_sound_event(id).stop()
+
+
+func get_sound_event(id: Sfx) -> SoundEvent:
 	match id:
-		Sfx.STARTUP: startup.play()
-		Sfx.BOWLING_CRASH: bowling_crash.play()
-		Sfx.COUNTDOWN_5SEC: countdown_5sec.play()
-		Sfx.COUNTDOWN_LOOP: countdown_loop.play()
-		Sfx.MENU_CLICK: menu_click.play()
-		Sfx.MENU_ERR: menu_err.play()
-		Sfx.MAXIMIZE: maximize.play()
-		Sfx.MINIMIZE: minimize.play()
-		Sfx.MOUSE_CLICK: mouse_click.play()
-		Sfx.CLUNK_GEAR_CHANGE: clunk_gear_change.play()
+		Sfx.STARTUP: return startup
+		Sfx.BOWLING_CRASH: return bowling_crash
+		Sfx.COUNTDOWN_5SEC: return countdown_5sec
+		Sfx.COUNTDOWN_LOOP: return countdown_loop
+		Sfx.MENU_CLICK: return menu_click
+		Sfx.MENU_ERR: return menu_err
+		Sfx.MAXIMIZE: return maximize
+		Sfx.MINIMIZE: return minimize
+		Sfx.MOUSE_CLICK: return mouse_click
+		Sfx.CLUNK_GEAR_CHANGE: return clunk_gear_change
+	push_error("AudioManager.get_sound_event: unhandled Sfx id %s" % id)
+	return null
 
 
 func stop_all():
