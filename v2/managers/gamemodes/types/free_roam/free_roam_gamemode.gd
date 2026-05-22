@@ -31,9 +31,12 @@ func Enter(state_context: StateContext):
 
 	if multiplayer.is_server():
 		# Coming from another gamemode — clear any TeleportTask-set respawn point
-		# so the player returns to (and future crashes return to) player_spawn_pos.
-		spawn_manager.reset_respawn_point.rpc(_ctx.peer_id)
-		spawn_manager.respawn_player.rpc(_ctx.peer_id)
+		# so every player returns to (and future crashes return to) player_spawn_pos.
+		# Must hit every peer, not just _ctx.peer_id — that's only the player who
+		# triggered the transition (the server, for race end), leaving clients riding.
+		for peer_id in gamemode_manager.lobby_manager.lobby_players:
+			spawn_manager.reset_respawn_point.rpc(peer_id)
+			spawn_manager.respawn_player.rpc(peer_id)
 
 
 ## param is whether to connect() or disconnect()
