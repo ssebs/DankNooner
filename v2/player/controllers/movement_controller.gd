@@ -13,7 +13,7 @@ class_name MovementController extends Node
 
 const CLUTCH_KICK_WINDOW: float = 0.2
 const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65  # fraction of bike's 1st-gear torque needed to clutch-pop — blocks high-gear pops
-const POWER_WHEELIE_MIN_POWER: float = 1.8  # delivered power floor for power wheelies — high-gear OK at speed (powerband), low-RPM blocked
+const POWER_WHEELIE_MIN_FORCE: float = 21.6  # power × bd.acceleration floor for power wheelies — auto-scales by bike strength
 const FALL_GRAVITY: float = 20
 const AIR_DRAG: float = 12.0  # speed loss while airborne
 # Ramp / loop tuning
@@ -480,15 +480,16 @@ func _can_initiate_wheelie(in_wheelie: bool) -> bool:
 		var max_torque_mult = bd.gear_ratios[0] / bd.gear_ratios[bd.num_gears - 1]
 		return gearing_controller.get_potential_power_output() > max_torque_mult * CLUTCH_POP_MIN_POWER_FRAC
 
-	# Power wheelie — needs forward motion + lean back + throttle + delivered power.
-	# Uses get_power_output() so high gears at speed (peak powerband) still work,
-	# but low-RPM/low-gear-engagement situations bog instead of lifting.
+	# Power wheelie — needs forward motion + lean back + throttle + delivered force.
+	# Gate uses power × bd.acceleration (bike's actual wheel force), so weaker bikes
+	# (lower acceleration) auto-fail without needing a per-bike flag.
 	if speed <= 1:
 		return false
+	var force = gearing_controller.get_power_output() * bd.acceleration
 	return (
 		input_controller.nfx_lean < -0.3
 		and input_controller.nfx_throttle > 0.7
-		and gearing_controller.get_power_output() > POWER_WHEELIE_MIN_POWER
+		and force > POWER_WHEELIE_MIN_FORCE
 	)
 
 
