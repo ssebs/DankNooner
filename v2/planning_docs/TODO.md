@@ -13,9 +13,6 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] Basic lap / race mode
-  - [ ] checkpoints / lapping system
-  - [ ] work w/ multiplayer (spawns)
 - [ ] incentivize being on road - make going on certain collision layer slower / less stable.
 
 ## HI-PRI‼️
@@ -343,6 +340,10 @@ mo) 📋
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Basic lap / race mode
+  - [x] checkpoints / lapping system
+  - [x] work w/ multiplayer (spawns)
 
 - [x] Respawn locations depend on last TP location
 
