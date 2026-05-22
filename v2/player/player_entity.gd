@@ -342,6 +342,10 @@ func update_skins(new_bike_def: BikeSkinDefinition, new_char_def: CharacterSkinD
 	# AnimationController caches _bd + base pose positions in initialize(); re-run so they
 	# pick up the new bike's wheel positions, chest/butt offsets, etc.
 	animation_controller.initialize()
+	# Restart engine sound so the new bike's EngineSoundEvent gets its rpm_curve/pitch
+	# range assigned — otherwise the next update_revs_rpm tick null-derefs rpm_curve.
+	if is_local_client and audio_manager:
+		audio_manager.play_revs(bike_definition)
 
 
 func do_respawn():
