@@ -13,10 +13,12 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
+- [ ] Use %GromRevs
+- [ ] add 3 2 1 countdown from 5 sec clip
 
 ## HI-PRI‼️
 
-- [ ] add 3 2 1 countdown from 5 sec clip
+
 
 - [ ] crashing during mid tutorial respawns you at first location instead of TP location
 

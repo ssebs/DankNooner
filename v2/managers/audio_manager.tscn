@@ -6,8 +6,10 @@
 [ext_resource type="Script" uid="uid://dkuocwpht87sr" path="res://utils/custom_audio_middleware/engine_sound_event.gd" id="3_eng"]
 [ext_resource type="AudioStream" uid="uid://b6r8tjr3vvkog" path="res://non_fmod_sounds/Ninja500/quieter-loop-ninja-500.ogg" id="4_yaisj"]
 [ext_resource type="AudioStream" uid="uid://qq4jvxe1uuau" path="res://non_fmod_sounds/SFX/bowling-crash.ogg" id="6_201by"]
-[ext_resource type="AudioStream" uid="uid://d2pjd0cmniysj" path="res://non_fmod_sounds/SFX/overly-intense-5-sec-countdown.mp3" id="7_qquof"]
+[ext_resource type="AudioStream" uid="uid://camhkn1kl1dnr" path="res://non_fmod_sounds/Grom/grom-rpm-loop.ogg" id="6_f4f00"]
+[ext_resource type="AudioStream" uid="uid://btpdg5jer1hob" path="res://non_fmod_sounds/SFX/5-sec-count.ogg" id="8_udhho"]
 [ext_resource type="AudioStream" uid="uid://cwxdb3rkn2bp4" path="res://non_fmod_sounds/SFX/scroll_003.ogg" id="8_vradv"]
+[ext_resource type="AudioStream" uid="uid://b4v1pfl32455j" path="res://non_fmod_sounds/SFX/3-sec-countdown.ogg" id="9_ouyk3"]
 [ext_resource type="AudioStream" uid="uid://lel03mbvx3ip" path="res://non_fmod_sounds/SFX/switch_002.ogg" id="9_ydcbx"]
 [ext_resource type="AudioStream" uid="uid://cg4eulxqmy006" path="res://non_fmod_sounds/SFX/error_003.ogg" id="10_2b6dx"]
 [ext_resource type="AudioStream" uid="uid://cu858mfccfnij" path="res://non_fmod_sounds/SFX/maximize_008.ogg" id="11_tqr3v"]
@@ -34,6 +36,15 @@ bus = &"SFX"
 script = ExtResource("3_eng")
 loop = true
 
+[node name="GromRevs" type="AudioStreamPlayer" parent="Sounds" unique_id=1724230522]
+unique_name_in_owner = true
+stream = ExtResource("6_f4f00")
+volume_db = -19.576
+pitch_scale = 0.78
+bus = &"SFX"
+script = ExtResource("3_eng")
+loop = true
+
 [node name="BowlingCrash" type="AudioStreamPlayer" parent="Sounds" unique_id=1740217947]
 unique_name_in_owner = true
 stream = ExtResource("6_201by")
@@ -43,7 +54,15 @@ metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 
 [node name="Countdown5Sec" type="AudioStreamPlayer" parent="Sounds" unique_id=573070884]
 unique_name_in_owner = true
-stream = ExtResource("7_qquof")
+stream = ExtResource("8_udhho")
+volume_db = -8.0
+bus = &"Menu"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="Countdown3Sec" type="AudioStreamPlayer" parent="Sounds" unique_id=544647935]
+unique_name_in_owner = true
+stream = ExtResource("9_ouyk3")
 volume_db = -8.0
 bus = &"Menu"
 script = ExtResource("2_snd")

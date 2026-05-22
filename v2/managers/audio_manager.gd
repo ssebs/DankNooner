@@ -19,6 +19,7 @@ const VOLUME_SETTING_MAP: Dictionary = {
 enum Sfx {
 	STARTUP,
 	BOWLING_CRASH,
+	COUNTDOWN_3SEC,
 	COUNTDOWN_5SEC,
 	COUNTDOWN_LOOP,
 	MENU_CLICK,
@@ -34,7 +35,9 @@ enum Sfx {
 var sounds_container: Node
 var startup: SoundEvent
 var ninja500_revs: EngineSoundEvent
+var grom_revs: EngineSoundEvent
 var bowling_crash: SoundEvent
+var countdown_3sec: SoundEvent
 var countdown_5sec: SoundEvent
 var countdown_loop: SoundEvent
 var menu_click: SoundEvent
@@ -49,7 +52,9 @@ func _ready():
 	sounds_container = get_node_or_null("%Sounds")
 	startup = get_node_or_null("%Startup") as SoundEvent
 	ninja500_revs = get_node_or_null("%Ninja500Revs") as EngineSoundEvent
+	grom_revs = get_node_or_null("%GromRevs") as EngineSoundEvent
 	bowling_crash = get_node_or_null("%BowlingCrash") as SoundEvent
+	countdown_3sec = get_node_or_null("%Countdown3Sec") as SoundEvent
 	countdown_5sec = get_node_or_null("%Countdown5Sec") as SoundEvent
 	countdown_loop = get_node_or_null("%CountdownLoop") as SoundEvent
 	menu_click = get_node_or_null("%MenuClick") as SoundEvent
@@ -103,12 +108,28 @@ func update_ninja500_rpm(val: float):
 	ninja500_revs.set_parameter("RPM", val)
 
 
+func play_grom_revs():
+	grom_revs.play()
+
+
+func stop_grom_revs():
+	grom_revs.stop()
+
+
+func update_grom_rpm(val: float):
+	grom_revs.set_parameter("RPM", val)
+
+
 func play_startup():
 	startup.play()
 
 
 func play_bowling_crash():
 	bowling_crash.play()
+
+
+func play_countdown_3sec():
+	countdown_3sec.play()
 
 
 func play_countdown_5sec():
@@ -153,16 +174,28 @@ func stop_sfx(id: Sfx):
 
 func get_sound_event(id: Sfx) -> SoundEvent:
 	match id:
-		Sfx.STARTUP: return startup
-		Sfx.BOWLING_CRASH: return bowling_crash
-		Sfx.COUNTDOWN_5SEC: return countdown_5sec
-		Sfx.COUNTDOWN_LOOP: return countdown_loop
-		Sfx.MENU_CLICK: return menu_click
-		Sfx.MENU_ERR: return menu_err
-		Sfx.MAXIMIZE: return maximize
-		Sfx.MINIMIZE: return minimize
-		Sfx.MOUSE_CLICK: return mouse_click
-		Sfx.CLUNK_GEAR_CHANGE: return clunk_gear_change
+		Sfx.STARTUP:
+			return startup
+		Sfx.BOWLING_CRASH:
+			return bowling_crash
+		Sfx.COUNTDOWN_3SEC:
+			return countdown_3sec
+		Sfx.COUNTDOWN_5SEC:
+			return countdown_5sec
+		Sfx.COUNTDOWN_LOOP:
+			return countdown_loop
+		Sfx.MENU_CLICK:
+			return menu_click
+		Sfx.MENU_ERR:
+			return menu_err
+		Sfx.MAXIMIZE:
+			return maximize
+		Sfx.MINIMIZE:
+			return minimize
+		Sfx.MOUSE_CLICK:
+			return mouse_click
+		Sfx.CLUNK_GEAR_CHANGE:
+			return clunk_gear_change
 	push_error("AudioManager.get_sound_event: unhandled Sfx id %s" % id)
 	return null
 
