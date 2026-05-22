@@ -13,6 +13,13 @@ const VOLUME_SETTING_MAP: Dictionary = {
 	"music_vol": "Music",
 }
 
+## Looping engine sounds driven by RPM. Used by BikeSkinDefinition.engine_sound_id
+## to pick which sound `play_revs()` activates.
+enum EngineSfx {
+	NINJA500,
+	GROM,
+}
+
 ## Generic SFX id for callers (e.g. GameModeTasks) that need to play a sound
 ## without holding a typed ref to a specific SoundEvent. Add new entries here
 ## and a matching case in `play_sfx()`.
@@ -47,6 +54,11 @@ var minimize: SoundEvent
 var mouse_click: SoundEvent
 var clunk_gear_change: SoundEvent
 
+## Map of EngineSfx → EngineSoundEvent node, populated in _ready.
+var _engine_sounds: Dictionary = {}
+## Currently-playing engine sound id, or -1 if none.
+var _active_engine_sfx: int = -1
+
 
 func _ready():
 	sounds_container = get_node_or_null("%Sounds")
@@ -63,6 +75,11 @@ func _ready():
 	minimize = get_node_or_null("%Minimize") as SoundEvent
 	mouse_click = get_node_or_null("%MouseClick") as SoundEvent
 	clunk_gear_change = get_node_or_null("%ClunkGearChange") as SoundEvent
+
+	_engine_sounds = {
+		EngineSfx.NINJA500: ninja500_revs,
+		EngineSfx.GROM: grom_revs,
+	}
 
 	if Engine.is_editor_hint():
 		return
@@ -96,28 +113,29 @@ func _apply_bus_volume(bus_name: String, linear_volume: float):
 	AudioServer.set_bus_volume_db(idx, linear_to_db(linear_volume))
 
 
-func play_ninja500_revs():
-	ninja500_revs.play()
+## Plays the engine sound configured by `bike_def`. Stops any previously-active
+## engine sound first so two loops don't overlap when a player swaps bikes.
+func play_revs(bike_def: BikeSkinDefinition):
+	var sfx_id: int = bike_def.engine_sound_id
+	if _active_engine_sfx != -1 and _active_engine_sfx != sfx_id:
+		_engine_sounds[_active_engine_sfx].stop()
+	var sound: EngineSoundEvent = _engine_sounds[sfx_id]
+	sound.min_pitch = bike_def.engine_min_pitch
+	sound.max_pitch = bike_def.engine_max_pitch
+	sound.rpm_curve = bike_def.engine_rpm_pitch_curve
+	sound.play()
+	_active_engine_sfx = sfx_id
 
 
-func stop_ninja500_revs():
-	ninja500_revs.stop()
+func stop_revs():
+	if _active_engine_sfx == -1:
+		return
+	_engine_sounds[_active_engine_sfx].stop()
+	_active_engine_sfx = -1
 
 
-func update_ninja500_rpm(val: float):
-	ninja500_revs.set_parameter("RPM", val)
-
-
-func play_grom_revs():
-	grom_revs.play()
-
-
-func stop_grom_revs():
-	grom_revs.stop()
-
-
-func update_grom_rpm(val: float):
-	grom_revs.set_parameter("RPM", val)
+func update_revs_rpm(bike_def: BikeSkinDefinition, val: float):
+	_engine_sounds[bike_def.engine_sound_id].set_parameter("RPM", val)
 
 
 func play_startup():

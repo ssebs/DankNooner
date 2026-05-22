@@ -13,7 +13,8 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] Use %GromRevs
+- [ ] Play tada when completing a trick
+- [ ] Should not be able to clutch up in 4th gear going 1mph
 
 ## HI-PRI‼️
 
@@ -338,6 +339,8 @@ mo) 📋
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Use %GromRevs
 
 - [x] add 3 2 1 countdown from 5 sec clip
 

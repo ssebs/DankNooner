@@ -64,6 +64,16 @@ class_name BikeSkinDefinition extends Resource
 @export_group("Mods")
 @export var mods: Array[BikeMod] = []
 
+@export_group("Audio")
+## Which engine sound this bike plays.
+@export var engine_sound_id: AudioManager.EngineSfx = AudioManager.EngineSfx.NINJA500
+## Pitch_scale at idle RPM (curve sample = 0).
+@export var engine_min_pitch: float = 1.0
+## Pitch_scale at max RPM (curve sample = 1).
+@export var engine_max_pitch: float = 2.828
+## Maps RPM [0..1] to interpolation factor [0..1] between min/max pitch.
+@export var engine_rpm_pitch_curve: Curve = preload("res://resources/bikes/ninja_rpm_pitch_curve.tres")
+
 @export_group("Animation")
 ## Multiplier for rider lean animation when steering
 @export var lean_multiplier: float = 1.0
@@ -178,6 +188,10 @@ func _copy_from(other: BikeSkinDefinition) -> void:
 	left_leg_magnet_position = other.left_leg_magnet_position
 	right_leg_magnet_position = other.right_leg_magnet_position
 	mods = other.mods.duplicate()
+	engine_sound_id = other.engine_sound_id
+	engine_min_pitch = other.engine_min_pitch
+	engine_max_pitch = other.engine_max_pitch
+	engine_rpm_pitch_curve = other.engine_rpm_pitch_curve
 	lean_multiplier = other.lean_multiplier
 	weight_shift_multiplier = other.weight_shift_multiplier
 	gear_ratios = other.gear_ratios.duplicate()
