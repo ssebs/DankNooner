@@ -12,6 +12,12 @@ signal crashed
 @export var crash_lean_threshold_deg: float = 80.0
 @export var brake_grab_rate_threshold: float = 20
 @export var brake_lean_sensitivity: float = 0.7
+## How many degrees the lean-crash threshold drops at full unstable_surface_factor.
+@export var unstable_lean_threshold_reduction_deg: float = 25.0
+## Min front-brake input to trigger a lowside while steering on an unstable surface.
+@export var unstable_lowside_brake_threshold: float = 0.5
+## Min |roll_angle| (deg) required for the unstable front-brake lowside.
+@export var unstable_lowside_steer_threshold_deg: float = 15.0
 
 var _prev_front_brake: float = 0.0
 var _brake_was_grabbed: bool = false
@@ -96,9 +102,23 @@ func _detect_crash():
 			trigger_crash()
 			return
 
-		# Lean crash
-		if abs(movement_controller.roll_angle) >= deg_to_rad(crash_lean_threshold_deg):
+		# Lean crash — threshold tightens on unstable surfaces (gravel/sand)
+		var unstable_factor = movement_controller.get_unstable_factor()
+		var effective_lean_threshold = (
+			crash_lean_threshold_deg - unstable_lean_threshold_reduction_deg * unstable_factor
+		)
+		if abs(movement_controller.roll_angle) >= deg_to_rad(effective_lean_threshold):
 			DebugUtils.DebugMsg("lean crash")
+			trigger_crash()
+			return
+
+		# Unstable lowside — front brake while steering on gravel/sand washes the front wheel out
+		if (
+			unstable_factor > 0
+			and input_controller.nfx_front_brake > unstable_lowside_brake_threshold
+			and abs(movement_controller.roll_angle) > deg_to_rad(unstable_lowside_steer_threshold_deg)
+		):
+			DebugUtils.DebugMsg("unstable lowside crash")
 			trigger_crash()
 			return
 

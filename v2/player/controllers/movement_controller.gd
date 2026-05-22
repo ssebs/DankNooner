@@ -16,6 +16,11 @@ const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65  # fraction of bike's 1st-gear tor
 const POWER_WHEELIE_MIN_FORCE: float = 21.6  # power × bd.acceleration floor for power wheelies — auto-scales by bike strength
 const FALL_GRAVITY: float = 20
 const AIR_DRAG: float = 12.0  # speed loss while airborne
+# Unstable surface (collision layer 5) — gravel/sand/etc. Scaled by bike's unstable_surface_factor.
+const UNSTABLE_LAYER_MASK: int = 16  # 1 << 4 (layer 5)
+const UNSTABLE_DRAG_RATE: float = 0.6  # proportional drag (per sec) on unstable ground at factor=1 — caps top speed without stalling launches
+const UNSTABLE_WHEELIE_SUPPRESSION: float = 0.4  # wheelie target scaled by (1 - factor * this)
+const UNSTABLE_STEER_SUPPRESSION: float = 0.5  # turn_rate scaled by (1 - factor * this)
 # Ramp / loop tuning
 const SURFACE_BLEND_SPEED_MIN: float = 3.0  # up_direction alignment speed at rest
 const SURFACE_BLEND_SPEED_MAX: float = 40.0  # alignment speed at full speed (must track loops)
@@ -53,6 +58,7 @@ var _was_on_floor: bool = false  # previous tick's floor state (for landing dete
 var _is_on_floor: bool = false  # cached once per tick to avoid redundant move_and_slide calls
 var _floor_normal: Vector3 = Vector3.UP  # cached per tick — only valid when _is_on_floor
 var _speed_pct: float = 0.0  # speed / max_speed, cached per tick
+var _on_unstable_surface: bool = false  # touching layer 5 (unstable_collision), cached per tick
 
 
 func _ready():
@@ -75,6 +81,7 @@ func on_movement_rollback_tick(delta: float):
 
 	_was_on_floor = _is_on_floor
 	_is_on_floor = is_on_floor_netfox()
+	_on_unstable_surface = _detect_unstable_surface()
 	if _is_on_floor:
 		_floor_normal = _get_blended_surface_normal()
 		# Landing — normalize pitch to effective angle from upright
@@ -114,6 +121,24 @@ func on_movement_rollback_tick(delta: float):
 	player_entity.velocity /= NetworkTime.physics_factor
 
 	_handle_player_collision(delta)
+
+
+## True if any current slide collision is on layer 5 (unstable_collision).
+## is_on_floor_netfox() runs move_and_slide just before this, so the collision list is fresh.
+func _detect_unstable_surface() -> bool:
+	for i in player_entity.get_slide_collision_count():
+		var collider = player_entity.get_slide_collision(i).get_collider()
+		if collider is CollisionObject3D and collider.collision_layer & UNSTABLE_LAYER_MASK:
+			return true
+	return false
+
+
+## Effective unstable factor (0..1) — bike's resistance applied. 0 when not on unstable
+## ground OR when the bike fully ignores unstable surfaces (dirtbike).
+func get_unstable_factor() -> float:
+	if not _on_unstable_surface:
+		return 0.0
+	return player_entity.bike_definition.unstable_surface_factor
 
 
 ## Blend normals from front + rear raycasts for smoother ramp transitions.
@@ -241,6 +266,12 @@ func _speed_calc(delta: float):
 		speed += FALL_GRAVITY * gravity_on_surface.dot(vel_dir) * RAMP_SLOWDOWN * delta
 		speed = maxf(speed, 0.0)
 
+	# Unstable surface drag — proportional to speed so low-speed launches still work.
+	# Equilibrium with throttle settles around a fraction of normal top speed.
+	var unstable_factor = get_unstable_factor()
+	if unstable_factor > 0 and speed > 0:
+		speed -= speed * UNSTABLE_DRAG_RATE * unstable_factor * delta
+
 	speed = minf(speed, bd.max_speed)
 
 
@@ -267,7 +298,7 @@ func _steer_calc(delta: float):
 	# Uses abs(speed) so reverse rolling still turns the body.
 	if absf(speed) > 0.5:
 		var steer_factor = 1.0 if is_reversing else (bd.steer_curve.sample(_speed_pct) if bd.steer_curve else 1.0)
-		var turn_rate = bd.turn_speed * steer_factor
+		var turn_rate = bd.turn_speed * steer_factor * (1.0 - get_unstable_factor() * UNSTABLE_STEER_SUPPRESSION)
 		DebugUtils.DebugMsg(
 			(
 				"Steer: spd=%.1f spd%%=%.0f%% curve=%.2f rate=%.2f"
@@ -499,7 +530,9 @@ func _calc_normal_wheelie_target(bd: BikeSkinDefinition) -> float:
 	if input_controller.nfx_lean >= 0:
 		return 0.0
 	var max_wheelie_rad = deg_to_rad(bd.max_wheelie_angle_deg)
-	return max_wheelie_rad * abs(input_controller.nfx_lean) * 0.75
+	# Unstable surfaces shrink the achievable target so reaching the balance point takes more input.
+	var unstable_scale = 1.0 - get_unstable_factor() * UNSTABLE_WHEELIE_SUPPRESSION
+	return max_wheelie_rad * abs(input_controller.nfx_lean) * 0.75 * unstable_scale
 
 
 ## Above balance point — unstable. Drifts toward crash unless rider leans forward.

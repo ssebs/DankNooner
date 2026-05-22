@@ -123,6 +123,11 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     - Lean forward recovery
   - `_handle_player_collision()` — spawn protection to avoid spawning inside other players
   - Calls `player_entity.move_and_slide()` with `NetworkTime.physics_factor`
+  - **Unstable surfaces** (collision layer 5 — gravel/sand/etc):
+    - Cached per tick as `_on_unstable_surface` via `_detect_unstable_surface()` (iterates slide collisions after `is_on_floor_netfox()`)
+    - `get_unstable_factor()` returns `bike_definition.unstable_surface_factor` (0..1) when touching layer 5, else 0 — set to `0.0` on dirtbike `.tres` to fully ignore
+    - Effects scaled by factor: proportional drag (`UNSTABLE_DRAG_RATE`, caps top speed without stalling launches), reduced wheelie target (`UNSTABLE_WHEELIE_SUPPRESSION`, harder to hold a wheelie / reach balance point), reduced turn rate (`UNSTABLE_STEER_SUPPRESSION`)
+    - CrashController also reads `get_unstable_factor()` (see below)
 - **GearingController** (`gearing_controller.gd`)
   - Listens to `input_controller.gear_change_pressed` for gear shifts
   - `on_movement_rollback_tick()`:
@@ -139,6 +144,7 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
 - **CrashController** (`crash_controller.gd`)
   - Runs in rollback tick after the other controllers
   - Detects crashes from over-rotation (wheelie/stoppie past trick limits, side lean), brake grabs while turning, killbox/obstacle collisions, upside-down landings, and landing while still mid air-trick
+  - **Unstable surfaces**: lean-crash threshold tightens (scaled by `movement_controller.get_unstable_factor()` via `unstable_lean_threshold_reduction_deg`); front brake while steering on unstable triggers a lowside (`unstable_lowside_brake_threshold`, `unstable_lowside_steer_threshold_deg`)
   - `trigger_crash()` — sets `is_crashed`, zeros velocity, starts ragdoll
   - Auto-respawn after 3s via timer (TODO: move to GamemodeManager)
   - Emits `crashed`
