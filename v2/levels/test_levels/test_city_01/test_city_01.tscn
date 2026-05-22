@@ -18,6 +18,7 @@
 [ext_resource type="Script" uid="uid://f840hmifnv7g" path="res://managers/gamemodes/runners/sequential_task_runner.gd" id="13_runner"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="17_cf4ia"]
 [ext_resource type="Script" uid="uid://bk8siml2v41d1" path="res://managers/gamemodes/tasks/race_task.gd" id="18_ecphy"]
+[ext_resource type="Script" uid="uid://cij1aa5h6g5nb" path="res://managers/gamemodes/tasks/grid_spawn_task.gd" id="18_mhobo"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2lumj"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -1854,13 +1855,21 @@ gamemode_event = SubResource("Resource_cf4ia")
 script = ExtResource("13_runner")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="TeleportTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner" unique_id=546654510 node_paths=PackedStringArray("marker")]
-script = ExtResource("9_ccoso")
-marker = NodePath("RaceStartMarker01")
-metadata/_custom_type_script = "uid://c4b6sy0eliiac"
+[node name="GridSpawnTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner" unique_id=181245019 node_paths=PackedStringArray("grid_markers")]
+script = ExtResource("18_mhobo")
+grid_markers = [NodePath("RaceGridSpot1"), NodePath("RaceGridSpot2"), NodePath("RaceGridSpot3"), NodePath("RaceGridSpot4")]
 
-[node name="RaceStartMarker01" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/TeleportTask" unique_id=10711231]
-transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, 124, 0, 70)
+[node name="RaceGridSpot1" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=10711231]
+transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, 128, 0, 67)
+
+[node name="RaceGridSpot2" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=1583486806]
+transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, 128, 0, 72)
+
+[node name="RaceGridSpot3" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=366641358]
+transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, 124, 0, 67)
+
+[node name="RaceGridSpot4" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=1541205078]
+transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, 124, 0, 72)
 
 [node name="ConcurrentTaskRunner2" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner" unique_id=814209640]
 script = ExtResource("8_cf4ia")
