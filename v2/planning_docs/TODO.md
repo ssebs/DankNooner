@@ -13,7 +13,6 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] when coming back from a stoppie, the angle is not fully reset until i start doing a wheelie, so the rear tire is off the ground.
 
 ## HI-PRI‼️
 
@@ -344,6 +343,8 @@ mo) 📋
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] when coming back from a stoppie, the angle is not fully reset until i start doing a wheelie, so the rear tire is off the ground.
 
 - [x] incentivize being on road part 1
   - > make going on certain collision layer slower / less stable.

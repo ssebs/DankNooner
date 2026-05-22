@@ -478,6 +478,10 @@ func _stoppie_calc(bd: BikeSkinDefinition, in_stoppie: bool, delta: float):
 		elif in_stoppie:
 			# Brake dropped below threshold — decay back to 0
 			pitch_angle = move_toward(pitch_angle, 0, bd.return_speed * delta)
+	elif pitch_angle < 0:
+		# Residual negative pitch below the in_stoppie threshold — without this,
+		# pitch gets stranded a few degrees negative and the rear wheel hangs.
+		pitch_angle = move_toward(pitch_angle, 0, bd.return_speed * delta)
 
 
 ## Detect clutch dump (held → released while on throttle) and manage kick window
