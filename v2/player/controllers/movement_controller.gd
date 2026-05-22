@@ -12,6 +12,7 @@ class_name MovementController extends Node
 @export var debug_verbose:bool=false
 
 const CLUTCH_KICK_WINDOW: float = 0.2
+const CLUTCH_POP_MIN_POWER: float = 2.5  # gearing.get_potential_power_output() floor — blocks clutch-up in too-high gears
 const FALL_GRAVITY: float = 20
 const AIR_DRAG: float = 12.0  # speed loss while airborne
 # Ramp / loop tuning
@@ -469,9 +470,10 @@ func _can_initiate_wheelie(in_wheelie: bool) -> bool:
 	if abs(roll_angle) >= deg_to_rad(10):
 		return false
 
-	# Clutch dump pop — works from standstill, just needs throttle
+	# Clutch dump pop — works from standstill, just needs throttle.
+	# Gate on potential power so high-gear/low-RPM dumps bog instead of popping.
 	var clutch_pop = _clutch_kick_window > 0 and input_controller.nfx_throttle > 0.5
-	if clutch_pop:
+	if clutch_pop and gearing_controller.get_potential_power_output() > CLUTCH_POP_MIN_POWER:
 		return true
 
 	# Power wheelie — needs forward motion + lean back + throttle + RPM

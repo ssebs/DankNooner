@@ -133,6 +133,20 @@ func get_power_output() -> float:
 	return output
 
 
+## Power output ignoring clutch engagement — used to gate clutch-dump wheelies,
+## since at the moment of release clutch_value is still ~1.0 and engagement ~0.
+func get_potential_power_output() -> float:
+	if _is_stalled or is_rev_limited:
+		return 0.0
+	var ratio = get_rpm_ratio()
+	var bd = player_entity.bike_definition
+	var power_curve = bd.power_curve.sample(ratio)
+	var gear_ratio = bd.gear_ratios[current_gear - 1]
+	var base_ratio = bd.gear_ratios[bd.num_gears - 1]
+	var torque_multiplier = gear_ratio / base_ratio
+	return input_controller.nfx_throttle * power_curve * torque_multiplier
+
+
 ## Called from player_entity.gd's do_respawn
 func do_reset():
 	current_gear = 1
