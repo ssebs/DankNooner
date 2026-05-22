@@ -2,17 +2,6 @@
 ---
 
 
-## Cleanup gamemode objective / events
+i want to implement my race gamemode. i have a working tutorial that uses the @planning_docs\GamemodeSystem.md .    see @levels\test_levels\test_city_01\test_city_01.tscn . Tutorial01EventStartCircle is the working sequential     tutorial. @managers\gamemodes\types\tutorial\tutorial_gamemode.gd . i want to impl the                             @managers\gamemodes\types\street_race\street_race_gamemode.gd from the checkpoints i have in                       RaceTestEventStartCircle. im using CheckpointTasks in a ConcurrentTaskRunner, but this wont be enough. i want      to: have the Race01CheckpointMarker01 be the start/finish line, and each other to provide a checkpoint /           progress in doing a lap. once going thru the start/finish line, add 1 to the lap counter. to start, lets do: new    RaceTask that has a lap counter, a start line, a finish line (can be the same, doesnt have to be), and            checkpoints in order between them. aka @export vars for start_checkpoint, lap_checkpoints Array[checkpoint], and    end_checkpoint (can be the same as start), but the order matters for the lap ones. if a player crashes, they      can respawn at the checkpoint they were last at (use the transform to update the last location, similar to         @managers\gamemodes\tasks\teleport_task.gd) this must work in multiplayer, and eventually have AI that can         follow along. keep the code simple, and follow @CLAUDE.md
 
-**Problems**:
 
-- Move GameModeTask logic from tutorial_gamemode.gd to the event_start_circle.gd
-  - Enter()
-  	_tasks = _start_circle.get_tasks()
-  	for task in _tasks:
-  		task._gamemode = self
-  - _wire_objective_signals() 
-  - _on_trigger_entered()
-
-- managers\gamemodes\tasks\stoppie_duration_task.gd
-  - How does the state: Dictionary work?
