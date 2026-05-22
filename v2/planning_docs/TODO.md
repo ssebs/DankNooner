@@ -13,21 +13,6 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] clutch dump wheelie is perfectly balanced
-- [ ] switching bike crashes game - 
-E 0:00:06:700   EngineSoundEvent.set_parameter: Cannot call method 'sample' on a null value.
-  <GDScript Source>engine_sound_event.gd:14 @ EngineSoundEvent.set_parameter()
-  <Stack Trace> engine_sound_event.gd:14 @ set_parameter()
-                audio_manager.gd:162 @ update_revs_rpm()
-                player_entity.gd:296 @ _on_rpm_updated()
-                gearing_controller.gd:47 @ on_movement_rollback_tick()
-                player_entity.gd:142 @ _rollback_tick()
-                network-rollback.gd:227 @ process_rollback()
-                rollback-synchronizer.gd:422 @ _run_rollback_tick()
-                rollback-synchronizer.gd:278 @ _process_tick()
-                network-rollback.gd:355 @ _rollback()
-                network-time.gd:570 @ _loop()
-                network-time.gd:576 @ _process()
 
 ## HI-PRI‼️
 
@@ -352,6 +337,10 @@ mo) 📋
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] switching bike crashes game
+
+- [x] clutch dump wheelie is perfectly balanced
 
 - [x] Should not be able to clutch up in 4th gear going 1mph
 
