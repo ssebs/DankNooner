@@ -13,7 +13,7 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] Should not be able to clutch up in 4th gear going 1mph
+- [ ] clutch dump wheelie is perfectly balanced
 
 ## HI-PRI‼️
 
@@ -338,6 +338,8 @@ mo) 📋
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Should not be able to clutch up in 4th gear going 1mph
 
 - [x] Play tada when completing a trick
 
