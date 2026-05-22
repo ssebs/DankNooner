@@ -16,6 +16,10 @@
 
 ## HI-PRI‼️
 
+- [ ] Create gamemodeobjects
+  - [ ] to show/hide things
+  - [ ] to call a function
+
 - [ ] Manually cleanup @animation_controller.gd
   - [ ] e.g. creating a new trick goes from trick_controller to 4 places in anim controller, lots of duplication
 - [ ] add ground detection to animation controller

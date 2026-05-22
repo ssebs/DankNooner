@@ -3,35 +3,38 @@
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_i65yt"]
 [ext_resource type="Script" uid="uid://dlukxvp4mme8d" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.gd" id="1_jt853"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_i65yt"]
-size = Vector3(9, 4, 1)
+[sub_resource type="BoxShape3D" id="BoxShape3D_lpp3f"]
+size = Vector3(8, 4, 1)
 
 [node name="CheckpointMarker" type="Node3D" unique_id=1048335829]
 script = ExtResource("1_jt853")
 
-[node name="sign_no_collision" parent="." unique_id=1485126779 instance=ExtResource("1_i65yt")]
+[node name="SignNoCollision" parent="." unique_id=1485126779 instance=ExtResource("1_i65yt")]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
 collision_layer = 0
 collision_mask = 0
-width = 9.5
-height = 3.0
+width = 8.0
+height = 2.0
 depth = 0.1
 color_preset = 3
 
-[node name="Label3D" type="Label3D" parent="sign_no_collision" unique_id=535489080]
+[node name="Label3D" type="Label3D" parent="SignNoCollision" unique_id=535489080]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.06323373)
 text = "REPLACE_ME"
-font_size = 72
+font_size = 92
 
-[node name="pillar" parent="." unique_id=39983299 instance=ExtResource("1_i65yt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
+[node name="LeftPillar" parent="." unique_id=39983299 instance=ExtResource("1_i65yt")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
 collision_layer = 3
 height = 4.0
 color_preset = 1
 
-[node name="pillar2" parent="." unique_id=1266424071 instance=ExtResource("1_i65yt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+[node name="RightPillar" parent="." unique_id=1266424071 instance=ExtResource("1_i65yt")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
 collision_layer = 3
 height = 4.0
 color_preset = 1
@@ -39,4 +42,5 @@ color_preset = 1
 [node name="Area3D" type="Area3D" parent="." unique_id=675842807]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1448077944]
-shape = SubResource("BoxShape3D_i65yt")
+unique_name_in_owner = true
+shape = SubResource("BoxShape3D_lpp3f")

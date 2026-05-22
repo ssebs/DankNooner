@@ -45,6 +45,13 @@ description = "Learn the basics to get your M1 license."
 target_gamemode = 3
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
+[sub_resource type="Resource" id="Resource_cf4ia"]
+script = ExtResource("4_dr5sf")
+name = "Race 01"
+description = "Testing the checkpoints & laps"
+target_gamemode = 1
+metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
+
 [node name="Test_City_01" type="Node3D" unique_id=721643000 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug")]
 script = ExtResource("1_qt85o")
 player_spawn_pos = NodePath("PlayerSpawn")
@@ -1835,3 +1842,94 @@ marker = NodePath("../../../Stuff/Tut01Location/Tutorial01StartMarker")
 
 [node name="StoppieDuration_Stoppie" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=1257142628]
 script = ExtResource("11_st")
+
+[node name="Race01Event" type="Node3D" parent="." unique_id=409874786]
+
+[node name="RaceTestEventStartCircle" parent="Race01Event" unique_id=423241463 instance=ExtResource("3_ffs5v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 131, -0.020000111, 81)
+gamemode_event = SubResource("Resource_cf4ia")
+
+[node name="SequentialTaskRunner" type="Node" parent="Race01Event/RaceTestEventStartCircle" unique_id=593871239]
+script = ExtResource("13_runner")
+metadata/_custom_type_script = "uid://f840hmifnv7g"
+
+[node name="TeleportTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner" unique_id=546654510 node_paths=PackedStringArray("marker")]
+script = ExtResource("9_ccoso")
+marker = NodePath("RaceStartMarker01")
+metadata/_custom_type_script = "uid://c4b6sy0eliiac"
+
+[node name="RaceStartMarker01" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/TeleportTask" unique_id=10711231]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 124, 0, 70)
+
+[node name="ConcurrentTaskRunner2" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner" unique_id=814209640]
+script = ExtResource("8_cf4ia")
+
+[node name="CountdownTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1085385331]
+script = ExtResource("9_7dagn")
+metadata/_custom_type_script = "uid://8xvij2vjrnn2"
+
+[node name="SFXTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=2026933016]
+script = ExtResource("9_whmyo")
+sound = 2
+advance_mode = 1
+duration_sec = 3.0
+metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
+
+[node name="ConcurrentTaskRunner" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner" unique_id=728823985]
+script = ExtResource("8_cf4ia")
+metadata/_custom_type_script = "uid://1hiltkmgy4i3"
+
+[node name="CheckpointTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=497300501 node_paths=PackedStringArray("trigger")]
+script = ExtResource("12_25rwx")
+eval_when = 1
+trigger = NodePath("Race01CheckpointMarker01")
+metadata/_custom_type_script = "uid://b40syrl038fb3"
+
+[node name="Race01CheckpointMarker01" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner/CheckpointTask" unique_id=1805086722 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 137, 2.0500002, 70)
+width = 11.0
+sign_text = "Start / Stop"
+
+[node name="CheckpointTask2" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1309655239 node_paths=PackedStringArray("trigger")]
+script = ExtResource("12_25rwx")
+eval_when = 1
+trigger = NodePath("Race01CheckpointMarker02")
+metadata/_custom_type_script = "uid://b40syrl038fb3"
+
+[node name="Race01CheckpointMarker02" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner/CheckpointTask2" unique_id=2103253634 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 197, 2.0500002, 70)
+width = 11.0
+sign_text = "Turn Left!"
+
+[node name="CheckpointTask3" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1507900267 node_paths=PackedStringArray("trigger")]
+script = ExtResource("12_25rwx")
+eval_when = 1
+trigger = NodePath("Race01CheckpointMarker03")
+metadata/_custom_type_script = "uid://b40syrl038fb3"
+
+[node name="Race01CheckpointMarker03" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner/CheckpointTask3" unique_id=424970851 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 220, 2.0500002, 13)
+width = 11.0
+sign_text = "Turn Left!"
+
+[node name="CheckpointTask4" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=511539016 node_paths=PackedStringArray("trigger")]
+script = ExtResource("12_25rwx")
+eval_when = 1
+trigger = NodePath("Race01CheckpointMarker04")
+metadata/_custom_type_script = "uid://b40syrl038fb3"
+
+[node name="Race01CheckpointMarker04" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner/CheckpointTask4" unique_id=1688146334 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 120, 2.0500002, 4.6809487e-06)
+width = 11.0
+sign_text = "Turn Left!"
+
+[node name="CheckpointTask5" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=255409153 node_paths=PackedStringArray("trigger")]
+script = ExtResource("12_25rwx")
+eval_when = 1
+trigger = NodePath("Race01CheckpointMarker05")
+metadata/_custom_type_script = "uid://b40syrl038fb3"
+
+[node name="Race01CheckpointMarker05" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner/CheckpointTask5" unique_id=751767640 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 110, 2.0500002, 63.000008)
+width = 11.0
+sign_text = "Last Turn"
