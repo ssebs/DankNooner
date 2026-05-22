@@ -8,7 +8,7 @@ Lap-based race built on the gamemode system ([GamemodeSystem](./GamemodeSystem.m
 - `managers/gamemodes/tasks/race_task.gd` — lap/checkpoint state machine
 - `managers/gamemodes/gamemodeobjects/checkpoint_marker.gd` — `CheckPointMarker` (gate, signals `entered`)
 - `managers/gamemodes/runners/sequential_task_runner.gd` — runner that hosts `RaceTask`
-- `managers/gamemodes/tasks/teleport_task.gd` — leading task that sets the race-start respawn
+- `managers/gamemodes/tasks/grid_spawn_task.gd` — leading task that assigns each peer a grid slot and sets the race-start respawn
 - `managers/spawn_manager.gd` — `set_respawn_point` / `respawn_player_at` / `respawn_player` RPCs
 - `managers/gamemodes/types/tutorial/tutorial_hud.gd` + `.tscn` — shared HUD (`rpc_show_step`, `rpc_update_progress`, `rpc_hide_step_label`)
 - `managers/gamemodes/hud/results_hud.gd` — end-of-race results panel
@@ -78,8 +78,8 @@ On crash:
    `_respawn_delay`, which honours the player's persistent respawn transform.
 
 Result: crash → respawn at the last checkpoint passed. Before any checkpoint
-is hit, the leading `TeleportTask` (in the runner) already set the respawn to
-the race start.
+is hit, the leading `GridSpawnTask` already set the respawn to that peer's
+grid slot.
 
 ## HUD
 
@@ -97,7 +97,7 @@ Uses the shared `TutorialHUD`. Race-specific behaviour:
 ```
 EventStartCircle  (target_gamemode = STREET_RACE)
 └── SequentialTaskRunner
-    ├── TeleportTask         (race start marker)
+    ├── GridSpawnTask        (grid_markers = [GridSlot01, GridSlot02, ...])
     ├── ConcurrentTaskRunner (countdown + sfx)
     └── RaceTask
         ├── start_checkpoint = CheckpointMarker01
@@ -105,6 +105,12 @@ EventStartCircle  (target_gamemode = STREET_RACE)
         ├── end_checkpoint   = CheckpointMarker01   (same as start)
         └── total_laps       = 3
 ```
+
+`GridSpawnTask` assigns each entering peer the next slot from its `grid_markers`
+array, teleports them there via `SpawnManager.respawn_player_at` (also stores
+the transform as the persistent respawn point), then auto-advances. Peers
+beyond `grid_markers.size()` stack on the last marker — collision avoidance
+handles separation.
 
 Markers can live anywhere in the level — RaceTask references them by NodePath
 exports, so their parent doesn't matter.
