@@ -1730,26 +1730,26 @@ width = 16.0
 depth = 0.1
 color_preset = 1
 
-[node name="Tutorial01EventStartCircle" parent="." unique_id=1014716352 instance=ExtResource("3_ffs5v")]
+[node name="TestEventStartCircle" parent="." unique_id=1014716352 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 81)
 gamemode_event = SubResource("Resource_i711f")
 
-[node name="SequentialTaskRunner" type="Node" parent="Tutorial01EventStartCircle" unique_id=2098834758]
+[node name="SequentialTaskRunner" type="Node" parent="TestEventStartCircle" unique_id=2098834758]
 script = ExtResource("13_runner")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="Teleport_Start" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=1014716353 node_paths=PackedStringArray("marker")]
+[node name="Teleport_Start" type="Node" parent="TestEventStartCircle/SequentialTaskRunner" unique_id=1014716353 node_paths=PackedStringArray("marker")]
 script = ExtResource("9_ccoso")
 marker = NodePath("../../../Stuff/Tut01Location/Tutorial01StartMarker")
 
-[node name="ConcurrentTaskRunner" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=2080321246]
+[node name="ConcurrentTaskRunner" type="Node" parent="TestEventStartCircle/SequentialTaskRunner" unique_id=2080321246]
 script = ExtResource("8_cf4ia")
 
-[node name="CountdownStep1" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1010143940]
+[node name="CountdownStep1" type="Node" parent="TestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1010143940]
 script = ExtResource("9_7dagn")
 seconds = 2.0
 
-[node name="SFXTask" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=463781277]
+[node name="SFXTask" type="Node" parent="TestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=463781277]
 script = ExtResource("9_whmyo")
 sound = 3
 advance_mode = 1
