@@ -16,6 +16,12 @@
 [ext_resource type="AudioStream" uid="uid://c05d8kjy8m8db" path="res://non_fmod_sounds/SFX/minimize_008.ogg" id="12_nbuvf"]
 [ext_resource type="AudioStream" uid="uid://bypjsikgd6vlo" path="res://non_fmod_sounds/SFX/mouse-click.mp3" id="13_tqr3v"]
 [ext_resource type="AudioStream" uid="uid://cnt3peoky4ry3" path="res://non_fmod_sounds/SFX/clunk-gear-change.ogg" id="14_nbuvf"]
+[ext_resource type="AudioStream" uid="uid://co3241mgan2g3" path="res://non_fmod_sounds/SFX/bone-crack.ogg" id="17_ouyk3"]
+[ext_resource type="AudioStream" uid="uid://52vsijrqmr10" path="res://non_fmod_sounds/SFX/ding.ogg" id="18_3kfh2"]
+[ext_resource type="AudioStream" uid="uid://bb5n6a76kjtsg" path="res://non_fmod_sounds/SFX/fahh.ogg" id="19_wigfl"]
+[ext_resource type="AudioStream" uid="uid://b6hkhxmnfe1h6" path="res://non_fmod_sounds/SFX/taco-bell-bong-sfx.mp3" id="20_7lx2g"]
+[ext_resource type="AudioStream" uid="uid://b74v67cikxdqo" path="res://non_fmod_sounds/SFX/vine-boom.mp3" id="21_60vs4"]
+[ext_resource type="AudioStream" uid="uid://dov0o7qath83k" path="res://non_fmod_sounds/SFX/windows-tada.mp3" id="22_uckac"]
 
 [node name="AudioManager" type="Node" unique_id=625309404 groups=["Managers"]]
 script = ExtResource("1_1k0gc")
@@ -119,6 +125,50 @@ metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 [node name="ClunkGearChange" type="AudioStreamPlayer" parent="Sounds" unique_id=1813774597]
 unique_name_in_owner = true
 stream = ExtResource("14_nbuvf")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="BoneCrack" type="AudioStreamPlayer" parent="Sounds" unique_id=1891151223]
+unique_name_in_owner = true
+stream = ExtResource("17_ouyk3")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="Ding" type="AudioStreamPlayer" parent="Sounds" unique_id=1429332315]
+unique_name_in_owner = true
+stream = ExtResource("18_3kfh2")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="Fahh" type="AudioStreamPlayer" parent="Sounds" unique_id=1802128725]
+unique_name_in_owner = true
+stream = ExtResource("19_wigfl")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="TBell" type="AudioStreamPlayer" parent="Sounds" unique_id=54644464]
+unique_name_in_owner = true
+stream = ExtResource("20_7lx2g")
+volume_db = -5.0
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="VineBoom" type="AudioStreamPlayer" parent="Sounds" unique_id=996360322]
+unique_name_in_owner = true
+stream = ExtResource("21_60vs4")
+volume_db = -5.0
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="Tada" type="AudioStreamPlayer" parent="Sounds" unique_id=274020935]
+unique_name_in_owner = true
+stream = ExtResource("22_uckac")
 bus = &"SFX"
 script = ExtResource("2_snd")
 metadata/_custom_type_script = "uid://dk2ghd454wkc2"
