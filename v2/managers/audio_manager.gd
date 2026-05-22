@@ -29,6 +29,8 @@ enum Sfx {
 	TBELL,
 	VINE_BOOM,
 	TADA,
+	NUKE,
+	COD_ZOMBIES_KABOOM,
 }
 
 @export var settings_manager: SettingsManager
@@ -65,6 +67,8 @@ var fahh: SoundEvent
 var tbell: SoundEvent
 var vine_boom: SoundEvent
 var tada: SoundEvent
+var nuke: SoundEvent
+var cod_zombies_kaboom: SoundEvent
 
 ## Map of EngineSfx → EngineSoundEvent node, populated in _ready.
 var _engine_sounds: Dictionary = {}
@@ -93,6 +97,8 @@ func _ready():
 	tbell = get_node_or_null("%TBell") as SoundEvent
 	vine_boom = get_node_or_null("%VineBoom") as SoundEvent
 	tada = get_node_or_null("%Tada") as SoundEvent
+	nuke = get_node_or_null("%Nuke") as SoundEvent
+	cod_zombies_kaboom = get_node_or_null("%CODZombiesKaboom") as SoundEvent
 
 	_engine_sounds = {
 		EngineSfx.NINJA500: ninja500_revs,
@@ -224,6 +230,14 @@ func play_tada():
 	tada.play()
 
 
+func play_nuke():
+	nuke.play()
+
+
+func play_cod_zombies_kaboom():
+	cod_zombies_kaboom.play()
+
+
 func play_sfx(id: Sfx):
 	get_sound_event(id).play()
 
@@ -268,6 +282,10 @@ func get_sound_event(id: Sfx) -> SoundEvent:
 			return vine_boom
 		Sfx.TADA:
 			return tada
+		Sfx.NUKE:
+			return nuke
+		Sfx.COD_ZOMBIES_KABOOM:
+			return cod_zombies_kaboom
 	push_error("AudioManager.get_sound_event: unhandled Sfx id %s" % id)
 	return null
 
