@@ -39,6 +39,13 @@ func rpc_update_progress(progress_text: String):
 	hint_label.text = progress_text
 
 
+## Hide the "step X / N" indicator. Used by single-step modes (e.g. race) where
+## the counter is meaningless.
+@rpc("call_local", "reliable")
+func rpc_hide_step_label():
+	step_label.hide()
+
+
 @rpc("call_local", "reliable")
 func rpc_show_complete():
 	step_label.hide()

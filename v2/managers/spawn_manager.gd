@@ -67,6 +67,13 @@ func respawn_player_at(player_peer_id: int, pos: Vector3, basis: Basis):
 	player_node.rb_do_respawn = true
 
 
+## Update the persistent respawn point without teleporting. Used when a player
+## passes a race checkpoint — their next crash returns them here.
+@rpc("any_peer", "call_local", "reliable")
+func set_respawn_point(player_peer_id: int, pos: Vector3, basis: Basis):
+	_get_player_by_peer_id(player_peer_id).rb_respawn_transform = Transform3D(basis, pos)
+
+
 ## Clear the persistent respawn point so the next respawn falls back to player_spawn_pos.
 ## Used when entering free roam from another gamemode.
 @rpc("any_peer", "call_local", "reliable")
