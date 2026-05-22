@@ -12,7 +12,7 @@ Realistic controls meet arcade tricks: progressive braking, balance point wheeli
 
 > Best played with a controller! But Keyboard + Mouse works too
 
-- **Browser (no sound yet):** [ssebs.github.io/DankNooner](https://ssebs.github.io/DankNooner/)
+- **In-Browser:** [ssebs.github.io/DankNooner](https://ssebs.github.io/DankNooner/)
 - **Desktop builds (Win/Mac/Linux):** [latest release](https://github.com/ssebs/DankNooner/releases)
 - **V1 POC (wheelie balance):** [itch.io](https://theofficialssebs.itch.io/dank-nooner-poc)
 

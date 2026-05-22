@@ -12,7 +12,8 @@ class_name MovementController extends Node
 @export var debug_verbose:bool=false
 
 const CLUTCH_KICK_WINDOW: float = 0.2
-const CLUTCH_POP_MIN_POWER: float = 2.5  # gearing.get_potential_power_output() floor — blocks clutch-up in too-high gears
+const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65  # fraction of bike's 1st-gear torque needed to clutch-pop — blocks high-gear pops
+const POWER_WHEELIE_MIN_POWER: float = 1.8  # delivered power floor for power wheelies — high-gear OK at speed (powerband), low-RPM blocked
 const FALL_GRAVITY: float = 20
 const AIR_DRAG: float = 12.0  # speed loss while airborne
 # Ramp / loop tuning
@@ -340,8 +341,10 @@ func _pitch_angle_calc(delta: float):
 	var wheelie_target = 0.0
 	if _can_initiate_wheelie(in_wheelie) and not in_stoppie:
 		wheelie_target = _calc_normal_wheelie_target(bd)
-		if in_balance_point or above_balance_point:
-			wheelie_target = _calc_balance_point_target(bd, in_balance_point, bp_low, bp_high)
+		# Above balance point is unstable — overrides normal target with drift-to-crash.
+		# In-BP keeps the normal target; dampened rotation/decay in _apply_wheelie_pitch gives the BP feel.
+		if above_balance_point:
+			wheelie_target = _calc_above_balance_point_target(bd, bp_low, bp_high)
 
 	DebugUtils.DebugMsg(
 		(
@@ -470,69 +473,46 @@ func _can_initiate_wheelie(in_wheelie: bool) -> bool:
 	if abs(roll_angle) >= deg_to_rad(10):
 		return false
 
-	# Clutch dump pop — works from standstill, just needs throttle.
-	# Gate on potential power so high-gear/low-RPM dumps bog instead of popping.
+	# Clutch dump pop — needs raw torque (low gear). Gates on potential power
+	# (ignoring engagement, since clutch_value is still ~1.0 at the dump instant).
 	var clutch_pop = _clutch_kick_window > 0 and input_controller.nfx_throttle > 0.5
-	if clutch_pop and gearing_controller.get_potential_power_output() > CLUTCH_POP_MIN_POWER:
-		return true
+	if clutch_pop:
+		var max_torque_mult = bd.gear_ratios[0] / bd.gear_ratios[bd.num_gears - 1]
+		return gearing_controller.get_potential_power_output() > max_torque_mult * CLUTCH_POP_MIN_POWER_FRAC
 
-	# Power wheelie — needs forward motion + lean back + throttle + RPM
+	# Power wheelie — needs forward motion + lean back + throttle + delivered power.
+	# Uses get_power_output() so high gears at speed (peak powerband) still work,
+	# but low-RPM/low-gear-engagement situations bog instead of lifting.
 	if speed <= 1:
 		return false
-	var effective_rpm_threshold = lerpf(
-		bd.wheelie_rpm_threshold, bd.wheelie_rpm_threshold * 0.5, _speed_pct
-	)
-	var rpm_for_power = gearing_controller.get_rpm_ratio() >= effective_rpm_threshold
 	return (
 		input_controller.nfx_lean < -0.3
 		and input_controller.nfx_throttle > 0.7
-		and rpm_for_power
+		and gearing_controller.get_power_output() > POWER_WHEELIE_MIN_POWER
 	)
 
 
-## Calculate wheelie target in the normal zone (below balance point).
-## Lean-back is the primary driver; throttle alone only provides a small assist.
+## Calculate wheelie target. Lean-back is the only driver — throttle alone
+## must not pin a target, or the bike sticks at a static equilibrium angle.
 func _calc_normal_wheelie_target(bd: BikeSkinDefinition) -> float:
+	if input_controller.nfx_lean >= 0:
+		return 0.0
 	var max_wheelie_rad = deg_to_rad(bd.max_wheelie_angle_deg)
-	# Throttle torque lifts the front — too much gas loops you out
-	var throttle_lift = max_wheelie_rad * input_controller.nfx_throttle * 0.4
-	# Lean-back is the main driver for reaching and holding higher angles
-	var lean_lift = 0.0
-	if input_controller.nfx_lean < 0:
-		lean_lift = max_wheelie_rad * abs(input_controller.nfx_lean) * 0.75
-	return throttle_lift + lean_lift
+	return max_wheelie_rad * abs(input_controller.nfx_lean) * 0.75
 
 
-## Three-zone balance point:
-## - In range (bp_low..bp_high): stable sweet spot — drifts toward center, but lean can push past
-## - Above range: unstable — drifts toward crash unless rider corrects
-func _calc_balance_point_target(
+## Above balance point — unstable. Drifts toward crash unless rider leans forward.
+func _calc_above_balance_point_target(
 	bd: BikeSkinDefinition,
-	in_range: bool,
 	bp_low: float,
 	bp_high: float,
 ) -> float:
 	var max_wheelie_rad = deg_to_rad(bd.max_wheelie_angle_deg)
 	var balance_center = (bp_low + bp_high) / 2.0
-
-	if in_range:
-		# Sweet spot — bike wants to settle here, but lean and throttle push past it.
-		# Inputs are dampened in the balance point so riders can hold it without twitching out.
-		var target = balance_center
-		target -= input_controller.nfx_lean * (max_wheelie_rad - bp_low) * _balance_point_decay_mult
-		target += (
-			input_controller.nfx_throttle * (max_wheelie_rad - bp_low) * 0.5 * _balance_point_decay_mult
-		)
-		target += randf_range(deg_to_rad(-10.0), deg_to_rad(10.0))
-		return target
-
-	# Above balance point — unstable, drifts toward crash
 	var drift_target = max_wheelie_rad + deg_to_rad(1)
 	if input_controller.nfx_lean > 0:
 		return balance_center
-	if input_controller.nfx_lean < 0:
-		return drift_target
-	# No input — drifts toward crash on its own
+	# Lean back or no input — drifts toward crash
 	return drift_target
 
 
