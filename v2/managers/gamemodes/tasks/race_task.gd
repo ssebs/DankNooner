@@ -20,11 +20,10 @@ enum WaitFor { START, LAP_CP, END }
 @export var end_checkpoint: CheckPointMarker
 @export var total_laps: int = 3
 @export var objective_key: String = "RACE_OBJECTIVE"
-@export var hint_key: String = "RACE_HINT"
 
 ## Per-peer progress. RaceTask owns this directly — the runner's per-peer
 ## scratchpad isn't reachable from signal callbacks.
-##   peer_id -> { "laps_done": int, "next_lap_idx": int, "waiting_for": WaitFor }
+##   peer_id -> { "laps_done": int, "next_lap_idx": int, "waiting_for": WaitFor, "start_ms": int }
 var _peer_progress: Dictionary[int, Dictionary] = {}
 var _signals_wired: bool = false
 
@@ -42,17 +41,21 @@ func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
 		"laps_done": 0,
 		"next_lap_idx": 0,
 		"waiting_for": WaitFor.START,
+		"start_ms": Time.get_ticks_msec(),
 	}
 	# Runner pushes rpc_show_step right after on_enter — defer the hide so it
 	# runs after that, otherwise the step label re-shows.
 	var hud := _runner.task_hud
 	(func(): hud.rpc_hide_step_label.rpc_id(peer_id)).call_deferred()
-	_push_lap_hud(peer_id)
 
 
 func check(player: PlayerEntity, _delta: float, _state: Dictionary) -> bool:
 	var peer_id := int(player.name)
-	return _peer_progress[peer_id]["laps_done"] >= total_laps
+	var p := _peer_progress[peer_id]
+	if p["laps_done"] >= total_laps:
+		return true
+	_push_lap_hud(peer_id, p)
+	return false
 
 
 func on_exit(player: PlayerEntity, _state: Dictionary) -> void:
@@ -64,7 +67,8 @@ func get_objective_text() -> String:
 
 
 func get_hint_text() -> String:
-	return tr(hint_key)
+	# Empty — dynamic lap/timer text is pushed each frame via rpc_update_progress.
+	return ""
 
 
 #region Checkpoint signal wiring
@@ -136,7 +140,6 @@ func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
 				p["waiting_for"] = WaitFor.LAP_CP if !lap_checkpoints.is_empty() else WaitFor.END
 			else:
 				p["waiting_for"] = WaitFor.START
-			_push_lap_hud(peer_id)
 
 
 func _after_start_or_lap_advance(p: Dictionary) -> void:
@@ -146,10 +149,15 @@ func _after_start_or_lap_advance(p: Dictionary) -> void:
 		p["waiting_for"] = WaitFor.END
 
 
-func _push_lap_hud(peer_id: int) -> void:
-	var laps_done: int = _peer_progress[peer_id]["laps_done"]
-	var current_lap: int = min(laps_done + 1, total_laps)
-	var text := tr("RACE_LAP").format({"current": current_lap, "total": total_laps})
+func _push_lap_hud(peer_id: int, p: Dictionary) -> void:
+	var current_lap: int = min(p["laps_done"] + 1, total_laps)
+	var elapsed_ms: int = Time.get_ticks_msec() - p["start_ms"]
+	var minutes := elapsed_ms / 60000
+	var secs := (elapsed_ms % 60000) / 1000.0
+	var time_str := "%d:%05.2f" % [minutes, secs]
+	var text := tr("RACE_LAP").format(
+		{"current": current_lap, "total": total_laps, "time": time_str}
+	)
 	_runner.task_hud.rpc_update_progress.rpc_id(peer_id, text)
 
 
