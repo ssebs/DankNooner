@@ -179,7 +179,7 @@ metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 [node name="Nuke" type="AudioStreamPlayer" parent="Sounds" unique_id=1588177652]
 unique_name_in_owner = true
 stream = ExtResource("23_wigfl")
-volume_db = -3.0
+volume_db = -6.0
 bus = &"SFX"
 script = ExtResource("2_snd")
 metadata/_custom_type_script = "uid://dk2ghd454wkc2"
