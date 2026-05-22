@@ -290,8 +290,8 @@ func _on_rpm_updated(new_rpm_ratio: float):
 func _on_gear_changed(new_gear: int):
 	DebugUtils.DebugMsg("Gear: %d" % new_gear, OS.has_feature("debug"))
 	if is_local_client and audio_manager:
-		# audio_manager.play_clunk_gear_change()
-		audio_manager.play_mouse_click()
+		audio_manager.play_clunk_gear_change()
+		# audio_manager.play_mouse_click()
 
 
 func _on_trick_started(trick_type: TrickController.Trick):
@@ -305,6 +305,17 @@ func _on_trick_ended(trick_type: TrickController.Trick):
 		"Trick Ended: %s" % TrickController.trick_to_str(trick_type),
 		OS.has_feature("debug") and false
 	)
+
+	if (
+		trick_type
+		not in [
+			TrickController.Trick.NONE,
+			TrickController.Trick.WHEELIE_SITTING,
+			TrickController.Trick.WHEELIE_MOD,
+			TrickController.Trick.STOPPIE
+		]
+	):
+		audio_manager.play_ding()
 
 
 #endregion

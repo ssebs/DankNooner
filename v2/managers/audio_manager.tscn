@@ -139,6 +139,7 @@ metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 [node name="Ding" type="AudioStreamPlayer" parent="Sounds" unique_id=1429332315]
 unique_name_in_owner = true
 stream = ExtResource("18_3kfh2")
+volume_db = -4.0
 bus = &"SFX"
 script = ExtResource("2_snd")
 metadata/_custom_type_script = "uid://dk2ghd454wkc2"
