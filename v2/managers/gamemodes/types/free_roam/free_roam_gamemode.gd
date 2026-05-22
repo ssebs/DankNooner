@@ -82,9 +82,9 @@ func _on_event_circle_exited(peer_id: int, source_circle: EventStartCircle):
 func _on_game_mode_event_confirm_hud_submitted(peer_id: int):
 	DebugUtils.DebugMsg("Starting Event... %d" % peer_id)
 	game_mode_event_confirm_hud.on_player_close_pressed.rpc_id(1, peer_id)
-	gamemode_manager.pending_gamemode_event = _ctx.gamemode_event
-	gamemode_manager.pending_event_start_circle = _ctx.event_start_circle
-	gamemode_manager.change_gamemode.rpc_id(1, _ctx.gamemode_event.target_gamemode, peer_id)
+	gamemode_manager.change_gamemode.rpc_id(
+		1, _ctx.gamemode_event.target_gamemode, peer_id, _ctx.event_start_circle.get_path()
+	)
 
 
 func Exit(_state_context: StateContext):

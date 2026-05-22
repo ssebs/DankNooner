@@ -34,8 +34,6 @@ var match_state: MatchState = MatchState.IN_LOBBY
 var current_game_mode: GameModeType.Kind = GameModeType.Kind.FREE_FROAM
 var current_level_name: LevelManager.LevelName = LevelManager.LevelName.LEVEL_SELECT_LABEL
 
-var pending_gamemode_event: GameModeEventDefinition
-var pending_event_start_circle: EventStartCircle
 var _gamemode_map: Dictionary[GameModeType.Kind,GameModeType] = {}
 
 
@@ -69,25 +67,25 @@ func start_game(level_name: LevelManager.LevelName, gamemode: GameModeType.Kind 
 
 ## Server receives request to change gamemode, broadcasts to all peers
 @rpc("any_peer", "call_local", "reliable")
-func change_gamemode(gamemode: GameModeType.Kind, peer_id: int):
+func change_gamemode(gamemode: GameModeType.Kind, peer_id: int, event_start_circle_path: NodePath = ^""):
 	if !multiplayer.is_server():
 		return
 
 	current_game_mode = gamemode
-	_rpc_transition_gamemode.rpc(gamemode, peer_id)
+	_rpc_transition_gamemode.rpc(gamemode, peer_id, event_start_circle_path)
 
 
-## All peers transition their state machine to the new gamemode
+## All peers transition their state machine to the new gamemode.
+## event_start_circle_path is resolved locally on each peer because EventStartCircle
+## refs can't cross RPC boundaries — the path is the same on every peer's level scene.
 @rpc("call_local", "reliable")
-func _rpc_transition_gamemode(gamemode: GameModeType.Kind, peer_id: int):
+func _rpc_transition_gamemode(gamemode: GameModeType.Kind, peer_id: int, event_start_circle_path: NodePath = ^""):
 	var ctx := GamemodeStateContext.new()
 	ctx.peer_id = peer_id
-	if pending_gamemode_event:
-		ctx.gamemode_event = pending_gamemode_event
-		pending_gamemode_event = null
-	if pending_event_start_circle:
-		ctx.event_start_circle = pending_event_start_circle
-		pending_event_start_circle = null
+	if !event_start_circle_path.is_empty():
+		var circle := get_node(event_start_circle_path) as EventStartCircle
+		ctx.event_start_circle = circle
+		ctx.gamemode_event = circle.gamemode_event
 	current_game_mode = gamemode
 	state_machine.request_state_change(_gamemode_map[gamemode], ctx)
 
