@@ -1,6 +1,22 @@
 # Street Race Mode
 
 Lap-based race built on the gamemode system ([GamemodeSystem](./GamemodeSystem.md)).
+
+## Relevant files
+
+- `managers/gamemodes/types/street_race/street_race_gamemode.gd` — the gamemode
+- `managers/gamemodes/tasks/race_task.gd` — lap/checkpoint state machine
+- `managers/gamemodes/gamemodeobjects/checkpoint_marker.gd` — `CheckPointMarker` (gate, signals `entered`)
+- `managers/gamemodes/runners/sequential_task_runner.gd` — runner that hosts `RaceTask`
+- `managers/gamemodes/tasks/teleport_task.gd` — leading task that sets the race-start respawn
+- `managers/spawn_manager.gd` — `set_respawn_point` / `respawn_player_at` / `respawn_player` RPCs
+- `managers/gamemodes/types/tutorial/tutorial_hud.gd` + `.tscn` — shared HUD (`rpc_show_step`, `rpc_update_progress`, `rpc_hide_step_label`)
+- `managers/gamemodes/hud/results_hud.gd` — end-of-race results panel
+- `managers/gamemodes/gamemode_manager.gd` — match state, `change_gamemode`, late-join sync
+- `managers/gamemodes/gamemodeobjects/event_start_circle.gd` — owns the runners, carries `GameModeEventDefinition`
+- `levels/test_levels/test_city_01/test_city_01.tscn` — `RaceTestEventStartCircle` reference wiring
+- `localization/localization.csv` — `RACE_*` keys
+- `planning_docs/GamemodeSystem.md` — base taxonomy / flow that this mode plugs into
 Mirrors `TutorialGameMode`: an `EventStartCircle` owns one or more `TaskRunner`s;
 the gamemode walks them, listens for completion, shows results, returns to free roam.
 
