@@ -9,7 +9,6 @@
 [ext_resource type="Script" uid="uid://6drc05oyeb7b" path="res://managers/network/connection_manager.gd" id="5_pk5u2"]
 [ext_resource type="PackedScene" uid="uid://d0jwfmklbjcoo" path="res://menus/pause_menu/pause_menu_state.tscn" id="6_02kkc"]
 [ext_resource type="PackedScene" uid="uid://ds8xwygeh5ykm" path="res://menus/main_menu/main_menu_state.tscn" id="6_2pltu"]
-[ext_resource type="Script" uid="uid://bwjhjq5qatrks" path="res://managers/network/multiplayer_noray.gd" id="6_an1vu"]
 [ext_resource type="PackedScene" uid="uid://tbsm4ckff72l" path="res://menus/settings_menu/settings_menu_state.tscn" id="6_f52ns"]
 [ext_resource type="Script" uid="uid://iqvglquvlctu" path="res://managers/network/multiplayer_ipport.gd" id="7_borgi"]
 [ext_resource type="PackedScene" uid="uid://x3ylknc7a413" path="res://menus/play_menu/play_menu_state.tscn" id="7_f52ns"]
@@ -59,15 +58,10 @@ script = ExtResource("5_pk5u2")
 menu_manager = NodePath("../MenuManager")
 settings_manager = NodePath("../SettingsManager")
 level_manager = NodePath("../LevelManager")
-noray_handler = NodePath("MultiplayerNoray")
+noray_handler = NodePath("")
 ipport_handler = NodePath("MultiplayerIPPort")
 webrtc_handler = NodePath("MultiplayerWebRTC")
 metadata/_custom_type_script = "uid://6drc05oyeb7b"
-
-[node name="MultiplayerNoray" type="Node" parent="ManagerManager/ConnectionManager" unique_id=664319890 node_paths=PackedStringArray("settings_manager")]
-script = ExtResource("6_an1vu")
-settings_manager = NodePath("../../SettingsManager")
-metadata/_custom_type_script = "uid://bwjhjq5qatrks"
 
 [node name="MultiplayerIPPort" type="Node" parent="ManagerManager/ConnectionManager" unique_id=901234466]
 script = ExtResource("7_borgi")

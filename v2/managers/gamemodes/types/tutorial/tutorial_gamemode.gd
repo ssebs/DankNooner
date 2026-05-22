@@ -127,6 +127,7 @@ func _inject_runner_deps():
 		runner.spawn_manager = spawn_manager
 		runner.task_hud = tutorial_hud
 		runner.audio_manager = audio_manager
+		runner.wire_task_refs()
 		_inject_task_deps(runner)
 
 

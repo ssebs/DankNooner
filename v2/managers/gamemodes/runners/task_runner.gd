@@ -19,3 +19,18 @@ signal respawn_requested(peer_id: int)
 var spawn_manager: SpawnManager
 var task_hud: TutorialHUD
 var audio_manager: AudioManager
+
+
+## Wire `_runner` on every child task and propagate deps + recurse into nested
+## runners. Runs on every peer (host gamemode calls this in Enter()) so RPCs
+## targeting clients can resolve `_runner.audio_manager` etc — the per-peer
+## `start()` only runs on the server and can't do this for clients.
+func wire_task_refs() -> void:
+	for c in get_children():
+		if c is GameModeTask:
+			c._runner = self
+		if c is TaskRunner:
+			c.spawn_manager = spawn_manager
+			c.task_hud = task_hud
+			c.audio_manager = audio_manager
+			c.wire_task_refs()
