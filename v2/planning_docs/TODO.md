@@ -14,11 +14,8 @@
 
 ### WIP
 - [ ] Use %GromRevs
-- [ ] add 3 2 1 countdown from 5 sec clip
 
 ## HI-PRI‼️
-
-
 
 - [ ] crashing during mid tutorial respawns you at first location instead of TP location
 
@@ -341,6 +338,8 @@ mo) 📋
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] add 3 2 1 countdown from 5 sec clip
 
 - [x] Cleanup gamemode objective / review code
   - [x] See scratchpad.md
