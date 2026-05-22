@@ -86,4 +86,8 @@ TUT_HINT_DO_STOPPIE,"Lean forward while tapping the front brake at speed, in 3rd
 TUT_CHECKPOINT,"Pass through the checkpoint","Pasa por el punto de control"
 TUT_HINT_CHECKPOINT,"Drive through the gate ahead","Conduce a través de la puerta de adelante"
 TUT_COMPLETE,"Tutorial Complete!","¡Tutorial Completado!"
+RACE_OBJECTIVE,"Complete the laps","Completa las vueltas"
+RACE_HINT,"Pass each checkpoint in order","Pasa por cada punto de control en orden"
+RACE_LAP,"Lap {current}/{total}","Vuelta {current}/{total}"
+RACE_COMPLETE,"Race Complete!","¡Carrera Completada!"
 LOADING_LABEL,"Loading...","Cargando..."
