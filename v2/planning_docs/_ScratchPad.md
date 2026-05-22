@@ -1,5 +1,8 @@
 # Scratch Pad
 ---
 
-
- a race gamemode has been implemented, but it doesnt support multiplayer yet. specifically, the initial grid        spawn system needs to be created. i want: @managers\gamemodes\tasks\race_task.gd to take in an @export array of    marker 3ds called starting_grid_markers, and for any/all players to spawn on those checkpoints before a race       starts. currently im using a @managers\gamemodes\tasks\teleport_task.gd in                                         @levels\test_levels\test_city_01\test_city_01.tscn to TP the only player.  if i only have 2 markers but 4          players, add the other 2 players to the location of the last marker. i have collision avoiding code that should    work fine enough. @planning_docs\StreetRaceMode.md @planning_docs\GamemodeSystem.md . also be sure to follow       best practices in @CLAUDE.md
+i have added a new collision layer 5 (unstable_collision), if a @player\player_entity.gd
+  @player\controllers\movement_controller.gd is colliding with that, i want to: slow the player down, make it      
+  easier to crash when steering, make it harder to do tricks, and play a visual effect(soon). this should be       
+  gatable, so i can choose to ignore these effects if riding a dirtbike. also, using front brake while steering    
+  in this should make it easier to lowside. 

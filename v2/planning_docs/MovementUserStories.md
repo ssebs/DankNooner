@@ -54,3 +54,12 @@
 - If speed drops below threshold, fall off ramp, player up is world up
 - User launches off ramp, their velocity should follow parabolic path from player FWD, like IRL
 - User falls off loop-de-loop, they fall on their head
+
+## Unstable Surfaces (gravel, sand, dirt — collision layer 5)
+
+- User on a street bike feels the surface bite: top speed drops, steering slows, wheelies are harder to hold
+- User can still launch from a standstill — drag is proportional to speed, not flat
+- User leaning hard while on unstable surface crashes sooner than on pavement (lean threshold tightens)
+- User grabbing the front brake while steering on unstable surface immediately lowsides
+- User on a dirtbike (`unstable_surface_factor = 0.0` on its `BikeSkinDefinition`) ignores all of the above and rides normally
+- Per-bike tuning lives on `BikeSkinDefinition.unstable_surface_factor` (0 = immune, 1 = full effect); intermediate values (e.g. dual-sport at 0.5) blend the penalties

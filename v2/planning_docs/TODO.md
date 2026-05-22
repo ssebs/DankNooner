@@ -13,14 +13,9 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
-- [ ] incentivize being on road - make going on certain collision layer slower / less stable.
-  - [ ] `unstable_collision` layer 5
+- [ ] when coming back from a stoppie, the angle is not fully reset until i start doing a wheelie, so the rear tire is off the ground.
 
 ## HI-PRI‼️
-
-- [ ] Create gamemodeobjects
-  - [ ] to show/hide things
-  - [ ] to call a function
 
 - [ ] Manually cleanup @animation_controller.gd
   - [ ] e.g. creating a new trick goes from trick_controller to 4 places in anim controller, lots of duplication
@@ -83,6 +78,10 @@
 - [ ] Wheelie battle gamemode
 
 ## Up Next (Finish POC MP Gameplay De
+
+- [ ] incentivize being on road part 2:
+  - [ ] Use @export unstable_surface_factor: float = 1.0 under "Surfaces" group. Set to 0.0 on a dirtbike .tres to fully ignore
+  - [ ] add VFX - The state is already exposed via movement_controller._on_unstable_surface / get_unstable_factor(), so the VFX controller can read it directly when you add it.
 
 mo) 📋
 
@@ -165,6 +164,10 @@ mo) 📋
   - [ ] [Web](https://github.com/utopia-rise/fmod-gdextension/pull/210#issuecomment-3717948490)
 
 ## Backlog
+- [ ] Create gamemodeobjects...
+  - [ ] to show/hide things (like the checkpoint markers)
+  - [ ] to call a function (for generic reasons)
+
 - [ ] Animation Controller contd.
   - [ ] AnimationController + Trick tweak integration
   - [ ] AnimationController + Crash integration
@@ -341,6 +344,11 @@ mo) 📋
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] incentivize being on road part 1
+  - > make going on certain collision layer slower / less stable.
+  - [x] `unstable_collision` layer 5
+  - [x] make it unstable
 
 - [x] Basic lap / race mode
   - [x] checkpoints / lapping system

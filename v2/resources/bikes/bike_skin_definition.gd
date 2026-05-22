@@ -113,6 +113,12 @@ class_name BikeSkinDefinition extends Resource
 @export var rotation_speed: float = 2.0
 @export var return_speed: float = 3.0
 
+@export_group("Surfaces")
+## How strongly this bike is affected by layer 5 (unstable_collision) surfaces.
+## 1.0 = full effect (street bike), 0.0 = ignored (dirtbike). Scales drag, wheelie suppression,
+## lean-crash threshold reduction, and front-brake-while-steering lowside trigger.
+@export_range(0.0, 1.0, 0.05) var unstable_surface_factor: float = 1.0
+
 const USER_SKIN_DIR: String = "user://skins/"
 const SKIN_PFX: String = "bike_skin_"
 
@@ -217,6 +223,7 @@ func _copy_from(other: BikeSkinDefinition) -> void:
 	wheelie_balance_point_width_deg = other.wheelie_balance_point_width_deg
 	rotation_speed = other.rotation_speed
 	return_speed = other.return_speed
+	unstable_surface_factor = other.unstable_surface_factor
 
 
 #region to/from Dictionary
