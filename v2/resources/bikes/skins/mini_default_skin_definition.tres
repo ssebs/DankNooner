@@ -7,6 +7,7 @@
 [ext_resource type="Resource" uid="uid://i0r5np06lfvi" path="res://resources/bikes/mods/color_mods/blue_color.tres" id="4_0j748"]
 [ext_resource type="Curve" uid="uid://ct2j0k3sl7m3u" path="res://player/bikes/resources/steer_speed_curve.tres" id="4_us0rk"]
 [ext_resource type="Curve" uid="uid://dlqmqgtip7b61" path="res://resources/bikes/power_curve.tres" id="5_us0rk"]
+[ext_resource type="Curve" uid="uid://c1f077u0478o4" path="res://resources/bikes/grom_rpm_pitch_curve.tres" id="6_grom"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oq5os"]
 radius = 0.4
@@ -44,6 +45,10 @@ right_foot_rotation = Vector3(-0.9994745, 2.3022046, 1.0635848)
 left_leg_magnet_position = Vector3(0.37603816, 0.45350832, 0.2764344)
 right_leg_magnet_position = Vector3(-0.376, 0.454, 0.276)
 mods = Array[ExtResource("3_us0rk")]([ExtResource("4_0j748")])
+engine_sound_id = 1
+engine_min_pitch = 0.55
+engine_max_pitch = 1.4
+engine_rpm_pitch_curve = ExtResource("6_grom")
 gear_ratios = Array[float]([2.92, 2.05, 1.6, 1.0])
 num_gears = 4
 max_rpm = 8000.0

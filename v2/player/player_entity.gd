@@ -152,7 +152,7 @@ func _process(_delta: float) -> void:
 	if is_crashed and !_prev_is_crashed:
 		crashed.emit(int(name))
 		if is_local_client and audio_manager:
-			audio_manager.stop_ninja500_revs()
+			audio_manager.stop_revs()
 			audio_manager.play_bowling_crash()
 	_prev_is_crashed = is_crashed
 
@@ -268,7 +268,7 @@ func _init_audio():
 	gearing_controller.rpm_updated.connect(_on_rpm_updated)
 
 	# TODO - add clunk sound when changing gears
-	audio_manager.play_ninja500_revs()
+	audio_manager.play_revs(bike_definition)
 
 
 func _init_controller_handlers():
@@ -284,7 +284,7 @@ func _init_controller_handlers():
 func _on_rpm_updated(new_rpm_ratio: float):
 	if !audio_manager:
 		return
-	audio_manager.update_ninja500_rpm(new_rpm_ratio)
+	audio_manager.update_revs_rpm(bike_definition, new_rpm_ratio)
 
 
 func _on_gear_changed(new_gear: int):
@@ -345,7 +345,7 @@ func do_respawn():
 	if animation_controller:
 		animation_controller.stop_ragdoll()
 	if is_local_client and audio_manager:
-		audio_manager.play_ninja500_revs()
+		audio_manager.play_revs(bike_definition)
 	# Re-spawn the bike mesh so any handlebar/wheel children moved by ragdoll/anim are
 	# back to base, then re-init IK so its targets snap to the fresh markers.
 	_init_mesh()

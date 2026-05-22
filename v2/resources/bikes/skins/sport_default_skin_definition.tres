@@ -3,6 +3,7 @@
 [ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/bikes/hitbox/bike_hitbox.tres" id="1_3klvi"]
 [ext_resource type="PackedScene" uid="uid://54ehro5jqyxu" path="res://player/bikes/scenes/sport_bike.tscn" id="1_uy60g"]
 [ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/bikes/bike_skin_definition.gd" id="2_3klvi"]
+[ext_resource type="Curve" path="res://resources/bikes/ninja_rpm_pitch_curve.tres" id="2_88b7q"]
 [ext_resource type="Curve" uid="uid://bc4775t6u5ngh" path="res://player/bikes/resources/lean_speed_curve.tres" id="2_mg0ht"]
 [ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="4_hx3xb"]
 [ext_resource type="Resource" uid="uid://dusov5uralis7" path="res://resources/bikes/mods/color_mods/black_pink_color.tres" id="5_qepda"]
