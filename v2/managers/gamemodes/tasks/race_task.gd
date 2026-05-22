@@ -43,6 +43,10 @@ func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
 		"next_lap_idx": 0,
 		"waiting_for": WaitFor.START,
 	}
+	# Runner pushes rpc_show_step right after on_enter — defer the hide so it
+	# runs after that, otherwise the step label re-shows.
+	var hud := _runner.task_hud
+	(func(): hud.rpc_hide_step_label.rpc_id(peer_id)).call_deferred()
 	_push_lap_hud(peer_id)
 
 
@@ -112,8 +116,8 @@ func _expected_checkpoint(p: Dictionary) -> CheckPointMarker:
 
 
 func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
-	# Update persistent respawn first — applies even if this crossing finishes the race.
-	_runner.spawn_manager.respawn_player_at.rpc(peer_id, ckpt.global_position, ckpt.global_basis)
+	# Update persistent respawn only — don't teleport the racing player.
+	_runner.spawn_manager.set_respawn_point.rpc(peer_id, ckpt.global_position, ckpt.global_basis)
 
 	match p["waiting_for"]:
 		WaitFor.START:

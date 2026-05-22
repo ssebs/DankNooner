@@ -1860,7 +1860,7 @@ marker = NodePath("RaceStartMarker01")
 metadata/_custom_type_script = "uid://c4b6sy0eliiac"
 
 [node name="RaceStartMarker01" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/TeleportTask" unique_id=10711231]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 124, 0, 70)
+transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, 124, 0, 70)
 
 [node name="ConcurrentTaskRunner2" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner" unique_id=814209640]
 script = ExtResource("8_cf4ia")
