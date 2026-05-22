@@ -8,10 +8,10 @@
 ## Subclasses override start/update/stop/notify_* to drive the per-peer walk.
 class_name TaskRunner extends GameModeTask
 
-## Per-peer respawn override forwarded to the host gamemode (which owns the
-## actual respawn timer). Sequential populates this from TeleportTask; nested
-## runners forward their nested runner's emissions upward.
-signal respawn_requested(peer_id: int, marker: Marker3D)
+## Notifies the host gamemode that a crashed peer should be respawned (gamemode
+## owns the actual delay timer). Respawn target is read from the player's own
+## persistent `rb_respawn_transform`, set by TeleportTask via SpawnManager.
+signal respawn_requested(peer_id: int)
 
 ## Set by the host gamemode (or a parent runner, for nested cases) before
 ## `start()`. Not @exported because the runner lives in a level scene while the

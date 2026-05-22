@@ -35,7 +35,7 @@ func Enter(state_context: StateContext):
 	results_hud.skip_pressed.connect(_on_results_skip_pressed)
 
 	if multiplayer.is_server():
-		_teleport_players_to_start()
+		# Initial teleport is handled by a leading TeleportTask in each runner.
 		_start_next_runner()
 
 
@@ -149,12 +149,6 @@ func _reset_all_player_input():
 		player.input_controller.input_disabled = false
 
 
-func _teleport_players_to_start():
-	var marker := _start_circle.start_marker
-	for peer_id in lobby_manager.lobby_players:
-		spawn_manager.respawn_player_at.rpc(peer_id, marker.global_position, marker.global_basis)
-
-
 #endregion
 
 #region Results
@@ -211,21 +205,16 @@ func _on_player_crashed(peer_id: int):
 		return
 	if _active_runner != null:
 		_active_runner.notify_crashed(peer_id)
-	# respawn_requested signal from the runner schedules the actual respawn —
-	# fallback to start_marker here for the case the runner doesn't fire it
-	# (e.g. crash arrived after the runner completed all peers).
+	# respawn_requested signal from the runner schedules the actual respawn.
+	# If the crash arrived after the runner completed all peers no respawn fires;
+	# the player keeps their last persistent respawn point from the prior TeleportTask.
 
 
-func _on_runner_respawn_requested(peer_id: int, marker: Marker3D):
-	# Runner may pass null when no override was set — fall back to start.
-	if marker == null:
-		marker = _start_circle.start_marker
+func _on_runner_respawn_requested(peer_id: int):
+	# respawn_player uses the player's persistent rb_respawn_transform, set by
+	# the most recent TeleportTask via SpawnManager.respawn_player_at.
 	get_tree().create_timer(_respawn_delay).timeout.connect(
-		func():
-			spawn_manager.respawn_player_at.rpc(
-				peer_id, marker.global_position, marker.global_basis
-			),
-		CONNECT_ONE_SHOT
+		func(): spawn_manager.respawn_player.rpc(peer_id), CONNECT_ONE_SHOT
 	)
 
 

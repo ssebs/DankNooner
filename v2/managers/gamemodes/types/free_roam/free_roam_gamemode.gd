@@ -30,7 +30,9 @@ func Enter(state_context: StateContext):
 		spawn_manager.spawn_all_players()
 
 	if multiplayer.is_server():
-		# Coming from another gamemode — respawn the target peer
+		# Coming from another gamemode — clear any TeleportTask-set respawn point
+		# so the player returns to (and future crashes return to) player_spawn_pos.
+		spawn_manager.reset_respawn_point.rpc(_ctx.peer_id)
 		spawn_manager.respawn_player.rpc(_ctx.peer_id)
 
 

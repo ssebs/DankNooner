@@ -11,7 +11,6 @@ class_name SequentialTaskRunner extends TaskRunner
 
 var _player_states: Dictionary[int, PlayerTaskState] = {}
 var _tasks: Array[GameModeTask] = []
-var _respawn_overrides: Dictionary[int, Marker3D] = {}
 var _wired_callables: Array = []
 var _running: bool = false
 
@@ -75,7 +74,6 @@ func stop() -> void:
 	for task in _tasks:
 		task._runner = null
 	_player_states.clear()
-	_respawn_overrides.clear()
 	_tasks = []
 
 
@@ -94,15 +92,13 @@ func notify_crashed(peer_id: int) -> void:
 	# Teleport on crash; clear in/out gating since Godot may not fire body_exited.
 	state.prop_event_fired = false
 	state.inside_zone = false
-	var marker: Marker3D = _respawn_overrides.get(peer_id, null)
-	respawn_requested.emit(peer_id, marker)
+	respawn_requested.emit(peer_id)
 
 
 func notify_disconnected(peer_id: int) -> void:
 	if _nested_runner != null:
 		_nested_runner.notify_disconnected(peer_id)
 	_player_states.erase(peer_id)
-	_respawn_overrides.erase(peer_id)
 
 
 #endregion
@@ -116,12 +112,6 @@ func mark_state(peer_id: int, key: String, value: Variant) -> void:
 	if !_player_states.has(peer_id):
 		return
 	_player_states[peer_id].lesson_state[key] = value
-
-
-## Called by TeleportTask to set this peer's crash-respawn target for the
-## remainder of this runner. Subsequent crashes will use this marker.
-func set_respawn_marker(peer_id: int, marker: Marker3D) -> void:
-	_respawn_overrides[peer_id] = marker
 
 
 #endregion
@@ -283,8 +273,8 @@ func _disconnect_nested_runner() -> void:
 		_nested_runner.respawn_requested.disconnect(_forward_nested_respawn)
 
 
-func _forward_nested_respawn(peer_id: int, marker: Marker3D) -> void:
-	respawn_requested.emit(peer_id, marker)
+func _forward_nested_respawn(peer_id: int) -> void:
+	respawn_requested.emit(peer_id)
 
 
 #endregion
