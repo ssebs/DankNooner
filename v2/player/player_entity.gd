@@ -153,7 +153,16 @@ func _process(_delta: float) -> void:
 		crashed.emit(int(name))
 		if is_local_client and audio_manager:
 			audio_manager.stop_revs()
-			audio_manager.play_bowling_crash()
+			# TODO - use meme mode instead of hard coding this randomization
+			randomize()
+			var r = randi_range(0, 2)
+			match r:
+				0:
+					audio_manager.play_bowling_crash()
+				1:
+					audio_manager.play_vine_boom()
+				2:
+					audio_manager.play_nuke()
 	_prev_is_crashed = is_crashed
 
 	if !is_local_client:
