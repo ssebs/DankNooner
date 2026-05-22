@@ -10,7 +10,8 @@ class_name TeleportTask extends GameModeTask
 
 func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
 	var peer_id := int(player.name)
-	_runner.set_respawn_marker(peer_id, marker)
+	# respawn_player_at also stores the transform on the player as the persistent
+	# respawn point, so subsequent crashes return here instead of player_spawn_pos.
 	_runner.spawn_manager.respawn_player_at.rpc(peer_id, marker.global_position, marker.global_basis)
 
 

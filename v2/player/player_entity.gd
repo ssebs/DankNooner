@@ -101,7 +101,10 @@ var grip_usage: float = 0.0
 
 # Discrete actions (rb_* pattern)
 var rb_do_respawn: bool = false
-var rb_respawn_transform: Transform3D = Transform3D()  # override spawn point when set
+## Persistent respawn point. Set by SpawnManager.respawn_player_at (e.g. TeleportTask),
+## reset to identity to fall back to `get_parent().global_transform` (player_spawn_pos).
+## Persists across respawns so crashes after a checkpoint return to the checkpoint.
+var rb_respawn_transform: Transform3D = Transform3D()
 
 # Process-side state tracking (not sync'd)
 var _prev_is_crashed: bool = false
@@ -351,7 +354,6 @@ func update_skins(new_bike_def: BikeSkinDefinition, new_char_def: CharacterSkinD
 func do_respawn():
 	if rb_respawn_transform != Transform3D():
 		global_transform = rb_respawn_transform
-		rb_respawn_transform = Transform3D()
 	else:
 		global_transform = get_parent().global_transform
 	velocity = Vector3.ZERO

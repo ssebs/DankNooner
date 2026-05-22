@@ -58,12 +58,20 @@ func respawn_player(player_peer_id: int):
 	_get_player_by_peer_id(player_peer_id).rb_do_respawn = true
 
 
-## Respawn player at a specific transform instead of their spawn point. Runs on every peer.
+## Respawn player at a specific transform AND store it as the persistent respawn point
+## (used by subsequent crash respawns until reset). Runs on every peer.
 @rpc("any_peer", "call_local", "reliable")
 func respawn_player_at(player_peer_id: int, pos: Vector3, basis: Basis):
 	var player_node := _get_player_by_peer_id(player_peer_id)
 	player_node.rb_respawn_transform = Transform3D(basis, pos)
 	player_node.rb_do_respawn = true
+
+
+## Clear the persistent respawn point so the next respawn falls back to player_spawn_pos.
+## Used when entering free roam from another gamemode.
+@rpc("any_peer", "call_local", "reliable")
+func reset_respawn_point(player_peer_id: int):
+	_get_player_by_peer_id(player_peer_id).rb_respawn_transform = Transform3D()
 
 
 ## Instantiate and add player node locally (no authority check)

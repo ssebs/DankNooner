@@ -1723,14 +1723,17 @@ width = 16.0
 depth = 0.1
 color_preset = 1
 
-[node name="Tutorial01EventStartCircle" parent="." unique_id=1014716352 node_paths=PackedStringArray("start_marker") instance=ExtResource("3_ffs5v")]
+[node name="Tutorial01EventStartCircle" parent="." unique_id=1014716352 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 81)
 gamemode_event = SubResource("Resource_i711f")
-start_marker = NodePath("../Stuff/Tut01Location/Tutorial01StartMarker")
 
 [node name="SequentialTaskRunner" type="Node" parent="Tutorial01EventStartCircle" unique_id=2098834758]
 script = ExtResource("13_runner")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
+
+[node name="Teleport_Start" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=1014716353 node_paths=PackedStringArray("marker")]
+script = ExtResource("9_ccoso")
+marker = NodePath("../../../Stuff/Tut01Location/Tutorial01StartMarker")
 
 [node name="ConcurrentTaskRunner" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=2080321246]
 script = ExtResource("8_cf4ia")
@@ -1746,14 +1749,17 @@ advance_mode = 1
 duration_sec = 2.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="Tutorial01EventStartCircle2" parent="." unique_id=459761741 node_paths=PackedStringArray("start_marker") instance=ExtResource("3_ffs5v")]
+[node name="Tutorial01EventStartCircle2" parent="." unique_id=459761741 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 93)
 gamemode_event = SubResource("Resource_asds5")
-start_marker = NodePath("../Stuff/Tut01Location/Tutorial01StartMarker")
 
 [node name="SequentialTaskRunner" type="Node" parent="Tutorial01EventStartCircle2" unique_id=1305171110]
 script = ExtResource("13_runner")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
+
+[node name="Teleport_Start" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=459761742 node_paths=PackedStringArray("marker")]
+script = ExtResource("9_ccoso")
+marker = NodePath("../../../Stuff/Tut01Location/Tutorial01StartMarker")
 
 [node name="CloseHelp_ShowHelp" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=710662388]
 script = ExtResource("8_hlp")

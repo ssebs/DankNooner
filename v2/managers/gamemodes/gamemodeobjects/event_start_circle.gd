@@ -2,14 +2,12 @@
 class_name EventStartCircle extends Area3D
 
 ## Emitted with a reference to *this* circle so consumers can pull
-## `gamemode_event`, `start_marker`, and `get_runners()` off it.
+## `gamemode_event` and `get_runners()` off it.
 signal entered_event_circle(peer_id: int, event_start_circle: EventStartCircle)
 signal exited_event_circle(peer_id: int, event_start_circle: EventStartCircle)
 
 ## TODO - show multiple events & be able to select them
 @export var gamemode_event: GameModeEventDefinition
-## Where players teleport to when this event's gamemode starts.
-@export var start_marker: Marker3D
 
 @onready var event_label: Label3D = %Label3D
 

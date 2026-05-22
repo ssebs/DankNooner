@@ -16,8 +16,6 @@
 
 ## HI-PRI‼️
 
-- [ ] crashing during mid tutorial respawns you at first location instead of TP location
-
 - [ ] Manually cleanup @animation_controller.gd
   - [ ] e.g. creating a new trick goes from trick_controller to 4 places in anim controller, lots of duplication
 - [ ] add ground detection to animation controller
@@ -337,6 +335,8 @@ mo) 📋
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Respawn locations depend on last TP location
 
 - [x] switching bike crashes game
 
