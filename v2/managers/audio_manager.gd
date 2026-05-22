@@ -1,18 +1,6 @@
 @tool
 class_name AudioManager extends BaseManager
 
-@export var settings_manager: SettingsManager
-@export_tool_button("Play Startup") var tool_btn_1 = play_startup
-
-## Map of settings_manager key → audio bus name. Buses are defined in `default_bus_layout.tres`
-## (must be created in the editor — runtime AudioServer.add_bus() doesn't work on web exports).
-const VOLUME_SETTING_MAP: Dictionary = {
-	"master_vol": "Master",
-	"menu_vol": "Menu",
-	"sfx_vol": "SFX",
-	"music_vol": "Music",
-}
-
 ## Looping engine sounds driven by RPM. Used by BikeSkinDefinition.engine_sound_id
 ## to pick which sound `play_revs()` activates.
 enum EngineSfx {
@@ -35,6 +23,24 @@ enum Sfx {
 	MINIMIZE,
 	MOUSE_CLICK,
 	CLUNK_GEAR_CHANGE,
+	BONE_CRACK,
+	DING,
+	FAHH,
+	TBELL,
+	VINE_BOOM,
+	TADA,
+}
+
+@export var settings_manager: SettingsManager
+@export_tool_button("Play Startup") var tool_btn_1 = play_startup
+
+## Map of settings_manager key → audio bus name. Buses are defined in `default_bus_layout.tres`
+## (must be created in the editor — runtime AudioServer.add_bus() doesn't work on web exports).
+const VOLUME_SETTING_MAP: Dictionary = {
+	"master_vol": "Master",
+	"menu_vol": "Menu",
+	"sfx_vol": "SFX",
+	"music_vol": "Music",
 }
 
 # TODO - use InputState to switch which buses are routed where
@@ -53,6 +59,12 @@ var maximize: SoundEvent
 var minimize: SoundEvent
 var mouse_click: SoundEvent
 var clunk_gear_change: SoundEvent
+var bone_crack: SoundEvent
+var ding: SoundEvent
+var fahh: SoundEvent
+var tbell: SoundEvent
+var vine_boom: SoundEvent
+var tada: SoundEvent
 
 ## Map of EngineSfx → EngineSoundEvent node, populated in _ready.
 var _engine_sounds: Dictionary = {}
@@ -75,6 +87,12 @@ func _ready():
 	minimize = get_node_or_null("%Minimize") as SoundEvent
 	mouse_click = get_node_or_null("%MouseClick") as SoundEvent
 	clunk_gear_change = get_node_or_null("%ClunkGearChange") as SoundEvent
+	bone_crack = get_node_or_null("%BoneCrack") as SoundEvent
+	ding = get_node_or_null("%Ding") as SoundEvent
+	fahh = get_node_or_null("%Fahh") as SoundEvent
+	tbell = get_node_or_null("%TBell") as SoundEvent
+	vine_boom = get_node_or_null("%VineBoom") as SoundEvent
+	tada = get_node_or_null("%Tada") as SoundEvent
 
 	_engine_sounds = {
 		EngineSfx.NINJA500: ninja500_revs,
@@ -182,6 +200,30 @@ func play_clunk_gear_change():
 	clunk_gear_change.play()
 
 
+func play_bone_crack():
+	bone_crack.play()
+
+
+func play_ding():
+	ding.play()
+
+
+func play_fahh():
+	fahh.play()
+
+
+func play_tbell():
+	tbell.play()
+
+
+func play_vine_boom():
+	vine_boom.play()
+
+
+func play_tada():
+	tada.play()
+
+
 func play_sfx(id: Sfx):
 	get_sound_event(id).play()
 
@@ -214,6 +256,18 @@ func get_sound_event(id: Sfx) -> SoundEvent:
 			return mouse_click
 		Sfx.CLUNK_GEAR_CHANGE:
 			return clunk_gear_change
+		Sfx.BONE_CRACK:
+			return bone_crack
+		Sfx.DING:
+			return ding
+		Sfx.FAHH:
+			return fahh
+		Sfx.TBELL:
+			return tbell
+		Sfx.VINE_BOOM:
+			return vine_boom
+		Sfx.TADA:
+			return tada
 	push_error("AudioManager.get_sound_event: unhandled Sfx id %s" % id)
 	return null
 
