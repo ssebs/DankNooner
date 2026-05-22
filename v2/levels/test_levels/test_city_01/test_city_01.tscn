@@ -1763,14 +1763,13 @@ script = ExtResource("8_cf4ia")
 
 [node name="CountdownTask" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=799982134]
 script = ExtResource("9_7dagn")
-seconds = 5.0
 metadata/_custom_type_script = "uid://8xvij2vjrnn2"
 
 [node name="SFXTask" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1939024796]
 script = ExtResource("9_whmyo")
 sound = 2
 advance_mode = 1
-duration_sec = 5.0
+duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
 [node name="SpeedAbove_PressRT" type="Node" parent="Tutorial01EventStartCircle2/SequentialTaskRunner" unique_id=1518672603]

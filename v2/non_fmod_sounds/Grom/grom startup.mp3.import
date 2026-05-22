@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://4t5imsepsjnr"
+path="res://.godot/imported/grom startup.mp3-86382cf0399a5c043d451e87180b64bd.mp3str"
+
+[deps]
+
+source_file="res://non_fmod_sounds/Grom/grom startup.mp3"
+dest_files=["res://.godot/imported/grom startup.mp3-86382cf0399a5c043d451e87180b64bd.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
