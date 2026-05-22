@@ -875,6 +875,7 @@ depth = 60.0
 
 [node name="GBSidewalk" parent="Stuff/Ground" unique_id=2145357445 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 123, -0.12, 95)
+collision_layer = 17
 width = 280.0
 height = 0.1
 depth = 400.0

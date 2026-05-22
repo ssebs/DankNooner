@@ -9,11 +9,12 @@
   - [x] start gamemodes via ~~map select~~ start circles
   - [ ] Game modes:
     - [x] Free roam
-    - [ ] Street race (w/o traffic)
+    - [x] Street race (w/o traffic)
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
 - [ ] incentivize being on road - make going on certain collision layer slower / less stable.
+  - [ ] `unstable_collision` layer 5
 
 ## HI-PRI‼️
 
