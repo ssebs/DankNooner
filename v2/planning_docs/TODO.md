@@ -86,6 +86,7 @@
 
 ## Up Next (Finish POC MP Gameplay De
 
+- [ ] Meme mode setting (for sfx)
 - [ ] incentivize being on road part 2:
   - [ ] Use @export unstable_surface_factor: float = 1.0 under "Surfaces" group. Set to 0.0 on a dirtbike .tres to fully ignore
   - [ ] add VFX - The state is already exposed via movement_controller._on_unstable_surface / get_unstable_factor(), so the VFX controller can read it directly when you add it.
@@ -99,7 +100,6 @@ mo) 📋
 - [ ] First launch is v slow ([compiling shaders](https://docs.godotengine.org/en/stable/tutorials/performance/pipeline_compilations.html))
   - [ ] Freezes on my Mac when using exported binary 
 
-- [ ] Add grom sound
 - [ ] Remap controls for leaning back/fwd, use mouse? or arrow keys
 
 - [ ] Improve CrashController
@@ -163,10 +163,10 @@ mo) 📋
 - [ ] More audio
 
   - [ ] Soundscapes for ambient sounds, get diff clips and play them in different orders, at random times to set mood & add sound variety
-  - [ ] add clunk sound when changing gears
-  - [ ] Crash SFX
+  - [x] add clunk sound when changing gears
+  - [x] Crash SFX
   - [ ] Tire Screetch SFX
-  - [ ] Menu click sounds
+  - [x] Menu click sounds
   - [ ] Music?
   - [ ] [Web](https://github.com/utopia-rise/fmod-gdextension/pull/210#issuecomment-3717948490)
 
@@ -351,6 +351,8 @@ mo) 📋
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Add grom sound
 
 - [x] when coming back from a stoppie, the angle is not fully reset until i start doing a wheelie, so the rear tire is off the ground.
 
