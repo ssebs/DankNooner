@@ -890,6 +890,7 @@ color_preset = 1
 
 [node name="GBGrass" parent="Stuff/Ground" unique_id=1213761209 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, -37)
+collision_layer = 19
 width = 58.0
 height = 0.1
 depth = 60.0
@@ -897,6 +898,7 @@ color_preset = 2
 
 [node name="GBGrass2" parent="Stuff/Ground" unique_id=545940584 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 243, 0, -90)
+collision_layer = 19
 width = 78.0
 height = 0.1
 depth = 30.0
@@ -904,6 +906,7 @@ color_preset = 2
 
 [node name="GBGrass3" parent="Stuff/Ground" unique_id=1777291380 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 273, 0, -40)
+collision_layer = 19
 width = 20.0
 height = 0.1
 depth = 70.0
@@ -911,6 +914,7 @@ color_preset = 2
 
 [node name="GBSand" parent="Stuff/Ground" unique_id=1412146464 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 125, 0, -90)
+collision_layer = 19
 width = 160.0
 height = 0.1
 depth = 30.0
@@ -918,6 +922,7 @@ color_preset = 6
 
 [node name="GBSand2" parent="Stuff/Ground" unique_id=220659895 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 132, 0, 280)
+collision_layer = 19
 width = 300.0
 height = 0.1
 depth = 30.0
@@ -925,6 +930,7 @@ color_preset = 6
 
 [node name="GBSand3" parent="Stuff/Ground" unique_id=1458641003 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -3.0000005, 0, 165)
+collision_layer = 19
 width = 200.0
 height = 0.1
 depth = 30.0
@@ -1190,7 +1196,7 @@ depth = 6.0
 
 [node name="GBWater" parent="Stuff/water" unique_id=1871786576 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 132, 0, -155)
-collision_layer = 3
+collision_layer = 2
 width = 300.0
 height = 0.1
 depth = 100.0
@@ -1198,7 +1204,7 @@ color_preset = 3
 
 [node name="GBWater3" parent="Stuff/water" unique_id=83787268 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 132, 0, 345)
-collision_layer = 3
+collision_layer = 2
 width = 300.0
 height = 0.1
 depth = 100.0
@@ -1206,7 +1212,7 @@ color_preset = 3
 
 [node name="GBWater2" parent="Stuff/water" unique_id=1280059567 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -68, 0, 95)
-collision_layer = 3
+collision_layer = 2
 width = 600.0
 height = 0.1
 depth = 100.0
@@ -1214,7 +1220,7 @@ color_preset = 3
 
 [node name="GBWater4" parent="Stuff/water" unique_id=1531541775 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 332, 0, 94.999985)
-collision_layer = 3
+collision_layer = 2
 width = 600.0
 height = 0.1
 depth = 100.0
