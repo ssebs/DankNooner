@@ -13,8 +13,14 @@
     - [ ] Ragdoll launch game mode (hall of meat)
 
 ### WIP
+- [ ] Check priorities now that basic racing is added
+  - [ ] AI next?
 
 ## HI-PRI‼️
+- [ ] restart race btn (for jump)
+- [ ] track tricks in race
+  - [ ] for bonus score
+  - [ ] for boost?
 
 - [ ] Manually cleanup @animation_controller.gd
   - [ ] e.g. creating a new trick goes from trick_controller to 4 places in anim controller, lots of duplication
@@ -56,8 +62,8 @@
 
 - [ ] Gamemode switching cleanup:
   - [ ] controller support on HUD buttons in event start circle/winlose screen (move to menu system?)
-  - [ ] tutorial finished MP => clients dont respawn back in free roam
-  - [ ] Close tutorial hud when leaving game
+  - [x] tutorial finished MP => clients dont respawn back in free roam
+  - [x] Close tutorial hud when leaving game
   - [ ] tutorial gamemode - _ctx doesnt make sense
 
 - [ ] Trick Battle / Score Attack gamemode
@@ -66,15 +72,17 @@
   - [ ] 2 locations for variety
 
 - [ ] Street Race gamemode
-  - [ ] Create lap system & show placement live in scoreboard
+  - [x] Create lap system & show placement live in scoreboard
   - [ ] Doing tricks gives respect/xp/currency that act as a bonus (to unlock items in the future, gold star for now)
-  - [ ] Be able to place checkpoint markers
+  - [x] Be able to place checkpoint markers
 
 - [ ] Crash Launch gamemode
  - [ ] Players drag race & hit low fence, sending bodies flying.
  - [ ] Furthest body wins
 
 - [ ] Wheelie battle gamemode
+  - [ ] Longest wheelie wins
+  - [ ] Most combo tricks wins
 
 ## Up Next (Finish POC MP Gameplay De
 
