@@ -12,9 +12,24 @@
     - [x] Street race (w/o traffic)
     - [ ] Ragdoll launch game mode (hall of meat)
 
+Bowling gamemode?
+
+### Bugs from playtest:
+- host can't go to customize bc others will leave
+- all spawned under map
+- trick sounds happen for everyone
+- height is offset for some clients
+- crashing during race caused audio to stop on engine / can still move in spawns
+- respawning in race doesnt work
+- add some console commands to allow movement from broken race start
+- Starting the gamemode for everyone doesnt work as expected
+- if one player crashes during countdown, they need to manually respawn before they can start
+
 ### WIP
 - [ ] Check priorities now that basic racing is added
   - [ ] AI next?
+
+- [ ] Fade out intro sound quicker, make 3 sec version
 
 ## HI-PRI‼️
 - [ ] restart race btn (for jump)
