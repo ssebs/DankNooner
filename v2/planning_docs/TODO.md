@@ -15,6 +15,7 @@
 Bowling gamemode?
 
 ### Bugs from playtest:
+- Jose - controls too hard to do a wheelie
 - host can't go to customize bc others will leave
 - all spawned under map
 - trick sounds happen for everyone
