@@ -7,8 +7,8 @@
 [ext_resource type="Curve" path="res://resources/bikes/ninja_rpm_pitch_curve.tres" id="2_y2gru"]
 [ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="4_xypd7"]
 [ext_resource type="Curve" uid="uid://ct2j0k3sl7m3u" path="res://player/bikes/resources/steer_speed_curve.tres" id="5_q40km"]
-[ext_resource type="Resource" uid="uid://fxmg7fyrhfsl" path="res://resources/bikes/mods/color_mods/teal_color.tres" id="5_xypd7"]
 [ext_resource type="Curve" uid="uid://dlqmqgtip7b61" path="res://resources/bikes/power_curve.tres" id="6_q0a53"]
+[ext_resource type="Resource" uid="uid://kkayasm0pv2h" path="res://resources/bikes/mods/color_mods/purple_color.tres" id="6_y2gru"]
 
 [resource]
 script = ExtResource("2_4wyad")
@@ -38,5 +38,5 @@ left_foot_rotation = Vector3(-1.2758567, -2.6177065, -0.7598183)
 right_foot_rotation = Vector3(-1.2758567, 2.617706, 0.7598185)
 left_leg_magnet_position = Vector3(0.46395656, 0.5692559, 0.42930415)
 right_leg_magnet_position = Vector3(-0.464, 0.569, 0.429)
-mods = Array[ExtResource("4_xypd7")]([ExtResource("5_xypd7")])
+mods = Array[ExtResource("4_xypd7")]([ExtResource("6_y2gru")])
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"

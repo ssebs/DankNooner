@@ -28,7 +28,6 @@ Bowling gamemode?
 
 ### WIP
 
-- [ ] Add purple color
 - [ ] Check priorities now that basic racing is added
   - [ ] AI next?
 
@@ -372,6 +371,8 @@ mo) 📋
 - [ ] Add text chat
 
 ## Done ✅
+
+- [x] Add purple color
 
 - [x] Add grom sound
 
