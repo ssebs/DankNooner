@@ -27,8 +27,13 @@ Bowling gamemode?
 - if one player crashes during countdown, they need to manually respawn before they can start
 
 ### WIP
+
+- [ ] Add purple color
 - [ ] Check priorities now that basic racing is added
   - [ ] AI next?
+
+- [ ] Wings as mod for sport bike 
+- [ ] Start enemy ai, it wants to go to the next checkpoint location 
 
 - [ ] Fade out intro sound quicker, make 3 sec version
 
