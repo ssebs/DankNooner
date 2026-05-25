@@ -1,8 +1,33 @@
 # Gameplay & Modes
 
-## Tutorials
+## Challenges (in-world, Skate-style) — replaces forced tutorials
 
-> Skate 3 style vibe
+> Players learn tricks by *playing*, not by being forced into a tutorial flow.
+
+Challenges live in the world. Roll a motorcycle into a `ChallengeStartCircle` →
+a 2D billboard speech bubble explains the task → complete it → success toast.
+No NPCs, no dialog system, no gamemode swap — just opt-in mini-objectives
+scattered through the open world.
+
+See [PLAN-Challenge-system-tutorial.md](./PLAN-Challenge-system-tutorial.md)
+for the implementation plan. Reuses `CheckPointMarker`, `SequentialTaskRunner`,
+`TutorialHUD`, and the existing trick detection. New pieces: `SpeechBubble`
+(2D billboard), `PerformTrickTask` (new `GameModeTask`), `ChallengeStartCircle`.
+
+Examples of starter challenges:
+- "Hold a wheelie for 5 seconds"
+- "Stoppie into this zone"
+- "Land a heel clicker off this ramp"
+- "Pop a high chair while airborne"
+
+Challenges also scaffold future modes: the same `PerformTrickTask` powers
+Trick Battle scoring, and per-segment bonus tricks in races.
+
+## Tutorial mode (legacy / onboarding)
+
+The existing `TutorialGameMode` remains for true newbie onboarding (first-time
+controls explanation). Most trick teaching is moving to the Challenge system
+above. Possible future tutorial paths:
 
 ### Tutorial: The basics
 > Learn the basics of riding a motorcycle to get your M1 license.
@@ -15,8 +40,6 @@
 
 ### Tutorial: Trick Tweaks
 > Learn how to tweak your wheelies to get higher score
-
-### Tutorial: ...
 
 ## Co-op gameplay
 > *means that this is in MVP
