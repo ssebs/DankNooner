@@ -4,7 +4,7 @@
 ## In Progress 🚀 — Current Sprint
 > **Theme:** stabilize what exists, refactor the trick pipeline, ship Skate-style challenges.
 - [WIP] work on playtest bugs
-- [ ] **Phase 3:** [PLAN-Challenge-system-tutorial.md](./PLAN-Challenge-system-tutorial.md) — Skate-style in-world challenges (replaces forced tutorials)
+- [ ] In-world UI - speech bubble
 ---
 
 ### Playtest bugs (tracked in PLAN-bug-fixes.md)

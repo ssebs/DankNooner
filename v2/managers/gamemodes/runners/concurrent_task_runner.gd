@@ -121,8 +121,21 @@ func _on_enter_all(peer_id: int, state: PlayerTaskState) -> void:
 
 
 func _push_step_hud() -> void:
+	var obj := objective_text if objective_text != "" else _first_child_text(true)
+	var hint := hint_text if hint_text != "" else _first_child_text(false)
 	for peer_id in _player_states:
-		task_hud.rpc_show_step.rpc_id(peer_id, 0, 1, objective_text, hint_text)
+		task_hud.rpc_show_step.rpc_id(peer_id, 0, 1, obj, hint)
+
+
+## Falls back to the first child task with a non-empty get_objective_text() /
+## get_hint_text() so a ConcurrentTaskRunner that wraps a single gating task
+## (e.g. PerformTrickTask) doesn't require duplicating its labels on the runner.
+func _first_child_text(want_objective: bool) -> String:
+	for task in _tasks:
+		var s := task.get_objective_text() if want_objective else task.get_hint_text()
+		if s != "":
+			return s
+	return ""
 
 
 func _update_player(peer_id: int, state: PlayerTaskState, delta: float) -> void:
@@ -136,15 +149,21 @@ func _update_player(peer_id: int, state: PlayerTaskState, delta: float) -> void:
 	var done: Array = state.lesson_state[_DONE]
 	var states_arr: Array = state.lesson_state[_STATES]
 	var all_done := true
+	var progress := ""
 	for i in _tasks.size():
 		if done[i]:
 			continue
 		var task := _tasks[i]
+		# First in-progress child wins the HUD progress line (matches SequentialTaskRunner's pattern).
+		if progress == "":
+			progress = task.get_progress(states_arr[i])
 		if task.check(player, delta, states_arr[i]):
 			task.on_exit(player, states_arr[i])
 			done[i] = true
 		else:
 			all_done = false
+	if progress != "":
+		task_hud.rpc_update_progress.rpc_id(peer_id, progress)
 	if all_done:
 		_complete_player(peer_id, state)
 
