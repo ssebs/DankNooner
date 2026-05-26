@@ -14,6 +14,11 @@ func on_enter(player: PlayerEntity, state: Dictionary) -> void:
 	# Player may not be spawned yet during late-join sync — input toggle skipped intentionally
 	if player == null:
 		return
+	# Force-respawn if the player crashed during a prior step (e.g. fell off the grid
+	# between GridSpawnTask and the countdown). Otherwise they'd sit ragdolled and the
+	# runner would skip them while the rest of the race starts.
+	if player.is_crashed:
+		_runner.spawn_manager.respawn_player.rpc(int(player.name))
 	player.input_controller.input_disabled = true
 	player.input_controller.nfx_throttle = 0.0
 	player.input_controller.nfx_front_brake = 0.0

@@ -80,3 +80,9 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Skip"
+
+[node name="RestartBtn" type="Button" parent="AspectContainer/CenterContainer/PanelContainer/VBoxContainer" unique_id=1723648654]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Restart Race"

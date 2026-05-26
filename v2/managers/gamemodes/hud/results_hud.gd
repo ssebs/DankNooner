@@ -2,6 +2,7 @@
 class_name ResultsHUD extends Control
 
 signal skip_pressed
+signal restart_pressed
 
 @export var input_state_manager: InputStateManager
 
@@ -9,6 +10,7 @@ signal skip_pressed
 @onready var results_container: VBoxContainer = %ResultsContainer
 @onready var countdown_label: Label = %CountdownLabel
 @onready var skip_btn: Button = %SkipBtn
+@onready var restart_btn: Button = %RestartBtn
 
 var _countdown: float = -1.0
 
@@ -16,6 +18,7 @@ var _countdown: float = -1.0
 func _ready():
 	hide()
 	skip_btn.pressed.connect(func(): skip_pressed.emit())
+	restart_btn.pressed.connect(func(): restart_pressed.emit())
 
 
 func _process(delta: float):
@@ -47,6 +50,7 @@ func rpc_show_results(results_dict: Dictionary, countdown_seconds: float):
 	_countdown = countdown_seconds
 	countdown_label.text = "%d" % ceili(countdown_seconds)
 	skip_btn.visible = multiplayer.is_server()
+	restart_btn.visible = multiplayer.is_server()
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME_PAUSED
 	show()
 

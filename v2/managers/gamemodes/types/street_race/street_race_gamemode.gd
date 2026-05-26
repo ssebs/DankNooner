@@ -32,6 +32,7 @@ func Enter(state_context: StateContext):
 	gamemode_manager.player_disconnected.connect(_on_player_disconnected)
 	gamemode_manager.player_latejoined.connect(_on_player_latejoined)
 	results_hud.skip_pressed.connect(_on_results_skip_pressed)
+	results_hud.restart_pressed.connect(_on_results_restart_pressed)
 
 	if multiplayer.is_server():
 		_start_next_runner()
@@ -53,6 +54,7 @@ func Exit(_state_context: StateContext):
 	gamemode_manager.player_disconnected.disconnect(_on_player_disconnected)
 	gamemode_manager.player_latejoined.disconnect(_on_player_latejoined)
 	results_hud.skip_pressed.disconnect(_on_results_skip_pressed)
+	results_hud.restart_pressed.disconnect(_on_results_restart_pressed)
 
 	if _active_runner != null:
 		_disconnect_runner(_active_runner)
@@ -171,6 +173,23 @@ func _on_results_skip_pressed():
 		return
 	_results_countdown = -1.0
 	_return_to_free_roam()
+
+
+func _on_results_restart_pressed():
+	if !multiplayer.is_server():
+		return
+	_results_countdown = -1.0
+	results_hud.rpc_hide.rpc()
+	# Active runner is already null here (results show only after all_completed),
+	# but guard for the timing edge where restart races the countdown.
+	if _active_runner != null:
+		_disconnect_runner(_active_runner)
+		_active_runner.stop()
+		_active_runner = null
+	_active_runner_index = -1
+	_runners = _start_circle.get_runners()
+	_inject_runner_deps()
+	_start_next_runner()
 
 
 #endregion

@@ -2,6 +2,7 @@
 class_name FreeRoamGameMode extends GameModeType
 
 @export var game_mode_event_confirm_hud: GameModeEventConfirmHUD
+@export var level_manager: LevelManager
 
 var _respawn_delay: float = 3.0
 
@@ -30,13 +31,24 @@ func Enter(state_context: StateContext):
 		spawn_manager.spawn_all_players()
 
 	if multiplayer.is_server():
-		# Coming from another gamemode — clear any TeleportTask-set respawn point
-		# so every player returns to (and future crashes return to) player_spawn_pos.
+		# Distribute every peer to a unique spot. With grid_markers, each peer gets
+		# its own grid slot (and persistent respawn point). Without, fall back to
+		# the legacy single-spawn behavior.
 		# Must hit every peer, not just _ctx.peer_id — that's only the player who
 		# triggered the transition (the server, for race end), leaving clients riding.
+		var grid_markers: Array[Marker3D] = level_manager.current_level.grid_markers
+		var slot: int = 0
 		for peer_id in gamemode_manager.lobby_manager.lobby_players:
-			spawn_manager.reset_respawn_point.rpc(peer_id)
-			spawn_manager.respawn_player.rpc(peer_id)
+			if grid_markers.is_empty():
+				spawn_manager.reset_respawn_point.rpc(peer_id)
+				spawn_manager.respawn_player.rpc(peer_id)
+			else:
+				var idx: int = min(slot, grid_markers.size() - 1)
+				var marker := grid_markers[idx]
+				spawn_manager.respawn_player_at.rpc(
+					peer_id, marker.global_position, marker.global_basis
+				)
+				slot += 1
 
 
 ## param is whether to connect() or disconnect()
@@ -123,5 +135,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 	if game_mode_event_confirm_hud == null:
 		issues.append("game_mode_event_confirm_hud must not be empty")
+	if level_manager == null:
+		issues.append("level_manager must not be empty")
 
 	return issues
