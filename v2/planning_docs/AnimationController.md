@@ -198,7 +198,18 @@ func do_reset()                             # Called from PlayerEntity.do_respaw
 
 ## Trick Animations
 
-`AnimationController` listens to `trick_controller.trick_started` / `trick_ended` and plays/stops cached IK animations via `_anim_runner`. Each trick picks its own play mode (auto-fade one-shot, hold-at-end, looping) based on whether it's a transient gesture or a sustained pose. `do_reset()` clears all layer refs so respawns flush cleanly.
+`AnimationController` listens to `trick_controller.trick_started` / `trick_ended` and plays/stops cached IK animations via `_anim_runner`. Trick anims are driven by a data table (`_trick_entries`) keyed by `TrickController.Trick`. Each row picks a `PlayMode` and optional `reverse_on_end`. `do_reset()` / `start_ragdoll()` clear all layer refs so respawns flush cleanly.
+
+### Adding a new trick anim
+
+1. Add the enum value to `TrickController.Trick`.
+2. Author the animation in `IKAnimationPlayer` (full track paths, keyframe `t=0`) and name it (e.g. `superman`).
+3. Add one row to `_build_trick_entries()` in `animation_controller.gd`:
+   ```gdscript
+   _make_entry(TrickController.Trick.SUPERMAN, "superman", PlayMode.ONE_SHOT, false),
+   ```
+
+`PlayMode`: `ONE_SHOT` (transient gesture, auto-fades), `LOOP_WHILE_LATCHED` (same call today, semantic intent), `HOLD_WHILE_LATCHED` (settles + holds; pair with `reverse_on_end: true` to unwind on trick_ended). No new vars, init branches, or cleanup spots needed — the registry drives everything.
 
 To play arbitrary IK anims from elsewhere, expose `_anim_runner` or wrap with helper methods — same `play()/stop()` API.
 
