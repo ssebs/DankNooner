@@ -110,12 +110,10 @@ var _bd: BikeSkinDefinition
 var _anim_runner: CustomAnimPlayer
 var _idle_anim: Animation
 var _idle_layer: CustomAnimPlayer.Layer
-var _heel_clicker_anim: Animation
-var _heel_clicker_layer: CustomAnimPlayer.Layer
-var _high_chair_anim: Animation
-var _high_chair_layer: CustomAnimPlayer.Layer
-var _two_left_feet_anim: Animation
-var _two_left_feet_layer: CustomAnimPlayer.Layer
+# Trick anims live in _trick_entries (built in initialize()). To add a trick,
+# append one row to _build_trick_entries() — see PLAN-animcontroller-refac.md.
+var _trick_entries: Array = []
+var _trick_by_enum: Dictionary = {}
 var _back_up_start_anim: Animation
 var _back_up_loop_anim: Animation
 var _back_up_start_layer: CustomAnimPlayer.Layer
@@ -495,15 +493,12 @@ func initialize() -> void:
 	if ik_anim_player.has_animation("idle"):
 		_idle_anim = ik_anim_player.get_animation("idle")
 		_fixup_anim_paths(_idle_anim)
-	if ik_anim_player.has_animation("heel_clicker"):
-		_heel_clicker_anim = ik_anim_player.get_animation("heel_clicker")
-		_fixup_anim_paths(_heel_clicker_anim)
-	if ik_anim_player.has_animation("high_chair"):
-		_high_chair_anim = ik_anim_player.get_animation("high_chair")
-		_fixup_anim_paths(_high_chair_anim)
-	if ik_anim_player.has_animation("two_left_feet"):
-		_two_left_feet_anim = ik_anim_player.get_animation("two_left_feet")
-		_fixup_anim_paths(_two_left_feet_anim)
+	_build_trick_entries()
+	for entry in _trick_entries:
+		if ik_anim_player.has_animation(entry.anim_name):
+			entry.anim = ik_anim_player.get_animation(entry.anim_name)
+			_fixup_anim_paths(entry.anim)
+		_trick_by_enum[entry.trick] = entry
 	if ik_anim_player.has_animation("back_up_start"):
 		_back_up_start_anim = ik_anim_player.get_animation("back_up_start")
 		_fixup_anim_paths(_back_up_start_anim)
@@ -529,38 +524,36 @@ func _fixup_anim_paths(anim: Animation) -> void:
 
 
 func _on_trick_started(trick_type: TrickController.Trick) -> void:
-	if trick_type == TrickController.Trick.HEEL_CLICKER:
-		# One-shot: plays through fully, auto-fades at end. Don't stop on button release —
-		# trick_ended fires when RB is let go OR on landing, but we want the full anim to play.
-		if _heel_clicker_anim:
-			if _heel_clicker_layer == null or not _heel_clicker_layer.is_playing():
-				_heel_clicker_layer = _anim_runner.play(_heel_clicker_anim, 1.0, false)
-	elif trick_type == TrickController.Trick.HIGH_CHAIR:
-		# Settle into pose, hold while latched. If a reverse-out is mid-flight (re-entry
-		# during the unwind), flip it back to forward instead of starting a new layer.
-		if _high_chair_anim == null:
-			return
-		if _high_chair_layer != null and _high_chair_layer.is_playing():
-			_high_chair_layer.speed = 1.0
-			_high_chair_layer.hold_at_end = true
-			_high_chair_layer.target_weight = 1.0
-		else:
-			_high_chair_layer = _anim_runner.play_one_shot(_high_chair_anim, 1.0)
-	elif trick_type == TrickController.Trick.TWO_LEFT_FEET:
-		if _two_left_feet_anim == null:
-			return
-		if _two_left_feet_layer == null or not _two_left_feet_layer.is_playing():
-			_two_left_feet_layer = _anim_runner.play(_two_left_feet_anim, 1.0, false)
+	var entry: _TrickAnimEntry = _trick_by_enum.get(trick_type)
+	if entry == null or entry.anim == null:
+		return
+	match entry.play_mode:
+		PlayMode.HOLD_WHILE_LATCHED:
+			# Settle into pose, hold while latched. If a reverse-out is mid-flight (re-entry
+			# during the unwind), flip it back to forward instead of starting a new layer.
+			if entry.layer != null and entry.layer.is_playing():
+				entry.layer.speed = 1.0
+				entry.layer.hold_at_end = true
+				entry.layer.target_weight = 1.0
+			else:
+				entry.layer = _anim_runner.play_one_shot(entry.anim, 1.0)
+		_:
+			# ONE_SHOT / LOOP_WHILE_LATCHED both call play(); trick_ended doesn't stop them,
+			# so the anim plays through fully and auto-fades at end.
+			if entry.layer == null or not entry.layer.is_playing():
+				entry.layer = _anim_runner.play(entry.anim, 1.0, false)
 
 
 func _on_trick_ended(trick_type: TrickController.Trick) -> void:
-	if trick_type == TrickController.Trick.HIGH_CHAIR:
-		# Reverse from current time back to 0 — rider unwinds out of the pose smoothly.
-		# When time hits 0, hold_at_end=false makes the layer auto-fade and clear itself.
-		if _high_chair_layer != null and _high_chair_layer.is_playing():
-			_high_chair_layer.speed = -1.0
-			_high_chair_layer.hold_at_end = false
-			_high_chair_layer.target_weight = 1.0
+	var entry: _TrickAnimEntry = _trick_by_enum.get(trick_type)
+	if entry == null or not entry.reverse_on_end:
+		return
+	# Reverse from current time back to 0 — rider unwinds out of the pose smoothly.
+	# When time hits 0, hold_at_end=false makes the layer auto-fade and clear itself.
+	if entry.layer != null and entry.layer.is_playing():
+		entry.layer.speed = -1.0
+		entry.layer.hold_at_end = false
+		entry.layer.target_weight = 1.0
 
 
 ## Sync hand/foot target transforms from saved positions/rotations in BikeSkinDefinition,
@@ -624,9 +617,8 @@ func start_ragdoll() -> void:
 	if _anim_runner:
 		_anim_runner.stop_all_and_reset(player_entity, _POSE_PIPELINE_PATHS)
 	_idle_layer = null
-	_heel_clicker_layer = null
-	_high_chair_layer = null
-	_two_left_feet_layer = null
+	for entry in _trick_entries:
+		entry.layer = null
 	_back_up_start_layer = null
 	_back_up_loop_layer = null
 	_was_reversing = false
@@ -650,8 +642,8 @@ func do_reset():
 	if _anim_runner:
 		_anim_runner.stop_all()
 	_idle_layer = null
-	_heel_clicker_layer = null
-	_high_chair_layer = null
+	for entry in _trick_entries:
+		entry.layer = null
 	_back_up_start_layer = null
 	_back_up_loop_layer = null
 	_was_reversing = false
@@ -896,6 +888,50 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if ik_anim_player == null:
 		issues.append("ik_anim_player must be set")
 	return issues
+
+
+enum PlayMode {
+	ONE_SHOT,  # play(anim, 1.0, false) — fires once, auto-fades when finished
+	LOOP_WHILE_LATCHED,  # play(anim, 1.0, false) — same call as ONE_SHOT today; kept distinct for intent
+	HOLD_WHILE_LATCHED,  # play_one_shot — settles + holds at end pose; pairs with reverse_on_end
+}
+
+
+## Data row for a trick anim. To add a trick: append one _make_entry(...) row in
+## _build_trick_entries(). No new vars, no init branches, no cleanup spots.
+class _TrickAnimEntry:
+	var trick: int  # TrickController.Trick
+	var anim_name: String
+	var play_mode: int  # PlayMode
+	var reverse_on_end: bool
+	var anim: Animation = null
+	var layer: CustomAnimPlayer.Layer = null
+
+
+func _make_entry(
+	trick: int, anim_name: String, play_mode: int, reverse_on_end: bool
+) -> _TrickAnimEntry:
+	var e := _TrickAnimEntry.new()
+	e.trick = trick
+	e.anim_name = anim_name
+	e.play_mode = play_mode
+	e.reverse_on_end = reverse_on_end
+	return e
+
+
+func _build_trick_entries() -> void:
+	_trick_entries = [
+		_make_entry(TrickController.Trick.HEEL_CLICKER, "heel_clicker", PlayMode.ONE_SHOT, false),
+		_make_entry(
+			TrickController.Trick.HIGH_CHAIR, "high_chair", PlayMode.HOLD_WHILE_LATCHED, true
+		),
+		_make_entry(
+			TrickController.Trick.TWO_LEFT_FEET,
+			"two_left_feet",
+			PlayMode.LOOP_WHILE_LATCHED,
+			false
+		),
+	]
 
 
 ## Per-frame snapshot of every value the rider pose pipeline mutates. Pure data;
