@@ -16,6 +16,8 @@ func _ready() -> void:
 	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
 	settings_manager.setting_updated.connect(_on_setting_updated)
 
+	get_window().size_changed.connect(_on_window_size_changed)
+
 	DebugUtils.DebugMsg(tr("GAME_TITLE"))
 	DebugUtils.DebugMsg(ProjectSettings.get_setting("application/config/version"))
 
@@ -33,6 +35,17 @@ func _on_all_settings_changed(new_settings: Dictionary):
 func _on_setting_updated(key: String, value: Variant):
 	if key == "fullscreen_mode":
 		DisplayServer.window_set_mode(SettingsManager.str_to_windowmode(value))
+
+
+# Persist window mode when the user changes it via the OS (e.g. clicking maximize)
+func _on_window_size_changed():
+	var current_mode_str := SettingsManager.windowmode_to_str(DisplayServer.window_get_mode())
+	if current_mode_str == "":
+		return
+	if settings_manager.current_settings.get("fullscreen_mode", "") == current_mode_str:
+		return
+	settings_manager.update_setting("fullscreen_mode", current_mode_str, false)
+	settings_manager.save_settings()
 
 
 func _run_validation() -> void:
