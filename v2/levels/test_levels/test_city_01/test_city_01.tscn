@@ -61,10 +61,11 @@ description = "Testing the tricks"
 target_gamemode = 1
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
-[node name="Test_City_01" type="Node3D" unique_id=721643000 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug")]
+[node name="Test_City_01" type="Node3D" unique_id=721643000 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug", "grid_markers")]
 script = ExtResource("1_qt85o")
 player_spawn_pos = NodePath("PlayerSpawn")
 player_spawn_pos_debug = NodePath("PlayerSpawnTest")
+grid_markers = [NodePath("Race02Event/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot1"), NodePath("Race02Event/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot2"), NodePath("Race02Event/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot3"), NodePath("Race02Event/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot4")]
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="PlayerSpawn" type="Marker3D" parent="." unique_id=2018268121]

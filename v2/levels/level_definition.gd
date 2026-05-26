@@ -8,6 +8,9 @@ class_name LevelDefinition extends Node3D
 @export var player_entity_scene: PackedScene = preload("res://player/player_entity.tscn")
 @export var player_spawn_pos: Marker3D
 @export var player_spawn_pos_debug: Marker3D
+## Optional grid for FreeRoamGameMode to distribute peers across on entry.
+## Empty → all peers stack on player_spawn_pos (legacy behavior).
+@export var grid_markers: Array[Marker3D] = []
 
 ## Set in level_manager
 var level_manager: LevelManager

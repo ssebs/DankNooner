@@ -319,7 +319,9 @@ func _on_trick_ended(trick_type: TrickController.Trick):
 	)
 
 	if (
-		trick_type
+		is_local_client
+		and audio_manager
+		and trick_type
 		not in [
 			TrickController.Trick.NONE,
 			TrickController.Trick.WHEELIE_SITTING,

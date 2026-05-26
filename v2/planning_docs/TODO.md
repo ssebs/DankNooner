@@ -15,14 +15,9 @@
 
 - [ ] Jose — controls too hard to do a wheelie
 - [ ] host can't go to customize bc others will leave
-- [ ] all spawned under map → use `GridSpawnTask` in free roam
-- [ ] trick sounds happen for everyone → make local-only
 - [ ] height is offset for some clients
-- [ ] crashing during race kills engine audio / can still move in spawn
-- [ ] respawning in race doesn't work
 - [ ] starting the gamemode for everyone doesn't work as expected
-- [ ] if one player crashes during countdown, they need to manually respawn before they can start
-- [ ] restart race btn (for jump)
+- [ ] add ability to stop race (see restart race)
 ---
 
 ## HI-PRI (next sprint candidates) ‼️
@@ -185,6 +180,18 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] if one player crashes during countdown, they need to manually respawn before they can start
+
+- [x] restart race btn (for jump)
+
+- [x] respawning in race doesn't work
+
+- [x] crashing during race kills engine audio / can still move in spawn
+
+- [x] trick sounds happen for everyone → make local-only
+
+- [x] all spawned under map → use `GridSpawnTask` in free roam
 
 - [x] Add purple color
 
