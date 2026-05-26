@@ -2,18 +2,13 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀 — Current Sprint
-> **Theme:** stabilize what exists, refactor the trick pipeline, ship Skate-style challenges.
-- [WIP] work on playtest bugs
-- [ ] In-world UI - speech bubble
+
 ---
 
-### Playtest bugs (tracked in PLAN-bug-fixes.md)
-> Detailed fix plans in [PLAN-bug-fixes.md](./PLAN-bug-fixes.md). Originals kept here for reference.
+### Playtest bugs
 
 - [ ] host can't go to customize bc others will leave
 - [ ] height is offset for some clients
-- [ ] starting the gamemode for everyone doesn't work as expected
-- [ ] add ability to stop race (see restart race)
 ---
 
 ## HI-PRI (next sprint candidates) ‼️
@@ -176,6 +171,14 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] In-world UI - speech bubble
+
+- [x] work on playtest bugs
+
+- [x] starting the gamemode for everyone doesn't work as expected
+
+- [x] add ability to stop race (see restart race)
 
 - [x] **Phase 2:** [PLAN-animcontroller-refac.md](./PLAN-animcontroller-refac.md) — adding a new trick should be ONE edit, not five
 
