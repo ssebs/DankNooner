@@ -2119,4 +2119,4 @@ script = ExtResource("21_hide_sb")
 speech_bubble = NodePath("../../SpeechBubble")
 
 [node name="SpeechBubble" parent="Challenge01Event/Chall01EventStartCircle" unique_id=2002413482 instance=ExtResource("21_dn2hu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 1, -45)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 0, -45)

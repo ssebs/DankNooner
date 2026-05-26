@@ -90,7 +90,7 @@ func _on_runner_all_completed():
 	var is_last := _active_runner_index + 1 >= _runners.size()
 	completed_runner.stop()
 	if is_last:
-		tutorial_hud.rpc_show_complete.rpc()
+		tutorial_hud.rpc_show_complete.rpc("CHALLENGE_COMPLETE")
 		_complete_toast_remaining = _complete_toast_duration
 	else:
 		_start_next_runner()
