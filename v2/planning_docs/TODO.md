@@ -4,7 +4,6 @@
 ## In Progress 🚀 — Current Sprint
 > **Theme:** stabilize what exists, refactor the trick pipeline, ship Skate-style challenges.
 
-- [ ] Resizing window should save in settings
 - [ ] **Phase 2:** [PLAN-animcontroller-refac.md](./PLAN-animcontroller-refac.md) — adding a new trick should be ONE edit, not five
 - [ ] **Phase 3:** [PLAN-Challenge-system-tutorial.md](./PLAN-Challenge-system-tutorial.md) — Skate-style in-world challenges (replaces forced tutorials)
 ---
@@ -179,6 +178,8 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] Resizing window should save in settings
 
 - [x] **Phase 1:** [PLAN-bug-fixes.md](./PLAN-bug-fixes.md) — stabilize playtest bugs
 
