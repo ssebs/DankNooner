@@ -3,7 +3,7 @@
 
 ## In Progress 🚀 — Current Sprint
 > **Theme:** stabilize what exists, refactor the trick pipeline, ship Skate-style challenges.
-- [ ] work on playtest bugs
+- [WIP] work on playtest bugs
 - [ ] **Phase 2:** [PLAN-animcontroller-refac.md](./PLAN-animcontroller-refac.md) — adding a new trick should be ONE edit, not five
 - [ ] **Phase 3:** [PLAN-Challenge-system-tutorial.md](./PLAN-Challenge-system-tutorial.md) — Skate-style in-world challenges (replaces forced tutorials)
 ---
@@ -11,7 +11,6 @@
 ### Playtest bugs (tracked in PLAN-bug-fixes.md)
 > Detailed fix plans in [PLAN-bug-fixes.md](./PLAN-bug-fixes.md). Originals kept here for reference.
 
-- [ ] Jose — controls too hard to do a wheelie
 - [ ] host can't go to customize bc others will leave
 - [ ] height is offset for some clients
 - [ ] starting the gamemode for everyone doesn't work as expected
@@ -178,6 +177,9 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] Jose — controls too hard to do a wheelie
+  - [x] fall return speed too fast
 
 - [x] Resizing window should save in settings
 

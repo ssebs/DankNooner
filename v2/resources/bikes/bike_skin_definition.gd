@@ -72,7 +72,8 @@ class_name BikeSkinDefinition extends Resource
 ## Pitch_scale at max RPM (curve sample = 1).
 @export var engine_max_pitch: float = 2.828
 ## Maps RPM [0..1] to interpolation factor [0..1] between min/max pitch.
-@export var engine_rpm_pitch_curve: Curve = preload("res://resources/bikes/ninja_rpm_pitch_curve.tres")
+@export
+var engine_rpm_pitch_curve: Curve = preload("res://resources/bikes/ninja_rpm_pitch_curve.tres")
 
 @export_group("Animation")
 ## Multiplier for rider lean animation when steering
@@ -109,9 +110,9 @@ class_name BikeSkinDefinition extends Resource
 @export var max_stoppie_angle_deg: float = 105.0
 @export var wheelie_rpm_threshold: float = 0.4
 ## Half-width of the balance point sweet spot (total range = balance_point ± this)
-@export var wheelie_balance_point_width_deg: float = 10.0
-@export var rotation_speed: float = 2.0
-@export var return_speed: float = 3.0
+@export var wheelie_balance_point_width_deg: float = 12.0
+@export var rotation_speed: float = 1.75
+@export var return_speed: float = 1.25
 
 @export_group("Surfaces")
 ## How strongly this bike is affected by layer 5 (unstable_collision) surfaces.

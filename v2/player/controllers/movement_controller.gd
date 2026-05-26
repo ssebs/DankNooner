@@ -15,7 +15,7 @@ const CLUTCH_KICK_WINDOW: float = 0.2
 const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65  # fraction of bike's 1st-gear torque needed to clutch-pop — blocks high-gear pops
 const POWER_WHEELIE_MIN_FORCE: float = 21.6  # power × bd.acceleration floor for power wheelies — auto-scales by bike strength
 const FALL_GRAVITY: float = 20
-const AIR_DRAG: float = 12.0  # speed loss while airborne
+const AIR_DRAG: float = 12.0  # speed loss while airborne. TODO - turn into a curve
 # Unstable surface (collision layer 5) — gravel/sand/etc. Scaled by bike's unstable_surface_factor.
 const UNSTABLE_LAYER_MASK: int = 16  # 1 << 4 (layer 5)
 const UNSTABLE_DRAG_RATE: float = 0.6  # proportional drag (per sec) on unstable ground at factor=1 — caps top speed without stalling launches
