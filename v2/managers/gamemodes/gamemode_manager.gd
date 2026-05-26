@@ -29,9 +29,10 @@ enum MatchState {
 @export var free_roam_mode: FreeRoamGameMode
 @export var street_race_mode: StreetRaceGameMode
 @export var tutorial_mode: TutorialGameMode
+@export var challenge_mode: ChallengeGameMode
 
 var match_state: MatchState = MatchState.IN_LOBBY
-var current_game_mode: GameModeType.Kind = GameModeType.Kind.FREE_FROAM
+var current_game_mode: GameModeType.Kind = GameModeType.Kind.FREE_ROAM
 var current_level_name: LevelManager.LevelName = LevelManager.LevelName.LEVEL_SELECT_LABEL
 
 var _gamemode_map: Dictionary[GameModeType.Kind,GameModeType] = {}
@@ -42,9 +43,10 @@ func _ready():
 		return
 
 	_gamemode_map = {
-		GameModeType.Kind.FREE_FROAM: free_roam_mode,
+		GameModeType.Kind.FREE_ROAM: free_roam_mode,
 		GameModeType.Kind.STREET_RACE: street_race_mode,
 		GameModeType.Kind.TUTORIAL: tutorial_mode,
+		GameModeType.Kind.CHALLENGE: challenge_mode,
 	}
 
 	connection_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
@@ -55,7 +57,9 @@ func _ready():
 
 ## Called by server to start the game for all players
 @rpc("call_local", "reliable")
-func start_game(level_name: LevelManager.LevelName, gamemode: GameModeType.Kind = GameModeType.Kind.FREE_FROAM):
+func start_game(
+	level_name: LevelManager.LevelName, gamemode: GameModeType.Kind = GameModeType.Kind.FREE_ROAM
+):
 	current_level_name = level_name
 	current_game_mode = gamemode
 	match_state = MatchState.IN_GAME
@@ -67,7 +71,9 @@ func start_game(level_name: LevelManager.LevelName, gamemode: GameModeType.Kind 
 
 ## Server receives request to change gamemode, broadcasts to all peers
 @rpc("any_peer", "call_local", "reliable")
-func change_gamemode(gamemode: GameModeType.Kind, peer_id: int, event_start_circle_path: NodePath = ^""):
+func change_gamemode(
+	gamemode: GameModeType.Kind, peer_id: int, event_start_circle_path: NodePath = ^""
+):
 	if !multiplayer.is_server():
 		return
 
@@ -79,7 +85,9 @@ func change_gamemode(gamemode: GameModeType.Kind, peer_id: int, event_start_circ
 ## event_start_circle_path is resolved locally on each peer because EventStartCircle
 ## refs can't cross RPC boundaries — the path is the same on every peer's level scene.
 @rpc("call_local", "reliable")
-func _rpc_transition_gamemode(gamemode: GameModeType.Kind, peer_id: int, event_start_circle_path: NodePath = ^""):
+func _rpc_transition_gamemode(
+	gamemode: GameModeType.Kind, peer_id: int, event_start_circle_path: NodePath = ^""
+):
 	var ctx := GamemodeStateContext.new()
 	ctx.peer_id = peer_id
 	if !event_start_circle_path.is_empty():
@@ -157,7 +165,7 @@ func _on_client_connection_succeeded(peer_id: int):
 ## Server calls this on a late-joining client to sync them into the active game
 @rpc("any_peer", "reliable")
 func _sync_game_to_late_joiner(
-	level_name: LevelManager.LevelName, gamemode: GameModeType.Kind = GameModeType.Kind.FREE_FROAM
+	level_name: LevelManager.LevelName, gamemode: GameModeType.Kind = GameModeType.Kind.FREE_ROAM
 ):
 	DebugUtils.DebugMsg("_sync_game_to_late_joiner")
 	match_state = MatchState.IN_GAME
@@ -209,6 +217,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("street_race_mode must not be empty")
 	if tutorial_mode == null:
 		issues.append("tutorial_mode must not be empty")
+	if challenge_mode == null:
+		issues.append("challenge_mode must not be empty")
 	if state_machine == null:
 		issues.append("state_machine must not be empty")
 

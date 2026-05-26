@@ -32,6 +32,7 @@
 [ext_resource type="Script" uid="uid://2sjea5ct6un7" path="res://managers/gamemodes/types/tutorial/tutorial_gamemode.gd" id="27_8slmw"]
 [ext_resource type="PackedScene" uid="uid://dmq80r6t0kwp5" path="res://managers/gamemodes/types/tutorial/tutorial_hud.tscn" id="28_onx7j"]
 [ext_resource type="PackedScene" uid="uid://c1rey02kvrh1h" path="res://managers/gamemodes/hud/results_hud.tscn" id="29_o8ab5"]
+[ext_resource type="Script" uid="uid://b6yqloe4qv2ck" path="res://managers/gamemodes/types/challenge/challenge_gamemode.gd" id="30_chlng"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("1_1oj5k")
@@ -164,7 +165,7 @@ script = ExtResource("19_wt57k")
 default_player_definition = ExtResource("20_pk5u2")
 metadata/_custom_type_script = "uid://didbm7t5dal30"
 
-[node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "spawn_manager", "audio_manager", "input_state_manager", "state_machine", "loading_menu_state", "free_roam_mode", "street_race_mode", "tutorial_mode") groups=["Managers"]]
+[node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "spawn_manager", "audio_manager", "input_state_manager", "state_machine", "loading_menu_state", "free_roam_mode", "street_race_mode", "tutorial_mode", "challenge_mode") groups=["Managers"]]
 script = ExtResource("18_ih6an")
 menu_manager = NodePath("../MenuManager")
 settings_manager = NodePath("../SettingsManager")
@@ -179,6 +180,7 @@ loading_menu_state = NodePath("../MenuManager/StateMachine/LoadingMenuState")
 free_roam_mode = NodePath("StateMachine/FreeRoamGameMode")
 street_race_mode = NodePath("StateMachine/StreetRaceGameMode")
 tutorial_mode = NodePath("StateMachine/TutorialGameMode")
+challenge_mode = NodePath("StateMachine/ChallengeGameMode")
 
 [node name="StateMachine" type="Node" parent="ManagerManager/GamemodeManager" unique_id=445664816]
 script = ExtResource("4_6bm6p")
@@ -219,6 +221,14 @@ results_hud = NodePath("../TutorialGameMode/ResultsHUD")
 input_state_manager = NodePath("../../../InputStateManager")
 lobby_manager = NodePath("../../../LobbyManager")
 menu_manager = NodePath("../../../MenuManager")
+audio_manager = NodePath("../../../AudioManager")
+gamemode_manager = NodePath("../..")
+spawn_manager = NodePath("../../../SpawnManager")
+
+[node name="ChallengeGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=629329474 node_paths=PackedStringArray("tutorial_hud", "lobby_manager", "audio_manager", "gamemode_manager", "spawn_manager")]
+script = ExtResource("30_chlng")
+tutorial_hud = NodePath("../TutorialGameMode/TutorialHUD")
+lobby_manager = NodePath("../../../LobbyManager")
 audio_manager = NodePath("../../../AudioManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")

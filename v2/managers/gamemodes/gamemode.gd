@@ -2,7 +2,7 @@
 ## Should only be running on server
 class_name GameModeType extends State
 
-enum Kind { FREE_FROAM, STREET_RACE, STUNT_RACE, TUTORIAL }
+enum Kind { FREE_ROAM, STREET_RACE, STUNT_RACE, TUTORIAL, CHALLENGE }
 
 @export var gamemode_manager: GamemodeManager
 @export var spawn_manager: SpawnManager
