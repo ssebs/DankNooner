@@ -3,12 +3,12 @@
     "versions": [
         {
             "id": "autosave",
-            "timestamp": "2026-05-14 20:56:05",
+            "timestamp": "2026-05-25 17:03:40",
             "note": "Auto Save",
             "thumbnail": "autosave/thumbnail.png",
             "blend": "autosave/snapshot.blend_snapshot",
-            "object_count": 8,
-            "file_size": 108648,
+            "object_count": 10,
+            "file_size": 121526,
             "is_protected": false,
             "tag": "NONE"
         }
