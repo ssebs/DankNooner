@@ -17,6 +17,7 @@ class_name PauseMenuState extends MenuState
 @onready var resume_btn: Button = %ResumeBtn
 @onready var main_menu_btn: Button = %MainMenuBtn
 @onready var respawn_btn: Button = %RespawnBtn
+@onready var cancel_event_btn: Button = %CancelEventBtn
 @onready var customize_btn: Button = %CustomizeBtn
 @onready var settings_btn: Button = %SettingsBtn
 @onready var help_btn: Button = %HelpBtn
@@ -31,11 +32,18 @@ func Enter(_state_context: StateContext):
 	resume_btn.pressed.connect(_on_resume_pressed)
 	main_menu_btn.pressed.connect(_on_main_menu_pressed)
 	respawn_btn.pressed.connect(_on_respawn_pressed)
+	cancel_event_btn.pressed.connect(_on_cancel_event_pressed)
 
 	connection_manager.server_disconnected.connect(_on_server_disconnected)
 	settings_btn.pressed.connect(_on_settings_pressed)
 	customize_btn.pressed.connect(_on_customize_pressed)
 	help_btn.pressed.connect(_on_help_pressed)
+
+	# Host-only, and only meaningful when a non-FreeRoam event is active.
+	cancel_event_btn.visible = (
+		multiplayer.is_server()
+		and gamemode_manager.current_game_mode != GameModeType.Kind.FREE_FROAM
+	)
 
 	respawn_btn.call_deferred("grab_focus")
 
@@ -45,6 +53,7 @@ func Exit(_state_context: StateContext):
 	resume_btn.pressed.disconnect(_on_resume_pressed)
 	main_menu_btn.pressed.disconnect(_on_main_menu_pressed)
 	respawn_btn.pressed.disconnect(_on_respawn_pressed)
+	cancel_event_btn.pressed.disconnect(_on_cancel_event_pressed)
 
 	connection_manager.server_disconnected.disconnect(_on_server_disconnected)
 	settings_btn.pressed.disconnect(_on_settings_pressed)
@@ -58,6 +67,13 @@ func _on_help_pressed():
 
 func _on_respawn_pressed():
 	spawn_manager.respawn_player.rpc(multiplayer.get_unique_id())
+	_on_resume_pressed()
+
+
+func _on_cancel_event_pressed():
+	gamemode_manager.change_gamemode.rpc_id(
+		1, GameModeType.Kind.FREE_FROAM, multiplayer.get_unique_id()
+	)
 	_on_resume_pressed()
 
 

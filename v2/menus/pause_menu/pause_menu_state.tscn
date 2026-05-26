@@ -58,6 +58,12 @@ layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "RESPAWN_LABEL"
 
+[node name="CancelEventBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1557111192]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "CANCEL_EVENT_LABEL"
+
 [node name="HSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=35406676]
 layout_mode = 2
 theme_override_constants/separation = 32

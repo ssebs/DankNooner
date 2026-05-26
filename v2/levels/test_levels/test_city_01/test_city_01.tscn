@@ -65,7 +65,7 @@ metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 script = ExtResource("1_qt85o")
 player_spawn_pos = NodePath("PlayerSpawn")
 player_spawn_pos_debug = NodePath("PlayerSpawnTest")
-grid_markers = [NodePath("Race02Event/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot1"), NodePath("Race02Event/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot2"), NodePath("Race02Event/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot3"), NodePath("Race02Event/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot4")]
+grid_markers = [NodePath("Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot1"), NodePath("Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot2"), NodePath("Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot3"), NodePath("Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot4"), NodePath("Race02Event/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot1"), NodePath("Race02Event/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot2")]
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="PlayerSpawn" type="Marker3D" parent="." unique_id=2018268121]
