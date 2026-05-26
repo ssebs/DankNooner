@@ -42,7 +42,7 @@ func Enter(_state_context: StateContext):
 	# Host-only, and only meaningful when a non-FreeRoam event is active.
 	cancel_event_btn.visible = (
 		multiplayer.is_server()
-		and gamemode_manager.current_game_mode != GameModeType.Kind.FREE_FROAM
+		and gamemode_manager.current_game_mode != GameModeType.Kind.FREE_ROAM
 	)
 
 	respawn_btn.call_deferred("grab_focus")
@@ -72,7 +72,7 @@ func _on_respawn_pressed():
 
 func _on_cancel_event_pressed():
 	gamemode_manager.change_gamemode.rpc_id(
-		1, GameModeType.Kind.FREE_FROAM, multiplayer.get_unique_id()
+		1, GameModeType.Kind.FREE_ROAM, multiplayer.get_unique_id()
 	)
 	_on_resume_pressed()
 
