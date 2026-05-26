@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://ddr0hkde8i60"]
+
+[ext_resource type="Script" uid="uid://jygmnyn3lq7o" path="res://managers/gamemodes/gamemodeobjects/speech_bubble.gd" id="1_sb01"]
+
+[node name="SpeechBubble" type="Node3D" unique_id=1256673171]
+script = ExtResource("1_sb01")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=337787078]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+billboard = 1
+double_sided = false
+text = "..."
+font_size = 96
+outline_size = 24

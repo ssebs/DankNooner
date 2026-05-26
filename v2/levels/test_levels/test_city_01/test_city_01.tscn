@@ -20,6 +20,10 @@
 [ext_resource type="Script" uid="uid://bk8siml2v41d1" path="res://managers/gamemodes/tasks/race_task.gd" id="18_ecphy"]
 [ext_resource type="Script" uid="uid://cij1aa5h6g5nb" path="res://managers/gamemodes/tasks/grid_spawn_task.gd" id="18_mhobo"]
 [ext_resource type="Script" uid="uid://07fvlfaumhio" path="res://managers/gamemodes/tasks/perform_trick_task.gd" id="20_tcy6e"]
+[ext_resource type="Script" uid="uid://c121yf80vp0q6" path="res://managers/gamemodes/tasks/show_speech_bubble_task.gd" id="20_xfcmg"]
+[ext_resource type="PackedScene" uid="uid://ddr0hkde8i60" path="res://managers/gamemodes/gamemodeobjects/speech_bubble.tscn" id="21_dn2hu"]
+[ext_resource type="Script" uid="uid://c7n5a4hmghfew" path="res://managers/gamemodes/tasks/hide_speech_bubble_task.gd" id="21_hide_sb"]
+[ext_resource type="Script" uid="uid://c8lp47thlfobx" path="res://managers/gamemodes/tasks/grid_respawn_task.gd" id="22_4paf4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2lumj"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -2061,19 +2065,58 @@ advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="PerformTrickTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=543026042]
+[node name="WheelieStep" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=2143000001]
+script = ExtResource("8_cf4ia")
+
+[node name="ShowSpeechBubbleTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/WheelieStep" unique_id=2143000002 node_paths=PackedStringArray("speech_bubble")]
+script = ExtResource("20_xfcmg")
+speech_bubble = NodePath("../../../SpeechBubble")
+text_key = "Do a wheelie!"
+
+[node name="PerformTrickTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/WheelieStep" unique_id=543026042]
 script = ExtResource("20_tcy6e")
 min_duration = 2.0
 metadata/_custom_type_script = "uid://07fvlfaumhio"
 
-[node name="PerformTrickTask2" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=591009744]
+[node name="GridRespawnTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=1919080941 node_paths=PackedStringArray("grid_spawn_task")]
+script = ExtResource("22_4paf4")
+grid_spawn_task = NodePath("../GridSpawnTask")
+
+[node name="StoppieStep" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=2143000003]
+script = ExtResource("8_cf4ia")
+
+[node name="ShowSpeechBubbleTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/StoppieStep" unique_id=2143000004 node_paths=PackedStringArray("speech_bubble")]
+script = ExtResource("20_xfcmg")
+speech_bubble = NodePath("../../../SpeechBubble")
+text_key = "Do a stoppie!"
+
+[node name="PerformTrickTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/StoppieStep" unique_id=591009744]
 script = ExtResource("20_tcy6e")
 required_trick = 3
 min_duration = 1.0
 metadata/_custom_type_script = "uid://07fvlfaumhio"
 
-[node name="PerformTrickTask3" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=1134964111]
+[node name="GridRespawnTask2" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=965551641 node_paths=PackedStringArray("grid_spawn_task")]
+script = ExtResource("22_4paf4")
+grid_spawn_task = NodePath("../GridSpawnTask")
+
+[node name="TwoLeftFeetStep" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=2143000005]
+script = ExtResource("8_cf4ia")
+
+[node name="ShowSpeechBubbleTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/TwoLeftFeetStep" unique_id=2143000006 node_paths=PackedStringArray("speech_bubble")]
+script = ExtResource("20_xfcmg")
+speech_bubble = NodePath("../../../SpeechBubble")
+text_key = "Two left feet!"
+
+[node name="PerformTrickTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/TwoLeftFeetStep" unique_id=1134964111]
 script = ExtResource("20_tcy6e")
 required_trick = 9
 min_duration = 0.5
 metadata/_custom_type_script = "uid://07fvlfaumhio"
+
+[node name="HideSpeechBubbleTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=2143000007 node_paths=PackedStringArray("speech_bubble")]
+script = ExtResource("21_hide_sb")
+speech_bubble = NodePath("../../SpeechBubble")
+
+[node name="SpeechBubble" parent="Challenge01Event/Chall01EventStartCircle" unique_id=2002413482 instance=ExtResource("21_dn2hu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 1, -45)
