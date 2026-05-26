@@ -3,7 +3,7 @@
 
 ## In Progress 🚀 — Current Sprint
 > **Theme:** stabilize what exists, refactor the trick pipeline, ship Skate-style challenges.
-
+- [ ] work on playtest bugs
 - [ ] **Phase 2:** [PLAN-animcontroller-refac.md](./PLAN-animcontroller-refac.md) — adding a new trick should be ONE edit, not five
 - [ ] **Phase 3:** [PLAN-Challenge-system-tutorial.md](./PLAN-Challenge-system-tutorial.md) — Skate-style in-world challenges (replaces forced tutorials)
 ---
