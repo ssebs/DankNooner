@@ -31,10 +31,50 @@ func _ready():
 
 
 func deferred_init():
-	if FileAccess.file_exists(save_path):
-		load_save()
-	else:
+	var first_run := not FileAccess.file_exists(save_path)
+	if first_run:
 		_save_default_save()
+	else:
+		load_save()
+
+	# First-run: seed one loadout per base bike found on disk.
+	# Migration: existing save with no loadouts (legacy from_dict left it empty) → also seed.
+	var player_def := get_player_definition()
+	if first_run or player_def.loadouts.is_empty():
+		_seed_default_loadouts(player_def)
+		save_save()
+
+
+const BIKE_SKINS_DIR := "res://resources/bikes/skins/"
+
+
+## Scans res://resources/bikes/skins/ and creates one loadout per base bike found,
+## with the skin's `skin_name` as the loadout name and no mods.
+func _seed_default_loadouts(player_def: PlayerDefinition) -> void:
+	var dir := DirAccess.open(BIKE_SKINS_DIR)
+	if dir == null:
+		DebugUtils.DebugErrMsg("SaveManager: failed to open %s" % BIKE_SKINS_DIR)
+		return
+
+	var is_exported := !OS.has_feature("editor")
+	var extension := ".tres.remap" if is_exported else ".tres"
+
+	var seeded: Array[BikeSkinDefinition] = []
+	dir.list_dir_begin()
+	var file_name := dir.get_next()
+	while file_name != "":
+		if not dir.current_is_dir() and file_name.ends_with(extension):
+			var res_path := BIKE_SKINS_DIR + file_name.replace(".remap", "")
+			var base := ResourceLoader.load(res_path) as BikeSkinDefinition
+			if base != null:
+				var loadout := BikeSkinDefinition.new()
+				loadout.from_dict({"base_res_path": res_path, "skin_name": base.skin_name})
+				seeded.append(loadout)
+		file_name = dir.get_next()
+	dir.list_dir_end()
+
+	player_def.loadouts = seeded
+	player_def.active_loadout_index = 0
 
 
 # TODO - this may cause a dupe emit bug since save_settings also emits a signal

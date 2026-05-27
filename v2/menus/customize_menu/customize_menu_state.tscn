@@ -1,14 +1,12 @@
-[gd_scene format=3 uid="uid://b8wtld34amu44"]
+[gd_scene load_steps=3 format=3 uid="uid://b8wtld34amu44"]
 
 [ext_resource type="Script" uid="uid://7ucyugkoihsv" path="res://menus/customize_menu/customize_menu_state.gd" id="1_hwmj7"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_id3t2"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_id3t2"]
-
-[node name="CustomizeMenuState" type="Node" unique_id=1710077363]
+[node name="CustomizeMenuState" type="Node"]
 script = ExtResource("1_hwmj7")
 
-[node name="UI" type="Control" parent="." unique_id=555581335]
+[node name="UI" type="Control" parent="."]
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
@@ -17,7 +15,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BGTint" type="ColorRect" parent="UI" unique_id=1543716163]
+[node name="BGTint" type="ColorRect" parent="UI"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -25,9 +23,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.78431374)
+color = Color(0, 0, 0, 0.784314)
 
-[node name="AspectContainer" type="AspectRatioContainer" parent="UI" unique_id=1411030700]
+[node name="AspectContainer" type="AspectRatioContainer" parent="UI"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -36,82 +34,146 @@ grow_horizontal = 2
 grow_vertical = 2
 ratio = 1.778
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/AspectContainer" unique_id=316995615]
+[node name="MarginContainer" type="MarginContainer" parent="UI/AspectContainer"]
 layout_mode = 2
 theme = ExtResource("2_id3t2")
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
 
-[node name="TitleLabel" type="Label" parent="UI/AspectContainer/MarginContainer" unique_id=373470256]
+[node name="Root" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer"]
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
+
+[node name="TitleLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Root"]
+layout_mode = 2
 theme_type_variation = &"TitleLabel"
 text = "CUSTOMIZE_LABEL"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=955028272]
+[node name="TopRow" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/Root"]
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
+theme_override_constants/separation = 24
 
-[node name="UsernameLabel" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=2124238731]
+[node name="UsernameBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/TopRow"]
+layout_mode = 2
+
+[node name="UsernameLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Root/TopRow/UsernameBox"]
 layout_mode = 2
 text = "USERNAME_LABEL"
 
-[node name="UsernameEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1151535776]
+[node name="UsernameEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/Root/TopRow/UsernameBox"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 placeholder_text = "e.g. hunter2"
 max_length = 32
 
-[node name="CharacterSkinLabel" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1393932526]
+[node name="CharacterBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/TopRow"]
 layout_mode = 2
-text = "Character Skin"
 
-[node name="CharacterSkinBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1376220749]
-unique_name_in_owner = true
+[node name="CharacterSkinLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Root/TopRow/CharacterBox"]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
+text = "CHARACTER_SKIN_LABEL"
+
+[node name="CharacterSkinBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Root/TopRow/CharacterBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
 mouse_default_cursor_shape = 2
 
-[node name="BikeSkinLabel" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1091209323]
+[node name="MainRow" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/Root"]
 layout_mode = 2
-text = "Bike Skin"
+size_flags_vertical = 3
+theme_override_constants/separation = 24
 
-[node name="BikeSkinBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1781161577]
+[node name="LeftPane" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/MainRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="LoadoutsLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Root/MainRow/LeftPane"]
+layout_mode = 2
+text = "LOADOUTS_LABEL"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/AspectContainer/MarginContainer/Root/MainRow/LeftPane"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LoadoutGrid" type="GridContainer" parent="UI/AspectContainer/MarginContainer/Root/MainRow/LeftPane/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+columns = 3
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
 
-[node name="ColorModLabel" type="Label" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1634892041]
-layout_mode = 2
-text = "Color Mod"
-
-[node name="ColorModBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/VBoxContainer2" unique_id=1634892042]
+[node name="NewLoadoutBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Root/MainRow/LeftPane"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
+mouse_default_cursor_shape = 2
+text = "NEW_LOADOUT_LABEL"
+
+[node name="RightPane" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/MainRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EditLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Root/MainRow/RightPane"]
+layout_mode = 2
+text = "EDIT_LOADOUT_LABEL"
+
+[node name="NameLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Root/MainRow/RightPane"]
+layout_mode = 2
+text = "NAME_LABEL"
+
+[node name="NameEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/Root/MainRow/RightPane"]
+unique_name_in_owner = true
+layout_mode = 2
+max_length = 32
+
+[node name="BaseBikeLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Root/MainRow/RightPane"]
+layout_mode = 2
+text = "BASE_BIKE_LABEL"
+
+[node name="BaseBikeBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Root/MainRow/RightPane"]
+unique_name_in_owner = true
+layout_mode = 2
 mouse_default_cursor_shape = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1196898275]
+[node name="ColorModLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Root/MainRow/RightPane"]
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 8
+text = "COLOR_MOD_LABEL"
 
-[node name="SaveBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=293903665]
+[node name="ColorModBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Root/MainRow/RightPane"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+
+[node name="ButtonRow" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/MainRow/RightPane"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SaveBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Root/MainRow/RightPane/ButtonRow"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "SAVE_LABEL"
 
-[node name="HSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=2101520216]
+[node name="SetActiveBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Root/MainRow/RightPane/ButtonRow"]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 32
-theme_override_styles/separator = SubResource("StyleBoxEmpty_id3t2")
+mouse_default_cursor_shape = 2
+text = "SET_ACTIVE_LABEL"
 
-[node name="BackBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1727863120]
+[node name="DeleteBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Root/MainRow/RightPane/ButtonRow"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "DELETE_LABEL"
+
+[node name="BottomRow" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/Root"]
+layout_mode = 2
+
+[node name="BackBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Root/BottomRow"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
