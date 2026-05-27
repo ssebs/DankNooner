@@ -12,29 +12,35 @@ The skin system allows runtime color customization of character and bike meshes 
 
 ### SkinSlot
 
-Resource at `components/skin_slot.gd`:
+Resource at `components/skin_slot.gd`. Pure data spec — runtime state lives on `SkinColor`.
 
 | Property                | Type               | Description                                                     |
 | ----------------------- | ------------------ | --------------------------------------------------------------- |
-| `color`                 | Color              | The color to apply                                              |
+| `color`                 | Color              | Default color baked into the runtime material at spawn          |
 | `use_standard_material` | bool               | If true, uses StandardMaterial3D; if false, uses ShaderMaterial |
 | `surface_index`         | int                | Which mesh surface to override (for multi-material meshes)      |
 | `standard_material`     | StandardMaterial3D | Material used when `use_standard_material = true`               |
 | `shader_material`       | ShaderMaterial     | Material used when `use_standard_material = false`              |
 
+Helpers: `make_runtime_material()` returns a fresh duplicate of the configured material; `apply_color_to(mat, color)` writes a color into a runtime material (albedo for standard, `replacement_color` shader param for shader).
+
 ### SkinColor
 
-Node3D at `components/skin_color.gd`:
+Node3D at `components/skin_color.gd`. Owns the per-instance runtime materials, so a single `SkinSlot` resource can safely drive multiple meshes — and shared slot resources don't leak state across `SkinColor` instances.
 
-| Property | Type                  | Description                                                  |
-| -------- | --------------------- | ------------------------------------------------------------ |
-| `slots`  | Array[SkinSlot]       | The slot configurations                                      |
-| `meshes` | Array[MeshInstance3D] | Corresponding meshes for each slot (must match slots length) |
+| Property | Type                  | Description                                                                        |
+| -------- | --------------------- | ---------------------------------------------------------------------------------- |
+| `slots`  | Array[SkinSlot]       | Slot palette. The **same** SkinSlot may appear at multiple positions               |
+| `meshes` | Array[MeshInstance3D] | Mesh per slot-position (must match slots length). Different positions ⇒ different mesh/surface, even if the slot resource is the same |
+
+On `_ready`, each position duplicates its slot's material, assigns it to `meshes[i].surface_override(slot.surface_index)`, and stores the material in a private per-position array.
 
 **Methods:**
 
-- `update_slot_color(index: int, color: Color)` - Update a specific slot
-- `update_all_colors(colors: Array[Color])` - Update all slots at once
+- `update_slot_color(index: int, color: Color)` — applies `color` to **every** position whose slot ref matches `slots[index]`. This is what makes "one slot drives N meshes" work.
+- `update_all_colors(colors: Array[Color])` — palette update with two modes:
+  - `colors.size() == 1`: broadcast that single color to every unique slot (a 1-color mod paints every mesh on a 2-slot bike).
+  - `colors.size() >= 2`: pair `colors[i]` → i-th **unique** slot (in order of first appearance), truncated to `min(colors.size(), unique_slots.size())`. So a 2-color mod on a bike whose `slots = [A, A]` uses only `colors[0]`; on `slots = [A, B]` it gives slot A = colors[0], slot B = colors[1].
 
 ## Creating a New SkinColor Scene (skin scene)
 
@@ -60,7 +66,12 @@ Node3D at `components/skin_color.gd`:
 3. Create SkinSlot resources with `use_standard_material = true`
 4. Assign a `StandardMaterial3D` to each slot (duplicated at runtime)
 5. The slot's color will set the material's `albedo_color`
-6. Make sure the Resource is Local to Scene in the SkinColor scene!
+
+(`resource_local_to_scene` on the slot SubResources is no longer required — `SkinColor` owns the runtime materials per-instance.)
+
+### Single Slot, Multiple Meshes
+
+To make one color drive several meshes, list the **same** SkinSlot resource at multiple positions in `slots` and put the corresponding `MeshInstance3D` at each matching position in `meshes`. Example (`mini_bike.tscn`): `slots = [A, A]`, `meshes = [Frontfender, PaintedBody]` — a single-color mod paints both meshes; `update_slot_color(0, c)` propagates to both. Use this when you want one configurable color across visually distinct meshes.
 
 ### Configuring SkinSlots in Inspector
 
@@ -152,9 +163,15 @@ IK markers and wheel markers are nodes on `PlayerEntity` (not the bike). To tune
 
 ### ColorMod
 
-`ColorMod` (`resources/bikes/mods/color_mod.gd`) overrides slot colors. Set `colors: Array[Color]` — use `Color.TRANSPARENT` to skip a slot (same convention as `BikeSkinDefinition.colors`).
+`ColorMod` (`resources/bikes/mods/color_mod.gd`) overrides slot colors via `SkinColor.update_all_colors(colors)`. The matrix:
 
-Color variants are standalone `.tres` files under `resources/bikes/skins/color_mods/`. Example: `sport_black_color_mod.tres` replaces the old `sport_black_skin_definition.tres` — add it to a `BikeSkinDefinition.mods` array to apply the black color on top of any base definition.
+| `colors.size()` | Bike unique slots | Result |
+| --- | --- | --- |
+| 1 | any N | Broadcast — every unique slot gets `colors[0]` (a `purple` mod paints both meshes of a 1-slot/2-mesh bike AND both surfaces of a 2-slot bike) |
+| 2+ | 1 | Only `colors[0]` is used (extras are dropped) |
+| 2+ | 2+ | Pair `colors[i]` → i-th unique slot in order of first appearance; truncated to `min(colors, unique_slots)` |
+
+Color variants are standalone `.tres` files under `resources/bikes/mods/color_mods/`. Add a `ColorMod` to a `BikeSkinDefinition.mods` array to apply it on top of the base definition.
 
 ### Creating a Color Variant
 
@@ -191,7 +208,17 @@ A player owns a flat list of named bike loadouts (cap 8) on `PlayerDefinition.lo
 
 ## Reusable 3D Thumbnail
 
-`utils/components/thumbnail_3d.{tscn,gd}` is a `SubViewportContainer` that renders any `BikeSkinDefinition` into its own `SubViewport` (transparent bg, own world 3D). Call `set_bike_loadout(def)` to swap the contents. v1 uses static rendering — extend with `set_character_skin(def)` later without rework.
+`utils/components/thumbnail_3d.{tscn,gd}` is a `@tool` `SubViewportContainer` that renders any skin definition into its own `SubViewport` (transparent bg, own world 3D, dedicated camera + directional light).
+
+| Export | Notes |
+| --- | --- |
+| `type: Type` | `BIKE` (default), `CHARACTER`, or `GENERIC`. Dispatches to `bike_skin.tscn` or `character_skin.tscn`; `GENERIC` leaves `spawn_parent` empty for external callers |
+| `skin_definition: Resource` | `BikeSkinDefinition` for BIKE, `CharacterSkinDefinition` for CHARACTER, any Resource for GENERIC. Live-rebuilds in-editor when set |
+| `camera_position`, `camera_look_at`, `camera_fov` | Per-instance camera framing — applied to the live `Camera3D` whenever changed |
+
+Convenience runtime helper: `set_skin(type, def)`. The component is `@tool`, so opening `loadout_card.tscn` and setting `preview_definition` previews the bike inside the inspector.
+
+Used by the customize menu's `LoadoutCard` scene to render each saved loadout.
 
 ## Forced Base Bike (events)
 

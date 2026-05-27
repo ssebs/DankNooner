@@ -1,5 +1,7 @@
 @tool
-## A single skin color slot configuration for use with SkinColor
+## A single skin color slot configuration for use with SkinColor.
+## Pure data spec — SkinColor owns the runtime material list so the same SkinSlot can drive
+## multiple meshes (when referenced more than once in SkinColor.slots).
 class_name SkinSlot extends Resource
 
 ## The color to apply to this slot
@@ -13,24 +15,17 @@ class_name SkinSlot extends Resource
 ## Used when use_standard_material is false (e.g. characters/shaders/skin_color.tres)
 @export var shader_material: ShaderMaterial
 
-## Runtime reference to the mesh (set by SkinColor via setup())
-var mesh: MeshInstance3D
-## Runtime duplicate of the material (set by SkinColor)
-var runtime_material: Material
 
-
-func setup(target_mesh: MeshInstance3D) -> void:
-	mesh = target_mesh
+## Create a fresh runtime material from this slot's spec. SkinColor calls this per
+## (slot-position, mesh) pair so each mesh gets its own material instance.
+func make_runtime_material() -> Material:
 	if use_standard_material:
-		runtime_material = standard_material.duplicate()
-	else:
-		runtime_material = shader_material.duplicate()
-	mesh.set_surface_override_material(surface_index, runtime_material)
-	update_color(color)
+		return standard_material.duplicate() if standard_material else null
+	return shader_material.duplicate() if shader_material else null
 
 
-func update_color(new_color: Color) -> void:
-	color = new_color
+## Apply `new_color` to a runtime material previously produced by make_runtime_material().
+func apply_color_to(runtime_material: Material, new_color: Color) -> void:
 	if runtime_material == null:
 		return
 	if use_standard_material:
