@@ -4,6 +4,7 @@
 class_name LoadoutCard extends Control
 
 signal selected(idx: int)
+signal set_active_requested(idx: int)
 
 @export var preview_definition: BikeSkinDefinition:
 	set(value):
@@ -14,6 +15,7 @@ signal selected(idx: int)
 @onready var thumbnail: Thumbnail3D = %Thumbnail
 @onready var name_label: Label = %NameLabel
 @onready var select_btn: Button = %SelectBtn
+@onready var set_active_btn: Button = %SetActiveBtn
 
 var _idx: int = -1
 
@@ -24,6 +26,7 @@ func _ready() -> void:
 			thumbnail.skin_definition = preview_definition
 		return
 	select_btn.pressed.connect(_on_select_pressed)
+	set_active_btn.pressed.connect(_on_set_active_pressed)
 
 
 func populate(def: BikeSkinDefinition, idx: int, is_active: bool, is_selected: bool) -> void:
@@ -35,7 +38,12 @@ func populate(def: BikeSkinDefinition, idx: int, is_active: bool, is_selected: b
 	name_label.text = label_text
 	select_btn.text = tr("SELECTED_LABEL") if is_selected else tr("SELECT_LABEL")
 	select_btn.disabled = is_selected
+	set_active_btn.disabled = is_active
 
 
 func _on_select_pressed() -> void:
 	selected.emit(_idx)
+
+
+func _on_set_active_pressed() -> void:
+	set_active_requested.emit(_idx)

@@ -3,8 +3,6 @@
 
 ## In Progress 🚀 — Current Sprint
 
-- [ ] Loadout card should have set active btn below select
-
 ## Playtest bugs
 
 - [ ] host can't go to customize bc others will leave
@@ -174,6 +172,8 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] Loadout card should have set active btn below select
 
 - [x] add ability to ride specific bike that is not saved
   - [x] See [plan](./PLAN-bike-save.md)
