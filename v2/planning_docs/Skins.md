@@ -195,7 +195,7 @@ A player owns a flat list of named bike loadouts (cap 8) on `PlayerDefinition.lo
 
 ## Forced Base Bike (events)
 
-`GameModeType.forced_base_bike: BikeSkinDefinition` is an optional field on the gamemode base. When set, the loadout picker is expected to filter to loadouts whose `base_res_path` matches it. v1 ships the field only; no current gamemode wires it.
+`GameModeEventDefinition.forced_base_bike: BikeSkinDefinition` is an optional per-event field. When the player enters an `EventStartCircle` whose event has it set, `GamemodeManager._rpc_transition_gamemode` calls `PlayerEntity.update_skins(forced_bike, …)` on every spawned player. Each peer runs this locally so all peers see the swap. On the transition back to free roam (no event context), `_restore_lobby_bikes()` reapplies each player's selected loadout from `lobby_manager.lobby_players`.
 
 ## Serialization
 

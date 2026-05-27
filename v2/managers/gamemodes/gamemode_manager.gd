@@ -98,8 +98,40 @@ func _rpc_transition_gamemode(
 		var circle := get_node(event_start_circle_path) as EventStartCircle
 		ctx.event_start_circle = circle
 		ctx.gamemode_event = circle.gamemode_event
+		_apply_forced_base_bike(circle.gamemode_event)
+	else:
+		# No event context (e.g. returning to free roam) — restore each player's lobby bike.
+		_restore_lobby_bikes()
 	current_game_mode = gamemode
 	state_machine.request_state_change(_gamemode_map[gamemode], ctx)
+
+
+## Swap every spawned player's bike to the event's forced bike (no-op if not set).
+## Runs locally on each peer — every peer sees the same forced bike on every player.
+func _apply_forced_base_bike(event: GameModeEventDefinition) -> void:
+	if event == null or event.forced_base_bike == null:
+		return
+	var forced := event.forced_base_bike
+	for peer_id in lobby_manager.lobby_players:
+		var player := spawn_manager._get_player_by_peer_id(peer_id)
+		if player == null:
+			continue
+		if player.bike_definition == forced:
+			continue
+		player.update_skins(forced, player.character_definition)
+
+
+## Reapply each spawned player's lobby bike (their selected loadout). Called when leaving
+## an event context so a forced bike doesn't stick around.
+func _restore_lobby_bikes() -> void:
+	for peer_id in lobby_manager.lobby_players:
+		var player := spawn_manager._get_player_by_peer_id(peer_id)
+		if player == null:
+			continue
+		var lobby_bike: BikeSkinDefinition = lobby_manager.lobby_players[peer_id].bike_skin
+		if lobby_bike == null or player.bike_definition == lobby_bike:
+			continue
+		player.update_skins(lobby_bike, player.character_definition)
 
 
 ## Called when returning to lobby
