@@ -1,7 +1,7 @@
 @tool
 ## Single loadout card: 3D thumbnail + name + select button.
 ## Used in the customize menu's loadout grid.
-class_name LoadoutCard extends VBoxContainer
+class_name LoadoutCard extends Control
 
 signal selected(idx: int)
 

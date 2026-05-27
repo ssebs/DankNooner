@@ -8,7 +8,7 @@ mouse_filter = 2
 stretch = true
 script = ExtResource("1_thumb")
 camera_look_at = Vector3(-0.22, 0.435, 0)
-camera_fov = 33.232
+camera_fov = 27.866
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=195815461]
 unique_name_in_owner = true
@@ -16,12 +16,11 @@ own_world_3d = true
 transparent_bg = true
 handle_input_locally = false
 size = Vector2i(256, 256)
-render_target_update_mode = 4
 
 [node name="Camera3D" type="Camera3D" parent="SubViewport" unique_id=1909342253]
 unique_name_in_owner = true
-transform = Transform3D(0.6726727, -0.16852804, 0.72049266, 0, 0.97371745, 0.22775905, -0.73994005, -0.15320729, 0.65499324, 2.2, 1.2, 2.2)
-fov = 33.232
+transform = Transform3D(0.6726727, -0.16852799, 0.72049266, 0, 0.97371715, 0.22775905, -0.73994005, -0.15320724, 0.65499324, 2.2, 1.2, 2.2)
+fov = 27.866
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewport" unique_id=573339717]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 4, 0)
