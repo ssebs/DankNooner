@@ -1,24 +1,31 @@
-[gd_scene load_steps=3 format=3 uid="uid://b1ldoutcard01"]
+[gd_scene format=3 uid="uid://b1ldoutcard01"]
 
-[ext_resource type="Script" path="res://menus/customize_menu/components/loadout_card.gd" id="1_card"]
+[ext_resource type="Script" uid="uid://dlbw3yu6tcip8" path="res://menus/customize_menu/components/loadout_card.gd" id="1_card"]
 [ext_resource type="PackedScene" uid="uid://b1thmb3dtnail" path="res://utils/components/thumbnail_3d.tscn" id="2_thumb"]
 
-[node name="LoadoutCard" type="VBoxContainer"]
-custom_minimum_size = Vector2(160, 200)
+[node name="LoadoutCard" type="MarginContainer" unique_id=1836685424]
+offset_right = 384.0
+offset_bottom = 510.0
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
 script = ExtResource("1_card")
 
-[node name="Thumbnail" parent="." instance=ExtResource("2_thumb")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 120)
+[node name="List" type="VBoxContainer" parent="." unique_id=1016936858]
 layout_mode = 2
 
-[node name="NameLabel" type="Label" parent="."]
+[node name="Thumbnail" parent="List" unique_id=1271187981 instance=ExtResource("2_thumb")]
 unique_name_in_owner = true
 layout_mode = 2
-horizontal_alignment = 1
+
+[node name="NameLabel" type="Label" parent="List" unique_id=1418676994]
+unique_name_in_owner = true
+layout_mode = 2
 text = "Loadout"
+horizontal_alignment = 1
 
-[node name="SelectBtn" type="Button" parent="."]
+[node name="SelectBtn" type="Button" parent="List" unique_id=917974234]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2

@@ -26,7 +26,6 @@ const COLOR_MODS_DIR := "res://resources/bikes/mods/color_mods/"
 @onready var save_btn: Button = %SaveBtn
 @onready var delete_btn: Button = %DeleteBtn
 @onready var set_active_btn: Button = %SetActiveBtn
-@onready var new_loadout_btn: Button = %NewLoadoutBtn
 
 @onready var bg_tint: ColorRect = %BGTint
 
@@ -52,7 +51,6 @@ func Enter(state_context: StateContext):
 	save_btn.pressed.connect(_on_save_pressed)
 	delete_btn.pressed.connect(_on_delete_pressed)
 	set_active_btn.pressed.connect(_on_set_active_pressed)
-	new_loadout_btn.pressed.connect(_on_new_loadout_pressed)
 	base_bike_btn.item_selected.connect(_on_base_bike_changed)
 	username_entry.text_changed.connect(_on_username_changed)
 	character_skin_btn.item_selected.connect(_on_character_skin_changed)
@@ -70,7 +68,6 @@ func Exit(_state_context: StateContext):
 	save_btn.pressed.disconnect(_on_save_pressed)
 	delete_btn.pressed.disconnect(_on_delete_pressed)
 	set_active_btn.pressed.disconnect(_on_set_active_pressed)
-	new_loadout_btn.pressed.disconnect(_on_new_loadout_pressed)
 	base_bike_btn.item_selected.disconnect(_on_base_bike_changed)
 	username_entry.text_changed.disconnect(_on_username_changed)
 	character_skin_btn.item_selected.disconnect(_on_character_skin_changed)
@@ -134,13 +131,13 @@ func _scan_color_mods() -> Dictionary:
 	while file_name != "":
 		if not dir.current_is_dir() and file_name.ends_with(extension):
 			var res_path := COLOR_MODS_DIR + file_name.replace(".remap", "")
-			var display_name := (
-				file_name.replace(extension, "").replace("_", " ").capitalize()
-			)
+			var display_name := file_name.replace(extension, "").replace("_", " ").capitalize()
 			result[display_name] = res_path
 		file_name = dir.get_next()
 	dir.list_dir_end()
 	return result
+
+
 #endregion
 
 
@@ -164,6 +161,8 @@ func _on_character_skin_changed(idx: int) -> void:
 	var char_name := character_skin_btn.get_item_text(idx)
 	player_def.character_skin = load(character_skins[char_name])
 	save_manager.update_save("player_definition", player_def, true, true)
+
+
 #endregion
 
 
@@ -176,33 +175,42 @@ func _rebuild_grid() -> void:
 	for i in player_def.loadouts.size():
 		var card: LoadoutCard = loadout_card_scene.instantiate()
 		loadout_grid.add_child(card)
-		card.populate(
-			player_def.loadouts[i],
-			i,
-			i == player_def.active_loadout_index,
-			i == selected_index,
+		(
+			card
+			. populate(
+				player_def.loadouts[i],
+				i,
+				i == player_def.active_loadout_index,
+				i == selected_index,
+			)
 		)
 		card.selected.connect(_on_card_selected)
 
 	var at_cap := player_def.loadouts.size() >= PlayerDefinition.MAX_LOADOUTS
 	var new_card: NewLoadoutCard = new_loadout_card_scene.instantiate()
-	new_card.disabled = at_cap
+	if at_cap:
+		new_card.disable_btn()
 	loadout_grid.add_child(new_card)
 	new_card.new_pressed.connect(_on_new_loadout_pressed)
-	new_loadout_btn.disabled = at_cap
 
 
 func _on_card_selected(idx: int) -> void:
 	selected_index = idx
 	_load_selected_into_editor()
 	_rebuild_grid()
+
+
 #endregion
 
 
 #region edit panel
 func _load_selected_into_editor() -> void:
 	var player_def := save_manager.get_player_definition()
-	if player_def.loadouts.is_empty() or selected_index < 0 or selected_index >= player_def.loadouts.size():
+	if (
+		player_def.loadouts.is_empty()
+		or selected_index < 0
+		or selected_index >= player_def.loadouts.size()
+	):
 		return
 	var def := player_def.loadouts[selected_index]
 	name_entry.text = def.skin_name
@@ -304,15 +312,22 @@ func _on_new_loadout_pressed() -> void:
 
 	var first_base_path: String = bike_skins.values()[0]
 	var new_def := BikeSkinDefinition.new()
-	new_def.from_dict({
-		"base_res_path": first_base_path,
-		"skin_name": "Loadout %d" % (player_def.loadouts.size() + 1),
-	})
+	(
+		new_def
+		. from_dict(
+			{
+				"base_res_path": first_base_path,
+				"skin_name": "Loadout %d" % (player_def.loadouts.size() + 1),
+			}
+		)
+	)
 	player_def.loadouts.append(new_def)
 	selected_index = player_def.loadouts.size() - 1
 	save_manager.update_save("player_definition", player_def, true, true)
 	_rebuild_grid()
 	_load_selected_into_editor()
+
+
 #endregion
 
 

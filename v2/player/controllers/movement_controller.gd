@@ -9,7 +9,7 @@ class_name MovementController extends Node
 @export var rear_raycast: RayCast3D
 @export var front_raycast: RayCast3D
 
-@export var debug_verbose:bool=false
+@export var debug_verbose:bool=true
 
 const CLUTCH_KICK_WINDOW: float = 0.2
 const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65  # fraction of bike's 1st-gear torque needed to clutch-pop — blocks high-gear pops
@@ -179,7 +179,7 @@ func _update_surface_alignment(delta: float):
 						rear_raycast.is_colliding()
 					]
 				),
-				OS.has_feature("debug_verbose") and debug_verbose
+				OS.has_feature("debug") and debug_verbose
 			)
 
 		# Adhesion check — need enough speed to ride steep/inverted surfaces
@@ -304,7 +304,7 @@ func _steer_calc(delta: float):
 				"Steer: spd=%.1f spd%%=%.0f%% curve=%.2f rate=%.2f"
 				% [speed, _speed_pct * 100, steer_factor, turn_rate]
 			),
-			OS.has_feature("debug_verbose") and debug_verbose
+			OS.has_feature("debug") and debug_verbose
 		)
 		player_entity.rotate_y(-roll_angle * turn_rate * delta)
 
@@ -389,7 +389,7 @@ func _pitch_angle_calc(delta: float):
 				in_balance_point
 			]
 		),
-		OS.has_feature("debug_verbose")and debug_verbose
+		OS.has_feature("debug")and debug_verbose
 	)
 
 	# Lean forward recovery — pull the front wheel down

@@ -5,11 +5,6 @@ class_name Thumbnail3D extends SubViewportContainer
 
 enum Type { BIKE, CHARACTER, GENERIC }
 
-const BIKE_SKIN_SCENE: PackedScene = preload("res://player/bikes/bike_skin.tscn")
-const CHARACTER_SKIN_SCENE: PackedScene = preload(
-	"res://player/characters/character_skin.tscn"
-)
-
 @export var type: Type = Type.BIKE:
 	set(value):
 		type = value
@@ -38,13 +33,17 @@ const CHARACTER_SKIN_SCENE: PackedScene = preload(
 		camera_fov = value
 		_apply_camera()
 
+const BIKE_SKIN_SCENE: PackedScene = preload("res://player/bikes/bike_skin.tscn")
+const CHARACTER_SKIN_SCENE: PackedScene = preload("res://player/characters/character_skin.tscn")
+
 @onready var sub_viewport: SubViewport = %SubViewport
 @onready var spawn_parent: Node3D = %SpawnParent
 @onready var camera: Camera3D = %Camera3D
 
 
 func _ready() -> void:
-	sub_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	# sub_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	sub_viewport.render_target_update_mode = SubViewport.UPDATE_WHEN_VISIBLE
 	_apply_camera()
 	_rebuild()
 
