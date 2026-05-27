@@ -185,6 +185,7 @@ func _rebuild_grid() -> void:
 			)
 		)
 		card.selected.connect(_on_card_selected)
+		card.set_active_requested.connect(_on_card_set_active_requested)
 
 	var at_cap := player_def.loadouts.size() >= PlayerDefinition.MAX_LOADOUTS
 	var new_card: NewLoadoutCard = new_loadout_card_scene.instantiate()
@@ -198,6 +199,11 @@ func _on_card_selected(idx: int) -> void:
 	selected_index = idx
 	_load_selected_into_editor()
 	_rebuild_grid()
+
+
+func _on_card_set_active_requested(idx: int) -> void:
+	selected_index = idx
+	_on_set_active_pressed()
 
 
 #endregion
