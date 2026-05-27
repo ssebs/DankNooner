@@ -39,10 +39,10 @@ ratio = 1.778
 [node name="MarginContainer" type="MarginContainer" parent="UI/AspectContainer" unique_id=666151253]
 layout_mode = 2
 theme = ExtResource("2_id3t2")
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 24
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
 
 [node name="Root" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1233770422]
 layout_mode = 2
@@ -58,6 +58,7 @@ theme_override_constants/separation = 32
 
 [node name="UsernameBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/TopRow" unique_id=665939358]
 layout_mode = 2
+size_flags_vertical = 0
 
 [node name="UsernameLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Root/TopRow/UsernameBox" unique_id=1466319678]
 layout_mode = 2
@@ -72,21 +73,21 @@ max_length = 32
 
 [node name="CharacterBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/TopRow" unique_id=901952349]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="CharacterSkinLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Root/TopRow/CharacterBox" unique_id=704413492]
 layout_mode = 2
 text = "CHARACTER_SKIN_LABEL"
 
 [node name="CharacterScroll" type="ScrollContainer" parent="UI/AspectContainer/MarginContainer/Root/TopRow/CharacterBox" unique_id=657939177]
-custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 horizontal_scroll_mode = 2
 vertical_scroll_mode = 0
 
 [node name="CharacterGrid" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/TopRow/CharacterBox/CharacterScroll" unique_id=657939176]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 16
 
 [node name="CharacterCard" parent="UI/AspectContainer/MarginContainer/Root/TopRow/CharacterBox/CharacterScroll/CharacterGrid" unique_id=1736685424 instance=ExtResource("3_rmhg3")]
 layout_mode = 2
