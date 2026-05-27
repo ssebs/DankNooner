@@ -4,16 +4,16 @@
 ## In Progress 🚀 — Current Sprint
 
 - [ ] add ability to ride specific bike that is not saved
+  - [ ] See [plan](./PLAN-bike-save.md)
   - [ ] select from saved bikes?
   - [ ] force bike per event?
+- [ ] Reusable 3D Thumbnail System
+  - [ ] See [plan](./PLAN-bike-save.md)
 
----
-
-### Playtest bugs
+## Playtest bugs
 
 - [ ] host can't go to customize bc others will leave
 - [ ] height is offset for some clients
----
 
 ## HI-PRI (next sprint candidates) ‼️
 - [ ] New maps for gamemodes
