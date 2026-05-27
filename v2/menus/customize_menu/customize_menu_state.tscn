@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://7ucyugkoihsv" path="res://menus/customize_menu/customize_menu_state.gd" id="1_hwmj7"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_id3t2"]
-[ext_resource type="PackedScene" uid="uid://b1ldoutcard01" path="res://menus/customize_menu/components/loadout_card.tscn" id="3_6301q"]
 
 [node name="CustomizeMenuState" type="Node" unique_id=1584947550]
 script = ExtResource("1_hwmj7")
@@ -108,12 +107,6 @@ size_flags_horizontal = 3
 theme_override_constants/h_separation = 32
 theme_override_constants/v_separation = 32
 columns = 3
-
-[node name="LoadoutCard" parent="UI/AspectContainer/MarginContainer/Root/MainRow/LeftPane/ScrollContainer/LoadoutGrid" unique_id=1016936858 instance=ExtResource("3_6301q")]
-layout_mode = 2
-
-[node name="LoadoutCard2" parent="UI/AspectContainer/MarginContainer/Root/MainRow/LeftPane/ScrollContainer/LoadoutGrid" unique_id=234786399 instance=ExtResource("3_6301q")]
-layout_mode = 2
 
 [node name="RightPane" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/MainRow" unique_id=944505663]
 layout_mode = 2

@@ -3,6 +3,8 @@
 
 ## In Progress 🚀 — Current Sprint
 
+- [ ] Loadout card should have set active btn below select
+
 ## Playtest bugs
 
 - [ ] host can't go to customize bc others will leave
