@@ -5,17 +5,19 @@
 [ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/bikes/skins/naked_default_skin_definition.tres" id="2_y5yus"]
 
 [node name="LoadoutCard" type="MarginContainer" unique_id=1836685424]
-offset_right = 384.0
-offset_bottom = 510.0
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 32
-theme_override_constants/margin_right = 32
-theme_override_constants/margin_bottom = 32
+offset_right = 232.0
+offset_bottom = 433.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 script = ExtResource("1_card")
 preview_definition = ExtResource("2_y5yus")
 
 [node name="List" type="VBoxContainer" parent="." unique_id=1016936858]
 layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
 
 [node name="Thumbnail" parent="List" unique_id=1271187981 instance=ExtResource("2_thumb")]
 unique_name_in_owner = true
@@ -28,13 +30,18 @@ layout_mode = 2
 text = "Loadout"
 horizontal_alignment = 1
 
-[node name="SelectBtn" type="Button" parent="List" unique_id=917974234]
+[node name="ButtonRow" type="VBoxContainer" parent="List" unique_id=806590034]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 8
+
+[node name="SelectBtn" type="Button" parent="List/ButtonRow" unique_id=917974234]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "SELECT_LABEL"
 
-[node name="SetActiveBtn" type="Button" parent="List" unique_id=917974235]
+[node name="SetActiveBtn" type="Button" parent="List/ButtonRow" unique_id=917974235]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2

@@ -5,19 +5,16 @@
 [ext_resource type="Resource" uid="uid://dugcuccseinkn" path="res://resources/player/skins/biker_default_skin_definition.tres" id="2_xfnph"]
 
 [node name="CharacterCard" type="MarginContainer" unique_id=1736685424]
-offset_right = 320.0
-offset_bottom = 446.0
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 32
-theme_override_constants/margin_right = 32
-theme_override_constants/margin_bottom = 32
+offset_right = 232.0
+offset_bottom = 300.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 script = ExtResource("1_char")
 preview_definition = ExtResource("2_xfnph")
 
-[node name="List" type="VBoxContainer" parent="." unique_id=1716936858]
-layout_mode = 2
-
-[node name="Thumbnail" parent="List" unique_id=1771187981 instance=ExtResource("2_thumb")]
+[node name="Thumbnail" parent="." unique_id=1771187981 instance=ExtResource("2_thumb")]
 unique_name_in_owner = true
 layout_mode = 2
 type = 1
@@ -26,14 +23,17 @@ camera_position = Vector3(1.535, 1.075, 2.08)
 camera_look_at = Vector3(-0.23, 0.77, -0.41)
 camera_fov = 38.503
 
-[node name="NameLabel" type="Label" parent="List" unique_id=1718676994]
+[node name="NameLabel" type="Label" parent="." unique_id=1718676994]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 text = "Character"
 horizontal_alignment = 1
 
-[node name="SelectBtn" type="Button" parent="List" unique_id=1717974234]
+[node name="SelectBtn" type="Button" parent="." unique_id=1717974234]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
 mouse_default_cursor_shape = 2
 text = "SELECT_LABEL"

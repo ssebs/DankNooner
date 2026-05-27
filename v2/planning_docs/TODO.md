@@ -3,7 +3,7 @@
 
 ## In Progress 🚀 — Current Sprint
 
-- [ ] character card selector
+- [ ] add delete button to Customize Bikes Loadout menu
 
 ## Playtest bugs
 
@@ -109,7 +109,9 @@
   - [ ] Add constraints to mods (certain skins require 2 colors, etc.)
   - [x] Custom colors option
   - [x] Subviewport to make icons (bike skin selection)
-  - [ ] Customize menu background scene (garage — show character + bike)
+  - [ ] Customize menu background scene (garage?)
+  - [x] show character
+  - [x] show bike
   - [ ] Shop tab (purchase bike + character skins)
   - [ ] My Stuff tab (choose bike + character skin)
 - [ ] More Customization UI 
@@ -177,6 +179,8 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] character card selector
 
 - [x] Loadout card should have set active btn below select
 
