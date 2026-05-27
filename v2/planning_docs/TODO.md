@@ -7,7 +7,6 @@
   - [ ] select from saved bikes?
   - [ ] force bike per event?
 
-- [ ] Make lobby invite code stay the same when going to main menu
 ---
 
 ### Playtest bugs
@@ -180,6 +179,8 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] ~~Make lobby invite code stay the same when going to main menu~~
 
 - [x] change map within lobby possible 
 
