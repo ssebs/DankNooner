@@ -181,6 +181,22 @@ Both `CharacterSkinDefinition` and `BikeSkinDefinition` support save/load + dict
 
 `BikeSkinDefinition.to_dict()` ships only the **base bike res:// path** + **mod res:// paths** — never `resource_path`, which can be a local `user://` file. `from_dict()` loads the base, applies the mods, then writes the rebuilt def to `user://skins/` on the receiving peer for caching. This is what enables customized bikes to sync across the lobby.
 
+## Loadouts
+
+A player owns a flat list of named bike loadouts (cap 8) on `PlayerDefinition.loadouts`, with `active_loadout_index` picking which is in use. `player_def.bike_skin` is a getter/setter that reads/writes `loadouts[active_loadout_index]` so existing callers (SpawnManager, lobby sync, etc.) keep working.
+
+- First run: `SaveManager._seed_default_loadouts()` scans `res://resources/bikes/skins/` and creates one loadout per base bike, no mods.
+- Legacy saves (pre-loadouts) are migrated by `PlayerDefinition.from_dict()` — the old single `bike_skin_dict` becomes `loadouts[0]`.
+- The Customize menu (`menus/customize_menu/`) shows a grid of loadout cards (each rendering via `Thumbnail3D`) and an edit panel for name / base bike / color mod.
+
+## Reusable 3D Thumbnail
+
+`utils/components/thumbnail_3d.{tscn,gd}` is a `SubViewportContainer` that renders any `BikeSkinDefinition` into its own `SubViewport` (transparent bg, own world 3D). Call `set_bike_loadout(def)` to swap the contents. v1 uses static rendering — extend with `set_character_skin(def)` later without rework.
+
+## Forced Base Bike (events)
+
+`GameModeType.forced_base_bike: BikeSkinDefinition` is an optional field on the gamemode base. When set, the loadout picker is expected to filter to loadouts whose `base_res_path` matches it. v1 ships the field only; no current gamemode wires it.
+
 ## Serialization
 
 `CharacterSkinDefinition` supports JSON serialization via `DictJSONSaverLoader`:

@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1nwldoutcard01"]
+
+[ext_resource type="Script" path="res://menus/customize_menu/components/new_loadout_card.gd" id="1_new"]
+
+[node name="NewLoadoutCard" type="Button"]
+custom_minimum_size = Vector2(160, 200)
+mouse_default_cursor_shape = 2
+text = "+
+NEW"
+script = ExtResource("1_new")

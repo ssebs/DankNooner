@@ -59,8 +59,8 @@ func Enter(state_context: StateContext):
 
 	timeout_timer.timeout.connect(_on_timeout)
 
-	set_single_or_multiplayer_ui()
 	level_select_panel.populate(level_manager, 1)
+	set_single_or_multiplayer_ui()
 
 
 func Exit(_state_context: StateContext):
