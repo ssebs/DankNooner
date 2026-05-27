@@ -3,6 +3,8 @@
 
 ## In Progress 🚀 — Current Sprint
 
+- [ ] character card selector
+
 ## Playtest bugs
 
 - [ ] host can't go to customize bc others will leave
@@ -105,12 +107,15 @@
   - [ ] unlocked tricks, mods, etc.
 - [ ] Basic customization menu / UI
   - [ ] Add constraints to mods (certain skins require 2 colors, etc.)
-  - [ ] Custom colors option
-  - [ ] Subviewport to make icons (bike skin selection)
+  - [x] Custom colors option
+  - [x] Subviewport to make icons (bike skin selection)
   - [ ] Customize menu background scene (garage — show character + bike)
   - [ ] Shop tab (purchase bike + character skins)
   - [ ] My Stuff tab (choose bike + character skin)
-- [ ] More Customization UI (grid w/ icons, character customization, color picker)
+- [ ] More Customization UI 
+  - [x] grid w/ icons
+  - [ ] character customization
+  - [ ] color picker
 - [ ] Unlock skins w/ Score from disk & spend
 - [ ] Score / XP / $ v2 (challenges, leaderboards, weekly)
 - [ ] 2 difficulties (arcade vs sim — sim 1.5× score)

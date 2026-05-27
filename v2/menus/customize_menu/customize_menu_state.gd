@@ -10,6 +10,9 @@ class_name CustomizeMenuState extends MenuState
 @export var new_loadout_card_scene: PackedScene = preload(
 	"res://menus/customize_menu/components/new_loadout_card.tscn"
 )
+@export var character_card_scene: PackedScene = preload(
+	"res://menus/customize_menu/components/character_card.tscn"
+)
 
 const BIKE_SKINS_DIR := "res://resources/bikes/skins/"
 const CHARACTER_SKINS_DIR := "res://resources/player/skins/"
@@ -17,7 +20,7 @@ const COLOR_MODS_DIR := "res://resources/bikes/mods/color_mods/"
 
 @onready var back_btn: Button = %BackBtn
 @onready var username_entry: LineEdit = %UsernameEntry
-@onready var character_skin_btn: OptionButton = %CharacterSkinBtn
+@onready var character_grid: HBoxContainer = %CharacterGrid
 
 @onready var loadout_grid: GridContainer = %LoadoutGrid
 @onready var name_entry: LineEdit = %NameEntry
@@ -53,7 +56,6 @@ func Enter(state_context: StateContext):
 	set_active_btn.pressed.connect(_on_set_active_pressed)
 	base_bike_btn.item_selected.connect(_on_base_bike_changed)
 	username_entry.text_changed.connect(_on_username_changed)
-	character_skin_btn.item_selected.connect(_on_character_skin_changed)
 
 	_populate_option_lists()
 	_load_username_and_character()
@@ -70,7 +72,6 @@ func Exit(_state_context: StateContext):
 	set_active_btn.pressed.disconnect(_on_set_active_pressed)
 	base_bike_btn.item_selected.disconnect(_on_base_bike_changed)
 	username_entry.text_changed.disconnect(_on_username_changed)
-	character_skin_btn.item_selected.disconnect(_on_character_skin_changed)
 
 
 #region populate / scan
@@ -82,10 +83,6 @@ func _populate_option_lists() -> void:
 	base_bike_btn.clear()
 	for skin_name in bike_skins.keys():
 		base_bike_btn.add_item(skin_name)
-
-	character_skin_btn.clear()
-	for skin_name in character_skins.keys():
-		character_skin_btn.add_item(skin_name)
 
 	color_mod_btn.clear()
 	color_mod_btn.add_item("None")
@@ -145,7 +142,7 @@ func _scan_color_mods() -> Dictionary:
 func _load_username_and_character() -> void:
 	var player_def := save_manager.get_player_definition()
 	username_entry.text = player_def.username
-	_select_option_by_text(character_skin_btn, player_def.character_skin.skin_name)
+	_rebuild_character_grid()
 
 
 func _on_username_changed(_new: String) -> void:
@@ -154,13 +151,25 @@ func _on_username_changed(_new: String) -> void:
 	save_manager.update_save("player_definition", player_def, true, true)
 
 
-func _on_character_skin_changed(idx: int) -> void:
-	if idx < 0:
-		return
+func _rebuild_character_grid() -> void:
+	for child in character_grid.get_children():
+		child.queue_free()
+
 	var player_def := save_manager.get_player_definition()
-	var char_name := character_skin_btn.get_item_text(idx)
-	player_def.character_skin = load(character_skins[char_name])
+	var active_name := player_def.character_skin.skin_name
+	for skin_name in character_skins.keys():
+		var def := load(character_skins[skin_name]) as CharacterSkinDefinition
+		var card: CharacterCard = character_card_scene.instantiate()
+		character_grid.add_child(card)
+		card.populate(def, skin_name == active_name)
+		card.selected.connect(_on_character_card_selected)
+
+
+func _on_character_card_selected(skin_name: String) -> void:
+	var player_def := save_manager.get_player_definition()
+	player_def.character_skin = load(character_skins[skin_name])
 	save_manager.update_save("player_definition", player_def, true, true)
+	_rebuild_character_grid()
 
 
 #endregion

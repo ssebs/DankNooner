@@ -108,8 +108,10 @@ func _apply_end_bone_rotations():
 		_rotate_bone_to_marker("LeftFoot", ik_left_foot)
 	if ik_right_foot:
 		_rotate_bone_to_marker("RightFoot", ik_right_foot)
-	_rotate_bone_to_marker("Spine", ik_chest)
-	_rotate_bone_to_marker("Head", ik_head)
+	if ik_chest:
+		_rotate_bone_to_marker("Spine", ik_chest)
+	if ik_head:
+		_rotate_bone_to_marker("Head", ik_head)
 
 
 func _rotate_bone_to_marker(bone_name: String, marker: Marker3D):

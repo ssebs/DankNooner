@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://7ucyugkoihsv" path="res://menus/customize_menu/customize_menu_state.gd" id="1_hwmj7"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_id3t2"]
+[ext_resource type="PackedScene" uid="uid://b1ldoutcard01" path="res://menus/customize_menu/components/loadout_card.tscn" id="3_6301q"]
+[ext_resource type="PackedScene" uid="uid://b1charcard001" path="res://menus/customize_menu/components/character_card.tscn" id="3_rmhg3"]
 
 [node name="CustomizeMenuState" type="Node" unique_id=1584947550]
 script = ExtResource("1_hwmj7")
@@ -75,11 +77,19 @@ layout_mode = 2
 layout_mode = 2
 text = "CHARACTER_SKIN_LABEL"
 
-[node name="CharacterSkinBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Root/TopRow/CharacterBox" unique_id=657939176]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(240, 0)
+[node name="CharacterScroll" type="ScrollContainer" parent="UI/AspectContainer/MarginContainer/Root/TopRow/CharacterBox" unique_id=657939177]
+custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
-mouse_default_cursor_shape = 2
+horizontal_scroll_mode = 2
+vertical_scroll_mode = 0
+
+[node name="CharacterGrid" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/TopRow/CharacterBox/CharacterScroll" unique_id=657939176]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="CharacterCard" parent="UI/AspectContainer/MarginContainer/Root/TopRow/CharacterBox/CharacterScroll/CharacterGrid" unique_id=1736685424 instance=ExtResource("3_rmhg3")]
+layout_mode = 2
 
 [node name="MainRow" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/Root" unique_id=776614669]
 layout_mode = 2
@@ -107,6 +117,9 @@ size_flags_horizontal = 3
 theme_override_constants/h_separation = 32
 theme_override_constants/v_separation = 32
 columns = 3
+
+[node name="LoadoutCard" parent="UI/AspectContainer/MarginContainer/Root/MainRow/LeftPane/ScrollContainer/LoadoutGrid" unique_id=1836685424 instance=ExtResource("3_6301q")]
+layout_mode = 2
 
 [node name="RightPane" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/MainRow" unique_id=944505663]
 layout_mode = 2
