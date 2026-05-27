@@ -3,13 +3,6 @@
 
 ## In Progress 🚀 — Current Sprint
 
-- [ ] add ability to ride specific bike that is not saved
-  - [ ] See [plan](./PLAN-bike-save.md)
-  - [ ] select from saved bikes?
-  - [ ] force bike per event?
-- [ ] Reusable 3D Thumbnail System
-  - [ ] See [plan](./PLAN-bike-save.md)
-
 ## Playtest bugs
 
 - [ ] host can't go to customize bc others will leave
@@ -179,6 +172,14 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] add ability to ride specific bike that is not saved
+  - [x] See [plan](./PLAN-bike-save.md)
+  - [x] select from saved bikes?
+  - [x] force bike per event?
+
+- [x] Reusable 3D Thumbnail System
+  - [x] See [plan](./PLAN-bike-save.md)
 
 - [x] ~~Make lobby invite code stay the same when going to main menu~~
 
