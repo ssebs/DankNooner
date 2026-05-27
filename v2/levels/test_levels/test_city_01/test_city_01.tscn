@@ -899,7 +899,7 @@ collision_layer = 17
 width = 280.0
 height = 0.1
 depth = 400.0
-color_preset = 1
+color_preset = 6
 
 [node name="GBGrass" parent="Stuff/Ground" unique_id=1213761209 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, -37)
@@ -1245,7 +1245,6 @@ collision_layer = 3
 width = 0.2
 height = 0.4
 depth = 170.0
-color_preset = 1
 
 [node name="seawall3" parent="Stuff/water" unique_id=1820555827 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 281.9, 0.13, 95)
@@ -1253,7 +1252,6 @@ collision_layer = 3
 width = 0.2
 height = 0.4
 depth = 340.0
-color_preset = 1
 
 [node name="seawall2" parent="Stuff/water" unique_id=1649755146 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 13, 0.13000007, -104.9)
@@ -1261,7 +1259,6 @@ collision_layer = 3
 width = 0.2
 height = 0.4
 depth = 62.0
-color_preset = 1
 
 [node name="SmolShop3" type="Node3D" parent="Stuff" unique_id=448309139]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 161, 0, 115)
@@ -1742,7 +1739,6 @@ collision_layer = 3
 width = 8.0
 height = 8.0
 depth = 0.1
-color_preset = 1
 
 [node name="rampwall2" parent="Stuff" unique_id=1074572289 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 119, 2.93, 123.74618)
@@ -1750,14 +1746,12 @@ collision_layer = 3
 width = 24.0
 height = 6.0
 depth = 0.1
-color_preset = 1
 
 [node name="rampwall3" parent="Stuff" unique_id=2085340060 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 99, 0.42999983, 119.87393)
 collision_layer = 3
 width = 16.0
 depth = 0.1
-color_preset = 1
 
 [node name="TestEventStartCircle" parent="." unique_id=1014716352 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 81)

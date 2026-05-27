@@ -3,7 +3,11 @@
 
 ## In Progress 🚀 — Current Sprint
 
-- [ ] Make lobby invite code stay the same when going to main menu/change map within lobby possible 
+- [ ] add ability to ride specific bike that is not saved
+  - [ ] select from saved bikes?
+  - [ ] force bike per event?
+
+- [ ] Make lobby invite code stay the same when going to main menu
 ---
 
 ### Playtest bugs
@@ -176,6 +180,8 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] change map within lobby possible 
 
 - [x] In-world UI - speech bubble
 

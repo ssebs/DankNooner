@@ -84,7 +84,7 @@ func notify_crashed(peer_id: int) -> void:
 	# Tasks like CountdownTask disable input on_enter — re-running on_enter
 	# resets their internal state so the player isn't stuck post-respawn.
 	_on_enter_all(peer_id, state)
-	respawn_requested.emit(peer_id, null)
+	respawn_requested.emit(peer_id)
 
 
 func notify_disconnected(peer_id: int) -> void:
