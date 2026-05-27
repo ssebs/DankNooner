@@ -63,6 +63,10 @@ func start_game(
 	current_level_name = level_name
 	current_game_mode = gamemode
 	match_state = MatchState.IN_GAME
+	# Clear gamemode state so re-entering the same gamemode (e.g. host changing maps mid-match
+	# from the pause menu) still runs Enter() — otherwise the StateMachine's same-state
+	# early-return skips player spawn. Same reasoning as end_game().
+	state_machine.clear_current_state()
 	menu_manager.state_machine.request_state_change(loading_menu_state)
 	await RenderingServer.frame_post_draw
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)

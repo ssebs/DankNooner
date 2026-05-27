@@ -21,6 +21,7 @@ class_name PauseMenuState extends MenuState
 @onready var customize_btn: Button = %CustomizeBtn
 @onready var settings_btn: Button = %SettingsBtn
 @onready var help_btn: Button = %HelpBtn
+@onready var level_select_panel: LevelSelectPanel = %LevelSelectPanel
 
 @onready var bg_tint: ColorRect = %BGTint
 
@@ -45,6 +46,14 @@ func Enter(_state_context: StateContext):
 		and gamemode_manager.current_game_mode != GameModeType.Kind.FREE_ROAM
 	)
 
+	# Host-only level switcher: lets the host swap maps without tearing down the lobby.
+	level_select_panel.visible = multiplayer.is_server()
+	if multiplayer.is_server():
+		level_select_panel.populate(level_manager, gamemode_manager.current_level_name as int)
+		level_select_panel.start_pressed.connect(_on_level_select_start_pressed)
+		level_select_panel.level_selected.connect(_on_level_select_level_selected)
+		_update_level_select_start_disabled()
+
 	respawn_btn.call_deferred("grab_focus")
 
 
@@ -59,6 +68,11 @@ func Exit(_state_context: StateContext):
 	settings_btn.pressed.disconnect(_on_settings_pressed)
 	customize_btn.pressed.disconnect(_on_customize_pressed)
 	help_btn.pressed.disconnect(_on_help_pressed)
+
+	if level_select_panel.start_pressed.is_connected(_on_level_select_start_pressed):
+		level_select_panel.start_pressed.disconnect(_on_level_select_start_pressed)
+	if level_select_panel.level_selected.is_connected(_on_level_select_level_selected):
+		level_select_panel.level_selected.disconnect(_on_level_select_level_selected)
 
 
 func _on_help_pressed():
@@ -79,6 +93,23 @@ func _on_cancel_event_pressed():
 
 func _on_resume_pressed():
 	pause_manager.do_unpause()
+
+
+func _on_level_select_start_pressed():
+	# Restart the match on the chosen level; the server (and lobby code) stays up.
+	var level_id := level_select_panel.get_selected_level_id()
+	pause_manager.do_unpause()
+	gamemode_manager.start_game.rpc(level_id)
+
+
+func _on_level_select_level_selected(_level_id: int):
+	_update_level_select_start_disabled()
+
+
+func _update_level_select_start_disabled():
+	var selected_id := level_select_panel.get_selected_level_id()
+	var current_id := gamemode_manager.current_level_name as int
+	level_select_panel.set_start_disabled(selected_id == current_id)
 
 
 func _on_main_menu_pressed():

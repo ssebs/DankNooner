@@ -17,9 +17,7 @@ class_name LobbyMenuState extends MenuState
 @onready var multiplayer_ui: Control = %MultiplayerUI
 
 @onready var back_btn: Button = %BackBtn
-@onready var level_select_btn: OptionButton = %LevelSelectBtn  # LevelSelectUI script
-@onready var level_preview_img: TextureRect = %LevelPreview
-@onready var start_btn: Button = %StartBtn
+@onready var level_select_panel: LevelSelectPanel = %LevelSelectPanel
 @onready var customize_btn: Button = %CustomizeBtn
 
 @onready var ip_label: Label = %IPLabel
@@ -45,8 +43,8 @@ func Enter(state_context: StateContext):
 	loading_ui.hide()
 
 	back_btn.pressed.connect(_on_back_pressed)
-	start_btn.pressed.connect(_on_start_pressed)
-	level_select_btn.level_selected.connect(_on_level_selected)
+	level_select_panel.start_pressed.connect(_on_start_pressed)
+	level_select_panel.level_selected.connect(_on_level_selected)
 	ip_copy_btn.pressed.connect(_on_ip_copy_btn_pressed)
 	customize_btn.pressed.connect(_on_customize_pressed)
 
@@ -62,7 +60,7 @@ func Enter(state_context: StateContext):
 	timeout_timer.timeout.connect(_on_timeout)
 
 	set_single_or_multiplayer_ui()
-	level_select_btn.populate(level_manager, 1)
+	level_select_panel.populate(level_manager, 1)
 
 
 func Exit(_state_context: StateContext):
@@ -71,8 +69,8 @@ func Exit(_state_context: StateContext):
 	player_list.clear()
 
 	back_btn.pressed.disconnect(_on_back_pressed)
-	start_btn.pressed.disconnect(_on_start_pressed)
-	level_select_btn.level_selected.disconnect(_on_level_selected)
+	level_select_panel.start_pressed.disconnect(_on_start_pressed)
+	level_select_panel.level_selected.disconnect(_on_level_selected)
 	ip_copy_btn.pressed.disconnect(_on_ip_copy_btn_pressed)
 	customize_btn.pressed.disconnect(_on_customize_pressed)
 
@@ -94,14 +92,14 @@ func Exit(_state_context: StateContext):
 ## server only, calls rpc for all
 func _on_level_selected(_level_id: int):
 	if multiplayer.multiplayer_peer && multiplayer.is_server():
-		start_btn.disabled = false
-		share_selected_level_with_clients.rpc(level_select_btn.selected)
+		level_select_panel.set_start_disabled(false)
+		share_selected_level_with_clients.rpc(level_select_panel.get_selected_index())
 
 
 ## server only, calls rpc for all
 func _on_start_pressed():
 	if multiplayer.multiplayer_peer && multiplayer.is_server():
-		gamemode_manager.start_game.rpc(level_select_btn.get_selected_level_id())
+		gamemode_manager.start_game.rpc(level_select_panel.get_selected_level_id())
 
 
 ## cleanup before going back
@@ -136,7 +134,7 @@ func _on_customize_pressed():
 func _on_game_id_set(conn_addr: String):
 	ip_label.text = conn_addr
 	ip_copy_btn.disabled = false
-	_set_preview_img()
+	level_select_panel.refresh_preview()
 
 	if (
 		multiplayer.multiplayer_peer
@@ -165,8 +163,7 @@ func _on_client_connection_succeeded(peer_id: int):
 	loading_ui.hide()
 	timeout_timer.stop()
 	if !multiplayer.is_server():
-		start_btn.disabled = true
-		level_select_btn.disabled = true
+		level_select_panel.set_controls_disabled(true)
 
 	var player_def = save_manager.get_player_definition()
 	lobby_manager.update_player_metadata.rpc_id(1, peer_id, player_def.to_dict())
@@ -182,9 +179,7 @@ func _on_timeout():
 #region local RPCs
 @rpc("call_local", "reliable")
 func share_selected_level_with_clients(idx: int):
-	level_select_btn.set_selected_index(idx)
-
-	_set_preview_img()
+	level_select_panel.set_selected_index(idx)
 
 
 #endregion
@@ -202,26 +197,15 @@ func set_single_or_multiplayer_ui():
 			else:
 				connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
 			await connection_manager.start_server()
-			start_btn.call_deferred("grab_focus")
+			level_select_panel.grab_start_focus()
 		_:
 			singleplayer_ui.hide()
 			multiplayer_ui.show()
 			loading_ui.show()
 			timeout_timer.start()
-			start_btn.disabled = false
+			level_select_panel.set_start_disabled(false)
 
-	call_deferred("_set_preview_img")
-
-
-func _set_preview_img():
-	var preview_texture: Texture = level_manager.level_img_map.get(
-		level_select_btn.get_selected_level_id()
-	)
-
-	if preview_texture:
-		level_preview_img.texture = preview_texture
-	else:
-		level_preview_img.texture = load("res://resources/img/test_level_select_img.png")
+	level_select_panel.call_deferred("refresh_preview")
 
 
 #override

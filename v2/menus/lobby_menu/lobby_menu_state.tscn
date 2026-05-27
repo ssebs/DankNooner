@@ -2,29 +2,9 @@
 
 [ext_resource type="Script" uid="uid://d3f7uthyd114r" path="res://menus/lobby_menu/lobby_menu_state.gd" id="1_1jh13"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_lphm8"]
-[ext_resource type="Texture2D" uid="uid://b4v2pgrppd0tq" path="res://resources/img/test_level_select_img.png" id="2_yu1h4"]
-[ext_resource type="Script" uid="uid://brx40gas5ijp5" path="res://menus/lobby_menu/level_select_ui.gd" id="4_jwemv"]
+[ext_resource type="PackedScene" path="res://menus/lobby_menu/level_select_panel.tscn" id="3_lspanel"]
 [ext_resource type="Script" uid="uid://muodw5580tnr" path="res://addons/tattomoosa.spinner/spinner.gd" id="4_wpkl5"]
 [ext_resource type="Script" uid="uid://c0mme4m8qonki" path="res://menus/lobby_menu/player_list_ui.gd" id="6_qnklb"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lphm8"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-bg_color = Color(0.6, 0.6, 0.6, 0)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.25490198, 0.6862745, 1, 1)
-border_blend = true
-corner_radius_top_left = 16
-corner_radius_top_right = 4
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 4
-expand_margin_left = 12.0
-expand_margin_right = 12.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wpkl5"]
 content_margin_left = 12.0
@@ -162,48 +142,11 @@ metadata/_custom_type_script = "uid://muodw5580tnr"
 layout_mode = 2
 theme = ExtResource("2_lphm8")
 
-[node name="LevelSelectContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=590154309]
+[node name="LevelSelectPanel" parent="UI/AspectContainer/MarginContainer" unique_id=590154309 instance=ExtResource("3_lspanel")]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
-alignment = 1
-
-[node name="LevelSelectBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/LevelSelectContainer" unique_id=1081541879]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-mouse_default_cursor_shape = 2
-selected = 0
-item_count = 2
-popup/item_0/text = "LEVEL_SELECT_LABEL"
-popup/item_0/id = 0
-popup/item_0/disabled = true
-popup/item_1/text = "LEVEL_TEST_1_LABEL"
-popup/item_1/id = 1
-script = ExtResource("4_jwemv")
-
-[node name="PanelContainer" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/LevelSelectContainer" unique_id=1121328565]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_lphm8")
-
-[node name="LevelPreview" type="TextureRect" parent="UI/AspectContainer/MarginContainer/LevelSelectContainer/PanelContainer" unique_id=370183041]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(512, 512)
-layout_mode = 2
-texture = ExtResource("2_yu1h4")
-expand_mode = 5
-stretch_mode = 6
-
-[node name="StartBtn" type="Button" parent="UI/AspectContainer/MarginContainer/LevelSelectContainer" unique_id=1428764379]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-mouse_default_cursor_shape = 2
-theme_type_variation = &"PrimaryButton"
-theme_override_font_sizes/font_size = 32
-text = "START_LABEL"
 
 [node name="SingleplayerUI" type="Control" parent="UI/AspectContainer/MarginContainer" unique_id=1062874427]
 unique_name_in_owner = true
