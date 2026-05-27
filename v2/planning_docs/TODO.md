@@ -3,6 +3,7 @@
 
 ## In Progress 🚀 — Current Sprint
 
+- [ ] Make lobby invite code stay the same when going to main menu/change map within lobby possible 
 ---
 
 ### Playtest bugs
@@ -12,7 +13,11 @@
 ---
 
 ## HI-PRI (next sprint candidates) ‼️
-
+- [ ] New maps for gamemodes
+  - [ ] Make racetrack map
+  - [ ] Make drag strip map
+  - [ ] Make stunt playground map
+  - [ ] Then copy them to the main city map once working
 - [ ] track tricks in race
   - [ ] for bonus score
   - [ ] for boost?

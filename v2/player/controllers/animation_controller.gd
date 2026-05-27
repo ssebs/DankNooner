@@ -4,6 +4,12 @@ class_name AnimationController extends Node
 
 signal state_changed(new_state: RiderState)
 
+enum PlayMode {
+	ONE_SHOT,  # play(anim, 1.0, false) — fires once, auto-fades when finished
+	LOOP_WHILE_LATCHED,  # play(anim, 1.0, false) — same call as ONE_SHOT today; kept distinct for intent
+	HOLD_WHILE_LATCHED,  # play_one_shot — settles + holds at end pose; pairs with reverse_on_end
+}
+
 enum RiderState {
 	RIDING,  # Procedural active, IK enabled
 	IDLE,  # Procedural paused, playing idle anims
@@ -68,16 +74,26 @@ const _PATH_RLEG_MAGNET_ROT := ^"IKTargets/RightLegMagnet:rotation"
 const _POSE_PIPELINE_PATHS := {
 	_PATH_VISUAL_ROOT_ROT: true,
 	_PATH_BUTT_POS: true,
-	_PATH_CHEST_POS: true, _PATH_CHEST_ROT: true,
-	_PATH_HEAD_POS: true, _PATH_HEAD_ROT: true,
-	_PATH_LHAND_POS: true, _PATH_LHAND_ROT: true,
-	_PATH_RHAND_POS: true, _PATH_RHAND_ROT: true,
-	_PATH_LFOOT_POS: true, _PATH_LFOOT_ROT: true,
-	_PATH_RFOOT_POS: true, _PATH_RFOOT_ROT: true,
-	_PATH_LARM_MAGNET_POS: true, _PATH_LARM_MAGNET_ROT: true,
-	_PATH_RARM_MAGNET_POS: true, _PATH_RARM_MAGNET_ROT: true,
-	_PATH_LLEG_MAGNET_POS: true, _PATH_LLEG_MAGNET_ROT: true,
-	_PATH_RLEG_MAGNET_POS: true, _PATH_RLEG_MAGNET_ROT: true,
+	_PATH_CHEST_POS: true,
+	_PATH_CHEST_ROT: true,
+	_PATH_HEAD_POS: true,
+	_PATH_HEAD_ROT: true,
+	_PATH_LHAND_POS: true,
+	_PATH_LHAND_ROT: true,
+	_PATH_RHAND_POS: true,
+	_PATH_RHAND_ROT: true,
+	_PATH_LFOOT_POS: true,
+	_PATH_LFOOT_ROT: true,
+	_PATH_RFOOT_POS: true,
+	_PATH_RFOOT_ROT: true,
+	_PATH_LARM_MAGNET_POS: true,
+	_PATH_LARM_MAGNET_ROT: true,
+	_PATH_RARM_MAGNET_POS: true,
+	_PATH_RARM_MAGNET_ROT: true,
+	_PATH_LLEG_MAGNET_POS: true,
+	_PATH_LLEG_MAGNET_ROT: true,
+	_PATH_RLEG_MAGNET_POS: true,
+	_PATH_RLEG_MAGNET_ROT: true,
 }
 
 var current_state: RiderState = RiderState.RIDING:
@@ -890,13 +906,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 	return issues
 
 
-enum PlayMode {
-	ONE_SHOT,  # play(anim, 1.0, false) — fires once, auto-fades when finished
-	LOOP_WHILE_LATCHED,  # play(anim, 1.0, false) — same call as ONE_SHOT today; kept distinct for intent
-	HOLD_WHILE_LATCHED,  # play_one_shot — settles + holds at end pose; pairs with reverse_on_end
-}
-
-
 ## Data row for a trick anim. To add a trick: append one _make_entry(...) row in
 ## _build_trick_entries(). No new vars, no init branches, no cleanup spots.
 class _TrickAnimEntry:
@@ -926,10 +935,7 @@ func _build_trick_entries() -> void:
 			TrickController.Trick.HIGH_CHAIR, "high_chair", PlayMode.HOLD_WHILE_LATCHED, true
 		),
 		_make_entry(
-			TrickController.Trick.TWO_LEFT_FEET,
-			"two_left_feet",
-			PlayMode.LOOP_WHILE_LATCHED,
-			false
+			TrickController.Trick.TWO_LEFT_FEET, "two_left_feet", PlayMode.LOOP_WHILE_LATCHED, false
 		),
 	]
 
