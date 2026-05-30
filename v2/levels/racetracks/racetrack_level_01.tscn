@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://d0rgswc73h64f" path="res://player/player_entity.tscn" id="2_eqymk"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="3_l4d1h"]
 [ext_resource type="PackedScene" uid="uid://csj7iuh101rqh" path="res://levels/components/road_path.tscn" id="4_2e0ve"]
+[ext_resource type="Material" uid="uid://donsgrpfhv2ba" path="res://resources/terrain_tex/Grass001_2K-JPG/Grass001_2K-JPG.tres" id="6_cdqss"]
 [ext_resource type="Script" uid="uid://c3ycg631dwkse" path="res://utils/editor_tools/take_screenshot.gd" id="6_ft3g4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_l4d1h"]
@@ -37,7 +38,7 @@ point_count = 2
 [sub_resource type="Curve3D" id="Curve3D_eqymk"]
 closed = true
 _data = {
-"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 20, -8.596563, -0.106513076, 14.810583, 11.665152, 0.14453347, -20.097298, 0, 0, -117, -23.13071, -0.36542055, 2.1988146, 20.847141, 0.32934457, -1.9817375, 80.709, 1, -163.098, -8.706502, 0.1778112, -19.04742, 5.270923, -0.10764704, 11.531323, 159.966, 2.5, -136, -2.3799474, 0.14379361, -12.453145, 2.7881887, -0.16845907, 14.589279, 140.966, 1, -89, -13.5345125, -0.16327058, -6.118801, 17.098608, 0.20626526, 7.730088, 181.966, 1.625, -46, -4.9446464, 0.0026312375, -18.102755, 6.1944456, -0.0032963043, 22.678371, 256.966, 2.365, -43, 23.508562, 0.14135951, 0.08434852, -36.471695, -0.21930821, -0.13086013, 177.966, 1.43, 8, 28.558643, -0.39740753, -22.682505, -20.348072, 0.2831534, 16.161316, 55.966, 1.41, -72, 10.718415, -0.13064612, -23.672997, -8.024252, 0.09780713, 17.722591, 127.664, 2.86, 123.134, 19.003054, 0.14380643, 4.165531, -19.30262, -0.1460734, -4.231197, 55.066, 2.875, 151.158, 0, 0, 0, 0, 0, 0, 0, 1.885, 94.457),
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 20, -8.596563, -0.106513076, 14.810583, 11.665152, 0.14453347, -20.097298, 0, 0, -117, -23.13071, -0.36542055, 2.1988146, 20.847141, 0.32934457, -1.9817375, 80.709, 1, -163.098, -8.706502, 0.1778112, -19.04742, 5.270923, -0.10764704, 11.531323, 159.966, 2.5, -136, -2.3799474, 0.14379361, -12.453145, 2.7881887, -0.16845907, 14.589279, 140.966, 1, -89, -13.5345125, -0.16327058, -6.118801, 17.098608, 0.20626526, 7.730088, 181.966, 1.625, -46, -4.9446464, 0.0026312375, -18.102755, 6.1944456, -0.0032963043, 22.678371, 256.966, 2.365, -43, 23.508562, 0.14135951, 0.08434852, -36.471695, -0.21930821, -0.13086013, 177.966, 1.43, 8, 28.558643, -0.39740753, -22.682505, -20.348072, 0.2831534, 16.161316, 55.966, 1.41, -72, 10.718415, -0.13064612, -23.672997, -8.024252, 0.09780713, 17.722591, 127.664, 1.45, 123.134, 19.003054, 0.14380643, 4.165531, -19.30262, -0.1460734, -4.231197, 55.066, 1.405, 151.158, 0, 0, 0, 0, 0, 0, 0, 5, 94.457),
 "tilts": PackedFloat32Array(0, 0, 0.034906585, 0.13962634, -0.05235988, -0.13962634, 0.20943952, 0.10471976, -0.10471976, 0.034906585, 0.034906585, 0.034906585)
 }
 point_count = 12
@@ -138,11 +139,15 @@ color_preset = 1
 [node name="PitRoad" parent="Paddock_PitLane" unique_id=1992333778 instance=ExtResource("4_2e0ve")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.033901, 0, 0)
 curve = SubResource("Curve3D_64ynj")
+left_wall_skip_segments = null
+right_wall_skip_segments = null
 
 [node name="GarageGround" parent="Paddock_PitLane" unique_id=1729378503 instance=ExtResource("4_2e0ve")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.033901, 0, 0)
 curve = SubResource("Curve3D_2e0ve")
 road_width = 12.0
+left_wall_skip_segments = null
+right_wall_skip_segments = null
 
 [node name="Track" type="Node3D" parent="." unique_id=596645095]
 
@@ -150,6 +155,13 @@ road_width = 12.0
 curve = SubResource("Curve3D_eqymk")
 road_width = 12.0
 straighter_segments = Array[int]([0, 8])
+left_runoff_width = 10.0
+left_runoff_material = ExtResource("6_cdqss")
+left_wall_height = 2.0
+right_runoff_width = 20.0
+right_runoff_material = ExtResource("6_cdqss")
+right_wall_height = 2.0
+right_wall_skip_segments = Array[int]([0, 11, 10])
 
 [node name="Walls" type="Node3D" parent="." unique_id=1107577451]
 
