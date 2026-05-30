@@ -2,8 +2,6 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀 — Current Sprint
-- [ ] Use Curves to create roads (godot or blender?)
-
 
 ## Playtest bugs
 
@@ -179,6 +177,8 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] Use Curves to create roads (godot or blender?)
 
 - [x] character card selector
 

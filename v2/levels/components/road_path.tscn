@@ -42,3 +42,37 @@ mesh = SubResource("ArrayMesh_ff7jn")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1908247921]
 unique_name_in_owner = true
 shape = SubResource("ConcavePolygonShape3D_ru3ac")
+
+[node name="Sides" type="Node3D" parent="."]
+
+[node name="LeftRunoff" type="MeshInstance3D" parent="Sides"]
+unique_name_in_owner = true
+
+[node name="LeftRunoffBody" type="StaticBody3D" parent="Sides"]
+
+[node name="LeftRunoffCol" type="CollisionShape3D" parent="Sides/LeftRunoffBody"]
+unique_name_in_owner = true
+
+[node name="RightRunoff" type="MeshInstance3D" parent="Sides"]
+unique_name_in_owner = true
+
+[node name="RightRunoffBody" type="StaticBody3D" parent="Sides"]
+
+[node name="RightRunoffCol" type="CollisionShape3D" parent="Sides/RightRunoffBody"]
+unique_name_in_owner = true
+
+[node name="LeftWall" type="MeshInstance3D" parent="Sides"]
+unique_name_in_owner = true
+
+[node name="LeftWallBody" type="StaticBody3D" parent="Sides"]
+
+[node name="LeftWallCol" type="CollisionShape3D" parent="Sides/LeftWallBody"]
+unique_name_in_owner = true
+
+[node name="RightWall" type="MeshInstance3D" parent="Sides"]
+unique_name_in_owner = true
+
+[node name="RightWallBody" type="StaticBody3D" parent="Sides"]
+
+[node name="RightWallCol" type="CollisionShape3D" parent="Sides/RightWallBody"]
+unique_name_in_owner = true
