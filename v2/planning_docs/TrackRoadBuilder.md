@@ -2,11 +2,10 @@
 
 How to build drivable roads and racetracks.
 
-> **Use the `Track` node for all new roads.** The older curve-based `RoadPath`
-> (`levels/components/road_path.gd`) still exists and works, but the marker-based
-> `Track` system is the one to use going forward — banking is a visual gizmo,
-> per-segment settings live on the points, and per-segment material/collision is
-> built in.
+> **Use the `Track` node for all roads.** It replaced the old curve-based
+> `RoadPath` (`levels/components/road_path.gd`, now removed) — banking is a visual
+> gizmo, per-segment settings live on the points, and per-segment
+> material/collision is built in.
 
 ## Components
 
@@ -113,10 +112,10 @@ GrayBox blockout:
   points or raise `tension`.
 - **Don't pitch/yaw markers** (see Banking). Roll for banking, position for slope.
 
-## Legacy: curve-based `RoadPath`
+## History: the old `RoadPath`
 
-`levels/components/road_path.gd` (`RoadPath extends Path3D`) extrudes the same
-road/runoff/wall strips from a `Curve3D` instead of markers. Banking there is the
-curve's `tilt` float array (awkward to edit) and segment settings are flat
-exports with index arrays (`straight_segments`, `right_wall_skip_segments`, …).
-It still drives some existing pieces, but prefer `Track` for anything new.
+`Track` replaced a curve-based `RoadPath` (`Path3D` extruding the same
+road/runoff/wall strips from a `Curve3D`). Banking there was the curve's `tilt`
+float array (awkward to edit) and segment settings were flat exports with index
+arrays (`straight_segments`, `right_wall_skip_segments`, …). It has been removed
+— mentioned here only so old commits/screenshots make sense.
