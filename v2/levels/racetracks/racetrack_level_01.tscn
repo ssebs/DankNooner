@@ -1,0 +1,157 @@
+[gd_scene format=3 uid="uid://dd0g6yrox40hj"]
+
+[ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_mfsae"]
+[ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/gamemodeobjects/killbox.tscn" id="2_67tx4"]
+[ext_resource type="PackedScene" uid="uid://d0rgswc73h64f" path="res://player/player_entity.tscn" id="2_eqymk"]
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="3_l4d1h"]
+[ext_resource type="PackedScene" uid="uid://csj7iuh101rqh" path="res://levels/components/road_path.tscn" id="4_2e0ve"]
+[ext_resource type="Script" uid="uid://c3ycg631dwkse" path="res://utils/editor_tools/take_screenshot.gd" id="6_ft3g4"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_l4d1h"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_6hu6n"]
+sky_material = SubResource("ProceduralSkyMaterial_l4d1h")
+
+[sub_resource type="Environment" id="Environment_2e0ve"]
+background_mode = 2
+sky = SubResource("Sky_6hu6n")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="Curve3D" id="Curve3D_64ynj"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, -20),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
+[sub_resource type="Curve3D" id="Curve3D_2e0ve"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, -12),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
+[sub_resource type="Curve3D" id="Curve3D_eqymk"]
+closed = true
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 20, -8.596563, -0.106513076, 14.810583, 11.665152, 0.14453347, -20.097298, 0, 0, -117, -23.13071, -0.36542055, 2.1988146, 20.847141, 0.32934457, -1.9817375, 80.709, 1, -163.098, -8.706502, 0.1778112, -19.04742, 5.270923, -0.10764704, 11.531323, 159.966, 2.5, -136, -2.3799474, 0.14379361, -12.453145, 2.7881887, -0.16845907, 14.589279, 140.966, 1, -89, -13.5345125, -0.16327058, -6.118801, 17.098608, 0.20626526, 7.730088, 181.966, 1.625, -46, -4.9446464, 0.0026312375, -18.102755, 6.1944456, -0.0032963043, 22.678371, 256.966, 2.365, -43, 23.508562, 0.14135951, 0.08434852, -36.471695, -0.21930821, -0.13086013, 177.966, 1.43, 8, 28.558643, -0.39740753, -22.682505, -20.348072, 0.2831534, 16.161316, 55.966, 1.41, -72, 10.718415, -0.13064612, -23.672997, -8.024252, 0.09780713, 17.722591, 127.664, 2.86, 123.134, 19.003054, 0.14380643, 4.165531, -19.30262, -0.1460734, -4.231197, 55.066, 2.875, 151.158, 0, 0, 0, 0, 0, 0, 0, 1.885, 94.457),
+"tilts": PackedFloat32Array(0, 0, 0.034906585, 0.13962634, -0.05235988, -0.13962634, 0.20943952, 0.10471976, -0.10471976, 0.034906585, 0.034906585, 0.034906585)
+}
+point_count = 12
+
+[node name="RacetrackLevel01" type="Node3D" unique_id=1668752513 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug")]
+script = ExtResource("1_mfsae")
+player_spawn_pos = NodePath("PlayerSpawn")
+player_spawn_pos_debug = NodePath("PlayerSpawnTest")
+metadata/_custom_type_script = "uid://dv0brm8irhlth"
+
+[node name="PlayerSpawn" type="Marker3D" parent="." unique_id=2039238747]
+unique_name_in_owner = true
+transform = Transform3D(0.7071067, 0, 0.7071067, 0, 1, 0, -0.7071067, 0, 0.7071067, 9, 0, -4)
+
+[node name="PlayerEntity" parent="PlayerSpawn" unique_id=1507519799 instance=ExtResource("2_eqymk")]
+
+[node name="PlayerSpawnTest" type="Marker3D" parent="." unique_id=2006659162]
+unique_name_in_owner = true
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, 9, 0, -4)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=215805659]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1326700473]
+environment = SubResource("Environment_2e0ve")
+
+[node name="Killbox" parent="." unique_id=1054789626 instance=ExtResource("2_67tx4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -64, 0)
+
+[node name="Grounds" type="Node3D" parent="." unique_id=1563556186]
+
+[node name="TODO__UseBlendertomaketerrainaroundtrack" type="Node" parent="Grounds" unique_id=1908568091]
+
+[node name="TEMPGround" parent="Grounds" unique_id=1485126779 instance=ExtResource("3_l4d1h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+width = 999.0
+height = 0.1
+depth = 999.0
+color_preset = 2
+
+[node name="Paddock_PitLane" type="Node3D" parent="." unique_id=495282692]
+
+[node name="Paddock" type="Node3D" parent="Paddock_PitLane" unique_id=1848357583]
+
+[node name="PaddockWall" parent="Paddock_PitLane/Paddock" unique_id=2134295601 instance=ExtResource("3_l4d1h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3, 12.25)
+width = 12.0
+height = 6.0
+depth = 0.5
+color_preset = 3
+
+[node name="PaddockWall2" parent="Paddock_PitLane/Paddock" unique_id=703595342 instance=ExtResource("3_l4d1h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3, -12.25)
+width = 12.0
+height = 6.0
+depth = 0.5
+color_preset = 3
+
+[node name="PaddockWall4" parent="Paddock_PitLane/Paddock" unique_id=678597889 instance=ExtResource("3_l4d1h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3, 0)
+width = 6.0
+height = 6.0
+depth = 0.5
+color_preset = 3
+
+[node name="PaddockWall3" parent="Paddock_PitLane/Paddock" unique_id=1439087035 instance=ExtResource("3_l4d1h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 3, 0)
+width = 0.5
+height = 6.0
+depth = 24.5
+color_preset = 3
+
+[node name="PaddockWall5" parent="Paddock_PitLane/Paddock" unique_id=1986809663 instance=ExtResource("3_l4d1h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.25, 0.5, 0)
+depth = 22.0
+color_preset = 1
+
+[node name="PaddockRoof" parent="Paddock_PitLane/Paddock" unique_id=1863402176 instance=ExtResource("3_l4d1h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 6, 0)
+width = 12.0
+height = 0.5
+depth = 25.0
+color_preset = 3
+
+[node name="Pitwall" parent="Paddock_PitLane" unique_id=531688435 instance=ExtResource("3_l4d1h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9499998, 0)
+width = 0.25
+height = 2.0
+depth = 24.0
+color_preset = 1
+
+[node name="PaddockWall6" parent="Paddock_PitLane" unique_id=1530351838 instance=ExtResource("3_l4d1h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, 0)
+depth = 22.0
+color_preset = 1
+
+[node name="PitRoad" parent="Paddock_PitLane" unique_id=1992333778 instance=ExtResource("4_2e0ve")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.033901, 0, 0)
+curve = SubResource("Curve3D_64ynj")
+
+[node name="GarageGround" parent="Paddock_PitLane" unique_id=1729378503 instance=ExtResource("4_2e0ve")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.033901, 0, 0)
+curve = SubResource("Curve3D_2e0ve")
+road_width = 12.0
+
+[node name="Track" type="Node3D" parent="." unique_id=596645095]
+
+[node name="TrackPiece" parent="Track" unique_id=187747921 instance=ExtResource("4_2e0ve")]
+curve = SubResource("Curve3D_eqymk")
+road_width = 12.0
+straighter_segments = Array[int]([0, 8])
+
+[node name="Walls" type="Node3D" parent="." unique_id=1107577451]
+
+[node name="Node" type="Node" parent="." unique_id=1322476029]
+script = ExtResource("6_ft3g4")

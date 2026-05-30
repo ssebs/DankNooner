@@ -107,15 +107,18 @@ func save_save():
 func load_save():
 	var json_dict = DictJSONSaverLoader.load_json_from_file(save_path)
 	if json_dict == {}:
-		DebugUtils.DebugErrMsg("failed to parse json from %s" % save_path)
+		DebugUtils.DebugErrMsg("failed to parse json from %s, resetting to defaults" % save_path)
+		_save_default_save()
 		return
 
-	if json_dict["version"] != save_version:
+	# old/missing version means an outdated save format — migrate by filling
+	# any missing keys with defaults instead of discarding the file
+	var needs_migration: bool = json_dict.get("version", -1) != save_version
+	if needs_migration:
 		DebugUtils.DebugErrMsg(
-			"savegame.json version mismatch, %s != %s" % [json_dict["version"], save_version]
+			"savegame.json version mismatch (%s != %s), filling missing keys with defaults"
+			% [json_dict.get("version", "none"), save_version]
 		)
-		# TODO: migrate version
-		return
 
 	for key in default_save.keys():
 		if key == "player_definition":
@@ -125,6 +128,10 @@ func load_save():
 			current_save["player_definition"] = player_def
 		else:
 			current_save[key] = json_dict.get(key, default_save[key])
+	current_save["version"] = save_version
+
+	if needs_migration:
+		save_save()  # persist migrated save
 
 
 func get_player_definition() -> PlayerDefinition:
