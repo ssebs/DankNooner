@@ -110,7 +110,6 @@ class_name RoadPath extends Path3D
 		right_wall_skip_segments = v
 		_rebuild()
 
-
 @onready var mesh_inst: MeshInstance3D = %MeshInstance3D
 @onready var col_shape: CollisionShape3D = %CollisionShape3D
 @onready var left_runoff_mesh: MeshInstance3D = %LeftRunoff
@@ -152,17 +151,29 @@ func _rebuild() -> void:
 
 	# Runoff continues outward from each road edge, sharing that edge so it's
 	# seamless and inheriting the road's height + banking.
-	var lr: ArrayMesh = _build_flat_strip(-half - left_runoff_width, -half) if left_runoff_width > 0.0 else null
+	var lr: ArrayMesh = (
+		_build_flat_strip(-half - left_runoff_width, -half) if left_runoff_width > 0.0 else null
+	)
 	_apply_feature(left_runoff_mesh, left_runoff_col, lr, left_runoff_material)
 
-	var rr: ArrayMesh = _build_flat_strip(half, half + right_runoff_width) if right_runoff_width > 0.0 else null
+	var rr: ArrayMesh = (
+		_build_flat_strip(half, half + right_runoff_width) if right_runoff_width > 0.0 else null
+	)
 	_apply_feature(right_runoff_mesh, right_runoff_col, rr, right_runoff_material)
 
 	# Walls stand at the outer edge of each runoff (road edge if no runoff).
-	var lw: ArrayMesh = _build_wall_strip(-(half + left_runoff_width), left_wall_height, left_wall_skip_segments) if left_wall_height > 0.0 else null
+	var lw: ArrayMesh = (
+		_build_wall_strip(-(half + left_runoff_width), left_wall_height, left_wall_skip_segments)
+		if left_wall_height > 0.0
+		else null
+	)
 	_apply_feature(left_wall_mesh, left_wall_col, lw, left_wall_material)
 
-	var rw: ArrayMesh = _build_wall_strip(half + right_runoff_width, right_wall_height, right_wall_skip_segments) if right_wall_height > 0.0 else null
+	var rw: ArrayMesh = (
+		_build_wall_strip(half + right_runoff_width, right_wall_height, right_wall_skip_segments)
+		if right_wall_height > 0.0
+		else null
+	)
 	_apply_feature(right_wall_mesh, right_wall_col, rw, right_wall_material)
 
 
@@ -194,13 +205,19 @@ func _build_flat_strip(off_a: float, off_b: float) -> ArrayMesh:
 		if not first:
 			# Wound so the top face normal points +Y. generate_normals()
 			# recomputes from this winding.
-			st.set_uv(Vector2(u_a, prev_v)); st.add_vertex(prev_l)
-			st.set_uv(Vector2(u_b, v)); st.add_vertex(r)
-			st.set_uv(Vector2(u_b, prev_v)); st.add_vertex(prev_r)
+			st.set_uv(Vector2(u_a, prev_v))
+			st.add_vertex(prev_l)
+			st.set_uv(Vector2(u_b, v))
+			st.add_vertex(r)
+			st.set_uv(Vector2(u_b, prev_v))
+			st.add_vertex(prev_r)
 
-			st.set_uv(Vector2(u_a, prev_v)); st.add_vertex(prev_l)
-			st.set_uv(Vector2(u_a, v)); st.add_vertex(l)
-			st.set_uv(Vector2(u_b, v)); st.add_vertex(r)
+			st.set_uv(Vector2(u_a, prev_v))
+			st.add_vertex(prev_l)
+			st.set_uv(Vector2(u_a, v))
+			st.add_vertex(l)
+			st.set_uv(Vector2(u_b, v))
+			st.add_vertex(r)
 
 		prev_l = l
 		prev_r = r
@@ -260,22 +277,46 @@ func _build_wall_strip(off: float, height: float, skip_segments: Array[int]) -> 
 
 		if not first:
 			# Front faces (toward the track).
-			st.set_normal(prev_n); st.set_uv(Vector2(prev_v, 0.0)); st.add_vertex(prev_b)
-			st.set_normal(prev_n); st.set_uv(Vector2(prev_v, u_top)); st.add_vertex(prev_t)
-			st.set_normal(n); st.set_uv(Vector2(v, u_top)); st.add_vertex(top)
+			st.set_normal(prev_n)
+			st.set_uv(Vector2(prev_v, 0.0))
+			st.add_vertex(prev_b)
+			st.set_normal(prev_n)
+			st.set_uv(Vector2(prev_v, u_top))
+			st.add_vertex(prev_t)
+			st.set_normal(n)
+			st.set_uv(Vector2(v, u_top))
+			st.add_vertex(top)
 
-			st.set_normal(prev_n); st.set_uv(Vector2(prev_v, 0.0)); st.add_vertex(prev_b)
-			st.set_normal(n); st.set_uv(Vector2(v, u_top)); st.add_vertex(top)
-			st.set_normal(n); st.set_uv(Vector2(v, 0.0)); st.add_vertex(base)
+			st.set_normal(prev_n)
+			st.set_uv(Vector2(prev_v, 0.0))
+			st.add_vertex(prev_b)
+			st.set_normal(n)
+			st.set_uv(Vector2(v, u_top))
+			st.add_vertex(top)
+			st.set_normal(n)
+			st.set_uv(Vector2(v, 0.0))
+			st.add_vertex(base)
 
 			# Back faces (reversed winding, same normals).
-			st.set_normal(n); st.set_uv(Vector2(v, u_top)); st.add_vertex(top)
-			st.set_normal(prev_n); st.set_uv(Vector2(prev_v, u_top)); st.add_vertex(prev_t)
-			st.set_normal(prev_n); st.set_uv(Vector2(prev_v, 0.0)); st.add_vertex(prev_b)
+			st.set_normal(n)
+			st.set_uv(Vector2(v, u_top))
+			st.add_vertex(top)
+			st.set_normal(prev_n)
+			st.set_uv(Vector2(prev_v, u_top))
+			st.add_vertex(prev_t)
+			st.set_normal(prev_n)
+			st.set_uv(Vector2(prev_v, 0.0))
+			st.add_vertex(prev_b)
 
-			st.set_normal(n); st.set_uv(Vector2(v, 0.0)); st.add_vertex(base)
-			st.set_normal(n); st.set_uv(Vector2(v, u_top)); st.add_vertex(top)
-			st.set_normal(prev_n); st.set_uv(Vector2(prev_v, 0.0)); st.add_vertex(prev_b)
+			st.set_normal(n)
+			st.set_uv(Vector2(v, 0.0))
+			st.add_vertex(base)
+			st.set_normal(n)
+			st.set_uv(Vector2(v, u_top))
+			st.add_vertex(top)
+			st.set_normal(prev_n)
+			st.set_uv(Vector2(prev_v, 0.0))
+			st.add_vertex(prev_b)
 
 		prev_b = base
 		prev_t = top
@@ -315,7 +356,9 @@ func _segment_boundaries() -> PackedFloat32Array:
 
 ## Assigns a generated mesh + trimesh collider to a side feature, or clears both
 ## when mesh is null. Material is optional.
-func _apply_feature(mi: MeshInstance3D, cs: CollisionShape3D, mesh: ArrayMesh, mat: Material) -> void:
+func _apply_feature(
+	mi: MeshInstance3D, cs: CollisionShape3D, mesh: ArrayMesh, mat: Material
+) -> void:
 	mi.mesh = mesh
 	cs.shape = mesh.create_trimesh_shape() if mesh != null else null
 	if mesh != null and mat != null:
