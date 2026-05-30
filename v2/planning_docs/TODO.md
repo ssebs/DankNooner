@@ -2,11 +2,12 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀 — Current Sprint
+- [ ] Use Curves to create roads (godot or blender?)
 
-- [ ] add delete button to Customize Bikes Loadout menu
 
 ## Playtest bugs
 
+- [ ] add delete button to Customize Bikes Loadout menu
 - [ ] host can't go to customize bc others will leave
 - [ ] height is offset for some clients
 
@@ -134,7 +135,6 @@
 - [ ] Complex traffic / AI system (A* pathfinding, state machine, sequence system)
 
 ### Levels / map
-- [ ] Use Curves to create roads (godot or blender?)
 - [ ] Gamemode select on map select (tutorial 01 plays specific gamemode on specific map)
 - [ ] Island Level (multimesh trees)
 - [ ] Test Levels: Gym, Zoo, Museum

@@ -7,6 +7,7 @@ enum LevelName {
 	# MAIN_MENU_LEVEL,
 	TEST_LEVEL_01,
 	TEST_CITY_01,
+	RACETRACK_01,
 }
 
 @export var spawn_node: Node3D
@@ -20,6 +21,7 @@ var possible_levels: Dictionary[LevelName, PackedScene] = {
 	LevelName.BG_GRAY_LEVEL: load("res://levels/menu_levels/bg_gray/bg_gray_level.tscn"),
 	LevelName.TEST_LEVEL_01: load("res://levels/test_levels/test_01/test_01_level.tscn"),
 	LevelName.TEST_CITY_01: load("res://levels/test_levels/test_city_01/test_city_01.tscn"),
+	LevelName.RACETRACK_01: load("res://levels/racetracks/racetrack_level_01.tscn")
 }
 ## LevelName enum => localization.csv's key name
 var level_name_map: Dictionary[LevelName, String] = {
@@ -27,11 +29,13 @@ var level_name_map: Dictionary[LevelName, String] = {
 	LevelName.BG_GRAY_LEVEL: "BgGrayLevel",
 	LevelName.TEST_LEVEL_01: "LEVEL_TEST_1_LABEL",
 	LevelName.TEST_CITY_01: "LEVEL_TEST_CITY_01",
+	LevelName.RACETRACK_01: "LEVEL_RACETRACK_01",
 }
 
 ## There are in order for the option btn
 var levels_names_in_level_select: Array[String] = [
 	"LEVEL_SELECT_LABEL",
+	"LEVEL_RACETRACK_01",
 	"LEVEL_TEST_CITY_01",
 	"LEVEL_TEST_1_LABEL",
 ]
@@ -39,6 +43,7 @@ var levels_names_in_level_select: Array[String] = [
 var level_img_map: Dictionary[LevelName,Texture] = {
 	LevelName.TEST_LEVEL_01: load("res://resources/img/level_previews/TEST_LEVEL_01.jpg"),
 	LevelName.TEST_CITY_01: load("res://resources/img/level_previews/TEST_CITY_01.jpg"),
+	LevelName.RACETRACK_01: load("res://resources/img/level_previews/RACETRACK_01.jpg"),
 }
 
 var current_level_name: LevelName = LevelName.LEVEL_SELECT_LABEL

@@ -11,7 +11,8 @@
       "WebSearch",
       "WebFetch(domain:godotengine.org)",
       "Bash(xargs grep *)",
-      "Bash(grep *)"
+      "Bash(grep *)",
+      "Bash(bash /home/ssebs/.claude/statusline-command.sh)"
     ]
   }
 }

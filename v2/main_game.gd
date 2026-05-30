@@ -39,6 +39,9 @@ func _on_setting_updated(key: String, value: Variant):
 
 # Persist window mode when the user changes it via the OS (e.g. clicking maximize)
 func _on_window_size_changed():
+	# Startup resizes fire before settings load (deferred_init); nothing to persist yet
+	if settings_manager.current_settings.is_empty():
+		return
 	var current_mode_str := SettingsManager.windowmode_to_str(DisplayServer.window_get_mode())
 	if current_mode_str == "":
 		return

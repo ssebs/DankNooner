@@ -88,20 +88,27 @@ func save_settings():
 func load_settings():
 	var json_dict = DictJSONSaverLoader.load_json_from_file(settings_path)
 	if json_dict == {}:
-		DebugUtils.DebugErrMsg("failed to parse json from %s" % settings_path)
+		DebugUtils.DebugErrMsg("failed to parse json from %s, resetting to defaults" % settings_path)
+		_save_default_settings()
 		return
 
-	if json_dict["version"] != settings_version:
+	# old/missing version means an outdated save format — migrate by filling
+	# any missing keys with defaults instead of discarding the file
+	var needs_migration: bool = json_dict.get("version", -1) != settings_version
+	if needs_migration:
 		DebugUtils.DebugErrMsg(
-			"settings.json version mismatch, %s != %s" % [json_dict["version"], settings_version]
+			"settings.json version mismatch (%s != %s), filling missing keys with defaults"
+			% [json_dict.get("version", "none"), settings_version]
 		)
-		# TODO: migrate version
-		return
 
 	for key in default_settings.keys():
 		current_settings[key] = json_dict.get(key, default_settings[key])
+	current_settings["version"] = settings_version
 
-	all_settings_changed.emit(current_settings)
+	if needs_migration:
+		save_settings()  # persist migrated settings (also emits all_settings_changed)
+	else:
+		all_settings_changed.emit(current_settings)
 
 
 ## save_settings() with default_settings
