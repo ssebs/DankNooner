@@ -14,6 +14,22 @@ class_name TrackPoint extends Marker3D
 		curviness = clampf(v, 0.0, 1.0)
 		_notify_track()
 
+## Turn this point into a sharp corner: the road runs straight into and out of it,
+## joined by a tight arc of `corner_radius` instead of the default rounded
+## Catmull-Rom swoop. Use for hairpins / the Corkscrew. An open track's first/last
+## point can't be sharp (no incoming/outgoing chord) and is ignored.
+@export var sharp: bool = false:
+	set(v):
+		sharp = v
+		_notify_track()
+
+## Centerline radius (m) of the arc at a `sharp` corner. Smaller = tighter.
+## Auto-reduced if it won't fit between the neighbouring points.
+@export var corner_radius: float = 8.0:
+	set(v):
+		corner_radius = maxf(0.0, v)
+		_notify_track()
+
 @export_group("Left Side")
 ## Flat strip extending outward from the left road edge (sand/grass/etc),
 ## inheriting the road's height + banking. Width lerps to the next point's.
