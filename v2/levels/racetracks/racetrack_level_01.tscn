@@ -22,7 +22,7 @@ sky = SubResource("Sky_6hu6n")
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="Resource" id="Resource_ihuqi"]
+[sub_resource type="Resource" id="Resource_t4jal"]
 script = ExtResource("10_t4jal")
 
 [sub_resource type="Resource" id="Resource_5ija2"]
@@ -35,7 +35,15 @@ script = ExtResource("10_t4jal")
 material_preset = 1
 metadata/_custom_type_script = "uid://r137hyd7ocbt"
 
+[sub_resource type="Resource" id="Resource_ihuqi"]
+script = ExtResource("10_t4jal")
+
 [sub_resource type="Resource" id="Resource_cdqss"]
+script = ExtResource("10_t4jal")
+material_preset = 6
+metadata/_custom_type_script = "uid://r137hyd7ocbt"
+
+[sub_resource type="Resource" id="Resource_o08l2"]
 script = ExtResource("10_t4jal")
 metadata/_custom_type_script = "uid://r137hyd7ocbt"
 
@@ -158,13 +166,15 @@ script = ExtResource("6_ft3g4")
 transform = Transform3D(-1, 0, 1.509958e-07, 0, 1, 0, -1.509958e-07, 0, -1, -5.5, 0, -19.75)
 script = ExtResource("8_ilxvw")
 closed = true
+ground_apron = true
+apron_width = 12.0
 
 [node name="TrackPoint" type="Marker3D" parent="Track2" unique_id=268674505]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7683716e-07, 0.25, 3.25)
 script = ExtResource("9_t4jal")
-curviness = 0.282
+curviness = 0.2
 left_runoff_width = 7.345
-left_runoff = SubResource("Resource_ihuqi")
+left_runoff = SubResource("Resource_t4jal")
 right_runoff_width = 12.0
 right_runoff = SubResource("Resource_5ija2")
 right_wall_height = 2.0
@@ -173,6 +183,7 @@ right_wall = SubResource("Resource_giffm")
 [node name="TrackPoint2" type="Marker3D" parent="Track2" unique_id=1495196518]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.25, 2, -149)
 script = ExtResource("9_t4jal")
+sharp = true
 left_runoff_width = 20.0
 left_runoff = SubResource("Resource_ihuqi")
 right_runoff_width = 12.0
@@ -181,24 +192,30 @@ right_wall_height = 2.0
 right_wall = SubResource("Resource_giffm")
 
 [node name="TrackPoint3" type="Marker3D" parent="Track2" unique_id=2131753193]
-transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, -58.75, 2, -97.25001)
+transform = Transform3D(1, 0, 0, 0, 0.99542123, 0.09558515, 0, -0.09558515, 0.99542123, -58.75, 2, -97.25001)
 script = ExtResource("9_t4jal")
+sharp = true
+corner_radius = 27.08
 right_runoff_width = 12.0
 right_runoff = SubResource("Resource_5ija2")
 right_wall_height = 2.0
 right_wall = SubResource("Resource_giffm")
 
 [node name="TrackPoint4" type="Marker3D" parent="Track2" unique_id=568605121]
-transform = Transform3D(0.9989466, 0.045126263, -0.008315592, -0.04588601, 0.9824062, -0.181032, -2.290811e-09, 0.18122292, 0.9834422, -126.99999, 1.5, -94.50001)
+transform = Transform3D(0.0056853886, 0.26135525, -0.96522593, -0.00945884, 0.96521235, 0.26129586, 0.999939, 0.0076443134, 0.007959682, -126.99999, 1.5, -94.50001)
 script = ExtResource("9_t4jal")
+sharp = true
+corner_radius = 23.41
 right_runoff_width = 12.0
 right_runoff = SubResource("Resource_5ija2")
 right_wall_height = 2.0
 right_wall = SubResource("Resource_giffm")
 
 [node name="TrackPoint5" type="Marker3D" parent="Track2" unique_id=281899502]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53.25, 12.75, 1)
+transform = Transform3D(0.9657132, -0.2596113, 0, 0.2596113, 0.9657132, 0, 0, 0, 1, -53.25, 12.75, 1)
 script = ExtResource("9_t4jal")
+sharp = true
+corner_radius = 19.83
 left_runoff_width = 12.0
 left_runoff = SubResource("Resource_cdqss")
 right_runoff_width = 12.0
@@ -207,8 +224,9 @@ right_wall_height = 2.0
 right_wall = SubResource("Resource_giffm")
 
 [node name="TrackPoint6" type="Marker3D" parent="Track2" unique_id=1409940867]
-transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1, -130.32933, 8.953186, 43.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -130.32933, 8.953186, 43.5)
 script = ExtResource("9_t4jal")
+sharp = true
 left_runoff_width = 20.0
 left_runoff = SubResource("Resource_cdqss")
 right_runoff_width = 12.0
@@ -219,6 +237,7 @@ right_wall = SubResource("Resource_giffm")
 [node name="TrackPoint7" type="Marker3D" parent="Track2" unique_id=1312033385]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -105.43744, 11.12647, 105.70585)
 script = ExtResource("9_t4jal")
+sharp = true
 left_runoff_width = 5.0
 left_runoff = SubResource("Resource_cdqss")
 right_runoff_width = 12.0
@@ -229,7 +248,8 @@ right_wall = SubResource("Resource_giffm")
 [node name="TrackPoint8" type="Marker3D" parent="Track2" unique_id=866867287]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.006922, 3.5880904, 108.721725)
 script = ExtResource("9_t4jal")
-left_runoff = SubResource("Resource_cdqss")
+sharp = true
+left_runoff = SubResource("Resource_o08l2")
 right_runoff_width = 12.0
 right_runoff = SubResource("Resource_ilxvw")
 right_wall_height = 2.0

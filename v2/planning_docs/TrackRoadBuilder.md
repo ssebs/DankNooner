@@ -63,6 +63,55 @@ re-parent the generated bodies; they get wiped on every rebuild.
 - **`tension`** (on the `Track`, global): slackens *every* segment toward its
   chords. Raise it to tame Catmull-Rom overshoot between widely-spaced points.
 
+## Sharp corners (hairpins, the Corkscrew)
+
+Catmull-Rom always rounds a point into a smooth swoop — `curviness`/`tension`
+only change the tangent *magnitude*, never its direction, so you can't get a
+defined apex by tuning them. For that, mark the point **`sharp`**:
+
+- **`sharp`** (per point): the road runs *straight in → tight curve → straight
+  out* of the point instead of swooping. The two neighbouring segments become
+  straight chords and a quadratic-Bézier **apex curve** joins them.
+- **`corner_radius`** (per point, meters): controls how far back the curve
+  starts (its tightness). Smaller = tighter. Auto-reduced if it won't fit
+  between the neighbours. The trim length is driven by the **plan-view** turn
+  angle, so a steep grade through the corner doesn't change it.
+- The apex curve interpolates height between its endpoints, so a sharp corner
+  taken *while descending* (drop the next point's Y) stays tight as it goes
+  downhill without plunging — that's the Laguna Seca Corkscrew: two sharp points
+  (left then right) with a
+  short straight between and a steep elevation drop. Bank by rolling the apex
+  point; the arc uses that point's bank.
+- An **S / chicane** is just two adjacent sharp points turning opposite ways.
+
+Limitations:
+- **Walls don't fill the corner** at a sharp point (road + runoff only). A walled
+  sharp corner will show a gap in the wall at the apex — leave sharp corners
+  wall-free for now.
+- **Open-track first/last points can't be sharp** (no incoming/outgoing chord);
+  the flag is ignored there.
+- A near-180° single point won't fillet (the tangent length explodes) — build a
+  true U-turn from a few sharp points, or leave it rounded.
+
+## Ground apron (tying the track into the ground)
+
+When the track climbs, its runoff edges float above the flat ground. Enable the
+**ground apron** on the `Track` to generate a skirt that ramps from each
+runoff/road outer edge down to a flat ground level:
+
+- **`ground_apron`** (Track): turn it on.
+- **`ground_y`** (Track): the world height the skirt levels off to — set it to
+  your surrounding ground's height.
+- **`apron_width`** (Track): how far out (meters, horizontal) the skirt reaches
+  before it's flat at `ground_y`.
+
+The skirt is generated from the same banked frames, so it auto-matches the road
+height, banking, and the sharp corners, and rebuilds live. Each side uses that
+side's **runoff `SurfaceConfig`** (so it blends with the runoff; null = road
+defaults). It grades the band *near* the track — use Blender terrain beyond it
+for distant scenery. Note: it assumes the track sits **above** `ground_y`; where
+the track dips below it the skirt ramps upward instead.
+
 ## Runoff and walls (per point, per side)
 
 Each `TrackPoint` carries Left and Right config for the segment it owns:

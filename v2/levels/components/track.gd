@@ -48,6 +48,25 @@ class_name Track extends Node3D
 		collision_layer = v
 		queue_rebuild()
 
+@export_group("Ground Apron")
+## Generate a ground skirt beyond each runoff that ramps down to `ground_y`, tying
+## the elevated track into the surrounding ground. Uses that side's runoff
+## material so it blends. Off by default.
+@export var ground_apron: bool = false:
+	set(v):
+		ground_apron = v
+		queue_rebuild()
+## World height the apron ramps down to — your surrounding flat ground level.
+@export var ground_y: float = 0.0:
+	set(v):
+		ground_y = v
+		queue_rebuild()
+## Max horizontal reach of the apron outward from the runoff/road edge.
+@export var apron_width: float = 30.0:
+	set(v):
+		apron_width = maxf(0.0, v)
+		queue_rebuild()
+
 const DEFAULT_TEXTURE := preload(
 	"res://levels/assets/kenney_prototype-textures/PNG/Dark/texture_04.png"
 )
@@ -86,6 +105,10 @@ func rebuild() -> void:
 		var seg_count := points.size() if closed else points.size() - 1
 		for i in seg_count:
 			_build_segment(points, i)
+		# Sharp points get an apex arc bridging their two (trimmed) straight chords.
+		for k in points.size():
+			if points[k].sharp:
+				_build_corner(points, k)
 
 	_building = false
 
@@ -116,15 +139,26 @@ func _build_segment(points: Array[TrackPoint], i: int) -> void:
 	var owner_pt := points[i]
 	var next_pt := points[(i + 1) % count]
 
-	# Catmull-Rom needs the neighbors on either side of the segment.
-	var p0 := _point_pos(points, i - 1)
+	# Catmull-Rom needs the neighbors on either side of the segment. A sharp
+	# endpoint clamps its neighbor to itself so the tangent there points straight
+	# down this segment's chord (the apex arc, built separately, joins the gap).
+	var p0 := owner_pt.position if owner_pt.sharp else _point_pos(points, i - 1)
 	var p1 := owner_pt.position
 	var p2 := next_pt.position
-	var p3 := _point_pos(points, i + 2)
+	var p3 := next_pt.position if next_pt.sharp else _point_pos(points, i + 2)
 	var up_a := owner_pt.transform.basis.y.normalized()
 	var up_b := next_pt.transform.basis.y.normalized()
 
-	var subdiv: int = maxi(1, int(round(p1.distance_to(p2) / step)))
+	# Trim the segment back to each sharp endpoint's arc tangent point so the
+	# straight chord ends exactly where the apex arc begins.
+	var chord_len := p1.distance_to(p2)
+	var t_start := (_corner_trim_length(points, i) / chord_len) if owner_pt.sharp else 0.0
+	var t_end := (
+		1.0 - _corner_trim_length(points, (i + 1) % count) / chord_len if next_pt.sharp else 1.0
+	)
+	var span := t_end - t_start
+
+	var subdiv: int = maxi(1, int(round(chord_len * span / step)))
 
 	# Per-segment curve strength: the Track's global tension slackens every
 	# segment; the owner point's curviness flattens just this one toward its
@@ -135,7 +169,7 @@ func _build_segment(points: Array[TrackPoint], i: int) -> void:
 	var frames: Array[Transform3D] = []
 	var forward := (p2 - p1).normalized()
 	for j in subdiv + 1:
-		var t := float(j) / subdiv
+		var t := t_start + span * (float(j) / subdiv)
 		var pos := _hermite(p0, p1, p2, p3, t, factor)
 		var tangent := _hermite_tangent(p0, p1, p2, p3, t, factor)
 		# Guard a near-zero tangent (straight chord / cusp) which would normalize
@@ -147,41 +181,51 @@ func _build_segment(points: Array[TrackPoint], i: int) -> void:
 
 	var half := road_width * 0.5
 
+	# Trimming shifts the boundaries inward, so the per-side widths/heights that
+	# lerp a->b must be re-evaluated at the trimmed t range to stay seam-tight.
+	var lw_a := lerpf(owner_pt.left_runoff_width, next_pt.left_runoff_width, t_start)
+	var lw_b := lerpf(owner_pt.left_runoff_width, next_pt.left_runoff_width, t_end)
+	var rw_a := lerpf(owner_pt.right_runoff_width, next_pt.right_runoff_width, t_start)
+	var rw_b := lerpf(owner_pt.right_runoff_width, next_pt.right_runoff_width, t_end)
+
 	# Road: full-width flat strip. Null cfg falls through to the Track road
 	# defaults.
 	_commit_feature(_build_flat_strip(frames, _const(subdiv, -half), _const(subdiv, half)), null)
 
 	# Runoff: width lerps a->b so adjacent segments meet seamlessly at the shared
 	# boundary point. off_a must stay <= off_b for +Y winding.
-	if owner_pt.left_runoff_width > 0.0 or next_pt.left_runoff_width > 0.0:
-		var outer := _lerp_offsets(
-			subdiv, -half, -half, owner_pt.left_runoff_width, next_pt.left_runoff_width, -1.0
-		)
+	if lw_a > 0.0 or lw_b > 0.0:
+		var outer := _lerp_offsets(subdiv, -half, -half, lw_a, lw_b, -1.0)
 		_commit_feature(
 			_build_flat_strip(frames, outer, _const(subdiv, -half)), owner_pt.left_runoff
 		)
-	if owner_pt.right_runoff_width > 0.0 or next_pt.right_runoff_width > 0.0:
-		var outer := _lerp_offsets(
-			subdiv, half, half, owner_pt.right_runoff_width, next_pt.right_runoff_width, 1.0
-		)
+	if rw_a > 0.0 or rw_b > 0.0:
+		var outer := _lerp_offsets(subdiv, half, half, rw_a, rw_b, 1.0)
 		_commit_feature(
 			_build_flat_strip(frames, _const(subdiv, half), outer), owner_pt.right_runoff
 		)
 
+	# Apron: skirt from each runoff/road outer edge down to flat ground.
+	if ground_apron and apron_width > 0.0:
+		var left_edge := _lerp_offsets(subdiv, -half, -half, lw_a, lw_b, -1.0)
+		_commit_feature(_build_apron_strip(frames, left_edge, -1.0), owner_pt.left_runoff)
+		var right_edge := _lerp_offsets(subdiv, half, half, rw_a, rw_b, 1.0)
+		_commit_feature(_build_apron_strip(frames, right_edge, 1.0), owner_pt.right_runoff)
+
 	# Walls stand at the outer edge of each runoff; gated by the owner point so a
 	# zero-height corner drops its wall. Height/offset lerp a->b for continuity.
 	if owner_pt.left_wall_height > 0.0:
-		var off := _lerp_offsets(
-			subdiv, -half, -half, owner_pt.left_runoff_width, next_pt.left_runoff_width, -1.0
-		)
-		var hgt := _lerp_floats(subdiv, owner_pt.left_wall_height, next_pt.left_wall_height)
-		_commit_feature(_build_wall_strip(frames, off, hgt), owner_pt.left_wall)
+		var off := _lerp_offsets(subdiv, -half, -half, lw_a, lw_b, -1.0)
+		var ha := lerpf(owner_pt.left_wall_height, next_pt.left_wall_height, t_start)
+		var hb := lerpf(owner_pt.left_wall_height, next_pt.left_wall_height, t_end)
+		_commit_feature(_build_wall_strip(frames, off, _lerp_floats(subdiv, ha, hb)), owner_pt.left_wall)
 	if owner_pt.right_wall_height > 0.0:
-		var off := _lerp_offsets(
-			subdiv, half, half, owner_pt.right_runoff_width, next_pt.right_runoff_width, 1.0
+		var off := _lerp_offsets(subdiv, half, half, rw_a, rw_b, 1.0)
+		var ha := lerpf(owner_pt.right_wall_height, next_pt.right_wall_height, t_start)
+		var hb := lerpf(owner_pt.right_wall_height, next_pt.right_wall_height, t_end)
+		_commit_feature(
+			_build_wall_strip(frames, off, _lerp_floats(subdiv, ha, hb)), owner_pt.right_wall
 		)
-		var hgt := _lerp_floats(subdiv, owner_pt.right_wall_height, next_pt.right_wall_height)
-		_commit_feature(_build_wall_strip(frames, off, hgt), owner_pt.right_wall)
 
 
 ## Position of points[idx], wrapping for closed loops or clamping for open ones
@@ -191,6 +235,101 @@ func _point_pos(points: Array[TrackPoint], idx: int) -> Vector3:
 	if closed:
 		return points[(idx % count + count) % count].position
 	return points[clampi(idx, 0, count - 1)].position
+
+
+# --- Sharp corners -----------------------------------------------------------
+
+
+## Distance along each chord from a sharp point to its arc tangent point (the
+## fillet tangent length T = radius * tan(deflection/2)), or 0 if point k is not a
+## valid sharp corner. Auto-shrunk so both tangent points stay within their
+## chords (leaving room for a neighbouring corner). Used by both the segment
+## trimmer and the arc builder so they agree on where the straight meets the arc.
+func _corner_trim_length(points: Array[TrackPoint], k: int) -> float:
+	var pt := points[k]
+	if not pt.sharp or pt.corner_radius <= 0.0:
+		return 0.0
+	var count := points.size()
+	# Open-track endpoints have no incoming/outgoing chord — can't be filleted.
+	if not closed and (k == 0 or k == count - 1):
+		return 0.0
+	var prev_pos := _point_pos(points, k - 1)
+	var next_pos := _point_pos(points, k + 1)
+	var din := pt.position - prev_pos
+	var dout := next_pos - pt.position
+	if din.length_squared() < 1e-6 or dout.length_squared() < 1e-6:
+		return 0.0
+	# Use the plan-view (horizontal) turn angle so a steep grade through the corner
+	# doesn't inflate the fillet length.
+	var din_h := Vector3(din.x, 0.0, din.z)
+	var dout_h := Vector3(dout.x, 0.0, dout.z)
+	if din_h.length_squared() < 1e-6 or dout_h.length_squared() < 1e-6:
+		return 0.0
+	var delta := acos(clampf(din_h.normalized().dot(dout_h.normalized()), -1.0, 1.0))
+	# Near-straight (no real corner) or near-180 U-turn (tangent length explodes).
+	if delta < 0.01 or delta > PI - 0.01:
+		return 0.0
+	var trim := pt.corner_radius * tan(delta * 0.5)
+	return minf(trim, minf(0.49 * din.length(), 0.49 * dout.length()))
+
+
+## Commits the road + runoff arc that joins a sharp point's two straight chords.
+## Tangent to both chords and built in their shared (3D) plane, so it descends
+## through the turn — the Corkscrew case. Walls are not filled here (known gap).
+func _build_corner(points: Array[TrackPoint], k: int) -> void:
+	var t := _corner_trim_length(points, k)
+	if t <= 0.0:
+		return
+	var count := points.size()
+	var pt := points[k]
+	var prev_pt := points[(k - 1 + count) % count]
+	var next_pt := points[(k + 1) % count]
+	var din := (pt.position - prev_pt.position).normalized()
+	var dout := (next_pt.position - pt.position).normalized()
+	var pa := pt.position - din * t
+	var pb := pt.position + dout * t
+	var up := pt.transform.basis.y.normalized()
+
+	# Quadratic Bézier fillet through pa -> corner -> pb. Tangent to din at pa and
+	# dout at pb (pa-pt is along din, pb-pt along dout), so it joins the trimmed
+	# chords smoothly. Y just interpolates, so a corner on a grade can't plunge the
+	# way a circular arc in the chords' (tilted) plane would.
+	var subdiv: int = maxi(2, int(round((pa.distance_to(pt.position) + pt.position.distance_to(pb)) / step)))
+	var frames: Array[Transform3D] = []
+	var forward := din
+	for j in subdiv + 1:
+		var s := float(j) / subdiv
+		var oms := 1.0 - s
+		var pos := oms * oms * pa + 2.0 * oms * s * pt.position + s * s * pb
+		var tangent := 2.0 * oms * (pt.position - pa) + 2.0 * s * (pb - pt.position)
+		if tangent.length_squared() > 1e-6:
+			forward = tangent.normalized()
+		frames.append(_frame(pos, forward, up))
+
+	var half := road_width * 0.5
+	_commit_feature(_build_flat_strip(frames, _const(subdiv, -half), _const(subdiv, half)), null)
+
+	# Match the trimmed segments' runoff widths at the tangent points so the arc's
+	# edges line up with the chords it bridges (t_in/t_out are those segments' t
+	# at pa/pb).
+	var t_in := 1.0 - t / pt.position.distance_to(prev_pt.position)
+	var t_out := t / pt.position.distance_to(next_pt.position)
+	var lw_a := lerpf(prev_pt.left_runoff_width, pt.left_runoff_width, t_in)
+	var lw_b := lerpf(pt.left_runoff_width, next_pt.left_runoff_width, t_out)
+	if lw_a > 0.0 or lw_b > 0.0:
+		var outer := _lerp_offsets(subdiv, -half, -half, lw_a, lw_b, -1.0)
+		_commit_feature(_build_flat_strip(frames, outer, _const(subdiv, -half)), pt.left_runoff)
+	var rw_a := lerpf(prev_pt.right_runoff_width, pt.right_runoff_width, t_in)
+	var rw_b := lerpf(pt.right_runoff_width, next_pt.right_runoff_width, t_out)
+	if rw_a > 0.0 or rw_b > 0.0:
+		var outer := _lerp_offsets(subdiv, half, half, rw_a, rw_b, 1.0)
+		_commit_feature(_build_flat_strip(frames, _const(subdiv, half), outer), pt.right_runoff)
+
+	if ground_apron and apron_width > 0.0:
+		var left_edge := _lerp_offsets(subdiv, -half, -half, lw_a, lw_b, -1.0)
+		_commit_feature(_build_apron_strip(frames, left_edge, -1.0), pt.left_runoff)
+		var right_edge := _lerp_offsets(subdiv, half, half, rw_a, rw_b, 1.0)
+		_commit_feature(_build_apron_strip(frames, right_edge, 1.0), pt.right_runoff)
 
 
 # --- Spline math -------------------------------------------------------------
@@ -288,6 +427,52 @@ func _build_flat_strip(
 		var xf := frames[j]
 		var l := xf.origin + xf.basis.x * offs_a[j]
 		var r := xf.origin + xf.basis.x * offs_b[j]
+
+		if not first:
+			st.add_vertex(prev_l)
+			st.add_vertex(r)
+			st.add_vertex(prev_r)
+
+			st.add_vertex(prev_l)
+			st.add_vertex(l)
+			st.add_vertex(r)
+
+		prev_l = l
+		prev_r = r
+		first = false
+
+	st.generate_normals()
+	return st.commit()
+
+
+## Ground skirt from a per-sample inner edge (`inner_offs` along each frame's
+## right vector) outward to FLAT ground at `ground_y`. The outer edge steps out
+## horizontally by `apron_width` and snaps to `ground_y`, so it follows banking at
+## the road edge but levels off into the surrounding ground. `side` (-1 left / +1
+## right) picks the outward direction and keeps the top face winding +Y.
+func _build_apron_strip(
+	frames: Array[Transform3D], inner_offs: PackedFloat32Array, side: float
+) -> ArrayMesh:
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+
+	var prev_l := Vector3.ZERO
+	var prev_r := Vector3.ZERO
+	var first := true
+
+	for j in frames.size():
+		var xf := frames[j]
+		var inner := xf.origin + xf.basis.x * inner_offs[j]
+		# Outward direction projected flat so the skirt grades toward level ground.
+		var h_right := Vector3(xf.basis.x.x, 0.0, xf.basis.x.z)
+		if h_right.length_squared() < 1e-6:
+			h_right = Vector3(xf.basis.z.x, 0.0, xf.basis.z.z)
+		h_right = h_right.normalized()
+		var outer := inner + h_right * side * apron_width
+		outer.y = ground_y
+		# Order edges so the lower-x vertex is "l" (matches _build_flat_strip +Y).
+		var l := inner if side > 0.0 else outer
+		var r := outer if side > 0.0 else inner
 
 		if not first:
 			st.add_vertex(prev_l)
