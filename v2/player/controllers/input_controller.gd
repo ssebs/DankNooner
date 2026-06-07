@@ -45,6 +45,8 @@ func _gather():
 		return
 	if input_disabled:
 		return
+	if _text_field_focused():
+		return
 
 	nfx_throttle = Input.get_action_strength("throttle_pct")
 	nfx_front_brake = Input.get_action_strength("brake_front_pct")
@@ -75,6 +77,8 @@ func _process(_delta):
 		return
 	if !is_multiplayer_authority():
 		return
+	if _text_field_focused():
+		return
 
 	if Input.is_action_just_pressed("switch_cam"):
 		cam_switch_pressed.emit()
@@ -85,6 +89,13 @@ func _process(_delta):
 		rb_gear_up_pressed = true
 	if Input.is_action_just_pressed("gear_down"):
 		rb_gear_down_pressed = true
+
+
+## True when a text field has keyboard focus (e.g. username/code entry) — game
+## input polls global Input and bypasses GUI focus, so block it while typing.
+func _text_field_focused() -> bool:
+	var focused := get_viewport().gui_get_focus_owner()
+	return focused is LineEdit or focused is TextEdit
 
 
 #region KBM/Gamepad switching
