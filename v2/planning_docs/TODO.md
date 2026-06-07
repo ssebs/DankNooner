@@ -3,7 +3,11 @@
 
 ## In Progress 🚀 — Current Sprint
 
-- [ ] Burnout by flooring it while leaning forward, starts drift.
+- [ ] Drifting
+  - [x] Ebrake
+  - [x] Powerslide
+  - [ ] show black lines
+  - [ ] play screech audio
 - [ ] [new roads](../PLAN-roads.md)
   - [ ] Just use Terrain3D instead of creating all this complexity
 

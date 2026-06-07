@@ -27,8 +27,12 @@ var ragdoll_bone_constraints_base = {
 var ragdoll_bone_constraints: Dictionary = {}
 
 
-func start_ragdoll():
+func start_ragdoll(launch_impulse: Vector3 = Vector3.ZERO):
 	skel_root.physical_bones_start_simulation()
+	if launch_impulse != Vector3.ZERO:
+		for child in skel_root.get_children():
+			if child is PhysicalBone3D:
+				child.linear_velocity = launch_impulse
 
 
 func stop_ragdoll():

@@ -37,9 +37,21 @@ const REVERSE_MAX_SPEED: float = 2.0
 const REVERSE_ACCEL: float = 8.0
 const REVERSE_BRAKE_THRESHOLD: float = 0.3
 var is_reversing: bool = false
+# Drift / powerslide — see planning_docs/PLAN-DRIFT.md
+const DRIFT_MIN_SPEED: float = 6.0  # below this it's a stationary burnout (slip stays ~0)
+const DRIFT_BRAKE_HOLD: float = 0.4  # rear-brake input that sustains a brake slide
+const DRIFT_STEER_ENTRY: float = 0.3  # steer needed to kick a brake slide loose
+const DRIFT_BREAK_FORCE: float = POWER_WHEELIE_MIN_FORCE  # power×accel torque gate to break traction
+const DRIFT_RECOVER_RATE: float = 2.0  # rad/s grip pulls the travel line back to heading
+const DRIFT_RECOVER_SUPPRESS: float = 0.8  # how much drive (0..1) suppresses recovery (holds the slide)
+const DRIFT_YAW_RATE: float = 1.6  # rad/s the heading carves per full steer while drifting
+const DRIFT_SPEED_SCRUB: float = 0.6  # speed bleed per sec, proportional to |slip_angle|
+const DRIFT_MAX_SLIP_ANGLE_DEG: float = 70.0  # clamp just past the 60° spinout so crash fires, no wrap
 var speed: float = 0.0
 var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
+var slip_angle: float = 0.0  # signed radians: heading vs velocity direction. Synced via RollbackSynchronizer.
+var is_drifting: bool = false  # re-derived each tick from synced inputs + slip_angle (not synced directly)
 
 var air_forward: Vector3 = Vector3.FORWARD  # forward direction when leaving a surface
 var air_pitch_total: float = 0.0  # cumulative pitch rotation while airborne (for flip counting)
@@ -111,6 +123,7 @@ func on_movement_rollback_tick(delta: float):
 	_speed_calc(delta)
 	_speed_pct = clampf(speed / player_entity.bike_definition.max_speed, 0.0, 1.0)
 	_update_surface_alignment(delta)
+	_drift_calc(delta)
 	_steer_calc(delta)
 	_velocity_calc(delta)
 	_pitch_angle_calc(delta)
@@ -298,7 +311,7 @@ func _steer_calc(delta: float):
 
 	# Steering — bell curve: low at standstill, peaks mid-low speed, tapers at top speed.
 	# Uses abs(speed) so reverse rolling still turns the body.
-	if absf(speed) > 0.5:
+	if absf(speed) > 0.5 and not is_drifting:
 		var steer_factor = 1.0 if is_reversing else (bd.steer_curve.sample(_speed_pct) if bd.steer_curve else 1.0)
 		var turn_rate = bd.turn_speed * steer_factor * (1.0 - get_unstable_factor() * UNSTABLE_STEER_SUPPRESSION)
 		DebugUtils.DebugMsg(
@@ -325,12 +338,19 @@ func _steer_calc(delta: float):
 func _velocity_calc(delta: float):
 	# Apply velocity following slope
 	var forward = -player_entity.global_transform.basis.z
+	# Drift: velocity travels along heading rotated by slip_angle (tail out). slip_angle==0
+	# (normal riding) leaves this identical to forward.
+	var travel_dir = forward
+	if is_drifting:
+		# Rotate about global Y to match the heading carve (rotate_y) so slip stays
+		# consistent on ramps; .slide(_floor_normal) below reprojects onto the surface.
+		travel_dir = forward.rotated(Vector3.UP, slip_angle)
 	if _is_on_floor:
 		if player_entity.velocity.length_squared() > 0.01:
 			air_forward = player_entity.velocity.normalized()
 		else:
-			air_forward = forward
-		player_entity.velocity = forward.slide(_floor_normal).normalized() * speed
+			air_forward = travel_dir
+		player_entity.velocity = travel_dir.slide(_floor_normal).normalized() * speed
 	else:
 		# Use the last on-surface forward so basis slerp doesn't deflect trajectory mid-air
 		speed = move_toward(speed, 0, AIR_DRAG * delta)
@@ -530,6 +550,97 @@ func _can_initiate_wheelie(in_wheelie: bool) -> bool:
 	)
 
 
+## Drift entry. Mirror of the wheelie clutch/power gates but gated on lean FORWARD
+## (lean back = wheelie, lean forward = drift), plus a rear-brake-slide entry.
+func _can_initiate_drift() -> bool:
+	if is_drifting:
+		return true
+	if not _is_on_floor or speed < DRIFT_MIN_SPEED:
+		return false
+
+	# Brake-slide entry — steer + hold rear brake breaks the rear loose. Accessible, safe to release.
+	if (
+		input_controller.nfx_rear_brake > DRIFT_BRAKE_HOLD
+		and absf(input_controller.nfx_steer) > DRIFT_STEER_ENTRY
+	):
+		return true
+
+	# Power entry — needs lean forward (distinguishes from wheelie's lean back).
+	if input_controller.nfx_lean <= 0.3:
+		return false
+	var bd = player_entity.bike_definition
+
+	# Clutch-dump pop (lean-forward variant) — same low-gear torque gate the wheelie pop uses.
+	var clutch_pop = _clutch_kick_window > 0 and input_controller.nfx_throttle > 0.5
+	if clutch_pop:
+		var max_torque_mult = bd.gear_ratios[0] / bd.gear_ratios[bd.num_gears - 1]
+		return (
+			gearing_controller.get_potential_power_output()
+			> max_torque_mult * CLUTCH_POP_MIN_POWER_FRAC
+		)
+
+	# Power slide — floored throttle + enough delivered force to break traction.
+	var force = gearing_controller.get_power_output() * bd.acceleration
+	return input_controller.nfx_throttle > 0.7 and force > DRIFT_BREAK_FORCE
+
+
+## Maintain is_drifting and integrate slip_angle. Runs before _velocity_calc so
+## velocity picks up the slip this tick. No-op (and slip decays to 0) when not drifting.
+func _drift_calc(delta: float):
+	# --- entry / exit ---
+	if player_entity.is_crashed or not _is_on_floor:
+		is_drifting = false
+		slip_angle = move_toward(slip_angle, 0.0, DRIFT_RECOVER_RATE * delta)
+		return
+
+	if not is_drifting:
+		is_drifting = _can_initiate_drift()
+
+	if not is_drifting:
+		# Not drifting — make sure any residual slip unwinds.
+		slip_angle = move_toward(slip_angle, 0.0, DRIFT_RECOVER_RATE * delta)
+		return
+
+	# Sustain check — drift ends once nothing is feeding it and the slide has closed.
+	var brake_sustain = input_controller.nfx_rear_brake > DRIFT_BRAKE_HOLD
+	var power_sustain = input_controller.nfx_throttle > 0.5 and input_controller.nfx_lean > 0.0
+	if not brake_sustain and not power_sustain and absf(slip_angle) < deg_to_rad(2.0):
+		is_drifting = false
+		slip_angle = 0.0
+		return
+
+	var steer = input_controller.nfx_steer
+	# Drive = how hard the slide is fed (throttle for power drift, rear brake for brake slide).
+	var drive = clampf(maxf(input_controller.nfx_throttle, input_controller.nfx_rear_brake), 0.0, 1.0)
+
+	# Carve the heading from steer. Momentum keeps the travel line put as the bike
+	# rotates, so adding the same delta to slip_angle (heading-vs-travel) makes the
+	# travel direction (forward.rotated(UP, slip_angle) in _velocity_calc) hold its
+	# world heading instead of being dragged with the nose. Steering builds the
+	# slide; countersteer unwinds it. This is the momentum-based (Forza-style) feel.
+	var carve = steer * DRIFT_YAW_RATE * delta
+	player_entity.rotate_y(-carve)
+	slip_angle += carve
+
+	# Grip pulls the travel line back toward the heading. Throttle/brake holds the
+	# slide (suppresses recovery); lifting lets grip catch up and the drift unwinds.
+	var recover = DRIFT_RECOVER_RATE * (1.0 - drive * DRIFT_RECOVER_SUPPRESS)
+	slip_angle = move_toward(slip_angle, 0.0, recover * delta)
+
+	# Clamp just past the spinout angle so CrashController fires before it can wrap.
+	slip_angle = clampf(
+		slip_angle, -deg_to_rad(DRIFT_MAX_SLIP_ANGLE_DEG), deg_to_rad(DRIFT_MAX_SLIP_ANGLE_DEG)
+	)
+
+	# Speed scrub — sliding sideways bleeds speed.
+	speed -= speed * DRIFT_SPEED_SCRUB * absf(slip_angle) * delta
+
+	DebugUtils.DebugMsg(
+		"drift: slip=%.1f° drive=%.2f steer=%.2f" % [rad_to_deg(slip_angle), drive, steer],
+		OS.has_feature("debug") and debug_verbose
+	)
+
+
 ## Calculate wheelie target. Lean-back is the only driver — throttle alone
 ## must not pin a target, or the bike sticks at a static equilibrium angle.
 func _calc_normal_wheelie_target(bd: BikeSkinDefinition) -> float:
@@ -589,6 +700,8 @@ func do_reset():
 	speed = 0.0
 	roll_angle = 0.0
 	pitch_angle = 0.0
+	slip_angle = 0.0
+	is_drifting = false
 	is_reversing = false
 	_was_on_floor = false
 	_prev_clutch_held = false

@@ -15,6 +15,7 @@ enum Trick {
 	HEEL_CLICKER,
 	HIGH_CHAIR,
 	TWO_LEFT_FEET,
+	DRIFT,
 }
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
@@ -59,6 +60,9 @@ func _detect_current_trick(delta: float) -> Trick:
 
 	# Reset flip tracking on landing
 	_flip_emitted = false
+
+	if movement_controller.is_drifting:
+		return Trick.DRIFT
 
 	if movement_controller.pitch_angle > deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG):
 		if input_controller.nfx_trick_held:
@@ -156,6 +160,8 @@ static func trick_to_str(trick: Trick) -> String:
 			return "HIGH_CHAIR"
 		Trick.TWO_LEFT_FEET:
 			return "TWO_LEFT_FEET"
+		Trick.DRIFT:
+			return "DRIFT"
 	return "NONE"
 
 
@@ -181,6 +187,8 @@ static func str_to_trick(s: String) -> Trick:
 			return Trick.HIGH_CHAIR
 		"TWO_LEFT_FEET":
 			return Trick.TWO_LEFT_FEET
+		"DRIFT":
+			return Trick.DRIFT
 	return Trick.NONE
 
 

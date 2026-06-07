@@ -68,8 +68,8 @@ func disable_ik():
 	ik_controller.disable_ik()
 
 
-func start_ragdoll():
-	ragdoll_controller.start_ragdoll()
+func start_ragdoll(launch_impulse: Vector3 = Vector3.ZERO):
+	ragdoll_controller.start_ragdoll(launch_impulse)
 
 
 func stop_ragdoll():
