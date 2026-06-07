@@ -18,8 +18,21 @@ signal crashed
 @export var unstable_lowside_brake_threshold: float = 0.5
 ## Min |roll_angle| (deg) required for the unstable front-brake lowside.
 @export var unstable_lowside_steer_threshold_deg: float = 15.0
+## Drift over-rotation crash angle (tail came all the way around).
+@export var drift_spinout_angle_deg: float = 60.0
+## Min |slip| for a highside on grip regain.
+@export var drift_highside_angle_deg: float = 40.0
+## Min speed for a highside to be dangerous.
+@export var drift_highside_min_speed: float = 12.0
+## Throttle release rate (per sec) that highsides at drift_highside_angle_deg (forgiving).
+@export var highside_chop_forgiving: float = 6.0
+## Throttle release rate that highsides near the spinout angle (twitchy — small lift snaps).
+@export var highside_chop_twitchy: float = 1.5
+## Upward+lateral launch speed applied to a highside crash.
+@export var highside_launch_force: float = 14.0
 
 var _prev_front_brake: float = 0.0
+var _prev_throttle: float = 0.0
 var _brake_was_grabbed: bool = false
 var _prev_trick: TrickController.Trick = TrickController.Trick.NONE
 
@@ -39,6 +52,7 @@ func on_movement_rollback_tick(delta: float):
 
 	_update_brake_grab(delta)
 	_detect_air_trick_landing()
+	_detect_drift_crash(delta)
 	_detect_crash()
 	# Cache trick state AFTER detection — trick_controller already ran this tick and
 	# transitioned to ground state on landing, so we use last tick's value to detect "landed mid-trick".
@@ -159,10 +173,52 @@ func _detect_crash():
 				DebugUtils.DebugMsg("no crash (angle=%.1f)" % angle)
 
 
-func trigger_crash():
+## Drift crashes: spin-out (tail past the limit) or highside (tire hooks up on a
+## throttle chop while still slipped). Rolling the throttle off slowly is safe.
+func _detect_drift_crash(delta: float):
+	var throttle = input_controller.nfx_throttle
+	var release_rate = (_prev_throttle - throttle) / delta  # > 0 means letting off
+	_prev_throttle = throttle
+
+	if not movement_controller.is_drifting:
+		return
+
+	var slip = absf(movement_controller.slip_angle)
+
+	# Spin-out — tail came all the way around.
+	if slip > deg_to_rad(drift_spinout_angle_deg):
+		DebugUtils.DebugMsg("drift spinout crash (slip=%.1f°)" % rad_to_deg(slip))
+		trigger_crash()
+		return
+
+	# Highside — fast throttle chop while deep + fast. Chop tolerance shrinks as slip grows.
+	if (
+		slip > deg_to_rad(drift_highside_angle_deg)
+		and movement_controller.speed > drift_highside_min_speed
+	):
+		var slip_ratio = clampf(
+			(
+				(slip - deg_to_rad(drift_highside_angle_deg))
+				/ deg_to_rad(drift_spinout_angle_deg - drift_highside_angle_deg)
+			),
+			0.0,
+			1.0
+		)
+		var chop_threshold = lerpf(highside_chop_forgiving, highside_chop_twitchy, slip_ratio)
+		if release_rate > chop_threshold:
+			# Launch over the high side: up + lateral toward the outside of the slide
+			# (opposite the tail-out direction).
+			var slip_sign = signf(movement_controller.slip_angle)
+			var right = player_entity.global_transform.basis.x
+			var launch = (Vector3.UP + right * slip_sign).normalized() * highside_launch_force
+			DebugUtils.DebugMsg("drift HIGHSIDE crash (slip=%.1f° rate=%.1f)" % [rad_to_deg(slip), release_rate])
+			trigger_crash(launch)
+
+
+func trigger_crash(launch_impulse: Vector3 = Vector3.ZERO):
 	player_entity.is_crashed = true
-	player_entity.velocity = Vector3.ZERO
-	animation_controller.start_ragdoll()
+	player_entity.velocity = launch_impulse
+	animation_controller.start_ragdoll(launch_impulse)
 	player_entity.camera_controller.force_tps()
 	crashed.emit()
 
@@ -170,6 +226,7 @@ func trigger_crash():
 ## Called from player_entity.gd's do_respawn
 func do_reset():
 	_prev_front_brake = 0.0
+	_prev_throttle = 0.0
 	_brake_was_grabbed = false
 	_prev_trick = TrickController.Trick.NONE
 

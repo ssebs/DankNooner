@@ -625,7 +625,7 @@ func disable_target_sync() -> void:
 
 
 ## Start ragdoll mode
-func start_ragdoll() -> void:
+func start_ragdoll(launch_impulse: Vector3 = Vector3.ZERO) -> void:
 	current_state = RiderState.RAGDOLL
 	# RAGDOLL stops the pose pipeline (_process is `pass`), so any anim layer
 	# mid-flight freezes — including non-pose tracks like spark `:emitting`
@@ -639,7 +639,7 @@ func start_ragdoll() -> void:
 	_back_up_loop_layer = null
 	_was_reversing = false
 	character_skin.disable_ik()
-	character_skin.start_ragdoll()
+	character_skin.start_ragdoll(launch_impulse)
 
 
 ## Stop ragdoll and return to riding
