@@ -187,6 +187,10 @@ func share_selected_level_with_clients(idx: int):
 
 ## Hide or Show the singleplayer / multiplayer ui depending on return_ctx.mode
 func set_single_or_multiplayer_ui():
+	# Reset controls disabled by a prior client join — otherwise re-entering as
+	# host/freeroam leaves the start + level select buttons stuck disabled.
+	level_select_panel.set_controls_disabled(false)
+
 	match return_ctx.mode:
 		LobbyStateContext.Mode.FREEROAM:
 			multiplayer_ui.hide()

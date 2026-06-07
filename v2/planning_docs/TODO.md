@@ -3,15 +3,13 @@
 
 ## In Progress 🚀 — Current Sprint
 
+- [ ] Burnout by flooring it while leaning forward, starts drift.
 - [ ] [new roads](../PLAN-roads.md)
   - [ ] Just use Terrain3D instead of creating all this complexity
 
 ## Playtest bugs
+
 - [ ] Label3d + script so all in group are removed on runtime for notes
-- [ ] Braking while accelerating doesn't stop you
-- [ ] Customize menu, typing still changes gear etc in game
-- [ ] going from joining a game => singleplayer doesnt work, it blocks the btns since the multiplayer host was set
-- [ ] Burnout by flooring it while leaning forward, starts drift.
 - [ ] customize menu on fresh computer doesnt render bikes
 
 - [ ] add delete button to Customize Bikes Loadout menu
@@ -186,6 +184,12 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] Customize menu, typing still changes gear etc in game
+
+- [x] going from joining a game => singleplayer doesnt work, it blocks the btns since the multiplayer host was set
+
+- [x] Braking while accelerating doesn't stop you
 
 - [x] XSR900 sounds
 

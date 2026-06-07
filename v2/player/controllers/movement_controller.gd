@@ -244,9 +244,11 @@ func _speed_calc(delta: float):
 		return
 
 	# Acceleration (uses gearing power output)
+	# Hard braking (> 0.5) cuts throttle so the brake can always bring you to a
+	# stop. Light braking keeps throttle for trail-braking.
 	var power = gearing_controller.get_power_output()
 	var gear_max_speed = gearing_controller.get_gear_max_speed()
-	if power > 0 and speed < gear_max_speed:
+	if power > 0 and speed < gear_max_speed and brake_total <= 0.5:
 		speed += bd.acceleration * power * delta
 		speed = minf(speed, gear_max_speed)
 	# Engine braking — applies when not on throttle, stronger at higher RPM
