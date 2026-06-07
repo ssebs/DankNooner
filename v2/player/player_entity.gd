@@ -321,13 +321,15 @@ func _on_trick_ended(trick_type: TrickController.Trick):
 	if (
 		is_local_client
 		and audio_manager
-		and trick_type
-		not in [
-			TrickController.Trick.NONE,
-			TrickController.Trick.WHEELIE_SITTING,
-			TrickController.Trick.WHEELIE_MOD,
-			TrickController.Trick.STOPPIE
-		]
+		and (
+			trick_type
+			not in [
+				TrickController.Trick.NONE,
+				TrickController.Trick.WHEELIE_SITTING,
+				TrickController.Trick.WHEELIE_MOD,
+				TrickController.Trick.STOPPIE
+			]
+		)
 	):
 		audio_manager.play_ding()
 

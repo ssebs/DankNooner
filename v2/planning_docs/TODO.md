@@ -5,13 +5,6 @@
 
 - [ ] [new roads](../PLAN-roads.md)
   - [ ] Just use Terrain3D instead of creating all this complexity
-- [ ] XSR900 starting - create impl plan for [SFX PLAN](PLAN-AUDIO-v2.md)
-  - [ ] audio middleware tweaks (allow for more RPM clips + rev limiter bangs)
-  - [ ] Record audio, for each, hold steady 4–6s:
-    - Idle (~1000 rpm).
-    - Accel set — held at ~3k, ~5k, ~7k, ~redline-hold, under load / on throttle.
-    - Decel set — coasting/overrun off-throttle at ~6k, ~4k, ~2k (engine braking, where the burble lives).
-    - Limiter bang — you already have xsr-1st-gear-limiter-bang.
 
 ## Playtest bugs
 
@@ -187,6 +180,8 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] XSR900 sounds
 
 - [x] Use Curves to create roads (godot or blender?)
 

@@ -6,6 +6,7 @@ class_name AudioManager extends BaseManager
 enum EngineSfx {
 	NINJA500,
 	GROM,
+	XSR900,
 }
 
 ## Generic SFX id for callers (e.g. GameModeTasks) that need to play a sound
@@ -51,6 +52,7 @@ var sounds_container: Node
 var startup: SoundEvent
 var ninja500_revs: EngineSoundEvent
 var grom_revs: EngineSoundEvent
+var xsr900_revs: EngineSoundEvent
 var bowling_crash: SoundEvent
 var countdown_3sec: SoundEvent
 var countdown_5sec: SoundEvent
@@ -81,6 +83,7 @@ func _ready():
 	startup = get_node_or_null("%Startup") as SoundEvent
 	ninja500_revs = get_node_or_null("%Ninja500Revs") as EngineSoundEvent
 	grom_revs = get_node_or_null("%GromRevs") as EngineSoundEvent
+	xsr900_revs = get_node_or_null("%Xsr900Revs") as EngineSoundEvent
 	bowling_crash = get_node_or_null("%BowlingCrash") as SoundEvent
 	countdown_3sec = get_node_or_null("%Countdown3Sec") as SoundEvent
 	countdown_5sec = get_node_or_null("%Countdown5Sec") as SoundEvent
@@ -103,6 +106,7 @@ func _ready():
 	_engine_sounds = {
 		EngineSfx.NINJA500: ninja500_revs,
 		EngineSfx.GROM: grom_revs,
+		EngineSfx.XSR900: xsr900_revs,
 	}
 
 	if Engine.is_editor_hint():
