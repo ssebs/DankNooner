@@ -151,9 +151,17 @@ func _update_player(peer_id: int, state: PlayerTaskState, delta: float) -> void:
 	var all_done := true
 	var progress := ""
 	for i in _tasks.size():
+		var task := _tasks[i]
+		# Constraints run every frame but never complete or gate the peer — their
+		# check() return is ignored. They still feed the HUD progress line (e.g. a
+		# "keep the wheelie" warning that overrides the objective's line when active).
+		if task.is_constraint:
+			task.check(player, delta, states_arr[i])
+			if progress == "":
+				progress = task.get_progress(states_arr[i])
+			continue
 		if done[i]:
 			continue
-		var task := _tasks[i]
 		# First in-progress child wins the HUD progress line (matches SequentialTaskRunner's pattern).
 		if progress == "":
 			progress = task.get_progress(states_arr[i])

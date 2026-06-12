@@ -6,6 +6,7 @@ Lap-based race built on the gamemode system ([GamemodeSystem](./GamemodeSystem.m
 
 - `managers/gamemodes/types/street_race/street_race_gamemode.gd` — the gamemode
 - `managers/gamemodes/tasks/race_task.gd` — lap/checkpoint state machine
+- `managers/gamemodes/tasks/maintain_trick_task.gd` — `MaintainTrickTask` constraint (wheelie-race variant)
 - `managers/gamemodes/gamemodeobjects/checkpoint_marker.gd` — `CheckPointMarker` (gate, signals `entered`)
 - `managers/gamemodes/runners/sequential_task_runner.gd` — runner that hosts `RaceTask`
 - `managers/gamemodes/tasks/grid_spawn_task.gd` — leading task that assigns each peer a grid slot and sets the race-start respawn
@@ -115,12 +116,50 @@ handles separation.
 Markers can live anywhere in the level — RaceTask references them by NodePath
 exports, so their parent doesn't matter.
 
+## Wheelie Race variant
+
+A race where you must hold a wheelie the whole way — drop the wheelie for more
+than a grace window and you restart at your last checkpoint. Built entirely from
+existing pieces plus one reusable constraint task; `RaceTask` and
+`StreetRaceGameMode` are unchanged.
+
+- **`MaintainTrickTask`** (`managers/gamemodes/tasks/maintain_trick_task.gd`) —
+  a constraint `GameModeTask` (`is_constraint = true`). Exports
+  `required_tricks: Array[int]` (TrickController.Trick enum ints, default the two
+  wheelie variants), `grace` (default 2.0s), `warn_key`. Each frame: in a required
+  trick → reset its timer; otherwise accumulate, and once past `grace` call
+  `spawn_manager.respawn_player.rpc(peer_id)` (returns the player to the persistent
+  respawn point `RaceTask` keeps updated at each checkpoint) and reset. `get_progress`
+  is blank while the trick is held (so `RaceTask` owns the HUD line) and shows a
+  `WHEELIE! X.Xs` countdown while the player is slipping.
+- Reusable for other tricks/events: change `required_tricks`/`grace` in the inspector
+  (e.g. a stoppie race). See `is_constraint` in [GamemodeSystem](./GamemodeSystem.md).
+
+Scene shape — wrap the race body in a `ConcurrentTaskRunner` so the objective and
+the constraint run in parallel:
+
+```
+EventStartCircle  (target_gamemode = STREET_RACE)
+└── SequentialTaskRunner
+    ├── GridSpawnTask
+    ├── ConcurrentTaskRunner   (countdown + sfx)
+    └── ConcurrentTaskRunner   (race body)
+        ├── RaceTask           (objective — total_laps = 1, objective_key = RACE_WHEELIE_OBJECTIVE)
+        └── MaintainTrickTask  (constraint — wheelie, grace 2.0)
+```
+
+Live example: the `WheelieRace` `EventStartCircle` in
+`levels/racetracks/racetrack_level_01.tscn` (references the same checkpoint/grid
+markers as a normal race — only one event runs at a time, so sharing is safe).
+
 ## Localization keys
 
 - `RACE_OBJECTIVE` — static objective line (`Complete the laps`)
 - `RACE_LAP` — `Lap {current}/{total}  -  {time}` (dynamic, per frame)
 - `RACE_COMPLETE` — results header
 - `RACE_HINT` — unused by RaceTask, kept for future variants
+- `RACE_WHEELIE_OBJECTIVE` — wheelie-race objective line (`Hold a wheelie the whole lap!`)
+- `RACE_WHEELIE_WARN` — `MaintainTrickTask` countdown warning (`WHEELIE! {time}s`)
 
 ## Future work / extension points
 

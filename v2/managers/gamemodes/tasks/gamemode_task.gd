@@ -24,6 +24,12 @@ enum EvalWhen { ALWAYS, ON_ENTER, WHILE_INSIDE }
 @export var eval_when: EvalWhen = EvalWhen.ALWAYS
 @export var trigger: GameModeObject
 
+## Constraint tasks tick every frame alongside the objective tasks but never gate
+## completion — their check() return value is ignored when deciding if a peer is
+## done. Use for fail-conditions that run for the whole objective (hold a trick,
+## maintain speed, stay in bounds). Honored by ConcurrentTaskRunner.
+@export var is_constraint: bool = false
+
 ## Set by the parent runner when the task becomes active.
 ## Tasks reach shared deps (spawn_manager, task_hud, audio_manager) via this ref
 ## instead of downcasting to a specific gamemode or runner subclass.
