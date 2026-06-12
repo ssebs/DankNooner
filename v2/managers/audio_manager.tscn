@@ -196,7 +196,6 @@ metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 [node name="Xsr900Revs" type="AudioStreamPlayer" parent="Sounds" unique_id=1955001235]
 unique_name_in_owner = true
 stream = ExtResource("26_uckac")
-pitch_scale = 0.8
 bus = &"SFX"
 script = ExtResource("3_eng")
 loop = true

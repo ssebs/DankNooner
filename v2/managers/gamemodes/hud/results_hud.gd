@@ -53,6 +53,8 @@ func rpc_show_results(results_dict: Dictionary, countdown_seconds: float):
 	restart_btn.visible = multiplayer.is_server()
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME_PAUSED
 	show()
+	if skip_btn.visible:
+		skip_btn.call_deferred("grab_focus")
 
 
 @rpc("call_local", "reliable")

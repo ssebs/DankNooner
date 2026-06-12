@@ -11,7 +11,6 @@
 - [ ] [new roads](../PLAN-roads.md)
   - [ ] del road / track system?
   - [x] Just use Terrain3D instead of creating all this complexity
-- [ ] cant use controller in event start circle hud
 - [ ] shake the screen when brakedanger gets higher
 - [ ] blur vision at high speed / change fov
 - [ ] shake the screen when landing a wheelie slightly
@@ -193,6 +192,8 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] cant use controller in event start circle hud
 
 - [x] Hide task items / rm collision while not being used
 
