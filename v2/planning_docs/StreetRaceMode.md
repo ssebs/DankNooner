@@ -30,6 +30,9 @@ the gamemode walks them, listens for completion, shows results, returns to free 
   that runs the lap loop. Sits inside a `SequentialTaskRunner` as the race body.
 - **`CheckPointMarker`** — existing `GameModeObject`. Race uses its `entered`
   signal directly. The marker's `global_transform` doubles as the respawn point.
+  Checkpoints (and all other objects under the circle) are hidden + non-collidable
+  in free roam and only enabled while the race runs — see
+  `EventStartCircle.enable_game_objects()` in [GamemodeSystem](./GamemodeSystem.md).
 
 ## RaceTask flow
 

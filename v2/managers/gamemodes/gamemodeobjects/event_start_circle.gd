@@ -31,6 +31,24 @@ func get_runners() -> Array[TaskRunner]:
 	return out
 
 
+## Enable/disable every GameModeObject under this circle (checkpoints, killboxes,
+## etc.) so an event's props only show + collide while its gamemode is running.
+## The circle itself is an Area3D, not a GameModeObject, so its ring/label stay.
+func enable_game_objects():
+	_set_game_objects_active(self, true)
+
+
+func disable_game_objects():
+	_set_game_objects_active(self, false)
+
+
+func _set_game_objects_active(node: Node, active: bool):
+	for child in node.get_children():
+		if child is GameModeObject:
+			child.is_active = active
+		_set_game_objects_active(child, active)
+
+
 func _on_body_entered(body: Node3D):
 	if !body is PlayerEntity:
 		return

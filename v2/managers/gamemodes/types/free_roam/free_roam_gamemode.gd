@@ -26,6 +26,11 @@ func Enter(state_context: StateContext):
 
 	_signals_event_circles(true)
 
+	# Hide + disable every event's objects (checkpoints, etc.) — they only show
+	# while their own gamemode is running. Initial-load default and return path.
+	for event_start_circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
+		(event_start_circle as EventStartCircle).disable_game_objects()
+
 	# Only spawn if players aren't already in the level (e.g. coming from another gamemode)
 	if spawn_manager._get_player_by_peer_id(multiplayer.get_unique_id()) == null:
 		spawn_manager.spawn_all_players()

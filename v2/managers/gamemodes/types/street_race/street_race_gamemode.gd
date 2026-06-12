@@ -25,6 +25,7 @@ func Enter(state_context: StateContext):
 
 	var ctx := state_context as GamemodeStateContext
 	_start_circle = ctx.event_start_circle
+	_start_circle.enable_game_objects()
 	_runners = _start_circle.get_runners()
 	_inject_runner_deps()
 
@@ -69,6 +70,7 @@ func Exit(_state_context: StateContext):
 		input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
 	tutorial_hud.hide()
 	results_hud.hide()
+	_start_circle.disable_game_objects()
 	_start_circle = null
 	_runners = []
 	_active_runner_index = -1
