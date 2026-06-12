@@ -9,7 +9,9 @@
   - [ ] show black lines
   - [ ] play screech audio
 - [ ] [new roads](../PLAN-roads.md)
-  - [ ] Just use Terrain3D instead of creating all this complexity
+  - [ ] del road / track system?
+  - [x] Just use Terrain3D instead of creating all this complexity
+- [ ] Wheelie only race
 
 ## Playtest bugs
 
