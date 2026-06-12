@@ -18,6 +18,7 @@
 [ext_resource type="Script" uid="uid://cpdxy3nxph3x0" path="res://managers/gamemodes/tasks/sfx_task.gd" id="16_1aw1h"]
 [ext_resource type="Script" uid="uid://bk8siml2v41d1" path="res://managers/gamemodes/tasks/race_task.gd" id="17_jbhkl"]
 [ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="18_r8obf"]
+[ext_resource type="Script" uid="uid://dfa11idd8fnyr" path="res://managers/gamemodes/tasks/maintain_trick_task.gd" id="19_mtt"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_l4d1h"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -110,6 +111,14 @@ texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_
 script = ExtResource("10_t4jal")
 name = "Race"
 description = "Around the track"
+target_gamemode = 1
+forced_base_bike = ExtResource("10_o08l2")
+metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
+
+[sub_resource type="Resource" id="Resource_wheelie"]
+script = ExtResource("10_t4jal")
+name = "Wheelie Race"
+description = "You must complete the circut while doing a wheelie"
 target_gamemode = 1
 forced_base_bike = ExtResource("10_o08l2")
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
@@ -217,72 +226,163 @@ collision_mode = 2
 top_level = true
 metadata/_edit_lock_ = true
 
-[node name="EventStartCircle" parent="." unique_id=459761741 instance=ExtResource("9_ilxvw")]
+[node name="Race" parent="." unique_id=459761741 instance=ExtResource("9_ilxvw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, -18.5)
 gamemode_event = SubResource("Resource_ihuqi")
 
-[node name="SequentialTaskRunner" type="Node" parent="EventStartCircle" unique_id=472903455]
+[node name="SequentialTaskRunner" type="Node" parent="Race" unique_id=472903455]
 script = ExtResource("12_o08l2")
+is_constraint = null
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="GridSpawnTask" type="Node" parent="EventStartCircle/SequentialTaskRunner" unique_id=806939545 node_paths=PackedStringArray("grid_markers")]
+[node name="GridSpawnTask" type="Node" parent="Race/SequentialTaskRunner" unique_id=806939545 node_paths=PackedStringArray("grid_markers")]
 script = ExtResource("13_2j11q")
 grid_markers = [NodePath("RaceGridSpot1"), NodePath("RaceGridSpot2"), NodePath("RaceGridSpot3"), NodePath("RaceGridSpot4")]
+is_constraint = null
 
-[node name="RaceGridSpot1" type="Marker3D" parent="EventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=2006111591]
+[node name="RaceGridSpot1" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=2006111591]
 transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.499992, 0, -8.999992)
 
-[node name="RaceGridSpot2" type="Marker3D" parent="EventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=1450323988]
+[node name="RaceGridSpot2" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=1450323988]
 transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.499992, 0, -3.9999928)
 
-[node name="RaceGridSpot3" type="Marker3D" parent="EventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=2069414924]
+[node name="RaceGridSpot3" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=2069414924]
 transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.499992, 0, -8.999992)
 
-[node name="RaceGridSpot4" type="Marker3D" parent="EventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=91539751]
+[node name="RaceGridSpot4" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=91539751]
 transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.499992, 0, -3.9999928)
 
-[node name="ConcurrentTaskRunner2" type="Node" parent="EventStartCircle/SequentialTaskRunner" unique_id=888872226]
+[node name="ConcurrentTaskRunner2" type="Node" parent="Race/SequentialTaskRunner" unique_id=888872226]
 script = ExtResource("14_bo3ha")
+is_constraint = null
 
-[node name="CountdownTask" type="Node" parent="EventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1434891024]
+[node name="CountdownTask" type="Node" parent="Race/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1434891024]
 script = ExtResource("15_erah2")
+is_constraint = null
 metadata/_custom_type_script = "uid://8xvij2vjrnn2"
 
-[node name="SFXTask" type="Node" parent="EventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=357741210]
+[node name="SFXTask" type="Node" parent="Race/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=357741210]
 script = ExtResource("16_1aw1h")
 sound = 2
 advance_mode = 1
 duration_sec = 3.0
+is_constraint = null
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="RaceTask" type="Node" parent="EventStartCircle/SequentialTaskRunner" unique_id=500670208 node_paths=PackedStringArray("start_checkpoint", "lap_checkpoints", "end_checkpoint")]
+[node name="RaceTask" type="Node" parent="Race/SequentialTaskRunner" unique_id=500670208 node_paths=PackedStringArray("start_checkpoint", "lap_checkpoints", "end_checkpoint")]
 script = ExtResource("17_jbhkl")
 start_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
 lap_checkpoints = [NodePath("Race01CheckpointMarker02"), NodePath("Race01CheckpointMarker03"), NodePath("Race01CheckpointMarker04"), NodePath("Race01CheckpointMarker05")]
 end_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
 total_laps = 2
+is_constraint = null
 
-[node name="Race01CheckpointMarkerStartStop" parent="EventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1048335829 instance=ExtResource("18_r8obf")]
+[node name="Race01CheckpointMarkerStartStop" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1048335829 instance=ExtResource("18_r8obf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 2, -12.5)
 width = 20.0
 sign_text = "Start / Stop"
 
-[node name="Race01CheckpointMarker02" parent="EventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1968073091 instance=ExtResource("18_r8obf")]
+[node name="Race01CheckpointMarker02" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1968073091 instance=ExtResource("18_r8obf")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 81, 2.0000005, -153)
 width = 20.0
 sign_text = "Keep going!"
 
-[node name="Race01CheckpointMarker03" parent="EventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1096804446 instance=ExtResource("18_r8obf")]
+[node name="Race01CheckpointMarker03" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1096804446 instance=ExtResource("18_r8obf")]
 transform = Transform3D(-0.2588191, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, -0.2588191, 112.6301, 3.9715781, -57.171185)
 width = 20.0
 sign_text = "Keep going!"
 
-[node name="Race01CheckpointMarker04" parent="EventStartCircle/SequentialTaskRunner/RaceTask" unique_id=608065201 instance=ExtResource("18_r8obf")]
+[node name="Race01CheckpointMarker04" parent="Race/SequentialTaskRunner/RaceTask" unique_id=608065201 instance=ExtResource("18_r8obf")]
 transform = Transform3D(-0.8660253, 0, -0.50000006, 0, 1, 0, 0.50000006, 0, -0.8660253, 87.702, 3.9715781, -8.553291)
 width = 20.0
 sign_text = "Keep going!"
 
-[node name="Race01CheckpointMarker05" parent="EventStartCircle/SequentialTaskRunner/RaceTask" unique_id=800779124 instance=ExtResource("18_r8obf")]
+[node name="Race01CheckpointMarker05" parent="Race/SequentialTaskRunner/RaceTask" unique_id=800779124 instance=ExtResource("18_r8obf")]
 transform = Transform3D(-2.9802322e-08, 0, 1, 0, 1, 0, -1, 0, -2.9802322e-08, 52.59291, 25.138788, 118.94462)
 width = 20.0
 sign_text = "Keep going!"
+
+[node name="WheelieRace" parent="." unique_id=1436876184 instance=ExtResource("9_ilxvw")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, -30.5)
+gamemode_event = SubResource("Resource_wheelie")
+
+[node name="SequentialTaskRunner" type="Node" parent="WheelieRace" unique_id=1360351275]
+script = ExtResource("12_o08l2")
+is_constraint = null
+metadata/_custom_type_script = "uid://f840hmifnv7g"
+
+[node name="GridSpawnTask" type="Node" parent="WheelieRace/SequentialTaskRunner" unique_id=1504957453 node_paths=PackedStringArray("grid_markers")]
+script = ExtResource("13_2j11q")
+grid_markers = [NodePath("RaceGridSpot1"), NodePath("RaceGridSpot2"), NodePath("RaceGridSpot3"), NodePath("RaceGridSpot4")]
+is_constraint = null
+
+[node name="RaceGridSpot1" type="Marker3D" parent="WheelieRace/SequentialTaskRunner/GridSpawnTask" unique_id=121603473]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.499992, 0, -8.999992)
+
+[node name="RaceGridSpot2" type="Marker3D" parent="WheelieRace/SequentialTaskRunner/GridSpawnTask" unique_id=309737086]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.499992, 0, -3.9999928)
+
+[node name="RaceGridSpot3" type="Marker3D" parent="WheelieRace/SequentialTaskRunner/GridSpawnTask" unique_id=1926232792]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.499992, 0, -8.999992)
+
+[node name="RaceGridSpot4" type="Marker3D" parent="WheelieRace/SequentialTaskRunner/GridSpawnTask" unique_id=1258383192]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.499992, 0, -3.9999928)
+
+[node name="ConcurrentTaskRunner2" type="Node" parent="WheelieRace/SequentialTaskRunner" unique_id=858370613]
+script = ExtResource("14_bo3ha")
+is_constraint = null
+
+[node name="CountdownTask" type="Node" parent="WheelieRace/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1257847547]
+script = ExtResource("15_erah2")
+is_constraint = null
+metadata/_custom_type_script = "uid://8xvij2vjrnn2"
+
+[node name="SFXTask" type="Node" parent="WheelieRace/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1256636038]
+script = ExtResource("16_1aw1h")
+sound = 2
+advance_mode = 1
+duration_sec = 3.0
+is_constraint = null
+metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
+
+[node name="RaceBody" type="Node" parent="WheelieRace/SequentialTaskRunner" unique_id=76134053]
+script = ExtResource("14_bo3ha")
+is_constraint = null
+
+[node name="RaceTask" type="Node" parent="WheelieRace/SequentialTaskRunner/RaceBody" unique_id=76134054 node_paths=PackedStringArray("start_checkpoint", "lap_checkpoints", "end_checkpoint")]
+script = ExtResource("17_jbhkl")
+start_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
+lap_checkpoints = [NodePath("Race01CheckpointMarker02"), NodePath("Race01CheckpointMarker03"), NodePath("Race01CheckpointMarker04"), NodePath("Race01CheckpointMarker05")]
+end_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
+total_laps = 1
+objective_key = "RACE_WHEELIE_OBJECTIVE"
+is_constraint = null
+
+[node name="Race01CheckpointMarkerStartStop" parent="WheelieRace/SequentialTaskRunner/RaceBody/RaceTask" unique_id=24477128 instance=ExtResource("18_r8obf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 2, -12.5)
+width = 20.0
+sign_text = "Start / Stop"
+
+[node name="Race01CheckpointMarker02" parent="WheelieRace/SequentialTaskRunner/RaceBody/RaceTask" unique_id=776046373 instance=ExtResource("18_r8obf")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 81, 2.0000005, -153)
+width = 20.0
+sign_text = "Keep going!"
+
+[node name="Race01CheckpointMarker03" parent="WheelieRace/SequentialTaskRunner/RaceBody/RaceTask" unique_id=806931666 instance=ExtResource("18_r8obf")]
+transform = Transform3D(-0.2588191, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, -0.2588191, 112.6301, 3.9715781, -57.171185)
+width = 20.0
+sign_text = "Keep going!"
+
+[node name="Race01CheckpointMarker04" parent="WheelieRace/SequentialTaskRunner/RaceBody/RaceTask" unique_id=2059581827 instance=ExtResource("18_r8obf")]
+transform = Transform3D(-0.8660253, 0, -0.50000006, 0, 1, 0, 0.50000006, 0, -0.8660253, 87.702, 3.9715781, -8.553291)
+width = 20.0
+sign_text = "Keep going!"
+
+[node name="Race01CheckpointMarker05" parent="WheelieRace/SequentialTaskRunner/RaceBody/RaceTask" unique_id=274877362 instance=ExtResource("18_r8obf")]
+transform = Transform3D(-2.9802322e-08, 0, 1, 0, 1, 0, -1, 0, -2.9802322e-08, 52.59291, 25.138788, 118.94462)
+width = 20.0
+sign_text = "Keep going!"
+
+[node name="MaintainTrickTask" type="Node" parent="WheelieRace/SequentialTaskRunner/RaceBody" unique_id=76134055]
+script = ExtResource("19_mtt")

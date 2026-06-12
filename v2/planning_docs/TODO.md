@@ -11,7 +11,11 @@
 - [ ] [new roads](../PLAN-roads.md)
   - [ ] del road / track system?
   - [x] Just use Terrain3D instead of creating all this complexity
-- [ ] Wheelie only race
+- [ ] Hide task items / rm collision while not being used
+- [ ] cant use controller in event start circle hud
+- [ ] shake the screen when brakedanger gets higher
+- [ ] blur vision at high speed / change fov
+- [ ] shake the screen when landing a wheelie slightly
 
 ## Playtest bugs
 
@@ -190,6 +194,8 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] Wheelie only race
 
 - [x] Customize menu, typing still changes gear etc in game
 
