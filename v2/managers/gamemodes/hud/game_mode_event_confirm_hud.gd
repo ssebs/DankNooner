@@ -58,6 +58,7 @@ func show_ui():
 		submit_btn.pressed.connect(_on_submit_pressed)
 	if !close_btn.pressed.is_connected(_on_close_pressed):
 		close_btn.pressed.connect(_on_close_pressed)
+	submit_btn.call_deferred("grab_focus")
 
 
 func hide_ui():

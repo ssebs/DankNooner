@@ -108,6 +108,10 @@ var _base_chest_pos: Vector3
 var _base_chest_rot: Vector3
 var _base_visual_root_position: Vector3
 var _base_visual_root_rotation: Vector3
+# visual_root's rest transform is structural (scene default), not bike-dependent. Capture it
+# once — re-capturing in a later initialize() (e.g. update_skins during a crash/wheelie) would
+# bake the displaced live position in as the "base" and permanently offset the bike.
+var _visual_root_base_captured: bool = false
 var _base_left_arm_magnet_pos: Vector3
 var _base_left_arm_magnet_rot: Vector3
 var _base_right_arm_magnet_pos: Vector3
@@ -487,8 +491,10 @@ func initialize() -> void:
 	_base_butt_pos = _ik_ctrl.butt_pos.position
 	_base_chest_pos = player_entity.chest_target.position
 	_base_chest_rot = player_entity.chest_target.rotation
-	_base_visual_root_position = visual_root.position
-	_base_visual_root_rotation = visual_root.rotation
+	if not _visual_root_base_captured:
+		_base_visual_root_position = visual_root.position
+		_base_visual_root_rotation = visual_root.rotation
+		_visual_root_base_captured = true
 	_base_left_arm_magnet_pos = player_entity.left_arm_magnet.position
 	_base_left_arm_magnet_rot = player_entity.left_arm_magnet.rotation
 	_base_right_arm_magnet_pos = player_entity.right_arm_magnet.position
