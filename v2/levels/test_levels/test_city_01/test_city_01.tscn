@@ -1913,6 +1913,7 @@ script = ExtResource("18_ecphy")
 start_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
 lap_checkpoints = [NodePath("Race01CheckpointMarker02"), NodePath("Race01CheckpointMarker03"), NodePath("Race01CheckpointMarker04"), NodePath("Race01CheckpointMarker05"), NodePath("Race01CheckpointMarker06"), NodePath("Race01CheckpointMarker07"), NodePath("Race01CheckpointMarker08"), NodePath("Race01CheckpointMarker09")]
 end_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
+total_laps = 2
 
 [node name="Race01CheckpointMarkerStartStop" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1805086722 instance=ExtResource("4_yaxf8")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 137, 2.0500002, 70)

@@ -2,12 +2,22 @@
 
 [ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_mfsae"]
 [ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/gamemodeobjects/killbox.tscn" id="2_67tx4"]
-[ext_resource type="PackedScene" uid="uid://d0rgswc73h64f" path="res://player/player_entity.tscn" id="2_eqymk"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="3_l4d1h"]
 [ext_resource type="Script" uid="uid://c3ycg631dwkse" path="res://utils/editor_tools/take_screenshot.gd" id="6_ft3g4"]
-[ext_resource type="Script" uid="uid://deqasw8862apf" path="res://levels/components/track.gd" id="8_ilxvw"]
-[ext_resource type="Script" uid="uid://d1ncrgbcndyoe" path="res://levels/components/track_point.gd" id="9_t4jal"]
-[ext_resource type="Script" uid="uid://r137hyd7ocbt" path="res://levels/components/surface_config.gd" id="10_t4jal"]
+[ext_resource type="Texture2D" uid="uid://ddprscrpsofah" path="res://terrain3d_demo/assets/textures/ground037_alb_ht.png" id="8_t4jal"]
+[ext_resource type="Texture2D" uid="uid://c1ots7w6i0i1q" path="res://terrain3d_demo/assets/textures/ground037_nrm_rgh.png" id="9_ihuqi"]
+[ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.tscn" id="9_ilxvw"]
+[ext_resource type="Texture2D" uid="uid://c88j3oj0lf6om" path="res://terrain3d_demo/assets/textures/rock023_alb_ht.png" id="10_ihuqi"]
+[ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/bikes/skins/naked_default_skin_definition.tres" id="10_o08l2"]
+[ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://managers/gamemodes/resources/gamemode_event_definition.gd" id="10_t4jal"]
+[ext_resource type="Texture2D" uid="uid://c307hdmos4gtm" path="res://terrain3d_demo/assets/textures/rock023_nrm_rgh.png" id="11_o08l2"]
+[ext_resource type="Script" uid="uid://f840hmifnv7g" path="res://managers/gamemodes/runners/sequential_task_runner.gd" id="12_o08l2"]
+[ext_resource type="Script" uid="uid://cij1aa5h6g5nb" path="res://managers/gamemodes/tasks/grid_spawn_task.gd" id="13_2j11q"]
+[ext_resource type="Script" uid="uid://1hiltkmgy4i3" path="res://managers/gamemodes/runners/concurrent_task_runner.gd" id="14_bo3ha"]
+[ext_resource type="Script" uid="uid://8xvij2vjrnn2" path="res://managers/gamemodes/tasks/countdown_task.gd" id="15_erah2"]
+[ext_resource type="Script" uid="uid://cpdxy3nxph3x0" path="res://managers/gamemodes/tasks/sfx_task.gd" id="16_1aw1h"]
+[ext_resource type="Script" uid="uid://bk8siml2v41d1" path="res://managers/gamemodes/tasks/race_task.gd" id="17_jbhkl"]
+[ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="18_r8obf"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_l4d1h"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -22,35 +32,87 @@ sky = SubResource("Sky_6hu6n")
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="Resource" id="Resource_t4jal"]
-script = ExtResource("10_t4jal")
+[sub_resource type="Gradient" id="Gradient_o08l2"]
+offsets = PackedFloat32Array(0.2, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
 
-[sub_resource type="Resource" id="Resource_5ija2"]
-script = ExtResource("10_t4jal")
-material_preset = 6
-metadata/_custom_type_script = "uid://r137hyd7ocbt"
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_5ija2"]
+noise_type = 2
+frequency = 0.03
+cellular_jitter = 3.0
+cellular_return_type = 0
+domain_warp_enabled = true
+domain_warp_type = 1
+domain_warp_amplitude = 50.0
+domain_warp_fractal_type = 2
+domain_warp_fractal_lacunarity = 1.5
+domain_warp_fractal_gain = 1.0
 
-[sub_resource type="Resource" id="Resource_giffm"]
-script = ExtResource("10_t4jal")
-material_preset = 1
-metadata/_custom_type_script = "uid://r137hyd7ocbt"
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_giffm"]
+noise = SubResource("FastNoiseLite_5ija2")
+color_ramp = SubResource("Gradient_o08l2")
+seamless = true
+
+[sub_resource type="Terrain3DMaterial" id="Terrain3DMaterial_ll4lc"]
+_shader_parameters = {
+&"bias_distance": null,
+&"blend_sharpness": null,
+&"depth_blur": null,
+&"enable_macro_variation": null,
+&"enable_projection": null,
+&"flat_terrain_normals": null,
+&"macro_variation1": null,
+&"macro_variation2": null,
+&"macro_variation_slope": null,
+&"mipmap_bias": null,
+&"noise1_angle": null,
+&"noise1_offset": null,
+&"noise1_scale": null,
+&"noise2_scale": null,
+&"noise_texture": SubResource("NoiseTexture2D_giffm"),
+&"projection_threshold": null
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aeyf6"]
+transparency = 4
+cull_mode = 2
+vertex_color_use_as_albedo = true
+backlight_enabled = true
+backlight = Color(0.5, 0.5, 0.5, 1)
+distance_fade_mode = 1
+distance_fade_min_distance = 128.0
+distance_fade_max_distance = 96.0
+
+[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_0kew3"]
+generated_type = 1
+height_offset = 0.5
+material_override = SubResource("StandardMaterial3D_aeyf6")
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 128.0
+
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_2j11q"]
+name = "ground037_alb_ht"
+albedo_texture = ExtResource("8_t4jal")
+normal_texture = ExtResource("9_ihuqi")
+
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_5ija2"]
+name = "rock023_alb_ht"
+id = 1
+albedo_texture = ExtResource("10_ihuqi")
+normal_texture = ExtResource("11_o08l2")
+
+[sub_resource type="Terrain3DAssets" id="Terrain3DAssets_bo3ha"]
+mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_0kew3")])
+texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_2j11q"), SubResource("Terrain3DTextureAsset_5ija2")])
 
 [sub_resource type="Resource" id="Resource_ihuqi"]
 script = ExtResource("10_t4jal")
-
-[sub_resource type="Resource" id="Resource_cdqss"]
-script = ExtResource("10_t4jal")
-material_preset = 6
-metadata/_custom_type_script = "uid://r137hyd7ocbt"
-
-[sub_resource type="Resource" id="Resource_o08l2"]
-script = ExtResource("10_t4jal")
-metadata/_custom_type_script = "uid://r137hyd7ocbt"
-
-[sub_resource type="Resource" id="Resource_ilxvw"]
-script = ExtResource("10_t4jal")
-material_preset = 6
-metadata/_custom_type_script = "uid://r137hyd7ocbt"
+name = "Race"
+description = "Around the track"
+target_gamemode = 1
+forced_base_bike = ExtResource("10_o08l2")
+metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [node name="RacetrackLevel01" type="Node3D" unique_id=1668752513 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug")]
 script = ExtResource("1_mfsae")
@@ -60,13 +122,11 @@ metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="PlayerSpawn" type="Marker3D" parent="." unique_id=2039238747]
 unique_name_in_owner = true
-transform = Transform3D(0.7071067, 0, 0.7071067, 0, 1, 0, -0.7071067, 0, 0.7071067, 9, 0.32498717, -4)
-
-[node name="PlayerEntity" parent="PlayerSpawn" unique_id=1507519799 instance=ExtResource("2_eqymk")]
+transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 4.9999995, 0.049999714, 0)
 
 [node name="PlayerSpawnTest" type="Marker3D" parent="." unique_id=2006659162]
 unique_name_in_owner = true
-transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, 9, 0.8799999, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.049999714, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=215805659]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
@@ -77,17 +137,6 @@ environment = SubResource("Environment_2e0ve")
 
 [node name="Killbox" parent="." unique_id=1054789626 instance=ExtResource("2_67tx4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -64, 0)
-
-[node name="Grounds" type="Node3D" parent="." unique_id=1563556186]
-
-[node name="TODO__UseBlendertomaketerrainaroundtrack" type="Node" parent="Grounds" unique_id=1908568091]
-
-[node name="TEMPGround" parent="Grounds" unique_id=1485126779 instance=ExtResource("3_l4d1h")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
-width = 999.0
-height = 0.1
-depth = 999.0
-color_preset = 2
 
 [node name="Paddock_PitLane" type="Node3D" parent="." unique_id=495282692]
 
@@ -157,99 +206,83 @@ width = 8.0
 height = 0.1
 depth = 64.0
 
-[node name="Walls" type="Node3D" parent="." unique_id=1107577451]
-
-[node name="Node" type="Node" parent="." unique_id=1322476029]
+[node name="__SCreenshot" type="Node" parent="." unique_id=1322476029]
 script = ExtResource("6_ft3g4")
 
-[node name="Track2" type="Node3D" parent="." unique_id=945850697]
-transform = Transform3D(-1, 0, 1.509958e-07, 0, 1, 0, -1.509958e-07, 0, -1, -5.5, 0, -19.75)
-script = ExtResource("8_ilxvw")
-closed = true
-ground_apron = true
-apron_width = 12.0
+[node name="Terrain3D" type="Terrain3D" parent="." unique_id=149829000]
+data_directory = "res://levels/racetracks/t3ddata"
+material = SubResource("Terrain3DMaterial_ll4lc")
+assets = SubResource("Terrain3DAssets_bo3ha")
+collision_mode = 2
+top_level = true
+metadata/_edit_lock_ = true
 
-[node name="TrackPoint" type="Marker3D" parent="Track2" unique_id=268674505]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7683716e-07, 0.25, 3.25)
-script = ExtResource("9_t4jal")
-curviness = 0.2
-left_runoff_width = 7.345
-left_runoff = SubResource("Resource_t4jal")
-right_runoff_width = 12.0
-right_runoff = SubResource("Resource_5ija2")
-right_wall_height = 2.0
-right_wall = SubResource("Resource_giffm")
+[node name="EventStartCircle" parent="." unique_id=459761741 instance=ExtResource("9_ilxvw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, -18.5)
+gamemode_event = SubResource("Resource_ihuqi")
 
-[node name="TrackPoint2" type="Marker3D" parent="Track2" unique_id=1495196518]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.25, 2, -149)
-script = ExtResource("9_t4jal")
-sharp = true
-left_runoff_width = 20.0
-left_runoff = SubResource("Resource_ihuqi")
-right_runoff_width = 12.0
-right_runoff = SubResource("Resource_5ija2")
-right_wall_height = 2.0
-right_wall = SubResource("Resource_giffm")
+[node name="SequentialTaskRunner" type="Node" parent="EventStartCircle" unique_id=472903455]
+script = ExtResource("12_o08l2")
+metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="TrackPoint3" type="Marker3D" parent="Track2" unique_id=2131753193]
-transform = Transform3D(1, 0, 0, 0, 0.99542123, 0.09558515, 0, -0.09558515, 0.99542123, -58.75, 2, -97.25001)
-script = ExtResource("9_t4jal")
-sharp = true
-corner_radius = 27.08
-right_runoff_width = 12.0
-right_runoff = SubResource("Resource_5ija2")
-right_wall_height = 2.0
-right_wall = SubResource("Resource_giffm")
+[node name="GridSpawnTask" type="Node" parent="EventStartCircle/SequentialTaskRunner" unique_id=806939545 node_paths=PackedStringArray("grid_markers")]
+script = ExtResource("13_2j11q")
+grid_markers = [NodePath("RaceGridSpot1"), NodePath("RaceGridSpot2"), NodePath("RaceGridSpot3"), NodePath("RaceGridSpot4")]
 
-[node name="TrackPoint4" type="Marker3D" parent="Track2" unique_id=568605121]
-transform = Transform3D(0.0056853886, 0.26135525, -0.96522593, -0.00945884, 0.96521235, 0.26129586, 0.999939, 0.0076443134, 0.007959682, -126.99999, 1.5, -94.50001)
-script = ExtResource("9_t4jal")
-sharp = true
-corner_radius = 23.41
-right_runoff_width = 12.0
-right_runoff = SubResource("Resource_5ija2")
-right_wall_height = 2.0
-right_wall = SubResource("Resource_giffm")
+[node name="RaceGridSpot1" type="Marker3D" parent="EventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=2006111591]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.499992, 0, -8.999992)
 
-[node name="TrackPoint5" type="Marker3D" parent="Track2" unique_id=281899502]
-transform = Transform3D(0.9657132, -0.2596113, 0, 0.2596113, 0.9657132, 0, 0, 0, 1, -53.25, 12.75, 1)
-script = ExtResource("9_t4jal")
-sharp = true
-corner_radius = 19.83
-left_runoff_width = 12.0
-left_runoff = SubResource("Resource_cdqss")
-right_runoff_width = 12.0
-right_runoff = SubResource("Resource_5ija2")
-right_wall_height = 2.0
-right_wall = SubResource("Resource_giffm")
+[node name="RaceGridSpot2" type="Marker3D" parent="EventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=1450323988]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.499992, 0, -3.9999928)
 
-[node name="TrackPoint6" type="Marker3D" parent="Track2" unique_id=1409940867]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -130.32933, 8.953186, 43.5)
-script = ExtResource("9_t4jal")
-sharp = true
-left_runoff_width = 20.0
-left_runoff = SubResource("Resource_cdqss")
-right_runoff_width = 12.0
-right_runoff = SubResource("Resource_5ija2")
-right_wall_height = 2.0
-right_wall = SubResource("Resource_giffm")
+[node name="RaceGridSpot3" type="Marker3D" parent="EventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=2069414924]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.499992, 0, -8.999992)
 
-[node name="TrackPoint7" type="Marker3D" parent="Track2" unique_id=1312033385]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -105.43744, 11.12647, 105.70585)
-script = ExtResource("9_t4jal")
-sharp = true
-left_runoff_width = 5.0
-left_runoff = SubResource("Resource_cdqss")
-right_runoff_width = 12.0
-right_runoff = SubResource("Resource_5ija2")
-right_wall_height = 2.0
-right_wall = SubResource("Resource_giffm")
+[node name="RaceGridSpot4" type="Marker3D" parent="EventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=91539751]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.499992, 0, -3.9999928)
 
-[node name="TrackPoint8" type="Marker3D" parent="Track2" unique_id=866867287]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.006922, 3.5880904, 108.721725)
-script = ExtResource("9_t4jal")
-sharp = true
-left_runoff = SubResource("Resource_o08l2")
-right_runoff_width = 12.0
-right_runoff = SubResource("Resource_ilxvw")
-right_wall_height = 2.0
+[node name="ConcurrentTaskRunner2" type="Node" parent="EventStartCircle/SequentialTaskRunner" unique_id=888872226]
+script = ExtResource("14_bo3ha")
+
+[node name="CountdownTask" type="Node" parent="EventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1434891024]
+script = ExtResource("15_erah2")
+metadata/_custom_type_script = "uid://8xvij2vjrnn2"
+
+[node name="SFXTask" type="Node" parent="EventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=357741210]
+script = ExtResource("16_1aw1h")
+sound = 2
+advance_mode = 1
+duration_sec = 3.0
+metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
+
+[node name="RaceTask" type="Node" parent="EventStartCircle/SequentialTaskRunner" unique_id=500670208 node_paths=PackedStringArray("start_checkpoint", "lap_checkpoints", "end_checkpoint")]
+script = ExtResource("17_jbhkl")
+start_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
+lap_checkpoints = [NodePath("Race01CheckpointMarker02"), NodePath("Race01CheckpointMarker03"), NodePath("Race01CheckpointMarker04"), NodePath("Race01CheckpointMarker05")]
+end_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
+total_laps = 2
+
+[node name="Race01CheckpointMarkerStartStop" parent="EventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1048335829 instance=ExtResource("18_r8obf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 2, -12.5)
+width = 20.0
+sign_text = "Start / Stop"
+
+[node name="Race01CheckpointMarker02" parent="EventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1968073091 instance=ExtResource("18_r8obf")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 81, 2.0000005, -153)
+width = 20.0
+sign_text = "Keep going!"
+
+[node name="Race01CheckpointMarker03" parent="EventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1096804446 instance=ExtResource("18_r8obf")]
+transform = Transform3D(-0.2588191, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, -0.2588191, 112.6301, 3.9715781, -57.171185)
+width = 20.0
+sign_text = "Keep going!"
+
+[node name="Race01CheckpointMarker04" parent="EventStartCircle/SequentialTaskRunner/RaceTask" unique_id=608065201 instance=ExtResource("18_r8obf")]
+transform = Transform3D(-0.8660253, 0, -0.50000006, 0, 1, 0, 0.50000006, 0, -0.8660253, 87.702, 3.9715781, -8.553291)
+width = 20.0
+sign_text = "Keep going!"
+
+[node name="Race01CheckpointMarker05" parent="EventStartCircle/SequentialTaskRunner/RaceTask" unique_id=800779124 instance=ExtResource("18_r8obf")]
+transform = Transform3D(-2.9802322e-08, 0, 1, 0, 1, 0, -1, 0, -2.9802322e-08, 52.59291, 25.138788, 118.94462)
+width = 20.0
+sign_text = "Keep going!"
