@@ -11,9 +11,14 @@
 - [ ] [new roads](../PLAN-roads.md)
   - [ ] del road / track system?
   - [x] Just use Terrain3D instead of creating all this complexity
-- [ ] shake the screen when brakedanger gets higher
-- [ ] blur vision at high speed / change fov
-- [ ] shake the screen when landing a wheelie slightly
+- [ ] VFX juice
+  - [x] shake the screen when brakedanger gets higher
+  - [x] blur vision at high speed / change fov
+  - [x] shake the screen when landing a wheelie slightly
+  - [ ] ^ tweak above! 
+    - [ ] for the wheelie landing, it should be as strong as how fast returning to the ground it. e.g. angle delta / frame
+    - [ ] the strength of the camera shake should be dependent on how aggressive the accel/deceleration is.
+    - [ ] blur should act in vignette
 
 ## Playtest bugs
 

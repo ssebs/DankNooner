@@ -27,10 +27,31 @@ enum CameraMode { TPS = 0, FPS, NONE }
 @export var reset_delay: float = 3.0
 @export var reset_speed: float = 3.0
 
+@export_group("Juice FX")
+## How fast accumulated screen-shake trauma bleeds off (per second).
+@export var trauma_decay: float = 1.8
+## Max camera jitter angle (deg) at full trauma.
+@export var shake_max_angle_deg: float = 0.8
+## grip_usage above this starts the continuous brake-danger shake.
+@export var brake_trauma_threshold: float = 0.85
+## Trauma floor held at full grip_usage (1.0) while braking dangerously.
+@export var brake_max_trauma: float = 0.6
+## One-shot trauma burst when the front wheel touches back down from a wheelie.
+@export var wheelie_land_trauma: float = 0.35
+## Speed where the FOV widen + blur begins.
+@export var fov_speed_min: float = 15.0
+## Speed where the FOV widen + blur is maxed out.
+@export var fov_speed_max: float = 80
+## Degrees added to the camera's base FOV at full speed.
+@export var fov_max_add: float = 15.0
+## Radial blur shader strength at full speed.
+@export var blur_max_strength: float = 4.2
+
 ## Base values when slider is at 0.5 (middle)
 const MOUSE_SENS_SCALE: float = 0.003
 const JOY_SENS_SCALE: float = 6.0
 const DEFAULT_ORBIT_PITCH: float = -0.5
+const RADIAL_BLUR_SHADER := preload("res://resources/shaders/radial_blur.gdshader")
 
 var current_cam_mode: CameraMode
 var invert_cam: int = -1:
@@ -48,6 +69,13 @@ var _no_input_timer: float = 0.0
 var _fps_yaw_offset: float = 0.0
 var _fps_pitch_offset: float = 0.0
 var _fps_cam_offset := 0.75
+
+# Juice FX state (local client only)
+var _trauma: float = 0.0
+var _tps_base_fov: float = 0.0
+var _fps_base_fov: float = 0.0
+var _blur_layer: CanvasLayer = null
+var _blur_mat: ShaderMaterial = null
 
 # TODO - zoom out w/ speed / current_trick != None
 
@@ -83,6 +111,7 @@ func _process(delta: float):
 			_update_fps_camera()
 
 	_mouse_delta = Vector2.ZERO
+	_update_juice_fx(delta)
 
 
 func _has_cam_input(mouse: Vector2) -> bool:
@@ -198,6 +227,10 @@ func deferred_init():
 		player_entity.settings_manager.setting_updated.connect(_on_setting_updated)
 		player_entity.settings_manager.all_settings_changed.connect(func(_s): _load_cam_settings())
 		_load_cam_settings()
+		_tps_base_fov = tps_cam.fov
+		_fps_base_fov = fps_cam.fov
+		player_entity.trick_controller.trick_ended.connect(_on_trick_ended_fx)
+		_create_blur_overlay()
 	else:
 		DebugUtils.DebugMsg("disable_cameras %s" % multiplayer.multiplayer_peer.get_unique_id())
 		disable_cameras()
@@ -230,6 +263,65 @@ func do_reset():
 	_default_orbit_pitch = deg_to_rad(DEFAULT_ORBIT_PITCH)
 	_on_reset_cam_pressed()
 	switch_to_cam(_int_to_cam_mode(player_entity.settings_manager.current_settings["cam_mode"]))
+
+
+#endregion
+
+
+#region Juice FX
+## Drives the high-speed FOV widen + radial blur and the screen shake each frame.
+## Runs after the camera transform is set so shake jitter doesn't accumulate.
+func _update_juice_fx(delta: float):
+	var cam: Camera3D = fps_cam if current_cam_mode == CameraMode.FPS else tps_cam
+	var base_fov: float = _fps_base_fov if current_cam_mode == CameraMode.FPS else _tps_base_fov
+
+	var speed_factor: float = clampf(
+		remap(player_entity.movement_controller.speed, fov_speed_min, fov_speed_max, 0.0, 1.0),
+		0.0,
+		1.0
+	)
+	cam.fov = base_fov + fov_max_add * speed_factor
+	_blur_mat.set_shader_parameter("strength", speed_factor * blur_max_strength)
+
+	# Brake danger holds a trauma floor; the wheelie-landing burst decays on top of it.
+	var grip: float = player_entity.grip_usage
+	if grip > brake_trauma_threshold:
+		_trauma = maxf(_trauma, remap(grip, brake_trauma_threshold, 1.0, 0.0, brake_max_trauma))
+
+	var shake: float = _trauma * _trauma
+	if shake > 0.0:
+		var amp: float = deg_to_rad(shake_max_angle_deg) * shake
+		cam.rotate_object_local(Vector3.RIGHT, randf_range(-amp, amp))
+		cam.rotate_object_local(Vector3.UP, randf_range(-amp, amp))
+		cam.rotate_object_local(Vector3.FORWARD, randf_range(-amp, amp) * 0.5)
+
+	_trauma = maxf(_trauma - trauma_decay * delta, 0.0)
+
+
+## Full-screen radial blur overlay, created locally so remote players don't pay for it.
+## CanvasLayer -1 keeps it above the 3D world but below the HUD (canvas layer 0).
+func _create_blur_overlay():
+	_blur_mat = ShaderMaterial.new()
+	_blur_mat.shader = RADIAL_BLUR_SHADER
+	_blur_mat.set_shader_parameter("strength", 0.0)
+
+	var rect := ColorRect.new()
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rect.material = _blur_mat
+	rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+	_blur_layer = CanvasLayer.new()
+	_blur_layer.layer = -1
+	_blur_layer.add_child(rect)
+	add_child(_blur_layer)
+
+
+func _on_trick_ended_fx(trick_type: TrickController.Trick):
+	if (
+		trick_type in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]
+		and player_entity.movement_controller._is_on_floor
+	):
+		_trauma = minf(_trauma + wheelie_land_trauma, 1.0)
 
 
 #endregion
