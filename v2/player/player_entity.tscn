@@ -1152,7 +1152,7 @@ unique_name_in_owner = true
 script = ExtResource("3_faflk")
 root = NodePath("..")
 enable_prediction = true
-state_properties = Array[String]([":global_transform", ":velocity", ":up_direction", ":is_crashed", "%MovementController:pitch_angle", "%MovementController:roll_angle", "%MovementController:speed", "%MovementController:slip_angle", "%MovementController:air_forward", "%GearingController:current_gear", "%GearingController:current_rpm", "%GearingController:clutch_value"])
+state_properties = Array[String]([":global_transform", ":velocity", ":up_direction", ":is_crashed", "%MovementController:pitch_angle", "%MovementController:roll_angle", "%MovementController:speed", "%MovementController:slip_angle", "%GearingController:current_gear", "%GearingController:current_rpm", "%GearingController:clutch_value"])
 input_properties = Array[String](["%InputController:nfx_throttle", "%InputController:nfx_front_brake", "%InputController:nfx_rear_brake", "%InputController:nfx_steer", "%InputController:nfx_lean", "%InputController:nfx_trick_held", "%InputController:nfx_clutch_held", "%InputController:nfx_cam_x", "%InputController:nfx_cam_y", "%InputController:rb_gear_up_pressed", "%InputController:rb_gear_down_pressed"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 

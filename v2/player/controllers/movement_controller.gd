@@ -14,7 +14,7 @@ class_name MovementController extends Node
 const CLUTCH_KICK_WINDOW: float = 0.2
 const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65  # fraction of bike's 1st-gear torque needed to clutch-pop — blocks high-gear pops
 const POWER_WHEELIE_MIN_FORCE: float = 21.6  # power × bd.acceleration floor for power wheelies — auto-scales by bike strength
-const FALL_GRAVITY: float = 20
+const FALL_GRAVITY: float = 40
 const AIR_DRAG: float = 12.0  # speed loss while airborne. TODO - turn into a curve
 const MIN_SPEED_FROM_AIR_DRAG:float = 5.0
 # Unstable surface (collision layer 5) — gravel/sand/etc. Scaled by bike's unstable_surface_factor.
@@ -33,6 +33,7 @@ const MIN_LOOP_SPEED: float = 20.0  # speed needed at fully inverted (180°)
 const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
 const AIR_TRICK_ROTATION_SPEED: float = 4.0  # rad/s pitch control while airborne
 const WHEELIE_AIR_GRACE: float = 1.0  # short hops (curbs) keep the wheelie pitch_angle
+const LANDING_SNAP_ANGLE_DEG: float = 30.0  # forgiveness window — flips landing this close to upright snap to neutral
 # Reverse — hold clutch + any brake to roll backwards from a stop
 const REVERSE_MAX_SPEED: float = 2.0
 const REVERSE_ACCEL: float = 8.0
@@ -54,7 +55,6 @@ var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
 var slip_angle: float = 0.0  # signed radians: heading vs velocity direction. Synced via RollbackSynchronizer.
 var is_drifting: bool = false  # re-derived each tick from synced inputs + slip_angle (not synced directly)
 
-var air_forward: Vector3 = Vector3.FORWARD  # forward direction when leaving a surface
 var air_pitch_total: float = 0.0  # cumulative pitch rotation while airborne (for flip counting)
 var _air_time: float = 0.0  # time since takeoff (for wheelie grace window)
 var _wheelie_grace_consumed: bool = false  # true once grace expired and pitch_angle was zeroed
@@ -105,6 +105,13 @@ func on_movement_rollback_tick(delta: float):
 				pitch_angle -= TAU
 			elif pitch_angle < -PI:
 				pitch_angle += TAU
+			# Landing forgiveness: if you (nearly) completed at least one full flip and touch
+			# down close to upright, snap to neutral for a clean landing. Held wheelies/stoppies
+			# off a jump (air_pitch_total below a full rotation) are left as-is so you can land
+			# into them; over-rotations past the bike's max still crash via CrashController.
+			var completed_flip := air_pitch_total >= TAU - deg_to_rad(LANDING_SNAP_ANGLE_DEG)
+			if completed_flip and absf(pitch_angle) <= deg_to_rad(LANDING_SNAP_ANGLE_DEG):
+				pitch_angle = 0.0
 			air_pitch_total = 0.0
 			_air_time = 0.0
 			_wheelie_grace_consumed = false
@@ -347,19 +354,27 @@ func _velocity_calc(delta: float):
 		# consistent on ramps; .slide(_floor_normal) below reprojects onto the surface.
 		travel_dir = forward.rotated(Vector3.UP, slip_angle)
 	if _is_on_floor:
-		if player_entity.velocity.length_squared() > 0.01:
-			air_forward = player_entity.velocity.normalized()
-		else:
-			air_forward = travel_dir
 		player_entity.velocity = travel_dir.slide(_floor_normal).normalized() * speed
 	else:
-		# Use the last on-surface forward so basis slerp doesn't deflect trajectory mid-air
-		speed = move_toward(speed, MIN_SPEED_FROM_AIR_DRAG, AIR_DRAG * delta)
-		player_entity.velocity = air_forward * speed
+		# Airborne: keep the launch momentum instead of rebuilding velocity from the (slerping)
+		# bike basis — the synced velocity already carries the takeoff trajectory, so the basis
+		# can't deflect it. Bleed only the horizontal component with drag, floored at
+		# MIN_SPEED_FROM_AIR_DRAG so huge jumps keep steering authority. velocity.y is left to
+		# gravity below for a real parabola.
+		var horizontal := Vector3(player_entity.velocity.x, 0.0, player_entity.velocity.z)
+		var h_speed := horizontal.length()
+		if h_speed > 0.0001:
+			var floor_speed := minf(h_speed, MIN_SPEED_FROM_AIR_DRAG)
+			var new_h := maxf(h_speed - AIR_DRAG * delta, floor_speed)
+			horizontal = horizontal / h_speed * new_h
+			player_entity.velocity.x = horizontal.x
+			player_entity.velocity.z = horizontal.z
+			speed = new_h  # keep speed in sync for landing, wheel spin, steering
 
-	# Gravity — straight down when airborne (slope speed handled in _speed_calc)
+	# Gravity — integrated onto velocity.y so airborne flight arcs like a real parabola
+	# instead of dropping at a constant rate.
 	if !_is_on_floor:
-		player_entity.velocity += Vector3.DOWN * FALL_GRAVITY
+		player_entity.velocity.y -= FALL_GRAVITY * delta
 
 
 ## Orchestrates pitch_angle: clutch detection → wheelie target → stoppie → apply
@@ -707,7 +722,6 @@ func do_reset():
 	_was_on_floor = false
 	_prev_clutch_held = false
 	_clutch_kick_window = 0.0
-	air_forward = Vector3.FORWARD
 	air_pitch_total = 0.0
 	_air_time = 0.0
 	_wheelie_grace_consumed = false
