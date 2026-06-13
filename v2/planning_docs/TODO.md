@@ -3,8 +3,6 @@
 
 ## In Progress 🚀 — Current Sprint
 
-- [ ] Change physics to keep momentum in air, don't go to 0
-
 - [ ] Drifting
   - [x] Ebrake
   - [x] Powerslide
@@ -200,6 +198,8 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] Change physics to keep momentum in air, don't go to 0
 
 - [x] Free roam respawn where you crashed, option to respawn at spawn
 
