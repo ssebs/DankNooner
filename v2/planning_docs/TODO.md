@@ -3,7 +3,6 @@
 
 ## In Progress 🚀 — Current Sprint
 
-- [ ] Free roam respawn where you crashed, option to respawn at spawn
 - [ ] Change physics to keep momentum in air, don't go to 0
 
 - [ ] Drifting
@@ -200,6 +199,8 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] Free roam respawn where you crashed, option to respawn at spawn
 
 - [x] Fix 3/4th gear
 

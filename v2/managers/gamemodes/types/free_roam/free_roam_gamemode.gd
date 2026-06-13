@@ -122,8 +122,17 @@ func _on_player_crashed(peer_id: int):
 		return
 
 	get_tree().create_timer(_respawn_delay).timeout.connect(
-		func(): spawn_manager.respawn_player.rpc(peer_id), CONNECT_ONE_SHOT
+		func(): _respawn_at_crash_site(peer_id), CONNECT_ONE_SHOT
 	)
+
+
+## Free roam respawns you where you crashed (upright, same heading) rather than back at
+## spawn. Doesn't touch the persistent respawn point, so the pause-menu respawn button
+## still returns to the original spawn.
+func _respawn_at_crash_site(peer_id: int):
+	var player := spawn_manager._get_player_by_peer_id(peer_id)
+	var upright := Basis(Vector3.UP, player.global_rotation.y)
+	spawn_manager.respawn_player_in_place.rpc(peer_id, player.global_position, upright)
 
 
 func _on_player_latejoined(peer_id: int):
