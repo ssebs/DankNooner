@@ -5,6 +5,7 @@
 
 - [ ] starting wheelie starts you in the ground, since "Free roam respawn where you crashed, option to respawn at spawn"
   - [ ] prob from wheelie landing snappy right before 0.0.82 release
+- [ ] cant use controller to select in customize menu
 
 - [ ] Drifting
   - [x] Ebrake
