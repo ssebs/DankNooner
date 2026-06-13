@@ -208,6 +208,7 @@ func _update_riding(delta: float) -> void:
 	var pose_roll := 0.0 if movement_controller.is_reversing else roll
 	_apply_riding_common(pose, delta, blend, pose_roll)
 
+	var prev_root_pos := pose.visual_root_pos
 	if not movement_controller._is_on_floor:
 		_apply_pitch_air(pose, blend, pitch)
 		# Airborne flips rotate around the bike's center, not a wheel contact — skip the ground
@@ -216,6 +217,9 @@ func _update_riding(delta: float) -> void:
 	else:
 		_apply_pitch_ground(pose, blend, pitch)
 		_apply_pivot_offset_to_pose(pose)
+	# Ease the pivot offset toward its target so the air↔ground transition (e.g. landing into a
+	# stoppie, or a bouncy touchdown where floor state flickers) doesn't pop the camera.
+	pose.visual_root_pos = prev_root_pos.lerp(pose.visual_root_pos, blend)
 
 	# Steering + wheels run direct on bike_skin — they're not part of the rider pose.
 	# Reverse inverts roll_angle (so the body rotates the correct way for input), but the

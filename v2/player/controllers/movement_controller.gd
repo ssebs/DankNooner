@@ -9,7 +9,7 @@ class_name MovementController extends Node
 @export var rear_raycast: RayCast3D
 @export var front_raycast: RayCast3D
 
-@export var debug_verbose:bool=true
+@export var debug_verbose:bool=false
 
 const CLUTCH_KICK_WINDOW: float = 0.2
 const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65  # fraction of bike's 1st-gear torque needed to clutch-pop — blocks high-gear pops
@@ -148,7 +148,8 @@ func on_movement_rollback_tick(delta: float):
 
 	_handle_player_collision(delta)
 
-	_debug_air_state()
+	if debug_verbose:
+		_debug_air_state()
 
 
 ## One-line dump of every value relevant to air/landing: angles, speed, trick state, and the

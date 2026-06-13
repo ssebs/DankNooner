@@ -109,7 +109,6 @@
 - [ ] AnimationController + Trick tweak integration
 - [ ] AnimationController + Crash integration
   - [ ] Create crash animation (procedural)
-- [ ] backflip landing is snappy, always lands in wheelie/stoppie
 - [ ] wheelie turning animation should yaw
 
 ### Multiplayer / netcode
@@ -198,6 +197,8 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] backflip landing is snappy, always lands in wheelie/stoppie
 
 - [x] Change physics to keep momentum in air, don't go to 0
 
