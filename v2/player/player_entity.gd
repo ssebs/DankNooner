@@ -105,6 +105,10 @@ var rb_do_respawn: bool = false
 ## reset to identity to fall back to `get_parent().global_transform` (player_spawn_pos).
 ## Persists across respawns so crashes after a checkpoint return to the checkpoint.
 var rb_respawn_transform: Transform3D = Transform3D()
+## One-shot respawn override, consumed by the next do_respawn() WITHOUT touching the
+## persistent respawn point. Free roam crash respawns set this so you respawn where you
+## crashed, while the pause-menu respawn button still returns to rb_respawn_transform.
+var rb_respawn_transform_oneshot: Transform3D = Transform3D()
 
 # Process-side state tracking (not sync'd)
 var _prev_is_crashed: bool = false
@@ -361,7 +365,10 @@ func update_skins(new_bike_def: BikeSkinDefinition, new_char_def: CharacterSkinD
 
 
 func do_respawn():
-	if rb_respawn_transform != Transform3D():
+	if rb_respawn_transform_oneshot != Transform3D():
+		global_transform = rb_respawn_transform_oneshot
+		rb_respawn_transform_oneshot = Transform3D()
+	elif rb_respawn_transform != Transform3D():
 		global_transform = rb_respawn_transform
 	else:
 		global_transform = get_parent().global_transform

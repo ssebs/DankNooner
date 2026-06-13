@@ -67,6 +67,16 @@ func respawn_player_at(player_peer_id: int, pos: Vector3, basis: Basis):
 	player_node.rb_do_respawn = true
 
 
+## Respawn a player at a one-shot transform WITHOUT changing the persistent respawn point.
+## Free roam crash respawns use this so you respawn where you crashed, while the pause-menu
+## respawn button still returns to the original spawn (rb_respawn_transform). Runs on every peer.
+@rpc("any_peer", "call_local", "reliable")
+func respawn_player_in_place(player_peer_id: int, pos: Vector3, basis: Basis):
+	var player_node := _get_player_by_peer_id(player_peer_id)
+	player_node.rb_respawn_transform_oneshot = Transform3D(basis, pos)
+	player_node.rb_do_respawn = true
+
+
 ## Update the persistent respawn point without teleporting. Used when a player
 ## passes a race checkpoint — their next crash returns them here.
 @rpc("any_peer", "call_local", "reliable")
