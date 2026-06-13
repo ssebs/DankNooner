@@ -3,6 +3,9 @@
 
 ## In Progress 🚀 — Current Sprint
 
+- [ ] starting wheelie starts you in the ground, since "Free roam respawn where you crashed, option to respawn at spawn"
+  - [ ] prob from wheelie landing snappy right before 0.0.82 release
+
 - [ ] Drifting
   - [x] Ebrake
   - [x] Powerslide
