@@ -9,7 +9,7 @@ class_name MovementController extends Node
 @export var rear_raycast: RayCast3D
 @export var front_raycast: RayCast3D
 
-@export var debug_verbose:bool=false
+@export var debug_verbose:bool=true
 
 const CLUTCH_KICK_WINDOW: float = 0.2
 const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65  # fraction of bike's 1st-gear torque needed to clutch-pop — blocks high-gear pops
@@ -109,8 +109,8 @@ func on_movement_rollback_tick(delta: float):
 			# down close to upright, snap to neutral for a clean landing. Held wheelies/stoppies
 			# off a jump (air_pitch_total below a full rotation) are left as-is so you can land
 			# into them; over-rotations past the bike's max still crash via CrashController.
-			var completed_flip := air_pitch_total >= TAU - deg_to_rad(LANDING_SNAP_ANGLE_DEG)
-			if completed_flip and absf(pitch_angle) <= deg_to_rad(LANDING_SNAP_ANGLE_DEG):
+			var did_flip := air_pitch_total >= PI  # half-turn+ = a flip attempt, not a held wheelie
+			if did_flip and absf(pitch_angle) <= deg_to_rad(LANDING_SNAP_ANGLE_DEG):
 				pitch_angle = 0.0
 			air_pitch_total = 0.0
 			_air_time = 0.0
@@ -142,6 +142,37 @@ func on_movement_rollback_tick(delta: float):
 	player_entity.velocity /= NetworkTime.physics_factor
 
 	_handle_player_collision(delta)
+
+	_debug_air_state()
+
+
+## One-line dump of every value relevant to air/landing: angles, speed, trick state, and the
+## VISUAL pitch/height (visual_root) that produces the "land underground" dip. Toggle the
+## MovementController's `debug_verbose` export to enable. trick state is last tick's (the
+## TrickController runs after MovementController in _rollback_tick).
+func _debug_air_state():
+	var vr: Node3D = player_entity.visual_root
+	DebugUtils.DebugMsg(
+		(
+			"[AIR] floor=%s pitch=%.1f air_pitch=%.1f roll=%.1f up=%.1f | vroot_x=%.1f vroot_y=%.3f"
+			+ " | spd=%.1f vel=(%.1f,%.1f,%.1f) | trick=%s"
+		)
+		% [
+			_is_on_floor,
+			rad_to_deg(pitch_angle),
+			rad_to_deg(air_pitch_total),
+			rad_to_deg(roll_angle),
+			rad_to_deg(player_entity.up_direction.angle_to(Vector3.UP)),
+			rad_to_deg(vr.rotation.x),
+			vr.position.y,
+			speed,
+			player_entity.velocity.x,
+			player_entity.velocity.y,
+			player_entity.velocity.z,
+			TrickController.trick_to_str(player_entity.trick_controller.current_trick),
+		],
+		debug_verbose
+	)
 
 
 ## True if any current slide collision is on layer 5 (unstable_collision).

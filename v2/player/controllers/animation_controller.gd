@@ -180,6 +180,7 @@ func _update_idle(delta: float) -> void:
 	# Ease wheelie/stoppie pitch back to 0 so the bike settles to ground.
 	var blend = clampf(5.0 * delta, 0.0, 1.0)
 	pose.visual_root_rot.x = lerp_angle(pose.visual_root_rot.x, 0.0, blend)
+	pose.visual_root_rot.x = wrapf(pose.visual_root_rot.x, -PI, PI)
 
 	_apply_riding_common(pose, delta, blend, movement_controller.roll_angle)
 
@@ -209,10 +210,12 @@ func _update_riding(delta: float) -> void:
 
 	if not movement_controller._is_on_floor:
 		_apply_pitch_air(pose, blend, pitch)
+		# Airborne flips rotate around the bike's center, not a wheel contact — skip the ground
+		# pivot so the bike doesn't swing mid-flip or wind underground on landing.
+		pose.visual_root_pos = _base_visual_root_position
 	else:
 		_apply_pitch_ground(pose, blend, pitch)
-
-	_apply_pivot_offset_to_pose(pose)
+		_apply_pivot_offset_to_pose(pose)
 
 	# Steering + wheels run direct on bike_skin — they're not part of the rider pose.
 	# Reverse inverts roll_angle (so the body rotates the correct way for input), but the
@@ -329,11 +332,14 @@ func _apply_pitch_ground(pose: _RiderPose, blend: float, pitch: float) -> void:
 	var max_stoppie_rad = deg_to_rad(_bd.max_stoppie_angle_deg)
 	var target = -clampf(pitch, -max_stoppie_rad, max_wheelie_rad)
 	pose.visual_root_rot.x = lerp_angle(pose.visual_root_rot.x, target, blend)
+	# Keep bounded so a flip's accumulated visual angle can't wind through the ground on landing.
+	pose.visual_root_rot.x = wrapf(pose.visual_root_rot.x, -PI, PI)
 
 
 func _apply_pitch_air(pose: _RiderPose, blend: float, pitch: float) -> void:
 	disable_target_sync()
 	pose.visual_root_rot.x = lerp_angle(pose.visual_root_rot.x, -pitch, blend)
+	pose.visual_root_rot.x = wrapf(pose.visual_root_rot.x, -PI, PI)
 
 
 ## Pivot visual_root around the tire contact arc — same logic as before but writes
