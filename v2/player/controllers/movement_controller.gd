@@ -125,8 +125,13 @@ func on_movement_rollback_tick(delta: float):
 			_wheelie_grace_consumed = false
 		_air_time += delta
 		if not _wheelie_grace_consumed and _air_time >= WHEELIE_AIR_GRACE:
-			pitch_angle = 0.0
-			air_pitch_total = 0.0
+			# Clear a leftover ground-wheelie pitch after a long hop — but NEVER mid-flip.
+			# air_pitch_total grows from air lean, so a meaningful value means the rider is
+			# actively flipping; zeroing then whips the visual ("speeds up halfway") and discards
+			# the rotation the landing-forgiveness snap relies on (causing late-flip land crashes).
+			if air_pitch_total < deg_to_rad(LANDING_SNAP_ANGLE_DEG):
+				pitch_angle = 0.0
+				air_pitch_total = 0.0
 			_wheelie_grace_consumed = true
 	_speed_calc(delta)
 	_speed_pct = clampf(speed / player_entity.bike_definition.max_speed, 0.0, 1.0)
