@@ -144,6 +144,8 @@ var _was_reversing: bool = false
 # from what gets committed to the nodes prevents anim-delta drift across frames —
 # the lerps inside proc need their own continuous state to read from.
 var _proc_pose: _RiderPose
+# Air↔ground pivot weight (0 = air/base, 1 = ground/full pivot). See _update_riding.
+var _ground_blend: float = 0.0
 
 #endregion
 
@@ -208,18 +210,19 @@ func _update_riding(delta: float) -> void:
 	var pose_roll := 0.0 if movement_controller.is_reversing else roll
 	_apply_riding_common(pose, delta, blend, pose_roll)
 
-	var prev_root_pos := pose.visual_root_pos
 	if not movement_controller._is_on_floor:
 		_apply_pitch_air(pose, blend, pitch)
 		# Airborne flips rotate around the bike's center, not a wheel contact — skip the ground
 		# pivot so the bike doesn't swing mid-flip or wind underground on landing.
 		pose.visual_root_pos = _base_visual_root_position
+		_ground_blend = lerpf(_ground_blend, 0.0, blend)
 	else:
 		_apply_pitch_ground(pose, blend, pitch)
 		_apply_pivot_offset_to_pose(pose)
-	# Ease the pivot offset toward its target so the air↔ground transition (e.g. landing into a
-	# stoppie, or a bouncy touchdown where floor state flickers) doesn't pop the camera.
-	pose.visual_root_pos = prev_root_pos.lerp(pose.visual_root_pos, blend)
+		_ground_blend = lerpf(_ground_blend, 1.0, blend)
+	# Ease the air↔ground weight, NOT the pivot: at rest _ground_blend == 1 so the pivot tracks
+	# rotation exactly (wheel stays planted on a ramp); it only ramps across the transition.
+	pose.visual_root_pos = _base_visual_root_position.lerp(pose.visual_root_pos, _ground_blend)
 
 	# Steering + wheels run direct on bike_skin — they're not part of the rider pose.
 	# Reverse inverts roll_angle (so the body rotates the correct way for input), but the

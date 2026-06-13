@@ -13,7 +13,10 @@
       "Bash(xargs grep *)",
       "Bash(grep *)",
       "Bash(bash /home/ssebs/.claude/statusline-command.sh)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(gdlint player/controllers/animation_controller.gd)",
+      "Bash(awk 'END{print NR\" lines\"}' player/controllers/animation_controller.gd)",
+      "Bash(echo \"exit: $?\")"
     ]
   }
 }
