@@ -42,4 +42,6 @@ mods = Array[ExtResource("4_xypd7")]([ExtResource("6_y2gru")])
 engine_sound_id = 2
 engine_min_pitch = 0.8
 engine_max_pitch = 2.1
+max_speed = 100.0
+acceleration = 8.0
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"
