@@ -82,7 +82,7 @@ var engine_rpm_pitch_curve: Curve = preload("res://resources/bikes/ninja_rpm_pit
 @export var weight_shift_multiplier: float = 1.0
 
 @export_group("Gearing")
-@export var gear_ratios: Array[float] = [2.92, 2.05, 1.6, 1.46, 1.15, 1.0]
+@export var gear_ratios: Array[float] = [2.92, 2.05, 1.6, 1.25, 1, 0.8]
 @export var num_gears: int = 6
 @export var max_rpm: float = 11000.0
 @export var idle_rpm: float = 1000.0
