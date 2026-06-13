@@ -21,6 +21,7 @@
     - [ ] for the wheelie landing, it should be as strong as how fast returning to the ground it. e.g. angle delta / frame
     - [ ] the strength of the camera shake should be dependent on how aggressive the accel/deceleration is.
     - [ ] blur should act in vignette
+    - [ ] reversing should not shake
 
 ## Playtest bugs
 
