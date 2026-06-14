@@ -210,10 +210,13 @@ func _update_riding(delta: float) -> void:
 
 	if not movement_controller._is_on_floor:
 		_apply_pitch_air(pose, blend, pitch)
+		# Airborne: no ground contact to pivot around. The wheel-contact-arc pivot would
+		# shove visual_root up ~1m at the flip's 90° points and drop it on the way out,
+		# reading as a teleport. Spin around the bike origin instead.
+		pose.visual_root_pos = _base_visual_root_position
 	else:
 		_apply_pitch_ground(pose, blend, pitch)
-
-	_apply_pivot_offset_to_pose(pose)
+		_apply_pivot_offset_to_pose(pose)
 
 	# Steering + wheels run direct on bike_skin — they're not part of the rider pose.
 	# Reverse inverts roll_angle (so the body rotates the correct way for input), but the
