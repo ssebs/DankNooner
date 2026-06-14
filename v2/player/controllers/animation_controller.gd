@@ -123,6 +123,10 @@ var _base_right_leg_magnet_rot: Vector3
 var _idle_timer: float = 0.0
 var _procedural_enabled: bool = true
 var _targets_synced_from_bike: bool = true
+# Eases the wheel-contact pivot back in after a flip's airborne suppression releases, so a
+# pitched landing rises to its resting pivot offset over a few frames instead of popping there.
+var _pivot_blend: float = 1.0
+var _pivot_suppressed_last: bool = false
 
 # Cached refs (set in initialize)
 var _ik_ctrl: IKController
@@ -208,15 +212,30 @@ func _update_riding(delta: float) -> void:
 	var pose_roll := 0.0 if movement_controller.is_reversing else roll
 	_apply_riding_common(pose, delta, blend, pose_roll)
 
+	# Only a genuine flip sweeps rot_x through extreme angles, where the wheel-contact-arc pivot
+	# would shove visual_root up ~1m at the 90° points (reads as a teleport). Suppress it there
+	# and spin around the origin. air_pitch_total resets to 0 on takeoff/landing, so held
+	# wheelie/stoppie curb-hops AND the brief floor-bounce on landing keep the normal pivot.
+	var suppress_pivot := (
+		not movement_controller._is_on_floor
+		and movement_controller.air_pitch_total > deg_to_rad(30.0)
+	)
 	if not movement_controller._is_on_floor:
 		_apply_pitch_air(pose, blend, pitch)
-		# Airborne: no ground contact to pivot around. The wheel-contact-arc pivot would
-		# shove visual_root up ~1m at the flip's 90° points and drop it on the way out,
-		# reading as a teleport. Spin around the bike origin instead.
-		pose.visual_root_pos = _base_visual_root_position
 	else:
 		_apply_pitch_ground(pose, blend, pitch)
+
+	if suppress_pivot:
+		pose.visual_root_pos = _base_visual_root_position
+	else:
+		# Just released from flip suppression (e.g. landing pitched) — restart the ease so the
+		# pivot offset grows in over a few frames instead of popping the rig up in one.
+		if _pivot_suppressed_last:
+			_pivot_blend = 0.0
+		_pivot_blend = minf(_pivot_blend + blend, 1.0)
 		_apply_pivot_offset_to_pose(pose)
+		pose.visual_root_pos = _base_visual_root_position.lerp(pose.visual_root_pos, _pivot_blend)
+	_pivot_suppressed_last = suppress_pivot
 
 	# Steering + wheels run direct on bike_skin — they're not part of the rider pose.
 	# Reverse inverts roll_angle (so the body rotates the correct way for input), but the
