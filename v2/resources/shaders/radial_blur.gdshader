@@ -5,8 +5,9 @@ shader_type canvas_item;
 
 uniform sampler2D screen_tex : hint_screen_texture, filter_linear;
 uniform float strength : hint_range(0.0, 1.0) = 0.0;
-// Radius (in UV) around the center that stays unblurred.
-uniform float clear_radius : hint_range(0.0, 1.0) = 0.2;
+// Radius (in UV) around the center that stays unblurred. Wide so the blur sits in the
+// outer ring / corners like a vignette, leaving the center of the view sharp.
+uniform float clear_radius : hint_range(0.0, 1.0) = 0.65;
 // Max sample offset back toward center at full strength + edge.
 uniform float max_offset : hint_range(0.0, 0.5) = 0.12;
 
