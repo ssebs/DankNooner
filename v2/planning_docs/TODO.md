@@ -3,8 +3,7 @@
 
 ## In Progress 🚀 — Current Sprint
 
-- [ ] starting wheelie starts you in the ground, since "Free roam respawn where you crashed, option to respawn at spawn"
-  - [ ] prob from wheelie landing snappy right before 0.0.82 release
+- [ ] backflip glitchy
 - [ ] cant use controller to select in customize menu
 
 - [ ] Drifting
@@ -15,15 +14,6 @@
 - [ ] [new roads](../PLAN-roads.md)
   - [ ] del road / track system?
   - [x] Just use Terrain3D instead of creating all this complexity
-- [ ] VFX juice
-  - [x] shake the screen when brakedanger gets higher
-  - [x] blur vision at high speed / change fov
-  - [x] shake the screen when landing a wheelie slightly
-  - [ ] ^ tweak above! 
-    - [ ] for the wheelie landing, it should be as strong as how fast returning to the ground it. e.g. angle delta / frame
-    - [ ] the strength of the camera shake should be dependent on how aggressive the accel/deceleration is.
-    - [ ] blur should act in vignette
-    - [ ] reversing should not shake
 
 ## Playtest bugs
 
@@ -201,6 +191,19 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] VFX juice
+  - [x] shake the screen when brakedanger gets higher
+  - [x] blur vision at high speed / change fov
+  - [x] shake the screen when landing a wheelie slightly
+  - [x] ^ tweak above! 
+    - [x] for the wheelie landing, it should be as strong as how fast returning to the ground it. e.g. angle delta / frame
+    - [x] the strength of the camera shake should be dependent on how aggressive the accel/deceleration is.
+    - [x] blur should act in vignette
+    - [x] reversing should not shake
+
+- [x] starting wheelie starts you in the ground, since "Free roam respawn where you crashed, option to respawn at spawn"
+  - [x] prob from wheelie landing snappy right before 0.0.82 release
 
 - [x] backflip landing is snappy, always lands in wheelie/stoppie
 

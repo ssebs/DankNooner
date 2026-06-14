@@ -32,26 +32,38 @@ enum CameraMode { TPS = 0, FPS, NONE }
 @export var trauma_decay: float = 1.8
 ## Max camera jitter angle (deg) at full trauma.
 @export var shake_max_angle_deg: float = 0.8
-## grip_usage above this starts the continuous brake-danger shake.
-@export var brake_trauma_threshold: float = 0.85
-## Trauma floor held at full grip_usage (1.0) while braking dangerously.
-@export var brake_max_trauma: float = 0.6
-## One-shot trauma burst when the front wheel touches back down from a wheelie.
+## Speed change (units/s²) where accel/decel shake begins.
+@export var accel_shake_threshold: float = 12.0
+## Speed change (units/s²) where accel/decel shake is maxed.
+@export var accel_shake_max: float = 60.0
+## Trauma floor held at the most aggressive accel/decel.
+@export var accel_max_trauma: float = 0.6
+## Max one-shot trauma burst on a wheelie landing (scaled by front-wheel drop speed).
 @export var wheelie_land_trauma: float = 0.35
-## Speed where the FOV widen + blur begins.
-@export var fov_speed_min: float = 15.0
-## Speed where the FOV widen + blur is maxed out.
-@export var fov_speed_max: float = 80
+## Front-wheel drop speed (deg/s) below which a wheelie landing adds no shake.
+@export var wheelie_land_drop_min_deg: float = 60.0
+## Front-wheel drop speed (deg/s) at which a wheelie landing adds full shake.
+@export var wheelie_land_drop_max_deg: float = 400.0
+## Fraction of the bike's max_speed where the FOV widen + blur begins.
+@export_range(0.0, 1.0) var fov_speed_pct_min: float = 0.2
+## Fraction of the bike's max_speed where the FOV widen + blur is maxed out.
+@export_range(0.0, 1.0) var fov_speed_pct_max: float = 1.0
 ## Degrees added to the camera's base FOV at full speed.
 @export var fov_max_add: float = 15.0
 ## Radial blur shader strength at full speed.
-@export var blur_max_strength: float = 4.2
+@export var blur_max_strength: float = 1.0
+## UV radius around screen center kept fully sharp — blur only sits in the outer ring beyond this.
+@export_range(0.0, 1.0) var blur_clear_radius: float = 0.7
 
 ## Base values when slider is at 0.5 (middle)
 const MOUSE_SENS_SCALE: float = 0.003
 const JOY_SENS_SCALE: float = 6.0
 const DEFAULT_ORBIT_PITCH: float = -0.5
 const RADIAL_BLUR_SHADER := preload("res://resources/shaders/radial_blur.gdshader")
+## How quickly the smoothed accel estimate tracks raw frame-to-frame speed change.
+const ACCEL_SMOOTH_RATE: float = 12.0
+## Peak-hold decay (rad/s per second) for the wheelie-drop rate sampled across the land event.
+const PITCH_DROP_DECAY: float = 30.0
 
 var current_cam_mode: CameraMode
 var invert_cam: int = -1:
@@ -76,6 +88,10 @@ var _tps_base_fov: float = 0.0
 var _fps_base_fov: float = 0.0
 var _blur_layer: CanvasLayer = null
 var _blur_mat: ShaderMaterial = null
+var _prev_pitch: float = 0.0
+var _pitch_drop_rate: float = 0.0  # peak-held downward pitch speed (rad/s) for landing shake
+var _prev_speed: float = 0.0
+var _accel_smooth: float = 0.0  # low-passed |accel| (units/s²) for accel/decel shake
 
 # TODO - zoom out w/ speed / current_trick != None
 
@@ -275,18 +291,42 @@ func _update_juice_fx(delta: float):
 	var cam: Camera3D = fps_cam if current_cam_mode == CameraMode.FPS else tps_cam
 	var base_fov: float = _fps_base_fov if current_cam_mode == CameraMode.FPS else _tps_base_fov
 
+	# Scale off speed as a fraction of this skin's max_speed so the effect is bike-relative.
 	var speed_factor: float = clampf(
-		remap(player_entity.movement_controller.speed, fov_speed_min, fov_speed_max, 0.0, 1.0),
+		remap(
+			player_entity.movement_controller._speed_pct,
+			fov_speed_pct_min,
+			fov_speed_pct_max,
+			0.0,
+			1.0
+		),
 		0.0,
 		1.0
 	)
 	cam.fov = base_fov + fov_max_add * speed_factor
 	_blur_mat.set_shader_parameter("strength", speed_factor * blur_max_strength)
 
-	# Brake danger holds a trauma floor; the wheelie-landing burst decays on top of it.
-	var grip: float = player_entity.grip_usage
-	if grip > brake_trauma_threshold:
-		_trauma = maxf(_trauma, remap(grip, brake_trauma_threshold, 1.0, 0.0, brake_max_trauma))
+	# Track the front-wheel drop speed (peak-held) so the wheelie-landing burst can scale by it.
+	var pitch: float = player_entity.movement_controller.pitch_angle
+	var instant_drop: float = maxf((_prev_pitch - pitch) / maxf(delta, 0.0001), 0.0)
+	_pitch_drop_rate = maxf(instant_drop, _pitch_drop_rate - PITCH_DROP_DECAY * delta)
+	_prev_pitch = pitch
+
+	# Aggressive accel/decel holds a trauma floor; the wheelie-landing burst decays on top of it.
+	# Reversing is gentle by nature, so it never shakes.
+	var spd: float = player_entity.movement_controller.speed
+	var accel: float = absf(spd - _prev_speed) / maxf(delta, 0.0001)
+	_prev_speed = spd
+	_accel_smooth = lerpf(_accel_smooth, accel, clampf(delta * ACCEL_SMOOTH_RATE, 0.0, 1.0))
+	if not player_entity.movement_controller.is_reversing and _accel_smooth > accel_shake_threshold:
+		_trauma = maxf(
+			_trauma,
+			clampf(
+				remap(_accel_smooth, accel_shake_threshold, accel_shake_max, 0.0, accel_max_trauma),
+				0.0,
+				accel_max_trauma
+			)
+		)
 
 	var shake: float = _trauma * _trauma
 	if shake > 0.0:
@@ -304,6 +344,8 @@ func _create_blur_overlay():
 	_blur_mat = ShaderMaterial.new()
 	_blur_mat.shader = RADIAL_BLUR_SHADER
 	_blur_mat.set_shader_parameter("strength", 0.0)
+	# Set explicitly — relying on the shader's uniform default isn't reliable at runtime.
+	_blur_mat.set_shader_parameter("clear_radius", blur_clear_radius)
 
 	var rect := ColorRect.new()
 	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -321,7 +363,19 @@ func _on_trick_ended_fx(trick_type: TrickController.Trick):
 		trick_type in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]
 		and player_entity.movement_controller._is_on_floor
 	):
-		_trauma = minf(_trauma + wheelie_land_trauma, 1.0)
+		# Stronger burst the faster the front wheel slammed back down.
+		var landing: float = clampf(
+			remap(
+				_pitch_drop_rate,
+				deg_to_rad(wheelie_land_drop_min_deg),
+				deg_to_rad(wheelie_land_drop_max_deg),
+				0.0,
+				1.0
+			),
+			0.0,
+			1.0
+		)
+		_trauma = minf(_trauma + wheelie_land_trauma * landing, 1.0)
 
 
 #endregion
