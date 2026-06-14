@@ -3,7 +3,6 @@
 
 ## In Progress 🚀 — Current Sprint
 
-- [ ] backflip glitchy
 - [ ] cant use controller to select in customize menu
 
 - [ ] Drifting
@@ -191,6 +190,8 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] backflip glitchy
 
 - [x] VFX juice
   - [x] shake the screen when brakedanger gets higher
