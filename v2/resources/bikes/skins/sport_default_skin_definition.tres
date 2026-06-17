@@ -1,41 +1,45 @@
 [gd_resource type="Resource" script_class="BikeSkinDefinition" format=3 uid="uid://bu5x25m0vsrv3"]
 
 [ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/bikes/hitbox/bike_hitbox.tres" id="1_3klvi"]
-[ext_resource type="PackedScene" uid="uid://54ehro5jqyxu" path="res://player/bikes/scenes/sport_bike.tscn" id="1_uy60g"]
+[ext_resource type="PackedScene" uid="uid://it7myerjmp0g" path="res://player/bikes/scenes/sport_bike.tscn" id="1_uy60g"]
 [ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/bikes/bike_skin_definition.gd" id="2_3klvi"]
 [ext_resource type="Curve" path="res://resources/bikes/ninja_rpm_pitch_curve.tres" id="2_88b7q"]
 [ext_resource type="Curve" uid="uid://bc4775t6u5ngh" path="res://player/bikes/resources/lean_speed_curve.tres" id="2_mg0ht"]
 [ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="4_hx3xb"]
-[ext_resource type="Resource" uid="uid://dusov5uralis7" path="res://resources/bikes/mods/color_mods/black_pink_color.tres" id="5_qepda"]
 [ext_resource type="Curve" uid="uid://ct2j0k3sl7m3u" path="res://player/bikes/resources/steer_speed_curve.tres" id="5_v4igm"]
+[ext_resource type="Resource" uid="uid://dek4aj5q88dv1" path="res://resources/bikes/mods/color_mods/black_blue_color.tres" id="6_88b7q"]
 [ext_resource type="Curve" uid="uid://dlqmqgtip7b61" path="res://resources/bikes/power_curve.tres" id="6_qepda"]
 
 [resource]
 script = ExtResource("2_3klvi")
 skin_name = "sport_default"
 mesh_res = ExtResource("1_uy60g")
-seat_marker_position = Vector3(1.768495e-08, 0.92681575, -0.33374453)
-front_wheel_ground_position = Vector3(-2.027462e-08, 0, 0.72615725)
-rear_wheel_ground_position = Vector3(2.7384466e-08, 0, -0.7459345)
-rear_wheel_back_position = Vector3(4.2368406e-08, 0, -1.0609363)
-front_wheel_front_position = Vector3(-3.217322e-08, 0, 1.0277224)
-chest_position = Vector3(5.3796714e-09, 1.183861, -0.043618277)
-chest_rotation = Vector3(0, -4.2632564e-14, 0)
-head_position = Vector3(-2.3301595e-08, 1.5793936, -0.3897591)
-head_rotation = Vector3(0, -2.842171e-14, 0)
+mesh_position_offset = Vector3(0, 0.57, 0)
+mesh_rotation_offset_degrees = Vector3(0, 180, 0)
+seat_marker_position = Vector3(1.385633e-07, 0.95820665, -0.34479797)
+front_wheel_ground_position = Vector3(-1.6558204e-08, 0, 0.70154446)
+rear_wheel_ground_position = Vector3(1.8712825e-08, 0, -0.6885047)
+rear_wheel_back_position = Vector3(3.369678e-08, 0, -1.0035067)
+front_wheel_front_position = Vector3(-2.7424491e-08, 0, 0.99627286)
+chest_position = Vector3(-1.7008484e-09, 1.1697934, 0.0032738894)
+chest_rotation = Vector3(0, -5.6843426e-14, 0)
+head_position = Vector3(-1.4981957e-08, 1.5793936, -0.4448575)
+head_rotation = Vector3(0, -4.2632564e-14, 0)
 left_arm_magnet_position = Vector3(0.41947496, 0.90092236, -0.011527833)
 right_arm_magnet_position = Vector3(-0.419, 0.901, -0.012)
-left_hand_position = Vector3(0.29064226, 0.980255, 0.23875304)
-right_hand_position = Vector3(-0.291, 0.9797716, 0.23906465)
-left_hand_rotation = Vector3(1.0400048, 2.2469192, 0.21723942)
-right_hand_rotation = Vector3(1.0400046, -2.2469196, -0.21723942)
-left_foot_position = Vector3(0.20908889, 0.5391585, -0.3306595)
-right_foot_position = Vector3(-0.21216635, 0.5234199, -0.32729492)
-left_foot_rotation = Vector3(-1.275857, -2.0608416, -0.75981855)
+left_hand_position = Vector3(-0.25099996, 0.010506213, 0.119806916)
+right_hand_position = Vector3(0.25104138, 0.010893047, 0.11961305)
+left_hand_rotation = Vector3(1.2217305, -2.1345377, -0.40142566)
+right_hand_rotation = Vector3(1.2223395, 2.1345227, 0.34589267)
+left_foot_position = Vector3(0.183, 0.567, -0.227)
+right_foot_position = Vector3(-0.18314199, 0.5666657, -0.22655825)
+left_foot_rotation = Vector3(-1.275857, -2.0608416, -0.7598186)
 right_foot_rotation = Vector3(-1.2186638, 2.5100298, 0.6246737)
 left_leg_magnet_position = Vector3(0.46395656, 0.5692559, 0.42930415)
 right_leg_magnet_position = Vector3(-0.464, 0.569, 0.429)
-mods = Array[ExtResource("4_hx3xb")]([ExtResource("5_qepda")])
+mods = Array[ExtResource("4_hx3xb")]([ExtResource("6_88b7q")])
+engine_sound_id = 2
+engine_min_pitch = 0.8
+engine_max_pitch = 2.1
 max_speed = 120.0
-lean_speed = 4.0
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"
