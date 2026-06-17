@@ -1,45 +1,58 @@
-[gd_scene format=3 uid="uid://54ehro5jqyxu"]
+[gd_scene format=3 uid="uid://it7myerjmp0g"]
 
-[ext_resource type="PackedScene" uid="uid://qrohq27ndoou" path="res://player/bikes/assets/sportbike/Untitled.glb" id="1_rw1ah"]
+[ext_resource type="PackedScene" uid="uid://c8gto7d47a278" path="res://player/bikes/assets/R73DModel/r7.glb" id="1_yvpo1"]
 [ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="2_4okic"]
 [ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="3_82gmx"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rw1ah"]
-
-[sub_resource type="Resource" id="Resource_4okic"]
-script = ExtResource("3_82gmx")
-color = Color(0.8, 0.8, 0.8, 1)
-use_standard_material = true
-surface_index = 1
-standard_material = SubResource("StandardMaterial3D_rw1ah")
-metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_82gmx"]
-
-[sub_resource type="Resource" id="Resource_br1d3"]
-script = ExtResource("3_82gmx")
-color = Color(0.92, 0.22340666, 0.21160002, 1)
-use_standard_material = true
-surface_index = 2
-standard_material = SubResource("StandardMaterial3D_82gmx")
-metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yvpo1"]
-albedo_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="Resource" id="Resource_8pjdv"]
+script = ExtResource("3_82gmx")
+color = Color(0.0225, 0.06187501, 0.09, 1)
+use_standard_material = true
+standard_material = SubResource("StandardMaterial3D_yvpo1")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_56qvq"]
+
+[sub_resource type="Resource" id="Resource_5ahef"]
+script = ExtResource("3_82gmx")
+color = Color(0.25490198, 0.6862745, 1, 1)
+use_standard_material = true
+standard_material = SubResource("StandardMaterial3D_56qvq")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_afa67"]
+
+[sub_resource type="Resource" id="Resource_kk1mv"]
+script = ExtResource("3_82gmx")
+color = Color(0.25490198, 0.6862745, 1, 1)
+use_standard_material = true
+standard_material = SubResource("StandardMaterial3D_afa67")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8pjdv"]
-albedo_color = Color(0.92, 0.22340666, 0.21160002, 1)
+albedo_color = Color(0.0225, 0.06187501, 0.09, 1)
 
-[node name="SportBike" unique_id=201545758 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("1_rw1ah")]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5ahef"]
+albedo_color = Color(0.25490198, 0.6862745, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kk1mv"]
+albedo_color = Color(0.25490198, 0.6862745, 1, 1)
+
+[node name="r7" unique_id=394643670 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("1_yvpo1")]
 script = ExtResource("2_4okic")
-slots = Array[ExtResource("3_82gmx")]([SubResource("Resource_4okic"), SubResource("Resource_br1d3")])
-meshes = [NodePath("sportbike"), NodePath("sportbike")]
-steering_rotation_node = NodePath("Node3D")
-front_wheel_node = NodePath("Node3D")
-rear_wheel_node = NodePath("Node3D")
+slots = Array[ExtResource("3_82gmx")]([SubResource("Resource_8pjdv"), SubResource("Resource_5ahef"), SubResource("Resource_kk1mv")])
+meshes = [NodePath("Body"), NodePath("RearWheelSpin/RearWheel"), NodePath("SteerHinge/FrontWheelSpin/FrontWheel")]
+steering_rotation_node = NodePath("SteerHinge")
+front_wheel_node = NodePath("SteerHinge/FrontWheelSpin")
+rear_wheel_node = NodePath("RearWheelSpin")
 
-[node name="sportbike" parent="." index="0" unique_id=1836968304]
-surface_material_override/1 = SubResource("StandardMaterial3D_yvpo1")
-surface_material_override/2 = SubResource("StandardMaterial3D_8pjdv")
+[node name="Body" parent="." index="0" unique_id=1893824468]
+surface_material_override/0 = SubResource("StandardMaterial3D_8pjdv")
 
-[node name="Node3D" type="Node3D" parent="." index="1" unique_id=1726142442]
+[node name="RearWheel" parent="RearWheelSpin" parent_id_path=PackedInt32Array(1527129744) index="2" unique_id=449659999]
+surface_material_override/0 = SubResource("StandardMaterial3D_5ahef")
+
+[node name="FrontWheel" parent="SteerHinge/FrontWheelSpin" parent_id_path=PackedInt32Array(32197171) index="2" unique_id=937373715]
+surface_material_override/0 = SubResource("StandardMaterial3D_kk1mv")

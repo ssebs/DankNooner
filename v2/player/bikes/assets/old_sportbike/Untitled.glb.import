@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://qrohq27ndoou"
-path="res://.godot/imported/Untitled.glb-8af9b426a312728e5e21ee4ef70cf92a.scn"
+path="res://.godot/imported/Untitled.glb-5ce6440477dd98cd69e936a0e1abc312.scn"
 
 [deps]
 
-source_file="res://player/bikes/assets/sportbike/Untitled.glb"
-dest_files=["res://.godot/imported/Untitled.glb-8af9b426a312728e5e21ee4ef70cf92a.scn"]
+source_file="res://player/bikes/assets/old_sportbike/Untitled.glb"
+dest_files=["res://.godot/imported/Untitled.glb-5ce6440477dd98cd69e936a0e1abc312.scn"]
 
 [params]
 

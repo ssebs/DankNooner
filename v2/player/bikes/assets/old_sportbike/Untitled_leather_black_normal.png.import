@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dsqj45emthx86"
-path.s3tc="res://.godot/imported/Untitled_leather_black_normal.png-c996e134a469cec4fc4bc8698e27d9aa.s3tc.ctex"
-path.etc2="res://.godot/imported/Untitled_leather_black_normal.png-c996e134a469cec4fc4bc8698e27d9aa.etc2.ctex"
+path.s3tc="res://.godot/imported/Untitled_leather_black_normal.png-065d4205928b7e4ae5880459ef06d749.s3tc.ctex"
+path.etc2="res://.godot/imported/Untitled_leather_black_normal.png-065d4205928b7e4ae5880459ef06d749.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -15,8 +15,8 @@ generator_parameters={
 
 [deps]
 
-source_file="res://player/bikes/assets/sportbike/Untitled_leather_black_normal.png"
-dest_files=["res://.godot/imported/Untitled_leather_black_normal.png-c996e134a469cec4fc4bc8698e27d9aa.s3tc.ctex", "res://.godot/imported/Untitled_leather_black_normal.png-c996e134a469cec4fc4bc8698e27d9aa.etc2.ctex"]
+source_file="res://player/bikes/assets/old_sportbike/Untitled_leather_black_normal.png"
+dest_files=["res://.godot/imported/Untitled_leather_black_normal.png-065d4205928b7e4ae5880459ef06d749.s3tc.ctex", "res://.godot/imported/Untitled_leather_black_normal.png-065d4205928b7e4ae5880459ef06d749.etc2.ctex"]
 
 [params]
 
