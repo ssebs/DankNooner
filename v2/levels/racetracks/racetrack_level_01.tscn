@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_mfsae"]
 [ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/gamemodeobjects/killbox.tscn" id="2_67tx4"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="3_l4d1h"]
+[ext_resource type="Shader" uid="uid://clkgjgiknt6cb" path="res://levels/components/terrain3d.gdshader" id="5_erah2"]
 [ext_resource type="Script" uid="uid://c3ycg631dwkse" path="res://utils/editor_tools/take_screenshot.gd" id="6_ft3g4"]
 [ext_resource type="Texture2D" uid="uid://ddprscrpsofah" path="res://terrain3d_demo/assets/textures/ground037_alb_ht.png" id="8_t4jal"]
 [ext_resource type="Texture2D" uid="uid://c1ots7w6i0i1q" path="res://terrain3d_demo/assets/textures/ground037_nrm_rgh.png" id="9_ihuqi"]
@@ -73,6 +74,8 @@ _shader_parameters = {
 &"noise_texture": SubResource("NoiseTexture2D_giffm"),
 &"projection_threshold": null
 }
+shader_override_enabled = true
+shader_override = ExtResource("5_erah2")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aeyf6"]
 transparency = 4

@@ -1600,15 +1600,15 @@ transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, -1.567
 
 [node name="LeftHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=811111111]
 unique_name_in_owner = true
-transform = Transform3D(-0.12706514, -0.6579527, -0.2023676, -0.09354653, 0.22038187, -0.6577848, 0.68198496, -0.092358194, -0.12793149, -0.17569996, 0.9017187, 0.47230154)
+transform = Transform3D(-0.32625553, 0.5542227, 0.27639562, 0.07637505, 0.34602264, -0.60368466, -0.61459273, -0.25120822, -0.22174369, 0.29064226, 0.9562068, 0.18692449)
 
 [node name="RightHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=822222222]
 unique_name_in_owner = true
-transform = Transform3D(-0.16333668, 0.6500036, 0.20203085, 0.08103431, 0.22485743, -0.6579305, -0.6758362, -0.13013248, -0.12771437, 0.17572896, 0.90198946, 0.47216585)
+transform = Transform3D(-0.33350974, -0.5309657, -0.31120205, -0.1094497, 0.39948568, -0.5642978, 0.60563356, -0.22019692, -0.273352, -0.266, 0.98800004, 0.20600004)
 
 [node name="LeftFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=833333333]
 unique_name_in_owner = true
-transform = Transform3D(-0.9226999, 0.28783172, -0.25647196, -0.20021874, 0.210733, 0.9568198, 0.32945016, 0.934208, -0.136814, 0.183, 0.567, -0.227)
+transform = Transform3D(-0.9574184, -0.24940923, -0.14541335, -0.20021881, 0.21073319, 0.9568197, -0.20799622, 0.94519126, -0.25169626, 0.19981939, 0.39506754, -0.16492465)
 
 [node name="SparkParticlesLeft" parent="VisualRoot/IKTargets/LeftFootTarget" unique_id=1003989945 instance=ExtResource("29_3kl2f")]
 unique_name_in_owner = true
@@ -1617,7 +1617,7 @@ emitting = false
 
 [node name="RightFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=844444444]
 unique_name_in_owner = true
-transform = Transform3D(-0.9787892, 0.022497207, 0.20363149, 0.20170893, 0.27976722, 0.93863934, -0.03585267, 0.9598043, -0.27837098, -0.18314199, 0.5666657, -0.22655825)
+transform = Transform3D(-0.95741844, 0.24940896, 0.14541346, 0.20021884, 0.21073316, 0.9568197, 0.20799601, 0.9451913, -0.2516962, -0.21216637, 0.5018048, -0.20081648)
 
 [node name="SparkParticlesRight" parent="VisualRoot/IKTargets/RightFootTarget" unique_id=1985641876 instance=ExtResource("29_3kl2f")]
 unique_name_in_owner = true
