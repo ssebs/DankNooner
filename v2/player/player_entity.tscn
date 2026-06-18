@@ -29,6 +29,7 @@
 [ext_resource type="Texture2D" uid="uid://8i4urqqivwil" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_menu.png" id="24_744ak"]
 [ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/bikes/hitbox/bike_hitbox.tres" id="28_xm7jy"]
 [ext_resource type="PackedScene" uid="uid://cu0vh8sgp0l2e" path="res://entities/vfx/spark_particles.tscn" id="29_3kl2f"]
+[ext_resource type="Script" path="res://player/controllers/skidmark_controller.gd" id="30_skid"]
 
 [sub_resource type="Animation" id="Animation_k5dce"]
 resource_name = "back_up_loop"
@@ -1186,6 +1187,11 @@ ik_anim_player = NodePath("IKAnimationPlayer")
 unique_name_in_owner = true
 root_node = NodePath("../../../VisualRoot")
 libraries/ = SubResource("AnimationLibrary_xm7jy")
+
+[node name="SkidmarkController" type="Node" parent="_Controllers/AnimationController" node_paths=PackedStringArray("player_entity", "movement_controller")]
+script = ExtResource("30_skid")
+player_entity = NodePath("../../..")
+movement_controller = NodePath("../../MovementController")
 
 [node name="MovementController" type="Node" parent="_Controllers" unique_id=220903559 node_paths=PackedStringArray("player_entity", "input_controller", "gearing_controller", "crash_controller", "rear_raycast", "front_raycast")]
 unique_name_in_owner = true

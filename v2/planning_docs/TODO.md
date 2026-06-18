@@ -8,7 +8,7 @@
 - [ ] Drifting
   - [x] Ebrake
   - [x] Powerslide
-  - [ ] show black lines
+  - [x] show black lines
   - [ ] play screech audio
 - [ ] [new roads](../PLAN-roads.md)
   - [ ] del road / track system?

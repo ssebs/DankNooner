@@ -211,11 +211,15 @@ func _init_collision_shape():
 	collision_shape_3d.scale = bike_definition.collision_scale_multiplier
 
 
-## Position ground raycasts at wheel positions from bike_definition
+## Position ground raycasts at wheel positions from bike_definition.
+## Wheel markers are authored under VisualRoot (yawed 180° to face -Z), so their
+## positions are VisualRoot-local. The raycasts live in PlayerEntity space, so
+## rotate the offsets by VisualRoot's basis or they land on the mirrored side.
 func _init_raycasts():
-	front_raycast.position = bike_definition.front_wheel_ground_position + Vector3.UP * 0.5
+	var b := visual_root.transform.basis
+	front_raycast.position = b * bike_definition.front_wheel_ground_position + Vector3.UP * 0.5
 	front_raycast.target_position = Vector3.DOWN * 1.5
-	rear_raycast.position = bike_definition.rear_wheel_ground_position + Vector3.UP * 0.5
+	rear_raycast.position = b * bike_definition.rear_wheel_ground_position + Vector3.UP * 0.5
 	rear_raycast.target_position = Vector3.DOWN * 1.5
 
 
