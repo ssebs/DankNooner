@@ -3,6 +3,7 @@ extends EditorPlugin
 
 var spinner_inspector := SpinnerEditorInspector.new()
 
+
 func _enter_tree():
 	# Initialization of the plugin goes here.
 	add_inspector_plugin(spinner_inspector)
@@ -14,13 +15,12 @@ func _exit_tree():
 	remove_inspector_plugin(spinner_inspector)
 
 
+class SpinnerEditorInspector:
+	extends EditorInspectorPlugin
 
-
-
-class SpinnerEditorInspector extends EditorInspectorPlugin:
 	func _can_handle(object):
 		return object is Spinner
-	
+
 	func _parse_property(object, type, name, hint_type, hint_string, usage_flags, wide):
 		var spinner := object as Spinner
 		if name == "nine_patch_stretch":
@@ -43,23 +43,25 @@ class SpinnerEditorInspector extends EditorInspectorPlugin:
 		if spinner.color_use_editor_theme:
 			if name.begins_with("color_"):
 				return true
-	
+		return false
+
 	func _parse_group(object, group):
 		var spinner := object as Spinner
 
-	class SpinnerColorsProperty extends EditorProperty:
+	class SpinnerColorsProperty:
+		extends EditorProperty
 		var property_control := CheckBox.new()
 
 		func _init():
 			add_child(property_control)
 			add_focusable(property_control)
-		
+
 		func _ready():
 			property_control.button_pressed = get_edited_object().color_use_editor_theme
 			property_control.toggled.connect(toggled)
-		
+
 		func toggled(value: bool):
-			var spinner : Spinner = get_edited_object()
+			var spinner: Spinner = get_edited_object()
 			spinner.color_use_editor_theme = value
 			if value:
 				spinner.color_success = property_control.get_theme_color("success_color", "Editor")
@@ -71,4 +73,3 @@ class SpinnerEditorInspector extends EditorInspectorPlugin:
 			emit_changed("color_warning", spinner)
 			emit_changed("color_error", spinner)
 			emit_changed("color_progress", spinner)
-			

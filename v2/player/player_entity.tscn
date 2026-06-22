@@ -25,11 +25,11 @@
 [ext_resource type="Texture2D" uid="uid://cqq425x7j1o01" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_x.png" id="20_8la7j"]
 [ext_resource type="Texture2D" uid="uid://c3x4cgt2aebjy" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_view.png" id="20_tc2m1"]
 [ext_resource type="Texture2D" uid="uid://ca0sqawt6rdwg" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_y.png" id="22_8urt2"]
-[ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://addons/virtual_joystick/virtual_joystick_scene.tscn" id="23_am3pr"]
+[ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://addons/virtual_joystick_addon/virtual_joystick_scene.tscn" id="23_am3pr"]
 [ext_resource type="Texture2D" uid="uid://8i4urqqivwil" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Double/xbox_button_menu.png" id="24_744ak"]
 [ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/bikes/hitbox/bike_hitbox.tres" id="28_xm7jy"]
 [ext_resource type="PackedScene" uid="uid://cu0vh8sgp0l2e" path="res://entities/vfx/spark_particles.tscn" id="29_3kl2f"]
-[ext_resource type="Script" path="res://player/controllers/skidmark_controller.gd" id="30_skid"]
+[ext_resource type="Script" uid="uid://cajkhr7cisa7f" path="res://player/controllers/skidmark_controller.gd" id="30_skid"]
 
 [sub_resource type="Animation" id="Animation_k5dce"]
 resource_name = "back_up_loop"
@@ -1188,7 +1188,7 @@ unique_name_in_owner = true
 root_node = NodePath("../../../VisualRoot")
 libraries/ = SubResource("AnimationLibrary_xm7jy")
 
-[node name="SkidmarkController" type="Node" parent="_Controllers/AnimationController" node_paths=PackedStringArray("player_entity", "movement_controller")]
+[node name="SkidmarkController" type="Node" parent="_Controllers/AnimationController" unique_id=234402908 node_paths=PackedStringArray("player_entity", "movement_controller")]
 script = ExtResource("30_skid")
 player_entity = NodePath("../../..")
 movement_controller = NodePath("../../MovementController")
@@ -1701,10 +1701,10 @@ text = "USERNAME"
 
 [node name="RearRayCast" type="RayCast3D" parent="." unique_id=1983600718]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0521185e-09, 0.5, -0.6426772)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.9093675e-08, 0.5, 0.6426772)
 target_position = Vector3(0, -1.5, 0)
 
 [node name="FrontRayCast" type="RayCast3D" parent="." unique_id=391878602]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.063193e-08, 0.5, 0.6847348)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4402401e-07, 0.5, -0.6847348)
 target_position = Vector3(0, -1.5, 0)
