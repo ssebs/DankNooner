@@ -21,7 +21,7 @@ enum Status {
 }
 
 ## Current status of the spinner
-@export var status : Status = Status.SPINNING:
+@export var status: Status = Status.SPINNING:
 	set(new_value):
 		status = new_value
 		_update_status()
@@ -34,7 +34,7 @@ enum Status {
 		use_icons = value
 		_update_status()
 ## Width of the spinning/static border
-@export_range(0.0, 0.3, 0.001) var border_width : float = 0.1:
+@export_range(0.0, 0.3, 0.001) var border_width: float = 0.1:
 	set(value):
 		border_width = value
 		_update_children_size()
@@ -52,19 +52,29 @@ enum Status {
 @export var color_use_editor_theme := false
 ## Color when status is Status.SUCCESS
 @export var color_success := Color(0.45, 0.95, 0.5):
-	set(value): color_success = value; _update_status()
+	set(value):
+		color_success = value
+		_update_status()
 ## Color when status is Status.PROGRESSING or Status.SPINNING
 @export var color_progress := Color(0.44, 0.73, 0.98):
-	set(value): color_progress = value; _update_status()
+	set(value):
+		color_progress = value
+		_update_status()
 ## Color when status is Status.ERROR
 @export var color_error := Color(1, 0.47, 0.42):
-	set(value): color_error = value; _update_status()
+	set(value):
+		color_error = value
+		_update_status()
 ## Color when status is Status.WARNING
 @export var color_warning := Color(1, 0.87, 0.4):
-	set(value): color_warning = value; _update_status()
+	set(value):
+		color_warning = value
+		_update_status()
 ## Background color
 @export var color_background := Color(0.0, 0.0, 0.0, 0.4):
-	set(value): color_background = value; _update_status()
+	set(value):
+		color_background = value
+		_update_status()
 
 @export_subgroup("Icons", "icon_")
 ## Whether or not to draw the spinning indicator in non-PROGRESSING/SPINNING statuses
@@ -82,36 +92,38 @@ enum Status {
 		# _icon.radius = (diameter / 2) * value
 		_update_status()
 ## Icon to display when status is Status.SUCCESS
-@export var icon_success : Texture2D = preload("./icons/StatusSuccess.svg"):
+@export var icon_success: Texture2D = preload("./icons/StatusSuccess.svg"):
 	set(value):
 		icon_success = value
 		_update_status()
 ## Icon to display when status is Status.ERROR
-@export var icon_error : Texture2D = preload("./icons/StatusError.svg"):
+@export var icon_error: Texture2D = preload("./icons/StatusError.svg"):
 	set(value):
 		icon_error = value
 		_update_status()
 ## Icon to display when status is Status.WARNING
-@export var icon_warning : Texture2D = preload("./icons/StatusWarning.svg"):
+@export var icon_warning: Texture2D = preload("./icons/StatusWarning.svg"):
 	set(value):
 		icon_warning = value
 		_update_status()
 
-var diameter : float:
+var diameter: float:
 	get():
 		return min(size.x, size.y)
 
-var _radial_initial_angle : float = 0.0
+var _radial_initial_angle: float = 0.0
 
 var _background := _SpinnerSolidCircle.new()
 var _icon := _SpinnerIcon.new()
 var _progress_border := _SpinnerProgressBorder.new()
+
 
 ## Sets value and status to Status.PROGRESSING at the same time.
 func set_progressing(to_value: float):
 	if status != Status.PROGRESSING:
 		status = Status.PROGRESSING
 	value = to_value
+
 
 func _ready():
 	clip_contents = true
@@ -138,6 +150,7 @@ func _ready():
 	# resized.connect(_update_children_size)
 	item_rect_changed.connect(_update_children_size)
 	_update_status()
+
 
 func _update_status():
 	_background.color = color_background
@@ -188,6 +201,7 @@ func _update_status():
 			_progress_border.hide()
 	queue_redraw()
 
+
 func _update_children_size():
 	var radius := diameter / 2
 	_background.radius = radius
@@ -195,6 +209,7 @@ func _update_children_size():
 	_icon.radius = radius
 	_progress_border.radius = radius
 	_progress_border.stroke_width = border_width * diameter
+
 
 func _process(delta: float):
 	if status == Status.SPINNING and (!Engine.is_editor_hint() or spin_preview_in_editor):
@@ -205,8 +220,9 @@ func _process(delta: float):
 		_radial_initial_angle = 0
 	_update_progress_border()
 
+
 func _update_progress_border():
-	var v : float
+	var v: float
 	match status:
 		Status.EMPTY:
 			v = min_value
@@ -217,10 +233,19 @@ func _update_progress_border():
 		_:
 			v = max_value
 	_progress_border.start_angle = _radial_initial_angle
-	_progress_border.end_angle = _radial_initial_angle  + lerp(0, 360, float(v - min_value) / float(max_value - min_value))
+	_progress_border.end_angle = (
+		_radial_initial_angle + lerp(0, 360, float(v - min_value) / float(max_value - min_value))
+	)
+
 
 func _should_use_editor_theme():
-	return Engine.is_editor_hint() and color_use_editor_theme and get_tree() and get_tree().edited_scene_root not in [self, owner]
+	return (
+		Engine.is_editor_hint()
+		and color_use_editor_theme
+		and get_tree()
+		and get_tree().edited_scene_root not in [self, owner]
+	)
+
 
 func _get_color(theme_color_name: String, fallback: Color) -> Color:
 	var c := get_theme_color(theme_color_name)
@@ -228,15 +253,15 @@ func _get_color(theme_color_name: String, fallback: Color) -> Color:
 		return get_theme_color(theme_color_name, "Editor")
 	else:
 		return fallback
-	
+
+
 func _validate_property(property):
-	if property.name in [
-			"_radial_initial_angle",
-			"page"
-			]:
+	if property.name in ["_radial_initial_angle", "page"]:
 		property.usage = PROPERTY_USAGE_NONE
 
-class _SpinnerElement extends Control:
+
+class _SpinnerElement:
+	extends Control
 	var color := Color.BLACK:
 		set(value):
 			color = value
@@ -249,20 +274,26 @@ class _SpinnerElement extends Control:
 			size = Vector2(radius * 2, radius * 2)
 			# pivot_offset = Vector2(radius, radius)
 			queue_redraw()
+
 	func _init():
 		set_anchors_preset(PRESET_CENTER)
 		mouse_filter = MOUSE_FILTER_IGNORE
 
-class _SpinnerSolidCircle extends _SpinnerElement:
+
+class _SpinnerSolidCircle:
+	extends _SpinnerElement
+
 	func _draw():
 		if color == Color.TRANSPARENT:
 			return
 		draw_circle(Vector2(radius, radius), radius, color, true)
 
+
 # Draws solid circle if no icon
-class _SpinnerIcon extends _SpinnerSolidCircle:
-	var icon : Texture2D
-	var icon_scale : float
+class _SpinnerIcon:
+	extends _SpinnerSolidCircle
+	var icon: Texture2D
+	var icon_scale: float
 
 	func _draw():
 		if color == Color.TRANSPARENT:
@@ -277,20 +308,22 @@ class _SpinnerIcon extends _SpinnerSolidCircle:
 		draw_texture(icon, pos, color)
 		draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 
-class _SpinnerProgressBorder extends _SpinnerElement:
-	var stroke_width : float:
+
+class _SpinnerProgressBorder:
+	extends _SpinnerElement
+	var stroke_width: float:
 		set(value):
 			stroke_width = value
 			queue_redraw()
-	var start_angle : float:
+	var start_angle: float:
 		set(value):
 			start_angle = value
 			queue_redraw()
-	var end_angle : float:
+	var end_angle: float:
 		set(value):
 			end_angle = value
 			queue_redraw()
-	
+
 	func _draw():
 		draw_arc(
 			Vector2(radius, radius),

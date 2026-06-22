@@ -2,7 +2,7 @@
 > Don't forget, have fun :D
 
 ## In Progress 🚀 — Current Sprint
-
+- [ ] Create linear map for stunt race
 - [ ] cant use controller to select in customize menu
 
 - [ ] Drifting

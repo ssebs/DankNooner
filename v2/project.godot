@@ -20,7 +20,7 @@ config/version="v0.0.87"
 run/main_scene="uid://bi5r4eng0hofw"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="DankNooner"
-config/features=PackedStringArray("4.6", "Forward Plus")
+config/features=PackedStringArray("4.7", "Forward Plus")
 boot_splash/bg_color=Color(0.078431375, 0.078431375, 0.078431375, 1)
 boot_splash/show_image=false
 boot_splash/image="uid://dlnqminq87toq"
@@ -60,7 +60,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/awaitable_http_request/plugin.cfg", "res://addons/console/plugin.cfg", "res://addons/fancy_folder_colors/plugin.cfg", "res://addons/mixamo_animation_retargeter/plugin.cfg", "res://addons/netfox.internals/plugin.cfg", "res://addons/netfox/plugin.cfg", "res://addons/tattomoosa.spinner/plugin.cfg", "res://addons/terrain_3d/plugin.cfg", "res://addons/toastparty/plugin.cfg", "res://addons/virtual_joystick/plugin.cfg")
+enabled=PackedStringArray("res://addons/awaitable_http_request/plugin.cfg", "res://addons/console/plugin.cfg", "res://addons/fancy_folder_colors/plugin.cfg", "res://addons/mixamo_animation_retargeter/plugin.cfg", "res://addons/netfox.internals/plugin.cfg", "res://addons/netfox/plugin.cfg", "res://addons/terrain_3d/plugin.cfg", "res://addons/toastparty/plugin.cfg", "res://addons/virtual_joystick/plugin.cfg")
 
 [file_customization]
 
