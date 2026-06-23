@@ -1,0 +1,186 @@
+[gd_scene format=3 uid="uid://c8qlsdtal72mr"]
+
+[ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_craaw"]
+[ext_resource type="Terrain3DAssets" uid="uid://yb0s63flmt74" path="res://levels/racetracks/stunt_track_01/t3ddata/new_terrain_3d_assets.res" id="2_gvu3f"]
+[ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/gamemodeobjects/killbox.tscn" id="3_cbnwg"]
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="4_e82mi"]
+[ext_resource type="PackedScene" uid="uid://d4msfqi2aivla" path="res://levels/components/road_pieces/straight_road.tscn" id="5_gvu3f"]
+
+[sub_resource type="Gradient" id="Gradient_gvu3f"]
+offsets = PackedFloat32Array(0.2, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_pgovl"]
+noise_type = 2
+frequency = 0.03
+cellular_jitter = 3.0
+cellular_return_type = 0
+domain_warp_enabled = true
+domain_warp_type = 1
+domain_warp_amplitude = 50.0
+domain_warp_fractal_type = 2
+domain_warp_fractal_lacunarity = 1.5
+domain_warp_fractal_gain = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_4rtj3"]
+noise = SubResource("FastNoiseLite_pgovl")
+color_ramp = SubResource("Gradient_gvu3f")
+seamless = true
+
+[sub_resource type="Terrain3DMaterial" id="Terrain3DMaterial_3ue8r"]
+_shader_parameters = {
+&"bias_distance": null,
+&"blend_sharpness": null,
+&"depth_blur": null,
+&"enable_macro_variation": null,
+&"enable_projection": null,
+&"flat_terrain_normals": null,
+&"macro_variation1": null,
+&"macro_variation2": null,
+&"macro_variation_slope": null,
+&"mipmap_bias": null,
+&"noise1_angle": null,
+&"noise1_offset": null,
+&"noise1_scale": null,
+&"noise2_scale": null,
+&"noise_texture": SubResource("NoiseTexture2D_4rtj3"),
+&"projection_threshold": null,
+&"world_noise_fragment_normals": null,
+&"world_noise_height": null,
+&"world_noise_lod_distance": 0.0,
+&"world_noise_max_octaves": 4,
+&"world_noise_min_octaves": 2,
+&"world_noise_offset": Vector3(0, -2.065, 0),
+&"world_noise_region_blend": 0.94999998062826,
+&"world_noise_scale": null
+}
+world_background = 2
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e82mi"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_6hu6n"]
+sky_material = SubResource("ProceduralSkyMaterial_e82mi")
+
+[sub_resource type="Environment" id="Environment_gvu3f"]
+background_mode = 2
+sky = SubResource("Sky_6hu6n")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="stunt_track_01" type="Node3D" unique_id=497611854 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug", "grid_markers")]
+script = ExtResource("1_craaw")
+player_spawn_pos = NodePath("PlayerSpawn")
+player_spawn_pos_debug = NodePath("PlayerSpawn")
+grid_markers = [NodePath("RaceGridSpot1"), NodePath("RaceGridSpot2"), NodePath("RaceGridSpot3"), NodePath("RaceGridSpot4")]
+metadata/_custom_type_script = "uid://dv0brm8irhlth"
+
+[node name="Terrain3D" type="Terrain3D" parent="." unique_id=1447359181]
+data_directory = "res://levels/racetracks/stunt_track_01/t3ddata"
+material = SubResource("Terrain3DMaterial_3ue8r")
+assets = ExtResource("2_gvu3f")
+top_level = true
+metadata/_edit_lock_ = true
+
+[node name="PlayerSpawn" type="Marker3D" parent="." unique_id=597938046]
+unique_name_in_owner = true
+transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 4.9999995, 0.049999714, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=464843826]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1652939760]
+environment = SubResource("Environment_gvu3f")
+
+[node name="Killbox" parent="." unique_id=1054789626 instance=ExtResource("3_cbnwg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -64, 0)
+
+[node name="Paddock_PitLane" type="Node3D" parent="." unique_id=1540496942]
+
+[node name="Paddock" type="Node3D" parent="Paddock_PitLane" unique_id=287770933]
+
+[node name="PaddockWall" parent="Paddock_PitLane/Paddock" unique_id=1485126779 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3, 12.25)
+width = 12.0
+height = 6.0
+depth = 0.5
+color_preset = 3
+
+[node name="PaddockWall2" parent="Paddock_PitLane/Paddock" unique_id=1818405687 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3, -12.25)
+width = 12.0
+height = 6.0
+depth = 0.5
+color_preset = 3
+
+[node name="PaddockWall4" parent="Paddock_PitLane/Paddock" unique_id=1016713017 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3, 0)
+width = 6.0
+height = 6.0
+depth = 0.5
+color_preset = 3
+
+[node name="PaddockWall3" parent="Paddock_PitLane/Paddock" unique_id=1734838797 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 3, 0)
+width = 0.5
+height = 6.0
+depth = 24.5
+color_preset = 3
+
+[node name="PaddockWall5" parent="Paddock_PitLane/Paddock" unique_id=471864176 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.25, 0.5, 0)
+depth = 22.0
+color_preset = 1
+
+[node name="PaddockRoof" parent="Paddock_PitLane/Paddock" unique_id=1596370587 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 6, 0)
+width = 12.0
+height = 0.5
+depth = 25.0
+color_preset = 3
+
+[node name="Pitwall" parent="Paddock_PitLane" unique_id=1105008714 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9499998, 0)
+width = 0.25
+height = 2.0
+depth = 24.0
+color_preset = 1
+
+[node name="PaddockWall6" parent="Paddock_PitLane" unique_id=1115979171 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, 0)
+depth = 22.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody" parent="Paddock_PitLane" unique_id=4209555 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 0)
+width = 12.0
+height = 0.1
+depth = 24.0
+
+[node name="GrayBox_StaticBody2" parent="Paddock_PitLane" unique_id=1859304210 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+width = 8.0
+height = 0.1
+depth = 64.0
+
+[node name="RaceGridSpot1" type="Marker3D" parent="." unique_id=1788064021]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.499992, 0, -8.999992)
+
+[node name="RaceGridSpot2" type="Marker3D" parent="." unique_id=385735553]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.499992, 0, -3.9999928)
+
+[node name="RaceGridSpot3" type="Marker3D" parent="." unique_id=1948706785]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.499992, 0, -8.999992)
+
+[node name="RaceGridSpot4" type="Marker3D" parent="." unique_id=2013135663]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.499992, 0, -3.9999928)
+
+[node name="Track" type="Node3D" parent="." unique_id=1613389763]
+
+[node name="StraightRoad" parent="Track" unique_id=1385091335 instance=ExtResource("5_gvu3f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.75, -0.49665976, -36.89948)
+
+[node name="StraightRoad2" parent="Track" unique_id=1412071033 instance=ExtResource("5_gvu3f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.75, -0.49665976, -46.89948)

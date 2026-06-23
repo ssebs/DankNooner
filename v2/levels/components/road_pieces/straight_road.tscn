@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://d4msfqi2aivla"]
+
+[ext_resource type="Script" uid="uid://dvlipp7cnj3cb" path="res://levels/components/road_pieces/straight_road.gd" id="1_jxc6o"]
+[ext_resource type="ArrayMesh" uid="uid://cfjo6a4o0ridq" path="res://levels/assets/racetrack_collection_for_assetforge/default.obj" id="1_tkscj"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_tkscj"]
+height = 10.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7jvdf"]
+size = Vector3(10, 0.5, 10)
+
+[node name="StraightRoad" type="Node3D" unique_id=1385091335]
+script = ExtResource("1_jxc6o")
+segments = 3
+
+[node name="Mesh" type="MeshInstance3D" parent="." unique_id=379663853]
+unique_name_in_owner = true
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+mesh = ExtResource("1_tkscj")
+
+[node name="crash_wall" type="StaticBody3D" parent="." unique_id=2130993327]
+collision_layer = 2
+
+[node name="RightWallCol" type="CollisionShape3D" parent="crash_wall" unique_id=1070405630]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -5.5, 1, 0)
+shape = SubResource("CylinderShape3D_tkscj")
+
+[node name="LeftWallCol" type="CollisionShape3D" parent="crash_wall" unique_id=42345229]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 5.5, 1, 0)
+shape = SubResource("CylinderShape3D_tkscj")
+
+[node name="ok" type="StaticBody3D" parent="." unique_id=48543409]
+
+[node name="GroundCol" type="CollisionShape3D" parent="ok" unique_id=1915158404]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("BoxShape3D_7jvdf")
