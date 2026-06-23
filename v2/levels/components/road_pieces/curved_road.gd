@@ -2,7 +2,7 @@
 class_name CurvedRoad extends Node3D
 
 ## matches the idx of meshes
-@export_range(1, 4) var sharpness: int = 1:
+@export var sharpness: int = 1:
 	set(value):
 		sharpness = value
 		if is_node_ready():
