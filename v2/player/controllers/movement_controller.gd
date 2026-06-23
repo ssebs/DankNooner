@@ -9,7 +9,7 @@ class_name MovementController extends Node
 @export var rear_raycast: RayCast3D
 @export var front_raycast: RayCast3D
 
-@export var debug_verbose:bool=false
+@export var debug_verbose:bool=true
 
 const CLUTCH_KICK_WINDOW: float = 0.2
 const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65  # fraction of bike's 1st-gear torque needed to clutch-pop — blocks high-gear pops
@@ -27,7 +27,7 @@ const SURFACE_BLEND_SPEED_MIN: float = 3.0  # up_direction alignment speed at re
 const SURFACE_BLEND_SPEED_MAX: float = 40.0  # alignment speed at full speed (must track loops)
 const SURFACE_BLEND_SPEED_FALL: float = 0.25  # airborne alignment back to global UP
 const ADHESION_ANGLE: float = 80.0  # degrees — adhesion speed check kicks in here
-const RAMP_SLOWDOWN: float = 0.25  # multiplier on slope gravity
+const RAMP_SLOWDOWN: float = -3.5  # multiplier on slope gravity
 const MIN_LOOP_SPEED: float = 20.0  # speed needed at fully inverted (180°)
 # Trick tuning
 const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)

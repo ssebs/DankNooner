@@ -238,3 +238,19 @@ sharpness = 9
 [node name="CurvedRoad11" parent="Track" unique_id=1344346384 instance=ExtResource("6_pgovl")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -145.00002, -0.49699998, -124.999985)
 sharpness = 10
+
+[node name="CurvedRoad12" parent="Track" unique_id=1563800816 instance=ExtResource("6_pgovl")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -6, -0.49699998, 77.000015)
+sharpness = 11
+
+[node name="StraightRoad4" parent="." unique_id=810197190 instance=ExtResource("5_gvu3f")]
+transform = Transform3D(-1.6292068e-07, 0, 1, 0, 1, 0, -1, 0, -1.6292068e-07, -49.999996, -0.49699974, -17.999996)
+segments = 3
+
+[node name="CurvedRoad10" parent="." unique_id=1533709457 instance=ExtResource("6_pgovl")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -60.000015, -0.49699998, -17.999989)
+sharpness = 9
+
+[node name="CurvedRoad11" parent="." unique_id=342883031 instance=ExtResource("6_pgovl")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -70.000015, -0.49699998, -17.999989)
+sharpness = 10
