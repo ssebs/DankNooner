@@ -206,3 +206,35 @@ sharpness = 4
 [node name="CurvedRoad5" parent="Track" unique_id=544186057 instance=ExtResource("6_pgovl")]
 transform = Transform3D(-2.1855693e-07, 0, 1, 0, 1, 0, -1, 0, -2.1855693e-07, -35.000008, -0.497, -114.99999)
 sharpness = 4
+
+[node name="CurvedRoad6" parent="Track" unique_id=354832172 instance=ExtResource("6_pgovl")]
+transform = Transform3D(-2.1855693e-07, 0, 1, 0, 1, 0, -1, 0, -2.1855693e-07, -55.00001, -0.497, -124.999985)
+sharpness = 5
+
+[node name="CurvedRoad7" parent="Track" unique_id=1645074080 instance=ExtResource("6_pgovl")]
+transform = Transform3D(-2.1855693e-07, 0, 1, 0, 1, 0, -1, 0, -2.1855693e-07, -65.000015, -0.49699998, -124.999985)
+sharpness = 6
+
+[node name="CurvedRoad8" parent="Track" unique_id=38553120 instance=ExtResource("6_pgovl")]
+transform = Transform3D(-2.1855693e-07, 0, 1, 0, 1, 0, -1, 0, -2.1855693e-07, -75.000015, -0.49699998, -124.999985)
+sharpness = 7
+
+[node name="StraightRoad3" parent="Track" unique_id=1916275032 instance=ExtResource("5_gvu3f")]
+transform = Transform3D(-1.6292068e-07, 0, 1, 0, 1, 0, -1, 0, -1.6292068e-07, -95.000015, 4.5030003, -124.999985)
+segments = 2
+
+[node name="StraightRoad4" parent="Track" unique_id=1269241725 instance=ExtResource("5_gvu3f")]
+transform = Transform3D(-1.6292068e-07, 0, 1, 0, 1, 0, -1, 0, -1.6292068e-07, -125.000015, -0.49699974, -124.999985)
+segments = 3
+
+[node name="CurvedRoad9" parent="Track" unique_id=1003862662 instance=ExtResource("6_pgovl")]
+transform = Transform3D(-1.6292068e-07, 0, 1, 0, 1, 0, -1, 0, -1.6292068e-07, -90.000015, -0.49699998, -124.999985)
+sharpness = 8
+
+[node name="CurvedRoad10" parent="Track" unique_id=1464630405 instance=ExtResource("6_pgovl")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -135.00002, -0.49699998, -124.999985)
+sharpness = 9
+
+[node name="CurvedRoad11" parent="Track" unique_id=1344346384 instance=ExtResource("6_pgovl")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -145.00002, -0.49699998, -124.999985)
+sharpness = 10
