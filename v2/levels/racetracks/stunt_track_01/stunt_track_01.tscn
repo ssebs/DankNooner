@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/gamemodeobjects/killbox.tscn" id="3_cbnwg"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="4_e82mi"]
 [ext_resource type="PackedScene" uid="uid://d4msfqi2aivla" path="res://levels/components/road_pieces/straight_road.tscn" id="5_gvu3f"]
+[ext_resource type="PackedScene" uid="uid://dnxihdwtmgw34" path="res://levels/components/road_pieces/curved_road.tscn" id="6_pgovl"]
 
 [sub_resource type="Gradient" id="Gradient_gvu3f"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -180,7 +181,28 @@ transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0
 [node name="Track" type="Node3D" parent="." unique_id=1613389763]
 
 [node name="StraightRoad" parent="Track" unique_id=1385091335 instance=ExtResource("5_gvu3f")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.75, -0.49665976, -36.89948)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 5, -0.497, -35)
+segments = 3
 
-[node name="StraightRoad2" parent="Track" unique_id=1412071033 instance=ExtResource("5_gvu3f")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.75, -0.49665976, -46.89948)
+[node name="CurvedRoad" parent="Track" unique_id=858726308 instance=ExtResource("6_pgovl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, -0.497, -65)
+sharpness = 2
+
+[node name="CurvedRoad2" parent="Track" unique_id=879864046 instance=ExtResource("6_pgovl")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 24.999996, -0.497, -95)
+sharpness = 3
+
+[node name="CurvedRoad3" parent="Track" unique_id=81563958 instance=ExtResource("6_pgovl")]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 44.999992, -0.497, -105)
+
+[node name="StraightRoad2" parent="Track" unique_id=190530948 instance=ExtResource("5_gvu3f")]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 34.999992, -0.497, -105)
+segments = 5
+
+[node name="CurvedRoad4" parent="Track" unique_id=560997353 instance=ExtResource("6_pgovl")]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -25.000008, -0.497, -114.99999)
+sharpness = 4
+
+[node name="CurvedRoad5" parent="Track" unique_id=544186057 instance=ExtResource("6_pgovl")]
+transform = Transform3D(-2.1855693e-07, 0, 1, 0, 1, 0, -1, 0, -2.1855693e-07, -35.000008, -0.497, -114.99999)
+sharpness = 4
