@@ -107,14 +107,14 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	var names := _get_surface_material_names()
 
-	if names.size() != material_layers.size():
-		# Print the list so it can be copied into the material_layers export.
+	var unmapped: PackedStringArray = []
+	for mat_name in names:
+		if not material_layers.has(StringName(mat_name)):
+			unmapped.append(mat_name)
+
+	if not unmapped.is_empty():
+		# Print the list so the names can be copied into the material_layers export.
 		print("[CurvedRoad] %d surface materials: %s" % [names.size(), ", ".join(names)])
 		warnings.append("Surface materials (%d): %s" % [names.size(), ", ".join(names)])
-		warnings.append(
-			(
-				"material_layers has %d entries but the mesh has %d surface materials."
-				% [material_layers.size(), names.size()]
-			)
-		)
+		warnings.append("Unmapped in material_layers: %s" % ", ".join(unmapped))
 	return warnings
