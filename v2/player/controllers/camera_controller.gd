@@ -31,13 +31,17 @@ enum CameraMode { TPS = 0, FPS, NONE }
 ## How fast accumulated screen-shake trauma bleeds off (per second).
 @export var trauma_decay: float = 1.8
 ## Max camera jitter angle (deg) at full trauma.
-@export var shake_max_angle_deg: float = 0.8
+@export var shake_max_angle_deg: float = 2.5
 ## Speed change (units/s²) where accel/decel shake begins.
 @export var accel_shake_threshold: float = 12.0
 ## Speed change (units/s²) where accel/decel shake is maxed.
 @export var accel_shake_max: float = 60.0
 ## Trauma floor held at the most aggressive accel/decel.
 @export var accel_max_trauma: float = 0.6
+## Fraction of the speed-achievable max lean where hard-cornering shake begins (halfway).
+@export_range(0.0, 1.0) var grip_shake_threshold: float = 0.5
+## Trauma floor held at full lean for the current speed — tires near their grip limit.
+@export var grip_max_trauma: float = 0.3
 ## Max one-shot trauma burst on a wheelie landing (scaled by front-wheel drop speed).
 @export var wheelie_land_trauma: float = 0.35
 ## Front-wheel drop speed (deg/s) below which a wheelie landing adds no shake.
@@ -325,6 +329,25 @@ func _update_juice_fx(delta: float):
 				remap(_accel_smooth, accel_shake_threshold, accel_shake_max, 0.0, accel_max_trauma),
 				0.0,
 				accel_max_trauma
+			)
+		)
+
+	# Hard cornering holds a trauma floor: the closer the lean gets to the max the bike can
+	# hold at this speed, the more the tires strain — the tightest turn radius this speed allows.
+	var mc := player_entity.movement_controller
+	var bd := player_entity.bike_definition
+	var lean_factor: float = bd.lean_curve.sample(mc._speed_pct)
+	var max_lean_for_speed: float = bd.max_lean_angle_rad * lean_factor
+	var grip_strain: float = (
+		absf(mc.roll_angle) / max_lean_for_speed if max_lean_for_speed > 0.001 else 0.0
+	)
+	if grip_strain > grip_shake_threshold:
+		_trauma = maxf(
+			_trauma,
+			clampf(
+				remap(grip_strain, grip_shake_threshold, 1.0, 0.0, grip_max_trauma),
+				0.0,
+				grip_max_trauma
 			)
 		)
 
