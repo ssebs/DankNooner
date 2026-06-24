@@ -19,7 +19,7 @@ signal crashed
 ## Min |roll_angle| (deg) required for the unstable front-brake lowside.
 @export var unstable_lowside_steer_threshold_deg: float = 15.0
 ## Drift over-rotation crash angle (tail came all the way around).
-@export var drift_spinout_angle_deg: float = 60.0
+@export var drift_spinout_angle_deg: float = 70.0  # matches DRIFT_MAX_SLIP_ANGLE_DEG in movement controller
 ## Min |slip| for a highside on grip regain.
 @export var drift_highside_angle_deg: float = 40.0
 ## Min speed for a highside to be dangerous.
@@ -65,7 +65,10 @@ func _detect_air_trick_landing():
 	if not movement_controller._is_on_floor:
 		return
 	var just_landed = not movement_controller._was_on_floor
-	if just_landed and player_entity.trick_controller.current_trick == TrickController.Trick.HEEL_CLICKER:
+	if (
+		just_landed
+		and player_entity.trick_controller.current_trick == TrickController.Trick.HEEL_CLICKER
+	):
 		DebugUtils.DebugMsg("landed mid heel clicker crash")
 		trigger_crash()
 
@@ -130,7 +133,10 @@ func _detect_crash():
 		if (
 			unstable_factor > 0
 			and input_controller.nfx_front_brake > unstable_lowside_brake_threshold
-			and abs(movement_controller.roll_angle) > deg_to_rad(unstable_lowside_steer_threshold_deg)
+			and (
+				abs(movement_controller.roll_angle)
+				> deg_to_rad(unstable_lowside_steer_threshold_deg)
+			)
 		):
 			DebugUtils.DebugMsg("unstable lowside crash")
 			trigger_crash()
@@ -211,7 +217,9 @@ func _detect_drift_crash(delta: float):
 			var slip_sign = signf(movement_controller.slip_angle)
 			var right = player_entity.global_transform.basis.x
 			var launch = (Vector3.UP + right * slip_sign).normalized() * highside_launch_force
-			DebugUtils.DebugMsg("drift HIGHSIDE crash (slip=%.1f° rate=%.1f)" % [rad_to_deg(slip), release_rate])
+			DebugUtils.DebugMsg(
+				"drift HIGHSIDE crash (slip=%.1f° rate=%.1f)" % [rad_to_deg(slip), release_rate]
+			)
 			trigger_crash(launch)
 
 
