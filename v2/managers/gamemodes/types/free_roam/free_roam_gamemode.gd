@@ -131,6 +131,10 @@ func _on_player_crashed(peer_id: int):
 ## still returns to the original spawn.
 func _respawn_at_crash_site(peer_id: int):
 	var player := spawn_manager._get_player_by_peer_id(peer_id)
+	# Already recovered (e.g. pause-menu respawn button) before the timer fired — skip
+	# so we don't respawn a second time.
+	if not player.is_crashed:
+		return
 	var upright := Basis(Vector3.UP, player.global_rotation.y)
 	spawn_manager.respawn_player_in_place.rpc(peer_id, player.global_position, upright)
 
