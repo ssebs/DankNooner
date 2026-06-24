@@ -10,9 +10,10 @@
   - [x] Powerslide
   - [x] show black lines
   - [ ] play screech audio
-- [ ] [new roads](../PLAN-roads.md)
+- [ ] new roads
   - [ ] del road / track system?
-  - [x] Just use Terrain3D instead of creating all this complexity
+  - [x] ~~Just use Terrain3D instead of creating all this complexity~~
+  - [ ] https://github.com/TheDuckCow/godot-road-generator/wiki
 
 ## Playtest bugs
 
