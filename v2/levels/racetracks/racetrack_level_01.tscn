@@ -20,6 +20,10 @@
 [ext_resource type="Script" uid="uid://bk8siml2v41d1" path="res://managers/gamemodes/tasks/race_task.gd" id="17_jbhkl"]
 [ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="18_r8obf"]
 [ext_resource type="Script" uid="uid://dfa11idd8fnyr" path="res://managers/gamemodes/tasks/maintain_trick_task.gd" id="19_mtt"]
+[ext_resource type="Script" uid="uid://bxp3i4cnonh8y" path="res://addons/road-generator/nodes/road_manager.gd" id="21_1aw1h"]
+[ext_resource type="Script" uid="uid://dg25avte7aket" path="res://addons/road-generator/connectors/terrain3d_road_connector.gd" id="21_jbhkl"]
+[ext_resource type="Script" uid="uid://cph7euje06kel" path="res://addons/road-generator/nodes/road_container.gd" id="23_hkp8u"]
+[ext_resource type="Script" uid="uid://difs1qg4mpcpw" path="res://addons/road-generator/nodes/road_point.gd" id="24_tcsq1"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_l4d1h"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -33,6 +37,22 @@ background_mode = 2
 sky = SubResource("Sky_6hu6n")
 tonemap_mode = 2
 glow_enabled = true
+
+[sub_resource type="Resource" id="Resource_ihuqi"]
+script = ExtResource("10_t4jal")
+name = "Race"
+description = "Around the track"
+target_gamemode = 1
+forced_base_bike = ExtResource("10_o08l2")
+metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
+
+[sub_resource type="Resource" id="Resource_wheelie"]
+script = ExtResource("10_t4jal")
+name = "Wheelie Race"
+description = "You must complete the circut while doing a wheelie"
+target_gamemode = 1
+forced_base_bike = ExtResource("10_o08l2")
+metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Gradient" id="Gradient_o08l2"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -110,35 +130,20 @@ normal_texture = ExtResource("11_o08l2")
 mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_0kew3")])
 texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_2j11q"), SubResource("Terrain3DTextureAsset_5ija2")])
 
-[sub_resource type="Resource" id="Resource_ihuqi"]
-script = ExtResource("10_t4jal")
-name = "Race"
-description = "Around the track"
-target_gamemode = 1
-forced_base_bike = ExtResource("10_o08l2")
-metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
-
-[sub_resource type="Resource" id="Resource_wheelie"]
-script = ExtResource("10_t4jal")
-name = "Wheelie Race"
-description = "You must complete the circut while doing a wheelie"
-target_gamemode = 1
-forced_base_bike = ExtResource("10_o08l2")
-metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
-
-[node name="RacetrackLevel01" type="Node3D" unique_id=1668752513 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug")]
+[node name="RacetrackLevel01" type="Node3D" unique_id=1668752513 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug", "grid_markers")]
 script = ExtResource("1_mfsae")
 player_spawn_pos = NodePath("PlayerSpawn")
 player_spawn_pos_debug = NodePath("PlayerSpawnTest")
+grid_markers = [NodePath("Race/SequentialTaskRunner/GridSpawnTask/RaceGridSpot1")]
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="PlayerSpawn" type="Marker3D" parent="." unique_id=2039238747]
 unique_name_in_owner = true
-transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 4.9999995, 0.049999714, 0)
+transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 13.999998, 0.049999952, 3.2499995)
 
 [node name="PlayerSpawnTest" type="Marker3D" parent="." unique_id=2006659162]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.049999714, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.049999952, 3.25)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=215805659]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
@@ -212,25 +217,11 @@ width = 12.0
 height = 0.1
 depth = 24.0
 
-[node name="GrayBox_StaticBody2" parent="Paddock_PitLane" unique_id=1846679608 instance=ExtResource("3_l4d1h")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
-width = 8.0
-height = 0.1
-depth = 64.0
-
 [node name="__SCreenshot" type="Node" parent="." unique_id=1322476029]
 script = ExtResource("6_ft3g4")
 
-[node name="Terrain3D" type="Terrain3D" parent="." unique_id=149829000]
-data_directory = "res://levels/racetracks/t3ddata"
-material = SubResource("Terrain3DMaterial_ll4lc")
-assets = SubResource("Terrain3DAssets_bo3ha")
-collision_mode = 2
-top_level = true
-metadata/_edit_lock_ = true
-
 [node name="Race" parent="." unique_id=459761741 instance=ExtResource("9_ilxvw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, -18.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 5.75)
 gamemode_event = SubResource("Resource_ihuqi")
 
 [node name="SequentialTaskRunner" type="Node" parent="Race" unique_id=472903455]
@@ -242,16 +233,16 @@ script = ExtResource("13_2j11q")
 grid_markers = [NodePath("RaceGridSpot1"), NodePath("RaceGridSpot2"), NodePath("RaceGridSpot3"), NodePath("RaceGridSpot4")]
 
 [node name="RaceGridSpot1" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=2006111591]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.499992, 0, -8.999992)
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.499992, 0.8097801, -8.999992)
 
 [node name="RaceGridSpot2" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=1450323988]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.499992, 0, -3.9999928)
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.499992, 1.2179065, -3.9999928)
 
 [node name="RaceGridSpot3" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=2069414924]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.499992, 0, -8.999992)
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.499992, 0.81582785, -8.999992)
 
 [node name="RaceGridSpot4" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=91539751]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.499992, 0, -3.9999928)
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.499992, 1.2241993, -3.9999928)
 
 [node name="ConcurrentTaskRunner2" type="Node" parent="Race/SequentialTaskRunner" unique_id=888872226]
 script = ExtResource("14_bo3ha")
@@ -301,7 +292,7 @@ sign_text = "Keep going!"
 
 [node name="WheelieRace" parent="." unique_id=1436876184 instance=ExtResource("9_ilxvw")]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, -30.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, -6.25)
 gamemode_event = SubResource("Resource_wheelie")
 
 [node name="SequentialTaskRunner" type="Node" parent="WheelieRace" unique_id=1360351275]
@@ -313,16 +304,16 @@ script = ExtResource("13_2j11q")
 grid_markers = [NodePath("RaceGridSpot1"), NodePath("RaceGridSpot2"), NodePath("RaceGridSpot3"), NodePath("RaceGridSpot4")]
 
 [node name="RaceGridSpot1" type="Marker3D" parent="WheelieRace/SequentialTaskRunner/GridSpawnTask" unique_id=121603473]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.499992, 0, -8.999992)
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.499992, 0.80977964, -8.999992)
 
 [node name="RaceGridSpot2" type="Marker3D" parent="WheelieRace/SequentialTaskRunner/GridSpawnTask" unique_id=309737086]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.499992, 0, -3.9999928)
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.499992, 1.217906, -3.9999928)
 
 [node name="RaceGridSpot3" type="Marker3D" parent="WheelieRace/SequentialTaskRunner/GridSpawnTask" unique_id=1926232792]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.499992, 0, -8.999992)
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.499992, 0.81582785, -8.999992)
 
 [node name="RaceGridSpot4" type="Marker3D" parent="WheelieRace/SequentialTaskRunner/GridSpawnTask" unique_id=1258383192]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.499992, 0, -3.9999928)
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.499992, 1.2241998, -3.9999928)
 
 [node name="ConcurrentTaskRunner2" type="Node" parent="WheelieRace/SequentialTaskRunner" unique_id=858370613]
 script = ExtResource("14_bo3ha")
@@ -377,3 +368,125 @@ sign_text = "Keep going!"
 [node name="MaintainTrickTask" type="Node" parent="WheelieRace/SequentialTaskRunner/RaceBody" unique_id=76134055]
 script = ExtResource("19_mtt")
 is_constraint = true
+
+[node name="Terrain3D" type="Terrain3D" parent="." unique_id=149829000]
+data_directory = "res://levels/racetracks/t3ddata"
+material = SubResource("Terrain3DMaterial_ll4lc")
+assets = SubResource("Terrain3DAssets_bo3ha")
+collision_mode = 4
+top_level = true
+metadata/_edit_lock_ = true
+
+[node name="RoadTerrain3DConnector" type="Node" parent="." unique_id=1840587184 node_paths=PackedStringArray("terrain", "road_manager")]
+script = ExtResource("21_jbhkl")
+terrain = NodePath("../Terrain3D")
+road_manager = NodePath("../RoadManager")
+edge_margin = 0.59
+metadata/_custom_type_script = "uid://dg25avte7aket"
+
+[node name="RoadManager" type="Node3D" parent="." unique_id=241168440]
+script = ExtResource("21_1aw1h")
+metadata/_custom_type_script = "uid://bxp3i4cnonh8y"
+
+[node name="Road_001" type="Node3D" parent="RoadManager" unique_id=546677176]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.810379, 1.671875, 2.1304662)
+script = ExtResource("23_hkp8u")
+use_lowpoly_preview = true
+
+[node name="RP_001" type="Node3D" parent="RoadManager/Road_001" unique_id=1796161828]
+transform = Transform3D(0.9998225, 2.1700538e-05, -0.018839601, 0, 0.99999934, 0.0011518568, 0.018839614, -0.0011516524, 0.99982184, 0.005, 0.1, -0.035)
+script = ExtResource("24_tcsq1")
+traffic_dir = Array[int]([1, 1])
+lanes = Array[int]([0, 2])
+next_mag = 15.679536
+lane_width = 10.0
+prior_pt_init = NodePath("../RP_002")
+next_pt_init = NodePath("../RP_009")
+
+[node name="RP_002" type="Node3D" parent="RoadManager/Road_001" unique_id=1328214555]
+transform = Transform3D(0.9998225, -0.0026150232, -0.018657247, 1.8189894e-12, 0.9903198, -0.13880447, 0.018839618, 0.13877983, 0.990144, 2.332, 0.1, -123.532)
+script = ExtResource("24_tcsq1")
+traffic_dir = Array[int]([1, 1])
+lanes = Array[int]([0, 2])
+prior_mag = 49.386036
+next_mag = 61.7585
+lane_width = 10.0
+prior_pt_init = NodePath("../RP_003")
+next_pt_init = NodePath("../RP_001")
+
+[node name="RP_003" type="Node3D" parent="RoadManager/Road_001" unique_id=901159421]
+transform = Transform3D(-0.22135514, -0.040462606, -0.97435343, -0.13591084, 0.9906679, -0.01026366, 0.965676, 0.1301533, -0.22478874, 96.83169, -1.7608184, -152.20892)
+script = ExtResource("24_tcsq1")
+traffic_dir = Array[int]([1, 1])
+lanes = Array[int]([0, 2])
+prior_mag = 34.936604
+next_mag = 49.386036
+lane_width = 10.0
+prior_pt_init = NodePath("../RP_004")
+next_pt_init = NodePath("../RP_002")
+
+[node name="RP_004" type="Node3D" parent="RoadManager/Road_001" unique_id=341234757]
+transform = Transform3D(-0.91889036, -0.084374346, -0.38538486, -0.0880543, 0.99608254, -0.008125809, 0.38456076, 0.026468066, -0.92272013, 147.58463, -0.44069028, -104.202034)
+script = ExtResource("24_tcsq1")
+traffic_dir = Array[int]([1, 1])
+lanes = Array[int]([0, 2])
+prior_mag = 31.128347
+next_mag = 34.936604
+lane_width = 10.0
+prior_pt_init = NodePath("../RP_005")
+next_pt_init = NodePath("../RP_003")
+
+[node name="RP_005" type="Node3D" parent="RoadManager/Road_001" unique_id=1585941589]
+transform = Transform3D(-0.30486488, 0.036959592, 0.9516782, 0.12949413, 0.9915757, 0.0029736646, -0.9435512, 0.12414331, -0.30708268, 105.792595, 1.7352554, -57.95367)
+script = ExtResource("24_tcsq1")
+traffic_dir = Array[int]([1, 1])
+lanes = Array[int]([0, 2])
+prior_mag = 26.561146
+next_mag = 31.128347
+lane_width = 10.0
+prior_pt_init = NodePath("../RP_006")
+next_pt_init = NodePath("../RP_004")
+
+[node name="RP_006" type="Node3D" parent="RoadManager/Road_001" unique_id=1116540871]
+transform = Transform3D(-0.940285, 0.0004167557, -0.34038785, -0.0029463693, 0.99995184, 0.009363332, 0.34037533, 0.009807109, -0.9402385, 96.44868, 0.56537604, -5.806593)
+script = ExtResource("24_tcsq1")
+traffic_dir = Array[int]([1, 1])
+lanes = Array[int]([0, 2])
+prior_mag = 43.88564
+next_mag = 26.561146
+lane_width = 10.0
+prior_pt_init = NodePath("../RP_007")
+next_pt_init = NodePath("../RP_005")
+
+[node name="RP_007" type="Node3D" parent="RoadManager/Road_001" unique_id=392269573]
+transform = Transform3D(-0.988676, 0.0013535531, 0.1500602, -0.019097958, 0.9906938, -0.13476354, -0.14884612, -0.13610333, -0.9794492, 104.64312, 20.102121, 79.64676)
+script = ExtResource("24_tcsq1")
+traffic_dir = Array[int]([1, 1])
+lanes = Array[int]([0, 2])
+prior_mag = 55.72686
+next_mag = 43.88564
+lane_width = 10.0
+prior_pt_init = NodePath("../RP_008")
+next_pt_init = NodePath("../RP_006")
+
+[node name="RP_008" type="Node3D" parent="RoadManager/Road_001" unique_id=1695349903]
+transform = Transform3D(0.45137802, 0.12195396, 0.88395995, -0.2608291, 0.965385, 0, -0.8533616, -0.23056246, 0.4675627, 42.583904, 27.720316, 105.27085)
+script = ExtResource("24_tcsq1")
+traffic_dir = Array[int]([1, 1])
+lanes = Array[int]([0, 2])
+prior_mag = 58.17137
+next_mag = 55.72686
+lane_width = 10.0
+prior_pt_init = NodePath("../RP_009")
+next_pt_init = NodePath("../RP_007")
+
+[node name="RP_009" type="Node3D" parent="RoadManager/Road_001" unique_id=993275148]
+transform = Transform3D(0.988994, 0.145702, -0.02572281, -0.14570296, 0.98932666, 0.001846358, 0.025717275, 0.0019217602, 0.99966735, -3.2691483, 1.1406553, 47.71211)
+script = ExtResource("24_tcsq1")
+traffic_dir = Array[int]([1, 1])
+lanes = Array[int]([0, 2])
+prior_mag = 51.041885
+next_mag = 44.993073
+lane_width = 10.0
+prior_pt_init = NodePath("../RP_001")
+next_pt_init = NodePath("../RP_008")

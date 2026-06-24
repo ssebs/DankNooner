@@ -9,7 +9,7 @@ class_name MovementController extends Node
 @export var rear_raycast: RayCast3D
 @export var front_raycast: RayCast3D
 
-@export var debug_verbose:bool=false
+@export var debug_verbose:bool=true
 
 const CLUTCH_KICK_WINDOW: float = 0.2
 const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65  # fraction of bike's 1st-gear torque needed to clutch-pop — blocks high-gear pops
@@ -27,7 +27,11 @@ const SURFACE_BLEND_SPEED_MIN: float = 3.0  # up_direction alignment speed at re
 const SURFACE_BLEND_SPEED_MAX: float = 40.0  # alignment speed at full speed (must track loops)
 const SURFACE_BLEND_SPEED_FALL: float = 0.25  # airborne alignment back to global UP
 const ADHESION_ANGLE: float = 80.0  # degrees — adhesion speed check kicks in here
-const RAMP_SLOWDOWN: float = -3.5  # multiplier on slope gravity
+const RAMP_DOWNHILL_FACTOR: float = 1.25  # slope-gravity multiplier rolling downhill (adds speed)
+const RAMP_UPHILL_FACTOR: float = 0.8  # slope-gravity multiplier climbing uphill (bleeds speed)
+# Below this, the uphill bleed is suppressed — at idle RPM it exceeds engine drive and would pin
+# the bike at a standstill, blocking pulling away from a stop. Downhill assist always applies.
+const SLOPE_GRAVITY_MIN_SPEED: float = 5.0
 const MIN_LOOP_SPEED: float = 20.0  # speed needed at fully inverted (180°)
 # Trick tuning
 const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
@@ -319,11 +323,19 @@ func _speed_calc(delta: float):
 	if total_brake > 0:
 		speed = move_toward(speed, 0, bd.brake_strength * total_brake * delta)
 
-	# Slope gravity — uses blended surface normal + velocity direction
+	# Slope gravity — projects gravity along the surface. Downhill (positive) adds speed,
+	# uphill (negative) bleeds it. The uphill bleed is suppressed below SLOPE_GRAVITY_MIN_SPEED
+	# so it can't out-pull engine drive at idle RPM and pin the bike at a standstill; the
+	# downhill assist always applies so you gain speed rolling down a grade.
 	if _is_on_floor and player_entity.velocity.length_squared() > 0.01:
 		var gravity_on_surface = Vector3.DOWN - _floor_normal * Vector3.DOWN.dot(_floor_normal)
 		var vel_dir = player_entity.velocity.normalized()
-		speed += FALL_GRAVITY * gravity_on_surface.dot(vel_dir) * RAMP_SLOWDOWN * delta
+		var slope_dot = gravity_on_surface.dot(vel_dir)  # >0 downhill, <0 uphill
+		var factor = RAMP_DOWNHILL_FACTOR if slope_dot > 0.0 else RAMP_UPHILL_FACTOR
+		var slope_accel = FALL_GRAVITY * slope_dot * factor
+		if slope_accel < 0.0 and speed < SLOPE_GRAVITY_MIN_SPEED:
+			slope_accel = 0.0
+		speed += slope_accel * delta
 		speed = maxf(speed, 0.0)
 
 	# Unstable surface drag — proportional to speed so low-speed launches still work.
