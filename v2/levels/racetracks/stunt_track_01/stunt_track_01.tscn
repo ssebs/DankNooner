@@ -182,11 +182,15 @@ transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0
 
 [node name="StraightRoad" parent="Track" unique_id=1385091335 instance=ExtResource("5_gvu3f")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 5, -0.497, -35)
-segments = 3
+length_segments = 3
+width_segments = 2
 
 [node name="CurvedRoad" parent="Track" unique_id=858726308 instance=ExtResource("6_pgovl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, -0.497, -65)
 sharpness = 2
+
+[node name="CurvedRoad13" parent="Track" unique_id=600167534 instance=ExtResource("6_pgovl")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -6, -0.497, -65)
 
 [node name="CurvedRoad2" parent="Track" unique_id=879864046 instance=ExtResource("6_pgovl")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 24.999996, -0.497, -95)
@@ -197,7 +201,7 @@ transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 44.9
 
 [node name="StraightRoad2" parent="Track" unique_id=190530948 instance=ExtResource("5_gvu3f")]
 transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 34.999992, -0.497, -105)
-segments = 5
+length_segments = 5
 
 [node name="CurvedRoad4" parent="Track" unique_id=560997353 instance=ExtResource("6_pgovl")]
 transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -25.000008, -0.497, -114.99999)
@@ -221,11 +225,11 @@ sharpness = 7
 
 [node name="StraightRoad3" parent="Track" unique_id=1916275032 instance=ExtResource("5_gvu3f")]
 transform = Transform3D(-1.6292068e-07, 0, 1, 0, 1, 0, -1, 0, -1.6292068e-07, -95.000015, 4.5030003, -124.999985)
-segments = 2
+length_segments = 2
 
 [node name="StraightRoad4" parent="Track" unique_id=1269241725 instance=ExtResource("5_gvu3f")]
 transform = Transform3D(-1.6292068e-07, 0, 1, 0, 1, 0, -1, 0, -1.6292068e-07, -125.000015, -0.49699974, -124.999985)
-segments = 3
+length_segments = 3
 
 [node name="CurvedRoad9" parent="Track" unique_id=1003862662 instance=ExtResource("6_pgovl")]
 transform = Transform3D(-1.6292068e-07, 0, 1, 0, 1, 0, -1, 0, -1.6292068e-07, -90.000015, -0.49699998, -124.999985)
@@ -245,7 +249,7 @@ sharpness = 11
 
 [node name="StraightRoad4" parent="." unique_id=810197190 instance=ExtResource("5_gvu3f")]
 transform = Transform3D(-1.6292068e-07, 0, 1, 0, 1, 0, -1, 0, -1.6292068e-07, -49.999996, -0.49699974, -17.999996)
-segments = 3
+length_segments = 3
 
 [node name="CurvedRoad10" parent="." unique_id=1533709457 instance=ExtResource("6_pgovl")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -60.000015, -0.49699998, -17.999989)
