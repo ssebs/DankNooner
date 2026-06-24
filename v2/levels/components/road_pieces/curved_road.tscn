@@ -56,13 +56,13 @@ unique_name_in_owner = true
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
 mesh = ExtResource("3_c5a20")
 
-[node name="SurfaceCol_Light_Gray" type="StaticBody3D" parent="." unique_id=1505065453]
+[node name="SurfaceCol_Light_Gray" type="StaticBody3D" parent="." unique_id=673644700]
 collision_layer = 2
 
-[node name="@CollisionShape3D@169806" type="CollisionShape3D" parent="SurfaceCol_Light_Gray" unique_id=626139909]
+[node name="@CollisionShape3D@35176" type="CollisionShape3D" parent="SurfaceCol_Light_Gray" unique_id=1564994037]
 shape = SubResource("ConcavePolygonShape3D_7ch5b")
 
-[node name="SurfaceCol_Asphalt" type="StaticBody3D" parent="." unique_id=1941433177]
+[node name="SurfaceCol_Asphalt" type="StaticBody3D" parent="." unique_id=1366994046]
 
-[node name="@CollisionShape3D@169807" type="CollisionShape3D" parent="SurfaceCol_Asphalt" unique_id=340150528]
+[node name="@CollisionShape3D@35177" type="CollisionShape3D" parent="SurfaceCol_Asphalt" unique_id=1991156126]
 shape = SubResource("ConcavePolygonShape3D_2m237")

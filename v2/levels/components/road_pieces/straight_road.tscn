@@ -4,9 +4,9 @@
 [ext_resource type="ArrayMesh" uid="uid://bhec5h1u887rd" path="res://levels/assets/racetrack_collection_for_assetforge/no-walls.obj" id="2_nowll"]
 [ext_resource type="ArrayMesh" uid="uid://dq5ou4t2o6s5l" path="res://levels/assets/racetrack_collection_for_assetforge/wall-only.obj" id="3_wall"]
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_tkscj"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall"]
 resource_local_to_scene = true
-height = 10.0
+size = Vector3(1, 1, 10)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7jvdf"]
 resource_local_to_scene = true
@@ -27,13 +27,13 @@ collision_layer = 2
 
 [node name="RightWallCol" type="CollisionShape3D" parent="crash_wall" unique_id=1070405630]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -5.5, 1, 0)
-shape = SubResource("CylinderShape3D_tkscj")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 1, 0)
+shape = SubResource("BoxShape3D_wall")
 
 [node name="LeftWallCol" type="CollisionShape3D" parent="crash_wall" unique_id=42345229]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 5.5, 1, 0)
-shape = SubResource("CylinderShape3D_tkscj")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 1, 0)
+shape = SubResource("BoxShape3D_wall")
 
 [node name="ok" type="StaticBody3D" parent="." unique_id=48543409]
 

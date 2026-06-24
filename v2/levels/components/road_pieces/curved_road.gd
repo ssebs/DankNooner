@@ -10,6 +10,13 @@ class_name CurvedRoad extends Node3D
 ## idx must match int in sharpness
 @export var meshes: Dictionary[int, ArrayMesh]
 
+## Scales the whole piece (X = width, Y = height, Z = length).
+@export var piece_scale: Vector3 = Vector3.ONE:
+	set(value):
+		piece_scale = value
+		if is_node_ready():
+			scale = piece_scale
+
 ## Mesh surface material name -> collision_layer bitmask for that surface.
 @export var material_layers: Dictionary[StringName, int]:
 	set(value):
@@ -24,6 +31,7 @@ const GENERATED_COL_PREFIX: String = "SurfaceCol_"
 
 
 func _ready() -> void:
+	scale = piece_scale
 	_apply_sharpness()
 
 

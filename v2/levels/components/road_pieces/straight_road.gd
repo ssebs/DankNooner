@@ -15,6 +15,13 @@ class_name StraightRoad extends Node3D
 		if is_node_ready():
 			_rebuild()
 
+## Scales the whole piece (X = width, Y = height, Z = length).
+@export var piece_scale: Vector3 = Vector3.ONE:
+	set(value):
+		piece_scale = value
+		if is_node_ready():
+			scale = piece_scale
+
 ## Adds wall meshes/collisions to the grid's two outer X edges only.
 @export var walls: bool = true:
 	set(value):
@@ -44,6 +51,7 @@ const GENERATED_WALL_PREFIX: String = "WallSegment_"
 
 
 func _ready() -> void:
+	scale = piece_scale
 	_rebuild()
 
 
@@ -80,8 +88,8 @@ func _rebuild() -> void:
 		_build_wall_edge(right_wall_x)
 		_build_wall_edge(left_wall_x)
 
-	var cylinder := right_wall_col.shape as CylinderShape3D  # shared res
-	cylinder.height = total_length
+	var wall_box := right_wall_col.shape as BoxShape3D  # shared res
+	wall_box.size.z = total_length
 	right_wall_col.position.x = right_wall_x
 	right_wall_col.position.z = center_z
 	left_wall_col.position.x = left_wall_x

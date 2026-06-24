@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=3 uid="uid://cc8w0puk44el3"]
+
+[ext_resource type="Script" uid="uid://crm0m321yddjf" path="res://addons/road-generator/ui/road_container_panel.gd" id="1_1iim1"]
+
+[node name="RoadContainerPanel" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1iim1")
+
+[node name="spacer1" type="Control" parent="."]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+
+[node name="export_gltf" type="Button" parent="."]
+layout_mode = 2
+tooltip_text = "Export all children to a .gltf / .glb file"
+text = "Export to gLTF"
+
+[node name="bake_roadlanes" type="Button" parent="."]
+layout_mode = 2
+tooltip_text = "Make all RoadLanes visible and editable. 
+Must have `generate_ai_lanes` enabled."
+text = "Bake RoadLanes"
+
+[node name="spacer2" type="Control" parent="."]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+
+[connection signal="pressed" from="export_gltf" to="." method="_on_export_gltf_pressed"]
+[connection signal="pressed" from="bake_roadlanes" to="." method="_on_make_roadlanes_editbale_pressed"]
