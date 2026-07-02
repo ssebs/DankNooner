@@ -17,6 +17,14 @@
 
 ## Playtest bugs
 
+- [ ] downhill + clutch + lean starts a wheelie
+- [ ] uphill slows you too much
+- [ ] longer gear ratios
+- [ ] larger maps for high speed
+- [ ] 0% => 100% brakes causing crash on noobs
+- [ ] cant get past 50% speed for a gear on client joining server
+
+
 - [ ] Label3d + script so all in group are removed on runtime for notes
 - [ ] customize menu on fresh computer doesnt render bikes
 
