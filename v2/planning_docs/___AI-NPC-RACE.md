@@ -1,5 +1,30 @@
 # AI NPC Race Riders — Plan
 
+> **STATUS (2026-07-06): Implemented (Phases 1–4), pending runtime verification.**
+> All code is in; the one thing that cannot be done from code is the **navmesh
+> bake**, which needs the editor:
+>
+> 1. Open `racetrack_level_01.tscn` → select the new `NPCNavRegion`
+>    (NavigationRegion3D, navmesh pre-configured: agent_radius 1.0, parses
+>    meshes + static colliders). Use the Terrain3D navigation workflow (paint
+>    navigable areas, then Terrain3D Tools → Bake NavMesh into this region) so
+>    the terrain + road surface is included. Verify the debug navmesh covers
+>    the track.
+> 2. The `Race` circle in that level has `npc_count = 3` for testing (0
+>    disables). NPC skins/names come from `NPCRaceManager.npc_definitions`
+>    (round-robin, currently just the default player definition — names render
+>    as "<username> 1..N"; author dedicated defs later).
+> 3. Run a race: NPCs spawn at the back grid slots, hold through countdown,
+>    then chase checkpoints; results list them (DNF if unfinished). Lean /
+>    wheelie-pitch signs on `NPCAnimationController` are best-guess cosmetic —
+>    flip `lean_per_yaw_rate` / `wheelie_pitch_deg` signs if they read wrong.
+>
+> Known deferred items: late-joiners don't receive already-spawned NPCs (and
+> will log sync warnings until they despawn); nothing triggers `crash_npc()`
+> automatically yet; TickInterpolator only if NPC motion looks choppy.
+> Results now prefer the RaceTask clock (race-body start) for humans too, so
+> human and NPC times share one clock.
+
 > Plan for the next agent. Design brainstormed + approved by Seb. Read
 > [GamemodeSystem.md](./GamemodeSystem.md) and [StreetRaceMode.md](./StreetRaceMode.md)
 > first — this feature plugs into the existing gamemode/race system, it does not

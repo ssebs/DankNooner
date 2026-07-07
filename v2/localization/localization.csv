@@ -95,6 +95,7 @@ RACE_LAP,"Lap {current}/{total}  -  {time}","Vuelta {current}/{total}  -  {time}
 RACE_COMPLETE,"Race Complete!","¡Carrera Completada!"
 RACE_WHEELIE_OBJECTIVE,"Hold a wheelie the whole lap!","¡Mantén el caballito toda la vuelta!"
 RACE_WHEELIE_WARN,"WHEELIE! {time}s","¡CABALLITO! {time}s"
+RACE_DNF,"DNF","DNF"
 LOADING_LABEL,"Loading...","Cargando..."
 LOADOUTS_LABEL,"Bikes","Motos"
 EDIT_LOADOUT_LABEL,"Edit Bike Loadout","Editar Configuración de Moto"

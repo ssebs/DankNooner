@@ -126,6 +126,8 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 
+	add_to_group(UtilsConstants.GROUPS["Racers"])
+
 	# await get_tree().process_frame
 
 	# Network authority

@@ -309,9 +309,9 @@ func _unwire_objective_signals() -> void:
 	_wired_callables.clear()
 
 
-func _on_trigger_entered(player: PlayerEntity, obj: GameModeObject) -> void:
-	var peer_id := int(player.name)
-	# Body may be a player not in this runner (spectator, late-joiner) — skip is intentional
+func _on_trigger_entered(racer: Node3D, obj: GameModeObject) -> void:
+	var peer_id := int(racer.name)
+	# Body may be a racer not in this runner (spectator, late-joiner, NPC) — skip is intentional
 	if !_player_states.has(peer_id):
 		return
 	var state := _player_states[peer_id]
@@ -327,8 +327,8 @@ func _on_trigger_entered(player: PlayerEntity, obj: GameModeObject) -> void:
 			state.inside_zone = true
 
 
-func _on_trigger_exited(player: PlayerEntity, obj: GameModeObject) -> void:
-	var peer_id := int(player.name)
+func _on_trigger_exited(racer: Node3D, obj: GameModeObject) -> void:
+	var peer_id := int(racer.name)
 	if !_player_states.has(peer_id):
 		return
 	var state := _player_states[peer_id]
