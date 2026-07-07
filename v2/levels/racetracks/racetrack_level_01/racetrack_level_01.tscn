@@ -208,6 +208,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -64, 0)
 [node name="Paddock_PitLane" type="Node3D" parent="." unique_id=495282692]
 
 [node name="Paddock" type="Node3D" parent="Paddock_PitLane" unique_id=1848357583]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.25, 0, 0)
 
 [node name="PaddockWall" parent="Paddock_PitLane/Paddock" unique_id=2134295601 instance=ExtResource("3_xxw4c")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3, 12.25)
@@ -262,7 +263,7 @@ depth = 22.0
 color_preset = 1
 
 [node name="GrayBox_StaticBody" parent="Paddock_PitLane" unique_id=1839157248 instance=ExtResource("3_xxw4c")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0.1, 0)
 width = 12.0
 height = 0.1
 depth = 24.0
@@ -379,7 +380,7 @@ metadata/_custom_type_script = "uid://f840hmifnv7g"
 
 [node name="GridSpawnTask" type="Node" parent="WheelieRace/SequentialTaskRunner" unique_id=1504957453 node_paths=PackedStringArray("grid_markers")]
 script = ExtResource("9_5ryor")
-grid_markers = [NodePath(""), NodePath(""), NodePath(""), NodePath("")]
+grid_markers = [null, null, null, null]
 
 [node name="ConcurrentTaskRunner2" type="Node" parent="WheelieRace/SequentialTaskRunner" unique_id=858370613]
 script = ExtResource("10_6j553")
@@ -401,7 +402,7 @@ script = ExtResource("10_6j553")
 [node name="RaceTask" type="Node" parent="WheelieRace/SequentialTaskRunner/RaceBody" unique_id=76134054 node_paths=PackedStringArray("start_checkpoint", "lap_checkpoints", "end_checkpoint")]
 script = ExtResource("13_xcb1u")
 start_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
-lap_checkpoints = [NodePath(""), NodePath(""), NodePath(""), NodePath("")]
+lap_checkpoints = [null, null, null, null]
 end_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
 total_laps = 1
 objective_key = "RACE_WHEELIE_OBJECTIVE"
@@ -771,3 +772,85 @@ lanes = Array[int]([0, 2])
 prior_mag = 37.756157
 next_mag = 14.843643
 prior_pt_init = NodePath("../RP_001")
+
+[node name="Walls" type="Node3D" parent="." unique_id=392066258]
+
+[node name="Wall" parent="Walls" unique_id=1485126779 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.75, 2, -22.5)
+collision_layer = 3
+width = 0.5
+height = 4.0
+depth = 500.0
+color_preset = 1
+
+[node name="Wall2" parent="Walls" unique_id=283598642 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(0, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, 0, 64.025635, 2, 227.40768)
+collision_layer = 3
+width = 0.5
+height = 4.0
+depth = 180.0
+color_preset = 1
+
+[node name="Wall3" parent="Walls" unique_id=904901342 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(-0.99999994, 0, -4.3711385e-08, 0, 1, 0, 4.3711385e-08, 0, -0.99999994, 154.27563, 2, 77.157684)
+collision_layer = 3
+width = 0.5
+height = 4.0
+depth = 300.0
+color_preset = 1
+
+[node name="Wall4" parent="Walls" unique_id=31047456 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(-0.98018014, 0, 0.19810785, 0, 1, 0, -0.19810785, 0, -0.98018014, 166.13669, 2, -131.2883)
+collision_layer = 3
+width = 0.5
+height = 4.0
+depth = 120.0
+color_preset = 1
+
+[node name="Wall5" parent="Walls" unique_id=856771571 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(-0.94791484, 0, -0.31852365, 0, 1, 0, 0.31852365, 0, -0.94791484, 158.85974, 2, -247.16649)
+collision_layer = 3
+width = 0.5
+height = 4.0
+depth = 120.0
+color_preset = 1
+
+[node name="Wall6" parent="Walls" unique_id=880535919 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(-0.6616565, 0, -0.74980694, 0, 1, 0, 0.74980694, 0, -0.6616565, 124.81399, 2, -317.08603)
+collision_layer = 3
+width = 0.5
+height = 4.0
+depth = 40.0
+color_preset = 1
+
+[node name="Wall7" parent="Walls" unique_id=731755959 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(0.79421645, 0, -0.6076345, 0, 1, 0, 0.6076345, 0, 0.79421645, 33.098537, 2, -303.05637)
+collision_layer = 3
+width = 0.5
+height = 4.0
+depth = 64.0
+color_preset = 1
+
+[node name="Wall9" parent="Walls" unique_id=1444835109 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(0.13193336, 0, -0.99125826, 0, 1, 0, 0.99125826, 0, 0.13193336, -5.8194313, 2, -275.0719)
+collision_layer = 3
+width = 0.5
+height = 4.0
+depth = 40.0
+color_preset = 1
+
+[node name="Wall8" parent="Walls" unique_id=482634980 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(0.036542304, 0, -0.9993317, 0, 1, 0, 0.9993317, 0, 0.036542304, 81.40559, 2, -329.5689)
+collision_layer = 3
+width = 0.5
+height = 4.0
+depth = 59.0
+color_preset = 1
+
+[node name="SandGround" parent="." unique_id=1552047408 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 71.25, 0, -50)
+collision_layer = 17
+width = 200.0
+height = 0.1
+depth = 600.0
+color_preset = 6
