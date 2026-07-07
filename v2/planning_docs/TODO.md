@@ -1,6 +1,13 @@
 # TODO
 > Don't forget, have fun :D
 
+## WIP
+- [ ] Create racer AI for in game racing
+
+> Below this line needs to be updated...
+
+--- 
+
 ## In Progress 🚀 — Current Sprint
 - [ ] Create linear map for stunt race
 - [ ] cant use controller to select in customize menu
