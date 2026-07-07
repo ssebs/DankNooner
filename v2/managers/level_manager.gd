@@ -36,12 +36,12 @@ var level_name_map: Dictionary[LevelName, String] = {
 	LevelName.STUNTTRACK_01: "LEVEL_STUNTTRACK_01",
 }
 
-## There are in order for the option btn
+## There are in order for the option btn ##
 var levels_names_in_level_select: Array[String] = [
 	"LEVEL_SELECT_LABEL",
-	"LEVEL_STUNTTRACK_01",
 	"LEVEL_TEST_CITY_01",
 	"LEVEL_RACETRACK_01",
+	"LEVEL_STUNTTRACK_01",
 	"LEVEL_TEST_1_LABEL",
 ]
 ## LevelName enum => image used in level preview
