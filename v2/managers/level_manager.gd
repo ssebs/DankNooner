@@ -22,7 +22,8 @@ var possible_levels: Dictionary[LevelName, PackedScene] = {
 	LevelName.BG_GRAY_LEVEL: load("res://levels/menu_levels/bg_gray/bg_gray_level.tscn"),
 	LevelName.TEST_LEVEL_01: load("res://levels/test_levels/test_01/test_01_level.tscn"),
 	LevelName.TEST_CITY_01: load("res://levels/test_levels/test_city_01/test_city_01.tscn"),
-	LevelName.RACETRACK_01: load("res://levels/racetracks/racetrack_level_01.tscn"),
+	LevelName.RACETRACK_01:
+	load("res://levels/racetracks/racetrack_level_01/racetrack_level_01.tscn"),
 	LevelName.STUNTTRACK_01: load("res://levels/racetracks/stunt_track_01/stunt_track_01.tscn"),
 }
 ## LevelName enum => localization.csv's key name
