@@ -18,6 +18,8 @@
 [ext_resource type="Script" uid="uid://dfa11idd8fnyr" path="res://managers/gamemodes/tasks/maintain_trick_task.gd" id="15_km3o7"]
 [ext_resource type="Texture2D" uid="uid://chctobd3h6dno" path="res://levels/assets/graybox/green.png" id="16_32xqg"]
 [ext_resource type="Texture2D" uid="uid://2ikkccys8b6w" path="res://levels/assets/graybox/texture_04.png" id="17_g77sv"]
+[ext_resource type="PackedScene" uid="uid://ce0rc0lmwvocu" path="res://levels/assets/props/tree.glb" id="17_y3pck"]
+[ext_resource type="PackedScene" uid="uid://cqjkuj8qx7goa" path="res://levels/assets/props/rock.glb" id="18_ckww3"]
 [ext_resource type="Texture2D" uid="uid://cptj8tdo4sfq4" path="res://levels/assets/graybox/brown.png" id="18_g77sv"]
 [ext_resource type="Texture2D" uid="uid://dfgsgem7ngu3h" path="res://levels/assets/graybox/gray.png" id="19_ngeet"]
 [ext_resource type="Texture2D" uid="uid://b2320l8vvg1c" path="res://levels/assets/graybox/blue.png" id="20_cjprs"]
@@ -28,6 +30,7 @@
 [ext_resource type="Texture2D" uid="uid://cjrex0qopeses" path="res://levels/assets/graybox/lightgray.png" id="24_r8gbb"]
 [ext_resource type="Script" uid="uid://difs1qg4mpcpw" path="res://addons/road-generator/nodes/road_point.gd" id="24_y3v0i"]
 [ext_resource type="Texture2D" uid="uid://de8hyye3c6mx7" path="res://levels/assets/tracklayouts/Barcelona.svg" id="25_l4hkb"]
+[ext_resource type="PackedScene" uid="uid://kag1hqax6aa2" path="res://levels/components/props/tree.tscn" id="29_0b3im"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_l4d1h"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -110,20 +113,19 @@ _shader_parameters = {
 }
 world_background = 2
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8cigu"]
-transparency = 4
-cull_mode = 2
-vertex_color_use_as_albedo = true
-backlight_enabled = true
-backlight = Color(0.5, 0.5, 0.5, 1)
-distance_fade_mode = 1
-distance_fade_min_distance = 128.0
-distance_fade_max_distance = 96.0
+[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_ckww3"]
+name = "tree"
+scene_file = ExtResource("17_y3pck")
+density = 0.175
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 128.0
 
-[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_0b3im"]
-generated_type = 1
-height_offset = 0.5
-material_override = SubResource("StandardMaterial3D_8cigu")
+[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_5ryor"]
+name = "player_entity"
+id = 1
+scene_file = ExtResource("18_ckww3")
+density = 0.7108891
 last_lod = 0
 last_shadow_lod = 0
 lod0_range = 128.0
@@ -177,7 +179,7 @@ normal_texture = ExtResource("17_g77sv")
 uv_scale = 0.5
 
 [sub_resource type="Terrain3DAssets" id="Terrain3DAssets_xxw4c"]
-mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_0b3im")])
+mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_ckww3"), SubResource("Terrain3DMeshAsset_5ryor")])
 texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_l4hkb"), SubResource("Terrain3DTextureAsset_ngeet"), SubResource("Terrain3DTextureAsset_cjprs"), SubResource("Terrain3DTextureAsset_8wxaq"), SubResource("Terrain3DTextureAsset_qqwky"), SubResource("Terrain3DTextureAsset_ksgao"), SubResource("Terrain3DTextureAsset_xxw4c")])
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0b3im"]
@@ -200,7 +202,7 @@ point_count = 8
 
 [sub_resource type="Curve3D" id="Curve3D_0b3im"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 85.88416, 0.050048828, 53.61653, 0, 0, 0, 0, 0, 0, 116.23545, 0.050048828, -31.562822, 0, 0, 0, 0, 0, 0, 107.423775, 0.050048828, -58.650505, 0, 0, 0, 0, 0, 0, 70.03943, 0.05000305, -67.19115, 0, 0, 0, 0, 0, 0, 25.657074, 0.05000305, -69.05547, 0, 0, 0, 0, 0, 0, 2.0102463, 0.050048828, -130.12283, 0, 0, 0, 0, 0, 0, 16.25304, 0.050048828, -223.50826, 0, 0, 0, 0, 0, 0, 73.84592, 10.013138, -248.11493, 0, 0, 0, 0, 0, 0, 64.22763, 0.050048828, -285.18985, 0, 0, 0, 0, 0, 0, 97.51608, 0.050048828, -289.75885, 0, 0, 0, 0, 0, 0, 123.29837, 0.050048828, -263.9766, 0, 0, 0, 0, 0, 0, 132.76273, 0.050048828, -211.10666, 0, 0, 0, 0, 0, 0, 122.67461, 0.05001068, -147.07083, 0, 0, 0, 0, 0, 0, 106.19242, 0.05000305, -152.42029, 0, 0, 0, 0, 0, 0, 107.306854, 0.050048828, -212.73845, 0, 0, 0, 0, 0, 0, 81.80541, 3.2437134, -257.99026),
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 85.88416, 0.050048828, 53.61653, 0, 0, 0, 0, 0, 0, 116.23545, 0.050048828, -31.562822, 0, 0, 0, 0, 0, 0, 107.423775, 0.050048828, -58.650505, 0, 0, 0, 0, 0, 0, 70.03943, 0.05000305, -67.19115, 0, 0, 0, 0, 0, 0, 25.657074, 0.05000305, -69.05547, 0, 0, 0, 0, 0, 0, 2.0102463, 0.050048828, -130.12283, 0, 0, 0, 0, 0, 0, 16.25304, 0.050048828, -223.50826, 0, 0, 0, 0, 0, 0, 71.12687, 0.05005859, -254.34518, 0, 0, 0, 0, 0, 0, 64.22763, 0.050048828, -285.18985, 0, 0, 0, 0, 0, 0, 97.51608, 0.050048828, -289.75885, 0, 0, 0, 0, 0, 0, 123.29837, 0.050048828, -263.9766, 0, 0, 0, 0, 0, 0, 132.76273, 0.050048828, -211.10666, 0, 0, 0, 0, 0, 0, 122.67461, 0.05001068, -147.07083, 0, 0, 0, 0, 0, 0, 106.19242, 0.05000305, -152.42029, 0, 0, 0, 0, 0, 0, 107.306854, 0.050048828, -212.73845, 0, 0, 0, 0, 0, 0, 79.219536, 0.049803704, -255.95908),
 "tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 }
 point_count = 16
@@ -799,14 +801,6 @@ width = 200.0
 height = 0.1
 depth = 600.0
 color_preset = 6
-
-[node name="Wall\'" parent="." unique_id=1485126779 instance=ExtResource("3_xxw4c")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 58.75, 2.1499999, 20)
-collision_layer = 3
-width = 0.5
-height = 4.0
-depth = 12.0
-color_preset = 1
 
 [node name="Stuff" type="Node3D" parent="." unique_id=1682590982]
 
@@ -2292,6 +2286,66 @@ height = 4.0
 depth = 59.0
 color_preset = 1
 
+[node name="wallygon3d" type="CSGPolygon3D" parent="Stuff/Walls" unique_id=576564476]
+use_collision = true
+collision_layer = 3
+polygon = PackedVector2Array(0, 0, 0, 2, 0.5, 2, 0.5, 0)
+mode = 2
+path_node = NodePath("Path3D")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = false
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+material = SubResource("StandardMaterial3D_0b3im")
+
+[node name="Path3D" type="Path3D" parent="Stuff/Walls/wallygon3d" unique_id=1866554393]
+curve = SubResource("Curve3D_y3pck")
+
+[node name="wallygon3d2" type="CSGPolygon3D" parent="Stuff/Walls" unique_id=1393894188]
+use_collision = true
+collision_layer = 3
+polygon = PackedVector2Array(0, 0, 0, 2, 0.5, 2, 0.5, 0)
+mode = 2
+path_node = NodePath("Path3D")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = false
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+material = SubResource("StandardMaterial3D_0b3im")
+
+[node name="Path3D" type="Path3D" parent="Stuff/Walls/wallygon3d2" unique_id=395419217]
+curve = SubResource("Curve3D_8cigu")
+
+[node name="wallygon3d3" type="CSGPolygon3D" parent="Stuff/Walls" unique_id=2096612176]
+use_collision = true
+collision_layer = 3
+polygon = PackedVector2Array(0, 0, 0, 2, 0.5, 2, 0.5, 0)
+mode = 2
+path_node = NodePath("Path3D")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = false
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+material = SubResource("StandardMaterial3D_0b3im")
+
+[node name="Path3D" type="Path3D" parent="Stuff/Walls/wallygon3d3" unique_id=1205413437]
+curve = SubResource("Curve3D_0b3im")
+
 [node name="Ramp2" type="Node3D" parent="Stuff" unique_id=1015102492]
 transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 38.75, 0.31422997, 2.4999962)
 
@@ -2461,62 +2515,7 @@ height = 0.1
 depth = 2.0
 color_preset = 5
 
-[node name="wallygon3d" type="CSGPolygon3D" parent="." unique_id=576564476]
-use_collision = true
-collision_layer = 3
-polygon = PackedVector2Array(0, 0, 0, 2, 0.5, 2, 0.5, 0)
-mode = 2
-path_node = NodePath("Path3D")
-path_interval_type = 0
-path_interval = 1.0
-path_simplify_angle = 0.0
-path_rotation = 2
-path_rotation_accurate = false
-path_local = false
-path_continuous_u = true
-path_u_distance = 1.0
-path_joined = false
-material = SubResource("StandardMaterial3D_0b3im")
+[node name="Trees" type="Node3D" parent="Stuff" unique_id=322715454]
 
-[node name="Path3D" type="Path3D" parent="wallygon3d" unique_id=1866554393]
-curve = SubResource("Curve3D_y3pck")
-
-[node name="wallygon3d2" type="CSGPolygon3D" parent="." unique_id=1393894188]
-use_collision = true
-collision_layer = 3
-polygon = PackedVector2Array(0, 0, 0, 2, 0.5, 2, 0.5, 0)
-mode = 2
-path_node = NodePath("Path3D")
-path_interval_type = 0
-path_interval = 1.0
-path_simplify_angle = 0.0
-path_rotation = 2
-path_rotation_accurate = false
-path_local = false
-path_continuous_u = true
-path_u_distance = 1.0
-path_joined = false
-material = SubResource("StandardMaterial3D_0b3im")
-
-[node name="Path3D" type="Path3D" parent="wallygon3d2" unique_id=395419217]
-curve = SubResource("Curve3D_8cigu")
-
-[node name="wallygon3d3" type="CSGPolygon3D" parent="." unique_id=2096612176]
-use_collision = true
-collision_layer = 3
-polygon = PackedVector2Array(0, 0, 0, 2, 0.5, 2, 0.5, 0)
-mode = 2
-path_node = NodePath("Path3D")
-path_interval_type = 0
-path_interval = 1.0
-path_simplify_angle = 0.0
-path_rotation = 2
-path_rotation_accurate = false
-path_local = false
-path_continuous_u = true
-path_u_distance = 1.0
-path_joined = false
-material = SubResource("StandardMaterial3D_0b3im")
-
-[node name="Path3D" type="Path3D" parent="wallygon3d3" unique_id=1205413437]
-curve = SubResource("Curve3D_0b3im")
+[node name="Tree" parent="Stuff/Trees" unique_id=1648128321 instance=ExtResource("29_0b3im")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.5, 4.25, 187.5)
