@@ -3,9 +3,10 @@
 
 ## WIP
 - [ ] Create racer AI for in game racing
+  - [ ] [plan](./___AI-NPC-RACE.md)
+
 
 > Below this line needs to be updated...
-
 --- 
 
 ## In Progress 🚀 — Current Sprint
