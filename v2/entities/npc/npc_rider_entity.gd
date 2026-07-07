@@ -3,8 +3,8 @@
 ## sets nav targets and owns crash/respawn timers); clients are passive and
 ## receive `transform` + `npc_state` via the child MultiplayerSynchronizer.
 ##
-## Bike front is VisualRoot-local +Z (VisualRoot is identity here, unlike the
-## player's 180°-yawed one), so steering yaws the body to face velocity with +Z.
+## VisualRoot is yawed 180° (matching the player scene), so the bike front is
+## entity -Z; steering yaws the body to face velocity with -Z.
 class_name NPCRiderEntity extends CharacterBody3D
 
 enum NPCState { RIDING, WHEELIE, CRASHED, FINISHED }
@@ -92,6 +92,7 @@ func set_nav_target(pos: Vector3) -> void:
 		return
 	_last_target_pos = pos
 	nav_agent.set_target_position(pos)
+	DebugUtils.DebugMsg("NPC %s retarget -> %v" % [name, pos])
 
 
 func clear_nav_target() -> void:
@@ -135,8 +136,8 @@ func _face_velocity(delta: float) -> void:
 	var horizontal := Vector3(velocity.x, 0.0, velocity.z)
 	if horizontal.length_squared() < 0.25:
 		return
-	# +Z faces the travel direction (bike front is +Z, see class docstring).
-	var target_yaw := atan2(horizontal.x, horizontal.z)
+	# -Z faces the travel direction (bike front is -Z, see class docstring).
+	var target_yaw := atan2(-horizontal.x, -horizontal.z)
 	rotation.y = lerp_angle(rotation.y, target_yaw, turn_speed * delta)
 
 

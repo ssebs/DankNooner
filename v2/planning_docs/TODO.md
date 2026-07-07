@@ -3,7 +3,10 @@
 
 ## WIP
 - [ ] Create racer AI for in game racing
-  - [ ] [plan](./___AI-NPC-RACE.md)
+  - [x] [plan](./___AI-NPC-RACE.md)
+  - [ ] make them try to stick to the road
+- [ ] Riding around AI
+- [ ] Add trick: https://www.youtube.com/shorts/cAxcIZ83MfU
 
 
 > Below this line needs to be updated...

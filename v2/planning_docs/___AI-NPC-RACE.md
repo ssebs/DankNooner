@@ -4,12 +4,18 @@
 > All code is in; the one thing that cannot be done from code is the **navmesh
 > bake**, which needs the editor:
 >
-> 1. Open `racetrack_level_01.tscn` → select the new `NPCNavRegion`
->    (NavigationRegion3D, navmesh pre-configured: agent_radius 1.0, parses
->    meshes + static colliders). Use the Terrain3D navigation workflow (paint
->    navigable areas, then Terrain3D Tools → Bake NavMesh into this region) so
->    the terrain + road surface is included. Verify the debug navmesh covers
->    the track.
+> 1. Open `racetrack_level_01.tscn` → select `NPCNavRegion` → Terrain3D menu
+>    → **Bake NavMesh**. The navmesh is set to
+>    `geometry_source_geometry_mode = GROUPS_WITH_CHILDREN`: it parses the
+>    nodes tagged with the `navigation_mesh_source_group` group (Terrain3D,
+>    RoadManager, SandGround, Stuff, Paddock_PitLane) — the default
+>    ROOT_NODE_CHILDREN mode sees only the region's own children (none) and
+>    bakes an EMPTY mesh, which is why the first attempt produced stationary
+>    bots. Terrain3D only contributes faces you've painted with
+>    "Paint Navigable Area (N)" — paint the track (or rely on the road/graybox
+>    meshes). Verify the baked navmesh visibly covers the track, then save the
+>    scene. Each `NPC %s retarget -> ...` debug line at race start confirms
+>    the agents got targets.
 > 2. The `Race` circle in that level has `npc_count = 3` for testing (0
 >    disables). NPC skins/names come from `NPCRaceManager.npc_definitions`
 >    (round-robin, currently just the default player definition — names render
