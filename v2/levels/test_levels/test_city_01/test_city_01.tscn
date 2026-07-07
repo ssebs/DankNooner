@@ -1758,6 +1758,7 @@ depth = 0.1
 [node name="TestEventStartCircle" parent="." unique_id=1014716352 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 81)
 gamemode_event = SubResource("Resource_i711f")
+npc_count = null
 
 [node name="SequentialTaskRunner" type="Node" parent="TestEventStartCircle" unique_id=2098834758]
 script = ExtResource("13_runner")
@@ -1784,6 +1785,7 @@ metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 [node name="Tutorial01EventStartCircle" parent="." unique_id=459761741 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 93)
 gamemode_event = SubResource("Resource_asds5")
+npc_count = null
 
 [node name="SequentialTaskRunner" type="Node" parent="Tutorial01EventStartCircle" unique_id=1305171110]
 script = ExtResource("13_runner")
@@ -1873,6 +1875,7 @@ script = ExtResource("11_st")
 [node name="RaceTestEventStartCircle" parent="Race01Event" unique_id=423241463 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 131, -0.020000111, 81)
 gamemode_event = SubResource("Resource_cf4ia")
+npc_count = null
 
 [node name="SequentialTaskRunner" type="Node" parent="Race01Event/RaceTestEventStartCircle" unique_id=593871239]
 script = ExtResource("13_runner")
@@ -1965,6 +1968,7 @@ sign_text = "Turn Left!  <--"
 [node name="RaceJumpEventStartCircle" parent="JumpEvent" unique_id=787539754 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 255, -0.020000111, 11)
 gamemode_event = SubResource("Resource_mhobo")
+npc_count = null
 
 [node name="SequentialTaskRunner" type="Node" parent="JumpEvent/RaceJumpEventStartCircle" unique_id=916068132]
 script = ExtResource("13_runner")
@@ -2027,6 +2031,7 @@ sign_text = "Finish"
 [node name="Chall01EventStartCircle" parent="Challenge01Event" unique_id=1107517821 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 209, -0.01999998, -11)
 gamemode_event = SubResource("Resource_tcy6e")
+npc_count = null
 
 [node name="SequentialTaskRunner" type="Node" parent="Challenge01Event/Chall01EventStartCircle" unique_id=621649203]
 script = ExtResource("13_runner")

@@ -21,11 +21,18 @@ enum WaitFor { START, LAP_CP, END }
 @export var total_laps: int = 3
 @export var objective_key: String = "RACE_OBJECTIVE"
 
-## Per-peer progress. RaceTask owns this directly — the runner's per-peer
-## scratchpad isn't reachable from signal callbacks.
-##   peer_id -> { "laps_done": int, "next_lap_idx": int, "waiting_for": WaitFor, "start_ms": int }
+## Per-racer progress (humans AND NPCs — RaceTask is the single scoring source
+## of truth, keyed by racer id; NPC ids are negative). RaceTask owns this
+## directly — the runner's per-peer scratchpad isn't reachable from signal
+## callbacks.
+##   racer_id -> { "laps_done": int, "next_lap_idx": int, "waiting_for": WaitFor,
+##                 "start_ms": int, ["completion_time_ms": int],
+##                 ["respawn_ckpt": CheckPointMarker  (NPC rows only)] }
 var _peer_progress: Dictionary[int, Dictionary] = {}
 var _signals_wired: bool = false
+## False until the race body actually starts (first human on_enter) — NPCs are
+## registered earlier, at gamemode Enter, and must hold at the grid until then.
+var _race_active: bool = false
 
 
 func _init():
@@ -36,6 +43,17 @@ func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
 	if !_signals_wired:
 		_wire_checkpoint_signals()
 		_signals_wired = true
+	if !_race_active:
+		_race_active = true
+		# NPCs were registered back at gamemode Enter (before grid/countdown) —
+		# start their clocks together with the humans'. Human rows surviving
+		# from a previous run are stale — drop them (this run's peers get fresh
+		# rows below).
+		for id in _peer_progress.keys():
+			if id < 0:
+				_peer_progress[id]["start_ms"] = Time.get_ticks_msec()
+			else:
+				_peer_progress.erase(id)
 	var peer_id := int(player.name)
 	_peer_progress[peer_id] = {
 		"laps_done": 0,
@@ -58,8 +76,11 @@ func check(player: PlayerEntity, _delta: float, _state: Dictionary) -> bool:
 	return false
 
 
-func on_exit(player: PlayerEntity, _state: Dictionary) -> void:
-	_peer_progress.erase(int(player.name))
+func on_exit(_player: PlayerEntity, _state: Dictionary) -> void:
+	# Keep the finished row — results read completion_time_ms from here after
+	# the runner stops (single scoring source for humans + NPCs). Stale rows
+	# are purged at the next race start in on_enter.
+	pass
 
 
 func get_objective_text() -> String:
@@ -69,6 +90,48 @@ func get_objective_text() -> String:
 func get_hint_text() -> String:
 	# Empty — dynamic lap/timer text is pushed each frame via rpc_update_progress.
 	return ""
+
+
+#region NPC racers (server-side, driven by StreetRaceGameMode / NPCRaceManager)
+
+
+## Adds an NPC row so checkpoint crossings score it like any peer. Called at
+## gamemode Enter — before the race body starts — so this also resets
+## _race_active, holding NPCs at the grid until the first human on_enter.
+func register_npc(npc_id: int) -> void:
+	_race_active = false
+	_peer_progress[npc_id] = {
+		"laps_done": 0,
+		"next_lap_idx": 0,
+		"waiting_for": WaitFor.START,
+		"start_ms": Time.get_ticks_msec(),
+	}
+
+
+func unregister_npc(npc_id: int) -> void:
+	_peer_progress.erase(npc_id)
+
+
+## The checkpoint an NPC should navigate toward. Null while the race body
+## hasn't started (grid/countdown) or once the NPC has finished — the caller
+## holds position. One event, two jobs: the same crossing that scores the lap
+## also retargets navigation.
+func get_target_checkpoint(npc_id: int) -> CheckPointMarker:
+	if !_race_active:
+		return null
+	var p := _peer_progress[npc_id]
+	if p["laps_done"] >= total_laps:
+		return null
+	return _expected_checkpoint(p)
+
+
+## Last checkpoint the NPC passed — its crash respawn point. Null until the
+## first crossing; caller falls back to the spawn grid slot.
+func get_npc_respawn_checkpoint(npc_id: int) -> CheckPointMarker:
+	return _peer_progress[npc_id].get("respawn_ckpt")
+
+
+#endregion
 
 
 #region Checkpoint signal wiring
@@ -92,12 +155,16 @@ func _all_checkpoints() -> Array[CheckPointMarker]:
 	return arr
 
 
-func _on_checkpoint_entered(player: PlayerEntity, ckpt: CheckPointMarker) -> void:
-	var peer_id := int(player.name)
-	# Player may not be racing (spectator, late-joiner, or already completed) — skip is intentional
+func _on_checkpoint_entered(racer: Node3D, ckpt: CheckPointMarker) -> void:
+	var peer_id := int(racer.name)
+	# Racer may not be racing (spectator, late-joiner, or already completed) — skip is intentional
 	if !_peer_progress.has(peer_id):
 		return
 	var p := _peer_progress[peer_id]
+	# Finished racers keep their row for results — don't let victory laps
+	# advance the state or overwrite the recorded time.
+	if p.has("completion_time_ms"):
+		return
 	var expected := _expected_checkpoint(p)
 	if ckpt != expected:
 		DebugUtils.DebugMsg(
@@ -120,8 +187,15 @@ func _expected_checkpoint(p: Dictionary) -> CheckPointMarker:
 
 
 func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
-	# Update persistent respawn only — don't teleport the racing player.
-	_runner.spawn_manager.set_respawn_point.rpc(peer_id, ckpt.global_position, ckpt.global_basis)
+	if peer_id < 0:
+		# NPC — no PlayerEntity rb_* respawn mechanism; NPCRaceManager reads
+		# this back via get_npc_respawn_checkpoint for crash recovery.
+		p["respawn_ckpt"] = ckpt
+	else:
+		# Update persistent respawn only — don't teleport the racing player.
+		_runner.spawn_manager.set_respawn_point.rpc(
+			peer_id, ckpt.global_position, ckpt.global_basis
+		)
 
 	match p["waiting_for"]:
 		WaitFor.START:
@@ -133,8 +207,10 @@ func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
 			p["laps_done"] += 1
 			p["next_lap_idx"] = 0
 			if p["laps_done"] >= total_laps:
-				# check() returns true next frame; no further waiting state needed.
-				pass
+				# Racer done (check() returns true next frame for humans).
+				# RaceTask is the scoring source of truth for every racer —
+				# record the time here for humans and NPCs alike.
+				p["completion_time_ms"] = Time.get_ticks_msec() - p["start_ms"]
 			elif end_checkpoint == start_checkpoint:
 				# Same marker doubles as the next lap's start crossing — go straight to lap CPs.
 				p["waiting_for"] = WaitFor.LAP_CP if !lap_checkpoints.is_empty() else WaitFor.END

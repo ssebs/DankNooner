@@ -45,6 +45,10 @@ sky = SubResource("Sky_6hu6n")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="NavigationMesh" id="NavigationMesh_npcai"]
+agent_radius = 1.0
+agent_max_climb = 0.5
+
 [sub_resource type="Resource" id="Resource_ihuqi"]
 script = ExtResource("7_y3pck")
 name = "Race"
@@ -232,6 +236,9 @@ environment = SubResource("Environment_2e0ve")
 [node name="Killbox" parent="." unique_id=1054789626 instance=ExtResource("2_l4hkb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -64, 0)
 
+[node name="NPCNavRegion" type="NavigationRegion3D" parent="." unique_id=257150868]
+navigation_mesh = SubResource("NavigationMesh_npcai")
+
 [node name="Paddock_PitLane" type="Node3D" parent="." unique_id=495282692]
 
 [node name="Paddock" type="Node3D" parent="Paddock_PitLane" unique_id=1848357583]
@@ -295,6 +302,7 @@ script = ExtResource("4_ej7gd")
 [node name="Race" parent="." unique_id=459761741 instance=ExtResource("5_8cigu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 5.75)
 gamemode_event = SubResource("Resource_ihuqi")
+npc_count = 3
 
 [node name="SequentialTaskRunner" type="Node" parent="Race" unique_id=472903455]
 script = ExtResource("8_ckww3")
@@ -342,52 +350,42 @@ advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="RaceTask" type="Node" parent="Race/SequentialTaskRunner" unique_id=500670208 node_paths=PackedStringArray("start_checkpoint", "lap_checkpoints", "end_checkpoint")]
+[node name="RaceTask" type="Node" parent="Race/SequentialTaskRunner" unique_id=500670208 node_paths=PackedStringArray("lap_checkpoints")]
 script = ExtResource("13_xcb1u")
-start_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
-lap_checkpoints = [NodePath("Race01CheckpointMarker02"), NodePath("Race01CheckpointMarker03"), NodePath("Race01CheckpointMarker04"), NodePath("Race01CheckpointMarker05"), NodePath("Race01CheckpointMarker06"), NodePath("Race01CheckpointMarker07"), NodePath("Race01CheckpointMarker08")]
-end_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
+lap_checkpoints = [null, null, null, null, null, null, null]
 total_laps = 2
 
 [node name="Race01CheckpointMarkerStartStop" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1048335829 instance=ExtResource("14_hyio3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 2, -12.5)
-width = 20.0
-sign_text = "Start / Stop"
+script = null
 
 [node name="Race01CheckpointMarker02" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1968073091 instance=ExtResource("14_hyio3")]
 transform = Transform3D(0.154755, 0, -0.9879529, 0, 1, 0, 0.9879529, 0, 0.154755, 19.262718, 2, -239.87521)
-width = 20.0
-sign_text = "Keep going!"
+script = null
 
 [node name="Race01CheckpointMarker03" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1096804446 instance=ExtResource("14_hyio3")]
 transform = Transform3D(-0.97984046, 0, 0.19978198, 0, 1, 0, -0.19978198, 0, -0.97984046, 143.42545, 2.0000005, -158.33928)
-width = 20.0
-sign_text = "Keep going!"
+script = null
 
 [node name="Race01CheckpointMarker04" parent="Race/SequentialTaskRunner/RaceTask" unique_id=608065201 instance=ExtResource("14_hyio3")]
 transform = Transform3D(0.8660254, 0, 0.49999997, 0, 1, 0, -0.49999997, 0, 0.8660254, 80.534164, 2, -232.46828)
-width = 20.0
-sign_text = "Keep going!"
+script = null
 
 [node name="Race01CheckpointMarker05" parent="Race/SequentialTaskRunner/RaceTask" unique_id=800779124 instance=ExtResource("14_hyio3")]
 transform = Transform3D(-0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, -0.70710677, 105.35988, 2, -82.84701)
-width = 20.0
-sign_text = "Keep going!"
+script = null
 
 [node name="Race01CheckpointMarker06" parent="Race/SequentialTaskRunner/RaceTask" unique_id=918005806 instance=ExtResource("14_hyio3")]
 transform = Transform3D(-0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, -0.70710677, 37.831177, 2, 158.2764)
-width = 20.0
-sign_text = "Keep going!"
+script = null
 
 [node name="Race01CheckpointMarker07" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1097430408 instance=ExtResource("14_hyio3")]
 transform = Transform3D(0.49999994, 0, -0.8660254, 0, 1, 0, 0.8660254, 0, 0.49999994, 96.35007, 2, 110.634094)
-width = 20.0
-sign_text = "Keep going!"
+script = null
 
 [node name="Race01CheckpointMarker08" parent="Race/SequentialTaskRunner/RaceTask" unique_id=2020293308 instance=ExtResource("14_hyio3")]
 transform = Transform3D(0, 0, 0.9999999, 0, 1, 0, -0.9999999, 0, 0, 66.12149, 2, 206.31197)
-width = 20.0
-sign_text = "Keep going!"
+script = null
 
 [node name="WheelieRace" parent="." unique_id=1436876184 instance=ExtResource("5_8cigu")]
 unique_name_in_owner = true
@@ -420,18 +418,15 @@ metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 [node name="RaceBody" type="Node" parent="WheelieRace/SequentialTaskRunner" unique_id=76134053]
 script = ExtResource("10_6j553")
 
-[node name="RaceTask" type="Node" parent="WheelieRace/SequentialTaskRunner/RaceBody" unique_id=76134054 node_paths=PackedStringArray("start_checkpoint", "lap_checkpoints", "end_checkpoint")]
+[node name="RaceTask" type="Node" parent="WheelieRace/SequentialTaskRunner/RaceBody" unique_id=76134054 node_paths=PackedStringArray("lap_checkpoints")]
 script = ExtResource("13_xcb1u")
-start_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
 lap_checkpoints = [null, null, null, null]
-end_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
 total_laps = 1
 objective_key = "RACE_WHEELIE_OBJECTIVE"
 
 [node name="Race01CheckpointMarkerStartStop" parent="WheelieRace/SequentialTaskRunner/RaceBody/RaceTask" unique_id=24477128 instance=ExtResource("14_hyio3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 2, -12.5)
-width = 20.0
-sign_text = "Start / Stop"
+script = null
 
 [node name="MaintainTrickTask" type="Node" parent="WheelieRace/SequentialTaskRunner/RaceBody" unique_id=76134055]
 script = ExtResource("15_km3o7")

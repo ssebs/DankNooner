@@ -8,6 +8,8 @@ signal exited_event_circle(peer_id: int, event_start_circle: EventStartCircle)
 
 ## TODO - show multiple events & be able to select them
 @export var gamemode_event: GameModeEventDefinition
+## AI racers to spawn for this event (0 = none). Only used by race gamemodes.
+@export var npc_count: int = 0
 
 @onready var event_label: Label3D = %Label3D
 
