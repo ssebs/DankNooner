@@ -1,0 +1,773 @@
+[gd_scene format=3 uid="uid://dd0g6yrox40hj"]
+
+[ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_r8gbb"]
+[ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/gamemodeobjects/killbox.tscn" id="2_l4hkb"]
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="3_xxw4c"]
+[ext_resource type="Script" uid="uid://c3ycg631dwkse" path="res://utils/editor_tools/take_screenshot.gd" id="4_ej7gd"]
+[ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.tscn" id="5_8cigu"]
+[ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/bikes/skins/naked_default_skin_definition.tres" id="6_0b3im"]
+[ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/bikes/skins/sport_default_skin_definition.tres" id="6_8cigu"]
+[ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://managers/gamemodes/resources/gamemode_event_definition.gd" id="7_y3pck"]
+[ext_resource type="Script" uid="uid://f840hmifnv7g" path="res://managers/gamemodes/runners/sequential_task_runner.gd" id="8_ckww3"]
+[ext_resource type="Script" uid="uid://cij1aa5h6g5nb" path="res://managers/gamemodes/tasks/grid_spawn_task.gd" id="9_5ryor"]
+[ext_resource type="Script" uid="uid://1hiltkmgy4i3" path="res://managers/gamemodes/runners/concurrent_task_runner.gd" id="10_6j553"]
+[ext_resource type="Script" uid="uid://8xvij2vjrnn2" path="res://managers/gamemodes/tasks/countdown_task.gd" id="11_nbb23"]
+[ext_resource type="Script" uid="uid://cpdxy3nxph3x0" path="res://managers/gamemodes/tasks/sfx_task.gd" id="12_qeuom"]
+[ext_resource type="Script" uid="uid://bk8siml2v41d1" path="res://managers/gamemodes/tasks/race_task.gd" id="13_xcb1u"]
+[ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="14_hyio3"]
+[ext_resource type="Script" uid="uid://dfa11idd8fnyr" path="res://managers/gamemodes/tasks/maintain_trick_task.gd" id="15_km3o7"]
+[ext_resource type="Texture2D" uid="uid://chctobd3h6dno" path="res://levels/assets/graybox/green.png" id="16_32xqg"]
+[ext_resource type="Texture2D" uid="uid://2ikkccys8b6w" path="res://levels/assets/graybox/texture_04.png" id="17_g77sv"]
+[ext_resource type="Texture2D" uid="uid://cptj8tdo4sfq4" path="res://levels/assets/graybox/brown.png" id="18_g77sv"]
+[ext_resource type="Texture2D" uid="uid://dfgsgem7ngu3h" path="res://levels/assets/graybox/gray.png" id="19_ngeet"]
+[ext_resource type="Texture2D" uid="uid://b2320l8vvg1c" path="res://levels/assets/graybox/blue.png" id="20_cjprs"]
+[ext_resource type="Texture2D" uid="uid://cjliervng0gbt" path="res://levels/assets/graybox/red.png" id="21_8wxaq"]
+[ext_resource type="Script" uid="uid://bxp3i4cnonh8y" path="res://addons/road-generator/nodes/road_manager.gd" id="22_idsao"]
+[ext_resource type="Texture2D" uid="uid://c3ut0vgj85xtc" path="res://levels/assets/graybox/purple.png" id="22_qqwky"]
+[ext_resource type="Script" uid="uid://cph7euje06kel" path="res://addons/road-generator/nodes/road_container.gd" id="23_ichjr"]
+[ext_resource type="Texture2D" uid="uid://cjrex0qopeses" path="res://levels/assets/graybox/lightgray.png" id="24_r8gbb"]
+[ext_resource type="Script" uid="uid://difs1qg4mpcpw" path="res://addons/road-generator/nodes/road_point.gd" id="24_y3v0i"]
+[ext_resource type="Texture2D" uid="uid://de8hyye3c6mx7" path="res://levels/assets/tracklayouts/Barcelona.svg" id="25_l4hkb"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_l4d1h"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_6hu6n"]
+sky_material = SubResource("ProceduralSkyMaterial_l4d1h")
+
+[sub_resource type="Environment" id="Environment_2e0ve"]
+background_mode = 2
+sky = SubResource("Sky_6hu6n")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="Resource" id="Resource_ihuqi"]
+script = ExtResource("7_y3pck")
+name = "Race"
+description = "Around the track"
+target_gamemode = 1
+forced_base_bike = ExtResource("6_8cigu")
+metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
+
+[sub_resource type="Resource" id="Resource_wheelie"]
+script = ExtResource("7_y3pck")
+name = "Wheelie Race"
+description = "You must complete the circut while doing a wheelie"
+target_gamemode = 1
+forced_base_bike = ExtResource("6_0b3im")
+metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
+
+[sub_resource type="Gradient" id="Gradient_ngeet"]
+offsets = PackedFloat32Array(0.2, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_cjprs"]
+noise_type = 2
+frequency = 0.0505
+cellular_jitter = 3.0
+cellular_return_type = 0
+domain_warp_enabled = true
+domain_warp_type = 1
+domain_warp_amplitude = 50.0
+domain_warp_fractal_type = 2
+domain_warp_fractal_lacunarity = 1.5
+domain_warp_fractal_gain = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_8wxaq"]
+width = 128
+height = 128
+noise = SubResource("FastNoiseLite_cjprs")
+color_ramp = SubResource("Gradient_ngeet")
+seamless = true
+
+[sub_resource type="Terrain3DMaterial" id="Terrain3DMaterial_qqwky"]
+_shader_parameters = {
+&"bias_distance": null,
+&"blend_sharpness": null,
+&"depth_blur": null,
+&"enable_macro_variation": null,
+&"enable_projection": null,
+&"flat_terrain_normals": null,
+&"macro_variation1": null,
+&"macro_variation2": null,
+&"macro_variation_slope": null,
+&"mipmap_bias": null,
+&"noise1_angle": 0.0,
+&"noise1_offset": Vector2(0.5, 0.5),
+&"noise1_scale": 0.04,
+&"noise2_scale": 0.076,
+&"noise_texture": SubResource("NoiseTexture2D_8wxaq"),
+&"projection_threshold": null,
+&"world_noise_fragment_normals": false,
+&"world_noise_height": 28.80000042915456,
+&"world_noise_lod_distance": 720.0,
+&"world_noise_max_octaves": 4,
+&"world_noise_min_octaves": 0,
+&"world_noise_offset": Vector3(0, -0.35, 0),
+&"world_noise_region_blend": 0.94999998062826,
+&"world_noise_scale": 14.5999996792488
+}
+world_background = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ksgao"]
+transparency = 4
+cull_mode = 2
+vertex_color_use_as_albedo = true
+backlight_enabled = true
+backlight = Color(0.5, 0.5, 0.5, 1)
+distance_fade_mode = 1
+distance_fade_min_distance = 128.0
+distance_fade_max_distance = 96.0
+
+[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_r8gbb"]
+generated_type = 1
+height_offset = 0.5
+material_override = SubResource("StandardMaterial3D_ksgao")
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 128.0
+
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_l4hkb"]
+name = "Green"
+albedo_texture = ExtResource("16_32xqg")
+normal_texture = ExtResource("17_g77sv")
+uv_scale = 0.5
+
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_ngeet"]
+name = "Brown"
+id = 1
+albedo_texture = ExtResource("18_g77sv")
+normal_texture = ExtResource("17_g77sv")
+uv_scale = 0.5
+
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_cjprs"]
+name = "Gray"
+id = 2
+albedo_texture = ExtResource("19_ngeet")
+normal_texture = ExtResource("17_g77sv")
+uv_scale = 0.5
+
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_8wxaq"]
+name = "Blue"
+id = 3
+albedo_texture = ExtResource("20_cjprs")
+normal_texture = ExtResource("17_g77sv")
+uv_scale = 0.5
+
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_qqwky"]
+name = "Red"
+id = 4
+albedo_texture = ExtResource("21_8wxaq")
+normal_texture = ExtResource("17_g77sv")
+uv_scale = 0.5
+
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_ksgao"]
+name = "Purple"
+id = 5
+albedo_texture = ExtResource("22_qqwky")
+normal_texture = ExtResource("17_g77sv")
+uv_scale = 0.5
+
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_xxw4c"]
+name = "LightGray"
+id = 6
+albedo_texture = ExtResource("24_r8gbb")
+normal_texture = ExtResource("17_g77sv")
+uv_scale = 0.5
+
+[sub_resource type="Terrain3DAssets" id="Terrain3DAssets_xxw4c"]
+mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_r8gbb")])
+texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_l4hkb"), SubResource("Terrain3DTextureAsset_ngeet"), SubResource("Terrain3DTextureAsset_cjprs"), SubResource("Terrain3DTextureAsset_8wxaq"), SubResource("Terrain3DTextureAsset_qqwky"), SubResource("Terrain3DTextureAsset_ksgao"), SubResource("Terrain3DTextureAsset_xxw4c")])
+
+[node name="RacetrackLevel01" type="Node3D" unique_id=1668752513 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug", "grid_markers")]
+script = ExtResource("1_r8gbb")
+player_spawn_pos = NodePath("PlayerSpawn")
+player_spawn_pos_debug = NodePath("PlayerSpawnTest")
+grid_markers = [NodePath("Race/SequentialTaskRunner/GridSpawnTask/RaceGridSpot1"), NodePath("Race/SequentialTaskRunner/GridSpawnTask/RaceGridSpot2"), NodePath("Race/SequentialTaskRunner/GridSpawnTask/RaceGridSpot3"), NodePath("Race/SequentialTaskRunner/GridSpawnTask/RaceGridSpot4"), NodePath("Race/SequentialTaskRunner/GridSpawnTask/RaceGridSpot5"), NodePath("Race/SequentialTaskRunner/GridSpawnTask/RaceGridSpot6"), NodePath("Race/SequentialTaskRunner/GridSpawnTask/RaceGridSpot7"), NodePath("Race/SequentialTaskRunner/GridSpawnTask/RaceGridSpot8")]
+metadata/_custom_type_script = "uid://dv0brm8irhlth"
+
+[node name="PlayerSpawn" type="Marker3D" parent="." unique_id=2039238747]
+unique_name_in_owner = true
+transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 13.999998, 0.049999952, 3.2499995)
+
+[node name="PlayerSpawnTest" type="Marker3D" parent="." unique_id=2006659162]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.049999952, 3.25)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=215805659]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1326700473]
+environment = SubResource("Environment_2e0ve")
+
+[node name="Killbox" parent="." unique_id=1054789626 instance=ExtResource("2_l4hkb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -64, 0)
+
+[node name="Paddock_PitLane" type="Node3D" parent="." unique_id=495282692]
+
+[node name="Paddock" type="Node3D" parent="Paddock_PitLane" unique_id=1848357583]
+
+[node name="PaddockWall" parent="Paddock_PitLane/Paddock" unique_id=2134295601 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3, 12.25)
+width = 12.0
+height = 6.0
+depth = 0.5
+color_preset = 3
+
+[node name="PaddockWall2" parent="Paddock_PitLane/Paddock" unique_id=703595342 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3, -12.25)
+width = 12.0
+height = 6.0
+depth = 0.5
+color_preset = 3
+
+[node name="PaddockWall4" parent="Paddock_PitLane/Paddock" unique_id=678597889 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3, 0)
+width = 6.0
+height = 6.0
+depth = 0.5
+color_preset = 3
+
+[node name="PaddockWall3" parent="Paddock_PitLane/Paddock" unique_id=1439087035 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 3, 0)
+width = 0.5
+height = 6.0
+depth = 24.5
+color_preset = 3
+
+[node name="PaddockWall5" parent="Paddock_PitLane/Paddock" unique_id=1986809663 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.25, 0.5, 0)
+depth = 22.0
+color_preset = 1
+
+[node name="PaddockRoof" parent="Paddock_PitLane/Paddock" unique_id=1863402176 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 6, 0)
+width = 12.0
+height = 0.5
+depth = 25.0
+color_preset = 3
+
+[node name="Pitwall" parent="Paddock_PitLane" unique_id=531688435 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+width = 0.25
+height = 2.0
+depth = 32.0
+color_preset = 1
+
+[node name="PaddockWall6" parent="Paddock_PitLane" unique_id=1530351838 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, 0)
+depth = 22.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody" parent="Paddock_PitLane" unique_id=1839157248 instance=ExtResource("3_xxw4c")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 0)
+width = 12.0
+height = 0.1
+depth = 24.0
+
+[node name="__SCreenshot" type="Node" parent="." unique_id=1322476029]
+script = ExtResource("4_ej7gd")
+
+[node name="Race" parent="." unique_id=459761741 instance=ExtResource("5_8cigu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 5.75)
+gamemode_event = SubResource("Resource_ihuqi")
+
+[node name="SequentialTaskRunner" type="Node" parent="Race" unique_id=472903455]
+script = ExtResource("8_ckww3")
+metadata/_custom_type_script = "uid://f840hmifnv7g"
+
+[node name="GridSpawnTask" type="Node" parent="Race/SequentialTaskRunner" unique_id=806939545 node_paths=PackedStringArray("grid_markers")]
+script = ExtResource("9_5ryor")
+grid_markers = [NodePath("RaceGridSpot1"), NodePath("RaceGridSpot2"), NodePath("RaceGridSpot3"), NodePath("RaceGridSpot4"), NodePath("RaceGridSpot5"), NodePath("RaceGridSpot6"), NodePath("RaceGridSpot7"), NodePath("RaceGridSpot8")]
+
+[node name="RaceGridSpot1" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=2006111591]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -14.24999, 0.24999976, -5.9999924)
+
+[node name="RaceGridSpot2" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=451520472]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.99999, 0.24999976, -5.9999924)
+
+[node name="RaceGridSpot3" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=1683236342]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.9999905, 0.24999976, -5.9999924)
+
+[node name="RaceGridSpot4" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=1632944192]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -12.24999, 0.24999976, -2.2499924)
+
+[node name="RaceGridSpot5" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=236889357]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -7.999991, 0.24999976, -2.2499926)
+
+[node name="RaceGridSpot6" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=396839970]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -10.24999, 0.24999976, 1.0000072)
+
+[node name="RaceGridSpot7" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=611814178]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -14.24999, 0.24999976, 1.0000073)
+
+[node name="RaceGridSpot8" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=2077988439]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.999991, 0.24999976, 1.0000069)
+
+[node name="ConcurrentTaskRunner2" type="Node" parent="Race/SequentialTaskRunner" unique_id=888872226]
+script = ExtResource("10_6j553")
+
+[node name="CountdownTask" type="Node" parent="Race/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1434891024]
+script = ExtResource("11_nbb23")
+metadata/_custom_type_script = "uid://8xvij2vjrnn2"
+
+[node name="SFXTask" type="Node" parent="Race/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=357741210]
+script = ExtResource("12_qeuom")
+sound = 2
+advance_mode = 1
+duration_sec = 3.0
+metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
+
+[node name="RaceTask" type="Node" parent="Race/SequentialTaskRunner" unique_id=500670208 node_paths=PackedStringArray("start_checkpoint", "lap_checkpoints", "end_checkpoint")]
+script = ExtResource("13_xcb1u")
+start_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
+lap_checkpoints = [NodePath("Race01CheckpointMarker02"), NodePath("Race01CheckpointMarker03"), NodePath("Race01CheckpointMarker04"), NodePath("Race01CheckpointMarker05"), NodePath("Race01CheckpointMarker06"), NodePath("Race01CheckpointMarker07"), NodePath("Race01CheckpointMarker08")]
+end_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
+total_laps = 2
+
+[node name="Race01CheckpointMarkerStartStop" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1048335829 instance=ExtResource("14_hyio3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 2, -12.5)
+width = 20.0
+sign_text = "Start / Stop"
+
+[node name="Race01CheckpointMarker02" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1968073091 instance=ExtResource("14_hyio3")]
+transform = Transform3D(0.154755, 0, -0.9879529, 0, 1, 0, 0.9879529, 0, 0.154755, 19.262718, 2, -239.87521)
+width = 20.0
+sign_text = "Keep going!"
+
+[node name="Race01CheckpointMarker03" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1096804446 instance=ExtResource("14_hyio3")]
+transform = Transform3D(-0.97984046, 0, 0.19978198, 0, 1, 0, -0.19978198, 0, -0.97984046, 143.42545, 2.0000005, -158.33928)
+width = 20.0
+sign_text = "Keep going!"
+
+[node name="Race01CheckpointMarker04" parent="Race/SequentialTaskRunner/RaceTask" unique_id=608065201 instance=ExtResource("14_hyio3")]
+transform = Transform3D(0.8660254, 0, 0.49999997, 0, 1, 0, -0.49999997, 0, 0.8660254, 80.534164, 2, -232.46828)
+width = 20.0
+sign_text = "Keep going!"
+
+[node name="Race01CheckpointMarker05" parent="Race/SequentialTaskRunner/RaceTask" unique_id=800779124 instance=ExtResource("14_hyio3")]
+transform = Transform3D(-0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, -0.70710677, 105.35988, 2, -82.84701)
+width = 20.0
+sign_text = "Keep going!"
+
+[node name="Race01CheckpointMarker06" parent="Race/SequentialTaskRunner/RaceTask" unique_id=918005806 instance=ExtResource("14_hyio3")]
+transform = Transform3D(-0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, -0.70710677, 37.831177, 2, 158.2764)
+width = 20.0
+sign_text = "Keep going!"
+
+[node name="Race01CheckpointMarker07" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1097430408 instance=ExtResource("14_hyio3")]
+transform = Transform3D(0.49999994, 0, -0.8660254, 0, 1, 0, 0.8660254, 0, 0.49999994, 96.35007, 2, 110.634094)
+width = 20.0
+sign_text = "Keep going!"
+
+[node name="Race01CheckpointMarker08" parent="Race/SequentialTaskRunner/RaceTask" unique_id=2020293308 instance=ExtResource("14_hyio3")]
+transform = Transform3D(0, 0, 0.9999999, 0, 1, 0, -0.9999999, 0, 0, 66.12149, 2, 206.31197)
+width = 20.0
+sign_text = "Keep going!"
+
+[node name="WheelieRace" parent="." unique_id=1436876184 instance=ExtResource("5_8cigu")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, -6.25)
+visible = false
+gamemode_event = SubResource("Resource_wheelie")
+
+[node name="SequentialTaskRunner" type="Node" parent="WheelieRace" unique_id=1360351275]
+script = ExtResource("8_ckww3")
+metadata/_custom_type_script = "uid://f840hmifnv7g"
+
+[node name="GridSpawnTask" type="Node" parent="WheelieRace/SequentialTaskRunner" unique_id=1504957453 node_paths=PackedStringArray("grid_markers")]
+script = ExtResource("9_5ryor")
+grid_markers = [NodePath(""), NodePath(""), NodePath(""), NodePath("")]
+
+[node name="ConcurrentTaskRunner2" type="Node" parent="WheelieRace/SequentialTaskRunner" unique_id=858370613]
+script = ExtResource("10_6j553")
+
+[node name="CountdownTask" type="Node" parent="WheelieRace/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1257847547]
+script = ExtResource("11_nbb23")
+metadata/_custom_type_script = "uid://8xvij2vjrnn2"
+
+[node name="SFXTask" type="Node" parent="WheelieRace/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1256636038]
+script = ExtResource("12_qeuom")
+sound = 2
+advance_mode = 1
+duration_sec = 3.0
+metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
+
+[node name="RaceBody" type="Node" parent="WheelieRace/SequentialTaskRunner" unique_id=76134053]
+script = ExtResource("10_6j553")
+
+[node name="RaceTask" type="Node" parent="WheelieRace/SequentialTaskRunner/RaceBody" unique_id=76134054 node_paths=PackedStringArray("start_checkpoint", "lap_checkpoints", "end_checkpoint")]
+script = ExtResource("13_xcb1u")
+start_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
+lap_checkpoints = [NodePath(""), NodePath(""), NodePath(""), NodePath("")]
+end_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
+total_laps = 1
+objective_key = "RACE_WHEELIE_OBJECTIVE"
+
+[node name="Race01CheckpointMarkerStartStop" parent="WheelieRace/SequentialTaskRunner/RaceBody/RaceTask" unique_id=24477128 instance=ExtResource("14_hyio3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 2, -12.5)
+width = 20.0
+sign_text = "Start / Stop"
+
+[node name="MaintainTrickTask" type="Node" parent="WheelieRace/SequentialTaskRunner/RaceBody" unique_id=76134055]
+script = ExtResource("15_km3o7")
+is_constraint = true
+
+[node name="Terrain3D" type="Terrain3D" parent="." unique_id=470850830]
+data_directory = "res://levels/racetracks/racetrack_level_01/t3ddata"
+material = SubResource("Terrain3DMaterial_qqwky")
+assets = SubResource("Terrain3DAssets_xxw4c")
+top_level = true
+metadata/_edit_lock_ = true
+
+[node name="Tracklayout" type="Sprite3D" parent="." unique_id=637833958]
+transform = Transform3D(-4.371139e-06, 100, 4.371139e-06, 0, -4.371139e-06, 100, 100, 4.371139e-06, 1.9106854e-13, 68.00293, 29.461248, -49.999996)
+visible = false
+texture = ExtResource("25_l4hkb")
+
+[node name="RoadManager" type="Node3D" parent="." unique_id=1517533527]
+script = ExtResource("22_idsao")
+metadata/_custom_type_script = "uid://bxp3i4cnonh8y"
+
+[node name="Road_001" type="Node3D" parent="RoadManager" unique_id=1620334673]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.916289, 0, 63.506)
+script = ExtResource("23_ichjr")
+use_lowpoly_preview = true
+
+[node name="RP_001" type="Node3D" parent="RoadManager/Road_001" unique_id=1674423936]
+transform = Transform3D(0.9999997, 0, 0.00075239403, 0, 1, 0, -0.00075239403, 0, 0.9999997, 0, 0.25, 0)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+next_mag = 141.84563
+prior_pt_init = NodePath("../RP_002")
+next_pt_init = NodePath("../RP_029")
+
+[node name="RP_003" type="Node3D" parent="RoadManager/Road_001" unique_id=1247755433]
+transform = Transform3D(0.094869494, 0, -0.9954897, 0, 1, 0, 0.9954897, 0, 0.094869494, 27.646904, 0.25, -303.4153)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 22.301226
+next_mag = 17.067812
+prior_pt_init = NodePath("../RP_004")
+next_pt_init = NodePath("../RP_002")
+
+[node name="RP_004" type="Node3D" parent="RoadManager/Road_001" unique_id=619385172]
+transform = Transform3D(0.9885633, 0, -0.15080683, 0, 1, 0, 0.15080681, 0, 0.9885633, 54.909904, 0.25, -338.71558)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 22.84898
+next_mag = 22.301226
+prior_pt_init = NodePath("../RP_005")
+next_pt_init = NodePath("../RP_003")
+
+[node name="RP_005" type="Node3D" parent="RoadManager/Road_001" unique_id=2002465026]
+transform = Transform3D(0.28063545, 0, -0.9598144, 0, 1, 0, 0.9598144, 0, 0.28063545, 88.1944, 0.25, -370.02765)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 22.77103
+next_mag = 22.84898
+prior_pt_init = NodePath("../RP_006")
+next_pt_init = NodePath("../RP_004")
+
+[node name="RP_006" type="Node3D" parent="RoadManager/Road_001" unique_id=1646219130]
+transform = Transform3D(-0.7174975, 0, -0.69656104, 0, 1, 0, 0.69656104, 0, -0.7174975, 131.0944, 0.25, -354.74142)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 23.761562
+next_mag = 22.77103
+prior_pt_init = NodePath("../RP_007")
+next_pt_init = NodePath("../RP_005")
+
+[node name="RP_007" type="Node3D" parent="RoadManager/Road_001" unique_id=1550756296]
+transform = Transform3D(-0.9818477, 0, -0.189671, 0, 1, 0, 0.189671, 0, -0.9818477, 152.54439, 0.25, -312.3345)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 49.18847
+next_mag = 23.761562
+prior_pt_init = NodePath("../RP_008")
+next_pt_init = NodePath("../RP_006")
+
+[node name="RP_008" type="Node3D" parent="RoadManager/Road_001" unique_id=1656290878]
+transform = Transform3D(-0.9803787, 0, 0.19712359, 0, 1, 0, -0.19712359, 0, -0.9803787, 151.80476, 0.25, -213.96034)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 16.16608
+next_mag = 49.18847
+prior_pt_init = NodePath("../RP_009")
+next_pt_init = NodePath("../RP_007")
+
+[node name="RP_009" type="Node3D" parent="RoadManager/Road_001" unique_id=290866246]
+transform = Transform3D(-0.2446464, 0, 0.96961236, 0, 1, 0, -0.96961236, 0, -0.2446464, 127.39612, 0.25, -192.75688)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 23.113169
+next_mag = 16.16608
+prior_pt_init = NodePath("../RP_010")
+next_pt_init = NodePath("../RP_008")
+
+[node name="RP_010" type="Node3D" parent="RoadManager/Road_001" unique_id=1022112783]
+transform = Transform3D(0.9741302, 0, 0.2259875, 0, 1, 0, -0.2259875, 0, 0.9741302, 95.83748, 0.25, -226.53448)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 39.32984
+next_mag = 23.113169
+prior_pt_init = NodePath("../RP_011")
+next_pt_init = NodePath("../RP_009")
+
+[node name="RP_011" type="Node3D" parent="RoadManager/Road_001" unique_id=1777472537]
+transform = Transform3D(0.96993613, 0, -0.24335957, 0, 1, 0, 0.24335957, 0, 0.96993613, 93.95078, 0.25, -273.2331)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 11.661194
+next_mag = 32.631744
+prior_pt_init = NodePath("../RP_012")
+next_pt_init = NodePath("../RP_010")
+
+[node name="RP_012" type="Node3D" parent="RoadManager/Road_001" unique_id=865376653]
+transform = Transform3D(-0.38370523, 0, 0.92345566, 0, 1, 0, -0.92345566, 0, -0.38370523, 76.14593, 0.25, -301.72824)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 27.168001
+next_mag = 16.0
+prior_pt_init = NodePath("../RP_013")
+next_pt_init = NodePath("../RP_011")
+
+[node name="RP_013" type="Node3D" parent="RoadManager/Road_001" unique_id=1452680571]
+transform = Transform3D(-0.995896, 0, 0.090505235, 0, 1, 0, -0.090505235, 0, -0.995896, 43.56852, 0.25, -262.28452)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 25.010439
+next_mag = 27.168001
+prior_pt_init = NodePath("../RP_014")
+next_pt_init = NodePath("../RP_012")
+
+[node name="RP_014" type="Node3D" parent="RoadManager/Road_001" unique_id=435341594]
+transform = Transform3D(-0.89506894, 0, 0.4459278, 0, 1, 0, -0.4459278, 0, -0.89506894, 29.76162, 0.25, -214.2069)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 16.0
+next_mag = 25.010439
+prior_pt_init = NodePath("../RP_015")
+next_pt_init = NodePath("../RP_013")
+
+[node name="RP_015" type="Node3D" parent="RoadManager/Road_001" unique_id=1708787250]
+transform = Transform3D(-0.9071436, 0, -0.42082122, 0, 1, 0, 0.42082122, 0, -0.9071436, 29.021965, 0.25, -186.09999)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 16.0
+next_mag = 16.0
+prior_pt_init = NodePath("../RP_016")
+next_pt_init = NodePath("../RP_014")
+
+[node name="RP_016" type="Node3D" parent="RoadManager/Road_001" unique_id=238562167]
+transform = Transform3D(-0.12611245, 0, -0.99201596, 0, 1, 0, 0.99201596, 0, -0.12611245, 55.403008, 0.25, -169.08792)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 16.0
+next_mag = 16.0
+prior_pt_init = NodePath("../RP_017")
+next_pt_init = NodePath("../RP_015")
+
+[node name="RP_017" type="Node3D" parent="RoadManager/Road_001" unique_id=310914437]
+transform = Transform3D(-0.27995858, 0, -0.96001214, 0, 1, 0, 0.96001214, 0, -0.27995858, 72.55295, 0.25, -166.69753)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 37.96277
+next_mag = 16.0
+prior_pt_init = NodePath("../RP_018")
+next_pt_init = NodePath("../RP_016")
+
+[node name="RP_018" type="Node3D" parent="RoadManager/Road_001" unique_id=956028471]
+transform = Transform3D(-0.78922945, 0, -0.6140984, 0, 1, 0, 0.6140984, 0, -0.78922945, 134.684, 0.25, -123.05786)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 22.457876
+next_mag = 37.96277
+prior_pt_init = NodePath("../RP_019")
+next_pt_init = NodePath("../RP_017")
+
+[node name="RP_019" type="Node3D" parent="RoadManager/Road_001" unique_id=1096466858]
+transform = Transform3D(-0.916879, 0, 0.3991653, 0, 1, 0, -0.3991653, 0, -0.916879, 136.6564, 0.25, -78.18544)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 87.60973
+next_mag = 22.457876
+prior_pt_init = NodePath("../RP_020")
+next_pt_init = NodePath("../RP_018")
+
+[node name="RP_020" type="Node3D" parent="RoadManager/Road_001" unique_id=1495956241]
+transform = Transform3D(-0.7886867, 0, 0.6147953, 0, 1, 0, -0.6147953, 0, -0.7886867, 62.336014, 0.25, 52.621532)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 15.752998
+next_mag = 87.60973
+prior_pt_init = NodePath("../RP_021")
+next_pt_init = NodePath("../RP_019")
+
+[node name="RP_021" type="Node3D" parent="RoadManager/Road_001" unique_id=617331696]
+transform = Transform3D(-0.7061018, 0, -0.70811033, 0, 1, 0, 0.70811033, 0, -0.7061018, 44.00751, 0.25, 91.816284)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 16.0
+next_mag = 15.797241
+prior_pt_init = NodePath("../RP_022")
+next_pt_init = NodePath("../RP_020")
+
+[node name="RP_022" type="Node3D" parent="RoadManager/Road_001" unique_id=700100816]
+transform = Transform3D(0.3817462, 0, -0.9242672, 0, 1, 0, 0.9242672, 0, 0.3817462, 75.28776, 0.25, 97.57869)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 20.365913
+next_mag = 11.8883705
+prior_pt_init = NodePath("../RP_023")
+next_pt_init = NodePath("../RP_021")
+
+[node name="RP_023" type="Node3D" parent="RoadManager/Road_001" unique_id=878003344]
+transform = Transform3D(0.97797996, 0, -0.20869894, 0, 1, 0, 0.20869894, 0, 0.97797996, 98.49547, 0.25, 62.47662)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 17.09584
+next_mag = 20.365913
+prior_pt_init = NodePath("../RP_024")
+next_pt_init = NodePath("../RP_022")
+
+[node name="RP_024" type="Node3D" parent="RoadManager/Road_001" unique_id=963191978]
+transform = Transform3D(0.08037764, 0, -0.9967645, 0, 1, 0, 0.9967645, 0, 0.08037764, 122.11165, 0.25, 44.140564)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 16.0
+next_mag = 17.09584
+prior_pt_init = NodePath("../RP_025")
+next_pt_init = NodePath("../RP_023")
+
+[node name="RP_025" type="Node3D" parent="RoadManager/Road_001" unique_id=1572617767]
+transform = Transform3D(-0.9977041, 0, 0.067724474, 0, 1, 0, -0.067724474, 0, -0.9977041, 141.14891, 0.25, 70.36629)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 30.835981
+next_mag = 16.0
+prior_pt_init = NodePath("../RP_026")
+next_pt_init = NodePath("../RP_024")
+
+[node name="RP_026" type="Node3D" parent="RoadManager/Road_001" unique_id=1373219109]
+transform = Transform3D(-0.84325886, 0, 0.5375078, 0, 1, 0, -0.5375078, 0, -0.84325886, 122.365395, 0.25, 127.32336)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 18.7286
+next_mag = 30.835981
+prior_pt_init = NodePath("../RP_027")
+next_pt_init = NodePath("../RP_025")
+
+[node name="RP_027" type="Node3D" parent="RoadManager/Road_001" unique_id=630041519]
+transform = Transform3D(0.05091535, 0, 0.998703, 0, 1, 0, -0.998703, 0, 0.05091535, 86.90752, 0.25, 143.3456)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 29.46396
+next_mag = 18.7286
+prior_pt_init = NodePath("../RP_028")
+next_pt_init = NodePath("../RP_026")
+
+[node name="RP_029" type="Node3D" parent="RoadManager/Road_001" unique_id=580209817]
+transform = Transform3D(0.97438115, 0, 0.22490329, 0, 1, 0, -0.22490329, 0, 0.97438115, -0.3718071, 0.25, 111.78697)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 21.029663
+next_mag = 21.029663
+prior_pt_init = NodePath("../RP_001")
+next_pt_init = NodePath("../RP_028")
+
+[node name="RP_002" type="Node3D" parent="RoadManager/Road_001" unique_id=1982754006]
+transform = Transform3D(0.99999976, 0, 0.0007523948, 0, 1, 0, -0.0007523948, 0, 0.99999976, -0.21344757, 0.25, -283.69116)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 17.067812
+next_mag = 141.84563
+prior_pt_init = NodePath("../RP_003")
+next_pt_init = NodePath("../RP_001")
+
+[node name="RP_028" type="Node3D" parent="RoadManager/Road_001" unique_id=911273806]
+transform = Transform3D(-0.034118272, 0, 0.9994178, 0, 1, 0, -0.9994178, 0, -0.034118272, 29.230934, 0.25, 142.80986)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1, 1])
+lanes = Array[int]([0, 3, 2])
+prior_mag = 21.029663
+next_mag = 29.46396
+prior_pt_init = NodePath("../RP_029")
+next_pt_init = NodePath("../RP_027")
+
+[node name="Road_002" type="Node3D" parent="RoadManager" unique_id=1190868225]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.102, 0, 36.689)
+script = ExtResource("23_ichjr")
+use_lowpoly_preview = true
+edge_containers = Array[NodePath]([NodePath(""), NodePath("")])
+edge_rp_targets = Array[NodePath]([NodePath(""), NodePath("")])
+edge_rp_target_dirs = Array[int]([-1, -1])
+edge_rp_locals = Array[NodePath]([NodePath("RP_003"), NodePath("RP_004")])
+edge_rp_local_dirs = Array[int]([1, 0])
+
+[node name="RP_001" type="Node3D" parent="RoadManager/Road_002" unique_id=1944907171]
+transform = Transform3D(0.99997246, 0, -0.007418242, 0, 1, 0, 0.007418242, 0, 0.99997246, -0.28560233, 0.25, 38.49894)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1])
+lanes = Array[int]([0, 2])
+next_mag = 37.756157
+prior_pt_init = NodePath("../RP_002")
+next_pt_init = NodePath("../RP_004")
+
+[node name="RP_002" type="Node3D" parent="RoadManager/Road_002" unique_id=1937390621]
+transform = Transform3D(0.9999725, 0, -0.0074182414, 0, 1, 0, 0.0074182414, 0, 0.9999725, 0, 0.25, -76.128)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1])
+lanes = Array[int]([0, 2])
+prior_mag = 16.0
+next_mag = 38.064995
+prior_pt_init = NodePath("../RP_003")
+next_pt_init = NodePath("../RP_001")
+
+[node name="RP_003" type="Node3D" parent="RoadManager/Road_002" unique_id=1655356538]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.171967, 0.25, -144.23503)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1])
+lanes = Array[int]([0, 2])
+prior_mag = 16.0
+next_mag = 16.0
+next_pt_init = NodePath("../RP_002")
+
+[node name="RP_004" type="Node3D" parent="RoadManager/Road_002" unique_id=1355990167]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, -16.75, 0.25, 126.075)
+script = ExtResource("24_y3v0i")
+traffic_dir = Array[int]([1, 1])
+lanes = Array[int]([0, 2])
+prior_mag = 37.756157
+next_mag = 14.843643
+prior_pt_init = NodePath("../RP_001")
