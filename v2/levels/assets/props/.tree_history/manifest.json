@@ -1,0 +1,18 @@
+{
+    "parent_file": "F:\\LocalProgramming\\DankNooner\\v2\\levels\\assets\\props\\tree.blend",
+    "versions": [
+        {
+            "id": "autosave",
+            "timestamp": "2026-07-06 20:46:11",
+            "note": "Auto Save",
+            "thumbnail": "autosave/thumbnail.png",
+            "blend": "autosave/snapshot.blend_snapshot",
+            "object_count": 1,
+            "file_size": 108353,
+            "is_protected": false,
+            "tag": "NONE"
+        }
+    ],
+    "schema_version": 1,
+    "project_uuid": "13d62c2e-e803-4a7e-9f4f-50b184841dae"
+}
