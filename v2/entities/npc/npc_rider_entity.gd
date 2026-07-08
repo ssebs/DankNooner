@@ -12,7 +12,19 @@ enum NPCState { RIDING, WHEELIE, CRASHED, FINISHED }
 @export var bike_definition: BikeSkinDefinition
 @export var character_definition: CharacterSkinDefinition
 @export var animation_controller: NPCAnimationController
-@export var move_speed: float = 22.0
+@export var move_speed: float = 35.0
+## Speed ramp rates (units/s^2) — accel when speeding up, braking when slowing.
+@export var acceleration: float = 64.0
+@export var braking: float = 40.0
+## Speed floor through the sharpest turns. The bot eases down toward this as the
+## road bends ahead, then accelerates back to move_speed as it straightens.
+@export var min_turn_speed: float = 8.0
+## Exponent on the road's bend — higher brakes harder for the same corner
+## (1 = linear, so even gentle turns shed speed as this climbs).
+@export var turn_sharpness: float = 4.0
+## How far ahead along the nav path (metres) to read the road's bend when
+## picking corner speed — larger = brakes earlier for upcoming turns.
+@export var turn_lookahead: float = 12.0
 @export var turn_speed: float = 4.0
 
 const GRAVITY: float = 30.0
@@ -37,6 +49,8 @@ var username: String:
 
 var _has_target: bool = false
 var _last_target_pos: Vector3 = Vector3.INF
+## Current horizontal speed magnitude, ramped toward the turn-scaled target.
+var _speed: float = 0.0
 
 
 func _ready():
@@ -61,19 +75,39 @@ func _physics_process(delta: float):
 	# than the checkpoint trigger is deep (1m), so stopping on "arrival" parks
 	# the bot short of the trigger and its lap never advances. Keep driving at
 	# the target — the crossing retargets it to the next checkpoint.
-	var driving := (
-		_has_target
-		and npc_state != NPCState.CRASHED
-		and npc_state != NPCState.FINISHED
-	)
+	var driving := _has_target and npc_state != NPCState.CRASHED and npc_state != NPCState.FINISHED
 	if driving:
 		var next_pos := nav_agent.get_next_path_position()
-		var dir := (next_pos - global_position).normalized()
-		velocity.x = dir.x * move_speed
-		velocity.z = dir.z * move_speed
+		var dir := next_pos - global_position
+		dir.y = 0.0
+		dir = dir.normalized()
+
+		# Corner speed reads the road's bend over the next `turn_lookahead` metres,
+		# sampled along the nav path by arc length (so it doesn't care how the
+		# navmesh spaces its corners). Compare the road's heading over the near
+		# half of the window vs the far half: straight -> move_speed, a bend eases
+		# toward min_turn_speed. Because we look ahead, the bot brakes BEFORE the
+		# apex and accelerates back out as the road straightens.
+		var mid := _path_point_ahead(turn_lookahead)
+		var far := _path_point_ahead(turn_lookahead * 2.0)
+		var lead := mid - global_position
+		var trail := far - mid
+		lead.y = 0.0
+		trail.y = 0.0
+		var alignment := 1.0
+		if lead.length_squared() > 0.01 and trail.length_squared() > 0.01:
+			alignment = clampf(lead.normalized().dot(trail.normalized()), 0.0, 1.0)
+		var turn_factor := pow(alignment, turn_sharpness)
+		var target_speed := lerpf(min_turn_speed, move_speed, turn_factor)
+		var rate := acceleration if target_speed > _speed else braking
+		_speed = move_toward(_speed, target_speed, rate * delta)
+
+		velocity.x = dir.x * _speed
+		velocity.z = dir.z * _speed
 	else:
-		velocity.x = move_toward(velocity.x, 0.0, move_speed * delta)
-		velocity.z = move_toward(velocity.z, 0.0, move_speed * delta)
+		velocity.x = move_toward(velocity.x, 0.0, braking * delta)
+		velocity.z = move_toward(velocity.z, 0.0, braking * delta)
+		_speed = Vector2(velocity.x, velocity.z).length()
 
 	velocity.y -= GRAVITY * delta
 
@@ -96,7 +130,7 @@ func set_nav_target(pos: Vector3) -> void:
 		return
 	_last_target_pos = pos
 	nav_agent.set_target_position(pos)
-	DebugUtils.DebugMsg("NPC %s retarget -> %v" % [name, pos])
+	DebugUtils.DebugMsg("NPC %s retarget -> %v" % [name, pos], OS.has_feature("debug"))
 
 
 func clear_nav_target() -> void:
@@ -128,12 +162,33 @@ func finish() -> void:
 func teleport_to(pos: Vector3, basis: Basis) -> void:
 	global_transform = Transform3D(basis, pos)
 	velocity = Vector3.ZERO
+	_speed = 0.0
 	npc_state = NPCState.RIDING
 	# Force a fresh path from the new position on the next set_nav_target.
 	_last_target_pos = Vector3.INF
 
 
 #endregion
+
+
+## Point on the current nav path `distance` metres ahead of us, measured by arc
+## length along the path polyline. This makes the road's curvature read the same
+## regardless of how sparsely/unevenly the navmesh spaces its corners.
+func _path_point_ahead(distance: float) -> Vector3:
+	var path := nav_agent.get_current_navigation_path()
+	if path.size() < 2:
+		return global_position
+	var prev := global_position
+	var remaining := distance
+	for i in range(nav_agent.get_current_navigation_path_index(), path.size()):
+		var seg := path[i] - prev
+		var seg_len := seg.length()
+		if seg_len >= remaining:
+			return prev + seg.normalized() * remaining
+		remaining -= seg_len
+		prev = path[i]
+	# Ran off the end of the path — clamp to the final point.
+	return prev
 
 
 func _face_velocity(delta: float) -> void:
