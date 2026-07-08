@@ -19,6 +19,9 @@ const GRAVITY: float = 30.0
 ## Checkpoints are static — only retarget when the target actually moved,
 ## since set_target_position triggers an expensive A* search.
 const RETARGET_DISTANCE_SQ: float = 1.0
+## Collision layer bit (value 16) flagging unstable ground (sand). Matches the
+## per-surface convention in curved_road.gd's material_layers / SandGround.
+const UNSTABLE_GROUND_LAYER: int = 16
 
 @onready var nav_agent: NavigationAgent3D = %NavigationAgent3D
 @onready var visual_root: Node3D = %VisualRoot
@@ -127,6 +130,16 @@ func teleport_to(pos: Vector3, basis: Basis) -> void:
 	npc_state = NPCState.RIDING
 	# Force a fresh path from the new position on the next set_nav_target.
 	_last_target_pos = Vector3.INF
+
+
+## True while a wheel is resting on a surface flagged as unstable ground (sand).
+## Server-only — reads this physics frame's move_and_slide contacts.
+func is_on_unstable_ground() -> bool:
+	for i in get_slide_collision_count():
+		var collider := get_slide_collision(i).get_collider()
+		if collider is CollisionObject3D and collider.collision_layer & UNSTABLE_GROUND_LAYER:
+			return true
+	return false
 
 
 #endregion

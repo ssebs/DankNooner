@@ -19,6 +19,7 @@ properties/1/spawn = true
 properties/1/replication_mode = 2
 
 [node name="NPCRiderEntity" type="CharacterBody3D" unique_id=1768842520 node_paths=PackedStringArray("animation_controller")]
+collision_mask = 19
 script = ExtResource("4_npcen")
 bike_definition = ExtResource("6_bkdef")
 character_definition = ExtResource("7_chdef")

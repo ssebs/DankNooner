@@ -71,6 +71,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
   - [ ] https://github.com/TheDuckCow/godot-road-generator/wiki
 
 ### Polish
+- [ ] red/white kerbs on corners gen from curve
 - [ ] drift screech audio (see Backlog > Audio)
 - [ ] Fade out intro sound quicker, make 3 sec version
 - [ ] Gamemode switching cleanup

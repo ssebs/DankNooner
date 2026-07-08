@@ -17,7 +17,8 @@
       "Bash(gdlint player/controllers/animation_controller.gd)",
       "Bash(awk 'END{print NR\" lines\"}' player/controllers/animation_controller.gd)",
       "Bash(echo \"exit: $?\")",
-      "WebFetch(domain:api.github.com)"
+      "WebFetch(domain:api.github.com)",
+      "Bash(gdlint *)"
     ]
   }
 }
