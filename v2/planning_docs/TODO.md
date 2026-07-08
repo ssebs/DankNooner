@@ -4,7 +4,7 @@
 ## Release Focus
 Ship priorities in order. Race map done. City map, mountain road, extra tricks = later.
 1. Fix game-breaking bugs only (skip tuning)
-2. Racing AI can complete a race + MP
+2. [DONE] Racing AI can complete a race + MP
 3. Basic traffic AI
 4. Customization & progression
 5. Stunt map + polish
