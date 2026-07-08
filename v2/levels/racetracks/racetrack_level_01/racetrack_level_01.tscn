@@ -303,7 +303,7 @@ script = ExtResource("4_ej7gd")
 [node name="Race" parent="." unique_id=459761741 instance=ExtResource("5_8cigu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 5.75)
 gamemode_event = SubResource("Resource_ihuqi")
-npc_count = 4
+enable_npcs = true
 
 [node name="SequentialTaskRunner" type="Node" parent="Race" unique_id=472903455]
 script = ExtResource("8_ckww3")
