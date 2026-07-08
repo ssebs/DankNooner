@@ -10,6 +10,7 @@ class_name StreetRaceGameMode extends GameModeType
 @export var npc_race_manager: NPCRaceManager
 
 var _start_circle: EventStartCircle
+var _race_task: RaceTask
 var _runners: Array[TaskRunner] = []
 var _active_runner: TaskRunner
 var _active_runner_index: int = -1
@@ -37,6 +38,7 @@ func Enter(state_context: StateContext):
 	results_hud.restart_pressed.connect(_on_results_restart_pressed)
 
 	if multiplayer.is_server():
+		_race_task = _find_race_task(_start_circle)
 		_setup_npcs()
 		_start_next_runner()
 
@@ -44,6 +46,7 @@ func Enter(state_context: StateContext):
 func Update(delta: float):
 	if !multiplayer.is_server():
 		return
+	_push_checkpoint_markers()
 	if _update_results_countdown(delta):
 		return
 	if _active_runner != null:
@@ -68,6 +71,8 @@ func Exit(_state_context: StateContext):
 		# CountdownTask disables input on_enter; if we exit mid-task on_exit never runs.
 		_reset_all_player_input()
 		_teardown_npcs()
+		_clear_checkpoint_markers()
+		_race_task = null
 
 	if results_hud.visible:
 		input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
@@ -134,6 +139,35 @@ func _reset_all_player_input():
 		player.input_controller.input_disabled = false
 
 
+## Server only. Push each human's next checkpoint to their own minimap (green
+## marker). get_target_checkpoint returns null pre-race/finished — that clears it.
+func _push_checkpoint_markers():
+	if _race_task == null:
+		return
+	for peer_id in lobby_manager.lobby_players:
+		# Player may not be spawned yet (late-join) — skip is intentional.
+		var player := spawn_manager._get_player_by_peer_id(peer_id)
+		if player == null:
+			continue
+		var pos := Vector3.ZERO
+		var has_target := false
+		if _race_task._peer_progress.has(peer_id):
+			var ckpt := _race_task.get_target_checkpoint(peer_id)
+			if ckpt != null:
+				pos = ckpt.global_position
+				has_target = true
+		player.hud_controller.push_checkpoint_marker(peer_id, pos, has_target)
+
+
+func _clear_checkpoint_markers():
+	for peer_id in lobby_manager.lobby_players:
+		# Player may not be spawned yet (late-join) — skip is intentional.
+		var player := spawn_manager._get_player_by_peer_id(peer_id)
+		if player == null:
+			continue
+		player.hud_controller.push_checkpoint_marker(peer_id, Vector3.ZERO, false)
+
+
 #endregion
 
 #region NPC racers (server only)
@@ -144,17 +178,16 @@ func _reset_all_player_input():
 func _setup_npcs():
 	if !_start_circle.enable_npcs:
 		return
-	var race_task := _find_race_task(_start_circle)
 	var grid_markers := _find_grid_spawn_task(_start_circle).grid_markers
 	# Fill every grid slot the humans don't occupy.
 	var npc_count := grid_markers.size() - lobby_manager.lobby_players.size()
 	if npc_count <= 0:
 		return
-	npc_race_manager.race_task = race_task
+	npc_race_manager.race_task = _race_task
 	for i in npc_count:
 		var marker: Marker3D = grid_markers[maxi(0, grid_markers.size() - 1 - i)]
 		var npc_id := npc_race_manager.spawn_npc(marker.global_position, marker.global_basis)
-		race_task.register_npc(npc_id)
+		_race_task.register_npc(npc_id)
 
 
 func _teardown_npcs():

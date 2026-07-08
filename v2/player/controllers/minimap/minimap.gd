@@ -20,6 +20,8 @@ class_name Minimap extends PanelContainer
 const COLOR_SELF := Color.WHITE
 const COLOR_PLAYER := Color(0.2, 0.5, 1.0)
 const COLOR_NPC := Color(0.7, 0.3, 1.0)
+const COLOR_CHECKPOINT := Color(0.15, 0.85, 0.2)
+const COLOR_EVENT := Color(1.0, 0.1, 0.8)
 
 @onready var _sub_viewport: SubViewport = %MinimapSubViewport
 @onready var _camera: Camera3D = %MinimapCamera
@@ -27,6 +29,10 @@ const COLOR_NPC := Color(0.7, 0.3, 1.0)
 
 var _local_player: PlayerEntity
 var _active: bool = false
+## Next-checkpoint marker for the local racer — server-fed via rpc_set_checkpoint
+## (checkpoint progress is server-only), null while not racing.
+var _checkpoint_pos: Vector3
+var _has_checkpoint: bool = false
 
 
 func _ready():
@@ -61,29 +67,42 @@ func _process(_delta: float):
 ## Runs during the overlay's draw pass (connected to its `draw` signal), so the
 ## draw calls target the overlay canvas item on top of the SubViewport.
 func _draw_dots() -> void:
-	var center := _dot_overlay.size * 0.5
-	# Inset the clamp box so a pinned blip + border + arrow stays fully on-screen.
-	var half := center - Vector2.ONE * (dot_radius + border_width + arrow_size)
 	for racer in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Racers"]):
 		var color := COLOR_PLAYER
 		if racer == _local_player:
 			color = COLOR_SELF
 		elif racer is NPCRiderEntity:
 			color = COLOR_NPC
-		# unproject gives SubViewport pixels; the overlay is sized 1:1 over it.
-		var pos := _camera.unproject_position(racer.global_position)
-		var offset := pos - center
-		if absf(offset.x) > half.x or absf(offset.y) > half.y:
-			# Off-map: clamp onto the edge box along the ray from center, then
-			# add an outward pointer toward the racer's real position.
-			var t := 1.0
-			if absf(offset.x) > 0.001:
-				t = minf(t, half.x / absf(offset.x))
-			if absf(offset.y) > 0.001:
-				t = minf(t, half.y / absf(offset.y))
-			pos = center + offset * t
-			_draw_edge_arrow(pos, offset.normalized(), color)
-		_draw_blip(pos, color)
+		_draw_marker(racer.global_position, color)
+
+	# Event start circles (local level nodes) — bright pink for testing.
+	for circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
+		_draw_marker(circle.global_position, COLOR_EVENT)
+
+	if _has_checkpoint:
+		_draw_marker(_checkpoint_pos, COLOR_CHECKPOINT)
+
+
+## Plot a world position onto the overlay: clamp off-map points to the edge box
+## with an outward pointer, then draw the bordered blip.
+func _draw_marker(world_pos: Vector3, color: Color) -> void:
+	var center := _dot_overlay.size * 0.5
+	# Inset the clamp box so a pinned blip + border + arrow stays fully on-screen.
+	var half := center - Vector2.ONE * (dot_radius + border_width + arrow_size)
+	# unproject gives SubViewport pixels; the overlay is sized 1:1 over it.
+	var pos := _camera.unproject_position(world_pos)
+	var offset := pos - center
+	if absf(offset.x) > half.x or absf(offset.y) > half.y:
+		# Off-map: clamp onto the edge box along the ray from center, then
+		# add an outward pointer toward the real position.
+		var t := 1.0
+		if absf(offset.x) > 0.001:
+			t = minf(t, half.x / absf(offset.x))
+		if absf(offset.y) > 0.001:
+			t = minf(t, half.y / absf(offset.y))
+		pos = center + offset * t
+		_draw_edge_arrow(pos, offset.normalized(), color)
+	_draw_blip(pos, color)
 
 
 func _draw_blip(pos: Vector2, color: Color) -> void:
@@ -98,3 +117,11 @@ func _draw_edge_arrow(pos: Vector2, dir: Vector2, color: Color) -> void:
 	_dot_overlay.draw_colored_polygon(
 		PackedVector2Array([tip, base + perp * arrow_size, base - perp * arrow_size]), color
 	)
+
+
+## Server -> owning client: set (or clear) the local racer's next-checkpoint
+## marker. Sent each frame while racing by StreetRaceGameMode.
+@rpc("authority", "call_local", "unreliable")
+func rpc_set_checkpoint(pos: Vector3, has_target: bool) -> void:
+	_checkpoint_pos = pos
+	_has_checkpoint = has_target
