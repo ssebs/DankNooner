@@ -142,12 +142,16 @@ func _reset_all_player_input():
 ## Spawns the event's NPCs at grid slots (from the back — humans keep the
 ## front rows) and registers them as racers in the RaceTask.
 func _setup_npcs():
-	if _start_circle.npc_count <= 0:
+	if !_start_circle.enable_npcs:
 		return
 	var race_task := _find_race_task(_start_circle)
 	var grid_markers := _find_grid_spawn_task(_start_circle).grid_markers
+	# Fill every grid slot the humans don't occupy.
+	var npc_count := grid_markers.size() - lobby_manager.lobby_players.size()
+	if npc_count <= 0:
+		return
 	npc_race_manager.race_task = race_task
-	for i in _start_circle.npc_count:
+	for i in npc_count:
 		var marker: Marker3D = grid_markers[maxi(0, grid_markers.size() - 1 - i)]
 		var npc_id := npc_race_manager.spawn_npc(marker.global_position, marker.global_basis)
 		race_task.register_npc(npc_id)

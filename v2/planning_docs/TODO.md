@@ -12,7 +12,6 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 ## Active
 
 ### Game-breaking bugs
-- [ ] npc_count should default to max - current players
 - [ ] **cant get past 50% speed for a gear on client joining server
 - [ ] customize menu on fresh computer doesnt render bikes
 - [ ] host can't go to customize bc others will leave
@@ -211,6 +210,8 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] npc_count should default to max - current players
 
 - [x] del road / track system?
   - [x] ~~Just use Terrain3D instead of creating all this complexity~~

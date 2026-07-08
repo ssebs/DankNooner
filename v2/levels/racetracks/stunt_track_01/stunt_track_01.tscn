@@ -7,7 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://cqjkuj8qx7goa" path="res://levels/assets/props/rock.glb" id="6_0osi3"]
 [ext_resource type="Script" uid="uid://bxp3i4cnonh8y" path="res://addons/road-generator/nodes/road_manager.gd" id="6_3ue8r"]
 [ext_resource type="Texture2D" uid="uid://chctobd3h6dno" path="res://levels/assets/graybox/green.png" id="7_dcmel"]
+[ext_resource type="Script" uid="uid://cph7euje06kel" path="res://addons/road-generator/nodes/road_container.gd" id="7_rmar3"]
 [ext_resource type="Texture2D" uid="uid://2ikkccys8b6w" path="res://levels/assets/graybox/texture_04.png" id="8_dmdsq"]
+[ext_resource type="Script" uid="uid://difs1qg4mpcpw" path="res://addons/road-generator/nodes/road_point.gd" id="8_ercdn"]
 [ext_resource type="Texture2D" uid="uid://cptj8tdo4sfq4" path="res://levels/assets/graybox/brown.png" id="9_dc022"]
 [ext_resource type="Texture2D" uid="uid://dfgsgem7ngu3h" path="res://levels/assets/graybox/gray.png" id="10_exfqb"]
 [ext_resource type="Texture2D" uid="uid://b2320l8vvg1c" path="res://levels/assets/graybox/blue.png" id="11_a57fq"]
@@ -265,6 +267,34 @@ depth = 1000.0
 [node name="RoadManager" type="Node3D" parent="." unique_id=184336321]
 script = ExtResource("6_3ue8r")
 metadata/_custom_type_script = "uid://bxp3i4cnonh8y"
+
+[node name="Road_001" type="Node3D" parent="RoadManager" unique_id=69397932]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -12.226414, -0.049995422, -115.20273)
+script = ExtResource("7_rmar3")
+use_lowpoly_preview = true
+edge_containers = Array[NodePath]([NodePath(""), NodePath("")])
+edge_rp_targets = Array[NodePath]([NodePath(""), NodePath("")])
+edge_rp_target_dirs = Array[int]([-1, -1])
+edge_rp_locals = Array[NodePath]([NodePath("RP_001"), NodePath("RP_002")])
+edge_rp_local_dirs = Array[int]([0, 1])
+
+[node name="RP_001" type="Node3D" parent="RoadManager/Road_001" unique_id=1878600298]
+transform = Transform3D(0.01856836, 9.746487e-08, 0.99982756, 0, 1, -9.748168e-08, -0.99982756, 1.8100749e-09, 0.01856836, 0, 0.25, 0)
+script = ExtResource("8_ercdn")
+traffic_dir = Array[int]([2, 2, 1, 1])
+lanes = Array[int]([2, 4, 4, 2])
+prior_mag = 44.04719
+next_mag = 39.132458
+prior_pt_init = NodePath("../RP_002")
+
+[node name="RP_002" type="Node3D" parent="RoadManager/Road_001" unique_id=850706875]
+transform = Transform3D(0.01856836, -9.895211e-17, 0.9998276, 5.3290714e-15, 1, 0, -0.9998276, 5.3281528e-15, 0.018568357, -67.75323, 18.750008, -1.2582793)
+script = ExtResource("8_ercdn")
+traffic_dir = Array[int]([2, 2, 1, 1])
+lanes = Array[int]([2, 4, 4, 2])
+prior_mag = 5.8114014
+next_mag = 0.0
+next_pt_init = NodePath("../RP_001")
 
 [node name="NPCNavRegion" type="NavigationRegion3D" parent="." unique_id=1990556521]
 navigation_mesh = SubResource("NavigationMesh_ercdn")
