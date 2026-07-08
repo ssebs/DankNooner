@@ -124,6 +124,15 @@ environment = SubResource("Environment_ffs5v")
 [node name="Killbox" parent="." unique_id=1054789626 instance=ExtResource("2_asds5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -54, 0)
 
+[node name="SAND" parent="." unique_id=2145357445 instance=ExtResource("17_cf4ia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 123, -0.12, 95)
+collision_layer = 20
+collision_mask = 16
+width = 280.0
+height = 0.1
+depth = 400.0
+color_preset = 6
+
 [node name="Stuff" type="Node3D" parent="." unique_id=2102151921 groups=["navigation_mesh_source_group"]]
 
 [node name="Block" type="Node3D" parent="Stuff" unique_id=1773519956]
@@ -918,15 +927,6 @@ height = 0.1
 depth = 60.0
 
 [node name="Ground" type="Node3D" parent="Stuff" unique_id=1828433666]
-
-[node name="SAND" parent="Stuff/Ground" unique_id=2145357445 instance=ExtResource("17_cf4ia")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 123, -0.12, 95)
-collision_layer = 16
-collision_mask = 16
-width = 280.0
-height = 0.1
-depth = 400.0
-color_preset = 6
 
 [node name="GBGrass" parent="Stuff/Ground" unique_id=1213761209 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, -37)

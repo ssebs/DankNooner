@@ -24,6 +24,7 @@ const _RPM_COLOR_HIGH := Color(0.85, 0.1, 0.1, 1)
 @onready var _game_msg: Label = %HUD_GAME_MSG
 @onready var _balance_bar: BalanceBar = %BalanceBar
 @onready var _mobile_controls: Control = %MobileControls
+@onready var _minimap: Minimap = %Minimap
 
 var input_state_mgr: InputStateManager = null
 var _rpm_fill_style: StyleBoxFlat = null
@@ -141,6 +142,7 @@ func _on_respawned():
 
 func show_hud() -> void:
 	visible = true
+	_minimap.activate(player_entity)
 
 
 func hide_hud() -> void:
