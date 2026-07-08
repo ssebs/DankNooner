@@ -21,7 +21,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] review vibe-coded AI + gamemode code (refactor?)
 - [x] make AI actually complete a race (too dumb currently)
 - [x] make them try to stick to the road
-- [ ] make it more realistic + difficulty settings
+- [ ] make it more realistic + difficulty settings (racing line + speed setting)
 - [x] MP test
 
 ### Traffic AI

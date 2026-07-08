@@ -23,7 +23,6 @@ script = ExtResource("4_npcen")
 bike_definition = ExtResource("6_bkdef")
 character_definition = ExtResource("7_chdef")
 animation_controller = NodePath("NPCAnimationController")
-move_speed = 35.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=811662464]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.5, 0)
