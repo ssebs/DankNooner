@@ -42,11 +42,14 @@ func _physics_process(_delta: float):
 			if npc.npc_state != NPCRiderEntity.NPCState.FINISHED:
 				npc.finish()
 			continue
+
+		# Set nav target to target checkpoint
 		var ckpt := race_task.get_target_checkpoint(npc_id)
 		if ckpt == null:
 			# Race body hasn't started yet (grid/countdown) — hold position.
 			npc.clear_nav_target()
 			continue
+		# TODO : try to be more smart about next spot, aka not just direct path but try to follow exising track
 		npc.set_nav_target(ckpt.global_position)
 
 
