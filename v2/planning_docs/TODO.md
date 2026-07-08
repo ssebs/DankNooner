@@ -11,6 +11,8 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 
 ## Active
 
+- [ ] [mini map](./Minimap.md)
+
 ### Game-breaking bugs
 - [ ] **cant get past 50% speed for a gear on client joining server
 - [ ] customize menu on fresh computer doesnt render bikes
