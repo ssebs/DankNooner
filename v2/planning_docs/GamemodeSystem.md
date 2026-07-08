@@ -2,10 +2,10 @@
 
 ## Class taxonomy
 
-- **`GameModeType`** (`managers/gamemodes/gamemode.gd`) — base class for a gamemode. Subclasses live under `managers/gamemodes/types/` (`FreeRoamGameMode`, `StreetRaceGameMode`, `TutorialGameMode`). The `Kind` enum on this class is the canonical gamemode identifier (`GameModeType.Kind.TUTORIAL`, etc.).
+- **`GameModeType`** (`managers/gamemodes/gamemode.gd`) — base class for a gamemode. Subclasses live under `managers/gamemodes/types/` (`FreeRoamGameMode`, `StreetRaceGameMode`, `TutorialGameMode`, `ChallengeGameMode` — lightweight in-world trick challenges, no countdown/results). The `Kind` enum on this class (`FREE_ROAM`, `STREET_RACE`, `STUNT_RACE`, `TUTORIAL`, `CHALLENGE`) is the canonical gamemode identifier (`GameModeType.Kind.TUTORIAL`, etc.).
 - **`GamemodeManager`** (`managers/gamemodes/gamemode_manager.gd`) — owns the state machine, match state, late-joiner sync. Maps `Kind` → `GameModeType` instance.
 - **`GameModeEventDefinition`** (`managers/gamemodes/resources/gamemode_event_definition.gd`) — `Resource`. Metadata about a single event: display name/description, `target_gamemode` (a `Kind`), `event_type` (`SEQUENTIAL` / `CONCURRENT` — flag only, runners enforce the actual semantics).
-- **`GameModeTask`** (`managers/gamemodes/tasks/gamemode_task.gd`) — base class for both leaf tasks and runners (composite pattern). Has `eval_when: ALWAYS | ON_ENTER | WHILE_INSIDE`, an optional `trigger: GameModeObject`, and an `is_constraint` flag (see below). Leaf subclasses (`countdown_task`, `speed_above_task`, `wheelie_duration_task`, `stoppie_duration_task`, `change_gear_task`, `checkpoint_task`, `teleport_task`, `grid_spawn_task`, `close_help_task`, `sfx_task`, `race_task`, `maintain_trick_task`) override `on_enter / check / on_exit / get_progress / get_objective_text / get_hint_text`. Holds a `_runner` ref set by `TaskRunner.wire_task_refs()` (called from the host gamemode on every peer) — leaf tasks reach shared deps via `_runner.spawn_manager` / `_runner.task_hud` / `_runner.audio_manager` rather than downcasting to a specific gamemode.
+- **`GameModeTask`** (`managers/gamemodes/tasks/gamemode_task.gd`) — base class for both leaf tasks and runners (composite pattern). Has `eval_when: ALWAYS | ON_ENTER | WHILE_INSIDE`, an optional `trigger: GameModeObject`, and an `is_constraint` flag (see below). Leaf subclasses (`countdown_task`, `speed_above_task`, `wheelie_duration_task`, `stoppie_duration_task`, `change_gear_task`, `checkpoint_task`, `teleport_task`, `grid_spawn_task`, `grid_respawn_task`, `close_help_task`, `sfx_task`, `race_task`, `maintain_trick_task`, `perform_trick_task`, `show_speech_bubble_task`, `hide_speech_bubble_task`) override `on_enter / check / on_exit / get_progress / get_objective_text / get_hint_text`. Holds a `_runner` ref set by `TaskRunner.wire_task_refs()` (called from the host gamemode on every peer) — leaf tasks reach shared deps via `_runner.spawn_manager` / `_runner.task_hud` / `_runner.audio_manager` rather than downcasting to a specific gamemode.
 - **Constraint tasks** (`is_constraint = true`) — a leaf task that runs alongside the objective for a whole step but never gates completion. `ConcurrentTaskRunner` ticks its `check()` every frame and ignores the return value when deciding if a peer is done; the task does its own per-frame enforcement (and can drive the HUD via `get_progress`). Used for fail-conditions like "hold this trick or restart" (`maintain_trick_task`). Place it as a sibling of the objective task inside a `ConcurrentTaskRunner`.
 - **`TaskRunner`** (`managers/gamemodes/runners/task_runner.gd`) — base class for composite runners. Holds the shared deps (`spawn_manager`, `task_hud`, `audio_manager`) and the `respawn_requested` signal so leaf tasks can address them via `_runner.<dep>` regardless of which runner subclass owns them. Don't instantiate directly — use `SequentialTaskRunner` or `ConcurrentTaskRunner`.
 - **`SequentialTaskRunner`** (`managers/gamemodes/runners/sequential_task_runner.gd`) — `TaskRunner` that walks its child `GameModeTask`s one at a time per peer. Owns per-peer state, eval_when dispatch, and trigger wiring. Supports nesting: a child that is itself a `TaskRunner` (sequential or concurrent) acts as a gate — peers park at it, runner starts once all non-completed peers reach it, parent advances them past it on `all_completed`.
@@ -26,18 +26,20 @@ managers/gamemodes/
     free_roam/free_roam_gamemode.gd
     tutorial/                 # tutorial_gamemode.gd, tutorial_hud.{gd,tscn}
     street_race/street_race_gamemode.gd
+    challenge/challenge_gamemode.gd
   runners/
     task_runner.gd  sequential_task_runner.gd  concurrent_task_runner.gd
     player_task_state.gd
   tasks/
     gamemode_task.gd
-    countdown_task.gd  teleport_task.gd  grid_spawn_task.gd  speed_above_task.gd
-    change_gear_task.gd  close_help_task.gd  checkpoint_task.gd
+    countdown_task.gd  teleport_task.gd  grid_spawn_task.gd  grid_respawn_task.gd  speed_above_task.gd
+    change_gear_task.gd  close_help_task.gd  checkpoint_task.gd  perform_trick_task.gd
     wheelie_duration_task.gd  stoppie_duration_task.gd  race_task.gd  sfx_task.gd
+    show_speech_bubble_task.gd  hide_speech_bubble_task.gd
     maintain_trick_task.gd    # constraint task (is_constraint)
   gamemodeobjects/
     gamemode_object.gd  event_start_circle.{gd,tscn}
-    checkpoint_marker.{gd,tscn}  killbox.{gd,tscn}  trigger_zone.{gd,tscn}
+    checkpoint_marker.{gd,tscn}  killbox.{gd,tscn}  trigger_zone.{gd,tscn}  speech_bubble.{gd,tscn}
   resources/
     gamemode_event_definition.gd
   hud/                        # game_mode_event_confirm_hud, results_hud
