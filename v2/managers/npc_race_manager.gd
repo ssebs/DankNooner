@@ -14,6 +14,9 @@ class_name NPCRaceManager extends BaseManager
 	load("res://resources/player/default_player_definition.tres")
 ]
 @export var respawn_delay: float = 3.0
+## Per-physics-tick probability that an NPC on unstable ground (sand) wipes out.
+## Penalizes bots that cut corners across the sand instead of following the track.
+@export var sand_crash_chance: float = 0.02
 
 const NPC_SCENE: PackedScene = preload("res://entities/npc/npc_rider_entity.tscn")
 
@@ -41,6 +44,13 @@ func _physics_process(_delta: float):
 		if race_task._peer_progress[npc_id].has("completion_time_ms"):
 			if npc.npc_state != NPCRiderEntity.NPCState.FINISHED:
 				npc.finish()
+			continue
+
+		# Sand penalty: each tick on unstable ground has a chance to wipe the bot
+		# out, so cutting corners across the sand costs it time (crash -> respawn
+		# at last checkpoint via the shared crash flow).
+		if npc.is_on_unstable_ground() and randf() < sand_crash_chance:
+			crash_npc(npc_id)
 			continue
 
 		# Set nav target to target checkpoint
