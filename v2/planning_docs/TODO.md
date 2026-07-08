@@ -13,27 +13,17 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 
 ### Game-breaking bugs
 - [ ] npc_count should default to max - current players
-- [ ] cant get past 50% speed for a gear on client joining server
+- [ ] **cant get past 50% speed for a gear on client joining server
 - [ ] customize menu on fresh computer doesnt render bikes
 - [ ] host can't go to customize bc others will leave
-- [ ] height is offset for some clients
-
-### Tuning bugs & minor UI
-- [ ] downhill + clutch + lean starts a wheelie
-- [ ] uphill slows you too much
-- [ ] longer gear ratios
-- [ ] larger maps for high speed
-- [ ] 0% => 100% brakes causing crash on noobs
-- [ ] cant use controller to select in customize menu
-- [ ] add delete button to Customize Bikes Loadout menu
-- [ ] Label3d + script so all in group are removed on runtime for notes
 
 ### Racing AI
 - [x] [plan](./___AI-NPC-RACE.md)
 - [ ] review vibe-coded AI + gamemode code (refactor?)
-- [ ] make AI actually complete a race (too dumb currently)
-- [ ] make them try to stick to the road
-- [ ] MP test
+- [x] make AI actually complete a race (too dumb currently)
+- [x] make them try to stick to the road
+- [ ] make it more realistic + difficulty settings
+- [x] MP test
 
 ### Traffic AI
 - [ ] basic riding-around cars (full spec in Backlog > AI/traffic)
@@ -65,10 +55,16 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
   - [ ] Burnout (stationary)
 - [ ] Wings as mod for sport bike
 
-### Roads / track system
-- [ ] del road / track system?
-  - [x] ~~Just use Terrain3D instead of creating all this complexity~~
-  - [ ] https://github.com/TheDuckCow/godot-road-generator/wiki
+### Tuning bugs & minor UI
+- [ ] downhill + clutch + lean starts a wheelie
+- [ ] uphill slows you too much
+- [ ] longer gear ratios
+- [ ] larger maps for high speed
+- [ ] 0% => 100% brakes causing crash on noobs
+- [ ] height is offset for some clients
+- [ ] cant use controller to select in customize menu
+- [ ] add delete button to Customize Bikes Loadout menu
+- [ ] Label3d + script so all in group are removed on runtime for notes
 
 ### Polish
 - [ ] red/white kerbs on corners gen from curve
@@ -215,6 +211,10 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] del road / track system?
+  - [x] ~~Just use Terrain3D instead of creating all this complexity~~
+  - [ ] https://github.com/TheDuckCow/godot-road-generator/wiki
 
 - [x] backflip glitchy
 

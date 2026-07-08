@@ -55,8 +55,6 @@ agent_max_climb = 0.5
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_0b3im"]
 resource_local_to_scene = true
-vertices = PackedVector3Array(-27.75, 0.45, -349, -27.75, 0.45, 249, 170.25, 0.45, 249, 170.25, 0.45, -349)
-polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
 geometry_parsed_geometry_type = 1
 geometry_collision_mask = 16
 geometry_source_geometry_mode = 1
@@ -392,12 +390,10 @@ width = 20.0
 transform = Transform3D(0, 0, 0.9999999, 0, 1, 0, -0.9999999, 0, 0, 66.12149, 2, 206.31197)
 width = 20.0
 
-[node name="Terrain3D" type="Terrain3D" parent="." unique_id=470850830 groups=["navigation_mesh_source_group"]]
+[node name="Terrain3D" type="Terrain3D" parent="." unique_id=470850830]
 data_directory = "res://levels/racetracks/racetrack_level_01/t3ddata"
 material = SubResource("Terrain3DMaterial_qqwky")
 assets = SubResource("Terrain3DAssets_xxw4c")
-collision_layer = 16
-collision_mask = 16
 top_level = true
 metadata/_edit_lock_ = true
 
@@ -751,7 +747,7 @@ prior_mag = 37.756157
 next_mag = 14.843643
 prior_pt_init = NodePath("../RP_001")
 
-[node name="SandGround" parent="." unique_id=1552047408 groups=["navigation_mesh_source_group"] instance=ExtResource("3_xxw4c")]
+[node name="SandGround" parent="." unique_id=1552047408 instance=ExtResource("3_xxw4c")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 71.25, 0, -50)
 collision_layer = 16
 collision_mask = 16
