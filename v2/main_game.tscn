@@ -33,7 +33,8 @@
 [ext_resource type="PackedScene" uid="uid://dmq80r6t0kwp5" path="res://managers/gamemodes/types/tutorial/tutorial_hud.tscn" id="28_onx7j"]
 [ext_resource type="PackedScene" uid="uid://c1rey02kvrh1h" path="res://managers/gamemodes/hud/results_hud.tscn" id="29_o8ab5"]
 [ext_resource type="Script" uid="uid://b6yqloe4qv2ck" path="res://managers/gamemodes/types/challenge/challenge_gamemode.gd" id="30_chlng"]
-[ext_resource type="Script" path="res://managers/npc_race_manager.gd" id="31_npcrm"]
+[ext_resource type="Script" uid="uid://boxia2udg1jxm" path="res://managers/npc_race_manager.gd" id="31_npcrm"]
+[ext_resource type="Script" uid="uid://283a7n5utttx" path="res://resources/player/player_definition.gd" id="35_iihm1"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("1_1oj5k")
@@ -238,14 +239,16 @@ spawn_manager = NodePath("../../../SpawnManager")
 [node name="AudioManager" parent="ManagerManager" unique_id=625309404 node_paths=PackedStringArray("settings_manager") instance=ExtResource("20_2i4tw")]
 settings_manager = NodePath("../SettingsManager")
 
-[node name="SpawnManager" type="Node" parent="ManagerManager" unique_id=1424921597 node_paths=PackedStringArray("lobby_manager", "level_manager", "audio_manager", "settings_manager") groups=["Managers"]]
+[node name="SpawnManager" type="Node" parent="ManagerManager" unique_id=1424921597 node_paths=PackedStringArray("lobby_manager", "level_manager", "audio_manager", "settings_manager", "gamemode_manager") groups=["Managers"]]
 script = ExtResource("21_euc45")
 lobby_manager = NodePath("../LobbyManager")
 level_manager = NodePath("../LevelManager")
 audio_manager = NodePath("../AudioManager")
 settings_manager = NodePath("../SettingsManager")
+gamemode_manager = NodePath("../GamemodeManager")
 metadata/_custom_type_script = "uid://cug5kob8cndk4"
 
-[node name="NPCRaceManager" type="Node" parent="ManagerManager" node_paths=PackedStringArray("level_manager") groups=["Managers"]]
+[node name="NPCRaceManager" type="Node" parent="ManagerManager" unique_id=1218916391 node_paths=PackedStringArray("level_manager") groups=["Managers"]]
 script = ExtResource("31_npcrm")
 level_manager = NodePath("../LevelManager")
+npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_pk5u2")])

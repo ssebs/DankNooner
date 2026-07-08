@@ -67,6 +67,10 @@ func _process(_delta: float):
 ## Runs during the overlay's draw pass (connected to its `draw` signal), so the
 ## draw calls target the overlay canvas item on top of the SubViewport.
 func _draw_dots() -> void:
+	# The overlay fires `draw` once on layout before activate() (and never
+	# activates on remote instances) — nothing to plot without a local player.
+	if !_active:
+		return
 	for racer in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Racers"]):
 		var color := COLOR_PLAYER
 		if racer == _local_player:
@@ -76,8 +80,10 @@ func _draw_dots() -> void:
 		_draw_marker(racer.global_position, color)
 
 	# Event start circles (local level nodes) — bright pink for testing.
-	for circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
-		_draw_marker(circle.global_position, COLOR_EVENT)
+	# Only in free roam; a race hides them so its checkpoint marker stands alone.
+	if _local_player.gamemode_manager.current_game_mode == GameModeType.Kind.FREE_ROAM:
+		for circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
+			_draw_marker(circle.global_position, COLOR_EVENT)
 
 	if _has_checkpoint:
 		_draw_marker(_checkpoint_pos, COLOR_CHECKPOINT)
