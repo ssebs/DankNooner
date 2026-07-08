@@ -30,6 +30,7 @@
 [ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/bikes/hitbox/bike_hitbox.tres" id="28_xm7jy"]
 [ext_resource type="PackedScene" uid="uid://cu0vh8sgp0l2e" path="res://entities/vfx/spark_particles.tscn" id="29_3kl2f"]
 [ext_resource type="Script" uid="uid://cajkhr7cisa7f" path="res://player/controllers/skidmark_controller.gd" id="30_skid"]
+[ext_resource type="PackedScene" uid="uid://cmnmap7blip01" path="res://player/controllers/minimap/minimap.tscn" id="33_mnmap"]
 
 [sub_resource type="Animation" id="Animation_k5dce"]
 resource_name = "back_up_loop"
@@ -1397,6 +1398,12 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "HUD_CHALLENGE_MSG"
+
+[node name="Minimap" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1477719834 instance=ExtResource("33_mnmap")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
 
 [node name="BalanceBar" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1249265550 instance=ExtResource("18_htgu7")]
 unique_name_in_owner = true

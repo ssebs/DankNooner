@@ -754,9 +754,9 @@ prior_mag = 37.756157
 next_mag = 14.843643
 prior_pt_init = NodePath("../RP_001")
 
-[node name="SandGround" parent="." unique_id=1552047408 instance=ExtResource("3_xxw4c")]
+[node name="SAND" parent="." unique_id=1552047408 instance=ExtResource("3_xxw4c")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 71.25, 0, -50)
-collision_layer = 16
+collision_layer = 20
 collision_mask = 16
 width = 200.0
 height = 0.1
