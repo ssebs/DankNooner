@@ -74,6 +74,7 @@ var is_local_client: bool = false
 #region HACK - set from spawn_manager
 var audio_manager: AudioManager
 var settings_manager: SettingsManager
+var gamemode_manager: GamemodeManager
 var username: String:
 	set(v):
 		username = v
@@ -125,6 +126,8 @@ func _ready():
 
 	if Engine.is_editor_hint():
 		return
+
+	add_to_group(UtilsConstants.GROUPS["Racers"])
 
 	# await get_tree().process_frame
 

@@ -1,51 +1,37 @@
 # TODO
 > Don't forget, have fun :D
 
-## WIP
-- [ ] Create racer AI for in game racing
-  - [ ] [plan](./___AI-NPC-RACE.md)
+## Release Focus
+Ship priorities in order. Race map done. City map, mountain road, extra tricks = later.
+1. Fix game-breaking bugs only (skip tuning)
+2. Racing AI can complete a race + MP
+3. Basic traffic AI
+4. Customization & progression
+5. Stunt map + polish
 
+## Active
 
-> Below this line needs to be updated...
---- 
-
-## In Progress 🚀 — Current Sprint
-- [ ] Create linear map for stunt race
-- [ ] cant use controller to select in customize menu
-
-- [ ] Drifting
-  - [x] Ebrake
-  - [x] Powerslide
-  - [x] show black lines
-  - [ ] play screech audio
-- [ ] new roads
-  - [ ] del road / track system?
-  - [x] ~~Just use Terrain3D instead of creating all this complexity~~
-  - [ ] https://github.com/TheDuckCow/godot-road-generator/wiki
-
-## Playtest bugs
-
-- [ ] downhill + clutch + lean starts a wheelie
-- [ ] uphill slows you too much
-- [ ] longer gear ratios
-- [ ] larger maps for high speed
-- [ ] 0% => 100% brakes causing crash on noobs
-- [ ] cant get past 50% speed for a gear on client joining server
-
-
-- [ ] Label3d + script so all in group are removed on runtime for notes
+### Game-breaking bugs
+- [ ] **cant get past 50% speed for a gear on client joining server
 - [ ] customize menu on fresh computer doesnt render bikes
-
-- [ ] add delete button to Customize Bikes Loadout menu
 - [ ] host can't go to customize bc others will leave
-- [ ] height is offset for some clients
 
-## HI-PRI (next sprint candidates) ‼️
-- [ ] New maps for gamemodes
-  - [ ] Make racetrack map
-  - [ ] Make drag strip map
-  - [ ] Make stunt playground map
-  - [ ] Then copy them to the main city map once working
+### Racing AI
+- [x] [plan](./___AI-NPC-RACE.md)
+- [ ] review vibe-coded AI + gamemode code (refactor?)
+- [x] make AI actually complete a race (too dumb currently)
+- [x] make them try to stick to the road
+- [ ] make it more realistic + difficulty settings (racing line + speed setting)
+- [x] MP test
+
+### Traffic AI
+- [ ] basic riding-around cars (full spec in Backlog > AI/traffic)
+
+### Stunt map
+- [ ] build linear stunt map (drag strip + stunt playground)
+- [ ] racetrack done, copy working maps into city map later
+
+### Gamemodes & scoring
 - [ ] track tricks in race
   - [ ] for bonus score
   - [ ] for boost?
@@ -53,24 +39,41 @@
   - [ ] 3 rounds, highest score in 60s wins round, best 2/3 wins game
   - [ ] Live scoreboard / trickfeed
   - [ ] 2 locations for variety
+
+### Tricks & animation
+- [ ] Add trick: https://www.youtube.com/shorts/cAxcIZ83MfU
 - [ ] add ground detection to animation controller
-  - [ ] `two_left_feet` — feet follow ground
+  - [ ] `two_left_feet` feet follow ground
   - [ ] hand drag scraper wheelie
   - [ ] Make two_left_feet also work on the right
     - [ ] add anim when switching between them to hop over whole bike
-- [ ] More tricks (depends on Phase 2 refactor):
+- [ ] More tricks (Phase 2 refactor done, unblocked)
   - [ ] Superman / no-handed spread eagle
   - [ ] Whip / table
   - [ ] Drift
   - [ ] Burnout (stationary)
 - [ ] Wings as mod for sport bike
-- [ ] Start enemy AI — wants to go to next checkpoint location
+
+### Tuning bugs & minor UI
+- [ ] downhill + clutch + lean starts a wheelie
+- [ ] uphill slows you too much
+- [ ] longer gear ratios
+- [ ] larger maps for high speed
+- [ ] 0% => 100% brakes causing crash on noobs
+- [ ] height is offset for some clients
+- [ ] cant use controller to select in customize menu
+- [ ] add delete button to Customize Bikes Loadout menu
+- [ ] Label3d + script so all in group are removed on runtime for notes
+
+### Polish
+- [ ] red/white kerbs on corners gen from curve
+- [ ] drift screech audio (see Backlog > Audio)
 - [ ] Fade out intro sound quicker, make 3 sec version
-- [ ] Gamemode switching cleanup:
+- [ ] Gamemode switching cleanup
   - [ ] controller support on HUD buttons in event start circle / win-lose screen (move to menu system?)
   - [ ] tutorial gamemode `_ctx` doesn't make sense
 
-### Code review followups (separate cleanup sprint)
+### Code review followups
 - [ ] [code review time](./code-review-20260430.md)
   - [ ] split bikeskindefinition
   - [ ] signal mismatches
@@ -207,6 +210,14 @@
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] [mini map](./Minimap.md)
+
+- [x] npc_count should default to max - current players
+
+- [x] del road / track system?
+  - [x] ~~Just use Terrain3D instead of creating all this complexity~~
+  - [ ] https://github.com/TheDuckCow/godot-road-generator/wiki
 
 - [x] backflip glitchy
 

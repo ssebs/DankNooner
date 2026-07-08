@@ -189,6 +189,7 @@ For detailed design docs see:
 | `CameraController`    | `controllers/camera_controller.gd`    | FPS/TPS camera switching                                |
 | `AnimationController` | `controllers/animation_controller.gd` | Procedural animation blending, IK, ragdoll              |
 | `HUDController`       | `controllers/hud_controller.gd`       | Wires controller signals to on-screen HUD               |
+| `SkidmarkController`  | `controllers/skidmark_controller.gd`  | Local-only skidmark ribbon VFX while drifting           |
 
 `IKController` (FABRIK solver) and `RagdollController` (PhysicalBone3D skeleton) live under `player/characters/scripts/` and are driven by `AnimationController`.
 
@@ -198,21 +199,19 @@ For detailed design docs see:
 - **Gearing**: `current_gear`, `current_rpm`, `clutch_value`
 - **Tricks**: `is_boosting`, `boost_count`
 - **Crashes**: `is_crashed`
-- **Discrete actions**: `rb_do_respawn`, `rb_gear_up_pressed`, `rb_gear_down_pressed` (rollback pattern)
-
-> Note: `rb_gear_up_pressed` / `rb_gear_down_pressed` are currently typed `float` in `input_controller.gd` — should be `bool` per the pattern. TODO: fix typing.
+- **Discrete actions**: `rb_do_respawn` (rollback pattern); `rb_respawn_transform` / `rb_respawn_transform_oneshot` carry the target respawn transform. Gear shifts use the `gear_change_pressed` signal (not an `rb_` var).
 
 #### GearingController
 
 - Tracks clutch engagement (0-1), blends between throttle-driven and wheel-driven RPM
-- Gear shifts via `rb_gear_up_pressed` / `rb_gear_down_pressed` discrete actions on PlayerEntity
+- Gear shifts via `input_controller.gear_change_pressed(direction)` signal
 - Power output = throttle x power_curve x torque_multiplier x engagement
 - Gear ratios, max_rpm, idle_rpm, stall_rpm are defined in `BikeSkinDefinition`
 
 #### TrickController
 
 ```gdscript
-enum TrickState { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, THREESIXTY }
+enum Trick { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, THREESIXTY, HEEL_CLICKER, HIGH_CHAIR, TWO_LEFT_FEET, DRIFT }
 ```
 
 - Detects tricks via `pitch_angle` threshold checks against bike definition limits
@@ -234,7 +233,7 @@ Monitors for crash conditions:
 #### AnimationController
 
 ```gdscript
-enum RiderState { RIDING, IDLE, TRICK, RAGDOLL }
+enum RiderState { RIDING, IDLE, RAGDOLL }  # TRICK is stubbed/disabled — skeleton anims not yet wired into the pose pipeline
 ```
 
 - **Procedural animation**: Smooths visual_lean, visual_pitch, visual_yaw each frame
@@ -278,25 +277,27 @@ The same "pause" action triggers different behavior based on `InputState`.
 
 ### Audio Manager
 
-- `AudioManager` (`managers/audio_manager.gd`) - FMOD integration
-- Maps settings keys to VCA paths (e.g. `"master_vol"` → `"MASTER"`)
+- `AudioManager` (`managers/audio_manager.gd`) - custom Godot audio middleware (replaced FMOD, web-export friendly). See [AudioMiddleware.md](./AudioMiddleware.md)
+- Maps settings keys to audio bus volumes (e.g. `"master_vol"` → `Master` bus)
 - `update_ninja500_rpm(rpm_ratio)` - sets RPM parameter for seamless engine sound looping
-- Listens to `SettingsManager.setting_updated` to sync VCA volumes
+- Listens to `SettingsManager.setting_updated` / `all_settings_changed` to sync bus volumes
 
 ### Settings Manager
 
 - `SettingsManager` (`managers/settings_manager.gd`) - JSON persistence to `user://settings.json`
-- Default settings: username, noray_relay_host, resolution, fullscreen_mode, master_vol, music_vol, menu_vol, sfx_vol, bike_skin, character_skin
+- Default settings: signal_relay_host, resolution_scale, fullscreen_mode, master_vol, music_vol, menu_vol, sfx_vol, cam_mode, invert_cam, mouse_cam_sens, joy_cam_sens, difficulty (username / skins live in save data, not settings)
 - Signals: `setting_updated(key, value)`, `all_settings_changed(dict)`
-- Used by AudioManager (volume), ConnectionManager (noray host), CustomizeMenuState (skins)
+- Used by AudioManager (volume), ConnectionManager (signal relay host)
 
 ### Gamemode Manager
 
 - `GamemodeManager` (`managers/gamemodes/gamemode_manager.gd`) - manages match state, coordinates level/spawn. Runs a **state machine of gamemodes**.
-- **Gamemode states** (extend base `GameMode`, live in `managers/gamemodes/`):
+- **Gamemode states** (extend base `GameModeType`, whose `Kind` enum is the canonical id, live under `managers/gamemodes/types/`):
   - `FreeRoamGameMode` - open play, event circles trigger mode switches, respawn on crash
-  - `StreetRaceGameMode` - stub
-  - `TutorialGameMode` - step-by-step progression with countdown + trick detection (see `TutorialSteps`, `TutorialHUD`)
+  - `StreetRaceGameMode` - lap-based race built on the task/runner system (see [StreetRaceMode.md](./StreetRaceMode.md))
+  - `TutorialGameMode` - step-by-step progression with countdown + trick detection
+  - `ChallengeGameMode` - lightweight in-world trick challenges (no countdown/results)
+- Events run via a composable **task/runner system** (`GameModeTask` leaves + `SequentialTaskRunner` / `ConcurrentTaskRunner`), authored in level scenes. See [GamemodeSystem.md](./GamemodeSystem.md)
 - Context passed between gamemode states via `GamemodeStateContext`
 - RPCs for multiplayer sync:
   - `start_game(level_name)` - server calls on all peers
@@ -317,6 +318,10 @@ The same "pause" action triggers different behavior based on `InputState`.
   - `rpc_despawn_player(peer_id)` - despawn broadcast
   - `respawn_player(peer_id)` - broadcast: every peer sets `rb_do_respawn` on their local player so `do_respawn()` runs everywhere (resets ragdoll/visual state on clients, not just server-synced transform)
 - Local helpers: `add_player_locally()`, `remove_player_locally()`, `spawn_all_players()`
+
+### NPC Race Manager
+
+- `NPCRaceManager` (`managers/npc_race_manager.gd`) - owns AI race riders (`NPCRiderEntity`) on a negative-id roster with spawn/despawn RPCs mirroring `SpawnManager`. `StreetRaceGameMode` drives its lifecycle; the server-only AI tick points each NPC at its next checkpoint from `RaceTask`.
 
 ### Unlocks / progression
 
@@ -404,12 +409,10 @@ flowchart LR
 
 All modes are **server-authoritative** — the host runs physics, clients predict + reconcile. Mode only affects transport.
 
-- **WEBRTC** *(preferred)*: WebRTC peer connections, works for both native and browser clients. Handled by `MultiplayerWebRTC`.
-- **NORAY**: Uses netfox.noray addon for NAT punch-through + relay fallback. Handled by `MultiplayerNoray`.
-  - `Noray.connect_to_host()`, `Noray.register_host()`, `Noray.register_remote()`
-  - OID = Object ID (21-char string) used as invite code
+- **WEBRTC** *(default)*: WebRTC peer connections via a custom signaling server (`signal_relay_host`), works for both native and browser clients. Handled by `MultiplayerWebRTC`. See [LobbyGameFlowMP.md](./LobbyGameFlowMP.md)
 - **IP_PORT**: Direct IP/ENet connection to port 42068. Handled by `MultiplayerIPPort`.
   - Fetches public IP via ipify.org API (or private IP in debug)
+- **NORAY** *(deprecated)*: `MultiplayerNoray` still exists but is no longer wired as a selectable mode (commented out in `connection_manager.gd`).
 
 ### RPC Signatures
 
@@ -437,8 +440,7 @@ Input is gathered locally by `InputController._gather()` and synced automaticall
 ### Deployment / builds
 
 - Godot 4.6+ is required
-- FMOD is required
-  - Use File > build before it can be used in game
+- Audio uses a custom Godot middleware — no FMOD dependency (see [AudioMiddleware.md](./AudioMiddleware.md))
 - Deploying new version
   - Run `./deploy-version.sh` (any OS) to create a new version tag & push to github to run CI
   - See [build.yml](../../.github/workflows/build.yml)

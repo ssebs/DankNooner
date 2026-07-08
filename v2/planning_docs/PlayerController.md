@@ -82,9 +82,9 @@
 - **GearingController** (local)
   - `_current_gear`, `_current_rpm`, `_clutch_value`, `_rpm_ratio`
 - **TrickController** (local)
-  - `current_trick` (Trick enum: NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, THREESIXTY, HEEL_CLICKER, HIGH_CHAIR)
+  - `current_trick` (Trick enum: NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, THREESIXTY, HEEL_CLICKER, HIGH_CHAIR, TWO_LEFT_FEET, DRIFT)
 - **AnimationController** (local)
-  - `current_state` (RiderState enum: RIDING, IDLE, TRICK, RAGDOLL)
+  - `current_state` (RiderState enum: RIDING, IDLE, RAGDOLL — TRICK is stubbed/disabled)
   - `_targets_synced_from_bike` flag
 
 ## Controllers
@@ -102,7 +102,7 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   - Directly set current_camera on client
 - **AnimationController** (`animation_controller.gd`) — see [AnimationController.md](./AnimationController.md)
   - Local to client, runs in `_process()` (not rollback)
-  - RiderState machine: RIDING → IDLE → TRICK → RAGDOLL
+  - RiderState machine: RIDING ↔ IDLE, RAGDOLL (TRICK stubbed — see [AnimationController.md](./AnimationController.md))
   - In RIDING:
     - `visual_root.rotation.x` ← pitch (wheelie/stoppie), with pivot offset along the tire arc
     - `visual_root.rotation.z` ← lean from `movement_controller.roll_angle`

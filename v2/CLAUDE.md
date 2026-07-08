@@ -62,7 +62,7 @@ Actual keypresses are managed in the `PlayerEntity`'s `InputController`
 ### Player Entity
 
 `PlayerEntity` (CharacterBody3D) uses composition via `@export` component references:
-`InputController`, `MovementController`, `GearingController`, `TrickController`, `CrashController`, `CameraController`, `AnimationController`, `HUDController`, plus `BikeSkinDefinition` / `CharacterSkinDefinition` resources. `IKController` / `RagdollController` live under `player/characters/scripts/`.
+`InputController`, `MovementController`, `GearingController`, `TrickController`, `CrashController`, `CameraController`, `AnimationController`, `HUDController`, `SkidmarkController`, plus `BikeSkinDefinition` / `CharacterSkinDefinition` resources. `IKController` / `RagdollController` live under `player/characters/scripts/`.
 
 Controllers are called sequentially from `PlayerEntity._rollback_tick()` via their `on_movement_rollback_tick()` methods. See `planning_docs/Architecture.md` for synced state vars and detailed subsystem docs.
 
@@ -80,13 +80,13 @@ See `planning_docs/Skins.md` for details.
 
 ### Audio & Settings
 
-- `AudioManager` - FMOD integration, VCA volume mapping, engine sound RPM parameter
+- `AudioManager` - custom Godot audio middleware (replaced FMOD), bus volume mapping, engine sound RPM parameter
 - `SettingsManager` - JSON persistence to `user://settings.json`, emits `setting_updated` / `all_settings_changed`
 
 ### Gamemode System
 
-- `GamemodeManager` - match state, late-joiner sync, runs a state machine of gamemodes (base `GameModeType` → `FreeRoamGameMode`, `StreetRaceGameMode`, `TutorialGameMode`)
-  - See [GamemodeSystem](./planning_docs/GamemodeSystem.md) and [GameplayAndModes](./planning_docs/GameplayAndModes.md)
+- `GamemodeManager` - match state, late-joiner sync, runs a state machine of gamemodes (base `GameModeType` → `FreeRoamGameMode`, `StreetRaceGameMode`, `TutorialGameMode`, `ChallengeGameMode`). Events run via a `GameModeTask` + `TaskRunner` system.
+  - See [GamemodeSystem](./planning_docs/GamemodeSystem.md) and [StreetRaceMode](./planning_docs/StreetRaceMode.md)
 - `SpawnManager` - spawn/despawn RPCs + local player instantiation
 - `SaveManager` - JSON persistence of `PlayerDefinition` (username, skins, etc.)
 

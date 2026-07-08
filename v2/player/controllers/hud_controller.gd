@@ -24,6 +24,7 @@ const _RPM_COLOR_HIGH := Color(0.85, 0.1, 0.1, 1)
 @onready var _game_msg: Label = %HUD_GAME_MSG
 @onready var _balance_bar: BalanceBar = %BalanceBar
 @onready var _mobile_controls: Control = %MobileControls
+@onready var _minimap: Minimap = %Minimap
 
 var input_state_mgr: InputStateManager = null
 var _rpm_fill_style: StyleBoxFlat = null
@@ -141,6 +142,13 @@ func _on_respawned():
 
 func show_hud() -> void:
 	visible = true
+	_minimap.activate(player_entity)
+
+
+## Server-side: forward the local racer's next-checkpoint marker to the owning
+## client's minimap. Called from StreetRaceGameMode.
+func push_checkpoint_marker(peer_id: int, pos: Vector3, has_target: bool) -> void:
+	_minimap.rpc_set_checkpoint.rpc_id(peer_id, pos, has_target)
 
 
 func hide_hud() -> void:

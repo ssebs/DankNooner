@@ -3,12 +3,13 @@
 ## activate/deactivate, but never decide gamemode completion themselves.
 ##
 ## If a child Area3D exists, body_entered/body_exited are auto-wired to
-## the entered/exited signals (filtered to PlayerEntity).
+## the entered/exited signals (filtered to the "Racers" group — PlayerEntity
+## and NPCRiderEntity both join it).
 class_name GameModeObject extends Node3D
 
-signal entered(player: PlayerEntity)
-signal exited(player: PlayerEntity)
-signal hit(player: PlayerEntity)
+signal entered(racer: Node3D)
+signal exited(racer: Node3D)
+signal hit(racer: Node3D)
 
 @export var is_active: bool = true:
 	set(value):
@@ -52,12 +53,12 @@ func _set_collision_disabled(node: Node, disabled: bool):
 func _on_area_body_entered(body: Node3D):
 	if !is_active:
 		return
-	if body is PlayerEntity:
+	if body.is_in_group(UtilsConstants.GROUPS["Racers"]):
 		entered.emit(body)
 
 
 func _on_area_body_exited(body: Node3D):
 	if !is_active:
 		return
-	if body is PlayerEntity:
+	if body.is_in_group(UtilsConstants.GROUPS["Racers"]):
 		exited.emit(body)
