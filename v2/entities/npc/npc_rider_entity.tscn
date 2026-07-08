@@ -3,20 +3,54 @@
 [ext_resource type="PackedScene" uid="uid://bmyba87m3xuaa" path="res://player/bikes/bike_skin.tscn" id="1_egfwl"]
 [ext_resource type="PackedScene" uid="uid://cuqtwh0saekmw" path="res://player/characters/character_skin.tscn" id="2_ovei0"]
 [ext_resource type="PackedScene" uid="uid://cu0vh8sgp0l2e" path="res://entities/vfx/spark_particles.tscn" id="3_ovei0"]
+[ext_resource type="Script" uid="uid://dvmp8gii4k5ui" path="res://entities/npc/npc_rider_entity.gd" id="4_npcen"]
+[ext_resource type="Script" uid="uid://dfq5estlsqt7f" path="res://entities/npc/npc_animation_controller.gd" id="5_npcan"]
+[ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/bikes/skins/naked_default_skin_definition.tres" id="6_bkdef"]
+[ext_resource type="Resource" uid="uid://2af1lwc0vbaw" path="res://resources/player/skins/clanker_blue_skin_definition.tres" id="7_chdef"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7jvdf"]
 
-[node name="NPCRiderEntity" type="CharacterBody3D" unique_id=1768842520]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_npc01"]
+properties/0/path = NodePath(".:transform")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:npc_state")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[node name="NPCRiderEntity" type="CharacterBody3D" unique_id=1768842520 node_paths=PackedStringArray("animation_controller")]
+script = ExtResource("4_npcen")
+bike_definition = ExtResource("6_bkdef")
+character_definition = ExtResource("7_chdef")
+animation_controller = NodePath("NPCAnimationController")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=811662464]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.5, 0)
 shape = SubResource("CapsuleShape3D_7jvdf")
 
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=2094872611]
+unique_name_in_owner = true
+path_desired_distance = 2.0
+target_desired_distance = 3.0
+height = 2.0
+radius = 1.0
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1384892474]
+replication_config = SubResource("SceneReplicationConfig_npc01")
+
+[node name="NPCAnimationController" type="Node" parent="." unique_id=423487287 node_paths=PackedStringArray("npc")]
+script = ExtResource("5_npcan")
+npc = NodePath("..")
+
 [node name="VisualRoot" type="Node3D" parent="." unique_id=253831679]
+unique_name_in_owner = true
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
 
 [node name="BikeSkin" parent="VisualRoot" unique_id=1727462617 instance=ExtResource("1_egfwl")]
+unique_name_in_owner = true
 
 [node name="CharacterSkin" parent="VisualRoot" unique_id=259227641 instance=ExtResource("2_ovei0")]
+unique_name_in_owner = true
 
 [node name="IKTargets" type="Node3D" parent="VisualRoot" unique_id=1367464099]
 unique_name_in_owner = true
