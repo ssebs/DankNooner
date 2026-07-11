@@ -163,7 +163,7 @@ func latespawn_player(peer_id: int):
 func _on_player_spawned(player: PlayerEntity):
 	if !multiplayer.is_server():
 		return
-	player_spawned.emit(player.name)  # TODO - verify
+	player_spawned.emit(int(str(player.name)))  # node name is the peer id
 	player.crashed.connect(_on_player_crashed)
 
 

@@ -2,6 +2,22 @@
 
 > Scope: `.gd` / `.tscn` / `.tres` only, excluding `addons/`. Reviewed against `CLAUDE.md` standards (fail loudly, no duplicate logic, surgical/simple, reuse existing) and the planning docs in `planning_docs/`.
 
+## Triage status — 2026-07-10
+
+🔴 Critical items re-verified against current code:
+
+- ✅ **FIXED — non-determinism in rollback**: `_calc_balance_point_target` (with its `randf_range`) no longer exists; the remaining violation was `randf()` in `_handle_player_collision` — replaced with a deterministic per-peer golden-angle push.
+- ✅ **FIXED — `rb_gear_up/down_pressed` float/bool flags**: removed entirely. Gear shifts now sync an absolute `nfx_target_gear` input (edge-triggered flags were being dropped/double-applied by netfox stale-input reuse on the server — root cause of the client 50%-speed-cap bug).
+- ✅ **FIXED — `player_spawned.emit(player.name)` type mismatch**: now emits `int`.
+- ❌ **STALE — tutorial `@rpc` arg order (:297) & direct `_rpc_transition_gamemode` call (:351)**: gamemodes were refactored into `types/`; the `@rpc` line is gone (and Godot 4 `@rpc` string args are order-insensitive anyway). Direct `_rpc_transition_gamemode.rpc()` calls still exist in `types/{tutorial,challenge,street_race}` — see authority holes below.
+- ❌ **STALE — `state_machine.gd` `Dictionary.set()` void check**: `Dictionary.set()` returns `bool` in Godot 4.4+; harmless either way.
+- ⏳ **OPEN — RPC authority holes**: `spawn_manager` respawn/set-respawn family (now 5 `any_peer` RPCs), `gamemode_manager.start_game` / `_sync_game_to_late_joiner`. Griefing hardening, not a bug players hit — tracked in TODO backlog ("cleanup to call authority done").
+- ⏳ **OPEN — `user://` path leaks**: `character_skin_definition.to_dict` / `player_definition.to_dict` still ship raw `resource_path`. Failure mode is a fallback to default skin on remote peers (not a crash). Awaiting owner decision per note in that section.
+- ⏳ **OPEN — shared mutable curves**: `_copy_from` still shares `power_curve` / `lean_curve` / `steer_curve`. Benign today (curves are only sampled, never mutated at runtime).
+- ⏳ **OPEN — `WINDOW_MODES` mapping**: unchanged; Godot's `WINDOW_MODE_FULLSCREEN` *is* borderless, so this is a labeling question, not a broken setting.
+
+🟠/🟡 sections not re-verified — treat line numbers as approximate after the `types/` refactor.
+
 Subsystem reviews dispatched in parallel: player controllers, managers/gamemodes, menus/state machine, levels/skins/utils.
 
 ---

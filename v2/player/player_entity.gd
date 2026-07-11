@@ -111,6 +111,15 @@ var rb_respawn_transform: Transform3D = Transform3D()
 ## crashed, while the pause-menu respawn button still returns to rb_respawn_transform.
 var rb_respawn_transform_oneshot: Transform3D = Transform3D()
 
+## Tick the last respawn was anchored to + its resolved target. Netfox resimulates
+## recent ticks when late input arrives (server: remote players; client: own prediction),
+## rebuilding state from pre-respawn history — without re-applying the respawn on the
+## resim of that tick, the teleport gets silently undone. Worse, the server's first
+## application lands on a predicted tick, which netfox never broadcasts, so clients
+## would never see race-grid teleports at all. See _rollback_tick.
+var _respawn_tick: int = -1
+var _respawn_target: Transform3D = Transform3D()
+
 # Process-side state tracking (not sync'd)
 var _prev_is_crashed: bool = false
 
@@ -139,13 +148,19 @@ func _ready():
 	call_deferred("_deferred_init")
 
 
-func _rollback_tick(delta: float, _tick: int, _is_fresh: bool):
+func _rollback_tick(delta: float, tick: int, _is_fresh: bool):
 	if Engine.is_editor_hint():
 		return
 
 	if rb_do_respawn:
-		do_respawn()
 		rb_do_respawn = false
+		_respawn_tick = tick
+		_respawn_target = _pick_respawn_target()
+		do_respawn()
+	elif tick == _respawn_tick:
+		# Resimulation of the respawn tick — re-apply the synced-state part (skip
+		# one-time cosmetics like mesh/IK/audio) so the resim doesn't undo the teleport.
+		_apply_respawn_state()
 
 	# Run other controllers (ORDER MATTERS)
 	movement_controller.on_movement_rollback_tick(delta)
@@ -371,14 +386,23 @@ func update_skins(new_bike_def: BikeSkinDefinition, new_char_def: CharacterSkinD
 		audio_manager.play_revs(bike_definition)
 
 
-func do_respawn():
+## Resolve which transform the next respawn should use, consuming the one-shot.
+## Snapshotted into _respawn_target when the respawn is anchored — consuming it inside
+## do_respawn() would make resim re-applies fall back to the wrong transform.
+func _pick_respawn_target() -> Transform3D:
 	if rb_respawn_transform_oneshot != Transform3D():
-		global_transform = rb_respawn_transform_oneshot
+		var target := rb_respawn_transform_oneshot
 		rb_respawn_transform_oneshot = Transform3D()
-	elif rb_respawn_transform != Transform3D():
-		global_transform = rb_respawn_transform
-	else:
-		global_transform = get_parent().global_transform
+		return target
+	if rb_respawn_transform != Transform3D():
+		return rb_respawn_transform
+	return get_parent().global_transform
+
+
+## Rollback-safe part of a respawn — only synced state (or vars feeding it), so it can
+## be re-applied when netfox resimulates the respawn tick.
+func _apply_respawn_state():
+	global_transform = _respawn_target
 	velocity = Vector3.ZERO
 	is_boosting = false
 	is_crashed = false
@@ -386,11 +410,10 @@ func do_respawn():
 		if !child.has_method("do_reset"):
 			continue
 		child.do_reset()
-	# movement_controller.do_reset()
-	# gearing_controller.do_reset()
-	# trick_controller.do_reset()
-	# crash_controller.do_reset()
-	# animation_controller.do_reset()
+
+
+func do_respawn():
+	_apply_respawn_state()
 	if animation_controller:
 		animation_controller.stop_ragdoll()
 	if is_local_client and audio_manager:

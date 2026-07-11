@@ -2,8 +2,6 @@
 class_name InputController extends Node3D
 
 # Local oneshot signals
-## -1 for back, 1 for fwd
-signal gear_change_pressed(direction: int)
 signal cam_switch_pressed
 signal reset_cam_pressed
 
@@ -25,15 +23,24 @@ var nfx_clutch_held: bool = false
 var nfx_cam_x: float = 0.0
 var nfx_cam_y: float = 0.0  # TODO: check inverted
 
-var rb_gear_up_pressed: float = false
-var rb_gear_down_pressed: float = false
+## Requested gear, absolute-valued (NOT edge-triggered). Netfox reuses the latest input
+## snapshot on server ticks where fresh client input hasn't arrived yet, and drops
+## superseded snapshots — one-tick "pressed" flags get double-applied or lost entirely,
+## desyncing the server's current_gear from the client's. An absolute target is idempotent
+## under both. GearingController applies it in its rollback tick.
+var nfx_target_gear: int = 1
 #endregion
+
+## Set on respawn; consumed by the next _gather() (outside the rollback loop, so the
+## reset actually lands in recorded input history instead of being overwritten by it).
+var _pending_gear_reset: bool = false
 
 
 func _ready():
 	if Engine.is_editor_hint():
 		return
 	NetworkTime.before_tick_loop.connect(_gather)
+	player_entity.respawned.connect(_on_respawned)
 
 
 ## Netfox's input hook
@@ -48,6 +55,10 @@ func _gather():
 	if _text_field_focused():
 		return
 
+	if _pending_gear_reset:
+		nfx_target_gear = 1
+		_pending_gear_reset = false
+
 	nfx_throttle = Input.get_action_strength("throttle_pct")
 	nfx_front_brake = Input.get_action_strength("brake_front_pct")
 	nfx_rear_brake = Input.get_action_strength("brake_rear")
@@ -59,16 +70,12 @@ func _gather():
 	nfx_cam_y = Input.get_action_strength("cam_up") - Input.get_action_strength("cam_down")
 
 
-func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool):
-	if Engine.is_editor_hint():
+## Reset requested gear on respawn — respawned fires from do_respawn (rollback), so defer
+## the write to _gather() where it gets recorded into netfox input history.
+func _on_respawned():
+	if !is_multiplayer_authority():
 		return
-
-	if rb_gear_up_pressed:
-		gear_change_pressed.emit(1)
-		rb_gear_up_pressed = false
-	if rb_gear_down_pressed:
-		gear_change_pressed.emit(-1)
-		rb_gear_down_pressed = false
+	_pending_gear_reset = true
 
 
 ## Local input
@@ -86,9 +93,10 @@ func _process(_delta):
 		reset_cam_pressed.emit()
 
 	if Input.is_action_just_pressed("gear_up"):
-		rb_gear_up_pressed = true
+		nfx_target_gear += 1
 	if Input.is_action_just_pressed("gear_down"):
-		rb_gear_down_pressed = true
+		nfx_target_gear -= 1
+	nfx_target_gear = clampi(nfx_target_gear, 1, player_entity.bike_definition.num_gears)
 
 
 ## True when a text field has keyboard focus (e.g. username/code entry) — game

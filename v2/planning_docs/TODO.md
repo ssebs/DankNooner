@@ -11,10 +11,24 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 
 ## Active
 
+### More
+- [ ] Tire sounds for tarmac+sand+drift
+- [ ] Restart race in pause
+- [ ] Automatic transmission option + no clutch up option 
+- [ ] Trick tweaks just move butt a little bit from base trick
+- [ ] Add arrow walls (like burnout) for city race
+
 ### Game-breaking bugs
-- [ ] **cant get past 50% speed for a gear on client joining server
-- [ ] customize menu on fresh computer doesnt render bikes
+- [ ] downhill + clutch + lean starts a wheelie
+- [ ] uphill slows you too much
+- [ ] being on a hill always makes you roll upwards w/ min speed, that shouldn't be the case
 - [ ] host can't go to customize bc others will leave
+- [ ] Mac web chrome export t3d
+  - [ ] https://devnt90.itch.io/rexs-relics/devlog/1533649/the-terrain3d-fragment-shader-bug-a-web-export-horror-story
+  - [ ] https://github.com/TokisanGames/Terrain3D/issues/668#issuecomment-4018340830
+
+- [ ] First time experience / shader compilation / 1st run slowness
+  - [ ] customize menu on fresh computer doesnt render bikes
 
 ### Racing AI
 - [x] [plan](./___AI-NPC-RACE.md)
@@ -55,8 +69,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Wings as mod for sport bike
 
 ### Tuning bugs & minor UI
-- [ ] downhill + clutch + lean starts a wheelie
-- [ ] uphill slows you too much
+
 - [ ] longer gear ratios
 - [ ] larger maps for high speed
 - [ ] 0% => 100% brakes causing crash on noobs
@@ -210,6 +223,8 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] **cant get past 50% speed for a gear on client joining server
 
 - [x] [mini map](./Minimap.md)
 

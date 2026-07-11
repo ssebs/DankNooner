@@ -199,12 +199,12 @@ For detailed design docs see:
 - **Gearing**: `current_gear`, `current_rpm`, `clutch_value`
 - **Tricks**: `is_boosting`, `boost_count`
 - **Crashes**: `is_crashed`
-- **Discrete actions**: `rb_do_respawn` (rollback pattern); `rb_respawn_transform` / `rb_respawn_transform_oneshot` carry the target respawn transform. Gear shifts use the `gear_change_pressed` signal (not an `rb_` var).
+- **Discrete actions**: `rb_do_respawn` (rollback pattern); `rb_respawn_transform` / `rb_respawn_transform_oneshot` carry the target respawn transform. Gear shifts sync `nfx_target_gear` (absolute requested gear) as netfox input — never edge-triggered flags, which drop/double-apply under stale-input reuse on the server.
 
 #### GearingController
 
 - Tracks clutch engagement (0-1), blends between throttle-driven and wheel-driven RPM
-- Gear shifts via `input_controller.gear_change_pressed(direction)` signal
+- Gear shifts applied from `input_controller.nfx_target_gear` each rollback tick
 - Power output = throttle x power_curve x torque_multiplier x engagement
 - Gear ratios, max_rpm, idle_rpm, stall_rpm are defined in `BikeSkinDefinition`
 

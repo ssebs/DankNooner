@@ -266,6 +266,10 @@ func switch_to_cam(cam_mode: CameraMode):
 	fps_cam.current = is_fps
 	tps_cam.current = !is_fps
 	current_cam_mode = cam_mode
+	# Terrain3D auto-grabs the active camera once and permanently stops processing if
+	# none exists yet — levels load before player cameras spawn, so hand it over manually.
+	for terrain in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Terrain3D"]):
+		terrain.set_camera(fps_cam if is_fps else tps_cam)
 
 
 ## Force-switch to TPS without persisting to settings — used for crash so the player can
