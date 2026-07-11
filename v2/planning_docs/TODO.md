@@ -19,9 +19,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Add arrow walls (like burnout) for city race
 
 ### Game-breaking bugs
-- [ ] downhill + clutch + lean starts a wheelie
-- [ ] uphill slows you too much
-- [ ] being on a hill always makes you roll upwards w/ min speed, that shouldn't be the case
+- [ ] crashing on ramp should TP you away from the ramp
 - [ ] host can't go to customize bc others will leave
 - [ ] Mac web chrome export t3d
   - [ ] https://devnt90.itch.io/rexs-relics/devlog/1533649/the-terrain3d-fragment-shader-bug-a-web-export-horror-story
@@ -223,6 +221,12 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] downhill + clutch + lean starts a wheelie
+
+- [x] being on a hill always makes you roll upwards w/ min speed, that shouldn't be the case
+
+- [x] uphill slows you too much
 
 - [x] **cant get past 50% speed for a gear on client joining server
 

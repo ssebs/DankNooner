@@ -119,6 +119,12 @@ func _detect_crash():
 			trigger_crash()
 			return
 
+		# Stalled on a grade too steep to climb — bike can't hold, rider drops it
+		if movement_controller.is_stalled_on_steep_slope():
+			DebugUtils.DebugMsg("steep slope stall crash")
+			trigger_crash()
+			return
+
 		# Lean crash — threshold tightens on unstable surfaces (gravel/sand)
 		var unstable_factor = movement_controller.get_unstable_factor()
 		var effective_lean_threshold = (

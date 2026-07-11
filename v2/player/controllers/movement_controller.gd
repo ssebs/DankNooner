@@ -14,6 +14,9 @@ class_name MovementController extends Node
 const CLUTCH_KICK_WINDOW: float = 0.2
 # Fraction of bike's 1st-gear torque needed to clutch-pop — blocks high-gear pops
 const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65
+# Clutch pops are a low-speed launch move. Above this fraction of max_speed (e.g. rolling fast
+# downhill on slope gravity) a clutch dump must NOT loft the front — use a power wheelie instead.
+const CLUTCH_POP_MAX_SPEED_FRAC: float = 0.4
 # power × bd.acceleration floor for power wheelies — auto-scales by bike strength
 const POWER_WHEELIE_MIN_FORCE: float = 21.6
 const FALL_GRAVITY: float = 40
@@ -32,9 +35,13 @@ const SURFACE_BLEND_SPEED_FALL: float = 0.25  # airborne alignment back to globa
 const ADHESION_ANGLE: float = 80.0  # degrees — adhesion speed check kicks in here
 const RAMP_DOWNHILL_FACTOR: float = 1.25  # slope-gravity multiplier rolling downhill (adds speed)
 const RAMP_UPHILL_FACTOR: float = 0.8  # slope-gravity multiplier climbing uphill (bleeds speed)
-# Below this, the uphill bleed is suppressed — at idle RPM it exceeds engine drive and would pin
-# the bike at a standstill, blocking pulling away from a stop. Downhill assist always applies.
-const SLOPE_GRAVITY_MIN_SPEED: float = 5.0
+# Dedicated slope gravity — gentler than FALL_GRAVITY (which is tuned for arcade air time and is
+# far too punishing on grades). Drives the downhill assist / uphill bleed.
+const SLOPE_GRAVITY: float = 18.0
+# Grades steeper than this can't be climbed under power — engine drive is blocked and gravity
+# bleeds the bike to a stall. Stalling out (near-stopped) on such a grade crashes (CrashController).
+const MAX_CLIMB_ANGLE_DEG: float = 40.0
+const STALL_CRASH_SPEED: float = 1.0  # near-stopped threshold for the steep-slope stall crash
 const MIN_LOOP_SPEED: float = 20.0  # speed needed at fully inverted (180°)
 # Trick tuning
 const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
@@ -206,6 +213,18 @@ func get_unstable_factor() -> float:
 	return player_entity.bike_definition.unstable_surface_factor
 
 
+## True when near-stopped on a grade too steep for the bike to climb — CrashController
+## stall-crashes the rider. Bounded below ADHESION_ANGLE so loop walls (handled by the
+## adhesion / peel-off system) aren't mistaken for an un-climbable grade.
+func is_stalled_on_steep_slope() -> bool:
+	if not _is_on_floor or speed >= STALL_CRASH_SPEED:
+		return false
+	var slope_angle = _floor_normal.angle_to(Vector3.UP)
+	return (
+		slope_angle > deg_to_rad(MAX_CLIMB_ANGLE_DEG) and slope_angle < deg_to_rad(ADHESION_ANGLE)
+	)
+
+
 ## Blend normals from front + rear raycasts for smoother ramp transitions.
 ## Falls back to CharacterBody3D floor normal if neither raycast hits.
 func _get_blended_surface_normal() -> Vector3:
@@ -308,12 +327,22 @@ func _speed_calc(delta: float):
 			speed = 0.0
 		return
 
+	# Slope analysis (heading-based so it stays stable at low speed, unlike a velocity
+	# direction that goes noisy near a stop). slope_dot > 0 = pointing downhill, < 0 = climbing.
+	# Used by both the acceleration gate and the slope gravity below.
+	var slope_angle = _floor_normal.angle_to(Vector3.UP)
+	var gravity_on_surface = Vector3.DOWN - _floor_normal * Vector3.DOWN.dot(_floor_normal)
+	var forward_dir = -player_entity.global_transform.basis.z
+	var slope_dot = gravity_on_surface.dot(forward_dir)
+	# Too steep to climb — block engine drive; gravity then bleeds the bike to a stall (crash).
+	var too_steep_to_climb = slope_angle > deg_to_rad(MAX_CLIMB_ANGLE_DEG) and slope_dot < 0.0
+
 	# Acceleration (uses gearing power output)
 	# Hard braking (> 0.5) cuts throttle so the brake can always bring you to a
 	# stop. Light braking keeps throttle for trail-braking.
 	var power = gearing_controller.get_power_output()
 	var gear_max_speed = gearing_controller.get_gear_max_speed()
-	if power > 0 and speed < gear_max_speed and brake_total <= 0.5:
+	if power > 0 and speed < gear_max_speed and brake_total <= 0.5 and not too_steep_to_climb:
 		speed += bd.acceleration * power * delta
 		speed = minf(speed, gear_max_speed)
 	# Engine braking — applies when not on throttle, stronger at higher RPM
@@ -326,19 +355,13 @@ func _speed_calc(delta: float):
 	if total_brake > 0:
 		speed = move_toward(speed, 0, bd.brake_strength * total_brake * delta)
 
-	# Slope gravity — projects gravity along the surface. Downhill (positive) adds speed,
-	# uphill (negative) bleeds it. The uphill bleed is suppressed below SLOPE_GRAVITY_MIN_SPEED
-	# so it can't out-pull engine drive at idle RPM and pin the bike at a standstill; the
-	# downhill assist always applies so you gain speed rolling down a grade.
+	# Slope gravity — projects a dedicated (gentler) gravity along the surface. Downhill
+	# (slope_dot > 0) adds speed; uphill bleeds it with NO min-speed floor, so the bike actually
+	# slows to a stop climbing instead of creeping up forever. Guarded on motion so a fully
+	# stopped bike doesn't spontaneously roll off.
 	if _is_on_floor and player_entity.velocity.length_squared() > 0.01:
-		var gravity_on_surface = Vector3.DOWN - _floor_normal * Vector3.DOWN.dot(_floor_normal)
-		var vel_dir = player_entity.velocity.normalized()
-		var slope_dot = gravity_on_surface.dot(vel_dir)  # >0 downhill, <0 uphill
 		var factor = RAMP_DOWNHILL_FACTOR if slope_dot > 0.0 else RAMP_UPHILL_FACTOR
-		var slope_accel = FALL_GRAVITY * slope_dot * factor
-		if slope_accel < 0.0 and speed < SLOPE_GRAVITY_MIN_SPEED:
-			slope_accel = 0.0
-		speed += slope_accel * delta
+		speed += SLOPE_GRAVITY * slope_dot * factor * delta
 		speed = maxf(speed, 0.0)
 
 	# Unstable surface drag — proportional to speed so low-speed launches still work.
@@ -602,6 +625,9 @@ func _can_initiate_wheelie(in_wheelie: bool) -> bool:
 	# (ignoring engagement, since clutch_value is still ~1.0 at the dump instant).
 	var clutch_pop = _clutch_kick_window > 0 and input_controller.nfx_throttle > 0.5
 	if clutch_pop:
+		# Low-speed launch move only — don't let slope-inflated downhill speed clutch-pop a wheelie.
+		if speed > bd.max_speed * CLUTCH_POP_MAX_SPEED_FRAC:
+			return false
 		var max_torque_mult = bd.gear_ratios[0] / bd.gear_ratios[bd.num_gears - 1]
 		return gearing_controller.get_potential_power_output() > max_torque_mult * CLUTCH_POP_MIN_POWER_FRAC
 
