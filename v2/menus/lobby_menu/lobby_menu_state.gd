@@ -38,6 +38,12 @@ func Enter(state_context: StateContext):
 
 	return_ctx = state_context
 	return_state = state_context.return_state
+	if return_state == self:
+		# Returning from customize — _on_customize_pressed pointed our own context's
+		# return_state back here so customize's Back lands in the lobby (leaving via the
+		# play menu re-hosts and drops every connected client). Restore the real back target.
+		return_state = play_menu_state
+		return_ctx.return_state = play_menu_state
 
 	ui.show()
 	loading_ui.hide()
@@ -120,9 +126,10 @@ func _on_ip_copy_btn_pressed():
 
 
 func _on_customize_pressed():
-	# transitioned.emit(customize_menu_state, return_ctx)
+	# Customize's Back must return HERE (session stays up) — Enter() restores the
+	# original back target when it sees return_state == self.
 	transitioned.emit(
-		customize_menu_state, StateContext.NewWithReturnAndContext(return_state, return_ctx)
+		customize_menu_state, StateContext.NewWithReturnAndContext(self, return_ctx)
 	)
 
 
@@ -191,23 +198,39 @@ func set_single_or_multiplayer_ui():
 	# host/freeroam leaves the start + level select buttons stuck disabled.
 	level_select_panel.set_controls_disabled(false)
 
+	# Re-entering with a live connection (e.g. back from customize) — starting the server
+	# again would replace multiplayer_peer and drop every connected client, and the join
+	# timeout would tear the session down. Reuse the existing connection instead.
+	var already_connected: bool = (
+		multiplayer.multiplayer_peer != null
+		and multiplayer.multiplayer_peer is not OfflineMultiplayerPeer
+	)
+
 	match return_ctx.mode:
 		LobbyStateContext.Mode.FREEROAM:
 			multiplayer_ui.hide()
 			singleplayer_ui.show()
-			# ENet doesn't work on web — use WebRTC there
-			if OS.has_feature("web"):
-				connection_manager.connection_mode = ConnectionManager.ConnectionMode.WEBRTC
-			else:
-				connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
-			await connection_manager.start_server()
+			if not already_connected:
+				# ENet doesn't work on web — use WebRTC there
+				if OS.has_feature("web"):
+					connection_manager.connection_mode = ConnectionManager.ConnectionMode.WEBRTC
+				else:
+					connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
+				await connection_manager.start_server()
 			level_select_panel.grab_start_focus()
 		_:
 			singleplayer_ui.hide()
 			multiplayer_ui.show()
-			loading_ui.show()
-			timeout_timer.start()
-			level_select_panel.set_start_disabled(false)
+			if already_connected:
+				ip_label.text = connection_manager.conn_addr
+				ip_copy_btn.disabled = false
+				if !multiplayer.is_server():
+					level_select_panel.set_controls_disabled(true)
+				_on_lobby_players_updated(lobby_manager.lobby_players)
+			else:
+				loading_ui.show()
+				timeout_timer.start()
+				level_select_panel.set_start_disabled(false)
 
 	level_select_panel.call_deferred("refresh_preview")
 

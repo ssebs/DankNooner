@@ -12,14 +12,17 @@ class_name MovementController extends Node
 @export var debug_verbose:bool=false
 
 const CLUTCH_KICK_WINDOW: float = 0.2
-const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65  # fraction of bike's 1st-gear torque needed to clutch-pop — blocks high-gear pops
-const POWER_WHEELIE_MIN_FORCE: float = 21.6  # power × bd.acceleration floor for power wheelies — auto-scales by bike strength
+# Fraction of bike's 1st-gear torque needed to clutch-pop — blocks high-gear pops
+const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65
+# power × bd.acceleration floor for power wheelies — auto-scales by bike strength
+const POWER_WHEELIE_MIN_FORCE: float = 21.6
 const FALL_GRAVITY: float = 40
 const AIR_DRAG: float = 12.0  # speed loss while airborne. TODO - turn into a curve
 const MIN_SPEED_FROM_AIR_DRAG:float = 5.0
 # Unstable surface (collision layer 5) — gravel/sand/etc. Scaled by bike's unstable_surface_factor.
 const UNSTABLE_LAYER_MASK: int = 16  # 1 << 4 (layer 5)
-const UNSTABLE_DRAG_RATE: float = 0.6  # proportional drag (per sec) on unstable ground at factor=1 — caps top speed without stalling launches
+# Proportional drag (per sec) on unstable ground at factor=1 — caps top speed without stalling launches
+const UNSTABLE_DRAG_RATE: float = 0.6
 const UNSTABLE_WHEELIE_SUPPRESSION: float = 0.4  # wheelie target scaled by (1 - factor * this)
 const UNSTABLE_STEER_SUPPRESSION: float = 0.5  # turn_rate scaled by (1 - factor * this)
 # Ramp / loop tuning
@@ -42,7 +45,6 @@ const LANDING_SNAP_ANGLE_DEG: float = 30.0  # forgiveness window — flips landi
 const REVERSE_MAX_SPEED: float = 2.0
 const REVERSE_ACCEL: float = 8.0
 const REVERSE_BRAKE_THRESHOLD: float = 0.3
-var is_reversing: bool = false
 # Drift / powerslide — see planning_docs/PLAN-DRIFT.md
 const DRIFT_MIN_SPEED: float = 6.0  # below this it's a stationary burnout (slip stays ~0)
 const DRIFT_BRAKE_HOLD: float = 0.4  # rear-brake input that sustains a brake slide
@@ -53,6 +55,7 @@ const DRIFT_RECOVER_SUPPRESS: float = 0.8  # how much drive (0..1) suppresses re
 const DRIFT_YAW_RATE: float = 1.6  # rad/s the heading carves per full steer while drifting
 const DRIFT_SPEED_SCRUB: float = 0.6  # speed bleed per sec, proportional to |slip_angle|
 const DRIFT_MAX_SLIP_ANGLE_DEG: float = 70.0  # clamp just past the 60° spinout so crash fires, no wrap
+var is_reversing: bool = false
 var speed: float = 0.0
 var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
@@ -297,7 +300,7 @@ func _speed_calc(delta: float):
 		is_reversing = true
 		speed = move_toward(speed, -REVERSE_MAX_SPEED, REVERSE_ACCEL * delta)
 		return
-	elif is_reversing:
+	if is_reversing:
 		# Inputs released — decay back to 0, then resume normal logic next tick.
 		speed = move_toward(speed, 0.0, REVERSE_ACCEL * delta)
 		if speed >= 0.0:
@@ -380,7 +383,6 @@ func _steer_calc(delta: float):
 		)
 		player_entity.rotate_y(-roll_angle * turn_rate * delta)
 
-	
 	# Align bike basis so local Y points along up_direction (ramp riding)
 	var target_up = player_entity.up_direction
 	var current_forward = -player_entity.global_transform.basis.z
@@ -438,7 +440,6 @@ func _pitch_angle_calc(delta: float):
 			pitch_angle -= rotation_delta
 			air_pitch_total += abs(rotation_delta)
 		return
-		
 
 	var bd = player_entity.bike_definition
 	var in_wheelie = pitch_angle > deg_to_rad(TrickController.WHEELIE_PITCH_THRESHOLD_DEG)
@@ -466,8 +467,10 @@ func _pitch_angle_calc(delta: float):
 
 	DebugUtils.DebugMsg(
 		(
-			"pitch_angle: %.2f | wheelie_target: %.2f | balance_point: %.2f | \
-	max_wheelie: %.2f | in_bp: %s"
+			(
+				"pitch_angle: %.2f | wheelie_target: %.2f | balance_point: %.2f | "
+				+ "max_wheelie: %.2f | in_bp: %s"
+			)
 			% [
 				rad_to_deg(pitch_angle),
 				rad_to_deg(wheelie_target),
@@ -745,8 +748,10 @@ func _handle_player_collision(delta: float):
 
 	var collider = collision.get_collider()
 	if collider is PlayerEntity:
-		var random_angle = randf() * TAU
-		var offset = Vector3(cos(random_angle), 0.5, sin(random_angle))
+		# Golden-angle spread per peer id — deterministic so server & client resimulate
+		# the same push during rollback (randf() here caused constant desync corrections).
+		var push_angle = fposmod(int(str(player_entity.name)) * 2.399963, TAU)
+		var offset = Vector3(cos(push_angle), 0.5, sin(push_angle))
 		player_entity.global_position += offset
 
 

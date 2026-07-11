@@ -395,7 +395,7 @@ width = 20.0
 transform = Transform3D(0, 0, 0.9999999, 0, 1, 0, -0.9999999, 0, 0, 66.12149, 2, 206.31197)
 width = 20.0
 
-[node name="Terrain3D" type="Terrain3D" parent="." unique_id=470850830]
+[node name="Terrain3D" type="Terrain3D" parent="." unique_id=470850830 groups=["Terrain3D"]]
 data_directory = "res://levels/racetracks/racetrack_level_01/t3ddata"
 material = SubResource("Terrain3DMaterial_qqwky")
 assets = SubResource("Terrain3DAssets_xxw4c")

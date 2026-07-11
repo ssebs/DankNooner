@@ -41,8 +41,15 @@
 - Client => Server (input via RollbackSynchronizer):
   - `nfx_` input vars
     - `nfx_throttle`, `nfx_front_brake`, `nfx_rear_brake`, `nfx_steer`, `nfx_lean`
+    - `nfx_target_gear` (absolute requested gear — see GearingController below)
   - `rb_` oneshots (on PlayerEntity)
     - `rb_do_respawn` — triggered by CrashController auto-respawn or GamemodeManager
+    - Consuming the flag anchors the respawn to that tick (`_respawn_tick` +
+      `_respawn_target`); resims of that tick re-apply the state part
+      (`_apply_respawn_state`) — otherwise netfox's resimulation (server: late remote
+      input; client: prediction) rebuilds from pre-respawn history and undoes the
+      teleport, and clients never see race-grid teleports (the first application lands
+      on a predicted tick, which is never broadcast)
     - Signals:
       - `respawned(peer_id)`
       - `crashed(peer_id)`
@@ -57,7 +64,6 @@
     - `trick_held`
     - `clutch_held`
     - `cam_x`, `cam_y`
-    - `gear_change_pressed` signal (direction: int)
     - `cam_switch_pressed` signal
   - GearingController — clutch, gear shifts, RPM blend => `get_power_output()`, `get_gear_max_speed()`
   - TrickController — detects current trick from `movement_controller.pitch_angle`
@@ -129,8 +135,10 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     - Effects scaled by factor: proportional drag (`UNSTABLE_DRAG_RATE`, caps top speed without stalling launches), reduced wheelie target (`UNSTABLE_WHEELIE_SUPPRESSION`, harder to hold a wheelie / reach balance point), reduced turn rate (`UNSTABLE_STEER_SUPPRESSION`)
     - CrashController also reads `get_unstable_factor()` (see below)
 - **GearingController** (`gearing_controller.gd`)
-  - Listens to `input_controller.gear_change_pressed` for gear shifts
   - `on_movement_rollback_tick()`:
+    - Apply `input_controller.nfx_target_gear` (absolute requested gear, synced as netfox
+      input — NOT edge-triggered, so stale-input reuse / dropped snapshots on the server
+      can't skip or double-apply shifts), emits `gear_changed`
     - Update `_clutch_value` from `clutch_held` input
     - Blend `_current_rpm` between free-rev and wheel-loaded RPM based on clutch engagement
   - Public API:

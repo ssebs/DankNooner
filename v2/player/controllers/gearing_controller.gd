@@ -22,25 +22,19 @@ var _rpm_ratio: float = 0.0
 var _is_stalled: bool = false
 
 
-func _ready():
-	if Engine.is_editor_hint():
-		return
-	input_controller.gear_change_pressed.connect(_on_gear_change)
-
-
-## direction must be `1` or `-1` (fwd/back)
-## Runs from _rollback_tick in input_controller
-func _on_gear_change(direction: int):
-	# DebugUtils.DebugMsg("_on_gear_change %d" % direction)
+## Apply the synced requested gear from InputController. Absolute-valued (not edge-triggered)
+## so netfox stale-input reuse / dropped snapshots can't skip or double-apply shifts.
+func _apply_target_gear():
 	var bd = player_entity.bike_definition
-	var new_gear = clampi(current_gear + direction, 1, bd.num_gears)
+	var new_gear = clampi(input_controller.nfx_target_gear, 1, bd.num_gears)
 	if new_gear != current_gear:
 		current_gear = new_gear
 		gear_changed.emit(new_gear)
 
 
-## Called from MovementController._rollback_tick()
+## Called from PlayerEntity._rollback_tick()
 func on_movement_rollback_tick(delta: float):
+	_apply_target_gear()
 	_update_clutch_hold_time(delta)
 	_blend_rpm(delta)
 

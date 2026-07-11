@@ -301,7 +301,7 @@ next_pt_init = NodePath("../RP_001")
 [node name="NPCNavRegion" type="NavigationRegion3D" parent="." unique_id=1990556521]
 navigation_mesh = SubResource("NavigationMesh_ercdn")
 
-[node name="Terrain3D" type="Terrain3D" parent="." unique_id=2041226121]
+[node name="Terrain3D" type="Terrain3D" parent="." unique_id=2041226121 groups=["Terrain3D"]]
 data_directory = "res://levels/racetracks/stunt_track_01/t3ddata"
 material = SubResource("Terrain3DMaterial_grj8g")
 assets = SubResource("Terrain3DAssets_gpyq4")

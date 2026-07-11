@@ -9,4 +9,5 @@ const GROUPS = {
 	"InputStateManager": "InputStateManager",
 	"EventCircles": "EventCircles",
 	"Racers": "Racers",
+	"Terrain3D": "Terrain3D",
 }
