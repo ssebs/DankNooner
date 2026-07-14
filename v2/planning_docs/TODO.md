@@ -10,6 +10,11 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 5. Stunt map + polish
 
 ## Active
+ 
+### Boost
+- [ ] doing tricks give you boost
+- [ ] create boost guage
+- [ ] add boost for trick points
 
 ### More
 - [ ] Tire sounds for tarmac+sand+drift
