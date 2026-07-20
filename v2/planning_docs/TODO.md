@@ -33,7 +33,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 
 ### Game-breaking bugs
 - [ ] optimize build: 
-  - [ ] some cleanup
+  - [x] some cleanup
   - [ ] the fmod/ dir (22M) and addons/fmod/ (258M) are separate deletions, and project.godot:13 still carries the stale General/banks_path pointing into res://fmod/. Removing that line is part of the same cleanup
 - [ ] crashing on ramp should TP you away from the ramp
 - [ ] host can't go to customize bc others will leave
