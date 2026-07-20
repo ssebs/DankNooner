@@ -206,7 +206,7 @@ For detailed design docs see:
 
 - Tracks clutch engagement (0-1), blends between throttle-driven and wheel-driven RPM
 - Gear shifts applied from `input_controller.nfx_target_gear` each rollback tick
-- **Automatic transmission** (`auto_transmission` setting) is a client-side input assist in `InputController._auto_shift()`, NOT a GearingController feature — `nfx_target_gear` is a netfox *input* property owned by the local client, so the server must never write it. Shifts up at 0.95 RPM ratio (just under the 0.98 rev-limiter cut), down at 0.5, with a 0.4s cooldown. Forced on while `is_boosting`, whatever the setting says.
+- **Automatic transmission** (`auto_transmission` setting) is a client-side input assist in `InputController._auto_shift()`, NOT a GearingController feature — `nfx_target_gear` is a netfox *input* property owned by the local client, so the server must never write it. Upshift/downshift RPM ratios and the between-shift cooldown are consts on `InputController`; the upshift threshold sits just under the rev-limiter cut so the auto box shifts instead of bouncing off it. Forced on while `is_boosting`, whatever the setting says.
 - Power output = throttle x power_curve x torque_multiplier x engagement
 - Gear ratios, max_rpm, idle_rpm, stall_rpm are defined in `BikeSkinDefinition`
 
@@ -230,7 +230,7 @@ enum Trick { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, T
 The trick economy is split across two places, and the split is **not** optional:
 
 - **Per-tick accrual → `TrickController._accrue_combo()`** (rollback). `combo_time`, `combo_grace`, `combo_multiplier` and `boost_amount` are netfox state properties, and `RollbackSynchronizer._before_tick()` re-applies every state property from history each tick. A manager writing them from `_process()` is overwritten before anything accumulates — this was a real bug, don't reintroduce it. Tuning lives in consts (`BOOST_PER_SEC`, `COMBO_GRACE_SECS`, `COMBO_MULT_THRESHOLDS`), not `@export`s, so every peer simulates identically.
-  - Any trick accrues; multiplier steps at 10s / 30s of unbroken trick time; dropping every trick starts the grace window so chains survive. A crash freezes accrual (the rollback tick bails on `is_crashed`) and the respawn's `do_reset()` clears the combo.
+  - Any trick accrues; the multiplier steps at `COMBO_MULT_THRESHOLDS` seconds of unbroken trick time; dropping every trick starts the grace window so chains survive. A crash freezes accrual (the rollback tick bails on `is_crashed`) and the respawn's `do_reset()` clears the combo.
 - **Scoring → `TrickManager`** (`managers/trick_manager.gd`, server-only `_process()`). Watches those synced values and banks a score the frame `combo_time` returns to zero: `duration × points_per_second × peak_multiplier`. Banking on the combo-end edge keeps scoring out of the rollback path entirely, so resimulation can't double-count it.
   - **Crashing voids the run** — no partial credit. Checked before the `combo_time` test, because a crash freezes `combo_time` and only zeroes it at the respawn; without that ordering a crashed run would bank on the way down like a clean finish.
   - Gamemode-agnostic: gamemodes call `get_score(peer_id)` and `reset_peer(peer_id)`. Signals: `combo_banked(peer_id, points, duration, multiplier)`, `combo_voided(peer_id, lost_duration, lost_points)`.
