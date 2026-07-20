@@ -17,9 +17,10 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [x] add boost for trick points
 - [ ] combos don't work? or ui doesnt show them
 - [ ] slow down generation
-- [ ] crashing shouldnt reset all boost, only for that combo session
+- [x] crashing shouldnt reset all boost, only for that combo session
 - [x] Automatic transmission option
-- [ ] force automatic transmission during boost
+- [x] force automatic transmission during boost
+- [ ] boost code doesnt follow existing patterns
 
 ### More
 - [ ] add endless gamemode, like original game. more casual, roguelite?

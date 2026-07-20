@@ -349,7 +349,11 @@ func _boost_calc(delta: float):
 	if !pe.is_boosting:
 		return
 
+	var before: float = pe.boost_amount
 	pe.boost_amount = maxf(pe.boost_amount - pe.boost_burn_rate * delta, pe.boost_burn_target)
+	# Draw the in-progress combo's claim down alongside the meter, or spending would leave a
+	# claim larger than what's left and a later crash would eat previously banked boost too.
+	pe.combo_boost_earned = maxf(pe.combo_boost_earned - (before - pe.boost_amount), 0.0)
 	if pe.boost_amount <= pe.boost_burn_target:
 		pe.boost_burn_target = -1.0
 
