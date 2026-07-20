@@ -31,6 +31,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Add arrow walls (like burnout) for city race
 
 ### Game-breaking bugs
+- [ ] optimize build: export includes fmod + unused textures etc.
 - [ ] crashing on ramp should TP you away from the ramp
 - [ ] host can't go to customize bc others will leave
 - [ ] Mac web chrome export t3d
