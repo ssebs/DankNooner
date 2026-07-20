@@ -10,7 +10,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 5. Stunt map + polish
 
 ## Active
- 
+
 ### Boost
 - [x] doing tricks give you boost
 - [x] create boost guage
@@ -29,6 +29,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Restart race in pause
 - [ ] Trick tweaks just move butt a little bit from base trick
 - [ ] Add arrow walls (like burnout) for city race
+- [ ] drift stunt race 
 
 ### Game-breaking bugs
 - [ ] optimize build: export includes fmod + unused textures etc.
