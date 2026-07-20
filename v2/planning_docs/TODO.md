@@ -15,8 +15,10 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [x] doing tricks give you boost
 - [x] create boost guage
 - [x] add boost for trick points
-- [ ] combos don't work?
+- [ ] combos don't work? or ui doesnt show them
 - [ ] slow down generation
+- [ ] crashing shouldnt reset all boost, only for that combo session
+- [x] Automatic transmission option
 - [ ] force automatic transmission during boost
 
 ### More
@@ -24,7 +26,6 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] add race thru traffic mode w/o crashing
 - [ ] Tire sounds for tarmac+sand+drift
 - [ ] Restart race in pause
-- [ ] Automatic transmission option + no clutch up option 
 - [ ] Trick tweaks just move butt a little bit from base trick
 - [ ] Add arrow walls (like burnout) for city race
 

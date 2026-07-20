@@ -206,6 +206,7 @@ For detailed design docs see:
 
 - Tracks clutch engagement (0-1), blends between throttle-driven and wheel-driven RPM
 - Gear shifts applied from `input_controller.nfx_target_gear` each rollback tick
+- **Automatic transmission** (`auto_transmission` setting) is a client-side input assist in `InputController._auto_shift()`, NOT a GearingController feature — `nfx_target_gear` is a netfox *input* property owned by the local client, so the server must never write it. Shifts up at 0.95 RPM ratio (just under the 0.98 rev-limiter cut), down at 0.5, with a 0.4s cooldown.
 - Power output = throttle x power_curve x torque_multiplier x engagement
 - Gear ratios, max_rpm, idle_rpm, stall_rpm are defined in `BikeSkinDefinition`
 
@@ -300,7 +301,7 @@ The same "pause" action triggers different behavior based on `InputState`.
 ### Settings Manager
 
 - `SettingsManager` (`managers/settings_manager.gd`) - JSON persistence to `user://settings.json`
-- Default settings: signal_relay_host, resolution_scale, fullscreen_mode, master_vol, music_vol, menu_vol, sfx_vol, cam_mode, invert_cam, mouse_cam_sens, joy_cam_sens, difficulty (username / skins live in save data, not settings)
+- Default settings: signal_relay_host, resolution_scale, fullscreen_mode, master_vol, music_vol, menu_vol, sfx_vol, cam_mode, invert_cam, mouse_cam_sens, joy_cam_sens, difficulty, auto_transmission (username / skins live in save data, not settings)
 - Signals: `setting_updated(key, value)`, `all_settings_changed(dict)`
 - Used by AudioManager (volume), ConnectionManager (signal relay host)
 

@@ -293,3 +293,13 @@ unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "TRUE"
+
+[node name="AUTO_TRANSMISSION_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1054639834]
+layout_mode = 2
+text = "AUTO_TRANSMISSION_LABEL"
+
+[node name="AutoTransmissionCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=259754546]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "TRUE"
