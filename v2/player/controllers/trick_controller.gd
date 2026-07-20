@@ -37,7 +37,11 @@ const BOOST_PER_SEC: float = 0.2
 ## so wheelie -> stoppie -> wheelie chains keep their multiplier.
 const COMBO_GRACE_SECS: float = 1.5
 ## Seconds of unbroken trick time to reach each multiplier above x1, ascending.
-const COMBO_MULT_THRESHOLDS: Array[float] = [10.0, 30.0]
+## Keep these in the same ballpark as the meter fill time (BOOST_PER_SEC) — the gauge is the
+## only feedback the player can actually see, so a multiplier that lags far behind it reads
+## as broken. At 0.2/sec: x2 lands around the first full segment, x3 well after the meter
+## caps (where it still matters, since score = duration x rate x peak multiplier).
+const COMBO_MULT_THRESHOLDS: Array[float] = [5.0, 15.0]
 
 var current_trick: Trick = Trick.NONE
 var _last_trick: Trick = Trick.NONE

@@ -76,8 +76,9 @@
 ## State owned by each component
 
 - **PlayerEntity** (synced or DELETE_ME)
-  - `boost_amount` (segments, 0..3), `boost_burn_target`, `boost_burn_rate`, `boost_prev_held`,
-    `combo_time`, `combo_grace`, `combo_multiplier`, `is_boosting` — all netfox state
+  - `boost_amount` (in segments, capacity `BOOST_SEGMENTS`), `boost_burn_target`,
+    `boost_burn_rate`, `boost_prev_held`, `combo_time`, `combo_grace`, `combo_boost_earned`,
+    `combo_multiplier`, `is_boosting` — all netfox state
     properties. Filled by `TrickController._accrue_combo()` and spent by
     `MovementController._boost_calc()`, both inside the rollback tick. Writing any of these
     from a manager's `_process()` does NOT work: `RollbackSynchronizer._before_tick()`
@@ -108,8 +109,9 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   - Processes local input in `_process()`: gear shifts, trick held, clutch held, camera
   - `_auto_shift()` — automatic transmission when the `auto_transmission` setting is on,
     and **always while `is_boosting`** (a boost spent on the limiter in the wrong gear is wasted).
-    Up at `AUTO_UPSHIFT_RPM_RATIO` (0.95), down at `AUTO_DOWNSHIFT_RPM_RATIO` (0.5),
-    `AUTO_SHIFT_COOLDOWN` (0.4s) between shifts. Compares against `nfx_target_gear` rather
+    Up at `AUTO_UPSHIFT_RPM_RATIO` (set just under the rev limiter's cut so it shifts
+    instead of bouncing off it), down at `AUTO_DOWNSHIFT_RPM_RATIO`, with
+    `AUTO_SHIFT_COOLDOWN` between shifts. Compares against `nfx_target_gear` rather
     than `GearingController.current_gear`, which only catches up on the next rollback tick.
   - Detects gamepad vs KBM via `_unhandled_input()`
   - Provides `add_vibration()` / `stop_vibration()` for controller rumble
@@ -138,10 +140,10 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     - Balance point zone with instability
     - Lean forward recovery
   - `_boost_calc()` — boost meter spend. Runs **before** the `is_crashed` bail-out so a crash
-    cancels an active burn. The meter is 3 discrete segments; a rising edge on `nfx_boost_held`
-    commits a burn down to `boost_burn_target` that **releasing the button cannot cancel**.
-    One segment = `BOOST_SEGMENT_SECS` (1s, so 3s total spent piecemeal); pressing on a full
-    meter instead commits all three over `BOOST_FULL_BURN_SECS` (4s). While boosting,
+    cancels an active burn. The meter is `BOOST_SEGMENTS` discrete segments; a rising edge on
+    `nfx_boost_held` commits a burn down to `boost_burn_target` that **releasing the button
+    cannot cancel**. One segment burns over `BOOST_SEGMENT_SECS`; pressing on a full meter
+    instead commits the whole thing over `BOOST_FULL_BURN_SECS`. While boosting,
     `_speed_calc()` scales engine drive by `BOOST_ACCEL_MULT` and lifts both the gear cap and
     the `bd.max_speed` ceiling by `BOOST_SPEED_MULT`. The rising edge uses the synced
     `boost_prev_held` so it survives resimulation.

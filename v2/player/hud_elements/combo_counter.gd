@@ -83,12 +83,14 @@ func _process(delta: float):
 ## Called every frame by HUDController. Steps up fire the punch; drops reset quietly.
 func set_combo(value: int, active: bool):
 	_active = active
-	if value == _multiplier:
-		return
-	if value > _multiplier:
-		_punch = 1.0
-		_trauma = PUNCH_TRAUMA
-	_multiplier = value
+	if value != _multiplier:
+		if value > _multiplier:
+			_punch = 1.0
+			_trauma = PUNCH_TRAUMA
+		_multiplier = value
+	# Assigned unconditionally: _multiplier starts at 1 and the first live call is also 1,
+	# so an early-out on "unchanged" left the label showing the scene's placeholder forever.
+	# Label.set_text() already no-ops on an identical string, so this is free.
 	_label.text = tr("HUD_COMBO").format({"value": _multiplier})
 
 

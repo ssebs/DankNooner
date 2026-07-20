@@ -15,8 +15,8 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [x] doing tricks give you boost
 - [x] create boost guage
 - [x] add boost for trick points
-- [ ] combos don't work? or ui doesnt show them
-- [ ] slow down generation
+- [x] combos don't work? or ui doesnt show them
+- [x] slow down generation
 - [x] crashing shouldnt reset all boost, only for that combo session
 - [x] Automatic transmission option
 - [x] force automatic transmission during boost
