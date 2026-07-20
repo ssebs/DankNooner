@@ -8,6 +8,14 @@ signal reset_cam_pressed
 @export var player_entity: PlayerEntity
 @export var vibration_duration: float = 0.15
 
+## Automatic transmission thresholds (RPM ratio, 0-1). Upshift sits just under the rev
+## limiter's 0.98 cut so the auto box shifts instead of bouncing off it.
+const AUTO_UPSHIFT_RPM_RATIO: float = 0.95
+const AUTO_DOWNSHIFT_RPM_RATIO: float = 0.5
+## Minimum seconds between automatic shifts — stops a shift from being re-evaluated before
+## the RPM has settled into the new gear.
+const AUTO_SHIFT_COOLDOWN: float = 0.4
+
 var is_gamepad := false
 var input_disabled := false
 
@@ -35,6 +43,7 @@ var nfx_target_gear: int = 1
 ## Set on respawn; consumed by the next _gather() (outside the rollback loop, so the
 ## reset actually lands in recorded input history instead of being overwritten by it).
 var _pending_gear_reset: bool = false
+var _auto_shift_cooldown: float = 0.0
 
 
 func _ready():
@@ -78,10 +87,11 @@ func _on_respawned():
 	if !is_multiplayer_authority():
 		return
 	_pending_gear_reset = true
+	_auto_shift_cooldown = 0.0
 
 
 ## Local input
-func _process(_delta):
+func _process(delta):
 	if Engine.is_editor_hint() or multiplayer.multiplayer_peer == null:
 		return
 	if !is_multiplayer_authority():
@@ -98,7 +108,36 @@ func _process(_delta):
 		nfx_target_gear += 1
 	if Input.is_action_just_pressed("gear_down"):
 		nfx_target_gear -= 1
+
+	if player_entity.settings_manager.current_settings["auto_transmission"]:
+		_auto_shift(delta)
+
 	nfx_target_gear = clampi(nfx_target_gear, 1, player_entity.bike_definition.num_gears)
+
+
+## Automatic transmission: shift up at redline, down at half RPM.
+##
+## Lives here rather than in GearingController because nfx_target_gear is a netfox INPUT
+## property owned by the local client — the server must never write it. Driving the same
+## absolute-valued var the manual shift keys use means the auto box inherits the whole
+## existing sync path for free, including its immunity to stale-input reuse.
+func _auto_shift(delta: float):
+	_auto_shift_cooldown = maxf(_auto_shift_cooldown - delta, 0.0)
+	if _auto_shift_cooldown > 0.0:
+		return
+
+	var rpm_ratio := player_entity.gearing_controller.get_rpm_ratio()
+	var num_gears := player_entity.bike_definition.num_gears
+
+	# Compared against nfx_target_gear, not GearingController.current_gear: current_gear
+	# only catches up on the next rollback tick, so using it would re-request a shift that
+	# is already in flight.
+	if rpm_ratio >= AUTO_UPSHIFT_RPM_RATIO and nfx_target_gear < num_gears:
+		nfx_target_gear += 1
+		_auto_shift_cooldown = AUTO_SHIFT_COOLDOWN
+	elif rpm_ratio <= AUTO_DOWNSHIFT_RPM_RATIO and nfx_target_gear > 1:
+		nfx_target_gear -= 1
+		_auto_shift_cooldown = AUTO_SHIFT_COOLDOWN
 
 
 ## True when a text field has keyboard focus (e.g. username/code entry) — game

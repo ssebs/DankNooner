@@ -106,6 +106,10 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   - Local to client, extends Node3D
   - Gathers `nfx_` vars on `NetworkTime.before_tick_loop` for RollbackSynchronizer
   - Processes local input in `_process()`: gear shifts, trick held, clutch held, camera
+  - `_auto_shift()` — automatic transmission when the `auto_transmission` setting is on.
+    Up at `AUTO_UPSHIFT_RPM_RATIO` (0.95), down at `AUTO_DOWNSHIFT_RPM_RATIO` (0.5),
+    `AUTO_SHIFT_COOLDOWN` (0.4s) between shifts. Compares against `nfx_target_gear` rather
+    than `GearingController.current_gear`, which only catches up on the next rollback tick.
   - Detects gamepad vs KBM via `_unhandled_input()`
   - Provides `add_vibration()` / `stop_vibration()` for controller rumble
 - **CameraController**

@@ -21,6 +21,7 @@ class_name SettingsMenuState extends MenuState
 @onready var joy_cam_sens: HSlider = %JoyCamSensSlider
 @onready var mouse_cam_sens: HSlider = %MouseCamSensSlider
 @onready var invert_cam: CheckBox = %InvertCamCheck
+@onready var auto_transmission: CheckBox = %AutoTransmissionCheck
 ## 0 is easy, 1 is hard. TODO make enum
 @onready var difficulty_opt: OptionButton = %DifficultyOptBtn
 
@@ -91,6 +92,7 @@ func load_settings_into_ui():
 	joy_cam_sens.value = settings_manager.current_settings["joy_cam_sens"]
 	mouse_cam_sens.value = settings_manager.current_settings["mouse_cam_sens"]
 	invert_cam.button_pressed = settings_manager.current_settings["invert_cam"]
+	auto_transmission.button_pressed = settings_manager.current_settings["auto_transmission"]
 	difficulty_opt.selected = settings_manager.current_settings["difficulty"]
 
 
@@ -125,6 +127,7 @@ func _on_save_pressed():
 	settings_manager.update_setting("joy_cam_sens", joy_cam_sens.value, false)
 	settings_manager.update_setting("mouse_cam_sens", mouse_cam_sens.value, false)
 	settings_manager.update_setting("invert_cam", invert_cam.button_pressed, false)
+	settings_manager.update_setting("auto_transmission", auto_transmission.button_pressed, false)
 	settings_manager.update_setting("difficulty", difficulty_opt.selected, false)
 
 	settings_manager.save_settings()

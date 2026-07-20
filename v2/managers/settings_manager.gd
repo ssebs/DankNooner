@@ -39,6 +39,7 @@ var default_settings: Dictionary = {
 	"mouse_cam_sens": 0.5,
 	"joy_cam_sens": 0.5,
 	"difficulty": 0,  # 0 is easy, 1 is hard. TODO make enum
+	"auto_transmission": false,  # auto shift up at redline / down at half RPM
 	# "bike_skin": "res://resources/bikes/skins/sport_default_skin_definition.tres",
 	# "character_skin": "res://resources/player/skins/biker_default_skin_definition.tres",
 }
