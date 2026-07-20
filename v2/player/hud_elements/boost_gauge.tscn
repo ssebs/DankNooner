@@ -1,0 +1,60 @@
+[gd_scene format=3]
+
+[ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="1_bstpn"]
+[ext_resource type="Script" path="res://player/hud_elements/boost_gauge.gd" id="1_bstsc"]
+
+[sub_resource type="Gradient" id="Gradient_bstun"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.29, 0.29, 0.29, 0.39215687)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_bstun"]
+gradient = SubResource("Gradient_bstun")
+width = 1
+
+[sub_resource type="Gradient" id="Gradient_bstpr"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_bstpr"]
+gradient = SubResource("Gradient_bstpr")
+width = 1
+
+[node name="BoostGauge" type="PanelContainer"]
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_styles/panel = ExtResource("1_bstpn")
+script = ExtResource("1_bstsc")
+
+[node name="Cells" type="HBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Cell1" type="TextureProgressBar" parent="Cells"]
+custom_minimum_size = Vector2(104, 20)
+layout_mode = 2
+value = 0.0
+nine_patch_stretch = true
+texture_under = SubResource("GradientTexture1D_bstun")
+texture_progress = SubResource("GradientTexture1D_bstpr")
+tint_progress = Color(0.16, 0.34, 0.48, 1)
+
+[node name="Cell2" type="TextureProgressBar" parent="Cells"]
+custom_minimum_size = Vector2(104, 20)
+layout_mode = 2
+value = 0.0
+nine_patch_stretch = true
+texture_under = SubResource("GradientTexture1D_bstun")
+texture_progress = SubResource("GradientTexture1D_bstpr")
+tint_progress = Color(0.16, 0.34, 0.48, 1)
+
+[node name="Cell3" type="TextureProgressBar" parent="Cells"]
+custom_minimum_size = Vector2(104, 20)
+layout_mode = 2
+value = 0.0
+nine_patch_stretch = true
+texture_under = SubResource("GradientTexture1D_bstun")
+texture_progress = SubResource("GradientTexture1D_bstpr")
+tint_progress = Color(0.16, 0.34, 0.48, 1)

@@ -20,6 +20,7 @@ var nfx_lean: float = 0.0  # TODO: check inverted
 
 var nfx_trick_held: bool = false
 var nfx_clutch_held: bool = false
+var nfx_boost_held: bool = false
 var nfx_cam_x: float = 0.0
 var nfx_cam_y: float = 0.0  # TODO: check inverted
 
@@ -66,6 +67,7 @@ func _gather():
 	nfx_lean = Input.get_action_strength("lean_forward") - Input.get_action_strength("lean_back")
 	nfx_trick_held = Input.is_action_pressed("trick")
 	nfx_clutch_held = Input.is_action_pressed("clutch")
+	nfx_boost_held = Input.is_action_pressed("boost")
 	nfx_cam_x = (Input.get_action_strength("cam_right") - Input.get_action_strength("cam_left"))
 	nfx_cam_y = Input.get_action_strength("cam_up") - Input.get_action_strength("cam_down")
 

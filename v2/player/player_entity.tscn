@@ -31,6 +31,8 @@
 [ext_resource type="PackedScene" uid="uid://cu0vh8sgp0l2e" path="res://entities/vfx/spark_particles.tscn" id="29_3kl2f"]
 [ext_resource type="Script" uid="uid://cajkhr7cisa7f" path="res://player/controllers/skidmark_controller.gd" id="30_skid"]
 [ext_resource type="PackedScene" uid="uid://cmnmap7blip01" path="res://player/controllers/minimap/minimap.tscn" id="33_mnmap"]
+[ext_resource type="PackedScene" path="res://player/hud_elements/boost_gauge.tscn" id="36_bstgg"]
+[ext_resource type="PackedScene" path="res://player/hud_elements/combo_counter.tscn" id="37_cmbct"]
 
 [sub_resource type="Animation" id="Animation_k5dce"]
 resource_name = "back_up_loop"
@@ -1154,8 +1156,8 @@ unique_name_in_owner = true
 script = ExtResource("3_faflk")
 root = NodePath("..")
 enable_prediction = true
-state_properties = Array[String]([":global_transform", ":velocity", ":up_direction", ":is_crashed", "%MovementController:pitch_angle", "%MovementController:roll_angle", "%MovementController:speed", "%MovementController:slip_angle", "%GearingController:current_gear", "%GearingController:current_rpm", "%GearingController:clutch_value"])
-input_properties = Array[String](["%InputController:nfx_throttle", "%InputController:nfx_front_brake", "%InputController:nfx_rear_brake", "%InputController:nfx_steer", "%InputController:nfx_lean", "%InputController:nfx_trick_held", "%InputController:nfx_clutch_held", "%InputController:nfx_cam_x", "%InputController:nfx_cam_y", "%InputController:nfx_target_gear"])
+state_properties = Array[String]([":global_transform", ":velocity", ":up_direction", ":is_crashed", ":boost_amount", ":boost_burn_target", ":boost_burn_rate", ":boost_prev_held", ":combo_time", ":combo_grace", ":combo_multiplier", ":is_boosting", "%MovementController:pitch_angle", "%MovementController:roll_angle", "%MovementController:speed", "%MovementController:slip_angle", "%GearingController:current_gear", "%GearingController:current_rpm", "%GearingController:clutch_value"])
+input_properties = Array[String](["%InputController:nfx_throttle", "%InputController:nfx_front_brake", "%InputController:nfx_rear_brake", "%InputController:nfx_steer", "%InputController:nfx_lean", "%InputController:nfx_trick_held", "%InputController:nfx_clutch_held", "%InputController:nfx_boost_held", "%InputController:nfx_cam_x", "%InputController:nfx_cam_y", "%InputController:nfx_target_gear"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="TickInterpolator" type="Node" parent="." unique_id=977812349 node_paths=PackedStringArray("root")]
@@ -1408,6 +1410,23 @@ size_flags_vertical = 0
 [node name="BalanceBar" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=1249265550 instance=ExtResource("18_htgu7")]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="BoostCluster" type="VBoxContainer" parent="_Controllers/HUDController/AspectContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_constants/separation = 4
+
+[node name="ComboCounter" parent="_Controllers/HUDController/AspectContainer/MarginContainer/BoostCluster" instance=ExtResource("37_cmbct")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="BoostGauge" parent="_Controllers/HUDController/AspectContainer/MarginContainer/BoostCluster" instance=ExtResource("36_bstgg")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
 
 [node name="MobileControls" type="Control" parent="_Controllers/HUDController/AspectContainer/MarginContainer" unique_id=275464545]
 unique_name_in_owner = true

@@ -12,11 +12,16 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 ## Active
  
 ### Boost
-- [ ] doing tricks give you boost
-- [ ] create boost guage
-- [ ] add boost for trick points
+- [x] doing tricks give you boost
+- [x] create boost guage
+- [x] add boost for trick points
+- [ ] combos don't work?
+- [ ] slow down generation
+- [ ] force automatic transmission during boost
 
 ### More
+- [ ] add endless gamemode, like original game. more casual, roguelite?
+- [ ] add race thru traffic mode w/o crashing
 - [ ] Tire sounds for tarmac+sand+drift
 - [ ] Restart race in pause
 - [ ] Automatic transmission option + no clutch up option 

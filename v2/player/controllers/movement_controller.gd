@@ -62,6 +62,15 @@ const DRIFT_RECOVER_SUPPRESS: float = 0.8  # how much drive (0..1) suppresses re
 const DRIFT_YAW_RATE: float = 1.6  # rad/s the heading carves per full steer while drifting
 const DRIFT_SPEED_SCRUB: float = 0.6  # speed bleed per sec, proportional to |slip_angle|
 const DRIFT_MAX_SLIP_ANGLE_DEG: float = 70.0  # clamp just past the 60° spinout so crash fires, no wrap
+# Boost — earned from tricks (TrickManager), spent here. Drained in the rollback tick so the
+# local client predicts it and netfox reconciles against the server's meter.
+# The meter is 3 discrete segments (boost_amount is in segments, 0..3). A press commits to
+# burning the current segment down to the next boundary — releasing early does NOT cancel.
+const BOOST_SEGMENTS: float = 3.0
+const BOOST_SEGMENT_SECS: float = 1.0  # one segment = 1s of boost (3s total, spent piecemeal)
+const BOOST_FULL_BURN_SECS: float = 4.0  # a full meter burned in one press runs longer
+const BOOST_ACCEL_MULT: float = 1.8  # engine drive multiplier while boosting
+const BOOST_SPEED_MULT: float = 1.25  # raises both the gear cap and bd.max_speed ceiling
 var is_reversing: bool = false
 var speed: float = 0.0
 var roll_angle: float = 0.0  # lean left/right
@@ -103,6 +112,11 @@ func _on_respawn():
 func on_movement_rollback_tick(delta: float):
 	if Engine.is_editor_hint():
 		return
+
+	# Ahead of the crash bail-out so a crash mid-boost actually cancels the burn (and its
+	# camera FX) instead of leaving it latched until the respawn.
+	_boost_calc(delta)
+
 	if player_entity.is_crashed:
 		return
 
@@ -304,8 +318,46 @@ func _detach_from_surface(delta: float):
 
 
 ## Calculate speed from input / power output
+## Drain the boost meter and resolve is_boosting for this tick. TrickManager owns filling it
+## (server, outside rollback); everything here derives from synced input + synced meter state,
+## so it resimulates cleanly.
+##
+## A press burns the current segment down to the next boundary and can't be cancelled by
+## releasing — pressing on a full meter instead commits all three at once for a longer boost.
+func _boost_calc(delta: float):
+	var pe := player_entity
+	var held := input_controller.nfx_boost_held
+	var was_held := pe.boost_prev_held
+	pe.boost_prev_held = held
+
+	if pe.is_crashed:
+		pe.boost_burn_target = -1.0
+		pe.is_boosting = false
+		return
+
+	# Rising edge with at least one whole segment banked commits a burn.
+	if held and not was_held and pe.boost_burn_target < 0.0 and pe.boost_amount >= 1.0:
+		if pe.boost_amount >= BOOST_SEGMENTS:
+			pe.boost_burn_target = 0.0
+			pe.boost_burn_rate = BOOST_SEGMENTS / BOOST_FULL_BURN_SECS
+		else:
+			# Spend exactly one segment — BOOST_SEGMENT_SECS of boost per press.
+			pe.boost_burn_target = pe.boost_amount - 1.0
+			pe.boost_burn_rate = 1.0 / BOOST_SEGMENT_SECS
+
+	pe.is_boosting = pe.boost_burn_target >= 0.0
+	if !pe.is_boosting:
+		return
+
+	pe.boost_amount = maxf(pe.boost_amount - pe.boost_burn_rate * delta, pe.boost_burn_target)
+	if pe.boost_amount <= pe.boost_burn_target:
+		pe.boost_burn_target = -1.0
+
+
 func _speed_calc(delta: float):
 	var bd = player_entity.bike_definition
+	var boost_accel: float = BOOST_ACCEL_MULT if player_entity.is_boosting else 1.0
+	var boost_speed: float = BOOST_SPEED_MULT if player_entity.is_boosting else 1.0
 
 	# Airborne
 	if not _is_on_floor:
@@ -341,9 +393,9 @@ func _speed_calc(delta: float):
 	# Hard braking (> 0.5) cuts throttle so the brake can always bring you to a
 	# stop. Light braking keeps throttle for trail-braking.
 	var power = gearing_controller.get_power_output()
-	var gear_max_speed = gearing_controller.get_gear_max_speed()
+	var gear_max_speed = gearing_controller.get_gear_max_speed() * boost_speed
 	if power > 0 and speed < gear_max_speed and brake_total <= 0.5 and not too_steep_to_climb:
-		speed += bd.acceleration * power * delta
+		speed += bd.acceleration * power * boost_accel * delta
 		speed = minf(speed, gear_max_speed)
 	# Engine braking — applies when not on throttle, stronger at higher RPM
 	elif power <= 0 and speed > 0.5:
@@ -370,7 +422,7 @@ func _speed_calc(delta: float):
 	if unstable_factor > 0 and speed > 0:
 		speed -= speed * UNSTABLE_DRAG_RATE * unstable_factor * delta
 
-	speed = minf(speed, bd.max_speed)
+	speed = minf(speed, bd.max_speed * boost_speed)
 
 
 ## Calculate roll_angle & set player_entity.rotation
