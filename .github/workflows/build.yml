@@ -11,21 +11,36 @@ permissions:
 jobs:
   export_game:
     runs-on: ubuntu-latest
-    name: Export Game
+    name: Export ${{ matrix.preset }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - preset: DankNoonerLinux
+            needs_wine: false
+          - preset: DankNoonerWindows
+            needs_wine: true
+          - preset: DankNoonerWeb
+            needs_wine: false
+          - preset: DankNoonerMac
+            needs_wine: false
     steps:
-      - name: install wine & audio deps
+      - name: free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+                      /usr/local/share/boost /usr/local/.ghcup \
+                      "$AGENT_TOOLSDIRECTORY"
+          df -h /
+
+      # wine is only used to stamp the Windows exe icon/metadata via rcedit
+      - name: install wine
         id: wine_install
+        if: matrix.needs_wine
         run: |
           sudo dpkg --add-architecture i386
           sudo apt update
-          sudo apt install -y wine64 wine32 libasound2-dev libpulse-dev pulseaudio
+          sudo apt install -y wine64 wine32
           echo "WINE_PATH=$(which wine)" >> $GITHUB_OUTPUT
-
-      - name: start virtual audio device for FMOD
-        run: |
-          pulseaudio --start --exit-idle-time=-1
-          pactl load-module module-null-sink sink_name=virtual_speaker
-          pactl set-default-sink virtual_speaker
 
       - name: checkout
         uses: actions/checkout@v5
@@ -43,25 +58,36 @@ jobs:
           relative_project_path: ./v2
           archive_output: true
           cache: true
-          presets_to_export: "DankNoonerLinux, DankNoonerWindows, DankNoonerWeb, DankNoonerMac"
-          wine_path: ${{ steps.wine_install.outputs.WINE_PATH }} # set the wine path here which is the output of the wine_install step
+          presets_to_export: ${{ matrix.preset }}
+          wine_path: ${{ steps.wine_install.outputs.WINE_PATH }}
+
+      - name: upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.preset }}
+          path: ${{ steps.export.outputs.archive_directory }}/*
+          retention-days: 1
+
+  create_release:
+    needs: export_game
+    runs-on: ubuntu-latest
+    name: Create Release
+    steps:
+      - name: download all builds
+        uses: actions/download-artifact@v4
+        with:
+          pattern: build-*
+          merge-multiple: true
+          path: /tmp/builds
+
       - name: create release
         uses: ncipollo/release-action@v1.18.0
         with:
           # token: ${{ secrets.GITHUB_TOKEN }}
           generateReleaseNotes: true
+          allowUpdates: true
           tag: ${{ github.ref_name }}
-          artifacts: ${{ steps.export.outputs.archive_directory }}/*
-
-      - name: extract web build for pages
-        run: |
-          mkdir -p /tmp/web-pages
-          unzip "${{ steps.export.outputs.archive_directory }}/DankNoonerWeb.zip" -d /tmp/web-pages
-
-      - name: upload pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: /tmp/web-pages
+          artifacts: /tmp/builds/*
 
   deploy_pages:
     needs: export_game
@@ -71,6 +97,22 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: download web build
+        uses: actions/download-artifact@v4
+        with:
+          name: build-DankNoonerWeb
+          path: /tmp/builds
+
+      - name: extract web build for pages
+        run: |
+          mkdir -p /tmp/web-pages
+          unzip /tmp/builds/DankNoonerWeb.zip -d /tmp/web-pages
+
+      - name: upload pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: /tmp/web-pages
+
       - name: deploy to github pages
         id: deployment
         uses: actions/deploy-pages@v4
