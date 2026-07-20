@@ -35,6 +35,7 @@
 [ext_resource type="Script" uid="uid://b6yqloe4qv2ck" path="res://managers/gamemodes/types/challenge/challenge_gamemode.gd" id="30_chlng"]
 [ext_resource type="Script" uid="uid://boxia2udg1jxm" path="res://managers/npc_race_manager.gd" id="31_npcrm"]
 [ext_resource type="Script" uid="uid://283a7n5utttx" path="res://resources/player/player_definition.gd" id="35_iihm1"]
+[ext_resource type="Script" uid="uid://37ehv252lkkf" path="res://managers/trick_manager.gd" id="36_trkmg"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("1_1oj5k")
@@ -247,6 +248,12 @@ audio_manager = NodePath("../AudioManager")
 settings_manager = NodePath("../SettingsManager")
 gamemode_manager = NodePath("../GamemodeManager")
 metadata/_custom_type_script = "uid://cug5kob8cndk4"
+
+[node name="TrickManager" type="Node" parent="ManagerManager" unique_id=1405416094 node_paths=PackedStringArray("spawn_manager", "gamemode_manager") groups=["Managers"]]
+script = ExtResource("36_trkmg")
+spawn_manager = NodePath("../SpawnManager")
+gamemode_manager = NodePath("../GamemodeManager")
+points_per_second = null
 
 [node name="NPCRaceManager" type="Node" parent="ManagerManager" unique_id=1218916391 node_paths=PackedStringArray("level_manager") groups=["Managers"]]
 script = ExtResource("31_npcrm")

@@ -56,6 +56,10 @@ enum CameraMode { TPS = 0, FPS, NONE }
 @export var fov_max_add: float = 15.0
 ## Radial blur shader strength at full speed.
 @export var blur_max_strength: float = 1.0
+## Degrees of extra FOV punch while boosting, on top of the speed-driven widen.
+@export var boost_fov_add: float = 12.0
+## How fast the boost tint / FOV punch ramps in and out (exponential rate).
+@export var boost_blend_speed: float = 6.0
 ## UV radius around screen center kept fully sharp — blur only sits in the outer ring beyond this.
 @export_range(0.0, 1.0) var blur_clear_radius: float = 0.7
 
@@ -92,6 +96,8 @@ var _tps_base_fov: float = 0.0
 var _fps_base_fov: float = 0.0
 var _blur_layer: CanvasLayer = null
 var _blur_mat: ShaderMaterial = null
+## Smoothed 0..1 boost blend — is_boosting is a hard bool, so ease it for the FX.
+var _boost_blend: float = 0.0
 var _prev_pitch: float = 0.0
 var _pitch_drop_rate: float = 0.0  # peak-held downward pitch speed (rad/s) for landing shake
 var _prev_speed: float = 0.0
@@ -311,8 +317,13 @@ func _update_juice_fx(delta: float):
 		0.0,
 		1.0
 	)
-	cam.fov = base_fov + fov_max_add * speed_factor
+	# Boost rides on top of the speed effect: extra FOV punch + the blue wash in the shader.
+	var boost_target: float = 1.0 if player_entity.is_boosting else 0.0
+	_boost_blend = lerpf(_boost_blend, boost_target, 1.0 - exp(-boost_blend_speed * delta))
+
+	cam.fov = base_fov + fov_max_add * speed_factor + boost_fov_add * _boost_blend
 	_blur_mat.set_shader_parameter("strength", speed_factor * blur_max_strength)
+	_blur_mat.set_shader_parameter("boost", _boost_blend)
 
 	# Track the front-wheel drop speed (peak-held) so the wheelie-landing burst can scale by it.
 	var pitch: float = player_entity.movement_controller.pitch_angle
@@ -371,6 +382,7 @@ func _create_blur_overlay():
 	_blur_mat = ShaderMaterial.new()
 	_blur_mat.shader = RADIAL_BLUR_SHADER
 	_blur_mat.set_shader_parameter("strength", 0.0)
+	_blur_mat.set_shader_parameter("boost", 0.0)
 	# Set explicitly — relying on the shader's uniform default isn't reliable at runtime.
 	_blur_mat.set_shader_parameter("clear_radius", blur_clear_radius)
 

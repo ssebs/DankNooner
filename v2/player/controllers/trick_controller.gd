@@ -28,6 +28,16 @@ const TWO_LEFT_FEET_SPEED_THRESHOLD: float = 20
 ## Shared by movement_controller for in_wheelie / in_stoppie checks.
 const WHEELIE_PITCH_THRESHOLD_DEG: float = 10.0
 const STOPPIE_PITCH_THRESHOLD_DEG: float = -10.0
+## Boost segments earned per second of trick, before the combo multiplier. At x1 that's ~2s
+## of wheelie per segment, ~6s for a full meter — short enough that a casual wheelie earns
+## something usable. Consts, not @exports: this runs inside the rollback tick and must be
+## byte-identical on every peer or predictions diverge from the server.
+const BOOST_PER_SEC: float = 0.5
+## Dropping every trick starts this grace window instead of breaking the combo outright,
+## so wheelie -> stoppie -> wheelie chains keep their multiplier.
+const COMBO_GRACE_SECS: float = 1.5
+## Seconds of unbroken trick time to reach each multiplier above x1, ascending.
+const COMBO_MULT_THRESHOLDS: Array[float] = [10.0, 30.0]
 
 var current_trick: Trick = Trick.NONE
 var _last_trick: Trick = Trick.NONE
@@ -52,6 +62,35 @@ func on_movement_rollback_tick(delta: float):
 		if current_trick != Trick.NONE:
 			trick_started.emit(current_trick)
 		_last_trick = current_trick
+
+	_accrue_combo(delta)
+
+
+## Accrue combo time + boost for the tick. Lives here (rollback) rather than in TrickManager
+## because these are netfox state properties — RollbackSynchronizer re-applies them from
+## history every tick, so a manager writing them in _process() would be overwritten before
+## anything accumulated. TrickManager banks the SCORE when the combo ends, off these values.
+func _accrue_combo(delta: float):
+	var pe := player_entity
+
+	if current_trick != Trick.NONE:
+		pe.combo_time += delta
+		pe.combo_grace = COMBO_GRACE_SECS
+		pe.boost_amount = minf(
+			pe.boost_amount + BOOST_PER_SEC * pe.combo_multiplier * delta,
+			MovementController.BOOST_SEGMENTS
+		)
+	elif pe.combo_time > 0.0:
+		pe.combo_grace -= delta
+		if pe.combo_grace <= 0.0:
+			pe.combo_time = 0.0
+			pe.combo_grace = 0.0
+
+	var mult := 1
+	for threshold in COMBO_MULT_THRESHOLDS:
+		if pe.combo_time >= threshold:
+			mult += 1
+	pe.combo_multiplier = mult
 
 
 func _detect_current_trick(delta: float) -> Trick:
@@ -132,6 +171,9 @@ func do_reset():
 	current_trick = Trick.NONE
 	_last_trick = Trick.NONE
 	_flip_emitted = false
+	player_entity.combo_time = 0.0
+	player_entity.combo_grace = 0.0
+	player_entity.combo_multiplier = 1
 
 
 func is_in_wheelie() -> bool:

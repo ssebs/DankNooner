@@ -23,11 +23,17 @@ const _RPM_COLOR_HIGH := Color(0.85, 0.1, 0.1, 1)
 @onready var _trick_msg: Label = %HUD_TRICK_MSG
 @onready var _game_msg: Label = %HUD_GAME_MSG
 @onready var _balance_bar: BalanceBar = %BalanceBar
+@onready var _boost_gauge: BoostGauge = %BoostGauge
+@onready var _combo_counter: ComboCounter = %ComboCounter
 @onready var _mobile_controls: Control = %MobileControls
 @onready var _minimap: Minimap = %Minimap
 
 var input_state_mgr: InputStateManager = null
 var _rpm_fill_style: StyleBoxFlat = null
+## Local-only edge tracking for the boost button, so a press with nothing banked can blink
+## the gauge. Purely cosmetic — kept out of the synced boost_prev_held, which the rollback
+## tick owns and must not be perturbed by the HUD.
+var _prev_boost_held: bool = false
 
 
 func _ready():
@@ -79,6 +85,25 @@ func _process(_delta: float):
 	_speed_num.text = "%d" % int(movement_controller.speed)
 	_grip_label.text = tr("HUD_GRIP").format({"value": int(player_entity.grip_usage * 100)})
 	_balance_bar.current_val = rad_to_deg(movement_controller.pitch_angle)
+
+	# Boost meter + combo multiplier are server-authoritative (TrickManager) and arrive
+	# via RollbackSynchronizer, so poll the synced vars rather than tracking them here.
+	_boost_gauge.current_val = player_entity.boost_amount
+	_boost_gauge.set_spending(player_entity.is_boosting)
+
+	# A press under one full segment is silently ignored by _boost_calc — blink so the
+	# rejection is visible instead of feeling like a dead button. Mid-burn presses don't
+	# count as rejected.
+	var boost_held: bool = input_controller.nfx_boost_held
+	if boost_held and not _prev_boost_held:
+		if not player_entity.is_boosting and player_entity.boost_amount < 1.0:
+			_boost_gauge.flash_rejected()
+	_prev_boost_held = boost_held
+	# A crash voids the run (TrickManager), but combo_multiplier / combo_time stay frozen
+	# until the respawn clears them — force x1 + inactive so the loss reads immediately.
+	var comboing: bool = player_entity.combo_time > 0.0 and not player_entity.is_crashed
+	var combo: int = player_entity.combo_multiplier if comboing else 1
+	_combo_counter.set_combo(combo, comboing)
 
 
 func _init_balance_bar(trick_type: TrickController.Trick):
@@ -160,6 +185,8 @@ func do_reset():
 	_gear_label.text = tr("HUD_GEAR").format({"value": 1})
 	_trick_msg.visible = false
 	_game_msg.visible = false
+	_combo_counter.do_reset()
+	_prev_boost_held = false
 
 
 func _get_configuration_warnings() -> PackedStringArray:

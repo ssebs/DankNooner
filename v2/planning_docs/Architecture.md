@@ -176,6 +176,7 @@ For detailed design docs see:
 
 - [PlayerController.md](./PlayerController.md) - movement, gearing, tricks, crash subsystems
 - [AnimationController.md](./AnimationController.md) - procedural animation, IK, ragdoll
+- [ComboAndBoost.md](./ComboAndBoost.md) - trick combos, boost economy, scoring, tunables
 
 #### Component Controllers
 
@@ -197,7 +198,7 @@ For detailed design docs see:
 
 - **Physics**: `speed`, `roll_angle`, `pitch_angle`
 - **Gearing**: `current_gear`, `current_rpm`, `clutch_value`
-- **Tricks**: `is_boosting`, `boost_count`
+- **Tricks / boost**: `boost_amount` (in segments), `boost_burn_target`, `boost_burn_rate`, `boost_prev_held`, `combo_multiplier`, `is_boosting`
 - **Crashes**: `is_crashed`
 - **Discrete actions**: `rb_do_respawn` (rollback pattern); `rb_respawn_transform` / `rb_respawn_transform_oneshot` carry the target respawn transform. Gear shifts sync `nfx_target_gear` (absolute requested gear) as netfox input — never edge-triggered flags, which drop/double-apply under stale-input reuse on the server.
 
@@ -219,6 +220,20 @@ enum Trick { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, T
 - Stoppie: Front brake + forward lean
 - Emits `trick_started`, `trick_ended` signals
 - Auto-balances pitch on ground with `move_toward()` smoothing
+- Detection only — scoring lives in `TrickManager` (see below)
+
+### Trick Manager
+
+> Full breakdown + every tunable: [ComboAndBoost.md](./ComboAndBoost.md)
+
+The trick economy is split across two places, and the split is **not** optional:
+
+- **Per-tick accrual → `TrickController._accrue_combo()`** (rollback). `combo_time`, `combo_grace`, `combo_multiplier` and `boost_amount` are netfox state properties, and `RollbackSynchronizer._before_tick()` re-applies every state property from history each tick. A manager writing them from `_process()` is overwritten before anything accumulates — this was a real bug, don't reintroduce it. Tuning lives in consts (`BOOST_PER_SEC`, `COMBO_GRACE_SECS`, `COMBO_MULT_THRESHOLDS`), not `@export`s, so every peer simulates identically.
+  - Any trick accrues; multiplier steps at 10s / 30s of unbroken trick time; dropping every trick starts the grace window so chains survive. A crash freezes accrual (the rollback tick bails on `is_crashed`) and the respawn's `do_reset()` clears the combo.
+- **Scoring → `TrickManager`** (`managers/trick_manager.gd`, server-only `_process()`). Watches those synced values and banks a score the frame `combo_time` returns to zero: `duration × points_per_second × peak_multiplier`. Banking on the combo-end edge keeps scoring out of the rollback path entirely, so resimulation can't double-count it.
+  - **Crashing voids the run** — no partial credit. Checked before the `combo_time` test, because a crash freezes `combo_time` and only zeroes it at the respawn; without that ordering a crashed run would bank on the way down like a clean finish.
+  - Gamemode-agnostic: gamemodes call `get_score(peer_id)` and `reset_peer(peer_id)`. Signals: `combo_banked(peer_id, points, duration, multiplier)`, `combo_voided(peer_id, lost_duration, lost_points)`.
+- **Spending** is `MovementController._boost_calc()` — see [PlayerController.md](./PlayerController.md).
 
 #### CrashController
 

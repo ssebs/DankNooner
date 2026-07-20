@@ -1,0 +1,20 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://player/hud_elements/combo_counter.gd" id="1_cmbsc"]
+
+[node name="ComboCounter" type="Control"]
+custom_minimum_size = Vector2(220, 90)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+script = ExtResource("1_cmbsc")
+
+[node name="ComboLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 220.0
+offset_bottom = 90.0
+theme_override_font_sizes/font_size = 56
+text = "x1"
+horizontal_alignment = 1
+vertical_alignment = 1

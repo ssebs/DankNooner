@@ -87,11 +87,32 @@ var username: String:
 # `global_transform`, `velocity` also sync'd
 #endregion
 
-#region DELETE_ME
-
-# Trick/boost state (synced)
+#region Trick / boost (synced)
+## Boost meter in SEGMENTS, 0..MovementController.BOOST_SEGMENTS. Filled server-side by
+## TrickManager from trick points; drained in MovementController's rollback tick, so the
+## local client predicts the drain and netfox reconciles it against the server.
+var boost_amount: float = 0.0
+## Meter level the active burn is running down to, or -1 when not boosting. A press commits
+## to reaching this, so releasing the button early can't cancel the boost.
+var boost_burn_target: float = -1.0
+## Segments per second of the active burn (a full-meter commit burns slower / lasts longer).
+var boost_burn_rate: float = 0.0
+## Previous tick's nfx_boost_held — synced so the rising edge survives netfox resimulation.
+var boost_prev_held: bool = false
+## Seconds of unbroken trick time on the current combo, 0 when not comboing. Accrued in
+## TrickController's rollback tick — NOT from a manager's _process(): netfox's
+## RollbackSynchronizer re-applies every state property from history on each tick, so writes
+## made outside the rollback window are silently overwritten before they accumulate.
+var combo_time: float = 0.0
+## Remaining grace before dropping every trick actually breaks the combo.
+var combo_grace: float = 0.0
+## Combo multiplier (1+), derived from combo_time each rollback tick.
+var combo_multiplier: int = 1
+## Derived each rollback tick from the burn state. Drives speed + boost FX.
 var is_boosting: bool = false
-var boost_count: int = 2
+#endregion
+
+#region DELETE_ME
 
 # Crash state (synced)
 var is_crashed: bool = false
@@ -405,6 +426,15 @@ func _apply_respawn_state():
 	global_transform = _respawn_target
 	velocity = Vector3.ZERO
 	is_boosting = false
+	# Boost is earned, so a crash costs you the meter along with the combo (TrickManager
+	# resets combo_multiplier server-side on the same crash).
+	boost_amount = 0.0
+	boost_burn_target = -1.0
+	boost_burn_rate = 0.0
+	boost_prev_held = false
+	combo_time = 0.0
+	combo_grace = 0.0
+	combo_multiplier = 1
 	is_crashed = false
 	for child in controllers_node.get_children():
 		if !child.has_method("do_reset"):
