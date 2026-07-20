@@ -253,7 +253,6 @@ metadata/_custom_type_script = "uid://cug5kob8cndk4"
 script = ExtResource("36_trkmg")
 spawn_manager = NodePath("../SpawnManager")
 gamemode_manager = NodePath("../GamemodeManager")
-points_per_second = null
 
 [node name="NPCRaceManager" type="Node" parent="ManagerManager" unique_id=1218916391 node_paths=PackedStringArray("level_manager") groups=["Managers"]]
 script = ExtResource("31_npcrm")
