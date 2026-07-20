@@ -11,7 +11,8 @@
    - One full segment banked → 1s burn.
    - All three segments full → the whole meter burns as one **4s** boost.
    - Under one full segment → press is rejected, gauge blinks red.
-5. **Crashing voids the run** — the banked score for that combo is discarded, not partially credited.
+5. **Crashing voids the run** — that combo's score is discarded, not partially credited, and the boost it earned is taken back. Boost banked by *earlier completed* combos survives (see `combo_boost_earned` below).
+6. While boosting, the **automatic transmission is forced on** regardless of the `auto_transmission` setting — a boost spent bouncing off the rev limiter in the wrong gear is a wasted boost.
 
 ## Where the logic lives (and why it's split)
 
@@ -27,13 +28,23 @@ The split is **not** stylistic — it's forced by netfox.
 
 ### The rule that bit us
 
-`combo_time`, `combo_grace`, `combo_multiplier`, `boost_amount`, `boost_burn_target`, `boost_burn_rate`, `boost_prev_held` and `is_boosting` are all **netfox state properties** on `PlayerEntity`.
+`combo_time`, `combo_grace`, `combo_boost_earned`, `combo_multiplier`, `boost_amount`, `boost_burn_target`, `boost_burn_rate`, `boost_prev_held` and `is_boosting` are all **netfox state properties** on `PlayerEntity`.
 
 `RollbackSynchronizer._before_tick()` calls `apply_state(tick)`, which re-applies *every* state property from recorded history on *every* network tick. **A manager writing these from `_process()` is overwritten before anything can accumulate.** The first version of this system did exactly that and the boost meter silently never filled.
 
 So: anything that mutates those vars must run inside `_rollback_tick()`. `TrickManager` therefore only *observes* them and banks a score on the combo-end edge — which also means resimulation can't double-count the score.
 
 Related: the rollback tick bails early on `is_crashed`, so a crash freezes combo state rather than clearing it; it's the respawn's `do_reset()` that actually zeroes it. `TrickManager` checks `is_crashed` **before** its `combo_time` test for this reason — in the other order a crashed run would bank on the way down like a clean finish.
+
+### `combo_boost_earned` — why a crash doesn't wipe the whole meter
+
+A crash should cost you the combo you were in the middle of, not boost you already banked and were saving. `combo_boost_earned` tracks how much of the current meter the *in-progress* combo contributed, and is maintained in three places:
+
+- **Earning** (`TrickController._accrue_combo()`) — incremented by the actual post-cap delta, so topping out a full meter doesn't inflate the claim.
+- **Clean combo end** (grace window expires) — reset to `0`. That boost is permanent now.
+- **Spending** (`MovementController._boost_calc()`) — drawn down alongside `boost_amount`. Without this, spending would leave a claim larger than the meter, and the next crash would eat previously banked boost too.
+
+`PlayerEntity._apply_respawn_state()` then does `boost_amount -= combo_boost_earned` (clamped at 0). It must run **before** the `do_reset()` loop in that same function, which clears the combo state it depends on.
 
 ## Tunables
 
@@ -130,6 +141,8 @@ Visibility keys off `combo_time > 0`, **not** the multiplier — an earlier vers
 `boost` action in `project.godot`: `F` (physical keycode 70) and gamepad button 3 (Y/Triangle). Gathered as `nfx_boost_held` in `InputController._gather()`, synced as a netfox input property.
 
 The rising edge is detected off the **synced** `boost_prev_held` in `_boost_calc()` so it survives resimulation. `HUDController` keeps its own separate `_prev_boost_held` for the rejection blink — deliberately not reusing the synced var, since the HUD must not perturb rollback state for a cosmetic effect.
+
+`InputController._process()` forces `_auto_shift()` while `is_boosting`, independent of the `auto_transmission` setting — see [PlayerController.md](./PlayerController.md) for why auto-shift lives in `InputController` rather than `GearingController`.
 
 ## Related
 

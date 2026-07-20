@@ -32,7 +32,7 @@ const STOPPIE_PITCH_THRESHOLD_DEG: float = -10.0
 ## of wheelie per segment, ~6s for a full meter — short enough that a casual wheelie earns
 ## something usable. Consts, not @exports: this runs inside the rollback tick and must be
 ## byte-identical on every peer or predictions diverge from the server.
-const BOOST_PER_SEC: float = 0.5
+const BOOST_PER_SEC: float = 0.2
 ## Dropping every trick starts this grace window instead of breaking the combo outright,
 ## so wheelie -> stoppie -> wheelie chains keep their multiplier.
 const COMBO_GRACE_SECS: float = 1.5
@@ -76,15 +76,21 @@ func _accrue_combo(delta: float):
 	if current_trick != Trick.NONE:
 		pe.combo_time += delta
 		pe.combo_grace = COMBO_GRACE_SECS
+		# Track what this combo contributed (post-cap, so a full meter doesn't inflate the
+		# claim) — a crash voids exactly this much and nothing that was banked earlier.
+		var before: float = pe.boost_amount
 		pe.boost_amount = minf(
 			pe.boost_amount + BOOST_PER_SEC * pe.combo_multiplier * delta,
 			MovementController.BOOST_SEGMENTS
 		)
+		pe.combo_boost_earned += pe.boost_amount - before
 	elif pe.combo_time > 0.0:
 		pe.combo_grace -= delta
 		if pe.combo_grace <= 0.0:
 			pe.combo_time = 0.0
 			pe.combo_grace = 0.0
+			# Survived the grace window — this combo's boost is banked for good now.
+			pe.combo_boost_earned = 0.0
 
 	var mult := 1
 	for threshold in COMBO_MULT_THRESHOLDS:

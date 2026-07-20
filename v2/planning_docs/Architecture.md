@@ -206,7 +206,7 @@ For detailed design docs see:
 
 - Tracks clutch engagement (0-1), blends between throttle-driven and wheel-driven RPM
 - Gear shifts applied from `input_controller.nfx_target_gear` each rollback tick
-- **Automatic transmission** (`auto_transmission` setting) is a client-side input assist in `InputController._auto_shift()`, NOT a GearingController feature — `nfx_target_gear` is a netfox *input* property owned by the local client, so the server must never write it. Shifts up at 0.95 RPM ratio (just under the 0.98 rev-limiter cut), down at 0.5, with a 0.4s cooldown.
+- **Automatic transmission** (`auto_transmission` setting) is a client-side input assist in `InputController._auto_shift()`, NOT a GearingController feature — `nfx_target_gear` is a netfox *input* property owned by the local client, so the server must never write it. Shifts up at 0.95 RPM ratio (just under the 0.98 rev-limiter cut), down at 0.5, with a 0.4s cooldown. Forced on while `is_boosting`, whatever the setting says.
 - Power output = throttle x power_curve x torque_multiplier x engagement
 - Gear ratios, max_rpm, idle_rpm, stall_rpm are defined in `BikeSkinDefinition`
 

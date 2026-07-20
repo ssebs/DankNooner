@@ -106,6 +106,11 @@ var boost_prev_held: bool = false
 var combo_time: float = 0.0
 ## Remaining grace before dropping every trick actually breaks the combo.
 var combo_grace: float = 0.0
+## How much of the CURRENT boost meter was earned by the combo still in progress. A crash
+## voids only this much, so boost banked by earlier completed combos survives. Cleared when
+## a combo ends cleanly (that boost is now permanent) and drawn down alongside boost_amount
+## when spending, so spending the pool doesn't leave a stale over-large claim behind.
+var combo_boost_earned: float = 0.0
 ## Combo multiplier (1+), derived from combo_time each rollback tick.
 var combo_multiplier: int = 1
 ## Derived each rollback tick from the burn state. Drives speed + boost FX.
@@ -426,9 +431,11 @@ func _apply_respawn_state():
 	global_transform = _respawn_target
 	velocity = Vector3.ZERO
 	is_boosting = false
-	# Boost is earned, so a crash costs you the meter along with the combo (TrickManager
-	# resets combo_multiplier server-side on the same crash).
-	boost_amount = 0.0
+	# A crash voids only what the in-progress combo earned — boost banked by earlier
+	# completed combos is yours to keep. Must run BEFORE the do_reset() loop below, which
+	# clears the combo state this reads.
+	boost_amount = maxf(boost_amount - combo_boost_earned, 0.0)
+	combo_boost_earned = 0.0
 	boost_burn_target = -1.0
 	boost_burn_rate = 0.0
 	boost_prev_held = false

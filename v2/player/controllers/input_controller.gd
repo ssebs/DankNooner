@@ -109,7 +109,9 @@ func _process(delta):
 	if Input.is_action_just_pressed("gear_down"):
 		nfx_target_gear -= 1
 
-	if player_entity.settings_manager.current_settings["auto_transmission"]:
+	# Boosting always drives the auto box, whatever the setting says — a boost spent bouncing
+	# off the rev limiter in the wrong gear is a wasted boost.
+	if player_entity.is_boosting or player_entity.settings_manager.current_settings["auto_transmission"]:
 		_auto_shift(delta)
 
 	nfx_target_gear = clampi(nfx_target_gear, 1, player_entity.bike_definition.num_gears)
