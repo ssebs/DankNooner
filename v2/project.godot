@@ -11,6 +11,8 @@ config_version=5
 [Fmod]
 
 General/banks_path="res://fmod/DankNoonerFMODProject/Build/Desktop"
+General/auto_initialize=false
+General/is_live_update_enabled=false
 
 [application]
 
