@@ -6,8 +6,9 @@
 ## getting wedged to NPCTrafficManager, which owns the recovery.
 class_name NPCTrafficState extends State
 
-## Hit another racer — the manager wipes the rider out and respawns it.
-signal crashed
+## Hit another racer — the manager wipes the rider out, respawns it, and takes
+## the racer we hit down with us if it's a player.
+signal crashed(victim: Node3D)
 ## No meaningful progress for a while — the manager relocates the rider.
 signal stuck
 
@@ -18,6 +19,9 @@ signal stuck
 @export var follow_detect_angle: float = 0.7
 ## How close to the end of an unlinked lane before picking the next one.
 @export var junction_proximity: float = 4.0
+## Speed difference (m/s) that makes contact an actual impact — riders queueing
+## nose-to-tail brush at matched speed and shouldn't both wipe out for it.
+@export var contact_min_speed_delta: float = 6.0
 ## Report stuck after moving less than this (metres) over this window (seconds).
 @export var stuck_window: float = 3.0
 @export var stuck_min_progress: float = 2.0
@@ -34,6 +38,13 @@ func Enter(_state_context: StateContext):
 		return
 	_stuck_timer = 0.0
 	_stuck_anchor = npc.global_position
+	npc.hit_by_racer.connect(_on_hit_by_racer)
+
+
+func Exit(_state_context: StateContext):
+	if Engine.is_editor_hint():
+		return
+	npc.hit_by_racer.disconnect(_on_hit_by_racer)
 
 
 func Physics_Update(delta: float):
@@ -78,13 +89,25 @@ func _pick_next_lane_at_junction() -> void:
 	npc.lane_agent.assign_lane(successors.pick_random())
 
 
+## Someone rode into us. Nothing to pass along — the hitter already took itself
+## out on its own side of the collision.
+func _on_hit_by_racer(_hitter: Node3D) -> void:
+	if npc.npc_state == NPCRiderEntity.NPCState.CRASHED:
+		return
+	crashed.emit(null)
+
+
 ## Riding into another racer wipes us out — the manager handles the recovery.
 func _check_contact() -> void:
 	for i in npc.get_slide_collision_count():
-		var collider := npc.get_slide_collision(i).get_collider()
-		if collider.is_in_group(UtilsConstants.GROUPS["Racers"]):
-			crashed.emit()
-			return
+		# Every physics collider is a Node3D, so this cast is just for typing.
+		var collider := npc.get_slide_collision(i).get_collider() as Node3D
+		if !collider.is_in_group(UtilsConstants.GROUPS["Racers"]):
+			continue
+		if absf(npc.current_speed - npc.horizontal_speed(collider)) < contact_min_speed_delta:
+			continue
+		crashed.emit(collider)
+		return
 
 
 ## Wedged against geometry (or spinning in place) — ask for a relocate.

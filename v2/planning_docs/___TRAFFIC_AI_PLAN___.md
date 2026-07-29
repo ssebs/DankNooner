@@ -242,6 +242,4 @@ Tracked in TODO under Traffic AI / Backlog > AI/traffic:
 - Consolidating `NPCRaceManager` and `NPCTrafficManager` onto a shared base —
   they were kept standalone to avoid destabilizing the working racing AI, at the
   cost of a duplicated spawn/despawn RPC pattern.
-- Traffic riders on their own collision layer so players crash into them via the
-  existing head-on obstacle detection in `CrashController`.
 - A* pathfinding and the fuller sequence system from the original backlog entry.

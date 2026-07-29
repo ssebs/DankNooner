@@ -61,6 +61,8 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 
 ### Traffic AI
 - [x] basic riding-around riders — free roam only (see ___TRAFFIC_AI_PLAN___.md)
+- [x] rider-vs-rider crashes both ways (whoever rams broadcasts to the one rammed;
+      race bots deliberately excluded so racing stays as-is)
 - [ ] tune density / cruise speed once the city map exists (rest in Backlog > AI/traffic)
 
 ### Stunt map
@@ -201,8 +203,6 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Near-miss detection → trick/score bonus (wheelie variant)
 - [ ] Traffic during races ("race thru traffic" mode)
 - [ ] Level-driven traffic spawner node for per-map density (city map)
-- [ ] Traffic riders on their own collision layer so players crash into them via
-      the existing head-on obstacle detection in CrashController
 - [ ] Consolidate NPCRaceManager + NPCTrafficManager onto a shared base (they
       duplicate the spawn/despawn RPC pattern)
 - [ ] Complex traffic / AI system (A* pathfinding, state machine, sequence system)
