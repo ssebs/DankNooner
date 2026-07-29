@@ -18,7 +18,8 @@
       "Bash(awk 'END{print NR\" lines\"}' player/controllers/animation_controller.gd)",
       "Bash(echo \"exit: $?\")",
       "WebFetch(domain:api.github.com)",
-      "Bash(gdlint *)"
+      "Bash(gdlint *)",
+      "Bash(python -)"
     ]
   }
 }

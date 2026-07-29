@@ -445,7 +445,7 @@ func emit_transform(low_poly=false):
 	if _is_internal_updating:
 		# Special internal update should bypass emit_transform, such as moving two edges in parallel
 		return
-	if auto_lanes:
+	if auto_lanes or lanes.size() != traffic_dir.size():
 		assign_lanes()
 	var _gizmos:Array[Node3DGizmo] = get_gizmos()
 	if !_gizmos.is_empty():
@@ -647,10 +647,10 @@ func get_last_rp(direction: int):
 	return self
 
 
-# Goal is to assign the appropriate sequence of textures for this lane.
-#
-# This will intelligently construct the sequence of left-right textures, knowing
-# where to apply middle vs outter vs inner lanes.
+## Goal is to assign the appropriate sequence of textures for this lane.
+##
+## This will intelligently construct the sequence of left-right textures, knowing
+## where to apply middle vs outter vs inner lanes.
 func assign_lanes():
 	lanes.clear()
 	if len(traffic_dir) == 1:
@@ -761,14 +761,18 @@ func update_traffic_dir(traffic_update):
 	# Add/remove lanes. But, always make sure at least one remains.
 	match traffic_update:
 		TrafficUpdate.ADD_FORWARD:
+			lanes.append(LaneType.SLOW) # change this first to avoid reset on traffic_dir change
 			traffic_dir.append(LaneDir.FORWARD)
 		TrafficUpdate.ADD_REVERSE:
+			lanes.insert(0, LaneType.SLOW) # change this first to avoid reset on traffic_dir change
 			traffic_dir.push_front(LaneDir.REVERSE)
 		TrafficUpdate.REM_FORWARD:
 			if lane_count > 1 and fwd_lane_count > 0:
+				lanes.pop_back()
 				traffic_dir.pop_back()
 		TrafficUpdate.REM_REVERSE:
 			if lane_count > 1 and rev_lane_count > 0:
+				lanes.pop_front()
 				traffic_dir.pop_front()
 		TrafficUpdate.MOVE_DIVIDER_LEFT:
 			pass
@@ -784,8 +788,8 @@ func update_traffic_dir(traffic_update):
 func copy_settings_from(ref_road_point: RoadPoint, copy_transform: bool = true) -> void:
 	var tmp_auto_lane = ref_road_point.auto_lanes
 	auto_lanes = false
-	lanes = ref_road_point.lanes.duplicate(true)
 	traffic_dir = ref_road_point.traffic_dir.duplicate(true)
+	lanes = ref_road_point.lanes.duplicate(true)
 	auto_lanes = tmp_auto_lane
 	lane_width = ref_road_point.lane_width
 	shoulder_width_l = ref_road_point.shoulder_width_l

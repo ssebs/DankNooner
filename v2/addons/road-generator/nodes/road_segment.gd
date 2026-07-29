@@ -941,8 +941,21 @@ func _build_geo():
 	# Aim for real-world texture proportions width:height of 2:1 matching texture,
 	# but then the hight of 1 full UV is half the with across all lanes, so another 2x
 	var single_uv_height:float = min_road_width * 4.0
-	var target_uv_tiles:int = int(clength / single_uv_height)
-	var per_loop_uv_size:float = float(target_uv_tiles) / float(loops)
+	var target_uv_tiles:float = clength / single_uv_height
+	if target_uv_tiles < 0.3:
+		# No snapping, UVs slide freely without stretching
+		pass
+	elif target_uv_tiles < 0.75:
+		# Snap to halfway point of texture, for many textures may still be seamless
+		# or at least have proper dotted line repeats
+		target_uv_tiles = 0.5
+	elif target_uv_tiles < 1.25:
+		target_uv_tiles = 1.0
+	elif target_uv_tiles < 1.75:
+		target_uv_tiles = 1.5
+	else:
+		target_uv_tiles = round(target_uv_tiles)
+	var per_loop_uv_size:float = target_uv_tiles / float(loops)
 	var uv_width := 0.125 # 1/8 for breakdown of texture.
 
 	#print_debug("(re)building %s: Seg gen: %s loops, length: %s, lp: %s" % [
