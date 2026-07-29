@@ -1,6 +1,7 @@
 # Traffic AI — Design
 
-> Status: implemented (free roam only), untested in-game.
+> Status: v1 implemented (free roam only), untested in-game.
+> Vehicle variety (skins + cars) is designed below, not yet implemented.
 > Related: [StreetRaceMode](./StreetRaceMode.md), [GamemodeSystem](./GamemodeSystem.md), [Architecture](./Architecture.md)
 
 ## Goal
@@ -170,6 +171,173 @@ manager node with its exports wired.
 
 Traffic is free-roam only in v1. Races stay clean.
 
+## Vehicle variety — skins now, cars later
+
+> Not implemented. Everything above this line is.
+
+Goal: traffic isn't a parade of the same sportbike. Swap in other bike skins now,
+and cars once they're modelled — **traffic only**, racing keeps its roster.
+
+### What already works, and what actually blocks it
+
+`NPCTrafficManager.npc_definitions` is an `Array[PlayerDefinition]` picked
+round-robin, and `rpc_spawn_npc` already assigns `def.bike_skin` /
+`def.character_skin` per rider. Dropping more `.tres` files into that array
+already yields mixed skins. Three things are wrong with stopping there:
+
+- `PlayerDefinition` is the wrong shape — loadouts, money, `ui_icon`, a username.
+  Traffic wants a vehicle, not a player.
+- Round-robin is deterministic and cyclical; density-per-map wants weights.
+- It can only ever describe a rider on a bike.
+
+### `CarSkin` — its own skin, mirroring `BikeSkin`
+
+A car gets a first-class `CarSkin` + `CarSkinDefinition` pair rather than being
+smuggled through `BikeSkinDefinition`. Bike tuning (gearing, lean, trick limits,
+rider pose, handlebar proxy) is meaningless on a car, and a car's own concerns
+(four wheels, a box collider) have nowhere to live on a bike definition. Same
+pattern, new pair — one place to look when something is car-shaped.
+
+New under `entities/vehicles/`:
+
+| Piece | Mirrors | Notes |
+| --- | --- | --- |
+| `car_skin.gd` / `car_skin.tscn` | `bike_skin.{gd,tscn}` | `skin_definition` setter → `_apply_definition()` → `_spawn_mesh()` + `_apply_mods()`, `mesh_skin: SkinColor`, `rotate_wheels()` |
+| `resources/vehicles/car_skin_definition.gd` | `bike_skin_definition.gd` | Mesh (`mesh_res`, offsets, scale, `colors`), Mods, Collision (`collision_shape` + offsets) |
+
+Deliberately **not** carried over: steering handlebar proxy, rider pose block,
+gearing / physics / trick groups. The NPC chassis owns motion; the skin owns looks
+and collision. (Bikes live under `player/` for historical reasons — cars are
+NPC-only, so `entities/` is the honest home.)
+
+Two shared pieces need a nudge:
+
+- **`SkinColor` wheels.** It exposes `front_wheel_node` / `rear_wheel_node` under a
+  "BikeSpecifics" category. A car has four+, so add an optional
+  `wheel_nodes: Array[Node3D]` that `CarSkin.rotate_wheels()` spins. Additive —
+  bikes keep their two fields and ignore it.
+- **`BikeMod.apply(_bike_skin: BikeSkin)`** is typed to `BikeSkin`, so `ColorMod`
+  can't paint a `CarSkin` as-is. Widen the parameter to `Node3D` (documented as
+  "any vehicle skin exposing `mesh_skin`") so one `ColorMod` ecosystem serves both.
+  Two one-line changes; no behavior change for bikes.
+
+### Rider vs car on `NPCRiderEntity`
+
+`npc_rider_entity.tscn` gains a `CarSkin` under `VisualRoot` beside `BikeSkin` and
+`CharacterSkin`. **A car spawns neither of the other two** — no bike mesh, no
+character, no IK, no `animation_controller.initialize()`. The definition decides:
+`car_definition != null` ⇒ car.
+
+> **Ordering trap — this is the one that will bite.** `bike_skin.tscn` ships a
+> default `skin_definition` *and* a pre-instanced mesh, and `BikeSkin._ready()`
+> applies it unconditionally; `CharacterSkin` does the same. Children run `_ready`
+> **before** their parent, so by the time `NPCRiderEntity._ready()` gets a say,
+> both have already built themselves. The unused branch must be removed in the
+> entity's **`_enter_tree`** (parent enter-tree precedes child ready), which works
+> because the spawning manager already assigns the definitions before `add_child`.
+> `@onready` vars and `%UniqueName` haven't resolved that early — use direct child
+> paths, or exported node references, in that pass.
+
+Also per-vehicle at spawn: collision shape + offsets from the chosen definition
+(a car in the scene's capsule is wrong — copy `PlayerEntity._init_collision_shape()`),
+and the `NameLabel` hidden for cars, which have no rider to name.
+
+### Wheels via `NPCAnimationController`
+
+`CarSkin.rotate_wheels(speed, delta)` mirrors `BikeSkin`'s, and the animation
+controller is the right caller — it already derives everything cosmetic from the
+synced transform. Note it fixes a current gap either way: **NPC bikes don't spin
+their wheels today** because nothing calls `rotate_wheels()` on them.
+
+> The controller runs on **every peer**, but `current_speed` is server-side chassis
+> state that clients never receive. Derive speed from the position delta the same
+> way `_update_yaw_rate()` derives yaw rate from the rotation delta — otherwise
+> wheels only turn on the host.
+
+The lean / wheelie / crash-roll block stays rider-only; a car uses the wheel step
+and nothing else.
+
+### `TrafficVehicleDefinition`
+
+New `Resource` at `resources/traffic/traffic_vehicle_definition.gd`, one `.tres`
+per traffic vehicle under `resources/traffic/vehicles/`.
+
+| Field | Purpose |
+| --- | --- |
+| `display_name` | Name label text; blank hides the label |
+| `car_definition: CarSkinDefinition` | **Set ⇒ this entry is a car**, and neither bike nor character spawns |
+| `bike_definition: BikeSkinDefinition` | The bike, when `car_definition` is null |
+| `character_definition: CharacterSkinDefinition` | Who rides that bike |
+| `color_mods: Array[BikeMod]` | Per-instance paint variety; one is picked per spawn (below) |
+| `speed_scale: float` | Multiplies the manager's `cruise_speed` — trucks lumber, sportbikes don't |
+| `max_line_offset: float` | Lateral wander; 0 for anything wide |
+| `spawn_weight: float` | Relative odds in the roster |
+
+The roster entry stays about *spawning* (which vehicle, how often, how fast);
+the skin definitions stay about *looks and collision*. `_get_configuration_warnings`
+should reject an entry with neither a car nor a bike, and one with a car **and** a
+character — that combination has no meaning and would otherwise fail silently.
+
+### Roster and selection
+
+`NPCTrafficManager.npc_definitions: Array[PlayerDefinition]` becomes
+`vehicle_roster: Array[TrafficVehicleDefinition]`, picked by `spawn_weight`
+instead of round-robin. `NPCRaceManager` keeps `PlayerDefinition` — race bots need
+usernames for the results table.
+
+Per-instance variety reuses the existing `hash(name)`-seeded RNG in
+`NPCRiderEntity._ready`, which already produces the line offset and speed scale:
+it also picks one entry from `color_mods`. Every peer instantiates the rider under
+the same node name, so every peer rolls the same paint — **no extra sync**.
+
+> **Gotcha:** `BikeSkinDefinition` is a shared resource. Appending a picked mod to
+> its `mods` array would repaint every rider using that definition (and leak into
+> the player's bike if it's a shared `.tres`). The spawn path must `duplicate()`
+> the definition and assign a fresh `mods` array before adding the roll.
+
+### Networking
+
+The spawn RPC currently ships `PlayerDefinition.to_dict()`. Traffic definitions
+live in `res://` and ship inside the export, so the RPC only needs the
+definition's `resource_path` plus the id — cheaper, and it covers any vehicle
+without a serializer per field. The constraint that buys this: **traffic
+definitions must be `res://` and identical on every peer.** No `user://`
+customization for traffic (that's a player-loadout feature, and traffic doesn't
+want it).
+
+### Ordering
+
+1. `TrafficVehicleDefinition` + one bike entry reproducing today's rider →
+   verify: traffic looks identical to now.
+2. Weighted roster + per-spawn `color_mods` roll (on a `duplicate()`d definition) →
+   verify: mixed skins and paints, and every peer sees the same rider the same way.
+3. Branch the entity's `_enter_tree` on `car_definition`, dropping the unused
+   skins → verify with a **bike** entry that nothing regressed, then with a car
+   entry pointed at a placeholder box mesh: no bike, no rider, no IK errors.
+4. `CarSkin` + `CarSkinDefinition` + `SkinColor.wheel_nodes` + the `BikeMod`
+   widening → verify a `ColorMod` repaints both a bike and the car.
+5. Definition-driven collision shape + `speed_scale` + `max_line_offset`.
+6. Wheel spin in `NPCAnimationController`, speed derived from position delta →
+   verify wheels turn on a **client**, not just the host.
+7. First real car `.tres` once a car `SkinColor` scene exists.
+
+Only step 7 waits on a car model — a placeholder box mesh with four wheel nodes
+unblocks everything above it.
+
+### Known rough edges
+
+- A crashed car just stops. The wipeout roll is the rider's lean/roll block, which
+  a car skips. Fine for v1; a car deserves its own hit reaction eventually.
+- The chassis still steers like a bike — it yaws toward its velocity with no
+  turning circle, so a car pivots tighter than it should at low speed.
+- Cars join the `Racers` group like everything else, so the player's contact
+  crash and `nearest_racer_ahead` queueing work on them unchanged — but a car and
+  a bike get the same `contact_min_speed_delta`, which is probably too forgiving
+  for a head-on with a truck.
+- Traffic riders still follow one lane per junction leg, so a wide vehicle can
+  clip a tight turn lane. Traffic lane-changing is already deferred; wide-vehicle
+  turn radius rides along with it.
+
 ## Files
 
 ### New
@@ -182,6 +350,16 @@ Traffic is free-roam only in v1. Races stay clean.
 | `entities/npc/traffic_route_graph.gd` | `RefCounted` lane-successor table built from the RoadManager's AI lane group |
 | `managers/npc_traffic_manager.gd` | Spawns/despawns traffic riders, owns crash-respawn + stuck-relocate |
 
+Vehicle variety (planned):
+
+| Path | What |
+| --- | --- |
+| `entities/vehicles/car_skin.gd` + `.tscn` | `CarSkin` — mesh spawn, colors, mods, `rotate_wheels()`. `BikeSkin` minus the bike |
+| `resources/vehicles/car_skin_definition.gd` | `CarSkinDefinition` — mesh + colors + mods + collision |
+| `resources/vehicles/skins/*.tres` | Per-car definitions |
+| `resources/traffic/traffic_vehicle_definition.gd` | One roster entry: car **or** bike+rider, spawn weight, traffic tuning |
+| `resources/traffic/vehicles/*.tres` | The roster itself — one per bike skin, later one per car |
+
 ### Modified
 
 | Path | Change |
@@ -193,6 +371,18 @@ Traffic is free-roam only in v1. Races stay clean.
 | `main_game.tscn` | Add `NPCTrafficManager` node, wire its exports |
 | `planning_docs/TODO.md` | Mark Traffic AI progress, move deferred items to backlog |
 | `planning_docs/___TRAFFIC_AI_PLAN___.md` | This doc |
+
+Vehicle variety (planned):
+
+| Path | Change |
+| --- | --- |
+| `entities/npc/npc_rider_entity.gd` | `car_definition` export; drop the unused skin branch in `_enter_tree`; skip character/IK/animation init for cars; collision shape from the chosen definition; roll a `color_mod` off the seeded RNG onto a duplicated definition |
+| `entities/npc/npc_rider_entity.tscn` | Add `CarSkin` under `VisualRoot` |
+| `entities/npc/npc_animation_controller.gd` | Wheel-spin step for both skins, speed derived from position delta (runs on clients too); rider-only lean block guarded |
+| `utils/components/skin_color.gd` | Optional `wheel_nodes: Array[Node3D]` for 4+ wheeled meshes |
+| `resources/bikes/mods/bike_mod.gd`, `color_mod.gd` | Widen `apply()` to `Node3D` so mods work on `CarSkin` too |
+| `managers/npc_traffic_manager.gd` | `npc_definitions` → weighted `vehicle_roster`; spawn RPC ships a definition `resource_path` instead of a `PlayerDefinition` dict; apply `speed_scale` / `max_line_offset` |
+| `planning_docs/Skins.md` | Document `CarSkin` / `CarSkinDefinition` alongside the bike pair |
 
 ### Read-only reference
 
@@ -213,8 +403,13 @@ Needed to follow existing patterns, not edited.
 | `addons/road-generator/nodes/road_manager.gd` | `ai_lane_group`, `get_containers()` |
 | `addons/road-generator/nodes/road_container.gd` | `update_lane_seg_connections()`, `force_assign_lanes()` — why intersection lanes are unlinked |
 | `addons/road-generator/procgen/intersection_ngon.gd` | How through/turn lanes are generated and tagged |
-| `player/controllers/crash_controller.gd` | Layer-2 head-on crash path (deferred item) |
+| `player/controllers/crash_controller.gd` | Layer-2 head-on crash path |
 | `levels/racetracks/racetrack_level_01/` | Test level with the road loop |
+| `planning_docs/Skins.md` | Skin/mod system the vehicle roster builds on |
+| `player/bikes/scripts/bike_skin.gd` | `has_steering()` / `rotate_wheels()` — why a car needs no new visual pipeline |
+| `utils/components/skin_color.gd` | `steering_rotation_node` / wheel nodes a vehicle mesh scene may expose |
+| `resources/bikes/bike_skin_definition.gd` | `collision_shape` + offsets + `mods` the vehicle definition reuses |
+| `player/player_entity.gd` | `_init_collision_shape()` — the three lines the NPC entity should copy |
 
 ## Testing
 
@@ -231,6 +426,19 @@ to circulate before the city map exists. Success criteria:
 6. Clients see traffic move smoothly and run no simulation locally.
 7. `.gd` files lint clean against `.gdlintrc`.
 
+Vehicle variety adds:
+
+8. A roster of several bike definitions produces visibly mixed traffic, and the
+   same rider looks identical on host and client (same skin, same paint roll).
+9. A car roster entry spawns a car and **nothing else** — no bike mesh, no
+   character, no IK errors in the log, no name label.
+10. A `CarSkinDefinition`'s `collision_shape` is what the car collides with, not
+    the scene's capsule.
+11. Wheels spin on a client, not just the host — on both cars and bikes.
+12. A `ColorMod` repaints a car the same way it repaints a bike.
+13. Racing is untouched — `NPCRaceManager` still spawns its `PlayerDefinition`
+    bots with usernames in the results table.
+
 ## Deferred
 
 Tracked in TODO under Traffic AI / Backlog > AI/traffic:
@@ -243,3 +451,14 @@ Tracked in TODO under Traffic AI / Backlog > AI/traffic:
   they were kept standalone to avoid destabilizing the working racing AI, at the
   cost of a duplicated spawn/despawn RPC pattern.
 - A* pathfinding and the fuller sequence system from the original backlog entry.
+- Splitting `NPCRiderEntity` into an `NPCVehicleEntity` base with rider/car
+  subclasses (and the matching rename) — the skins are separate, but one chassis
+  drives both until cars need different *behavior* (turning circle, reverse,
+  trailers), not just a different look.
+- Player-drivable cars. `CarSkin` is deliberately NPC-only for now: `PlayerEntity`
+  reads gearing / physics / trick tuning off `BikeSkinDefinition`, none of which
+  `CarSkinDefinition` carries.
+- Per-level traffic rosters: the city map spawns cars, the racetrack spawns bikes.
+  Folds into the deferred level-driven traffic spawner node.
+- A car-specific hit reaction (crashed cars currently just stop, since the wipeout
+  roll lives in the rider's animation controller).

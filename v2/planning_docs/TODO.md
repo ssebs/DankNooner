@@ -3,15 +3,22 @@
 
 ## Release Focus
 Ship priorities in order. Race map done. City map, mountain road, extra tricks = later.
-1. Fix game-breaking bugs only (skip tuning)
-2. [DONE] Racing AI can complete a race + MP
-3. Basic traffic AI
-4. Customization & progression
-5. Stunt map + polish
+1.  [DONE] Fix game-breaking bugs only (skip tuning)
+2.  [DONE] Racing AI can complete a race + MP
+3.  [ALMOST_DONE] Basic traffic AI
+4.  [WIP] Stunt map + polish
+5.  Customization & progression
 
 ## Active
 
-## From my phone
+### Traffic AI
+- [x] basic riding-around riders — free roam only (see ___TRAFFIC_AI_PLAN___.md)
+- [x] rider-vs-rider crashes both ways (whoever rams broadcasts to the one rammed;
+      race bots deliberately excluded so racing stays as-is)
+- [ ] traffic vehicle roster: swap skins now, cars later (designed in ___TRAFFIC_AI_PLAN___.md
+      > Vehicle variety — new CarSkin/CarSkinDefinition pair; a car spawns no bike + no rider)
+- [ ] tune density / cruise speed once the city map exists (rest in Backlog > AI/traffic)
+### From my phone
 - [ ] when finishing race, bots shouldnt DNF, but race til timer runs out then get their final time
 - [ ] scale boost from wheelie / stoppie angle
 - [ ] Add items to the race like Mario kart, and ramps/jumps
@@ -59,11 +66,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] make it more realistic + difficulty settings (racing line + speed setting)
 - [x] MP test
 
-### Traffic AI
-- [x] basic riding-around riders — free roam only (see ___TRAFFIC_AI_PLAN___.md)
-- [x] rider-vs-rider crashes both ways (whoever rams broadcasts to the one rammed;
-      race bots deliberately excluded so racing stays as-is)
-- [ ] tune density / cruise speed once the city map exists (rest in Backlog > AI/traffic)
+
 
 ### Stunt map
 - [ ] build linear stunt map (drag strip + stunt playground)
