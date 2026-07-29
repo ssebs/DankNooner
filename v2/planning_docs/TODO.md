@@ -12,6 +12,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 ## Active
 
 ## From my phone
+- [ ] when finishing race, bots shouldnt DNF, but race til timer runs out then get their final time
 - [ ] scale boost from wheelie / stoppie angle
 - [ ] Add items to the race like Mario kart, and ramps/jumps
 - [ ] add progression
