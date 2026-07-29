@@ -109,7 +109,7 @@ func _ready():
 	# (unique) node name so it's stable and differs between bots.
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(name)
-	_preferred_lane_index = rng.randi_range(0, 2)
+	_preferred_lane_index = 1 # middle lane
 	_line_offset = rng.randf_range(-max_line_offset, max_line_offset)
 
 
