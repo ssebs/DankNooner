@@ -184,6 +184,7 @@ environment = SubResource("Environment_gvu3f")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -64, 0)
 
 [node name="Paddock_PitLane" type="Node3D" parent="." unique_id=1540496942]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8333054, 0, 0)
 
 [node name="Paddock" type="Node3D" parent="Paddock_PitLane" unique_id=287770933]
 
@@ -228,8 +229,8 @@ depth = 25.0
 color_preset = 3
 
 [node name="GrayBox_StaticBody" parent="Paddock_PitLane" unique_id=4209555 instance=ExtResource("4_e82mi")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 0)
-width = 12.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.797056, 0, 0)
+width = 14.0
 height = 0.1
 depth = 24.0
 
@@ -263,20 +264,11 @@ generate_ai_lanes = true
 ai_lane_group = "road_lanes"
 auto_free_vehicles = false
 draw_lanes_editor = true
-edge_containers = Array[NodePath]([NodePath(""), NodePath("../3way_2x2"), NodePath("../roundabout_2x2"), NodePath("../4way_2x2"), NodePath("../roundabout_2x2"), NodePath("")])
-edge_rp_targets = Array[NodePath]([NodePath(""), NodePath("RP_001"), NodePath("RP_EXIT_B"), NodePath("RP_001"), NodePath("RP_EXIT_A"), NodePath("")])
-edge_rp_target_dirs = Array[int]([-1, 1, 0, 1, 0, -1])
-edge_rp_locals = Array[NodePath]([NodePath("RP_002"), NodePath("RP_017"), NodePath("RP_018"), NodePath("RP_012"), NodePath("RP_019"), NodePath("RP_020")])
-edge_rp_local_dirs = Array[int]([0, 0, 1, 0, 1, 1])
-
-[node name="RP_002" type="Node3D" parent="RoadManager/Road_001" unique_id=1920199000]
-transform = Transform3D(-0.99880046, -0.0016078613, 0.0489394, 0, 0.99946076, 0.03283641, -0.048965804, 0.032797024, -0.99826187, -0.23561478, 0.25, -46.258923)
-script = ExtResource("8_ercdn")
-traffic_dir = Array[int]([2, 2, 1, 1])
-lanes = Array[int]([2, 4, 4, 2])
-prior_mag = 9.099861
-next_mag = 16.0
-prior_pt_init = NodePath("../RP_013")
+edge_containers = Array[NodePath]([NodePath("../3way_2x2"), NodePath("../roundabout_2x2"), NodePath("../4way_2x2"), NodePath("../roundabout_2x2"), NodePath(""), NodePath("../4way_2x2")])
+edge_rp_targets = Array[NodePath]([NodePath("RP_001"), NodePath("RP_EXIT_B"), NodePath("RP_001"), NodePath("RP_EXIT_A"), NodePath(""), NodePath("RP_002")])
+edge_rp_target_dirs = Array[int]([1, 0, 1, 0, -1, 0])
+edge_rp_locals = Array[NodePath]([NodePath("RP_017"), NodePath("RP_018"), NodePath("RP_012"), NodePath("RP_019"), NodePath("RP_020"), NodePath("RP_013")])
+edge_rp_local_dirs = Array[int]([0, 1, 0, 1, 1, 0])
 
 [node name="RP_003" type="Node3D" parent="RoadManager/Road_001" unique_id=292971778]
 transform = Transform3D(0.99993485, 0, 0.011414555, 0, 1, 0, -0.011414555, 0, 0.99993485, -1.1036043, 0.25, -151.89502)
@@ -359,27 +351,17 @@ prior_pt_init = NodePath("../RP_011")
 next_pt_init = NodePath("../RP_009")
 
 [node name="RP_014" type="Node3D" parent="RoadManager/Road_001" unique_id=1353525097]
-transform = Transform3D(-0.024890399, 0, 0.9996902, 0, 1, 0, -0.9996902, 0, -0.024890399, -354.39978, 0.24987793, -187.37582)
+transform = Transform3D(-0.024890574, 0, 0.9996902, 0, 1, 0, -0.9996902, 0, -0.024890574, -344.28577, 0.24987793, -187.37582)
 script = ExtResource("8_ercdn")
 traffic_dir = Array[int]([2, 2, 1, 1])
 lanes = Array[int]([2, 4, 4, 2])
-prior_mag = 18.650034
-next_mag = 36.321266
+prior_mag = 18.153229
+next_mag = 22.67978
 prior_pt_init = NodePath("../RP_015")
 next_pt_init = NodePath("../RP_006")
 
-[node name="RP_015" type="Node3D" parent="RoadManager/Road_001" unique_id=812173215]
-transform = Transform3D(-0.9955018, 0, -0.09474271, 0, 1, 0, 0.09474271, 0, -0.9955018, -369.8575, 0.24987793, -153.42949)
-script = ExtResource("8_ercdn")
-traffic_dir = Array[int]([2, 2, 1, 1])
-lanes = Array[int]([2, 4, 4, 2])
-prior_mag = 9.355804
-next_mag = 18.650034
-prior_pt_init = NodePath("../RP_016")
-next_pt_init = NodePath("../RP_014")
-
 [node name="RP_016" type="Node3D" parent="RoadManager/Road_001" unique_id=1364811189]
-transform = Transform3D(-0.9908208, 0, 0.13518152, 0, 1, 0, -0.13518152, 0, -0.9908208, -369.71912, -0.5001221, -118.06926)
+transform = Transform3D(-0.9908208, 0, 0.13518152, 0, 1, 0, -0.13518152, 0, -0.9908208, -369.71912, -1.009134, -118.06926)
 script = ExtResource("8_ercdn")
 traffic_dir = Array[int]([2, 2, 1, 1])
 lanes = Array[int]([2, 4, 4, 2])
@@ -424,23 +406,14 @@ prior_mag = 8.0
 next_mag = 8.0
 prior_pt_init = NodePath("../RP_003")
 
-[node name="RP_013" type="Node3D" parent="RoadManager/Road_001" unique_id=858807218]
-transform = Transform3D(-0.99880046, 0, 0.048965804, 0, 1, 0, -0.048965804, 0, -0.99880046, -1.35359, -0.5001174, -23.454554)
-script = ExtResource("8_ercdn")
-traffic_dir = Array[int]([2, 2, 1, 1])
-lanes = Array[int]([2, 4, 4, 2])
-prior_mag = 16.0
-next_mag = 16.0
-prior_pt_init = NodePath("../RP_019")
-next_pt_init = NodePath("../RP_002")
-
 [node name="RP_019" type="Node3D" parent="RoadManager/Road_001" unique_id=1283747314]
-transform = Transform3D(-0.999987, 0, -0.0050934125, 0, 1, 0, 0.0050934125, 0, -0.999987, 0, -0.99482214, -3.8146973e-06)
+transform = Transform3D(-0.999987, 0, -0.0050935876, 0, 1, 0, 0.0050935876, 0, -0.999987, 0, -0.99482214, -3.8146973e-06)
 script = ExtResource("8_ercdn")
 traffic_dir = Array[int]([2, 2, 1, 1])
 lanes = Array[int]([2, 4, 4, 2])
 prior_mag = 2.0
-next_pt_init = NodePath("../RP_013")
+next_mag = 10.017723
+next_pt_init = NodePath("../RP_002")
 
 [node name="RP_020" type="Node3D" parent="RoadManager/Road_001" unique_id=1670425688]
 transform = Transform3D(-0.9908208, 0, 0.1351815, 0, 1, 0, -0.1351815, 0, -0.9908208, -370.76678, -1.0001221, -110.39035)
@@ -451,15 +424,53 @@ prior_mag = 8.0
 next_mag = 8.0
 next_pt_init = NodePath("../RP_016")
 
+[node name="RP_015" type="Node3D" parent="RoadManager/Road_001" unique_id=59014066]
+transform = Transform3D(-0.9373888, 0, 0.34828472, 0, 1, 0, -0.34828472, 0, -0.9373888, -365.75702, -0.967458, -168.44635)
+script = ExtResource("8_ercdn")
+traffic_dir = Array[int]([2, 2, 1, 1])
+lanes = Array[int]([2, 4, 4, 2])
+prior_mag = 12.364464
+next_mag = 6.5083847
+prior_pt_init = NodePath("../RP_016")
+next_pt_init = NodePath("../RP_014")
+
+[node name="RP_001" type="Node3D" parent="RoadManager/Road_001" unique_id=797736432]
+transform = Transform3D(-0.99998355, 5.037575e-05, 0.0057369648, 0, 0.99996144, -0.008780568, -0.005737186, -0.008780424, -0.999945, 0.42987633, -1.2013323, -35.45617)
+script = ExtResource("8_ercdn")
+traffic_dir = Array[int]([2, 2, 1, 1])
+lanes = Array[int]([2, 4, 4, 2])
+next_mag = 16.0
+prior_pt_init = NodePath("../RP_002")
+next_pt_init = NodePath("../RP_013")
+
+[node name="RP_002" type="Node3D" parent="RoadManager/Road_001" unique_id=454339639]
+transform = Transform3D(-0.99998355, 0, 0.005737186, 0, 1, 0, -0.005737186, 0, -0.99998355, 0.266531, -1.2501214, -9.553013)
+script = ExtResource("8_ercdn")
+traffic_dir = Array[int]([2, 2, 1, 1])
+lanes = Array[int]([2, 4, 4, 2])
+prior_mag = 4.4568644
+next_mag = 16.0
+prior_pt_init = NodePath("../RP_019")
+next_pt_init = NodePath("../RP_001")
+
+[node name="RP_013" type="Node3D" parent="RoadManager/Road_001" unique_id=1913689075]
+transform = Transform3D(-0.999987, 0, -0.005093413, 0, 1, 0, 0.005093413, 0, -0.999987, -0.23561478, -0.99832207, -46.25892)
+script = ExtResource("8_ercdn")
+traffic_dir = Array[int]([2, 2, 1, 1])
+lanes = Array[int]([2, 4, 4, 2])
+prior_mag = 8.0
+next_mag = 8.0
+prior_pt_init = NodePath("../RP_001")
+
 [node name="4way_2x2" parent="RoadManager" unique_id=1450210172 instance=ExtResource("7_dc022")]
 transform = Transform3D(0.999987, 0, 0.005093325, 0, 1, 0, -0.005093325, 0, 0.999987, -0.61880666, 0.45180005, -44.732666)
 generate_ai_lanes = true
 ai_lane_group = "road_lanes"
 auto_free_vehicles = false
 draw_lanes_editor = true
-edge_containers = Array[NodePath]([NodePath("../Road_001"), NodePath(""), NodePath("../Road_003"), NodePath("../Road_002")])
-edge_rp_targets = Array[NodePath]([NodePath("RP_012"), NodePath(""), NodePath("RP_003"), NodePath("RP_002")])
-edge_rp_target_dirs = Array[int]([0, -1, 0, 1])
+edge_containers = Array[NodePath]([NodePath("../Road_001"), NodePath("../Road_001"), NodePath("../Road_003"), NodePath("../Road_002")])
+edge_rp_targets = Array[NodePath]([NodePath("RP_012"), NodePath("RP_013"), NodePath("RP_003"), NodePath("RP_002")])
+edge_rp_target_dirs = Array[int]([0, 0, 0, 1])
 
 [node name="Road_002" type="Node3D" parent="RoadManager" unique_id=1079736187]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 59.554173, 0.20021367, -42.384098)
@@ -933,3 +944,785 @@ width = 20.0
 height = 0.1
 depth = 2.0
 color_preset = 5
+
+[node name="GasStation2" type="Node3D" parent="." unique_id=27459515]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -56.5)
+
+[node name="GrayBox_StaticBody" parent="GasStation2" unique_id=12140111 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 1.4299998, -17)
+collision_layer = 3
+width = 10.0
+height = 3.0
+depth = 4.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody2" parent="GasStation2" unique_id=506558787 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -25, 1.4299998, -14)
+collision_layer = 3
+width = 10.0
+height = 3.0
+depth = 4.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody3" parent="GasStation2" unique_id=665052217 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -18, 1.4299998, -10)
+collision_layer = 3
+height = 3.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody4" parent="GasStation2" unique_id=767343290 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -14, 1.4299998, -10)
+collision_layer = 3
+height = 3.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody5" parent="GasStation2" unique_id=1947958253 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -18, 1.4299998, -6)
+collision_layer = 3
+height = 3.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody9" parent="GasStation2" unique_id=1898924741 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -14, 3.03, -8)
+collision_layer = 3
+width = 8.0
+height = 0.2
+depth = 11.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody6" parent="GasStation2" unique_id=64815005 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -14, 1.4299998, -6)
+collision_layer = 3
+height = 3.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody10" parent="GasStation2" unique_id=1237990825 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3, 1.05, -3)
+collision_layer = 3
+width = 2.0
+height = 2.0
+depth = 2.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody7" parent="GasStation2" unique_id=1697158322 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -10, 1.4299998, -10)
+collision_layer = 3
+height = 3.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody8" parent="GasStation2" unique_id=989264937 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -10, 1.4299998, -6)
+collision_layer = 3
+height = 3.0
+color_preset = 5
+
+[node name="gas station lot" parent="GasStation2" unique_id=1185405677 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -8)
+width = 20.0
+height = 0.1
+depth = 12.0
+
+[node name="gas station lot3" parent="GasStation2" unique_id=710535568 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -1)
+width = 16.0
+height = 0.1
+depth = 2.0
+
+[node name="gas station lot4" parent="GasStation2" unique_id=1154466577 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -8)
+width = 2.0
+height = 0.1
+depth = 8.0
+
+[node name="gas station lot5" parent="GasStation2" unique_id=1346289660 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -17)
+width = 8.0
+height = 0.1
+depth = 6.0
+
+[node name="GasStation3" type="Node3D" parent="." unique_id=619006795]
+transform = Transform3D(0.25881907, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, 0.25881907, -12.5, 0, 54.75)
+
+[node name="GrayBox_StaticBody" parent="GasStation3" unique_id=53864190 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 1.4299998, -17)
+collision_layer = 3
+width = 10.0
+height = 3.0
+depth = 4.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody2" parent="GasStation3" unique_id=404391794 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -25, 1.4299998, -14)
+collision_layer = 3
+width = 10.0
+height = 3.0
+depth = 4.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody3" parent="GasStation3" unique_id=1610126888 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -18, 1.4299998, -10)
+collision_layer = 3
+height = 3.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody4" parent="GasStation3" unique_id=6640365 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -14, 1.4299998, -10)
+collision_layer = 3
+height = 3.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody5" parent="GasStation3" unique_id=11314808 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -18, 1.4299998, -6)
+collision_layer = 3
+height = 3.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody9" parent="GasStation3" unique_id=1122807383 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -14, 3.03, -8)
+collision_layer = 3
+width = 8.0
+height = 0.2
+depth = 11.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody6" parent="GasStation3" unique_id=229296701 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -14, 1.4299998, -6)
+collision_layer = 3
+height = 3.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody10" parent="GasStation3" unique_id=1799499999 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3, 1.05, -3)
+collision_layer = 3
+width = 2.0
+height = 2.0
+depth = 2.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody7" parent="GasStation3" unique_id=1790946101 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -10, 1.4299998, -10)
+collision_layer = 3
+height = 3.0
+color_preset = 5
+
+[node name="GrayBox_StaticBody8" parent="GasStation3" unique_id=775751432 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -10, 1.4299998, -6)
+collision_layer = 3
+height = 3.0
+color_preset = 5
+
+[node name="gas station lot" parent="GasStation3" unique_id=357516020 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -8)
+width = 20.0
+height = 0.1
+depth = 12.0
+
+[node name="gas station lot3" parent="GasStation3" unique_id=1519733656 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 0)
+width = 16.0
+height = 0.1
+depth = 4.0
+
+[node name="gas station lot4" parent="GasStation3" unique_id=383108697 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8)
+width = 4.0
+height = 0.1
+depth = 8.0
+
+[node name="gas station lot5" parent="GasStation3" unique_id=828786087 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -17)
+width = 8.0
+height = 0.1
+depth = 6.0
+
+[node name="BigShop" type="Node3D" parent="." unique_id=1661561353]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.75, 0, 19.5)
+
+[node name="GrayBox_StaticBody" parent="BigShop" unique_id=874706368 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.9300003, -13)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 20.0
+color_preset = 4
+
+[node name="GrayBox_StaticBody3" parent="BigShop" unique_id=811546521 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -11, 3.9299998, -34)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 18.0
+color_preset = 4
+
+[node name="GrayBox_StaticBody2" parent="BigShop" unique_id=1155104078 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 5.9300003, -36)
+collision_layer = 3
+width = 16.0
+height = 12.0
+depth = 20.0
+color_preset = 4
+
+[node name="gas station lot" parent="BigShop" unique_id=1839100810 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -13)
+width = 16.0
+height = 0.1
+depth = 22.0
+
+[node name="gas station lot4" parent="BigShop" unique_id=2087319513 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -18)
+width = 6.0
+height = 0.1
+depth = 8.0
+
+[node name="gas station lot5" parent="BigShop" unique_id=1583825433 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 4)
+width = 8.0
+height = 0.1
+depth = 12.0
+
+[node name="BigShop3" type="Node3D" parent="." unique_id=690612023]
+transform = Transform3D(0.9963261, 0, -0.08564092, 0, 1, 0, 0.08564092, 0, 0.9963261, -390.64423, 0, -50.931118)
+
+[node name="GrayBox_StaticBody5" parent="BigShop3" unique_id=1948356989 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.99997, 3.9300003, -70.75001)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 20.0
+color_preset = 4
+
+[node name="GrayBox_StaticBody6" parent="BigShop3" unique_id=264165766 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.4703484e-08, 0, -1, 0, 1, 0, 1, 0, -4.4703484e-08, -10.9999695, 3.9299998, -91.75001)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 18.0
+color_preset = 4
+
+[node name="GrayBox_StaticBody7" parent="BigShop3" unique_id=1751742859 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.99997, 5.9300003, -93.75)
+collision_layer = 3
+width = 16.0
+height = 12.0
+depth = 20.0
+color_preset = 4
+
+[node name="gas station lot" parent="BigShop3" unique_id=507289326 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.9999695, 0, -32.499996)
+width = 16.0
+height = 0.1
+depth = 94.0
+
+[node name="gas station lot5" parent="BigShop3" unique_id=1926554445 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -71.5)
+width = 8.0
+height = 0.1
+depth = 8.0
+
+[node name="GrayBox_StaticBody" parent="BigShop3" unique_id=1449935667 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.9300003, -13)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 20.0
+color_preset = 4
+
+[node name="GrayBox_StaticBody3" parent="BigShop3" unique_id=10143751 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -31.500004, 3.9299998, 12.499999)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 18.0
+color_preset = 4
+
+[node name="GrayBox_StaticBody4" parent="BigShop3" unique_id=1964839298 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -9.750004, 3.9299998, 25.25)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 18.0
+color_preset = 4
+
+[node name="GrayBox_StaticBody2" parent="BigShop3" unique_id=1138636088 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.25, 5.9300003, -42.75)
+collision_layer = 3
+width = 16.0
+height = 12.0
+depth = 20.0
+color_preset = 4
+
+[node name="gas station lot4" parent="BigShop3" unique_id=731968921 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -13.75)
+width = 6.0
+height = 0.1
+depth = 8.0
+
+[node name="BigShop4" type="Node3D" parent="." unique_id=546418424]
+transform = Transform3D(0.56870925, 0, -0.8225386, 0, 1, 0, 0.8225386, 0, 0.56870925, -189.90128, 0, -180.66333)
+
+[node name="GrayBox_StaticBody5" parent="BigShop4" unique_id=1586328502 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.99997, 3.9300003, -70.75001)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 20.0
+color_preset = 4
+
+[node name="GrayBox_StaticBody6" parent="BigShop4" unique_id=1099190975 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.4703484e-08, 0, -1, 0, 1, 0, 1, 0, -4.4703484e-08, -10.9999695, 3.9299998, -91.75001)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 18.0
+color_preset = 4
+
+[node name="GrayBox_StaticBody7" parent="BigShop4" unique_id=249640555 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.99997, 5.9300003, -93.75)
+collision_layer = 3
+width = 16.0
+height = 12.0
+depth = 20.0
+color_preset = 4
+
+[node name="gas station lot" parent="BigShop4" unique_id=1724856917 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.9999695, 0, -32.499996)
+width = 16.0
+height = 0.1
+depth = 94.0
+
+[node name="gas station lot5" parent="BigShop4" unique_id=960232913 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -71.5)
+width = 8.0
+height = 0.1
+depth = 8.0
+
+[node name="GrayBox_StaticBody" parent="BigShop4" unique_id=508415210 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.9300003, -13)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 20.0
+color_preset = 4
+
+[node name="GrayBox_StaticBody3" parent="BigShop4" unique_id=963351720 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -31.500004, 3.9299998, 12.499999)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 18.0
+color_preset = 4
+
+[node name="GrayBox_StaticBody4" parent="BigShop4" unique_id=286682075 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -9.750004, 3.9299998, 25.25)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 18.0
+color_preset = 4
+
+[node name="GrayBox_StaticBody2" parent="BigShop4" unique_id=1280646806 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.25, 5.9300003, -42.75)
+collision_layer = 3
+width = 16.0
+height = 12.0
+depth = 20.0
+color_preset = 4
+
+[node name="gas station lot4" parent="BigShop4" unique_id=1814303470 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -13.75)
+width = 8.0
+height = 0.1
+depth = 8.0
+
+[node name="building" type="Node3D" parent="." unique_id=1059421344]
+transform = Transform3D(0.9732719, 0, -0.22965583, 0, 1, 0, 0.22965583, 0, 0.9732719, -326.32562, 0, -77.924286)
+
+[node name="GrayBox_StaticBody19" parent="building" unique_id=1664373722 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 15.634613, 2.93, -15.019232)
+collision_layer = 3
+width = 16.0
+height = 6.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody23" parent="building" unique_id=1103496771 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-0.99280286, 0, -0.11975999, 0, 1, 0, 0.11975999, 0, -0.99280286, 53.168365, 4.93, -32.16723)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody24" parent="building" unique_id=621947441 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 32.134613, 4.93, -11.519231)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody25" parent="building" unique_id=653092897 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 21.134613, 5.9299994, -7.519232)
+collision_layer = 3
+width = 6.0
+height = 12.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody26" parent="building" unique_id=594980427 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-0.99426776, 0, -0.1069187, 0, 1, 0, 0.1069187, 0, -0.99426776, 3.3458252, 3.9299998, -24.754349)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody30" parent="building" unique_id=1094893734 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.634613, 2.93, -15.51923)
+collision_layer = 3
+width = 16.0
+height = 6.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody31" parent="building" unique_id=1753702930 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 51.634613, 4.93, -24.01923)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody32" parent="building" unique_id=1508370955 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 61.134613, 4.93, -12.019228)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody33" parent="building" unique_id=1683436282 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50.134613, 5.9299994, -8.01923)
+collision_layer = 3
+width = 6.0
+height = 12.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody34" parent="building" unique_id=336925005 instance=ExtResource("4_e82mi")]
+transform = Transform3D(0.99426776, 0, 0.10691879, 0, 1, 0, -0.10691879, 0, 0.99426776, 32.12616, 3.9299998, -28.352112)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody20" parent="building" unique_id=1431451738 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-1, 0, 8.940697e-08, 0, 1, 0, -8.940697e-08, 0, -1, -26.566864, 2.93, -13.369324)
+collision_layer = 3
+width = 16.0
+height = 6.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody27" parent="building" unique_id=1686169248 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-1, 0, 8.940697e-08, 0, 1, 0, -8.940697e-08, 0, -1, -15.758636, 4.93, -5.6614304)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody28" parent="building" unique_id=2117901025 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-0.9821034, 0, -0.18834206, 0, 1, 0, 0.18834206, 0, -0.9821034, -33.656097, 5.9299994, -35.749084)
+collision_layer = 3
+width = 9.0
+height = 12.0
+depth = 31.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody36" parent="building" unique_id=1155534691 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2586365, 2.93, -9.661423)
+collision_layer = 3
+width = 16.0
+height = 6.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody39" parent="building" unique_id=682965016 instance=ExtResource("4_e82mi")]
+transform = Transform3D(0.99426776, 0, 0.10691878, 0, 1, 0, -0.10691878, 0, 0.99426776, -15.76709, 3.9299998, -22.494316)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody35" parent="building" unique_id=1542137772 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 71.13461, 2.93, -17.019228)
+collision_layer = 3
+width = 16.0
+height = 6.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody37" parent="building" unique_id=574931283 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 91.63461, 4.93, -11.519226)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody38" parent="building" unique_id=1297669690 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 80.63461, 5.9299994, -7.519227)
+collision_layer = 3
+width = 6.0
+height = 12.0
+depth = 6.0
+color_preset = 3
+
+[node name="building2" type="Node3D" parent="." unique_id=332798660]
+transform = Transform3D(-0.97421265, 0, 0.22563209, 0, 1, 0, -0.22563209, 0, -0.97421265, -187.67206, 0, -23.74704)
+
+[node name="GrayBox_StaticBody19" parent="building2" unique_id=1975878507 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 15.634613, 2.93, -15.019232)
+collision_layer = 3
+width = 16.0
+height = 6.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody23" parent="building2" unique_id=237837746 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 22.634613, 4.93, -23.519232)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody24" parent="building2" unique_id=1915612567 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 32.134613, 4.93, -11.519231)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody25" parent="building2" unique_id=252487446 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 21.134613, 5.9299994, -7.519232)
+collision_layer = 3
+width = 6.0
+height = 12.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody26" parent="building2" unique_id=240147343 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 9.634613, 3.9299998, -28.019234)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody30" parent="building2" unique_id=362261443 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.634613, 2.93, -15.51923)
+collision_layer = 3
+width = 16.0
+height = 6.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody31" parent="building2" unique_id=500099744 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 51.634613, 4.93, -24.01923)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody32" parent="building2" unique_id=1623506206 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 61.134613, 4.93, -12.019228)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody33" parent="building2" unique_id=724597596 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50.134613, 5.9299994, -8.01923)
+collision_layer = 3
+width = 6.0
+height = 12.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody34" parent="building2" unique_id=1082555467 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.634613, 3.9299998, -28.51923)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody35" parent="building2" unique_id=592399365 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 71.13461, 2.93, -17.019228)
+collision_layer = 3
+width = 16.0
+height = 6.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody37" parent="building2" unique_id=2097489334 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 91.63461, 4.93, -11.519226)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody38" parent="building2" unique_id=633742273 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 80.63461, 5.9299994, -7.519227)
+collision_layer = 3
+width = 6.0
+height = 12.0
+depth = 6.0
+color_preset = 3
+
+[node name="building3" type="Node3D" parent="." unique_id=15989988]
+transform = Transform3D(-0.97421265, 0, 0.22563209, 0, 1, 0, -0.22563209, 0, -0.97421265, -266.93134, 0, -44.013332)
+
+[node name="GrayBox_StaticBody19" parent="building3" unique_id=916605144 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-1, 0, 8.940697e-08, 0, 1, 0, -8.940697e-08, 0, -1, 85.48773, 2.93, -23.78268)
+collision_layer = 3
+width = 16.0
+height = 6.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody23" parent="building3" unique_id=975205386 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 22.634613, 4.93, -23.519232)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody24" parent="building3" unique_id=1894420572 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 32.134613, 4.93, -11.519231)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody25" parent="building3" unique_id=347637392 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 21.134613, 5.9299994, -7.519232)
+collision_layer = 3
+width = 6.0
+height = 12.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody26" parent="building3" unique_id=991009486 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 9.634613, 3.9299998, -28.019234)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody30" parent="building3" unique_id=445805931 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.634613, 2.93, -15.51923)
+collision_layer = 3
+width = 16.0
+height = 6.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody31" parent="building3" unique_id=339264131 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 51.634613, 4.93, -24.01923)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody32" parent="building3" unique_id=1808929264 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 61.134613, 4.93, -12.019228)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody33" parent="building3" unique_id=1449692489 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50.134613, 5.9299994, -8.01923)
+collision_layer = 3
+width = 6.0
+height = 12.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody34" parent="building3" unique_id=249786793 instance=ExtResource("4_e82mi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.634613, 3.9299998, -28.51923)
+collision_layer = 3
+width = 16.0
+height = 8.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody35" parent="building3" unique_id=285128034 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 71.13461, 2.93, -17.019228)
+collision_layer = 3
+width = 16.0
+height = 6.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody20" parent="building3" unique_id=403897035 instance=ExtResource("4_e82mi")]
+transform = Transform3D(0.9941909, 0, -0.1076314, 0, 1, 0, 0.1076314, 0, 0.9941909, 34.41806, 2.93, -43.845863)
+collision_layer = 3
+width = 16.0
+height = 6.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody36" parent="building3" unique_id=953267974 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-0.9941909, 0, 0.10763131, 0, 1, 0, -0.10763131, 0, -0.9941909, 75.92322, 2.93, -47.664238)
+collision_layer = 3
+width = 16.0
+height = 6.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody39" parent="building3" unique_id=1157200559 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-0.9941909, 0, 0.10763131, 0, 1, 0, -0.10763131, 0, -0.9941909, 59.895782, 4.93, -52.919823)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody40" parent="building3" unique_id=505128310 instance=ExtResource("4_e82mi")]
+transform = Transform3D(0.10763134, 0, 0.9941909, 0, 1, 0, -0.9941909, 0, 0.10763134, 49.41568, 2.93, -49.025177)
+collision_layer = 3
+width = 16.0
+height = 6.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody37" parent="building3" unique_id=14672709 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 91.63461, 4.93, -11.519226)
+collision_layer = 3
+width = 6.0
+height = 10.0
+depth = 6.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody38" parent="building3" unique_id=2133482704 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 80.63461, 5.9299994, -7.519227)
+collision_layer = 3
+width = 6.0
+height = 12.0
+depth = 6.0
+color_preset = 3

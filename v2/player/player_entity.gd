@@ -128,6 +128,9 @@ var grip_usage: float = 0.0
 
 # Discrete actions (rb_* pattern)
 var rb_do_respawn: bool = false
+## Set by SpawnManager.crash_player when another racer rammed us — we can't see
+## that collision ourselves (slide collisions only report what WE moved into).
+var rb_do_crash: bool = false
 ## Persistent respawn point. Set by SpawnManager.respawn_player_at (e.g. TeleportTask),
 ## reset to identity to fall back to `get_parent().global_transform` (player_spawn_pos).
 ## Persists across respawns so crashes after a checkpoint return to the checkpoint.
@@ -187,6 +190,10 @@ func _rollback_tick(delta: float, tick: int, _is_fresh: bool):
 		# Resimulation of the respawn tick — re-apply the synced-state part (skip
 		# one-time cosmetics like mesh/IK/audio) so the resim doesn't undo the teleport.
 		_apply_respawn_state()
+
+	if rb_do_crash:
+		rb_do_crash = false
+		on_crash()
 
 	# Run other controllers (ORDER MATTERS)
 	movement_controller.on_movement_rollback_tick(delta)
@@ -447,6 +454,16 @@ func _apply_respawn_state():
 		if !child.has_method("do_reset"):
 			continue
 		child.do_reset()
+
+
+## Rammed by another racer (AI or human) — the one who hit us detected it and
+## broadcast, since we never see that collision ourselves.
+func on_crash():
+	# Already down (two riders piling in, or the RPC racing our own crash) —
+	# re-triggering would restart the ragdoll on top of itself.
+	if is_crashed:
+		return
+	crash_controller.trigger_crash()
 
 
 func do_respawn():

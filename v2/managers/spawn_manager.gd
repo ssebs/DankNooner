@@ -59,6 +59,15 @@ func respawn_player(player_peer_id: int):
 	_get_player_by_peer_id(player_peer_id).rb_do_respawn = true
 
 
+## Set player's rb_do_crash on every peer so each runs the crash locally (ragdoll,
+## camera and audio are client-side). Sent by whoever rammed them — a rider can't
+## detect being hit, only what it moved into. Server only; see CrashController and
+## NPCTrafficState for the detection side.
+@rpc("any_peer", "call_local", "reliable")
+func crash_player(player_peer_id: int):
+	_get_player_by_peer_id(player_peer_id).rb_do_crash = true
+
+
 ## Respawn player at a specific transform AND store it as the persistent respawn point
 ## (used by subsequent crash respawns until reset). Runs on every peer.
 @rpc("any_peer", "call_local", "reliable")

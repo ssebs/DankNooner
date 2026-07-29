@@ -9,6 +9,8 @@
 class_name NPCTrafficManager extends BaseManager
 
 @export var level_manager: LevelManager
+## Used to crash a player a traffic rider rammed.
+@export var spawn_manager: SpawnManager
 ## Round-robin source of NPC names + skins, same as NPCRaceManager.
 @export var npc_definitions: Array[PlayerDefinition] = [
 	load("res://resources/player/default_player_definition.tres")
@@ -155,9 +157,13 @@ func _gather_lanes(road_manager: RoadManager) -> Array:
 #region Recovery (server only)
 
 
-func _on_npc_crashed(npc_id: int) -> void:
+func _on_npc_crashed(victim: Node3D, npc_id: int) -> void:
 	_npcs[npc_id].crash()
 	_respawn_after_delay(npc_id)
+	# We rode into a player — they never see that collision from their side, so
+	# take them down with us (same broadcast CrashController uses).
+	if victim is PlayerEntity:
+		spawn_manager.crash_player.rpc(int(victim.name))
 
 
 func _respawn_after_delay(npc_id: int) -> void:
@@ -199,6 +205,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
 	if level_manager == null:
 		issues.append("level_manager must not be empty")
+	if spawn_manager == null:
+		issues.append("spawn_manager must not be empty")
 	if npc_definitions.is_empty():
 		issues.append("npc_definitions must not be empty")
 	return issues

@@ -180,9 +180,24 @@ func _detect_crash():
 				)
 				if angle < _crash_angle:
 					DebugUtils.DebugMsg("obstacle crash (angle=%.1f)" % angle)
+					_crash_rammed_racer(collider)
 					trigger_crash()
 					return
 				DebugUtils.DebugMsg("no crash (angle=%.1f)" % angle)
+
+
+## We rode into another racer: they never see that collision from their side
+## (slide collisions only report what YOU moved into), so take them down too.
+## Server only — the client runs this same detection while predicting and must
+## not fire off its own guess. Static obstacles fall through both branches.
+func _crash_rammed_racer(collider: Object) -> void:
+	if !multiplayer.is_server():
+		return
+	if collider is PlayerEntity:
+		var victim := collider as PlayerEntity
+		player_entity.gamemode_manager.spawn_manager.crash_player.rpc(int(victim.name))
+	elif collider is NPCRiderEntity:
+		(collider as NPCRiderEntity).report_hit(player_entity)
 
 
 ## Drift crashes: spin-out (tail past the limit) or highside (tire hooks up on a

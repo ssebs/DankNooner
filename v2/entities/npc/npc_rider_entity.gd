@@ -16,6 +16,11 @@
 ## entity -Z; steering yaws the body to face velocity with -Z.
 class_name NPCRiderEntity extends CharacterBody3D
 
+## Another racer rammed us — they detected it, because slide collisions only
+## report what YOU moved into. The behavior state decides what it means: traffic
+## wipes out, race bots (nobody connected) shrug it off.
+signal hit_by_racer(hitter: Node3D)
+
 enum NPCState { RIDING, WHEELIE, CRASHED, FINISHED }
 
 @export var bike_definition: BikeSkinDefinition
@@ -218,6 +223,11 @@ func horizontal_speed(racer: Node3D) -> float:
 func crash() -> void:
 	npc_state = NPCState.CRASHED
 	velocity = Vector3.ZERO
+
+
+## Called by whoever rode into us (see CrashController).
+func report_hit(hitter: Node3D) -> void:
+	hit_by_racer.emit(hitter)
 
 
 ## Cosmetic stub — v1 has no trick variety; kept as the hook for it.
