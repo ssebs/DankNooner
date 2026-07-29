@@ -15,7 +15,6 @@ enum ConnectionMode { NORAY, IP_PORT, WEBRTC }
 @export var settings_manager: SettingsManager
 @export var level_manager: LevelManager
 @export var connection_mode: ConnectionMode = ConnectionMode.WEBRTC
-# @export var noray_handler: MultiplayerNoray
 @export var ipport_handler: MultiplayerIPPort
 @export var webrtc_handler: MultiplayerWebRTC
 
@@ -121,11 +120,9 @@ func disconnect_sp_or_mp():
 #endregion
 
 
-## return MultiplayerNoray, MultiplayerIPPort, or MultiplayerWebRTC depending on connection_mode
+## return MultiplayerIPPort, or MultiplayerWebRTC depending on connection_mode
 func _get_handler():
 	match connection_mode:
-		# ConnectionMode.NORAY:
-		# 	return noray_handler
 		ConnectionMode.IP_PORT:
 			return ipport_handler
 		ConnectionMode.WEBRTC:
