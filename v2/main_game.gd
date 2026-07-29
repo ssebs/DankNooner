@@ -22,6 +22,19 @@ func _ready() -> void:
 	DebugUtils.DebugMsg(ProjectSettings.get_setting("application/config/version"))
 
 
+## Alt+Enter flips between windowed and the fullscreen default. Goes through the
+## setting rather than DisplayServer directly, so it persists and the settings
+## menu shows the mode the window is actually in.
+func _input(event: InputEvent):
+	if !event.is_action_pressed("toggle_fullscreen"):
+		return
+	var is_windowed := DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_WINDOWED
+	var new_mode := "borderless" if is_windowed else "windowed"
+	# save_settings emits all_settings_changed, which applies the window mode.
+	settings_manager.update_setting("fullscreen_mode", new_mode, false)
+	settings_manager.save_settings()
+
+
 func _on_all_settings_changed(new_settings: Dictionary):
 	DisplayServer.window_set_mode(
 		SettingsManager.str_to_windowmode(new_settings["fullscreen_mode"])

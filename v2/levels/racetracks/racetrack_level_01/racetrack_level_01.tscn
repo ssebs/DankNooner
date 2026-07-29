@@ -32,6 +32,7 @@
 [ext_resource type="PackedScene" uid="uid://kag1hqax6aa2" path="res://levels/components/props/tree.tscn" id="29_0b3im"]
 [ext_resource type="Script" uid="uid://dx0pklu2apuar" path="res://addons/road-generator/nodes/road_intersection.gd" id="30_ckww3"]
 [ext_resource type="Script" uid="uid://cob3ih0wpthwf" path="res://addons/road-generator/procgen/intersection_ngon.gd" id="31_5ryor"]
+[ext_resource type="ArrayOccluder3D" uid="uid://6yicqq5aik2s" path="res://levels/racetracks/racetrack_level_01/racetrack_level_01.occ" id="33_6j553"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_l4d1h"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -2691,3 +2692,7 @@ lanes = Array[int]([0])
 prior_mag = 8.543914
 next_mag = 8.543914
 next_pt_init = NodePath("../RP_002")
+
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=2095457459]
+occluder = ExtResource("33_6j553")
+bake_simplification_distance = 0.5

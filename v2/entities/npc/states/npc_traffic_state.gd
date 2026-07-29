@@ -51,15 +51,21 @@ func Physics_Update(delta: float):
 	if Engine.is_editor_hint():
 		return
 
-	var can_drive := npc.driving and npc.npc_state != NPCRiderEntity.NPCState.CRASHED
+	# Lanes may not have been built yet at spawn, or we just got teleported. This
+	# can come up empty — the containers free and regenerate every lane on their
+	# deferred first rebuild, so there's a window with no lane to latch onto.
+	if npc.driving and !is_instance_valid(npc.lane_agent.current_lane):
+		npc.lane_agent.assign_nearest_lane()
+
+	var can_drive := (
+		npc.driving
+		and is_instance_valid(npc.lane_agent.current_lane)
+		and npc.npc_state != NPCRiderEntity.NPCState.CRASHED
+	)
 	if !can_drive:
 		npc.coast_to_stop(delta)
 		npc.apply_gravity_and_move(delta)
 		return
-
-	# Lanes may not have been built yet at spawn, or we just got teleported.
-	if !is_instance_valid(npc.lane_agent.current_lane):
-		npc.lane_agent.assign_nearest_lane()
 
 	_pick_next_lane_at_junction()
 

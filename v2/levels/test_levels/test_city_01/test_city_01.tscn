@@ -25,6 +25,7 @@
 [ext_resource type="PackedScene" uid="uid://ddr0hkde8i60" path="res://managers/gamemodes/gamemodeobjects/speech_bubble.tscn" id="21_dn2hu"]
 [ext_resource type="Script" uid="uid://c7n5a4hmghfew" path="res://managers/gamemodes/tasks/hide_speech_bubble_task.gd" id="21_hide_sb"]
 [ext_resource type="Script" uid="uid://c8lp47thlfobx" path="res://managers/gamemodes/tasks/grid_respawn_task.gd" id="22_4paf4"]
+[ext_resource type="ArrayOccluder3D" uid="uid://c78oj3warrr3w" path="res://levels/test_levels/test_city_01/test_city_01.occ" id="26_dmi5q"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2lumj"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -2660,3 +2661,7 @@ navigation_mesh = SubResource("NavigationMesh_dmi5q")
 navigation_layers = 16
 enter_cost = 999.0
 travel_cost = 999.0
+
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=103075822]
+occluder = ExtResource("26_dmi5q")
+bake_simplification_distance = 0.5
