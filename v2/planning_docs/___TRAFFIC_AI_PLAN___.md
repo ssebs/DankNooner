@@ -1,6 +1,6 @@
 # Traffic AI — Design
 
-> Status: design approved, not yet implemented.
+> Status: implemented (free roam only), untested in-game.
 > Related: [StreetRaceMode](./StreetRaceMode.md), [GamemodeSystem](./GamemodeSystem.md), [Architecture](./Architecture.md)
 
 ## Goal
@@ -84,7 +84,14 @@ New scripts under `entities/npc/states/`:
   when overtaking is disabled, preserving the current master-switch behavior.
 - **`npc_traffic_state.gd`** — new, described below.
 
-Managers move a bot into its behavior with `request_state_change` after spawn.
+Managers move a bot into its behavior after spawn with
+`npc.state_machine.get_state_by_name(...)` + `request_state_change`. The call is
+deferred: `StateMachine._ready` defers its own transition into the idle state, so
+an immediate request would be overwritten by it.
+
+Race-only tunables (difficulty, overtake range/cone, lane-change cooldown, the
+overtaking master switch) live on `NPCRaceState`; traffic-only ones (follow
+range/cone, junction proximity, stuck window/threshold) on `NPCTrafficState`.
 
 Both states' tick reduces to the same four steps — `lane_speed()`, cap to the
 blocker from `nearest_racer_ahead`, `steer_toward`, `apply_gravity_and_move` —
@@ -105,7 +112,15 @@ whose **start** falls within a snap distance of this lane's **end** with a
 forward-facing heading. That geometric fallback is what carries riders onto
 intersection turn lanes, which the addon never links.
 
-API: `next_lanes(lane)` and `random_lane()`. Snap distance and heading tolerance
+**Lanes don't survive the level load.** `RoadContainer._ready` defers
+`rebuild_segments(true)`, which frees and regenerates every RoadLane — so a graph
+built when the gamemode enters holds dead instances seconds later. The manager
+connects each container's `on_road_updated` and rebuilds the graph in place
+(coalesced to once per frame) so riders' references stay valid.
+
+API: `next_lanes(lane)`, `random_lane()`, `lane_start_transform(lane)` (where a
+rider dropped onto a lane starts, facing along the curve), and the public `lanes`
+list the manager shuffles for spawn spread. Snap distance and heading tolerance
 are constructor tunables.
 
 ### `NPCTrafficState`
@@ -137,8 +152,10 @@ instantiate-name-definition-road_manager sequence), additionally assigning the
 rider's base move speed from `cruise_speed` before `add_child` and moving it into
 the traffic state.
 
-Owns the crash-to-respawn timer and the stuck-to-relocate handler, both
-teleporting the rider onto a lane from the graph.
+Owns the crash-to-respawn timer and the stuck-to-relocate handler (fed by
+`NPCTrafficState`'s `crashed` / `stuck` signals). Both drop the rider back on the
+road a few metres ahead along its current lane, falling back to the start of a
+random lane from the graph when it no longer has a lane under it.
 
 **ID space:** race NPCs count down from −1. Traffic NPCs count down from a
 distinct lower offset so the two can never collide on node names, since both
@@ -152,6 +169,52 @@ validates the export in `_get_configuration_warnings`. `main_game.tscn` gains th
 manager node with its exports wired.
 
 Traffic is free-roam only in v1. Races stay clean.
+
+## Files
+
+### New
+
+| Path | What |
+| --- | --- |
+| `entities/npc/states/npc_idle_state.gd` | Coast + fall. Initial state; where clients and un-started bots sit |
+| `entities/npc/states/npc_race_state.gd` | Race behavior lifted out of the entity (difficulty, overtaking, lane changes, merge-on-dead-end) |
+| `entities/npc/states/npc_traffic_state.gd` | Traffic behavior (route-graph junctions, car-following, crash-on-contact, stuck detection) |
+| `entities/npc/traffic_route_graph.gd` | `RefCounted` lane-successor table built from the RoadManager's AI lane group |
+| `managers/npc_traffic_manager.gd` | Spawns/despawns traffic riders, owns crash-respawn + stuck-relocate |
+
+### Modified
+
+| Path | Change |
+| --- | --- |
+| `entities/npc/npc_rider_entity.gd` | Strip to chassis + shared helpers; drop `_physics_process`; disable state-machine physics on clients |
+| `entities/npc/npc_rider_entity.tscn` | Add `StateMachine` + three `State` children, wire `npc` exports and `initial_state` |
+| `managers/npc_race_manager.gd` | Move spawned NPCs into the race state |
+| `managers/gamemodes/types/free_roam/free_roam_gamemode.gd` | New traffic manager export; `start_traffic()` / `stop_traffic()`; config warning |
+| `main_game.tscn` | Add `NPCTrafficManager` node, wire its exports |
+| `planning_docs/TODO.md` | Mark Traffic AI progress, move deferred items to backlog |
+| `planning_docs/___TRAFFIC_AI_PLAN___.md` | This doc |
+
+### Read-only reference
+
+Needed to follow existing patterns, not edited.
+
+| Path | Why |
+| --- | --- |
+| `CLAUDE.md`, `.gdlintrc` | Conventions + lint rules |
+| `utils/state_machine/state.gd` | `State` lifecycle (`Enter` / `Physics_Update` / `Exit`) |
+| `utils/state_machine/state_machine.gd` | Registration, `request_state_change`, tick order |
+| `utils/constants.gd` | `GROUPS["Racers"]` |
+| `managers/base_manager.gd` | Manager base class |
+| `managers/level_manager.gd`, `levels/level_definition.gd` | `current_level`, `player_spawn_pos`, grid markers |
+| `entities/npc/npc_animation_controller.gd` | Exported back-reference pattern; consumes `npc_state` and `visual_root` |
+| `managers/gamemodes/types/street_race/street_race_gamemode.gd` | Race lifecycle that must keep working unchanged |
+| `addons/road-generator/nodes/road_lane_agent.gd` | `move_along_lane`, `close_to_lane_end`, `change_lane`, `assign_nearest_lane` |
+| `addons/road-generator/nodes/road_lane.gd` | `lane_next`/`lane_prior`/`lane_left`/`lane_right`, `get_lane_start`/`get_lane_end` |
+| `addons/road-generator/nodes/road_manager.gd` | `ai_lane_group`, `get_containers()` |
+| `addons/road-generator/nodes/road_container.gd` | `update_lane_seg_connections()`, `force_assign_lanes()` — why intersection lanes are unlinked |
+| `addons/road-generator/procgen/intersection_ngon.gd` | How through/turn lanes are generated and tagged |
+| `player/controllers/crash_controller.gd` | Layer-2 head-on crash path (deferred item) |
+| `levels/racetracks/racetrack_level_01/` | Test level with the road loop |
 
 ## Testing
 

@@ -34,6 +34,7 @@
 [ext_resource type="PackedScene" uid="uid://c1rey02kvrh1h" path="res://managers/gamemodes/hud/results_hud.tscn" id="29_o8ab5"]
 [ext_resource type="Script" uid="uid://b6yqloe4qv2ck" path="res://managers/gamemodes/types/challenge/challenge_gamemode.gd" id="30_chlng"]
 [ext_resource type="Script" uid="uid://boxia2udg1jxm" path="res://managers/npc_race_manager.gd" id="31_npcrm"]
+[ext_resource type="Script" path="res://managers/npc_traffic_manager.gd" id="37_npctm"]
 [ext_resource type="Script" uid="uid://283a7n5utttx" path="res://resources/player/player_definition.gd" id="35_iihm1"]
 [ext_resource type="Script" uid="uid://37ehv252lkkf" path="res://managers/trick_manager.gd" id="36_trkmg"]
 
@@ -189,10 +190,11 @@ challenge_mode = NodePath("StateMachine/ChallengeGameMode")
 script = ExtResource("4_6bm6p")
 metadata/_custom_type_script = "uid://ba7kyb4p3trb1"
 
-[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_confirm_hud", "level_manager", "gamemode_manager", "spawn_manager")]
+[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_confirm_hud", "level_manager", "npc_traffic_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("25_6krrg")
 game_mode_event_confirm_hud = NodePath("GameModeEventConfirmHUD")
 level_manager = NodePath("../../../LevelManager")
+npc_traffic_manager = NodePath("../../../NPCTrafficManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
@@ -256,5 +258,10 @@ gamemode_manager = NodePath("../GamemodeManager")
 
 [node name="NPCRaceManager" type="Node" parent="ManagerManager" unique_id=1218916391 node_paths=PackedStringArray("level_manager") groups=["Managers"]]
 script = ExtResource("31_npcrm")
+level_manager = NodePath("../LevelManager")
+npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_pk5u2")])
+
+[node name="NPCTrafficManager" type="Node" parent="ManagerManager" unique_id=1218916392 node_paths=PackedStringArray("level_manager") groups=["Managers"]]
+script = ExtResource("37_npctm")
 level_manager = NodePath("../LevelManager")
 npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_pk5u2")])

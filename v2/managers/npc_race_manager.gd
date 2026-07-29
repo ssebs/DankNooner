@@ -99,6 +99,13 @@ func rpc_spawn_npc(npc_id: int, def_dict: Dictionary, pos: Vector3, basis: Basis
 	_npcs[npc_id] = npc
 	_spawn_transforms[npc_id] = Transform3D(basis, pos)
 
+	if !multiplayer.is_server():
+		return
+	# StateMachine._ready defers its own transition into the idle state — queue
+	# ours behind it so the bot isn't flipped straight back to idle.
+	var race_state := npc.state_machine.get_state_by_name("NPCRaceState")
+	npc.state_machine.request_state_change.call_deferred(race_state)
+
 
 ## The current level's RoadManager, whose lanes the NPCs follow.
 func _find_road_manager() -> RoadManager:

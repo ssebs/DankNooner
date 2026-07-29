@@ -3,6 +3,7 @@ class_name FreeRoamGameMode extends GameModeType
 
 @export var game_mode_event_confirm_hud: GameModeEventConfirmHUD
 @export var level_manager: LevelManager
+@export var npc_traffic_manager: NPCTrafficManager
 
 var _respawn_delay: float = 3.0
 
@@ -26,7 +27,7 @@ func Enter(state_context: StateContext):
 
 	_signals_event_circles(true)
 
-	# Hide + disable every event's objects (checkpoints, etc.) — they only show
+	# Hide + disable every event's objects (checkpoints, etc.) â€” they only show
 	# while their own gamemode is running. Initial-load default and return path.
 	for event_start_circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
 		(event_start_circle as EventStartCircle).disable_game_objects()
@@ -39,7 +40,7 @@ func Enter(state_context: StateContext):
 		# Distribute every peer to a unique spot. With grid_markers, each peer gets
 		# its own grid slot (and persistent respawn point). Without, fall back to
 		# the legacy single-spawn behavior.
-		# Must hit every peer, not just _ctx.peer_id — that's only the player who
+		# Must hit every peer, not just _ctx.peer_id â€” that's only the player who
 		# triggered the transition (the server, for race end), leaving clients riding.
 		var grid_markers: Array[Marker3D] = level_manager.current_level.grid_markers
 		var slot: int = 0
@@ -54,6 +55,8 @@ func Enter(state_context: StateContext):
 					peer_id, marker.global_position, marker.global_basis
 				)
 				slot += 1
+
+		npc_traffic_manager.start_traffic()
 
 
 ## param is whether to connect() or disconnect()
@@ -116,6 +119,9 @@ func Exit(_state_context: StateContext):
 
 	_signals_event_circles(false)
 
+	if multiplayer.is_server():
+		npc_traffic_manager.stop_traffic()
+
 
 func _on_player_crashed(peer_id: int):
 	if !multiplayer.is_server():
@@ -131,7 +137,7 @@ func _on_player_crashed(peer_id: int):
 ## still returns to the original spawn.
 func _respawn_at_crash_site(peer_id: int):
 	var player := spawn_manager._get_player_by_peer_id(peer_id)
-	# Already recovered (e.g. pause-menu respawn button) before the timer fired — skip
+	# Already recovered (e.g. pause-menu respawn button) before the timer fired â€” skip
 	# so we don't respawn a second time.
 	if not player.is_crashed:
 		return
@@ -155,5 +161,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("game_mode_event_confirm_hud must not be empty")
 	if level_manager == null:
 		issues.append("level_manager must not be empty")
+	if npc_traffic_manager == null:
+		issues.append("npc_traffic_manager must not be empty")
 
 	return issues
