@@ -1029,6 +1029,7 @@ use_lowpoly_preview = true
 generate_ai_lanes = true
 ai_lane_group = "road_lanes"
 auto_free_vehicles = false
+draw_lanes_editor = true
 
 [node name="RP_001" type="Node3D" parent="RoadManager/Road_001" unique_id=1674423936]
 transform = Transform3D(0.9999997, 0, 0.00075239403, 0, 1, 0, -0.00075239403, 0, 0.9999997, 0, 0.25, 0)
@@ -1047,6 +1048,7 @@ lane_next = NodePath("../../RP_002/pF0_nF0")
 lane_prior = NodePath("../../RP_029/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_001" unique_id=1717334288]
@@ -1058,6 +1060,7 @@ lane_next = NodePath("../../RP_002/pF1_nF1")
 lane_prior = NodePath("../../RP_029/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_001" unique_id=662387619]
@@ -1068,6 +1071,7 @@ lane_next = NodePath("../../RP_002/pF2_nF2")
 lane_prior = NodePath("../../RP_029/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_003" type="Node3D" parent="RoadManager/Road_001" unique_id=1247755433]
@@ -1088,6 +1092,7 @@ lane_next = NodePath("../../RP_004/pF0_nF0")
 lane_prior = NodePath("../../RP_002/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_003" unique_id=1030657981]
@@ -1099,6 +1104,7 @@ lane_next = NodePath("../../RP_004/pF1_nF1")
 lane_prior = NodePath("../../RP_002/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_003" unique_id=1395270035]
@@ -1109,6 +1115,7 @@ lane_next = NodePath("../../RP_004/pF2_nF2")
 lane_prior = NodePath("../../RP_002/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_004" type="Node3D" parent="RoadManager/Road_001" unique_id=619385172]
@@ -1129,6 +1136,7 @@ lane_next = NodePath("../../RP_005/pF0_nF0")
 lane_prior = NodePath("../../RP_003/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_004" unique_id=1438179669]
@@ -1140,6 +1148,7 @@ lane_next = NodePath("../../RP_005/pF1_nF1")
 lane_prior = NodePath("../../RP_003/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_004" unique_id=1250153400]
@@ -1150,6 +1159,7 @@ lane_next = NodePath("../../RP_005/pF2_nF2")
 lane_prior = NodePath("../../RP_003/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_005" type="Node3D" parent="RoadManager/Road_001" unique_id=2002465026]
@@ -1170,6 +1180,7 @@ lane_next = NodePath("../../RP_006/pF0_nF0")
 lane_prior = NodePath("../../RP_004/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_005" unique_id=1762075674]
@@ -1181,6 +1192,7 @@ lane_next = NodePath("../../RP_006/pF1_nF1")
 lane_prior = NodePath("../../RP_004/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_005" unique_id=1475122965]
@@ -1191,6 +1203,7 @@ lane_next = NodePath("../../RP_006/pF2_nF2")
 lane_prior = NodePath("../../RP_004/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_006" type="Node3D" parent="RoadManager/Road_001" unique_id=1646219130]
@@ -1211,6 +1224,7 @@ lane_next = NodePath("../../RP_007/pF0_nF0")
 lane_prior = NodePath("../../RP_005/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_006" unique_id=367989510]
@@ -1222,6 +1236,7 @@ lane_next = NodePath("../../RP_007/pF1_nF1")
 lane_prior = NodePath("../../RP_005/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_006" unique_id=1274676811]
@@ -1232,6 +1247,7 @@ lane_next = NodePath("../../RP_007/pF2_nF2")
 lane_prior = NodePath("../../RP_005/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_007" type="Node3D" parent="RoadManager/Road_001" unique_id=1550756296]
@@ -1252,6 +1268,7 @@ lane_next = NodePath("../../RP_008/pF0_nF0")
 lane_prior = NodePath("../../RP_006/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_007" unique_id=1851770741]
@@ -1263,6 +1280,7 @@ lane_next = NodePath("../../RP_008/pF1_nF1")
 lane_prior = NodePath("../../RP_006/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_007" unique_id=1554405550]
@@ -1273,6 +1291,7 @@ lane_next = NodePath("../../RP_008/pF2_nF2")
 lane_prior = NodePath("../../RP_006/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_008" type="Node3D" parent="RoadManager/Road_001" unique_id=1656290878]
@@ -1293,6 +1312,7 @@ lane_next = NodePath("../../RP_009/pF0_nF0")
 lane_prior = NodePath("../../RP_007/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_008" unique_id=2009573704]
@@ -1304,6 +1324,7 @@ lane_next = NodePath("../../RP_009/pF1_nF1")
 lane_prior = NodePath("../../RP_007/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_008" unique_id=172881730]
@@ -1314,6 +1335,7 @@ lane_next = NodePath("../../RP_009/pF2_nF2")
 lane_prior = NodePath("../../RP_007/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_009" type="Node3D" parent="RoadManager/Road_001" unique_id=290866246]
@@ -1334,6 +1356,7 @@ lane_next = NodePath("../../RP_010/pF0_nF0")
 lane_prior = NodePath("../../RP_008/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_009" unique_id=461146927]
@@ -1345,6 +1368,7 @@ lane_next = NodePath("../../RP_010/pF1_nF1")
 lane_prior = NodePath("../../RP_008/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_009" unique_id=361724752]
@@ -1355,6 +1379,7 @@ lane_next = NodePath("../../RP_010/pF2_nF2")
 lane_prior = NodePath("../../RP_008/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_010" type="Node3D" parent="RoadManager/Road_001" unique_id=1022112783]
@@ -1375,6 +1400,7 @@ lane_next = NodePath("../../RP_011/pF0_nF0")
 lane_prior = NodePath("../../RP_009/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_010" unique_id=1266927646]
@@ -1386,6 +1412,7 @@ lane_next = NodePath("../../RP_011/pF1_nF1")
 lane_prior = NodePath("../../RP_009/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_010" unique_id=173262514]
@@ -1396,6 +1423,7 @@ lane_next = NodePath("../../RP_011/pF2_nF2")
 lane_prior = NodePath("../../RP_009/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_011" type="Node3D" parent="RoadManager/Road_001" unique_id=1777472537]
@@ -1416,6 +1444,7 @@ lane_next = NodePath("../../RP_012/pF0_nF0")
 lane_prior = NodePath("../../RP_010/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_011" unique_id=58729781]
@@ -1427,6 +1456,7 @@ lane_next = NodePath("../../RP_012/pF1_nF1")
 lane_prior = NodePath("../../RP_010/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_011" unique_id=2076611018]
@@ -1437,6 +1467,7 @@ lane_next = NodePath("../../RP_012/pF2_nF2")
 lane_prior = NodePath("../../RP_010/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_012" type="Node3D" parent="RoadManager/Road_001" unique_id=865376653]
@@ -1457,6 +1488,7 @@ lane_next = NodePath("../../RP_013/pF0_nF0")
 lane_prior = NodePath("../../RP_011/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_012" unique_id=68701620]
@@ -1468,6 +1500,7 @@ lane_next = NodePath("../../RP_013/pF1_nF1")
 lane_prior = NodePath("../../RP_011/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_012" unique_id=1255646410]
@@ -1478,6 +1511,7 @@ lane_next = NodePath("../../RP_013/pF2_nF2")
 lane_prior = NodePath("../../RP_011/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_013" type="Node3D" parent="RoadManager/Road_001" unique_id=1452680571]
@@ -1498,6 +1532,7 @@ lane_next = NodePath("../../RP_014/pF0_nF0")
 lane_prior = NodePath("../../RP_012/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_013" unique_id=1297219955]
@@ -1509,6 +1544,7 @@ lane_next = NodePath("../../RP_014/pF1_nF1")
 lane_prior = NodePath("../../RP_012/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_013" unique_id=758632407]
@@ -1519,6 +1555,7 @@ lane_next = NodePath("../../RP_014/pF2_nF2")
 lane_prior = NodePath("../../RP_012/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_014" type="Node3D" parent="RoadManager/Road_001" unique_id=435341594]
@@ -1539,6 +1576,7 @@ lane_next = NodePath("../../RP_015/pF0_nF0")
 lane_prior = NodePath("../../RP_013/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_014" unique_id=1704912699]
@@ -1550,6 +1588,7 @@ lane_next = NodePath("../../RP_015/pF1_nF1")
 lane_prior = NodePath("../../RP_013/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_014" unique_id=516821227]
@@ -1560,6 +1599,7 @@ lane_next = NodePath("../../RP_015/pF2_nF2")
 lane_prior = NodePath("../../RP_013/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_015" type="Node3D" parent="RoadManager/Road_001" unique_id=1708787250]
@@ -1580,6 +1620,7 @@ lane_next = NodePath("../../RP_016/pF0_nF0")
 lane_prior = NodePath("../../RP_014/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_015" unique_id=2058020911]
@@ -1591,6 +1632,7 @@ lane_next = NodePath("../../RP_016/pF1_nF1")
 lane_prior = NodePath("../../RP_014/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_015" unique_id=410516958]
@@ -1601,6 +1643,7 @@ lane_next = NodePath("../../RP_016/pF2_nF2")
 lane_prior = NodePath("../../RP_014/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_016" type="Node3D" parent="RoadManager/Road_001" unique_id=238562167]
@@ -1621,6 +1664,7 @@ lane_next = NodePath("../../RP_017/pF0_nF0")
 lane_prior = NodePath("../../RP_015/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_016" unique_id=526086281]
@@ -1632,6 +1676,7 @@ lane_next = NodePath("../../RP_017/pF1_nF1")
 lane_prior = NodePath("../../RP_015/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_016" unique_id=1522820644]
@@ -1642,6 +1687,7 @@ lane_next = NodePath("../../RP_017/pF2_nF2")
 lane_prior = NodePath("../../RP_015/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_017" type="Node3D" parent="RoadManager/Road_001" unique_id=310914437]
@@ -1662,6 +1708,7 @@ lane_next = NodePath("../../RP_018/pF0_nF0")
 lane_prior = NodePath("../../RP_016/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_017" unique_id=469984564]
@@ -1673,6 +1720,7 @@ lane_next = NodePath("../../RP_018/pF1_nF1")
 lane_prior = NodePath("../../RP_016/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_017" unique_id=1867535237]
@@ -1683,6 +1731,7 @@ lane_next = NodePath("../../RP_018/pF2_nF2")
 lane_prior = NodePath("../../RP_016/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_018" type="Node3D" parent="RoadManager/Road_001" unique_id=956028471]
@@ -1703,6 +1752,7 @@ lane_next = NodePath("../../RP_019/pF0_nF0")
 lane_prior = NodePath("../../RP_017/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_018" unique_id=1531245932]
@@ -1714,6 +1764,7 @@ lane_next = NodePath("../../RP_019/pF1_nF1")
 lane_prior = NodePath("../../RP_017/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_018" unique_id=1880524126]
@@ -1724,6 +1775,7 @@ lane_next = NodePath("../../RP_019/pF2_nF2")
 lane_prior = NodePath("../../RP_017/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_019" type="Node3D" parent="RoadManager/Road_001" unique_id=1096466858]
@@ -1744,6 +1796,7 @@ lane_next = NodePath("../../RP_020/pF0_nF0")
 lane_prior = NodePath("../../RP_018/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_019" unique_id=1365181942]
@@ -1755,6 +1808,7 @@ lane_next = NodePath("../../RP_020/pF1_nF1")
 lane_prior = NodePath("../../RP_018/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_019" unique_id=10929671]
@@ -1765,6 +1819,7 @@ lane_next = NodePath("../../RP_020/pF2_nF2")
 lane_prior = NodePath("../../RP_018/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_020" type="Node3D" parent="RoadManager/Road_001" unique_id=1495956241]
@@ -1785,6 +1840,7 @@ lane_next = NodePath("../../RP_021/pF0_nF0")
 lane_prior = NodePath("../../RP_019/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_020" unique_id=1402029418]
@@ -1796,6 +1852,7 @@ lane_next = NodePath("../../RP_021/pF1_nF1")
 lane_prior = NodePath("../../RP_019/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_020" unique_id=1379650753]
@@ -1806,6 +1863,7 @@ lane_next = NodePath("../../RP_021/pF2_nF2")
 lane_prior = NodePath("../../RP_019/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_021" type="Node3D" parent="RoadManager/Road_001" unique_id=617331696]
@@ -1826,6 +1884,7 @@ lane_next = NodePath("../../RP_022/pF0_nF0")
 lane_prior = NodePath("../../RP_020/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_021" unique_id=43814953]
@@ -1837,6 +1896,7 @@ lane_next = NodePath("../../RP_022/pF1_nF1")
 lane_prior = NodePath("../../RP_020/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_021" unique_id=1898133587]
@@ -1847,6 +1907,7 @@ lane_next = NodePath("../../RP_022/pF2_nF2")
 lane_prior = NodePath("../../RP_020/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_022" type="Node3D" parent="RoadManager/Road_001" unique_id=700100816]
@@ -1867,6 +1928,7 @@ lane_next = NodePath("../../RP_023/pF0_nF0")
 lane_prior = NodePath("../../RP_021/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_022" unique_id=956425470]
@@ -1878,6 +1940,7 @@ lane_next = NodePath("../../RP_023/pF1_nF1")
 lane_prior = NodePath("../../RP_021/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_022" unique_id=643708559]
@@ -1888,6 +1951,7 @@ lane_next = NodePath("../../RP_023/pF2_nF2")
 lane_prior = NodePath("../../RP_021/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_023" type="Node3D" parent="RoadManager/Road_001" unique_id=878003344]
@@ -1908,6 +1972,7 @@ lane_next = NodePath("../../RP_024/pF0_nF0")
 lane_prior = NodePath("../../RP_022/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_023" unique_id=1168113334]
@@ -1919,6 +1984,7 @@ lane_next = NodePath("../../RP_024/pF1_nF1")
 lane_prior = NodePath("../../RP_022/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_023" unique_id=493855216]
@@ -1929,6 +1995,7 @@ lane_next = NodePath("../../RP_024/pF2_nF2")
 lane_prior = NodePath("../../RP_022/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_024" type="Node3D" parent="RoadManager/Road_001" unique_id=963191978]
@@ -1949,6 +2016,7 @@ lane_next = NodePath("../../RP_025/pF0_nF0")
 lane_prior = NodePath("../../RP_023/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_024" unique_id=2104694328]
@@ -1960,6 +2028,7 @@ lane_next = NodePath("../../RP_025/pF1_nF1")
 lane_prior = NodePath("../../RP_023/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_024" unique_id=2013813786]
@@ -1970,6 +2039,7 @@ lane_next = NodePath("../../RP_025/pF2_nF2")
 lane_prior = NodePath("../../RP_023/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_025" type="Node3D" parent="RoadManager/Road_001" unique_id=1572617767]
@@ -1990,6 +2060,7 @@ lane_next = NodePath("../../RP_026/pF0_nF0")
 lane_prior = NodePath("../../RP_024/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_025" unique_id=304883998]
@@ -2001,6 +2072,7 @@ lane_next = NodePath("../../RP_026/pF1_nF1")
 lane_prior = NodePath("../../RP_024/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_025" unique_id=540749553]
@@ -2011,6 +2083,7 @@ lane_next = NodePath("../../RP_026/pF2_nF2")
 lane_prior = NodePath("../../RP_024/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_026" type="Node3D" parent="RoadManager/Road_001" unique_id=1373219109]
@@ -2031,6 +2104,7 @@ lane_next = NodePath("../../RP_027/pF0_nF0")
 lane_prior = NodePath("../../RP_025/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_026" unique_id=651385312]
@@ -2042,6 +2116,7 @@ lane_next = NodePath("../../RP_027/pF1_nF1")
 lane_prior = NodePath("../../RP_025/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_026" unique_id=982188377]
@@ -2052,6 +2127,7 @@ lane_next = NodePath("../../RP_027/pF2_nF2")
 lane_prior = NodePath("../../RP_025/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_027" type="Node3D" parent="RoadManager/Road_001" unique_id=630041519]
@@ -2072,6 +2148,7 @@ lane_next = NodePath("../../RP_028/pF0_nF0")
 lane_prior = NodePath("../../RP_026/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_027" unique_id=669311578]
@@ -2083,6 +2160,7 @@ lane_next = NodePath("../../RP_028/pF1_nF1")
 lane_prior = NodePath("../../RP_026/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_027" unique_id=1527523300]
@@ -2093,6 +2171,7 @@ lane_next = NodePath("../../RP_028/pF2_nF2")
 lane_prior = NodePath("../../RP_026/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_029" type="Node3D" parent="RoadManager/Road_001" unique_id=580209817]
@@ -2113,6 +2192,7 @@ lane_next = NodePath("../../RP_001/pF0_nF0")
 lane_prior = NodePath("../../RP_028/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_029" unique_id=869626035]
@@ -2124,6 +2204,7 @@ lane_next = NodePath("../../RP_001/pF1_nF1")
 lane_prior = NodePath("../../RP_028/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_029" unique_id=205865845]
@@ -2134,6 +2215,7 @@ lane_next = NodePath("../../RP_001/pF2_nF2")
 lane_prior = NodePath("../../RP_028/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_002" type="Node3D" parent="RoadManager/Road_001" unique_id=1982754006]
@@ -2154,6 +2236,7 @@ lane_next = NodePath("../../RP_003/pF0_nF0")
 lane_prior = NodePath("../../RP_001/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_002" unique_id=1346806149]
@@ -2165,6 +2248,7 @@ lane_next = NodePath("../../RP_003/pF1_nF1")
 lane_prior = NodePath("../../RP_001/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_002" unique_id=1305080805]
@@ -2175,6 +2259,7 @@ lane_next = NodePath("../../RP_003/pF2_nF2")
 lane_prior = NodePath("../../RP_001/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="RP_028" type="Node3D" parent="RoadManager/Road_001" unique_id=911273806]
@@ -2195,6 +2280,7 @@ lane_next = NodePath("../../RP_029/pF0_nF0")
 lane_prior = NodePath("../../RP_027/pF0_nF0")
 lane_next_tag = "F0"
 lane_prior_tag = "F0"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF1_nF1" type="Path3D" parent="RoadManager/Road_001/RP_028" unique_id=1113472755]
@@ -2206,6 +2292,7 @@ lane_next = NodePath("../../RP_029/pF1_nF1")
 lane_prior = NodePath("../../RP_027/pF1_nF1")
 lane_next_tag = "F1"
 lane_prior_tag = "F1"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="pF2_nF2" type="Path3D" parent="RoadManager/Road_001/RP_028" unique_id=1818282374]
@@ -2216,6 +2303,7 @@ lane_next = NodePath("../../RP_029/pF2_nF2")
 lane_prior = NodePath("../../RP_027/pF2_nF2")
 lane_next_tag = "F2"
 lane_prior_tag = "F2"
+draw_in_editor = true
 auto_free_vehicles = false
 
 [node name="Road_002" type="Node3D" parent="RoadManager" unique_id=1190868225]

@@ -1,6 +1,6 @@
-[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://bfuav67ol2p2c"]
+[gd_resource type="ShaderMaterial" format=3 uid="uid://bfuav67ol2p2c"]
 
-[ext_resource type="Shader" path="res://addons/road-generator/ui/hidden_gizmo.gdshader" id="1_ipkjx"]
+[ext_resource type="Shader" uid="uid://dfseo433ba1c3" path="res://addons/road-generator/ui/hidden_gizmo.gdshader" id="1_ipkjx"]
 
 [resource]
 render_priority = 0
