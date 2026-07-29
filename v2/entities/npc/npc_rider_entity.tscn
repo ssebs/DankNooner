@@ -28,13 +28,6 @@ animation_controller = NodePath("NPCAnimationController")
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.5, 0)
 shape = SubResource("CapsuleShape3D_7jvdf")
 
-[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=2094872611]
-unique_name_in_owner = true
-path_desired_distance = 2.0
-target_desired_distance = 3.0
-height = 2.0
-radius = 1.0
-
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1384892474]
 replication_config = SubResource("SceneReplicationConfig_npc01")
 
