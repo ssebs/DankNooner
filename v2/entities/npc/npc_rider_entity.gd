@@ -48,6 +48,9 @@ enum Difficulty { EASY, MEDIUM, HARD }
 @export var lane_change_cooldown_time: float = 1.2
 ## Per-bot lateral wander off the lane centreline so they don't trace one line.
 @export var max_line_offset: float = 0.7
+## Master switch for lane changes + line offset. Off = pure single-lane follow
+## (the stable baseline) — flip off to isolate lane-change issues.
+@export var enable_overtaking: bool = true
 
 const GRAVITY: float = 30.0
 
@@ -134,10 +137,14 @@ func _physics_process(delta: float):
 		# Pick which lane to be in. Merging off a dead-ending lane wins over
 		# everything (else the bot runs off the road where it narrows); otherwise
 		# dodge a slower racer ahead, else drift back to the home lane.
-		_lane_change_cd = maxf(0.0, _lane_change_cd - delta)
-		var blocker := _nearest_blocker_ahead(forward)
-		if !_merge_if_lane_ends():
-			_update_lane_choice(blocker, forward, right)
+		var blocker: Node3D = null
+		var line_off := 0.0
+		if enable_overtaking:
+			_lane_change_cd = maxf(0.0, _lane_change_cd - delta)
+			blocker = _nearest_blocker_ahead(forward)
+			if !_merge_if_lane_ends():
+				_update_lane_choice(blocker, forward, right)
+			line_off = _line_offset
 
 		# Steer toward a point a little ahead along the (possibly just-changed)
 		# lane curve, nudged by this bot's fixed offset. move_along_lane advances
@@ -146,7 +153,7 @@ func _physics_process(delta: float):
 		var steer_ahead := clampf(
 			_speed * steer_lookahead_time, min_steer_lookahead, max_steer_lookahead
 		)
-		var target := _lane_agent.move_along_lane(steer_ahead) + right * _line_offset
+		var target := _lane_agent.move_along_lane(steer_ahead) + right * line_off
 		var dir := target - global_position
 		dir.y = 0.0
 		dir = dir.normalized()
