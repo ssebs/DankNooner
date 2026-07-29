@@ -60,7 +60,8 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [x] MP test
 
 ### Traffic AI
-- [ ] basic riding-around cars (full spec in Backlog > AI/traffic)
+- [x] basic riding-around riders — free roam only (see ___TRAFFIC_AI_PLAN___.md)
+- [ ] tune density / cruise speed once the city map exists (rest in Backlog > AI/traffic)
 
 ### Stunt map
 - [ ] build linear stunt map (drag strip + stunt playground)
@@ -196,7 +197,14 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Audio Manager v2 (FMOD RPM blending, record bike, per-bike samples)
 
 ### AI / traffic
-- [ ] Basic Traffic AI (collisions, loops, near-miss trick → wheelie variant)
+- [ ] Traffic lane changes + overtaking (v1 follows one lane per junction leg)
+- [ ] Near-miss detection → trick/score bonus (wheelie variant)
+- [ ] Traffic during races ("race thru traffic" mode)
+- [ ] Level-driven traffic spawner node for per-map density (city map)
+- [ ] Traffic riders on their own collision layer so players crash into them via
+      the existing head-on obstacle detection in CrashController
+- [ ] Consolidate NPCRaceManager + NPCTrafficManager onto a shared base (they
+      duplicate the spawn/despawn RPC pattern)
 - [ ] Complex traffic / AI system (A* pathfinding, state machine, sequence system)
 
 ### Levels / map

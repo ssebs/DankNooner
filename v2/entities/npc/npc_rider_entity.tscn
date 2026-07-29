@@ -7,6 +7,10 @@
 [ext_resource type="Script" uid="uid://dfq5estlsqt7f" path="res://entities/npc/npc_animation_controller.gd" id="5_npcan"]
 [ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/bikes/skins/naked_default_skin_definition.tres" id="6_bkdef"]
 [ext_resource type="Resource" uid="uid://2af1lwc0vbaw" path="res://resources/player/skins/clanker_blue_skin_definition.tres" id="7_chdef"]
+[ext_resource type="Script" uid="uid://ba7kyb4p3trb1" path="res://utils/state_machine/state_machine.gd" id="8_npcsm"]
+[ext_resource type="Script" path="res://entities/npc/states/npc_idle_state.gd" id="9_npcid"]
+[ext_resource type="Script" path="res://entities/npc/states/npc_race_state.gd" id="10_npcrc"]
+[ext_resource type="Script" path="res://entities/npc/states/npc_traffic_state.gd" id="11_npctr"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7jvdf"]
 
@@ -18,11 +22,29 @@ properties/1/path = NodePath(".:npc_state")
 properties/1/spawn = true
 properties/1/replication_mode = 2
 
-[node name="NPCRiderEntity" type="CharacterBody3D" unique_id=1768842520 node_paths=PackedStringArray("animation_controller")]
+[node name="NPCRiderEntity" type="CharacterBody3D" unique_id=1768842520 node_paths=PackedStringArray("animation_controller", "state_machine")]
 script = ExtResource("4_npcen")
 bike_definition = ExtResource("6_bkdef")
 character_definition = ExtResource("7_chdef")
 animation_controller = NodePath("NPCAnimationController")
+state_machine = NodePath("StateMachine")
+
+[node name="StateMachine" type="Node" parent="." unique_id=1768842521 node_paths=PackedStringArray("initial_state")]
+script = ExtResource("8_npcsm")
+initial_state = NodePath("NPCIdleState")
+metadata/_custom_type_script = "uid://ba7kyb4p3trb1"
+
+[node name="NPCIdleState" type="Node" parent="StateMachine" unique_id=1768842522 node_paths=PackedStringArray("npc")]
+script = ExtResource("9_npcid")
+npc = NodePath("../..")
+
+[node name="NPCRaceState" type="Node" parent="StateMachine" unique_id=1768842523 node_paths=PackedStringArray("npc")]
+script = ExtResource("10_npcrc")
+npc = NodePath("../..")
+
+[node name="NPCTrafficState" type="Node" parent="StateMachine" unique_id=1768842524 node_paths=PackedStringArray("npc")]
+script = ExtResource("11_npctr")
+npc = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=811662464]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.5, 0)
