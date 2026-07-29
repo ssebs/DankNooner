@@ -11,6 +11,12 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 
 ## Active
 
+## From my phone
+- [ ] scale boost from wheelie / stoppie angle
+- [ ] Add items to the race like Mario kart, and ramps/jumps
+- [ ] add progression
+- [ ] start optimizing
+
 ### Boost
 - [x] doing tricks give you boost
 - [x] create boost guage

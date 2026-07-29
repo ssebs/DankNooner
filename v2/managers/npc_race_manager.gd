@@ -43,14 +43,10 @@ func _physics_process(_delta: float):
 				npc.finish()
 			continue
 
-		# Set nav target to target checkpoint
-		var ckpt := race_task.get_target_checkpoint(npc_id)
-		if ckpt == null:
-			# Race body hasn't started yet (grid/countdown) — hold position.
-			npc.clear_nav_target()
-			continue
-		# TODO : try to be more smart about next spot, aka not just direct path but try to follow exising track
-		npc.set_nav_target(ckpt.global_position)
+		# get_target_checkpoint is null during grid/countdown — the bot only
+		# rides its lane while the race body is active. The lane curve, not the
+		# checkpoint, decides where it steers.
+		npc.driving = race_task.get_target_checkpoint(npc_id) != null
 
 
 #region Spawn / despawn (server API + broadcast RPCs)
@@ -95,11 +91,18 @@ func rpc_spawn_npc(npc_id: int, def_dict: Dictionary, pos: Vector3, basis: Basis
 	npc.bike_definition = def.bike_skin
 	npc.character_definition = def.character_skin
 	npc.username = "%s %d" % [def.username, -npc_id]
+	# Lane follower needs the level's RoadManager before _ready runs.
+	npc.road_manager = _find_road_manager()
 
 	level_manager.current_level.player_spawn_pos.add_child(npc, true)
 	npc.global_transform = Transform3D(basis, pos)
 	_npcs[npc_id] = npc
 	_spawn_transforms[npc_id] = Transform3D(basis, pos)
+
+
+## The current level's RoadManager, whose lanes the NPCs follow.
+func _find_road_manager() -> RoadManager:
+	return level_manager.current_level.find_children("*", "RoadManager", true, false)[0]
 
 
 @rpc("call_local", "reliable")
