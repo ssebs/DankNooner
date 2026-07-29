@@ -2,7 +2,7 @@ class_name MultiplayerWebRTC extends Node
 
 ## WebRTC multiplayer handler using a remote signaling server.
 ## Both host and client connect to the signaling server via WebSocket.
-## Follows the same interface as MultiplayerIPPort and MultiplayerNoray.
+## Follows the same interface as MultiplayerIPPort
 
 signal connection_failed(reason: String)
 signal connection_succeeded(peer_id: int)

@@ -428,7 +428,6 @@ All modes are **server-authoritative** — the host runs physics, clients predic
 - **WEBRTC** *(default)*: WebRTC peer connections via a custom signaling server (`signal_relay_host`), works for both native and browser clients. Handled by `MultiplayerWebRTC`. See [LobbyGameFlowMP.md](./LobbyGameFlowMP.md)
 - **IP_PORT**: Direct IP/ENet connection to port 42068. Handled by `MultiplayerIPPort`.
   - Fetches public IP via ipify.org API (or private IP in debug)
-- **NORAY** *(deprecated)*: `MultiplayerNoray` still exists but is no longer wired as a selectable mode (commented out in `connection_manager.gd`).
 
 ### RPC Signatures
 

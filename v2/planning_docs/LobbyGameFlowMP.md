@@ -9,8 +9,6 @@ The lobby system uses WebRTC for networking with two connection modes:
 - **WebRTC**: P2P via custom signaling server (default) — [danknoonersignalserver](https://github.com/ssebs/danknoonersignalserver/)
 - **IP/Port**: Direct ENet connection (requires port forwarding)
 
-> **Note:** Noray is deprecated. `MultiplayerNoray` still exists in code but is no longer the default.
-
 ---
 
 ## High-Level Flow
@@ -149,16 +147,16 @@ The [danknoonersignalserver](https://github.com/ssebs/danknoonersignalserver/) i
 { "type": <int>, "id": <int>, "data": "<string>" }
 ```
 
-| Type | Value | Direction | Purpose |
-|------|-------|-----------|---------|
-| `JOIN` | 0 | C→S / S→C | Create or join lobby; `data` = code (empty = create new) |
-| `ID` | 1 | S→C | Server assigns peer ID; `data` = "true" if host |
-| `PEER_CONNECT` | 2 | S→C | New peer joined the lobby |
-| `PEER_DISCONNECT` | 3 | S→C | Peer left |
-| `OFFER` | 4 | relay | WebRTC SDP offer |
-| `ANSWER` | 5 | relay | WebRTC SDP answer |
-| `CANDIDATE` | 6 | relay | ICE candidate (`mid\nindex\nsdp`) |
-| `SEAL` | 7 | C→S / S→C | Close lobby to new joiners |
+| Type              | Value | Direction | Purpose                                                  |
+| ----------------- | ----- | --------- | -------------------------------------------------------- |
+| `JOIN`            | 0     | C→S / S→C | Create or join lobby; `data` = code (empty = create new) |
+| `ID`              | 1     | S→C       | Server assigns peer ID; `data` = "true" if host          |
+| `PEER_CONNECT`    | 2     | S→C       | New peer joined the lobby                                |
+| `PEER_DISCONNECT` | 3     | S→C       | Peer left                                                |
+| `OFFER`           | 4     | relay     | WebRTC SDP offer                                         |
+| `ANSWER`          | 5     | relay     | WebRTC SDP answer                                        |
+| `CANDIDATE`       | 6     | relay     | ICE candidate (`mid\nindex\nsdp`)                        |
+| `SEAL`            | 7     | C→S / S→C | Close lobby to new joiners                               |
 
 **Peer connection rule:** The peer with the lower ID always creates the SDP offer.
 
@@ -209,14 +207,14 @@ sequenceDiagram
 
 ### Signal Reference
 
-| Signal                        | Source              | When                 | Purpose               |
-| ----------------------------- | ------------------- | -------------------- | --------------------- |
-| `connection_succeeded`        | Handler             | Peer created         | Low-level success     |
-| `client_connection_succeeded` | ConnectionManager   | Fully connected      | **Safe for RPCs**     |
-| `player_connected(id)`        | ConnectionManager   | Server sees peer     | LobbyManager listens  |
-| `game_id_set(addr)`           | ConnectionManager   | Got lobby code       | Display invite code   |
-| `lobby_players_updated`       | LobbyManager        | After sync RPC       | Update player list UI |
-| `connection_reset`            | ConnectionManager   | Server/client stops  | LobbyManager clears   |
+| Signal                        | Source            | When                | Purpose               |
+| ----------------------------- | ----------------- | ------------------- | --------------------- |
+| `connection_succeeded`        | Handler           | Peer created        | Low-level success     |
+| `client_connection_succeeded` | ConnectionManager | Fully connected     | **Safe for RPCs**     |
+| `player_connected(id)`        | ConnectionManager | Server sees peer    | LobbyManager listens  |
+| `game_id_set(addr)`           | ConnectionManager | Got lobby code      | Display invite code   |
+| `lobby_players_updated`       | LobbyManager      | After sync RPC      | Update player list UI |
+| `connection_reset`            | ConnectionManager | Server/client stops | LobbyManager clears   |
 
 ### Why Two Stages?
 
@@ -465,17 +463,17 @@ func _auto_detect_connection_mode(text: String):
 
 ## Key Code Locations
 
-| Component              | File                        | Description                              |
-| ---------------------- | --------------------------- | ---------------------------------------- |
-| PlayerDefinition       | player_definition.gd        | Resource with username, skins, to_dict() |
-| SaveManager            | save_manager.gd             | Persists local PlayerDefinition          |
-| Server startup         | connection_manager.gd       | start_server(), connect_client()         |
-| Connection handling    | connection_manager.gd       | _on_handler_connection_succeeded()       |
-| WebRTC signaling       | multiplayer_webrtc.gd       | WebSocket + SDP/ICE exchange             |
-| IP/Port handler        | multiplayer_ipport.gd       | Direct ENet connection                   |
-| Noray handler          | multiplayer_noray.gd        | **Deprecated** — do not use              |
-| Lobby players dict     | lobby_manager.gd            | lobby_players, update_player_metadata(), _sync_lobby_players() |
-| Game start RPC         | gamemode_manager.gd         | start_game(), late-joiner sync           |
-| Player spawning        | spawn_manager.gd            | spawn_all_players(), rpc_spawn_player(), add_player_locally() |
-| Player list UI         | player_list_ui.gd           | update_from_dict() with PlayerDefinition |
-| Signal server          | [danknoonersignalserver](https://github.com/ssebs/danknoonersignalserver/) | WebRTC broker (Go) |
+| Component           | File                                                                       | Description                                                    |
+| ------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| PlayerDefinition    | player_definition.gd                                                       | Resource with username, skins, to_dict()                       |
+| SaveManager         | save_manager.gd                                                            | Persists local PlayerDefinition                                |
+| Server startup      | connection_manager.gd                                                      | start_server(), connect_client()                               |
+| Connection handling | connection_manager.gd                                                      | _on_handler_connection_succeeded()                             |
+| WebRTC signaling    | multiplayer_webrtc.gd                                                      | WebSocket + SDP/ICE exchange                                   |
+| IP/Port handler     | multiplayer_ipport.gd                                                      | Direct ENet connection                                         |
+| Noray handler       | multiplayer_noray.gd                                                       | **Deprecated** — do not use                                    |
+| Lobby players dict  | lobby_manager.gd                                                           | lobby_players, update_player_metadata(), _sync_lobby_players() |
+| Game start RPC      | gamemode_manager.gd                                                        | start_game(), late-joiner sync                                 |
+| Player spawning     | spawn_manager.gd                                                           | spawn_all_players(), rpc_spawn_player(), add_player_locally()  |
+| Player list UI      | player_list_ui.gd                                                          | update_from_dict() with PlayerDefinition                       |
+| Signal server       | [danknoonersignalserver](https://github.com/ssebs/danknoonersignalserver/) | WebRTC broker (Go)                                             |
