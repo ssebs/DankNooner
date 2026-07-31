@@ -33,6 +33,8 @@ Node3D at `components/skin_color.gd`. Owns the per-instance runtime materials, s
 | `slots`  | Array[SkinSlot]       | Slot palette. The **same** SkinSlot may appear at multiple positions               |
 | `meshes` | Array[MeshInstance3D] | Mesh per slot-position (must match slots length). Different positions ⇒ different mesh/surface, even if the slot resource is the same |
 
+Under **BikeSpecifics**: `steering_rotation_node`, `front_wheel_node`, `rear_wheel_node`, `steering_rot_axis`, `wheel_rot_axis`. Under **VehicleSpecifics**: `wheel_nodes: Array[Node3D]` — for meshes with more than two wheels, spun by `CarSkin.rotate_wheels()`. Bikes leave it empty and keep using the two named wheel fields.
+
 On `_ready`, each position duplicates its slot's material, assigns it to `meshes[i].surface_override(slot.surface_index)`, and stores the material in a private per-position array.
 
 **Methods:**
@@ -155,9 +157,36 @@ IK markers and wheel markers are nodes on `PlayerEntity` (not the bike). To tune
 
 `PlayerEntity._apply_rider_pose_from_definition()` reapplies these on init / bike swap.
 
+## Car Skin System
+
+`CarSkin` (`entities/vehicles/car_skin.{gd,tscn}`) displays a `CarSkinDefinition` (`resources/cars/car_skin_definition.gd`). It mirrors the `BikeSkin` / `BikeSkinDefinition` pair — same `skin_definition` setter → `_apply_definition()` → `_spawn_mesh()` + `_apply_mods()` flow — minus everything bike-shaped.
+
+Cars are **NPC traffic only**. `PlayerEntity` reads gearing / physics / trick tuning off `BikeSkinDefinition`, none of which a car definition carries, so cars are not player-drivable.
+
+### CarSkinDefinition
+
+**Mesh** — `mesh_res` (must be a `SkinColor` scene), `mesh_position_offset`, `mesh_rotation_offset_degrees`, `mesh_scale_multiplier`
+
+**Collision** — `collision_shape`, `collision_position_offset`, `collision_rotation_offset_degrees`, `collision_scale_multiplier`. Applied by `NPCRiderEntity._init_collision_shape()`, which reads whichever definition matches `vehicle_type`.
+
+**Mods** — `mods: Array[BikeMod]`, same ecosystem as bikes (see [Mods](#mods))
+
+Deliberately absent vs `BikeSkinDefinition`: steering handlebar proxy, rider pose, markers, gearing, physics, tricks, audio, and `user://` save/load. The NPC chassis owns motion; the skin owns looks and collision. Traffic definitions must live in `res://` and be identical on every peer — the spawn RPC ships a resource path, not a serialized definition.
+
+### Creating a New Car
+
+1. Import the model, create an inherited scene under `entities/vehicles/scenes/`.
+2. Attach `SkinColor` to the root, configure `slots` / `meshes` (see above). Wire `wheel_nodes` if you want wheels that can spin later.
+3. Right-click → **New Resource** → `CarSkinDefinition`, save to `resources/cars/skins/{name}_car_skin_definition.tres`.
+4. Set `skin_name`, assign `mesh_res`, adjust the mesh + collision offsets.
+
+That's it — traffic scans the folder, so the new car joins the roster with no code or inspector wiring. To preview one, open `npc_rider_entity.tscn`, set `vehicle_type` to `CAR` and point `car_definition` at the `.tres`; the scene rebuilds in-editor.
+
+> `car_skin.tscn` carries its own default `skin_definition`. That default is what you see when opening the scene standalone — at runtime `NPCRiderEntity._init_mesh()` always overwrites it with the rolled definition.
+
 ## Mods
 
-`BikeMod` (`resources/bikes/mods/bike_mod.gd`) is a base `Resource` with a single `apply(bike_skin: BikeSkin)` method. Subclass it to create composable overrides that stack on top of the base `BikeSkinDefinition`.
+`BikeMod` (`resources/bikes/mods/bike_mod.gd`) is a base `Resource` with a single `apply(vehicle_skin: Node3D)` method — typed to `Node3D` rather than `BikeSkin` so one mod ecosystem serves both `BikeSkin` and `CarSkin` (any vehicle skin exposing `mesh_skin`). Subclass it to create composable overrides that stack on top of the base definition.
 
 `BikeSkin._apply_definition()` calls `_apply_mods()` after `_set_mesh_colors()`, so mods always win over base colors.
 
