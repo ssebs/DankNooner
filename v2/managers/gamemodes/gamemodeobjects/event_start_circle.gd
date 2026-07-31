@@ -45,11 +45,22 @@ func disable_game_objects():
 	_set_game_objects_active(self, false)
 
 
-func _set_game_objects_active(node: Node, active: bool):
+## `in_task` tracks whether we've descended into a GameModeTask yet. Plain graybox props
+## parked under a task (race barriers, ramps) belong to the event just as much as the
+## checkpoints do, but they aren't GameModeObjects so nothing was hiding them. Scoped to
+## tasks on purpose: this circle's own Floor is a graybox too, and it has to stay put.
+func _set_game_objects_active(node: Node, active: bool, in_task: bool = false):
 	for child in node.get_children():
+		var child_in_task := in_task or child is GameModeTask
 		if child is GameModeObject:
 			child.is_active = active
-		_set_game_objects_active(child, active)
+		elif child_in_task and child is GrayBoxStaticBody:
+			child.visible = active
+			# An invisible wall is worse than a visible one — drop collision too, the
+			# same thing GameModeObject._apply_active_state does for its own shapes.
+			for shape in child.find_children("*", "CollisionShape3D", true, false):
+				shape.disabled = not active
+		_set_game_objects_active(child, active, child_in_task)
 
 
 func _on_body_entered(body: Node3D):

@@ -38,6 +38,9 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
       SkinColor.do_not_use_color opts fixed liveries out (taxi set, cop car later)
 - [x] tune density / cruise speed once the city map exists (rest in Backlog > AI/traffic)
 - [ ] street races (traffic is there+ racing ai simultaneously)
+  - [x] WIP kinda working
+  - [x] rename street race to road race, then actually impl street race w/ traffic
+  - [ ]  the racers must go thru the checkpoints
 
 
 ### From my phone

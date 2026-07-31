@@ -27,6 +27,19 @@ func _init(road_lanes: Array, snap_distance: float = 6.0, heading_tolerance: flo
 	rebuild(road_lanes)
 
 
+## Every AI lane under the manager. Containers may override the manager's lane group with
+## their own, so check both (same sweep RoadLaneAgent does). Static because both NPC
+## managers need it and neither owns the other.
+static func gather_lanes(tree: SceneTree, road_manager: RoadManager) -> Array:
+	var out: Array = []
+	out.append_array(tree.get_nodes_in_group(road_manager.ai_lane_group))
+	for container in road_manager.get_containers():
+		if container.ai_lane_group == "":
+			continue
+		out.append_array(tree.get_nodes_in_group(container.ai_lane_group))
+	return out
+
+
 ## Re-derive the whole table. Done in place so riders holding this graph keep
 ## working across a road rebuild.
 func rebuild(road_lanes: Array) -> void:
