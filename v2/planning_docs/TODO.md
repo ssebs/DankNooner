@@ -24,6 +24,12 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Add items to the race like Mario kart, and ramps/jumps
 - [ ] add progression
 - [ ] start optimizing
+- [ ] "Return to checkpoint" HUD during race
+- [ ] Tell user they missed checkpoint during race 
+- [ ] Checkpoint noise/visual showing you passed it
+  - [ ] highlight checkpoint in another color
+  - [ ] use flags instead of sign?
+- [ ] Rotate cam down + shift left look right while doing wheelie (fps mode diff than tps mode)
 
 ### Boost
 - [x] doing tricks give you boost

@@ -1,0 +1,144 @@
+[gd_scene format=3 uid="uid://5gjrqxijrao7"]
+
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="1_hpiy0"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="2_l2b5r"]
+[ext_resource type="PackedScene" uid="uid://tebarjn4qpyn" path="res://entities/npc/assets/Cars Bundle-glb/Car-unqqkULtRU.glb" id="3_l2b5r"]
+[ext_resource type="Material" uid="uid://hvmgv2l4yfyt" path="res://resources/terrain_tex/Metal062C_2K-JPG/Metal062C_2K-JPG.tres" id="3_mibol"]
+[ext_resource type="Texture2D" uid="uid://c8si3h86fi55g" path="res://resources/terrain_tex/Metal062C_2K-JPG/Metal062C_2K-JPG_Color.jpg" id="5_u551j"]
+[ext_resource type="Texture2D" uid="uid://c1opeuk4dty7b" path="res://resources/terrain_tex/Metal062C_2K-JPG/Metal062C_2K-JPG_Displacement.jpg" id="6_puuyu"]
+[ext_resource type="Texture2D" uid="uid://dgicws2sxbok" path="res://resources/terrain_tex/Metal062C_2K-JPG/Metal062C_2K-JPG_Metalness.jpg" id="7_fnupp"]
+[ext_resource type="Texture2D" uid="uid://cpynvllo86yv4" path="res://resources/terrain_tex/Metal062C_2K-JPG/Metal062C_2K-JPG_NormalGL.jpg" id="8_w6rtf"]
+[ext_resource type="Texture2D" uid="uid://d3psnenxqvxlh" path="res://resources/terrain_tex/Metal062C_2K-JPG/Metal062C_2K-JPG_Roughness.jpg" id="9_vsib8"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cs7fk"]
+
+[sub_resource type="Resource" id="Resource_slot"]
+script = ExtResource("2_l2b5r")
+color = Color(0.15710449, 0.15710449, 0.38671875, 1)
+use_standard_material = true
+standard_material = SubResource("StandardMaterial3D_cs7fk")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mibol"]
+
+[sub_resource type="Resource" id="Resource_l2b5r"]
+script = ExtResource("2_l2b5r")
+color = Color(0.30859375, 0.30859375, 0.30859375, 1)
+use_standard_material = true
+surface_index = 1
+standard_material = SubResource("StandardMaterial3D_mibol")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="Resource" id="Resource_mibol"]
+script = ExtResource("2_l2b5r")
+use_standard_material = true
+surface_index = 5
+standard_material = ExtResource("3_mibol")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lyhtb"]
+
+[sub_resource type="Resource" id="Resource_ie68h"]
+script = ExtResource("2_l2b5r")
+color = Color(0.85546875, 0.74320936, 0.13700867, 1)
+use_standard_material = true
+surface_index = 4
+standard_material = SubResource("StandardMaterial3D_lyhtb")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u551j"]
+albedo_color = Color(0.15710449, 0.15710449, 0.38671875, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_puuyu"]
+albedo_color = Color(0.30859375, 0.30859375, 0.30859375, 1)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_u551j"]
+load_path = "res://.godot/imported/Metal062C_2K-JPG_Color.jpg-e331454d840199160803b4433a6a4971.s3tc.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_puuyu"]
+load_path = "res://.godot/imported/Metal062C_2K-JPG_Displacement.jpg-adddb2755eefdf1fbfe3fc5f59741b98.s3tc.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_fnupp"]
+load_path = "res://.godot/imported/Metal062C_2K-JPG_Metalness.jpg-5fb585ed76dc63f4b32b179d5de53a70.s3tc.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_w6rtf"]
+load_path = "res://.godot/imported/Metal062C_2K-JPG_NormalGL.jpg-1d297ea70c2d95281205d54c75fef4f3.s3tc.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_vsib8"]
+load_path = "res://.godot/imported/Metal062C_2K-JPG_Roughness.jpg-681d109d7e18bf86dc051fd72b53b49c.s3tc.ctex"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fnupp"]
+albedo_color = Color(0.84375, 0, 0, 1)
+albedo_texture = SubResource("CompressedTexture2D_u551j")
+metallic = 1.0
+metallic_texture = SubResource("CompressedTexture2D_fnupp")
+metallic_texture_channel = 4
+roughness_texture = SubResource("CompressedTexture2D_vsib8")
+roughness_texture_channel = 4
+normal_enabled = true
+normal_texture = SubResource("CompressedTexture2D_w6rtf")
+heightmap_enabled = true
+heightmap_scale = 1.0
+heightmap_texture = SubResource("CompressedTexture2D_puuyu")
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_p2fji"]
+load_path = "res://.godot/imported/Metal062C_2K-JPG_Color.jpg-e331454d840199160803b4433a6a4971.s3tc.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_6i1yq"]
+load_path = "res://.godot/imported/Metal062C_2K-JPG_Displacement.jpg-adddb2755eefdf1fbfe3fc5f59741b98.s3tc.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_momrg"]
+load_path = "res://.godot/imported/Metal062C_2K-JPG_Metalness.jpg-5fb585ed76dc63f4b32b179d5de53a70.s3tc.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_pgb83"]
+load_path = "res://.godot/imported/Metal062C_2K-JPG_NormalGL.jpg-1d297ea70c2d95281205d54c75fef4f3.s3tc.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_7xx4i"]
+load_path = "res://.godot/imported/Metal062C_2K-JPG_Roughness.jpg-681d109d7e18bf86dc051fd72b53b49c.s3tc.ctex"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w6rtf"]
+albedo_color = Color(0.85546875, 0.74320936, 0.13700867, 1)
+albedo_texture = SubResource("CompressedTexture2D_p2fji")
+metallic = 1.0
+metallic_texture = SubResource("CompressedTexture2D_momrg")
+metallic_texture_channel = 4
+roughness_texture = SubResource("CompressedTexture2D_7xx4i")
+roughness_texture_channel = 4
+normal_enabled = true
+normal_texture = SubResource("CompressedTexture2D_pgb83")
+heightmap_enabled = true
+heightmap_scale = 1.0
+heightmap_texture = SubResource("CompressedTexture2D_6i1yq")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vsib8"]
+albedo_color = Color(0.85546875, 0.74320936, 0.13700867, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_83v6i"]
+albedo_texture = ExtResource("5_u551j")
+metallic = 1.0
+metallic_texture = ExtResource("7_fnupp")
+metallic_texture_channel = 4
+roughness_texture = ExtResource("9_vsib8")
+roughness_texture_channel = 4
+normal_enabled = true
+normal_texture = ExtResource("8_w6rtf")
+heightmap_enabled = true
+heightmap_scale = 1.0
+heightmap_texture = ExtResource("6_puuyu")
+
+[node name="SedanCar" type="Node3D" unique_id=1065239879 node_paths=PackedStringArray("meshes")]
+script = ExtResource("1_hpiy0")
+slots = Array[ExtResource("2_l2b5r")]([SubResource("Resource_slot"), SubResource("Resource_l2b5r"), SubResource("Resource_mibol"), SubResource("Resource_ie68h")])
+meshes = [NodePath("Car-unqqkULtRU/NormalCar2_Cube_002"), NodePath("Car-unqqkULtRU/NormalCar2_Cube_002"), NodePath("Car-unqqkULtRU/NormalCar2_Cube_002"), NodePath("Car-unqqkULtRU/NormalCar2_Cube_002")]
+
+[node name="Car-unqqkULtRU" parent="." unique_id=799729513 instance=ExtResource("3_l2b5r")]
+
+[node name="NormalCar2_Cube_002" parent="Car-unqqkULtRU" index="0" unique_id=1099824368]
+surface_material_override/0 = SubResource("StandardMaterial3D_u551j")
+surface_material_override/1 = SubResource("StandardMaterial3D_puuyu")
+surface_material_override/2 = SubResource("StandardMaterial3D_fnupp")
+surface_material_override/3 = SubResource("StandardMaterial3D_w6rtf")
+surface_material_override/4 = SubResource("StandardMaterial3D_vsib8")
+surface_material_override/5 = SubResource("StandardMaterial3D_83v6i")
+
+[editable path="Car-unqqkULtRU"]

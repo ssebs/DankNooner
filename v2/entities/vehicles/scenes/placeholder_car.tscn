@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://bym12b2mhphj8"]
+
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="1_skclr"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="2_skslt"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cs7fk"]
+
+[sub_resource type="Resource" id="Resource_slot"]
+script = ExtResource("2_skslt")
+color = Color(0.15710449, 0.15710449, 0.38671875, 1)
+use_standard_material = true
+standard_material = SubResource("StandardMaterial3D_cs7fk")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="BoxMesh" id="BoxMesh_body"]
+size = Vector3(1.8, 1, 4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_55l4r"]
+albedo_color = Color(0.15710449, 0.15710449, 0.38671875, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wheel"]
+top_radius = 0.35
+bottom_radius = 0.35
+height = 0.25
+
+[node name="PlaceholderCar" type="Node3D" unique_id=1065239879 node_paths=PackedStringArray("meshes", "wheel_nodes")]
+script = ExtResource("1_skclr")
+slots = Array[ExtResource("2_skslt")]([SubResource("Resource_slot")])
+meshes = [NodePath("Body")]
+wheel_nodes = [NodePath("WheelFR"), NodePath("WheelFL"), NodePath("WheelRR"), NodePath("WheelRL")]
+
+[node name="Body" type="MeshInstance3D" parent="." unique_id=312261794]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+mesh = SubResource("BoxMesh_body")
+surface_material_override/0 = SubResource("StandardMaterial3D_55l4r")
+
+[node name="WheelFR" type="Node3D" parent="." unique_id=177607265]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95, 0.35, -1.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="WheelFR" unique_id=1517881833]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_wheel")
+
+[node name="WheelFL" type="Node3D" parent="." unique_id=192381699]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.95, 0.35, -1.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="WheelFL" unique_id=725107769]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_wheel")
+
+[node name="WheelRR" type="Node3D" parent="." unique_id=75132034]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95, 0.35, 1.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="WheelRR" unique_id=867337046]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_wheel")
+
+[node name="WheelRL" type="Node3D" parent="." unique_id=1764403837]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.95, 0.35, 1.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="WheelRL" unique_id=1249290815]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_wheel")

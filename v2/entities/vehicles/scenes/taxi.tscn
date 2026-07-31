@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://jnyapma2vr1m"]
+
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="1_82y5a"]
+[ext_resource type="PackedScene" uid="uid://bn2qvn1cja35l" path="res://entities/npc/assets/Cars Bundle-glb/Taxi.glb" id="2_4nr0m"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="2_4tdhq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o356b"]
+
+[sub_resource type="Resource" id="Resource_wcbnl"]
+script = ExtResource("2_4tdhq")
+color = Color(0.859375, 0.6912923, 0.117492676, 1)
+use_standard_material = true
+standard_material = SubResource("StandardMaterial3D_o356b")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wcbnl"]
+albedo_color = Color(0.859375, 0.6912923, 0.117492676, 1)
+
+[node name="TaxiCar" type="Node3D" unique_id=1065239879 node_paths=PackedStringArray("meshes")]
+script = ExtResource("1_82y5a")
+slots = Array[ExtResource("2_4tdhq")]([SubResource("Resource_wcbnl")])
+meshes = [NodePath("Taxi/Taxi_Cube_009")]
+
+[node name="Taxi" parent="." unique_id=1653174780 instance=ExtResource("2_4nr0m")]
+
+[node name="Taxi_Cube_009" parent="Taxi" index="0" unique_id=85110398]
+surface_material_override/0 = SubResource("StandardMaterial3D_wcbnl")
+
+[editable path="Taxi"]
