@@ -11,13 +11,29 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 
 ## Active
 
+- [ ] moving npcs seem to be laggy? like maybe lerp is stuck at 30fps on physics tick and it looks jittery / blurry
+
 ### Traffic AI
 - [x] basic riding-around riders — free roam only (see ___TRAFFIC_AI_PLAN___.md)
 - [x] rider-vs-rider crashes both ways (whoever rams broadcasts to the one rammed;
       race bots deliberately excluded so racing stays as-is)
-- [ ] traffic vehicle roster: swap skins now, cars later (designed in ___TRAFFIC_AI_PLAN___.md
-      > Vehicle variety — new CarSkin/CarSkinDefinition pair; a car spawns no bike + no rider)
+- [x] traffic vehicle roster: mixed bikes + cars, rolled per rider from the skin
+      folders (CarSkin/CarSkinDefinition pair; a car spawns no bike + no rider)
+- [ ] per-vehicle traffic tuning (speed scale, lateral wander, spawn weights) —
+      every vehicle currently rolls with equal odds and the same cruise speed
+- [ ] wheel spin on traffic vehicles (CarSkin.rotate_wheels exists, nothing calls it;
+      NPC bikes have never spun theirs either)
+- [ ] car hit reaction — a crashed car just stops, the wipeout roll is rider-only
+- [ ] per-spawn ColorMod roll for paint variety, off the hash(name)-seeded RNG already
+      in NPCRiderEntity._ready (every peer names the rider the same, so every peer rolls
+      the same paint — no extra sync). GOTCHA: skin definitions are shared resources —
+      duplicate() the definition and give it a fresh `mods` array first, or you repaint
+      every rider using it and leak into the player's bike
+- [ ] delete ___TRAFFIC_AI_PLAN___.md once the above are done (it's otherwise implemented;
+      CarSkin/CarSkinDefinition are documented in Skins.md)
 - [ ] tune density / cruise speed once the city map exists (rest in Backlog > AI/traffic)
+
+
 ### From my phone
 - [ ] when finishing race, bots shouldnt DNF, but race til timer runs out then get their final time
 - [ ] scale boost from wheelie / stoppie angle

@@ -731,7 +731,7 @@ next_mag = 16.98576
 next_pt_init = NodePath("../RP_008")
 
 [node name="RP_010" type="Node3D" parent="RoadManager/Road_005" unique_id=408356355]
-transform = Transform3D(-0.03845535, 0, -0.99926037, 0, 1, 0, 0.99926037, 0, -0.03845535, -46.070396, 6.9999237, -1.8805015)
+transform = Transform3D(-0.03845535, 0, -0.99926037, 0, 1, 0, 0.99926037, 0, -0.03845535, -47.178772, 8.5621195, -1.8805008)
 script = ExtResource("8_ercdn")
 traffic_dir = Array[int]([2, 2, 1, 1])
 lanes = Array[int]([2, 4, 4, 2])
@@ -1431,10 +1431,10 @@ depth = 6.0
 color_preset = 3
 
 [node name="GrayBox_StaticBody28" parent="Stuff/building" unique_id=2117901025 instance=ExtResource("4_e82mi")]
-transform = Transform3D(-0.9821034, 0, -0.18834206, 0, 1, 0, 0.18834206, 0, -0.9821034, -33.656097, 5.9299994, -35.749084)
+transform = Transform3D(-0.98210335, 0, -0.18834206, 0, 1, 0, 0.18834206, 0, -0.98210335, -33.656097, 3.99971, -35.749092)
 collision_layer = 3
 width = 9.0
-height = 12.0
+height = 8.0
 depth = 31.0
 color_preset = 3
 
