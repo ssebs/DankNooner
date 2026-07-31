@@ -11,7 +11,7 @@
 [sub_resource type="Resource" id="Resource_qeo2q"]
 resource_local_to_scene = true
 script = ExtResource("5_e6q4j")
-color = Color(0.054901965, 0.7607843, 0.69460785, 1)
+color = Color(0.11028292, 0.6258798, 0.47056687, 1)
 use_standard_material = true
 surface_index = 1
 standard_material = SubResource("StandardMaterial3D_rolk3")

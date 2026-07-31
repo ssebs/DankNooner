@@ -16,6 +16,11 @@ class_name SkinColor extends Node3D
 @export var steering_rot_axis: Vector3 = Vector3.UP
 @export var wheel_rot_axis: Vector3 = Vector3.RIGHT
 
+@export_category("VehicleSpecifics")
+## Wheel nodes for meshes with more than two wheels (CarSkin spins these).
+## Bikes keep using front_wheel_node / rear_wheel_node above and leave this empty.
+@export var wheel_nodes: Array[Node3D] = []
+
 # Per slot-position runtime materials. Owned by this instance so nothing leaks across other
 # SkinColor instances that share the same SkinSlot resource.
 var _runtime_materials: Array[Material] = []

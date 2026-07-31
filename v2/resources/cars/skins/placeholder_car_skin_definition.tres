@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CarSkinDefinition" format=3 uid="uid://dc6tkr77agy4m"]
+
+[ext_resource type="Script" uid="uid://p2mjdn2eyh12" path="res://resources/cars/car_skin_definition.gd" id="1_carsk"]
+[ext_resource type="Shape3D" uid="uid://bht6jjdtr1j28" path="res://resources/cars/hitbox/car_hitbox.tres" id="1_rsxwu"]
+[ext_resource type="PackedScene" uid="uid://bym12b2mhphj8" path="res://entities/vehicles/scenes/placeholder_car.tscn" id="2_carmh"]
+[ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_q0qel"]
+
+[resource]
+script = ExtResource("1_carsk")
+skin_name = "placeholder_car"
+mesh_res = ExtResource("2_carmh")

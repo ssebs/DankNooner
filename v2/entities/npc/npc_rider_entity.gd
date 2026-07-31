@@ -14,6 +14,7 @@
 ##
 ## VisualRoot is yawed 180° (matching the player scene), so the bike front is
 ## entity -Z; steering yaws the body to face velocity with -Z.
+@tool
 class_name NPCRiderEntity extends CharacterBody3D
 
 ## Another racer rammed us — they detected it, because slide collisions only
@@ -22,7 +23,13 @@ class_name NPCRiderEntity extends CharacterBody3D
 signal hit_by_racer(hitter: Node3D)
 
 enum NPCState { RIDING, WHEELIE, CRASHED, FINISHED }
+## What this chassis is wearing. CAR spawns no bike mesh, no character, no IK,
+## and no name label — see _enter_tree.
+enum VehicleType { BIKE, CAR }
 
+## Set by the spawning manager BEFORE add_child — _enter_tree reads it.
+@export var vehicle_type: VehicleType = VehicleType.BIKE
+@export var car_definition: CarSkinDefinition
 @export var bike_definition: BikeSkinDefinition
 @export var character_definition: CharacterSkinDefinition
 @export var animation_controller: NPCAnimationController
@@ -56,9 +63,13 @@ enum NPCState { RIDING, WHEELIE, CRASHED, FINISHED }
 const GRAVITY: float = 30.0
 
 @onready var visual_root: Node3D = %VisualRoot
-@onready var bike_skin: BikeSkin = %BikeSkin
-@onready var character_skin: CharacterSkin = %CharacterSkin
 @onready var name_label: Label3D = %NameLabel
+@onready var collision_shape_3d: CollisionShape3D = $CollisionShape3D
+
+## Only the half this vehicle actually uses survives — see _enter_tree.
+var bike_skin: BikeSkin
+var character_skin: CharacterSkin
+var car_skin: CarSkin
 
 ## The level's RoadManager — set by the spawning manager before add_child so the
 ## lane agent can find its lanes. Riding follows those lanes.
@@ -86,13 +97,53 @@ var line_offset: float = 0.0
 var _speed_scale: float = 1.0
 
 
+## Drop the skins this vehicle doesn't wear — a car keeps CarSkin, a bike keeps
+## BikeSkin + CharacterSkin.
+##
+## This can't wait for _ready: all three skins build their own mesh in their own
+## _ready, and a child's _ready runs BEFORE its parent's, so by then they'd
+## already exist. The spawning manager sets vehicle_type before add_child, so
+## we know which is which this early. @onready vars and %UniqueName aren't
+## resolved yet — direct paths only.
+func _enter_tree() -> void:
+	var visuals := get_node("VisualRoot")
+	bike_skin = visuals.get_node("BikeSkin")
+	character_skin = visuals.get_node("CharacterSkin")
+	car_skin = visuals.get_node("CarSkin")
+
+	# Editing the scene keeps every skin. Freeing one here would delete it out of
+	# npc_rider_entity.tscn the moment you saved — _init_mesh hides it instead.
+	if Engine.is_editor_hint():
+		return
+
+	if vehicle_type == VehicleType.CAR:
+		_drop_skin(bike_skin)
+		_drop_skin(character_skin)
+		bike_skin = null
+		character_skin = null
+	else:
+		_drop_skin(car_skin)
+		car_skin = null
+
+
 func _ready():
-	bike_skin.skin_definition = bike_definition
-	bike_skin._apply_definition()
-	character_skin.skin_definition = character_definition
-	character_skin.apply_definition()
-	animation_controller.initialize()
-	name_label.text = username
+	# Same shape as PlayerEntity._ready: definitions → mesh → collision up front so
+	# the scene previews correctly in-editor, then bail before anything that needs
+	# a spawning manager (road_manager is null until one runs).
+	_init_mesh()
+	_init_collision_shape()
+
+	if Engine.is_editor_hint():
+		return
+
+	# A car has no rider to name. Written on both paths — a hidden label could
+	# otherwise have been saved into the scene by an earlier editor session.
+	name_label.visible = vehicle_type != VehicleType.CAR
+	if vehicle_type != VehicleType.CAR:
+		# Runtime only, unlike PlayerEntity: IKTargets is a child of VisualRoot
+		# here, so running IK in-editor re-poses markers that live in the scene.
+		animation_controller.initialize()
+		name_label.text = username
 
 	add_to_group(UtilsConstants.GROUPS["Racers"])
 	set_multiplayer_authority(1)
@@ -266,12 +317,65 @@ func _face_velocity(delta: float) -> void:
 	rotation.y = lerp_angle(rotation.y, target_yaw, turn_speed * delta)
 
 
+## Set definitions and apply mesh/colors — PlayerEntity._init_mesh, with a car
+## branch. Runs in-editor too, so swapping car_definition / bike_definition on the
+## scene previews straight away instead of showing whatever bike_skin.tscn and
+## car_skin.tscn happen to default to.
+##
+## In-editor every skin is still present (see _enter_tree), so the unused half is
+## hidden rather than freed. Visibility is written on every path, so a `visible`
+## flag saved into the scene can never leak onto the wrong vehicle.
+func _init_mesh() -> void:
+	var editing := Engine.is_editor_hint()
+	if vehicle_type == VehicleType.CAR:
+		car_skin.visible = true
+		car_skin.skin_definition = car_definition
+		car_skin._apply_definition()
+		if editing:
+			bike_skin.visible = false
+			character_skin.visible = false
+		return
+
+	bike_skin.visible = true
+	character_skin.visible = true
+	bike_skin.skin_definition = bike_definition
+	bike_skin._apply_definition()
+	character_skin.skin_definition = character_definition
+	character_skin.apply_definition()
+	if editing:
+		car_skin.visible = false
+
+
+## free(), not queue_free() — a deferred free still lets the node's _ready run and
+## build the skin we're dropping.
+func _drop_skin(skin: Node) -> void:
+	skin.get_parent().remove_child(skin)
+	skin.free()
+
+
+## The scene's capsule fits a bike; a car needs its own box. Same four lines as
+## PlayerEntity._init_collision_shape(), off whichever definition is in play.
+func _init_collision_shape() -> void:
+	# Both definitions expose the same four collision fields; nothing else is shared.
+	var definition: Resource = (
+		car_definition if vehicle_type == VehicleType.CAR else bike_definition
+	)
+	collision_shape_3d.shape = definition.collision_shape
+	collision_shape_3d.position = definition.collision_position_offset
+	collision_shape_3d.rotation_degrees = definition.collision_rotation_offset_degrees
+	collision_shape_3d.scale = definition.collision_scale_multiplier
+
+
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues := PackedStringArray()
-	if bike_definition == null:
-		issues.append("bike_definition must not be empty")
-	if character_definition == null:
-		issues.append("character_definition must not be empty")
+	if vehicle_type == VehicleType.CAR:
+		if car_definition == null:
+			issues.append("car_definition must not be empty when vehicle_type is CAR")
+	else:
+		if bike_definition == null:
+			issues.append("bike_definition must not be empty")
+		if character_definition == null:
+			issues.append("character_definition must not be empty")
 	if animation_controller == null:
 		issues.append("animation_controller must not be empty")
 	if state_machine == null:

@@ -88,6 +88,9 @@ func rpc_spawn_npc(npc_id: int, def_dict: Dictionary, pos: Vector3, basis: Basis
 
 	var npc := NPC_SCENE.instantiate() as NPCRiderEntity
 	npc.name = str(npc_id)
+	# Race bots are always riders — say so rather than inheriting whatever the
+	# scene was last saved with. Must land before add_child (see _enter_tree).
+	npc.vehicle_type = NPCRiderEntity.VehicleType.BIKE
 	npc.bike_definition = def.bike_skin
 	npc.character_definition = def.character_skin
 	npc.username = "%s %d" % [def.username, -npc_id]

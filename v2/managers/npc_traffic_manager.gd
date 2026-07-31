@@ -11,16 +11,23 @@ class_name NPCTrafficManager extends BaseManager
 @export var level_manager: LevelManager
 ## Used to crash a player a traffic rider rammed.
 @export var spawn_manager: SpawnManager
-## Round-robin source of NPC names + skins, same as NPCRaceManager.
+## Round-robin source of NPC names + character skins, same as NPCRaceManager.
+## The bike itself is rolled per rider from BIKE_SKINS_DIR, not taken from here.
 @export var npc_definitions: Array[PlayerDefinition] = [
 	load("res://resources/player/default_player_definition.tres")
 ]
 @export var traffic_count: int = 8
+## Odds a given traffic vehicle is a car rather than a bike + rider.
+@export_range(0.0, 1.0, 0.05) var car_chance: float = 0.5
 ## Base move speed handed to every traffic rider (they ride slower than racers).
 @export var cruise_speed: float = 22.0
 @export var respawn_delay: float = 3.0
 
 const NPC_SCENE: PackedScene = preload("res://entities/npc/npc_rider_entity.tscn")
+## Traffic rolls its vehicle out of these — the same folders the customize menu
+## lists, so a new .tres shows up in traffic with no wiring.
+const BIKE_SKINS_DIR: String = "res://resources/bikes/skins/"
+const CAR_SKINS_DIR: String = "res://resources/cars/skins/"
 ## Race NPCs count down from -1; traffic starts far below so the two can never
 ## produce the same node name under the level's spawn node.
 const FIRST_ID: int = -1000
@@ -28,6 +35,9 @@ const FIRST_ID: int = -1000
 const RECOVER_AHEAD: float = 4.0
 
 var _npcs: Dictionary[int, NPCRiderEntity] = {}
+## res:// paths of every rollable vehicle skin, refreshed each start_traffic.
+var _bike_skin_paths: Array = []
+var _car_skin_paths: Array = []
 var _route_graph: TrafficRouteGraph
 var _graph_rebuild_queued: bool = false
 var _next_id: int = FIRST_ID
@@ -51,6 +61,10 @@ func start_traffic() -> void:
 		if !container.on_road_updated.is_connected(_on_road_updated):
 			container.on_road_updated.connect(_on_road_updated)
 
+	# Only the paths matter here — the skin_name keys are the menu's concern.
+	_bike_skin_paths = SkinScanner.scan_skin_dir(BIKE_SKINS_DIR).values()
+	_car_skin_paths = SkinScanner.scan_skin_dir(CAR_SKINS_DIR).values()
+
 	# Shuffled distinct lanes — spreads riders over the whole network instead of
 	# stacking them all at one spawn point.
 	var spawn_lanes := _route_graph.lanes.duplicate()
@@ -60,7 +74,32 @@ func start_traffic() -> void:
 		var npc_id := _next_id
 		_next_id -= 1
 		var def := npc_definitions[(-npc_id + FIRST_ID) % npc_definitions.size()]
-		rpc_spawn_npc.rpc(npc_id, def.to_dict(), lane_transform.origin, lane_transform.basis)
+		var vehicle := _roll_vehicle(def, npc_id)
+		rpc_spawn_npc.rpc(npc_id, vehicle, lane_transform.origin, lane_transform.basis)
+
+
+## Roll one rider's vehicle. The server rolls and ships the result — rolling on
+## each peer would give the same rider a different car on every screen.
+##
+## Traffic skins all live in res:// and are byte-identical on every peer, so the
+## resource paths ARE the serializer. Deliberately not PlayerDefinition.to_dict():
+## that round-trips every loadout through BikeSkinDefinition.from_dict(), which
+## writes a .tres into user://skins/ per rider per peer.
+func _roll_vehicle(def: PlayerDefinition, npc_id: int) -> Dictionary:
+	if !_car_skin_paths.is_empty() and randf() < car_chance:
+		# No rider on a car, so no character skin and no name to label it with.
+		return {
+			"type": NPCRiderEntity.VehicleType.CAR,
+			"skin": _car_skin_paths.pick_random(),
+			"character": "",
+			"username": "",
+		}
+	return {
+		"type": NPCRiderEntity.VehicleType.BIKE,
+		"skin": _bike_skin_paths.pick_random(),
+		"character": def.character_skin.resource_path,
+		"username": "%s %d" % [def.username, -npc_id],
+	}
 
 
 func stop_traffic() -> void:
@@ -94,17 +133,19 @@ func _rebuild_route_graph() -> void:
 
 
 @rpc("call_local", "reliable")
-func rpc_spawn_npc(npc_id: int, def_dict: Dictionary, pos: Vector3, basis: Basis):
-	var def := PlayerDefinition.new()
-	def.from_dict(def_dict)
-
-	DebugUtils.DebugMsg("Adding traffic NPC locally: %s - %s" % [npc_id, def.username])
+func rpc_spawn_npc(npc_id: int, vehicle: Dictionary, pos: Vector3, basis: Basis):
+	DebugUtils.DebugMsg("Adding traffic NPC locally: %s - %s" % [npc_id, vehicle["skin"]])
 
 	var npc := NPC_SCENE.instantiate() as NPCRiderEntity
 	npc.name = str(npc_id)
-	npc.bike_definition = def.bike_skin
-	npc.character_definition = def.character_skin
-	npc.username = "%s %d" % [def.username, -npc_id]
+	# vehicle_type must land before add_child — _enter_tree drops the other skins.
+	npc.vehicle_type = vehicle["type"]
+	if npc.vehicle_type == NPCRiderEntity.VehicleType.CAR:
+		npc.car_definition = load(vehicle["skin"])
+	else:
+		npc.bike_definition = load(vehicle["skin"])
+		npc.character_definition = load(vehicle["character"])
+		npc.username = vehicle["username"]
 	npc.move_speed = cruise_speed
 	# Lane follower needs the level's RoadManager before _ready runs.
 	npc.road_manager = _find_road_manager()

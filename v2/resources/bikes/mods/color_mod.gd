@@ -6,5 +6,5 @@ class_name ColorMod extends BikeMod
 
 
 ##override
-func apply(bike_skin: BikeSkin) -> void:
-	bike_skin.mesh_skin.update_all_colors(colors)
+func apply(vehicle_skin: Node3D) -> void:
+	vehicle_skin.mesh_skin.update_all_colors(colors)

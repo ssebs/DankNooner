@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CarSkinDefinition" format=3 uid="uid://xogsicjgfdc4"]
+
+[ext_resource type="Shape3D" uid="uid://c2b8moadys5d7" path="res://resources/cars/hitbox/taxi_hitbox.tres" id="1_r1lbp"]
+[ext_resource type="PackedScene" uid="uid://jnyapma2vr1m" path="res://entities/vehicles/scenes/taxi.tscn" id="2_e2rn6"]
+[ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_80kds"]
+[ext_resource type="Script" uid="uid://p2mjdn2eyh12" path="res://resources/cars/car_skin_definition.gd" id="4_1mm1u"]
+
+[resource]
+script = ExtResource("4_1mm1u")
+skin_name = "taxi"
+mesh_res = ExtResource("2_e2rn6")
+mesh_position_offset = Vector3(0, 0.03, 0)
+collision_shape = ExtResource("1_r1lbp")
+collision_position_offset = Vector3(0, 0.6, -0.1)

@@ -76,8 +76,8 @@ func Exit(_state_context: StateContext):
 
 #region populate / scan
 func _populate_option_lists() -> void:
-	bike_skins = _scan_skin_dir(BIKE_SKINS_DIR)
-	character_skins = _scan_skin_dir(CHARACTER_SKINS_DIR)
+	bike_skins = SkinScanner.scan_skin_dir(BIKE_SKINS_DIR)
+	character_skins = SkinScanner.scan_skin_dir(CHARACTER_SKINS_DIR)
 	color_mods = _scan_color_mods()
 
 	base_bike_btn.clear()
@@ -88,29 +88,6 @@ func _populate_option_lists() -> void:
 	color_mod_btn.add_item("None")
 	for mod_name in color_mods.keys():
 		color_mod_btn.add_item(mod_name)
-
-
-func _scan_skin_dir(dir_path: String) -> Dictionary:
-	var result: Dictionary = {}
-	var dir := DirAccess.open(dir_path)
-	if dir == null:
-		DebugUtils.DebugErrMsg("Failed to open skin directory: %s" % dir_path)
-		return result
-
-	var is_exported := !OS.has_feature("editor")
-	var extension := ".tres.remap" if is_exported else ".tres"
-
-	dir.list_dir_begin()
-	var file_name := dir.get_next()
-	while file_name != "":
-		if not dir.current_is_dir() and file_name.ends_with(extension):
-			var res_path := dir_path + file_name.replace(".remap", "")
-			var res := ResourceLoader.load(res_path)
-			if res and "skin_name" in res:
-				result[res.skin_name] = res_path
-		file_name = dir.get_next()
-	dir.list_dir_end()
-	return result
 
 
 func _scan_color_mods() -> Dictionary:
