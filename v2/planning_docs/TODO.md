@@ -40,7 +40,8 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] street races (traffic is there+ racing ai simultaneously)
   - [x] WIP kinda working
   - [x] rename street race to road race, then actually impl street race w/ traffic
-  - [ ]  the racers must go thru the checkpoints
+  - [ ]  the racers must go thru the checkpoints, they cant finish a race
+    - [ ]  **IMPORTANT**
 
 
 ### From my phone
