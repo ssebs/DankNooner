@@ -21,6 +21,10 @@ const NPC_SCENE: PackedScene = preload("res://entities/npc/npc_rider_entity.tscn
 var race_task: RaceTask
 
 var _npcs: Dictionary[int, NPCRiderEntity] = {}
+## Junction routing for the bots. RoadContainer never gives intersection lanes a
+## lane_next, so without this they dead-end at every junction — fine on a closed-loop
+## racetrack, fatal on a map with 3-way/4-way/roundabout containers.
+var _route_graph: TrafficRouteGraph
 ## Grid-slot spawn transform per NPC — crash-respawn fallback until the NPC
 ## passes its first checkpoint.
 var _spawn_transforms: Dictionary[int, Transform3D] = {}
@@ -55,6 +59,12 @@ func _physics_process(_delta: float):
 ## Server only. Spawns an NPC on every peer at the given transform and
 ## returns its (negative) racer id.
 func spawn_npc(pos: Vector3, basis: Basis) -> int:
+	# Built once per race on the first spawn — the road network is up by now, and doing
+	# it here keeps both race gamemodes from needing their own call. Cleared on despawn.
+	if _route_graph == null:
+		_route_graph = TrafficRouteGraph.new(
+			TrafficRouteGraph.gather_lanes(get_tree(), _find_road_manager())
+		)
 	var npc_id := _next_id
 	_next_id -= 1
 	var def := npc_definitions[(-npc_id - 1) % npc_definitions.size()]
@@ -66,6 +76,8 @@ func spawn_npc(pos: Vector3, basis: Basis) -> int:
 func despawn_all_npcs() -> void:
 	for npc_id in _npcs.keys():
 		rpc_despawn_npc.rpc(npc_id)
+	# Its lanes belong to the level being torn down; the next race rebuilds it.
+	_route_graph = null
 
 
 func get_npc_ids() -> Array[int]:
@@ -109,7 +121,12 @@ func rpc_spawn_npc(npc_id: int, def_dict: Dictionary, pos: Vector3, basis: Basis
 		return
 	# StateMachine._ready defers its own transition into the idle state — queue
 	# ours behind it so the bot isn't flipped straight back to idle.
-	var race_state := npc.state_machine.get_state_by_name("NPCRaceState")
+	var race_state := npc.state_machine.get_state_by_name("NPCRaceState") as NPCRaceState
+	race_state.route_graph = _route_graph
+	race_state.race_task = race_task
+	# Wedged on geometry the lanes don't model — same wipeout + checkpoint respawn a
+	# crash gets, which is exactly the recovery we want.
+	race_state.stuck.connect(crash_npc.bind(npc_id))
 	npc.state_machine.request_state_change.call_deferred(race_state)
 
 

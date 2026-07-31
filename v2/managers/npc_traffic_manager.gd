@@ -64,7 +64,7 @@ func start_traffic(for_race: bool = false) -> void:
 	# Maps with no road network (the stunt map) simply get no traffic.
 	if road_manager == null:
 		return
-	_route_graph = TrafficRouteGraph.new(_gather_lanes(road_manager))
+	_route_graph = TrafficRouteGraph.new(TrafficRouteGraph.gather_lanes(get_tree(), road_manager))
 
 	# Containers defer their first rebuild_segments(true) — which frees and
 	# regenerates every lane — so the graph we just built goes stale moments
@@ -155,7 +155,7 @@ func _rebuild_route_graph() -> void:
 	# Traffic was stopped while the rebuild was queued — nothing to re-derive.
 	if _route_graph == null:
 		return
-	_route_graph.rebuild(_gather_lanes(_find_road_manager()))
+	_route_graph.rebuild(TrafficRouteGraph.gather_lanes(get_tree(), _find_road_manager()))
 
 
 #endregion
@@ -215,18 +215,6 @@ func _find_road_manager() -> RoadManager:
 	if found.is_empty():
 		return null
 	return found[0]
-
-
-## Every AI lane under the manager. Containers may override the manager's lane
-## group with their own, so check both (same sweep RoadLaneAgent does).
-func _gather_lanes(road_manager: RoadManager) -> Array:
-	var out: Array = []
-	out.append_array(get_tree().get_nodes_in_group(road_manager.ai_lane_group))
-	for container in road_manager.get_containers():
-		if container.ai_lane_group == "":
-			continue
-		out.append_array(get_tree().get_nodes_in_group(container.ai_lane_group))
-	return out
 
 
 #endregion
