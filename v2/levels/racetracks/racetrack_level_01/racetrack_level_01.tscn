@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dd0g6yrox40hj"]
 
 [ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_r8gbb"]
+[ext_resource type="Resource" path="res://resources/traffic/settings/racetrack_level_01_traffic_settings.tres" id="1_trfst"]
 [ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/gamemodeobjects/killbox.tscn" id="2_l4hkb"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="3_xxw4c"]
 [ext_resource type="Script" uid="uid://c3ycg631dwkse" path="res://utils/editor_tools/take_screenshot.gd" id="4_ej7gd"]
@@ -241,6 +242,7 @@ script = ExtResource("1_r8gbb")
 player_spawn_pos = NodePath("Spawnpoints/PlayerSpawn")
 player_spawn_pos_debug = NodePath("Spawnpoints/PlayerSpawnTest")
 grid_markers = [NodePath("Spawnpoints/Spawn1"), NodePath("Spawnpoints/Spawn2"), NodePath("Spawnpoints/Spawn3"), NodePath("Spawnpoints/Spawn4"), NodePath("Spawnpoints/Spawn5"), NodePath("Spawnpoints/Spawn6"), NodePath("Spawnpoints/Spawn7"), NodePath("Spawnpoints/Spawn8")]
+traffic_settings = ExtResource("1_trfst")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=215805659]

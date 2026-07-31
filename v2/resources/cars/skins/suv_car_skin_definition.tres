@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CarSkinDefinition" format=3 uid="uid://c8wxf0des6hem"]
+
+[ext_resource type="Shape3D" uid="uid://bldxfe7d68s3v" path="res://resources/cars/hitbox/suv_hitbox.tres" id="1_h65y7"]
+[ext_resource type="PackedScene" uid="uid://0qiebj2prmqs" path="res://entities/vehicles/scenes/suv.tscn" id="2_p800b"]
+[ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_rc8yg"]
+[ext_resource type="Script" uid="uid://p2mjdn2eyh12" path="res://resources/cars/car_skin_definition.gd" id="4_v5ptt"]
+
+[resource]
+script = ExtResource("4_v5ptt")
+skin_name = "suv"
+mesh_res = ExtResource("2_p800b")
+collision_shape = ExtResource("1_h65y7")
+collision_position_offset = Vector3(0, 0.788, 0)

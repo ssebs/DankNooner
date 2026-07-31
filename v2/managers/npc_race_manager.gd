@@ -94,6 +94,9 @@ func rpc_spawn_npc(npc_id: int, def_dict: Dictionary, pos: Vector3, basis: Basis
 	npc.bike_definition = def.bike_skin
 	npc.character_definition = def.character_skin
 	npc.username = "%s %d" % [def.username, -npc_id]
+	# Paint pool lives on the level's TrafficSettings — race bots on this map paint
+	# from the same one. Read per peer, like the rest of the level's settings.
+	npc.paint_colors = level_manager.current_level.traffic_settings.paint_colors
 	# Lane follower needs the level's RoadManager before _ready runs.
 	npc.road_manager = _find_road_manager()
 

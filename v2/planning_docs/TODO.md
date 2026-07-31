@@ -19,19 +19,21 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
       race bots deliberately excluded so racing stays as-is)
 - [x] traffic vehicle roster: mixed bikes + cars, rolled per rider from the skin
       folders (CarSkin/CarSkinDefinition pair; a car spawns no bike + no rider)
+- [x] per-level rosters — TrafficSettings.bike_roster / car_roster narrow what a map
+      rolls; empty roster falls back to the global skin folder
 - [ ] per-vehicle traffic tuning (speed scale, lateral wander, spawn weights) —
       every vehicle currently rolls with equal odds and the same cruise speed
 - [ ] wheel spin on traffic vehicles (CarSkin.rotate_wheels exists, nothing calls it;
       NPC bikes have never spun theirs either)
 - [ ] car hit reaction — a crashed car just stops, the wipeout roll is rider-only
-- [ ] per-spawn ColorMod roll for paint variety, off the hash(name)-seeded RNG already
-      in NPCRiderEntity._ready (every peer names the rider the same, so every peer rolls
-      the same paint — no extra sync). GOTCHA: skin definitions are shared resources —
-      duplicate() the definition and give it a fresh `mods` array first, or you repaint
-      every rider using it and leak into the player's bike
+- [x] per-spawn paint roll off the hash(name)-seeded RNG in NPCRiderEntity._ready
+      (TrafficSettings.paint_colors → SkinColor.update_slot_color(0)). Went through the
+      per-instance runtime materials rather than a ColorMod, which sidesteps the
+      shared-definition problem entirely. Only slot 0 rolls — multi-slot paint is open
 - [ ] delete ___TRAFFIC_AI_PLAN___.md once the above are done (it's otherwise implemented;
       CarSkin/CarSkinDefinition are documented in Skins.md)
 - [ ] tune density / cruise speed once the city map exists (rest in Backlog > AI/traffic)
+- [ ] street races (traffic is there+ racing ai simultaneously)
 
 
 ### From my phone
@@ -227,7 +229,6 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Traffic lane changes + overtaking (v1 follows one lane per junction leg)
 - [ ] Near-miss detection → trick/score bonus (wheelie variant)
 - [ ] Traffic during races ("race thru traffic" mode)
-- [ ] Level-driven traffic spawner node for per-map density (city map)
 - [ ] Consolidate NPCRaceManager + NPCTrafficManager onto a shared base (they
       duplicate the spawn/despawn RPC pattern)
 - [ ] Complex traffic / AI system (A* pathfinding, state machine, sequence system)
