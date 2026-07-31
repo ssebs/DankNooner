@@ -15,6 +15,14 @@ class_name NPCAnimationController extends Node
 @export var wheelie_pitch_deg: float = 35.0
 @export var crash_roll_deg: float = 80.0
 @export var rotation_blend_speed: float = 6.0
+## Past this distance from the active camera the rider's rig stops updating — limb IK is
+## cosmetic, so a distant rider holding its last pose reads fine. The bike keeps driving,
+## colliding and syncing; only the skeleton work stops, which is why this is safe during
+## races where culling the simulation would not be. Same idea as the VisibleOnScreenEnabler3D
+## approach in the Godot 3D perf docs, by distance so it doesn't pop as the camera swings.
+@export var rig_cull_distance: float = 60.0
+## How often the distance check runs. It's cheap, but there's no reason to do it per tick.
+@export var rig_cull_check_interval: float = 0.5
 
 @onready var _butt_target: Marker3D = %ButtTarget
 @onready var _chest_target: Marker3D = %ChestTarget
@@ -32,11 +40,26 @@ var _initialized: bool = false
 var _prev_yaw: float = 0.0
 var _yaw_rate: float = 0.0
 
+## Rig LOD state — see rig_cull_distance.
+var _ik_ctrl: IKController
+var _rig_active: bool = true
+var _rig_next_check_ms: int = 0
+
+## Rider pose is fixed per bike definition, so these resolve once in initialize() rather
+## than being rebuilt every tick — four Basis.from_euler calls plus a node lookup per
+## rider per tick, all for values that never change.
+var _hb_parent: Node3D
+var _left_hand_local: Transform3D
+var _right_hand_local: Transform3D
+var _left_foot_local: Transform3D
+var _right_foot_local: Transform3D
+
 
 ## Called from NPCRiderEntity._ready after skins are applied. Same sequence as
 ## PlayerEntity._init_ik().
 func initialize() -> void:
 	var ik_ctrl: IKController = npc.character_skin.ik_controller
+	_ik_ctrl = ik_ctrl
 	var def := npc.bike_definition
 	_butt_target.position = def.seat_marker_position
 	ik_ctrl.set_targets(
@@ -56,42 +79,79 @@ func initialize() -> void:
 	ik_ctrl._create_ik()
 	npc.character_skin.enable_ik()
 	_prev_yaw = npc.rotation.y
+
+	_hb_parent = npc.bike_skin.steering_handlebar_marker.get_parent() as Node3D
+	_left_hand_local = Transform3D(
+		Basis.from_euler(def.left_hand_rotation), def.left_hand_position
+	)
+	_right_hand_local = Transform3D(
+		Basis.from_euler(def.right_hand_rotation), def.right_hand_position
+	)
+	_left_foot_local = Transform3D(
+		Basis.from_euler(def.left_foot_rotation), def.left_foot_position
+	)
+	_right_foot_local = Transform3D(
+		Basis.from_euler(def.right_foot_rotation), def.right_foot_position
+	)
 	_initialized = true
 
 
 func _physics_process(delta: float):
 	if !_initialized:
 		return
-	_sync_targets_from_bike()
+	_update_rig_lod()
+	# Lean/pitch stays on at any distance — it's two lerps on one node, and a bike that
+	# stops leaning through corners is obvious in a way a frozen wrist isn't.
+	if _rig_active:
+		_sync_targets_from_bike()
 	_update_yaw_rate(delta)
 	_apply_visual_root_rotation(delta)
+
+
+## Toggle the cosmetic rider rig by distance from the active camera. Runs on every peer
+## against its own view — the rig is local cosmetics, nothing here is synced or authoritative.
+##
+## Note this cuts Process time as much as Physics: Skeleton3D runs its modifiers (the
+## FABRIK3D solve) on the idle callback by default, so switching the modifier off lands in
+## a different budget than the target writes below.
+func _update_rig_lod() -> void:
+	var now := Time.get_ticks_msec()
+	if now < _rig_next_check_ms:
+		return
+	_rig_next_check_ms = now + int(rig_cull_check_interval * 1000.0)
+
+	var cam := get_viewport().get_camera_3d()
+	# No camera yet while a level is still loading — leave the rig as it is until there is one.
+	if cam == null:
+		return
+	var active := (
+		npc.global_position.distance_squared_to(cam.global_position)
+		< rig_cull_distance * rig_cull_distance
+	)
+	if active == _rig_active:
+		return
+	_rig_active = active
+	# enable_ik/disable_ik already own the modifier + hip-placement flags.
+	if active:
+		_ik_ctrl.enable_ik()
+	else:
+		_ik_ctrl.disable_ik()
+	_ik_ctrl.set_physics_process(active)
 
 
 ## Same math as AnimationController._sync_targets_from_bike: hands anchored to
 ## the steering rotation node, feet to the bike skin, from saved definition
 ## transforms.
 func _sync_targets_from_bike() -> void:
-	var def := npc.bike_definition
-	var hb_parent := npc.bike_skin.steering_handlebar_marker.get_parent() as Node3D
-	var peg_parent: Node3D = npc.bike_skin
+	# Locals and the handlebar parent are cached in initialize() — only the two parent
+	# global_transforms actually change per tick, so read each once.
+	var hb_global := _hb_parent.global_transform
+	var peg_global := npc.bike_skin.global_transform
 
-	var left_hand_local := Transform3D(
-		Basis.from_euler(def.left_hand_rotation), def.left_hand_position
-	)
-	var right_hand_local := Transform3D(
-		Basis.from_euler(def.right_hand_rotation), def.right_hand_position
-	)
-	var left_foot_local := Transform3D(
-		Basis.from_euler(def.left_foot_rotation), def.left_foot_position
-	)
-	var right_foot_local := Transform3D(
-		Basis.from_euler(def.right_foot_rotation), def.right_foot_position
-	)
-
-	_left_hand_target.global_transform = hb_parent.global_transform * left_hand_local
-	_right_hand_target.global_transform = hb_parent.global_transform * right_hand_local
-	_left_foot_target.global_transform = peg_parent.global_transform * left_foot_local
-	_right_foot_target.global_transform = peg_parent.global_transform * right_foot_local
+	_left_hand_target.global_transform = hb_global * _left_hand_local
+	_right_hand_target.global_transform = hb_global * _right_hand_local
+	_left_foot_target.global_transform = peg_global * _left_foot_local
+	_right_foot_target.global_transform = peg_global * _right_foot_local
 
 
 ## Rider pose from definition — ZERO means "not yet authored", skip those

@@ -235,9 +235,12 @@ func _move_along_lane(move_distance: float, update_lane: bool = true) -> Vector3
 	if not is_instance_valid(current_lane):
 		current_lane = null
 	var pos = actor.global_transform.origin
-	var lane_pos:Vector3 = get_closest_path_point(current_lane, pos)
-	# Find how much space is left along the RoadLane in this direction
-	var init_offset:float = current_lane.curve.get_closest_offset(current_lane.to_local(lane_pos))
+	# PATCHED (DankNooner, perf): was get_closest_offset(to_local(get_closest_path_point(pos))).
+	# Both get_closest_point and get_closest_offset run the same nearest-baked-point search,
+	# so that walked the curve twice for one answer — the offset of the point nearest `pos`
+	# is the same whether you ask about `pos` or about the point already nearest it.
+	# Profiled at 17ms/frame in get_closest_path_point with 128 agents.
+	var init_offset:float = current_lane.curve.get_closest_offset(current_lane.to_local(pos))
 	var check_next_offset:float = init_offset + move_distance
 	var _update_lane = current_lane
 	var lane_length = current_lane.curve.get_baked_length()

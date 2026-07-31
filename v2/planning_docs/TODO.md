@@ -31,9 +31,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
       per-instance runtime materials rather than a ColorMod, which sidesteps the
       shared-definition problem entirely. Only slot 0 rolls — multi-slot paint is open.
       SkinColor.do_not_use_color opts fixed liveries out (taxi set, cop car later)
-- [ ] delete ___TRAFFIC_AI_PLAN___.md once the above are done (it's otherwise implemented;
-      CarSkin/CarSkinDefinition are documented in Skins.md)
-- [ ] tune density / cruise speed once the city map exists (rest in Backlog > AI/traffic)
+- [x] tune density / cruise speed once the city map exists (rest in Backlog > AI/traffic)
 - [ ] street races (traffic is there+ racing ai simultaneously)
 
 

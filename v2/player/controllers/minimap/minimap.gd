@@ -16,6 +16,10 @@ class_name Minimap extends PanelContainer
 @export var border_width: float = 2.0
 ## Length of the edge pointer triangle for off-map racers.
 @export var arrow_size: float = 6.0
+## Blip redraw rate. The map camera still follows every frame — only the overlay throttles.
+## Each blip is two draw_circle calls, so at 100+ racers this pass cost several ms a frame,
+## and blips do not need 60Hz.
+@export var blip_refresh_hz: float = 20.0
 
 const COLOR_SELF := Color.WHITE
 const COLOR_PLAYER := Color(0.2, 0.5, 1.0)
@@ -33,6 +37,7 @@ var _active: bool = false
 ## (checkpoint progress is server-only), null while not racing.
 var _checkpoint_pos: Vector3
 var _has_checkpoint: bool = false
+var _blip_timer: float = 0.0
 
 
 func _ready():
@@ -50,7 +55,7 @@ func activate(local_player: PlayerEntity) -> void:
 	set_process(true)
 
 
-func _process(_delta: float):
+func _process(delta: float):
 	if !_active:
 		return
 
@@ -61,7 +66,12 @@ func _process(_delta: float):
 	var cam_pos := _local_player.global_position + Vector3.UP * height
 	_camera.look_at_from_position(cam_pos, _local_player.global_position, player_fwd)
 
-	_dot_overlay.queue_redraw()
+	# Camera follows every frame so the map itself stays smooth; only the blip overlay
+	# throttles. The overlay keeps its last drawn frame in between.
+	_blip_timer -= delta
+	if _blip_timer <= 0.0:
+		_blip_timer = 1.0 / blip_refresh_hz
+		_dot_overlay.queue_redraw()
 
 
 ## Runs during the overlay's draw pass (connected to its `draw` signal), so the
@@ -72,6 +82,10 @@ func _draw_dots() -> void:
 	if !_active:
 		return
 	for racer in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Racers"]):
+		# Ambient traffic isn't something you navigate by, and at 100+ riders plotting it
+		# was most of this pass — and most of them pin to the map edge as arrows anyway.
+		if racer.is_in_group(UtilsConstants.GROUPS["Traffic"]):
+			continue
 		var color := COLOR_PLAYER
 		if racer == _local_player:
 			color = COLOR_SELF

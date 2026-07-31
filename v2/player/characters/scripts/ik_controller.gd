@@ -21,6 +21,12 @@ var ik_settings_map: Array[Dictionary] = []
 
 var can_move_butt: bool = true
 
+## bone name -> index. The per-tick pose writes below used to call Skeleton3D.find_bone —
+## a string search across every bone — 7 times per rig per tick, which at 128 NPC riders
+## is ~900 string searches a tick for indices that never move. Cleared in _create_ik(),
+## the only place a different skeleton can come in.
+var _bone_idx_cache: Dictionary[String, int] = {}
+
 
 func _physics_process(_delta):
 	if can_move_butt:
@@ -83,7 +89,7 @@ func _move_hips_to_butt_target():
 	var skel_3d = char_skin.skel_3d
 	if skel_3d == null:
 		return
-	var hips_idx = skel_3d.find_bone("Hips")
+	var hips_idx = _bone_idx(skel_3d, "Hips")
 	if hips_idx == -1:
 		DebugUtils.DebugErrMsg("could not find Hips bone in skel_3d")
 		return
@@ -114,11 +120,19 @@ func _apply_end_bone_rotations():
 		_rotate_bone_to_marker("Head", ik_head)
 
 
+## Cached bone lookup — a miss is stored too (find_bone returns -1), so a rig missing a
+## bone doesn't re-search for it every tick either.
+func _bone_idx(skel_3d, bone_name: String) -> int:
+	if !_bone_idx_cache.has(bone_name):
+		_bone_idx_cache[bone_name] = skel_3d.find_bone(bone_name)
+	return _bone_idx_cache[bone_name]
+
+
 func _rotate_bone_to_marker(bone_name: String, marker: Marker3D):
 	var skel_3d = char_skin.skel_3d
 	if skel_3d == null:
 		return
-	var bone_idx = skel_3d.find_bone(bone_name)
+	var bone_idx = _bone_idx(skel_3d, bone_name)
 	if bone_idx == -1:
 		return
 
@@ -143,6 +157,9 @@ func _create_ik() -> void:
 	if skel_3d == null:
 		DebugUtils.DebugErrMsg("Cannot create IK: skel_3d is null")
 		return
+
+	# Indices belong to whatever skeleton was cached against — this may be a new one.
+	_bone_idx_cache.clear()
 
 	# Clear old fabrik_ik if it exists
 	if fabrik_ik != null and is_instance_valid(fabrik_ik):

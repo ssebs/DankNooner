@@ -62,6 +62,13 @@ enum VehicleType { BIKE, CAR }
 ## Paint pool this rider picks its color from, set by the spawning manager off the
 ## level's TrafficSettings. Empty leaves the skin's authored color alone.
 @export var paint_colors: Array[Color] = []
+## How long a cached "rider ahead" / corner-speed reading is reused before re-scanning.
+## Both sweeps are expensive: nearest_racer_ahead walks every racer in the level (so the
+## pack costs O(n²) a tick), and lane_speed does two baked-curve searches. Running either
+## at full tick rate is what caps rider count. Rolled per rider so scans spread across
+## frames instead of spiking on one. Steering itself still updates every tick.
+@export var scan_interval_min: float = 0.15
+@export var scan_interval_max: float = 0.25
 
 const GRAVITY: float = 30.0
 
@@ -98,6 +105,12 @@ var line_offset: float = 0.0
 
 ## Stable per-rider scale on move_speed (see speed_variance).
 var _speed_scale: float = 1.0
+
+## Cached sweep results, refreshed on the scan_interval cadence rather than per tick.
+var _blocker: Node3D
+var _blocker_next_scan_ms: int = 0
+var _lane_speed: float = 0.0
+var _lane_speed_next_scan_ms: int = 0
 
 
 ## Drop the skins this vehicle doesn't wear — a car keeps CarSkin, a bike keeps
@@ -193,7 +206,15 @@ func cruise_speed() -> float:
 ## the window vs the far half: straight -> cruise, a bend eases toward
 ## min_turn_speed. Because we look ahead, the bot brakes BEFORE the apex and
 ## accelerates back out as the road straightens.
+## Throttled — two baked-curve searches per call (RoadLaneAgent._move_along_lane does a
+## get_closest_point AND a get_closest_offset each), and steer_toward ramps toward the
+## result anyway, so a reading a fraction of a second old is indistinguishable.
 func lane_speed() -> float:
+	var now := Time.get_ticks_msec()
+	if now < _lane_speed_next_scan_ms:
+		return _lane_speed
+	_lane_speed_next_scan_ms = now + _next_scan_delay_ms()
+
 	var mid := lane_agent.test_move_along_lane(turn_lookahead)
 	var far := lane_agent.test_move_along_lane(turn_lookahead * 2.0)
 	var lead := mid - global_position
@@ -203,7 +224,8 @@ func lane_speed() -> float:
 	var alignment := 1.0
 	if lead.length_squared() > 0.01 and trail.length_squared() > 0.01:
 		alignment = clampf(lead.normalized().dot(trail.normalized()), 0.0, 1.0)
-	return lerpf(min_turn_speed, cruise_speed(), pow(alignment, turn_sharpness))
+	_lane_speed = lerpf(min_turn_speed, cruise_speed(), pow(alignment, turn_sharpness))
+	return _lane_speed
 
 
 ## How far ahead to place the steering target at the current speed.
@@ -238,7 +260,16 @@ func apply_gravity_and_move(delta: float) -> void:
 ## Nearest racer within range + forward cone that is slower than us — the one
 ## worth passing / tucking in behind. Null if the road ahead is clear. Scans
 ## humans too.
+## Throttled — this sweeps the whole Racers group, so every rider doing it every tick
+## makes the pack O(n²) (128 riders ≈ 16k iterations a tick). A reaction delay of a
+## fraction of a second on "ease off behind the rider ahead" reads as normal driving.
 func nearest_racer_ahead(detect_range: float, detect_angle: float) -> Node3D:
+	var now := Time.get_ticks_msec()
+	if now < _blocker_next_scan_ms:
+		# Whoever we found last sweep may have despawned or crashed out since.
+		return _blocker if is_instance_valid(_blocker) else null
+	_blocker_next_scan_ms = now + _next_scan_delay_ms()
+
 	var forward := -global_transform.basis.z
 	forward.y = 0.0
 	forward = forward.normalized()
@@ -258,7 +289,13 @@ func nearest_racer_ahead(detect_range: float, detect_angle: float) -> Node3D:
 			continue
 		best = racer
 		best_dist = dist
+	_blocker = best
 	return best
+
+
+## Randomized per call so riders never settle into scanning on the same tick.
+func _next_scan_delay_ms() -> int:
+	return int(randf_range(scan_interval_min, scan_interval_max) * 1000.0)
 
 
 ## Horizontal speed of any racer (NPC or player) — both are CharacterBody3D.
