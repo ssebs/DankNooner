@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://c8qlsdtal72mr"]
 
 [ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_craaw"]
+[ext_resource type="Resource" uid="uid://b3u0inad4glpn" path="res://resources/traffic/settings/stunt_track_01_traffic_settings.tres" id="1_trfst"]
 [ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/gamemodeobjects/killbox.tscn" id="3_cbnwg"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="4_e82mi"]
 [ext_resource type="PackedScene" uid="uid://ce0rc0lmwvocu" path="res://levels/assets/props/tree.glb" id="5_y88sc"]
@@ -168,6 +169,7 @@ script = ExtResource("1_craaw")
 player_spawn_pos = NodePath("PlayerSpawn")
 player_spawn_pos_debug = NodePath("PlayerSpawn")
 grid_markers = [NodePath("Spawn1"), NodePath("Spawn2"), NodePath("Spawn3"), NodePath("Spawn4")]
+traffic_settings = ExtResource("1_trfst")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="PlayerSpawn" type="Marker3D" parent="." unique_id=597938046]

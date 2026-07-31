@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="TrafficSettings" format=3]
+
+[ext_resource type="Script" path="res://resources/traffic/traffic_settings.gd" id="1_trfst"]
+
+[resource]
+script = ExtResource("1_trfst")
+traffic_count = 8
+car_chance = 0.5
+cruise_speed = 22.0

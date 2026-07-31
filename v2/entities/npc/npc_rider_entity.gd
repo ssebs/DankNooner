@@ -59,6 +59,9 @@ enum VehicleType { BIKE, CAR }
 @export var max_steer_lookahead: float = 12.0
 ## Per-bot lateral wander off the lane centreline so they don't trace one line.
 @export var max_line_offset: float = 0.7
+## Paint pool this rider picks its color from, set by the spawning manager off the
+## level's TrafficSettings. Empty leaves the skin's authored color alone.
+@export var paint_colors: Array[Color] = []
 
 const GRAVITY: float = 30.0
 
@@ -161,6 +164,7 @@ func _ready():
 	rng.seed = hash(name)
 	line_offset = rng.randf_range(-max_line_offset, max_line_offset)
 	_speed_scale = rng.randf_range(1.0 - speed_variance, 1.0 + speed_variance)
+	_roll_paint(rng)
 
 	# Clients never simulate — they just play back the synced transform.
 	if !multiplayer.is_server():
@@ -344,6 +348,23 @@ func _init_mesh() -> void:
 	character_skin.apply_definition()
 	if editing:
 		car_skin.visible = false
+
+
+## Repaint the mesh's first color slot from the level's paint pool, off the same
+## hash(name)-seeded rng as the rest of the per-rider variety — every peer names
+## this rider identically, so every peer rolls the same paint with nothing synced.
+##
+## Deliberately not a ColorMod on the definition: skin definitions are shared
+## resources, so writing mods would repaint every rider wearing that skin (and leak
+## into the player's bike). SkinColor's runtime materials are per instance, so
+## going through update_slot_color only touches this one vehicle.
+func _roll_paint(rng: RandomNumberGenerator) -> void:
+	if paint_colors.is_empty():
+		return
+	var skin: SkinColor = (
+		car_skin.mesh_skin if vehicle_type == VehicleType.CAR else bike_skin.mesh_skin
+	)
+	skin.update_slot_color(0, paint_colors[rng.randi() % paint_colors.size()])
 
 
 ## free(), not queue_free() — a deferred free still lets the node's _ready run and

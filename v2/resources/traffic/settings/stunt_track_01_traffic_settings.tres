@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="TrafficSettings" format=3 uid="uid://b3u0inad4glpn"]
+
+[ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/bikes/bike_skin_definition.gd" id="1_fjo22"]
+[ext_resource type="Script" uid="uid://c82qxqpywlr1o" path="res://resources/traffic/traffic_settings.gd" id="1_trfst"]
+[ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/bikes/skins/sport_default_skin_definition.tres" id="2_q8exi"]
+[ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/bikes/skins/naked_default_skin_definition.tres" id="3_16uiw"]
+[ext_resource type="Resource" uid="uid://cvkjasqlccy3m" path="res://resources/bikes/skins/mini_default_skin_definition.tres" id="4_gs0aa"]
+[ext_resource type="Script" uid="uid://p2mjdn2eyh12" path="res://resources/cars/car_skin_definition.gd" id="5_mjb04"]
+[ext_resource type="Resource" uid="uid://b6b3rpheo44ce" path="res://resources/cars/skins/sedan_car_skin_definition.tres" id="6_wu8om"]
+[ext_resource type="Resource" uid="uid://c8wxf0des6hem" path="res://resources/cars/skins/suv_car_skin_definition.tres" id="7_y1vat"]
+[ext_resource type="Resource" uid="uid://xogsicjgfdc4" path="res://resources/cars/skins/taxi_car_skin_definition.tres" id="8_5ux5e"]
+
+[resource]
+script = ExtResource("1_trfst")
+traffic_count = 64
+car_chance = 0.75
+cruise_speed = 18.0
+bike_roster = Array[ExtResource("1_fjo22")]([ExtResource("2_q8exi"), ExtResource("3_16uiw"), ExtResource("4_gs0aa")])
+car_roster = Array[ExtResource("5_mjb04")]([ExtResource("6_wu8om"), ExtResource("7_y1vat"), ExtResource("8_5ux5e")])

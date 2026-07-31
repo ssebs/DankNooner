@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://b1unpyfbdidcb"]
 
-[ext_resource type="Resource" uid="uid://xogsicjgfdc4" path="res://resources/cars/skins/taxi_car_skin_definition.tres" id="2_klalp"]
+[ext_resource type="Resource" uid="uid://c8wxf0des6hem" path="res://resources/cars/skins/suv_car_skin_definition.tres" id="2_ft2i1"]
 [ext_resource type="PackedScene" uid="uid://cu0vh8sgp0l2e" path="res://entities/vfx/spark_particles.tscn" id="3_ovei0"]
 [ext_resource type="Script" uid="uid://dvmp8gii4k5ui" path="res://entities/npc/npc_rider_entity.gd" id="4_npcen"]
 [ext_resource type="Script" uid="uid://dfq5estlsqt7f" path="res://entities/npc/npc_animation_controller.gd" id="5_npcan"]
 [ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/bikes/skins/naked_default_skin_definition.tres" id="6_bkdef"]
 [ext_resource type="Resource" uid="uid://2af1lwc0vbaw" path="res://resources/player/skins/clanker_blue_skin_definition.tres" id="7_chdef"]
 [ext_resource type="Script" uid="uid://ba7kyb4p3trb1" path="res://utils/state_machine/state_machine.gd" id="8_npcsm"]
-[ext_resource type="Shape3D" uid="uid://c2b8moadys5d7" path="res://resources/cars/hitbox/taxi_hitbox.tres" id="9_1voqy"]
+[ext_resource type="Shape3D" uid="uid://bldxfe7d68s3v" path="res://resources/cars/hitbox/suv_hitbox.tres" id="9_1voqy"]
 [ext_resource type="Script" uid="uid://b465356mjtmtr" path="res://entities/npc/states/npc_idle_state.gd" id="9_npcid"]
 [ext_resource type="Script" uid="uid://bvsi4dujqk2hc" path="res://entities/npc/states/npc_race_state.gd" id="10_npcrc"]
 [ext_resource type="Script" uid="uid://bymt6uy5qct0b" path="res://entities/npc/states/npc_traffic_state.gd" id="11_npctr"]
@@ -28,7 +28,7 @@ collision_layer = 3
 collision_mask = 19
 script = ExtResource("4_npcen")
 vehicle_type = 1
-car_definition = ExtResource("2_klalp")
+car_definition = ExtResource("2_ft2i1")
 bike_definition = ExtResource("6_bkdef")
 character_definition = ExtResource("7_chdef")
 animation_controller = NodePath("NPCAnimationController")
@@ -52,7 +52,7 @@ script = ExtResource("11_npctr")
 npc = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=811662464]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -0.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.788, 0)
 shape = ExtResource("9_1voqy")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1384892474]

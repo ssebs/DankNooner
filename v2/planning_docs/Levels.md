@@ -4,6 +4,32 @@ Stuff about levels
 
 TODO - add info here!
 
+## Traffic Density
+
+`LevelDefinition.traffic_settings` is a `TrafficSettings` resource
+(`resources/traffic/traffic_settings.gd`) holding this map's rider count, car/bike
+mix, cruise speed, and vehicle rosters. It defaults to the shared
+`resources/traffic/settings/default_traffic_settings.tres` — assign a per-map
+`.tres` instead to make a level busier, quieter, or car-heavy.
+
+Read once on level entry, in `NPCTrafficManager.start_traffic()`, so edits need a
+re-entry of free roam to take effect. Two caveats:
+
+- Rider count is capped by the level's distinct AI lanes — traffic spawns one rider
+  per lane to spread them out, so a small road network silently ignores the excess.
+- Maps with no `RoadManager` get no traffic at all, whatever the settings say.
+
+Per-map vehicle *rosters* live on the same resource: `bike_roster` / `car_roster`
+limit which skins that map rolls (city spawns cars, racetrack spawns bikes). Leave a
+roster empty and traffic rolls every skin in the global folder instead. A roster only
+narrows the pool — `car_chance` still decides whether a car or a bike comes up.
+
+`paint_colors` on the same resource is the map's paint pool: every spawned NPC
+repaints its mesh's **first color slot** with one entry, picked off the `hash(name)`
+rng `NPCRiderEntity._ready` already seeds — so every peer rolls the same paint with
+nothing synced. Empty leaves the skin's authored color alone. This also covers race
+bots, not just traffic (`NPCRaceManager` reads the same field).
+
 ## Level Preview Image
 
 - Open the `LevelDefinition` Scene

@@ -12,20 +12,17 @@ class_name NPCTrafficManager extends BaseManager
 ## Used to crash a player a traffic rider rammed.
 @export var spawn_manager: SpawnManager
 ## Round-robin source of NPC names + character skins, same as NPCRaceManager.
-## The bike itself is rolled per rider from BIKE_SKINS_DIR, not taken from here.
+## The bike itself is rolled per rider from the map's roster, not taken from here.
 @export var npc_definitions: Array[PlayerDefinition] = [
 	load("res://resources/player/default_player_definition.tres")
 ]
-@export var traffic_count: int = 8
-## Odds a given traffic vehicle is a car rather than a bike + rider.
-@export_range(0.0, 1.0, 0.05) var car_chance: float = 0.5
-## Base move speed handed to every traffic rider (they ride slower than racers).
-@export var cruise_speed: float = 22.0
+## Count, car/bike mix, cruise speed and the vehicle rosters are per-map — see
+## LevelDefinition.traffic_settings.
 @export var respawn_delay: float = 3.0
 
 const NPC_SCENE: PackedScene = preload("res://entities/npc/npc_rider_entity.tscn")
-## Traffic rolls its vehicle out of these — the same folders the customize menu
-## lists, so a new .tres shows up in traffic with no wiring.
+## Fallback pools for maps whose TrafficSettings leave a roster empty — the same
+## folders the customize menu lists, so a new .tres shows up in traffic with no wiring.
 const BIKE_SKINS_DIR: String = "res://resources/bikes/skins/"
 const CAR_SKINS_DIR: String = "res://resources/cars/skins/"
 ## Race NPCs count down from -1; traffic starts far below so the two can never
@@ -35,7 +32,7 @@ const FIRST_ID: int = -1000
 const RECOVER_AHEAD: float = 4.0
 
 var _npcs: Dictionary[int, NPCRiderEntity] = {}
-## res:// paths of every rollable vehicle skin, refreshed each start_traffic.
+## res:// paths of the vehicle skins this map rolls, refreshed each start_traffic.
 var _bike_skin_paths: Array = []
 var _car_skin_paths: Array = []
 var _route_graph: TrafficRouteGraph
@@ -61,15 +58,17 @@ func start_traffic() -> void:
 		if !container.on_road_updated.is_connected(_on_road_updated):
 			container.on_road_updated.connect(_on_road_updated)
 
-	# Only the paths matter here — the skin_name keys are the menu's concern.
-	_bike_skin_paths = SkinScanner.scan_skin_dir(BIKE_SKINS_DIR).values()
-	_car_skin_paths = SkinScanner.scan_skin_dir(CAR_SKINS_DIR).values()
+	var settings := level_manager.current_level.traffic_settings
+	_bike_skin_paths = _roster_paths(settings.bike_roster, BIKE_SKINS_DIR)
+	_car_skin_paths = _roster_paths(settings.car_roster, CAR_SKINS_DIR)
+
+	var count := settings.traffic_count
 
 	# Shuffled distinct lanes — spreads riders over the whole network instead of
 	# stacking them all at one spawn point.
 	var spawn_lanes := _route_graph.lanes.duplicate()
 	spawn_lanes.shuffle()
-	for i in mini(traffic_count, spawn_lanes.size()):
+	for i in mini(count, spawn_lanes.size()):
 		var lane_transform := _route_graph.lane_start_transform(spawn_lanes[i])
 		var npc_id := _next_id
 		_next_id -= 1
@@ -86,7 +85,8 @@ func start_traffic() -> void:
 ## that round-trips every loadout through BikeSkinDefinition.from_dict(), which
 ## writes a .tres into user://skins/ per rider per peer.
 func _roll_vehicle(def: PlayerDefinition, npc_id: int) -> Dictionary:
-	if !_car_skin_paths.is_empty() and randf() < car_chance:
+	var chance := level_manager.current_level.traffic_settings.car_chance
+	if !_car_skin_paths.is_empty() and randf() < chance:
 		# No rider on a car, so no character skin and no name to label it with.
 		return {
 			"type": NPCRiderEntity.VehicleType.CAR,
@@ -100,6 +100,19 @@ func _roll_vehicle(def: PlayerDefinition, npc_id: int) -> Dictionary:
 		"character": def.character_skin.resource_path,
 		"username": "%s %d" % [def.username, -npc_id],
 	}
+
+
+## res:// paths of the skins this map may roll: the level's roster if it named one,
+## otherwise everything in the global folder. Paths, not the resources themselves —
+## _roll_vehicle ships them across the wire.
+func _roster_paths(roster: Array, fallback_dir: String) -> Array:
+	if roster.is_empty():
+		# Only the paths matter here — the skin_name keys are the menu's concern.
+		return SkinScanner.scan_skin_dir(fallback_dir).values()
+	var out: Array = []
+	for skin in roster:
+		out.append(skin.resource_path)
+	return out
 
 
 func stop_traffic() -> void:
@@ -146,7 +159,9 @@ func rpc_spawn_npc(npc_id: int, vehicle: Dictionary, pos: Vector3, basis: Basis)
 		npc.bike_definition = load(vehicle["skin"])
 		npc.character_definition = load(vehicle["character"])
 		npc.username = vehicle["username"]
-	npc.move_speed = cruise_speed
+	# Read per peer rather than shipped — every peer has the same level loaded.
+	npc.move_speed = level_manager.current_level.traffic_settings.cruise_speed
+	npc.paint_colors = level_manager.current_level.traffic_settings.paint_colors
 	# Lane follower needs the level's RoadManager before _ready runs.
 	npc.road_manager = _find_road_manager()
 

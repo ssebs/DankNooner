@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://0qiebj2prmqs"]
+
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="1_l24hu"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="2_udbyj"]
+[ext_resource type="PackedScene" uid="uid://dp2ksmw02ljy" path="res://entities/npc/assets/Cars Bundle-glb/SUV.glb" id="3_l24hu"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o356b"]
+
+[sub_resource type="Resource" id="Resource_wcbnl"]
+script = ExtResource("2_udbyj")
+color = Color(0.117647074, 0.85882354, 0.1465993, 1)
+use_standard_material = true
+standard_material = SubResource("StandardMaterial3D_o356b")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l24hu"]
+albedo_color = Color(0.117647074, 0.85882354, 0.1465993, 1)
+
+[node name="SUVCar" type="Node3D" unique_id=1065239879 node_paths=PackedStringArray("meshes")]
+script = ExtResource("1_l24hu")
+slots = Array[ExtResource("2_udbyj")]([SubResource("Resource_wcbnl")])
+meshes = [NodePath("SUV/SUV_Cube")]
+
+[node name="SUV" parent="." unique_id=1067595615 instance=ExtResource("3_l24hu")]
+
+[node name="SUV_Cube" parent="SUV" index="0" unique_id=557581072]
+surface_material_override/0 = SubResource("StandardMaterial3D_l24hu")
+
+[editable path="SUV"]
