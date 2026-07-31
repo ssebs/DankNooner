@@ -92,7 +92,7 @@ func get_hint_text() -> String:
 	return ""
 
 
-#region NPC racers (server-side, driven by StreetRaceGameMode / NPCRaceManager)
+#region NPC racers (server-side, driven by the race gamemodes / NPCRaceManager)
 
 
 ## Adds an NPC row so checkpoint crossings score it like any peer. Called at

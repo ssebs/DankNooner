@@ -171,7 +171,7 @@ func show_hud() -> void:
 
 
 ## Server-side: forward the local racer's next-checkpoint marker to the owning
-## client's minimap. Called from StreetRaceGameMode.
+## client's minimap. Called from the race gamemodes.
 func push_checkpoint_marker(peer_id: int, pos: Vector3, has_target: bool) -> void:
 	_minimap.rpc_set_checkpoint.rpc_id(peer_id, pos, has_target)
 

@@ -3,7 +3,7 @@
 ## RPCs (mirrors SpawnManager's pattern), and the server-only AI tick that
 ## points each NPC at its next checkpoint from RaceTask.
 ##
-## StreetRaceGameMode sets `race_task` while a race runs and calls
+## The race gamemodes set `race_task` while a race runs and call
 ## spawn_npc / register — see that gamemode for the lifecycle.
 class_name NPCRaceManager extends BaseManager
 
@@ -17,7 +17,7 @@ class_name NPCRaceManager extends BaseManager
 
 const NPC_SCENE: PackedScene = preload("res://entities/npc/npc_rider_entity.tscn")
 
-## Set by StreetRaceGameMode while a race is running; null otherwise.
+## Set by RoadRaceGameMode / StreetRaceGameMode while a race runs; null otherwise.
 var race_task: RaceTask
 
 var _npcs: Dictionary[int, NPCRiderEntity] = {}

@@ -140,7 +140,7 @@ func _draw_edge_arrow(pos: Vector2, dir: Vector2, color: Color) -> void:
 
 
 ## Server -> owning client: set (or clear) the local racer's next-checkpoint
-## marker. Sent each frame while racing by StreetRaceGameMode.
+## marker. Sent each frame while racing by the race gamemodes.
 @rpc("authority", "call_local", "unreliable")
 func rpc_set_checkpoint(pos: Vector3, has_target: bool) -> void:
 	_checkpoint_pos = pos

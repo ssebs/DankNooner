@@ -21,6 +21,16 @@
 [ext_resource type="Texture2D" uid="uid://c3ut0vgj85xtc" path="res://levels/assets/graybox/purple.png" id="13_7qjpf"]
 [ext_resource type="Texture2D" uid="uid://cjrex0qopeses" path="res://levels/assets/graybox/lightgray.png" id="14_185dl"]
 [ext_resource type="ArrayOccluder3D" uid="uid://dtiwh8mj1id14" path="res://levels/racetracks/stunt_track_01/stunt_track_01.occ" id="20_a57fq"]
+[ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.tscn" id="22_eair3"]
+[ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/bikes/skins/sport_default_skin_definition.tres" id="23_s2l3m"]
+[ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://managers/gamemodes/resources/gamemode_event_definition.gd" id="24_l8nu3"]
+[ext_resource type="Script" uid="uid://f840hmifnv7g" path="res://managers/gamemodes/runners/sequential_task_runner.gd" id="25_b3ac3"]
+[ext_resource type="Script" uid="uid://cij1aa5h6g5nb" path="res://managers/gamemodes/tasks/grid_spawn_task.gd" id="26_clf25"]
+[ext_resource type="Script" uid="uid://1hiltkmgy4i3" path="res://managers/gamemodes/runners/concurrent_task_runner.gd" id="27_k3cxb"]
+[ext_resource type="Script" uid="uid://8xvij2vjrnn2" path="res://managers/gamemodes/tasks/countdown_task.gd" id="28_ythoq"]
+[ext_resource type="Script" uid="uid://cpdxy3nxph3x0" path="res://managers/gamemodes/tasks/sfx_task.gd" id="29_s8lvk"]
+[ext_resource type="Script" uid="uid://bk8siml2v41d1" path="res://managers/gamemodes/tasks/race_task.gd" id="30_mn4lr"]
+[ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="31_3twxm"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e82mi"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -164,6 +174,14 @@ uv_scale = 0.5
 mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_ckww3"), SubResource("Terrain3DMeshAsset_5ryor")])
 texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_l4hkb"), SubResource("Terrain3DTextureAsset_ngeet"), SubResource("Terrain3DTextureAsset_cjprs"), SubResource("Terrain3DTextureAsset_8wxaq"), SubResource("Terrain3DTextureAsset_qqwky"), SubResource("Terrain3DTextureAsset_ksgao"), SubResource("Terrain3DTextureAsset_xxw4c")])
 
+[sub_resource type="Resource" id="Resource_ftdt1"]
+script = ExtResource("24_l8nu3")
+name = "Street Race"
+description = "Through Traffic!"
+target_gamemode = 2
+forced_base_bike = ExtResource("23_s2l3m")
+metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
+
 [node name="Stunt Track 01" type="Node3D" unique_id=497611854 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug", "grid_markers")]
 script = ExtResource("1_craaw")
 player_spawn_pos = NodePath("PlayerSpawn")
@@ -199,8 +217,8 @@ depth = 0.5
 color_preset = 3
 
 [node name="PaddockWall2" parent="Paddock_PitLane/Paddock" unique_id=1818405687 instance=ExtResource("4_e82mi")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3, -12.25)
-width = 12.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3, -12.25)
+width = 6.0
 height = 6.0
 depth = 0.5
 color_preset = 3
@@ -1956,3 +1974,114 @@ depth = 2.0
 
 [node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=756147242]
 occluder = ExtResource("20_a57fq")
+
+[node name="StreetRace" parent="." unique_id=459761741 instance=ExtResource("22_eair3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.624523, 0, -17.988443)
+gamemode_event = SubResource("Resource_ftdt1")
+enable_npcs = true
+
+[node name="SequentialTaskRunner" type="Node" parent="StreetRace" unique_id=1232856569]
+script = ExtResource("25_b3ac3")
+metadata/_custom_type_script = "uid://f840hmifnv7g"
+
+[node name="GridSpawnTask" type="Node" parent="StreetRace/SequentialTaskRunner" unique_id=1347349349 node_paths=PackedStringArray("grid_markers")]
+script = ExtResource("26_clf25")
+grid_markers = [NodePath("RaceGridSpot1"), NodePath("RaceGridSpot2"), NodePath("RaceGridSpot3"), NodePath("RaceGridSpot4"), NodePath("RaceGridSpot5"), NodePath("RaceGridSpot6"), NodePath("RaceGridSpot7"), NodePath("RaceGridSpot8"), NodePath("RaceGridSpot9")]
+
+[node name="RaceGridSpot1" type="Marker3D" parent="StreetRace/SequentialTaskRunner/GridSpawnTask" unique_id=589847090]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 0.8871441, 0.25000358, -12.504953)
+
+[node name="RaceGridSpot2" type="Marker3D" parent="StreetRace/SequentialTaskRunner/GridSpawnTask" unique_id=674941029]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 4.0719366, 0.25000358, -12.504953)
+
+[node name="RaceGridSpot3" type="Marker3D" parent="StreetRace/SequentialTaskRunner/GridSpawnTask" unique_id=1320573539]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 7.726927, 0.25000358, -12.504953)
+
+[node name="RaceGridSpot4" type="Marker3D" parent="StreetRace/SequentialTaskRunner/GridSpawnTask" unique_id=1340793918]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 0.8871442, 0.25000358, -9.598966)
+
+[node name="RaceGridSpot5" type="Marker3D" parent="StreetRace/SequentialTaskRunner/GridSpawnTask" unique_id=2121746176]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 4.0719366, 0.25000358, -9.598966)
+
+[node name="RaceGridSpot6" type="Marker3D" parent="StreetRace/SequentialTaskRunner/GridSpawnTask" unique_id=515925370]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 7.726927, 0.25000358, -9.598966)
+
+[node name="RaceGridSpot7" type="Marker3D" parent="StreetRace/SequentialTaskRunner/GridSpawnTask" unique_id=472206669]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 0.8871443, 0.25000358, -6.400289)
+
+[node name="RaceGridSpot8" type="Marker3D" parent="StreetRace/SequentialTaskRunner/GridSpawnTask" unique_id=1008741359]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 4.0719366, 0.25000358, -6.400289)
+
+[node name="RaceGridSpot9" type="Marker3D" parent="StreetRace/SequentialTaskRunner/GridSpawnTask" unique_id=1266991865]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 7.726927, 0.25000358, -6.400289)
+
+[node name="ConcurrentTaskRunner2" type="Node" parent="StreetRace/SequentialTaskRunner" unique_id=1739417783]
+script = ExtResource("27_k3cxb")
+
+[node name="CountdownTask" type="Node" parent="StreetRace/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1617745999]
+script = ExtResource("28_ythoq")
+metadata/_custom_type_script = "uid://8xvij2vjrnn2"
+
+[node name="SFXTask" type="Node" parent="StreetRace/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1359583827]
+script = ExtResource("29_s8lvk")
+sound = 2
+advance_mode = 1
+duration_sec = 3.0
+metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
+
+[node name="RaceTask" type="Node" parent="StreetRace/SequentialTaskRunner" unique_id=1525906342 node_paths=PackedStringArray("start_checkpoint", "lap_checkpoints", "end_checkpoint")]
+script = ExtResource("30_mn4lr")
+start_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
+lap_checkpoints = [NodePath("Race01CheckpointMarker02"), NodePath("Race01CheckpointMarker03"), NodePath("Race01CheckpointMarker04"), NodePath("Race01CheckpointMarker05"), NodePath("Race01CheckpointMarker06"), NodePath("Race01CheckpointMarker07"), NodePath("Race01CheckpointMarker08")]
+end_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
+total_laps = 2
+
+[node name="Race01CheckpointMarkerStartStop" parent="StreetRace/SequentialTaskRunner/RaceTask" unique_id=1048335829 instance=ExtResource("31_3twxm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.38481474, 2.320674, -15.6307125)
+width = 20.0
+
+[node name="Race01CheckpointMarker02" parent="StreetRace/SequentialTaskRunner/RaceTask" unique_id=1293468834 instance=ExtResource("31_3twxm")]
+transform = Transform3D(0.9999266, 0, 0.012116633, 0, 1, 0, -0.012116633, 0, 0.9999266, -1.2343864, 2.4926724, -68.67595)
+width = 20.0
+
+[node name="Race01CheckpointMarker03" parent="StreetRace/SequentialTaskRunner/RaceTask" unique_id=266316451 instance=ExtResource("31_3twxm")]
+transform = Transform3D(0.5786111, 0, 0.8156037, 0, 1, 0, -0.8156037, 0, 0.5786111, -35.54042, 3.4623842, -192.76193)
+width = 20.0
+
+[node name="Race01CheckpointMarker04" parent="StreetRace/SequentialTaskRunner/RaceTask" unique_id=1896892990 instance=ExtResource("31_3twxm")]
+transform = Transform3D(-0.48352072, 0, 0.8753329, 0, 1, 0, -0.8753329, 0, -0.48352072, -352.74252, 3.2509775, -165.76364)
+width = 20.0
+
+[node name="Race01CheckpointMarker05" parent="StreetRace/SequentialTaskRunner/RaceTask" unique_id=1879412635 instance=ExtResource("31_3twxm")]
+transform = Transform3D(-0.81736916, 0, -0.57611424, 0, 1, 0, 0.57611424, 0, -0.81736916, -368.6852, 2.2204576, -79.51379)
+width = 30.0
+
+[node name="Race01CheckpointMarker06" parent="StreetRace/SequentialTaskRunner/RaceTask" unique_id=540219272 instance=ExtResource("31_3twxm")]
+transform = Transform3D(-0.7402442, 0, -0.6723382, 0, 1, 0, 0.6723382, 0, -0.7402442, -183.16399, 2.4653225, -34.619698)
+width = 30.0
+
+[node name="Race01CheckpointMarker07" parent="StreetRace/SequentialTaskRunner/RaceTask" unique_id=1777577612 instance=ExtResource("31_3twxm")]
+transform = Transform3D(-0.24287966, 0, -0.9700564, 0, 1, 0, 0.9700564, 0, -0.24287966, -115.437645, 3.6275253, 67.67572)
+width = 20.0
+
+[node name="Race01CheckpointMarker08" parent="StreetRace/SequentialTaskRunner/RaceTask" unique_id=448094122 instance=ExtResource("31_3twxm")]
+transform = Transform3D(0.5, 0, -0.8660254, 0, 1, 0, 0.8660254, 0, 0.5, -10.765404, 2.1734505, 35.046795)
+width = 30.0
+
+[node name="GrayBox_StaticBody" parent="StreetRace/SequentialTaskRunner/RaceTask" unique_id=1798991802 instance=ExtResource("4_e82mi")]
+transform = Transform3D(0.9917427, 0, -0.12824371, 0, 1, 0, 0.12824371, 0, 0.9917427, -374.65848, 3.5617409, -64.767555)
+width = 25.0
+height = 8.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody2" parent="StreetRace/SequentialTaskRunner/RaceTask" unique_id=80166275 instance=ExtResource("4_e82mi")]
+transform = Transform3D(-0.04689786, 0, 0.9988997, 0, 1, 0, -0.9988997, 0, -0.04689786, -166.99684, 3.5617409, -37.77362)
+width = 25.0
+height = 8.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody3" parent="StreetRace/SequentialTaskRunner/RaceTask" unique_id=1095705051 instance=ExtResource("4_e82mi")]
+transform = Transform3D(0.63999015, 0, 0.7683831, 0, 1, 0, -0.7683831, 0, 0.63999015, 5.0328083, 3.5617561, 43.472923)
+width = 40.0
+height = 8.0
+color_preset = 1

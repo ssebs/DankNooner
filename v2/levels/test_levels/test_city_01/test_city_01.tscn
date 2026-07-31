@@ -44,14 +44,14 @@ glow_enabled = true
 script = ExtResource("4_dr5sf")
 name = "Tutorial: TEST"
 description = "Only 1 thing..."
-target_gamemode = 3
+target_gamemode = 4
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_asds5"]
 script = ExtResource("4_dr5sf")
 name = "Tutorial: Moto 101"
 description = "Learn the basics to get your M1 license."
-target_gamemode = 3
+target_gamemode = 4
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_cf4ia"]
@@ -73,7 +73,7 @@ metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 script = ExtResource("4_dr5sf")
 name = "Wheelie Challenge"
 description = "test "
-target_gamemode = 4
+target_gamemode = 5
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_2sj2k"]

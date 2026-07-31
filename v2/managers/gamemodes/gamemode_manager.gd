@@ -27,6 +27,8 @@ enum MatchState {
 @export var loading_menu_state: MenuState
 
 @export var free_roam_mode: FreeRoamGameMode
+@export var road_race_mode: RoadRaceGameMode
+## Same race as road_race_mode but run through live traffic.
 @export var street_race_mode: StreetRaceGameMode
 @export var tutorial_mode: TutorialGameMode
 @export var challenge_mode: ChallengeGameMode
@@ -44,6 +46,7 @@ func _ready():
 
 	_gamemode_map = {
 		GameModeType.Kind.FREE_ROAM: free_roam_mode,
+		GameModeType.Kind.ROAD_RACE: road_race_mode,
 		GameModeType.Kind.STREET_RACE: street_race_mode,
 		GameModeType.Kind.TUTORIAL: tutorial_mode,
 		GameModeType.Kind.CHALLENGE: challenge_mode,
@@ -249,6 +252,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("loading_menu_state must not be empty")
 	if free_roam_mode == null:
 		issues.append("free_roam_mode must not be empty")
+	if road_race_mode == null:
+		issues.append("road_race_mode must not be empty")
 	if street_race_mode == null:
 		issues.append("street_race_mode must not be empty")
 	if tutorial_mode == null:
