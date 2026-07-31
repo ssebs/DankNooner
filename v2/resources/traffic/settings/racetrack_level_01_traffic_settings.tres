@@ -1,9 +1,13 @@
-[gd_resource type="Resource" script_class="TrafficSettings" format=3]
+[gd_resource type="Resource" script_class="TrafficSettings" format=3 uid="uid://bqaoqt6b67lj6"]
 
-[ext_resource type="Script" path="res://resources/traffic/traffic_settings.gd" id="1_trfst"]
+[ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/bikes/bike_skin_definition.gd" id="1_6ymul"]
+[ext_resource type="Script" uid="uid://c82qxqpywlr1o" path="res://resources/traffic/traffic_settings.gd" id="1_trfst"]
+[ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/bikes/skins/naked_default_skin_definition.tres" id="2_umm8b"]
+[ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/bikes/skins/sport_default_skin_definition.tres" id="3_aahso"]
+[ext_resource type="Script" uid="uid://p2mjdn2eyh12" path="res://resources/cars/car_skin_definition.gd" id="4_xx33o"]
 
 [resource]
 script = ExtResource("1_trfst")
-traffic_count = 8
-car_chance = 0.5
-cruise_speed = 22.0
+car_chance = 0.0
+bike_roster = Array[ExtResource("1_6ymul")]([ExtResource("2_umm8b"), ExtResource("3_aahso")])
+paint_colors = Array[Color]([Color(0.22265625, 0.22265625, 0.22265625, 1), Color(0.65625, 0.1307373, 0.1307373, 1), Color(0.22613525, 0.25008774, 0.609375, 1), Color(0.22861433, 0.6328125, 0.18292236, 1), Color(0.7734375, 0.7734375, 0.7734375, 1)])
