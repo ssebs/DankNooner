@@ -8,6 +8,7 @@
 
 [resource]
 script = ExtResource("1_trfst")
+traffic_count = 18
 car_chance = 0.0
 bike_roster = Array[ExtResource("1_6ymul")]([ExtResource("2_umm8b"), ExtResource("3_aahso")])
 paint_colors = Array[Color]([Color(0.22265625, 0.22265625, 0.22265625, 1), Color(0.65625, 0.1307373, 0.1307373, 1), Color(0.22613525, 0.25008774, 0.609375, 1), Color(0.22861433, 0.6328125, 0.18292236, 1), Color(0.7734375, 0.7734375, 0.7734375, 1)])
