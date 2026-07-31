@@ -85,8 +85,9 @@ See `planning_docs/Skins.md` for details.
 
 ### Gamemode System
 
-- `GamemodeManager` - match state, late-joiner sync, runs a state machine of gamemodes (base `GameModeType` → `FreeRoamGameMode`, `StreetRaceGameMode`, `TutorialGameMode`, `ChallengeGameMode`). Events run via a `GameModeTask` + `TaskRunner` system.
-  - See [GamemodeSystem](./planning_docs/GamemodeSystem.md) and [StreetRaceMode](./planning_docs/StreetRaceMode.md)
+- `GamemodeManager` - match state, late-joiner sync, runs a state machine of gamemodes (base `GameModeType` → `FreeRoamGameMode`, `RoadRaceGameMode`, `StreetRaceGameMode`, `TutorialGameMode`, `ChallengeGameMode`). Events run via a `GameModeTask` + `TaskRunner` system.
+  - `RoadRaceGameMode` (closed roads) and `StreetRaceGameMode` (same race, through live traffic) are deliberately duplicated files rather than a base + subclass — they're expected to diverge.
+  - See [GamemodeSystem](./planning_docs/GamemodeSystem.md) and [RaceModes](./planning_docs/RaceModes.md)
 - `SpawnManager` - spawn/despawn RPCs + local player instantiation
 - `SaveManager` - JSON persistence of `PlayerDefinition` (username, skins, etc.)
 

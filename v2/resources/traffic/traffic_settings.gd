@@ -7,6 +7,10 @@ class_name TrafficSettings extends Resource
 ## Riders to spawn. Still capped by the number of distinct lanes in the level's
 ## road network — traffic spreads one rider per lane.
 @export var traffic_count: int = 8
+## Riders to spawn during a StreetRaceGameMode event instead of traffic_count. Racing
+## through free-roam density tends to be a wall rather than a challenge, so this is
+## usually the thinner number. Same lane cap applies.
+@export var race_traffic_amount: int = 4
 ## Odds a given vehicle is a car rather than a bike + rider.
 @export_range(0.0, 1.0, 0.05) var car_chance: float = 0.5
 ## Base move speed handed to every rider on this map.

@@ -4,7 +4,7 @@ Lap-based race built on the gamemode system ([GamemodeSystem](./GamemodeSystem.m
 
 ## Relevant files
 
-- `managers/gamemodes/types/street_race/street_race_gamemode.gd` — the gamemode
+- `managers/gamemodes/types/road_race/road_race_gamemode.gd` — the gamemode
 - `managers/gamemodes/tasks/race_task.gd` — lap/checkpoint state machine
 - `managers/gamemodes/tasks/maintain_trick_task.gd` — `MaintainTrickTask` constraint (wheelie-race variant)
 - `managers/gamemodes/gamemodeobjects/checkpoint_marker.gd` — `CheckPointMarker` (gate, signals `entered`)
@@ -23,7 +23,7 @@ the gamemode walks them, listens for completion, shows results, returns to free 
 
 ## Key pieces
 
-- **`StreetRaceGameMode`** (`managers/gamemodes/types/street_race/street_race_gamemode.gd`) —
+- **`RoadRaceGameMode`** (`managers/gamemodes/types/road_race/road_race_gamemode.gd`) —
   near-copy of `TutorialGameMode` without help-menu wiring. Runner chain, crash
   respawn forwarding, results HUD, return-to-free-roam.
 - **`RaceTask`** (`managers/gamemodes/tasks/race_task.gd`) — leaf `GameModeTask`
@@ -76,7 +76,7 @@ teleporting them (distinct from `respawn_player_at`, which both sets and
 teleports — `TeleportTask` uses that variant at the start of the runner).
 
 On crash:
-1. `StreetRaceGameMode._on_player_crashed` → `runner.notify_crashed(peer_id)`.
+1. `RoadRaceGameMode._on_player_crashed` → `runner.notify_crashed(peer_id)`.
 2. Runner clears the scratchpad (we don't use it) and emits `respawn_requested`.
 3. Gamemode schedules `spawn_manager.respawn_player.rpc(peer_id)` after
    `_respawn_delay`, which honours the player's persistent respawn transform.
@@ -124,7 +124,7 @@ exports, so their parent doesn't matter.
 A race where you must hold a wheelie the whole way — drop the wheelie for more
 than a grace window and you restart at your last checkpoint. Built entirely from
 existing pieces plus one reusable constraint task; `RaceTask` and
-`StreetRaceGameMode` are unchanged.
+`RoadRaceGameMode` are unchanged.
 
 - **`MaintainTrickTask`** (`managers/gamemodes/tasks/maintain_trick_task.gd`) —
   a constraint `GameModeTask` (`is_constraint = true`). Exports
@@ -172,6 +172,6 @@ markers as a normal race — only one event runs at a time, so sharing is safe).
 - **AI racers** — RaceTask's signal handler only looks up `peer_id` from
   `player.name`. AI bots driving a `PlayerEntity` with an integer name will
   participate automatically.
-- **Shared base** for `StreetRaceGameMode` and `TutorialGameMode` once a third
+- **Shared base** for `RoadRaceGameMode` and `TutorialGameMode` once a third
   runner-driven mode arrives. Until then the ~50 lines of duplication is the
   simpler call.

@@ -310,7 +310,8 @@ The same "pause" action triggers different behavior based on `InputState`.
 - `GamemodeManager` (`managers/gamemodes/gamemode_manager.gd`) - manages match state, coordinates level/spawn. Runs a **state machine of gamemodes**.
 - **Gamemode states** (extend base `GameModeType`, whose `Kind` enum is the canonical id, live under `managers/gamemodes/types/`):
   - `FreeRoamGameMode` - open play, event circles trigger mode switches, respawn on crash
-  - `StreetRaceGameMode` - lap-based race built on the task/runner system (see [StreetRaceMode.md](./StreetRaceMode.md))
+  - `RoadRaceGameMode` - lap-based race built on the task/runner system (see [RaceModes.md](./RaceModes.md))
+  - `StreetRaceGameMode` - the same race run through live ambient traffic (duplicated file, not a subclass)
   - `TutorialGameMode` - step-by-step progression with countdown + trick detection
   - `ChallengeGameMode` - lightweight in-world trick challenges (no countdown/results)
 - Events run via a composable **task/runner system** (`GameModeTask` leaves + `SequentialTaskRunner` / `ConcurrentTaskRunner`), authored in level scenes. See [GamemodeSystem.md](./GamemodeSystem.md)
@@ -337,7 +338,7 @@ The same "pause" action triggers different behavior based on `InputState`.
 
 ### NPC Race Manager
 
-- `NPCRaceManager` (`managers/npc_race_manager.gd`) - owns AI race riders (`NPCRiderEntity`) on a negative-id roster with spawn/despawn RPCs mirroring `SpawnManager`. `StreetRaceGameMode` drives its lifecycle; the server-only AI tick points each NPC at its next checkpoint from `RaceTask`.
+- `NPCRaceManager` (`managers/npc_race_manager.gd`) - owns AI race riders (`NPCRiderEntity`) on a negative-id roster with spawn/despawn RPCs mirroring `SpawnManager`. The race gamemodes drive its lifecycle; the server-only AI tick points each NPC at its next checkpoint from `RaceTask`.
 
 ### Unlocks / progression
 

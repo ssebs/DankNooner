@@ -1,11 +1,14 @@
 @tool
-## Owns free-roam traffic riders (NPCRiderEntity in NPCTrafficState): builds the
+## Owns ambient traffic riders (NPCRiderEntity in NPCTrafficState): builds the
 ## level's TrafficRouteGraph, spawns riders spread across the road network, and
 ## recovers them when they crash or get wedged.
 ##
-## FreeRoamGameMode starts/stops it — see start_traffic / stop_traffic. Kept
-## standalone from NPCRaceManager on purpose (see the Traffic AI plan); the two
-## share the spawn RPC shape but nothing else.
+## Count, car/bike mix, cruise speed and the vehicle rosters are all per-map — see
+## LevelDefinition.traffic_settings.
+##
+## FreeRoamGameMode and StreetRaceGameMode start/stop it — see start_traffic /
+## stop_traffic. Kept standalone from NPCRaceManager on purpose (see the Traffic AI
+## plan); the two share the spawn RPC shape but nothing else.
 class_name NPCTrafficManager extends BaseManager
 
 @export var level_manager: LevelManager
@@ -16,8 +19,6 @@ class_name NPCTrafficManager extends BaseManager
 @export var npc_definitions: Array[PlayerDefinition] = [
 	load("res://resources/player/default_player_definition.tres")
 ]
-## Count, car/bike mix, cruise speed and the vehicle rosters are per-map — see
-## LevelDefinition.traffic_settings.
 ## How long a crashed rider stays down before it's put back on the road. Deliberately
 ## longer than the player's own respawn (FreeRoamGameMode._respawn_delay, 3s): a rider
 ## recovers roughly where it went down, so matching the player's timer drops it straight
@@ -55,7 +56,10 @@ var _next_id: int = FIRST_ID
 
 
 ## Build the route graph for the current level and populate it with riders.
-func start_traffic() -> void:
+##
+## `for_race` picks TrafficSettings.race_traffic_amount over traffic_count — a race
+## through free-roam density is a wall rather than a challenge.
+func start_traffic(for_race: bool = false) -> void:
 	var road_manager := _find_road_manager()
 	# Maps with no road network (the stunt map) simply get no traffic.
 	if road_manager == null:
@@ -73,7 +77,7 @@ func start_traffic() -> void:
 	_bike_skin_paths = _roster_paths(settings.bike_roster, BIKE_SKINS_DIR)
 	_car_skin_paths = _roster_paths(settings.car_roster, CAR_SKINS_DIR)
 
-	var count := settings.traffic_count
+	var count := settings.race_traffic_amount if for_race else settings.traffic_count
 
 	# Shuffled distinct lanes — spreads riders over the whole network instead of
 	# stacking them all at one spawn point. Dropped at a random point ALONG each lane

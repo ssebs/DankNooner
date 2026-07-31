@@ -1,9 +1,8 @@
 @tool
-## Checkpoint race run through live ambient traffic — RoadRaceGameMode plus the free-roam
-## traffic sim, at TrafficSettings.race_traffic_amount rather than the free-roam count.
-## Duplicated from RoadRaceGameMode rather than subclassing it: the two are expected to
-## diverge (traffic races want their own rules), so they're kept independently editable.
-class_name StreetRaceGameMode extends GameModeType
+## Checkpoint race on closed roads — no ambient traffic. StreetRaceGameMode is the same
+## race run through live traffic; the two are deliberately separate files rather than a
+## base + subclass, since they're expected to diverge as each gets its own rules.
+class_name RoadRaceGameMode extends GameModeType
 
 @export var tutorial_hud: TutorialHUD
 @export var results_hud: ResultsHUD
@@ -12,9 +11,6 @@ class_name StreetRaceGameMode extends GameModeType
 @export var menu_manager: MenuManager
 @export var audio_manager: AudioManager
 @export var npc_race_manager: NPCRaceManager
-## Ambient traffic for the duration of the race — this is what separates this mode from
-## RoadRaceGameMode. Started in Enter, stopped in Exit, both server-only.
-@export var npc_traffic_manager: NPCTrafficManager
 
 var _start_circle: EventStartCircle
 var _race_task: RaceTask
@@ -29,8 +25,8 @@ var _results_countdown_total: float = 10.0
 func Enter(state_context: StateContext):
 	if Engine.is_editor_hint():
 		return
-	gamemode_manager.current_game_mode = GameModeType.Kind.STREET_RACE
-	DebugUtils.DebugMsg("Street Race Mode")
+	gamemode_manager.current_game_mode = GameModeType.Kind.ROAD_RACE
+	DebugUtils.DebugMsg("Road Race Mode")
 
 	var ctx := state_context as GamemodeStateContext
 	_start_circle = ctx.event_start_circle
@@ -47,10 +43,6 @@ func Enter(state_context: StateContext):
 	if multiplayer.is_server():
 		_race_task = _find_race_task(_start_circle)
 		_setup_npcs()
-		# Traffic first: the route graph has to exist before riders start circulating,
-		# and the racers spawn on grid markers rather than lanes, so the two don't fight
-		# over spawn points.
-		npc_traffic_manager.start_traffic(true)
 		_start_next_runner()
 
 
@@ -82,7 +74,6 @@ func Exit(_state_context: StateContext):
 		# CountdownTask disables input on_enter; if we exit mid-task on_exit never runs.
 		_reset_all_player_input()
 		_teardown_npcs()
-		npc_traffic_manager.stop_traffic()
 		_clear_checkpoint_markers()
 		_race_task = null
 
@@ -365,7 +356,5 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("audio_manager must not be empty")
 	if npc_race_manager == null:
 		issues.append("npc_race_manager must not be empty")
-	if npc_traffic_manager == null:
-		issues.append("npc_traffic_manager must not be empty")
 
 	return issues
