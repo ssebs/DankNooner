@@ -28,7 +28,9 @@ narrows the pool — `car_chance` still decides whether a car or a bike comes up
 repaints its mesh's **first color slot** with one entry, picked off the `hash(name)`
 rng `NPCRiderEntity._ready` already seeds — so every peer rolls the same paint with
 nothing synced. Empty leaves the skin's authored color alone. This also covers race
-bots, not just traffic (`NPCRaceManager` reads the same field).
+bots, not just traffic (`NPCRaceManager` reads the same field). Meshes that must keep
+their authored livery (taxi, cop car) set `do_not_use_color` on their `SkinColor` root
+and are skipped — see Skins.md.
 
 ## Level Preview Image
 

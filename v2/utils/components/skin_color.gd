@@ -8,6 +8,11 @@ class_name SkinColor extends Node3D
 @export var slots: Array[SkinSlot]
 ## Meshes corresponding to each slot (must match slots length)
 @export var meshes: Array[MeshInstance3D]
+## Liveries whose colors carry meaning — taxi yellow, cop black-and-white — set this so
+## the NPC paint roll leaves them alone (see NPCRiderEntity._roll_paint). Only that random
+## repaint is blocked: authored ColorMods and direct update_slot_color calls still apply,
+## so a deliberate recolor never silently no-ops.
+@export var do_not_use_color: bool = false
 
 @export_category("BikeSpecifics")
 @export var steering_rotation_node: Node3D
