@@ -65,11 +65,14 @@ func start_traffic() -> void:
 	var count := settings.traffic_count
 
 	# Shuffled distinct lanes — spreads riders over the whole network instead of
-	# stacking them all at one spawn point.
+	# stacking them all at one spawn point. Dropped at a random point ALONG each lane
+	# rather than at its start: junction lanes all start within a few metres of each
+	# other, so spawning at starts piles riders into intersections and leaves the roads
+	# between them empty.
 	var spawn_lanes := _route_graph.lanes.duplicate()
 	spawn_lanes.shuffle()
 	for i in mini(count, spawn_lanes.size()):
-		var lane_transform := _route_graph.lane_start_transform(spawn_lanes[i])
+		var lane_transform := _route_graph.lane_transform_at(spawn_lanes[i], randf())
 		var npc_id := _next_id
 		_next_id -= 1
 		var def := npc_definitions[(-npc_id + FIRST_ID) % npc_definitions.size()]
@@ -168,6 +171,9 @@ func rpc_spawn_npc(npc_id: int, vehicle: Dictionary, pos: Vector3, basis: Basis)
 	level_manager.current_level.player_spawn_pos.add_child(npc, true)
 	npc.global_transform = Transform3D(basis, pos)
 	_npcs[npc_id] = npc
+	# Tagged on every peer, not just the server — the HUD runs client-side and uses this
+	# to tell ambient traffic from actual competitors.
+	npc.add_to_group(UtilsConstants.GROUPS["Traffic"])
 
 	if !multiplayer.is_server():
 		return
@@ -250,7 +256,9 @@ func _place_on_lane(npc_id: int) -> void:
 	if lane == null:
 		_respawn_after_delay(npc_id)
 		return
-	var lane_transform := _route_graph.lane_start_transform(lane)
+	# Random point along it, same reason as spawning — otherwise every recovered rider
+	# lands on the same handful of junction lane starts and stacks up again.
+	var lane_transform := _route_graph.lane_transform_at(lane, randf())
 	npc.teleport_to(lane_transform.origin, lane_transform.basis)
 
 

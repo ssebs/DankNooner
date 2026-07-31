@@ -58,10 +58,21 @@ func random_lane() -> RoadLane:
 	return null
 
 
-## Where a rider dropped onto this lane should start: the lane's first point,
-## facing along the curve (bike front is -Z, so looking_at the heading).
-func lane_start_transform(lane: RoadLane) -> Transform3D:
-	return Transform3D(Basis.looking_at(_heading_at_start(lane)), lane.get_lane_start())
+## Where a rider dropped somewhere ALONG this lane should sit — `t` is 0..1 of the way
+## down the curve. Spawning everyone at t=0 stacks them: the junction generator emits a
+## through lane plus a turn lane per branch that all START within a few metres of each
+## other (the same proximity _find_successors links on), so lane starts cluster hard at
+## intersections while the road between them sits empty.
+func lane_transform_at(lane: RoadLane, t: float) -> Transform3D:
+	var length := lane.curve.get_baked_length()
+	var offset := clampf(t, 0.0, 1.0) * length
+	var pos := lane.to_global(lane.curve.sample_baked(offset))
+	var ahead := lane.to_global(lane.curve.sample_baked(minf(offset + 1.0, length)))
+	var dir := ahead - pos
+	# Landed on the last baked point, so there's nothing ahead to aim at.
+	if dir.length_squared() < 0.001:
+		dir = _heading_at_end(lane)
+	return Transform3D(Basis.looking_at(dir), pos)
 
 
 func _find_successors(lane: RoadLane) -> Array:

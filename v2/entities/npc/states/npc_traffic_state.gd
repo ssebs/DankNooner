@@ -25,12 +25,20 @@ signal stuck
 ## Report stuck after moving less than this (metres) over this window (seconds).
 @export var stuck_window: float = 3.0
 @export var stuck_min_progress: float = 2.0
+## How long a rider with no lane under it waits before trying to re-latch. Rolled fresh
+## per rider on every retry, so riders never sync up into one big scan tick.
+## Re-latching scans EVERY lane in the level — RoadLaneAgent.find_nearest_lane is brute
+## force with a Curve3D.get_closest_point per lane — and it gives up on anything past its
+## 50m cutoff, so a stranded rider retrying every tick paid that scan forever.
+@export var relatch_retry_delay_min: float = 2.0
+@export var relatch_retry_delay_max: float = 5.0
 
 ## Set by NPCTrafficManager right after spawn — junction routing needs it.
 var route_graph: TrafficRouteGraph
 
 var _stuck_timer: float = 0.0
 var _stuck_anchor: Vector3
+var _relatch_timer: float = 0.0
 
 
 func Enter(_state_context: StateContext):
@@ -38,6 +46,10 @@ func Enter(_state_context: StateContext):
 		return
 	_stuck_timer = 0.0
 	_stuck_anchor = npc.global_position
+	# Spread the first retry across the window so a wave of riders spawned together
+	# doesn't run all its lane scans on the same tick. Server-only state, so rolling
+	# this locally can't desync anything.
+	_relatch_timer = randf_range(0.0, relatch_retry_delay_max)
 	npc.hit_by_racer.connect(_on_hit_by_racer)
 
 
@@ -54,8 +66,12 @@ func Physics_Update(delta: float):
 	# Lanes may not have been built yet at spawn, or we just got teleported. This
 	# can come up empty — the containers free and regenerate every lane on their
 	# deferred first rebuild, so there's a window with no lane to latch onto.
+	# Throttled: see relatch_retry_delay for why this must not run every tick.
 	if npc.driving and !is_instance_valid(npc.lane_agent.current_lane):
-		npc.lane_agent.assign_nearest_lane()
+		_relatch_timer -= delta
+		if _relatch_timer <= 0.0:
+			_relatch_timer = randf_range(relatch_retry_delay_min, relatch_retry_delay_max)
+			npc.lane_agent.assign_nearest_lane()
 
 	var can_drive := (
 		npc.driving

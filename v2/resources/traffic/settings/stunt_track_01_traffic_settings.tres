@@ -12,7 +12,7 @@
 
 [resource]
 script = ExtResource("1_trfst")
-traffic_count = 32
+traffic_count = 128
 car_chance = 0.75
 cruise_speed = 25.0
 bike_roster = Array[ExtResource("1_fjo22")]([ExtResource("2_q8exi"), ExtResource("3_16uiw"), ExtResource("4_gs0aa")])
