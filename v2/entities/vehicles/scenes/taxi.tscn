@@ -20,6 +20,7 @@ albedo_color = Color(0.859375, 0.6912923, 0.117492676, 1)
 script = ExtResource("1_82y5a")
 slots = Array[ExtResource("2_4tdhq")]([SubResource("Resource_wcbnl")])
 meshes = [NodePath("Taxi/Taxi_Cube_009")]
+do_not_use_color = true
 
 [node name="Taxi" parent="." unique_id=1653174780 instance=ExtResource("2_4nr0m")]
 

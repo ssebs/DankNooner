@@ -1956,4 +1956,3 @@ depth = 2.0
 
 [node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=756147242]
 occluder = ExtResource("20_a57fq")
-bake_simplification_distance = 0.5

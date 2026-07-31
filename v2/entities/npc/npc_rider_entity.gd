@@ -364,6 +364,9 @@ func _roll_paint(rng: RandomNumberGenerator) -> void:
 	var skin: SkinColor = (
 		car_skin.mesh_skin if vehicle_type == VehicleType.CAR else bike_skin.mesh_skin
 	)
+	# Taxis, cop cars — liveries that have to stay recognizable opt out.
+	if skin.do_not_use_color:
+		return
 	skin.update_slot_color(0, paint_colors[rng.randi() % paint_colors.size()])
 
 

@@ -32,6 +32,7 @@ Node3D at `components/skin_color.gd`. Owns the per-instance runtime materials, s
 | -------- | --------------------- | ---------------------------------------------------------------------------------- |
 | `slots`  | Array[SkinSlot]       | Slot palette. The **same** SkinSlot may appear at multiple positions               |
 | `meshes` | Array[MeshInstance3D] | Mesh per slot-position (must match slots length). Different positions ⇒ different mesh/surface, even if the slot resource is the same |
+| `do_not_use_color` | bool | Opts this mesh out of the NPC spawn paint roll — set on liveries whose colors mean something (taxi, cop car). Blocks only that random repaint; ColorMods and direct `update_slot_color` calls still work |
 
 Under **BikeSpecifics**: `steering_rotation_node`, `front_wheel_node`, `rear_wheel_node`, `steering_rot_axis`, `wheel_rot_axis`. Under **VehicleSpecifics**: `wheel_nodes: Array[Node3D]` — for meshes with more than two wheels, spun by `CarSkin.rotate_wheels()`. Bikes leave it empty and keep using the two named wheel fields.
 
