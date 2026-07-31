@@ -26,6 +26,11 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] wheel spin on traffic vehicles (CarSkin.rotate_wheels exists, nothing calls it;
       NPC bikes have never spun theirs either)
 - [ ] car hit reaction — a crashed car just stops, the wipeout roll is rider-only
+- [x] crash loop — traffic respawned on the same 3s timer as the player and recovers
+      roughly where it went down, so it landed back on the player it just took out, over
+      and over. Now respawn_delay_min/max (5-8s, randomized) on NPCTrafficManager.
+      Mitigation not elimination: _place_on_lane still doesn't check whether a player is
+      standing on the spot it's dropping into
 - [x] per-spawn paint roll off the hash(name)-seeded RNG in NPCRiderEntity._ready
       (TrafficSettings.paint_colors → SkinColor.update_slot_color(0)). Went through the
       per-instance runtime materials rather than a ColorMod, which sidesteps the
@@ -36,6 +41,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 
 
 ### From my phone
+- [ ] cafe racer (xsr) bike model
 - [ ] when finishing race, bots shouldnt DNF, but race til timer runs out then get their final time
 - [ ] scale boost from wheelie / stoppie angle
 - [ ] Add items to the race like Mario kart, and ramps/jumps

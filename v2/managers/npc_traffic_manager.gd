@@ -18,7 +18,13 @@ class_name NPCTrafficManager extends BaseManager
 ]
 ## Count, car/bike mix, cruise speed and the vehicle rosters are per-map — see
 ## LevelDefinition.traffic_settings.
-@export var respawn_delay: float = 3.0
+## How long a crashed rider stays down before it's put back on the road. Deliberately
+## longer than the player's own respawn (FreeRoamGameMode._respawn_delay, 3s): a rider
+## recovers roughly where it went down, so matching the player's timer drops it straight
+## back onto the player it just took out — crash, respawn, crash. Randomized so a pile-up
+## doesn't pop back all at once either.
+@export var respawn_delay_min: float = 5.0
+@export var respawn_delay_max: float = 8.0
 
 const NPC_SCENE: PackedScene = preload("res://entities/npc/npc_rider_entity.tscn")
 ## Fallback pools for maps whose TrafficSettings leave a roster empty — the same
@@ -30,6 +36,11 @@ const CAR_SKINS_DIR: String = "res://resources/cars/skins/"
 const FIRST_ID: int = -1000
 ## How far along its lane a recovered rider is dropped back in.
 const RECOVER_AHEAD: float = 4.0
+## Room a recovering rider needs at its drop point before it will take it. Without this
+## a rider lands back on whoever it just crashed into and the pair loop forever.
+const PLACEMENT_CLEARANCE: float = 5.0
+## Random lanes tried for a clear spot before giving up and waiting out another delay.
+const PLACEMENT_ATTEMPTS: int = 4
 
 var _npcs: Dictionary[int, NPCRiderEntity] = {}
 ## res:// paths of the vehicle skins this map rolls, refreshed each start_traffic.
@@ -229,13 +240,13 @@ func _on_npc_crashed(victim: Node3D, npc_id: int) -> void:
 
 
 func _respawn_after_delay(npc_id: int) -> void:
-	get_tree().create_timer(respawn_delay).timeout.connect(
+	get_tree().create_timer(randf_range(respawn_delay_min, respawn_delay_max)).timeout.connect(
 		_place_on_lane.bind(npc_id), CONNECT_ONE_SHOT
 	)
 
 
 ## Drop the rider back onto the road a little ahead of where it went wrong, or
-## onto a random lane if it no longer has one under it.
+## onto a random lane if that spot is taken or it no longer has a lane under it.
 func _place_on_lane(npc_id: int) -> void:
 	# Rider may have been despawned while the respawn timer ran — skip is intentional
 	if !_npcs.has(npc_id):
@@ -246,20 +257,40 @@ func _place_on_lane(npc_id: int) -> void:
 		var ahead := npc.lane_agent.test_move_along_lane(RECOVER_AHEAD)
 		var dir := ahead - here
 		dir.y = 0.0
-		if dir.length_squared() > 0.01:
+		# Blocked here usually means whoever we crashed into hasn't moved — fall through
+		# to a random lane instead of landing on them and starting the loop again.
+		if dir.length_squared() > 0.01 and _is_spot_clear(ahead, npc):
 			npc.teleport_to(ahead, Basis.looking_at(dir))
 			return
 
-	var lane := _route_graph.random_lane()
-	# Every cached lane was freed and the graph hasn't caught up yet (road
-	# rebuild) — wait it out rather than teleporting the rider into the void.
-	if lane == null:
-		_respawn_after_delay(npc_id)
+	# Random point along a random lane, same reason as spawning — otherwise every
+	# recovered rider lands on the same handful of junction lane starts and stacks up.
+	for _attempt in PLACEMENT_ATTEMPTS:
+		var lane := _route_graph.random_lane()
+		# Every cached lane was freed and the graph hasn't caught up yet (road rebuild).
+		if lane == null:
+			break
+		var lane_transform := _route_graph.lane_transform_at(lane, randf())
+		if !_is_spot_clear(lane_transform.origin, npc):
+			continue
+		npc.teleport_to(lane_transform.origin, lane_transform.basis)
 		return
-	# Random point along it, same reason as spawning — otherwise every recovered rider
-	# lands on the same handful of junction lane starts and stacks up again.
-	var lane_transform := _route_graph.lane_transform_at(lane, randf())
-	npc.teleport_to(lane_transform.origin, lane_transform.basis)
+
+	# No lanes at all, or everything we sampled was occupied. Wait it out rather than
+	# teleporting into the void or onto someone.
+	_respawn_after_delay(npc_id)
+
+
+## Nobody parked within PLACEMENT_CLEARANCE of a drop point. Linear over the Racers
+## group, which is fine here — this runs on respawn, not per tick.
+func _is_spot_clear(pos: Vector3, mover: NPCRiderEntity) -> bool:
+	var clearance_sq := PLACEMENT_CLEARANCE * PLACEMENT_CLEARANCE
+	for racer in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Racers"]):
+		if racer == mover:
+			continue
+		if racer.global_position.distance_squared_to(pos) < clearance_sq:
+			return false
+	return true
 
 
 #endregion
