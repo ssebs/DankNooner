@@ -11,9 +11,9 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 
 ## Active
 
-- [ ] can't go over 15 speed? rpm stuck at 40-48
+- [ ] can't go over 15 speed while joining someone else? rpm stuck at 40-48
 - [ ] traffic ai only loads for host
-- [ ] fall thru map when not host on t3d
+- [ ] fall thru map when not host on t3d (in game collision gen on terrain3d)
 - [ ] moving npcs seem to be laggy? like maybe lerp is stuck at 30fps on physics tick and it looks jittery / blurry
 
 ### Traffic AI
