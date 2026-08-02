@@ -21,6 +21,8 @@ const NPC_SCENE: PackedScene = preload("res://entities/npc/npc_rider_entity.tscn
 var race_task: RaceTask
 
 var _npcs: Dictionary[int, NPCRiderEntity] = {}
+## Server-side copy of each bot's PlayerDefinition dict for late-joiner resync.
+var _defs: Dictionary[int, Dictionary] = {}
 ## Junction routing for the bots. RoadContainer never gives intersection lanes a
 ## lane_next, so without this they dead-end at every junction — fine on a closed-loop
 ## racetrack, fatal on a map with 3-way/4-way/roundabout containers.
@@ -34,7 +36,11 @@ var _next_id: int = -1
 ## Server-only AI tick: retarget each NPC at the checkpoint RaceTask expects
 ## it to cross next. The same crossing that scores the lap retargets nav.
 func _physics_process(_delta: float):
-	if Engine.is_editor_hint() or !multiplayer.is_server():
+	# Peer is null in menus / after a session teardown (ConnectionManager nulls it on
+	# disconnect) — is_server() errors on a null peer, so check it first.
+	if Engine.is_editor_hint() or multiplayer.multiplayer_peer == null:
+		return
+	if !multiplayer.is_server():
 		return
 	if race_task == null:
 		return
@@ -68,7 +74,9 @@ func spawn_npc(pos: Vector3, basis: Basis) -> int:
 	var npc_id := _next_id
 	_next_id -= 1
 	var def := npc_definitions[(-npc_id - 1) % npc_definitions.size()]
-	rpc_spawn_npc.rpc(npc_id, def.to_dict(), pos, basis)
+	var def_dict := def.to_dict()
+	_defs[npc_id] = def_dict
+	rpc_spawn_npc.rpc(npc_id, def_dict, pos, basis)
 	return npc_id
 
 
@@ -76,8 +84,18 @@ func spawn_npc(pos: Vector3, basis: Basis) -> int:
 func despawn_all_npcs() -> void:
 	for npc_id in _npcs.keys():
 		rpc_despawn_npc.rpc(npc_id)
+	_defs.clear()
 	# Its lanes belong to the level being torn down; the next race rebuilds it.
 	_route_graph = null
+
+
+## Server only. A late joiner's level just loaded — resend every live bot at its
+## current spot so their MultiplayerSynchronizers have a node to land on. Without
+## this the newcomer takes a per-packet sync error for every bot, every tick.
+func sync_npcs_to_peer(peer_id: int) -> void:
+	for npc_id in _npcs:
+		var npc := _npcs[npc_id]
+		rpc_spawn_npc.rpc_id(peer_id, npc_id, _defs[npc_id], npc.global_position, npc.global_basis)
 
 
 func get_npc_ids() -> Array[int]:
@@ -93,6 +111,9 @@ func get_npc(npc_id: int) -> NPCRiderEntity:
 
 @rpc("call_local", "reliable")
 func rpc_spawn_npc(npc_id: int, def_dict: Dictionary, pos: Vector3, basis: Basis):
+	# Broadcast and late-join resync can both deliver the same bot — first one wins.
+	if _npcs.has(npc_id):
+		return
 	var def := PlayerDefinition.new()
 	def.from_dict(def_dict)
 
@@ -137,6 +158,9 @@ func _find_road_manager() -> RoadManager:
 
 @rpc("call_local", "reliable")
 func rpc_despawn_npc(npc_id: int):
+	# This peer may have joined after the race ended mid-teardown — skip is intentional.
+	if !_npcs.has(npc_id):
+		return
 	_npcs[npc_id].queue_free()
 	_npcs.erase(npc_id)
 	_spawn_transforms.erase(npc_id)

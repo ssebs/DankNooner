@@ -1,6 +1,12 @@
 # TODO
 > Don't forget, have fun :D
 
+# NOW
+- Working on [refactor](PLAN-cleanup-bugfix-20260801.md)
+  -`# PHASE 2 — PATTERN REFACTORS`
+
+---
+
 ## Release Focus
 Ship priorities in order. Race map done. City map, mountain road, extra tricks = later.
 1.  [DONE] Fix game-breaking bugs only (skip tuning)
@@ -10,7 +16,8 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 5.  Customization & progression
 
 ## Active
-
+- [ ] add race position hud
+- [ ] head turns wrong direction when leaning/steering
 - [ ] can't go over 15 speed while joining someone else? rpm stuck at 40-48
 - [ ] traffic ai only loads for host
 - [ ] fall thru map when not host on t3d (in game collision gen on terrain3d)

@@ -197,7 +197,8 @@ For detailed design docs see:
 #### Synced State (via RollbackSynchronizer)
 
 - **Physics**: `speed`, `roll_angle`, `pitch_angle`
-- **Gearing**: `current_gear`, `current_rpm`, `clutch_value`
+- **Gearing**: `current_gear`, `current_rpm`, `clutch_value`, `is_rev_limited`
+  - `is_rev_limited` is synced because the rule is: **every var mutated inside the rollback tick that affects simulation must be a state property** — resimulation can't rewind what netfox doesn't record. The limiter gates power output, so leaving it unsynced rubberbanded gear shifts (the auto box shifts just under the limiter cut, so the flag flaps exactly then).
 - **Tricks / boost**: `boost_amount` (in segments), `boost_burn_target`, `boost_burn_rate`, `boost_prev_held`, `combo_multiplier`, `is_boosting`
 - **Crashes**: `is_crashed`
 - **Discrete actions**: `rb_do_respawn` (rollback pattern); `rb_respawn_transform` / `rb_respawn_transform_oneshot` carry the target respawn transform. Gear shifts sync `nfx_target_gear` (absolute requested gear) as netfox input — never edge-triggered flags, which drop/double-apply under stale-input reuse on the server.
@@ -309,8 +310,8 @@ The same "pause" action triggers different behavior based on `InputState`.
 
 - `GamemodeManager` (`managers/gamemodes/gamemode_manager.gd`) - manages match state, coordinates level/spawn. Runs a **state machine of gamemodes**.
 - **Gamemode states** (extend base `GameModeType`, whose `Kind` enum is the canonical id, live under `managers/gamemodes/types/`):
-  - `FreeRoamGameMode` - open play, event circles trigger mode switches, respawn on crash
-  - `RoadRaceGameMode` - lap-based race built on the task/runner system (see [RaceModes.md](./RaceModes.md))
+  - `FreeRoamGameMode` - open play, event circles trigger mode switches, respawn on crash. Crash respawns return you to the crash site (upright, same heading) — unless the site is steep or void, in which case you go to your last flat-ground breadcrumb (the server samples one per player on gentle ground; the ground check excludes the bike's own collider and ragdoll bones)
+  - `RoadRaceGameMode` - lap-based race built on the task/runner system (see [RaceModes.md](./RaceModes.md)). Bots keep racing through the results countdown; result rows refresh live until the timer ends (human rows are snapshotted before the runner stops — `TaskRunner.stop()` clears its per-player state)
   - `StreetRaceGameMode` - the same race run through live ambient traffic (duplicated file, not a subclass)
   - `TutorialGameMode` - step-by-step progression with countdown + trick detection
   - `ChallengeGameMode` - lightweight in-world trick challenges (no countdown/results)
@@ -334,11 +335,27 @@ The same "pause" action triggers different behavior based on `InputState`.
   - `rpc_spawn_player(peer_id, player_def_dict)` - spawn broadcast
   - `rpc_despawn_player(peer_id)` - despawn broadcast
   - `respawn_player(peer_id)` - broadcast: every peer sets `rb_do_respawn` on their local player so `do_respawn()` runs everywhere (resets ragdoll/visual state on clients, not just server-synced transform)
+  - `crash_player(peer_id)` - broadcast: sets `rb_do_crash` everywhere; sent by whoever rammed the victim (slide collisions only report what YOU moved into)
+  - `respawn_player_at(peer_id, pos, basis)` - respawn AND store the persistent respawn point
+  - `respawn_player_in_place(peer_id, pos, basis)` - one-shot respawn transform, persistent point untouched (free-roam crash respawns)
+  - `set_respawn_point(peer_id, pos, basis)` / `reset_respawn_point(peer_id)` - update/clear the persistent respawn point without teleporting (race checkpoints / entering free roam)
+- All of these are currently `any_peer` with no sender guard — hardening (server-sender guards + a client `request_respawn`) is planned, see PLAN-cleanup-bugfix-20260801.md Phase 2
 - Local helpers: `add_player_locally()`, `remove_player_locally()`, `spawn_all_players()`
 
 ### NPC Race Manager
 
-- `NPCRaceManager` (`managers/npc_race_manager.gd`) - owns AI race riders (`NPCRiderEntity`) on a negative-id roster with spawn/despawn RPCs mirroring `SpawnManager`. The race gamemodes drive its lifecycle; the server-only AI tick points each NPC at its next checkpoint from `RaceTask`.
+- `NPCRaceManager` (`managers/npc_race_manager.gd`) - owns AI race riders (`NPCRiderEntity`) on a negative-id roster (ids from -1) with spawn/despawn RPCs mirroring `SpawnManager`. The race gamemodes drive its lifecycle; the server-only AI tick points each NPC at its next checkpoint from `RaceTask`.
+- Late joiners get every live bot re-sent at its current transform via `sync_npcs_to_peer(peer_id)` (called from the race gamemodes' `_on_player_latejoined`) — without it the newcomer has no bot nodes and takes a MultiplayerSynchronizer error per packet per bot.
+
+### NPC Traffic Manager
+
+- `NPCTrafficManager` (`managers/npc_traffic_manager.gd`) - ambient traffic riders/cars (ids from -1000, so race and traffic ids can never collide). Builds a `TrafficRouteGraph` from the level's road network; count, car/bike mix, cruise speed and vehicle rosters are per-map via `LevelDefinition.traffic_settings` (a `TrafficSettings` resource). `FreeRoamGameMode` and `StreetRaceGameMode` start/stop it, server-only.
+- **Spawn sync contract** (this is the fix for "traffic only loads for host"):
+  - The server broadcasts `rpc_spawn_npc`, but clients only *accept* spawns after their own gamemode `Enter()` runs (level guaranteed loaded) — earlier broadcasts would parent riders under the outgoing level and be freed with it.
+  - On `Enter()`, non-server peers call `request_traffic_sync()` to pull everything they missed (covers both the fresh-start timing race and late join); `Exit()` calls `reset_local_traffic()`.
+  - Spawn/despawn RPCs are idempotent (dedupe on npc id / tolerant of missing ids), so broadcast + resync can overlap safely.
+- Crashed riders recover onto a clear lane spot after a randomized delay; a rider that rams a player crashes them via `SpawnManager.crash_player`.
+- Vehicle skins ship as `res://` paths, deliberately not `PlayerDefinition.to_dict()` — that round-trips through `BikeSkinDefinition.from_dict()`, which writes a `.tres` into `user://skins/` per rider per peer (open issue, see code-review-20260430.md).
 
 ### Unlocks / progression
 
@@ -422,6 +439,10 @@ flowchart LR
 | Position/Rotation           | Server broadcasts      | Server                     |
 | Lobby state                 | Server broadcasts      | Server                     |
 
+### Terrain3D collision under server authority
+
+Terrain3D's default collision is dynamic — built around **one tracked camera** (`CameraController.switch_to_cam` hands it the local player's camera). That's fine for a client predicting only itself, but the server simulates **every** player's physics, so remote players ride over collision-less terrain and fall through. `LevelDefinition._ready()` therefore forces `terrain.collision.mode = Terrain3DCollision.FULL_GAME` on the server (memory for correctness); clients keep the cheap camera-tracked mode. The "Cannot find the active camera" push_error at level load is benign — it fires before the player camera exists, and the hand-off on spawn restarts Terrain3D's processing.
+
 ### Connection Modes
 
 All modes are **server-authoritative** — the host runs physics, clients predict + reconcile. Mode only affects transport.
@@ -447,11 +468,7 @@ Input is gathered locally by `InputController._gather()` and synced automaticall
 - `_sync_game_to_late_joiner(level_name)` - sync level to late-joining client
 - `_request_late_spawn(peer_id)` - late-joiner requests their player spawn
 
-**SpawnManager** RPCs:
-
-- `rpc_spawn_player(peer_id, player_def_dict)` - spawn broadcast
-- `rpc_despawn_player(peer_id)` - despawn broadcast
-- `respawn_player(peer_id)` - server respawns a specific player
+**SpawnManager** RPCs: see the [Spawn Manager](#spawn-manager) section for the full list (spawn/despawn broadcasts plus the respawn/crash/respawn-point family).
 
 ### Deployment / builds
 

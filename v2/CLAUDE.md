@@ -89,11 +89,12 @@ See `planning_docs/Skins.md` for details.
   - `RoadRaceGameMode` (closed roads) and `StreetRaceGameMode` (same race, through live traffic) are deliberately duplicated files rather than a base + subclass — they're expected to diverge.
   - See [GamemodeSystem](./planning_docs/GamemodeSystem.md) and [RaceModes](./planning_docs/RaceModes.md)
 - `SpawnManager` - spawn/despawn RPCs + local player instantiation
+- `NPCRaceManager` / `NPCTrafficManager` - AI race bots and ambient traffic (negative-id rosters, broadcast spawns with client-side accept gate + late-join resync)
 - `SaveManager` - JSON persistence of `PlayerDefinition` (username, skins, etc.)
 
 ### Multiplayer / Netcode
 
-**Server-authoritative** using **netfox** (RollbackSynchronizer + TickInterpolator). Clients predict locally and reconcile. `ConnectionManager` supports three modes: **WebRTC** (preferred), **Noray**, and direct **IP/Port**. `LobbyManager`, `GamemodeManager`, and `SpawnManager` handle the lobby/match/spawn layers.
+**Server-authoritative** using **netfox** (RollbackSynchronizer + TickInterpolator). Clients predict locally and reconcile. `ConnectionManager` supports two modes: **WebRTC** (preferred) and direct **IP/Port**. `LobbyManager`, `GamemodeManager`, and `SpawnManager` handle the lobby/match/spawn layers.
 
 See `Architecture.md` for diagrams and RPC signatures.
 
@@ -104,6 +105,7 @@ See `Architecture.md` for diagrams and RPC signatures.
 - `player/` - PlayerEntity + `controllers/`
 - `menus/` - menu states (main, splash, play, lobby, customize, settings, pause, help)
 - `levels/` - all levels extend `LevelDefinition`
+- `entities/` - non-player entities (`NPCRiderEntity` + its state machine, `TrafficRouteGraph`)
 - `resources/` - `BikeSkinDefinition` / `CharacterSkinDefinition` `.tres` files
 - `utils/state_machine/` - base `State`, `StateMachine`, `StateContext` classes
 - `utils/constants.gd` - global constants/enums

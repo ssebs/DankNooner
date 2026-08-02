@@ -92,6 +92,16 @@ func get_hint_text() -> String:
 	return ""
 
 
+## Recorded finish time for any racer (humans and NPCs), -1.0 while unfinished.
+## Public so the race gamemodes stop reaching into _peer_progress.
+func get_completion_time_ms(racer_id: int) -> float:
+	return _peer_progress[racer_id].get("completion_time_ms", -1.0)
+
+
+func has_racer(racer_id: int) -> bool:
+	return _peer_progress.has(racer_id)
+
+
 #region NPC racers (server-side, driven by the race gamemodes / NPCRaceManager)
 
 
