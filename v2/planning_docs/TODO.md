@@ -3,7 +3,7 @@
 
 # NOW
 - Working on [refactor](PLAN-cleanup-bugfix-20260801.md)
-  -`# PHASE 2 — PATTERN REFACTORS`
+  -`# PHASE 2 — PATTERN REFACTORS` is next
 
 ---
 
