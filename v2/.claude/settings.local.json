@@ -19,7 +19,8 @@
       "Bash(echo \"exit: $?\")",
       "WebFetch(domain:api.github.com)",
       "Bash(gdlint *)",
-      "Bash(python -)"
+      "Bash(python -)",
+      "Bash(git log *)"
     ]
   }
 }

@@ -20,6 +20,14 @@
 
 Subsystem reviews dispatched in parallel: player controllers, managers/gamemodes, menus/state machine, levels/skins/utils.
 
+## Triage status — 2026-08-01 (Phase 1 of PLAN-cleanup-bugfix-20260801.md)
+
+- ✅ **PARTIAL — late-join contract (architectural decision #2)**: NPC resync for late joiners shipped (`NPCTrafficManager.request_traffic_sync` pull + `NPCRaceManager.sync_npcs_to_peer`); the full `serialize_state_for_late_joiner`/`apply_state_from_host` contract is Phase 2 of the plan. The predicted symptom class ("traffic only loads for host") was real and is fixed.
+- ✅ **NEW determinism fix**: `GearingController.is_rev_limited` was mutated in the rollback tick but not in the synced state list — resimulation carried stale limiter state and rubberbanded gear shifts. Now synced. Rule of thumb confirmed: every sim-affecting var mutated in `_rollback_tick` must be a state property.
+- ✅ **Private reach-ins (results)**: race gamemodes no longer read `RaceTask._peer_progress` — public `get_completion_time_ms`/`has_racer` added. (`npc_race_manager.gd` still has one `_peer_progress` read — deferred.)
+- ⏳ **STILL OPEN — RPC authority holes**: unchanged, now ~8 `any_peer` RPCs on SpawnManager/GamemodeManager. Phase 2 Task 8.
+- ⏳ **STILL OPEN — `user://` path leaks / BikeSkinDefinition split**: unchanged, and now actively costing: `NPCTrafficManager._roll_vehicle` ships raw `res://` paths specifically to dodge `from_dict()`'s per-peer `user://skins/` write.
+
 ---
 
 ## 🏛️ Architectural decisions to lock in

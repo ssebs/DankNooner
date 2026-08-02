@@ -34,6 +34,10 @@ var _rpm_fill_style: StyleBoxFlat = null
 ## the gauge. Purely cosmetic — kept out of the synced boost_prev_held, which the rollback
 ## tick owns and must not be perturbed by the HUD.
 var _prev_boost_held: bool = false
+## Debug-build-only netfox perf readout. Null on remote instances, in release builds,
+## and whenever netfox's perf monitors aren't registered — see show_hud.
+var _netfox_debug_label: Label = null
+var _netfox_dbg_accum: float = 0.0
 
 
 func _ready():
@@ -60,7 +64,7 @@ func _ready():
 	_balance_bar.hide()
 
 
-func _process(_delta: float):
+func _process(delta: float):
 	if Engine.is_editor_hint():
 		return
 
@@ -104,6 +108,21 @@ func _process(_delta: float):
 	var comboing: bool = player_entity.combo_time > 0.0 and not player_entity.is_crashed
 	var combo: int = player_entity.combo_multiplier if comboing else 1
 	_combo_counter.set_combo(combo, comboing)
+
+	# 1 Hz netfox readout — rollback resim volume + state property traffic, for spotting
+	# input starvation / correction storms during playtests.
+	_netfox_dbg_accum -= delta
+	if _netfox_debug_label != null and _netfox_dbg_accum <= 0.0:
+		_netfox_dbg_accum = 1.0
+		_netfox_debug_label.text = (
+			"rb ticks/s: %d | rb ms: %.1f | state props full/sent: %d/%d"
+			% [
+				Performance.get_custom_monitor(&"netfox/Rollback ticks simulated"),
+				Performance.get_custom_monitor(&"netfox/Rollback loop duration (ms)"),
+				Performance.get_custom_monitor(&"netfox/Full state properties count"),
+				Performance.get_custom_monitor(&"netfox/Sent state properties count"),
+			]
+		)
 
 
 func _init_balance_bar(trick_type: TrickController.Trick):
@@ -168,6 +187,21 @@ func _on_respawned():
 func show_hud() -> void:
 	visible = true
 	_minimap.activate(player_entity)
+
+	# Only the local client reaches show_hud, so the overlay never spawns on remote
+	# player instances. netfox registers its perf monitors only when NetworkPerformance
+	# is enabled (debug builds / netfox_perf tag), and Performance.get_custom_monitor
+	# errors on a monitor that was never added — so skip the label entirely when the
+	# monitors are absent instead of erroring once a second.
+	if (
+		OS.has_feature("debug")
+		and Performance.has_custom_monitor(&"netfox/Rollback ticks simulated")
+	):
+		_netfox_debug_label = Label.new()
+		_netfox_debug_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_netfox_debug_label.add_theme_font_size_override("font_size", 12)
+		_netfox_debug_label.position = Vector2(8, 8)
+		add_child(_netfox_debug_label)
 
 
 ## Server-side: forward the local racer's next-checkpoint marker to the owning

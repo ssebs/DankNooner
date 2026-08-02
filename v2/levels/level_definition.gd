@@ -28,6 +28,15 @@ func _ready():
 	if OS.has_feature("debug"):
 		player_spawn_pos = player_spawn_pos_debug
 
+	# The server simulates EVERY player's physics, but Terrain3D's default dynamic
+	# collision only builds around one tracked camera (the local player's — see
+	# CameraController.switch_to_cam). Remote players ride over collision-less
+	# terrain on the host and fall through the map. Full collision on the server
+	# trades memory for correctness; clients keep the cheap camera-tracked mode.
+	if multiplayer.multiplayer_peer != null and multiplayer.is_server():
+		for terrain in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Terrain3D"]):
+			terrain.collision.mode = Terrain3DCollision.FULL_GAME
+
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []

@@ -44,6 +44,13 @@ const PLACEMENT_CLEARANCE: float = 5.0
 const PLACEMENT_ATTEMPTS: int = 4
 
 var _npcs: Dictionary[int, NPCRiderEntity] = {}
+## Server-side copy of each rider's rolled vehicle dict, kept so a peer whose level
+## loaded after the spawn broadcast can be resynced (see request_traffic_sync).
+var _vehicles: Dictionary[int, Dictionary] = {}
+## Client-side gate: false until this peer's gamemode Enter confirms the level is
+## loaded. Spawn broadcasts arriving earlier would parent riders under the outgoing
+## level and be freed with it — they're dropped here and recovered by the sync request.
+var _accept_spawns: bool = false
 ## res:// paths of the vehicle skins this map rolls, refreshed each start_traffic.
 var _bike_skin_paths: Array = []
 var _car_skin_paths: Array = []
@@ -92,6 +99,7 @@ func start_traffic(for_race: bool = false) -> void:
 		_next_id -= 1
 		var def := npc_definitions[(-npc_id + FIRST_ID) % npc_definitions.size()]
 		var vehicle := _roll_vehicle(def, npc_id)
+		_vehicles[npc_id] = vehicle
 		rpc_spawn_npc.rpc(npc_id, vehicle, lane_transform.origin, lane_transform.basis)
 
 
@@ -136,9 +144,60 @@ func _roster_paths(roster: Array, fallback_dir: String) -> Array:
 func stop_traffic() -> void:
 	for npc_id in _npcs.keys():
 		rpc_despawn_npc.rpc(npc_id)
+	_vehicles.clear()
 	# The containers' on_road_updated connections die with them on level unload,
 	# and start_traffic re-connects whatever survives.
 	_route_graph = null
+
+
+#endregion
+
+#region Client spawn sync
+
+
+## Client-side, from gamemode Enter once THIS peer's level is loaded: accept spawn
+## broadcasts from here on and pull whatever the server spawned before that. Covers
+## the fresh-start race (the server's broadcast beats our spawn_level while start_game
+## is suspended on frame_post_draw) and late join (broadcasts predate our connection).
+func request_traffic_sync() -> void:
+	# A previous session's Exit can be skipped (start_game clears gamemode state while
+	# this peer is mid-load) — purge entries freed with their old level so the has()
+	# dedupe in rpc_spawn_npc doesn't block their resync.
+	for npc_id in _npcs.keys():
+		if !is_instance_valid(_npcs[npc_id]):
+			_npcs.erase(npc_id)
+	_accept_spawns = true
+	_rpc_request_traffic_sync.rpc_id(1)
+
+
+## Client-side, from gamemode Exit: stop accepting spawns and drop local riders.
+## The server's stop_traffic despawns normally do the freeing — this covers orderings
+## where our Exit runs before those despawn RPCs arrive.
+func reset_local_traffic() -> void:
+	_accept_spawns = false
+	for npc_id in _npcs.keys():
+		if is_instance_valid(_npcs[npc_id]):
+			_npcs[npc_id].queue_free()
+	_npcs.clear()
+
+
+## A peer's level just finished loading — resend every rider currently on the road,
+## at its CURRENT spot (riders have moved since their original spawn broadcast).
+@rpc("any_peer", "reliable")
+func _rpc_request_traffic_sync() -> void:
+	if !multiplayer.is_server():
+		return
+	var peer_id := multiplayer.get_remote_sender_id()
+	for npc_id in _npcs:
+		var npc := _npcs[npc_id]
+		rpc_spawn_npc.rpc_id(
+			peer_id, npc_id, _vehicles[npc_id], npc.global_position, npc.global_basis
+		)
+
+
+#endregion
+
+#region Route graph upkeep (server only)
 
 
 ## A container finished (re)building. It fires per rebuild pass and there are
@@ -165,6 +224,13 @@ func _rebuild_route_graph() -> void:
 
 @rpc("call_local", "reliable")
 func rpc_spawn_npc(npc_id: int, vehicle: Dictionary, pos: Vector3, basis: Basis):
+	# Our level isn't loaded yet (spawn broadcast raced our spawn_level) — dropped
+	# here, recovered by request_traffic_sync once the gamemode enters.
+	if !multiplayer.is_server() and !_accept_spawns:
+		return
+	# Broadcast and resync can both deliver the same rider — first one wins.
+	if _npcs.has(npc_id):
+		return
 	DebugUtils.DebugMsg("Adding traffic NPC locally: %s - %s" % [npc_id, vehicle["skin"]])
 
 	var npc := NPC_SCENE.instantiate() as NPCRiderEntity
@@ -204,6 +270,10 @@ func rpc_spawn_npc(npc_id: int, vehicle: Dictionary, pos: Vector3, basis: Basis)
 
 @rpc("call_local", "reliable")
 func rpc_despawn_npc(npc_id: int):
+	# This peer may never have accepted the spawn (late join / level still loading) —
+	# skip is intentional.
+	if !_npcs.has(npc_id):
+		return
 	_npcs[npc_id].queue_free()
 	_npcs.erase(npc_id)
 

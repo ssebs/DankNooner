@@ -34,19 +34,7 @@ func _process(delta: float):
 func rpc_show_results(results_dict: Dictionary, countdown_seconds: float):
 	var data := ResultsData.from_dict(results_dict)
 	title_label.text = data.title
-
-	for child in results_container.get_children():
-		child.queue_free()
-
-	for row in data.rows:
-		var row_label := Label.new()
-		var parts: Array[String] = []
-		for col in data.columns:
-			parts.append(str(row.get(col, "")))
-		row_label.text = "  ".join(parts)
-		row_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		results_container.add_child(row_label)
-
+	_rebuild_rows(data)
 	_countdown = countdown_seconds
 	countdown_label.text = "%d" % ceili(countdown_seconds)
 	skip_btn.visible = multiplayer.is_server()
@@ -57,11 +45,37 @@ func rpc_show_results(results_dict: Dictionary, countdown_seconds: float):
 		skip_btn.call_deferred("grab_focus")
 
 
+## Refresh title + rows only — countdown, focus and input state are untouched, so
+## this is safe to call repeatedly while the results screen is up.
+@rpc("call_local", "reliable")
+func rpc_update_rows(results_dict: Dictionary):
+	var data := ResultsData.from_dict(results_dict)
+	title_label.text = data.title
+	_rebuild_rows(data)
+
+
 @rpc("call_local", "reliable")
 func rpc_hide():
 	_countdown = -1.0
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
 	hide()
+
+
+func _rebuild_rows(data: ResultsData):
+	for child in results_container.get_children():
+		# Remove before freeing — queue_free()'d nodes still lay out until end of
+		# frame, so a refresh would briefly show old + new rows together.
+		results_container.remove_child(child)
+		child.queue_free()
+
+	for row in data.rows:
+		var row_label := Label.new()
+		var parts: Array[String] = []
+		for col in data.columns:
+			parts.append(str(row.get(col, "")))
+		row_label.text = "  ".join(parts)
+		row_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		results_container.add_child(row_label)
 
 
 func _get_configuration_warnings() -> PackedStringArray:

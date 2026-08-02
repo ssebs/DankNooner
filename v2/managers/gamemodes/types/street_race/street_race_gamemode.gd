@@ -16,6 +16,8 @@ class_name StreetRaceGameMode extends GameModeType
 ## RoadRaceGameMode. Started in Enter, stopped in Exit, both server-only.
 @export var npc_traffic_manager: NPCTrafficManager
 
+const RESULTS_REFRESH_SECS: float = 1.0
+
 var _start_circle: EventStartCircle
 var _race_task: RaceTask
 var _runners: Array[TaskRunner] = []
@@ -24,6 +26,10 @@ var _active_runner_index: int = -1
 var _respawn_delay: float = 3.0
 var _results_countdown: float = -1.0
 var _results_countdown_total: float = 10.0
+## Human rows cached at the all-finished snapshot — the runner clears its state on
+## stop(), so they can't be re-derived. NPC rows re-derive live from RaceTask.
+var _human_rows: Array[Dictionary] = []
+var _results_refresh_accum: float = 0.0
 
 
 func Enter(state_context: StateContext):
@@ -52,6 +58,9 @@ func Enter(state_context: StateContext):
 		# over spawn points.
 		npc_traffic_manager.start_traffic(true)
 		_start_next_runner()
+	else:
+		# Same pull as FreeRoamGameMode — see that Enter for why.
+		npc_traffic_manager.request_traffic_sync()
 
 
 func Update(delta: float):
@@ -85,6 +94,8 @@ func Exit(_state_context: StateContext):
 		npc_traffic_manager.stop_traffic()
 		_clear_checkpoint_markers()
 		_race_task = null
+	else:
+		npc_traffic_manager.reset_local_traffic()
 
 	if results_hud.visible:
 		input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
@@ -94,6 +105,7 @@ func Exit(_state_context: StateContext):
 	_start_circle = null
 	_runners = []
 	_active_runner_index = -1
+	_human_rows = []
 
 
 #region Runner chaining
@@ -163,7 +175,7 @@ func _push_checkpoint_markers():
 			continue
 		var pos := Vector3.ZERO
 		var has_target := false
-		if _race_task._peer_progress.has(peer_id):
+		if _race_task.has_racer(peer_id):
 			var ckpt := _race_task.get_target_checkpoint(peer_id)
 			if ckpt != null:
 				pos = ckpt.global_position
@@ -240,6 +252,10 @@ func _update_results_countdown(delta: float) -> bool:
 	if _results_countdown <= 0.0:
 		return false
 	_results_countdown -= delta
+	_results_refresh_accum -= delta
+	if _results_refresh_accum <= 0.0:
+		_results_refresh_accum = RESULTS_REFRESH_SECS
+		results_hud.rpc_update_rows.rpc(_build_results_data().to_dict())
 	if _results_countdown <= 0.0:
 		_results_countdown = -1.0
 		_return_to_free_roam()
@@ -247,32 +263,39 @@ func _update_results_countdown(delta: float) -> bool:
 
 
 func _show_results(runner: TaskRunner):
-	var race_task := npc_race_manager.race_task
-	var rows: Array[Dictionary] = []
+	_human_rows = []
 	for peer_id in runner._player_states:
 		var state = runner._player_states[peer_id] as PlayerTaskState
 		var username: String = lobby_manager.lobby_players[peer_id].username
-		# Prefer the RaceTask clock (starts at the race body, like the lap HUD
-		# and NPC rows) over the runner clock (starts at grid/countdown).
+		# Prefer the RaceTask clock (starts at the race body, like the lap HUD and
+		# NPC rows) over the runner clock (starts at grid/countdown).
 		var time_ms: float = state.completion_time_ms
-		if race_task != null and race_task._peer_progress.has(peer_id):
-			time_ms = race_task._peer_progress[peer_id].get("completion_time_ms", time_ms)
-		rows.append(_result_row(username, time_ms))
-	if race_task != null:
-		for npc_id in npc_race_manager.get_npc_ids():
-			var npc_row: Dictionary = race_task._peer_progress[npc_id]
-			var npc_name: String = npc_race_manager.get_npc(npc_id).username
-			if npc_row.has("completion_time_ms"):
-				rows.append(_result_row(npc_name, npc_row["completion_time_ms"]))
-			else:
-				# Race ended (all humans done) before this NPC finished.
-				rows.append({"Username": npc_name, "Time": tr("RACE_DNF"), "_sort_key": INF})
-	rows.sort_custom(func(a, b): return a["_sort_key"] < b["_sort_key"])
-
-	var data := ResultsData.create(tr("RACE_COMPLETE"), ["Username", "Time"], rows)
+		if _race_task != null and _race_task.has_racer(peer_id):
+			var task_ms := _race_task.get_completion_time_ms(peer_id)
+			if task_ms >= 0.0:
+				time_ms = task_ms
+		_human_rows.append(_result_row(username, time_ms))
 	_results_countdown = _results_countdown_total
+	_results_refresh_accum = RESULTS_REFRESH_SECS
 	tutorial_hud.rpc_hide.rpc()
-	results_hud.rpc_show_results.rpc(data.to_dict(), _results_countdown_total)
+	results_hud.rpc_show_results.rpc(_build_results_data().to_dict(), _results_countdown_total)
+
+
+## Cached human rows + live NPC rows. Bots keep racing through the results
+## countdown — a bot that finishes mid-countdown gets its real time on the next
+## refresh instead of a DNF.
+func _build_results_data() -> ResultsData:
+	var rows: Array[Dictionary] = _human_rows.duplicate()
+	if _race_task != null:
+		for npc_id in npc_race_manager.get_npc_ids():
+			var npc_name: String = npc_race_manager.get_npc(npc_id).username
+			var time_ms := _race_task.get_completion_time_ms(npc_id)
+			if time_ms >= 0.0:
+				rows.append(_result_row(npc_name, time_ms))
+			else:
+				rows.append({"Username": npc_name, "Time": tr("RACE_RACING"), "_sort_key": INF})
+	rows.sort_custom(func(a, b): return a["_sort_key"] < b["_sort_key"])
+	return ResultsData.create(tr("RACE_COMPLETE"), ["Username", "Time"], rows)
 
 
 func _result_row(username: String, time_ms: float) -> Dictionary:
@@ -302,6 +325,7 @@ func _on_results_restart_pressed():
 		_active_runner.stop()
 		_active_runner = null
 	_active_runner_index = -1
+	_human_rows = []
 	_runners = _start_circle.get_runners()
 	_inject_runner_deps()
 	# Fresh NPCs back at the grid with reset race rows.
@@ -330,6 +354,7 @@ func _on_runner_respawn_requested(peer_id: int):
 
 func _on_player_latejoined(peer_id: int):
 	gamemode_manager.latespawn_player(peer_id)
+	npc_race_manager.sync_npcs_to_peer(peer_id)
 
 
 func _on_player_disconnected(peer_id: int):
