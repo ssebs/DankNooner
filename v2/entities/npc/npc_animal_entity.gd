@@ -4,16 +4,16 @@
 ##
 ## **The PARENT decides the behavior.** Under a Path3D we walk that curve; parked anywhere
 ## else we stand and idle. Drag an animal onto a different Path3D and it walks that one
-## instead — no code, no manager wiring. Several animals can share a path: each seeds its
-## own offset from wherever you dropped it, so they stay spread out.
+## instead — no code, no manager wiring. Several animals can share a path: they space
+## themselves evenly around it by child order (see _seed_progress), so where along the
+## curve you drop them does not matter — only which Path3D they hang under.
 ##
 ## Area3D, not a body: a racer rides straight THROUGH an animal — it dies, they keep going —
 ## so there is nothing to collide with and the shape is a hit volume rather than a collider.
 ##
 ## The walk costs no bandwidth. Every peer loads the same level, so it has the same curve,
-## the same speed and the same authored start offset, and simply walks it. Only the events
-## that peers cannot each decide alone — the kill and the respawn — are broadcast, by
-## AnimalSpawnManager.
+## the same speed and the same start offset, and simply walks it. Only the events that peers
+## cannot each decide alone — the kill and the respawn — are broadcast, by AnimalSpawnManager.
 class_name NPCAnimalEntity extends Area3D
 
 ## A racer rode through us. Server-only (see _on_body_entered) — AnimalSpawnManager
@@ -72,12 +72,26 @@ func _ready() -> void:
 	if path == null:
 		mesh_anim_player.play(IDLE_ANIM)
 		return
-	# Seed from where the author dropped us, so a herd sharing one path starts spread along
-	# it instead of stacking on its origin. Also what keeps every peer in step: the authored
-	# position is in the level scene, so they all derive the same offset with nothing synced.
-	_progress = path.curve.get_closest_offset(position)
+	_seed_progress()
 	mesh_anim_player.play(WALK_ANIM)
 	walking = true
+
+
+## Space this animal evenly along the curve by its index among the animals sharing the path.
+##
+## Deliberately NOT derived from the authored position: an animal dropped in the viewport is
+## almost never exactly ON the spline, and get_closest_offset() clamps every off-curve point
+## to the nearest END of it — so a whole herd placed beside the path seeds to one offset and
+## walks the route stacked inside each other, looking like a single animal.
+##
+## Index is identical on every peer (same level scene, same child order), so the spread costs
+## nothing to sync. Drop in a third animal and the herd simply re-spaces itself into thirds.
+func _seed_progress() -> void:
+	var herd: Array[Node] = []
+	for sibling in path.get_children():
+		if sibling is NPCAnimalEntity:
+			herd.append(sibling)
+	_progress = path.curve.get_baked_length() * (float(herd.find(self)) / herd.size())
 
 
 func _physics_process(delta: float) -> void:

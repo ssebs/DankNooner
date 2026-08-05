@@ -212,11 +212,11 @@ Animals are hand-placed, not spawned — **the parent decides the behavior**:
 Animals                     <- plain Node
 ├── Path3D                  <- animals under here walk this curve
 │   ├── NPCAnimalEntity     (horse, definition set per instance)
-│   └── NPCAnimalEntity2    (horse — own start offset, so they stay spread out)
+│   └── NPCAnimalEntity2    (horse — auto-spaced half a lap from the first)
 └── NPCAnimalEntity3        (shiba — no Path3D parent, so it idles in place)
 ```
 
-Instance `npc_animal_entity.tscn`, set `animal_skin_definition` on **that instance**, and drag it under whichever `Path3D` you want it walking. A walker seeds its start offset from wherever you drop it along the curve, so a herd sharing one path stays spread out. `AnimalSpawnManager` finds them on level load — nothing to register.
+Instance `npc_animal_entity.tscn`, set `animal_skin_definition` on **that instance**, and drag it under whichever `Path3D` you want it walking. Walkers sharing a path space themselves evenly around it by child order, so you do not need to place them on the spline — position in the viewport is ignored, only the parent matters. `AnimalSpawnManager` finds them on level load — nothing to register.
 
 > The entity scene deliberately carries no default definition and bakes no mesh child. `_init_mesh()` does **not** set `owner`, so the spawned mesh is preview-only and never written into the scene — that is what lets a per-instance `animal_skin_definition` override actually take effect.
 
