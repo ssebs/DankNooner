@@ -365,6 +365,15 @@ The same "pause" action triggers different behavior based on `InputState`.
 - Crashed riders recover onto a clear lane spot after a randomized delay; a rider that rams a player crashes them via `SpawnManager.crash_player`.
 - Vehicle skins ship as `res://` paths, deliberately not `PlayerDefinition.to_dict()` — that round-trips through `BikeSkinDefinition.from_dict()`, which writes a `.tres` into `user://skins/` per rider per peer (open issue, see code-review-20260430.md).
 
+### Animal Spawn Manager
+
+- `AnimalSpawnManager` (`managers/animal_spawn_manager.gd`) — ambient path-walking animals (`NPCAnimalEntity`, ids from -2000 so race/traffic/animal rosters can't collide). One animal per `Path3D` the level tagged into the `AnimalPaths` group, so adding a walk route is level authoring, not code. Species is rolled per path server-side and shipped as a `res://` path (same reasoning as traffic vehicle skins). `FreeRoamGameMode` starts/stops it, server-only.
+- Reuses `NPCTrafficManager`'s **spawn sync contract** verbatim: clients only accept spawns after their gamemode `Enter()` runs, `request_animal_sync()` pulls what they missed, `reset_local_animals()` on `Exit()`, and every RPC is idempotent so broadcast + resync can overlap.
+- **The walk is deliberately unsynced.** Every peer has the same `Path3D` and the same `move_speed`, so each advances its own `PathFollow3D` locally — a herd costs zero bandwidth per tick, versus a transform packet per animal per tick like `NPCRiderEntity`. Only the discrete events broadcast: spawn, kill, respawn, despawn. Peers drift by centimetres, which is invisible because nothing about an animal is collidable (below).
+- **Animals are hit volumes, not obstacles.** `NPCAnimalEntity` is an `Area3D` with `collision_layer = 0` (nothing can hit it) and `collision_mask = 2`, so a racer rides straight *through* one: the animal plays its `Death` clip and holds the last frame, the rider keeps their line. That is why it isn't an `AnimatableBody3D` — a solid body would deflect a bike at speed no matter how fast the death registered. The layer-2 mask is a cheap pre-filter; `_on_body_entered` still checks the `Racers` group, because level obstacles share `crash_collision`.
+- Only the server acts on the overlap (`hit_by_racer` → `rpc_kill_animal`), so no peer ever kills an animal locally. The corpse lies there for `respawn_delay_min..max`, then reappears at a random point along the same path.
+- Mesh and hit volume are built from `AnimalSkinDefinition` exactly as `PlayerEntity` builds itself from `BikeSkinDefinition` — see [Skins.md](./Skins.md). Clip names are consts on the entity, not definition fields: the Animated Animal Pack ships one identical clip set (`Walk` / `Idle` / `Death`) for every animal in it.
+
 #### NPC transform sync + render smoothing
 
 Shared by both NPC managers, implemented on `NPCRiderEntity`. NPCs use a plain `MultiplayerSynchronizer` (server authority) with **no** netfox rollback or TickInterpolator.

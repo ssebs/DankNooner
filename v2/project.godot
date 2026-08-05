@@ -84,6 +84,10 @@ folder_colors={
 
 import/blender/enabled=false
 
+[global_group]
+
+AnimalPaths=""
+
 [gui]
 
 theme/custom="uid://de2t3r1ewrlw5"

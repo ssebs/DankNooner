@@ -35,6 +35,7 @@
 [ext_resource type="PackedScene" uid="uid://b11ak4b3uc6tw" path="res://levels/assets/Farm Buildings Bundle-glb/Big Barn.glb" id="33_clf25"]
 [ext_resource type="PackedScene" uid="uid://d1m3ct4lb46e0" path="res://levels/assets/Farm Buildings Bundle-glb/Barn.glb" id="34_k3cxb"]
 [ext_resource type="PackedScene" uid="uid://cdusyl3e4lbb" path="res://levels/assets/Farm Buildings Bundle-glb/ChickenCoop.glb" id="35_ythoq"]
+[ext_resource type="PackedScene" uid="uid://biin5k0fkdd2l" path="res://entities/npc/npc_animal_entity.tscn" id="36_k3cxb"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e82mi"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -185,6 +186,14 @@ description = "Through Traffic!"
 target_gamemode = 2
 forced_base_bike = ExtResource("23_s2l3m")
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
+
+[sub_resource type="Curve3D" id="Curve3D_ythoq"]
+closed = true
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -10.99205, -9.536743e-07, -0.79693604, 0, 0, 0, 0, 0, 0, -12.00882, -9.536743e-07, 7.584503, 0, 0, 0, 0, 0, 0, -2.5006866, -9.536743e-07, 8.463898),
+"tilts": PackedFloat32Array(0, 0, 0, 0)
+}
+point_count = 4
 
 [node name="Stunt Track 01" type="Node3D" unique_id=497611854 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug", "grid_markers")]
 script = ExtResource("1_craaw")
@@ -2215,3 +2224,12 @@ transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, 269.
 
 [node name="Fence-e02PFKKhbr17" parent="Farm" unique_id=591666036 instance=ExtResource("32_s2l3m")]
 transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, 269.90173, 0.010823, -324.0944)
+
+[node name="Animals" type="Node" parent="." unique_id=766024810]
+
+[node name="NPCAnimalEntity" parent="Animals" unique_id=848725741 instance=ExtResource("36_k3cxb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 240.32735, 0, -261.92682)
+
+[node name="Path3D" type="Path3D" parent="Animals" unique_id=1556026666 groups=["AnimalPaths"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 204.73027, 9.536743e-07, -270.51782)
+curve = SubResource("Curve3D_ythoq")
