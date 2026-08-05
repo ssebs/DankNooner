@@ -22,3 +22,7 @@ class_name AnimalSkinDefinition extends Resource
 @export var collision_position_offset: Vector3 = Vector3(0, 0, 0)
 @export var collision_rotation_offset_degrees: Vector3 = Vector3.ZERO
 @export var collision_scale_multiplier: Vector3 = Vector3.ONE
+
+@export_group("Movement")
+## Metres per second along its Path3D — a fox should outpace a cow.
+@export var move_speed: float = 3.0

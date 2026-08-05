@@ -185,6 +185,25 @@ That's it — traffic scans the folder, so the new car joins the roster with no 
 
 > `car_skin.tscn` carries its own default `skin_definition`. That default is what you see when opening the scene standalone — at runtime `NPCRiderEntity._init_mesh()` always overwrites it with the rolled definition.
 
+## Animal Skin System
+
+`NPCAnimalEntity` (`entities/npc/npc_animal_entity.{gd,tscn}`) builds itself from an `AnimalSkinDefinition` (`resources/npcs/animal_skin_definition.gd`). Unlike bikes and cars there is no separate skin scene — the entity *is* the skin holder, spawning `mesh_res` under its own `%Mesh` node.
+
+**Mesh** — `mesh_res` (must be a `SkinColor` scene), `mesh_position_offset`, `mesh_rotation_offset_degrees`, `mesh_scale_multiplier`
+
+**Collision** — `collision_shape`, `collision_position_offset`, `collision_rotation_offset_degrees`, `collision_scale_multiplier`. This is a **hit volume on an `Area3D`**, not a collider — racers ride through animals. See [Architecture.md](./Architecture.md#animal-spawn-manager).
+
+**Movement** — `move_speed`, metres per second along the level's `Path3D`.
+
+Deliberately absent vs `CarSkinDefinition`: mods, and any `user://` save/load. Animal definitions must live in `res://` and be identical on every peer — the spawn RPC ships a resource path.
+
+### Creating a New Animal
+
+1. Create an inherited scene from the `.glb` under `entities/npc/`, attach `SkinColor` to the root, configure `slots` / `meshes` (see above). The glb's own `AnimationPlayer` must survive — the entity plays `Walk` / `Death` off it.
+2. Right-click → **New Resource** → `AnimalSkinDefinition`, save to `resources/npcs/{name}_animal_definition.tres`.
+3. Set `skin_name`, assign `mesh_res`, tune the mesh + collision offsets and `move_speed`.
+4. Add it to `AnimalSpawnManager.animal_definitions` in `main_game.tscn` to put it in the roster.
+
 ## Mods
 
 `BikeMod` (`resources/bikes/mods/bike_mod.gd`) is a base `Resource` with a single `apply(vehicle_skin: Node3D)` method — typed to `Node3D` rather than `BikeSkin` so one mod ecosystem serves both `BikeSkin` and `CarSkin` (any vehicle skin exposing `mesh_skin`). Subclass it to create composable overrides that stack on top of the base definition.

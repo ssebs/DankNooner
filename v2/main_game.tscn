@@ -37,6 +37,7 @@
 [ext_resource type="Script" uid="uid://283a7n5utttx" path="res://resources/player/player_definition.gd" id="35_iihm1"]
 [ext_resource type="Script" uid="uid://37ehv252lkkf" path="res://managers/trick_manager.gd" id="36_trkmg"]
 [ext_resource type="Script" uid="uid://uj0l0u0v0f0d" path="res://managers/npc_traffic_manager.gd" id="37_npctm"]
+[ext_resource type="Script" uid="uid://c7rb62smxqgpp" path="res://managers/animal_spawn_manager.gd" id="38_anspm"]
 [ext_resource type="Script" uid="uid://ckudxd3spv3uh" path="res://managers/gamemodes/types/street_race/street_race_gamemode.gd" id="38_strce"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
@@ -192,11 +193,12 @@ challenge_mode = NodePath("StateMachine/ChallengeGameMode")
 script = ExtResource("4_6bm6p")
 metadata/_custom_type_script = "uid://ba7kyb4p3trb1"
 
-[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_confirm_hud", "level_manager", "npc_traffic_manager", "gamemode_manager", "spawn_manager")]
+[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_confirm_hud", "level_manager", "npc_traffic_manager", "animal_spawn_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("25_6krrg")
 game_mode_event_confirm_hud = NodePath("GameModeEventConfirmHUD")
 level_manager = NodePath("../../../LevelManager")
 npc_traffic_manager = NodePath("../../../NPCTrafficManager")
+animal_spawn_manager = NodePath("../../../AnimalSpawnManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
@@ -281,3 +283,7 @@ script = ExtResource("37_npctm")
 level_manager = NodePath("../LevelManager")
 spawn_manager = NodePath("../SpawnManager")
 npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_pk5u2")])
+
+[node name="AnimalSpawnManager" type="Node" parent="ManagerManager" unique_id=1218916393 node_paths=PackedStringArray("level_manager") groups=["Managers"]]
+script = ExtResource("38_anspm")
+level_manager = NodePath("../LevelManager")

@@ -2,9 +2,8 @@
 > Don't forget, have fun :D
 
 # NOW
-- Working on [refactor](PLAN-cleanup-bugfix-20260801.md)
-  -`# PHASE 2 — PATTERN REFACTORS` is next
-
+- [ ] level design for stunt city
+  - [ ] animated animal skins
 ---
 
 ## Release Focus
