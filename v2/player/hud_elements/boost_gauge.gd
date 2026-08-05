@@ -1,6 +1,6 @@
 @tool
 ## Segmented boost meter — one cell per boost segment. Fed from HUDController each frame
-## off PlayerEntity.boost_amount (which is measured in segments).
+## off BoostController.boost_amount (which is measured in segments).
 ##
 ## Reads at a glance as one of three states, because a press is silently rejected below one
 ## full segment and that needs to be obvious before the player tries:

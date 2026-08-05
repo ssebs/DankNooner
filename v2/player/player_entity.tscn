@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://bi0gffmw6lupt" path="res://player/controllers/movement_controller.gd" id="11_tivla"]
 [ext_resource type="Script" uid="uid://t5igmn16n20c" path="res://player/controllers/trick_controller.gd" id="11_trick"]
 [ext_resource type="Script" uid="uid://cfpb4scu8hdy4" path="res://player/controllers/crash_controller.gd" id="12_crash"]
+[ext_resource type="Script" path="res://player/controllers/boost_controller.gd" id="12_boost"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="16_uthnt"]
 [ext_resource type="Script" uid="uid://coopftft0wwho" path="res://player/controllers/camera_controller.gd" id="17_0jgj5"]
 [ext_resource type="Script" uid="uid://civ7dg4q23qwd" path="res://player/controllers/hud_controller.gd" id="17_fiihv"]
@@ -1118,7 +1119,7 @@ radius = 64.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8urt2"]
 
-[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("collision_shape_3d", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "movement_controller", "camera_controller", "butt_target", "left_hand_target", "right_hand_target", "left_foot_target", "right_foot_target", "chest_target", "head_target", "left_arm_magnet", "right_arm_magnet", "left_leg_magnet", "right_leg_magnet", "front_wheel_ground_marker", "rear_wheel_ground_marker", "front_wheel_front_marker", "rear_wheel_back_marker")]
+[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("collision_shape_3d", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "movement_controller", "camera_controller", "boost_controller", "butt_target", "left_hand_target", "right_hand_target", "left_foot_target", "right_foot_target", "chest_target", "head_target", "left_arm_magnet", "right_arm_magnet", "left_leg_magnet", "right_leg_magnet", "front_wheel_ground_marker", "rear_wheel_ground_marker", "front_wheel_front_marker", "rear_wheel_back_marker")]
 collision_layer = 3
 collision_mask = 19
 floor_block_on_wall = false
@@ -1135,6 +1136,7 @@ trick_controller = NodePath("_Controllers/TrickController")
 crash_controller = NodePath("_Controllers/CrashController")
 movement_controller = NodePath("_Controllers/MovementController")
 camera_controller = NodePath("_Controllers/CameraController")
+boost_controller = NodePath("_Controllers/BoostController")
 butt_target = NodePath("VisualRoot/IKTargets/ButtTarget")
 left_hand_target = NodePath("VisualRoot/IKTargets/LeftHandTarget")
 right_hand_target = NodePath("VisualRoot/IKTargets/RightHandTarget")
@@ -1156,7 +1158,7 @@ unique_name_in_owner = true
 script = ExtResource("3_faflk")
 root = NodePath("..")
 enable_prediction = true
-state_properties = Array[String]([":global_transform", ":velocity", ":up_direction", ":is_crashed", ":boost_amount", ":boost_burn_target", ":boost_burn_rate", ":boost_prev_held", ":combo_time", ":combo_grace", ":combo_boost_earned", ":combo_multiplier", ":is_boosting", "%MovementController:pitch_angle", "%MovementController:roll_angle", "%MovementController:speed", "%MovementController:slip_angle", "%GearingController:current_gear", "%GearingController:current_rpm", "%GearingController:clutch_value", "%GearingController:is_rev_limited"])
+state_properties = Array[String]([":global_transform", ":velocity", ":up_direction", ":is_crashed", "%BoostController:boost_amount", "%BoostController:boost_burn_target", "%BoostController:boost_burn_rate", "%BoostController:boost_prev_held", "%BoostController:is_boosting", "%TrickController:combo_time", "%TrickController:combo_grace", "%TrickController:combo_boost_earned", "%TrickController:combo_multiplier", "%MovementController:pitch_angle", "%MovementController:roll_angle", "%MovementController:speed", "%MovementController:slip_angle", "%GearingController:current_gear", "%GearingController:current_rpm", "%GearingController:clutch_value", "%GearingController:is_rev_limited"])
 input_properties = Array[String](["%InputController:nfx_throttle", "%InputController:nfx_front_brake", "%InputController:nfx_rear_brake", "%InputController:nfx_steer", "%InputController:nfx_lean", "%InputController:nfx_trick_held", "%InputController:nfx_clutch_held", "%InputController:nfx_boost_held", "%InputController:nfx_cam_x", "%InputController:nfx_cam_y", "%InputController:nfx_target_gear"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
@@ -1212,13 +1214,21 @@ script = ExtResource("10_gear")
 player_entity = NodePath("../..")
 input_controller = NodePath("../InputController")
 
-[node name="TrickController" type="Node" parent="_Controllers" unique_id=504066215 node_paths=PackedStringArray("player_entity", "input_controller", "gearing_controller", "movement_controller")]
+[node name="TrickController" type="Node" parent="_Controllers" unique_id=504066215 node_paths=PackedStringArray("player_entity", "input_controller", "gearing_controller", "movement_controller", "boost_controller")]
 unique_name_in_owner = true
 script = ExtResource("11_trick")
 player_entity = NodePath("../..")
 input_controller = NodePath("../InputController")
 gearing_controller = NodePath("../GearingController")
 movement_controller = NodePath("../MovementController")
+boost_controller = NodePath("../BoostController")
+
+[node name="BoostController" type="Node" parent="_Controllers" node_paths=PackedStringArray("player_entity", "input_controller", "trick_controller")]
+unique_name_in_owner = true
+script = ExtResource("12_boost")
+player_entity = NodePath("../..")
+input_controller = NodePath("../InputController")
+trick_controller = NodePath("../TrickController")
 
 [node name="CrashController" type="Node" parent="_Controllers" unique_id=1441970825 node_paths=PackedStringArray("player_entity", "input_controller", "animation_controller", "movement_controller")]
 unique_name_in_owner = true
@@ -1228,7 +1238,7 @@ input_controller = NodePath("../InputController")
 animation_controller = NodePath("../AnimationController")
 movement_controller = NodePath("../MovementController")
 
-[node name="HUDController" type="Control" parent="_Controllers" unique_id=651235913 node_paths=PackedStringArray("player_entity", "movement_controller", "input_controller", "gearing_controller", "trick_controller", "crash_controller")]
+[node name="HUDController" type="Control" parent="_Controllers" unique_id=651235913 node_paths=PackedStringArray("player_entity", "movement_controller", "input_controller", "gearing_controller", "trick_controller", "crash_controller", "boost_controller")]
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
@@ -1245,6 +1255,7 @@ input_controller = NodePath("../InputController")
 gearing_controller = NodePath("../GearingController")
 trick_controller = NodePath("../TrickController")
 crash_controller = NodePath("../CrashController")
+boost_controller = NodePath("../BoostController")
 
 [node name="AspectContainer" type="AspectRatioContainer" parent="_Controllers/HUDController" unique_id=810684012]
 layout_mode = 1

@@ -51,11 +51,32 @@ func _on_lobby_players_updated(players: Dictionary):
 		player.update_skins(players[peer_id].bike_skin, players[peer_id].character_skin)
 
 
+## True when the executing RPC came from the server or a local call — sender id is
+## the local peer's own id for call_local execution (1 on the host) and 1 for
+## server-sent RPCs. The broadcast RPCs below stay any_peer only because the server
+## must call_local them; this closes them to clients.
+func _sender_is_server() -> bool:
+	return multiplayer.get_remote_sender_id() <= 1
+
+
+## Client-callable: ask the server to respawn YOU (pause-menu button). The server
+## derives the target from the sender — a client can never respawn someone else.
+@rpc("any_peer", "call_local", "reliable")
+func request_respawn():
+	if !multiplayer.is_server():
+		return
+	var sender := multiplayer.get_remote_sender_id()
+	# sender == 1 covers both the host's local call and (impossibly) server-sent.
+	respawn_player.rpc(sender if sender > 1 else 1)
+
+
 ## Set player's rb_do_respawn to true on every peer so each runs do_respawn() locally.
 ## Required so client-only state (ragdoll bones, controller-local vars) gets reset alongside
 ## the server-synced global_transform / is_crashed.
 @rpc("any_peer", "call_local", "reliable")
 func respawn_player(player_peer_id: int):
+	if !_sender_is_server():
+		return
 	_get_player_by_peer_id(player_peer_id).rb_do_respawn = true
 
 
@@ -65,6 +86,8 @@ func respawn_player(player_peer_id: int):
 ## NPCTrafficState for the detection side.
 @rpc("any_peer", "call_local", "reliable")
 func crash_player(player_peer_id: int):
+	if !_sender_is_server():
+		return
 	_get_player_by_peer_id(player_peer_id).rb_do_crash = true
 
 
@@ -72,6 +95,8 @@ func crash_player(player_peer_id: int):
 ## (used by subsequent crash respawns until reset). Runs on every peer.
 @rpc("any_peer", "call_local", "reliable")
 func respawn_player_at(player_peer_id: int, pos: Vector3, basis: Basis):
+	if !_sender_is_server():
+		return
 	var player_node := _get_player_by_peer_id(player_peer_id)
 	player_node.rb_respawn_transform = Transform3D(basis, pos)
 	player_node.rb_do_respawn = true
@@ -82,6 +107,8 @@ func respawn_player_at(player_peer_id: int, pos: Vector3, basis: Basis):
 ## respawn button still returns to the original spawn (rb_respawn_transform). Runs on every peer.
 @rpc("any_peer", "call_local", "reliable")
 func respawn_player_in_place(player_peer_id: int, pos: Vector3, basis: Basis):
+	if !_sender_is_server():
+		return
 	var player_node := _get_player_by_peer_id(player_peer_id)
 	player_node.rb_respawn_transform_oneshot = Transform3D(basis, pos)
 	player_node.rb_do_respawn = true
@@ -91,6 +118,8 @@ func respawn_player_in_place(player_peer_id: int, pos: Vector3, basis: Basis):
 ## passes a race checkpoint — their next crash returns them here.
 @rpc("any_peer", "call_local", "reliable")
 func set_respawn_point(player_peer_id: int, pos: Vector3, basis: Basis):
+	if !_sender_is_server():
+		return
 	_get_player_by_peer_id(player_peer_id).rb_respawn_transform = Transform3D(basis, pos)
 
 
@@ -98,6 +127,8 @@ func set_respawn_point(player_peer_id: int, pos: Vector3, basis: Basis):
 ## Used when entering free roam from another gamemode.
 @rpc("any_peer", "call_local", "reliable")
 func reset_respawn_point(player_peer_id: int):
+	if !_sender_is_server():
+		return
 	_get_player_by_peer_id(player_peer_id).rb_respawn_transform = Transform3D()
 
 

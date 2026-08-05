@@ -2,7 +2,7 @@
 ## Combo multiplier readout. Escalates in drama with the multiplier: bigger, hotter,
 ## and shakier the higher it climbs, with a punch + flash on every step up.
 ##
-## Fed from HUDController off the synced PlayerEntity.combo_multiplier — the actual
+## Fed from HUDController off the synced TrickController.combo_multiplier — the actual
 ## scoring lives server-side in TrickManager.
 class_name ComboCounter extends Control
 

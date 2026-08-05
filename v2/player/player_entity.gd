@@ -35,6 +35,7 @@ signal crashed(peer_id: int)
 @export var crash_controller: CrashController
 @export var movement_controller: MovementController
 @export var camera_controller: CameraController
+@export var boost_controller: BoostController
 
 @export_group("IK Targets")
 @export var butt_target: Marker3D
@@ -85,36 +86,6 @@ var username: String:
 
 #region Netfox sync'd
 # `global_transform`, `velocity` also sync'd
-#endregion
-
-#region Trick / boost (synced)
-## Boost meter in SEGMENTS, 0..MovementController.BOOST_SEGMENTS. Filled server-side by
-## TrickManager from trick points; drained in MovementController's rollback tick, so the
-## local client predicts the drain and netfox reconciles it against the server.
-var boost_amount: float = 0.0
-## Meter level the active burn is running down to, or -1 when not boosting. A press commits
-## to reaching this, so releasing the button early can't cancel the boost.
-var boost_burn_target: float = -1.0
-## Segments per second of the active burn (a full-meter commit burns slower / lasts longer).
-var boost_burn_rate: float = 0.0
-## Previous tick's nfx_boost_held — synced so the rising edge survives netfox resimulation.
-var boost_prev_held: bool = false
-## Seconds of unbroken trick time on the current combo, 0 when not comboing. Accrued in
-## TrickController's rollback tick — NOT from a manager's _process(): netfox's
-## RollbackSynchronizer re-applies every state property from history on each tick, so writes
-## made outside the rollback window are silently overwritten before they accumulate.
-var combo_time: float = 0.0
-## Remaining grace before dropping every trick actually breaks the combo.
-var combo_grace: float = 0.0
-## How much of the CURRENT boost meter was earned by the combo still in progress. A crash
-## voids only this much, so boost banked by earlier completed combos survives. Cleared when
-## a combo ends cleanly (that boost is now permanent) and drawn down alongside boost_amount
-## when spending, so spending the pool doesn't leave a stale over-large claim behind.
-var combo_boost_earned: float = 0.0
-## Combo multiplier (1+), derived from combo_time each rollback tick.
-var combo_multiplier: int = 1
-## Derived each rollback tick from the burn state. Drives speed + boost FX.
-var is_boosting: bool = false
 #endregion
 
 #region DELETE_ME
@@ -196,6 +167,10 @@ func _rollback_tick(delta: float, tick: int, _is_fresh: bool):
 		on_crash()
 
 	# Run other controllers (ORDER MATTERS)
+	# Boost first — ahead of every controller AND evaluated even while crashed (unlike the
+	# rest, which bail on is_crashed), so a crash mid-boost cancels the burn and its camera
+	# FX instead of latching them until the respawn.
+	boost_controller.on_movement_rollback_tick(delta)
 	movement_controller.on_movement_rollback_tick(delta)
 	gearing_controller.on_movement_rollback_tick(delta)
 	trick_controller.on_movement_rollback_tick(delta)
@@ -437,18 +412,10 @@ func _pick_respawn_target() -> Transform3D:
 func _apply_respawn_state():
 	global_transform = _respawn_target
 	velocity = Vector3.ZERO
-	is_boosting = false
 	# A crash voids only what the in-progress combo earned — boost banked by earlier
 	# completed combos is yours to keep. Must run BEFORE the do_reset() loop below, which
 	# clears the combo state this reads.
-	boost_amount = maxf(boost_amount - combo_boost_earned, 0.0)
-	combo_boost_earned = 0.0
-	boost_burn_target = -1.0
-	boost_burn_rate = 0.0
-	boost_prev_held = false
-	combo_time = 0.0
-	combo_grace = 0.0
-	combo_multiplier = 1
+	boost_controller.apply_crash_void(trick_controller.combo_boost_earned)
 	is_crashed = false
 	for child in controllers_node.get_children():
 		if !child.has_method("do_reset"):
@@ -499,6 +466,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("crash_controller must not be empty")
 	if camera_controller == null:
 		issues.append("camera_controller must not be empty")
+	if boost_controller == null:
+		issues.append("boost_controller must not be empty")
 	if hud_controller == null:
 		issues.append("hud_controller must not be empty")
 	if bike_definition == null:
