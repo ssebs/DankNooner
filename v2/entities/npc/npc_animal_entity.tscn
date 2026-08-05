@@ -1,40 +1,16 @@
 [gd_scene format=3 uid="uid://biin5k0fkdd2l"]
 
 [ext_resource type="Script" uid="uid://copeg0hw2y8ey" path="res://entities/npc/npc_animal_entity.gd" id="1_uol64"]
-[ext_resource type="PackedScene" uid="uid://cjvthqv526ec2" path="res://entities/npc/shiba_skin.tscn" id="2_5jo1h"]
-[ext_resource type="Resource" uid="uid://cxxe2rar7tq1d" path="res://resources/npcs/shiba_animal_definition.tres" id="2_kq7ug"]
-[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="4_kq7ug"]
-[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="5_5jo1h"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lyqmb"]
 radius = 0.25
 height = 1.0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q8exi"]
-
-[sub_resource type="Resource" id="Resource_fjo22"]
-script = ExtResource("5_5jo1h")
-color = Color(0.53333336, 0.40392157, 0.24705882, 1)
-use_standard_material = true
-standard_material = SubResource("StandardMaterial3D_q8exi")
-metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2v5cc"]
-
-[sub_resource type="Resource" id="Resource_btskg"]
-script = ExtResource("5_5jo1h")
-color = Color(0.74507797, 0.683513, 0.6081657, 1)
-use_standard_material = true
-surface_index = 1
-standard_material = SubResource("StandardMaterial3D_2v5cc")
-metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 
 [node name="NPCAnimalEntity" type="Area3D" unique_id=848725741]
 collision_layer = 0
 collision_mask = 2
 monitorable = false
 script = ExtResource("1_uol64")
-animal_skin_definition = ExtResource("2_kq7ug")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1405545431]
 transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 0.5, 0)
@@ -43,9 +19,3 @@ shape = SubResource("CapsuleShape3D_lyqmb")
 [node name="Mesh" type="Node3D" parent="." unique_id=1240324396]
 unique_name_in_owner = true
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
-
-[node name="ShibaSkin" type="Node3D" parent="Mesh" unique_id=2001019722 node_paths=PackedStringArray("meshes") instance=ExtResource("2_5jo1h")]
-transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, -0.11)
-script = ExtResource("4_kq7ug")
-slots = Array[ExtResource("5_5jo1h")]([SubResource("Resource_fjo22"), SubResource("Resource_btskg")])
-meshes = [NodePath("RootNode/AnimalArmature/Skeleton3D/ShibaInu"), NodePath("RootNode/AnimalArmature/Skeleton3D/ShibaInu")]
