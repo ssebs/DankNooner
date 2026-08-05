@@ -28,7 +28,6 @@
 [ext_resource type="PackedScene" uid="uid://pg4u70n43ksy" path="res://menus/loading_menu/loading_menu_state.tscn" id="21_x5kvo"]
 [ext_resource type="Script" uid="uid://yp4h0tghigit" path="res://managers/gamemodes/types/free_roam/free_roam_gamemode.gd" id="25_6krrg"]
 [ext_resource type="Script" uid="uid://5xa3xuln57nw" path="res://managers/gamemodes/types/road_race/road_race_gamemode.gd" id="26_8slmw"]
-[ext_resource type="Script" path="res://managers/gamemodes/types/street_race/street_race_gamemode.gd" id="38_strce"]
 [ext_resource type="PackedScene" uid="uid://dr5dms10u4b2o" path="res://managers/gamemodes/hud/game_mode_event_confirm_hud.tscn" id="26_u7wvl"]
 [ext_resource type="Script" uid="uid://2sjea5ct6un7" path="res://managers/gamemodes/types/tutorial/tutorial_gamemode.gd" id="27_8slmw"]
 [ext_resource type="PackedScene" uid="uid://dmq80r6t0kwp5" path="res://managers/gamemodes/types/tutorial/tutorial_hud.tscn" id="28_onx7j"]
@@ -38,6 +37,7 @@
 [ext_resource type="Script" uid="uid://283a7n5utttx" path="res://resources/player/player_definition.gd" id="35_iihm1"]
 [ext_resource type="Script" uid="uid://37ehv252lkkf" path="res://managers/trick_manager.gd" id="36_trkmg"]
 [ext_resource type="Script" uid="uid://uj0l0u0v0f0d" path="res://managers/npc_traffic_manager.gd" id="37_npctm"]
+[ext_resource type="Script" uid="uid://ckudxd3spv3uh" path="res://managers/gamemodes/types/street_race/street_race_gamemode.gd" id="38_strce"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("1_1oj5k")
@@ -233,7 +233,7 @@ npc_race_manager = NodePath("../../../NPCRaceManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
-[node name="StreetRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" node_paths=PackedStringArray("tutorial_hud", "results_hud", "input_state_manager", "lobby_manager", "menu_manager", "audio_manager", "npc_race_manager", "npc_traffic_manager", "gamemode_manager", "spawn_manager")]
+[node name="StreetRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1507451540 node_paths=PackedStringArray("tutorial_hud", "results_hud", "input_state_manager", "lobby_manager", "menu_manager", "audio_manager", "npc_race_manager", "npc_traffic_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("38_strce")
 tutorial_hud = NodePath("../TutorialGameMode/TutorialHUD")
 results_hud = NodePath("../TutorialGameMode/ResultsHUD")
