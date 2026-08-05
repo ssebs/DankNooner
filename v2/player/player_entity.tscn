@@ -12,8 +12,8 @@
 [ext_resource type="Script" uid="uid://c2c38w5opks8m" path="res://player/controllers/gearing_controller.gd" id="10_gear"]
 [ext_resource type="Script" uid="uid://bi0gffmw6lupt" path="res://player/controllers/movement_controller.gd" id="11_tivla"]
 [ext_resource type="Script" uid="uid://t5igmn16n20c" path="res://player/controllers/trick_controller.gd" id="11_trick"]
+[ext_resource type="Script" uid="uid://7lneqwknykwt" path="res://player/controllers/boost_controller.gd" id="12_boost"]
 [ext_resource type="Script" uid="uid://cfpb4scu8hdy4" path="res://player/controllers/crash_controller.gd" id="12_crash"]
-[ext_resource type="Script" path="res://player/controllers/boost_controller.gd" id="12_boost"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="16_uthnt"]
 [ext_resource type="Script" uid="uid://coopftft0wwho" path="res://player/controllers/camera_controller.gd" id="17_0jgj5"]
 [ext_resource type="Script" uid="uid://civ7dg4q23qwd" path="res://player/controllers/hud_controller.gd" id="17_fiihv"]
@@ -1223,7 +1223,7 @@ gearing_controller = NodePath("../GearingController")
 movement_controller = NodePath("../MovementController")
 boost_controller = NodePath("../BoostController")
 
-[node name="BoostController" type="Node" parent="_Controllers" node_paths=PackedStringArray("player_entity", "input_controller", "trick_controller")]
+[node name="BoostController" type="Node" parent="_Controllers" unique_id=638664848 node_paths=PackedStringArray("player_entity", "input_controller", "trick_controller")]
 unique_name_in_owner = true
 script = ExtResource("12_boost")
 player_entity = NodePath("../..")
