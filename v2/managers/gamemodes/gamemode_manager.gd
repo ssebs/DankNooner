@@ -19,6 +19,8 @@ enum MatchState {
 @export var lobby_manager: LobbyManager
 @export var level_manager: LevelManager
 @export var spawn_manager: SpawnManager
+## Wired here rather than on a gamemode: animals belong to the level, not the mode.
+@export var animal_spawn_manager: AnimalSpawnManager
 @export var audio_manager: AudioManager
 @export var input_state_manager: InputStateManager
 
@@ -73,10 +75,13 @@ func start_game(
 	# from the pause menu) still runs Enter() — otherwise the StateMachine's same-state
 	# early-return skips player spawn. Same reasoning as end_game().
 	state_machine.clear_current_state()
+	# Ahead of the level swap below — the outgoing level takes its animals with it.
+	_stop_animals_locally()
 	menu_manager.state_machine.request_state_change(loading_menu_state)
 	await RenderingServer.frame_post_draw
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
 	state_machine.request_state_change(_gamemode_map[gamemode])
+	_start_animals_locally()
 
 
 ## Server receives request to change gamemode, broadcasts to all peers
@@ -156,8 +161,32 @@ func end_game():
 	# Exit the active gamemode state so re-entering the same gamemode next match
 	# still runs Enter() (otherwise StateMachine's same-state early-return skips player spawn).
 	state_machine.clear_current_state()
+	_stop_animals_locally()
 
 	audio_manager.stop_all()
+
+
+## Animals are per-LEVEL, not per-gamemode: hooked to the two places a level actually loads
+## (fresh start + late-join sync) so every mode gets them with no per-mode wiring, and a
+## mid-match mode change leaves them walking because the level is never reloaded.
+##
+## This is the level-is-loaded-on-THIS-peer guarantee AnimalSpawnManager's client accept
+## gate needs — the same one gamemode Enter() gives NPCTrafficManager. Not hoisted into
+## GameModeType because every mode overrides Enter/Exit without calling super().
+func _start_animals_locally():
+	if multiplayer.multiplayer_peer != null and multiplayer.is_server():
+		animal_spawn_manager.start_animals()
+	else:
+		animal_spawn_manager.request_animal_sync()
+
+
+func _stop_animals_locally():
+	# No peer means a torn-down session (ConnectionManager nulls it on disconnect) — there
+	# is nobody to broadcast the despawns to, so just drop our own.
+	if multiplayer.multiplayer_peer != null and multiplayer.is_server():
+		animal_spawn_manager.stop_animals()
+	else:
+		animal_spawn_manager.reset_local_animals()
 
 
 ## Actually tell spawn manager to spawn all players in lobby_manager, RPC around
@@ -230,6 +259,7 @@ func _sync_game_to_late_joiner(
 	await RenderingServer.frame_post_draw
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
 	state_machine.request_state_change(_gamemode_map[current_game_mode])
+	_start_animals_locally()
 
 	# Request server to spawn our player after level is loaded
 	_request_late_spawn.rpc_id(1, multiplayer.get_unique_id())
@@ -267,6 +297,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_state_manager must not be empty")
 	if spawn_manager == null:
 		issues.append("spawn_manager must not be empty")
+	if animal_spawn_manager == null:
+		issues.append("animal_spawn_manager must not be empty")
 	if loading_menu_state == null:
 		issues.append("loading_menu_state must not be empty")
 	if free_roam_mode == null:

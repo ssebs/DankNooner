@@ -39,9 +39,16 @@ var _next_id: int = FIRST_ID
 
 ## Put one animal on every Path3D this map tagged for them.
 func start_animals() -> void:
+	_purge_freed()
 	if animal_definitions.is_empty():
 		return
 	for path in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["AnimalPaths"]):
+		# LevelManager.despawn_level() queue_free()s the outgoing level, which stays in the
+		# tree — and in this group — until the end of the frame. Unscoped, we would spawn
+		# half the herd into a level that is about to be freed, and get_path_to would hand
+		# the survivors a ../.. path that resolves to nothing on the other peers.
+		if !level_manager.current_level.is_ancestor_of(path):
+			continue
 		var animal_id := _next_id
 		_next_id -= 1
 		# Dropped at a random point along the curve rather than at its start, so a map's
@@ -57,9 +64,20 @@ func start_animals() -> void:
 
 
 func stop_animals() -> void:
+	_purge_freed()
 	for animal_id in _animals.keys():
 		rpc_despawn_animal.rpc(animal_id)
 	_spawns.clear()
+
+
+## Drop roster entries whose node already died with its level. A map change tears the old
+## level down without necessarily reaching us first, and a freed animal left in the roster
+## takes the next despawn or resync with it.
+func _purge_freed() -> void:
+	for animal_id in _animals.keys():
+		if !is_instance_valid(_animals[animal_id]):
+			_animals.erase(animal_id)
+			_spawns.erase(animal_id)
 
 
 #endregion
@@ -71,12 +89,9 @@ func stop_animals() -> void:
 ## broadcasts from here on and pull whatever the server spawned before that. Covers both
 ## the fresh-start timing race and late join — see NPCTrafficManager.request_traffic_sync.
 func request_animal_sync() -> void:
-	# A previous session's Exit can be skipped (start_game clears gamemode state while this
-	# peer is mid-load) — purge entries freed with their old level so the has() dedupe in
-	# rpc_spawn_animal doesn't block their resync.
-	for animal_id in _animals.keys():
-		if !is_instance_valid(_animals[animal_id]):
-			_animals.erase(animal_id)
+	# Entries freed with their old level would otherwise hit the has() dedupe in
+	# rpc_spawn_animal and block their own resync.
+	_purge_freed()
 	_accept_spawns = true
 	_rpc_request_animal_sync.rpc_id(1)
 
@@ -86,9 +101,9 @@ func request_animal_sync() -> void:
 ## our Exit runs before those despawn RPCs arrive.
 func reset_local_animals() -> void:
 	_accept_spawns = false
-	for animal_id in _animals.keys():
-		if is_instance_valid(_animals[animal_id]):
-			_free_locally(animal_id)
+	_purge_freed()
+	for animal_id in _animals:
+		_free_locally(animal_id)
 	_animals.clear()
 
 
