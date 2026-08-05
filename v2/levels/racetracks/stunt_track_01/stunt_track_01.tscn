@@ -37,6 +37,7 @@
 [ext_resource type="PackedScene" uid="uid://cdusyl3e4lbb" path="res://levels/assets/Farm Buildings Bundle-glb/ChickenCoop.glb" id="35_ythoq"]
 [ext_resource type="PackedScene" uid="uid://biin5k0fkdd2l" path="res://entities/npc/npc_animal_entity.tscn" id="36_k3cxb"]
 [ext_resource type="Resource" uid="uid://bduhng74bq2px" path="res://resources/npcs/horse_animal_definition.tres" id="37_ythoq"]
+[ext_resource type="Resource" uid="uid://cxxe2rar7tq1d" path="res://resources/npcs/shiba_animal_definition.tres" id="38_s8lvk"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e82mi"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -2237,8 +2238,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.597076, -9.536743e-07, 8.5
 animal_skin_definition = ExtResource("37_ythoq")
 
 [node name="NPCAnimalEntity2horse" parent="Animals/Path3D" unique_id=2058054019 instance=ExtResource("36_k3cxb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.597076, -9.536743e-07, 8.591003)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.597076, -9.536743e-07, 4.2438965)
 animal_skin_definition = ExtResource("37_ythoq")
 
 [node name="NPCAnimalEntity3shiba" parent="Animals" unique_id=1740194007 instance=ExtResource("36_k3cxb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.622093, 0, -4.153411)
+animal_skin_definition = ExtResource("38_s8lvk")
