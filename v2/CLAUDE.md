@@ -4,7 +4,7 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## Project Overview
 
-DankNooner is a multiplayer motorcycle stunt game built in Godot 4.6 (GDScript). The project is in active development with Claude assisting on planning and implementation.
+DankNooner is a multiplayer motorcycle stunt game built in Godot 4.7 (GDScript). The project is in active development with Claude assisting on planning and implementation.
 
 **Source of Truth**: Always review `./planning_docs/Architecture.md` for current system designs and implementation details. The TODO.md in the same folder tracks active work. Other .md files in planning_docs/ will explain how various systems work.
 
@@ -23,7 +23,7 @@ DankNooner is a multiplayer motorcycle stunt game built in Godot 4.6 (GDScript).
 ## Running the Project
 
 - Only have the human run the project
-- After completing changes with any `.gd` files, verify it lints clean against `.gdlintrc` before reporting done. Get diagnostics via the VS Code LSP (mcp__ide__getDiagnostics), not shell commands, and fix any reported problems (e.g. class-definitions-order)
+- After completing changes with any `.gd` files, verify it lints clean against `.gdlintrc` before reporting done. Fix any reported problems (e.g. class-definitions-order)
 
 ## Core Architecture
 

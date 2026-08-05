@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AnimalSkinDefinition" format=3 uid="uid://bduhng74bq2px"]
+
+[ext_resource type="PackedScene" uid="uid://bqba8e268ulyu" path="res://entities/npc/horse_skin.tscn" id="1_h2bqq"]
+[ext_resource type="Script" uid="uid://sswt4xrkjsih" path="res://resources/npcs/animal_skin_definition.gd" id="2_n8njm"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_y08kj"]
+height = 3.0
+
+[resource]
+script = ExtResource("2_n8njm")
+skin_name = "Horse"
+mesh_res = ExtResource("1_h2bqq")
+mesh_scale_multiplier = Vector3(0.4, 0.4, 0.4)
+collision_shape = SubResource("CapsuleShape3D_y08kj")
+collision_position_offset = Vector3(0, 1, 0)
+collision_rotation_offset_degrees = Vector3(60, 0, 0)
+metadata/_custom_type_script = "uid://sswt4xrkjsih"
