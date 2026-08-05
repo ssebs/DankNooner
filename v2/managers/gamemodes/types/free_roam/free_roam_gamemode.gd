@@ -4,7 +4,6 @@ class_name FreeRoamGameMode extends GameModeType
 @export var game_mode_event_confirm_hud: GameModeEventConfirmHUD
 @export var level_manager: LevelManager
 @export var npc_traffic_manager: NPCTrafficManager
-@export var animal_spawn_manager: AnimalSpawnManager
 
 ## Crash-site respawn is only safe on ground the bike can actually stand on.
 ## Steeper than this at the crash site → fall back to the last flat breadcrumb.
@@ -77,13 +76,11 @@ func Enter(state_context: StateContext):
 				slot += 1
 
 		npc_traffic_manager.start_traffic()
-		animal_spawn_manager.start_animals()
 	else:
 		# Our level just finished loading — pull any traffic spawned before we could
 		# accept it (fresh-start broadcasts race our spawn_level; late join misses
 		# them entirely).
 		npc_traffic_manager.request_traffic_sync()
-		animal_spawn_manager.request_animal_sync()
 
 
 func Physics_Update(delta: float):
@@ -188,10 +185,8 @@ func Exit(_state_context: StateContext):
 
 	if multiplayer.is_server():
 		npc_traffic_manager.stop_traffic()
-		animal_spawn_manager.stop_animals()
 	else:
 		npc_traffic_manager.reset_local_traffic()
-		animal_spawn_manager.reset_local_animals()
 
 	_flat_breadcrumbs.clear()
 
@@ -245,7 +240,5 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("level_manager must not be empty")
 	if npc_traffic_manager == null:
 		issues.append("npc_traffic_manager must not be empty")
-	if animal_spawn_manager == null:
-		issues.append("animal_spawn_manager must not be empty")
 
 	return issues

@@ -200,6 +200,7 @@ Deliberately absent vs `CarSkinDefinition`: mods, and any `user://` save/load. A
 ### Creating a New Animal
 
 1. Create an inherited scene from the `.glb` under `entities/npc/`, attach `SkinColor` to the root, configure `slots` / `meshes` (see above). The glb's own `AnimationPlayer` must survive — the entity plays `Walk` / `Death` off it.
+   - `%Mesh` on `npc_animal_entity.tscn` is yawed 180° because the pack's Blender exports face +Z and `PathFollow3D` drives the animal facing -Z. If a model from some other source already faces -Z, cancel the yaw with `mesh_rotation_offset_degrees = (0, 180, 0)`. Note `mesh_position_offset` is applied in that yawed space, so its X and Z read mirrored.
 2. Right-click → **New Resource** → `AnimalSkinDefinition`, save to `resources/npcs/{name}_animal_definition.tres`.
 3. Set `skin_name`, assign `mesh_res`, tune the mesh + collision offsets and `move_speed`.
 4. Add it to `AnimalSpawnManager.animal_definitions` in `main_game.tscn` to put it in the roster.

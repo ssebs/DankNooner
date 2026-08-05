@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AnimalSkinDefinition" format=3 uid="uid://cxxe2rar7tq1d"]
+
+[ext_resource type="PackedScene" uid="uid://cjvthqv526ec2" path="res://entities/npc/shiba_skin.tscn" id="1_7n7rd"]
+[ext_resource type="Script" uid="uid://sswt4xrkjsih" path="res://resources/npcs/animal_skin_definition.gd" id="2_ly28h"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lyqmb"]
+radius = 0.25
+height = 1.0
+
+[resource]
+script = ExtResource("2_ly28h")
+skin_name = "Shiba"
+mesh_res = ExtResource("1_7n7rd")
+mesh_position_offset = Vector3(0, 0, -0.11)
+mesh_scale_multiplier = Vector3(0.3, 0.3, 0.3)
+collision_shape = SubResource("CapsuleShape3D_lyqmb")
+collision_position_offset = Vector3(0, 0.5, 0)
+collision_rotation_offset_degrees = Vector3(-60, 0, 0)
+metadata/_custom_type_script = "uid://sswt4xrkjsih"

@@ -39,6 +39,9 @@
 [ext_resource type="Script" uid="uid://uj0l0u0v0f0d" path="res://managers/npc_traffic_manager.gd" id="37_npctm"]
 [ext_resource type="Script" uid="uid://c7rb62smxqgpp" path="res://managers/animal_spawn_manager.gd" id="38_anspm"]
 [ext_resource type="Script" uid="uid://ckudxd3spv3uh" path="res://managers/gamemodes/types/street_race/street_race_gamemode.gd" id="38_strce"]
+[ext_resource type="Script" uid="uid://sswt4xrkjsih" path="res://resources/npcs/animal_skin_definition.gd" id="40_5fp36"]
+[ext_resource type="Resource" uid="uid://bduhng74bq2px" path="res://resources/npcs/horse_animal_definition.tres" id="41_3cqky"]
+[ext_resource type="Resource" uid="uid://cxxe2rar7tq1d" path="res://resources/npcs/shiba_animal_definition.tres" id="42_bj7hs"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("1_1oj5k")
@@ -171,7 +174,7 @@ script = ExtResource("19_wt57k")
 default_player_definition = ExtResource("20_pk5u2")
 metadata/_custom_type_script = "uid://didbm7t5dal30"
 
-[node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "spawn_manager", "audio_manager", "input_state_manager", "state_machine", "loading_menu_state", "free_roam_mode", "road_race_mode", "street_race_mode", "tutorial_mode", "challenge_mode") groups=["Managers"]]
+[node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "spawn_manager", "animal_spawn_manager", "audio_manager", "input_state_manager", "state_machine", "loading_menu_state", "free_roam_mode", "road_race_mode", "street_race_mode", "tutorial_mode", "challenge_mode") groups=["Managers"]]
 script = ExtResource("18_ih6an")
 menu_manager = NodePath("../MenuManager")
 settings_manager = NodePath("../SettingsManager")
@@ -179,6 +182,7 @@ connection_manager = NodePath("../ConnectionManager")
 lobby_manager = NodePath("../LobbyManager")
 level_manager = NodePath("../LevelManager")
 spawn_manager = NodePath("../SpawnManager")
+animal_spawn_manager = NodePath("../AnimalSpawnManager")
 audio_manager = NodePath("../AudioManager")
 input_state_manager = NodePath("../InputStateManager")
 state_machine = NodePath("StateMachine")
@@ -193,12 +197,11 @@ challenge_mode = NodePath("StateMachine/ChallengeGameMode")
 script = ExtResource("4_6bm6p")
 metadata/_custom_type_script = "uid://ba7kyb4p3trb1"
 
-[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_confirm_hud", "level_manager", "npc_traffic_manager", "animal_spawn_manager", "gamemode_manager", "spawn_manager")]
+[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_confirm_hud", "level_manager", "npc_traffic_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("25_6krrg")
 game_mode_event_confirm_hud = NodePath("GameModeEventConfirmHUD")
 level_manager = NodePath("../../../LevelManager")
 npc_traffic_manager = NodePath("../../../NPCTrafficManager")
-animal_spawn_manager = NodePath("../../../AnimalSpawnManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
@@ -287,3 +290,4 @@ npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_pk5u2")])
 [node name="AnimalSpawnManager" type="Node" parent="ManagerManager" unique_id=1218916393 node_paths=PackedStringArray("level_manager") groups=["Managers"]]
 script = ExtResource("38_anspm")
 level_manager = NodePath("../LevelManager")
+animal_definitions = Array[ExtResource("40_5fp36")]([ExtResource("41_3cqky"), ExtResource("42_bj7hs")])

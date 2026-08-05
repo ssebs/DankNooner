@@ -63,6 +63,12 @@ func _physics_process(delta: float) -> void:
 #region init
 ## Spawn the definition's mesh under %Mesh — PlayerEntity._init_mesh via CarSkin._spawn_mesh,
 ## minus the mod pass (animals have no mod ecosystem).
+##
+## %Mesh is yawed 180° in the scene, matching PlayerEntity's VisualRoot: the pack's glbs are
+## Blender exports and face +Z, while PathFollow3D drives us down the curve facing -Z, so
+## without it every animal moonwalks. Two consequences for the definition's offsets:
+## mesh_position_offset is applied in that yawed space (its X and Z read mirrored), and an
+## animal that already faces -Z cancels the yaw with mesh_rotation_offset_degrees = (0,180,0).
 func _init_mesh() -> void:
 	for child in spawn_node.get_children():
 		child.queue_free()
