@@ -185,7 +185,8 @@ For detailed design docs see:
 | `InputController`     | `controllers/input_controller.gd`     | Gathers input, syncs via RollbackSynchronizer           |
 | `MovementController`  | `controllers/movement_controller.gd`  | Physics-based movement, speed, steering, lean, velocity |
 | `GearingController`   | `controllers/gearing_controller.gd`   | Clutch engagement, RPM blending, power output           |
-| `TrickController`     | `controllers/trick_controller.gd`     | Detects wheelie/stoppie, updates pitch_angle            |
+| `TrickController`     | `controllers/trick_controller.gd`     | Detects wheelie/stoppie, owns combo accrual             |
+| `BoostController`     | `controllers/boost_controller.gd`     | Boost meter: commit-on-press burn, spend, crash void    |
 | `CrashController`     | `controllers/crash_controller.gd`     | Brake grab detection, crash detection, auto-respawn     |
 | `CameraController`    | `controllers/camera_controller.gd`    | FPS/TPS camera switching                                |
 | `AnimationController` | `controllers/animation_controller.gd` | Procedural animation blending, IK, ragdoll              |
@@ -199,15 +200,18 @@ For detailed design docs see:
 - **Physics**: `speed`, `roll_angle`, `pitch_angle`
 - **Gearing**: `current_gear`, `current_rpm`, `clutch_value`, `is_rev_limited`
   - `is_rev_limited` is synced because the rule is: **every var mutated inside the rollback tick that affects simulation must be a state property** — resimulation can't rewind what netfox doesn't record. The limiter gates power output, so leaving it unsynced rubberbanded gear shifts (the auto box shifts just under the limiter cut, so the flag flaps exactly then).
-- **Tricks / boost**: `boost_amount` (in segments), `boost_burn_target`, `boost_burn_rate`, `boost_prev_held`, `combo_multiplier`, `is_boosting`
+- **Boost** (`%BoostController:*`): `boost_amount` (in segments), `boost_burn_target`, `boost_burn_rate`, `boost_prev_held`, `is_boosting`
+- **Combo** (`%TrickController:*`): `combo_time`, `combo_grace`, `combo_boost_earned`, `combo_multiplier`
 - **Crashes**: `is_crashed`
+
+State is registered as `%Controller:var` and lives on the controller that owns the domain. netfox constrains *when* a var may be written (inside the rollback tick), not where it lives — only `is_crashed` and the discrete actions below sit on `PlayerEntity` itself.
 - **Discrete actions**: `rb_do_respawn` (rollback pattern); `rb_respawn_transform` / `rb_respawn_transform_oneshot` carry the target respawn transform. Gear shifts sync `nfx_target_gear` (absolute requested gear) as netfox input — never edge-triggered flags, which drop/double-apply under stale-input reuse on the server.
 
 #### GearingController
 
 - Tracks clutch engagement (0-1), blends between throttle-driven and wheel-driven RPM
 - Gear shifts applied from `input_controller.nfx_target_gear` each rollback tick
-- **Automatic transmission** (`auto_transmission` setting) is a client-side input assist in `InputController._auto_shift()`, NOT a GearingController feature — `nfx_target_gear` is a netfox *input* property owned by the local client, so the server must never write it. Upshift/downshift RPM ratios and the between-shift cooldown are consts on `InputController`; the upshift threshold sits just under the rev-limiter cut so the auto box shifts instead of bouncing off it. Forced on while `is_boosting`, whatever the setting says.
+- **Automatic transmission** (`auto_transmission` setting) is a client-side input assist in `InputController._auto_shift()`, NOT a GearingController feature — `nfx_target_gear` is a netfox *input* property owned by the local client, so the server must never write it. Upshift/downshift RPM ratios and the between-shift cooldown are consts on `InputController`; the upshift threshold sits just under the rev-limiter cut so the auto box shifts instead of bouncing off it. Forced on while `BoostController.is_boosting`, whatever the setting says.
 - Power output = throttle x power_curve x torque_multiplier x engagement
 - Gear ratios, max_rpm, idle_rpm, stall_rpm are defined in `BikeSkinDefinition`
 
@@ -228,14 +232,14 @@ enum Trick { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, T
 
 > Full breakdown + every tunable: [ComboAndBoost.md](./ComboAndBoost.md)
 
-The trick economy is split across two places, and the split is **not** optional:
+Earn, spend and bank have three separate owners, and the split is **not** optional:
 
-- **Per-tick accrual → `TrickController._accrue_combo()`** (rollback). `combo_time`, `combo_grace`, `combo_multiplier` and `boost_amount` are netfox state properties, and `RollbackSynchronizer._before_tick()` re-applies every state property from history each tick. A manager writing them from `_process()` is overwritten before anything accumulates — this was a real bug, don't reintroduce it. Tuning lives in consts (`BOOST_PER_SEC`, `COMBO_GRACE_SECS`, `COMBO_MULT_THRESHOLDS`), not `@export`s, so every peer simulates identically.
+- **Per-tick accrual → `TrickController._accrue_combo()`** (rollback). The combo vars and `BoostController.boost_amount` are netfox state properties, and `RollbackSynchronizer._before_tick()` re-applies every state property from history each tick. A manager writing them from `_process()` is overwritten before anything accumulates — this was a real bug, don't reintroduce it. Tuning lives in consts (`BOOST_PER_SEC`, `COMBO_GRACE_SECS`, `COMBO_MULT_THRESHOLDS`), not `@export`s, so every peer simulates identically.
   - Any trick accrues; the multiplier steps at `COMBO_MULT_THRESHOLDS` seconds of unbroken trick time; dropping every trick starts the grace window so chains survive. A crash freezes accrual (the rollback tick bails on `is_crashed`) and the respawn's `do_reset()` clears the combo.
 - **Scoring → `TrickManager`** (`managers/trick_manager.gd`, server-only `_process()`). Watches those synced values and banks a score the frame `combo_time` returns to zero: `duration × points_per_second × peak_multiplier`. Banking on the combo-end edge keeps scoring out of the rollback path entirely, so resimulation can't double-count it.
   - **Crashing voids the run** — no partial credit. Checked before the `combo_time` test, because a crash freezes `combo_time` and only zeroes it at the respawn; without that ordering a crashed run would bank on the way down like a clean finish.
   - Gamemode-agnostic: gamemodes call `get_score(peer_id)` and `reset_peer(peer_id)`. Signals: `combo_banked(peer_id, points, duration, multiplier)`, `combo_voided(peer_id, lost_duration, lost_points)`.
-- **Spending** is `MovementController._boost_calc()` — see [PlayerController.md](./PlayerController.md).
+- **Spending → `BoostController`** (rollback), which owns the meter vars — see [PlayerController.md](./PlayerController.md).
 
 #### CrashController
 
@@ -318,9 +322,12 @@ The same "pause" action triggers different behavior based on `InputState`.
 - Events run via a composable **task/runner system** (`GameModeTask` leaves + `SequentialTaskRunner` / `ConcurrentTaskRunner`), authored in level scenes. See [GamemodeSystem.md](./GamemodeSystem.md)
 - Context passed between gamemode states via `GamemodeStateContext`
 - RPCs for multiplayer sync:
-  - `start_game(level_name)` - server calls on all peers
-  - `_sync_game_to_late_joiner(level_name)` - sync level to late-joining client
-  - `_request_late_spawn(peer_id)` - late-joiner requests their player spawn
+  - `start_game(level_name)` - server calls on all peers; ignores anything sent by a client
+  - `_sync_game_to_late_joiner(level_name, gamemode, ...)` - sync level to late-joining client (authority-mode RPC, server → one peer)
+  - `_request_late_spawn(peer_id)` - late-joiner requests their player spawn; a peer may only request its own
+- **`change_gamemode()` is the single entry point for transitions.** It is the only thing that calls the `_rpc_transition_gamemode` broadcast — gamemodes returning to free roam go through it too, so every transition passes the same guards. Calling the broadcast directly bypasses them.
+- **Late-join contract**: `GameModeType.is_late_joinable()` (default false, true on `FreeRoamGameMode`). A peer joining mid-race is synced into free roam on the same level instead of the live race — races need mid-match context (start circle, runner state) the joiner has no way to reconstruct, and dropping them straight in crashed the client on a null `event_start_circle`. They still spawn and ride; when the race ends, everyone transitions to free roam and the joiner's same-state transition is a harmless no-op.
+- While a non-late-joinable mode is running, `change_gamemode()` accepts only a return to `FREE_ROAM`. That stops a free-roaming late joiner from driving into an event circle and restarting the mode out from under a live race.
 
 ### Save Manager
 
@@ -339,7 +346,8 @@ The same "pause" action triggers different behavior based on `InputState`.
   - `respawn_player_at(peer_id, pos, basis)` - respawn AND store the persistent respawn point
   - `respawn_player_in_place(peer_id, pos, basis)` - one-shot respawn transform, persistent point untouched (free-roam crash respawns)
   - `set_respawn_point(peer_id, pos, basis)` / `reset_respawn_point(peer_id)` - update/clear the persistent respawn point without teleporting (race checkpoints / entering free roam)
-- All of these are currently `any_peer` with no sender guard — hardening (server-sender guards + a client `request_respawn`) is planned, see PLAN-cleanup-bugfix-20260801.md Phase 2
+  - `request_respawn()` - the one client-callable entry point (pause-menu button). The server derives the target from the RPC sender, so a client can never respawn anyone but itself
+- **Sender guards**: the broadcast RPCs above stay `any_peer` only because the server has to `call_local` them, and each rejects any sender that isn't the server. Note the mechanic this relies on — during `call_local` execution the sender id is the *local* peer's own id, so it reads as 1 on the host and as the client's own id (and is therefore rejected) on a client. Any new client-side caller needs a `request_*` entry point rather than a direct broadcast.
 - Local helpers: `add_player_locally()`, `remove_player_locally()`, `spawn_all_players()`
 
 ### NPC Race Manager
@@ -356,6 +364,17 @@ The same "pause" action triggers different behavior based on `InputState`.
   - Spawn/despawn RPCs are idempotent (dedupe on npc id / tolerant of missing ids), so broadcast + resync can overlap safely.
 - Crashed riders recover onto a clear lane spot after a randomized delay; a rider that rams a player crashes them via `SpawnManager.crash_player`.
 - Vehicle skins ship as `res://` paths, deliberately not `PlayerDefinition.to_dict()` — that round-trips through `BikeSkinDefinition.from_dict()`, which writes a `.tres` into `user://skins/` per rider per peer (open issue, see code-review-20260430.md).
+
+#### NPC transform sync + render smoothing
+
+Shared by both NPC managers, implemented on `NPCRiderEntity`. NPCs use a plain `MultiplayerSynchronizer` (server authority) with **no** netfox rollback or TickInterpolator.
+
+- The replicated property is `sync_transform`, not the node's raw transform. The server writes it at the end of every movement tick (all three behavior states route through `apply_gravity_and_move()`) and on `teleport_to()`.
+- Nothing renders straight off it. A body that only moves on the tick reads as stepping at render rate — the player bike doesn't, because netfox's TickInterpolator smooths it, and that gap is what this closes for NPCs. Both peers ease toward `sync_transform` in `_process()`, with different math because they know different things:
+  - **Server** knows both ends of the step, so it interpolates exactly between the last two authoritative poses by the physics interpolation fraction. One tick of visual latency and no more, so what you see still lines up with what you collide with.
+  - **Client** only ever knows the latest pose, arriving at replication rate on irregular timing, so it eases toward it exponentially. Jumps past a snap threshold (teleport / crash recovery) snap instead of sliding across the map.
+- The server puts the body back on `sync_transform` in its own `_physics_process` before the behavior states run, so steering and `move_and_slide()` never see a smoothed pose. That restore has to land first, which is why the entity sets a negative `process_physics_priority` rather than relying on parent-before-child order alone.
+- Clients never simulate: `_ready` disables the behavior state machine's physics on non-server peers.
 
 ### Unlocks / progression
 
@@ -465,10 +484,12 @@ Input is gathered locally by `InputController._gather()` and synced automaticall
 **GamemodeManager** RPCs:
 
 - `start_game(level_name)` - server calls on all peers
-- `_sync_game_to_late_joiner(level_name)` - sync level to late-joining client
+- `_sync_game_to_late_joiner(level_name, gamemode, ...)` - sync level to late-joining client
 - `_request_late_spawn(peer_id)` - late-joiner requests their player spawn
 
-**SpawnManager** RPCs: see the [Spawn Manager](#spawn-manager) section for the full list (spawn/despawn broadcasts plus the respawn/crash/respawn-point family).
+See the [Gamemode Manager](#gamemode-manager) section for the sender guards, the late-join contract, and why `change_gamemode()` is the only way to start a transition.
+
+**SpawnManager** RPCs: see the [Spawn Manager](#spawn-manager) section for the full list (spawn/despawn broadcasts plus the respawn/crash/respawn-point family) and the server-sender guard rule.
 
 ### Deployment / builds
 

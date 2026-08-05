@@ -318,7 +318,7 @@ func _update_juice_fx(delta: float):
 		1.0
 	)
 	# Boost rides on top of the speed effect: extra FOV punch + the blue wash in the shader.
-	var boost_target: float = 1.0 if player_entity.is_boosting else 0.0
+	var boost_target: float = 1.0 if player_entity.boost_controller.is_boosting else 0.0
 	_boost_blend = lerpf(_boost_blend, boost_target, 1.0 - exp(-boost_blend_speed * delta))
 
 	cam.fov = base_fov + fov_max_add * speed_factor + boost_fov_add * _boost_blend

@@ -62,7 +62,7 @@ Actual keypresses are managed in the `PlayerEntity`'s `InputController`
 ### Player Entity
 
 `PlayerEntity` (CharacterBody3D) uses composition via `@export` component references:
-`InputController`, `MovementController`, `GearingController`, `TrickController`, `CrashController`, `CameraController`, `AnimationController`, `HUDController`, `SkidmarkController`, plus `BikeSkinDefinition` / `CharacterSkinDefinition` resources. `IKController` / `RagdollController` live under `player/characters/scripts/`.
+`InputController`, `MovementController`, `GearingController`, `TrickController`, `BoostController`, `CrashController`, `CameraController`, `AnimationController`, `HUDController`, `SkidmarkController`, plus `BikeSkinDefinition` / `CharacterSkinDefinition` resources. `IKController` / `RagdollController` live under `player/characters/scripts/`.
 
 Controllers are called sequentially from `PlayerEntity._rollback_tick()` via their `on_movement_rollback_tick()` methods. See `planning_docs/Architecture.md` for synced state vars and detailed subsystem docs.
 

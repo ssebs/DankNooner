@@ -18,10 +18,11 @@
   - _Controllers/ — see below
 
 `PlayerEntity._rollback_tick()` runs controllers in this order:
-1. MovementController
-2. GearingController
-3. TrickController
-4. CrashController
+1. BoostController — first, and the only one that still runs while `is_crashed`
+2. MovementController
+3. GearingController
+4. TrickController
+5. CrashController
 
 (InputController gathers input on `NetworkTime.before_tick_loop`, before the rollback tick.)
 
@@ -75,17 +76,20 @@
 
 ## State owned by each component
 
+Netfox constrains **when** a var may be written (inside the rollback tick), not **where it
+lives**. State belongs to the controller that owns the domain, and is registered on the
+RollbackSynchronizer as `%Controller:var`. Writing any state property from a manager's
+`_process()` does NOT work either way: `RollbackSynchronizer._before_tick()` re-applies every
+state property from history each tick, wiping the write.
+
 - **PlayerEntity** (synced or DELETE_ME)
-  - `boost_amount` (in segments, capacity `BOOST_SEGMENTS`), `boost_burn_target`,
-    `boost_burn_rate`, `boost_prev_held`, `combo_time`, `combo_grace`, `combo_boost_earned`,
-    `combo_multiplier`, `is_boosting` — all netfox state
-    properties. Filled by `TrickController._accrue_combo()` and spent by
-    `MovementController._boost_calc()`, both inside the rollback tick. Writing any of these
-    from a manager's `_process()` does NOT work: `RollbackSynchronizer._before_tick()`
-    re-applies every state property from history each tick, wiping the write.
   - `is_crashed` (DELETE_ME)
   - `grip_usage` (DELETE_ME — display only)
   - Owns IK marker nodes (`IKTargets/*`) and wheel markers (`WheelMarkers/*`)
+- **BoostController** (synced) — the boost meter
+  - `boost_amount` (in segments, capacity `BOOST_SEGMENTS`), `boost_burn_target`,
+    `boost_burn_rate`, `boost_prev_held`, `is_boosting`
+  - Filled by `TrickController._accrue_combo()`, spent here, both inside the rollback tick
 - **MovementController** (local, derived from physics)
   - `speed` — scalar speed from velocity
   - `roll_angle` — lean left/right
@@ -93,8 +97,9 @@
   - `yaw_angle` — twist left/right (unused currently)
 - **GearingController** (local)
   - `_current_gear`, `_current_rpm`, `_clutch_value`, `_rpm_ratio`
-- **TrickController** (local)
-  - `current_trick` (Trick enum: NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, THREESIXTY, HEEL_CLICKER, HIGH_CHAIR, TWO_LEFT_FEET, DRIFT)
+- **TrickController**
+  - `current_trick` (Trick enum: NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, THREESIXTY, HEEL_CLICKER, HIGH_CHAIR, TWO_LEFT_FEET, DRIFT) — local
+  - `combo_time`, `combo_grace`, `combo_multiplier`, `combo_boost_earned` — synced
 - **AnimationController** (local)
   - `current_state` (RiderState enum: RIDING, IDLE, RAGDOLL — TRICK is stubbed/disabled)
   - `_targets_synced_from_bike` flag
@@ -108,7 +113,7 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   - Gathers `nfx_` vars on `NetworkTime.before_tick_loop` for RollbackSynchronizer
   - Processes local input in `_process()`: gear shifts, trick held, clutch held, camera
   - `_auto_shift()` — automatic transmission when the `auto_transmission` setting is on,
-    and **always while `is_boosting`** (a boost spent on the limiter in the wrong gear is wasted).
+    and **always while `BoostController.is_boosting`** (a boost spent on the limiter in the wrong gear is wasted).
     Up at `AUTO_UPSHIFT_RPM_RATIO` (set just under the rev limiter's cut so it shifts
     instead of bouncing off it), down at `AUTO_DOWNSHIFT_RPM_RATIO`, with
     `AUTO_SHIFT_COOLDOWN` between shifts. Compares against `nfx_target_gear` rather
@@ -139,14 +144,9 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     - Power wheelie initiation (lean back + throttle + RPM threshold)
     - Balance point zone with instability
     - Lean forward recovery
-  - `_boost_calc()` — boost meter spend. Runs **before** the `is_crashed` bail-out so a crash
-    cancels an active burn. The meter is `BOOST_SEGMENTS` discrete segments; a rising edge on
-    `nfx_boost_held` commits a burn down to `boost_burn_target` that **releasing the button
-    cannot cancel**. One segment burns over `BOOST_SEGMENT_SECS`; pressing on a full meter
-    instead commits the whole thing over `BOOST_FULL_BURN_SECS`. While boosting,
-    `_speed_calc()` scales engine drive by `BOOST_ACCEL_MULT` and lifts both the gear cap and
-    the `bd.max_speed` ceiling by `BOOST_SPEED_MULT`. The rising edge uses the synced
-    `boost_prev_held` so it survives resimulation.
+  - `_speed_calc()` reads `BoostController.is_boosting` to scale engine drive by
+    `BOOST_ACCEL_MULT` and lift both the gear cap and the `bd.max_speed` ceiling by
+    `BOOST_SPEED_MULT`
   - `_handle_player_collision()` — spawn protection to avoid spawning inside other players
   - Calls `player_entity.move_and_slide()` with `NetworkTime.physics_factor`
   - **Unstable surfaces** (collision layer 5 — gravel/sand/etc):
@@ -169,9 +169,22 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   - Detects ground tricks (wheelie variants, stoppie) from `movement_controller.pitch_angle` and air tricks (flips, heel clicker, high chair) from input + airtime
   - Some tricks (e.g. high chair) latch — entry on a gesture, persist while the gating input + condition hold
   - Emits `trick_started(trick_type)` / `trick_ended(trick_type)` on transitions
-  - `_accrue_combo()` — accrues `combo_time` / `combo_grace` / `combo_multiplier` and fills
-    `boost_amount` while any trick is held. `TrickManager` banks the score off these when the
-    combo ends — see [ComboAndBoost.md](./ComboAndBoost.md) for the full system + tunables
+  - `_accrue_combo()` — accrues its own `combo_time` / `combo_grace` / `combo_multiplier` and
+    fills `BoostController.boost_amount` while any trick is held. `TrickManager` banks the
+    score off these when the combo ends — see [ComboAndBoost.md](./ComboAndBoost.md) for the
+    full system + tunables
+- **BoostController** (`boost_controller.gd`)
+  - Runs **first** in the rollback tick, ahead of every other controller and evaluated even
+    while crashed (the rest bail on `is_crashed`), so a crash mid-boost cancels the burn and
+    its camera FX rather than latching them until the respawn
+  - The meter is `BOOST_SEGMENTS` discrete segments. A rising edge on `nfx_boost_held` commits
+    a burn down to `boost_burn_target` that **releasing the button cannot cancel**. One segment
+    burns over `BOOST_SEGMENT_SECS`; pressing on a full meter instead commits the whole thing
+    over `BOOST_FULL_BURN_SECS`. The rising edge uses the synced `boost_prev_held` so it
+    survives resimulation
+  - `apply_crash_void(earned)` — respawn subtracts only the in-progress combo's contribution;
+    banked boost survives both the crash and the respawn. `do_reset()` clears the active burn
+    but deliberately leaves `boost_amount` alone
 - **CrashController** (`crash_controller.gd`)
   - Runs in rollback tick after the other controllers
   - Detects crashes from over-rotation (wheelie/stoppie past trick limits, side lean), brake grabs while turning, killbox/obstacle collisions, upside-down landings, and landing while still mid air-trick
@@ -181,10 +194,10 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   - Emits `crashed`
 - **HUDController** (`hud_controller.gd`)
   - Local to client, extends Control, child of `_Controllers`
-  - `@export` refs to: `player_entity`, `movement_controller`, `input_controller`, `gearing_controller`, `trick_controller`, `crash_controller`
+  - `@export` refs to: `player_entity`, `movement_controller`, `input_controller`, `gearing_controller`, `trick_controller`, `crash_controller`, `boost_controller`
   - Continuous values polled in `_process()`: speed, throttle, brake, clutch, grip, plus the
-    synced `boost_amount` / `combo_multiplier` fed to `BoostGauge` + `ComboCounter`
-    (`player/hud_elements/`)
+    synced `BoostController.boost_amount` / `TrickController.combo_multiplier` fed to
+    `BoostGauge` + `ComboCounter` (`player/hud_elements/`)
   - Discrete events via signals: `gear_changed`, `trick_started`, `trick_ended`, `crashed`, `respawned`
   - All display strings use `tr()` localization keys (HUD_THROTTLE, HUD_SPEED, etc.)
   - `show_hud()` / `hide_hud()` called from `PlayerEntity._deferred_init()` based on `is_local_client`

@@ -80,7 +80,7 @@ func _on_help_pressed():
 
 
 func _on_respawn_pressed():
-	spawn_manager.respawn_player.rpc(multiplayer.get_unique_id())
+	spawn_manager.request_respawn.rpc_id(1)
 	_on_resume_pressed()
 
 

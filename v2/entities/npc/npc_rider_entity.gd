@@ -1,7 +1,7 @@
 ## Kinematic AI rider chassis — it just moves and collides. No netfox rollback,
 ## no input simulation, no bike physics. The server simulates; clients are
-## passive and receive `transform` + `npc_state` via the child
-## MultiplayerSynchronizer.
+## passive and receive `sync_transform` + `npc_state` via the child
+## MultiplayerSynchronizer, easing toward the former in _process.
 ##
 ## The BEHAVIOR lives in the child StateMachine (idle / race / traffic) — those
 ## states own the physics tick and call the helpers below. A manager moves a
@@ -71,6 +71,9 @@ enum VehicleType { BIKE, CAR }
 @export var scan_interval_max: float = 0.25
 
 const GRAVITY: float = 30.0
+## Distance beyond which a client snaps instead of lerping (teleport / crash recovery).
+const NET_SNAP_DISTANCE: float = 25.0
+const NET_LERP_SPEED: float = 12.0
 
 @onready var visual_root: Node3D = %VisualRoot
 @onready var name_label: Label3D = %NameLabel
@@ -87,6 +90,20 @@ var road_manager: RoadManager
 
 ## Synced to clients via MultiplayerSynchronizer (server authority).
 var npc_state: NPCState = NPCState.RIDING
+
+## The authoritative pose, written by the server each movement tick and replicated in place
+## of the raw transform. Nothing renders straight from it — both peers ease toward it in
+## _process, because a body that only moves on the tick reads as stepping at render rate.
+##
+## The setter seeds the first packet: the spawning manager positions us AFTER add_child, so
+## _ready can't do it, and smoothing before the first update would drag the rider in from
+## the world origin.
+var sync_transform: Transform3D:
+	set(value):
+		sync_transform = value
+		if !_has_sync_transform:
+			_phys_prev = value
+			_has_sync_transform = true
 
 var username: String:
 	set(v):
@@ -105,6 +122,11 @@ var line_offset: float = 0.0
 
 ## Stable per-rider scale on move_speed (see speed_variance).
 var _speed_scale: float = 1.0
+
+## True once sync_transform has been written at least once — see its docstring.
+var _has_sync_transform: bool = false
+## The tick before sync_transform, so the server can render exactly between the two.
+var _phys_prev: Transform3D
 
 ## Cached sweep results, refreshed on the scan_interval cadence rather than per tick.
 var _blocker: Node3D
@@ -163,6 +185,9 @@ func _ready():
 
 	add_to_group(UtilsConstants.GROUPS["Racers"])
 	set_multiplayer_authority(1)
+	# Our _physics_process restores the authoritative pose the behavior states simulate from,
+	# so it has to land before theirs — see _physics_process.
+	process_physics_priority = -1
 
 	lane_agent = RoadLaneAgent.new()
 	lane_agent.road_manager_path = road_manager.get_path()
@@ -182,6 +207,42 @@ func _ready():
 	# Clients never simulate — they just play back the synced transform.
 	if !multiplayer.is_server():
 		state_machine.set_physics_process(false)
+
+
+## Put the body back on its authoritative pose before the behavior states simulate, undoing
+## the render smoothing below. Runs first because a parent's _physics_process precedes its
+## children's, and _ready pins the priority ahead of them as well — steering and
+## move_and_slide must never see a smoothed pose or the simulation drifts.
+func _physics_process(_delta: float) -> void:
+	if Engine.is_editor_hint() or !multiplayer.is_server() or !_has_sync_transform:
+		return
+	_phys_prev = sync_transform
+	global_transform = sync_transform
+
+
+## Render smoothing. The rider moves once per tick, which reads as stepping on any display
+## faster than that — the local player doesn't, because netfox's TickInterpolator smooths it,
+## which is exactly the gap this closes for NPCs.
+func _process(delta: float) -> void:
+	if Engine.is_editor_hint() or !_has_sync_transform:
+		return
+
+	if multiplayer.is_server():
+		# We own the simulation, so both ends of the step are known: interpolate exactly
+		# between them. Costs one tick of visual latency and no more, so what you see still
+		# lines up with what you collide with.
+		global_transform = _phys_prev.interpolate_with(
+			sync_transform, Engine.get_physics_interpolation_fraction()
+		)
+		return
+
+	# A client only knows the latest pose, and it arrives at replication rate on irregular
+	# timing, so ease toward it. Big jumps (teleport / crash recovery) snap instead.
+	if global_position.distance_to(sync_transform.origin) > NET_SNAP_DISTANCE:
+		global_transform = sync_transform
+		return
+	var weight := 1.0 - exp(-NET_LERP_SPEED * delta)
+	global_transform = global_transform.interpolate_with(sync_transform, weight)
 
 
 #region Steering helpers (called by the behavior states, server-side)
@@ -255,6 +316,9 @@ func apply_gravity_and_move(delta: float) -> void:
 	velocity.y -= GRAVITY * delta
 	move_and_slide()
 	_face_velocity(delta)
+	# Server-only in practice: clients have the behavior state machine's physics disabled
+	# (see _ready), so this is the one place the replicated pose is written.
+	sync_transform = global_transform
 
 
 ## Nearest racer within range + forward cone that is slower than us — the one
@@ -339,6 +403,11 @@ func finish() -> void:
 ## Teleport (crash recovery / grid placement). Resets driving state.
 func teleport_to(pos: Vector3, basis: Basis) -> void:
 	global_transform = Transform3D(basis, pos)
+	# Push it on the wire immediately so clients snap (NET_SNAP_DISTANCE) instead of
+	# sliding across the map from where the rider crashed. _phys_prev jumps with it, or the
+	# server would smear that same distance across one tick's worth of rendered frames.
+	sync_transform = global_transform
+	_phys_prev = global_transform
 	velocity = Vector3.ZERO
 	current_speed = 0.0
 	npc_state = NPCState.RIDING

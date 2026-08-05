@@ -23,6 +23,11 @@ var _flat_breadcrumbs: Dictionary[int, Transform3D] = {}
 var _breadcrumb_accum: float = 0.0
 
 
+#override
+func is_late_joinable() -> bool:
+	return true
+
+
 func Enter(state_context: StateContext):
 	if Engine.is_editor_hint():
 		return

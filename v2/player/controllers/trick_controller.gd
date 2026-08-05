@@ -21,6 +21,7 @@ enum Trick {
 @export var input_controller: InputController
 @export var gearing_controller: GearingController
 @export var movement_controller: MovementController
+@export var boost_controller: BoostController
 
 const TRICK_CAM_THRESHOLD: float = -0.5
 const TWO_LEFT_FEET_SPEED_THRESHOLD: float = 20
@@ -42,6 +43,21 @@ const COMBO_GRACE_SECS: float = 1.5
 ## as broken. At 0.2/sec: x2 lands around the first full segment, x3 well after the meter
 ## caps (where it still matters, since score = duration x rate x peak multiplier).
 const COMBO_MULT_THRESHOLDS: Array[float] = [5.0, 15.0]
+
+## Seconds of unbroken trick time on the current combo, 0 when not comboing. Accrued in this
+## controller's rollback tick — NOT from a manager's _process(): netfox's RollbackSynchronizer
+## re-applies every state property from history on each tick, so writes made outside the
+## rollback window are silently overwritten before they accumulate.
+var combo_time: float = 0.0
+## Remaining grace before dropping every trick actually breaks the combo.
+var combo_grace: float = 0.0
+## How much of the CURRENT boost meter was earned by the combo still in progress. A crash
+## voids only this much, so boost banked by earlier completed combos survives. Cleared when
+## a combo ends cleanly (that boost is now permanent) and drawn down alongside boost_amount
+## when spending, so spending the pool doesn't leave a stale over-large claim behind.
+var combo_boost_earned: float = 0.0
+## Combo multiplier (1+), derived from combo_time each rollback tick.
+var combo_multiplier: int = 1
 
 var current_trick: Trick = Trick.NONE
 var _last_trick: Trick = Trick.NONE
@@ -75,32 +91,30 @@ func on_movement_rollback_tick(delta: float):
 ## history every tick, so a manager writing them in _process() would be overwritten before
 ## anything accumulated. TrickManager banks the SCORE when the combo ends, off these values.
 func _accrue_combo(delta: float):
-	var pe := player_entity
-
 	if current_trick != Trick.NONE:
-		pe.combo_time += delta
-		pe.combo_grace = COMBO_GRACE_SECS
+		combo_time += delta
+		combo_grace = COMBO_GRACE_SECS
 		# Track what this combo contributed (post-cap, so a full meter doesn't inflate the
 		# claim) — a crash voids exactly this much and nothing that was banked earlier.
-		var before: float = pe.boost_amount
-		pe.boost_amount = minf(
-			pe.boost_amount + BOOST_PER_SEC * pe.combo_multiplier * delta,
-			MovementController.BOOST_SEGMENTS
+		var before: float = boost_controller.boost_amount
+		boost_controller.boost_amount = minf(
+			boost_controller.boost_amount + BOOST_PER_SEC * combo_multiplier * delta,
+			BoostController.BOOST_SEGMENTS
 		)
-		pe.combo_boost_earned += pe.boost_amount - before
-	elif pe.combo_time > 0.0:
-		pe.combo_grace -= delta
-		if pe.combo_grace <= 0.0:
-			pe.combo_time = 0.0
-			pe.combo_grace = 0.0
+		combo_boost_earned += boost_controller.boost_amount - before
+	elif combo_time > 0.0:
+		combo_grace -= delta
+		if combo_grace <= 0.0:
+			combo_time = 0.0
+			combo_grace = 0.0
 			# Survived the grace window — this combo's boost is banked for good now.
-			pe.combo_boost_earned = 0.0
+			combo_boost_earned = 0.0
 
 	var mult := 1
 	for threshold in COMBO_MULT_THRESHOLDS:
-		if pe.combo_time >= threshold:
+		if combo_time >= threshold:
 			mult += 1
-	pe.combo_multiplier = mult
+	combo_multiplier = mult
 
 
 func _detect_current_trick(delta: float) -> Trick:
@@ -181,9 +195,10 @@ func do_reset():
 	current_trick = Trick.NONE
 	_last_trick = Trick.NONE
 	_flip_emitted = false
-	player_entity.combo_time = 0.0
-	player_entity.combo_grace = 0.0
-	player_entity.combo_multiplier = 1
+	combo_time = 0.0
+	combo_grace = 0.0
+	combo_boost_earned = 0.0
+	combo_multiplier = 1
 
 
 func is_in_wheelie() -> bool:
@@ -254,4 +269,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("gearing_controller must not be empty")
 	if movement_controller == null:
 		issues.append("movement_controller must not be empty")
+	if boost_controller == null:
+		issues.append("boost_controller must not be empty")
 	return issues

@@ -67,10 +67,10 @@ func _track_combo(peer_id: int, player: PlayerEntity):
 			st["peak_mult"] = 1
 		return
 
-	var elapsed: float = player.combo_time
+	var elapsed: float = player.trick_controller.combo_time
 
 	if elapsed > 0.0:
-		st["peak_mult"] = maxi(st["peak_mult"], player.combo_multiplier)
+		st["peak_mult"] = maxi(st["peak_mult"], player.trick_controller.combo_multiplier)
 		st["prev_time"] = elapsed
 		return
 

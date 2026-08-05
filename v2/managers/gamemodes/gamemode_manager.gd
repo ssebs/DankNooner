@@ -63,6 +63,9 @@ func _ready():
 func start_game(
 	level_name: LevelManager.LevelName, gamemode: GameModeType.Kind = GameModeType.Kind.FREE_ROAM
 ):
+	# Only the server starts matches — a client RPCing this is misbehaving.
+	if multiplayer.get_remote_sender_id() > 1:
+		return
 	current_level_name = level_name
 	current_game_mode = gamemode
 	match_state = MatchState.IN_GAME
@@ -82,6 +85,14 @@ func change_gamemode(
 	gamemode: GameModeType.Kind, peer_id: int, event_start_circle_path: NodePath = ^""
 ):
 	if !multiplayer.is_server():
+		return
+
+	# A race is running — only a return to free roam (host cancel / race end) may
+	# interrupt it. Blocks a free-roaming late joiner starting a second event.
+	if (
+		!_gamemode_map[current_game_mode].is_late_joinable()
+		and gamemode != GameModeType.Kind.FREE_ROAM
+	):
 		return
 
 	current_game_mode = gamemode
@@ -195,14 +206,19 @@ func _on_client_connection_succeeded(peer_id: int):
 	DebugUtils.DebugMsg("_on_client_connection_succeeded %s" % peer_id)
 
 	if match_state == MatchState.IN_GAME:
-		_sync_game_to_late_joiner.rpc_id(peer_id, current_level_name, current_game_mode as int)
+		# Modes that can't take a late joiner mid-flight (races) sync the joiner
+		# into free roam on the same level instead — they still spawn and ride.
+		var sync_mode := current_game_mode
+		if !_gamemode_map[current_game_mode].is_late_joinable():
+			sync_mode = GameModeType.Kind.FREE_ROAM
+		_sync_game_to_late_joiner.rpc_id(peer_id, current_level_name, sync_mode as int)
 
 
 #endregion
 
 #region late-joiner sync
 ## Server calls this on a late-joining client to sync them into the active game
-@rpc("any_peer", "reliable")
+@rpc("reliable")
 func _sync_game_to_late_joiner(
 	level_name: LevelManager.LevelName, gamemode: GameModeType.Kind = GameModeType.Kind.FREE_ROAM
 ):
@@ -223,6 +239,9 @@ func _sync_game_to_late_joiner(
 @rpc("any_peer", "call_local", "reliable")
 func _request_late_spawn(peer_id: int):
 	if !multiplayer.is_server():
+		return
+	# A peer may only request its own late spawn.
+	if multiplayer.get_remote_sender_id() not in [0, peer_id]:
 		return
 
 	player_latejoined.emit(peer_id)
