@@ -1,10 +1,27 @@
 # TODO
 > Don't forget, have fun :D
-
-# NOW
-- [ ] level design for stunt city
-  - [ ] animated animal skins
 ---
+
+## Traffic AI
+- [x] basic riding-around riders — free roam only (see ___TRAFFIC_AI_PLAN___.md)
+- [x] rider-vs-rider crashes both ways
+- [x] traffic vehicle roster: mixed bikes + cars
+- [x] crash loop
+- [ ] car hit reaction — a crashed car just stops, the wipeout roll is rider-only
+- [x] per-spawn paint roll off the hash(name)-seeded RNG in NPCRiderEntity._ready
+- [x] tune density / cruise speed once the city map exists (rest in Backlog > AI/traffic)
+- [ ] **LEARNING TIME** — graph nav + traffic rules, implemented solo
+  - [ ] [NavigationPrimer](./NavigationPrimer.md) — theory: graphs, Dijkstra → A\*, admissible
+        heuristics, primal vs dual road graphs, conflict sets, why lights = f(clock)
+  - [ ] [TrafficAI](./TrafficAI.md) — reference: how it works today file-by-file, what each
+        file's job becomes, and the traps already hit once
+  - [ ] [TrafficAI_TODO](./TrafficAI_TODO.md) — build order + pseudocode, one verifiable step
+        at a time
+- [ ] street races (traffic is there+ racing ai simultaneously)
+  - [x] WIP kinda working
+  - [x] rename street race to road race, then actually impl street race w/ traffic
+  - [ ]  the racers must go thru the checkpoints, they cant finish a race
+    - [ ]  **IMPORTANT**
 
 ## Release Focus
 Ship priorities in order. Race map done. City map, mountain road, extra tricks = later.
@@ -22,38 +39,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] fall thru map when not host on t3d (in game collision gen on terrain3d)
 - [ ] moving npcs seem to be laggy? like maybe lerp is stuck at 30fps on physics tick and it looks jittery / blurry
 
-### Traffic AI
-- [x] basic riding-around riders — free roam only (see ___TRAFFIC_AI_PLAN___.md)
-- [x] rider-vs-rider crashes both ways (whoever rams broadcasts to the one rammed;
-      race bots deliberately excluded so racing stays as-is)
-- [x] traffic vehicle roster: mixed bikes + cars, rolled per rider from the skin
-      folders (CarSkin/CarSkinDefinition pair; a car spawns no bike + no rider)
-- [x] per-level rosters — TrafficSettings.bike_roster / car_roster narrow what a map
-      rolls; empty roster falls back to the global skin folder
-- [ ] per-vehicle traffic tuning (speed scale, lateral wander, spawn weights) —
-      every vehicle currently rolls with equal odds and the same cruise speed
-- [ ] wheel spin on traffic vehicles (CarSkin.rotate_wheels exists, nothing calls it;
-      NPC bikes have never spun theirs either)
-- [ ] car hit reaction — a crashed car just stops, the wipeout roll is rider-only
-- [x] crash loop — traffic respawned on the same 3s timer as the player and recovers
-      roughly where it went down, so it landed back on the player it just took out, over
-      and over. Now respawn_delay_min/max (5-8s, randomized) on NPCTrafficManager.
-      Mitigation not elimination: _place_on_lane still doesn't check whether a player is
-      standing on the spot it's dropping into
-- [x] per-spawn paint roll off the hash(name)-seeded RNG in NPCRiderEntity._ready
-      (TrafficSettings.paint_colors → SkinColor.update_slot_color(0)). Went through the
-      per-instance runtime materials rather than a ColorMod, which sidesteps the
-      shared-definition problem entirely. Only slot 0 rolls — multi-slot paint is open.
-      SkinColor.do_not_use_color opts fixed liveries out (taxi set, cop car later)
-- [x] tune density / cruise speed once the city map exists (rest in Backlog > AI/traffic)
-- [ ] street races (traffic is there+ racing ai simultaneously)
-  - [x] WIP kinda working
-  - [x] rename street race to road race, then actually impl street race w/ traffic
-  - [ ]  the racers must go thru the checkpoints, they cant finish a race
-    - [ ]  **IMPORTANT**
-
-
-### From my phone
+## From my phone
 - [ ] cafe racer (xsr) bike model
 - [ ] when finishing race, bots shouldnt DNF, but race til timer runs out then get their final time
 - [ ] scale boost from wheelie / stoppie angle
@@ -67,7 +53,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
   - [ ] use flags instead of sign?
 - [ ] Rotate cam down + shift left look right while doing wheelie (fps mode diff than tps mode)
 
-### Boost
+## Boost
 - [x] doing tricks give you boost
 - [x] create boost guage
 - [x] add boost for trick points
@@ -78,7 +64,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [x] force automatic transmission during boost
 - [ ] boost code doesnt follow existing patterns
 
-### More
+## More
 - [ ] add endless gamemode, like original game. more casual, roguelite?
 - [ ] add race thru traffic mode w/o crashing
 - [ ] Tire sounds for tarmac+sand+drift
@@ -87,7 +73,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Add arrow walls (like burnout) for city race
 - [ ] drift stunt race 
 
-### Game-breaking bugs
+## Game-breaking bugs
 - [ ] optimize build: 
   - [x] some cleanup
   - [ ] the fmod/ dir (22M) and addons/fmod/ (258M) are separate deletions, and project.godot:13 still carries the stale General/banks_path pointing into res://fmod/. Removing that line is part of the same cleanup
@@ -107,8 +93,6 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [x] make them try to stick to the road
 - [ ] make it more realistic + difficulty settings (racing line + speed setting)
 - [x] MP test
-
-
 
 ### Stunt map
 - [ ] build linear stunt map (drag strip + stunt playground)
@@ -296,6 +280,9 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] level design for stunt city
+  - [x] animated animal skins
 
 - [x] downhill + clutch + lean starts a wheelie
 
