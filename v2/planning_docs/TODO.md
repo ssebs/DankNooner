@@ -11,10 +11,10 @@
 - [x] per-spawn paint roll off the hash(name)-seeded RNG in NPCRiderEntity._ready
 - [x] tune density / cruise speed once the city map exists (rest in Backlog > AI/traffic)
 - [ ] **LEARNING TIME** — graph nav + traffic rules, implemented solo
-  - [ ] [NavigationPrimer](./NavigationPrimer.md) — theory: graphs, Dijkstra → A\*, admissible
-        heuristics, primal vs dual road graphs, conflict sets, why lights = f(clock)
-  - [ ] [TrafficAI](./TrafficAI.md) — reference: how it works today file-by-file, what each
-        file's job becomes, and the traps already hit once
+  - [ ] [Navigation](./Navigation.md) — the ideas: why roads aren't navmeshes, A\* and its three
+        rules, who goes first at a junction, why lights are maths not Timers
+  - [ ] [TrafficAI](./TrafficAI.md) — our code: architecture and ownership, file-by-file, and
+        the traps already hit once
   - [ ] [TrafficAI_TODO](./TrafficAI_TODO.md) — build order + pseudocode, one verifiable step
         at a time
 - [ ] street races (traffic is there+ racing ai simultaneously)
