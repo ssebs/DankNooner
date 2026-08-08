@@ -41,11 +41,9 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 
 ## From my phone
 - [ ] cafe racer (xsr) bike model
-- [ ] when finishing race, bots shouldnt DNF, but race til timer runs out then get their final time
 - [ ] scale boost from wheelie / stoppie angle
 - [ ] Add items to the race like Mario kart, and ramps/jumps
 - [ ] add progression
-- [ ] start optimizing
 - [ ] "Return to checkpoint" HUD during race
 - [ ] Tell user they missed checkpoint during race 
 - [ ] Checkpoint noise/visual showing you passed it
@@ -280,6 +278,10 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] start optimizing
+
+- [x] when finishing race, bots shouldnt DNF, but race til timer runs out then get their final time
 
 - [x] level design for stunt city
   - [x] animated animal skins
