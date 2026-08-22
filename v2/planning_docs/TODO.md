@@ -48,14 +48,11 @@
 - [ ] road generator lanes are iffy-af
 - [ ] optimize build: 
   - [x] some cleanup
-  - [ ] the fmod/ dir (22M) and addons/fmod/ (258M) are separate deletions, and project.godot:13 still carries the stale General/banks_path pointing into res://fmod/. Removing that line is part of the same cleanup
 - [ ] crashing on ramp should TP you away from the ramp
 - [ ] host can't go to customize bc others will leave
-- [ ] Mac web chrome export t3d
-  - [ ] https://devnt90.itch.io/rexs-relics/devlog/1533649/the-terrain3d-fragment-shader-bug-a-web-export-horror-story
-  - [ ] https://github.com/TokisanGames/Terrain3D/issues/668#issuecomment-4018340830
 - [ ] First time experience / shader compilation / 1st run slowness
   - [ ] customize menu on fresh computer doesnt render bikes
+  - [ ] freezes on Mac in exported binary
 
 ### Gameplay Improvements
 
@@ -99,10 +96,8 @@
     - [ ]  **IMPORTANT**
 - [ ] Traffic lane changes + overtaking (v1 follows one lane per junction leg)
 - [ ] Near-miss detection → trick/score bonus (wheelie variant)
-- [ ] Traffic during races ("race thru traffic" mode)
 - [ ] Consolidate NPCRaceManager + NPCTrafficManager onto a shared base (they
       duplicate the spawn/despawn RPC pattern)
-- [ ] Complex traffic / AI system (A* pathfinding, state machine, sequence system)
 
 #### Racing AI
 - [x] [plan](./___AI-NPC-RACE.md)
@@ -156,30 +151,22 @@
 ### Misc
 - [ ] cafe racer (xsr) bike model
 - [ ] scale boost from wheelie / stoppie angle
-- [ ] Add items to the race like Mario kart, and ramps/jumps
-- [ ] add progression
 - [ ] "Return to checkpoint" HUD during race
 - [ ] Tell user they missed checkpoint during race 
 - [ ] Checkpoint noise/visual showing you passed it
   - [ ] highlight checkpoint in another color
   - [ ] use flags instead of sign?
-- [ ] Rotate cam down + shift left look right while doing wheelie (fps mode diff than tps mode)
 - [ ] add race position hud
 - [ ] head turns wrong direction when leaning/steering
 - [ ] can't go over 15 speed while joining someone else? rpm stuck at 40-48
 - [ ] traffic ai only loads for host
-- [ ] fall thru map when not host on t3d (in game collision gen on terrain3d)
 - [ ] moving npcs seem to be laggy? like maybe lerp is stuck at 30fps on physics tick and it looks jittery / blurry
 - [ ] "Lock in" a wheelie to do combo moves, make it easier to do the other tricks. Aka hold at perfect spot for 3s then it's good until you brake/gas/steer
 - [ ] tron bike
 - [ ] retro sports bike
 - [ ] pughead from guac and load
 - [ ] zombie from guac and load
-- [ ] add endless gamemode, like original game. more casual, roguelite?
-- [ ] add race thru traffic mode w/o crashing
-- [ ] Tire sounds for tarmac+sand+drift
 - [ ] Restart race in pause
-- [ ] Trick tweaks just move butt a little bit from base trick
 - [ ] Add arrow walls (like burnout) for city race
 - [ ] drift stunt race 
 - [ ] Meme mode setting (for sfx)
@@ -188,12 +175,9 @@
 - [ ] Android keystore + github secrets + build.yml
 - [ ] https://docs.discord.com/developers/resources/invite
 - [ ] Slow time on ramp launches (client side somehow?)
-- [ ] Friends + invites + server browser
-- [ ] Dedicated server (matchmaking, quick join, open lobby gamemode)
 - [ ] software is open source, but assets aren't public
 - [ ] Vibe code a painterly shader pass (brush stroke lines)
 - [ ] Gamemodeobjects (show/hide things, call generic functions)
-- [ ] Competitive modes
 
 ### Stunt map
 - [ ] build linear stunt map (drag strip + stunt playground)
@@ -203,12 +187,12 @@
 ### Gameplay modes (future)
 - [ ] Crash Launch gamemode (drag race → low fence → furthest body wins)
 - [ ] Wheelie Battle gamemode (longest wheelie / most combo tricks)
-- [ ] Stunt Race (mario-kart-like — tricks earn items)
+- [ ] Stunt Race (mario-kart-like — tricks earn items, ramps/jumps on course)
 - [ ] Pizza Delivery
 - [ ] Follow the Leader / H.O.R.S.E.
 - [ ] Cops & Robbers
 - [ ] Bowling gamemode?
-- [ ] Endless mode (arcade-style)
+- [ ] Endless mode (arcade-style, like the original game — casual / roguelite?)
 
 ### Tutorials (post-Challenge-system)
 > Most of these become challenges (see Phase 3). Keep this list only for true newbie onboarding.
@@ -225,7 +209,7 @@
 
 ### Tricks
 - [ ] trick scoring & combos
-- [ ] trick tweaks
+- [ ] trick tweaks (just move butt a little from base trick)
   - [ ] Land into wheelie / stoppie should be a trick
   - [ ] Wheelie + RIGHT animation (hand grab) — IK hand twd ground
 - [ ] once speed hits 0 mid-air, lose all ability to rotate fwd/back
@@ -244,6 +228,10 @@
 - [ ] review all code & cleanup to call authority done
 - [ ] update Architecture.md
 - [ ] Review WebRTC gen code for security
+- [ ] Online services
+  - [ ] Friends + invites
+  - [ ] Server browser
+  - [ ] Dedicated server (matchmaking, quick join, open lobby gamemode)
 
 ### Customization / progression
 - [ ] Save System for in-game
@@ -270,9 +258,11 @@
 
 ### Audio
 - [ ] Soundscapes for ambient sounds
-- [ ] Tire Screech SFX
+- [ ] Tire screech SFX (tarmac / sand / drift)
 - [ ] Music
-- [ ] Audio Manager v2 (FMOD RPM blending, record bike, per-bike samples)
+- [ ] Mute option in settings + auto-mute when out of focus
+- [ ] reactive sounds = juice
+- [ ] Audio Manager v2 (RPM blending, record bike, per-bike samples)
 
 ### Levels / map
 - [ ] Gamemode select on map select (tutorial 01 plays specific gamemode on specific map)
@@ -282,27 +272,26 @@
 
 ### Polish / bugs
 - [ ] Pause => show lobby
-- [ ] mute option in settings
-- [ ] mute when out of focus
 - [ ] find hook for dank nooner — what makes it cool!
-- [ ] broken back button via: play → lobby → back → customize → back
-- [ ] back from lobby → customize goes to play menu instead of lobby menu
-- [ ] Free play → back → host game broken (creates dupe multiplayer init)
-- [ ] add to MenuState validation ("set return_state on Enter()")
-- [ ] Camera zoom out FOV w/ speed / current_trick
+- [ ] Menu back-nav / `return_state`
+  - [ ] broken back button via: play → lobby → back → customize → back
+  - [ ] back from lobby → customize goes to play menu instead of lobby menu
+  - [ ] Free play → back → host game broken (creates dupe multiplayer init)
+  - [ ] add to MenuState validation ("set return_state on Enter()")
 - [ ] Update settings via controller
 - [ ] Add loading UI (show when switching levels)
-- [ ] reactive sounds = juice
 - [ ] Transition animations between menu states
 - [ ] Add text chat
-- [ ] First launch is v slow (compiling shaders); freezes on Mac in exported binary
 - [ ] Remap controls for leaning back/fwd (mouse / arrow keys)
 - [ ] Improve CrashController
   - [ ] Brake danger
   - [ ] Sync w/ players (crashing into player = both affected)
   - [ ] Swap to rigidbody, bounding box of mesh + velocity
   - [ ] Emit signals to gamemode controller
-- [ ] Camera should not rotate with player (loops, ramps)
+- [ ] Camera behavior
+  - [ ] Rotate cam down + shift left look right while doing wheelie (fps mode diff than tps mode)
+  - [ ] Zoom out FOV w/ speed / current_trick
+  - [ ] Should not rotate with player (loops, ramps)
 
 
 
