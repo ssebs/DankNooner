@@ -8,6 +8,11 @@ DankNooner is a multiplayer motorcycle stunt game built in Godot 4.7 (GDScript).
 
 **Source of Truth**: Always review `./planning_docs/Architecture.md` for current system designs and implementation details. The TODO.md in the same folder tracks active work. Other .md files in planning_docs/ will explain how various systems work.
 
+**Intent**: This project is a portfolio-quality highlight of my SWE work. Code quality is a
+deliverable, not overhead. "AI slop" — code I can't read or didn't write — is a velocity
+problem, not just a pride problem: prioritize it accordingly. Reducing scope is always a valid
+answer. Prefer deleting over adding.
+
 ## Working Style
 
 - Don't always jump to coding first - help plan and design systems before implementation
@@ -19,6 +24,17 @@ DankNooner is a multiplayer motorcycle stunt game built in Godot 4.7 (GDScript).
 - Don't run `gh` or `git` commands
 - Follow existing patterns, do not add duplicate logic that is found in another file / controller.
 - Do NOT GUESS, VERIFY BY READING EXISTING CODE.
+- Verify TODO/doc claims against the code before acting on them — many are stale.
+- Answer the question that was asked. "How would you X" means propose, then stop.
+- Don't produce artifacts — new files, rewritten docs, full plans — unless asked.
+- One question at a time when checking direction, not a batch.
+
+### planning_docs/TODO.md
+
+- The user owns this file. Don't edit without an explicit instruction to.
+- The fat `## Done ✅` section stays. It's history, not clutter.
+- Tight lists throughout — no blank lines between items or before nested children.
+- Links to plan docs are often stale (several point at deleted files). Verify before citing.
 
 ## Running the Project
 
@@ -153,9 +169,10 @@ if player == null:
     return
 ```
 
-# IF ASKED TO "USE GOOD STANDARDS" OR "FOLLOW @Claude.md", USE THE FOLLOWING
+# Always Apply
 
-Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+Behavioral guidelines to reduce common LLM coding mistakes. These are not optional — see
+**Intent** above. Merge with project-specific instructions as needed.
 
 **Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 

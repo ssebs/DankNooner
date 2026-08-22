@@ -93,6 +93,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] drift stunt race 
 
 ## Game-breaking bugs
+- [ ] road generator lanes are iffy-af
 - [ ] optimize build: 
   - [x] some cleanup
   - [ ] the fmod/ dir (22M) and addons/fmod/ (258M) are separate deletions, and project.godot:13 still carries the stale General/banks_path pointing into res://fmod/. Removing that line is part of the same cleanup
