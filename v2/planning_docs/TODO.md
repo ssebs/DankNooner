@@ -1,5 +1,6 @@
 # TODO
-> Don't forget, have fun :D
+> **Convention:** `In-Progress 🚨` is the high-level focus; `Tasks 📋` has the details.
+> They're loosely priority-ordered, tails are wishes. Items go stale; verify against code.
 - [In-Progress 🚨](#in-progress-)
 - [Tasks 📋](#tasks-)
   - [Game-breaking bugs](#game-breaking-bugs)
@@ -18,10 +19,11 @@
     - [Misc](#misc)
     - [Polish](#polish)
 - [Done ✅](#done-)
-
 ---
 
 ## In-Progress 🚨
+> Don't forget, have fun :D
+
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
 - [ ] fix game breaking bugs
 - [ ] get fun gameplay loop going
@@ -128,11 +130,11 @@
 
 #### Traffic / Racing AI
 - [ ] **LEARNING TIME** — graph nav + traffic rules, implemented solo
-  - [ ] [Navigation](./Navigation.md) — the ideas: why roads aren't navmeshes, A\* and its three
+  - [ ] [Navigation](./__Navigation.md) — the ideas: why roads aren't navmeshes, A\* and its three
         rules, who goes first at a junction, why lights are maths not Timers
-  - [ ] [TrafficAI](./TrafficAI.md) — our code: architecture and ownership, file-by-file, and
+  - [ ] [TrafficAI](./__TrafficAI.md) — our code: architecture and ownership, file-by-file, and
         the traps already hit once
-  - [ ] [TrafficAI_TODO](./TrafficAI_TODO.md) — build order + pseudocode, one verifiable step
+  - [ ] [TrafficAI_TODO](./__TrafficAI_TODO.md) — build order + pseudocode, one verifiable step
         at a time
 - [ ] street races (traffic is there+ racing ai simultaneously)
   - [x] WIP kinda working
