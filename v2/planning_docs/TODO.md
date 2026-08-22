@@ -13,7 +13,6 @@
   - [Tech Debt](#tech-debt)
     - [Misc](#misc)
     - [Polish](#polish)
-    - [Code review followups](#code-review-followups)
 - [Ideas / Backlog ➡️](#ideas--backlog-️)
   - [Misc](#misc-1)
   - [Stunt map](#stunt-map)
@@ -32,7 +31,11 @@
 
 ## In-Progress 🚨
 - [ ] work on todos
-  - [wip] organize todo file (some bugs are fixed, delete stuff, make way shorter, split to other files, etc.)
+  - [wip] organize todo file 
+    - [x] fix headers
+    - [x] merge duplicate items
+    - [x] stale info
+    - [ ] delete stuff / make way shorter
   - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
   - [ ] fix game breaking bugs
   - [ ] get fun gameplay loop going
@@ -48,8 +51,6 @@
 - [ ] road generator lanes are iffy-af
 - [ ] optimize build: 
   - [x] some cleanup
-- [ ] crashing on ramp should TP you away from the ramp
-- [ ] host can't go to customize bc others will leave
 - [ ] First time experience / shader compilation / 1st run slowness
   - [ ] customize menu on fresh computer doesnt render bikes
   - [ ] freezes on Mac in exported binary
@@ -69,7 +70,6 @@
 - [ ] longer gear ratios
 - [ ] larger maps for high speed
 - [ ] 0% => 100% brakes causing crash on noobs
-- [ ] add delete button to Customize Bikes Loadout menu
 - [ ] Label3d + script so all in group are removed on runtime for notes
 
 ### Systems
@@ -117,7 +117,6 @@
 - [ ] More tricks (Phase 2 refactor done, unblocked)
   - [ ] Superman / no-handed spread eagle
   - [ ] Whip / table
-  - [ ] Drift
   - [ ] Burnout (stationary)
 - [ ] Wings as mod for sport bike
 
@@ -133,17 +132,8 @@
 - [ ] drift screech audio (see Backlog > Audio)
 - [ ] Fade out intro sound quicker, make 3 sec version
 - [ ] Gamemode switching cleanup
-  - [ ] controller support on HUD buttons in event start circle / win-lose screen (move to menu system?)
-  - [ ] tutorial gamemode `_ctx` doesn't make sense
+- [ ] Improved controller UX — full navigation across menus, HUDs & in-world UI
 
-#### Code review followups
-- [ ] [code review time](./code-review-20260430.md)
-  - [ ] split bikeskindefinition
-  - [ ] signal mismatches
-  - [ ] resource paths `user://`
-  - [ ] duplicate logic
-  - [ ] missing `_get_configuration_warnings`
-  - [ ] todos & dead code
 ---
 
 ## Ideas / Backlog ➡️
@@ -158,9 +148,6 @@
   - [ ] use flags instead of sign?
 - [ ] add race position hud
 - [ ] head turns wrong direction when leaning/steering
-- [ ] can't go over 15 speed while joining someone else? rpm stuck at 40-48
-- [ ] traffic ai only loads for host
-- [ ] moving npcs seem to be laggy? like maybe lerp is stuck at 30fps on physics tick and it looks jittery / blurry
 - [ ] "Lock in" a wheelie to do combo moves, make it easier to do the other tricks. Aka hold at perfect spot for 3s then it's good until you brake/gas/steer
 - [ ] tron bike
 - [ ] retro sports bike
@@ -208,7 +195,6 @@
 - [ ] tutorial press RT/B should depend on controlscheme
 
 ### Tricks
-- [ ] trick scoring & combos
 - [ ] trick tweaks (just move butt a little from base trick)
   - [ ] Land into wheelie / stoppie should be a trick
   - [ ] Wheelie + RIGHT animation (hand grab) — IK hand twd ground
@@ -223,7 +209,6 @@
 - [ ] wheelie turning animation should yaw
 
 ### Multiplayer / netcode
-- [ ] Move respawn logic to gamemode controller using new signals
 - [ ] return to lobby (force everyone)
 - [ ] review all code & cleanup to call authority done
 - [ ] update Architecture.md
@@ -275,7 +260,6 @@
 - [ ] find hook for dank nooner — what makes it cool!
 - [ ] Menu back-nav / `return_state`
   - [ ] broken back button via: play → lobby → back → customize → back
-  - [ ] back from lobby → customize goes to play menu instead of lobby menu
   - [ ] Free play → back → host game broken (creates dupe multiplayer init)
   - [ ] add to MenuState validation ("set return_state on Enter()")
 - [ ] Update settings via controller

@@ -52,7 +52,7 @@ const LANDING_SNAP_ANGLE_DEG: float = 30.0  # forgiveness window — flips landi
 const REVERSE_MAX_SPEED: float = 2.0
 const REVERSE_ACCEL: float = 8.0
 const REVERSE_BRAKE_THRESHOLD: float = 0.3
-# Drift / powerslide — see planning_docs/PLAN-DRIFT.md
+# Drift / powerslide
 const DRIFT_MIN_SPEED: float = 6.0  # below this it's a stationary burnout (slip stays ~0)
 const DRIFT_BRAKE_HOLD: float = 0.4  # rear-brake input that sustains a brake slide
 const DRIFT_STEER_ENTRY: float = 0.3  # steer needed to kick a brake slide loose
