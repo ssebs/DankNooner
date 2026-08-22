@@ -2,6 +2,8 @@
 > Don't forget, have fun :D
 ---
 
+## Active
+
 ## Traffic AI
 - [x] basic riding-around riders — free roam only (see ___TRAFFIC_AI_PLAN___.md)
 - [x] rider-vs-rider crashes both ways
@@ -31,15 +33,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 4.  [WIP] Stunt map + polish
 5.  Customization & progression
 
-## Active
-- [ ] add race position hud
-- [ ] head turns wrong direction when leaning/steering
-- [ ] can't go over 15 speed while joining someone else? rpm stuck at 40-48
-- [ ] traffic ai only loads for host
-- [ ] fall thru map when not host on t3d (in game collision gen on terrain3d)
-- [ ] moving npcs seem to be laggy? like maybe lerp is stuck at 30fps on physics tick and it looks jittery / blurry
-
-## From my phone
+## Ideas from my phone
 - [ ] cafe racer (xsr) bike model
 - [ ] scale boost from wheelie / stoppie angle
 - [ ] Add items to the race like Mario kart, and ramps/jumps
@@ -50,6 +44,17 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
   - [ ] highlight checkpoint in another color
   - [ ] use flags instead of sign?
 - [ ] Rotate cam down + shift left look right while doing wheelie (fps mode diff than tps mode)
+- [ ] add race position hud
+- [ ] head turns wrong direction when leaning/steering
+- [ ] can't go over 15 speed while joining someone else? rpm stuck at 40-48
+- [ ] traffic ai only loads for host
+- [ ] fall thru map when not host on t3d (in game collision gen on terrain3d)
+- [ ] moving npcs seem to be laggy? like maybe lerp is stuck at 30fps on physics tick and it looks jittery / blurry
+- [ ] "Lock in" a wheelie to do combo moves, make it easier to do the other tricks. Aka hold at perfect spot for 3s then it's good until you brake/gas/steer
+- [ ] tron bike
+- [ ] retro sports bike
+- [ ] pughead from guac and load
+- [ ] zombie from guac and load
 
 ## Boost
 - [x] doing tricks give you boost
@@ -278,6 +283,8 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Competitive modes
 
 ## Done ✅
+
+- [x] Rm terrain3d, try Hterrain again
 
 - [x] start optimizing
 

@@ -15,24 +15,21 @@
 [ext_resource type="Script" uid="uid://cpdxy3nxph3x0" path="res://managers/gamemodes/tasks/sfx_task.gd" id="12_qeuom"]
 [ext_resource type="Script" uid="uid://bk8siml2v41d1" path="res://managers/gamemodes/tasks/race_task.gd" id="13_xcb1u"]
 [ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="14_hyio3"]
-[ext_resource type="Texture2D" uid="uid://chctobd3h6dno" path="res://levels/assets/graybox/green.png" id="16_32xqg"]
-[ext_resource type="Texture2D" uid="uid://2ikkccys8b6w" path="res://levels/assets/graybox/texture_04.png" id="17_g77sv"]
-[ext_resource type="PackedScene" uid="uid://ce0rc0lmwvocu" path="res://levels/assets/props/tree.glb" id="17_y3pck"]
-[ext_resource type="PackedScene" uid="uid://cqjkuj8qx7goa" path="res://levels/assets/props/rock.glb" id="18_ckww3"]
-[ext_resource type="Texture2D" uid="uid://cptj8tdo4sfq4" path="res://levels/assets/graybox/brown.png" id="18_g77sv"]
-[ext_resource type="Texture2D" uid="uid://dfgsgem7ngu3h" path="res://levels/assets/graybox/gray.png" id="19_ngeet"]
-[ext_resource type="Texture2D" uid="uid://b2320l8vvg1c" path="res://levels/assets/graybox/blue.png" id="20_cjprs"]
-[ext_resource type="Texture2D" uid="uid://cjliervng0gbt" path="res://levels/assets/graybox/red.png" id="21_8wxaq"]
 [ext_resource type="Script" uid="uid://bxp3i4cnonh8y" path="res://addons/road-generator/nodes/road_manager.gd" id="22_idsao"]
-[ext_resource type="Texture2D" uid="uid://c3ut0vgj85xtc" path="res://levels/assets/graybox/purple.png" id="22_qqwky"]
 [ext_resource type="Script" uid="uid://cph7euje06kel" path="res://addons/road-generator/nodes/road_container.gd" id="23_ichjr"]
 [ext_resource type="Texture2D" uid="uid://cjrex0qopeses" path="res://levels/assets/graybox/lightgray.png" id="24_r8gbb"]
 [ext_resource type="Script" uid="uid://difs1qg4mpcpw" path="res://addons/road-generator/nodes/road_point.gd" id="24_y3v0i"]
 [ext_resource type="Texture2D" uid="uid://de8hyye3c6mx7" path="res://levels/assets/tracklayouts/Barcelona.svg" id="25_l4hkb"]
+[ext_resource type="Script" uid="uid://dw5nubakvddy7" path="res://addons/zylann.hterrain/hterrain.gd" id="26_8cigu"]
+[ext_resource type="Resource" uid="uid://cceyxfm648jyt" path="res://levels/racetracks/racetrack_level_01/data/data.hterrain" id="27_0b3im"]
 [ext_resource type="Texture2D" uid="uid://c841by2vaiw7j" path="res://levels/assets/graybox/darkgray.png" id="28_5ryor"]
+[ext_resource type="Script" uid="uid://dosw27d6axq7i" path="res://addons/zylann.hterrain/hterrain_texture_set.gd" id="28_y3pck"]
 [ext_resource type="PackedScene" uid="uid://kag1hqax6aa2" path="res://levels/components/props/tree.tscn" id="29_0b3im"]
+[ext_resource type="Texture2D" uid="uid://chctobd3h6dno" path="res://levels/assets/graybox/green.png" id="29_ckww3"]
+[ext_resource type="Texture2D" uid="uid://cb07pkn0834he" path="res://levels/assets/graybox/tan.png" id="30_5ryor"]
 [ext_resource type="Script" uid="uid://dx0pklu2apuar" path="res://addons/road-generator/nodes/road_intersection.gd" id="30_ckww3"]
 [ext_resource type="Script" uid="uid://cob3ih0wpthwf" path="res://addons/road-generator/procgen/intersection_ngon.gd" id="31_5ryor"]
+[ext_resource type="Texture2D" uid="uid://b2320l8vvg1c" path="res://levels/assets/graybox/blue.png" id="31_6j553"]
 [ext_resource type="ArrayOccluder3D" uid="uid://6yicqq5aik2s" path="res://levels/racetracks/racetrack_level_01/racetrack_level_01.occ" id="33_6j553"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_l4d1h"]
@@ -78,127 +75,6 @@ target_gamemode = 1
 forced_base_bike = ExtResource("6_8cigu")
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
-[sub_resource type="Gradient" id="Gradient_ngeet"]
-offsets = PackedFloat32Array(0.2, 1)
-colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_cjprs"]
-noise_type = 2
-frequency = 0.0505
-cellular_jitter = 3.0
-cellular_return_type = 0
-domain_warp_enabled = true
-domain_warp_type = 1
-domain_warp_amplitude = 50.0
-domain_warp_fractal_type = 2
-domain_warp_fractal_lacunarity = 1.5
-domain_warp_fractal_gain = 1.0
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_8wxaq"]
-width = 128
-height = 128
-noise = SubResource("FastNoiseLite_cjprs")
-color_ramp = SubResource("Gradient_ngeet")
-seamless = true
-
-[sub_resource type="Terrain3DMaterial" id="Terrain3DMaterial_qqwky"]
-_shader_parameters = {
-&"bias_distance": null,
-&"blend_sharpness": null,
-&"depth_blur": null,
-&"enable_macro_variation": null,
-&"enable_projection": null,
-&"flat_terrain_normals": null,
-&"macro_variation1": null,
-&"macro_variation2": null,
-&"macro_variation_slope": null,
-&"mipmap_bias": null,
-&"noise1_angle": 0.0,
-&"noise1_offset": Vector2(0.5, 0.5),
-&"noise1_scale": 0.04,
-&"noise2_scale": 0.076,
-&"noise_texture": SubResource("NoiseTexture2D_8wxaq"),
-&"projection_threshold": null,
-&"world_noise_fragment_normals": false,
-&"world_noise_height": 28.80000042915456,
-&"world_noise_lod_distance": 720.0,
-&"world_noise_max_octaves": 4,
-&"world_noise_min_octaves": 0,
-&"world_noise_offset": Vector3(0, -0.35, 0),
-&"world_noise_region_blend": 0.94999998062826,
-&"world_noise_scale": 14.5999996792488
-}
-world_background = 2
-
-[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_ckww3"]
-name = "tree"
-scene_file = ExtResource("17_y3pck")
-density = 0.175
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
-
-[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_5ryor"]
-name = "player_entity"
-id = 1
-scene_file = ExtResource("18_ckww3")
-density = 0.7108891
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
-
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_l4hkb"]
-name = "Green"
-albedo_texture = ExtResource("16_32xqg")
-normal_texture = ExtResource("17_g77sv")
-uv_scale = 0.5
-
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_ngeet"]
-name = "Brown"
-id = 1
-albedo_texture = ExtResource("18_g77sv")
-normal_texture = ExtResource("17_g77sv")
-uv_scale = 0.5
-
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_cjprs"]
-name = "Gray"
-id = 2
-albedo_texture = ExtResource("19_ngeet")
-normal_texture = ExtResource("17_g77sv")
-uv_scale = 0.5
-
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_8wxaq"]
-name = "Blue"
-id = 3
-albedo_texture = ExtResource("20_cjprs")
-normal_texture = ExtResource("17_g77sv")
-uv_scale = 0.5
-
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_qqwky"]
-name = "Red"
-id = 4
-albedo_texture = ExtResource("21_8wxaq")
-normal_texture = ExtResource("17_g77sv")
-uv_scale = 0.5
-
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_ksgao"]
-name = "Purple"
-id = 5
-albedo_texture = ExtResource("22_qqwky")
-normal_texture = ExtResource("17_g77sv")
-uv_scale = 0.5
-
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_xxw4c"]
-name = "LightGray"
-id = 6
-albedo_texture = ExtResource("24_r8gbb")
-normal_texture = ExtResource("17_g77sv")
-uv_scale = 0.5
-
-[sub_resource type="Terrain3DAssets" id="Terrain3DAssets_xxw4c"]
-mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_ckww3"), SubResource("Terrain3DMeshAsset_5ryor")])
-texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_l4hkb"), SubResource("Terrain3DTextureAsset_ngeet"), SubResource("Terrain3DTextureAsset_cjprs"), SubResource("Terrain3DTextureAsset_8wxaq"), SubResource("Terrain3DTextureAsset_qqwky"), SubResource("Terrain3DTextureAsset_ksgao"), SubResource("Terrain3DTextureAsset_xxw4c")])
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0b3im"]
 albedo_texture = ExtResource("24_r8gbb")
 uv1_triplanar = true
@@ -237,11 +113,15 @@ script = ExtResource("31_5ryor")
 [sub_resource type="Resource" id="Resource_5ryor"]
 script = ExtResource("31_5ryor")
 
-[node name="RacetrackLevel01" type="Node3D" unique_id=1668752513 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug", "grid_markers")]
+[sub_resource type="Resource" id="Resource_6j553"]
+script = ExtResource("28_y3pck")
+mode = 0
+textures = [[ExtResource("29_ckww3"), ExtResource("28_5ryor"), ExtResource("30_5ryor"), ExtResource("31_6j553")], [null, null, null, null]]
+
+[node name="RacetrackLevel01" type="Node3D" unique_id=1668752513 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug")]
 script = ExtResource("1_r8gbb")
 player_spawn_pos = NodePath("Spawnpoints/PlayerSpawn")
 player_spawn_pos_debug = NodePath("Spawnpoints/PlayerSpawnTest")
-grid_markers = [NodePath("Spawnpoints/Spawn1"), NodePath("Spawnpoints/Spawn2"), NodePath("Spawnpoints/Spawn3"), NodePath("Spawnpoints/Spawn4"), NodePath("Spawnpoints/Spawn5"), NodePath("Spawnpoints/Spawn6"), NodePath("Spawnpoints/Spawn7"), NodePath("Spawnpoints/Spawn8")]
 traffic_settings = ExtResource("1_trfst")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
@@ -324,7 +204,7 @@ color_preset = 1
 script = ExtResource("4_ej7gd")
 
 [node name="Race" parent="." unique_id=459761741 instance=ExtResource("5_8cigu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 5.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, -5.8552046)
 gamemode_event = SubResource("Resource_ihuqi")
 enable_npcs = true
 
@@ -412,13 +292,6 @@ width = 20.0
 [node name="Race01CheckpointMarker08" parent="Race/SequentialTaskRunner/RaceTask" unique_id=2020293308 instance=ExtResource("14_hyio3")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 66.12149, 2, 206.31197)
 width = 20.0
-
-[node name="Terrain3D" type="Terrain3D" parent="." unique_id=470850830 groups=["Terrain3D"]]
-data_directory = "res://levels/racetracks/racetrack_level_01/t3ddata"
-material = SubResource("Terrain3DMaterial_qqwky")
-assets = SubResource("Terrain3DAssets_xxw4c")
-top_level = true
-metadata/_edit_lock_ = true
 
 [node name="Tracklayout" type="Sprite3D" parent="." unique_id=637833958]
 transform = Transform3D(-4.371139e-06, 100, 4.371139e-06, 0, -4.371139e-06, 100, 100, 4.371139e-06, 1.9106854e-13, 68.00293, -55.80065, -49.999996)
@@ -2698,3 +2571,26 @@ next_pt_init = NodePath("../RP_002")
 [node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=2095457459]
 occluder = ExtResource("33_6j553")
 bake_simplification_distance = 0.5
+
+[node name="HTerrain" type="Node3D" parent="." unique_id=2127590280]
+script = ExtResource("26_8cigu")
+map_scale = Vector3(4, 4, 4)
+centered = true
+_terrain_data = ExtResource("27_0b3im")
+chunk_size = 32
+collision_enabled = true
+collision_layer = 1
+collision_mask = 1
+physics_material = null
+shader_type = "Classic4Lite"
+custom_shader = null
+custom_globalmap_shader = null
+texture_set = SubResource("Resource_6j553")
+render_layers = 1
+cast_shadow = 1
+shader_params/u_ground_uv_scale = 20
+shader_params/u_depth_blending = true
+shader_params/u_triplanar = false
+shader_params/u_tile_reduction = Vector4(0, 0, 0, 0)
+shader_params/u_specular = 0.5
+metadata/_custom_type_script = "uid://dw5nubakvddy7"
