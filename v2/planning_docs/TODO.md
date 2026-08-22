@@ -1,6 +1,17 @@
 # TODO
 > Don't forget, have fun :D
 ---
+## WIP 
+- [ ] work on todos
+  - [ ] organize todo file (some bugs are fixed, delete stuff, etc.)
+  - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
+  - [ ] fix game breaking bugs
+  - [ ] get fun gameplay loop going
+    - [ ] see what i have that works
+    - [ ] see what i can add thats smol & fun
+    - [ ] make tricks + combos easier to do, feel juicy instead of focusing on realism (to extent)
+
+---
 
 ## Stuff to work on
 - [ ] learn / fix traffic AI
