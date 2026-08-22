@@ -1,9 +1,38 @@
 # TODO
 > Don't forget, have fun :D
+- [In-Progress 🚨](#in-progress-)
+- [Tasks 📋](#tasks-)
+  - [Game-breaking bugs](#game-breaking-bugs)
+  - [Gameplay Improvements](#gameplay-improvements)
+    - [Gamemodes \& scoring](#gamemodes--scoring)
+    - [Juice \& "Feel"](#juice--feel)
+  - [Systems](#systems)
+    - [Traffic AI](#traffic-ai)
+    - [Racing AI](#racing-ai)
+    - [Tricks \& animation](#tricks--animation)
+  - [Tech Debt](#tech-debt)
+    - [Misc](#misc)
+    - [Polish](#polish)
+    - [Code review followups](#code-review-followups)
+- [Ideas / Backlog ➡️](#ideas--backlog-️)
+  - [Misc](#misc-1)
+  - [Stunt map](#stunt-map)
+  - [Gameplay modes (future)](#gameplay-modes-future)
+  - [Tutorials (post-Challenge-system)](#tutorials-post-challenge-system)
+  - [Tricks](#tricks)
+  - [Animation](#animation)
+  - [Multiplayer / netcode](#multiplayer--netcode)
+  - [Customization / progression](#customization--progression)
+  - [Audio](#audio)
+  - [Levels / map](#levels--map)
+  - [Polish / bugs](#polish--bugs)
+- [Done ✅](#done-)
+
 ---
-## WIP 
+
+## In-Progress 🚨
 - [ ] work on todos
-  - [ ] organize todo file (some bugs are fixed, delete stuff, make way shorter, split to other files, etc.)
+  - [wip] organize todo file (some bugs are fixed, delete stuff, make way shorter, split to other files, etc.)
   - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
   - [ ] fix game breaking bugs
   - [ ] get fun gameplay loop going
@@ -13,14 +42,42 @@
 
 ---
 
-## Stuff to work on
-- [ ] learn / fix traffic AI
-- [ ] game braking bug fixes (multiplayer bugs)
-- [ ] gameplay (game modes, items, etc.)
-- [ ] systems (traffic, camera, etc.)
+## Tasks 📋
 
+### Game-breaking bugs
+- [ ] road generator lanes are iffy-af
+- [ ] optimize build: 
+  - [x] some cleanup
+  - [ ] the fmod/ dir (22M) and addons/fmod/ (258M) are separate deletions, and project.godot:13 still carries the stale General/banks_path pointing into res://fmod/. Removing that line is part of the same cleanup
+- [ ] crashing on ramp should TP you away from the ramp
+- [ ] host can't go to customize bc others will leave
+- [ ] Mac web chrome export t3d
+  - [ ] https://devnt90.itch.io/rexs-relics/devlog/1533649/the-terrain3d-fragment-shader-bug-a-web-export-horror-story
+  - [ ] https://github.com/TokisanGames/Terrain3D/issues/668#issuecomment-4018340830
+- [ ] First time experience / shader compilation / 1st run slowness
+  - [ ] customize menu on fresh computer doesnt render bikes
 
-## Traffic AI
+### Gameplay Improvements
+
+#### Gamemodes & scoring
+- [ ] track tricks in race
+  - [ ] for bonus score
+  - [ ] for boost?
+- [ ] Trick Battle / Score Attack gamemode
+  - [ ] 3 rounds, highest score in 60s wins round, best 2/3 wins game
+  - [ ] Live scoreboard / trickfeed
+  - [ ] 2 locations for variety
+
+#### Juice & "Feel"
+- [ ] longer gear ratios
+- [ ] larger maps for high speed
+- [ ] 0% => 100% brakes causing crash on noobs
+- [ ] add delete button to Customize Bikes Loadout menu
+- [ ] Label3d + script so all in group are removed on runtime for notes
+
+### Systems
+
+#### Traffic AI
 - [x] basic riding-around riders — free roam only (see ___TRAFFIC_AI_PLAN___.md)
 - [x] rider-vs-rider crashes both ways
 - [x] traffic vehicle roster: mixed bikes + cars
@@ -40,16 +97,63 @@
   - [x] rename street race to road race, then actually impl street race w/ traffic
   - [ ]  the racers must go thru the checkpoints, they cant finish a race
     - [ ]  **IMPORTANT**
+- [ ] Traffic lane changes + overtaking (v1 follows one lane per junction leg)
+- [ ] Near-miss detection → trick/score bonus (wheelie variant)
+- [ ] Traffic during races ("race thru traffic" mode)
+- [ ] Consolidate NPCRaceManager + NPCTrafficManager onto a shared base (they
+      duplicate the spawn/despawn RPC pattern)
+- [ ] Complex traffic / AI system (A* pathfinding, state machine, sequence system)
 
-## Release Focus
-Ship priorities in order. Race map done. City map, mountain road, extra tricks = later.
-1.  [DONE] Fix game-breaking bugs only (skip tuning)
-2.  [DONE] Racing AI can complete a race + MP
-3.  [ALMOST_DONE] Basic traffic AI
-4.  [WIP] Stunt map + polish
-5.  Customization & progression
+#### Racing AI
+- [x] [plan](./___AI-NPC-RACE.md)
+- [ ] review vibe-coded AI + gamemode code (refactor?)
+- [x] make AI actually complete a race (too dumb currently)
+- [x] make them try to stick to the road
+- [ ] make it more realistic + difficulty settings (racing line + speed setting)
+- [x] MP test
 
-## Ideas from my phone
+#### Tricks & animation
+- [ ] Add trick: https://www.youtube.com/shorts/cAxcIZ83MfU
+- [ ] add ground detection to animation controller
+  - [ ] `two_left_feet` feet follow ground
+  - [ ] hand drag scraper wheelie
+  - [ ] Make two_left_feet also work on the right
+    - [ ] add anim when switching between them to hop over whole bike
+- [ ] More tricks (Phase 2 refactor done, unblocked)
+  - [ ] Superman / no-handed spread eagle
+  - [ ] Whip / table
+  - [ ] Drift
+  - [ ] Burnout (stationary)
+- [ ] Wings as mod for sport bike
+
+
+### Tech Debt
+
+#### Misc
+- [ ] boost code doesnt follow existing patterns
+- [ ] cant use controller to select in customize menu
+
+#### Polish
+- [ ] red/white kerbs on corners gen from curve
+- [ ] drift screech audio (see Backlog > Audio)
+- [ ] Fade out intro sound quicker, make 3 sec version
+- [ ] Gamemode switching cleanup
+  - [ ] controller support on HUD buttons in event start circle / win-lose screen (move to menu system?)
+  - [ ] tutorial gamemode `_ctx` doesn't make sense
+
+#### Code review followups
+- [ ] [code review time](./code-review-20260430.md)
+  - [ ] split bikeskindefinition
+  - [ ] signal mismatches
+  - [ ] resource paths `user://`
+  - [ ] duplicate logic
+  - [ ] missing `_get_configuration_warnings`
+  - [ ] todos & dead code
+---
+
+## Ideas / Backlog ➡️
+
+### Misc
 - [ ] cafe racer (xsr) bike model
 - [ ] scale boost from wheelie / stoppie angle
 - [ ] Add items to the race like Mario kart, and ramps/jumps
@@ -71,19 +175,6 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] retro sports bike
 - [ ] pughead from guac and load
 - [ ] zombie from guac and load
-
-## Boost
-- [x] doing tricks give you boost
-- [x] create boost guage
-- [x] add boost for trick points
-- [x] combos don't work? or ui doesnt show them
-- [x] slow down generation
-- [x] crashing shouldnt reset all boost, only for that combo session
-- [x] Automatic transmission option
-- [x] force automatic transmission during boost
-- [ ] boost code doesnt follow existing patterns
-
-## More
 - [ ] add endless gamemode, like original game. more casual, roguelite?
 - [ ] add race thru traffic mode w/o crashing
 - [ ] Tire sounds for tarmac+sand+drift
@@ -91,86 +182,23 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Trick tweaks just move butt a little bit from base trick
 - [ ] Add arrow walls (like burnout) for city race
 - [ ] drift stunt race 
-
-## Game-breaking bugs
-- [ ] road generator lanes are iffy-af
-- [ ] optimize build: 
-  - [x] some cleanup
-  - [ ] the fmod/ dir (22M) and addons/fmod/ (258M) are separate deletions, and project.godot:13 still carries the stale General/banks_path pointing into res://fmod/. Removing that line is part of the same cleanup
-- [ ] crashing on ramp should TP you away from the ramp
-- [ ] host can't go to customize bc others will leave
-- [ ] Mac web chrome export t3d
-  - [ ] https://devnt90.itch.io/rexs-relics/devlog/1533649/the-terrain3d-fragment-shader-bug-a-web-export-horror-story
-  - [ ] https://github.com/TokisanGames/Terrain3D/issues/668#issuecomment-4018340830
-
-- [ ] First time experience / shader compilation / 1st run slowness
-  - [ ] customize menu on fresh computer doesnt render bikes
-
-### Racing AI
-- [x] [plan](./___AI-NPC-RACE.md)
-- [ ] review vibe-coded AI + gamemode code (refactor?)
-- [x] make AI actually complete a race (too dumb currently)
-- [x] make them try to stick to the road
-- [ ] make it more realistic + difficulty settings (racing line + speed setting)
-- [x] MP test
+- [ ] Meme mode setting (for sfx)
+- [ ] incentivize being on road part 2 (`unstable_surface_factor` + VFX from `_on_unstable_surface`)
+- [ ] Option to change localization language
+- [ ] Android keystore + github secrets + build.yml
+- [ ] https://docs.discord.com/developers/resources/invite
+- [ ] Slow time on ramp launches (client side somehow?)
+- [ ] Friends + invites + server browser
+- [ ] Dedicated server (matchmaking, quick join, open lobby gamemode)
+- [ ] software is open source, but assets aren't public
+- [ ] Vibe code a painterly shader pass (brush stroke lines)
+- [ ] Gamemodeobjects (show/hide things, call generic functions)
+- [ ] Competitive modes
 
 ### Stunt map
 - [ ] build linear stunt map (drag strip + stunt playground)
 - [ ] racetrack done, copy working maps into city map later
 
-### Gamemodes & scoring
-- [ ] track tricks in race
-  - [ ] for bonus score
-  - [ ] for boost?
-- [ ] Trick Battle / Score Attack gamemode
-  - [ ] 3 rounds, highest score in 60s wins round, best 2/3 wins game
-  - [ ] Live scoreboard / trickfeed
-  - [ ] 2 locations for variety
-
-### Tricks & animation
-- [ ] Add trick: https://www.youtube.com/shorts/cAxcIZ83MfU
-- [ ] add ground detection to animation controller
-  - [ ] `two_left_feet` feet follow ground
-  - [ ] hand drag scraper wheelie
-  - [ ] Make two_left_feet also work on the right
-    - [ ] add anim when switching between them to hop over whole bike
-- [ ] More tricks (Phase 2 refactor done, unblocked)
-  - [ ] Superman / no-handed spread eagle
-  - [ ] Whip / table
-  - [ ] Drift
-  - [ ] Burnout (stationary)
-- [ ] Wings as mod for sport bike
-
-### Tuning bugs & minor UI
-
-- [ ] longer gear ratios
-- [ ] larger maps for high speed
-- [ ] 0% => 100% brakes causing crash on noobs
-- [ ] height is offset for some clients
-- [ ] cant use controller to select in customize menu
-- [ ] add delete button to Customize Bikes Loadout menu
-- [ ] Label3d + script so all in group are removed on runtime for notes
-
-### Polish
-- [ ] red/white kerbs on corners gen from curve
-- [ ] drift screech audio (see Backlog > Audio)
-- [ ] Fade out intro sound quicker, make 3 sec version
-- [ ] Gamemode switching cleanup
-  - [ ] controller support on HUD buttons in event start circle / win-lose screen (move to menu system?)
-  - [ ] tutorial gamemode `_ctx` doesn't make sense
-
-### Code review followups
-- [ ] [code review time](./code-review-20260430.md)
-  - [ ] split bikeskindefinition
-  - [ ] signal mismatches
-  - [ ] resource paths `user://`
-  - [ ] duplicate logic
-  - [ ] missing `_get_configuration_warnings`
-  - [ ] todos & dead code
-
----
-
-## Backlog 📋
 
 ### Gameplay modes (future)
 - [ ] Crash Launch gamemode (drag race → low fence → furthest body wins)
@@ -244,16 +272,7 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
 - [ ] Soundscapes for ambient sounds
 - [ ] Tire Screech SFX
 - [ ] Music
-- [ ] [Web audio fix](https://github.com/utopia-rise/fmod-gdextension/pull/210#issuecomment-3717948490)
 - [ ] Audio Manager v2 (FMOD RPM blending, record bike, per-bike samples)
-
-### AI / traffic
-- [ ] Traffic lane changes + overtaking (v1 follows one lane per junction leg)
-- [ ] Near-miss detection → trick/score bonus (wheelie variant)
-- [ ] Traffic during races ("race thru traffic" mode)
-- [ ] Consolidate NPCRaceManager + NPCTrafficManager onto a shared base (they
-      duplicate the spawn/despawn RPC pattern)
-- [ ] Complex traffic / AI system (A* pathfinding, state machine, sequence system)
 
 ### Levels / map
 - [ ] Gamemode select on map select (tutorial 01 plays specific gamemode on specific map)
@@ -285,22 +304,19 @@ Ship priorities in order. Race map done. City map, mountain road, extra tricks =
   - [ ] Emit signals to gamemode controller
 - [ ] Camera should not rotate with player (loops, ramps)
 
-### Meta / misc
-- [ ] Meme mode setting (for sfx)
-- [ ] incentivize being on road part 2 (`unstable_surface_factor` + VFX from `_on_unstable_surface`)
-- [ ] Option to change localization language
-- [ ] Android keystore + github secrets + build.yml
-- [ ] https://docs.discord.com/developers/resources/invite
-- [ ] Slow time on ramp launches (client side somehow?)
-- [ ] Friends + invites + server browser
-- [ ] Dedicated server (matchmaking, quick join, open lobby gamemode)
-- [ ] software is open source, but assets aren't public
-- [ ] Vibe code a painterly shader pass (brush stroke lines)
-- [ ] Gamemodeobjects (show/hide things, call generic functions)
-- [ ] Competitive modes
+
 
 ## Done ✅
 
+- [x] Boost
+  - [x] doing tricks give you boost
+  - [x] create boost guage
+  - [x] add boost for trick points
+  - [x] combos don't work? or ui doesnt show them
+  - [x] slow down generation
+  - [x] crashing shouldnt reset all boost, only for that combo session
+  - [x] Automatic transmission option
+  - [x] force automatic transmission during boost
 - [x] Rm terrain3d, try Hterrain again
 - [x] start optimizing
 - [x] when finishing race, bots shouldnt DNF, but race til timer runs out then get their final time
