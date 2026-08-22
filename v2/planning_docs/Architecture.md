@@ -13,8 +13,9 @@
 
 #### Debug levels
 
-- See @level_manager's Console cmd
-  - \` then `dbg_gym` to load that test level right from the main menu
+- `level_manager.gd` wires debug console commands in `_ready()` (\` opens the console)
+  - The `dbg_gym` command is commented out and its handler no longer exists — nothing is
+    registered today. Re-add one there to load a level straight from the main menu.
 
 ### Stuff to plan out:
 
@@ -221,12 +222,19 @@ State is registered as `%Controller:var` and lives on the controller that owns t
 enum Trick { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, THREESIXTY, HEEL_CLICKER, HIGH_CHAIR, TWO_LEFT_FEET, DRIFT }
 ```
 
-- Detects tricks via `pitch_angle` threshold checks against bike definition limits
-- Wheelie: RPM + throttle + lean detection + clutch-kick window (0.4s)
-- Stoppie: Front brake + forward lean
+- **Detection only** — it reads `MovementController.pitch_angle` and classifies. It does not
+  drive the bike: the wheelie/stoppie/drift physics (including the clutch-dump kick window,
+  `CLUTCH_KICK_WINDOW`) live in `MovementController._pitch_angle_calc()`, and so does the
+  on-ground pitch auto-balance.
+- Wheelie / stoppie are entered off `WHEELIE_PITCH_THRESHOLD_DEG` / `STOPPIE_PITCH_THRESHOLD_DEG`
+  (consts here, shared with `MovementController`'s `in_wheelie` / `in_stoppie` checks). The bike
+  definition's `max_wheelie_angle_deg` / `max_stoppie_angle_deg` are the *crash* limits instead —
+  see `CrashController`.
+- The trick-button variants (`WHEELIE_MOD` / `HIGH_CHAIR` / `HEEL_CLICKER` / `TWO_LEFT_FEET`) are
+  picked by camera-stick direction while the trick button is held; `HIGH_CHAIR` latches until the
+  button drops or the wheelie ends. `DRIFT` mirrors `MovementController.is_drifting`.
 - Emits `trick_started`, `trick_ended` signals
-- Auto-balances pitch on ground with `move_toward()` smoothing
-- Detection only — scoring lives in `TrickManager` (see below)
+- Scoring lives in `TrickManager` (see below)
 
 ### Trick Manager
 
@@ -243,13 +251,28 @@ Earn, spend and bank have three separate owners, and the split is **not** option
 
 #### CrashController
 
-Monitors for crash conditions:
+Runs after physics each rollback tick and tests, in order: air-trick landing, drift
+spinout/highside, then the ground checks. Every threshold is an `@export` on the controller or a
+limit on `BikeSkinDefinition` — read the values there, not here.
 
-- Lean angle > 80 degrees
-- Pitch angle > max_wheelie_angle_deg or < -max_stoppie_angle_deg
-- Brake grab while turning (rapid brake engage + lean > 15 degrees)
+- **Killbox** contact — always crashes, whatever the speed or angle
+- **Pitch** past the bike definition's `max_wheelie_angle_deg` / `max_stoppie_angle_deg`
+- **Stalled on a grade** too steep to climb (`MovementController.is_stalled_on_steep_slope()`)
+- **Lean** past `crash_lean_threshold_deg`, tightened on unstable ground by
+  `unstable_lean_threshold_reduction_deg` × `get_unstable_factor()`
+- **Unstable lowside** — front brake while steering on gravel/sand
+  (`unstable_lowside_brake_threshold` + `unstable_lowside_steer_threshold_deg`)
+- **Brake grab** while turning (`brake_grab_rate_threshold`, gamepad only)
+- **Upside-down landing** — checked separately, because an inverted `up_direction` breaks
+  `is_on_floor()`; skipped on steep surfaces where being inverted is expected (loops)
+- **Head-on obstacle collision** above a min speed
+- **Drift** — over-rotation past `drift_spinout_angle_deg`, or a highside when grip returns
+  (`drift_highside_*`, launched with `highside_launch_force`)
 
-`trigger_crash()` sets `is_crashed = true`, starts ragdoll, 3s auto-respawn timer.
+`trigger_crash()` sets `is_crashed = true`, starts the ragdoll, forces the TPS camera and emits
+`crashed`. It does **not** schedule a respawn — the running gamemode owns the delay and the
+destination (see [Gamemode Manager](#gamemode-manager)), which is how free roam can drop you at
+the crash site while a race puts you back on your last checkpoint.
 
 #### AnimationController
 
@@ -357,13 +380,13 @@ The same "pause" action triggers different behavior based on `InputState`.
 
 ### NPC Traffic Manager
 
-- `NPCTrafficManager` (`managers/npc_traffic_manager.gd`) - ambient traffic riders/cars (ids from -1000, so race and traffic ids can never collide). Builds a `TrafficRouteGraph` from the level's road network; count, car/bike mix, cruise speed and vehicle rosters are per-map via `LevelDefinition.traffic_settings` (a `TrafficSettings` resource). `FreeRoamGameMode` and `StreetRaceGameMode` start/stop it, server-only.
+- `NPCTrafficManager` (`managers/npc_traffic_manager.gd`) - ambient traffic riders/cars (ids counting down from its `FIRST_ID` const, far enough below the race roster to guarantee the two id spaces never collide). Builds a `TrafficRouteGraph` from the level's road network; count, car/bike mix, cruise speed and vehicle rosters are per-map via `LevelDefinition.traffic_settings` (a `TrafficSettings` resource). `FreeRoamGameMode` and `StreetRaceGameMode` start/stop it, server-only.
 - **Spawn sync contract** (this is the fix for "traffic only loads for host"):
   - The server broadcasts `rpc_spawn_npc`, but clients only *accept* spawns after their own gamemode `Enter()` runs (level guaranteed loaded) — earlier broadcasts would parent riders under the outgoing level and be freed with it.
   - On `Enter()`, non-server peers call `request_traffic_sync()` to pull everything they missed (covers both the fresh-start timing race and late join); `Exit()` calls `reset_local_traffic()`.
   - Spawn/despawn RPCs are idempotent (dedupe on npc id / tolerant of missing ids), so broadcast + resync can overlap safely.
 - Crashed riders recover onto a clear lane spot after a randomized delay; a rider that rams a player crashes them via `SpawnManager.crash_player`.
-- Vehicle skins ship as `res://` paths, deliberately not `PlayerDefinition.to_dict()` — that round-trips through `BikeSkinDefinition.from_dict()`, which writes a `.tres` into `user://skins/` per rider per peer (open issue, see code-review-20260430.md).
+- Vehicle skins ship as `res://` paths, deliberately not `PlayerDefinition.to_dict()` — that round-trips through `BikeSkinDefinition.from_dict()`, which writes a `.tres` into `user://skins/` per rider per peer (open issue).
 
 ### Animal Spawn Manager
 
@@ -371,8 +394,8 @@ The same "pause" action triggers different behavior based on `InputState`.
 - **The parent decides the behavior.** An animal under a `Path3D` walks that curve; one parked anywhere else stands and plays `Idle`. Several animals can share a path — they space themselves evenly around it by child order, so only *which* Path3D they hang under matters, not where along it they were dropped. (Seeding from the authored position was tried and is wrong: an animal placed beside the spline gets clamped by `get_closest_offset()` to the nearest end of it, so a whole herd stacks on one point.) Re-routing a herd is a drag in the scene tree, no code and no manager wiring.
 - **The walk is deliberately unsynced.** Every peer loads the same level, so it has the same curve, the same `move_speed` and the same index-derived start offset — it just walks it. Only the two things a peer cannot decide alone are broadcast: the kill and the respawn.
 - Animals are addressed by **NodePath under the level**, which ships inside the level scene and is therefore identical on every peer. That removes the id roster, the spawn broadcast and the client accept gate that `NPCTrafficManager` needs. A late joiner's level brings every animal in alive, so `request_animal_sync()` only has to fetch the set that is currently dead.
-- **Animals are hit volumes, not obstacles.** `NPCAnimalEntity` is an `Area3D` with `collision_layer = 0` (nothing can hit it) and `collision_mask = 2`, so a racer rides straight *through* one: the animal plays `Death` and holds the last frame, the rider keeps their line. That is why it isn't an `AnimatableBody3D` — a solid body would deflect a bike at speed no matter how fast the death registered.
-  - The mask is only a pre-filter, **not** a racer test: buildings are on layer 3 and curbs on layer 2, so `_on_body_entered` still checks the `Racers` group. Layer 2 is chosen over layer 1 because the asphalt road surface is on layer 1 — an animal walking a roadside path would otherwise fire against the ground under its own feet.
+- **Animals are hit volumes, not obstacles.** `NPCAnimalEntity` is an `Area3D` on no collision layer at all (nothing can hit it), masking only `crash_collision` — the layer racers carry alongside the default world layer. A racer rides straight *through* one: the animal plays `Death` and holds the last frame, the rider keeps their line. That is why it isn't an `AnimatableBody3D` — a solid body would deflect a bike at speed no matter how fast the death registered.
+  - The mask is only a pre-filter, **not** a racer test — `_on_body_entered` still checks the `Racers` group. It masks `crash_collision` rather than the default world layer because the asphalt road surface is on that default layer: an animal walking a roadside path would otherwise fire against the ground under its own feet. Layer names live in `project.godot`.
 - Only the server acts on the overlap (`hit_by_racer` → `rpc_kill_animal`), so no peer ever kills an animal locally. The corpse lies there for `respawn_delay_min..max`, then gets up where it fell and walks on.
 - Mesh and hit volume are built from `AnimalSkinDefinition` exactly as `PlayerEntity` builds itself from `BikeSkinDefinition` — see [Skins.md](./Skins.md). Clip names are consts on the entity, not definition fields: the Animated Animal Pack ships one identical clip set (`Walk` / `Idle` / `Death`) for every animal in it.
 
@@ -469,16 +492,16 @@ flowchart LR
 | Position/Rotation           | Server broadcasts      | Server                     |
 | Lobby state                 | Server broadcasts      | Server                     |
 
-### Terrain3D collision under server authority
+### Terrain
 
-Terrain3D's default collision is dynamic — built around **one tracked camera** (`CameraController.switch_to_cam` hands it the local player's camera). That's fine for a client predicting only itself, but the server simulates **every** player's physics, so remote players ride over collision-less terrain and fall through. `LevelDefinition._ready()` therefore forces `terrain.collision.mode = Terrain3DCollision.FULL_GAME` on the server (memory for correctness); clients keep the cheap camera-tracked mode. The "Cannot find the active camera" push_error at level load is benign — it fires before the player camera exists, and the hand-off on spawn restarts Terrain3D's processing.
+Terrain is `zylann.hterrain`. Its collision is static and identical on every peer, so server-authoritative physics needs nothing special from it. (Terrain3D was removed — it built collision around a single tracked camera, so the server had to force a full-collision mode or remote players fell through the map.)
 
 ### Connection Modes
 
 All modes are **server-authoritative** — the host runs physics, clients predict + reconcile. Mode only affects transport.
 
 - **WEBRTC** *(default)*: WebRTC peer connections via a custom signaling server (`signal_relay_host`), works for both native and browser clients. Handled by `MultiplayerWebRTC`. See [LobbyGameFlowMP.md](./LobbyGameFlowMP.md)
-- **IP_PORT**: Direct IP/ENet connection to port 42068. Handled by `MultiplayerIPPort`.
+- **IP_PORT**: Direct IP/ENet connection on `UtilsConstants.PORT`. Handled by `MultiplayerIPPort`.
   - Fetches public IP via ipify.org API (or private IP in debug)
 
 ### RPC Signatures
@@ -504,7 +527,7 @@ See the [Gamemode Manager](#gamemode-manager) section for the sender guards, the
 
 ### Deployment / builds
 
-- Godot 4.6+ is required
+- Godot 4.7 is required (see `config/features` in `project.godot`)
 - Audio uses a custom Godot middleware — no FMOD dependency (see [AudioMiddleware.md](./AudioMiddleware.md))
 - Deploying new version
   - Run `./deploy-version.sh` (any OS) to create a new version tag & push to github to run CI
