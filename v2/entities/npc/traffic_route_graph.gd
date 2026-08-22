@@ -47,8 +47,9 @@ func rebuild(road_lanes: Array) -> void:
 	_successors.clear()
 	for lane in road_lanes:
 		# Containers can each carry their own lane group, so the same lane can
-		# show up twice in the gathered list.
-		if lane is RoadLane and !lanes.has(lane):
+		# show up twice in the gathered list. Lanes this rebuild is replacing are
+		# already queue_free()d but still in the group — skip those too.
+		if lane is RoadLane and !lanes.has(lane) and !lane.is_queued_for_deletion():
 			lanes.append(lane)
 	for lane in lanes:
 		_successors[lane] = _find_successors(lane)
@@ -62,12 +63,15 @@ func next_lanes(lane: RoadLane) -> Array:
 
 
 ## A lane that is still alive. Stale entries are pruned as we hit them.
+##
+## Indexed, not pick_random() + erase(): a freed instance can't be assigned to a typed
+## RoadLane local, nor erased from a typed Array.
 func random_lane() -> RoadLane:
 	while !lanes.is_empty():
-		var lane: RoadLane = lanes.pick_random()
-		if is_instance_valid(lane):
-			return lane
-		lanes.erase(lane)
+		var index := randi_range(0, lanes.size() - 1)
+		if is_instance_valid(lanes[index]):
+			return lanes[index]
+		lanes.remove_at(index)
 	return null
 
 

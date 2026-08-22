@@ -20,7 +20,8 @@
       "WebFetch(domain:api.github.com)",
       "Bash(gdlint *)",
       "Bash(python -)",
-      "Bash(git log *)"
+      "Bash(git log *)",
+      "PowerShell(gdlint *)"
     ]
   }
 }
