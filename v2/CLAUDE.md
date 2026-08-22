@@ -41,7 +41,10 @@ answer. Prefer deleting over adding.
 - Only have the human run the project
 - After completing changes with any `.gd` files, verify it lints clean against `.gdlintrc` before reporting done. Fix any reported problems (e.g. class-definitions-order)
 
-## Core Architecture
+## Patterns
+
+> Conventions for writing new code. **System inventories belong in `planning_docs/`, not here** —
+> a fact duplicated in both files is a fact that will disagree with itself.
 
 ### Manager Pattern
 
@@ -65,22 +68,15 @@ Pattern: `@export` navigation targets and managers, wire in inspector.
 
 ### Level System
 
-- `LevelManager` has `LevelName` enum, `possible_levels` dict (enum → PackedScene), `level_name_map` dict (enum → localization key)
-- Levels extend `LevelDefinition`
-- Adding a level: add to enum, both dicts, create scene
-
-### Input System
-
-`InputStateManager` routes input based on `InputState` enum (IN_MENU, IN_GAME, IN_GAME_PAUSED, DISABLED).
-
-Actual keypresses are managed in the `PlayerEntity`'s `InputController`
+Levels extend `LevelDefinition`. Adding one: add to `LevelManager`'s `LevelName` enum, then to
+both dicts (`possible_levels`, `level_name_map`), then create the scene.
 
 ### Player Entity
 
-`PlayerEntity` (CharacterBody3D) uses composition via `@export` component references:
-`InputController`, `MovementController`, `GearingController`, `TrickController`, `BoostController`, `CrashController`, `CameraController`, `AnimationController`, `HUDController`, `SkidmarkController`, plus `BikeSkinDefinition` / `CharacterSkinDefinition` resources. `IKController` / `RagdollController` live under `player/characters/scripts/`.
-
-Controllers are called sequentially from `PlayerEntity._rollback_tick()` via their `on_movement_rollback_tick()` methods. See `planning_docs/Architecture.md` for synced state vars and detailed subsystem docs.
+`PlayerEntity` (CharacterBody3D) is composed of controllers wired in `player_entity.tscn`.
+Simulation controllers implement `on_movement_rollback_tick()` and run in `_rollback_tick()`
+(order is load-bearing); visual/local ones run in `_process()` and must never write simulation
+state. See [Architecture — Player Entity](./planning_docs/Architecture.md#player-entity).
 
 #### Netfox + RPC Pattern
 
@@ -90,38 +86,50 @@ For actions needing rollback sync on `PlayerEntity`:
 2. **Handler func**: `on_<action>()` — does the work
 3. In `_rollback_tick()`: check setter, call handler, reset setter
 
-### Skin System
+### Gamemodes
 
-See `planning_docs/Skins.md` for details.
-
-### Audio & Settings
-
-- `AudioManager` - custom Godot audio middleware (replaced FMOD), bus volume mapping, engine sound RPM parameter
-- `SettingsManager` - JSON persistence to `user://settings.json`, emits `setting_updated` / `all_settings_changed`
-
-### Gamemode System
-
-- `GamemodeManager` - match state, late-joiner sync, runs a state machine of gamemodes (base `GameModeType` → `FreeRoamGameMode`, `RoadRaceGameMode`, `StreetRaceGameMode`, `TutorialGameMode`, `ChallengeGameMode`). Events run via a `GameModeTask` + `TaskRunner` system.
-  - `RoadRaceGameMode` (closed roads) and `StreetRaceGameMode` (same race, through live traffic) are deliberately duplicated files rather than a base + subclass — they're expected to diverge.
-  - See [GamemodeSystem](./planning_docs/GamemodeSystem.md) and [RaceModes](./planning_docs/RaceModes.md)
-- `SpawnManager` - spawn/despawn RPCs + local player instantiation
-- `NPCRaceManager` / `NPCTrafficManager` - AI race bots and ambient traffic (negative-id rosters, broadcast spawns with client-side accept gate + late-join resync)
-- `SaveManager` - JSON persistence of `PlayerDefinition` (username, skins, etc.)
+Gamemodes are `State`s extending `GameModeType`, run by `GamemodeManager`'s state machine.
+In-mode events are composed from `GameModeTask` leaves under a `TaskRunner`, authored in the
+level scene rather than in code. See [GamemodeSystem](./planning_docs/GamemodeSystem.md).
 
 ### Multiplayer / Netcode
 
-**Server-authoritative** using **netfox** (RollbackSynchronizer + TickInterpolator). Clients predict locally and reconcile. `ConnectionManager` supports two modes: **WebRTC** (preferred) and direct **IP/Port**. `LobbyManager`, `GamemodeManager`, and `SpawnManager` handle the lobby/match/spawn layers.
+**Server-authoritative** via **netfox** — the host simulates, clients predict and reconcile.
+Never hand-roll an input RPC; register the property on the `RollbackSynchronizer` instead. Every
+var mutated inside the rollback tick that affects simulation **must** be a state property —
+resimulation cannot rewind what netfox doesn't record.
 
-See `Architecture.md` for diagrams and RPC signatures.
+Client-callable RPCs get a `request_*` entry point that derives the target from the sender.
+Broadcast RPCs are server-only and must reject non-server senders. See
+[Architecture — Multiplayer Networking](./planning_docs/Architecture.md#multiplayer-networking-architecture).
+
+## Planning Docs
+
+`planning_docs/` is the source of truth for how systems actually work. Files prefixed `__` are
+archived — ignore them.
+
+- [Architecture](./planning_docs/Architecture.md) — **start here**; every system, how they wire together
+- [TODO](./planning_docs/TODO.md) — active work (user owns this file, see rules above)
+- [Goals4Game](./planning_docs/Goals4Game.md) — MVP scope and requirements
+- [PlayerController](./planning_docs/PlayerController.md) — physics, gearbox, crash, tricks, rollback
+- [AnimationController](./planning_docs/AnimationController.md) — pose pipeline, procedural animation, IK, ragdoll
+- [ComboAndBoost](./planning_docs/ComboAndBoost.md) — trick combos, boost economy, scoring, tunables
+- [GamemodeSystem](./planning_docs/GamemodeSystem.md) — gamemode taxonomy, task/runner system
+- [LobbyGameFlowMP](./planning_docs/LobbyGameFlowMP.md) — host/join through game start
+- [Skins](./planning_docs/Skins.md) — slot-based color customization, bike/character definitions
+- [AudioMiddleware](./planning_docs/AudioMiddleware.md) — the FMOD replacement, buses, engine sound
+- [Levels](./planning_docs/Levels.md) — stub
+- [Debugging](./planning_docs/Debugging.md) — VSCode integration
+- [Story](./planning_docs/Story.md) / [Marketing](./planning_docs/Marketing.md) — narrative and launch notes
 
 ## Project Structure
 
 - `main_game.tscn` - root scene, composes all managers
 - `managers/` - all managers (`network/`, `gamemodes/` subdirs)
 - `player/` - PlayerEntity + `controllers/`
-- `menus/` - menu states (main, splash, play, lobby, customize, settings, pause, help)
+- `menus/` - menu states (main, splash, play, lobby, customize, settings, pause, help, loading)
 - `levels/` - all levels extend `LevelDefinition`
-- `entities/` - non-player entities (`NPCRiderEntity` + its state machine, `TrafficRouteGraph`)
+- `entities/` - non-player entities (`NPCRiderEntity` + its state machine, `NPCAnimalEntity`, `NPCAnimationController`, `TrafficRouteGraph`, `vehicles/`, `vfx/`)
 - `resources/` - `BikeSkinDefinition` / `CharacterSkinDefinition` `.tres` files
 - `utils/state_machine/` - base `State`, `StateMachine`, `StateContext` classes
 - `utils/constants.gd` - global constants/enums
