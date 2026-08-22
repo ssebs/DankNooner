@@ -2,7 +2,12 @@
 > Don't forget, have fun :D
 ---
 
-## Active
+## Stuff to work on
+- [ ] learn / fix traffic AI
+- [ ] game braking bug fixes (multiplayer bugs)
+- [ ] gameplay (game modes, items, etc.)
+- [ ] systems (traffic, camera, etc.)
+
 
 ## Traffic AI
 - [x] basic riding-around riders — free roam only (see ___TRAFFIC_AI_PLAN___.md)
