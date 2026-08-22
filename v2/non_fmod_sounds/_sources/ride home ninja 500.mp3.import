@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b7fbh8r6eikdw"
+path="res://.godot/imported/ride home ninja 500.mp3-a76dae8c9537359de9ac258361b0fed2.mp3str"
+
+[deps]
+
+source_file="res://non_fmod_sounds/_sources/ride home ninja 500.mp3"
+dest_files=["res://.godot/imported/ride home ninja 500.mp3-a76dae8c9537359de9ac258361b0fed2.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
