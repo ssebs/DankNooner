@@ -2,6 +2,21 @@
 
 > How the game works under the hood
 
+## How to write in this doc
+
+**If a grep would answer it, link the grep. Write down only what the code can't say about itself.**
+
+Enumerations rot on every commit — a copied enum, a list of RPCs, a roster of exports, a file
+path next to a class name. All of it is already in the code, machine-readable and correct there.
+Point at the authoritative location instead, then write the part that isn't in the code: why a
+surprising member is on the list, why an obvious one is absent, what breaks if you change it.
+
+Decisions and constraints are what survive. They only go stale when someone deliberately
+revisits the design — and to revisit it they have to read the rationale first, which is exactly
+the moment to update it.
+
+Same rule as tunables: name and behavior, never current values.
+
 ## High Level
 
 ### Tips for me:
@@ -13,9 +28,9 @@
 
 #### Debug levels
 
-- `level_manager.gd` wires debug console commands in `_ready()` (\` opens the console)
-  - The `dbg_gym` command is commented out and its handler no longer exists — nothing is
-    registered today. Re-add one there to load a level straight from the main menu.
+- Nothing is registered today. `level_manager.gd` has one commented-out `Console.add_command`
+  (`dbg_gym`, marked broken — its handler no longer exists). Re-add a command there to load a
+  level straight from the main menu (\` opens the console).
 
 ### Stuff to plan out:
 
@@ -113,17 +128,14 @@ Levels are managed via `LevelManager` and selected through the `LobbyMenuState` 
 
 #### Components
 
-- **LevelManager** (`managers/level_manager.gd`)
-  - `LevelName` enum - defines all available levels
-  - `possible_levels` - Dictionary mapping `LevelName` -> preloaded `PackedScene`
-  - `level_name_map` - Dictionary mapping `LevelName` -> localization key string
-  - `@export spawn_node` - Node3D where levels are instantiated
+A level is identified by a `LevelName` enum value that must appear in **three** places in
+`level_manager.gd` — the enum, `possible_levels` (→ `PackedScene`) and `level_name_map`
+(→ localization key). Nothing enforces this at compile time, which is why the editor validator
+checks enum/dict sync (see [Editor Validation](#editor-validation)); a missing dict entry shows up
+as a level that lists but won't load.
 
-> Note - Level enum idx 0 is `LEVEL_SELECT_LABEL` (not a real level, used for dropdown default)
-
-- **LobbyMenuState** (`menus/lobby_menu/`) - Level selection UI
-  - `LevelSelectBtn` (OptionButton) - Dropdown for level selection
-  - `StartBtn` - Triggers level spawn
+`LevelName` idx 0 is a sentinel, not a level — it's the "select a level" placeholder the
+`LobbyMenuState` dropdown shows by default. Anything iterating levels has to skip it.
 
 #### Adding a New Level
 
@@ -136,42 +148,31 @@ Levels are managed via `LevelManager` and selected through the `LobbyMenuState` 
 
 The `InputStateManager` (`managers/input_state_manager.gd`) is a centralized input handler that routes input based on the current game context.
 
-#### Input States
-
-```gdscript
-enum InputState {
-    IN_MENU,           # Player is in a menu, ESC navigates menus
-    IN_GAME,           # Player is playing, ESC triggers pause
-    IN_GAME_PAUSED,    # Game is paused, ESC resumes game
-    DISABLED,          # All input is disabled
-}
-```
-
 #### Input Routing
 
-The InputStateManager uses `_unhandled_input()` to process events based on `current_input_state`:
+`_unhandled_input()` dispatches on `current_input_state` — read the `InputState` enum and the
+match in `input_state_manager.gd` for the current set.
 
-- **IN_GAME**: "pause" action -> emits `pause_requested` signal
-- **IN_GAME_PAUSED**: "pause" action -> emits `unpause_requested` signal
-- **IN_MENU**: "ui_cancel" action -> delegates to current MenuState's `on_cancel_key_pressed()`
-- **DISABLED**: Ignores all input
+The design points behind it:
 
-#### Mouse Cursor Control
-
-Mouse visibility is managed based on input state:
-
-- **IN_MENU** or **IN_GAME_PAUSED**: Mouse visible (`MOUSE_MODE_VISIBLE`)
-- **IN_GAME** or **DISABLED**: Mouse captured (`MOUSE_MODE_CAPTURED`)
-
-#### Signals
-
-- `input_state_changed(new_state: InputState)` - Fired when state changes
-- `pause_requested` - Fired when player wants to pause (IN_GAME + pause action)
-- `unpause_requested` - Fired when player wants to resume (IN_GAME_PAUSED + pause action)
+- **The same physical "pause" press means different things per state**, resolved here rather than
+  by the presser. IN_GAME emits `pause_requested`; IN_GAME_PAUSED emits `unpause_requested`.
+  Nothing downstream has to know which is appropriate.
+- **Menu cancel delegates rather than dispatches** — IN_MENU routes `ui_cancel` to the current
+  MenuState's `on_cancel_key_pressed()`, so back-navigation lives with the screen that knows where
+  "back" goes.
+- **Mouse capture is derived from input state, never set ad hoc.** Menu and paused states show the
+  cursor; in-game and disabled capture it. Setting `mouse_mode` anywhere else will fight this.
 
 ### Player Entity
 
-`PlayerEntity` is a `CharacterBody3D` using composition with `@export` component references. All controllers are called sequentially from `_rollback_tick()` via their `on_movement_rollback_tick()` methods.
+`PlayerEntity` is a `CharacterBody3D` using composition. Most components are `@export` node
+references wired in `player_entity.tscn`; `HUDController` is an `@onready %HUDController` and
+`SkidmarkController` hangs under `AnimationController` rather than off the entity.
+
+The five **simulation** controllers are called sequentially from `_rollback_tick()` via their
+`on_movement_rollback_tick()` methods (order matters — see the comment there). The rest are
+local/visual and run off `_process()`.
 
 For detailed design docs see:
 
@@ -181,32 +182,49 @@ For detailed design docs see:
 
 #### Component Controllers
 
-| Controller            | File                                  | Purpose                                                 |
-| --------------------- | ------------------------------------- | ------------------------------------------------------- |
-| `InputController`     | `controllers/input_controller.gd`     | Gathers input, syncs via RollbackSynchronizer           |
-| `MovementController`  | `controllers/movement_controller.gd`  | Physics-based movement, speed, steering, lean, velocity |
-| `GearingController`   | `controllers/gearing_controller.gd`   | Clutch engagement, RPM blending, power output           |
-| `TrickController`     | `controllers/trick_controller.gd`     | Detects wheelie/stoppie, owns combo accrual             |
-| `BoostController`     | `controllers/boost_controller.gd`     | Boost meter: commit-on-press burn, spend, crash void    |
-| `CrashController`     | `controllers/crash_controller.gd`     | Brake grab detection, crash detection, auto-respawn     |
-| `CameraController`    | `controllers/camera_controller.gd`    | FPS/TPS camera switching                                |
-| `AnimationController` | `controllers/animation_controller.gd` | Procedural animation blending, IK, ragdoll              |
-| `HUDController`       | `controllers/hud_controller.gd`       | Wires controller signals to on-screen HUD               |
-| `SkidmarkController`  | `controllers/skidmark_controller.gd`  | Local-only skidmark ribbon VFX while drifting           |
+The roster lives in `player/controllers/` and is wired in `player_entity.tscn` — read it there.
+The split that matters, and that the file layout does **not** show:
 
-`IKController` (FABRIK solver) and `RagdollController` (PhysicalBone3D skeleton) live under `player/characters/scripts/` and are driven by `AnimationController`.
+- **Simulation controllers** implement `on_movement_rollback_tick()` and are called from
+  `PlayerEntity._rollback_tick()`. Grep that method for the current set and order. **Order is
+  load-bearing** — boost runs first and is the only one evaluated while crashed, so a crash
+  mid-boost cancels the burn and its camera FX instead of latching them until respawn.
+- **Everything else is local/visual** and runs off `_process()` — camera, animation, HUD,
+  skidmarks, minimap. None of it may write simulation state.
+
+`IKController` (FABRIK solver) and `RagdollController` (PhysicalBone3D skeleton) live under
+`player/characters/scripts/`, not with the controllers, because they're driven by
+`AnimationController` rather than by the entity.
 
 #### Synced State (via RollbackSynchronizer)
 
-- **Physics**: `speed`, `roll_angle`, `pitch_angle`
-- **Gearing**: `current_gear`, `current_rpm`, `clutch_value`, `is_rev_limited`
-  - `is_rev_limited` is synced because the rule is: **every var mutated inside the rollback tick that affects simulation must be a state property** — resimulation can't rewind what netfox doesn't record. The limiter gates power output, so leaving it unsynced rubberbanded gear shifts (the auto box shifts just under the limiter cut, so the flag flaps exactly then).
-- **Boost** (`%BoostController:*`): `boost_amount` (in segments), `boost_burn_target`, `boost_burn_rate`, `boost_prev_held`, `is_boosting`
-- **Combo** (`%TrickController:*`): `combo_time`, `combo_grace`, `combo_boost_earned`, `combo_multiplier`
-- **Crashes**: `is_crashed`
+The authoritative list is `state_properties` / `input_properties` on the RollbackSynchronizer in
+`player_entity.tscn`. Read it there — it's one line each, and it is never wrong.
 
-State is registered as `%Controller:var` and lives on the controller that owns the domain. netfox constrains *when* a var may be written (inside the rollback tick), not where it lives — only `is_crashed` and the discrete actions below sit on `PlayerEntity` itself.
-- **Discrete actions**: `rb_do_respawn` (rollback pattern); `rb_respawn_transform` / `rb_respawn_transform_oneshot` carry the target respawn transform. Gear shifts sync `nfx_target_gear` (absolute requested gear) as netfox input — never edge-triggered flags, which drop/double-apply under stale-input reuse on the server.
+**The rule that generates that list**: every var mutated inside the rollback tick that affects
+simulation must be a state property. Resimulation can't rewind what netfox doesn't record. Adding
+a var to the tick without registering it is the single most common way to introduce a desync
+here, and it always presents as rubberbanding rather than as an obvious error.
+
+State is registered as `%Controller:var` and lives on the controller owning the domain — netfox
+constrains *when* a var may be written, not where it lives. Only root properties and the discrete
+actions below sit on `PlayerEntity` itself.
+
+What the list can't tell you:
+
+- **`is_rev_limited`** looks like a cosmetic flag but gates power output. Unsynced, it rubberbanded
+  gear shifts — the auto box shifts just under the limiter cut, so the flag flaps exactly then.
+- **`up_direction`** looks like a constant but isn't: `MovementController` slerps it toward the
+  surface normal for ramp/loop riding, and it drives `is_on_floor()` and the bike's basis.
+- **`is_drifting` is deliberately absent.** It's re-derived each tick from synced inputs plus
+  `slip_angle`, so syncing it would be redundant state that can disagree with its own inputs.
+
+**Discrete actions** (the `rb_` pattern — external systems set the flag, `_rollback_tick()` runs the handler and clears it):
+
+- `rb_do_respawn` → `do_respawn()`, and `rb_do_crash` → `on_crash()`
+- `rb_respawn_transform` (persistent point) / `rb_respawn_transform_oneshot` (consumed on use) carry the target; `_pick_respawn_target()` prefers the one-shot.
+- The respawn tick is remembered in `_respawn_tick` so a **resimulation** of it re-applies the synced-state half via `_apply_respawn_state()`, skipping one-time cosmetics (mesh/IK/audio). Without that, the resim undoes the teleport — the flag was already consumed on the first pass.
+- Gear shifts sync `nfx_target_gear` (absolute requested gear) as netfox input — never edge-triggered flags, which drop/double-apply under stale-input reuse on the server.
 
 #### GearingController
 
@@ -218,9 +236,7 @@ State is registered as `%Controller:var` and lives on the controller that owns t
 
 #### TrickController
 
-```gdscript
-enum Trick { NONE, WHEELIE_SITTING, WHEELIE_MOD, STOPPIE, BACKFLIP, FRONTFLIP, THREESIXTY, HEEL_CLICKER, HIGH_CHAIR, TWO_LEFT_FEET, DRIFT }
-```
+The trick roster is the `Trick` enum in `trick_controller.gd`.
 
 - **Detection only** — it reads `MovementController.pitch_angle` and classifies. It does not
   drive the bike: the wheelie/stoppie/drift physics (including the clutch-dump kick window,
@@ -276,9 +292,9 @@ the crash site while a race puts you back on your last checkpoint.
 
 #### AnimationController
 
-```gdscript
-enum RiderState { RIDING, IDLE, RAGDOLL }  # TRICK is stubbed/disabled — skeleton anims not yet wired into the pose pipeline
-```
+Rider states are the `RiderState` enum in `animation_controller.gd`. A `TRICK` state is commented
+out there — skeleton trick anims aren't wired into the pose pipeline yet, so tricks currently
+render purely procedurally.
 
 - **Procedural animation**: Smooths visual_lean, visual_pitch, visual_yaw each frame
   - `visual_root.rotation.x` = pitch (wheelie/stoppie)
@@ -329,25 +345,30 @@ The same "pause" action triggers different behavior based on `InputState`.
 ### Settings Manager
 
 - `SettingsManager` (`managers/settings_manager.gd`) - JSON persistence to `user://settings.json`
-- Default settings: signal_relay_host, resolution_scale, fullscreen_mode, master_vol, music_vol, menu_vol, sfx_vol, cam_mode, invert_cam, mouse_cam_sens, joy_cam_sens, difficulty, auto_transmission (username / skins live in save data, not settings)
+- The key list is the `default_settings` dict in that file — read it there
+- **Settings are device/UI preferences only.** Username, skins and progression live in save data
+  (`SaveManager`), not here. New player-identity fields go there, not in settings
 - Signals: `setting_updated(key, value)`, `all_settings_changed(dict)`
-- Used by AudioManager (volume), ConnectionManager (signal relay host)
+- Consumers: `AudioManager` (bus volumes), `ConnectionManager` (signal relay host)
 
 ### Gamemode Manager
 
 - `GamemodeManager` (`managers/gamemodes/gamemode_manager.gd`) - manages match state, coordinates level/spawn. Runs a **state machine of gamemodes**.
 - **Gamemode states** (extend base `GameModeType`, whose `Kind` enum is the canonical id, live under `managers/gamemodes/types/`):
   - `FreeRoamGameMode` - open play, event circles trigger mode switches, respawn on crash. Crash respawns return you to the crash site (upright, same heading) — unless the site is steep or void, in which case you go to your last flat-ground breadcrumb (the server samples one per player on gentle ground; the ground check excludes the bike's own collider and ragdoll bones)
-  - `RoadRaceGameMode` - lap-based race built on the task/runner system (see [RaceModes.md](./RaceModes.md)). Bots keep racing through the results countdown; result rows refresh live until the timer ends (human rows are snapshotted before the runner stops — `TaskRunner.stop()` clears its per-player state)
+  - `RoadRaceGameMode` - lap-based race built on the task/runner system (see [GamemodeSystem.md](./GamemodeSystem.md)). Bots keep racing through the results countdown; result rows refresh live until the timer ends (human rows are snapshotted before the runner stops — `TaskRunner.stop()` clears its per-player state)
   - `StreetRaceGameMode` - the same race run through live ambient traffic (duplicated file, not a subclass)
   - `TutorialGameMode` - step-by-step progression with countdown + trick detection
   - `ChallengeGameMode` - lightweight in-world trick challenges (no countdown/results)
+  - The `Kind` enum runs ahead of the implementation — it carries reserved entries with no
+    gamemode file and no state node in `main_game.tscn`. A `Kind` value is not evidence the mode
+    exists; check for the type under `types/` and the node in `main_game.tscn`.
 - Events run via a composable **task/runner system** (`GameModeTask` leaves + `SequentialTaskRunner` / `ConcurrentTaskRunner`), authored in level scenes. See [GamemodeSystem.md](./GamemodeSystem.md)
 - Context passed between gamemode states via `GamemodeStateContext`
-- RPCs for multiplayer sync:
-  - `start_game(level_name)` - server calls on all peers; ignores anything sent by a client
-  - `_sync_game_to_late_joiner(level_name, gamemode, ...)` - sync level to late-joining client (authority-mode RPC, server → one peer)
-  - `_request_late_spawn(peer_id)` - late-joiner requests their player spawn; a peer may only request its own
+- RPC guards (signatures: grep `@rpc` in `gamemode_manager.gd`):
+  - `start_game` - server calls on all peers; ignores anything sent by a client
+  - `_sync_game_to_late_joiner` - authority-mode RPC, server → one peer
+  - `_request_late_spawn` - a peer may only request its own spawn
 - **`change_gamemode()` is the single entry point for transitions.** It is the only thing that calls the `_rpc_transition_gamemode` broadcast — gamemodes returning to free roam go through it too, so every transition passes the same guards. Calling the broadcast directly bypasses them.
 - **Late-join contract**: `GameModeType.is_late_joinable()` (default false, true on `FreeRoamGameMode`). A peer joining mid-race is synced into free roam on the same level instead of the live race — races need mid-match context (start circle, runner state) the joiner has no way to reconstruct, and dropping them straight in crashed the client on a null `event_start_circle`. They still spawn and ride; when the race ends, everyone transitions to free roam and the joiner's same-state transition is a harmless no-op.
 - While a non-late-joinable mode is running, `change_gamemode()` accepts only a return to `FREE_ROAM`. That stops a free-roaming late joiner from driving into an event circle and restarting the mode out from under a live race.
@@ -360,18 +381,24 @@ The same "pause" action triggers different behavior based on `InputState`.
 
 ### Spawn Manager
 
-- `SpawnManager` (`managers/spawn_manager.gd`) - player spawning/despawning
-- RPCs:
-  - `rpc_spawn_player(peer_id, player_def_dict)` - spawn broadcast
-  - `rpc_despawn_player(peer_id)` - despawn broadcast
-  - `respawn_player(peer_id)` - broadcast: every peer sets `rb_do_respawn` on their local player so `do_respawn()` runs everywhere (resets ragdoll/visual state on clients, not just server-synced transform)
-  - `crash_player(peer_id)` - broadcast: sets `rb_do_crash` everywhere; sent by whoever rammed the victim (slide collisions only report what YOU moved into)
-  - `respawn_player_at(peer_id, pos, basis)` - respawn AND store the persistent respawn point
-  - `respawn_player_in_place(peer_id, pos, basis)` - one-shot respawn transform, persistent point untouched (free-roam crash respawns)
-  - `set_respawn_point(peer_id, pos, basis)` / `reset_respawn_point(peer_id)` - update/clear the persistent respawn point without teleporting (race checkpoints / entering free roam)
-  - `request_respawn()` - the one client-callable entry point (pause-menu button). The server derives the target from the RPC sender, so a client can never respawn anyone but itself
-- **Sender guards**: the broadcast RPCs above stay `any_peer` only because the server has to `call_local` them, and each rejects any sender that isn't the server. Note the mechanic this relies on — during `call_local` execution the sender id is the *local* peer's own id, so it reads as 1 on the host and as the client's own id (and is therefore rejected) on a client. Any new client-side caller needs a `request_*` entry point rather than a direct broadcast.
-- Local helpers: `add_player_locally()`, `remove_player_locally()`, `spawn_all_players()`
+`SpawnManager` (`managers/spawn_manager.gd`) owns player spawn/despawn/respawn. Grep `@rpc` there
+for the current surface. The distinctions that aren't obvious from the signatures:
+
+- **Respawn and crash are broadcasts, not server-side teleports.** Every peer sets `rb_do_respawn`
+  / `rb_do_crash` on its local player so the handler runs everywhere — clients have ragdoll and
+  visual state that a synced transform alone won't reset. `crash_player` is sent by whoever rammed
+  the victim, because slide collisions only report what *you* moved into.
+- **Three respawn flavors, differing only in what they do to the persistent point**: teleport and
+  store it, teleport with a one-shot and leave it (free-roam crash), or update/clear it without
+  teleporting (race checkpoints, entering free roam). Picking the wrong one is silent — you find
+  out when a later respawn lands somewhere stale.
+- **`request_respawn()` is the only client-callable entry point.** The server derives the target
+  from the RPC sender, so a client can never respawn anyone but itself.
+- **Sender guards**: broadcasts stay `any_peer` only because the server has to `call_local` them,
+  and each rejects any sender that isn't the server. This relies on a subtle mechanic — during
+  `call_local` the sender id is the *local* peer's own id, so it reads as 1 on the host and as the
+  client's own id (correctly rejected) on a client. **Any new client-side caller needs a
+  `request_*` entry point, never a direct broadcast.**
 
 ### NPC Race Manager
 
@@ -429,53 +456,10 @@ Shared by both NPC managers, implemented on `NPCRiderEntity`. NPCs use a plain `
 
 ### Authority Model: Client-Predicted, Server-Authoritative
 
-```mermaid
-sequenceDiagram
-    participant C as Client (Local)
-    participant S as Server (Host)
-    participant O as Other Clients
-
-    Note over C: Frame N
-    C->>C: Capture input locally
-    C->>C: Apply input (prediction)
-    C->>S: send_input.rpc_id(1, input_state)
-
-    Note over S: Server processes
-    S->>S: Receive input for player
-    S->>S: Apply input to player entity
-    S->>S: Run physics (authoritative)
-
-    Note over S,O: Broadcast state
-    S-->>C: Position/rotation sync
-    S-->>O: Position/rotation sync
-
-    Note over C: Reconciliation
-    C->>C: Compare server state vs prediction
-    C->>C: Correct if mismatch (netfox rollback)
-```
-
-### What Runs Where
-
-```mermaid
-flowchart LR
-    subgraph Client["Client (Each Player)"]
-        IC[InputController]
-        Predict[Local Prediction]
-        Cam[CameraController]
-    end
-
-    subgraph Server["Server (Host)"]
-        MC[MovementController]
-        Physics[Authoritative Physics]
-        Sync[State Broadcast]
-    end
-
-    IC -->|"send_input.rpc_id(1)"| MC
-    IC --> Predict
-    MC --> Physics
-    Physics --> Sync
-    Sync -->|"MultiplayerSynchronizer"| Client
-```
+Each client captures input locally and predicts off it immediately. netfox's
+`RollbackSynchronizer` ships that input to the server, which runs the authoritative physics and
+broadcasts the resulting state properties back; clients resimulate from the corrected state on
+mismatch. There is no hand-written input RPC — netfox owns the whole path.
 
 ### Authority Summary
 
@@ -503,6 +487,9 @@ All modes are **server-authoritative** — the host runs physics, clients predic
 - **WEBRTC** *(default)*: WebRTC peer connections via a custom signaling server (`signal_relay_host`), works for both native and browser clients. Handled by `MultiplayerWebRTC`. See [LobbyGameFlowMP.md](./LobbyGameFlowMP.md)
 - **IP_PORT**: Direct IP/ENet connection on `UtilsConstants.PORT`. Handled by `MultiplayerIPPort`.
   - Fetches public IP via ipify.org API (or private IP in debug)
+
+Like `GameModeType.Kind`, `ConnectionMode` carries entries with no handler behind them. The
+`match` in `connection_manager.gd` is the real list of supported modes, not the enum.
 
 ### RPC Signatures
 
