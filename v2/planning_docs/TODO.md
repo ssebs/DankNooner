@@ -2,6 +2,7 @@
 > **Convention:** `In-Progress 🚨` is the high-level focus; `Tasks 📋` has the details.
 > They're loosely priority-ordered, tails are wishes. Items go stale; verify against code.
 - [In-Progress 🚨](#in-progress-)
+- [Notes 📝](#notes-)
 - [Tasks 📋](#tasks-)
   - [Game-breaking bugs](#game-breaking-bugs)
   - [Gameplay Improvements](#gameplay-improvements)
@@ -24,14 +25,17 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] fix ai slop / limit scope of game / delete old code/files / simplify
-- [ ] fix game breaking bugs
 - [ ] get fun gameplay loop going
-  - [ ] look at what gamemodes i want
-  - [ ] see what i have that works
-  - [ ] see what i can add thats smol & fun
+  - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md)
   - [ ] make tricks + combos easier to do
   - [ ] tricks should feel juicy instead of focusing on realism (to extent)
+- [ ] fix ai slop / limit scope of game / delete old code/files / simplify
+- [ ] fix game breaking bugs
+
+---
+
+## Notes 📝
+> Stuff to move ASAP
 
 ---
 
