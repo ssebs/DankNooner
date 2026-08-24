@@ -111,6 +111,7 @@ Kept small and varied — each targets a different axis:
   - Sticky Tires — tricks hold easier, multiplier climbs faster.
 - **Knockout:**
   - Bat — melee; the activate button swings left/right, knock a rider off their line so they almost crash.
+    - > also, ramming into someone has the same effect 
   - Shorty Shotgun — blasts the rider directly ahead so they crash, Terminator-style fire animation.
   - Oil Slick — banana peel causes person riding over it to crash
 - **Defense:**
