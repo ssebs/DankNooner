@@ -144,6 +144,26 @@ as a level that lists but won't load.
 3. Add entry to `level_name_map` (enum -> localization key)
 4. Add entry to `possible_levels` (enum -> `preload("res://path/to/level.tscn")`)
 
+### Terrain & Roads
+
+Terrain is `zylann.hterrain`; roads are TheDuckCow's `godot-road-generator`. Both are addons and
+both are authored per level as scene nodes — an `HTerrain` node beside a `RoadManager` holding
+`RoadContainer`s of `RoadPoint`s. There is no code that builds either; the level scene *is* the
+data.
+
+This is the third attempt. Hand-built `StaticBody3D` road pieces and Terrain3D both lost.
+
+What the plugins don't give you:
+
+- **Junction routing.** `RoadContainer` links lanes segment-to-segment and never gives an
+  intersection's lanes a `lane_next`, so bots dead-end at every junction. `TrafficRouteGraph`
+  rebuilds those links geometrically — read its header comment.
+- **A road/off-road distinction.** Road mesh and terrain both sit on the default world layer.
+  Surface feel comes from the separately authored unstable-surface layer
+  (see [CrashController](#crashcontroller)), not from being on a `RoadContainer`.
+- **Stability.** Generated lanes are still rough in places; treat lane geometry as suspect before
+  blaming the AI that follows it.
+
 ### Input System
 
 The `InputStateManager` (`managers/input_state_manager.gd`) is a centralized input handler that routes input based on the current game context.
@@ -478,7 +498,8 @@ mismatch. There is no hand-written input RPC — netfox owns the whole path.
 
 ### Terrain
 
-Terrain is `zylann.hterrain`. Its collision is static and identical on every peer, so server-authoritative physics needs nothing special from it. (Terrain3D was removed — it built collision around a single tracked camera, so the server had to force a full-collision mode or remote players fell through the map.)
+Ground collision is static and identical on every peer, so it needs nothing special from the
+netcode — see [Terrain & Roads](#terrain--roads) for why that constraint picked the plugin.
 
 ### Connection Modes
 
