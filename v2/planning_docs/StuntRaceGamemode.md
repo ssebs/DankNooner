@@ -2,7 +2,7 @@
 
 - [Notes](#notes)
 - [MVP](#mvp)
-- [Implementation approach (decided)](#implementation-approach-decided)
+- [Implementation approach](#implementation-approach-idea)
 - [Map design](#map-design)
   - [Ramps \& routing (brainstormed)](#ramps--routing-brainstormed)
 - [Design direction](#design-direction)
@@ -61,7 +61,7 @@ Shotgun, Siphon Hose, Deployable Ramp, Sticky Tires, Armor, Roll Cage); NPC race
 cross-city / open world; and the city aesthetic.
 
 
-## Implementation approach (decided)
+## Implementation approach (idea)
 
 > Code-first, not the half-editor / half-code task-tree.
 
