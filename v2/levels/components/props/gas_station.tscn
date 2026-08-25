@@ -1,0 +1,189 @@
+[gd_scene format=3 uid="uid://i5gn7vx2atly"]
+
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_jbldn"]
+
+[node name="GasStation" type="Node3D" unique_id=1355590988]
+
+[node name="pumps" type="Node3D" parent="." unique_id=623878045]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -8.25)
+
+[node name="pol" parent="pumps" unique_id=1485126779 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -3.25, 2.1, 2.75)
+collision_layer = 3
+width = 0.25
+height = 4.0
+depth = 0.25
+color_preset = 1
+
+[node name="pol2" parent="pumps" unique_id=220745870 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2.75, 2.1, 2.75)
+collision_layer = 3
+width = 0.25
+height = 4.0
+depth = 0.25
+color_preset = 1
+
+[node name="pol3" parent="pumps" unique_id=1661325459 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -3.25, 2.1, -2.25)
+collision_layer = 3
+width = 0.25
+height = 4.0
+depth = 0.25
+color_preset = 1
+
+[node name="pol4" parent="pumps" unique_id=1118005274 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2.75, 2.1, -2.25)
+collision_layer = 3
+width = 0.25
+height = 4.0
+depth = 0.25
+color_preset = 1
+
+[node name="pump" parent="pumps" unique_id=1508973261 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.25, 1.3499999, 2.75)
+collision_layer = 3
+width = 1.5
+height = 2.5
+color_preset = 5
+
+[node name="pump2" parent="pumps" unique_id=766420174 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.25, 1.3499999, -2.25)
+collision_layer = 3
+width = 1.5
+height = 2.5
+color_preset = 5
+
+[node name="pump3" parent="pumps" unique_id=901383815 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.25, 1.3499999, 2.75)
+collision_layer = 3
+width = 1.5
+height = 2.5
+color_preset = 5
+
+[node name="pump4" parent="pumps" unique_id=899689404 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.25, 1.3499999, -2.25)
+collision_layer = 3
+width = 1.5
+height = 2.5
+color_preset = 5
+
+[node name="pump5" parent="pumps" unique_id=959006728 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.75, 1.3499999, 2.75)
+collision_layer = 3
+width = 1.5
+height = 2.5
+color_preset = 5
+
+[node name="pump6" parent="pumps" unique_id=46367108 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.75, 1.3499999, -2.25)
+collision_layer = 3
+width = 1.5
+height = 2.5
+color_preset = 5
+
+[node name="roof" parent="pumps" unique_id=372765366 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 4.25, 0)
+collision_layer = 3
+width = 10.0
+height = 0.5
+depth = 14.0
+color_preset = 5
+
+[node name="mainb" parent="." unique_id=614563674 instance=ExtResource("1_jbldn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 1.5999998, -18)
+collision_layer = 3
+width = 10.0
+height = 3.0
+depth = 4.0
+color_preset = 5
+
+[node name="tallwall" parent="." unique_id=1270526994 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -22, 3, -12)
+collision_layer = 3
+width = 20.0
+height = 6.0
+depth = 0.1
+color_preset = 1
+
+[node name="shortwall" parent="." unique_id=1690930240 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-1, 0, -2.9802322e-08, 0, 1, 0, 2.9802322e-08, 0, -1, -12, 1, -20)
+collision_layer = 3
+width = 20.0
+height = 2.0
+depth = 0.1
+color_preset = 1
+
+[node name="logotop" parent="." unique_id=1297852809 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -2, 4.8, -2)
+collision_layer = 3
+width = 1.5
+height = 1.5
+depth = 1.5
+color_preset = 5
+
+[node name="logopol" parent="." unique_id=1355730409 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -2, 2.1, -2)
+collision_layer = 3
+width = 0.5
+height = 4.0
+depth = 0.5
+color_preset = 1
+
+[node name="ground" parent="." unique_id=1252605649 instance=ExtResource("1_jbldn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.050000012, -8)
+width = 20.0
+height = 0.1
+depth = 12.0
+
+[node name="ground3" parent="." unique_id=1521076604 instance=ExtResource("1_jbldn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -10)
+width = 2.0
+height = 0.1
+depth = 10.0
+
+[node name="ground5" parent="." unique_id=1495072415 instance=ExtResource("1_jbldn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.050000012, -17)
+width = 8.0
+height = 0.1
+depth = 6.0
+
+[node name="ground6" parent="." unique_id=1241011296 instance=ExtResource("1_jbldn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0.050000012, -17)
+width = 12.0
+height = 0.1
+depth = 6.0
+color_preset = 1
+
+[node name="ground7" parent="." unique_id=529837642 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -1, 0.050000012, -17.5)
+width = 5.0
+height = 0.1
+depth = 2.0
+color_preset = 1
+
+[node name="ground8" parent="." unique_id=382477000 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -1, 0.050000012, -2.5)
+width = 5.0
+height = 0.1
+depth = 2.0
+color_preset = 1
+
+[node name="ground4" parent="." unique_id=2125338286 instance=ExtResource("1_jbldn")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -12, 0, -1)
+width = 2.0
+height = 0.1
+depth = 10.0
+
+[node name="ground9" parent="." unique_id=21074715 instance=ExtResource("1_jbldn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0.050000012, -1)
+width = 5.0
+height = 0.1
+depth = 2.0
+color_preset = 1
+
+[node name="ground10" parent="." unique_id=1342043703 instance=ExtResource("1_jbldn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.5, 0.050000012, -1)
+width = 5.0
+height = 0.1
+depth = 2.0
+color_preset = 1
