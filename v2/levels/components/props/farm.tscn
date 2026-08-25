@@ -1,0 +1,88 @@
+[gd_scene format=3 uid="uid://bctraybfcefhl"]
+
+[ext_resource type="PackedScene" uid="uid://b11ak4b3uc6tw" path="res://levels/assets/Farm Buildings Bundle-glb/Big Barn.glb" id="1_n8j2u"]
+[ext_resource type="PackedScene" uid="uid://d1m3ct4lb46e0" path="res://levels/assets/Farm Buildings Bundle-glb/Barn.glb" id="2_lrsao"]
+[ext_resource type="PackedScene" uid="uid://cdusyl3e4lbb" path="res://levels/assets/Farm Buildings Bundle-glb/ChickenCoop.glb" id="3_ead64"]
+[ext_resource type="PackedScene" uid="uid://biin5k0fkdd2l" path="res://entities/npc/npc_animal_entity.tscn" id="4_7lmao"]
+[ext_resource type="Resource" uid="uid://bduhng74bq2px" path="res://resources/npcs/horse_animal_definition.tres" id="5_lkmqu"]
+[ext_resource type="PackedScene" uid="uid://bpe1i6x4dyyau" path="res://levels/assets/Farm Buildings Bundle-glb/Fence-e02PFKKhbr.glb" id="6_mimdj"]
+
+[sub_resource type="Curve3D" id="Curve3D_ythoq"]
+closed = true
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -13.74205, -9.536743e-07, -5.296936, 0, 0, 0, 0, 0, 0, -12.00882, -9.536743e-07, 7.584503, 0, 0, 0, 0, 0, 0, 3.9993134, -9.536743e-07, 8.463898),
+"tilts": PackedFloat32Array(0, 0, 0, 0)
+}
+point_count = 4
+
+[node name="Farm" type="Node3D" unique_id=1668911799]
+
+[node name="Big Barn" parent="." unique_id=261031522 instance=ExtResource("1_n8j2u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.495712, 0.004004, -33.253357)
+
+[node name="Barn" parent="." unique_id=1291990878 instance=ExtResource("2_lrsao")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.9944, 0, -29.427002)
+
+[node name="ChickenCoop" parent="." unique_id=422313652 instance=ExtResource("3_ead64")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.95346, 0.002965, -32.268494)
+
+[node name="Animals" type="Node3D" parent="." unique_id=885275221]
+
+[node name="Path3D" type="Path3D" parent="Animals" unique_id=59212815 groups=["AnimalPaths"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.98027, 9.536743e-07, -23.767822)
+curve = SubResource("Curve3D_ythoq")
+
+[node name="NPCAnimalEntityhorse" parent="Animals/Path3D" unique_id=848725741 instance=ExtResource("4_7lmao")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.4029236, -9.536743e-07, 5.0910034)
+animal_skin_definition = ExtResource("5_lkmqu")
+
+[node name="NPCAnimalEntity2horse" parent="Animals/Path3D" unique_id=699074176 instance=ExtResource("4_7lmao")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.4029236, -9.536743e-07, 0.7438965)
+animal_skin_definition = ExtResource("5_lkmqu")
+
+[node name="Fence" type="Node3D" parent="." unique_id=618636222]
+
+[node name="Fence-e02PFKKhbr12" parent="Fence" unique_id=613142418 instance=ExtResource("6_mimdj")]
+transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, 0.037643433, 0.010823, -17.930847)
+
+[node name="Fence-e02PFKKhbr13" parent="Fence" unique_id=2123565870 instance=ExtResource("6_mimdj")]
+transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, 0.037643433, 0.010823, -29.765503)
+
+[node name="Fence-e02PFKKhbr14" parent="Fence" unique_id=1735737405 instance=ExtResource("6_mimdj")]
+transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, 0.037643433, 0.010823, -41.59439)
+
+[node name="Fence-e02PFKKhbr15" parent="Fence" unique_id=133783773 instance=ExtResource("6_mimdj")]
+transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, 47.901733, 0.010823, -17.930847)
+
+[node name="Fence-e02PFKKhbr16" parent="Fence" unique_id=1307380899 instance=ExtResource("6_mimdj")]
+transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, 47.901733, 0.010823, -29.765503)
+
+[node name="Fence-e02PFKKhbr17" parent="Fence" unique_id=1074196119 instance=ExtResource("6_mimdj")]
+transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, 47.901733, 0.010823, -41.59439)
+
+[node name="Fence-e02PFKKhbr5" parent="Fence" unique_id=1350440288 instance=ExtResource("6_mimdj")]
+transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, 36.106445, 0.010823, -5.727417)
+
+[node name="Fence-e02PFKKhbr6" parent="Fence" unique_id=1188684635 instance=ExtResource("6_mimdj")]
+transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, 23.856445, 0.010823, -5.727417)
+
+[node name="Fence-e02PFKKhbr7" parent="Fence" unique_id=140578449 instance=ExtResource("6_mimdj")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 42.106445, 0.010823, -11.815033)
+
+[node name="Fence-e02PFKKhbr8" parent="Fence" unique_id=1931226550 instance=ExtResource("6_mimdj")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 17.606445, 0.010823, -11.815033)
+
+[node name="Fence-e02PFKKhbr9" parent="Fence" unique_id=635457557 instance=ExtResource("6_mimdj")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 5.6654053, 0.010823, -11.815033)
+
+[node name="Fence-e02PFKKhbr18" parent="Fence" unique_id=873010058 instance=ExtResource("6_mimdj")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 17.751846, 0.010823, -47.702026)
+
+[node name="Fence-e02PFKKhbr22" parent="Fence" unique_id=953264932 instance=ExtResource("6_mimdj")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 29.784988, 0.010823, -47.702026)
+
+[node name="Fence-e02PFKKhbr23" parent="Fence" unique_id=500948870 instance=ExtResource("6_mimdj")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 41.762695, 0.010823, -47.702026)
+
+[node name="Fence-e02PFKKhbr19" parent="Fence" unique_id=897125017 instance=ExtResource("6_mimdj")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 5.8108063, 0.010823, -47.702026)

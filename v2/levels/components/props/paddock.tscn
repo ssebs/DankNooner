@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://dc156vunmu8ky"]
+
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_wdnca"]
+
+[node name="Paddock" type="Node3D" unique_id=1741653985]
+
+[node name="PaddockWall" parent="." unique_id=1485126779 instance=ExtResource("1_wdnca")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3, 12.25)
+width = 12.0
+height = 6.0
+depth = 0.5
+color_preset = 3
+
+[node name="PaddockWall2" parent="." unique_id=550817705 instance=ExtResource("1_wdnca")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3, -12.25)
+width = 6.0
+height = 6.0
+depth = 0.5
+color_preset = 3
+
+[node name="PaddockWall4" parent="." unique_id=782159427 instance=ExtResource("1_wdnca")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3, 0)
+width = 6.0
+height = 6.0
+depth = 0.5
+color_preset = 3
+
+[node name="PaddockWall3" parent="." unique_id=1539747740 instance=ExtResource("1_wdnca")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 3, 0)
+width = 0.5
+height = 6.0
+depth = 24.5
+color_preset = 3
+
+[node name="PaddockWall5" parent="." unique_id=928445619 instance=ExtResource("1_wdnca")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.25, 0.5, 0)
+depth = 22.0
+color_preset = 1
+
+[node name="PaddockRoof" parent="." unique_id=1994073428 instance=ExtResource("1_wdnca")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 6, 0)
+width = 12.0
+height = 0.5
+depth = 25.0
+color_preset = 3
+
+[node name="GrayBox_StaticBody" parent="." unique_id=623006964 instance=ExtResource("1_wdnca")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.797056, 0, 0)
+width = 14.0
+height = 0.1
+depth = 24.0

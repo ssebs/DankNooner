@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://rervqxotioc4"]
+
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_nj8oi"]
+
+[node name="Ramp" type="Node3D" unique_id=1633736762]
+
+[node name="ramp2" parent="." unique_id=1485126779 instance=ExtResource("1_nj8oi")]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 1, 0.19374347, 1.9000015)
+width = 20.0
+height = 0.1
+depth = 2.0
+color_preset = 5
+
+[node name="ramp3" parent="." unique_id=1779167175 instance=ExtResource("1_nj8oi")]
+transform = Transform3D(1, 0, 0, 0, 0.86602545, 0.50000006, 0, -0.50000006, 0.86602545, 1, 0.8937434, 3.7000046)
+width = 20.0
+height = 0.1
+depth = 2.0
+color_preset = 5
+
+[node name="ramp4" parent="." unique_id=1716846430 instance=ExtResource("1_nj8oi")]
+transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.7071068, 0, -0.7071068, 0.70710677, 1, 2.0937433, 5.300003)
+width = 20.0
+height = 0.1
+depth = 2.0
+color_preset = 5
+
+[node name="ramp5" parent="." unique_id=412499474 instance=ExtResource("1_nj8oi")]
+transform = Transform3D(1, 0, 0, 0, 0.49999994, 0.86602545, 0, -0.86602545, 0.49999994, 1, 3.5937433, 6.5000076)
+width = 20.0
+height = 0.1
+depth = 2.0
+color_preset = 5
