@@ -3,6 +3,7 @@
 - [Notes](#notes)
 - [MVP](#mvp)
 - [Implementation approach (idea)](#implementation-approach-idea)
+- [Implementation plan (PM)](#implementation-plan-pm)
 - [Map design](#map-design)
   - [Ramps \& routing (brainstormed)](#ramps--routing-brainstormed)
 - [Design direction](#design-direction)
@@ -63,18 +64,15 @@ cross-city / open world; and the city aesthetic.
 
 ## Implementation approach (idea)
 
-> Code-first, not the half-editor / half-code task-tree.
-
-- **`StuntRaceGameMode` is imperative** — modeled on `FreeRoamGameMode`, not on the
-  tutorial/race task-tree. The leg loop, scoring, and leg-completion logic live in code in
-  `Enter()` / `Update(delta)` / `Exit()`. A gamemode is just a `State` with those three
-  methods.
+- **`StuntRaceGameMode` is imperative** — modeled on `FreeRoamGameMode`. The leg loop, scoring,
+  and leg-completion logic live in code in `Enter()` / `Update(delta)` / `Exit()`. A gamemode is
+  just a `State` with those methods.
 - **Resolve level objects by group lookup**, the way `FreeRoamGameMode` does with
   `EventCircles` — e.g. `get_tree().get_nodes_in_group("stunt_checkpoints")`,
   `"gas_stations"`, `"ramps"`, `"spawns"`. No `@export` NodePath wiring, no
   `GameModeEventDefinition` resources, no injection layer.
-- **Borrow leaf tasks only where they save real work** — `CountdownTask`, `GridSpawnTask`,
-  `RaceTask`. Everything else is plain code. Don't lean on the task framework.
+- **Borrow leaf tasks where they save real work** — `CountdownTask`, `GridSpawnTask`,
+  `RaceTask`. Everything else is plain code.
 - **Spatial props stay in the editor.** Checkpoints, gas-station markers, ramps, spawn
   points are physical positions in the level — placing those in the editor is inherent to a
   3D game. The split is: editor = *where things are*, code = *what the mode does*.
@@ -94,6 +92,169 @@ you always leave with a full bar (per boost = fuel), and nailing the range grant
 (e.g. an extra starting boost segment or a small score bump). Overfilling past the range
 forfeits the bonus — never leaves you under-fueled. One chance is fine when the stakes are
 "bonus or no bonus."
+
+
+## Implementation plan (PM)
+
+> Ordered by dependency, not priority. Each milestone is a roughly self-contained,
+> reviewable chunk (~a session). Milestones above the line are the playable MVP; below is
+> backlog. **The human runs/verifies each milestone before the next starts** — none of this is
+> testable without running the project, and every net-new piece is netfox-synced.
+
+### Prereq — Trace the race gamemode end-to-end
+
+> Read the working race before writing the stunt race. `RoadRaceGameMode` is the closest
+> template; the stunt race reuses its plumbing but swaps the runner/task core for imperative
+> code. Walk the path once, node → node, before touching M0.
+
+- [ ] Follow one race, launch to exit:
+  - **Launch:** free roam → player enters an `EventStartCircle` → confirm HUD →
+    `gamemode_manager.change_gamemode(target, peer_id, circle_path)` (`free_roam_gamemode.gd:169-174`).
+    The single transition entry point for every mode.
+  - **Context hand-off:** `change_gamemode` → StateMachine → race `Enter(ctx)`, where `ctx` is a
+    `GamemodeStateContext` carrying `event_start_circle` (`road_race_gamemode.gd:37-38`).
+  - **Where the race is authored:** runners + tasks + checkpoint markers are **children of the
+    `EventStartCircle` in the level scene** — `_start_circle.get_runners()` pulls them (`:40`),
+    `_find_race_task()` searches under it (`:50,212`).
+  - **Deps injected at runtime:** `_inject_runner_deps()` sets `runner.spawn_manager` /
+    `task_hud` / `audio_manager` then `wire_task_refs()` (`:135-140`) — this is why the leaf tasks
+    can deref `_runner.spawn_manager` / `_runner.task_hud`.
+  - **The loop:** `_start_next_runner()` → `runner.start(lobby_players.keys())` (`:100-108`);
+    `Update(delta)` pumps `_active_runner.update(delta)` server-side each frame (`:55-62`). The
+    runner walks child tasks per peer (grid → countdown → RaceTask).
+  - **Placement source:** `RaceTask` records `completion_time_ms` per racer (`race_task.gd:223`);
+    the gamemode reads it and sorts in `_show_results` (`:251-284`) — placement is derived, not
+    handed out.
+  - **Results:** `ResultsData.create(title, columns, rows)` → `results_hud.rpc_show_results`
+    (`:267,284`); the countdown refreshes rows, then `_return_to_free_roam()` →
+    `change_gamemode(FREE_ROAM)` (`:237-247,356`).
+  - **Crash/respawn:** `_on_player_crashed` → `runner.notify_crashed` → runner emits
+    `respawn_requested` → gamemode waits `_respawn_delay`, then `spawn_manager.respawn_player.rpc`
+    (`:328-338`).
+  - **Where the gamemode node lives:** the race `State` sits under `GamemodeManager`'s
+    StateMachine in `main_game.tscn`, with `@export` refs to the HUDs + managers (`:7-13`).
+- [ ] Note the deltas the stunt race changes vs. this template:
+  - **Entry point (decide first):** launch via an `EventStartCircle` (gives a free
+    `ctx.event_start_circle`) or straight from the lobby via `start_game(level, STUNT_RACE)`. If
+    the latter, `Enter()` must **not** deref `event_start_circle` the way the race modes do
+    (`:38-40`) — resolve everything by group lookup instead.
+  - **Runner/tasks → imperative:** no `get_runners()`, no `RaceTask`; the leg tracker, countdown,
+    and grid spawn are inline code (see M0). The leaf tasks are runner-coupled, so they aren't
+    dropped in standalone.
+  - **Reused verbatim:** the `player_crashed` / `player_disconnected` / `player_latejoined` signal
+    wiring, the `_respawn_delay` timer pattern, and `ResultsData` → `results_hud` all carry over
+    unchanged.
+
+### M0 — Gamemode spine (code-only, humans-only, existing level)
+
+> The proof-of-loop slice. No new level, no items, knockouts stubbed. Runs on an existing
+> racetrack level to prove the leg loop + scoring before building the heavy subsystems.
+
+#### Registration
+- [ ] Add `@export var stunt_race_mode` on `GamemodeManager` + one `_gamemode_map` line
+  - `STUNT_RACE` already reserved in the `Kind` enum — no enum edit
+  - Add the state node under the gamemode state machine in `main_game.tscn`
+#### `StuntRaceGameMode` state
+- [ ] New imperative `GameModeType`, modeled on `free_roam_gamemode.gd` (~244 lines)
+  - Leg loop lives in `Enter()` / `Update(delta)` / `Exit()`
+  - Resolve level objects by group lookup (`stunt_checkpoints`, `gas_stations`, `spawns`) — no `@export` NodePaths
+  - Register the group names in `utils/constants.gd`, don't hardcode strings
+- [ ] Leg = station-to-station; arriving at the next `gas_stations` marker completes the leg
+  - **Don't borrow `RaceTask`** — it's runner-coupled (derefs `_runner.task_hud`/`spawn_manager`),
+    its checkpoints are editor `@export`s (group lookup can't fill them), and it's lap-shaped, not
+    A→B. Write a ~30-line imperative leg tracker: connect the destination `CheckPointMarker.entered`,
+    record arrival order → placement.
+  - **Inline countdown + grid spawn, don't borrow the tasks** — both deref `_runner`; the grid-slot
+    spawn is already inlined in `free_roam_gamemode.gd:64-77`, and countdown is ~10 lines.
+  - `gas_stations` group is **unordered** — add an explicit leg order (an index `@export` on the
+    marker, or sort by node name), or legs run in arbitrary sequence.
+  - Chain legs imperatively; carry running totals across legs in the state
+- [ ] Boost = fuel top-off on leg start — **not a bare assignment.** `boost_amount` is a netfox
+  state property written in the rollback tick (`boost_controller.gd:24,71`); assigning it from
+  `Enter()`/`Update()` gets overwritten by history re-apply. And `do_respawn`→`do_reset()`
+  deliberately preserves `boost_amount` (`:88-94`), so the leg-start respawn won't refill it.
+  - Add a small `rb_refuel` discrete action (flag + handler setting `boost_amount = BOOST_SEGMENTS`
+    in the rollback tick), following the `rb_do_respawn` pattern
+  - Fill-up minigame stubbed here: "full bar, no bonus"
+#### Scoring aggregator
+- [ ] Sum the 3 axes per leg, cumulative across legs: Placement + Style + Knockouts
+  - Placement from the leg tracker's arrival order; Style from `TrickManager.get_score(peer_id)`;
+    Knockouts = 0 for now
+  - Style: `reset_peer(peer_id)` at leg start, `get_score` at leg end (`trick_manager.gd:91,96`).
+    Caveat: banking is on combo-**end**, so a combo still running as you cross the line isn't
+    counted yet; and `reset_peer` auto-fires on `player_spawned` — watch the reset timing.
+  - Decide the running-total data shape (per-peer struct on the gamemode state)
+  - Open question to resolve here: **axis weighting** in the total (see Open questions)
+- [ ] Feed `ResultsHUD` the new columns — **no HUD code change needed.** It's already
+  column-driven: build a `ResultsData.create(title, ["Placement","Style","Knockouts","Total"], rows)`
+  and the existing `_rebuild_rows` renders it (`results_hud.gd:71-78`, `results_data.gd`).
+  - Reuse the row-refresh pattern (`rpc_update_rows`) from the race gamemodes
+- **Verify:** human plays N legs, per-leg + cumulative scores show correct columns, top-off works
+
+### M1 — Blockout level (editor work + group conventions)
+
+> Graybox only — flat void / synthwave grid. Mostly the human's editor work; my part is the
+> group-marker conventions and `LevelManager` registration.
+
+- [ ] Graybox roads: straight + curvy segments (reuse `graybox` / `kenney_prototype-textures`)
+- [ ] Station markers in the `gas_stations` group, `stunt_checkpoints`, `spawns`
+- [ ] One air-line vs. ground-line junction with a blockout kicker (equal distance, no shortcut)
+  - Jerry Can pickup slot sits at the ramp apex (wired in M3)
+- [ ] Register in `LevelManager`: `LevelName` enum + `possible_levels` + `level_name_map`
+  - Editor validator on `MainGame` catches enum/dict desync
+- **Verify:** level loads from lobby, M0 loop runs on it end-to-end
+
+### M2 — Knockouts via ramming + fast respawn
+
+> Makes the third scoring axis live without the item roster.
+
+- [ ] Ramming knockout reuses the crash broadcast (`SpawnManager.crash_player`, `:88-91`)
+  - **Gap:** `crash_player` carries only the *victim* id, and the ram→crash path that exists today
+    is traffic→player (`NPCTrafficState`) — player-vs-player ram **detection** may not exist yet.
+    Verify a player detects ramming another player; if not, add that detection.
+  - Attribution needs the *aggressor* id too — the rammer reports itself (it moved into the victim);
+    thread that id through so the knockout can be credited
+- [ ] Fast respawn: short recovery so a hit bounces you back into the leg — reuse the gamemode's
+  own `_respawn_delay` timer pattern (`road_race_gamemode.gd:335-338`), tuned shorter
+- [ ] Credit the knockout to the aggressor → feeds the Knockouts axis in M0's aggregator
+- **Verify:** ramming crashes the victim, aggressor's Knockout count increments, respawn is quick
+
+### M3 — Item system + starter set
+
+> The heaviest net-new MVP piece. Pickup + hold-one + single activate, all netfox-synced.
+
+#### System
+- [ ] On-course pickup entity (spawns at level markers, e.g. ramp apex)
+- [ ] Hold-one inventory slot on `PlayerEntity`, single activate button
+  - Every simulation-affecting var must be a netfox state property (see rollback rule)
+  - Client-callable activate needs a `request_*` entry point deriving target from sender
+#### Starter set (non-directional)
+- [ ] Jerry Can — instant partial boost refill (the apex on-course pickup)
+- [ ] Nitrous — max the boost meter and burn it now
+- [ ] Oil Slick — drop-behind hazard *entity*; crashes a rider who rides over it
+  - New networked entity; model contact-crash on the animal/killbox pattern
+- **Verify:** pickup → hold → activate works for all three in multiplayer, no desync
+
+### M4 — Fill-up minigame
+
+> Replaces the M0 stub. Self-contained local minigame, runs outside the rollback sim.
+
+- [ ] Local `CanvasLayer`, top-down angle, mouse-aim nozzle, click-and-hold to fill
+- [ ] Runs locally while stopped at a station; reports result to server
+  - Sets a **bonus**, never pass/fail — always leave with a full bar
+  - Nailing the target range grants the bonus; overfilling forfeits it
+  - Open question: bonus flavor (extra starting boost segment vs. score bump) + range tuning
+- **Verify:** minigame runs at a station, bonus applies on success, never leaves you under-fueled
+
+### Post-MVP backlog
+
+> Explicitly out of MVP; each is its own effort.
+
+- [ ] Rest of the item roster: Bat, Shorty Shotgun, Siphon Hose, Deployable Ramp, Sticky Tires, Armor, Roll Cage
+  - Needs speed wobbles to exist (Bat / ramming)
+- [ ] NPC racers — re-add dormant racing AI (`npc_race_state` / `npc_race_manager`) after the human loop works
+- [ ] Cross-city / open-world level structure (islands, ~9 stations / 3 circuits)
+- [ ] City aesthetic — environmental ramps, buildings, vistas, lakes
 
 
 ## Map design
