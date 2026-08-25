@@ -2,7 +2,7 @@
 
 - [Notes](#notes)
 - [MVP](#mvp)
-- [Implementation approach](#implementation-approach-idea)
+- [Implementation approach (idea)](#implementation-approach-idea)
 - [Map design](#map-design)
   - [Ramps \& routing (brainstormed)](#ramps--routing-brainstormed)
 - [Design direction](#design-direction)
@@ -193,17 +193,19 @@ targets a different axis:
   - Oil Slick — banana peel causes person riding over it to crash. *(MVP starter set)*
   - Bat — melee; the activate button swings left/right, knock a rider off their line so they almost crash.
     - > also, ramming into someone has the same effect
+    - causes speed wobbles
   - Shorty Shotgun — blasts the rider directly ahead so they crash, Terminator-style fire animation.
+  - Call the cops - same as blue shell
 - **Defense:**
   - Armor — absorbs one hit (knockout, shotgun blast, or oil-slick crash), then breaks.
   - Roll Cage — your next crash doesn't void the combo you were building, then breaks.
 - **Speed:**
-  - Nitrous — boost burst that does *not* count against your bar. *(MVP starter set)*
+  - Nitrous — Maxes out boost meter and uses it now *(MVP starter set)* 
 
 > **Dependency:** knockout items (and ramming) need **fast respawn** — getting hit should bounce
 > you back into the leg quickly (short recovery, keep placement stakes without a dead time-out).
 > All items use the single activate button, so directional ones (Bat) resolve the direction
-> themselves.
+> themselves. Needs speed wobbles to be a thing too
 
 ### Open questions
 - Match structure: how the three axes are dealt per leg, and how they're weighted against each
