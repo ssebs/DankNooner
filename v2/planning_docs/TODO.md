@@ -37,6 +37,9 @@
 ## Notes 📝
 > Stuff to move ASAP
 
+- add speed wobbles
+- run from cops mode
+  - like stunt race gamemode but with gas station pit stops
 ---
 
 ## Tasks 📋
