@@ -26,7 +26,7 @@
 > Don't forget, have fun :D
 
 - [ ] get fun gameplay loop going
-  - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md)
+  - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [ ] make tricks + combos easier to do
   - [ ] tricks should feel juicy instead of focusing on realism (to extent)
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
