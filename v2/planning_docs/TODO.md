@@ -36,7 +36,7 @@
 
 ## Notes 📝
 > Stuff to move ASAP
-
+- should not be able to stoppie when trying to do a burnout + when steering
 - add speed wobbles
 - run from cops mode
   - like stunt race gamemode but with gas station pit stops
