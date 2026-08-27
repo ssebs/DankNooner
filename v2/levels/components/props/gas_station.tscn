@@ -98,9 +98,9 @@ depth = 4.0
 color_preset = 5
 
 [node name="tallwall" parent="." unique_id=1270526994 instance=ExtResource("1_jbldn")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -22, 3, -12)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -22, 3, -11)
 collision_layer = 3
-width = 20.0
+width = 18.0
 height = 6.0
 depth = 0.1
 color_preset = 1
