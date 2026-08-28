@@ -24,6 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://it7myerjmp0g" path="res://player/bikes/scenes/sport_bike.tscn" id="25_430hl"]
 [ext_resource type="Texture2D" uid="uid://bqogsjgrlr3ri" path="res://levels/assets/props/tree_brown.png" id="25_pls18"]
 [ext_resource type="Texture2D" uid="uid://csnqvxweh4an3" path="res://levels/assets/props/tree_green.png" id="26_grj8g"]
+[ext_resource type="PackedScene" uid="uid://bgnt3a0pepkxx" path="res://levels/components/props/business_1.tscn" id="26_pls18"]
 [ext_resource type="PackedScene" uid="uid://ddiynv4dy4x5n" path="res://levels/assets/map_terrain_mine/StuntCity.glb" id="27_grj8g"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_ercdn"]
@@ -135,6 +136,8 @@ traffic_settings = ExtResource("1_trfst")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=756147242]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -94, 38, 246)
+visible = false
 occluder = ExtResource("20_a57fq")
 
 [node name="NPCNavRegion" type="NavigationRegion3D" parent="." unique_id=1990556521]
@@ -554,7 +557,7 @@ edge_rp_target_dirs = Array[int]([0, -1, 0])
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -237, 0, 39)
 
 [node name="GasStation2" parent="pt1 props" unique_id=1635353995 instance=ExtResource("7_7qjpf")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -144, 0.05, 176)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -144, 0.05, 48)
 
 [node name="SedanCar" parent="pt1 props" unique_id=1065239879 instance=ExtResource("22_rl138")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -122, 0.028337456, 137.75)
@@ -735,6 +738,21 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -48,
 multimesh = SubResource("MultiMesh_430hl")
 
 [node name="tree" parent="Trees" unique_id=1744448138 instance=ExtResource("24_rl138")]
+
+[node name="Business1" parent="." unique_id=319494185 instance=ExtResource("26_pls18")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -48, 0.024999648, 48)
+
+[node name="Business2" parent="." unique_id=13243821 instance=ExtResource("26_pls18")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -80, 0.024999648, 48)
+
+[node name="Business4" parent="." unique_id=1319928004 instance=ExtResource("26_pls18")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -112, 0.024999648, 48)
+
+[node name="Business3" parent="." unique_id=867551026 instance=ExtResource("26_pls18")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -144, 0.024999648, 176)
+
+[node name="Business5" parent="." unique_id=960392865 instance=ExtResource("26_pls18")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -144, 0.024999648, 80)
 
 [editable path="StuntCity"]
 [editable path="Trees/tree"]
