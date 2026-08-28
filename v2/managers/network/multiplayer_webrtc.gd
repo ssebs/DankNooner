@@ -79,15 +79,24 @@ func _dbg(msg: String) -> void:
 
 ## Connects to the remote signaling server as host and creates a lobby.
 ## Returns the WebRTCMultiplayerPeer once ready.
-func start_server() -> MultiplayerPeer:
+func start_server(solo: bool = false) -> MultiplayerPeer:
 	_is_server = true
 	_peer_ready = false
 	_setup_in_progress = true
 	_lobby_code = ""
-	_ws = WebSocketPeer.new()
 	_rtc_mp = WebRTCMultiplayerPeer.new()
 	_ws_old_state = WebSocketPeer.STATE_CLOSED
 
+	# Solo / free roam: nobody can join, so skip signaling entirely and host a
+	# local 1-peer server. No lobby code, so the game still starts if signal is down.
+	if solo:
+		_ws = null
+		_rtc_mp.create_server()
+		_peer_ready = true
+		_setup_in_progress = false
+		return _rtc_mp
+
+	_ws = WebSocketPeer.new()
 	_ws.connect_to_url(signaling_url)
 
 	var start_time := Time.get_ticks_msec()

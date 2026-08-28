@@ -39,7 +39,7 @@ func _ready():
 func _process(_delta: float):
 	if Engine.is_editor_hint():
 		return
-	if !multiplayer.is_server():
+	if multiplayer.multiplayer_peer == null or !multiplayer.is_server():
 		return
 
 	for peer_id in _peer_states:
