@@ -12,7 +12,6 @@
 [ext_resource type="Script" uid="uid://difs1qg4mpcpw" path="res://addons/road-generator/nodes/road_point.gd" id="8_ercdn"]
 [ext_resource type="PackedScene" uid="uid://bctraybfcefhl" path="res://levels/components/props/farm.tscn" id="9_dmdsq"]
 [ext_resource type="PackedScene" uid="uid://dfggtpn3gyrn0" path="res://addons/road-generator/custom_containers/3way_2x2.tscn" id="13_7qjpf"]
-[ext_resource type="Material" uid="uid://dpashsuk5lr4x" path="res://addons/road-generator/resources/road_texture.material" id="14_185dl"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="18_dc022"]
 [ext_resource type="ArrayOccluder3D" uid="uid://dtiwh8mj1id14" path="res://levels/racetracks/stunt_track_01/stunt_track_01.occ" id="20_a57fq"]
 [ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.tscn" id="22_eair3"]
@@ -208,20 +207,13 @@ lanes = Array[int]([2, 4, 4, 2])
 next_mag = 3.31814
 prior_pt_init = NodePath("../RP_005")
 
-[node name="3way_2x2" type="Node3D" parent="RoadManager" unique_id=1493543485 node_paths=PackedStringArray("material_top_meshes") instance=ExtResource("13_7qjpf")]
+[node name="3way_2x2" parent="RoadManager" unique_id=1493543485 instance=ExtResource("13_7qjpf")]
 transform = Transform3D(-0.9997938, 1.7267352e-17, 0.020305343, 1.7270912e-17, 1, 0, -0.020305343, 3.506918e-19, -0.9997938, -179.06104, 0.25, 401.78107)
-script = ExtResource("7_rmar3")
-create_geo = false
-material_resource = ExtResource("14_185dl")
-material_top_meshes = [NodePath("3way_2x3/3way_2x2")]
-use_lowpoly_preview = true
 generate_ai_lanes = true
 ai_lane_group = "road_lanes"
 edge_containers = Array[NodePath]([NodePath("../Road_001"), NodePath("../Road_003"), NodePath("../Road_002")])
 edge_rp_targets = Array[NodePath]([NodePath("RP_007"), NodePath("RP_005"), NodePath("RP_006")])
 edge_rp_target_dirs = Array[int]([0, 1, 0])
-edge_rp_locals = Array[NodePath]([NodePath("RP_001"), NodePath("RP_002"), NodePath("RP_003")])
-edge_rp_local_dirs = Array[int]([1, 0, 1])
 
 [node name="Road_003" type="Node3D" parent="RoadManager" unique_id=1392201421]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -174.14287, 0, 358.93384)
@@ -304,7 +296,7 @@ prior_pt_init = NodePath("../RP_008")
 next_pt_init = NodePath("../RP_006")
 
 [node name="RP_008" type="Node3D" parent="RoadManager/Road_003" unique_id=1694379460]
-transform = Transform3D(0.040152438, 0, -0.99919355, 0, 1, 0, 0.99919355, 0, 0.040152438, 140.08676, 0.24999237, -335.95386)
+transform = Transform3D(0.040152438, 0, -0.99919355, 0, 1, 0, 0.99919355, 0, 0.040152438, 140.08676, 0.24999237, -338.70386)
 script = ExtResource("8_ercdn")
 traffic_dir = Array[int]([2, 2, 1, 1])
 lanes = Array[int]([2, 4, 4, 2])
