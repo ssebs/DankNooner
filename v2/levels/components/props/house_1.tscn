@@ -193,14 +193,12 @@ color_preset = 5
 
 [node name="driveway" parent="." unique_id=210000026 instance=ExtResource("1_3mdmw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.07499991, 9.5)
-collision_layer = 3
 width = 5.0
 height = 0.12
 depth = 13.0
 
 [node name="driveway2" parent="." unique_id=1621482511 instance=ExtResource("1_3mdmw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.07499991, 6.5)
-collision_layer = 3
 width = 8.0
 height = 0.12
 depth = 2.0
@@ -263,7 +261,6 @@ color_preset = 6
 
 [node name="sidewalk_front" parent="." unique_id=210000034 instance=ExtResource("1_3mdmw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07499999, 14)
-collision_layer = 3
 width = 32.0
 height = 0.1
 depth = 4.0
