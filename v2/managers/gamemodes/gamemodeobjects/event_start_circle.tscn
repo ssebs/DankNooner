@@ -1,11 +1,10 @@
 [gd_scene format=3 uid="uid://hxxsuaaohfd7"]
 
 [ext_resource type="Script" uid="uid://0i4uny3m27jm" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.gd" id="1_3ysdx"]
-[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_mvmlf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2lumj"]
 transparency = 1
-albedo_color = Color(0.38326755, 0.99332047, 1.4369954, 0.10980392)
+albedo_color = Color(1.4148117, 0.4498188, 1.3648983, 0.15686275)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_2lumj"]
 material = SubResource("StandardMaterial3D_2lumj")
@@ -28,13 +27,8 @@ script = ExtResource("1_3ysdx")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0499997, 0)
 mesh = SubResource("CylinderMesh_2lumj")
 
-[node name="Floor" parent="." unique_id=1485126779 instance=ExtResource("1_mvmlf")]
-width = 12.0
-height = 0.1
-depth = 12.0
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=703346514]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_3ysdx")
 
 [node name="Label3D" type="Label3D" parent="." unique_id=2069409638]

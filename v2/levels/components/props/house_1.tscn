@@ -13,57 +13,64 @@ color_preset = 2
 [node name="foundation" parent="." unique_id=210000001 instance=ExtResource("1_3mdmw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 collision_layer = 3
+shape_mode = 1
 width = 13.0
-height = 0.2
+height = 11.0
 depth = 11.0
 color_preset = 1
 
 [node name="wall_back" parent="." unique_id=210000002 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.05, -5)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 2.05, -5)
 collision_layer = 3
+shape_mode = 1
 width = 12.0
 height = 4.0
-depth = 0.3
+depth = 4.0
 color_preset = 1
 
 [node name="wall_left" parent="." unique_id=210000003 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.05, 0)
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -6, 2.05, 0)
 collision_layer = 3
-width = 0.3
+shape_mode = 1
+width = 4.0
 height = 4.0
 depth = 10.0
 color_preset = 1
 
 [node name="wall_right" parent="." unique_id=210000004 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.05, 0)
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 6, 2.05, 0)
 collision_layer = 3
-width = 0.3
+shape_mode = 1
+width = 4.0
 height = 4.0
 depth = 10.0
 color_preset = 1
 
 [node name="wall_front_left" parent="." unique_id=210000005 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 2.05, 5)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -3.5, 2.05, 5)
 collision_layer = 3
+shape_mode = 1
 width = 5.0
 height = 4.0
-depth = 0.3
+depth = 4.0
 color_preset = 1
 
 [node name="wall_front_right" parent="." unique_id=210000006 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.05, 5)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 3.5, 2.05, 5)
 collision_layer = 3
+shape_mode = 1
 width = 5.0
 height = 4.0
-depth = 0.3
+depth = 4.0
 color_preset = 1
 
 [node name="door_lintel" parent="." unique_id=210000007 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, 5)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 3.3, 5)
 collision_layer = 3
+shape_mode = 1
 width = 2.0
 height = 1.5
-depth = 0.3
+depth = 1.5
 color_preset = 1
 
 [node name="door" parent="." unique_id=210000008 instance=ExtResource("1_3mdmw")]
@@ -99,35 +106,39 @@ depth = 0.8
 color_preset = 1
 
 [node name="gable_front_right" parent="." unique_id=210000012 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(0.923077, 0.384615, 0, -0.384615, 0.923077, 0, 0, 0, 1, 2.423, 3.89, 4.934026)
+transform = Transform3D(0.9230773, 3.3800426e-08, -0.38461506, -0.38461512, 1.2284444e-07, -0.92307717, -3.5527137e-15, 0.99999994, 1.3113417e-07, 2.423, 3.89, 4.934026)
 collision_layer = 3
+shape_mode = 1
 width = 6.5
 height = 3.0
-depth = 0.3
+depth = 3.0
 color_preset = 1
 
 [node name="gable_front_left" parent="." unique_id=210000013 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(0.923077, -0.384615, 0, 0.384615, 0.923077, 0, 0, 0, 1, -2.423, 3.89, 4.934026)
+transform = Transform3D(0.9230773, -3.3800426e-08, 0.38461506, 0.38461512, 1.2284444e-07, -0.92307717, 3.5527137e-15, 0.99999994, 1.3113417e-07, -2.423, 3.89, 4.934026)
 collision_layer = 3
+shape_mode = 1
 width = 6.5
 height = 3.0
-depth = 0.3
+depth = 3.0
 color_preset = 1
 
 [node name="gable_back_right" parent="." unique_id=210000014 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(0.923077, 0.384615, 0, -0.384615, 0.923077, 0, 0, 0, 1, 2.423, 3.89, -4.9755287)
+transform = Transform3D(0.9230771, -2.9802322e-08, 0.38461506, -0.38461506, -2.9802322e-08, 0.9230771, 0, -0.99999994, -4.371139e-08, 2.423, 3.89, -4.9755287)
 collision_layer = 3
+shape_mode = 1
 width = 6.5
 height = 3.0
-depth = 0.3
+depth = 3.0
 color_preset = 1
 
 [node name="gable_back_left" parent="." unique_id=210000015 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(0.923077, -0.384615, 0, 0.384615, 0.923077, 0, 0, 0, 1, -2.423, 3.89, -4.9755287)
+transform = Transform3D(0.9230771, 2.9802322e-08, -0.38461506, 0.38461506, -2.9802322e-08, 0.9230771, 0, -0.99999994, -4.371139e-08, -2.423, 3.89, -4.9755287)
 collision_layer = 3
+shape_mode = 1
 width = 6.5
 height = 3.0
-depth = 0.3
+depth = 3.0
 color_preset = 1
 
 [node name="garage_foundation" parent="." unique_id=210000018 instance=ExtResource("1_3mdmw")]
@@ -139,49 +150,55 @@ depth = 6.0
 color_preset = 1
 
 [node name="garage_wall_back" parent="." unique_id=210000019 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 1.8, -3)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 9, 1.8, -3)
 collision_layer = 3
+shape_mode = 1
 width = 6.0
 height = 3.5
-depth = 0.3
+depth = 3.5
 color_preset = 1
 
 [node name="garage_wall_right" parent="." unique_id=210000020 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.8, 0)
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 12, 1.8, 0)
 collision_layer = 3
-width = 0.3
+shape_mode = 1
+width = 3.5
 height = 3.5
 depth = 6.0
 color_preset = 1
 
 [node name="garage_front_left" parent="." unique_id=210000021 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 1.8, 3)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 6.5, 1.8, 3)
 collision_layer = 3
+shape_mode = 1
 height = 3.5
-depth = 0.3
+depth = 3.5
 color_preset = 1
 
 [node name="garage_front_right" parent="." unique_id=210000022 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 1.8, 3)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 11.5, 1.8, 3)
 collision_layer = 3
+shape_mode = 1
 height = 3.5
-depth = 0.3
+depth = 3.5
 color_preset = 1
 
 [node name="garage_door_header" parent="." unique_id=210000023 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3.2, 3)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 9, 3.2, 3)
 collision_layer = 3
+shape_mode = 1
 width = 4.0
 height = 0.7
-depth = 0.3
+depth = 0.7
 color_preset = 1
 
 [node name="garage_door" parent="." unique_id=210000024 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 1.4, 3)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 9, 1.5036317, 3)
 collision_layer = 3
-width = 3.8
-height = 2.7
-depth = 0.15
+shape_mode = 1
+width = 4.0
+height = 3.0
+depth = 2.7
 
 [node name="garage_roof" parent="." unique_id=210000025 instance=ExtResource("1_3mdmw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3.7, 0)
@@ -192,20 +209,21 @@ depth = 6.4
 color_preset = 5
 
 [node name="driveway" parent="." unique_id=210000026 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.07499991, 9.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.049999833, 9.5)
+shape_mode = 1
 width = 5.0
 height = 0.12
 depth = 13.0
 
 [node name="driveway2" parent="." unique_id=1621482511 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.07499991, 6.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.049999833, 6.5)
+shape_mode = 1
 width = 8.0
 height = 0.12
 depth = 2.0
 
 [node name="fence_back" parent="." unique_id=210000027 instance=ExtResource("1_3mdmw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6249999, -16)
-collision_layer = 3
 width = 32.0
 height = 1.2
 depth = 0.15
@@ -213,7 +231,6 @@ color_preset = 6
 
 [node name="fence_left" parent="." unique_id=210000028 instance=ExtResource("1_3mdmw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0.625, -2)
-collision_layer = 3
 width = 0.15
 height = 1.2
 depth = 28.0
@@ -221,7 +238,6 @@ color_preset = 6
 
 [node name="fence_left2" parent="." unique_id=1035061368 instance=ExtResource("1_3mdmw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0.625, -2)
-collision_layer = 3
 width = 0.15
 height = 1.2
 depth = 28.0
@@ -229,7 +245,6 @@ color_preset = 6
 
 [node name="fence_front_left" parent="." unique_id=210000030 instance=ExtResource("1_3mdmw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.7249998, 12)
-collision_layer = 3
 width = 21.0
 height = 1.2
 depth = 0.15
@@ -237,7 +252,6 @@ color_preset = 6
 
 [node name="fence_front_right" parent="." unique_id=210000031 instance=ExtResource("1_3mdmw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0.7249998, 12)
-collision_layer = 3
 width = 3.0
 height = 1.2
 depth = 0.15
