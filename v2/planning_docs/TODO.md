@@ -213,6 +213,8 @@
 
 ## Done ✅
 
+- [x] Cannot start game if the webrtc signal server is down.
+
 - [x] work on todos
   - [x] organize todo file 
     - [x] fix headers

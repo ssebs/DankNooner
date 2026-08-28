@@ -216,7 +216,7 @@ func set_single_or_multiplayer_ui():
 					connection_manager.connection_mode = ConnectionManager.ConnectionMode.WEBRTC
 				else:
 					connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
-				await connection_manager.start_server()
+				await connection_manager.start_server(true)
 			level_select_panel.grab_start_focus()
 		_:
 			singleplayer_ui.hide()

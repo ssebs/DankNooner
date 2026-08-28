@@ -29,14 +29,19 @@ var _enet_connected_callable: Callable
 
 #region Public API
 ## Starts the ENet server and listens for connections.
-func start_server():
+func start_server(solo: bool = false):
 	var handler = _get_handler()
-	var peer: MultiplayerPeer = await handler.start_server()
+	var peer: MultiplayerPeer = await handler.start_server(solo)
 	handler.connection_failed.connect(_on_handler_connection_failed)
 	conn_addr = handler.get_addr()
 
 	if peer == null:
 		DebugUtils.DebugErrMsg("failed to create server")
+		if handler.connection_failed.is_connected(_on_handler_connection_failed):
+			handler.connection_failed.disconnect(_on_handler_connection_failed)
+		handler.stop_server()
+		# Reset back to the pre-host state so the lobby toasts + returns to the play menu.
+		client_connection_failed.emit("Could not create server")
 		return
 
 	multiplayer.multiplayer_peer = peer

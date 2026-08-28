@@ -8,7 +8,7 @@ var ip_addr: String = "0.0.0.0"
 
 ## Creates and returns an ENet server peer on UtilsConstants.PORT.
 ## Emits server_started with the public IP after peer is created.
-func start_server() -> ENetMultiplayerPeer:
+func start_server(_solo: bool = false) -> ENetMultiplayerPeer:
 	var peer = ENetMultiplayerPeer.new()
 	var err = peer.create_server(UtilsConstants.PORT)
 	if err != OK:
