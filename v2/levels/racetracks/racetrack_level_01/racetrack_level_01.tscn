@@ -15,6 +15,7 @@
 [ext_resource type="Script" uid="uid://cpdxy3nxph3x0" path="res://managers/gamemodes/tasks/sfx_task.gd" id="12_qeuom"]
 [ext_resource type="Script" uid="uid://bk8siml2v41d1" path="res://managers/gamemodes/tasks/race_task.gd" id="13_xcb1u"]
 [ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="14_hyio3"]
+[ext_resource type="Material" uid="uid://bbd265hdx34nq" path="res://levels/assets/map_terrain_mine/road_material.tres" id="20_5ryor"]
 [ext_resource type="Script" uid="uid://bxp3i4cnonh8y" path="res://addons/road-generator/nodes/road_manager.gd" id="22_idsao"]
 [ext_resource type="Script" uid="uid://cph7euje06kel" path="res://addons/road-generator/nodes/road_container.gd" id="23_ichjr"]
 [ext_resource type="Texture2D" uid="uid://cjrex0qopeses" path="res://levels/assets/graybox/lightgray.png" id="24_r8gbb"]
@@ -99,13 +100,6 @@ _data = {
 "tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 }
 point_count = 16
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6j553"]
-albedo_texture = ExtResource("28_5ryor")
-uv1_scale = Vector3(0.5, 0.5, 0.5)
-uv1_offset = Vector3(0, 0.25, 0)
-uv1_triplanar = true
-texture_filter = 4
 
 [sub_resource type="Resource" id="Resource_ckww3"]
 script = ExtResource("31_5ryor")
@@ -2177,7 +2171,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.049999952, 3.25)
 
 [node name="RoadManager" type="Node3D" parent="." unique_id=1234800341]
 script = ExtResource("22_idsao")
-material_resource = SubResource("StandardMaterial3D_6j553")
+material_resource = ExtResource("20_5ryor")
 metadata/_custom_type_script = "uid://bxp3i4cnonh8y"
 
 [node name="Road_001" type="Node3D" parent="RoadManager" unique_id=904810350]
