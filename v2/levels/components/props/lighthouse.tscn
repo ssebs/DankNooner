@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://1qii5r1owvt1"]
+
+[ext_resource type="PackedScene" uid="uid://ba4yrkdgcqwny" path="res://levels/assets/props/Lighthouse by Poly by Google - 7H8is9jrGeB.glb" id="1_lebf8"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7jvdf"]
+radius = 4.0
+height = 20.0
+
+[node name="Lighthouse" type="StaticBody3D" unique_id=199534414]
+collision_layer = 3
+
+[node name="Lighthouse by Poly by Google - 7H8is9jrGeB" parent="." unique_id=1816492088 instance=ExtResource("1_lebf8")]
+transform = Transform3D(0.571, 0, 0, 0, 0.571, 0, 0, 0, 0.571, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=596637313]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
+shape = SubResource("CapsuleShape3D_7jvdf")

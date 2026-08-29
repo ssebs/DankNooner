@@ -40,8 +40,8 @@ var level_name_map: Dictionary[LevelName, String] = {
 ## There are in order for the option btn ##
 var levels_names_in_level_select: Array[String] = [
 	"LEVEL_SELECT_LABEL", # leave as first option
-	"LEVEL_RACETRACK_01",
 	"LEVEL_STUNTTRACK_01",
+	"LEVEL_RACETRACK_01",
 	"LEVEL_TEST_CITY_01",
 	"LEVEL_TEST_1_LABEL",
 ]
@@ -50,6 +50,7 @@ var level_img_map: Dictionary[LevelName,Texture] = {
 	LevelName.TEST_LEVEL_01: load("res://resources/img/level_previews/TEST_LEVEL_01.jpg"),
 	LevelName.TEST_CITY_01: load("res://resources/img/level_previews/TEST_CITY_01.jpg"),
 	LevelName.RACETRACK_01: load("res://resources/img/level_previews/RACETRACK_01.jpg"),
+	LevelName.STUNTTRACK_01: load("res://resources/img/level_previews/STUNT_CITY.jpg"),
 }
 
 var current_level_name: LevelName = LevelName.LEVEL_SELECT_LABEL

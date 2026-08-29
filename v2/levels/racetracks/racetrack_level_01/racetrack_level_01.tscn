@@ -119,6 +119,10 @@ player_spawn_pos_debug = NodePath("Spawnpoints/PlayerSpawnTest")
 traffic_settings = ExtResource("1_trfst")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=2095457459]
+occluder = ExtResource("33_6j553")
+bake_simplification_distance = 0.5
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=215805659]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
@@ -2561,10 +2565,6 @@ lanes = Array[int]([0])
 prior_mag = 8.543914
 next_mag = 8.543914
 next_pt_init = NodePath("../RP_002")
-
-[node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=2095457459]
-occluder = ExtResource("33_6j553")
-bake_simplification_distance = 0.5
 
 [node name="HTerrain" type="Node3D" parent="." unique_id=2127590280]
 script = ExtResource("26_8cigu")
