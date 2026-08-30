@@ -39,9 +39,6 @@
 [ext_resource type="Script" uid="uid://uj0l0u0v0f0d" path="res://managers/npc_traffic_manager.gd" id="37_npctm"]
 [ext_resource type="Script" uid="uid://c7rb62smxqgpp" path="res://managers/animal_spawn_manager.gd" id="38_anspm"]
 [ext_resource type="Script" uid="uid://ckudxd3spv3uh" path="res://managers/gamemodes/types/street_race/street_race_gamemode.gd" id="38_strce"]
-[ext_resource type="Script" uid="uid://sswt4xrkjsih" path="res://resources/npcs/animal_skin_definition.gd" id="40_5fp36"]
-[ext_resource type="Resource" uid="uid://bduhng74bq2px" path="res://resources/npcs/horse_animal_definition.tres" id="41_3cqky"]
-[ext_resource type="Resource" uid="uid://cxxe2rar7tq1d" path="res://resources/npcs/shiba_animal_definition.tres" id="42_bj7hs"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("1_1oj5k")
@@ -290,4 +287,3 @@ npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_pk5u2")])
 [node name="AnimalSpawnManager" type="Node" parent="ManagerManager" unique_id=1218916393 node_paths=PackedStringArray("level_manager") groups=["Managers"]]
 script = ExtResource("38_anspm")
 level_manager = NodePath("../LevelManager")
-animal_definitions = Array[ExtResource("40_5fp36")]([ExtResource("41_3cqky"), ExtResource("42_bj7hs")])

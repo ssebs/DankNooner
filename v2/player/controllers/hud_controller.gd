@@ -147,6 +147,10 @@ func _init_balance_bar(trick_type: TrickController.Trick):
 
 
 #region signal handlers
+func _on_input_state_changed(new_state: InputStateManager.InputState) -> void:
+	_minimap.set_expanded(new_state == InputStateManager.InputState.IN_MAP)
+
+
 func _on_gear_changed(new_gear: int):
 	_gear_label.text = tr("HUD_GEAR").format({"value": new_gear})
 
@@ -188,6 +192,8 @@ func _on_respawned():
 func show_hud() -> void:
 	visible = true
 	_minimap.activate(player_entity)
+	# Local-only (only local reaches show_hud): expand the minimap into the full map while IN_MAP.
+	input_state_mgr.input_state_changed.connect(_on_input_state_changed)
 
 	# Only the local client reaches show_hud, so the overlay never spawns on remote
 	# player instances. netfox registers its perf monitors only when NetworkPerformance
