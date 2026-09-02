@@ -12,8 +12,8 @@
 
 [resource]
 script = ExtResource("1_trfst")
-traffic_count = 48
-race_traffic_amount = 32
+traffic_count = 12
+race_traffic_amount = 12
 car_chance = 0.9
 bike_roster = Array[ExtResource("1_fjo22")]([ExtResource("2_q8exi"), ExtResource("3_16uiw"), ExtResource("4_gs0aa")])
 car_roster = Array[ExtResource("5_mjb04")]([ExtResource("6_wu8om"), ExtResource("7_y1vat"), ExtResource("8_5ux5e")])
