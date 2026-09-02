@@ -36,6 +36,8 @@
 
 ## Notes 📝
 > Stuff to move ASAP
+- I want to add a stationary burnout, so you can do the burnout via: hold front brake, lean fwd, max rpm clutch dump to start a drift with 0 velocity. then you can
+  let go to start regular drift
 - should not be able to stoppie when trying to do a burnout + when steering
 - add speed wobbles
 - run from cops mode

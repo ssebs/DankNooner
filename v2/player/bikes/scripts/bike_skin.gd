@@ -48,19 +48,19 @@ func rotate_steering(roll_angle: float, delta: float):
 	)
 
 
-func rotate_wheels(speed: float, delta: float, is_in_wheelie: bool = false):
+func rotate_wheels(front_speed: float, rear_speed: float, delta: float, is_in_wheelie: bool = false):
 	if mesh_skin == null:
 		return
-	var spin = -mesh_skin.wheel_rot_axis * speed * WHEEL_SPIN_MULTIPLIER * delta
+	var axis = -mesh_skin.wheel_rot_axis * WHEEL_SPIN_MULTIPLIER * delta
 	if mesh_skin.front_wheel_node:
 		if is_in_wheelie:
 			mesh_skin.front_wheel_node.rotation.x = lerpf(
 				mesh_skin.front_wheel_node.rotation.x, 0.0, WHEEL_SPIN_MULTIPLIER * delta
 			)
 		else:
-			mesh_skin.front_wheel_node.rotation += spin
+			mesh_skin.front_wheel_node.rotation += axis * front_speed
 	if mesh_skin.rear_wheel_node:
-		mesh_skin.rear_wheel_node.rotation += spin
+		mesh_skin.rear_wheel_node.rotation += axis * rear_speed
 
 
 #region resource/definition

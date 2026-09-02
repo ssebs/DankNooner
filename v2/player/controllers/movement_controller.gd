@@ -55,12 +55,16 @@ const STOPPIE_STEER_SCALE: float = 0.5
 const REVERSE_MAX_SPEED: float = 2.0
 const REVERSE_ACCEL: float = 8.0
 const REVERSE_BRAKE_THRESHOLD: float = 0.3
+const REVERSE_THROTTLE_MAX: float = 0.5  # on the gas = burnout/launch prep, not a reverse roll
 # Drift / powerslide
 const DRIFT_MIN_SPEED: float = 6.0  # below this it's a stationary burnout (slip stays ~0)
 const DRIFT_BRAKE_HOLD: float = 0.4  # rear-brake input that sustains a brake slide
 const DRIFT_STEER_ENTRY: float = 0.3  # steer needed to kick a brake slide loose
 const DRIFT_BREAK_FORCE: float = POWER_WHEELIE_MIN_FORCE  # power×accel torque gate to break traction
 const DRIFT_POWER_MIN_RPM_RATIO: float = 0.7  # power slide needs revs — can't lug into a burnout at low RPM
+# Stationary burnout — a max-RPM clutch dump against a held front brake spins up the rear from a standstill
+const BURNOUT_FRONT_BRAKE_MIN: float = 0.5  # front brake to pin the bike; also blocks throttle accel in _speed_calc
+const BURNOUT_MIN_RPM_RATIO: float = 0.85
 const DRIFT_RECOVER_RATE: float = 2.0  # rad/s grip pulls the travel line back to heading
 const DRIFT_RECOVER_SUPPRESS: float = 0.8  # how much drive (0..1) suppresses recovery (holds the slide)
 const DRIFT_YAW_RATE: float = 1.6  # rad/s the heading carves per full steer while drifting
@@ -78,7 +82,6 @@ var is_stoppie: bool = false
 var air_pitch_total: float = 0.0  # cumulative pitch rotation while airborne (for flip counting)
 var _air_time: float = 0.0  # time since takeoff (for wheelie grace window)
 var _wheelie_grace_consumed: bool = false  # true once grace expired and pitch_angle was zeroed
-var _stoppie_from_landing: bool = false  # touched down nose-first (not a ground stoppie) — keep it out of is_stoppie
 
 # spawn protection - todo move?
 var _default_spawn_timer: float = 1.0
@@ -127,17 +130,16 @@ func on_movement_rollback_tick(delta: float):
 				pitch_angle -= TAU
 			elif pitch_angle < -PI:
 				pitch_angle += TAU
-			# Landing forgiveness: if you (nearly) completed at least one full flip and touch
-			# down close to upright, snap to neutral for a clean landing. Held wheelies/stoppies
-			# off a jump (air_pitch_total below a full rotation) are left as-is so you can land
-			# into them; over-rotations past the bike's max still crash via CrashController.
+			# Landing forgiveness: a near-upright landing after a flip snaps to neutral; over-
+			# rotations past the bike's max still crash via CrashController. A held wheelie off a
+			# jump lands as-is, but a nose-first touchdown flattens rather than becoming a stoppie.
 			var did_flip := air_pitch_total >= PI  # half-turn+ = a flip attempt, not a held wheelie
-			if did_flip and absf(pitch_angle) <= deg_to_rad(LANDING_SNAP_ANGLE_DEG):
+			if did_flip:
+				if absf(pitch_angle) <= deg_to_rad(LANDING_SNAP_ANGLE_DEG):
+					pitch_angle = 0.0
+			elif pitch_angle < 0.0:
+				# Nose-first landing (not a flip) — flatten to the ground, not into a stoppie.
 				pitch_angle = 0.0
-			# Landed nose-first on the front wheel — not a braking stoppie you set up on the
-			# ground, so flag it out of scoring / steer-cut / washout (still steer + throttle
-			# normally). Cleared in _stoppie_calc once the nose comes back up.
-			_stoppie_from_landing = pitch_angle < deg_to_rad(TrickController.STOPPIE_PITCH_THRESHOLD_DEG)
 			air_pitch_total = 0.0
 			_air_time = 0.0
 			_wheelie_grace_consumed = false
@@ -329,7 +331,12 @@ func _speed_calc(delta: float):
 
 	# Reverse — hold clutch + brake from a near-stop. Bypasses normal accel/brake/slope.
 	var brake_total = input_controller.nfx_front_brake + input_controller.nfx_rear_brake
-	var reverse_input = input_controller.nfx_clutch_held and brake_total > REVERSE_BRAKE_THRESHOLD
+	# Off-gas only — revving with the clutch in (burnout / launch prep) must not read as reverse.
+	var reverse_input = (
+		input_controller.nfx_clutch_held
+		and brake_total > REVERSE_BRAKE_THRESHOLD
+		and input_controller.nfx_throttle < REVERSE_THROTTLE_MAX
+	)
 	if reverse_input and (is_reversing or speed <= 0.5):
 		is_reversing = true
 		speed = move_toward(speed, -REVERSE_MAX_SPEED, REVERSE_ACCEL * delta)
@@ -597,15 +604,10 @@ func _stoppie_calc(bd: BikeSkinDefinition, in_stoppie: bool, delta: float):
 		and abs(roll_angle) < deg_to_rad(10)
 		and not is_drifting  # a burnout/brake-slide is weight-back — can't pitch onto the front
 	)
-	# Nose came back up — a fresh stoppie earned from the ground can count again.
-	if not in_stoppie:
-		_stoppie_from_landing = false
-
-	# Scores the whole time the nose is up (symmetric with the wheelie's pitch check) — gating it
-	# on brake-still-held ended it as you feather to balance, before a combo could start. Only a
-	# braking stoppie can put the nose down here anyway; landings (_stoppie_from_landing) and
-	# burnouts (is_drifting) are the cases to exclude.
-	is_stoppie = in_stoppie and not is_drifting and not _stoppie_from_landing
+	# Scores the whole time the nose is up (symmetric with the wheelie's pitch check). A nose-first
+	# landing flattens to 0 on touchdown, so only a real braking stoppie reaches here; a burnout
+	# (is_drifting) is the one case to exclude.
+	is_stoppie = in_stoppie and not is_drifting
 
 	if can_stoppie or in_stoppie:
 		# Target deepens with brake + lean — speed just needs a minimum
@@ -683,8 +685,21 @@ func _can_initiate_wheelie(in_wheelie: bool) -> bool:
 func _can_initiate_drift() -> bool:
 	if is_drifting:
 		return true
-	if not _is_on_floor or speed < DRIFT_MIN_SPEED:
+	if not _is_on_floor:
 		return false
+
+	# Stationary burnout — a max-RPM clutch dump against a held front brake lights up the rear from
+	# a standstill. Checked before the min-speed gate so it starts at ~0 velocity; the front brake
+	# also blocks throttle accel in _speed_calc, so you sit and spin until you release it and roll
+	# into a normal power drift (is_drifting carries straight over).
+	if speed < DRIFT_MIN_SPEED:
+		return (
+			_clutch_kick_window > 0
+			and input_controller.nfx_throttle > 0.5
+			and input_controller.nfx_front_brake > BURNOUT_FRONT_BRAKE_MIN
+			and input_controller.nfx_lean > 0.3
+			and gearing_controller.get_rpm_ratio() > BURNOUT_MIN_RPM_RATIO
+		)
 
 	# Brake-slide entry — steer + hold rear brake breaks the rear loose. Accessible, safe to release.
 	if (
@@ -838,7 +853,6 @@ func do_reset():
 	slip_angle = 0.0
 	is_drifting = false
 	is_stoppie = false
-	_stoppie_from_landing = false
 	is_reversing = false
 	_was_on_floor = false
 	_prev_clutch_held = false
