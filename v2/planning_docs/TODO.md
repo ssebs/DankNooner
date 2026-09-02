@@ -45,6 +45,7 @@
 ## Tasks 📋
 
 ### Game-breaking bugs
+- [ ] M for map half ass/ broken
 - [ ] Road generator lanes are jank / broken
 - [ ] multiplayer lag / bugs (do another playtest)
 

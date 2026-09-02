@@ -24,6 +24,14 @@ signal crashed
 @export var drift_highside_angle_deg: float = 40.0
 ## Min speed for a highside to be dangerous.
 @export var drift_highside_min_speed: float = 12.0
+## Lean (deg) allowed in a stoppie before the loaded front tire washes out (lowside). Reads
+## roll_angle (already time-eased) not raw steer, so a KBM tap stays under it but a hard hold crosses.
+@export var stoppie_steer_crash_angle_deg: float = 10.0
+## At/below this speed, a stoppie held high enough (see fraction below) can be pivot-steered
+## without washing out — you're balanced on the front, not carrying speed the tire can wash off.
+@export var stoppie_pivot_max_speed: float = 10.0
+## Fraction of max_stoppie_angle_deg the nose must be past to count as "high enough" to pivot.
+@export var stoppie_pivot_min_angle_frac: float = 0.7
 ## Throttle release rate (per sec) that highsides at drift_highside_angle_deg (forgiving).
 @export var highside_chop_forgiving: float = 6.0
 ## Throttle release rate that highsides near the spinout angle (twitchy — small lift snaps).
@@ -113,9 +121,28 @@ func _detect_crash():
 			trigger_crash()
 			return
 
-		# Stoppie crash
+		# Stoppie crash — over-rotated past the limit (went over the bars)
 		if movement_controller.pitch_angle < -deg_to_rad(bd.max_stoppie_angle_deg):
 			DebugUtils.DebugMsg("stoppie crash")
+			trigger_crash()
+			return
+
+		# Stoppie washout — leaning too hard on the single loaded front tire tucks it (lowside).
+		# Reduced steering is allowed (MovementController.STOPPIE_STEER_SCALE); past this it lets go.
+		# Exception: at low speed a high-enough stoppie is a balanced pivot — steer freely, no washout.
+		var stoppie_pivot := (
+			movement_controller.speed <= stoppie_pivot_max_speed
+			and (
+				absf(movement_controller.pitch_angle)
+				>= deg_to_rad(bd.max_stoppie_angle_deg * stoppie_pivot_min_angle_frac)
+			)
+		)
+		if (
+			movement_controller.is_stoppie
+			and not stoppie_pivot
+			and absf(movement_controller.roll_angle) > deg_to_rad(stoppie_steer_crash_angle_deg)
+		):
+			DebugUtils.DebugMsg("stoppie steer washout crash")
 			trigger_crash()
 			return
 
