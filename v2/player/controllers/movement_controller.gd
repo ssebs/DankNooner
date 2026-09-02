@@ -60,6 +60,7 @@ const DRIFT_MIN_SPEED: float = 6.0  # below this it's a stationary burnout (slip
 const DRIFT_BRAKE_HOLD: float = 0.4  # rear-brake input that sustains a brake slide
 const DRIFT_STEER_ENTRY: float = 0.3  # steer needed to kick a brake slide loose
 const DRIFT_BREAK_FORCE: float = POWER_WHEELIE_MIN_FORCE  # power×accel torque gate to break traction
+const DRIFT_POWER_MIN_RPM_RATIO: float = 0.7  # power slide needs revs — can't lug into a burnout at low RPM
 const DRIFT_RECOVER_RATE: float = 2.0  # rad/s grip pulls the travel line back to heading
 const DRIFT_RECOVER_SUPPRESS: float = 0.8  # how much drive (0..1) suppresses recovery (holds the slide)
 const DRIFT_YAW_RATE: float = 1.6  # rad/s the heading carves per full steer while drifting
@@ -600,13 +601,11 @@ func _stoppie_calc(bd: BikeSkinDefinition, in_stoppie: bool, delta: float):
 	if not in_stoppie:
 		_stoppie_from_landing = false
 
-	# A real stoppie: nose up AND held by braking. A coast/landing (no brake) decays below and
-	# must NOT count — CrashController + TrickController key off this flag, not raw pitch. A
-	# front-wheel landing is excluded outright, even if braking, until the nose comes back up.
-	is_stoppie = (
-		(can_stoppie or (in_stoppie and total_brake > required_brake and not is_drifting))
-		and not _stoppie_from_landing
-	)
+	# Scores the whole time the nose is up (symmetric with the wheelie's pitch check) — gating it
+	# on brake-still-held ended it as you feather to balance, before a combo could start. Only a
+	# braking stoppie can put the nose down here anyway; landings (_stoppie_from_landing) and
+	# burnouts (is_drifting) are the cases to exclude.
+	is_stoppie = in_stoppie and not is_drifting and not _stoppie_from_landing
 
 	if can_stoppie or in_stoppie:
 		# Target deepens with brake + lean — speed just needs a minimum
@@ -708,9 +707,14 @@ func _can_initiate_drift() -> bool:
 			> max_torque_mult * CLUTCH_POP_MIN_POWER_FRAC
 		)
 
-	# Power slide — floored throttle + enough delivered force to break traction.
+	# Power slide — floored throttle at high RPM + enough delivered force to break traction.
+	# The RPM gate is what stops a lean-forward + gas + steer burnout in any gear at any revs.
 	var force = gearing_controller.get_power_output() * bd.acceleration
-	return input_controller.nfx_throttle > 0.7 and force > DRIFT_BREAK_FORCE
+	return (
+		input_controller.nfx_throttle > 0.7
+		and gearing_controller.get_rpm_ratio() > DRIFT_POWER_MIN_RPM_RATIO
+		and force > DRIFT_BREAK_FORCE
+	)
 
 
 ## Maintain is_drifting and integrate slip_angle. Runs before _velocity_calc so

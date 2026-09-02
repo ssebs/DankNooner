@@ -48,6 +48,7 @@
 - [ ] M for map half ass/ broken
 - [ ] Road generator lanes are jank / broken
 - [ ] multiplayer lag / bugs (do another playtest)
+- [ ] on sand, reverse + steer causes crash
 
 ### Gameplay Improvements
 
