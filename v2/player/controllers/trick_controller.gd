@@ -140,7 +140,8 @@ func _detect_current_trick(delta: float) -> Trick:
 			return Trick.WHEELIE_MOD
 		return Trick.WHEELIE_SITTING
 
-	if movement_controller.pitch_angle < deg_to_rad(STOPPIE_PITCH_THRESHOLD_DEG):
+	# Only a braking-held stoppie scores — a nose-down landing or coast isn't a stoppie.
+	if movement_controller.is_stoppie:
 		return Trick.STOPPIE
 
 	if input_controller.nfx_trick_held:

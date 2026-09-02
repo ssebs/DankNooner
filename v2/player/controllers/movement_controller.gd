@@ -48,6 +48,9 @@ const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
 const AIR_TRICK_ROTATION_SPEED: float = 4.0  # rad/s pitch control while airborne
 const WHEELIE_AIR_GRACE: float = 1.0  # short hops (curbs) keep the wheelie pitch_angle
 const LANDING_SNAP_ANGLE_DEG: float = 30.0  # forgiveness window — flips landing this close to upright snap to neutral
+# Steering authority while up on the front wheel. Reduced input is allowed; shoving past the
+# crash threshold (CrashController.stoppie_steer_crash_threshold) washes the loaded front out.
+const STOPPIE_STEER_SCALE: float = 0.5
 # Reverse — hold clutch + any brake to roll backwards from a stop
 const REVERSE_MAX_SPEED: float = 2.0
 const REVERSE_ACCEL: float = 8.0
@@ -68,10 +71,13 @@ var roll_angle: float = 0.0  # lean left/right
 var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
 var slip_angle: float = 0.0  # signed radians: heading vs velocity direction. Synced via RollbackSynchronizer.
 var is_drifting: bool = false  # re-derived each tick from synced inputs + slip_angle (not synced directly)
+# true ONLY in a braking-held stoppie (not a coast/landing/burnout); gates scoring + washout crash
+var is_stoppie: bool = false
 
 var air_pitch_total: float = 0.0  # cumulative pitch rotation while airborne (for flip counting)
 var _air_time: float = 0.0  # time since takeoff (for wheelie grace window)
 var _wheelie_grace_consumed: bool = false  # true once grace expired and pitch_angle was zeroed
+var _stoppie_from_landing: bool = false  # touched down nose-first (not a ground stoppie) — keep it out of is_stoppie
 
 # spawn protection - todo move?
 var _default_spawn_timer: float = 1.0
@@ -127,6 +133,10 @@ func on_movement_rollback_tick(delta: float):
 			var did_flip := air_pitch_total >= PI  # half-turn+ = a flip attempt, not a held wheelie
 			if did_flip and absf(pitch_angle) <= deg_to_rad(LANDING_SNAP_ANGLE_DEG):
 				pitch_angle = 0.0
+			# Landed nose-first on the front wheel — not a braking stoppie you set up on the
+			# ground, so flag it out of scoring / steer-cut / washout (still steer + throttle
+			# normally). Cleared in _stoppie_calc once the nose comes back up.
+			_stoppie_from_landing = pitch_angle < deg_to_rad(TrickController.STOPPIE_PITCH_THRESHOLD_DEG)
 			air_pitch_total = 0.0
 			_air_time = 0.0
 			_wheelie_grace_consumed = false
@@ -387,13 +397,21 @@ func _steer_calc(delta: float):
 	elif speed < 1 and not is_reversing:
 		amount_normalized_rename_me = 0.2
 
+	# Up on the front wheel: cut steering authority. Scales the TARGET, not the accumulated
+	# roll_angle — multiplying roll every tick compounds toward ~4% (kills steering AND puts the
+	# washout out of reach), whereas a target scale settles at a true fraction. Derived inline from
+	# pitch since _pitch_angle_calc (is_stoppie) hasn't run yet this tick.
+	var stoppie_steer_scale := 1.0
+	if pitch_angle < deg_to_rad(TrickController.STOPPIE_PITCH_THRESHOLD_DEG):
+		stoppie_steer_scale = STOPPIE_STEER_SCALE
+
 	# ONCE STOPPED, LERP BACK TO DEFAULT POSE
 
 	# Curve-based speed factor for steering and lean. Reverse bypasses the curves —
 	# they're tuned for forward speed and bottom out near 0, so we'd lose all authority.
 	var lean_factor = 1.0 if is_reversing else bd.lean_curve.sample(_speed_pct)
 	var steer_input = -input_controller.nfx_steer if is_reversing else input_controller.nfx_steer
-	var target_lean = steer_input * bd.max_lean_angle_rad * lean_factor
+	var target_lean = steer_input * bd.max_lean_angle_rad * lean_factor * stoppie_steer_scale
 	roll_angle = lerpf(roll_angle, target_lean, bd.lean_speed * delta)*amount_normalized_rename_me
 
 	# Steering — bell curve: low at standstill, peaks mid-low speed, tapers at top speed.
@@ -458,6 +476,7 @@ func _velocity_calc(delta: float):
 ## Orchestrates pitch_angle: clutch detection → wheelie target → stoppie → apply
 func _pitch_angle_calc(delta: float):
 	_update_clutch_dump_detection()
+	is_stoppie = false  # _stoppie_calc re-asserts it below; stays false when airborne / in a wheelie / on steep ground
 
 	# Airborne trick control — lean to flip, no decay (weightless)
 	if not _is_on_floor:
@@ -575,6 +594,18 @@ func _stoppie_calc(bd: BikeSkinDefinition, in_stoppie: bool, delta: float):
 		and input_controller.nfx_lean > 0.3
 		and speed > 3.0
 		and abs(roll_angle) < deg_to_rad(10)
+		and not is_drifting  # a burnout/brake-slide is weight-back — can't pitch onto the front
+	)
+	# Nose came back up — a fresh stoppie earned from the ground can count again.
+	if not in_stoppie:
+		_stoppie_from_landing = false
+
+	# A real stoppie: nose up AND held by braking. A coast/landing (no brake) decays below and
+	# must NOT count — CrashController + TrickController key off this flag, not raw pitch. A
+	# front-wheel landing is excluded outright, even if braking, until the nose comes back up.
+	is_stoppie = (
+		(can_stoppie or (in_stoppie and total_brake > required_brake and not is_drifting))
+		and not _stoppie_from_landing
 	)
 
 	if can_stoppie or in_stoppie:
@@ -802,6 +833,8 @@ func do_reset():
 	pitch_angle = 0.0
 	slip_angle = 0.0
 	is_drifting = false
+	is_stoppie = false
+	_stoppie_from_landing = false
 	is_reversing = false
 	_was_on_floor = false
 	_prev_clutch_held = false

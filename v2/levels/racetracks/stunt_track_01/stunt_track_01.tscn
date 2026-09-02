@@ -586,7 +586,7 @@ prior_pt_init = NodePath("../RP_004")
 next_pt_init = NodePath("../RP_002")
 
 [node name="RP_004" type="Node3D" parent="RoadManager/Road_004" unique_id=876757225]
-transform = Transform3D(0.49975118, 0.046406534, 0.864925, -0.068100534, 0.9975778, -0.014175538, -0.8634877, -0.051817633, 0.50170094, 84.02977, -1.0045862, -42.124435)
+transform = Transform3D(0.8652597, 0.046406534, 0.4991715, -0.06606457, 0.9975778, 0.021773912, -0.4969518, -0.051817633, 0.86622965, 96.26526, -1.3680072, -38.16313)
 script = ExtResource("8_ercdn")
 traffic_dir = Array[int]([2, 2, 1, 1])
 lanes = Array[int]([2, 4, 4, 2])
@@ -678,7 +678,14 @@ collision_layer = 0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 10.661509, 112.5)
 
 [node name="House4" parent="Houses" unique_id=1078601246 instance=ExtResource("22_7qjpf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, 10.661509, 112.5)
+transform = Transform3D(0.9977721, 0.066714466, 0, -0.066714466, 0.9977721, 0, 0, 0, 1, 48, 9.661509, 112.5)
+
+[node name="GrayBox_StaticBody" parent="Houses/House4" unique_id=1485126779 instance=ExtResource("18_dc022")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5, 0)
+width = 32.0
+height = 10.0
+depth = 32.0
+color_preset = 2
 
 [node name="House5" parent="Houses" unique_id=946917928 instance=ExtResource("22_7qjpf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 112, 3.9348931, -16)
@@ -803,7 +810,7 @@ transform = Transform3D(-1, 0, -8.742277e-08, 0, 1, 0, 8.742277e-08, 0, -1, 84, 
 [node name="House2" parent="Houses" unique_id=1199325231 instance=ExtResource("22_7qjpf")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -48, 10.6615095, 144.5)
 
-[node name="GrayBox_StaticBody" parent="Houses/House2" unique_id=1485126779 instance=ExtResource("18_dc022")]
+[node name="GrayBox_StaticBody" parent="Houses/House2" unique_id=430767498 instance=ExtResource("18_dc022")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.5, 0)
 width = 32.0
 height = 11.0
