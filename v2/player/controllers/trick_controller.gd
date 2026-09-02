@@ -16,6 +16,7 @@ enum Trick {
 	HIGH_CHAIR,
 	TWO_LEFT_FEET,
 	DRIFT,
+	BURNOUT,
 }
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
@@ -125,6 +126,9 @@ func _detect_current_trick(delta: float) -> Trick:
 	_flip_emitted = false
 
 	if movement_controller.is_drifting:
+		# Drifting at a near-standstill is a burnout (rear spinning in place); moving is a drift.
+		if movement_controller.speed < MovementController.DRIFT_MIN_SPEED:
+			return Trick.BURNOUT
 		return Trick.DRIFT
 
 	if movement_controller.pitch_angle > deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG):
@@ -230,6 +234,8 @@ static func trick_to_str(trick: Trick) -> String:
 			return "TWO_LEFT_FEET"
 		Trick.DRIFT:
 			return "DRIFT"
+		Trick.BURNOUT:
+			return "BURNOUT"
 	return "NONE"
 
 
@@ -257,6 +263,8 @@ static func str_to_trick(s: String) -> Trick:
 			return Trick.TWO_LEFT_FEET
 		"DRIFT":
 			return Trick.DRIFT
+		"BURNOUT":
+			return Trick.BURNOUT
 	return Trick.NONE
 
 

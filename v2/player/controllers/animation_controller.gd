@@ -244,7 +244,12 @@ func _update_riding(delta: float) -> void:
 	if movement_controller.is_reversing:
 		steer_input = -steer_input
 	bike_skin.rotate_steering(steer_input, delta)
-	bike_skin.rotate_wheels(movement_controller.speed, delta, trick_controller.is_in_wheelie())
+	# Rear breaks loose in a drift/burnout — spin it by throttle so it keeps lighting up even at 0
+	# road speed (a standstill burnout), where the road-speed spin would read as stopped.
+	var rear_speed := movement_controller.speed
+	if movement_controller.is_drifting:
+		rear_speed = maxf(absf(rear_speed), input_controller.nfx_throttle * player_entity.bike_definition.max_speed)
+	bike_skin.rotate_wheels(movement_controller.speed, rear_speed, delta, trick_controller.is_in_wheelie())
 
 	_update_reverse_anim()
 
@@ -483,8 +488,8 @@ func _update_idle_timer(delta: float) -> void:
 		if current_state == RiderState.IDLE:
 			_transition_to_riding()
 		return
-	# Check if player is mostly stationary
-	if movement_controller.speed < 0.5 and abs(input_controller.nfx_steer) < 0.1:
+	# Mostly stationary — but a standstill burnout still counts as riding, so keep the wheels alive
+	if movement_controller.speed < 0.5 and abs(input_controller.nfx_steer) < 0.1 and not movement_controller.is_drifting:
 		_idle_timer += delta
 		if _idle_timer >= idle_timeout and current_state == RiderState.RIDING:
 			_transition_to_idle()
