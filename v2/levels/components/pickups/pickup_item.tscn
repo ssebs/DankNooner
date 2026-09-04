@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://c26p7f4114vxw"]
+
+[ext_resource type="Script" uid="uid://be51aqt01qvag" path="res://levels/components/pickups/pickup_item.gd" id="1_eppld"]
+[ext_resource type="Resource" uid="uid://dr0stf17pc2go" path="res://levels/components/pickups/default_pickup_definition.tres" id="2_38q4i"]
+[ext_resource type="PackedScene" uid="uid://dyflvne7n66se" path="res://levels/assets/City Pack.undefined-glb/Cone.glb" id="3_7bco1"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_eppld"]
+radius = 1.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wig4y"]
+transparency = 1
+albedo_color = Color(0.17, 0.72533333, 0.85, 0.29411766)
+
+[sub_resource type="SphereMesh" id="SphereMesh_38q4i"]
+material = SubResource("StandardMaterial3D_wig4y")
+radius = 1.5
+height = 3.0
+
+[node name="PickupItem" type="Area3D" unique_id=195507555]
+script = ExtResource("1_eppld")
+pickup_item_definition = ExtResource("2_38q4i")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=552384891]
+unique_name_in_owner = true
+shape = SubResource("SphereShape3D_eppld")
+
+[node name="MeshNode" type="Node3D" parent="." unique_id=180618646]
+unique_name_in_owner = true
+
+[node name="@Node3D@268929" type="Node3D" parent="MeshNode" unique_id=8418372 instance=ExtResource("3_7bco1")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.857031, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=882169721]
+unique_name_in_owner = true
+mesh = SubResource("SphereMesh_38q4i")

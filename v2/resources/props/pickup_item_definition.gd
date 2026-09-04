@@ -9,18 +9,18 @@ enum PickupItemType{GAS_CAN,}
 	set(value):
 		if value:
 			var instance = value.instantiate()
-			assert(instance is SkinColor, "Wrong scene type!")
+			# Any 3D scene works (a raw .glb, a SkinColor, etc.) — it just needs to be spatial
+			# so the mesh offsets below apply.
+			assert(instance is Node3D, "Mesh scene root must be a Node3D")
 			instance.free()
 		mesh_res = value
 @export var mesh_position_offset: Vector3 = Vector3.ZERO
 @export var mesh_rotation_offset_degrees: Vector3 = Vector3.ZERO
 @export var mesh_scale_multiplier: Vector3 = Vector3.ONE
 
-@export_group("Collision")
-@export var collision_shape: Shape3D
-@export var collision_position_offset: Vector3 = Vector3(0, 0.75, 0)
-@export var collision_rotation_offset_degrees: Vector3 = Vector3.ZERO
-@export var collision_scale_multiplier: Vector3 = Vector3.ONE
+@export_group("Bubble")
+## Radius of the pickup's spherical collider and its bubble mesh (both always spheres).
+@export var radius: float = 1.5
 
 @export_group("Type")
 @export var item_type:PickupItemType
