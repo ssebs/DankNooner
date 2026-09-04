@@ -27,7 +27,7 @@ func on_enter(player: PlayerEntity, state: Dictionary) -> void:
 ## Server-only, called by StuntRaceGameMode when the race starts.
 func on_race_start() -> void:
 	for spawner in spawners:
-		spawner.activate()
+		spawner.activate(_runner.spawn_manager)
 
 
 ## Server-only, called by StuntRaceGameMode when the race ends / the mode exits.

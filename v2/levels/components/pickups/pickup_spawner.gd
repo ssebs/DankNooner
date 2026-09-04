@@ -20,6 +20,8 @@ const PICKUP_ITEM_SCENE := preload("res://levels/components/pickups/pickup_item.
 
 var _active: bool = false
 var _current: PickupItem
+## Injected by StuntRaceTask on activate() — used to grant item effects (server broadcast RPCs).
+var _spawn_manager: SpawnManager
 ## Editor-only preview of the first item so placement is visible; never saved / spawned at runtime.
 var _preview: PickupItem
 
@@ -29,9 +31,10 @@ func _ready() -> void:
 		_refresh_preview()
 
 
-func activate() -> void:
+func activate(spawn_manager: SpawnManager) -> void:
 	if !multiplayer.is_server():
 		return
+	_spawn_manager = spawn_manager
 	_active = true
 	_spawn_random()
 
@@ -91,10 +94,16 @@ func _refresh_preview() -> void:
 func _on_item_body_entered(body: Node3D) -> void:
 	if !_active or !body.is_in_group(UtilsConstants.GROUPS["Racers"]):
 		return
-	# TODO: apply the item effect to the collecting rider (int(body.name) -> peer id), keyed on
-	# the definition's item_type. Items are TBD — see planning_docs/StuntRaceGamemode.md.
+	_apply_effect(int(body.name), _current.pickup_item_definition)
 	_rpc_despawn.rpc()
 	get_tree().create_timer(timeout).timeout.connect(_on_respawn_timer, CONNECT_ONE_SHOT)
+
+
+## Server-only. Grants the collected item's effect to the rider, keyed on its type.
+func _apply_effect(peer_id: int, definition: PickupItemDefinition) -> void:
+	match definition.item_type:
+		PickupItemDefinition.PickupItemType.GAS_CAN:
+			_spawn_manager.grant_boost.rpc(peer_id)
 
 
 func _on_respawn_timer() -> void:

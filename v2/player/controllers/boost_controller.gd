@@ -12,8 +12,8 @@ class_name BoostController extends Node
 # local client predicts it and netfox reconciles against the server's meter.
 # The meter is 3 discrete segments (boost_amount is in segments, 0..3). A press commits to
 # burning the current segment down to the next boundary — releasing early does NOT cancel.
-const BOOST_SEGMENTS: float = 3.0
-const BOOST_SEGMENT_SECS: float = 1.0  # one segment = 1s of boost (3s total, spent piecemeal)
+const BOOST_SEGMENTS: float = 5.0
+const BOOST_SEGMENT_SECS: float = 1.0  # one segment = 1s of boost, spent piecemeal
 const BOOST_FULL_BURN_SECS: float = 4.0  # a full meter burned in one press runs longer
 const BOOST_ACCEL_MULT: float = 1.8  # engine drive multiplier while boosting
 const BOOST_SPEED_MULT: float = 1.25  # raises both the gear cap and bd.max_speed ceiling
@@ -76,6 +76,12 @@ func on_movement_rollback_tick(delta: float):
 	)
 	if boost_amount <= boost_burn_target:
 		boost_burn_target = -1.0
+
+
+## +1 segment, clamped to full. Called from PlayerEntity's rollback tick (rb_add_boost) so the
+## write to the synced boost_amount survives resimulation. Gas Can pickup.
+func add_segment():
+	boost_amount = minf(boost_amount + 1.0, BOOST_SEGMENTS)
 
 
 ## A crash voids only what the in-progress combo earned — boost banked by earlier completed

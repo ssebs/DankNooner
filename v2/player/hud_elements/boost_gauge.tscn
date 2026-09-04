@@ -58,3 +58,21 @@ nine_patch_stretch = true
 texture_under = SubResource("GradientTexture1D_bstun")
 texture_progress = SubResource("GradientTexture1D_bstpr")
 tint_progress = Color(0.16, 0.34, 0.48, 1)
+
+[node name="Cell4" type="TextureProgressBar" parent="Cells"]
+custom_minimum_size = Vector2(104, 20)
+layout_mode = 2
+value = 0.0
+nine_patch_stretch = true
+texture_under = SubResource("GradientTexture1D_bstun")
+texture_progress = SubResource("GradientTexture1D_bstpr")
+tint_progress = Color(0.16, 0.34, 0.48, 1)
+
+[node name="Cell5" type="TextureProgressBar" parent="Cells"]
+custom_minimum_size = Vector2(104, 20)
+layout_mode = 2
+value = 0.0
+nine_patch_stretch = true
+texture_under = SubResource("GradientTexture1D_bstun")
+texture_progress = SubResource("GradientTexture1D_bstpr")
+tint_progress = Color(0.16, 0.34, 0.48, 1)

@@ -91,6 +91,15 @@ func crash_player(player_peer_id: int):
 	_get_player_by_peer_id(player_peer_id).rb_do_crash = true
 
 
+## Set player's rb_add_boost on every peer so each adds one boost segment in its rollback tick
+## (boost_amount is synced state). Server only — sent when a rider collects a Gas Can pickup.
+@rpc("any_peer", "call_local", "reliable")
+func grant_boost(player_peer_id: int):
+	if !_sender_is_server():
+		return
+	_get_player_by_peer_id(player_peer_id).rb_add_boost = true
+
+
 ## Respawn player at a specific transform AND store it as the persistent respawn point
 ## (used by subsequent crash respawns until reset). Runs on every peer.
 @rpc("any_peer", "call_local", "reliable")
