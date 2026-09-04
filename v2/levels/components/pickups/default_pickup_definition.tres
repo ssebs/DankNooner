@@ -1,10 +1,9 @@
 [gd_resource type="Resource" script_class="PickupItemDefinition" format=3 uid="uid://dr0stf17pc2go"]
 
-[ext_resource type="PackedScene" uid="uid://dyflvne7n66se" path="res://levels/assets/City Pack.undefined-glb/Cone.glb" id="1_ffam6"]
+[ext_resource type="PackedScene" uid="uid://cu4qunatj2j2r" path="res://levels/assets/props/gas_can.glb" id="1_ffam6"]
 [ext_resource type="Script" uid="uid://dsfcoucwjtequ" path="res://resources/props/pickup_item_definition.gd" id="2_eow0d"]
 
 [resource]
 script = ExtResource("2_eow0d")
 mesh_res = ExtResource("1_ffam6")
-mesh_scale_multiplier = Vector3(2, 2, 2)
 metadata/_custom_type_script = "uid://dsfcoucwjtequ"

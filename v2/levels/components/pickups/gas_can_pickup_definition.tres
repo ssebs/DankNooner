@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="PickupItemDefinition" format=3 uid="uid://cqeidudggyae1"]
+
+[ext_resource type="PackedScene" uid="uid://cu4qunatj2j2r" path="res://levels/assets/props/gas_can.glb" id="1_leuna"]
+[ext_resource type="Script" uid="uid://dsfcoucwjtequ" path="res://resources/props/pickup_item_definition.gd" id="2_udwtp"]
+
+[resource]
+script = ExtResource("2_udwtp")
+mesh_res = ExtResource("1_leuna")
+metadata/_custom_type_script = "uid://dsfcoucwjtequ"

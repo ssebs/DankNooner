@@ -102,6 +102,9 @@ var rb_do_respawn: bool = false
 ## Set by SpawnManager.crash_player when another racer rammed us — we can't see
 ## that collision ourselves (slide collisions only report what WE moved into).
 var rb_do_crash: bool = false
+## Set by SpawnManager.grant_boost on a pickup — adds one boost segment. boost_amount is synced
+## state, so this rides the rollback tick + resim re-application (like rb_do_respawn) to survive.
+var rb_add_boost: bool = false
 ## Persistent respawn point. Set by SpawnManager.respawn_player_at (e.g. TeleportTask),
 ## reset to identity to fall back to `get_parent().global_transform` (player_spawn_pos).
 ## Persists across respawns so crashes after a checkpoint return to the checkpoint.
@@ -119,6 +122,11 @@ var rb_respawn_transform_oneshot: Transform3D = Transform3D()
 ## would never see race-grid teleports at all. See _rollback_tick.
 var _respawn_tick: int = -1
 var _respawn_target: Transform3D = Transform3D()
+
+## Same resim protection for the boost grant: remember the tick + resulting meter so a resim of
+## that tick re-applies the same absolute value instead of dropping the +1.
+var _boost_grant_tick: int = -1
+var _boost_grant_amount: float = 0.0
 
 # Process-side state tracking (not sync'd)
 var _prev_is_crashed: bool = false
@@ -165,6 +173,16 @@ func _rollback_tick(delta: float, tick: int, _is_fresh: bool):
 	if rb_do_crash:
 		rb_do_crash = false
 		on_crash()
+
+	# Boost grant: apply once, then re-apply the same meter on any resim of that tick (boost
+	# is drained below, so this must land before the controllers run).
+	if rb_add_boost:
+		rb_add_boost = false
+		boost_controller.add_segment()
+		_boost_grant_tick = tick
+		_boost_grant_amount = boost_controller.boost_amount
+	elif tick == _boost_grant_tick:
+		boost_controller.boost_amount = _boost_grant_amount
 
 	# Run other controllers (ORDER MATTERS)
 	# Boost first — ahead of every controller AND evaluated even while crashed (unlike the

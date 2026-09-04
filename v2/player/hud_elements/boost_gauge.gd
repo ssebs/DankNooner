@@ -6,7 +6,7 @@
 ## full segment and that needs to be obvious before the player tries:
 ##   - below 1 segment  -> dim, no glow ("not yet")
 ##   - 1+ segments      -> bright blue with a slow glow pulse ("ready")
-##   - all cells full   -> faster white shimmer ("spend all 3 for the long burn")
+##   - all cells full   -> faster white shimmer ("spend the full meter for the long burn")
 ##
 ##  [||||||][||||||][......]
 class_name BoostGauge extends Control
