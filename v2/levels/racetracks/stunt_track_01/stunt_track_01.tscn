@@ -23,10 +23,13 @@
 [ext_resource type="ArrayOccluder3D" uid="uid://dtiwh8mj1id14" path="res://levels/racetracks/stunt_track_01/stunt_track_01.occ" id="20_a57fq"]
 [ext_resource type="Script" uid="uid://f840hmifnv7g" path="res://managers/gamemodes/runners/sequential_task_runner.gd" id="20_grj8g"]
 [ext_resource type="Script" uid="uid://cij1aa5h6g5nb" path="res://managers/gamemodes/tasks/grid_spawn_task.gd" id="21_gpyq4"]
+[ext_resource type="PackedScene" uid="uid://cv3uyj3m3nj6t" path="res://levels/components/pickups/pickup_spawner.tscn" id="21_mn4lr"]
+[ext_resource type="Script" uid="uid://dsfcoucwjtequ" path="res://resources/props/pickup_item_definition.gd" id="22_3twxm"]
 [ext_resource type="PackedScene" uid="uid://cil6ntcnlqt5e" path="res://levels/components/props/house_1.tscn" id="22_7qjpf"]
 [ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.tscn" id="22_eair3"]
 [ext_resource type="PackedScene" uid="uid://5gjrqxijrao7" path="res://entities/vehicles/scenes/sedan.tscn" id="22_rl138"]
 [ext_resource type="PackedScene" uid="uid://0qiebj2prmqs" path="res://entities/vehicles/scenes/suv.tscn" id="23_430hl"]
+[ext_resource type="Resource" uid="uid://dr0stf17pc2go" path="res://levels/components/pickups/default_pickup_definition.tres" id="23_ftdt1"]
 [ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://managers/gamemodes/resources/gamemode_event_definition.gd" id="24_l8nu3"]
 [ext_resource type="PackedScene" uid="uid://jnyapma2vr1m" path="res://entities/vehicles/scenes/taxi.tscn" id="24_pls18"]
 [ext_resource type="PackedScene" uid="uid://ce0rc0lmwvocu" path="res://levels/assets/props/tree.glb" id="24_rl138"]
@@ -1957,11 +1960,10 @@ advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="StuntRaceTask" type="Node" parent="StuntRace/SequentialTaskRunner" unique_id=1438498696 node_paths=PackedStringArray("checkpoints")]
+[node name="StuntRaceTask" type="Node" parent="StuntRace/SequentialTaskRunner" unique_id=1438498696 node_paths=PackedStringArray("checkpoints", "spawners")]
 script = ExtResource("19_k3cxb")
 checkpoints = [NodePath("CheckpointMarker1"), NodePath("CheckpointMarker2"), NodePath("CheckpointMarker3"), NodePath("CheckpointMarker4"), NodePath("CheckpointMarker5")]
-total_laps = null
-objective_key = null
+spawners = [NodePath("PickupSpawner"), NodePath("PickupSpawner2"), NodePath("PickupSpawner3"), NodePath("PickupSpawner4"), NodePath("PickupSpawner5"), NodePath("PickupSpawner6")]
 
 [node name="CheckpointMarker1" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1048335829 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.5, 5.766265, 16)
@@ -1982,6 +1984,30 @@ width = 32.0
 [node name="CheckpointMarker5" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=163288397 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -875, 1.7500701, 462)
 width = 32.0
+
+[node name="PickupSpawner" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=761218876 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 5.8671966, 25.5)
+items = Array[ExtResource("22_3twxm")]([ExtResource("23_ftdt1")])
+
+[node name="PickupSpawner2" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1008318155 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 5.8671966, 21.5)
+items = Array[ExtResource("22_3twxm")]([ExtResource("23_ftdt1")])
+
+[node name="PickupSpawner3" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1241410484 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 5.8671966, 17.5)
+items = Array[ExtResource("22_3twxm")]([ExtResource("23_ftdt1")])
+
+[node name="PickupSpawner4" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=890997217 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 5.8671966, 13.5)
+items = Array[ExtResource("22_3twxm")]([ExtResource("23_ftdt1")])
+
+[node name="PickupSpawner5" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1634778502 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 5.8671966, 9.5)
+items = Array[ExtResource("22_3twxm")]([ExtResource("23_ftdt1")])
+
+[node name="PickupSpawner6" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=490238493 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 5.8671966, 5.5)
+items = Array[ExtResource("22_3twxm")]([ExtResource("23_ftdt1")])
 
 [node name="StuntCity" parent="." unique_id=11418617 instance=ExtResource("27_grj8g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 0)
