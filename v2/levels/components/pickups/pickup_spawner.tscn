@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cv3uyj3m3nj6t"]
+
+[ext_resource type="Script" uid="uid://cttkoxlgp6xhk" path="res://levels/components/pickups/pickup_spawner.gd" id="1_tmwld"]
+
+[node name="PickupSpawner" type="Marker3D" unique_id=761218876]
+script = ExtResource("1_tmwld")
