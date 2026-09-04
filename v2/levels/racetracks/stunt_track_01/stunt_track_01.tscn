@@ -14,7 +14,12 @@
 [ext_resource type="PackedScene" uid="uid://dfggtpn3gyrn0" path="res://addons/road-generator/custom_containers/3way_2x2.tscn" id="13_7qjpf"]
 [ext_resource type="Material" uid="uid://bdn26favvnenb" path="res://levels/assets/graybox/repeating_gray.tres" id="15_7kcev"]
 [ext_resource type="PackedScene" uid="uid://1qii5r1owvt1" path="res://levels/components/props/lighthouse.tscn" id="16_7kcev"]
+[ext_resource type="Script" uid="uid://1hiltkmgy4i3" path="res://managers/gamemodes/runners/concurrent_task_runner.gd" id="16_b3ac3"]
+[ext_resource type="Script" uid="uid://8xvij2vjrnn2" path="res://managers/gamemodes/tasks/countdown_task.gd" id="17_clf25"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="18_dc022"]
+[ext_resource type="Script" uid="uid://cpdxy3nxph3x0" path="res://managers/gamemodes/tasks/sfx_task.gd" id="18_k3cxb"]
+[ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="19_clf25"]
+[ext_resource type="Script" uid="uid://cw333kuvx3g6c" path="res://managers/gamemodes/tasks/stunt_race_task.gd" id="19_k3cxb"]
 [ext_resource type="ArrayOccluder3D" uid="uid://dtiwh8mj1id14" path="res://levels/racetracks/stunt_track_01/stunt_track_01.occ" id="20_a57fq"]
 [ext_resource type="Script" uid="uid://f840hmifnv7g" path="res://managers/gamemodes/runners/sequential_task_runner.gd" id="20_grj8g"]
 [ext_resource type="Script" uid="uid://cij1aa5h6g5nb" path="res://managers/gamemodes/tasks/grid_spawn_task.gd" id="21_gpyq4"]
@@ -1938,6 +1943,46 @@ transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0
 [node name="RaceGridSpot8" type="Marker3D" parent="StuntRace/SequentialTaskRunner/GridSpawnTask" unique_id=1719694009]
 transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 118.00001, 8.311884, 210)
 
+[node name="ConcurrentTaskRunner2" type="Node" parent="StuntRace/SequentialTaskRunner" unique_id=297690689]
+script = ExtResource("16_b3ac3")
+
+[node name="CountdownTask" type="Node" parent="StuntRace/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1097372777]
+script = ExtResource("17_clf25")
+metadata/_custom_type_script = "uid://8xvij2vjrnn2"
+
+[node name="SFXTask" type="Node" parent="StuntRace/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1875498786]
+script = ExtResource("18_k3cxb")
+sound = 2
+advance_mode = 1
+duration_sec = 3.0
+metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
+
+[node name="StuntRaceTask" type="Node" parent="StuntRace/SequentialTaskRunner" unique_id=1438498696 node_paths=PackedStringArray("checkpoints")]
+script = ExtResource("19_k3cxb")
+checkpoints = [NodePath("CheckpointMarker1"), NodePath("CheckpointMarker2"), NodePath("CheckpointMarker3"), NodePath("CheckpointMarker4"), NodePath("CheckpointMarker5")]
+total_laps = null
+objective_key = null
+
+[node name="CheckpointMarker1" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1048335829 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.5, 5.766265, 16)
+width = 32.0
+
+[node name="CheckpointMarker2" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=437231926 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-0.7071068, 0, 0.7071067, 0, 1, 0, -0.7071067, 0, -0.7071068, -235.2894, 1.7501221, 409.61603)
+width = 32.0
+
+[node name="CheckpointMarker3" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=448904890 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -335.49997, 1.7500701, 488.5)
+width = 32.0
+
+[node name="CheckpointMarker4" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=2128726192 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -528, 1.7500701, 512)
+width = 32.0
+
+[node name="CheckpointMarker5" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=163288397 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -875, 1.7500701, 462)
+width = 32.0
+
 [node name="StuntCity" parent="." unique_id=11418617 instance=ExtResource("27_grj8g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 0)
 
@@ -2198,6 +2243,15 @@ transform = Transform3D(-1, 0, -2.6226832e-07, 0, 1, 0, 2.6226832e-07, 0, -1, -9
 
 [node name="Ramp" parent="props" unique_id=319877564 instance=ExtResource("6_w1aki")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -232.5, 0, 32)
+
+[node name="Ramp7" parent="props" unique_id=1633736762 instance=ExtResource("6_w1aki")]
+transform = Transform3D(0.7071067, 0, -0.7071068, 0, 1, 0, 0.7071068, 0, 0.7071067, -199.67159, 0, 364.57108)
+
+[node name="Ramp8" parent="props" unique_id=1887397100 instance=ExtResource("6_w1aki")]
+transform = Transform3D(5.9604645e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, 5.9604645e-08, -512.87823, 0, 469.7878)
+
+[node name="Ramp9" parent="props" unique_id=1825882042 instance=ExtResource("6_w1aki")]
+transform = Transform3D(-0.70710665, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710665, -204.4874, 0, 639.9092)
 
 [node name="Ramp6" parent="props" unique_id=2139185877 instance=ExtResource("6_w1aki")]
 transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, -485.08014, 0, 220.06699)

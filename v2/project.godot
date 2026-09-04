@@ -81,6 +81,7 @@ import/blender/enabled=false
 [global_group]
 
 AnimalPaths=""
+stunt_checkpoints=""
 
 [gui]
 
