@@ -94,6 +94,29 @@ forfeits the bonus — never leaves you under-fueled. One chance is fine when th
 "bonus or no bonus."
 
 
+## As-built (POC) — deviations & tradeoffs
+
+The POC was built **node-based** (runner + tasks under the EventStartCircle, reusing the race
+plumbing), not the imperative approach sketched above.
+
+- **`StuntRaceGameMode`** is a near-copy of `RoadRaceGameMode` (the StreetRace convention:
+  duplicate-and-diverge), launched via the level's existing Stunt Race event circle
+  (`target_gamemode = STUNT_RACE`).
+- **`StuntRaceTask` subclasses `RaceTask`** — the opposite of M0's "don't borrow RaceTask" call.
+  Reuse won: it inherits per-racer tracking, respawn-point updates, results, and NPC support
+  (`NPCRaceManager` reaches into `RaceTask._peer_progress`, so a standalone task would mean retyping
+  that manager too). It presents a single ordered `checkpoints` list and **hides** RaceTask's
+  lap-shaped exports, mapping list → (start=first, end=last, middle=laps, `total_laps=1`) at runtime.
+  It also carries the item-spawner lifecycle (`spawners` + `on_race_start`/`on_race_end`, driven by
+  the gamemode's Enter/Exit).
+
+**Tradeoff / tech debt:** the lap model is hidden, not gone — a bit of cleverness (hidden exports, a
+plain-timer HUD override in place of "Lap x/y") in service of reuse. **Revisit when the HUD system is
+reworked** (minigames incoming): that's the natural point to decide whether to decouple
+`StuntRaceTask` from `RaceTask` (and retype `NPCRaceManager` off it) and give the stunt race its own
+flat-list task + HUD.
+
+
 ## Implementation plan (PM)
 
 > Ordered by dependency, not priority. Each milestone is a roughly self-contained,
