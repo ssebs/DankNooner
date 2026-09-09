@@ -5,7 +5,7 @@
 ## FreeRoam on completion. No results screen, no countdown.
 class_name ChallengeGameMode extends GameModeType
 
-@export var tutorial_hud: TutorialHUD
+@export var tutorial_hud: TutorialHUDState
 @export var lobby_manager: LobbyManager
 @export var audio_manager: AudioManager
 
@@ -62,7 +62,7 @@ func Exit(_state_context: StateContext):
 		_active_runner.stop()
 		_active_runner = null
 
-	tutorial_hud.hide()
+	tutorial_hud.hide_ui()
 	_start_circle = null
 	_runners = []
 	_active_runner_index = -1
