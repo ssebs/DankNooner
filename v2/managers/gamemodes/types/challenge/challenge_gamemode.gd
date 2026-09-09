@@ -8,12 +8,12 @@ class_name ChallengeGameMode extends GameModeType
 @export var tutorial_hud: TutorialHUDState
 @export var lobby_manager: LobbyManager
 @export var audio_manager: AudioManager
+@export var _respawn_delay: float = 2.5
 
 var _start_circle: EventStartCircle
 var _runners: Array[TaskRunner] = []
 var _active_runner: TaskRunner
 var _active_runner_index: int = -1
-var _respawn_delay: float = 3.0
 var _complete_toast_duration: float = 3.0
 var _complete_toast_remaining: float = -1.0
 

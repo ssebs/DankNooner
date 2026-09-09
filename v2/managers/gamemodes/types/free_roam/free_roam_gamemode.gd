@@ -4,6 +4,7 @@ class_name FreeRoamGameMode extends GameModeType
 @export var game_mode_event_hud_state: GamemodeEventHUDState
 @export var level_manager: LevelManager
 @export var npc_traffic_manager: NPCTrafficManager
+@export var _respawn_delay: float = 2.5
 
 ## Crash-site respawn is only safe on ground the bike can actually stand on.
 ## Steeper than this at the crash site → fall back to the last flat breadcrumb.
@@ -12,7 +13,6 @@ const RESPAWN_STEEP_SLOPE_DEG: float = 35.0
 const RESPAWN_FLAT_MAX_SLOPE_DEG: float = 25.0
 const BREADCRUMB_INTERVAL_SECS: float = 1.0
 
-var _respawn_delay: float = 3.0
 
 var _ctx: GamemodeStateContext
 
