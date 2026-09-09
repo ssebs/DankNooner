@@ -187,8 +187,10 @@ The design points behind it:
 ### Player Entity
 
 `PlayerEntity` is a `CharacterBody3D` using composition. Most components are `@export` node
-references wired in `player_entity.tscn`; `HUDController` is an `@onready %HUDController` and
-`SkidmarkController` hangs under `AnimationController` rather than off the entity.
+references wired in `player_entity.tscn`; `SkidmarkController` hangs under `AnimationController`
+rather than off the entity. The HUD is no longer a component — it's the global `HUDManager`
+(see [HUD Manager](#hud-manager)), injected onto the entity by `SpawnManager`; on spawn the local
+player registers itself as `hud_manager.local_player` and flips it to the riding HUD.
 
 The five **simulation** controllers are called sequentially from `_rollback_tick()` via their
 `on_movement_rollback_tick()` methods (order matters — see the comment there). The rest are
@@ -209,8 +211,9 @@ The split that matters, and that the file layout does **not** show:
   `PlayerEntity._rollback_tick()`. Grep that method for the current set and order. **Order is
   load-bearing** — boost runs first and is the only one evaluated while crashed, so a crash
   mid-boost cancels the burn and its camera FX instead of latching them until respawn.
-- **Everything else is local/visual** and runs off `_process()` — camera, animation, HUD,
-  skidmarks, minimap. None of it may write simulation state.
+- **Everything else is local/visual** and runs off `_process()` — camera, animation, skidmarks.
+  None of it may write simulation state. (The HUD and minimap moved out of the entity into
+  `HUDManager` — see [HUD Manager](#hud-manager).)
 
 `IKController` (FABRIK solver) and `RagdollController` (PhysicalBone3D skeleton) live under
 `player/characters/scripts/`, not with the controllers, because they're driven by
@@ -354,6 +357,24 @@ The `PauseManager` (`managers/pause_manager.gd`) coordinates InputManager, MenuM
 - **Unpause** (`unpause_requested`): Sets state to `IN_GAME`, hides menus, disables MenuManager processing, enables LevelManager processing
 
 The same "pause" action triggers different behavior based on `InputState`.
+
+### HUD Manager
+
+`HUDManager` (`managers/hud/hud_manager.gd`) runs a **state machine of `HUDState`s** (all under
+`managers/hud/`). `RidingHUDState` is the gameplay HUD — on spawn the local `PlayerEntity` sets
+`hud_manager.local_player` and calls `go_to_riding_hud()`, and the state polls that player's
+controllers in its own `Physics_Update()` rather than the entity's `_process()`, so it owns no
+simulation state. `LevelManager` flips back to `NullHUDState` when leaving gameplay for a menu.
+
+- **The overlay HUDs are parked states their gamemode drives directly, not transitioned to** —
+  `TutorialHUDState`, `ResultsHUDState` and `GamemodeEventHUDState` sit under the same state
+  machine but are shown/hidden by their owning gamemode via `@rpc` calls (grep the gamemode for the
+  `rpc_*` entry points). They never become the machine's `current_state`.
+- **`RidingHUDState.push_checkpoint_marker()`** is how the race gamemodes mark each racer's next
+  checkpoint on that peer's minimap: the state is a single node at a shared path on every peer, so
+  the server can `rpc_id` the owning client's minimap through it.
+- Pause hides the current HUD in place (`set_hud_hidden`) instead of transitioning, so unpause
+  restores it without a state change.
 
 ### Audio Manager
 

@@ -82,7 +82,7 @@ EventStartCircle
 4. **Runner walk:** `SequentialTaskRunner.start(peer_ids)` builds `PlayerTaskState` per peer, wires triggers from its leaf children, calls `on_enter` of the first leaf. `Update(delta)` runs `_update_player` per peer: `eval_when` selects continuous (`ALWAYS`), one-shot (`ON_ENTER`), or zone-gated (`WHILE_INSIDE`) evaluation; on `check() == true` the peer advances. Peer completion → `player_completed`; all complete → `all_completed`.
 5. **Nesting gate:** if a leaf advance lands a peer on a child that is itself a `SequentialTaskRunner`, the peer parks. Once all non-completed peers are parked at the same gate index, the parent starts the nested runner with those peers and forwards its `update`/`crash`/`disconnect` calls. On `all_completed` the parent advances every parked peer past the gate.
 6. **Crash respawn:** `TutorialGameMode` listens to `gamemode_manager.player_crashed` and forwards to `runner.notify_crashed(peer_id)`. The runner clears scratchpad, gating, and emits `respawn_requested(peer_id)`. The gamemode owns the respawn delay timer and calls `spawn_manager.respawn_player.rpc(peer_id)`, which uses the player's persistent `rb_respawn_transform` (set by the most recent `TeleportTask` via `SpawnManager.respawn_player_at`). `FreeRoamGameMode.Enter()` calls `reset_respawn_point.rpc()` on transition so subsequent free-roam crashes fall back to `player_spawn_pos`.
-7. **Runner chain & results:** `TutorialGameMode` listens for `all_completed` on the active runner; on signal it advances to the next runner under the circle. On the last runner's completion it builds the `ResultsData` from `runner._player_states`, shows `ResultsHUD`, runs a skip-or-timeout countdown, then transitions back to `FreeRoamGameMode`.
+7. **Runner chain & results:** `TutorialGameMode` listens for `all_completed` on the active runner; on signal it advances to the next runner under the circle. On the last runner's completion it builds the `ResultsData` from `runner._player_states`, shows `ResultsHUDState`, runs a skip-or-timeout countdown, then transitions back to `FreeRoamGameMode`.
 
 ## Per-peer scratchpad: `state: Dictionary`
 
@@ -92,7 +92,7 @@ See the `GameModeTask` file header for the full contract.
 
 ## Dependency injection
 
-`SequentialTaskRunner` and tutorial-specific tasks (`CloseHelpTask`) live in level scenes; their dependencies (`SpawnManager`, `TutorialHUD`, `MenuManager`, `HelpMenuState`, `InputStateManager`) live in `main_game.tscn`. Cross-scene `@export` NodePaths are fragile, so:
+`SequentialTaskRunner` and tutorial-specific tasks (`CloseHelpTask`) live in level scenes; their dependencies (`SpawnManager`, `TutorialHUDState`, `MenuManager`, `HelpMenuState`, `InputStateManager`) live in `main_game.tscn`. Cross-scene `@export` NodePaths are fragile, so:
 
 - Runners and `CloseHelpTask` declare plain `var` (not `@export`) fields.
 - `TutorialGameMode.Enter()` / the race gamemodes' `Enter()` call `_inject_runner_deps()` (runs on every peer, server and client) which for each top-level runner:
