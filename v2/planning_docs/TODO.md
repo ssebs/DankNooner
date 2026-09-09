@@ -25,11 +25,12 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] fix ai slop / limit scope of game / delete old code/files / simplify
+  - [ ] HUDManager
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [ ] make tricks + combos easier to do
   - [ ] tricks should feel juicy instead of focusing on realism (to extent)
-- [ ] fix ai slop / limit scope of game / delete old code/files / simplify
 - [ ] fix game breaking bugs
 
 ---
