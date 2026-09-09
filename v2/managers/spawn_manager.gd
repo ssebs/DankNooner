@@ -6,6 +6,7 @@ signal player_spawned(player: PlayerEntity)
 @export var lobby_manager: LobbyManager
 @export var level_manager: LevelManager
 @export var audio_manager: AudioManager
+@export var hud_manager: HUDManager
 @export var settings_manager: SettingsManager
 @export var gamemode_manager: GamemodeManager
 
@@ -152,9 +153,10 @@ func add_player_locally(peer_id: int, player_def_dict: Dictionary):
 		level_manager.current_level.player_entity_scene.instantiate() as PlayerEntity
 	)
 	player_to_add.name = str(peer_id)
-	player_to_add.audio_manager = audio_manager  # HACK
-	player_to_add.settings_manager = settings_manager  # HACK
-	player_to_add.gamemode_manager = gamemode_manager  # HACK
+	player_to_add.audio_manager = audio_manager # HACK
+	player_to_add.settings_manager = settings_manager # HACK
+	player_to_add.gamemode_manager = gamemode_manager # HACK
+	player_to_add.hud_manager = hud_manager # HACK
 	player_to_add.bike_definition = player_def.bike_skin
 	player_to_add.character_definition = player_def.character_skin
 
@@ -195,5 +197,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("settings_manager must not be empty")
 	if gamemode_manager == null:
 		issues.append("gamemode_manager must not be empty")
+	if hud_manager == null:
+		issues.append("hud_manager must not be empty")
 
 	return issues

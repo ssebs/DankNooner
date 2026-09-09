@@ -1,13 +1,8 @@
 @tool
-class_name HUDController extends Control
+## The riding HUD (Guages, Balance Bar, Boost, etc.)
+class_name RidingHUDState extends HUDState
 
-@export var player_entity: PlayerEntity
-@export var movement_controller: MovementController
-@export var input_controller: InputController
-@export var gearing_controller: GearingController
-@export var trick_controller: TrickController
-@export var crash_controller: CrashController
-@export var boost_controller: BoostController
+@export var hud_manager: HUDManager
 
 const _RPM_COLOR_LOW := Color(0.103055954, 0.5546875, 0.052001953, 1)
 const _RPM_COLOR_HIGH := Color(0.85, 0.1, 0.1, 1)
@@ -26,8 +21,17 @@ const _RPM_COLOR_HIGH := Color(0.85, 0.1, 0.1, 1)
 @onready var _balance_bar: BalanceBar = %BalanceBar
 @onready var _boost_gauge: BoostGauge = %BoostGauge
 @onready var _combo_counter: ComboCounter = %ComboCounter
-@onready var _mobile_controls: Control = %MobileControls
 @onready var _minimap: Minimap = %Minimap
+
+
+var player_entity: PlayerEntity
+var movement_controller: MovementController
+var input_controller: InputController
+var gearing_controller: GearingController
+var trick_controller: TrickController
+var crash_controller: CrashController
+var boost_controller: BoostController
+
 
 var input_state_mgr: InputStateManager = null
 var _rpm_fill_style: StyleBoxFlat = null
@@ -40,15 +44,27 @@ var _prev_boost_held: bool = false
 var _netfox_debug_label: Label = null
 var _netfox_dbg_accum: float = 0.0
 
+func _ready() -> void:
+	hide_ui()
 
-func _ready():
+func Enter(_state_context: StateContext):
+	player_entity = hud_manager.local_player
+	if player_entity == null:
+		DebugUtils.DebugErrMsg("could not get local player from ridinghudstate")
+		return
+	
+	movement_controller = player_entity.movement_controller
+	input_controller = player_entity.input_controller
+	gearing_controller = player_entity.gearing_controller
+	trick_controller = player_entity.trick_controller
+	crash_controller = player_entity.crash_controller
+	boost_controller = player_entity.boost_controller
+	
+	
 	if Engine.is_editor_hint():
 		return
 
 	input_state_mgr = get_tree().get_first_node_in_group(UtilsConstants.GROUPS["InputStateManager"])
-
-	if !input_state_mgr.is_mobile:
-		_mobile_controls.queue_free()
 
 	_rpm_fill_style = _rpm_bar.get_theme_stylebox("fill").duplicate() as StyleBoxFlat
 	_rpm_bar.add_theme_stylebox_override("fill", _rpm_fill_style)
@@ -65,7 +81,12 @@ func _ready():
 	_balance_bar.hide()
 
 
-func _process(delta: float):
+	show_ui()
+
+func Exit(_state_context: StateContext):
+	hide_ui()
+
+func Physics_Update(delta: float):
 	if Engine.is_editor_hint():
 		return
 
@@ -126,15 +147,16 @@ func _process(delta: float):
 		)
 
 
+##### TODO - move to balance_bar.gd
 func _init_balance_bar(trick_type: TrickController.Trick):
 	var bd = player_entity.bike_definition
 	match trick_type:
 		TrickController.Trick.STOPPIE:
-			_balance_bar.min_val = -bd.max_stoppie_angle_deg
+			_balance_bar.min_val = - bd.max_stoppie_angle_deg
 			_balance_bar.max_val = 0.0
 			# # No dedicated stoppie balance point — warn band sits in the usable middle
-			_balance_bar.warn_low_val = -bd.max_stoppie_angle_deg * 0.8
-			_balance_bar.warn_high_val = -bd.max_stoppie_angle_deg * 0.3
+			_balance_bar.warn_low_val = - bd.max_stoppie_angle_deg * 0.8
+			_balance_bar.warn_high_val = - bd.max_stoppie_angle_deg * 0.3
 		TrickController.Trick.WHEELIE_MOD, TrickController.Trick.WHEELIE_SITTING:
 			_balance_bar.min_val = 0.0
 			_balance_bar.max_val = bd.max_wheelie_angle_deg
@@ -189,8 +211,8 @@ func _on_respawned():
 #endregion
 
 
-func show_hud() -> void:
-	visible = true
+func show_ui() -> void:
+	ui.visible = true
 	_minimap.activate(player_entity)
 	# Local-only (only local reaches show_hud): expand the minimap into the full map while IN_MAP.
 	input_state_mgr.input_state_changed.connect(_on_input_state_changed)
@@ -217,8 +239,8 @@ func push_checkpoint_marker(peer_id: int, pos: Vector3, has_target: bool) -> voi
 	_minimap.rpc_set_checkpoint.rpc_id(peer_id, pos, has_target)
 
 
-func hide_hud() -> void:
-	visible = false
+func hide_ui() -> void:
+	ui.visible = false
 
 
 ## Called from player_entity.gd's do_respawn
@@ -232,16 +254,6 @@ func do_reset():
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
-	if player_entity == null:
-		issues.append("player_entity must not be empty")
-	if movement_controller == null:
-		issues.append("movement_controller must not be empty")
-	if input_controller == null:
-		issues.append("input_controller must not be empty")
-	if gearing_controller == null:
-		issues.append("gearing_controller must not be empty")
-	if trick_controller == null:
-		issues.append("trick_controller must not be empty")
-	if crash_controller == null:
-		issues.append("crash_controller must not be empty")
+	if hud_manager == null:
+		issues.append("hud_manager must not be empty")
 	return issues

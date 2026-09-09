@@ -9,6 +9,7 @@ var menu_manager: MenuManager
 var pause_manager: PauseManager
 var input_state_manager: InputStateManager
 var audio_manager: AudioManager
+var hud_manager: HUDManager
 
 
 func _ready():
@@ -26,6 +27,8 @@ func _ready():
 			input_state_manager = child
 		elif child is AudioManager:
 			audio_manager = child
+		elif child is HUDManager:
+			hud_manager = child
 
 		child.add_to_group(UtilsConstants.GROUPS["Managers"], true)
 		child.manager_manager = self

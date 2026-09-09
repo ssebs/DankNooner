@@ -60,7 +60,6 @@ signal crashed(peer_id: int)
 @export var rear_wheel_back_marker: Marker3D
 
 @onready var controllers_node: Node3D = %_Controllers
-@onready var hud_controller: HUDController = %HUDController
 
 @onready var visual_root: Node3D = %VisualRoot
 @onready var character_skin: CharacterSkin = %CharacterSkin
@@ -76,6 +75,7 @@ var is_local_client: bool = false
 var audio_manager: AudioManager
 var settings_manager: SettingsManager
 var gamemode_manager: GamemodeManager
+var hud_manager: HUDManager
 var username: String:
 	set(v):
 		username = v
@@ -133,7 +133,7 @@ var _prev_is_crashed: bool = false
 
 
 func _ready():
-	floor_max_angle = deg_to_rad(170.0)  # allow riding on steep ramps, loops, ceilings
+	floor_max_angle = deg_to_rad(170.0) # allow riding on steep ramps, loops, ceilings
 	_init_mesh()
 	_init_collision_shape()
 	_init_ik()
@@ -321,9 +321,11 @@ func _deferred_init():
 		is_local_client = true
 		camera_controller.deferred_init()
 		_init_audio()
-		hud_controller.show_hud()
+		hud_manager.local_player = self
+		add_to_group(UtilsConstants.GROUPS["LocalPlayer"])
+		
 	else:
-		hud_controller.hide_hud()
+		hud_manager.hide_all()
 
 
 func _init_audio():
@@ -461,6 +463,7 @@ func do_respawn():
 	# back to base, then re-init IK so its targets snap to the fresh markers.
 	_init_mesh()
 	_init_ik()
+	hud_manager.go_to_riding_hud()
 	respawned.emit()
 
 
@@ -486,8 +489,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("camera_controller must not be empty")
 	if boost_controller == null:
 		issues.append("boost_controller must not be empty")
-	if hud_controller == null:
-		issues.append("hud_controller must not be empty")
 	if bike_definition == null:
 		issues.append("bike_definition must not be empty")
 	if collision_shape_3d == null:
