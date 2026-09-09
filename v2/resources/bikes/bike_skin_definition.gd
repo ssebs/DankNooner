@@ -91,7 +91,7 @@ var engine_rpm_pitch_curve: Curve = preload("res://resources/bikes/ninja_rpm_pit
 
 @export_group("Physics")
 @export var max_speed: float = 88.0
-@export var acceleration: float = 12.0
+@export var acceleration: float = 10.0
 @export var brake_strength: float = 30.0
 @export var friction: float = 2.0
 @export var engine_brake_strength: float = 12.0
@@ -238,7 +238,7 @@ func to_dict() -> Dictionary:
 			mod_paths.append(mod.resource_path)
 	var base := base_res_path
 	if base == "":
-		base = resource_path  # un-customized base def loaded directly from res://
+		base = resource_path # un-customized base def loaded directly from res://
 	return {
 		"skin_name": skin_name,
 		"base_res_path": base,
