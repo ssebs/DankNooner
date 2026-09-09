@@ -34,6 +34,7 @@ func _ready():
 
 	spawn_manager.player_spawned.connect(_on_player_spawned)
 	gamemode_manager.player_disconnected.connect(_on_player_disconnected)
+	gamemode_manager.match_ended.connect(_on_match_ended)
 
 
 func _process(_delta: float):
@@ -111,6 +112,12 @@ func _on_player_spawned(player: PlayerEntity):
 
 func _on_player_disconnected(peer_id: int):
 	_peer_states.erase(peer_id)
+
+
+## Match teardown — drop every peer's scoring row so it can't outlive the match into a menu
+## level (whose current_level has no player_spawn_pos), which would crash the _process scan.
+func _on_match_ended():
+	_peer_states.clear()
 #endregion
 
 
