@@ -90,7 +90,8 @@ func start_game(
 ## Server receives request to change gamemode, broadcasts to all peers
 @rpc("any_peer", "call_local", "reliable")
 func change_gamemode(
-	gamemode: GameModeType.Kind, peer_id: int, event_start_circle_path: NodePath = ^""
+	gamemode: GameModeType.Kind, peer_id: int, event_start_circle_path: NodePath = ^"",
+	skip_spawn_redistribute: bool = false
 ):
 	if !multiplayer.is_server():
 		return
@@ -104,7 +105,7 @@ func change_gamemode(
 		return
 
 	current_game_mode = gamemode
-	_rpc_transition_gamemode.rpc(gamemode, peer_id, event_start_circle_path)
+	_rpc_transition_gamemode.rpc(gamemode, peer_id, event_start_circle_path, skip_spawn_redistribute)
 
 
 ## All peers transition their state machine to the new gamemode.
@@ -112,10 +113,12 @@ func change_gamemode(
 ## refs can't cross RPC boundaries — the path is the same on every peer's level scene.
 @rpc("call_local", "reliable")
 func _rpc_transition_gamemode(
-	gamemode: GameModeType.Kind, peer_id: int, event_start_circle_path: NodePath = ^""
+	gamemode: GameModeType.Kind, peer_id: int, event_start_circle_path: NodePath = ^"",
+	skip_spawn_redistribute: bool = false
 ):
 	var ctx := GamemodeStateContext.new()
 	ctx.peer_id = peer_id
+	ctx.skip_spawn_redistribute = skip_spawn_redistribute
 	if !event_start_circle_path.is_empty():
 		var circle := get_node(event_start_circle_path) as EventStartCircle
 		ctx.event_start_circle = circle

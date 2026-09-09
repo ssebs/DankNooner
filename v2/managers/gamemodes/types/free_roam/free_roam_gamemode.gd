@@ -61,19 +61,21 @@ func Enter(state_context: StateContext):
 		# the legacy single-spawn behavior.
 		# Must hit every peer, not just _ctx.peer_id â€” that's only the player who
 		# triggered the transition (the server, for race end), leaving clients riding.
-		var grid_markers: Array[Marker3D] = level_manager.current_level.grid_markers
-		var slot: int = 0
-		for peer_id in gamemode_manager.lobby_manager.lobby_players:
-			if grid_markers.is_empty():
-				spawn_manager.reset_respawn_point.rpc(peer_id)
-				spawn_manager.respawn_player.rpc(peer_id)
-			else:
-				var idx: int = min(slot, grid_markers.size() - 1)
-				var marker := grid_markers[idx]
-				spawn_manager.respawn_player_at.rpc(
-					peer_id, marker.global_position, marker.global_basis
-				)
-				slot += 1
+		# Skipped when returning from a finished race — players stay where they finished.
+		if !_ctx.skip_spawn_redistribute:
+			var grid_markers: Array[Marker3D] = level_manager.current_level.grid_markers
+			var slot: int = 0
+			for peer_id in gamemode_manager.lobby_manager.lobby_players:
+				if grid_markers.is_empty():
+					spawn_manager.reset_respawn_point.rpc(peer_id)
+					spawn_manager.respawn_player.rpc(peer_id)
+				else:
+					var idx: int = min(slot, grid_markers.size() - 1)
+					var marker := grid_markers[idx]
+					spawn_manager.respawn_player_at.rpc(
+						peer_id, marker.global_position, marker.global_basis
+					)
+					slot += 1
 
 		npc_traffic_manager.start_traffic()
 	else:

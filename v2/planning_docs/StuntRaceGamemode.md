@@ -105,10 +105,11 @@ plumbing), not the imperative approach sketched above.
 - **`StuntRaceTask` subclasses `RaceTask`** — the opposite of M0's "don't borrow RaceTask" call.
   Reuse won: it inherits per-racer tracking, respawn-point updates, results, and NPC support
   (`NPCRaceManager` reaches into `RaceTask._peer_progress`, so a standalone task would mean retyping
-  that manager too). It presents a single ordered `checkpoints` list and **hides** RaceTask's
+  that manager too). It reads its ordered `CheckPointMarker` children as the route and **hides** RaceTask's
   lap-shaped exports, mapping list → (start=first, end=last, middle=laps, `total_laps=1`) at runtime.
-  It also carries the item-spawner lifecycle (`spawners` + `on_race_start`/`on_race_end`, driven by
-  the gamemode's Enter/Exit).
+  It also carries the item-spawner lifecycle — its `PickupSpawner` children, activated/deactivated
+  via `on_race_start`/`on_race_end` (driven by the gamemode's Enter/Exit). See
+  [GamemodeSystem — Level-authored task inputs](./GamemodeSystem.md#level-authored-task-inputs).
 
 **Tradeoff / tech debt:** the lap model is hidden, not gone — a bit of cleverness (hidden exports, a
 plain-timer HUD override in place of "Lap x/y") in service of reuse. **Revisit when the HUD system is
