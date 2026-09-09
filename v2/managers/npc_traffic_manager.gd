@@ -20,7 +20,7 @@ class_name NPCTrafficManager extends BaseManager
 	load("res://resources/player/default_player_definition.tres")
 ]
 ## How long a crashed rider stays down before it's put back on the road. Deliberately
-## longer than the player's own respawn (FreeRoamGameMode._respawn_delay, 3s): a rider
+## longer than the player's own respawn (FreeRoamGameMode._respawn_delay, 2.5s): a rider
 ## recovers roughly where it went down, so matching the player's timer drops it straight
 ## back onto the player it just took out — crash, respawn, crash. Randomized so a pile-up
 ## doesn't pop back all at once either.

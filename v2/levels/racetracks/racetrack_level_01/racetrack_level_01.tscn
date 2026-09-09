@@ -17,6 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="14_hyio3"]
 [ext_resource type="Material" uid="uid://bbd265hdx34nq" path="res://levels/assets/map_terrain_mine/road_material.tres" id="20_5ryor"]
 [ext_resource type="Script" uid="uid://bxp3i4cnonh8y" path="res://addons/road-generator/nodes/road_manager.gd" id="22_idsao"]
+[ext_resource type="Material" uid="uid://dpashsuk5lr4x" path="res://addons/road-generator/resources/road_texture.material" id="23_6j553"]
 [ext_resource type="Script" uid="uid://cph7euje06kel" path="res://addons/road-generator/nodes/road_container.gd" id="23_ichjr"]
 [ext_resource type="Texture2D" uid="uid://cjrex0qopeses" path="res://levels/assets/graybox/lightgray.png" id="24_r8gbb"]
 [ext_resource type="Script" uid="uid://difs1qg4mpcpw" path="res://addons/road-generator/nodes/road_point.gd" id="24_y3v0i"]
@@ -210,9 +211,9 @@ enable_npcs = true
 script = ExtResource("8_ckww3")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="GridSpawnTask" type="Node" parent="Race/SequentialTaskRunner" unique_id=806939545 node_paths=PackedStringArray("grid_markers")]
+[node name="GridSpawnTask" type="Node" parent="Race/SequentialTaskRunner" unique_id=806939545 node_paths=PackedStringArray("first_grid_marker")]
 script = ExtResource("9_5ryor")
-grid_markers = [NodePath("RaceGridSpot1"), NodePath("RaceGridSpot2"), NodePath("RaceGridSpot3"), NodePath("RaceGridSpot4"), NodePath("RaceGridSpot5"), NodePath("RaceGridSpot6"), NodePath("RaceGridSpot7"), NodePath("RaceGridSpot8")]
+first_grid_marker = NodePath("RaceGridSpot1")
 
 [node name="RaceGridSpot1" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=2006111591]
 transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -14.24999, 0.24999976, -5.9999924)
@@ -254,12 +255,12 @@ metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
 [node name="RaceTask" type="Node" parent="Race/SequentialTaskRunner" unique_id=500670208 node_paths=PackedStringArray("start_checkpoint", "lap_checkpoints", "end_checkpoint")]
 script = ExtResource("13_xcb1u")
-start_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
+start_checkpoint = NodePath("Race01CheckpointMarkerStartStop1")
 lap_checkpoints = [NodePath("Race01CheckpointMarker02"), NodePath("Race01CheckpointMarker03"), NodePath("Race01CheckpointMarker04"), NodePath("Race01CheckpointMarker05"), NodePath("Race01CheckpointMarker06"), NodePath("Race01CheckpointMarker07"), NodePath("Race01CheckpointMarker08")]
-end_checkpoint = NodePath("Race01CheckpointMarkerStartStop")
+end_checkpoint = NodePath("Race01CheckpointMarkerStartStop1")
 total_laps = 2
 
-[node name="Race01CheckpointMarkerStartStop" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1048335829 instance=ExtResource("14_hyio3")]
+[node name="Race01CheckpointMarkerStartStop1" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1048335829 instance=ExtResource("14_hyio3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 2, -12.5)
 width = 20.0
 
@@ -2181,6 +2182,7 @@ metadata/_custom_type_script = "uid://bxp3i4cnonh8y"
 [node name="Road_001" type="Node3D" parent="RoadManager" unique_id=904810350]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.225777, 0.050048828, -0.26402166)
 script = ExtResource("23_ichjr")
+material_resource = ExtResource("23_6j553")
 use_lowpoly_preview = true
 generate_ai_lanes = true
 ai_lane_group = "road_lanes"
@@ -2532,6 +2534,7 @@ prior_pt_init = NodePath("../RP_033")
 [node name="Road_002" type="Node3D" parent="RoadManager" unique_id=122661391]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.168515, 0.05000305, 89.53543)
 script = ExtResource("23_ichjr")
+material_resource = ExtResource("23_6j553")
 use_lowpoly_preview = true
 edge_containers = Array[NodePath]([NodePath("../Road_001"), NodePath("../Road_001")])
 edge_rp_targets = Array[NodePath]([NodePath("RP_028"), NodePath("RP_034")])

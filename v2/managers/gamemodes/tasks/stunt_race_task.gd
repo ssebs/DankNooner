@@ -1,7 +1,8 @@
 @tool
 ## The stunt race's body task: point-to-point checkpoint racing plus the item-spawner lifecycle.
-## Author the route as ONE ordered `checkpoints` list — cross them first-to-last, the last is the
-## finish. Extends RaceTask to reuse its per-racer tracking / respawn-point / results / NPC support,
+## Author the route as the CheckPointMarker children of this task, in tree order — cross them
+## first-to-last, the last is the finish. Extends RaceTask to reuse its per-racer tracking /
+## respawn-point / results / NPC support,
 ## but hides RaceTask's lap-shaped exports: the list drives start=first, end=last, middle=laps,
 ## total_laps=1. Use it in place of RaceTask under the SequentialTaskRunner.
 ##
@@ -10,13 +11,17 @@
 ## spawners are TBD — see the item system in planning_docs/StuntRaceGamemode.md.
 class_name StuntRaceTask extends RaceTask
 
-## Route gates in order. Cross them first-to-last; the last one is the finish.
-@export var checkpoints: Array[CheckPointMarker] = []
-@export var spawners: Array[Node] = []
+## Signposts only — assign the first of each so a fresh node shows in the inspector that these
+## children are expected. The live sets are auto-collected from the children (on_enter/on_race_start).
+@export var first_checkpoint: CheckPointMarker
+@export var first_spawner: PickupSpawner
 
 
-## Map the flat list onto RaceTask's start/lap/end before the base wires its signals (on_enter).
+## Map the CheckPointMarker children onto RaceTask's start/lap/end before the base wires its
+## signals (on_enter).
 func on_enter(player: PlayerEntity, state: Dictionary) -> void:
+	var checkpoints: Array[CheckPointMarker] = []
+	checkpoints.assign(find_children("*", "CheckPointMarker", false))
 	total_laps = 1
 	start_checkpoint = checkpoints[0]
 	end_checkpoint = checkpoints[checkpoints.size() - 1]
@@ -24,15 +29,16 @@ func on_enter(player: PlayerEntity, state: Dictionary) -> void:
 	super(player, state)
 
 
-## Server-only, called by StuntRaceGameMode when the race starts.
+## Server-only, called by StuntRaceGameMode when the race starts. Spawners are
+## the PickupSpawner children of this task — no manual inspector wiring.
 func on_race_start() -> void:
-	for spawner in spawners:
+	for spawner in find_children("*", "PickupSpawner", false):
 		spawner.activate(_runner.spawn_manager)
 
 
 ## Server-only, called by StuntRaceGameMode when the race ends / the mode exits.
 func on_race_end() -> void:
-	for spawner in spawners:
+	for spawner in find_children("*", "PickupSpawner", false):
 		spawner.deactivate()
 
 
@@ -52,6 +58,16 @@ func _validate_property(property: Dictionary) -> void:
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues: PackedStringArray = []
-	if checkpoints.size() < 2:
-		issues.append("checkpoints needs at least 2 (start + finish)")
+	var checkpoints := find_children("*", "CheckPointMarker", false)
+	if first_checkpoint == null:
+		issues.append("assign first_checkpoint — CheckPointMarker children are required (auto-collected at runtime)")
+	elif checkpoints.size() < 2:
+		issues.append("needs at least 2 CheckPointMarker children (start + finish)")
+	elif not checkpoints[0].name.ends_with("1"):
+		issues.append("first CheckPointMarker should be named ending in \"1\" so route order counts up")
+	var spawners := find_children("*", "PickupSpawner", false)
+	if first_spawner == null:
+		issues.append("assign first_spawner — PickupSpawner children are required (auto-collected at runtime)")
+	elif not spawners.is_empty() and not spawners[0].name.ends_with("1"):
+		issues.append("first PickupSpawner should be named ending in \"1\" so they count up")
 	return issues

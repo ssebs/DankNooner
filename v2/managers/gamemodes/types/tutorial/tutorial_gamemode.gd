@@ -8,12 +8,12 @@ class_name TutorialGameMode extends GameModeType
 @export var menu_manager: MenuManager
 @export var audio_manager: AudioManager
 @export var help_menu_state: HelpMenuState
+@export var _respawn_delay: float = 2.5
 
 var _start_circle: EventStartCircle
 var _runners: Array[TaskRunner] = []
 var _active_runner: TaskRunner
 var _active_runner_index: int = -1
-var _respawn_delay: float = 3.0
 var _results_countdown: float = -1.0
 var _results_countdown_total: float = 10.0
 

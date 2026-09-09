@@ -16,6 +16,7 @@ class_name StreetRaceGameMode extends GameModeType
 ## RoadRaceGameMode. Started in Enter, stopped in Exit, both server-only.
 @export var npc_traffic_manager: NPCTrafficManager
 @export var riding_hud_state: RidingHUDState
+@export var _respawn_delay: float = 2.5
 
 const RESULTS_REFRESH_SECS: float = 1.0
 
@@ -24,7 +25,6 @@ var _race_task: RaceTask
 var _runners: Array[TaskRunner] = []
 var _active_runner: TaskRunner
 var _active_runner_index: int = -1
-var _respawn_delay: float = 3.0
 var _results_countdown: float = -1.0
 var _results_countdown_total: float = 10.0
 ## Human rows cached at the all-finished snapshot — the runner clears its state on
@@ -203,7 +203,7 @@ func _clear_checkpoint_markers():
 func _setup_npcs():
 	if !_start_circle.enable_npcs:
 		return
-	var grid_markers := _find_grid_spawn_task(_start_circle).grid_markers
+	var grid_markers := _find_grid_spawn_task(_start_circle).get_grid_markers()
 	# Fill every grid slot the humans don't occupy.
 	var npc_count := grid_markers.size() - lobby_manager.lobby_players.size()
 	if npc_count <= 0:

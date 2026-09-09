@@ -254,6 +254,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var issues := super()
 	if start_checkpoint == null:
 		issues.append("start_checkpoint must be set")
+	elif not start_checkpoint.name.ends_with("1"):
+		issues.append("start_checkpoint should be named ending in \"1\" so the route counts up")
 	if end_checkpoint == null:
 		issues.append("end_checkpoint must be set")
 	if lap_checkpoints.is_empty():

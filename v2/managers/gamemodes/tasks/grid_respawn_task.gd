@@ -14,7 +14,7 @@ var _next_slot: int = 0
 
 func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
 	var peer_id := int(player.name)
-	var markers := grid_spawn_task.grid_markers
+	var markers := grid_spawn_task.get_grid_markers()
 	var idx: int = min(_next_slot, markers.size() - 1)
 	var marker := markers[idx]
 	_runner.spawn_manager.respawn_player_at.rpc(
@@ -35,6 +35,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var issues := super()
 	if grid_spawn_task == null:
 		issues.append("grid_spawn_task must be set")
-	elif grid_spawn_task.grid_markers.is_empty():
+	elif grid_spawn_task.get_grid_markers().is_empty():
 		issues.append("referenced grid_spawn_task has no markers")
 	return issues
