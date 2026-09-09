@@ -56,12 +56,13 @@ script = ExtResource("3_krmtw")
 menu_manager = NodePath("../MenuManager")
 metadata/_custom_type_script = "uid://b766m1s624u36"
 
-[node name="PauseManager" type="Node" parent="ManagerManager" unique_id=704027696 node_paths=PackedStringArray("menu_manager", "level_manager", "input_state_manager", "audio_manager") groups=["Managers"]]
+[node name="PauseManager" type="Node" parent="ManagerManager" unique_id=704027696 node_paths=PackedStringArray("menu_manager", "level_manager", "input_state_manager", "audio_manager", "hud_manager") groups=["Managers"]]
 script = ExtResource("12_aomqu")
 menu_manager = NodePath("../MenuManager")
 level_manager = NodePath("../LevelManager")
 input_state_manager = NodePath("../InputStateManager")
 audio_manager = NodePath("../AudioManager")
+hud_manager = NodePath("../HUDManager")
 metadata/_custom_type_script = "uid://b2j8gbb336wwq"
 
 [node name="ConnectionManager" type="Node" parent="ManagerManager" unique_id=79087304 node_paths=PackedStringArray("menu_manager", "settings_manager", "level_manager", "ipport_handler", "webrtc_handler") groups=["Managers"]]
@@ -86,12 +87,13 @@ script = ExtResource("5_lobby")
 connection_manager = NodePath("../ConnectionManager")
 save_manager = NodePath("../SaveManager")
 
-[node name="LevelManager" type="Node" parent="ManagerManager" unique_id=572419191 node_paths=PackedStringArray("spawn_node", "menu_manager", "input_state_manager", "audio_manager") groups=["Managers"]]
+[node name="LevelManager" type="Node" parent="ManagerManager" unique_id=572419191 node_paths=PackedStringArray("spawn_node", "menu_manager", "input_state_manager", "audio_manager", "hud_manager") groups=["Managers"]]
 script = ExtResource("10_mf81u")
 spawn_node = NodePath("LevelSpawn")
 menu_manager = NodePath("../MenuManager")
 input_state_manager = NodePath("../InputStateManager")
 audio_manager = NodePath("../AudioManager")
+hud_manager = NodePath("../HUDManager")
 
 [node name="LevelSpawn" type="Node3D" parent="ManagerManager/LevelManager" unique_id=1580791442]
 
@@ -325,9 +327,14 @@ metadata/_custom_type_script = "uid://bhyn7u22l6ps4"
 [node name="UI" type="Control" parent="ManagerManager/HUDManager/StateMachine/NullHUDState" unique_id=1166332146]
 unique_name_in_owner = true
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
 
 [node name="RidingHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=1177239669 node_paths=PackedStringArray("hud_manager") instance=ExtResource("42_5fp36")]
 hud_manager = NodePath("../..")
