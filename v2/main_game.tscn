@@ -28,9 +28,9 @@
 [ext_resource type="PackedScene" uid="uid://pg4u70n43ksy" path="res://menus/loading_menu/loading_menu_state.tscn" id="21_x5kvo"]
 [ext_resource type="Script" uid="uid://yp4h0tghigit" path="res://managers/gamemodes/types/free_roam/free_roam_gamemode.gd" id="25_6krrg"]
 [ext_resource type="Script" uid="uid://5xa3xuln57nw" path="res://managers/gamemodes/types/road_race/road_race_gamemode.gd" id="26_8slmw"]
-[ext_resource type="PackedScene" uid="uid://dr5dms10u4b2o" path="res://managers/gamemodes/hud/game_mode_event_confirm_hud.tscn" id="26_u7wvl"]
+[ext_resource type="PackedScene" uid="uid://dr5dms10u4b2o" path="res://managers/hud/gamemode_event_hud_state.tscn" id="27_3cqky"]
 [ext_resource type="Script" uid="uid://2sjea5ct6un7" path="res://managers/gamemodes/types/tutorial/tutorial_gamemode.gd" id="27_8slmw"]
-[ext_resource type="PackedScene" uid="uid://dmq80r6t0kwp5" path="res://managers/gamemodes/types/tutorial/tutorial_hud.tscn" id="28_onx7j"]
+[ext_resource type="PackedScene" uid="uid://dmq80r6t0kwp5" path="res://managers/hud/tutorial_hud_state.tscn" id="28_onx7j"]
 [ext_resource type="PackedScene" uid="uid://c1rey02kvrh1h" path="res://managers/gamemodes/hud/results_hud.tscn" id="29_o8ab5"]
 [ext_resource type="Script" uid="uid://b6yqloe4qv2ck" path="res://managers/gamemodes/types/challenge/challenge_gamemode.gd" id="30_chlng"]
 [ext_resource type="Script" uid="uid://boxia2udg1jxm" path="res://managers/npc_race_manager.gd" id="31_npcrm"]
@@ -177,6 +177,44 @@ script = ExtResource("19_wt57k")
 default_player_definition = ExtResource("20_pk5u2")
 metadata/_custom_type_script = "uid://didbm7t5dal30"
 
+[node name="HUDManager" type="Node" parent="ManagerManager" unique_id=654912404 node_paths=PackedStringArray("state_machine", "null_hud_state", "riding_hud_state") groups=["Managers"]]
+script = ExtResource("41_8jqmg")
+state_machine = NodePath("StateMachine")
+null_hud_state = NodePath("StateMachine/NullHUDState")
+riding_hud_state = NodePath("StateMachine/RidingHUDState")
+metadata/_custom_type_script = "uid://c4nkca4ah0fwh"
+
+[node name="StateMachine" type="Node" parent="ManagerManager/HUDManager" unique_id=1115217599 node_paths=PackedStringArray("initial_state")]
+script = ExtResource("4_6bm6p")
+initial_state = NodePath("NullHUDState")
+metadata/_custom_type_script = "uid://ba7kyb4p3trb1"
+
+[node name="NullHUDState" type="Node" parent="ManagerManager/HUDManager/StateMachine" unique_id=1346290165]
+script = ExtResource("42_3cqky")
+metadata/_custom_type_script = "uid://bhyn7u22l6ps4"
+
+[node name="UI" type="Control" parent="ManagerManager/HUDManager/StateMachine/NullHUDState" unique_id=1166332146]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="RidingHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=1177239669 node_paths=PackedStringArray("hud_manager") instance=ExtResource("42_5fp36")]
+hud_manager = NodePath("../..")
+
+[node name="GamemodeEventHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=1122284461 node_paths=PackedStringArray("hud_manager", "input_state_manager") instance=ExtResource("27_3cqky")]
+hud_manager = NodePath("../..")
+input_state_manager = NodePath("../../../InputStateManager")
+
+[node name="TutorialHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=653633430 node_paths=PackedStringArray("hud_manager") instance=ExtResource("28_onx7j")]
+hud_manager = NodePath("../..")
+
 [node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "spawn_manager", "animal_spawn_manager", "audio_manager", "input_state_manager", "state_machine", "loading_menu_state", "free_roam_mode", "road_race_mode", "street_race_mode", "stunt_race_mode", "tutorial_mode", "challenge_mode") groups=["Managers"]]
 script = ExtResource("18_ih6an")
 menu_manager = NodePath("../MenuManager")
@@ -201,20 +239,17 @@ challenge_mode = NodePath("StateMachine/ChallengeGameMode")
 script = ExtResource("4_6bm6p")
 metadata/_custom_type_script = "uid://ba7kyb4p3trb1"
 
-[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_confirm_hud", "level_manager", "npc_traffic_manager", "gamemode_manager", "spawn_manager")]
+[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_hud_state", "level_manager", "npc_traffic_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("25_6krrg")
-game_mode_event_confirm_hud = NodePath("GameModeEventConfirmHUD")
+game_mode_event_hud_state = NodePath("../../../HUDManager/StateMachine/GamemodeEventHUDState")
 level_manager = NodePath("../../../LevelManager")
 npc_traffic_manager = NodePath("../../../NPCTrafficManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
-[node name="GameModeEventConfirmHUD" parent="ManagerManager/GamemodeManager/StateMachine/FreeRoamGameMode" unique_id=844708804 node_paths=PackedStringArray("input_state_manager") instance=ExtResource("26_u7wvl")]
-input_state_manager = NodePath("../../../../InputStateManager")
-
 [node name="TutorialGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1184474950 node_paths=PackedStringArray("tutorial_hud", "results_hud", "input_state_manager", "lobby_manager", "menu_manager", "audio_manager", "help_menu_state", "gamemode_manager", "spawn_manager")]
 script = ExtResource("27_8slmw")
-tutorial_hud = NodePath("TutorialHUD")
+tutorial_hud = NodePath("../../../HUDManager/StateMachine/TutorialHUDState")
 results_hud = NodePath("ResultsHUD")
 input_state_manager = NodePath("../../../InputStateManager")
 lobby_manager = NodePath("../../../LobbyManager")
@@ -225,26 +260,25 @@ gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 metadata/_custom_type_script = "uid://2sjea5ct6un7"
 
-[node name="TutorialHUD" parent="ManagerManager/GamemodeManager/StateMachine/TutorialGameMode" unique_id=777399642 instance=ExtResource("28_onx7j")]
-
 [node name="ResultsHUD" parent="ManagerManager/GamemodeManager/StateMachine/TutorialGameMode" unique_id=289541554 node_paths=PackedStringArray("input_state_manager") instance=ExtResource("29_o8ab5")]
 input_state_manager = NodePath("../../../../InputStateManager")
 
-[node name="RoadRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1858784240 node_paths=PackedStringArray("tutorial_hud", "results_hud", "input_state_manager", "lobby_manager", "menu_manager", "audio_manager", "npc_race_manager", "gamemode_manager", "spawn_manager")]
+[node name="RoadRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1858784240 node_paths=PackedStringArray("tutorial_hud", "results_hud", "input_state_manager", "lobby_manager", "menu_manager", "audio_manager", "npc_race_manager", "riding_hud_state", "gamemode_manager", "spawn_manager")]
 script = ExtResource("26_8slmw")
-tutorial_hud = NodePath("../TutorialGameMode/TutorialHUD")
+tutorial_hud = NodePath("../../../HUDManager/StateMachine/TutorialHUDState")
 results_hud = NodePath("../TutorialGameMode/ResultsHUD")
 input_state_manager = NodePath("../../../InputStateManager")
 lobby_manager = NodePath("../../../LobbyManager")
 menu_manager = NodePath("../../../MenuManager")
 audio_manager = NodePath("../../../AudioManager")
 npc_race_manager = NodePath("../../../NPCRaceManager")
+riding_hud_state = NodePath("../../../HUDManager/StateMachine/RidingHUDState")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
-[node name="StreetRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1507451540 node_paths=PackedStringArray("tutorial_hud", "results_hud", "input_state_manager", "lobby_manager", "menu_manager", "audio_manager", "npc_race_manager", "npc_traffic_manager", "gamemode_manager", "spawn_manager")]
+[node name="StreetRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1507451540 node_paths=PackedStringArray("tutorial_hud", "results_hud", "input_state_manager", "lobby_manager", "menu_manager", "audio_manager", "npc_race_manager", "npc_traffic_manager", "riding_hud_state", "gamemode_manager", "spawn_manager")]
 script = ExtResource("38_strce")
-tutorial_hud = NodePath("../TutorialGameMode/TutorialHUD")
+tutorial_hud = NodePath("../../../HUDManager/StateMachine/TutorialHUDState")
 results_hud = NodePath("../TutorialGameMode/ResultsHUD")
 input_state_manager = NodePath("../../../InputStateManager")
 lobby_manager = NodePath("../../../LobbyManager")
@@ -252,24 +286,26 @@ menu_manager = NodePath("../../../MenuManager")
 audio_manager = NodePath("../../../AudioManager")
 npc_race_manager = NodePath("../../../NPCRaceManager")
 npc_traffic_manager = NodePath("../../../NPCTrafficManager")
+riding_hud_state = NodePath("../../../HUDManager/StateMachine/RidingHUDState")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
-[node name="StuntRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1367970627 node_paths=PackedStringArray("tutorial_hud", "results_hud", "input_state_manager", "lobby_manager", "menu_manager", "audio_manager", "npc_race_manager", "gamemode_manager", "spawn_manager")]
+[node name="StuntRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1367970627 node_paths=PackedStringArray("tutorial_hud", "results_hud", "input_state_manager", "lobby_manager", "menu_manager", "audio_manager", "npc_race_manager", "riding_hud_state", "gamemode_manager", "spawn_manager")]
 script = ExtResource("40_stnrc")
-tutorial_hud = NodePath("../TutorialGameMode/TutorialHUD")
+tutorial_hud = NodePath("../../../HUDManager/StateMachine/TutorialHUDState")
 results_hud = NodePath("../TutorialGameMode/ResultsHUD")
 input_state_manager = NodePath("../../../InputStateManager")
 lobby_manager = NodePath("../../../LobbyManager")
 menu_manager = NodePath("../../../MenuManager")
 audio_manager = NodePath("../../../AudioManager")
 npc_race_manager = NodePath("../../../NPCRaceManager")
+riding_hud_state = NodePath("../../../HUDManager/StateMachine/RidingHUDState")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
 [node name="ChallengeGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=629329474 node_paths=PackedStringArray("tutorial_hud", "lobby_manager", "audio_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("30_chlng")
-tutorial_hud = NodePath("../TutorialGameMode/TutorialHUD")
+tutorial_hud = NodePath("../../../HUDManager/StateMachine/TutorialHUDState")
 lobby_manager = NodePath("../../../LobbyManager")
 audio_manager = NodePath("../../../AudioManager")
 gamemode_manager = NodePath("../..")
@@ -307,34 +343,3 @@ npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_pk5u2")])
 [node name="AnimalSpawnManager" type="Node" parent="ManagerManager" unique_id=1218916393 node_paths=PackedStringArray("level_manager") groups=["Managers"]]
 script = ExtResource("38_anspm")
 level_manager = NodePath("../LevelManager")
-
-[node name="HUDManager" type="Node" parent="ManagerManager" unique_id=654912404 node_paths=PackedStringArray("state_machine", "null_hud_state", "riding_hud_state") groups=["Managers"]]
-script = ExtResource("41_8jqmg")
-state_machine = NodePath("StateMachine")
-null_hud_state = NodePath("StateMachine/NullHUDState")
-riding_hud_state = NodePath("StateMachine/RidingHUDState")
-metadata/_custom_type_script = "uid://c4nkca4ah0fwh"
-
-[node name="StateMachine" type="Node" parent="ManagerManager/HUDManager" unique_id=1115217599 node_paths=PackedStringArray("initial_state")]
-script = ExtResource("4_6bm6p")
-initial_state = NodePath("NullHUDState")
-metadata/_custom_type_script = "uid://ba7kyb4p3trb1"
-
-[node name="NullHUDState" type="Node" parent="ManagerManager/HUDManager/StateMachine" unique_id=1346290165]
-script = ExtResource("42_3cqky")
-metadata/_custom_type_script = "uid://bhyn7u22l6ps4"
-
-[node name="UI" type="Control" parent="ManagerManager/HUDManager/StateMachine/NullHUDState" unique_id=1166332146]
-unique_name_in_owner = true
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 2
-
-[node name="RidingHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=1177239669 node_paths=PackedStringArray("hud_manager") instance=ExtResource("42_5fp36")]
-hud_manager = NodePath("../..")

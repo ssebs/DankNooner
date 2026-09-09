@@ -1,7 +1,7 @@
 @tool
 class_name FreeRoamGameMode extends GameModeType
 
-@export var game_mode_event_confirm_hud: GameModeEventConfirmHUD
+@export var game_mode_event_hud_state: GamemodeEventHUDState
 @export var level_manager: LevelManager
 @export var npc_traffic_manager: NPCTrafficManager
 
@@ -142,13 +142,13 @@ func _on_event_circle_entered(peer_id: int, source_circle: EventStartCircle):
 	_ctx.gamemode_event = ev
 	_ctx.event_start_circle = source_circle
 
-	game_mode_event_confirm_hud.on_player_entered_circle.rpc_id(1, peer_id, ev.name, ev.description)
+	game_mode_event_hud_state.on_player_entered_circle.rpc_id(1, peer_id, ev.name, ev.description)
 
 	# connect hud signals
-	if not game_mode_event_confirm_hud.hud_submitted.is_connected(
+	if not game_mode_event_hud_state.hud_submitted.is_connected(
 		_on_game_mode_event_confirm_hud_submitted
 	):
-		game_mode_event_confirm_hud.hud_submitted.connect(_on_game_mode_event_confirm_hud_submitted)
+		game_mode_event_hud_state.hud_submitted.connect(_on_game_mode_event_confirm_hud_submitted)
 
 	# TODO - set player velocity to 0
 
@@ -156,19 +156,19 @@ func _on_event_circle_entered(peer_id: int, source_circle: EventStartCircle):
 func _on_event_circle_exited(peer_id: int, source_circle: EventStartCircle):
 	DebugUtils.DebugMsg("%d exited eventcircle: %s" % [peer_id, source_circle.gamemode_event.name])
 
-	if game_mode_event_confirm_hud.hud_submitted.is_connected(
+	if game_mode_event_hud_state.hud_submitted.is_connected(
 		_on_game_mode_event_confirm_hud_submitted
 	):
-		game_mode_event_confirm_hud.hud_submitted.disconnect(
+		game_mode_event_hud_state.hud_submitted.disconnect(
 			_on_game_mode_event_confirm_hud_submitted
 		)
 
-	game_mode_event_confirm_hud.on_player_close_pressed.rpc_id(1, peer_id)
+	game_mode_event_hud_state.on_player_close_pressed.rpc_id(1, peer_id)
 
 
 func _on_game_mode_event_confirm_hud_submitted(peer_id: int):
 	DebugUtils.DebugMsg("Starting Event... %d" % peer_id)
-	game_mode_event_confirm_hud.on_player_close_pressed.rpc_id(1, peer_id)
+	game_mode_event_hud_state.on_player_close_pressed.rpc_id(1, peer_id)
 	gamemode_manager.change_gamemode.rpc_id(
 		1, _ctx.gamemode_event.target_gamemode, peer_id, _ctx.event_start_circle.get_path()
 	)
@@ -234,8 +234,8 @@ func _on_player_disconnected(peer_id: int):
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
 
-	if game_mode_event_confirm_hud == null:
-		issues.append("game_mode_event_confirm_hud must not be empty")
+	if game_mode_event_hud_state == null:
+		issues.append("game_mode_event_hud_state must not be empty")
 	if level_manager == null:
 		issues.append("level_manager must not be empty")
 	if npc_traffic_manager == null:

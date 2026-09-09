@@ -17,7 +17,7 @@ signal respawn_requested(peer_id: int)
 ## `start()`. Not @exported because the runner lives in a level scene while the
 ## managers live in main_game.tscn — cross-scene NodePaths would be fragile.
 var spawn_manager: SpawnManager
-var task_hud: TutorialHUD
+var task_hud: TutorialHUDState
 var audio_manager: AudioManager
 
 

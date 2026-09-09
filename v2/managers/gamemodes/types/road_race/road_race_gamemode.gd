@@ -4,13 +4,14 @@
 ## base + subclass, since they're expected to diverge as each gets its own rules.
 class_name RoadRaceGameMode extends GameModeType
 
-@export var tutorial_hud: TutorialHUD
+@export var tutorial_hud: TutorialHUDState
 @export var results_hud: ResultsHUD
 @export var input_state_manager: InputStateManager
 @export var lobby_manager: LobbyManager
 @export var menu_manager: MenuManager
 @export var audio_manager: AudioManager
 @export var npc_race_manager: NPCRaceManager
+@export var riding_hud_state: RidingHUDState
 
 const RESULTS_REFRESH_SECS: float = 1.0
 
@@ -85,7 +86,7 @@ func Exit(_state_context: StateContext):
 
 	if results_hud.visible:
 		input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
-	tutorial_hud.hide()
+	tutorial_hud.hide_ui()
 	results_hud.hide()
 	_start_circle.disable_game_objects()
 	_start_circle = null
@@ -166,7 +167,7 @@ func _push_checkpoint_markers():
 			if ckpt != null:
 				pos = ckpt.global_position
 				has_target = true
-		player.hud_controller.push_checkpoint_marker(peer_id, pos, has_target)
+		riding_hud_state.push_checkpoint_marker(peer_id, pos, has_target)
 
 
 func _clear_checkpoint_markers():
@@ -175,7 +176,7 @@ func _clear_checkpoint_markers():
 		var player := spawn_manager._get_player_by_peer_id(peer_id)
 		if player == null:
 			continue
-		player.hud_controller.push_checkpoint_marker(peer_id, Vector3.ZERO, false)
+		riding_hud_state.push_checkpoint_marker(peer_id, Vector3.ZERO, false)
 
 
 #endregion
@@ -374,5 +375,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("audio_manager must not be empty")
 	if npc_race_manager == null:
 		issues.append("npc_race_manager must not be empty")
+	if riding_hud_state == null:
+		issues.append("riding_hud_state must not be empty")
 
 	return issues

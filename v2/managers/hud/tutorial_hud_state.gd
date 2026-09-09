@@ -1,5 +1,8 @@
 @tool
-class_name TutorialHUD extends Control
+class_name TutorialHUDState extends HUDState
+
+@export var hud_manager: HUDManager
+
 
 @onready var step_label: Label = %StepLabel
 @onready var objective_label: Label = %ObjectiveLabel
@@ -17,7 +20,7 @@ func rpc_show_countdown(seconds: int):
 	complete_label.hide()
 	objective_label.text = str(seconds)
 	objective_label.show()
-	self.show()
+	ui.show()
 
 
 @rpc("call_local", "reliable")
@@ -31,7 +34,7 @@ func rpc_show_step(step_index: int, total: int, objective_text: String, hint_tex
 	step_label.show()
 	objective_label.show()
 	hint_label.show()
-	self.show()
+	ui.show()
 
 
 @rpc("call_local", "unreliable")
@@ -53,7 +56,7 @@ func rpc_show_complete(text_key: String = "TUT_COMPLETE"):
 	hint_label.hide()
 	complete_label.text = tr(text_key)
 	complete_label.show()
-	self.show()
+	ui.show()
 
 
 @rpc("call_local", "reliable")
@@ -63,9 +66,9 @@ func rpc_show_waiting():
 	hint_label.hide()
 	complete_label.text = tr("TUT_WAITING_FOR_OTHERS")
 	complete_label.show()
-	self.show()
+	ui.show()
 
 
 @rpc("call_local", "reliable")
 func rpc_hide():
-	self.hide()
+	ui.hide()

@@ -1,7 +1,7 @@
 @tool
 class_name TutorialGameMode extends GameModeType
 
-@export var tutorial_hud: TutorialHUD
+@export var tutorial_hud: TutorialHUDState
 @export var results_hud: ResultsHUD
 @export var input_state_manager: InputStateManager
 @export var lobby_manager: LobbyManager
@@ -74,7 +74,7 @@ func Exit(_state_context: StateContext):
 	# the cursor doesn't stay visible after skip→free-roam.
 	if results_hud.visible:
 		input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
-	tutorial_hud.hide()
+	tutorial_hud.hide_ui()
 	results_hud.hide()
 	_start_circle.disable_game_objects()
 	_start_circle = null
@@ -175,7 +175,7 @@ func _show_results(runner: TaskRunner):
 		var time_sec: float = state.completion_time_ms / 1000.0
 		(
 			rows
-			. append(
+			.append(
 				{
 					"Username": username,
 					"Time": "%.1fs" % time_sec,

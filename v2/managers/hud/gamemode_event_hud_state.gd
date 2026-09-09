@@ -1,10 +1,12 @@
 @tool
-class_name GameModeEventConfirmHUD extends Control
+class_name GamemodeEventHUDState extends HUDState
+
+@export var hud_manager: HUDManager
+@export var input_state_manager: InputStateManager
+
 
 signal hud_closed(peer_id: int)
 signal hud_submitted(peer_id: int)
-
-@export var input_state_manager: InputStateManager
 
 @onready var submit_btn: Button = %SubmitBtn
 @onready var close_btn: Button = %CloseBtn
@@ -53,7 +55,7 @@ func hide_ui_for_peer():
 
 
 func show_ui():
-	self.show()
+	ui.show()
 	if !submit_btn.pressed.is_connected(_on_submit_pressed):
 		submit_btn.pressed.connect(_on_submit_pressed)
 	if !close_btn.pressed.is_connected(_on_close_pressed):
@@ -62,7 +64,7 @@ func show_ui():
 
 
 func hide_ui():
-	self.hide()
+	ui.hide()
 	if submit_btn.pressed.has_connections():
 		submit_btn.pressed.disconnect(_on_submit_pressed)
 	if close_btn.pressed.has_connections():
