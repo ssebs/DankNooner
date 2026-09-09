@@ -42,7 +42,7 @@
 - **Three-axis scoring: Placement + Style + Knockouts**, summed and cumulative across legs.
   Placement (`RaceTask`) and Style (`TrickManager.get_score`) already exist; the net-new work
   is an aggregator that sums the three per leg and carries a running total, plus extending
-  `ResultsHUD` to show the columns. Knockouts in the MVP is driven by **ramming** (reuses the
+  `ResultsHUDState` to show the columns. Knockouts in the MVP is driven by **ramming** (reuses the
   crash system) plus the Oil Slick item, so the axis is live without the full item roster.
   Needs fast respawn.
 - **Item system + minimal starter set.** The item *system* — on-course pickup, hold one item,
@@ -208,7 +208,7 @@ flat-list task + HUD.
     counted yet; and `reset_peer` auto-fires on `player_spawned` — watch the reset timing.
   - Decide the running-total data shape (per-peer struct on the gamemode state)
   - Open question to resolve here: **axis weighting** in the total (see Open questions)
-- [ ] Feed `ResultsHUD` the new columns — **no HUD code change needed.** It's already
+- [ ] Feed `ResultsHUDState` the new columns — **no HUD code change needed.** It's already
   column-driven: build a `ResultsData.create(title, ["Placement","Style","Knockouts","Total"], rows)`
   and the existing `_rebuild_rows` renders it (`results_hud.gd:71-78`, `results_data.gd`).
   - Reuse the row-refresh pattern (`rpc_update_rows`) from the race gamemodes

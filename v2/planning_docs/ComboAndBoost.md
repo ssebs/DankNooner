@@ -23,7 +23,7 @@ Earn, spend and bank are three separate owners:
 | Combo timer, multiplier, boost fill | `TrickController._accrue_combo()` | Rollback tick, every peer |
 | Boost spend / drain | `BoostController` | Rollback tick, every peer |
 | Score banking | `TrickManager._track_combo()` | Server `_process()` |
-| Gauge + counter UI | `HUDController._process()` → `BoostGauge` / `ComboCounter` | Local client |
+| Gauge + counter UI | `RidingHUDState.Physics_Update()` → `BoostGauge` / `ComboCounter` | Local client |
 | Camera FX | `CameraController._update_juice_fx()` | Local client |
 
 Each controller owns its own state: the combo vars are `%TrickController:*` and the meter vars
@@ -149,7 +149,7 @@ Visibility keys off `combo_time > 0`, **not** the multiplier — an earlier vers
 
 `boost` action in `project.godot` (keyboard + gamepad). Gathered as `nfx_boost_held` in `InputController._gather()`, synced as a netfox input property.
 
-The rising edge is detected off the **synced** `boost_prev_held` in `BoostController` so it survives resimulation. `HUDController` keeps its own separate `_prev_boost_held` for the rejection blink — deliberately not reusing the synced var, since the HUD must not perturb rollback state for a cosmetic effect.
+The rising edge is detected off the **synced** `boost_prev_held` in `BoostController` so it survives resimulation. `RidingHUDState` keeps its own separate `_prev_boost_held` for the rejection blink — deliberately not reusing the synced var, since the HUD must not perturb rollback state for a cosmetic effect.
 
 `InputController._process()` forces `_auto_shift()` while `is_boosting`, independent of the `auto_transmission` setting — see [PlayerController.md](./PlayerController.md) for why auto-shift lives in `InputController` rather than `GearingController`.
 

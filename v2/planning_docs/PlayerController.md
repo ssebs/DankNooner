@@ -71,8 +71,10 @@
   - CrashController — brake grab, crash detection, emits `crashed`
   - AnimationController — procedural animation + RiderState machine + IK target sync
   - CameraController — FPS/TPS switching
-  - HUDController — polls controllers in `_process()`, listens to discrete signals
   - Audio — engine sound RPM parameter via `rpm_updated` signal
+
+The riding HUD polls these same controllers, but it's no longer a player component — it lives in
+`RidingHUDState` under the global `HUDManager`. See [Architecture — HUD Manager](./Architecture.md#hud-manager).
 
 ## State owned by each component
 
@@ -192,12 +194,8 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   - `trigger_crash()` — sets `is_crashed`, zeros velocity, starts ragdoll
   - Auto-respawn after 3s via timer (TODO: move to GamemodeManager)
   - Emits `crashed`
-- **HUDController** (`hud_controller.gd`)
-  - Local to client, extends Control, child of `_Controllers`
-  - `@export` refs to: `player_entity`, `movement_controller`, `input_controller`, `gearing_controller`, `trick_controller`, `crash_controller`, `boost_controller`
-  - Continuous values polled in `_process()`: speed, throttle, brake, clutch, grip, plus the
-    synced `BoostController.boost_amount` / `TrickController.combo_multiplier` fed to
-    `BoostGauge` + `ComboCounter` (`player/hud_elements/`)
-  - Discrete events via signals: `gear_changed`, `trick_started`, `trick_ended`, `crashed`, `respawned`
-  - All display strings use `tr()` localization keys (HUD_THROTTLE, HUD_SPEED, etc.)
-  - `show_hud()` / `hide_hud()` called from `PlayerEntity._deferred_init()` based on `is_local_client`
+- **Riding HUD** — no longer a player controller. `hud_controller.gd` was replaced by
+  `RidingHUDState` (`managers/hud/riding_hud_state.gd`) under the global `HUDManager`. It polls the
+  same controllers off `hud_manager.local_player` and feeds `BoostGauge` / `ComboCounter`
+  (`player/hud_elements/`), with all display strings on `tr()` keys. See
+  [Architecture — HUD Manager](./Architecture.md#hud-manager).
