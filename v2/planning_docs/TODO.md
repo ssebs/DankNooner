@@ -26,13 +26,6 @@
 > Don't forget, have fun :D
 
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
-  - [ ] HUDManager
-    - [x] create class
-    - [x] migrate riding hud
-    - [ ] inputstate manager (hide on pause)
-    - [ ] migrate tutorialhud
-    - [ ] migrate resultshud
-    - [ ] migrate gamemodeeventconfirmhud
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [ ] make tricks + combos easier to do
@@ -224,6 +217,14 @@
 ---
 
 ## Done ✅
+
+- [x] HUDManager refactor
+  - [x] create class
+  - [x] migrate riding hud
+  - [x] inputstate manager (hide on pause)
+  - [x] migrate tutorialhud
+  - [x] migrate resultshud
+  - [x] migrate gamemodeeventconfirmhud
 
 - [x] Cannot start game if the webrtc signal server is down.
 

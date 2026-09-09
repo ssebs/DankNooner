@@ -6,7 +6,7 @@
 class_name StreetRaceGameMode extends GameModeType
 
 @export var tutorial_hud: TutorialHUDState
-@export var results_hud: ResultsHUD
+@export var results_hud: ResultsHUDState
 @export var input_state_manager: InputStateManager
 @export var lobby_manager: LobbyManager
 @export var menu_manager: MenuManager
@@ -98,10 +98,10 @@ func Exit(_state_context: StateContext):
 	else:
 		npc_traffic_manager.reset_local_traffic()
 
-	if results_hud.visible:
+	if results_hud.ui.visible:
 		input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
 	tutorial_hud.hide_ui()
-	results_hud.hide()
+	results_hud.hide_ui()
 	_start_circle.disable_game_objects()
 	_start_circle = null
 	_runners = []
