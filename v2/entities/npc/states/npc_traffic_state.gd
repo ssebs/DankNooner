@@ -62,6 +62,9 @@ func Exit(_state_context: StateContext):
 func Physics_Update(delta: float):
 	if Engine.is_editor_hint():
 		return
+	# HACK - DISABLE TMP
+	# TODO FIX THIS
+	return
 
 	# Lanes may not have been built yet at spawn, or we just got teleported. This
 	# can come up empty — the containers free and regenerate every lane on their

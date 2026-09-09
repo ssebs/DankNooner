@@ -105,6 +105,9 @@ var rb_do_crash: bool = false
 ## Set by SpawnManager.grant_boost on a pickup — adds one boost segment. boost_amount is synced
 ## state, so this rides the rollback tick + resim re-application (like rb_do_respawn) to survive.
 var rb_add_boost: bool = false
+## Set by SpawnManager.max_boost_player (debug console) — fills the meter. Rides the same
+## rollback tick + resim machinery as rb_add_boost.
+var rb_do_max_boost: bool = false
 ## Persistent respawn point. Set by SpawnManager.respawn_player_at (e.g. TeleportTask),
 ## reset to identity to fall back to `get_parent().global_transform` (player_spawn_pos).
 ## Persists across respawns so crashes after a checkpoint return to the checkpoint.
@@ -179,6 +182,11 @@ func _rollback_tick(delta: float, tick: int, _is_fresh: bool):
 	if rb_add_boost:
 		rb_add_boost = false
 		boost_controller.add_segment()
+		_boost_grant_tick = tick
+		_boost_grant_amount = boost_controller.boost_amount
+	elif rb_do_max_boost:
+		rb_do_max_boost = false
+		boost_controller.fill()
 		_boost_grant_tick = tick
 		_boost_grant_amount = boost_controller.boost_amount
 	elif tick == _boost_grant_tick:

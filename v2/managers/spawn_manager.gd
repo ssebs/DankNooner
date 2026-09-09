@@ -101,6 +101,15 @@ func grant_boost(player_peer_id: int):
 	_get_player_by_peer_id(player_peer_id).rb_add_boost = true
 
 
+## Debug: fill the player's boost meter. Server only; broadcast so each peer sets the setter and
+## fills boost_amount in its own rollback tick (boost_amount is synced state).
+@rpc("any_peer", "call_local", "reliable")
+func max_boost_player(player_peer_id: int):
+	if !_sender_is_server():
+		return
+	_get_player_by_peer_id(player_peer_id).rb_do_max_boost = true
+
+
 ## Respawn player at a specific transform AND store it as the persistent respawn point
 ## (used by subsequent crash respawns until reset). Runs on every peer.
 @rpc("any_peer", "call_local", "reliable")

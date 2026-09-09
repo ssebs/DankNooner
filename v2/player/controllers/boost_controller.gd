@@ -84,6 +84,12 @@ func add_segment():
 	boost_amount = minf(boost_amount + 1.0, BOOST_SEGMENTS)
 
 
+## Fills the meter. Routed through the rollback tick (rb_do_max_boost) like add_segment so the
+## write to synced boost_amount survives resimulation. Debug console (max_boost).
+func fill():
+	boost_amount = BOOST_SEGMENTS
+
+
 ## A crash voids only what the in-progress combo earned — boost banked by earlier completed
 ## combos survives. Called from PlayerEntity._apply_respawn_state BEFORE the do_reset loop
 ## clears trick_controller.combo_boost_earned.
