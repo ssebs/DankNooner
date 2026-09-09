@@ -15,6 +15,22 @@ func go_to_riding_hud():
 	state_machine.request_state_change(riding_hud_state)
 
 
+## Reset to the no-HUD state when leaving gameplay for a menu — stops RidingHUDState from
+## polling controllers on a player entity that's being freed. Called from LevelManager.
+func go_to_null_hud():
+	state_machine.request_state_change(null_hud_state)
+
+
+## Pause hides the HUD without leaving the current state, so unpause restores it without
+## a full state transition. RidingHUDState.show_ui() is re-entry-safe for this.
+func set_hud_hidden(hidden: bool):
+	var hud_state := state_machine.current_state as HUDState
+	if hidden:
+		hud_state.hide_ui()
+	else:
+		hud_state.show_ui()
+
+
 func hide_all():
 	for child in state_machine.get_children():
 		if !child is HUDState:

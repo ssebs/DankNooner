@@ -15,6 +15,7 @@ enum LevelName {
 @export var menu_manager: MenuManager
 @export var input_state_manager: InputStateManager
 @export var audio_manager: AudioManager
+@export var hud_manager: HUDManager
 
 ## PackedScene of type LevelDefinition
 var possible_levels: Dictionary[LevelName, PackedScene] = {
@@ -89,6 +90,9 @@ func spawn_level(level_name: LevelName, input_state: InputStateManager.InputStat
 		menu_manager.hide_all_menus()
 		if audio_manager:
 			audio_manager.play_maximize()
+	else:
+		# Menu level — clear the riding HUD (RidingHUDState re-enters on the next spawn).
+		hud_manager.go_to_null_hud()
 
 
 func despawn_level():
@@ -122,5 +126,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_state_manager must not be empty")
 	if audio_manager == null:
 		issues.append("audio_manager must not be empty")
+	if hud_manager == null:
+		issues.append("hud_manager must not be empty")
 
 	return issues

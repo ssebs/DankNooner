@@ -4,21 +4,21 @@
 - [In-Progress 🚨](#in-progress-)
 - [Notes 📝](#notes-)
 - [Tasks 📋](#tasks-)
-  - [Game-breaking bugs](#game-breaking-bugs)
-  - [Gameplay Improvements](#gameplay-improvements)
-    - [Gamemodes / scoring](#gamemodes--scoring)
-    - [Juice / "Feel"](#juice--feel)
-    - [Audio](#audio)
-    - [Progression \& Customization](#progression--customization)
-    - [Tutorials (post-Challenge-system)](#tutorials-post-challenge-system)
-  - [Systems](#systems)
-    - [Traffic / Racing AI](#traffic--racing-ai)
-    - [Tricks / animation](#tricks--animation)
-    - [Multiplayer / netcode](#multiplayer--netcode)
-    - [Cutscenes](#cutscenes)
-  - [Tech Debt / Bugs](#tech-debt--bugs)
-    - [Misc](#misc)
-    - [Polish](#polish)
+	- [Game-breaking bugs](#game-breaking-bugs)
+	- [Gameplay Improvements](#gameplay-improvements)
+		- [Gamemodes / scoring](#gamemodes--scoring)
+		- [Juice / "Feel"](#juice--feel)
+		- [Audio](#audio)
+		- [Progression \& Customization](#progression--customization)
+		- [Tutorials (post-Challenge-system)](#tutorials-post-challenge-system)
+	- [Systems](#systems)
+		- [Traffic / Racing AI](#traffic--racing-ai)
+		- [Tricks / animation](#tricks--animation)
+		- [Multiplayer / netcode](#multiplayer--netcode)
+		- [Cutscenes](#cutscenes)
+	- [Tech Debt / Bugs](#tech-debt--bugs)
+		- [Misc](#misc)
+		- [Polish](#polish)
 - [Done ✅](#done-)
 ---
 
@@ -27,6 +27,12 @@
 
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
   - [ ] HUDManager
+    - [x] create class
+    - [x] migrate riding hud
+    - [ ] inputstate manager (hide on pause)
+    - [ ] migrate tutorialhud
+    - [ ] migrate resultshud
+    - [ ] migrate gamemodeeventconfirmhud
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [ ] make tricks + combos easier to do

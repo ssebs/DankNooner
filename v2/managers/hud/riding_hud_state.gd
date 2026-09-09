@@ -75,6 +75,8 @@ func Enter(_state_context: StateContext):
 	trick_controller.trick_ended.connect(_on_trick_ended)
 	crash_controller.crashed.connect(_on_crashed)
 	player_entity.respawned.connect(_on_respawned)
+	# Local-only: expand the minimap into the full map while IN_MAP.
+	input_state_mgr.input_state_changed.connect(_on_input_state_changed)
 
 	# Manual inits
 	_on_gear_changed(1)
@@ -84,6 +86,19 @@ func Enter(_state_context: StateContext):
 	show_ui()
 
 func Exit(_state_context: StateContext):
+	# Enter() bails before wiring in the editor or when there's no local player,
+	# so there's nothing to disconnect in those cases.
+	if Engine.is_editor_hint() or player_entity == null:
+		hide_ui()
+		return
+
+	gearing_controller.gear_changed.disconnect(_on_gear_changed)
+	trick_controller.trick_started.disconnect(_on_trick_started)
+	trick_controller.trick_ended.disconnect(_on_trick_ended)
+	crash_controller.crashed.disconnect(_on_crashed)
+	player_entity.respawned.disconnect(_on_respawned)
+	input_state_mgr.input_state_changed.disconnect(_on_input_state_changed)
+
 	hide_ui()
 
 func Physics_Update(delta: float):
@@ -214,16 +229,16 @@ func _on_respawned():
 func show_ui() -> void:
 	ui.visible = true
 	_minimap.activate(player_entity)
-	# Local-only (only local reaches show_hud): expand the minimap into the full map while IN_MAP.
-	input_state_mgr.input_state_changed.connect(_on_input_state_changed)
 
-	# Only the local client reaches show_hud, so the overlay never spawns on remote
+	# Only the local client reaches show_ui, so the overlay never spawns on remote
 	# player instances. netfox registers its perf monitors only when NetworkPerformance
 	# is enabled (debug builds / netfox_perf tag), and Performance.get_custom_monitor
 	# errors on a monitor that was never added — so skip the label entirely when the
 	# monitors are absent instead of erroring once a second.
+	# Guarded on null so pause re-showing the HUD doesn't stack a second label.
 	if (
-		OS.has_feature("debug")
+		_netfox_debug_label == null
+		and OS.has_feature("debug")
 		and Performance.has_custom_monitor(&"netfox/Rollback ticks simulated")
 	):
 		_netfox_debug_label = Label.new()
@@ -241,6 +256,7 @@ func push_checkpoint_marker(peer_id: int, pos: Vector3, has_target: bool) -> voi
 
 func hide_ui() -> void:
 	ui.visible = false
+	_minimap.deactivate()
 
 
 ## Called from player_entity.gd's do_respawn

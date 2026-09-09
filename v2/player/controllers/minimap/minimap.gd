@@ -61,13 +61,22 @@ func _ready():
 	set_process(false)
 
 
-## Turn the minimap on for the local player. Called from HUDController.show_hud,
+## Turn the minimap on for the local player. Called from RidingHUDState.show_ui,
 ## which only runs on the local client.
 func activate(local_player: PlayerEntity) -> void:
 	_local_player = local_player
 	_sub_viewport.render_target_update_mode = SubViewport.UPDATE_WHEN_VISIBLE
 	_active = true
 	set_process(true)
+
+
+## Stop following. Called from RidingHUDState.hide_ui — the local player is freed when
+## leaving gameplay for a menu, so the follow camera must not keep polling its transform.
+func deactivate() -> void:
+	_active = false
+	set_process(false)
+	_local_player = null
+	_sub_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 
 
 ## Toggle between the corner minimap (heading-up follow) and the fullscreen pannable
