@@ -239,6 +239,27 @@ _data = {
 }
 point_count = 2
 
+[sub_resource type="Curve3D" id="Curve3D_udx41"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 11.221257, -12.000002, 0, 0, 0.076378144, 0, -9.3569355, -23.014465, 0.49987793, -0.04333496, -12.321501, 0.49987793, 22.914257),
+"tilts": PackedFloat32Array(0, -0.00024108018)
+}
+point_count = 2
+
+[sub_resource type="Curve3D" id="Curve3D_emu8c"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 13.979689, 12.000002, 0, 0, 0.054221224, 0, -6.642535, -23.014465, 0.49987793, -0.04333496, 11.677702, 0.49987793, 23.110157),
+"tilts": PackedFloat32Array(0, -0.00024864852)
+}
+point_count = 2
+
+[sub_resource type="Curve3D" id="Curve3D_6lq47"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 12.600473, 0, 0, 0, 0.06529968, 0, -7.999735, -23.014465, 0.49987793, -0.04333496, -0.3218994, 0.49987793, 23.012207),
+"tilts": PackedFloat32Array(0, -0.00024301952)
+}
+point_count = 2
+
 [sub_resource type="Resource" id="Resource_pls18"]
 script = ExtResource("24_l8nu3")
 name = "Stunt Race"
@@ -2350,6 +2371,18 @@ prior_mag = 26.897736
 next_mag = 12.600464
 prior_pt_init = NodePath("../RP_002")
 next_pt_init = NodePath("../RP_004")
+
+[node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_003" unique_id=1130543593]
+curve = SubResource("Curve3D_udx41")
+metadata/_edit_lock_ = true
+
+[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_003" unique_id=816150197]
+curve = SubResource("Curve3D_emu8c")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_003" unique_id=72864931]
+curve = SubResource("Curve3D_6lq47")
+metadata/_edit_lock_ = true
 
 [node name="RP_004" type="Node3D" parent="RoadManager/bridgeroad" unique_id=304205764]
 transform = Transform3D(0.003940236, 0, -0.99999225, 0, 1, 0, 0.99999225, 0, 0.003940236, -79.51074, 0.7496338, 74.95172)

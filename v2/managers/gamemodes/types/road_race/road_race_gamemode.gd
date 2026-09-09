@@ -13,6 +13,10 @@ class_name RoadRaceGameMode extends GameModeType
 @export var npc_race_manager: NPCRaceManager
 @export var riding_hud_state: RidingHUDState
 @export var _respawn_delay: float = 2.5
+## When true, finishing the race teleports everyone back to the grid; otherwise they stay
+## where they finished and only the results HUD closes.
+@export var teleport_to_start_on_finish: bool = false
+
 
 const RESULTS_REFRESH_SECS: float = 1.0
 
@@ -355,7 +359,10 @@ func _on_player_disconnected(peer_id: int):
 
 
 func _return_to_free_roam():
-	gamemode_manager.change_gamemode(GameModeType.Kind.FREE_ROAM, multiplayer.get_unique_id())
+	gamemode_manager.change_gamemode(
+		GameModeType.Kind.FREE_ROAM, multiplayer.get_unique_id(), ^"",
+		not teleport_to_start_on_finish
+	)
 
 
 func _get_configuration_warnings() -> PackedStringArray:
