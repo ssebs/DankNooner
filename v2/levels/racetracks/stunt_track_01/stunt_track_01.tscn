@@ -1840,7 +1840,7 @@ prior_pt_init = NodePath("../RP_006")
 next_pt_init = NodePath("../RP_004")
 
 [node name="RP_006" type="Node3D" parent="RoadManager/Road_026" unique_id=382769729]
-transform = Transform3D(-0.9272532, 0, -0.37443495, 0, 1, 0, 0.37443495, 0, -0.9272532, 100.01947, 0.25, 87.96119)
+transform = Transform3D(-0.71764004, 0, -0.69641423, 0, 1, 0, 0.69641423, 0, -0.71764004, 102.28552, 0.25, 85.92011)
 script = ExtResource("8_ercdn")
 traffic_dir = Array[int]([2, 2, 1, 1])
 lanes = Array[int]([2, 4, 4, 2])
@@ -1850,11 +1850,11 @@ prior_pt_init = NodePath("../RP_007")
 next_pt_init = NodePath("../RP_005")
 
 [node name="RP_007" type="Node3D" parent="RoadManager/Road_026" unique_id=174035746]
-transform = Transform3D(-0.4247344, 0, -0.90531796, 0, 1, 0, 0.90531796, 0, -0.4247344, 123.67835, 0.25, 106.52056)
+transform = Transform3D(-0.6445755, 0, -0.7645407, 0, 1, 0, 0.7645407, 0, -0.6445755, 122.71149, 0.25, 107.66737)
 script = ExtResource("8_ercdn")
 traffic_dir = Array[int]([2, 2, 1, 1])
 lanes = Array[int]([2, 4, 4, 2])
-prior_mag = 15.453217
+prior_mag = 9.853516
 next_mag = 16.0
 prior_pt_init = NodePath("../RP_008")
 next_pt_init = NodePath("../RP_006")
@@ -1870,7 +1870,7 @@ prior_pt_init = NodePath("../RP_009")
 next_pt_init = NodePath("../RP_007")
 
 [node name="RP_009" type="Node3D" parent="RoadManager/Road_026" unique_id=825904578]
-transform = Transform3D(0.30665806, 0, -0.9518198, 0, 1, 0, 0.9518198, 0, 0.30665806, 170.80717, 0.25, 133.7993)
+transform = Transform3D(-0.07970393, 0, -0.9968186, 0, 1, 0, 0.9968186, 0, -0.07970393, 170.80717, 0.25, 133.7993)
 script = ExtResource("8_ercdn")
 traffic_dir = Array[int]([2, 2, 1, 1])
 lanes = Array[int]([2, 4, 4, 2])
@@ -1880,7 +1880,7 @@ prior_pt_init = NodePath("../RP_010")
 next_pt_init = NodePath("../RP_008")
 
 [node name="RP_010" type="Node3D" parent="RoadManager/Road_026" unique_id=1453552694]
-transform = Transform3D(-0.99548703, 0, -0.094897695, 0, 1, 0, 0.094897695, 0, -0.99548703, 197.1496, 0.25, 150.16705)
+transform = Transform3D(-0.8359607, 0, -0.5487893, 0, 1, 0, 0.5487893, 0, -0.8359607, 193.40054, 0.25, 150.83388)
 script = ExtResource("8_ercdn")
 traffic_dir = Array[int]([2, 2, 1, 1])
 lanes = Array[int]([2, 4, 4, 2])
