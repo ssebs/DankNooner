@@ -1,5 +1,5 @@
 @tool
-class_name ResultsHUD extends Control
+class_name ResultsHUDState extends HUDState
 
 signal skip_pressed
 signal restart_pressed
@@ -16,7 +16,7 @@ var _countdown: float = -1.0
 
 
 func _ready():
-	hide()
+	ui.hide()
 	skip_btn.pressed.connect(func(): skip_pressed.emit())
 	restart_btn.pressed.connect(func(): restart_pressed.emit())
 
@@ -40,7 +40,7 @@ func rpc_show_results(results_dict: Dictionary, countdown_seconds: float):
 	skip_btn.visible = multiplayer.is_server()
 	restart_btn.visible = multiplayer.is_server()
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME_PAUSED
-	show()
+	ui.show()
 	if skip_btn.visible:
 		skip_btn.call_deferred("grab_focus")
 
@@ -58,7 +58,7 @@ func rpc_update_rows(results_dict: Dictionary):
 func rpc_hide():
 	_countdown = -1.0
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
-	hide()
+	ui.hide()
 
 
 func _rebuild_rows(data: ResultsData):

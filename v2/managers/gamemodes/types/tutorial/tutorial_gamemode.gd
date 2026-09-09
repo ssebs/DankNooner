@@ -2,7 +2,7 @@
 class_name TutorialGameMode extends GameModeType
 
 @export var tutorial_hud: TutorialHUDState
-@export var results_hud: ResultsHUD
+@export var results_hud: ResultsHUDState
 @export var input_state_manager: InputStateManager
 @export var lobby_manager: LobbyManager
 @export var menu_manager: MenuManager
@@ -16,7 +16,6 @@ var _active_runner_index: int = -1
 var _respawn_delay: float = 3.0
 var _results_countdown: float = -1.0
 var _results_countdown_total: float = 10.0
-
 
 func Enter(state_context: StateContext):
 	if Engine.is_editor_hint():
@@ -72,10 +71,10 @@ func Exit(_state_context: StateContext):
 	# runs Exit() on their own state machine, so a local hide is sufficient.
 	# results_hud sets IN_GAME_PAUSED when it shows; restore IN_GAME on the way out so
 	# the cursor doesn't stay visible after skip→free-roam.
-	if results_hud.visible:
+	if results_hud.ui.visible:
 		input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
 	tutorial_hud.hide_ui()
-	results_hud.hide()
+	results_hud.hide_ui()
 	_start_circle.disable_game_objects()
 	_start_circle = null
 	_runners = []
