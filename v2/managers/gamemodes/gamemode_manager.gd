@@ -7,6 +7,8 @@ signal player_spawned(peer_id: int)
 signal player_crashed(peer_id: int)
 signal player_latejoined(peer_id: int)
 signal player_disconnected(peer_id: int)
+## Emitted when a match ends and we return to the lobby/menu.
+signal match_ended
 
 enum MatchState {
 	IN_LOBBY,
@@ -165,6 +167,7 @@ func end_game():
 	_release_level_animals()
 
 	audio_manager.stop_all()
+	match_ended.emit()
 
 
 ## Animals ride along inside the level scene, so they are per-LEVEL, not per-gamemode.
