@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bqt8efotw5yp8"]
+
+[ext_resource type="Texture2D" uid="uid://bvwp75yahgco5" path="res://resources/img/arrow_texture_mine/ArrowTex.png" id="1_5di4t"]
+
+[resource]
+albedo_texture = ExtResource("1_5di4t")
+uv1_scale = Vector3(0.2, 0.2, 0.2)
+uv1_offset = Vector3(0, 0.46, 0)
+uv1_triplanar = true

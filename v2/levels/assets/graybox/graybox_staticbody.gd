@@ -28,6 +28,12 @@ enum ShapeMode { BOX, PLANE }
 		color_preset = v
 		apply_color()
 
+# When set, this material is used as-is and the color_preset system is skipped.
+@export var material_override: Material:
+	set(v):
+		material_override = v
+		apply_color()
+
 # PlaneMesh has no finite collision shape, so PLANE mode uses a thin BoxShape3D
 # spanning width x depth. height is ignored in PLANE mode.
 const PLANE_COLLISION_THICKNESS: float = 0.05
@@ -72,6 +78,10 @@ func apply_shape():
 
 func apply_color():
 	if not is_node_ready():
+		return
+
+	if material_override != null:
+		meshinstance.set_surface_override_material(0, material_override)
 		return
 
 	# Reuse the .tscn override material's texture (kenney texture_04) so the

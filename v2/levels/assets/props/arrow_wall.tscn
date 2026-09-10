@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://pimxd647gw4v"]
+
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_vahfl"]
+[ext_resource type="Material" uid="uid://bqt8efotw5yp8" path="res://levels/assets/props/repeating_arrow_texture.tres" id="2_mcbul"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_s7eql"]
+size = Vector3(10, 35, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_km681"]
+size = Vector3(10, 35, 1)
+
+[node name="ArrowWall" unique_id=1485126779 instance=ExtResource("1_vahfl")]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+width = 10.0
+height = 35.0
+material_override = ExtResource("2_mcbul")
+
+[node name="MeshInstance3D" parent="." index="0" unique_id=1922891733]
+mesh = SubResource("BoxMesh_s7eql")
+surface_material_override/0 = ExtResource("2_mcbul")
+
+[node name="CollisionShape3D" parent="." index="1" unique_id=1147968358]
+shape = SubResource("BoxShape3D_km681")
