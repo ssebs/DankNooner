@@ -331,9 +331,16 @@ func _deferred_init():
 		_init_audio()
 		hud_manager.local_player = self
 		add_to_group(UtilsConstants.GROUPS["LocalPlayer"])
-		
 	else:
 		hud_manager.hide_all()
+
+
+## The HUD holds a bare ref to the local player (hud_manager.local_player). Clear it on
+## teardown so a stale read fails as a clean null (see RidingHUDState.Enter) rather than a
+## "previously freed" crash. `== self` keeps this order-independent with the next player's spawn.
+func _exit_tree():
+	if is_local_client and hud_manager.local_player == self:
+		hud_manager.local_player = null
 
 
 func _init_audio():

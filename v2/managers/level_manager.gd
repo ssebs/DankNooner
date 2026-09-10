@@ -74,6 +74,9 @@ func spawn_level(level_name: LevelName, input_state: InputStateManager.InputStat
 		DebugUtils.DebugErrMsg("Could not find LevelName.%s in possible_levels" % level_name)
 		return
 
+	# Reset the HUD before despawn so RidingHUDState stops polling the player being freed.
+	# Re-enters on the next player spawn (needed for IN_GAME->IN_GAME map switches too).
+	hud_manager.go_to_null_hud()
 	despawn_level()
 
 	var spawned_level = possible_levels[level_name].instantiate() as LevelDefinition
@@ -90,9 +93,6 @@ func spawn_level(level_name: LevelName, input_state: InputStateManager.InputStat
 		menu_manager.hide_all_menus()
 		if audio_manager:
 			audio_manager.play_maximize()
-	else:
-		# Menu level — clear the riding HUD (RidingHUDState re-enters on the next spawn).
-		hud_manager.go_to_null_hud()
 
 
 func despawn_level():
