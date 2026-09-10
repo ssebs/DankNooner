@@ -24,6 +24,7 @@
 [ext_resource type="AudioStream" uid="uid://dov0o7qath83k" path="res://non_fmod_sounds/SFX/windows-tada.mp3" id="22_uckac"]
 [ext_resource type="AudioStream" uid="uid://dh4kgxmx1kba5" path="res://non_fmod_sounds/SFX/nuke-bomb.ogg" id="23_wigfl"]
 [ext_resource type="AudioStream" uid="uid://dapyaegjsje1r" path="res://non_fmod_sounds/SFX/cod-zombies-kaboom.ogg" id="24_7lx2g"]
+[ext_resource type="AudioStream" uid="uid://ck0twuq6xhxmm" path="res://non_fmod_sounds/SFX/tire_squeal_loop_01.ogg" id="26_2gp0e"]
 [ext_resource type="AudioStream" uid="uid://bulh350cqoa0a" path="res://non_fmod_sounds/XSR900/xsr900-mid.ogg" id="26_uckac"]
 
 [node name="AudioManager" type="Node" unique_id=625309404 groups=["Managers"]]
@@ -196,6 +197,13 @@ metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 [node name="Xsr900Revs" type="AudioStreamPlayer" parent="Sounds" unique_id=1955001235]
 unique_name_in_owner = true
 stream = ExtResource("26_uckac")
+bus = &"SFX"
+script = ExtResource("3_eng")
+loop = true
+
+[node name="TireSqueal" type="AudioStreamPlayer" parent="Sounds" unique_id=1870814155]
+unique_name_in_owner = true
+stream = ExtResource("26_2gp0e")
 bus = &"SFX"
 script = ExtResource("3_eng")
 loop = true

@@ -101,6 +101,12 @@ func grant_boost(player_peer_id: int):
 	_get_player_by_peer_id(player_peer_id).rb_add_boost = true
 
 
+## Play the pickup "pop" (Ding) on the collecting rider's own client. Server → that peer via rpc_id.
+@rpc("call_local", "reliable")
+func play_pickup_sfx():
+	audio_manager.play_ding()
+
+
 ## Debug: fill the player's boost meter. Server only; broadcast so each peer sets the setter and
 ## fills boost_amount in its own rollback tick (boost_amount is synced state).
 @rpc("any_peer", "call_local", "reliable")

@@ -95,6 +95,7 @@ func _on_item_body_entered(body: Node3D) -> void:
 	if !_active or !body.is_in_group(UtilsConstants.GROUPS["Racers"]):
 		return
 	_apply_effect(int(body.name), _current.pickup_item_definition)
+	_spawn_manager.play_pickup_sfx.rpc_id(int(body.name))
 	_rpc_despawn.rpc()
 	get_tree().create_timer(timeout).timeout.connect(_on_respawn_timer, CONNECT_ONE_SHOT)
 
