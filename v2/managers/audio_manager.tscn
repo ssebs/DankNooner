@@ -205,5 +205,4 @@ loop = true
 unique_name_in_owner = true
 stream = ExtResource("26_2gp0e")
 bus = &"SFX"
-script = ExtResource("3_eng")
-loop = true
+script = ExtResource("2_snd")
