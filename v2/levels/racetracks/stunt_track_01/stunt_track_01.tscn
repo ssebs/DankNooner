@@ -34,6 +34,7 @@
 [ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://managers/gamemodes/resources/gamemode_event_definition.gd" id="24_l8nu3"]
 [ext_resource type="PackedScene" uid="uid://jnyapma2vr1m" path="res://entities/vehicles/scenes/taxi.tscn" id="24_pls18"]
 [ext_resource type="PackedScene" uid="uid://ce0rc0lmwvocu" path="res://levels/assets/props/tree.glb" id="24_rl138"]
+[ext_resource type="PackedScene" uid="uid://pimxd647gw4v" path="res://levels/assets/props/arrow_wall.tscn" id="25_60x1b"]
 [ext_resource type="PackedScene" uid="uid://it7myerjmp0g" path="res://player/bikes/scenes/sport_bike.tscn" id="25_430hl"]
 [ext_resource type="Texture2D" uid="uid://bqogsjgrlr3ri" path="res://levels/assets/props/tree_brown.png" id="25_pls18"]
 [ext_resource type="Texture2D" uid="uid://csnqvxweh4an3" path="res://levels/assets/props/tree_green.png" id="26_grj8g"]
@@ -72,189 +73,189 @@ fog_sky_affect = 0.923
 albedo_texture = ExtResource("11_pvkg6")
 texture_filter = 4
 
-[sub_resource type="Curve3D" id="Curve3D_ftdt1"]
+[sub_resource type="Curve3D" id="Curve3D_60x1b"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11578369, 0, 4.998657, -12, 0, 0, 0.7178345, 0, -9.396362, -0.07171631, 0, 24.684082, -11.499939, 0, 24.6792),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_60x1b"]
+[sub_resource type="Curve3D" id="Curve3D_aoie2"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11578369, 0, 4.998657, 12, 0, 0, 0.7178345, 0, -9.396362, -0.07171631, 0, 24.684082, 12.500061, 0, 24.6792),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_aoie2"]
+[sub_resource type="Curve3D" id="Curve3D_3x52s"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11578369, 0, 4.998657, 0, 0, 0, 0.7178345, 0, -9.396362, -0.07171631, 0, 24.684082, 0.50006104, 0, 24.6792),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_3x52s"]
+[sub_resource type="Curve3D" id="Curve3D_548st"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 2.675011, -12, 0, 0, 27.26851, 0, -0.9620242, -57.078796, -0.00024414063, 13.786011, -57.167294, -0.00024414063, 3.1117086),
 "tilts": PackedFloat32Array(0, 1.1827484e-05)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_548st"]
+[sub_resource type="Curve3D" id="Curve3D_rk330"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 27.389694, 12, 0, 0, 26.493488, 0, -0.93468165, -57.078796, -0.00024414063, 13.786011, -56.32111, -0.00024414063, 27.096786),
 "tilts": PackedFloat32Array(0, 4.741022e-06)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_rk330"]
+[sub_resource type="Curve3D" id="Curve3D_i0vae"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 15.032352, 0, 0, 0, 26.880999, 0, -0.94835293, -57.078796, -0.00024414063, 13.786011, -56.7442, -0.00024414063, 15.104248),
 "tilts": PackedFloat32Array(0, 6.5639724e-06)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_i0vae"]
+[sub_resource type="Curve3D" id="Curve3D_dsd47"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -4.1820505e-07, -8.712605e-09, 9.355087, -12, 1.6763806e-08, 5.364418e-07, -3.7633698, -0.18538216, -16.368944, -0.75213623, -1.1040066, 27.69635, -5.5688114, -1.0307107, 29.722975),
 "tilts": PackedFloat32Array(2.3283067e-09, 0.0073268116)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_dsd47"]
+[sub_resource type="Curve3D" id="Curve3D_3qy1b"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -4.8356654e-08, -1.0074303e-09, 1.0817199, 12, -1.6763806e-08, -5.364418e-07, -5.1086736, -0.25165132, -22.220402, -0.75213623, -1.1040066, 27.69635, 17.815516, -0.5694366, 24.341478),
 "tilts": PackedFloat32Array(2.328307e-09, -0.0029715886)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_3qy1b"]
+[sub_resource type="Curve3D" id="Curve3D_7h6ax"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -2.3328084e-07, -4.8600177e-09, 5.218404, 0, 0, 0, -4.436022, -0.21851674, -19.294672, -0.75213623, -1.1040066, 27.69635, 6.123352, -0.8000736, 27.032227),
 "tilts": PackedFloat32Array(2.3283067e-09, 0.006194006)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_7h6ax"]
+[sub_resource type="Curve3D" id="Curve3D_y7kpu"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -1.0495243e-06, -3.2797633e-08, 17.608097, -12, 0, 7.1525574e-07, -5.319589, -0.11297146, -9.214865, -23.731628, -6.645993, 47.955627, 6.321026, -6.1794567, 56.9004),
 "tilts": PackedFloat32Array(3.7252903e-09, -0.034298744)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_y7kpu"]
+[sub_resource type="Curve3D" id="Curve3D_a4ddl"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -7.213675e-07, -2.2542734e-08, 12.10254, 12, 0, -7.1525574e-07, -3.8753722, -0.082300805, -6.713118, -23.731628, -6.645993, 47.955627, 27.10445, -5.979101, 44.900017),
 "tilts": PackedFloat32Array(3.7252899e-09, -0.040770363)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_a4ddl"]
+[sub_resource type="Curve3D" id="Curve3D_x6w3k"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -8.854459e-07, -2.7670184e-08, 14.855319, 0, 0, 0, -4.5974803, -0.09763613, -7.963991, -23.731628, -6.645993, 47.955627, 16.712738, -6.079279, 50.900208),
 "tilts": PackedFloat32Array(3.7252903e-09, -0.03726352)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_x6w3k"]
+[sub_resource type="Curve3D" id="Curve3D_x1gnv"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 11.26405, -12, 2.6645353e-15, 0, -13.2831135, 4.3842842e-08, -20.06907, -33.695984, 0, 14.713196, -2.750204, 0.40945268, 42.66542),
 "tilts": PackedFloat32Array(2.220446e-16, -0.027724633)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_x1gnv"]
+[sub_resource type="Curve3D" id="Curve3D_oxlis"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 15.412031, 12, -2.6645353e-15, 0, -6.662755, 2.199139e-08, -10.066564, -33.695984, 0, 14.713196, 17.251547, -0.40945077, 29.426865),
 "tilts": PackedFloat32Array(2.220446e-16, -0.0448057)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_oxlis"]
+[sub_resource type="Curve3D" id="Curve3D_5wqg6"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 13.33804, 0, 0, 0, -9.972934, 3.2917114e-08, -15.067817, -33.695984, 0, 14.713196, 7.2506714, 9.536743e-07, 36.046143),
 "tilts": PackedFloat32Array(2.220446e-16, -0.034127582)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_5wqg6"]
+[sub_resource type="Curve3D" id="Curve3D_5cxnc"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 2.562258e-07, 0, 4.298755, -12.000002, -2.2351742e-08, -7.1525574e-07, 3.564316, -0.11404709, -3.8943985, -21.453491, 0, 16.677307, -16.711414, 0.534715, 17.90451),
 "tilts": PackedFloat32Array(-1.8626454e-09, -0.04455372)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_5cxnc"]
+[sub_resource type="Curve3D" id="Curve3D_t4l24"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 3.4091966e-07, 0, 5.719682, 12.000002, 2.2351742e-08, 7.1525574e-07, 8.781821, -0.2809911, -9.595083, -21.453491, 0, 16.677307, 0.97966385, -0.03134471, 34.1127),
 "tilts": PackedFloat32Array(-1.8626454e-09, -0.025401322)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_t4l24"]
+[sub_resource type="Curve3D" id="Curve3D_0ogqk"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 2.9857273e-07, 0, 5.0092187, 0, 0, 0, 6.1730685, -0.1975191, -6.744741, -21.453491, 0, 16.677307, -7.8658752, 0.25168514, 26.008606),
 "tilts": PackedFloat32Array(-1.8626454e-09, -0.03198602)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_0ogqk"]
+[sub_resource type="Curve3D" id="Curve3D_kgknl"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 4.101689e-08, 0, 3.1458244, -11.999998, 5.98302e-08, -1.5646219e-07, 1.7167464, -0.059429932, -2.546007, -16.40625, 6.000121, 38.57184, -25.261967, 6.494231, 32.22514),
 "tilts": PackedFloat32Array(4.9858504e-09, -0.063036636)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_kgknl"]
+[sub_resource type="Curve3D" id="Curve3D_ibpty"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 1.134285e-07, 0, 8.699492, 11.999998, -5.98302e-08, 1.5646219e-07, 3.4374819, -0.118997954, -5.0979295, -16.40625, 6.000121, 38.57184, -5.362301, 6.5733423, 45.641438),
 "tilts": PackedFloat32Array(4.9858504e-09, -0.050802246)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_ibpty"]
+[sub_resource type="Curve3D" id="Curve3D_4h6qj"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 7.722269e-08, 0, 5.9226584, 0, 0, 0, 2.577114, -0.08921394, -3.821968, -16.40625, 6.000121, 38.57184, -15.312134, 6.533787, 38.93329),
 "tilts": PackedFloat32Array(4.9858504e-09, -0.056325287)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_4h6qj"]
+[sub_resource type="Curve3D" id="Curve3D_whdav"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 5.5948224, -12, 0, 0, 0.18393414, -1.1825016e-08, -8.124006, 0.025024414, 1.75, 31.502075, -11.964718, 1.3348355, 31.230618),
 "tilts": PackedFloat32Array(0, 0.033853404)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_whdav"]
+[sub_resource type="Curve3D" id="Curve3D_udx41"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 4.4051776, 12, 0, 0, 0.21230501, -1.3648963e-08, -9.377091, 0.025024414, 1.75, 31.502075, 12.014767, 2.1651645, 31.773533),
 "tilts": PackedFloat32Array(0, 0.033405785)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_udx41"]
+[sub_resource type="Curve3D" id="Curve3D_emu8c"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 5, 0, 0, 0, 0.19811957, -1.2736989e-08, -8.750549, 0.025024414, 1.75, 31.502075, 0.025024414, 1.75, 31.502075),
 "tilts": PackedFloat32Array(0, 0.03362845)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_emu8c"]
+[sub_resource type="Curve3D" id="Curve3D_6lq47"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 11.221257, -12.000002, 0, 0, 0.076378144, 0, -9.3569355, -23.014465, 0.49987793, -0.04333496, -12.321501, 0.49987793, 22.914257),
 "tilts": PackedFloat32Array(0, -0.00024108018)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_6lq47"]
+[sub_resource type="Curve3D" id="Curve3D_dhvxm"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 13.979689, 12.000002, 0, 0, 0.054221224, 0, -6.642535, -23.014465, 0.49987793, -0.04333496, 11.677702, 0.49987793, 23.110157),
 "tilts": PackedFloat32Array(0, -0.00024864852)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_dhvxm"]
+[sub_resource type="Curve3D" id="Curve3D_yucqr"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 12.600473, 0, 0, 0, 0.06529968, 0, -7.999735, -23.014465, 0.49987793, -0.04333496, -0.3218994, 0.49987793, 23.012207),
 "tilts": PackedFloat32Array(0, -0.00024301952)
@@ -2159,7 +2160,6 @@ use_lowpoly_preview = true
 underside_thickness = 2.0
 generate_ai_lanes = true
 ai_lane_group = "road_lanes"
-draw_lanes_editor = true
 create_edge_curves = true
 edge_containers = Array[NodePath]([NodePath("../Road_024"), NodePath("../3way_2x9")])
 edge_rp_targets = Array[NodePath]([NodePath("RP_001"), NodePath("RP_001")])
@@ -2177,15 +2177,15 @@ prior_pt_init = NodePath("../RP_005")
 next_pt_init = NodePath("../RP_002")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_001" unique_id=1986150321]
-curve = SubResource("Curve3D_ftdt1")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_001" unique_id=1878071296]
 curve = SubResource("Curve3D_60x1b")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_001" unique_id=1599986307]
+[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_001" unique_id=1878071296]
 curve = SubResource("Curve3D_aoie2")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_001" unique_id=1599986307]
+curve = SubResource("Curve3D_3x52s")
 metadata/_edit_lock_ = true
 
 [node name="RP_002" type="Node3D" parent="RoadManager/bridgeroad" unique_id=1770111972]
@@ -2199,15 +2199,15 @@ prior_pt_init = NodePath("../RP_001")
 next_pt_init = NodePath("../RP_003")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_002" unique_id=1812409607]
-curve = SubResource("Curve3D_3x52s")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_002" unique_id=909327310]
 curve = SubResource("Curve3D_548st")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_002" unique_id=1375997108]
+[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_002" unique_id=909327310]
 curve = SubResource("Curve3D_rk330")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_002" unique_id=1375997108]
+curve = SubResource("Curve3D_i0vae")
 metadata/_edit_lock_ = true
 
 [node name="RP_005" type="Node3D" parent="RoadManager/bridgeroad" unique_id=104417362]
@@ -2221,19 +2221,21 @@ prior_pt_init = NodePath("../RP_006")
 next_pt_init = NodePath("../RP_001")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_005" unique_id=209340463]
-curve = SubResource("Curve3D_i0vae")
-metadata/_edit_lock_ = true
-
-[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_005/edge_R" unique_id=433815596 instance=ExtResource("12_3twxm")]
-
-[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_005" unique_id=1460038946]
 curve = SubResource("Curve3D_dsd47")
 metadata/_edit_lock_ = true
 
-[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_005/edge_F" unique_id=216220357 instance=ExtResource("12_3twxm")]
+[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_005/edge_R" unique_id=227368666 instance=ExtResource("12_3twxm")]
+polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
+
+[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_005" unique_id=1460038946]
+curve = SubResource("Curve3D_3qy1b")
+metadata/_edit_lock_ = true
+
+[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_005/edge_F" unique_id=1416033416 instance=ExtResource("12_3twxm")]
+polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_005" unique_id=882996704]
-curve = SubResource("Curve3D_3qy1b")
+curve = SubResource("Curve3D_7h6ax")
 metadata/_edit_lock_ = true
 
 [node name="RP_006" type="Node3D" parent="RoadManager/bridgeroad" unique_id=1878248579]
@@ -2247,19 +2249,21 @@ prior_pt_init = NodePath("../RP_007")
 next_pt_init = NodePath("../RP_005")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_006" unique_id=912126381]
-curve = SubResource("Curve3D_7h6ax")
-metadata/_edit_lock_ = true
-
-[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_006/edge_R" unique_id=643881505 instance=ExtResource("12_3twxm")]
-
-[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_006" unique_id=2027731395]
 curve = SubResource("Curve3D_y7kpu")
 metadata/_edit_lock_ = true
 
+[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_006/edge_R" unique_id=1410673700 instance=ExtResource("12_3twxm")]
+polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
+
+[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_006" unique_id=2027731395]
+curve = SubResource("Curve3D_a4ddl")
+metadata/_edit_lock_ = true
+
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_006/edge_F" unique_id=344925828 instance=ExtResource("12_3twxm")]
+polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_006" unique_id=1742019994]
-curve = SubResource("Curve3D_a4ddl")
+curve = SubResource("Curve3D_x6w3k")
 metadata/_edit_lock_ = true
 
 [node name="RP_007" type="Node3D" parent="RoadManager/bridgeroad" unique_id=322917356]
@@ -2273,19 +2277,21 @@ prior_pt_init = NodePath("../RP_008")
 next_pt_init = NodePath("../RP_006")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_007" unique_id=1634234280]
-curve = SubResource("Curve3D_x6w3k")
-metadata/_edit_lock_ = true
-
-[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_007/edge_R" unique_id=1074778967 instance=ExtResource("12_3twxm")]
-
-[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_007" unique_id=1707585009]
 curve = SubResource("Curve3D_x1gnv")
 metadata/_edit_lock_ = true
 
-[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_007/edge_F" unique_id=362668998 instance=ExtResource("12_3twxm")]
+[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_007/edge_R" unique_id=819865914 instance=ExtResource("12_3twxm")]
+polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
+
+[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_007" unique_id=1707585009]
+curve = SubResource("Curve3D_oxlis")
+metadata/_edit_lock_ = true
+
+[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_007/edge_F" unique_id=2085483279 instance=ExtResource("12_3twxm")]
+polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_007" unique_id=126214080]
-curve = SubResource("Curve3D_oxlis")
+curve = SubResource("Curve3D_5wqg6")
 metadata/_edit_lock_ = true
 
 [node name="RP_008" type="Node3D" parent="RoadManager/bridgeroad" unique_id=58407875]
@@ -2299,19 +2305,21 @@ prior_pt_init = NodePath("../RP_009")
 next_pt_init = NodePath("../RP_007")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_008" unique_id=694602661]
-curve = SubResource("Curve3D_5wqg6")
-metadata/_edit_lock_ = true
-
-[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_008/edge_R" unique_id=1224026791 instance=ExtResource("12_3twxm")]
-
-[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_008" unique_id=72102539]
 curve = SubResource("Curve3D_5cxnc")
 metadata/_edit_lock_ = true
 
-[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_008/edge_F" unique_id=1210380017 instance=ExtResource("12_3twxm")]
+[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_008/edge_R" unique_id=1703846035 instance=ExtResource("12_3twxm")]
+polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
+
+[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_008" unique_id=72102539]
+curve = SubResource("Curve3D_t4l24")
+metadata/_edit_lock_ = true
+
+[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_008/edge_F" unique_id=740523124 instance=ExtResource("12_3twxm")]
+polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_008" unique_id=1882487803]
-curve = SubResource("Curve3D_t4l24")
+curve = SubResource("Curve3D_0ogqk")
 metadata/_edit_lock_ = true
 
 [node name="RP_009" type="Node3D" parent="RoadManager/bridgeroad" unique_id=1339023966]
@@ -2325,19 +2333,21 @@ prior_pt_init = NodePath("../RP_010")
 next_pt_init = NodePath("../RP_008")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_009" unique_id=1955638473]
-curve = SubResource("Curve3D_0ogqk")
-metadata/_edit_lock_ = true
-
-[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_009/edge_R" unique_id=1915822082 instance=ExtResource("12_3twxm")]
-
-[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_009" unique_id=1693336786]
 curve = SubResource("Curve3D_kgknl")
 metadata/_edit_lock_ = true
 
-[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_009/edge_F" unique_id=1373494551 instance=ExtResource("12_3twxm")]
+[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_009/edge_R" unique_id=382722042 instance=ExtResource("12_3twxm")]
+polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
+
+[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_009" unique_id=1693336786]
+curve = SubResource("Curve3D_ibpty")
+metadata/_edit_lock_ = true
+
+[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_009/edge_F" unique_id=747350104 instance=ExtResource("12_3twxm")]
+polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_009" unique_id=1681721669]
-curve = SubResource("Curve3D_ibpty")
+curve = SubResource("Curve3D_4h6qj")
 metadata/_edit_lock_ = true
 
 [node name="RP_010" type="Node3D" parent="RoadManager/bridgeroad" unique_id=1317145902]
@@ -2348,19 +2358,21 @@ lanes = Array[int]([2, 4, 4, 2])
 next_pt_init = NodePath("../RP_009")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_010" unique_id=693373319]
-curve = SubResource("Curve3D_4h6qj")
-metadata/_edit_lock_ = true
-
-[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_010/edge_R" unique_id=1971559755 instance=ExtResource("12_3twxm")]
-
-[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_010" unique_id=1055047765]
 curve = SubResource("Curve3D_whdav")
 metadata/_edit_lock_ = true
 
-[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_010/edge_F" unique_id=435561808 instance=ExtResource("12_3twxm")]
+[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_010/edge_R" unique_id=1668919672 instance=ExtResource("12_3twxm")]
+polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
+
+[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_010" unique_id=1055047765]
+curve = SubResource("Curve3D_udx41")
+metadata/_edit_lock_ = true
+
+[node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_010/edge_F" unique_id=1622523373 instance=ExtResource("12_3twxm")]
+polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_010" unique_id=1219700673]
-curve = SubResource("Curve3D_udx41")
+curve = SubResource("Curve3D_emu8c")
 metadata/_edit_lock_ = true
 
 [node name="RP_003" type="Node3D" parent="RoadManager/bridgeroad" unique_id=1626909351]
@@ -2374,15 +2386,15 @@ prior_pt_init = NodePath("../RP_002")
 next_pt_init = NodePath("../RP_004")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_003" unique_id=1130543593]
-curve = SubResource("Curve3D_emu8c")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_003" unique_id=816150197]
 curve = SubResource("Curve3D_6lq47")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_003" unique_id=72864931]
+[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_003" unique_id=816150197]
 curve = SubResource("Curve3D_dhvxm")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_003" unique_id=72864931]
+curve = SubResource("Curve3D_yucqr")
 metadata/_edit_lock_ = true
 
 [node name="RP_004" type="Node3D" parent="RoadManager/bridgeroad" unique_id=304205764]
@@ -2650,6 +2662,22 @@ script = ExtResource("19_k3cxb")
 first_checkpoint = NodePath("CheckpointMarker1")
 first_spawner = NodePath("PickupSpawner1")
 
+[node name="ArrowWall2" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1485126779 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 0.50000006, 0.8660254, 1, 2.185569e-08, 3.7855173e-08, 0, 0.8660254, -0.50000006, -773.6683, 5.5000005, 465.8718)
+
+[node name="ArrowWall3" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1440237634 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, -529.18304, 5.5000114, 638.30634)
+
+[node name="ArrowWall5" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=805742350 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, -529.18304, 5.5000114, 676.80634)
+
+[node name="ArrowWall6" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1755254922 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 0.49999988, -0.8660254, 1, 2.185569e-08, -3.785516e-08, 0, -0.8660254, -0.49999988, -169.33174, 5.5000277, 658.4027)
+
+[node name="ArrowWall7" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=231303715 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 0.8660252, -0.5, 1, 3.7855163e-08, -2.1855685e-08, 0, -0.5, -0.8660252, -188.45616, 5.5000267, 398.95877)
+height = 55.0
+
 [node name="CheckpointMarker1" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=770419617 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -822.5, 2.2498784, 462.5)
 width = 32.0
@@ -2658,12 +2686,6 @@ width = 32.0
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -784, 2.2498784, 512)
 width = 32.0
 
-[node name="GrayBox_StaticBody" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1485126779 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, -780.5, 4.5, 462)
-height = 10.0
-depth = 35.0
-color_preset = 1
-
 [node name="CheckpointMarker3" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1382040154 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -509.5, 2.2498784, 656.5)
 width = 32.0
@@ -2671,18 +2693,6 @@ width = 32.0
 [node name="CheckpointMarker4" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=168658589 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -176, 2.2498784, 567.5)
 width = 32.0
-
-[node name="GrayBox_StaticBody2" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=473371715 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.8660253, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660253, -162, 4.5, 660.5)
-height = 10.0
-depth = 35.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody3" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1051932965 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.49999994, 0, -0.8660253, 0, 1, 0, 0.8660253, 0, 0.49999994, -186.67174, 4.5, 398.43854)
-height = 10.0
-depth = 60.0
-color_preset = 1
 
 [node name="CheckpointMarker5" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=710560741 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
 transform = Transform3D(8.7422784e-08, 0, -1.0000001, 0, 1, 0, 1.0000001, 0, 8.7422784e-08, -140.5, 2.2498784, 400)
@@ -2751,78 +2761,6 @@ items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 [node name="PickupSpawner19" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1761530306 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -187.24696, 9.367197, 634.51044)
 items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
-
-[node name="GrayBox_StaticBody4" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=924713284 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.61237234, 0.3535533, -0.70710677, -0.49999994, 0.8660252, 0, 0.61237246, 0.35355335, 0.70710665, -683.06036, 2.9150636, 622.82495)
-width = 16.0
-depth = 16.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody13" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=834847328 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.77630585, 0.46162796, -0.4292422, -0.51110864, 0.85951596, -3.5135457e-08, 0.36894068, 0.21938945, 0.90318936, -676.7518, 2.9237096, 613.97437)
-width = 16.0
-depth = 10.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody14" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=559259756 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.68753344, 0.7054699, 0.17207384, -0.71615213, 0.69794405, -1.0957333e-07, -0.1200978, -0.123230964, 0.9850839, -674.64496, 1.214122, 607.99005)
-width = 6.0
-depth = 6.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody7" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=545989460 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.86627024, 0, -0.49957547, 0, 0.99999976, 0, 0.4995755, 0, 0.8662702, -678.8993, 3.4150636, 607.2244)
-width = 4.0
-height = 8.0
-depth = 4.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody8" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1712262344 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.7071067, 0, -0.70710665, 0, 0.99999976, 0, 0.7071067, 0, 0.70710665, -688.5102, 3.4150636, 597.40643)
-width = 4.0
-height = 8.0
-depth = 4.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody9" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1120364299 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.7071067, 0, -0.70710665, 0, 0.99999976, 0, 0.7071067, 0, 0.70710665, -661.28656, 3.4150636, 582.2036)
-width = 4.0
-height = 8.0
-depth = 4.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody10" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=537745485 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.7071067, 0, -0.70710665, 0, 0.99999976, 0, 0.7071067, 0, 0.70710665, -645.7302, 3.4150636, 594.9316)
-width = 4.0
-height = 8.0
-depth = 4.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody11" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1151161501 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.7071067, 0, -0.70710665, 0, 0.99999976, 0, 0.7071067, 0, 0.70710665, -626.2848, 2.4639769, 566.29376)
-width = 4.0
-height = 6.0
-depth = 4.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody12" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=289348753 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.7071067, 0, -0.70710665, 0, 0.99999976, 0, 0.7071067, 0, 0.70710665, -641.8411, 2.4639769, 560.63696)
-width = 4.0
-height = 6.0
-depth = 4.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody5" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=225828155 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.7905082, 0.39615643, -0.46707222, -0.49379256, 0.86340827, -0.10341494, 0.36230567, 0.31238717, 0.8781506, -690.2749, 1.9150636, 633.4439)
-width = 16.0
-depth = 15.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody6" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=491093595 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.8375171, 0.39615643, -0.37633085, -0.4792416, 0.86340827, -0.15764901, 0.26247358, 0.31238717, 0.912974, -698.4214, 1.0774114, 646.09015)
-width = 12.0
-depth = 18.0
-color_preset = 1
 
 [node name="PickupSpawner6" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1681096213 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(0.55690646, 0, 0.8305752, 0, 1, 0, -0.8305752, 0, 0.55690646, -711.5583, 6.867197, 579.89886)
@@ -3124,6 +3062,80 @@ transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 48.0
 transform = Transform3D(-1, 0, -2.6226832e-07, 0, 1, 0, 2.6226832e-07, 0, -1, -912, 0.025000477, 496.00018)
 
 [node name="props" type="Node3D" parent="." unique_id=1428165132]
+
+[node name="BridgeSupports" type="Node3D" parent="props" unique_id=1179143975]
+
+[node name="GrayBox_StaticBody4" parent="props/BridgeSupports" unique_id=924713284 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.61237234, 0.3535533, -0.70710677, -0.49999994, 0.8660252, 0, 0.61237246, 0.35355335, 0.70710665, -683.06036, 2.9150636, 622.82495)
+width = 16.0
+depth = 16.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody13" parent="props/BridgeSupports" unique_id=834847328 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.77630585, 0.46162796, -0.4292422, -0.51110864, 0.85951596, -3.5135457e-08, 0.36894068, 0.21938945, 0.90318936, -676.7518, 2.9237096, 613.97437)
+width = 16.0
+depth = 10.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody14" parent="props/BridgeSupports" unique_id=559259756 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.68753344, 0.7054699, 0.17207384, -0.71615213, 0.69794405, -1.0957333e-07, -0.1200978, -0.123230964, 0.9850839, -674.64496, 1.214122, 607.99005)
+width = 6.0
+depth = 6.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody7" parent="props/BridgeSupports" unique_id=545989460 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.86627024, 0, -0.49957547, 0, 0.99999976, 0, 0.4995755, 0, 0.8662702, -678.8993, 3.4150636, 607.2244)
+width = 4.0
+height = 8.0
+depth = 4.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody9" parent="props/BridgeSupports" unique_id=1120364299 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.7071067, 0, -0.70710665, 0, 0.99999976, 0, 0.7071067, 0, 0.70710665, -661.28656, 3.4150636, 582.2036)
+width = 4.0
+height = 8.0
+depth = 4.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody10" parent="props/BridgeSupports" unique_id=537745485 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.7071067, 0, -0.70710665, 0, 0.99999976, 0, 0.7071067, 0, 0.70710665, -645.7302, 3.4150636, 594.9316)
+width = 4.0
+height = 8.0
+depth = 4.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody11" parent="props/BridgeSupports" unique_id=1151161501 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.7071067, 0, -0.70710665, 0, 0.99999976, 0, 0.7071067, 0, 0.70710665, -626.2848, 2.4639769, 566.29376)
+width = 4.0
+height = 6.0
+depth = 4.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody12" parent="props/BridgeSupports" unique_id=289348753 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.7071067, 0, -0.70710665, 0, 0.99999976, 0, 0.7071067, 0, 0.70710665, -641.8411, 2.4639769, 560.63696)
+width = 4.0
+height = 6.0
+depth = 4.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody5" parent="props/BridgeSupports" unique_id=225828155 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.7905082, 0.39615643, -0.46707222, -0.49379256, 0.86340827, -0.10341494, 0.36230567, 0.31238717, 0.8781506, -690.2749, 1.9150636, 633.4439)
+width = 16.0
+depth = 15.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody6" parent="props/BridgeSupports" unique_id=491093595 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.8375171, 0.39615643, -0.37633085, -0.4792416, 0.86340827, -0.15764901, 0.26247358, 0.31238717, 0.912974, -698.4214, 1.0774114, 646.09015)
+width = 12.0
+depth = 18.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody8" parent="props/BridgeSupports" unique_id=1712262344 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.7071067, 0, -0.70710665, 0, 0.99999976, 0, 0.7071067, 0, 0.70710665, -688.5102, 3.4150636, 597.40643)
+width = 4.0
+height = 8.0
+depth = 4.0
+color_preset = 1
 
 [node name="Ramp" parent="props" unique_id=319877564 instance=ExtResource("6_w1aki")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -232.5, 0, 32)
