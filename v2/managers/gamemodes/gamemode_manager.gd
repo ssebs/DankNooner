@@ -82,9 +82,17 @@ func start_game(
 	_release_level_animals()
 	menu_manager.state_machine.request_state_change(loading_menu_state)
 	await RenderingServer.frame_post_draw
+	var t_start := Time.get_ticks_msec()
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
+	var t_spawned := Time.get_ticks_msec()
 	state_machine.request_state_change(_gamemode_map[gamemode])
+	var t_gamemode := Time.get_ticks_msec()
 	_bind_level_animals()
+	DebugUtils.DebugMsg(
+		"[level load] spawn_level %dms, gamemode enter %dms" % [
+			t_spawned - t_start, t_gamemode - t_spawned
+		]
+	)
 
 
 ## Server receives request to change gamemode, broadcasts to all peers

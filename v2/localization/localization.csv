@@ -100,6 +100,7 @@ RACE_WHEELIE_OBJECTIVE,"Hold a wheelie the whole lap!","¡Mantén el caballito t
 RACE_WHEELIE_WARN,"WHEELIE! {time}s","¡CABALLITO! {time}s"
 RACE_DNF,"DNF","DNF"
 LOADING_LABEL,"Loading...","Cargando..."
+COMPILING_SHADERS_LABEL,"Compiling shaders...","Compilando shaders..."
 LOADOUTS_LABEL,"Bikes","Motos"
 EDIT_LOADOUT_LABEL,"Edit Bike Loadout","Editar Configuración de Moto"
 NEW_LOADOUT_LABEL,"+ New Bike Loadout","+ Nueva Configuración de Moto"

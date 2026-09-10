@@ -1,0 +1,76 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://menus/warmup_menu/warmup_menu_state.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_theme"]
+
+[sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("Sky_mat")
+
+[sub_resource type="Environment" id="Env_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+ambient_light_source = 3
+
+[node name="WarmupMenuState" type="Node"]
+script = ExtResource("1_script")
+
+[node name="UI" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BG" type="ColorRect" parent="UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Label" type="Label" parent="UI/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_theme")
+theme_override_font_sizes/font_size = 48
+text = "COMPILING_SHADERS_LABEL"
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="UI/CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 24)
+layout_mode = 2
+
+[node name="WarmupViewport" type="SubViewport" parent="."]
+unique_name_in_owner = true
+own_world_3d = true
+use_occlusion_culling = false
+size = Vector2i(320, 200)
+render_target_update_mode = 4
+
+[node name="WarmupCamera" type="Camera3D" parent="WarmupViewport"]
+unique_name_in_owner = true
+
+[node name="WarmupLight" type="DirectionalLight3D" parent="WarmupViewport"]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="WarmupViewport"]
+environment = SubResource("Env_1")

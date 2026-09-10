@@ -26,6 +26,7 @@
 [ext_resource type="Resource" uid="uid://ba1bidrtscoc7" path="res://resources/player/default_player_definition.tres" id="20_pk5u2"]
 [ext_resource type="Script" uid="uid://cug5kob8cndk4" path="res://managers/spawn_manager.gd" id="21_euc45"]
 [ext_resource type="PackedScene" uid="uid://pg4u70n43ksy" path="res://menus/loading_menu/loading_menu_state.tscn" id="21_x5kvo"]
+[ext_resource type="PackedScene" path="res://menus/warmup_menu/warmup_menu_state.tscn" id="22_warmup"]
 [ext_resource type="Script" uid="uid://yp4h0tghigit" path="res://managers/gamemodes/types/free_roam/free_roam_gamemode.gd" id="25_6krrg"]
 [ext_resource type="Script" uid="uid://5xa3xuln57nw" path="res://managers/gamemodes/types/road_race/road_race_gamemode.gd" id="26_8slmw"]
 [ext_resource type="PackedScene" uid="uid://dr5dms10u4b2o" path="res://managers/hud/gamemode_event_hud_state.tscn" id="27_3cqky"]
@@ -104,7 +105,11 @@ pause_menu_state = NodePath("StateMachine/PauseMenuState")
 
 [node name="StateMachine" type="Node" parent="ManagerManager/MenuManager" unique_id=544508199 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("4_6bm6p")
-initial_state = NodePath("SplashMenuState")
+initial_state = NodePath("WarmupMenuState")
+
+[node name="WarmupMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1093494079 node_paths=PackedStringArray("level_manager", "next_state") instance=ExtResource("22_warmup")]
+level_manager = NodePath("../../../LevelManager")
+next_state = NodePath("../SplashMenuState")
 
 [node name="SplashMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=2055861891 node_paths=PackedStringArray("menu_manager", "level_manager", "main_menu_state", "audio_manager") instance=ExtResource("11_umrn2")]
 menu_manager = NodePath("../..")
