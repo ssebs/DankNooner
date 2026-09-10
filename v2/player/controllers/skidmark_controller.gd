@@ -48,6 +48,8 @@ static var _shader: Shader
 
 var _ribbons: Array[Skidmark] = []
 var _active: Skidmark = null
+## Tracks the looping TireSqueal so it's started/stopped only on drift edges.
+var _squealing: bool = false
 
 
 ## One ribbon = one continuous drift mark. Holds its world-space strip points
@@ -84,6 +86,27 @@ func _process(delta: float) -> void:
 		_extend_active()
 	elif _active != null:
 		_finalize_active()
+
+	_set_squeal(movement_controller.is_drifting)
+
+
+## Start/stop the looping tire-squeal on drift edges. Local player only — this runs for every
+## player on every client, so an unguarded call would squeal for remote riders' drifts too.
+func _set_squeal(on: bool) -> void:
+	if on == _squealing:
+		return
+	_squealing = on
+	if not player_entity.is_local_client:
+		return
+	if on:
+		player_entity.audio_manager.play_sfx(AudioManager.Sfx.TIRE_SQUEAL)
+	else:
+		player_entity.audio_manager.stop_sfx(AudioManager.Sfx.TIRE_SQUEAL)
+
+
+## A despawn mid-drift (e.g. level change) never hits the drift-end edge, so stop the loop here.
+func _exit_tree() -> void:
+	_set_squeal(false)
 
 
 ## Append a strip segment at the rear wheel's current ground contact, if it has
