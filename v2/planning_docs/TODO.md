@@ -26,6 +26,7 @@
 > Don't forget, have fun :D
 
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
+  - [ ] in game switching maps broken
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [ ] make tricks + combos easier to do
