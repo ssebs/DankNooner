@@ -209,9 +209,6 @@
 - [ ] Improved controller UX — full navigation across menus, HUDs & in-world UI
   - [ ] cant use controller to select in customize menu
   - [ ] cant update settings via controller
-- [ ] First time experience / shader compilation / 1st run slowness
-  - [ ] customize menu on fresh computer doesnt render bikes
-  - [ ] freezes on Mac in exported binary
 - [ ] Pause => show lobby
 - [ ] Camera behavior
   - [ ] Rotate cam down + shift left look right while doing wheelie (fps mode diff than tps mode)
@@ -222,6 +219,10 @@
 ---
 
 ## Done ✅
+
+- [x] First time experience / shader compilation / 1st run slowness
+  - [x] customize menu on fresh computer doesnt render bikes
+  - [x] freezes on Mac in exported binary
 
 - [x] in game switching maps broken
 
