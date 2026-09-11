@@ -8,6 +8,8 @@ signal respawned(peer_id: int)
 
 ## Used for GameMode
 signal crashed(peer_id: int)
+## Crash-cleared edge (is_crashed true→false) — off-switch for crash visuals. See _process.
+signal uncrashed
 # signal trick_started(peer_id: int, trick_type: int)
 # signal trick_ended(peer_id: int, trick_type: int)
 
@@ -97,6 +99,9 @@ var username: String:
 # Crash state (synced)
 var is_crashed: bool = false
 
+## Synced freeze MovementController honors in rollback, so client prediction freezes too. Set by CountdownTask.
+var movement_locked: bool = false
+
 # Brake danger (local, display only)
 var grip_usage: float = 0.0
 #endregion
@@ -137,6 +142,8 @@ var _boost_grant_amount: float = 0.0
 
 # Process-side state tracking (not sync'd)
 var _prev_is_crashed: bool = false
+## Highside launch stashed by trigger_crash for the is_crashed-edge ragdoll. Visual-only, not synced.
+var _crash_launch_impulse: Vector3 = Vector3.ZERO
 
 # Netcode metrics probe (debug_netcode_metrics) — predicted state snapshot taken before
 # netfox re-applies authoritative state each rollback loop, on the local client only.
@@ -217,25 +224,45 @@ func _process(_delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
 
-	# Detect crash state transition outside rollback (safe for signals/RPCs)
+	# is_crashed-edge visuals (outside rollback) so a reconciled-away predicted crash un-ragdolls itself.
 	if is_crashed and !_prev_is_crashed:
-		crashed.emit(int(name))
-		if is_local_client and audio_manager:
-			audio_manager.stop_revs()
-			# TODO - use meme mode instead of hard coding this randomization
-			randomize()
-			var r = randi_range(0, 2)
-			match r:
-				0:
-					audio_manager.play_bowling_crash()
-				1:
-					audio_manager.play_vine_boom()
-				2:
-					audio_manager.play_nuke()
+		_enter_crash_visuals()
+	elif !is_crashed and _prev_is_crashed:
+		_exit_crash_visuals()
 	_prev_is_crashed = is_crashed
 
 	if !is_local_client:
 		return
+
+
+## Crash-entered edge. Ragdoll on every peer; camera + SFX local; crashed(peer_id) drives respawn.
+func _enter_crash_visuals() -> void:
+	animation_controller.start_ragdoll(_crash_launch_impulse)
+	crashed.emit(int(name))
+	if !is_local_client:
+		return
+	camera_controller.force_tps()
+	if audio_manager:
+		audio_manager.stop_revs()
+		# TODO - use meme mode instead of hard coding this randomization
+		randomize()
+		match randi_range(0, 2):
+			0:
+				audio_manager.play_bowling_crash()
+			1:
+				audio_manager.play_vine_boom()
+			2:
+				audio_manager.play_nuke()
+
+
+## Crash-cleared edge. Rebuild mesh + IK because the ragdoll left rider/handlebar bones off base pose.
+func _exit_crash_visuals() -> void:
+	animation_controller.stop_ragdoll()
+	_init_mesh()
+	_init_ik()
+	uncrashed.emit()
+	if is_local_client and audio_manager:
+		audio_manager.play_revs(bike_definition)
 
 
 #region init
@@ -486,14 +513,7 @@ func on_crash():
 
 func do_respawn():
 	_apply_respawn_state()
-	if animation_controller:
-		animation_controller.stop_ragdoll()
-	if is_local_client and audio_manager:
-		audio_manager.play_revs(bike_definition)
-	# Re-spawn the bike mesh so any handlebar/wheel children moved by ragdoll/anim are
-	# back to base, then re-init IK so its targets snap to the fresh markers.
-	_init_mesh()
-	_init_ik()
+	# Ragdoll teardown + mesh/IK ride the is_crashed edge now; do_respawn owns only the respawn-event bits.
 	hud_manager.go_to_riding_hud()
 	respawned.emit()
 

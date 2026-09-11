@@ -117,6 +117,12 @@ func on_movement_rollback_tick(delta: float):
 	if player_entity.is_crashed:
 		return
 
+	# Synced freeze honored here so client prediction freezes too (input_disabled only gated the owning client).
+	if player_entity.movement_locked:
+		player_entity.velocity = Vector3.ZERO
+		speed = 0.0
+		return
+
 	_was_on_floor = _is_on_floor
 	_is_on_floor = is_on_floor_netfox()
 	_on_unstable_surface = _detect_unstable_surface()

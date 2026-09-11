@@ -166,6 +166,7 @@ func _reset_all_player_input():
 		if player == null:
 			continue
 		player.input_controller.input_disabled = false
+		player.movement_locked = false
 
 
 ## Server only. Push each human's next checkpoint to their own minimap (green
