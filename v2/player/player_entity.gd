@@ -528,10 +528,12 @@ func _dbg_after_loop() -> void:
 	if d_speed < 0.5 and d_vel < 0.5:
 		return
 	var line := (
-		"[netcode] tick=%d resim=%d | speed %.1f (Δ%.1f) | vel %.1f (Δ%.1f) | rpm %.2f"
+		"[netcode] tick=%d resim=%d rtt=%.0fms offset=%.0fms | speed %.1f (Δ%.1f) | vel %.1f (Δ%.1f) | rpm %.2f"
 		% [
 			NetworkTime.tick,
 			NetworkPerformance.get_rollback_ticks(),
+			NetworkTime.remote_rtt * 1000.0,
+			NetworkTime.clock_offset * 1000.0,
 			movement_controller.speed, d_speed,
 			velocity.length(), d_vel,
 			gearing_controller.get_rpm_ratio(),
