@@ -3,10 +3,10 @@
 [ext_resource type="Script" uid="uid://bov8d0bxdald0" path="res://menus/help_menu/help_menu_state.gd" id="1_help"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://vl827k4qolh6" path="res://resources/img/ControlsOverlay/GamepadControls.png" id="3_gamepad"]
-[ext_resource type="Texture2D" uid="uid://cabros13lbdh2" path="res://resources/img/kenney_input-prompts_1.4.1/Xbox Series/Vector/controller_xboxone.svg" id="3_jy65a"]
-[ext_resource type="Texture2D" uid="uid://djxhgqi4cb3ka" path="res://resources/img/kenney_input-prompts_1.4.1/Keyboard & Mouse/Vector/keyboard.svg" id="4_bek87"]
+[ext_resource type="Texture2D" uid="uid://bklfbr5l387qb" path="res://resources/img/Icons/controller_xboxone.svg" id="3_jy65a"]
+[ext_resource type="Texture2D" uid="uid://cf6xu54lwu5jy" path="res://resources/img/Icons/keyboard.svg" id="4_bek87"]
 [ext_resource type="Texture2D" uid="uid://c6fvfgvumpue" path="res://resources/img/ControlsOverlay/KBMControls.png" id="4_kbm"]
-[ext_resource type="Texture2D" uid="uid://iobhp4goa0lk" path="res://resources/img/kenney_input-prompts_1.4.1/Flairs/Vector/flair_disabled_cross.svg" id="5_772gm"]
+[ext_resource type="Texture2D" uid="uid://dombbuh0a3fxn" path="res://resources/img/Icons/flair_disabled_cross.svg" id="7_jy65a"]
 
 [node name="HelpMenuState" type="Node" unique_id=64073042]
 script = ExtResource("1_help")
@@ -74,9 +74,9 @@ metadata/_tab_name = "KBM_LABEL"
 [node name="CloseHelpBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer" unique_id=280540503]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 4
 size_flags_vertical = 8
 mouse_default_cursor_shape = 2
 text = "CLOSE_LABEL"
-icon = ExtResource("5_772gm")
+icon = ExtResource("7_jy65a")
 flat = true

@@ -2408,9 +2408,9 @@ enable_npcs = true
 script = ExtResource("13_runner")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="GridSpawnTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner" unique_id=181245019 node_paths=PackedStringArray("grid_markers")]
+[node name="GridSpawnTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner" unique_id=181245019 node_paths=PackedStringArray("first_grid_marker")]
 script = ExtResource("18_mhobo")
-grid_markers = [NodePath("RaceGridSpot1"), NodePath("RaceGridSpot2"), NodePath("RaceGridSpot3"), NodePath("RaceGridSpot4")]
+first_grid_marker = NodePath("RaceGridSpot1")
 
 [node name="RaceGridSpot1" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=10711231]
 transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, 128, 0, 67)
@@ -2501,9 +2501,9 @@ enable_npcs = true
 script = ExtResource("13_runner")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="GridSpawnTask" type="Node" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner" unique_id=830872795 node_paths=PackedStringArray("grid_markers")]
+[node name="GridSpawnTask" type="Node" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner" unique_id=830872795 node_paths=PackedStringArray("first_grid_marker")]
 script = ExtResource("18_mhobo")
-grid_markers = [NodePath("RaceGridSpot1"), NodePath("RaceGridSpot2"), NodePath("RaceGridSpot3"), NodePath("RaceGridSpot4")]
+first_grid_marker = NodePath("RaceGridSpot1")
 
 [node name="RaceGridSpot1" type="Marker3D" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=1837168242]
 transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 274, 0, 1)
@@ -2563,9 +2563,9 @@ gamemode_event = SubResource("Resource_tcy6e")
 script = ExtResource("13_runner")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="GridSpawnTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=84680729 node_paths=PackedStringArray("grid_markers")]
+[node name="GridSpawnTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=84680729 node_paths=PackedStringArray("first_grid_marker")]
 script = ExtResource("18_mhobo")
-grid_markers = [NodePath("RaceGridSpot1"), NodePath("RaceGridSpot2"), NodePath("RaceGridSpot3"), NodePath("RaceGridSpot4")]
+first_grid_marker = NodePath("RaceGridSpot1")
 
 [node name="RaceGridSpot1" type="Marker3D" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=1181169093]
 transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 223, 0, -74)

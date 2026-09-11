@@ -1,1 +1,0 @@
-This is a sample scene for checking the startup performance and refresh performance of roads mesh generation. It is mostly for internal performance checking.
