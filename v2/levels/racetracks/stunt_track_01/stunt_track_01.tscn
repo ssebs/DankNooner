@@ -1449,6 +1449,9 @@ del_end_ramp = true
 [node name="Ramp6" parent="props" unique_id=2139185877 instance=ExtResource("6_w1aki")]
 transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, -485.08014, 0, 220.06699)
 
+[node name="Ramp11" parent="props" unique_id=1450276786 instance=ExtResource("6_w1aki")]
+transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, -858.59094, 0, 282.6273)
+
 [node name="Ramp2" parent="props" unique_id=1585675927 instance=ExtResource("6_w1aki")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -119, 0, 159)
 

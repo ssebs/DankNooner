@@ -37,6 +37,10 @@ signal crashed(peer_id: int)
 @export var camera_controller: CameraController
 @export var boost_controller: BoostController
 
+## Local-client only: log per-tick reconciliation correction to speed/velocity + rollback
+## depth (rubber-band probe). Off by default; toggle in the inspector to diagnose desync.
+@export var debug_netcode_metrics: bool = false
+
 @export_group("IK Targets")
 @export var butt_target: Marker3D
 @export var left_hand_target: Marker3D
@@ -133,6 +137,12 @@ var _boost_grant_amount: float = 0.0
 
 # Process-side state tracking (not sync'd)
 var _prev_is_crashed: bool = false
+
+# Netcode metrics probe (debug_netcode_metrics) — predicted state snapshot taken before
+# netfox re-applies authoritative state each rollback loop, on the local client only.
+var _dbg_pre_speed: float = 0.0
+var _dbg_pre_vel_len: float = 0.0
+var _dbg_log_file: FileAccess = null
 
 
 func _ready():
@@ -331,6 +341,10 @@ func _deferred_init():
 		_init_audio()
 		hud_manager.local_player = self
 		add_to_group(UtilsConstants.GROUPS["LocalPlayer"])
+		if debug_netcode_metrics:
+			_dbg_open_log()
+			NetworkRollback.before_loop.connect(_dbg_before_loop)
+			NetworkRollback.after_loop.connect(_dbg_after_loop)
 	else:
 		hud_manager.hide_all()
 
@@ -341,6 +355,8 @@ func _deferred_init():
 func _exit_tree():
 	if is_local_client and hud_manager.local_player == self:
 		hud_manager.local_player = null
+	if _dbg_log_file != null:
+		_dbg_log_file.close()
 
 
 func _init_audio():
@@ -480,6 +496,51 @@ func do_respawn():
 	_init_ik()
 	hud_manager.go_to_riding_hud()
 	respawned.emit()
+
+
+#endregion
+
+
+#region netcode metrics probe
+## Open the Desktop log for this instance — _server when hosting, _client otherwise. Best-effort
+## (mirrors the warmup marker write): a failed open just disables file logging, stdout still runs.
+func _dbg_open_log() -> void:
+	var suffix := "server" if multiplayer.is_server() else "client"
+	var path := OS.get_system_dir(OS.SYSTEM_DIR_DESKTOP).path_join("netcode_metrics_%s.txt" % suffix)
+	_dbg_log_file = FileAccess.open(path, FileAccess.WRITE)
+	if _dbg_log_file == null:
+		DebugUtils.DebugErrMsg("[netcode] could not open log at %s" % path)
+		return
+	DebugUtils.DebugMsg("[netcode] logging to %s" % path)
+
+
+## Snapshot our predicted state right before netfox re-applies authoritative state this loop.
+func _dbg_before_loop() -> void:
+	_dbg_pre_speed = movement_controller.speed
+	_dbg_pre_vel_len = velocity.length()
+
+
+## Log how far reconciliation yanked speed/velocity. Under steady input these should be ~0;
+## a large recurring jump is the rubber-band. resim = ticks netfox resimulated this loop.
+func _dbg_after_loop() -> void:
+	var d_speed := absf(movement_controller.speed - _dbg_pre_speed)
+	var d_vel := absf(velocity.length() - _dbg_pre_vel_len)
+	if d_speed < 0.5 and d_vel < 0.5:
+		return
+	var line := (
+		"[netcode] tick=%d resim=%d | speed %.1f (Δ%.1f) | vel %.1f (Δ%.1f) | rpm %.2f"
+		% [
+			NetworkTime.tick,
+			NetworkPerformance.get_rollback_ticks(),
+			movement_controller.speed, d_speed,
+			velocity.length(), d_vel,
+			gearing_controller.get_rpm_ratio(),
+		]
+	)
+	DebugUtils.DebugMsg(line)
+	if _dbg_log_file != null:
+		_dbg_log_file.store_line(line)
+		_dbg_log_file.flush()
 
 
 #endregion

@@ -1,22 +1,12 @@
 [gd_scene format=3 uid="uid://bctraybfcefhl"]
 
-[ext_resource type="PackedScene" uid="uid://b11ak4b3uc6tw" path="res://levels/assets/Farm Buildings Bundle-glb/Big Barn.glb" id="1_n8j2u"]
-[ext_resource type="PackedScene" uid="uid://d1m3ct4lb46e0" path="res://levels/assets/Farm Buildings Bundle-glb/Barn.glb" id="2_lrsao"]
-[ext_resource type="PackedScene" uid="uid://cdusyl3e4lbb" path="res://levels/assets/Farm Buildings Bundle-glb/ChickenCoop.glb" id="3_ead64"]
+[ext_resource type="PackedScene" uid="uid://csbxtpqk26qb6" path="res://levels/assets/props/Big Barn.glb" id="2_3u4ou"]
+[ext_resource type="PackedScene" uid="uid://m5dv45oxujfi" path="res://levels/assets/props/Barn.glb" id="3_wg7xr"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="4_3u4ou"]
+[ext_resource type="PackedScene" uid="uid://m5e0q6g46kjg" path="res://levels/assets/props/ChickenCoop.glb" id="4_n8j2u"]
+[ext_resource type="PackedScene" uid="uid://dar7hqkito23a" path="res://levels/assets/props/Silo House.glb" id="5_wg7xr"]
 
 [node name="Farm" type="Node3D" unique_id=1668911799]
-
-[node name="Big Barn" parent="." unique_id=261031522 instance=ExtResource("1_n8j2u")]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 13.495712, 0.004004, -33.253357)
-
-[node name="Barn" parent="." unique_id=1291990878 instance=ExtResource("2_lrsao")]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 37.9944, 0, -34.427002)
-
-[node name="ChickenCoop" parent="." unique_id=422313652 instance=ExtResource("3_ead64")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 13.953461, 0.002965, -7.2684937)
-
-[node name="Fence" type="Node3D" parent="." unique_id=618636222]
 
 [node name="fence" parent="." unique_id=1485126779 instance=ExtResource("4_3u4ou")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 1, -46)
@@ -99,3 +89,15 @@ width = 4.0
 height = 2.0
 depth = 2.0
 color_preset = 6
+
+[node name="Big Barn" parent="." unique_id=1039168053 instance=ExtResource("2_3u4ou")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 11.5, 0, -35)
+
+[node name="Barn" parent="." unique_id=1164833034 instance=ExtResource("3_wg7xr")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 35, 0, -36)
+
+[node name="ChickenCoop" parent="." unique_id=310502123 instance=ExtResource("4_n8j2u")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 24, 0, -23.5)
+
+[node name="Silo House" parent="." unique_id=2050090573 instance=ExtResource("5_wg7xr")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 15.5, 0, -7.5)
