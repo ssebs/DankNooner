@@ -29,7 +29,6 @@ var movement_controller: MovementController
 var input_controller: InputController
 var gearing_controller: GearingController
 var trick_controller: TrickController
-var crash_controller: CrashController
 var boost_controller: BoostController
 
 
@@ -52,15 +51,14 @@ func Enter(_state_context: StateContext):
 	if player_entity == null:
 		DebugUtils.DebugErrMsg("could not get local player from ridinghudstate")
 		return
-	
+
 	movement_controller = player_entity.movement_controller
 	input_controller = player_entity.input_controller
 	gearing_controller = player_entity.gearing_controller
 	trick_controller = player_entity.trick_controller
-	crash_controller = player_entity.crash_controller
 	boost_controller = player_entity.boost_controller
-	
-	
+
+
 	if Engine.is_editor_hint():
 		return
 
@@ -73,7 +71,9 @@ func Enter(_state_context: StateContext):
 	gearing_controller.gear_changed.connect(_on_gear_changed)
 	trick_controller.trick_started.connect(_on_trick_started)
 	trick_controller.trick_ended.connect(_on_trick_ended)
-	crash_controller.crashed.connect(_on_crashed)
+	# Crash message tracks the is_crashed edge (crashed/uncrashed) so a reconciled-away predicted crash clears it.
+	player_entity.crashed.connect(_on_crashed)
+	player_entity.uncrashed.connect(_on_respawned)
 	player_entity.respawned.connect(_on_respawned)
 	# Local-only: expand the minimap into the full map while IN_MAP.
 	input_state_mgr.input_state_changed.connect(_on_input_state_changed)
@@ -95,7 +95,8 @@ func Exit(_state_context: StateContext):
 	gearing_controller.gear_changed.disconnect(_on_gear_changed)
 	trick_controller.trick_started.disconnect(_on_trick_started)
 	trick_controller.trick_ended.disconnect(_on_trick_ended)
-	crash_controller.crashed.disconnect(_on_crashed)
+	player_entity.crashed.disconnect(_on_crashed)
+	player_entity.uncrashed.disconnect(_on_respawned)
 	player_entity.respawned.disconnect(_on_respawned)
 	input_state_mgr.input_state_changed.disconnect(_on_input_state_changed)
 
@@ -214,7 +215,7 @@ func _on_trick_ended(_trick_type: TrickController.Trick):
 	_balance_bar.hide()
 
 
-func _on_crashed():
+func _on_crashed(_peer_id: int):
 	_game_msg.text = tr("HUD_CRASHED")
 	_game_msg.visible = true
 

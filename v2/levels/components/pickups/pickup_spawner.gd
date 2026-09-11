@@ -92,7 +92,8 @@ func _refresh_preview() -> void:
 
 
 func _on_item_body_entered(body: Node3D) -> void:
-	if !_active or !body.is_in_group(UtilsConstants.GROUPS["Racers"]):
+	# Only players collect — NPC riders are Racers too but have no boost, so granting to them derefs a null player.
+	if !_active or not body is PlayerEntity:
 		return
 	_apply_effect(int(body.name), _current.pickup_item_definition)
 	_spawn_manager.play_pickup_sfx.rpc_id(int(body.name))

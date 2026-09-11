@@ -36,6 +36,7 @@
 
 ## Notes 📝
 > Stuff to move ASAP
+- "crashing" into layer 1 items keeps speed but you don't move, need to add some kinda check here. e.g. driving full speed into back of ramp
 - gas pump fill up minigame (should do more than just boost the bike, and it should be in first person. group of peeps do it like the race gamemodes)
 - [ ] lag when ending stunt race / no tp option
 - Exhaust pop + flame when shifting down to high rpm and giving a little gas for a second like irl

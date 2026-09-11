@@ -1,0 +1,268 @@
+[gd_scene format=3 uid="uid://bbijpc7rs4he4"]
+
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_schl0"]
+
+[node name="School1" type="Node3D" unique_id=1355590988]
+
+[node name="Ground" parent="." unique_id=1485126779 instance=ExtResource("1_schl0")]
+shape_mode = 1
+width = 96.0
+depth = 64.0
+color_preset = 2
+
+[node name="back_wing" parent="." unique_id=230000002 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.525, -25)
+collision_layer = 3
+width = 64.0
+height = 7.0
+depth = 12.0
+color_preset = 1
+
+[node name="back_roof" parent="." unique_id=230000003 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.275, -25)
+width = 64.5
+height = 0.5
+depth = 12.5
+
+[node name="left_wing" parent="." unique_id=230000004 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.525, -13)
+collision_layer = 3
+width = 12.0
+height = 7.0
+depth = 24.0
+color_preset = 1
+
+[node name="left_roof" parent="." unique_id=230000005 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 7.275, -13)
+width = 12.5
+height = 0.5
+depth = 24.5
+
+[node name="right_wing" parent="." unique_id=230000006 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.525, -13)
+collision_layer = 3
+width = 12.0
+height = 7.0
+depth = 24.0
+color_preset = 1
+
+[node name="right_roof" parent="." unique_id=230000007 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 7.275, -13)
+width = 12.5
+height = 0.5
+depth = 24.5
+
+[node name="quad" parent="." unique_id=230000008 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -10)
+shape_mode = 1
+width = 44.0
+height = 0.15
+depth = 18.0
+color_preset = 1
+
+[node name="quad_planter" parent="." unique_id=230000009 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -10)
+collision_layer = 3
+width = 4.0
+height = 1.0
+depth = 4.0
+color_preset = 2
+
+[node name="entrance" parent="." unique_id=230000010 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, -19)
+collision_layer = 3
+width = 4.0
+height = 3.0
+depth = 0.3
+color_preset = 5
+
+[node name="sign" parent="." unique_id=230000011 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 5.5, -18.9)
+collision_layer = 3
+shape_mode = 1
+width = 12.0
+height = 1.5
+depth = 3.0
+color_preset = 3
+
+[node name="gate_left" parent="." unique_id=230000012 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2.0, -1)
+collision_layer = 3
+width = 1.0
+height = 4.0
+depth = 1.0
+color_preset = 1
+
+[node name="gate_right" parent="." unique_id=230000013 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.0, -1)
+collision_layer = 3
+width = 1.0
+height = 4.0
+depth = 1.0
+color_preset = 1
+
+[node name="gate_arch" parent="." unique_id=230000014 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.25, -1)
+collision_layer = 3
+width = 22.0
+height = 1.0
+depth = 1.0
+color_preset = 3
+
+[node name="blacktop" parent="." unique_id=230000015 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0.075, 12)
+shape_mode = 1
+width = 28.0
+height = 0.15
+depth = 20.0
+color_preset = 1
+
+[node name="hoop_pole" parent="." unique_id=230000016 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 1.75, 4)
+collision_layer = 3
+width = 0.2
+height = 3.5
+depth = 0.2
+color_preset = 1
+
+[node name="hoop_board" parent="." unique_id=230000017 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 3.2, 4.4)
+collision_layer = 3
+width = 2.4
+height = 1.4
+depth = 0.15
+color_preset = 3
+
+[node name="hoop_pole2" parent="." unique_id=230000018 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 1.75, 20)
+collision_layer = 3
+width = 0.2
+height = 3.5
+depth = 0.2
+color_preset = 1
+
+[node name="hoop_board2" parent="." unique_id=230000019 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 3.2, 19.6)
+collision_layer = 3
+width = 2.4
+height = 1.4
+depth = 0.15
+color_preset = 3
+
+[node name="goal_post_left" parent="." unique_id=230000020 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 1.5, 6)
+collision_layer = 3
+width = 0.2
+height = 3.0
+depth = 0.2
+color_preset = 3
+
+[node name="goal_post_right" parent="." unique_id=230000021 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 1.5, 6)
+collision_layer = 3
+width = 0.2
+height = 3.0
+depth = 0.2
+color_preset = 3
+
+[node name="goal_crossbar" parent="." unique_id=230000022 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 3.0, 6)
+collision_layer = 3
+width = 8.0
+height = 0.2
+depth = 0.2
+color_preset = 3
+
+[node name="goal2_post_left" parent="." unique_id=230000023 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 1.5, 22)
+collision_layer = 3
+width = 0.2
+height = 3.0
+depth = 0.2
+color_preset = 3
+
+[node name="goal2_post_right" parent="." unique_id=230000024 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 1.5, 22)
+collision_layer = 3
+width = 0.2
+height = 3.0
+depth = 0.2
+color_preset = 3
+
+[node name="goal2_crossbar" parent="." unique_id=230000025 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 3.0, 22)
+collision_layer = 3
+width = 8.0
+height = 0.2
+depth = 0.2
+color_preset = 3
+
+[node name="parking_lot" parent="." unique_id=230000026 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 24)
+shape_mode = 1
+width = 44.0
+height = 0.15
+depth = 8.0
+color_preset = 1
+
+[node name="flagpole" parent="." unique_id=230000027 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 4.75, 0)
+collision_layer = 3
+width = 0.25
+height = 9.5
+depth = 0.25
+color_preset = 1
+
+[node name="flag" parent="." unique_id=230000028 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.1, 8.5, 0)
+width = 1.6
+height = 1.0
+depth = 0.1
+color_preset = 3
+
+[node name="sidewalk_front" parent="." unique_id=230000029 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 30)
+width = 96.0
+height = 0.1
+depth = 4.0
+color_preset = 1
+
+[node name="fence_back" parent="." unique_id=230000030 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.625, -31)
+collision_layer = 3
+width = 92.0
+height = 1.2
+depth = 0.15
+color_preset = 6
+
+[node name="fence_left" parent="." unique_id=230000031 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -47, 0.625, -1)
+collision_layer = 3
+width = 0.15
+height = 1.2
+depth = 60.0
+color_preset = 6
+
+[node name="fence_right" parent="." unique_id=230000032 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47, 0.625, -1)
+collision_layer = 3
+width = 0.15
+height = 1.2
+depth = 60.0
+color_preset = 6
+
+[node name="fence_front_left" parent="." unique_id=230000033 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29, 0.725, 30)
+collision_layer = 3
+width = 34.0
+height = 1.2
+depth = 0.15
+color_preset = 6
+
+[node name="fence_front_right" parent="." unique_id=230000034 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 0.725, 30)
+collision_layer = 3
+width = 34.0
+height = 1.2
+depth = 0.15
+color_preset = 6

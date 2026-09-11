@@ -1,11 +1,8 @@
 @tool
 class_name CrashController extends Node
 
-signal crashed
-
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
-@export var animation_controller: AnimationController
 @export var movement_controller: MovementController
 
 @export var is_sim_difficulty: bool = false
@@ -272,11 +269,10 @@ func _detect_drift_crash(delta: float):
 
 
 func trigger_crash(launch_impulse: Vector3 = Vector3.ZERO):
+	# Sim state only — visuals ride the is_crashed edge in _process (firing them in rollback left them stuck).
 	player_entity.is_crashed = true
 	player_entity.velocity = launch_impulse
-	animation_controller.start_ragdoll(launch_impulse)
-	player_entity.camera_controller.force_tps()
-	crashed.emit()
+	player_entity._crash_launch_impulse = launch_impulse
 
 
 ## Called from player_entity.gd's do_respawn
@@ -293,8 +289,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("player_entity must not be empty")
 	if input_controller == null:
 		issues.append("input_controller must not be empty")
-	if animation_controller == null:
-		issues.append("animation_controller must not be empty")
 	if movement_controller == null:
 		issues.append("movement_controller must not be empty")
 	return issues
