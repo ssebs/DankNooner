@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bs3ielo1s6nab"
+path="res://.godot/imported/loop.obj-800dde982d991c97001369b7d6493441.mesh"
+
+[deps]
+
+files=["res://.godot/imported/loop.obj-800dde982d991c97001369b7d6493441.mesh"]
+
+source_file="res://assets_excluded_from_export/racetrack_collection_for_assetforge/loop.obj"
+dest_files=["res://.godot/imported/loop.obj-800dde982d991c97001369b7d6493441.mesh", "res://.godot/imported/loop.obj-800dde982d991c97001369b7d6493441.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
