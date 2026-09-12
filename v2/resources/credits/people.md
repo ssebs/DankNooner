@@ -6,8 +6,11 @@
 
 - Matt
 - Pedro
+- Jose
 
 ## Ideas / bouncing ideas off of
 
 - Matt
 - Dilly
+- Pedro
+- Jose
