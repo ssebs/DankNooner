@@ -143,6 +143,9 @@ var _back_up_loop_anim: Animation
 var _back_up_start_layer: CustomAnimPlayer.Layer
 var _back_up_loop_layer: CustomAnimPlayer.Layer
 var _was_reversing: bool = false
+# Bat pickup swing (rider pose + %BaseballBat mesh). Looping visual, self-stopped after a few sec.
+var _bat_swing_anim: Animation
+var _bat_swing_layer: CustomAnimPlayer.Layer
 
 # Proc pose carried between frames (no anim deltas applied). Keeping this separate
 # from what gets committed to the nodes prevents anim-delta drift across frames —
@@ -558,6 +561,11 @@ func initialize() -> void:
 	if ik_anim_player.has_animation("back_up_loop"):
 		_back_up_loop_anim = ik_anim_player.get_animation("back_up_loop")
 		_fixup_anim_paths(_back_up_loop_anim)
+	if ik_anim_player.has_animation("bat_swing"):
+		_bat_swing_anim = ik_anim_player.get_animation("bat_swing")
+		_fixup_anim_paths(_bat_swing_anim)
+	# Bat rests hidden — the RESET pose leaves it visible, and bat_swing shows it while swinging.
+	player_entity.get_node("%BaseballBat").visible = false
 
 	if not trick_controller.trick_started.is_connected(_on_trick_started):
 		trick_controller.trick_started.connect(_on_trick_started)
@@ -675,6 +683,7 @@ func start_ragdoll(launch_impulse: Vector3 = Vector3.ZERO) -> void:
 	_back_up_start_layer = null
 	_back_up_loop_layer = null
 	_was_reversing = false
+	_bat_swing_layer = null
 	character_skin.disable_ik()
 	character_skin.start_ragdoll(launch_impulse)
 
@@ -700,7 +709,27 @@ func do_reset():
 	_back_up_start_layer = null
 	_back_up_loop_layer = null
 	_was_reversing = false
+	_bat_swing_layer = null
 	_proc_pose = null
+
+
+## Bat pickup: loop the authored bat_swing anim (rider pose + bat mesh) for `duration`, then fade.
+## Visual only — runs on every peer; the server drives the proximity wobble. A crash mid-swing
+## flushes layers via do_reset()/start_ragdoll(), so no explicit cancel is needed here.
+func play_bat_swing(duration: float) -> void:
+	if _bat_swing_anim == null or (_bat_swing_layer != null and _bat_swing_layer.is_playing()):
+		return
+	var layer := _anim_runner.play(_bat_swing_anim, 1.0, true)
+	_bat_swing_layer = layer
+	await get_tree().create_timer(duration).timeout
+	# A re-pickup or crash reset may have replaced/flushed the layer during the wait — only clean
+	# up the one this call started. Freeze on t=0 (bat hidden) so the fade-out can't re-show it.
+	if layer.is_playing():
+		layer.time = 0.0
+		layer.speed = 0.0
+		_anim_runner.stop(layer)
+	if _bat_swing_layer == layer:
+		_bat_swing_layer = null
 
 
 #endregion
