@@ -12,10 +12,9 @@
 - [x] peeps can start race before countdown
   - [x] done in theory
 - [x] mid race respawn multiple people shouldnt spawn in same place
+- [x] tapping r to respawn after crashing respawns you, then you respawn from the time delay. when you crash and press R during a race, it should full respawn you thesame way just crashing over time will. in free roam / in race when not crashing tapping r should quick respawn you.
 - [ ] lightning / Rally Up item
-- [ ] tapping r to respawn after crashing respawns you, then you respawn from the time delay. when you crash and press R during a race, it should full respawn you the
-  - [ ] r => quick respawn, add btn for set full respawn point (if not in race) ????
-  same way just crashing over time will. in free roam / in race when not crashing tapping r should quick respawn you.
+- [ ] r => quick respawn, add btn for set full respawn point (if not in race)
 - [ ] all keybinds for controller
 - [ ] improved / easier combo tricks
   - [ ] > aka no need to hold RB / trick mod anymore

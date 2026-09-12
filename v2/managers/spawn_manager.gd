@@ -121,14 +121,22 @@ func request_respawn():
 	respawn_player.rpc(sender if sender > 1 else 1)
 
 
-## Client-callable: quick-respawn YOU in place (R tap). The server derives the target from the
-## sender and resolves the transform, so a client can never respawn someone else.
+## Client-callable: R tap. Quick in-place recovery — EXCEPT while crashed mid-race, where it does
+## the full respawn to the last checkpoint (the same one the crash timer would), immediately.
+## The server derives the target from the sender, so a client can never respawn someone else.
 @rpc("any_peer", "call_local", "reliable")
 func request_respawn_in_place():
 	if !multiplayer.is_server():
 		return
 	var sender := multiplayer.get_remote_sender_id()
-	respawn_in_place(sender if sender > 1 else 1)
+	var peer_id := sender if sender > 1 else 1
+	# Every mode except free roam recovers a crash with a full respawn (to the last checkpoint /
+	# TeleportTask); free roam's crash recovery is itself in-place, so a crashed tap there stays put.
+	var full_respawn_on_crash := gamemode_manager.current_game_mode != GameModeType.Kind.FREE_ROAM
+	if _get_player_by_peer_id(peer_id).is_crashed and full_respawn_on_crash:
+		respawn_player.rpc(peer_id)
+	else:
+		respawn_in_place(peer_id)
 
 
 ## Server-only: resolve where a player should respawn in place — current spot upright, or the
