@@ -16,3 +16,4 @@
   - do X trick in 10s or explode, see - CS2 TDM
 - make grass unstable
 - 1, 2, 3 doesnt work on multiplayer, same for TP commands
+- "lightning" item - swaps everyone to mini bike
