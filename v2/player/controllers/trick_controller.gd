@@ -132,16 +132,14 @@ func _detect_current_trick(delta: float) -> Trick:
 		return Trick.DRIFT
 
 	if movement_controller.pitch_angle > deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG):
-		if input_controller.nfx_trick_held:
-			# HIGH_CHAIR latches: once entered (via cam-down flick), stays held while
-			# RB is held + still in a wheelie. Releasing RB or dropping the wheelie exits.
-			if current_trick == Trick.HIGH_CHAIR:
-				return Trick.HIGH_CHAIR
+		# In the balance point the right stick pops tweaks on top of the wheelie; neutral stick
+		# (or a wheelie below the window) stays the plain WHEELIE_SITTING — physics unchanged.
+		if movement_controller.in_balance_point:
+			# Held while the stick is pushed; neutral returns to the plain wheelie (no latch).
 			if input_controller.nfx_cam_y > -TRICK_CAM_THRESHOLD:
 				return Trick.HIGH_CHAIR
 			if input_controller.nfx_cam_y < TRICK_CAM_THRESHOLD:
 				return Trick.HEEL_CLICKER
-			return Trick.WHEELIE_MOD
 		return Trick.WHEELIE_SITTING
 
 	# Only a braking-held stoppie scores — a nose-down landing or coast isn't a stoppie.
@@ -165,18 +163,14 @@ func _detect_current_trick(delta: float) -> Trick:
 
 
 func _detect_air_trick() -> Trick:
-	# HIGH_CHAIR (air entry: RB + cam up) — latches while RB held + airborne.
-	# -TRICK_CAM_THRESHOLD == 0.5 (cam stick up).
-	if input_controller.nfx_trick_held:
-		if current_trick == Trick.HIGH_CHAIR:
-			return Trick.HIGH_CHAIR
+	# Airborne is itself the gate — the right stick drives the tweaks, no RB. Held while the
+	# stick is pushed (no latch). -TRICK_CAM_THRESHOLD == 0.5 (cam stick up).
+	if input_controller.nfx_cam_y > -TRICK_CAM_THRESHOLD:
+		return Trick.HIGH_CHAIR
 
-		if input_controller.nfx_cam_y > -TRICK_CAM_THRESHOLD:
-			return Trick.HIGH_CHAIR
-
-		# Heel clicker — held while airborne with trick btn + cam stick down
-		if input_controller.nfx_cam_y < TRICK_CAM_THRESHOLD:
-			return Trick.HEEL_CLICKER
+	# Heel clicker — held while airborne with cam stick down
+	if input_controller.nfx_cam_y < TRICK_CAM_THRESHOLD:
+		return Trick.HEEL_CLICKER
 
 	if movement_controller.air_pitch_total < (TAU * 0.9):
 		return Trick.NONE
