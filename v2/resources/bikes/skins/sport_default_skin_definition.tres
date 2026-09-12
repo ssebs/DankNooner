@@ -42,4 +42,6 @@ engine_sound_id = 2
 engine_min_pitch = 0.8
 engine_max_pitch = 2.1
 max_speed = 128.0
+acceleration = 12.0
+brake_strength = 35.0
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"

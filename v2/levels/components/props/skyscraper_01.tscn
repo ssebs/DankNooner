@@ -1,0 +1,251 @@
+[gd_scene format=3 uid="uid://ciqu8bikl7yow"]
+
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_uq33c"]
+
+[node name="SkyScraper" type="Node3D" unique_id=1355590988]
+
+[node name="Ground" parent="." unique_id=1485126779 instance=ExtResource("1_uq33c")]
+shape_mode = 1
+width = 64.0
+depth = 64.0
+color_preset = 1
+
+[node name="box" parent="." unique_id=210000002 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 21.024998, 0)
+collision_layer = 3
+width = 32.0
+height = 42.0
+depth = 32.0
+
+[node name="door" parent="." unique_id=1273445304 instance=ExtResource("1_uq33c")]
+transform = Transform3D(-1, 8.742278e-08, -4.3711385e-08, -4.371139e-08, -1.642028e-15, 1, 8.742278e-08, 1, 3.5527137e-15, 0.015024066, 4.0249996, 16.131453)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 1
+
+[node name="door3" parent="." unique_id=1807741093 instance=ExtResource("1_uq33c")]
+transform = Transform3D(-1, 8.742278e-08, -4.3711385e-08, 8.742278e-08, 1, -4.3711385e-08, 4.3711385e-08, -4.371139e-08, -1, 0, 0.4104848, 24)
+collision_layer = 3
+shape_mode = 1
+width = 5.0
+height = 0.2
+depth = 16.0
+
+[node name="door2" parent="." unique_id=40851301 instance=ExtResource("1_uq33c")]
+transform = Transform3D(-1, -4.371138e-08, -8.742278e-08, -4.371138e-08, 1, -4.371139e-08, 8.742277e-08, -4.3711385e-08, -1, 0.015024066, 8.525, 18.131453)
+collision_layer = 3
+width = 8.0
+depth = 4.0
+color_preset = 1
+
+[node name="Node3D" type="Node3D" parent="." unique_id=429360641]
+
+[node name="window" parent="Node3D" unique_id=210000003 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -7.500001, 33.55, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window2" parent="Node3D" unique_id=1640906162 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 5.999999, 33.55, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window3" parent="Node3D" unique_id=171878566 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -7.500001, 22.55, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window4" parent="Node3D" unique_id=1613753570 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 5.999999, 22.55, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="Node3D2" type="Node3D" parent="." unique_id=741519776]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+
+[node name="window" parent="Node3D2" unique_id=1454025021 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -7.500001, 33.55, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window2" parent="Node3D2" unique_id=1051502568 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 5.999999, 33.55, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window3" parent="Node3D2" unique_id=756242404 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -7.500001, 22.55, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window4" parent="Node3D2" unique_id=78172409 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 5.999999, 22.55, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window5" parent="Node3D2" unique_id=189659946 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -7.500001, 11.049999, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window6" parent="Node3D2" unique_id=1262610946 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 5.999999, 11.049999, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="Node3D3" type="Node3D" parent="." unique_id=447478471]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="window" parent="Node3D3" unique_id=1235134343 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -7.500001, 33.55, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window2" parent="Node3D3" unique_id=34454202 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 5.999999, 33.55, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window3" parent="Node3D3" unique_id=1102790526 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -7.500001, 22.55, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window4" parent="Node3D3" unique_id=1853405575 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 5.999999, 22.55, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window5" parent="Node3D3" unique_id=615400285 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -7.500001, 11.049999, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window6" parent="Node3D3" unique_id=1704206956 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 5.999999, 11.049999, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="Node3D4" type="Node3D" parent="." unique_id=2127650803]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 0, 0)
+
+[node name="window" parent="Node3D4" unique_id=372257630 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -7.500001, 33.55, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window2" parent="Node3D4" unique_id=2102901313 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 5.999999, 33.55, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window3" parent="Node3D4" unique_id=1334729856 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -7.500001, 22.55, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window4" parent="Node3D4" unique_id=658430104 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 5.999999, 22.55, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window5" parent="Node3D4" unique_id=126016064 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -7.500001, 11.049999, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
+
+[node name="window6" parent="Node3D4" unique_id=1526391260 instance=ExtResource("1_uq33c")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 5.999999, 11.049999, 16.175648)
+collision_layer = 3
+shape_mode = 1
+width = 8.0
+height = 0.2
+depth = 8.0
+color_preset = 3
