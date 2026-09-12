@@ -26,9 +26,8 @@
 > Don't forget, have fun :D
 - [ ] [Gameplay feedback notes](./_ScratchPad.md#gameplay-feedback-notes)
   - [ ] todo now
-- [ ] Superman
-- [ ] no-handed spread eagle
-- [ ] kickflip
+- [ ] show/hide objects if they get past checkpoint in race (ArrowWall4_DEPENDS_ON_CheckpointMarker9)
+- [ ] add vibration on brake danger / screen shake
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [ ] make tricks + combos easier to do **WIP**
@@ -177,6 +176,9 @@
 - [ ] More tricks
   - [ ] Whip / table
   - [x] Burnout (stationary)
+  - [x] Superman
+  - [x] no-handed spread eagle
+  - [x] kickflip
   - [ ] https://www.youtube.com/shorts/cAxcIZ83MfU
 - [ ] trick tweaks (just move butt a little from base trick)
   - [ ] Land into wheelie / stoppie should be a trick
@@ -220,6 +222,29 @@
 ---
 
 ## Done ✅
+
+- [x] increase bat time
+- [x] make grass unstable
+- [x] reverse + turn on unstable collision should not make you crash
+- [x] burnout sound doesnt loop
+- [x] make checkpoints like forza horizon, so jumping over it counts & cant crash into gates
+- [x] add more arrow signs in world
+- [x] peeps can start race before countdown
+  - [x] done in theory
+- [x] mid race respawn multiple people shouldnt spawn in same place
+- [x] tapping r to respawn after crashing respawns you, then you respawn from the time delay. when you crash and press R during a race, it should full respawn you thesame way just crashing over time will. in free roam / in race when not crashing tapping r should quick respawn you.
+- [x] improved / easier combo tricks
+  - [x] > aka no need to hold RB / trick mod anymore
+  - [x] when doing a wheelie:
+    - [x] move to wheelie cam 
+    - [x] + right joystick does the tricks instead of needing to hold RB and right joystick
+  - [x] when catching air
+    - [x] right joystick does the tricks
+  - [x] allow leaning fwd/back, but if you leave balance point then stop being in sweet spot
+  - [x] holding high chair trick doesnt work anymore, always gets stuck
+  - [x] RB + dir while riding around to do other tricks
+  - [x] doing flips doesnt give you boost
+  - [x] holding tricks doesnt use time, just counts as 1
 
 - [x] "Lock in" a wheelie to do combo moves, make it easier to do the other tricks. Aka hold at perfect spot for 3s then it's good until you brake/gas/steer
 

@@ -15,6 +15,9 @@ enum Trick {
 	HEEL_CLICKER,
 	HIGH_CHAIR,
 	TWO_LEFT_FEET,
+	KICKFLIP,
+	SPREAD_EAGLE,
+	SUPERMAN,
 	DRIFT,
 	BURNOUT,
 }
@@ -44,6 +47,11 @@ const COMBO_GRACE_SECS: float = 1.5
 ## as broken. At 0.2/sec: x2 lands around the first full segment, x3 well after the meter
 ## caps (where it still matters, since score = duration x rate x peak multiplier).
 const COMBO_MULT_THRESHOLDS: Array[float] = [5.0, 15.0]
+## Boost segments banked per completed air rotation (each flip) and per landed air trick, before
+## the combo multiplier. A chunk, not a full meter — a big combo multiplier is what fills a bar.
+## Consts (rollback): must be byte-identical on every peer.
+const BOOST_PER_FLIP: float = 0.5
+const BOOST_PER_AIR_TRICK: float = 0.5
 
 ## Seconds of unbroken trick time on the current combo, 0 when not comboing. Accrued in this
 ## controller's rollback tick — NOT from a manager's _process(): netfox's RollbackSynchronizer
@@ -64,6 +72,8 @@ var current_trick: Trick = Trick.NONE
 var _last_trick: Trick = Trick.NONE
 var _flip_emitted: bool = false  # prevent re-emitting the same flip while still airborne
 var _trick_timer: float = 0.0
+## Full air rotations already paid out this airtime — synced so a resim doesn't double-award.
+var _air_flips_awarded: int = 0
 
 
 func _ready():
@@ -82,9 +92,37 @@ func on_movement_rollback_tick(delta: float):
 			trick_ended.emit(_last_trick)
 		if current_trick != Trick.NONE:
 			trick_started.emit(current_trick)
+			# Landing an air trick banks a chunk (void-on-crash means you must land it clean).
+			if not movement_controller._is_on_floor and is_air_trick(current_trick):
+				_award_trick_boost(BOOST_PER_AIR_TRICK)
 		_last_trick = current_trick
 
+	_award_flip_boost()
 	_accrue_combo(delta)
+
+
+## Bank a chunk per full air rotation as it completes. air_pitch_total resets to 0 on takeoff /
+## landing, so the paid-out counter re-arms on the ground.
+func _award_flip_boost():
+	if not movement_controller._is_on_floor:
+		var completed := int(movement_controller.air_pitch_total / TAU)
+		if completed > _air_flips_awarded:
+			_award_trick_boost(BOOST_PER_FLIP * (completed - _air_flips_awarded))
+			_air_flips_awarded = completed
+	else:
+		_air_flips_awarded = 0
+
+
+## Add a lump of trick boost, scaled by the current combo multiplier. Tracked in combo_boost_earned
+## like the per-second accrual, so a crash before the combo banks (incl. a mid-trick landing) voids
+## it — land it to keep it.
+func _award_trick_boost(base: float):
+	var before: float = boost_controller.boost_amount
+	boost_controller.boost_amount = minf(
+		boost_controller.boost_amount + base * combo_multiplier, BoostController.BOOST_SEGMENTS
+	)
+	combo_boost_earned += boost_controller.boost_amount - before
+	combo_grace = COMBO_GRACE_SECS  # keep the combo alive so chained tricks build the multiplier
 
 
 ## Accrue combo time + boost for the tick. Lives here (rollback) rather than in TrickManager
@@ -146,7 +184,10 @@ func _detect_current_trick(delta: float) -> Trick:
 	if movement_controller.is_stoppie:
 		return Trick.STOPPIE
 
+	# RB + stick direction = flat-ground tricks. Up = kickflip, left = two left feet.
 	if input_controller.nfx_trick_held:
+		if input_controller.nfx_cam_y > -TRICK_CAM_THRESHOLD:
+			return Trick.KICKFLIP
 		if (
 			input_controller.nfx_cam_x < TRICK_CAM_THRESHOLD
 			and movement_controller.speed > TWO_LEFT_FEET_SPEED_THRESHOLD
@@ -172,6 +213,12 @@ func _detect_air_trick() -> Trick:
 	if input_controller.nfx_cam_y < TRICK_CAM_THRESHOLD:
 		return Trick.HEEL_CLICKER
 
+	# Left = spread eagle, right = superman (up/down taken above).
+	if input_controller.nfx_cam_x < TRICK_CAM_THRESHOLD:
+		return Trick.SPREAD_EAGLE
+	if input_controller.nfx_cam_x > -TRICK_CAM_THRESHOLD:
+		return Trick.SUPERMAN
+
 	if movement_controller.air_pitch_total < (TAU * 0.9):
 		return Trick.NONE
 
@@ -194,6 +241,7 @@ func do_reset():
 	current_trick = Trick.NONE
 	_last_trick = Trick.NONE
 	_flip_emitted = false
+	_air_flips_awarded = 0
 	combo_time = 0.0
 	combo_grace = 0.0
 	combo_boost_earned = 0.0
@@ -202,6 +250,12 @@ func do_reset():
 
 func is_in_wheelie() -> bool:
 	return current_trick in [Trick.WHEELIE_SITTING, Trick.WHEELIE_MOD]
+
+
+## Tricks that must be finished before touching down — landing mid-trick crashes (see
+## CrashController._detect_air_trick_landing). Kickflip / two left feet are ground tricks.
+static func is_air_trick(trick: Trick) -> bool:
+	return trick in [Trick.HEEL_CLICKER, Trick.SPREAD_EAGLE, Trick.SUPERMAN]
 
 
 static func trick_to_str(trick: Trick) -> String:
@@ -226,6 +280,12 @@ static func trick_to_str(trick: Trick) -> String:
 			return "HIGH_CHAIR"
 		Trick.TWO_LEFT_FEET:
 			return "TWO_LEFT_FEET"
+		Trick.KICKFLIP:
+			return "KICKFLIP"
+		Trick.SPREAD_EAGLE:
+			return "SPREAD_EAGLE"
+		Trick.SUPERMAN:
+			return "SUPERMAN"
 		Trick.DRIFT:
 			return "DRIFT"
 		Trick.BURNOUT:
@@ -255,6 +315,12 @@ static func str_to_trick(s: String) -> Trick:
 			return Trick.HIGH_CHAIR
 		"TWO_LEFT_FEET":
 			return Trick.TWO_LEFT_FEET
+		"KICKFLIP":
+			return Trick.KICKFLIP
+		"SPREAD_EAGLE":
+			return Trick.SPREAD_EAGLE
+		"SUPERMAN":
+			return Trick.SUPERMAN
 		"DRIFT":
 			return Trick.DRIFT
 		"BURNOUT":
