@@ -130,8 +130,15 @@ func _on_player_crashed(peer_id: int):
 
 func _on_runner_respawn_requested(peer_id: int):
 	get_tree().create_timer(_respawn_delay).timeout.connect(
-		func(): spawn_manager.respawn_player.rpc(peer_id), CONNECT_ONE_SHOT
+		func(): _respawn_crashed_player(peer_id), CONNECT_ONE_SHOT
 	)
+
+
+## Delayed crash respawn — skip if the player already recovered (R tap) before the timer fired,
+## so we don't respawn twice.
+func _respawn_crashed_player(peer_id: int):
+	if spawn_manager._get_player_by_peer_id(peer_id).is_crashed:
+		spawn_manager.respawn_player.rpc(peer_id)
 
 
 func _on_player_latejoined(peer_id: int):

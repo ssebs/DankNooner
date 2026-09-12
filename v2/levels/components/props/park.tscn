@@ -78,7 +78,7 @@ height = 0.5
 color_preset = 6
 
 [node name="tree_trunk_1" parent="." unique_id=240000011 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 1.5, -16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 1.5, -8.5)
 collision_layer = 3
 width = 0.8
 height = 3.0
@@ -86,7 +86,7 @@ depth = 0.8
 color_preset = 6
 
 [node name="tree_canopy_1" parent="." unique_id=240000012 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 4.5, -16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 4.5, -8.5)
 width = 6.0
 height = 5.0
 depth = 6.0
@@ -211,67 +211,3 @@ width = 4.0
 height = 0.1
 depth = 64.0
 color_preset = 1
-
-[node name="fence_n_left" parent="." unique_id=240000029 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 0.725, 31)
-collision_layer = 3
-width = 28.0
-height = 1.2
-depth = 0.15
-color_preset = 6
-
-[node name="fence_n_right" parent="." unique_id=240000030 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 0.725, 31)
-collision_layer = 3
-width = 28.0
-height = 1.2
-depth = 0.15
-color_preset = 6
-
-[node name="fence_s_left" parent="." unique_id=240000031 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 0.725, -31)
-collision_layer = 3
-width = 28.0
-height = 1.2
-depth = 0.15
-color_preset = 6
-
-[node name="fence_s_right" parent="." unique_id=240000032 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 0.725, -31)
-collision_layer = 3
-width = 28.0
-height = 1.2
-depth = 0.15
-color_preset = 6
-
-[node name="fence_e_top" parent="." unique_id=240000033 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31, 0.725, 17)
-collision_layer = 3
-width = 0.15
-height = 1.2
-depth = 28.0
-color_preset = 6
-
-[node name="fence_e_bottom" parent="." unique_id=240000034 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31, 0.725, -17)
-collision_layer = 3
-width = 0.15
-height = 1.2
-depth = 28.0
-color_preset = 6
-
-[node name="fence_w_top" parent="." unique_id=240000035 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31, 0.725, 17)
-collision_layer = 3
-width = 0.15
-height = 1.2
-depth = 28.0
-color_preset = 6
-
-[node name="fence_w_bottom" parent="." unique_id=240000036 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31, 0.725, -17)
-collision_layer = 3
-width = 0.15
-height = 1.2
-depth = 28.0
-color_preset = 6

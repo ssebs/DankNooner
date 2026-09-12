@@ -24,12 +24,9 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
+- [ ] smack into wall - "crashing" into layer 1 items keeps speed but you don't move, need to add some kinda check here. e.g. driving full speed into back of ramp
 - [ ] [Gameplay feedback notes](./_ScratchPad.md#gameplay-feedback-notes)
   - [ ] todo now
-- [ ] R to quick respawn, hold R to full respawn
-  - [x] function
-  - [x] add loading bar when holding (also show when tapping)
-  - [ ] pressing respawn before crash respawn ends up respawning you 2x.
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [ ] make tricks + combos easier to do **WIP**
@@ -41,7 +38,6 @@
         - [x] smack into player
         - [x] wheelie rise only works when also leaning back it should be no matter what. also you should not be able to use front brake when in wheelie, rear barke in stoppie
         - [x] grom cant clutch up
-        - [ ] smack into wall - "crashing" into layer 1 items keeps speed but you don't move, need to add some kinda check here. e.g. driving full speed into back of ramp
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
 - [ ] fix game breaking bugs
 
@@ -234,6 +230,11 @@
 ---
 
 ## Done ✅
+
+- [x] R to quick respawn, hold R to full respawn
+  - [x] function
+  - [x] add loading bar when holding (also show when tapping)
+  - [x] pressing respawn before crash respawn ends up respawning you 2x.
 
 - [x] bat item
   - [x] add it w/ animation & auto swing
