@@ -74,17 +74,15 @@ func on_movement_rollback_tick(delta: float):
 	_prev_trick = player_entity.trick_controller.current_trick
 
 
-## Crash if the player touches down while still in HEEL_CLICKER. Releasing the
-## trick mid-air is safe — only an unresolved heel clicker on landing crashes.
+## Crash if the player touches down mid air-trick. Releasing the trick before landing is safe.
+## Checks _prev_trick (last tick's), not current_trick: trick_controller runs before us and has
+## already transitioned to the ground state on the landing tick.
 func _detect_air_trick_landing():
 	if not movement_controller._is_on_floor:
 		return
 	var just_landed = not movement_controller._was_on_floor
-	if (
-		just_landed
-		and player_entity.trick_controller.current_trick == TrickController.Trick.HEEL_CLICKER
-	):
-		DebugUtils.DebugMsg("landed mid heel clicker crash")
+	if just_landed and TrickController.is_air_trick(_prev_trick):
+		DebugUtils.DebugMsg("landed mid air-trick crash (%s)" % TrickController.trick_to_str(_prev_trick))
 		trigger_crash()
 
 

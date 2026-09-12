@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://orso1gc2kar1"]
+
+[ext_resource type="PackedScene" uid="uid://lc6pixdyluml" path="res://levels/assets/props/Cone.glb" id="1_ovsd1"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_wig4y"]
+radius = 3.0
+
+[node name="ConeStaticbody" type="StaticBody3D" unique_id=530273413]
+collision_layer = 3
+
+[node name="Cone" parent="." unique_id=99877753 instance=ExtResource("1_ovsd1")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1129125352]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("SphereShape3D_wig4y")

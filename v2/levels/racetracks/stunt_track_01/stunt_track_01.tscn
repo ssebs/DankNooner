@@ -40,6 +40,7 @@
 [ext_resource type="Texture2D" uid="uid://csnqvxweh4an3" path="res://levels/assets/props/tree_green.png" id="26_grj8g"]
 [ext_resource type="PackedScene" uid="uid://bgnt3a0pepkxx" path="res://levels/components/props/business_1.tscn" id="26_pls18"]
 [ext_resource type="PackedScene" uid="uid://ddiynv4dy4x5n" path="res://levels/assets/map_terrain_mine/StuntCity.glb" id="27_grj8g"]
+[ext_resource type="PackedScene" uid="uid://orso1gc2kar1" path="res://levels/assets/props/cone_staticbody.tscn" id="27_i0vae"]
 [ext_resource type="Script" uid="uid://c3ycg631dwkse" path="res://utils/editor_tools/take_screenshot.gd" id="29_pvkg6"]
 [ext_resource type="PackedScene" uid="uid://bbijpc7rs4he4" path="res://levels/components/props/school.tscn" id="32_aoie2"]
 [ext_resource type="PackedScene" uid="uid://dparkgb4x7k2q" path="res://levels/components/props/park.tscn" id="33_3x52s"]
@@ -1076,6 +1077,15 @@ width = 32.0
 transform = Transform3D(-0.13022624, 0, -0.9914843, 0, 1, 0, 0.9914843, 0, -0.13022624, 30.376049, 0.24975634, 494.14523)
 width = 36.0
 
+[node name="CheckpointMarker7" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=533510433 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-0.6085214, 0, -0.79353744, 0, 1, 0, 0.79353744, 0, -0.6085214, 47.199055, -1.5497208e-06, 518.8475)
+
+[node name="CheckpointMarker8" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=57426336 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(0.60900146, 0, -0.79316914, 0, 1, 0, 0.79316914, 0, 0.60900146, 76.481, -1.5497208e-06, 526.6668)
+
+[node name="CheckpointMarker9" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=627136618 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(0.38240385, 0, 0.9239954, 0, 1, 0, -0.9239954, 0, 0.38240385, 76.41135, -1.5497208e-06, 498.06052)
+
 [node name="PickupSpawner1" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=385871693 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -801.5, 2.3671966, 479)
 items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
@@ -1155,6 +1165,11 @@ items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 [node name="PickupSpawner9" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1241894859 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(0.55690646, 0, 0.8305752, 0, 1, 0, -0.8305752, 0, 0.55690646, -719.07654, 6.867197, 591.1117)
 items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
+
+[node name="ArrowWall4_DEPENDS_ON_CheckpointMarker9" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1037802458 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711378e-08, -0.4999999, 0.8660253, 1, -2.185569e-08, 3.7855177e-08, 0, 0.8660253, 0.4999999, -179.54071, 5.25, 398.72382)
+visible = false
+height = 45.9
 
 [node name="StuntCity_REMEMBER_TO_REPLACE_ME" parent="." unique_id=1750931100 instance=ExtResource("27_grj8g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 0)
@@ -1451,17 +1466,8 @@ transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 80, 
 [node name="House36" parent="Houses" unique_id=1005302191 instance=ExtResource("22_7qjpf")]
 transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 48, 0.024993896, 464)
 
-[node name="House31" parent="Houses" unique_id=503842976 instance=ExtResource("22_7qjpf")]
-transform = Transform3D(-1, 0, -8.742277e-08, 0, 1, 0, 8.742277e-08, 0, -1, 52, 0.024994373, 560)
-
-[node name="House32" parent="Houses" unique_id=2045428732 instance=ExtResource("22_7qjpf")]
-transform = Transform3D(-1, 0, -8.742277e-08, 0, 1, 0, 8.742277e-08, 0, -1, 20, 0.024993896, 560)
-
 [node name="House34" parent="Houses" unique_id=547053138 instance=ExtResource("22_7qjpf")]
 transform = Transform3D(-4.371138e-08, 0, 1, 0, 1, 0, -1, 0, -4.371138e-08, 16, 0.024993896, 528)
-
-[node name="House33" parent="Houses" unique_id=1101524686 instance=ExtResource("22_7qjpf")]
-transform = Transform3D(-1, 0, -8.742277e-08, 0, 1, 0, 8.742277e-08, 0, -1, 84, 0.024993896, 560)
 
 [node name="House2" parent="Houses" unique_id=1199325231 instance=ExtResource("22_7qjpf")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -48, 10.6615095, 144.5)
@@ -1516,6 +1522,9 @@ transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 48.0
 transform = Transform3D(-1, 0, -2.6226832e-07, 0, 1, 0, 2.6226832e-07, 0, -1, -912, 0.025000477, 496.00018)
 
 [node name="props" type="Node3D" parent="." unique_id=1428165132]
+
+[node name="ConeStaticbody" parent="props" unique_id=530273413 instance=ExtResource("27_i0vae")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 67.5, 0.18367767, 512.5)
 
 [node name="BridgeSupports" type="Node3D" parent="props" unique_id=1179143975]
 

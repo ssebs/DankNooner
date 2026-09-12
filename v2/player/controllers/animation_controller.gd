@@ -1031,13 +1031,15 @@ func _make_entry(
 
 func _build_trick_entries() -> void:
 	_trick_entries = [
+		# One-shots (except high chair): a single flick plays the anim through and auto-fades.
 		_make_entry(TrickController.Trick.HEEL_CLICKER, "heel_clicker", PlayMode.ONE_SHOT, false),
 		_make_entry(
 			TrickController.Trick.HIGH_CHAIR, "high_chair", PlayMode.HOLD_WHILE_LATCHED, true
 		),
-		_make_entry(
-			TrickController.Trick.TWO_LEFT_FEET, "two_left_feet", PlayMode.LOOP_WHILE_LATCHED, false
-		),
+		_make_entry(TrickController.Trick.TWO_LEFT_FEET, "two_left_feet", PlayMode.ONE_SHOT, false),
+		_make_entry(TrickController.Trick.KICKFLIP, "kickflip", PlayMode.ONE_SHOT, false),
+		_make_entry(TrickController.Trick.SPREAD_EAGLE, "spread_eagle", PlayMode.ONE_SHOT, false),
+		_make_entry(TrickController.Trick.SUPERMAN, "superman", PlayMode.ONE_SHOT, false),
 	]
 
 
