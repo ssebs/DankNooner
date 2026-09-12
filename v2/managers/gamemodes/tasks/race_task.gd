@@ -206,6 +206,7 @@ func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
 		_runner.spawn_manager.set_respawn_point.rpc(
 			peer_id, ckpt.global_position, ckpt.global_basis
 		)
+		_rpc_play_checkpoint_sfx.rpc_id(peer_id)
 
 	match p["waiting_for"]:
 		WaitFor.START:
@@ -245,6 +246,11 @@ func _push_lap_hud(peer_id: int, p: Dictionary) -> void:
 		{"current": current_lap, "total": total_laps, "time": time_str}
 	)
 	_runner.task_hud.rpc_update_progress.rpc_id(peer_id, text)
+
+
+@rpc("call_local", "reliable")
+func _rpc_play_checkpoint_sfx() -> void:
+	_runner.audio_manager.play_mouse_click()
 
 
 #endregion
