@@ -17,6 +17,14 @@ const RESPAWN_STEEP_SLOPE_DEG: float = 35.0
 const RESPAWN_FLAT_MAX_SLOPE_DEG: float = 25.0
 const BREADCRUMB_INTERVAL_SECS: float = 1.0
 
+## Bat pickup: the collector swings for BAT_SWING_DURATION; any OTHER rider within BAT_SWING_RANGE
+## at each swing (one per BAT_SWING_PERIOD, matching the bat_swing anim loop) gets a speed wobble
+## strong enough to force an active recovery.
+const BAT_SWING_DURATION: float = 5.0
+const BAT_SWING_PERIOD: float = 1.0
+const BAT_SWING_RANGE: float = 4.0
+const BAT_SWING_WOBBLE_STRENGTH: float = 10.0
+
 ## Server-only: last known flat-ground transform per peer. In-place respawns fall back here
 ## when the site is a ramp/loop/steep grade (or has no ground at all — e.g. fell out of the
 ## map), which otherwise loops the steep-slope stall crash.
@@ -196,6 +204,35 @@ func grant_boost(player_peer_id: int):
 	if !_sender_is_server():
 		return
 	_get_player_by_peer_id(player_peer_id).rb_add_boost = true
+
+
+## Bat pickup effect: every peer plays the swing anim on the collector; the server also wobbles
+## any other rider within range once per swing over the duration. Sent by PickupSpawner.
+@rpc("any_peer", "call_local", "reliable")
+func swing_bat(wielder_peer_id: int):
+	if !_sender_is_server():
+		return
+	_get_player_by_peer_id(wielder_peer_id).animation_controller.play_bat_swing(BAT_SWING_DURATION)
+	# Proximity + wobble is a server decision; clients above just show the swing.
+	if multiplayer.is_server():
+		_wobble_riders_near_bat(wielder_peer_id)
+
+
+## Server-only. Once per swing over the swing duration, wobble every OTHER spawned rider within
+## range of the wielder. An await loop rather than a rollback tick — proximity is a server call,
+## and wobble_player already routes the kick through synced state on every peer.
+func _wobble_riders_near_bat(wielder_peer_id: int) -> void:
+	for _i in int(BAT_SWING_DURATION / BAT_SWING_PERIOD):
+		await get_tree().create_timer(BAT_SWING_PERIOD).timeout
+		var wielder := _get_player_by_peer_id(wielder_peer_id)
+		# Wielder crashed / left mid-swing — nothing to swing from.
+		if wielder == null:
+			return
+		for child in level_manager.current_level.player_spawn_pos.get_children():
+			if not child is PlayerEntity or child == wielder:
+				continue
+			if wielder.global_position.distance_to(child.global_position) <= BAT_SWING_RANGE:
+				wobble_player.rpc(int(child.name), BAT_SWING_WOBBLE_STRENGTH)
 
 
 ## Play the pickup "pop" (Ding) on the collecting rider's own client. Server → that peer via rpc_id.

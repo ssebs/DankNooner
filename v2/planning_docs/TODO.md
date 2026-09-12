@@ -41,7 +41,8 @@
         - [x] grom cant clutch up
         - [ ] smack into wall - "crashing" into layer 1 items keeps speed but you don't move, need to add some kinda check here. e.g. driving full speed into back of ramp
         - [ ] bat item
-          - [ ] when collecting bat, show on player for 5s, auto swinging back and forth (play animation). if other player is in range then make them get speed wobbles.
+          - [x] add it w/ animation & auto swing
+          - [ ] test it
   - [ ] tricks should feel juicy instead of focusing on realism (to extent)
     - [ ] add vibration / sound when screen shakes during acel + when skidmarks show
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify

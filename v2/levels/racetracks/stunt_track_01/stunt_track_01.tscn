@@ -795,7 +795,6 @@ transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 
 
 [node name="PickupSpawner1" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=761218876 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 5.8671966, 25.5)
-items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 
 [node name="PickupSpawner2" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1008318155 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 5.8671966, 21.5)
@@ -815,11 +814,9 @@ items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 
 [node name="PickupSpawner6" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=490238493 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 5.8671966, 5.5)
-items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 
 [node name="PickupSpawner7" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1098221561 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.70710677, 0, 0.7071068, 0, 1, 0, -0.7071068, 0, 0.70710677, -172.92894, 1.75, 368.07108)
-items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
+transform = Transform3D(0.70710677, 0, 0.7071068, 0, 1, 0, -0.7071068, 0, 0.70710677, -205.4896, 6.25, 372.13174)
 
 [node name="PickupSpawner8" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1463645906 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(0.70710677, 0, 0.7071068, 0, 1, 0, -0.7071068, 0, 0.70710677, -182.25735, 1.630609, 367.24265)
@@ -871,7 +868,6 @@ items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 
 [node name="PickupSpawner20" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1642640912 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(0.70710677, 0, 0.7071068, 0, 1, 0, -0.7071068, 0, 0.70710677, -335.4142, 1.5, 467.5858)
-items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 
 [node name="PickupSpawner21" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1189900512 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(0.70710677, 0, -0.7071068, 0, 1, 0, 0.7071068, 0, 0.70710677, -526.4142, 1.75, 525.07104)
@@ -1017,7 +1013,6 @@ items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 
 [node name="PickupSpawner5" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=78475948 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -787.5, 2.3671966, 459)
-items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 
 [node name="PickupSpawner10" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=539220794 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -440, 1.8671966, 645.5)
@@ -1057,11 +1052,16 @@ items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 
 [node name="PickupSpawner19" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1761530306 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -187.24696, 9.367197, 634.51044)
-items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 
 [node name="PickupSpawner6" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1681096213 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(0.55690646, 0, 0.8305752, 0, 1, 0, -0.8305752, 0, 0.55690646, -711.5583, 6.867197, 579.89886)
 items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
+
+[node name="PickupSpawner20" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=2090557582 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(0.752899, 0, 0.65813607, 0, 1, 0, -0.65813607, 0, 0.752899, -676.4703, 1.4999981, 578.74384)
+
+[node name="PickupSpawner21" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=85576469 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(0.752899, 0, 0.65813607, 0, 1, 0, -0.65813607, 0, 0.752899, -682.86993, 1.4999981, 584.338)
 
 [node name="PickupSpawner7" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=202101648 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(0.55690646, 0, 0.8305752, 0, 1, 0, -0.8305752, 0, 0.55690646, -714.0644, 6.867197, 583.63654)
@@ -3535,11 +3535,11 @@ next_mag = 3.31814
 prior_pt_init = NodePath("../RP_004")
 
 [node name="RP_006" type="Node3D" parent="RoadManager/Road_027" unique_id=2000775754]
-transform = Transform3D(-0.0039401483, 0, 0.99999225, 0, 1, 0, -0.99999225, 0, -0.0039401483, 18.67273, 0.62951946, 0.6152649)
+transform = Transform3D(-0.0039401483, 0, 0.99999225, 0, 1, 0, -0.99999225, 0, -0.0039401483, 18.67273, 0.5001221, 0.6152649)
 script = ExtResource("8_ercdn")
 traffic_dir = Array[int]([2, 2, 1, 1])
 lanes = Array[int]([2, 4, 4, 2])
-prior_mag = 21.036072
+prior_mag = 8.0
 next_mag = 8.0
 prior_pt_init = NodePath("../RP_001")
 
