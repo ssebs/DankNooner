@@ -3,15 +3,28 @@
 - [Notes](#notes)
 - [MVP](#mvp)
 - [Implementation approach (idea)](#implementation-approach-idea)
+- [As-built (POC) — deviations \& tradeoffs](#as-built-poc--deviations--tradeoffs)
 - [Implementation plan (PM)](#implementation-plan-pm)
+	- [Prereq — Trace the race gamemode end-to-end](#prereq--trace-the-race-gamemode-end-to-end)
+	- [M0 — Gamemode spine (code-only, humans-only, existing level)](#m0--gamemode-spine-code-only-humans-only-existing-level)
+		- [Registration](#registration)
+		- [`StuntRaceGameMode` state](#stuntracegamemode-state)
+		- [Scoring aggregator](#scoring-aggregator)
+	- [M1 — Blockout level (editor work + group conventions)](#m1--blockout-level-editor-work--group-conventions)
+	- [M2 — Knockouts via ramming + fast respawn](#m2--knockouts-via-ramming--fast-respawn)
+	- [M3 — Item system + starter set](#m3--item-system--starter-set)
+		- [System](#system)
+		- [Starter set (non-directional)](#starter-set-non-directional)
+	- [M4 — Fill-up minigame](#m4--fill-up-minigame)
+	- [Post-MVP backlog](#post-mvp-backlog)
 - [Map design](#map-design)
-  - [Ramps \& routing (brainstormed)](#ramps--routing-brainstormed)
+	- [Ramps \& routing (brainstormed)](#ramps--routing-brainstormed)
 - [Design direction](#design-direction)
-  - [Core loop](#core-loop)
-  - [Scoring (3 axes, summed and cumulative across legs)](#scoring-3-axes-summed-and-cumulative-across-legs)
-  - [Boost = fuel (decided)](#boost--fuel-decided)
-  - [Items](#items)
-  - [Open questions](#open-questions)
+	- [Core loop](#core-loop)
+	- [Scoring (3 axes, summed and cumulative across legs)](#scoring-3-axes-summed-and-cumulative-across-legs)
+	- [Boost = fuel (decided)](#boost--fuel-decided)
+	- [Items](#items)
+	- [Open questions](#open-questions)
 
 
 ## Notes
@@ -374,6 +387,7 @@ targets a different axis:
 - **Style:**
   - Deployable Ramp — start a combo anywhere.
   - Sticky Tires — tricks hold easier, multiplier climbs faster.
+  - Rally Up - "lightning" item - swaps everyone to mini bike + the astronaut skin
 - **Knockout:**
   - Oil Slick — banana peel causes person riding over it to crash. *(MVP starter set)*
   - Bat — melee; the activate button swings left/right, knock a rider off their line so they almost crash.
