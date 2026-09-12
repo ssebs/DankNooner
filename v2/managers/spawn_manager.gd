@@ -20,9 +20,9 @@ const BREADCRUMB_INTERVAL_SECS: float = 1.0
 ## Bat pickup: the collector swings for BAT_SWING_DURATION; any OTHER rider within BAT_SWING_RANGE
 ## at each swing (one per BAT_SWING_PERIOD, matching the bat_swing anim loop) gets a speed wobble
 ## strong enough to force an active recovery.
-const BAT_SWING_DURATION: float = 5.0
+const BAT_SWING_DURATION: float = 15.0
 const BAT_SWING_PERIOD: float = 1.0
-const BAT_SWING_RANGE: float = 4.0
+const BAT_SWING_RANGE: float = 6.0
 const BAT_SWING_WOBBLE_STRENGTH: float = 10.0
 
 ## Server-only: last known flat-ground transform per peer. In-place respawns fall back here
@@ -316,7 +316,7 @@ func add_player_locally(peer_id: int, player_def_dict: Dictionary):
 
 ## Remove player node locally (no authority check)
 func remove_player_locally(peer_id: int):
-	_flat_breadcrumbs.erase(peer_id)  # server-only dict; harmless no-op on clients
+	_flat_breadcrumbs.erase(peer_id) # server-only dict; harmless no-op on clients
 	# No current level or a menu/background level with no player_spawn_pos — nothing to remove.
 	# Guards the raw deref below (this doesn't route through _get_player_by_peer_id).
 	if level_manager.current_level == null or level_manager.current_level.no_player_spawn_needed:

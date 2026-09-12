@@ -69,12 +69,12 @@ const CLUTCH_POP_MAX_SPEED_FRAC: float = 0.4
 # balance-point crossing). Decoupled from DRIFT_BREAK_FORCE so drift traction-break is unaffected.
 const POWER_WHEELIE_MIN_FORCE: float = 15.0
 const FALL_GRAVITY: float = 40
-const AIR_DRAG: float = 12.0 # speed loss while airborne. TODO - turn into a curve
+const AIR_DRAG: float = 11.0 # speed loss while airborne. TODO - turn into a curve
 const MIN_SPEED_FROM_AIR_DRAG: float = 5.0
 # Unstable surface (collision layer 5) — gravel/sand/etc. Scaled by bike's unstable_surface_factor.
 const UNSTABLE_LAYER_MASK: int = 16 # 1 << 4 (layer 5)
 # Proportional drag (per sec) on unstable ground at factor=1 — caps top speed without stalling launches
-const UNSTABLE_DRAG_RATE: float = 0.6
+const UNSTABLE_DRAG_RATE: float = 0.1
 const UNSTABLE_WHEELIE_SUPPRESSION: float = 0.4 # wheelie target scaled by (1 - factor * this)
 const UNSTABLE_STEER_SUPPRESSION: float = 0.5 # turn_rate scaled by (1 - factor * this)
 # Ramp / loop tuning

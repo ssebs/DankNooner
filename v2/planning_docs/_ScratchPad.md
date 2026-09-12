@@ -2,14 +2,20 @@
 ---
 
 ## Gameplay feedback notes
-- mid race respawn multiple people shouldnt spawn in same place
-- move checkpoints so jumping over it counts
-  - like forza horizon, cant crash into gates, no height limit
-- increase bat time
-- peeps can start race before countdown
-- add more arrow signs in world
-- make grass unstable
+### NOW
+- [x] increase bat time
+- [x] make grass unstable
+- [x] reverse + turn on unstable collision should not make you crash
+- [ ] add more arrow signs in world
+- [ ] mid race respawn multiple people shouldnt spawn in same place
+- [ ] move checkpoints so jumping over it counts
+  - [ ] like forza horizon, cant crash into gates, no height limit
+- [ ] peeps can start race before countdown
+- [ ] lightning / Rally Up item
+- [ ] r => quick respawn, add btn for set full respawn point (if not in race)
 
+
+### Also
 - doing flips doesnt give you boost
 - holding tricks doesnt use time, just counts as 1
 - add longest single wheelie challenge

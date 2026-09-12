@@ -6,6 +6,20 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_lpp3f"]
 size = Vector3(8, 4, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2lumj"]
+transparency = 1
+albedo_color = Color(1.4148117, 0.4498188, 1.3648983, 0.15686275)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_sx6t6"]
+material = SubResource("StandardMaterial3D_2lumj")
+top_radius = 2.0
+bottom_radius = 1.0
+height = 64.0
+radial_segments = 6
+rings = 1
+cap_top = false
+cap_bottom = false
+
 [node name="CheckpointMarker" type="Node3D" unique_id=1048335829]
 script = ExtResource("1_jt853")
 
@@ -44,3 +58,8 @@ color_preset = 1
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1448077944]
 unique_name_in_owner = true
 shape = SubResource("BoxShape3D_lpp3f")
+
+[node name="BorderCyl" type="MeshInstance3D" parent="." unique_id=1433966497]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 32, 0)
+mesh = SubResource("CylinderMesh_sx6t6")
