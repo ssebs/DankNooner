@@ -24,18 +24,27 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-- [ ] [Speed Wobbles](./____SpeedWobbles____.md)
-- [ ] fix ai slop / limit scope of game / delete old code/files / simplify
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
-  - [ ] make tricks + combos easier to do
+  - [ ] make tricks + combos easier to do **WIP**
+      - [ ] [Speed Wobbles](./____SpeedWobbles____.md)
+        - [x] FX
+        - [x] while drifting
+        - [x] while landing jumps wrong
+        - [x] while wheelie-ing
+        - [ ] smack into wall
+        - [x] smack into player
+        - [ ] bat item
+        - [ ]  wheelie rise only works when also leaning back it should be no matter what. also you should not be able to use front brake when in wheelie, rear barke in stoppie
   - [ ] tricks should feel juicy instead of focusing on realism (to extent)
+- [ ] fix ai slop / limit scope of game / delete old code/files / simplify
 - [ ] fix game breaking bugs
 
 ---
 
 ## Notes 📝
 > Stuff to move ASAP
+- when doing a wheelie, move to wheelie cam + right joystick does the tricks instead of holding RB and right joystick
 - "crashing" into layer 1 items keeps speed but you don't move, need to add some kinda check here. e.g. driving full speed into back of ramp
 - gas pump fill up minigame (should do more than just boost the bike, and it should be in first person. group of peeps do it like the race gamemodes)
 - [ ] lag when ending stunt race / no tp option

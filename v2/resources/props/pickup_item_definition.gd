@@ -1,7 +1,7 @@
 @tool
 class_name PickupItemDefinition extends Resource
 
-enum PickupItemType{GAS_CAN,}
+enum PickupItemType{GAS_CAN, BAT,}
 
 @export_group("Mesh")
 ## The Scene to instantiate

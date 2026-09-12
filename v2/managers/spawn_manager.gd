@@ -92,6 +92,17 @@ func crash_player(player_peer_id: int):
 	_get_player_by_peer_id(player_peer_id).rb_do_crash = true
 
 
+## Set player's rb_do_wobble on every peer so each injects the wobble in its rollback tick
+## (wobble_vel is synced state). Server only — the callable the bat and any wobble source uses.
+@rpc("any_peer", "call_local", "reliable")
+func wobble_player(player_peer_id: int, strength: float):
+	if !_sender_is_server():
+		return
+	var player := _get_player_by_peer_id(player_peer_id)
+	player.rb_wobble_strength = strength
+	player.rb_do_wobble = true
+
+
 ## Set player's rb_add_boost on every peer so each adds one boost segment in its rollback tick
 ## (boost_amount is synced state). Server only — sent when a rider collects a Gas Can pickup.
 @rpc("any_peer", "call_local", "reliable")

@@ -111,6 +111,10 @@ var rb_do_respawn: bool = false
 ## Set by SpawnManager.crash_player when another racer rammed us — we can't see
 ## that collision ourselves (slide collisions only report what WE moved into).
 var rb_do_crash: bool = false
+## Set by SpawnManager.wobble_player (bat item, player-to-player tap) — injects a speed wobble.
+## wobble_vel is synced state, so this rides the rollback tick + resim like the crash setter.
+var rb_do_wobble: bool = false
+var rb_wobble_strength: float = 0.0
 ## Set by SpawnManager.grant_boost on a pickup — adds one boost segment. boost_amount is synced
 ## state, so this rides the rollback tick + resim re-application (like rb_do_respawn) to survive.
 var rb_add_boost: bool = false
@@ -193,6 +197,10 @@ func _rollback_tick(delta: float, tick: int, _is_fresh: bool):
 	if rb_do_crash:
 		rb_do_crash = false
 		on_crash()
+
+	if rb_do_wobble:
+		rb_do_wobble = false
+		movement_controller.wobble_vel += rb_wobble_strength  # tank-slapper kick (synced state)
 
 	# Boost grant: apply once, then re-apply the same meter on any resim of that tick (boost
 	# is drained below, so this must land before the controllers run).

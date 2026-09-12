@@ -148,6 +148,8 @@ archived — ignore them.
   - Reuse existing code, signals, and patterns before adding new ones
   - Check what's already available in the codebase
   - New methods, exports, or helpers should be a last resort
+- Reuse existing exports before adding new ones — a new knob that duplicates bd.return_speed (or similar) is a smell; wire the behavior to the export that already exists.
+- Tune the root cause, not a band-aid — when something is too slow/weak, look at the formula first (e.g. a stray /2 or a factor that collapses to zero at speed) rather than adding a scaling export to paper over it.
 
 ### Fail Loudly — No Silent Null Returns
 
