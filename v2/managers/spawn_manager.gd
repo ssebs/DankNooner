@@ -10,11 +10,48 @@ signal player_spawned(player: PlayerEntity)
 @export var settings_manager: SettingsManager
 @export var gamemode_manager: GamemodeManager
 
+## In-place respawn is only safe on ground the bike can stand on. Steeper than this at the
+## respawn site → fall back to the last flat breadcrumb.
+const RESPAWN_STEEP_SLOPE_DEG: float = 35.0
+## A breadcrumb is only recorded on ground at least this gentle.
+const RESPAWN_FLAT_MAX_SLOPE_DEG: float = 25.0
+const BREADCRUMB_INTERVAL_SECS: float = 1.0
+
+## Server-only: last known flat-ground transform per peer. In-place respawns fall back here
+## when the site is a ramp/loop/steep grade (or has no ground at all — e.g. fell out of the
+## map), which otherwise loops the steep-slope stall crash.
+var _flat_breadcrumbs: Dictionary[int, Transform3D] = {}
+var _breadcrumb_accum: float = 0.0
+
 
 func _ready():
 	if Engine.is_editor_hint():
 		return
 	lobby_manager.lobby_players_updated.connect(_on_lobby_players_updated)
+
+
+## Server-only: periodically remember each spawned player's last flat-ground transform, so an
+## in-place respawn on a steep site (ramp, wall, off-map) can fall back somewhere safe.
+func _physics_process(delta: float):
+	if Engine.is_editor_hint() or multiplayer.multiplayer_peer == null or !multiplayer.is_server():
+		return
+	_breadcrumb_accum -= delta
+	if _breadcrumb_accum > 0.0:
+		return
+	_breadcrumb_accum = BREADCRUMB_INTERVAL_SECS
+	for peer_id in lobby_manager.lobby_players:
+		# Player may not be spawned yet (late-join) — skip is intentional.
+		var player := _get_player_by_peer_id(peer_id)
+		if player == null or player.is_crashed:
+			continue
+		var normal := _ground_normal_at(player)
+		if (
+			normal != Vector3.ZERO
+			and normal.angle_to(Vector3.UP) <= deg_to_rad(RESPAWN_FLAT_MAX_SLOPE_DEG)
+		):
+			_flat_breadcrumbs[peer_id] = Transform3D(
+				Basis(Vector3.UP, player.global_rotation.y), player.global_position
+			)
 
 
 ## Spawn all players from lobby_players dict (server only)
@@ -69,6 +106,50 @@ func request_respawn():
 	var sender := multiplayer.get_remote_sender_id()
 	# sender == 1 covers both the host's local call and (impossibly) server-sent.
 	respawn_player.rpc(sender if sender > 1 else 1)
+
+
+## Client-callable: quick-respawn YOU in place (R tap). The server derives the target from the
+## sender and resolves the transform, so a client can never respawn someone else.
+@rpc("any_peer", "call_local", "reliable")
+func request_respawn_in_place():
+	if !multiplayer.is_server():
+		return
+	var sender := multiplayer.get_remote_sender_id()
+	respawn_in_place(sender if sender > 1 else 1)
+
+
+## Server-only: resolve where a player should respawn in place — current spot upright, or the
+## last flat breadcrumb if the site is too steep — and broadcast it. Shared by the R tap
+## (request_respawn_in_place) and free-roam crash recovery so both behave identically.
+func respawn_in_place(player_peer_id: int):
+	var player := _get_player_by_peer_id(player_peer_id)
+	var normal := _ground_normal_at(player)
+	var too_steep := (
+		normal == Vector3.ZERO or normal.angle_to(Vector3.UP) > deg_to_rad(RESPAWN_STEEP_SLOPE_DEG)
+	)
+	if too_steep and _flat_breadcrumbs.has(player_peer_id):
+		var crumb := _flat_breadcrumbs[player_peer_id]
+		respawn_player_in_place.rpc(player_peer_id, crumb.origin, crumb.basis)
+		return
+	var upright := Basis(Vector3.UP, player.global_rotation.y)
+	respawn_player_in_place.rpc(player_peer_id, player.global_position, upright)
+
+
+## Ground normal just under the player, Vector3.ZERO when there is no ground within 3m.
+func _ground_normal_at(player: PlayerEntity) -> Vector3:
+	var pos := player.global_position
+	var space_state := get_viewport().get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.create(pos + Vector3.UP, pos + Vector3.DOWN * 3.0)
+	# World geometry only: exclude the bike's own capsule (the ray starts just above its top, so
+	# it self-hits and reports the bike's up-vector as "ground"), and mask to layer 1 so
+	# crash-site ragdoll bones (layer 3) and other racers' layer-2 bits can't answer for the
+	# ground either. A miss errs toward the breadcrumb fallback — the safe direction.
+	query.exclude = [player.get_rid()]
+	query.collision_mask = 1
+	var hit := space_state.intersect_ray(query)
+	if hit.is_empty():
+		return Vector3.ZERO
+	return hit["normal"]
 
 
 ## Set player's rb_do_respawn to true on every peer so each runs do_respawn() locally.
@@ -193,6 +274,7 @@ func add_player_locally(peer_id: int, player_def_dict: Dictionary):
 
 ## Remove player node locally (no authority check)
 func remove_player_locally(peer_id: int):
+	_flat_breadcrumbs.erase(peer_id)  # server-only dict; harmless no-op on clients
 	if !level_manager.current_level.player_spawn_pos.has_node(str(peer_id)):
 		return
 

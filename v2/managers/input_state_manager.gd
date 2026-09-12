@@ -15,9 +15,15 @@ enum InputState {
 }
 
 @export var menu_manager: MenuManager
+@export var save_manager: SaveManager
+@export var spawn_manager: SpawnManager
 
 # @export var debug_mobile := true
 @export var debug_mobile := false
+
+## Hold the respawn action at least this long for a full respawn; a shorter tap is an
+## in-place quick respawn.
+const RESPAWN_HOLD_THRESHOLD: float = 0.5
 
 var current_input_state = InputState.IN_MENU:
 	set(val):
@@ -26,6 +32,11 @@ var current_input_state = InputState.IN_MENU:
 		input_state_changed.emit(val)
 
 var is_mobile := false
+
+## Respawn tap/hold tracking for the local player. Full respawn fires once the hold crosses
+## the threshold; a release before then is a tap → quick in-place respawn.
+var _respawn_hold_time: float = 0.0
+var _respawn_full_fired: bool = false
 
 
 func _ready():
@@ -44,6 +55,26 @@ func _input(event: InputEvent):
 		showhide_mouse_cursor()
 
 
+## Respawn tap vs hold. Polled here rather than in _unhandled_input because the hold needs
+## per-frame timing: crossing the threshold fires a full respawn immediately, and releasing
+## before it fires a quick in-place respawn.
+func _process(delta: float):
+	if current_input_state != InputState.IN_GAME:
+		_respawn_hold_time = 0.0
+		_respawn_full_fired = false
+		return
+	if Input.is_action_pressed("respawn"):
+		_respawn_hold_time += delta
+		if _respawn_hold_time >= RESPAWN_HOLD_THRESHOLD and not _respawn_full_fired:
+			_respawn_full_fired = true
+			spawn_manager.request_respawn.rpc_id(1)
+	if Input.is_action_just_released("respawn"):
+		if not _respawn_full_fired:
+			spawn_manager.request_respawn_in_place.rpc_id(1)
+		_respawn_hold_time = 0.0
+		_respawn_full_fired = false
+
+
 #region InputState (in game vs in menu)
 func _unhandled_input(event: InputEvent):
 	match current_input_state:
@@ -56,6 +87,8 @@ func _unhandled_input(event: InputEvent):
 				# Live overlay, coordinates no other manager — so unlike pause this state owns
 				# its own toggle. The HUD expands the minimap off the input_state_changed signal.
 				current_input_state = InputState.IN_MAP
+			elif event is InputEventKey and event.pressed and not event.echo:
+				_try_switch_bike_slot(event.physical_keycode)
 		InputStateManager.InputState.IN_GAME_PAUSED:
 			if event.is_action_pressed("pause"):
 				unpause_requested.emit()
@@ -67,6 +100,21 @@ func _unhandled_input(event: InputEvent):
 				var current_state = menu_manager.state_machine.current_state as MenuState
 				if current_state:
 					current_state.on_cancel_key_pressed()
+
+
+## Switch the local player's active bike to the loadout for a number-row key
+## (1 → slot 0, 2 → slot 1, …). Reuses the customize menu's active-loadout path, which
+## syncs the swap to every peer via SpawnManager.update_skins.
+func _try_switch_bike_slot(physical_keycode: int):
+	if physical_keycode < KEY_1 or physical_keycode > KEY_8:
+		return
+	var idx := physical_keycode - KEY_1
+	var player_def := save_manager.get_player_definition()
+	# Slot past your last bike, or already active — nothing to do (e.g. "2" with one bike).
+	if idx >= player_def.loadouts.size() or idx == player_def.active_loadout_index:
+		return
+	player_def.active_loadout_index = idx
+	save_manager.update_save("player_definition", player_def, true, true)
 
 
 ## Shows or hides mouse cursor depending on current_input_state

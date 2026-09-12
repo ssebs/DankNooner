@@ -52,9 +52,11 @@ settings_manager = NodePath("ManagerManager/SettingsManager")
 [node name="ManagerManager" type="Node" parent="." unique_id=1214717395]
 script = ExtResource("2_yx7mw")
 
-[node name="InputStateManager" type="Node" parent="ManagerManager" unique_id=2040238004 node_paths=PackedStringArray("menu_manager") groups=["InputManager", "InputStateManager", "Managers"]]
+[node name="InputStateManager" type="Node" parent="ManagerManager" unique_id=2040238004 node_paths=PackedStringArray("menu_manager", "save_manager", "spawn_manager") groups=["InputManager", "InputStateManager", "Managers"]]
 script = ExtResource("3_krmtw")
 menu_manager = NodePath("../MenuManager")
+save_manager = NodePath("../SaveManager")
+spawn_manager = NodePath("../SpawnManager")
 metadata/_custom_type_script = "uid://b766m1s624u36"
 
 [node name="PauseManager" type="Node" parent="ManagerManager" unique_id=704027696 node_paths=PackedStringArray("menu_manager", "level_manager", "input_state_manager", "audio_manager", "hud_manager") groups=["Managers"]]

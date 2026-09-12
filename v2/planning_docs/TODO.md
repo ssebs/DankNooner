@@ -24,6 +24,10 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
+- [ ] R to quick respawn, hold R to full respawn
+  - [ ] function
+  - [ ] add loading bar when holding (also show when tapping)
+  - [ ] pressing respawn before crash respawn ends up respawning you 2x.
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [ ] make tricks + combos easier to do **WIP**
