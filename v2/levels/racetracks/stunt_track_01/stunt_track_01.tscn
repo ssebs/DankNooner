@@ -1094,6 +1094,8 @@ transform = Transform3D(0.60900146, 0, -0.79316914, 0, 1, 0, 0.79316914, 0, 0.60
 [node name="CheckpointMarker9" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=627136618 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
 transform = Transform3D(0.38240385, 0, 0.9239954, 0, 1, 0, -0.9239954, 0, 0.38240385, 76.41135, -1.5497208e-06, 498.06052)
 
+[node name="DIV" type="Node" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1732499121]
+
 [node name="CheckpointMarker10" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1355421364 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
 transform = Transform3D(-4.3711392e-08, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, -4.3711392e-08, -14.678253, -1.5497208e-06, 399.5091)
 width = 32.0

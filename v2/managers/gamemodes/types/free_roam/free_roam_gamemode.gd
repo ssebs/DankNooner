@@ -4,6 +4,7 @@ class_name FreeRoamGameMode extends GameModeType
 @export var game_mode_event_hud_state: GamemodeEventHUDState
 @export var level_manager: LevelManager
 @export var npc_traffic_manager: NPCTrafficManager
+@export var pickup_spawn_manager: PickupSpawnManager
 @export var _respawn_delay: float = 2.5
 
 
@@ -64,11 +65,13 @@ func Enter(state_context: StateContext):
 					slot += 1
 
 		npc_traffic_manager.start_traffic()
+		pickup_spawn_manager.activate_pickups()
 	else:
 		# Our level just finished loading — pull any traffic spawned before we could
 		# accept it (fresh-start broadcasts race our spawn_level; late join misses
 		# them entirely).
 		npc_traffic_manager.request_traffic_sync()
+		pickup_spawn_manager.request_pickup_sync()
 
 
 ## param is whether to connect() or disconnect()
@@ -133,6 +136,7 @@ func Exit(_state_context: StateContext):
 
 	if multiplayer.is_server():
 		npc_traffic_manager.stop_traffic()
+		pickup_spawn_manager.deactivate_pickups()
 	else:
 		npc_traffic_manager.reset_local_traffic()
 
@@ -176,5 +180,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("level_manager must not be empty")
 	if npc_traffic_manager == null:
 		issues.append("npc_traffic_manager must not be empty")
+	if pickup_spawn_manager == null:
+		issues.append("pickup_spawn_manager must not be empty")
 
 	return issues
