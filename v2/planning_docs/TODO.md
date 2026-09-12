@@ -26,6 +26,9 @@
 > Don't forget, have fun :D
 - [ ] [Gameplay feedback notes](./_ScratchPad.md#gameplay-feedback-notes)
   - [ ] todo now
+- [ ] Superman
+- [ ] no-handed spread eagle
+- [ ] kickflip
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [ ] make tricks + combos easier to do **WIP**
@@ -53,11 +56,6 @@
 - Delete most of the NPC AI, keep the basic lane position/movement and racing Ai. Clean it up but don't reimplement until the stunt race is working first.
 - npc => have their own collision layers?
 - when chaining gas stations, just have multiple event start circles & have the mini game be an optional thing (smol start circle in front of gas pump)
-- I want to add a stationary burnout, so you can do the burnout via: hold front brake, lean fwd, max rpm clutch dump to start a drift with 0 velocity. then you can
-  let go to start regular drift
-- should not be able to stoppie when trying to do a burnout + when steering
-- run from cops mode
-  - like stunt race gamemode but with gas station pit stops
 ---
 
 ## Tasks 📋
@@ -65,8 +63,6 @@
 ### Game-breaking bugs
 - [ ] M for map half ass/ broken
 - [ ] Road generator lanes are jank / broken
-- [ ] multiplayer lag / bugs (do another playtest)
-- [ ] on sand, reverse + steer causes crash
 
 ### Gameplay Improvements
 
@@ -85,10 +81,8 @@
 
 #### Juice / "Feel"
 - [ ] Label3d + script so all in group are removed on runtime for notes
-- [ ] incentivize being on road part 2 (`unstable_surface_factor` + VFX from `_on_unstable_surface`)
 - [ ] Slow time on ramp launches (client side somehow?)
 - [ ] Vibe code a painterly shader pass (brush stroke lines)
-- [ ] Add arrow walls (like burnout) for race
 - [ ] reactive sounds
 - [ ] Transition animations between menu states
 - [ ] Race HUD feedback
@@ -100,7 +94,6 @@
   - [ ] add race position hud
 
 #### Audio
-- [ ] Tire screech SFX (tarmac / sand / drift)
 - [ ] Music
 - [ ] Soundscapes for ambient sounds
 - [ ] Mute option in settings + auto-mute when out of focus
@@ -181,11 +174,9 @@
 - [x] tune density / cruise speed once the city map exists (rest in Backlog > AI/traffic)
 
 #### Tricks / animation
-- [ ] "Lock in" a wheelie to do combo moves, make it easier to do the other tricks. Aka hold at perfect spot for 3s then it's good until you brake/gas/steer
 - [ ] More tricks
-  - [ ] Superman / no-handed spread eagle
   - [ ] Whip / table
-  - [ ] Burnout (stationary)
+  - [x] Burnout (stationary)
   - [ ] https://www.youtube.com/shorts/cAxcIZ83MfU
 - [ ] trick tweaks (just move butt a little from base trick)
   - [ ] Land into wheelie / stoppie should be a trick
@@ -229,6 +220,18 @@
 ---
 
 ## Done ✅
+
+- [x] "Lock in" a wheelie to do combo moves, make it easier to do the other tricks. Aka hold at perfect spot for 3s then it's good until you brake/gas/steer
+
+- [x] Tire screech SFX (tarmac / sand / drift)
+
+- [x] incentivize being on road part 2 (`unstable_surface_factor` + VFX from `_on_unstable_surface`)
+
+- [x] Add arrow walls (like burnout) for race
+
+- [x] on sand, reverse + steer causes crash
+
+- [x] multiplayer lag / bugs (do another playtest)
 
 - [x] smack into wall - "crashing" into layer 1 items keeps speed but you don't move, need to add some kinda check here. e.g. driving full speed into back of ramp
 

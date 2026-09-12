@@ -15,11 +15,14 @@
 - [x] tapping r to respawn after crashing respawns you, then you respawn from the time delay. when you crash and press R during a race, it should full respawn you thesame way just crashing over time will. in free roam / in race when not crashing tapping r should quick respawn you.
 - [ ] improved / easier combo tricks
   - [ ] > aka no need to hold RB / trick mod anymore
-  - [ ] when doing a wheelie:
-    - [ ] move to wheelie cam 
-    - [ ] + right joystick does the tricks instead of needing to hold RB and right joystick
-  - [ ] when catching air
-    - [ ] right joystick does the tricks
+  - [x] when doing a wheelie:
+    - [x] move to wheelie cam 
+    - [x] + right joystick does the tricks instead of needing to hold RB and right joystick
+  - [x] when catching air
+    - [x] right joystick does the tricks
+  - [ ] allow leaning fwd/back, but if you leave balance point then stop being in sweet spot
+  - [ ] holding high chair trick doesnt work anymore, always gets stuck
+- [ ] add vibration on brake danger / screen shake
 
 
 ### Also
