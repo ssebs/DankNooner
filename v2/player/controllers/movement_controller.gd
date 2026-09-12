@@ -44,7 +44,7 @@ class_name MovementController extends Node
 @export var wheelie_lean_influence: float = 0.25
 ## Scales the wheelie climb rate (bd.rotation_speed) so the front comes up less abruptly, without
 ## touching the stoppie rate.
-@export var wheelie_rise_rate_scale: float = 0.75
+@export var wheelie_rise_rate_scale: float = 0.25
 ## Clutch-dump torque boost to the wheelie climb rate at low speed (was a hardcoded 2.0).
 @export var wheelie_clutch_kick_boost: float = 1.0
 ## Steering authority while up on the front wheel, above wheelie_steer_full_speed (mirrors STOPPIE_STEER_SCALE).
@@ -60,8 +60,11 @@ const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65
 # Clutch pops are a low-speed launch move. Above this fraction of max_speed (e.g. rolling fast
 # downhill on slope gravity) a clutch dump must NOT loft the front — use a power wheelie instead.
 const CLUTCH_POP_MAX_SPEED_FRAC: float = 0.4
-# power × bd.acceleration floor for power wheelies — auto-scales by bike strength
-const POWER_WHEELIE_MIN_FORCE: float = 21.6
+# Wheel-force (power × bd.acceleration) floor to start a wheelie / clutch-pop — auto-scales by bike
+# strength. Kept low enough that a light bike (the mini) clears it across a usable RPM band, not just
+# a sliver at peak; this also makes clutch-ups easier in general. NOT the loop threshold (that's the
+# balance-point crossing). Decoupled from DRIFT_BREAK_FORCE so drift traction-break is unaffected.
+const POWER_WHEELIE_MIN_FORCE: float = 15.0
 const FALL_GRAVITY: float = 40
 const AIR_DRAG: float = 12.0 # speed loss while airborne. TODO - turn into a curve
 const MIN_SPEED_FROM_AIR_DRAG: float = 5.0
@@ -103,7 +106,9 @@ const REVERSE_THROTTLE_MAX: float = 0.5 # on the gas = burnout/launch prep, not 
 const DRIFT_MIN_SPEED: float = 6.0 # below this it's a stationary burnout (slip stays ~0)
 const DRIFT_BRAKE_HOLD: float = 0.4 # rear-brake input that sustains a brake slide
 const DRIFT_STEER_ENTRY: float = 0.3 # steer needed to kick a brake slide loose
-const DRIFT_BREAK_FORCE: float = POWER_WHEELIE_MIN_FORCE # power×accel torque gate to break traction
+# power×accel torque gate to break traction. Kept at the wheelie gate's OLD value (was aliased to it)
+# so lowering that gate for easier wheelies/clutch-ups leaves drift feel unchanged.
+const DRIFT_BREAK_FORCE: float = 21.6
 const DRIFT_POWER_MIN_RPM_RATIO: float = 0.7 # power slide needs revs — can't lug into a burnout at low RPM
 # Stationary burnout — a max-RPM clutch dump against a held front brake spins up the rear from a standstill
 const BURNOUT_FRONT_BRAKE_MIN: float = 0.5 # front brake to pin the bike; also blocks throttle accel in _speed_calc
@@ -1086,7 +1091,7 @@ func _calc_normal_wheelie_target(bd: BikeSkinDefinition) -> float:
 		power_out = maxf(power_out, gearing_controller.get_potential_power_output())
 	var power_target = power_out * bd.acceleration * wheelie_force_to_angle
 	if power_target <= 0.0:
-		return 0.0  # no power = no wheelie; lean alone can't float one (keeps the mini planted)
+		return 0.0 # no power = no wheelie; lean alone can't float one (keeps the mini planted)
 	# Lean-back (negative) adds on top, lean-forward trims — as a fraction of max_wheelie.
 	var target = power_target - input_controller.nfx_lean * wheelie_lean_influence * max_wheelie_rad
 	return clampf(target, 0.0, max_wheelie_rad) * unstable_scale

@@ -34,7 +34,8 @@
         - [x] while wheelie-ing
         - [x] smack into player
         - [ ] smack into wall - "crashing" into layer 1 items keeps speed but you don't move, need to add some kinda check here. e.g. driving full speed into back of ramp
-        - [ ] wheelie rise only works when also leaning back it should be no matter what. also you should not be able to use front brake when in wheelie, rear barke in stoppie
+        - [x] wheelie rise only works when also leaning back it should be no matter what. also you should not be able to use front brake when in wheelie, rear barke in stoppie
+        - [ ] grom cant clutch up
         - [ ] bat item
   - [ ] tricks should feel juicy instead of focusing on realism (to extent)
     - [ ] add vibration / sound when screen shakes during acel + when skidmarks show
