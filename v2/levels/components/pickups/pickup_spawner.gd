@@ -20,6 +20,8 @@ const PICKUP_ITEM_SCENE := preload("res://levels/components/pickups/pickup_item.
 
 var _active: bool = false
 var _current: PickupItem
+## Item index currently showing, resent on a late-join/load-race sync so every peer builds the same one.
+var _current_index: int = -1
 ## Injected by StuntRaceTask on activate() — used to grant item effects (server broadcast RPCs).
 var _spawn_manager: SpawnManager
 ## Editor-only preview of the first item so placement is visible; never saved / spawned at runtime.
@@ -46,6 +48,13 @@ func deactivate() -> void:
 	_rpc_despawn.rpc()
 
 
+## Server-side. Re-send the item currently showing to a peer whose level loaded after our
+## activate broadcast. Null between collect and respawn — that peer just catches the next one.
+func sync_to_peer(peer_id: int) -> void:
+	if _current != null:
+		_rpc_spawn.rpc_id(peer_id, _current_index)
+
+
 #region spawn / despawn (server drives, all peers apply)
 
 
@@ -57,6 +66,7 @@ func _spawn_random() -> void:
 @rpc("call_local", "reliable")
 func _rpc_spawn(item_index: int) -> void:
 	_clear_current()
+	_current_index = item_index
 	_current = PICKUP_ITEM_SCENE.instantiate()
 	_current.pickup_item_definition = items[item_index]
 	add_child(_current)

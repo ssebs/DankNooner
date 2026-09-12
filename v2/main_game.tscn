@@ -39,6 +39,7 @@
 [ext_resource type="Script" uid="uid://37ehv252lkkf" path="res://managers/trick_manager.gd" id="36_trkmg"]
 [ext_resource type="Script" uid="uid://uj0l0u0v0f0d" path="res://managers/npc_traffic_manager.gd" id="37_npctm"]
 [ext_resource type="Script" uid="uid://c7rb62smxqgpp" path="res://managers/animal_spawn_manager.gd" id="38_anspm"]
+[ext_resource type="Script" path="res://managers/pickup_spawn_manager.gd" id="46_pkspm"]
 [ext_resource type="Script" uid="uid://ckudxd3spv3uh" path="res://managers/gamemodes/types/street_race/street_race_gamemode.gd" id="38_strce"]
 [ext_resource type="Script" uid="uid://chvl23bmhktxa" path="res://managers/gamemodes/types/stunt_race/stunt_race_gamemode.gd" id="40_stnrc"]
 [ext_resource type="Script" uid="uid://c4nkca4ah0fwh" path="res://managers/hud/hud_manager.gd" id="41_8jqmg"]
@@ -249,11 +250,12 @@ challenge_mode = NodePath("StateMachine/ChallengeGameMode")
 script = ExtResource("4_6bm6p")
 metadata/_custom_type_script = "uid://ba7kyb4p3trb1"
 
-[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_hud_state", "level_manager", "npc_traffic_manager", "gamemode_manager", "spawn_manager")]
+[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_hud_state", "level_manager", "npc_traffic_manager", "pickup_spawn_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("25_6krrg")
 game_mode_event_hud_state = NodePath("../../../HUDManager/StateMachine/GamemodeEventHUDState")
 level_manager = NodePath("../../../LevelManager")
 npc_traffic_manager = NodePath("../../../NPCTrafficManager")
+pickup_spawn_manager = NodePath("../../../PickupSpawnManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
@@ -350,3 +352,8 @@ npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_pk5u2")])
 [node name="AnimalSpawnManager" type="Node" parent="ManagerManager" unique_id=1218916393 node_paths=PackedStringArray("level_manager") groups=["Managers"]]
 script = ExtResource("38_anspm")
 level_manager = NodePath("../LevelManager")
+
+[node name="PickupSpawnManager" type="Node" parent="ManagerManager" unique_id=1218916394 node_paths=PackedStringArray("level_manager", "spawn_manager") groups=["Managers"]]
+script = ExtResource("46_pkspm")
+level_manager = NodePath("../LevelManager")
+spawn_manager = NodePath("../SpawnManager")
