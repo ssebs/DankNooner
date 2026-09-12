@@ -32,10 +32,10 @@
         - [x] while drifting
         - [x] while landing jumps wrong
         - [x] while wheelie-ing
-        - [ ] smack into wall
         - [x] smack into player
+        - [ ] smack into wall - "crashing" into layer 1 items keeps speed but you don't move, need to add some kinda check here. e.g. driving full speed into back of ramp
+        - [ ] wheelie rise only works when also leaning back it should be no matter what. also you should not be able to use front brake when in wheelie, rear barke in stoppie
         - [ ] bat item
-        - [ ]  wheelie rise only works when also leaning back it should be no matter what. also you should not be able to use front brake when in wheelie, rear barke in stoppie
   - [ ] tricks should feel juicy instead of focusing on realism (to extent)
     - [ ] add vibration / sound when screen shakes during acel + when skidmarks show
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
@@ -46,7 +46,7 @@
 ## Notes 📝
 > Stuff to move ASAP
 - when doing a wheelie, move to wheelie cam + right joystick does the tricks instead of holding RB and right joystick
-- "crashing" into layer 1 items keeps speed but you don't move, need to add some kinda check here. e.g. driving full speed into back of ramp
+
 - gas pump fill up minigame (should do more than just boost the bike, and it should be in first person. group of peeps do it like the race gamemodes)
 - [ ] lag when ending stunt race / no tp option
 - Exhaust pop + flame when shifting down to high rpm and giving a little gas for a second like irl
