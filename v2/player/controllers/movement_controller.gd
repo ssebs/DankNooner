@@ -45,8 +45,11 @@ class_name MovementController extends Node
 ## Scales the wheelie climb rate (bd.rotation_speed) so the front comes up less abruptly, without
 ## touching the stoppie rate.
 @export var wheelie_rise_rate_scale: float = 0.25
-## Clutch-dump torque boost to the wheelie climb rate at low speed (was a hardcoded 2.0).
-@export var wheelie_clutch_kick_boost: float = 1.0
+## Clutch-dump torque spike, biggest at low speed and fading with speed. Boosts BOTH the wheelie
+## force (so a clutch-up lofts higher than steady power — "more power") and the climb rate (so it
+## snaps up even when wheelie_rise_rate_scale is low). Higher = a stronger pop; too high loops light
+## bikes off a hard dump. See _calc_normal_wheelie_target and _apply_wheelie_pitch.
+@export var wheelie_clutch_kick_boost: float = 0.75
 ## Steering authority while up on the front wheel, above wheelie_steer_full_speed (mirrors STOPPIE_STEER_SCALE).
 @export var wheelie_steer_scale: float = 0.5
 ## At/below this speed the wheelie steering cut is lifted so tight circle wheelies stay possible.
@@ -716,12 +719,14 @@ func _apply_wheelie_pitch(
 		var spd = bd.rotation_speed
 		if in_balance_point and not punch_through:
 			spd *= _balance_point_decay_mult
-		# Clutch dump torque boost — big at low speed, fades with speed
+		var rate_scale = 1.0 if punch_through else wheelie_rise_rate_scale
+		var climb = spd * rate_scale
+		# Clutch dump snaps the front up fast — added AFTER rate_scale so a low wheelie_rise_rate_scale
+		# doesn't blunt the pop. Fades with speed (a launch move).
 		if _clutch_kick_window > 0:
 			var speed_falloff = 1.0 - clampf(speed / (bd.max_speed * 0.3), 0.0, 1.0)
-			spd += bd.rotation_speed * wheelie_clutch_kick_boost * speed_falloff
-		var rate_scale = 1.0 if punch_through else wheelie_rise_rate_scale
-		pitch_angle = move_toward(pitch_angle, wheelie_target, spd * rate_scale * delta)
+			climb += bd.rotation_speed * wheelie_clutch_kick_boost * speed_falloff
+		pitch_angle = move_toward(pitch_angle, wheelie_target, climb * delta)
 	elif pitch_angle > 0:
 		var decay_speed = (
 			bd.return_speed * _balance_point_decay_mult if in_balance_point else bd.return_speed
@@ -1088,7 +1093,11 @@ func _calc_normal_wheelie_target(bd: BikeSkinDefinition) -> float:
 	# (what the clutch-pop gate uses) or a clutch-up would loft nothing.
 	var power_out = gearing_controller.get_power_output()
 	if _clutch_kick_window > 0:
+		# Clutch dump: engagement ~0 so get_power_output() reads ~0 — use potential power, then add the
+		# dump's torque SPIKE so a clutch-up lofts harder than steady power (biggest at low speed).
+		var speed_falloff := 1.0 - clampf(speed / (bd.max_speed * 0.3), 0.0, 1.0)
 		power_out = maxf(power_out, gearing_controller.get_potential_power_output())
+		power_out *= 1.0 + wheelie_clutch_kick_boost * speed_falloff
 	var power_target = power_out * bd.acceleration * wheelie_force_to_angle
 	if power_target <= 0.0:
 		return 0.0 # no power = no wheelie; lean alone can't float one (keeps the mini planted)
