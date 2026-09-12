@@ -7,9 +7,8 @@
 - [x] make grass unstable
 - [x] reverse + turn on unstable collision should not make you crash
 - [x] burnout sound doesnt loop
-- [ ] move checkpoints so jumping over it counts
-  - [ ] like forza horizon, cant crash into gates, no height limit
-- [ ] add more arrow signs in world
+- [x] make checkpoints like forza horizon, so jumping over it counts & cant crash into gates
+- [x] add more arrow signs in world
 - [ ] mid race respawn multiple people shouldnt spawn in same place
 - [ ] peeps can start race before countdown
 - [ ] lightning / Rally Up item
