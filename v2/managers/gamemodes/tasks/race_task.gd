@@ -55,11 +55,18 @@ func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
 			else:
 				_peer_progress.erase(id)
 	var peer_id := int(player.name)
+	# Stable per-racer respawn lane, in entry order (0,1,2…) — picks a distinct
+	# slot from each checkpoint's RespawnPoints so crashed racers don't stack.
+	var respawn_slot := 0
+	for id in _peer_progress:
+		if id >= 0:
+			respawn_slot += 1
 	_peer_progress[peer_id] = {
 		"laps_done": 0,
 		"next_lap_idx": 0,
 		"waiting_for": WaitFor.START,
 		"start_ms": Time.get_ticks_msec(),
+		"respawn_slot": respawn_slot,
 	}
 	# Runner pushes rpc_show_step right after on_enter — defer the hide so it
 	# runs after that, otherwise the step label re-shows.
@@ -203,8 +210,12 @@ func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
 		p["respawn_ckpt"] = ckpt
 	else:
 		# Update persistent respawn only — don't teleport the racing player.
+		# Pick this racer's lane so crashed racers spread across the checkpoint
+		# instead of stacking on its origin.
+		var slots := ckpt.get_respawn_points()
+		var slot := slots[p["respawn_slot"] % slots.size()]
 		_runner.spawn_manager.set_respawn_point.rpc(
-			peer_id, ckpt.global_position, ckpt.global_basis
+			peer_id, slot.global_position, slot.global_basis
 		)
 		_rpc_play_checkpoint_sfx.rpc_id(peer_id)
 

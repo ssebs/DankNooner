@@ -11,9 +11,19 @@
 - [x] add more arrow signs in world
 - [x] peeps can start race before countdown
   - [x] done in theory
-- [ ] mid race respawn multiple people shouldnt spawn in same place
+- [x] mid race respawn multiple people shouldnt spawn in same place
 - [ ] lightning / Rally Up item
-- [ ] r => quick respawn, add btn for set full respawn point (if not in race)
+- [ ] tapping r to respawn after crashing respawns you, then you respawn from the time delay. when you crash and press R during a race, it should full respawn you the
+  - [ ] r => quick respawn, add btn for set full respawn point (if not in race) ????
+  same way just crashing over time will. in free roam / in race when not crashing tapping r should quick respawn you.
+- [ ] all keybinds for controller
+- [ ] improved / easier combo tricks
+  - [ ] > aka no need to hold RB / trick mod anymore
+  - [ ] when doing a wheelie:
+    - [ ] move to wheelie cam 
+    - [ ] + right joystick does the tricks instead of needing to hold RB and right joystick
+  - [ ] when catching air
+    - [ ] right joystick does the tricks
 
 
 ### Also
