@@ -11,6 +11,7 @@
 - Naked bike "Motorcycle" (https://skfb.ly/oVrTZ) by eriklys is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 - Cars Bundle by Quaternius via Poly Pizza (https://poly.pizza/bundle/Cars-Bundle-FE5IWe6OMk)
 - Gas can by Poly by Google [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/bOjbK_rGqRA)
+- Baseball bat by jeremy [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/9FPflHIzK73)
 
 
 - Quaternius

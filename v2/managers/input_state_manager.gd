@@ -5,6 +5,9 @@ class_name InputStateManager extends BaseManager
 signal input_state_changed(new_state: InputState)
 signal pause_requested
 signal unpause_requested
+## A tap (release before the hold threshold) fired a quick in-place respawn. Lets the HUD flash
+## its "Respawning..." text even for a tap too brief to observe via the hold timer.
+signal respawn_quick_fired
 
 enum InputState {
 	IN_MENU,
@@ -71,8 +74,15 @@ func _process(delta: float):
 	if Input.is_action_just_released("respawn"):
 		if not _respawn_full_fired:
 			spawn_manager.request_respawn_in_place.rpc_id(1)
+			respawn_quick_fired.emit()
 		_respawn_hold_time = 0.0
 		_respawn_full_fired = false
+
+
+## Seconds the respawn action has been held (0 when not held). Polled by RidingHUDState to
+## drive the hold-progress bar toward RESPAWN_HOLD_THRESHOLD.
+func get_respawn_hold_time() -> float:
+	return _respawn_hold_time
 
 
 #region InputState (in game vs in menu)

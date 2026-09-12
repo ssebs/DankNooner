@@ -7,6 +7,17 @@ class_name RidingHUDState extends HUDState
 const _RPM_COLOR_LOW := Color(0.103055954, 0.5546875, 0.052001953, 1)
 const _RPM_COLOR_HIGH := Color(0.85, 0.1, 0.1, 1)
 
+## Respawn hold bar: only appears once the hold passes this, so a quick tap (in-place respawn)
+## doesn't flash it. Fills toward InputStateManager.RESPAWN_HOLD_THRESHOLD.
+const _RESPAWN_SHOW_SECS := 0.1
+## Boost-gauge "ready" blue while filling; snaps to bright white when the full-respawn fires.
+const _RESPAWN_COLOR := Color(0.25, 0.69, 1.0)
+const _RESPAWN_COLOR_DONE := Color.WHITE
+const _RESPAWN_PULSE_HZ := 2.0
+const _RESPAWN_GLOW := 0.35
+## How long the "Respawning..." text lingers after a quick tap, so a brief tap still reads.
+const _RESPAWN_QUICK_FLASH_SECS := 0.6
+
 @onready var _throttle_bar: ProgressBar = %HUD_ThrottleProgress
 @onready var _rpm_bar: ProgressBar = %HUD_RPMProgress
 
@@ -22,6 +33,8 @@ const _RPM_COLOR_HIGH := Color(0.85, 0.1, 0.1, 1)
 @onready var _boost_gauge: BoostGauge = %BoostGauge
 @onready var _combo_counter: ComboCounter = %ComboCounter
 @onready var _minimap: Minimap = %Minimap
+@onready var _respawn_bar: ProgressBar = %HUD_RespawnProgress
+@onready var _respawn_label: Label = %HUD_RespawnLabel
 
 
 var player_entity: PlayerEntity
@@ -34,6 +47,12 @@ var boost_controller: BoostController
 
 var input_state_mgr: InputStateManager = null
 var _rpm_fill_style: StyleBoxFlat = null
+## Duplicated fill stylebox for the respawn hold bar, so its bg_color can pulse per-frame
+## (same trick as _rpm_fill_style).
+var _respawn_fill_style: StyleBoxFlat = null
+var _respawn_pulse_t: float = 0.0
+## Countdown keeping the quick-tap "Respawning..." text up for a split second after release.
+var _respawn_flash_t: float = 0.0
 ## Local-only edge tracking for the boost button, so a press with nothing banked can blink
 ## the gauge. Purely cosmetic — kept out of the synced boost_prev_held, which the rollback
 ## tick owns and must not be perturbed by the HUD.
@@ -70,6 +89,9 @@ func Enter(_state_context: StateContext):
 	_rpm_fill_style = _rpm_bar.get_theme_stylebox("fill").duplicate() as StyleBoxFlat
 	_rpm_bar.add_theme_stylebox_override("fill", _rpm_fill_style)
 
+	_respawn_fill_style = _respawn_bar.get_theme_stylebox("fill").duplicate() as StyleBoxFlat
+	_respawn_bar.add_theme_stylebox_override("fill", _respawn_fill_style)
+
 	# Discrete events via signals
 	gearing_controller.gear_changed.connect(_on_gear_changed)
 	trick_controller.trick_started.connect(_on_trick_started)
@@ -80,6 +102,7 @@ func Enter(_state_context: StateContext):
 	player_entity.respawned.connect(_on_respawned)
 	# Local-only: expand the minimap into the full map while IN_MAP.
 	input_state_mgr.input_state_changed.connect(_on_input_state_changed)
+	input_state_mgr.respawn_quick_fired.connect(_on_respawn_quick_fired)
 
 	# Manual inits
 	_on_gear_changed(1)
@@ -102,6 +125,7 @@ func Exit(_state_context: StateContext):
 	player_entity.uncrashed.disconnect(_on_respawned)
 	player_entity.respawned.disconnect(_on_respawned)
 	input_state_mgr.input_state_changed.disconnect(_on_input_state_changed)
+	input_state_mgr.respawn_quick_fired.disconnect(_on_respawn_quick_fired)
 
 	hide_ui()
 
@@ -162,6 +186,32 @@ func Physics_Update(delta: float):
 	var comboing: bool = trick_controller.combo_time > 0.0 and not player_entity.is_crashed
 	var combo: int = trick_controller.combo_multiplier if comboing else 1
 	_combo_counter.set_combo(combo, comboing)
+
+	# Respawn feedback. A tap shows "Respawning..." for a split second; holding past
+	# _RESPAWN_SHOW_SECS switches to "Full respawning..." with the bar charging toward the
+	# full-respawn threshold. The bar hits solid white at 100% so you can see you held long enough.
+	_respawn_flash_t = maxf(_respawn_flash_t - delta, 0.0)
+	var respawn_hold := input_state_mgr.get_respawn_hold_time()
+	if respawn_hold > _RESPAWN_SHOW_SECS:
+		_respawn_label.text = tr("HUD_FULL_RESPAWNING")
+		_respawn_label.visible = true
+		_respawn_bar.visible = true
+		var progress := clampf(respawn_hold / InputStateManager.RESPAWN_HOLD_THRESHOLD, 0.0, 1.0)
+		_respawn_bar.value = progress * 100.0
+		if progress >= 1.0:
+			_respawn_fill_style.bg_color = _RESPAWN_COLOR_DONE
+		else:
+			_respawn_pulse_t += delta
+			var glow := (sin(_respawn_pulse_t * TAU * _RESPAWN_PULSE_HZ) * 0.5 + 0.5) * _RESPAWN_GLOW
+			_respawn_fill_style.bg_color = _RESPAWN_COLOR.lerp(Color.WHITE, glow)
+	elif respawn_hold > 0.0 or _respawn_flash_t > 0.0:
+		# Early press, or the lingering flash after a quick tap — quick respawn intent, no bar.
+		_respawn_label.text = tr("HUD_RESPAWNING")
+		_respawn_label.visible = true
+		_respawn_bar.visible = false
+	else:
+		_respawn_label.visible = false
+		_respawn_bar.visible = false
 
 	# 1 Hz netfox readout — rollback resim volume + state property traffic, for spotting
 	# input starvation / correction storms during playtests.
@@ -247,6 +297,11 @@ func _on_crashed(_peer_id: int):
 
 func _on_respawned():
 	_game_msg.visible = false
+
+
+## Tap (quick in-place respawn) fired — keep "Respawning..." up briefly even for a fast tap.
+func _on_respawn_quick_fired():
+	_respawn_flash_t = _RESPAWN_QUICK_FLASH_SECS
 
 
 #endregion

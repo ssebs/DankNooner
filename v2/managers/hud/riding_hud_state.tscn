@@ -27,6 +27,13 @@ corner_radius_bottom_left = 4
 expand_margin_left = 12.0
 expand_margin_right = 12.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_respawn"]
+bg_color = Color(0.25, 0.69, 1, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
 [node name="RidingHUDState" type="Node" unique_id=1177239669]
 script = ExtResource("1_8neiw")
 metadata/_custom_type_script = "uid://ce4n2xjrhv4j8"
@@ -229,3 +236,29 @@ size_flags_horizontal = 0
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
+
+[node name="RespawnCenter" type="CenterContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1500000001]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="RespawnCluster" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/RespawnCenter" unique_id=1500000003]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="HUD_RespawnLabel" type="Label" parent="UI/AspectContainer/MarginContainer/RespawnCenter/RespawnCluster" unique_id=1500000004]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "HUD_RESPAWNING"
+horizontal_alignment = 1
+
+[node name="HUD_RespawnProgress" type="ProgressBar" parent="UI/AspectContainer/MarginContainer/RespawnCenter/RespawnCluster" unique_id=1500000002]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(360, 22)
+layout_mode = 2
+theme_override_styles/background = ExtResource("3_j31af")
+theme_override_styles/fill = SubResource("StyleBoxFlat_respawn")
+step = 1.0
+value = 0.0
+show_percentage = false

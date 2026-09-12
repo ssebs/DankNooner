@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://cv3uyj3m3nj6t"]
 
 [ext_resource type="Script" uid="uid://cttkoxlgp6xhk" path="res://levels/components/pickups/pickup_spawner.gd" id="1_tmwld"]
+[ext_resource type="Script" uid="uid://dsfcoucwjtequ" path="res://resources/props/pickup_item_definition.gd" id="2_i5tgj"]
+[ext_resource type="Resource" uid="uid://b7dhsqu1yft5a" path="res://levels/components/pickups/bat_pickup_definition.tres" id="3_ixykb"]
 
 [node name="PickupSpawner" type="Marker3D" unique_id=761218876]
 script = ExtResource("1_tmwld")
+items = Array[ExtResource("2_i5tgj")]([ExtResource("3_ixykb")])

@@ -25,7 +25,7 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] R to quick respawn, hold R to full respawn
-  - [ ] function
+  - [x] function
   - [ ] add loading bar when holding (also show when tapping)
   - [ ] pressing respawn before crash respawn ends up respawning you 2x.
 - [ ] get fun gameplay loop going
@@ -41,6 +41,7 @@
         - [x] grom cant clutch up
         - [ ] smack into wall - "crashing" into layer 1 items keeps speed but you don't move, need to add some kinda check here. e.g. driving full speed into back of ramp
         - [ ] bat item
+          - [ ] when collecting bat, show on player for 5s, auto swinging back and forth (play animation). if other player is in range then make them get speed wobbles.
   - [ ] tricks should feel juicy instead of focusing on realism (to extent)
     - [ ] add vibration / sound when screen shakes during acel + when skidmarks show
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify

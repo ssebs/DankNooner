@@ -1,10 +1,12 @@
 [gd_resource type="Resource" script_class="PickupItemDefinition" format=3 uid="uid://b7dhsqu1yft5a"]
 
-[ext_resource type="PackedScene" uid="uid://cu4qunatj2j2r" path="res://levels/assets/props/gas_can.glb" id="1_leuna"]
+[ext_resource type="PackedScene" uid="uid://cf0bolmhpsorl" path="res://levels/assets/props/BaseballBat.glb" id="1_25fb5"]
 [ext_resource type="Script" uid="uid://dsfcoucwjtequ" path="res://resources/props/pickup_item_definition.gd" id="2_udwtp"]
 
 [resource]
 script = ExtResource("2_udwtp")
-mesh_res = ExtResource("1_leuna")
+mesh_res = ExtResource("1_25fb5")
+mesh_rotation_offset_degrees = Vector3(45, 0, 0)
+mesh_scale_multiplier = Vector3(3, 3, 3)
 item_type = 1
 metadata/_custom_type_script = "uid://dsfcoucwjtequ"
