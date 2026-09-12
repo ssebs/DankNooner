@@ -27,6 +27,7 @@
 - [ ] [Gameplay feedback notes](./_ScratchPad.md#gameplay-feedback-notes)
   - [ ] todo now
 - [ ] show/hide objects if they get past checkpoint in race (ArrowWall4_DEPENDS_ON_CheckpointMarker9)
+  - [ ] i want to be able to spawn/despawn items sequentially in the race, aka have a Node in the children of StuntRaceTask called "DIV" that has a export var pointing to a checkpoint marker, so once you go thru that marker the items under this DIV item are then spawned and the ones before it are despawned. so you can go back/forth on the same road in diff directions
 - [ ] add vibration on brake danger / screen shake
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
