@@ -146,6 +146,10 @@ var _was_reversing: bool = false
 # Bat pickup swing (rider pose + %BaseballBat mesh). Looping visual, self-stopped after a few sec.
 var _bat_swing_anim: Animation
 var _bat_swing_layer: CustomAnimPlayer.Layer
+# Wheelie cam: reframes the FPS/TPS cam markers while in the balance point. Local only.
+var _wheelie_cam_anim: Animation
+var _wheelie_cam_layer: CustomAnimPlayer.Layer
+var _was_in_balance_point: bool = false
 
 # Proc pose carried between frames (no anim deltas applied). Keeping this separate
 # from what gets committed to the nodes prevents anim-delta drift across frames —
@@ -255,6 +259,7 @@ func _update_riding(delta: float) -> void:
 	bike_skin.rotate_wheels(movement_controller.speed, rear_speed, delta, trick_controller.is_in_wheelie())
 
 	_update_reverse_anim()
+	_update_wheelie_cam_anim()
 
 	# Snapshot proc-only state for next frame, then layer anim deltas onto a copy.
 	_proc_pose = pose
@@ -484,6 +489,29 @@ func _update_reverse_anim() -> void:
 	_was_reversing = reversing
 
 
+## Reframe the camera on entering the wheelie balance point; unwind on exit. Local only — the
+## anim drives the FPS/TPS cam markers, which only the owning client's camera reads. Mirrors the
+## back_up enter/exit edge (play_one_shot + hold, reverse to t=0).
+func _update_wheelie_cam_anim() -> void:
+	if not player_entity.is_local_client or _wheelie_cam_anim == null:
+		return
+	var in_bp := movement_controller.in_balance_point
+	if in_bp and not _was_in_balance_point:
+		# Re-entered while a reverse-out is mid-flight — flip it forward instead of a new layer.
+		if _wheelie_cam_layer != null and _wheelie_cam_layer.is_playing():
+			_wheelie_cam_layer.speed = 1.0
+			_wheelie_cam_layer.hold_at_end = true
+			_wheelie_cam_layer.target_weight = 1.0
+		else:
+			_wheelie_cam_layer = _anim_runner.play_one_shot(_wheelie_cam_anim, 1.0)
+	elif not in_bp and _was_in_balance_point:
+		if _wheelie_cam_layer != null and _wheelie_cam_layer.is_playing():
+			_wheelie_cam_layer.speed = -1.0
+			_wheelie_cam_layer.hold_at_end = false
+			_wheelie_cam_layer.target_weight = 1.0
+	_was_in_balance_point = in_bp
+
+
 func _update_idle_timer(delta: float) -> void:
 	# Reversing keeps us in RIDING — idle anim would fight the back_up pose.
 	if movement_controller.is_reversing:
@@ -564,6 +592,9 @@ func initialize() -> void:
 	if ik_anim_player.has_animation("bat_swing"):
 		_bat_swing_anim = ik_anim_player.get_animation("bat_swing")
 		_fixup_anim_paths(_bat_swing_anim)
+	if ik_anim_player.has_animation("wheelie_cam_start"):
+		_wheelie_cam_anim = ik_anim_player.get_animation("wheelie_cam_start")
+		_fixup_anim_paths(_wheelie_cam_anim)
 	# Bat rests hidden — the RESET pose leaves it visible, and bat_swing shows it while swinging.
 	player_entity.get_node("%BaseballBat").visible = false
 
@@ -684,6 +715,8 @@ func start_ragdoll(launch_impulse: Vector3 = Vector3.ZERO) -> void:
 	_back_up_loop_layer = null
 	_was_reversing = false
 	_bat_swing_layer = null
+	_wheelie_cam_layer = null
+	_was_in_balance_point = false
 	character_skin.disable_ik()
 	character_skin.start_ragdoll(launch_impulse)
 
@@ -710,6 +743,8 @@ func do_reset():
 	_back_up_loop_layer = null
 	_was_reversing = false
 	_bat_swing_layer = null
+	_wheelie_cam_layer = null
+	_was_in_balance_point = false
 	_proc_pose = null
 
 

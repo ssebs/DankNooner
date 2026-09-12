@@ -122,6 +122,7 @@ const DRIFT_YAW_RATE: float = 1.6 # rad/s the heading carves per full steer whil
 const DRIFT_SPEED_SCRUB: float = 0.6 # speed bleed per sec, proportional to |slip_angle|
 const DRIFT_MAX_SLIP_ANGLE_DEG: float = 70.0 # clamp just past the 60° spinout so crash fires, no wrap
 const WOBBLE_EPS: float = 0.03 # |wobble_angle|/|wobble_vel| below this counts as settled (snaps clean)
+const BALANCE_LOCK_INPUT_EPS: float = 0.1 # throttle/brake/lean "touch" that releases the balance lock
 var is_reversing: bool = false
 var speed: float = 0.0
 var roll_angle: float = 0.0 # lean left/right
@@ -140,6 +141,13 @@ var wobble_brake_hold_time: float = 0.0 # brake-slide hold accumulator (trigger 
 var is_wobbling: bool = false
 # true ONLY in a braking-held stoppie (not a coast/landing/burnout); gates scoring + washout crash
 var is_stoppie: bool = false
+# true while pitch sits in the wheelie balance window. Re-derived each tick from the synced
+# pitch_angle (not synced directly). Gates the right-stick trick tweaks + the wheelie cam.
+var in_balance_point: bool = false
+# Wheelie balance lock: holds the bike hands-free at the balance point (pitch + speed frozen)
+# until released. Synced (persistent sim state). Toggled by an RB tap in the balance point, or
+# via set_balance_locked() so a future powerup item can drive the same mechanism.
+var balance_locked: bool = false
 
 var air_pitch_total: float = 0.0 # cumulative pitch rotation while airborne (for flip counting)
 var _air_time: float = 0.0 # time since takeoff (for wheelie grace window)
@@ -150,6 +158,8 @@ var _default_spawn_timer: float = 1.0
 var _spawn_timer: float = _default_spawn_timer
 
 # Wheelie physics
+var _rb_prev_held: bool = false  # synced — RB rising-edge detection for the balance-lock toggle
+var _lock_throttle_released: bool = false  # synced — rule C: re-pressing throttle exits after a release
 var _prev_clutch_held: bool = false
 var _clutch_kick_window: float = 0.0
 var _balance_point_decay_mult: float = 0.85
@@ -423,6 +433,10 @@ func _speed_calc(delta: float):
 	var boost_accel: float = BoostController.BOOST_ACCEL_MULT if is_boosting else 1.0
 	var boost_speed: float = BoostController.BOOST_SPEED_MULT if is_boosting else 1.0
 
+	# Balance lock hovers the bike — hold speed steady (pitch is held in _pitch_angle_calc).
+	if balance_locked:
+		return
+
 	# Airborne
 	if not _is_on_floor:
 		is_reversing = false
@@ -590,13 +604,16 @@ func _velocity_calc(delta: float):
 func _pitch_angle_calc(delta: float):
 	_update_clutch_dump_detection()
 	is_stoppie = false # _stoppie_calc re-asserts it below; stays false when airborne / in a wheelie / on steep ground
+	in_balance_point = false # re-asserted below when in the window; false when airborne / wobbling / steep
 
 	if is_wobbling: # can't pop tricks mid-tank-slapper — bleed pitch to neutral
+		balance_locked = false
 		pitch_angle = move_toward(pitch_angle, 0.0, player_entity.bike_definition.return_speed * delta)
 		return
 
 	# Airborne trick control — lean to flip, no decay (weightless)
 	if not _is_on_floor:
+		balance_locked = false
 		if input_controller.nfx_lean != 0:
 			# Lean back (negative) = backflip (positive pitch), lean forward = frontflip
 			var rotation_delta = input_controller.nfx_lean * AIR_TRICK_ROTATION_SPEED * delta
@@ -611,15 +628,31 @@ func _pitch_angle_calc(delta: float):
 		_stoppie_locked_by_wheelie = true
 	var bp_low = deg_to_rad(bd.wheelie_balance_point_deg - bd.wheelie_balance_point_width_deg)
 	var bp_high = deg_to_rad(bd.wheelie_balance_point_deg + bd.wheelie_balance_point_width_deg)
-	var in_balance_point = pitch_angle >= bp_low and pitch_angle <= bp_high
+	in_balance_point = pitch_angle >= bp_low and pitch_angle <= bp_high
 	var above_balance_point = pitch_angle > bp_high
 
 	# Disable tricks on steep surfaces — decay pitch back to neutral
 	var surface_angle = player_entity.up_direction.angle_to(Vector3.UP)
 	if surface_angle > deg_to_rad(TRICK_DISABLE_ANGLE):
+		balance_locked = false
 		if pitch_angle != 0:
 			pitch_angle = move_toward(pitch_angle, 0, bd.return_speed * delta)
 		return
+
+	# Balance lock: RB-tap toggle + exit rules, then hover at the balance point. Leaning fwd/back
+	# nudges the held pitch; drift out of the sweet spot and the lock drops (rider lost balance).
+	_update_balance_lock()
+	if balance_locked:
+		if input_controller.nfx_lean != 0.0:
+			pitch_angle -= input_controller.nfx_lean * bd.rotation_speed * delta
+		else:
+			pitch_angle = move_toward(
+				pitch_angle, deg_to_rad(bd.wheelie_balance_point_deg), bd.rotation_speed * delta
+			)
+		if pitch_angle >= bp_low and pitch_angle <= bp_high:
+			in_balance_point = true
+			return
+		set_balance_locked(false)  # left the sweet spot — fall through to normal wheelie physics
 
 	# --- Wheelie ---
 	var wheelie_target = 0.0
@@ -703,6 +736,38 @@ func _pitch_angle_calc(delta: float):
 		_stoppie_calc(bd, in_stoppie, delta)
 
 	# TODO: easy mode clamp
+
+
+## Engage/release the wheelie balance lock. Exposed as a plain toggle so a pickup item can drive
+## the same hands-free hold, not just the RB tap. Resets the throttle-release gate on engage.
+func set_balance_locked(locked: bool) -> void:
+	balance_locked = locked
+	_lock_throttle_released = false
+
+
+## RB-tap toggle + exit rules for the balance lock. Runs after in_balance_point is known this tick.
+func _update_balance_lock() -> void:
+	var rb := input_controller.nfx_trick_held
+	var rb_tapped := rb and not _rb_prev_held
+	_rb_prev_held = rb
+
+	if balance_locked:
+		# Rule C: throttle can be released while locked, but touching it again releases the lock.
+		if input_controller.nfx_throttle < BALANCE_LOCK_INPUT_EPS:
+			_lock_throttle_released = true
+		var throttle_exit := (
+			_lock_throttle_released and input_controller.nfx_throttle >= BALANCE_LOCK_INPUT_EPS
+		)
+		# Lean is NOT an exit — it adjusts the held pitch in _pitch_angle_calc, dropping the lock
+		# only if it leaves the sweet spot. Brake still bails immediately.
+		var control_exit := (
+			_effective_front_brake() > BALANCE_LOCK_INPUT_EPS
+			or _effective_rear_brake() > BALANCE_LOCK_INPUT_EPS
+		)
+		if rb_tapped or throttle_exit or control_exit:
+			set_balance_locked(false)
+	elif rb_tapped and in_balance_point:
+		set_balance_locked(true)
 
 
 ## Apply wheelie pitch toward target, or decay back to 0. punch_through = the bike has the power to
@@ -1160,6 +1225,10 @@ func do_reset():
 	slip_angle = 0.0
 	is_drifting = false
 	is_stoppie = false
+	in_balance_point = false
+	balance_locked = false
+	_rb_prev_held = false
+	_lock_throttle_released = false
 	_stoppie_locked_by_wheelie = false
 	wobble_angle = 0.0
 	wobble_vel = 0.0

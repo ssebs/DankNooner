@@ -17,6 +17,9 @@ enum CameraMode { TPS = 0, FPS, NONE }
 @export var pitch_min_deg: float = -20.0
 @export var pitch_max_deg: float = 60.0
 @export var tps_look_height: float = 0.7
+## Orbit pitch (deg) the TPS base view rotates to while in the wheelie balance point — the
+## bike rears up, so the rest camera tilts up to frame it. Lerps in/out; mouse can still override.
+@export var wheelie_cam_orbit_pitch_deg: float = 10.0
 
 @export_group("FPS Look")
 @export var fps_pitch_min_deg: float = -30.0
@@ -141,14 +144,23 @@ func _process(delta: float):
 
 
 func _has_cam_input(mouse: Vector2) -> bool:
-	# Trick mod button repurposes the right stick for trick input — lock the camera.
-	if input_controller.nfx_trick_held:
-		return false
+	var mouse_input := mouse.length_squared() > 0.01
+	# When the right stick is trick input, only the mouse aims the camera (KBM keeps looking
+	# around; a gamepad's stick is busy with tricks, so its camera holds at the reframed base).
+	if _stick_is_trick_input():
+		return mouse_input
 	return (
-		mouse.length_squared() > 0.01
+		mouse_input
 		or absf(input_controller.nfx_cam_x) > 0.05
 		or absf(input_controller.nfx_cam_y) > 0.05
 	)
+
+
+## True when the right stick is consumed by trick input (airborne / wheelie balance point / RB
+## for TWO_LEFT_FEET), so the joystick must not also drive the camera. The mouse still can.
+func _stick_is_trick_input() -> bool:
+	var mc := player_entity.movement_controller
+	return input_controller.nfx_trick_held or not mc._is_on_floor or mc.in_balance_point
 
 
 #region TPS orbit
@@ -157,18 +169,26 @@ func _update_tps_input(delta: float, mouse: Vector2):
 		_orbit_yaw -= mouse.x * _mouse_cam_sens
 		_orbit_pitch -= mouse.y * _mouse_cam_sens
 
-		_orbit_yaw -= input_controller.nfx_cam_x * _joy_cam_sens * delta
-		_orbit_pitch += input_controller.nfx_cam_y * invert_cam * _joy_cam_sens * delta
+		# Skip the joystick while it's trick input — the mouse branch above still applies.
+		if not _stick_is_trick_input():
+			_orbit_yaw -= input_controller.nfx_cam_x * _joy_cam_sens * delta
+			_orbit_pitch += input_controller.nfx_cam_y * invert_cam * _joy_cam_sens * delta
 
 		_orbit_pitch = clampf(_orbit_pitch, deg_to_rad(pitch_min_deg), deg_to_rad(pitch_max_deg))
 		_orbit_yaw = wrapf(_orbit_yaw, -PI, PI)
 		_no_input_timer = 0.0
 	else:
+		# In the balance point the base view rotates to the wheelie framing and settles there
+		# right away; otherwise settle to the normal rest after the idle delay.
+		var wheelie_cam := player_entity.movement_controller.in_balance_point
+		var target_pitch: float = (
+			deg_to_rad(wheelie_cam_orbit_pitch_deg) if wheelie_cam else _default_orbit_pitch
+		)
 		_no_input_timer += delta
-		if _no_input_timer >= reset_delay:
+		if wheelie_cam or _no_input_timer >= reset_delay:
 			var t: float = reset_speed * delta
 			_orbit_yaw = lerpf(_orbit_yaw, 0.0, t)
-			_orbit_pitch = lerpf(_orbit_pitch, _default_orbit_pitch, t)
+			_orbit_pitch = lerpf(_orbit_pitch, target_pitch, t)
 
 
 func _update_tps_camera():
@@ -213,10 +233,12 @@ func _update_fps_input(delta: float, mouse: Vector2):
 		_fps_yaw_offset -= mouse.x * _mouse_cam_sens
 		_fps_pitch_offset -= mouse.y * _mouse_cam_sens
 
-		_fps_yaw_offset -= input_controller.nfx_cam_x * _joy_cam_sens * _fps_cam_offset * delta
-		_fps_pitch_offset += (
-			input_controller.nfx_cam_y * invert_cam * _joy_cam_sens * _fps_cam_offset * delta
-		)
+		# Skip the joystick while it's trick input — the mouse branch above still applies.
+		if not _stick_is_trick_input():
+			_fps_yaw_offset -= input_controller.nfx_cam_x * _joy_cam_sens * _fps_cam_offset * delta
+			_fps_pitch_offset += (
+				input_controller.nfx_cam_y * invert_cam * _joy_cam_sens * _fps_cam_offset * delta
+			)
 
 		_fps_yaw_offset = clampf(
 			_fps_yaw_offset, deg_to_rad(-fps_yaw_limit_deg), deg_to_rad(fps_yaw_limit_deg)
