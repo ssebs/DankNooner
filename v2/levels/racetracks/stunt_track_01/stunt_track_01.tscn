@@ -800,7 +800,7 @@ transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -926
 [node name="Ramp8" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1633736762 instance=ExtResource("6_w1aki")]
 transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, -694.99994, 0, 461.99997)
 
-[node name="PickupSpawner1" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=761218876 instance=ExtResource("21_mn4lr")]
+[node name="PickupSpawner1" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1012215384 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 5.8671966, 25.5)
 
 [node name="PickupSpawner2" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1008318155 instance=ExtResource("21_mn4lr")]
@@ -922,13 +922,34 @@ height = 64.0
 [node name="ArrowWall3" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1003909341 instance=ExtResource("25_60x1b")]
 transform = Transform3D(-4.3711374e-08, 5.9604645e-08, 1, 1, -1.7763568e-15, 4.3711392e-08, 0, 1, -5.9604645e-08, -351.87894, 5.250122, 461.38425)
 
+[node name="ArrowWall15" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=289439854 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371137e-08, -1, 1.5893256e-08, 1, -4.3711378e-08, 2.0368969e-14, 0, 1.5893256e-08, 1, -400.87894, 5.2501197, 545.8843)
+
+[node name="ArrowWall16" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1141342731 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371137e-08, -0.8660254, -0.5, 1, -3.7855163e-08, -2.1855666e-08, 0, -0.5, 0.8660254, -521.06195, 5.2501144, 537.40704)
+height = 30.0
+
+[node name="ArrowWall18" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1555154824 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371137e-08, -0.95409244, 0.29951233, 1, -4.170469e-08, 1.3092114e-08, 0, 0.29951233, 0.95409244, -624.1954, 5.25011, 480.12396)
+
+[node name="ArrowWall19" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1972442618 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -784.0772, 5.262818, 483.01154)
+
+[node name="ArrowWall20" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1072716656 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -911.5772, -2.2371876, 483.01154)
+height = 30.0
+
 [node name="ArrowWall5" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1593677337 instance=ExtResource("25_60x1b")]
 transform = Transform3D(-4.3711385e-08, 4.371139e-08, 1, 1, 0, 4.371139e-08, 0, 1, -4.371139e-08, -194.5, 4.999997, 22.000002)
 height = 45.0
 
 [node name="ArrowWall4" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=658731916 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711374e-08, -0.5000001, -0.8660253, 1, -2.1855696e-08, -3.785514e-08, 0, -0.8660253, 0.5000001, -532.0571, 5.249986, 536.2814)
-height = 60.0
+transform = Transform3D(-4.3711374e-08, -0.5000001, -0.8660253, 1, -2.1855696e-08, -3.785514e-08, 0, -0.8660253, 0.5000001, -540.2581, 5.2499857, 519.0769)
+height = 26.0
+
+[node name="ArrowWall17" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1336520665 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711374e-08, -1, 1.7881393e-07, 1, -4.3711378e-08, 2.3092639e-14, 0, 1.7881393e-07, 1, -533.12195, 5.249986, 449.2577)
+height = 55.0
 
 [node name="ArrowWall6" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=214698557 instance=ExtResource("25_60x1b")]
 transform = Transform3D(-4.3711374e-08, 1, -5.9604645e-08, 1, 4.3711367e-08, 1.2434498e-14, 0, -5.9604645e-08, -1, -943.58105, 5.2552037, 511.3767)
@@ -992,7 +1013,7 @@ first_checkpoint = NodePath("CheckpointMarker1")
 first_spawner = NodePath("PickupSpawner1")
 
 [node name="ArrowWall2" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1639704062 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, 0.50000006, 0.8660254, 1, 2.185569e-08, 3.7855173e-08, 0, 0.8660254, -0.50000006, -773.6683, 5.5000005, 465.8718)
+transform = Transform3D(-4.371138e-08, 0.50000006, 0.8660254, 1, 2.185569e-08, 3.7855173e-08, 0, 0.8660254, -0.50000006, -776.8333, 5.5000005, 465.38974)
 
 [node name="ArrowWall3" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1440237634 instance=ExtResource("25_60x1b")]
 transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, -529.18304, 5.5000114, 638.30634)
@@ -1000,12 +1021,36 @@ transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.55
 [node name="ArrowWall5" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=805742350 instance=ExtResource("25_60x1b")]
 transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, -529.18304, 5.5000114, 676.80634)
 
+[node name="ArrowWall8" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1839600488 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, -462.18304, 5.5000143, 676.80634)
+
+[node name="ArrowWall9" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=650967640 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, -397.68304, 5.500017, 676.80634)
+
+[node name="ArrowWall10" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=644254049 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, -334.18304, 5.50002, 676.80634)
+
+[node name="ArrowWall11" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1888310639 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, -269.68304, 5.500023, 676.80634)
+
+[node name="ArrowWall12" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1013451802 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 0.96592575, -0.25881916, 1, 4.2221956e-08, -1.1313334e-08, 0, -0.25881916, -0.96592575, -271.2013, 5.500023, 631.072)
+
 [node name="ArrowWall6" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1755254922 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, 0.49999988, -0.8660254, 1, 2.185569e-08, -3.785516e-08, 0, -0.8660254, -0.49999988, -169.33174, 5.5000277, 658.4027)
+transform = Transform3D(-4.371138e-08, 0.25881892, -0.96592575, 1, 1.1313339e-08, -4.222194e-08, 0, -0.96592575, -0.25881892, -167.43684, 5.5000277, 649.43024)
+height = 46.0
+
+[node name="ArrowWall13" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1400049010 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-5.2125306e-16, -1.1924879e-08, -0.9999999, 1, -4.3711385e-08, 0, -4.371139e-08, -0.9999999, 1.1924879e-08, -156.88792, 5.500028, 566.34564)
+height = 76.0
 
 [node name="ArrowWall7" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=231303715 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, 0.8660252, -0.5, 1, 3.7855163e-08, -2.1855685e-08, 0, -0.5, -0.8660252, -188.45616, 5.5000267, 398.95877)
+transform = Transform3D(-4.371138e-08, 0.8660252, -0.5, 1, 3.7855163e-08, -2.1855685e-08, 0, -0.5, -0.8660252, -180.84494, 5.500027, 395.14178)
 height = 55.0
+
+[node name="ArrowWall14" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1820189027 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 0.45227775, -0.891877, 1, 1.976969e-08, -3.8985167e-08, 0, -0.891877, -0.45227775, -214.6275, 5.5000257, 428.3274)
+height = 44.0
 
 [node name="CheckpointMarker1" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=770419617 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -822.5, 0.5781338, 462.5)

@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://i5gn7vx2atly"]
 
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_jbldn"]
+[ext_resource type="PackedScene" uid="uid://cv3uyj3m3nj6t" path="res://levels/components/pickups/pickup_spawner.tscn" id="2_mru51"]
+[ext_resource type="Script" uid="uid://dsfcoucwjtequ" path="res://resources/props/pickup_item_definition.gd" id="3_8t3bl"]
+[ext_resource type="Resource" uid="uid://cqeidudggyae1" path="res://levels/components/pickups/gas_can_pickup_definition.tres" id="4_xpnjo"]
 
 [node name="GasStation" type="Node3D" unique_id=1355590988]
 
@@ -170,3 +173,22 @@ width = 8.0
 height = 0.1
 depth = 4.0
 color_preset = 1
+
+[node name="PickupSpawner5" parent="." unique_id=868781105 instance=ExtResource("2_mru51")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 1.5249999, 1.5)
+
+[node name="PickupSpawner2" parent="." unique_id=2087922718 instance=ExtResource("2_mru51")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 1.5249999, 4)
+items = Array[ExtResource("3_8t3bl")]([ExtResource("4_xpnjo")])
+
+[node name="PickupSpawner4" parent="." unique_id=579270096 instance=ExtResource("2_mru51")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1.5249999, 4)
+items = Array[ExtResource("3_8t3bl")]([ExtResource("4_xpnjo")])
+
+[node name="PickupSpawner7" parent="." unique_id=2005526371 instance=ExtResource("2_mru51")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5249999, -1.5)
+items = Array[ExtResource("3_8t3bl")]([ExtResource("4_xpnjo")])
+
+[node name="PickupSpawner8" parent="." unique_id=1925172981 instance=ExtResource("2_mru51")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5249999, 9)
+items = Array[ExtResource("3_8t3bl")]([ExtResource("4_xpnjo")])
