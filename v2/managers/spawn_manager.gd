@@ -35,6 +35,11 @@ func _ready():
 func _physics_process(delta: float):
 	if Engine.is_editor_hint() or multiplayer.multiplayer_peer == null or !multiplayer.is_server():
 		return
+	# Runs every physics frame from startup, so current_level can be null before the first
+	# level spawns; menu/background levels (BG_GRAY_LEVEL) also have no player_spawn_pos to
+	# scan. Either way there are no players to breadcrumb — bail (mirrors _on_lobby_players_updated).
+	if level_manager.current_level == null or level_manager.current_level.no_player_spawn_needed:
+		return
 	_breadcrumb_accum -= delta
 	if _breadcrumb_accum > 0.0:
 		return
@@ -275,6 +280,10 @@ func add_player_locally(peer_id: int, player_def_dict: Dictionary):
 ## Remove player node locally (no authority check)
 func remove_player_locally(peer_id: int):
 	_flat_breadcrumbs.erase(peer_id)  # server-only dict; harmless no-op on clients
+	# No current level or a menu/background level with no player_spawn_pos — nothing to remove.
+	# Guards the raw deref below (this doesn't route through _get_player_by_peer_id).
+	if level_manager.current_level == null or level_manager.current_level.no_player_spawn_needed:
+		return
 	if !level_manager.current_level.player_spawn_pos.has_node(str(peer_id)):
 		return
 
@@ -283,6 +292,11 @@ func remove_player_locally(peer_id: int):
 
 ## Get player from multiplayer peer id found in level_manager.current_level
 func _get_player_by_peer_id(player_peer_id: int) -> PlayerEntity:
+	# No current level (startup / mid-swap) or a menu/background level with no player_spawn_pos —
+	# no players to find. Return null (the "not spawned" contract every caller already handles)
+	# rather than null-deref get_children.
+	if level_manager.current_level == null or level_manager.current_level.no_player_spawn_needed:
+		return null
 	var player_node: PlayerEntity
 	for child in level_manager.current_level.player_spawn_pos.get_children():
 		if child is PlayerEntity:
