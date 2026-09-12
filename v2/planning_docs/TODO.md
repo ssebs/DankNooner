@@ -37,6 +37,7 @@
         - [ ] bat item
         - [ ]  wheelie rise only works when also leaning back it should be no matter what. also you should not be able to use front brake when in wheelie, rear barke in stoppie
   - [ ] tricks should feel juicy instead of focusing on realism (to extent)
+    - [ ] add vibration / sound when screen shakes during acel + when skidmarks show
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
 - [ ] fix game breaking bugs
 
