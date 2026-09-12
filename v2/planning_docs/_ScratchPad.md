@@ -9,8 +9,9 @@
 - [x] burnout sound doesnt loop
 - [x] make checkpoints like forza horizon, so jumping over it counts & cant crash into gates
 - [x] add more arrow signs in world
+- [x] peeps can start race before countdown
+  - [x] done in theory
 - [ ] mid race respawn multiple people shouldnt spawn in same place
-- [ ] peeps can start race before countdown
 - [ ] lightning / Rally Up item
 - [ ] r => quick respawn, add btn for set full respawn point (if not in race)
 

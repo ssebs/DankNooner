@@ -99,7 +99,7 @@ var username: String:
 # Crash state (synced)
 var is_crashed: bool = false
 
-## Synced freeze MovementController honors in rollback, so client prediction freezes too. Set by CountdownTask.
+## Synced freeze MovementController honors in rollback. Set only via rb_lock_movement/rb_unlock_movement.
 var movement_locked: bool = false
 
 # Brake danger (local, display only)
@@ -121,6 +121,10 @@ var rb_add_boost: bool = false
 ## Set by SpawnManager.max_boost_player (debug console) — fills the meter. Rides the same
 ## rollback tick + resim machinery as rb_add_boost.
 var rb_do_max_boost: bool = false
+## Freeze/unfreeze, set by CountdownTask + gamemode teardown. movement_locked is synced state, so
+## applying it in the rollback tick lets the freeze reach clients — a write from outside never syncs.
+var rb_lock_movement: bool = false
+var rb_unlock_movement: bool = false
 ## Persistent respawn point. Set by SpawnManager.respawn_player_at (e.g. TeleportTask),
 ## reset to identity to fall back to `get_parent().global_transform` (player_spawn_pos).
 ## Persists across respawns so crashes after a checkpoint return to the checkpoint.
@@ -201,6 +205,13 @@ func _rollback_tick(delta: float, tick: int, _is_fresh: bool):
 	if rb_do_wobble:
 		rb_do_wobble = false
 		movement_controller.wobble_vel += rb_wobble_strength  # tank-slapper kick (synced state)
+
+	if rb_lock_movement:
+		rb_lock_movement = false
+		movement_locked = true
+	if rb_unlock_movement:
+		rb_unlock_movement = false
+		movement_locked = false
 
 	# Boost grant: apply once, then re-apply the same meter on any resim of that tick (boost
 	# is drained below, so this must land before the controllers run).

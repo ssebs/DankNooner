@@ -25,8 +25,8 @@ func on_enter(player: PlayerEntity, state: Dictionary) -> void:
 	player.input_controller.nfx_rear_brake = 0.0
 	player.input_controller.nfx_steer = 0.0
 	player.input_controller.nfx_lean = 0.0
-	# movement_locked is synced state MovementController honors in rollback, freezing the client's prediction too.
-	player.movement_locked = true
+	# rb_* freeze command — PlayerEntity applies it in _rollback_tick so the freeze syncs to clients too.
+	player.rb_lock_movement = true
 
 
 func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
@@ -43,7 +43,7 @@ func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
 
 func on_exit(player: PlayerEntity, _state: Dictionary) -> void:
 	player.input_controller.input_disabled = false
-	player.movement_locked = false
+	player.rb_unlock_movement = true
 
 
 @rpc("call_local", "reliable")
