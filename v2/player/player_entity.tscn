@@ -363,7 +363,7 @@ step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("%ButtTarget:position")
+tracks/0/path = NodePath("IKTargets/ButtTarget:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -375,7 +375,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("%ChestTarget:position")
+tracks/1/path = NodePath("IKTargets/ChestTarget:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -387,7 +387,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("%RightHandTarget:position")
+tracks/2/path = NodePath("IKTargets/RightHandTarget:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -399,7 +399,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("%ButtTarget:rotation")
+tracks/3/path = NodePath("IKTargets/ButtTarget:rotation")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -411,7 +411,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("%ChestTarget:rotation")
+tracks/4/path = NodePath("IKTargets/ChestTarget:rotation")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -423,7 +423,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("%RightHandTarget:rotation")
+tracks/5/path = NodePath("IKTargets/RightHandTarget:rotation")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -435,7 +435,7 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("%BaseballBat:visible")
+tracks/6/path = NodePath("IKTargets/BaseballBat:visible")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
@@ -447,7 +447,7 @@ tracks/6/keys = {
 tracks/7/type = "value"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("%BaseballBat:rotation")
+tracks/7/path = NodePath("IKTargets/BaseballBat:rotation")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
@@ -459,7 +459,7 @@ tracks/7/keys = {
 tracks/8/type = "value"
 tracks/8/imported = false
 tracks/8/enabled = true
-tracks/8/path = NodePath("%BaseballBat:position")
+tracks/8/path = NodePath("IKTargets/BaseballBat:position")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
@@ -1372,7 +1372,6 @@ gearing_controller = NodePath("../GearingController")
 crash_controller = NodePath("../CrashController")
 rear_raycast = NodePath("../../RearRayCast")
 front_raycast = NodePath("../../FrontRayCast")
-debug_verbose = true
 wheelie_clutch_kick_boost = 1.0
 
 [node name="GearingController" type="Node" parent="_Controllers" unique_id=2064362163 node_paths=PackedStringArray("player_entity", "input_controller")]
@@ -1430,23 +1429,23 @@ transform = Transform3D(1, 0, -8.526513e-14, 0, 1, 0, 8.526513e-14, 0, 1, -1.873
 
 [node name="ChestTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=1108562279]
 unique_name_in_owner = true
-transform = Transform3D(0.99999994, 0, -5.6843415e-14, 0, 1, 0, 5.6843415e-14, 0, 0.99999994, -2.4288136e-08, 1.1710131, 0.15286274)
+transform = Transform3D(0.99999994, 0, -2.8421708e-14, 0, 1, 0, 2.8421708e-14, 0, 0.99999994, -2.4288136e-08, 1.1710131, 0.15286274)
 
 [node name="HeadTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=190960288]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, -1.5670119e-07, 1.7314824, -0.2957811)
+transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, 2.396361e-08, 1.4979396, -0.1587038)
 
 [node name="LeftHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=811111111]
 unique_name_in_owner = true
-transform = Transform3D(-0.16312777, 0.27711132, 0.13819785, 0.03818753, 0.17301135, -0.30184233, -0.30729637, -0.12560411, -0.11087188, 0.29064223, 0.9562068, 0.18692446)
+transform = Transform3D(-0.03717319, 0.33543876, 0.09273082, 0.23657626, 0.09275333, -0.2406834, -0.25524464, 0.037116967, -0.23658513, 0.29064223, 0.96515584, 0.17284963)
 
 [node name="RightHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=822222222]
 unique_name_in_owner = true
-transform = Transform3D(-0.16675495, -0.2654828, -0.15560105, -0.054724865, 0.19974281, -0.28214893, 0.30281687, -0.11009845, -0.13667601, -0.46152005, 0.82063097, 0.17274939)
+transform = Transform3D(-0.16675489, -0.26548284, -0.15560102, -0.054724846, 0.19974282, -0.28214887, 0.30281678, -0.11009846, -0.136676, -0.46152005, 0.82063097, 0.17274939)
 
 [node name="LeftFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=833333333]
 unique_name_in_owner = true
-transform = Transform3D(-0.9574183, -0.24940932, -0.14541335, -0.20021883, 0.21073318, 0.9568197, -0.20799631, 0.9451912, -0.25169626, 0.19981939, 0.39506754, -0.16492465)
+transform = Transform3D(-0.8710659, -0.39240646, -0.2954004, -0.44450417, 0.37394792, 0.8139896, -0.2089504, 0.84034526, -0.50015956, 0.17601499, 0.39506754, -0.16492465)
 
 [node name="SparkParticlesLeft" parent="VisualRoot/IKTargets/LeftFootTarget" unique_id=1003989945 instance=ExtResource("29_3kl2f")]
 unique_name_in_owner = true
@@ -1455,7 +1454,7 @@ emitting = false
 
 [node name="RightFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=844444444]
 unique_name_in_owner = true
-transform = Transform3D(-0.95741844, 0.24940896, 0.14541346, 0.20021884, 0.21073316, 0.9568197, 0.20799601, 0.9451913, -0.2516962, -0.21216637, 0.5018048, -0.20081648)
+transform = Transform3D(-0.8716592, 0.27973512, 0.40244067, 0.472666, 0.26266214, 0.84118694, 0.12960365, 0.9234484, -0.36117315, -0.16101696, 0.41390836, -0.16492465)
 
 [node name="SparkParticlesRight" parent="VisualRoot/IKTargets/RightFootTarget" unique_id=1985641876 instance=ExtResource("29_3kl2f")]
 unique_name_in_owner = true
@@ -1464,19 +1463,19 @@ emitting = false
 
 [node name="LeftArmMagnet" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=811601522]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -5.684342e-14, 0, 1, 0, 5.684342e-14, 0, 1, 0.50935364, 1.0199555, -0.1354702)
+transform = Transform3D(1, 0, -5.684342e-14, 0, 1, 0, 5.684342e-14, 0, 1, 0.42258745, 0.95855165, 6.3808926e-08)
 
 [node name="RightArmMagnet" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=593977268]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -1.4210855e-14, 0, 1, 0, 1.4210855e-14, 0, 1, -0.509, 1.0199208, -0.135)
+transform = Transform3D(1, 0, -1.4210855e-14, 0, 1, 0, 1.4210855e-14, 0, 1, -0.423, 0.959, 0)
 
 [node name="LeftLegMagnet" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=423836538]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 0.46395656, 0.5692559, 0.42930415)
+transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 0.37603816, 0.45350832, 0.2764344)
 
 [node name="RightLegMagnet" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=132337519]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.464, 0.569, 0.429)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.376, 0.454, 0.276)
 
 [node name="FrontWheelGroundMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=728490293]
 unique_name_in_owner = true

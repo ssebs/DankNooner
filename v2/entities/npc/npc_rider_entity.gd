@@ -22,10 +22,10 @@ class_name NPCRiderEntity extends CharacterBody3D
 ## wipes out, race bots (nobody connected) shrug it off.
 signal hit_by_racer(hitter: Node3D)
 
-enum NPCState { RIDING, WHEELIE, CRASHED, FINISHED }
+enum NPCState {RIDING, WHEELIE, CRASHED, FINISHED}
 ## What this chassis is wearing. CAR spawns no bike mesh, no character, no IK,
 ## and no name label — see _enter_tree.
-enum VehicleType { BIKE, CAR }
+enum VehicleType {BIKE, CAR}
 
 ## Set by the spawning manager BEFORE add_child — _enter_tree reads it.
 @export var vehicle_type: VehicleType = VehicleType.BIKE
@@ -214,7 +214,7 @@ func _ready():
 ## children's, and _ready pins the priority ahead of them as well — steering and
 ## move_and_slide must never see a smoothed pose or the simulation drifts.
 func _physics_process(_delta: float) -> void:
-	if Engine.is_editor_hint() or !multiplayer.is_server() or !_has_sync_transform:
+	if Engine.is_editor_hint() or !multiplayer.is_server() or !_has_sync_transform or multiplayer.multiplayer_peer == null:
 		return
 	_phys_prev = sync_transform
 	global_transform = sync_transform
