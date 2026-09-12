@@ -9,7 +9,29 @@ class_name MovementController extends Node
 @export var rear_raycast: RayCast3D
 @export var front_raycast: RayCast3D
 
-@export var debug_verbose:bool=false
+@export var debug_verbose: bool = false
+
+@export_group("Speed Wobbles") # tank-slapper tunables (see _wobble_calc); 1a/1b bools mix & match
+@export var wobble_spring: float = 120.0 # restoring spring (rad/s² per rad) — higher = tighter
+@export var wobble_damping: float = 1.5 # base per-sec taper
+@export var wobble_countersteer_bonus: float = 8.0 # extra damping when countersteering (fast save)
+@export var wobble_offgas_bonus: float = 3.0 # extra damping from off-gas + steer (slower save)
+@export var wobble_feed: float = 6.0 # energy/sec added when steering into the swing
+@export var wobble_recover_boost: float = 6.0 # extra damping that ramps up as you near center (forgiving)
+@export var wobble_min_speed: float = 15.0 # below this no wobble starts, and slowing kills an active one
+@export var wobble_crash_angle_deg: float = 60.0 # |wobble_angle| past this highsides
+# Triggers 1a (brake-slide release), 1b (high-speed brake entry) and 5 (wheelie set-down) are always on.
+@export var wobble_release_min_hold: float = 0.25 # 1a: brake-slide hold (sec) that wobbles
+@export var wobble_release_min_angle_deg: float = 30.0 # 1a: release slip (deg) that wobbles
+@export var wobble_release_strength: float = 6.0 # 1a kick (rad/s)
+@export var wobble_brake_entry_speed_frac: float = 0.6 # 1b: speed frac above which entry wobbles
+@export var wobble_brake_entry_strength: float = 7.0 # 1b kick (rad/s)
+@export var wobble_landing_min_airtime: float = 0.5 # trigger 2: only jumps longer than this wobble
+@export var wobble_landing_angle_deg: float = 20.0 # trigger 2: landing misalignment (deg) window
+@export var wobble_landing_strength: float = 0.18 # trigger 2 kick (rad/s) per deg past the window
+@export var wobble_landing_hard_over_deg: float = 50.0 # deg past the window that highsides outright (no cap)
+@export var wobble_hard_land_speed: float = 14.0 # trigger 2: vertical impact (m/s) above which a landing wobbles
+@export var wobble_hard_land_strength: float = 0.4 # trigger 2 kick (rad/s) per m/s of impact past the threshold
 
 const CLUTCH_KICK_WINDOW: float = 0.2
 # Fraction of bike's 1st-gear torque needed to clutch-pop — blocks high-gear pops
@@ -20,34 +42,34 @@ const CLUTCH_POP_MAX_SPEED_FRAC: float = 0.4
 # power × bd.acceleration floor for power wheelies — auto-scales by bike strength
 const POWER_WHEELIE_MIN_FORCE: float = 21.6
 const FALL_GRAVITY: float = 40
-const AIR_DRAG: float = 12.0  # speed loss while airborne. TODO - turn into a curve
-const MIN_SPEED_FROM_AIR_DRAG:float = 5.0
+const AIR_DRAG: float = 12.0 # speed loss while airborne. TODO - turn into a curve
+const MIN_SPEED_FROM_AIR_DRAG: float = 5.0
 # Unstable surface (collision layer 5) — gravel/sand/etc. Scaled by bike's unstable_surface_factor.
-const UNSTABLE_LAYER_MASK: int = 16  # 1 << 4 (layer 5)
+const UNSTABLE_LAYER_MASK: int = 16 # 1 << 4 (layer 5)
 # Proportional drag (per sec) on unstable ground at factor=1 — caps top speed without stalling launches
 const UNSTABLE_DRAG_RATE: float = 0.6
-const UNSTABLE_WHEELIE_SUPPRESSION: float = 0.4  # wheelie target scaled by (1 - factor * this)
-const UNSTABLE_STEER_SUPPRESSION: float = 0.5  # turn_rate scaled by (1 - factor * this)
+const UNSTABLE_WHEELIE_SUPPRESSION: float = 0.4 # wheelie target scaled by (1 - factor * this)
+const UNSTABLE_STEER_SUPPRESSION: float = 0.5 # turn_rate scaled by (1 - factor * this)
 # Ramp / loop tuning
-const SURFACE_BLEND_SPEED_MIN: float = 3.0  # up_direction alignment speed at rest
-const SURFACE_BLEND_SPEED_MAX: float = 40.0  # alignment speed at full speed (must track loops)
-const SURFACE_BLEND_SPEED_FALL: float = 0.25  # airborne alignment back to global UP
-const ADHESION_ANGLE: float = 80.0  # degrees — adhesion speed check kicks in here
-const RAMP_DOWNHILL_FACTOR: float = 1.25  # slope-gravity multiplier rolling downhill (adds speed)
-const RAMP_UPHILL_FACTOR: float = 0.8  # slope-gravity multiplier climbing uphill (bleeds speed)
+const SURFACE_BLEND_SPEED_MIN: float = 3.0 # up_direction alignment speed at rest
+const SURFACE_BLEND_SPEED_MAX: float = 40.0 # alignment speed at full speed (must track loops)
+const SURFACE_BLEND_SPEED_FALL: float = 0.25 # airborne alignment back to global UP
+const ADHESION_ANGLE: float = 80.0 # degrees — adhesion speed check kicks in here
+const RAMP_DOWNHILL_FACTOR: float = 1.25 # slope-gravity multiplier rolling downhill (adds speed)
+const RAMP_UPHILL_FACTOR: float = 0.85 # slope-gravity multiplier climbing uphill (bleeds speed)
 # Dedicated slope gravity — gentler than FALL_GRAVITY (which is tuned for arcade air time and is
 # far too punishing on grades). Drives the downhill assist / uphill bleed.
 const SLOPE_GRAVITY: float = 18.0
 # Grades steeper than this can't be climbed under power — engine drive is blocked and gravity
 # bleeds the bike to a stall. Stalling out (near-stopped) on such a grade crashes (CrashController).
 const MAX_CLIMB_ANGLE_DEG: float = 40.0
-const STALL_CRASH_SPEED: float = 1.0  # near-stopped threshold for the steep-slope stall crash
-const MIN_LOOP_SPEED: float = 20.0  # speed needed at fully inverted (180°)
+const STALL_CRASH_SPEED: float = 1.0 # near-stopped threshold for the steep-slope stall crash
+const MIN_LOOP_SPEED: float = 20.0 # speed needed at fully inverted (180°)
 # Trick tuning
-const TRICK_DISABLE_ANGLE: float = 30.0  # (degrees)
-const AIR_TRICK_ROTATION_SPEED: float = 4.0  # rad/s pitch control while airborne
-const WHEELIE_AIR_GRACE: float = 1.0  # short hops (curbs) keep the wheelie pitch_angle
-const LANDING_SNAP_ANGLE_DEG: float = 30.0  # forgiveness window — flips landing this close to upright snap to neutral
+const TRICK_DISABLE_ANGLE: float = 30.0 # (degrees)
+const AIR_TRICK_ROTATION_SPEED: float = 4.0 # rad/s pitch control while airborne
+const WHEELIE_AIR_GRACE: float = 1.0 # short hops (curbs) keep the wheelie pitch_angle
+const LANDING_SNAP_ANGLE_DEG: float = 30.0 # forgiveness window — flips landing this close to upright snap to neutral
 # Steering authority while up on the front wheel. Reduced input is allowed; shoving past the
 # crash threshold (CrashController.stoppie_steer_crash_threshold) washes the loaded front out.
 const STOPPIE_STEER_SCALE: float = 0.5
@@ -55,33 +77,39 @@ const STOPPIE_STEER_SCALE: float = 0.5
 const REVERSE_MAX_SPEED: float = 2.0
 const REVERSE_ACCEL: float = 8.0
 const REVERSE_BRAKE_THRESHOLD: float = 0.3
-const REVERSE_THROTTLE_MAX: float = 0.5  # on the gas = burnout/launch prep, not a reverse roll
+const REVERSE_THROTTLE_MAX: float = 0.5 # on the gas = burnout/launch prep, not a reverse roll
 # Drift / powerslide
-const DRIFT_MIN_SPEED: float = 6.0  # below this it's a stationary burnout (slip stays ~0)
-const DRIFT_BRAKE_HOLD: float = 0.4  # rear-brake input that sustains a brake slide
-const DRIFT_STEER_ENTRY: float = 0.3  # steer needed to kick a brake slide loose
-const DRIFT_BREAK_FORCE: float = POWER_WHEELIE_MIN_FORCE  # power×accel torque gate to break traction
-const DRIFT_POWER_MIN_RPM_RATIO: float = 0.7  # power slide needs revs — can't lug into a burnout at low RPM
+const DRIFT_MIN_SPEED: float = 6.0 # below this it's a stationary burnout (slip stays ~0)
+const DRIFT_BRAKE_HOLD: float = 0.4 # rear-brake input that sustains a brake slide
+const DRIFT_STEER_ENTRY: float = 0.3 # steer needed to kick a brake slide loose
+const DRIFT_BREAK_FORCE: float = POWER_WHEELIE_MIN_FORCE # power×accel torque gate to break traction
+const DRIFT_POWER_MIN_RPM_RATIO: float = 0.7 # power slide needs revs — can't lug into a burnout at low RPM
 # Stationary burnout — a max-RPM clutch dump against a held front brake spins up the rear from a standstill
-const BURNOUT_FRONT_BRAKE_MIN: float = 0.5  # front brake to pin the bike; also blocks throttle accel in _speed_calc
+const BURNOUT_FRONT_BRAKE_MIN: float = 0.5 # front brake to pin the bike; also blocks throttle accel in _speed_calc
 const BURNOUT_MIN_RPM_RATIO: float = 0.85
-const DRIFT_RECOVER_RATE: float = 2.0  # rad/s grip pulls the travel line back to heading
-const DRIFT_RECOVER_SUPPRESS: float = 0.8  # how much drive (0..1) suppresses recovery (holds the slide)
-const DRIFT_YAW_RATE: float = 1.6  # rad/s the heading carves per full steer while drifting
-const DRIFT_SPEED_SCRUB: float = 0.6  # speed bleed per sec, proportional to |slip_angle|
-const DRIFT_MAX_SLIP_ANGLE_DEG: float = 70.0  # clamp just past the 60° spinout so crash fires, no wrap
+const DRIFT_RECOVER_RATE: float = 2.0 # rad/s grip pulls the travel line back to heading
+const DRIFT_RECOVER_SUPPRESS: float = 0.8 # how much drive (0..1) suppresses recovery (holds the slide)
+const DRIFT_YAW_RATE: float = 1.6 # rad/s the heading carves per full steer while drifting
+const DRIFT_SPEED_SCRUB: float = 0.6 # speed bleed per sec, proportional to |slip_angle|
+const DRIFT_MAX_SLIP_ANGLE_DEG: float = 70.0 # clamp just past the 60° spinout so crash fires, no wrap
+const WOBBLE_EPS: float = 0.03 # |wobble_angle|/|wobble_vel| below this counts as settled (snaps clean)
 var is_reversing: bool = false
 var speed: float = 0.0
-var roll_angle: float = 0.0  # lean left/right
-var pitch_angle: float = 0.0  # + = wheelie, - = stoppie
-var slip_angle: float = 0.0  # signed radians: heading vs velocity direction. Synced via RollbackSynchronizer.
-var is_drifting: bool = false  # re-derived each tick from synced inputs + slip_angle (not synced directly)
+var roll_angle: float = 0.0 # lean left/right
+var pitch_angle: float = 0.0 # + = wheelie, - = stoppie
+var slip_angle: float = 0.0 # signed radians: heading vs velocity direction. Synced via RollbackSynchronizer.
+var is_drifting: bool = false # re-derived each tick from synced inputs + slip_angle (not synced directly)
+# Tank-slapper. angle/vel/hold are synced (perturb heading — see CLAUDE.md Multiplayer); is_wobbling re-derived.
+var wobble_angle: float = 0.0 # signed yaw perturbation (rad)
+var wobble_vel: float = 0.0 # its angular velocity (rad/s)
+var wobble_brake_hold_time: float = 0.0 # brake-slide hold accumulator (trigger 1a)
+var is_wobbling: bool = false
 # true ONLY in a braking-held stoppie (not a coast/landing/burnout); gates scoring + washout crash
 var is_stoppie: bool = false
 
-var air_pitch_total: float = 0.0  # cumulative pitch rotation while airborne (for flip counting)
-var _air_time: float = 0.0  # time since takeoff (for wheelie grace window)
-var _wheelie_grace_consumed: bool = false  # true once grace expired and pitch_angle was zeroed
+var air_pitch_total: float = 0.0 # cumulative pitch rotation while airborne (for flip counting)
+var _air_time: float = 0.0 # time since takeoff (for wheelie grace window)
+var _wheelie_grace_consumed: bool = false # true once grace expired and pitch_angle was zeroed
 
 # spawn protection - todo move?
 var _default_spawn_timer: float = 1.0
@@ -91,11 +119,14 @@ var _spawn_timer: float = _default_spawn_timer
 var _prev_clutch_held: bool = false
 var _clutch_kick_window: float = 0.0
 var _balance_point_decay_mult: float = 0.85
-var _was_on_floor: bool = false  # previous tick's floor state (for landing detection)
-var _is_on_floor: bool = false  # cached once per tick to avoid redundant move_and_slide calls
-var _floor_normal: Vector3 = Vector3.UP  # cached per tick — only valid when _is_on_floor
-var _speed_pct: float = 0.0  # speed / max_speed, cached per tick
-var _on_unstable_surface: bool = false  # touching layer 5 (unstable_collision), cached per tick
+# Blocks a wheelie chaining straight into a stoppie — must pass through normal first. Set while in a
+# wheelie, cleared when brake + lean-forward aren't both held (forces a fresh press for the stoppie).
+var _stoppie_locked_by_wheelie: bool = false
+var _was_on_floor: bool = false # previous tick's floor state (for landing detection)
+var _is_on_floor: bool = false # cached once per tick to avoid redundant move_and_slide calls
+var _floor_normal: Vector3 = Vector3.UP # cached per tick — only valid when _is_on_floor
+var _speed_pct: float = 0.0 # speed / max_speed, cached per tick
+var _on_unstable_surface: bool = false # touching layer 5 (unstable_collision), cached per tick
 
 
 func _ready():
@@ -139,13 +170,14 @@ func on_movement_rollback_tick(delta: float):
 			# Landing forgiveness: a near-upright landing after a flip snaps to neutral; over-
 			# rotations past the bike's max still crash via CrashController. A held wheelie off a
 			# jump lands as-is, but a nose-first touchdown flattens rather than becoming a stoppie.
-			var did_flip := air_pitch_total >= PI  # half-turn+ = a flip attempt, not a held wheelie
+			var did_flip := air_pitch_total >= PI # half-turn+ = a flip attempt, not a held wheelie
 			if did_flip:
 				if absf(pitch_angle) <= deg_to_rad(LANDING_SNAP_ANGLE_DEG):
 					pitch_angle = 0.0
 			elif pitch_angle < 0.0:
 				# Nose-first landing (not a flip) — flatten to the ground, not into a stoppie.
 				pitch_angle = 0.0
+			_wobble_bad_landing() # trigger 2 — a crooked touchdown wobbles (reads roll/heading pre-reset)
 			air_pitch_total = 0.0
 			_air_time = 0.0
 			_wheelie_grace_consumed = false
@@ -170,10 +202,22 @@ func on_movement_rollback_tick(delta: float):
 	_speed_calc(delta)
 	_speed_pct = clampf(speed / player_entity.bike_definition.max_speed, 0.0, 1.0)
 	_update_surface_alignment(delta)
+	is_wobbling = absf(wobble_angle) > WOBBLE_EPS or absf(wobble_vel) > WOBBLE_EPS
 	_drift_calc(delta)
+	_wobble_calc(delta) # carves heading via rotate_y — slots with drift/steer (ORDER MATTERS)
 	_steer_calc(delta)
 	_velocity_calc(delta)
 	_pitch_angle_calc(delta)
+
+	# Trigger 5 — front wheel setting down from a ground wheelie. is_in_wheelie() lags a tick (trick
+	# runs after us) so it's last tick's state; the edge is that vs this tick's just-updated pitch.
+	# Injects after _wobble_calc, so it's picked up next tick (wobble_vel is synced).
+	if (
+		_is_on_floor
+		and player_entity.trick_controller.is_in_wheelie()
+		and pitch_angle <= deg_to_rad(TrickController.WHEELIE_PITCH_THRESHOLD_DEG)
+	):
+		_wobble_from_misalign("trigger 5 (wheelie set-down)")
 
 	# Apply movement
 	player_entity.velocity *= NetworkTime.physics_factor
@@ -195,7 +239,7 @@ func _debug_air_state():
 	DebugUtils.DebugMsg(
 		(
 			"[AIR] floor=%s pitch=%.1f air_pitch=%.1f roll=%.1f up=%.1f | vroot_x=%.1f vroot_y=%.3f"
-			+ " | spd=%.1f vel=(%.1f,%.1f,%.1f) | trick=%s"
+			+" | spd=%.1f vel=(%.1f,%.1f,%.1f) | trick=%s"
 		)
 		% [
 			_is_on_floor,
@@ -254,9 +298,9 @@ func _get_blended_surface_normal() -> Vector3:
 	if front_hit and rear_hit:
 		return (
 			front_raycast
-			. get_collision_normal()
-			. lerp(rear_raycast.get_collision_normal(), 0.5)
-			. normalized()
+			.get_collision_normal()
+			.lerp(rear_raycast.get_collision_normal(), 0.5)
+			.normalized()
 		)
 	if front_hit:
 		return front_raycast.get_collision_normal()
@@ -313,7 +357,7 @@ func _update_surface_alignment(delta: float):
 ## Blend up_direction back to global up (airborne or detaching).
 ## More inverted = slower correction — rider falls on their head off a loop.
 func _detach_from_surface(delta: float):
-	var inversion = player_entity.up_direction.angle_to(Vector3.UP) / PI  # 0=upright, 1=inverted
+	var inversion = player_entity.up_direction.angle_to(Vector3.UP) / PI # 0=upright, 1=inverted
 	# Upright: corrects quickly. Fully inverted: nearly frozen so they fall on their head.
 	var correction_speed = lerpf(
 		SURFACE_BLEND_SPEED_FALL, SURFACE_BLEND_SPEED_FALL * 0.05, inversion
@@ -360,7 +404,7 @@ func _speed_calc(delta: float):
 	# Used by both the acceleration gate and the slope gravity below.
 	var slope_angle = _floor_normal.angle_to(Vector3.UP)
 	var gravity_on_surface = Vector3.DOWN - _floor_normal * Vector3.DOWN.dot(_floor_normal)
-	var forward_dir = -player_entity.global_transform.basis.z
+	var forward_dir = - player_entity.global_transform.basis.z
 	var slope_dot = gravity_on_surface.dot(forward_dir)
 	# Too steep to climb — block engine drive; gravity then bleeds the bike to a stall (crash).
 	var too_steep_to_climb = slope_angle > deg_to_rad(MAX_CLIMB_ANGLE_DEG) and slope_dot < 0.0
@@ -405,7 +449,7 @@ func _speed_calc(delta: float):
 func _steer_calc(delta: float):
 	var bd = player_entity.bike_definition
 
-	var amount_normalized_rename_me:=1.0
+	var amount_normalized_rename_me := 1.0
 	if player_entity.trick_controller.current_trick == TrickController.Trick.TWO_LEFT_FEET:
 		amount_normalized_rename_me = 0.5
 	elif speed < 1 and not is_reversing:
@@ -424,13 +468,13 @@ func _steer_calc(delta: float):
 	# Curve-based speed factor for steering and lean. Reverse bypasses the curves —
 	# they're tuned for forward speed and bottom out near 0, so we'd lose all authority.
 	var lean_factor = 1.0 if is_reversing else bd.lean_curve.sample(_speed_pct)
-	var steer_input = -input_controller.nfx_steer if is_reversing else input_controller.nfx_steer
+	var steer_input = - input_controller.nfx_steer if is_reversing else input_controller.nfx_steer
 	var target_lean = steer_input * bd.max_lean_angle_rad * lean_factor * stoppie_steer_scale
-	roll_angle = lerpf(roll_angle, target_lean, bd.lean_speed * delta)*amount_normalized_rename_me
+	roll_angle = lerpf(roll_angle, target_lean, bd.lean_speed * delta) * amount_normalized_rename_me
 
 	# Steering — bell curve: low at standstill, peaks mid-low speed, tapers at top speed.
 	# Uses abs(speed) so reverse rolling still turns the body.
-	if absf(speed) > 0.5 and not is_drifting:
+	if absf(speed) > 0.5 and not is_drifting: # steering stays live while wobbling — the wobble rides on top
 		var steer_factor = 1.0 if is_reversing else (bd.steer_curve.sample(_speed_pct) if bd.steer_curve else 1.0)
 		var turn_rate = bd.turn_speed * steer_factor * (1.0 - get_unstable_factor() * UNSTABLE_STEER_SUPPRESSION)
 		DebugUtils.DebugMsg(
@@ -444,7 +488,7 @@ func _steer_calc(delta: float):
 
 	# Align bike basis so local Y points along up_direction (ramp riding)
 	var target_up = player_entity.up_direction
-	var current_forward = -player_entity.global_transform.basis.z
+	var current_forward = - player_entity.global_transform.basis.z
 	var right = current_forward.cross(target_up)
 	if right.length_squared() > 0.001:
 		right = right.normalized()
@@ -455,7 +499,7 @@ func _steer_calc(delta: float):
 ## Calculate player_entity.velocity & set slope angle
 func _velocity_calc(delta: float):
 	# Apply velocity following slope
-	var forward = -player_entity.global_transform.basis.z
+	var forward = - player_entity.global_transform.basis.z
 	# Drift: velocity travels along heading rotated by slip_angle (tail out). slip_angle==0
 	# (normal riding) leaves this identical to forward.
 	var travel_dir = forward
@@ -479,7 +523,7 @@ func _velocity_calc(delta: float):
 			horizontal = horizontal / h_speed * new_h
 			player_entity.velocity.x = horizontal.x
 			player_entity.velocity.z = horizontal.z
-			speed = new_h  # keep speed in sync for landing, wheel spin, steering
+			speed = new_h # keep speed in sync for landing, wheel spin, steering
 
 	# Gravity — integrated onto velocity.y so airborne flight arcs like a real parabola
 	# instead of dropping at a constant rate.
@@ -490,7 +534,11 @@ func _velocity_calc(delta: float):
 ## Orchestrates pitch_angle: clutch detection → wheelie target → stoppie → apply
 func _pitch_angle_calc(delta: float):
 	_update_clutch_dump_detection()
-	is_stoppie = false  # _stoppie_calc re-asserts it below; stays false when airborne / in a wheelie / on steep ground
+	is_stoppie = false # _stoppie_calc re-asserts it below; stays false when airborne / in a wheelie / on steep ground
+
+	if is_wobbling: # can't pop tricks mid-tank-slapper — bleed pitch to neutral
+		pitch_angle = move_toward(pitch_angle, 0.0, player_entity.bike_definition.return_speed * delta)
+		return
 
 	# Airborne trick control — lean to flip, no decay (weightless)
 	if not _is_on_floor:
@@ -504,6 +552,8 @@ func _pitch_angle_calc(delta: float):
 	var bd = player_entity.bike_definition
 	var in_wheelie = pitch_angle > deg_to_rad(TrickController.WHEELIE_PITCH_THRESHOLD_DEG)
 	var in_stoppie = pitch_angle < deg_to_rad(TrickController.STOPPIE_PITCH_THRESHOLD_DEG)
+	if in_wheelie: # arm the lock so the coming-down nose can't flow straight into a stoppie
+		_stoppie_locked_by_wheelie = true
 	var bp_low = deg_to_rad(bd.wheelie_balance_point_deg - bd.wheelie_balance_point_width_deg)
 	var bp_high = deg_to_rad(bd.wheelie_balance_point_deg + bd.wheelie_balance_point_width_deg)
 	var in_balance_point = pitch_angle >= bp_low and pitch_angle <= bp_high
@@ -529,7 +579,7 @@ func _pitch_angle_calc(delta: float):
 		(
 			(
 				"pitch_angle: %.2f | wheelie_target: %.2f | balance_point: %.2f | "
-				+ "max_wheelie: %.2f | in_bp: %s"
+				+"max_wheelie: %.2f | in_bp: %s"
 			)
 			% [
 				rad_to_deg(pitch_angle),
@@ -539,7 +589,7 @@ func _pitch_angle_calc(delta: float):
 				in_balance_point
 			]
 		),
-		OS.has_feature("debug")and debug_verbose
+		OS.has_feature("debug") and debug_verbose
 	)
 
 	# Lean forward recovery — pull the front wheel down
@@ -548,15 +598,15 @@ func _pitch_angle_calc(delta: float):
 			pitch_angle, 0, bd.return_speed * input_controller.nfx_lean * 2.0 * delta
 		)
 
-	# Speed-dependent wheelie gravity — less speed = front wheel drops
-	# Only applies when rider isn't actively pulling back or flooring throttle
+	# Off-gas front-wheel drop — only once lean is released (leaning back still holds the wheelie).
+	# Speed only slightly slows it (floored at 0.5) so releasing lean at speed still brings it down.
 	if in_wheelie and input_controller.nfx_lean >= 0 and input_controller.nfx_throttle < 0.5:
 		var speed_ratio = clampf(speed / (bd.max_speed * 0.5), 0.0, 1.0)
-		var wheelie_gravity = bd.return_speed * (1.0 - speed_ratio)
+		var wheelie_gravity = bd.return_speed * (1.0 - speed_ratio * 0.5)
 		# Balance point stabilizes the wheelie — gravity is dampened here too
 		if in_balance_point:
 			wheelie_gravity *= _balance_point_decay_mult * 2.0
-		pitch_angle = move_toward(pitch_angle, 0, wheelie_gravity / 2 * delta)
+		pitch_angle = move_toward(pitch_angle, 0, wheelie_gravity * delta)
 
 	# Rev limiter drop — banging the limiter during a wheelie kills the power
 	# Rider needs to shift up or back off throttle to maintain the wheelie
@@ -603,12 +653,18 @@ func _stoppie_calc(bd: BikeSkinDefinition, in_stoppie: bool, delta: float):
 	var stoppie_ratio = clampf(abs(pitch_angle) / max_stoppie_rad, 0.0, 1.0)
 	var required_brake = lerpf(0.5, 0.15, stoppie_ratio)
 
+	# Clear the after-wheelie lock once the stoppie inputs are released — forces a fresh press, so a
+	# wheelie can't chain straight into a stoppie (wheelie -> normal -> stoppie is still fine).
+	if not (total_brake > required_brake and input_controller.nfx_lean > 0.3):
+		_stoppie_locked_by_wheelie = false
+
 	var can_stoppie = (
-		total_brake > required_brake
+		not _stoppie_locked_by_wheelie
+		and total_brake > required_brake
 		and input_controller.nfx_lean > 0.3
 		and speed > 3.0
 		and abs(roll_angle) < deg_to_rad(10)
-		and not is_drifting  # a burnout/brake-slide is weight-back — can't pitch onto the front
+		and not is_drifting # a burnout/brake-slide is weight-back — can't pitch onto the front
 	)
 	# Scores the whole time the nose is up (symmetric with the wheelie's pitch check). A nose-first
 	# landing flattens to 0 on touchdown, so only a real braking stoppie reaches here; a burnout
@@ -620,7 +676,7 @@ func _stoppie_calc(bd: BikeSkinDefinition, in_stoppie: bool, delta: float):
 		var speed_factor = clampf(speed / (bd.max_speed * 0.25), 0.0, 1.0)
 		var brake_pct = clampf(total_brake * 1.5, 0.0, 1.0)
 		# Target can exceed max — crash controller will trigger if you go over
-		var stoppie_target = -max_stoppie_rad * (0.5 + brake_pct * 0.7) * speed_factor
+		var stoppie_target = - max_stoppie_rad * (0.5 + brake_pct * 0.7) * speed_factor
 
 		# Lean back recovery — push the rear wheel down
 		if input_controller.nfx_lean < 0 and in_stoppie:
@@ -708,10 +764,7 @@ func _can_initiate_drift() -> bool:
 		)
 
 	# Brake-slide entry — steer + hold rear brake breaks the rear loose. Accessible, safe to release.
-	if (
-		input_controller.nfx_rear_brake > DRIFT_BRAKE_HOLD
-		and absf(input_controller.nfx_steer) > DRIFT_STEER_ENTRY
-	):
+	if _is_brake_slide_input():
 		return true
 
 	# Power entry — needs lean forward (distinguishes from wheelie's lean back).
@@ -742,13 +795,25 @@ func _can_initiate_drift() -> bool:
 ## velocity picks up the slip this tick. No-op (and slip decays to 0) when not drifting.
 func _drift_calc(delta: float):
 	# --- entry / exit ---
-	if player_entity.is_crashed or not _is_on_floor:
+	# A tank-slapper takes over from drifting (and airborne / crashed unwind slip too).
+	if player_entity.is_crashed or not _is_on_floor or is_wobbling:
 		is_drifting = false
+		wobble_brake_hold_time = 0.0
 		slip_angle = move_toward(slip_angle, 0.0, DRIFT_RECOVER_RATE * delta)
 		return
 
 	if not is_drifting:
-		is_drifting = _can_initiate_drift()
+		# Trigger 1b: a high-speed brake-slide entry wobbles instead of starting a drift.
+		if _is_brake_slide_input() and _speed_pct > wobble_brake_entry_speed_frac:
+			wobble_vel += signf(input_controller.nfx_steer) * wobble_brake_entry_strength
+			DebugUtils.DebugMsg(
+				"wobble trigger 1b (high-speed brake entry): spd=%.0f%%" % (_speed_pct * 100.0),
+				OS.has_feature("debug") and debug_verbose
+			)
+		else:
+			is_drifting = _can_initiate_drift()
+
+	_update_brake_slide_wobble(delta) # trigger 1a
 
 	if not is_drifting:
 		# Not drifting — make sure any residual slip unwinds.
@@ -795,6 +860,136 @@ func _drift_calc(delta: float):
 	)
 
 
+func _is_brake_slide_input() -> bool:
+	return (
+		input_controller.nfx_rear_brake > DRIFT_BRAKE_HOLD
+		and absf(input_controller.nfx_steer) > DRIFT_STEER_ENTRY
+	)
+
+
+## Trigger 1a. Accumulate brake-slide hold; on release a long hold OR big angle wobbles.
+func _update_brake_slide_wobble(delta: float):
+	if is_drifting and input_controller.nfx_rear_brake > DRIFT_BRAKE_HOLD:
+		wobble_brake_hold_time += delta
+		return
+	if wobble_brake_hold_time <= 0.0:
+		return
+	var release_slip := absf(slip_angle)
+	if (
+		wobble_brake_hold_time > wobble_release_min_hold
+		or release_slip > deg_to_rad(wobble_release_min_angle_deg)
+	):
+		var kick_sign := signf(slip_angle) if release_slip > 0.01 else signf(input_controller.nfx_steer)
+		if kick_sign == 0.0:
+			kick_sign = 1.0
+		wobble_vel += kick_sign * wobble_release_strength
+		DebugUtils.DebugMsg(
+			(
+				"wobble trigger 1a (rear-brake release): slip=%.0f° hold=%.2fs"
+				% [rad_to_deg(release_slip), wobble_brake_hold_time]
+			),
+			OS.has_feature("debug") and debug_verbose
+		)
+	wobble_brake_hold_time = 0.0
+
+
+## Trigger 2. A crooked jump landing (roll lean, or heading off travel) wobbles by how far off it is.
+func _wobble_bad_landing():
+	if _air_time < wobble_landing_min_airtime: # short hops / curbs never wobble
+		return
+	# Hard slam — enough vertical impact wobbles even a dead-straight landing. Land smooth or pay.
+	var impact := -player_entity.velocity.y # downward speed at touchdown (velocity is still pre-landing here)
+	DebugUtils.DebugMsg(
+		"landing: impact=%.1f (hard>%.0f) air=%.2fs spd=%.1f" % [impact, wobble_hard_land_speed, _air_time, speed],
+		OS.has_feature("debug") and debug_verbose
+	)
+	if impact > wobble_hard_land_speed and speed >= wobble_min_speed:
+		var kick_sign := signf(input_controller.nfx_steer) if absf(input_controller.nfx_steer) > 0.1 else 1.0
+		wobble_vel += kick_sign * (impact - wobble_hard_land_speed) * wobble_hard_land_strength
+		DebugUtils.DebugMsg(
+			"wobble trigger 2 (hard landing): impact=%.1f" % impact, OS.has_feature("debug") and debug_verbose
+		)
+	_wobble_from_misalign("trigger 2 (bad landing)")
+
+
+## Inject a wobble sized by how far the bike's lean / heading is off from its travel. Shared by the
+## jump landing (trigger 2) and the wheelie set-down (trigger 5). No-op below min speed or when
+## already aligned. A moderately-off angle is capped to a RECOVERABLE wobble, but one past the hard
+## window keeps its full magnitude and blows past the balance bar — a crazy-crooked one highsides.
+func _wobble_from_misalign(source: String):
+	var fwd := -player_entity.global_transform.basis.z
+	var h_vel := Vector3(player_entity.velocity.x, 0.0, player_entity.velocity.z)
+	var yaw_off := 0.0
+	if h_vel.length() > 2.0:
+		var fwd_flat := Vector3(fwd.x, 0.0, fwd.z).normalized()
+		yaw_off = fwd_flat.angle_to(h_vel.normalized())
+	var misalign := maxf(absf(roll_angle), yaw_off)
+	var over := rad_to_deg(misalign) - wobble_landing_angle_deg
+	DebugUtils.DebugMsg(
+		(
+			"%s: misalign=%.0f° (roll=%.0f yaw=%.0f) over=%.0f spd=%.0f | window=%.0f min_spd=%.0f"
+			% [
+				source, rad_to_deg(misalign), rad_to_deg(roll_angle), rad_to_deg(yaw_off),
+				over, speed, wobble_landing_angle_deg, wobble_min_speed
+			]
+		),
+		OS.has_feature("debug") and debug_verbose
+	)
+	if speed < wobble_min_speed or over <= 0.0: # too slow, or aligned enough — no wobble
+		return
+	if over < wobble_landing_hard_over_deg:
+		over = minf(over, wobble_crash_angle_deg * 0.6)
+	var kick_sign := signf(roll_angle) if absf(roll_angle) > 0.01 else 1.0
+	wobble_vel += kick_sign * over * wobble_landing_strength
+	DebugUtils.DebugMsg(
+		"  -> %s WOBBLE (vel+=%.1f)" % [source, kick_sign * over * wobble_landing_strength],
+		OS.has_feature("debug") and debug_verbose
+	)
+
+
+## The tank-slapper: damped harmonic oscillator on the heading (countersteer/off-gas damp, steering
+## in feeds; CrashController fires past the limit). Re-derives is_wobbling — 1a/1b inject in _drift_calc.
+func _wobble_calc(delta: float):
+	var was_wobbling := is_wobbling # captured pre-recompute for the start/stop edge logs
+	is_wobbling = absf(wobble_angle) > WOBBLE_EPS or absf(wobble_vel) > WOBBLE_EPS
+	if not is_wobbling:
+		if was_wobbling:
+			DebugUtils.DebugMsg("wobble ended (settled)", OS.has_feature("debug") and debug_verbose)
+		wobble_angle = 0.0
+		wobble_vel = 0.0
+		return
+	if not was_wobbling:
+		DebugUtils.DebugMsg(
+			"wobble started (vel=%.2f rad/s) — see trigger above for cause" % wobble_vel,
+			OS.has_feature("debug") and debug_verbose
+		)
+
+	var steer := input_controller.nfx_steer
+	var steering := absf(steer) > 0.1
+	var into_swing := steering and signf(steer) == signf(wobble_vel)
+	var damping := wobble_damping
+	if steering and not into_swing:
+		damping += wobble_countersteer_bonus # countersteer — the fast save
+	if steering and input_controller.nfx_throttle < 0.1:
+		damping += wobble_offgas_bonus # off-gas + steer — the slower universal save
+	# More forgiving the closer to center you are — recovery accelerates as the swing shrinks.
+	var amp_ratio := clampf(absf(wobble_angle) / deg_to_rad(wobble_crash_angle_deg), 0.0, 1.0)
+	damping += wobble_recover_boost * (1.0 - amp_ratio)
+	# Slowing below min speed kills the wobble — a universal low-speed save.
+	if speed < wobble_min_speed:
+		damping += wobble_recover_boost * 3.0
+	wobble_vel -= wobble_spring * wobble_angle * delta
+	wobble_vel *= exp(-damping * delta) # exp keeps damping stable even when the bonuses stack high
+	# Feed only a swing that's still meaningful — so a near-settled wobble can actually settle
+	# instead of a held steer pumping it forever.
+	if into_swing and amp_ratio > 0.2:
+		wobble_vel += signf(wobble_vel) * wobble_feed * absf(steer) * delta
+
+	# rotate_y carves the same delta tracked in wobble_angle, so damping returns the heading.
+	wobble_angle += wobble_vel * delta
+	player_entity.rotate_y(wobble_vel * delta)
+
+
 ## Calculate wheelie target. Lean-back is the only driver — throttle alone
 ## must not pin a target, or the bike sticks at a static equilibrium angle.
 func _calc_normal_wheelie_target(bd: BikeSkinDefinition) -> float:
@@ -803,7 +998,13 @@ func _calc_normal_wheelie_target(bd: BikeSkinDefinition) -> float:
 	var max_wheelie_rad = deg_to_rad(bd.max_wheelie_angle_deg)
 	# Unstable surfaces shrink the achievable target so reaching the balance point takes more input.
 	var unstable_scale = 1.0 - get_unstable_factor() * UNSTABLE_WHEELIE_SUPPRESSION
-	return max_wheelie_rad * abs(input_controller.nfx_lean) * 0.75 * unstable_scale
+	# Raise depends on the POWER BAND: get_power_output() = throttle x power_curve(rpm) x gear torque,
+	# normalized to 1st-gear peak. Revving into the band lofts higher; lugging or a tall gear lifts
+	# less. Works on KBM too — RPM is continuous even with binary throttle. bd.rotation_speed sets rate.
+	var max_torque_mult = bd.gear_ratios[0] / bd.gear_ratios[bd.num_gears - 1]
+	var power_frac = clampf(gearing_controller.get_power_output() / max_torque_mult, 0.0, 1.0)
+	var power_scale = 0.3 + 0.7 * power_frac
+	return max_wheelie_rad * abs(input_controller.nfx_lean) * power_scale * unstable_scale
 
 
 ## Above balance point — unstable. Drifts toward crash unless rider leans forward.
@@ -859,6 +1060,11 @@ func do_reset():
 	slip_angle = 0.0
 	is_drifting = false
 	is_stoppie = false
+	_stoppie_locked_by_wheelie = false
+	wobble_angle = 0.0
+	wobble_vel = 0.0
+	wobble_brake_hold_time = 0.0
+	is_wobbling = false
 	is_reversing = false
 	_was_on_floor = false
 	_prev_clutch_held = false

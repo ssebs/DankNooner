@@ -38,6 +38,9 @@ var _rpm_fill_style: StyleBoxFlat = null
 ## the gauge. Purely cosmetic — kept out of the synced boost_prev_held, which the rollback
 ## tick owns and must not be perturbed by the HUD.
 var _prev_boost_held: bool = false
+## True while the balance bar is showing the speed wobble (vs a trick). Lets the wobble take the
+## bar over and hand it back cleanly.
+var _wobble_bar_active: bool = false
 ## Debug-build-only netfox perf readout. Null on remote instances, in release builds,
 ## and whenever netfox's perf monitors aren't registered — see show_hud.
 var _netfox_debug_label: Label = null
@@ -126,7 +129,20 @@ func Physics_Update(delta: float):
 	_speed_bar.value = int(movement_controller.speed)
 	_speed_num.text = "%d" % int(movement_controller.speed)
 	_grip_label.text = tr("HUD_GRIP").format({"value": int(player_entity.grip_usage * 100)})
-	_balance_bar.current_val = rad_to_deg(movement_controller.pitch_angle)
+
+	# The tank-slapper takes the balance bar over from the trick display while active.
+	if movement_controller.is_wobbling:
+		if not _wobble_bar_active:
+			_init_wobble_bar()
+			_balance_bar.update_warn_markers()
+			_balance_bar.show()
+			_wobble_bar_active = true
+		_balance_bar.current_val = rad_to_deg(movement_controller.wobble_angle)
+	else:
+		if _wobble_bar_active:
+			_wobble_bar_active = false
+			_balance_bar.hide()
+		_balance_bar.current_val = rad_to_deg(movement_controller.pitch_angle)
 
 	# Boost meter + combo multiplier are server-authoritative (TrickManager) and arrive
 	# via RollbackSynchronizer, so poll the synced vars rather than tracking them here.
@@ -161,6 +177,15 @@ func Physics_Update(delta: float):
 				Performance.get_custom_monitor(&"netfox/Sent state properties count"),
 			]
 		)
+
+
+## Symmetric ±crash-angle range with warn bands at the crash edges (danger at the extremes).
+func _init_wobble_bar():
+	var limit := movement_controller.wobble_crash_angle_deg
+	_balance_bar.min_val = -limit
+	_balance_bar.max_val = limit
+	_balance_bar.warn_low_val = -limit * 0.7
+	_balance_bar.warn_high_val = limit * 0.7
 
 
 ##### TODO - move to balance_bar.gd
@@ -267,6 +292,7 @@ func do_reset():
 	_game_msg.visible = false
 	_combo_counter.do_reset()
 	_prev_boost_held = false
+	_wobble_bar_active = false
 
 
 func _get_configuration_warnings() -> PackedStringArray:

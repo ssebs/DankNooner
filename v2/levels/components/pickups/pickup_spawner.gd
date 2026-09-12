@@ -17,6 +17,8 @@ class_name PickupSpawner extends Marker3D
 @export var timeout: float = 3.0
 
 const PICKUP_ITEM_SCENE := preload("res://levels/components/pickups/pickup_item.tscn")
+## TODO — placeholder wobble kick for the stubbed bat; tune once the real weapon lands.
+const BAT_WOBBLE_STRENGTH: float = 6.0
 
 var _active: bool = false
 var _current: PickupItem
@@ -106,6 +108,14 @@ func _apply_effect(peer_id: int, definition: PickupItemDefinition) -> void:
 	match definition.item_type:
 		PickupItemDefinition.PickupItemType.GAS_CAN:
 			_spawn_manager.grant_boost.rpc(peer_id)
+		PickupItemDefinition.PickupItemType.BAT:
+			# TODO — BAT is a stub. The real bat is a swung weapon: it needs a swing animation
+			# and a hitbox that wobbles whichever rider it connects with (via wobble_player).
+			# None of that exists yet. For now, picking it up just wobbles the collector so the
+			# wobble_player callable is exercised end-to-end. Swap the placeholder gas_can mesh,
+			# add the swing + hitbox, then target the rider the hitbox hits instead of `peer_id`.
+			DebugUtils.DebugMsg("BAT PICKED UP — TODO: swing anim + hitbox; wobbling collector for now")
+			_spawn_manager.wobble_player.rpc(peer_id, BAT_WOBBLE_STRENGTH)
 
 
 func _on_respawn_timer() -> void:
