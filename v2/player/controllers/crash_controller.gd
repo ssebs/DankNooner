@@ -183,9 +183,12 @@ func _detect_crash():
 			trigger_crash()
 			return
 
-		# Unstable lowside — front brake while steering on gravel/sand washes the front wheel out
+		# Unstable lowside — front brake while steering on gravel/sand washes the front wheel out.
+		# Not while reversing: a reverse roll holds the brake by design (see REVERSE_BRAKE_THRESHOLD)
+		# and steering leans the bike, so this would fire on every backward turn.
 		if (
 			unstable_factor > 0
+			and not movement_controller.is_reversing
 			and input_controller.nfx_front_brake > unstable_lowside_brake_threshold
 			and (
 				abs(movement_controller.roll_angle)

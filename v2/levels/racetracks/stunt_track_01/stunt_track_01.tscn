@@ -1078,12 +1078,14 @@ items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 [node name="StuntCity_REMEMBER_TO_REPLACE_ME" parent="." unique_id=1750931100 instance=ExtResource("27_grj8g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 0)
 
+[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/grass" parent_id_path=PackedInt32Array(1750931100, 181875014) index="0" unique_id=1877508431]
+collision_layer = 17
+
 [node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/ground" parent_id_path=PackedInt32Array(1750931100, 1825696800) index="0" unique_id=549086487]
 collision_layer = 17
 
 [node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/water" parent_id_path=PackedInt32Array(1750931100, 431463689) index="0" unique_id=232472431]
-collision_layer = 0
-collision_mask = 0
+collision_layer = 2
 
 [node name="Houses" type="Node3D" parent="." unique_id=697015734]
 
