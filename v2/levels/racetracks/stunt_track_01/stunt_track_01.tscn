@@ -650,22 +650,22 @@ point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_dhvic"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 0, 0, 11.221257, -12.000002, 0, 0, 0.076378144, 0, -9.3569355, -23.014465, 0.49987793, -0.04333496, -12.321501, 0.49987793, 22.914257),
-"tilts": PackedFloat32Array(0, -0.00024108018)
+"points": PackedVector3Array(0, 0, 0, 0, 0, 11.714025, -12.000002, 0, 0, 0.07225293, 0, -8.851563, -23.014465, 0.25012016, -0.04333496, -12.321501, 0.25012016, 22.914257),
+"tilts": PackedFloat32Array(0, -0.00012105423)
 }
 point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_ruwj7"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 0, 0, 13.979689, 12.000002, 0, 0, 0.054221224, 0, -6.642535, -23.014465, 0.49987793, -0.04333496, 11.677702, 0.49987793, 23.110157),
-"tilts": PackedFloat32Array(0, -0.00024864852)
+"points": PackedVector3Array(0, 0, 0, 0, 0, 13.486921, 12.000002, 0, 0, 0.05834643, 0, -7.147906, -23.014465, 0.25012016, -0.04333496, 11.677702, 0.25012016, 23.110157),
+"tilts": PackedFloat32Array(0, -0.0001228862)
 }
 point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_44yky"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 0, 0, 12.600473, 0, 0, 0, 0.06529968, 0, -7.999735, -23.014465, 0.49987793, -0.04333496, -0.3218994, 0.49987793, 23.012207),
-"tilts": PackedFloat32Array(0, -0.00024301952)
+"points": PackedVector3Array(0, 0, 0, 0, 0, 12.600473, 0, 0, 0, 0.06529968, 0, -7.999735, -23.014465, 0.25012016, -0.04333496, -0.3218994, 0.25012016, 23.012207),
+"tilts": PackedFloat32Array(0, -0.00012164235)
 }
 point_count = 2
 
@@ -4033,7 +4033,7 @@ curve = SubResource("Curve3D_44yky")
 metadata/_edit_lock_ = true
 
 [node name="RP_004" type="Node3D" parent="RoadManager/bridgeroad" unique_id=304205764]
-transform = Transform3D(0.003940236, 0, -0.99999225, 0, 1, 0, 0.99999225, 0, 0.003940236, -79.51074, 0.7496338, 74.95172)
+transform = Transform3D(0.003940236, 0, -0.99999225, 0, 1, 0, 0.99999225, 0, 0.003940236, -79.51074, 0.49987602, 74.95172)
 script = ExtResource("8_ercdn")
 traffic_dir = Array[int]([2, 2, 1, 1])
 lanes = Array[int]([2, 4, 4, 2])
