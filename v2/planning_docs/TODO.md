@@ -45,8 +45,7 @@
 
 ## Notes 📝
 > Stuff to move ASAP
-- when doing a wheelie, move to wheelie cam + right joystick does the tricks instead of holding RB and right joystick
-
+- when doing a wheelie, move to wheelie cam + right joystick does the tricks instead of holding RB and right joystick (called: Locking In, this will be used in the `Sticky Tires` Item)
 - gas pump fill up minigame (should do more than just boost the bike, and it should be in first person. group of peeps do it like the race gamemodes)
 - [ ] lag when ending stunt race / no tp option
 - Exhaust pop + flame when shifting down to high rpm and giving a little gas for a second like irl

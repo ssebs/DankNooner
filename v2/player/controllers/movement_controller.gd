@@ -33,6 +33,27 @@ class_name MovementController extends Node
 @export var wobble_hard_land_speed: float = 14.0 # trigger 2: vertical impact (m/s) above which a landing wobbles
 @export var wobble_hard_land_strength: float = 0.4 # trigger 2 kick (rad/s) per m/s of impact past the threshold
 
+@export_group("Wheelie")
+## Radians of wheelie target per unit of wheel force (get_power_output × acceleration). The single
+## knob that calibrates how hard bikes loft: a strong/peaky power band drives the target past the
+## balance point (loops), a weaker one tops out below it. See _calc_normal_wheelie_target.
+@export var wheelie_force_to_angle: float = 0.045
+## How much lean adds to (back) / subtracts from (forward) the wheelie target, as a fraction of
+## max_wheelie. The joystick's extra authority on a bike that already has the power to loft — it can't
+## conjure a wheelie on a bike too weak to clear the start gate.
+@export var wheelie_lean_influence: float = 0.25
+## Scales the wheelie climb rate (bd.rotation_speed) so the front comes up less abruptly, without
+## touching the stoppie rate.
+@export var wheelie_rise_rate_scale: float = 0.75
+## Clutch-dump torque boost to the wheelie climb rate at low speed (was a hardcoded 2.0).
+@export var wheelie_clutch_kick_boost: float = 1.0
+## Steering authority while up on the front wheel, above wheelie_steer_full_speed (mirrors STOPPIE_STEER_SCALE).
+@export var wheelie_steer_scale: float = 0.5
+## At/below this speed the wheelie steering cut is lifted so tight circle wheelies stay possible.
+@export var wheelie_steer_full_speed: float = 8.0
+## Rear brake pulls the front down during a wheelie, scaled by bd.return_speed (works on throttle too).
+@export var wheelie_rear_brake_drop: float = 3.0
+
 const CLUTCH_KICK_WINDOW: float = 0.2
 # Fraction of bike's 1st-gear torque needed to clutch-pop — blocks high-gear pops
 const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65
@@ -97,6 +118,11 @@ var is_reversing: bool = false
 var speed: float = 0.0
 var roll_angle: float = 0.0 # lean left/right
 var pitch_angle: float = 0.0 # + = wheelie, - = stoppie
+## Latched once a wheelie's power targets past the balance point — the loop is then committed and
+## survives an auto-upshift dropping the target, so a strong bike revved out in a low gear still loops.
+## Synced (drives the pitch trajectory across ticks). Cleared by easing throttle / lean-forward / rear
+## brake / the wheelie coming down. See _pitch_angle_calc.
+var wheelie_committed: bool = false
 var slip_angle: float = 0.0 # signed radians: heading vs velocity direction. Synced via RollbackSynchronizer.
 var is_drifting: bool = false # re-derived each tick from synced inputs + slip_angle (not synced directly)
 # Tank-slapper. angle/vel/hold are synced (perturb heading — see CLAUDE.md Multiplayer); is_wobbling re-derived.
@@ -367,6 +393,21 @@ func _detach_from_surface(delta: float):
 	)
 
 
+## Front brake does nothing while the front wheel is lofted (wheelie) — nothing to brake in the air.
+## pitch_angle here is last tick's value (_pitch_angle_calc runs later), matching is_in_wheelie()'s lag.
+func _effective_front_brake() -> float:
+	if pitch_angle > deg_to_rad(TrickController.WHEELIE_PITCH_THRESHOLD_DEG):
+		return 0.0
+	return input_controller.nfx_front_brake
+
+
+## Rear brake does nothing while the rear wheel is up (stoppie) — nothing to brake in the air.
+func _effective_rear_brake() -> float:
+	if pitch_angle < deg_to_rad(TrickController.STOPPIE_PITCH_THRESHOLD_DEG):
+		return 0.0
+	return input_controller.nfx_rear_brake
+
+
 ## Calculate speed from input / power output
 func _speed_calc(delta: float):
 	var bd = player_entity.bike_definition
@@ -380,7 +421,7 @@ func _speed_calc(delta: float):
 		return
 
 	# Reverse — hold clutch + brake from a near-stop. Bypasses normal accel/brake/slope.
-	var brake_total = input_controller.nfx_front_brake + input_controller.nfx_rear_brake
+	var brake_total = _effective_front_brake() + _effective_rear_brake()
 	# Off-gas only — revving with the clutch in (burnout / launch prep) must not read as reverse.
 	var reverse_input = (
 		input_controller.nfx_clutch_held
@@ -423,7 +464,7 @@ func _speed_calc(delta: float):
 		speed = move_toward(speed, 0, bd.engine_brake_strength * rpm_factor * delta)
 
 	# Braking
-	var total_brake = input_controller.nfx_front_brake + input_controller.nfx_rear_brake
+	var total_brake = _effective_front_brake() + _effective_rear_brake()
 	if total_brake > 0:
 		speed = move_toward(speed, 0, bd.brake_strength * total_brake * delta)
 
@@ -455,13 +496,19 @@ func _steer_calc(delta: float):
 	elif speed < 1 and not is_reversing:
 		amount_normalized_rename_me = 0.2
 
-	# Up on the front wheel: cut steering authority. Scales the TARGET, not the accumulated
+	# One wheel off the ground cuts steering authority. Scale the TARGET, not the accumulated
 	# roll_angle — multiplying roll every tick compounds toward ~4% (kills steering AND puts the
 	# washout out of reach), whereas a target scale settles at a true fraction. Derived inline from
-	# pitch since _pitch_angle_calc (is_stoppie) hasn't run yet this tick.
-	var stoppie_steer_scale := 1.0
+	# pitch since _pitch_angle_calc hasn't run yet this tick. Wheelie keeps full steer at a crawl so
+	# tight circle wheelies stay possible.
+	var trick_steer_scale := 1.0
 	if pitch_angle < deg_to_rad(TrickController.STOPPIE_PITCH_THRESHOLD_DEG):
-		stoppie_steer_scale = STOPPIE_STEER_SCALE
+		trick_steer_scale = STOPPIE_STEER_SCALE
+	elif (
+		pitch_angle > deg_to_rad(TrickController.WHEELIE_PITCH_THRESHOLD_DEG)
+		and speed > wheelie_steer_full_speed
+	):
+		trick_steer_scale = wheelie_steer_scale
 
 	# ONCE STOPPED, LERP BACK TO DEFAULT POSE
 
@@ -469,7 +516,7 @@ func _steer_calc(delta: float):
 	# they're tuned for forward speed and bottom out near 0, so we'd lose all authority.
 	var lean_factor = 1.0 if is_reversing else bd.lean_curve.sample(_speed_pct)
 	var steer_input = - input_controller.nfx_steer if is_reversing else input_controller.nfx_steer
-	var target_lean = steer_input * bd.max_lean_angle_rad * lean_factor * stoppie_steer_scale
+	var target_lean = steer_input * bd.max_lean_angle_rad * lean_factor * trick_steer_scale
 	roll_angle = lerpf(roll_angle, target_lean, bd.lean_speed * delta) * amount_normalized_rename_me
 
 	# Steering — bell curve: low at standstill, peaks mid-low speed, tapers at top speed.
@@ -570,10 +617,28 @@ func _pitch_angle_calc(delta: float):
 	var wheelie_target = 0.0
 	if _can_initiate_wheelie(in_wheelie) and not in_stoppie:
 		wheelie_target = _calc_normal_wheelie_target(bd)
-		# Above balance point is unstable — overrides normal target with drift-to-crash.
-		# In-BP keeps the normal target; dampened rotation/decay in _apply_wheelie_pitch gives the BP feel.
-		if above_balance_point:
-			wheelie_target = _calc_above_balance_point_target(bd, bp_low, bp_high)
+		# Loop commit: once the bike's power targets past the balance point (or pitch is already there),
+		# it's going over — LATCH it. The latch survives an auto-upshift dropping the target below the
+		# threshold, so a strong bike revved out in 1st keeps looping as it shifts up (the log showed it
+		# stalling at ~78° right when it upshifted). A weak bike never targets past bp_high, so it never
+		# latches and just holds a wheelie.
+		if wheelie_target > bp_high or above_balance_point:
+			wheelie_committed = true
+	else:
+		wheelie_committed = false
+	# Bail out of a committed loop by easing throttle, leaning forward, rear-braking, or once it has
+	# come down — the rider's saves. (Lean-forward / rear-brake recovery is applied further below too.)
+	if (
+		not in_wheelie
+		or input_controller.nfx_throttle < 0.5
+		or input_controller.nfx_lean > 0.0
+		or _effective_rear_brake() > 0.0
+	):
+		wheelie_committed = false
+	# Committed → drive to the loop and climb hard through the balance window (see _apply_wheelie_pitch).
+	var punch_through = wheelie_committed
+	if wheelie_committed:
+		wheelie_target = _calc_above_balance_point_target(bd, bp_low, bp_high)
 
 	DebugUtils.DebugMsg(
 		(
@@ -608,14 +673,22 @@ func _pitch_angle_calc(delta: float):
 			wheelie_gravity *= _balance_point_decay_mult * 2.0
 		pitch_angle = move_toward(pitch_angle, 0, wheelie_gravity * delta)
 
-	# Rev limiter drop — banging the limiter during a wheelie kills the power
-	# Rider needs to shift up or back off throttle to maintain the wheelie
+	# Rear brake stabs the front down (rear wheel loads, weight pitches forward). Works on throttle
+	# too, so you can chop a wheelie with the brake instead of only lean/off-gas. Rear brake is live
+	# in a wheelie (rear is grounded); _effective_rear_brake only zeroes it in a stoppie.
+	if in_wheelie and _effective_rear_brake() > 0.0:
+		pitch_angle = move_toward(
+			pitch_angle, 0, bd.return_speed * _effective_rear_brake() * wheelie_rear_brake_drop * delta
+		)
+
+	# Rev limiter — power cuts at redline (get_power_output returns 0), so the force-driven wheelie
+	# target collapses on its own and the front eases down. No extra pitch slam: it used to shove the
+	# nose down harder than the climb, which blocked a strong bike from looping out at redline. Just
+	# bleed a little speed to signal the limiter.
 	if in_wheelie and gearing_controller.is_rev_limited:
-		var drop_speed = bd.return_speed * 5.0
-		pitch_angle = move_toward(pitch_angle, 0, drop_speed * delta)
 		speed = move_toward(speed, speed * 0.95, bd.max_speed * 0.1 * delta)
 
-	_apply_wheelie_pitch(bd, wheelie_target, in_balance_point, delta)
+	_apply_wheelie_pitch(bd, wheelie_target, in_balance_point, punch_through, delta)
 
 	# --- Stoppie ---
 	if not in_wheelie:
@@ -624,19 +697,26 @@ func _pitch_angle_calc(delta: float):
 	# TODO: easy mode clamp
 
 
-## Apply wheelie pitch toward target, or decay back to 0
+## Apply wheelie pitch toward target, or decay back to 0. punch_through = the bike has the power to
+## loop, so climb at full rate through the balance point instead of damping/rate-scaling it (those
+## would leave a strong bike stuck just short of the loop).
 func _apply_wheelie_pitch(
-	bd: BikeSkinDefinition, wheelie_target: float, in_balance_point: bool, delta: float
+	bd: BikeSkinDefinition,
+	wheelie_target: float,
+	in_balance_point: bool,
+	punch_through: bool,
+	delta: float
 ):
 	if wheelie_target > 0:
-		var spd = (
-			bd.rotation_speed * _balance_point_decay_mult if in_balance_point else bd.rotation_speed
-		)
-		# Clutch dump torque boost — massive at low speed, fades with speed
+		var spd = bd.rotation_speed
+		if in_balance_point and not punch_through:
+			spd *= _balance_point_decay_mult
+		# Clutch dump torque boost — big at low speed, fades with speed
 		if _clutch_kick_window > 0:
 			var speed_falloff = 1.0 - clampf(speed / (bd.max_speed * 0.3), 0.0, 1.0)
-			spd += bd.rotation_speed * 2.0 * speed_falloff
-		pitch_angle = move_toward(pitch_angle, wheelie_target, spd * delta)
+			spd += bd.rotation_speed * wheelie_clutch_kick_boost * speed_falloff
+		var rate_scale = 1.0 if punch_through else wheelie_rise_rate_scale
+		pitch_angle = move_toward(pitch_angle, wheelie_target, spd * rate_scale * delta)
 	elif pitch_angle > 0:
 		var decay_speed = (
 			bd.return_speed * _balance_point_decay_mult if in_balance_point else bd.return_speed
@@ -646,7 +726,8 @@ func _apply_wheelie_pitch(
 
 ## Stoppie physics: brake hard + lean forward to lift the rear wheel
 func _stoppie_calc(bd: BikeSkinDefinition, in_stoppie: bool, delta: float):
-	var total_brake = input_controller.nfx_front_brake + input_controller.nfx_rear_brake
+	# Only the front brake pitches the nose down — the rear can't lift itself off the ground.
+	var total_brake = _effective_front_brake()
 	var max_stoppie_rad = deg_to_rad(bd.max_stoppie_angle_deg)
 
 	# Dynamic brake threshold: need more brake to start, less to sustain at deeper angles
@@ -719,27 +800,24 @@ func _can_initiate_wheelie(in_wheelie: bool) -> bool:
 	if abs(roll_angle) >= deg_to_rad(10):
 		return false
 
-	# Clutch dump pop — needs raw torque (low gear). Gates on potential power
-	# (ignoring engagement, since clutch_value is still ~1.0 at the dump instant).
+	# Clutch dump pop — gates on POTENTIAL power (ignores engagement, since clutch_value is still ~1.0
+	# at the dump instant) × acceleration, the same wheel-force units as the power gate below. A bike
+	# too weak to loft (mini) can't clutch-pop one either, and a tall gear (3rd+) lacks the torque.
 	var clutch_pop = _clutch_kick_window > 0 and input_controller.nfx_throttle > 0.5
 	if clutch_pop:
 		# Low-speed launch move only — don't let slope-inflated downhill speed clutch-pop a wheelie.
 		if speed > bd.max_speed * CLUTCH_POP_MAX_SPEED_FRAC:
 			return false
-		var max_torque_mult = bd.gear_ratios[0] / bd.gear_ratios[bd.num_gears - 1]
-		return gearing_controller.get_potential_power_output() > max_torque_mult * CLUTCH_POP_MIN_POWER_FRAC
+		return gearing_controller.get_potential_power_output() * bd.acceleration > POWER_WHEELIE_MIN_FORCE
 
-	# Power wheelie — needs forward motion + lean back + throttle + delivered force.
-	# Gate uses power × bd.acceleration (bike's actual wheel force), so weaker bikes
+	# Power wheelie — needs forward motion + throttle + delivered force. Lean-back is NOT required
+	# (it only boosts the target in _calc_normal_wheelie_target); throttle + power alone lofts the
+	# front. Gate uses power × bd.acceleration (bike's actual wheel force), so weaker bikes
 	# (lower acceleration) auto-fail without needing a per-bike flag.
 	if speed <= 1:
 		return false
 	var force = gearing_controller.get_power_output() * bd.acceleration
-	return (
-		input_controller.nfx_lean < -0.3
-		and input_controller.nfx_throttle > 0.7
-		and force > POWER_WHEELIE_MIN_FORCE
-	)
+	return input_controller.nfx_throttle > 0.7 and force > POWER_WHEELIE_MIN_FORCE
 
 
 ## Drift entry. Mirror of the wheelie clutch/power gates but gated on lean FORWARD
@@ -862,7 +940,7 @@ func _drift_calc(delta: float):
 
 func _is_brake_slide_input() -> bool:
 	return (
-		input_controller.nfx_rear_brake > DRIFT_BRAKE_HOLD
+		_effective_rear_brake() > DRIFT_BRAKE_HOLD
 		and absf(input_controller.nfx_steer) > DRIFT_STEER_ENTRY
 	)
 
@@ -990,21 +1068,28 @@ func _wobble_calc(delta: float):
 	player_entity.rotate_y(wobble_vel * delta)
 
 
-## Calculate wheelie target. Lean-back is the only driver — throttle alone
-## must not pin a target, or the bike sticks at a static equilibrium angle.
+## Calculate wheelie target. Loft is driven by the bike's real wheel force (get_power_output ×
+## acceleration — the SAME quantity the start gate uses), mapped straight to an angle. A strong or
+## peaky power band drives the target past the balance point (loops); a weaker one tops out below it;
+## a bike too weak to clear the start gate never gets here (the mini). All of it follows the existing
+## power_curve, gearing and acceleration — no per-bike wheelie flag. Lean adds authority on a capable
+## bike; the start gate (not this function) is what keeps a too-weak bike from lofting at all.
 func _calc_normal_wheelie_target(bd: BikeSkinDefinition) -> float:
-	if input_controller.nfx_lean >= 0:
-		return 0.0
 	var max_wheelie_rad = deg_to_rad(bd.max_wheelie_angle_deg)
 	# Unstable surfaces shrink the achievable target so reaching the balance point takes more input.
 	var unstable_scale = 1.0 - get_unstable_factor() * UNSTABLE_WHEELIE_SUPPRESSION
-	# Raise depends on the POWER BAND: get_power_output() = throttle x power_curve(rpm) x gear torque,
-	# normalized to 1st-gear peak. Revving into the band lofts higher; lugging or a tall gear lifts
-	# less. Works on KBM too — RPM is continuous even with binary throttle. bd.rotation_speed sets rate.
-	var max_torque_mult = bd.gear_ratios[0] / bd.gear_ratios[bd.num_gears - 1]
-	var power_frac = clampf(gearing_controller.get_power_output() / max_torque_mult, 0.0, 1.0)
-	var power_scale = 0.3 + 0.7 * power_frac
-	return max_wheelie_rad * abs(input_controller.nfx_lean) * power_scale * unstable_scale
+	# Force = the bike's real wheel force (same quantity as the start gate). During a clutch dump the
+	# clutch is still disengaged, so get_power_output() reads ~0 — fall back to potential power there
+	# (what the clutch-pop gate uses) or a clutch-up would loft nothing.
+	var power_out = gearing_controller.get_power_output()
+	if _clutch_kick_window > 0:
+		power_out = maxf(power_out, gearing_controller.get_potential_power_output())
+	var power_target = power_out * bd.acceleration * wheelie_force_to_angle
+	if power_target <= 0.0:
+		return 0.0  # no power = no wheelie; lean alone can't float one (keeps the mini planted)
+	# Lean-back (negative) adds on top, lean-forward trims — as a fraction of max_wheelie.
+	var target = power_target - input_controller.nfx_lean * wheelie_lean_influence * max_wheelie_rad
+	return clampf(target, 0.0, max_wheelie_rad) * unstable_scale
 
 
 ## Above balance point — unstable. Drifts toward crash unless rider leans forward.
@@ -1057,6 +1142,7 @@ func do_reset():
 	speed = 0.0
 	roll_angle = 0.0
 	pitch_angle = 0.0
+	wheelie_committed = false
 	slip_angle = 0.0
 	is_drifting = false
 	is_stoppie = false
