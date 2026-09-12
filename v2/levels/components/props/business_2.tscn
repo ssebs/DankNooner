@@ -18,7 +18,7 @@ height = 20.0
 depth = 20.0
 
 [node name="door" parent="." unique_id=1273445304 instance=ExtResource("1_suex6")]
-transform = Transform3D(-1, 8.742278e-08, -4.3711385e-08, -4.371139e-08, -1.642028e-15, 1, 8.742278e-08, 1, 3.5527137e-15, 0.015024066, 4.0249996, 16.131453)
+transform = Transform3D(-1, 8.742278e-08, -4.3711385e-08, -4.371139e-08, -1.642028e-15, 1, 8.742278e-08, 1, 3.5527137e-15, 0.015024066, 4.0249996, 10.131453)
 collision_layer = 3
 shape_mode = 1
 width = 8.0
@@ -27,7 +27,7 @@ depth = 8.0
 color_preset = 1
 
 [node name="door3" parent="." unique_id=1807741093 instance=ExtResource("1_suex6")]
-transform = Transform3D(-1, 8.742278e-08, -4.3711385e-08, 8.742278e-08, 1, -4.3711385e-08, 4.3711385e-08, -4.371139e-08, -1, 0, 0.4104848, 24)
+transform = Transform3D(-1, 8.742278e-08, -4.3711385e-08, 8.742278e-08, 1, -4.3711385e-08, 4.3711385e-08, -4.371139e-08, -1, 0, 0.4104848, 8)
 collision_layer = 3
 shape_mode = 1
 width = 5.0
@@ -35,7 +35,7 @@ height = 0.2
 depth = 16.0
 
 [node name="door2" parent="." unique_id=40851301 instance=ExtResource("1_suex6")]
-transform = Transform3D(-1, -4.371138e-08, -8.742278e-08, -4.371138e-08, 1, -4.371139e-08, 8.742277e-08, -4.3711385e-08, -1, 0.015024066, 8.525, 18.131453)
+transform = Transform3D(-1, -4.371138e-08, -8.742278e-08, -4.371138e-08, 1, -4.371139e-08, 8.742277e-08, -4.3711385e-08, -1, 0.015024066, 8.525, 12.131453)
 collision_layer = 3
 width = 8.0
 depth = 4.0
