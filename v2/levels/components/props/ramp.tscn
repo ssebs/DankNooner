@@ -34,3 +34,30 @@ width = 20.0
 height = 0.1
 depth = 2.0
 color_preset = 5
+
+[node name="crash" parent="." unique_id=225985917 instance=ExtResource("1_nj8oi")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 1, 2, 6.9052043)
+collision_layer = 3
+shape_mode = 1
+width = 20.0
+height = 0.1
+depth = 4.0
+color_preset = 1
+
+[node name="crash2" parent="." unique_id=2140580274 instance=ExtResource("1_nj8oi")]
+transform = Transform3D(0, -0.99999994, 0, -4.371139e-08, 2.3037128e-15, -1, 0.99999994, 0, -4.3711392e-08, -9.063524, 1, 5.9468045)
+collision_layer = 3
+shape_mode = 1
+width = 2.0
+height = 0.1
+depth = 2.0
+color_preset = 1
+
+[node name="crash3" parent="." unique_id=916935309 instance=ExtResource("1_nj8oi")]
+transform = Transform3D(8.742277e-08, 0.99999994, 0, 4.371139e-08, -1.5176582e-15, -1, -0.99999994, 8.742277e-08, -4.3711392e-08, 11.155117, 1, 5.9468045)
+collision_layer = 3
+shape_mode = 1
+width = 2.0
+height = 0.1
+depth = 2.0
+color_preset = 1

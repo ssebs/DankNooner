@@ -24,7 +24,6 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-- [ ] smack into wall - "crashing" into layer 1 items keeps speed but you don't move, need to add some kinda check here. e.g. driving full speed into back of ramp
 - [ ] [Gameplay feedback notes](./_ScratchPad.md#gameplay-feedback-notes)
   - [ ] todo now
 - [ ] get fun gameplay loop going
@@ -230,6 +229,8 @@
 ---
 
 ## Done ✅
+
+- [x] smack into wall - "crashing" into layer 1 items keeps speed but you don't move, need to add some kinda check here. e.g. driving full speed into back of ramp
 
 - [x] R to quick respawn, hold R to full respawn
   - [x] function

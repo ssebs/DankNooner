@@ -87,6 +87,7 @@ color_preset = 6
 
 [node name="tree_canopy_1" parent="." unique_id=240000012 instance=ExtResource("1_park0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 4.5, -8.5)
+collision_layer = 3
 width = 6.0
 height = 5.0
 depth = 6.0
@@ -102,6 +103,7 @@ color_preset = 6
 
 [node name="tree_canopy_2" parent="." unique_id=240000014 instance=ExtResource("1_park0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 4.5, -16)
+collision_layer = 3
 width = 6.0
 height = 5.0
 depth = 6.0
@@ -117,6 +119,7 @@ color_preset = 6
 
 [node name="tree_canopy_3" parent="." unique_id=240000016 instance=ExtResource("1_park0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 4.5, 16)
+collision_layer = 3
 width = 6.0
 height = 5.0
 depth = 6.0
@@ -132,6 +135,7 @@ color_preset = 6
 
 [node name="tree_canopy_4" parent="." unique_id=240000018 instance=ExtResource("1_park0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 4.5, 16)
+collision_layer = 3
 width = 6.0
 height = 5.0
 depth = 6.0
@@ -179,6 +183,7 @@ color_preset = 1
 
 [node name="gazebo_roof" parent="." unique_id=240000024 instance=ExtResource("1_park0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 3.3, -20)
+collision_layer = 3
 width = 8.0
 height = 0.4
 depth = 8.0
