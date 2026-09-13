@@ -24,7 +24,7 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-- [ ] add vibration on brake danger / screen shake
+- [ ] tell controller players they need to progressively brake
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [ ] make tricks + combos easier to do **WIP**
@@ -226,6 +226,8 @@
 ---
 
 ## Done ✅
+
+- [x] add vibration on brake danger / screen shake
 
 - [x] increase bat time
 - [x] make grass unstable

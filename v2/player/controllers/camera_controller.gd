@@ -35,6 +35,9 @@ enum CameraMode { TPS = 0, FPS, NONE }
 @export var trauma_decay: float = 1.8
 ## Max camera jitter angle (deg) at full trauma.
 @export var shake_max_angle_deg: float = 2.5
+## Controller rumble intensity at full screen shake — vibration tracks the same shake amount
+## as the camera, so every shake source (accel, cornering, brake danger, wheelie landings) rumbles.
+@export_range(0.0, 1.0) var shake_vibration_scale: float = 1.0
 ## Speed change (units/s²) where accel/decel shake begins.
 @export var accel_shake_threshold: float = 12.0
 ## Speed change (units/s²) where accel/decel shake is maxed.
@@ -45,12 +48,28 @@ enum CameraMode { TPS = 0, FPS, NONE }
 @export_range(0.0, 1.0) var grip_shake_threshold: float = 0.5
 ## Trauma floor held at full lean for the current speed — tires near their grip limit.
 @export var grip_max_trauma: float = 0.3
+## Fraction of brake danger (grip_usage) where the near-washout shake begins.
+@export_range(0.0, 1.0) var brake_shake_threshold: float = 0.6
+## Trauma floor held at full brake danger — front tire on the edge of locking/washing out.
+@export var brake_max_trauma: float = 0.4
 ## Max one-shot trauma burst on a wheelie landing (scaled by front-wheel drop speed).
 @export var wheelie_land_trauma: float = 0.35
 ## Front-wheel drop speed (deg/s) below which a wheelie landing adds no shake.
 @export var wheelie_land_drop_min_deg: float = 60.0
 ## Front-wheel drop speed (deg/s) at which a wheelie landing adds full shake.
 @export var wheelie_land_drop_max_deg: float = 400.0
+## Max one-shot trauma burst on touching down from a jump (scaled by impact speed).
+@export var jump_land_trauma: float = 0.5
+## Downward impact speed (units/s) below which a jump landing adds no shake — small hops.
+@export var jump_land_impact_min: float = 4.0
+## Downward impact speed (units/s) at which a jump landing adds full shake.
+@export var jump_land_impact_max: float = 20.0
+## One-shot trauma burst on crashing — the hardest hit.
+@export var crash_trauma: float = 1.0
+## Trauma floor at a full-blown speed wobble (tank-slapper); scales up as the wobble nears highside.
+@export var wobble_max_trauma: float = 0.9
+## Trauma floor held the whole time the bike is drifting.
+@export var drift_trauma: float = 0.6
 ## Fraction of the bike's max_speed where the FOV widen + blur begins.
 @export_range(0.0, 1.0) var fov_speed_pct_min: float = 0.2
 ## Fraction of the bike's max_speed where the FOV widen + blur is maxed out.
@@ -75,6 +94,9 @@ const RADIAL_BLUR_SHADER := preload("res://resources/shaders/radial_blur.gdshade
 const ACCEL_SMOOTH_RATE: float = 12.0
 ## Peak-hold decay (rad/s per second) for the wheelie-drop rate sampled across the land event.
 const PITCH_DROP_DECAY: float = 30.0
+## Near-stopped speed (units/s) below which brake danger is inert — grabbing the brake while
+## parked pins grip_usage high but there's no momentum to wash the front out, so it must not shake.
+const BRAKE_SHAKE_MIN_SPEED: float = 1.0
 
 var current_cam_mode: CameraMode
 var invert_cam: int = -1:
@@ -105,6 +127,9 @@ var _prev_pitch: float = 0.0
 var _pitch_drop_rate: float = 0.0  # peak-held downward pitch speed (rad/s) for landing shake
 var _prev_speed: float = 0.0
 var _accel_smooth: float = 0.0  # low-passed |accel| (units/s²) for accel/decel shake
+var _prev_on_floor: bool = true
+var _fall_speed: float = 0.0  # peak-held downward speed while airborne, for the landing burst
+var _prev_crashed: bool = false
 
 # TODO - zoom out w/ speed / current_trick != None
 
@@ -349,6 +374,19 @@ func _update_juice_fx(delta: float):
 	_pitch_drop_rate = maxf(instant_drop, _pitch_drop_rate - PITCH_DROP_DECAY * delta)
 	_prev_pitch = pitch
 
+	# Touching down from a jump bursts trauma by how fast we were falling. Peak-hold the airborne
+	# downward speed, then convert it on the landing edge (velocity.y is zeroed once grounded).
+	var on_floor: bool = player_entity.movement_controller._is_on_floor
+	if not on_floor:
+		_fall_speed = maxf(_fall_speed, -player_entity.velocity.y)
+	elif not _prev_on_floor:
+		var land: float = clampf(
+			remap(_fall_speed, jump_land_impact_min, jump_land_impact_max, 0.0, 1.0), 0.0, 1.0
+		)
+		_trauma = minf(_trauma + jump_land_trauma * land, 1.0)
+		_fall_speed = 0.0
+	_prev_on_floor = on_floor
+
 	# Aggressive accel/decel holds a trauma floor; the wheelie-landing burst decays on top of it.
 	# Reversing is gentle by nature, so it never shakes.
 	var spd: float = player_entity.movement_controller.speed
@@ -384,12 +422,47 @@ func _update_juice_fx(delta: float):
 			)
 		)
 
+	# Brake danger holds a trauma floor: as grip_usage nears 1 the front tire is on the edge of
+	# locking / washing out — the same near-the-limit feel as hard cornering. grip_usage is the
+	# brake-danger signal the HUD shows (CrashController._update_brake_grab).
+	var brake_danger: float = player_entity.grip_usage
+	if brake_danger > brake_shake_threshold and mc.speed > BRAKE_SHAKE_MIN_SPEED:
+		_trauma = maxf(
+			_trauma,
+			clampf(
+				remap(brake_danger, brake_shake_threshold, 1.0, 0.0, brake_max_trauma),
+				0.0,
+				brake_max_trauma
+			)
+		)
+
+	# Heavy tier — the loudest feedback. Crash jolts once on the edge (the accel spike from the
+	# sudden stop rides on top); a tank-slapper climbs toward the highside limit; a drift holds
+	# a steady floor for its whole slide.
+	var crashed: bool = player_entity.is_crashed
+	if crashed and not _prev_crashed:
+		_trauma = minf(_trauma + crash_trauma, 1.0)
+	_prev_crashed = crashed
+
+	if mc.is_wobbling:
+		var wobble_severity: float = clampf(
+			absf(mc.wobble_angle) / deg_to_rad(mc.wobble_crash_angle_deg), 0.0, 1.0
+		)
+		_trauma = maxf(_trauma, wobble_max_trauma * wobble_severity)
+
+	if mc.is_drifting:
+		_trauma = maxf(_trauma, drift_trauma)
+
 	var shake: float = _trauma * _trauma
 	if shake > 0.0:
 		var amp: float = deg_to_rad(shake_max_angle_deg) * shake
 		cam.rotate_object_local(Vector3.RIGHT, randf_range(-amp, amp))
 		cam.rotate_object_local(Vector3.UP, randf_range(-amp, amp))
 		cam.rotate_object_local(Vector3.FORWARD, randf_range(-amp, amp) * 0.5)
+
+	# Rumble at the same level the screen shakes — add_vibration stops itself when shake hits 0.
+	var rumble: float = shake * shake_vibration_scale
+	input_controller.add_vibration(rumble, rumble)
 
 	_trauma = maxf(_trauma - trauma_decay * delta, 0.0)
 

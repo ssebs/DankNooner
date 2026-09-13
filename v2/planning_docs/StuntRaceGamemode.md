@@ -3,7 +3,7 @@
 - [Notes](#notes)
 - [MVP](#mvp)
 - [Implementation approach (idea)](#implementation-approach-idea)
-- [As-built (POC) — deviations \& tradeoffs](#as-built-poc--deviations--tradeoffs)
+- [As-built — deviations \& tradeoffs](#as-built--deviations--tradeoffs)
 - [Implementation plan (PM)](#implementation-plan-pm)
 	- [Prereq — Trace the race gamemode end-to-end](#prereq--trace-the-race-gamemode-end-to-end)
 	- [M0 — Gamemode spine (code-only, humans-only, existing level)](#m0--gamemode-spine-code-only-humans-only-existing-level)
@@ -107,14 +107,18 @@ forfeits the bonus — never leaves you under-fueled. One chance is fine when th
 "bonus or no bonus."
 
 
-## As-built (POC) — deviations & tradeoffs
+## As-built — deviations & tradeoffs
+
+> Updated 2026-09. Accurate record of what shipped; the imperative "Implementation approach" and
+> milestone plan below are the original design, kept as history.
 
 The POC was built **node-based** (runner + tasks under the EventStartCircle, reusing the race
 plumbing), not the imperative approach sketched above.
 
 - **`StuntRaceGameMode`** is a near-copy of `RoadRaceGameMode` (the StreetRace convention:
   duplicate-and-diverge), launched via the level's existing Stunt Race event circle
-  (`target_gamemode = STUNT_RACE`).
+  (`target_gamemode = STUNT_RACE`). Registered in `GamemodeManager`. **NPC racers work** —
+  `_setup_npcs()` fills the empty grid slots.
 - **`StuntRaceTask` subclasses `RaceTask`** — the opposite of M0's "don't borrow RaceTask" call.
   Reuse won: it inherits per-racer tracking, respawn-point updates, results, and NPC support
   (`NPCRaceManager` reaches into `RaceTask._peer_progress`, so a standalone task would mean retyping
@@ -123,12 +127,25 @@ plumbing), not the imperative approach sketched above.
   It also carries the item-spawner lifecycle — its `PickupSpawner` children, activated/deactivated
   via `on_race_start`/`on_race_end` (driven by the gamemode's Enter/Exit). See
   [GamemodeSystem — Level-authored task inputs](./GamemodeSystem.md#level-authored-task-inputs).
+- **Level:** `stunt_track_01` shipped, registered as `STUNTTRACK_01`, with multiple event circles.
+- **Item system shipped** (`PickupItem` / `PickupSpawner` / `PickupItemDefinition`) — server-auth,
+  RPC-by-path like the animal spawners. Spawners run during a race (via `StuntRaceTask`) **and** in
+  free roam (via `PickupSpawnManager`). Effects in `SpawnManager`: **Gas Can** → boost refill;
+  **Bat** → swing that wobbles nearby riders.
+- **Ramming** crashes the victim already; wobble-on-ram fires too rarely (known bug). No crash is
+  scored as a knockout — there's no scoring axis.
 
 **Tradeoff / tech debt:** the lap model is hidden, not gone — a bit of cleverness (hidden exports, a
 plain-timer HUD override in place of "Lap x/y") in service of reuse. **Revisit when the HUD system is
 reworked** (minigames incoming): that's the natural point to decide whether to decouple
 `StuntRaceTask` from `RaceTask` (and retype `NPCRaceManager` off it) and give the stunt race its own
 flat-list task + HUD.
+
+### Not built yet
+
+- **Three-axis scoring** — results are placement/time only; no Style/Knockout aggregator.
+- **Boost = fuel** — no station top-off, no fill-up minigame; boost is just the normal meter.
+- **Rest of the item roster** — only Gas Can + Bat.
 
 
 ## Implementation plan (PM)
@@ -184,6 +201,8 @@ flat-list task + HUD.
 
 ### M0 — Gamemode spine (code-only, humans-only, existing level)
 
+> **Status:** ✅ leg loop shipped (node-based — see As-built); ❌ scoring aggregator + boost=fuel top-off.
+
 > The proof-of-loop slice. No new level, no items, knockouts stubbed. Runs on an existing
 > racetrack level to prove the leg loop + scoring before building the heavy subsystems.
 
@@ -230,6 +249,8 @@ flat-list task + HUD.
 
 ### M1 — Blockout level (editor work + group conventions)
 
+> **Status:** ✅ `stunt_track_01` built + registered — via event-circle/task checkpoints, not group markers.
+
 > Graybox only — flat void / synthwave grid. Mostly the human's editor work; my part is the
 > group-marker conventions and `LevelManager` registration.
 
@@ -242,6 +263,8 @@ flat-list task + HUD.
 - **Verify:** level loads from lobby, M0 loop runs on it end-to-end
 
 ### M2 — Knockouts via ramming + fast respawn
+
+> **Status:** 🟡 ramming crashes the victim; ❌ not scored as a knockout, and wobble-on-ram is too rare (bug).
 
 > Makes the third scoring axis live without the item roster.
 
@@ -257,6 +280,8 @@ flat-list task + HUD.
 - **Verify:** ramming crashes the victim, aggressor's Knockout count increments, respawn is quick
 
 ### M3 — Item system + starter set
+
+> **Status:** ✅ system shipped (see As-built); collect-and-apply instantly (no hold/activate yet), Gas Can + Bat only.
 
 > The heaviest net-new MVP piece. Pickup + hold-one + single activate, all netfox-synced.
 
@@ -274,6 +299,8 @@ flat-list task + HUD.
 
 ### M4 — Fill-up minigame
 
+> **Status:** ❌ not started. No station refuel and no minigame — boost is just the normal boost meter.
+
 > Replaces the M0 stub. Self-contained local minigame, runs outside the rollback sim.
 
 - [ ] Local `CanvasLayer`, top-down angle, mouse-aim nozzle, click-and-hold to fill
@@ -287,9 +314,9 @@ flat-list task + HUD.
 
 > Explicitly out of MVP; each is its own effort.
 
-- [ ] Rest of the item roster: Bat, Shorty Shotgun, Siphon Hose, Deployable Ramp, Sticky Tires, Armor, Roll Cage
-  - Needs speed wobbles to exist (Bat / ramming)
-- [ ] NPC racers — re-add dormant racing AI (`npc_race_state` / `npc_race_manager`) after the human loop works
+- [ ] Rest of the item roster: Shorty Shotgun, Siphon Hose, Deployable Ramp, Sticky Tires, Armor, Roll Cage
+  - Bat ✅ already shipped (see As-built); speed wobbles exist
+- [x] NPC racers — racing AI (`npc_race_state` / `npc_race_manager`) is live in stunt race (`_setup_npcs`)
 - [ ] Cross-city / open-world level structure (islands, ~9 stations / 3 circuits)
 - [ ] City aesthetic — environmental ramps, buildings, vistas, lakes
 
