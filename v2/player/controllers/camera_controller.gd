@@ -1,7 +1,7 @@
 @tool
 class_name CameraController extends Node3D
 
-enum CameraMode { TPS = 0, FPS, NONE }
+enum CameraMode {TPS = 0, FPS, NONE}
 
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
@@ -16,7 +16,7 @@ enum CameraMode { TPS = 0, FPS, NONE }
 @export_group("TPS Orbit")
 @export var pitch_min_deg: float = -20.0
 @export var pitch_max_deg: float = 60.0
-@export var tps_look_height: float = 0.7
+@export var tps_look_height: float = 0.75
 ## Orbit pitch (deg) the TPS base view rotates to while in the wheelie balance point — the
 ## bike rears up, so the rest camera tilts up to frame it. Lerps in/out; mouse can still override.
 @export var wheelie_cam_orbit_pitch_deg: float = 10.0
@@ -124,11 +124,11 @@ var _blur_mat: ShaderMaterial = null
 ## Smoothed 0..1 boost blend — is_boosting is a hard bool, so ease it for the FX.
 var _boost_blend: float = 0.0
 var _prev_pitch: float = 0.0
-var _pitch_drop_rate: float = 0.0  # peak-held downward pitch speed (rad/s) for landing shake
+var _pitch_drop_rate: float = 0.0 # peak-held downward pitch speed (rad/s) for landing shake
 var _prev_speed: float = 0.0
-var _accel_smooth: float = 0.0  # low-passed |accel| (units/s²) for accel/decel shake
+var _accel_smooth: float = 0.0 # low-passed |accel| (units/s²) for accel/decel shake
 var _prev_on_floor: bool = true
-var _fall_speed: float = 0.0  # peak-held downward speed while airborne, for the landing burst
+var _fall_speed: float = 0.0 # peak-held downward speed while airborne, for the landing burst
 var _prev_crashed: bool = false
 
 # TODO - zoom out w/ speed / current_trick != None
@@ -218,7 +218,7 @@ func _update_tps_input(delta: float, mouse: Vector2):
 
 func _update_tps_camera():
 	var marker_offset: Vector3 = tps_marker.position
-	var distance: float = -marker_offset.z
+	var distance: float = - marker_offset.z
 	var height: float = marker_offset.y
 
 	var focus: Vector3 = _get_tps_focus_position()
