@@ -24,10 +24,6 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-- [ ] [Gameplay feedback notes](./_ScratchPad.md#gameplay-feedback-notes)
-  - [ ] todo now
-- [ ] show/hide objects if they get past checkpoint in race (ArrowWall4_DEPENDS_ON_CheckpointMarker9)
-  - [ ] i want to be able to spawn/despawn items sequentially in the race, aka have a Node in the children of StuntRaceTask called "DIV" that has a export var pointing to a checkpoint marker, so once you go thru that marker the items under this DIV item are then spawned and the ones before it are despawned. so you can go back/forth on the same road in diff directions
 - [ ] add vibration on brake danger / screen shake
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
@@ -47,7 +43,14 @@
 
 ## Notes 📝
 > Stuff to move ASAP
-
+- lightning / Rally Up item
+- r => quick respawn, add btn for set full respawn point (if not in race)
+- add longest single wheelie challenge
+- 1, 2, 3 spam is possible for everyone, debounce this
+- longest wheelie during race, challenges
+  - do X trick in 10s or explode, see - CS2 TDM
+- auto transmission => reverse shouldnt need clutch
+- TP commands dont work on multiplayer
 - gas pump fill up minigame (should do more than just boost the bike, and it should be in first person. group of peeps do it like the race gamemodes)
 - [ ] lag when ending stunt race / no tp option
 - Exhaust pop + flame when shifting down to high rpm and giving a little gas for a second like irl
