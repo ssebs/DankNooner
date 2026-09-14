@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://d0dvas03uhcxs"
+path="res://.godot/imported/BEST of Anti-Lag, Exhaust Flames, Pops, Crackles & Backfire Sounds Crank up the volume.mp3-c15c11d6d29c530ff1790f8233825f91.mp3str"
+
+[deps]
+
+source_file="res://assets_excluded_from_export/Exhaust_pops/BEST of Anti-Lag, Exhaust Flames, Pops, Crackles & Backfire Sounds Crank up the volume.mp3"
+dest_files=["res://.godot/imported/BEST of Anti-Lag, Exhaust Flames, Pops, Crackles & Backfire Sounds Crank up the volume.mp3-c15c11d6d29c530ff1790f8233825f91.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

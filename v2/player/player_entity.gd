@@ -65,6 +65,23 @@ signal uncrashed
 @export var front_wheel_front_marker: Marker3D
 @export var rear_wheel_back_marker: Marker3D
 
+## Local cosmetic decel pops / backfires (see _update_exhaust_pops).
+@export_group("Exhaust Pops")
+## RPM ratio floor below which no pops fire.
+@export var exhaust_rpm_min: float = 0.7
+## Throttle at/below this counts as "off the gas" for the decel burble.
+@export var exhaust_throttle_max: float = 0.05
+## Throttle-release rate (units/sec) above which a fast chop cracks a backfire.
+@export var exhaust_backfire_rate: float = 9.0
+## Random gap (sec) between burble pops while coasting at high RPM.
+@export var exhaust_burble_gap_min: float = 0.16
+@export var exhaust_burble_gap_max: float = 0.42
+## After a backfire, seconds before another can fire (one chop = one crack).
+@export var exhaust_backfire_cooldown: float = 0.6
+
+## Fraction of qualifying exhaust-pop triggers that actually fire; the rest are skipped for sparseness.
+const EXHAUST_POP_CHANCE: float = 1.0 / 3.0
+
 @onready var controllers_node: Node3D = %_Controllers
 
 @onready var visual_root: Node3D = %VisualRoot
@@ -150,6 +167,10 @@ var _boost_grant_amount: float = 0.0
 
 # Process-side state tracking (not sync'd)
 var _prev_is_crashed: bool = false
+## Exhaust-pop detection (local, _process): last throttle for chop-rate, plus burble/backfire timers.
+var _exhaust_prev_throttle: float = 0.0
+var _exhaust_burble_timer: float = 0.0
+var _exhaust_pop_cooldown: float = 0.0
 ## Highside launch stashed by trigger_crash for the is_crashed-edge ragdoll. Visual-only, not synced.
 var _crash_launch_impulse: Vector3 = Vector3.ZERO
 
@@ -239,7 +260,7 @@ func _rollback_tick(delta: float, tick: int, _is_fresh: bool):
 	crash_controller.on_movement_rollback_tick(delta)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
 
@@ -252,6 +273,38 @@ func _process(_delta: float) -> void:
 
 	if !is_local_client:
 		return
+
+	_update_exhaust_pops(delta)
+
+
+## Local cosmetic exhaust pops. A decel burble while coasting at high RPM, and a louder backfire
+## on a fast throttle chop. Runs in _process (not the rollback tick) so each pop fires exactly once
+## — a resim of the tick would otherwise retrigger it.
+func _update_exhaust_pops(delta: float) -> void:
+	if !audio_manager:
+		return
+	_exhaust_pop_cooldown -= delta
+	var rpm := gearing_controller.get_rpm_ratio()
+	var throttle := input_controller.nfx_throttle
+	var release_rate := (_exhaust_prev_throttle - throttle) / delta
+	_exhaust_prev_throttle = throttle
+
+	var high_rpm := rpm > exhaust_rpm_min
+	if high_rpm and release_rate > exhaust_backfire_rate and _exhaust_pop_cooldown <= 0.0:
+		_exhaust_pop_cooldown = exhaust_backfire_cooldown
+		# Consume the chop even on a miss so one chop = at most one crack, ~1/3 of the time.
+		if randf() < EXHAUST_POP_CHANCE:
+			audio_manager.play_backfire()
+
+	if high_rpm and throttle <= exhaust_throttle_max:
+		_exhaust_burble_timer -= delta
+		if _exhaust_burble_timer <= 0.0:
+			_exhaust_burble_timer = randf_range(exhaust_burble_gap_min, exhaust_burble_gap_max)
+			# Skip ~2/3 of slots so the stream stays sparse and irregular.
+			if randf() < EXHAUST_POP_CHANCE:
+				audio_manager.play_exhaust_pop()
+	else:
+		_exhaust_burble_timer = 0.0
 
 
 ## Crash-entered edge. Ragdoll on every peer; camera + SFX local; crashed(peer_id) drives respawn.

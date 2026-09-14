@@ -24,6 +24,9 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
+- [ ] Exhaust pop + flame when shifting down to high rpm and giving a little gas for a second like irl
+  - [x] burbles / pops when letting off gas
+  - [ ] VFX
 - [ ] tell controller players they need to progressively brake
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
@@ -43,6 +46,7 @@
 
 ## Notes 📝
 > Stuff to move ASAP
+- [ ] NOS sfx `nos-sfx.ogg`
 - lightning / Rally Up item
 - r => quick respawn, add btn for set full respawn point (if not in race)
 - add longest single wheelie challenge
@@ -53,9 +57,7 @@
 - TP commands dont work on multiplayer
 - gas pump fill up minigame (should do more than just boost the bike, and it should be in first person. group of peeps do it like the race gamemodes)
 - [ ] lag when ending stunt race / no tp option
-- Exhaust pop + flame when shifting down to high rpm and giving a little gas for a second like irl
-  - added `exhaust_pop.ogg`
-  - also see `nos-sfx.ogg`
+
 - Delete most of the NPC AI, keep the basic lane position/movement and racing Ai. Clean it up but don't reimplement until the stunt race is working first.
 - npc => have their own collision layers?
 - when chaining gas stations, just have multiple event start circles & have the mini game be an optional thing (smol start circle in front of gas pump)

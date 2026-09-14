@@ -27,6 +27,8 @@
 [ext_resource type="AudioStream" uid="uid://ck0twuq6xhxmm" path="res://non_fmod_sounds/SFX/tire_squeal_loop_01.ogg" id="26_2gp0e"]
 [ext_resource type="AudioStream" uid="uid://0k35edkokth6" path="res://non_fmod_sounds/XSR900/xsr-idle-loop-w-exhaust.ogg" id="26_holwe"]
 [ext_resource type="AudioStream" uid="uid://bulh350cqoa0a" path="res://non_fmod_sounds/XSR900/xsr900-mid.ogg" id="26_uckac"]
+[ext_resource type="AudioStream" uid="uid://btsdhy0nfx6rj" path="res://non_fmod_sounds/Exhaust_Pops/pop2.ogg" id="28_holwe"]
+[ext_resource type="AudioStream" uid="uid://btd6hkwtgfd6c" path="res://non_fmod_sounds/Exhaust_Pops/burble.ogg" id="29_06geh"]
 
 [node name="AudioManager" type="Node" unique_id=625309404 groups=["Managers"]]
 script = ExtResource("1_1k0gc")
@@ -215,3 +217,20 @@ stream = ExtResource("26_2gp0e")
 bus = &"SFX"
 script = ExtResource("2_snd")
 loop = true
+
+[node name="ExhaustPop" type="AudioStreamPlayer" parent="Sounds" unique_id=909090901]
+unique_name_in_owner = true
+stream = ExtResource("28_holwe")
+volume_db = -5.0
+max_polyphony = 4
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="ExhaustBurble" type="AudioStreamPlayer" parent="Sounds" unique_id=909090902]
+unique_name_in_owner = true
+stream = ExtResource("29_06geh")
+max_polyphony = 4
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"

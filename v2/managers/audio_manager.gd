@@ -73,6 +73,8 @@ var tada: SoundEvent
 var nuke: SoundEvent
 var cod_zombies_kaboom: SoundEvent
 var tire_squeal: SoundEvent
+var exhaust_pop: SoundEvent
+var exhaust_burble: SoundEvent
 
 ## Map of EngineSfx → EngineSoundEvent node, populated in _ready.
 var _engine_sounds: Dictionary = {}
@@ -105,6 +107,8 @@ func _ready():
 	nuke = get_node_or_null("%Nuke") as SoundEvent
 	cod_zombies_kaboom = get_node_or_null("%CODZombiesKaboom") as SoundEvent
 	tire_squeal = get_node_or_null("%TireSqueal") as SoundEvent
+	exhaust_pop = get_node_or_null("%ExhaustPop") as SoundEvent
+	exhaust_burble = get_node_or_null("%ExhaustBurble") as SoundEvent
 
 	_engine_sounds = {
 		EngineSfx.NINJA500: ninja500_revs,
@@ -168,6 +172,20 @@ func stop_revs():
 
 func update_revs_rpm(bike_def: BikeSkinDefinition, val: float):
 	_engine_sounds[bike_def.engine_sound_id].set_parameter("RPM", val)
+
+
+## Short decel burble crack. Pitch/volume randomized so a rapid string doesn't machine-gun.
+func play_exhaust_pop():
+	exhaust_burble.pitch_scale = randf_range(0.9, 1.15)
+	exhaust_burble.volume_db = randf_range(-14.0, -8.0)
+	exhaust_burble.play()
+
+
+## Louder, lower single crack on a fast throttle chop. TODO: give this its own clip.
+func play_backfire():
+	exhaust_pop.pitch_scale = randf_range(0.75, 0.85)
+	exhaust_pop.volume_db = randf_range(-3.0, 0.0)
+	exhaust_pop.play()
 
 
 func play_startup():
