@@ -1115,23 +1115,23 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -440, 1.8671966, 665.5)
 items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 
 [node name="PickupSpawner15" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=14174415 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -199.62132, 9.367197, 622.136)
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -210.58498, 9.367197, 621.083)
 items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 
 [node name="PickupSpawner16" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=219503402 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -196.43935, 9.367197, 625.318)
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -207.403, 9.367197, 624.265)
 items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 
 [node name="PickupSpawner17" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1604600435 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -193.25737, 9.367197, 628.5)
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -204.22102, 9.367197, 627.447)
 items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 
 [node name="PickupSpawner18" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1947255361 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -190.0754, 9.367197, 631.682)
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -201.03905, 9.367197, 630.629)
 items = Array[ExtResource("22_3twxm")]([ExtResource("23_mn4lr")])
 
 [node name="PickupSpawner19" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1761530306 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -187.24696, 9.367197, 634.51044)
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -198.21062, 9.367197, 633.45746)
 
 [node name="PickupSpawner6" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1681096213 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(0.55690646, 0, 0.8305752, 0, 1, 0, -0.8305752, 0, 0.55690646, -711.5583, 6.867197, 579.89886)
@@ -1493,7 +1493,7 @@ collision_layer = 17
 collision_layer = 17
 
 [node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/water" parent_id_path=PackedInt32Array(1750931100, 431463689) index="0" unique_id=232472431]
-collision_layer = 2
+collision_layer = 0
 
 [node name="Houses" type="Node3D" parent="." unique_id=697015734]
 
@@ -1946,11 +1946,14 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -232
 [node name="Ramp7" parent="props" unique_id=347389674 instance=ExtResource("6_w1aki")]
 transform = Transform3D(0.7071067, 0, -0.7071068, 0, 1, 0, 0.7071068, 0, 0.7071067, -199.67159, 0, 364.57108)
 
+[node name="Ramp12" parent="props" unique_id=1242527810 instance=ExtResource("6_w1aki")]
+transform = Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, -208.51044, 0, 376.23834)
+
 [node name="Ramp8" parent="props" unique_id=1887397100 instance=ExtResource("6_w1aki")]
 transform = Transform3D(5.9604645e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, 5.9604645e-08, -512.87823, 0, 462.7878)
 
 [node name="Ramp9" parent="props" unique_id=1825882042 instance=ExtResource("6_w1aki")]
-transform = Transform3D(-0.70710665, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710665, -204.4874, 0, 639.9092)
+transform = Transform3D(-0.70710665, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710665, -216.03952, 0, 639.20667)
 del_end_ramp = true
 
 [node name="Ramp10" parent="props" unique_id=1654268796 instance=ExtResource("6_w1aki")]
@@ -2637,12 +2640,6 @@ ai_lane_group = "road_lanes"
 edge_containers = Array[NodePath]([NodePath(""), NodePath("../Road_001"), NodePath("../Road_006"), NodePath("")])
 edge_rp_targets = Array[NodePath]([NodePath(""), NodePath("RP_007"), NodePath("RP_007"), NodePath("")])
 edge_rp_target_dirs = Array[int]([-1, 0, 0, -1])
-
-[node name="4way_2x3" parent="RoadManager" unique_id=620619674 instance=ExtResource("11_s2l3m")]
-generate_ai_lanes = true
-ai_lane_group = "road_lanes"
-edge_rp_targets = Array[NodePath]([NodePath("RP_002"), NodePath("RP_002"), NodePath(""), NodePath("RP_004")])
-edge_rp_target_dirs = Array[int]([0, 1, -1, 1])
 
 [node name="4way_2x4" parent="RoadManager" unique_id=1780850733 instance=ExtResource("11_s2l3m")]
 transform = Transform3D(1, -1.7267354e-17, -0.00021995045, 1.7267428e-17, 1, 3.4689233e-19, 0.00021995045, -3.506903e-19, 1, -528.1609, 0.25, 656.3859)

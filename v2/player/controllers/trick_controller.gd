@@ -52,6 +52,14 @@ const COMBO_MULT_THRESHOLDS: Array[float] = [5.0, 15.0]
 ## Consts (rollback): must be byte-identical on every peer.
 const BOOST_PER_FLIP: float = 0.5
 const BOOST_PER_AIR_TRICK: float = 0.5
+## A cam-left flick released before this is a KICKFLIP tap; holding longer is the plain held
+## left-stick trick (spread eagle airborne, two left feet on the ground) — same tap/hold split
+## as the respawn button. Const (rollback): byte-identical on every peer. Raising it makes the
+## tap more forgiving but delays the held trick by the same amount.
+const KICKFLIP_TAP_MAX_SECS: float = 0.25
+## Seconds KICKFLIP stays the active trick after a tap (matches the anim length). Latched because
+## a tap has no held phase to keep it alive, unlike the stick-held tricks.
+const KICKFLIP_DURATION: float = 1.0
 
 ## Seconds of unbroken trick time on the current combo, 0 when not comboing. Accrued in this
 ## controller's rollback tick — NOT from a manager's _process(): netfox's RollbackSynchronizer
@@ -74,6 +82,12 @@ var _flip_emitted: bool = false  # prevent re-emitting the same flip while still
 var _trick_timer: float = 0.0
 ## Full air rotations already paid out this airtime — synced so a resim doesn't double-award.
 var _air_flips_awarded: int = 0
+## Seconds cam-left has been held this press, 0 when released. A release under KICKFLIP_TAP_MAX_SECS
+## is a tap (fires a kickflip); a longer hold is the plain left-stick trick. Synced: read/written in
+## the rollback tick and gates a trick (so combo_time, which is synced, stays consistent on resim).
+var _left_hold_time: float = 0.0
+## Remaining KICKFLIP latch in seconds (synced). >0 = kickflip is the active trick.
+var _kickflip_timer: float = 0.0
 
 
 func _ready():
@@ -86,6 +100,7 @@ func on_movement_rollback_tick(delta: float):
 	if player_entity.is_crashed:
 		return
 
+	_update_kickflip_tap(delta)
 	current_trick = _detect_current_trick(delta)
 	if current_trick != _last_trick:
 		if _last_trick != Trick.NONE:
@@ -99,6 +114,27 @@ func on_movement_rollback_tick(delta: float):
 
 	_award_flip_boost()
 	_accrue_combo(delta)
+
+
+## Cam-left tap vs hold. A quick flick (released before KICKFLIP_TAP_MAX_SECS) fires a kickflip;
+## a sustained hold falls through to the plain left-stick trick (spread eagle / two left feet).
+## On the ground the trick button must be held (matching the old RB+direction tricks); airborne
+## needs no button. Lives in the rollback tick — not a local input poll like the respawn tap/hold —
+## so the latch it drives stays byte-identical on every peer.
+func _update_kickflip_tap(delta: float):
+	if _kickflip_timer > 0.0:
+		_kickflip_timer -= delta
+
+	if input_controller.nfx_cam_x < TRICK_CAM_THRESHOLD:
+		_left_hold_time += delta
+		return
+
+	# Left released — a short flick fires the kickflip (skip while one's already latched).
+	var was_tap := _left_hold_time > 0.0 and _left_hold_time < KICKFLIP_TAP_MAX_SECS
+	var button_ok := not movement_controller._is_on_floor or input_controller.nfx_trick_held
+	if was_tap and button_ok and _kickflip_timer <= 0.0:
+		_kickflip_timer = KICKFLIP_DURATION
+	_left_hold_time = 0.0
 
 
 ## Bank a chunk per full air rotation as it completes. air_pitch_total resets to 0 on takeoff /
@@ -157,6 +193,10 @@ func _accrue_combo(delta: float):
 
 
 func _detect_current_trick(delta: float) -> Trick:
+	# Kickflip latch overrides everything (ground or air) while it's running.
+	if _kickflip_timer > 0.0:
+		return Trick.KICKFLIP
+
 	if !movement_controller._is_on_floor:
 		return _detect_air_trick()
 
@@ -184,12 +224,12 @@ func _detect_current_trick(delta: float) -> Trick:
 	if movement_controller.is_stoppie:
 		return Trick.STOPPIE
 
-	# RB + stick direction = flat-ground tricks. Up = kickflip, left = two left feet.
+	# RB + held cam-left = two left feet. A quick left flick is a kickflip instead (see
+	# _update_kickflip_tap), so only a hold past the tap window counts here.
 	if input_controller.nfx_trick_held:
-		if input_controller.nfx_cam_y > -TRICK_CAM_THRESHOLD:
-			return Trick.KICKFLIP
 		if (
-			input_controller.nfx_cam_x < TRICK_CAM_THRESHOLD
+			_left_hold_time >= KICKFLIP_TAP_MAX_SECS
+			and input_controller.nfx_cam_x < TRICK_CAM_THRESHOLD
 			and movement_controller.speed > TWO_LEFT_FEET_SPEED_THRESHOLD
 		):
 			return Trick.TWO_LEFT_FEET
@@ -213,8 +253,9 @@ func _detect_air_trick() -> Trick:
 	if input_controller.nfx_cam_y < TRICK_CAM_THRESHOLD:
 		return Trick.HEEL_CLICKER
 
-	# Left = spread eagle, right = superman (up/down taken above).
-	if input_controller.nfx_cam_x < TRICK_CAM_THRESHOLD:
+	# Left = spread eagle, right = superman (up/down taken above). A quick left flick is a
+	# kickflip (handled in _detect_current_trick); only a held left is a spread eagle.
+	if input_controller.nfx_cam_x < TRICK_CAM_THRESHOLD and _left_hold_time >= KICKFLIP_TAP_MAX_SECS:
 		return Trick.SPREAD_EAGLE
 	if input_controller.nfx_cam_x > -TRICK_CAM_THRESHOLD:
 		return Trick.SUPERMAN
@@ -242,6 +283,8 @@ func do_reset():
 	_last_trick = Trick.NONE
 	_flip_emitted = false
 	_air_flips_awarded = 0
+	_left_hold_time = 0.0
+	_kickflip_timer = 0.0
 	combo_time = 0.0
 	combo_grace = 0.0
 	combo_boost_earned = 0.0

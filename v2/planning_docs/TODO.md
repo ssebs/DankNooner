@@ -44,6 +44,9 @@
 ## Notes 📝
 > Stuff to move ASAP
 - [ ] NOS sfx `nos-sfx.ogg`
+- Time attack mode
+- Add lap race to stunt city
+- Bridge to Island 
 - lightning / Rally Up item
 - r => quick respawn, add btn for set full respawn point (if not in race)
 - add longest single wheelie challenge
