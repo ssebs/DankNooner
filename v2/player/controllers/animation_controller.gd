@@ -735,10 +735,12 @@ func stop_ragdoll() -> void:
 
 ## Called from player_entity.gd's do_respawn
 func do_reset():
-	# Flush any active anim layers (heel clicker, idle, etc.) so a crash mid-trick
-	# doesn't leave deltas baked into the respawn pose.
+	# Flush any active anim layers (heel clicker, idle, etc.) so a crash mid-trick doesn't leave
+	# deltas baked into the respawn pose. Rewind-and-reset (not a bare stop_all) so latched non-pose
+	# tracks — VFX `:emitting` flags like the two-left-feet sparks — revert to their t=0 value first,
+	# matching start_ragdoll; a bare clear would leave them stuck on through the respawn.
 	if _anim_runner:
-		_anim_runner.stop_all()
+		_anim_runner.stop_all_and_reset(player_entity, _POSE_PIPELINE_PATHS)
 	_idle_layer = null
 	for entry in _trick_entries:
 		entry.layer = null

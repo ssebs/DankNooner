@@ -29,6 +29,11 @@ enum Trick {
 
 const TRICK_CAM_THRESHOLD: float = -0.5
 const TWO_LEFT_FEET_SPEED_THRESHOLD: float = 20
+## Airborne time before a pose air trick (spread eagle, superman, heel clicker, high chair) can
+## register. A bump or curb mid-ground-trick isn't a real jump: without this, holding cam-left in
+## two left feet flicks to a spread eagle on the hop and crashes on touchdown (landed-mid-air-trick).
+## Real jumps clear it easily. Const (rollback): byte-identical on every peer.
+const AIR_TRICK_MIN_AIRTIME: float = 0.25
 ## Pitch (degrees) past which the bike is considered in a wheelie / stoppie.
 ## Shared by movement_controller for in_wheelie / in_stoppie checks.
 const WHEELIE_PITCH_THRESHOLD_DEG: float = 10.0
@@ -244,6 +249,13 @@ func _detect_current_trick(delta: float) -> Trick:
 
 
 func _detect_air_trick() -> Trick:
+	# A brief hop (curb, bump) isn't a real jump — a held stick shouldn't register a crashable
+	# air trick until there's genuine airtime, or a ground trick held over a bump (two left feet
+	# on cam-left) flicks to a spread eagle and crashes on touchdown. Flips need far more airtime
+	# than this, so gating here doesn't affect them.
+	if movement_controller._air_time < AIR_TRICK_MIN_AIRTIME:
+		return Trick.NONE
+
 	# Airborne is itself the gate — the right stick drives the tweaks, no RB. Held while the
 	# stick is pushed (no latch). -TRICK_CAM_THRESHOLD == 0.5 (cam stick up).
 	if input_controller.nfx_cam_y > -TRICK_CAM_THRESHOLD:
