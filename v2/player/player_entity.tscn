@@ -277,7 +277,7 @@ tracks/20/keys = {
 tracks/21/type = "value"
 tracks/21/imported = false
 tracks/21/enabled = true
-tracks/21/path = NodePath("%BikeSkin:rotation")
+tracks/21/path = NodePath("IKTargets/BikeSkin:rotation")
 tracks/21/interp = 1
 tracks/21/loop_wrap = true
 tracks/21/keys = {
@@ -349,7 +349,7 @@ tracks/26/keys = {
 tracks/27/type = "value"
 tracks/27/imported = false
 tracks/27/enabled = true
-tracks/27/path = NodePath("%BikeSkin:position")
+tracks/27/path = NodePath("IKTargets/BikeSkin:position")
 tracks/27/interp = 1
 tracks/27/loop_wrap = true
 tracks/27/keys = {
@@ -2396,7 +2396,7 @@ script = ExtResource("9_anim")
 player_entity = NodePath("../..")
 visual_root = NodePath("../../VisualRoot")
 character_skin = NodePath("../../VisualRoot/CharacterSkin")
-bike_skin = NodePath("../../VisualRoot/BikeSkin")
+bike_skin = NodePath("../../VisualRoot/IKTargets/BikeSkin")
 movement_controller = NodePath("../MovementController")
 trick_controller = NodePath("../TrickController")
 input_controller = NodePath("../InputController")
@@ -2555,13 +2555,13 @@ transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 1.87
 unique_name_in_owner = true
 transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 3.369678e-08, 0, -1.0035067)
 
+[node name="BikeSkin" parent="VisualRoot/IKTargets" unique_id=1727462617 instance=ExtResource("7_lfjd4")]
+unique_name_in_owner = true
+skin_definition = ExtResource("2_htgu7")
+
 [node name="CharacterSkin" parent="VisualRoot" unique_id=259227641 instance=ExtResource("6_1vqn6")]
 unique_name_in_owner = true
 skin_definition = ExtResource("3_3kl2f")
-
-[node name="BikeSkin" parent="VisualRoot" unique_id=1727462617 instance=ExtResource("7_lfjd4")]
-unique_name_in_owner = true
-skin_definition = ExtResource("2_htgu7")
 
 [node name="TPSCam" type="Camera3D" parent="." unique_id=1200816402]
 unique_name_in_owner = true

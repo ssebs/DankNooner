@@ -10,6 +10,10 @@
 [ext_resource type="Resource" uid="uid://dek4aj5q88dv1" path="res://resources/bikes/mods/color_mods/black_blue_color.tres" id="6_88b7q"]
 [ext_resource type="Curve" uid="uid://dlqmqgtip7b61" path="res://resources/bikes/power_curve.tres" id="6_qepda"]
 
+[sub_resource type="Curve" id="Curve_2gp0e"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
 [resource]
 script = ExtResource("2_3klvi")
 skin_name = "sport_default"
@@ -41,6 +45,7 @@ mods = Array[ExtResource("4_hx3xb")]([ExtResource("6_88b7q")])
 engine_sound_id = 2
 engine_min_pitch = 0.8
 engine_max_pitch = 2.1
+engine_blend_curve = SubResource("Curve_2gp0e")
 max_speed = 128.0
 acceleration = 12.0
 brake_strength = 35.0

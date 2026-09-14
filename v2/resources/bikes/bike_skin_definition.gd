@@ -74,6 +74,10 @@ class_name BikeSkinDefinition extends Resource
 ## Maps RPM [0..1] to interpolation factor [0..1] between min/max pitch.
 @export
 var engine_rpm_pitch_curve: Curve = preload("res://resources/bikes/ninja_rpm_pitch_curve.tres")
+## Optional: RPM [0..1] → equal-power crossfade position [0..1] between the engine's low
+## and high sound layers. Null = linear (crossover centered mid-RPM). Only used by
+## two-layer engine sounds (see EngineSoundEvent.high_layer).
+@export var engine_blend_curve: Curve
 
 @export_group("Animation")
 ## Multiplier for rider lean animation when steering
@@ -199,6 +203,7 @@ func _copy_from(other: BikeSkinDefinition) -> void:
 	engine_min_pitch = other.engine_min_pitch
 	engine_max_pitch = other.engine_max_pitch
 	engine_rpm_pitch_curve = other.engine_rpm_pitch_curve
+	engine_blend_curve = other.engine_blend_curve
 	lean_multiplier = other.lean_multiplier
 	weight_shift_multiplier = other.weight_shift_multiplier
 	gear_ratios = other.gear_ratios.duplicate()

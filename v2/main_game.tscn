@@ -39,12 +39,12 @@
 [ext_resource type="Script" uid="uid://37ehv252lkkf" path="res://managers/trick_manager.gd" id="36_trkmg"]
 [ext_resource type="Script" uid="uid://uj0l0u0v0f0d" path="res://managers/npc_traffic_manager.gd" id="37_npctm"]
 [ext_resource type="Script" uid="uid://c7rb62smxqgpp" path="res://managers/animal_spawn_manager.gd" id="38_anspm"]
-[ext_resource type="Script" path="res://managers/pickup_spawn_manager.gd" id="46_pkspm"]
 [ext_resource type="Script" uid="uid://ckudxd3spv3uh" path="res://managers/gamemodes/types/street_race/street_race_gamemode.gd" id="38_strce"]
 [ext_resource type="Script" uid="uid://chvl23bmhktxa" path="res://managers/gamemodes/types/stunt_race/stunt_race_gamemode.gd" id="40_stnrc"]
 [ext_resource type="Script" uid="uid://c4nkca4ah0fwh" path="res://managers/hud/hud_manager.gd" id="41_8jqmg"]
 [ext_resource type="Script" uid="uid://bhyn7u22l6ps4" path="res://managers/hud/hud_state.gd" id="42_3cqky"]
 [ext_resource type="PackedScene" uid="uid://do131g4o4kcam" path="res://managers/hud/riding_hud_state.tscn" id="42_5fp36"]
+[ext_resource type="Script" uid="uid://ciedegmkiyb08" path="res://managers/pickup_spawn_manager.gd" id="46_pkspm"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("1_1oj5k")

@@ -154,14 +154,15 @@ func play_revs(bike_def: BikeSkinDefinition):
 	sound.min_pitch = bike_def.engine_min_pitch
 	sound.max_pitch = bike_def.engine_max_pitch
 	sound.rpm_curve = bike_def.engine_rpm_pitch_curve
-	sound.play()
+	sound.blend_curve = bike_def.engine_blend_curve
+	sound.play_engine()
 	_active_engine_sfx = sfx_id
 
 
 func stop_revs():
 	if _active_engine_sfx == -1:
 		return
-	_engine_sounds[_active_engine_sfx].stop()
+	_engine_sounds[_active_engine_sfx].stop_engine()
 	_active_engine_sfx = -1
 
 
@@ -301,5 +302,7 @@ func get_sound_event(id: Sfx) -> SoundEvent:
 
 func stop_all():
 	for sound in sounds_container.get_children():
-		if sound is SoundEvent:
+		if sound is EngineSoundEvent:
+			sound.stop_engine()
+		elif sound is SoundEvent:
 			sound.stop()
