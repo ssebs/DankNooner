@@ -73,13 +73,15 @@ var tada: SoundEvent
 var nuke: SoundEvent
 var cod_zombies_kaboom: SoundEvent
 var tire_squeal: SoundEvent
-var exhaust_pop: SoundEvent
 var exhaust_burble: SoundEvent
 
 ## Map of EngineSfx → EngineSoundEvent node, populated in _ready.
 var _engine_sounds: Dictionary = {}
 ## Currently-playing engine sound id, or -1 if none.
 var _active_engine_sfx: int = -1
+## Round-robin pool of decel pop players (children of %ExhaustPops) + the next index to play.
+var _exhaust_pops: Array[SoundEvent] = []
+var _exhaust_pop_idx: int = 0
 
 
 func _ready():
@@ -107,8 +109,10 @@ func _ready():
 	nuke = get_node_or_null("%Nuke") as SoundEvent
 	cod_zombies_kaboom = get_node_or_null("%CODZombiesKaboom") as SoundEvent
 	tire_squeal = get_node_or_null("%TireSqueal") as SoundEvent
-	exhaust_pop = get_node_or_null("%ExhaustPop") as SoundEvent
 	exhaust_burble = get_node_or_null("%ExhaustBurble") as SoundEvent
+	for pop in get_node("%ExhaustPops").get_children():
+		if pop is SoundEvent:
+			_exhaust_pops.append(pop)
 
 	_engine_sounds = {
 		EngineSfx.NINJA500: ninja500_revs,
@@ -174,18 +178,22 @@ func update_revs_rpm(bike_def: BikeSkinDefinition, val: float):
 	_engine_sounds[bike_def.engine_sound_id].set_parameter("RPM", val)
 
 
-## Short decel burble crack. Pitch/volume randomized so a rapid string doesn't machine-gun.
-func play_exhaust_pop():
-	exhaust_burble.pitch_scale = randf_range(0.9, 1.15)
-	exhaust_burble.volume_db = randf_range(-14.0, -8.0)
+## Decel burble. Plays the clip from the start, unmodulated (no pitch/volume/seek); the caller
+## ends it with stop_exhaust_burble() when the decel window closes.
+func play_exhaust_burble():
 	exhaust_burble.play()
 
 
-## Louder, lower single crack on a fast throttle chop. TODO: give this its own clip.
-func play_backfire():
-	exhaust_pop.pitch_scale = randf_range(0.75, 0.85)
-	exhaust_pop.volume_db = randf_range(-3.0, 0.0)
-	exhaust_pop.play()
+func stop_exhaust_burble():
+	exhaust_burble.stop()
+
+
+## Plays the next decel pop, round-robin. Add variants by dropping AudioStreamPlayers under the
+## ExhaustPops node — they join the rotation automatically, each played at its authored level.
+func play_exhaust_pop():
+	var pop := _exhaust_pops[_exhaust_pop_idx]
+	_exhaust_pop_idx = (_exhaust_pop_idx + 1) % _exhaust_pops.size()
+	pop.play()
 
 
 func play_startup():

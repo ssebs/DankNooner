@@ -24,9 +24,6 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-- [ ] Exhaust pop + flame when shifting down to high rpm and giving a little gas for a second like irl
-  - [x] burbles / pops when letting off gas
-  - [ ] VFX
 - [ ] tell controller players they need to progressively brake
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
@@ -228,6 +225,10 @@
 ---
 
 ## Done ✅
+
+- [x] Exhaust pop + flame when shifting down to high rpm and giving a little gas for a second like irl
+  - [x] burbles / pops when letting off gas
+  - [x] VFX
 
 - [x] add vibration on brake danger / screen shake
 

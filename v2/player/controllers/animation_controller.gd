@@ -602,6 +602,9 @@ func initialize() -> void:
 		trick_controller.trick_started.connect(_on_trick_started)
 		trick_controller.trick_ended.connect(_on_trick_ended)
 
+	# Places the exhaust-tip marker (+ its flame VFX child) per-bike at runtime, same as the
+	# editor tools do — hand/foot come from _sync_targets_from_bike below.
+	_load_wheel_markers_from_definition(_bd)
 	_sync_targets_from_bike()
 
 
@@ -871,7 +874,9 @@ func _editor_init_ik_from_bike() -> void:
 	disable_target_sync()
 
 
-## Position the editor wheel-authoring markers from .tres values so the user sees current state.
+## Position the wheel-authoring markers + exhaust tip from .tres values. In editor: so the user
+## sees current state. At runtime (via initialize): only the exhaust tip matters — its flame VFX
+## child rides it, while the wheel markers are unused (raycasts read the .tres directly).
 func _load_wheel_markers_from_definition(def: BikeSkinDefinition) -> void:
 	if player_entity.front_wheel_ground_marker:
 		player_entity.front_wheel_ground_marker.position = def.front_wheel_ground_position
@@ -881,6 +886,9 @@ func _load_wheel_markers_from_definition(def: BikeSkinDefinition) -> void:
 		player_entity.front_wheel_front_marker.position = def.front_wheel_front_position
 	if player_entity.rear_wheel_back_marker:
 		player_entity.rear_wheel_back_marker.position = def.rear_wheel_back_position
+	if player_entity.exhaust_tip_marker:
+		player_entity.exhaust_tip_marker.position = def.exhaust_tip_position
+		player_entity.exhaust_tip_marker.rotation_degrees = def.exhaust_tip_rotation_degrees
 
 
 ## Inverse of _local_with_rotation_override: extract the euler that, when plugged into
@@ -956,6 +964,9 @@ func _editor_save_default_pose() -> void:
 		def.front_wheel_front_position = player_entity.front_wheel_front_marker.position
 	if player_entity.rear_wheel_back_marker:
 		def.rear_wheel_back_position = player_entity.rear_wheel_back_marker.position
+	if player_entity.exhaust_tip_marker:
+		def.exhaust_tip_position = player_entity.exhaust_tip_marker.position
+		def.exhaust_tip_rotation_degrees = player_entity.exhaust_tip_marker.rotation_degrees
 
 	var err = ResourceSaver.save(def)
 	if err == OK:

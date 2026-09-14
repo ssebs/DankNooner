@@ -39,6 +39,9 @@ class_name BikeSkinDefinition extends Resource
 @export var rear_wheel_ground_position: Vector3 = Vector3.ZERO
 @export var rear_wheel_back_position: Vector3 = Vector3.ZERO
 @export var front_wheel_front_position: Vector3 = Vector3.ZERO
+## Exhaust tip: where flame/backfire VFX spawns and which way it points (per-bike).
+@export var exhaust_tip_position: Vector3 = Vector3.ZERO
+@export var exhaust_tip_rotation_degrees: Vector3 = Vector3.ZERO
 
 @export_group("Rider Pose")
 @export var chest_position: Vector3 = Vector3.ZERO
@@ -182,6 +185,8 @@ func _copy_from(other: BikeSkinDefinition) -> void:
 	rear_wheel_ground_position = other.rear_wheel_ground_position
 	rear_wheel_back_position = other.rear_wheel_back_position
 	front_wheel_front_position = other.front_wheel_front_position
+	exhaust_tip_position = other.exhaust_tip_position
+	exhaust_tip_rotation_degrees = other.exhaust_tip_rotation_degrees
 	chest_position = other.chest_position
 	chest_rotation = other.chest_rotation
 	head_position = other.head_position

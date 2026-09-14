@@ -28,6 +28,7 @@
 [ext_resource type="AudioStream" uid="uid://0k35edkokth6" path="res://non_fmod_sounds/XSR900/xsr-idle-loop-w-exhaust.ogg" id="26_holwe"]
 [ext_resource type="AudioStream" uid="uid://bulh350cqoa0a" path="res://non_fmod_sounds/XSR900/xsr900-mid.ogg" id="26_uckac"]
 [ext_resource type="AudioStream" uid="uid://btsdhy0nfx6rj" path="res://non_fmod_sounds/Exhaust_Pops/pop2.ogg" id="28_holwe"]
+[ext_resource type="AudioStream" uid="uid://dt3cg7laru1k5" path="res://non_fmod_sounds/Exhaust_Pops/pop1.ogg" id="29_0taqp"]
 [ext_resource type="AudioStream" uid="uid://btd6hkwtgfd6c" path="res://non_fmod_sounds/Exhaust_Pops/burble.ogg" id="29_06geh"]
 
 [node name="AudioManager" type="Node" unique_id=625309404 groups=["Managers"]]
@@ -41,22 +42,6 @@ unique_name_in_owner = true
 stream = ExtResource("2_yaisj")
 bus = &"Menu"
 script = ExtResource("2_snd")
-
-[node name="Ninja500Revs" type="AudioStreamPlayer" parent="Sounds" unique_id=866670601]
-unique_name_in_owner = true
-stream = ExtResource("4_yaisj")
-bus = &"SFX"
-script = ExtResource("3_eng")
-loop = true
-
-[node name="GromRevs" type="AudioStreamPlayer" parent="Sounds" unique_id=1724230522]
-unique_name_in_owner = true
-stream = ExtResource("6_f4f00")
-volume_db = -19.576
-pitch_scale = 0.55
-bus = &"SFX"
-script = ExtResource("3_eng")
-loop = true
 
 [node name="BowlingCrash" type="AudioStreamPlayer" parent="Sounds" unique_id=1740217947]
 unique_name_in_owner = true
@@ -197,18 +182,34 @@ bus = &"Menu"
 script = ExtResource("2_snd")
 metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 
+[node name="Ninja500Revs" type="AudioStreamPlayer" parent="Sounds" unique_id=866670601]
+unique_name_in_owner = true
+stream = ExtResource("4_yaisj")
+bus = &"SFX"
+script = ExtResource("3_eng")
+loop = true
+
+[node name="GromRevs" type="AudioStreamPlayer" parent="Sounds" unique_id=1724230522]
+unique_name_in_owner = true
+stream = ExtResource("6_f4f00")
+volume_db = -15.0
+pitch_scale = 0.55
+bus = &"SFX"
+script = ExtResource("3_eng")
+loop = true
+
 [node name="Xsr900Revs" type="AudioStreamPlayer" parent="Sounds" unique_id=55662845 node_paths=PackedStringArray("high_layer")]
 unique_name_in_owner = true
 stream = ExtResource("26_holwe")
-volume_db = -6.0
+volume_db = -12.0
 bus = &"SFX"
 script = ExtResource("3_eng")
 high_layer = NodePath("Xsr900RevsHigh")
-debug_verbose = true
 loop = true
 
 [node name="Xsr900RevsHigh" type="AudioStreamPlayer" parent="Sounds/Xsr900Revs" unique_id=1955001235]
 stream = ExtResource("26_uckac")
+volume_db = -4.0
 bus = &"SFX"
 
 [node name="TireSqueal" type="AudioStreamPlayer" parent="Sounds" unique_id=1870814155]
@@ -218,9 +219,19 @@ bus = &"SFX"
 script = ExtResource("2_snd")
 loop = true
 
-[node name="ExhaustPop" type="AudioStreamPlayer" parent="Sounds" unique_id=909090901]
+[node name="ExhaustPops" type="Node" parent="Sounds" unique_id=909090903]
 unique_name_in_owner = true
+
+[node name="ExhaustPop" type="AudioStreamPlayer" parent="Sounds/ExhaustPops" unique_id=909090901]
 stream = ExtResource("28_holwe")
+volume_db = -6.0
+max_polyphony = 4
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="ExhaustPop2" type="AudioStreamPlayer" parent="Sounds/ExhaustPops" unique_id=2014672418]
+stream = ExtResource("29_0taqp")
 volume_db = -5.0
 max_polyphony = 4
 bus = &"SFX"
@@ -230,6 +241,7 @@ metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 [node name="ExhaustBurble" type="AudioStreamPlayer" parent="Sounds" unique_id=909090902]
 unique_name_in_owner = true
 stream = ExtResource("29_06geh")
+volume_db = -8.0
 max_polyphony = 4
 bus = &"SFX"
 script = ExtResource("2_snd")
