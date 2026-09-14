@@ -891,12 +891,14 @@ func _load_wheel_markers_from_definition(def: BikeSkinDefinition) -> void:
 		player_entity.exhaust_tip_marker.rotation_degrees = def.exhaust_tip_rotation_degrees
 
 
-## Inverse of _local_with_rotation_override: extract the euler that, when plugged into
-## Basis.from_euler() and multiplied by parent.global.basis, reproduces marker.global.basis.
+## Exact inverse of _sync_targets_from_bike's `parent.global * Transform3D(from_euler(rot), pos)`:
+## the full affine_inverse cancels the parent basis — scale included — so the round-trip is stable
+## even when the parent is scaled (e.g. mesh_scale_multiplier). Orthonormalizing parent and marker
+## bases SEPARATELY does not invert a scaled parent, so Play→Save drifted the saved rotations.
+## Matches the runtime pose path (_set_pose_local_from_bike).
 static func _rotation_in_parent_space(marker: Node3D, parent: Node3D) -> Vector3:
-	var parent_basis := parent.global_transform.basis.orthonormalized()
-	var marker_basis := marker.global_transform.basis.orthonormalized()
-	return (parent_basis.inverse() * marker_basis).get_euler()
+	var local := parent.global_transform.affine_inverse() * marker.global_transform
+	return local.basis.get_euler()
 
 
 ## Express marker.global.origin in parent's local space, so that
