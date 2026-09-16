@@ -172,6 +172,7 @@ var _prev_is_crashed: bool = false
 var _exhaust_decel_active: bool = false
 var _exhaust_coast_time: float = 0.0
 var _exhaust_burble_rolled: bool = false
+var _exhaust_prev_rpm: float = 0.0
 ## Highside launch stashed by trigger_crash for the is_crashed-edge ragdoll. Visual-only, not synced.
 var _crash_launch_impulse: Vector3 = Vector3.ZERO
 
@@ -287,7 +288,10 @@ func _update_exhaust_pops(delta: float) -> void:
 		return
 	var rpm := gearing_controller.get_rpm_ratio()
 	var throttle := input_controller.nfx_throttle
-	var decel := rpm > exhaust_rpm_min and throttle <= exhaust_throttle_max
+	# Use the higher of this/last frame's RPM: fast free-rev spin-down can collapse RPM below
+	# the threshold within the tick before _process samples the throttle chop, missing the pop.
+	var decel := maxf(rpm, _exhaust_prev_rpm) > exhaust_rpm_min and throttle <= exhaust_throttle_max
+	_exhaust_prev_rpm = rpm
 
 	if decel and not _exhaust_decel_active:
 		# Chop edge — went off the gas at high RPM. Snap a pop (with flame).

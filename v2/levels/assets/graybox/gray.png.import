@@ -3,19 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dfgsgem7ngu3h"
-path="res://.godot/imported/gray.png-c935eb092e4b28f72162b3c70f3cbbef.ctex"
+path.s3tc="res://.godot/imported/gray.png-c935eb092e4b28f72162b3c70f3cbbef.s3tc.ctex"
+path.etc2="res://.godot/imported/gray.png-c935eb092e4b28f72162b3c70f3cbbef.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://levels/assets/graybox/gray.png"
-dest_files=["res://.godot/imported/gray.png-c935eb092e4b28f72162b3c70f3cbbef.ctex"]
+dest_files=["res://.godot/imported/gray.png-c935eb092e4b28f72162b3c70f3cbbef.s3tc.ctex", "res://.godot/imported/gray.png-c935eb092e4b28f72162b3c70f3cbbef.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -37,4 +39,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

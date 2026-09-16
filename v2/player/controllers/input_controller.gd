@@ -127,6 +127,11 @@ func _process(delta):
 ## absolute-valued var the manual shift keys use means the auto box inherits the whole
 ## existing sync path for free, including its immunity to stale-input reuse.
 func _auto_shift(delta: float):
+	# Clutch in = free-revving; RPM tracks throttle, not road speed. Shifting here walks the
+	# box up through gears while the bike sits still — let the rev limiter handle the blip.
+	if nfx_clutch_held:
+		return
+
 	_auto_shift_cooldown = maxf(_auto_shift_cooldown - delta, 0.0)
 	if _auto_shift_cooldown > 0.0:
 		return

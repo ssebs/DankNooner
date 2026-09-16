@@ -10,7 +10,9 @@ signal rpm_updated(rpm_ratio: float)
 @export var clutch_engage_speed: float = 6.0
 @export var clutch_release_speed: float = 2.5
 @export var clutch_tap_amount: float = 0.35
-@export var rpm_free_rev_speed: float = 4.0
+@export var rpm_free_rev_speed: float = 12.0
+## RPM ratio the limiter drops to on a redline cut. Lower = longer, more audible bounce.
+@export var rev_limit_cut_ratio: float = 0.85
 
 var current_gear: int = 1
 var current_rpm: float = 1000.0
@@ -55,7 +57,7 @@ func _update_clutch_hold_time(delta: float):
 ## Sets current_rpm
 func _blend_rpm(delta: float):
 	var bd = player_entity.bike_definition
-	var engagement = 1.0 - clutch_value  # 0 = clutch in, 1 = clutch out
+	var engagement = 1.0 - clutch_value # 0 = clutch in, 1 = clutch out
 
 	# RPM locked to wheel speed via gear ratio
 	var gear_ratio = bd.gear_ratios[current_gear - 1]
@@ -67,7 +69,11 @@ func _blend_rpm(delta: float):
 
 	# Free-rev RPM from throttle (clutch pulled)
 	var free_rpm = lerpf(bd.idle_rpm, bd.max_rpm, input_controller.nfx_throttle)
-	var smooth_free = lerpf(current_rpm, free_rpm, rpm_free_rev_speed * delta)
+	# Climb rate follows the power curve (quick through the band, lazy off idle); spin-down uses base rate
+	var rev_speed = rpm_free_rev_speed
+	if free_rpm > current_rpm:
+		rev_speed *= bd.power_curve.sample(get_rpm_ratio())
+	var smooth_free = lerpf(current_rpm, free_rpm, rev_speed * delta)
 
 	# Engaged = locked to wheel speed, disengaged = free-rev
 	current_rpm = lerpf(smooth_free, wheel_rpm, engagement)
@@ -77,7 +83,7 @@ func _blend_rpm(delta: float):
 	# Rev limiter — fuel cut at redline, instant drop to simulate ignition cut
 	if not is_rev_limited and get_rpm_ratio() >= 0.98:
 		is_rev_limited = true
-		current_rpm = rpm_from_ratio(0.94)
+		current_rpm = rpm_from_ratio(rev_limit_cut_ratio)
 	elif is_rev_limited and get_rpm_ratio() < 0.96:
 		is_rev_limited = false
 
