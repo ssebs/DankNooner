@@ -9,6 +9,9 @@ class_name WarmupMenuState extends MenuState
 @export var next_state: MenuState  ## where to go once warmup finishes (splash)
 ## Frames drawn per level, so async (ubershader) pipeline compiles have time to settle.
 @export var frames_per_level: int = 4
+## PlayerEntity VFX scenes (exhaust flame, sparks). No level contains a player, so their
+## shader/particle pipelines never compile during level warmup — warm them here too.
+@export var vfx_scenes: Array[PackedScene] = []
 
 const MARKER_PATH := "user://.shaders_warmed"
 
@@ -53,20 +56,29 @@ func _warm_all_levels() -> void:
 		if scene != null and scene not in scenes:
 			scenes.append(scene)
 
-	progress_bar.max_value = scenes.size()
+	progress_bar.max_value = scenes.size() + vfx_scenes.size()
 	progress_bar.value = 0
 
 	for scene in scenes:
-		await _warm_scene(scene)
+		await _warm_scene(scene, false)
 		progress_bar.value += 1
 		# Repaint so the bar visibly climbs before the next blocking instantiate.
 		await RenderingServer.frame_post_draw
 
+	for scene in vfx_scenes:
+		await _warm_scene(scene, true)
+		progress_bar.value += 1
+		await RenderingServer.frame_post_draw
 
-func _warm_scene(scene: PackedScene) -> void:
+
+## force_drawable: VFX start hidden/idle (FlameMesh invisible, particles not emitting), so
+## nothing draws unless we force them on — otherwise their pipelines never compile here.
+func _warm_scene(scene: PackedScene, force_drawable: bool) -> void:
 	var t_start := Time.get_ticks_msec()
 	var instance := scene.instantiate()
 	warmup_viewport.add_child(instance)
+	if force_drawable:
+		_force_drawable(instance)
 	_frame_camera_to(instance)
 	warmup_camera.make_current()
 	var t_loaded := Time.get_ticks_msec()
@@ -85,6 +97,14 @@ func _warm_scene(scene: PackedScene) -> void:
 			t_freed - t_rendered
 		]
 	)
+
+
+## Reveal every mesh and start every particle emitter so their materials actually draw.
+func _force_drawable(root: Node) -> void:
+	for mi in root.find_children("*", "MeshInstance3D", true, false):
+		mi.visible = true
+	for p in root.find_children("*", "GPUParticles3D", true, false):
+		p.emitting = true
 
 
 ## Aim the warmup camera at the instanced content's bounds so every mesh lands

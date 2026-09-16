@@ -1,7 +1,9 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://menus/warmup_menu/warmup_menu_state.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_theme"]
+[ext_resource type="PackedScene" uid="uid://c73uvu152n4lh" path="res://entities/vfx/exhaust_flame_particles.tscn" id="3_flame"]
+[ext_resource type="PackedScene" uid="uid://cu0vh8sgp0l2e" path="res://entities/vfx/spark_particles.tscn" id="4_spark"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
 
@@ -15,6 +17,7 @@ ambient_light_source = 3
 
 [node name="WarmupMenuState" type="Node"]
 script = ExtResource("1_script")
+vfx_scenes = Array[PackedScene]([ExtResource("3_flame"), ExtResource("4_spark")])
 
 [node name="UI" type="Control" parent="."]
 unique_name_in_owner = true
