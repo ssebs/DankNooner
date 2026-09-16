@@ -24,16 +24,16 @@ answer. Prefer deleting over adding.
 - Don't run `gh` or `git` commands
 - Follow existing patterns, do not add duplicate logic that is found in another file / controller.
 - Do NOT GUESS, VERIFY BY READING EXISTING CODE.
+- Do NOT GUESS, if a decision on how something should work needs to be decided then ask first.
 - Verify TODO/doc claims against the code before acting on them — many are stale.
 - Answer the question that was asked. "How would you X" means propose, then stop.
 - Don't produce artifacts — new files, rewritten docs, full plans — unless asked.
-- One question at a time when checking direction, not a batch.
+- Follow existing pattern / style per file / system.
 
 ### planning_docs/TODO.md
 
 - The user owns this file. Don't edit without an explicit instruction to.
-- The fat `## Done ✅` section stays. It's history, not clutter.
-- Tight lists throughout — no blank lines between items or before nested children.
+- The fat `Done` section stays. It's history, not clutter.
 - Links to plan docs are often stale (several point at deleted files). Verify before citing.
 
 ## Running the Project
@@ -48,7 +48,7 @@ answer. Prefer deleting over adding.
 
 ### Manager Pattern
 
-All systems use a **Manager + State Machine** pattern:
+Systems use a **Manager + State Machine** pattern:
 
 - `ManagerManager` - root node, wires signals between all managers
 - Managers extend `BaseManager`
@@ -105,12 +105,10 @@ Broadcast RPCs are server-only and must reject non-server senders. See
 
 ## Planning Docs
 
-`planning_docs/` is the source of truth for how systems actually work. Files prefixed `__` are
-archived — ignore them.
+`planning_docs/` is the source of truth for how systems actually work.
 
 - [Architecture](./planning_docs/Architecture.md) — **start here**; every system, how they wire together
 - [TODO](./planning_docs/TODO.md) — active work (user owns this file, see rules above)
-- [Goals4Game](./planning_docs/Goals4Game.md) — MVP scope and requirements
 - [PlayerController](./planning_docs/PlayerController.md) — physics, gearbox, crash, tricks, rollback
 - [AnimationController](./planning_docs/AnimationController.md) — pose pipeline, procedural animation, IK, ragdoll
 - [ComboAndBoost](./planning_docs/ComboAndBoost.md) — trick combos, boost economy, scoring, tunables
@@ -118,9 +116,6 @@ archived — ignore them.
 - [LobbyGameFlowMP](./planning_docs/LobbyGameFlowMP.md) — host/join through game start
 - [Skins](./planning_docs/Skins.md) — slot-based color customization, bike/character definitions
 - [AudioMiddleware](./planning_docs/AudioMiddleware.md) — the FMOD replacement, buses, engine sound
-- [Levels](./planning_docs/Levels.md) — stub
-- [Debugging](./planning_docs/Debugging.md) — VSCode integration
-- [Story](./planning_docs/Story.md) / [Marketing](./planning_docs/Marketing.md) — narrative and launch notes
 
 ## Project Structure
 
@@ -150,6 +145,7 @@ archived — ignore them.
   - New methods, exports, or helpers should be a last resort
 - Reuse existing exports before adding new ones — a new knob that duplicates bd.return_speed (or similar) is a smell; wire the behavior to the export that already exists.
 - Tune the root cause, not a band-aid — when something is too slow/weak, look at the formula first (e.g. a stray /2 or a factor that collapses to zero at speed) rather than adding a scaling export to paper over it.
+- Do not write multiline comments where a short one would suffice
 
 ### Fail Loudly — No Silent Null Returns
 
