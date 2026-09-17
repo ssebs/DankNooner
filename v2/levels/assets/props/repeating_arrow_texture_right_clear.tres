@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bbj32qio4k0yj"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_b8crp"]
+load_path = "res://.godot/imported/ArrowTexRightClear.png-8195a0e20673f810d60fec92e5ae9659.s3tc.ctex"
+
+[resource]
+resource_local_to_scene = true
+transparency = 1
+albedo_color = Color(0.25490198, 0.6862745, 1, 1)
+albedo_texture = SubResource("CompressedTexture2D_b8crp")
+uv1_scale = Vector3(6.5, 6.5, 6.5)
+uv1_offset = Vector3(0, -0.715, 0)
+uv1_world_triplanar = true

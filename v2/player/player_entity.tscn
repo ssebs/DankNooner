@@ -122,346 +122,322 @@ tracks/7/keys = {
 tracks/8/type = "value"
 tracks/8/imported = false
 tracks/8/enabled = true
-tracks/8/path = NodePath("IKTargets/TPSCamMarker:position")
+tracks/8/path = NodePath("IKTargets/FPSCamMarker:rotation")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0.071, 1.382, -1.678)]
+"values": [Vector3(-0.1850049, -3.1415925, 0)]
 }
 tracks/9/type = "value"
 tracks/9/imported = false
 tracks/9/enabled = true
-tracks/9/path = NodePath("IKTargets/FPSCamMarker:rotation")
+tracks/9/path = NodePath("%HeadTarget:position")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
 tracks/9/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-0.1850049, -3.1415925, 0)]
+"values": [Vector3(-1.4981957e-08, 1.5793936, -0.4448575)]
 }
 tracks/10/type = "value"
 tracks/10/imported = false
 tracks/10/enabled = true
-tracks/10/path = NodePath("IKTargets/TPSCamMarker:rotation")
+tracks/10/path = NodePath("%LeftFootTarget:position")
 tracks/10/interp = 1
 tracks/10/loop_wrap = true
 tracks/10/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-0.35667545, 3.1415925, 0)]
+"values": [Vector3(0.183, 0.567, -0.227)]
 }
 tracks/11/type = "value"
 tracks/11/imported = false
 tracks/11/enabled = true
-tracks/11/path = NodePath("%HeadTarget:position")
+tracks/11/path = NodePath("%RightFootTarget:position")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-1.4981957e-08, 1.5793936, -0.4448575)]
+"values": [Vector3(-0.18314199, 0.5666657, -0.22655825)]
 }
 tracks/12/type = "value"
 tracks/12/imported = false
 tracks/12/enabled = true
-tracks/12/path = NodePath("%LeftFootTarget:position")
+tracks/12/path = NodePath("%LeftHandTarget:position")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0.183, 0.567, -0.227)]
+"values": [Vector3(0.251, 0.914, 0.287)]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
 tracks/13/enabled = true
-tracks/13/path = NodePath("%RightFootTarget:position")
+tracks/13/path = NodePath("%ChestTarget:rotation")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-0.18314199, 0.5666657, -0.22655825)]
+"values": [Vector3(0, -5.6843426e-14, 0)]
 }
 tracks/14/type = "value"
 tracks/14/imported = false
 tracks/14/enabled = true
-tracks/14/path = NodePath("%LeftHandTarget:position")
+tracks/14/path = NodePath("%LeftFootTarget:rotation")
 tracks/14/interp = 1
 tracks/14/loop_wrap = true
 tracks/14/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0.251, 0.914, 0.287)]
+"values": [Vector3(-1.275857, -2.0608416, -0.7598186)]
 }
 tracks/15/type = "value"
 tracks/15/imported = false
 tracks/15/enabled = true
-tracks/15/path = NodePath("%ChestTarget:rotation")
+tracks/15/path = NodePath("%RightFootTarget:rotation")
 tracks/15/interp = 1
 tracks/15/loop_wrap = true
 tracks/15/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, -5.6843426e-14, 0)]
+"values": [Vector3(-1.2186639, 2.5100298, 0.62467366)]
 }
 tracks/16/type = "value"
 tracks/16/imported = false
 tracks/16/enabled = true
-tracks/16/path = NodePath("%LeftFootTarget:rotation")
+tracks/16/path = NodePath("%LeftLegMagnet:position")
 tracks/16/interp = 1
 tracks/16/loop_wrap = true
 tracks/16/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-1.275857, -2.0608416, -0.7598186)]
+"values": [Vector3(0.46395656, 0.5692559, 0.42930415)]
 }
 tracks/17/type = "value"
 tracks/17/imported = false
 tracks/17/enabled = true
-tracks/17/path = NodePath("%RightFootTarget:rotation")
+tracks/17/path = NodePath("%RightLegMagnet:position")
 tracks/17/interp = 1
 tracks/17/loop_wrap = true
 tracks/17/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-1.2186639, 2.5100298, 0.62467366)]
+"values": [Vector3(-0.464, 0.569, 0.429)]
 }
 tracks/18/type = "value"
 tracks/18/imported = false
 tracks/18/enabled = true
-tracks/18/path = NodePath("%LeftLegMagnet:position")
+tracks/18/path = NodePath("%HeadTarget:rotation")
 tracks/18/interp = 1
 tracks/18/loop_wrap = true
 tracks/18/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0.46395656, 0.5692559, 0.42930415)]
+"values": [Vector3(0, -4.2632564e-14, 0)]
 }
 tracks/19/type = "value"
 tracks/19/imported = false
 tracks/19/enabled = true
-tracks/19/path = NodePath("%RightLegMagnet:position")
+tracks/19/path = NodePath("IKTargets/BikeSkin:rotation")
 tracks/19/interp = 1
 tracks/19/loop_wrap = true
 tracks/19/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-0.464, 0.569, 0.429)]
+"values": [Vector3(0, 0, 0)]
 }
 tracks/20/type = "value"
 tracks/20/imported = false
 tracks/20/enabled = true
-tracks/20/path = NodePath("%HeadTarget:rotation")
+tracks/20/path = NodePath("%TPSCamMarker:position")
 tracks/20/interp = 1
 tracks/20/loop_wrap = true
 tracks/20/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, -4.2632564e-14, 0)]
+"values": [Vector3(0.05, 1.75, -1.778)]
 }
 tracks/21/type = "value"
 tracks/21/imported = false
 tracks/21/enabled = true
-tracks/21/path = NodePath("IKTargets/BikeSkin:rotation")
+tracks/21/path = NodePath("%FPSCamMarker:position")
 tracks/21/interp = 1
 tracks/21/loop_wrap = true
 tracks/21/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 0, 0)]
+"values": [Vector3(0, 1.179, 0.175)]
 }
 tracks/22/type = "value"
 tracks/22/imported = false
 tracks/22/enabled = true
-tracks/22/path = NodePath("%TPSCamMarker:position")
+tracks/22/path = NodePath("%BaseballBat:position")
 tracks/22/interp = 1
 tracks/22/loop_wrap = true
 tracks/22/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0.071, 1.382, -1.678)]
+"values": [Vector3(-0.46865526, 0.8885468, 0.18646635)]
 }
 tracks/23/type = "value"
 tracks/23/imported = false
 tracks/23/enabled = true
-tracks/23/path = NodePath("%FPSCamMarker:position")
+tracks/23/path = NodePath("%LeftArmMagnet:position")
 tracks/23/interp = 1
 tracks/23/loop_wrap = true
 tracks/23/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 1.179, 0.175)]
+"values": [Vector3(0.41947496, 0.90092236, -0.011527833)]
 }
 tracks/24/type = "value"
 tracks/24/imported = false
 tracks/24/enabled = true
-tracks/24/path = NodePath("%BaseballBat:position")
+tracks/24/path = NodePath("%RightArmMagnet:position")
 tracks/24/interp = 1
 tracks/24/loop_wrap = true
 tracks/24/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-0.46865526, 0.8885468, 0.18646635)]
+"values": [Vector3(-0.419, 0.901, -0.012)]
 }
 tracks/25/type = "value"
 tracks/25/imported = false
 tracks/25/enabled = true
-tracks/25/path = NodePath("%LeftArmMagnet:position")
+tracks/25/path = NodePath("IKTargets/BikeSkin:position")
 tracks/25/interp = 1
 tracks/25/loop_wrap = true
 tracks/25/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0.41947496, 0.90092236, -0.011527833)]
+"values": [Vector3(0, 0, 0)]
 }
 tracks/26/type = "value"
 tracks/26/imported = false
 tracks/26/enabled = true
-tracks/26/path = NodePath("%RightArmMagnet:position")
+tracks/26/path = NodePath("%TPSCamMarker:rotation")
 tracks/26/interp = 1
 tracks/26/loop_wrap = true
 tracks/26/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-0.419, 0.901, -0.012)]
+"values": [Vector3(0, 0, 0)]
 }
 tracks/27/type = "value"
 tracks/27/imported = false
 tracks/27/enabled = true
-tracks/27/path = NodePath("IKTargets/BikeSkin:position")
+tracks/27/path = NodePath("%FPSCamMarker:rotation")
 tracks/27/interp = 1
 tracks/27/loop_wrap = true
 tracks/27/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 0, 0)]
+"values": [Vector3(-0.1850049, -3.1415925, 0)]
 }
 tracks/28/type = "value"
 tracks/28/imported = false
 tracks/28/enabled = true
-tracks/28/path = NodePath("%TPSCamMarker:rotation")
+tracks/28/path = NodePath("%BaseballBat:rotation")
 tracks/28/interp = 1
 tracks/28/loop_wrap = true
 tracks/28/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-0.35667545, 3.1415925, 0)]
+"values": [Vector3(-2.1242909e-10, 3.1415923, -2.6179938)]
 }
 tracks/29/type = "value"
 tracks/29/imported = false
 tracks/29/enabled = true
-tracks/29/path = NodePath("%FPSCamMarker:rotation")
+tracks/29/path = NodePath("%ButtTarget:rotation")
 tracks/29/interp = 1
 tracks/29/loop_wrap = true
 tracks/29/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-0.1850049, -3.1415925, 0)]
+"values": [Vector3(0, -8.526513e-14, 0)]
 }
 tracks/30/type = "value"
 tracks/30/imported = false
 tracks/30/enabled = true
-tracks/30/path = NodePath("%BaseballBat:rotation")
+tracks/30/path = NodePath("%LeftHandTarget:rotation")
 tracks/30/interp = 1
 tracks/30/loop_wrap = true
 tracks/30/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-2.1242909e-10, 3.1415923, -2.6179938)]
+"values": [Vector3(1.2217305, 1.007055, -0.40142566)]
 }
 tracks/31/type = "value"
 tracks/31/imported = false
 tracks/31/enabled = true
-tracks/31/path = NodePath("%ButtTarget:rotation")
+tracks/31/path = NodePath("%LeftArmMagnet:rotation")
 tracks/31/interp = 1
 tracks/31/loop_wrap = true
 tracks/31/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, -8.526513e-14, 0)]
+"values": [Vector3(0, -5.684342e-14, 0)]
 }
 tracks/32/type = "value"
 tracks/32/imported = false
 tracks/32/enabled = true
-tracks/32/path = NodePath("%LeftHandTarget:rotation")
+tracks/32/path = NodePath("%RightArmMagnet:rotation")
 tracks/32/interp = 1
 tracks/32/loop_wrap = true
 tracks/32/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(1.2217305, 1.007055, -0.40142566)]
+"values": [Vector3(0, -1.4210855e-14, 0)]
 }
 tracks/33/type = "value"
 tracks/33/imported = false
 tracks/33/enabled = true
-tracks/33/path = NodePath("%LeftArmMagnet:rotation")
+tracks/33/path = NodePath("%LeftLegMagnet:rotation")
 tracks/33/interp = 1
 tracks/33/loop_wrap = true
 tracks/33/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, -5.684342e-14, 0)]
+"values": [Vector3(0, -4.2632564e-14, 0)]
 }
 tracks/34/type = "value"
 tracks/34/imported = false
 tracks/34/enabled = true
-tracks/34/path = NodePath("%RightArmMagnet:rotation")
+tracks/34/path = NodePath("%RightLegMagnet:rotation")
 tracks/34/interp = 1
 tracks/34/loop_wrap = true
 tracks/34/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, -1.4210855e-14, 0)]
-}
-tracks/35/type = "value"
-tracks/35/imported = false
-tracks/35/enabled = true
-tracks/35/path = NodePath("%LeftLegMagnet:rotation")
-tracks/35/interp = 1
-tracks/35/loop_wrap = true
-tracks/35/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, -4.2632564e-14, 0)]
-}
-tracks/36/type = "value"
-tracks/36/imported = false
-tracks/36/enabled = true
-tracks/36/path = NodePath("%RightLegMagnet:rotation")
-tracks/36/interp = 1
-tracks/36/loop_wrap = true
-tracks/36/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
@@ -2284,38 +2260,26 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("IKTargets/TPSCamMarker:rotation")
+tracks/1/path = NodePath("IKTargets/FPSCamMarker:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.2),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector3(-0.35667545, 3.1415925, 0), Vector3(-0.25431195, 2.9269462, 0.07477538)]
+"values": [Vector3(0, 1.179, 0.175), Vector3(0.044680122, 1.179, 0.175)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("IKTargets/FPSCamMarker:position")
+tracks/2/path = NodePath("%TPSCamMarker:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 1.179, 0.175), Vector3(0.044680122, 1.179, 0.175)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("IKTargets/TPSCamMarker:position")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0.071, 1.382, -1.678), Vector3(0.5479863, 1.382, -1.6779999)]
+"values": [Vector3(0.2, 1.605, -1.88)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xm7jy"]
@@ -2476,7 +2440,7 @@ transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, 0, 0, 
 
 [node name="TPSCamMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=748255221]
 unique_name_in_owner = true
-transform = Transform3D(-1, -5.272181e-08, 1.4149255e-07, 0, 0.93706256, 0.34916085, -1.509958e-07, 0.34916076, -0.9370628, 0.071, 1.382, -1.678)
+transform = Transform3D(1, 0, 0, 0, 0.99999976, 0, 0, 0, 1, 0.05, 1.75, -1.778)
 
 [node name="FPSCamMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=2035762363]
 unique_name_in_owner = true
@@ -2559,7 +2523,7 @@ transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 3.36
 
 [node name="ExhaustTipMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=698596267]
 unique_name_in_owner = true
-transform = Transform3D(0.9694908, 0.13598497, 0.20394911, 0, 0.83201456, -0.5547535, -0.24512681, 0.5378285, 0.8066306, -0.22484247, 0.4660294, -0.5100629)
+transform = Transform3D(0.9694907, 0.13598497, 0.20394911, 0, 0.83201456, -0.5547535, -0.24512678, 0.5378285, 0.8066306, -0.22484247, 0.4660294, -0.5100629)
 
 [node name="ExhaustFlameParticles" parent="VisualRoot/IKTargets/ExhaustTipMarker" unique_id=557107755 instance=ExtResource("17_htgu7")]
 unique_name_in_owner = true

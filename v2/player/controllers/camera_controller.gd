@@ -34,7 +34,7 @@ enum CameraMode {TPS = 0, FPS, NONE}
 ## How fast accumulated screen-shake trauma bleeds off (per second).
 @export var trauma_decay: float = 1.8
 ## Max camera jitter angle (deg) at full trauma.
-@export var shake_max_angle_deg: float = 2.5
+@export var shake_max_angle_deg: float = 1.5
 ## Controller rumble intensity at full screen shake — vibration tracks the same shake amount
 ## as the camera, so every shake source (accel, cornering, brake danger, wheelie landings) rumbles.
 @export_range(0.0, 1.0) var shake_vibration_scale: float = 1.0
@@ -110,6 +110,8 @@ var _orbit_pitch: float = 0.0
 var _default_orbit_pitch: float = -15
 var _mouse_delta: Vector2 = Vector2.ZERO
 var _no_input_timer: float = 0.0
+## Smoothed tps_marker.position — eases the wheelie-cam reframe in/out (the anim ramps it linearly).
+var _tps_marker_offset: Vector3 = Vector3.ZERO
 
 var _fps_yaw_offset: float = 0.0
 var _fps_pitch_offset: float = 0.0
@@ -159,7 +161,7 @@ func _process(delta: float):
 	match current_cam_mode:
 		CameraMode.TPS:
 			_update_tps_input(delta, adjusted_mouse)
-			_update_tps_camera()
+			_update_tps_camera(delta)
 		CameraMode.FPS:
 			_update_fps_input(delta, adjusted_mouse)
 			_update_fps_camera()
@@ -216,17 +218,21 @@ func _update_tps_input(delta: float, mouse: Vector2):
 			_orbit_pitch = lerpf(_orbit_pitch, target_pitch, t)
 
 
-func _update_tps_camera():
-	var marker_offset: Vector3 = tps_marker.position
-	var distance: float = - marker_offset.z
-	var height: float = marker_offset.y
+func _update_tps_camera(delta: float):
+	# Ease the marker read so the wheelie-cam reframe glides in/out instead of tracking the anim's
+	# linear ramp — matches the orbit-pitch ease in _update_tps_input (same reset_speed).
+	_tps_marker_offset = _tps_marker_offset.lerp(tps_marker.position, reset_speed * delta)
+	# Marker lives under VisualRoot (yawed 180°), so x/z negate into the player-space orbit frame.
+	var lateral: float = - _tps_marker_offset.x
+	var distance: float = - _tps_marker_offset.z
+	var height: float = _tps_marker_offset.y
 
 	var focus: Vector3 = _get_tps_focus_position()
 	var look_target: Vector3 = focus + Vector3.UP * tps_look_height
 	var yaw: float = _get_tps_base_yaw() + _orbit_yaw
 
 	var orbit_rot := Basis(Vector3.UP, yaw) * Basis(Vector3.RIGHT, -_orbit_pitch)
-	var cam_offset: Vector3 = orbit_rot * Vector3(0, 0, distance)
+	var cam_offset: Vector3 = orbit_rot * Vector3(lateral, 0, distance)
 	cam_offset.y += height
 
 	tps_cam.global_position = focus + cam_offset
@@ -334,6 +340,7 @@ func do_reset():
 	if !player_entity.is_local_client:
 		return
 	_default_orbit_pitch = deg_to_rad(DEFAULT_ORBIT_PITCH)
+	_tps_marker_offset = tps_marker.position
 	_on_reset_cam_pressed()
 	switch_to_cam(_int_to_cam_mode(player_entity.settings_manager.current_settings["cam_mode"]))
 

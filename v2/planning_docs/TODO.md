@@ -24,7 +24,10 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-
+- [ ] add racing line to show newbs where to go & brake, forza style
+  - [ ] levels\assets\props\racing_line.gd
+  - [x] curve/mesh gen system
+  - [ ] maybe add markers & dynamically generate on the player's client (HUdController?)
 - [ ] move camera to up/left aka make it easier to see when driving around (not directly behind)
 - [ ] tell controller players they need to progressively brake
 - [ ] get fun gameplay loop going
@@ -46,7 +49,6 @@
 ## Notes 📝
 > Stuff to move ASAP
 - NOS sfx `nos-sfx.ogg`
-- add racing line
 - Brake lights
 - Time attack mode
 - Add lap race to stunt city
