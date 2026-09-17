@@ -24,6 +24,8 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
+
+- [ ] move camera to up/left aka make it easier to see when driving around (not directly behind)
 - [ ] tell controller players they need to progressively brake
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
@@ -43,7 +45,8 @@
 
 ## Notes 📝
 > Stuff to move ASAP
-- [ ] NOS sfx `nos-sfx.ogg`
+- NOS sfx `nos-sfx.ogg`
+- Brake lights
 - Time attack mode
 - Add lap race to stunt city
 - Bridge to Island 
@@ -67,7 +70,9 @@
 
 ### Game-breaking bugs
 - [ ] M for map half ass/ broken
-- [ ] Road generator lanes are jank / broken
+- [ ] players can move at start on Race, not stunt race
+  - [ ] merge shared stuff from race+stuntrace aka spawning stuff like this
+- [ ] Road generator lanes + AI
 
 ### Gameplay Improvements
 

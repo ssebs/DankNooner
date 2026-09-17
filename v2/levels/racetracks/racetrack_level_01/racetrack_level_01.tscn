@@ -216,28 +216,28 @@ script = ExtResource("9_5ryor")
 first_grid_marker = NodePath("RaceGridSpot1")
 
 [node name="RaceGridSpot1" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=2006111591]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -14.24999, 0.24999976, -5.9999924)
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -14.24999, 0.30009115, -5.9999924)
 
 [node name="RaceGridSpot2" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=451520472]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.99999, 0.24999976, -5.9999924)
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -9.99999, 0.30009103, -5.9999924)
 
 [node name="RaceGridSpot3" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=1683236342]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.9999905, 0.24999976, -5.9999924)
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.9999905, 0.30009103, -5.9999924)
 
 [node name="RaceGridSpot4" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=1632944192]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -12.24999, 0.24999976, -2.2499924)
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -12.24999, 0.30009544, -2.2499924)
 
 [node name="RaceGridSpot5" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=236889357]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -7.999991, 0.24999976, -2.2499926)
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -7.999991, 0.30009544, -2.2499926)
 
 [node name="RaceGridSpot6" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=396839970]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -10.24999, 0.24999976, 1.0000072)
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -10.24999, 0.30004895, 1.0000072)
 
 [node name="RaceGridSpot7" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=611814178]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -14.24999, 0.24999976, 1.0000073)
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -14.24999, 0.30004895, 1.0000073)
 
 [node name="RaceGridSpot8" type="Marker3D" parent="Race/SequentialTaskRunner/GridSpawnTask" unique_id=2077988439]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.999991, 0.24999976, 1.0000069)
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, -5.999991, 0.30004895, 1.0000069)
 
 [node name="ConcurrentTaskRunner2" type="Node" parent="Race/SequentialTaskRunner" unique_id=888872226]
 script = ExtResource("10_6j553")
@@ -261,35 +261,35 @@ end_checkpoint = NodePath("Race01CheckpointMarkerStartStop1")
 total_laps = 2
 
 [node name="Race01CheckpointMarkerStartStop1" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1048335829 instance=ExtResource("14_hyio3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 2, -12.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0.30008268, -12.5)
 width = 20.0
 
 [node name="Race01CheckpointMarker02" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1968073091 instance=ExtResource("14_hyio3")]
-transform = Transform3D(0.53794265, 0, -0.84298146, 0, 1, 0, 0.84298146, 0, 0.53794265, 18.862797, 2, -240.5019)
+transform = Transform3D(0.53794265, 0, -0.84298146, 0, 1, 0, 0.84298146, 0, 0.53794265, 18.862797, 0.30004787, -240.5019)
 width = 20.0
 
 [node name="Race01CheckpointMarker03" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1096804446 instance=ExtResource("14_hyio3")]
-transform = Transform3D(-0.97984046, 0, 0.19978198, 0, 1, 0, -0.19978198, 0, -0.97984046, 149.23488, 2.0000005, -157.15479)
+transform = Transform3D(-0.97984046, 0, 0.19978198, 0, 1, 0, -0.19978198, 0, -0.97984046, 149.23488, 0.30004883, -157.15479)
 width = 20.0
 
 [node name="Race01CheckpointMarker04" parent="Race/SequentialTaskRunner/RaceTask" unique_id=608065201 instance=ExtResource("14_hyio3")]
-transform = Transform3D(0.8660254, 0, 0.49999997, 0, 1, 0, -0.49999997, 0, 0.8660254, 79.62275, 2, -224.1063)
+transform = Transform3D(0.8660254, 0, 0.49999997, 0, 1, 0, -0.49999997, 0, 0.8660254, 79.62275, 0.30004835, -224.1063)
 width = 20.0
 
 [node name="Race01CheckpointMarker05" parent="Race/SequentialTaskRunner/RaceTask" unique_id=800779124 instance=ExtResource("14_hyio3")]
-transform = Transform3D(-0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, -0.70710677, 107.27463, 2, -86.8737)
+transform = Transform3D(-0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, -0.70710677, 107.27463, 0.30004787, -86.8737)
 width = 20.0
 
 [node name="Race01CheckpointMarker06" parent="Race/SequentialTaskRunner/RaceTask" unique_id=918005806 instance=ExtResource("14_hyio3")]
-transform = Transform3D(-0.81959456, 0, -0.572944, 0, 1, 0, 0.572944, 0, -0.81959456, 36.104744, 2, 158.57397)
+transform = Transform3D(-0.81959456, 0, -0.572944, 0, 1, 0, 0.572944, 0, -0.81959456, 36.104744, 0.30004787, 158.57397)
 width = 20.0
 
 [node name="Race01CheckpointMarker07" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1097430408 instance=ExtResource("14_hyio3")]
-transform = Transform3D(0.25086397, 0, -0.96802235, 0, 1, 0, 0.96802235, 0, 0.25086397, 103.291954, 2, 106.04346)
+transform = Transform3D(0.25086397, 0, -0.96802235, 0, 1, 0, 0.96802235, 0, 0.25086397, 103.291954, 0.3000474, 106.04346)
 width = 20.0
 
 [node name="Race01CheckpointMarker08" parent="Race/SequentialTaskRunner/RaceTask" unique_id=2020293308 instance=ExtResource("14_hyio3")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 66.12149, 2, 206.31197)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 66.12149, 0.30004835, 206.31197)
 width = 20.0
 
 [node name="Tracklayout" type="Sprite3D" parent="." unique_id=637833958]

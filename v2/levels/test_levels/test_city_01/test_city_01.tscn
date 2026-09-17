@@ -107,6 +107,10 @@ player_spawn_pos_debug = NodePath("PlayerSpawnTest")
 grid_markers = [NodePath("PlayerSpawn"), NodePath("PlayerSpawnTest"), NodePath("Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot3"), NodePath("Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot4"), NodePath("JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot1"), NodePath("JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot2")]
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=103075822]
+occluder = ExtResource("26_dmi5q")
+bake_simplification_distance = 0.5
+
 [node name="PlayerSpawn" type="Marker3D" parent="." unique_id=2018268121]
 unique_name_in_owner = true
 transform = Transform3D(-0.99999994, 0, 3.1786506e-08, 0, 1, 0, -3.1786506e-08, 0, -0.99999994, 107.99999, 0.049999952, 36.999996)
@@ -2446,49 +2450,40 @@ end_checkpoint = NodePath("Race01CheckpointMarkerStartStop1")
 total_laps = 2
 
 [node name="Race01CheckpointMarkerStartStop1" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1805086722 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 137, 2.0500002, 70)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 137, 0.050001144, 70)
 width = 11.0
-sign_text = "Start / Stop"
 
 [node name="Race01CheckpointMarker02" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=2103253634 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 197, 2.0500002, 70)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 197, 0.050001144, 70)
 width = 11.0
-sign_text = "Turn Left!  <--"
 
 [node name="Race01CheckpointMarker03" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=424970851 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 220, 2.0500002, 13)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 220, 0.050001144, 13)
 width = 11.0
-sign_text = "Turn Left!  <--"
 
 [node name="Race01CheckpointMarker04" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1688146334 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 180, 2.0500002, 4.6809487e-06)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 180, 0.050001144, 4.6809487e-06)
 width = 11.0
-sign_text = "Turn Right!  -->"
 
 [node name="Race01CheckpointMarker05" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=751767640 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 170, 2.0500002, -60.999992)
+transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 170, 0.050001144, -60.999992)
 width = 11.0
-sign_text = "Turn Left!  <--"
 
 [node name="Race01CheckpointMarker06" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=536711753 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-2.1855695e-07, 0, 1, 0, 1, 0, -1, 0, -2.1855695e-07, 60, 2.0500002, -69.99999)
+transform = Transform3D(-2.1855695e-07, 0, 1, 0, 1, 0, -1, 0, -2.1855695e-07, 60, 0.050001144, -69.99999)
 width = 11.0
-sign_text = "Turn Left!  <--"
 
 [node name="Race01CheckpointMarker07" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1832958492 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-1, 0, -2.6226834e-07, 0, 1, 0, 2.6226834e-07, 0, -1, 50, 2.0500002, -7.9999924)
+transform = Transform3D(-1, 0, -2.6226834e-07, 0, 1, 0, 2.6226834e-07, 0, -1, 50, 0.050001144, -7.9999924)
 width = 11.0
-sign_text = "Turn Left!  <--"
 
 [node name="Race01CheckpointMarker08" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=290029436 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 101, 2.0500002, 4.6809487e-06)
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 101, 0.050001144, 4.6809487e-06)
 width = 11.0
-sign_text = "Turn Right!  -->"
 
 [node name="Race01CheckpointMarker09" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1180949922 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-1, 0, -2.6226834e-07, 0, 1, 0, 2.6226834e-07, 0, -1, 110, 2.0500002, 60.000008)
+transform = Transform3D(-1, 0, -2.6226834e-07, 0, 1, 0, 2.6226834e-07, 0, -1, 110, 0.050001144, 60.000008)
 width = 11.0
-sign_text = "Turn Left!  <--"
 
 [node name="JumpEvent" type="Node3D" parent="." unique_id=2082413095]
 
@@ -2541,17 +2536,14 @@ total_laps = 1
 [node name="Start1" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1576775672 instance=ExtResource("4_yaxf8")]
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 273, 2.0500002, 12)
 width = 21.0
-sign_text = "Start"
 
 [node name="CheckpointMarker02" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=427359612 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 273, 2.0500002, 163)
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 273, 0.050000668, 163)
 width = 21.0
-sign_text = "You made the jump!"
 
 [node name="End" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=214077839 instance=ExtResource("4_yaxf8")]
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 273, 2.0500002, 199)
 width = 21.0
-sign_text = "Finish"
 
 [node name="Challenge01Event" type="Node3D" parent="." unique_id=963449666]
 
@@ -2661,7 +2653,3 @@ navigation_mesh = SubResource("NavigationMesh_dmi5q")
 navigation_layers = 16
 enter_cost = 999.0
 travel_cost = 999.0
-
-[node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=103075822]
-occluder = ExtResource("26_dmi5q")
-bake_simplification_distance = 0.5
