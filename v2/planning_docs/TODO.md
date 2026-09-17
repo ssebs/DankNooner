@@ -46,6 +46,7 @@
 ## Notes 📝
 > Stuff to move ASAP
 - NOS sfx `nos-sfx.ogg`
+- add racing line
 - Brake lights
 - Time attack mode
 - Add lap race to stunt city
