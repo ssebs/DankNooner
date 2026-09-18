@@ -24,15 +24,15 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-- [ ] add racing line to show newbs where to go & brake, forza style
-  - [ ] levels\assets\props\racing_line.gd
-  - [x] curve/mesh gen system
-  - [ ] maybe add markers & dynamically generate on the player's client (HUdController?)
 - [ ] mid-race challenges
   - [ ] display in HUD during race
   - [ ] track who did longest wheelie / airtime
   - [ ] this suggested trick changes every race
-- [ ] update default settings (auto) / biker skins on first launch
+
+- [ ] add racing line to show newbs where to go & brake, forza style
+  - [ ] levels\assets\props\racing_line.gd
+  - [x] curve/mesh gen system
+  - [ ] maybe add markers & dynamically generate on the player's client (HUdController?)
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [ ] make tricks + combos easier to do **WIP**
@@ -43,7 +43,6 @@
 
 ## Notes 📝
 > Stuff to move ASAP
-- NOS sfx `nos-sfx.ogg`
 - Brake lights
 - Time attack mode
 - Add lap race to stunt city
@@ -227,6 +226,10 @@
 ---
 
 ## Done ✅
+
+- [x] update default settings (auto) / biker skins on first launch
+
+- [x] NOS sfx `nos-sfx.ogg`
 
 - [x] reverse shouldnt need clutch
 

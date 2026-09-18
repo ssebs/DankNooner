@@ -167,6 +167,8 @@ var _boost_grant_amount: float = 0.0
 
 # Process-side state tracking (not sync'd)
 var _prev_is_crashed: bool = false
+## Local _process edge for the NOS boost SFX — plays once each time a boost fires.
+var _prev_is_boosting: bool = false
 ## Exhaust-sound detection (local, _process): whether we're inside a decel window, how long we've
 ## coasted in it (gates the sustained burble), and whether the burble roll already happened.
 var _exhaust_decel_active: bool = false
@@ -275,6 +277,11 @@ func _process(delta: float) -> void:
 
 	if !is_local_client:
 		return
+
+	# NOS boost SFX on the is_boosting rising edge — one-shot per boost.
+	if boost_controller.is_boosting and !_prev_is_boosting and audio_manager:
+		audio_manager.play_nos_boost()
+	_prev_is_boosting = boost_controller.is_boosting
 
 	_update_exhaust_pops(delta)
 

@@ -21,6 +21,7 @@
 [ext_resource type="AudioStream" uid="uid://bb5n6a76kjtsg" path="res://non_fmod_sounds/SFX/fahh.ogg" id="19_wigfl"]
 [ext_resource type="AudioStream" uid="uid://b6hkhxmnfe1h6" path="res://non_fmod_sounds/SFX/taco-bell-bong-sfx.mp3" id="20_7lx2g"]
 [ext_resource type="AudioStream" uid="uid://b74v67cikxdqo" path="res://non_fmod_sounds/SFX/vine-boom.mp3" id="21_60vs4"]
+[ext_resource type="AudioStream" uid="uid://chh11m62yy7i5" path="res://non_fmod_sounds/nos-sfx.mp3" id="22_f77kd"]
 [ext_resource type="AudioStream" uid="uid://dov0o7qath83k" path="res://non_fmod_sounds/SFX/windows-tada.mp3" id="22_uckac"]
 [ext_resource type="AudioStream" uid="uid://dh4kgxmx1kba5" path="res://non_fmod_sounds/SFX/nuke-bomb.ogg" id="23_wigfl"]
 [ext_resource type="AudioStream" uid="uid://dapyaegjsje1r" path="res://non_fmod_sounds/SFX/cod-zombies-kaboom.ogg" id="24_7lx2g"]
@@ -179,6 +180,14 @@ unique_name_in_owner = true
 stream = ExtResource("24_7lx2g")
 volume_db = -4.0
 bus = &"Menu"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="NOSBoost" type="AudioStreamPlayer" parent="Sounds" unique_id=455949376]
+unique_name_in_owner = true
+stream = ExtResource("22_f77kd")
+volume_db = -12.0
+bus = &"SFX"
 script = ExtResource("2_snd")
 metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 

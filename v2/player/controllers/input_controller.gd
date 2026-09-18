@@ -70,6 +70,9 @@ func _gather():
 		_pending_gear_reset = false
 
 	nfx_throttle = Input.get_action_strength("throttle_pct")
+	# Boost drives you forward even off the gas — force full throttle while boosting.
+	if player_entity.boost_controller.is_boosting:
+		nfx_throttle = 1.0
 	nfx_front_brake = Input.get_action_strength("brake_front_pct")
 	nfx_rear_brake = Input.get_action_strength("brake_rear")
 	nfx_steer = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")

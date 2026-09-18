@@ -14,7 +14,8 @@ class_name BoostController extends Node
 # burning the current segment down to the next boundary — releasing early does NOT cancel.
 const BOOST_SEGMENTS: float = 5.0
 const BOOST_SEGMENT_SECS: float = 1.0  # one segment = 1s of boost, spent piecemeal
-const BOOST_FULL_BURN_SECS: float = 4.0  # a full meter burned in one press runs longer
+const BOOST_FULL_BURN_SECS: float = 4.0  # rate for a burn-it-all double-tap: BOOST_SEGMENTS over this
+const BOOST_DOUBLE_TAP_SECS: float = 0.5  # a second tap inside this window burns all remaining boost
 const BOOST_ACCEL_MULT: float = 1.8  # engine drive multiplier while boosting
 const BOOST_SPEED_MULT: float = 1.25  # raises both the gear cap and bd.max_speed ceiling
 
@@ -29,6 +30,9 @@ var boost_burn_target: float = -1.0
 var boost_burn_rate: float = 0.0
 ## Previous tick's nfx_boost_held — synced so the rising edge survives netfox resimulation.
 var boost_prev_held: bool = false
+## Counts down from BOOST_DOUBLE_TAP_SECS after a tap. A press while this is >0 is the second
+## tap of a double-tap and burns everything remaining. Synced so it resimulates cleanly.
+var boost_tap_window: float = 0.0
 ## Derived each rollback tick from the burn state. Drives speed + boost FX.
 var is_boosting: bool = false
 
@@ -41,27 +45,33 @@ var is_boosting: bool = false
 ## (server, outside rollback); everything here derives from synced input + synced meter state,
 ## so it resimulates cleanly.
 ##
-## A press burns the current segment down to the next boundary and can't be cancelled by
-## releasing — pressing on a full meter instead commits all three at once for a longer boost.
+## A press burns one segment down to the next boundary and can't be cancelled by releasing.
+## A second press within BOOST_DOUBLE_TAP_SECS retargets the burn to zero, spending everything
+## remaining in one longer boost.
 func on_movement_rollback_tick(delta: float):
 	var held := input_controller.nfx_boost_held
 	var was_held := boost_prev_held
 	boost_prev_held = held
+	boost_tap_window = maxf(boost_tap_window - delta, 0.0)
 
 	if player_entity.is_crashed:
 		boost_burn_target = -1.0
+		boost_tap_window = 0.0
 		is_boosting = false
 		return
 
 	# Rising edge with at least one whole segment banked commits a burn.
-	if held and not was_held and boost_burn_target < 0.0 and boost_amount >= 1.0:
-		if boost_amount >= BOOST_SEGMENTS:
+	if held and not was_held and boost_amount >= 1.0:
+		if boost_tap_window > 0.0:
+			# Second tap of a double-tap — burn everything remaining.
 			boost_burn_target = 0.0
 			boost_burn_rate = BOOST_SEGMENTS / BOOST_FULL_BURN_SECS
-		else:
-			# Spend exactly one segment — BOOST_SEGMENT_SECS of boost per press.
+			boost_tap_window = 0.0
+		elif boost_burn_target < 0.0:
+			# First tap — spend exactly one segment, and open the double-tap window.
 			boost_burn_target = boost_amount - 1.0
 			boost_burn_rate = 1.0 / BOOST_SEGMENT_SECS
+			boost_tap_window = BOOST_DOUBLE_TAP_SECS
 
 	is_boosting = boost_burn_target >= 0.0
 	if !is_boosting:
@@ -103,6 +113,7 @@ func do_reset():
 	boost_burn_target = -1.0
 	boost_burn_rate = 0.0
 	boost_prev_held = false
+	boost_tap_window = 0.0
 	is_boosting = false
 
 

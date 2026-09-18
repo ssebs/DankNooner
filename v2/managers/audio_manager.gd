@@ -74,6 +74,7 @@ var nuke: SoundEvent
 var cod_zombies_kaboom: SoundEvent
 var tire_squeal: SoundEvent
 var exhaust_burble: SoundEvent
+var nos_boost: SoundEvent
 
 ## Map of EngineSfx → EngineSoundEvent node, populated in _ready.
 var _engine_sounds: Dictionary = {}
@@ -110,6 +111,7 @@ func _ready():
 	cod_zombies_kaboom = get_node_or_null("%CODZombiesKaboom") as SoundEvent
 	tire_squeal = get_node_or_null("%TireSqueal") as SoundEvent
 	exhaust_burble = get_node_or_null("%ExhaustBurble") as SoundEvent
+	nos_boost = get_node_or_null("%NOSBoost") as SoundEvent
 	for pop in get_node("%ExhaustPops").get_children():
 		if pop is SoundEvent:
 			_exhaust_pops.append(pop)
@@ -194,6 +196,10 @@ func play_exhaust_pop():
 	var pop := _exhaust_pops[_exhaust_pop_idx]
 	_exhaust_pop_idx = (_exhaust_pop_idx + 1) % _exhaust_pops.size()
 	pop.play()
+
+
+func play_nos_boost():
+	nos_boost.play()
 
 
 func play_startup():

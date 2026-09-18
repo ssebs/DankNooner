@@ -9,10 +9,10 @@
 3. Drop every trick and a **grace window** starts — re-enter a trick in time and the combo survives, so wheelie → stoppie → wheelie chains keep their multiplier.
 4. **Tap the boost button** to spend. It is a *tap, not a hold*: the press commits a burn that releasing cannot cancel.
    - One or more full segments banked → burns a single segment.
-   - Meter completely full → the whole meter burns as one longer boost.
+   - Double-tap (a second press within `BOOST_DOUBLE_TAP_SECS`) → burns all remaining boost as one longer boost.
    - Under one full segment → press is rejected, gauge blinks.
 5. **Crashing voids the run** — that combo's score is discarded, not partially credited, and the boost it earned is taken back. Boost banked by *earlier completed* combos survives (see `combo_boost_earned` below).
-6. While boosting, the **automatic transmission is forced on** regardless of the `auto_transmission` setting — a boost spent bouncing off the rev limiter in the wrong gear is a wasted boost.
+6. While boosting, **full throttle is forced** (you accelerate even off the gas) and the **automatic transmission is forced on** regardless of the `auto_transmission` setting — a boost spent bouncing off the rev limiter in the wrong gear is a wasted boost.
 
 ## Where the logic lives (and why it's split)
 
@@ -77,7 +77,8 @@ Same rollback-determinism reason for being consts.
 | --- | --- |
 | `BOOST_SEGMENTS` | Meter capacity in segments. Changing this needs a matching cell count in `boost_gauge.tscn`. |
 | `BOOST_SEGMENT_SECS` | Duration of a single-segment burn. |
-| `BOOST_FULL_BURN_SECS` | Duration when a full meter is committed in one press — the reward for banking the whole thing. |
+| `BOOST_FULL_BURN_SECS` | Sets the burn rate for a double-tap "use it all" (`BOOST_SEGMENTS` over this many secs), so emptying a full meter runs this long. |
+| `BOOST_DOUBLE_TAP_SECS` | Second-tap window: a press this soon after the first burns all remaining boost instead of one segment. |
 | `BOOST_ACCEL_MULT` | Engine drive multiplier while boosting. |
 | `BOOST_SPEED_MULT` | Raises both the gear cap and the `bd.max_speed` ceiling while boosting. |
 
@@ -151,7 +152,7 @@ Visibility keys off `combo_time > 0`, **not** the multiplier — an earlier vers
 
 The rising edge is detected off the **synced** `boost_prev_held` in `BoostController` so it survives resimulation. `RidingHUDState` keeps its own separate `_prev_boost_held` for the rejection blink — deliberately not reusing the synced var, since the HUD must not perturb rollback state for a cosmetic effect.
 
-`InputController._process()` forces `_auto_shift()` while `is_boosting`, independent of the `auto_transmission` setting — see [PlayerController.md](./PlayerController.md) for why auto-shift lives in `InputController` rather than `GearingController`.
+`InputController._gather()` forces `nfx_throttle` to full while `is_boosting`, so a boost drives you forward off the gas; recording it into the input property (rather than overriding in the sim) keeps it on netfox's input-sync path. `InputController._process()` likewise forces `_auto_shift()` while `is_boosting`, independent of the `auto_transmission` setting — see [PlayerController.md](./PlayerController.md) for why auto-shift lives in `InputController` rather than `GearingController`.
 
 ## Related
 
