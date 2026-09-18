@@ -13,3 +13,7 @@ var description: String = "Sunt nisi id proident veniam ad laboris pariatur mini
 ## If set, every participating player's bike is swapped to this for the duration of the event.
 ## Restored from lobby_players on exit back to free roam. Leave null for no override.
 @export var forced_base_bike: BikeSkinDefinition = null
+
+## Passive whole-race side-challenge (e.g. longest wheelie), shown live in the HUD and on the
+## results screen. Read by StuntRaceGameMode. Leave null for no challenge.
+@export var race_challenge: RaceChallenge = null

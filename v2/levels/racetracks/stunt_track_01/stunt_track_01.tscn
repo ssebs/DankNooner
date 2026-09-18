@@ -4,6 +4,7 @@
 [ext_resource type="Resource" uid="uid://b3u0inad4glpn" path="res://resources/traffic/settings/stunt_track_01_traffic_settings.tres" id="1_trfst"]
 [ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/gamemodeobjects/killbox.tscn" id="3_cbnwg"]
 [ext_resource type="Script" uid="uid://bxp3i4cnonh8y" path="res://addons/road-generator/nodes/road_manager.gd" id="6_3ue8r"]
+[ext_resource type="Script" uid="uid://c0uylliv5rmt6" path="res://managers/gamemodes/challenges/longest_wheelie_challenge.gd" id="6_a4ddl"]
 [ext_resource type="PackedScene" uid="uid://rervqxotioc4" path="res://levels/components/props/ramp.tscn" id="6_w1aki"]
 [ext_resource type="PackedScene" uid="uid://i5gn7vx2atly" path="res://levels/components/props/gas_station.tscn" id="7_7qjpf"]
 [ext_resource type="Script" uid="uid://cph7euje06kel" path="res://addons/road-generator/nodes/road_container.gd" id="7_rmar3"]
@@ -76,11 +77,16 @@ fog_light_energy = 0.32
 fog_density = 0.0045
 fog_sky_affect = 0.923
 
+[sub_resource type="Resource" id="Resource_wktgk"]
+script = ExtResource("6_a4ddl")
+metadata/_custom_type_script = "uid://c0uylliv5rmt6"
+
 [sub_resource type="Resource" id="Resource_pls18"]
 script = ExtResource("24_l8nu3")
 name = "Stunt Race"
 description = "Do a flip!"
 target_gamemode = 3
+race_challenge = SubResource("Resource_wktgk")
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_mn4lr"]

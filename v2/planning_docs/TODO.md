@@ -25,8 +25,8 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] mid-race challenges
-  - [ ] display in HUD during race
-  - [ ] track who did longest wheelie / airtime
+  - [x] display in HUD during race
+  - [x] track who did longest wheelie / airtime
   - [ ] this suggested trick changes every race
 
 - [ ] add racing line to show newbs where to go & brake, forza style

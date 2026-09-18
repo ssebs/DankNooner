@@ -22,6 +22,8 @@ class_name StuntRaceGameMode extends GameModeType
 
 
 const RESULTS_REFRESH_SECS: float = 1.0
+## Cadence for pushing the live challenge line to clients (a few Hz — the value crawls).
+const CHALLENGE_REFRESH_SECS: float = 0.25
 
 var _start_circle: EventStartCircle
 ## A stunt track authors a StuntRaceTask (RaceTask + item spawners) in place of a plain RaceTask.
@@ -35,6 +37,11 @@ var _results_countdown_total: float = 10.0
 ## stop(), so they can't be re-derived. NPC rows re-derive live from RaceTask.
 var _human_rows: Array[Dictionary] = []
 var _results_refresh_accum: float = 0.0
+var _challenge_refresh_accum: float = 0.0
+## Challenge winner line ("Name (4.2s)") snapshotted at all-finished; "" if nobody scored.
+var _challenge_winner_text: String = ""
+## The event's challenge (from GameModeEventDefinition), or null. Resolved from ctx in Enter.
+var _race_challenge: RaceChallenge
 
 
 func Enter(state_context: StateContext):
@@ -45,6 +52,8 @@ func Enter(state_context: StateContext):
 
 	var ctx := state_context as GamemodeStateContext
 	_start_circle = ctx.event_start_circle
+	if ctx.gamemode_event != null:
+		_race_challenge = ctx.gamemode_event.race_challenge
 	_start_circle.enable_game_objects()
 	_runners = _start_circle.get_runners()
 	_inject_runner_deps()
@@ -59,6 +68,8 @@ func Enter(state_context: StateContext):
 		_race_task = _find_race_task(_start_circle)
 		if _race_task is StuntRaceTask:
 			(_race_task as StuntRaceTask).on_race_start()
+		if _race_challenge != null:
+			_race_challenge.reset(lobby_manager.lobby_players.keys())
 		_setup_npcs()
 		_start_next_runner()
 
@@ -67,6 +78,7 @@ func Update(delta: float):
 	if !multiplayer.is_server():
 		return
 	_push_checkpoint_markers()
+	_update_challenge(delta)
 	if _update_results_countdown(delta):
 		return
 	if _active_runner != null:
@@ -94,6 +106,7 @@ func Exit(_state_context: StateContext):
 			(_race_task as StuntRaceTask).on_race_end()
 		_teardown_npcs()
 		_clear_checkpoint_markers()
+		_clear_challenge_hud()
 		_race_task = null
 
 	if results_hud.ui.visible:
@@ -105,6 +118,8 @@ func Exit(_state_context: StateContext):
 	_runners = []
 	_active_runner_index = -1
 	_human_rows = []
+	_challenge_winner_text = ""
+	_race_challenge = null
 
 
 #region Runner chaining
@@ -194,6 +209,71 @@ func _clear_checkpoint_markers():
 
 #endregion
 
+#region Mid-race challenge (server only)
+
+
+## Tick every spawned human's challenge state, then push the leader/own line to their HUD
+## at CHALLENGE_REFRESH_SECS. Only runs while a leg is live — the race is over during results.
+func _update_challenge(delta: float):
+	if _race_challenge == null or _active_runner == null:
+		return
+	for peer_id in lobby_manager.lobby_players:
+		# Player may not be spawned yet (late-join) — skip is intentional.
+		var player := spawn_manager._get_player_by_peer_id(peer_id)
+		if player == null:
+			continue
+		_race_challenge.tick(peer_id, player, delta)
+	_challenge_refresh_accum -= delta
+	if _challenge_refresh_accum > 0.0:
+		return
+	_challenge_refresh_accum = CHALLENGE_REFRESH_SECS
+	var leader_id := _challenge_leader()
+	var leader_name := "" if leader_id == -1 else lobby_manager.lobby_players[leader_id].username
+	var leader_val := 0.0 if leader_id == -1 else _race_challenge.get_best(leader_id)
+	for peer_id in lobby_manager.lobby_players:
+		var player := spawn_manager._get_player_by_peer_id(peer_id)
+		if player == null:
+			continue
+		riding_hud_state.push_challenge_status(
+			peer_id, _challenge_hud_text(peer_id, leader_name, leader_val)
+		)
+
+
+func _clear_challenge_hud():
+	if _race_challenge == null:
+		return
+	for peer_id in lobby_manager.lobby_players:
+		var player := spawn_manager._get_player_by_peer_id(peer_id)
+		if player == null:
+			continue
+		riding_hud_state.clear_challenge_status(peer_id)
+
+
+## Human peer with the best value, or -1 if nobody has scored. NPCs don't do tricks.
+func _challenge_leader() -> int:
+	var leader_id := -1
+	var leader_val := 0.0
+	for peer_id in lobby_manager.lobby_players:
+		var value := _race_challenge.get_best(peer_id)
+		if value > leader_val:
+			leader_val = value
+			leader_id = peer_id
+	return leader_id
+
+
+func _challenge_hud_text(peer_id: int, leader_name: String, leader_val: float) -> String:
+	var leader_seg := tr("RACE_CHALLENGE_NONE")
+	if leader_name != "":
+		leader_seg = "%s %s" % [leader_name, _race_challenge.format_value(leader_val)]
+	return tr("RACE_CHALLENGE_HUD").format({
+		"title": _race_challenge.title(),
+		"leader": leader_seg,
+		"you": _race_challenge.format_value(_race_challenge.get_best(peer_id)),
+	})
+
+
+#endregion
+
 #region NPC racers (server only)
 
 
@@ -275,6 +355,7 @@ func _show_results(runner: TaskRunner):
 			if task_ms >= 0.0:
 				time_ms = task_ms
 		_human_rows.append(_result_row(username, time_ms))
+	_challenge_winner_text = _build_challenge_winner_text()
 	_results_countdown = _results_countdown_total
 	_results_refresh_accum = RESULTS_REFRESH_SECS
 	tutorial_hud.rpc_hide.rpc()
@@ -295,7 +376,23 @@ func _build_results_data() -> ResultsData:
 			else:
 				rows.append({"Username": npc_name, "Time": tr("RACE_RACING"), "_sort_key": INF})
 	rows.sort_custom(func(a, b): return a["_sort_key"] < b["_sort_key"])
+	# Challenge winner trails the placement table as a plain note row (reuses the two columns).
+	if _challenge_winner_text != "":
+		rows.append({"Username": _race_challenge.title(), "Time": _challenge_winner_text})
 	return ResultsData.create(tr("RACE_COMPLETE"), ["Username", "Time"], rows)
+
+
+## Snapshot the challenge winner ("Name (4.2s)") at all-finished; "" if disabled or nobody scored.
+func _build_challenge_winner_text() -> String:
+	if _race_challenge == null:
+		return ""
+	var leader_id := _challenge_leader()
+	if leader_id == -1:
+		return ""
+	return "%s (%s)" % [
+		lobby_manager.lobby_players[leader_id].username,
+		_race_challenge.format_value(_race_challenge.get_best(leader_id)),
+	]
 
 
 func _result_row(username: String, time_ms: float) -> Dictionary:
@@ -326,6 +423,9 @@ func _on_results_restart_pressed():
 		_active_runner = null
 	_active_runner_index = -1
 	_human_rows = []
+	_challenge_winner_text = ""
+	if _race_challenge != null:
+		_race_challenge.reset(lobby_manager.lobby_players.keys())
 	_runners = _start_circle.get_runners()
 	_inject_runner_deps()
 	# Fresh NPCs back at the grid with reset race rows.

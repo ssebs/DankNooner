@@ -29,6 +29,9 @@ const _RESPAWN_QUICK_FLASH_SECS := 0.6
 @onready var _grip_label: Label = %HUD_GRIP_DGR
 @onready var _trick_msg: Label = %HUD_TRICK_MSG
 @onready var _game_msg: Label = %HUD_GAME_MSG
+@onready var _challenge_msg: Label = %HUD_CHALLENGE_MSG
+@onready var _challenge_panel: PanelContainer = %ChallengePanel
+@onready var _trick_timer: Label = %HUD_TRICK_TIMER
 @onready var _balance_bar: BalanceBar = %BalanceBar
 @onready var _boost_gauge: BoostGauge = %BoostGauge
 @onready var _combo_counter: ComboCounter = %ComboCounter
@@ -60,6 +63,9 @@ var _prev_boost_held: bool = false
 ## True while the balance bar is showing the speed wobble (vs a trick). Lets the wobble take the
 ## bar over and hand it back cleanly.
 var _wobble_bar_active: bool = false
+## Local, display-only stopwatch for the current wheelie hold — shown next to the combo while a
+## challenge is up so you can read your live attempt. Never touches simulation state.
+var _wheelie_attempt_t: float = 0.0
 ## Debug-build-only netfox perf readout. Null on remote instances, in release builds,
 ## and whenever netfox's perf monitors aren't registered — see show_hud.
 var _netfox_debug_label: Label = null
@@ -186,6 +192,21 @@ func Physics_Update(delta: float):
 	var comboing: bool = trick_controller.combo_time > 0.0 and not player_entity.is_crashed
 	var combo: int = trick_controller.combo_multiplier if comboing else 1
 	_combo_counter.set_combo(combo, comboing)
+
+	# Live wheelie-attempt stopwatch, only while a challenge is up (the panel is visible).
+	# Display-only local accumulation — the challenge's authoritative best is server-side.
+	var wheelie_held: bool = (
+		not player_entity.is_crashed
+		and trick_controller.current_trick
+		in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]
+	)
+	if _challenge_panel.visible and wheelie_held:
+		_wheelie_attempt_t += delta
+		_trick_timer.text = tr("RACE_WHEELIE_ATTEMPT").format({"time": "%.1f" % _wheelie_attempt_t})
+		_trick_timer.visible = true
+	else:
+		_wheelie_attempt_t = 0.0
+		_trick_timer.visible = false
 
 	# Respawn feedback. A tap shows "Respawning..." for a split second; holding past
 	# _RESPAWN_SHOW_SECS switches to "Full respawning..." with the bar charging toward the
@@ -335,6 +356,29 @@ func push_checkpoint_marker(peer_id: int, pos: Vector3, has_target: bool) -> voi
 	_minimap.rpc_set_checkpoint.rpc_id(peer_id, pos, has_target)
 
 
+## Server-side: push the mid-race challenge line (already localized) to one client.
+## Called from the stunt race gamemode.
+func push_challenge_status(peer_id: int, text: String) -> void:
+	_rpc_set_challenge.rpc_id(peer_id, text)
+
+
+func clear_challenge_status(peer_id: int) -> void:
+	_rpc_clear_challenge.rpc_id(peer_id)
+
+
+## text is pre-localized by the server (per-peer, so it carries the caller's own best) —
+## don't tr() again, same as the tutorial HUD's progress line.
+@rpc("call_local", "unreliable")
+func _rpc_set_challenge(text: String):
+	_challenge_msg.text = text
+	_challenge_panel.visible = true
+
+
+@rpc("call_local", "reliable")
+func _rpc_clear_challenge():
+	_challenge_panel.visible = false
+
+
 func hide_ui() -> void:
 	ui.visible = false
 	_minimap.deactivate()
@@ -348,6 +392,8 @@ func do_reset():
 	_combo_counter.do_reset()
 	_prev_boost_held = false
 	_wobble_bar_active = false
+	_wheelie_attempt_t = 0.0
+	_trick_timer.visible = false
 
 
 func _get_configuration_warnings() -> PackedStringArray:

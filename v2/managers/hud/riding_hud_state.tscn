@@ -203,17 +203,38 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_GAME_MSG"
 
-[node name="HUD_CHALLENGE_MSG" type="Label" parent="UI/AspectContainer/MarginContainer/top left vbox" unique_id=1156886562]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-text = "HUD_CHALLENGE_MSG"
-
 [node name="Minimap" parent="UI/AspectContainer/MarginContainer" unique_id=407372356 instance=ExtResource("4_ltqsj")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
+
+[node name="ChallengeCluster" type="Control" parent="UI/AspectContainer/MarginContainer" unique_id=1156886570]
+layout_mode = 2
+mouse_filter = 2
+theme = ExtResource("1_whasa")
+
+[node name="ChallengePanel" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/ChallengeCluster" unique_id=1156886571]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.0
+offset_top = 240.0
+offset_right = -12.0
+offset_bottom = 240.0
+grow_horizontal = 0
+grow_vertical = 1
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("3_j31af")
+
+[node name="HUD_CHALLENGE_MSG" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/ChallengePanel" unique_id=1156886562]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+text = "HUD_CHALLENGE_MSG"
 
 [node name="BalanceBar" parent="UI/AspectContainer/MarginContainer" unique_id=108705249 instance=ExtResource("5_q7o3g")]
 unique_name_in_owner = true
@@ -226,6 +247,14 @@ size_flags_horizontal = 0
 size_flags_vertical = 8
 mouse_filter = 2
 theme_override_constants/separation = 4
+
+[node name="HUD_TRICK_TIMER" type="Label" parent="UI/AspectContainer/MarginContainer/BoostCluster" unique_id=1156886572]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 32
+text = "HUD_TRICK_TIMER"
 
 [node name="ComboCounter" parent="UI/AspectContainer/MarginContainer/BoostCluster" unique_id=1303206430 instance=ExtResource("6_x84np")]
 unique_name_in_owner = true
