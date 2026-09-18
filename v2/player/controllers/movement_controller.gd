@@ -100,7 +100,7 @@ const LANDING_SNAP_ANGLE_DEG: float = 30.0 # forgiveness window — flips landin
 # Steering authority while up on the front wheel. Reduced input is allowed; shoving past the
 # crash threshold (CrashController.stoppie_steer_crash_threshold) washes the loaded front out.
 const STOPPIE_STEER_SCALE: float = 0.5
-# Reverse — hold clutch + any brake to roll backwards from a stop
+# Reverse — hold any brake while stopped to roll backwards. No clutch needed.
 const REVERSE_MAX_SPEED: float = 2.0
 const REVERSE_ACCEL: float = 8.0
 const REVERSE_BRAKE_THRESHOLD: float = 0.3
@@ -442,12 +442,11 @@ func _speed_calc(delta: float):
 		is_reversing = false
 		return
 
-	# Reverse — hold clutch + brake from a near-stop. Bypasses normal accel/brake/slope.
+	# Reverse — hold any brake from a near-stop. Bypasses normal accel/brake/slope.
 	var brake_total = _effective_front_brake() + _effective_rear_brake()
-	# Off-gas only — revving with the clutch in (burnout / launch prep) must not read as reverse.
+	# Off-gas only — a burnout / launch prep (front brake + throttle) must not read as reverse.
 	var reverse_input = (
-		input_controller.nfx_clutch_held
-		and brake_total > REVERSE_BRAKE_THRESHOLD
+		brake_total > REVERSE_BRAKE_THRESHOLD
 		and input_controller.nfx_throttle < REVERSE_THROTTLE_MAX
 	)
 	if reverse_input and (is_reversing or speed <= 0.5):

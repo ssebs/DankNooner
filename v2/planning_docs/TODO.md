@@ -32,7 +32,6 @@
   - [ ] display in HUD during race
   - [ ] track who did longest wheelie / airtime
   - [ ] this suggested trick changes every race
-- [ ] auto transmission => reverse shouldnt need clutch
 - [ ] update default settings (auto) / biker skins on first launch
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
@@ -228,6 +227,8 @@
 ---
 
 ## Done ✅
+
+- [x] reverse shouldnt need clutch
 
 - [x] [Speed Wobbles](./____SpeedWobbles____.md)
   - [x] FX
