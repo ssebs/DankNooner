@@ -28,19 +28,14 @@
   - [ ] levels\assets\props\racing_line.gd
   - [x] curve/mesh gen system
   - [ ] maybe add markers & dynamically generate on the player's client (HUdController?)
-- [ ] move camera to up/left aka make it easier to see when driving around (not directly behind)
-- [ ] tell controller players they need to progressively brake
+- [ ] mid-race challenges
+  - [ ] display in HUD during race
+  - [ ] track who did longest wheelie / airtime
+  - [ ] this suggested trick changes every race
+- [ ] auto transmission => reverse shouldnt need clutch
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [ ] make tricks + combos easier to do **WIP**
-      - [ ] [Speed Wobbles](./____SpeedWobbles____.md)
-        - [x] FX
-        - [x] while drifting
-        - [x] while landing jumps wrong
-        - [x] while wheelie-ing
-        - [x] smack into player
-        - [x] wheelie rise only works when also leaning back it should be no matter what. also you should not be able to use front brake when in wheelie, rear barke in stoppie
-        - [x] grom cant clutch up
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
 - [ ] fix game breaking bugs
 
@@ -52,14 +47,10 @@
 - Brake lights
 - Time attack mode
 - Add lap race to stunt city
-- Bridge to Island 
 - lightning / Rally Up item
 - r => quick respawn, add btn for set full respawn point (if not in race)
 - add longest single wheelie challenge
 - 1, 2, 3 spam is possible for everyone, debounce this
-- longest wheelie during race, challenges
-  - do X trick in 10s or explode, see - CS2 TDM
-- auto transmission => reverse shouldnt need clutch
 - TP commands dont work on multiplayer
 - gas pump fill up minigame (should do more than just boost the bike, and it should be in first person. group of peeps do it like the race gamemodes)
 - [ ] lag when ending stunt race / no tp option
@@ -236,6 +227,19 @@
 ---
 
 ## Done ✅
+
+- [x] [Speed Wobbles](./____SpeedWobbles____.md)
+  - [x] FX
+  - [x] while drifting
+  - [x] while landing jumps wrong
+  - [x] while wheelie-ing
+  - [x] smack into player
+  - [x] wheelie rise only works when also leaning back it should be no matter what. also you should not be able to use front brake when in wheelie, rear barke in stoppie
+  - [x] grom cant clutch up
+
+- [x] Bridge to Island 
+
+- [x] move camera to up/left aka make it easier to see when driving around (not directly behind)
 
 - [x] Exhaust pop + flame when shifting down to high rpm and giving a little gas for a second like irl
   - [x] burbles / pops when letting off gas
