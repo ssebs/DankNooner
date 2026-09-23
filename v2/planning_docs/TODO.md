@@ -62,7 +62,6 @@
 ## Tasks 📋
 
 ### Game-breaking bugs
-- [ ] M for map half ass/ broken
 - [ ] players can move at start on Race, not stunt race
   - [ ] merge shared stuff from race+stuntrace aka spawning stuff like this
 - [ ] Road generator lanes + AI
@@ -226,6 +225,8 @@
 ---
 
 ## Done ✅
+
+- [x] M for map half ass/ broken
 
 - [x] update default settings (auto) / biker skins on first launch
 

@@ -92,10 +92,13 @@ func set_expanded(on: bool) -> void:
 		_saved_offsets = [offset_left, offset_top, offset_right, offset_bottom]
 		_saved_offset_transform = get("offset_transform_enabled")
 		set("offset_transform_enabled", false)
+		# Escape the parent container, else its next re-sort (e.g. move_to_front) snaps us back.
+		top_level = true
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		move_to_front()
 	else:
 		_camera.size = zoom
+		top_level = false
 		set("offset_transform_enabled", _saved_offset_transform)
 		anchor_left = _saved_anchors[0]
 		anchor_top = _saved_anchors[1]
