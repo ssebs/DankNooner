@@ -34,3 +34,8 @@ func format_value(_value: float) -> String:
 ## Localized challenge name for the HUD/results. Override in the subclass.
 func title() -> String:
 	return ""
+
+
+## Tricks the HUD shows (with how to do them) while this challenge runs. Override in the subclass.
+func hint_tricks() -> PackedInt32Array:
+	return PackedInt32Array()

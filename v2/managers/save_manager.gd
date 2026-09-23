@@ -10,6 +10,8 @@ signal save_item_updated(save_key: String, save_value: Variant)
 	"res://resources/player/default_player_definition.tres"
 )
 
+const BIKE_SKINS_DIR := "res://resources/bikes/skins/"
+
 var save_path: String:
 	get:
 		return "user://savegame_%d.json" % save_slot
@@ -17,7 +19,10 @@ var save_path: String:
 ## NOTE - key names (str) are hard coded in lots of places!
 ## if using a Definition, be sure to call to_dict/from_dict when save/loading it in the impl
 var default_save: Dictionary = {
-	"version": save_version, "player_definition": default_player_definition
+	"version": save_version,
+	"player_definition": default_player_definition,
+	# TrickRow.pin ids shown on the riding HUD
+	"pinned_tricks": [],
 }
 
 var current_save: Dictionary
@@ -43,9 +48,6 @@ func deferred_init():
 	if first_run or player_def.loadouts.is_empty():
 		_seed_default_loadouts(player_def)
 		save_save()
-
-
-const BIKE_SKINS_DIR := "res://resources/bikes/skins/"
 
 
 ## Scans res://resources/bikes/skins/ and creates one loadout per base bike found,

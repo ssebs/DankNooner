@@ -121,7 +121,7 @@ level_manager = NodePath("../../../LevelManager")
 main_menu_state = NodePath("../MainMenuState")
 audio_manager = NodePath("../../../AudioManager")
 
-[node name="MainMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=494197480 node_paths=PackedStringArray("menu_manager", "level_manager", "audio_manager", "settings_menu_state", "play_menu_state", "customize_menu_state", "help_menu_state") instance=ExtResource("6_2pltu")]
+[node name="MainMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=494197480 node_paths=PackedStringArray("menu_manager", "level_manager", "audio_manager", "settings_menu_state", "play_menu_state", "customize_menu_state", "help_menu_state", "tricks_menu_state") instance=ExtResource("6_2pltu")]
 menu_manager = NodePath("../..")
 level_manager = NodePath("../../../LevelManager")
 audio_manager = NodePath("../../../AudioManager")
@@ -129,6 +129,7 @@ settings_menu_state = NodePath("../SettingsMenuState")
 play_menu_state = NodePath("../PlayMenuState")
 customize_menu_state = NodePath("../CustomizeMenuState")
 help_menu_state = NodePath("../HelpMenuState")
+tricks_menu_state = NodePath("../TricksMenuState")
 
 [node name="PlayMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=207724047 node_paths=PackedStringArray("menu_manager", "connection_manager", "main_menu_state", "lobby_menu_state", "customize_menu_state") instance=ExtResource("7_f52ns")]
 menu_manager = NodePath("../..")
@@ -176,8 +177,9 @@ tricks_menu_state = NodePath("../TricksMenuState")
 [node name="HelpMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=64073042 node_paths=PackedStringArray("menu_manager") instance=ExtResource("20_lfj8l")]
 menu_manager = NodePath("../..")
 
-[node name="TricksMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1846203517 node_paths=PackedStringArray("menu_manager") instance=ExtResource("38_trkmn")]
+[node name="TricksMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1846203517 node_paths=PackedStringArray("menu_manager", "save_manager") instance=ExtResource("38_trkmn")]
 menu_manager = NodePath("../..")
+save_manager = NodePath("../../../SaveManager")
 
 [node name="LoadingMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1253633817 instance=ExtResource("21_x5kvo")]
 
@@ -218,8 +220,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="RidingHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=1177239669 node_paths=PackedStringArray("hud_manager") instance=ExtResource("42_5fp36")]
+[node name="RidingHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=1177239669 node_paths=PackedStringArray("hud_manager", "save_manager") instance=ExtResource("42_5fp36")]
 hud_manager = NodePath("../..")
+save_manager = NodePath("../../../SaveManager")
 
 [node name="GamemodeEventHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=1122284461 node_paths=PackedStringArray("hud_manager", "input_state_manager") instance=ExtResource("27_3cqky")]
 hud_manager = NodePath("../..")

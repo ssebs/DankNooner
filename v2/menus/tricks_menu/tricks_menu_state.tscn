@@ -1,8 +1,7 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://det2e0yice867"]
 
-[ext_resource type="Script" path="res://menus/tricks_menu/tricks_menu_state.gd" id="1_tricks"]
+[ext_resource type="Script" uid="uid://bemkxmpmhjikk" path="res://menus/tricks_menu/tricks_menu_state.gd" id="1_tricks"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_theme"]
-[ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="3_panel"]
 
 [node name="TricksMenuState" type="Node" unique_id=1846203517]
 script = ExtResource("1_tricks")
@@ -48,28 +47,33 @@ layout_mode = 2
 theme_type_variation = &"TitleLabel"
 text = "TRICKS_LABEL"
 
-[node name="HintLabel" type="Label" parent="UI/AspectRatioContainer/MarginContainer/VBoxContainer" unique_id=1846203524]
+[node name="HintRow" type="HBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/VBoxContainer" unique_id=1846203544]
+layout_mode = 2
+
+[node name="HintLabel" type="Label" parent="UI/AspectRatioContainer/MarginContainer/VBoxContainer/HintRow" unique_id=1846203524]
 modulate = Color(1, 1, 1, 0.7)
 layout_mode = 2
+size_flags_horizontal = 3
 text = "TRICKS_HINT_LABEL"
 autowrap_mode = 3
 
-[node name="PanelContainer" type="PanelContainer" parent="UI/AspectRatioContainer/MarginContainer/VBoxContainer" unique_id=1846203529]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_styles/panel = ExtResource("3_panel")
-
-[node name="ScrollContainer" type="ScrollContainer" parent="UI/AspectRatioContainer/MarginContainer/VBoxContainer/PanelContainer" unique_id=1846203525]
-layout_mode = 2
-horizontal_scroll_mode = 0
-
-[node name="TricksGrid" type="GridContainer" parent="UI/AspectRatioContainer/MarginContainer/VBoxContainer/PanelContainer/ScrollContainer" unique_id=1846203526]
+[node name="ClearPinBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer/VBoxContainer/HintRow" unique_id=1846203545]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_vertical = 4
+mouse_default_cursor_shape = 2
+text = "CLEAR_PIN_LABEL"
+
+[node name="StateTabs" type="TabContainer" parent="UI/AspectRatioContainer/MarginContainer/VBoxContainer" unique_id=1846203529]
+unique_name_in_owner = true
+layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/h_separation = 24
-theme_override_constants/v_separation = 24
+theme = ExtResource("2_theme")
+current_tab = 0
+tab_0/title = "Wheelie"
+tab_1/title = "Ground"
+tab_2/title = "Air"
+tab_3/title = "TRICKS_HOWTO_TAB"
 
 [node name="CloseTricksBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer/VBoxContainer" unique_id=1846203527]
 unique_name_in_owner = true

@@ -127,7 +127,7 @@ func _on_save_pressed():
 	settings_manager.update_setting("joy_cam_sens", joy_cam_sens.value, false)
 	settings_manager.update_setting("mouse_cam_sens", mouse_cam_sens.value, false)
 	settings_manager.update_setting("invert_cam", invert_cam.button_pressed, false)
-	settings_manager.update_setting("auto_transmission", auto_transmission.button_pressed, false)
+	settings_manager.update_setting("auto_transmission", auto_transmission.button_pressed, true)
 	settings_manager.update_setting("difficulty", difficulty_opt.selected, false)
 
 	settings_manager.save_settings()

@@ -49,7 +49,7 @@ class_name CrashController extends Node
 var _prev_front_brake: float = 0.0
 var _prev_throttle: float = 0.0
 var _brake_was_grabbed: bool = false
-var _prev_trick: TrickController.Trick = TrickController.Trick.NONE
+var _prev_air_trick: TrickController.Trick = TrickController.Trick.NONE
 
 var _crash_min_speed: float = 10.0
 var _crash_angle: float = 60.0
@@ -69,20 +69,27 @@ func on_movement_rollback_tick(delta: float):
 	_detect_air_trick_landing()
 	_detect_drift_crash(delta)
 	_detect_crash()
-	# Cache trick state AFTER detection — trick_controller already ran this tick and
-	# transitioned to ground state on landing, so we use last tick's value to detect "landed mid-trick".
-	_prev_trick = player_entity.trick_controller.current_trick
+	# Cache AFTER detection — trick_controller already ran this tick and transitioned to ground
+	# state on landing, so we use last tick's value to detect "landed mid-trick". Only a real jump
+	# counts: a wheelie/ground trick over a brief hop (bump, wheelie bounce) lands safely.
+	var airborne := (
+		not movement_controller._is_on_floor
+		and movement_controller._air_time >= TrickController.AIR_TRICK_MIN_AIRTIME
+	)
+	_prev_air_trick = (
+		player_entity.trick_controller.current_trick if airborne else TrickController.Trick.NONE
+	)
 
 
 ## Crash if the player touches down mid air-trick. Releasing the trick before landing is safe.
-## Checks _prev_trick (last tick's), not current_trick: trick_controller runs before us and has
+## Checks _prev_air_trick (last tick's), not current_trick: trick_controller runs before us and has
 ## already transitioned to the ground state on the landing tick.
 func _detect_air_trick_landing():
 	if not movement_controller._is_on_floor:
 		return
 	var just_landed = not movement_controller._was_on_floor
-	if just_landed and TrickController.is_air_trick(_prev_trick):
-		DebugUtils.DebugMsg("landed mid air-trick crash (%s)" % TrickController.trick_to_str(_prev_trick))
+	if just_landed and TrickController.is_air_trick(_prev_air_trick):
+		DebugUtils.DebugMsg("landed mid air-trick crash (%s)" % TrickController.trick_to_str(_prev_air_trick))
 		trigger_crash()
 
 
@@ -331,7 +338,7 @@ func do_reset():
 	_prev_front_brake = 0.0
 	_prev_throttle = 0.0
 	_brake_was_grabbed = false
-	_prev_trick = TrickController.Trick.NONE
+	_prev_air_trick = TrickController.Trick.NONE
 
 
 func _get_configuration_warnings() -> PackedStringArray:

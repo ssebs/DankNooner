@@ -3,7 +3,9 @@
 class_name RidingHUDState extends HUDState
 
 @export var hud_manager: HUDManager
+@export var save_manager: SaveManager
 
+const _TRICK_ROW_SCENE := preload("res://menus/tricks_menu/components/trick_row.tscn")
 const _RPM_COLOR_LOW := Color(0.103055954, 0.5546875, 0.052001953, 1)
 const _RPM_COLOR_HIGH := Color(0.85, 0.1, 0.1, 1)
 
@@ -38,6 +40,7 @@ const _RESPAWN_QUICK_FLASH_SECS := 0.6
 @onready var _minimap: Minimap = %Minimap
 @onready var _respawn_bar: ProgressBar = %HUD_RespawnProgress
 @onready var _respawn_label: Label = %HUD_RespawnLabel
+@onready var _trick_rows: VBoxContainer = %HUD_TrickRows
 
 
 var player_entity: PlayerEntity
@@ -70,6 +73,8 @@ var _wheelie_attempt_t: float = 0.0
 ## and whenever netfox's perf monitors aren't registered — see show_hud.
 var _netfox_debug_label: Label = null
 var _netfox_dbg_accum: float = 0.0
+## Hint tricks of the running race challenge; shown under the player's pinned tricks.
+var _challenge_tricks := PackedInt32Array()
 
 func _ready() -> void:
 	hide_ui()
@@ -109,9 +114,11 @@ func Enter(_state_context: StateContext):
 	# Local-only: expand the minimap into the full map while IN_MAP.
 	input_state_mgr.input_state_changed.connect(_on_input_state_changed)
 	input_state_mgr.respawn_quick_fired.connect(_on_respawn_quick_fired)
+	save_manager.save_item_updated.connect(_on_save_item_updated)
 
 	# Manual inits
 	_on_gear_changed(1)
+	_rebuild_trick_rows()
 	_balance_bar.hide()
 
 
@@ -132,6 +139,7 @@ func Exit(_state_context: StateContext):
 	player_entity.respawned.disconnect(_on_respawned)
 	input_state_mgr.input_state_changed.disconnect(_on_input_state_changed)
 	input_state_mgr.respawn_quick_fired.disconnect(_on_respawn_quick_fired)
+	save_manager.save_item_updated.disconnect(_on_save_item_updated)
 
 	hide_ui()
 
@@ -325,6 +333,37 @@ func _on_respawn_quick_fired():
 	_respawn_flash_t = _RESPAWN_QUICK_FLASH_SECS
 
 
+func _on_save_item_updated(key: String, _value: Variant):
+	if key == "pinned_tricks":
+		_rebuild_trick_rows()
+
+
+## Pinned tricks (tricks menu), then the race challenge's hint tricks, skipping duplicates.
+func _rebuild_trick_rows():
+	for child in _trick_rows.get_children():
+		child.queue_free()
+	var shown: Array[String] = []
+	for pin: String in save_manager.current_save["pinned_tricks"]:
+		_add_trick_row().populate_pin(pin)
+		shown.append(pin)
+	for trick in _challenge_tricks:
+		var row := _add_trick_row()
+		row.populate_trick(trick)
+		if row.pin in shown:
+			row.queue_free()
+		else:
+			shown.append(row.pin)
+
+
+func _add_trick_row() -> TrickRow:
+	var row: TrickRow = _TRICK_ROW_SCENE.instantiate()
+	row.compact = true
+	row.show_state = true
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_trick_rows.add_child(row)
+	return row
+
+
 #endregion
 
 
@@ -356,10 +395,10 @@ func push_checkpoint_marker(peer_id: int, pos: Vector3, has_target: bool) -> voi
 	_minimap.rpc_set_checkpoint.rpc_id(peer_id, pos, has_target)
 
 
-## Server-side: push the mid-race challenge line (already localized) to one client.
-## Called from the stunt race gamemode.
-func push_challenge_status(peer_id: int, text: String) -> void:
-	_rpc_set_challenge.rpc_id(peer_id, text)
+## Server-side: push the mid-race challenge line (already localized) and its hint tricks to one
+## client. Called from the stunt race gamemode.
+func push_challenge_status(peer_id: int, text: String, tricks: PackedInt32Array) -> void:
+	_rpc_set_challenge.rpc_id(peer_id, text, tricks)
 
 
 func clear_challenge_status(peer_id: int) -> void:
@@ -369,14 +408,20 @@ func clear_challenge_status(peer_id: int) -> void:
 ## text is pre-localized by the server (per-peer, so it carries the caller's own best) —
 ## don't tr() again, same as the tutorial HUD's progress line.
 @rpc("call_local", "unreliable")
-func _rpc_set_challenge(text: String):
+func _rpc_set_challenge(text: String, tricks: PackedInt32Array):
 	_challenge_msg.text = text
 	_challenge_panel.visible = true
+	# Resent every refresh; only rebuild when it changes.
+	if tricks != _challenge_tricks:
+		_challenge_tricks = tricks
+		_rebuild_trick_rows()
 
 
 @rpc("call_local", "reliable")
 func _rpc_clear_challenge():
 	_challenge_panel.visible = false
+	_challenge_tricks = PackedInt32Array()
+	_rebuild_trick_rows()
 
 
 func hide_ui() -> void:
@@ -400,4 +445,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
 	if hud_manager == null:
 		issues.append("hud_manager must not be empty")
+	if save_manager == null:
+		issues.append("save_manager must not be empty")
 	return issues

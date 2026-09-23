@@ -187,6 +187,22 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_GRIP_DGR"
 
+[node name="HUD_TrickRows" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/GuageCluster" unique_id=1846203543]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -465.0
+offset_top = -343.0
+offset_bottom = -343.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 8
+
 [node name="top left vbox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=2041029131]
 layout_mode = 2
 size_flags_horizontal = 0

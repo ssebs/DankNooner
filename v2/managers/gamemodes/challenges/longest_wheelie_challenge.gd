@@ -34,3 +34,7 @@ func format_value(value: float) -> String:
 
 func title() -> String:
 	return tr(title_key)
+
+
+func hint_tricks() -> PackedInt32Array:
+	return PackedInt32Array([TrickController.Trick.WHEELIE_SITTING])

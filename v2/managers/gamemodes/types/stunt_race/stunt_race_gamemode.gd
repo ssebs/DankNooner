@@ -235,7 +235,9 @@ func _update_challenge(delta: float):
 		if player == null:
 			continue
 		riding_hud_state.push_challenge_status(
-			peer_id, _challenge_hud_text(peer_id, leader_name, leader_val)
+			peer_id,
+			_challenge_hud_text(peer_id, leader_name, leader_val),
+			_race_challenge.hint_tricks()
 		)
 
 

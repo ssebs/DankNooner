@@ -101,6 +101,22 @@ corner_radius_bottom_left = 4
 expand_margin_left = 12.0
 expand_margin_right = 12.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trkchip"]
+content_margin_left = 16.0
+content_margin_top = 4.0
+content_margin_right = 16.0
+content_margin_bottom = 4.0
+bg_color = Color(0.06666667, 0.06666667, 0.06666667, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.25490198, 0.6862745, 1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 4
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 4
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k75rx"]
 content_margin_left = 12.0
 content_margin_top = 12.0
@@ -209,6 +225,24 @@ corner_radius_bottom_left = 4
 expand_margin_left = 12.0
 expand_margin_right = 12.0
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iun4r"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trkrow"]
+content_margin_left = 24.0
+content_margin_top = 8.0
+content_margin_right = 24.0
+content_margin_bottom = 8.0
+bg_color = Color(0.13333334, 0.13333334, 0.13333334, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.26666668, 0.26666668, 0.26666668, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 4
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 4
+
 [resource]
 default_font = ExtResource("1_kytw6")
 default_font_size = 24
@@ -223,6 +257,8 @@ CheckBox/constants/icon_max_width = 36
 CheckBox/icons/checked = ExtResource("2_hydtf")
 CheckBox/icons/unchecked = ExtResource("3_7depn")
 CheckBox/styles/normal = ExtResource("1_bvbyg")
+GestureChipLabel/base_type = &"Label"
+GestureChipLabel/styles/normal = SubResource("StyleBoxFlat_trkchip")
 HBoxContainer/constants/separation = 12
 HSlider/icons/grabber = ExtResource("4_7depn")
 HSlider/icons/grabber_highlight = ExtResource("4_7depn")
@@ -246,6 +282,7 @@ PrimaryButton/colors/font_outline_color = Color(0, 0, 0, 1)
 PrimaryButton/constants/outline_size = 4
 PrimaryButton/font_sizes/font_size = 32
 PrimaryButton/styles/normal = SubResource("StyleBoxFlat_4v18w")
+TabContainer/styles/panel = SubResource("StyleBoxEmpty_iun4r")
 TableHeaderLabel/base_type = &"Label"
 TableHeaderLabel/colors/font_color = Color(0.25490198, 0.6862745, 1, 1)
 TableHeaderLabel/font_sizes/font_size = 32
@@ -254,4 +291,6 @@ TitleLabel/colors/font_color = Color(0.13333334, 0.13333334, 0.13333334, 1)
 TitleLabel/colors/font_outline_color = Color(0.25490198, 0.6862745, 1, 1)
 TitleLabel/constants/outline_size = 8
 TitleLabel/font_sizes/font_size = 76
+TrickRowPanel/base_type = &"PanelContainer"
+TrickRowPanel/styles/panel = SubResource("StyleBoxFlat_trkrow")
 VBoxContainer/constants/separation = 12

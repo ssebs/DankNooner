@@ -1,0 +1,103 @@
+[gd_scene format=3 uid="uid://df6h32t6hu8uv"]
+
+[ext_resource type="Script" uid="uid://t87lixsaor5q" path="res://menus/tricks_menu/components/trick_row.gd" id="1_row"]
+[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://c2efmbslc8wa3" path="res://resources/img/Icons/xbox_stick_r_left.svg" id="3_dir"]
+
+[node name="TrickRow" type="PanelContainer" unique_id=1846203531]
+offset_right = 900.0
+offset_bottom = 44.0
+theme = ExtResource("2_theme")
+theme_type_variation = &"TrickRowPanel"
+script = ExtResource("1_row")
+
+[node name="Columns" type="HBoxContainer" parent="." unique_id=1846203532]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 36
+
+[node name="NameBox" type="VBoxContainer" parent="Columns" unique_id=1846203546]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="NameLabel" type="Label" parent="Columns/NameBox" unique_id=1846203533]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Kickflip"
+
+[node name="StateLabel" type="Label" parent="Columns/NameBox" unique_id=1846203547]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 1, 1, 0.6)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Wheelie"
+
+[node name="StickInput" type="HBoxContainer" parent="Columns" unique_id=1846203534]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DirBox" type="HBoxContainer" parent="Columns/StickInput" unique_id=1846203535]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="DirIcon" type="TextureRect" parent="Columns/StickInput/DirBox" unique_id=1846203536]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("3_dir")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DirLabel" type="Label" parent="Columns/StickInput/DirBox" unique_id=1846203537]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "TRICK_DIR_LEFT"
+
+[node name="GestureCol" type="CenterContainer" parent="Columns/StickInput" unique_id=1846203538]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+
+[node name="GestureChip" type="Label" parent="Columns/StickInput/GestureCol" unique_id=1846203539]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"GestureChipLabel"
+theme_override_font_sizes/font_size = 18
+text = "TRICK_GESTURE_DOUBLE_TAP"
+
+[node name="HowtoLabel" type="Label" parent="Columns" unique_id=1846203540]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 1, 1, 0.7)
+custom_minimum_size = Vector2(452, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "TRICK_HOWTO_DRIFT"
+autowrap_mode = 3
+
+[node name="ScoreLabel" type="Label" parent="Columns" unique_id=1846203541]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_type_variation = &"TableHeaderLabel"
+theme_override_font_sizes/font_size = 22
+text = "+3"
+horizontal_alignment = 2
+
+[node name="PinBtn" type="Button" parent="Columns" unique_id=1846203542]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 18
+toggle_mode = true
+text = "PIN_TRICK_LABEL"
