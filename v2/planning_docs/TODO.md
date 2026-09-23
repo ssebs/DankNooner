@@ -26,15 +26,14 @@
 > Don't forget, have fun :D
 - [ ] race wall around track
 - [ ] better trees
+
 - [ ] mid-race challenges
   - [x] display in HUD during race
   - [x] track who did longest wheelie / airtime
+  - [ ] hud to show how to do trick
   - [ ] this suggested trick changes every race
 
-- [ ] add racing line to show newbs where to go & brake, forza style
-  - [ ] levels\assets\props\racing_line.gd
-  - [x] curve/mesh gen system
-  - [ ] maybe add markers & dynamically generate on the player's client (HUdController?)
+
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [ ] make tricks + combos easier to do **WIP**
@@ -56,6 +55,10 @@
 - TP commands dont work on multiplayer
 - gas pump fill up minigame (should do more than just boost the bike, and it should be in first person. group of peeps do it like the race gamemodes)
 - [ ] lag when ending stunt race / no tp option
+- [ ] add racing line to show newbs where to go & brake, forza style
+  - [ ] levels\assets\props\racing_line.gd
+  - [x] curve/mesh gen system
+  - [ ] maybe add markers & dynamically generate on the player's client (HUdController?)
 
 - Delete most of the NPC AI, keep the basic lane position/movement and racing Ai. Clean it up but don't reimplement until the stunt race is working first.
 - npc => have their own collision layers?
