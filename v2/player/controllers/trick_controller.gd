@@ -20,7 +20,15 @@ enum Trick {
 	SUPERMAN,
 	DRIFT,
 	BURNOUT,
+	T_POSE,
+	KNEE_KNOCKER,
 }
+enum Dir { UP, DOWN, LEFT, RIGHT }
+## TAP / DOUBLE_TAP latch their trick for TAP_TRICK_DURATION; HOLD / DOUBLE_TAP_HOLD keep it active
+## while the stick stays pushed. Any trick works in any slot.
+enum Gesture { TAP, DOUBLE_TAP, HOLD, DOUBLE_TAP_HOLD }
+## Which BINDINGS table the right stick reads. NONE = stick tricks gated off.
+enum TrickState { NONE, GROUND, WHEELIE, AIR }
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
 @export var gearing_controller: GearingController
@@ -29,9 +37,9 @@ enum Trick {
 
 const TRICK_CAM_THRESHOLD: float = -0.5
 const TWO_LEFT_FEET_SPEED_THRESHOLD: float = 20
-## Airborne time before a pose air trick (spread eagle, superman, heel clicker, high chair) can
-## register. A bump or curb mid-ground-trick isn't a real jump: without this, holding cam-left in
-## two left feet flicks to a spread eagle on the hop and crashes on touchdown (landed-mid-air-trick).
+## Airborne time before any right-stick air trick can register. A bump or curb mid-ground-trick isn't
+## a real jump: without this, a held ground trick flicks to an air trick on the hop and crashes on
+## touchdown (landed-mid-air-trick).
 ## Real jumps clear it easily. Const (rollback): byte-identical on every peer.
 const AIR_TRICK_MIN_AIRTIME: float = 0.25
 ## Pitch (degrees) past which the bike is considered in a wheelie / stoppie.
@@ -57,14 +65,65 @@ const COMBO_MULT_THRESHOLDS: Array[float] = [5.0, 15.0]
 ## Consts (rollback): must be byte-identical on every peer.
 const BOOST_PER_FLIP: float = 0.5
 const BOOST_PER_AIR_TRICK: float = 0.5
-## A cam-left flick released before this is a KICKFLIP tap; holding longer is the plain held
-## left-stick trick (spread eagle airborne, two left feet on the ground) — same tap/hold split
-## as the respawn button. Const (rollback): byte-identical on every peer. Raising it makes the
-## tap more forgiving but delays the held trick by the same amount.
-const KICKFLIP_TAP_MAX_SECS: float = 0.25
-## Seconds KICKFLIP stays the active trick after a tap (matches the anim length). Latched because
-## a tap has no held phase to keep it alive, unlike the stick-held tricks.
-const KICKFLIP_DURATION: float = 1.0
+## A cam flick released before this is a tap; holding longer is a HOLD gesture. Const (rollback):
+## byte-identical on every peer. Raising it makes the tap more forgiving but delays holds.
+const TAP_TRICK_MAX_SECS: float = 0.25
+## A second press in the same direction within this window (from the first release) is a double
+## tap, or a double-tap-hold if it's held. A single tap fires once the window expires, so this is
+## also single-tap latency.
+const DOUBLE_TAP_WINDOW: float = 0.25
+## Seconds a tap trick stays the active trick (the kickflip anim length; hold anims stay posed for
+## it). Latched because a tap has no held phase to keep it alive, unlike the stick-held tricks.
+const TAP_TRICK_DURATION: float = 1.0
+const NO_DIR: int = -1
+## Per-trick score, in "seconds at TrickManager.points_per_second". Held tricks earn their value per
+## second while active; one-time tricks bank it once, when they start. Consts (rollback).
+const HELD_TRICK_SCORE: Dictionary = {
+	Trick.WHEELIE_SITTING: 1.0,
+	Trick.WHEELIE_MOD: 1.0,
+	Trick.STOPPIE: 1.0,
+	Trick.DRIFT: 1.0,
+	Trick.BURNOUT: 0.5,
+	Trick.HIGH_CHAIR: 1.5,
+	Trick.KNEE_KNOCKER: 1.5,
+	Trick.T_POSE: 1.5,
+	Trick.TWO_LEFT_FEET: 1.5,
+	Trick.SPREAD_EAGLE: 2.0,
+	Trick.SUPERMAN: 2.0,
+}
+const ONE_TIME_TRICK_SCORE: Dictionary = {
+	Trick.HEEL_CLICKER: 1.5,
+	Trick.KICKFLIP: 3.0,
+	Trick.BACKFLIP: 5.0,
+	Trick.FRONTFLIP: 5.0,
+	Trick.THREESIXTY: 5.0,
+}
+## Right-stick control scheme: state -> gesture -> trick per Dir (UP, DOWN, LEFT, RIGHT). Guideline:
+## shared tricks keep one tap / double-tap slot across states (double tap = harder trick); HOLD is
+## for state-specific tricks. Const (rollback): byte-identical on every peer.
+const BINDINGS: Dictionary = {
+	TrickState.WHEELIE:
+	{
+		Gesture.TAP: [Trick.NONE, Trick.HEEL_CLICKER, Trick.NONE, Trick.NONE],
+		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.NONE],
+		Gesture.HOLD: [Trick.HIGH_CHAIR, Trick.NONE, Trick.KNEE_KNOCKER, Trick.T_POSE],
+		Gesture.DOUBLE_TAP_HOLD: [Trick.NONE, Trick.NONE, Trick.NONE, Trick.NONE],
+	},
+	TrickState.GROUND:
+	{
+		Gesture.TAP: [Trick.NONE, Trick.HEEL_CLICKER, Trick.NONE, Trick.NONE],
+		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.NONE],
+		Gesture.HOLD: [Trick.HIGH_CHAIR, Trick.TWO_LEFT_FEET, Trick.KNEE_KNOCKER, Trick.T_POSE],
+		Gesture.DOUBLE_TAP_HOLD: [Trick.NONE, Trick.NONE, Trick.NONE, Trick.NONE],
+	},
+	TrickState.AIR:
+	{
+		Gesture.TAP: [Trick.NONE, Trick.HEEL_CLICKER, Trick.NONE, Trick.NONE],
+		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.NONE],
+		Gesture.HOLD: [Trick.HIGH_CHAIR, Trick.NONE, Trick.KNEE_KNOCKER, Trick.T_POSE],
+		Gesture.DOUBLE_TAP_HOLD: [Trick.NONE, Trick.NONE, Trick.SPREAD_EAGLE, Trick.SUPERMAN],
+	},
+}
 
 ## Seconds of unbroken trick time on the current combo, 0 when not comboing. Accrued in this
 ## controller's rollback tick — NOT from a manager's _process(): netfox's RollbackSynchronizer
@@ -80,6 +139,9 @@ var combo_grace: float = 0.0
 var combo_boost_earned: float = 0.0
 ## Combo multiplier (1+), derived from combo_time each rollback tick.
 var combo_multiplier: int = 1
+## Score the combo in progress has earned (see HELD_TRICK_SCORE / ONE_TIME_TRICK_SCORE).
+## TrickManager banks it when the combo ends.
+var combo_score: float = 0.0
 
 var current_trick: Trick = Trick.NONE
 var _last_trick: Trick = Trick.NONE
@@ -87,12 +149,18 @@ var _flip_emitted: bool = false  # prevent re-emitting the same flip while still
 var _trick_timer: float = 0.0
 ## Full air rotations already paid out this airtime — synced so a resim doesn't double-award.
 var _air_flips_awarded: int = 0
-## Seconds cam-left has been held this press, 0 when released. A release under KICKFLIP_TAP_MAX_SECS
-## is a tap (fires a kickflip); a longer hold is the plain left-stick trick. Synced: read/written in
-## the rollback tick and gates a trick (so combo_time, which is synced, stays consistent on resim).
-var _left_hold_time: float = 0.0
-## Remaining KICKFLIP latch in seconds (synced). >0 = kickflip is the active trick.
-var _kickflip_timer: float = 0.0
+## Gesture state (all synced: read/written in the rollback tick and gates tricks, so combo_time,
+## which is synced, stays consistent on resim). Direction the stick is pushed (NO_DIR = neutral)
+## and for how long, whether this press is the second of a double tap; plus a released tap waiting
+## out DOUBLE_TAP_WINDOW.
+var _hold_dir: int = NO_DIR
+var _hold_time: float = 0.0
+var _press_double: bool = false
+var _tap_dir: int = NO_DIR
+var _tap_age: float = 0.0
+## Latched tap trick and its remaining seconds (synced). Timer >0 = _tap_trick is the active trick.
+var _tap_trick: Trick = Trick.NONE
+var _tap_trick_timer: float = 0.0
 
 
 func _ready():
@@ -105,13 +173,14 @@ func on_movement_rollback_tick(delta: float):
 	if player_entity.is_crashed:
 		return
 
-	_update_kickflip_tap(delta)
+	_update_gestures(delta)
 	current_trick = _detect_current_trick(delta)
 	if current_trick != _last_trick:
 		if _last_trick != Trick.NONE:
 			trick_ended.emit(_last_trick)
 		if current_trick != Trick.NONE:
 			trick_started.emit(current_trick)
+			combo_score += ONE_TIME_TRICK_SCORE.get(current_trick, 0.0)
 			# Landing an air trick banks a chunk (void-on-crash means you must land it clean).
 			if not movement_controller._is_on_floor and is_air_trick(current_trick):
 				_award_trick_boost(BOOST_PER_AIR_TRICK)
@@ -121,25 +190,92 @@ func on_movement_rollback_tick(delta: float):
 	_accrue_combo(delta)
 
 
-## Cam-left tap vs hold. A quick flick (released before KICKFLIP_TAP_MAX_SECS) fires a kickflip;
-## a sustained hold falls through to the plain left-stick trick (spread eagle / two left feet).
-## On the ground the trick button must be held (matching the old RB+direction tricks); airborne
-## needs no button. Lives in the rollback tick — not a local input poll like the respawn tap/hold —
-## so the latch it drives stays byte-identical on every peer.
-func _update_kickflip_tap(delta: float):
-	if _kickflip_timer > 0.0:
-		_kickflip_timer -= delta
+## Turn the right stick into TAP / DOUBLE_TAP gestures and latch their BINDINGS trick. The held
+## gestures are read live by _held_trick(). Lives in the rollback tick — not a local input poll like
+## the respawn tap/hold — so the latch it drives stays byte-identical on every peer.
+func _update_gestures(delta: float):
+	if _tap_trick_timer > 0.0:
+		_tap_trick_timer -= delta
 
-	if input_controller.nfx_cam_x < TRICK_CAM_THRESHOLD:
-		_left_hold_time += delta
-		return
+	var dir := _stick_dir()
+	if dir != _hold_dir:
+		# Released (or swung to another direction) — a short press is a tap.
+		if _hold_dir != NO_DIR and _hold_time < TAP_TRICK_MAX_SECS:
+			if _press_double:
+				_latch_gesture(Gesture.DOUBLE_TAP, _hold_dir)
+			else:
+				# A pending tap in another direction fires now rather than being dropped.
+				if _tap_dir != NO_DIR:
+					_latch_gesture(Gesture.TAP, _tap_dir)
+				_tap_dir = _hold_dir
+				_tap_age = 0.0
+		# A press toward a pending tap is its second press: it resolves as DOUBLE_TAP on a quick
+		# release or DOUBLE_TAP_HOLD if held, so the pending single tap is consumed.
+		_press_double = dir != NO_DIR and dir == _tap_dir
+		if _press_double:
+			_tap_dir = NO_DIR
+		_hold_dir = dir
+		_hold_time = 0.0
+	if dir != NO_DIR:
+		_hold_time += delta
 
-	# Left released — a short flick fires the kickflip (skip while one's already latched).
-	var was_tap := _left_hold_time > 0.0 and _left_hold_time < KICKFLIP_TAP_MAX_SECS
-	var button_ok := not movement_controller._is_on_floor or input_controller.nfx_trick_held
-	if was_tap and button_ok and _kickflip_timer <= 0.0:
-		_kickflip_timer = KICKFLIP_DURATION
-	_left_hold_time = 0.0
+	if _tap_dir != NO_DIR:
+		_tap_age += delta
+		if _tap_age >= DOUBLE_TAP_WINDOW:
+			_latch_gesture(Gesture.TAP, _tap_dir)
+			_tap_dir = NO_DIR
+
+
+func _latch_gesture(gesture: Gesture, dir: int):
+	var trick := _bound_trick(gesture, dir)
+	# Skip while a tap trick is already latched.
+	if trick != Trick.NONE and _tap_trick_timer <= 0.0:
+		_tap_trick = trick
+		_tap_trick_timer = TAP_TRICK_DURATION
+
+
+## BINDINGS HOLD / DOUBLE_TAP_HOLD trick for the stick held past the tap window, else NONE.
+func _held_trick() -> Trick:
+	if _hold_dir == NO_DIR or _hold_time < TAP_TRICK_MAX_SECS:
+		return Trick.NONE
+	var gesture := Gesture.DOUBLE_TAP_HOLD if _press_double else Gesture.HOLD
+	return _bound_trick(gesture, _hold_dir)
+
+
+func _bound_trick(gesture: Gesture, dir: int) -> Trick:
+	var state := _trick_state()
+	if state == TrickState.NONE:
+		return Trick.NONE
+	var trick: Trick = BINDINGS[state][gesture][dir]
+	if trick == Trick.TWO_LEFT_FEET and movement_controller.speed <= TWO_LEFT_FEET_SPEED_THRESHOLD:
+		return Trick.NONE
+	return trick
+
+
+## Which BINDINGS table applies right now, or NONE when stick tricks are gated off.
+func _trick_state() -> TrickState:
+	if not movement_controller._is_on_floor:
+		# A brief hop (curb, bump) isn't a real jump — a ground trick held over a bump would
+		# otherwise flick to an air trick and crash on touchdown (landed-mid-air-trick).
+		if movement_controller._air_time < AIR_TRICK_MIN_AIRTIME:
+			return TrickState.NONE
+		return TrickState.AIR
+	if movement_controller.pitch_angle > deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG):
+		# Tweaks only in the balance point; a wheelie below the window stays the plain wheelie.
+		return TrickState.WHEELIE if movement_controller.in_balance_point else TrickState.NONE
+	# On the ground the trick button must be held, so the stick still drives the camera otherwise.
+	return TrickState.GROUND if input_controller.nfx_trick_held else TrickState.NONE
+
+
+## Dominant right-stick direction past the trick threshold, or NO_DIR.
+func _stick_dir() -> int:
+	var x := input_controller.nfx_cam_x
+	var y := input_controller.nfx_cam_y
+	if maxf(absf(x), absf(y)) < -TRICK_CAM_THRESHOLD:
+		return NO_DIR
+	if absf(y) >= absf(x):
+		return Dir.UP if y > 0.0 else Dir.DOWN
+	return Dir.RIGHT if x > 0.0 else Dir.LEFT
 
 
 ## Bank a chunk per full air rotation as it completes. air_pitch_total resets to 0 on takeoff /
@@ -173,6 +309,7 @@ func _award_trick_boost(base: float):
 func _accrue_combo(delta: float):
 	if current_trick != Trick.NONE:
 		combo_time += delta
+		combo_score += HELD_TRICK_SCORE.get(current_trick, 0.0) * delta
 		combo_grace = COMBO_GRACE_SECS
 		# Track what this combo contributed (post-cap, so a full meter doesn't inflate the
 		# claim) — a crash voids exactly this much and nothing that was banked earlier.
@@ -187,6 +324,7 @@ func _accrue_combo(delta: float):
 		if combo_grace <= 0.0:
 			combo_time = 0.0
 			combo_grace = 0.0
+			combo_score = 0.0
 			# Survived the grace window — this combo's boost is banked for good now.
 			combo_boost_earned = 0.0
 
@@ -198,9 +336,9 @@ func _accrue_combo(delta: float):
 
 
 func _detect_current_trick(delta: float) -> Trick:
-	# Kickflip latch overrides everything (ground or air) while it's running.
-	if _kickflip_timer > 0.0:
-		return Trick.KICKFLIP
+	# Tap trick latch overrides everything (ground or air) while it's running.
+	if _tap_trick_timer > 0.0:
+		return _tap_trick
 
 	if !movement_controller._is_on_floor:
 		return _detect_air_trick()
@@ -215,29 +353,19 @@ func _detect_current_trick(delta: float) -> Trick:
 		return Trick.DRIFT
 
 	if movement_controller.pitch_angle > deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG):
-		# In the balance point the right stick pops tweaks on top of the wheelie; neutral stick
-		# (or a wheelie below the window) stays the plain WHEELIE_SITTING — physics unchanged.
-		if movement_controller.in_balance_point:
-			# Held while the stick is pushed; neutral returns to the plain wheelie (no latch).
-			if input_controller.nfx_cam_y > -TRICK_CAM_THRESHOLD:
-				return Trick.HIGH_CHAIR
-			if input_controller.nfx_cam_y < TRICK_CAM_THRESHOLD:
-				return Trick.HEEL_CLICKER
+		# Neutral stick stays the plain WHEELIE_SITTING — physics unchanged.
+		var wheelie_held := _held_trick()
+		if wheelie_held != Trick.NONE:
+			return wheelie_held
 		return Trick.WHEELIE_SITTING
 
 	# Only a braking-held stoppie scores — a nose-down landing or coast isn't a stoppie.
 	if movement_controller.is_stoppie:
 		return Trick.STOPPIE
 
-	# RB + held cam-left = two left feet. A quick left flick is a kickflip instead (see
-	# _update_kickflip_tap), so only a hold past the tap window counts here.
-	if input_controller.nfx_trick_held:
-		if (
-			_left_hold_time >= KICKFLIP_TAP_MAX_SECS
-			and input_controller.nfx_cam_x < TRICK_CAM_THRESHOLD
-			and movement_controller.speed > TWO_LEFT_FEET_SPEED_THRESHOLD
-		):
-			return Trick.TWO_LEFT_FEET
+	var held := _held_trick()
+	if held != Trick.NONE:
+		return held
 
 	if _last_trick == Trick.TWO_LEFT_FEET:
 		if _trick_timer <= 3:  # HACK - duration of the animation
@@ -249,28 +377,11 @@ func _detect_current_trick(delta: float) -> Trick:
 
 
 func _detect_air_trick() -> Trick:
-	# A brief hop (curb, bump) isn't a real jump — a held stick shouldn't register a crashable
-	# air trick until there's genuine airtime, or a ground trick held over a bump (two left feet
-	# on cam-left) flicks to a spread eagle and crashes on touchdown. Flips need far more airtime
-	# than this, so gating here doesn't affect them.
-	if movement_controller._air_time < AIR_TRICK_MIN_AIRTIME:
-		return Trick.NONE
-
-	# Airborne is itself the gate — the right stick drives the tweaks, no RB. Held while the
-	# stick is pushed (no latch). -TRICK_CAM_THRESHOLD == 0.5 (cam stick up).
-	if input_controller.nfx_cam_y > -TRICK_CAM_THRESHOLD:
-		return Trick.HIGH_CHAIR
-
-	# Heel clicker — held while airborne with cam stick down
-	if input_controller.nfx_cam_y < TRICK_CAM_THRESHOLD:
-		return Trick.HEEL_CLICKER
-
-	# Left = spread eagle, right = superman (up/down taken above). A quick left flick is a
-	# kickflip (handled in _detect_current_trick); only a held left is a spread eagle.
-	if input_controller.nfx_cam_x < TRICK_CAM_THRESHOLD and _left_hold_time >= KICKFLIP_TAP_MAX_SECS:
-		return Trick.SPREAD_EAGLE
-	if input_controller.nfx_cam_x > -TRICK_CAM_THRESHOLD:
-		return Trick.SUPERMAN
+	# Airborne is itself the gate — no RB. _trick_state() applies the min-airtime gate; flips need
+	# far more airtime than that, so it doesn't affect them.
+	var held := _held_trick()
+	if held != Trick.NONE:
+		return held
 
 	if movement_controller.air_pitch_total < (TAU * 0.9):
 		return Trick.NONE
@@ -295,12 +406,18 @@ func do_reset():
 	_last_trick = Trick.NONE
 	_flip_emitted = false
 	_air_flips_awarded = 0
-	_left_hold_time = 0.0
-	_kickflip_timer = 0.0
+	_hold_dir = NO_DIR
+	_hold_time = 0.0
+	_press_double = false
+	_tap_dir = NO_DIR
+	_tap_age = 0.0
+	_tap_trick = Trick.NONE
+	_tap_trick_timer = 0.0
 	combo_time = 0.0
 	combo_grace = 0.0
 	combo_boost_earned = 0.0
 	combo_multiplier = 1
+	combo_score = 0.0
 
 
 func is_in_wheelie() -> bool:
@@ -308,9 +425,17 @@ func is_in_wheelie() -> bool:
 
 
 ## Tricks that must be finished before touching down — landing mid-trick crashes (see
-## CrashController._detect_air_trick_landing). Kickflip / two left feet are ground tricks.
+## CrashController._detect_air_trick_landing). That only checks the landing tick, so the ground
+## versions of kickflip / T-pose / knee knocker stay safe.
 static func is_air_trick(trick: Trick) -> bool:
-	return trick in [Trick.HEEL_CLICKER, Trick.SPREAD_EAGLE, Trick.SUPERMAN]
+	return trick in [
+		Trick.HEEL_CLICKER,
+		Trick.SPREAD_EAGLE,
+		Trick.SUPERMAN,
+		Trick.KICKFLIP,
+		Trick.T_POSE,
+		Trick.KNEE_KNOCKER,
+	]
 
 
 static func trick_to_str(trick: Trick) -> String:
@@ -345,6 +470,10 @@ static func trick_to_str(trick: Trick) -> String:
 			return "DRIFT"
 		Trick.BURNOUT:
 			return "BURNOUT"
+		Trick.T_POSE:
+			return "T_POSE"
+		Trick.KNEE_KNOCKER:
+			return "KNEE_KNOCKER"
 	return "NONE"
 
 
@@ -380,6 +509,10 @@ static func str_to_trick(s: String) -> Trick:
 			return Trick.DRIFT
 		"BURNOUT":
 			return Trick.BURNOUT
+		"T_POSE":
+			return Trick.T_POSE
+		"KNEE_KNOCKER":
+			return Trick.KNEE_KNOCKER
 	return Trick.NONE
 
 

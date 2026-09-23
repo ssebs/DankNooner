@@ -64,10 +64,12 @@ Consts, deliberately **not** `@export`: this code runs inside the rollback tick 
 | `BOOST_PER_SEC` | Boost segments earned per second of trick, before the multiplier. **The main "how fast does this feel" knob.** |
 | `COMBO_GRACE_SECS` | How long you can be trickless before the combo breaks. Higher = more forgiving chaining. |
 | `COMBO_MULT_THRESHOLDS` | Seconds of unbroken trick time per multiplier step, ascending. Add entries for higher tiers. |
+| `HELD_TRICK_SCORE` | Per-trick score earned per second while a held trick is active. |
+| `ONE_TIME_TRICK_SCORE` | Per-trick score banked once when a one-time trick (flip, kickflip…) starts. |
 
 **Keep `COMBO_MULT_THRESHOLDS` in the same ballpark as the meter fill time implied by `BOOST_PER_SEC`.** The gauge is the only feedback the player can see, so a multiplier that steps far behind it reads as broken. Changing one without re-checking the other has already caused a false bug report once.
 
-Any trick counts toward the combo — there is no per-trick rate table. If you want a stoppie worth more than a wheelie, that's a change to `_accrue_combo()`, not a constant.
+Any trick counts toward combo *time* (multiplier, boost). Score is separate: it accumulates in the synced `combo_score` from the two tables above; a trick in neither scores nothing.
 
 ### Spending — `player/controllers/boost_controller.gd`
 
@@ -88,7 +90,7 @@ Same rollback-determinism reason for being consts.
 
 | Export | Effect |
 | --- | --- |
-| `points_per_second` | Base points per second of combo time. Final score = `duration × points_per_second × peak_multiplier`. |
+| `points_per_second` | Points per unit of `combo_score`. Final score = `combo_score × points_per_second × peak_multiplier`. |
 
 Signals for gamemodes:
 

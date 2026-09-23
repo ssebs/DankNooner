@@ -37,6 +37,7 @@
 [ext_resource type="Script" uid="uid://boxia2udg1jxm" path="res://managers/npc_race_manager.gd" id="31_npcrm"]
 [ext_resource type="Script" uid="uid://283a7n5utttx" path="res://resources/player/player_definition.gd" id="35_iihm1"]
 [ext_resource type="Script" uid="uid://37ehv252lkkf" path="res://managers/trick_manager.gd" id="36_trkmg"]
+[ext_resource type="PackedScene" path="res://menus/tricks_menu/tricks_menu_state.tscn" id="38_trkmn"]
 [ext_resource type="Script" uid="uid://uj0l0u0v0f0d" path="res://managers/npc_traffic_manager.gd" id="37_npctm"]
 [ext_resource type="Script" uid="uid://c7rb62smxqgpp" path="res://managers/animal_spawn_manager.gd" id="38_anspm"]
 [ext_resource type="Script" uid="uid://ckudxd3spv3uh" path="res://managers/gamemodes/types/street_race/street_race_gamemode.gd" id="38_strce"]
@@ -158,7 +159,7 @@ menu_manager = NodePath("../..")
 save_manager = NodePath("../../../SaveManager")
 play_menu_state = NodePath("../PlayMenuState")
 
-[node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "connection_manager", "level_manager", "input_state_manager", "pause_manager", "gamemode_manager", "spawn_manager", "main_menu_state", "settings_menu_state", "customize_menu_state", "help_menu_state") instance=ExtResource("6_02kkc")]
+[node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "connection_manager", "level_manager", "input_state_manager", "pause_manager", "gamemode_manager", "spawn_manager", "main_menu_state", "settings_menu_state", "customize_menu_state", "help_menu_state", "tricks_menu_state") instance=ExtResource("6_02kkc")]
 menu_manager = NodePath("../..")
 connection_manager = NodePath("../../../ConnectionManager")
 level_manager = NodePath("../../../LevelManager")
@@ -170,8 +171,12 @@ main_menu_state = NodePath("../MainMenuState")
 settings_menu_state = NodePath("../SettingsMenuState")
 customize_menu_state = NodePath("../CustomizeMenuState")
 help_menu_state = NodePath("../HelpMenuState")
+tricks_menu_state = NodePath("../TricksMenuState")
 
 [node name="HelpMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=64073042 node_paths=PackedStringArray("menu_manager") instance=ExtResource("20_lfj8l")]
+menu_manager = NodePath("../..")
+
+[node name="TricksMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1846203517 node_paths=PackedStringArray("menu_manager") instance=ExtResource("38_trkmn")]
 menu_manager = NodePath("../..")
 
 [node name="LoadingMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1253633817 instance=ExtResource("21_x5kvo")]

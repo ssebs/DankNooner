@@ -88,6 +88,12 @@ layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "SETTINGS_LABEL"
 
+[node name="TricksBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1846203528]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "TRICKS_LABEL"
+
 [node name="MainMenuBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=588914279]
 unique_name_in_owner = true
 layout_mode = 2

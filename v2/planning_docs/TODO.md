@@ -43,6 +43,7 @@
 
 ## Notes 📝
 > Stuff to move ASAP
+- trick animation to move up then play the mixamo anims
 - Brake lights
 - Time attack mode
 - Add lap race to stunt city

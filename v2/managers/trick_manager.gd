@@ -21,10 +21,11 @@ signal combo_voided(peer_id: int, lost_duration: float, lost_points: float)
 @export var gamemode_manager: GamemodeManager
 
 @export_group("Scoring")
-## Base points per second of combo time, before the multiplier.
+## Points per unit of TrickController.combo_score (a 1.0 held trick earns this per second), before
+## the multiplier.
 @export var points_per_second: float = 10.0
 
-## peer_id -> {"points", "prev_time", "peak_mult"}
+## peer_id -> {"points", "prev_time", "prev_score", "peak_mult"}
 var _peer_states: Dictionary[int, Dictionary] = {}
 
 
@@ -62,9 +63,10 @@ func _track_combo(peer_id: int, player: PlayerEntity):
 
 	if player.is_crashed:
 		if st["prev_time"] > 0.0:
-			var lost: float = st["prev_time"] * points_per_second * st["peak_mult"]
+			var lost: float = st["prev_score"] * points_per_second * st["peak_mult"]
 			combo_voided.emit(peer_id, st["prev_time"], lost)
 			st["prev_time"] = 0.0
+			st["prev_score"] = 0.0
 			st["peak_mult"] = 1
 		return
 
@@ -73,6 +75,7 @@ func _track_combo(peer_id: int, player: PlayerEntity):
 	if elapsed > 0.0:
 		st["peak_mult"] = maxi(st["peak_mult"], player.trick_controller.combo_multiplier)
 		st["prev_time"] = elapsed
+		st["prev_score"] = player.trick_controller.combo_score
 		return
 
 	if st["prev_time"] <= 0.0:
@@ -80,9 +83,10 @@ func _track_combo(peer_id: int, player: PlayerEntity):
 
 	var duration: float = st["prev_time"]
 	var multiplier: int = st["peak_mult"]
-	var points: float = duration * points_per_second * multiplier
+	var points: float = st["prev_score"] * points_per_second * multiplier
 	st["points"] += points
 	st["prev_time"] = 0.0
+	st["prev_score"] = 0.0
 	st["peak_mult"] = 1
 	combo_banked.emit(peer_id, points, duration, multiplier)
 
@@ -98,6 +102,7 @@ func reset_peer(peer_id: int):
 	_peer_states[peer_id] = {
 		"points": 0.0,
 		"prev_time": 0.0,
+		"prev_score": 0.0,
 		"peak_mult": 1,
 	}
 #endregion

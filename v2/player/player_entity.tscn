@@ -146,302 +146,158 @@ tracks/9/keys = {
 tracks/10/type = "value"
 tracks/10/imported = false
 tracks/10/enabled = true
-tracks/10/path = NodePath("%LeftFootTarget:position")
+tracks/10/path = NodePath("%LeftHandTarget:position")
 tracks/10/interp = 1
 tracks/10/loop_wrap = true
 tracks/10/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0.183, 0.567, -0.227)]
+"values": [Vector3(0.251, 0.914, 0.287)]
 }
 tracks/11/type = "value"
 tracks/11/imported = false
 tracks/11/enabled = true
-tracks/11/path = NodePath("%RightFootTarget:position")
+tracks/11/path = NodePath("IKTargets/BikeSkin:rotation")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-0.18314199, 0.5666657, -0.22655825)]
+"values": [Vector3(0, 0, 0)]
 }
 tracks/12/type = "value"
 tracks/12/imported = false
 tracks/12/enabled = true
-tracks/12/path = NodePath("%LeftHandTarget:position")
+tracks/12/path = NodePath("%TPSCamMarker:position")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0.251, 0.914, 0.287)]
+"values": [Vector3(0.05, 1.75, -1.778)]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
 tracks/13/enabled = true
-tracks/13/path = NodePath("%ChestTarget:rotation")
+tracks/13/path = NodePath("%FPSCamMarker:position")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, -5.6843426e-14, 0)]
+"values": [Vector3(0, 1.179, 0.175)]
 }
 tracks/14/type = "value"
 tracks/14/imported = false
 tracks/14/enabled = true
-tracks/14/path = NodePath("%LeftFootTarget:rotation")
+tracks/14/path = NodePath("%BaseballBat:position")
 tracks/14/interp = 1
 tracks/14/loop_wrap = true
 tracks/14/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-1.275857, -2.0608416, -0.7598186)]
+"values": [Vector3(-0.46865526, 0.8885468, 0.18646635)]
 }
 tracks/15/type = "value"
 tracks/15/imported = false
 tracks/15/enabled = true
-tracks/15/path = NodePath("%RightFootTarget:rotation")
+tracks/15/path = NodePath("IKTargets/BikeSkin:position")
 tracks/15/interp = 1
 tracks/15/loop_wrap = true
 tracks/15/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-1.2186639, 2.5100298, 0.62467366)]
+"values": [Vector3(0, 0, 0)]
 }
 tracks/16/type = "value"
 tracks/16/imported = false
 tracks/16/enabled = true
-tracks/16/path = NodePath("%LeftLegMagnet:position")
+tracks/16/path = NodePath("%TPSCamMarker:rotation")
 tracks/16/interp = 1
 tracks/16/loop_wrap = true
 tracks/16/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0.46395656, 0.5692559, 0.42930415)]
+"values": [Vector3(0, 0, 0)]
 }
 tracks/17/type = "value"
 tracks/17/imported = false
 tracks/17/enabled = true
-tracks/17/path = NodePath("%RightLegMagnet:position")
+tracks/17/path = NodePath("%FPSCamMarker:rotation")
 tracks/17/interp = 1
 tracks/17/loop_wrap = true
 tracks/17/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-0.464, 0.569, 0.429)]
+"values": [Vector3(-0.1850049, -3.1415925, 0)]
 }
 tracks/18/type = "value"
 tracks/18/imported = false
 tracks/18/enabled = true
-tracks/18/path = NodePath("%HeadTarget:rotation")
+tracks/18/path = NodePath("%BaseballBat:rotation")
 tracks/18/interp = 1
 tracks/18/loop_wrap = true
 tracks/18/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, -4.2632564e-14, 0)]
+"values": [Vector3(-2.1242909e-10, 3.1415923, -2.6179938)]
 }
 tracks/19/type = "value"
 tracks/19/imported = false
 tracks/19/enabled = true
-tracks/19/path = NodePath("IKTargets/BikeSkin:rotation")
+tracks/19/path = NodePath("%LeftHandTarget:rotation")
 tracks/19/interp = 1
 tracks/19/loop_wrap = true
 tracks/19/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 0, 0)]
+"values": [Vector3(1.2217305, 1.007055, -0.40142566)]
 }
 tracks/20/type = "value"
 tracks/20/imported = false
 tracks/20/enabled = true
-tracks/20/path = NodePath("%TPSCamMarker:position")
+tracks/20/path = NodePath("%LeftFootTarget:rotation")
 tracks/20/interp = 1
 tracks/20/loop_wrap = true
 tracks/20/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0.05, 1.75, -1.778)]
+"values": [Vector3(-1.5135574, 2.2176719, 1.6370285)]
 }
 tracks/21/type = "value"
 tracks/21/imported = false
 tracks/21/enabled = true
-tracks/21/path = NodePath("%FPSCamMarker:position")
+tracks/21/path = NodePath("%LeftFootTarget:position")
 tracks/21/interp = 1
 tracks/21/loop_wrap = true
 tracks/21/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 1.179, 0.175)]
+"values": [Vector3(-0.12641062, 1.0385206, -0.8354169)]
 }
 tracks/22/type = "value"
 tracks/22/imported = false
 tracks/22/enabled = true
-tracks/22/path = NodePath("%BaseballBat:position")
+tracks/22/path = NodePath("%LeftLegMagnet:position")
 tracks/22/interp = 1
 tracks/22/loop_wrap = true
 tracks/22/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-0.46865526, 0.8885468, 0.18646635)]
-}
-tracks/23/type = "value"
-tracks/23/imported = false
-tracks/23/enabled = true
-tracks/23/path = NodePath("%LeftArmMagnet:position")
-tracks/23/interp = 1
-tracks/23/loop_wrap = true
-tracks/23/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0.41947496, 0.90092236, -0.011527833)]
-}
-tracks/24/type = "value"
-tracks/24/imported = false
-tracks/24/enabled = true
-tracks/24/path = NodePath("%RightArmMagnet:position")
-tracks/24/interp = 1
-tracks/24/loop_wrap = true
-tracks/24/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-0.419, 0.901, -0.012)]
-}
-tracks/25/type = "value"
-tracks/25/imported = false
-tracks/25/enabled = true
-tracks/25/path = NodePath("IKTargets/BikeSkin:position")
-tracks/25/interp = 1
-tracks/25/loop_wrap = true
-tracks/25/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/26/type = "value"
-tracks/26/imported = false
-tracks/26/enabled = true
-tracks/26/path = NodePath("%TPSCamMarker:rotation")
-tracks/26/interp = 1
-tracks/26/loop_wrap = true
-tracks/26/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/27/type = "value"
-tracks/27/imported = false
-tracks/27/enabled = true
-tracks/27/path = NodePath("%FPSCamMarker:rotation")
-tracks/27/interp = 1
-tracks/27/loop_wrap = true
-tracks/27/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-0.1850049, -3.1415925, 0)]
-}
-tracks/28/type = "value"
-tracks/28/imported = false
-tracks/28/enabled = true
-tracks/28/path = NodePath("%BaseballBat:rotation")
-tracks/28/interp = 1
-tracks/28/loop_wrap = true
-tracks/28/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-2.1242909e-10, 3.1415923, -2.6179938)]
-}
-tracks/29/type = "value"
-tracks/29/imported = false
-tracks/29/enabled = true
-tracks/29/path = NodePath("%ButtTarget:rotation")
-tracks/29/interp = 1
-tracks/29/loop_wrap = true
-tracks/29/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, -8.526513e-14, 0)]
-}
-tracks/30/type = "value"
-tracks/30/imported = false
-tracks/30/enabled = true
-tracks/30/path = NodePath("%LeftHandTarget:rotation")
-tracks/30/interp = 1
-tracks/30/loop_wrap = true
-tracks/30/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(1.2217305, 1.007055, -0.40142566)]
-}
-tracks/31/type = "value"
-tracks/31/imported = false
-tracks/31/enabled = true
-tracks/31/path = NodePath("%LeftArmMagnet:rotation")
-tracks/31/interp = 1
-tracks/31/loop_wrap = true
-tracks/31/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, -5.684342e-14, 0)]
-}
-tracks/32/type = "value"
-tracks/32/imported = false
-tracks/32/enabled = true
-tracks/32/path = NodePath("%RightArmMagnet:rotation")
-tracks/32/interp = 1
-tracks/32/loop_wrap = true
-tracks/32/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, -1.4210855e-14, 0)]
-}
-tracks/33/type = "value"
-tracks/33/imported = false
-tracks/33/enabled = true
-tracks/33/path = NodePath("%LeftLegMagnet:rotation")
-tracks/33/interp = 1
-tracks/33/loop_wrap = true
-tracks/33/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, -4.2632564e-14, 0)]
-}
-tracks/34/type = "value"
-tracks/34/imported = false
-tracks/34/enabled = true
-tracks/34/path = NodePath("%RightLegMagnet:rotation")
-tracks/34/interp = 1
-tracks/34/loop_wrap = true
-tracks/34/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
+"values": [Vector3(0.15192097, 1.0757259, -0.48777756)]
 }
 
 [sub_resource type="Animation" id="Animation_k5dce"]
@@ -1713,6 +1569,83 @@ tracks/23/keys = {
 "values": [Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, -0.46795857), Vector3(0, 0, -6.2831855), Vector3(0, 0, -6.2831855)]
 }
 
+[sub_resource type="Animation" id="Animation_744ak"]
+resource_name = "knee_knocker"
+length = 0.2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("IKTargets/LeftFootTarget:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-1.2758567, -2.6177065, -0.7598184), Vector3(-1.2758567, -2.6177065, -0.7598184), Vector3(-2.2851946, -2.675793, -0.0848157)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("IKTargets/ButtTarget:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(1.385633e-07, 0.95820665, -0.34479797), Vector3(1.385633e-07, 1.2125188, -0.34479797)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("IKTargets/ChestTarget:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-1.7008484e-09, 1.1697934, 0.0032738894), Vector3(5.5596775e-08, 1.5729113, -0.10159463)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("IKTargets/HeadTarget:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-1.4981957e-08, 1.5793936, -0.4448575), Vector3(-2.5419807e-08, 2.007349, -0.37573075)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("IKTargets/LeftFootTarget:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.15, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0.19981939, 0.39506754, -0.16492465), Vector3(0.19981948, 0.9279759, -0.65265125), Vector3(0.040029537, 1.0738175, -0.69672704), Vector3(-0.1593069, 1.0417702, -0.78487855)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("IKTargets/LeftLegMagnet:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0.46395656, 0.5692559, 0.42930415), Vector3(0.15192097, 1.0757259, -0.48777756)]
+}
+
 [sub_resource type="Animation" id="Animation_hqggp"]
 resource_name = "spread_eagle"
 step = 0.05
@@ -2057,6 +1990,95 @@ tracks/13/keys = {
 "values": [Vector3(-0.21216637, 0.5018048, -0.20081648), Vector3(-0.21216607, 1.3360244, -1.3329482), Vector3(-0.21216607, 1.2920392, -1.3329482), Vector3(-0.21216607, 1.3360244, -1.3329482), Vector3(-0.21216637, 0.5018048, -0.20081648)]
 }
 
+[sub_resource type="Animation" id="Animation_am3pr"]
+resource_name = "t_pose"
+length = 0.2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("IKTargets/LeftHandTarget:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(1.0400047, 2.2469194, 0.21723954), Vector3(1.4369671, 0.7864961, -0.77980936)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("IKTargets/RightHandTarget:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0.93759894, -2.2915344, -0.26741448), Vector3(1.3563348, -0.03148595, 1.5385727)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("IKTargets/ButtTarget:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(8.72776e-09, 0.8699445, -0.27442372), Vector3(8.727753e-09, 1.638207, -0.27442372)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("IKTargets/ChestTarget:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(1.58426e-08, 1.1710131, -0.11291112), Vector3(1.5842605e-08, 2.3684752, -0.18331875)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("IKTargets/HeadTarget:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-1.5670119e-07, 1.7314824, -0.2957811), Vector3(-1.4306987e-07, 2.7695198, -0.38605726)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("IKTargets/LeftHandTarget:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0.29064223, 0.9562068, 0.18692446), Vector3(2.5832145, 1.8961908, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("IKTargets/RightHandTarget:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-0.266, 0.98800004, 0.20600004), Vector3(-2.3957925, 1.8970202, -0.008091549)]
+}
+
 [sub_resource type="Animation" id="Animation_xcneo"]
 resource_name = "two_left_feet"
 length = 3.0
@@ -2272,7 +2294,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("%TPSCamMarker:position")
+tracks/2/path = NodePath("IKTargets/TPSCamMarker:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -2292,8 +2314,10 @@ _data = {
 &"high_chair": SubResource("Animation_xm7jy"),
 &"idle": SubResource("Animation_3kl2f"),
 &"kickflip": SubResource("Animation_8tb5v"),
+&"knee_knocker": SubResource("Animation_744ak"),
 &"spread_eagle": SubResource("Animation_hqggp"),
 &"superman": SubResource("Animation_8la7j"),
+&"t_pose": SubResource("Animation_am3pr"),
 &"two_left_feet": SubResource("Animation_xcneo"),
 &"wheelie_cam_start": SubResource("Animation_75npo")
 }
@@ -2338,7 +2362,7 @@ unique_name_in_owner = true
 script = ExtResource("3_faflk")
 root = NodePath("..")
 enable_prediction = true
-state_properties = Array[String]([":global_transform", ":velocity", ":up_direction", ":is_crashed", ":movement_locked", "%BoostController:boost_amount", "%BoostController:boost_burn_target", "%BoostController:boost_burn_rate", "%BoostController:boost_prev_held", "%BoostController:boost_tap_window", "%BoostController:is_boosting", "%TrickController:combo_time", "%TrickController:combo_grace", "%TrickController:combo_boost_earned", "%TrickController:combo_multiplier", "%TrickController:_air_flips_awarded", "%TrickController:_left_hold_time", "%TrickController:_kickflip_timer", "%MovementController:pitch_angle", "%MovementController:wheelie_committed", "%MovementController:roll_angle", "%MovementController:speed", "%MovementController:slip_angle", "%MovementController:wobble_angle", "%MovementController:wobble_vel", "%MovementController:wobble_brake_hold_time", "%MovementController:balance_locked", "%MovementController:_rb_prev_held", "%MovementController:_lock_throttle_released", "%GearingController:current_gear", "%GearingController:current_rpm", "%GearingController:clutch_value", "%GearingController:is_rev_limited"])
+state_properties = Array[String]([":global_transform", ":velocity", ":up_direction", ":is_crashed", ":movement_locked", "%BoostController:boost_amount", "%BoostController:boost_burn_target", "%BoostController:boost_burn_rate", "%BoostController:boost_prev_held", "%BoostController:boost_tap_window", "%BoostController:is_boosting", "%TrickController:combo_time", "%TrickController:combo_grace", "%TrickController:combo_boost_earned", "%TrickController:combo_multiplier", "%TrickController:combo_score", "%TrickController:_air_flips_awarded", "%TrickController:_hold_dir", "%TrickController:_hold_time", "%TrickController:_press_double", "%TrickController:_tap_dir", "%TrickController:_tap_age", "%TrickController:_tap_trick", "%TrickController:_tap_trick_timer", "%MovementController:pitch_angle", "%MovementController:wheelie_committed", "%MovementController:roll_angle", "%MovementController:speed", "%MovementController:slip_angle", "%MovementController:wobble_angle", "%MovementController:wobble_vel", "%MovementController:wobble_brake_hold_time", "%MovementController:balance_locked", "%MovementController:_rb_prev_held", "%MovementController:_lock_throttle_released", "%GearingController:current_gear", "%GearingController:current_rpm", "%GearingController:clutch_value", "%GearingController:is_rev_limited"])
 input_properties = Array[String](["%InputController:nfx_throttle", "%InputController:nfx_front_brake", "%InputController:nfx_rear_brake", "%InputController:nfx_steer", "%InputController:nfx_lean", "%InputController:nfx_trick_held", "%InputController:nfx_clutch_held", "%InputController:nfx_boost_held", "%InputController:nfx_cam_x", "%InputController:nfx_cam_y", "%InputController:nfx_target_gear"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
@@ -2473,7 +2497,7 @@ transform = Transform3D(0.2333382, -0.9285764, -0.28861547, 0.11576331, 0.321224
 
 [node name="LeftFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=833333333]
 unique_name_in_owner = true
-transform = Transform3D(-0.9226999, 0.28783172, -0.25647196, -0.20021874, 0.210733, 0.9568198, 0.32945016, 0.934208, -0.136814, 0.183, 0.567, -0.227)
+transform = Transform3D(-0.75502855, 0.6541009, 0.045650028, 0.057082213, -0.0037862144, 0.9983623, 0.6532025, 0.75639784, -0.034478825, -0.12641062, 1.0385206, -0.8354169)
 
 [node name="SparkParticlesLeft" parent="VisualRoot/IKTargets/LeftFootTarget" unique_id=1003989945 instance=ExtResource("29_3kl2f")]
 unique_name_in_owner = true
@@ -2482,7 +2506,7 @@ emitting = false
 
 [node name="RightFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=844444444]
 unique_name_in_owner = true
-transform = Transform3D(-0.9787893, 0.022497118, 0.2036314, 0.20170887, 0.27976713, 0.93863934, -0.035852674, 0.9598043, -0.27837086, -0.18314199, 0.5666657, -0.22655825)
+transform = Transform3D(-0.9787892, 0.022497207, 0.20363149, 0.20170893, 0.27976722, 0.93863934, -0.03585267, 0.9598043, -0.27837098, -0.18314199, 0.5666657, -0.22655825)
 
 [node name="SparkParticlesRight" parent="VisualRoot/IKTargets/RightFootTarget" unique_id=1985641876 instance=ExtResource("29_3kl2f")]
 unique_name_in_owner = true
@@ -2499,7 +2523,7 @@ transform = Transform3D(1, 0, -1.4210855e-14, 0, 1, 0, 1.4210855e-14, 0, 1, -0.4
 
 [node name="LeftLegMagnet" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=423836538]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 0.46395656, 0.5692559, 0.42930415)
+transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 0.15192097, 1.0757259, -0.48777756)
 
 [node name="RightLegMagnet" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=132337519]
 unique_name_in_owner = true
