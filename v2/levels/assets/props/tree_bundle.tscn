@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://ylnfkd3cjyjp"]
+
+[ext_resource type="Script" uid="uid://m0s24kmiy2lw" path="res://levels/assets/props/tree_bundle.gd" id="1_treebundle"]
+
+[node name="TreeBundle" type="Node3D" unique_id=1880052268]
+script = ExtResource("1_treebundle")

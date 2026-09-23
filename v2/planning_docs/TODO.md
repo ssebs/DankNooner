@@ -24,6 +24,8 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
+- [ ] race wall around track
+- [ ] better trees
 - [ ] mid-race challenges
   - [x] display in HUD during race
   - [x] track who did longest wheelie / airtime
