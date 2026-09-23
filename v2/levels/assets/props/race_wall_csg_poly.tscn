@@ -1,0 +1,46 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" uid="uid://2ikkccys8b6w" path="res://levels/assets/graybox/texture_04.png" id="1_base"]
+[ext_resource type="Texture2D" uid="uid://dfgsgem7ngu3h" path="res://levels/assets/graybox/gray.png" id="2_glass"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_base"]
+albedo_color = Color(1.975, 0.209, 0.209, 1)
+albedo_texture = ExtResource("1_base")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_glass"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.5019608)
+albedo_texture = ExtResource("2_glass")
+uv1_triplanar = true
+
+[node name="RaceWallCSGPoly" type="CSGPolygon3D"]
+use_collision = true
+polygon = PackedVector2Array(-0.25, -0.5, -0.25, 0.5, 0.25, 0.5, 0.25, -0.5)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+material = SubResource("StandardMaterial3D_base")
+
+[node name="Glass" type="CSGPolygon3D" parent="."]
+polygon = PackedVector2Array(-0.05, 0.5, -0.05, 2.5, 0.05, 2.5, 0.05, 0.5)
+mode = 2
+path_node = NodePath("../..")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+material = SubResource("StandardMaterial3D_glass")
