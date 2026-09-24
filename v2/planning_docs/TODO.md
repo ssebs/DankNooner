@@ -24,7 +24,8 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-
+- [ ] skybox changes
+  - [ ] WIP on stunt track 01
 - [ ] mid-race challenges
   - [x] display in HUD during race
   - [x] track who did longest wheelie / airtime
