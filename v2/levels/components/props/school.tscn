@@ -262,6 +262,7 @@ width = 92.0
 height = 1.2
 depth = 0.15
 color_preset = 6
+neon_edges = true
 
 [node name="fence_left" parent="." unique_id=230000031 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -47, 0.625, -1)
@@ -270,6 +271,7 @@ width = 0.15
 height = 1.2
 depth = 60.0
 color_preset = 6
+neon_edges = true
 
 [node name="fence_right" parent="." unique_id=230000032 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47, 0.625, -1)
@@ -278,6 +280,7 @@ width = 0.15
 height = 1.2
 depth = 60.0
 color_preset = 6
+neon_edges = true
 
 [node name="fence_front_left" parent="." unique_id=230000033 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29, 0.725, 30)
@@ -286,6 +289,7 @@ width = 34.0
 height = 1.2
 depth = 0.15
 color_preset = 6
+neon_edges = true
 
 [node name="fence_front_right" parent="." unique_id=230000034 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 0.725, 30)
@@ -294,3 +298,4 @@ width = 34.0
 height = 1.2
 depth = 0.15
 color_preset = 6
+neon_edges = true

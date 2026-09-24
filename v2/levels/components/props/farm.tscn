@@ -16,6 +16,7 @@ width = 48.0
 height = 2.0
 depth = 0.15
 color_preset = 6
+neon_edges = true
 
 [node name="fence2" parent="." unique_id=118944281 instance=ExtResource("4_3u4ou")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1, -31)
@@ -24,6 +25,7 @@ width = 30.0
 height = 2.0
 depth = 0.15
 color_preset = 6
+neon_edges = true
 
 [node name="fence4" parent="." unique_id=463411340 instance=ExtResource("4_3u4ou")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 1, -16)
@@ -32,6 +34,7 @@ width = 31.0
 height = 2.0
 depth = 0.15
 color_preset = 6
+neon_edges = true
 
 [node name="fence5" parent="." unique_id=1730286661 instance=ExtResource("4_3u4ou")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 31, 1, -8)
@@ -40,6 +43,7 @@ width = 16.0
 height = 2.0
 depth = 0.15
 color_preset = 6
+neon_edges = true
 
 [node name="fence3" parent="." unique_id=979279864 instance=ExtResource("4_3u4ou")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 48, 1, -23)
@@ -48,6 +52,7 @@ width = 46.0
 height = 2.0
 depth = 0.15
 color_preset = 6
+neon_edges = true
 
 [node name="GrayBox_StaticBody" parent="." unique_id=1062758486 instance=ExtResource("4_3u4ou")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 20, 0, -37)
@@ -55,6 +60,7 @@ width = 4.0
 height = 2.0
 depth = 2.0
 color_preset = 6
+neon_edges = true
 
 [node name="GrayBox_StaticBody2" parent="." unique_id=240050677 instance=ExtResource("4_3u4ou")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 22.5, 0, -37)
@@ -62,6 +68,7 @@ width = 4.0
 height = 2.0
 depth = 2.0
 color_preset = 6
+neon_edges = true
 
 [node name="GrayBox_StaticBody3" parent="." unique_id=110300393 instance=ExtResource("4_3u4ou")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 25, 0, -37)
@@ -69,6 +76,7 @@ width = 4.0
 height = 2.0
 depth = 2.0
 color_preset = 6
+neon_edges = true
 
 [node name="GrayBox_StaticBody4" parent="." unique_id=254096218 instance=ExtResource("4_3u4ou")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 24.006762, 2, -37)
@@ -76,6 +84,7 @@ width = 4.0
 height = 2.0
 depth = 2.0
 color_preset = 6
+neon_edges = true
 
 [node name="GrayBox_StaticBody5" parent="." unique_id=817962095 instance=ExtResource("4_3u4ou")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 21.006762, 2, -37)
@@ -83,6 +92,7 @@ width = 4.0
 height = 2.0
 depth = 2.0
 color_preset = 6
+neon_edges = true
 
 [node name="GrayBox_StaticBody6" parent="." unique_id=392100653 instance=ExtResource("4_3u4ou")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 22.506762, 4, -37)
@@ -90,15 +100,34 @@ width = 4.0
 height = 2.0
 depth = 2.0
 color_preset = 6
+neon_edges = true
 
 [node name="Big Barn" parent="." unique_id=1039168053 instance=ExtResource("2_3u4ou")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 11.5, 0, -35)
 
+[node name="NeonEdges" type="Node" parent="Big Barn" unique_id=1901891052]
+script = ExtResource("6_n8j2u")
+color = Color(0.25, 1, 0.28749996, 1)
+energy = 2.5
+normal_threshold = 1.112
+
 [node name="Barn" parent="." unique_id=1164833034 instance=ExtResource("3_wg7xr")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 35, 0, -36)
 
+[node name="NeonEdges" type="Node" parent="Barn" unique_id=902230747]
+script = ExtResource("6_n8j2u")
+color = Color(0.25, 1, 0.28749996, 1)
+energy = 2.5
+normal_threshold = 1.112
+
 [node name="ChickenCoop" parent="." unique_id=310502123 instance=ExtResource("4_n8j2u")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 24, 0, -23.5)
+
+[node name="NeonEdges" type="Node" parent="ChickenCoop" unique_id=143822726]
+script = ExtResource("6_n8j2u")
+color = Color(0.25, 1, 0.28749996, 1)
+energy = 2.5
+normal_threshold = 1.112
 
 [node name="Silo House" parent="." unique_id=2050090573 instance=ExtResource("5_wg7xr")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 15.5, 0, -7.5)
@@ -106,3 +135,5 @@ transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 15.5, 0, -7.5)
 [node name="NeonEdges" type="Node" parent="Silo House" unique_id=115965620]
 script = ExtResource("6_n8j2u")
 color = Color(0.25, 1, 0.28749996, 1)
+energy = 2.5
+normal_threshold = 1.112

@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://it7myerjmp0g"]
 
-[ext_resource type="PackedScene" uid="uid://c8gto7d47a278" path="res://player/bikes/assets/R73DModel/r7.glb" id="1_yvpo1"]
 [ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="2_4okic"]
 [ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="3_82gmx"]
+[ext_resource type="PackedScene" uid="uid://chw1g67v01n3i" path="res://player/bikes/assets/R73DModel/r7_neon.glb" id="4_8pjdv"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yvpo1"]
 
@@ -40,19 +40,19 @@ albedo_color = Color(0.25490198, 0.6862745, 1, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kk1mv"]
 albedo_color = Color(0.25490198, 0.6862745, 1, 1)
 
-[node name="r7" unique_id=394643670 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("1_yvpo1")]
+[node name="r7" unique_id=394643670 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("4_8pjdv")]
 script = ExtResource("2_4okic")
 slots = Array[ExtResource("3_82gmx")]([SubResource("Resource_8pjdv"), SubResource("Resource_5ahef"), SubResource("Resource_kk1mv")])
-meshes = [NodePath("Body"), NodePath("RearWheelSpin/RearWheel"), NodePath("SteerHinge/FrontWheelSpin/FrontWheel")]
+meshes = [NodePath("Body"), NodePath("RearWheelSpin/RearWheel"), NodePath("SteerHinge/FrontWheelSpin/FrontWheel_001")]
 steering_rotation_node = NodePath("SteerHinge")
 front_wheel_node = NodePath("SteerHinge/FrontWheelSpin")
 rear_wheel_node = NodePath("RearWheelSpin")
 
-[node name="Body" parent="." index="0" unique_id=1893824468]
+[node name="Body" parent="." index="1" unique_id=2132649301]
 surface_material_override/0 = SubResource("StandardMaterial3D_8pjdv")
 
-[node name="RearWheel" parent="RearWheelSpin" parent_id_path=PackedInt32Array(1527129744) index="2" unique_id=449659999]
+[node name="RearWheel" parent="RearWheelSpin" parent_id_path=PackedInt32Array(584105430) index="2" unique_id=1272787069]
 surface_material_override/0 = SubResource("StandardMaterial3D_5ahef")
 
-[node name="FrontWheel" parent="SteerHinge/FrontWheelSpin" parent_id_path=PackedInt32Array(32197171) index="2" unique_id=937373715]
+[node name="FrontWheel_001" parent="SteerHinge/FrontWheelSpin" parent_id_path=PackedInt32Array(776127678) index="2" unique_id=2071377964]
 surface_material_override/0 = SubResource("StandardMaterial3D_kk1mv")

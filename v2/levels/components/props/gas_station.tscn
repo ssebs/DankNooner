@@ -104,7 +104,7 @@ color_preset = 5
 neon_edges = true
 
 [node name="mainb" parent="." unique_id=614563674 instance=ExtResource("1_jbldn")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.625, -12.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 1.625, -12.5)
 collision_layer = 3
 width = 12.0
 height = 3.0
@@ -119,6 +119,7 @@ width = 28.0
 height = 6.0
 depth = 0.1
 color_preset = 1
+neon_edges = true
 
 [node name="shortwall" parent="." unique_id=1690930240 instance=ExtResource("1_jbldn")]
 transform = Transform3D(-1, 0, -2.9802322e-08, 0, 1, 0, 2.9802322e-08, 0, -1, -2, 3.1249998, -16)
@@ -127,6 +128,7 @@ width = 28.0
 height = 6.0
 depth = 0.1
 color_preset = 1
+neon_edges = true
 
 [node name="logotop" parent="." unique_id=1297852809 instance=ExtResource("1_jbldn")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 12.575339, 4.7749996, 11.72745)

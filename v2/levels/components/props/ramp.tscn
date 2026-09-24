@@ -12,6 +12,7 @@ width = 20.0
 height = 0.1
 depth = 2.0
 color_preset = 5
+neon_edges = true
 
 [node name="ramp3" parent="." unique_id=1779167175 instance=ExtResource("1_nj8oi")]
 transform = Transform3D(1, 0, 0, 0, 0.86602545, 0.50000006, 0, -0.50000006, 0.86602545, 1, 0.8937434, 3.7000046)
@@ -19,6 +20,7 @@ width = 20.0
 height = 0.1
 depth = 2.0
 color_preset = 5
+neon_edges = true
 
 [node name="ramp4" parent="." unique_id=1716846430 instance=ExtResource("1_nj8oi")]
 transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.7071068, 0, -0.7071068, 0.70710677, 1, 2.0937433, 5.300003)
@@ -26,6 +28,7 @@ width = 20.0
 height = 0.1
 depth = 2.0
 color_preset = 5
+neon_edges = true
 
 [node name="EndRamp" parent="." unique_id=412499474 instance=ExtResource("1_nj8oi")]
 unique_name_in_owner = true
@@ -34,6 +37,7 @@ width = 20.0
 height = 0.1
 depth = 2.0
 color_preset = 5
+neon_edges = true
 
 [node name="crash" parent="." unique_id=225985917 instance=ExtResource("1_nj8oi")]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 1, 1.25, 6.905)
