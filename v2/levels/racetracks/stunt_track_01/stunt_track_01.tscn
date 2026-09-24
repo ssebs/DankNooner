@@ -62,18 +62,18 @@ agent_max_climb = 0.5
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nsky"]
 shader = ExtResource("51_nsky")
-shader_parameter/zenith_color = Color(0.01, 0.015, 0.08, 1)
-shader_parameter/horizon_color = Color(0.12, 0.05, 0.3, 1)
+shader_parameter/zenith_color = Color(0.026348038, 0.07843137, 0.011764703, 1)
+shader_parameter/horizon_color = Color(0.17058825, 0.050980393, 0.3019608, 1)
 shader_parameter/ground_color = Color(0.02, 0.01, 0.05, 1)
-shader_parameter/city_glow_color = Color(1, 0.25, 0.55, 1)
-shader_parameter/city_glow_height = 0.08
-shader_parameter/city_glow_energy = 1.5
-shader_parameter/sky_bands = 6
-shader_parameter/star_scale = 120.0
+shader_parameter/city_glow_color = Color(0, 0.5366668, 0.7, 1)
+shader_parameter/city_glow_height = 0.16100000694898
+shader_parameter/city_glow_energy = 0.3770000179075
+shader_parameter/sky_bands = 16
+shader_parameter/star_scale = 68.00000227999999
 shader_parameter/star_density = 0.3
-shader_parameter/star_size = 0.15
-shader_parameter/star_energy = 3.0
-shader_parameter/twinkle_speed = 3.0
+shader_parameter/star_size = 0.11600000481148
+shader_parameter/star_energy = 2.50000011875
+shader_parameter/twinkle_speed = 5.600000266
 shader_parameter/moon_color = Color(1, 0.93, 0.85, 1)
 shader_parameter/moon_crater_color = Color(0.7, 0.62, 0.8, 1)
 shader_parameter/moon_radius = 0.06
@@ -81,7 +81,7 @@ shader_parameter/moon_energy = 3.0
 shader_parameter/halo_color = Color(0.45, 0.3, 1, 1)
 shader_parameter/halo_radius = 0.35
 shader_parameter/halo_rings = 3
-shader_parameter/cloud_dark_color = Color(0.05, 0.03, 0.15, 1)
+shader_parameter/cloud_dark_color = Color(0.17254902, 0.050980393, 0.3019608, 1)
 shader_parameter/cloud_lit_color = Color(0.25, 0.15, 0.45, 1)
 shader_parameter/cloud_scale = 0.8
 shader_parameter/cloud_coverage = 0.45
@@ -2046,7 +2046,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -404.40582, 256, -2.085909)
 size = 48
 density = 2
 layout_seed = -1
-snapped_heights = PackedFloat32Array(-255.76329, -255.6705, -255.72894, -255.63756, -255.62437, -255.6448, -255.61264, -255.67227, -255.62138)
+snapped_heights = PackedFloat32Array(-255.76329, -255.6705, -255.72894, -255.63756, -255.62437, nan, -255.61264, -255.67227, nan)
 
 [node name="TreeBundle15" parent="_Trees_/IslandTrackTrees" unique_id=38375093 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(-0.039157793, 0, 0.99923307, 0, 1, 0, -0.99923307, 0, -0.039157793, -605.94366, 256, 182.18442)

@@ -20,6 +20,7 @@
 [ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/bikes/hitbox/bike_hitbox.tres" id="19_75npo"]
 [ext_resource type="PackedScene" uid="uid://cu0vh8sgp0l2e" path="res://entities/vfx/spark_particles.tscn" id="29_3kl2f"]
 [ext_resource type="Script" uid="uid://cajkhr7cisa7f" path="res://player/controllers/skidmark_controller.gd" id="30_skid"]
+[ext_resource type="Script" path="res://levels/components/neon_edges.gd" id="31_neon"]
 
 [sub_resource type="Animation" id="Animation_0jgj5"]
 length = 0.001
@@ -2559,6 +2560,9 @@ skin_definition = ExtResource("2_htgu7")
 [node name="CharacterSkin" parent="VisualRoot" unique_id=259227641 instance=ExtResource("6_1vqn6")]
 unique_name_in_owner = true
 skin_definition = ExtResource("3_3kl2f")
+
+[node name="NeonEdges" type="Node" parent="VisualRoot" unique_id=1480734402]
+script = ExtResource("31_neon")
 
 [node name="TPSCam" type="Camera3D" parent="." unique_id=1200816402]
 unique_name_in_owner = true

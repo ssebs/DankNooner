@@ -57,6 +57,7 @@ collision_layer = 3
 height = 0.5
 depth = 3.0
 color_preset = 6
+neon_edges = true
 
 [node name="bench_w" parent="." unique_id=240000008 instance=ExtResource("1_park0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.45, 0)
@@ -64,6 +65,7 @@ collision_layer = 3
 height = 0.5
 depth = 3.0
 color_preset = 6
+neon_edges = true
 
 [node name="bench_n" parent="." unique_id=240000009 instance=ExtResource("1_park0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 6)
@@ -71,6 +73,7 @@ collision_layer = 3
 width = 3.0
 height = 0.5
 color_preset = 6
+neon_edges = true
 
 [node name="bench_s" parent="." unique_id=240000010 instance=ExtResource("1_park0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, -6)
@@ -78,6 +81,7 @@ collision_layer = 3
 width = 3.0
 height = 0.5
 color_preset = 6
+neon_edges = true
 
 [node name="gazebo_pillar_1" parent="." unique_id=240000019 instance=ExtResource("1_park0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 1.5, -23)
@@ -126,6 +130,7 @@ width = 8.0
 height = 0.4
 depth = 8.0
 color_preset = 3
+neon_edges = true
 
 [node name="sidewalk_n" parent="." unique_id=240000025 instance=ExtResource("1_park0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 30)

@@ -26,6 +26,9 @@
 > Don't forget, have fun :D
 - [ ] skybox changes
   - [ ] WIP on stunt track 01
+  - [ ] skybox = repeating patterns/fractal?
+  - [ ] sunset like GTA V?
+  - [ ] current shader w/ neon road lines, edges of meshes glow, rest of face is dark. Kinda neon light and Tron ?
 - [ ] mid-race challenges
   - [x] display in HUD during race
   - [x] track who did longest wheelie / airtime

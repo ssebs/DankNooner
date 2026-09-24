@@ -4,6 +4,11 @@
 
 [resource]
 albedo_texture = ExtResource("1_5di4t")
+emission_enabled = true
+emission = Color(0.25490198, 0.6862745, 1, 1)
+emission_energy_multiplier = 1.75
+emission_operator = 1
+emission_texture = ExtResource("1_5di4t")
 uv1_scale = Vector3(0.2, 0.2, 0.2)
 uv1_offset = Vector3(0, 0.46, 0)
 uv1_triplanar = true

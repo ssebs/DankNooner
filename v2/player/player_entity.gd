@@ -452,6 +452,7 @@ func _apply_rider_pose_from_definition():
 func _deferred_init():
 	if int(name) == multiplayer.get_unique_id():
 		is_local_client = true
+		name_label.hide()
 		camera_controller.deferred_init()
 		_init_audio()
 		hud_manager.local_player = self

@@ -19,10 +19,11 @@ depth = 12.0
 color_preset = 1
 
 [node name="back_roof" parent="." unique_id=230000003 instance=ExtResource("1_schl0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.275, -25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.025, -25)
 width = 64.5
-height = 0.5
+height = 8.0
 depth = 12.5
+neon_edges = true
 
 [node name="left_wing" parent="." unique_id=230000004 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.525, -13)
@@ -37,6 +38,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 7.275, -13)
 width = 12.5
 height = 0.5
 depth = 24.5
+neon_edges = true
 
 [node name="right_wing" parent="." unique_id=230000006 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.525, -13)
@@ -51,6 +53,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 7.275, -13)
 width = 12.5
 height = 0.5
 depth = 24.5
+neon_edges = true
 
 [node name="quad" parent="." unique_id=230000008 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -10)
@@ -64,7 +67,6 @@ color_preset = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -10)
 collision_layer = 3
 width = 4.0
-height = 1.0
 depth = 4.0
 color_preset = 2
 
@@ -77,37 +79,35 @@ depth = 0.3
 color_preset = 5
 
 [node name="sign" parent="." unique_id=230000011 instance=ExtResource("1_schl0")]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 5.5, -18.9)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 5, -18.9)
 collision_layer = 3
 shape_mode = 1
 width = 12.0
 height = 1.5
 depth = 3.0
 color_preset = 3
+neon_edges = true
 
 [node name="gate_left" parent="." unique_id=230000012 instance=ExtResource("1_schl0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2.0, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2, -1)
 collision_layer = 3
-width = 1.0
 height = 4.0
-depth = 1.0
 color_preset = 1
 
 [node name="gate_right" parent="." unique_id=230000013 instance=ExtResource("1_schl0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.0, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2, -1)
 collision_layer = 3
-width = 1.0
 height = 4.0
-depth = 1.0
 color_preset = 1
 
 [node name="gate_arch" parent="." unique_id=230000014 instance=ExtResource("1_schl0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.25, -1)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 4.25, -0.4556582)
 collision_layer = 3
-width = 22.0
-height = 1.0
-depth = 1.0
+shape_mode = 1
+width = 23.0
+depth = 3.0
 color_preset = 3
+neon_edges = true
 
 [node name="blacktop" parent="." unique_id=230000015 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0.075, 12)
@@ -115,6 +115,14 @@ shape_mode = 1
 width = 28.0
 height = 0.15
 depth = 20.0
+color_preset = 1
+
+[node name="blacktop2" parent="." unique_id=1403712959 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 9.5)
+shape_mode = 1
+width = 21.0
+height = 0.15
+depth = 21.0
 color_preset = 1
 
 [node name="hoop_pole" parent="." unique_id=230000016 instance=ExtResource("1_schl0")]
@@ -131,7 +139,8 @@ collision_layer = 3
 width = 2.4
 height = 1.4
 depth = 0.15
-color_preset = 3
+color_preset = 6
+neon_edges = true
 
 [node name="hoop_pole2" parent="." unique_id=230000018 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 1.75, 20)
@@ -147,7 +156,8 @@ collision_layer = 3
 width = 2.4
 height = 1.4
 depth = 0.15
-color_preset = 3
+color_preset = 6
+neon_edges = true
 
 [node name="goal_post_left" parent="." unique_id=230000020 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 1.5, 6)
@@ -155,7 +165,8 @@ collision_layer = 3
 width = 0.2
 height = 3.0
 depth = 0.2
-color_preset = 3
+color_preset = 6
+neon_edges = true
 
 [node name="goal_post_right" parent="." unique_id=230000021 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 1.5, 6)
@@ -163,15 +174,17 @@ collision_layer = 3
 width = 0.2
 height = 3.0
 depth = 0.2
-color_preset = 3
+color_preset = 6
+neon_edges = true
 
 [node name="goal_crossbar" parent="." unique_id=230000022 instance=ExtResource("1_schl0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 3.0, 6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 3, 6)
 collision_layer = 3
 width = 8.0
 height = 0.2
 depth = 0.2
-color_preset = 3
+color_preset = 6
+neon_edges = true
 
 [node name="goal2_post_left" parent="." unique_id=230000023 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 1.5, 22)
@@ -179,7 +192,8 @@ collision_layer = 3
 width = 0.2
 height = 3.0
 depth = 0.2
-color_preset = 3
+color_preset = 6
+neon_edges = true
 
 [node name="goal2_post_right" parent="." unique_id=230000024 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 1.5, 22)
@@ -187,15 +201,17 @@ collision_layer = 3
 width = 0.2
 height = 3.0
 depth = 0.2
-color_preset = 3
+color_preset = 6
+neon_edges = true
 
 [node name="goal2_crossbar" parent="." unique_id=230000025 instance=ExtResource("1_schl0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 3.0, 22)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 3, 22)
 collision_layer = 3
 width = 8.0
 height = 0.2
 depth = 0.2
-color_preset = 3
+color_preset = 6
+neon_edges = true
 
 [node name="parking_lot" parent="." unique_id=230000026 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 24)
@@ -206,7 +222,7 @@ depth = 8.0
 color_preset = 1
 
 [node name="flagpole" parent="." unique_id=230000027 instance=ExtResource("1_schl0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 4.75, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 4.75, 17.5)
 collision_layer = 3
 width = 0.25
 height = 9.5
@@ -214,11 +230,12 @@ depth = 0.25
 color_preset = 1
 
 [node name="flag" parent="." unique_id=230000028 instance=ExtResource("1_schl0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.1, 8.5, 0)
-width = 1.6
-height = 1.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.099998, 8.25, 17.5)
+width = 4.0
+height = 2.0
 depth = 0.1
-color_preset = 3
+color_preset = 5
+neon_edges = true
 
 [node name="sidewalk_front" parent="." unique_id=230000029 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 30)
