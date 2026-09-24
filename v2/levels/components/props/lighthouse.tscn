@@ -1,21 +1,91 @@
 [gd_scene format=3 uid="uid://1qii5r1owvt1"]
 
-[ext_resource type="PackedScene" uid="uid://ba4yrkdgcqwny" path="res://levels/assets/props/Lighthouse by Poly by Google - 7H8is9jrGeB.glb" id="1_lebf8"]
-[ext_resource type="Script" uid="uid://bkho4nxye7goy" path="res://levels/components/neon_edges.gd" id="2_kj6o1"]
+[ext_resource type="PackedScene" uid="uid://be8dcp3iruamu" path="res://levels/assets/map_terrain_mine/Lighthouse.glb" id="1_lebf8"]
+[ext_resource type="Material" uid="uid://c3caaviarijhp" path="res://levels/assets/props/light_emit.tres" id="2_kj6o1"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7jvdf"]
 radius = 4.0
 height = 20.0
 
+[sub_resource type="SphereMesh" id="SphereMesh_7jvdf"]
+material = ExtResource("2_kj6o1")
+radius = 1.0
+height = 2.0
+radial_segments = 4
+rings = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kj6o1"]
+transparency = 1
+albedo_color = Color(0, 0, 0, 0.101960786)
+emission_enabled = true
+emission = Color(1, 0.8576667, 0.39, 1)
+emission_energy_multiplier = 2.18
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_lebf8"]
+material = SubResource("StandardMaterial3D_kj6o1")
+top_radius = 2.0
+height = 20.0
+radial_segments = 4
+cap_bottom = false
+
+[sub_resource type="Animation" id="Animation_87u5h"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rotate:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_kj6o1"]
+resource_name = "rotate"
+length = 10.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rotate:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 10),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -6.2831855, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_87u5h"]
+_data = {
+&"RESET": SubResource("Animation_87u5h"),
+&"rotate": SubResource("Animation_kj6o1")
+}
+
 [node name="Lighthouse" type="StaticBody3D" unique_id=199534414]
 collision_layer = 3
 
-[node name="Lighthouse by Poly by Google - 7H8is9jrGeB" parent="." unique_id=1816492088 instance=ExtResource("1_lebf8")]
-transform = Transform3D(0.571, 0, 0, 0, 0.571, 0, 0, 0, 0.571, 0, 0, 0)
+[node name="Lighthouse2" parent="." unique_id=672043363 instance=ExtResource("1_lebf8")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=596637313]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
 shape = SubResource("CapsuleShape3D_7jvdf")
 
-[node name="NeonEdges" type="Node" parent="." unique_id=476552043]
-script = ExtResource("2_kj6o1")
+[node name="Bulb" type="MeshInstance3D" parent="." unique_id=1177800191]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 17.070347, 0)
+mesh = SubResource("SphereMesh_7jvdf")
+
+[node name="Rotate" type="Node3D" parent="." unique_id=252353925]
+unique_name_in_owner = true
+
+[node name="ray" type="MeshInstance3D" parent="Rotate" unique_id=1408840377]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -10, 16.91767, 0)
+mesh = SubResource("CylinderMesh_lebf8")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=574600955]
+libraries/ = SubResource("AnimationLibrary_87u5h")
+autoplay = &"rotate"

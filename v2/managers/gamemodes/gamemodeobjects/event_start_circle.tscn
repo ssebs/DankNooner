@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" uid="uid://0i4uny3m27jm" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.gd" id="1_3ysdx"]
 [ext_resource type="Shader" uid="uid://bdmdtwvpsr2w6" path="res://levels/components/screen_neon_edges.gdshader" id="2_0blfn"]
-[ext_resource type="Script" uid="uid://bkho4nxye7goy" path="res://levels/components/neon_edges.gd" id="3_edjov"]
+[ext_resource type="Material" uid="uid://k0dialwj5i42" path="res://levels/assets/props/neon_blue.tres" id="4_edjov"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_r3lln"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0blfn"]
 render_priority = 0
 shader = ExtResource("2_0blfn")
-shader_parameter/edge_color = Color(0.25490198, 0.6862745, 1, 1)
+shader_parameter/edge_color = Color(1.4151802, 0.44790244, 1.3659966, 1)
 shader_parameter/edge_energy = 4.0
 shader_parameter/edge_width_px = 1.5
 shader_parameter/depth_threshold = 0.05
@@ -15,7 +15,7 @@ shader_parameter/normal_threshold = 0.4
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2lumj"]
 transparency = 1
-albedo_color = Color(1.4148117, 0.4498188, 1.3648983, 0.15686275)
+albedo_color = Color(1.415, 0.45, 1.365, 0.157)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_2lumj"]
 material = SubResource("StandardMaterial3D_2lumj")
@@ -25,10 +25,55 @@ height = 4.0
 radial_segments = 16
 rings = 1
 cap_top = false
-cap_bottom = false
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_3ysdx"]
 radius = 4.0
+
+[sub_resource type="TorusMesh" id="TorusMesh_7jvdf"]
+material = ExtResource("4_edjov")
+inner_radius = 3.9
+outer_radius = 4.0
+rings = 24
+ring_segments = 6
+
+[sub_resource type="Animation" id="Animation_0blfn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:mesh:material:emission_energy_multiplier")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [4.0]
+}
+
+[sub_resource type="Animation" id="Animation_edjov"]
+resource_name = "loop"
+length = 3.0000000000000004
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:mesh:material:emission_energy_multiplier")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.75, 1.5, 2.25, 3),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [4.0, 2.0, 4.0, 2.0, 4.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_r3lln"]
+_data = {
+&"RESET": SubResource("Animation_0blfn"),
+&"loop": SubResource("Animation_edjov")
+}
 
 [node name="EventStartCircle" type="Area3D" unique_id=459761741 groups=["EventCircles"]]
 collision_layer = 8
@@ -36,15 +81,12 @@ script = ExtResource("1_3ysdx")
 
 [node name="Cyl" type="MeshInstance3D" parent="." unique_id=394970070]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0499997, 0)
-material_overlay = SubResource("ShaderMaterial_r3lln")
+material_overlay = SubResource("ShaderMaterial_0blfn")
 mesh = SubResource("CylinderMesh_2lumj")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=703346514]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_3ysdx")
-
-[node name="NeonEdges" type="Node" parent="CollisionShape3D" unique_id=1790627056]
-script = ExtResource("3_edjov")
 
 [node name="Label3D" type="Label3D" parent="." unique_id=2069409638]
 unique_name_in_owner = true
@@ -54,3 +96,26 @@ double_sided = false
 text = "EVENT_LABEL_NAME"
 font_size = 128
 outline_size = 32
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1746768751]
+mesh = SubResource("TorusMesh_7jvdf")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1028322554]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("TorusMesh_7jvdf")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=395839827]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+mesh = SubResource("TorusMesh_7jvdf")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="." unique_id=2036244985]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+mesh = SubResource("TorusMesh_7jvdf")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="." unique_id=704662027]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+mesh = SubResource("TorusMesh_7jvdf")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1190914722]
+libraries/ = SubResource("AnimationLibrary_r3lln")
+autoplay = &"loop"
