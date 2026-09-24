@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://1qii5r1owvt1"]
 
 [ext_resource type="PackedScene" uid="uid://ba4yrkdgcqwny" path="res://levels/assets/props/Lighthouse by Poly by Google - 7H8is9jrGeB.glb" id="1_lebf8"]
+[ext_resource type="Script" uid="uid://bkho4nxye7goy" path="res://levels/components/neon_edges.gd" id="2_kj6o1"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7jvdf"]
 radius = 4.0
@@ -15,3 +16,6 @@ transform = Transform3D(0.571, 0, 0, 0, 0.571, 0, 0, 0, 0.571, 0, 0, 0)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=596637313]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
 shape = SubResource("CapsuleShape3D_7jvdf")
+
+[node name="NeonEdges" type="Node" parent="." unique_id=476552043]
+script = ExtResource("2_kj6o1")

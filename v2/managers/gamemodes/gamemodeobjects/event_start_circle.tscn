@@ -1,6 +1,17 @@
 [gd_scene format=3 uid="uid://hxxsuaaohfd7"]
 
 [ext_resource type="Script" uid="uid://0i4uny3m27jm" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.gd" id="1_3ysdx"]
+[ext_resource type="Shader" uid="uid://bdmdtwvpsr2w6" path="res://levels/components/screen_neon_edges.gdshader" id="2_0blfn"]
+[ext_resource type="Script" uid="uid://bkho4nxye7goy" path="res://levels/components/neon_edges.gd" id="3_edjov"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r3lln"]
+render_priority = 0
+shader = ExtResource("2_0blfn")
+shader_parameter/edge_color = Color(0.25490198, 0.6862745, 1, 1)
+shader_parameter/edge_energy = 4.0
+shader_parameter/edge_width_px = 1.5
+shader_parameter/depth_threshold = 0.05
+shader_parameter/normal_threshold = 0.4
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2lumj"]
 transparency = 1
@@ -25,11 +36,15 @@ script = ExtResource("1_3ysdx")
 
 [node name="Cyl" type="MeshInstance3D" parent="." unique_id=394970070]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0499997, 0)
+material_overlay = SubResource("ShaderMaterial_r3lln")
 mesh = SubResource("CylinderMesh_2lumj")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=703346514]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_3ysdx")
+
+[node name="NeonEdges" type="Node" parent="CollisionShape3D" unique_id=1790627056]
+script = ExtResource("3_edjov")
 
 [node name="Label3D" type="Label3D" parent="." unique_id=2069409638]
 unique_name_in_owner = true

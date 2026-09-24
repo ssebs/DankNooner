@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="4_3u4ou"]
 [ext_resource type="PackedScene" uid="uid://m5e0q6g46kjg" path="res://levels/assets/props/ChickenCoop.glb" id="4_n8j2u"]
 [ext_resource type="PackedScene" uid="uid://dar7hqkito23a" path="res://levels/assets/props/Silo House.glb" id="5_wg7xr"]
+[ext_resource type="Script" uid="uid://bkho4nxye7goy" path="res://levels/components/neon_edges.gd" id="6_n8j2u"]
 
 [node name="Farm" type="Node3D" unique_id=1668911799]
 
@@ -101,3 +102,7 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 24, 0, -23.5)
 
 [node name="Silo House" parent="." unique_id=2050090573 instance=ExtResource("5_wg7xr")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 15.5, 0, -7.5)
+
+[node name="NeonEdges" type="Node" parent="Silo House" unique_id=115965620]
+script = ExtResource("6_n8j2u")
+color = Color(0.25, 1, 0.28749996, 1)

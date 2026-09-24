@@ -1,7 +1,10 @@
 @tool
-## Drop into any scene to light up the edges of every mesh under this node's parent
+## Drop into any scene to light up the edges of the target meshes and every mesh under them
 ## (including instanced .glb meshes and ones spawned later). One shared overlay material per NeonEdges node.
 class_name NeonEdges extends Node
+
+## Empty = this node's parent. Applied in _ready, so reload the scene after changing.
+@export var targets: Array[Node3D] = []
 
 @export var color: Color = Color("41afff"):
 	set(v):
@@ -47,14 +50,24 @@ func _exit_tree():
 
 func _ready():
 	_apply_params()
-	for mesh: MeshInstance3D in get_parent().find_children("*", "MeshInstance3D", true, false):
-		mesh.material_overlay = _mat
+	for target in _get_targets():
+		var meshes := target.find_children("*", "MeshInstance3D", true, false)
+		if target is MeshInstance3D:
+			meshes.append(target)
+		for mesh: MeshInstance3D in meshes:
+			mesh.material_overlay = _mat
 
 
 # Catches meshes spawned after _ready, e.g. PlayerEntity rebuilding its skins after a crash.
 func _on_node_added(node: Node):
-	if node is MeshInstance3D and get_parent().is_ancestor_of(node):
+	if node is MeshInstance3D and _get_targets().any(func(t: Node3D): return t.is_ancestor_of(node)):
 		node.material_overlay = _mat
+
+
+func _get_targets() -> Array[Node3D]:
+	if targets.is_empty():
+		return [get_parent() as Node3D]
+	return targets
 
 
 func _apply_params():

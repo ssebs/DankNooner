@@ -64,11 +64,21 @@ depth = 18.0
 color_preset = 1
 
 [node name="quad_planter" parent="." unique_id=230000009 instance=ExtResource("1_schl0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, 0.5, -12.5)
 collision_layer = 3
 width = 4.0
 depth = 4.0
 color_preset = 2
+neon_edges = true
+
+[node name="quad_planter2" parent="." unique_id=139258288 instance=ExtResource("1_schl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.5, -12.5)
+collision_layer = 3
+width = 12.0
+height = 4.0
+depth = 6.0
+color_preset = 2
+neon_edges = true
 
 [node name="entrance" parent="." unique_id=230000010 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, -19)
@@ -77,6 +87,7 @@ width = 4.0
 height = 3.0
 depth = 0.3
 color_preset = 5
+neon_edges = true
 
 [node name="sign" parent="." unique_id=230000011 instance=ExtResource("1_schl0")]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 5, -18.9)

@@ -1,0 +1,31 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://2v7qmmv1b6fl"]
+
+[ext_resource type="Shader" uid="uid://c0t5fou2lybeo" path="res://levels/assets/night_sky.gdshader" id="1_otnq0"]
+
+[resource]
+shader = ExtResource("1_otnq0")
+shader_parameter/zenith_color = Color(0.026348038, 0.07843137, 0.011764703, 1)
+shader_parameter/horizon_color = Color(0.17058825, 0.050980393, 0.3019608, 1)
+shader_parameter/ground_color = Color(0.02, 0.01, 0.05, 1)
+shader_parameter/city_glow_color = Color(0, 0.5366668, 0.7, 1)
+shader_parameter/city_glow_height = 0.16100000694898
+shader_parameter/city_glow_energy = 0.3770000179075
+shader_parameter/sky_bands = 16
+shader_parameter/star_scale = 68.00000227999999
+shader_parameter/star_density = 0.3
+shader_parameter/star_size = 0.11600000481148
+shader_parameter/star_energy = 2.50000011875
+shader_parameter/twinkle_speed = 5.600000266
+shader_parameter/moon_color = Color(1, 0.93, 0.85, 1)
+shader_parameter/moon_crater_color = Color(0.67704, 0.59279996, 0.78, 1)
+shader_parameter/moon_radius = 0.06
+shader_parameter/moon_energy = 1.7770000844075
+shader_parameter/halo_color = Color(0.45, 0.3, 1, 1)
+shader_parameter/halo_radius = 0.35000001499506
+shader_parameter/halo_rings = 6
+shader_parameter/cloud_dark_color = Color(0.17254902, 0.050980393, 0.3019608, 1)
+shader_parameter/cloud_lit_color = Color(0.25, 0.15, 0.45, 1)
+shader_parameter/cloud_scale = 0.8
+shader_parameter/cloud_coverage = 0.45
+shader_parameter/cloud_rim_width = 0.04
+shader_parameter/cloud_wind = Vector2(0.01, 0.004)

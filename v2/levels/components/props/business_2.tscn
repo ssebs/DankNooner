@@ -26,6 +26,7 @@ width = 8.0
 height = 0.2
 depth = 8.0
 color_preset = 1
+neon_edges = true
 
 [node name="door3" parent="." unique_id=1807741093 instance=ExtResource("1_suex6")]
 transform = Transform3D(-1, 8.742278e-08, -4.3711385e-08, 8.742278e-08, 1, -4.3711385e-08, 4.3711385e-08, -4.371139e-08, -1, 0, 0.4104848, 8)

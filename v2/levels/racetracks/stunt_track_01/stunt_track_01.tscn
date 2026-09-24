@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_craaw"]
 [ext_resource type="Resource" uid="uid://b3u0inad4glpn" path="res://resources/traffic/settings/stunt_track_01_traffic_settings.tres" id="1_trfst"]
 [ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/gamemodeobjects/killbox.tscn" id="3_cbnwg"]
+[ext_resource type="Sky" uid="uid://dfgbuerpq3y8" path="res://levels/assets/skybox_neon.tres" id="4_y7kpu"]
 [ext_resource type="Script" uid="uid://bxp3i4cnonh8y" path="res://addons/road-generator/nodes/road_manager.gd" id="6_3ue8r"]
 [ext_resource type="Script" uid="uid://c0uylliv5rmt6" path="res://managers/gamemodes/challenges/longest_wheelie_challenge.gd" id="6_a4ddl"]
 [ext_resource type="PackedScene" uid="uid://rervqxotioc4" path="res://levels/components/props/ramp.tscn" id="6_w1aki"]
@@ -50,7 +51,6 @@
 [ext_resource type="Script" uid="uid://dx0pklu2apuar" path="res://addons/road-generator/nodes/road_intersection.gd" id="48_7h6ax"]
 [ext_resource type="Script" uid="uid://cob3ih0wpthwf" path="res://addons/road-generator/procgen/intersection_ngon.gd" id="49_y7kpu"]
 [ext_resource type="PackedScene" uid="uid://cwks8i4eknex2" path="res://levels/assets/props/race_wall_csg_poly.tscn" id="50_7h6ax"]
-[ext_resource type="Shader" uid="uid://c0t5fou2lybeo" path="res://levels/assets/night_sky.gdshader" id="51_nsky"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_ercdn"]
 resource_local_to_scene = true
@@ -60,50 +60,19 @@ cell_height = 0.5
 agent_radius = 1.0
 agent_max_climb = 0.5
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_nsky"]
-shader = ExtResource("51_nsky")
-shader_parameter/zenith_color = Color(0.026348038, 0.07843137, 0.011764703, 1)
-shader_parameter/horizon_color = Color(0.17058825, 0.050980393, 0.3019608, 1)
-shader_parameter/ground_color = Color(0.02, 0.01, 0.05, 1)
-shader_parameter/city_glow_color = Color(0, 0.5366668, 0.7, 1)
-shader_parameter/city_glow_height = 0.16100000694898
-shader_parameter/city_glow_energy = 0.3770000179075
-shader_parameter/sky_bands = 16
-shader_parameter/star_scale = 68.00000227999999
-shader_parameter/star_density = 0.3
-shader_parameter/star_size = 0.11600000481148
-shader_parameter/star_energy = 2.50000011875
-shader_parameter/twinkle_speed = 5.600000266
-shader_parameter/moon_color = Color(1, 0.93, 0.85, 1)
-shader_parameter/moon_crater_color = Color(0.7, 0.62, 0.8, 1)
-shader_parameter/moon_radius = 0.06
-shader_parameter/moon_energy = 3.0
-shader_parameter/halo_color = Color(0.45, 0.3, 1, 1)
-shader_parameter/halo_radius = 0.35
-shader_parameter/halo_rings = 3
-shader_parameter/cloud_dark_color = Color(0.17254902, 0.050980393, 0.3019608, 1)
-shader_parameter/cloud_lit_color = Color(0.25, 0.15, 0.45, 1)
-shader_parameter/cloud_scale = 0.8
-shader_parameter/cloud_coverage = 0.45
-shader_parameter/cloud_rim_width = 0.04
-shader_parameter/cloud_wind = Vector2(0.01, 0.004)
-
-[sub_resource type="Sky" id="Sky_6hu6n"]
-sky_material = SubResource("ShaderMaterial_nsky")
-
 [sub_resource type="Environment" id="Environment_gvu3f"]
 background_mode = 2
-sky = SubResource("Sky_6hu6n")
+sky = ExtResource("4_y7kpu")
 ambient_light_source = 2
 ambient_light_color = Color(0.35, 0.3, 0.6, 1)
 ambient_light_energy = 0.6
 tonemap_mode = 2
 glow_enabled = true
-glow_bloom = 0.05
+glow_strength = 1.25
 fog_enabled = true
 fog_light_color = Color(0.12, 0.05, 0.3, 1)
 fog_density = 0.002
-fog_sky_affect = 0.0
+fog_sky_affect = 0.268
 adjustment_enabled = true
 adjustment_contrast = 1.15
 adjustment_saturation = 1.1
