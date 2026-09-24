@@ -34,7 +34,6 @@
 [ext_resource type="Resource" uid="uid://cqeidudggyae1" path="res://levels/components/pickups/gas_can_pickup_definition.tres" id="23_mn4lr"]
 [ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://managers/gamemodes/resources/gamemode_event_definition.gd" id="24_l8nu3"]
 [ext_resource type="PackedScene" uid="uid://jnyapma2vr1m" path="res://entities/vehicles/scenes/taxi.tscn" id="24_pls18"]
-[ext_resource type="PackedScene" uid="uid://ce0rc0lmwvocu" path="res://levels/assets/props/tree.glb" id="24_rl138"]
 [ext_resource type="PackedScene" uid="uid://pimxd647gw4v" path="res://levels/assets/props/arrow_wall.tscn" id="25_60x1b"]
 [ext_resource type="PackedScene" uid="uid://it7myerjmp0g" path="res://player/bikes/scenes/sport_bike.tscn" id="25_430hl"]
 [ext_resource type="PackedScene" uid="uid://ylnfkd3cjyjp" path="res://levels/assets/props/tree_bundle.tscn" id="25_x6w3k"]
@@ -113,504 +112,504 @@ metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 albedo_texture = ExtResource("11_pvkg6")
 texture_filter = 4
 
-[sub_resource type="Curve3D" id="Curve3D_y7kpu"]
+[sub_resource type="Curve3D" id="Curve3D_7h6ax"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0.04449463, 0, -15.999939, -12.000002, 0, 0, -0.55548096, 0.25, -4.3699646, -0.5751953, 0.25, -9.369934, -11.398411, 0.25, 9.44899),
 "tilts": PackedFloat32Array(0, -2.4386518)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_a4ddl"]
+[sub_resource type="Curve3D" id="Curve3D_y7kpu"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0.04449463, 0, -15.999939, 12.000002, 0, 0, -0.55548096, 0.25, -4.3699646, -0.5751953, 0.25, -9.369934, 12.6010475, 0.25, 9.287643),
 "tilts": PackedFloat32Array(0, -2.4387524)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_x6w3k"]
+[sub_resource type="Curve3D" id="Curve3D_a4ddl"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0.04449463, 0, -15.999939, 0, 0, 0, -0.55548096, 0.25, -4.3699646, -0.5751953, 0.25, -9.369934, 0.60131836, 0.25, 9.368317),
 "tilts": PackedFloat32Array(0, -2.4387026)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_x1gnv"]
+[sub_resource type="Curve3D" id="Curve3D_x6w3k"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 0.057932608, -12, 0, 0, 1.8177354, 0, -19.39651, 0.9206543, 0, -20.482147, -14.718891, 0, 19.195028),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_oxlis"]
+[sub_resource type="Curve3D" id="Curve3D_x1gnv"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 31.942072, 12, 0, 0, -0.8846801, 0, 9.440156, 0.9206543, 0, -20.482147, 9.176411, 0, 21.434366),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_5wqg6"]
+[sub_resource type="Curve3D" id="Curve3D_oxlis"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 16.000002, 0, 0, 0, 0.46652767, 0, -4.9781766, 0.9206543, 0, -20.482147, -2.7712402, 0, 20.314697),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_5cxnc"]
+[sub_resource type="Curve3D" id="Curve3D_5wqg6"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 8.43212, -11.999998, 0, 0, 6.2934136, 0, -2.7136495, -15.273621, 0, -19.4841, -18.515057, 0, 9.559159),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_t4l24"]
+[sub_resource type="Curve3D" id="Curve3D_5cxnc"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 6.7633924, 11.999998, 0, 0, 23.091312, 0, -9.956715, -15.273621, 0, -19.4841, -9.012286, 0, 31.597702),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_0ogqk"]
+[sub_resource type="Curve3D" id="Curve3D_t4l24"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 7.5977564, 0, 0, 0, 14.692363, 0, -6.335182, -15.273621, 0, -19.4841, -13.763672, 0, 20.57843),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_kgknl"]
+[sub_resource type="Curve3D" id="Curve3D_0ogqk"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 16.654081, -12, 0, 0, -9.3593235, 0, -9.543202, -19.766357, 0, -22.537354, -1.4036608, 0, 37.511135),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_ibpty"]
+[sub_resource type="Curve3D" id="Curve3D_kgknl"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 15.345941, 12, 0, 0, -3.5396667, 0, -3.609209, -19.766357, 0, -22.537354, 15.731175, 0, 20.706455),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_4h6qj"]
+[sub_resource type="Curve3D" id="Curve3D_ibpty"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 16.000011, 0, 0, 0, -6.4494953, 0, -6.5762057, -19.766357, 0, -22.537354, 7.1637573, 0, 29.108795),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_whdav"]
+[sub_resource type="Curve3D" id="Curve3D_4h6qj"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 5.926729e-07, 0, 21.21259, -12.000002, 0, -3.3527613e-07, 3.4563496, 0, -1.8701571, -37.119568, 0, -8.330627, -13.398405, 0, 26.703957),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_udx41"]
+[sub_resource type="Curve3D" id="Curve3D_whdav"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 4.1544112e-07, 0, 14.869217, 12.000002, 0, 3.3527613e-07, 25.008858, 0, -13.531759, -37.119568, 0, -8.330627, -1.9772048, 0, 47.812157),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_emu8c"]
+[sub_resource type="Curve3D" id="Curve3D_udx41"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 5.04057e-07, 0, 18.040903, 0, 0, 0, 14.232603, 0, -7.7009583, -37.119568, 0, -8.330627, -7.687805, 0, 37.258057),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_6lq47"]
+[sub_resource type="Curve3D" id="Curve3D_emu8c"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 11.027318, -12, 0, 0, -23.620975, 0, -23.728691, -29.038269, 0, -18.080322, -0.2569437, 0, 41.663803),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_dhvxm"]
+[sub_resource type="Curve3D" id="Curve3D_6lq47"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 24.833218, 12, 0, 0, -1.6785339, 0, -1.6861883, -29.038269, 0, -18.080322, 16.752182, 0, 24.731888),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_yucqr"]
+[sub_resource type="Curve3D" id="Curve3D_dhvxm"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 17.930267, 0, 0, 0, -12.649755, 0, -12.707439, -29.038269, 0, -18.080322, 8.24762, 0, 33.197845),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_i2g37"]
+[sub_resource type="Curve3D" id="Curve3D_yucqr"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, -25.454878, -12, 0, 0, -0.6370961, 0, -58.315475, -19.741089, 0, -22.473755, -13.156876, 0, 30.021564),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_nn4in"]
+[sub_resource type="Curve3D" id="Curve3D_i2g37"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 57.454884, 12, 0, 0, 0.2875171, 0, 26.317375, -19.741089, 0, -22.473755, 10.84169, 0, 29.75938),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_eiesv"]
+[sub_resource type="Curve3D" id="Curve3D_nn4in"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 16.000002, 0, 0, 0, -0.17478949, 0, -15.99905, -19.741089, 0, -22.473755, -1.1575928, 0, 29.890472),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_5y7ao"]
+[sub_resource type="Curve3D" id="Curve3D_eiesv"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 10.937413, -12, 0, 0, -5.8667903, 0, -7.527119, -9.720825, 0, -22.689636, -1.9963646, 0, 30.904375),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_7hvei"]
+[sub_resource type="Curve3D" id="Curve3D_5y7ao"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 7.0514045, 12, 0, 0, -3.3264427, 0, -4.2678413, -9.720825, 0, -22.689636, 16.93301, 0, 16.150434),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_i66y0"]
+[sub_resource type="Curve3D" id="Curve3D_7hvei"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 8.994409, 0, 0, 0, -4.5966167, 0, -5.8974805, -9.720825, 0, -22.689636, 7.4683228, 0, 23.527405),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_2ay7t"]
+[sub_resource type="Curve3D" id="Curve3D_i66y0"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 8.493381, -12.000002, 0, 0, 9.302959, 0, -1.3363287, -17.973328, 0, -33.409607, -34.268246, 0, 7.5887785),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_d5rj0"]
+[sub_resource type="Curve3D" id="Curve3D_2ay7t"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 36.997322, 12.000002, 0, 0, 5.544562, 0, -0.7964516, -17.973328, 0, -33.409607, -30.855778, 0, 31.344936),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_jp5v4"]
+[sub_resource type="Curve3D" id="Curve3D_d5rj0"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 22.745352, 0, 0, 0, 7.4237604, 0, -1.0663902, -17.973328, 0, -33.409607, -32.56201, 0, 19.466858),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_ls3o1"]
+[sub_resource type="Curve3D" id="Curve3D_jp5v4"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11804199, -0.12613839, 15.999054, -12, 4.3655746e-11, 0, 0.65527344, 0.1812275, -1.1180725, 0.6867676, 0.1812275, 6.8818665, 12.73678, 0.23436365, 6.739138),
 "tilts": PackedFloat32Array(-0.007883737, 0.38368732)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_smo70"]
+[sub_resource type="Curve3D" id="Curve3D_ls3o1"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11804199, -0.12613839, 15.999054, 12, -4.3655746e-11, 0, 0.65527344, 0.1812275, -1.1180725, 0.6867676, 0.1812275, 6.8818665, -11.2616825, 0.23650542, 7.010801),
 "tilts": PackedFloat32Array(-0.007883737, -0.18591078)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_4hi6c"]
+[sub_resource type="Curve3D" id="Curve3D_smo70"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11804199, -0.12613839, 15.999054, 0, 0, 0, 0.65527344, 0.1812275, -1.1180725, 0.6867676, 0.1812275, 6.8818665, 0.7375488, 0.23543453, 6.8749695),
 "tilts": PackedFloat32Array(-0.007883737, 0.25729567)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_0yvxw"]
+[sub_resource type="Curve3D" id="Curve3D_4hi6c"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 16.132545, -12.000002, 7.903834e-16, 0, 5.4285874e-06, 0.038746223, -4.914604, -0.19708252, -0.16562802, 26.712006, -11.999939, -0.16562791, 26.712694),
 "tilts": PackedFloat32Array(6.586528e-17, 2.8560976e-08)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_v0061"]
+[sub_resource type="Curve3D" id="Curve3D_0yvxw"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 15.867474, 12.000002, -7.903834e-16, 0, 5.6168687e-06, 0.04009007, -5.0850587, -0.19708252, -0.16562802, 26.712006, 12.000061, -0.16562812, 26.71272),
 "tilts": PackedFloat32Array(6.586528e-17, 2.6038789e-08)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_dpvtx"]
+[sub_resource type="Curve3D" id="Curve3D_v0061"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 16.00001, 0, 0, 0, 5.5227283e-06, 0.039418146, -4.999831, -0.19708252, -0.16562802, 26.712006, 6.1035156e-05, -0.16562802, 26.712708),
 "tilts": PackedFloat32Array(6.586528e-17, 2.6894545e-08)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_m8kd6"]
+[sub_resource type="Curve3D" id="Curve3D_dpvtx"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 2.527597e-07, -4.9367124e-08, 13.569934, -12.000002, 3.3527613e-08, -2.2351742e-07, 3.3825629, -0.050377667, 0.08252913, 26.593994, 0.074409604, 16.322662, -16.470987, 0.71601003, 14.308701),
 "tilts": PackedFloat32Array(7.793959e-09, -0.11134139)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_wktpq"]
+[sub_resource type="Curve3D" id="Curve3D_m8kd6"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 4.7732107e-07, -9.3226774e-08, 25.625984, 12.000002, -3.3527613e-08, 2.2351742e-07, 11.719773, -0.1745466, 0.28594375, 26.593994, 0.074409604, 16.322662, -17.046408, 1.3710165, 38.292862),
 "tilts": PackedFloat32Array(7.793959e-09, -0.016778847)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_mmjc8"]
+[sub_resource type="Curve3D" id="Curve3D_wktpq"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 3.6504036e-07, -7.1296945e-08, 19.597958, 0, 0, 0, 7.5511684, -0.11246214, 0.18423644, 26.593994, 0.074409604, 16.322662, -16.758698, 1.0435133, 26.300781),
 "tilts": PackedFloat32Array(7.793959e-09, -0.030049952)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_xh2aq"]
+[sub_resource type="Curve3D" id="Curve3D_mmjc8"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 28.94776, -12, 0, 0, -0.016768737, 0.03452766, -1.2818444, 50.114685, -0.09000921, 0.2796936, -12.474731, -0.27652568, 50.265144),
 "tilts": PackedFloat32Array(0, 0.015004844)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_660yo"]
+[sub_resource type="Curve3D" id="Curve3D_xh2aq"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 29.24434, 12, 0, 0, -0.009787529, 0.020153007, -0.7481833, 50.114685, -0.09000921, 0.2796936, 11.520447, 0.09650725, 49.961296),
 "tilts": PackedFloat32Array(0, 0.015103085)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_4a300"]
+[sub_resource type="Curve3D" id="Curve3D_660yo"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 29.09605, 0, 0, 0, -0.013278132, 0.027340334, -1.0150138, 50.114685, -0.09000921, 0.2796936, -0.47714233, -0.09000921, 50.11322),
 "tilts": PackedFloat32Array(0, 0.015053386)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_gyn7v"]
+[sub_resource type="Curve3D" id="Curve3D_4a300"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 31.010399, -12, 0, 0, 2.3345995, 0, -32.175705, -67.216125, -7.6293945e-06, -0.9801636, -14.773712, -7.6293945e-06, 66.296326),
 "tilts": PackedFloat32Array(0, 1.2171887e-08)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_pci2k"]
+[sub_resource type="Curve3D" id="Curve3D_gyn7v"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 32.69608, 12, 0, 0, 2.275687, 0, -31.363764, -67.216125, -7.6293945e-06, -0.9801636, 9.163361, -7.6293945e-06, 68.03314),
 "tilts": PackedFloat32Array(0, 1.1608536e-08)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_ij01o"]
+[sub_resource type="Curve3D" id="Curve3D_pci2k"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 31.85324, 0, 0, 0, 2.305143, 0, -31.769735, -67.216125, -7.6293945e-06, -0.9801636, -2.8051758, -7.6293945e-06, 67.164734),
 "tilts": PackedFloat32Array(0, 1.1930838e-08)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_sfwv2"]
+[sub_resource type="Curve3D" id="Curve3D_ij01o"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -8, 0, -0.0017700195, -12, -3.1019273e-25, 0, 6.8029175, 7.6293945e-06, -0.98443604, -25.038574, 7.6293945e-06, -0.1194458, 12.109456, 7.6293945e-06, -25.36715),
 "tilts": PackedFloat32Array(0, -4.530578e-06)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_463k5"]
+[sub_resource type="Curve3D" id="Curve3D_sfwv2"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -8, 0, -0.0017700195, 12, 3.1019273e-25, 0, 6.8029175, 7.6293945e-06, -0.98443604, -25.038574, 7.6293945e-06, -0.1194458, -11.881551, 7.6293945e-06, -24.710121),
 "tilts": PackedFloat32Array(0, -1.3594329e-06)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_iyu83"]
+[sub_resource type="Curve3D" id="Curve3D_463k5"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -8, 0, -0.0017700195, 0, 0, 0, 6.8029175, 7.6293945e-06, -0.98443604, -25.038574, 7.6293945e-06, -0.1194458, 0.11395264, 7.6293945e-06, -25.038635),
 "tilts": PackedFloat32Array(0, -2.281481e-06)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_eqhci"]
+[sub_resource type="Curve3D" id="Curve3D_iyu83"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11578369, 0, 4.998657, -12, 0, 0, 0.7178345, 0, -9.396362, -0.07171631, 0, 24.684082, -11.499939, 0, 24.6792),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_ajuuv"]
+[sub_resource type="Curve3D" id="Curve3D_eqhci"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11578369, 0, 4.998657, 12, 0, 0, 0.7178345, 0, -9.396362, -0.07171631, 0, 24.684082, 12.500061, 0, 24.6792),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_r58c1"]
+[sub_resource type="Curve3D" id="Curve3D_ajuuv"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11578369, 0, 4.998657, 0, 0, 0, 0.7178345, 0, -9.396362, -0.07171631, 0, 24.684082, 0.50006104, 0, 24.6792),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_wyckw"]
+[sub_resource type="Curve3D" id="Curve3D_r58c1"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 4.7197003, -12, 0, 0, 27.995186, 0, -0.98766106, -57.078796, -0.00024414063, 13.786011, -57.167294, -0.00024414063, 3.1117086),
 "tilts": PackedFloat32Array(0, 1.2103818e-05)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_jago7"]
+[sub_resource type="Curve3D" id="Curve3D_wyckw"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 32.62003, 12, 0, 0, 25.766813, 0, -0.9090448, -57.078796, -0.00024414063, 13.786011, -56.32111, -0.00024414063, 27.096786),
 "tilts": PackedFloat32Array(0, 4.860527e-06)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_5ls82"]
+[sub_resource type="Curve3D" id="Curve3D_jago7"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 18.669865, 0, 0, 0, 26.880999, 0, -0.94835293, -57.078796, -0.00024414063, 13.786011, -56.7442, -0.00024414063, 15.104248),
 "tilts": PackedFloat32Array(0, 6.734742e-06)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_okah6"]
+[sub_resource type="Curve3D" id="Curve3D_5ls82"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -4.1820505e-07, -8.712605e-09, 9.355087, -12, 1.6763806e-08, 5.364418e-07, -3.7633698, -0.18538216, -16.368944, -0.75213623, -1.1040066, 27.69635, -5.5688114, -1.0307107, 29.722975),
 "tilts": PackedFloat32Array(2.3283067e-09, 0.0073268116)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_rbh0l"]
+[sub_resource type="Curve3D" id="Curve3D_okah6"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -4.8356654e-08, -1.0074303e-09, 1.0817199, 12, -1.6763806e-08, -5.364418e-07, -5.1086736, -0.25165132, -22.220402, -0.75213623, -1.1040066, 27.69635, 17.815516, -0.5694366, 24.341478),
 "tilts": PackedFloat32Array(2.328307e-09, -0.0029715886)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_nal0m"]
+[sub_resource type="Curve3D" id="Curve3D_rbh0l"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -2.3328084e-07, -4.8600177e-09, 5.218404, 0, 0, 0, -4.436022, -0.21851674, -19.294672, -0.75213623, -1.1040066, 27.69635, 6.123352, -0.8000736, 27.032227),
 "tilts": PackedFloat32Array(2.3283067e-09, 0.006194006)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_mwlmy"]
+[sub_resource type="Curve3D" id="Curve3D_nal0m"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -1.0495243e-06, -3.2797633e-08, 17.608097, -12, 0, 7.1525574e-07, -5.319589, -0.11297146, -9.214865, -23.731628, -6.645993, 47.955627, 6.321026, -6.1794567, 56.9004),
 "tilts": PackedFloat32Array(3.7252903e-09, -0.034298744)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_vppsu"]
+[sub_resource type="Curve3D" id="Curve3D_mwlmy"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -7.213675e-07, -2.2542734e-08, 12.10254, 12, 0, -7.1525574e-07, -3.8753722, -0.082300805, -6.713118, -23.731628, -6.645993, 47.955627, 27.10445, -5.979101, 44.900017),
 "tilts": PackedFloat32Array(3.7252899e-09, -0.040770363)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_y6c4p"]
+[sub_resource type="Curve3D" id="Curve3D_vppsu"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -8.854459e-07, -2.7670184e-08, 14.855319, 0, 0, 0, -4.5974803, -0.09763613, -7.963991, -23.731628, -6.645993, 47.955627, 16.712738, -6.079279, 50.900208),
 "tilts": PackedFloat32Array(3.7252903e-09, -0.03726352)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_qukl4"]
+[sub_resource type="Curve3D" id="Curve3D_y6c4p"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 11.26405, -12, 2.6645353e-15, 0, -13.2831135, 4.3842842e-08, -20.06907, -33.695984, 0, 14.713196, -2.750204, 0.40945268, 42.66542),
 "tilts": PackedFloat32Array(2.220446e-16, -0.027724633)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_05twp"]
+[sub_resource type="Curve3D" id="Curve3D_qukl4"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 15.412031, 12, -2.6645353e-15, 0, -6.662755, 2.199139e-08, -10.066564, -33.695984, 0, 14.713196, 17.251547, -0.40945077, 29.426865),
 "tilts": PackedFloat32Array(2.220446e-16, -0.0448057)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_r4ej8"]
+[sub_resource type="Curve3D" id="Curve3D_05twp"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 13.33804, 0, 0, 0, -9.972934, 3.2917114e-08, -15.067817, -33.695984, 0, 14.713196, 7.2506714, 9.536743e-07, 36.046143),
 "tilts": PackedFloat32Array(2.220446e-16, -0.034127582)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_punjn"]
+[sub_resource type="Curve3D" id="Curve3D_r4ej8"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 2.562258e-07, 0, 4.298755, -12.000002, -2.2351742e-08, -7.1525574e-07, 3.564316, -0.11404709, -3.8943985, -21.453491, 0, 16.677307, -16.711414, 0.534715, 17.90451),
 "tilts": PackedFloat32Array(-1.8626454e-09, -0.04455372)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_wyqag"]
+[sub_resource type="Curve3D" id="Curve3D_punjn"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 3.4091966e-07, 0, 5.719682, 12.000002, 2.2351742e-08, 7.1525574e-07, 8.781821, -0.2809911, -9.595083, -21.453491, 0, 16.677307, 0.97966385, -0.03134471, 34.1127),
 "tilts": PackedFloat32Array(-1.8626454e-09, -0.025401322)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_bop2h"]
+[sub_resource type="Curve3D" id="Curve3D_wyqag"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 2.9857273e-07, 0, 5.0092187, 0, 0, 0, 6.1730685, -0.1975191, -6.744741, -21.453491, 0, 16.677307, -7.8658752, 0.25168514, 26.008606),
 "tilts": PackedFloat32Array(-1.8626454e-09, -0.03198602)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_022se"]
+[sub_resource type="Curve3D" id="Curve3D_bop2h"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 5.0734236e-08, 0, 3.4047163, -11.999996, 8.381903e-08, -1.7881393e-07, 1.7594445, 0.21260838, -2.6013675, -16.406311, 6.000122, 38.57184, -25.261906, 3.0847573, 32.72796),
 "tilts": PackedFloat32Array(6.98492e-09, -0.08187109)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_dhvic"]
+[sub_resource type="Curve3D" id="Curve3D_022se"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 1.2577493e-07, 0, 8.440611, 11.999996, -8.381903e-08, 1.7881393e-07, 3.3948226, 0.4102248, -5.0193005, -16.406311, 6.000122, 38.57184, -5.36224, 1.758825, 46.078804),
 "tilts": PackedFloat32Array(6.98492e-09, -0.06554856)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_ruwj7"]
+[sub_resource type="Curve3D" id="Curve3D_dhvic"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 8.825459e-08, 0, 5.9226637, 0, 0, 0, 2.5771337, 0.3114166, -3.810334, -16.406311, 6.000122, 38.57184, -15.312073, 2.421791, 39.40338),
 "tilts": PackedFloat32Array(6.98492e-09, -0.07281607)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_44yky"]
+[sub_resource type="Curve3D" id="Curve3D_ruwj7"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 5.2937226, -12, 0, 0, 0.217638, -0.8714205, -8.279898, 0.025024414, 1.75, 31.502075, -11.964718, 1.3348355, 31.230618),
 "tilts": PackedFloat32Array(0, 0.03245914)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_cad8g"]
+[sub_resource type="Curve3D" id="Curve3D_44yky"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 4.7062774, 12, 0, 0, 0.23981327, -0.96021, -9.123541, 0.025024414, 1.75, 31.502075, 12.014767, 2.1651645, 31.773533),
 "tilts": PackedFloat32Array(0, 0.031993154)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_8dg3l"]
+[sub_resource type="Curve3D" id="Curve3D_cad8g"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 5, 0, 0, 0, 0.22872563, -0.91581523, -8.701719, 0.025024414, 1.75, 31.502075, 0.025024414, 1.75, 31.502075),
 "tilts": PackedFloat32Array(0, 0.03222478)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_58ha2"]
+[sub_resource type="Curve3D" id="Curve3D_8dg3l"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 11.714025, -12.000002, 0, 0, 0.07225293, 0, -8.851563, -23.014465, 0.25012016, -0.04333496, -12.321501, 0.25012016, 22.914257),
 "tilts": PackedFloat32Array(0, -0.00012105423)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_cdtsq"]
+[sub_resource type="Curve3D" id="Curve3D_58ha2"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 13.486921, 12.000002, 0, 0, 0.05834643, 0, -7.147906, -23.014465, 0.25012016, -0.04333496, 11.677702, 0.25012016, 23.110157),
 "tilts": PackedFloat32Array(0, -0.0001228862)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_j3ken"]
+[sub_resource type="Curve3D" id="Curve3D_cdtsq"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 12.600473, 0, 0, 0, 0.06529968, 0, -7.999735, -23.014465, 0.25012016, -0.04333496, -0.3218994, 0.25012016, 23.012207),
 "tilts": PackedFloat32Array(0, -0.00012164235)
@@ -641,84 +640,84 @@ point_count = 2
 [sub_resource type="Resource" id="Resource_h88f7"]
 script = ExtResource("49_y7kpu")
 
-[sub_resource type="Curve3D" id="Curve3D_s5tfl"]
+[sub_resource type="Curve3D" id="Curve3D_j3ken"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 5.0356207, -12, 0, 0, 1.1318064e-13, 0, -7.9643793, 0.93640137, -0.00012207031, 170.72806, -11.063599, -0.00012207031, 170.72806),
 "tilts": PackedFloat32Array(0, 7.683878e-14)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_1nt7f"]
+[sub_resource type="Curve3D" id="Curve3D_s5tfl"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 4.9643793, 12, 0, 0, 1.1419304e-13, 0, -8.035621, 0.93640137, -0.00012207031, 170.72806, 12.936401, -0.00012207031, 170.72806),
 "tilts": PackedFloat32Array(0, 1.7759728e-13)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_rhwn7"]
+[sub_resource type="Curve3D" id="Curve3D_1nt7f"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 5, 0, 0, 0, 1.1368684e-13, 0, -8, 0.93640137, -0.00012207031, 170.72806, 0.93640137, -0.00012207031, 170.72806),
 "tilts": PackedFloat32Array(0, 5.8161917e-13)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_mmlbl"]
+[sub_resource type="Curve3D" id="Curve3D_rhwn7"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 19.55136, -12.000002, 0, 0, -36.8639, 0, -0.5723612, -48.86084, 0, 19.155685, 18.208544, 0, 61.150898),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_la3vg"]
+[sub_resource type="Curve3D" id="Curve3D_mmlbl"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 21.485327, 12.000002, 0, 0, -9.099925, 0, -0.14128849, -48.86084, 0, 19.155685, 18.58113, 0, 37.15379),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_g4kdb"]
+[sub_resource type="Curve3D" id="Curve3D_la3vg"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 20.518343, 0, 0, 0, -22.98191, 0, -0.35682485, -48.86084, 0, 19.155685, 18.394836, 0, 49.152344),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_ow6x7"]
+[sub_resource type="Curve3D" id="Curve3D_g4kdb"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 0.7049773, -12.000002, 0, 0, -1.2884146, 0, -20.135296, -81.73981, 0, -14.562881, -22.56868, 0, 83.11468),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_0c48d"]
+[sub_resource type="Curve3D" id="Curve3D_ow6x7"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 2.969487, 12.000002, 0, 0, -1.094243, 0, -17.100792, -81.73981, 0, -14.562881, 1.3823395, 0, 81.5821),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_c0ooj"]
+[sub_resource type="Curve3D" id="Curve3D_0c48d"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 1.8372322, 0, 0, 0, -1.1913289, 0, -18.618044, -81.73981, 0, -14.562881, -10.59317, 0, 82.34839),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_pdy6h"]
+[sub_resource type="Curve3D" id="Curve3D_c0ooj"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 8.447406, -11.999999, 0, 0, 4.837984, 0, -1.1412662, -33.226196, 0, 11.226105, -31.584246, 0, 8.292793),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_thlma"]
+[sub_resource type="Curve3D" id="Curve3D_pdy6h"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 34.648952, 11.999999, 0, 0, 1.0764918, 0, -0.25394127, -33.226196, 0, 11.226105, -26.073957, 0, 31.651665),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_2okop"]
+[sub_resource type="Curve3D" id="Curve3D_thlma"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 21.54818, 0, 0, 0, 2.9572377, 0, -0.6976037, -33.226196, 0, 11.226105, -28.829102, 0, 19.972229),
 "tilts": PackedFloat32Array(0, 0)
@@ -746,7 +745,7 @@ _data = {
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_wtb5w"]
+[sub_resource type="Curve3D" id="Curve3D_2okop"]
 resource_local_to_scene = true
 closed = true
 _data = {
@@ -762,6 +761,14 @@ _data = {
 "tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0)
 }
 point_count = 9
+
+[sub_resource type="Curve3D" id="Curve3D_wtb5w"]
+resource_local_to_scene = true
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0, -8.92865, 0, 0.52874756, 8.92865, 0, -0.52874756, 7.5, 0, -5.5, -21.54486, 0, 22.016861, 31.014343, 0, -22.431305, 128.68286, -0.00012207031, -19.054504, -9.631897, 0, 9.272202, 21.102783, 0, -6.632431, 145.2572, 0, -107.28392, -46.555115, 0, 0.6806793, 40.686005, 0, -2.6257935, 245.79895, -0.00012207031, -62.154755, -9.96225, 0, 12.617401, 2.703827, 0, -12.928055, 298.59647, -0.00012207031, -171.1063, -2.5209656, 0, 28.45018, 2.5209656, 0, -28.45018, 355.38525, -0.00012207031, -252.50856, 23.460876, 0, 2.9641724, -23.460876, 0, -2.9641724, 272.9001, -0.00012207031, -312.0325, 31.641846, 0, -0.7863159, -31.641846, 0, 0.7863159, 27.657104, -0.00012207031, -321.20844, 0, 0, 0, 0, 0, 0, -39.384277, 0, -275.5528, 0, 0, 0, -9.48407, 0.003791809, 38.231415, -54.979187, 8.794067, -246.3847, -14.941711, 0, -14.931335, 14.941711, 0, 14.931335, -32.368835, 4, -156.4422, -4.3065186, 0, -7.504593, 4.3065186, 0, 7.504593, 59.704956, -0.00012207031, -111.84172, 15.05426, 0, 2.2224426, -15.05426, 0, -2.2224426, 51.810608, -0.00012207031, -83.06822, 21.326172, 0, 14.021759, -27.659912, 0, -16.197403, 9.701782, -0.00012207031, -121.675674, 9.928467, 0, -15.177902, -53.569458, 0, 85.03296, -68.497314, -0.00012207031, -112.512955, -47.68042, 0, -7.2508087, 0, 0, 0, -24.953064, 0, -7.7634125),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+}
+point_count = 17
 
 [node name="Stunt Track 01" type="Node3D" unique_id=497611854 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug", "grid_markers")]
 script = ExtResource("1_craaw")
@@ -1910,9 +1917,623 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -832, 0.024997795, 608)
 
 [node name="_Trees_" type="Node3D" parent="." unique_id=1255388530]
 
-[node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="_Trees_" unique_id=1904970085]
+[node name="IslandTrackTrees" type="Node3D" parent="_Trees_" unique_id=779401878]
 
-[node name="tree" parent="_Trees_" unique_id=1744448138 instance=ExtResource("24_rl138")]
+[node name="TreeBundle" parent="_Trees_/IslandTrackTrees" unique_id=1880052268 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -895.9591, 256, 21.522446)
+size = 128
+density = 2
+snapped_heights = PackedFloat32Array(-246.93402, -234.58319, -224.97554, -220.68681, -220.6553, -226.57306, -231.74356, -235.06339, -245.19536, -237.24959, -224.36635, -220.7537, -221.57518, -226.13066, -234.99698, -235.0625, -246.78552, -236.9185, -232.42905, -228.66707, -229.4244, -235.19717, -236.52637, -235.0466, -244.29913, -242.88322, -237.06166, -239.8435, -240.18184, -238.15096, -235.57616, -235.01033, -248.22206, -243.36908, -242.74086, -242.4927, -243.75357, -242.21515, -237.32066, -235.74751, -254.22891, -251.14375, -244.86446, -244.16862, -245.45807, -246.14684, -243.1183, -247.1892, -255.00058, -252.72345, -248.15341, -245.75407, -245.83252, -247.25156, -249.01611, -249.03882, -255.70679, -251.99138, -245.89474, -245.7443, -245.95206, -247.29637, -248.08089, -249.10233)
+
+[node name="TreeBundle2" parent="_Trees_/IslandTrackTrees" unique_id=1433287146 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -927.2919, 256, 158.13316)
+size = 128
+density = 2
+layout_seed = 6
+snapped_heights = PackedFloat32Array(-241.5582, -243.66325, -248.2898, -252.08766, -252.18083, -251.20445, -255.0778, -255.70125, -239.72081, -236.19888, -238.50635, -242.00682, -249.71051, -247.04994, -251.78131, -255.27066, -234.96109, -235.0001, -235.68806, -241.05432, -245.83652, -245.91364, -248.48744, -253.6413, -235.1075, -235.10278, -237.88087, -242.59647, -245.91678, -245.91708, -246.717, -254.02286, -234.98453, -235.06316, -235.78882, -242.04887, -245.82407, -245.87479, -248.00981, -253.45161, -235.0858, -235.09761, -235.69771, -241.8607, -245.85356, -245.91765, -247.32562, -251.76454, -239.05537, -237.72997, -237.65453, -247.57564, -247.45012, -246.86433, -253.44986, -254.80847, -244.1377, -248.95265, -255.29565, -254.52597, -251.7264, -252.4319, -254.75882, -255.60074)
+
+[node name="TreeBundle3" parent="_Trees_/IslandTrackTrees" unique_id=2075449135 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -831.2236, 256, 118.27137)
+size = 48
+density = 2
+snapped_heights = PackedFloat32Array(-249.38701, -253.57584, -255.59026, -251.26555, -253.86276, -255.68463, -251.63147, -255.70978, -255.72719)
+
+[node name="TreeBundle4" parent="_Trees_/IslandTrackTrees" unique_id=1555756303 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -984.754, 256, 60.61911)
+size = 48
+density = 2
+layout_seed = 5
+snapped_heights = PackedFloat32Array(-248.16144, -247.97345, -248.94624, -243.91016, -244.77611, -243.55676, -235.48502, -237.11873, -238.49284)
+
+[node name="TreeBundle5" parent="_Trees_/IslandTrackTrees" unique_id=443016519 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -703.38586, 256, 44.952744)
+size = 96
+density = 2
+layout_seed = -1
+snapped_heights = PackedFloat32Array(-255.76329, -255.67049, -255.33153, -253.78299, -255.05008, -255.6448, -255.61264, -255.67227, -255.62138, -255.7605, -255.59795, -255.72733, -255.63496, -255.6521, -255.72182, -255.64407, -255.69853, -255.76094, -255.60797, -255.6548, -255.642, -255.7213, -255.71292, -255.6061, -255.67839, -255.58968, -255.65564, -255.70195, -255.64545, -255.62329, -255.6399, -255.74344, -255.59036, -255.68803, -255.60443, -255.67828)
+
+[node name="TreeBundle6" parent="_Trees_/IslandTrackTrees" unique_id=279217816 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -602.15576, 256, 41.567123)
+size = 96
+density = 2
+snapped_heights = PackedFloat32Array(-255.73512, -255.67352, -255.59026, -255.65604, -255.62453, -255.68463, -255.59982, -255.70978, -255.72719, -255.6431, -255.7239, -255.72293, -255.75488, -255.59563, -255.64336, -255.7089, -255.73106, -255.67992, -255.6377, -255.63933, -255.66643, -255.69821, -255.7377, -255.69298, -255.68112, -255.718, -255.73438, -255.62045, -255.69362, -255.66547, -255.66515, -255.65672, -255.69398, -255.60141, -255.6792, -255.60971)
+
+[node name="TreeBundle7" parent="_Trees_/IslandTrackTrees" unique_id=759457022 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -521.9165, 256, 25.993279)
+size = 48
+density = 2
+snapped_heights = PackedFloat32Array(-255.73512, -255.67351, -255.59026, -255.65604, -255.62453, -255.68463, -255.59981, -255.70976, -255.72717)
+
+[node name="TreeBundle8" parent="_Trees_/IslandTrackTrees" unique_id=578783922 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -547.30865, 256, 110.97238)
+size = 48
+density = 2
+layout_seed = 5
+snapped_heights = PackedFloat32Array(-255.592, -255.75255, -255.73122, -255.7238, -255.61948, -255.6205, -255.59552, -255.68591, -255.70753)
+
+[node name="TreeBundle9" parent="_Trees_/IslandTrackTrees" unique_id=37877625 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -662.7584, 256, 106.57108)
+size = 32
+density = 2
+layout_seed = 5
+snapped_heights = PackedFloat32Array(-255.59198, -255.75253, -255.7312, -255.72379)
+
+[node name="TreeBundle10" parent="_Trees_/IslandTrackTrees" unique_id=404329920 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -588.2748, 256, 102.16977)
+size = 32
+density = 2
+layout_seed = 5
+snapped_heights = PackedFloat32Array(-255.59198, -255.75253, -255.7312, -255.72379)
+
+[node name="TreeBundle11" parent="_Trees_/IslandTrackTrees" unique_id=666307991 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -527.6722, 256, 62.896553)
+size = 32
+density = 2
+layout_seed = 10
+snapped_heights = PackedFloat32Array(-255.7626, -255.63635, -255.71512, -255.71358)
+
+[node name="TreeBundle12" parent="_Trees_/IslandTrackTrees" unique_id=274993597 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -489.07608, 256, 21.930542)
+size = 32
+density = 2
+layout_seed = 15
+snapped_heights = PackedFloat32Array(-255.6589, -255.64572, -255.72755, -255.63506)
+
+[node name="TreeBundle13" parent="_Trees_/IslandTrackTrees" unique_id=200606776 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -432.76514, 256, -47.732452)
+size = 32
+density = 2
+layout_seed = 6
+snapped_heights = PackedFloat32Array(-255.6125, -255.63835, -255.7125, -255.5926)
+
+[node name="TreeBundle14" parent="_Trees_/IslandTrackTrees" unique_id=1557590115 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -404.40582, 256, -2.085909)
+size = 48
+density = 2
+layout_seed = -1
+snapped_heights = PackedFloat32Array(-255.76329, -255.6705, -255.72894, -255.63756, -255.62437, -255.6448, -255.61264, -255.67227, -255.62138)
+
+[node name="TreeBundle15" parent="_Trees_/IslandTrackTrees" unique_id=38375093 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-0.039157793, 0, 0.99923307, 0, 1, 0, -0.99923307, 0, -0.039157793, -605.94366, 256, 182.18442)
+size = 48
+density = 2
+layout_seed = 7
+snapped_heights = PackedFloat32Array(-255.64668, -255.73026, -255.69995, -255.6183, -255.6693, -255.7077, -255.65642, -255.66112, -255.70372)
+
+[node name="TreeBundle16" parent="_Trees_/IslandTrackTrees" unique_id=2110726272 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-0.99778205, 0, 0.0665648, 0, 1, 0, -0.0665648, 0, -0.99778205, -569.24786, 256, 198.33685)
+size = 32
+density = 2
+snapped_heights = PackedFloat32Array(-255.73514, -255.67351, -255.59027, -255.65604)
+
+[node name="TreeBundle17" parent="_Trees_/IslandTrackTrees" unique_id=199589720 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-0.99778205, 0, 0.0665648, 0, 1, 0, -0.0665648, 0, -0.99778205, -531.14075, 256, 207.58922)
+size = 32
+density = 2
+layout_seed = 3
+snapped_heights = PackedFloat32Array(-255.72264, -255.68073, -255.70184, -255.74911)
+
+[node name="TreeBundle18" parent="_Trees_/IslandTrackTrees" unique_id=452988363 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(0.039946012, 0, 0.9992018, 0, 1, 0, -0.9992018, 0, 0.039946012, -463.7998, 256, 107.15836)
+size = 32
+density = 2
+layout_seed = 15
+snapped_heights = PackedFloat32Array(-255.6589, -255.64572, -255.72755, -255.63506)
+
+[node name="TreeBundle19" parent="_Trees_/IslandTrackTrees" unique_id=1069682775 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, -607.4633, 256, 254.91446)
+density = 2
+layout_seed = 6
+snapped_heights = PackedFloat32Array(-255.6125, -255.63835, -255.7125, -255.5926, -255.67545, -255.68974, -255.7324, -255.70125, -255.61035, -255.7291, -255.65857, -255.64224, -255.64304, -255.6284, -255.66632, -255.58897)
+
+[node name="TreeBundle25" parent="_Trees_/IslandTrackTrees" unique_id=722453137 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-0.34558257, 0, 0.9383882, 0, 1, 0, -0.9383882, 0, -0.34558257, -666.7751, 256, 271.76926)
+size = 48
+density = 2
+layout_seed = 6
+snapped_heights = PackedFloat32Array(-255.61249, -255.63834, -255.71248, -255.59259, -255.67543, -255.68973, -255.73239, -255.70123, -255.61035)
+
+[node name="TreeBundle26" parent="_Trees_/IslandTrackTrees" unique_id=56645015 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(0.9996838, 0, -0.02513948, 0, 1, 0, 0.02513948, 0, 0.9996838, -761.98584, 256, 270.7956)
+size = 32
+density = 2
+layout_seed = 6
+snapped_heights = PackedFloat32Array(-255.61249, -255.63834, -255.71248, -255.59259)
+
+[node name="TreeBundle27" parent="_Trees_/IslandTrackTrees" unique_id=1517373783 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(0.9996838, 0, -0.02513948, 0, 1, 0, 0.02513948, 0, 0.9996838, -738.356, 256, 271.83298)
+size = 32
+density = 2
+layout_seed = 11
+snapped_heights = PackedFloat32Array(-255.76126, -255.64873, -255.71213, -255.73352)
+
+[node name="TreeBundle28" parent="_Trees_/IslandTrackTrees" unique_id=1673576080 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(0.78934145, 0, -0.61395437, 0, 1, 0, 0.61395437, 0, 0.78934145, -707.0033, 256, 272.98566)
+size = 32
+density = 2
+layout_seed = 14
+snapped_heights = PackedFloat32Array(-255.67847, -255.69746, -255.72664, -255.63336)
+
+[node name="TreeBundle20" parent="_Trees_/IslandTrackTrees" unique_id=1030927975 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-0.50602573, 0, 0.86251825, 0, 1, 0, -0.86251825, 0, -0.50602573, -792.6385, 256, 197.30173)
+size = 48
+density = 1
+layout_seed = 35
+snapped_heights = PackedFloat32Array(-255.73465, -255.74039, -255.70569, -255.66393, -255.75037, -255.73973, -255.73294, -255.75044, -255.64217, -255.61143, -255.66348, -255.64514, -255.66518, -255.64339, -255.73889, -255.70824)
+
+[node name="TreeBundle21" parent="_Trees_/IslandTrackTrees" unique_id=757979830 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(0.16910681, 0, 0.98559767, 0, 1, 0, -0.98559767, 0, 0.16910681, -765.749, 256, 217.46892)
+size = 32
+density = 1
+layout_seed = 23
+snapped_heights = PackedFloat32Array(-255.64977, -255.72363, -255.65744, -255.67154)
+
+[node name="TreeBundle22" parent="_Trees_/IslandTrackTrees" unique_id=1378955155 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(0.6438116, 0, -0.76518404, 0, 1, 0, 0.76518404, 0, 0.6438116, -675.1885, 256, 210.76955)
+size = 32
+density = 1
+layout_seed = 23
+snapped_heights = PackedFloat32Array(-255.64975, -255.72363, -255.65742, -255.67154)
+
+[node name="TreeBundle23" parent="_Trees_/IslandTrackTrees" unique_id=1149131467 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(0.6438116, 0, -0.76518404, 0, 1, 0, 0.76518404, 0, 0.6438116, -744.0682, 256, 221.44244)
+size = 16
+density = 1
+layout_seed = 23
+snapped_heights = PackedFloat32Array(-255.64975)
+
+[node name="TreeBundle29" parent="_Trees_/IslandTrackTrees" unique_id=657816446 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(0.6438116, 0, -0.76518404, 0, 1, 0, 0.76518404, 0, 0.6438116, -818.4653, 256, 253.86955)
+size = 16
+density = 1
+layout_seed = 23
+snapped_heights = PackedFloat32Array(-255.64977)
+
+[node name="TreeBundle30" parent="_Trees_/IslandTrackTrees" unique_id=977276123 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(0.6438116, 0, -0.76518404, 0, 1, 0, 0.76518404, 0, 0.6438116, -826.67334, 256, 252.41678)
+size = 16
+density = 1
+layout_seed = 23
+snapped_heights = PackedFloat32Array(-255.64977)
+
+[node name="TreeBundle31" parent="_Trees_/IslandTrackTrees" unique_id=1545169834 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-0.019094229, 0, -0.99981767, 0, 1, 0, 0.99981767, 0, -0.019094229, -870.6541, 256, 230.75522)
+size = 32
+density = 1
+layout_seed = 23
+snapped_heights = PackedFloat32Array(-255.64977, -255.72365, -255.65744, -255.67155)
+
+[node name="TreeBundle32" parent="_Trees_/IslandTrackTrees" unique_id=687172498 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-0.27373877, 0, -0.96180403, 0, 1, 0, 0.96180403, 0, -0.27373877, -905.3496, 256, 232.02315)
+size = 32
+density = 1
+snapped_heights = PackedFloat32Array(-255.73514, -255.67352, -255.59027, -255.65605)
+
+[node name="TreeBundle34" parent="_Trees_/IslandTrackTrees" unique_id=1249629006 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-0.42693633, 0, -0.9042816, 0, 1, 0, 0.9042816, 0, -0.42693633, -911.7646, 256, 277.83167)
+size = 32
+density = 1
+snapped_heights = PackedFloat32Array(-255.73512, -255.67351, -255.59026, -255.65604)
+
+[node name="TreeBundle33" parent="_Trees_/IslandTrackTrees" unique_id=711570977 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(0.2940268, 0, 0.955797, 0, 1, 0, -0.955797, 0, 0.2940268, -987.3528, 256, 244.98793)
+density = 1
+layout_seed = 3
+snapped_heights = PackedFloat32Array(-255.72266, -255.68074, -255.70184, -255.7491, -255.68039, -255.64746, -255.65242, -255.71114, -255.62587, -255.76437, -255.68155, -255.66435, -255.75232, -255.60922, -255.73369, -255.71799, -255.62276, -255.71555, -255.60962, -255.73651, -255.7023, -255.66597, -255.68709, -255.64154, -255.62749)
+
+[node name="TreeBundle24" parent="_Trees_/IslandTrackTrees" unique_id=490263472 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(0.6438116, 0, -0.76518404, 0, 1, 0, 0.76518404, 0, 0.6438116, -716.9906, 256, 221.54126)
+size = 16
+density = 1
+layout_seed = 23
+snapped_heights = PackedFloat32Array(-255.64975)
+
+[node name="Treesoutskirtsandintown" type="Node3D" parent="_Trees_" unique_id=856899014]
+
+[node name="TreeBundle" parent="_Trees_/Treesoutskirtsandintown" unique_id=1943445954 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 182, 256, 84)
+size = 96
+density = 2
+snapped_heights = PackedFloat32Array(-251.29323, -242.18306, -244.20749, -233.79712, -238.00838, -238.64822, -251.1504, -236.25815, -227.09909, -222.60028, -218.93228, -215.00755, -242.04735, -235.53366, -224.26686, -218.13734, -218.15952, -202.28276, -250.89603, -237.74052, -226.811, -218.9338, -208.26033, -187.93245, -248.65857, -238.3214, -226.28276, -215.49281, -198.31424, -180.11449, -246.99696, -233.84653, -220.09218, -199.18233, -190.87218, -180.29309)
+
+[node name="TreeBundle2" parent="_Trees_/Treesoutskirtsandintown" unique_id=1394668872 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 182, 256, 184.5)
+size = 96
+density = 2
+layout_seed = 4
+snapped_heights = PackedFloat32Array(-229.92578, -234.65901, -230.44046, -233.18416, -233.90598, -206.38777, -223.74225, -220.0895, -212.56404, -192.72565, -189.86925, -182.51173, -197.41516, -197.94232, -186.83533, -188.62358, -178.01947, -175.8089, -180.11044, -186.85411, -183.34296, -177.42012, -173.26868, -171.97874, -180.05244, -180.19714, -178.74962, -175.6216, -170.4598, -169.07086, -180.08437, -180.11511, -175.54457, -169.07124, -168.95567, -169.37845)
+
+[node name="TreeBundle3" parent="_Trees_/Treesoutskirtsandintown" unique_id=1727788948 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 179.5, 256, 285)
+size = 96
+density = 2
+layout_seed = 3
+snapped_heights = PackedFloat32Array(-223.56056, -217.1213, -202.98688, -195.96696, -180.82834, -178.63344, -223.49033, -214.46362, -209.9805, -195.58702, -180.93103, -175.03008, -226.80588, -216.8968, -209.602, -202.18777, -184.12584, -175.54695, -231.10881, -225.25531, -210.25604, -201.65474, -191.83174, -186.93408, -234.35628, -231.29637, -221.48276, -205.03688, -203.15091, -197.79085, -244.70949, -240.673, -240.42834, -236.14534, -236.71046, -223.29979)
+
+[node name="TreeBundle4" parent="_Trees_/Treesoutskirtsandintown" unique_id=1996699780 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 184.5, 256, 403.5)
+size = 128
+density = 2
+layout_seed = 3
+snapped_heights = PackedFloat32Array(-196.5324, -193.77945, -193.80057, -195.18248, -201.85228, -203.63559, -215.01163, -223.54906, -199.83543, -193.8631, -193.78026, -196.72491, -201.01833, -209.33624, -215.13107, -223.5559, -202.19246, -197.7843, -199.05627, -200.04411, -203.56207, -205.87294, -216.8961, -223.06647, -208.57266, -204.1786, -203.90369, -203.77338, -203.6935, -203.4649, -215.29904, -223.51518, -213.96767, -209.43991, -209.93156, -208.27646, -209.40504, -210.67928, -223.81683, -230.24585, -217.89375, -213.18076, -217.2295, -216.34116, -213.43306, -220.09676, -223.30463, -235.74994, -244.84254, -235.24345, -226.0304, -220.63393, -223.35786, -225.06285, -232.4061, -238.43785, nan, -253.08359, -230.04663, -232.2489, -232.24492, -236.43625, -241.85779, -247.30925)
+
+[node name="TreeBundle5" parent="_Trees_/Treesoutskirtsandintown" unique_id=1194774719 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -30, 256, 603.5)
+size = 128
+density = 1
+snapped_heights = PackedFloat32Array(-255.73512, -255.67351, -255.59026, -253.47453, -250.03128, -248.45041, -248.36559, -248.53644, -250.17899, -252.05396, -255.02737, -255.72292, -255.75487, -255.59561, -255.50305, -252.30954, -251.32977, -248.44568, -248.40347, -249.53316, -252.83217, nan, -255.7377, -255.69298, -255.6811, -255.718, -255.73438, -255.06668, -252.7642, -248.43123, -250.09755, -253.06766, -255.24878, -255.60141, -255.6792, -255.6097, -255.74469, -255.70102, -254.83989, -252.9295, -251.21896, -251.3732, -253.13669, -255.25545, -255.74878, -255.758, -255.6054, -255.66081, -255.7263, -255.62505, -255.71698, -254.13228, -255.1801, -252.61096, -248.70786, -255.69394, -255.7068, -255.7336, -255.75452, -255.60406, -255.66942, -255.72745, -255.59555, -253.27498, -249.90552, -247.48581, -255.6706, -255.6266, -255.65431, -255.74422, -255.67986, -255.75426, -255.71043, -255.62709, -253.28519, -250.95796, -245.92972, -255.61047, -255.60344, -255.68619, -255.67772, -255.75072, -255.66028, -255.63835, -255.66217, -252.27141, -248.3115, -246.56694, -255.71767, -255.75032, -255.74522, -255.66267, -255.63535, -255.66481, -255.69261, -255.66293, -253.96593, -249.87878, -246.6168, -255.64413, -255.73242, -255.61592, -255.59334, -255.63498, -255.59459, -255.65361, -255.7309, -254.48051, -248.05997, -245.16455, -255.63606, -255.68216, -255.73709, -255.75061, -255.7312, -255.7496, -255.72694, -255.64856, -252.39636, -250.16579, -245.16446)
+
+[node name="TreeBundle10" parent="_Trees_/Treesoutskirtsandintown" unique_id=876477841 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -57.5, 256, 479)
+size = 96
+density = 1
+layout_seed = 5
+snapped_heights = PackedFloat32Array(-252.807, -252.48122, -252.8996, -252.0927, -250.87051, -250.01657, -251.5294, -252.69048, -249.91876, -250.69196, -247.82794, -247.89316, -247.33008, -245.2847, -246.23102, -249.9982, -247.35294, -248.14282, -245.21153, -244.76395, -244.77025, -244.68135, -245.38228, -249.80806, -246.59705, -246.04884, -244.77406, -244.71674, -244.77933, -244.84892, -244.69522, -247.77368, -244.80608, -244.6158, -244.69052, -244.77425, -244.82184, -244.78242, -245.3211, -248.74516, -244.7931, -246.59073, -248.40662, -248.2473, -248.35985, -246.59685, -246.72113, -251.02148, -247.31953, -251.26134, -250.17279, -251.73734, -251.7723, -250.17535, -249.58745, -253.6368, -249.9408, -252.88542, -252.69547, -252.83765, -253.43579, -253.32088, -253.3368, -253.72198)
+
+[node name="TreeBundle51" parent="_Trees_/Treesoutskirtsandintown" unique_id=1744590679 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -2, 256, 354)
+density = 2
+snapped_heights = PackedFloat32Array(-254.77719, -238.45952, -229.75697, -226.63274, -249.85226, -238.53241, -229.95361, -226.07912, -255.72719, -250.07506, -235.76358, -226.18053, -255.75488, -255.59563, -241.17679, -226.18399)
+
+[node name="TreeBundle52" parent="_Trees_/Treesoutskirtsandintown" unique_id=742343327 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 69.5, 256, 361)
+density = 2
+layout_seed = 3
+snapped_heights = PackedFloat32Array(-233.18982, -239.00359, -247.38998, -247.43724, -234.76147, -237.38376, -245.91751, -247.39928, -232.26996, -239.68657, -246.1634, -245.97511, -249.38232, -233.87805, -235.86897, -233.44933)
+
+[node name="TreeBundle53" parent="_Trees_/Treesoutskirtsandintown" unique_id=707133910 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 71.5, 256, 417.5)
+density = 2
+snapped_heights = PackedFloat32Array(-254.49081, -239.51228, -232.23434, -232.30011, -249.9625, -239.58006, -232.2439, -232.35384, -255.17657, -243.2345, -233.57027, -236.1252, -255.75487, -249.95824, -245.99217, -242.73993)
+
+[node name="TreeBundle11" parent="_Trees_/Treesoutskirtsandintown" unique_id=1951946885 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.5, 256, 826.5)
+size = 128
+aspect = 4
+density = 2
+layout_seed = 5
+snapped_heights = PackedFloat32Array(-211.0054, -211.16595, -211.1446, -211.13719, -207.45078, -199.47789, -193.70026, -193.79065, -193.81227, -201.17012, -209.29518, -213.01598, -216.1508, -217.85388, -217.8674, -216.10287, -213.1014, -212.97011, -218.68295, -218.98994, -216.02646, -212.66054, -212.66608, -214.09236, -217.25285, -219.85294, -219.86517, -219.77187, -219.81009, -219.87968, -218.0691, -213.52734, -211.06842, -211.04836, -211.06432, -211.10811, -211.13988, -211.10818, -207.96326, -205.63953, -194.88657, -193.85696, -196.7764, -200.132, -213.07028, -213.6807, -216.03815, -217.91501, -217.91743, -217.33281, -212.33282, -215.78375, -220.20932, -218.72752, -215.36057, -212.7584, -212.82826, -212.69095, -215.36348, -219.81694, -222.67041, -222.4689, -220.8778, -219.85104, -216.90833, -214.33986, -211.15819, -211.15656, -222.19489, -226.66833, -229.54993, -219.61148, -223.91606, -227.96884, -223.87944, -223.36777, -211.53812, -228.74623, -227.09514, -223.89813, -224.30457, -223.38643, -224.54475, -224.53352, -224.9257, -221.71901, -230.41057, -229.99112, -227.20323, -224.283, -222.6323, -220.16284, -224.9276, -234.85605, -226.65181, -228.01213, -234.46515, -235.32787, -225.96967, -211.85669, -211.15726, -211.1443, -237.54773, -240.44962, -246.08046, -245.11961, -255.6196, -246.89935, -240.85873, -252.0821, -241.13318, -245.18869, -244.93033, -236.95573, -229.51918, -231.00209, -233.83119, -234.4664, -243.57898, -254.5966, -240.37285, -240.81363, -237.98132, -228.5245, -230.62012, -233.43808, -232.66704, -241.75562, -250.78311, -251.63478, -253.9213, -253.36066, -236.0772, -218.6909, -211.01318, -211.08853, -235.83856, -243.48634, -247.42784, -251.3704, -255.65193, -255.6157, -255.60727, -249.51216, -245.66493, -245.27771, -245.27171, -242.0121, -236.01251, -233.72444, -233.68707, -242.12456, -249.89885, -254.27557, -250.37085, -243.30777, -239.50877, -233.67831, -233.67781, -234.94534, -240.1278, -246.18799, -250.56042, -245.52437, -247.30809, -250.15237, -222.88708, -212.3078, -211.11168, -211.02618, -237.4935, -244.25499, -248.14992, -253.37006, -255.615, -255.70535, -254.76778, -251.91823, -246.99188, -245.12085, -244.44658, -240.7478, -236.62224, -236.37813, -233.82213, -241.39806, -249.51051, -253.00122, -250.27896, -242.4694, -236.939, -233.72331, -233.70204, -235.4263, -242.65419, -243.74706, -243.62141, -235.17368, -239.58055, -236.76471, -231.26569, -217.58159, -211.09471, -211.45695, -240.08827, -247.6857, -252.89851, -255.7233, -255.75848, -255.63033, -255.72516, -252.89322, -249.36101, -251.0629, -251.6193, -249.13748, -242.89188, -243.46002, -246.4206, -242.52705, -255.62646, -255.60237, -253.41794, -249.6777, -250.07083, -243.87326, -244.29376, -241.6162, -248.32721, -248.99164, -238.50298, -236.36938, -234.05081, -234.07318, -232.30173, -222.61043, -215.38724, -215.03767, -255.76381, -255.52254, -254.44194, -255.6129, -255.66075, -255.68758, -255.69804, -255.63696, -255.41759, -252.73354, -253.49248, nan, -249.88647, -255.75125, -252.85324, -255.67484, -255.64201, -255.60883, -255.64537, -255.6454, -255.2133, -249.78561, -253.48141, -250.75594, -255.61432, -254.17949, -240.84619, -234.79106, -234.1365, -233.96762, -231.98912, -225.69165, -225.40091, -225.48494)
+
+[node name="TreeBundle12" parent="_Trees_/Treesoutskirtsandintown" unique_id=95579555 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -515.5, 256, 826.5)
+size = 128
+aspect = 4
+density = 2
+layout_seed = 5
+snapped_heights = PackedFloat32Array(-193.69672, -193.85727, -193.83594, -193.82852, -195.68369, -203.6586, -209.62492, -211.09932, -211.12094, -205.32947, -197.35925, -193.74268, -193.73036, -193.73631, -193.74983, -193.78952, -193.72551, -195.81836, -207.20712, -211.11319, -211.09601, -211.00711, -200.66153, -193.7607, -193.74594, -193.83928, -200.99149, -207.24574, -205.71635, -196.4663, -193.71231, -193.79259, -195.74657, -205.9224, -193.75563, -193.79942, -193.8312, -193.79951, -195.20828, -203.3183, -208.25766, -211.16563, -212.22247, -208.78745, -198.424, -193.77354, -193.78139, -193.79744, -193.79987, -195.10132, -193.83585, -199.96669, -208.61772, -211.11513, -211.13103, -211.10498, -205.00746, -196.5239, -193.82872, -194.6429, -206.93324, -213.24846, -206.80193, -198.15002, -196.38179, -193.82378, -197.70833, -206.46436, -207.399, -212.12459, -216.3026, -202.94376, -205.84502, -218.15245, -220.69252, -221.62202, -217.75282, -221.12532, -212.26917, -211.73268, -212.99265, -208.7739, -209.20424, -211.12325, -206.75876, -203.05128, -222.2323, -221.53299, -229.72546, -234.96121, -224.64293, -211.29317, -216.3247, -224.29729, -216.19083, -218.95006, -228.90874, -225.10442, -221.10847, -214.28755, -215.68314, -221.53853, -225.71056, -230.19127, -237.87105, -230.27098, -230.70113, -226.66112, -226.25233, -230.48636, -228.15752, -230.45233, -230.29855, -225.44849, -228.24678, -230.39896, -232.12767, -227.41016, -225.74971, -230.18854, -229.97441, -234.405, -247.65071, -243.10107, -244.85812, -245.99985, -234.4948, -242.85727, -244.97472, -241.72186, -247.5315, -251.34068, -249.22087, -229.50964, -228.6165, -230.35118, -223.15546, -234.79858, -237.90135, -234.6693, -230.43541, -230.39919, -230.39075, -230.4647, -230.39972, -230.54135, -230.53535, -231.97337, -236.5891, -237.4826, -231.55751, -230.46907, -230.41695, -230.8963, -233.96176, -240.19029, -245.66966, -255.34467, -251.31384, -245.14314, -245.17223, -245.11412, -245.26375, -245.20595, -249.92082, -252.58725, -246.21465, -236.98073, -233.78143, -233.69594, -225.75069, -236.01067, -237.42198, -233.1128, -230.39848, -230.48883, -230.45221, -230.52519, -232.80956, -230.38449, -230.51347, -232.98764, -236.15773, -238.94135, -233.7319, -231.22885, -233.45976, -231.94453, -233.92719, -244.20142, -251.13348, -253.81067, -249.50073, -245.24486, -246.42754, -245.18855, -245.18878, -246.19746, -247.95222, -251.49178, -253.79192, -242.01198, -233.76447, -234.31332, -230.1191, -241.5707, -246.60866, -240.79402, -241.53844, -238.41104, -240.74248, -240.08185, -240.30563, -244.52377, -245.95595, -241.79556, -244.64642, -246.402, -247.98338, -236.73521, -242.4218, -247.05238, -247.14899, -249.3341, -255.44923, -255.67912, -255.20042, -248.07362, -249.51126, -250.13942, -248.98982, -248.8349, -255.67761, -255.69998, -255.7034, -249.84172, -240.28726, -239.75117, -255.7638, -255.45572, -253.68713, -252.95268, -254.18634, -249.695, -255.69804, -253.53664, -255.03056, -248.66327, -250.48566, nan, -251.27896, -255.75125, -253.54765, -249.84897, -255.64201, -254.1984, -252.36943, -255.6454, -255.7487, -255.68773, -255.60062, -252.78741, -255.61432, -255.59543, -252.83588, -255.59253, -255.7633, -255.59442, -255.66048, -255.69586, -255.59485, -255.67888)
+
+[node name="TreeBundle13" parent="_Trees_/Treesoutskirtsandintown" unique_id=642761543 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -907, 256, 826.5)
+size = 128
+aspect = 2
+density = 2
+snapped_heights = PackedFloat32Array(-193.83986, -193.77824, -193.69499, -200.07237, -207.76433, -211.09804, -211.01321, -211.12317, -211.14058, -211.05649, -211.1373, -211.13632, -211.16827, -211.00902, -199.59995, -193.81361, -193.83578, -193.78464, -193.74243, -195.76501, -202.87862, -209.14108, -211.34323, -211.10638, -214.36433, -211.13141, -211.14778, -212.9474, -213.36763, -212.45985, -210.94533, -201.71455, -195.54399, -194.67726, -209.41888, -207.18433, -220.96141, -222.4271, -224.83267, -219.5272, -224.37914, -229.73946, -225.55908, -219.37984, -227.37743, -218.32315, -218.11928, -226.20485, -216.82065, -207.46759, -208.9969, -239.03528, -239.01917, -239.0622, -245.14597, -250.74257, -252.38425, -249.55746, -243.59288, -239.2639, -235.1909, -232.87796, -239.8202, -239.15096, -231.9656, -220.96063, -214.36166, -220.84431, -238.98119, -239.07109, -239.00673, -242.11018, -249.62718, -254.16833, -249.17487, -246.53854, -246.53699, -245.74269, -242.56337, -239.07971, -239.07124, -238.31929, -229.49678, -221.56694, -221.59076, -238.92426, -239.53333, -239.03435, -241.12868, -253.16348, -251.89569, -248.09618, -246.47964, -246.9658, -245.88255, -242.54263, -239.22629, -239.12442, -239.02069, -232.59602, -221.66103, -224.60815, -240.4235, -244.47154, -245.97786, -252.3721, -255.7309, -255.73724, -251.98373, -252.0056, -249.46762, -249.69649, -249.22806, -247.68686, -248.14912, -247.78177, -245.5479, -237.06813, -230.3666, -252.72694, -251.0956, -253.31523, nan, -255.75471, nan, nan, nan, nan, -253.255, -253.64406, -255.62726, -252.46587, -254.16917, -254.09045, -247.5034, -255.66797)
+
+[node name="TreeBundle35" parent="_Trees_/Treesoutskirtsandintown" unique_id=885241006 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1058, 256, 568)
+size = 48
+aspect = 4
+density = 2
+snapped_heights = PackedFloat32Array(-248.86519, -244.73174, -249.47969, -246.0912, -248.76111, -249.12825, -249.51637, -249.59424, -244.43965, -246.45273, -246.45334, -247.4622, -240.2612, -240.56125, -240.14969, -240.34541, -240.34471, -240.18623, -240.14403, -240.14566, -240.17276, -240.20454, -240.24403, -240.19931, -240.18744, -240.22433, -240.2407, -240.12677, -240.19994, -240.17178, -240.17146, -240.16304, -240.2003, -240.10773, -240.18552, -241.8346)
+
+[node name="TreeBundle36" parent="_Trees_/Treesoutskirtsandintown" unique_id=90545979 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1057.5, 256, 768.5)
+size = 48
+aspect = 4
+density = 2
+layout_seed = 3
+snapped_heights = PackedFloat32Array(-208.31413, -226.34073, -239.76334, -239.92278, -239.69734, -241.50851, -247.95808, -246.84326, -248.99742, -249.30333, -247.32864, -247.15675, -202.95065, -235.02249, -240.24, -240.2243, -240.12907, -240.17351, -240.11594, -240.24283, -240.99158, -241.83662, -240.1934, -240.14786, -195.93292, -233.91936, -240.26328, -240.24536, -240.25548, -240.18211, -240.13718, -240.1836, -240.23695, -240.10822, -240.18025, -240.21022)
+
+[node name="TreeBundle37" parent="_Trees_/Treesoutskirtsandintown" unique_id=1364428442 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1012, 256, 528.5)
+size = 32
+aspect = 4
+density = 2
+layout_seed = 3
+snapped_heights = PackedFloat32Array(-255.72266, -255.68074, -255.70186, -255.74911, -255.6804, -255.64746, -255.65242, -255.71115, -255.62589, -255.76439, -255.68155, -255.66435, -255.3785, -254.87935, -255.73369, -255.71797)
+
+[node name="TreeBundle38" parent="_Trees_/Treesoutskirtsandintown" unique_id=1600134374 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -780, 256, 755.5)
+size = 32
+aspect = 4
+density = 2
+layout_seed = 3
+snapped_heights = PackedFloat32Array(-255.72264, -255.68074, -255.70184, -255.7491, -255.68039, -255.64745, -255.6524, -255.71114, -255.62587, -255.76439, -255.68153, -255.66434, -255.7523, -255.6092, -255.73367, -255.71797)
+
+[node name="TreeBundle39" parent="_Trees_/Treesoutskirtsandintown" unique_id=151670651 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -515, 256, 755.5)
+size = 32
+aspect = 4
+density = 2
+snapped_heights = PackedFloat32Array(-255.73512, -255.67351, -254.89746, -255.65604, -255.62453, -255.68463, -255.27338, -255.70976, -255.72717, -255.64308, -255.72389, -255.72292, -255.75487, -255.59561, -255.64336, -255.70888)
+
+[node name="TreeBundle40" parent="_Trees_/Treesoutskirtsandintown" unique_id=1147069303 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -379.5, 256, 755.5)
+size = 32
+aspect = 4
+density = 2
+layout_seed = 5
+snapped_heights = PackedFloat32Array(-255.592, -255.75255, -255.7312, -255.72379, -255.61946, -255.62048, -255.59552, -255.68591, -255.70755, -255.6794, -255.75671, -255.63794, -255.62563, -255.63158, -255.6451, -255.68478)
+
+[node name="TreeBundle41" parent="_Trees_/Treesoutskirtsandintown" unique_id=2104557027 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -246, 256, 755.5)
+size = 32
+aspect = 4
+density = 2
+layout_seed = 9
+snapped_heights = PackedFloat32Array(-255.66241, -255.63554, -255.68372, -255.60756, -255.63895, -255.74464, -255.64923, -255.73154, -255.73262, -255.6802, -255.72191, -255.71307, -255.70567, -255.67923, -255.69858, -255.72632)
+
+[node name="TreeBundle44" parent="_Trees_/Treesoutskirtsandintown" unique_id=85468011 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 17, 256, 755.5)
+size = 32
+aspect = 4
+density = 2
+layout_seed = 9
+snapped_heights = PackedFloat32Array(-255.66241, -255.63554, -255.68372, -255.60754, -255.63893, -255.44322, -255.64923, -255.19438, -255.73262, -255.6802, -255.72191, -255.71306, -255.70566, -255.67923, -255.69858, -255.72632)
+
+[node name="TreeBundle45" parent="_Trees_/Treesoutskirtsandintown" unique_id=972814887 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 180, 256, 707.5)
+aspect = 2
+density = 2
+layout_seed = 9
+snapped_heights = PackedFloat32Array(-255.66241, -254.33273, -250.67206, -248.37334, -248.40472, -235.28506, -227.72015, -225.5376, -255.73262, -252.55698, -250.51413, -248.47885, -248.47145, -237.46307, -227.02956, -225.53238, -255.67052, -251.50188, -246.76913, -244.24634, -245.37471, -233.26991, -226.11172, -225.44572, -255.62057, -251.86539, -242.24477, -237.58728, -240.50815, -231.81944, -226.8739, -225.40543)
+
+[node name="TreeBundle42" parent="_Trees_/Treesoutskirtsandintown" unique_id=1411632350 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -144.5, 256, 717)
+size = 32
+aspect = 2
+density = 2
+layout_seed = 9
+snapped_heights = PackedFloat32Array(-255.66241, -255.63554, -255.68372, -255.60754, -255.63893, -255.74464, -255.64923, -255.73154)
+
+[node name="TreeBundle43" parent="_Trees_/Treesoutskirtsandintown" unique_id=1369448214 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -144.5, 256, 717)
+size = 32
+aspect = 2
+density = 2
+layout_seed = 9
+snapped_heights = PackedFloat32Array(-255.66241, -255.63554, -255.68372, -255.60754, -255.63893, -255.74464, -255.64923, -255.73154)
+
+[node name="TreeBundle14" parent="_Trees_/Treesoutskirtsandintown" unique_id=1237763356 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -285, 256, 284)
+size = 128
+density = 2
+snapped_heights = PackedFloat32Array(-255.73512, -255.67351, -255.59026, -255.65604, -255.62453, -255.68463, -255.59982, -255.70976, -255.72719, -255.64308, -255.72389, -255.72293, -255.75487, -255.59561, -255.64337, -255.70888, -255.73106, -255.67992, -255.63771, -255.63934, -255.66644, -255.69823, -255.73772, -255.693, -255.6811, -255.71802, -255.73439, -255.62044, -255.6936, -255.66545, -255.66515, -255.65672, -255.69397, -255.6014, -255.67918, -255.6097, -255.74469, -255.70102, -255.7261, -255.65315, -255.61008, -255.70694, -255.61314, -255.64526, -255.74878, -255.75798, -255.60541, -255.66083, -255.72632, -255.62505, -255.71698, -255.61386, -255.6923, -255.73534, -255.70306, nan, -255.7068, nan, -255.75453, -255.60408, -255.66942, -255.72745, -255.59555, -255.75745)
+
+[node name="TreeBundle15" parent="_Trees_/Treesoutskirtsandintown" unique_id=654000799 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -84.5, 256, 286.5)
+size = 96
+aspect = 2
+density = 2
+snapped_heights = PackedFloat32Array(-255.73514, -255.67352, -253.94319, -239.20721, -231.25978, -230.89369, -230.15222, -232.15619, -245.50662, -244.29851, -242.12883, -244.83066, -255.75488, -255.59563, -251.38377, -244.11758, -243.19875, -244.48676, -245.17879, -252.9719, -255.66644, -255.44203, -253.4138, -245.72089, -255.68112, -255.71802, -252.63928, -250.02356, -247.00745, -246.9793, -249.54378, -254.4528, -255.69398, -255.60141, -255.67918, -248.78978, -255.7447, -255.70103, -251.64442, -249.46928, -246.92392, -247.02078, -247.84283, -252.8208, -255.74878, -255.758, -255.6054, -255.66081, -255.72632, -255.62505, -255.71696, -253.15086, -251.8823, -251.92413, -254.73572, -255.69392, -255.7068, -255.73361, -255.75452, -255.60406, -255.66942, -255.72745, -255.59554, -255.75743, -253.93636, -252.97049, -255.67058, -255.62659, -255.65433, -255.74423, -255.67986, -255.75424)
+
+[node name="TreeBundle16" parent="_Trees_/Treesoutskirtsandintown" unique_id=775647001 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -2.5, 256, 221)
+size = 48
+density = 2
+snapped_heights = PackedFloat32Array(-230.24065, -236.81029, -240.3491, -232.4395, -237.21388, -241.28322, -230.1389, -238.67928, -241.46657)
+
+[node name="TreeBundle17" parent="_Trees_/Treesoutskirtsandintown" unique_id=437741270 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -81, 256, 158)
+size = 32
+aspect = 2
+density = 2
+layout_seed = -1
+snapped_heights = PackedFloat32Array(-250.24358, -249.2505, -251.22661, -254.43802, -253.55634, nan, -255.3305, -255.67227)
+
+[node name="TreeBundle18" parent="_Trees_/Treesoutskirtsandintown" unique_id=1966125027 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -239.5, 256, 160)
+size = 32
+aspect = 4
+density = 2
+snapped_heights = PackedFloat32Array(-255.73514, -255.67352, -255.59027, -255.65605, -255.62454, -255.68465, -255.59982, -255.70978, -255.72719, -255.6431, -255.7239, -255.72293, -255.75488, -255.59563, -255.64337, -255.7089)
+
+[node name="TreeBundle19" parent="_Trees_/Treesoutskirtsandintown" unique_id=1148275969 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -239.5, 256, 33.5)
+size = 32
+aspect = 4
+density = 2
+layout_seed = 3
+snapped_heights = PackedFloat32Array(-255.72266, -255.68074, -255.70186, nan, -255.6804, -255.64746, -255.65242, -255.71115, -255.62589, -255.76439, -255.68155, -255.66435, -255.75232, -255.60922, -255.73369, -255.71799)
+
+[node name="TreeBundle20" parent="_Trees_/Treesoutskirtsandintown" unique_id=567024210 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -121, 256, -45)
+size = 32
+aspect = 4
+density = 2
+layout_seed = 3
+snapped_heights = PackedFloat32Array(-255.72264, -255.68073, -255.70186, -255.74911, -255.68039, -255.64745, -255.6524, -255.71115, -255.62587, -255.76437, -255.68155, -255.66434, -255.7523, -255.6092, -255.73367, -255.71797)
+
+[node name="TreeBundle21" parent="_Trees_/Treesoutskirtsandintown" unique_id=1459682998 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 64.5, 256, -48)
+size = 32
+aspect = 4
+density = 2
+snapped_heights = PackedFloat32Array(-255.73512, -255.67351, -255.29124, -253.59958, -251.71468, -251.77478, -251.68996, -251.79991, -255.72717, -255.64308, -255.72389, -255.5472, -252.99007, -251.68576, -251.7335, -251.79903)
+
+[node name="TreeBundle22" parent="_Trees_/Treesoutskirtsandintown" unique_id=1620277214 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 140, 256, 3.5)
+size = 32
+aspect = 2
+density = 2
+snapped_heights = PackedFloat32Array(-251.80345, -251.76366, -251.6804, -251.74619, -251.71468, -251.77478, -251.68996, -251.79991)
+
+[node name="TreeBundle23" parent="_Trees_/Treesoutskirtsandintown" unique_id=1373907876 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1, 256, 62)
+density = 2
+layout_seed = 5
+snapped_heights = PackedFloat32Array(-247.95905, -252.44685, -251.82135, -251.81393, -248.38106, -253.99689, -253.05794, -252.3518, -249.76292, -255.6794, -255.75673, -253.84866, -253.90549, -255.63159, -255.64511, -255.59126)
+
+[node name="TreeBundle24" parent="_Trees_/Treesoutskirtsandintown" unique_id=369604658 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 48, 256, 63)
+size = 32
+aspect = 2
+density = 2
+layout_seed = 2
+snapped_heights = PackedFloat32Array(-245.38428, -243.88777, -245.57658, -251.75673, -244.87848, -247.19553, -251.70244, -251.83122)
+
+[node name="TreeBundle25" parent="_Trees_/Treesoutskirtsandintown" unique_id=1914317201 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 79.5, 256, 47.5)
+size = 32
+density = 2
+snapped_heights = PackedFloat32Array(-249.55272, -251.18336, -247.07912, -251.34634)
+
+[node name="TreeBundle26" parent="_Trees_/Treesoutskirtsandintown" unique_id=1075336267 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -238.5, 256, 366)
+size = 32
+density = 2
+snapped_heights = PackedFloat32Array(-255.73514, -255.67352, -255.59027, -255.65605)
+
+[node name="TreeBundle27" parent="_Trees_/Treesoutskirtsandintown" unique_id=551595366 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -210, 256, 484.5)
+size = 32
+aspect = 4
+density = 2
+snapped_heights = PackedFloat32Array(-255.73512, -255.67351, -255.59026, -255.65604, -255.62453, -255.68463, -255.59981, -255.70976, -255.72717, -255.64308, -255.72389, -255.72292, -255.75487, -255.59561, -255.64336, -255.70888)
+
+[node name="TreeBundle46" parent="_Trees_/Treesoutskirtsandintown" unique_id=1572607434 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -205, 256, 583)
+size = 16
+aspect = 4
+density = 2
+snapped_heights = PackedFloat32Array(-255.73512, -255.67351, -255.59026, -255.65604)
+
+[node name="TreeBundle47" parent="_Trees_/Treesoutskirtsandintown" unique_id=1497327222 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -242.5, 256, 596.5)
+size = 16
+aspect = 4
+density = 2
+snapped_heights = PackedFloat32Array(-255.73514, -255.67352, -255.59027, -255.65605)
+
+[node name="TreeBundle48" parent="_Trees_/Treesoutskirtsandintown" unique_id=1711906331 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -465, 256, 579)
+size = 16
+aspect = 4
+density = 2
+snapped_heights = PackedFloat32Array(-255.73512, -255.67351, -255.59026, -255.65604)
+
+[node name="TreeBundle49" parent="_Trees_/Treesoutskirtsandintown" unique_id=1080973687 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -475.5, 256, 466)
+size = 16
+aspect = 4
+density = 2
+snapped_heights = PackedFloat32Array(nan, -255.67351, -255.59026, -255.65604)
+
+[node name="TreeBundle50" parent="_Trees_/Treesoutskirtsandintown" unique_id=2106627367 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -413.5, 256, 370)
+size = 16
+aspect = 4
+density = 2
+snapped_heights = PackedFloat32Array(-255.73514, -255.67352, -255.59027, -255.65605)
+
+[node name="TreeBundle28" parent="_Trees_/Treesoutskirtsandintown" unique_id=1755994656 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -354.5, 256, 381)
+density = 2
+snapped_heights = PackedFloat32Array(-255.73514, -255.67352, -255.59027, -255.65605, -255.62454, -255.68465, -255.59982, -255.70976, -255.72719, -255.6431, -255.7239, -255.72292, -255.75488, -255.59563, -255.64337, -255.70888)
+
+[node name="TreeBundle29" parent="_Trees_/Treesoutskirtsandintown" unique_id=1873715150 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -671, 256, 527.5)
+size = 32
+aspect = 2
+density = 2
+snapped_heights = PackedFloat32Array(-255.73512, -255.67351, -255.59026, -255.65604, -255.62453, -255.68463, nan, -255.70976)
+
+[node name="TreeBundle30" parent="_Trees_/Treesoutskirtsandintown" unique_id=430885841 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -829, 256, 563)
+size = 32
+aspect = 2
+density = 2
+snapped_heights = PackedFloat32Array(-255.73514, -255.67352, -255.59026, -255.65604, -255.62454, -255.68465, -255.59981, -255.70976)
+
+[node name="TreeBundle31" parent="_Trees_/Treesoutskirtsandintown" unique_id=861187064 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -895, 256, 593)
+size = 32
+aspect = 2
+density = 2
+layout_seed = 5
+snapped_heights = PackedFloat32Array(-255.59198, -255.75253, -255.7312, -255.72379, -255.61946, -255.62048, -255.59552, -255.68591)
+
+[node name="TreeBundle32" parent="_Trees_/Treesoutskirtsandintown" unique_id=414554461 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, -783, 256, 607)
+size = 32
+aspect = 2
+density = 2
+layout_seed = 5
+snapped_heights = PackedFloat32Array(-255.59198, -255.75253, -255.7312, -255.72379, -255.61946, -255.62048, -255.59552, -255.68591)
+
+[node name="TreeBundle54" parent="_Trees_/Treesoutskirtsandintown" unique_id=396974953 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, -848, 256, 524)
+size = 32
+density = 2
+layout_seed = 5
+snapped_heights = PackedFloat32Array(-255.59198, -255.75253, -255.7312, -255.72379)
+
+[node name="TreeBundle55" parent="_Trees_/Treesoutskirtsandintown" unique_id=1965273491 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, -688, 256, 685.5)
+size = 32
+density = 2
+layout_seed = 5
+snapped_heights = PackedFloat32Array(-255.59198, -255.75253, -255.7312, -255.72379)
+
+[node name="TreeBundle33" parent="_Trees_/Treesoutskirtsandintown" unique_id=362666376 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-2.1855695e-07, 0, 1, 0, 1, 0, -1, 0, -2.1855695e-07, -751, 256, 624)
+size = 32
+density = 2
+layout_seed = 5
+snapped_heights = PackedFloat32Array(-255.59198, -255.75253, -255.7312, -255.72379)
+
+[node name="TreeBundle34" parent="_Trees_/Treesoutskirtsandintown" unique_id=1311263157 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-2.1855695e-07, 0, 1, 0, 1, 0, -1, 0, -2.1855695e-07, -977.5, 256, 592.5)
+size = 32
+density = 2
+layout_seed = 5
+snapped_heights = PackedFloat32Array(-255.59198, -255.75253, -255.7312, -255.72379)
+
+[node name="TreeBundle6" parent="_Trees_/Treesoutskirtsandintown" unique_id=1602776262 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 97.5, 256, 603.5)
+size = 128
+density = 1
+layout_seed = 7
+snapped_heights = PackedFloat32Array(-242.01532, -249.85643, -250.20573, -249.22966, -249.42014, -249.23064, -245.58614, -243.1775, -234.89757, -241.51291, -240.49858, -246.32875, -251.13513, -251.22241, -252.8451, -251.78566, -252.72964, -249.87047, -246.37114, -242.90167, -249.58331, -249.50763, -254.49074, -254.42097, -253.70671, -254.97908, -253.84972, -254.50099, -254.08113, -251.40501, -253.55203, -252.9657, -252.16551, -255.73756, -255.61255, -255.65233, -255.76024, -255.08781, -254.54027, -253.38847, -254.94499, -255.70825, -255.76453, -255.75467, -255.59192, -255.6395, -255.62561, -255.23798, -253.51474, -251.27414, -250.38467, -250.50627, -253.60373, -255.47292, nan, -255.69907, -255.58997, -255.60596, -252.14684, -251.09685, -248.44675, -249.0019, -249.11217, -251.22765, -252.92494, -255.23792, -255.69347, -255.716, -254.62227, -251.89856, -249.69814, -248.42082, -248.4969, -248.44553, -250.1059, -253.25467, -255.30324, -255.67494, -255.61209, -255.40204, -252.89484, -250.52919, -248.49051, -248.41595, -248.47182, -250.43608, -253.56837, -255.4642, -255.59798, -255.64023, -255.75043, -252.69817, -249.02872, -248.45296, -248.35475, -248.40991, -249.89566, -251.80093, nan, -255.73256, -255.65456, -254.63239, -252.05542, -250.0548, -248.43236, -248.50867, -248.40219, -249.70137, -252.50761, -254.29099, -255.64857, -255.6223, -255.01204, -253.0633, -250.03067, -248.49226, -248.50331, -248.36827, -250.19855, -252.83421, -254.5888)
+
+[node name="TreeBundle7" parent="_Trees_/Treesoutskirtsandintown" unique_id=1471016479 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 166, 256, 509.5)
+density = 1
+layout_seed = 7
+snapped_heights = PackedFloat32Array(-215.71638, -217.09946, -217.2914, -215.70851, -215.6897, -221.86642, -221.98448, -221.90248, -218.97704, -221.54819, -229.64206, -225.86057, -223.36026, -223.48811, -226.22609, -241.70288, -241.32457, -231.46696, -232.46313, -229.01804, -251.6197, -250.61455, -243.9688, -243.20486, -240.2815)
+
+[node name="TreeBundle8" parent="_Trees_/Treesoutskirtsandintown" unique_id=2079917733 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 205.5, 256, 591)
+size = 96
+density = 2
+snapped_heights = PackedFloat32Array(-200.96468, -200.90306, -202.59184, -209.50563, -209.11208, -205.82187, -200.82936, -200.93932, -203.84236, -207.55023, -210.05592, -206.1066, -213.77995, -212.04321, -214.87534, -216.54109, -214.4607, -209.61002, -241.02338, -246.07321, -243.4181, -232.63821, -229.25601, -216.84203, -248.4469, -248.4838, -243.59647, -239.33716, -234.58096, -228.20677, -248.43092, -248.4225, -244.81456, -236.32912, -235.49791, -234.46548)
+
+[node name="TreeBundle9" parent="_Trees_/Treesoutskirtsandintown" unique_id=1408481110 instance=ExtResource("25_x6w3k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 226.5, 256, 506.5)
+size = 48
+density = 2
+layout_seed = 19
+snapped_heights = PackedFloat32Array(-204.98204, -204.09245, -204.42036, -205.6091, -205.6252, -205.36829, -208.4951, -211.07942, -212.00871)
 
 [node name="GasStations" type="Node3D" parent="." unique_id=1179563457]
 
@@ -2230,10 +2851,10 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -232
 del_end_ramp = true
 
 [node name="invisiblewall" parent="props/Ramp" unique_id=1330899296 instance=ExtResource("18_dc022")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.50001, 0.05, 87.5)
+transform = Transform3D(1, -1.8691035e-09, -3.998224e-11, 1.8691046e-09, 0.9990854, 0.0427601, -3.9978687e-11, -0.0427601, 0.9990854, -10.500011, 4.617072, 105.52756)
 shape_mode = 1
 width = 24.0
-depth = 128.0
+depth = 156.0
 material_override = ExtResource("29_a4ddl")
 
 [node name="Ramp7" parent="props" unique_id=347389674 instance=ExtResource("6_w1aki")]
@@ -2252,12 +2873,6 @@ del_end_ramp = true
 [node name="Ramp10" parent="props" unique_id=1654268796 instance=ExtResource("6_w1aki")]
 transform = Transform3D(0.553933, 0, 0.83256125, 0, 1, 0, -0.83256125, 0, 0.553933, -725.6734, 0, 579.9191)
 del_end_ramp = true
-
-[node name="Ramp6" parent="props" unique_id=2139185877 instance=ExtResource("6_w1aki")]
-transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, -485.08014, 0, 220.06699)
-
-[node name="Ramp11" parent="props" unique_id=1450276786 instance=ExtResource("6_w1aki")]
-transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, -858.59094, 0, 282.6273)
 
 [node name="Ramp2" parent="props" unique_id=1585675927 instance=ExtResource("6_w1aki")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -119, 0, 159)
@@ -2392,6 +3007,12 @@ transform = Transform3D(1.3113416e-07, 0, 1, 0, 1, 0, -1, 0, 1.3113416e-07, -976
 
 [node name="Business12" parent="Businesses" unique_id=1714279842 instance=ExtResource("26_pls18")]
 transform = Transform3D(-1, 0, 8.742277e-08, 0, 1, 0, -8.742277e-08, 0, -1, -720.00006, 0.024999648, 495.99994)
+
+[node name="Business33" parent="Businesses" unique_id=1009823028 instance=ExtResource("26_pls18")]
+transform = Transform3D(1, 0, 7.1054274e-15, 0, 1, 0, -7.1054274e-15, 0, 1, 15.999939, 0.024997711, 687.99994)
+
+[node name="Business34" parent="Businesses" unique_id=2044523704 instance=ExtResource("26_pls18")]
+transform = Transform3D(1, 0, 7.1054274e-15, 0, 1, 0, -7.1054274e-15, 0, 1, -16.000061, 0.024997711, 687.99994)
 
 [node name="Business13" parent="Businesses" unique_id=1560593335 instance=ExtResource("26_pls18")]
 transform = Transform3D(-1, 0, 8.742277e-08, 0, 1, 0, -8.742277e-08, 0, -1, -784.00006, 0.024999648, 559.99994)
@@ -3833,15 +4454,15 @@ prior_pt_init = NodePath("../RP_002")
 next_pt_init = NodePath("../RP_013")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_001" unique_id=178060121]
-curve = SubResource("Curve3D_y7kpu")
+curve = SubResource("Curve3D_7h6ax")
 metadata/_edit_lock_ = true
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_001" unique_id=310261972]
-curve = SubResource("Curve3D_a4ddl")
+curve = SubResource("Curve3D_y7kpu")
 metadata/_edit_lock_ = true
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_001" unique_id=1859346658]
-curve = SubResource("Curve3D_x6w3k")
+curve = SubResource("Curve3D_a4ddl")
 metadata/_edit_lock_ = true
 
 [node name="RP_002" type="Node3D" parent="RoadManager/Road_026" unique_id=373419492]
@@ -3855,15 +4476,15 @@ prior_pt_init = NodePath("../RP_003")
 next_pt_init = NodePath("../RP_001")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_002" unique_id=1954073844]
-curve = SubResource("Curve3D_x1gnv")
+curve = SubResource("Curve3D_x6w3k")
 metadata/_edit_lock_ = true
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_002" unique_id=8778028]
-curve = SubResource("Curve3D_oxlis")
+curve = SubResource("Curve3D_x1gnv")
 metadata/_edit_lock_ = true
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_002" unique_id=217191205]
-curve = SubResource("Curve3D_5wqg6")
+curve = SubResource("Curve3D_oxlis")
 metadata/_edit_lock_ = true
 
 [node name="RP_003" type="Node3D" parent="RoadManager/Road_026" unique_id=732619955]
@@ -3877,15 +4498,15 @@ prior_pt_init = NodePath("../RP_004")
 next_pt_init = NodePath("../RP_002")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_003" unique_id=87675341]
-curve = SubResource("Curve3D_5cxnc")
+curve = SubResource("Curve3D_5wqg6")
 metadata/_edit_lock_ = true
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_003" unique_id=1503123557]
-curve = SubResource("Curve3D_t4l24")
+curve = SubResource("Curve3D_5cxnc")
 metadata/_edit_lock_ = true
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_003" unique_id=1236241332]
-curve = SubResource("Curve3D_0ogqk")
+curve = SubResource("Curve3D_t4l24")
 metadata/_edit_lock_ = true
 
 [node name="RP_004" type="Node3D" parent="RoadManager/Road_026" unique_id=1458535917]
@@ -3899,15 +4520,15 @@ prior_pt_init = NodePath("../RP_005")
 next_pt_init = NodePath("../RP_003")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_004" unique_id=983293870]
-curve = SubResource("Curve3D_kgknl")
+curve = SubResource("Curve3D_0ogqk")
 metadata/_edit_lock_ = true
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_004" unique_id=889597465]
-curve = SubResource("Curve3D_ibpty")
+curve = SubResource("Curve3D_kgknl")
 metadata/_edit_lock_ = true
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_004" unique_id=570980754]
-curve = SubResource("Curve3D_4h6qj")
+curve = SubResource("Curve3D_ibpty")
 metadata/_edit_lock_ = true
 
 [node name="RP_005" type="Node3D" parent="RoadManager/Road_026" unique_id=2033250797]
@@ -3921,15 +4542,15 @@ prior_pt_init = NodePath("../RP_006")
 next_pt_init = NodePath("../RP_004")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_005" unique_id=801600540]
-curve = SubResource("Curve3D_whdav")
+curve = SubResource("Curve3D_4h6qj")
 metadata/_edit_lock_ = true
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_005" unique_id=831801444]
-curve = SubResource("Curve3D_udx41")
+curve = SubResource("Curve3D_whdav")
 metadata/_edit_lock_ = true
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_005" unique_id=567061192]
-curve = SubResource("Curve3D_emu8c")
+curve = SubResource("Curve3D_udx41")
 metadata/_edit_lock_ = true
 
 [node name="RP_006" type="Node3D" parent="RoadManager/Road_026" unique_id=382769729]
@@ -3943,15 +4564,15 @@ prior_pt_init = NodePath("../RP_007")
 next_pt_init = NodePath("../RP_005")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_006" unique_id=1412821470]
-curve = SubResource("Curve3D_6lq47")
+curve = SubResource("Curve3D_emu8c")
 metadata/_edit_lock_ = true
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_006" unique_id=1321545878]
-curve = SubResource("Curve3D_dhvxm")
+curve = SubResource("Curve3D_6lq47")
 metadata/_edit_lock_ = true
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_006" unique_id=6522191]
-curve = SubResource("Curve3D_yucqr")
+curve = SubResource("Curve3D_dhvxm")
 metadata/_edit_lock_ = true
 
 [node name="RP_007" type="Node3D" parent="RoadManager/Road_026" unique_id=174035746]
@@ -3965,15 +4586,15 @@ prior_pt_init = NodePath("../RP_008")
 next_pt_init = NodePath("../RP_006")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_007" unique_id=1468443031]
-curve = SubResource("Curve3D_i2g37")
+curve = SubResource("Curve3D_yucqr")
 metadata/_edit_lock_ = true
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_007" unique_id=372730496]
-curve = SubResource("Curve3D_nn4in")
+curve = SubResource("Curve3D_i2g37")
 metadata/_edit_lock_ = true
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_007" unique_id=1860557356]
-curve = SubResource("Curve3D_eiesv")
+curve = SubResource("Curve3D_nn4in")
 metadata/_edit_lock_ = true
 
 [node name="RP_008" type="Node3D" parent="RoadManager/Road_026" unique_id=1993203289]
@@ -3987,15 +4608,15 @@ prior_pt_init = NodePath("../RP_009")
 next_pt_init = NodePath("../RP_007")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_008" unique_id=237278491]
-curve = SubResource("Curve3D_5y7ao")
+curve = SubResource("Curve3D_eiesv")
 metadata/_edit_lock_ = true
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_008" unique_id=1389987177]
-curve = SubResource("Curve3D_7hvei")
+curve = SubResource("Curve3D_5y7ao")
 metadata/_edit_lock_ = true
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_008" unique_id=1561850552]
-curve = SubResource("Curve3D_i66y0")
+curve = SubResource("Curve3D_7hvei")
 metadata/_edit_lock_ = true
 
 [node name="RP_009" type="Node3D" parent="RoadManager/Road_026" unique_id=825904578]
@@ -4009,15 +4630,15 @@ prior_pt_init = NodePath("../RP_010")
 next_pt_init = NodePath("../RP_008")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_009" unique_id=748279703]
-curve = SubResource("Curve3D_2ay7t")
+curve = SubResource("Curve3D_i66y0")
 metadata/_edit_lock_ = true
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_009" unique_id=1779650588]
-curve = SubResource("Curve3D_d5rj0")
+curve = SubResource("Curve3D_2ay7t")
 metadata/_edit_lock_ = true
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_009" unique_id=245516932]
-curve = SubResource("Curve3D_jp5v4")
+curve = SubResource("Curve3D_d5rj0")
 metadata/_edit_lock_ = true
 
 [node name="RP_013" type="Node3D" parent="RoadManager/Road_026" unique_id=1905323819]
@@ -4038,15 +4659,15 @@ prior_pt_init = NodePath("../RP_015")
 next_pt_init = NodePath("../RP_018")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_014" unique_id=1903044859]
-curve = SubResource("Curve3D_ls3o1")
+curve = SubResource("Curve3D_jp5v4")
 metadata/_edit_lock_ = true
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_014" unique_id=1708523577]
-curve = SubResource("Curve3D_smo70")
+curve = SubResource("Curve3D_ls3o1")
 metadata/_edit_lock_ = true
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_014" unique_id=378834212]
-curve = SubResource("Curve3D_4hi6c")
+curve = SubResource("Curve3D_smo70")
 metadata/_edit_lock_ = true
 
 [node name="RP_015" type="Node3D" parent="RoadManager/Road_026" unique_id=1008527756]
@@ -4060,15 +4681,15 @@ prior_pt_init = NodePath("../RP_016")
 next_pt_init = NodePath("../RP_014")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_015" unique_id=17391926]
-curve = SubResource("Curve3D_0yvxw")
+curve = SubResource("Curve3D_4hi6c")
 metadata/_edit_lock_ = true
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_015" unique_id=301163245]
-curve = SubResource("Curve3D_v0061")
+curve = SubResource("Curve3D_0yvxw")
 metadata/_edit_lock_ = true
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_015" unique_id=1930353955]
-curve = SubResource("Curve3D_dpvtx")
+curve = SubResource("Curve3D_v0061")
 metadata/_edit_lock_ = true
 
 [node name="RP_016" type="Node3D" parent="RoadManager/Road_026" unique_id=317647550]
@@ -4082,15 +4703,15 @@ prior_pt_init = NodePath("../RP_017")
 next_pt_init = NodePath("../RP_015")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_016" unique_id=159930296]
-curve = SubResource("Curve3D_m8kd6")
+curve = SubResource("Curve3D_dpvtx")
 metadata/_edit_lock_ = true
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_016" unique_id=87938582]
-curve = SubResource("Curve3D_wktpq")
+curve = SubResource("Curve3D_m8kd6")
 metadata/_edit_lock_ = true
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_016" unique_id=1044141348]
-curve = SubResource("Curve3D_mmjc8")
+curve = SubResource("Curve3D_wktpq")
 metadata/_edit_lock_ = true
 
 [node name="RP_017" type="Node3D" parent="RoadManager/Road_026" unique_id=448347375]
@@ -4103,21 +4724,21 @@ next_mag = 29.09607
 next_pt_init = NodePath("../RP_016")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_017" unique_id=1722395293]
-curve = SubResource("Curve3D_xh2aq")
+curve = SubResource("Curve3D_mmjc8")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Road_026/RP_017/edge_R" unique_id=227368666 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_017" unique_id=1251156025]
-curve = SubResource("Curve3D_660yo")
+curve = SubResource("Curve3D_xh2aq")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Road_026/RP_017/edge_F" unique_id=348371621 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_017" unique_id=713924321]
-curve = SubResource("Curve3D_4a300")
+curve = SubResource("Curve3D_660yo")
 metadata/_edit_lock_ = true
 
 [node name="RP_018" type="Node3D" parent="RoadManager/Road_026" unique_id=1062224018]
@@ -4140,7 +4761,7 @@ prior_pt_init = NodePath("../RP_011")
 next_pt_init = NodePath("../RP_009")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_010" unique_id=1717314078]
-curve = SubResource("Curve3D_gyn7v")
+curve = SubResource("Curve3D_4a300")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Road_026/RP_010/edge_R" unique_id=1226340263 instance=ExtResource("12_3twxm")]
@@ -4148,7 +4769,7 @@ collision_layer = 2
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_010" unique_id=1781715613]
-curve = SubResource("Curve3D_pci2k")
+curve = SubResource("Curve3D_gyn7v")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Road_026/RP_010/edge_F" unique_id=591334515 instance=ExtResource("12_3twxm")]
@@ -4156,7 +4777,7 @@ collision_layer = 2
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_010" unique_id=579864184]
-curve = SubResource("Curve3D_ij01o")
+curve = SubResource("Curve3D_pci2k")
 metadata/_edit_lock_ = true
 
 [node name="RP_011" type="Node3D" parent="RoadManager/Road_026" unique_id=2124795648]
@@ -4169,15 +4790,15 @@ next_mag = 8.0
 prior_pt_init = NodePath("../RP_010")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_011" unique_id=291517936]
-curve = SubResource("Curve3D_sfwv2")
+curve = SubResource("Curve3D_ij01o")
 metadata/_edit_lock_ = true
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_011" unique_id=1503427741]
-curve = SubResource("Curve3D_463k5")
+curve = SubResource("Curve3D_sfwv2")
 metadata/_edit_lock_ = true
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_011" unique_id=1402498689]
-curve = SubResource("Curve3D_iyu83")
+curve = SubResource("Curve3D_463k5")
 metadata/_edit_lock_ = true
 
 [node name="Road_027" type="Node3D" parent="RoadManager" unique_id=1958268287]
@@ -4438,15 +5059,15 @@ prior_pt_init = NodePath("../RP_005")
 next_pt_init = NodePath("../RP_002")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_001" unique_id=1986150321]
-curve = SubResource("Curve3D_eqhci")
+curve = SubResource("Curve3D_iyu83")
 metadata/_edit_lock_ = true
 
 [node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_001" unique_id=1878071296]
-curve = SubResource("Curve3D_ajuuv")
+curve = SubResource("Curve3D_eqhci")
 metadata/_edit_lock_ = true
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_001" unique_id=1599986307]
-curve = SubResource("Curve3D_r58c1")
+curve = SubResource("Curve3D_ajuuv")
 metadata/_edit_lock_ = true
 
 [node name="RP_002" type="Node3D" parent="RoadManager/bridgeroad" unique_id=1770111972]
@@ -4460,15 +5081,15 @@ prior_pt_init = NodePath("../RP_001")
 next_pt_init = NodePath("../RP_003")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_002" unique_id=1812409607]
-curve = SubResource("Curve3D_wyckw")
+curve = SubResource("Curve3D_r58c1")
 metadata/_edit_lock_ = true
 
 [node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_002" unique_id=909327310]
-curve = SubResource("Curve3D_jago7")
+curve = SubResource("Curve3D_wyckw")
 metadata/_edit_lock_ = true
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_002" unique_id=1375997108]
-curve = SubResource("Curve3D_5ls82")
+curve = SubResource("Curve3D_jago7")
 metadata/_edit_lock_ = true
 
 [node name="RP_005" type="Node3D" parent="RoadManager/bridgeroad" unique_id=104417362]
@@ -4482,21 +5103,21 @@ prior_pt_init = NodePath("../RP_006")
 next_pt_init = NodePath("../RP_001")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_005" unique_id=209340463]
-curve = SubResource("Curve3D_okah6")
+curve = SubResource("Curve3D_5ls82")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_005/edge_R" unique_id=354494324 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_005" unique_id=1460038946]
-curve = SubResource("Curve3D_rbh0l")
+curve = SubResource("Curve3D_okah6")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_005/edge_F" unique_id=1416033416 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_005" unique_id=882996704]
-curve = SubResource("Curve3D_nal0m")
+curve = SubResource("Curve3D_rbh0l")
 metadata/_edit_lock_ = true
 
 [node name="RP_006" type="Node3D" parent="RoadManager/bridgeroad" unique_id=1878248579]
@@ -4510,21 +5131,21 @@ prior_pt_init = NodePath("../RP_007")
 next_pt_init = NodePath("../RP_005")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_006" unique_id=912126381]
-curve = SubResource("Curve3D_mwlmy")
+curve = SubResource("Curve3D_nal0m")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_006/edge_R" unique_id=1410673700 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_006" unique_id=2027731395]
-curve = SubResource("Curve3D_vppsu")
+curve = SubResource("Curve3D_mwlmy")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_006/edge_F" unique_id=344925828 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_006" unique_id=1742019994]
-curve = SubResource("Curve3D_y6c4p")
+curve = SubResource("Curve3D_vppsu")
 metadata/_edit_lock_ = true
 
 [node name="RP_007" type="Node3D" parent="RoadManager/bridgeroad" unique_id=322917356]
@@ -4538,21 +5159,21 @@ prior_pt_init = NodePath("../RP_008")
 next_pt_init = NodePath("../RP_006")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_007" unique_id=1634234280]
-curve = SubResource("Curve3D_qukl4")
+curve = SubResource("Curve3D_y6c4p")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_007/edge_R" unique_id=819865914 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_007" unique_id=1707585009]
-curve = SubResource("Curve3D_05twp")
+curve = SubResource("Curve3D_qukl4")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_007/edge_F" unique_id=2085483279 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_007" unique_id=126214080]
-curve = SubResource("Curve3D_r4ej8")
+curve = SubResource("Curve3D_05twp")
 metadata/_edit_lock_ = true
 
 [node name="RP_008" type="Node3D" parent="RoadManager/bridgeroad" unique_id=58407875]
@@ -4566,21 +5187,21 @@ prior_pt_init = NodePath("../RP_009")
 next_pt_init = NodePath("../RP_007")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_008" unique_id=694602661]
-curve = SubResource("Curve3D_punjn")
+curve = SubResource("Curve3D_r4ej8")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_008/edge_R" unique_id=1703846035 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_008" unique_id=72102539]
-curve = SubResource("Curve3D_wyqag")
+curve = SubResource("Curve3D_punjn")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_008/edge_F" unique_id=740523124 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_008" unique_id=1882487803]
-curve = SubResource("Curve3D_bop2h")
+curve = SubResource("Curve3D_wyqag")
 metadata/_edit_lock_ = true
 
 [node name="RP_009" type="Node3D" parent="RoadManager/bridgeroad" unique_id=1339023966]
@@ -4594,21 +5215,21 @@ prior_pt_init = NodePath("../RP_010")
 next_pt_init = NodePath("../RP_008")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_009" unique_id=1955638473]
-curve = SubResource("Curve3D_022se")
+curve = SubResource("Curve3D_bop2h")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_009/edge_R" unique_id=382722042 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_009" unique_id=1693336786]
-curve = SubResource("Curve3D_dhvic")
+curve = SubResource("Curve3D_022se")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_009/edge_F" unique_id=747350104 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_009" unique_id=1681721669]
-curve = SubResource("Curve3D_ruwj7")
+curve = SubResource("Curve3D_dhvic")
 metadata/_edit_lock_ = true
 
 [node name="RP_010" type="Node3D" parent="RoadManager/bridgeroad" unique_id=1317145902]
@@ -4619,21 +5240,21 @@ lanes = Array[int]([2, 4, 4, 2])
 next_pt_init = NodePath("../RP_009")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_010" unique_id=693373319]
-curve = SubResource("Curve3D_44yky")
+curve = SubResource("Curve3D_ruwj7")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_010/edge_R" unique_id=1668919672 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_010" unique_id=1055047765]
-curve = SubResource("Curve3D_cad8g")
+curve = SubResource("Curve3D_44yky")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_010/edge_F" unique_id=1622523373 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_010" unique_id=1219700673]
-curve = SubResource("Curve3D_8dg3l")
+curve = SubResource("Curve3D_cad8g")
 metadata/_edit_lock_ = true
 
 [node name="RP_003" type="Node3D" parent="RoadManager/bridgeroad" unique_id=1626909351]
@@ -4647,15 +5268,15 @@ prior_pt_init = NodePath("../RP_002")
 next_pt_init = NodePath("../RP_004")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_003" unique_id=1130543593]
-curve = SubResource("Curve3D_58ha2")
+curve = SubResource("Curve3D_8dg3l")
 metadata/_edit_lock_ = true
 
 [node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_003" unique_id=816150197]
-curve = SubResource("Curve3D_cdtsq")
+curve = SubResource("Curve3D_58ha2")
 metadata/_edit_lock_ = true
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_003" unique_id=72864931]
-curve = SubResource("Curve3D_j3ken")
+curve = SubResource("Curve3D_cdtsq")
 metadata/_edit_lock_ = true
 
 [node name="RP_004" type="Node3D" parent="RoadManager/bridgeroad" unique_id=304205764]
@@ -4937,21 +5558,21 @@ prior_pt_init = NodePath("../RP_003")
 next_pt_init = NodePath("../RP_002")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Bridgeroad2/RP_001" unique_id=1873575921]
-curve = SubResource("Curve3D_s5tfl")
+curve = SubResource("Curve3D_j3ken")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Bridgeroad2/RP_001/edge_R" unique_id=2099936115 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Bridgeroad2/RP_001" unique_id=1351785388]
-curve = SubResource("Curve3D_1nt7f")
+curve = SubResource("Curve3D_s5tfl")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Bridgeroad2/RP_001/edge_F" unique_id=1491277127 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Bridgeroad2/RP_001" unique_id=1471574737]
-curve = SubResource("Curve3D_rhwn7")
+curve = SubResource("Curve3D_1nt7f")
 metadata/_edit_lock_ = true
 
 [node name="RP_003" type="Node3D" parent="RoadManager/Bridgeroad2" unique_id=1483991054]
@@ -4965,21 +5586,21 @@ prior_pt_init = NodePath("../RP_006")
 next_pt_init = NodePath("../RP_001")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Bridgeroad2/RP_003" unique_id=524920057]
-curve = SubResource("Curve3D_mmlbl")
+curve = SubResource("Curve3D_rhwn7")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Bridgeroad2/RP_003/edge_R" unique_id=1473906858 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Bridgeroad2/RP_003" unique_id=1282266261]
-curve = SubResource("Curve3D_la3vg")
+curve = SubResource("Curve3D_mmlbl")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Bridgeroad2/RP_003/edge_F" unique_id=931586216 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Bridgeroad2/RP_003" unique_id=770387062]
-curve = SubResource("Curve3D_g4kdb")
+curve = SubResource("Curve3D_la3vg")
 metadata/_edit_lock_ = true
 
 [node name="RP_006" type="Node3D" parent="RoadManager/Bridgeroad2" unique_id=250666018]
@@ -4993,21 +5614,21 @@ prior_pt_init = NodePath("../RP_007")
 next_pt_init = NodePath("../RP_003")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Bridgeroad2/RP_006" unique_id=641999320]
-curve = SubResource("Curve3D_ow6x7")
+curve = SubResource("Curve3D_g4kdb")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Bridgeroad2/RP_006/edge_R" unique_id=608459918 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Bridgeroad2/RP_006" unique_id=975483433]
-curve = SubResource("Curve3D_0c48d")
+curve = SubResource("Curve3D_ow6x7")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Bridgeroad2/RP_006/edge_F" unique_id=354978774 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Bridgeroad2/RP_006" unique_id=504664830]
-curve = SubResource("Curve3D_c0ooj")
+curve = SubResource("Curve3D_0c48d")
 metadata/_edit_lock_ = true
 
 [node name="RP_007" type="Node3D" parent="RoadManager/Bridgeroad2" unique_id=2044872247]
@@ -5020,21 +5641,21 @@ next_mag = 21.548187
 next_pt_init = NodePath("../RP_006")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Bridgeroad2/RP_007" unique_id=350264463]
-curve = SubResource("Curve3D_pdy6h")
+curve = SubResource("Curve3D_c0ooj")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Bridgeroad2/RP_007/edge_R" unique_id=1515237878 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Bridgeroad2/RP_007" unique_id=2059330650]
-curve = SubResource("Curve3D_thlma")
+curve = SubResource("Curve3D_pdy6h")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Bridgeroad2/RP_007/edge_F" unique_id=267140248 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Bridgeroad2/RP_007" unique_id=1856818512]
-curve = SubResource("Curve3D_2okop")
+curve = SubResource("Curve3D_thlma")
 metadata/_edit_lock_ = true
 
 [node name="RP_002" type="Node3D" parent="RoadManager/Bridgeroad2" unique_id=1869473923]
@@ -5060,96 +5681,17 @@ metadata/_edit_lock_ = true
 
 [node name="RaceWall" parent="." unique_id=1909321819 instance=ExtResource("50_7h6ax")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -663, -1.9073486e-06, 164)
-curve = SubResource("Curve3D_wtb5w")
+curve = SubResource("Curve3D_2okop")
 
 [node name="RaceWall2" parent="." unique_id=1382726365 instance=ExtResource("50_7h6ax")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -663, 0, 164)
 curve = SubResource("Curve3D_ytyv1")
 
-[node name="IslandTrackTrees" type="Node3D" parent="." unique_id=779401878]
-
-[node name="TreeBundle" parent="IslandTrackTrees" unique_id=1880052268 instance=ExtResource("25_x6w3k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -895.9591, 256, 21.522446)
-size = 128
-density = 2
-snapped_heights = PackedFloat32Array(-246.93402, -234.58319, -224.97554, -220.68681, -220.6553, -226.57306, -231.74356, -235.06339, -245.19536, -237.24959, -224.36635, -220.7537, -221.57516, -226.13066, -234.99698, -235.0625, -246.78552, -236.9185, -232.42905, -228.66707, -229.4244, -235.19717, -236.52637, -235.0466, -244.29913, -242.88322, -237.06166, -239.8435, -240.18184, -238.15097, -235.57616, -235.01033, -248.22206, -243.36908, -242.74086, -242.4927, -243.75357, -242.21515, -237.32068, -235.74751, -254.22891, -251.14375, -244.86446, -244.16862, -245.45807, -246.14684, -243.1183, -247.1892, -255.00058, -252.72345, -248.15341, -245.75406, -245.83252, -247.25156, -249.01611, -249.03882, -255.70679, -251.99138, -245.89474, -245.7443, -245.95206, -247.29637, -248.08089, -249.10233)
-
-[node name="TreeBundle2" parent="IslandTrackTrees" unique_id=1433287146 instance=ExtResource("25_x6w3k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -927.2919, 256, 158.13316)
-size = 128
-density = 2
-layout_seed = 6
-snapped_heights = PackedFloat32Array(-241.5582, -243.66325, -248.2898, -252.08766, -252.18083, -251.20445, -255.0778, -255.70125, -239.72081, -236.19888, -238.50635, -242.00682, -249.71051, -247.04994, -251.78131, -255.27066, -234.96109, -235.0001, -235.68806, -241.05432, -245.83652, -245.91364, -248.48744, -253.6413, -235.1075, -235.10278, -237.88087, -242.59647, -245.91678, -245.91708, -246.717, -254.02286, -234.98453, -235.06316, -235.78882, -242.04887, -245.82407, -245.87479, -248.00981, -253.45161, -235.0858, -235.09761, -235.69771, -241.8607, -245.85356, -245.91765, -247.32562, -251.76454, -239.05537, -237.72997, -237.65453, -247.57564, -247.45012, -246.86433, -253.44986, -254.80847, -244.1377, -248.95265, -255.29565, -254.52597, -251.7264, -252.4319, -254.75882, -255.60074)
-
-[node name="TreeBundle3" parent="IslandTrackTrees" unique_id=2075449135 instance=ExtResource("25_x6w3k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -831.2236, 256, 118.27137)
-size = 48
-density = 2
-snapped_heights = PackedFloat32Array(-249.38701, -253.57584, -255.59026, -251.26555, -253.86276, -255.68462, -251.63147, -255.70978, -255.72719)
-
-[node name="TreeBundle4" parent="IslandTrackTrees" unique_id=1555756303 instance=ExtResource("25_x6w3k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -984.754, 256, 60.61911)
-size = 48
-density = 2
-layout_seed = 5
-snapped_heights = PackedFloat32Array(-248.16144, -247.97345, -248.94624, -243.91016, -244.77611, -243.55676, -235.48502, -237.11873, -238.49284)
-
-[node name="TreeBundle5" parent="IslandTrackTrees" unique_id=443016519 instance=ExtResource("25_x6w3k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -703.38586, 256, 44.952744)
-size = 96
-density = 2
-layout_seed = -1
-snapped_heights = PackedFloat32Array(-255.76329, -255.67049, -255.33153, -253.78299, -255.05008, -255.6448, -255.61264, -255.67227, -255.62138, -255.7605, -255.59795, -255.72733, -255.63496, -255.6521, -255.72182, -255.64407, -255.69853, -255.76094, -255.60797, -255.6548, -255.642, -255.7213, -255.71292, -255.6061, -255.67839, -255.58968, -255.65564, -255.70195, -255.64545, -255.62329, -255.6399, -255.74344, -255.59036, -255.68803, -255.60443, -255.67828)
-
-[node name="TreeBundle6" parent="IslandTrackTrees" unique_id=279217816 instance=ExtResource("25_x6w3k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -602.15576, 256, 41.567123)
-size = 96
-density = 2
-snapped_heights = PackedFloat32Array(-255.73512, -255.67352, -255.59026, -255.65604, -255.62453, -255.68463, -255.59982, -255.70978, -255.72719, -255.6431, -255.7239, -255.72293, -255.75488, -255.59563, -255.64336, -255.7089, -255.73106, -255.67992, -255.6377, -255.63933, -255.66643, -255.69821, -255.7377, -255.69298, -255.68112, -255.718, -255.73438, -255.62045, -255.69362, -255.66547, -255.66515, -255.65672, -255.69398, -255.60141, -255.6792, -255.60971)
-
-[node name="TreeBundle7" parent="IslandTrackTrees" unique_id=759457022 instance=ExtResource("25_x6w3k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -521.9165, 256, 25.993279)
-size = 48
-density = 2
-snapped_heights = PackedFloat32Array(-255.73512, -255.67351, -255.59026, -255.65604, -255.62453, -255.68462, -255.59981, -255.70976, -255.72717)
-
-[node name="TreeBundle8" parent="IslandTrackTrees" unique_id=578783922 instance=ExtResource("25_x6w3k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -547.30865, 256, 110.97238)
-size = 48
-density = 2
-layout_seed = 5
-snapped_heights = PackedFloat32Array(-255.592, -255.75255, -255.73122, -255.7238, -255.61948, -255.6205, -255.59552, -255.68591, -255.70753)
-
-[node name="TreeBundle9" parent="IslandTrackTrees" unique_id=37877625 instance=ExtResource("25_x6w3k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -662.7584, 256, 106.57108)
-size = 32
-density = 2
-layout_seed = 5
-snapped_heights = PackedFloat32Array(-255.59198, -255.75253, -255.7312, -255.72379)
-
-[node name="TreeBundle10" parent="IslandTrackTrees" unique_id=404329920 instance=ExtResource("25_x6w3k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -588.2748, 256, 102.16977)
-size = 32
-density = 2
-layout_seed = 5
-snapped_heights = PackedFloat32Array(-255.59198, -255.75253, -255.7312, -255.72379)
-
-[node name="TreeBundle11" parent="IslandTrackTrees" unique_id=666307991 instance=ExtResource("25_x6w3k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -527.6722, 256, 62.896553)
-size = 32
-density = 2
-layout_seed = 10
-snapped_heights = PackedFloat32Array(-255.7626, -255.63635, -255.71512, -255.71358)
-
-[node name="TreeBundle12" parent="IslandTrackTrees" unique_id=274993597 instance=ExtResource("25_x6w3k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -489.07608, 256, 21.930542)
-size = 32
-density = 2
-layout_seed = 15
-snapped_heights = PackedFloat32Array(-255.6589, -255.64572, -255.72755, -255.63506)
+[node name="RaceWall3" parent="." unique_id=481092031 instance=ExtResource("50_7h6ax")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -769, 0, 263.5)
+curve = SubResource("Curve3D_wtb5w")
 
 [editable path="StuntCity_REMEMBER_TO_REPLACE_ME"]
-[editable path="_Trees_/tree"]
 [editable path="RoadManager/3way_2x3"]
 [editable path="RoadManager/3way_2x3/3way_2x3"]
 [editable path="RoadManager/3way_2x4"]

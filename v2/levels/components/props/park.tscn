@@ -1,10 +1,12 @@
 [gd_scene format=3 uid="uid://dparkgb4x7k2q"]
 
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_park0"]
+[ext_resource type="PackedScene" uid="uid://ylnfkd3cjyjp" path="res://levels/assets/props/tree_bundle.tscn" id="2_6nr7q"]
 
 [node name="Park1" type="Node3D" unique_id=1355590988]
 
 [node name="Ground" parent="." unique_id=1485126779 instance=ExtResource("1_park0")]
+collision_layer = 17
 shape_mode = 1
 width = 64.0
 depth = 64.0
@@ -76,70 +78,6 @@ collision_layer = 3
 width = 3.0
 height = 0.5
 color_preset = 6
-
-[node name="tree_trunk_1" parent="." unique_id=240000011 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 1.5, -8.5)
-collision_layer = 3
-width = 0.8
-height = 3.0
-depth = 0.8
-color_preset = 6
-
-[node name="tree_canopy_1" parent="." unique_id=240000012 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 4.5, -8.5)
-collision_layer = 3
-width = 6.0
-height = 5.0
-depth = 6.0
-color_preset = 2
-
-[node name="tree_trunk_2" parent="." unique_id=240000013 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1.5, -16)
-collision_layer = 3
-width = 0.8
-height = 3.0
-depth = 0.8
-color_preset = 6
-
-[node name="tree_canopy_2" parent="." unique_id=240000014 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 4.5, -16)
-collision_layer = 3
-width = 6.0
-height = 5.0
-depth = 6.0
-color_preset = 2
-
-[node name="tree_trunk_3" parent="." unique_id=240000015 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1.5, 16)
-collision_layer = 3
-width = 0.8
-height = 3.0
-depth = 0.8
-color_preset = 6
-
-[node name="tree_canopy_3" parent="." unique_id=240000016 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 4.5, 16)
-collision_layer = 3
-width = 6.0
-height = 5.0
-depth = 6.0
-color_preset = 2
-
-[node name="tree_trunk_4" parent="." unique_id=240000017 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 1.5, 16)
-collision_layer = 3
-width = 0.8
-height = 3.0
-depth = 0.8
-color_preset = 6
-
-[node name="tree_canopy_4" parent="." unique_id=240000018 instance=ExtResource("1_park0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 4.5, 16)
-collision_layer = 3
-width = 6.0
-height = 5.0
-depth = 6.0
-color_preset = 2
 
 [node name="gazebo_pillar_1" parent="." unique_id=240000019 instance=ExtResource("1_park0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 1.5, -23)
@@ -216,3 +154,9 @@ width = 4.0
 height = 0.1
 depth = 64.0
 color_preset = 1
+
+[node name="TreeBundle" parent="." unique_id=1880052268 instance=ExtResource("2_6nr7q")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2, 30.5, -1.0000002)
+density = 2
+layout_seed = 5
+snapped_heights = PackedFloat32Array(-30.067, -30.227547, -30.206215, nan, -30.094475, -30.095499, -30.070541, -30.16093, -30.182554, nan, -30.231731, -30.11296, -30.100641, -30.10659, -30.120106, -30.159796)

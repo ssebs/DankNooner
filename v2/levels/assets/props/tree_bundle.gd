@@ -1,15 +1,21 @@
 @tool
 class_name TreeBundle extends Node3D
 
-## Scatters pines on a jittered grid, then drops each tree's mesh base onto the collision below the
-## bundle origin. Baked in-editor into snapped_heights, since generated children aren't saved.
+## Scatters pines on a jittered grid, then drops each tree's mesh base onto the unstable_collision
+## layer below the bundle origin; trees over anything else are deleted. Baked in-editor into
+## snapped_heights, since generated children aren't saved.
 
 enum Density { DENSE, MID, SPARSE }
 
 @export_tool_button("Snap to Ground") var snap_btn = snap_to_ground
-@export_enum("16:16", "32:32", "48:48", "64:64", "96:96", "128:128", "256:256") var size := 64:
+@export_enum("16:16", "32:32", "48:48", "64:64", "96:96", "128:128", "192:192", "256:256") var size := 64:
 	set(v):
 		size = v
+		_rebuild()
+## Length along Z as a multiple of size (width along X).
+@export_enum("1x1:1", "1x2:2", "1x4:4") var aspect := 1:
+	set(v):
+		aspect = v
 		_rebuild()
 @export var density := Density.DENSE:
 	set(v):
@@ -31,8 +37,12 @@ func _ready():
 	_build()
 	if Engine.is_editor_hint():
 		set_notify_transform(true)
+	var trees := get_children()
 	for i in snapped_heights.size():
-		(get_child(i) as Node3D).position.y = snapped_heights[i]
+		if is_nan(snapped_heights[i]):
+			trees[i].free()
+		else:
+			trees[i].position.y = snapped_heights[i]
 
 
 func _notification(what: int):
@@ -41,16 +51,20 @@ func _notification(what: int):
 
 
 func snap_to_ground():
+	_build()
 	var space := get_world_3d().direct_space_state
 	var heights := PackedFloat32Array()
 	for tree: Node3D in get_children():
 		var from := Vector3(tree.global_position.x, global_position.y, tree.global_position.z)
 		var hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(from, from + Vector3.DOWN * RAY_LENGTH))
-		# No ground below is expected mid-drag in the editor — leave the tree where it is
-		if not hit.is_empty():
-			var mesh: MeshInstance3D = tree.find_children("*", "MeshInstance3D")[0]
-			var base_y := (mesh.global_transform * mesh.get_aabb()).position.y
-			tree.global_position.y += hit.position.y - base_y
+		# Only grow on unstable ground, not roads/ramps. NaN marks the tree for deletion on load
+		if hit.is_empty() or not hit.collider.collision_layer & MovementController.UNSTABLE_LAYER_MASK:
+			heights.append(NAN)
+			tree.free()
+			continue
+		var mesh: MeshInstance3D = tree.find_children("*", "MeshInstance3D")[0]
+		var base_y := (mesh.global_transform * mesh.get_aabb()).position.y
+		tree.global_position.y += hit.position.y - base_y
 		heights.append(tree.position.y)
 	snapped_heights = heights
 
@@ -58,7 +72,6 @@ func snap_to_ground():
 func _rebuild():
 	if not is_node_ready():
 		return
-	_build()
 	snap_to_ground()
 
 
@@ -67,12 +80,13 @@ func _build():
 		child.free()
 	var rng := RandomNumberGenerator.new()
 	rng.seed = layout_seed
-	var cells := int(size / CELL_SIZE[density])
-	var cell := float(size) / cells
-	for x in cells:
-		for z in cells:
+	var dims := Vector2(size, size * aspect)
+	var cells := Vector2i(dims / CELL_SIZE[density])
+	var cell := dims / Vector2(cells)
+	for x in cells.x:
+		for z in cells.y:
 			var offset := Vector2(rng.randf_range(-JITTER, JITTER), rng.randf_range(-JITTER, JITTER))
-			var pos := (Vector2(x, z) + Vector2(0.5, 0.5) + offset) * cell - Vector2.ONE * size / 2.0
+			var pos := (Vector2(x, z) + Vector2(0.5, 0.5) + offset) * cell - dims / 2.0
 			var tree: Node3D = PINE.instantiate()
 			tree.position = Vector3(pos.x, 0, pos.y)
 			tree.rotation.y = rng.randf() * TAU

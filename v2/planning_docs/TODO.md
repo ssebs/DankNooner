@@ -24,15 +24,12 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-- [ ] race wall around track
-- [ ] better trees
 
 - [ ] mid-race challenges
   - [x] display in HUD during race
   - [x] track who did longest wheelie / airtime
   - [ ] hud to show how to do trick
   - [ ] this suggested trick changes every race
-
 
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
@@ -231,6 +228,10 @@
 ---
 
 ## Done ✅
+
+- [x] better trees
+
+- [x] race wall around track
 
 - [x] M for map half ass/ broken
 
