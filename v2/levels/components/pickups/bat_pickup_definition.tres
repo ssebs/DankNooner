@@ -8,5 +8,6 @@ script = ExtResource("2_udwtp")
 mesh_res = ExtResource("1_25fb5")
 mesh_rotation_offset_degrees = Vector3(45, 0, 0)
 mesh_scale_multiplier = Vector3(3, 3, 3)
+radius = 1.5
 item_type = 1
 metadata/_custom_type_script = "uid://dsfcoucwjtequ"

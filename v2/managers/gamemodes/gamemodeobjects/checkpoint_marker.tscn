@@ -13,7 +13,7 @@ albedo_color = Color(1.4147556, 0.45349365, 1.3666928, 0.2784314)
 material = SubResource("StandardMaterial3D_2lumj")
 top_radius = 2.0
 bottom_radius = 1.0
-height = 64.0
+height = 128.0
 radial_segments = 6
 rings = 1
 cap_top = false
@@ -31,12 +31,12 @@ shape = SubResource("BoxShape3D_fjdpx")
 
 [node name="BorderCylLeft" type="MeshInstance3D" parent="." unique_id=1433966497]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 32, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 64, 0)
 mesh = SubResource("CylinderMesh_sx6t6")
 
 [node name="BorderCylRight" type="MeshInstance3D" parent="." unique_id=706259786]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 32, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 64, 0)
 mesh = SubResource("CylinderMesh_sx6t6")
 
 [node name="RespawnPoints" type="Node3D" parent="." unique_id=697950746]

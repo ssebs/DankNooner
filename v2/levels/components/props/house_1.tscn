@@ -198,6 +198,7 @@ width = 28.0
 height = 1.2
 depth = 0.15
 color_preset = 6
+neon_edges = true
 
 [node name="fence_left" parent="." unique_id=210000028 instance=ExtResource("1_3mdmw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0.625, -2)
@@ -206,6 +207,7 @@ width = 0.15
 height = 1.2
 depth = 28.0
 color_preset = 6
+neon_edges = true
 
 [node name="fence_left2" parent="." unique_id=1035061368 instance=ExtResource("1_3mdmw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0.625, -2)
@@ -214,6 +216,7 @@ width = 0.15
 height = 1.2
 depth = 28.0
 color_preset = 6
+neon_edges = true
 
 [node name="fence_front_left" parent="." unique_id=210000030 instance=ExtResource("1_3mdmw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.7249998, 12)
@@ -222,6 +225,7 @@ width = 21.0
 height = 1.2
 depth = 0.15
 color_preset = 6
+neon_edges = true
 
 [node name="fence_front_right" parent="." unique_id=210000031 instance=ExtResource("1_3mdmw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0.7249998, 12)
@@ -230,6 +234,7 @@ width = 3.0
 height = 1.2
 depth = 0.15
 color_preset = 6
+neon_edges = true
 
 [node name="sidewalk_front" parent="." unique_id=210000034 instance=ExtResource("1_3mdmw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07499999, 14)

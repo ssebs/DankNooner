@@ -1,7 +1,7 @@
 @tool
 class_name PickupItemDefinition extends Resource
 
-enum PickupItemType{GAS_CAN, BAT,}
+enum PickupItemType {GAS_CAN, BAT, }
 
 @export_group("Mesh")
 ## The Scene to instantiate
@@ -20,8 +20,7 @@ enum PickupItemType{GAS_CAN, BAT,}
 
 @export_group("Bubble")
 ## Radius of the pickup's spherical collider and its bubble mesh (both always spheres).
-@export var radius: float = 1.5
+@export var radius: float = 1.25
 
 @export_group("Type")
-@export var item_type:PickupItemType
-
+@export var item_type: PickupItemType

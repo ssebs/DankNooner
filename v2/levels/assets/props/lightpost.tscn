@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://dkk3ym43xrngn"]
+
+[ext_resource type="PackedScene" uid="uid://ox1iggaljcqn" path="res://levels/assets/props/Lightpost.glb" id="1_4t6lr"]
+
+[node name="Lightpost" unique_id=952974811 instance=ExtResource("1_4t6lr")]
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." index="2" unique_id=1600336667]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 9.023917, 1.5986519)
+light_color = Color(0.8392157, 0.7882353, 0.22352941, 1)
+light_energy = 4.0
+spot_range = 32.0
+spot_attenuation = 0.36
+spot_angle = 80.0

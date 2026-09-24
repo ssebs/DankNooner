@@ -70,22 +70,7 @@ font_size = 128
 outline_size = 32
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1746768751]
-mesh = SubResource("TorusMesh_7jvdf")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1028322554]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-mesh = SubResource("TorusMesh_7jvdf")
-
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=395839827]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
-mesh = SubResource("TorusMesh_7jvdf")
-
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="." unique_id=2036244985]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
-mesh = SubResource("TorusMesh_7jvdf")
-
-[node name="MeshInstance3D5" type="MeshInstance3D" parent="." unique_id=704662027]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 mesh = SubResource("TorusMesh_7jvdf")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1190914722]

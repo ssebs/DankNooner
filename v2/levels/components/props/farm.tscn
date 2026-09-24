@@ -107,8 +107,8 @@ transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 11.5, 0, -35)
 
 [node name="NeonEdges" type="Node" parent="Big Barn" unique_id=1901891052]
 script = ExtResource("6_n8j2u")
-color = Color(0.25, 1, 0.28749996, 1)
 energy = 2.5
+width_px = 0.5
 normal_threshold = 1.112
 
 [node name="Barn" parent="." unique_id=1164833034 instance=ExtResource("3_wg7xr")]
@@ -116,8 +116,8 @@ transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 35, 0, -36)
 
 [node name="NeonEdges" type="Node" parent="Barn" unique_id=902230747]
 script = ExtResource("6_n8j2u")
-color = Color(0.25, 1, 0.28749996, 1)
 energy = 2.5
+width_px = 0.5
 normal_threshold = 1.112
 
 [node name="ChickenCoop" parent="." unique_id=310502123 instance=ExtResource("4_n8j2u")]
@@ -125,8 +125,8 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 24, 0, -23.5)
 
 [node name="NeonEdges" type="Node" parent="ChickenCoop" unique_id=143822726]
 script = ExtResource("6_n8j2u")
-color = Color(0.25, 1, 0.28749996, 1)
 energy = 2.5
+width_px = 0.5
 normal_threshold = 1.112
 
 [node name="Silo House" parent="." unique_id=2050090573 instance=ExtResource("5_wg7xr")]
@@ -134,6 +134,6 @@ transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 15.5, 0, -7.5)
 
 [node name="NeonEdges" type="Node" parent="Silo House" unique_id=115965620]
 script = ExtResource("6_n8j2u")
-color = Color(0.25, 1, 0.28749996, 1)
 energy = 2.5
+width_px = 0.5
 normal_threshold = 1.112
