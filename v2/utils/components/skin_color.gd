@@ -26,6 +26,13 @@ class_name SkinColor extends Node3D
 ## Bikes keep using front_wheel_node / rear_wheel_node above and leave this empty.
 @export var wheel_nodes: Array[Node3D] = []
 
+@export_category("Lights")
+## Kept out of `slots` so paint mods never recolor it. Must use a StandardMaterial3D.
+@export var taillight_slot: SkinSlot
+@export var taillight_mesh: MeshInstance3D
+
+var taillight_material: StandardMaterial3D
+
 # Per slot-position runtime materials. Owned by this instance so nothing leaks across other
 # SkinColor instances that share the same SkinSlot resource.
 var _runtime_materials: Array[Material] = []
@@ -43,6 +50,11 @@ func _ready() -> void:
 		meshes[i].set_surface_override_material(slot.surface_index, mat)
 		_runtime_materials[i] = mat
 		slot.apply_color_to(mat, slot.color)
+
+	if taillight_slot:
+		taillight_material = taillight_slot.make_runtime_material()
+		taillight_mesh.set_surface_override_material(taillight_slot.surface_index, taillight_material)
+		taillight_slot.apply_color_to(taillight_material, taillight_slot.color)
 
 
 ## Update a single slot's color. If the slot at `index` appears at multiple positions in
@@ -108,5 +120,11 @@ func _get_configuration_warnings() -> PackedStringArray:
 				issues.append("Slot %d: %s" % [i, issue])
 		if i < meshes.size() and meshes[i] == null:
 			issues.append("Mesh %d is null" % i)
+
+	if taillight_slot:
+		if not taillight_slot.use_standard_material:
+			issues.append("taillight_slot must use a standard material")
+		if taillight_mesh == null:
+			issues.append("taillight_mesh required when taillight_slot is set")
 
 	return issues

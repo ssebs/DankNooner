@@ -257,6 +257,7 @@ func _update_riding(delta: float) -> void:
 	if movement_controller.is_drifting:
 		rear_speed = maxf(absf(rear_speed), input_controller.nfx_throttle * player_entity.bike_definition.max_speed)
 	bike_skin.rotate_wheels(movement_controller.speed, rear_speed, delta, trick_controller.is_in_wheelie())
+	bike_skin.update_brake_light(maxf(input_controller.nfx_front_brake, input_controller.nfx_rear_brake))
 
 	_update_reverse_anim()
 	_update_wheelie_cam_anim()

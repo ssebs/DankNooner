@@ -19,13 +19,28 @@ albedo_color = Color(0.25490198, 0.6862745, 1, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1jg8m"]
 albedo_color = Color(0.25490198, 0.6862745, 1, 1)
 
-[node name="Grom" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("1_kl2q6")]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tail"]
+albedo_color = Color(0.58, 0, 0.066, 1)
+emission_enabled = true
+emission = Color(1, 0.03, 0.03, 1)
+emission_energy_multiplier = 1.6
+
+[sub_resource type="Resource" id="Resource_tail"]
+script = ExtResource("3_1jg8m")
+color = Color(0.58, 0, 0.066, 1)
+use_standard_material = true
+standard_material = SubResource("StandardMaterial3D_tail")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[node name="Grom" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node", "taillight_mesh") instance=ExtResource("1_kl2q6")]
 script = ExtResource("2_cvxtv")
 slots = Array[ExtResource("3_1jg8m")]([SubResource("Resource_cvxtv"), SubResource("Resource_cvxtv")])
 meshes = [NodePath("RotationPoint/Frontfender"), NodePath("PaintedBody")]
 steering_rotation_node = NodePath("RotationPoint")
 front_wheel_node = NodePath("RotationPoint/FrontWheel")
 rear_wheel_node = NodePath("RearWheel")
+taillight_slot = SubResource("Resource_tail")
+taillight_mesh = NodePath("RearTaillight")
 
 [node name="Frontfender" parent="RotationPoint" parent_id_path=PackedInt32Array(1031484188) index="5" unique_id=1756580941]
 surface_material_override/0 = SubResource("StandardMaterial3D_cvxtv")

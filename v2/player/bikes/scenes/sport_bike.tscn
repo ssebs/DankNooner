@@ -40,13 +40,28 @@ albedo_color = Color(0.25490198, 0.6862745, 1, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kk1mv"]
 albedo_color = Color(0.25490198, 0.6862745, 1, 1)
 
-[node name="r7" unique_id=394643670 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node") instance=ExtResource("4_8pjdv")]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tail"]
+albedo_color = Color(0.58, 0, 0.066, 1)
+emission_enabled = true
+emission = Color(1, 0.03, 0.03, 1)
+emission_energy_multiplier = 1.6
+
+[sub_resource type="Resource" id="Resource_tail"]
+script = ExtResource("3_82gmx")
+color = Color(0.58, 0, 0.066, 1)
+use_standard_material = true
+standard_material = SubResource("StandardMaterial3D_tail")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[node name="r7" unique_id=394643670 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node", "taillight_mesh") instance=ExtResource("4_8pjdv")]
 script = ExtResource("2_4okic")
 slots = Array[ExtResource("3_82gmx")]([SubResource("Resource_8pjdv"), SubResource("Resource_5ahef"), SubResource("Resource_kk1mv")])
 meshes = [NodePath("Body"), NodePath("RearWheelSpin/RearWheel"), NodePath("SteerHinge/FrontWheelSpin/FrontWheel_001")]
 steering_rotation_node = NodePath("SteerHinge")
 front_wheel_node = NodePath("SteerHinge/FrontWheelSpin")
 rear_wheel_node = NodePath("RearWheelSpin")
+taillight_slot = SubResource("Resource_tail")
+taillight_mesh = NodePath("Taillight")
 
 [node name="Body" parent="." index="1" unique_id=2132649301]
 surface_material_override/0 = SubResource("StandardMaterial3D_8pjdv")

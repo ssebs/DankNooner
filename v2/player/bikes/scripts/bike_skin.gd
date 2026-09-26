@@ -15,6 +15,7 @@ const LENGTH: float = 2.0
 const WHEEL_SPIN_MULTIPLIER: float = 3.0
 const STEERING_VISUAL_MULTIPLIER: float = 1.0
 const STEERING_LERP_SPEED: float = 10.0
+const BRAKE_LIGHT_ENERGY_MULTIPLIER: float = 2.0
 
 @onready var mesh_node: Node3D = %MeshNode
 
@@ -42,7 +43,7 @@ func get_steering_rotation() -> Vector3:
 func rotate_steering(roll_angle: float, delta: float):
 	if not has_steering():
 		return
-	var target = -mesh_skin.steering_rot_axis * roll_angle * STEERING_VISUAL_MULTIPLIER
+	var target = - mesh_skin.steering_rot_axis * roll_angle * STEERING_VISUAL_MULTIPLIER
 	mesh_skin.steering_rotation_node.rotation = mesh_skin.steering_rotation_node.rotation.lerp(
 		target, STEERING_LERP_SPEED * delta
 	)
@@ -51,7 +52,7 @@ func rotate_steering(roll_angle: float, delta: float):
 func rotate_wheels(front_speed: float, rear_speed: float, delta: float, is_in_wheelie: bool = false):
 	if mesh_skin == null:
 		return
-	var axis = -mesh_skin.wheel_rot_axis * WHEEL_SPIN_MULTIPLIER * delta
+	var axis = - mesh_skin.wheel_rot_axis * WHEEL_SPIN_MULTIPLIER * delta
 	if mesh_skin.front_wheel_node:
 		if is_in_wheelie:
 			mesh_skin.front_wheel_node.rotation.x = lerpf(
@@ -61,6 +62,17 @@ func rotate_wheels(front_speed: float, rear_speed: float, delta: float, is_in_wh
 			mesh_skin.front_wheel_node.rotation += axis * front_speed
 	if mesh_skin.rear_wheel_node:
 		mesh_skin.rear_wheel_node.rotation += axis * rear_speed
+
+
+## Scales the taillight's authored emission up by brake input (0..1).
+func update_brake_light(brake_amount: float):
+	# Not every bike has a taillight authored yet
+	if mesh_skin == null or mesh_skin.taillight_material == null:
+		return
+	var base_energy := mesh_skin.taillight_slot.standard_material.emission_energy_multiplier
+	mesh_skin.taillight_material.emission_energy_multiplier = (
+		base_energy * lerpf(1.0, BRAKE_LIGHT_ENERGY_MULTIPLIER, brake_amount)
+	)
 
 
 #region resource/definition

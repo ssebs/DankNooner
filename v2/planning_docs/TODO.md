@@ -25,8 +25,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] Headlight and brake light functionality
-
 - [ ] mid-race challenges
   - [x] display in HUD during race
   - [x] track who did longest wheelie / airtime
@@ -232,6 +230,8 @@
 ---
 
 ## Done ✅
+
+- [x] Headlight and brake light functionality
 
 - [x] auto stoppie like how wheelies work
 
