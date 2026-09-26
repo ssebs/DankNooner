@@ -141,7 +141,7 @@ point_count = 2
 [sub_resource type="Curve3D" id="Curve3D_oxlis"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0.04449463, 0, -15.999939, 0, 0, 0, -0.55548096, 0.25, -4.3699646, -0.5751953, 0.25, -9.369934, 0.60131836, 0.25, 9.368317),
-"tilts": PackedFloat32Array(0, -2.4387026)
+"tilts": PackedFloat32Array(0, -2.4387028)
 }
 point_count = 2
 
@@ -323,7 +323,7 @@ point_count = 2
 [sub_resource type="Curve3D" id="Curve3D_0yvxw"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11804199, -0.12613839, 15.999054, 12, -4.3655746e-11, 0, 0.65527344, 0.1812275, -1.1180725, 0.6867676, 0.1812275, 6.8818665, -11.2616825, 0.23650542, 7.010801),
-"tilts": PackedFloat32Array(-0.007883737, -0.18591078)
+"tilts": PackedFloat32Array(-0.007883737, -0.18591079)
 }
 point_count = 2
 
@@ -364,15 +364,15 @@ point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_xh2aq"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 4.7732107e-07, -9.3226774e-08, 25.625984, 12.000002, -3.3527613e-08, 2.2351742e-07, 11.719773, -0.1745466, 0.28594375, 26.593994, 0.074409604, 16.322662, -17.046408, 1.3710165, 38.292862),
-"tilts": PackedFloat32Array(7.793959e-09, -0.016778847)
+"points": PackedVector3Array(0, 0, 0, 4.7732107e-07, -9.322677e-08, 25.625982, 12.000002, -3.3527613e-08, 2.2351742e-07, 11.719773, -0.1745466, 0.28594375, 26.593994, 0.074409604, 16.322662, -17.046408, 1.3710165, 38.292862),
+"tilts": PackedFloat32Array(7.793959e-09, -0.016778862)
 }
 point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_660yo"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 3.6504036e-07, -7.1296945e-08, 19.597958, 0, 0, 0, 7.5511684, -0.11246214, 0.18423644, 26.593994, 0.074409604, 16.322662, -16.758698, 1.0435133, 26.300781),
-"tilts": PackedFloat32Array(7.793959e-09, -0.030049952)
+"tilts": PackedFloat32Array(7.793959e-09, -0.030049944)
 }
 point_count = 2
 
@@ -385,15 +385,15 @@ point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_gyn7v"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 0, 0, 29.24434, 12, 0, 0, -0.009787529, 0.020153007, -0.7481833, 50.114685, -0.09000921, 0.2796936, 11.520447, 0.09650725, 49.961296),
-"tilts": PackedFloat32Array(0, 0.015103085)
+"points": PackedVector3Array(0, 0, 0, 0, 0, 29.24434, 12, 0, 0, -0.009787528, 0.020153005, -0.74818325, 50.114685, -0.09000921, 0.2796936, 11.520447, 0.09650725, 49.961296),
+"tilts": PackedFloat32Array(0, 0.015103116)
 }
 point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_pci2k"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 29.09605, 0, 0, 0, -0.013278132, 0.027340334, -1.0150138, 50.114685, -0.09000921, 0.2796936, -0.47714233, -0.09000921, 50.11322),
-"tilts": PackedFloat32Array(0, 0.015053386)
+"tilts": PackedFloat32Array(0, 0.015053385)
 }
 point_count = 2
 
@@ -470,7 +470,7 @@ point_count = 2
 [sub_resource type="Curve3D" id="Curve3D_okah6"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 32.62003, 12, 0, 0, 25.766813, 0, -0.9090448, -57.078796, -0.00024414063, 13.786011, -56.32111, -0.00024414063, 27.096786),
-"tilts": PackedFloat32Array(0, 4.860527e-06)
+"tilts": PackedFloat32Array(0, 4.860984e-06)
 }
 point_count = 2
 
@@ -484,7 +484,7 @@ point_count = 2
 [sub_resource type="Curve3D" id="Curve3D_nal0m"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -4.1820505e-07, -8.712605e-09, 9.355087, -12, 1.6763806e-08, 5.364418e-07, -3.7633698, -0.18538216, -16.368944, -0.75213623, -1.1040066, 27.69635, -5.5688114, -1.0307107, 29.722975),
-"tilts": PackedFloat32Array(2.3283067e-09, 0.0073268116)
+"tilts": PackedFloat32Array(2.3283067e-09, 0.00732682)
 }
 point_count = 2
 
@@ -505,21 +505,21 @@ point_count = 2
 [sub_resource type="Curve3D" id="Curve3D_y6c4p"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -1.0495243e-06, -3.2797633e-08, 17.608097, -12, 0, 7.1525574e-07, -5.319589, -0.11297146, -9.214865, -23.731628, -6.645993, 47.955627, 6.321026, -6.1794567, 56.9004),
-"tilts": PackedFloat32Array(3.7252903e-09, -0.034298744)
+"tilts": PackedFloat32Array(3.7252903e-09, -0.034298748)
 }
 point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_qukl4"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, -7.213675e-07, -2.2542734e-08, 12.10254, 12, 0, -7.1525574e-07, -3.8753722, -0.082300805, -6.713118, -23.731628, -6.645993, 47.955627, 27.10445, -5.979101, 44.900017),
-"tilts": PackedFloat32Array(3.7252899e-09, -0.040770363)
+"points": PackedVector3Array(0, 0, 0, -7.213675e-07, -2.2542734e-08, 12.10254, 12, 0, -7.1525574e-07, -3.8753724, -0.08230081, -6.7131186, -23.731628, -6.645993, 47.955627, 27.10445, -5.979101, 44.900017),
+"tilts": PackedFloat32Array(3.7252899e-09, -0.04077035)
 }
 point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_05twp"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -8.854459e-07, -2.7670184e-08, 14.855319, 0, 0, 0, -4.5974803, -0.09763613, -7.963991, -23.731628, -6.645993, 47.955627, 16.712738, -6.079279, 50.900208),
-"tilts": PackedFloat32Array(3.7252903e-09, -0.03726352)
+"tilts": PackedFloat32Array(3.7252903e-09, -0.037263535)
 }
 point_count = 2
 
@@ -574,8 +574,8 @@ point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_44yky"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 1.2577493e-07, 0, 8.440611, 11.999996, -8.381903e-08, 1.7881393e-07, 3.3948226, 0.4102248, -5.0193005, -16.406311, 6.000122, 38.57184, -5.36224, 1.758825, 46.078804),
-"tilts": PackedFloat32Array(6.98492e-09, -0.06554856)
+"points": PackedVector3Array(0, 0, 0, 1.2577495e-07, 0, 8.440612, 11.999996, -8.381903e-08, 1.7881393e-07, 3.3948226, 0.4102248, -5.0193005, -16.406311, 6.000122, 38.57184, -5.36224, 1.758825, 46.078804),
+"tilts": PackedFloat32Array(6.98492e-09, -0.06554859)
 }
 point_count = 2
 
@@ -1756,13 +1756,13 @@ color_preset = 1
 [node name="StuntCity_REMEMBER_TO_REPLACE_ME" parent="." unique_id=1750931100 instance=ExtResource("27_grj8g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 0)
 
-[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/grass" parent_id_path=PackedInt32Array(1750931100, 1434498815) index="0" unique_id=1902094466]
+[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/grass" parent_id_path=PackedInt32Array(1750931100, 1855413113) index="0" unique_id=649719389]
 collision_layer = 17
 
-[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/ground" parent_id_path=PackedInt32Array(1750931100, 1650114735) index="0" unique_id=768195441]
+[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/ground" parent_id_path=PackedInt32Array(1750931100, 204493026) index="0" unique_id=824161194]
 collision_layer = 17
 
-[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/water" parent_id_path=PackedInt32Array(1750931100, 448821427) index="0" unique_id=1545230634]
+[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/water" parent_id_path=PackedInt32Array(1750931100, 1323724107) index="0" unique_id=1559516157]
 collision_layer = 0
 
 [node name="Houses" type="Node3D" parent="." unique_id=697015734]
@@ -4006,7 +4006,7 @@ lane_width = 6.0
 [node name="RP_004" parent="RoadManager/3way_2x3" index="3"]
 lane_width = 6.0
 
-[node name="3way_2x2" parent="RoadManager/3way_2x3/3way_2x3" index="0" unique_id=792373302]
+[node name="3way_2x2" parent="RoadManager/3way_2x3/3way_2x3" index="0" unique_id=1118283580]
 surface_material_override/0 = ExtResource("15_7kcev")
 
 [node name="Road_004" type="Node3D" parent="RoadManager" unique_id=1679953535]
@@ -4090,7 +4090,7 @@ lane_width = 6.0
 [node name="RP_004" parent="RoadManager/3way_2x4" index="3"]
 lane_width = 6.0
 
-[node name="3way_2x2" parent="RoadManager/3way_2x4/3way_2x3" index="0" unique_id=792373302]
+[node name="3way_2x2" parent="RoadManager/3way_2x4/3way_2x3" index="0" unique_id=1118283580]
 surface_material_override/0 = ExtResource("15_7kcev")
 
 [node name="4way_2x2" parent="RoadManager" unique_id=4089390 instance=ExtResource("11_s2l3m")]

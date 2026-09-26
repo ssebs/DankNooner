@@ -51,7 +51,7 @@ const NEON_EDGES_SHADER := preload("res://levels/assets/graybox/neon_edges.gdsha
 const PLANE_COLLISION_THICKNESS: float = 0.05
 
 static var _mesh_cache: Dictionary = {}
-static var _neon_material: ShaderMaterial
+static var _neon_material_cache: Dictionary = {}
 
 @onready var meshinstance: MeshInstance3D = %MeshInstance3D
 @onready var collisionshape: CollisionShape3D = %CollisionShape3D
@@ -125,10 +125,18 @@ func apply_neon_edges():
 		meshinstance.material_overlay = null
 		return
 
-	if _neon_material == null:
-		_neon_material = ShaderMaterial.new()
-		_neon_material.shader = NEON_EDGES_SHADER
-	meshinstance.material_overlay = _neon_material
-	meshinstance.set_instance_shader_parameter("edge_color", neon_color)
 	var mesh_height := height if shape_mode == ShapeMode.BOX else 0.0
-	meshinstance.set_instance_shader_parameter("size", Vector3(width, mesh_height, depth))
+	meshinstance.material_overlay = _get_shared_neon_material(Vector3(width, mesh_height, depth), neon_color)
+
+
+# One material per (size, color) so matching boxes share it — never mutate
+static func _get_shared_neon_material(size: Vector3, color: Color) -> ShaderMaterial:
+	var key := [size, color]
+	if _neon_material_cache.has(key):
+		return _neon_material_cache[key]
+	var mat := ShaderMaterial.new()
+	mat.shader = NEON_EDGES_SHADER
+	mat.set_shader_parameter("size", size)
+	mat.set_shader_parameter("edge_color", color)
+	_neon_material_cache[key] = mat
+	return mat

@@ -53,6 +53,7 @@ func _ready():
 
 	if OS.has_feature("web"):
 		default_settings["fullscreen_mode"] = "windowed"
+		default_settings["resolution_scale"] = 0.5
 
 	self.call_deferred("deferred_init")
 

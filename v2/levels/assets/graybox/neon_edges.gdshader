@@ -2,12 +2,12 @@
 shader_type spatial;
 render_mode unshaded, blend_add, depth_draw_never, fog_disabled;
 
-// Instance uniforms so every box shares one material
-instance uniform vec3 edge_color : source_color = vec3(0.255, 0.686, 1.0);
+// Plain uniforms, not instance uniforms: WebGL's instance buffer only fits a few hundred meshes
+uniform vec3 edge_color : source_color = vec3(0.255, 0.686, 1.0);
 uniform float edge_energy : hint_range(0.0, 16.0) = 4.0;
 uniform float edge_width : hint_range(0.0, 1.0) = 0.06;
 // Mesh size in local units; y = 0 for a plane
-instance uniform vec3 size = vec3(1.0);
+uniform vec3 size = vec3(1.0);
 
 varying vec3 local_pos;
 

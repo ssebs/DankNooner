@@ -201,6 +201,11 @@ func _ready():
 
 	add_to_group(UtilsConstants.GROUPS["Racers"])
 
+	# No shadow maps on WebGL — see LevelDefinition._ready
+	if OS.has_feature("web"):
+		for light: Light3D in headlight_marker.find_children("*", "Light3D", true, false):
+			light.shadow_enabled = false
+
 	# await get_tree().process_frame
 
 	# Network authority

@@ -265,5 +265,6 @@ rendering_device/driver.windows="d3d12"
 textures/vram_compression/import_etc2_astc=true
 anti_aliasing/quality/screen_space_aa=1
 anti_aliasing/quality/use_taa=true
+limits/opengl/max_renderable_lights.web=16
 occlusion_culling/use_occlusion_culling=true
 mesh_lod/lod_change/threshold_pixels=2.0

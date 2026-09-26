@@ -27,6 +27,14 @@ func _ready():
 		return
 	if OS.has_feature("debug"):
 		player_spawn_pos = player_spawn_pos_debug
+	# WebGL can't afford the post-process pass (glow + adjustments) or shadow maps. Neon edges still
+	# draw, unbloomed. Runs in warmup too, so warmed shader variants match this.
+	if OS.has_feature("web"):
+		for world_env: WorldEnvironment in find_children("*", "WorldEnvironment", true, false):
+			world_env.environment.glow_enabled = false
+			world_env.environment.adjustment_enabled = false
+		for light: Light3D in find_children("*", "Light3D", true, false):
+			light.shadow_enabled = false
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []

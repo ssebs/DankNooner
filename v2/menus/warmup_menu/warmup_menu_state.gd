@@ -1,28 +1,34 @@
 @tool
 class_name WarmupMenuState extends MenuState
-## Boot-time shader/pipeline warmup. Instances every level offscreen and draws it
-## for a few frames so Godot compiles its material/particle/shadow pipelines here —
-## behind a "compiling shaders" screen — instead of hitching on first gameplay draw.
+## Boot-time shader/pipeline warmup. Instances every level offscreen (with every skin and VFX
+## inside it) and draws it for a few frames so Godot compiles its material/particle/shadow
+## pipelines here — behind a "compiling shaders" screen — instead of hitching on first gameplay draw.
+## The viewport has no environment or light of its own: shader variants depend on the level's
+## fog/glow/lights, so each level must be drawn under exactly what it uses in-game.
 ## Runs once per build; Godot's own shader_cache persists the results across launches.
 
 @export var level_manager: LevelManager
 @export var next_state: MenuState  ## where to go once warmup finishes (splash)
 ## Frames drawn per level, so async (ubershader) pipeline compiles have time to settle.
 @export var frames_per_level: int = 4
-## PlayerEntity VFX scenes (exhaust flame, sparks). No level contains a player, so their
-## shader/particle pipelines never compile during level warmup — warm them here too.
+## PlayerEntity VFX scenes (exhaust flame, sparks). No level contains a player, so these
+## are dropped into each level during its warmup, alongside every skin.
 @export var vfx_scenes: Array[PackedScene] = []
 
 const MARKER_PATH := "user://.shaders_warmed"
 
 @onready var warmup_viewport: SubViewport = %WarmupViewport
 @onready var warmup_camera: Camera3D = %WarmupCamera
+## Mirrors the player's shadowed headlight so spot-light shader variants compile here too
+@onready var warmup_spot_light: SpotLight3D = %WarmupSpotLight
 @onready var progress_bar: ProgressBar = %ProgressBar
 
 
 func Enter(_state_context: StateContext):
 	if Engine.is_editor_hint():
 		return
+	# Match the headlight, which has no shadow on web (PlayerEntity._ready)
+	warmup_spot_light.shadow_enabled = not OS.has_feature("web")
 	ui.show()
 	# Time-to-here is pure Godot boot (engine init, main scene load, base-shader
 	# compile) — everything before warmup starts. Compare against the warmup total.
@@ -51,36 +57,54 @@ func Exit(_state_context: StateContext):
 
 
 func _warm_all_levels() -> void:
-	var scenes: Array[PackedScene] = []
+	var levels: Array[PackedScene] = []
 	for scene in level_manager.possible_levels.values():
-		if scene != null and scene not in scenes:
-			scenes.append(scene)
+		if scene != null and scene not in levels:
+			levels.append(scene)
+	# Every bike/character the customize menu offers — no level contains them
+	var extras: Array[PackedScene] = vfx_scenes.duplicate()
+	for skins_dir in [CustomizeMenuState.BIKE_SKINS_DIR, CustomizeMenuState.CHARACTER_SKINS_DIR]:
+		for res_path in SkinScanner.scan_skin_dir(skins_dir).values():
+			var skin_scene: PackedScene = load(res_path).mesh_res
+			if skin_scene not in extras:
+				extras.append(skin_scene)
 
-	progress_bar.max_value = scenes.size() + vfx_scenes.size()
+	progress_bar.max_value = levels.size()
 	progress_bar.value = 0
 
-	for scene in scenes:
-		await _warm_scene(scene, false)
+	for scene in levels:
+		await _warm_level(scene, extras)
 		progress_bar.value += 1
 		# Repaint so the bar visibly climbs before the next blocking instantiate.
 		await RenderingServer.frame_post_draw
 
-	for scene in vfx_scenes:
-		await _warm_scene(scene, true)
-		progress_bar.value += 1
-		await RenderingServer.frame_post_draw
 
-
-## force_drawable: VFX start hidden/idle (FlameMesh invisible, particles not emitting), so
-## nothing draws unless we force them on — otherwise their pipelines never compile here.
-func _warm_scene(scene: PackedScene, force_drawable: bool) -> void:
+## extras are placed in front of the camera so they draw under this level's environment/lights.
+## They start hidden/idle (FlameMesh invisible, particles not emitting), so force them drawable —
+## otherwise their pipelines never compile here.
+func _warm_level(scene: PackedScene, extras: Array[PackedScene]) -> void:
 	var t_start := Time.get_ticks_msec()
 	var instance := scene.instantiate()
 	warmup_viewport.add_child(instance)
-	if force_drawable:
-		_force_drawable(instance)
 	_frame_camera_to(instance)
 	warmup_camera.make_current()
+	var in_view := warmup_camera.global_position - warmup_camera.global_basis.z * 3.0
+	for extra_scene in extras:
+		var extra: Node3D = extra_scene.instantiate()
+		instance.add_child(extra)
+		extra.global_position = in_view
+		_force_drawable(extra)
+	# Skidmarks build their material at runtime (SkidmarkController._new_ribbon), so no scene carries it
+	var skid_mat := ShaderMaterial.new()
+	skid_mat.shader = SkidmarkController.SKID_SHADER
+	skid_mat.set_shader_parameter("tex", SkidmarkController.SKID_TEXTURE)
+	var skid := MeshInstance3D.new()
+	skid.mesh = QuadMesh.new()
+	skid.material_override = skid_mat
+	skid.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	instance.add_child(skid)
+	# QuadMesh faces +Z, the camera's back — so it faces the camera and isn't backface-culled
+	skid.global_transform = Transform3D(warmup_camera.global_basis, in_view)
 	var t_loaded := Time.get_ticks_msec()
 	for _i in frames_per_level:
 		await RenderingServer.frame_post_draw
@@ -116,6 +140,7 @@ func _frame_camera_to(root: Node) -> void:
 	warmup_camera.global_position = center + Vector3(0, radius * 0.5, radius * 2.0)
 	warmup_camera.look_at(center)
 	warmup_camera.far = radius * 8.0
+	warmup_spot_light.spot_range = warmup_camera.far
 
 
 func _combined_aabb(node: Node) -> AABB:
@@ -136,6 +161,9 @@ func _combined_aabb(node: Node) -> AABB:
 ## Cache is current only if the marker holds this exact build version; a mismatch
 ## (or missing marker) re-runs warmup, and the write above overwrites the old value.
 func _cache_is_current() -> bool:
+	# WebGL can't persist compiled shaders (Godot compiles the GLES3 cache out on web)
+	if OS.has_feature("web"):
+		return false
 	if !FileAccess.file_exists(MARKER_PATH):
 		return false
 	var f := FileAccess.open(MARKER_PATH, FileAccess.READ)
