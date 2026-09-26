@@ -5,7 +5,7 @@ class_name TreeBundle extends Node3D
 ## layer below the bundle origin; trees over anything else are deleted. Baked in-editor into
 ## snapped_heights, since generated children aren't saved.
 
-enum Density { DENSE, MID, SPARSE }
+enum Density {DENSE, MID, SPARSE}
 
 @export_tool_button("Snap to Ground") var snap_btn = snap_to_ground
 @export_enum("16:16", "32:32", "48:48", "64:64", "96:96", "128:128", "192:192", "256:256") var size := 64:
@@ -25,12 +25,17 @@ enum Density { DENSE, MID, SPARSE }
 	set(v):
 		layout_seed = v
 		_rebuild()
+## Trunk colliders on every tree; only enable for bundles players can reach.
+@export var has_collision := false
 @export var snapped_heights: PackedFloat32Array
 
 const PINE := preload("res://levels/assets/props/Pine.glb")
 const CELL_SIZE := {Density.DENSE: 8.0, Density.MID: 11.0, Density.SPARSE: 15.0}
 const JITTER := 0.4
 const RAY_LENGTH := 500.0
+# Pine.glb bark is ~0.5 wide; canopy starts ~1.5 up. Tree scale applies on top.
+const TRUNK_RADIUS := 0.5
+const TRUNK_HEIGHT := 2.0
 
 
 func _ready():
@@ -38,11 +43,19 @@ func _ready():
 	if Engine.is_editor_hint():
 		set_notify_transform(true)
 	var trees := get_children()
+	# Runtime only: editor colliders would be hit by snap_to_ground rays from overlapping bundles
+	var trunk: CylinderShape3D = null
+	if has_collision and not Engine.is_editor_hint():
+		trunk = CylinderShape3D.new()
+		trunk.radius = TRUNK_RADIUS
+		trunk.height = TRUNK_HEIGHT
 	for i in snapped_heights.size():
 		if is_nan(snapped_heights[i]):
 			trees[i].free()
 		else:
 			trees[i].position.y = snapped_heights[i]
+			if trunk:
+				_add_trunk_collider(trees[i], trunk)
 
 
 func _notification(what: int):
@@ -67,6 +80,16 @@ func snap_to_ground():
 		tree.global_position.y += hit.position.y - base_y
 		heights.append(tree.position.y)
 	snapped_heights = heights
+
+
+func _add_trunk_collider(tree: Node3D, trunk: CylinderShape3D):
+	var body := StaticBody3D.new()
+	body.collision_layer = 3 # default + crash_collision, same as cone_staticbody
+	var shape := CollisionShape3D.new()
+	shape.shape = trunk
+	shape.position.y = TRUNK_HEIGHT / 2.0
+	body.add_child(shape)
+	tree.add_child(body)
 
 
 func _rebuild():
