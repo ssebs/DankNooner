@@ -23,7 +23,7 @@ read -p "Push $NEW_TAG and update project.godot? [Y/n] " confirm
 confirm=${confirm:-Y}
 
 if [[ "$confirm" =~ ^[Yy]$ ]]; then
-    sed -i "s/config\/version=\"[^\"]*\"/config\/version=\"$NEW_TAG\"/" ./project.godot
+    sed -i.bak "s/config\/version=\"[^\"]*\"/config\/version=\"$NEW_TAG\"/" ./project.godot && rm ./project.godot.bak
 
     git add ./project.godot
     git commit -m "$NEW_TAG release"
