@@ -25,6 +25,8 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] Headlight and brake light functionality
+
 - [ ] mid-race challenges
   - [x] display in HUD during race
   - [x] track who did longest wheelie / airtime
@@ -43,7 +45,6 @@
 ## Notes 📝
 > Stuff to move ASAP
 - [ ] replace csgmesh for houses/other buildings for performance + looks
-- [ ] Headlight and brake light functionality
 - [ ] tapping brakes during full boost should stop it where youre at
 - trick animation to move up then play the mixamo anims
 - Time attack mode

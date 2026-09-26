@@ -67,6 +67,8 @@ signal uncrashed
 ## Exhaust tip authoring handle (position + rotation). Save Default Pose writes it into
 ## exhaust_tip_position/exhaust_tip_rotation_degrees; runtime reads those .tres values to place flame VFX.
 @export var exhaust_tip_marker: Marker3D
+## Headlight authoring handle, same flow as exhaust_tip_marker (headlight_position/rotation_degrees).
+@export var headlight_marker: Marker3D
 
 ## Local cosmetic decel pops / backfires (see _update_exhaust_pops).
 @export_group("Exhaust Pops")

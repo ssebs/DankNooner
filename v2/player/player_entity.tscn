@@ -2310,7 +2310,7 @@ _data = {
 &"wheelie_cam_start": SubResource("Animation_75npo")
 }
 
-[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("collision_shape_3d", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "movement_controller", "camera_controller", "boost_controller", "butt_target", "left_hand_target", "right_hand_target", "left_foot_target", "right_foot_target", "chest_target", "head_target", "left_arm_magnet", "right_arm_magnet", "left_leg_magnet", "right_leg_magnet", "front_wheel_ground_marker", "rear_wheel_ground_marker", "front_wheel_front_marker", "rear_wheel_back_marker", "exhaust_tip_marker")]
+[node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("collision_shape_3d", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "movement_controller", "camera_controller", "boost_controller", "butt_target", "left_hand_target", "right_hand_target", "left_foot_target", "right_foot_target", "chest_target", "head_target", "left_arm_magnet", "right_arm_magnet", "left_leg_magnet", "right_leg_magnet", "front_wheel_ground_marker", "rear_wheel_ground_marker", "front_wheel_front_marker", "rear_wheel_back_marker", "exhaust_tip_marker", "headlight_marker")]
 collision_layer = 3
 collision_mask = 19
 floor_block_on_wall = false
@@ -2344,6 +2344,7 @@ rear_wheel_ground_marker = NodePath("VisualRoot/IKTargets/RearWheelGroundMarker"
 front_wheel_front_marker = NodePath("VisualRoot/IKTargets/FrontWheelFrontMarker")
 rear_wheel_back_marker = NodePath("VisualRoot/IKTargets/RearWheelBackMarker")
 exhaust_tip_marker = NodePath("VisualRoot/IKTargets/ExhaustTipMarker")
+headlight_marker = NodePath("VisualRoot/IKTargets/HeadlightMarker")
 
 [node name="RollbackSynchronizer" type="Node" parent="." unique_id=609748778 node_paths=PackedStringArray("root")]
 unique_name_in_owner = true
@@ -2494,7 +2495,7 @@ emitting = false
 
 [node name="RightFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=844444444]
 unique_name_in_owner = true
-transform = Transform3D(-0.9787893, 0.022497118, 0.2036314, 0.20170887, 0.27976713, 0.93863934, -0.035852674, 0.9598043, -0.27837086, -0.18314199, 0.5666657, -0.22655825)
+transform = Transform3D(-0.9787892, 0.022497207, 0.20363149, 0.20170893, 0.27976722, 0.93863934, -0.03585267, 0.9598043, -0.27837098, -0.18314199, 0.5666657, -0.22655825)
 
 [node name="SparkParticlesRight" parent="VisualRoot/IKTargets/RightFootTarget" unique_id=1985641876 instance=ExtResource("29_3kl2f")]
 unique_name_in_owner = true
@@ -2535,7 +2536,7 @@ transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 3.36
 
 [node name="ExhaustTipMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=698596267]
 unique_name_in_owner = true
-transform = Transform3D(0.9694907, 0.13598497, 0.20394911, 0, 0.83201456, -0.5547535, -0.24512678, 0.5378285, 0.8066306, -0.22484247, 0.4660294, -0.5100629)
+transform = Transform3D(0.9694901, 0.13598497, 0.20394906, 0, 0.8320145, -0.5547534, -0.24512663, 0.5378285, 0.80663043, -0.22484247, 0.4660294, -0.5100629)
 
 [node name="ExhaustFlameParticles" parent="VisualRoot/IKTargets/ExhaustTipMarker" unique_id=557107755 instance=ExtResource("17_htgu7")]
 unique_name_in_owner = true
@@ -2550,10 +2551,10 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2.62
 
 [node name="SpotLight3D" type="SpotLight3D" parent="VisualRoot/IKTargets/HeadlightMarker" unique_id=1112210254]
 light_color = Color(0.953125, 0.9419265, 0.6664429, 1)
-light_energy = 2.0
+light_energy = 8.0
 shadow_enabled = true
-spot_range = 20.0
-spot_angle = 15.0
+spot_range = 60.0
+spot_angle = 26.0
 
 [node name="CharacterSkin" parent="VisualRoot" unique_id=259227641 instance=ExtResource("6_1vqn6")]
 unique_name_in_owner = true
