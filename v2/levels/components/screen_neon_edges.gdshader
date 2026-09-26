@@ -38,13 +38,12 @@ void fragment() {
 	for (int i = 0; i < 4; i++) {
 		vec2 uv = SCREEN_UV + offsets[i];
 		float depth_jump = (linear_depth(uv, INV_PROJECTION_MATRIX) - depth) / depth;
+		// Ramps instead of hard thresholds so near-threshold pixels fade rather than pop under TAA jitter
+		float silhouette = smoothstep(depth_threshold, depth_threshold * 2.0, depth_jump);
+		float crease = smoothstep(normal_threshold, normal_threshold * 2.0, 1.0 - dot(normal, view_normal(uv)));
 		// A nearer neighbor is an occluder's outline, not ours
-		if (depth_jump < -depth_threshold) {
-			continue;
-		}
-		if (depth_jump > depth_threshold || 1.0 - dot(normal, view_normal(uv)) > normal_threshold) {
-			edge = 1.0;
-		}
+		float not_occluded = 1.0 - smoothstep(depth_threshold, depth_threshold * 2.0, -depth_jump);
+		edge = max(edge, max(silhouette, crease) * not_occluded);
 	}
 	ALBEDO = edge_color * edge_energy * edge;
 }

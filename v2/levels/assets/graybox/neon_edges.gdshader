@@ -21,5 +21,11 @@ void fragment() {
 	vec3 d = size * 0.5 - abs(local_pos);
 	// On a face one component is ~0, so the median is the distance to the nearest edge
 	float edge_dist = d.x + d.y + d.z - min(d.x, min(d.y, d.z)) - max(d.x, max(d.y, d.z));
-	ALBEDO = edge_color * edge_energy * (1.0 - smoothstep(edge_width * 0.5, edge_width, edge_dist));
+	// Floor the width at ~1px on screen so distant edges don't break into dots,
+	// and dim by the true coverage so they fade with distance instead of thickening
+	float px = length(vec2(dFdx(edge_dist), dFdy(edge_dist)));
+	float width = max(edge_width, px);
+	float coverage = edge_width / width;
+	// Pad the falloff by a pixel either side so the outer boundary is antialiased at any distance
+	ALBEDO = edge_color * edge_energy * coverage * (1.0 - smoothstep(width * 0.5 - px, width + px, edge_dist));
 }
