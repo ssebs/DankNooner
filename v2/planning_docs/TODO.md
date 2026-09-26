@@ -43,7 +43,6 @@
 ## Notes 📝
 > Stuff to move ASAP
 - [ ] replace csgmesh for houses/other buildings for performance + looks
-- [ ] tapping brakes during full boost should stop it where youre at
 - trick animation to move up then play the mixamo anims
 - Time attack mode
 - Add lap race to stunt city
@@ -230,6 +229,8 @@
 ---
 
 ## Done ✅
+
+- [x] tapping brakes during full boost should stop it
 
 - [x] Headlight and brake light functionality
 

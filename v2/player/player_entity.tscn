@@ -2536,7 +2536,7 @@ transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 3.36
 
 [node name="ExhaustTipMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=698596267]
 unique_name_in_owner = true
-transform = Transform3D(0.9694901, 0.13598497, 0.20394906, 0, 0.8320145, -0.5547534, -0.24512663, 0.5378285, 0.80663043, -0.22484247, 0.4660294, -0.5100629)
+transform = Transform3D(0.96949005, 0.13598497, 0.20394905, 0, 0.8320145, -0.55475336, -0.24512662, 0.5378285, 0.8066304, -0.22484247, 0.4660294, -0.5100629)
 
 [node name="ExhaustFlameParticles" parent="VisualRoot/IKTargets/ExhaustTipMarker" unique_id=557107755 instance=ExtResource("17_htgu7")]
 unique_name_in_owner = true

@@ -60,6 +60,10 @@ func on_movement_rollback_tick(delta: float):
 		is_boosting = false
 		return
 
+	# Braking cancels a full burn, keeping whatever meter is left.
+	if boost_burn_rate == BOOST_SEGMENTS / BOOST_FULL_BURN_SECS and input_controller.nfx_front_brake > 0.0:
+		boost_burn_target = -1.0
+
 	# Rising edge with at least one whole segment banked commits a burn.
 	if held and not was_held and boost_amount >= 1.0:
 		if boost_tap_window > 0.0:
