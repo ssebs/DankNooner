@@ -219,9 +219,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="RidingHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=1177239669 node_paths=PackedStringArray("hud_manager", "save_manager") instance=ExtResource("42_5fp36")]
+[node name="RidingHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=1177239669 node_paths=PackedStringArray("hud_manager", "save_manager", "trick_manager") instance=ExtResource("42_5fp36")]
 hud_manager = NodePath("../..")
 save_manager = NodePath("../../../SaveManager")
+trick_manager = NodePath("../../../TrickManager")
 
 [node name="GamemodeEventHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=1122284461 node_paths=PackedStringArray("hud_manager", "input_state_manager") instance=ExtResource("27_3cqky")]
 hud_manager = NodePath("../..")
@@ -257,11 +258,13 @@ challenge_mode = NodePath("StateMachine/ChallengeGameMode")
 script = ExtResource("4_6bm6p")
 metadata/_custom_type_script = "uid://ba7kyb4p3trb1"
 
-[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_hud_state", "level_manager", "pickup_spawn_manager", "gamemode_manager", "spawn_manager")]
+[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_hud_state", "level_manager", "pickup_spawn_manager", "trick_manager", "riding_hud_state", "gamemode_manager", "spawn_manager")]
 script = ExtResource("25_6krrg")
 game_mode_event_hud_state = NodePath("../../../HUDManager/StateMachine/GamemodeEventHUDState")
 level_manager = NodePath("../../../LevelManager")
 pickup_spawn_manager = NodePath("../../../PickupSpawnManager")
+trick_manager = NodePath("../../../TrickManager")
+riding_hud_state = NodePath("../../../HUDManager/StateMachine/RidingHUDState")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 

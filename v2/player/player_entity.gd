@@ -341,13 +341,15 @@ func _enter_crash_visuals() -> void:
 		audio_manager.stop_revs()
 		# TODO - use meme mode instead of hard coding this randomization
 		randomize()
-		match randi_range(0, 2):
+		match randi_range(0, 3):
 			0:
 				audio_manager.play_bowling_crash()
 			1:
 				audio_manager.play_vine_boom()
 			2:
 				audio_manager.play_nuke()
+			3:
+				audio_manager.play_bone_crack()
 
 
 ## Crash-cleared edge. Rebuild mesh + IK because the ragdoll left rider/handlebar bones off base pose.
@@ -525,21 +527,6 @@ func _on_trick_ended(trick_type: TrickController.Trick):
 		"Trick Ended: %s" % TrickController.trick_to_str(trick_type),
 		OS.has_feature("debug") and false
 	)
-
-	if (
-		is_local_client
-		and audio_manager
-		and (
-			trick_type
-			not in [
-				TrickController.Trick.NONE,
-				TrickController.Trick.WHEELIE_SITTING,
-				TrickController.Trick.WHEELIE_MOD,
-				TrickController.Trick.STOPPIE
-			]
-		)
-	):
-		audio_manager.play_ding()
 
 
 #endregion

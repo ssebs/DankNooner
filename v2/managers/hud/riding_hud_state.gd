@@ -4,6 +4,8 @@ class_name RidingHUDState extends HUDState
 
 @export var hud_manager: HUDManager
 @export var save_manager: SaveManager
+## Read for points_per_second, so the live combo points match what the server banks.
+@export var trick_manager: TrickManager
 
 const _TRICK_ROW_SCENE := preload("res://menus/tricks_menu/components/trick_row.tscn")
 const _RPM_COLOR_LOW := Color(0.103055954, 0.5546875, 0.052001953, 1)
@@ -33,7 +35,7 @@ const _RESPAWN_QUICK_FLASH_SECS := 0.6
 @onready var _trick_msg: Label = %HUD_TRICK_MSG
 @onready var _game_msg: Label = %HUD_GAME_MSG
 @onready var _leaderboard: RaceLeaderboard = %HUD_Leaderboard
-@onready var _score_popup: ScorePopup = %ScorePopup
+@onready var _trick_popups: TrickPopups = %TrickPopups
 @onready var _challenge_panel: PanelContainer = %ChallengePanel
 @onready var _trick_timer: Label = %HUD_TRICK_TIMER
 @onready var _balance_bar: BalanceBar = %BalanceBar
@@ -92,6 +94,7 @@ func Enter(_state_context: StateContext):
 	gearing_controller = player_entity.gearing_controller
 	trick_controller = player_entity.trick_controller
 	boost_controller = player_entity.boost_controller
+	_trick_popups.audio_manager = player_entity.audio_manager
 
 
 	if Engine.is_editor_hint():
@@ -203,6 +206,7 @@ func Physics_Update(delta: float):
 	var comboing: bool = trick_controller.combo_time > 0.0 and not player_entity.is_crashed
 	var combo: int = trick_controller.combo_multiplier if comboing else 1
 	_combo_counter.set_combo(combo, comboing)
+	_trick_popups.track(player_entity, trick_manager.points_per_second, delta)
 
 	# Live wheelie-attempt stopwatch, only while a challenge is up (the panel is visible).
 	# Display-only local accumulation — the challenge's authoritative best is server-side.
@@ -325,6 +329,9 @@ func _on_trick_ended(_trick_type: TrickController.Trick):
 func _on_crashed(_peer_id: int):
 	_game_msg.text = tr("HUD_CRASHED")
 	_game_msg.visible = true
+	# combo_time freezes on a crash, so it's still set here if a combo just got voided.
+	if trick_controller.combo_time > 0.0:
+		_trick_popups.pop_oof()
 
 
 func _on_respawned():
@@ -435,7 +442,17 @@ func push_score_popup(peer_id: int, points: int, multiplier: int) -> void:
 
 @rpc("call_local", "reliable")
 func _rpc_score_popup(points: int, multiplier: int):
-	_score_popup.pop(points, multiplier)
+	_trick_popups.pop_score(points, multiplier)
+
+
+## Server-side: show a (pre-localized) callout on every rider's HUD, e.g. a round winner.
+func push_callout_all(text: String) -> void:
+	_rpc_callout.rpc(text)
+
+
+@rpc("call_local", "reliable")
+func _rpc_callout(text: String):
+	_trick_popups.pop_callout(text)
 
 
 func hide_ui() -> void:
@@ -461,4 +478,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("hud_manager must not be empty")
 	if save_manager == null:
 		issues.append("save_manager must not be empty")
+	if trick_manager == null:
+		issues.append("trick_manager must not be empty")
 	return issues

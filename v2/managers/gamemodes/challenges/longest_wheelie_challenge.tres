@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="LongestWheelieChallenge" format=3]
+[gd_resource type="Resource" script_class="LongestWheelieChallenge" format=3 uid="uid://bhuyo3mphkb1m"]
 
-[ext_resource type="Script" path="res://managers/gamemodes/challenges/longest_wheelie_challenge.gd" id="1"]
+[ext_resource type="Script" uid="uid://c0uylliv5rmt6" path="res://managers/gamemodes/challenges/longest_wheelie_challenge.gd" id="1"]
 
 [resource]
 script = ExtResource("1")
-title_key = "RACE_LONGEST_WHEELIE"
-icon = "🏍"
+title_key = null
+icon = null

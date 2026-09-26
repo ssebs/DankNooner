@@ -74,8 +74,12 @@ func _add_row() -> HBoxContainer:
 	return row
 
 
-## Grows the row's labels to match, then sets their text. First column is the (wider) name.
+## Grows/trims the row's labels to match, then sets their text. First column is the (wider) name.
 func _set_cells(row: HBoxContainer, texts: PackedStringArray) -> void:
+	while row.get_child_count() > texts.size():
+		var extra := row.get_child(row.get_child_count() - 1)
+		row.remove_child(extra)
+		extra.queue_free()
 	while row.get_child_count() < texts.size():
 		var label := Label.new()
 		var is_name := row.get_child_count() == 0

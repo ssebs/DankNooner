@@ -25,23 +25,25 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] Race HUD feedback
-  - [x] Tell user they missed checkpoint during race / going wrong way
-  - [ ] add race position hud
-    - [x] add it
-    - [ ] MP test
-
-
 - [ ] mid-race challenges
   - [x] display in HUD during race
   - [x] track who did longest wheelie / airtime
   - [x] hud to show how to do trick
+  - [ ] trick juice
   - [ ] Multiple trick options
   - [ ] this suggested trick changes every race? 
 
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [x] make tricks + combos easier to do **WIP**
+  - [x] Trick juice / points / leaderboard
+
+- [ ] Race HUD feedback
+  - [x] Tell user they missed checkpoint during race / going wrong way
+  - [ ] add race position hud
+    - [x] add it
+    - [ ] MP test
+
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
 - [ ] fix game breaking bugs
 

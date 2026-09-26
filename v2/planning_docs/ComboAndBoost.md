@@ -24,6 +24,8 @@ Earn, spend and bank are three separate owners:
 | Boost spend / drain | `BoostController` | Rollback tick, every peer |
 | Score banking | `TrickManager._track_combo()` | Server `_process()` |
 | Gauge + counter UI | `RidingHUDState.Physics_Update()` → `BoostGauge` / `ComboCounter` | Local client |
+| Live "+N", bank pop, crash "OOF!", hype callouts (`TrickPopups.CALLOUTS`) | `TrickPopups` — bank pop RPC'd from `TrickManager` | Local client |
+| Free-roam 1-min points round + leaderboard | `FreeRoamGameMode` (sums `combo_banked`) → `RaceLeaderboard` | Server → all |
 | Camera FX | `CameraController._update_juice_fx()` | Local client |
 
 Each controller owns its own state: the combo vars are `%TrickController:*` and the meter vars
