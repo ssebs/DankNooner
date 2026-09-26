@@ -29,6 +29,7 @@ const _RESPAWN_QUICK_FLASH_SECS := 0.6
 @onready var _speed_num: Label = %HUD_SPEED_NUM
 @onready var _gear_label: Label = %HUD_GEAR
 @onready var _grip_label: Label = %HUD_GRIP_DGR
+@onready var _fps_label: Label = %HUD_FPS
 @onready var _trick_msg: Label = %HUD_TRICK_MSG
 @onready var _game_msg: Label = %HUD_GAME_MSG
 @onready var _challenge_msg: Label = %HUD_CHALLENGE_MSG
@@ -167,6 +168,7 @@ func Physics_Update(delta: float):
 	_speed_bar.value = int(movement_controller.speed)
 	_speed_num.text = "%d" % int(movement_controller.speed)
 	_grip_label.text = tr("HUD_GRIP").format({"value": int(player_entity.grip_usage * 100)})
+	_fps_label.text = tr("HUD_FPS").format({"value": int(Engine.get_frames_per_second())})
 
 	# The tank-slapper takes the balance bar over from the trick display while active.
 	if movement_controller.is_wobbling:

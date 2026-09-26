@@ -14,7 +14,8 @@ class_name StreetRaceGameMode extends GameModeType
 @export var audio_manager: AudioManager
 @export var npc_race_manager: NPCRaceManager
 ## Ambient traffic for the duration of the race — this is what separates this mode from
-## RoadRaceGameMode. Started in Enter, stopped in Exit, both server-only.
+## RoadRaceGameMode. Started in Enter, stopped in Exit, both server-only. Optional — unlinked in
+## main_game while traffic is disabled for perf; null skips traffic.
 @export var npc_traffic_manager: NPCTrafficManager
 @export var riding_hud_state: RidingHUDState
 @export var _respawn_delay: float = 2.5
@@ -61,9 +62,10 @@ func Enter(state_context: StateContext):
 		# Traffic first: the route graph has to exist before riders start circulating,
 		# and the racers spawn on grid markers rather than lanes, so the two don't fight
 		# over spawn points.
-		npc_traffic_manager.start_traffic(true)
+		if npc_traffic_manager != null:
+			npc_traffic_manager.start_traffic(true)
 		_start_next_runner()
-	else:
+	elif npc_traffic_manager != null:
 		# Same pull as FreeRoamGameMode — see that Enter for why.
 		npc_traffic_manager.request_traffic_sync()
 
@@ -96,10 +98,11 @@ func Exit(_state_context: StateContext):
 		# CountdownTask disables input on_enter; if we exit mid-task on_exit never runs.
 		_reset_all_player_input()
 		_teardown_npcs()
-		npc_traffic_manager.stop_traffic()
+		if npc_traffic_manager != null:
+			npc_traffic_manager.stop_traffic()
 		_clear_checkpoint_markers()
 		_race_task = null
-	else:
+	elif npc_traffic_manager != null:
 		npc_traffic_manager.reset_local_traffic()
 
 	if results_hud.ui.visible:
@@ -404,8 +407,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("audio_manager must not be empty")
 	if npc_race_manager == null:
 		issues.append("npc_race_manager must not be empty")
-	if npc_traffic_manager == null:
-		issues.append("npc_traffic_manager must not be empty")
 	if riding_hud_state == null:
 		issues.append("riding_hud_state must not be empty")
 

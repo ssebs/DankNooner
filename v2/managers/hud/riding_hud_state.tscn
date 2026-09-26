@@ -187,6 +187,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_GRIP_DGR"
 
+[node name="HUD_FPS" type="Label" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer4" unique_id=1874410297]
+unique_name_in_owner = true
+layout_mode = 2
+text = "HUD_FPS"
+
 [node name="HUD_TrickRows" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/GuageCluster" unique_id=1846203543]
 unique_name_in_owner = true
 layout_mode = 1

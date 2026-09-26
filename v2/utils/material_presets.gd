@@ -19,13 +19,20 @@ const COLOR_VALUES: Dictionary = {
 	Preset.TAN: Color(2.807, 2.352, 1.369)
 }
 
+# Shared so identical boxes can be auto-instanced by the renderer — never mutate a returned material
+static var _material_cache: Dictionary = {}
+
 
 ## Builds a triplanar StandardMaterial3D tinted by preset. Triplanar tiles the
 ## texture in world space, so it repeats correctly on any mesh size with no
 ## per-mesh UV math.
 static func make_material(preset: Preset, texture: Texture2D) -> StandardMaterial3D:
+	var key := [preset, texture]
+	if _material_cache.has(key):
+		return _material_cache[key]
 	var mat := StandardMaterial3D.new()
 	mat.albedo_texture = texture
 	mat.uv1_triplanar = true
 	mat.albedo_color = COLOR_VALUES.get(preset, Color.WHITE)
+	_material_cache[key] = mat
 	return mat

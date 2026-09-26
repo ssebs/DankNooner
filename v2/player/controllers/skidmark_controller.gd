@@ -27,24 +27,8 @@ class_name SkidmarkController extends Node
 @export var max_points: int = 256
 
 const SKID_TEXTURE: Texture2D = preload("res://resources/textures/skidmarktex.png")
-
-# Black ink opaque, white background transparent (luminance → alpha) so it works
-# whether or not the PNG carries an alpha channel. `fade` drives the fade-out.
-const SHADER_CODE := """
-shader_type spatial;
-render_mode unshaded, cull_disabled, depth_draw_opaque, blend_mix;
-uniform sampler2D tex : source_color;
-uniform float fade = 1.0;
-void fragment() {
-	vec4 t = texture(tex, UV);
-	float ink = 1.0 - dot(t.rgb, vec3(0.299, 0.587, 0.114));
-	ALBEDO = vec3(0.04);
-	ALPHA = ink * t.a * fade;
-}
-"""
-
-# Shared across all SkidmarkController instances — the shader is identical.
-static var _shader: Shader
+# Preloaded so it compiles at load — building it from a string on the first drift hitched ~20ms
+const SKID_SHADER: Shader = preload("res://resources/shaders/skidmark.gdshader")
 
 var _ribbons: Array[Skidmark] = []
 var _active: Skidmark = null
@@ -169,7 +153,7 @@ func _new_ribbon() -> Skidmark:
 	var rib := Skidmark.new()
 	rib.mesh = ImmediateMesh.new()
 	rib.mat = ShaderMaterial.new()
-	rib.mat.shader = _get_shader()
+	rib.mat.shader = SKID_SHADER
 	rib.mat.set_shader_parameter("tex", SKID_TEXTURE)
 	rib.mat.set_shader_parameter("fade", 1.0)
 	rib.node = MeshInstance3D.new()
@@ -214,10 +198,3 @@ func _advance_fades(delta: float) -> void:
 			_ribbons.remove_at(i)
 		else:
 			rib.mat.set_shader_parameter("fade", f)
-
-
-static func _get_shader() -> Shader:
-	if _shader == null:
-		_shader = Shader.new()
-		_shader.code = SHADER_CODE
-	return _shader

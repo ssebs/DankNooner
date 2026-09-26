@@ -50,6 +50,9 @@ const NEON_EDGES_SHADER := preload("res://levels/assets/graybox/neon_edges.gdsha
 # spanning width x depth. height is ignored in PLANE mode.
 const PLANE_COLLISION_THICKNESS: float = 0.05
 
+static var _mesh_cache: Dictionary = {}
+static var _neon_material: ShaderMaterial
+
 @onready var meshinstance: MeshInstance3D = %MeshInstance3D
 @onready var collisionshape: CollisionShape3D = %CollisionShape3D
 
@@ -59,19 +62,12 @@ func _ready():
 	apply_color()
 
 
-# Swaps mesh/shape resources to match shape_mode, then sizes them.
+# Gives this body its own collision shape, then sizes it and picks the shared mesh.
 func rebuild_geometry():
 	if not is_node_ready():
 		return
 
-	match shape_mode:
-		ShapeMode.BOX:
-			meshinstance.mesh = BoxMesh.new()
-			collisionshape.shape = BoxShape3D.new()
-		ShapeMode.PLANE:
-			meshinstance.mesh = PlaneMesh.new()
-			collisionshape.shape = BoxShape3D.new()
-
+	collisionshape.shape = BoxShape3D.new()
 	apply_shape()
 
 
@@ -81,13 +77,28 @@ func apply_shape():
 
 	match shape_mode:
 		ShapeMode.BOX:
-			meshinstance.mesh.size = Vector3(width, height, depth)
+			meshinstance.mesh = _get_shared_mesh(Vector3(width, height, depth))
 			collisionshape.shape.size = Vector3(width, height, depth)
 		ShapeMode.PLANE:
-			meshinstance.mesh.size = Vector2(width, depth)
+			meshinstance.mesh = _get_shared_mesh(Vector3(width, 0.0, depth))
 			collisionshape.shape.size = Vector3(width, PLANE_COLLISION_THICKNESS, depth)
 
 	apply_neon_edges()
+
+
+# y = 0 keys a PlaneMesh. Shared so same-sized boxes can be auto-instanced — never mutate
+static func _get_shared_mesh(size: Vector3) -> PrimitiveMesh:
+	if _mesh_cache.has(size):
+		return _mesh_cache[size]
+	var mesh: PrimitiveMesh
+	if size.y == 0.0:
+		mesh = PlaneMesh.new()
+		mesh.size = Vector2(size.x, size.z)
+	else:
+		mesh = BoxMesh.new()
+		mesh.size = size
+	_mesh_cache[size] = mesh
+	return mesh
 
 
 func apply_color():
@@ -114,9 +125,10 @@ func apply_neon_edges():
 		meshinstance.material_overlay = null
 		return
 
-	var mat := ShaderMaterial.new()
-	mat.shader = NEON_EDGES_SHADER
-	mat.set_shader_parameter("edge_color", neon_color)
+	if _neon_material == null:
+		_neon_material = ShaderMaterial.new()
+		_neon_material.shader = NEON_EDGES_SHADER
+	meshinstance.material_overlay = _neon_material
+	meshinstance.set_instance_shader_parameter("edge_color", neon_color)
 	var mesh_height := height if shape_mode == ShapeMode.BOX else 0.0
-	mat.set_shader_parameter("size", Vector3(width, mesh_height, depth))
-	meshinstance.material_overlay = mat
+	meshinstance.set_instance_shader_parameter("size", Vector3(width, mesh_height, depth))
