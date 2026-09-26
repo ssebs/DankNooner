@@ -79,11 +79,10 @@ EventStartCircle
 Some leaf tasks read their level objects from **their own children**, not `@export` NodePath arrays — drop the markers under the task and they're collected in tree order, no inspector wiring:
 
 - **`GridSpawnTask`** — `get_grid_markers()` returns its `Marker3D` children (the grid slots). `GridRespawnTask` reads a referenced `GridSpawnTask` through the same method.
-- **`StuntRaceTask`** — its `CheckPointMarker` children are the route (start = first … finish = last); its `PickupSpawner` children are the item spawners it activates during the race.
+- **`RaceTask`** — its `CheckPointMarker` children are the route, in tree order. A first child named ending in `StartStop1` is both start and finish (a lap circuit: `…StartStop1`, `…2`, `…3`, … back to `StartStop1`); otherwise it's point-to-point (first = start, last = finish). A lap race (`total_laps > 1`) warns without the `StartStop1` first child.
+- **`StuntRaceTask`** — extends `RaceTask` (same route collection, point-to-point, `total_laps` fixed to 1); its `PickupSpawner` children are the item spawners it activates during the race.
 
 Each keeps one `first_*` `@export` (`first_grid_marker`, `first_checkpoint`, `first_spawner`) as a **signpost only** — unused at runtime, it makes a fresh node show in the inspector that children are required, and `_get_configuration_warnings()` flags it when unassigned. A second warning nudges the first child's name to end in `1`, so tree order reads as a sequence (`…1, …2, …`).
-
-`RaceTask` is the exception — its checkpoints are scattered across the level, not children, so it keeps explicit `start_checkpoint` / `lap_checkpoints` / `end_checkpoint` `@export`s; its config warning validates `start_checkpoint` is named ending in `1` for the same count-up convention.
 
 ## Flow
 

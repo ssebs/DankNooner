@@ -253,11 +253,9 @@ advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="RaceTask" type="Node" parent="Race/SequentialTaskRunner" unique_id=500670208 node_paths=PackedStringArray("start_checkpoint", "lap_checkpoints", "end_checkpoint")]
+[node name="RaceTask" type="Node" parent="Race/SequentialTaskRunner" unique_id=500670208 node_paths=PackedStringArray("first_checkpoint")]
 script = ExtResource("13_xcb1u")
-start_checkpoint = NodePath("Race01CheckpointMarkerStartStop1")
-lap_checkpoints = [NodePath("Race01CheckpointMarker02"), NodePath("Race01CheckpointMarker03"), NodePath("Race01CheckpointMarker04"), NodePath("Race01CheckpointMarker05"), NodePath("Race01CheckpointMarker06"), NodePath("Race01CheckpointMarker07"), NodePath("Race01CheckpointMarker08")]
-end_checkpoint = NodePath("Race01CheckpointMarkerStartStop1")
+first_checkpoint = NodePath("Race01CheckpointMarkerStartStop1")
 total_laps = 2
 
 [node name="Race01CheckpointMarkerStartStop1" parent="Race/SequentialTaskRunner/RaceTask" unique_id=1048335829 instance=ExtResource("14_hyio3")]

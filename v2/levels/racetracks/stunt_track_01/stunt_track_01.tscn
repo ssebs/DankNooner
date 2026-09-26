@@ -876,10 +876,11 @@ advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="StuntRaceTask" type="Node" parent="StuntRace/SequentialTaskRunner" unique_id=1438498696 node_paths=PackedStringArray("first_checkpoint", "first_spawner")]
+[node name="StuntRaceTask" type="Node" parent="StuntRace/SequentialTaskRunner" unique_id=1438498696 node_paths=PackedStringArray("first_spawner", "first_checkpoint")]
 script = ExtResource("19_k3cxb")
-first_checkpoint = NodePath("CheckpointMarker1")
 first_spawner = NodePath("PickupSpawner1")
+first_checkpoint = NodePath("CheckpointMarker1")
+total_laps = 1
 
 [node name="CheckpointMarker1" parent="StuntRace/SequentialTaskRunner/StuntRaceTask" unique_id=1048335829 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.5, 4.2673445, 16)
@@ -1132,10 +1133,11 @@ advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="StuntRaceTask" type="Node" parent="StuntRace2/SequentialTaskRunner" unique_id=860300605 node_paths=PackedStringArray("first_checkpoint", "first_spawner")]
+[node name="StuntRaceTask" type="Node" parent="StuntRace2/SequentialTaskRunner" unique_id=860300605 node_paths=PackedStringArray("first_spawner", "first_checkpoint")]
 script = ExtResource("19_k3cxb")
-first_checkpoint = NodePath("CheckpointMarker1")
 first_spawner = NodePath("PickupSpawner1")
+first_checkpoint = NodePath("CheckpointMarker1")
+total_laps = 1
 
 [node name="ArrowWall2" parent="StuntRace2/SequentialTaskRunner/StuntRaceTask" unique_id=1639704062 instance=ExtResource("25_60x1b")]
 transform = Transform3D(-4.371138e-08, 0.50000006, 0.8660254, 1, 2.185569e-08, 3.7855173e-08, 0, 0.8660254, -0.50000006, -776.8333, 5.5000005, 465.38974)
@@ -1346,10 +1348,11 @@ advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="StuntRaceTask" type="Node" parent="StuntRace3/SequentialTaskRunner" unique_id=1109009782 node_paths=PackedStringArray("first_checkpoint", "first_spawner")]
+[node name="StuntRaceTask" type="Node" parent="StuntRace3/SequentialTaskRunner" unique_id=1109009782 node_paths=PackedStringArray("first_spawner", "first_checkpoint")]
 script = ExtResource("19_k3cxb")
-first_checkpoint = NodePath("CheckpointMarker1")
 first_spawner = NodePath("PickupSpawner1")
+first_checkpoint = NodePath("CheckpointMarker1")
+total_laps = 1
 
 [node name="CheckpointMarker1" parent="StuntRace3/SequentialTaskRunner/StuntRaceTask" unique_id=1400657112 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
 transform = Transform3D(-4.3711392e-08, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, -4.3711392e-08, -14.678253, 0.2499981, 399.5091)
@@ -1482,10 +1485,11 @@ advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="StuntRaceTask" type="Node" parent="StuntRace4/SequentialTaskRunner" unique_id=156318237 node_paths=PackedStringArray("first_checkpoint", "first_spawner")]
+[node name="StuntRaceTask" type="Node" parent="StuntRace4/SequentialTaskRunner" unique_id=156318237 node_paths=PackedStringArray("first_spawner", "first_checkpoint")]
 script = ExtResource("19_k3cxb")
-first_checkpoint = NodePath("CheckpointMarker1")
 first_spawner = NodePath("PickupSpawner1")
+first_checkpoint = NodePath("CheckpointMarker1")
+total_laps = 1
 
 [node name="CheckpointMarker1" parent="StuntRace4/SequentialTaskRunner/StuntRaceTask" unique_id=2112484092 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
 transform = Transform3D(-4.3711392e-08, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, -4.3711392e-08, -27.178253, 0.24987662, 722.0091)
@@ -1643,53 +1647,111 @@ advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="RaceTask" type="Node" parent="TrackRace/SequentialTaskRunner" unique_id=506149246]
+[node name="RaceTask" type="Node" parent="TrackRace/SequentialTaskRunner" unique_id=506149246 node_paths=PackedStringArray("first_checkpoint")]
 script = ExtResource("22_x6w3k")
+first_checkpoint = NodePath("CheckpointMarkerStartStop1")
+total_laps = 2
 metadata/_custom_type_script = "uid://bk8siml2v41d1"
 
 [node name="CheckpointMarkerStartStop1" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=371754582 instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.03847803, 0, -0.9992594, 0, 1, 0, 0.9992594, 0, -0.03847803, -733, 0.5, 245.5)
+transform = Transform3D(-0.03847803, 0, -0.9992594, 0, 1, 0, 0.9992594, 0, -0.03847803, -733, 0.25000763, 245.5)
 width = 24.0
 
 [node name="CheckpointMarker2" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=601636242 instance=ExtResource("19_clf25")]
-transform = Transform3D(0.46630675, 0, -0.88462305, 0, 1, 0, 0.88462305, 0, 0.46630675, -659.9217, 0.5, 238.37363)
+transform = Transform3D(0.46630675, 0, -0.88462305, 0, 1, 0, 0.88462305, 0, 0.46630675, -659.9217, 0.25, 238.37363)
 width = 24.0
 
 [node name="CheckpointMarker3" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=672311881 instance=ExtResource("19_clf25")]
-transform = Transform3D(0.12527186, 0, -0.9921224, 0, 1, 0, 0.9921224, 0, 0.12527186, -621.7936, 0.5, 138.69675)
+transform = Transform3D(0.12527186, 0, -0.9921224, 0, 1, 0, 0.9921224, 0, 0.12527186, -621.7936, 0.24990392, 138.69675)
 width = 24.0
 
 [node name="CheckpointMarker4" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=1861321699 instance=ExtResource("19_clf25")]
-transform = Transform3D(0.12527186, 0, -0.9921224, 0, 1, 0, 0.9921224, 0, 0.12527186, -532.1013, 0.5, 179.18352)
+transform = Transform3D(0.12527186, 0, -0.9921224, 0, 1, 0, 0.9921224, 0, 0.12527186, -532.1013, 0.24987769, 179.18352)
 width = 24.0
 
 [node name="CheckpointMarker5" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=936713619 instance=ExtResource("19_clf25")]
-transform = Transform3D(0.7221247, 0, -0.6917628, 0, 1, 0, 0.6917628, 0, 0.7221247, -445.6895, 0.5, 37.42381)
+transform = Transform3D(0.7221247, 0, -0.6917628, 0, 1, 0, 0.6917628, 0, 0.7221247, -445.6895, 0.24987793, 37.42381)
 width = 24.0
 
 [node name="CheckpointMarker6" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=998212527 instance=ExtResource("19_clf25")]
-transform = Transform3D(0.051546, 0, 0.9986705, 0, 1, 0, -0.9986705, 0, 0.051546, -605.328, 0.5, -37.092926)
+transform = Transform3D(0.051546, 0, 0.9986705, 0, 1, 0, -0.9986705, 0, 0.051546, -605.328, 0.27003455, -37.092926)
 width = 24.0
 
 [node name="CheckpointMarker7" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=2055149992 instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.7982621, 0, 0.60231006, 0, 1, 0, -0.60231006, 0, -0.7982621, -794.51636, 0.5, 7.6419783)
+transform = Transform3D(-0.7982621, 0, 0.60231006, 0, 1, 0, -0.60231006, 0, -0.7982621, -794.51636, 1.1757596, 7.6419783)
 width = 24.0
 
 [node name="CheckpointMarker8" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=206261677 instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.34367758, 0, -0.9390876, 0, 1, 0, 0.9390876, 0, -0.34367758, -707.2694, 0.5, 130.05417)
+transform = Transform3D(-0.34367758, 0, -0.9390876, 0, 1, 0, 0.9390876, 0, -0.34367758, -707.2694, 0.42539406, 130.05417)
 width = 24.0
 
 [node name="CheckpointMarker9" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=2070740217 instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.42101845, 0, 0.9070519, 0, 1, 0, -0.9070519, 0, -0.42101845, -701.12604, 0.5, 196.19424)
+transform = Transform3D(-0.42101845, 0, 0.9070519, 0, 1, 0, -0.9070519, 0, -0.42101845, -701.12604, 0.19352722, 196.19424)
 width = 24.0
 
 [node name="CheckpointMarker10" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=1933255950 instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.42101845, 0, 0.9070519, 0, 1, 0, -0.9070519, 0, -0.42101845, -809.23376, 0.5, 152.11227)
+transform = Transform3D(-0.42101845, 0, 0.9070519, 0, 1, 0, -0.9070519, 0, -0.42101845, -809.23376, 0.2499001, 152.11227)
 width = 24.0
 
 [node name="CheckpointMarker11" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=779541876 instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.57502073, 0, -0.8181387, 0, 1, 0, 0.8181387, 0, -0.57502073, -831.1924, 0.5, 232.5872)
+transform = Transform3D(-0.57502073, 0, -0.8181387, 0, 1, 0, 0.8181387, 0, -0.57502073, -831.1924, 0.24997807, 232.5872)
 width = 24.0
+
+[node name="GrayBox_StaticBody" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=1644147130 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.99526596, 0, 0.09718746, 0, 1, 0, -0.09718746, 0, 0.99526596, -684.41846, 0.7499982, 230.79498)
+collision_layer = 3
+width = 0.2
+height = 1.5
+depth = 3.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody2" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=1234363892 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.03961526, 0, 0.9992148, 0, 1, 0, -0.9992148, 0, 0.03961526, -628.72943, 0.7499982, 171.14989)
+collision_layer = 3
+width = 0.2
+height = 1.5
+depth = 3.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody3" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=2026174968 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.7041016, 0, 0.710099, 0, 1, 0, -0.710099, 0, 0.7041016, -479.746, 0.7499982, 51.62038)
+collision_layer = 3
+width = 0.2
+height = 1.5
+depth = 3.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody4" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=53219200 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.998425, 0, 0.05609882, 0, 1, 0, -0.05609882, 0, 0.998425, -725.34064, 0.7499982, -23.448944)
+collision_layer = 3
+width = 0.2
+height = 1.5
+depth = 3.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody5" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=780484300 instance=ExtResource("18_dc022")]
+transform = Transform3D(-0.91414315, 0, 0.40539104, 0, 1, 0, -0.40539104, 0, -0.91414315, -729.9289, 0.7499982, 137.80652)
+collision_layer = 3
+width = 0.2
+height = 1.5
+depth = 3.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody6" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=670774984 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.84788585, 0, -0.5301784, 0, 1, 0, 0.5301784, 0, 0.84788585, -780.3175, 0.7499982, 166.32819)
+collision_layer = 3
+width = 0.2
+height = 1.5
+depth = 3.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody7" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=2133219538 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.035205036, 0, 0.99937993, 0, 1, 0, -0.99937993, 0, 0.035205036, -829.8027, 0.7499982, 202.71724)
+collision_layer = 3
+width = 0.2
+height = 1.5
+depth = 3.0
+color_preset = 1
 
 [node name="StuntCity_REMEMBER_TO_REPLACE_ME" parent="." unique_id=1750931100 instance=ExtResource("27_grj8g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 0)
@@ -2159,6 +2221,7 @@ transform = Transform3D(-0.34558257, 0, 0.9383882, 0, 1, 0, -0.9383882, 0, -0.34
 size = 48
 density = 2
 layout_seed = 6
+has_collision = true
 snapped_heights = PackedFloat32Array(-255.61249, -255.63834, -255.71248, -255.59259, -255.67543, -255.68973, -255.73239, -255.70123, -255.61035)
 
 [node name="TreeBundle26" parent="_Trees_/IslandTrackTrees" unique_id=56645015 instance=ExtResource("25_x6w3k")]
@@ -2166,6 +2229,7 @@ transform = Transform3D(-0.95911396, 0, 0.2830202, 0, 1, 0, -0.2830202, 0, -0.95
 size = 32
 density = 2
 layout_seed = -3
+has_collision = true
 snapped_heights = PackedFloat32Array(-255.69981, nan, -255.76414, nan)
 
 [node name="TreeBundle27" parent="_Trees_/IslandTrackTrees" unique_id=1517373783 instance=ExtResource("25_x6w3k")]
@@ -2173,6 +2237,7 @@ transform = Transform3D(0.9996838, 0, -0.02513948, 0, 1, 0, 0.02513948, 0, 0.999
 size = 32
 density = 2
 layout_seed = 11
+has_collision = true
 snapped_heights = PackedFloat32Array(nan, -255.64873, -255.71213, -255.73352)
 
 [node name="TreeBundle28" parent="_Trees_/IslandTrackTrees" unique_id=1673576080 instance=ExtResource("25_x6w3k")]
@@ -2180,6 +2245,7 @@ transform = Transform3D(0.78934145, 0, -0.61395437, 0, 1, 0, 0.61395437, 0, 0.78
 size = 32
 density = 2
 layout_seed = 14
+has_collision = true
 snapped_heights = PackedFloat32Array(-255.67847, -255.69746, -255.72664, -255.63336)
 
 [node name="TreeBundle20" parent="_Trees_/IslandTrackTrees" unique_id=1030927975 instance=ExtResource("25_x6w3k")]
@@ -2420,9 +2486,9 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -144
 size = 32
 aspect = 2
 density = 2
-layout_seed = 9
+layout_seed = 4
 has_collision = true
-snapped_heights = PackedFloat32Array(-255.66241, -255.63554, -255.68372, -255.60754, -255.63893, -255.74464, -255.64923, -255.73154)
+snapped_heights = PackedFloat32Array(-255.72232, -255.68442, -255.59428, -255.61147, -255.62732, -255.68431, -255.62009, -255.66957)
 
 [node name="TreeBundle43" parent="_Trees_/Treesoutskirtsandintown" unique_id=1369448214 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -144.5, 256, 717)
@@ -2436,6 +2502,7 @@ snapped_heights = PackedFloat32Array(-255.66241, -255.63554, -255.68372, -255.60
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -285, 256, 284)
 size = 128
 density = 2
+has_collision = true
 snapped_heights = PackedFloat32Array(-255.73512, -255.67351, -255.59026, -255.65604, -255.62453, -255.68463, -255.59982, -255.70976, -255.72719, -255.64308, -255.72389, -255.72293, -255.75487, -255.59561, -255.64337, -255.70888, -255.73106, -255.67992, -255.63771, -255.63934, -255.66644, -255.69823, -255.73772, -255.693, -255.6811, -255.71802, -255.73439, -255.62044, -255.6936, -255.66545, -255.66515, -255.65672, -255.69397, -255.6014, -255.67918, -255.6097, -255.74469, -255.70102, -255.7261, -255.65315, -255.61008, -255.70694, -255.61314, -255.64526, -255.74878, -255.75798, -255.60541, -255.66083, -255.72632, -255.62505, -255.71698, -255.61386, -255.6923, -255.73534, -255.70306, nan, -255.7068, nan, -255.75453, -255.60408, -255.66942, -255.72745, -255.59555, -255.75745)
 
 [node name="TreeBundle15" parent="_Trees_/Treesoutskirtsandintown" unique_id=654000799 instance=ExtResource("25_x6w3k")]
@@ -2450,6 +2517,7 @@ snapped_heights = PackedFloat32Array(-255.73514, -255.67352, -253.94319, -239.20
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -2.5, 256, 221)
 size = 48
 density = 2
+has_collision = true
 snapped_heights = PackedFloat32Array(-230.24065, -236.81029, -240.3491, -232.4395, -237.21388, -241.28322, -230.1389, -238.67928, -241.46657)
 
 [node name="TreeBundle17" parent="_Trees_/Treesoutskirtsandintown" unique_id=437741270 instance=ExtResource("25_x6w3k")]
@@ -2466,6 +2534,7 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -239
 size = 32
 aspect = 4
 density = 2
+has_collision = true
 snapped_heights = PackedFloat32Array(-255.73514, -255.67352, -255.59027, -255.65605, -255.62454, -255.68465, -255.59982, -255.70978, -255.72719, -255.6431, -255.7239, -255.72293, -255.75488, -255.59563, -255.64337, -255.7089)
 
 [node name="TreeBundle19" parent="_Trees_/Treesoutskirtsandintown" unique_id=1148275969 instance=ExtResource("25_x6w3k")]
@@ -2474,6 +2543,7 @@ size = 32
 aspect = 4
 density = 2
 layout_seed = 3
+has_collision = true
 snapped_heights = PackedFloat32Array(-255.72266, -255.68074, -255.70186, nan, -255.6804, -255.64746, -255.65242, -255.71115, -255.62589, -255.76439, -255.68155, -255.66435, -255.75232, -255.60922, -255.73369, -255.71799)
 
 [node name="TreeBundle20" parent="_Trees_/Treesoutskirtsandintown" unique_id=567024210 instance=ExtResource("25_x6w3k")]
@@ -2503,6 +2573,7 @@ snapped_heights = PackedFloat32Array(-251.80345, -251.76366, -251.6804, -251.746
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1, 256, 62)
 density = 2
 layout_seed = 5
+has_collision = true
 snapped_heights = PackedFloat32Array(-247.95905, -252.44685, -251.82135, -251.81393, -248.38106, -253.99689, -253.05794, -252.3518, -249.76292, -255.6794, -255.75673, -253.84866, -253.90549, -255.63159, -255.64511, -255.59126)
 
 [node name="TreeBundle24" parent="_Trees_/Treesoutskirtsandintown" unique_id=369604658 instance=ExtResource("25_x6w3k")]
@@ -2511,6 +2582,7 @@ size = 32
 aspect = 2
 density = 2
 layout_seed = 2
+has_collision = true
 snapped_heights = PackedFloat32Array(-245.38428, -243.88777, -245.57658, -251.75673, -244.87848, -247.19553, -251.70244, -251.83122)
 
 [node name="TreeBundle25" parent="_Trees_/Treesoutskirtsandintown" unique_id=1914317201 instance=ExtResource("25_x6w3k")]
@@ -2555,17 +2627,16 @@ snapped_heights = PackedFloat32Array(-255.73514, -255.67352, -255.59027, -255.65
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -465, 256, 579)
 size = 16
 aspect = 4
-density = 2
+density = 1
 has_collision = true
-snapped_heights = PackedFloat32Array(-255.73512, -255.67351, -255.59026, -255.65604)
+snapped_heights = PackedFloat32Array(nan, -255.67351, -255.59026, -255.65604, -255.62453)
 
 [node name="TreeBundle49" parent="_Trees_/Treesoutskirtsandintown" unique_id=1080973687 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -475.5, 256, 466)
 size = 16
 aspect = 4
-density = 2
 has_collision = true
-snapped_heights = PackedFloat32Array(nan, -255.67351, -255.59026, -255.65604)
+snapped_heights = PackedFloat32Array(nan, -255.67351, -255.59026, -255.65604, -255.62453, -255.68463, -255.59981, nan, nan, -255.64308, -255.72389, -255.72292, -255.75487, -255.59561, -255.64336, nan)
 
 [node name="TreeBundle50" parent="_Trees_/Treesoutskirtsandintown" unique_id=2106627367 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -413.5, 256, 370)
@@ -2577,9 +2648,9 @@ snapped_heights = PackedFloat32Array(-255.73514, -255.67352, -255.59027, -255.65
 
 [node name="TreeBundle28" parent="_Trees_/Treesoutskirtsandintown" unique_id=1755994656 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -354.5, 256, 381)
-density = 2
+density = 1
 has_collision = true
-snapped_heights = PackedFloat32Array(-255.73514, -255.67352, -255.59027, -255.65605, -255.62454, -255.68465, -255.59982, -255.70976, -255.72719, -255.6431, -255.7239, -255.72292, -255.75488, -255.59563, -255.64337, -255.70888)
+snapped_heights = PackedFloat32Array(-255.73514, -255.67352, -255.59027, -255.65605, -255.62454, -255.68465, -255.59982, -255.70978, -255.72719, -255.6431, -255.7239, -255.72293, -255.75488, -255.59563, -255.64336, -255.7089, -255.73106, -255.67992, -255.63771, -255.63934, nan, -255.69823, -255.73772, -255.693, -255.68112)
 
 [node name="TreeBundle29" parent="_Trees_/Treesoutskirtsandintown" unique_id=1873715150 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -671, 256, 527.5)
@@ -2594,6 +2665,7 @@ transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -829
 size = 32
 aspect = 2
 density = 2
+has_collision = true
 snapped_heights = PackedFloat32Array(-255.73514, -255.67352, -255.59026, -255.65604, -255.62454, -255.68465, -255.59981, -255.70976)
 
 [node name="TreeBundle31" parent="_Trees_/Treesoutskirtsandintown" unique_id=861187064 instance=ExtResource("25_x6w3k")]
@@ -2619,6 +2691,7 @@ transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, -848
 size = 32
 density = 2
 layout_seed = 5
+has_collision = true
 snapped_heights = PackedFloat32Array(-255.59198, -255.75253, -255.7312, -255.72379)
 
 [node name="TreeBundle55" parent="_Trees_/Treesoutskirtsandintown" unique_id=1965273491 instance=ExtResource("25_x6w3k")]
@@ -5737,8 +5810,8 @@ next_pt_init = NodePath("../RP_001")
 [node name="IslandTrack" type="Node3D" parent="RoadManager" unique_id=964702440]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -517.7875, -0.00012207031, -47.37543)
 script = ExtResource("7_rmar3")
+material_resource = ExtResource("15_7kcev")
 use_lowpoly_preview = true
-generate_ai_lanes = true
 ai_lane_group = "road_lanes"
 draw_lanes_editor = true
 edge_containers = Array[NodePath]([NodePath("../Bridgeroad2")])
@@ -5862,8 +5935,8 @@ transform = Transform3D(0.23447561, 0, 0.97212195, 0, 1, 0, -0.97212195, 0, 0.23
 script = ExtResource("8_ercdn")
 traffic_dir = Array[int]([2, 2, 1, 1])
 lanes = Array[int]([2, 4, 4, 2])
-prior_mag = 12.18927
-next_mag = 51.117348
+prior_mag = 12.376709
+next_mag = 31.572754
 prior_pt_init = NodePath("../RP_017")
 next_pt_init = NodePath("../RP_015")
 
@@ -5873,7 +5946,7 @@ script = ExtResource("8_ercdn")
 traffic_dir = Array[int]([2, 2, 1, 1])
 lanes = Array[int]([2, 4, 4, 2])
 prior_mag = 27.135715
-next_mag = 64.02045
+next_mag = 43.36044
 prior_pt_init = NodePath("../RP_018")
 next_pt_init = NodePath("../RP_016")
 

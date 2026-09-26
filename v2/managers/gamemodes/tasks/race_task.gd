@@ -4,9 +4,9 @@
 ## Watches multiple CheckPointMarkers directly via their `entered` signal
 ## instead of using the runner's single-`trigger` system.
 ##
-## Per-lap sequence: start_checkpoint -> lap_checkpoints[0..N] -> end_checkpoint.
-## When end_checkpoint == start_checkpoint, crossing it ends one lap and (if
-## more remain) immediately starts the next.
+## The route is this task's CheckPointMarker children, in tree order. A first child named
+## `…StartStop1` is both start and finish (a lap circuit: StartStop1 -> 2 -> 3 … -> StartStop1);
+## otherwise it's point-to-point (first = start, last = finish).
 ##
 ## On every recognized checkpoint crossing, the player's persistent respawn
 ## transform is updated to that marker (same mechanism as TeleportTask), so
@@ -15,11 +15,16 @@ class_name RaceTask extends GameModeTask
 
 enum WaitFor { START, LAP_CP, END }
 
-@export var start_checkpoint: CheckPointMarker
-@export var lap_checkpoints: Array[CheckPointMarker] = []
-@export var end_checkpoint: CheckPointMarker
+## Signpost only — assign the first CheckPointMarker child so a fresh node shows in the inspector
+## that children are expected. The live route is auto-collected from the children (on_enter).
+@export var first_checkpoint: CheckPointMarker
 @export var total_laps: int = 3
 @export var objective_key: String = "RACE_OBJECTIVE"
+
+## Derived from the children by _collect_checkpoints().
+var start_checkpoint: CheckPointMarker
+var lap_checkpoints: Array[CheckPointMarker] = []
+var end_checkpoint: CheckPointMarker
 
 ## Per-racer progress (humans AND NPCs — RaceTask is the single scoring source
 ## of truth, keyed by racer id; NPC ids are negative). RaceTask owns this
@@ -41,6 +46,7 @@ func _init():
 
 func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
 	if !_signals_wired:
+		_collect_checkpoints()
 		_wire_checkpoint_signals()
 		_signals_wired = true
 	if !_race_active:
@@ -152,6 +158,23 @@ func get_npc_respawn_checkpoint(npc_id: int) -> CheckPointMarker:
 
 
 #region Checkpoint signal wiring
+
+
+func _get_child_checkpoints() -> Array[CheckPointMarker]:
+	var checkpoints: Array[CheckPointMarker] = []
+	checkpoints.assign(find_children("*", "CheckPointMarker", false))
+	return checkpoints
+
+
+func _collect_checkpoints() -> void:
+	var checkpoints := _get_child_checkpoints()
+	start_checkpoint = checkpoints[0]
+	if "StartStop" in start_checkpoint.name:
+		end_checkpoint = start_checkpoint
+		lap_checkpoints = checkpoints.slice(1)
+	else:
+		end_checkpoint = checkpoints[checkpoints.size() - 1]
+		lap_checkpoints = checkpoints.slice(1, checkpoints.size() - 1)
 
 
 func _wire_checkpoint_signals() -> void:
@@ -269,14 +292,15 @@ func _rpc_play_checkpoint_sfx() -> void:
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues := super()
-	if start_checkpoint == null:
-		issues.append("start_checkpoint must be set")
-	elif not start_checkpoint.name.ends_with("1"):
-		issues.append("start_checkpoint should be named ending in \"1\" so the route counts up")
-	if end_checkpoint == null:
-		issues.append("end_checkpoint must be set")
-	if lap_checkpoints.is_empty():
-		issues.append("lap_checkpoints should not be empty")
+	var checkpoints := _get_child_checkpoints()
+	if first_checkpoint == null:
+		issues.append("assign first_checkpoint — CheckPointMarker children are required (auto-collected at runtime)")
+	elif checkpoints.size() < 2:
+		issues.append("needs at least 2 CheckPointMarker children")
+	elif not checkpoints[0].name.ends_with("1"):
+		issues.append("first CheckPointMarker should be named ending in \"1\" so route order counts up")
+	elif total_laps > 1 and not "StartStop" in checkpoints[0].name:
+		issues.append("lap races need the first CheckPointMarker named ending in \"StartStop1\"")
 	if total_laps <= 0:
 		issues.append("total_laps must be > 0")
 	return issues

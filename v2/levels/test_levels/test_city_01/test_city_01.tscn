@@ -2442,11 +2442,9 @@ advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="RaceTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner" unique_id=1357241757 node_paths=PackedStringArray("start_checkpoint", "lap_checkpoints", "end_checkpoint")]
+[node name="RaceTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner" unique_id=1357241757 node_paths=PackedStringArray("first_checkpoint")]
 script = ExtResource("18_ecphy")
-start_checkpoint = NodePath("Race01CheckpointMarkerStartStop1")
-lap_checkpoints = [NodePath("Race01CheckpointMarker02"), NodePath("Race01CheckpointMarker03"), NodePath("Race01CheckpointMarker04"), NodePath("Race01CheckpointMarker05"), NodePath("Race01CheckpointMarker06"), NodePath("Race01CheckpointMarker07"), NodePath("Race01CheckpointMarker08"), NodePath("Race01CheckpointMarker09")]
-end_checkpoint = NodePath("Race01CheckpointMarkerStartStop1")
+first_checkpoint = NodePath("Race01CheckpointMarkerStartStop1")
 total_laps = 2
 
 [node name="Race01CheckpointMarkerStartStop1" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1805086722 instance=ExtResource("4_yaxf8")]
@@ -2526,11 +2524,9 @@ advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="RaceTask" type="Node" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner" unique_id=1840106188 node_paths=PackedStringArray("start_checkpoint", "lap_checkpoints", "end_checkpoint")]
+[node name="RaceTask" type="Node" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner" unique_id=1840106188 node_paths=PackedStringArray("first_checkpoint")]
 script = ExtResource("18_ecphy")
-start_checkpoint = NodePath("Start1")
-lap_checkpoints = [NodePath("CheckpointMarker02")]
-end_checkpoint = NodePath("End")
+first_checkpoint = NodePath("Start1")
 total_laps = 1
 
 [node name="Start1" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1576775672 instance=ExtResource("4_yaxf8")]

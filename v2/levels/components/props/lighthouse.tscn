@@ -23,8 +23,8 @@ emission_energy_multiplier = 2.18
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_lebf8"]
 material = SubResource("StandardMaterial3D_kj6o1")
-top_radius = 2.0
-height = 20.0
+top_radius = 3.0
+height = 64.0
 radial_segments = 4
 cap_bottom = false
 
@@ -83,7 +83,7 @@ mesh = SubResource("SphereMesh_7jvdf")
 unique_name_in_owner = true
 
 [node name="ray" type="MeshInstance3D" parent="Rotate" unique_id=1408840377]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -10, 16.91767, 0)
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -32.23438, 16.91767, 0)
 mesh = SubResource("CylinderMesh_lebf8")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=574600955]

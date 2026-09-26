@@ -25,6 +25,7 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] rotate camera to next checkpoint slightly
 
 - [ ] mid-race challenges
   - [x] display in HUD during race
