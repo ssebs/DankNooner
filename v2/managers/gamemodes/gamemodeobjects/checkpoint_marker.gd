@@ -12,6 +12,7 @@ class_name CheckPointMarker extends GameModeObject
 @onready var _border_left: Node3D = %BorderCylLeft
 @onready var _border_right: Node3D = %BorderCylRight
 @onready var _respawn_points: Node3D = %RespawnPoints
+@onready var _anim_player: AnimationPlayer = %AnimationPlayer
 
 
 func _ready():
@@ -26,6 +27,16 @@ func get_respawn_points() -> Array[Marker3D]:
 	var markers: Array[Marker3D] = []
 	markers.assign(_respawn_points.find_children("*", "Marker3D", false))
 	return markers
+
+
+## Client-side race feedback. The pillar material is local-to-scene, so this only
+## recolors this gate.
+func play_passed():
+	_anim_player.play(&"passed")
+
+
+func reset_passed():
+	_anim_player.play(&"RESET")
 
 
 func _apply_width():

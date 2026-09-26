@@ -25,6 +25,13 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] Race HUD feedback
+  - [x] Tell user they missed checkpoint during race / going wrong way
+  - [ ] add race position hud
+    - [x] add it
+    - [ ] MP test
+
+
 - [ ] mid-race challenges
   - [x] display in HUD during race
   - [x] track who did longest wheelie / airtime
@@ -89,13 +96,7 @@
 - [ ] Vibe code a painterly shader pass (brush stroke lines)
 - [ ] reactive sounds
 - [ ] Transition animations between menu states
-- [ ] Race HUD feedback
-  - [ ] "Return to checkpoint" HUD during race
-  - [ ] Tell user they missed checkpoint during race
-  - [ ] Checkpoint noise/visual showing you passed it
-    - [ ] highlight checkpoint in another color
-    - [ ] use flags instead of sign?
-  - [ ] add race position hud
+
 
 #### Audio
 - [ ] Music
@@ -219,9 +220,10 @@
   - [ ] cant update settings via controller
 - [ ] Pause => show lobby
 - [ ] Camera behavior
-  - [ ] Rotate cam down + shift left look right while doing wheelie (fps mode diff than tps mode)
-  - [ ] Zoom out FOV w/ speed / current_trick
-  - [ ] Should not rotate with player (loops, ramps)
+  - [x] Rotate cam down + shift left look right while doing wheelie (fps mode diff than tps mode)
+  - [x] look at next checkpoint during race
+  - [x] Zoom out FOV w/ speed / current_trick
+  - [x] Should not rotate with player (loops, ramps)
 - [ ] Option to change localization language in settings
 
 ---
@@ -229,38 +231,25 @@
 ## Done ✅
 
 - [x] lag when ending stunt race / no tp option
-
 - [x] tapping brakes during full boost should stop it
-
 - [x] Headlight and brake light functionality
-
 - [x] auto stoppie like how wheelies work
-
 - [x] rotate camera to next checkpoint slightly
-
 - [x] performance improvements
   - [x] claude suggestions (cache materials)
   - [x] tweak LOD
   - [x] spotlight fadeoff distance
   - [x] profile & investigate (cpu bound)
   - [x] subviewport lower settings/no shading
-
 - [x] skybox changes
   - [x] WIP on stunt track 01
   - [x] current shader w/ neon road lines, edges of meshes glow, rest of face is dark. Kinda neon light and Tron ?
-
 - [x] better trees
-
 - [x] race wall around track
-
 - [x] M for map half ass/ broken
-
 - [x] update default settings (auto) / biker skins on first launch
-
 - [x] NOS sfx `nos-sfx.ogg`
-
 - [x] reverse shouldnt need clutch
-
 - [x] [Speed Wobbles](./____SpeedWobbles____.md)
   - [x] FX
   - [x] while drifting
@@ -269,17 +258,12 @@
   - [x] smack into player
   - [x] wheelie rise only works when also leaning back it should be no matter what. also you should not be able to use front brake when in wheelie, rear barke in stoppie
   - [x] grom cant clutch up
-
 - [x] Bridge to Island 
-
 - [x] move camera to up/left aka make it easier to see when driving around (not directly behind)
-
 - [x] Exhaust pop + flame when shifting down to high rpm and giving a little gas for a second like irl
   - [x] burbles / pops when letting off gas
   - [x] VFX
-
 - [x] add vibration on brake danger / screen shake
-
 - [x] increase bat time
 - [x] make grass unstable
 - [x] reverse + turn on unstable collision should not make you crash

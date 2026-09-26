@@ -13,13 +13,20 @@
 ## crashes return to the last checkpoint passed.
 class_name RaceTask extends GameModeTask
 
-enum WaitFor { START, LAP_CP, END }
+enum WaitFor {START, LAP_CP, END}
 
 ## Signpost only — assign the first CheckPointMarker child so a fresh node shows in the inspector
 ## that children are expected. The live route is auto-collected from the children (on_enter).
 @export var first_checkpoint: CheckPointMarker
 @export var total_laps: int = 3
 @export var objective_key: String = "RACE_OBJECTIVE"
+## Wrong-way warning fires once a racer is this many meters past their closest approach to the
+## next gate and still moving away from it (e.g. missed a turn).
+@export var wrong_way_margin: float = 40.0
+
+const WRONG_WAY_MIN_SPEED: float = 5.0
+## Going the wrong way this long respawns the racer at their last checkpoint.
+const WRONG_WAY_RESPAWN_MS: int = 3000
 
 ## Derived from the children by _collect_checkpoints().
 var start_checkpoint: CheckPointMarker
@@ -73,11 +80,15 @@ func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
 		"waiting_for": WaitFor.START,
 		"start_ms": Time.get_ticks_msec(),
 		"respawn_slot": respawn_slot,
+		"best_dist": INF,
+		## Ticks when the racer started going the wrong way, 0 while on course.
+		"wrong_way_since_ms": 0,
 	}
 	# Runner pushes rpc_show_step right after on_enter — defer the hide so it
 	# runs after that, otherwise the step label re-shows.
 	var hud := _runner.task_hud
 	(func(): hud.rpc_hide_step_label.rpc_id(peer_id)).call_deferred()
+	_rpc_reset_checkpoints.rpc_id(peer_id)
 
 
 func check(player: PlayerEntity, _delta: float, _state: Dictionary) -> bool:
@@ -86,14 +97,17 @@ func check(player: PlayerEntity, _delta: float, _state: Dictionary) -> bool:
 	if p["laps_done"] >= total_laps:
 		return true
 	_push_lap_hud(peer_id, p)
+	_check_wrong_way(player, peer_id, p)
 	return false
 
 
-func on_exit(_player: PlayerEntity, _state: Dictionary) -> void:
+func on_exit(player: PlayerEntity, _state: Dictionary) -> void:
 	# Keep the finished row — results read completion_time_ms from here after
 	# the runner stops (single scoring source for humans + NPCs). Stale rows
 	# are purged at the next race start in on_enter.
-	pass
+	var peer_id := int(player.name)
+	if _peer_progress[peer_id]["wrong_way_since_ms"] > 0:
+		_runner.task_hud.rpc_stop_warning.rpc_id(peer_id)
 
 
 func get_objective_text() -> String:
@@ -211,6 +225,10 @@ func _on_checkpoint_entered(racer: Node3D, ckpt: CheckPointMarker) -> void:
 			"RaceTask: peer %d hit %s out of order (expected %s)"
 			% [peer_id, ckpt.name, expected.name if expected else "null"]
 		)
+		# Only a gate ahead of the expected one means one was skipped — re-crossing a
+		# passed gate (e.g. after a respawn) isn't a miss.
+		if peer_id >= 0 and _route_ordinal(ckpt, p) > _expected_ordinal(p):
+			_runner.task_hud.rpc_flash_warning.rpc_id(peer_id, "RACE_MISSED_CHECKPOINT")
 		return
 	_advance(peer_id, p, ckpt)
 
@@ -240,7 +258,11 @@ func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
 		_runner.spawn_manager.set_respawn_point.rpc(
 			peer_id, slot.global_position, slot.global_basis
 		)
-		_rpc_play_checkpoint_sfx.rpc_id(peer_id)
+		# A new lap clears the passed highlights before this crossing re-marks its gate.
+		if p["waiting_for"] == WaitFor.END and p["laps_done"] + 1 < total_laps:
+			_rpc_reset_checkpoints.rpc_id(peer_id)
+		_rpc_checkpoint_passed.rpc_id(peer_id, _get_child_checkpoints().find(ckpt))
+		p["best_dist"] = INF
 
 	match p["waiting_for"]:
 		WaitFor.START:
@@ -263,6 +285,76 @@ func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
 				p["waiting_for"] = WaitFor.START
 
 
+## Position of the racer's next gate along the whole race (laps included) — only grows.
+func _expected_ordinal(p: Dictionary) -> int:
+	var lap_ordinal: int = p["laps_done"] * (lap_checkpoints.size() + 2)
+	match p["waiting_for"]:
+		WaitFor.START:
+			return lap_ordinal
+		WaitFor.LAP_CP:
+			return lap_ordinal + 1 + p["next_lap_idx"]
+	return lap_ordinal + 1 + lap_checkpoints.size()
+
+
+## Where `ckpt` sits in the racer's current lap, on the same scale as _expected_ordinal.
+func _route_ordinal(ckpt: CheckPointMarker, p: Dictionary) -> int:
+	var lap_ordinal: int = p["laps_done"] * (lap_checkpoints.size() + 2)
+	if lap_checkpoints.has(ckpt):
+		return lap_ordinal + 1 + lap_checkpoints.find(ckpt)
+	if ckpt == end_checkpoint and p["waiting_for"] != WaitFor.START:
+		return lap_ordinal + 1 + lap_checkpoints.size()
+	return lap_ordinal
+
+
+func _check_wrong_way(player: PlayerEntity, peer_id: int, p: Dictionary) -> void:
+	var to_gate := _expected_checkpoint(p).global_position - player.global_position
+	var dist := to_gate.length()
+	p["best_dist"] = minf(p["best_dist"], dist)
+	var heading_away := (
+		player.velocity.length() > WRONG_WAY_MIN_SPEED and player.velocity.dot(to_gate) < 0.0
+	)
+	var wrong_way: bool = heading_away and dist - p["best_dist"] >= wrong_way_margin
+	var was_wrong_way: bool = p["wrong_way_since_ms"] > 0
+	if wrong_way == was_wrong_way:
+		if wrong_way and Time.get_ticks_msec() - p["wrong_way_since_ms"] >= WRONG_WAY_RESPAWN_MS:
+			_runner.spawn_manager.respawn_player.rpc(peer_id)
+			# Measure from the respawn gate, not the wrong-way spot.
+			p["best_dist"] = INF
+			p["wrong_way_since_ms"] = 0
+			_runner.task_hud.rpc_stop_warning.rpc_id(peer_id)
+		return
+	if wrong_way:
+		p["wrong_way_since_ms"] = Time.get_ticks_msec()
+		_runner.task_hud.rpc_flash_warning.rpc_id(peer_id, "RACE_WRONG_WAY", true)
+	else:
+		p["wrong_way_since_ms"] = 0
+		_runner.task_hud.rpc_stop_warning.rpc_id(peer_id)
+
+
+## 1-based race position among all live racers ("P2/6"). Finished racers rank by
+## time, the rest by route progress, then distance to their next gate.
+func _position_text(peer_id: int) -> String:
+	var scores: Dictionary[int, float] = {}
+	for racer in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Racers"]):
+		var id := int(racer.name)
+		# Traffic and disconnected/stale rows aren't competitors — skip is intentional.
+		if racer.is_in_group(UtilsConstants.GROUPS["Traffic"]) or !_peer_progress.has(id):
+			continue
+		var p := _peer_progress[id]
+		if p.has("completion_time_ms"):
+			scores[id] = 1e12 - p["completion_time_ms"]
+		else:
+			var dist := (racer as Node3D).global_position.distance_to(
+				_expected_checkpoint(p).global_position
+			)
+			scores[id] = _expected_ordinal(p) * 1e6 - dist
+	var pos := 1
+	for id in scores:
+		if scores[id] > scores[peer_id]:
+			pos += 1
+	return tr("RACE_POSITION").format({"pos": pos, "total": scores.size()})
+
+
 func _after_start_or_lap_advance(p: Dictionary) -> void:
 	if p["next_lap_idx"] < lap_checkpoints.size():
 		p["waiting_for"] = WaitFor.LAP_CP
@@ -279,12 +371,20 @@ func _push_lap_hud(peer_id: int, p: Dictionary) -> void:
 	var text := tr("RACE_LAP").format(
 		{"current": current_lap, "total": total_laps, "time": time_str}
 	)
-	_runner.task_hud.rpc_update_progress.rpc_id(peer_id, text)
+	_runner.task_hud.rpc_update_progress.rpc_id(peer_id, "%s  -  %s" % [_position_text(peer_id), text])
+
+
+## Local-only feedback: the highlight is per-client, other racers' gates are untouched.
+@rpc("call_local", "reliable")
+func _rpc_checkpoint_passed(ckpt_idx: int) -> void:
+	_runner.audio_manager.play_mouse_click()
+	_get_child_checkpoints()[ckpt_idx].play_passed()
 
 
 @rpc("call_local", "reliable")
-func _rpc_play_checkpoint_sfx() -> void:
-	_runner.audio_manager.play_mouse_click()
+func _rpc_reset_checkpoints() -> void:
+	for ckpt in _get_child_checkpoints():
+		ckpt.reset_passed()
 
 
 #endregion

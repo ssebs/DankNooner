@@ -6,11 +6,11 @@
 size = Vector3(16, 64, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2lumj"]
+resource_local_to_scene = true
 transparency = 1
 albedo_color = Color(1.4147556, 0.45349365, 1.3666928, 0.2784314)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_sx6t6"]
-material = SubResource("StandardMaterial3D_2lumj")
 top_radius = 2.0
 bottom_radius = 1.0
 height = 128.0
@@ -18,6 +18,43 @@ radial_segments = 6
 rings = 1
 cap_top = false
 cap_bottom = false
+
+[sub_resource type="Animation" id="Animation_reset"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BorderCylLeft:material_override:albedo_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1.4147556, 0.45349365, 1.3666928, 0.2784314)]
+}
+
+[sub_resource type="Animation" id="Animation_passed"]
+resource_name = "passed"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BorderCylLeft:material_override:albedo_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(2, 2, 2, 0.9), Color(0.25490198, 0.6862745, 1, 0.15)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ckpt"]
+_data = {
+&"RESET": SubResource("Animation_reset"),
+&"passed": SubResource("Animation_passed")
+}
 
 [node name="CheckpointMarker" type="Node3D" unique_id=1048335829]
 script = ExtResource("1_jt853")
@@ -33,11 +70,13 @@ shape = SubResource("BoxShape3D_fjdpx")
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 64, 0)
 mesh = SubResource("CylinderMesh_sx6t6")
+material_override = SubResource("StandardMaterial3D_2lumj")
 
 [node name="BorderCylRight" type="MeshInstance3D" parent="." unique_id=706259786]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 64, 0)
 mesh = SubResource("CylinderMesh_sx6t6")
+material_override = SubResource("StandardMaterial3D_2lumj")
 
 [node name="RespawnPoints" type="Node3D" parent="." unique_id=697950746]
 unique_name_in_owner = true
@@ -65,3 +104,7 @@ transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 2.2499995, 
 
 [node name="8" type="Marker3D" parent="RespawnPoints" unique_id=1947466951]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 5.499999, 0, 14.5)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1386204517]
+unique_name_in_owner = true
+libraries/ = SubResource("AnimationLibrary_ckpt")

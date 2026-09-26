@@ -37,7 +37,7 @@ func on_race_end() -> void:
 func _push_lap_hud(peer_id: int, p: Dictionary) -> void:
 	var elapsed_ms: int = Time.get_ticks_msec() - p["start_ms"]
 	var time_str := "%d:%05.2f" % [elapsed_ms / 60000, (elapsed_ms % 60000) / 1000.0]
-	_runner.task_hud.rpc_update_progress.rpc_id(peer_id, time_str)
+	_runner.task_hud.rpc_update_progress.rpc_id(peer_id, "%s  -  %s" % [_position_text(peer_id), time_str])
 
 
 ## Point-to-point, always one lap — hide RaceTask's total_laps.
