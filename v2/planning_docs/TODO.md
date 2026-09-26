@@ -28,8 +28,9 @@
 - [ ] mid-race challenges
   - [x] display in HUD during race
   - [x] track who did longest wheelie / airtime
-  - [ ] hud to show how to do trick
-  - [ ] this suggested trick changes every race
+  - [x] hud to show how to do trick
+  - [ ] Multiple trick options
+  - [ ] this suggested trick changes every race? 
 
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
@@ -43,7 +44,6 @@
 > Stuff to move ASAP
 - [ ] replace csgmesh for houses/other buildings for performance + looks
 - [ ] Headlight and brake light functionality
-- [ ] auto stoppie like how wheelies work
 - [ ] tapping brakes during full boost should stop it where youre at
 - trick animation to move up then play the mixamo anims
 - Time attack mode
@@ -231,6 +231,8 @@
 ---
 
 ## Done ✅
+
+- [x] auto stoppie like how wheelies work
 
 - [x] rotate camera to next checkpoint slightly
 

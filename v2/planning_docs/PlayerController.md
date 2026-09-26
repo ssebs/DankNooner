@@ -149,6 +149,9 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     - Power wheelie initiation (lean back + throttle + RPM threshold)
     - Balance point zone with instability
     - Lean forward recovery
+  - `_stoppie_calc()` — stoppie physics:
+    - Manual: front brake + lean forward lifts the rear immediately
+    - Auto: holding the front brake past `AUTO_STOPPIE_BRAKE` above `AUTO_STOPPIE_SPEED_FRAC` of `bd.max_speed` for `AUTO_STOPPIE_HOLD_SECS` lifts it without lean. Depth scales with brake pressure and keeps climbing while held (hold too long → over the bars); easing off lowers it. Hold timer `stoppie_brake_hold_time` is a synced state property
   - `_speed_calc()` reads `BoostController.is_boosting` to scale engine drive by
     `BOOST_ACCEL_MULT` and lift both the gear cap and the `bd.max_speed` ceiling by
     `BOOST_SPEED_MULT`

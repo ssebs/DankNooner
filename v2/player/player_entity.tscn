@@ -2350,7 +2350,7 @@ unique_name_in_owner = true
 script = ExtResource("3_faflk")
 root = NodePath("..")
 enable_prediction = true
-state_properties = Array[String]([":global_transform", ":velocity", ":up_direction", ":is_crashed", ":movement_locked", "%BoostController:boost_amount", "%BoostController:boost_burn_target", "%BoostController:boost_burn_rate", "%BoostController:boost_prev_held", "%BoostController:boost_tap_window", "%BoostController:is_boosting", "%TrickController:combo_time", "%TrickController:combo_grace", "%TrickController:combo_boost_earned", "%TrickController:combo_multiplier", "%TrickController:combo_score", "%TrickController:_air_flips_awarded", "%TrickController:_hold_dir", "%TrickController:_hold_time", "%TrickController:_press_double", "%TrickController:_tap_dir", "%TrickController:_tap_age", "%TrickController:_tap_trick", "%TrickController:_tap_trick_timer", "%MovementController:pitch_angle", "%MovementController:wheelie_committed", "%MovementController:roll_angle", "%MovementController:speed", "%MovementController:slip_angle", "%MovementController:wobble_angle", "%MovementController:wobble_vel", "%MovementController:wobble_brake_hold_time", "%MovementController:balance_locked", "%MovementController:_rb_prev_held", "%MovementController:_lock_throttle_released", "%GearingController:current_gear", "%GearingController:current_rpm", "%GearingController:clutch_value", "%GearingController:is_rev_limited"])
+state_properties = Array[String]([":global_transform", ":velocity", ":up_direction", ":is_crashed", ":movement_locked", "%BoostController:boost_amount", "%BoostController:boost_burn_target", "%BoostController:boost_burn_rate", "%BoostController:boost_prev_held", "%BoostController:boost_tap_window", "%BoostController:is_boosting", "%TrickController:combo_time", "%TrickController:combo_grace", "%TrickController:combo_boost_earned", "%TrickController:combo_multiplier", "%TrickController:combo_score", "%TrickController:_air_flips_awarded", "%TrickController:_hold_dir", "%TrickController:_hold_time", "%TrickController:_press_double", "%TrickController:_tap_dir", "%TrickController:_tap_age", "%TrickController:_tap_trick", "%TrickController:_tap_trick_timer", "%MovementController:pitch_angle", "%MovementController:wheelie_committed", "%MovementController:roll_angle", "%MovementController:speed", "%MovementController:slip_angle", "%MovementController:wobble_angle", "%MovementController:wobble_vel", "%MovementController:wobble_brake_hold_time", "%MovementController:stoppie_brake_hold_time", "%MovementController:balance_locked", "%MovementController:_rb_prev_held", "%MovementController:_lock_throttle_released", "%GearingController:current_gear", "%GearingController:current_rpm", "%GearingController:clutch_value", "%GearingController:is_rev_limited"])
 input_properties = Array[String](["%InputController:nfx_throttle", "%InputController:nfx_front_brake", "%InputController:nfx_rear_brake", "%InputController:nfx_steer", "%InputController:nfx_lean", "%InputController:nfx_trick_held", "%InputController:nfx_clutch_held", "%InputController:nfx_boost_held", "%InputController:nfx_cam_x", "%InputController:nfx_cam_y", "%InputController:nfx_target_gear"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
@@ -2399,7 +2399,7 @@ gearing_controller = NodePath("../GearingController")
 crash_controller = NodePath("../CrashController")
 rear_raycast = NodePath("../../RearRayCast")
 front_raycast = NodePath("../../FrontRayCast")
-wheelie_clutch_kick_boost = 1.0
+wheelie_clutch_kick_boost = 0.75
 
 [node name="GearingController" type="Node" parent="_Controllers" unique_id=2064362163 node_paths=PackedStringArray("player_entity", "input_controller")]
 unique_name_in_owner = true
@@ -2543,6 +2543,17 @@ unique_name_in_owner = true
 [node name="BikeSkin" parent="VisualRoot/IKTargets" unique_id=1727462617 instance=ExtResource("7_lfjd4")]
 unique_name_in_owner = true
 skin_definition = ExtResource("2_htgu7")
+
+[node name="HeadlightMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=602305415]
+unique_name_in_owner = true
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2.624415e-08, 0.6928464, 0.8001981)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="VisualRoot/IKTargets/HeadlightMarker" unique_id=1112210254]
+light_color = Color(0.953125, 0.9419265, 0.6664429, 1)
+light_energy = 2.0
+shadow_enabled = true
+spot_range = 20.0
+spot_angle = 15.0
 
 [node name="CharacterSkin" parent="VisualRoot" unique_id=259227641 instance=ExtResource("6_1vqn6")]
 unique_name_in_owner = true

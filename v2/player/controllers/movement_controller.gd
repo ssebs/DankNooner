@@ -49,7 +49,7 @@ class_name MovementController extends Node
 ## force (so a clutch-up lofts higher than steady power — "more power") and the climb rate (so it
 ## snaps up even when wheelie_rise_rate_scale is low). Higher = a stronger pop; too high loops light
 ## bikes off a hard dump. See _calc_normal_wheelie_target and _apply_wheelie_pitch.
-@export var wheelie_clutch_kick_boost: float = 0.75
+@export var wheelie_clutch_kick_boost: float = 1.0
 ## Steering authority while up on the front wheel, above wheelie_steer_full_speed (mirrors STOPPIE_STEER_SCALE).
 @export var wheelie_steer_scale: float = 0.5
 ## At/below this speed the wheelie steering cut is lifted so tight circle wheelies stay possible.
@@ -100,6 +100,11 @@ const LANDING_SNAP_ANGLE_DEG: float = 30.0 # forgiveness window — flips landin
 # Steering authority while up on the front wheel. Reduced input is allowed; shoving past the
 # crash threshold (CrashController.stoppie_steer_crash_threshold) washes the loaded front out.
 const STOPPIE_STEER_SCALE: float = 0.5
+# Auto stoppie — hold LT past AUTO_STOPPIE_BRAKE above this fraction of bd.max_speed for
+# AUTO_STOPPIE_HOLD_SECS and the rear lifts without leaning forward.
+const AUTO_STOPPIE_BRAKE: float = 0.9
+const AUTO_STOPPIE_SPEED_FRAC: float = 0.6
+const AUTO_STOPPIE_HOLD_SECS: float = 0.25
 # Reverse — hold any brake while stopped to roll backwards. No clutch needed.
 const REVERSE_MAX_SPEED: float = 2.0
 const REVERSE_ACCEL: float = 8.0
@@ -141,6 +146,7 @@ var wobble_brake_hold_time: float = 0.0 # brake-slide hold accumulator (trigger 
 var is_wobbling: bool = false
 # true ONLY in a braking-held stoppie (not a coast/landing/burnout); gates scoring + washout crash
 var is_stoppie: bool = false
+var stoppie_brake_hold_time: float = 0.0 # auto-stoppie hard-brake hold accumulator (synced)
 # true while pitch sits in the wheelie balance window. Re-derived each tick from the synced
 # pitch_angle (not synced directly). Gates the right-stick trick tweaks + the wheelie cam.
 var in_balance_point: bool = false
@@ -158,8 +164,8 @@ var _default_spawn_timer: float = 1.0
 var _spawn_timer: float = _default_spawn_timer
 
 # Wheelie physics
-var _rb_prev_held: bool = false  # synced — RB rising-edge detection for the balance-lock toggle
-var _lock_throttle_released: bool = false  # synced — rule C: re-pressing throttle exits after a release
+var _rb_prev_held: bool = false # synced — RB rising-edge detection for the balance-lock toggle
+var _lock_throttle_released: bool = false # synced — rule C: re-pressing throttle exits after a release
 var _prev_clutch_held: bool = false
 var _clutch_kick_window: float = 0.0
 var _balance_point_decay_mult: float = 0.85
@@ -651,7 +657,7 @@ func _pitch_angle_calc(delta: float):
 		if pitch_angle >= bp_low and pitch_angle <= bp_high:
 			in_balance_point = true
 			return
-		set_balance_locked(false)  # left the sweet spot — fall through to normal wheelie physics
+		set_balance_locked(false) # left the sweet spot — fall through to normal wheelie physics
 
 	# --- Wheelie ---
 	var wheelie_target = 0.0
@@ -798,7 +804,8 @@ func _apply_wheelie_pitch(
 		pitch_angle = move_toward(pitch_angle, 0, decay_speed * delta)
 
 
-## Stoppie physics: brake hard + lean forward to lift the rear wheel
+## Stoppie physics: brake + lean forward lifts the rear wheel (manual), or a long hard front-brake
+## hold at high speed lifts it on its own (auto — see AUTO_STOPPIE_*).
 func _stoppie_calc(bd: BikeSkinDefinition, in_stoppie: bool, delta: float):
 	# Only the front brake pitches the nose down — the rear can't lift itself off the ground.
 	var total_brake = _effective_front_brake()
@@ -813,25 +820,44 @@ func _stoppie_calc(bd: BikeSkinDefinition, in_stoppie: bool, delta: float):
 	if not (total_brake > required_brake and input_controller.nfx_lean > 0.3):
 		_stoppie_locked_by_wheelie = false
 
-	var can_stoppie = (
+	# Auto hold timer: counts while LT is held hard at high speed. Once the nose is up the sustain
+	# threshold applies instead, so easing LT lowers the stoppie rather than dropping it outright.
+	var auto_brake = required_brake if in_stoppie else AUTO_STOPPIE_BRAKE
+	if total_brake > auto_brake and (in_stoppie or speed > bd.max_speed * AUTO_STOPPIE_SPEED_FRAC):
+		stoppie_brake_hold_time += delta
+	else:
+		stoppie_brake_hold_time = 0.0
+
+	var can_lift = (
 		not _stoppie_locked_by_wheelie
-		and total_brake > required_brake
-		and input_controller.nfx_lean > 0.3
 		and speed > 3.0
 		and abs(roll_angle) < deg_to_rad(10)
 		and not is_drifting # a burnout/brake-slide is weight-back — can't pitch onto the front
 	)
+	var manual_stoppie = (
+		can_lift and total_brake > required_brake and input_controller.nfx_lean > 0.3
+	)
+	var auto_stoppie = can_lift and stoppie_brake_hold_time > AUTO_STOPPIE_HOLD_SECS
+	var can_stoppie = manual_stoppie or auto_stoppie
 	# Scores the whole time the nose is up (symmetric with the wheelie's pitch check). A nose-first
 	# landing flattens to 0 on touchdown, so only a real braking stoppie reaches here; a burnout
 	# (is_drifting) is the one case to exclude.
 	is_stoppie = in_stoppie and not is_drifting
 
 	if can_stoppie or in_stoppie:
-		# Target deepens with brake + lean — speed just needs a minimum
 		var speed_factor = clampf(speed / (bd.max_speed * 0.25), 0.0, 1.0)
-		var brake_pct = clampf(total_brake * 1.5, 0.0, 1.0)
-		# Target can exceed max — crash controller will trigger if you go over
-		var stoppie_target = - max_stoppie_rad * (0.5 + brake_pct * 0.7) * speed_factor
+		var stoppie_target: float
+		if manual_stoppie:
+			# Target deepens with brake + lean — speed just needs a minimum
+			var brake_pct = clampf(total_brake * 1.5, 0.0, 1.0)
+			# Target can exceed max — crash controller will trigger if you go over
+			stoppie_target = - max_stoppie_rad * (0.5 + brake_pct * 0.7) * speed_factor
+		else:
+			# Auto: deepens with LT pressure and keeps climbing while held — hold too long and it goes over.
+			var hold_ramp = (
+				(stoppie_brake_hold_time - AUTO_STOPPIE_HOLD_SECS) / AUTO_STOPPIE_HOLD_SECS
+			)
+			stoppie_target = - max_stoppie_rad * total_brake * hold_ramp * speed_factor
 
 		# Lean back recovery — push the rear wheel down
 		if input_controller.nfx_lean < 0 and in_stoppie:
@@ -1224,6 +1250,7 @@ func do_reset():
 	slip_angle = 0.0
 	is_drifting = false
 	is_stoppie = false
+	stoppie_brake_hold_time = 0.0
 	in_balance_point = false
 	balance_locked = false
 	_rb_prev_held = false
