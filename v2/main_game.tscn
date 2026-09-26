@@ -304,7 +304,7 @@ riding_hud_state = NodePath("../../../HUDManager/StateMachine/RidingHUDState")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
-[node name="StuntRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1367970627 node_paths=PackedStringArray("tutorial_hud", "results_hud", "input_state_manager", "lobby_manager", "menu_manager", "audio_manager", "npc_race_manager", "riding_hud_state", "gamemode_manager", "spawn_manager")]
+[node name="StuntRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1367970627 node_paths=PackedStringArray("tutorial_hud", "results_hud", "input_state_manager", "lobby_manager", "menu_manager", "audio_manager", "npc_race_manager", "riding_hud_state", "trick_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("40_stnrc")
 tutorial_hud = NodePath("../../../HUDManager/StateMachine/TutorialHUDState")
 results_hud = NodePath("../../../HUDManager/StateMachine/ResultsHUDState")
@@ -314,6 +314,7 @@ menu_manager = NodePath("../../../MenuManager")
 audio_manager = NodePath("../../../AudioManager")
 npc_race_manager = NodePath("../../../NPCRaceManager")
 riding_hud_state = NodePath("../../../HUDManager/StateMachine/RidingHUDState")
+trick_manager = NodePath("../../../TrickManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
@@ -338,10 +339,11 @@ settings_manager = NodePath("../SettingsManager")
 gamemode_manager = NodePath("../GamemodeManager")
 metadata/_custom_type_script = "uid://cug5kob8cndk4"
 
-[node name="TrickManager" type="Node" parent="ManagerManager" unique_id=1405416094 node_paths=PackedStringArray("spawn_manager", "gamemode_manager") groups=["Managers"]]
+[node name="TrickManager" type="Node" parent="ManagerManager" unique_id=1405416094 node_paths=PackedStringArray("spawn_manager", "gamemode_manager", "riding_hud_state") groups=["Managers"]]
 script = ExtResource("36_trkmg")
 spawn_manager = NodePath("../SpawnManager")
 gamemode_manager = NodePath("../GamemodeManager")
+riding_hud_state = NodePath("../HUDManager/StateMachine/RidingHUDState")
 
 [node name="NPCRaceManager" type="Node" parent="ManagerManager" unique_id=1218916391 node_paths=PackedStringArray("level_manager") groups=["Managers"]]
 script = ExtResource("31_npcrm")

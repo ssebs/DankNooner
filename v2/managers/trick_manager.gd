@@ -19,6 +19,7 @@ signal combo_voided(peer_id: int, lost_duration: float, lost_points: float)
 
 @export var spawn_manager: SpawnManager
 @export var gamemode_manager: GamemodeManager
+@export var riding_hud_state: RidingHUDState
 
 @export_group("Scoring")
 ## Points per unit of TrickController.combo_score (a 1.0 held trick earns this per second), before
@@ -89,6 +90,7 @@ func _track_combo(peer_id: int, player: PlayerEntity):
 	st["prev_score"] = 0.0
 	st["peak_mult"] = 1
 	combo_banked.emit(peer_id, points, duration, multiplier)
+	riding_hud_state.push_score_popup(peer_id, int(points), multiplier)
 
 
 #region public api
@@ -133,5 +135,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("spawn_manager must not be empty")
 	if gamemode_manager == null:
 		issues.append("gamemode_manager must not be empty")
+	if riding_hud_state == null:
+		issues.append("riding_hud_state must not be empty")
 
 	return issues

@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://do131g4o4kcam"]
 
+[ext_resource type="Script" path="res://player/hud_elements/race_leaderboard.gd" id="99_rldbd"]
+[ext_resource type="Script" path="res://player/hud_elements/score_popup.gd" id="99_scrpp"]
 [ext_resource type="Script" uid="uid://ce4n2xjrhv4j8" path="res://managers/hud/riding_hud_state.gd" id="1_8neiw"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="1_whasa"]
 [ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="3_j31af"]
@@ -250,10 +252,17 @@ grow_horizontal = 0
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("3_j31af")
 
-[node name="HUD_CHALLENGE_MSG" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/ChallengePanel" unique_id=1156886562]
+[node name="HUD_Leaderboard" type="Control" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/ChallengePanel" unique_id=1156886562]
 unique_name_in_owner = true
 layout_mode = 2
-text = "HUD_CHALLENGE_MSG"
+mouse_filter = 2
+script = ExtResource("99_rldbd")
+
+[node name="ScorePopup" type="Control" parent="UI/AspectContainer/MarginContainer" unique_id=1156886590]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("99_scrpp")
 
 [node name="BalanceBar" parent="UI/AspectContainer/MarginContainer" unique_id=108705249 instance=ExtResource("5_q7o3g")]
 unique_name_in_owner = true

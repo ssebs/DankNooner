@@ -5,7 +5,9 @@
 [ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/gamemodeobjects/killbox.tscn" id="3_cbnwg"]
 [ext_resource type="Sky" uid="uid://dfgbuerpq3y8" path="res://levels/assets/skybox_neon.tres" id="4_y7kpu"]
 [ext_resource type="Script" uid="uid://bxp3i4cnonh8y" path="res://addons/road-generator/nodes/road_manager.gd" id="6_3ue8r"]
-[ext_resource type="Script" uid="uid://c0uylliv5rmt6" path="res://managers/gamemodes/challenges/longest_wheelie_challenge.gd" id="6_a4ddl"]
+[ext_resource type="Script" uid="uid://bjt7k3nrl24c8" path="res://managers/gamemodes/challenges/race_challenge.gd" id="6_a4ddl"]
+[ext_resource type="Resource" path="res://managers/gamemodes/challenges/longest_wheelie_challenge.tres" id="6_lwhch"]
+[ext_resource type="Resource" path="res://managers/gamemodes/challenges/best_combo_challenge.tres" id="6_bcmch"]
 [ext_resource type="PackedScene" uid="uid://rervqxotioc4" path="res://levels/components/props/ramp.tscn" id="6_w1aki"]
 [ext_resource type="PackedScene" uid="uid://i5gn7vx2atly" path="res://levels/components/props/gas_station.tscn" id="7_7qjpf"]
 [ext_resource type="Script" uid="uid://cph7euje06kel" path="res://addons/road-generator/nodes/road_container.gd" id="7_rmar3"]
@@ -80,16 +82,12 @@ adjustment_brightness = 1.14
 adjustment_contrast = 1.15
 adjustment_saturation = 1.1
 
-[sub_resource type="Resource" id="Resource_wktgk"]
-script = ExtResource("6_a4ddl")
-metadata/_custom_type_script = "uid://c0uylliv5rmt6"
-
 [sub_resource type="Resource" id="Resource_pls18"]
 script = ExtResource("24_l8nu3")
 name = "Stunt Race"
 description = "Do a flip!"
 target_gamemode = 3
-race_challenge = SubResource("Resource_wktgk")
+race_challenges = Array[ExtResource("6_a4ddl")]([ExtResource("6_lwhch"), ExtResource("6_bcmch")])
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_mn4lr"]

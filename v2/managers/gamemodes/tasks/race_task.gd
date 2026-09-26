@@ -331,8 +331,17 @@ func _check_wrong_way(player: PlayerEntity, peer_id: int, p: Dictionary) -> void
 		_runner.task_hud.rpc_stop_warning.rpc_id(peer_id)
 
 
-## 1-based race position among all live racers ("P2/6"). Finished racers rank by
-## time, the rest by route progress, then distance to their next gate.
+## Ranking key for one racer — higher is further ahead. Finished racers rank by time,
+## the rest by route progress, then distance to their next gate.
+func get_progress_key(racer_id: int, racer_pos: Vector3) -> float:
+	var p := _peer_progress[racer_id]
+	if p.has("completion_time_ms"):
+		return 1e12 - p["completion_time_ms"]
+	var dist := racer_pos.distance_to(_expected_checkpoint(p).global_position)
+	return _expected_ordinal(p) * 1e6 - dist
+
+
+## 1-based race position among all live racers ("P2/6").
 func _position_text(peer_id: int) -> String:
 	var scores: Dictionary[int, float] = {}
 	for racer in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Racers"]):
@@ -340,14 +349,7 @@ func _position_text(peer_id: int) -> String:
 		# Traffic and disconnected/stale rows aren't competitors — skip is intentional.
 		if racer.is_in_group(UtilsConstants.GROUPS["Traffic"]) or !_peer_progress.has(id):
 			continue
-		var p := _peer_progress[id]
-		if p.has("completion_time_ms"):
-			scores[id] = 1e12 - p["completion_time_ms"]
-		else:
-			var dist := (racer as Node3D).global_position.distance_to(
-				_expected_checkpoint(p).global_position
-			)
-			scores[id] = _expected_ordinal(p) * 1e6 - dist
+		scores[id] = get_progress_key(id, (racer as Node3D).global_position)
 	var pos := 1
 	for id in scores:
 		if scores[id] > scores[peer_id]:

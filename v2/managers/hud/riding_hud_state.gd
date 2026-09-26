@@ -32,7 +32,8 @@ const _RESPAWN_QUICK_FLASH_SECS := 0.6
 @onready var _fps_label: Label = %HUD_FPS
 @onready var _trick_msg: Label = %HUD_TRICK_MSG
 @onready var _game_msg: Label = %HUD_GAME_MSG
-@onready var _challenge_msg: Label = %HUD_CHALLENGE_MSG
+@onready var _leaderboard: RaceLeaderboard = %HUD_Leaderboard
+@onready var _score_popup: ScorePopup = %ScorePopup
 @onready var _challenge_panel: PanelContainer = %ChallengePanel
 @onready var _trick_timer: Label = %HUD_TRICK_TIMER
 @onready var _balance_bar: BalanceBar = %BalanceBar
@@ -74,7 +75,7 @@ var _wheelie_attempt_t: float = 0.0
 ## and whenever netfox's perf monitors aren't registered — see show_hud.
 var _netfox_debug_label: Label = null
 var _netfox_dbg_accum: float = 0.0
-## Hint tricks of the running race challenge; shown under the player's pinned tricks.
+## Hint tricks of the running race challenges; shown under the player's pinned tricks.
 var _challenge_tricks := PackedInt32Array()
 
 func _ready() -> void:
@@ -340,7 +341,7 @@ func _on_save_item_updated(key: String, _value: Variant):
 		_rebuild_trick_rows()
 
 
-## Pinned tricks (tricks menu), then the race challenge's hint tricks, skipping duplicates.
+## Pinned tricks (tricks menu), then the race challenges' hint tricks, skipping duplicates.
 func _rebuild_trick_rows():
 	for child in _trick_rows.get_children():
 		child.queue_free()
@@ -397,21 +398,21 @@ func push_checkpoint_marker(peer_id: int, pos: Vector3, has_target: bool) -> voi
 	_minimap.rpc_set_checkpoint.rpc_id(peer_id, pos, has_target)
 
 
-## Server-side: push the mid-race challenge line (already localized) and its hint tricks to one
-## client. Called from the stunt race gamemode.
-func push_challenge_status(peer_id: int, text: String, tricks: PackedInt32Array) -> void:
-	_rpc_set_challenge.rpc_id(peer_id, text, tricks)
+## Server-side: broadcast the live leaderboard (see RaceLeaderboard.set_board) and the race
+## challenges' hint tricks. Called from the stunt race gamemode.
+func push_leaderboard(headers: PackedStringArray, rows: Array, tricks: PackedInt32Array) -> void:
+	_rpc_set_leaderboard.rpc(headers, rows, tricks)
 
 
-func clear_challenge_status(peer_id: int) -> void:
-	_rpc_clear_challenge.rpc_id(peer_id)
+func clear_leaderboard() -> void:
+	_rpc_clear_leaderboard.rpc()
 
 
-## text is pre-localized by the server (per-peer, so it carries the caller's own best) —
-## don't tr() again, same as the tutorial HUD's progress line.
+## headers/cells are pre-localized by the server — don't tr() again, same as the tutorial
+## HUD's progress line.
 @rpc("call_local", "unreliable")
-func _rpc_set_challenge(text: String, tricks: PackedInt32Array):
-	_challenge_msg.text = text
+func _rpc_set_leaderboard(headers: PackedStringArray, rows: Array, tricks: PackedInt32Array):
+	_leaderboard.set_board(headers, rows)
 	_challenge_panel.visible = true
 	# Resent every refresh; only rebuild when it changes.
 	if tricks != _challenge_tricks:
@@ -420,10 +421,21 @@ func _rpc_set_challenge(text: String, tricks: PackedInt32Array):
 
 
 @rpc("call_local", "reliable")
-func _rpc_clear_challenge():
+func _rpc_clear_leaderboard():
 	_challenge_panel.visible = false
+	_leaderboard.clear()
 	_challenge_tricks = PackedInt32Array()
 	_rebuild_trick_rows()
+
+
+## Server-side: pop a banked combo's score on its rider's HUD. Called from TrickManager.
+func push_score_popup(peer_id: int, points: int, multiplier: int) -> void:
+	_rpc_score_popup.rpc_id(peer_id, points, multiplier)
+
+
+@rpc("call_local", "reliable")
+func _rpc_score_popup(points: int, multiplier: int):
+	_score_popup.pop(points, multiplier)
 
 
 func hide_ui() -> void:

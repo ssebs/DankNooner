@@ -5,3 +5,4 @@
 [resource]
 script = ExtResource("1")
 title_key = "RACE_LONGEST_WHEELIE"
+icon = "🏍"

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="BestComboChallenge" format=3]
+
+[ext_resource type="Script" path="res://managers/gamemodes/challenges/best_combo_challenge.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+title_key = "RACE_BEST_COMBO"
+icon = "🔥"

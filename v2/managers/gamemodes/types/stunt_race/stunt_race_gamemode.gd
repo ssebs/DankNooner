@@ -15,15 +15,20 @@ class_name StuntRaceGameMode extends GameModeType
 @export var audio_manager: AudioManager
 @export var npc_race_manager: NPCRaceManager
 @export var riding_hud_state: RidingHUDState
+@export var trick_manager: TrickManager
 @export var _respawn_delay: float = 2.5
 ## When true, finishing the race teleports everyone back to the grid; otherwise they stay
 ## where they finished and only the results HUD closes.
 @export var teleport_to_start_on_finish: bool = false
+## Score awarded by finish order among humans (NPCs ignored); 0 past the end.
+@export var placement_points: PackedInt32Array = PackedInt32Array([300, 200, 150, 100, 50])
 
 
 const RESULTS_REFRESH_SECS: float = 1.0
-## Cadence for pushing the live challenge line to clients (a few Hz — the value crawls).
-const CHALLENGE_REFRESH_SECS: float = 0.25
+## Cadence for pushing the live leaderboard to clients (a few Hz — the values crawl).
+const LEADERBOARD_REFRESH_SECS: float = 0.25
+## Results sort key offset that puts every NPC row below every human (humans sort by -score).
+const NPC_SORT_OFFSET: float = 1e12
 
 var _start_circle: EventStartCircle
 ## A stunt track authors a StuntRaceTask (RaceTask + item spawners) in place of a plain RaceTask.
@@ -37,11 +42,12 @@ var _results_countdown_total: float = 10.0
 ## stop(), so they can't be re-derived. NPC rows re-derive live from RaceTask.
 var _human_rows: Array[Dictionary] = []
 var _results_refresh_accum: float = 0.0
-var _challenge_refresh_accum: float = 0.0
-## Challenge winner line ("Name (4.2s)") snapshotted at all-finished; "" if nobody scored.
-var _challenge_winner_text: String = ""
-## The event's challenge (from GameModeEventDefinition), or null. Resolved from ctx in Enter.
-var _race_challenge: RaceChallenge
+var _leaderboard_refresh_accum: float = 0.0
+## The event's challenges (from GameModeEventDefinition). Resolved from ctx in Enter.
+var _race_challenges: Array[RaceChallenge] = []
+## peer_id -> stats (see _peer_stats), frozen when the human crosses the finish line so
+## tricks after it don't count. Server only.
+var _finished_stats: Dictionary[int, Dictionary] = {}
 
 
 func Enter(state_context: StateContext):
@@ -53,7 +59,7 @@ func Enter(state_context: StateContext):
 	var ctx := state_context as GamemodeStateContext
 	_start_circle = ctx.event_start_circle
 	if ctx.gamemode_event != null:
-		_race_challenge = ctx.gamemode_event.race_challenge
+		_race_challenges = ctx.gamemode_event.race_challenges
 	_start_circle.enable_game_objects()
 	_runners = _start_circle.get_runners()
 	_inject_runner_deps()
@@ -63,13 +69,14 @@ func Enter(state_context: StateContext):
 	gamemode_manager.player_latejoined.connect(_on_player_latejoined)
 	results_hud.skip_pressed.connect(_on_results_skip_pressed)
 	results_hud.restart_pressed.connect(_on_results_restart_pressed)
+	trick_manager.combo_banked.connect(_on_combo_banked)
+	trick_manager.combo_voided.connect(_on_combo_voided)
 
 	if multiplayer.is_server():
 		_race_task = _find_race_task(_start_circle)
 		if _race_task is StuntRaceTask:
 			(_race_task as StuntRaceTask).on_race_start()
-		if _race_challenge != null:
-			_race_challenge.reset(lobby_manager.lobby_players.keys())
+		_reset_scoring()
 		_setup_npcs()
 		_start_next_runner()
 
@@ -78,7 +85,7 @@ func Update(delta: float):
 	if !multiplayer.is_server():
 		return
 	_push_checkpoint_markers()
-	_update_challenge(delta)
+	_update_leaderboard(delta)
 	if _update_results_countdown(delta):
 		return
 	if _active_runner != null:
@@ -93,6 +100,8 @@ func Exit(_state_context: StateContext):
 	gamemode_manager.player_latejoined.disconnect(_on_player_latejoined)
 	results_hud.skip_pressed.disconnect(_on_results_skip_pressed)
 	results_hud.restart_pressed.disconnect(_on_results_restart_pressed)
+	trick_manager.combo_banked.disconnect(_on_combo_banked)
+	trick_manager.combo_voided.disconnect(_on_combo_voided)
 
 	if _active_runner != null:
 		_disconnect_runner(_active_runner)
@@ -106,7 +115,7 @@ func Exit(_state_context: StateContext):
 			(_race_task as StuntRaceTask).on_race_end()
 		_teardown_npcs()
 		_clear_checkpoint_markers()
-		_clear_challenge_hud()
+		riding_hud_state.clear_leaderboard()
 		_race_task = null
 
 	if results_hud.ui.visible:
@@ -118,8 +127,8 @@ func Exit(_state_context: StateContext):
 	_runners = []
 	_active_runner_index = -1
 	_human_rows = []
-	_challenge_winner_text = ""
-	_race_challenge = null
+	_race_challenges = []
+	_finished_stats.clear()
 
 
 #region Runner chaining
@@ -132,6 +141,7 @@ func _start_next_runner():
 		return
 	_active_runner = _runners[_active_runner_index]
 	_active_runner.all_completed.connect(_on_runner_all_completed)
+	_active_runner.player_completed.connect(_on_runner_player_completed)
 	_active_runner.respawn_requested.connect(_on_runner_respawn_requested)
 	_active_runner.start(lobby_manager.lobby_players.keys())
 
@@ -142,7 +152,7 @@ func _on_runner_all_completed():
 	_active_runner = null
 	var is_last := _active_runner_index + 1 >= _runners.size()
 	if is_last:
-		_show_results(completed_runner)
+		_show_results()
 	completed_runner.stop()
 	if !is_last:
 		_start_next_runner()
@@ -151,6 +161,8 @@ func _on_runner_all_completed():
 func _disconnect_runner(runner: TaskRunner):
 	if runner.all_completed.is_connected(_on_runner_all_completed):
 		runner.all_completed.disconnect(_on_runner_all_completed)
+	if runner.player_completed.is_connected(_on_runner_player_completed):
+		runner.player_completed.disconnect(_on_runner_player_completed)
 	if runner.respawn_requested.is_connected(_on_runner_respawn_requested):
 		runner.respawn_requested.disconnect(_on_runner_respawn_requested)
 
@@ -209,69 +221,128 @@ func _clear_checkpoint_markers():
 
 #endregion
 
-#region Mid-race challenge (server only)
+#region Scoring + leaderboard (server only)
 
 
-## Tick every spawned human's challenge state, then push the leader/own line to their HUD
-## at CHALLENGE_REFRESH_SECS. Only runs while a leg is live — the race is over during results.
-func _update_challenge(delta: float):
-	if _race_challenge == null or _active_runner == null:
-		return
+## Fresh race: zero every human's trick score and challenge bests, unfreeze finishers.
+func _reset_scoring():
+	_finished_stats.clear()
+	var peer_ids := lobby_manager.lobby_players.keys()
+	for peer_id in peer_ids:
+		trick_manager.reset_peer(peer_id)
+	for challenge in _race_challenges:
+		challenge.reset(peer_ids)
+
+
+## One human's race stats — the shape the leaderboard, results, and (later) progression read.
+## Finishers return their frozen snapshot.
+func _peer_stats(peer_id: int) -> Dictionary:
+	if _finished_stats.has(peer_id):
+		return _finished_stats[peer_id]
+	var bests: Array[float] = []
+	for challenge in _race_challenges:
+		bests.append(challenge.get_best(peer_id))
+	return {
+		"peer_id": peer_id,
+		"username": lobby_manager.lobby_players[peer_id].username,
+		"score": trick_manager.get_score(peer_id),
+		"time_ms": -1.0,
+		"place": 0,
+		"bests": bests,
+	}
+
+
+## Freeze a finisher's stats and award placement points by finish order among humans.
+func _finish_peer(peer_id: int):
+	var stats := _peer_stats(peer_id)
+	stats["time_ms"] = _race_task.get_completion_time_ms(peer_id)
+	var place := _finished_stats.size()
+	if place < placement_points.size():
+		stats["score"] += placement_points[place]
+	stats["place"] = place + 1
+	_finished_stats[peer_id] = stats
+
+
+## Every spawned human's stats, best score first.
+func _sorted_stats() -> Array[Dictionary]:
+	var all: Array[Dictionary] = []
 	for peer_id in lobby_manager.lobby_players:
 		# Player may not be spawned yet (late-join) — skip is intentional.
-		var player := spawn_manager._get_player_by_peer_id(peer_id)
-		if player == null:
+		if spawn_manager._get_player_by_peer_id(peer_id) == null:
 			continue
-		_race_challenge.tick(peer_id, player, delta)
-	_challenge_refresh_accum -= delta
-	if _challenge_refresh_accum > 0.0:
-		return
-	_challenge_refresh_accum = CHALLENGE_REFRESH_SECS
-	var leader_id := _challenge_leader()
-	var leader_name := "" if leader_id == -1 else lobby_manager.lobby_players[leader_id].username
-	var leader_val := 0.0 if leader_id == -1 else _race_challenge.get_best(leader_id)
-	for peer_id in lobby_manager.lobby_players:
-		var player := spawn_manager._get_player_by_peer_id(peer_id)
-		if player == null:
-			continue
-		riding_hud_state.push_challenge_status(
-			peer_id,
-			_challenge_hud_text(peer_id, leader_name, leader_val),
-			_race_challenge.hint_tricks()
-		)
+		all.append(_peer_stats(peer_id))
+	all.sort_custom(func(a, b): return a["score"] > b["score"])
+	return all
 
 
-func _clear_challenge_hud():
-	if _race_challenge == null:
+## Tick every racing human's challenges, then broadcast the leaderboard at
+## LEADERBOARD_REFRESH_SECS. Only runs while a leg is live — the race is over during results.
+func _update_leaderboard(delta: float):
+	if _active_runner == null:
 		return
 	for peer_id in lobby_manager.lobby_players:
+		# Unspawned (late-join) and finished riders don't tick — skip is intentional.
 		var player := spawn_manager._get_player_by_peer_id(peer_id)
-		if player == null:
+		if player == null or _finished_stats.has(peer_id):
 			continue
-		riding_hud_state.clear_challenge_status(peer_id)
+		for challenge in _race_challenges:
+			challenge.tick(peer_id, player, delta)
+	_leaderboard_refresh_accum -= delta
+	if _leaderboard_refresh_accum > 0.0:
+		return
+	_leaderboard_refresh_accum = LEADERBOARD_REFRESH_SECS
+
+	var headers := PackedStringArray(["", "🏁", "💰"])
+	var tricks := PackedInt32Array()
+	for challenge in _race_challenges:
+		headers.append(challenge.icon)
+		tricks.append_array(challenge.hint_tricks())
+	var places := _human_race_places()
+	var rows: Array = []
+	for stats in _sorted_stats():
+		var place: int = places.get(stats["peer_id"], 0)
+		var cells := PackedStringArray([
+			stats["username"],
+			"P%d" % place if place > 0 else "—",
+			"%d" % int(stats["score"]),
+		])
+		for i in _race_challenges.size():
+			cells.append(_race_challenges[i].format_value(stats["bests"][i]))
+		rows.append({"peer_id": stats["peer_id"], "cells": cells})
+	riding_hud_state.push_leaderboard(headers, rows, tricks)
 
 
-## Human peer with the best value, or -1 if nobody has scored. NPCs don't do tricks.
-func _challenge_leader() -> int:
-	var leader_id := -1
-	var leader_val := 0.0
+## 1-based race position per racing human — NPCs ignored, matching placement points.
+func _human_race_places() -> Dictionary[int, int]:
+	var keys: Dictionary[int, float] = {}
 	for peer_id in lobby_manager.lobby_players:
-		var value := _race_challenge.get_best(peer_id)
-		if value > leader_val:
-			leader_val = value
-			leader_id = peer_id
-	return leader_id
+		var player := spawn_manager._get_player_by_peer_id(peer_id)
+		# Unspawned (late-join) or not in the race body yet — no place, skip is intentional.
+		if player == null or !_race_task.has_racer(peer_id):
+			continue
+		keys[peer_id] = _race_task.get_progress_key(peer_id, player.global_position)
+	var places: Dictionary[int, int] = {}
+	for peer_id in keys:
+		places[peer_id] = 1
+		for other in keys:
+			if keys[other] > keys[peer_id]:
+				places[peer_id] += 1
+	return places
 
 
-func _challenge_hud_text(peer_id: int, leader_name: String, leader_val: float) -> String:
-	var leader_seg := tr("RACE_CHALLENGE_NONE")
-	if leader_name != "":
-		leader_seg = "%s %s" % [leader_name, _race_challenge.format_value(leader_val)]
-	return tr("RACE_CHALLENGE_HUD").format({
-		"title": _race_challenge.title(),
-		"leader": leader_seg,
-		"you": _race_challenge.format_value(_race_challenge.get_best(peer_id)),
-	})
+func _on_combo_banked(peer_id: int, points: float, _duration: float, _multiplier: int):
+	# Tricks past the finish line don't count — the finisher's stats are frozen.
+	if !multiplayer.is_server() or _finished_stats.has(peer_id):
+		return
+	for challenge in _race_challenges:
+		challenge.on_combo_banked(peer_id, points)
+
+
+func _on_combo_voided(peer_id: int, _lost_duration: float, _lost_points: float):
+	if !multiplayer.is_server() or _finished_stats.has(peer_id):
+		return
+	for challenge in _race_challenges:
+		challenge.on_combo_voided(peer_id)
 
 
 #endregion
@@ -344,29 +415,19 @@ func _update_results_countdown(delta: float) -> bool:
 	return true
 
 
-func _show_results(runner: TaskRunner):
+func _show_results():
 	_human_rows = []
-	for peer_id in runner._player_states:
-		var state = runner._player_states[peer_id] as PlayerTaskState
-		var username: String = lobby_manager.lobby_players[peer_id].username
-		# Prefer the RaceTask clock (starts at the race body, like the lap HUD and
-		# NPC rows) over the runner clock (starts at grid/countdown).
-		var time_ms: float = state.completion_time_ms
-		if _race_task != null and _race_task.has_racer(peer_id):
-			var task_ms := _race_task.get_completion_time_ms(peer_id)
-			if task_ms >= 0.0:
-				time_ms = task_ms
-		_human_rows.append(_result_row(username, time_ms))
-	_challenge_winner_text = _build_challenge_winner_text()
+	for stats in _finished_stats.values():
+		_human_rows.append(_human_result_row(stats))
 	_results_countdown = _results_countdown_total
 	_results_refresh_accum = RESULTS_REFRESH_SECS
 	tutorial_hud.rpc_hide.rpc()
 	results_hud.rpc_show_results.rpc(_build_results_data().to_dict(), _results_countdown_total)
 
 
-## Cached human rows + live NPC rows. Bots keep racing through the results
-## countdown — a bot that finishes mid-countdown gets its real time on the next
-## refresh instead of a DNF.
+## Cached human rows (best score first) + live NPC rows below them by time. Bots keep racing
+## through the results countdown — a bot that finishes mid-countdown gets its real time on the
+## next refresh instead of a DNF. NPCs don't score, so their stat cells stay empty.
 func _build_results_data() -> ResultsData:
 	var rows: Array[Dictionary] = _human_rows.duplicate()
 	if _race_task != null:
@@ -374,35 +435,32 @@ func _build_results_data() -> ResultsData:
 			var npc_name: String = npc_race_manager.get_npc(npc_id).username
 			var time_ms := _race_task.get_completion_time_ms(npc_id)
 			if time_ms >= 0.0:
-				rows.append(_result_row(npc_name, time_ms))
+				rows.append({
+					"Username": npc_name,
+					"Time": "%.1fs" % (time_ms / 1000.0),
+					"_sort_key": NPC_SORT_OFFSET + time_ms,
+				})
 			else:
 				rows.append({"Username": npc_name, "Time": tr("RACE_RACING"), "_sort_key": INF})
 	rows.sort_custom(func(a, b): return a["_sort_key"] < b["_sort_key"])
-	# Challenge winner trails the placement table as a plain note row (reuses the two columns).
-	if _challenge_winner_text != "":
-		rows.append({"Username": _race_challenge.title(), "Time": _challenge_winner_text})
-	return ResultsData.create(tr("RACE_COMPLETE"), ["Username", "Time"], rows)
+	var columns: Array[String] = ["Username", "Time", "Score"]
+	for challenge in _race_challenges:
+		columns.append(challenge.title())
+	return ResultsData.create(tr("RACE_COMPLETE"), columns, rows)
 
 
-## Snapshot the challenge winner ("Name (4.2s)") at all-finished; "" if disabled or nobody scored.
-func _build_challenge_winner_text() -> String:
-	if _race_challenge == null:
-		return ""
-	var leader_id := _challenge_leader()
-	if leader_id == -1:
-		return ""
-	return "%s (%s)" % [
-		lobby_manager.lobby_players[leader_id].username,
-		_race_challenge.format_value(_race_challenge.get_best(leader_id)),
-	]
-
-
-func _result_row(username: String, time_ms: float) -> Dictionary:
-	return {
-		"Username": username,
-		"Time": "%.1fs" % (time_ms / 1000.0),
-		"_sort_key": time_ms,
+## The results HUD has no header row, so each stat cell carries its own label.
+func _human_result_row(stats: Dictionary) -> Dictionary:
+	var row := {
+		"Username": stats["username"],
+		"Time": "%.1fs" % (stats["time_ms"] / 1000.0),
+		"Score": "%s %d" % [tr("RACE_SCORE"), int(stats["score"])],
+		"_sort_key": -stats["score"],
 	}
+	for i in _race_challenges.size():
+		var challenge := _race_challenges[i]
+		row[challenge.title()] = "%s %s" % [challenge.title(), challenge.format_value(stats["bests"][i])]
+	return row
 
 
 func _on_results_skip_pressed():
@@ -425,9 +483,7 @@ func _on_results_restart_pressed():
 		_active_runner = null
 	_active_runner_index = -1
 	_human_rows = []
-	_challenge_winner_text = ""
-	if _race_challenge != null:
-		_race_challenge.reset(lobby_manager.lobby_players.keys())
+	_reset_scoring()
 	_runners = _start_circle.get_runners()
 	_inject_runner_deps()
 	# Fresh NPCs back at the grid with reset race rows.
@@ -439,6 +495,12 @@ func _on_results_restart_pressed():
 #endregion
 
 #region Player event handlers
+
+
+## Only the last runner's completion is crossing the race's finish line.
+func _on_runner_player_completed(peer_id: int):
+	if _active_runner_index == _runners.size() - 1:
+		_finish_peer(peer_id)
 
 
 func _on_player_crashed(peer_id: int):
@@ -502,5 +564,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("npc_race_manager must not be empty")
 	if riding_hud_state == null:
 		issues.append("riding_hud_state must not be empty")
+	if trick_manager == null:
+		issues.append("trick_manager must not be empty")
 
 	return issues

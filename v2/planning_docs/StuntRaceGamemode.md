@@ -134,6 +134,16 @@ plumbing), not the imperative approach sketched above.
   **Bat** → swing that wobbles nearby riders.
 - **Ramming** crashes the victim already; wobble-on-ram fires too rarely (known bug). No crash is
   scored as a knockout — there's no scoring axis.
+- **Scoring + mid-race challenges.** Score = banked trick points (`TrickManager.get_score`) +
+  `placement_points[finish order]` among humans (NPCs ignored), awarded on the last runner's
+  `player_completed`. A finisher's stats freeze there — tricks past the line don't count.
+  Challenges are `RaceChallenge` resources listed in `GameModeEventDefinition.race_challenges`
+  (`LongestWheelieChallenge`, `BestComboChallenge`); the gamemode ticks them and forwards
+  TrickManager's `combo_banked` / `combo_voided`, so **a crash voids a combo's trick stats** too
+  (the wheelie hold only commits when its combo banks). All of it feeds one per-peer stats dict
+  (`_peer_stats`) → live `RaceLeaderboard` in the riding HUD (rows slide on reorder) and the
+  results columns. Shaped for a future progression save; nothing persists yet. Known gap: a combo
+  still running at the finish line isn't banked, so it doesn't count.
 
 **Tradeoff / tech debt:** the lap model is hidden, not gone — a bit of cleverness (hidden exports, a
 plain-timer HUD override in place of "Lap x/y") in service of reuse. **Revisit when the HUD system is
@@ -143,7 +153,7 @@ flat-list task + HUD.
 
 ### Not built yet
 
-- **Three-axis scoring** — results are placement/time only; no Style/Knockout aggregator.
+- **Knockout scoring axis** — Style + Placement are live (see above); Knockouts aren't scored.
 - **Boost = fuel** — no station top-off, no fill-up minigame; boost is just the normal meter.
 - **Rest of the item roster** — only Gas Can + Bat.
 
