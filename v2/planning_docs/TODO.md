@@ -25,8 +25,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] rotate camera to next checkpoint slightly
-
 - [ ] mid-race challenges
   - [x] display in HUD during race
   - [x] track who did longest wheelie / airtime
@@ -233,6 +231,8 @@
 ---
 
 ## Done ✅
+
+- [x] rotate camera to next checkpoint slightly
 
 - [x] performance improvements
   - [x] claude suggestions (cache materials)

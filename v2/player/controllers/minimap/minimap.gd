@@ -39,12 +39,13 @@ const COLOR_EVENT := Color(1.0, 0.1, 0.8)
 @onready var _camera: Camera3D = %MinimapCamera
 @onready var _dot_overlay: Control = %DotOverlay
 
-var _local_player: PlayerEntity
-var _active: bool = false
 ## Next-checkpoint marker for the local racer — server-fed via rpc_set_checkpoint
 ## (checkpoint progress is server-only), null while not racing.
-var _checkpoint_pos: Vector3
-var _has_checkpoint: bool = false
+var checkpoint_pos: Vector3
+var has_checkpoint: bool = false
+
+var _local_player: PlayerEntity
+var _active: bool = false
 var _blip_timer: float = 0.0
 ## Full-map state: expanded to fullscreen + free-pan (north-up) instead of heading-up follow.
 var _expanded: bool = false
@@ -190,8 +191,8 @@ func _draw_dots() -> void:
 		for circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
 			_draw_marker(circle.global_position, COLOR_EVENT)
 
-	if _has_checkpoint:
-		_draw_marker(_checkpoint_pos, COLOR_CHECKPOINT)
+	if has_checkpoint:
+		_draw_marker(checkpoint_pos, COLOR_CHECKPOINT)
 
 
 ## Plot a world position onto the overlay: clamp off-map points to the edge box
@@ -234,5 +235,5 @@ func _draw_edge_arrow(pos: Vector2, dir: Vector2, color: Color) -> void:
 ## marker. Sent each frame while racing by the race gamemodes.
 @rpc("authority", "call_local", "unreliable")
 func rpc_set_checkpoint(pos: Vector3, has_target: bool) -> void:
-	_checkpoint_pos = pos
-	_has_checkpoint = has_target
+	checkpoint_pos = pos
+	has_checkpoint = has_target

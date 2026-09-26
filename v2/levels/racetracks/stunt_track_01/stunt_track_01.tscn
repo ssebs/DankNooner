@@ -1662,11 +1662,11 @@ transform = Transform3D(0.46630675, 0, -0.88462305, 0, 1, 0, 0.88462305, 0, 0.46
 width = 24.0
 
 [node name="CheckpointMarker3" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=672311881 instance=ExtResource("19_clf25")]
-transform = Transform3D(0.12527186, 0, -0.9921224, 0, 1, 0, 0.9921224, 0, 0.12527186, -621.7936, 0.24990392, 138.69675)
+transform = Transform3D(-0.07521814, 0, -0.99716705, 0, 1, 0, 0.99716705, 0, -0.07521814, -612.11786, 0.24990392, 139.4909)
 width = 24.0
 
 [node name="CheckpointMarker4" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=1861321699 instance=ExtResource("19_clf25")]
-transform = Transform3D(0.12527186, 0, -0.9921224, 0, 1, 0, 0.9921224, 0, 0.12527186, -532.1013, 0.24987769, 179.18352)
+transform = Transform3D(0.9218392, 0, -0.38757256, 0, 1, 0, 0.38757256, 0, 0.9218392, -504.96606, 0.24987769, 153.82614)
 width = 24.0
 
 [node name="CheckpointMarker5" parent="TrackRace/SequentialTaskRunner/RaceTask" unique_id=936713619 instance=ExtResource("19_clf25")]
@@ -2757,6 +2757,56 @@ transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 48.0
 transform = Transform3D(-1, 0, -2.6226832e-07, 0, 1, 0, 2.6226832e-07, 0, -1, -912, 0.025000477, 496.00018)
 
 [node name="props" type="Node3D" parent="." unique_id=1428165132]
+
+[node name="Island" type="Node3D" parent="props" unique_id=188517865]
+
+[node name="GrayBox_StaticBody" parent="props/Island" unique_id=927672150 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.9762052, 0, 0.21684878, 0, 1, 0, -0.21684878, 0, 0.9762052, -451.18613, 0.10090068, 12.531288)
+shape_mode = 1
+width = 16.0
+depth = 38.0
+
+[node name="GrayBox_StaticBody2" parent="props/Island" unique_id=1707215912 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.68550444, 0.29763266, 0.6644534, -0.3467727, 0.93593216, -0.06147875, -0.64018136, -0.18827036, 0.74479645, -797.25604, 5.394514, 99.51482)
+shape_mode = 1
+width = 12.0
+depth = 16.0
+
+[node name="GrayBox_StaticBody3" parent="props/Island" unique_id=474571772 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.68550444, 0.23410328, 0.68940496, -0.3467727, 0.93757665, 0.026435085, -0.64018136, -0.25718823, 0.72389346, -807.0206, 5.765189, 88.85812)
+shape_mode = 1
+width = 12.0
+depth = 14.0
+
+[node name="GrayBox_StaticBody5" parent="props/Island" unique_id=528729399 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.68550444, 0.23410328, 0.68940496, -0.3467727, 0.93757665, 0.026435085, -0.64018136, -0.25718823, 0.72389346, -816.6723, 5.3950977, 78.72362)
+shape_mode = 1
+width = 12.0
+depth = 14.0
+
+[node name="GrayBox_StaticBody6" parent="props/Island" unique_id=1637006000 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.86602527, 0, 0.49999994, 0, 1, 0, -0.49999994, 0, 0.86602527, -830.16766, 0.024997592, 214.80675)
+shape_mode = 1
+width = 23.0
+depth = 40.0
+
+[node name="GrayBox_StaticBody7" parent="props/Island" unique_id=808730613 instance=ExtResource("18_dc022")]
+transform = Transform3D(-0.7071067, 0, 0.70710665, 0, 1, 0, -0.70710665, 0, -0.7071067, -629.8126, 0.024997592, 153.64731)
+shape_mode = 1
+width = 23.0
+depth = 40.0
+
+[node name="GrayBox_StaticBody8" parent="props/Island" unique_id=1738376024 instance=ExtResource("18_dc022")]
+transform = Transform3D(-0.258819, 0, 0.9659257, 0, 1, 0, -0.9659257, 0, -0.258819, -533.50055, 0.024997592, 161.14128)
+shape_mode = 1
+width = 16.0
+depth = 50.0
+
+[node name="GrayBox_StaticBody4" parent="props/Island" unique_id=1559919622 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.49017325, 0.2976327, 0.8192343, -0.31904483, 0.9359322, -0.14913528, -0.8111353, -0.18827036, 0.553727, -776.64136, 2.0087414, 115.27285)
+shape_mode = 1
+width = 12.0
+depth = 40.0
 
 [node name="LightPosts" type="Node3D" parent="props" unique_id=772326219]
 

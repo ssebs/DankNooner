@@ -17,6 +17,8 @@ enum CameraMode {TPS = 0, FPS, NONE}
 @export var pitch_min_deg: float = -45.0
 @export var pitch_max_deg: float = 60.0
 @export var tps_look_height: float = 0.75
+## Street race: max yaw (deg) the resting cam turns toward the next checkpoint.
+@export var checkpoint_yaw_max_deg: float = 15.0
 
 @export_group("FPS Look")
 @export var fps_pitch_min_deg: float = -30.0
@@ -107,6 +109,7 @@ var _orbit_pitch: float = 0.0
 var _default_orbit_pitch: float = -15
 var _mouse_delta: Vector2 = Vector2.ZERO
 var _no_input_timer: float = 0.0
+var _checkpoint_yaw_bias: float = 0.0
 ## Smoothed tps_marker.position — eases the wheelie-cam reframe in/out (the anim ramps it linearly).
 var _tps_marker_offset: Vector3 = Vector3.ZERO
 
@@ -208,14 +211,20 @@ func _update_tps_input(delta: float, mouse: Vector2):
 		_no_input_timer += delta
 		if wheelie_cam or _no_input_timer >= reset_delay:
 			var t: float = reset_speed * delta
-			_orbit_yaw = lerpf(_orbit_yaw, 0.0, t)
+			# Ease the bias itself too — it jumps when the next checkpoint changes.
+			_checkpoint_yaw_bias = lerpf(_checkpoint_yaw_bias, _get_checkpoint_yaw_bias(), t)
+			_orbit_yaw = lerpf(_orbit_yaw, _checkpoint_yaw_bias, t)
 			_orbit_pitch = lerpf(_orbit_pitch, _default_orbit_pitch, t)
 
 
 func _update_tps_camera(delta: float):
 	# Ease the marker read so the wheelie-cam reframe glides in/out instead of tracking the anim's
 	# linear ramp — matches the orbit-pitch ease in _update_tps_input (same reset_speed).
-	_tps_marker_offset = _tps_marker_offset.lerp(tps_marker.position, reset_speed * delta)
+	var marker_target: Vector3 = tps_marker.position
+	# Center behind the bike while racing — the free-roam lateral offset hides the road ahead.
+	if _is_street_racing():
+		marker_target.x = 0.0
+	_tps_marker_offset = _tps_marker_offset.lerp(marker_target, reset_speed * delta)
 	# Marker lives under VisualRoot (yawed 180°), so x/z negate into the player-space orbit frame.
 	var lateral: float = - _tps_marker_offset.x
 	var distance: float = - _tps_marker_offset.z
@@ -250,6 +259,27 @@ func _get_tps_base_yaw() -> float:
 	if player_entity.is_crashed:
 		return 0.0
 	return player_entity.global_rotation.y
+
+
+## The minimap's live checkpoint (null pre-race / after finishing) doubles as the "racing" signal.
+func _is_street_racing() -> bool:
+	return (
+		player_entity.gamemode_manager.current_game_mode == GameModeType.Kind.STREET_RACE
+		and player_entity.hud_manager.riding_hud_state._minimap.has_checkpoint
+	)
+
+
+## Resting orbit yaw toward the next checkpoint, clamped so a gate behind doesn't spin the cam.
+func _get_checkpoint_yaw_bias() -> float:
+	if not _is_street_racing():
+		return 0.0
+	var to_ckpt: Vector3 = (
+		player_entity.hud_manager.riding_hud_state._minimap.checkpoint_pos
+		- player_entity.global_position
+	)
+	var bias: float = wrapf(atan2(-to_ckpt.x, -to_ckpt.z) - _get_tps_base_yaw(), -PI, PI)
+	var limit: float = deg_to_rad(checkpoint_yaw_max_deg)
+	return clampf(bias, -limit, limit)
 
 
 #endregion

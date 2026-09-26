@@ -125,6 +125,9 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
 - **CameraController**
   - Local to client
   - Directly set current_camera on client
+  - Street race: while the minimap has a next checkpoint, the TPS cam drops the marker's lateral
+    offset (centered behind the bike) and its resting orbit yaw eases toward that checkpoint,
+    clamped by `checkpoint_yaw_max_deg`. Player cam input still overrides it until `reset_delay`
 - **AnimationController** (`animation_controller.gd`) — see [AnimationController.md](./AnimationController.md)
   - Local to client, runs in `_process()` (not rollback)
   - RiderState machine: RIDING ↔ IDLE, RAGDOLL (TRICK stubbed — see [AnimationController.md](./AnimationController.md))
