@@ -216,11 +216,6 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 mouse_filter = 2
 
-[node name="HUD_TRICK_MSG" type="Label" parent="UI/AspectContainer/MarginContainer/top left vbox" unique_id=56762265]
-unique_name_in_owner = true
-layout_mode = 2
-text = "HUD_TRICK_MSG"
-
 [node name="HUD_GAME_MSG" type="Label" parent="UI/AspectContainer/MarginContainer/top left vbox" unique_id=411038987]
 unique_name_in_owner = true
 layout_mode = 2

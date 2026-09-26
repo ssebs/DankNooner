@@ -32,7 +32,6 @@ const _RESPAWN_QUICK_FLASH_SECS := 0.6
 @onready var _gear_label: Label = %HUD_GEAR
 @onready var _grip_label: Label = %HUD_GRIP_DGR
 @onready var _fps_label: Label = %HUD_FPS
-@onready var _trick_msg: Label = %HUD_TRICK_MSG
 @onready var _game_msg: Label = %HUD_GAME_MSG
 @onready var _leaderboard: RaceLeaderboard = %HUD_Leaderboard
 @onready var _trick_popups: TrickPopups = %TrickPopups
@@ -305,9 +304,6 @@ func _on_gear_changed(new_gear: int):
 
 
 func _on_trick_started(trick_type: TrickController.Trick):
-	_trick_msg.text = TrickController.Trick.keys()[trick_type]
-	_trick_msg.visible = true
-
 	if (
 		trick_type
 		in [
@@ -322,7 +318,6 @@ func _on_trick_started(trick_type: TrickController.Trick):
 
 
 func _on_trick_ended(_trick_type: TrickController.Trick):
-	_trick_msg.visible = false
 	_balance_bar.hide()
 
 
@@ -463,7 +458,6 @@ func hide_ui() -> void:
 ## Called from player_entity.gd's do_respawn
 func do_reset():
 	_gear_label.text = tr("HUD_GEAR").format({"value": 1})
-	_trick_msg.visible = false
 	_game_msg.visible = false
 	_combo_counter.do_reset()
 	_prev_boost_held = false

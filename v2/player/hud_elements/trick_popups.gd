@@ -2,17 +2,25 @@
 ## Borderlands-style trick feedback over the riding HUD — all local and display-only:
 ##  - right of center: live "+N" for the combo in progress, popped when the server banks it,
 ##    or turned into a red "OOF!" when a crash voids it
-##  - left of center: hype callouts (CALLOUTS), plus any server-sent callout
+##  - left of center: a callout for every trick started (TRICK_CALLOUTS, else the trick's
+##    name), timed HOLD_CALLOUTS, and any server-sent callout
 ## Sfx: tada on a combo multiplier step up, ding on a score pop. Callouts stay silent.
 ## A pop grows small -> big, then drifts outward with a slight tilt and fades. Each pop is its
 ## own Label, so rapid pops stack instead of resetting.
 class_name TrickPopups extends Control
 
+## Trick -> callout text key, popped when the trick starts. Tricks missing here pop their name.
+const TRICK_CALLOUTS: Dictionary = {
+	TrickController.Trick.BACKFLIP: "CALLOUT_SICK_FLIP",
+	TrickController.Trick.FRONTFLIP: "CALLOUT_SICK_FLIP",
+	TrickController.Trick.WHEELIE_SITTING: "CALLOUT_WHEELIE",
+	TrickController.Trick.WHEELIE_MOD: "CALLOUT_WHEELIE",
+	TrickController.Trick.KNEE_KNOCKER: "CALLOUT_KNEE_KNOCKER",
+	TrickController.Trick.HIGH_CHAIR: "CALLOUT_HIGH_CHAIR",
+}
 ## Callout text key -> condition: the rider holds one of `tricks` (at the wheelie balance point
 ## too, if `balance_point`) for `hold` seconds. Fires once per continuous hold.
-const CALLOUTS: Dictionary = {
-	"CALLOUT_SICK_FLIP":
-	{"tricks": [TrickController.Trick.BACKFLIP, TrickController.Trick.FRONTFLIP], "hold": 0.0},
+const HOLD_CALLOUTS: Dictionary = {
 	"CALLOUT_NICE_DRIFT": {"tricks": [TrickController.Trick.DRIFT], "hold": 2.0},
 	"CALLOUT_DANKNOONER":
 	{
@@ -47,6 +55,11 @@ var audio_manager: AudioManager = null
 var _live: Label = null
 ## Multiplier seen last frame, to catch the step up.
 var _last_multiplier: int = 1
+## Trick seen last frame, to catch a new one starting.
+var _last_trick: TrickController.Trick = TrickController.Trick.NONE
+## Last held trick called out this combo. Hovering at the wheelie threshold flickers
+## current_trick on/off, so re-entering it inside the same combo stays quiet.
+var _last_named: TrickController.Trick = TrickController.Trick.NONE
 ## Callout key -> seconds its condition has held; absent while it doesn't.
 var _held: Dictionary[String, float] = {}
 var _oof_index: int = 0
@@ -71,7 +84,9 @@ func track(player: PlayerEntity, points_per_second: float, delta: float) -> void
 		_live.text = "+%d" % int(tc.combo_score * points_per_second * tc.combo_multiplier)
 		_live.modulate = _tier_color(tc.combo_multiplier)
 		_place(_live, SCORE_ORIGIN)
-	_track_callouts(player, delta)
+
+	_track_trick_start(tc)
+	_track_hold_callouts(player, delta)
 
 
 func pop_score(points: int, multiplier: int) -> void:
@@ -91,9 +106,27 @@ func pop_callout(text: String) -> void:
 	_spawn(text, CALLOUT_COLOR, CALLOUT_ORIGIN, -1.0)
 
 
-func _track_callouts(player: PlayerEntity, delta: float) -> void:
-	for key: String in CALLOUTS:
-		var cond: Dictionary = CALLOUTS[key]
+## Held tricks flicker at their thresholds, so they're called out once per combo; one-shot
+## tricks (flips, taps) every time.
+func _track_trick_start(tc: TrickController) -> void:
+	var trick := tc.current_trick
+	if tc.combo_time <= 0.0:
+		_last_named = TrickController.Trick.NONE
+	var started := trick != _last_trick and trick != TrickController.Trick.NONE
+	_last_trick = trick
+	if !started or trick == _last_named:
+		return
+	if TrickController.HELD_TRICK_SCORE.has(trick):
+		_last_named = trick
+	if TRICK_CALLOUTS.has(trick):
+		pop_callout(tr(TRICK_CALLOUTS[trick]))
+	else:
+		pop_callout("%s!" % TrickController.trick_to_str(trick).capitalize().to_upper())
+
+
+func _track_hold_callouts(player: PlayerEntity, delta: float) -> void:
+	for key: String in HOLD_CALLOUTS:
+		var cond: Dictionary = HOLD_CALLOUTS[key]
 		var met: bool = (
 			not player.is_crashed
 			and player.trick_controller.current_trick in cond["tricks"]

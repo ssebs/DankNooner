@@ -29,7 +29,7 @@
   - [x] display in HUD during race
   - [x] track who did longest wheelie / airtime
   - [x] hud to show how to do trick
-  - [ ] trick juice
+  - [x] trick juice
   - [ ] Multiple trick options
   - [ ] this suggested trick changes every race? 
 
@@ -37,6 +37,7 @@
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [x] make tricks + combos easier to do **WIP**
   - [x] Trick juice / points / leaderboard
+  - [ ] Score complex tricks more (high chair during wheelie vs just on ground)
 
 - [ ] Race HUD feedback
   - [x] Tell user they missed checkpoint during race / going wrong way
