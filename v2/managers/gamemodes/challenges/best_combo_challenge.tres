@@ -4,5 +4,5 @@
 
 [resource]
 script = ExtResource("1")
-title_key = null
-icon = null
+title_key = "RACE_BEST_COMBO"
+icon = "🔥"

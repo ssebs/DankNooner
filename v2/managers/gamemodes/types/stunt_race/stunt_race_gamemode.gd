@@ -436,30 +436,37 @@ func _build_results_data() -> ResultsData:
 			var time_ms := _race_task.get_completion_time_ms(npc_id)
 			if time_ms >= 0.0:
 				rows.append({
+					"_peer_id": npc_id,
 					"Username": npc_name,
 					"Time": "%.1fs" % (time_ms / 1000.0),
 					"_sort_key": NPC_SORT_OFFSET + time_ms,
 				})
 			else:
-				rows.append({"Username": npc_name, "Time": tr("RACE_RACING"), "_sort_key": INF})
+				rows.append({
+					"_peer_id": npc_id, "Username": npc_name, "Time": tr("RACE_RACING"), "_sort_key": INF
+				})
 	rows.sort_custom(func(a, b): return a["_sort_key"] < b["_sort_key"])
-	var columns: Array[String] = ["Username", "Time", "Score"]
+	# Same icons as the live leaderboard.
+	var columns: Array[String] = ["Username", "Time", "Place", "Score"]
+	var headers: Array[String] = ["", "⏱", "🏁", "💰"]
 	for challenge in _race_challenges:
 		columns.append(challenge.title())
-	return ResultsData.create(tr("RACE_COMPLETE"), columns, rows)
+		headers.append(challenge.icon)
+	return ResultsData.create(tr("RACE_COMPLETE"), columns, rows, headers)
 
 
-## The results HUD has no header row, so each stat cell carries its own label.
 func _human_result_row(stats: Dictionary) -> Dictionary:
 	var row := {
+		"_peer_id": stats["peer_id"],
 		"Username": stats["username"],
 		"Time": "%.1fs" % (stats["time_ms"] / 1000.0),
-		"Score": "%s %d" % [tr("RACE_SCORE"), int(stats["score"])],
+		"Place": "P%d" % stats["place"],
+		"Score": "%d" % int(stats["score"]),
 		"_sort_key": -stats["score"],
 	}
 	for i in _race_challenges.size():
 		var challenge := _race_challenges[i]
-		row[challenge.title()] = "%s %s" % [challenge.title(), challenge.format_value(stats["bests"][i])]
+		row[challenge.title()] = challenge.format_value(stats["bests"][i])
 	return row
 
 

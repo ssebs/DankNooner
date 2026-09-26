@@ -7,7 +7,7 @@ signal restart_pressed
 @export var input_state_manager: InputStateManager
 
 @onready var title_label: Label = %TitleLabel
-@onready var results_container: VBoxContainer = %ResultsContainer
+@onready var results_board: RaceLeaderboard = %ResultsBoard
 @onready var countdown_label: Label = %CountdownLabel
 @onready var skip_btn: Button = %SkipBtn
 @onready var restart_btn: Button = %RestartBtn
@@ -34,6 +34,8 @@ func _process(delta: float):
 func rpc_show_results(results_dict: Dictionary, countdown_seconds: float):
 	var data := ResultsData.from_dict(results_dict)
 	title_label.text = data.title
+	# A fresh results screen — don't slide rows over from the last one.
+	results_board.clear()
 	_rebuild_rows(data)
 	_countdown = countdown_seconds
 	countdown_label.text = "%d" % ceili(countdown_seconds)
@@ -61,21 +63,17 @@ func rpc_hide():
 	ui.hide()
 
 
+## Rows with a _peer_id tween by it and highlight the local player's; the rest key by rank,
+## offset clear of real peer ids (positive) and NPC ids (small negative).
 func _rebuild_rows(data: ResultsData):
-	for child in results_container.get_children():
-		# Remove before freeing — queue_free()'d nodes still lay out until end of
-		# frame, so a refresh would briefly show old + new rows together.
-		results_container.remove_child(child)
-		child.queue_free()
-
-	for row in data.rows:
-		var row_label := Label.new()
-		var parts: Array[String] = []
+	var rows: Array = []
+	for i in data.rows.size():
+		var row := data.rows[i]
+		var cells := PackedStringArray()
 		for col in data.columns:
-			parts.append(str(row.get(col, "")))
-		row_label.text = "  ".join(parts)
-		row_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		results_container.add_child(row_label)
+			cells.append(str(row.get(col, "")))
+		rows.append({"peer_id": row.get("_peer_id", -1_000_000 - i), "cells": cells})
+	results_board.set_board(PackedStringArray(data.headers), rows)
 
 
 func _get_configuration_warnings() -> PackedStringArray:

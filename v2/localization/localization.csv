@@ -115,6 +115,7 @@ TUT_HINT_CHECKPOINT,"Drive through the gate ahead","Conduce a través de la puer
 TUT_COMPLETE,"Tutorial Complete!","¡Tutorial Completado!"
 CHALLENGE_COMPLETE,"Challenge Complete!","¡Desafío Completado!"
 RACE_OBJECTIVE,"Complete the laps","Completa las vueltas"
+STUNT_RACE_OBJECTIVE,"Race to the finish — trick for points!","¡Corre a la meta y haz trucos para sumar puntos!"
 RACE_HINT,"Pass each checkpoint in order","Pasa por cada punto de control en orden"
 RACE_LAP,"Lap {current}/{total}  -  {time}","Vuelta {current}/{total}  -  {time}"
 RACE_COMPLETE,"Race Complete!","¡Carrera Completada!"

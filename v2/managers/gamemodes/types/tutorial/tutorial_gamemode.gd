@@ -185,7 +185,7 @@ func _show_results(runner: TaskRunner):
 		)
 	rows.sort_custom(func(a, b): return a["_sort_key"] < b["_sort_key"])
 
-	var data := ResultsData.create(tr("TUT_COMPLETE"), ["Username", "Time"], rows)
+	var data := ResultsData.create(tr("TUT_COMPLETE"), ["Username", "Time"], rows, ["", "⏱"])
 	_results_countdown = _results_countdown_total
 	tutorial_hud.rpc_hide.rpc()
 	results_hud.rpc_show_results.rpc(data.to_dict(), _results_countdown_total)

@@ -17,6 +17,7 @@ class_name StuntRaceTask extends RaceTask
 
 func _init():
 	total_laps = 1
+	objective_key = "STUNT_RACE_OBJECTIVE"
 
 
 ## Server-only, called by StuntRaceGameMode when the race starts. Spawners are

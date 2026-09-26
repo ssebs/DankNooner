@@ -304,7 +304,7 @@ func _build_results_data() -> ResultsData:
 			else:
 				rows.append({"Username": npc_name, "Time": tr("RACE_RACING"), "_sort_key": INF})
 	rows.sort_custom(func(a, b): return a["_sort_key"] < b["_sort_key"])
-	return ResultsData.create(tr("RACE_COMPLETE"), ["Username", "Time"], rows)
+	return ResultsData.create(tr("RACE_COMPLETE"), ["Username", "Time"], rows, ["", "⏱"])
 
 
 func _result_row(username: String, time_ms: float) -> Dictionary:
