@@ -30,7 +30,10 @@ group_uniforms clouds;
 uniform vec3 cloud_dark_color : source_color = vec3(0.05, 0.03, 0.15);
 uniform vec3 cloud_lit_color : source_color = vec3(0.25, 0.15, 0.45);
 uniform float cloud_scale : hint_range(0.1, 5.0) = 0.8;
-uniform float cloud_coverage : hint_range(0.0, 1.0) = 0.3;
+// Coverage drifts between min and max on a sine; 0.1 speed is roughly a 1min cycle
+uniform float cloud_coverage_min : hint_range(0.0, 1.0) = 0.3;
+uniform float cloud_coverage_max : hint_range(0.0, 1.0) = 0.5;
+uniform float cloud_coverage_speed = 0.1;
 uniform float cloud_rim_width : hint_range(0.0, 0.2) = 0.015;
 uniform vec2 cloud_wind = vec2(0.01, 0.004);
 group_uniforms;
@@ -127,7 +130,8 @@ vec3 add_moon(vec3 col, vec3 dir, vec3 moon_dir) {
 vec4 clouds(vec3 dir, vec3 moon_dir) {
 	vec2 uv = dir.xz / (dir.y + 0.15) * cloud_scale + TIME * cloud_wind;
 	float density = fbm(uv);
-	float threshold = 1.0 - cloud_coverage;
+	float drift = 0.5 + 0.5 * sin(TIME * cloud_coverage_speed);
+	float threshold = 1.0 - mix(cloud_coverage_min, cloud_coverage_max, drift);
 	float mask = smoothstep(threshold, threshold + 0.01, density);
 	float core = smoothstep(threshold + cloud_rim_width, threshold + cloud_rim_width + 0.01, density);
 

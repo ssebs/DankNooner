@@ -14,12 +14,9 @@ enum CameraMode {TPS = 0, FPS, NONE}
 @export var tps_marker: Marker3D
 
 @export_group("TPS Orbit")
-@export var pitch_min_deg: float = -20.0
+@export var pitch_min_deg: float = -45.0
 @export var pitch_max_deg: float = 60.0
 @export var tps_look_height: float = 0.75
-## Orbit pitch (deg) the TPS base view rotates to while in the wheelie balance point — the
-## bike rears up, so the rest camera tilts up to frame it. Lerps in/out; mouse can still override.
-@export var wheelie_cam_orbit_pitch_deg: float = 10.0
 
 @export_group("FPS Look")
 @export var fps_pitch_min_deg: float = -30.0
@@ -205,17 +202,14 @@ func _update_tps_input(delta: float, mouse: Vector2):
 		_orbit_yaw = wrapf(_orbit_yaw, -PI, PI)
 		_no_input_timer = 0.0
 	else:
-		# In the balance point the base view rotates to the wheelie framing and settles there
-		# right away; otherwise settle to the normal rest after the idle delay.
+		# In the balance point settle right away so the wheelie_cam marker anim frames the shot;
+		# otherwise settle after the idle delay.
 		var wheelie_cam := player_entity.movement_controller.in_balance_point
-		var target_pitch: float = (
-			deg_to_rad(wheelie_cam_orbit_pitch_deg) if wheelie_cam else _default_orbit_pitch
-		)
 		_no_input_timer += delta
 		if wheelie_cam or _no_input_timer >= reset_delay:
 			var t: float = reset_speed * delta
 			_orbit_yaw = lerpf(_orbit_yaw, 0.0, t)
-			_orbit_pitch = lerpf(_orbit_pitch, target_pitch, t)
+			_orbit_pitch = lerpf(_orbit_pitch, _default_orbit_pitch, t)
 
 
 func _update_tps_camera(delta: float):
@@ -228,8 +222,11 @@ func _update_tps_camera(delta: float):
 	var height: float = _tps_marker_offset.y
 
 	var focus: Vector3 = _get_tps_focus_position()
-	var look_target: Vector3 = focus + Vector3.UP * tps_look_height
 	var yaw: float = _get_tps_base_yaw() + _orbit_yaw
+	# Aim point shares the marker's lateral offset so the cam looks straight ahead, not angled in
+	var look_target: Vector3 = (
+		focus + Vector3.UP * tps_look_height + Basis(Vector3.UP, yaw) * Vector3(lateral, 0, 0)
+	)
 
 	var orbit_rot := Basis(Vector3.UP, yaw) * Basis(Vector3.RIGHT, -_orbit_pitch)
 	var cam_offset: Vector3 = orbit_rot * Vector3(lateral, 0, distance)

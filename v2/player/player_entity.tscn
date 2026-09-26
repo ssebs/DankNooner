@@ -170,43 +170,43 @@ tracks/11/keys = {
 tracks/12/type = "value"
 tracks/12/imported = false
 tracks/12/enabled = true
-tracks/12/path = NodePath("%TPSCamMarker:position")
+tracks/12/path = NodePath("%FPSCamMarker:position")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0.05, 1.75, -1.778)]
+"values": [Vector3(0, 1.179, 0.175)]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
 tracks/13/enabled = true
-tracks/13/path = NodePath("%FPSCamMarker:position")
+tracks/13/path = NodePath("%BaseballBat:position")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 1.179, 0.175)]
+"values": [Vector3(-0.46865526, 0.8885468, 0.18646635)]
 }
 tracks/14/type = "value"
 tracks/14/imported = false
 tracks/14/enabled = true
-tracks/14/path = NodePath("%BaseballBat:position")
+tracks/14/path = NodePath("IKTargets/BikeSkin:position")
 tracks/14/interp = 1
 tracks/14/loop_wrap = true
 tracks/14/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-0.46865526, 0.8885468, 0.18646635)]
+"values": [Vector3(0, 0, 0)]
 }
 tracks/15/type = "value"
 tracks/15/imported = false
 tracks/15/enabled = true
-tracks/15/path = NodePath("IKTargets/BikeSkin:position")
+tracks/15/path = NodePath("%TPSCamMarker:rotation")
 tracks/15/interp = 1
 tracks/15/loop_wrap = true
 tracks/15/keys = {
@@ -218,82 +218,70 @@ tracks/15/keys = {
 tracks/16/type = "value"
 tracks/16/imported = false
 tracks/16/enabled = true
-tracks/16/path = NodePath("%TPSCamMarker:rotation")
+tracks/16/path = NodePath("%FPSCamMarker:rotation")
 tracks/16/interp = 1
 tracks/16/loop_wrap = true
 tracks/16/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 0, 0)]
+"values": [Vector3(-0.1850049, -3.1415925, 0)]
 }
 tracks/17/type = "value"
 tracks/17/imported = false
 tracks/17/enabled = true
-tracks/17/path = NodePath("%FPSCamMarker:rotation")
+tracks/17/path = NodePath("%BaseballBat:rotation")
 tracks/17/interp = 1
 tracks/17/loop_wrap = true
 tracks/17/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-0.1850049, -3.1415925, 0)]
+"values": [Vector3(-2.1242909e-10, 3.1415923, -2.6179938)]
 }
 tracks/18/type = "value"
 tracks/18/imported = false
 tracks/18/enabled = true
-tracks/18/path = NodePath("%BaseballBat:rotation")
+tracks/18/path = NodePath("%LeftHandTarget:rotation")
 tracks/18/interp = 1
 tracks/18/loop_wrap = true
 tracks/18/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-2.1242909e-10, 3.1415923, -2.6179938)]
+"values": [Vector3(1.2217305, 1.007055, -0.40142566)]
 }
 tracks/19/type = "value"
 tracks/19/imported = false
 tracks/19/enabled = true
-tracks/19/path = NodePath("%LeftHandTarget:rotation")
+tracks/19/path = NodePath("%LeftFootTarget:rotation")
 tracks/19/interp = 1
 tracks/19/loop_wrap = true
 tracks/19/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(1.2217305, 1.007055, -0.40142566)]
+"values": [Vector3(-1.5135574, 2.2176719, 1.6370285)]
 }
 tracks/20/type = "value"
 tracks/20/imported = false
 tracks/20/enabled = true
-tracks/20/path = NodePath("%LeftFootTarget:rotation")
+tracks/20/path = NodePath("%LeftFootTarget:position")
 tracks/20/interp = 1
 tracks/20/loop_wrap = true
 tracks/20/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-1.5135574, 2.2176719, 1.6370285)]
+"values": [Vector3(-0.12641062, 1.0385206, -0.8354169)]
 }
 tracks/21/type = "value"
 tracks/21/imported = false
 tracks/21/enabled = true
-tracks/21/path = NodePath("%LeftFootTarget:position")
+tracks/21/path = NodePath("%LeftLegMagnet:position")
 tracks/21/interp = 1
 tracks/21/loop_wrap = true
 tracks/21/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-0.12641062, 1.0385206, -0.8354169)]
-}
-tracks/22/type = "value"
-tracks/22/imported = false
-tracks/22/enabled = true
-tracks/22/path = NodePath("%LeftLegMagnet:position")
-tracks/22/interp = 1
-tracks/22/loop_wrap = true
-tracks/22/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
@@ -2298,10 +2286,10 @@ tracks/2/path = NodePath("IKTargets/TPSCamMarker:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector3(0.2, 1.605, -1.88)]
+"values": [Vector3(-0.41169122, 1.508824, -1.7780001), Vector3(-0.4, 1.4, -1.778)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xm7jy"]
@@ -2464,7 +2452,7 @@ transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, 0, 0, 
 
 [node name="TPSCamMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=748255221]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.99999976, 0, 0, 0, 1, 0.05, 1.75, -1.778)
+transform = Transform3D(1, 0, 0, 0, 0.99999976, 0, 0, 0, 1, -0.4, 1.4, -1.778)
 
 [node name="FPSCamMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=2035762363]
 unique_name_in_owner = true
@@ -2506,7 +2494,7 @@ emitting = false
 
 [node name="RightFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=844444444]
 unique_name_in_owner = true
-transform = Transform3D(-0.9787892, 0.022497207, 0.20363149, 0.20170893, 0.27976722, 0.93863934, -0.03585267, 0.9598043, -0.27837098, -0.18314199, 0.5666657, -0.22655825)
+transform = Transform3D(-0.9787893, 0.022497118, 0.2036314, 0.20170887, 0.27976713, 0.93863934, -0.035852674, 0.9598043, -0.27837086, -0.18314199, 0.5666657, -0.22655825)
 
 [node name="SparkParticlesRight" parent="VisualRoot/IKTargets/RightFootTarget" unique_id=1985641876 instance=ExtResource("29_3kl2f")]
 unique_name_in_owner = true
