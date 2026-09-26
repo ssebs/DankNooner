@@ -24,13 +24,6 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-- [ ] performance improvements
-  - [x] claude suggestions (cache materials)
-  - [x] tweak LOD
-  - [x] spotlight fadeoff distance
-  - [ ] profile & investigate (cpu bound)
-  - [ ] replace csgmesh for houses/other buildings
-  - [ ] subviewport lower settings/no shading
 - [ ] Headlight and brake light functionality
 - [ ] auto stoppie like how wheelies work
 - [ ] tapping brakes during full boost should stop it where youre at
@@ -51,6 +44,7 @@
 
 ## Notes 📝
 > Stuff to move ASAP
+- [ ] replace csgmesh for houses/other buildings for performance + looks
 - trick animation to move up then play the mixamo anims
 - Time attack mode
 - Add lap race to stunt city
@@ -237,6 +231,13 @@
 ---
 
 ## Done ✅
+
+- [x] performance improvements
+  - [x] claude suggestions (cache materials)
+  - [x] tweak LOD
+  - [x] spotlight fadeoff distance
+  - [x] profile & investigate (cpu bound)
+  - [x] subviewport lower settings/no shading
 
 - [x] skybox changes
   - [x] WIP on stunt track 01
