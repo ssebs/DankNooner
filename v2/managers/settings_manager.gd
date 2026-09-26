@@ -18,8 +18,8 @@ const WINDOW_MODE_LABELS: Dictionary = {
 # json stores the string, this maps to the godot enum
 const WINDOW_MODES: Dictionary = {
 	"windowed": DisplayServer.WINDOW_MODE_WINDOWED,
-	"fullscreen": DisplayServer.WINDOW_MODE_FULLSCREEN,
-	"borderless": DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN,
+	"fullscreen": DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN,
+	"borderless": DisplayServer.WINDOW_MODE_FULLSCREEN,
 	"maximized": DisplayServer.WINDOW_MODE_MAXIMIZED,
 }
 
@@ -131,9 +131,9 @@ static func windowmode_to_str(wmode: int) -> String:
 	match wmode:
 		DisplayServer.WINDOW_MODE_WINDOWED:
 			return "windowed"
-		DisplayServer.WINDOW_MODE_FULLSCREEN:
-			return "fullscreen"
 		DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN:
+			return "fullscreen"
+		DisplayServer.WINDOW_MODE_FULLSCREEN:
 			return "borderless"
 		DisplayServer.WINDOW_MODE_MAXIMIZED:
 			return "maximized"

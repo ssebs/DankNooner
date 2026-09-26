@@ -34,7 +34,7 @@
 
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
-  - [ ] make tricks + combos easier to do **WIP**
+  - [x] make tricks + combos easier to do **WIP**
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
 - [ ] fix game breaking bugs
 
@@ -45,14 +45,12 @@
 - [ ] replace csgmesh for houses/other buildings for performance + looks
 - trick animation to move up then play the mixamo anims
 - Time attack mode
-- Add lap race to stunt city
 - lightning / Rally Up item
 - r => quick respawn, add btn for set full respawn point (if not in race)
 - add longest single wheelie challenge
 - 1, 2, 3 spam is possible for everyone, debounce this
 - TP commands dont work on multiplayer
 - gas pump fill up minigame (should do more than just boost the bike, and it should be in first person. group of peeps do it like the race gamemodes)
-- [ ] lag when ending stunt race / no tp option
 - [ ] add racing line to show newbs where to go & brake, forza style
   - [ ] levels\assets\props\racing_line.gd
   - [x] curve/mesh gen system
@@ -229,6 +227,8 @@
 ---
 
 ## Done ✅
+
+- [x] lag when ending stunt race / no tp option
 
 - [x] tapping brakes during full boost should stop it
 

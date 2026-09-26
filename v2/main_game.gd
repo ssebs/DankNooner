@@ -5,6 +5,10 @@ class_name MainGame extends Node
 
 @export_tool_button("Run Validation") var run_validation = _run_validation
 
+## Mode last requested via window_set_mode, or -1. Size changes are ignored until the
+## window reports it, so mid-transition modes (e.g. macOS fullscreen animation) aren't persisted.
+var _pending_window_mode: int = -1
+
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
@@ -36,9 +40,7 @@ func _input(event: InputEvent):
 
 
 func _on_all_settings_changed(new_settings: Dictionary):
-	DisplayServer.window_set_mode(
-		SettingsManager.str_to_windowmode(new_settings["fullscreen_mode"])
-	)
+	_apply_window_mode(new_settings["fullscreen_mode"])
 
 	get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
 	get_viewport().scaling_3d_scale = new_settings.get("resolution_scale", 1.0)
@@ -47,7 +49,15 @@ func _on_all_settings_changed(new_settings: Dictionary):
 
 func _on_setting_updated(key: String, value: Variant):
 	if key == "fullscreen_mode":
-		DisplayServer.window_set_mode(SettingsManager.str_to_windowmode(value))
+		_apply_window_mode(value)
+
+
+func _apply_window_mode(mode_str: String):
+	var mode := SettingsManager.str_to_windowmode(mode_str)
+	if DisplayServer.window_get_mode() == mode:
+		return
+	_pending_window_mode = mode
+	DisplayServer.window_set_mode(mode)
 
 
 # Persist window mode when the user changes it via the OS (e.g. clicking maximize)
@@ -55,7 +65,12 @@ func _on_window_size_changed():
 	# Startup resizes fire before settings load (deferred_init); nothing to persist yet
 	if settings_manager.current_settings.is_empty():
 		return
-	var current_mode_str := SettingsManager.windowmode_to_str(DisplayServer.window_get_mode())
+	var current_mode := DisplayServer.window_get_mode()
+	if _pending_window_mode != -1:
+		if current_mode != _pending_window_mode:
+			return
+		_pending_window_mode = -1
+	var current_mode_str := SettingsManager.windowmode_to_str(current_mode)
 	if current_mode_str == "":
 		return
 	if settings_manager.current_settings.get("fullscreen_mode", "") == current_mode_str:
