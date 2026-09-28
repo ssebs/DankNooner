@@ -36,6 +36,7 @@ enum MatchState {
 @export var time_attack_mode: RaceGameMode
 @export var tutorial_mode: TutorialGameMode
 @export var stunt_challenge_mode: StuntChallengeGameMode
+@export var long_jump_mode: LongJumpGameMode
 
 var match_state: MatchState = MatchState.IN_LOBBY
 var current_game_mode: GameModeType.Kind = GameModeType.Kind.FREE_ROAM
@@ -57,6 +58,7 @@ func _ready():
 		GameModeType.Kind.TIME_ATTACK: time_attack_mode,
 		GameModeType.Kind.TUTORIAL: tutorial_mode,
 		GameModeType.Kind.STUNT_CHALLENGE: stunt_challenge_mode,
+		GameModeType.Kind.LONG_JUMP: long_jump_mode,
 	}
 
 	connection_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)

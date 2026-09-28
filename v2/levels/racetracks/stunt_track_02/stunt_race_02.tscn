@@ -1,0 +1,199 @@
+[gd_scene format=3 uid="uid://c6sujoau36r8q"]
+
+[ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_qoxxs"]
+[ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/bikes/bike_skin_definition.gd" id="2_co5cj"]
+[ext_resource type="Script" uid="uid://p2mjdn2eyh12" path="res://resources/cars/car_skin_definition.gd" id="3_qfjxo"]
+[ext_resource type="Script" uid="uid://c82qxqpywlr1o" path="res://resources/traffic/traffic_settings.gd" id="4_lgsic"]
+[ext_resource type="Sky" uid="uid://dfgbuerpq3y8" path="res://levels/assets/skybox_neon.tres" id="5_py6on"]
+[ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/gamemodeobjects/killbox.tscn" id="6_nm3k2"]
+[ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.tscn" id="7_py6on"]
+[ext_resource type="Script" uid="uid://cm4g6ptfwf37q" path="res://managers/gamemodes/gamemodeobjects/event_route.gd" id="8_nm3k2"]
+[ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="9_ehog7"]
+[ext_resource type="PackedScene" uid="uid://rervqxotioc4" path="res://levels/components/props/ramp.tscn" id="10_dcsrd"]
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="11_nm3k2"]
+[ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://managers/gamemodes/resources/gamemode_event_definition.gd" id="12_evdef"]
+[ext_resource type="Script" uid="uid://bjt7k3nrl24c8" path="res://managers/gamemodes/challenges/race_challenge.gd" id="12_ne3sg"]
+[ext_resource type="Script" uid="uid://pulnqxx1eaja" path="res://managers/gamemodes/gamemodeobjects/gamemode_event.gd" id="13_event"]
+[ext_resource type="Script" uid="uid://f840hmifnv7g" path="res://managers/gamemodes/runners/sequential_task_runner.gd" id="14_seqrun"]
+[ext_resource type="Script" uid="uid://1hiltkmgy4i3" path="res://managers/gamemodes/runners/concurrent_task_runner.gd" id="15_conrun"]
+[ext_resource type="Script" uid="uid://cij1aa5h6g5nb" path="res://managers/gamemodes/tasks/grid_spawn_task.gd" id="16_grid"]
+[ext_resource type="Script" uid="uid://8xvij2vjrnn2" path="res://managers/gamemodes/tasks/countdown_task.gd" id="17_count"]
+[ext_resource type="Script" uid="uid://cpdxy3nxph3x0" path="res://managers/gamemodes/tasks/sfx_task.gd" id="18_sfx"]
+[ext_resource type="Script" uid="uid://nyvpj8qcqqww" path="res://managers/gamemodes/tasks/long_jump_task.gd" id="19_lngjmp"]
+
+[sub_resource type="Resource" id="Resource_ehog7"]
+script = ExtResource("4_lgsic")
+traffic_count = 0
+race_traffic_amount = 0
+
+[sub_resource type="Environment" id="Environment_dcsrd"]
+background_mode = 2
+sky = ExtResource("5_py6on")
+ambient_light_source = 2
+ambient_light_color = Color(0.35, 0.3, 0.6, 1)
+ambient_light_energy = 0.6
+tonemap_mode = 2
+glow_enabled = true
+glow_strength = 1.25
+fog_enabled = true
+fog_light_color = Color(0.12, 0.05, 0.3, 1)
+fog_density = 0.002
+fog_sky_affect = 0.268
+adjustment_enabled = true
+adjustment_brightness = 1.14
+adjustment_contrast = 1.15
+adjustment_saturation = 1.1
+
+[sub_resource type="Resource" id="Resource_lngjmp"]
+script = ExtResource("12_evdef")
+name = "Long Jump"
+description = "Trick off the mega ramp. Best jump wins."
+target_gamemode = 6
+metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
+
+[node name="StuntRace02" type="Node3D" unique_id=419655892 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug", "grid_markers")]
+script = ExtResource("1_qoxxs")
+player_spawn_pos = NodePath("PlayerSpawn")
+player_spawn_pos_debug = NodePath("PlayerSpawn")
+grid_markers = [NodePath("MegaRamp/Route/RaceGridSpot1"), NodePath("MegaRamp/Route/RaceGridSpot2"), NodePath("MegaRamp/Route/RaceGridSpot3"), NodePath("MegaRamp/Route/RaceGridSpot4"), NodePath("MegaRamp/Route/RaceGridSpot5"), NodePath("MegaRamp/Route/RaceGridSpot6"), NodePath("MegaRamp/Route/RaceGridSpot7"), NodePath("MegaRamp/Route/RaceGridSpot8")]
+traffic_settings = SubResource("Resource_ehog7")
+metadata/_custom_type_script = "uid://dv0brm8irhlth"
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=2013348802]
+transform = Transform3D(0.19617997, -0.94997144, -0.24303903, 0.92850906, 0.100282654, 0.3575113, -0.31525278, -0.29580045, 0.90173054, 12.095804, 144.87276, -1.7741599)
+light_color = Color(0.6, 0.65, 1, 1)
+light_energy = 0.5
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1303455271]
+environment = SubResource("Environment_dcsrd")
+
+[node name="Killbox" parent="." unique_id=1054789626 instance=ExtResource("6_nm3k2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -256, 0)
+
+[node name="PlayerSpawn" type="Marker3D" parent="." unique_id=54633218]
+unique_name_in_owner = true
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 256, 0)
+
+[node name="MegaRamp" parent="." unique_id=459761741 instance=ExtResource("7_py6on")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 256, -57.5)
+
+[node name="Route" type="Node3D" parent="MegaRamp" unique_id=1387059771]
+top_level = true
+script = ExtResource("8_nm3k2")
+
+[node name="RaceGridSpot1" type="Marker3D" parent="MegaRamp/Route" unique_id=64511581]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 6.750005, 256.025, -53.99998)
+
+[node name="RaceGridSpot2" type="Marker3D" parent="MegaRamp/Route" unique_id=1183329063]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 11.000005, 256.025, -53.99998)
+
+[node name="RaceGridSpot3" type="Marker3D" parent="MegaRamp/Route" unique_id=895449263]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 15.000005, 256.025, -53.99998)
+
+[node name="RaceGridSpot4" type="Marker3D" parent="MegaRamp/Route" unique_id=387819987]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 8.750005, 256.025, -50.24998)
+
+[node name="RaceGridSpot5" type="Marker3D" parent="MegaRamp/Route" unique_id=1602381298]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 13.000005, 256.025, -50.24998)
+
+[node name="RaceGridSpot6" type="Marker3D" parent="MegaRamp/Route" unique_id=1637838400]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 10.750005, 256.025, -46.99998)
+
+[node name="RaceGridSpot7" type="Marker3D" parent="MegaRamp/Route" unique_id=748540006]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 6.750005, 256.025, -46.99998)
+
+[node name="RaceGridSpot8" type="Marker3D" parent="MegaRamp/Route" unique_id=1111098666]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 15.000005, 256.025, -46.99998)
+
+[node name="CheckpointMarker1" parent="MegaRamp/Route" unique_id=1048335829 groups=["stunt_checkpoints"] instance=ExtResource("9_ehog7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.999996, 128.08981, -285.36444)
+width = 32.0
+
+[node name="LongJump" type="Node" parent="MegaRamp" unique_id=431557644 node_paths=PackedStringArray("route")]
+script = ExtResource("13_event")
+definition = SubResource("Resource_lngjmp")
+route = NodePath("../Route")
+
+[node name="SequentialTaskRunner" type="Node" parent="MegaRamp/LongJump" unique_id=540005593]
+script = ExtResource("14_seqrun")
+
+[node name="GridSpawnTask" type="Node" parent="MegaRamp/LongJump/SequentialTaskRunner" unique_id=662463420]
+script = ExtResource("16_grid")
+
+[node name="ConcurrentTaskRunner" type="Node" parent="MegaRamp/LongJump/SequentialTaskRunner" unique_id=394300456]
+script = ExtResource("15_conrun")
+
+[node name="CountdownTask" type="Node" parent="MegaRamp/LongJump/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=875218440]
+script = ExtResource("17_count")
+
+[node name="SFXTask" type="Node" parent="MegaRamp/LongJump/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1645856497]
+script = ExtResource("18_sfx")
+sound = 2
+advance_mode = 1
+duration_sec = 3.0
+
+[node name="JumpRunner" type="Node" parent="MegaRamp/LongJump" unique_id=868928265]
+script = ExtResource("14_seqrun")
+
+[node name="LongJumpTask" type="Node" parent="MegaRamp/LongJump/JumpRunner" unique_id=386618439 node_paths=PackedStringArray("trigger")]
+script = ExtResource("19_lngjmp")
+trigger = NodePath("../../../Route/CheckpointMarker1")
+
+[node name="Ramp8" parent="." unique_id=1633736762 instance=ExtResource("10_dcsrd")]
+transform = Transform3D(-0.9999999, 0, -8.7422755e-08, 2.2626674e-08, 0.9659258, -0.258819, 8.44439e-08, -0.25881904, -0.9659257, 10.999996, 128.08981, -283.86444)
+
+[node name="Ground" parent="." unique_id=1485126779 instance=ExtResource("11_nm3k2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 256, 0)
+shape_mode = 1
+width = 128.0
+depth = 128.0
+
+[node name="Ground7" parent="." unique_id=1996519660 instance=ExtResource("11_nm3k2")]
+transform = Transform3D(1, 0, 0, 0, 0.92565775, 0.378362, 0, -0.378362, 0.92565775, 0, -81.5, -756.5)
+shape_mode = 1
+width = 128.0
+depth = 1024.0
+color_preset = 2
+
+[node name="Ground2" parent="." unique_id=1103408999 instance=ExtResource("11_nm3k2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -64, 257, 0)
+width = 0.1
+height = 2.0
+depth = 128.0
+color_preset = 1
+
+[node name="Ground3" parent="." unique_id=1708602702 instance=ExtResource("11_nm3k2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 64, 257, 0)
+width = 0.1
+height = 2.0
+depth = 128.0
+color_preset = 1
+
+[node name="Ground4" parent="." unique_id=1952904395 instance=ExtResource("11_nm3k2")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.5, 257, 64)
+width = 0.1
+height = 2.0
+depth = 128.0
+color_preset = 1
+
+[node name="Ground5" parent="." unique_id=564516297 instance=ExtResource("11_nm3k2")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -32.5, 257, -64)
+width = 0.1
+height = 2.0
+depth = 64.0
+color_preset = 1
+
+[node name="Ground6" parent="." unique_id=1600805327 instance=ExtResource("11_nm3k2")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 43, 257, -64)
+width = 0.1
+height = 2.0
+depth = 42.0
+color_preset = 1
+
+[node name="Rampdown" parent="." unique_id=261553301 instance=ExtResource("11_nm3k2")]
+transform = Transform3D(-4.371139e-08, 0, 1, -0.8660254, -0.50000006, -3.7855173e-08, 0.50000006, -0.8660254, 2.1855696e-08, 10.5, 191.75, -173.99261)
+width = 0.1
+height = 256.0
+depth = 24.0
+color_preset = 1

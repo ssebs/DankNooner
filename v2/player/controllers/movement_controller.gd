@@ -28,10 +28,8 @@ class_name MovementController extends Node
 @export var wobble_brake_entry_strength: float = 7.0 # 1b kick (rad/s)
 @export var wobble_landing_min_airtime: float = 0.5 # trigger 2: only jumps longer than this wobble
 @export var wobble_landing_angle_deg: float = 20.0 # trigger 2: landing misalignment (deg) window
-@export var wobble_landing_strength: float = 0.18 # trigger 2 kick (rad/s) per deg past the window
+@export var wobble_landing_strength: float = 0.4 # trigger 2 kick (rad/s) per deg past the window
 @export var wobble_landing_hard_over_deg: float = 50.0 # deg past the window that highsides outright (no cap)
-@export var wobble_hard_land_speed: float = 14.0 # trigger 2: vertical impact (m/s) above which a landing wobbles
-@export var wobble_hard_land_strength: float = 0.4 # trigger 2 kick (rad/s) per m/s of impact past the threshold
 
 @export_group("Wheelie")
 ## Radians of wheelie target per unit of wheel force (get_power_output × acceleration). The single
@@ -1075,56 +1073,42 @@ func _update_brake_slide_wobble(delta: float):
 	wobble_brake_hold_time = 0.0
 
 
-## Trigger 2. A crooked jump landing (roll lean, or heading off travel) wobbles by how far off it is.
+## Trigger 2. A jump landing with the heading off travel wobbles by how far off it is.
 func _wobble_bad_landing(landing_velocity: Vector3):
 	if _air_time < wobble_landing_min_airtime: # short hops / curbs never wobble
 		return
-	# Hard slam — enough speed into the surface wobbles even a dead-straight landing; matching the slope lands soft.
-	var impact := -landing_velocity.dot(player_entity.get_floor_normal())
-	DebugUtils.DebugMsg(
-		"landing: impact=%.1f (hard>%.0f) air=%.2fs spd=%.1f" % [impact, wobble_hard_land_speed, _air_time, speed],
-		OS.has_feature("debug") and debug_verbose
-	)
-	if impact > wobble_hard_land_speed and speed >= wobble_min_speed:
-		var kick_sign := signf(input_controller.nfx_steer) if absf(input_controller.nfx_steer) > 0.1 else 1.0
-		wobble_vel += kick_sign * (impact - wobble_hard_land_speed) * wobble_hard_land_strength
-		DebugUtils.DebugMsg(
-			"wobble trigger 2 (hard landing): impact=%.1f" % impact, OS.has_feature("debug") and debug_verbose
-		)
 	_wobble_from_misalign("trigger 2 (bad landing)", landing_velocity)
 
 
-## Inject a wobble sized by how far the bike's lean / heading is off from its travel. Shared by the
+## Inject a wobble sized by how far the bike's heading (yaw only) is off from its travel. Shared by the
 ## jump landing (trigger 2) and the wheelie set-down (trigger 5). No-op below min speed or when
 ## already aligned. A moderately-off angle is capped to a RECOVERABLE wobble, but one past the hard
 ## window keeps its full magnitude and blows past the balance bar — a crazy-crooked one highsides.
 func _wobble_from_misalign(source: String, travel_velocity: Vector3):
 	var fwd := -player_entity.global_transform.basis.z
 	var h_vel := Vector3(travel_velocity.x, 0.0, travel_velocity.z)
+	# Signed so the kick swings the way the heading is already off.
 	var yaw_off := 0.0
 	if h_vel.length() > 2.0:
 		var fwd_flat := Vector3(fwd.x, 0.0, fwd.z).normalized()
-		yaw_off = fwd_flat.angle_to(h_vel.normalized())
-	var misalign := maxf(absf(roll_angle), yaw_off)
-	var over := rad_to_deg(misalign) - wobble_landing_angle_deg
+		yaw_off = fwd_flat.signed_angle_to(h_vel.normalized(), Vector3.UP)
+	var over := rad_to_deg(absf(yaw_off)) - wobble_landing_angle_deg
 	DebugUtils.DebugMsg(
 		(
-			"%s: misalign=%.0f° (roll=%.0f yaw=%.0f) over=%.0f spd=%.0f | window=%.0f min_spd=%.0f"
-			% [
-				source, rad_to_deg(misalign), rad_to_deg(roll_angle), rad_to_deg(yaw_off),
-				over, speed, wobble_landing_angle_deg, wobble_min_speed
-			]
+			"%s: yaw=%.0f° over=%.0f spd=%.0f | window=%.0f min_spd=%.0f"
+			% [source, rad_to_deg(yaw_off), over, speed, wobble_landing_angle_deg, wobble_min_speed]
 		),
 		OS.has_feature("debug") and debug_verbose
 	)
 	if speed < wobble_min_speed or over <= 0.0: # too slow, or aligned enough — no wobble
 		return
+	var kick := over * wobble_landing_strength
 	if over < wobble_landing_hard_over_deg:
-		over = minf(over, wobble_crash_angle_deg * 0.6)
-	var kick_sign := signf(roll_angle) if absf(roll_angle) > 0.01 else 1.0
-	wobble_vel += kick_sign * over * wobble_landing_strength
+		# Undamped swing peaks at kick / sqrt(spring) — cap it at 60% of the crash angle.
+		kick = minf(kick, deg_to_rad(wobble_crash_angle_deg) * 0.6 * sqrt(wobble_spring))
+	wobble_vel += signf(yaw_off) * kick
 	DebugUtils.DebugMsg(
-		"  -> %s WOBBLE (vel+=%.1f)" % [source, kick_sign * over * wobble_landing_strength],
+		"  -> %s WOBBLE (vel+=%.1f)" % [source, signf(yaw_off) * kick],
 		OS.has_feature("debug") and debug_verbose
 	)
 

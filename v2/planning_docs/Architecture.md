@@ -409,6 +409,7 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
   - `RaceGameMode` - every checkpoint race; `race_type` (`RACE` / `STUNT_RACE` / `TIME_ATTACK`) fixes the standing, and everything else is a `RaceComponent` child (NPCs, traffic, scoring, challenges, pickups, time attack, leaderboard). One node per `race_type` in `main_game.tscn`. Bots keep racing through the results countdown; result rows refresh live until the timer ends
   - `TutorialGameMode` - step-by-step progression with countdown + trick detection
   - `StuntChallengeGameMode` - race through a fixed sequence of `PerformTrickTask`s, ranked by completion time
+  - `LongJumpGameMode` - timed `LongJumpTask` attempts off one jump, ranked by best attempt's trick score
   - The `Kind` enum runs ahead of the implementation — it carries reserved entries with no
     gamemode file and no state node in `main_game.tscn`. A `Kind` value is not evidence the mode
     exists; check for the type under `types/` and the node in `main_game.tscn`.

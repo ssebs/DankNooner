@@ -111,6 +111,11 @@ func get_score(peer_id: int) -> float:
 	return _peer_states[peer_id]["points"]
 
 
+## True while a combo is running or ended but not yet banked.
+func is_combo_open(peer_id: int) -> bool:
+	return _peer_states[peer_id]["prev_time"] > 0.0
+
+
 ## Wipe a peer's banked score. Gamemodes call this when a run starts.
 func reset_peer(peer_id: int):
 	_peer_states[peer_id] = {

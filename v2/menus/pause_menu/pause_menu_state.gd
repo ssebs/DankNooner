@@ -93,9 +93,11 @@ func _on_respawn_pressed():
 
 
 func _on_cancel_event_pressed():
-	gamemode_manager.change_gamemode.rpc_id(
-		1, GameModeType.Kind.FREE_ROAM, multiplayer.get_unique_id()
-	)
+	# Host-only button, so this runs on the server.
+	if !gamemode_manager.get_current_gamemode().handle_cancel_event():
+		gamemode_manager.change_gamemode.rpc_id(
+			1, GameModeType.Kind.FREE_ROAM, multiplayer.get_unique_id()
+		)
 	_on_resume_pressed()
 
 

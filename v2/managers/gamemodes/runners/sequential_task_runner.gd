@@ -328,6 +328,9 @@ func _on_trigger_entered(racer: Node3D, obj: GameModeObject) -> void:
 	if task.trigger != obj:
 		return
 	match task.eval_when:
+		GameModeTask.EvalWhen.ALWAYS:
+			# The task reads it itself (LongJumpTask's start gate); cleared with the scratchpad.
+			state.lesson_state["trigger_entered"] = true
 		GameModeTask.EvalWhen.ON_ENTER:
 			state.prop_event_fired = true
 		GameModeTask.EvalWhen.WHILE_INSIDE:

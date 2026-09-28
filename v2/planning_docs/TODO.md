@@ -25,6 +25,10 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] landing mega ramp jump causes crash
+  - [x] only use yaw in speed wobble code
+  - [ ] tweak speed wobbles from yaw
+
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [x] make tricks + combos easier to do **WIP**

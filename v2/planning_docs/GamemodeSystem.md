@@ -23,6 +23,7 @@
   - **`TutorialGameMode`** — step-by-step lessons; injects the menu deps `CloseHelpTask` needs.
     Results by completion time.
   - **`StuntChallengeGameMode`** — a trick-sequence race (see [Stunt challenge](#stunt-challenge)).
+  - **`LongJumpGameMode`** — timed trick attempts off one jump (see [Long jump](#long-jump)).
   - **`RaceGameMode`** — every checkpoint race (see [Races](#races)). `main_game.tscn` holds one
     instance per `race_type`.
 
@@ -216,6 +217,23 @@ player's pinned tricks.
 - **Ranking:** runner 2's `completion_time_ms`, which starts when runner 2 does (after the
   countdown). Live leaderboard by progress (tricks done, then time); results by completion time,
   fastest first. The event ends when everyone finishes (or the host cancels).
+
+## Long jump
+
+`LongJumpGameMode`: repeated attempts off a level's jump, each scored by its trick points.
+
+- **Event shape:** runner 1 = `GridSpawnTask` + countdown; runner 2 = one `LongJumpTask`.
+- **Start gate:** the task's `trigger` is a route `CheckPointMarker`. The runner sets
+  `trigger_entered` in the scratchpad for `ALWAYS` tasks, and nothing scores until it's set.
+  Nothing sets a checkpoint respawn in this mode, so respawns stay on the grid slot.
+- **Attempt:** once through the gate, `LongJumpTask` resets the peer's `TrickManager` score, waits for a landing after
+  real airtime, then `reset_delay` on the ground and the combo banking. It reports the score and
+  respawns the rider at their grid slot. A crash clears the scratchpad, so the attempt is void
+  and the next one starts after the normal crash respawn. The task never completes.
+- **Session:** the mode's `duration_secs` clock starts with runner 2. The time left shows on the
+  progress line, and the leaderboard shows Best / Last. Results rank by best attempt. The host's
+  pause → Cancel Event ends it early with results (`GameModeType.handle_cancel_event`). Before
+  runner 2 starts, or while results are up, Cancel Event goes straight to free roam.
 
 ## Gamemode refactor (2026-09) — why it looks like this
 
