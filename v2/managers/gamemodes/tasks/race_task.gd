@@ -13,9 +13,15 @@
 ## crashes return to the last checkpoint passed.
 class_name RaceTask extends GameModeTask
 
+## A racer (human or NPC) crossed the finish of a lap; lap_ms is that lap's split.
+signal lap_completed(racer_id: int, lap_ms: int)
+
 enum WaitFor {START, LAP_CP, END}
 
 @export var total_laps: int = 3
+## Time attack: never completes (total_laps ignored). Circuits lap forever; a point-to-point run
+## parks the rider at the finish until retry_run(). The host ends it via Cancel Event.
+@export var endless: bool = false
 @export var objective_key: String = "RACE_OBJECTIVE"
 ## Wrong-way warning fires once a racer is this many meters past their closest approach to the
 ## next gate and still moving away from it (e.g. missed a turn).
@@ -35,7 +41,7 @@ var end_checkpoint: CheckPointMarker
 ## directly — the runner's per-peer scratchpad isn't reachable from signal
 ## callbacks.
 ##   racer_id -> { "laps_done": int, "next_lap_idx": int, "waiting_for": WaitFor,
-##                 "start_ms": int, ["completion_time_ms": int],
+##                 "start_ms": int, "lap_start_ms": int, ["completion_time_ms": int],
 ##                 ["respawn_ckpt": CheckPointMarker  (NPC rows only)] }
 var _peer_progress: Dictionary[int, Dictionary] = {}
 var _signals_wired: bool = false
@@ -62,6 +68,7 @@ func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
 		for id in _peer_progress.keys():
 			if id < 0:
 				_peer_progress[id]["start_ms"] = Time.get_ticks_msec()
+				_peer_progress[id]["lap_start_ms"] = Time.get_ticks_msec()
 			else:
 				_peer_progress.erase(id)
 	var peer_id := int(player.name)
@@ -76,6 +83,9 @@ func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
 		"next_lap_idx": 0,
 		"waiting_for": WaitFor.START,
 		"start_ms": Time.get_ticks_msec(),
+		"lap_start_ms": Time.get_ticks_msec(),
+		## Endless point-to-point: finished a run, waiting on retry_run().
+		"run_done": false,
 		"respawn_slot": respawn_slot,
 		"best_dist": INF,
 		## Ticks when the racer started going the wrong way, 0 while on course.
@@ -91,8 +101,10 @@ func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
 func check(player: PlayerEntity, _delta: float, _state: Dictionary) -> bool:
 	var peer_id := int(player.name)
 	var p := _peer_progress[peer_id]
-	if p["laps_done"] >= total_laps:
+	if !endless and p["laps_done"] >= total_laps:
 		return true
+	if p["run_done"]:
+		return false
 	_push_lap_hud(peer_id, p)
 	_check_wrong_way(player, peer_id, p)
 	return false
@@ -126,6 +138,31 @@ func has_racer(racer_id: int) -> bool:
 	return _peer_progress.has(racer_id)
 
 
+func is_point_to_point() -> bool:
+	return end_checkpoint != start_checkpoint
+
+
+## Running clock of the racer's current lap, -1 while parked after an endless point-to-point run.
+func get_lap_elapsed_ms(racer_id: int) -> int:
+	var p := _peer_progress[racer_id]
+	if p.get("run_done", false):
+		return -1
+	return Time.get_ticks_msec() - p["lap_start_ms"]
+
+
+## Endless point-to-point: back to the rider's grid slot with a fresh clock.
+func retry_run(peer_id: int) -> void:
+	var p := _peer_progress[peer_id]
+	p["run_done"] = false
+	p["waiting_for"] = WaitFor.START
+	p["lap_start_ms"] = Time.get_ticks_msec()
+	p["best_dist"] = INF
+	var markers := _runner.route.get_grid_markers()
+	var marker := markers[mini(p["respawn_slot"], markers.size() - 1)]
+	_runner.spawn_manager.respawn_player_at.rpc(peer_id, marker.global_position, marker.global_basis)
+	_rpc_reset_checkpoints.rpc_id(peer_id)
+
+
 #region NPC racers (server-side, driven by the race gamemodes / NPCRaceManager)
 
 
@@ -139,6 +176,7 @@ func register_npc(npc_id: int) -> void:
 		"next_lap_idx": 0,
 		"waiting_for": WaitFor.START,
 		"start_ms": Time.get_ticks_msec(),
+		"lap_start_ms": Time.get_ticks_msec(),
 	}
 
 
@@ -208,7 +246,7 @@ func _on_checkpoint_entered(racer: Node3D, ckpt: CheckPointMarker) -> void:
 	var p := _peer_progress[peer_id]
 	# Finished racers keep their row for results — don't let victory laps
 	# advance the state or overwrite the recorded time.
-	if p.has("completion_time_ms"):
+	if p.has("completion_time_ms") or p.get("run_done", false):
 		return
 	var expected := _expected_checkpoint(p)
 	if ckpt != expected:
@@ -250,7 +288,7 @@ func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
 			peer_id, slot.global_position, slot.global_basis
 		)
 		# A new lap clears the passed highlights before this crossing re-marks its gate.
-		if p["waiting_for"] == WaitFor.END and p["laps_done"] + 1 < total_laps:
+		if p["waiting_for"] == WaitFor.END and (endless or p["laps_done"] + 1 < total_laps):
 			_rpc_reset_checkpoints.rpc_id(peer_id)
 		_rpc_checkpoint_passed.rpc_id(peer_id, _runner.route.get_checkpoints().find(ckpt))
 		p["best_dist"] = INF
@@ -264,7 +302,12 @@ func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
 		WaitFor.END:
 			p["laps_done"] += 1
 			p["next_lap_idx"] = 0
-			if p["laps_done"] >= total_laps:
+			var now := Time.get_ticks_msec()
+			var lap_ms: int = now - p["lap_start_ms"]
+			p["lap_start_ms"] = now
+			if endless and is_point_to_point():
+				p["run_done"] = true
+			elif !endless and p["laps_done"] >= total_laps:
 				# Racer done (check() returns true next frame for humans).
 				# RaceTask is the scoring source of truth for every racer —
 				# record the time here for humans and NPCs alike.
@@ -274,6 +317,8 @@ func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
 				p["waiting_for"] = WaitFor.LAP_CP if !lap_checkpoints.is_empty() else WaitFor.END
 			else:
 				p["waiting_for"] = WaitFor.START
+			# After the row update so listeners see run_done.
+			lap_completed.emit(peer_id, lap_ms)
 
 
 ## Position of the racer's next gate along the whole race (laps included) — only grows.
@@ -367,16 +412,24 @@ func _after_start_or_lap_advance(p: Dictionary) -> void:
 		p["waiting_for"] = WaitFor.END
 
 
-## Point-to-point (one lap) shows just the running clock.
+## Point-to-point (one lap) shows just the running clock; endless shows the current lap, no place.
 func _push_lap_hud(peer_id: int, p: Dictionary) -> void:
+	if endless:
+		var lap_text := format_time_ms(get_lap_elapsed_ms(peer_id))
+		if !is_point_to_point():
+			lap_text = tr("RACE_LAP_ENDLESS").format({"current": p["laps_done"] + 1, "time": lap_text})
+		_runner.task_hud.rpc_update_progress.rpc_id(peer_id, lap_text)
+		return
 	var current_lap: int = min(p["laps_done"] + 1, total_laps)
-	var elapsed_ms: int = Time.get_ticks_msec() - p["start_ms"]
-	var minutes := elapsed_ms / 60000
-	var secs := (elapsed_ms % 60000) / 1000.0
-	var text := "%d:%05.2f" % [minutes, secs]
+	var text := format_time_ms(Time.get_ticks_msec() - p["start_ms"])
 	if total_laps > 1:
 		text = tr("RACE_LAP").format({"current": current_lap, "total": total_laps, "time": text})
 	_runner.task_hud.rpc_update_progress.rpc_id(peer_id, "%s  -  %s" % [_position_text(peer_id), text])
+
+
+## "m:ss.cc".
+static func format_time_ms(ms: int) -> String:
+	return "%d:%05.2f" % [ms / 60000, (ms % 60000) / 1000.0]
 
 
 ## Local-only feedback: the highlight is per-client, other racers' gates are untouched.
@@ -398,6 +451,6 @@ func _rpc_reset_checkpoints() -> void:
 ## Route checks live on GameModeEvent / EventRoute — they see both the task and the route.
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues := super()
-	if total_laps <= 0:
+	if !endless and total_laps <= 0:
 		issues.append("total_laps must be > 0")
 	return issues

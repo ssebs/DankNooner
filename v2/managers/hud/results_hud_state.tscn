@@ -93,3 +93,17 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Restart Race"
+
+[node name="RetryBtn" type="Button" parent="UI/AspectContainer/CenterContainer/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+text = "TIME_ATTACK_RETRY_LABEL"
+
+[node name="WaitBtn" type="Button" parent="UI/AspectContainer/CenterContainer/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+text = "TIME_ATTACK_WAIT_LABEL"

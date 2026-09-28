@@ -3,6 +3,7 @@ class_name ResultsHUDState extends HUDState
 
 signal skip_pressed
 signal restart_pressed
+signal retry_pressed
 
 @export var input_state_manager: InputStateManager
 
@@ -11,6 +12,8 @@ signal restart_pressed
 @onready var countdown_label: Label = %CountdownLabel
 @onready var skip_btn: Button = %SkipBtn
 @onready var restart_btn: Button = %RestartBtn
+@onready var retry_btn: Button = %RetryBtn
+@onready var wait_btn: Button = %WaitBtn
 
 var _countdown: float = -1.0
 
@@ -19,6 +22,12 @@ func _ready():
 	ui.hide()
 	skip_btn.pressed.connect(func(): skip_pressed.emit())
 	restart_btn.pressed.connect(func(): restart_pressed.emit())
+	retry_btn.pressed.connect(
+		func():
+			rpc_hide()
+			retry_pressed.emit()
+	)
+	wait_btn.pressed.connect(rpc_hide)
 
 
 func _process(delta: float):
@@ -39,12 +48,33 @@ func rpc_show_results(results_dict: Dictionary, countdown_seconds: float):
 	_rebuild_rows(data)
 	_countdown = countdown_seconds
 	countdown_label.text = "%d" % ceili(countdown_seconds)
+	countdown_label.show()
 	skip_btn.visible = multiplayer.is_server()
 	restart_btn.visible = multiplayer.is_server()
+	retry_btn.hide()
+	wait_btn.hide()
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME_PAUSED
 	ui.show()
 	if skip_btn.visible:
 		skip_btn.call_deferred("grab_focus")
+
+
+## Time attack point-to-point: this rider finished a run — run again, or wait for the host.
+@rpc("call_local", "reliable")
+func rpc_show_run_finished(results_dict: Dictionary):
+	var data := ResultsData.from_dict(results_dict)
+	title_label.text = data.title
+	results_board.clear()
+	_rebuild_rows(data)
+	_countdown = -1.0
+	countdown_label.hide()
+	skip_btn.hide()
+	restart_btn.hide()
+	retry_btn.show()
+	wait_btn.show()
+	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME_PAUSED
+	ui.show()
+	retry_btn.call_deferred("grab_focus")
 
 
 ## Refresh title + rows only — countdown, focus and input state are untouched, so

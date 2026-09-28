@@ -33,6 +33,7 @@ enum MatchState {
 @export var free_roam_mode: FreeRoamGameMode
 @export var race_mode: RaceGameMode
 @export var stunt_race_mode: RaceGameMode
+@export var time_attack_mode: RaceGameMode
 @export var tutorial_mode: TutorialGameMode
 @export var challenge_mode: ChallengeGameMode
 
@@ -53,6 +54,7 @@ func _ready():
 		GameModeType.Kind.FREE_ROAM: free_roam_mode,
 		GameModeType.Kind.RACE: race_mode,
 		GameModeType.Kind.STUNT_RACE: stunt_race_mode,
+		GameModeType.Kind.TIME_ATTACK: time_attack_mode,
 		GameModeType.Kind.TUTORIAL: tutorial_mode,
 		GameModeType.Kind.CHALLENGE: challenge_mode,
 	}

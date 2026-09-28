@@ -115,15 +115,18 @@ EventStartCircle                       picker lists its GameModeEvent children
 
 ### 4 — Time Attack
 
-- [ ] `RaceTask` records per-lap split times.
-- [ ] `TimeAttackComponent`:
+- [x] `RaceTask` emits `lap_completed(racer_id, lap_ms)`; `endless` export — never completes.
+  Circuits lap forever; point-to-point parks the rider at the finish until `retry_run()`. The host
+  ends the session via pause → Cancel Event.
+- [x] `TimeAttackComponent`:
   - `race_start` sets `player.rb_do_max_boost = true` per rider (existing rollback path).
-  - Host keeps session bests per peer per event → Leaderboard (everyone in lobby runs together,
-    own clocks, no NPCs).
-  - Server RPCs each finished lap/run time to the owning peer; the client compares against its
-    PB and saves.
-- [ ] `SaveManager`: add a `progression` field to the save JSON —
-  `{"time_attack": {"<level_name>/<event node name>": {best_lap_ms, best_run_ms}}}`.
+  - Host keeps session times per peer per event → Leaderboard columns best / last / current lap
+    (everyone in lobby runs together, own clocks, no NPCs). Standing = best lap.
+  - Server RPCs each lap time to the owning peer; the client compares against its PB and saves.
+  - Point-to-point finish → per-rider `ResultsHUDState` prompt: Run Again (`request_retry`) or
+    Wait for Host.
+- [x] `SaveManager`: add a `progression` field to the save JSON —
+  `{"time_attack": {"<level_name>/<event node name>": {best_lap_ms}}}`.
   (Future: skins / $ / unlocks go in the same field.)
 - **Verify:** lint; laps + p2p time attack, session leaderboard, PB persists across restarts.
 

@@ -23,6 +23,8 @@ var default_save: Dictionary = {
 	"player_definition": default_player_definition,
 	# TrickRow.pin ids shown on the riding HUD
 	"pinned_tricks": [],
+	# Earned per-player records. time_attack: "<level>/<event>" -> {best_lap_ms, best_run_ms}
+	"progression": {"time_attack": {}},
 }
 
 var current_save: Dictionary

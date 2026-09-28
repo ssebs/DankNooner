@@ -1,6 +1,6 @@
 @tool
 ## Checkpoint race — every race event runs here. race_type fixes the standing (RACE: race position,
-## STUNT_RACE: summed component scores); everything beyond the shared race loop lives in the
+## STUNT_RACE: summed component scores, TIME_ATTACK: best lap); everything beyond the shared race loop lives in the
 ## RaceComponent children wired below. main_game has one instance per race_type.
 class_name RaceGameMode extends RunnerGameMode
 
@@ -24,6 +24,7 @@ enum RaceType { RACE, STUNT_RACE, TIME_ATTACK }
 @export var style_scoring: StyleScoringComponent
 @export var finish_bonus: FinishBonusComponent
 @export var challenges: ChallengesComponent
+@export var time_attack: TimeAttackComponent
 @export var leaderboard: LeaderboardComponent
 
 const RESULTS_REFRESH_SECS: float = 1.0
@@ -32,7 +33,7 @@ const RESULTS_REFRESH_SECS: float = 1.0
 const REQUIRED_COMPONENTS: Dictionary[RaceType, Array] = {
 	RaceType.RACE: ["leaderboard"],
 	RaceType.STUNT_RACE: ["style_scoring", "finish_bonus", "challenges", "pickups", "leaderboard"],
-	RaceType.TIME_ATTACK: ["pickups", "leaderboard"],
+	RaceType.TIME_ATTACK: ["pickups", "time_attack", "leaderboard"],
 }
 
 ## Server only — the event's RaceTask, the single source of race position and finish times.
@@ -51,11 +52,15 @@ func Enter(state_context: StateContext):
 	super(state_context)
 	results_hud.skip_pressed.connect(_on_results_skip_pressed)
 	results_hud.restart_pressed.connect(_on_results_restart_pressed)
+	results_hud.retry_pressed.connect(_on_results_retry_pressed)
 
 	# Hook order: traffic before NPCs (the route graph must exist before riders circulate),
 	# scoring before the leaderboard reads it.
 	_components.assign(
-		[traffic, npc_racers, pickups, style_scoring, finish_bonus, challenges, leaderboard]
+		[
+			traffic, npc_racers, pickups, style_scoring, finish_bonus, challenges, time_attack,
+			leaderboard
+		]
 		.filter(func(c): return c != null)
 	)
 
@@ -84,6 +89,7 @@ func Exit(state_context: StateContext):
 		return
 	results_hud.skip_pressed.disconnect(_on_results_skip_pressed)
 	results_hud.restart_pressed.disconnect(_on_results_restart_pressed)
+	results_hud.retry_pressed.disconnect(_on_results_retry_pressed)
 
 	if multiplayer.is_server():
 		_race_end()
@@ -206,6 +212,11 @@ func _on_results_restart_pressed():
 	_race_end()
 	_race_start()
 	_start_next_runner()
+
+
+## Any peer: only time attack's run-finished prompt shows the retry button.
+func _on_results_retry_pressed():
+	time_attack.request_retry.rpc_id(1)
 
 
 #endregion

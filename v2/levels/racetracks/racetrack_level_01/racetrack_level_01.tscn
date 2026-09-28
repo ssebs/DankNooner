@@ -80,6 +80,13 @@ enable_npcs = true
 forced_base_bike = ExtResource("6_8cigu")
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
+[sub_resource type="Resource" id="Resource_timeattack"]
+script = ExtResource("7_y3pck")
+name = "Time Attack"
+description = "Set your best lap"
+target_gamemode = 3
+forced_base_bike = ExtResource("6_8cigu")
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0b3im"]
 albedo_texture = ExtResource("24_r8gbb")
 uv1_triplanar = true
@@ -265,6 +272,34 @@ metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 [node name="RaceTask" type="Node" parent="Race/Race/SequentialTaskRunner" unique_id=500670208]
 script = ExtResource("13_xcb1u")
 total_laps = 2
+
+[node name="TimeAttack" type="Node" parent="Race" node_paths=PackedStringArray("route")]
+script = ExtResource("mig_event")
+definition = SubResource("Resource_timeattack")
+route = NodePath("../Route")
+
+[node name="SequentialTaskRunner" type="Node" parent="Race/TimeAttack"]
+script = ExtResource("8_ckww3")
+
+[node name="GridSpawnTask" type="Node" parent="Race/TimeAttack/SequentialTaskRunner"]
+script = ExtResource("9_5ryor")
+
+[node name="ConcurrentTaskRunner2" type="Node" parent="Race/TimeAttack/SequentialTaskRunner"]
+script = ExtResource("10_6j553")
+
+[node name="CountdownTask" type="Node" parent="Race/TimeAttack/SequentialTaskRunner/ConcurrentTaskRunner2"]
+script = ExtResource("11_nbb23")
+
+[node name="SFXTask" type="Node" parent="Race/TimeAttack/SequentialTaskRunner/ConcurrentTaskRunner2"]
+script = ExtResource("12_qeuom")
+sound = 2
+advance_mode = 1
+duration_sec = 3.0
+
+[node name="RaceTask" type="Node" parent="Race/TimeAttack/SequentialTaskRunner"]
+script = ExtResource("13_xcb1u")
+objective_key = "TIME_ATTACK_OBJECTIVE"
+endless = true
 
 [node name="Race01CheckpointMarkerStartStop1" parent="Race/Route" unique_id=1048335829 instance=ExtResource("14_hyio3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0.30008268, -12.5)

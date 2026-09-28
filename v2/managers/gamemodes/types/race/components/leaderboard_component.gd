@@ -1,7 +1,8 @@
 @tool
 ## The live leaderboard (humans, riding HUD) and the results table (humans + NPCs). Columns: name,
 ## race position, score (STUNT_RACE), then every component's column_headers. Standing is fixed by
-## race_type: STUNT_RACE by RaceGameMode.score, otherwise race position.
+## race_type: STUNT_RACE by RaceGameMode.score, TIME_ATTACK by session best lap, otherwise race
+## position.
 class_name LeaderboardComponent extends RaceComponent
 
 ## Cadence for pushing the live leaderboard to clients (a few Hz — the values crawl).
@@ -38,7 +39,7 @@ func race_end() -> void:
 
 ## Rebuilt live on every refresh — bots keep racing through the results countdown, so one that
 ## finishes mid-countdown gets its real time instead of a DNF. Same columns as the leaderboard,
-## plus the finish time.
+## plus the finish time (TIME_ATTACK never finishes — its lap columns replace it).
 func build_results() -> ResultsData:
 	var race_task := race_mode.race_task
 	var rows: Array[Dictionary] = []
@@ -62,15 +63,22 @@ func build_results() -> ResultsData:
 
 	var headers: Array[String] = []
 	headers.assign(_headers())
-	headers.insert(1, "⏱")
+	var title := tr("TIME_ATTACK_RUN_COMPLETE")
+	if !_is_time_attack():
+		headers.insert(1, "⏱")
+		title = tr("RACE_COMPLETE")
 	var columns: Array[String] = []
 	for i in headers.size():
 		columns.append(str(i))
-	return ResultsData.create(tr("RACE_COMPLETE"), columns, rows, headers)
+	return ResultsData.create(title, columns, rows, headers)
 
 
 func _by_score() -> bool:
 	return race_mode.race_type == RaceGameMode.RaceType.STUNT_RACE
+
+
+func _is_time_attack() -> bool:
+	return race_mode.race_type == RaceGameMode.RaceType.TIME_ATTACK
 
 
 func _headers() -> PackedStringArray:
@@ -95,6 +103,8 @@ func _human_cells(peer_id: int) -> PackedStringArray:
 func _human_sort_key(peer_id: int) -> float:
 	if _by_score():
 		return -race_mode.score(peer_id)
+	if _is_time_attack():
+		return race_mode.time_attack.best_lap_ms(peer_id)
 	# Not in the race body yet (grid/countdown) — no position, sorts last.
 	if !race_mode.race_task.has_racer(peer_id):
 		return INF
@@ -109,8 +119,9 @@ func _place_text(racer_id: int) -> String:
 
 ## cells keyed by column index, with the finish time spliced in after the name.
 func _result_row(racer_id: int, cells: PackedStringArray, sort_key: float) -> Dictionary:
-	var time_ms := race_mode.race_task.get_completion_time_ms(racer_id)
-	cells.insert(1, "%.1fs" % (time_ms / 1000.0) if time_ms >= 0.0 else tr("RACE_RACING"))
+	if !_is_time_attack():
+		var time_ms := race_mode.race_task.get_completion_time_ms(racer_id)
+		cells.insert(1, "%.1fs" % (time_ms / 1000.0) if time_ms >= 0.0 else tr("RACE_RACING"))
 	var row := {"_peer_id": racer_id, "_sort_key": sort_key}
 	for i in cells.size():
 		row[str(i)] = cells[i]
