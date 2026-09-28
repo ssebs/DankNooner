@@ -158,6 +158,9 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   - `_speed_calc()` reads `BoostController.is_boosting` to scale engine drive by
     `BOOST_ACCEL_MULT` and lift both the gear cap and the `bd.max_speed` ceiling by
     `BOOST_SPEED_MULT`
+  - Landing forgiveness: after a flip attempt (`air_pitch_total` past a half turn), touching down
+    within `LANDING_SNAP_ANGLE_DEG` of upright snaps pitch to neutral; worse lands keep their pitch
+    and crash via CrashController's wheelie/stoppie limits
   - `_handle_player_collision()` — spawn protection to avoid spawning inside other players
   - Calls `player_entity.move_and_slide()` with `NetworkTime.physics_factor`
   - **Unstable surfaces** (collision layer 5 — gravel/sand/etc):
@@ -200,11 +203,11 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     but deliberately leaves `boost_amount` alone
 - **CrashController** (`crash_controller.gd`)
   - Runs in rollback tick after the other controllers
-  - Detects crashes from over-rotation (wheelie/stoppie past trick limits, side lean), brake grabs while turning, killbox/obstacle collisions, upside-down landings, and landing while still mid air-trick
+  - Detects crashes from over-rotation (wheelie/stoppie past trick limits, side lean), stoppie steer washout, steep-slope stalls, speed-wobble and drift highsides / spinouts, brake grabs while turning, killbox/obstacle collisions, upside-down landings, and landing while still mid air-trick (`TrickController.is_air_trick` — stick tricks only, not flips)
   - **Unstable surfaces**: lean-crash threshold tightens (scaled by `movement_controller.get_unstable_factor()` via `unstable_lean_threshold_reduction_deg`); front brake while steering on unstable triggers a lowside (`unstable_lowside_brake_threshold`, `unstable_lowside_steer_threshold_deg`)
-  - `trigger_crash()` — sets `is_crashed`, zeros velocity, starts ragdoll
-  - Auto-respawn after 3s via timer (TODO: move to GamemodeManager)
-  - Emits `crashed`
+  - `trigger_crash()` — sim state only: sets `is_crashed` and velocity (zero, or the highside launch).
+    Ragdoll, camera and SFX ride the `is_crashed` edge in `PlayerEntity._process()`, which emits
+    `crashed(peer_id)`; the gamemode schedules the respawn
 - **Riding HUD** — no longer a player controller. `hud_controller.gd` was replaced by
   `RidingHUDState` (`managers/hud/riding_hud_state.gd`) under the global `HUDManager`. It polls the
   same controllers off `hud_manager.local_player` and feeds `BoostGauge` / `ComboCounter`

@@ -33,8 +33,7 @@
     - [x] track who did longest wheelie / airtime
     - [x] hud to show how to do trick
     - [x] trick juice
-    - [ ] Multiple trick options
-    - [ ] this suggested trick changes every race? 
+    - [x] Multiple trick options that changes every race
     - [ ] leaderboard order should go winner => loser desc, aka P1 should be first, unless stunt score is beating it.
 
 - [ ] get fun gameplay loop going

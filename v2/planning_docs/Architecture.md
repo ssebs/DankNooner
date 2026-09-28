@@ -239,6 +239,10 @@ What the list can't tell you:
   gear shifts — the auto box shifts just under the limiter cut, so the flag flaps exactly then.
 - **`up_direction`** looks like a constant but isn't: `MovementController` slerps it toward the
   surface normal for ramp/loop riding, and it drives `is_on_floor()` and the bike's basis.
+- **Private `_prev_*` / cached vars count too.** Anything carried from one tick into the next
+  (`_is_on_floor`, `air_pitch_total`, CrashController's `_prev_*`) must be registered. Unsynced,
+  they kept the client's own values through a resim, so landings mispredicted — a flashed crash
+  HUD on a clean land, or a server-side crash on a flip that looked landed.
 - **`is_drifting` is deliberately absent.** It's re-derived each tick from synced inputs plus
   `slip_angle`, so syncing it would be redundant state that can disagree with its own inputs.
 
