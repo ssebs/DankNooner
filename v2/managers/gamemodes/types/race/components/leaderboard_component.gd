@@ -7,8 +7,6 @@ class_name LeaderboardComponent extends RaceComponent
 
 ## Cadence for pushing the live leaderboard to clients (a few Hz — the values crawl).
 const REFRESH_SECS: float = 0.25
-## Puts every NPC row below every human when standing is by score (humans sort by -score).
-const NPC_SORT_OFFSET: float = 1e12
 
 var _refresh_accum: float = 0.0
 
@@ -23,7 +21,9 @@ func tick(delta: float) -> void:
 		# Player may not be spawned yet (late-join) — skip is intentional.
 		if race_mode.spawn_manager._get_player_by_peer_id(peer_id) != null:
 			peer_ids.append(peer_id)
-	peer_ids.sort_custom(func(a, b): return _human_sort_key(a) < _human_sort_key(b))
+	peer_ids.sort_custom(
+		func(a, b): return _ranks_above(_human_sort_key(a), a, _human_sort_key(b), b)
+	)
 	var rows: Array = []
 	for peer_id in peer_ids:
 		rows.append({"peer_id": peer_id, "cells": _human_cells(peer_id)})
@@ -55,11 +55,11 @@ func build_results() -> ResultsData:
 			var cells := PackedStringArray([npc.username, _place_text(npc_id)])
 			# NPCs don't score — blank the rest of the columns.
 			cells.resize(_headers().size())
-			var sort_key: float = race_task.get_race_position(npc_id)
-			if _by_score():
-				sort_key += NPC_SORT_OFFSET
+			var sort_key := 0.0 if _by_score() else _position_key(npc_id)
 			rows.append(_result_row(npc_id, cells, sort_key))
-	rows.sort_custom(func(a, b): return a["_sort_key"] < b["_sort_key"])
+	rows.sort_custom(
+		func(a, b): return _ranks_above(a["_sort_key"], a["_peer_id"], b["_sort_key"], b["_peer_id"])
+	)
 
 	var headers: Array[String] = []
 	headers.assign(_headers())
@@ -105,10 +105,21 @@ func _human_sort_key(peer_id: int) -> float:
 		return -race_mode.score(peer_id)
 	if _is_time_attack():
 		return race_mode.time_attack.best_lap_ms(peer_id)
+	return _position_key(peer_id)
+
+
+## Standing first; race position breaks ties (e.g. everyone on 0 score at a stunt race's start).
+func _ranks_above(key_a: float, id_a: int, key_b: float, id_b: int) -> bool:
+	if key_a != key_b:
+		return key_a < key_b
+	return _position_key(id_a) < _position_key(id_b)
+
+
+func _position_key(racer_id: int) -> float:
 	# Not in the race body yet (grid/countdown) — no position, sorts last.
-	if !race_mode.race_task.has_racer(peer_id):
+	if !race_mode.race_task.has_racer(racer_id):
 		return INF
-	return race_mode.race_task.get_race_position(peer_id)
+	return race_mode.race_task.get_race_position(racer_id)
 
 
 func _place_text(racer_id: int) -> String:

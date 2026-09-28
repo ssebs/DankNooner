@@ -28,13 +28,13 @@
 - [ ] refactor gamemodes
   - [x] simplify code / use modular components 
   - [x] Add time attack mode to event race circle, allow option to select diff races at same event circle
-  - [ ] mid-race challenges
+  - [x] mid-race challenges
     - [x] display in HUD during race
     - [x] track who did longest wheelie / airtime
     - [x] hud to show how to do trick
     - [x] trick juice
     - [x] Multiple trick options that changes every race
-    - [ ] leaderboard order should go winner => loser desc, aka P1 should be first, unless stunt score is beating it.
+    - [x] leaderboard order should go winner => loser desc, aka P1 should be first, unless stunt score is beating it.
 
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
