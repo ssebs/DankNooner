@@ -25,13 +25,16 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] mid-race challenges
-  - [x] display in HUD during race
-  - [x] track who did longest wheelie / airtime
-  - [x] hud to show how to do trick
-  - [x] trick juice
-  - [ ] Multiple trick options
-  - [ ] this suggested trick changes every race? 
+- [ ] refactor gamemodes
+  - [ ] simplify code / use modular components 
+  - [ ] Add time attack mode to event race circle, allow option to select diff races at same event circle
+  - [ ] mid-race challenges
+    - [x] display in HUD during race
+    - [x] track who did longest wheelie / airtime
+    - [x] hud to show how to do trick
+    - [x] trick juice
+    - [ ] Multiple trick options
+    - [ ] this suggested trick changes every race? 
 
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
@@ -54,7 +57,6 @@
 > Stuff to move ASAP
 - [ ] replace csgmesh for houses/other buildings for performance + looks
 - trick animation to move up then play the mixamo anims
-- Time attack mode
 - lightning / Rally Up item
 - r => quick respawn, add btn for set full respawn point (if not in race)
 - add longest single wheelie challenge
