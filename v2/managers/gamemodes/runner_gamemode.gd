@@ -1,6 +1,7 @@
 @tool
 ## Base for gamemodes that run a GameModeEvent's task runners: runner chaining, dep injection,
-## crash respawn, late-join, disconnect, input reset and the return to free roam. Subclasses call
+## crash respawn, late-join, disconnect, input reset, the results countdown and the return to
+## free roam. Subclasses call
 ## super() from Enter/Update/Exit and override the _on_* hooks.
 class_name RunnerGameMode extends GameModeType
 
@@ -8,12 +9,16 @@ class_name RunnerGameMode extends GameModeType
 @export var riding_hud_state: RidingHUDState
 @export var lobby_manager: LobbyManager
 @export var audio_manager: AudioManager
+@export var results_hud: ResultsHUDState
+@export var input_state_manager: InputStateManager
 @export var _respawn_delay: float = 2.5
 
 var _event: GameModeEvent
 var _runners: Array[TaskRunner] = []
 var _active_runner: TaskRunner
 var _active_runner_index: int = -1
+var _results_countdown: float = -1.0
+var _results_countdown_total: float = 10.0
 
 
 func Enter(state_context: StateContext):
@@ -26,6 +31,7 @@ func Enter(state_context: StateContext):
 	_runners = _event.get_runners()
 	_inject_runner_deps()
 	riding_hud_state.set_event_title(tr(_event.definition.name))
+	results_hud.skip_pressed.connect(_on_results_skip_pressed)
 
 	gamemode_manager.player_crashed.connect(_on_player_crashed)
 	gamemode_manager.player_disconnected.connect(_on_player_disconnected)
@@ -34,6 +40,8 @@ func Enter(state_context: StateContext):
 
 func Update(delta: float):
 	if !multiplayer.is_server():
+		return
+	if _update_results_countdown(delta):
 		return
 	if _active_runner != null:
 		_active_runner.update(delta)
@@ -45,6 +53,13 @@ func Exit(_state_context: StateContext):
 	gamemode_manager.player_crashed.disconnect(_on_player_crashed)
 	gamemode_manager.player_disconnected.disconnect(_on_player_disconnected)
 	gamemode_manager.player_latejoined.disconnect(_on_player_latejoined)
+	results_hud.skip_pressed.disconnect(_on_results_skip_pressed)
+	_results_countdown = -1.0
+	# results_hud sets IN_GAME_PAUSED when it shows; restore IN_GAME on the way out so
+	# the cursor doesn't stay visible after skip→free-roam.
+	if results_hud.ui.visible:
+		input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
+	results_hud.hide_ui()
 
 	_stop_active_runner()
 
@@ -134,6 +149,57 @@ func _disconnect_runner(runner: TaskRunner):
 
 #endregion
 
+#region Results
+
+
+## Show the results screen; the event returns to free roam when its countdown runs out.
+func _show_results(data: ResultsData):
+	_results_countdown = _results_countdown_total
+	riding_hud_state.push_event_clear_all()
+	results_hud.rpc_show_results.rpc(data.to_dict(), _results_countdown_total)
+
+
+## One row per peer of `runner`, fastest completion first.
+func _completion_results(runner: TaskRunner, title_key: String) -> ResultsData:
+	var rows: Array[Dictionary] = []
+	for peer_id in runner._player_states:
+		var state = runner._player_states[peer_id] as PlayerTaskState
+		var username: String = lobby_manager.lobby_players[peer_id].username
+		var time_sec: float = state.completion_time_ms / 1000.0
+		(
+			rows
+			.append(
+				{
+					"Username": username,
+					"Time": "%.1fs" % time_sec,
+					"_sort_key": state.completion_time_ms,
+				}
+			)
+		)
+	rows.sort_custom(func(a, b): return a["_sort_key"] < b["_sort_key"])
+	return ResultsData.create(tr(title_key), ["Username", "Time"], rows, ["", "⏱"])
+
+
+## True while the results screen counts down (the event is over).
+func _update_results_countdown(delta: float) -> bool:
+	if _results_countdown <= 0.0:
+		return false
+	_results_countdown -= delta
+	if _results_countdown <= 0.0:
+		_results_countdown = -1.0
+		_return_to_free_roam()
+	return true
+
+
+func _on_results_skip_pressed():
+	if !multiplayer.is_server():
+		return
+	_results_countdown = -1.0
+	_return_to_free_roam()
+
+
+#endregion
+
 #region Setup
 
 
@@ -214,4 +280,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("lobby_manager must not be empty")
 	if audio_manager == null:
 		issues.append("audio_manager must not be empty")
+	if results_hud == null:
+		issues.append("results_hud must not be empty")
+	if input_state_manager == null:
+		issues.append("input_state_manager must not be empty")
 	return issues

@@ -34,7 +34,7 @@ content_margin_left = 12.0
 content_margin_top = 12.0
 content_margin_right = 12.0
 content_margin_bottom = 12.0
-bg_color = Color(0.13, 0.13, 0.13, 0.3764706)
+bg_color = Color(0.13, 0.13, 0.13, 0.5019608)
 border_width_left = 4
 border_width_top = 4
 border_width_right = 4
@@ -253,14 +253,8 @@ theme = ExtResource("1_whasa")
 [node name="EventPanel" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/ChallengeCluster" unique_id=1156886571]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = 12.0
-offset_top = 256.0
-offset_right = 12.0
-offset_bottom = 256.0
-grow_horizontal = 0
+offset_right = 344.0
+offset_bottom = 184.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_racepane")
 
@@ -295,6 +289,7 @@ autowrap_mode = 3
 
 [node name="HUD_EventWarning" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane" unique_id=1935886846]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)

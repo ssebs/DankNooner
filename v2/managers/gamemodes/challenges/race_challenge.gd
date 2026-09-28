@@ -6,6 +6,7 @@
 ## See planning_docs/StuntRaceGamemode.md.
 class_name RaceChallenge extends Resource
 
+## Leave empty for no leaderboard column.
 @export var title_key: String = ""
 ## Leaderboard column header — an emoji for now.
 @export var icon: String = ""
@@ -53,4 +54,9 @@ func title() -> String:
 
 ## Tricks the HUD shows (with how to do them) while this challenge runs. Override in the subclass.
 func hint_tricks() -> PackedInt32Array:
+	return PackedInt32Array()
+
+
+## Tricks TrickManager scores 2x while this challenge runs. Override in the subclass.
+func bonus_tricks() -> PackedInt32Array:
 	return PackedInt32Array()

@@ -10,8 +10,6 @@ enum RaceType { RACE, STUNT_RACE, TIME_ATTACK }
 	set(value):
 		race_type = value
 		update_configuration_warnings()
-@export var results_hud: ResultsHUDState
-@export var input_state_manager: InputStateManager
 ## When true, finishing the race teleports everyone back to the grid; otherwise they stay
 ## where they finished and only the results HUD closes.
 @export var teleport_to_start_on_finish: bool = false
@@ -38,8 +36,6 @@ const REQUIRED_COMPONENTS: Dictionary[RaceType, Array] = {
 ## Server only — the event's RaceTask, the single source of race position and finish times.
 var race_task: RaceTask
 var _components: Array[RaceComponent] = []
-var _results_countdown: float = -1.0
-var _results_countdown_total: float = 10.0
 var _results_refresh_accum: float = 0.0
 
 
@@ -49,7 +45,6 @@ func Enter(state_context: StateContext):
 	DebugUtils.DebugMsg("Race Mode: %s" % RaceType.keys()[race_type])
 
 	super(state_context)
-	results_hud.skip_pressed.connect(_on_results_skip_pressed)
 	results_hud.restart_pressed.connect(_on_results_restart_pressed)
 	results_hud.retry_pressed.connect(_on_results_retry_pressed)
 
@@ -75,8 +70,7 @@ func Update(delta: float):
 	if !multiplayer.is_server():
 		return
 	_push_checkpoint_markers()
-	if _update_results_countdown(delta):
-		return
+	# Null through the results countdown too.
 	if _active_runner != null:
 		for component in _components:
 			component.tick(delta)
@@ -86,7 +80,6 @@ func Update(delta: float):
 func Exit(state_context: StateContext):
 	if Engine.is_editor_hint():
 		return
-	results_hud.skip_pressed.disconnect(_on_results_skip_pressed)
 	results_hud.restart_pressed.disconnect(_on_results_restart_pressed)
 	results_hud.retry_pressed.disconnect(_on_results_retry_pressed)
 
@@ -97,9 +90,6 @@ func Exit(state_context: StateContext):
 	elif traffic != null:
 		traffic.client_exit()
 
-	if results_hud.ui.visible:
-		input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
-	results_hud.hide_ui()
 	super(state_context)
 	_components = []
 
@@ -169,34 +159,22 @@ func _clear_checkpoint_markers():
 #region Results
 
 
+#override
 func _update_results_countdown(delta: float) -> bool:
 	if _results_countdown <= 0.0:
 		return false
-	_results_countdown -= delta
 	_results_refresh_accum -= delta
 	# NPCs keep racing through the countdown — refresh so a late finisher gets its time.
 	if _results_refresh_accum <= 0.0:
 		_results_refresh_accum = RESULTS_REFRESH_SECS
 		results_hud.rpc_update_rows.rpc(leaderboard.build_results().to_dict())
-	if _results_countdown <= 0.0:
-		_results_countdown = -1.0
-		_return_to_free_roam()
-	return true
+	return super(delta)
 
 
 #override
 func _on_last_runner_completed(_runner: TaskRunner):
-	_results_countdown = _results_countdown_total
 	_results_refresh_accum = RESULTS_REFRESH_SECS
-	riding_hud_state.push_event_clear_all()
-	results_hud.rpc_show_results.rpc(leaderboard.build_results().to_dict(), _results_countdown_total)
-
-
-func _on_results_skip_pressed():
-	if !multiplayer.is_server():
-		return
-	_results_countdown = -1.0
-	_return_to_free_roam()
+	_show_results(leaderboard.build_results())
 
 
 func _on_results_restart_pressed():
@@ -262,10 +240,6 @@ func _return_to_free_roam():
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues := super()
-	if results_hud == null:
-		issues.append("results_hud must not be empty")
-	if input_state_manager == null:
-		issues.append("input_state_manager must not be empty")
 	for component_name: String in REQUIRED_COMPONENTS[race_type]:
 		if get(component_name) == null:
 			issues.append(

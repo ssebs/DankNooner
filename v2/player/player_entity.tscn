@@ -2328,6 +2328,7 @@ crash_controller = NodePath("_Controllers/CrashController")
 movement_controller = NodePath("_Controllers/MovementController")
 camera_controller = NodePath("_Controllers/CameraController")
 boost_controller = NodePath("_Controllers/BoostController")
+debug_netcode_metrics = true
 butt_target = NodePath("VisualRoot/IKTargets/ButtTarget")
 left_hand_target = NodePath("VisualRoot/IKTargets/LeftHandTarget")
 right_hand_target = NodePath("VisualRoot/IKTargets/RightHandTarget")
@@ -2351,7 +2352,7 @@ unique_name_in_owner = true
 script = ExtResource("3_faflk")
 root = NodePath("..")
 enable_prediction = true
-state_properties = Array[String]([":global_transform", ":velocity", ":up_direction", ":is_crashed", ":movement_locked", "%BoostController:boost_amount", "%BoostController:boost_burn_target", "%BoostController:boost_burn_rate", "%BoostController:boost_prev_held", "%BoostController:boost_tap_window", "%BoostController:is_boosting", "%TrickController:combo_time", "%TrickController:combo_grace", "%TrickController:combo_boost_earned", "%TrickController:combo_multiplier", "%TrickController:combo_score", "%TrickController:_air_flips_awarded", "%TrickController:_hold_dir", "%TrickController:_hold_time", "%TrickController:_press_double", "%TrickController:_tap_dir", "%TrickController:_tap_age", "%TrickController:_tap_trick", "%TrickController:_tap_trick_timer", "%MovementController:pitch_angle", "%MovementController:wheelie_committed", "%MovementController:roll_angle", "%MovementController:speed", "%MovementController:slip_angle", "%MovementController:wobble_angle", "%MovementController:wobble_vel", "%MovementController:wobble_brake_hold_time", "%MovementController:stoppie_brake_hold_time", "%MovementController:balance_locked", "%MovementController:_rb_prev_held", "%MovementController:_lock_throttle_released", "%GearingController:current_gear", "%GearingController:current_rpm", "%GearingController:clutch_value", "%GearingController:is_rev_limited", "%GearingController:shift_cut_timer"])
+state_properties = Array[String]([":global_transform", ":velocity", ":up_direction", ":is_crashed", ":movement_locked", "%BoostController:boost_amount", "%BoostController:boost_burn_target", "%BoostController:boost_burn_rate", "%BoostController:boost_prev_held", "%BoostController:boost_tap_window", "%BoostController:is_boosting", "%TrickController:combo_time", "%TrickController:combo_grace", "%TrickController:combo_boost_earned", "%TrickController:combo_multiplier", "%TrickController:combo_score", "%TrickController:_air_flips_awarded", "%TrickController:_hold_dir", "%TrickController:_hold_time", "%TrickController:_press_double", "%TrickController:_tap_dir", "%TrickController:_tap_age", "%TrickController:_tap_trick", "%TrickController:_tap_trick_timer", "%MovementController:pitch_angle", "%MovementController:wheelie_committed", "%MovementController:roll_angle", "%MovementController:speed", "%MovementController:slip_angle", "%MovementController:wobble_angle", "%MovementController:wobble_vel", "%MovementController:wobble_brake_hold_time", "%MovementController:stoppie_brake_hold_time", "%MovementController:balance_locked", "%MovementController:_rb_prev_held", "%MovementController:_lock_throttle_released", "%GearingController:current_gear", "%GearingController:current_rpm", "%GearingController:clutch_value", "%GearingController:is_rev_limited", "%GearingController:shift_cut_timer", "%MovementController:_is_on_floor", "%MovementController:_air_time", "%CrashController:_prev_air_trick", "%CrashController:_prev_throttle", "%CrashController:_prev_front_brake", "%CrashController:_brake_was_grabbed"])
 input_properties = Array[String](["%InputController:nfx_throttle", "%InputController:nfx_front_brake", "%InputController:nfx_rear_brake", "%InputController:nfx_steer", "%InputController:nfx_lean", "%InputController:nfx_trick_held", "%InputController:nfx_clutch_held", "%InputController:nfx_boost_held", "%InputController:nfx_cam_x", "%InputController:nfx_cam_y", "%InputController:nfx_target_gear"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
@@ -2478,11 +2479,11 @@ transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, -1.4
 
 [node name="LeftHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=811111111]
 unique_name_in_owner = true
-transform = Transform3D(0.18152156, 0.93993247, 0.28909656, -0.1336379, 0.31483123, -0.93969256, -0.97426426, 0.13194022, 0.18275924, 0.251, 0.914, 0.287)
+transform = Transform3D(0.18152155, 0.93993247, 0.28909656, -0.13363789, 0.31483123, -0.93969256, -0.9742642, 0.13194022, 0.18275924, 0.251, 0.914, 0.287)
 
 [node name="RightHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=822222222]
 unique_name_in_owner = true
-transform = Transform3D(0.2333382, -0.9285764, -0.28861547, 0.11576331, 0.32122487, -0.93990076, 0.9654802, 0.18590368, 0.18244913, -0.25104135, 0.9143868, 0.28719392)
+transform = Transform3D(0.2333382, -0.92857647, -0.28861547, 0.11576331, 0.3212249, -0.93990076, 0.9654802, 0.1859037, 0.18244913, -0.25104135, 0.9143868, 0.28719392)
 
 [node name="LeftFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=833333333]
 unique_name_in_owner = true
@@ -2536,7 +2537,7 @@ transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 3.36
 
 [node name="ExhaustTipMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=698596267]
 unique_name_in_owner = true
-transform = Transform3D(0.96949005, 0.13598497, 0.20394905, 0, 0.8320145, -0.55475336, -0.24512662, 0.5378285, 0.8066304, -0.22484247, 0.4660294, -0.5100629)
+transform = Transform3D(0.96949005, 0.13598497, 0.20394903, 0, 0.8320145, -0.55475336, -0.2451266, 0.5378285, 0.8066304, -0.22484247, 0.4660294, -0.5100629)
 
 [node name="ExhaustFlameParticles" parent="VisualRoot/IKTargets/ExhaustTipMarker" unique_id=557107755 instance=ExtResource("17_htgu7")]
 unique_name_in_owner = true

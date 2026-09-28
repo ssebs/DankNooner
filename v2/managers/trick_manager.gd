@@ -9,7 +9,7 @@
 ## This manager watches those synced values and banks a SCORE when a combo ends, which keeps
 ## scoring out of the rollback path entirely (no resimulation double-counting) and keeps the
 ## rules in one gamemode-agnostic place. Gamemodes read get_score(peer_id) and clear with
-## reset_peer(peer_id).
+## reset_peer(peer_id). Bonus tricks (set_bonus_tricks) score 2x, already in get_score.
 class_name TrickManager extends BaseManager
 
 ## Emitted (server) when a combo ends cleanly and its score is banked.
@@ -26,8 +26,11 @@ signal combo_voided(peer_id: int, lost_duration: float, lost_points: float)
 ## the multiplier.
 @export var points_per_second: float = 10.0
 
-## peer_id -> {"points", "prev_time", "prev_score", "peak_mult"}
+## peer_id -> {"points", "prev_time", "prev_score", "bonus_score", "peak_mult"}
 var _peer_states: Dictionary[int, Dictionary] = {}
+## peer_id -> tricks whose combo_score counts twice. Apart from _peer_states so reset_peer (every
+## spawn) keeps it.
+var _bonus_tricks: Dictionary[int, PackedInt32Array] = {}
 
 
 func _ready():
@@ -64,19 +67,26 @@ func _track_combo(peer_id: int, player: PlayerEntity):
 
 	if player.is_crashed:
 		if st["prev_time"] > 0.0:
-			var lost: float = st["prev_score"] * points_per_second * st["peak_mult"]
+			var lost: float = (
+				(st["prev_score"] + st["bonus_score"]) * points_per_second * st["peak_mult"]
+			)
 			combo_voided.emit(peer_id, st["prev_time"], lost)
 			st["prev_time"] = 0.0
 			st["prev_score"] = 0.0
+			st["bonus_score"] = 0.0
 			st["peak_mult"] = 1
 		return
 
-	var elapsed: float = player.trick_controller.combo_time
+	var tc := player.trick_controller
+	var elapsed: float = tc.combo_time
 
 	if elapsed > 0.0:
-		st["peak_mult"] = maxi(st["peak_mult"], player.trick_controller.combo_multiplier)
+		st["peak_mult"] = maxi(st["peak_mult"], tc.combo_multiplier)
 		st["prev_time"] = elapsed
-		st["prev_score"] = player.trick_controller.combo_score
+		# This frame's combo_score growth belongs to the trick held now; a bonus trick's counts again.
+		if tc.current_trick in _bonus_tricks.get(peer_id, PackedInt32Array()):
+			st["bonus_score"] += tc.combo_score - st["prev_score"]
+		st["prev_score"] = tc.combo_score
 		return
 
 	if st["prev_time"] <= 0.0:
@@ -84,13 +94,15 @@ func _track_combo(peer_id: int, player: PlayerEntity):
 
 	var duration: float = st["prev_time"]
 	var multiplier: int = st["peak_mult"]
-	var points: float = st["prev_score"] * points_per_second * multiplier
+	var bonus: bool = st["bonus_score"] > 0.0
+	var points: float = (st["prev_score"] + st["bonus_score"]) * points_per_second * multiplier
 	st["points"] += points
 	st["prev_time"] = 0.0
 	st["prev_score"] = 0.0
+	st["bonus_score"] = 0.0
 	st["peak_mult"] = 1
 	combo_banked.emit(peer_id, points, duration, multiplier)
-	riding_hud_state.push_score_popup(peer_id, int(points), multiplier)
+	riding_hud_state.push_score_popup(peer_id, int(points), multiplier, bonus)
 
 
 #region public api
@@ -105,8 +117,14 @@ func reset_peer(peer_id: int):
 		"points": 0.0,
 		"prev_time": 0.0,
 		"prev_score": 0.0,
+		"bonus_score": 0.0,
 		"peak_mult": 1,
 	}
+
+
+## Tricks that score 2x for this peer (SuggestedTricksChallenge). Empty to clear.
+func set_bonus_tricks(peer_id: int, tricks: PackedInt32Array):
+	_bonus_tricks[peer_id] = tricks
 #endregion
 
 
@@ -119,12 +137,14 @@ func _on_player_spawned(player: PlayerEntity):
 
 func _on_player_disconnected(peer_id: int):
 	_peer_states.erase(peer_id)
+	_bonus_tricks.erase(peer_id)
 
 
 ## Match teardown — drop every peer's scoring row so it can't outlive the match into a menu
 ## level (whose current_level has no player_spawn_pos), which would crash the _process scan.
 func _on_match_ended():
 	_peer_states.clear()
+	_bonus_tricks.clear()
 #endregion
 
 

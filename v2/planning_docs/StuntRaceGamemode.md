@@ -109,51 +109,42 @@ forfeits the bonus — never leaves you under-fueled. One chance is fine when th
 
 ## As-built — deviations & tradeoffs
 
-> Updated 2026-09. Accurate record of what shipped; the imperative "Implementation approach" and
-> milestone plan below are the original design, kept as history.
+> Updated 2026-09-27, after the gamemode refactor. Accurate record of what shipped; the imperative
+> "Implementation approach" and milestone plan below are the original design, kept as history —
+> the class names in them (`StuntRaceGameMode`, `RoadRaceGameMode`, `StuntRaceTask`, `task_hud`,
+> `TutorialHUDState`) no longer exist.
 
-The POC was built **node-based** (runner + tasks under the EventStartCircle, reusing the race
-plumbing), not the imperative approach sketched above.
+The POC was built **node-based** (runner + tasks under an event, reusing the race plumbing), not
+the imperative approach sketched above. The stunt race is now **`RaceGameMode` with
+`race_type = STUNT_RACE`** — the shared race loop plus components. See
+[GamemodeSystem — Races](./GamemodeSystem.md#races).
 
-- **`StuntRaceGameMode`** is a near-copy of `RoadRaceGameMode` (the StreetRace convention:
-  duplicate-and-diverge), launched via the level's existing Stunt Race event circle
-  (`target_gamemode = STUNT_RACE`). Registered in `GamemodeManager`. **NPC racers work** —
-  `_setup_npcs()` fills the empty grid slots.
-- **`StuntRaceTask` subclasses `RaceTask`** — the opposite of M0's "don't borrow RaceTask" call.
-  Reuse won: it inherits per-racer tracking, respawn-point updates, results, and NPC support
-  (`NPCRaceManager` reaches into `RaceTask._peer_progress`, so a standalone task would mean retyping
-  that manager too). It reads its ordered `CheckPointMarker` children as the route and **hides** RaceTask's
-  lap-shaped exports, mapping list → (start=first, end=last, middle=laps, `total_laps=1`) at runtime.
-  It also carries the item-spawner lifecycle — its `PickupSpawner` children, activated/deactivated
-  via `on_race_start`/`on_race_end` (driven by the gamemode's Enter/Exit). See
-  [GamemodeSystem — Level-authored task inputs](./GamemodeSystem.md#level-authored-task-inputs).
-- **Level:** `stunt_track_01` shipped, registered as `STUNTTRACK_01`, with multiple event circles.
-- **Item system shipped** (`PickupItem` / `PickupSpawner` / `PickupItemDefinition`) — server-auth,
-  RPC-by-path like the animal spawners. Spawners run during a race (via `StuntRaceTask`) **and** in
-  free roam (via `PickupSpawnManager`). Effects in `SpawnManager`: **Gas Can** → boost refill;
-  **Bat** → swing that wobbles nearby riders.
+- **Launch:** a `GameModeEvent` with `target_gamemode = STUNT_RACE` under a circle in
+  `stunt_track_01`. NPC racers and traffic are per-event flags on the definition.
+- **Route:** the event's `EventRoute` — checkpoints (point-to-point), grid slots, `PickupSpawner`s
+  and props. `RaceTask` handles it directly; the old `StuntRaceTask` subclass (hidden lap exports,
+  a timer HUD override) is gone. Lap text shows only when `total_laps > 1`.
+- **Items:** `PickupItem` / `PickupSpawner` / `PickupItemDefinition`, server-auth, RPC-by-path.
+  Spawners run during a race (`PickupsComponent`) **and** in free roam (`PickupSpawnManager`).
+  Effects in `SpawnManager`: **Gas Can** → boost refill; **Bat** → swing that wobbles nearby riders.
 - **Ramming** crashes the victim already; wobble-on-ram fires too rarely (known bug). No crash is
-  scored as a knockout — there's no scoring axis.
-- **Scoring + mid-race challenges.** Score = banked trick points (`TrickManager.get_score`) +
-  `placement_points[finish order]` among humans (NPCs ignored), awarded on the last runner's
-  `player_completed`. A finisher's stats freeze there — tricks past the line don't count.
-  Challenges are `RaceChallenge` resources listed in `GameModeEventDefinition.race_challenges`
-  (`LongestWheelieChallenge`, `BestComboChallenge`); the gamemode ticks them and forwards
-  TrickManager's `combo_banked` / `combo_voided`, so **a crash voids a combo's trick stats** too
-  (the wheelie hold only commits when its combo banks). All of it feeds one per-peer stats dict
-  (`_peer_stats`) → live `RaceLeaderboard` in the riding HUD (rows slide on reorder) and the
-  results columns. Shaped for a future progression save; nothing persists yet. Known gap: a combo
-  still running at the finish line isn't banked, so it doesn't count.
-
-**Tradeoff / tech debt:** the lap model is hidden, not gone — a bit of cleverness (hidden exports, a
-plain-timer HUD override in place of "Lap x/y") in service of reuse. **Revisit when the HUD system is
-reworked** (minigames incoming): that's the natural point to decide whether to decouple
-`StuntRaceTask` from `RaceTask` (and retype `NPCRaceManager` off it) and give the stunt race its own
-flat-list task + HUD.
+  scored as a knockout.
+- **Scoring:** standing = the sum of the scoring components — `StyleScoringComponent` (banked trick
+  points, `TrickManager.get_score`) + `FinishBonusComponent` (`placement_points[finish place]`
+  among humans, NPCs ignored). A finisher's score freezes at the line. Known gap: a combo still
+  running at the finish isn't banked, so it doesn't count.
+- **Challenges:** `RaceChallenge` resources in `race_challenges` (`LongestWheelieChallenge`,
+  `BestComboChallenge`, `SuggestedTricksChallenge`), run by `ChallengesComponent`. A crash voids a
+  combo's challenge stats too (the wheelie hold only commits when its combo banks). **Suggested
+  tricks** score 2x inside `TrickManager` and tint the HUD's combo points and score pop.
+- **Leaderboard:** `LeaderboardComponent` → live `RaceLeaderboard` in the riding HUD's event pane
+  (rows slide on reorder) and the results table. Shaped for a future progression save; nothing
+  persists for stunt races yet.
 
 ### Not built yet
 
-- **Knockout scoring axis** — Style + Placement are live (see above); Knockouts aren't scored.
+- **Knockout scoring axis** — Style + Placement are live (see above); Knockouts aren't scored. It
+  slots in as a `KnockoutScoring` component once the aggressor id is threaded through the crash (M2).
 - **Boost = fuel** — no station top-off, no fill-up minigame; boost is just the normal meter.
 - **Rest of the item roster** — only Gas Can + Bat.
 
@@ -326,7 +317,7 @@ flat-list task + HUD.
 
 - [ ] Rest of the item roster: Shorty Shotgun, Siphon Hose, Deployable Ramp, Sticky Tires, Armor, Roll Cage
   - Bat ✅ already shipped (see As-built); speed wobbles exist
-- [x] NPC racers — racing AI (`npc_race_state` / `npc_race_manager`) is live in stunt race (`_setup_npcs`)
+- [x] NPC racers — racing AI (`npc_race_state` / `npc_race_manager`) is live in stunt race (`NPCRacersComponent`)
 - [ ] Cross-city / open-world level structure (islands, ~9 stations / 3 circuits)
 - [ ] City aesthetic — environmental ramps, buildings, vistas, lakes
 

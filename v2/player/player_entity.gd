@@ -184,6 +184,7 @@ var _crash_launch_impulse: Vector3 = Vector3.ZERO
 # netfox re-applies authoritative state each rollback loop, on the local client only.
 var _dbg_pre_speed: float = 0.0
 var _dbg_pre_vel_len: float = 0.0
+var _dbg_pre_pos: Vector3 = Vector3.ZERO
 var _dbg_log_file: FileAccess = null
 
 
@@ -617,6 +618,7 @@ func _dbg_open_log() -> void:
 func _dbg_before_loop() -> void:
 	_dbg_pre_speed = movement_controller.speed
 	_dbg_pre_vel_len = velocity.length()
+	_dbg_pre_pos = global_position
 
 
 ## Log how far reconciliation yanked speed/velocity. Under steady input these should be ~0;
@@ -624,10 +626,14 @@ func _dbg_before_loop() -> void:
 func _dbg_after_loop() -> void:
 	var d_speed := absf(movement_controller.speed - _dbg_pre_speed)
 	var d_vel := absf(velocity.length() - _dbg_pre_vel_len)
-	if d_speed < 0.5 and d_vel < 0.5:
+	var d_pos := global_position.distance_to(_dbg_pre_pos)
+	if d_speed < 0.5 and d_vel < 0.5 and d_pos < 0.5:
 		return
 	var line := (
-		"[netcode] tick=%d resim=%d rtt=%.0fms offset=%.0fms | speed %.1f (Δ%.1f) | vel %.1f (Δ%.1f) | rpm %.2f"
+		(
+			"[netcode] tick=%d resim=%d rtt=%.0fms offset=%.0fms | speed %.1f (Δ%.1f) | vel %.1f (Δ%.1f)"
+			+ " | pos Δ%.2f | rpm %.2f | gear %d target %d cut %.2f"
+		)
 		% [
 			NetworkTime.tick,
 			NetworkPerformance.get_rollback_ticks(),
@@ -635,7 +641,11 @@ func _dbg_after_loop() -> void:
 			NetworkTime.clock_offset * 1000.0,
 			movement_controller.speed, d_speed,
 			velocity.length(), d_vel,
+			d_pos,
 			gearing_controller.get_rpm_ratio(),
+			gearing_controller.current_gear,
+			input_controller.nfx_target_gear,
+			gearing_controller.shift_cut_timer,
 		]
 	)
 	DebugUtils.DebugMsg(line)

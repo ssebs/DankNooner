@@ -1,114 +1,229 @@
 # Gamemode System
 
+> How events are authored, launched and run. Follows the [Architecture](./Architecture.md#how-to-write-in-this-doc)
+> rule: grep for rosters (the `Kind` enum, task list, component list); this doc holds the shape and
+> the reasons.
+
 ## Class taxonomy
 
-- **`GameModeType`** (`managers/gamemodes/gamemode.gd`) — base class for a gamemode. Subclasses live under `managers/gamemodes/types/` (`FreeRoamGameMode`, `RoadRaceGameMode`, `StreetRaceGameMode`, `TutorialGameMode`, `ChallengeGameMode` — lightweight in-world trick challenges, no countdown/results). The `Kind` enum on this class (`FREE_ROAM`, `ROAD_RACE`, `STREET_RACE`, `STUNT_RACE`, `TUTORIAL`, `CHALLENGE`) is the canonical gamemode identifier (`GameModeType.Kind.TUTORIAL`, etc.).
-- **`GamemodeManager`** (`managers/gamemodes/gamemode_manager.gd`) — owns the state machine, match state, late-joiner sync. Maps `Kind` → `GameModeType` instance.
-- **`GameModeEventDefinition`** (`managers/gamemodes/resources/gamemode_event_definition.gd`) — `Resource`. Metadata about a single event: display name/description, `target_gamemode` (a `Kind`), `event_type` (`SEQUENTIAL` / `CONCURRENT` — flag only, runners enforce the actual semantics).
-- **`GameModeTask`** (`managers/gamemodes/tasks/gamemode_task.gd`) — base class for both leaf tasks and runners (composite pattern). Has `eval_when: ALWAYS | ON_ENTER | WHILE_INSIDE`, an optional `trigger: GameModeObject`, and an `is_constraint` flag (see below). Leaf subclasses (`countdown_task`, `speed_above_task`, `wheelie_duration_task`, `stoppie_duration_task`, `change_gear_task`, `checkpoint_task`, `teleport_task`, `grid_spawn_task`, `grid_respawn_task`, `close_help_task`, `sfx_task`, `race_task`, `maintain_trick_task`, `perform_trick_task`, `show_speech_bubble_task`, `hide_speech_bubble_task`) override `on_enter / check / on_exit / get_progress / get_objective_text / get_hint_text`. Holds a `_runner` ref set by `TaskRunner.wire_task_refs()` (called from the host gamemode on every peer) — leaf tasks reach shared deps via `_runner.spawn_manager` / `_runner.task_hud` / `_runner.audio_manager` rather than downcasting to a specific gamemode.
-- **Constraint tasks** (`is_constraint = true`) — a leaf task that runs alongside the objective for a whole step but never gates completion. `ConcurrentTaskRunner` ticks its `check()` every frame and ignores the return value when deciding if a peer is done; the task does its own per-frame enforcement (and can drive the HUD via `get_progress`). Used for fail-conditions like "hold this trick or restart" (`maintain_trick_task`). Place it as a sibling of the objective task inside a `ConcurrentTaskRunner`.
-- **`TaskRunner`** (`managers/gamemodes/runners/task_runner.gd`) — base class for composite runners. Holds the shared deps (`spawn_manager`, `task_hud`, `audio_manager`) and the `respawn_requested` signal so leaf tasks can address them via `_runner.<dep>` regardless of which runner subclass owns them. Don't instantiate directly — use `SequentialTaskRunner` or `ConcurrentTaskRunner`.
-- **`SequentialTaskRunner`** (`managers/gamemodes/runners/sequential_task_runner.gd`) — `TaskRunner` that walks its child `GameModeTask`s one at a time per peer. Owns per-peer state, eval_when dispatch, and trigger wiring. Supports nesting: a child that is itself a `TaskRunner` (sequential or concurrent) acts as a gate — peers park at it, runner starts once all non-completed peers reach it, parent advances them past it on `all_completed`.
-- **`ConcurrentTaskRunner`** (`managers/gamemodes/runners/concurrent_task_runner.gd`) — `TaskRunner` that runs every child `GameModeTask` in parallel per peer. Each child's `on_enter` fires immediately; each `check()` ticks every frame until it returns true; peer completes when every **non-constraint** child reports done. Constraint children (`is_constraint = true`) tick every frame but never gate completion. Trigger gating is NOT supported — children must use `eval_when = ALWAYS`. Nest a `SequentialTaskRunner` inside if you need trigger-gated steps. Exposes `@export var objective_text` / `hint_text` for the runner-level HUD line (individual children's `get_objective_text()` is ignored).
-- **`PlayerTaskState`** (`managers/gamemodes/runners/player_task_state.gd`) — per-peer runner state (`current_index`, `completed`, `start_time`, `completion_time_ms`, `lesson_state` scratchpad, `prop_event_fired` / `inside_zone` trigger gates).
-- **`GameModeObject`** (`managers/gamemodes/gamemodeobjects/gamemode_object.gd`) — base for level-authored props (rings, gates, checkpoints, killboxes, trigger zones). Dumb props — emit signals, `activate`/`deactivate`, never decide completion. The `is_active` setter applies `_apply_active_state()`: toggles `visible`, the child `Area3D`'s `monitoring`, and **recursively disables every child `CollisionShape3D`** (so a hidden checkpoint isn't an invisible wall via its pillars).
-- **`EventStartCircle`** (`managers/gamemodes/gamemodeobjects/event_start_circle.gd`) — level-placed `Area3D` carrying a `GameModeEventDefinition` and one or more `SequentialTaskRunner` children. Entering it raises the confirm HUD in free roam. Exposes `get_runners()`. The initial teleport into the event is handled by a leading `TeleportTask` in the runner — the circle no longer owns a `start_marker`. Also exposes `enable_game_objects()` / `disable_game_objects()` — recursively flip `is_active` on every descendant `GameModeObject` so an event's props only show + collide while its gamemode runs (the circle itself is an `Area3D`, not a `GameModeObject`, so its ring/label are untouched). **Lifecycle:** `FreeRoamGameMode.Enter()` disables every circle's objects (initial-load default + return-from-event path); runner-driven gamemodes (`RoadRaceGameMode`, `StreetRaceGameMode`, `TutorialGameMode`) `enable_game_objects()` on their `_start_circle` in `Enter()` and `disable_game_objects()` in `Exit()`. Top-level hazards not under a circle (e.g. a level-wide `Killbox`) stay active. On entry `FreeRoamGameMode.Enter()` also redistributes every peer to the level's grid markers, **except** when returning from a finished race — each race gamemode's `teleport_to_start_on_finish` `@export` (default off) passes `skip_spawn_redistribute` through the transition so players stay where they finished.
-- **`GamemodeStateContext`** (`managers/gamemodes/gamemode_state_context.gd`) — `StateContext` subclass carrying `peer_id`, `gamemode_event`, `event_start_circle`, and `skip_spawn_redistribute` across state transitions.
+### Gamemodes (`managers/gamemodes/types/`)
 
-## Folder layout
+- **`GameModeType`** (`gamemode.gd`) — base `State`. Its `Kind` enum is the canonical gamemode id.
+  `Kind` values are stored as **ints** in level scenes (`GameModeEventDefinition.target_gamemode`),
+  so reordering or inserting entries silently retargets every authored event — append only, or
+  remap the level scenes.
+- **`GamemodeManager`** — owns the state machine, match state and late-join sync; maps each `Kind`
+  to its state node in `main_game.tscn`.
+- **`FreeRoamGameMode`** — the hub. Event circles open the event picker from here.
+- **`RunnerGameMode`** (`runner_gamemode.gd`) — base for every mode that runs a `GameModeEvent`'s
+  task runners: runner chaining, dep injection, crash respawn, late-join, disconnect, input reset,
+  the results countdown and the return to free roam. Subclasses call `super()` from
+  `Enter`/`Update`/`Exit` and override the `_on_*` hooks plus `shows_event_props()` /
+  `shows_step_count()`.
+  - **`TutorialGameMode`** — step-by-step lessons; injects the menu deps `CloseHelpTask` needs.
+    Results by completion time.
+  - **`StuntChallengeGameMode`** — a trick-sequence race (see [Stunt challenge](#stunt-challenge)).
+  - **`RaceGameMode`** — every checkpoint race (see [Races](#races)). `main_game.tscn` holds one
+    instance per `race_type`.
+
+Why one `RunnerGameMode` base: the five runner modes this replaced re-implemented the same
+plumbing, and Road/Street race differed only in traffic start/stop.
+
+### Events and props (`managers/gamemodes/gamemodeobjects/`)
+
+- **`EventStartCircle`** — level-placed `Area3D`; its `GameModeEvent` children are the events the
+  picker lists. `set_active_event()` owns show/hide of the events' props.
+- **`GameModeEvent`** — one selectable event: `@export definition`, `@export route`, and the
+  `TaskRunner` children the target mode runs **in tree order**.
+- **`GameModeEventDefinition`** (`resources/`) — name/description, `target_gamemode`, forced bike,
+  and the race flags (`enable_npcs`, `enable_traffic`, `race_challenges`). Authored as an embedded
+  sub-resource on the event.
+- **`EventRoute`** — `Node3D` holding a route's physical stuff: grid `Marker3D`s, `CheckPointMarker`s
+  and `PickupSpawner`s as direct children (each group in tree order), plus props (arrow walls,
+  ramps). Several events on a circle can share one route. `set_active()` toggles `visible`, every
+  `GameModeObject` and every `CollisionShape3D` — a hidden ramp mustn't be an invisible wall.
+  `top_level`, so it sits in world space whatever the circle's transform.
+- **`GameModeObject`** — base for dumb props (checkpoints, trigger zones, speech bubbles): emit signals, `is_active` toggles visibility + collision, never decide completion.
+
+### Tasks and runners (`managers/gamemodes/tasks/`, `runners/`)
+
+- **`GameModeTask`** — base for leaf tasks **and** runners (composite). Leaf hooks:
+  `on_enter / check / on_exit / get_progress / get_objective_text / get_hint_text`. `eval_when`
+  (`ALWAYS | ON_ENTER | WHILE_INSIDE`) + optional `trigger: GameModeObject`. See the file header for
+  the full contract.
+- **Constraint tasks** (`is_constraint = true`) — run alongside the objective for a whole step but
+  never gate completion; they enforce their own fail-condition each frame (`MaintainTrickTask`).
+  Place one as a sibling of the objective inside a `ConcurrentTaskRunner`.
+- **`TaskRunner`** — base for runners. Holds the shared deps leaf tasks reach via `_runner.<dep>`
+  (`spawn_manager`, `riding_hud`, `audio_manager`, `route`, `show_step_count`) and the
+  `respawn_requested` signal.
+- **`SequentialTaskRunner`** — walks its children one at a time **per peer**. A child that is
+  itself a `TaskRunner` is a **gate**: peers park there, and it starts only once every unfinished
+  peer has arrived. Gates put everyone in lockstep — don't nest runners in anything players should
+  race through.
+- **`ConcurrentTaskRunner`** — runs every child in parallel per peer; done when every
+  non-constraint child is. No trigger gating (children use `ALWAYS`); its own
+  `objective_text` / `hint_text` replace the children's.
+- **`PlayerTaskState`** (`resources/`) — per-peer runner state: `current_index`, `completed`,
+  `start_time`, `completion_time_ms`, the `lesson_state` scratchpad, trigger gates.
+
+## Level scene shape
 
 ```
-managers/gamemodes/
-  gamemode.gd                 # GameModeType + Kind enum
-  gamemode_manager.gd
-  gamemode_state_context.gd
-  types/
-    free_roam/free_roam_gamemode.gd
-    tutorial/                 # tutorial_gamemode.gd, tutorial_hud.{gd,tscn}
-    road_race/road_race_gamemode.gd
-    street_race/street_race_gamemode.gd
-    challenge/challenge_gamemode.gd
-  runners/
-    task_runner.gd  sequential_task_runner.gd  concurrent_task_runner.gd
-    player_task_state.gd
-  tasks/
-    gamemode_task.gd
-    countdown_task.gd  teleport_task.gd  grid_spawn_task.gd  grid_respawn_task.gd  speed_above_task.gd
-    change_gear_task.gd  close_help_task.gd  checkpoint_task.gd  perform_trick_task.gd
-    wheelie_duration_task.gd  stoppie_duration_task.gd  race_task.gd  sfx_task.gd
-    show_speech_bubble_task.gd  hide_speech_bubble_task.gd
-    maintain_trick_task.gd    # constraint task (is_constraint)
-  gamemodeobjects/
-    gamemode_object.gd  event_start_circle.{gd,tscn}
-    checkpoint_marker.{gd,tscn}  killbox.{gd,tscn}  trigger_zone.{gd,tscn}  speech_bubble.{gd,tscn}
-  resources/
-    gamemode_event_definition.gd
-  hud/                        # game_mode_event_confirm_hud, results_hud
+EventStartCircle                       picker lists its GameModeEvent children
+├── EventRoute "IslandLoop"            grid markers, CheckPointMarkers, PickupSpawners, props
+├── GameModeEvent "Island Race"        definition (kind=RACE, flags), route -> IslandLoop
+│   └── SequentialTaskRunner -> GridSpawnTask -> ConcurrentTaskRunner(Countdown, SFX) -> RaceTask
+└── GameModeEvent "Island Time Attack" definition (kind=TIME_ATTACK), route -> IslandLoop
+    └── SequentialTaskRunner -> GridSpawnTask -> ...
 ```
 
-## Scene shape
-
-An `EventStartCircle` owns one or more `SequentialTaskRunner` children. Each runner owns its `GameModeTask` children (leaves or nested runners). Tutorial today uses a single runner:
-
-```
-EventStartCircle
-└── SequentialTaskRunner
-    ├── CountdownTask
-    ├── CloseHelpTask
-    ├── SpeedAboveTask
-    └── ...
-```
-
-A future race can mix runners — outer sequential with a concurrent body:
-
-```
-EventStartCircle
-└── SequentialTaskRunner            (race overall)
-    ├── TeleportTask                (intro)
-    ├── CountdownTask
-    ├── ConcurrentTaskRunner        (race body — all children run in parallel)
-    │   ├── CheckLapsTask
-    │   ├── CheckPlaceTask
-    │   └── OutOfBoundsTask
-    ├── PlayFinishAnimTask          (outro)
-    └── ShowResultsTask
-```
-
-## Level-authored task inputs
-
-Some leaf tasks read their level objects from **their own children**, not `@export` NodePath arrays — drop the markers under the task and they're collected in tree order, no inspector wiring:
-
-- **`GridSpawnTask`** — `get_grid_markers()` returns its `Marker3D` children (the grid slots). `GridRespawnTask` reads a referenced `GridSpawnTask` through the same method.
-- **`RaceTask`** — its `CheckPointMarker` children are the route, in tree order. A first child named ending in `StartStop1` is both start and finish (a lap circuit: `…StartStop1`, `…2`, `…3`, … back to `StartStop1`); otherwise it's point-to-point (first = start, last = finish). A lap race (`total_laps > 1`) warns without the `StartStop1` first child.
-- **`StuntRaceTask`** — extends `RaceTask` (same route collection, point-to-point, `total_laps` fixed to 1); its `PickupSpawner` children are the item spawners it activates during the race.
-
-Each keeps one `first_*` `@export` (`first_grid_marker`, `first_checkpoint`, `first_spawner`) as a **signpost only** — unused at runtime, it makes a fresh node show in the inspector that children are required, and `_get_configuration_warnings()` flags it when unassigned. A second warning nudges the first child's name to end in `1`, so tree order reads as a sequence (`…1, …2, …`).
+- Tasks read markers from `_runner.route`, never from `@export` NodePath arrays. `GridSpawnTask`
+  takes `route.get_grid_markers()`; `RaceTask` takes `route.get_checkpoints()` — a first checkpoint
+  named ending in `StartStop1` makes it a lap circuit (start = finish), anything else is
+  point-to-point. `GameModeEvent` / `EventRoute` configuration warnings flag a missing route, too
+  few checkpoints, and first children not named ending in `1` (tree order is the sequence).
+- Events without a route (tutorials) leave `route` empty.
+- Any other `GameModeObject` under the circle (not in a route) belongs to every event on it.
 
 ## Flow
 
-1. **Free roam → event:** player enters an `EventStartCircle`. `FreeRoamGameMode` shows the confirm HUD. On submit it calls `GamemodeManager.change_gamemode(target_gamemode, peer_id, event_start_circle.get_path())`.
-2. **Transition:** `change_gamemode()` is the single entry point — it applies the authority and race-interruption guards, then broadcasts `_rpc_transition_gamemode(kind, peer_id, event_start_circle_path, skip_spawn_redistribute)`. Nothing else calls that broadcast, including gamemodes returning to free roam. On every peer, the path is resolved via `get_node()` against the local level scene (identical across peers), then `ctx.event_start_circle` and `ctx.gamemode_event = circle.gamemode_event` populate the `GamemodeStateContext`. EventStartCircle refs can't cross RPC boundaries — passing the NodePath is the sync mechanism.
-3. **Gamemode enter:** `TutorialGameMode.Enter()` reads `_start_circle.get_runners()`, injects runtime deps (`spawn_manager`, `tutorial_hud` onto each runner; tutorial-specific managers onto `CloseHelpTask` instances — see "Dependency injection" below), and starts the first runner. The runner's first child is expected to be a `TeleportTask` that moves all peers to the event start.
-4. **Runner walk:** `SequentialTaskRunner.start(peer_ids)` builds `PlayerTaskState` per peer, wires triggers from its leaf children, calls `on_enter` of the first leaf. `Update(delta)` runs `_update_player` per peer: `eval_when` selects continuous (`ALWAYS`), one-shot (`ON_ENTER`), or zone-gated (`WHILE_INSIDE`) evaluation; on `check() == true` the peer advances. Peer completion → `player_completed`; all complete → `all_completed`.
-5. **Nesting gate:** if a leaf advance lands a peer on a child that is itself a `SequentialTaskRunner`, the peer parks. Once all non-completed peers are parked at the same gate index, the parent starts the nested runner with those peers and forwards its `update`/`crash`/`disconnect` calls. On `all_completed` the parent advances every parked peer past the gate.
-6. **Crash respawn:** `TutorialGameMode` listens to `gamemode_manager.player_crashed` and forwards to `runner.notify_crashed(peer_id)`. The runner clears scratchpad, gating, and emits `respawn_requested(peer_id)`. The gamemode owns the respawn delay timer and calls `spawn_manager.respawn_player.rpc(peer_id)`, which uses the player's persistent `rb_respawn_transform` (set by the most recent `TeleportTask` via `SpawnManager.respawn_player_at`). `FreeRoamGameMode.Enter()` calls `reset_respawn_point.rpc()` on transition so subsequent free-roam crashes fall back to `player_spawn_pos`.
-7. **Runner chain & results:** `TutorialGameMode` listens for `all_completed` on the active runner; on signal it advances to the next runner under the circle. On the last runner's completion it builds the `ResultsData` from `runner._player_states`, shows `ResultsHUDState`, runs a skip-or-timeout countdown, then transitions back to `FreeRoamGameMode`.
-
-## Per-peer scratchpad: `state: Dictionary`
-
-Each leaf-task hook (`on_enter / check / on_exit / get_progress`) receives a `Dictionary` arg — that peer's `PlayerTaskState.lesson_state`. The runner owns it: cleared on advance to next task and on crash. Tasks pick their own keys; e.g. `StoppieDurationTask` uses `state["t"]` to accumulate elapsed hold time, `ChangeGearTask` uses `state["initial"]` to record the entry gear. Untyped on purpose so each task chooses its own shape.
-
-See the `GameModeTask` file header for the full contract.
+1. **Pick:** entering a circle in free roam opens `GamemodeEventHUDState`'s picker over
+   `circle.get_events()`. Submit → `GamemodeManager.change_gamemode(kind, peer_id, event_path)`.
+2. **Transition:** `change_gamemode()` is the single entry point (guards: server only; a
+   non-late-joinable mode only accepts a return to `FREE_ROAM`). It broadcasts
+   `_rpc_transition_gamemode`; every peer resolves the **event node path** against its own copy of
+   the level — node refs can't cross RPC boundaries, the path is the sync mechanism. The
+   `GamemodeStateContext` carries the event, `peer_id` and `skip_spawn_redistribute`.
+3. **Enter (`RunnerGameMode`):** shows the event's props (unless `shows_event_props()` is false —
+   modes whose tasks reveal their own props), sets the event pane title, injects runner deps
+   (every peer — see below), and the server starts the first runner.
+4. **Runner walk:** `start(peer_ids)` builds a `PlayerTaskState` per peer; `update()` evaluates the
+   current task per `eval_when`, advancing on `check() == true`. Progress pauses while a peer is
+   crashed (a frozen `current_trick` would otherwise keep a hold timer running through the respawn).
+5. **Crash respawn:** `player_crashed` → `runner.notify_crashed` clears the peer's scratchpad and
+   emits `respawn_requested`; the gamemode owns the delay, then respawns at the player's persistent
+   `rb_respawn_transform` (set by the last `TeleportTask` / grid slot / checkpoint). A crash after
+   the runner finished requests nothing.
+6. **Chain + results:** each runner's `all_completed` starts the next. On the last one,
+   `_on_last_runner_completed(runner)` fires **before** `runner.stop()` (which clears the per-peer
+   state results read). `_show_results(data)` opens `ResultsHUDState` with a countdown; skip or
+   timeout returns to free roam. Exiting a mode restores `IN_GAME` input and hides results.
 
 ## Dependency injection
 
-`SequentialTaskRunner` and tutorial-specific tasks (`CloseHelpTask`) live in level scenes; their dependencies (`SpawnManager`, `TutorialHUDState`, `MenuManager`, `HelpMenuState`, `InputStateManager`) live in `main_game.tscn`. Cross-scene `@export` NodePaths are fragile, so:
+Runners and tasks live in level scenes; their deps live in `main_game.tscn`. Cross-scene `@export`
+NodePaths are fragile, so runners declare plain `var`s and `RunnerGameMode._inject_runner_deps()`
+sets them, then `wire_task_refs()` sets every child's `_runner` and recurses into nested runners.
 
-- Runners and `CloseHelpTask` declare plain `var` (not `@export`) fields.
-- `TutorialGameMode.Enter()` / the race gamemodes' `Enter()` call `_inject_runner_deps()` (runs on every peer, server and client) which for each top-level runner:
-  - Sets `runner.spawn_manager`, `runner.task_hud`, `runner.audio_manager`.
-  - Calls `runner.wire_task_refs()` — sets `task._runner = self` on every child task and recurses into nested runners (propagating deps).
-  - Tutorial additionally walks `CloseHelpTask` children to set `input_state_manager`, `menu_manager`, `help_menu_state`.
-- `wire_task_refs()` runs on every peer, not just the server. The per-peer `start()` is server-only, so clients would otherwise have `task._runner == null` — fine for most tasks (their RPC bodies run server-side) but fatal for tasks like `SFXTask` whose `_rpc_*` bodies execute on clients and dereference `_runner.<dep>`.
+It runs on **every peer**, not just the server: `start()` is server-only, and tasks whose `_rpc_*`
+bodies execute on clients (e.g. `SFXTask`) dereference `_runner.<dep>` there. Mode-specific deps are
+injected by overriding `_inject_runner_deps()` (Tutorial → `CloseHelpTask`'s menu managers).
 
-Things that *are* level-scene-local (markers, triggers, durations, text keys) stay as `@export` on the task node — wired directly inside the level scene.
+Level-local inputs (durations, text keys, triggers) stay `@export` on the task node.
+
+## Per-peer scratchpad
+
+Each leaf hook receives that peer's `PlayerTaskState.lesson_state` — cleared on advance and on
+crash, untyped so each task picks its own keys (`PerformTrickTask` accumulates `state["t"]`).
+
+## Event pane (riding HUD)
+
+Every runner event's text lives in `RidingHUDState`'s event pane (top-right, under the minimap):
+title, step count (`shows_step_count()`; races hide it), objective, a progress line (hint / lap
+clock / countdown / status), a flashing warning line, then the live leaderboard. Runners and tasks
+call `riding_hud.push_event_*` server-side; the text is pre-localized there, so the client doesn't
+`tr()` again. Label visibility is set in code at `_ready` — the editor kept flipping it in the scene.
+
+## Races
+
+`RaceGameMode` runs every checkpoint race. `race_type` (`RACE`, `STUNT_RACE`, `TIME_ATTACK`) picks
+the standing and which components are required; everything beyond the shared race loop lives in
+**components**.
+
+### Components (PlayerEntity controller pattern)
+
+`RaceComponent` children of each `RaceGameMode` node, wired both ways by `@export`. The mode calls
+their hooks server-side in a fixed, explicit order (`_components` in `Enter`) — traffic before NPCs
+(the route graph must exist first), scoring before the leaderboard reads it:
+`race_start()`, `tick(delta)`, `racer_finished(peer_id)`, `race_end()`, plus `score(peer_id)` and the
+`column_headers()` / `column_cells()` leaderboard builders. `REQUIRED_COMPONENTS` (and the `@tool`
+configuration warnings) list what each `race_type` needs; the rest are optional.
+
+| Component | RACE | STUNT_RACE | TIME_ATTACK |
+|---|---|---|---|
+| NPCRacers | event flag | event flag | — |
+| Traffic | event flag | event flag | — |
+| StyleScoring | — | ✓ | — |
+| FinishBonus | — | ✓ | — |
+| Challenges | — | ✓ | — |
+| Pickups | — | ✓ | ✓ |
+| TimeAttack | — | — | ✓ |
+| Leaderboard | ✓ | ✓ | ✓ |
+
+### Place vs standing
+
+- **Race position** (P2/6, finish order) — `RaceTask` is the single source of truth for humans and
+  NPCs (`get_race_position`, completion time). Shown in every race type.
+- **Standing** (the final ranking) is fixed by `race_type`, no extra knob:
+  - `RACE` → race position.
+  - `STUNT_RACE` → `RaceGameMode.score()`: every component's `score(peer_id)` summed.
+    `StyleScoring` = banked trick points, `FinishBonus` = points by finish place among humans. Both
+    freeze at the finish line. Axis weighting = each component's own points tunable.
+  - `TIME_ATTACK` → session best lap.
+
+### Race challenges
+
+`RaceChallenge` resources in `GameModeEventDefinition.race_challenges`, run by
+`ChallengesComponent`: ticked from synced player state, fed TrickManager's `combo_banked` /
+`combo_voided` (so a crash voids a combo's challenge stats too), one leaderboard column each.
+`hint_tricks()` reach the riding HUD through `push_leaderboard` and show as trick rows under the
+player's pinned tricks.
+
+- **Suggested tricks** (`SuggestedTricksChallenge`) — rolls `pick_count` tricks from `trick_pool`
+  each race. `bonus_tricks()` → `TrickManager.set_bonus_tricks()`, which attributes each frame's
+  `combo_score` growth to the trick being held and counts a bonus trick's growth twice, so
+  `get_score` already includes it. Observe-only: no rollback change. No leaderboard column (empty
+  `title_key`). The HUD's live combo points and the banked score pop turn `TrickPopups.BONUS_COLOR`.
+  Known limitation: the client tints for **any** challenge hint trick (e.g. the longest-wheelie
+  hint), not just the 2x ones, and the live number doesn't include the 2x until it banks.
+
+### Time attack
+
+- `RaceTask.endless` never completes: circuits lap forever; point-to-point parks the rider at the
+  finish. The host ends the session via pause → Cancel Event.
+- A full respawn (hold-R / pause Respawn) after the race body started restarts the run
+  (`RaceGameMode.handle_full_respawn` → `TimeAttackComponent.restart_run` → `RaceTask.restart_run`):
+  back to the grid slot, frozen through a countdown, fresh clock, boost refilled.
+- `TimeAttackComponent` keeps session times per event per peer on the host (Best / PB / Last / Lap
+  columns). The server sends each lap to its rider; the client saves a new PB under
+  `progression.time_attack["<level>/<circle>/<event>"]` (the circle is in the key because event
+  names repeat across circles). PBs are client-reported — display only.
+- Point-to-point finish → a per-rider run-finished prompt: Run Again, plus Wait for Host (clients)
+  or End Event (host).
+- `SaveManager.save_changed` means "whole save loaded/reset" only. A PB write used to emit it, which
+  re-pushed player metadata → lobby resync → every rider's skin rebuilt mid-race. Per-key writes go
+  through `save_item_updated`.
+
+## Stunt challenge
+
+`StuntChallengeGameMode` races players through a fixed trick sequence.
+
+- **Event shape:** runner 1 = `GridSpawnTask` + countdown; runner 2 = a flat
+  `SequentialTaskRunner` of `PerformTrickTask`s (trick and hold time picked per task in the
+  inspector, tree order = sequence). Keep runner 2 flat — a nested runner is a gate and would put
+  everyone back in lockstep.
+- **Ranking:** runner 2's `completion_time_ms`, which starts when runner 2 does (after the
+  countdown). Live leaderboard by progress (tricks done, then time); results by completion time,
+  fastest first. The event ends when everyone finishes (or the host cancels).
+
+## Gamemode refactor (2026-09) — why it looks like this
+
+- `RoadRaceGameMode` / `StreetRaceGameMode` were ~95% identical, and `StuntRaceGameMode` was the same
+  skeleton plus scoring → one component-based `RaceGameMode`. `StuntRaceTask` folded into `RaceTask`
+  (it collects the route's `PickupSpawner`s; lap text only when `total_laps > 1`).
+- `EventStartCircle` held one event → `GameModeEvent` children + a shared `EventRoute`, so one route
+  serves a race and a time attack. This also replaced the circle's graybox `in_task` special case.
+- `TutorialHUDState` is gone — every event's text is in the riding HUD's event pane.
+- Deferred: `KnockoutScoring` (per-knockout points; needs the aggressor id threaded through the
+  crash — see [StuntRaceGamemode M2](./StuntRaceGamemode.md#m2--knockouts-via-ramming--fast-respawn)).

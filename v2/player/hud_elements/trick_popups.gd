@@ -1,7 +1,8 @@
 @tool
 ## Borderlands-style trick feedback over the riding HUD — all local and display-only:
 ##  - below center, under the rider: live "+N" for the combo in progress, popped when the server
-##    banks it, or turned into a red "OOF!" when a crash voids it
+##    banks it, or turned into a red "OOF!" when a crash voids it. BONUS_COLOR while holding a race
+##    challenge's hint trick (suggested tricks score 2x), and on a pop that included one
 ##  - under the score: the race wheelie stopwatch, its bike icon tilted to the bike's pitch
 ##  - up and right of center: a callout for every trick started (TRICK_CALLOUTS, else the trick's
 ##    name), timed HOLD_CALLOUTS, and any server-sent callout
@@ -34,6 +35,7 @@ const HOLD_CALLOUTS: Dictionary = {
 const OOF_KEYS: Array[String] = ["CALLOUT_OOF_1", "CALLOUT_OOF_2", "CALLOUT_OOF_3", "CALLOUT_OOF_4"]
 const OOF_COLOR := Color(1.0, 0.2, 0.15)
 const CALLOUT_COLOR := Color(1.0, 0.85, 0.2)
+const BONUS_COLOR := Color(1.0, 0.35, 0.9)
 
 const FONT_SIZE: int = 40
 const OUTLINE_SIZE: int = 10
@@ -107,7 +109,9 @@ func _ready():
 
 
 ## Every frame, for the local rider: the live combo points and callout conditions.
-func track(player: PlayerEntity, points_per_second: float, delta: float) -> void:
+func track(
+	player: PlayerEntity, points_per_second: float, bonus_tricks: PackedInt32Array, delta: float
+) -> void:
 	var tc := player.trick_controller
 	_live.visible = tc.combo_time > 0.0 and not player.is_crashed
 	if _live.visible and tc.combo_multiplier > _last_multiplier:
@@ -115,15 +119,16 @@ func track(player: PlayerEntity, points_per_second: float, delta: float) -> void
 	_last_multiplier = tc.combo_multiplier if _live.visible else 1
 	if _live.visible:
 		_live.text = "+%d" % int(tc.combo_score * points_per_second * tc.combo_multiplier)
-		_live.modulate = _tier_color(tc.combo_multiplier)
+		var bonus := tc.current_trick in bonus_tricks
+		_live.modulate = BONUS_COLOR if bonus else _tier_color(tc.combo_multiplier)
 		_place(_live, SCORE_ORIGIN)
 
 	_track_trick_start(tc)
 	_track_hold_callouts(player, delta)
 
 
-func pop_score(points: int, multiplier: int) -> void:
-	_spawn("+%d" % points, _tier_color(multiplier), SCORE_ORIGIN, 1.0)
+func pop_score(points: int, multiplier: int, bonus: bool) -> void:
+	_spawn("+%d" % points, BONUS_COLOR if bonus else _tier_color(multiplier), SCORE_ORIGIN, 1.0)
 	audio_manager.play_ding()
 
 

@@ -35,7 +35,7 @@ enum MatchState {
 @export var stunt_race_mode: RaceGameMode
 @export var time_attack_mode: RaceGameMode
 @export var tutorial_mode: TutorialGameMode
-@export var challenge_mode: ChallengeGameMode
+@export var stunt_challenge_mode: StuntChallengeGameMode
 
 var match_state: MatchState = MatchState.IN_LOBBY
 var current_game_mode: GameModeType.Kind = GameModeType.Kind.FREE_ROAM
@@ -56,7 +56,7 @@ func _ready():
 		GameModeType.Kind.STUNT_RACE: stunt_race_mode,
 		GameModeType.Kind.TIME_ATTACK: time_attack_mode,
 		GameModeType.Kind.TUTORIAL: tutorial_mode,
-		GameModeType.Kind.CHALLENGE: challenge_mode,
+		GameModeType.Kind.STUNT_CHALLENGE: stunt_challenge_mode,
 	}
 
 	connection_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
@@ -334,8 +334,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("stunt_race_mode must not be empty")
 	if tutorial_mode == null:
 		issues.append("tutorial_mode must not be empty")
-	if challenge_mode == null:
-		issues.append("challenge_mode must not be empty")
+	if stunt_challenge_mode == null:
+		issues.append("stunt_challenge_mode must not be empty")
 	if state_machine == null:
 		issues.append("state_machine must not be empty")
 

@@ -286,6 +286,7 @@ Earn, spend and bank have three separate owners, and the split is **not** option
 - **Scoring → `TrickManager`** (`managers/trick_manager.gd`, server-only `_process()`). Watches those synced values and banks a score the frame `combo_time` returns to zero: `duration × points_per_second × peak_multiplier`. Banking on the combo-end edge keeps scoring out of the rollback path entirely, so resimulation can't double-count it.
   - **Crashing voids the run** — no partial credit. Checked before the `combo_time` test, because a crash freezes `combo_time` and only zeroes it at the respawn; without that ordering a crashed run would bank on the way down like a clean finish.
   - Gamemode-agnostic: gamemodes call `get_score(peer_id)` and `reset_peer(peer_id)`. Signals: `combo_banked(peer_id, points, duration, multiplier)`, `combo_voided(peer_id, lost_duration, lost_points)`.
+  - **Bonus tricks** (`set_bonus_tricks`, from a race's suggested-tricks challenge) count twice: each frame's `combo_score` growth is attributed to the trick being held. Still observe-only — nothing in the rollback path changes. Kept outside the per-peer scoring row because `reset_peer` fires on every spawn.
 - **Spending → `BoostController`** (rollback), which owns the meter vars — see [PlayerController.md](./PlayerController.md).
 
 #### CrashController
@@ -367,9 +368,12 @@ controllers in its own `Physics_Update()` rather than the entity's `_process()`,
 simulation state. `LevelManager` flips back to `NullHUDState` when leaving gameplay for a menu.
 
 - **The overlay HUDs are parked states their gamemode drives directly, not transitioned to** —
-  `TutorialHUDState`, `ResultsHUDState` and `GamemodeEventHUDState` sit under the same state
+  `ResultsHUDState` and `GamemodeEventHUDState` sit under the same state
   machine but are shown/hidden by their owning gamemode via `@rpc` calls (grep the gamemode for the
   `rpc_*` entry points). They never become the machine's `current_state`.
+- **Event text lives in `RidingHUDState`'s event pane** (title, step, objective, progress, warning,
+  live leaderboard) — every runner event pushes to it server-side via `push_event_*` /
+  `push_leaderboard`. See [GamemodeSystem — Event pane](./GamemodeSystem.md#event-pane-riding-hud).
 - **`RidingHUDState.push_checkpoint_marker()`** is how the race gamemodes mark each racer's next
   checkpoint on that peer's minimap: the state is a single node at a shared path on every peer, so
   the server can `rpc_id` the owning client's minimap through it.
@@ -397,14 +401,14 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
 - `GamemodeManager` (`managers/gamemodes/gamemode_manager.gd`) - manages match state, coordinates level/spawn. Runs a **state machine of gamemodes**.
 - **Gamemode states** (extend base `GameModeType`, whose `Kind` enum is the canonical id, live under `managers/gamemodes/types/`):
   - `FreeRoamGameMode` - open play, event circles trigger mode switches, respawn on crash. Crash respawns return you to the crash site (upright, same heading) — unless the site is steep or void, in which case you go to your last flat-ground breadcrumb (the server samples one per player on gentle ground; the ground check excludes the bike's own collider and ragdoll bones)
-  - `RoadRaceGameMode` - lap-based race built on the task/runner system (see [GamemodeSystem.md](./GamemodeSystem.md)). Bots keep racing through the results countdown; result rows refresh live until the timer ends (human rows are snapshotted before the runner stops — `TaskRunner.stop()` clears its per-player state)
-  - `StreetRaceGameMode` - the same race run through live ambient traffic (duplicated file, not a subclass)
+  - Every event mode extends `RunnerGameMode` — the shared runner plumbing (chaining, dep injection, crash respawn, late-join, disconnect, results countdown). Results are built in `_on_last_runner_completed`, **before** the runner stops — `TaskRunner.stop()` clears its per-player state.
+  - `RaceGameMode` - every checkpoint race; `race_type` (`RACE` / `STUNT_RACE` / `TIME_ATTACK`) fixes the standing, and everything else is a `RaceComponent` child (NPCs, traffic, scoring, challenges, pickups, time attack, leaderboard). One node per `race_type` in `main_game.tscn`. Bots keep racing through the results countdown; result rows refresh live until the timer ends
   - `TutorialGameMode` - step-by-step progression with countdown + trick detection
-  - `ChallengeGameMode` - lightweight in-world trick challenges (no countdown/results)
+  - `StuntChallengeGameMode` - race through a fixed sequence of `PerformTrickTask`s, ranked by completion time
   - The `Kind` enum runs ahead of the implementation — it carries reserved entries with no
     gamemode file and no state node in `main_game.tscn`. A `Kind` value is not evidence the mode
     exists; check for the type under `types/` and the node in `main_game.tscn`.
-- Events run via a composable **task/runner system** (`GameModeTask` leaves + `SequentialTaskRunner` / `ConcurrentTaskRunner`), authored in level scenes. See [GamemodeSystem.md](./GamemodeSystem.md)
+- Events run via a composable **task/runner system** (`GameModeTask` leaves + `SequentialTaskRunner` / `ConcurrentTaskRunner`), authored in level scenes as `GameModeEvent`s under an `EventStartCircle`, with a shared `EventRoute` for the physical route. See [GamemodeSystem.md](./GamemodeSystem.md)
 - Context passed between gamemode states via `GamemodeStateContext`
 - RPC guards (signatures: grep `@rpc` in `gamemode_manager.gd`):
   - `start_game` - server calls on all peers; ignores anything sent by a client
@@ -443,12 +447,12 @@ for the current surface. The distinctions that aren't obvious from the signature
 
 ### NPC Race Manager
 
-- `NPCRaceManager` (`managers/npc_race_manager.gd`) - owns AI race riders (`NPCRiderEntity`) on a negative-id roster (ids from -1) with spawn/despawn RPCs mirroring `SpawnManager`. The race gamemodes drive its lifecycle; the server-only AI tick points each NPC at its next checkpoint from `RaceTask`.
-- Late joiners get every live bot re-sent at its current transform via `sync_npcs_to_peer(peer_id)` (called from the race gamemodes' `_on_player_latejoined`) — without it the newcomer has no bot nodes and takes a MultiplayerSynchronizer error per packet per bot.
+- `NPCRaceManager` (`managers/npc_race_manager.gd`) - owns AI race riders (`NPCRiderEntity`) on a negative-id roster (ids from -1) with spawn/despawn RPCs mirroring `SpawnManager`. `RaceGameMode`'s `NPCRacersComponent` drives its lifecycle; the server-only AI tick points each NPC at its next checkpoint from `RaceTask`.
+- Late joiners get every live bot re-sent at its current transform via `sync_npcs_to_peer(peer_id)` (from `RaceGameMode._on_player_latejoined` via `NPCRacersComponent.sync_to_peer`) — without it the newcomer has no bot nodes and takes a MultiplayerSynchronizer error per packet per bot.
 
 ### NPC Traffic Manager
 
-- `NPCTrafficManager` (`managers/npc_traffic_manager.gd`) - ambient traffic riders/cars (ids counting down from its `FIRST_ID` const, far enough below the race roster to guarantee the two id spaces never collide). Builds a `TrafficRouteGraph` from the level's road network; count, car/bike mix, cruise speed and vehicle rosters are per-map via `LevelDefinition.traffic_settings` (a `TrafficSettings` resource). `FreeRoamGameMode` and `StreetRaceGameMode` start/stop it, server-only.
+- `NPCTrafficManager` (`managers/npc_traffic_manager.gd`) - ambient traffic riders/cars (ids counting down from its `FIRST_ID` const, far enough below the race roster to guarantee the two id spaces never collide). Builds a `TrafficRouteGraph` from the level's road network; count, car/bike mix, cruise speed and vehicle rosters are per-map via `LevelDefinition.traffic_settings` (a `TrafficSettings` resource). `FreeRoamGameMode` and `RaceGameMode`'s `TrafficComponent` (events with `enable_traffic`) start/stop it, server-only.
 - **Spawn sync contract** (this is the fix for "traffic only loads for host"):
   - The server broadcasts `rpc_spawn_npc`, but clients only *accept* spawns after their own gamemode `Enter()` runs (level guaranteed loaded) — earlier broadcasts would parent riders under the outgoing level and be freed with it.
   - On `Enter()`, non-server peers call `request_traffic_sync()` to pull everything they missed (covers both the fresh-start timing race and late join); `Exit()` calls `reset_local_traffic()`.

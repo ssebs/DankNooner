@@ -26,8 +26,8 @@
 > Don't forget, have fun :D
 
 - [ ] refactor gamemodes
-  - [ ] simplify code / use modular components 
-  - [ ] Add time attack mode to event race circle, allow option to select diff races at same event circle
+  - [x] simplify code / use modular components 
+  - [x] Add time attack mode to event race circle, allow option to select diff races at same event circle
   - [ ] mid-race challenges
     - [x] display in HUD during race
     - [x] track who did longest wheelie / airtime
@@ -35,12 +35,14 @@
     - [x] trick juice
     - [ ] Multiple trick options
     - [ ] this suggested trick changes every race? 
+    - [ ] leaderboard order should go winner => loser desc, aka P1 should be first, unless stunt score is beating it.
 
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [x] make tricks + combos easier to do **WIP**
   - [x] Trick juice / points / leaderboard
-  - [ ] Score complex tricks more (high chair during wheelie vs just on ground)
+  - [x] Score complex tricks more (high chair during wheelie vs just on ground)
+  - [ ] Time attack / multiple modes per location
 
 - [ ] Race HUD feedback
   - [x] Tell user they missed checkpoint during race / going wrong way
@@ -85,14 +87,16 @@
 #### Gamemodes / scoring
 - [x] Free roam
 - [x] Race gamemode
-- [ ] Stunt Race (mario-kart-like — tricks earn items, ramps/jumps on course)
+- [x] Stunt Race (mario-kart-like — tricks earn items, ramps/jumps on course)
+- [x] Time attack
 - [ ] Crash Launch gamemode (drag race → low fence → furthest body wins)
 - [ ] Endless mode (arcade-style, like the original game — casual / roguelite?)
 - [ ] Trick Battle / Score Attack gamemode
   - [ ] (longest wheelie / most combo tricks)
   - [ ] follow the Leader / H.O.R.S.E.
   - [ ] 3 rounds, highest score in 60s wins round, best 2/3 wins game
-  - [ ] Live scoreboard / trickfeed
+  - [ ] Live scoreboard 
+  - [ ] Trickfeed
 - [ ] Pizza Delivery
 
 #### Juice / "Feel"

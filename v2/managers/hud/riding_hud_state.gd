@@ -217,7 +217,7 @@ func Physics_Update(delta: float):
 	var comboing: bool = trick_controller.combo_time > 0.0 and not player_entity.is_crashed
 	var combo: int = trick_controller.combo_multiplier if comboing else 1
 	_combo_counter.set_combo(combo, comboing)
-	_trick_popups.track(player_entity, trick_manager.points_per_second, delta)
+	_trick_popups.track(player_entity, trick_manager.points_per_second, _challenge_tricks, delta)
 
 	# Live wheelie-attempt stopwatch, only while a race leaderboard (and its challenges) is up.
 	# Display-only local accumulation — the challenge's authoritative best is server-side.
@@ -576,14 +576,15 @@ func _update_event_panel() -> void:
 #endregion
 
 
-## Server-side: pop a banked combo's score on its rider's HUD. Called from TrickManager.
-func push_score_popup(peer_id: int, points: int, multiplier: int) -> void:
-	_rpc_score_popup.rpc_id(peer_id, points, multiplier)
+## Server-side: pop a banked combo's score on its rider's HUD. Called from TrickManager. bonus: part
+## of it came from a suggested trick.
+func push_score_popup(peer_id: int, points: int, multiplier: int, bonus: bool) -> void:
+	_rpc_score_popup.rpc_id(peer_id, points, multiplier, bonus)
 
 
 @rpc("call_local", "reliable")
-func _rpc_score_popup(points: int, multiplier: int):
-	_trick_popups.pop_score(points, multiplier)
+func _rpc_score_popup(points: int, multiplier: int, bonus: bool):
+	_trick_popups.pop_score(points, multiplier, bonus)
 
 
 ## Server-side: show a (pre-localized) callout on every rider's HUD, e.g. a round winner.
