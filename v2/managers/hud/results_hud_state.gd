@@ -14,6 +14,7 @@ signal retry_pressed
 @onready var restart_btn: Button = %RestartBtn
 @onready var retry_btn: Button = %RetryBtn
 @onready var wait_btn: Button = %WaitBtn
+@onready var end_event_btn: Button = %EndEventBtn
 
 var _countdown: float = -1.0
 
@@ -28,6 +29,8 @@ func _ready():
 			retry_pressed.emit()
 	)
 	wait_btn.pressed.connect(rpc_hide)
+	# Same exit as skipping the results countdown: back to free roam for everyone.
+	end_event_btn.pressed.connect(func(): skip_pressed.emit())
 
 
 func _process(delta: float):
@@ -53,6 +56,7 @@ func rpc_show_results(results_dict: Dictionary, countdown_seconds: float):
 	restart_btn.visible = multiplayer.is_server()
 	retry_btn.hide()
 	wait_btn.hide()
+	end_event_btn.hide()
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME_PAUSED
 	ui.show()
 	if skip_btn.visible:
@@ -71,7 +75,9 @@ func rpc_show_run_finished(results_dict: Dictionary):
 	skip_btn.hide()
 	restart_btn.hide()
 	retry_btn.show()
-	wait_btn.show()
+	# The host has no one to wait for — they end the event instead.
+	wait_btn.visible = !multiplayer.is_server()
+	end_event_btn.visible = multiplayer.is_server()
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME_PAUSED
 	ui.show()
 	retry_btn.call_deferred("grab_focus")

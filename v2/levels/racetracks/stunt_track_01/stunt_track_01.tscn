@@ -3518,8 +3518,15 @@ transform = Transform3D(5.9604645e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, 5
 transform = Transform3D(-0.70710665, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710665, -216.03952, 0, 639.20667)
 del_end_ramp = true
 
+[node name="GrayBox_StaticBody" parent="props" unique_id=670183193 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.7071068, 0.20592135, 0.6764588, 0, 0.9566571, -0.29121676, -0.7071068, 0.20592135, 0.6764588, -716.7429, 4.029678, 588.58734)
+shape_mode = 1
+width = 6.0
+depth = 3.0
+color_preset = 5
+
 [node name="Ramp10" parent="props" unique_id=1654268796 instance=ExtResource("6_w1aki")]
-transform = Transform3D(0.553933, 0, 0.83256125, 0, 1, 0, -0.83256125, 0, 0.553933, -725.6734, 0, 579.9191)
+transform = Transform3D(0.553933, 0, 0.83256125, 0, 1, 0, -0.83256125, 0, 0.553933, -723.6807, 0, 581.2449)
 del_end_ramp = true
 
 [node name="Ramp2" parent="props" unique_id=1585675927 instance=ExtResource("6_w1aki")]

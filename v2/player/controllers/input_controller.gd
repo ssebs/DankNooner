@@ -11,10 +11,15 @@ signal reset_cam_pressed
 ## Automatic transmission thresholds (RPM ratio, 0-1). Upshift sits just under the rev
 ## limiter's 0.98 cut so the auto box shifts instead of bouncing off it.
 const AUTO_UPSHIFT_RPM_RATIO: float = 0.95
-const AUTO_DOWNSHIFT_RPM_RATIO: float = 0.55
+const AUTO_DOWNSHIFT_RPM_RATIO: float = 0.75
 ## Minimum seconds between automatic shifts — stops a shift from being re-evaluated before
 ## the RPM has settled into the new gear.
 const AUTO_SHIFT_COOLDOWN: float = 0.4
+## Seconds RPM must stay under the downshift ratio first, so post-upshift dips don't count.
+## Skipped while braking so hard stops downshift immediately.
+const AUTO_DOWNSHIFT_DELAY: float = 1.0
+## Highest RPM ratio a downshift may land at, leaving headroom before the next upshift.
+const AUTO_DOWNSHIFT_MAX_LANDING: float = 0.75
 
 var is_gamepad := false
 var input_disabled := false
@@ -24,13 +29,13 @@ var nfx_throttle: float = 0.0
 var nfx_front_brake: float = 0.0
 var nfx_rear_brake: float = 0.0
 var nfx_steer: float = 0.0
-var nfx_lean: float = 0.0  # TODO: check inverted
+var nfx_lean: float = 0.0 # TODO: check inverted
 
 var nfx_trick_held: bool = false
 var nfx_clutch_held: bool = false
 var nfx_boost_held: bool = false
 var nfx_cam_x: float = 0.0
-var nfx_cam_y: float = 0.0  # TODO: check inverted
+var nfx_cam_y: float = 0.0 # TODO: check inverted
 
 ## Requested gear, absolute-valued (NOT edge-triggered). Netfox reuses the latest input
 ## snapshot on server ticks where fresh client input hasn't arrived yet, and drops
@@ -44,6 +49,7 @@ var nfx_target_gear: int = 1
 ## reset actually lands in recorded input history instead of being overwritten by it).
 var _pending_gear_reset: bool = false
 var _auto_shift_cooldown: float = 0.0
+var _auto_downshift_hold: float = 0.0
 
 
 func _ready():
@@ -91,6 +97,7 @@ func _on_respawned():
 		return
 	_pending_gear_reset = true
 	_auto_shift_cooldown = 0.0
+	_auto_downshift_hold = 0.0
 
 
 ## Local input
@@ -135,21 +142,38 @@ func _auto_shift(delta: float):
 	if nfx_clutch_held:
 		return
 
-	_auto_shift_cooldown = maxf(_auto_shift_cooldown - delta, 0.0)
-	if _auto_shift_cooldown > 0.0:
-		return
-
 	var rpm_ratio := player_entity.gearing_controller.get_rpm_ratio()
+	if rpm_ratio <= AUTO_DOWNSHIFT_RPM_RATIO:
+		_auto_downshift_hold += delta
+	else:
+		_auto_downshift_hold = 0.0
+
+	_auto_shift_cooldown = maxf(_auto_shift_cooldown - delta, 0.0)
+	var cooled := _auto_shift_cooldown <= 0.0
+
 	var num_gears := player_entity.bike_definition.num_gears
+	var braking := nfx_front_brake > 0.0 or nfx_rear_brake > 0.0
+	# Braking skips both waits; the landing cap below is what stops it hunting
+	var downshift_due := braking or (cooled and _auto_downshift_hold >= AUTO_DOWNSHIFT_DELAY)
 
 	# Compared against nfx_target_gear, not GearingController.current_gear: current_gear
 	# only catches up on the next rollback tick, so using it would re-request a shift that
 	# is already in flight.
-	if rpm_ratio >= AUTO_UPSHIFT_RPM_RATIO and nfx_target_gear < num_gears:
+	if cooled and rpm_ratio >= AUTO_UPSHIFT_RPM_RATIO and nfx_target_gear < num_gears:
 		nfx_target_gear += 1
 		_auto_shift_cooldown = AUTO_SHIFT_COOLDOWN
-	elif rpm_ratio <= AUTO_DOWNSHIFT_RPM_RATIO and nfx_target_gear > 1:
-		nfx_target_gear -= 1
+	elif rpm_ratio <= AUTO_DOWNSHIFT_RPM_RATIO and downshift_due and nfx_target_gear > 1:
+		# Drop straight to the gear road speed calls for (one gear per cooldown lags hard
+		# stops), but never into one that would land above AUTO_DOWNSHIFT_MAX_LANDING.
+		var gearing := player_entity.gearing_controller
+		var speed := player_entity.velocity.length()
+		while nfx_target_gear > 1:
+			var rpm_here := speed / gearing.get_gear_max_speed(nfx_target_gear)
+			var rpm_below := speed / gearing.get_gear_max_speed(nfx_target_gear - 1)
+			if rpm_here > AUTO_DOWNSHIFT_RPM_RATIO or rpm_below > AUTO_DOWNSHIFT_MAX_LANDING:
+				break
+			nfx_target_gear -= 1
+		_auto_downshift_hold = 0.0
 		_auto_shift_cooldown = AUTO_SHIFT_COOLDOWN
 
 

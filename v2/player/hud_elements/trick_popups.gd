@@ -1,8 +1,9 @@
 @tool
 ## Borderlands-style trick feedback over the riding HUD — all local and display-only:
-##  - right of center: live "+N" for the combo in progress, popped when the server banks it,
-##    or turned into a red "OOF!" when a crash voids it
-##  - left of center: a callout for every trick started (TRICK_CALLOUTS, else the trick's
+##  - below center, under the rider: live "+N" for the combo in progress, popped when the server
+##    banks it, or turned into a red "OOF!" when a crash voids it
+##  - under the score: the race wheelie stopwatch, its bike icon tilted to the bike's pitch
+##  - up and right of center: a callout for every trick started (TRICK_CALLOUTS, else the trick's
 ##    name), timed HOLD_CALLOUTS, and any server-sent callout
 ## Sfx: tada on a combo multiplier step up, ding on a score pop. Callouts stay silent.
 ## A pop grows small -> big, then drifts outward with a slight tilt and fades. Each pop is its
@@ -37,8 +38,15 @@ const CALLOUT_COLOR := Color(1.0, 0.85, 0.2)
 const FONT_SIZE: int = 40
 const OUTLINE_SIZE: int = 10
 ## Pop origins, as offsets from this control's center.
-const SCORE_ORIGIN := Vector2(140.0, -60.0)
-const CALLOUT_ORIGIN := Vector2(-140.0, -60.0)
+const SCORE_ORIGIN := Vector2(30.0, 96.0)
+const CALLOUT_ORIGIN := Vector2(210.0, -250.0)
+## Gap from the score's bottom to the stopwatch row (negative tucks it up — the icon's art has
+## transparent padding). The row's left edge lines up with the score's.
+const WHEELIE_GAP_Y: float = -12.0
+const WHEELIE_ICON := preload("res://resources/img/Logos/BikeOnly.png")
+const WHEELIE_ICON_PX: float = 64.0
+## The icon's rear-wheel contact point, as a fraction of its size — it wheelies about this.
+const WHEELIE_ICON_PIVOT := Vector2(0.35, 0.63)
 const POP_SECS: float = 0.2
 const POP_START_SCALE: float = 0.3
 const POP_PEAK_SCALE: float = 1.3
@@ -53,6 +61,9 @@ const FADE_SECS: float = 0.4
 var audio_manager: AudioManager = null
 
 var _live: Label = null
+var _wheelie_row: HBoxContainer = null
+var _wheelie_icon: TextureRect = null
+var _wheelie_label: Label = null
 ## Multiplier seen last frame, to catch the step up.
 var _last_multiplier: int = 1
 ## Trick seen last frame, to catch a new one starting.
@@ -71,6 +82,28 @@ func _ready():
 	_live = _make_label(Color.WHITE)
 	_live.visible = false
 	add_child(_live)
+
+	_wheelie_row = HBoxContainer.new()
+	_wheelie_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_wheelie_row.add_theme_constant_override("separation", 0)
+	_wheelie_row.visible = false
+	add_child(_wheelie_row)
+	# A container resets its children's rotation on every re-sort — the icon rotates inside a
+	# plain Control slot the row sizes instead.
+	var icon_slot := Control.new()
+	icon_slot.custom_minimum_size = Vector2.ONE * WHEELIE_ICON_PX
+	icon_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_wheelie_row.add_child(icon_slot)
+	_wheelie_icon = TextureRect.new()
+	_wheelie_icon.texture = WHEELIE_ICON
+	_wheelie_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_wheelie_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_wheelie_icon.size = Vector2.ONE * WHEELIE_ICON_PX
+	_wheelie_icon.pivot_offset = _wheelie_icon.size * WHEELIE_ICON_PIVOT
+	_wheelie_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	icon_slot.add_child(_wheelie_icon)
+	_wheelie_label = _make_label(Color.WHITE)
+	_wheelie_row.add_child(_wheelie_label)
 
 
 ## Every frame, for the local rider: the live combo points and callout conditions.
@@ -101,9 +134,24 @@ func pop_oof() -> void:
 	_oof_index = (_oof_index + 1) % OOF_KEYS.size()
 
 
+## The live wheelie stopwatch. pitch is the bike's pitch_angle (radians, + = wheelie); the
+## icon faces right, so a wheelie tilts it counter-clockwise.
+func show_wheelie_timer(seconds: float, pitch: float) -> void:
+	_wheelie_label.text = tr("RACE_WHEELIE_ATTEMPT").format({"time": "%.1f" % seconds})
+	_wheelie_icon.rotation = - pitch
+	_wheelie_row.visible = true
+	_wheelie_row.reset_size()
+	# The score label is re-placed (centered on SCORE_ORIGIN) every frame by track().
+	_wheelie_row.position = Vector2(_live.position.x, _live.position.y + _live.size.y + WHEELIE_GAP_Y)
+
+
+func hide_wheelie_timer() -> void:
+	_wheelie_row.visible = false
+
+
 ## text is already localized.
 func pop_callout(text: String) -> void:
-	_spawn(text, CALLOUT_COLOR, CALLOUT_ORIGIN, -1.0)
+	_spawn(text, CALLOUT_COLOR, CALLOUT_ORIGIN, 1.0)
 
 
 ## Held tricks flicker at their thresholds, so they're called out once per combo; one-shot

@@ -43,9 +43,7 @@ const _WARNING_PULSE_SECS := 0.35
 @onready var _event_step: Label = %HUD_EventStep
 @onready var _event_objective: Label = %HUD_EventObjective
 @onready var _event_progress: Label = %HUD_EventProgress
-@onready var _race_pb: Label = %HUD_RacePB
 @onready var _event_warning: Label = %HUD_EventWarning
-@onready var _trick_timer: Label = %HUD_TRICK_TIMER
 @onready var _balance_bar: BalanceBar = %BalanceBar
 @onready var _boost_gauge: BoostGauge = %BoostGauge
 @onready var _combo_counter: ComboCounter = %ComboCounter
@@ -93,6 +91,8 @@ var _challenge_tricks := PackedInt32Array()
 
 func _ready() -> void:
 	hide_ui()
+	# Event text starts hidden in code, not in the scene — the editor flips label visibility.
+	clear_event_text()
 
 func Enter(_state_context: StateContext):
 	player_entity = hud_manager.local_player
@@ -228,11 +228,10 @@ func Physics_Update(delta: float):
 	)
 	if _has_leaderboard and wheelie_held:
 		_wheelie_attempt_t += delta
-		_trick_timer.text = tr("RACE_WHEELIE_ATTEMPT").format({"time": "%.1f" % _wheelie_attempt_t})
-		_trick_timer.visible = true
+		_trick_popups.show_wheelie_timer(_wheelie_attempt_t, movement_controller.pitch_angle)
 	else:
 		_wheelie_attempt_t = 0.0
-		_trick_timer.visible = false
+		_trick_popups.hide_wheelie_timer()
 
 	# Respawn feedback. A tap shows "Respawning..." for a split second; holding past
 	# _RESPAWN_SHOW_SECS switches to "Full respawning..." with the bar charging toward the
@@ -439,7 +438,6 @@ func _rpc_set_leaderboard(headers: PackedStringArray, rows: Array, tricks: Packe
 func _rpc_clear_leaderboard():
 	_leaderboard.clear()
 	_has_leaderboard = false
-	set_race_pb("")
 	_update_event_panel()
 	_challenge_tricks = PackedInt32Array()
 	_rebuild_trick_rows()
@@ -493,13 +491,6 @@ func show_event_countdown(num: int) -> void:
 func set_event_title(text: String) -> void:
 	_event_title.text = text
 	_event_title.show()
-	_update_event_panel()
-
-
-## Local: this client's time attack personal best line; empty hides it.
-func set_race_pb(text: String) -> void:
-	_race_pb.text = text
-	_race_pb.visible = text != ""
 	_update_event_panel()
 
 
@@ -578,7 +569,6 @@ func _update_event_panel() -> void:
 		or _event_title.visible
 		or _event_objective.visible
 		or _event_progress.visible
-		or _race_pb.visible
 		or _event_warning.visible
 	)
 
@@ -619,7 +609,7 @@ func do_reset():
 	_prev_boost_held = false
 	_wobble_bar_active = false
 	_wheelie_attempt_t = 0.0
-	_trick_timer.visible = false
+	_trick_popups.hide_wheelie_timer()
 
 
 func _get_configuration_warnings() -> PackedStringArray:

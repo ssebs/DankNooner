@@ -109,10 +109,10 @@ func rpm_from_ratio(ratio: float) -> float:
 	return bd.idle_rpm + (bd.max_rpm - bd.idle_rpm) * ratio
 
 
-## Max speed the current gear can achieve
-func get_gear_max_speed() -> float:
+## Max speed `gear` can achieve
+func get_gear_max_speed(gear: int) -> float:
 	var bd = player_entity.bike_definition
-	var gear_ratio = bd.gear_ratios[current_gear - 1]
+	var gear_ratio = bd.gear_ratios[gear - 1]
 	return bd.max_speed * (bd.gear_ratios[bd.num_gears - 1] / gear_ratio)
 
 

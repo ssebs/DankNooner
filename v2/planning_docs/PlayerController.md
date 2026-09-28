@@ -117,8 +117,11 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   - `_auto_shift()` — automatic transmission when the `auto_transmission` setting is on,
     and **always while `BoostController.is_boosting`** (a boost spent on the limiter in the wrong gear is wasted).
     Up at `AUTO_UPSHIFT_RPM_RATIO` (set just under the rev limiter's cut so it shifts
-    instead of bouncing off it), down at `AUTO_DOWNSHIFT_RPM_RATIO`, with
-    `AUTO_SHIFT_COOLDOWN` between shifts. Compares against `nfx_target_gear` rather
+    instead of bouncing off it), down once RPM has sat under `AUTO_DOWNSHIFT_RPM_RATIO` for
+    `AUTO_DOWNSHIFT_DELAY` (straight to the gear road speed calls for, possibly skipping
+    several, but never one landing above `AUTO_DOWNSHIFT_MAX_LANDING`), with
+    `AUTO_SHIFT_COOLDOWN` between shifts. Braking skips both the delay and the cooldown for
+    downshifts. Compares against `nfx_target_gear` rather
     than `GearingController.current_gear`, which only catches up on the next rollback tick.
   - Detects gamepad vs KBM via `_unhandled_input()`
   - Provides `add_vibration()` / `stop_vibration()` for controller rumble
@@ -173,7 +176,7 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     - Blend `_current_rpm` between free-rev and wheel-loaded RPM based on clutch engagement
   - Public API:
     - `get_power_output()` — throttle × power curve × torque multiplier × engagement
-    - `get_gear_max_speed()` — max speed for current gear
+    - `get_gear_max_speed(gear)` — max speed for a gear
   - Emits `gear_changed(new_gear)`, `rpm_updated(rpm_ratio)`
 - **TrickController** (`trick_controller.gd`)
   - Detects ground tricks (wheelie variants, stoppie) from `movement_controller.pitch_angle` and air tricks (flips, heel clicker, high chair) from input + airtime

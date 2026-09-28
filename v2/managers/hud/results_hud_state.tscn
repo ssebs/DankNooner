@@ -107,3 +107,10 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 text = "TIME_ATTACK_WAIT_LABEL"
+
+[node name="EndEventBtn" type="Button" parent="UI/AspectContainer/CenterContainer/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+text = "END_EVENT_LABEL"
