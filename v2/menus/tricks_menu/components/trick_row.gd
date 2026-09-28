@@ -22,7 +22,6 @@ const DIR_ICONS: Dictionary = {
 	TrickController.Dir.LEFT: preload("res://resources/img/Icons/xbox_stick_r_left.svg"),
 	TrickController.Dir.RIGHT: preload("res://resources/img/Icons/xbox_stick_r_right.svg"),
 }
-const COMPACT_HOWTO_WIDTH := 260
 
 @onready var columns: HBoxContainer = %Columns
 @onready var name_label: Label = %NameLabel
@@ -48,7 +47,6 @@ func _ready() -> void:
 		columns.add_theme_constant_override("separation", 12)
 		for col: Control in [dir_box, gesture_col, score_label]:
 			col.custom_minimum_size.x = 0
-		howto_label.custom_minimum_size.x = COMPACT_HOWTO_WIDTH
 	if Engine.is_editor_hint():
 		return
 	pin_btn.pressed.connect(func(): pin_pressed.emit(pin))
@@ -74,10 +72,13 @@ func populate_stick(state: int, trick: TrickController.Trick, gesture: int, dir:
 func populate_howto(trick: TrickController.Trick) -> void:
 	_populate(trick)
 	pin = TrickController.trick_to_str(trick)
-	state_label.hide()
 	stick_input.hide()
-	howto_label.show()
-	howto_label.text = "TRICK_HOWTO_" + pin
+	var howto := "TRICK_HOWTO_" + pin
+	# Compact (HUD): rides the name's subtitle line like a stick row's state, instead of a wrapped column.
+	state_label.visible = compact
+	state_label.text = howto
+	howto_label.visible = !compact
+	howto_label.text = howto
 
 
 ## Shows the first BINDINGS slot for the trick, else its how-to.

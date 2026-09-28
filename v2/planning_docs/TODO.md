@@ -25,29 +25,12 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] refactor gamemodes
-  - [x] simplify code / use modular components 
-  - [x] Add time attack mode to event race circle, allow option to select diff races at same event circle
-  - [x] mid-race challenges
-    - [x] display in HUD during race
-    - [x] track who did longest wheelie / airtime
-    - [x] hud to show how to do trick
-    - [x] trick juice
-    - [x] Multiple trick options that changes every race
-    - [x] leaderboard order should go winner => loser desc, aka P1 should be first, unless stunt score is beating it.
-
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [x] make tricks + combos easier to do **WIP**
   - [x] Trick juice / points / leaderboard
   - [x] Score complex tricks more (high chair during wheelie vs just on ground)
   - [ ] Time attack / multiple modes per location
-
-- [ ] Race HUD feedback
-  - [x] Tell user they missed checkpoint during race / going wrong way
-  - [ ] add race position hud
-    - [x] add it
-    - [ ] MP test
 
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
 - [ ] fix game breaking bugs
@@ -60,7 +43,6 @@
 - trick animation to move up then play the mixamo anims
 - lightning / Rally Up item
 - r => quick respawn, add btn for set full respawn point (if not in race)
-- add longest single wheelie challenge
 - 1, 2, 3 spam is possible for everyone, debounce this
 - TP commands dont work on multiplayer
 - gas pump fill up minigame (should do more than just boost the bike, and it should be in first person. group of peeps do it like the race gamemodes)
@@ -91,7 +73,7 @@
 - [ ] Crash Launch gamemode (drag race → low fence → furthest body wins)
 - [ ] Endless mode (arcade-style, like the original game — casual / roguelite?)
 - [ ] Trick Battle / Score Attack gamemode
-  - [ ] (longest wheelie / most combo tricks)
+  - [x] (longest wheelie / most combo tricks)
   - [ ] follow the Leader / H.O.R.S.E.
   - [ ] 3 rounds, highest score in 60s wins round, best 2/3 wins game
   - [ ] Live scoreboard 
@@ -105,12 +87,10 @@
 - [ ] reactive sounds
 - [ ] Transition animations between menu states
 
-
 #### Audio
 - [ ] Music
 - [ ] Soundscapes for ambient sounds
 - [ ] Mute option in settings + auto-mute when out of focus
-- [ ] Audio Manager v2 (RPM blending, record bike, per-bike samples)
 - [ ] Meme mode setting (for sfx)
 - [ ] Fade out intro sound quicker, make 3 sec version
 
@@ -237,6 +217,27 @@
 ---
 
 ## Done ✅
+
+- [x] Audio Manager v2 (RPM blending, record bike, per-bike samples)
+
+- add longest single wheelie challenge
+
+- [x] Race HUD feedback
+  - [x] Tell user they missed checkpoint during race / going wrong way
+  - [x] add race position hud
+    - [x] add it
+    - [x] MP test
+
+- [x] refactor gamemodes
+  - [x] simplify code / use modular components 
+  - [x] Add time attack mode to event race circle, allow option to select diff races at same event circle
+  - [x] mid-race challenges
+    - [x] display in HUD during race
+    - [x] track who did longest wheelie / airtime
+    - [x] hud to show how to do trick
+    - [x] trick juice
+    - [x] Multiple trick options that changes every race
+    - [x] leaderboard order should go winner => loser desc, aka P1 should be first, unless stunt score is beating it.
 
 - [x] lag when ending stunt race / no tp option
 - [x] tapping brakes during full boost should stop it

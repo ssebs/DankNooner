@@ -34,7 +34,7 @@ content_margin_left = 12.0
 content_margin_top = 12.0
 content_margin_right = 12.0
 content_margin_bottom = 12.0
-bg_color = Color(0.13, 0.13, 0.13, 0.5019608)
+bg_color = Color(0, 0, 0, 0.6117647)
 border_width_left = 4
 border_width_top = 4
 border_width_right = 4
@@ -61,6 +61,7 @@ metadata/_custom_type_script = "uid://ce4n2xjrhv4j8"
 
 [node name="UI" type="Control" parent="." unique_id=1416178715]
 unique_name_in_owner = true
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -252,6 +253,7 @@ theme = ExtResource("1_whasa")
 
 [node name="EventPanel" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/ChallengeCluster" unique_id=1156886571]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 offset_right = 344.0
 offset_bottom = 184.0
@@ -263,28 +265,39 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="HUD_EventTitle" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane" unique_id=2138217353]
+[node name="TitleRow" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane" unique_id=1156886599]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+
+[node name="HUD_EventTitle" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane/TitleRow" unique_id=2138217353]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 
+[node name="HUD_EventProgress" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane/TitleRow" unique_id=1723272740]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 2
+autowrap_mode = 3
+
 [node name="HUD_EventStep" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane" unique_id=1247704292]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 
 [node name="HUD_EventObjective" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane" unique_id=1605934630]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-autowrap_mode = 3
-
-[node name="HUD_EventProgress" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane" unique_id=1723272740]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(320, 0)
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
 autowrap_mode = 3
 
 [node name="HUD_EventWarning" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane" unique_id=1935886846]
@@ -300,6 +313,7 @@ unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("99_rldbd")
+font_size = 18
 
 [node name="TrickPopups" type="Control" parent="UI/AspectContainer/MarginContainer" unique_id=1156886590]
 unique_name_in_owner = true

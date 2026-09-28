@@ -4,9 +4,12 @@
 ## container (which would snap them). Fed by RidingHUDState from the server's snapshot.
 class_name RaceLeaderboard extends Control
 
+## Cell font size; 0 keeps the theme's Label size.
+@export var font_size: int = 0
+
 const ROW_HEIGHT: float = 26.0
 ## Columns size to their widest text; the name column never shrinks below this.
-const NAME_MIN_WIDTH: float = 130.0
+const NAME_MIN_WIDTH: float = 60.0
 const CELL_PADDING: float = 16.0
 ## Duration of the slide to a new rank.
 const REORDER_SECS: float = 0.35
@@ -68,15 +71,19 @@ func clear() -> void:
 
 func _column_widths(headers: PackedStringArray, rows: Array) -> PackedFloat32Array:
 	var font := get_theme_font("font", "Label")
-	var font_size := get_theme_font_size("font_size", "Label")
+	var size := _font_size()
 	var widths := PackedFloat32Array()
 	for i in headers.size():
-		var w := font.get_string_size(headers[i], HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+		var w := font.get_string_size(headers[i], HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
 		for row in rows:
 			var text: String = row["cells"][i]
-			w = maxf(w, font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x)
+			w = maxf(w, font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x)
 		widths.append(maxf(w + CELL_PADDING, NAME_MIN_WIDTH if i == 0 else 0.0))
 	return widths
+
+
+func _font_size() -> int:
+	return font_size if font_size > 0 else get_theme_font_size("font_size", "Label")
 
 
 ## Header sits at rank -1, so data rank 0 is the second line.
@@ -105,6 +112,7 @@ func _set_cells(row: HBoxContainer, texts: PackedStringArray) -> void:
 		label.horizontal_alignment = (
 			HORIZONTAL_ALIGNMENT_LEFT if is_name else HORIZONTAL_ALIGNMENT_CENTER
 		)
+		label.add_theme_font_size_override("font_size", _font_size())
 		row.add_child(label)
 	for i in texts.size():
 		(row.get_child(i) as Label).text = texts[i]

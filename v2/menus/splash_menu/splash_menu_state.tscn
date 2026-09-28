@@ -7,7 +7,7 @@
 
 [node name="SplashMenuState" type="Node" unique_id=2055861891]
 script = ExtResource("1_4ta0w")
-splash_duration = 2.0
+splash_duration = 1.5
 
 [node name="UI" type="Control" parent="." unique_id=555581335]
 unique_name_in_owner = true

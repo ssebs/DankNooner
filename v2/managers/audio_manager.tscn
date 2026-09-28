@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://b27jgs5kv1310"]
 
 [ext_resource type="Script" uid="uid://d2dfqo7sswuem" path="res://managers/audio_manager.gd" id="1_1k0gc"]
+[ext_resource type="AudioStream" uid="uid://bn7qcrdlho8um" path="res://non_fmod_sounds/startup-3sec.ogg" id="2_f77kd"]
 [ext_resource type="Script" uid="uid://dk2ghd454wkc2" path="res://utils/custom_audio_middleware/sound_event.gd" id="2_snd"]
-[ext_resource type="AudioStream" uid="uid://kgx3srtrxr5l" path="res://non_fmod_sounds/startup.ogg" id="2_yaisj"]
 [ext_resource type="Script" uid="uid://dkuocwpht87sr" path="res://utils/custom_audio_middleware/engine_sound_event.gd" id="3_eng"]
 [ext_resource type="AudioStream" uid="uid://b6r8tjr3vvkog" path="res://non_fmod_sounds/Ninja500/quieter-loop-ninja-500.ogg" id="4_yaisj"]
 [ext_resource type="AudioStream" uid="uid://qq4jvxe1uuau" path="res://non_fmod_sounds/SFX/bowling-crash.ogg" id="6_201by"]
@@ -40,7 +40,7 @@ unique_name_in_owner = true
 
 [node name="Startup" type="AudioStreamPlayer" parent="Sounds" unique_id=1082903853]
 unique_name_in_owner = true
-stream = ExtResource("2_yaisj")
+stream = ExtResource("2_f77kd")
 bus = &"Menu"
 script = ExtResource("2_snd")
 
