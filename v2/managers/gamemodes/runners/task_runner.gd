@@ -2,7 +2,7 @@
 ## Base for composite runners (Sequential, Concurrent).
 ##
 ## Holds the deps shared by every runner so leaf tasks can address them via
-## `_runner.spawn_manager` / `_runner.task_hud` / `_runner.audio_manager`
+## `_runner.spawn_manager` / `_runner.task_hud` / `_runner.audio_manager` / `_runner.route`
 ## regardless of which runner type owns them.
 ##
 ## Subclasses override start/update/stop/notify_* to drive the per-peer walk.
@@ -19,6 +19,8 @@ signal respawn_requested(peer_id: int)
 var spawn_manager: SpawnManager
 var task_hud: TutorialHUDState
 var audio_manager: AudioManager
+## The event's EventRoute (grid, checkpoints) — null for events without one.
+var route: EventRoute
 
 
 ## Wire `_runner` on every child task and propagate deps + recurse into nested
@@ -33,4 +35,5 @@ func wire_task_refs() -> void:
 			c.spawn_manager = spawn_manager
 			c.task_hud = task_hud
 			c.audio_manager = audio_manager
+			c.route = route
 			c.wire_task_refs()

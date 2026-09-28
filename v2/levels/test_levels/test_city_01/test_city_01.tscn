@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://managers/gamemodes/resources/gamemode_event_definition.gd" id="4_dr5sf"]
 [ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="4_yaxf8"]
 [ext_resource type="Script" uid="uid://cks7nbapumc55" path="res://managers/gamemodes/tasks/speed_above_task.gd" id="7_spd"]
+[ext_resource type="Script" uid="uid://bjt7k3nrl24c8" path="res://managers/gamemodes/challenges/race_challenge.gd" id="8_20hdw"]
 [ext_resource type="Script" uid="uid://1hiltkmgy4i3" path="res://managers/gamemodes/runners/concurrent_task_runner.gd" id="8_cf4ia"]
 [ext_resource type="Script" uid="uid://cw2cdgs7dv7ww" path="res://managers/gamemodes/tasks/close_help_task.gd" id="8_hlp"]
 [ext_resource type="Script" uid="uid://8xvij2vjrnn2" path="res://managers/gamemodes/tasks/countdown_task.gd" id="9_7dagn"]
@@ -26,6 +27,8 @@
 [ext_resource type="Script" uid="uid://c7n5a4hmghfew" path="res://managers/gamemodes/tasks/hide_speech_bubble_task.gd" id="21_hide_sb"]
 [ext_resource type="Script" uid="uid://c8lp47thlfobx" path="res://managers/gamemodes/tasks/grid_respawn_task.gd" id="22_4paf4"]
 [ext_resource type="ArrayOccluder3D" uid="uid://c78oj3warrr3w" path="res://levels/test_levels/test_city_01/test_city_01.occ" id="26_dmi5q"]
+[ext_resource type="Script" uid="uid://pulnqxx1eaja" path="res://managers/gamemodes/gamemodeobjects/gamemode_event.gd" id="mig_event"]
+[ext_resource type="Script" uid="uid://cm4g6ptfwf37q" path="res://managers/gamemodes/gamemodeobjects/event_route.gd" id="mig_route"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2lumj"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -59,6 +62,7 @@ script = ExtResource("4_dr5sf")
 name = "City Race"
 description = "Testing the checkpoints & laps"
 target_gamemode = 1
+enable_npcs = true
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_mhobo"]
@@ -67,6 +71,7 @@ name = "MegaJump Race"
 description = "Testing the tricks"
 target_gamemode = 1
 forced_base_bike = ExtResource("20_2sj2k")
+enable_npcs = true
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_tcy6e"]
@@ -104,7 +109,7 @@ agent_max_climb = 0.5
 script = ExtResource("1_qt85o")
 player_spawn_pos = NodePath("PlayerSpawn")
 player_spawn_pos_debug = NodePath("PlayerSpawnTest")
-grid_markers = [NodePath("PlayerSpawn"), NodePath("PlayerSpawnTest"), NodePath("Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot3"), NodePath("Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot4"), NodePath("JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot1"), NodePath("JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask/RaceGridSpot2")]
+grid_markers = [NodePath("PlayerSpawn"), NodePath("PlayerSpawnTest"), NodePath("Race01Event/RaceTestEventStartCircle/Route/RaceGridSpot3"), NodePath("Race01Event/RaceTestEventStartCircle/Route/RaceGridSpot4"), NodePath("JumpEvent/RaceJumpEventStartCircle/Route/RaceGridSpot1"), NodePath("JumpEvent/RaceJumpEventStartCircle/Route/RaceGridSpot2")]
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=103075822]
@@ -2263,10 +2268,10 @@ depth = 2.0
 color_preset = 3
 
 [node name="CheckpointMarker" parent="Stuff/Tut01Location" unique_id=1048335829 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 217, 2.0499992, -95)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 217, 0.049995422, -95)
 
 [node name="CheckpointMarker2" parent="Stuff/Tut01Location" unique_id=1281968215 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 194, 2.0499992, -95)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 194, 0.049995422, -95)
 
 [node name="rampwall" parent="Stuff" unique_id=873398629 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 119, 4.0499997, 108.64206)
@@ -2290,24 +2295,27 @@ depth = 0.1
 
 [node name="TestEventStartCircle" parent="." unique_id=1014716352 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 81)
-gamemode_event = SubResource("Resource_i711f")
 
-[node name="SequentialTaskRunner" type="Node" parent="TestEventStartCircle" unique_id=2098834758]
+[node name="TutorialTEST" type="Node" parent="TestEventStartCircle" unique_id=1247244260]
+script = ExtResource("mig_event")
+definition = SubResource("Resource_i711f")
+
+[node name="SequentialTaskRunner" type="Node" parent="TestEventStartCircle/TutorialTEST" unique_id=2098834758]
 script = ExtResource("13_runner")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="Teleport_Start" type="Node" parent="TestEventStartCircle/SequentialTaskRunner" unique_id=1014716353 node_paths=PackedStringArray("marker")]
+[node name="Teleport_Start" type="Node" parent="TestEventStartCircle/TutorialTEST/SequentialTaskRunner" unique_id=1014716353 node_paths=PackedStringArray("marker")]
 script = ExtResource("9_ccoso")
-marker = NodePath("../../../Stuff/Tut01Location/Tutorial01StartMarker")
+marker = NodePath("../../../../Stuff/Tut01Location/Tutorial01StartMarker")
 
-[node name="ConcurrentTaskRunner" type="Node" parent="TestEventStartCircle/SequentialTaskRunner" unique_id=2080321246]
+[node name="ConcurrentTaskRunner" type="Node" parent="TestEventStartCircle/TutorialTEST/SequentialTaskRunner" unique_id=2080321246]
 script = ExtResource("8_cf4ia")
 
-[node name="CountdownStep1" type="Node" parent="TestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1010143940]
+[node name="CountdownStep1" type="Node" parent="TestEventStartCircle/TutorialTEST/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1010143940]
 script = ExtResource("9_7dagn")
 seconds = 2.0
 
-[node name="SFXTask" type="Node" parent="TestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=463781277]
+[node name="SFXTask" type="Node" parent="TestEventStartCircle/TutorialTEST/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=463781277]
 script = ExtResource("9_whmyo")
 sound = 3
 advance_mode = 1
@@ -2316,323 +2324,341 @@ metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
 [node name="Tutorial01EventStartCircle" parent="." unique_id=459761741 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 93)
-gamemode_event = SubResource("Resource_asds5")
 
-[node name="SequentialTaskRunner" type="Node" parent="Tutorial01EventStartCircle" unique_id=1305171110]
+[node name="TutorialMoto101" type="Node" parent="Tutorial01EventStartCircle" unique_id=1987635211]
+script = ExtResource("mig_event")
+definition = SubResource("Resource_asds5")
+
+[node name="SequentialTaskRunner" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101" unique_id=1305171110]
 script = ExtResource("13_runner")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="Teleport_Start" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=459761742 node_paths=PackedStringArray("marker")]
+[node name="Teleport_Start" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=459761742 node_paths=PackedStringArray("marker")]
 script = ExtResource("9_ccoso")
-marker = NodePath("../../../Stuff/Tut01Location/Tutorial01StartMarker")
+marker = NodePath("../../../../Stuff/Tut01Location/Tutorial01StartMarker")
 
-[node name="CloseHelp_ShowHelp" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=710662388]
+[node name="CloseHelp_ShowHelp" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=710662388]
 script = ExtResource("8_hlp")
 
-[node name="ConcurrentTaskRunner2" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=894900473]
+[node name="ConcurrentTaskRunner2" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=894900473]
 script = ExtResource("8_cf4ia")
 
-[node name="CountdownTask" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=799982134]
+[node name="CountdownTask" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=799982134]
 script = ExtResource("9_7dagn")
 metadata/_custom_type_script = "uid://8xvij2vjrnn2"
 
-[node name="SFXTask" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1939024796]
+[node name="SFXTask" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1939024796]
 script = ExtResource("9_whmyo")
 sound = 2
 advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="SpeedAbove_PressRT" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=1518672603]
+[node name="SpeedAbove_PressRT" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=1518672603]
 script = ExtResource("7_spd")
 min_speed = 2.0
 objective_key = "TUT_PRESS_RT"
 hint_key = "TUT_HINT_PRESS_RT"
 
-[node name="SpeedAbove_ReachSpeed" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=217992485]
+[node name="SpeedAbove_ReachSpeed" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=217992485]
 script = ExtResource("7_spd")
 
-[node name="ChangeGear" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=417285950]
+[node name="ChangeGear" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=417285950]
 script = ExtResource("9_gear")
 
-[node name="CountdownTask" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=686746654]
+[node name="CountdownTask" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=686746654]
 script = ExtResource("9_7dagn")
 seconds = 1.0
 show_hud = false
 metadata/_custom_type_script = "uid://8xvij2vjrnn2"
 
-[node name="Teleport_step2" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=550997663 node_paths=PackedStringArray("marker")]
+[node name="Teleport_step2" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=550997663 node_paths=PackedStringArray("marker")]
 script = ExtResource("9_ccoso")
-marker = NodePath("../../../Stuff/Tut01Location/Tutorial01CheckpointTest")
+marker = NodePath("../../../../Stuff/Tut01Location/Tutorial01CheckpointTest")
 
-[node name="EnterCheckpoint1" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=1365254219 node_paths=PackedStringArray("trigger")]
+[node name="EnterCheckpoint1" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=1365254219 node_paths=PackedStringArray("trigger")]
 script = ExtResource("12_25rwx")
 eval_when = 1
-trigger = NodePath("../../../Stuff/Tut01Location/CheckpointMarker")
+trigger = NodePath("../../../../Stuff/Tut01Location/CheckpointMarker")
 metadata/_custom_type_script = "uid://c22suxxblut73"
 
-[node name="SFXTask" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=729296987]
+[node name="SFXTask" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=729296987]
 script = ExtResource("9_whmyo")
 sound = 9
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="EnterCheckpoint2" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=325730336 node_paths=PackedStringArray("trigger")]
+[node name="EnterCheckpoint2" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=325730336 node_paths=PackedStringArray("trigger")]
 script = ExtResource("12_25rwx")
 eval_when = 1
-trigger = NodePath("../../../Stuff/Tut01Location/CheckpointMarker2")
+trigger = NodePath("../../../../Stuff/Tut01Location/CheckpointMarker2")
 metadata/_custom_type_script = "uid://c22suxxblut73"
 
-[node name="SFXTask2" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=795043335]
+[node name="SFXTask2" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=795043335]
 script = ExtResource("9_whmyo")
 sound = 9
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="Teleport_step" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=146409448 node_paths=PackedStringArray("marker")]
+[node name="Teleport_step" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=146409448 node_paths=PackedStringArray("marker")]
 script = ExtResource("9_ccoso")
-marker = NodePath("../../../Stuff/Tut01Location/Tutorial01StartMarker")
+marker = NodePath("../../../../Stuff/Tut01Location/Tutorial01StartMarker")
 
-[node name="WheelieDuration_Wheelie" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=2060995372]
+[node name="WheelieDuration_Wheelie" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=2060995372]
 script = ExtResource("10_wh")
 
-[node name="Teleport_step3" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=228101148 node_paths=PackedStringArray("marker")]
+[node name="Teleport_step3" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=228101148 node_paths=PackedStringArray("marker")]
 script = ExtResource("9_ccoso")
-marker = NodePath("../../../Stuff/Tut01Location/Tutorial01StartMarker")
+marker = NodePath("../../../../Stuff/Tut01Location/Tutorial01StartMarker")
 
-[node name="StoppieDuration_Stoppie" type="Node" parent="Tutorial01EventStartCircle/SequentialTaskRunner" unique_id=1257142628]
+[node name="StoppieDuration_Stoppie" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=1257142628]
 script = ExtResource("11_st")
 
 [node name="Race01Event" type="Node3D" parent="." unique_id=409874786]
 
 [node name="RaceTestEventStartCircle" parent="Race01Event" unique_id=423241463 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 131, -0.020000111, 81)
-gamemode_event = SubResource("Resource_cf4ia")
-enable_npcs = true
 
-[node name="SequentialTaskRunner" type="Node" parent="Race01Event/RaceTestEventStartCircle" unique_id=593871239]
+[node name="Route" type="Node3D" parent="Race01Event/RaceTestEventStartCircle" unique_id=1636586915]
+top_level = true
+script = ExtResource("mig_route")
+
+[node name="RaceGridSpot1" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/Route" unique_id=10711231]
+transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, 128, 0, 67)
+
+[node name="RaceGridSpot2" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/Route" unique_id=1583486806]
+transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, 128, 0, 72)
+
+[node name="RaceGridSpot3" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/Route" unique_id=366641358]
+transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, 124, 0, 67)
+
+[node name="RaceGridSpot4" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/Route" unique_id=1541205078]
+transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, 124, 0, 72)
+
+[node name="Race01CheckpointMarkerStartStop1" parent="Race01Event/RaceTestEventStartCircle/Route" unique_id=1805086722 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 137, 0.049997926, 70)
+width = 11.0
+
+[node name="Race01CheckpointMarker02" parent="Race01Event/RaceTestEventStartCircle/Route" unique_id=2103253634 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 197, 0.049997926, 70)
+width = 11.0
+
+[node name="Race01CheckpointMarker03" parent="Race01Event/RaceTestEventStartCircle/Route" unique_id=424970851 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 220, 0.049997926, 13)
+width = 11.0
+
+[node name="Race01CheckpointMarker04" parent="Race01Event/RaceTestEventStartCircle/Route" unique_id=1688146334 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 180, 0.049997926, 4.6809487e-06)
+width = 11.0
+
+[node name="Race01CheckpointMarker05" parent="Race01Event/RaceTestEventStartCircle/Route" unique_id=751767640 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 170, 0.049997926, -60.999992)
+width = 11.0
+
+[node name="Race01CheckpointMarker06" parent="Race01Event/RaceTestEventStartCircle/Route" unique_id=536711753 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(-2.1855695e-07, 0, 1, 0, 1, 0, -1, 0, -2.1855695e-07, 60, 0.049997926, -69.99999)
+width = 11.0
+
+[node name="Race01CheckpointMarker07" parent="Race01Event/RaceTestEventStartCircle/Route" unique_id=1832958492 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(-1, 0, -2.6226834e-07, 0, 1, 0, 2.6226834e-07, 0, -1, 50, 0.049997926, -7.9999924)
+width = 11.0
+
+[node name="Race01CheckpointMarker08" parent="Race01Event/RaceTestEventStartCircle/Route" unique_id=290029436 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 101, 0.049997926, 4.6809487e-06)
+width = 11.0
+
+[node name="Race01CheckpointMarker09" parent="Race01Event/RaceTestEventStartCircle/Route" unique_id=1180949922 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(-1, 0, -2.6226834e-07, 0, 1, 0, 2.6226834e-07, 0, -1, 110, 0.049997926, 60.000008)
+width = 11.0
+
+[node name="CityRace" type="Node" parent="Race01Event/RaceTestEventStartCircle" unique_id=498788711 node_paths=PackedStringArray("route")]
+script = ExtResource("mig_event")
+definition = SubResource("Resource_cf4ia")
+route = NodePath("../Route")
+
+[node name="SequentialTaskRunner" type="Node" parent="Race01Event/RaceTestEventStartCircle/CityRace" unique_id=593871239]
 script = ExtResource("13_runner")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="GridSpawnTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner" unique_id=181245019 node_paths=PackedStringArray("first_grid_marker")]
+[node name="GridSpawnTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/CityRace/SequentialTaskRunner" unique_id=181245019]
 script = ExtResource("18_mhobo")
-first_grid_marker = NodePath("RaceGridSpot1")
 
-[node name="RaceGridSpot1" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=10711231]
-transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, 128, 0, 67)
-
-[node name="RaceGridSpot2" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=1583486806]
-transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, 128, 0, 72)
-
-[node name="RaceGridSpot3" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=366641358]
-transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, 124, 0, 67)
-
-[node name="RaceGridSpot4" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=1541205078]
-transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, 124, 0, 72)
-
-[node name="ConcurrentTaskRunner2" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner" unique_id=814209640]
+[node name="ConcurrentTaskRunner2" type="Node" parent="Race01Event/RaceTestEventStartCircle/CityRace/SequentialTaskRunner" unique_id=814209640]
 script = ExtResource("8_cf4ia")
 
-[node name="CountdownTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1085385331]
+[node name="CountdownTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/CityRace/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1085385331]
 script = ExtResource("9_7dagn")
 metadata/_custom_type_script = "uid://8xvij2vjrnn2"
 
-[node name="SFXTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=2026933016]
+[node name="SFXTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/CityRace/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=2026933016]
 script = ExtResource("9_whmyo")
 sound = 2
 advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="RaceTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner" unique_id=1357241757 node_paths=PackedStringArray("first_checkpoint")]
+[node name="RaceTask" type="Node" parent="Race01Event/RaceTestEventStartCircle/CityRace/SequentialTaskRunner" unique_id=1357241757]
 script = ExtResource("18_ecphy")
-first_checkpoint = NodePath("Race01CheckpointMarkerStartStop1")
 total_laps = 2
-
-[node name="Race01CheckpointMarkerStartStop1" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1805086722 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 137, 0.050001144, 70)
-width = 11.0
-
-[node name="Race01CheckpointMarker02" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=2103253634 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 197, 0.050001144, 70)
-width = 11.0
-
-[node name="Race01CheckpointMarker03" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=424970851 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 220, 0.050001144, 13)
-width = 11.0
-
-[node name="Race01CheckpointMarker04" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1688146334 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 180, 0.050001144, 4.6809487e-06)
-width = 11.0
-
-[node name="Race01CheckpointMarker05" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=751767640 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 170, 0.050001144, -60.999992)
-width = 11.0
-
-[node name="Race01CheckpointMarker06" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=536711753 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-2.1855695e-07, 0, 1, 0, 1, 0, -1, 0, -2.1855695e-07, 60, 0.050001144, -69.99999)
-width = 11.0
-
-[node name="Race01CheckpointMarker07" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1832958492 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-1, 0, -2.6226834e-07, 0, 1, 0, 2.6226834e-07, 0, -1, 50, 0.050001144, -7.9999924)
-width = 11.0
-
-[node name="Race01CheckpointMarker08" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=290029436 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 101, 0.050001144, 4.6809487e-06)
-width = 11.0
-
-[node name="Race01CheckpointMarker09" parent="Race01Event/RaceTestEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1180949922 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-1, 0, -2.6226834e-07, 0, 1, 0, 2.6226834e-07, 0, -1, 110, 0.050001144, 60.000008)
-width = 11.0
 
 [node name="JumpEvent" type="Node3D" parent="." unique_id=2082413095]
 
 [node name="RaceJumpEventStartCircle" parent="JumpEvent" unique_id=787539754 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 255, -0.020000111, 11)
-gamemode_event = SubResource("Resource_mhobo")
-enable_npcs = true
 
-[node name="SequentialTaskRunner" type="Node" parent="JumpEvent/RaceJumpEventStartCircle" unique_id=916068132]
+[node name="Route" type="Node3D" parent="JumpEvent/RaceJumpEventStartCircle" unique_id=781751401]
+top_level = true
+script = ExtResource("mig_route")
+
+[node name="RaceGridSpot1" type="Marker3D" parent="JumpEvent/RaceJumpEventStartCircle/Route" unique_id=1837168242]
+transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 274, 0, 1)
+
+[node name="RaceGridSpot2" type="Marker3D" parent="JumpEvent/RaceJumpEventStartCircle/Route" unique_id=1494621042]
+transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 276, 0, 1)
+
+[node name="RaceGridSpot3" type="Marker3D" parent="JumpEvent/RaceJumpEventStartCircle/Route" unique_id=559746481]
+transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 270, 0, 1)
+
+[node name="RaceGridSpot4" type="Marker3D" parent="JumpEvent/RaceJumpEventStartCircle/Route" unique_id=1650787341]
+transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 272, 0, 1)
+
+[node name="Start1" parent="JumpEvent/RaceJumpEventStartCircle/Route" unique_id=1576775672 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 273, 0.050000906, 12)
+width = 21.0
+
+[node name="CheckpointMarker02" parent="JumpEvent/RaceJumpEventStartCircle/Route" unique_id=427359612 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 273, 0.050001442, 163)
+width = 21.0
+
+[node name="End" parent="JumpEvent/RaceJumpEventStartCircle/Route" unique_id=214077839 instance=ExtResource("4_yaxf8")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 273, 0.050000906, 199)
+width = 21.0
+
+[node name="MegaJumpRace" type="Node" parent="JumpEvent/RaceJumpEventStartCircle" unique_id=1908742542 node_paths=PackedStringArray("route")]
+script = ExtResource("mig_event")
+definition = SubResource("Resource_mhobo")
+route = NodePath("../Route")
+
+[node name="SequentialTaskRunner" type="Node" parent="JumpEvent/RaceJumpEventStartCircle/MegaJumpRace" unique_id=916068132]
 script = ExtResource("13_runner")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="GridSpawnTask" type="Node" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner" unique_id=830872795 node_paths=PackedStringArray("first_grid_marker")]
+[node name="GridSpawnTask" type="Node" parent="JumpEvent/RaceJumpEventStartCircle/MegaJumpRace/SequentialTaskRunner" unique_id=830872795]
 script = ExtResource("18_mhobo")
-first_grid_marker = NodePath("RaceGridSpot1")
 
-[node name="RaceGridSpot1" type="Marker3D" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=1837168242]
-transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 274, 0, 1)
-
-[node name="RaceGridSpot2" type="Marker3D" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=1494621042]
-transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 276, 0, 1)
-
-[node name="RaceGridSpot3" type="Marker3D" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=559746481]
-transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 270, 0, 1)
-
-[node name="RaceGridSpot4" type="Marker3D" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=1650787341]
-transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 272, 0, 1)
-
-[node name="ConcurrentTaskRunner2" type="Node" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner" unique_id=718711592]
+[node name="ConcurrentTaskRunner2" type="Node" parent="JumpEvent/RaceJumpEventStartCircle/MegaJumpRace/SequentialTaskRunner" unique_id=718711592]
 script = ExtResource("8_cf4ia")
 
-[node name="CountdownTask" type="Node" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=737842658]
+[node name="CountdownTask" type="Node" parent="JumpEvent/RaceJumpEventStartCircle/MegaJumpRace/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=737842658]
 script = ExtResource("9_7dagn")
 metadata/_custom_type_script = "uid://8xvij2vjrnn2"
 
-[node name="SFXTask" type="Node" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1221055616]
+[node name="SFXTask" type="Node" parent="JumpEvent/RaceJumpEventStartCircle/MegaJumpRace/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1221055616]
 script = ExtResource("9_whmyo")
 sound = 2
 advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="RaceTask" type="Node" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner" unique_id=1840106188 node_paths=PackedStringArray("first_checkpoint")]
+[node name="RaceTask" type="Node" parent="JumpEvent/RaceJumpEventStartCircle/MegaJumpRace/SequentialTaskRunner" unique_id=1840106188]
 script = ExtResource("18_ecphy")
-first_checkpoint = NodePath("Start1")
 total_laps = 1
-
-[node name="Start1" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=1576775672 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 273, 2.0500002, 12)
-width = 21.0
-
-[node name="CheckpointMarker02" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=427359612 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 273, 0.050000668, 163)
-width = 21.0
-
-[node name="End" parent="JumpEvent/RaceJumpEventStartCircle/SequentialTaskRunner/RaceTask" unique_id=214077839 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 273, 2.0500002, 199)
-width = 21.0
 
 [node name="Challenge01Event" type="Node3D" parent="." unique_id=963449666]
 
 [node name="Chall01EventStartCircle" parent="Challenge01Event" unique_id=1107517821 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 209, -0.01999998, -11)
-gamemode_event = SubResource("Resource_tcy6e")
 
-[node name="SequentialTaskRunner" type="Node" parent="Challenge01Event/Chall01EventStartCircle" unique_id=621649203]
+[node name="Route" type="Node3D" parent="Challenge01Event/Chall01EventStartCircle" unique_id=360356363]
+top_level = true
+script = ExtResource("mig_route")
+
+[node name="RaceGridSpot1" type="Marker3D" parent="Challenge01Event/Chall01EventStartCircle/Route" unique_id=1181169093]
+transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 223, 0, -74)
+
+[node name="RaceGridSpot2" type="Marker3D" parent="Challenge01Event/Chall01EventStartCircle/Route" unique_id=322445514]
+transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 223, 0, -69)
+
+[node name="RaceGridSpot3" type="Marker3D" parent="Challenge01Event/Chall01EventStartCircle/Route" unique_id=349276639]
+transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 219, 0, -74)
+
+[node name="RaceGridSpot4" type="Marker3D" parent="Challenge01Event/Chall01EventStartCircle/Route" unique_id=873962186]
+transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 219, 0, -69)
+
+[node name="WheelieChallenge" type="Node" parent="Challenge01Event/Chall01EventStartCircle" unique_id=248616427 node_paths=PackedStringArray("route")]
+script = ExtResource("mig_event")
+definition = SubResource("Resource_tcy6e")
+route = NodePath("../Route")
+
+[node name="SequentialTaskRunner" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge" unique_id=621649203]
 script = ExtResource("13_runner")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="GridSpawnTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=84680729 node_paths=PackedStringArray("first_grid_marker")]
+[node name="GridSpawnTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge/SequentialTaskRunner" unique_id=84680729]
 script = ExtResource("18_mhobo")
-first_grid_marker = NodePath("RaceGridSpot1")
 
-[node name="RaceGridSpot1" type="Marker3D" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=1181169093]
-transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 223, 0, -74)
-
-[node name="RaceGridSpot2" type="Marker3D" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=322445514]
-transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 223, 0, -69)
-
-[node name="RaceGridSpot3" type="Marker3D" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=349276639]
-transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 219, 0, -74)
-
-[node name="RaceGridSpot4" type="Marker3D" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/GridSpawnTask" unique_id=873962186]
-transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 219, 0, -69)
-
-[node name="ConcurrentTaskRunner2" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=1367704726]
+[node name="ConcurrentTaskRunner2" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge/SequentialTaskRunner" unique_id=1367704726]
 script = ExtResource("8_cf4ia")
 
-[node name="CountdownTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1073588017]
+[node name="CountdownTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1073588017]
 script = ExtResource("9_7dagn")
 metadata/_custom_type_script = "uid://8xvij2vjrnn2"
 
-[node name="SFXTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=386819100]
+[node name="SFXTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=386819100]
 script = ExtResource("9_whmyo")
 sound = 2
 advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="WheelieStep" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=2143000001]
+[node name="WheelieStep" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge/SequentialTaskRunner" unique_id=2143000001]
 script = ExtResource("8_cf4ia")
 
-[node name="ShowSpeechBubbleTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/WheelieStep" unique_id=2143000002 node_paths=PackedStringArray("speech_bubble")]
+[node name="ShowSpeechBubbleTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge/SequentialTaskRunner/WheelieStep" unique_id=2143000002 node_paths=PackedStringArray("speech_bubble")]
 script = ExtResource("20_xfcmg")
-speech_bubble = NodePath("../../../SpeechBubble")
+speech_bubble = NodePath("../../../../SpeechBubble")
 text_key = "Do a wheelie!"
 
-[node name="PerformTrickTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/WheelieStep" unique_id=543026042]
+[node name="PerformTrickTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge/SequentialTaskRunner/WheelieStep" unique_id=543026042]
 script = ExtResource("20_tcy6e")
 min_duration = 2.0
 metadata/_custom_type_script = "uid://07fvlfaumhio"
 
-[node name="GridRespawnTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=1919080941 node_paths=PackedStringArray("grid_spawn_task")]
+[node name="GridRespawnTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge/SequentialTaskRunner" unique_id=1919080941]
 script = ExtResource("22_4paf4")
-grid_spawn_task = NodePath("../GridSpawnTask")
 
-[node name="StoppieStep" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=2143000003]
+[node name="StoppieStep" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge/SequentialTaskRunner" unique_id=2143000003]
 script = ExtResource("8_cf4ia")
 
-[node name="ShowSpeechBubbleTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/StoppieStep" unique_id=2143000004 node_paths=PackedStringArray("speech_bubble")]
+[node name="ShowSpeechBubbleTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge/SequentialTaskRunner/StoppieStep" unique_id=2143000004 node_paths=PackedStringArray("speech_bubble")]
 script = ExtResource("20_xfcmg")
-speech_bubble = NodePath("../../../SpeechBubble")
+speech_bubble = NodePath("../../../../SpeechBubble")
 text_key = "Do a stoppie!"
 
-[node name="PerformTrickTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/StoppieStep" unique_id=591009744]
+[node name="PerformTrickTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge/SequentialTaskRunner/StoppieStep" unique_id=591009744]
 script = ExtResource("20_tcy6e")
 required_trick = 3
 min_duration = 1.0
 metadata/_custom_type_script = "uid://07fvlfaumhio"
 
-[node name="GridRespawnTask2" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=965551641 node_paths=PackedStringArray("grid_spawn_task")]
+[node name="GridRespawnTask2" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge/SequentialTaskRunner" unique_id=965551641]
 script = ExtResource("22_4paf4")
-grid_spawn_task = NodePath("../GridSpawnTask")
 
-[node name="TwoLeftFeetStep" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=2143000005]
+[node name="TwoLeftFeetStep" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge/SequentialTaskRunner" unique_id=2143000005]
 script = ExtResource("8_cf4ia")
 
-[node name="ShowSpeechBubbleTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/TwoLeftFeetStep" unique_id=2143000006 node_paths=PackedStringArray("speech_bubble")]
+[node name="ShowSpeechBubbleTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge/SequentialTaskRunner/TwoLeftFeetStep" unique_id=2143000006 node_paths=PackedStringArray("speech_bubble")]
 script = ExtResource("20_xfcmg")
-speech_bubble = NodePath("../../../SpeechBubble")
+speech_bubble = NodePath("../../../../SpeechBubble")
 text_key = "Two left feet!"
 
-[node name="PerformTrickTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner/TwoLeftFeetStep" unique_id=1134964111]
+[node name="PerformTrickTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge/SequentialTaskRunner/TwoLeftFeetStep" unique_id=1134964111]
 script = ExtResource("20_tcy6e")
 required_trick = 9
 min_duration = 0.5
 metadata/_custom_type_script = "uid://07fvlfaumhio"
 
-[node name="HideSpeechBubbleTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/SequentialTaskRunner" unique_id=2143000007 node_paths=PackedStringArray("speech_bubble")]
+[node name="HideSpeechBubbleTask" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge/SequentialTaskRunner" unique_id=2143000007 node_paths=PackedStringArray("speech_bubble")]
 script = ExtResource("21_hide_sb")
-speech_bubble = NodePath("../../SpeechBubble")
+speech_bubble = NodePath("../../../SpeechBubble")
 
 [node name="SpeechBubble" parent="Challenge01Event/Chall01EventStartCircle" unique_id=2002413482 instance=ExtResource("21_dn2hu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 0, -45)

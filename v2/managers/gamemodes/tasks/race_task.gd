@@ -1,10 +1,10 @@
 @tool
-## Race body task — per-peer lap + checkpoint tracking for street race.
+## Race body task — per-peer lap + checkpoint tracking for every RaceGameMode type.
 ##
 ## Watches multiple CheckPointMarkers directly via their `entered` signal
 ## instead of using the runner's single-`trigger` system.
 ##
-## The route is this task's CheckPointMarker children, in tree order. A first child named
+## The route is the EventRoute's CheckPointMarkers, in tree order. A first marker named
 ## `…StartStop1` is both start and finish (a lap circuit: StartStop1 -> 2 -> 3 … -> StartStop1);
 ## otherwise it's point-to-point (first = start, last = finish).
 ##
@@ -15,9 +15,6 @@ class_name RaceTask extends GameModeTask
 
 enum WaitFor {START, LAP_CP, END}
 
-## Signpost only — assign the first CheckPointMarker child so a fresh node shows in the inspector
-## that children are expected. The live route is auto-collected from the children (on_enter).
-@export var first_checkpoint: CheckPointMarker
 @export var total_laps: int = 3
 @export var objective_key: String = "RACE_OBJECTIVE"
 ## Wrong-way warning fires once a racer is this many meters past their closest approach to the
@@ -28,7 +25,7 @@ const WRONG_WAY_MIN_SPEED: float = 5.0
 ## Going the wrong way this long respawns the racer at their last checkpoint.
 const WRONG_WAY_RESPAWN_MS: int = 3000
 
-## Derived from the children by _collect_checkpoints().
+## Derived from the route by _collect_checkpoints().
 var start_checkpoint: CheckPointMarker
 var lap_checkpoints: Array[CheckPointMarker] = []
 var end_checkpoint: CheckPointMarker
@@ -174,14 +171,8 @@ func get_npc_respawn_checkpoint(npc_id: int) -> CheckPointMarker:
 #region Checkpoint signal wiring
 
 
-func _get_child_checkpoints() -> Array[CheckPointMarker]:
-	var checkpoints: Array[CheckPointMarker] = []
-	checkpoints.assign(find_children("*", "CheckPointMarker", false))
-	return checkpoints
-
-
 func _collect_checkpoints() -> void:
-	var checkpoints := _get_child_checkpoints()
+	var checkpoints := _runner.route.get_checkpoints()
 	start_checkpoint = checkpoints[0]
 	if "StartStop" in start_checkpoint.name:
 		end_checkpoint = start_checkpoint
@@ -261,7 +252,7 @@ func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
 		# A new lap clears the passed highlights before this crossing re-marks its gate.
 		if p["waiting_for"] == WaitFor.END and p["laps_done"] + 1 < total_laps:
 			_rpc_reset_checkpoints.rpc_id(peer_id)
-		_rpc_checkpoint_passed.rpc_id(peer_id, _get_child_checkpoints().find(ckpt))
+		_rpc_checkpoint_passed.rpc_id(peer_id, _runner.route.get_checkpoints().find(ckpt))
 		p["best_dist"] = INF
 
 	match p["waiting_for"]:
@@ -341,20 +332,32 @@ func get_progress_key(racer_id: int, racer_pos: Vector3) -> float:
 	return _expected_ordinal(p) * 1e6 - dist
 
 
-## 1-based race position among all live racers ("P2/6").
-func _position_text(peer_id: int) -> String:
-	var scores: Dictionary[int, float] = {}
+## 1-based race position among all live racers, humans and NPCs.
+func get_race_position(racer_id: int) -> int:
+	var keys := _live_progress_keys()
+	var pos := 1
+	for id in keys:
+		if keys[id] > keys[racer_id]:
+			pos += 1
+	return pos
+
+
+## racer_id -> get_progress_key for every racer in the scene.
+func _live_progress_keys() -> Dictionary[int, float]:
+	var keys: Dictionary[int, float] = {}
 	for racer in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Racers"]):
 		var id := int(racer.name)
 		# Traffic and disconnected/stale rows aren't competitors — skip is intentional.
 		if racer.is_in_group(UtilsConstants.GROUPS["Traffic"]) or !_peer_progress.has(id):
 			continue
-		scores[id] = get_progress_key(id, (racer as Node3D).global_position)
-	var pos := 1
-	for id in scores:
-		if scores[id] > scores[peer_id]:
-			pos += 1
-	return tr("RACE_POSITION").format({"pos": pos, "total": scores.size()})
+		keys[id] = get_progress_key(id, (racer as Node3D).global_position)
+	return keys
+
+
+## "P2/6".
+func _position_text(peer_id: int) -> String:
+	var total := _live_progress_keys().size()
+	return tr("RACE_POSITION").format({"pos": get_race_position(peer_id), "total": total})
 
 
 func _after_start_or_lap_advance(p: Dictionary) -> void:
@@ -364,15 +367,15 @@ func _after_start_or_lap_advance(p: Dictionary) -> void:
 		p["waiting_for"] = WaitFor.END
 
 
+## Point-to-point (one lap) shows just the running clock.
 func _push_lap_hud(peer_id: int, p: Dictionary) -> void:
 	var current_lap: int = min(p["laps_done"] + 1, total_laps)
 	var elapsed_ms: int = Time.get_ticks_msec() - p["start_ms"]
 	var minutes := elapsed_ms / 60000
 	var secs := (elapsed_ms % 60000) / 1000.0
-	var time_str := "%d:%05.2f" % [minutes, secs]
-	var text := tr("RACE_LAP").format(
-		{"current": current_lap, "total": total_laps, "time": time_str}
-	)
+	var text := "%d:%05.2f" % [minutes, secs]
+	if total_laps > 1:
+		text = tr("RACE_LAP").format({"current": current_lap, "total": total_laps, "time": text})
 	_runner.task_hud.rpc_update_progress.rpc_id(peer_id, "%s  -  %s" % [_position_text(peer_id), text])
 
 
@@ -380,29 +383,21 @@ func _push_lap_hud(peer_id: int, p: Dictionary) -> void:
 @rpc("call_local", "reliable")
 func _rpc_checkpoint_passed(ckpt_idx: int) -> void:
 	_runner.audio_manager.play_mouse_click()
-	_get_child_checkpoints()[ckpt_idx].play_passed()
+	_runner.route.get_checkpoints()[ckpt_idx].play_passed()
 
 
 @rpc("call_local", "reliable")
 func _rpc_reset_checkpoints() -> void:
-	for ckpt in _get_child_checkpoints():
+	for ckpt in _runner.route.get_checkpoints():
 		ckpt.reset_passed()
 
 
 #endregion
 
 
+## Route checks live on GameModeEvent / EventRoute — they see both the task and the route.
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues := super()
-	var checkpoints := _get_child_checkpoints()
-	if first_checkpoint == null:
-		issues.append("assign first_checkpoint — CheckPointMarker children are required (auto-collected at runtime)")
-	elif checkpoints.size() < 2:
-		issues.append("needs at least 2 CheckPointMarker children")
-	elif not checkpoints[0].name.ends_with("1"):
-		issues.append("first CheckPointMarker should be named ending in \"1\" so route order counts up")
-	elif total_laps > 1 and not "StartStop" in checkpoints[0].name:
-		issues.append("lap races need the first CheckPointMarker named ending in \"StartStop1\"")
 	if total_laps <= 0:
 		issues.append("total_laps must be > 0")
 	return issues

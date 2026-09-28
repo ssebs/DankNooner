@@ -6,7 +6,7 @@
 ## Count, car/bike mix, cruise speed and the vehicle rosters are all per-map — see
 ## LevelDefinition.traffic_settings.
 ##
-## FreeRoamGameMode and StreetRaceGameMode start/stop it — see start_traffic /
+## FreeRoamGameMode and RaceGameMode's TrafficComponent start/stop it — see start_traffic /
 ## stop_traffic. Kept standalone from NPCRaceManager on purpose (see the Traffic AI
 ## plan); the two share the spawn RPC shape but nothing else.
 class_name NPCTrafficManager extends BaseManager

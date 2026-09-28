@@ -41,6 +41,7 @@ func start(peer_ids: Array) -> void:
 			task.spawn_manager = spawn_manager
 			task.task_hud = task_hud
 			task.audio_manager = audio_manager
+			task.route = route
 	if multiplayer.is_server():
 		_wire_objective_signals()
 	_running = true

@@ -89,28 +89,28 @@ EventStartCircle                       picker lists its GameModeEvent children
 
 ### 1 — `RunnerGameMode` extraction (pure refactor)
 
-- [ ] Create `RunnerGameMode`; move shared plumbing out of the 5 runner modes.
-- [ ] Port Tutorial, Challenge, Road, Street, Stunt onto it. No behavior change.
+- [x] Create `RunnerGameMode`; move shared plumbing out of the 5 runner modes.
+- [x] Port Tutorial, Challenge, Road, Street, Stunt onto it. No behavior change.
 - **Verify:** lint; human plays each mode (tutorial, challenge, road, street, stunt race).
 
 ### 2 — `RaceGameMode` + components
 
-- [ ] `RaceGameMode` with `race_type` + per-type configuration warnings.
-- [ ] Components per the table (KnockoutScoring deferred).
-- [ ] Fold `StuntRaceTask` into `RaceTask`: collect `PickupSpawner`s, lap text only when
+- [x] `RaceGameMode` with `race_type` + per-type configuration warnings.
+- [x] Components per the table (KnockoutScoring deferred).
+- [x] Fold `StuntRaceTask` into `RaceTask`: collect `PickupSpawner`s, lap text only when
   `total_laps > 1`. Delete `StuntRaceTask`.
-- [ ] Delete Road/Street/Stunt gamemodes; update `GamemodeManager` map + `main_game.tscn`.
-- [ ] Remap `Kind` ints in the 3 level scenes.
-- [ ] `camera_controller._is_street_racing()` → `RACE`/`STUNT_RACE` with traffic enabled.
-- [ ] `NPCRaceManager` / traffic docstrings that name the deleted classes.
+- [x] Delete Road/Street/Stunt gamemodes; update `GamemodeManager` map + `main_game.tscn`.
+- [x] Remap `Kind` ints in the 3 level scenes.
+- [x] `camera_controller._is_street_racing()` → `RACE`/`STUNT_RACE` with traffic enabled.
+- [x] `NPCRaceManager` / traffic docstrings that name the deleted classes.
 - **Verify:** lint; road race, traffic race, stunt race all play as before.
 
 ### 3 — `EventRoute` + `GameModeEvent` + picker
 
-- [ ] `EventRoute`, `GameModeEvent`, runner `route` propagation, tasks read from route.
-- [ ] `EventStartCircle` lists events; drop the graybox `in_task` hack.
-- [ ] Confirm HUD picker; `change_gamemode` / `_rpc_transition_gamemode` take the event path.
-- [ ] Migrate circles: `stunt_track_01` (5), `racetrack_level_01`, `test_city_01` (incl. tutorial).
+- [x] `EventRoute`, `GameModeEvent`, runner `route` propagation, tasks read from route.
+- [x] `EventStartCircle` lists events; drop the graybox `in_task` hack.
+- [x] Confirm HUD picker; `change_gamemode` / `_rpc_transition_gamemode` take the event path.
+- [x] Migrate circles: `stunt_track_01` (5), `racetrack_level_01`, `test_city_01` (incl. tutorial).
 - **Verify:** lint; each circle's events selectable + playable; props show/hide per event.
 
 ### 4 — Time Attack

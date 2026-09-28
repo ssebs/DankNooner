@@ -261,10 +261,14 @@ func _get_tps_base_yaw() -> float:
 	return player_entity.global_rotation.y
 
 
-## The minimap's live checkpoint (null pre-race / after finishing) doubles as the "racing" signal.
+## A race event with traffic. The minimap's live checkpoint (null pre-race / after finishing)
+## doubles as the "racing" signal.
 func _is_street_racing() -> bool:
+	var event := player_entity.gamemode_manager.current_event
 	return (
-		player_entity.gamemode_manager.current_game_mode == GameModeType.Kind.STREET_RACE
+		event != null
+		and event.definition.target_gamemode in [GameModeType.Kind.RACE, GameModeType.Kind.STUNT_RACE]
+		and event.definition.enable_traffic
 		and player_entity.hud_manager.riding_hud_state._minimap.has_checkpoint
 	)
 

@@ -1,16 +1,11 @@
 @tool
+## Level-placed trigger for its GameModeEvent children — entering it opens the event picker in
+## free roam. Also owns show/hide of the events' props (see set_active_event).
 class_name EventStartCircle extends Area3D
 
-## Emitted with a reference to *this* circle so consumers can pull
-## `gamemode_event` and `get_runners()` off it.
+## Emitted with a reference to *this* circle so consumers can pull get_events() off it.
 signal entered_event_circle(peer_id: int, event_start_circle: EventStartCircle)
 signal exited_event_circle(peer_id: int, event_start_circle: EventStartCircle)
-
-## TODO - show multiple events & be able to select them
-@export var gamemode_event: GameModeEventDefinition
-## Fill empty grid slots with AI racers for this event. Only used by race
-## gamemodes (tutorials and other non-race events leave this off).
-@export var enable_npcs: bool = false
 
 @onready var event_label: Label3D = %Label3D
 
@@ -20,47 +15,39 @@ func _ready():
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 
-	event_label.text = tr(gamemode_event.name)
+	var names := PackedStringArray()
+	for event in get_events():
+		names.append(tr(event.definition.name))
+	event_label.text = "\n".join(names)
 
 
-## Runners are children of this circle, in tree order. Other children
-## (Marker3D, CheckpointMarker, TriggerZone) are ignored — they're referenced
-## by individual tasks via @export.
-func get_runners() -> Array[TaskRunner]:
-	var out: Array[TaskRunner] = []
+func get_events() -> Array[GameModeEvent]:
+	var out: Array[GameModeEvent] = []
 	for c in get_children():
-		if c is TaskRunner:
+		if c is GameModeEvent:
 			out.append(c)
 	return out
 
 
-## Enable/disable every GameModeObject under this circle (checkpoints, killboxes,
-## etc.) so an event's props only show + collide while its gamemode is running.
-## The circle itself is an Area3D, not a GameModeObject, so its ring/label stay.
-func enable_game_objects():
-	_set_game_objects_active(self, true)
+## Show + collide only `active_event`'s props; null hides them all (free roam). Routes are toggled
+## per event; any other GameModeObject under the circle belongs to every event on it. The circle
+## itself is an Area3D, not a GameModeObject, so its ring/label stay.
+func set_active_event(active_event: GameModeEvent):
+	_set_game_objects_active(self, active_event != null)
+	for event in get_events():
+		if event.route != null:
+			event.route.set_active(false)
+	if active_event != null and active_event.route != null:
+		active_event.route.set_active(true)
 
 
-func disable_game_objects():
-	_set_game_objects_active(self, false)
-
-
-## `in_task` tracks whether we've descended into a GameModeTask yet. Plain graybox props
-## parked under a task (race barriers, ramps) belong to the event just as much as the
-## checkpoints do, but they aren't GameModeObjects so nothing was hiding them. Scoped to
-## tasks on purpose: this circle's own Floor is a graybox too, and it has to stay put.
-func _set_game_objects_active(node: Node, active: bool, in_task: bool = false):
+func _set_game_objects_active(node: Node, active: bool):
 	for child in node.get_children():
-		var child_in_task := in_task or child is GameModeTask
+		if child is EventRoute:
+			continue
 		if child is GameModeObject:
 			child.is_active = active
-		elif child_in_task and child is GrayBoxStaticBody:
-			child.visible = active
-			# An invisible wall is worse than a visible one — drop collision too, the
-			# same thing GameModeObject._apply_active_state does for its own shapes.
-			for shape in child.find_children("*", "CollisionShape3D", true, false):
-				shape.disabled = not active
-		_set_game_objects_active(child, active, child_in_task)
+		_set_game_objects_active(child, active)
 
 
 func _on_body_entered(body: Node3D):
@@ -73,3 +60,10 @@ func _on_body_exited(body: Node3D):
 	if !body is PlayerEntity:
 		return
 	exited_event_circle.emit(int(body.name), self)
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var issues: PackedStringArray = []
+	if get_events().is_empty():
+		issues.append("needs at least one GameModeEvent child")
+	return issues

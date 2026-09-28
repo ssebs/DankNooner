@@ -16,6 +16,8 @@ const ROUND_SECS: float = 60.0
 const LEADERBOARD_REFRESH_SECS: float = 0.25
 
 var _ctx: GamemodeStateContext
+## The circle whose event picker is open — its events are what the picker indexes.
+var _entered_circle: EventStartCircle
 ## peer_id -> points banked this round. Server only.
 var _round_points: Dictionary[int, float] = {}
 var _round_left: float = ROUND_SECS
@@ -48,7 +50,7 @@ func Enter(state_context: StateContext):
 	# Hide + disable every event's objects (checkpoints, etc.) â€” they only show
 	# while their own gamemode is running. Initial-load default and return path.
 	for event_start_circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
-		(event_start_circle as EventStartCircle).disable_game_objects()
+		(event_start_circle as EventStartCircle).set_active_event(null)
 
 	# Only spawn if players aren't already in the level (e.g. coming from another gamemode)
 	if spawn_manager._get_player_by_peer_id(multiplayer.get_unique_id()) == null:
@@ -103,13 +105,16 @@ func _signals_event_circles(should_connect: bool):
 
 
 func _on_event_circle_entered(peer_id: int, source_circle: EventStartCircle):
-	var ev := source_circle.gamemode_event
-	DebugUtils.DebugMsg("%d entered eventcircle: %s" % [peer_id, ev.name])
+	DebugUtils.DebugMsg("%d entered eventcircle: %s" % [peer_id, source_circle.name])
 
-	_ctx.gamemode_event = ev
-	_ctx.event_start_circle = source_circle
+	_entered_circle = source_circle
+	var names := PackedStringArray()
+	var descriptions := PackedStringArray()
+	for event in source_circle.get_events():
+		names.append(event.definition.name)
+		descriptions.append(event.definition.description)
 
-	game_mode_event_hud_state.on_player_entered_circle.rpc_id(1, peer_id, ev.name, ev.description)
+	game_mode_event_hud_state.on_player_entered_circle.rpc_id(1, peer_id, names, descriptions)
 
 	# connect hud signals
 	if not game_mode_event_hud_state.hud_submitted.is_connected(
@@ -121,7 +126,7 @@ func _on_event_circle_entered(peer_id: int, source_circle: EventStartCircle):
 
 
 func _on_event_circle_exited(peer_id: int, source_circle: EventStartCircle):
-	DebugUtils.DebugMsg("%d exited eventcircle: %s" % [peer_id, source_circle.gamemode_event.name])
+	DebugUtils.DebugMsg("%d exited eventcircle: %s" % [peer_id, source_circle.name])
 
 	if game_mode_event_hud_state.hud_submitted.is_connected(
 		_on_game_mode_event_confirm_hud_submitted
@@ -133,11 +138,12 @@ func _on_event_circle_exited(peer_id: int, source_circle: EventStartCircle):
 	game_mode_event_hud_state.on_player_close_pressed.rpc_id(1, peer_id)
 
 
-func _on_game_mode_event_confirm_hud_submitted(peer_id: int):
+func _on_game_mode_event_confirm_hud_submitted(peer_id: int, event_index: int):
 	DebugUtils.DebugMsg("Starting Event... %d" % peer_id)
 	game_mode_event_hud_state.on_player_close_pressed.rpc_id(1, peer_id)
+	var event := _entered_circle.get_events()[event_index]
 	gamemode_manager.change_gamemode.rpc_id(
-		1, _ctx.gamemode_event.target_gamemode, peer_id, _ctx.event_start_circle.get_path()
+		1, event.definition.target_gamemode, peer_id, event.get_path()
 	)
 
 

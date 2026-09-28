@@ -14,6 +14,11 @@ var description: String = "Sunt nisi id proident veniam ad laboris pariatur mini
 ## Restored from lobby_players on exit back to free roam. Leave null for no override.
 @export var forced_base_bike: BikeSkinDefinition = null
 
+## Race events only (RaceGameMode's NPCRacersComponent): fill empty grid slots with AI racers.
+@export var enable_npcs: bool = false
+## Race events only (RaceGameMode's TrafficComponent): run ambient traffic during the race.
+@export var enable_traffic: bool = false
+
 ## Passive whole-race side-challenges (e.g. longest wheelie), one column each on the live
-## leaderboard and results screen. Read by StuntRaceGameMode. Leave empty for none.
+## leaderboard and results screen. Read by RaceGameMode's ChallengesComponent. Leave empty for none.
 @export var race_challenges: Array[RaceChallenge] = []

@@ -31,16 +31,16 @@ enum MatchState {
 @export var loading_menu_state: MenuState
 
 @export var free_roam_mode: FreeRoamGameMode
-@export var road_race_mode: RoadRaceGameMode
-## Same race as road_race_mode but run through live traffic.
-@export var street_race_mode: StreetRaceGameMode
-@export var stunt_race_mode: StuntRaceGameMode
+@export var race_mode: RaceGameMode
+@export var stunt_race_mode: RaceGameMode
 @export var tutorial_mode: TutorialGameMode
 @export var challenge_mode: ChallengeGameMode
 
 var match_state: MatchState = MatchState.IN_LOBBY
 var current_game_mode: GameModeType.Kind = GameModeType.Kind.FREE_ROAM
 var current_level_name: LevelManager.LevelName = LevelManager.LevelName.LEVEL_SELECT_LABEL
+## The running event, set on every peer by the transition; null in free roam.
+var current_event: GameModeEvent
 
 var _gamemode_map: Dictionary[GameModeType.Kind,GameModeType] = {}
 
@@ -51,8 +51,7 @@ func _ready():
 
 	_gamemode_map = {
 		GameModeType.Kind.FREE_ROAM: free_roam_mode,
-		GameModeType.Kind.ROAD_RACE: road_race_mode,
-		GameModeType.Kind.STREET_RACE: street_race_mode,
+		GameModeType.Kind.RACE: race_mode,
 		GameModeType.Kind.STUNT_RACE: stunt_race_mode,
 		GameModeType.Kind.TUTORIAL: tutorial_mode,
 		GameModeType.Kind.CHALLENGE: challenge_mode,
@@ -98,7 +97,7 @@ func start_game(
 ## Server receives request to change gamemode, broadcasts to all peers
 @rpc("any_peer", "call_local", "reliable")
 func change_gamemode(
-	gamemode: GameModeType.Kind, peer_id: int, event_start_circle_path: NodePath = ^"",
+	gamemode: GameModeType.Kind, peer_id: int, event_path: NodePath = ^"",
 	skip_spawn_redistribute: bool = false
 ):
 	if !multiplayer.is_server():
@@ -113,25 +112,25 @@ func change_gamemode(
 		return
 
 	current_game_mode = gamemode
-	_rpc_transition_gamemode.rpc(gamemode, peer_id, event_start_circle_path, skip_spawn_redistribute)
+	_rpc_transition_gamemode.rpc(gamemode, peer_id, event_path, skip_spawn_redistribute)
 
 
 ## All peers transition their state machine to the new gamemode.
-## event_start_circle_path is resolved locally on each peer because EventStartCircle
-## refs can't cross RPC boundaries — the path is the same on every peer's level scene.
+## event_path (a GameModeEvent) is resolved locally on each peer because node refs
+## can't cross RPC boundaries — the path is the same on every peer's level scene.
 @rpc("call_local", "reliable")
 func _rpc_transition_gamemode(
-	gamemode: GameModeType.Kind, peer_id: int, event_start_circle_path: NodePath = ^"",
+	gamemode: GameModeType.Kind, peer_id: int, event_path: NodePath = ^"",
 	skip_spawn_redistribute: bool = false
 ):
 	var ctx := GamemodeStateContext.new()
 	ctx.peer_id = peer_id
 	ctx.skip_spawn_redistribute = skip_spawn_redistribute
-	if !event_start_circle_path.is_empty():
-		var circle := get_node(event_start_circle_path) as EventStartCircle
-		ctx.event_start_circle = circle
-		ctx.gamemode_event = circle.gamemode_event
-		_apply_forced_base_bike(circle.gamemode_event)
+	current_event = null
+	if !event_path.is_empty():
+		current_event = get_node(event_path) as GameModeEvent
+		ctx.event = current_event
+		_apply_forced_base_bike(current_event.definition)
 	else:
 		# No event context (e.g. returning to free roam) — restore each player's lobby bike.
 		_restore_lobby_bikes()
@@ -171,6 +170,7 @@ func _restore_lobby_bikes() -> void:
 func end_game():
 	match_state = MatchState.IN_LOBBY
 	current_level_name = LevelManager.LevelName.LEVEL_SELECT_LABEL
+	current_event = null
 
 	# Exit the active gamemode state so re-entering the same gamemode next match
 	# still runs Enter() (otherwise StateMachine's same-state early-return skips player spawn).
@@ -322,10 +322,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("loading_menu_state must not be empty")
 	if free_roam_mode == null:
 		issues.append("free_roam_mode must not be empty")
-	if road_race_mode == null:
-		issues.append("road_race_mode must not be empty")
-	if street_race_mode == null:
-		issues.append("street_race_mode must not be empty")
+	if race_mode == null:
+		issues.append("race_mode must not be empty")
 	if stunt_race_mode == null:
 		issues.append("stunt_race_mode must not be empty")
 	if tutorial_mode == null:

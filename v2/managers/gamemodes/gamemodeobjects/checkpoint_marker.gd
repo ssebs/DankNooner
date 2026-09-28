@@ -1,6 +1,6 @@
 @tool
 ## Gate / ring that fires `entered` when a PlayerEntity passes through.
-## Reused by tutorial checkpoint objectives and by Street Race checkpoints.
+## Reused by tutorial checkpoint objectives and by race routes (EventRoute).
 class_name CheckPointMarker extends GameModeObject
 
 @export var width: float = 16.0:

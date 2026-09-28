@@ -2,13 +2,12 @@
 ## Should only be running on server
 class_name GameModeType extends State
 
-## ROAD_RACE is the plain checkpoint race (closed roads, no traffic). STREET_RACE is the
-## same race run through live traffic. STUNT_RACE is reserved and not implemented yet.
+## RACE, STUNT_RACE and TIME_ATTACK are all RaceGameMode (see its race_type).
 ##
 ## GameModeEventDefinition.target_gamemode stores these as ints in level scenes, so
 ## INSERTING a value here renumbers every event circle after it — update those scenes to
 ## match, or append instead.
-enum Kind { FREE_ROAM, ROAD_RACE, STREET_RACE, STUNT_RACE, TUTORIAL, CHALLENGE }
+enum Kind { FREE_ROAM, RACE, STUNT_RACE, TIME_ATTACK, TUTORIAL, CHALLENGE }
 
 @export var gamemode_manager: GamemodeManager
 @export var spawn_manager: SpawnManager

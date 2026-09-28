@@ -1,6 +1,6 @@
 @tool
 ## Server authority for the level's free-roam pickup spawners (the gas-station props, etc.).
-## Race spawners live under an EventStartCircle and are driven by their own StuntRaceTask, so
+## Race spawners live under an EventStartCircle and are driven by RaceGameMode's PickupsComponent, so
 ## they stay race-only — this skips them and owns just the world pickups.
 ##
 ## Lifecycle mirrors NPCTrafficManager: FreeRoamGameMode calls activate/deactivate (server) and

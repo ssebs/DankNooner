@@ -401,7 +401,7 @@ func push_checkpoint_marker(peer_id: int, pos: Vector3, has_target: bool) -> voi
 
 
 ## Server-side: broadcast the live leaderboard (see RaceLeaderboard.set_board) and the race
-## challenges' hint tricks. Called from the stunt race gamemode.
+## challenges' hint tricks. Called from RaceGameMode's LeaderboardComponent.
 func push_leaderboard(headers: PackedStringArray, rows: Array, tricks: PackedInt32Array) -> void:
 	_rpc_set_leaderboard.rpc(headers, rows, tricks)
 

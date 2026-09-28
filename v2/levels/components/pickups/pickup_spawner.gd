@@ -4,7 +4,7 @@
 ## collect/respawn, broadcasting spawn/despawn to every peer (mirrors AnimalSpawnManager's
 ## RPC-by-path model — the spawner is a level node at the same path on all peers).
 ##
-## Driven by StuntRaceTask via activate() / deactivate(), so pickups only exist during the race.
+## Driven by RaceGameMode's PickupsComponent via activate() / deactivate(), so pickups only exist during the race.
 class_name PickupSpawner extends Marker3D
 
 ## Item definitions this spawner can produce; one is picked at random per spawn.
@@ -22,7 +22,7 @@ var _active: bool = false
 var _current: PickupItem
 ## Item index currently showing, resent on a late-join/load-race sync so every peer builds the same one.
 var _current_index: int = -1
-## Injected by StuntRaceTask on activate() — used to grant item effects (server broadcast RPCs).
+## Injected by PickupsComponent on activate() — used to grant item effects (server broadcast RPCs).
 var _spawn_manager: SpawnManager
 ## Editor-only preview of the first item so placement is visible; never saved / spawned at runtime.
 var _preview: PickupItem
