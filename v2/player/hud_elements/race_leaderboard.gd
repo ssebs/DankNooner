@@ -5,8 +5,9 @@
 class_name RaceLeaderboard extends Control
 
 const ROW_HEIGHT: float = 26.0
-const NAME_WIDTH: float = 130.0
-const CELL_WIDTH: float = 64.0
+## Columns size to their widest text; the name column never shrinks below this.
+const NAME_MIN_WIDTH: float = 130.0
+const CELL_PADDING: float = 16.0
 ## Duration of the slide to a new rank.
 const REORDER_SECS: float = 0.35
 const OWN_ROW_COLOR := Color(1.0, 0.8, 0.2)
@@ -47,9 +48,14 @@ func set_board(headers: PackedStringArray, rows: Array) -> void:
 			_rows.erase(peer_id)
 			_ranks.erase(peer_id)
 
-	custom_minimum_size = Vector2(
-		NAME_WIDTH + CELL_WIDTH * (headers.size() - 1), _rank_y(rows.size())
-	)
+	var widths := _column_widths(headers, rows)
+	for row: HBoxContainer in [_header] + _rows.values():
+		for i in row.get_child_count():
+			(row.get_child(i) as Label).custom_minimum_size.x = widths[i]
+	var total_width := 0.0
+	for w in widths:
+		total_width += w
+	custom_minimum_size = Vector2(total_width, _rank_y(rows.size()))
 
 
 func clear() -> void:
@@ -58,6 +64,19 @@ func clear() -> void:
 	_header = null
 	_rows.clear()
 	_ranks.clear()
+
+
+func _column_widths(headers: PackedStringArray, rows: Array) -> PackedFloat32Array:
+	var font := get_theme_font("font", "Label")
+	var font_size := get_theme_font_size("font_size", "Label")
+	var widths := PackedFloat32Array()
+	for i in headers.size():
+		var w := font.get_string_size(headers[i], HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+		for row in rows:
+			var text: String = row["cells"][i]
+			w = maxf(w, font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x)
+		widths.append(maxf(w + CELL_PADDING, NAME_MIN_WIDTH if i == 0 else 0.0))
+	return widths
 
 
 ## Header sits at rank -1, so data rank 0 is the second line.
@@ -83,8 +102,6 @@ func _set_cells(row: HBoxContainer, texts: PackedStringArray) -> void:
 	while row.get_child_count() < texts.size():
 		var label := Label.new()
 		var is_name := row.get_child_count() == 0
-		label.custom_minimum_size.x = NAME_WIDTH if is_name else CELL_WIDTH
-		label.clip_text = true
 		label.horizontal_alignment = (
 			HORIZONTAL_ALIGNMENT_LEFT if is_name else HORIZONTAL_ALIGNMENT_CENTER
 		)

@@ -4,7 +4,8 @@
 ## super() from Enter/Update/Exit and override the _on_* hooks.
 class_name RunnerGameMode extends GameModeType
 
-@export var tutorial_hud: TutorialHUDState
+## Hosts the event pane every runner's step text goes to.
+@export var riding_hud_state: RidingHUDState
 @export var lobby_manager: LobbyManager
 @export var audio_manager: AudioManager
 @export var _respawn_delay: float = 2.5
@@ -24,6 +25,7 @@ func Enter(state_context: StateContext):
 		_event.get_circle().set_active_event(_event)
 	_runners = _event.get_runners()
 	_inject_runner_deps()
+	riding_hud_state.set_event_title(tr(_event.definition.name))
 
 	gamemode_manager.player_crashed.connect(_on_player_crashed)
 	gamemode_manager.player_disconnected.connect(_on_player_disconnected)
@@ -51,9 +53,9 @@ func Exit(_state_context: StateContext):
 		# exit mid-task (player quit, skip) on_exit never runs — reset everyone.
 		_reset_all_player_input()
 
-	# Hide locally rather than via RPC — when leaving via pause→main menu the peer is
+	# Clear locally rather than via RPC — when leaving via pause→main menu the peer is
 	# torn down before Exit runs, which silently drops the .rpc() local-call.
-	tutorial_hud.hide_ui()
+	riding_hud_state.clear_event_text()
 	_event.get_circle().set_active_event(null)
 	_event = null
 	_runners = []
@@ -62,6 +64,11 @@ func Exit(_state_context: StateContext):
 
 ## Whether Enter shows the event's props. Modes whose tasks reveal their own props return false.
 func shows_event_props() -> bool:
+	return true
+
+
+## Whether the event pane shows "step N / total". Single-objective modes return false.
+func shows_step_count() -> bool:
 	return true
 
 
@@ -135,7 +142,8 @@ func _disconnect_runner(runner: TaskRunner):
 func _inject_runner_deps():
 	for runner in _runners:
 		runner.spawn_manager = spawn_manager
-		runner.task_hud = tutorial_hud
+		runner.riding_hud = riding_hud_state
+		runner.show_step_count = shows_step_count()
 		runner.audio_manager = audio_manager
 		runner.route = _event.route
 		runner.wire_task_refs()
@@ -200,8 +208,8 @@ func _return_to_free_roam():
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues: PackedStringArray = []
-	if tutorial_hud == null:
-		issues.append("tutorial_hud must not be empty")
+	if riding_hud_state == null:
+		issues.append("riding_hud_state must not be empty")
 	if lobby_manager == null:
 		issues.append("lobby_manager must not be empty")
 	if audio_manager == null:

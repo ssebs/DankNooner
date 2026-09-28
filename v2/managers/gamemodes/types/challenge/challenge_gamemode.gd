@@ -48,5 +48,5 @@ func shows_event_props() -> bool:
 
 #override
 func _on_last_runner_completed(_runner: TaskRunner):
-	tutorial_hud.rpc_show_complete.rpc("CHALLENGE_COMPLETE")
+	riding_hud_state.push_event_status_all("CHALLENGE_COMPLETE")
 	_complete_toast_remaining = _complete_toast_duration

@@ -65,7 +65,7 @@ func build_results() -> ResultsData:
 	headers.assign(_headers())
 	var title := tr("TIME_ATTACK_RUN_COMPLETE")
 	if !_is_time_attack():
-		headers.insert(1, "⏱")
+		headers.insert(1, "⏱ %s" % tr("LB_TIME"))
 		title = tr("RACE_COMPLETE")
 	var columns: Array[String] = []
 	for i in headers.size():
@@ -82,9 +82,9 @@ func _is_time_attack() -> bool:
 
 
 func _headers() -> PackedStringArray:
-	var headers := PackedStringArray(["", "🏁"])
+	var headers := PackedStringArray(["", "🏁 %s" % tr("LB_PLACE")])
 	if _by_score():
-		headers.append("💰")
+		headers.append("💰 %s" % tr("LB_SCORE"))
 	for component in race_mode.get_components():
 		headers.append_array(component.column_headers())
 	return headers

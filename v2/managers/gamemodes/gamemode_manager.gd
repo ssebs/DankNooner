@@ -65,6 +65,10 @@ func _ready():
 	spawn_manager.player_spawned.connect(_on_player_spawned)
 
 
+func get_current_gamemode() -> GameModeType:
+	return _gamemode_map[current_game_mode]
+
+
 ## Called by server to start the game for all players
 @rpc("call_local", "reliable")
 func start_game(

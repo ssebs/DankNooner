@@ -98,6 +98,8 @@ var engine_rpm_pitch_curve: Curve = preload("res://resources/bikes/ninja_rpm_pit
 @export var idle_rpm: float = 1000.0
 @export var stall_rpm: float = 800.0
 @export var power_curve: Curve = preload("res://resources/bikes/power_curve.tres")
+## Seconds of zero drive power after each shift while RPM glides to the new gear.
+@export var shift_cut_time: float = 0.15
 
 @export_group("Physics")
 @export var max_speed: float = 88.0
@@ -222,6 +224,7 @@ func _copy_from(other: BikeSkinDefinition) -> void:
 	idle_rpm = other.idle_rpm
 	stall_rpm = other.stall_rpm
 	power_curve = other.power_curve
+	shift_cut_time = other.shift_cut_time
 	max_speed = other.max_speed
 	acceleration = other.acceleration
 	brake_strength = other.brake_strength

@@ -1,6 +1,8 @@
 @tool
 class_name SaveManager extends BaseManager
 
+## The whole save was loaded or reset. Plain writes don't emit it — per-key changes come
+## through save_item_updated (a PB save must not re-push player metadata mid-race).
 signal save_changed(current_save: Dictionary)
 signal save_item_updated(save_key: String, save_value: Variant)
 
@@ -81,7 +83,6 @@ func _seed_default_loadouts(player_def: PlayerDefinition) -> void:
 	player_def.active_loadout_index = 0
 
 
-# TODO - this may cause a dupe emit bug since save_settings also emits a signal
 func update_save(
 	key: String,
 	value: Variant,
@@ -103,7 +104,6 @@ func save_save():
 	save_dict["player_definition"] = current_save["player_definition"].to_dict()
 
 	DictJSONSaverLoader.save_json_to_file(save_path, save_dict)
-	save_changed.emit(current_save)
 
 
 ## load save_path into current_save
@@ -136,6 +136,7 @@ func load_save():
 
 	if needs_migration:
 		save_save()  # persist migrated save
+	save_changed.emit(current_save)
 
 
 func get_player_definition() -> PlayerDefinition:

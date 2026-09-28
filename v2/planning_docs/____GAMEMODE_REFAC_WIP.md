@@ -116,7 +116,8 @@ EventStartCircle                       picker lists its GameModeEvent children
 ### 4 — Time Attack
 
 - [x] `RaceTask` emits `lap_completed(racer_id, lap_ms)`; `endless` export — never completes.
-  Circuits lap forever; point-to-point parks the rider at the finish until `retry_run()`. The host
+  Circuits lap forever; point-to-point parks the rider at the finish until `restart_run()` (also hold-R /
+  pause Respawn via `GameModeType.handle_full_respawn`: back to the grid, 3-2-1, fresh clock). The host
   ends the session via pause → Cancel Event.
 - [x] `TimeAttackComponent`:
   - `race_start` sets `player.rb_do_max_boost = true` per rider (existing rollback path).
@@ -126,7 +127,7 @@ EventStartCircle                       picker lists its GameModeEvent children
   - Point-to-point finish → per-rider `ResultsHUDState` prompt: Run Again (`request_retry`) or
     Wait for Host.
 - [x] `SaveManager`: add a `progression` field to the save JSON —
-  `{"time_attack": {"<level_name>/<event node name>": {best_lap_ms}}}`.
+  `{"time_attack": {"<level_name>/<circle>/<event node name>": {best_lap_ms}}}`.
   (Future: skins / $ / unlocks go in the same field.)
 - **Verify:** lint; laps + p2p time attack, session leaderboard, PB persists across restarts.
 

@@ -99,7 +99,7 @@ func _on_last_runner_completed(runner: TaskRunner):
 
 	var data := ResultsData.create(tr("TUT_COMPLETE"), ["Username", "Time"], rows, ["", "⏱"])
 	_results_countdown = _results_countdown_total
-	tutorial_hud.rpc_hide.rpc()
+	riding_hud_state.push_event_clear_all()
 	results_hud.rpc_show_results.rpc(data.to_dict(), _results_countdown_total)
 
 

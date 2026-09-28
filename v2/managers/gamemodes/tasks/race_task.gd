@@ -20,7 +20,7 @@ enum WaitFor {START, LAP_CP, END}
 
 @export var total_laps: int = 3
 ## Time attack: never completes (total_laps ignored). Circuits lap forever; a point-to-point run
-## parks the rider at the finish until retry_run(). The host ends it via Cancel Event.
+## parks the rider at the finish until restart_run(). The host ends it via Cancel Event.
 @export var endless: bool = false
 @export var objective_key: String = "RACE_OBJECTIVE"
 ## Wrong-way warning fires once a racer is this many meters past their closest approach to the
@@ -30,6 +30,8 @@ enum WaitFor {START, LAP_CP, END}
 const WRONG_WAY_MIN_SPEED: float = 5.0
 ## Going the wrong way this long respawns the racer at their last checkpoint.
 const WRONG_WAY_RESPAWN_MS: int = 3000
+## Time attack restart: frozen on the grid this long (matches COUNTDOWN_3SEC).
+const RESTART_COUNTDOWN_MS: int = 3000
 
 ## Derived from the route by _collect_checkpoints().
 var start_checkpoint: CheckPointMarker
@@ -84,17 +86,15 @@ func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
 		"waiting_for": WaitFor.START,
 		"start_ms": Time.get_ticks_msec(),
 		"lap_start_ms": Time.get_ticks_msec(),
-		## Endless point-to-point: finished a run, waiting on retry_run().
+		## Endless point-to-point: finished a run, waiting on restart_run().
 		"run_done": false,
+		## Ticks when a restart_run() countdown ends, 0 when none is running.
+		"countdown_end_ms": 0,
 		"respawn_slot": respawn_slot,
 		"best_dist": INF,
 		## Ticks when the racer started going the wrong way, 0 while on course.
 		"wrong_way_since_ms": 0,
 	}
-	# Runner pushes rpc_show_step right after on_enter — defer the hide so it
-	# runs after that, otherwise the step label re-shows.
-	var hud := _runner.task_hud
-	(func(): hud.rpc_hide_step_label.rpc_id(peer_id)).call_deferred()
 	_rpc_reset_checkpoints.rpc_id(peer_id)
 
 
@@ -103,6 +103,9 @@ func check(player: PlayerEntity, _delta: float, _state: Dictionary) -> bool:
 	var p := _peer_progress[peer_id]
 	if !endless and p["laps_done"] >= total_laps:
 		return true
+	if p["countdown_end_ms"] > 0:
+		_tick_restart_countdown(player, peer_id, p)
+		return false
 	if p["run_done"]:
 		return false
 	_push_lap_hud(peer_id, p)
@@ -116,7 +119,7 @@ func on_exit(player: PlayerEntity, _state: Dictionary) -> void:
 	# are purged at the next race start in on_enter.
 	var peer_id := int(player.name)
 	if _peer_progress[peer_id]["wrong_way_since_ms"] > 0:
-		_runner.task_hud.rpc_stop_warning.rpc_id(peer_id)
+		_runner.riding_hud.clear_event_warning(peer_id)
 
 
 func get_objective_text() -> String:
@@ -124,7 +127,7 @@ func get_objective_text() -> String:
 
 
 func get_hint_text() -> String:
-	# Empty — dynamic lap/timer text is pushed each frame via rpc_update_progress.
+	# Empty — dynamic lap/timer text is pushed each frame via riding_hud.push_event_progress.
 	return ""
 
 
@@ -142,25 +145,33 @@ func is_point_to_point() -> bool:
 	return end_checkpoint != start_checkpoint
 
 
-## Running clock of the racer's current lap, -1 while parked after an endless point-to-point run.
+## Running clock of the racer's current lap, -1 while parked after an endless point-to-point run
+## or counting down a restart.
 func get_lap_elapsed_ms(racer_id: int) -> int:
 	var p := _peer_progress[racer_id]
-	if p.get("run_done", false):
+	if p.get("run_done", false) or p.get("countdown_end_ms", 0) > 0:
 		return -1
 	return Time.get_ticks_msec() - p["lap_start_ms"]
 
 
-## Endless point-to-point: back to the rider's grid slot with a fresh clock.
-func retry_run(peer_id: int) -> void:
+## Time attack (hold-R respawn, point-to-point "run again"): back to the rider's grid slot,
+## frozen through a 3-2-1, then lap 1 on a fresh clock.
+func restart_run(peer_id: int) -> void:
 	var p := _peer_progress[peer_id]
 	p["run_done"] = false
+	p["laps_done"] = 0
+	p["next_lap_idx"] = 0
 	p["waiting_for"] = WaitFor.START
-	p["lap_start_ms"] = Time.get_ticks_msec()
 	p["best_dist"] = INF
+	p["wrong_way_since_ms"] = 0
+	p["countdown_end_ms"] = Time.get_ticks_msec() + RESTART_COUNTDOWN_MS
 	var markers := _runner.route.get_grid_markers()
 	var marker := markers[mini(p["respawn_slot"], markers.size() - 1)]
 	_runner.spawn_manager.respawn_player_at.rpc(peer_id, marker.global_position, marker.global_basis)
+	CountdownTask.freeze(_runner.spawn_manager._get_player_by_peer_id(peer_id))
+	_runner.riding_hud.clear_event_warning(peer_id)
 	_rpc_reset_checkpoints.rpc_id(peer_id)
+	_rpc_play_countdown_sfx.rpc_id(peer_id)
 
 
 #region NPC racers (server-side, driven by the race gamemodes / NPCRaceManager)
@@ -257,7 +268,7 @@ func _on_checkpoint_entered(racer: Node3D, ckpt: CheckPointMarker) -> void:
 		# Only a gate ahead of the expected one means one was skipped — re-crossing a
 		# passed gate (e.g. after a respawn) isn't a miss.
 		if peer_id >= 0 and _route_ordinal(ckpt, p) > _expected_ordinal(p):
-			_runner.task_hud.rpc_flash_warning.rpc_id(peer_id, "RACE_MISSED_CHECKPOINT")
+			_runner.riding_hud.push_event_warning(peer_id, "RACE_MISSED_CHECKPOINT")
 		return
 	_advance(peer_id, p, ckpt)
 
@@ -357,14 +368,14 @@ func _check_wrong_way(player: PlayerEntity, peer_id: int, p: Dictionary) -> void
 			# Measure from the respawn gate, not the wrong-way spot.
 			p["best_dist"] = INF
 			p["wrong_way_since_ms"] = 0
-			_runner.task_hud.rpc_stop_warning.rpc_id(peer_id)
+			_runner.riding_hud.clear_event_warning(peer_id)
 		return
 	if wrong_way:
 		p["wrong_way_since_ms"] = Time.get_ticks_msec()
-		_runner.task_hud.rpc_flash_warning.rpc_id(peer_id, "RACE_WRONG_WAY", true)
+		_runner.riding_hud.push_event_warning(peer_id, "RACE_WRONG_WAY", true)
 	else:
 		p["wrong_way_since_ms"] = 0
-		_runner.task_hud.rpc_stop_warning.rpc_id(peer_id)
+		_runner.riding_hud.clear_event_warning(peer_id)
 
 
 ## Ranking key for one racer — higher is further ahead. Finished racers rank by time,
@@ -418,18 +429,33 @@ func _push_lap_hud(peer_id: int, p: Dictionary) -> void:
 		var lap_text := format_time_ms(get_lap_elapsed_ms(peer_id))
 		if !is_point_to_point():
 			lap_text = tr("RACE_LAP_ENDLESS").format({"current": p["laps_done"] + 1, "time": lap_text})
-		_runner.task_hud.rpc_update_progress.rpc_id(peer_id, lap_text)
+		_runner.riding_hud.push_event_progress(peer_id, lap_text)
 		return
 	var current_lap: int = min(p["laps_done"] + 1, total_laps)
 	var text := format_time_ms(Time.get_ticks_msec() - p["start_ms"])
 	if total_laps > 1:
 		text = tr("RACE_LAP").format({"current": current_lap, "total": total_laps, "time": text})
-	_runner.task_hud.rpc_update_progress.rpc_id(peer_id, "%s  -  %s" % [_position_text(peer_id), text])
+	_runner.riding_hud.push_event_progress(peer_id, "%s  -  %s" % [_position_text(peer_id), text])
 
 
 ## "m:ss.cc".
 static func format_time_ms(ms: int) -> String:
 	return "%d:%05.2f" % [ms / 60000, (ms % 60000) / 1000.0]
+
+
+func _tick_restart_countdown(player: PlayerEntity, peer_id: int, p: Dictionary) -> void:
+	var remaining_ms: int = p["countdown_end_ms"] - Time.get_ticks_msec()
+	if remaining_ms > 0:
+		_runner.riding_hud.push_event_progress(peer_id, str(ceili(remaining_ms / 1000.0)))
+		return
+	p["countdown_end_ms"] = 0
+	p["lap_start_ms"] = Time.get_ticks_msec()
+	CountdownTask.unfreeze(player)
+
+
+@rpc("call_local", "reliable")
+func _rpc_play_countdown_sfx() -> void:
+	_runner.audio_manager.play_sfx(AudioManager.Sfx.COUNTDOWN_3SEC)
 
 
 ## Local-only feedback: the highlight is per-client, other racers' gates are untouched.

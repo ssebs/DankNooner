@@ -13,6 +13,12 @@ enum Kind { FREE_ROAM, RACE, STUNT_RACE, TIME_ATTACK, TUTORIAL, CHALLENGE }
 @export var spawn_manager: SpawnManager
 
 
+## Server-side: a player asked for a full respawn (hold R, pause menu). Return true when the
+## mode handled it; false falls through to the normal respawn at the last checkpoint.
+func handle_full_respawn(_peer_id: int) -> bool:
+	return false
+
+
 ## Whether a late joiner can be dropped straight into this mode. Modes needing
 ## mid-match context (races: start circle + runner state) return false; the late
 ## joiner free-roams the level instead and syncs up at the next mode change.

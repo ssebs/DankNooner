@@ -12,7 +12,6 @@ enum RaceType { RACE, STUNT_RACE, TIME_ATTACK }
 		update_configuration_warnings()
 @export var results_hud: ResultsHUDState
 @export var input_state_manager: InputStateManager
-@export var riding_hud_state: RidingHUDState
 ## When true, finishing the race teleports everyone back to the grid; otherwise they stay
 ## where they finished and only the results HUD closes.
 @export var teleport_to_start_on_finish: bool = false
@@ -189,7 +188,7 @@ func _update_results_countdown(delta: float) -> bool:
 func _on_last_runner_completed(_runner: TaskRunner):
 	_results_countdown = _results_countdown_total
 	_results_refresh_accum = RESULTS_REFRESH_SECS
-	tutorial_hud.rpc_hide.rpc()
+	riding_hud_state.push_event_clear_all()
 	results_hud.rpc_show_results.rpc(leaderboard.build_results().to_dict(), _results_countdown_total)
 
 
@@ -223,6 +222,22 @@ func _on_results_retry_pressed():
 
 
 #override
+## Time attack: a full respawn restarts the run. Before the race body (grid/countdown) there's
+## no run yet — the normal respawn applies.
+func handle_full_respawn(peer_id: int) -> bool:
+	if race_type != RaceType.TIME_ATTACK or !race_task.has_racer(peer_id):
+		return false
+	time_attack.restart_run(peer_id)
+	return true
+
+
+#override
+## Races show one objective (the lap line), not the grid/countdown/race step count.
+func shows_step_count() -> bool:
+	return false
+
+
+#override
 func _on_runner_player_completed(peer_id: int):
 	# Only the last runner's completion is crossing the race's finish line.
 	if _is_last_runner():
@@ -251,8 +266,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("results_hud must not be empty")
 	if input_state_manager == null:
 		issues.append("input_state_manager must not be empty")
-	if riding_hud_state == null:
-		issues.append("riding_hud_state must not be empty")
 	for component_name: String in REQUIRED_COMPONENTS[race_type]:
 		if get(component_name) == null:
 			issues.append(

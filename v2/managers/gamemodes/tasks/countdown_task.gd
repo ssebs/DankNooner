@@ -19,14 +19,7 @@ func on_enter(player: PlayerEntity, state: Dictionary) -> void:
 	# runner would skip them while the rest of the race starts.
 	if player.is_crashed:
 		_runner.spawn_manager.respawn_player.rpc(int(player.name))
-	player.input_controller.input_disabled = true
-	player.input_controller.nfx_throttle = 0.0
-	player.input_controller.nfx_front_brake = 0.0
-	player.input_controller.nfx_rear_brake = 0.0
-	player.input_controller.nfx_steer = 0.0
-	player.input_controller.nfx_lean = 0.0
-	# rb_* freeze command — PlayerEntity applies it in _rollback_tick so the freeze syncs to clients too.
-	player.rb_lock_movement = true
+	freeze(player)
 
 
 func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
@@ -42,10 +35,26 @@ func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
 
 
 func on_exit(player: PlayerEntity, _state: Dictionary) -> void:
+	unfreeze(player)
+
+
+## Server-side. Also RaceTask's time attack restart countdown.
+static func freeze(player: PlayerEntity) -> void:
+	player.input_controller.input_disabled = true
+	player.input_controller.nfx_throttle = 0.0
+	player.input_controller.nfx_front_brake = 0.0
+	player.input_controller.nfx_rear_brake = 0.0
+	player.input_controller.nfx_steer = 0.0
+	player.input_controller.nfx_lean = 0.0
+	# rb_* freeze command — PlayerEntity applies it in _rollback_tick so the freeze syncs to clients too.
+	player.rb_lock_movement = true
+
+
+static func unfreeze(player: PlayerEntity) -> void:
 	player.input_controller.input_disabled = false
 	player.rb_unlock_movement = true
 
 
 @rpc("call_local", "reliable")
 func _rpc_show_countdown(num: int):
-	_runner.task_hud.rpc_show_countdown(num)
+	_runner.riding_hud.show_event_countdown(num)

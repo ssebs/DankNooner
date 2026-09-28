@@ -2,7 +2,7 @@
 ## Base for composite runners (Sequential, Concurrent).
 ##
 ## Holds the deps shared by every runner so leaf tasks can address them via
-## `_runner.spawn_manager` / `_runner.task_hud` / `_runner.audio_manager` / `_runner.route`
+## `_runner.spawn_manager` / `_runner.riding_hud` / `_runner.audio_manager` / `_runner.route`
 ## regardless of which runner type owns them.
 ##
 ## Subclasses override start/update/stop/notify_* to drive the per-peer walk.
@@ -17,7 +17,10 @@ signal respawn_requested(peer_id: int)
 ## `start()`. Not @exported because the runner lives in a level scene while the
 ## managers live in main_game.tscn — cross-scene NodePaths would be fragile.
 var spawn_manager: SpawnManager
-var task_hud: TutorialHUDState
+## Step text goes to its event pane.
+var riding_hud: RidingHUDState
+## "2 / 5" on the event pane — tutorials yes, races no (see RunnerGameMode.shows_step_count).
+var show_step_count: bool = true
 var audio_manager: AudioManager
 ## The event's EventRoute (grid, checkpoints) — null for events without one.
 var route: EventRoute
@@ -33,7 +36,9 @@ func wire_task_refs() -> void:
 			c._runner = self
 		if c is TaskRunner:
 			c.spawn_manager = spawn_manager
-			c.task_hud = task_hud
+			c.riding_hud = riding_hud
+			c.show_step_count = show_step_count
 			c.audio_manager = audio_manager
 			c.route = route
 			c.wire_task_refs()
+

@@ -39,7 +39,8 @@ func start(peer_ids: Array) -> void:
 		# Propagate shared deps into nested runners so they don't need wiring.
 		if task is TaskRunner:
 			task.spawn_manager = spawn_manager
-			task.task_hud = task_hud
+			task.riding_hud = riding_hud
+			task.show_step_count = show_step_count
 			task.audio_manager = audio_manager
 			task.route = route
 	if multiplayer.is_server():
@@ -146,7 +147,7 @@ func _update_player(peer_id: int, state: PlayerTaskState, delta: float) -> void:
 
 	var progress := task.get_progress(state.lesson_state)
 	if progress != "":
-		task_hud.rpc_update_progress.rpc_id(peer_id, progress)
+		riding_hud.push_event_progress(peer_id, progress)
 
 	if !_should_eval(task, state):
 		return
@@ -184,7 +185,7 @@ func _advance_player(peer_id: int, state: PlayerTaskState) -> void:
 func _complete_player(peer_id: int, state: PlayerTaskState) -> void:
 	state.completed = true
 	state.completion_time_ms = Time.get_ticks_msec() - state.start_time
-	task_hud.rpc_show_waiting.rpc_id(peer_id)
+	riding_hud.push_event_status(peer_id, "TUT_WAITING_FOR_OTHERS")
 	player_completed.emit(peer_id)
 	if _all_peers_complete():
 		all_completed.emit()
@@ -210,8 +211,13 @@ func _start_step_for_peer(peer_id: int, state: PlayerTaskState) -> void:
 	# Player may not be spawned yet during late-join sync — pass null is intentional
 	var player := spawn_manager._get_player_by_peer_id(peer_id)
 	task.on_enter(player, state.lesson_state)
-	task_hud.rpc_show_step.rpc_id(
-		peer_id, state.current_index, _tasks.size(), task.get_objective_text(), task.get_hint_text()
+	riding_hud.push_event_step(
+		peer_id,
+		state.current_index,
+		_tasks.size(),
+		task.get_objective_text(),
+		task.get_hint_text(),
+		show_step_count
 	)
 
 

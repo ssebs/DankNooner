@@ -489,7 +489,6 @@ func _init_audio():
 		return
 	gearing_controller.rpm_updated.connect(_on_rpm_updated)
 
-	# TODO - add clunk sound when changing gears
 	audio_manager.play_revs(bike_definition)
 
 
@@ -511,9 +510,6 @@ func _on_rpm_updated(new_rpm_ratio: float):
 
 func _on_gear_changed(new_gear: int):
 	DebugUtils.DebugMsg("Gear: %d" % new_gear, OS.has_feature("debug"))
-	if is_local_client and audio_manager:
-		audio_manager.play_clunk_gear_change()
-		# audio_manager.play_mouse_click()
 
 
 func _on_trick_started(trick_type: TrickController.Trick):

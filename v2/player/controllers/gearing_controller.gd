@@ -19,6 +19,7 @@ var current_rpm: float = 1000.0
 var clutch_value: float = 0.0
 
 var is_rev_limited: bool = false
+var shift_cut_timer: float = 0.0
 var _clutch_hold_time: float = 0.0
 var _rpm_ratio: float = 0.0
 var _is_stalled: bool = false
@@ -31,11 +32,13 @@ func _apply_target_gear():
 	var new_gear = clampi(input_controller.nfx_target_gear, 1, bd.num_gears)
 	if new_gear != current_gear:
 		current_gear = new_gear
+		shift_cut_timer = bd.shift_cut_time
 		gear_changed.emit(new_gear)
 
 
 ## Called from PlayerEntity._rollback_tick()
 func on_movement_rollback_tick(delta: float):
+	shift_cut_timer = maxf(shift_cut_timer - delta, 0.0)
 	_apply_target_gear()
 	_update_clutch_hold_time(delta)
 	_blend_rpm(delta)
@@ -76,8 +79,11 @@ func _blend_rpm(delta: float):
 	var smooth_free = lerpf(current_rpm, free_rpm, rev_speed * delta)
 
 	# Engaged = locked to wheel speed, disengaged = free-rev
-	current_rpm = lerpf(smooth_free, wheel_rpm, engagement)
-	current_rpm = clamp(current_rpm, bd.idle_rpm, bd.max_rpm)
+	var target_rpm = lerpf(smooth_free, wheel_rpm, engagement)
+	if shift_cut_timer > 0.0:
+		# Glide to the new gear's RPM over the shift cut instead of snapping
+		target_rpm = lerpf(current_rpm, target_rpm, 1.0 - shift_cut_timer / bd.shift_cut_time)
+	current_rpm = clamp(target_rpm, bd.idle_rpm, bd.max_rpm)
 	# DebugUtils.DebugMsg("RPM %.2f" % current_rpm)
 
 	# Rev limiter — fuel cut at redline, instant drop to simulate ignition cut
@@ -112,7 +118,7 @@ func get_gear_max_speed() -> float:
 
 ## Returns power multiplier (0-1) based on current RPM and gear
 func get_power_output() -> float:
-	if _is_stalled or is_rev_limited:
+	if _is_stalled or is_rev_limited or shift_cut_timer > 0.0:
 		return 0.0
 
 	# Pulling the clutch lever is an instant disconnect
@@ -136,7 +142,7 @@ func get_power_output() -> float:
 ## Power output ignoring clutch engagement — used to gate clutch-dump wheelies,
 ## since at the moment of release clutch_value is still ~1.0 and engagement ~0.
 func get_potential_power_output() -> float:
-	if _is_stalled or is_rev_limited:
+	if _is_stalled or is_rev_limited or shift_cut_timer > 0.0:
 		return 0.0
 	var ratio = get_rpm_ratio()
 	var bd = player_entity.bike_definition
@@ -156,6 +162,7 @@ func do_reset():
 	clutch_value = 0.0
 	_rpm_ratio = 0.0
 	is_rev_limited = false
+	shift_cut_timer = 0.0
 
 
 #endregion

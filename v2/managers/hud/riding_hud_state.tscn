@@ -1,7 +1,5 @@
 [gd_scene format=3 uid="uid://do131g4o4kcam"]
 
-[ext_resource type="Script" path="res://player/hud_elements/race_leaderboard.gd" id="99_rldbd"]
-[ext_resource type="Script" uid="uid://cqsjngdd8k28k" path="res://player/hud_elements/trick_popups.gd" id="99_scrpp"]
 [ext_resource type="Script" uid="uid://ce4n2xjrhv4j8" path="res://managers/hud/riding_hud_state.gd" id="1_8neiw"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="1_whasa"]
 [ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="3_j31af"]
@@ -9,6 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://cof5vsd00u8ob" path="res://player/hud_elements/balance_bar.tscn" id="5_q7o3g"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/combo_counter.tscn" id="6_x84np"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/boost_gauge.tscn" id="7_3xx38"]
+[ext_resource type="Script" uid="uid://bbuk3w2ml0an0" path="res://player/hud_elements/race_leaderboard.gd" id="99_rldbd"]
+[ext_resource type="Script" uid="uid://cqsjngdd8k28k" path="res://player/hud_elements/trick_popups.gd" id="99_scrpp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8urt2"]
 content_margin_left = 12.0
@@ -16,6 +16,25 @@ content_margin_top = 12.0
 content_margin_right = 12.0
 content_margin_bottom = 12.0
 bg_color = Color(0.103055954, 0.5546875, 0.052001953, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.25490198, 0.6862745, 1, 1)
+border_blend = true
+corner_radius_top_left = 16
+corner_radius_top_right = 4
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 4
+expand_margin_left = 12.0
+expand_margin_right = 12.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_racepane"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.12941177, 0.12941177, 0.12941177, 0.1254902)
 border_width_left = 4
 border_width_top = 4
 border_width_right = 4
@@ -42,7 +61,6 @@ metadata/_custom_type_script = "uid://ce4n2xjrhv4j8"
 
 [node name="UI" type="Control" parent="." unique_id=1416178715]
 unique_name_in_owner = true
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -232,22 +250,63 @@ layout_mode = 2
 mouse_filter = 2
 theme = ExtResource("1_whasa")
 
-[node name="ChallengePanel" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/ChallengeCluster" unique_id=1156886571]
+[node name="EventPanel" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/ChallengeCluster" unique_id=1156886571]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -12.0
-offset_top = 240.0
-offset_right = -12.0
-offset_bottom = 240.0
+offset_left = 12.0
+offset_top = 256.0
+offset_right = 12.0
+offset_bottom = 256.0
 grow_horizontal = 0
 mouse_filter = 2
-theme_override_styles/panel = ExtResource("3_j31af")
+theme_override_styles/panel = SubResource("StyleBoxFlat_racepane")
 
-[node name="HUD_Leaderboard" type="Control" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/ChallengePanel" unique_id=1156886562]
+[node name="EventPane" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel" unique_id=870828957]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="HUD_EventTitle" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+
+[node name="HUD_EventStep" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane" unique_id=1247704292]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+
+[node name="HUD_EventObjective" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane" unique_id=1605934630]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+autowrap_mode = 3
+
+[node name="HUD_EventProgress" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane" unique_id=1723272740]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+autowrap_mode = 3
+
+[node name="HUD_RacePB" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane" unique_id=1985250701]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="HUD_EventWarning" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane" unique_id=1935886846]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 24
+
+[node name="HUD_Leaderboard" type="Control" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane" unique_id=1156886562]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
@@ -273,7 +332,6 @@ theme_override_constants/separation = 4
 
 [node name="HUD_TRICK_TIMER" type="Label" parent="UI/AspectContainer/MarginContainer/BoostCluster" unique_id=1156886572]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_font_sizes/font_size = 32
@@ -299,14 +357,12 @@ theme_override_constants/separation = 6
 
 [node name="HUD_RespawnLabel" type="Label" parent="UI/AspectContainer/MarginContainer/RespawnCenter/RespawnCluster" unique_id=1500000004]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 text = "HUD_RESPAWNING"
 horizontal_alignment = 1
 
 [node name="HUD_RespawnProgress" type="ProgressBar" parent="UI/AspectContainer/MarginContainer/RespawnCenter/RespawnCluster" unique_id=1500000002]
 unique_name_in_owner = true
-visible = false
 custom_minimum_size = Vector2(360, 22)
 layout_mode = 2
 theme_override_styles/background = ExtResource("3_j31af")

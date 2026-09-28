@@ -7,6 +7,7 @@ signal hud_submitted(peer_id: int, event_index: int)
 
 @export var hud_manager: HUDManager
 @export var input_state_manager: InputStateManager
+@export var save_manager: SaveManager
 
 @onready var submit_btn: Button = %SubmitBtn
 @onready var close_btn: Button = %CloseBtn
@@ -18,6 +19,7 @@ signal hud_submitted(peer_id: int, event_index: int)
 
 var _names: PackedStringArray = []
 var _descriptions: PackedStringArray = []
+var _pb_keys: PackedStringArray = []
 
 
 func _ready():
@@ -27,7 +29,10 @@ func _ready():
 
 @rpc("any_peer", "call_local", "reliable")
 func on_player_entered_circle(
-	peer_id: int, event_names: PackedStringArray, event_descriptions: PackedStringArray
+	peer_id: int,
+	event_names: PackedStringArray,
+	event_descriptions: PackedStringArray,
+	pb_keys: PackedStringArray
 ):
 	if !multiplayer.is_server():
 		return
@@ -36,15 +41,16 @@ func on_player_entered_circle(
 	if peer_id != 1:
 		return
 
-	set_gamemode_hud_and_show_ui.rpc_id(peer_id, event_names, event_descriptions)
+	set_gamemode_hud_and_show_ui.rpc_id(peer_id, event_names, event_descriptions, pb_keys)
 
 
 @rpc("call_local", "reliable")
 func set_gamemode_hud_and_show_ui(
-	event_names: PackedStringArray, event_descriptions: PackedStringArray
+	event_names: PackedStringArray, event_descriptions: PackedStringArray, pb_keys: PackedStringArray
 ):
 	_names = event_names
 	_descriptions = event_descriptions
+	_pb_keys = pb_keys
 	event_picker.clear()
 	for event_name in event_names:
 		event_picker.add_item(tr(event_name))
@@ -58,6 +64,8 @@ func set_gamemode_hud_and_show_ui(
 func _show_event(index: int):
 	gm_name.text = tr(_names[index])
 	gm_desc.text = tr(_descriptions[index])
+	if _pb_keys[index] != "":
+		gm_desc.text += "\n\n" + TimeAttackComponent.personal_best_text(save_manager, _pb_keys[index])
 
 
 @rpc("any_peer", "call_local", "reliable")
@@ -107,4 +115,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
 	if input_state_manager == null:
 		issues.append("input_state_manager must not be empty")
+	if save_manager == null:
+		issues.append("save_manager must not be empty")
 	return issues

@@ -40,7 +40,7 @@ func racer_finished(peer_id: int) -> void:
 func column_headers() -> PackedStringArray:
 	var headers := PackedStringArray()
 	for challenge in _challenges:
-		headers.append(challenge.icon)
+		headers.append("%s %s" % [challenge.icon, tr(challenge.title_key)])
 	return headers
 
 

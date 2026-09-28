@@ -124,7 +124,7 @@ func _push_step_hud() -> void:
 	var obj := objective_text if objective_text != "" else _first_child_text(true)
 	var hint := hint_text if hint_text != "" else _first_child_text(false)
 	for peer_id in _player_states:
-		task_hud.rpc_show_step.rpc_id(peer_id, 0, 1, obj, hint)
+		riding_hud.push_event_step(peer_id, 0, 1, obj, hint, show_step_count)
 
 
 ## Falls back to the first child task with a non-empty get_objective_text() /
@@ -171,7 +171,7 @@ func _update_player(peer_id: int, state: PlayerTaskState, delta: float) -> void:
 		else:
 			all_done = false
 	if progress != "":
-		task_hud.rpc_update_progress.rpc_id(peer_id, progress)
+		riding_hud.push_event_progress(peer_id, progress)
 	if all_done:
 		_complete_player(peer_id, state)
 
@@ -179,7 +179,7 @@ func _update_player(peer_id: int, state: PlayerTaskState, delta: float) -> void:
 func _complete_player(peer_id: int, state: PlayerTaskState) -> void:
 	state.completed = true
 	state.completion_time_ms = Time.get_ticks_msec() - state.start_time
-	task_hud.rpc_show_waiting.rpc_id(peer_id)
+	riding_hud.push_event_status(peer_id, "TUT_WAITING_FOR_OTHERS")
 	player_completed.emit(peer_id)
 	if _all_peers_complete():
 		all_completed.emit()

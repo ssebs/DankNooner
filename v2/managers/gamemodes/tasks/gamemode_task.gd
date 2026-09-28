@@ -19,6 +19,10 @@
 ## - trigger   : required for ON_ENTER / WHILE_INSIDE — a level-authored GameModeObject
 class_name GameModeTask extends Node
 
+## Runner API — emitted by TaskRunner subclasses, never by leaf tasks.
+signal player_completed(peer_id: int)
+signal all_completed
+
 enum EvalWhen { ALWAYS, ON_ENTER, WHILE_INSIDE }
 
 @export var eval_when: EvalWhen = EvalWhen.ALWAYS
@@ -31,7 +35,7 @@ enum EvalWhen { ALWAYS, ON_ENTER, WHILE_INSIDE }
 @export var is_constraint: bool = false
 
 ## Set by the parent runner when the task becomes active.
-## Tasks reach shared deps (spawn_manager, task_hud, audio_manager) via this ref
+## Tasks reach shared deps (spawn_manager, riding_hud, audio_manager) via this ref
 ## instead of downcasting to a specific gamemode or runner subclass.
 var _runner: TaskRunner
 
@@ -66,10 +70,7 @@ func get_hint_text() -> String:
 
 #region Composite/runner API (override in TaskRunner subclasses)
 ## Leaf tasks ignore these — the parent runner walks them via the leaf hooks above.
-## Runner subclasses override to manage their own children.
-
-signal player_completed(peer_id: int)
-signal all_completed
+## Runner subclasses override to manage their own children (signals are declared up top).
 
 
 func start(_peer_ids: Array) -> void:

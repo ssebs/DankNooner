@@ -118,7 +118,10 @@ func request_respawn():
 		return
 	var sender := multiplayer.get_remote_sender_id()
 	# sender == 1 covers both the host's local call and (impossibly) server-sent.
-	respawn_player.rpc(sender if sender > 1 else 1)
+	var peer_id := sender if sender > 1 else 1
+	if gamemode_manager.get_current_gamemode().handle_full_respawn(peer_id):
+		return
+	respawn_player.rpc(peer_id)
 
 
 ## Client-callable: R tap. Quick in-place recovery — EXCEPT while crashed mid-race, where it does

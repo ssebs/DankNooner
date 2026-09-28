@@ -11,7 +11,7 @@ signal reset_cam_pressed
 ## Automatic transmission thresholds (RPM ratio, 0-1). Upshift sits just under the rev
 ## limiter's 0.98 cut so the auto box shifts instead of bouncing off it.
 const AUTO_UPSHIFT_RPM_RATIO: float = 0.95
-const AUTO_DOWNSHIFT_RPM_RATIO: float = 0.5
+const AUTO_DOWNSHIFT_RPM_RATIO: float = 0.55
 ## Minimum seconds between automatic shifts — stops a shift from being re-evaluated before
 ## the RPM has settled into the new gear.
 const AUTO_SHIFT_COOLDOWN: float = 0.4
@@ -123,7 +123,7 @@ func _process(delta):
 	nfx_target_gear = clampi(nfx_target_gear, 1, player_entity.bike_definition.num_gears)
 
 
-## Automatic transmission: shift up at redline, down at half RPM.
+## Automatic transmission: shift up at redline, down just under where an upshift lands.
 ##
 ## Lives here rather than in GearingController because nfx_target_gear is a netfox INPUT
 ## property owned by the local client — the server must never write it. Driving the same

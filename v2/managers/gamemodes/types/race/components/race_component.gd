@@ -32,7 +32,7 @@ func score(_peer_id: int) -> float:
 	return 0.0
 
 
-## Extra leaderboard/results columns — header icons, one cell each via column_cells.
+## Extra leaderboard/results columns — "icon word" headers, one cell each via column_cells.
 func column_headers() -> PackedStringArray:
 	return PackedStringArray()
 

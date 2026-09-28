@@ -21,6 +21,9 @@ const _RESPAWN_PULSE_HZ := 2.0
 const _RESPAWN_GLOW := 0.35
 ## How long the "Respawning..." text lingers after a quick tap, so a brief tap still reads.
 const _RESPAWN_QUICK_FLASH_SECS := 0.6
+## Event warning: how long a one-shot stays up, and a looping one's half-pulse.
+const _WARNING_HOLD_SECS := 1.5
+const _WARNING_PULSE_SECS := 0.35
 
 @onready var _throttle_bar: ProgressBar = %HUD_ThrottleProgress
 @onready var _rpm_bar: ProgressBar = %HUD_RPMProgress
@@ -35,7 +38,13 @@ const _RESPAWN_QUICK_FLASH_SECS := 0.6
 @onready var _game_msg: Label = %HUD_GAME_MSG
 @onready var _leaderboard: RaceLeaderboard = %HUD_Leaderboard
 @onready var _trick_popups: TrickPopups = %TrickPopups
-@onready var _challenge_panel: PanelContainer = %ChallengePanel
+@onready var _event_panel: PanelContainer = %EventPanel
+@onready var _event_title: Label = %HUD_EventTitle
+@onready var _event_step: Label = %HUD_EventStep
+@onready var _event_objective: Label = %HUD_EventObjective
+@onready var _event_progress: Label = %HUD_EventProgress
+@onready var _race_pb: Label = %HUD_RacePB
+@onready var _event_warning: Label = %HUD_EventWarning
 @onready var _trick_timer: Label = %HUD_TRICK_TIMER
 @onready var _balance_bar: BalanceBar = %BalanceBar
 @onready var _boost_gauge: BoostGauge = %BoostGauge
@@ -62,6 +71,9 @@ var _respawn_fill_style: StyleBoxFlat = null
 var _respawn_pulse_t: float = 0.0
 ## Countdown keeping the quick-tap "Respawning..." text up for a split second after release.
 var _respawn_flash_t: float = 0.0
+var _event_warning_tween: Tween = null
+## A race leaderboard is up (see _rpc_set_leaderboard).
+var _has_leaderboard: bool = false
 ## Local-only edge tracking for the boost button, so a press with nothing banked can blink
 ## the gauge. Purely cosmetic — kept out of the synced boost_prev_held, which the rollback
 ## tick owns and must not be perturbed by the HUD.
@@ -207,14 +219,14 @@ func Physics_Update(delta: float):
 	_combo_counter.set_combo(combo, comboing)
 	_trick_popups.track(player_entity, trick_manager.points_per_second, delta)
 
-	# Live wheelie-attempt stopwatch, only while a challenge is up (the panel is visible).
+	# Live wheelie-attempt stopwatch, only while a race leaderboard (and its challenges) is up.
 	# Display-only local accumulation — the challenge's authoritative best is server-side.
 	var wheelie_held: bool = (
 		not player_entity.is_crashed
 		and trick_controller.current_trick
 		in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]
 	)
-	if _challenge_panel.visible and wheelie_held:
+	if _has_leaderboard and wheelie_held:
 		_wheelie_attempt_t += delta
 		_trick_timer.text = tr("RACE_WHEELIE_ATTEMPT").format({"time": "%.1f" % _wheelie_attempt_t})
 		_trick_timer.visible = true
@@ -410,12 +422,13 @@ func clear_leaderboard() -> void:
 	_rpc_clear_leaderboard.rpc()
 
 
-## headers/cells are pre-localized by the server — don't tr() again, same as the tutorial
-## HUD's progress line.
+## headers/cells are pre-localized by the server — don't tr() again, same as the event
+## pane's step text.
 @rpc("call_local", "unreliable")
 func _rpc_set_leaderboard(headers: PackedStringArray, rows: Array, tricks: PackedInt32Array):
 	_leaderboard.set_board(headers, rows)
-	_challenge_panel.visible = true
+	_has_leaderboard = true
+	_update_event_panel()
 	# Resent every refresh; only rebuild when it changes.
 	if tricks != _challenge_tricks:
 		_challenge_tricks = tricks
@@ -424,10 +437,153 @@ func _rpc_set_leaderboard(headers: PackedStringArray, rows: Array, tricks: Packe
 
 @rpc("call_local", "reliable")
 func _rpc_clear_leaderboard():
-	_challenge_panel.visible = false
 	_leaderboard.clear()
+	_has_leaderboard = false
+	set_race_pb("")
+	_update_event_panel()
 	_challenge_tricks = PackedInt32Array()
 	_rebuild_trick_rows()
+
+
+#region Event pane — every runner event's step text, above the race leaderboard
+
+
+## Server-side, to one peer. objective/hint are pre-localized by the task (it interpolates its
+## own @export values) — don't tr() again. The hint shares the progress line, which
+## push_event_progress then overwrites.
+func push_event_step(
+	peer_id: int, index: int, total: int, objective: String, hint: String, show_count: bool
+) -> void:
+	_rpc_set_event_step.rpc_id(peer_id, index, total, objective, hint, show_count)
+
+
+## Server-side, every frame: the peer's live progress line (lap clock, wheelie timer...).
+func push_event_progress(peer_id: int, text: String) -> void:
+	_rpc_set_event_progress.rpc_id(peer_id, text)
+
+
+## Server-side: replace the step with a status line (waiting, complete). Localized per client.
+func push_event_status(peer_id: int, text_key: String) -> void:
+	_rpc_set_event_status.rpc_id(peer_id, text_key)
+
+
+func push_event_status_all(text_key: String) -> void:
+	_rpc_set_event_status.rpc(text_key)
+
+
+## Server-side: flash a warning (missed checkpoint, wrong way); `looping` pulses until cleared.
+func push_event_warning(peer_id: int, text_key: String, looping: bool = false) -> void:
+	_rpc_flash_event_warning.rpc_id(peer_id, text_key, looping)
+
+
+func clear_event_warning(peer_id: int) -> void:
+	_rpc_clear_event_warning.rpc_id(peer_id)
+
+
+func push_event_clear_all() -> void:
+	_rpc_clear_event_text.rpc()
+
+
+## Local, from CountdownTask: the 3-2-1 on the progress line (the next step replaces it).
+func show_event_countdown(num: int) -> void:
+	_rpc_set_event_progress(str(num))
+
+
+## Local, on every peer from RunnerGameMode.Enter: the running event's name.
+func set_event_title(text: String) -> void:
+	_event_title.text = text
+	_event_title.show()
+	_update_event_panel()
+
+
+## Local: this client's time attack personal best line; empty hides it.
+func set_race_pb(text: String) -> void:
+	_race_pb.text = text
+	_race_pb.visible = text != ""
+	_update_event_panel()
+
+
+## Local — RunnerGameMode.Exit calls this directly, as the peer may be torn down for an RPC.
+func clear_event_text() -> void:
+	_event_title.hide()
+	_event_step.hide()
+	_event_objective.hide()
+	_event_progress.hide()
+	_rpc_clear_event_warning()
+	_update_event_panel()
+
+
+@rpc("call_local", "reliable")
+func _rpc_clear_event_text():
+	clear_event_text()
+
+
+@rpc("call_local", "reliable")
+func _rpc_set_event_step(
+	index: int, total: int, objective: String, hint: String, show_count: bool
+):
+	_event_step.text = "%d / %d" % [index + 1, total]
+	_event_step.visible = show_count and total > 1
+	# Grid/countdown steps have no objective — hide rather than leave a blank line.
+	_event_objective.text = objective
+	_event_objective.visible = objective != ""
+	_event_progress.text = hint
+	_event_progress.visible = hint != ""
+	_update_event_panel()
+
+
+@rpc("call_local", "unreliable")
+func _rpc_set_event_progress(text: String):
+	_event_progress.text = text
+	_event_progress.show()
+	_update_event_panel()
+
+
+@rpc("call_local", "reliable")
+func _rpc_set_event_status(text_key: String):
+	_event_step.hide()
+	_event_objective.hide()
+	_rpc_set_event_progress(tr(text_key))
+
+
+@rpc("call_local", "reliable")
+func _rpc_flash_event_warning(text_key: String, looping: bool):
+	if _event_warning_tween != null:
+		_event_warning_tween.kill()
+	_event_warning.text = tr(text_key)
+	_event_warning.modulate.a = 1.0
+	_event_warning.show()
+	_event_warning_tween = create_tween()
+	if looping:
+		_event_warning_tween.set_loops()
+		_event_warning_tween.tween_property(_event_warning, "modulate:a", 0.3, _WARNING_PULSE_SECS)
+		_event_warning_tween.tween_property(_event_warning, "modulate:a", 1.0, _WARNING_PULSE_SECS)
+	else:
+		_event_warning_tween.tween_interval(_WARNING_HOLD_SECS)
+		_event_warning_tween.tween_callback(_event_warning.hide)
+	_update_event_panel()
+
+
+@rpc("call_local", "reliable")
+func _rpc_clear_event_warning():
+	if _event_warning_tween != null:
+		_event_warning_tween.kill()
+		_event_warning_tween = null
+	_event_warning.hide()
+
+
+func _update_event_panel() -> void:
+	_event_panel.visible = (
+		_has_leaderboard
+		or _event_title.visible
+		or _event_objective.visible
+		or _event_progress.visible
+		or _race_pb.visible
+		or _event_warning.visible
+	)
+
+
+#endregion
 
 
 ## Server-side: pop a banked combo's score on its rider's HUD. Called from TrickManager.

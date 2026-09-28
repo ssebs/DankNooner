@@ -110,11 +110,20 @@ func _on_event_circle_entered(peer_id: int, source_circle: EventStartCircle):
 	_entered_circle = source_circle
 	var names := PackedStringArray()
 	var descriptions := PackedStringArray()
+	# Time attack events' personal-best save keys, "" for the rest.
+	var pb_keys := PackedStringArray()
 	for event in source_circle.get_events():
 		names.append(event.definition.name)
 		descriptions.append(event.definition.description)
+		var is_time_attack := event.definition.target_gamemode == GameModeType.Kind.TIME_ATTACK
+		pb_keys.append(
+			TimeAttackComponent.event_key(gamemode_manager.current_level_name, event)
+			if is_time_attack else ""
+		)
 
-	game_mode_event_hud_state.on_player_entered_circle.rpc_id(1, peer_id, names, descriptions)
+	game_mode_event_hud_state.on_player_entered_circle.rpc_id(
+		1, peer_id, names, descriptions, pb_keys
+	)
 
 	# connect hud signals
 	if not game_mode_event_hud_state.hud_submitted.is_connected(

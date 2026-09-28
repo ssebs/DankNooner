@@ -167,6 +167,8 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     - Apply `input_controller.nfx_target_gear` (absolute requested gear, synced as netfox
       input — NOT edge-triggered, so stale-input reuse / dropped snapshots on the server
       can't skip or double-apply shifts), emits `gear_changed`
+    - Each shift starts `shift_cut_timer` (`bd.shift_cut_time`): zero drive power while RPM
+      glides to the new gear instead of snapping
     - Update `_clutch_value` from `clutch_held` input
     - Blend `_current_rpm` between free-rev and wheel-loaded RPM based on clutch engagement
   - Public API:

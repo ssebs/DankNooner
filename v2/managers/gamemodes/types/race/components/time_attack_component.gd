@@ -6,17 +6,41 @@ class_name TimeAttackComponent extends RaceComponent
 
 @export var save_manager: SaveManager
 
-## "<level>/<event>" -> peer_id -> {"best_lap_ms": int, "last_lap_ms": int}. Kept for the
+## event_key -> peer_id -> {"best_lap_ms": int, "last_lap_ms": int}. Kept for the
 ## whole host session so re-entries compete against earlier laps.
 var _session_times: Dictionary[String, Dictionary] = {}
 
 
+## Save key for an event's personal best — "<level>/<circle>/<event>". Event names repeat
+## across a level's circles, so the circle is part of the key.
+static func event_key(level_name: LevelManager.LevelName, event: GameModeEvent) -> String:
+	return "%s/%s/%s" % [
+		LevelManager.LevelName.find_key(level_name), event.get_circle().name, event.name
+	]
+
+
+## This client's saved best lap for `key`, -1 if none.
+static func personal_best_ms(save: SaveManager, key: String) -> int:
+	var pbs: Dictionary = save.current_save["progression"]["time_attack"].get(key, {})
+	return int(pbs.get("best_lap_ms", -1))
+
+
+## "PB 0:38.50", or the no-PB-yet text.
+static func personal_best_text(save: SaveManager, key: String) -> String:
+	var ms := personal_best_ms(save, key)
+	if ms < 0:
+		return TranslationServer.translate("TIME_ATTACK_NO_PB")
+	return TranslationServer.translate("TIME_ATTACK_PB").format({"time": RaceTask.format_time_ms(ms)})
+
+
 func race_start() -> void:
+	# Every run starts on a full boost meter — restart_run refills it too.
 	for peer_id in race_mode.lobby_manager.lobby_players:
 		# Player may not be spawned yet (late-join) — skip is intentional.
 		if race_mode.spawn_manager._get_player_by_peer_id(peer_id) != null:
 			race_mode.spawn_manager.max_boost_player.rpc(peer_id)
 	race_mode.race_task.lap_completed.connect(_on_lap_completed)
+	_rpc_show_personal_best.rpc(_event_key())
 
 
 func race_end() -> void:
@@ -28,7 +52,9 @@ func best_lap_ms(peer_id: int) -> float:
 
 
 func column_headers() -> PackedStringArray:
-	return PackedStringArray(["🏆", "🔁", "⏱"])
+	return PackedStringArray([
+		"🏆 %s" % tr("LB_BEST_LAP"), "🔁 %s" % tr("LB_LAST_LAP"), "⏱ %s" % tr("LB_CURRENT_LAP")
+	])
 
 
 func column_cells(peer_id: int) -> PackedStringArray:
@@ -53,7 +79,13 @@ func request_retry() -> void:
 	# The host may have ended the event before the request arrived — skip is intentional.
 	if race_mode.race_task == null or !race_mode.race_task.has_racer(peer_id):
 		return
-	race_mode.race_task.retry_run(peer_id)
+	restart_run(peer_id)
+
+
+## A fresh run for one rider: grid, 3-2-1, full boost. Hold-R respawn and "run again".
+func restart_run(peer_id: int) -> void:
+	race_mode.race_task.restart_run(peer_id)
+	race_mode.spawn_manager.max_boost_player.rpc(peer_id)
 
 
 func _on_lap_completed(peer_id: int, lap_ms: int) -> void:
@@ -62,7 +94,7 @@ func _on_lap_completed(peer_id: int, lap_ms: int) -> void:
 	times["best_lap_ms"] = mini(times.get("best_lap_ms", lap_ms), lap_ms)
 	_rpc_save_personal_best.rpc_id(peer_id, _event_key(), lap_ms)
 	if race_mode.race_task.is_point_to_point():
-		race_mode.tutorial_hud.rpc_update_progress.rpc_id(peer_id, tr("TIME_ATTACK_RUN_DONE"))
+		race_mode.riding_hud_state.push_event_status(peer_id, "TIME_ATTACK_RUN_DONE")
 		race_mode.results_hud.rpc_show_run_finished.rpc_id(
 			peer_id, race_mode.leaderboard.build_results().to_dict()
 		)
@@ -72,10 +104,9 @@ func _times(peer_id: int) -> Dictionary:
 	return _session_times.get_or_add(_event_key(), {}).get_or_add(peer_id, {})
 
 
-## Same on every peer — gamemode_manager syncs the level and event.
 func _event_key() -> String:
 	var gm := race_mode.gamemode_manager
-	return "%s/%s" % [LevelManager.LevelName.find_key(gm.current_level_name), gm.current_event.name]
+	return event_key(gm.current_level_name, gm.current_event)
 
 
 func _time_text(ms: int) -> String:
@@ -83,14 +114,19 @@ func _time_text(ms: int) -> String:
 
 
 @rpc("call_local", "reliable")
-func _rpc_save_personal_best(event_key: String, lap_ms: int) -> void:
-	var progression: Dictionary = save_manager.current_save["progression"]
-	var pbs: Dictionary = progression["time_attack"].get_or_add(event_key, {})
-	if pbs.has("best_lap_ms") and pbs["best_lap_ms"] <= lap_ms:
+func _rpc_show_personal_best(key: String) -> void:
+	race_mode.riding_hud_state.set_race_pb(personal_best_text(save_manager, key))
+
+
+@rpc("call_local", "reliable")
+func _rpc_save_personal_best(key: String, lap_ms: int) -> void:
+	var pb_ms := personal_best_ms(save_manager, key)
+	if pb_ms >= 0 and pb_ms <= lap_ms:
 		return
-	pbs["best_lap_ms"] = lap_ms
+	var progression: Dictionary = save_manager.current_save["progression"]
+	progression["time_attack"][key] = {"best_lap_ms": lap_ms}
 	save_manager.update_save("progression", progression, false, true)
-	DebugUtils.DebugMsg("TimeAttack: new PB %s = %s" % [event_key, RaceTask.format_time_ms(lap_ms)])
+	race_mode.riding_hud_state.set_race_pb(personal_best_text(save_manager, key))
 
 
 func _get_configuration_warnings() -> PackedStringArray:
