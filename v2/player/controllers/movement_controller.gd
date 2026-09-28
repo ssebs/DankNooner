@@ -227,7 +227,6 @@ func on_movement_rollback_tick(delta: float):
 			elif pitch_angle < 0.0:
 				# Nose-first landing (not a flip) — flatten to the ground, not into a stoppie.
 				pitch_angle = 0.0
-			_wobble_bad_landing() # trigger 2 — a crooked touchdown wobbles (reads roll/heading pre-reset)
 			air_pitch_total = 0.0
 			_air_time = 0.0
 			_wheelie_grace_consumed = false
@@ -267,12 +266,17 @@ func on_movement_rollback_tick(delta: float):
 		and player_entity.trick_controller.is_in_wheelie()
 		and pitch_angle <= deg_to_rad(TrickController.WHEELIE_PITCH_THRESHOLD_DEG)
 	):
-		_wobble_from_misalign("trigger 5 (wheelie set-down)")
+		_wobble_from_misalign("trigger 5 (wheelie set-down)", player_entity.velocity)
 
 	# Apply movement
+	var pre_slide_velocity := player_entity.velocity
 	player_entity.velocity *= NetworkTime.physics_factor
 	player_entity.move_and_slide()
 	player_entity.velocity /= NetworkTime.physics_factor
+
+	# Trigger 2 — judged here because the touchdown slide deflects velocity (a steep landing can reverse it).
+	if not _is_on_floor and player_entity.is_on_floor():
+		_wobble_bad_landing(pre_slide_velocity)
 
 	_handle_player_collision(delta)
 
@@ -1072,11 +1076,11 @@ func _update_brake_slide_wobble(delta: float):
 
 
 ## Trigger 2. A crooked jump landing (roll lean, or heading off travel) wobbles by how far off it is.
-func _wobble_bad_landing():
+func _wobble_bad_landing(landing_velocity: Vector3):
 	if _air_time < wobble_landing_min_airtime: # short hops / curbs never wobble
 		return
-	# Hard slam — enough vertical impact wobbles even a dead-straight landing. Land smooth or pay.
-	var impact := -player_entity.velocity.y # downward speed at touchdown (velocity is still pre-landing here)
+	# Hard slam — enough speed into the surface wobbles even a dead-straight landing; matching the slope lands soft.
+	var impact := -landing_velocity.dot(player_entity.get_floor_normal())
 	DebugUtils.DebugMsg(
 		"landing: impact=%.1f (hard>%.0f) air=%.2fs spd=%.1f" % [impact, wobble_hard_land_speed, _air_time, speed],
 		OS.has_feature("debug") and debug_verbose
@@ -1087,16 +1091,16 @@ func _wobble_bad_landing():
 		DebugUtils.DebugMsg(
 			"wobble trigger 2 (hard landing): impact=%.1f" % impact, OS.has_feature("debug") and debug_verbose
 		)
-	_wobble_from_misalign("trigger 2 (bad landing)")
+	_wobble_from_misalign("trigger 2 (bad landing)", landing_velocity)
 
 
 ## Inject a wobble sized by how far the bike's lean / heading is off from its travel. Shared by the
 ## jump landing (trigger 2) and the wheelie set-down (trigger 5). No-op below min speed or when
 ## already aligned. A moderately-off angle is capped to a RECOVERABLE wobble, but one past the hard
 ## window keeps its full magnitude and blows past the balance bar — a crazy-crooked one highsides.
-func _wobble_from_misalign(source: String):
+func _wobble_from_misalign(source: String, travel_velocity: Vector3):
 	var fwd := -player_entity.global_transform.basis.z
-	var h_vel := Vector3(player_entity.velocity.x, 0.0, player_entity.velocity.z)
+	var h_vel := Vector3(travel_velocity.x, 0.0, travel_velocity.z)
 	var yaw_off := 0.0
 	if h_vel.length() > 2.0:
 		var fwd_flat := Vector3(fwd.x, 0.0, fwd.z).normalized()

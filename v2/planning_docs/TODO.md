@@ -30,7 +30,7 @@
   - [x] make tricks + combos easier to do **WIP**
   - [x] Trick juice / points / leaderboard
   - [x] Score complex tricks more (high chair during wheelie vs just on ground)
-  - [ ] Time attack / multiple modes per location
+  - [x] Time attack / multiple modes per location
 
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
 - [ ] fix game breaking bugs
