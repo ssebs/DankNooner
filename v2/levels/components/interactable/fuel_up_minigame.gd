@@ -1,5 +1,5 @@
 ## One gas pump in a station. FuelUpGameMode assigns each rider a pump and runs its minigame
-## locally on that rider's client: hold click on the handle to carry it, hold fill over the gas cap
+## locally on that rider's client: hold click on the handle to carry it, hold it over the gas cap
 ## until full, let go to hang it back up (letting go early just returns it). The left stick steers
 ## the same cursor, so gamepad plays it too.
 class_name FuelUpMinigame extends Node3D
@@ -96,7 +96,7 @@ func get_prompt_key() -> String:
 		return "FUELUP_GRAB"
 	if fill >= 1.0:
 		return "FUELUP_RETURN"
-	return "FUELUP_FILL" if _over_cap else "FUELUP_ALIGN"
+	return "FUELUP_ALIGN"
 
 
 func _process(delta: float):
@@ -124,7 +124,7 @@ func _process(delta: float):
 				_follow_cursor()
 				_over_cap = _tip_in_cap()
 				_set_highlight(_gas_cap if _over_cap else null)
-				if _over_cap and Input.is_action_pressed("fuel_fill"):
+				if _over_cap:
 					fill = minf(fill + delta / fill_secs, 1.0)
 			else:
 				# Let go: the handle springs back onto the pump.
@@ -225,7 +225,7 @@ func _solve_swing():
 	)
 
 
-## Carry: left click (use_item) or gamepad A (ui_accept). Fill is its own action (fuel_fill).
+## Carry: left click (use_item) or gamepad A (ui_accept).
 func _click_pressed() -> bool:
 	return Input.is_action_just_pressed("use_item") or Input.is_action_just_pressed("ui_accept")
 

@@ -68,8 +68,8 @@ its `target_gamemode` once every rider has finished. This is the boost = fuel to
   locally, outside the rollback sim: pump camera, rider hidden, `IN_MINIGAME` input state (hand
   cursor; the left stick steers it on gamepad), and `FuelUpHUDState` (boost gauge + step prompt).
 - **Play:** hold carry (`use_item` / A) on the handle, held by `HandleMarkerClick`. Nearing the cap,
-  it swings toward the `GasCapMarkerTip` pose and rides at cap height. Hold `fuel_fill`
-  (right click / A) while `HandleMarkerTip` is inside `GasCapArea`. Let go to hang it up; letting go
+  it swings toward the `GasCapMarkerTip` pose and rides at cap height. It fills while
+  `HandleMarkerTip` is inside `GasCapArea` (no separate fill button, so it works on trackpads). Let go to hang it up; letting go
   early just returns it. The tank starts at the rider's boost; finishing tells the server, which
   fills the meter.
 - **The cap target is per bike:** `BikeSkinDefinition.gas_cap_position`, authored with

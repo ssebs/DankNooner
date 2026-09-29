@@ -25,6 +25,8 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] sfx for filling up
+
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [x] make tricks + combos easier to do **WIP**
@@ -70,7 +72,6 @@
 
 - [ ] holding balance point + using wrong dir should not move the camera.
   - [ ] e.g. balance point + down fails and the camera moves, bc theres no trick assigned
-
 
 ### Gameplay Improvements
 
@@ -226,6 +227,11 @@
 ---
 
 ## Done ✅
+
+- [x] Don't have to right click to fill up
+
+- [x] try separate thread for physics
+  - [x] not worth it
 
 - [x] Audio Manager v2 (RPM blending, record bike, per-bike samples)
 

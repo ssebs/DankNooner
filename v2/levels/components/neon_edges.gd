@@ -34,21 +34,28 @@ class_name NeonEdges extends Node
 const SCREEN_NEON_EDGES_SHADER := preload("res://levels/components/screen_neon_edges.gdshader")
 
 var _mat := ShaderMaterial.new()
+## The shader samples screen normals, which only Forward+ has (web runs Compatibility).
+var _supported := RenderingServer.get_current_rendering_method() == "forward_plus"
 
 
 func _init():
-	_mat.shader = SCREEN_NEON_EDGES_SHADER
+	if _supported:
+		_mat.shader = SCREEN_NEON_EDGES_SHADER
 
 
 func _enter_tree():
-	get_tree().node_added.connect(_on_node_added)
+	if _supported:
+		get_tree().node_added.connect(_on_node_added)
 
 
 func _exit_tree():
-	get_tree().node_added.disconnect(_on_node_added)
+	if _supported:
+		get_tree().node_added.disconnect(_on_node_added)
 
 
 func _ready():
+	if not _supported:
+		return
 	_apply_params()
 	for target in _get_targets():
 		var meshes := target.find_children("*", "MeshInstance3D", true, false)
