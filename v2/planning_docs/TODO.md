@@ -25,8 +25,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] disable sfx while loading a level
-  - currently has revs on first launch for a while and its annoying
 - [ ] show rotation hud (like during wheelie) when in air / doing flips.
 
 - [ ] get fun gameplay loop going
@@ -230,6 +228,9 @@
 ---
 
 ## Done ✅
+
+- [x] disable sfx while loading a level
+  - currently has revs on first launch for a while and its annoying
 
 - [x] glug sfx for filling up
 
