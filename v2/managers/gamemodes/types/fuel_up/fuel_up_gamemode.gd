@@ -77,6 +77,13 @@ func Exit(_state_context: StateContext):
 	_event = null
 
 
+func Update(_delta: float):
+	# Web pointer lock lands async, so the event submit's capture can lock after IN_MINIGAME
+	# released it. Asks DisplayServer since Input.mouse_mode caches the last requested mode.
+	if _minigame != null and DisplayServer.mouse_get_mode() == DisplayServer.MOUSE_MODE_CAPTURED:
+		input_state_manager.showhide_mouse_cursor()
+
+
 func _set_station_objects_active(station: Node3D, active: bool):
 	for obj: GameModeObject in station.find_children("*", "GameModeObject", true, false):
 		obj.is_active = active
@@ -87,6 +94,7 @@ func _set_station_objects_active(station: Node3D, active: bool):
 
 func _start_minigame():
 	_minigame.input_state_manager = input_state_manager
+	_minigame.audio_manager = gamemode_manager.audio_manager
 	_minigame.finished.connect(_on_minigame_finished)
 	_minigame.start(
 		_player.boost_controller.boost_amount / BoostController.BOOST_SEGMENTS,

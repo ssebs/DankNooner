@@ -41,8 +41,9 @@ const CURSOR_HOTSPOT := Vector2(32, 32)
 
 ## Tank level, 0..1. Read by FuelUpHUDState.
 var fill: float = 0.0
-## Set by FuelUpGameMode while this pump is in use.
+## Both set by FuelUpGameMode while this pump is in use.
 var input_state_manager: InputStateManager
+var audio_manager: AudioManager
 
 var _step := Step.GRAB
 var _over_cap: bool = false
@@ -61,6 +62,8 @@ var _swing_angle: float = 0.0
 var _cap_grip_height: float = 0.0
 var _cursor: Texture2D
 var _highlighted: GrayBoxStaticBody
+## The glug plays once per fill-up; later fills resume it rather than restart it.
+var _glug_started: bool = false
 
 
 func _ready():
@@ -79,6 +82,7 @@ func start(start_fill: float, gas_cap_pos: Vector3):
 	_gas_cap_area.global_position = gas_cap_pos
 	_step = Step.GRAB
 	_over_cap = false
+	_glug_started = false
 	set_process(true)
 
 
@@ -89,6 +93,7 @@ func stop():
 	_update_hose()
 	_set_highlight(null)
 	_set_cursor(null)
+	audio_manager.stop_sfx(AudioManager.Sfx.GLUG_GLUG)
 
 
 func get_prompt_key() -> String:
@@ -106,6 +111,7 @@ func _process(delta: float):
 	# Paused — the pause menu owns the cursor.
 	if input_state_manager.current_input_state != InputStateManager.InputState.IN_MINIGAME:
 		_set_cursor(null)
+		_set_glug(false)
 		return
 	_move_cursor_with_stick(delta)
 	match _step:
@@ -136,6 +142,7 @@ func _process(delta: float):
 					stop()
 					finished.emit()
 					return
+	_set_glug(_step == Step.HOLD and _over_cap and fill < 1.0)
 	_set_cursor(CURSOR_CLOSED if _step == Step.HOLD else CURSOR_OPEN)
 	_update_hose()
 
@@ -232,6 +239,16 @@ func _click_pressed() -> bool:
 
 func _click_held() -> bool:
 	return Input.is_action_pressed("use_item") or Input.is_action_pressed("ui_accept")
+
+
+## Pausing keeps the clip's place, so filling again picks up where it left off.
+func _set_glug(filling: bool):
+	var glug := audio_manager.get_sound_event(AudioManager.Sfx.GLUG_GLUG)
+	if filling and !_glug_started:
+		_glug_started = true
+		glug.play()
+	if glug.stream_paused == filling:
+		glug.stream_paused = !filling
 
 
 func _set_cursor(tex: Texture2D):

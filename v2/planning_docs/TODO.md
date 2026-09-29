@@ -25,7 +25,8 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] sfx for filling up
+- [ ] disable sfx while loading, currently has revs on first launch for a while and its annoying
+- [ ] show rotation hud (like during wheelie) when in air / doing flips.
 
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
@@ -45,11 +46,12 @@
 > Stuff to move ASAP
 - [ ] replace csgmesh for houses/other buildings for performance + looks
 - trick animation to move up then play the mixamo anims
+- - [ ] rotate fps cam down while doing wheelie to make it easier to see
+- [ ] try to have the camera look where your eyes are supposed to look irl when riding 
 - lightning / Rally Up item
 - r => quick respawn, add btn for set full respawn point (if not in race)
 - 1, 2, 3 spam is possible for everyone, debounce this
 - TP commands dont work on multiplayer
-- gas pump fill up minigame (should do more than just boost the bike, and it should be in first person. group of peeps do it like the race gamemodes)
 - [ ] add racing line to show newbs where to go & brake, forza style
   - [ ] levels\assets\props\racing_line.gd
   - [x] curve/mesh gen system
@@ -227,6 +229,10 @@
 ---
 
 ## Done ✅
+
+- [x] glug sfx for filling up
+
+- [x] gas pump fill up minigame (should do more than just boost the bike, and it should be in first person. group of peeps do it like the race gamemodes)
 
 - [x] Don't have to right click to fill up
 

@@ -23,6 +23,9 @@ const MARKER_PATH := "user://.shaders_warmed"
 @onready var warmup_spot_light: SpotLight3D = %WarmupSpotLight
 @onready var progress_bar: ProgressBar = %ProgressBar
 
+## Hidden: Ctrl stops warmup after the current level.
+var _skip_requested: bool = false
+
 
 func Enter(_state_context: StateContext):
 	if Engine.is_editor_hint():
@@ -44,11 +47,13 @@ func Enter(_state_context: StateContext):
 	var t_warm_start := Time.get_ticks_msec()
 	await _warm_all_levels()
 	DebugUtils.DebugMsg("[warmup] all levels warmed in %dms" % (Time.get_ticks_msec() - t_warm_start))
-	# Overwrite the marker with this build's version (replaces any stale one).
-	# Best-effort: a failed write (e.g. sandboxed web FS) just re-warms next launch.
-	var f := FileAccess.open(MARKER_PATH, FileAccess.WRITE)
-	if f != null:
-		f.store_string(_current_version())
+	# A skipped warmup isn't complete, so leave the marker for next launch to re-warm.
+	if !_skip_requested:
+		# Overwrite the marker with this build's version (replaces any stale one).
+		# Best-effort: a failed write (e.g. sandboxed web FS) just re-warms next launch.
+		var f := FileAccess.open(MARKER_PATH, FileAccess.WRITE)
+		if f != null:
+			f.store_string(_current_version())
 	_finish()
 
 
@@ -73,10 +78,20 @@ func _warm_all_levels() -> void:
 	progress_bar.value = 0
 
 	for scene in levels:
+		if _skip_requested:
+			DebugUtils.DebugMsg("[warmup] skipped")
+			return
 		await _warm_level(scene, extras)
 		progress_bar.value += 1
 		# Repaint so the bar visibly climbs before the next blocking instantiate.
 		await RenderingServer.frame_post_draw
+
+
+func _unhandled_input(event: InputEvent):
+	if Engine.is_editor_hint():
+		return
+	if event is InputEventKey and event.keycode == KEY_CTRL and event.is_pressed():
+		_skip_requested = true
 
 
 ## extras are placed in front of the camera so they draw under this level's environment/lights.
