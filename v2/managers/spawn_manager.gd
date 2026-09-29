@@ -2,6 +2,8 @@
 class_name SpawnManager extends BaseManager
 
 signal player_spawned(player: PlayerEntity)
+## Server-only. A rider was crashed on someone else's account — see knock_out.
+signal player_knocked_out(victim_peer_id: int, aggressor_peer_id: int)
 
 @export var lobby_manager: LobbyManager
 @export var level_manager: LevelManager
@@ -197,6 +199,14 @@ func crash_player(player_peer_id: int):
 	_get_player_by_peer_id(player_peer_id).rb_do_crash = true
 
 
+## Server-only. Crash a rider on someone else's account (ram, oil slick, shotgun), crediting the
+## aggressor unless the victim was already down or took themselves out.
+func knock_out(victim_peer_id: int, aggressor_peer_id: int) -> void:
+	if !_get_player_by_peer_id(victim_peer_id).is_crashed and victim_peer_id != aggressor_peer_id:
+		player_knocked_out.emit(victim_peer_id, aggressor_peer_id)
+	crash_player.rpc(victim_peer_id)
+
+
 ## Set player's rb_do_wobble on every peer so each injects the wobble in its rollback tick
 ## (wobble_vel is synced state). Server only — the callable the bat and any wobble source uses.
 @rpc("any_peer", "call_local", "reliable")
@@ -244,12 +254,19 @@ func _wobble_riders_near_bat(wielder_peer_id: int) -> void:
 				continue
 			if wielder.global_position.distance_to(child.global_position) <= BAT_SWING_RANGE:
 				wobble_player.rpc(int(child.name), BAT_SWING_WOBBLE_STRENGTH)
+				play_bonk_sfx.rpc_id(wielder_peer_id)
 
 
 ## Play the pickup "pop" (Ding) on the collecting rider's own client. Server → that peer via rpc_id.
 @rpc("call_local", "reliable")
 func play_pickup_sfx():
 	audio_manager.play_ding()
+
+
+## Play the bat-hit Bonk on the wielder's own client. Server → that peer via rpc_id.
+@rpc("call_local", "reliable")
+func play_bonk_sfx():
+	audio_manager.play_bonk()
 
 
 ## Debug: fill the player's boost meter. Server only; broadcast so each peer sets the setter and

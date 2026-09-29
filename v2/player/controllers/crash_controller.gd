@@ -258,7 +258,7 @@ func _crash_rammed_racer(collider: Object) -> void:
 		return
 	if collider is PlayerEntity:
 		var victim := collider as PlayerEntity
-		player_entity.gamemode_manager.spawn_manager.crash_player.rpc(int(victim.name))
+		player_entity.gamemode_manager.spawn_manager.knock_out(int(victim.name), int(player_entity.name))
 	elif collider is NPCRiderEntity:
 		(collider as NPCRiderEntity).report_hit(player_entity)
 

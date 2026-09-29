@@ -22,8 +22,8 @@ var _active: bool = false
 var _current: PickupItem
 ## Item index currently showing, resent on a late-join/load-race sync so every peer builds the same one.
 var _current_index: int = -1
-## Injected by PickupsComponent on activate() — used to grant item effects (server broadcast RPCs).
-var _spawn_manager: SpawnManager
+## Injected on activate() — a collect goes through it (instant effect, or the rider's held slot).
+var _item_manager: ItemManager
 ## Editor-only preview of the first item so placement is visible; never saved / spawned at runtime.
 var _preview: PickupItem
 
@@ -33,10 +33,10 @@ func _ready() -> void:
 		_refresh_preview()
 
 
-func activate(spawn_manager: SpawnManager) -> void:
+func activate(item_manager: ItemManager) -> void:
 	if !multiplayer.is_server():
 		return
-	_spawn_manager = spawn_manager
+	_item_manager = item_manager
 	_active = true
 	_spawn_random()
 
@@ -105,20 +105,11 @@ func _on_item_body_entered(body: Node3D) -> void:
 	# Only players collect — NPC riders are Racers too but have no boost, so granting to them derefs a null player.
 	if !_active or not body is PlayerEntity:
 		return
-	_apply_effect(int(body.name), _current.pickup_item_definition)
-	_spawn_manager.play_pickup_sfx.rpc_id(int(body.name))
+	# Rider's slot is full — the bubble stays for someone else.
+	if !_item_manager.collect(int(body.name), _current.pickup_item_definition):
+		return
 	_rpc_despawn.rpc()
 	get_tree().create_timer(timeout).timeout.connect(_on_respawn_timer, CONNECT_ONE_SHOT)
-
-
-## Server-only. Grants the collected item's effect to the rider, keyed on its type.
-func _apply_effect(peer_id: int, definition: PickupItemDefinition) -> void:
-	match definition.item_type:
-		PickupItemDefinition.PickupItemType.GAS_CAN:
-			_spawn_manager.grant_boost.rpc(peer_id)
-		PickupItemDefinition.PickupItemType.BAT:
-			# Collector swings the bat for a few seconds; the server wobbles nearby riders per swing.
-			_spawn_manager.swing_bat.rpc(peer_id)
 
 
 func _on_respawn_timer() -> void:

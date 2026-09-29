@@ -51,6 +51,7 @@ const _WARNING_PULSE_SECS := 0.35
 @onready var _respawn_bar: ProgressBar = %HUD_RespawnProgress
 @onready var _respawn_label: Label = %HUD_RespawnLabel
 @onready var _trick_rows: VBoxContainer = %HUD_TrickRows
+@onready var _held_item_label: Label = %HUD_HeldItem
 
 
 var player_entity: PlayerEntity
@@ -93,6 +94,7 @@ func _ready() -> void:
 	hide_ui()
 	# Event text starts hidden in code, not in the scene — the editor flips label visibility.
 	clear_event_text()
+	_held_item_label.hide()
 
 func Enter(_state_context: StateContext):
 	player_entity = hud_manager.local_player
@@ -441,6 +443,17 @@ func _rpc_clear_leaderboard():
 	_update_event_panel()
 	_challenge_tricks = PackedInt32Array()
 	_rebuild_trick_rows()
+
+
+## Server-side, to the holder: the held item's localization key, or "" once it's spent.
+func push_held_item(peer_id: int, text_key: String) -> void:
+	_rpc_set_held_item.rpc_id(peer_id, text_key)
+
+
+@rpc("call_local", "reliable")
+func _rpc_set_held_item(text_key: String):
+	_held_item_label.text = tr(text_key)
+	_held_item_label.visible = text_key != ""
 
 
 #region Event pane — every runner event's step text, above the race leaderboard

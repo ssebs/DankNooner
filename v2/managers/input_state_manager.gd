@@ -20,6 +20,7 @@ enum InputState {
 @export var menu_manager: MenuManager
 @export var save_manager: SaveManager
 @export var spawn_manager: SpawnManager
+@export var item_manager: ItemManager
 
 # @export var debug_mobile := true
 @export var debug_mobile := false
@@ -40,6 +41,8 @@ var is_mobile := false
 ## the threshold; a release before then is a tap → quick in-place respawn.
 var _respawn_hold_time: float = 0.0
 var _respawn_full_fired: bool = false
+## Last trick-button release; a press within TrickController.DOUBLE_TAP_WINDOW of it uses the held item.
+var _trick_released_msec: int = -1
 
 
 func _ready():
@@ -97,6 +100,12 @@ func _unhandled_input(event: InputEvent):
 				# Live overlay, coordinates no other manager — so unlike pause this state owns
 				# its own toggle. The HUD expands the minimap off the input_state_changed signal.
 				current_input_state = InputState.IN_MAP
+			elif event.is_action_released("trick"):
+				_trick_released_msec = Time.get_ticks_msec()
+			elif event.is_action_pressed("trick"):
+				_try_use_item()
+			elif event.is_action_pressed("use_item"):
+				item_manager.request_use_item.rpc_id(1)
 			elif event is InputEventKey and event.pressed and not event.echo:
 				_try_switch_bike_slot(event.physical_keycode)
 		InputStateManager.InputState.IN_GAME_PAUSED:
@@ -110,6 +119,12 @@ func _unhandled_input(event: InputEvent):
 				var current_state = menu_manager.state_machine.current_state as MenuState
 				if current_state:
 					current_state.on_cancel_key_pressed()
+
+
+## Double-tap the trick button to use the held item — timed like the trick stick's double tap.
+func _try_use_item():
+	if Time.get_ticks_msec() - _trick_released_msec <= TrickController.DOUBLE_TAP_WINDOW * 1000.0:
+		item_manager.request_use_item.rpc_id(1)
 
 
 ## Switch the local player's active bike to the loadout for a number-row key

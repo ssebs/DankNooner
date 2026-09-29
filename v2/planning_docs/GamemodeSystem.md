@@ -157,6 +157,7 @@ configuration warnings) list what each `race_type` needs; the rest are optional.
 | Traffic | event flag | event flag | — |
 | StyleScoring | — | ✓ | — |
 | FinishBonus | — | ✓ | — |
+| KnockoutScoring | — | ✓ | — |
 | Challenges | — | ✓ | — |
 | Pickups | — | ✓ | ✓ |
 | TimeAttack | — | — | ✓ |
@@ -169,7 +170,8 @@ configuration warnings) list what each `race_type` needs; the rest are optional.
 - **Standing** (the final ranking) is fixed by `race_type`, no extra knob:
   - `RACE` → race position.
   - `STUNT_RACE` → `RaceGameMode.score()`: every component's `score(peer_id)` summed.
-    `StyleScoring` = banked trick points, `FinishBonus` = points by finish place among humans. Both
+    `StyleScoring` = banked trick points, `FinishBonus` = points by finish place among humans,
+    `KnockoutScoring` = points per knockout credited via `SpawnManager.player_knocked_out`. All
     freeze at the finish line. Axis weighting = each component's own points tunable.
   - `TIME_ATTACK` → session best lap.
 
@@ -243,5 +245,4 @@ player's pinned tricks.
 - `EventStartCircle` held one event → `GameModeEvent` children + a shared `EventRoute`, so one route
   serves a race and a time attack. This also replaced the circle's graybox `in_task` special case.
 - `TutorialHUDState` is gone — every event's text is in the riding HUD's event pane.
-- Deferred: `KnockoutScoring` (per-knockout points; needs the aggressor id threaded through the
-  crash — see [StuntRaceGamemode M2](./StuntRaceGamemode.md#m2--knockouts-via-ramming--fast-respawn)).
+- `KnockoutScoring` landed later (2026-09-28), once `SpawnManager.knock_out` carried the aggressor id.

@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://cvfguvpnccvr1"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oil"]
+albedo_color = Color(0.03, 0.03, 0.04, 1)
+metallic = 0.9
+roughness = 0.08
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_oil"]
+height = 0.6
+radius = 1.5
+
+[node name="OilSlick" type="Area3D" unique_id=968249289]
+collision_layer = 0
+collision_mask = 2
+
+[node name="PlaceholderMesh" type="CSGCylinder3D" parent="." unique_id=1313792100]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+radius = 1.5
+height = 0.05
+sides = 24
+material = SubResource("StandardMaterial3D_oil")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1969137572]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+shape = SubResource("CylinderShape3D_oil")

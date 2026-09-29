@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="PickupItemDefinition" format=3 uid="uid://bv0gsgv7tp3cy"]
+
+[ext_resource type="PackedScene" uid="uid://hh20gge5vix1" path="res://levels/assets/props/shotgun_sawed_offglb.glb" id="1_m7hxb"]
+[ext_resource type="Script" uid="uid://dsfcoucwjtequ" path="res://resources/props/pickup_item_definition.gd" id="2_def"]
+
+[resource]
+script = ExtResource("2_def")
+mesh_res = ExtResource("1_m7hxb")
+mesh_rotation_offset_degrees = Vector3(0, 0, 45)
+mesh_scale_multiplier = Vector3(0.6, 0.6, 1)
+item_type = 4
+use_sfx = 18
+metadata/_custom_type_script = "uid://dsfcoucwjtequ"

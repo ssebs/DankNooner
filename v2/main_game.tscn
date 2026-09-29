@@ -51,6 +51,8 @@
 [ext_resource type="Script" uid="uid://b1k6yj01eqpsi" path="res://managers/gamemodes/types/race/components/style_scoring_component.gd" id="60_style_scoring"]
 [ext_resource type="Script" uid="uid://cgy57qlo3xy0x" path="res://managers/gamemodes/types/race/components/traffic_component.gd" id="60_traffic"]
 [ext_resource type="Script" path="res://managers/gamemodes/types/race/components/time_attack_component.gd" id="60_time_attack"]
+[ext_resource type="Script" path="res://managers/gamemodes/types/race/components/knockout_scoring_component.gd" id="60_knockout_scoring"]
+[ext_resource type="Script" path="res://managers/item_manager.gd" id="47_itemm"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("1_1oj5k")
@@ -59,11 +61,12 @@ settings_manager = NodePath("ManagerManager/SettingsManager")
 [node name="ManagerManager" type="Node" parent="." unique_id=1214717395]
 script = ExtResource("2_yx7mw")
 
-[node name="InputStateManager" type="Node" parent="ManagerManager" unique_id=2040238004 node_paths=PackedStringArray("menu_manager", "save_manager", "spawn_manager") groups=["InputManager", "InputStateManager", "Managers"]]
+[node name="InputStateManager" type="Node" parent="ManagerManager" unique_id=2040238004 node_paths=PackedStringArray("menu_manager", "save_manager", "spawn_manager", "item_manager") groups=["InputManager", "InputStateManager", "Managers"]]
 script = ExtResource("3_krmtw")
 menu_manager = NodePath("../MenuManager")
 save_manager = NodePath("../SaveManager")
 spawn_manager = NodePath("../SpawnManager")
+item_manager = NodePath("../ItemManager")
 metadata/_custom_type_script = "uid://b766m1s624u36"
 
 [node name="PauseManager" type="Node" parent="ManagerManager" unique_id=704027696 node_paths=PackedStringArray("menu_manager", "level_manager", "input_state_manager", "audio_manager", "hud_manager") groups=["Managers"]]
@@ -312,7 +315,7 @@ race_mode = NodePath("..")
 script = ExtResource("60_leaderboard")
 race_mode = NodePath("..")
 
-[node name="StuntRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=569716093 node_paths=PackedStringArray("results_hud", "input_state_manager", "riding_hud_state", "traffic", "npc_racers", "pickups", "style_scoring", "finish_bonus", "challenges", "leaderboard", "lobby_manager", "audio_manager", "gamemode_manager", "spawn_manager")]
+[node name="StuntRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=569716093 node_paths=PackedStringArray("results_hud", "input_state_manager", "riding_hud_state", "traffic", "npc_racers", "pickups", "style_scoring", "finish_bonus", "knockout_scoring", "challenges", "leaderboard", "lobby_manager", "audio_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("60_racgm")
 race_type = 1
 results_hud = NodePath("../../../HUDManager/StateMachine/ResultsHUDState")
@@ -323,6 +326,7 @@ npc_racers = NodePath("NPCRacers")
 pickups = NodePath("Pickups")
 style_scoring = NodePath("StyleScoring")
 finish_bonus = NodePath("FinishBonus")
+knockout_scoring = NodePath("KnockoutScoring")
 challenges = NodePath("Challenges")
 leaderboard = NodePath("Leaderboard")
 lobby_manager = NodePath("../../../LobbyManager")
@@ -339,8 +343,9 @@ script = ExtResource("60_npc_racers")
 npc_race_manager = NodePath("../../../../NPCRaceManager")
 race_mode = NodePath("..")
 
-[node name="Pickups" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/StuntRaceGameMode" unique_id=838794956 node_paths=PackedStringArray("race_mode")]
+[node name="Pickups" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/StuntRaceGameMode" unique_id=838794956 node_paths=PackedStringArray("item_manager", "race_mode")]
 script = ExtResource("60_pickups")
+item_manager = NodePath("../../../../ItemManager")
 race_mode = NodePath("..")
 
 [node name="StyleScoring" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/StuntRaceGameMode" unique_id=1184750814 node_paths=PackedStringArray("trick_manager", "race_mode")]
@@ -351,6 +356,10 @@ race_mode = NodePath("..")
 [node name="FinishBonus" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/StuntRaceGameMode" unique_id=1180011573 node_paths=PackedStringArray("race_mode")]
 script = ExtResource("60_finish_bonus")
 placement_points = PackedInt32Array(300, 200, 150, 100, 50)
+race_mode = NodePath("..")
+
+[node name="KnockoutScoring" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/StuntRaceGameMode" node_paths=PackedStringArray("race_mode")]
+script = ExtResource("60_knockout_scoring")
 race_mode = NodePath("..")
 
 [node name="Challenges" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/StuntRaceGameMode" unique_id=1704626482 node_paths=PackedStringArray("trick_manager", "race_mode")]
@@ -376,8 +385,9 @@ audio_manager = NodePath("../../../AudioManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
-[node name="Pickups" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/TimeAttackGameMode" node_paths=PackedStringArray("race_mode")]
+[node name="Pickups" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/TimeAttackGameMode" node_paths=PackedStringArray("item_manager", "race_mode")]
 script = ExtResource("60_pickups")
+item_manager = NodePath("../../../../ItemManager")
 race_mode = NodePath("..")
 
 [node name="TimeAttack" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/TimeAttackGameMode" node_paths=PackedStringArray("save_manager", "race_mode")]
@@ -438,7 +448,15 @@ npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_pk5u2")])
 script = ExtResource("38_anspm")
 level_manager = NodePath("../LevelManager")
 
-[node name="PickupSpawnManager" type="Node" parent="ManagerManager" unique_id=1218916394 node_paths=PackedStringArray("level_manager", "spawn_manager") groups=["Managers"]]
+[node name="PickupSpawnManager" type="Node" parent="ManagerManager" unique_id=1218916394 node_paths=PackedStringArray("level_manager", "item_manager") groups=["Managers"]]
 script = ExtResource("46_pkspm")
 level_manager = NodePath("../LevelManager")
+item_manager = NodePath("../ItemManager")
+
+[node name="ItemManager" type="Node" parent="ManagerManager" node_paths=PackedStringArray("level_manager", "spawn_manager", "gamemode_manager", "riding_hud_state", "audio_manager") groups=["Managers"]]
+script = ExtResource("47_itemm")
+level_manager = NodePath("../LevelManager")
 spawn_manager = NodePath("../SpawnManager")
+gamemode_manager = NodePath("../GamemodeManager")
+riding_hud_state = NodePath("../HUDManager/StateMachine/RidingHUDState")
+audio_manager = NodePath("../AudioManager")

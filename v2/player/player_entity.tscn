@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://t5igmn16n20c" path="res://player/controllers/trick_controller.gd" id="11_trick"]
 [ext_resource type="Script" uid="uid://7lneqwknykwt" path="res://player/controllers/boost_controller.gd" id="12_boost"]
 [ext_resource type="Script" uid="uid://cfpb4scu8hdy4" path="res://player/controllers/crash_controller.gd" id="12_crash"]
+[ext_resource type="PackedScene" uid="uid://hh20gge5vix1" path="res://levels/assets/props/shotgun_sawed_offglb.glb" id="16_8la7j"]
 [ext_resource type="Script" uid="uid://coopftft0wwho" path="res://player/controllers/camera_controller.gd" id="17_0jgj5"]
 [ext_resource type="PackedScene" uid="uid://c73uvu152n4lh" path="res://entities/vfx/exhaust_flame_particles.tscn" id="17_htgu7"]
 [ext_resource type="PackedScene" uid="uid://cf0bolmhpsorl" path="res://levels/assets/props/BaseballBat.glb" id="18_0jgj5"]
@@ -286,6 +287,42 @@ tracks/21/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector3(0.15192097, 1.0757259, -0.48777756)]
+}
+tracks/22/type = "value"
+tracks/22/imported = false
+tracks/22/enabled = true
+tracks/22/path = NodePath("%Shotgun:rotation")
+tracks/22/interp = 1
+tracks/22/loop_wrap = true
+tracks/22/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -1.5707964, 0)]
+}
+tracks/23/type = "value"
+tracks/23/imported = false
+tracks/23/enabled = true
+tracks/23/path = NodePath("%Shotgun:position")
+tracks/23/interp = 1
+tracks/23/loop_wrap = true
+tracks/23/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.43661237, 1.1000001, 6.5926656e-08)]
+}
+tracks/24/type = "value"
+tracks/24/imported = false
+tracks/24/enabled = true
+tracks/24/path = NodePath("%Shotgun:visible")
+tracks/24/interp = 1
+tracks/24/loop_wrap = true
+tracks/24/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
 }
 
 [sub_resource type="Animation" id="Animation_k5dce"]
@@ -1634,6 +1671,137 @@ tracks/5/keys = {
 "values": [Vector3(0.46395656, 0.5692559, 0.42930415), Vector3(0.15192097, 1.0757259, -0.48777756)]
 }
 
+[sub_resource type="Animation" id="Animation_pv2x4"]
+resource_name = "shotgun_equip"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("IKTargets/Shotgun:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.10000001, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0.248731, 0.74735796, 0.09877824), Vector3(0.248731, 0.74735796, 0.09877824), Vector3(0.39600977, 1.1000001, 0.2797067)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("IKTargets/Shotgun:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.10000001, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-0.2617992, -1.509958e-07, -1.5707964), Vector3(-0.2617992, -1.509958e-07, -1.5707964), Vector3(0, -1.5707964, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("IKTargets/Shotgun:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.01),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("IKTargets/LeftHandTarget:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.10000001, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0.251, 0.914, 0.287), Vector3(0.25100002, 0.8509659, 0.0329274), Vector3(0.37731907, 1.0590861, 0.16414648)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("IKTargets/LeftHandTarget:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.10000001, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(1.2217305, 1.007055, -0.40142566), Vector3(-0.6713644, 0.37817925, -1.6223123), Vector3(-0.315743, -0.0171813, -1.5718305)]
+}
+
+[sub_resource type="Animation" id="Animation_tc2m1"]
+resource_name = "shotgun_fire"
+length = 0.2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("IKTargets/LeftHandTarget:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0.37731907, 1.0590861, 0.16414648), Vector3(0.37731907, 1.0336416, 0.10930149), Vector3(0.37731907, 1.0590861, 0.16414648)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("IKTargets/Shotgun:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0.39600977, 1.1000001, 0.2797067), Vector3(0.39600977, 1.1000001, 0.20594153), Vector3(0.39600977, 1.1000001, 0.2797067)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("IKTargets/LeftHandTarget:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-0.31574297, -0.017181277, -1.5718305), Vector3(-0.315743, -0.017181255, -1.0142666), Vector3(-0.31574297, -0.017181277, -1.5718305)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("IKTargets/Shotgun:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, -1.5707964, 0), Vector3(-6.481227e-08, -1.5707964, 0.6486567), Vector3(0, -1.5707964, 0)]
+}
+tracks/4/type = "method"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("IKTargets/ShotgunFlameParticle")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0.05),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"pop"
+}]
+}
+
 [sub_resource type="Animation" id="Animation_hqggp"]
 resource_name = "spread_eagle"
 step = 0.05
@@ -2303,12 +2471,17 @@ _data = {
 &"idle": SubResource("Animation_3kl2f"),
 &"kickflip": SubResource("Animation_8tb5v"),
 &"knee_knocker": SubResource("Animation_744ak"),
+&"shotgun_equip": SubResource("Animation_pv2x4"),
+&"shotgun_fire": SubResource("Animation_tc2m1"),
 &"spread_eagle": SubResource("Animation_hqggp"),
 &"superman": SubResource("Animation_8la7j"),
 &"t_pose": SubResource("Animation_am3pr"),
 &"two_left_feet": SubResource("Animation_xcneo"),
 &"wheelie_cam_start": SubResource("Animation_75npo")
 }
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wig4y"]
+size = Vector3(4, 10, 2)
 
 [node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("collision_shape_3d", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "movement_controller", "camera_controller", "boost_controller", "butt_target", "left_hand_target", "right_hand_target", "left_foot_target", "right_foot_target", "chest_target", "head_target", "left_arm_magnet", "right_arm_magnet", "left_leg_magnet", "right_leg_magnet", "front_wheel_ground_marker", "rear_wheel_ground_marker", "front_wheel_front_marker", "rear_wheel_back_marker", "exhaust_tip_marker", "headlight_marker")]
 collision_layer = 3
@@ -2464,6 +2637,15 @@ unique_name_in_owner = true
 transform = Transform3D(0.86602527, -0.5000001, 3.8941434e-07, -0.5, -0.8660255, 2.1242907e-10, 3.371365e-07, -1.9489121e-07, -0.99999994, -0.46865526, 0.8885468, 0.18646635)
 visible = false
 
+[node name="Shotgun" parent="VisualRoot/IKTargets" unique_id=719468994 instance=ExtResource("16_8la7j")]
+unique_name_in_owner = true
+transform = Transform3D(-5.463923e-09, 0, -0.21539763, 0, 0.14319643, 0, 0.12499999, 0, -9.415329e-09, 0.43661237, 1.1000001, 6.5926656e-08)
+visible = false
+
+[node name="ShotgunFlameParticle" parent="VisualRoot/IKTargets/Shotgun" unique_id=557107755 instance=ExtResource("17_htgu7")]
+unique_name_in_owner = true
+transform = Transform3D(9, 7.5730604e-28, -3.4106053e-14, 0, 1.5, 2.131627e-14, 2.5579538e-13, -2.6645337e-14, 1.2, 3.8689702, 0.41110802, 0.13644364)
+
 [node name="ButtTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=2080337299]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, -8.526513e-14, 0, 1, 0, 8.526513e-14, 0, 1, 1.385633e-07, 0.95820665, -0.34479797)
@@ -2478,11 +2660,11 @@ transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, -1.4
 
 [node name="LeftHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=811111111]
 unique_name_in_owner = true
-transform = Transform3D(0.18152156, 0.93993247, 0.28909656, -0.1336379, 0.31483123, -0.93969256, -0.97426426, 0.13194022, 0.18275924, 0.251, 0.914, 0.287)
+transform = Transform3D(0.18152155, 0.93993247, 0.28909656, -0.13363789, 0.31483123, -0.93969256, -0.9742642, 0.13194022, 0.18275924, 0.251, 0.914, 0.287)
 
 [node name="RightHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=822222222]
 unique_name_in_owner = true
-transform = Transform3D(0.2333382, -0.9285764, -0.28861547, 0.11576331, 0.32122487, -0.93990076, 0.9654802, 0.18590368, 0.18244913, -0.25104135, 0.9143868, 0.28719392)
+transform = Transform3D(0.2333382, -0.92857647, -0.28861547, 0.11576331, 0.3212249, -0.93990076, 0.9654802, 0.1859037, 0.18244913, -0.25104135, 0.9143868, 0.28719392)
 
 [node name="LeftFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=833333333]
 unique_name_in_owner = true
@@ -2538,7 +2720,7 @@ transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 3.36
 unique_name_in_owner = true
 transform = Transform3D(0.96949005, 0.13598497, 0.20394903, 0, 0.8320145, -0.55475336, -0.2451266, 0.5378285, 0.8066304, -0.22484247, 0.4660294, -0.5100629)
 
-[node name="ExhaustFlameParticles" parent="VisualRoot/IKTargets/ExhaustTipMarker" unique_id=557107755 instance=ExtResource("17_htgu7")]
+[node name="ExhaustFlameParticles" parent="VisualRoot/IKTargets/ExhaustTipMarker" unique_id=469568345 instance=ExtResource("17_htgu7")]
 unique_name_in_owner = true
 
 [node name="BikeSkin" parent="VisualRoot/IKTargets" unique_id=1727462617 instance=ExtResource("7_lfjd4")]
@@ -2575,6 +2757,14 @@ near = 0.115
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.44, 0)
 shape = ExtResource("19_75npo")
+
+[node name="GunCollisionArea" type="Area3D" parent="." unique_id=1949974523]
+unique_name_in_owner = true
+collision_layer = 0
+
+[node name="GunCollisionShape" type="CollisionShape3D" parent="GunCollisionArea" unique_id=169461816]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1.056441, -6.0359473)
+shape = SubResource("BoxShape3D_wig4y")
 
 [node name="NameLabel" type="Label3D" parent="." unique_id=1811367941]
 unique_name_in_owner = true

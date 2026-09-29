@@ -20,6 +20,7 @@ enum RaceType { RACE, STUNT_RACE, TIME_ATTACK }
 @export var pickups: PickupsComponent
 @export var style_scoring: StyleScoringComponent
 @export var finish_bonus: FinishBonusComponent
+@export var knockout_scoring: KnockoutScoringComponent
 @export var challenges: ChallengesComponent
 @export var time_attack: TimeAttackComponent
 @export var leaderboard: LeaderboardComponent
@@ -29,7 +30,8 @@ const RESULTS_REFRESH_SECS: float = 1.0
 ## Components each race_type needs; the rest are optional.
 const REQUIRED_COMPONENTS: Dictionary[RaceType, Array] = {
 	RaceType.RACE: ["leaderboard"],
-	RaceType.STUNT_RACE: ["style_scoring", "finish_bonus", "challenges", "pickups", "leaderboard"],
+	RaceType.STUNT_RACE:
+	["style_scoring", "finish_bonus", "knockout_scoring", "challenges", "pickups", "leaderboard"],
 	RaceType.TIME_ATTACK: ["pickups", "time_attack", "leaderboard"],
 }
 
@@ -52,8 +54,8 @@ func Enter(state_context: StateContext):
 	# scoring before the leaderboard reads it.
 	_components.assign(
 		[
-			traffic, npc_racers, pickups, style_scoring, finish_bonus, challenges, time_attack,
-			leaderboard
+			traffic, npc_racers, pickups, style_scoring, finish_bonus, knockout_scoring,
+			challenges, time_attack, leaderboard
 		]
 		.filter(func(c): return c != null)
 	)

@@ -33,6 +33,7 @@ enum Sfx {
 	NUKE,
 	COD_ZOMBIES_KABOOM,
 	TIRE_SQUEAL,
+	BONK,
 }
 
 @export var settings_manager: SettingsManager
@@ -73,6 +74,7 @@ var tada: SoundEvent
 var nuke: SoundEvent
 var cod_zombies_kaboom: SoundEvent
 var tire_squeal: SoundEvent
+var bonk: SoundEvent
 var exhaust_burble: SoundEvent
 var nos_boost: SoundEvent
 
@@ -110,6 +112,7 @@ func _ready():
 	nuke = get_node_or_null("%Nuke") as SoundEvent
 	cod_zombies_kaboom = get_node_or_null("%CODZombiesKaboom") as SoundEvent
 	tire_squeal = get_node_or_null("%TireSqueal") as SoundEvent
+	bonk = get_node_or_null("%Bonk") as SoundEvent
 	exhaust_burble = get_node_or_null("%ExhaustBurble") as SoundEvent
 	nos_boost = get_node_or_null("%NOSBoost") as SoundEvent
 	for pop in get_node("%ExhaustPops").get_children():
@@ -278,6 +281,10 @@ func play_cod_zombies_kaboom():
 	cod_zombies_kaboom.play()
 
 
+func play_bonk():
+	bonk.play()
+
+
 func play_sfx(id: Sfx):
 	get_sound_event(id).play()
 
@@ -328,6 +335,8 @@ func get_sound_event(id: Sfx) -> SoundEvent:
 			return cod_zombies_kaboom
 		Sfx.TIRE_SQUEAL:
 			return tire_squeal
+		Sfx.BONK:
+			return bonk
 	push_error("AudioManager.get_sound_event: unhandled Sfx id %s" % id)
 	return null
 

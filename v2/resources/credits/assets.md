@@ -20,6 +20,7 @@
   - [Ultimate Modular Women Pack by Quaternius [CC-BY] via Poly Pizza](https://poly.pizza/bundle/Ultimate-Modular-Women-Pack-aCBDXDdTNN)
   - [Ultimate Modular Men Pack by Quaternius via Poly Pizza](https://poly.pizza/bundle/Ultimate-Modular-Men-Pack-ZiH8muWqwQ)
   - [Animated Animal Pack by Quaternius via Poly Pizza](https://poly.pizza/bundle/Animated-Animal-Pack-ILAPXeUYiS)
+  - Shotgun Sawed Off by Quaternius (https://poly.pizza/m/29FXKu7G91)
 - J-Toastie
   - [City Pack by J-Toastie [CC-BY] via Poly Pizza](https://poly.pizza/bundle/City-Pack-kJqRAIGsw0)
 

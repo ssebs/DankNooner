@@ -336,6 +336,9 @@ func _enter_crash_visuals() -> void:
 	animation_controller.start_ragdoll(_crash_launch_impulse)
 	crashed.emit(int(name))
 	if !is_local_client:
+		# Everyone else hears another rider go down.
+		if audio_manager:
+			audio_manager.play_bone_crack()
 		return
 	camera_controller.force_tps()
 	if audio_manager:

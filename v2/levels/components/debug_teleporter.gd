@@ -3,12 +3,21 @@
 ##   tp <name|index>  teleport local player to a destination
 ##   tp_list          list all destinations
 ##   max_boost        fill the local player's boost meter
+##   give_item <item> collect an item as if from a pickup (host only)
 ## Destinations are the author-placed `destinations` plus every EventStartCircle in the level.
 ## Effects route through the host-authoritative SpawnManager, so they apply when the console user
 ## is the host; a client acting on itself only applies locally and reconciles away.
 class_name DebugTeleporter extends Node3D
 
 @export var destinations: Array[Node3D] = []
+
+const ITEM_DEFINITIONS: Dictionary[String, PickupItemDefinition] = {
+	"gas_can": preload("res://levels/components/pickups/gas_can_pickup_definition.tres"),
+	"bat": preload("res://levels/components/pickups/bat_pickup_definition.tres"),
+	"oil_slick": preload("res://levels/components/pickups/oil_slick_pickup_definition.tres"),
+	"ramp": preload("res://levels/components/pickups/ramp_pickup_definition.tres"),
+	"shotgun": preload("res://levels/components/pickups/shotgun_pickup_definition.tres"),
+}
 
 
 func _ready() -> void:
@@ -19,6 +28,8 @@ func _ready() -> void:
 	)
 	Console.add_command("tp_list", _tp_list, [], 0, "List all teleport destinations")
 	Console.add_command("max_boost", _max_boost, [], 0, "Fill the local player's boost meter")
+	Console.add_command("give_item", _give_item, ["item"], 1, "Collect an item as if from a pickup (host only)")
+	Console.add_command_autocomplete_list("give_item", PackedStringArray(ITEM_DEFINITIONS.keys()))
 	# Deferred so every EventStartCircle has run _ready() and joined the group first.
 	_refresh_autocomplete.call_deferred()
 
@@ -29,6 +40,7 @@ func _exit_tree() -> void:
 	Console.remove_command("tp")
 	Console.remove_command("tp_list")
 	Console.remove_command("max_boost")
+	Console.remove_command("give_item")
 
 
 func _teleport(arg: String) -> void:
@@ -58,6 +70,18 @@ func _max_boost() -> void:
 	_spawn_manager().max_boost_player.rpc(_local_peer_id())
 
 
+## Straight into ItemManager.collect, which is server-side — a client has no slots to fill.
+func _give_item(arg: String) -> void:
+	if !multiplayer.is_server():
+		Console.print_line("give_item: host only")
+		return
+	if !ITEM_DEFINITIONS.has(arg):
+		Console.print_line("give_item: no item '%s' (%s)" % [arg, ", ".join(PackedStringArray(ITEM_DEFINITIONS.keys()))])
+		return
+	if !_item_manager().collect(_local_peer_id(), ITEM_DEFINITIONS[arg]):
+		Console.print_line("give_item: already holding an item")
+
+
 func _local_peer_id() -> int:
 	return int(get_tree().get_first_node_in_group(UtilsConstants.GROUPS["LocalPlayer"]).name)
 
@@ -78,8 +102,16 @@ func _refresh_autocomplete() -> void:
 
 
 func _spawn_manager() -> SpawnManager:
+	return _find_manager(SpawnManager)
+
+
+func _item_manager() -> ItemManager:
+	return _find_manager(ItemManager)
+
+
+func _find_manager(type: Variant) -> BaseManager:
 	for manager in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Managers"]):
-		if manager is SpawnManager:
+		if is_instance_of(manager, type):
 			return manager
 	return null
 

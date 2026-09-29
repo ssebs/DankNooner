@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_gbox"]
+
+[node name="DeployableRamp" type="Node3D"]
+
+[node name="Wedge" parent="." instance=ExtResource("1_gbox")]
+position = Vector3(0, 0.63, 0)
+rotation = Vector3(0.261799, 0, 0)
+width = 4.0
+height = 0.3
+depth = 6.0

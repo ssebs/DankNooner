@@ -185,7 +185,13 @@ depth = 4.0
 color_preset = 1
 
 [node name="PickupSpawner5" parent="." unique_id=868781105 instance=ExtResource("2_mru51")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 1.5249999, 1.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 1.5249999, 1.5)
+
+[node name="PickupSpawner6" parent="." unique_id=761218876 instance=ExtResource("2_mru51")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 1.5249999, 5)
+
+[node name="PickupSpawner9" parent="." unique_id=9328650 instance=ExtResource("2_mru51")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 1.5249999, -2)
 
 [node name="PickupSpawner2" parent="." unique_id=2087922718 instance=ExtResource("2_mru51")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 1.5249999, 4)

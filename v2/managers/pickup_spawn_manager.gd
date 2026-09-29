@@ -9,8 +9,8 @@
 class_name PickupSpawnManager extends BaseManager
 
 @export var level_manager: LevelManager
-## Handed to each spawner so it can grant collected item effects (server broadcast RPCs).
-@export var spawn_manager: SpawnManager
+## Handed to each spawner so a collect can grant or hold the item.
+@export var item_manager: ItemManager
 
 ## Spawners turned on this session (server-side), kept so a peer whose level loaded after the
 ## activate broadcast can be resynced (see request_pickup_sync).
@@ -22,9 +22,10 @@ var _active: Array[PickupSpawner] = []
 
 ## Server-side, from FreeRoamGameMode.Enter.
 func activate_pickups() -> void:
+	item_manager.clear_items()
 	_active = _free_roam_spawners()
 	for spawner in _active:
-		spawner.activate(spawn_manager)
+		spawner.activate(item_manager)
 
 
 ## Server-side, from FreeRoamGameMode.Exit — broadcasts a despawn to every peer.
@@ -77,6 +78,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var issues: PackedStringArray = []
 	if level_manager == null:
 		issues.append("level_manager must not be empty")
-	if spawn_manager == null:
-		issues.append("spawn_manager must not be empty")
+	if item_manager == null:
+		issues.append("item_manager must not be empty")
 	return issues

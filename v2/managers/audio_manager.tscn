@@ -31,6 +31,7 @@
 [ext_resource type="AudioStream" uid="uid://btsdhy0nfx6rj" path="res://non_fmod_sounds/Exhaust_Pops/pop2.ogg" id="28_holwe"]
 [ext_resource type="AudioStream" uid="uid://dt3cg7laru1k5" path="res://non_fmod_sounds/Exhaust_Pops/pop1.ogg" id="29_0taqp"]
 [ext_resource type="AudioStream" uid="uid://btd6hkwtgfd6c" path="res://non_fmod_sounds/Exhaust_Pops/burble.ogg" id="29_06geh"]
+[ext_resource type="AudioStream" uid="uid://dr2dlse0lb64o" path="res://non_fmod_sounds/SFX/bonk.ogg" id="30_bonk"]
 
 [node name="AudioManager" type="Node" unique_id=625309404 groups=["Managers"]]
 script = ExtResource("1_1k0gc")
@@ -178,8 +179,15 @@ metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 [node name="CODZombiesKaboom" type="AudioStreamPlayer" parent="Sounds" unique_id=1202355907]
 unique_name_in_owner = true
 stream = ExtResource("24_7lx2g")
-volume_db = -4.0
+volume_db = -16.0
 bus = &"Menu"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="Bonk" type="AudioStreamPlayer" parent="Sounds" unique_id=153816775]
+unique_name_in_owner = true
+stream = ExtResource("30_bonk")
+bus = &"SFX"
 script = ExtResource("2_snd")
 metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 

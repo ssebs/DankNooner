@@ -71,6 +71,9 @@ const _PATH_RLEG_MAGNET_ROT := ^"IKTargets/RightLegMagnet:rotation"
 ## animation whose path is NOT in this set is auto-applied raw to its node by
 ## CustomAnimPlayer.apply_to_nodes — animators can drop new tracks (VFX emitting flags,
 ## particle positions, materials, etc.) without touching this file.
+## shotgun_fire is 0.2s — the default fade-in would swallow the recoil.
+const _SHOTGUN_FIRE_FADE_SPEED := 20.0
+
 const _POSE_PIPELINE_PATHS := {
 	_PATH_VISUAL_ROOT_ROT: true,
 	_PATH_BUTT_POS: true,
@@ -96,6 +99,9 @@ const _POSE_PIPELINE_PATHS := {
 	_PATH_RLEG_MAGNET_ROT: true,
 }
 
+## Shotgun pickup held: equip pose holds while true, reverses to hidden when cleared. Set on every
+## peer by ItemManager; outlives a crash so the next riding frame re-equips.
+var shotgun_held: bool = false
 var current_state: RiderState = RiderState.RIDING:
 	set(value):
 		if current_state != value:
@@ -146,6 +152,9 @@ var _was_reversing: bool = false
 # Bat pickup swing (rider pose + %BaseballBat mesh). Looping visual, self-stopped after a few sec.
 var _bat_swing_anim: Animation
 var _bat_swing_layer: CustomAnimPlayer.Layer
+var _shotgun_equip_anim: Animation
+var _shotgun_fire_anim: Animation
+var _shotgun_equip_layer: CustomAnimPlayer.Layer
 # Wheelie cam: reframes the FPS/TPS cam markers while in the balance point. Local only.
 var _wheelie_cam_anim: Animation
 var _wheelie_cam_layer: CustomAnimPlayer.Layer
@@ -201,6 +210,7 @@ func _update_idle(delta: float) -> void:
 	_apply_anim_deltas(final_pose, delta)
 	_commit_pose(final_pose)
 	_anim_runner.apply_to_nodes(player_entity, _POSE_PIPELINE_PATHS)
+	_update_shotgun_anim()
 	_update_idle_timer(delta)
 
 
@@ -261,6 +271,7 @@ func _update_riding(delta: float) -> void:
 
 	_update_reverse_anim()
 	_update_wheelie_cam_anim()
+	_update_shotgun_anim()
 
 	# Snapshot proc-only state for next frame, then layer anim deltas onto a copy.
 	_proc_pose = pose
@@ -593,6 +604,12 @@ func initialize() -> void:
 	if ik_anim_player.has_animation("bat_swing"):
 		_bat_swing_anim = ik_anim_player.get_animation("bat_swing")
 		_fixup_anim_paths(_bat_swing_anim)
+	if ik_anim_player.has_animation("shotgun_equip"):
+		_shotgun_equip_anim = ik_anim_player.get_animation("shotgun_equip")
+		_fixup_anim_paths(_shotgun_equip_anim)
+	if ik_anim_player.has_animation("shotgun_fire"):
+		_shotgun_fire_anim = ik_anim_player.get_animation("shotgun_fire")
+		_fixup_anim_paths(_shotgun_fire_anim)
 	if ik_anim_player.has_animation("wheelie_cam_start"):
 		_wheelie_cam_anim = ik_anim_player.get_animation("wheelie_cam_start")
 		_fixup_anim_paths(_wheelie_cam_anim)
@@ -719,6 +736,7 @@ func start_ragdoll(launch_impulse: Vector3 = Vector3.ZERO) -> void:
 	_back_up_loop_layer = null
 	_was_reversing = false
 	_bat_swing_layer = null
+	_shotgun_equip_layer = null
 	_wheelie_cam_layer = null
 	_was_in_balance_point = false
 	character_skin.disable_ik()
@@ -749,6 +767,7 @@ func do_reset():
 	_back_up_loop_layer = null
 	_was_reversing = false
 	_bat_swing_layer = null
+	_shotgun_equip_layer = null
 	_wheelie_cam_layer = null
 	_was_in_balance_point = false
 	_proc_pose = null
@@ -771,6 +790,33 @@ func play_bat_swing(duration: float) -> void:
 		_anim_runner.stop(layer)
 	if _bat_swing_layer == layer:
 		_bat_swing_layer = null
+
+
+## Shotgun use: fire on top of the held equip pose, then unequip. Visual only — the server resolves
+## the hit. The flame pops from here since CustomAnimPlayer skips the anim's method track.
+func play_shotgun_fire() -> void:
+	if _shotgun_fire_anim == null:
+		return
+	_anim_runner.play(_shotgun_fire_anim, 1.0, false, _SHOTGUN_FIRE_FADE_SPEED)
+	player_entity.get_node("%ShotgunFlameParticle").pop()
+	await get_tree().create_timer(_shotgun_fire_anim.length).timeout
+	shotgun_held = false
+
+
+## Equip and hold while shotgun_held, else reverse to t=0 (hidden) and fade. Re-plays after a crash
+## flush, and flips a mid-unequip layer back forward (mirrors the HOLD_WHILE_LATCHED trick re-entry).
+func _update_shotgun_anim() -> void:
+	if _shotgun_equip_anim == null:
+		return
+	var layer := _shotgun_equip_layer
+	if layer == null or not layer.is_playing():
+		if shotgun_held:
+			_shotgun_equip_layer = _anim_runner.play_one_shot(_shotgun_equip_anim, 1.0)
+		return
+	layer.speed = 1.0 if shotgun_held else -1.0
+	layer.hold_at_end = shotgun_held
+	if shotgun_held:
+		layer.target_weight = 1.0
 
 
 #endregion

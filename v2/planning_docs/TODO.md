@@ -29,12 +29,16 @@
   - [x] only use yaw in speed wobble code
   - [ ] tweak speed wobbles from yaw
 
+- [ ] holding balance point + using wrong dir should not move the camera.
+  - [ ] e.g. balance point + down fails and the camera moves, bc theres no trick assigned
+
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [x] make tricks + combos easier to do **WIP**
   - [x] Trick juice / points / leaderboard
   - [x] Score complex tricks more (high chair during wheelie vs just on ground)
   - [x] Time attack / multiple modes per location
+  - [ ] more items (shotgun, bat, ramp, oil slick)
 
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
 - [ ] fix game breaking bugs

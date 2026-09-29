@@ -126,12 +126,28 @@ the imperative approach sketched above. The stunt race is now **`RaceGameMode` w
   a timer HUD override) is gone. Lap text shows only when `total_laps > 1`.
 - **Items:** `PickupItem` / `PickupSpawner` / `PickupItemDefinition`, server-auth, RPC-by-path.
   Spawners run during a race (`PickupsComponent`) **and** in free roam (`PickupSpawnManager`).
-  Effects in `SpawnManager`: **Gas Can** → boost refill; **Bat** → swing that wobbles nearby riders.
-- **Ramming** crashes the victim already; wobble-on-ram fires too rarely (known bug). No crash is
-  scored as a knockout.
+  A collect goes through `ItemManager`: **Gas Can** applies instantly (boost refill); every other
+  item fills the rider's single held slot (full slot = the bubble stays). Double-tap the trick
+  button or left click (`use_item`) to use it (`InputStateManager` → `ItemManager.request_use_item`),
+  playing the definition's `use_sfx` for the user. Slots reset on race start
+  and free-roam entry. Held items: **Bat** (swing that wobbles nearby riders), **Oil Slick**
+  (dropped behind; crashes the first other rider over it, owner grace then it can catch you too),
+  **Ramp** (spawned ahead along your heading, scaled by speed), **Shotgun** (knocks out the nearest
+  rider inside the player's `%GunCollisionArea` Area3D). Oil slick + ramp are
+  timed deployables spawned on every peer; late joiners don't see ones already down (nor a held
+  shotgun). The rider visibly holds
+  the shotgun while carrying it (`AnimationController.shotgun_held`, re-equips after a crash
+  respawn); firing plays `shotgun_fire`, then `shotgun_equip` in reverse. Oil slick mesh is a
+  placeholder.
+- **Knockouts:** `SpawnManager.knock_out(victim, aggressor)` crashes the victim and emits
+  `player_knocked_out` unless they were already down or it was their own slick. Sources: ramming
+  (`CrashController`), Oil Slick, Shotgun. Human victims only; Bat wobbles aren't attributed. Every
+  other client hears Bone Crack on any crash; a bat hit plays Bonk for the wielder.
+  Wobble-on-ram fires too rarely (known bug).
 - **Scoring:** standing = the sum of the scoring components — `StyleScoringComponent` (banked trick
   points, `TrickManager.get_score`) + `FinishBonusComponent` (`placement_points[finish place]`
-  among humans, NPCs ignored). A finisher's score freezes at the line. Known gap: a combo still
+  among humans, NPCs ignored) + `KnockoutScoringComponent` (`points_per_knockout` each, "KOs"
+  column). A finisher's score freezes at the line. Known gap: a combo still
   running at the finish isn't banked, so it doesn't count.
 - **Challenges:** `RaceChallenge` resources in `race_challenges` (`LongestWheelieChallenge`,
   `BestComboChallenge`, `SuggestedTricksChallenge`), run by `ChallengesComponent`. A crash voids a
@@ -143,10 +159,8 @@ the imperative approach sketched above. The stunt race is now **`RaceGameMode` w
 
 ### Not built yet
 
-- **Knockout scoring axis** — Style + Placement are live (see above); Knockouts aren't scored. It
-  slots in as a `KnockoutScoring` component once the aggressor id is threaded through the crash (M2).
 - **Boost = fuel** — no station top-off, no fill-up minigame; boost is just the normal meter.
-- **Rest of the item roster** — only Gas Can + Bat.
+- **Rest of the item roster** — Nitrous, Siphon Hose, Sticky Tires, Armor, Roll Cage (see Items).
 
 
 ## Implementation plan (PM)

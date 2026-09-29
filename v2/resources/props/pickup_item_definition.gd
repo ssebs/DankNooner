@@ -1,7 +1,7 @@
 @tool
 class_name PickupItemDefinition extends Resource
 
-enum PickupItemType {GAS_CAN, BAT, }
+enum PickupItemType {GAS_CAN, BAT, OIL_SLICK, RAMP, SHOTGUN, }
 
 @export_group("Mesh")
 ## The Scene to instantiate
@@ -24,3 +24,5 @@ enum PickupItemType {GAS_CAN, BAT, }
 
 @export_group("Type")
 @export var item_type: PickupItemType
+## Played for the rider when they use a held item.
+@export var use_sfx: AudioManager.Sfx = AudioManager.Sfx.CLUNK_GEAR_CHANGE
