@@ -37,6 +37,7 @@ enum MatchState {
 @export var tutorial_mode: TutorialGameMode
 @export var stunt_challenge_mode: StuntChallengeGameMode
 @export var long_jump_mode: LongJumpGameMode
+@export var fuel_up_mode: FuelUpGameMode
 
 var match_state: MatchState = MatchState.IN_LOBBY
 var current_game_mode: GameModeType.Kind = GameModeType.Kind.FREE_ROAM
@@ -59,6 +60,7 @@ func _ready():
 		GameModeType.Kind.TUTORIAL: tutorial_mode,
 		GameModeType.Kind.STUNT_CHALLENGE: stunt_challenge_mode,
 		GameModeType.Kind.LONG_JUMP: long_jump_mode,
+		GameModeType.Kind.FUEL_UP: fuel_up_mode,
 	}
 
 	connection_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
@@ -113,9 +115,14 @@ func change_gamemode(
 
 	# A race is running — only a return to free roam (host cancel / race end) may
 	# interrupt it. Blocks a free-roaming late joiner starting a second event.
+	# Exception: fuel-up handing its own event on to the race.
+	var is_fuel_up_handoff := (
+		current_game_mode == GameModeType.Kind.FUEL_UP and event_path == current_event.get_path()
+	)
 	if (
 		!_gamemode_map[current_game_mode].is_late_joinable()
 		and gamemode != GameModeType.Kind.FREE_ROAM
+		and !is_fuel_up_handoff
 	):
 		return
 
@@ -338,6 +345,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("tutorial_mode must not be empty")
 	if stunt_challenge_mode == null:
 		issues.append("stunt_challenge_mode must not be empty")
+	if fuel_up_mode == null:
+		issues.append("fuel_up_mode must not be empty")
 	if state_machine == null:
 		issues.append("state_machine must not be empty")
 

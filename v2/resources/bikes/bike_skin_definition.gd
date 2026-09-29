@@ -45,6 +45,8 @@ class_name BikeSkinDefinition extends Resource
 ## Headlight: where the spotlight sits and which way it points (per-bike).
 @export var headlight_position: Vector3 = Vector3.ZERO
 @export var headlight_rotation_degrees: Vector3 = Vector3.ZERO
+## Gas cap: where the fuel-up nozzle goes (per-bike).
+@export var gas_cap_position: Vector3 = Vector3(0, 0.97512925, 0.1212935)
 
 @export_group("Rider Pose")
 @export var chest_position: Vector3 = Vector3.ZERO
@@ -194,6 +196,7 @@ func _copy_from(other: BikeSkinDefinition) -> void:
 	exhaust_tip_rotation_degrees = other.exhaust_tip_rotation_degrees
 	headlight_position = other.headlight_position
 	headlight_rotation_degrees = other.headlight_rotation_degrees
+	gas_cap_position = other.gas_cap_position
 	chest_position = other.chest_position
 	chest_rotation = other.chest_rotation
 	head_position = other.head_position

@@ -18,6 +18,8 @@ var description: String = "Sunt nisi id proident veniam ad laboris pariatur mini
 @export var enable_npcs: bool = false
 ## Race events only (RaceGameMode's TrafficComponent): run ambient traffic during the race.
 @export var enable_traffic: bool = false
+## Run the FuelUpGameMode minigame first; it hands off to target_gamemode once everyone's full.
+@export var fuel_up_first: bool = false
 
 ## Passive whole-race side-challenges (e.g. longest wheelie), one column each on the live
 ## leaderboard and results screen. Read by RaceGameMode's ChallengesComponent. Leave empty for none.

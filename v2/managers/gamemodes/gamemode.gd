@@ -7,7 +7,7 @@ class_name GameModeType extends State
 ## GameModeEventDefinition.target_gamemode stores these as ints in level scenes, so
 ## INSERTING a value here renumbers every event circle after it — update those scenes to
 ## match, or append instead.
-enum Kind { FREE_ROAM, RACE, STUNT_RACE, TIME_ATTACK, TUTORIAL, STUNT_CHALLENGE, LONG_JUMP }
+enum Kind { FREE_ROAM, RACE, STUNT_RACE, TIME_ATTACK, TUTORIAL, STUNT_CHALLENGE, LONG_JUMP, FUEL_UP }
 
 @export var gamemode_manager: GamemodeManager
 @export var spawn_manager: SpawnManager

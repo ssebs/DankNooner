@@ -410,6 +410,9 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
   - `TutorialGameMode` - step-by-step progression with countdown + trick detection
   - `StuntChallengeGameMode` - race through a fixed sequence of `PerformTrickTask`s, ranked by completion time
   - `LongJumpGameMode` - timed `LongJumpTask` attempts off one jump, ranked by best attempt's trick score
+  - `FuelUpGameMode` - pre-race step for events with `fuel_up_first`. Each rider is teleported to a pump (`FuelUpMinigame`) in the circle's `gas_station`, assigned by sorted peer id so every peer agrees without an RPC, and frozen. Each client then plays its own pump locally: pump camera, `IN_MINIGAME` input state, `FuelUpHUDState` in place of the riding HUD. It reports done and gets a full boost bar. When every rider has reported, it hands the same event to `target_gamemode` — the one non-free-roam transition `change_gamemode()` allows out of a running mode
+    - The minigame starts on the rider's `respawned` signal, not in `Enter`: the teleport's `do_respawn` flips the HUD back to riding. The pump camera is re-asserted every frame, because respawn resims re-run `CameraController.do_reset()`
+    - Pump pick areas sit on their own `interactable` physics layer so the cursor ray never hits the rider's own areas
   - The `Kind` enum runs ahead of the implementation — it carries reserved entries with no
     gamemode file and no state node in `main_game.tscn`. A `Kind` value is not evidence the mode
     exists; check for the type under `types/` and the node in `main_game.tscn`.

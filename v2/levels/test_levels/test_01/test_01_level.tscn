@@ -1,10 +1,29 @@
 [gd_scene format=3 uid="uid://dj8yd118p20oa"]
 
 [ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_m4ipn"]
+[ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.tscn" id="2_tmett"]
+[ext_resource type="PackedScene" uid="uid://i5gn7vx2atly" path="res://levels/components/props/gas_station.tscn" id="2_u7lq8"]
 [ext_resource type="PackedScene" uid="uid://cuqtwh0saekmw" path="res://player/characters/character_skin.tscn" id="3_5q1pe"]
+[ext_resource type="Script" uid="uid://cm4g6ptfwf37q" path="res://managers/gamemodes/gamemodeobjects/event_route.gd" id="3_pu0o3"]
+[ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="4_fb0ik"]
 [ext_resource type="Resource" uid="uid://dqh5h78glj4ju" path="res://resources/player/skins/clanker_red_skin_definition.tres" id="4_m4ipn"]
 [ext_resource type="Resource" uid="uid://d3v0btsnsgpb3" path="res://resources/player/skins/astronaut_default_skin_definition.tres" id="5_51jyr"]
+[ext_resource type="PackedScene" uid="uid://cv3uyj3m3nj6t" path="res://levels/components/pickups/pickup_spawner.tscn" id="5_fviyc"]
 [ext_resource type="Resource" uid="uid://cqthri007ak8l" path="res://resources/player/skins/biker_blue_skin_definition.tres" id="6_51jyr"]
+[ext_resource type="Script" uid="uid://pulnqxx1eaja" path="res://managers/gamemodes/gamemodeobjects/gamemode_event.gd" id="7_4m0o6"]
+[ext_resource type="Script" uid="uid://bjt7k3nrl24c8" path="res://managers/gamemodes/challenges/race_challenge.gd" id="8_udgxj"]
+[ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://managers/gamemodes/resources/gamemode_event_definition.gd" id="9_aul3u"]
+[ext_resource type="Script" uid="uid://f840hmifnv7g" path="res://managers/gamemodes/runners/sequential_task_runner.gd" id="10_ssdfk"]
+[ext_resource type="Script" uid="uid://cij1aa5h6g5nb" path="res://managers/gamemodes/tasks/grid_spawn_task.gd" id="11_tv2pq"]
+[ext_resource type="Script" uid="uid://bk8siml2v41d1" path="res://managers/gamemodes/tasks/race_task.gd" id="15_4y04b"]
+
+[sub_resource type="Resource" id="Resource_qygxf"]
+script = ExtResource("9_aul3u")
+name = "Test"
+description = "fill up"
+target_gamemode = 2
+fuel_up_first = true
+metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jmk2t"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -42,6 +61,69 @@ script = ExtResource("1_m4ipn")
 player_spawn_pos = NodePath("PlayerSpawn")
 player_spawn_pos_debug = NodePath("PlayerSpawn")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
+
+[node name="GasStation" parent="." unique_id=1355590988 instance=ExtResource("2_u7lq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.593023, 0.025, -23.804728)
+
+[node name="StuntRace4" parent="." unique_id=459761741 node_paths=PackedStringArray("gas_station") instance=ExtResource("2_tmett")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.775879, 0, 2.7444057)
+gas_station = NodePath("../GasStation")
+
+[node name="Route" type="Node3D" parent="StuntRace4" unique_id=1955180433]
+top_level = true
+script = ExtResource("3_pu0o3")
+
+[node name="RaceGridSpot1" type="Marker3D" parent="StuntRace4/Route" unique_id=1642959356]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 11.101854, 0.2499392, 11.252789)
+
+[node name="RaceGridSpot2" type="Marker3D" parent="StuntRace4/Route" unique_id=851435825]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 12.20183, 0.24993896, 7.147625)
+
+[node name="RaceGridSpot3" type="Marker3D" parent="StuntRace4/Route" unique_id=1130571006]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 13.237108, 0.24993896, 3.2839165)
+
+[node name="RaceGridSpot4" type="Marker3D" parent="StuntRace4/Route" unique_id=344384722]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 15.241716, 0.2499392, 10.291546)
+
+[node name="RaceGridSpot5" type="Marker3D" parent="StuntRace4/Route" unique_id=568625556]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 16.341692, 0.24993944, 6.1863823)
+
+[node name="RaceGridSpot6" type="Marker3D" parent="StuntRace4/Route" unique_id=661779298]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 18.898607, 0.24993873, 9.200848)
+
+[node name="RaceGridSpot7" type="Marker3D" parent="StuntRace4/Route" unique_id=2018703876]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 17.863329, 0.24993896, 13.064556)
+
+[node name="RaceGridSpot8" type="Marker3D" parent="StuntRace4/Route" unique_id=1202603678]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 19.998583, 0.24993873, 5.095684)
+
+[node name="CheckpointMarker1" parent="StuntRace4/Route" unique_id=1048335829 groups=["stunt_checkpoints"] instance=ExtResource("4_fb0ik")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -20.11249, 0, -38.636925)
+width = 32.0
+
+[node name="CheckpointMarker2" parent="StuntRace4/Route" unique_id=1858967501 groups=["stunt_checkpoints"] instance=ExtResource("4_fb0ik")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -19.356308, 0, -69.05792)
+width = 32.0
+
+[node name="PickupSpawner1" parent="StuntRace4/Route" unique_id=761218876 instance=ExtResource("5_fviyc")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.8999996, 2.3671966, 732.7969)
+
+[node name="StuntRace4" type="Node" parent="StuntRace4" unique_id=818348977 node_paths=PackedStringArray("route")]
+script = ExtResource("7_4m0o6")
+definition = SubResource("Resource_qygxf")
+route = NodePath("../Route")
+
+[node name="SequentialTaskRunner" type="Node" parent="StuntRace4/StuntRace4" unique_id=504378176]
+script = ExtResource("10_ssdfk")
+metadata/_custom_type_script = "uid://f840hmifnv7g"
+
+[node name="GridSpawnTask" type="Node" parent="StuntRace4/StuntRace4/SequentialTaskRunner" unique_id=1428736049]
+script = ExtResource("11_tv2pq")
+
+[node name="RaceTask" type="Node" parent="StuntRace4/StuntRace4/SequentialTaskRunner" unique_id=920203307]
+script = ExtResource("15_4y04b")
+total_laps = 1
+objective_key = "STUNT_RACE_OBJECTIVE"
 
 [node name="PlayerSpawn" type="Marker3D" parent="." unique_id=840084747]
 unique_name_in_owner = true

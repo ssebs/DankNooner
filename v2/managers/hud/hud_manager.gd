@@ -5,6 +5,7 @@ class_name HUDManager extends BaseManager
 
 @export var null_hud_state: HUDState
 @export var riding_hud_state: RidingHUDState
+@export var fuel_up_hud_state: FuelUpHUDState
 
 var local_player: PlayerEntity
 
@@ -13,6 +14,11 @@ func _ready() -> void:
 
 func go_to_riding_hud():
 	state_machine.request_state_change(riding_hud_state)
+
+
+func go_to_fuel_up_hud(minigame: FuelUpMinigame):
+	fuel_up_hud_state.minigame = minigame
+	state_machine.request_state_change(fuel_up_hud_state)
 
 
 ## Reset to the no-HUD state when leaving gameplay for a menu — stops RidingHUDState from
@@ -44,6 +50,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("null_hud_state must not be empty")
 	if riding_hud_state == null:
 		issues.append("riding_hud_state must not be empty")
+	if fuel_up_hud_state == null:
+		issues.append("fuel_up_hud_state must not be empty")
 	if state_machine == null:
 		issues.append("state_machine must not be empty")
 	return issues

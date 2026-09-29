@@ -1,12 +1,29 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://lrddpwsrpo3w"]
 
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_gbox"]
 
-[node name="DeployableRamp" type="Node3D"]
+[node name="DeployableRamp" type="Node3D" unique_id=672895301]
 
-[node name="Wedge" parent="." instance=ExtResource("1_gbox")]
-position = Vector3(0, 0.63, 0)
-rotation = Vector3(0.261799, 0, 0)
-width = 4.0
-height = 0.3
-depth = 6.0
+[node name="ramp2" parent="." unique_id=1485126779 instance=ExtResource("1_gbox")]
+transform = Transform3D(-1, 2.2626677e-08, -8.444391e-08, 0, 0.96592575, 0.258819, 8.742278e-08, 0.258819, -0.96592575, -0.9999999, 0.19374347, 0.665589)
+width = 8.0
+height = 0.1
+depth = 2.0
+color_preset = 5
+neon_edges = true
+
+[node name="ramp3" parent="." unique_id=599659865 instance=ExtResource("1_gbox")]
+transform = Transform3D(-1, 4.371139e-08, -7.5710346e-08, 0, 0.8660254, 0.5, 8.742278e-08, 0.5, -0.8660254, -1.0000001, 0.8937434, -1.1344142)
+width = 8.0
+height = 0.1
+depth = 2.0
+color_preset = 5
+neon_edges = true
+
+[node name="ramp4" parent="." unique_id=1998677065 instance=ExtResource("1_gbox")]
+transform = Transform3D(-1, 6.834469e-08, -5.451372e-08, 0, 0.6235642, 0.7817721, 8.742278e-08, 0.7817721, -0.6235642, -1.0000002, 2.0937433, -2.5762186)
+width = 8.0
+height = 0.1
+depth = 2.0
+color_preset = 5
+neon_edges = true

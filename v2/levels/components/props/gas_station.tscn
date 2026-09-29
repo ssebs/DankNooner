@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://cv3uyj3m3nj6t" path="res://levels/components/pickups/pickup_spawner.tscn" id="2_mru51"]
 [ext_resource type="Script" uid="uid://dsfcoucwjtequ" path="res://resources/props/pickup_item_definition.gd" id="3_8t3bl"]
 [ext_resource type="Resource" uid="uid://cqeidudggyae1" path="res://levels/components/pickups/gas_can_pickup_definition.tres" id="4_xpnjo"]
+[ext_resource type="PackedScene" uid="uid://vumsue2gkkc0" path="res://levels/components/interactable/gas_pump.tscn" id="5_gaspump"]
+[ext_resource type="Script" uid="uid://kqfc4owdojbf" path="res://managers/gamemodes/gamemodeobjects/gamemode_object.gd" id="6_gmobj"]
 
 [node name="GasStation" type="Node3D" unique_id=1355590988]
 
@@ -47,53 +49,34 @@ height = 4.0
 depth = 0.25
 color_preset = 1
 
-[node name="pump" parent="pumps" unique_id=1508973261 instance=ExtResource("1_jbldn")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -6.25, 1.2749999, 2.75)
-collision_layer = 3
-width = 1.5
-height = 2.5
-color_preset = 5
-neon_edges = true
+[node name="pump" parent="pumps" unique_id=1508973261 instance=ExtResource("5_gaspump")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -6.25, 0, 2.75)
 
-[node name="pump2" parent="pumps" unique_id=766420174 instance=ExtResource("1_jbldn")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -6.25, 1.2749999, -2.25)
-collision_layer = 3
-width = 1.5
-height = 2.5
-color_preset = 5
-neon_edges = true
+[node name="pump2" parent="pumps" unique_id=766420174 instance=ExtResource("5_gaspump")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -6.25, 0, -2.25)
 
-[node name="pump3" parent="pumps" unique_id=901383815 instance=ExtResource("1_jbldn")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.25, 1.2749999, 2.75)
-collision_layer = 3
-width = 1.5
-height = 2.5
-color_preset = 5
-neon_edges = true
+[node name="pump3" parent="pumps" unique_id=901383815 instance=ExtResource("5_gaspump")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.25, 0, 2.75)
 
-[node name="pump4" parent="pumps" unique_id=899689404 instance=ExtResource("1_jbldn")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.25, 1.2749999, -2.25)
-collision_layer = 3
-width = 1.5
-height = 2.5
-color_preset = 5
-neon_edges = true
+[node name="pump4" parent="pumps" unique_id=899689404 instance=ExtResource("5_gaspump")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.25, 0, -2.25)
 
-[node name="pump5" parent="pumps" unique_id=959006728 instance=ExtResource("1_jbldn")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.75, 1.2749999, 2.75)
-collision_layer = 3
-width = 1.5
-height = 2.5
-color_preset = 5
-neon_edges = true
+[node name="pump5" parent="pumps" unique_id=959006728 instance=ExtResource("5_gaspump")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.75, 0, 2.75)
 
-[node name="pump6" parent="pumps" unique_id=46367108 instance=ExtResource("1_jbldn")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.75, 1.2749999, -2.25)
-collision_layer = 3
-width = 1.5
-height = 2.5
-color_preset = 5
-neon_edges = true
+[node name="pump6" parent="pumps" unique_id=46367108 instance=ExtResource("5_gaspump")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.75, 0, -2.25)
+
+[node name="HIDE_CTRL" type="Node3D" parent="pumps" unique_id=1940163410]
+unique_name_in_owner = true
+script = ExtResource("6_gmobj")
+is_active = false
+
+[node name="pump7" parent="pumps/HIDE_CTRL" unique_id=255124490 instance=ExtResource("5_gaspump")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 8.25, 0, 2.75)
+
+[node name="pump8" parent="pumps/HIDE_CTRL" unique_id=477051983 instance=ExtResource("5_gaspump")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 8.25, 0, -2.25)
 
 [node name="roof" parent="pumps" unique_id=372765366 instance=ExtResource("1_jbldn")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -1.231, 4.25, 0.219)

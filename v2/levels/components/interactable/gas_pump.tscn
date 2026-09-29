@@ -1,0 +1,150 @@
+[gd_scene format=3 uid="uid://vumsue2gkkc0"]
+
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_kyn7p"]
+[ext_resource type="Script" uid="uid://vc1gxo6x0kdc" path="res://levels/components/interactable/fuel_up_minigame.gd" id="2_fuelup"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kyn7p"]
+radius = 0.125
+height = 0.6
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_7jvdf"]
+radius = 0.15
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_827ky"]
+albedo_color = Color(0, 0, 0, 1)
+emission_enabled = true
+emission = Color(0.25490198, 0.6862745, 1, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hose"]
+render_priority = 1
+no_depth_test = true
+albedo_color = Color(0.08, 0.08, 0.1, 1)
+roughness = 0.6
+
+[node name="GasPump" type="Node3D" unique_id=255124490]
+script = ExtResource("2_fuelup")
+
+[node name="pump2" parent="." unique_id=1433789873 instance=ExtResource("1_kyn7p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+collision_layer = 3
+width = 1.5
+height = 1.5
+depth = 0.76
+color_preset = 5
+neon_edges = true
+
+[node name="pump5" parent="." unique_id=1912590253 instance=ExtResource("1_kyn7p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.65, 0)
+collision_layer = 3
+width = 1.5
+height = 0.5
+depth = 0.76
+color_preset = 5
+neon_edges = true
+
+[node name="pump3" parent="." unique_id=175949848 instance=ExtResource("1_kyn7p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.62, 1.95, 0)
+collision_layer = 3
+width = 0.25
+depth = 0.5
+color_preset = 5
+neon_edges = true
+
+[node name="pump4" parent="." unique_id=2144116125 instance=ExtResource("1_kyn7p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.62, 1.95, 0)
+collision_layer = 3
+width = 0.25
+depth = 0.5
+color_preset = 5
+neon_edges = true
+
+[node name="HandleArea" type="Area3D" parent="." unique_id=1410637629]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1, -0.5)
+collision_layer = 32
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HandleArea" unique_id=1197887336]
+shape = SubResource("CapsuleShape3D_kyn7p")
+
+[node name="Handle" parent="HandleArea" unique_id=1485126779 instance=ExtResource("1_kyn7p")]
+unique_name_in_owner = true
+collision_layer = 0
+width = 0.1
+height = 0.5
+depth = 0.15
+
+[node name="HandleMarkerHose" type="Marker3D" parent="HandleArea/Handle" unique_id=486557463]
+unique_name_in_owner = true
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.0011457801, -0.25311095, 2.1354862e-09)
+
+[node name="HandleMarkerClick" type="Marker3D" parent="HandleArea/Handle" unique_id=568657661]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, -0.08548968)
+
+[node name="Handle2" parent="HandleArea" unique_id=2137347971 instance=ExtResource("1_kyn7p")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.70710677, -0.70710677, 0, 0.70710677, 0.70710677, 0, 0.287, 0.116)
+collision_layer = 0
+width = 0.05
+height = 0.18
+depth = 0.05
+color_preset = 1
+
+[node name="HandleMarkerTip" type="Marker3D" parent="HandleArea/Handle2" unique_id=1999055910]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09050857, 0)
+
+[node name="GasCapArea" type="Area3D" parent="." unique_id=276705214]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.20075673, 0.9556382, -1.5)
+collision_layer = 32
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GasCapArea" unique_id=1833529637]
+shape = SubResource("SphereShape3D_7jvdf")
+
+[node name="GasCap" parent="GasCapArea" unique_id=1974221404 instance=ExtResource("1_kyn7p")]
+unique_name_in_owner = true
+collision_layer = 0
+shape_mode = 1
+width = 0.15
+depth = 0.15
+material_override = SubResource("StandardMaterial3D_827ky")
+
+[node name="GasCapMarkerTip" type="Marker3D" parent="GasCapArea" unique_id=1846290573]
+unique_name_in_owner = true
+transform = Transform3D(-1, -8.742277e-08, 0, 6.181724e-08, -0.7071067, -0.7071067, 6.181724e-08, -0.7071067, 0.7071067, 0, 0, 0)
+
+[node name="BikeSpot" type="Marker3D" parent="." unique_id=1213614148]
+unique_name_in_owner = true
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.5, 0, -1.5)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=2130966401]
+unique_name_in_owner = true
+transform = Transform3D(-0.16503908, 0.42000902, -0.892387, 0, 0.90479445, 0.42584863, 0.98628706, 0.07028167, -0.14932643, -1.4689869, 1.7621264, -1.4606453)
+fov = 60.0
+
+[node name="PumpMarker" type="Marker3D" parent="." unique_id=1925612561]
+unique_name_in_owner = true
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.75, 0.95, 0)
+
+[node name="Hose" type="Path3D" parent="." unique_id=1580274113]
+unique_name_in_owner = true
+
+[node name="HoseMesh" type="CSGPolygon3D" parent="Hose" unique_id=1172846390]
+polygon = PackedVector2Array(0.025, 0, 0.01768, 0.01768, 0, 0.025, -0.01768, 0.01768, -0.025, 0, -0.01768, -0.01768, 0, -0.025, 0.01768, -0.01768)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 0.05
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+smooth_faces = true
+material = SubResource("StandardMaterial3D_hose")

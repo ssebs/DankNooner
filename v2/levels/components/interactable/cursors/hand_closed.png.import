@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://tj1k8po38cei"
-path="res://.godot/imported/STUNT_CITY.jpg-51b3985318f7c2911f18cc422e1b89bb.ctex"
+uid="uid://ddbkgd1npyp1f"
+path="res://.godot/imported/hand_closed.png-60465af12a5983e815304976006a7700.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/img/level_previews/STUNT_CITY.jpg"
-dest_files=["res://.godot/imported/STUNT_CITY.jpg-51b3985318f7c2911f18cc422e1b89bb.ctex"]
+source_file="res://levels/components/interactable/cursors/hand_closed.png"
+dest_files=["res://.godot/imported/hand_closed.png-60465af12a5983e815304976006a7700.ctex"]
 
 [params]
 

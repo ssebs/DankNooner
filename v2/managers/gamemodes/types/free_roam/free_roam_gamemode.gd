@@ -151,9 +151,10 @@ func _on_game_mode_event_confirm_hud_submitted(peer_id: int, event_index: int):
 	DebugUtils.DebugMsg("Starting Event... %d" % peer_id)
 	game_mode_event_hud_state.on_player_close_pressed.rpc_id(1, peer_id)
 	var event := _entered_circle.get_events()[event_index]
-	gamemode_manager.change_gamemode.rpc_id(
-		1, event.definition.target_gamemode, peer_id, event.get_path()
-	)
+	var target := event.definition.target_gamemode
+	if event.definition.fuel_up_first:
+		target = GameModeType.Kind.FUEL_UP
+	gamemode_manager.change_gamemode.rpc_id(1, target, peer_id, event.get_path())
 
 
 func Exit(_state_context: StateContext):

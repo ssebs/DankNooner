@@ -7,6 +7,10 @@ class_name EventStartCircle extends Area3D
 signal entered_event_circle(peer_id: int, event_start_circle: EventStartCircle)
 signal exited_event_circle(peer_id: int, event_start_circle: EventStartCircle)
 
+## Fuel-up events (fuel_up_first): the station whose FuelUpMinigame pumps riders are assigned to,
+## in tree order. Needs at least one pump per rider.
+@export var gas_station: Node3D
+
 @onready var event_label: Label3D = %Label3D
 
 

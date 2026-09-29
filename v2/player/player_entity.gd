@@ -69,6 +69,8 @@ signal uncrashed
 @export var exhaust_tip_marker: Marker3D
 ## Headlight authoring handle, same flow as exhaust_tip_marker (headlight_position/rotation_degrees).
 @export var headlight_marker: Marker3D
+## Gas cap authoring handle, same flow (gas_cap_position). Fuel-up aims the nozzle at it.
+@export var gas_cap_marker: Marker3D
 
 ## Local cosmetic decel pops / backfires (see _update_exhaust_pops).
 @export_group("Exhaust Pops")
@@ -597,7 +599,9 @@ func on_crash():
 func do_respawn():
 	_apply_respawn_state()
 	# Ragdoll teardown + mesh/IK ride the is_crashed edge now; do_respawn owns only the respawn-event bits.
-	hud_manager.go_to_riding_hud()
+	# Runs for every player on every peer — only our own respawn may touch our HUD.
+	if is_local_client:
+		hud_manager.go_to_riding_hud()
 	respawned.emit()
 
 

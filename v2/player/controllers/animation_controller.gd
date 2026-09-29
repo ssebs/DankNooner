@@ -941,6 +941,8 @@ func _load_wheel_markers_from_definition(def: BikeSkinDefinition) -> void:
 	if player_entity.headlight_marker:
 		player_entity.headlight_marker.position = def.headlight_position
 		player_entity.headlight_marker.rotation_degrees = def.headlight_rotation_degrees
+	if player_entity.gas_cap_marker:
+		player_entity.gas_cap_marker.position = def.gas_cap_position
 
 
 ## Exact inverse of _sync_targets_from_bike's `parent.global * Transform3D(from_euler(rot), pos)`:
@@ -1024,6 +1026,8 @@ func _editor_save_default_pose() -> void:
 	if player_entity.headlight_marker:
 		def.headlight_position = player_entity.headlight_marker.position
 		def.headlight_rotation_degrees = player_entity.headlight_marker.rotation_degrees
+	if player_entity.gas_cap_marker:
+		def.gas_cap_position = player_entity.gas_cap_marker.position
 
 	var err = ResourceSaver.save(def)
 	if err == OK:
