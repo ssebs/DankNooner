@@ -399,7 +399,7 @@ func _detect_air_trick() -> Trick:
 
 ## Called from player_entity.gd's do_respawn
 func do_reset():
-	# Drain any active trick so listeners (HUD balance bar, etc.) clean up
+	# Drain any active trick so listeners (animation, camera fx, etc.) clean up
 	if _last_trick != Trick.NONE:
 		trick_ended.emit(_last_trick)
 	current_trick = Trick.NONE

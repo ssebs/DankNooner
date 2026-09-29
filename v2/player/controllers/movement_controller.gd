@@ -1083,7 +1083,7 @@ func _wobble_bad_landing(landing_velocity: Vector3):
 ## Inject a wobble sized by how far the bike's heading (yaw only) is off from its travel. Shared by the
 ## jump landing (trigger 2) and the wheelie set-down (trigger 5). No-op below min speed or when
 ## already aligned. A moderately-off angle is capped to a RECOVERABLE wobble, but one past the hard
-## window keeps its full magnitude and blows past the balance bar — a crazy-crooked one highsides.
+## window keeps its full magnitude and blows past the crash angle — a crazy-crooked one highsides.
 func _wobble_from_misalign(source: String, travel_velocity: Vector3):
 	var fwd := -player_entity.global_transform.basis.z
 	var h_vel := Vector3(travel_velocity.x, 0.0, travel_velocity.z)

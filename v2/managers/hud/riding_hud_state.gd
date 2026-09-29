@@ -1,5 +1,5 @@
 @tool
-## The riding HUD (Guages, Balance Bar, Boost, etc.)
+## The riding HUD (Guages, Pitch Icon, Boost, etc.)
 class_name RidingHUDState extends HUDState
 
 @export var hud_manager: HUDManager
@@ -44,7 +44,6 @@ const _WARNING_PULSE_SECS := 0.35
 @onready var _event_objective: Label = %HUD_EventObjective
 @onready var _event_progress: Label = %HUD_EventProgress
 @onready var _event_warning: Label = %HUD_EventWarning
-@onready var _balance_bar: BalanceBar = %BalanceBar
 @onready var _boost_gauge: BoostGauge = %BoostGauge
 @onready var _combo_counter: ComboCounter = %ComboCounter
 @onready var _minimap: Minimap = %Minimap
@@ -77,9 +76,6 @@ var _has_leaderboard: bool = false
 ## the gauge. Purely cosmetic — kept out of the synced boost_prev_held, which the rollback
 ## tick owns and must not be perturbed by the HUD.
 var _prev_boost_held: bool = false
-## True while the balance bar is showing the speed wobble (vs a trick). Lets the wobble take the
-## bar over and hand it back cleanly.
-var _wobble_bar_active: bool = false
 ## Local, display-only stopwatch for the current wheelie hold — shown next to the combo while a
 ## challenge is up so you can read your live attempt. Never touches simulation state.
 var _wheelie_attempt_t: float = 0.0
@@ -123,8 +119,6 @@ func Enter(_state_context: StateContext):
 
 	# Discrete events via signals
 	gearing_controller.gear_changed.connect(_on_gear_changed)
-	trick_controller.trick_started.connect(_on_trick_started)
-	trick_controller.trick_ended.connect(_on_trick_ended)
 	# Crash message tracks the is_crashed edge (crashed/uncrashed) so a reconciled-away predicted crash clears it.
 	player_entity.crashed.connect(_on_crashed)
 	player_entity.uncrashed.connect(_on_respawned)
@@ -137,7 +131,6 @@ func Enter(_state_context: StateContext):
 	# Manual inits
 	_on_gear_changed(1)
 	_rebuild_trick_rows()
-	_balance_bar.hide()
 
 
 	show_ui()
@@ -150,8 +143,6 @@ func Exit(_state_context: StateContext):
 		return
 
 	gearing_controller.gear_changed.disconnect(_on_gear_changed)
-	trick_controller.trick_started.disconnect(_on_trick_started)
-	trick_controller.trick_ended.disconnect(_on_trick_ended)
 	player_entity.crashed.disconnect(_on_crashed)
 	player_entity.uncrashed.disconnect(_on_respawned)
 	player_entity.respawned.disconnect(_on_respawned)
@@ -187,20 +178,6 @@ func Physics_Update(delta: float):
 	_grip_label.text = tr("HUD_GRIP").format({"value": int(player_entity.grip_usage * 100)})
 	_fps_label.text = tr("HUD_FPS").format({"value": int(Engine.get_frames_per_second())})
 
-	# The tank-slapper takes the balance bar over from the trick display while active.
-	if movement_controller.is_wobbling:
-		if not _wobble_bar_active:
-			_init_wobble_bar()
-			_balance_bar.update_warn_markers()
-			_balance_bar.show()
-			_wobble_bar_active = true
-		_balance_bar.current_val = rad_to_deg(movement_controller.wobble_angle)
-	else:
-		if _wobble_bar_active:
-			_wobble_bar_active = false
-			_balance_bar.hide()
-		_balance_bar.current_val = rad_to_deg(movement_controller.pitch_angle)
-
 	# Boost meter + combo multiplier are server-authoritative (TrickManager) and arrive
 	# via RollbackSynchronizer, so poll the synced vars rather than tracking them here.
 	_boost_gauge.current_val = boost_controller.boost_amount
@@ -228,12 +205,8 @@ func Physics_Update(delta: float):
 		and trick_controller.current_trick
 		in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]
 	)
-	if _has_leaderboard and wheelie_held:
-		_wheelie_attempt_t += delta
-		_trick_popups.show_wheelie_timer(_wheelie_attempt_t, movement_controller.pitch_angle)
-	else:
-		_wheelie_attempt_t = 0.0
-		_trick_popups.hide_wheelie_timer()
+	_wheelie_attempt_t = _wheelie_attempt_t + delta if _has_leaderboard and wheelie_held else 0.0
+	_update_pitch_icon()
 
 	# Respawn feedback. A tap shows "Respawning..." for a split second; holding past
 	# _RESPAWN_SHOW_SECS switches to "Full respawning..." with the bar charging toward the
@@ -277,34 +250,39 @@ func Physics_Update(delta: float):
 		)
 
 
-## Symmetric ±crash-angle range with warn bands at the crash edges (danger at the extremes).
-func _init_wobble_bar():
-	var limit := movement_controller.wobble_crash_angle_deg
-	_balance_bar.min_val = -limit
-	_balance_bar.max_val = limit
-	_balance_bar.warn_low_val = -limit * 0.7
-	_balance_bar.warn_high_val = limit * 0.7
-
-
-##### TODO - move to balance_bar.gd
-func _init_balance_bar(trick_type: TrickController.Trick):
+## The bike icon under the score: pitch vs the balance point while wheelieing / stoppieing /
+## airborne (the landing-snap window counts as the balance point in the air).
+func _update_pitch_icon():
 	var bd = player_entity.bike_definition
-	match trick_type:
-		TrickController.Trick.STOPPIE:
-			_balance_bar.min_val = - bd.max_stoppie_angle_deg
-			_balance_bar.max_val = 0.0
-			# # No dedicated stoppie balance point — warn band sits in the usable middle
-			_balance_bar.warn_low_val = - bd.max_stoppie_angle_deg * 0.8
-			_balance_bar.warn_high_val = - bd.max_stoppie_angle_deg * 0.3
-		TrickController.Trick.WHEELIE_MOD, TrickController.Trick.WHEELIE_SITTING:
-			_balance_bar.min_val = 0.0
-			_balance_bar.max_val = bd.max_wheelie_angle_deg
-			_balance_bar.warn_low_val = (
-				bd.wheelie_balance_point_deg - bd.wheelie_balance_point_width_deg
-			)
-			_balance_bar.warn_high_val = (
-				bd.wheelie_balance_point_deg + bd.wheelie_balance_point_width_deg
-			)
+	var pitch := rad_to_deg(movement_controller.pitch_angle)
+	var trick := trick_controller.current_trick
+	if player_entity.is_crashed:
+		_trick_popups.hide_pitch_icon()
+	elif trick_controller._trick_state() == TrickController.TrickState.AIR:
+		var snap := MovementController.LANDING_SNAP_ANGLE_DEG
+		_trick_popups.show_pitch_icon(
+			wrapf(pitch, -180.0, 180.0), Vector4(-180.0, -snap, snap, 180.0), Vector2(0.5, 0.5), 0.0
+		)
+	elif trick in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]:
+		var bp: float = bd.wheelie_balance_point_deg
+		var width: float = bd.wheelie_balance_point_width_deg
+		_trick_popups.show_pitch_icon(
+			pitch,
+			Vector4(0.0, bp - width, bp + width, bd.max_wheelie_angle_deg),
+			TrickPopups.WHEELIE_ICON_PIVOT,
+			_wheelie_attempt_t
+		)
+	elif trick == TrickController.Trick.STOPPIE:
+		# No dedicated stoppie balance point — the window sits in the usable middle.
+		var max_deg: float = bd.max_stoppie_angle_deg
+		_trick_popups.show_pitch_icon(
+			pitch,
+			Vector4(-max_deg, -max_deg * 0.8, -max_deg * 0.3, 0.0),
+			TrickPopups.STOPPIE_ICON_PIVOT,
+			0.0
+		)
+	else:
+		_trick_popups.hide_pitch_icon()
 
 
 #region signal handlers
@@ -314,24 +292,6 @@ func _on_input_state_changed(new_state: InputStateManager.InputState) -> void:
 
 func _on_gear_changed(new_gear: int):
 	_gear_label.text = tr("HUD_GEAR").format({"value": new_gear})
-
-
-func _on_trick_started(trick_type: TrickController.Trick):
-	if (
-		trick_type
-		in [
-			TrickController.Trick.WHEELIE_SITTING,
-			TrickController.Trick.WHEELIE_MOD,
-			TrickController.Trick.STOPPIE
-		]
-	):
-		_init_balance_bar(trick_type)
-		_balance_bar.update_warn_markers()
-		_balance_bar.show()
-
-
-func _on_trick_ended(_trick_type: TrickController.Trick):
-	_balance_bar.hide()
 
 
 func _on_crashed(_peer_id: int):
@@ -621,9 +581,8 @@ func do_reset():
 	_game_msg.visible = false
 	_combo_counter.do_reset()
 	_prev_boost_held = false
-	_wobble_bar_active = false
 	_wheelie_attempt_t = 0.0
-	_trick_popups.hide_wheelie_timer()
+	_trick_popups.hide_pitch_icon()
 
 
 func _get_configuration_warnings() -> PackedStringArray:

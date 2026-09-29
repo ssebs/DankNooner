@@ -4,7 +4,6 @@
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="1_whasa"]
 [ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="3_j31af"]
 [ext_resource type="PackedScene" uid="uid://cmnmap7blip01" path="res://player/controllers/minimap/minimap.tscn" id="4_ltqsj"]
-[ext_resource type="PackedScene" uid="uid://cof5vsd00u8ob" path="res://player/hud_elements/balance_bar.tscn" id="5_q7o3g"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/combo_counter.tscn" id="6_x84np"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/boost_gauge.tscn" id="7_3xx38"]
 [ext_resource type="Script" uid="uid://bbuk3w2ml0an0" path="res://player/hud_elements/race_leaderboard.gd" id="99_rldbd"]
@@ -320,11 +319,6 @@ unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("99_scrpp")
-
-[node name="BalanceBar" parent="UI/AspectContainer/MarginContainer" unique_id=108705249 instance=ExtResource("5_q7o3g")]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 2
 
 [node name="BoostCluster" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1216272844]
 layout_mode = 2

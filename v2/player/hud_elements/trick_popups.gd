@@ -3,7 +3,8 @@
 ##  - below center, under the rider: live "+N" for the combo in progress, popped when the server
 ##    banks it, or turned into a red "OOF!" when a crash voids it. BONUS_COLOR while holding a race
 ##    challenge's hint trick (suggested tricks score 2x), and on a pop that included one
-##  - under the score: the race wheelie stopwatch, its bike icon tilted to the bike's pitch
+##  - under the score: the bike icon, tilted to the bike's pitch vs its balance point while
+##    wheelieing / stoppieing / airborne, plus the race wheelie stopwatch
 ##  - up and right of center: a callout for every trick started (TRICK_CALLOUTS, else the trick's
 ##    name), timed HOLD_CALLOUTS, and any server-sent callout
 ## Sfx: tada on a combo multiplier step up, ding on a score pop. Callouts stay silent.
@@ -44,11 +45,26 @@ const SCORE_ORIGIN := Vector2(30.0, 96.0)
 const CALLOUT_ORIGIN := Vector2(210.0, -250.0)
 ## Gap from the score's bottom to the stopwatch row (negative tucks it up — the icon's art has
 ## transparent padding). The row's left edge lines up with the score's.
-const WHEELIE_GAP_Y: float = -12.0
+const WHEELIE_GAP_Y: float = 12.0
 const WHEELIE_ICON := preload("res://resources/img/Logos/BikeOnly.png")
+const TINT_SHADER := preload("res://resources/shaders/hud_tint.gdshader")
 const WHEELIE_ICON_PX: float = 64.0
-## The icon's rear-wheel contact point, as a fraction of its size — it wheelies about this.
+## The icon's rear / front wheel contact points, as a fraction of its size — it wheelies /
+## stoppies about these.
 const WHEELIE_ICON_PIVOT := Vector2(0.35, 0.63)
+const STOPPIE_ICON_PIVOT := Vector2(0.65, 0.63)
+const ICON_MIN_SCALE: float = 0.6
+const ICON_MAX_SCALE: float = 1.3
+const ICON_SHAKE_PX: float = 3.0
+const ICON_SMOOTH_SPEED: float = 12.0
+## Icon colors: blue before the balance point, green in it, red past it — each edge ramps through
+## a midtone (teal / yellow) over ICON_BLEND_DEG.
+const ICON_COLOR := Color(0.25, 0.69, 1.0)  # the art's own blue
+const ICON_NEAR_COLOR := Color(0.2, 0.9, 0.8)
+const ICON_BP_COLOR := Color(0.3, 1.0, 0.35)
+const ICON_WARN_COLOR := Color(1.0, 0.85, 0.2)
+const ICON_HOT_COLOR := Color(1.0, 0.15, 0.1)
+const ICON_BLEND_DEG: float = 6.0
 const POP_SECS: float = 0.2
 const POP_START_SCALE: float = 0.3
 const POP_PEAK_SCALE: float = 1.3
@@ -66,6 +82,13 @@ var _live: Label = null
 var _wheelie_row: HBoxContainer = null
 var _wheelie_icon: TextureRect = null
 var _wheelie_label: Label = null
+var _icon_material: ShaderMaterial = null
+## show_pitch_icon's targets — the HUD updates on physics ticks, so _process eases toward them.
+var _icon_rotation: float = 0.0
+var _icon_scale: float = 1.0
+var _icon_offset := Vector2.ZERO
+var _icon_target_tint := ICON_COLOR
+var _icon_tint := ICON_COLOR
 ## Multiplier seen last frame, to catch the step up.
 var _last_multiplier: int = 1
 ## Trick seen last frame, to catch a new one starting.
@@ -101,8 +124,10 @@ func _ready():
 	_wheelie_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_wheelie_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_wheelie_icon.size = Vector2.ONE * WHEELIE_ICON_PX
-	_wheelie_icon.pivot_offset = _wheelie_icon.size * WHEELIE_ICON_PIVOT
 	_wheelie_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_icon_material = ShaderMaterial.new()
+	_icon_material.shader = TINT_SHADER
+	_wheelie_icon.material = _icon_material
 	icon_slot.add_child(_wheelie_icon)
 	_wheelie_label = _make_label(Color.WHITE)
 	_wheelie_row.add_child(_wheelie_label)
@@ -121,7 +146,8 @@ func track(
 		_live.text = "+%d" % int(tc.combo_score * points_per_second * tc.combo_multiplier)
 		var bonus := tc.current_trick in bonus_tricks
 		_live.modulate = BONUS_COLOR if bonus else _tier_color(tc.combo_multiplier)
-		_place(_live, SCORE_ORIGIN)
+	# Placed even while hidden — the icon row anchors under it.
+	_place(_live, SCORE_ORIGIN)
 
 	_track_trick_start(tc)
 	_track_hold_callouts(player, delta)
@@ -139,19 +165,65 @@ func pop_oof() -> void:
 	_oof_index = (_oof_index + 1) % OOF_KEYS.size()
 
 
-## The live wheelie stopwatch. pitch is the bike's pitch_angle (radians, + = wheelie); the
-## icon faces right, so a wheelie tilts it counter-clockwise.
-func show_wheelie_timer(seconds: float, pitch: float) -> void:
-	_wheelie_label.text = tr("RACE_WHEELIE_ATTEMPT").format({"time": "%.1f" % seconds})
-	_wheelie_icon.rotation = - pitch
+## The bike icon, tilted to pitch (degrees, + = wheelie; the icon faces right, so a wheelie tilts
+## it counter-clockwise). window is (min, low, high, max): the pitch range and its balance point.
+## The icon grows toward the balance point, shakes inside it, and shrinks past it (away from
+## level); see ICON_COLOR for its colors. pivot: rotation point as a fraction of the icon's size.
+## timer: the race wheelie stopwatch's seconds, 0 to hide it.
+func show_pitch_icon(pitch: float, window: Vector4, pivot: Vector2, timer: float) -> void:
+	var low := window.y
+	var high := window.z
+	if pitch >= low and pitch <= high:
+		_icon_scale = ICON_MAX_SCALE
+		_icon_offset = Vector2(randf_range(-1, 1), randf_range(-1, 1)) * ICON_SHAKE_PX
+		_icon_target_tint = ICON_BP_COLOR
+	else:
+		# 0 at the window's edge, 1 at the end of the range on that side.
+		var edge := high if pitch > high else low
+		var end := window.w if pitch > high else window.x
+		var t := clampf((pitch - edge) / (end - edge), 0.0, 1.0)
+		var past := (pitch > high and high >= 0.0) or (pitch < low and low <= 0.0)
+		_icon_scale = lerpf(ICON_MAX_SCALE, ICON_MIN_SCALE, t)
+		_icon_offset = Vector2.ZERO
+		# Flat colors, with a short ramp through a midtone just outside the window.
+		var s := clampf(absf(pitch - edge) / ICON_BLEND_DEG, 0.0, 1.0)
+		if past:
+			_icon_target_tint = _ramp(ICON_BP_COLOR, ICON_WARN_COLOR, ICON_HOT_COLOR, s)
+		else:
+			_icon_target_tint = _ramp(ICON_BP_COLOR, ICON_NEAR_COLOR, ICON_COLOR, s)
+	_icon_rotation = - deg_to_rad(pitch)
+	_wheelie_icon.pivot_offset = _wheelie_icon.size * pivot
+	_wheelie_label.text = tr("RACE_WHEELIE_ATTEMPT").format({"time": "%.1f" % timer})
+	_wheelie_label.visible = timer > 0.0
+	if not _wheelie_row.visible:
+		_ease_icon(1.0) # just appeared — start at the target instead of easing from stale values
 	_wheelie_row.visible = true
 	_wheelie_row.reset_size()
 	# The score label is re-placed (centered on SCORE_ORIGIN) every frame by track().
 	_wheelie_row.position = Vector2(_live.position.x, _live.position.y + _live.size.y + WHEELIE_GAP_Y)
 
 
-func hide_wheelie_timer() -> void:
+func hide_pitch_icon() -> void:
 	_wheelie_row.visible = false
+
+
+func _process(delta: float) -> void:
+	if Engine.is_editor_hint() or not _wheelie_row.visible:
+		return
+	_ease_icon(1.0 - exp(-ICON_SMOOTH_SPEED * delta))
+
+
+func _ease_icon(weight: float) -> void:
+	_wheelie_icon.rotation = lerp_angle(_wheelie_icon.rotation, _icon_rotation, weight)
+	_wheelie_icon.scale = _wheelie_icon.scale.lerp(Vector2.ONE * _icon_scale, weight)
+	_wheelie_icon.position = _wheelie_icon.position.lerp(_icon_offset, weight)
+	_icon_tint = _icon_tint.lerp(_icon_target_tint, weight)
+	_icon_material.set_shader_parameter("tint", _icon_tint)
+
+
+## a -> b -> c as s goes 0 -> 1.
+func _ramp(a: Color, b: Color, c: Color, s: float) -> Color:
+	return a.lerp(b, s * 2.0) if s < 0.5 else b.lerp(c, s * 2.0 - 1.0)
 
 
 ## text is already localized.
