@@ -160,6 +160,11 @@ func _apply_bus_volume(bus_name: String, linear_volume: float):
 	AudioServer.set_bus_volume_db(idx, linear_to_db(linear_volume))
 
 
+## Silences gameplay SFX (engine revs etc.) without touching the user's volume setting.
+func set_sfx_muted(muted: bool):
+	AudioServer.set_bus_mute(AudioServer.get_bus_index(&"SFX"), muted)
+
+
 ## Plays the engine sound configured by `bike_def`. Stops any previously-active
 ## engine sound first so two loops don't overlap when a player swaps bikes.
 func play_revs(bike_def: BikeSkinDefinition):

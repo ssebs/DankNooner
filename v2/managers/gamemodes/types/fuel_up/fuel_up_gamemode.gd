@@ -102,6 +102,7 @@ func _start_minigame():
 	)
 	# Local only — the rider sits between the pump camera and the pump.
 	_player.character_skin.visible = false
+	gamemode_manager.audio_manager.stop_revs()
 	hud_manager.go_to_fuel_up_hud(_minigame)
 
 	input_state_manager.input_state_changed.connect(_on_input_state_changed)
@@ -116,6 +117,7 @@ func _end_minigame():
 	_minigame.stop()
 	_minigame = null
 	_player.character_skin.visible = true
+	gamemode_manager.audio_manager.play_revs(_player.bike_definition)
 	hud_manager.go_to_riding_hud()
 	_player.camera_controller.switch_to_cam(_player.camera_controller.current_cam_mode)
 

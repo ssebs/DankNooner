@@ -90,6 +90,8 @@ func start_game(
 	state_machine.clear_current_state()
 	_release_level_animals()
 	menu_manager.state_machine.request_state_change(loading_menu_state)
+	# Revs start on spawn, but the level's first draw stalls — keep SFX quiet until it lands.
+	audio_manager.set_sfx_muted(true)
 	await RenderingServer.frame_post_draw
 	var t_start := Time.get_ticks_msec()
 	level_manager.spawn_level(level_name, InputStateManager.InputState.IN_GAME)
@@ -102,6 +104,8 @@ func start_game(
 			t_spawned - t_start, t_gamemode - t_spawned
 		]
 	)
+	await RenderingServer.frame_post_draw
+	audio_manager.set_sfx_muted(false)
 
 
 ## Server receives request to change gamemode, broadcasts to all peers
