@@ -43,8 +43,10 @@ class_name CrashController extends Node
 @export var highside_launch_force: float = 14.0
 ## At/above this impact speed a player-to-player hit hard-crashes; below it both riders wobble.
 @export var wobble_ram_max_speed: float = 15.0
-## Angular kick (rad/s) applied to both riders on a low-speed player-to-player tap.
+## Angular kick (rad/s) applied to both riders on a low-speed player-to-player tap, or a glancing wall hit.
 @export var wobble_ram_strength: float = 6.0
+## Fraction of speed lost on a glancing (non-crash) layer-2 wall hit.
+@export var wall_glance_speed_loss: float = 0.25
 
 var _prev_front_brake: float = 0.0
 var _prev_throttle: float = 0.0
@@ -246,7 +248,21 @@ func _detect_crash():
 					_crash_rammed_racer(collider)
 					trigger_crash()
 					return
-				DebugUtils.DebugMsg("no crash (angle=%.1f)" % angle)
+				# Glancing hit: reflect heading off the wall, wobble away + speed penalty.
+				# Once per wobble so contact can't stack it.
+				if not movement_controller.is_wobbling:
+					var fwd := -player_entity.global_transform.basis.z
+					var fwd_flat := Vector3(fwd.x, 0.0, fwd.z).normalized()
+					var n: Vector3 = collision.get_normal()
+					var n_flat := Vector3(n.x, 0.0, n.z).normalized()
+					# Mirror only the into-wall part — a heading already angled away is left alone.
+					var reflected := fwd_flat - 2.0 * minf(fwd_flat.dot(n_flat), 0.0) * n_flat
+					player_entity.rotate_y(fwd_flat.signed_angle_to(reflected, Vector3.UP))
+					var away := signf(fwd.signed_angle_to(n, Vector3.UP))
+					movement_controller.wobble_vel += away * wobble_ram_strength
+					movement_controller.speed *= 1.0 - wall_glance_speed_loss
+					DebugUtils.DebugMsg("wall glance wobble (angle=%.1f)" % angle)
+					return
 
 
 ## We rode into another racer: they never see that collision from their side

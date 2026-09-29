@@ -191,7 +191,8 @@ var _dbg_log_file: FileAccess = null
 
 
 func _ready():
-	floor_max_angle = deg_to_rad(170.0) # allow riding on steep ramps, loops, ceilings
+	# Relative to up_direction, which tracks loops — so walls stay walls (slide, not pin).
+	floor_max_angle = deg_to_rad(80.0)
 	_init_mesh()
 	_init_collision_shape()
 	_init_ik()

@@ -2575,6 +2575,7 @@ crash_controller = NodePath("../CrashController")
 rear_raycast = NodePath("../../RearRayCast")
 front_raycast = NodePath("../../FrontRayCast")
 wobble_trick_feed = 2.0
+wobble_trick_crash_miss_deg = null
 wheelie_clutch_kick_boost = 0.75
 
 [node name="GearingController" type="Node" parent="_Controllers" unique_id=2064362163 node_paths=PackedStringArray("player_entity", "input_controller")]

@@ -203,7 +203,7 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     but deliberately leaves `boost_amount` alone
 - **CrashController** (`crash_controller.gd`)
   - Runs in rollback tick after the other controllers
-  - Detects crashes from over-rotation (wheelie/stoppie past trick limits, side lean), stoppie steer washout, steep-slope stalls, speed-wobble and drift highsides / spinouts, brake grabs while turning, killbox/obstacle collisions, upside-down landings, and landing while still mid air-trick (`TrickController.is_air_trick` — stick tricks only, not flips)
+  - Detects crashes from over-rotation (wheelie/stoppie past trick limits, side lean), stoppie steer washout, steep-slope stalls, speed-wobble and drift highsides / spinouts, brake grabs while turning, killbox/obstacle collisions (a glancing layer-2 hit reflects the heading off the wall, wobbles the rider away, and costs `wall_glance_speed_loss` instead), upside-down landings, and landing while still mid air-trick (`TrickController.is_air_trick` — stick tricks only, not flips)
   - **Unstable surfaces**: lean-crash threshold tightens (scaled by `movement_controller.get_unstable_factor()` via `unstable_lean_threshold_reduction_deg`); front brake while steering on unstable triggers a lowside (`unstable_lowside_brake_threshold`, `unstable_lowside_steer_threshold_deg`)
   - `trigger_crash()` — sim state only: sets `is_crashed` and velocity (zero, or the highside launch).
     Ragdoll, camera and SFX ride the `is_crashed` edge in `PlayerEntity._process()`, which emits
