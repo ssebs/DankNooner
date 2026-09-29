@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://by6pl8bkpmycq"]
+
+[ext_resource type="Texture2D" uid="uid://jpt2tqlxrf2f" path="res://levels/assets/graybox/road_texture_template.png" id="1_0s70s"]
+
+[resource]
+albedo_texture = ExtResource("1_0s70s")
+texture_filter = 4

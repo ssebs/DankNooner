@@ -38,7 +38,7 @@
   - [x] Trick juice / points / leaderboard
   - [x] Score complex tricks more (high chair during wheelie vs just on ground)
   - [x] Time attack / multiple modes per location
-  - [ ] more items (shotgun, bat, ramp, oil slick)
+  - [x] more items (shotgun, bat, ramp, oil slick)
 
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
 - [ ] fix game breaking bugs
