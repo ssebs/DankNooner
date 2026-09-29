@@ -25,8 +25,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] show rotation hud (like during wheelie) when in air / doing flips.
-
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [x] make tricks + combos easier to do **WIP**
@@ -70,9 +68,6 @@
 - [ ] landing mega ramp jump causes crash
   - [x] only use yaw in speed wobble code
   - [ ] tweak speed wobbles from yaw
-
-- [ ] holding balance point + using wrong dir should not move the camera.
-  - [ ] e.g. balance point + down fails and the camera moves, bc theres no trick assigned
 
 ### Gameplay Improvements
 
@@ -228,6 +223,12 @@
 ---
 
 ## Done ✅
+
+- [x] holding balance point + using wrong dir should not move the camera.
+
+- [x] add speed wobbles when trying to do wheelie trick out of balance point
+
+- [x] show rotation hud (like during wheelie) when in air / doing flips.
 
 - [x] disable sfx while loading a level
   - currently has revs on first launch for a while and its annoying

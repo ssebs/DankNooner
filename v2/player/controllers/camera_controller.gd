@@ -109,6 +109,7 @@ var _orbit_pitch: float = 0.0
 var _default_orbit_pitch: float = -15
 var _mouse_delta: Vector2 = Vector2.ZERO
 var _no_input_timer: float = 0.0
+var _stick_trick_latched: bool = false # stick held since it was last trick input
 var _checkpoint_yaw_bias: float = 0.0
 ## Smoothed tps_marker.position — eases the wheelie-cam reframe in/out (the anim ramps it linearly).
 var _tps_marker_offset: Vector3 = Vector3.ZERO
@@ -157,6 +158,9 @@ func _process(delta: float):
 		return
 
 	var adjusted_mouse := Vector2(_mouse_delta.x, _mouse_delta.y * invert_cam)
+	# Once the stick is trick input it stays so until released — a direction still held as the
+	# wheelie / jump ends shouldn't swing the camera.
+	_stick_trick_latched = _stick_held() and _stick_is_trick_input()
 
 	match current_cam_mode:
 		CameraMode.TPS:
@@ -176,18 +180,26 @@ func _has_cam_input(mouse: Vector2) -> bool:
 	# around; a gamepad's stick is busy with tricks, so its camera holds at the reframed base).
 	if _stick_is_trick_input():
 		return mouse_input
-	return (
-		mouse_input
-		or absf(input_controller.nfx_cam_x) > 0.05
-		or absf(input_controller.nfx_cam_y) > 0.05
-	)
+	return mouse_input or _stick_held()
 
 
-## True when the right stick is consumed by trick input (airborne / wheelie balance point / RB
-## for TWO_LEFT_FEET), so the joystick must not also drive the camera. The mouse still can.
+func _stick_held() -> bool:
+	return absf(input_controller.nfx_cam_x) > 0.05 or absf(input_controller.nfx_cam_y) > 0.05
+
+
+## True when the right stick is consumed by trick input (airborne / any wheelie / RB for
+## TWO_LEFT_FEET, or still held since one of those), so the joystick must not also drive the camera.
+## The mouse still can. The whole wheelie, not just the balance point, so drifting out of it
+## mid-trick doesn't swing the camera.
 func _stick_is_trick_input() -> bool:
 	var mc := player_entity.movement_controller
-	return input_controller.nfx_trick_held or not mc._is_on_floor or mc.in_balance_point
+	var in_wheelie := mc.pitch_angle > deg_to_rad(TrickController.WHEELIE_PITCH_THRESHOLD_DEG)
+	return (
+		_stick_trick_latched
+		or input_controller.nfx_trick_held
+		or not mc._is_on_floor
+		or in_wheelie
+	)
 
 
 #region TPS orbit

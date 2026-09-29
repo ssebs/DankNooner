@@ -20,7 +20,8 @@ class_name MovementController extends Node
 @export var wobble_recover_boost: float = 6.0 # extra damping that ramps up as you near center (forgiving)
 @export var wobble_min_speed: float = 15.0 # below this no wobble starts, and slowing kills an active one
 @export var wobble_crash_angle_deg: float = 60.0 # |wobble_angle| past this highsides
-# Triggers 1a (brake-slide release), 1b (high-speed brake entry) and 5 (wheelie set-down) are always on.
+# Triggers 1a (brake-slide release), 1b (high-speed brake entry), 5 (wheelie set-down) and 6 (wheelie
+# trick off the balance point) are always on.
 @export var wobble_release_min_hold: float = 0.25 # 1a: brake-slide hold (sec) that wobbles
 @export var wobble_release_min_angle_deg: float = 30.0 # 1a: release slip (deg) that wobbles
 @export var wobble_release_strength: float = 6.0 # 1a kick (rad/s)
@@ -30,6 +31,7 @@ class_name MovementController extends Node
 @export var wobble_landing_angle_deg: float = 20.0 # trigger 2: landing misalignment (deg) window
 @export var wobble_landing_strength: float = 0.4 # trigger 2 kick (rad/s) per deg past the window
 @export var wobble_landing_hard_over_deg: float = 50.0 # deg past the window that highsides outright (no cap)
+@export var wobble_trick_feed: float = 1.0 # trigger 6: feed (rad/s²) per deg a wheelie trick is off the balance point
 
 @export_group("Wheelie")
 ## Radians of wheelie target per unit of wheel force (get_power_output × acceleration). The single
@@ -142,6 +144,7 @@ var wobble_angle: float = 0.0 # signed yaw perturbation (rad)
 var wobble_vel: float = 0.0 # its angular velocity (rad/s)
 var wobble_brake_hold_time: float = 0.0 # brake-slide hold accumulator (trigger 1a)
 var is_wobbling: bool = false
+var wobble_from_trick: bool = false # synced — trigger 6 fed this wobble; the wheelie stays up until it settles
 # true ONLY in a braking-held stoppie (not a coast/landing/burnout); gates scoring + washout crash
 var is_stoppie: bool = false
 var stoppie_brake_hold_time: float = 0.0 # auto-stoppie hard-brake hold accumulator (synced)
@@ -256,15 +259,11 @@ func on_movement_rollback_tick(delta: float):
 	_velocity_calc(delta)
 	_pitch_angle_calc(delta)
 
-	# Trigger 5 — front wheel setting down from a ground wheelie. is_in_wheelie() lags a tick (trick
-	# runs after us) so it's last tick's state; the edge is that vs this tick's just-updated pitch.
+	# Trigger 5 — front wheel setting down from a ground wheelie (fires once, as the wheelie ends).
 	# Injects after _wobble_calc, so it's picked up next tick (wobble_vel is synced).
-	if (
-		_is_on_floor
-		and player_entity.trick_controller.is_in_wheelie()
-		and pitch_angle <= deg_to_rad(TrickController.WHEELIE_PITCH_THRESHOLD_DEG)
-	):
+	if _is_on_floor and player_entity.trick_controller.wheelie_setting_down(delta):
 		_wobble_from_misalign("trigger 5 (wheelie set-down)", player_entity.velocity)
+	_wobble_trick_feed(delta)
 
 	# Apply movement
 	var pre_slide_velocity := player_entity.velocity
@@ -613,14 +612,25 @@ func _pitch_angle_calc(delta: float):
 	is_stoppie = false # _stoppie_calc re-asserts it below; stays false when airborne / in a wheelie / on steep ground
 	in_balance_point = false # re-asserted below when in the window; false when airborne / wobbling / steep
 
-	if is_wobbling: # can't pop tricks mid-tank-slapper — bleed pitch to neutral
+	if is_wobbling:
 		balance_locked = false
-		pitch_angle = move_toward(pitch_angle, 0.0, player_entity.bike_definition.return_speed * delta)
-		return
+		# Can't pop tricks mid-tank-slapper — bleed pitch to neutral. A trick wobble (trigger 6) keeps
+		# an up wheelie's physics, so the rider can climb into the balance point to settle it.
+		var trick_wheelie := (
+			wobble_from_trick
+			and pitch_angle > deg_to_rad(TrickController.WHEELIE_PITCH_THRESHOLD_DEG)
+		)
+		if not trick_wheelie:
+			pitch_angle = move_toward(
+				pitch_angle, 0.0, player_entity.bike_definition.return_speed * delta
+			)
+			return
 
 	# Airborne trick control — lean to flip, no decay (weightless)
 	if not _is_on_floor:
-		balance_locked = false
+		# A bump or slope crest isn't a jump — the lock resumes on touchdown.
+		if _air_time >= TrickController.AIR_TRICK_MIN_AIRTIME:
+			balance_locked = false
 		if input_controller.nfx_lean != 0:
 			# Lean back (negative) = backflip (positive pitch), lean forward = frontflip
 			var rotation_delta = input_controller.nfx_lean * AIR_TRICK_ROTATION_SPEED * delta
@@ -1073,6 +1083,31 @@ func _update_brake_slide_wobble(delta: float):
 	wobble_brake_hold_time = 0.0
 
 
+## Trigger 6. A right-stick trick run outside the wheelie balance point feeds a wobble every tick,
+## scaled by how far off the window pitch is; inside it, _wobble_calc damps it out.
+func _wobble_trick_feed(delta: float):
+	var miss_deg := _balance_point_miss_deg()
+	if (
+		speed < wobble_min_speed
+		or miss_deg <= 0.0
+		or not player_entity.trick_controller.is_wheelie_stick_trick()
+	):
+		return
+	# Pump the current swing; a fresh one starts toward the steer side.
+	var kick_sign := signf(wobble_vel) if is_wobbling else signf(input_controller.nfx_steer)
+	if kick_sign == 0.0:
+		kick_sign = 1.0
+	wobble_vel += kick_sign * wobble_trick_feed * miss_deg * delta
+	wobble_from_trick = true
+
+
+## Degrees pitch sits outside the wheelie balance window (0 inside it).
+func _balance_point_miss_deg() -> float:
+	var bd = player_entity.bike_definition
+	var off_center := absf(rad_to_deg(pitch_angle) - bd.wheelie_balance_point_deg)
+	return maxf(off_center - bd.wheelie_balance_point_width_deg, 0.0)
+
+
 ## Trigger 2. A jump landing with the heading off travel wobbles by how far off it is.
 func _wobble_bad_landing(landing_velocity: Vector3):
 	if _air_time < wobble_landing_min_airtime: # short hops / curbs never wobble
@@ -1123,6 +1158,7 @@ func _wobble_calc(delta: float):
 			DebugUtils.DebugMsg("wobble ended (settled)", OS.has_feature("debug") and debug_verbose)
 		wobble_angle = 0.0
 		wobble_vel = 0.0
+		wobble_from_trick = false
 		return
 	if not was_wobbling:
 		DebugUtils.DebugMsg(
@@ -1141,8 +1177,9 @@ func _wobble_calc(delta: float):
 	# More forgiving the closer to center you are — recovery accelerates as the swing shrinks.
 	var amp_ratio := clampf(absf(wobble_angle) / deg_to_rad(wobble_crash_angle_deg), 0.0, 1.0)
 	damping += wobble_recover_boost * (1.0 - amp_ratio)
-	# Slowing below min speed kills the wobble — a universal low-speed save.
-	if speed < wobble_min_speed:
+	# Slowing below min speed kills the wobble — a universal low-speed save. Getting a trick wobble's
+	# wheelie into the balance point saves it the same way.
+	if speed < wobble_min_speed or (wobble_from_trick and _balance_point_miss_deg() <= 0.0):
 		damping += wobble_recover_boost * 3.0
 	wobble_vel -= wobble_spring * wobble_angle * delta
 	wobble_vel *= exp(-damping * delta) # exp keeps damping stable even when the bonuses stack high
@@ -1248,6 +1285,7 @@ func do_reset():
 	wobble_vel = 0.0
 	wobble_brake_hold_time = 0.0
 	is_wobbling = false
+	wobble_from_trick = false
 	is_reversing = false
 	_was_on_floor = false
 	_prev_clutch_held = false

@@ -46,6 +46,11 @@ const AIR_TRICK_MIN_AIRTIME: float = 0.25
 ## Shared by movement_controller for in_wheelie / in_stoppie checks.
 const WHEELIE_PITCH_THRESHOLD_DEG: float = 10.0
 const STOPPIE_PITCH_THRESHOLD_DEG: float = -10.0
+## A wheelie ends once pitch stays under WHEELIE_EXIT_PITCH_DEG for WHEELIE_EXIT_DELAY seconds (same
+## idea as AUTO_DOWNSHIFT_DELAY). Below the entry threshold, so a nose bobbing across it — power
+## fading in a tall gear — stays one wheelie instead of restarting the trick every crossing.
+const WHEELIE_EXIT_PITCH_DEG: float = 5.0
+const WHEELIE_EXIT_DELAY: float = 0.2
 ## Boost segments earned per second of trick, before the combo multiplier. At x1 that's ~2s
 ## of wheelie per segment, ~6s for a full meter — short enough that a casual wheelie earns
 ## something usable. Consts, not @exports: this runs inside the rollback tick and must be
@@ -147,6 +152,7 @@ var current_trick: Trick = Trick.NONE
 var _last_trick: Trick = Trick.NONE
 var _flip_emitted: bool = false  # prevent re-emitting the same flip while still airborne
 var _trick_timer: float = 0.0
+var _wheelie_exit_hold: float = 0.0  # synced — seconds pitch has been under WHEELIE_EXIT_PITCH_DEG
 ## Full air rotations already paid out this airtime — synced so a resim doesn't double-award.
 var _air_flips_awarded: int = 0
 ## Gesture state (all synced: read/written in the rollback tick and gates tricks, so combo_time,
@@ -261,8 +267,9 @@ func _trick_state() -> TrickState:
 			return TrickState.NONE
 		return TrickState.AIR
 	if movement_controller.pitch_angle > deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG):
-		# Tweaks only in the balance point; a wheelie below the window stays the plain wheelie.
-		return TrickState.WHEELIE if movement_controller.in_balance_point else TrickState.NONE
+		# Any wheelie — outside the balance point the trick still pops but throws a wobble
+		# (MovementController._wobble_trick_feed).
+		return TrickState.WHEELIE
 	# On the ground the trick button must be held, so the stick still drives the camera otherwise.
 	return TrickState.GROUND if input_controller.nfx_trick_held else TrickState.NONE
 
@@ -341,6 +348,9 @@ func _detect_current_trick(delta: float) -> Trick:
 		return _tap_trick
 
 	if !movement_controller._is_on_floor:
+		# A bump or crest mid-trick isn't a jump — keep the ground trick (same gate as _trick_state).
+		if movement_controller._air_time < AIR_TRICK_MIN_AIRTIME:
+			return _last_trick
 		return _detect_air_trick()
 
 	# Reset flip tracking on landing
@@ -353,11 +363,19 @@ func _detect_current_trick(delta: float) -> Trick:
 		return Trick.DRIFT
 
 	if movement_controller.pitch_angle > deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG):
+		_wheelie_exit_hold = 0.0
 		# Neutral stick stays the plain WHEELIE_SITTING — physics unchanged.
 		var wheelie_held := _held_trick()
 		if wheelie_held != Trick.NONE:
 			return wheelie_held
 		return Trick.WHEELIE_SITTING
+
+	if _last_trick in [Trick.WHEELIE_SITTING, Trick.WHEELIE_MOD] and not wheelie_setting_down(delta):
+		if movement_controller.pitch_angle <= deg_to_rad(WHEELIE_EXIT_PITCH_DEG):
+			_wheelie_exit_hold += delta
+		else:
+			_wheelie_exit_hold = 0.0
+		return _last_trick
 
 	# Only a braking-held stoppie scores — a nose-down landing or coast isn't a stoppie.
 	if movement_controller.is_stoppie:
@@ -406,6 +424,7 @@ func do_reset():
 	_last_trick = Trick.NONE
 	_flip_emitted = false
 	_air_flips_awarded = 0
+	_wheelie_exit_hold = 0.0
 	_hold_dir = NO_DIR
 	_hold_time = 0.0
 	_press_double = false
@@ -422,6 +441,31 @@ func do_reset():
 
 func is_in_wheelie() -> bool:
 	return current_trick in [Trick.WHEELIE_SITTING, Trick.WHEELIE_MOD]
+
+
+## True while a right-stick trick (BINDINGS) runs in a ground wheelie. Reads the synced _last_trick —
+## MovementController calls this before this tick's detection.
+func is_wheelie_stick_trick() -> bool:
+	if (
+		_last_trick == Trick.NONE
+		or not movement_controller._is_on_floor
+		or movement_controller.pitch_angle <= deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG)
+	):
+		return false
+	for tricks: Array in BINDINGS[TrickState.WHEELIE].values():
+		if _last_trick in tricks:
+			return true
+	return false
+
+
+## True on the tick a wheelie's WHEELIE_EXIT_DELAY runs out — the front wheel is down for good.
+## MovementController reads it before this tick's _detect_current_trick, which ends the wheelie.
+func wheelie_setting_down(delta: float) -> bool:
+	return (
+		_last_trick in [Trick.WHEELIE_SITTING, Trick.WHEELIE_MOD]
+		and movement_controller.pitch_angle <= deg_to_rad(WHEELIE_EXIT_PITCH_DEG)
+		and _wheelie_exit_hold + delta >= WHEELIE_EXIT_DELAY
+	)
 
 
 ## Tricks that must be finished before touching down — landing mid-trick crashes (see

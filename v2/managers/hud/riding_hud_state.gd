@@ -254,35 +254,31 @@ func Physics_Update(delta: float):
 ## airborne (the landing-snap window counts as the balance point in the air).
 func _update_pitch_icon():
 	var bd = player_entity.bike_definition
-	var pitch := rad_to_deg(movement_controller.pitch_angle)
 	var trick := trick_controller.current_trick
+	var window: Vector4
+	var pivot: Vector2
 	if player_entity.is_crashed:
 		_trick_popups.hide_pitch_icon()
-	elif trick_controller._trick_state() == TrickController.TrickState.AIR:
+		return
+	if trick_controller._trick_state() == TrickController.TrickState.AIR:
 		var snap := MovementController.LANDING_SNAP_ANGLE_DEG
-		_trick_popups.show_pitch_icon(
-			wrapf(pitch, -180.0, 180.0), Vector4(-180.0, -snap, snap, 180.0), Vector2(0.5, 0.5), 0.0
-		)
+		window = Vector4(-180.0, -snap, snap, 180.0)
+		pivot = Vector2(0.5, 0.5)
 	elif trick in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]:
 		var bp: float = bd.wheelie_balance_point_deg
 		var width: float = bd.wheelie_balance_point_width_deg
-		_trick_popups.show_pitch_icon(
-			pitch,
-			Vector4(0.0, bp - width, bp + width, bd.max_wheelie_angle_deg),
-			TrickPopups.WHEELIE_ICON_PIVOT,
-			_wheelie_attempt_t
-		)
+		window = Vector4(0.0, bp - width, bp + width, bd.max_wheelie_angle_deg)
+		pivot = TrickPopups.WHEELIE_ICON_PIVOT
 	elif trick == TrickController.Trick.STOPPIE:
 		# No dedicated stoppie balance point — the window sits in the usable middle.
 		var max_deg: float = bd.max_stoppie_angle_deg
-		_trick_popups.show_pitch_icon(
-			pitch,
-			Vector4(-max_deg, -max_deg * 0.8, -max_deg * 0.3, 0.0),
-			TrickPopups.STOPPIE_ICON_PIVOT,
-			0.0
-		)
+		window = Vector4(-max_deg, -max_deg * 0.8, -max_deg * 0.3, 0.0)
+		pivot = TrickPopups.STOPPIE_ICON_PIVOT
 	else:
 		_trick_popups.hide_pitch_icon()
+		return
+	var pitch := wrapf(rad_to_deg(movement_controller.pitch_angle), -180.0, 180.0)
+	_trick_popups.show_pitch_icon(pitch, window, pivot, _wheelie_attempt_t)
 
 
 #region signal handlers

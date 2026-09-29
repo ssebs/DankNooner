@@ -270,12 +270,17 @@ The trick roster is the `Trick` enum in `trick_controller.gd`.
   `CLUTCH_KICK_WINDOW`) live in `MovementController._pitch_angle_calc()`, and so does the
   on-ground pitch auto-balance.
 - Wheelie / stoppie are entered off `WHEELIE_PITCH_THRESHOLD_DEG` / `STOPPIE_PITCH_THRESHOLD_DEG`
-  (consts here, shared with `MovementController`'s `in_wheelie` / `in_stoppie` checks). The bike
+  (consts here, shared with `MovementController`'s `in_wheelie` / `in_stoppie` checks). A wheelie
+  only ends once pitch stays under the lower `WHEELIE_EXIT_PITCH_DEG` for `WHEELIE_EXIT_DELAY`, so
+  bobbing across the threshold doesn't restart the trick; `wheelie_setting_down()` marks that tick (the set-down wobble trigger). The bike
   definition's `max_wheelie_angle_deg` / `max_stoppie_angle_deg` are the *crash* limits instead —
   see `CrashController`.
 - The trick-button variants (`WHEELIE_MOD` / `HIGH_CHAIR` / `HEEL_CLICKER` / `TWO_LEFT_FEET`) are
   picked by camera-stick direction while the trick button is held; `HIGH_CHAIR` latches until the
   button drops or the wheelie ends. `DRIFT` mirrors `MovementController.is_drifting`.
+- Stick tricks work in any ground wheelie. Outside the balance point they feed a speed wobble
+  (`MovementController._wobble_trick_feed`, scaled by `wobble_trick_feed`) that keeps the wheelie up
+  (`wobble_from_trick`); getting into the balance point damps it out, or it highsides.
 - Emits `trick_started`, `trick_ended` signals
 - Scoring lives in `TrickManager` (see below)
 
