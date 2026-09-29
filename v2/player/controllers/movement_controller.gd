@@ -32,6 +32,7 @@ class_name MovementController extends Node
 @export var wobble_landing_strength: float = 0.4 # trigger 2 kick (rad/s) per deg past the window
 @export var wobble_landing_hard_over_deg: float = 50.0 # deg past the window that highsides outright (no cap)
 @export var wobble_trick_feed: float = 1.0 # trigger 6: feed (rad/s²) per deg a wheelie trick is off the balance point
+@export var wobble_trick_crash_miss_deg: float = 45.0 # trigger 6: deg off balance point = crash-sized swing
 
 @export_group("Wheelie")
 ## Radians of wheelie target per unit of wheel force (get_power_output × acceleration). The single
@@ -1083,13 +1084,14 @@ func _update_brake_slide_wobble(delta: float):
 	wobble_brake_hold_time = 0.0
 
 
-## Trigger 6. A right-stick trick run outside the wheelie balance point feeds a wobble every tick,
-## scaled by how far off the window pitch is; inside it, _wobble_calc damps it out.
+## Trigger 6. A right-stick trick run outside the wheelie balance point pumps a wobble up to a swing
+## sized by how far off the window pitch is; past that size, _wobble_calc damps it back down.
 func _wobble_trick_feed(delta: float):
 	var miss_deg := _balance_point_miss_deg()
 	if (
 		speed < wobble_min_speed
 		or miss_deg <= 0.0
+		or _wobble_amplitude() >= _trick_wobble_target_amp()
 		or not player_entity.trick_controller.is_wheelie_stick_trick()
 	):
 		return
@@ -1099,6 +1101,18 @@ func _wobble_trick_feed(delta: float):
 		kick_sign = 1.0
 	wobble_vel += kick_sign * wobble_trick_feed * miss_deg * delta
 	wobble_from_trick = true
+
+
+## Swing (rad) a trick wobble settles toward: the crash angle at wobble_trick_crash_miss_deg off the
+## balance point, 0 inside it.
+func _trick_wobble_target_amp() -> float:
+	var miss_ratio := _balance_point_miss_deg() / wobble_trick_crash_miss_deg
+	return deg_to_rad(wobble_crash_angle_deg) * miss_ratio
+
+
+## Peak |wobble_angle| this swing reaches (rad), from its angle + velocity.
+func _wobble_amplitude() -> float:
+	return sqrt(wobble_angle * wobble_angle + wobble_vel * wobble_vel / wobble_spring)
 
 
 ## Degrees pitch sits outside the wheelie balance window (0 inside it).
@@ -1177,9 +1191,11 @@ func _wobble_calc(delta: float):
 	# More forgiving the closer to center you are — recovery accelerates as the swing shrinks.
 	var amp_ratio := clampf(absf(wobble_angle) / deg_to_rad(wobble_crash_angle_deg), 0.0, 1.0)
 	damping += wobble_recover_boost * (1.0 - amp_ratio)
-	# Slowing below min speed kills the wobble — a universal low-speed save. Getting a trick wobble's
-	# wheelie into the balance point saves it the same way.
-	if speed < wobble_min_speed or (wobble_from_trick and _balance_point_miss_deg() <= 0.0):
+	# Slowing below min speed kills the wobble — a universal low-speed save. A trick wobble swinging
+	# bigger than its pitch warrants (closing in on the balance point) mellows the same way.
+	if speed < wobble_min_speed or (
+		wobble_from_trick and _wobble_amplitude() > _trick_wobble_target_amp()
+	):
 		damping += wobble_recover_boost * 3.0
 	wobble_vel -= wobble_spring * wobble_angle * delta
 	wobble_vel *= exp(-damping * delta) # exp keeps damping stable even when the bonuses stack high

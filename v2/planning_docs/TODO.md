@@ -25,6 +25,8 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] hitting collision wall at high speed at shallow angle doesnt crash, but it causes momentum to still build while being stuck
+
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [x] make tricks + combos easier to do **WIP**

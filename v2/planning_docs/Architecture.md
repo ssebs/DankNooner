@@ -278,9 +278,10 @@ The trick roster is the `Trick` enum in `trick_controller.gd`.
 - The trick-button variants (`WHEELIE_MOD` / `HIGH_CHAIR` / `HEEL_CLICKER` / `TWO_LEFT_FEET`) are
   picked by camera-stick direction while the trick button is held; `HIGH_CHAIR` latches until the
   button drops or the wheelie ends. `DRIFT` mirrors `MovementController.is_drifting`.
-- Stick tricks work in any ground wheelie. Outside the balance point they feed a speed wobble
-  (`MovementController._wobble_trick_feed`, scaled by `wobble_trick_feed`) that keeps the wheelie up
-  (`wobble_from_trick`); getting into the balance point damps it out, or it highsides.
+- Stick tricks work in any ground wheelie. Outside the balance point they pump a speed wobble
+  (`MovementController._wobble_trick_feed`, rate `wobble_trick_feed`) toward a swing sized by how far
+  off the window pitch is (crash-sized at `wobble_trick_crash_miss_deg`). It keeps the wheelie up
+  (`wobble_from_trick`); closing in on the balance point shrinks it, reaching it settles it.
 - Emits `trick_started`, `trick_ended` signals
 - Scoring lives in `TrickManager` (see below)
 
