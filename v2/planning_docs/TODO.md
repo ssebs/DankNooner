@@ -24,7 +24,6 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-- [ ] Air time => land into wheelie should count in combo
 
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
@@ -229,6 +228,8 @@
 ---
 
 ## Done ✅
+
+- [x] Air time => land into wheelie should count in combo
 
 - [x] Clear hitbox on ramp in pickup item since players can crash into it when they already have an item, aka change model?
 
