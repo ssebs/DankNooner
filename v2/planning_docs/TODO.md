@@ -25,6 +25,8 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] quick vibe code quality / review
+
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [x] make tricks + combos easier to do **WIP**
@@ -42,7 +44,6 @@
 ## Notes 📝
 > Stuff to move ASAP
 
-- [ ] Bunny hop trick like irl
 - [ ] Grinding tricks (jump in air, grind on house fences)
 
 - Knock over light pole & fire hydrants & signs/ street lights 
@@ -228,6 +229,8 @@
 ---
 
 ## Done ✅
+
+- [x] Bunny hop trick
 
 - [x] Air time => land into wheelie should count in combo
 

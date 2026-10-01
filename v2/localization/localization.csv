@@ -96,6 +96,7 @@ TRICK_HOWTO_BURNOUT,"From a stop: hold LT and lean forward, rev with RT while ho
 TRICK_HOWTO_WHEELIE_SITTING,"Floor it (RT) in low gear or pop the clutch (LB). Lean back to balance.","A fondo (RT) en marcha corta o suelta el embrague (LB). Inclínate atrás."
 TRICK_HOWTO_BACKFLIP,"In the air, lean back (left stick down) for a full rotation. Land upright.","En el aire, inclínate hacia atrás (stick izquierdo abajo) una vuelta completa. Aterriza derecho."
 TRICK_HOWTO_FRONTFLIP,"In the air, lean forward (left stick up) for a full rotation. Land upright.","En el aire, inclínate hacia adelante (stick izquierdo arriba) una vuelta completa. Aterriza derecho."
+TRICK_HOWTO_BUNNY_HOP,"In a wheelie, let off the gas (RT) and lean forward.","En una wheelie, suelta el gas (RT) e inclínate hacia adelante."
 PIN_TRICK_LABEL,"Pin","Fijar"
 CLEAR_PIN_LABEL,"Clear Pins","Quitar fijados"
 PINNED_LABEL,"Pinned","Fijado"

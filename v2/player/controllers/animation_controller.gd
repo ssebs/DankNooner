@@ -1110,6 +1110,7 @@ func _build_trick_entries() -> void:
 		),
 		_make_entry(TrickController.Trick.TWO_LEFT_FEET, "two_left_feet", PlayMode.ONE_SHOT, false),
 		_make_entry(TrickController.Trick.KICKFLIP, "kickflip", PlayMode.ONE_SHOT, false),
+		_make_entry(TrickController.Trick.BUNNY_HOP, "bunny_hop", PlayMode.ONE_SHOT, false),
 		_make_entry(TrickController.Trick.SPREAD_EAGLE, "spread_eagle", PlayMode.ONE_SHOT, false),
 		_make_entry(TrickController.Trick.SUPERMAN, "superman", PlayMode.ONE_SHOT, false),
 		_make_entry(TrickController.Trick.T_POSE, "t_pose", PlayMode.HOLD_WHILE_LATCHED, true),

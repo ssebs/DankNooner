@@ -64,6 +64,14 @@ const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65
 # Clutch pops are a low-speed launch move. Above this fraction of max_speed (e.g. rolling fast
 # downhill on slope gravity) a clutch dump must NOT loft the front — use a power wheelie instead.
 const CLUTCH_POP_MAX_SPEED_FRAC: float = 0.4
+# Bunny hop: from a wheelie up to HOP_MAX_BALANCE_FRAC of the balance point, lean forward with the gas
+# off. The nose rocks down on the ground and the rear launches once it passes level. Airtime
+# 2 * HOP_VELOCITY / FALL_GRAVITY (0.23s) stays under AIR_TRICK_MIN_AIRTIME, so it's a bump to the
+# air-trick / landing systems.
+const HOP_MAX_BALANCE_FRAC: float = 0.5
+const HOP_VELOCITY: float = 4.6
+# Nose-down rate per radian of wheelie (1/s) — the rock down to level always takes 1 / this (~0.125s).
+const HOP_PITCH_KICK: float = 8.0
 # Wheel-force (power × bd.acceleration) floor to start a wheelie / clutch-pop — auto-scales by bike
 # strength. Kept low enough that a light bike (the mini) clears it across a usable RPM band, not just
 # a sliver at peak; this also makes clutch-ups easier in general. NOT the loop threshold (that's the
@@ -156,6 +164,8 @@ var in_balance_point: bool = false
 # until released. Synced (persistent sim state). Toggled by an RB tap in the balance point, or
 # via set_balance_locked() so a future powerup item can drive the same mechanism.
 var balance_locked: bool = false
+var hop_pitch_vel: float = 0.0 # synced — nose-down rate from the hop, cleared on landing
+var bunny_hopped: bool = false # true on the tick a hop fires; TrickController latches it
 
 var air_pitch_total: float = 0.0 # cumulative pitch rotation while airborne (for flip counting)
 var _air_time: float = 0.0 # time since takeoff (for wheelie grace window)
@@ -170,6 +180,7 @@ var _rb_prev_held: bool = false # synced — RB rising-edge detection for the ba
 var _lock_throttle_released: bool = false # synced — rule C: re-pressing throttle exits after a release
 var _prev_clutch_held: bool = false
 var _clutch_kick_window: float = 0.0
+var _hop_launch_vel: float = 0.0 # synced — >0 while the hop rocks down on the ground, awaiting launch
 var _balance_point_decay_mult: float = 0.85
 # Blocks a wheelie chaining straight into a stoppie — must pass through normal first. Set while in a
 # wheelie, cleared when brake + lean-forward aren't both held (forces a fresh press for the stoppie).
@@ -232,6 +243,7 @@ func on_movement_rollback_tick(delta: float):
 			air_pitch_total = 0.0
 			_air_time = 0.0
 			_wheelie_grace_consumed = false
+			hop_pitch_vel = 0.0
 	else:
 		# Takeoff — start grace window. Short hops (e.g. curbs) keep the wheelie;
 		# once grace expires we zero pitch_angle so longer airtime lets air tricks
@@ -610,6 +622,7 @@ func _velocity_calc(delta: float):
 ## Orchestrates pitch_angle: clutch detection → wheelie target → stoppie → apply
 func _pitch_angle_calc(delta: float):
 	_update_clutch_dump_detection()
+	bunny_hopped = false
 	is_stoppie = false # _stoppie_calc re-asserts it below; stays false when airborne / in a wheelie / on steep ground
 	in_balance_point = false # re-asserted below when in the window; false when airborne / wobbling / steep
 
@@ -632,7 +645,14 @@ func _pitch_angle_calc(delta: float):
 		# A bump or slope crest isn't a jump — the lock resumes on touchdown.
 		if _air_time >= TrickController.AIR_TRICK_MIN_AIRTIME:
 			balance_locked = false
-		if input_controller.nfx_lean != 0:
+		# Hop rock stops short of a stoppie — the usual brake + lean method starts one after landing.
+		if hop_pitch_vel > 0.0:
+			pitch_angle = maxf(
+				pitch_angle - hop_pitch_vel * delta,
+				deg_to_rad(TrickController.STOPPIE_PITCH_THRESHOLD_DEG)
+			)
+		# The hop owns pitch until landing — the held lean-forward that fired it would double the rock.
+		if input_controller.nfx_lean != 0 and hop_pitch_vel == 0.0:
 			# Lean back (negative) = backflip (positive pitch), lean forward = frontflip
 			var rotation_delta = input_controller.nfx_lean * AIR_TRICK_ROTATION_SPEED * delta
 			pitch_angle -= rotation_delta
@@ -655,6 +675,9 @@ func _pitch_angle_calc(delta: float):
 		balance_locked = false
 		if pitch_angle != 0:
 			pitch_angle = move_toward(pitch_angle, 0, bd.return_speed * delta)
+		return
+
+	if _bunny_hop_calc(in_wheelie, delta):
 		return
 
 	# Balance lock: RB-tap toggle + exit rules, then hover at the balance point. Leaning fwd/back
@@ -754,6 +777,32 @@ func _pitch_angle_calc(delta: float):
 		_stoppie_calc(bd, in_stoppie, delta)
 
 	# TODO: easy mode clamp
+
+
+## Fires from a low wheelie on lean forward with the gas off (on-gas lean forward is still recovery).
+## The nose rocks down on the ground first; the rear only leaves once it passes level (weight shifted
+## forward). Returns true while that ground phase owns pitch.
+func _bunny_hop_calc(in_wheelie: bool, delta: float) -> bool:
+	if _hop_launch_vel == 0.0:
+		hop_pitch_vel = 0.0 # landed, or the launch never left the floor
+		var max_pitch := deg_to_rad(
+			player_entity.bike_definition.wheelie_balance_point_deg * HOP_MAX_BALANCE_FRAC
+		)
+		if not (
+			in_wheelie
+			and pitch_angle <= max_pitch
+			and input_controller.nfx_throttle < 0.5
+			and input_controller.nfx_lean >= 0.5
+		):
+			return false
+		bunny_hopped = true
+		hop_pitch_vel = pitch_angle * HOP_PITCH_KICK
+		_hop_launch_vel = HOP_VELOCITY
+	pitch_angle -= hop_pitch_vel * delta
+	if pitch_angle <= 0.0:
+		player_entity.velocity.y += _hop_launch_vel
+		_hop_launch_vel = 0.0
+	return true
 
 
 ## Engage/release the wheelie balance lock. Exposed as a plain toggle so a pickup item can drive
@@ -1306,6 +1355,9 @@ func do_reset():
 	_was_on_floor = false
 	_prev_clutch_held = false
 	_clutch_kick_window = 0.0
+	hop_pitch_vel = 0.0
+	_hop_launch_vel = 0.0
+	bunny_hopped = false
 	air_pitch_total = 0.0
 	_air_time = 0.0
 	_wheelie_grace_consumed = false

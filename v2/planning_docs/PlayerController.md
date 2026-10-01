@@ -152,6 +152,11 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     - Power wheelie initiation (lean back + throttle + RPM threshold)
     - Balance point zone with instability
     - Lean forward recovery
+    - Bunny hop (`_bunny_hop_calc()`): from a wheelie up to `HOP_MAX_BALANCE_FRAC` of the balance
+      point, leaning forward with the gas off rocks the nose down on the ground (`hop_pitch_vel`,
+      scaled by wheelie angle), then launches `HOP_VELOCITY` up once pitch passes level. The rock continues airborne,
+      clamped at the stoppie threshold. Airtime stays under `AIR_TRICK_MIN_AIRTIME`. Sets
+      `bunny_hopped` for the tick; TrickController latches `BUNNY_HOP` on the tap-trick latch
   - `_stoppie_calc()` — stoppie physics:
     - Manual: front brake + lean forward lifts the rear immediately
     - Auto: holding the front brake past `AUTO_STOPPIE_BRAKE` above `AUTO_STOPPIE_SPEED_FRAC` of `bd.max_speed` for `AUTO_STOPPIE_HOLD_SECS` lifts it without lean. Depth scales with brake pressure and keeps climbing while held (hold too long → over the bars); easing off lowers it. Hold timer `stoppie_brake_hold_time` is a synced state property

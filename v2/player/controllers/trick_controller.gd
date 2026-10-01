@@ -22,13 +22,14 @@ enum Trick {
 	BURNOUT,
 	T_POSE,
 	KNEE_KNOCKER,
+	BUNNY_HOP,
 }
-enum Dir { UP, DOWN, LEFT, RIGHT }
+enum Dir {UP, DOWN, LEFT, RIGHT}
 ## TAP / DOUBLE_TAP latch their trick for TAP_TRICK_DURATION; HOLD / DOUBLE_TAP_HOLD keep it active
 ## while the stick stays pushed. Any trick works in any slot.
-enum Gesture { TAP, DOUBLE_TAP, HOLD, DOUBLE_TAP_HOLD }
+enum Gesture {TAP, DOUBLE_TAP, HOLD, DOUBLE_TAP_HOLD}
 ## Which BINDINGS table the right stick reads. NONE = stick tricks gated off.
-enum TrickState { NONE, GROUND, WHEELIE, AIR }
+enum TrickState {NONE, GROUND, WHEELIE, AIR}
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
 @export var gearing_controller: GearingController
@@ -90,7 +91,7 @@ const HELD_TRICK_SCORE: Dictionary = {
 	Trick.WHEELIE_SITTING: 1.0,
 	Trick.WHEELIE_MOD: 1.0,
 	Trick.STOPPIE: 1.0,
-	Trick.DRIFT: 1.0,
+	Trick.DRIFT: 0.75,
 	Trick.BURNOUT: 0.5,
 	Trick.HIGH_CHAIR: 1.5,
 	Trick.KNEE_KNOCKER: 1.5,
@@ -105,6 +106,7 @@ const ONE_TIME_TRICK_SCORE: Dictionary = {
 	Trick.BACKFLIP: 5.0,
 	Trick.FRONTFLIP: 5.0,
 	Trick.THREESIXTY: 5.0,
+	Trick.BUNNY_HOP: 4.0,
 }
 ## Right-stick control scheme: state -> gesture -> trick per Dir (UP, DOWN, LEFT, RIGHT). Guideline:
 ## shared tricks keep one tap / double-tap slot across states (double tap = harder trick); HOLD is
@@ -153,9 +155,9 @@ var combo_score: float = 0.0
 
 var current_trick: Trick = Trick.NONE
 var _last_trick: Trick = Trick.NONE
-var _flip_emitted: bool = false  # prevent re-emitting the same flip while still airborne
+var _flip_emitted: bool = false # prevent re-emitting the same flip while still airborne
 var _trick_timer: float = 0.0
-var _wheelie_exit_hold: float = 0.0  # synced — seconds pitch has been under WHEELIE_EXIT_PITCH_DEG
+var _wheelie_exit_hold: float = 0.0 # synced — seconds pitch has been under WHEELIE_EXIT_PITCH_DEG
 ## Full air rotations already paid out this airtime — synced so a resim doesn't double-award.
 var _air_flips_awarded: int = 0
 ## Synced — last tick was a real jump (past AIR_TRICK_MIN_AIRTIME). MovementController zeroes
@@ -186,6 +188,10 @@ func on_movement_rollback_tick(delta: float):
 		return
 
 	_update_gestures(delta)
+	# Physics-driven one-shot — rides the tap-trick latch so it stays active through the hop.
+	if movement_controller.bunny_hopped:
+		_tap_trick = Trick.BUNNY_HOP
+		_tap_trick_timer = TAP_TRICK_DURATION
 	current_trick = _detect_current_trick(delta)
 	if current_trick != _last_trick:
 		if _last_trick != Trick.NONE:
@@ -325,7 +331,7 @@ func _award_trick_boost(base: float):
 		boost_controller.boost_amount + base * combo_multiplier, BoostController.BOOST_SEGMENTS
 	)
 	combo_boost_earned += boost_controller.boost_amount - before
-	combo_grace = COMBO_GRACE_SECS  # keep the combo alive so chained tricks build the multiplier
+	combo_grace = COMBO_GRACE_SECS # keep the combo alive so chained tricks build the multiplier
 
 
 ## Accrue combo time + boost for the tick. Lives here (rollback) rather than in TrickManager
@@ -405,7 +411,7 @@ func _detect_current_trick(delta: float) -> Trick:
 		return held
 
 	if _last_trick == Trick.TWO_LEFT_FEET:
-		if _trick_timer <= 3:  # HACK - duration of the animation
+		if _trick_timer <= 3: # HACK - duration of the animation
 			_trick_timer += delta
 			return Trick.TWO_LEFT_FEET
 		_trick_timer = 0
@@ -478,7 +484,6 @@ func is_landed_in_trick() -> bool:
 			or pitch < deg_to_rad(STOPPIE_PITCH_THRESHOLD_DEG)
 		)
 	)
-
 
 
 ## True while a right-stick trick (BINDINGS) runs in a ground wheelie. Reads the synced _last_trick —
@@ -556,6 +561,8 @@ static func trick_to_str(trick: Trick) -> String:
 			return "T_POSE"
 		Trick.KNEE_KNOCKER:
 			return "KNEE_KNOCKER"
+		Trick.BUNNY_HOP:
+			return "BUNNY_HOP"
 	return "NONE"
 
 
@@ -595,6 +602,8 @@ static func str_to_trick(s: String) -> Trick:
 			return Trick.T_POSE
 		"KNEE_KNOCKER":
 			return Trick.KNEE_KNOCKER
+		"BUNNY_HOP":
+			return Trick.BUNNY_HOP
 	return Trick.NONE
 
 

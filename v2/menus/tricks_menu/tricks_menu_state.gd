@@ -14,6 +14,7 @@ const HOWTO_TRICKS: Array[TrickController.Trick] = [
 	TrickController.Trick.BURNOUT,
 	TrickController.Trick.BACKFLIP,
 	TrickController.Trick.FRONTFLIP,
+	TrickController.Trick.BUNNY_HOP,
 ]
 
 @onready var state_tabs: TabContainer = %StateTabs
