@@ -53,7 +53,7 @@ func Enter(_state_context: StateContext):
 		level_select_panel.level_selected.connect(_on_level_select_level_selected)
 		_update_level_select_start_disabled()
 
-	respawn_btn.call_deferred("grab_focus")
+	resume_btn.call_deferred("grab_focus")
 
 
 func Exit(_state_context: StateContext):
