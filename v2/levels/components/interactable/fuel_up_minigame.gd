@@ -1,10 +1,8 @@
-## One gas pump in a station. FuelUpGameMode assigns each rider a pump and runs its minigame
-## locally on that rider's client: hold click on the handle to carry it, hold it over the gas cap
-## until full, let go to hang it back up (letting go early just returns it). The left stick steers
-## the same cursor, so gamepad plays it too.
-class_name FuelUpMinigame extends Node3D
-
-signal finished
+## One gas pump in a station. FuelUpGameMode assigns each rider a pump pre-race; in free roam it's
+## a FreeRoamActivity. Either way the minigame runs locally on that rider's client: hold click on
+## the handle to carry it, hold it over the gas cap until full, let go to hang it back up (letting
+## go early just returns it). The left stick steers the same cursor, so gamepad plays it too.
+class_name FuelUpMinigame extends FreeRoamActivity
 
 enum Step { GRAB, HOLD }
 
@@ -32,7 +30,10 @@ const CURSOR_HOTSPOT := Vector2(32, 32)
 @onready var _handle_marker_tip: Marker3D = %HandleMarkerTip
 ## The whole handle assembly (handle + nozzle) is carried by moving this.
 @onready var _handle_area: Area3D = %HandleArea
-@onready var _gas_cap: GrayBoxStaticBody = %GasCap
+## The cap target ring — shown only while carrying the handle.
+@onready var _gas_cap_mesh: MeshInstance3D = %GasCapMeshCircle
+## Shared with the start circle's "loop"; also plays "gas_cap_hover".
+@onready var _anim: AnimationPlayer = %AnimationPlayer
 @onready var _gas_cap_area: Area3D = %GasCapArea
 ## Nozzle tip's orientation once it reaches the cap.
 @onready var _gas_cap_marker_tip: Marker3D = %GasCapMarkerTip
@@ -41,9 +42,12 @@ const CURSOR_HOTSPOT := Vector2(32, 32)
 
 ## Tank level, 0..1. Read by FuelUpHUDState.
 var fill: float = 0.0
-## Both set by FuelUpGameMode while this pump is in use.
-var input_state_manager: InputStateManager
-var audio_manager: AudioManager
+
+## All set by begin() while this pump is in use.
+var _player: PlayerEntity
+var _input_state_manager: InputStateManager
+var _audio_manager: AudioManager
+var _hud_manager: HUDManager
 
 var _step := Step.GRAB
 var _over_cap: bool = false
@@ -67,33 +71,108 @@ var _glug_started: bool = false
 
 
 func _ready():
+	super()
 	_carry_rest = _handle_area.transform
 	_tip_rel = _handle_area.global_basis.inverse() * _handle_marker_tip.global_basis
 	# Own curve per pump — a scene sub_resource would be shared by every instance.
 	_hose.curve = Curve3D.new()
 	_update_hose()
+	_gas_cap_mesh.visible = false
 	set_process(false)
 
 
-## Begin on this client, tank already at start_fill (the rider's boost), cap target moved onto
-## the rider's bike.
-func start(start_fill: float, gas_cap_pos: Vector3):
-	fill = start_fill
-	_gas_cap_area.global_position = gas_cap_pos
-	_step = Step.GRAB
-	_over_cap = false
-	_glug_started = false
-	set_process(true)
+#override
+## Park the rider at bike_spot and hold them there.
+func server_start(peer_id: int, spawn_manager: SpawnManager):
+	spawn_manager.respawn_player_in_place.rpc(
+		peer_id, bike_spot.global_position, bike_spot.global_basis
+	)
+	CountdownTask.freeze(spawn_manager._get_player_by_peer_id(peer_id))
 
 
-## Reset the pump for its next use.
-func stop():
+#override
+func server_end(peer_id: int, result: float, spawn_manager: SpawnManager):
+	var player := spawn_manager._get_player_by_peer_id(peer_id)
+	# The tank started at the rider's boost, so a fill-up never takes any away.
+	var amount := maxf(
+		player.boost_controller.boost_amount,
+		clampf(result, 0.0, 1.0) * BoostController.BOOST_SEGMENTS
+	)
+	spawn_manager.set_boost_player.rpc(peer_id, amount)
+	CountdownTask.unfreeze(player)
+
+
+#override
+func get_result() -> float:
+	return fill
+
+
+#override
+## Run this pump for the local `player`, tank at their boost. Starts once their teleport onto
+## bike_spot lands, since that respawn flips the HUD back to riding.
+func begin(
+	player: PlayerEntity,
+	input_state_manager: InputStateManager,
+	audio_manager: AudioManager,
+	hud_manager: HUDManager
+):
+	_player = player
+	_input_state_manager = input_state_manager
+	_audio_manager = audio_manager
+	_hud_manager = hud_manager
+	fill = player.boost_controller.boost_amount / BoostController.BOOST_SEGMENTS
+	player.respawned.connect(_start, CONNECT_ONE_SHOT)
+
+
+#override
+## Hand the rider back and reset the pump. Runs itself on finish; callers use it to cancel, which
+## is safe even before the teleport landed.
+func end():
+	if _player.respawned.is_connected(_start):
+		_player.respawned.disconnect(_start)
+		_player = null
+		return
+	_input_state_manager.input_state_changed.disconnect(_on_input_state_changed)
+	_input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
+
 	set_process(false)
 	_handle_area.transform = _carry_rest
 	_update_hose()
 	_set_highlight(null)
 	_set_cursor(null)
-	audio_manager.stop_sfx(AudioManager.Sfx.GLUG_GLUG)
+	_audio_manager.stop_sfx(AudioManager.Sfx.GLUG_GLUG)
+	_gas_cap_mesh.visible = false
+	_anim.play(&"loop")
+
+	_player.character_skin.visible = true
+	_audio_manager.play_revs(_player.bike_definition)
+	_hud_manager.go_to_riding_hud()
+	_player.camera_controller.switch_to_cam(_player.camera_controller.current_cam_mode)
+	_player = null
+
+
+func _start():
+	_gas_cap_area.global_position = _player.gas_cap_marker.global_position
+	_step = Step.GRAB
+	_over_cap = false
+	# Settles the ring at rest size (a cancel mid-hover leaves it grown); pauses the circle's loop.
+	_anim.play_backwards(&"gas_cap_hover")
+	_glug_started = false
+	set_process(true)
+
+	# Local only — the rider sits between the pump camera and the pump.
+	_player.character_skin.visible = false
+	_audio_manager.stop_revs()
+	_hud_manager.go_to_fuel_up_hud(self)
+
+	_input_state_manager.input_state_changed.connect(_on_input_state_changed)
+	_input_state_manager.current_input_state = InputStateManager.InputState.IN_MINIGAME
+
+
+## Unpause always lands on IN_GAME — put the cursor back while the minigame is still up.
+func _on_input_state_changed(new_state: InputStateManager.InputState):
+	if new_state == InputStateManager.InputState.IN_GAME:
+		_input_state_manager.current_input_state = InputStateManager.InputState.IN_MINIGAME
 
 
 func get_prompt_key() -> String:
@@ -108,8 +187,12 @@ func _process(delta: float):
 	# Re-asserted every frame: the teleport's respawn (and its resims) and the switch-cam key
 	# all hand the view back to the rider's own camera.
 	camera.current = true
+	# Web pointer lock lands async, so the event submit's capture can lock after IN_MINIGAME
+	# released it. Asks DisplayServer since Input.mouse_mode caches the last requested mode.
+	if DisplayServer.mouse_get_mode() == DisplayServer.MOUSE_MODE_CAPTURED:
+		_input_state_manager.showhide_mouse_cursor()
 	# Paused — the pause menu owns the cursor.
-	if input_state_manager.current_input_state != InputStateManager.InputState.IN_MINIGAME:
+	if _input_state_manager.current_input_state != InputStateManager.InputState.IN_MINIGAME:
 		_set_cursor(null)
 		_set_glug(false)
 		return
@@ -124,27 +207,39 @@ func _process(delta: float):
 					_gas_cap_area.global_position
 				)
 				_solve_swing()
+				_set_highlight(null)
+				_gas_cap_mesh.visible = true
 				_step = Step.HOLD
 		Step.HOLD:
 			if _click_held():
 				_follow_cursor()
-				_over_cap = _tip_in_cap()
-				_set_highlight(_gas_cap if _over_cap else null)
+				_set_over_cap(_tip_in_cap())
 				if _over_cap:
 					fill = minf(fill + delta / fill_secs, 1.0)
 			else:
 				# Let go: the handle springs back onto the pump.
 				_handle_area.transform = _carry_rest
-				_set_highlight(null)
-				_over_cap = false
+				_set_over_cap(false)
+				_gas_cap_mesh.visible = false
 				_step = Step.GRAB
 				if fill >= 1.0:
-					stop()
+					end()
 					finished.emit()
 					return
 	_set_glug(_step == Step.HOLD and _over_cap and fill < 1.0)
 	_set_cursor(CURSOR_CLOSED if _step == Step.HOLD else CURSOR_OPEN)
 	_update_hose()
+
+
+## Grows the cap ring while the nozzle's in it, shrinks it back on leaving.
+func _set_over_cap(over: bool):
+	if over == _over_cap:
+		return
+	_over_cap = over
+	if over:
+		_anim.play(&"gas_cap_hover")
+	else:
+		_anim.play_backwards(&"gas_cap_hover")
 
 
 ## Fake hose: a bezier from the pump to the handle, both ends drooping.
@@ -243,7 +338,7 @@ func _click_held() -> bool:
 
 ## Pausing keeps the clip's place, so filling again picks up where it left off.
 func _set_glug(filling: bool):
-	var glug := audio_manager.get_sound_event(AudioManager.Sfx.GLUG_GLUG)
+	var glug := _audio_manager.get_sound_event(AudioManager.Sfx.GLUG_GLUG)
 	if filling and !_glug_started:
 		_glug_started = true
 		glug.play()

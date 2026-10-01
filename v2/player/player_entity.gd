@@ -142,6 +142,9 @@ var rb_add_boost: bool = false
 ## Set by SpawnManager.max_boost_player (debug console) — fills the meter. Rides the same
 ## rollback tick + resim machinery as rb_add_boost.
 var rb_do_max_boost: bool = false
+## Set by SpawnManager.set_boost_player (free-roam fuel-up) — sets the meter to rb_set_boost_amount.
+var rb_set_boost: bool = false
+var rb_set_boost_amount: float = 0.0
 ## Freeze/unfreeze, set by CountdownTask + gamemode teardown. movement_locked is synced state, so
 ## applying it in the rollback tick lets the freeze reach clients — a write from outside never syncs.
 var rb_lock_movement: bool = false
@@ -259,6 +262,11 @@ func _rollback_tick(delta: float, tick: int, _is_fresh: bool):
 	elif rb_do_max_boost:
 		rb_do_max_boost = false
 		boost_controller.fill()
+		_boost_grant_tick = tick
+		_boost_grant_amount = boost_controller.boost_amount
+	elif rb_set_boost:
+		rb_set_boost = false
+		boost_controller.boost_amount = rb_set_boost_amount
 		_boost_grant_tick = tick
 		_boost_grant_amount = boost_controller.boost_amount
 	elif tick == _boost_grant_tick:

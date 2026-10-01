@@ -272,13 +272,15 @@ fuel_up_mode = NodePath("StateMachine/FuelUpGameMode")
 script = ExtResource("4_6bm6p")
 metadata/_custom_type_script = "uid://ba7kyb4p3trb1"
 
-[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_hud_state", "level_manager", "pickup_spawn_manager", "trick_manager", "riding_hud_state", "gamemode_manager", "spawn_manager")]
+[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_hud_state", "level_manager", "pickup_spawn_manager", "trick_manager", "riding_hud_state", "input_state_manager", "hud_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("25_6krrg")
 game_mode_event_hud_state = NodePath("../../../HUDManager/StateMachine/GamemodeEventHUDState")
 level_manager = NodePath("../../../LevelManager")
 pickup_spawn_manager = NodePath("../../../PickupSpawnManager")
 trick_manager = NodePath("../../../TrickManager")
 riding_hud_state = NodePath("../../../HUDManager/StateMachine/RidingHUDState")
+input_state_manager = NodePath("../../../InputStateManager")
+hud_manager = NodePath("../../../HUDManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 

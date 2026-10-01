@@ -11,8 +11,6 @@ class_name FuelUpGameMode extends GameModeType
 var _event: GameModeEvent
 ## This client's pump; null once it's done.
 var _minigame: FuelUpMinigame
-## Cached: quitting to the main menu drops the peer before Exit, so no id lookup then.
-var _player: PlayerEntity
 ## Server only — peers still fueling.
 var _pending: Array[int] = []
 
@@ -36,10 +34,14 @@ func Enter(state_context: StateContext):
 	var peer_ids := gamemode_manager.lobby_manager.lobby_players.keys()
 	peer_ids.sort()
 
-	# The teleport's do_respawn flips the HUD back to riding, so start once it lands.
-	_player = spawn_manager._get_player_by_peer_id(multiplayer.get_unique_id())
 	_minigame = pumps[peer_ids.find(multiplayer.get_unique_id())]
-	_player.respawned.connect(_start_minigame, CONNECT_ONE_SHOT)
+	_minigame.finished.connect(_on_minigame_finished, CONNECT_ONE_SHOT)
+	_minigame.begin(
+		spawn_manager._get_player_by_peer_id(multiplayer.get_unique_id()),
+		input_state_manager,
+		gamemode_manager.audio_manager,
+		hud_manager
+	)
 
 	if multiplayer.is_server():
 		_pending.assign(peer_ids)
@@ -58,10 +60,9 @@ func Exit(_state_context: StateContext):
 	gamemode_manager.player_latejoined.disconnect(_on_player_latejoined)
 
 	# Exited early (host cancelled) — before the teleport landed, or mid-minigame.
-	if _player.respawned.is_connected(_start_minigame):
-		_player.respawned.disconnect(_start_minigame)
-	elif _minigame != null:
-		_end_minigame()
+	if _minigame != null:
+		_minigame.finished.disconnect(_on_minigame_finished)
+		_minigame.end()
 
 	if multiplayer.is_server():
 		# The race's own grid + countdown re-freeze riders as needed.
@@ -73,15 +74,7 @@ func Exit(_state_context: StateContext):
 	_set_station_objects_active(_event.get_circle().gas_station, false)
 	_pending.clear()
 	_minigame = null
-	_player = null
 	_event = null
-
-
-func Update(_delta: float):
-	# Web pointer lock lands async, so the event submit's capture can lock after IN_MINIGAME
-	# released it. Asks DisplayServer since Input.mouse_mode caches the last requested mode.
-	if _minigame != null and DisplayServer.mouse_get_mode() == DisplayServer.MOUSE_MODE_CAPTURED:
-		input_state_manager.showhide_mouse_cursor()
 
 
 func _set_station_objects_active(station: Node3D, active: bool):
@@ -89,51 +82,10 @@ func _set_station_objects_active(station: Node3D, active: bool):
 		obj.is_active = active
 
 
-#region Local minigame (every peer)
-
-
-func _start_minigame():
-	_minigame.input_state_manager = input_state_manager
-	_minigame.audio_manager = gamemode_manager.audio_manager
-	_minigame.finished.connect(_on_minigame_finished)
-	_minigame.start(
-		_player.boost_controller.boost_amount / BoostController.BOOST_SEGMENTS,
-		_player.gas_cap_marker.global_position
-	)
-	# Local only — the rider sits between the pump camera and the pump.
-	_player.character_skin.visible = false
-	gamemode_manager.audio_manager.stop_revs()
-	hud_manager.go_to_fuel_up_hud(_minigame)
-
-	input_state_manager.input_state_changed.connect(_on_input_state_changed)
-	input_state_manager.current_input_state = InputStateManager.InputState.IN_MINIGAME
-
-
-func _end_minigame():
-	input_state_manager.input_state_changed.disconnect(_on_input_state_changed)
-	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
-
-	_minigame.finished.disconnect(_on_minigame_finished)
-	_minigame.stop()
-	_minigame = null
-	_player.character_skin.visible = true
-	gamemode_manager.audio_manager.play_revs(_player.bike_definition)
-	hud_manager.go_to_riding_hud()
-	_player.camera_controller.switch_to_cam(_player.camera_controller.current_cam_mode)
-
-
+## Local — the pump already handed the rider back.
 func _on_minigame_finished():
-	_end_minigame()
+	_minigame = null
 	_rpc_fuel_up_done.rpc_id(1)
-
-
-## Unpause always lands on IN_GAME — put the cursor back while the minigame is still up.
-func _on_input_state_changed(new_state: InputStateManager.InputState):
-	if new_state == InputStateManager.InputState.IN_GAME:
-		input_state_manager.current_input_state = InputStateManager.InputState.IN_MINIGAME
-
-
-#endregion
 
 #region Server
 

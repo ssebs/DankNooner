@@ -43,11 +43,7 @@ func Enter(_state_context: StateContext):
 	help_btn.pressed.connect(_on_help_pressed)
 	tricks_btn.pressed.connect(_on_tricks_pressed)
 
-	# Host-only, and only meaningful when a non-FreeRoam event is active.
-	cancel_event_btn.visible = (
-		multiplayer.is_server()
-		and gamemode_manager.current_game_mode != GameModeType.Kind.FREE_ROAM
-	)
+	cancel_event_btn.visible = gamemode_manager.get_current_gamemode().can_cancel_event()
 
 	# Host-only level switcher: lets the host swap maps without tearing down the lobby.
 	level_select_panel.visible = multiplayer.is_server()
@@ -93,7 +89,7 @@ func _on_respawn_pressed():
 
 
 func _on_cancel_event_pressed():
-	# Host-only button, so this runs on the server.
+	# Only free roam's per-rider fuel-up shows this to clients, and it handles its own cancel.
 	if !gamemode_manager.get_current_gamemode().handle_cancel_event():
 		gamemode_manager.change_gamemode.rpc_id(
 			1, GameModeType.Kind.FREE_ROAM, multiplayer.get_unique_id()

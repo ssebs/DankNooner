@@ -14,7 +14,8 @@
   remap the level scenes.
 - **`GamemodeManager`** — owns the state machine, match state and late-join sync; maps each `Kind`
   to its state node in `main_game.tscn`.
-- **`FreeRoamGameMode`** — the hub. Event circles open the event picker from here.
+- **`FreeRoamGameMode`** — the hub. Event circles open the event picker from here. Also hosts
+  `FreeRoamActivity`s (below) per rider, without leaving free roam.
 - **`FuelUpGameMode`** — not a runner mode: a pre-race step for events flagged `fuel_up_first`.
   Every rider plays the gas pump minigame locally, then it hands the same event to its
   `target_gamemode`. See [StuntRaceGamemode — Fuel-up](./StuntRaceGamemode.md#fuel-up).
@@ -49,6 +50,15 @@ plumbing, and Road/Street race differed only in traffic start/stop.
   `GameModeObject` and every `CollisionShape3D` — a hidden ramp mustn't be an invisible wall.
   `top_level`, so it sits in world space whatever the circle's transform.
 - **`GameModeObject`** — base for dumb props (checkpoints, trigger zones, speech bubbles): emit signals, `is_active` toggles visibility + collision, never decide completion.
+- **`FreeRoamActivity`** — abstract, level-placed, per-rider event that `FreeRoamGameMode` hosts
+  without a gamemode change (`FuelUpMinigame` is one). Entering its `%PlayerStartCircle` opens the
+  same picker, for any rider. On submit the server takes a one-rider lock (`_running`), sends
+  `begin()` to that client, *then* runs `server_start()`, so the client is already listening for
+  whatever `server_start` triggers. The client reports `get_result()` on `finished` or on pause →
+  Cancel Event (shown via `GameModeType.can_cancel_event`), and the server runs `server_end()`.
+  Free roam's Exit ends every running activity with result 0. Props must stay identical on every
+  peer (rollback needs the same bodies everywhere), so an activity's local-only state is visuals
+  and input.
 
 ### Tasks and runners (`managers/gamemodes/tasks/`, `runners/`)
 
@@ -94,8 +104,8 @@ EventStartCircle                       picker lists its GameModeEvent children
 ## Flow
 
 1. **Pick:** entering a circle in free roam opens `GamemodeEventHUDState`'s picker over
-   `circle.get_events()`. Submit → `GamemodeManager.change_gamemode(kind, peer_id, event_path)`,
-   with `kind = FUEL_UP` when the event has `fuel_up_first`.
+   `circle.get_events()` (host only). Submit → `GamemodeManager.change_gamemode(kind, peer_id,
+   event_path)`, with `kind = FUEL_UP` when the event has `fuel_up_first`.
 2. **Transition:** `change_gamemode()` is the single entry point (guards: server only; a
    non-late-joinable mode only accepts a return to `FREE_ROAM`, except fuel-up handing its own
    event on to the race). It broadcasts

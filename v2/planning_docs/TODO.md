@@ -25,11 +25,8 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] Make the fill-up mini game work in free roam at gas stations instead of picking up gas cans
-
 - [ ] Clear hitbox on ramp in pickup item since players can crash into it when they already have an item, aka change model?
 - [ ] pickup item should show in nice hud instead of just text
-
 
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
@@ -234,6 +231,8 @@
 ---
 
 ## Done ✅
+
+- [x] Make the fill-up mini game work in free roam at gas stations instead of picking up gas cans
 
 - [x] hitting collision wall at high speed at shallow angle doesnt crash, but it causes momentum to still build while being stuck
 

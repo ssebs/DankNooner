@@ -278,6 +278,17 @@ func max_boost_player(player_peer_id: int):
 	_get_player_by_peer_id(player_peer_id).rb_do_max_boost = true
 
 
+## Set the player's boost meter to `amount` segments. Server only; broadcast like max_boost_player.
+## Sent when a free-roam fuel-up ends, full or cancelled partway.
+@rpc("any_peer", "call_local", "reliable")
+func set_boost_player(player_peer_id: int, amount: float):
+	if !_sender_is_server():
+		return
+	var player := _get_player_by_peer_id(player_peer_id)
+	player.rb_set_boost_amount = amount
+	player.rb_set_boost = true
+
+
 ## Respawn player at a specific transform AND store it as the persistent respawn point
 ## (used by subsequent crash respawns until reset). Runs on every peer.
 @rpc("any_peer", "call_local", "reliable")

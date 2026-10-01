@@ -19,8 +19,13 @@ func handle_full_respawn(_peer_id: int) -> bool:
 	return false
 
 
-## Server-side: the host pressed Cancel Event. Return true when the mode ended the event itself
-## (e.g. to show results); false returns straight to free roam.
+## Whether this peer's pause menu offers Cancel Event. Host-only, since events are lobby-wide.
+func can_cancel_event() -> bool:
+	return multiplayer.is_server()
+
+
+## Runs on the peer that pressed Cancel Event (see can_cancel_event). Return true when the mode
+## ended the event itself (e.g. to show results); false returns straight to free roam.
 func handle_cancel_event() -> bool:
 	return false
 

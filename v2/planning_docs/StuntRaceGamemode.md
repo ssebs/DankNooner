@@ -60,6 +60,12 @@ The stunt race is `RaceGameMode` with `race_type = STUNT_RACE`: the shared race 
 Events with `fuel_up_first` run `FuelUpGameMode` before the race, which hands the same event to
 its `target_gamemode` once every rider has finished. This is the boost = fuel top-off.
 
+**Free roam:** each pump is also a `FreeRoamActivity` (see
+[GamemodeSystem](./GamemodeSystem.md)) with its own small `%PlayerStartCircle`. Its `server_start`
+teleports and freezes the rider; its `server_end` sets boost to the higher of the meter and the
+reported fill (`SpawnManager.set_boost_player`), then unfreezes. Cancelling partway keeps the
+partial fill.
+
 - **Pumps** are `gas_pump.tscn` (`FuelUpMinigame`) instances in `gas_station.tscn`; the circle's
   `gas_station` export picks the station. Riders get pumps in tree order by sorted peer id, so every
   peer agrees without an RPC, and a station needs one pump per rider. Extra pumps sit under a
@@ -67,6 +73,8 @@ its `target_gamemode` once every rider has finished. This is the boost = fuel to
 - **Each rider** is teleported to their pump's `BikeSpot` and frozen. Their own client then plays
   locally, outside the rollback sim: pump camera, rider hidden, `IN_MINIGAME` input state (hand
   cursor; the left stick steers it on gamepad), and `FuelUpHUDState` (boost gauge + step prompt).
+  The pump owns all of that: gamemodes call `FuelUpMinigame.begin()` / `end()` and listen for
+  `finished`.
 - **Play:** hold carry (`use_item` / A) on the handle, held by `HandleMarkerClick`. Nearing the cap,
   it swings toward the `GasCapMarkerTip` pose and rides at cap height. It fills while
   `HandleMarkerTip` is inside `GasCapArea` (no separate fill button, so it works on trackpads). The

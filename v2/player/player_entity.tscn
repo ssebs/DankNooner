@@ -2487,7 +2487,7 @@ size = Vector3(4, 10, 2)
 collision_layer = 3
 collision_mask = 19
 floor_block_on_wall = false
-floor_max_angle = 2.9670596
+floor_max_angle = 1.3962634
 safe_margin = 0.01
 script = ExtResource("1_0jc3c")
 bike_definition = ExtResource("2_htgu7")
@@ -2575,7 +2575,6 @@ crash_controller = NodePath("../CrashController")
 rear_raycast = NodePath("../../RearRayCast")
 front_raycast = NodePath("../../FrontRayCast")
 wobble_trick_feed = 2.0
-wobble_trick_crash_miss_deg = null
 wheelie_clutch_kick_boost = 0.75
 
 [node name="GearingController" type="Node" parent="_Controllers" unique_id=2064362163 node_paths=PackedStringArray("player_entity", "input_controller")]
@@ -2680,7 +2679,7 @@ emitting = false
 
 [node name="RightFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=844444444]
 unique_name_in_owner = true
-transform = Transform3D(-0.9787893, 0.022497118, 0.2036314, 0.20170887, 0.27976713, 0.93863934, -0.035852674, 0.9598043, -0.27837086, -0.18314199, 0.5666657, -0.22655825)
+transform = Transform3D(-0.9787892, 0.022497207, 0.20363149, 0.20170893, 0.27976722, 0.93863934, -0.03585267, 0.9598043, -0.27837098, -0.18314199, 0.5666657, -0.22655825)
 
 [node name="SparkParticlesRight" parent="VisualRoot/IKTargets/RightFootTarget" unique_id=1985641876 instance=ExtResource("29_3kl2f")]
 unique_name_in_owner = true

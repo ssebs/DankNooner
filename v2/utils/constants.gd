@@ -8,6 +8,7 @@ const GROUPS = {
 	"Validate": "Validate",
 	"InputStateManager": "InputStateManager",
 	"EventCircles": "EventCircles",
+	"FreeRoamActivities": "FreeRoamActivities",
 	"Racers": "Racers",
 	"LocalPlayer": "LocalPlayer",
 	## Ambient free-roam traffic. A subset of Racers (they still queue behind each other

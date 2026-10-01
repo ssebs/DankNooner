@@ -8,6 +8,8 @@ class_name FreeRoamGameMode extends GameModeType
 @export var pickup_spawn_manager: PickupSpawnManager
 @export var trick_manager: TrickManager
 @export var riding_hud_state: RidingHUDState
+@export var input_state_manager: InputStateManager
+@export var hud_manager: HUDManager
 @export var _respawn_delay: float = 2.5
 
 ## Trick round: banked combo points add up per human for ROUND_SECS, shown on the live
@@ -18,14 +20,36 @@ const LEADERBOARD_REFRESH_SECS: float = 0.25
 var _ctx: GamemodeStateContext
 ## The circle whose event picker is open — its events are what the picker indexes.
 var _entered_circle: EventStartCircle
+## The activity whose picker is open instead; null while a circle's is.
+var _entered_activity: FreeRoamActivity
 ## peer_id -> points banked this round. Server only.
 var _round_points: Dictionary[int, float] = {}
 var _round_left: float = ROUND_SECS
 var _leaderboard_refresh_accum: float = 0.0
+## This client's running activity; null otherwise.
+var _activity: FreeRoamActivity
+## peer_id -> the activity they're running; also the one-rider-per-activity lock. Server only.
+var _running: Dictionary[int, FreeRoamActivity] = {}
 
 
 #override
 func is_late_joinable() -> bool:
+	return true
+
+
+#override
+## No lobby event to cancel here — only this rider's own activity.
+func can_cancel_event() -> bool:
+	return _activity != null
+
+
+#override
+## Leave the activity early with whatever result it has so far.
+func handle_cancel_event() -> bool:
+	_activity.finished.disconnect(_on_activity_finished)
+	_activity.end()
+	request_end_activity.rpc_id(1, _activity.get_result())
+	_activity = null
 	return true
 
 
@@ -46,6 +70,7 @@ func Enter(state_context: StateContext):
 	trick_manager.combo_banked.connect(_on_combo_banked)
 
 	_signals_event_circles(true)
+	_signals_activities(true)
 
 	# Hide + disable every event's objects (checkpoints, etc.) â€” they only show
 	# while their own gamemode is running. Initial-load default and return path.
@@ -104,10 +129,28 @@ func _signals_event_circles(should_connect: bool):
 			event_start_circle.exited_event_circle.disconnect(_on_event_circle_exited)
 
 
+## param is whether to connect() or disconnect()
+func _signals_activities(should_connect: bool):
+	for activity: FreeRoamActivity in get_tree().get_nodes_in_group(
+		UtilsConstants.GROUPS["FreeRoamActivities"]
+	):
+		if should_connect:
+			activity.entered_activity.connect(_on_activity_entered)
+			activity.exited_activity.connect(_on_activity_exited)
+		else:
+			activity.entered_activity.disconnect(_on_activity_entered)
+			activity.exited_activity.disconnect(_on_activity_exited)
+
+
 func _on_event_circle_entered(peer_id: int, source_circle: EventStartCircle):
+	# Every peer sees every rider's body enter; only the rider's own peer opens their picker, so
+	# _entered_circle (which the submit indexes) is always this peer's.
+	if peer_id != multiplayer.get_unique_id():
+		return
 	DebugUtils.DebugMsg("%d entered eventcircle: %s" % [peer_id, source_circle.name])
 
 	_entered_circle = source_circle
+	_entered_activity = null
 	var names := PackedStringArray()
 	var descriptions := PackedStringArray()
 	# Time attack events' personal-best save keys, "" for the rest.
@@ -121,8 +164,27 @@ func _on_event_circle_entered(peer_id: int, source_circle: EventStartCircle):
 			if is_time_attack else ""
 		)
 
+	_open_event_picker(peer_id, names, descriptions, pb_keys, false)
+
+	# TODO - set player velocity to 0
+
+
+func _on_event_circle_exited(peer_id: int, source_circle: EventStartCircle):
+	if peer_id != multiplayer.get_unique_id():
+		return
+	DebugUtils.DebugMsg("%d exited eventcircle: %s" % [peer_id, source_circle.name])
+	_close_event_picker(peer_id)
+
+
+func _open_event_picker(
+	peer_id: int,
+	names: PackedStringArray,
+	descriptions: PackedStringArray,
+	pb_keys: PackedStringArray,
+	per_rider: bool
+):
 	game_mode_event_hud_state.on_player_entered_circle.rpc_id(
-		1, peer_id, names, descriptions, pb_keys
+		1, peer_id, names, descriptions, pb_keys, per_rider
 	)
 
 	# connect hud signals
@@ -131,12 +193,8 @@ func _on_event_circle_entered(peer_id: int, source_circle: EventStartCircle):
 	):
 		game_mode_event_hud_state.hud_submitted.connect(_on_game_mode_event_confirm_hud_submitted)
 
-	# TODO - set player velocity to 0
 
-
-func _on_event_circle_exited(peer_id: int, source_circle: EventStartCircle):
-	DebugUtils.DebugMsg("%d exited eventcircle: %s" % [peer_id, source_circle.name])
-
+func _close_event_picker(peer_id: int):
 	if game_mode_event_hud_state.hud_submitted.is_connected(
 		_on_game_mode_event_confirm_hud_submitted
 	):
@@ -150,6 +208,10 @@ func _on_event_circle_exited(peer_id: int, source_circle: EventStartCircle):
 func _on_game_mode_event_confirm_hud_submitted(peer_id: int, event_index: int):
 	DebugUtils.DebugMsg("Starting Event... %d" % peer_id)
 	game_mode_event_hud_state.on_player_close_pressed.rpc_id(1, peer_id)
+	# Per rider: only the submitter runs it, the lobby stays in free roam.
+	if _entered_activity != null:
+		request_start_activity.rpc_id(1, _entered_activity.get_path())
+		return
 	var event := _entered_circle.get_events()[event_index]
 	var target := event.definition.target_gamemode
 	if event.definition.fuel_up_first:
@@ -166,8 +228,18 @@ func Exit(_state_context: StateContext):
 	trick_manager.combo_banked.disconnect(_on_combo_banked)
 
 	_signals_event_circles(false)
+	_signals_activities(false)
+
+	# Host started an event mid-activity — that event places and freezes riders itself.
+	if _activity != null:
+		_activity.finished.disconnect(_on_activity_finished)
+		_activity.end()
+		_activity = null
 
 	if multiplayer.is_server():
+		for peer_id in _running:
+			_running[peer_id].server_end(peer_id, 0.0, spawn_manager)
+		_running.clear()
 		if npc_traffic_manager != null:
 			npc_traffic_manager.stop_traffic()
 		pickup_spawn_manager.deactivate_pickups()
@@ -242,6 +314,88 @@ func _on_combo_banked(peer_id: int, points: float, _duration: float, _multiplier
 
 #endregion
 
+#region Activities (per rider)
+
+
+func _on_activity_entered(peer_id: int, activity: FreeRoamActivity):
+	# Same local-only rule as circles. Also skips a rider their own activity parked in its circle.
+	if peer_id != multiplayer.get_unique_id() or _activity != null:
+		return
+	_entered_circle = null
+	_entered_activity = activity
+	_open_event_picker(
+		peer_id,
+		PackedStringArray([activity.event_name]),
+		PackedStringArray([activity.event_description]),
+		PackedStringArray([""]),
+		true
+	)
+
+
+func _on_activity_exited(peer_id: int, _exited: FreeRoamActivity):
+	if peer_id != multiplayer.get_unique_id() or _activity != null:
+		return
+	_close_event_picker(peer_id)
+
+
+## Client-callable: start `activity_path` for YOU. The server derives the rider from the sender.
+@rpc("any_peer", "call_local", "reliable")
+func request_start_activity(activity_path: NodePath):
+	if !multiplayer.is_server():
+		return
+	var sender := multiplayer.get_remote_sender_id()
+	var peer_id := sender if sender > 1 else 1
+	var activity := get_node(activity_path) as FreeRoamActivity
+	# The host started an event while this was in flight, the rider's busy, or someone's on it.
+	if (
+		gamemode_manager.get_current_gamemode() != self
+		or _running.has(peer_id)
+		or activity in _running.values()
+		or spawn_manager._get_player_by_peer_id(peer_id).is_crashed
+	):
+		return
+	_running[peer_id] = activity
+	# Sent before server_start (reliable RPCs arrive in order), so the client is already listening
+	# for whatever server_start triggers, e.g. the fuel-up teleport.
+	_rpc_begin_activity.rpc_id(peer_id, activity_path)
+	activity.server_start(peer_id, spawn_manager)
+
+
+## Client-callable: end YOUR activity with `result`, finished or cancelled.
+@rpc("any_peer", "call_local", "reliable")
+func request_end_activity(result: float):
+	if !multiplayer.is_server():
+		return
+	var sender := multiplayer.get_remote_sender_id()
+	var peer_id := sender if sender > 1 else 1
+	# Exit already ended everyone's before this arrived.
+	if !_running.has(peer_id):
+		return
+	_running[peer_id].server_end(peer_id, result, spawn_manager)
+	_running.erase(peer_id)
+
+
+## Server → the rider's own client.
+@rpc("call_local", "reliable")
+func _rpc_begin_activity(activity_path: NodePath):
+	_activity = get_node(activity_path)
+	_activity.finished.connect(_on_activity_finished, CONNECT_ONE_SHOT)
+	_activity.begin(
+		spawn_manager._get_player_by_peer_id(multiplayer.get_unique_id()),
+		input_state_manager,
+		gamemode_manager.audio_manager,
+		hud_manager
+	)
+
+
+## Local — the activity already handed the rider back.
+func _on_activity_finished():
+	request_end_activity.rpc_id(1, _activity.get_result())
+	_activity = null
+
+
+#endregion
+
 
 func _on_player_crashed(peer_id: int):
 	if !multiplayer.is_server():
@@ -271,6 +425,7 @@ func _on_player_latejoined(peer_id: int):
 func _on_player_disconnected(peer_id: int):
 	if gamemode_manager.match_state == GamemodeManager.MatchState.IN_GAME:
 		spawn_manager.rpc_despawn_player.rpc(peer_id)
+	_running.erase(peer_id)
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -286,5 +441,9 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("trick_manager must not be empty")
 	if riding_hud_state == null:
 		issues.append("riding_hud_state must not be empty")
+	if input_state_manager == null:
+		issues.append("input_state_manager must not be empty")
+	if hud_manager == null:
+		issues.append("hud_manager must not be empty")
 
 	return issues

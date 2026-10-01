@@ -32,13 +32,14 @@ func on_player_entered_circle(
 	peer_id: int,
 	event_names: PackedStringArray,
 	event_descriptions: PackedStringArray,
-	pb_keys: PackedStringArray
+	pb_keys: PackedStringArray,
+	per_rider: bool
 ):
 	if !multiplayer.is_server():
 		return
 
-	# Only show event popup to the host
-	if peer_id != 1:
+	# Lobby-wide events are the host's call; per-rider ones (gas station fuel-up) are anyone's.
+	if peer_id != 1 and !per_rider:
 		return
 
 	set_gamemode_hud_and_show_ui.rpc_id(peer_id, event_names, event_descriptions, pb_keys)
