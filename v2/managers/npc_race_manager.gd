@@ -48,7 +48,7 @@ func _physics_process(_delta: float):
 		var npc := _npcs[npc_id]
 		if npc.npc_state == NPCRiderEntity.NPCState.CRASHED:
 			continue
-		if race_task._peer_progress[npc_id].has("completion_time_ms"):
+		if race_task.peer_progress[npc_id].has("completion_time_ms"):
 			if npc.npc_state != NPCRiderEntity.NPCState.FINISHED:
 				npc.finish()
 			continue

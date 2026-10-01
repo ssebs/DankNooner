@@ -12,7 +12,7 @@ func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
 	var peer_id := int(player.name)
 	# respawn_player_at also stores the transform on the player as the persistent
 	# respawn point, so subsequent crashes return here instead of player_spawn_pos.
-	_runner.spawn_manager.respawn_player_at.rpc(peer_id, marker.global_position, marker.global_basis)
+	runner.spawn_manager.respawn_player_at.rpc(peer_id, marker.global_position, marker.global_basis)
 
 
 func check(_player: PlayerEntity, _delta: float, _state: Dictionary) -> bool:

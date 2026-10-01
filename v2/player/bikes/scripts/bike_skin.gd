@@ -5,7 +5,7 @@ class_name BikeSkin extends Node3D
 	set(value):
 		skin_definition = value
 		if Engine.is_editor_hint() and is_node_ready():
-			_apply_definition()
+			apply_definition()
 
 @export_tool_button("Save skin to u:disk") var save_skin_btn = _save_skin_to_disk
 @export var skin_name_for_loading_test = "sport_default"
@@ -24,7 +24,7 @@ var steering_handlebar_marker: Marker3D
 
 
 func _ready():
-	_apply_definition()
+	apply_definition()
 
 
 func has_steering() -> bool:
@@ -76,7 +76,7 @@ func update_brake_light(brake_amount: float):
 
 
 #region resource/definition
-func _apply_definition():
+func apply_definition():
 	_spawn_mesh()
 	_apply_mods()
 	_create_steering_handlebar_proxy()

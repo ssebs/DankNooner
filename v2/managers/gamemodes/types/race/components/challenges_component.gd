@@ -32,7 +32,7 @@ func race_end() -> void:
 func tick(delta: float) -> void:
 	for peer_id in race_mode.lobby_manager.lobby_players:
 		# Unspawned (late-join) and finished riders don't tick — skip is intentional.
-		var player := race_mode.spawn_manager._get_player_by_peer_id(peer_id)
+		var player := race_mode.spawn_manager.get_player_by_peer_id(peer_id)
 		if player == null or _finished.has(peer_id):
 			continue
 		for challenge in _challenges:

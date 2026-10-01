@@ -27,7 +27,7 @@ func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
 
 	if !state["jumped"]:
 		state["jumped"] = (
-			player.movement_controller._air_time >= TrickController.AIR_TRICK_MIN_AIRTIME
+			player.movement_controller.air_time >= TrickController.AIR_TRICK_MIN_AIRTIME
 		)
 		return false
 	if !player.is_on_floor():
@@ -37,7 +37,7 @@ func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
 	if state["landed_t"] < reset_delay or trick_manager.is_combo_open(peer_id):
 		return false
 	attempt_scored.emit(peer_id, trick_manager.get_score(peer_id))
-	_runner.spawn_manager.respawn_player.rpc(peer_id)
+	runner.spawn_manager.respawn_player.rpc(peer_id)
 	state.clear()
 	return false
 

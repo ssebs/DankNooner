@@ -36,6 +36,7 @@ signal uncrashed
 @export var trick_controller: TrickController
 @export var crash_controller: CrashController
 @export var movement_controller: MovementController
+@export var wobble_controller: WobbleController
 @export var camera_controller: CameraController
 @export var boost_controller: BoostController
 
@@ -157,6 +158,8 @@ var rb_respawn_transform: Transform3D = Transform3D()
 ## persistent respawn point. Free roam crash respawns set this so you respawn where you
 ## crashed, while the pause-menu respawn button still returns to rb_respawn_transform.
 var rb_respawn_transform_oneshot: Transform3D = Transform3D()
+## Highside launch stashed by trigger_crash for the is_crashed-edge ragdoll. Visual-only, not synced.
+var crash_launch_impulse: Vector3 = Vector3.ZERO
 
 ## Tick the last respawn was anchored to + its resolved target. Netfox resimulates
 ## recent ticks when late input arrives (server: remote players; client: own prediction),
@@ -182,8 +185,6 @@ var _exhaust_decel_active: bool = false
 var _exhaust_coast_time: float = 0.0
 var _exhaust_burble_rolled: bool = false
 var _exhaust_prev_rpm: float = 0.0
-## Highside launch stashed by trigger_crash for the is_crashed-edge ragdoll. Visual-only, not synced.
-var _crash_launch_impulse: Vector3 = Vector3.ZERO
 
 # Netcode metrics probe (debug_netcode_metrics) — predicted state snapshot taken before
 # netfox re-applies authoritative state each rollback loop, on the local client only.
@@ -243,7 +244,7 @@ func _rollback_tick(delta: float, tick: int, _is_fresh: bool):
 
 	if rb_do_wobble:
 		rb_do_wobble = false
-		movement_controller.wobble_vel += rb_wobble_strength  # tank-slapper kick (synced state)
+		wobble_controller.wobble_vel += rb_wobble_strength  # tank-slapper kick (synced state)
 
 	if rb_lock_movement:
 		rb_lock_movement = false
@@ -344,7 +345,7 @@ func _update_exhaust_pops(delta: float) -> void:
 
 ## Crash-entered edge. Ragdoll on every peer; camera + SFX local; crashed(peer_id) drives respawn.
 func _enter_crash_visuals() -> void:
-	animation_controller.start_ragdoll(_crash_launch_impulse)
+	animation_controller.start_ragdoll(crash_launch_impulse)
 	crashed.emit(int(name))
 	if !is_local_client:
 		# Everyone else hears another rider go down.
@@ -390,15 +391,15 @@ func _editor_refresh_from_bike_definition() -> void:
 		_init_collision_shape()
 	if front_raycast and rear_raycast:
 		_init_raycasts()
-	# AnimationController._editor_auto_init() handles wheel markers, IK pose, hand/foot sync.
+	# AnimationController.editor_auto_init() handles wheel markers, IK pose, hand/foot sync.
 	if animation_controller:
-		animation_controller._editor_auto_init()
+		animation_controller.editor_auto_init()
 
 
 ## set definitions and apply mesh/colors/markers
 func _init_mesh():
 	bike_skin.skin_definition = bike_definition
-	bike_skin._apply_definition()
+	bike_skin.apply_definition()
 	character_skin.skin_definition = character_definition
 	character_skin.apply_definition()
 
@@ -441,7 +442,7 @@ func _init_ik():
 		right_leg_magnet
 	)
 	_apply_rider_pose_from_definition()
-	ik_ctrl._create_ik()
+	ik_ctrl.create_ik()
 	character_skin.enable_ik()
 
 
@@ -678,6 +679,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 	if movement_controller == null:
 		issues.append("movement_controller must not be empty")
+	if wobble_controller == null:
+		issues.append("wobble_controller must not be empty")
 	if input_controller == null:
 		issues.append("input_controller must not be empty")
 	if animation_controller == null:

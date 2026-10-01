@@ -56,7 +56,7 @@ func _physics_process(delta: float):
 	_breadcrumb_accum = BREADCRUMB_INTERVAL_SECS
 	for peer_id in lobby_manager.lobby_players:
 		# Player may not be spawned yet (late-join) — skip is intentional.
-		var player := _get_player_by_peer_id(peer_id)
+		var player := get_player_by_peer_id(peer_id)
 		if player == null or player.is_crashed:
 			continue
 		var normal := _ground_normal_at(player)
@@ -98,7 +98,7 @@ func _on_lobby_players_updated(players: Dictionary):
 
 	for peer_id in players:
 		# Player may not be spawned yet during late-join sync — skip is intentional
-		var player := _get_player_by_peer_id(peer_id)
+		var player := get_player_by_peer_id(peer_id)
 		if player == null:
 			continue
 		player.update_skins(players[peer_id].bike_skin, players[peer_id].character_skin)
@@ -138,7 +138,7 @@ func request_respawn_in_place():
 	# Every mode except free roam recovers a crash with a full respawn (to the last checkpoint /
 	# TeleportTask); free roam's crash recovery is itself in-place, so a crashed tap there stays put.
 	var full_respawn_on_crash := gamemode_manager.current_game_mode != GameModeType.Kind.FREE_ROAM
-	if _get_player_by_peer_id(peer_id).is_crashed and full_respawn_on_crash:
+	if get_player_by_peer_id(peer_id).is_crashed and full_respawn_on_crash:
 		respawn_player.rpc(peer_id)
 	else:
 		respawn_in_place(peer_id)
@@ -148,7 +148,7 @@ func request_respawn_in_place():
 ## last flat breadcrumb if the site is too steep — and broadcast it. Shared by the R tap
 ## (request_respawn_in_place) and free-roam crash recovery so both behave identically.
 func respawn_in_place(player_peer_id: int):
-	var player := _get_player_by_peer_id(player_peer_id)
+	var player := get_player_by_peer_id(player_peer_id)
 	var normal := _ground_normal_at(player)
 	var too_steep := (
 		normal == Vector3.ZERO or normal.angle_to(Vector3.UP) > deg_to_rad(RESPAWN_STEEP_SLOPE_DEG)
@@ -185,7 +185,7 @@ func _ground_normal_at(player: PlayerEntity) -> Vector3:
 func respawn_player(player_peer_id: int):
 	if !_sender_is_server():
 		return
-	_get_player_by_peer_id(player_peer_id).rb_do_respawn = true
+	get_player_by_peer_id(player_peer_id).rb_do_respawn = true
 
 
 ## Set player's rb_do_crash on every peer so each runs the crash locally (ragdoll,
@@ -196,13 +196,13 @@ func respawn_player(player_peer_id: int):
 func crash_player(player_peer_id: int):
 	if !_sender_is_server():
 		return
-	_get_player_by_peer_id(player_peer_id).rb_do_crash = true
+	get_player_by_peer_id(player_peer_id).rb_do_crash = true
 
 
 ## Server-only. Crash a rider on someone else's account (ram, oil slick, shotgun), crediting the
 ## aggressor unless the victim was already down or took themselves out.
 func knock_out(victim_peer_id: int, aggressor_peer_id: int) -> void:
-	if !_get_player_by_peer_id(victim_peer_id).is_crashed and victim_peer_id != aggressor_peer_id:
+	if !get_player_by_peer_id(victim_peer_id).is_crashed and victim_peer_id != aggressor_peer_id:
 		player_knocked_out.emit(victim_peer_id, aggressor_peer_id)
 	crash_player.rpc(victim_peer_id)
 
@@ -213,7 +213,7 @@ func knock_out(victim_peer_id: int, aggressor_peer_id: int) -> void:
 func wobble_player(player_peer_id: int, strength: float):
 	if !_sender_is_server():
 		return
-	var player := _get_player_by_peer_id(player_peer_id)
+	var player := get_player_by_peer_id(player_peer_id)
 	player.rb_wobble_strength = strength
 	player.rb_do_wobble = true
 
@@ -224,7 +224,7 @@ func wobble_player(player_peer_id: int, strength: float):
 func grant_boost(player_peer_id: int):
 	if !_sender_is_server():
 		return
-	_get_player_by_peer_id(player_peer_id).rb_add_boost = true
+	get_player_by_peer_id(player_peer_id).rb_add_boost = true
 
 
 ## Bat pickup effect: every peer plays the swing anim on the collector; the server also wobbles
@@ -233,7 +233,7 @@ func grant_boost(player_peer_id: int):
 func swing_bat(wielder_peer_id: int):
 	if !_sender_is_server():
 		return
-	_get_player_by_peer_id(wielder_peer_id).animation_controller.play_bat_swing(BAT_SWING_DURATION)
+	get_player_by_peer_id(wielder_peer_id).animation_controller.play_bat_swing(BAT_SWING_DURATION)
 	# Proximity + wobble is a server decision; clients above just show the swing.
 	if multiplayer.is_server():
 		_wobble_riders_near_bat(wielder_peer_id)
@@ -245,7 +245,7 @@ func swing_bat(wielder_peer_id: int):
 func _wobble_riders_near_bat(wielder_peer_id: int) -> void:
 	for _i in int(BAT_SWING_DURATION / BAT_SWING_PERIOD):
 		await get_tree().create_timer(BAT_SWING_PERIOD).timeout
-		var wielder := _get_player_by_peer_id(wielder_peer_id)
+		var wielder := get_player_by_peer_id(wielder_peer_id)
 		# Wielder crashed / left mid-swing — nothing to swing from.
 		if wielder == null:
 			return
@@ -275,7 +275,7 @@ func play_bonk_sfx():
 func max_boost_player(player_peer_id: int):
 	if !_sender_is_server():
 		return
-	_get_player_by_peer_id(player_peer_id).rb_do_max_boost = true
+	get_player_by_peer_id(player_peer_id).rb_do_max_boost = true
 
 
 ## Set the player's boost meter to `amount` segments. Server only; broadcast like max_boost_player.
@@ -284,7 +284,7 @@ func max_boost_player(player_peer_id: int):
 func set_boost_player(player_peer_id: int, amount: float):
 	if !_sender_is_server():
 		return
-	var player := _get_player_by_peer_id(player_peer_id)
+	var player := get_player_by_peer_id(player_peer_id)
 	player.rb_set_boost_amount = amount
 	player.rb_set_boost = true
 
@@ -295,7 +295,7 @@ func set_boost_player(player_peer_id: int, amount: float):
 func respawn_player_at(player_peer_id: int, pos: Vector3, basis: Basis):
 	if !_sender_is_server():
 		return
-	var player_node := _get_player_by_peer_id(player_peer_id)
+	var player_node := get_player_by_peer_id(player_peer_id)
 	player_node.rb_respawn_transform = Transform3D(basis, pos)
 	player_node.rb_do_respawn = true
 
@@ -307,7 +307,7 @@ func respawn_player_at(player_peer_id: int, pos: Vector3, basis: Basis):
 func respawn_player_in_place(player_peer_id: int, pos: Vector3, basis: Basis):
 	if !_sender_is_server():
 		return
-	var player_node := _get_player_by_peer_id(player_peer_id)
+	var player_node := get_player_by_peer_id(player_peer_id)
 	player_node.rb_respawn_transform_oneshot = Transform3D(basis, pos)
 	player_node.rb_do_respawn = true
 
@@ -318,7 +318,7 @@ func respawn_player_in_place(player_peer_id: int, pos: Vector3, basis: Basis):
 func set_respawn_point(player_peer_id: int, pos: Vector3, basis: Basis):
 	if !_sender_is_server():
 		return
-	_get_player_by_peer_id(player_peer_id).rb_respawn_transform = Transform3D(basis, pos)
+	get_player_by_peer_id(player_peer_id).rb_respawn_transform = Transform3D(basis, pos)
 
 
 ## Clear the persistent respawn point so the next respawn falls back to player_spawn_pos.
@@ -327,7 +327,7 @@ func set_respawn_point(player_peer_id: int, pos: Vector3, basis: Basis):
 func reset_respawn_point(player_peer_id: int):
 	if !_sender_is_server():
 		return
-	_get_player_by_peer_id(player_peer_id).rb_respawn_transform = Transform3D()
+	get_player_by_peer_id(player_peer_id).rb_respawn_transform = Transform3D()
 
 
 ## Instantiate and add player node locally (no authority check)
@@ -357,7 +357,7 @@ func add_player_locally(peer_id: int, player_def_dict: Dictionary):
 func remove_player_locally(peer_id: int):
 	_flat_breadcrumbs.erase(peer_id) # server-only dict; harmless no-op on clients
 	# No current level or a menu/background level with no player_spawn_pos — nothing to remove.
-	# Guards the raw deref below (this doesn't route through _get_player_by_peer_id).
+	# Guards the raw deref below (this doesn't route through get_player_by_peer_id).
 	if level_manager.current_level == null or level_manager.current_level.no_player_spawn_needed:
 		return
 	if !level_manager.current_level.player_spawn_pos.has_node(str(peer_id)):
@@ -367,7 +367,7 @@ func remove_player_locally(peer_id: int):
 
 
 ## Get player from multiplayer peer id found in level_manager.current_level
-func _get_player_by_peer_id(player_peer_id: int) -> PlayerEntity:
+func get_player_by_peer_id(player_peer_id: int) -> PlayerEntity:
 	# No current level (startup / mid-swap) or a menu/background level with no player_spawn_pos —
 	# no players to find. Return null (the "not spawned" contract every caller already handles)
 	# rather than null-deref get_children.

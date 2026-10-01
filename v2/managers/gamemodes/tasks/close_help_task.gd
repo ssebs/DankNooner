@@ -31,13 +31,13 @@ func get_hint_text() -> String:
 
 @rpc("call_local", "reliable")
 func _rpc_show_help():
-	var player := _runner.spawn_manager._get_player_by_peer_id(multiplayer.get_unique_id())
+	var player := runner.spawn_manager.get_player_by_peer_id(multiplayer.get_unique_id())
 	player.input_controller.input_disabled = true
 
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME_PAUSED
 	menu_manager.enable_input_and_processing()
 	help_menu_state.ui.show()
-	help_menu_state._show_controls_for_current_device()
+	help_menu_state.show_controls_for_current_device()
 
 	help_menu_state.close_help_btn.pressed.connect(_on_help_closed, CONNECT_ONE_SHOT)
 	input_state_manager.unpause_requested.connect(_on_help_closed, CONNECT_ONE_SHOT)
@@ -53,7 +53,7 @@ func _on_help_closed():
 	menu_manager.disable_input_and_processing()
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
 
-	var player := _runner.spawn_manager._get_player_by_peer_id(multiplayer.get_unique_id())
+	var player := runner.spawn_manager.get_player_by_peer_id(multiplayer.get_unique_id())
 	player.input_controller.input_disabled = false
 
 	_rpc_help_closed.rpc_id(1)
@@ -62,6 +62,6 @@ func _on_help_closed():
 @rpc("any_peer", "call_local", "reliable")
 func _rpc_help_closed():
 	var peer_id := multiplayer.get_remote_sender_id()
-	_runner.mark_state(peer_id, "closed", true)
+	runner.mark_state(peer_id, "closed", true)
 
 

@@ -26,60 +26,32 @@ class_name ConcurrentTaskRunner extends TaskRunner
 const _DONE := "_done"
 const _STATES := "_states"
 
-var _player_states: Dictionary[int, PlayerTaskState] = {}
-var _tasks: Array[GameModeTask] = []
-var _running: bool = false
-
 #region Composite API
 
 
 func start(peer_ids: Array) -> void:
 	if Engine.is_editor_hint():
 		return
-	_collect_tasks()
-	_player_states.clear()
-	var now := Time.get_ticks_msec() as float
-	for peer_id in peer_ids:
-		var state := PlayerTaskState.create()
-		state.started = true
-		state.start_time = now
-		state.lesson_state = _fresh_lesson_state()
-		_player_states[peer_id] = state
-	for task in _tasks:
-		task._runner = self
-	_running = true
-	for peer_id in _player_states:
-		_on_enter_all(peer_id, _player_states[peer_id])
+	super(peer_ids)
+	for peer_id in player_states:
+		player_states[peer_id].lesson_state = _fresh_lesson_state()
+		_on_enter_all(peer_id, player_states[peer_id])
 	_push_step_hud()
-
-
-func update(delta: float) -> void:
-	if !_running or !multiplayer.is_server():
-		return
-	for peer_id in _player_states:
-		var state := _player_states[peer_id]
-		if state.completed or !state.started:
-			continue
-		_update_player(peer_id, state, delta)
 
 
 func stop() -> void:
 	if Engine.is_editor_hint():
 		return
-	_running = false
-	for task in _tasks:
-		task._runner = null
-	_player_states.clear()
-	_tasks = []
+	super()
 
 
 func notify_crashed(peer_id: int) -> void:
 	if !multiplayer.is_server():
 		return
 	# Crash signal may fire for players not in this runner — skip is intentional
-	if !_player_states.has(peer_id):
+	if !player_states.has(peer_id):
 		return
-	var state := _player_states[peer_id]
+	var state := player_states[peer_id]
 	state.lesson_state = _fresh_lesson_state()
 	# Tasks like CountdownTask disable input on_enter — re-running on_enter
 	# resets their internal state so the player isn't stuck post-respawn.
@@ -87,26 +59,15 @@ func notify_crashed(peer_id: int) -> void:
 	respawn_requested.emit(peer_id)
 
 
-func notify_disconnected(peer_id: int) -> void:
-	_player_states.erase(peer_id)
-
-
 #endregion
 
 #region Per-peer parallel walk
 
 
-func _collect_tasks() -> void:
-	_tasks = []
-	for c in get_children():
-		if c is GameModeTask:
-			_tasks.append(c)
-
-
 func _fresh_lesson_state() -> Dictionary:
 	var done: Array[bool] = []
 	var states: Array[Dictionary] = []
-	for i in _tasks.size():
+	for i in tasks.size():
 		done.append(false)
 		states.append({})
 	return {_DONE: done, _STATES: states}
@@ -114,16 +75,16 @@ func _fresh_lesson_state() -> Dictionary:
 
 func _on_enter_all(peer_id: int, state: PlayerTaskState) -> void:
 	# Player may not be spawned yet during late-join sync — pass null is intentional
-	var player := spawn_manager._get_player_by_peer_id(peer_id)
+	var player := spawn_manager.get_player_by_peer_id(peer_id)
 	var states_arr: Array = state.lesson_state[_STATES]
-	for i in _tasks.size():
-		_tasks[i].on_enter(player, states_arr[i])
+	for i in tasks.size():
+		tasks[i].on_enter(player, states_arr[i])
 
 
 func _push_step_hud() -> void:
 	var obj := objective_text if objective_text != "" else _first_child_text(true)
 	var hint := hint_text if hint_text != "" else _first_child_text(false)
-	for peer_id in _player_states:
+	for peer_id in player_states:
 		riding_hud.push_event_step(peer_id, 0, 1, obj, hint, show_step_count)
 
 
@@ -131,27 +92,22 @@ func _push_step_hud() -> void:
 ## get_hint_text() so a ConcurrentTaskRunner that wraps a single gating task
 ## (e.g. PerformTrickTask) doesn't require duplicating its labels on the runner.
 func _first_child_text(want_objective: bool) -> String:
-	for task in _tasks:
+	for task in tasks:
 		var s := task.get_objective_text() if want_objective else task.get_hint_text()
 		if s != "":
 			return s
 	return ""
 
 
-func _update_player(peer_id: int, state: PlayerTaskState, delta: float) -> void:
-	# Player may not be spawned yet during late-join sync — skip is intentional
-	var player := spawn_manager._get_player_by_peer_id(peer_id)
-	if player == null:
-		return
-	if player.is_crashed:
-		return
-
+func _update_player(
+	peer_id: int, state: PlayerTaskState, player: PlayerEntity, delta: float
+) -> void:
 	var done: Array = state.lesson_state[_DONE]
 	var states_arr: Array = state.lesson_state[_STATES]
 	var all_done := true
 	var progress := ""
-	for i in _tasks.size():
-		var task := _tasks[i]
+	for i in tasks.size():
+		var task := tasks[i]
 		# Constraints run every frame but never complete or gate the peer — their
 		# check() return is ignored. They still feed the HUD progress line (e.g. a
 		# "keep the wheelie" warning that overrides the objective's line when active).
@@ -175,20 +131,5 @@ func _update_player(peer_id: int, state: PlayerTaskState, delta: float) -> void:
 	if all_done:
 		_complete_player(peer_id, state)
 
-
-func _complete_player(peer_id: int, state: PlayerTaskState) -> void:
-	state.completed = true
-	state.completion_time_ms = Time.get_ticks_msec() - state.start_time
-	riding_hud.push_event_status(peer_id, "TUT_WAITING_FOR_OTHERS")
-	player_completed.emit(peer_id)
-	if _all_peers_complete():
-		all_completed.emit()
-
-
-func _all_peers_complete() -> bool:
-	for peer_id in _player_states:
-		if !_player_states[peer_id].completed:
-			return false
-	return _player_states.size() > 0
 
 #endregion

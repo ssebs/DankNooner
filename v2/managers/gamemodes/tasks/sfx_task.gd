@@ -39,16 +39,16 @@ func _get_wait_seconds() -> float:
 		AdvanceMode.AFTER_DURATION:
 			return duration_sec
 		AdvanceMode.WHEN_FINISHED:
-			var ev := _runner.audio_manager.get_sound_event(sound)
+			var ev := runner.audio_manager.get_sound_event(sound)
 			return ev.stream.get_length() if ev.stream != null else 0.0
 	return 0.0
 
 
 @rpc("call_local", "reliable")
 func _rpc_play_sfx(id: int):
-	_runner.audio_manager.play_sfx(id)
+	runner.audio_manager.play_sfx(id)
 
 
 @rpc("call_local", "reliable")
 func _rpc_stop_sfx(id: int):
-	_runner.audio_manager.stop_sfx(id)
+	runner.audio_manager.stop_sfx(id)

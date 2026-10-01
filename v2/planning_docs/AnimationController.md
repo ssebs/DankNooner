@@ -177,7 +177,7 @@ enum RiderState {
 
 Transitions fire `state_changed(new_state)`.
 
-- **RIDING → IDLE**: when speed < 0.5 and steer < 0.1 for `idle_timeout` seconds. Disables target sync (so the anim's hand keyframes aren't overwritten), starts `_anim_runner.play(_idle_anim, 1.0, true)`. Layer fades in.
+- **RIDING → IDLE**: when speed < 0.5 and steer < 0.1 for `IDLE_TIMEOUT` seconds. Disables target sync (so the anim's hand keyframes aren't overwritten), starts `_anim_runner.play(_idle_anim, 1.0, true)`. Layer fades in.
 - **IDLE → RIDING**: `_anim_runner.stop(_idle_layer)` — layer fades out and is removed. Re-enables IK and target sync.
 
 The old `await get_tree().create_timer(...)` half-anim wait is gone — fades happen via blend weights, no timer needed.
@@ -285,11 +285,11 @@ For tricks IK can't achieve, use `CharacterSkin/AnimationPlayer` with bone trans
 
 ## Tuning
 
-On `AnimationController` (inspector):
-- `idle_timeout` — seconds of stillness before idle state
-- `max_butt_offset` — lateral butt shift during lean
-- `max_chest_yaw_deg` — chest twist toward turn direction
-- `max_chest_lean_pitch_deg`, `max_chest_z_offset`, `max_butt_z_offset` — fwd/back weight shift from `nfx_lean`
+Consts on `AnimationController`:
+- `IDLE_TIMEOUT` — seconds of stillness before idle state
+- `MAX_BUTT_OFFSET` — lateral butt shift during lean
+- `MAX_CHEST_YAW_DEG` — chest twist toward turn direction
+- `MAX_CHEST_LEAN_PITCH_DEG`, `MAX_CHEST_Z_OFFSET`, `MAX_BUTT_Z_OFFSET` — fwd/back weight shift from `nfx_lean`
 
 On `BikeSkinDefinition`: `lean_multiplier`, `weight_shift_multiplier`, `max_wheelie_angle_deg`, `max_stoppie_angle_deg`, plus all per-bike marker positions/rotations.
 

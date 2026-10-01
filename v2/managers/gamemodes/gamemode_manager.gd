@@ -164,7 +164,7 @@ func _apply_forced_base_bike(event: GameModeEventDefinition) -> void:
 		return
 	var forced := event.forced_base_bike
 	for peer_id in lobby_manager.lobby_players:
-		var player := spawn_manager._get_player_by_peer_id(peer_id)
+		var player := spawn_manager.get_player_by_peer_id(peer_id)
 		if player == null:
 			continue
 		if player.bike_definition == forced:
@@ -176,7 +176,7 @@ func _apply_forced_base_bike(event: GameModeEventDefinition) -> void:
 ## an event context so a forced bike doesn't stick around.
 func _restore_lobby_bikes() -> void:
 	for peer_id in lobby_manager.lobby_players:
-		var player := spawn_manager._get_player_by_peer_id(peer_id)
+		var player := spawn_manager.get_player_by_peer_id(peer_id)
 		if player == null:
 			continue
 		var lobby_bike: BikeSkinDefinition = lobby_manager.lobby_players[peer_id].bike_skin

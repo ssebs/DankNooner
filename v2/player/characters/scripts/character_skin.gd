@@ -49,10 +49,10 @@ func apply_definition():
 	# # Show the biker mesh in the editor
 	# mesh_skin.owner = self
 
-	ragdoll_controller._create_skeleton_for_ragdoll()
-	# _create_ik() is NOT called here — bike markers aren't set yet.
+	ragdoll_controller.create_skeleton_for_ragdoll()
+	# create_ik() is NOT called here — bike markers aren't set yet.
 	# player_entity._init_ik() (runtime) or _editor_init_ik_from_bike (editor)
-	# calls _create_ik() after set_bike_markers().
+	# calls create_ik() after set_bike_markers().
 
 	if !Engine.is_editor_hint():
 		if debug_auto_ragdoll:

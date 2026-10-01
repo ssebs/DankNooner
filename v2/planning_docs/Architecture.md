@@ -279,8 +279,8 @@ The trick roster is the `Trick` enum in `trick_controller.gd`.
   picked by camera-stick direction while the trick button is held; `HIGH_CHAIR` latches until the
   button drops or the wheelie ends. `DRIFT` mirrors `MovementController.is_drifting`.
 - Stick tricks work in any ground wheelie. Outside the balance point they pump a speed wobble
-  (`MovementController._wobble_trick_feed`, rate `wobble_trick_feed`) toward a swing sized by how far
-  off the window pitch is (crash-sized at `wobble_trick_crash_miss_deg`). It keeps the wheelie up
+  (`WobbleController.trick_feed()`, rate `WOBBLE_TRICK_FEED`) toward a swing sized by how far
+  off the window pitch is (crash-sized at `WOBBLE_TRICK_CRASH_MISS_DEG`). It keeps the wheelie up
   (`wobble_from_trick`); closing in on the balance point shrinks it, reaching it settles it.
 - Emits `trick_started`, `trick_ended` signals
 - Scoring lives in `TrickManager` (see below)
@@ -308,16 +308,16 @@ limit on `BikeSkinDefinition` — read the values there, not here.
 - **Killbox** contact — always crashes, whatever the speed or angle
 - **Pitch** past the bike definition's `max_wheelie_angle_deg` / `max_stoppie_angle_deg`
 - **Stalled on a grade** too steep to climb (`MovementController.is_stalled_on_steep_slope()`)
-- **Lean** past `crash_lean_threshold_deg`, tightened on unstable ground by
-  `unstable_lean_threshold_reduction_deg` × `get_unstable_factor()`
+- **Lean** past `CRASH_LEAN_THRESHOLD_DEG`, tightened on unstable ground by
+  `UNSTABLE_LEAN_THRESHOLD_REDUCTION_DEG` × `get_unstable_factor()`
 - **Unstable lowside** — front brake while steering on gravel/sand
-  (`unstable_lowside_brake_threshold` + `unstable_lowside_steer_threshold_deg`)
-- **Brake grab** while turning (`brake_grab_rate_threshold`, gamepad only)
+  (`UNSTABLE_LOWSIDE_BRAKE_THRESHOLD` + `UNSTABLE_LOWSIDE_STEER_THRESHOLD_DEG`)
+- **Brake grab** while turning (`BRAKE_GRAB_RATE_THRESHOLD`, gamepad only)
 - **Upside-down landing** — checked separately, because an inverted `up_direction` breaks
   `is_on_floor()`; skipped on steep surfaces where being inverted is expected (loops)
 - **Head-on obstacle collision** above a min speed
-- **Drift** — over-rotation past `drift_spinout_angle_deg`, or a highside when grip returns
-  (`drift_highside_*`, launched with `highside_launch_force`)
+- **Drift** — over-rotation past `DRIFT_SPINOUT_ANGLE_DEG`, or a highside when grip returns
+  (`DRIFT_HIGHSIDE_*`, launched with `HIGHSIDE_LAUNCH_FORCE`)
 
 `trigger_crash()` sets `is_crashed = true`, starts the ragdoll, forces the TPS camera and emits
 `crashed`. It does **not** schedule a respawn — the running gamemode owns the delay and the
@@ -528,6 +528,7 @@ mismatch. There is no hand-written input RPC — netfox owns the whole path.
 | `InputController` (capture) | Local client only      | Client                     |
 | `InputController` (sync)    | Local client -> Server | Client sends, netfox syncs |
 | `MovementController`        | Server only            | Server                     |
+| `WobbleController`          | Server only            | Server                     |
 | `GearingController`         | Server only            | Server                     |
 | `TrickController`           | Server only            | Server                     |
 | `CrashController`           | Server only            | Server                     |

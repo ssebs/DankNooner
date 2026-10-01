@@ -78,7 +78,7 @@ func Enter(state_context: StateContext):
 		(event_start_circle as EventStartCircle).set_active_event(null)
 
 	# Only spawn if players aren't already in the level (e.g. coming from another gamemode)
-	if spawn_manager._get_player_by_peer_id(multiplayer.get_unique_id()) == null:
+	if spawn_manager.get_player_by_peer_id(multiplayer.get_unique_id()) == null:
 		spawn_manager.spawn_all_players()
 
 	if multiplayer.is_server():
@@ -272,7 +272,7 @@ func _leaderboard_rows() -> Array:
 	var peer_ids: Array[int] = []
 	for peer_id in lobby_players:
 		# Player may not be spawned yet (late-join) — skip is intentional.
-		if spawn_manager._get_player_by_peer_id(peer_id) != null:
+		if spawn_manager.get_player_by_peer_id(peer_id) != null:
 			peer_ids.append(peer_id)
 	peer_ids.sort_custom(
 		func(a, b): return _round_points.get(a, 0.0) > _round_points.get(b, 0.0)
@@ -351,7 +351,7 @@ func request_start_activity(activity_path: NodePath):
 		gamemode_manager.get_current_gamemode() != self
 		or _running.has(peer_id)
 		or activity in _running.values()
-		or spawn_manager._get_player_by_peer_id(peer_id).is_crashed
+		or spawn_manager.get_player_by_peer_id(peer_id).is_crashed
 	):
 		return
 	_running[peer_id] = activity
@@ -381,7 +381,7 @@ func _rpc_begin_activity(activity_path: NodePath):
 	_activity = get_node(activity_path)
 	_activity.finished.connect(_on_activity_finished, CONNECT_ONE_SHOT)
 	_activity.begin(
-		spawn_manager._get_player_by_peer_id(multiplayer.get_unique_id()),
+		spawn_manager.get_player_by_peer_id(multiplayer.get_unique_id()),
 		input_state_manager,
 		gamemode_manager.audio_manager,
 		hud_manager
@@ -413,7 +413,7 @@ func _on_player_crashed(peer_id: int):
 func _respawn_at_crash_site(peer_id: int):
 	# Already recovered (e.g. pause-menu respawn button) before the timer fired — skip
 	# so we don't respawn a second time.
-	if not spawn_manager._get_player_by_peer_id(peer_id).is_crashed:
+	if not spawn_manager.get_player_by_peer_id(peer_id).is_crashed:
 		return
 	spawn_manager.respawn_in_place(peer_id)
 

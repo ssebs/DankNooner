@@ -82,4 +82,5 @@ func _on_window_size_changed():
 func _run_validation() -> void:
 	var validator = load("res://utils/validation/auto_validator.gd")
 	validator.validate_tree(get_tree())
+	load("res://utils/validation/serialization_checks.gd").run()
 	DebugUtils.DebugMsg("Validation complete!")

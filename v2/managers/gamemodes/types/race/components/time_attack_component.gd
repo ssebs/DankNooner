@@ -41,7 +41,7 @@ func race_start() -> void:
 	# Every run starts on a full boost meter — restart_run refills it too.
 	for peer_id in race_mode.lobby_manager.lobby_players:
 		# Player may not be spawned yet (late-join) — skip is intentional.
-		if race_mode.spawn_manager._get_player_by_peer_id(peer_id) != null:
+		if race_mode.spawn_manager.get_player_by_peer_id(peer_id) != null:
 			race_mode.spawn_manager.max_boost_player.rpc(peer_id)
 	race_mode.race_task.lap_completed.connect(_on_lap_completed)
 	_personal_bests.clear()

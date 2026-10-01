@@ -18,7 +18,7 @@ func on_enter(player: PlayerEntity, state: Dictionary) -> void:
 	# between GridSpawnTask and the countdown). Otherwise they'd sit ragdolled and the
 	# runner would skip them while the rest of the race starts.
 	if player.is_crashed:
-		_runner.spawn_manager.respawn_player.rpc(int(player.name))
+		runner.spawn_manager.respawn_player.rpc(int(player.name))
 	freeze(player)
 
 
@@ -57,4 +57,4 @@ static func unfreeze(player: PlayerEntity) -> void:
 
 @rpc("call_local", "reliable")
 func _rpc_show_countdown(num: int):
-	_runner.riding_hud.show_event_countdown(num)
+	runner.riding_hud.show_event_countdown(num)

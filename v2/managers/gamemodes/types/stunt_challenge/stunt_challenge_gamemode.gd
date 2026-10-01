@@ -39,10 +39,10 @@ func Exit(state_context: StateContext):
 
 
 func _push_leaderboard(runner: TaskRunner):
-	var states: Dictionary = runner._player_states
+	var states: Dictionary = runner.player_states
 	var peer_ids: Array = states.keys()
 	peer_ids.sort_custom(func(a, b): return _ranks_before(states[a], states[b]))
-	var total: int = runner._tasks.size()
+	var total: int = runner.tasks.size()
 	var now := Time.get_ticks_msec() as float
 	var rows: Array = []
 	for peer_id in peer_ids:

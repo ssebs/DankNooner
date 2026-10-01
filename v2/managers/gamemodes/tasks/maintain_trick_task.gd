@@ -35,7 +35,7 @@ func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
 	state["t"] = state.get("t", 0.0) + delta
 	if state["t"] >= grace:
 		DebugUtils.DebugMsg("MaintainTrickTask: peer %d lost the trick — respawning" % int(player.name))
-		_runner.spawn_manager.respawn_player.rpc(int(player.name))
+		runner.spawn_manager.respawn_player.rpc(int(player.name))
 		state["t"] = 0.0
 	return false
 

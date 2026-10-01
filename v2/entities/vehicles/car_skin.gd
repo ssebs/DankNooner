@@ -7,7 +7,7 @@ class_name CarSkin extends Node3D
 	set(value):
 		skin_definition = value
 		if Engine.is_editor_hint() and is_node_ready():
-			_apply_definition()
+			apply_definition()
 
 const WHEEL_SPIN_MULTIPLIER: float = 3.0
 
@@ -17,7 +17,7 @@ var mesh_skin: SkinColor
 
 
 func _ready():
-	_apply_definition()
+	apply_definition()
 
 
 ## Nothing calls this yet — the NPC animation controller is the intended caller (deferred).
@@ -31,7 +31,7 @@ func rotate_wheels(speed: float, delta: float) -> void:
 
 
 #region resource/definition
-func _apply_definition():
+func apply_definition():
 	_spawn_mesh()
 	_apply_mods()
 	if Engine.is_editor_hint():

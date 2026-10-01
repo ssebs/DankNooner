@@ -104,12 +104,12 @@ API: `get_score(peer_id)`, `reset_peer(peer_id)`. Call `reset_peer()` when a run
 
 ### Camera FX — `player/controllers/camera_controller.gd`
 
-`@export`, per-player, safe to tweak.
+Consts, visual-only (local client).
 
-| Export | Effect |
+| Const | Effect |
 | --- | --- |
-| `boost_fov_add` | Extra FOV degrees while boosting, on top of the speed-driven widen. |
-| `boost_blend_speed` | How fast the tint / FOV punch ramps in and out. |
+| `BOOST_FOV_ADD` | Extra FOV degrees while boosting, on top of the speed-driven widen. |
+| `BOOST_BLEND_SPEED` | How fast the tint / FOV punch ramps in and out. |
 
 Shader uniforms in `resources/shaders/radial_blur.gdshader` (shared with the speed blur):
 

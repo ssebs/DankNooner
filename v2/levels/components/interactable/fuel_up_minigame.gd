@@ -91,12 +91,12 @@ func server_start(peer_id: int, spawn_manager: SpawnManager):
 	spawn_manager.respawn_player_in_place.rpc(
 		peer_id, bike_spot.global_position, bike_spot.global_basis
 	)
-	CountdownTask.freeze(spawn_manager._get_player_by_peer_id(peer_id))
+	CountdownTask.freeze(spawn_manager.get_player_by_peer_id(peer_id))
 
 
 #override
 func server_end(peer_id: int, result: float, spawn_manager: SpawnManager):
-	var player := spawn_manager._get_player_by_peer_id(peer_id)
+	var player := spawn_manager.get_player_by_peer_id(peer_id)
 	# The tank started at the rider's boost, so a fill-up never takes any away.
 	var amount := maxf(
 		player.boost_controller.boost_amount,

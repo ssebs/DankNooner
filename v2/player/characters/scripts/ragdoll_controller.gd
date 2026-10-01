@@ -47,7 +47,7 @@ func get_hips_global_position() -> Vector3:
 	return Vector3.ZERO
 
 
-func _create_skeleton_for_ragdoll():
+func create_skeleton_for_ragdoll():
 	var mesh_skin = char_skin.mesh_skin
 	var skel_3d = mesh_skin.find_child("Skeleton") as Skeleton3D
 	char_skin.skel_3d = skel_3d

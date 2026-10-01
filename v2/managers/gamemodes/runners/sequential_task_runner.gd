@@ -9,10 +9,7 @@
 ## nested inside another runner as one "step."
 class_name SequentialTaskRunner extends TaskRunner
 
-var _player_states: Dictionary[int, PlayerTaskState] = {}
-var _tasks: Array[GameModeTask] = []
 var _wired_callables: Array = []
-var _running: bool = false
 
 ## When the per-peer walk lands on a child that is itself a TaskRunner, peers
 ## park at that index. Once all non-completed peers are parked there, we start
@@ -26,37 +23,16 @@ var _nested_runner_index: int = -1
 func start(peer_ids: Array) -> void:
 	if Engine.is_editor_hint():
 		return
-	_collect_tasks()
-	_player_states.clear()
-	var now := Time.get_ticks_msec() as float
-	for peer_id in peer_ids:
-		var state := PlayerTaskState.create()
-		state.started = true
-		state.start_time = now
-		_player_states[peer_id] = state
-	for task in _tasks:
-		task._runner = self
-		# Propagate shared deps into nested runners so they don't need wiring.
-		if task is TaskRunner:
-			task.spawn_manager = spawn_manager
-			task.riding_hud = riding_hud
-			task.show_step_count = show_step_count
-			task.audio_manager = audio_manager
-			task.route = route
+	super(peer_ids)
 	if multiplayer.is_server():
 		_wire_objective_signals()
-	_running = true
 	_start_step_for_all()
 
 
 func update(delta: float) -> void:
 	if !_running or !multiplayer.is_server():
 		return
-	for peer_id in _player_states:
-		var state := _player_states[peer_id]
-		if state.completed or !state.started:
-			continue
-		_update_player(peer_id, state, delta)
+	super(delta)
 	_try_start_nested_runner()
 	if _nested_runner != null:
 		_nested_runner.update(delta)
@@ -65,7 +41,6 @@ func update(delta: float) -> void:
 func stop() -> void:
 	if Engine.is_editor_hint():
 		return
-	_running = false
 	if _nested_runner != null:
 		_disconnect_nested_runner()
 		_nested_runner.stop()
@@ -73,23 +48,20 @@ func stop() -> void:
 		_nested_runner_index = -1
 	if multiplayer.is_server():
 		_unwire_objective_signals()
-	for task in _tasks:
-		task._runner = null
-	_player_states.clear()
-	_tasks = []
+	super()
 
 
 func notify_crashed(peer_id: int) -> void:
 	if !multiplayer.is_server():
 		return
 	# If a nested runner has this peer, it owns the crash response.
-	if _nested_runner != null and _nested_runner._player_states.has(peer_id):
+	if _nested_runner != null and _nested_runner.player_states.has(peer_id):
 		_nested_runner.notify_crashed(peer_id)
 		return
 	# Crash signal may fire for players not in this runner — skip is intentional
-	if !_player_states.has(peer_id):
+	if !player_states.has(peer_id):
 		return
-	var state := _player_states[peer_id]
+	var state := player_states[peer_id]
 	state.lesson_state = {}
 	# Teleport on crash; clear in/out gating since Godot may not fire body_exited.
 	state.prop_event_fired = false
@@ -100,7 +72,7 @@ func notify_crashed(peer_id: int) -> void:
 func notify_disconnected(peer_id: int) -> void:
 	if _nested_runner != null:
 		_nested_runner.notify_disconnected(peer_id)
-	_player_states.erase(peer_id)
+	super(peer_id)
 
 
 #endregion
@@ -111,9 +83,9 @@ func notify_disconnected(peer_id: int) -> void:
 ## Called by tasks (e.g. CloseHelpTask ack RPC) to write into the per-peer scratchpad.
 func mark_state(peer_id: int, key: String, value: Variant) -> void:
 	# Player may have disconnected before the ack arrived — skip is intentional
-	if !_player_states.has(peer_id):
+	if !player_states.has(peer_id):
 		return
-	_player_states[peer_id].lesson_state[key] = value
+	player_states[peer_id].lesson_state[key] = value
 
 
 #endregion
@@ -121,28 +93,12 @@ func mark_state(peer_id: int, key: String, value: Variant) -> void:
 #region Per-peer walk
 
 
-func _collect_tasks() -> void:
-	_tasks = []
-	for c in get_children():
-		if c is GameModeTask:
-			_tasks.append(c)
-
-
-func _update_player(peer_id: int, state: PlayerTaskState, delta: float) -> void:
-	var task := _tasks[state.current_index]
+func _update_player(
+	peer_id: int, state: PlayerTaskState, player: PlayerEntity, delta: float
+) -> void:
+	var task := tasks[state.current_index]
 	# Peer is parked at a nested-runner gate — _try_start_nested_runner handles it.
 	if task is TaskRunner:
-		return
-
-	# Player may not be spawned yet during late-join sync — skip is intentional
-	var player := spawn_manager._get_player_by_peer_id(peer_id)
-	if player == null:
-		return
-
-	# Pause progress while crashed/respawning. trick_controller freezes current_trick
-	# during a crash, so without this guard a wheelie/stoppie timer would keep ticking
-	# through the respawn delay.
-	if player.is_crashed:
 		return
 
 	var progress := task.get_progress(state.lesson_state)
@@ -176,45 +132,29 @@ func _advance_player(peer_id: int, state: PlayerTaskState) -> void:
 	state.lesson_state = {}
 	state.prop_event_fired = false
 	state.inside_zone = false
-	if state.current_index >= _tasks.size():
+	if state.current_index >= tasks.size():
 		_complete_player(peer_id, state)
 	else:
 		_start_step_for_peer(peer_id, state)
 
 
-func _complete_player(peer_id: int, state: PlayerTaskState) -> void:
-	state.completed = true
-	state.completion_time_ms = Time.get_ticks_msec() - state.start_time
-	riding_hud.push_event_status(peer_id, "TUT_WAITING_FOR_OTHERS")
-	player_completed.emit(peer_id)
-	if _all_peers_complete():
-		all_completed.emit()
-
-
-func _all_peers_complete() -> bool:
-	for peer_id in _player_states:
-		if !_player_states[peer_id].completed:
-			return false
-	return _player_states.size() > 0
-
-
 func _start_step_for_all() -> void:
-	for peer_id in _player_states:
-		_start_step_for_peer(peer_id, _player_states[peer_id])
+	for peer_id in player_states:
+		_start_step_for_peer(peer_id, player_states[peer_id])
 
 
 func _start_step_for_peer(peer_id: int, state: PlayerTaskState) -> void:
-	var task := _tasks[state.current_index]
+	var task := tasks[state.current_index]
 	# Nested runner — peer just parks here; the runner pushes its own HUD when it starts.
 	if task is TaskRunner:
 		return
 	# Player may not be spawned yet during late-join sync — pass null is intentional
-	var player := spawn_manager._get_player_by_peer_id(peer_id)
+	var player := spawn_manager.get_player_by_peer_id(peer_id)
 	task.on_enter(player, state.lesson_state)
 	riding_hud.push_event_step(
 		peer_id,
 		state.current_index,
-		_tasks.size(),
+		tasks.size(),
 		task.get_objective_text(),
 		task.get_hint_text(),
 		show_step_count
@@ -234,11 +174,11 @@ func _try_start_nested_runner() -> void:
 		return
 	var gate_index := -1
 	var peers_at_gate: Array[int] = []
-	for peer_id in _player_states:
-		var s := _player_states[peer_id]
+	for peer_id in player_states:
+		var s := player_states[peer_id]
 		if s.completed:
 			continue
-		if _tasks[s.current_index] is TaskRunner:
+		if tasks[s.current_index] is TaskRunner:
 			if gate_index == -1:
 				gate_index = s.current_index
 			elif s.current_index != gate_index:
@@ -250,7 +190,7 @@ func _try_start_nested_runner() -> void:
 			return
 	if gate_index == -1 or peers_at_gate.is_empty():
 		return
-	_nested_runner = _tasks[gate_index] as TaskRunner
+	_nested_runner = tasks[gate_index] as TaskRunner
 	_nested_runner_index = gate_index
 	_nested_runner.all_completed.connect(_on_nested_runner_completed)
 	_nested_runner.respawn_requested.connect(_forward_nested_respawn)
@@ -265,8 +205,8 @@ func _on_nested_runner_completed() -> void:
 	_nested_runner_index = -1
 	completed.stop()
 	# Advance every peer parked at this gate past it.
-	for peer_id in _player_states:
-		var s := _player_states[peer_id]
+	for peer_id in player_states:
+		var s := player_states[peer_id]
 		if s.completed:
 			continue
 		if s.current_index == idx:
@@ -291,7 +231,7 @@ func _forward_nested_respawn(peer_id: int) -> void:
 
 func _wire_objective_signals() -> void:
 	var seen := {}
-	for task in _tasks:
+	for task in tasks:
 		var obj := task.trigger
 		if obj == null or seen.has(obj):
 			continue
@@ -319,12 +259,12 @@ func _unwire_objective_signals() -> void:
 func _on_trigger_entered(racer: Node3D, obj: GameModeObject) -> void:
 	var peer_id := int(racer.name)
 	# Body may be a racer not in this runner (spectator, late-joiner, NPC) — skip is intentional
-	if !_player_states.has(peer_id):
+	if !player_states.has(peer_id):
 		return
-	var state := _player_states[peer_id]
+	var state := player_states[peer_id]
 	if state.completed or !state.started:
 		return
-	var task := _tasks[state.current_index]
+	var task := tasks[state.current_index]
 	if task.trigger != obj:
 		return
 	match task.eval_when:
@@ -339,12 +279,12 @@ func _on_trigger_entered(racer: Node3D, obj: GameModeObject) -> void:
 
 func _on_trigger_exited(racer: Node3D, obj: GameModeObject) -> void:
 	var peer_id := int(racer.name)
-	if !_player_states.has(peer_id):
+	if !player_states.has(peer_id):
 		return
-	var state := _player_states[peer_id]
+	var state := player_states[peer_id]
 	if state.completed or !state.started:
 		return
-	var task := _tasks[state.current_index]
+	var task := tasks[state.current_index]
 	if task.trigger != obj:
 		return
 	if task.eval_when == GameModeTask.EvalWhen.WHILE_INSIDE:

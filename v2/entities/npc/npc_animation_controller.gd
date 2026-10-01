@@ -1,5 +1,5 @@
 ## Lite rider animation for NPCRiderEntity — seats the rider with the same IK
-## system as the player's AnimationController (set_targets → _create_ik →
+## system as the player's AnimationController (set_targets → create_ik →
 ## enable_ik), then drives cosmetic lean / wheelie pitch on VisualRoot.
 ## No trick pipeline, no CustomAnimPlayer, no netfox. Runs locally on every
 ## peer — it derives purely from the synced transform + npc_state.
@@ -76,7 +76,7 @@ func initialize() -> void:
 		_right_leg_magnet
 	)
 	_apply_rider_pose_from_definition(def)
-	ik_ctrl._create_ik()
+	ik_ctrl.create_ik()
 	npc.character_skin.enable_ik()
 	_prev_yaw = npc.rotation.y
 

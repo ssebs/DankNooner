@@ -6,83 +6,79 @@ enum CameraMode {TPS = 0, FPS, NONE}
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
 
-@export var default_camera_mode: CameraMode = CameraMode.TPS
 @export var fps_cam: Camera3D
 @export var tps_cam: Camera3D
 
 @export var fps_marker: Marker3D
 @export var tps_marker: Marker3D
 
-@export_group("TPS Orbit")
-@export var pitch_min_deg: float = -45.0
-@export var pitch_max_deg: float = 60.0
-@export var tps_look_height: float = 0.75
+const DEFAULT_CAMERA_MODE: CameraMode = CameraMode.TPS
+const PITCH_MIN_DEG: float = -45.0
+const PITCH_MAX_DEG: float = 60.0
+const TPS_LOOK_HEIGHT: float = 0.75
 ## Street race: max yaw (deg) the resting cam turns toward the next checkpoint.
-@export var checkpoint_yaw_max_deg: float = 15.0
+const CHECKPOINT_YAW_MAX_DEG: float = 15.0
 
-@export_group("FPS Look")
-@export var fps_pitch_min_deg: float = -30.0
-@export var fps_pitch_max_deg: float = 45.0
-@export var fps_yaw_limit_deg: float = 120.0
+const FPS_PITCH_MIN_DEG: float = -30.0
+const FPS_PITCH_MAX_DEG: float = 45.0
+const FPS_YAW_LIMIT_DEG: float = 120.0
 
-@export_group("Camera Reset")
-@export var reset_delay: float = 3.0
-@export var reset_speed: float = 3.0
+const RESET_DELAY: float = 3.0
+const RESET_SPEED: float = 3.0
 
-@export_group("Juice FX")
 ## How fast accumulated screen-shake trauma bleeds off (per second).
-@export var trauma_decay: float = 1.8
+const TRAUMA_DECAY: float = 1.8
 ## Max camera jitter angle (deg) at full trauma.
-@export var shake_max_angle_deg: float = 1.5
+const SHAKE_MAX_ANGLE_DEG: float = 1.5
 ## Controller rumble intensity at full screen shake — vibration tracks the same shake amount
 ## as the camera, so every shake source (accel, cornering, brake danger, wheelie landings) rumbles.
-@export_range(0.0, 1.0) var shake_vibration_scale: float = 1.0
+const SHAKE_VIBRATION_SCALE: float = 1.0
 ## Speed change (units/s²) where accel/decel shake begins.
-@export var accel_shake_threshold: float = 12.0
+const ACCEL_SHAKE_THRESHOLD: float = 12.0
 ## Speed change (units/s²) where accel/decel shake is maxed.
-@export var accel_shake_max: float = 60.0
+const ACCEL_SHAKE_MAX: float = 60.0
 ## Trauma floor held at the most aggressive accel/decel.
-@export var accel_max_trauma: float = 0.6
+const ACCEL_MAX_TRAUMA: float = 0.6
 ## Fraction of the speed-achievable max lean where hard-cornering shake begins (halfway).
-@export_range(0.0, 1.0) var grip_shake_threshold: float = 0.5
+const GRIP_SHAKE_THRESHOLD: float = 0.5
 ## Trauma floor held at full lean for the current speed — tires near their grip limit.
-@export var grip_max_trauma: float = 0.3
+const GRIP_MAX_TRAUMA: float = 0.3
 ## Fraction of brake danger (grip_usage) where the near-washout shake begins.
-@export_range(0.0, 1.0) var brake_shake_threshold: float = 0.6
+const BRAKE_SHAKE_THRESHOLD: float = 0.6
 ## Trauma floor held at full brake danger — front tire on the edge of locking/washing out.
-@export var brake_max_trauma: float = 0.4
+const BRAKE_MAX_TRAUMA: float = 0.4
 ## Max one-shot trauma burst on a wheelie landing (scaled by front-wheel drop speed).
-@export var wheelie_land_trauma: float = 0.35
+const WHEELIE_LAND_TRAUMA: float = 0.35
 ## Front-wheel drop speed (deg/s) below which a wheelie landing adds no shake.
-@export var wheelie_land_drop_min_deg: float = 60.0
+const WHEELIE_LAND_DROP_MIN_DEG: float = 60.0
 ## Front-wheel drop speed (deg/s) at which a wheelie landing adds full shake.
-@export var wheelie_land_drop_max_deg: float = 400.0
+const WHEELIE_LAND_DROP_MAX_DEG: float = 400.0
 ## Max one-shot trauma burst on touching down from a jump (scaled by impact speed).
-@export var jump_land_trauma: float = 0.5
+const JUMP_LAND_TRAUMA: float = 0.5
 ## Downward impact speed (units/s) below which a jump landing adds no shake — small hops.
-@export var jump_land_impact_min: float = 4.0
+const JUMP_LAND_IMPACT_MIN: float = 4.0
 ## Downward impact speed (units/s) at which a jump landing adds full shake.
-@export var jump_land_impact_max: float = 20.0
+const JUMP_LAND_IMPACT_MAX: float = 20.0
 ## One-shot trauma burst on crashing — the hardest hit.
-@export var crash_trauma: float = 1.0
+const CRASH_TRAUMA: float = 1.0
 ## Trauma floor at a full-blown speed wobble (tank-slapper); scales up as the wobble nears highside.
-@export var wobble_max_trauma: float = 0.9
+const WOBBLE_MAX_TRAUMA: float = 0.9
 ## Trauma floor held the whole time the bike is drifting.
-@export var drift_trauma: float = 0.6
+const DRIFT_TRAUMA: float = 0.6
 ## Fraction of the bike's max_speed where the FOV widen + blur begins.
-@export_range(0.0, 1.0) var fov_speed_pct_min: float = 0.2
+const FOV_SPEED_PCT_MIN: float = 0.2
 ## Fraction of the bike's max_speed where the FOV widen + blur is maxed out.
-@export_range(0.0, 1.0) var fov_speed_pct_max: float = 1.0
+const FOV_SPEED_PCT_MAX: float = 1.0
 ## Degrees added to the camera's base FOV at full speed.
-@export var fov_max_add: float = 15.0
+const FOV_MAX_ADD: float = 15.0
 ## Radial blur shader strength at full speed.
-@export var blur_max_strength: float = 1.0
+const BLUR_MAX_STRENGTH: float = 1.0
 ## Degrees of extra FOV punch while boosting, on top of the speed-driven widen.
-@export var boost_fov_add: float = 12.0
+const BOOST_FOV_ADD: float = 12.0
 ## How fast the boost tint / FOV punch ramps in and out (exponential rate).
-@export var boost_blend_speed: float = 6.0
+const BOOST_BLEND_SPEED: float = 6.0
 ## UV radius around screen center kept fully sharp — blur only sits in the outer ring beyond this.
-@export_range(0.0, 1.0) var blur_clear_radius: float = 0.7
+const BLUR_CLEAR_RADIUS: float = 0.7
 
 ## Base values when slider is at 0.5 (middle)
 const MOUSE_SENS_SCALE: float = 0.003
@@ -197,7 +193,7 @@ func _stick_is_trick_input() -> bool:
 	return (
 		_stick_trick_latched
 		or input_controller.nfx_trick_held
-		or not mc._is_on_floor
+		or not mc.is_on_floor
 		or in_wheelie
 	)
 
@@ -213,7 +209,7 @@ func _update_tps_input(delta: float, mouse: Vector2):
 			_orbit_yaw -= input_controller.nfx_cam_x * _joy_cam_sens * delta
 			_orbit_pitch += input_controller.nfx_cam_y * invert_cam * _joy_cam_sens * delta
 
-		_orbit_pitch = clampf(_orbit_pitch, deg_to_rad(pitch_min_deg), deg_to_rad(pitch_max_deg))
+		_orbit_pitch = clampf(_orbit_pitch, deg_to_rad(PITCH_MIN_DEG), deg_to_rad(PITCH_MAX_DEG))
 		_orbit_yaw = wrapf(_orbit_yaw, -PI, PI)
 		_no_input_timer = 0.0
 	else:
@@ -221,8 +217,8 @@ func _update_tps_input(delta: float, mouse: Vector2):
 		# otherwise settle after the idle delay.
 		var wheelie_cam := player_entity.movement_controller.in_balance_point
 		_no_input_timer += delta
-		if wheelie_cam or _no_input_timer >= reset_delay:
-			var t: float = reset_speed * delta
+		if wheelie_cam or _no_input_timer >= RESET_DELAY:
+			var t: float = RESET_SPEED * delta
 			# Ease the bias itself too — it jumps when the next checkpoint changes.
 			_checkpoint_yaw_bias = lerpf(_checkpoint_yaw_bias, _get_checkpoint_yaw_bias(), t)
 			_orbit_yaw = lerpf(_orbit_yaw, _checkpoint_yaw_bias, t)
@@ -231,12 +227,12 @@ func _update_tps_input(delta: float, mouse: Vector2):
 
 func _update_tps_camera(delta: float):
 	# Ease the marker read so the wheelie-cam reframe glides in/out instead of tracking the anim's
-	# linear ramp — matches the orbit-pitch ease in _update_tps_input (same reset_speed).
+	# linear ramp — matches the orbit-pitch ease in _update_tps_input (same RESET_SPEED).
 	var marker_target: Vector3 = tps_marker.position
 	# Center behind the bike while racing — the free-roam lateral offset hides the road ahead.
 	if _is_street_racing():
 		marker_target.x = 0.0
-	_tps_marker_offset = _tps_marker_offset.lerp(marker_target, reset_speed * delta)
+	_tps_marker_offset = _tps_marker_offset.lerp(marker_target, RESET_SPEED * delta)
 	# Marker lives under VisualRoot (yawed 180°), so x/z negate into the player-space orbit frame.
 	var lateral: float = - _tps_marker_offset.x
 	var distance: float = - _tps_marker_offset.z
@@ -246,7 +242,7 @@ func _update_tps_camera(delta: float):
 	var yaw: float = _get_tps_base_yaw() + _orbit_yaw
 	# Aim point shares the marker's lateral offset so the cam looks straight ahead, not angled in
 	var look_target: Vector3 = (
-		focus + Vector3.UP * tps_look_height + Basis(Vector3.UP, yaw) * Vector3(lateral, 0, 0)
+		focus + Vector3.UP * TPS_LOOK_HEIGHT + Basis(Vector3.UP, yaw) * Vector3(lateral, 0, 0)
 	)
 
 	var orbit_rot := Basis(Vector3.UP, yaw) * Basis(Vector3.RIGHT, -_orbit_pitch)
@@ -281,7 +277,7 @@ func _is_street_racing() -> bool:
 		event != null
 		and event.definition.target_gamemode in [GameModeType.Kind.RACE, GameModeType.Kind.STUNT_RACE]
 		and event.definition.enable_traffic
-		and player_entity.hud_manager.riding_hud_state._minimap.has_checkpoint
+		and player_entity.hud_manager.riding_hud_state.minimap.has_checkpoint
 	)
 
 
@@ -290,11 +286,11 @@ func _get_checkpoint_yaw_bias() -> float:
 	if not _is_street_racing():
 		return 0.0
 	var to_ckpt: Vector3 = (
-		player_entity.hud_manager.riding_hud_state._minimap.checkpoint_pos
+		player_entity.hud_manager.riding_hud_state.minimap.checkpoint_pos
 		- player_entity.global_position
 	)
 	var bias: float = wrapf(atan2(-to_ckpt.x, -to_ckpt.z) - _get_tps_base_yaw(), -PI, PI)
-	var limit: float = deg_to_rad(checkpoint_yaw_max_deg)
+	var limit: float = deg_to_rad(CHECKPOINT_YAW_MAX_DEG)
 	return clampf(bias, -limit, limit)
 
 
@@ -315,16 +311,16 @@ func _update_fps_input(delta: float, mouse: Vector2):
 			)
 
 		_fps_yaw_offset = clampf(
-			_fps_yaw_offset, deg_to_rad(-fps_yaw_limit_deg), deg_to_rad(fps_yaw_limit_deg)
+			_fps_yaw_offset, deg_to_rad(-FPS_YAW_LIMIT_DEG), deg_to_rad(FPS_YAW_LIMIT_DEG)
 		)
 		_fps_pitch_offset = clampf(
-			_fps_pitch_offset, deg_to_rad(fps_pitch_min_deg), deg_to_rad(fps_pitch_max_deg)
+			_fps_pitch_offset, deg_to_rad(FPS_PITCH_MIN_DEG), deg_to_rad(FPS_PITCH_MAX_DEG)
 		)
 		_no_input_timer = 0.0
 	else:
 		_no_input_timer += delta
-		if _no_input_timer >= reset_delay:
-			var t: float = reset_speed * delta
+		if _no_input_timer >= RESET_DELAY:
+			var t: float = RESET_SPEED * delta
 			_fps_yaw_offset = lerpf(_fps_yaw_offset, 0.0, t)
 			_fps_pitch_offset = lerpf(_fps_pitch_offset, 0.0, t)
 
@@ -401,9 +397,9 @@ func _update_juice_fx(delta: float):
 	# Scale off speed as a fraction of this skin's max_speed so the effect is bike-relative.
 	var speed_factor: float = clampf(
 		remap(
-			player_entity.movement_controller._speed_pct,
-			fov_speed_pct_min,
-			fov_speed_pct_max,
+			player_entity.movement_controller.speed_pct,
+			FOV_SPEED_PCT_MIN,
+			FOV_SPEED_PCT_MAX,
 			0.0,
 			1.0
 		),
@@ -412,10 +408,10 @@ func _update_juice_fx(delta: float):
 	)
 	# Boost rides on top of the speed effect: extra FOV punch + the blue wash in the shader.
 	var boost_target: float = 1.0 if player_entity.boost_controller.is_boosting else 0.0
-	_boost_blend = lerpf(_boost_blend, boost_target, 1.0 - exp(-boost_blend_speed * delta))
+	_boost_blend = lerpf(_boost_blend, boost_target, 1.0 - exp(-BOOST_BLEND_SPEED * delta))
 
-	cam.fov = base_fov + fov_max_add * speed_factor + boost_fov_add * _boost_blend
-	_blur_mat.set_shader_parameter("strength", speed_factor * blur_max_strength)
+	cam.fov = base_fov + FOV_MAX_ADD * speed_factor + BOOST_FOV_ADD * _boost_blend
+	_blur_mat.set_shader_parameter("strength", speed_factor * BLUR_MAX_STRENGTH)
 	_blur_mat.set_shader_parameter("boost", _boost_blend)
 
 	# Track the front-wheel drop speed (peak-held) so the wheelie-landing burst can scale by it.
@@ -426,14 +422,14 @@ func _update_juice_fx(delta: float):
 
 	# Touching down from a jump bursts trauma by how fast we were falling. Peak-hold the airborne
 	# downward speed, then convert it on the landing edge (velocity.y is zeroed once grounded).
-	var on_floor: bool = player_entity.movement_controller._is_on_floor
+	var on_floor: bool = player_entity.movement_controller.is_on_floor
 	if not on_floor:
 		_fall_speed = maxf(_fall_speed, -player_entity.velocity.y)
 	elif not _prev_on_floor:
 		var land: float = clampf(
-			remap(_fall_speed, jump_land_impact_min, jump_land_impact_max, 0.0, 1.0), 0.0, 1.0
+			remap(_fall_speed, JUMP_LAND_IMPACT_MIN, JUMP_LAND_IMPACT_MAX, 0.0, 1.0), 0.0, 1.0
 		)
-		_trauma = minf(_trauma + jump_land_trauma * land, 1.0)
+		_trauma = minf(_trauma + JUMP_LAND_TRAUMA * land, 1.0)
 		_fall_speed = 0.0
 	_prev_on_floor = on_floor
 
@@ -443,13 +439,13 @@ func _update_juice_fx(delta: float):
 	var accel: float = absf(spd - _prev_speed) / maxf(delta, 0.0001)
 	_prev_speed = spd
 	_accel_smooth = lerpf(_accel_smooth, accel, clampf(delta * ACCEL_SMOOTH_RATE, 0.0, 1.0))
-	if not player_entity.movement_controller.is_reversing and _accel_smooth > accel_shake_threshold:
+	if not player_entity.movement_controller.is_reversing and _accel_smooth > ACCEL_SHAKE_THRESHOLD:
 		_trauma = maxf(
 			_trauma,
 			clampf(
-				remap(_accel_smooth, accel_shake_threshold, accel_shake_max, 0.0, accel_max_trauma),
+				remap(_accel_smooth, ACCEL_SHAKE_THRESHOLD, ACCEL_SHAKE_MAX, 0.0, ACCEL_MAX_TRAUMA),
 				0.0,
-				accel_max_trauma
+				ACCEL_MAX_TRAUMA
 			)
 		)
 
@@ -457,18 +453,18 @@ func _update_juice_fx(delta: float):
 	# hold at this speed, the more the tires strain — the tightest turn radius this speed allows.
 	var mc := player_entity.movement_controller
 	var bd := player_entity.bike_definition
-	var lean_factor: float = bd.lean_curve.sample(mc._speed_pct)
+	var lean_factor: float = bd.lean_curve.sample(mc.speed_pct)
 	var max_lean_for_speed: float = bd.max_lean_angle_rad * lean_factor
 	var grip_strain: float = (
 		absf(mc.roll_angle) / max_lean_for_speed if max_lean_for_speed > 0.001 else 0.0
 	)
-	if grip_strain > grip_shake_threshold:
+	if grip_strain > GRIP_SHAKE_THRESHOLD:
 		_trauma = maxf(
 			_trauma,
 			clampf(
-				remap(grip_strain, grip_shake_threshold, 1.0, 0.0, grip_max_trauma),
+				remap(grip_strain, GRIP_SHAKE_THRESHOLD, 1.0, 0.0, GRIP_MAX_TRAUMA),
 				0.0,
-				grip_max_trauma
+				GRIP_MAX_TRAUMA
 			)
 		)
 
@@ -476,13 +472,13 @@ func _update_juice_fx(delta: float):
 	# locking / washing out — the same near-the-limit feel as hard cornering. grip_usage is the
 	# brake-danger signal the HUD shows (CrashController._update_brake_grab).
 	var brake_danger: float = player_entity.grip_usage
-	if brake_danger > brake_shake_threshold and mc.speed > BRAKE_SHAKE_MIN_SPEED:
+	if brake_danger > BRAKE_SHAKE_THRESHOLD and mc.speed > BRAKE_SHAKE_MIN_SPEED:
 		_trauma = maxf(
 			_trauma,
 			clampf(
-				remap(brake_danger, brake_shake_threshold, 1.0, 0.0, brake_max_trauma),
+				remap(brake_danger, BRAKE_SHAKE_THRESHOLD, 1.0, 0.0, BRAKE_MAX_TRAUMA),
 				0.0,
-				brake_max_trauma
+				BRAKE_MAX_TRAUMA
 			)
 		)
 
@@ -491,30 +487,31 @@ func _update_juice_fx(delta: float):
 	# a steady floor for its whole slide.
 	var crashed: bool = player_entity.is_crashed
 	if crashed and not _prev_crashed:
-		_trauma = minf(_trauma + crash_trauma, 1.0)
+		_trauma = minf(_trauma + CRASH_TRAUMA, 1.0)
 	_prev_crashed = crashed
 
-	if mc.is_wobbling:
+	var wc := player_entity.wobble_controller
+	if wc.is_wobbling:
 		var wobble_severity: float = clampf(
-			absf(mc.wobble_angle) / deg_to_rad(mc.wobble_crash_angle_deg), 0.0, 1.0
+			absf(wc.wobble_angle) / deg_to_rad(WobbleController.WOBBLE_CRASH_ANGLE_DEG), 0.0, 1.0
 		)
-		_trauma = maxf(_trauma, wobble_max_trauma * wobble_severity)
+		_trauma = maxf(_trauma, WOBBLE_MAX_TRAUMA * wobble_severity)
 
 	if mc.is_drifting:
-		_trauma = maxf(_trauma, drift_trauma)
+		_trauma = maxf(_trauma, DRIFT_TRAUMA)
 
 	var shake: float = _trauma * _trauma
 	if shake > 0.0:
-		var amp: float = deg_to_rad(shake_max_angle_deg) * shake
+		var amp: float = deg_to_rad(SHAKE_MAX_ANGLE_DEG) * shake
 		cam.rotate_object_local(Vector3.RIGHT, randf_range(-amp, amp))
 		cam.rotate_object_local(Vector3.UP, randf_range(-amp, amp))
 		cam.rotate_object_local(Vector3.FORWARD, randf_range(-amp, amp) * 0.5)
 
 	# Rumble at the same level the screen shakes — add_vibration stops itself when shake hits 0.
-	var rumble: float = shake * shake_vibration_scale
+	var rumble: float = shake * SHAKE_VIBRATION_SCALE
 	input_controller.add_vibration(rumble, rumble)
 
-	_trauma = maxf(_trauma - trauma_decay * delta, 0.0)
+	_trauma = maxf(_trauma - TRAUMA_DECAY * delta, 0.0)
 
 
 ## Full-screen radial blur overlay, created locally so remote players don't pay for it.
@@ -525,7 +522,7 @@ func _create_blur_overlay():
 	_blur_mat.set_shader_parameter("strength", 0.0)
 	_blur_mat.set_shader_parameter("boost", 0.0)
 	# Set explicitly — relying on the shader's uniform default isn't reliable at runtime.
-	_blur_mat.set_shader_parameter("clear_radius", blur_clear_radius)
+	_blur_mat.set_shader_parameter("clear_radius", BLUR_CLEAR_RADIUS)
 
 	var rect := ColorRect.new()
 	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -541,21 +538,21 @@ func _create_blur_overlay():
 func _on_trick_ended_fx(trick_type: TrickController.Trick):
 	if (
 		trick_type in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]
-		and player_entity.movement_controller._is_on_floor
+		and player_entity.movement_controller.is_on_floor
 	):
 		# Stronger burst the faster the front wheel slammed back down.
 		var landing: float = clampf(
 			remap(
 				_pitch_drop_rate,
-				deg_to_rad(wheelie_land_drop_min_deg),
-				deg_to_rad(wheelie_land_drop_max_deg),
+				deg_to_rad(WHEELIE_LAND_DROP_MIN_DEG),
+				deg_to_rad(WHEELIE_LAND_DROP_MAX_DEG),
 				0.0,
 				1.0
 			),
 			0.0,
 			1.0
 		)
-		_trauma = minf(_trauma + wheelie_land_trauma * landing, 1.0)
+		_trauma = minf(_trauma + WHEELIE_LAND_TRAUMA * landing, 1.0)
 
 
 #endregion

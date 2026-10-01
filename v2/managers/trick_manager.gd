@@ -51,7 +51,7 @@ func _process(_delta: float):
 	for peer_id in _peer_states:
 		# Player despawns (level swap / disconnect) before its row is cleared — skip until
 		# _on_player_disconnected catches up.
-		var player := spawn_manager._get_player_by_peer_id(peer_id)
+		var player := spawn_manager.get_player_by_peer_id(peer_id)
 		if player == null:
 			continue
 		_track_combo(peer_id, player)

@@ -11,10 +11,10 @@ var _next_slot: int = 0
 
 func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
 	var peer_id := int(player.name)
-	var markers := _runner.route.get_grid_markers()
+	var markers := runner.route.get_grid_markers()
 	var idx: int = min(_next_slot, markers.size() - 1)
 	var marker := markers[idx]
-	_runner.spawn_manager.respawn_player_at.rpc(
+	runner.spawn_manager.respawn_player_at.rpc(
 		peer_id, marker.global_position, marker.global_basis
 	)
 	_next_slot += 1

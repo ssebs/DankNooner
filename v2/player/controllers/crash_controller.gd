@@ -4,49 +4,50 @@ class_name CrashController extends Node
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
 @export var movement_controller: MovementController
+@export var wobble_controller: WobbleController
 
-@export var is_sim_difficulty: bool = false
-@export var crash_lean_threshold_deg: float = 80.0
-@export var brake_grab_rate_threshold: float = 20
-@export var brake_lean_sensitivity: float = 0.7
+const IS_SIM_DIFFICULTY: bool = false
+const CRASH_LEAN_THRESHOLD_DEG: float = 80.0
+const BRAKE_GRAB_RATE_THRESHOLD: float = 20
+const BRAKE_LEAN_SENSITIVITY: float = 0.7
 ## How many degrees the lean-crash threshold drops at full unstable_surface_factor.
-@export var unstable_lean_threshold_reduction_deg: float = 25.0
+const UNSTABLE_LEAN_THRESHOLD_REDUCTION_DEG: float = 25.0
 ## Min front-brake input to trigger a lowside while steering on an unstable surface.
-@export var unstable_lowside_brake_threshold: float = 0.5
+const UNSTABLE_LOWSIDE_BRAKE_THRESHOLD: float = 0.5
 ## Min |roll_angle| (deg) required for the unstable front-brake lowside.
-@export var unstable_lowside_steer_threshold_deg: float = 15.0
+const UNSTABLE_LOWSIDE_STEER_THRESHOLD_DEG: float = 15.0
 ## Drift over-rotation crash angle (tail came all the way around).
-@export var drift_spinout_angle_deg: float = 70.0  # matches DRIFT_MAX_SLIP_ANGLE_DEG in movement controller
+const DRIFT_SPINOUT_ANGLE_DEG: float = 70.0  # matches DRIFT_MAX_SLIP_ANGLE_DEG in movement controller
 ## Min |slip| for a highside on grip regain.
-@export var drift_highside_angle_deg: float = 55.0
-## |slip| at/above which a chop highsides instantly; below it (down to drift_highside_angle_deg) a
+const DRIFT_HIGHSIDE_ANGLE_DEG: float = 40.0
+## |slip| at/above which a chop highsides instantly; below it (down to DRIFT_HIGHSIDE_ANGLE_DEG) a
 ## chop throws a recoverable speed wobble first that only highsides if it grows past the limit.
-@export var drift_highside_hard_angle_deg: float = 65.0
+const DRIFT_HIGHSIDE_HARD_ANGLE_DEG: float = 65.0
 ## Angular kick (rad/s) a moderate drift chop injects into the wobble instead of an instant highside.
 ## Big enough to swing wide and last a beat so there's time to countersteer out of it.
-@export var drift_chop_wobble_strength: float = 9.0
+const DRIFT_CHOP_WOBBLE_STRENGTH: float = 9.0
 ## Min speed for a highside to be dangerous.
-@export var drift_highside_min_speed: float = 12.0
+const DRIFT_HIGHSIDE_MIN_SPEED: float = 12.0
 ## Lean (deg) allowed in a stoppie before the loaded front tire washes out (lowside). Reads
 ## roll_angle (already time-eased) not raw steer, so a KBM tap stays under it but a hard hold crosses.
-@export var stoppie_steer_crash_angle_deg: float = 10.0
+const STOPPIE_STEER_CRASH_ANGLE_DEG: float = 10.0
 ## At/below this speed, a stoppie held high enough (see fraction below) can be pivot-steered
 ## without washing out — you're balanced on the front, not carrying speed the tire can wash off.
-@export var stoppie_pivot_max_speed: float = 10.0
+const STOPPIE_PIVOT_MAX_SPEED: float = 10.0
 ## Fraction of max_stoppie_angle_deg the nose must be past to count as "high enough" to pivot.
-@export var stoppie_pivot_min_angle_frac: float = 0.7
-## Throttle release rate (per sec) that highsides at drift_highside_angle_deg (forgiving).
-@export var highside_chop_forgiving: float = 6.0
+const STOPPIE_PIVOT_MIN_ANGLE_FRAC: float = 0.7
+## Throttle release rate (per sec) that highsides at DRIFT_HIGHSIDE_ANGLE_DEG (forgiving).
+const HIGHSIDE_CHOP_FORGIVING: float = 6.0
 ## Throttle release rate that highsides near the spinout angle (twitchy — small lift snaps).
-@export var highside_chop_twitchy: float = 1.5
+const HIGHSIDE_CHOP_TWITCHY: float = 1.5
 ## Upward+lateral launch speed applied to a highside crash.
-@export var highside_launch_force: float = 14.0
+const HIGHSIDE_LAUNCH_FORCE: float = 14.0
 ## At/above this impact speed a player-to-player hit hard-crashes; below it both riders wobble.
-@export var wobble_ram_max_speed: float = 15.0
+const WOBBLE_RAM_MAX_SPEED: float = 15.0
 ## Angular kick (rad/s) applied to both riders on a low-speed player-to-player tap, or a glancing wall hit.
-@export var wobble_ram_strength: float = 6.0
+const WOBBLE_RAM_STRENGTH: float = 6.0
 ## Fraction of speed lost on a glancing (non-crash) layer-2 wall hit.
-@export var wall_glance_speed_loss: float = 0.25
+const WALL_GLANCE_SPEED_LOSS: float = 0.25
 
 var _prev_front_brake: float = 0.0
 var _prev_throttle: float = 0.0
@@ -75,8 +76,8 @@ func on_movement_rollback_tick(delta: float):
 	# state on landing, so we use last tick's value to detect "landed mid-trick". Only a real jump
 	# counts: a wheelie/ground trick over a brief hop (bump, wheelie bounce) lands safely.
 	var airborne := (
-		not movement_controller._is_on_floor
-		and movement_controller._air_time >= TrickController.AIR_TRICK_MIN_AIRTIME
+		not movement_controller.is_on_floor
+		and movement_controller.air_time >= TrickController.AIR_TRICK_MIN_AIRTIME
 	)
 	_prev_air_trick = (
 		player_entity.trick_controller.current_trick if airborne else TrickController.Trick.NONE
@@ -87,9 +88,9 @@ func on_movement_rollback_tick(delta: float):
 ## Checks _prev_air_trick (last tick's), not current_trick: trick_controller runs before us and has
 ## already transitioned to the ground state on the landing tick.
 func _detect_air_trick_landing():
-	if not movement_controller._is_on_floor:
+	if not movement_controller.is_on_floor:
 		return
-	var just_landed = not movement_controller._was_on_floor
+	var just_landed = not movement_controller.was_on_floor
 	if just_landed and TrickController.is_air_trick(_prev_air_trick):
 		DebugUtils.DebugMsg("landed mid air-trick crash (%s)" % TrickController.trick_to_str(_prev_air_trick))
 		trigger_crash()
@@ -104,12 +105,12 @@ func _update_brake_grab(delta: float):
 
 	if front_brake < 0.2:
 		_brake_was_grabbed = false
-	elif front_brake > 0.9 and brake_delta > brake_grab_rate_threshold:
+	elif front_brake > 0.9 and brake_delta > BRAKE_GRAB_RATE_THRESHOLD:
 		_brake_was_grabbed = true
 
 	# Compute brake danger (grip_usage) for HUD display
-	var lean_ratio = abs(movement_controller.roll_angle) / deg_to_rad(crash_lean_threshold_deg)
-	var max_safe_brake = 1.0 - (lean_ratio * brake_lean_sensitivity)
+	var lean_ratio = abs(movement_controller.roll_angle) / deg_to_rad(CRASH_LEAN_THRESHOLD_DEG)
+	var max_safe_brake = 1.0 - (lean_ratio * BRAKE_LEAN_SENSITIVITY)
 	if front_brake > 0.1:
 		player_entity.grip_usage = clamp(front_brake / max(max_safe_brake, 0.01), 0.0, 1.0)
 	else:
@@ -128,7 +129,7 @@ func _detect_crash():
 			return
 
 	# If in air, don't crash by angle
-	if movement_controller._is_on_floor:
+	if movement_controller.is_on_floor:
 		# Wheelie crash
 		if movement_controller.pitch_angle > deg_to_rad(bd.max_wheelie_angle_deg):
 			DebugUtils.DebugMsg("wheelie crash")
@@ -145,16 +146,16 @@ func _detect_crash():
 		# Reduced steering is allowed (MovementController.STOPPIE_STEER_SCALE); past this it lets go.
 		# Exception: at low speed a high-enough stoppie is a balanced pivot — steer freely, no washout.
 		var stoppie_pivot := (
-			movement_controller.speed <= stoppie_pivot_max_speed
+			movement_controller.speed <= STOPPIE_PIVOT_MAX_SPEED
 			and (
 				absf(movement_controller.pitch_angle)
-				>= deg_to_rad(bd.max_stoppie_angle_deg * stoppie_pivot_min_angle_frac)
+				>= deg_to_rad(bd.max_stoppie_angle_deg * STOPPIE_PIVOT_MIN_ANGLE_FRAC)
 			)
 		)
 		if (
 			movement_controller.is_stoppie
 			and not stoppie_pivot
-			and absf(movement_controller.roll_angle) > deg_to_rad(stoppie_steer_crash_angle_deg)
+			and absf(movement_controller.roll_angle) > deg_to_rad(STOPPIE_STEER_CRASH_ANGLE_DEG)
 		):
 			DebugUtils.DebugMsg("stoppie steer washout crash")
 			trigger_crash()
@@ -168,22 +169,22 @@ func _detect_crash():
 
 		# Speed wobble peaked past the limit — the tank-slapper throws them over the high side.
 		if (
-			movement_controller.is_wobbling
+			wobble_controller.is_wobbling
 			and (
-				absf(movement_controller.wobble_angle)
-				> deg_to_rad(movement_controller.wobble_crash_angle_deg)
+				absf(wobble_controller.wobble_angle)
+				> deg_to_rad(WobbleController.WOBBLE_CRASH_ANGLE_DEG)
 			)
 		):
 			DebugUtils.DebugMsg(
-				"speed wobble HIGHSIDE (angle=%.1f°)" % rad_to_deg(movement_controller.wobble_angle)
+				"speed wobble HIGHSIDE (angle=%.1f°)" % rad_to_deg(wobble_controller.wobble_angle)
 			)
-			trigger_crash(_highside_launch(signf(movement_controller.wobble_angle)))
+			trigger_crash(_highside_launch(signf(wobble_controller.wobble_angle)))
 			return
 
 		# Lean crash — threshold tightens on unstable surfaces (gravel/sand)
 		var unstable_factor = movement_controller.get_unstable_factor()
 		var effective_lean_threshold = (
-			crash_lean_threshold_deg - unstable_lean_threshold_reduction_deg * unstable_factor
+			CRASH_LEAN_THRESHOLD_DEG - UNSTABLE_LEAN_THRESHOLD_REDUCTION_DEG * unstable_factor
 		)
 		if abs(movement_controller.roll_angle) >= deg_to_rad(effective_lean_threshold):
 			DebugUtils.DebugMsg("lean crash")
@@ -196,10 +197,10 @@ func _detect_crash():
 		if (
 			unstable_factor > 0
 			and not movement_controller.is_reversing
-			and input_controller.nfx_front_brake > unstable_lowside_brake_threshold
+			and input_controller.nfx_front_brake > UNSTABLE_LOWSIDE_BRAKE_THRESHOLD
 			and (
 				abs(movement_controller.roll_angle)
-				> deg_to_rad(unstable_lowside_steer_threshold_deg)
+				> deg_to_rad(UNSTABLE_LOWSIDE_STEER_THRESHOLD_DEG)
 			)
 		):
 			DebugUtils.DebugMsg("unstable lowside crash")
@@ -209,7 +210,7 @@ func _detect_crash():
 		# Brake grab while turning (sim difficulty + gamepad only)
 		if (
 			_brake_was_grabbed
-			# and is_sim_difficulty
+			# and IS_SIM_DIFFICULTY
 			and input_controller.is_gamepad
 			and abs(movement_controller.roll_angle) > deg_to_rad(15)
 		):
@@ -232,16 +233,18 @@ func _detect_crash():
 		for i in player_entity.get_slide_collision_count():
 			var collision = player_entity.get_slide_collision(i)
 			var collider = collision.get_collider()
-			if collider is CollisionObject3D and collider.collision_layer & 2:
+			# CSG walls report the CSG node itself as the collider, not a CollisionObject3D.
+			var is_body := collider is CollisionObject3D or collider is CSGShape3D
+			if is_body and collider.collision_layer & 2:
 				var angle = rad_to_deg(
 					collision.get_normal().angle_to(-player_entity.velocity.normalized())
 				)
 				if angle < _crash_angle:
 					# Low-speed player-to-player tap: both riders wobble instead of crashing.
 					# NPCs and static obstacles fall through to the hard crash.
-					if collider is PlayerEntity and movement_controller.speed < wobble_ram_max_speed:
+					if collider is PlayerEntity and movement_controller.speed < WOBBLE_RAM_MAX_SPEED:
 						DebugUtils.DebugMsg("player ram wobble (angle=%.1f)" % angle)
-						movement_controller.wobble_vel += wobble_ram_strength  # self — deterministic on all peers
+						wobble_controller.wobble_vel += WOBBLE_RAM_STRENGTH  # self — deterministic on all peers
 						_wobble_rammed_racer(collider)  # server broadcasts the victim's wobble
 						return
 					DebugUtils.DebugMsg("obstacle crash (angle=%.1f)" % angle)
@@ -250,7 +253,7 @@ func _detect_crash():
 					return
 				# Glancing hit: reflect heading off the wall, wobble away + speed penalty.
 				# Once per wobble so contact can't stack it.
-				if not movement_controller.is_wobbling:
+				if not wobble_controller.is_wobbling:
 					var fwd := -player_entity.global_transform.basis.z
 					var fwd_flat := Vector3(fwd.x, 0.0, fwd.z).normalized()
 					var n: Vector3 = collision.get_normal()
@@ -259,8 +262,8 @@ func _detect_crash():
 					var reflected := fwd_flat - 2.0 * minf(fwd_flat.dot(n_flat), 0.0) * n_flat
 					player_entity.rotate_y(fwd_flat.signed_angle_to(reflected, Vector3.UP))
 					var away := signf(fwd.signed_angle_to(n, Vector3.UP))
-					movement_controller.wobble_vel += away * wobble_ram_strength
-					movement_controller.speed *= 1.0 - wall_glance_speed_loss
+					wobble_controller.wobble_vel += away * WOBBLE_RAM_STRENGTH
+					movement_controller.speed *= 1.0 - WALL_GLANCE_SPEED_LOSS
 					DebugUtils.DebugMsg("wall glance wobble (angle=%.1f)" % angle)
 					return
 
@@ -285,7 +288,7 @@ func _wobble_rammed_racer(collider: Object) -> void:
 	if !multiplayer.is_server():
 		return
 	var victim := collider as PlayerEntity
-	player_entity.gamemode_manager.spawn_manager.wobble_player.rpc(int(victim.name), wobble_ram_strength)
+	player_entity.gamemode_manager.spawn_manager.wobble_player.rpc(int(victim.name), WOBBLE_RAM_STRENGTH)
 
 
 ## Drift crashes: spin-out (tail past the limit) or highside (tire hooks up on a
@@ -301,28 +304,28 @@ func _detect_drift_crash(delta: float):
 	var slip = absf(movement_controller.slip_angle)
 
 	# Spin-out — tail came all the way around.
-	if slip > deg_to_rad(drift_spinout_angle_deg):
+	if slip > deg_to_rad(DRIFT_SPINOUT_ANGLE_DEG):
 		DebugUtils.DebugMsg("drift spinout crash (slip=%.1f°)" % rad_to_deg(slip))
 		trigger_crash()
 		return
 
 	# Highside — fast throttle chop while deep + fast. Chop tolerance shrinks as slip grows.
 	if (
-		slip > deg_to_rad(drift_highside_angle_deg)
-		and movement_controller.speed > drift_highside_min_speed
+		slip > deg_to_rad(DRIFT_HIGHSIDE_ANGLE_DEG)
+		and movement_controller.speed > DRIFT_HIGHSIDE_MIN_SPEED
 	):
 		var slip_ratio = clampf(
 			(
-				(slip - deg_to_rad(drift_highside_angle_deg))
-				/ deg_to_rad(drift_spinout_angle_deg - drift_highside_angle_deg)
+				(slip - deg_to_rad(DRIFT_HIGHSIDE_ANGLE_DEG))
+				/ deg_to_rad(DRIFT_SPINOUT_ANGLE_DEG - DRIFT_HIGHSIDE_ANGLE_DEG)
 			),
 			0.0,
 			1.0
 		)
-		var chop_threshold = lerpf(highside_chop_forgiving, highside_chop_twitchy, slip_ratio)
+		var chop_threshold = lerpf(HIGHSIDE_CHOP_FORGIVING, HIGHSIDE_CHOP_TWITCHY, slip_ratio)
 		if release_rate > chop_threshold:
 			var slip_sign = signf(movement_controller.slip_angle)
-			if slip > deg_to_rad(drift_highside_hard_angle_deg):
+			if slip > deg_to_rad(DRIFT_HIGHSIDE_HARD_ANGLE_DEG):
 				# Crazy angle — straight over the high side.
 				DebugUtils.DebugMsg(
 					"drift HIGHSIDE crash (slip=%.1f° rate=%.1f)" % [rad_to_deg(slip), release_rate]
@@ -330,7 +333,7 @@ func _detect_drift_crash(delta: float):
 				trigger_crash(_highside_launch(slip_sign))
 			else:
 				# Recoverable angle — throw a wobble first; it highsides only if it grows past the limit.
-				movement_controller.wobble_vel += slip_sign * drift_chop_wobble_strength
+				wobble_controller.wobble_vel += slip_sign * DRIFT_CHOP_WOBBLE_STRENGTH
 				DebugUtils.DebugMsg(
 					"drift chop -> wobble (slip=%.1f° rate=%.1f)" % [rad_to_deg(slip), release_rate]
 				)
@@ -339,14 +342,14 @@ func _detect_drift_crash(delta: float):
 ## Highside launch: up + lateral toward the outside of the slide/swing (opposite the tail-out).
 func _highside_launch(dir_sign: float) -> Vector3:
 	var right := player_entity.global_transform.basis.x
-	return (Vector3.UP + right * dir_sign).normalized() * highside_launch_force
+	return (Vector3.UP + right * dir_sign).normalized() * HIGHSIDE_LAUNCH_FORCE
 
 
 func trigger_crash(launch_impulse: Vector3 = Vector3.ZERO):
 	# Sim state only — visuals ride the is_crashed edge in _process (firing them in rollback left them stuck).
 	player_entity.is_crashed = true
 	player_entity.velocity = launch_impulse
-	player_entity._crash_launch_impulse = launch_impulse
+	player_entity.crash_launch_impulse = launch_impulse
 
 
 ## Called from player_entity.gd's do_respawn
@@ -365,4 +368,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_controller must not be empty")
 	if movement_controller == null:
 		issues.append("movement_controller must not be empty")
+	if wobble_controller == null:
+		issues.append("wobble_controller must not be empty")
 	return issues

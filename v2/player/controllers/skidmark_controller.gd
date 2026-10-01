@@ -12,19 +12,19 @@ class_name SkidmarkController extends Node
 @export var movement_controller: MovementController
 
 ## Half the ribbon width, in meters.
-@export var ribbon_half_width: float = 0.09
+const RIBBON_HALF_WIDTH: float = 0.09
 ## Lift above the ground along the surface normal to avoid z-fighting.
-@export var ground_offset: float = 0.02
+const GROUND_OFFSET: float = 0.02
 ## Minimum rear-wheel travel before a new strip segment is appended.
-@export var min_segment_dist: float = 0.15
+const MIN_SEGMENT_DIST: float = 0.15
 ## Seconds a finished ribbon takes to fade out after the drift ends.
-@export var fade_time: float = 4.0
+const FADE_TIME: float = 4.0
 ## World length (meters) over which skidmarktex tiles once along the ribbon.
-@export var tex_tile_length: float = 1.0
+const TEX_TILE_LENGTH: float = 1.0
 ## Max ribbons kept per player before the oldest is recycled (bounds memory).
-@export var max_ribbons: int = 12
+const MAX_RIBBONS: int = 12
 ## Max strip points in one ribbon before it is finalized and a new one starts.
-@export var max_points: int = 256
+const MAX_POINTS: int = 256
 
 const SKID_TEXTURE: Texture2D = preload("res://resources/textures/skidmarktex.png")
 # Preloaded so it compiles at load — building it from a string on the first drift hitched ~20ms
@@ -102,7 +102,7 @@ func _extend_active() -> void:
 		return
 
 	var normal := rc.get_collision_normal()
-	var center := rc.get_collision_point() + normal * ground_offset
+	var center := rc.get_collision_point() + normal * GROUND_OFFSET
 
 	if _active == null:
 		_active = _new_ribbon()
@@ -111,10 +111,10 @@ func _extend_active() -> void:
 
 	var travel := center - _active.last_center
 	var seg_len := travel.length()
-	if seg_len < min_segment_dist:
+	if seg_len < MIN_SEGMENT_DIST:
 		return
 	travel /= seg_len
-	var side := travel.cross(normal).normalized() * ribbon_half_width
+	var side := travel.cross(normal).normalized() * RIBBON_HALF_WIDTH
 
 	# Seed the strip's first point pair at the previous center so the very first
 	# segment is a full quad, not a degenerate triangle.
@@ -126,12 +126,12 @@ func _extend_active() -> void:
 	_active.length_accum += seg_len
 	_active.left.append(center - side)
 	_active.right.append(center + side)
-	_active.vs.append(_active.length_accum / tex_tile_length)
+	_active.vs.append(_active.length_accum / TEX_TILE_LENGTH)
 	_active.last_center = center
 
 	_rebuild(_active)
 
-	if _active.left.size() >= max_points:
+	if _active.left.size() >= MAX_POINTS:
 		_finalize_active()
 
 
@@ -173,7 +173,7 @@ func _new_ribbon() -> Skidmark:
 
 ## Recycle the oldest ribbons once this player exceeds its budget.
 func _enforce_cap() -> void:
-	while _ribbons.size() > max_ribbons:
+	while _ribbons.size() > MAX_RIBBONS:
 		var old: Skidmark = _ribbons.pop_front()
 		if old == _active:
 			_active = null
@@ -192,7 +192,7 @@ func _advance_fades(delta: float) -> void:
 		if not rib.fading:
 			continue
 		rib.fade_elapsed += delta
-		var f := 1.0 - rib.fade_elapsed / fade_time
+		var f := 1.0 - rib.fade_elapsed / FADE_TIME
 		if f <= 0.0:
 			rib.node.queue_free()
 			_ribbons.remove_at(i)

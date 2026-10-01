@@ -9,7 +9,7 @@
 ## inside other runners (e.g. SequentialTaskRunner [intro tasks ... ConcurrentTaskRunner ... outro tasks]).
 ##
 ## Per-peer scratchpad: `state: Dictionary`
-##   - One dict per peer, owned by the runner (`_player_states[peer_id].lesson_state`).
+##   - One dict per peer, owned by the runner (`player_states[peer_id].lesson_state`).
 ##   - Passed into every leaf hook. Tasks read/write whatever keys they need
 ##     (e.g. StoppieDurationTask uses `state["t"]` to accumulate elapsed hold time).
 ##   - Cleared on advance (next task starts with empty {}) and on crash.
@@ -37,7 +37,7 @@ enum EvalWhen { ALWAYS, ON_ENTER, WHILE_INSIDE }
 ## Set by the parent runner when the task becomes active.
 ## Tasks reach shared deps (spawn_manager, riding_hud, audio_manager) via this ref
 ## instead of downcasting to a specific gamemode or runner subclass.
-var _runner: TaskRunner
+var runner: TaskRunner
 
 #region Leaf-task hooks (override in leaf subclasses)
 

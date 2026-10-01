@@ -130,7 +130,7 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   - Directly set current_camera on client
   - Street race: while the minimap has a next checkpoint, the TPS cam drops the marker's lateral
     offset (centered behind the bike) and its resting orbit yaw eases toward that checkpoint,
-    clamped by `checkpoint_yaw_max_deg`. Player cam input still overrides it until `reset_delay`
+    clamped by `CHECKPOINT_YAW_MAX_DEG`. Player cam input still overrides it until `RESET_DELAY`
 - **AnimationController** (`animation_controller.gd`) — see [AnimationController.md](./AnimationController.md)
   - Local to client, runs in `_process()` (not rollback)
   - RiderState machine: RIDING ↔ IDLE, RAGDOLL (TRICK stubbed — see [AnimationController.md](./AnimationController.md))
@@ -165,7 +165,8 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     `BOOST_SPEED_MULT`
   - Landing forgiveness: after a flip attempt (`air_pitch_total` past a half turn), touching down
     within `LANDING_SNAP_ANGLE_DEG` of upright snaps pitch to neutral; worse lands keep their pitch
-    and crash via CrashController's wheelie/stoppie limits
+    and crash via CrashController's wheelie/stoppie limits. No stoppies under power (throttle > 0.5):
+    a nose-first touchdown on the gas flattens, and `_stoppie_calc()` won't lift while on the gas
   - `_handle_player_collision()` — spawn protection to avoid spawning inside other players
   - Calls `player_entity.move_and_slide()` with `NetworkTime.physics_factor`
   - **Unstable surfaces** (collision layer 5 — gravel/sand/etc):
@@ -173,6 +174,16 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     - `get_unstable_factor()` returns `bike_definition.unstable_surface_factor` (0..1) when touching layer 5, else 0 — set to `0.0` on dirtbike `.tres` to fully ignore
     - Effects scaled by factor: proportional drag (`UNSTABLE_DRAG_RATE`, caps top speed without stalling launches), reduced wheelie target (`UNSTABLE_WHEELIE_SUPPRESSION`, harder to hold a wheelie / reach balance point), reduced turn rate (`UNSTABLE_STEER_SUPPRESSION`)
     - CrashController also reads `get_unstable_factor()` (see below)
+- **WobbleController** (`wobble_controller.gd`) — the speed wobble (tank-slapper)
+  - Not ticked by `PlayerEntity`: MovementController calls `tick()` mid-tick, between
+    `_drift_calc()` and `_steer_calc()`, because it carves heading via `rotate_y()` (ORDER MATTERS)
+  - Damped oscillator on heading (`wobble_angle` / `wobble_vel`, synced); countersteer and
+    off-gas + steer damp it, steering into the swing feeds it
+  - Triggers: 1a brake-slide release (`update_brake_slide()`), 1b high-speed brake entry (inline in
+    `_drift_calc()`), 2 bad landing (`kick_bad_landing()`), 5 wheelie set-down
+    (`kick_from_misalign()`), 6 stick trick off the balance point (`trick_feed()`). External kicks
+    (rams, wall glances, drift chops, `rb_do_wobble`) add to `wobble_vel` directly
+  - CrashController highsides past `WOBBLE_CRASH_ANGLE_DEG`
 - **GearingController** (`gearing_controller.gd`)
   - `on_movement_rollback_tick()`:
     - Apply `input_controller.nfx_target_gear` (absolute requested gear, synced as netfox
@@ -208,8 +219,8 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     but deliberately leaves `boost_amount` alone
 - **CrashController** (`crash_controller.gd`)
   - Runs in rollback tick after the other controllers
-  - Detects crashes from over-rotation (wheelie/stoppie past trick limits, side lean), stoppie steer washout, steep-slope stalls, speed-wobble and drift highsides / spinouts, brake grabs while turning, killbox/obstacle collisions (a glancing layer-2 hit reflects the heading off the wall, wobbles the rider away, and costs `wall_glance_speed_loss` instead), upside-down landings, and landing while still mid air-trick (`TrickController.is_air_trick` — stick tricks only, not flips)
-  - **Unstable surfaces**: lean-crash threshold tightens (scaled by `movement_controller.get_unstable_factor()` via `unstable_lean_threshold_reduction_deg`); front brake while steering on unstable triggers a lowside (`unstable_lowside_brake_threshold`, `unstable_lowside_steer_threshold_deg`)
+  - Detects crashes from over-rotation (wheelie/stoppie past trick limits, side lean), stoppie steer washout, steep-slope stalls, speed-wobble and drift highsides / spinouts, brake grabs while turning, killbox/obstacle collisions (a glancing layer-2 hit reflects the heading off the wall, wobbles the rider away, and costs `WALL_GLANCE_SPEED_LOSS` instead), upside-down landings, and landing while still mid air-trick (`TrickController.is_air_trick` — stick tricks only, not flips)
+  - **Unstable surfaces**: lean-crash threshold tightens (scaled by `movement_controller.get_unstable_factor()` via `UNSTABLE_LEAN_THRESHOLD_REDUCTION_DEG`); front brake while steering on unstable triggers a lowside (`UNSTABLE_LOWSIDE_BRAKE_THRESHOLD`, `UNSTABLE_LOWSIDE_STEER_THRESHOLD_DEG`)
   - `trigger_crash()` — sim state only: sets `is_crashed` and velocity (zero, or the highside launch).
     Ragdoll, camera and SFX ride the `is_crashed` edge in `PlayerEntity._process()`, which emits
     `crashed(peer_id)`; the gamemode schedules the respawn

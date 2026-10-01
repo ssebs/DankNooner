@@ -23,7 +23,7 @@ var can_move_butt: bool = true
 
 ## bone name -> index. The per-tick pose writes below used to call Skeleton3D.find_bone —
 ## a string search across every bone — 7 times per rig per tick, which at 128 NPC riders
-## is ~900 string searches a tick for indices that never move. Cleared in _create_ik(),
+## is ~900 string searches a tick for indices that never move. Cleared in create_ik(),
 ## the only place a different skeleton can come in.
 var _bone_idx_cache: Dictionary[String, int] = {}
 
@@ -151,7 +151,7 @@ func _rotate_bone_to_marker(bone_name: String, marker: Marker3D):
 	skel_3d.set_bone_pose(bone_idx, pose)
 
 
-func _create_ik() -> void:
+func create_ik() -> void:
 	var skel_3d = char_skin.skel_3d
 	var mesh_skin = char_skin.mesh_skin
 	if skel_3d == null:

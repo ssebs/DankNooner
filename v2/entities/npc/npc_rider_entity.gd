@@ -440,7 +440,7 @@ func _init_mesh() -> void:
 	if vehicle_type == VehicleType.CAR:
 		car_skin.visible = true
 		car_skin.skin_definition = car_definition
-		car_skin._apply_definition()
+		car_skin.apply_definition()
 		if editing:
 			bike_skin.visible = false
 			character_skin.visible = false
@@ -449,7 +449,7 @@ func _init_mesh() -> void:
 	bike_skin.visible = true
 	character_skin.visible = true
 	bike_skin.skin_definition = bike_definition
-	bike_skin._apply_definition()
+	bike_skin.apply_definition()
 	character_skin.skin_definition = character_definition
 	character_skin.apply_definition()
 	if editing:

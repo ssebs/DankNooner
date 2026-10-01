@@ -7,12 +7,12 @@ signal rpm_updated(rpm_ratio: float)
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
 
-@export var clutch_engage_speed: float = 6.0
-@export var clutch_release_speed: float = 2.5
-@export var clutch_tap_amount: float = 0.35
-@export var rpm_free_rev_speed: float = 12.0
+const CLUTCH_ENGAGE_SPEED: float = 6.0
+const CLUTCH_RELEASE_SPEED: float = 2.5
+const CLUTCH_TAP_AMOUNT: float = 0.35
+const RPM_FREE_REV_SPEED: float = 12.0
 ## RPM ratio the limiter drops to on a redline cut. Lower = longer, more audible bounce.
-@export var rev_limit_cut_ratio: float = 0.85
+const REV_LIMIT_CUT_RATIO: float = 0.85
 
 var current_gear: int = 1
 var current_rpm: float = 1000.0
@@ -49,10 +49,10 @@ func on_movement_rollback_tick(delta: float):
 func _update_clutch_hold_time(delta: float):
 	if input_controller.nfx_clutch_held:
 		_clutch_hold_time += delta
-		clutch_value = move_toward(clutch_value, 1.0, clutch_engage_speed * delta)
+		clutch_value = move_toward(clutch_value, 1.0, CLUTCH_ENGAGE_SPEED * delta)
 	else:
 		_clutch_hold_time = 0.0
-		clutch_value = move_toward(clutch_value, 0.0, clutch_release_speed * delta)
+		clutch_value = move_toward(clutch_value, 0.0, CLUTCH_RELEASE_SPEED * delta)
 
 	# DebugUtils.DebugMsg("clutch_value: %.1f" % clutch_value)
 
@@ -73,7 +73,7 @@ func _blend_rpm(delta: float):
 	# Free-rev RPM from throttle (clutch pulled)
 	var free_rpm = lerpf(bd.idle_rpm, bd.max_rpm, input_controller.nfx_throttle)
 	# Climb rate follows the power curve (quick through the band, lazy off idle); spin-down uses base rate
-	var rev_speed = rpm_free_rev_speed
+	var rev_speed = RPM_FREE_REV_SPEED
 	if free_rpm > current_rpm:
 		rev_speed *= bd.power_curve.sample(get_rpm_ratio())
 	var smooth_free = lerpf(current_rpm, free_rpm, rev_speed * delta)
@@ -89,7 +89,7 @@ func _blend_rpm(delta: float):
 	# Rev limiter — fuel cut at redline, instant drop to simulate ignition cut
 	if not is_rev_limited and get_rpm_ratio() >= 0.98:
 		is_rev_limited = true
-		current_rpm = rpm_from_ratio(rev_limit_cut_ratio)
+		current_rpm = rpm_from_ratio(REV_LIMIT_CUT_RATIO)
 	elif is_rev_limited and get_rpm_ratio() < 0.96:
 		is_rev_limited = false
 

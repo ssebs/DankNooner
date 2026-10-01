@@ -37,7 +37,7 @@ func Enter(state_context: StateContext):
 	_minigame = pumps[peer_ids.find(multiplayer.get_unique_id())]
 	_minigame.finished.connect(_on_minigame_finished, CONNECT_ONE_SHOT)
 	_minigame.begin(
-		spawn_manager._get_player_by_peer_id(multiplayer.get_unique_id()),
+		spawn_manager.get_player_by_peer_id(multiplayer.get_unique_id()),
 		input_state_manager,
 		gamemode_manager.audio_manager,
 		hud_manager
@@ -50,7 +50,7 @@ func Enter(state_context: StateContext):
 			spawn_manager.respawn_player_in_place.rpc(
 				peer_ids[i], spot.global_position, spot.global_basis
 			)
-			CountdownTask.freeze(spawn_manager._get_player_by_peer_id(peer_ids[i]))
+			CountdownTask.freeze(spawn_manager.get_player_by_peer_id(peer_ids[i]))
 
 
 func Exit(_state_context: StateContext):
@@ -68,7 +68,7 @@ func Exit(_state_context: StateContext):
 		# The race's own grid + countdown re-freeze riders as needed.
 		for peer_id in gamemode_manager.lobby_manager.lobby_players:
 			# Player may not be spawned yet (late-join) — skip is intentional.
-			var player := spawn_manager._get_player_by_peer_id(peer_id)
+			var player := spawn_manager.get_player_by_peer_id(peer_id)
 			if player != null:
 				CountdownTask.unfreeze(player)
 	_set_station_objects_active(_event.get_circle().gas_station, false)

@@ -161,7 +161,7 @@ var _wheelie_exit_hold: float = 0.0 # synced — seconds pitch has been under WH
 ## Full air rotations already paid out this airtime — synced so a resim doesn't double-award.
 var _air_flips_awarded: int = 0
 ## Synced — last tick was a real jump (past AIR_TRICK_MIN_AIRTIME). MovementController zeroes
-## _air_time on the landing tick, so the landing check needs last tick's value.
+## air_time on the landing tick, so the landing check needs last tick's value.
 var _was_airborne: bool = false
 ## Gesture state (all synced: read/written in the rollback tick and gates tricks, so combo_time,
 ## which is synced, stays consistent on resim). Direction the stick is pushed (NO_DIR = neutral)
@@ -200,7 +200,7 @@ func on_movement_rollback_tick(delta: float):
 			trick_started.emit(current_trick)
 			combo_score += ONE_TIME_TRICK_SCORE.get(current_trick, 0.0)
 			# Landing an air trick banks a chunk (void-on-crash means you must land it clean).
-			if not movement_controller._is_on_floor and is_air_trick(current_trick):
+			if not movement_controller.is_on_floor and is_air_trick(current_trick):
 				_award_trick_boost(BOOST_PER_AIR_TRICK)
 		_last_trick = current_trick
 
@@ -262,7 +262,7 @@ func _held_trick() -> Trick:
 
 
 func _bound_trick(gesture: Gesture, dir: int) -> Trick:
-	var state := _trick_state()
+	var state := trick_state()
 	if state == TrickState.NONE:
 		return Trick.NONE
 	var trick: Trick = BINDINGS[state][gesture][dir]
@@ -272,16 +272,16 @@ func _bound_trick(gesture: Gesture, dir: int) -> Trick:
 
 
 ## Which BINDINGS table applies right now, or NONE when stick tricks are gated off.
-func _trick_state() -> TrickState:
-	if not movement_controller._is_on_floor:
+func trick_state() -> TrickState:
+	if not movement_controller.is_on_floor:
 		# A brief hop (curb, bump) isn't a real jump — a ground trick held over a bump would
 		# otherwise flick to an air trick and crash on touchdown (landed-mid-air-trick).
-		if movement_controller._air_time < AIR_TRICK_MIN_AIRTIME:
+		if movement_controller.air_time < AIR_TRICK_MIN_AIRTIME:
 			return TrickState.NONE
 		return TrickState.AIR
 	if movement_controller.pitch_angle > deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG):
 		# Any wheelie — outside the balance point the trick still pops but throws a wobble
-		# (MovementController._wobble_trick_feed).
+		# (WobbleController.trick_feed).
 		return TrickState.WHEELIE
 	# On the ground the trick button must be held, so the stick still drives the camera otherwise.
 	return TrickState.GROUND if input_controller.nfx_trick_held else TrickState.NONE
@@ -301,7 +301,7 @@ func _stick_dir() -> int:
 ## Bank a chunk per full air rotation as it completes. air_pitch_total resets to 0 on takeoff /
 ## landing, so the paid-out counter re-arms on the ground.
 func _award_flip_boost():
-	if not movement_controller._is_on_floor:
+	if not movement_controller.is_on_floor:
 		var completed := int(movement_controller.air_pitch_total / TAU)
 		if completed > _air_flips_awarded:
 			_award_trick_boost(BOOST_PER_FLIP * (completed - _air_flips_awarded))
@@ -317,8 +317,8 @@ func _award_trick_landing():
 		combo_score += LANDING_TRICK_SCORE
 		_award_trick_boost(BOOST_PER_AIR_TRICK)
 	_was_airborne = (
-		not movement_controller._is_on_floor
-		and movement_controller._air_time >= AIR_TRICK_MIN_AIRTIME
+		not movement_controller.is_on_floor
+		and movement_controller.air_time >= AIR_TRICK_MIN_AIRTIME
 	)
 
 
@@ -372,9 +372,9 @@ func _detect_current_trick(delta: float) -> Trick:
 	if _tap_trick_timer > 0.0:
 		return _tap_trick
 
-	if !movement_controller._is_on_floor:
-		# A bump or crest mid-trick isn't a jump — keep the ground trick (same gate as _trick_state).
-		if movement_controller._air_time < AIR_TRICK_MIN_AIRTIME:
+	if !movement_controller.is_on_floor:
+		# A bump or crest mid-trick isn't a jump — keep the ground trick (same gate as trick_state).
+		if movement_controller.air_time < AIR_TRICK_MIN_AIRTIME:
 			return _last_trick
 		return _detect_air_trick()
 
@@ -420,7 +420,7 @@ func _detect_current_trick(delta: float) -> Trick:
 
 
 func _detect_air_trick() -> Trick:
-	# Airborne is itself the gate — no RB. _trick_state() applies the min-airtime gate; flips need
+	# Airborne is itself the gate — no RB. trick_state() applies the min-airtime gate; flips need
 	# far more airtime than that, so it doesn't affect them.
 	var held := _held_trick()
 	if held != Trick.NONE:
@@ -478,7 +478,7 @@ func has_flipped() -> bool:
 func is_landed_in_trick() -> bool:
 	var pitch := movement_controller.pitch_angle
 	return (
-		movement_controller._is_on_floor
+		movement_controller.is_on_floor
 		and (
 			pitch > deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG)
 			or pitch < deg_to_rad(STOPPIE_PITCH_THRESHOLD_DEG)
@@ -491,7 +491,7 @@ func is_landed_in_trick() -> bool:
 func is_wheelie_stick_trick() -> bool:
 	if (
 		_last_trick == Trick.NONE
-		or not movement_controller._is_on_floor
+		or not movement_controller.is_on_floor
 		or movement_controller.pitch_angle <= deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG)
 	):
 		return false

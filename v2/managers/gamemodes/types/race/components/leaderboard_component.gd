@@ -19,7 +19,7 @@ func tick(delta: float) -> void:
 	var peer_ids: Array[int] = []
 	for peer_id in race_mode.lobby_manager.lobby_players:
 		# Player may not be spawned yet (late-join) — skip is intentional.
-		if race_mode.spawn_manager._get_player_by_peer_id(peer_id) != null:
+		if race_mode.spawn_manager.get_player_by_peer_id(peer_id) != null:
 			peer_ids.append(peer_id)
 	peer_ids.sort_custom(
 		func(a, b): return _ranks_above(_human_sort_key(a), a, _human_sort_key(b), b)
@@ -45,7 +45,7 @@ func build_results() -> ResultsData:
 	var rows: Array[Dictionary] = []
 	for peer_id in race_mode.lobby_manager.lobby_players:
 		# Late joiners never raced, and an unspawned player has no position — skip is intentional.
-		var player := race_mode.spawn_manager._get_player_by_peer_id(peer_id)
+		var player := race_mode.spawn_manager.get_player_by_peer_id(peer_id)
 		if player == null or !race_task.has_racer(peer_id):
 			continue
 		rows.append(_result_row(peer_id, _human_cells(peer_id), _human_sort_key(peer_id)))

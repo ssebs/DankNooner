@@ -162,8 +162,8 @@ func _show_results(data: ResultsData):
 ## One row per peer of `runner`, fastest completion first.
 func _completion_results(runner: TaskRunner, title_key: String) -> ResultsData:
 	var rows: Array[Dictionary] = []
-	for peer_id in runner._player_states:
-		var state = runner._player_states[peer_id] as PlayerTaskState
+	for peer_id in runner.player_states:
+		var state = runner.player_states[peer_id] as PlayerTaskState
 		var username: String = lobby_manager.lobby_players[peer_id].username
 		var time_sec: float = state.completion_time_ms / 1000.0
 		(
@@ -218,7 +218,7 @@ func _inject_runner_deps():
 func _reset_all_player_input():
 	for peer_id in lobby_manager.lobby_players:
 		# Player may not be spawned yet — skip is intentional
-		var player := spawn_manager._get_player_by_peer_id(peer_id)
+		var player := spawn_manager.get_player_by_peer_id(peer_id)
 		if player == null:
 			continue
 		player.input_controller.input_disabled = false
@@ -250,7 +250,7 @@ func _on_runner_respawn_requested(peer_id: int):
 ## Delayed crash respawn — skip if the player already recovered (R tap) before the timer fired,
 ## so we don't respawn twice.
 func _respawn_crashed_player(peer_id: int):
-	if spawn_manager._get_player_by_peer_id(peer_id).is_crashed:
+	if spawn_manager.get_player_by_peer_id(peer_id).is_crashed:
 		spawn_manager.respawn_player.rpc(peer_id)
 
 

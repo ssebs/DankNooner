@@ -6,7 +6,7 @@ signal cam_switch_pressed
 signal reset_cam_pressed
 
 @export var player_entity: PlayerEntity
-@export var vibration_duration: float = 0.15
+const VIBRATION_DURATION: float = 0.15
 
 ## Automatic transmission thresholds (RPM ratio, 0-1). Upshift sits just under the rev
 ## limiter's 0.98 cut so the auto box shifts instead of bouncing off it.
@@ -206,7 +206,7 @@ func _detect_gamepad_or_kbm(event: InputEvent):
 func add_vibration(weak: float, strong: float):
 	if weak > 0.01 or strong > 0.01:
 		Input.start_joy_vibration(
-			0, clamp(weak, 0.0, 1.0), clamp(strong, 0.0, 1.0), vibration_duration
+			0, clamp(weak, 0.0, 1.0), clamp(strong, 0.0, 1.0), VIBRATION_DURATION
 		)
 	else:
 		stop_vibration()

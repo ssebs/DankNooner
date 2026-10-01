@@ -30,17 +30,16 @@ enum RiderState {
 @export_tool_button("Save Default Pose") var save_pose_btn = _editor_save_default_pose
 @export_tool_button("Play Default Pose") var reset_pose_btn = _editor_reset_to_default_pose
 
-@export_group("Procedural Settings")
-@export var idle_timeout: float = 0.1
-@export var max_butt_offset := 0.12
+const IDLE_TIMEOUT: float = 0.1
+const MAX_BUTT_OFFSET := 0.12
 ## Max chest yaw (deg) when leaning into a turn — chest twists toward turn direction.
-@export var max_chest_yaw_deg: float = 30.0
+const MAX_CHEST_YAW_DEG: float = 30.0
 ## Max chest pitch (deg) when leaning fwd/back. Negate to flip direction.
-@export var max_chest_lean_pitch_deg: float = -15.0
+const MAX_CHEST_LEAN_PITCH_DEG: float = -15.0
 ## Max chest z shift when leaning fwd/back. Negate to flip direction.
-@export var max_chest_z_offset: float = 0.2
+const MAX_CHEST_Z_OFFSET: float = 0.2
 ## Max butt z shift when leaning fwd/back. Negate to flip direction.
-@export var max_butt_z_offset: float = 0.1
+const MAX_BUTT_Z_OFFSET: float = 0.1
 
 # Animation track paths (relative to visual_root, which is anim root_node).
 # Cached as NodePaths so CustomAnimPlayer.find_track lookups are cheap.
@@ -170,7 +169,7 @@ var _proc_pose: _RiderPose
 
 func _ready():
 	if Engine.is_editor_hint():
-		call_deferred("_editor_auto_init")
+		call_deferred("editor_auto_init")
 		return
 
 
@@ -234,10 +233,10 @@ func _update_riding(delta: float) -> void:
 	# and spin around the origin. air_pitch_total resets to 0 on takeoff/landing, so held
 	# wheelie/stoppie curb-hops AND the brief floor-bounce on landing keep the normal pivot.
 	var suppress_pivot := (
-		not movement_controller._is_on_floor
+		not movement_controller.is_on_floor
 		and movement_controller.air_pitch_total > deg_to_rad(30.0)
 	)
-	if not movement_controller._is_on_floor:
+	if not movement_controller.is_on_floor:
 		_apply_pitch_air(pose, blend, pitch)
 	else:
 		_apply_pitch_ground(pose, blend, pitch)
@@ -353,21 +352,21 @@ func _set_pose_local_from_bike(
 func _apply_riding_common(pose: _RiderPose, _delta: float, blend: float, roll: float) -> void:
 	pose.visual_root_rot.z = lerpf(pose.visual_root_rot.z, roll, blend)
 
-	var target_chest_y = roll * deg_to_rad(max_chest_yaw_deg)
+	var target_chest_y = roll * deg_to_rad(MAX_CHEST_YAW_DEG)
 	pose.chest_rot.y = lerpf(pose.chest_rot.y, target_chest_y, blend)
 
-	var lean_x_offset = clampf(pose.visual_root_rot.z, -max_butt_offset, max_butt_offset)
+	var lean_x_offset = clampf(pose.visual_root_rot.z, -MAX_BUTT_OFFSET, MAX_BUTT_OFFSET)
 	pose.butt_pos.x = lerpf(pose.butt_pos.x, _base_butt_pos.x - lean_x_offset, blend)
 	pose.chest_pos.x = lerpf(pose.chest_pos.x, _base_chest_pos.x - lean_x_offset, blend)
 
 	var lean_input = input_controller.nfx_lean
-	var target_chest_pitch = _base_chest_rot.x - lean_input * deg_to_rad(max_chest_lean_pitch_deg)
+	var target_chest_pitch = _base_chest_rot.x - lean_input * deg_to_rad(MAX_CHEST_LEAN_PITCH_DEG)
 	pose.chest_rot.x = lerpf(pose.chest_rot.x, target_chest_pitch, blend)
 	pose.chest_pos.z = lerpf(
-		pose.chest_pos.z, _base_chest_pos.z + lean_input * max_chest_z_offset, blend
+		pose.chest_pos.z, _base_chest_pos.z + lean_input * MAX_CHEST_Z_OFFSET, blend
 	)
 	pose.butt_pos.z = lerpf(
-		pose.butt_pos.z, _base_butt_pos.z + lean_input * max_butt_z_offset, blend
+		pose.butt_pos.z, _base_butt_pos.z + lean_input * MAX_BUTT_Z_OFFSET, blend
 	)
 
 
@@ -534,7 +533,7 @@ func _update_idle_timer(delta: float) -> void:
 	# Mostly stationary — but a standstill burnout still counts as riding, so keep the wheels alive
 	if movement_controller.speed < 0.5 and abs(input_controller.nfx_steer) < 0.1 and not movement_controller.is_drifting:
 		_idle_timer += delta
-		if _idle_timer >= idle_timeout and current_state == RiderState.RIDING:
+		if _idle_timer >= IDLE_TIMEOUT and current_state == RiderState.RIDING:
 			_transition_to_idle()
 	else:
 		_idle_timer = 0.0
@@ -846,7 +845,7 @@ func _transition_to_idle() -> void:
 
 
 #region Editor Tools
-func _editor_auto_init() -> void:
+func editor_auto_init() -> void:
 	# Silent skip during editor scene load when exports aren't wired yet.
 	if not _editor_refs_ready():
 		return
@@ -918,7 +917,7 @@ func _editor_init_ik_from_bike() -> void:
 
 	_load_wheel_markers_from_definition(def)
 
-	ik_ctrl._create_ik()
+	ik_ctrl.create_ik()
 	character_skin.enable_ik()
 	disable_target_sync()
 

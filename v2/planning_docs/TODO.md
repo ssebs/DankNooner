@@ -25,8 +25,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] quick vibe code quality / review
-
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [x] make tricks + combos easier to do **WIP**
@@ -229,6 +227,8 @@
 ---
 
 ## Done ✅
+
+- [x] quick vibe code quality / review
 
 - [x] Bunny hop trick
 

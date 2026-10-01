@@ -18,7 +18,7 @@ func Enter(state_context: StateContext):
 		bg_tint.visible = false
 
 	ui.show()
-	_show_controls_for_current_device()
+	show_controls_for_current_device()
 
 	close_help_btn.pressed.connect(_on_close_help_pressed)
 
@@ -28,7 +28,7 @@ func Exit(_state_context: StateContext):
 	close_help_btn.pressed.disconnect(_on_close_help_pressed)
 
 
-func _show_controls_for_current_device():
+func show_controls_for_current_device():
 	if Input.get_connected_joypads().size() > 0:
 		tab_container.current_tab = 0
 	else:

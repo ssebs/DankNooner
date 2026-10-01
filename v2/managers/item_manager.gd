@@ -70,7 +70,7 @@ func request_use_item():
 		return
 	var sender := multiplayer.get_remote_sender_id()
 	var peer_id := sender if sender > 1 else 1
-	var player := spawn_manager._get_player_by_peer_id(peer_id)
+	var player := spawn_manager.get_player_by_peer_id(peer_id)
 	# Empty-handed double taps are normal trick-button use, and a crashed rider can't use items.
 	if !_held.has(peer_id) or player.is_crashed:
 		return
@@ -208,13 +208,13 @@ func _fire_shotgun(peer_id: int, shooter: PlayerEntity) -> void:
 ## Every peer: the holder's equip pose follows the held shotgun.
 @rpc("call_local", "reliable")
 func _rpc_set_shotgun_held(peer_id: int, held: bool):
-	spawn_manager._get_player_by_peer_id(peer_id).animation_controller.shotgun_held = held
+	spawn_manager.get_player_by_peer_id(peer_id).animation_controller.shotgun_held = held
 
 
 ## Every peer: fire, then unequip (AnimationController clears shotgun_held after the shot).
 @rpc("call_local", "reliable")
 func _rpc_fire_shotgun(peer_id: int):
-	spawn_manager._get_player_by_peer_id(peer_id).animation_controller.play_shotgun_fire()
+	spawn_manager.get_player_by_peer_id(peer_id).animation_controller.play_shotgun_fire()
 
 
 #endregion

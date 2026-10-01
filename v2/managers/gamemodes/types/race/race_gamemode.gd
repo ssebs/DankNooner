@@ -134,7 +134,7 @@ func _race_end():
 func _push_checkpoint_markers():
 	for peer_id in lobby_manager.lobby_players:
 		# Player may not be spawned yet (late-join) — skip is intentional.
-		var player := spawn_manager._get_player_by_peer_id(peer_id)
+		var player := spawn_manager.get_player_by_peer_id(peer_id)
 		if player == null:
 			continue
 		var pos := Vector3.ZERO
@@ -150,7 +150,7 @@ func _push_checkpoint_markers():
 func _clear_checkpoint_markers():
 	for peer_id in lobby_manager.lobby_players:
 		# Player may not be spawned yet (late-join) — skip is intentional.
-		var player := spawn_manager._get_player_by_peer_id(peer_id)
+		var player := spawn_manager.get_player_by_peer_id(peer_id)
 		if player == null:
 			continue
 		riding_hud_state.push_checkpoint_marker(peer_id, Vector3.ZERO, false)

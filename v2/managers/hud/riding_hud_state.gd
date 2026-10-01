@@ -25,6 +25,7 @@ const _RESPAWN_QUICK_FLASH_SECS := 0.6
 const _WARNING_HOLD_SECS := 1.5
 const _WARNING_PULSE_SECS := 0.35
 
+@onready var minimap: Minimap = %Minimap
 @onready var _throttle_bar: ProgressBar = %HUD_ThrottleProgress
 @onready var _rpm_bar: ProgressBar = %HUD_RPMProgress
 
@@ -46,7 +47,6 @@ const _WARNING_PULSE_SECS := 0.35
 @onready var _event_warning: Label = %HUD_EventWarning
 @onready var _boost_gauge: BoostGauge = %BoostGauge
 @onready var _combo_counter: ComboCounter = %ComboCounter
-@onready var _minimap: Minimap = %Minimap
 @onready var _respawn_bar: ProgressBar = %HUD_RespawnProgress
 @onready var _respawn_label: Label = %HUD_RespawnLabel
 @onready var _trick_rows: VBoxContainer = %HUD_TrickRows
@@ -262,7 +262,7 @@ func _update_pitch_icon():
 	if player_entity.is_crashed:
 		_trick_popups.hide_pitch_icon()
 		return
-	if trick_controller._trick_state() == TrickController.TrickState.AIR:
+	if trick_controller.trick_state() == TrickController.TrickState.AIR:
 		var snap := MovementController.LANDING_SNAP_ANGLE_DEG
 		window = Vector4(-180.0, -snap, snap, 180.0)
 		pivot = Vector2(0.5, 0.5)
@@ -285,7 +285,7 @@ func _update_pitch_icon():
 
 #region signal handlers
 func _on_input_state_changed(new_state: InputStateManager.InputState) -> void:
-	_minimap.set_expanded(new_state == InputStateManager.InputState.IN_MAP)
+	minimap.set_expanded(new_state == InputStateManager.InputState.IN_MAP)
 
 
 func _on_gear_changed(new_gear: int):
@@ -345,7 +345,7 @@ func _add_trick_row() -> TrickRow:
 
 func show_ui() -> void:
 	ui.visible = true
-	_minimap.activate(player_entity)
+	minimap.activate(player_entity)
 
 	# Only the local client reaches show_ui, so the overlay never spawns on remote
 	# player instances. netfox registers its perf monitors only when NetworkPerformance
@@ -368,7 +368,7 @@ func show_ui() -> void:
 ## Server-side: forward the local racer's next-checkpoint marker to the owning
 ## client's minimap. Called from the race gamemodes.
 func push_checkpoint_marker(peer_id: int, pos: Vector3, has_target: bool) -> void:
-	_minimap.rpc_set_checkpoint.rpc_id(peer_id, pos, has_target)
+	minimap.rpc_set_checkpoint.rpc_id(peer_id, pos, has_target)
 
 
 ## Server-side: broadcast the live leaderboard (see RaceLeaderboard.set_board) and the race
@@ -576,7 +576,7 @@ func _rpc_callout(text: String):
 
 func hide_ui() -> void:
 	ui.visible = false
-	_minimap.deactivate()
+	minimap.deactivate()
 
 
 ## Called from player_entity.gd's do_respawn
