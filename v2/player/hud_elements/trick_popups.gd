@@ -98,6 +98,8 @@ var _last_trick: TrickController.Trick = TrickController.Trick.NONE
 var _last_named: TrickController.Trick = TrickController.Trick.NONE
 ## Callout key -> seconds its condition has held; absent while it doesn't.
 var _held: Dictionary[String, float] = {}
+## A flip was completed last frame, to catch it landing into a wheelie / stoppie.
+var _was_flipped: bool = false
 var _oof_index: int = 0
 
 
@@ -151,6 +153,9 @@ func track(
 
 	_track_trick_start(tc)
 	_track_hold_callouts(player, delta)
+	if _was_flipped and tc.is_landed_in_trick() and not player.is_crashed:
+		pop_callout(tr("CALLOUT_STUCK_LANDING"))
+	_was_flipped = tc.has_flipped()
 
 
 func pop_score(points: int, multiplier: int, bonus: bool) -> void:

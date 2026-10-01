@@ -68,6 +68,7 @@ Consts, deliberately **not** `@export`: this code runs inside the rollback tick 
 | `COMBO_MULT_THRESHOLDS` | Seconds of unbroken trick time per multiplier step, ascending. Add entries for higher tiers. |
 | `HELD_TRICK_SCORE` | Per-trick score earned per second while a held trick is active. |
 | `ONE_TIME_TRICK_SCORE` | Per-trick score banked once when a one-time trick (flip, kickflip…) starts. |
+| `LANDING_TRICK_SCORE` | Score banked when a real jump (past `AIR_TRICK_MIN_AIRTIME`) touches down past the wheelie or stoppie threshold. Also awards `BOOST_PER_AIR_TRICK`. |
 
 **Keep `COMBO_MULT_THRESHOLDS` in the same ballpark as the meter fill time implied by `BOOST_PER_SEC`.** The gauge is the only feedback the player can see, so a multiplier that steps far behind it reads as broken. Changing one without re-checking the other has already caused a false bug report once.
 

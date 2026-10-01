@@ -70,6 +70,9 @@ const COMBO_MULT_THRESHOLDS: Array[float] = [5.0, 15.0]
 ## Consts (rollback): must be byte-identical on every peer.
 const BOOST_PER_FLIP: float = 0.5
 const BOOST_PER_AIR_TRICK: float = 0.5
+## One-time score for touching down from a real jump straight into a wheelie or stoppie. Its boost
+## reuses BOOST_PER_AIR_TRICK. Const (rollback).
+const LANDING_TRICK_SCORE: float = 3.0
 ## A cam flick released before this is a tap; holding longer is a HOLD gesture. Const (rollback):
 ## byte-identical on every peer. Raising it makes the tap more forgiving but delays holds.
 const TAP_TRICK_MAX_SECS: float = 0.25
@@ -155,6 +158,9 @@ var _trick_timer: float = 0.0
 var _wheelie_exit_hold: float = 0.0  # synced — seconds pitch has been under WHEELIE_EXIT_PITCH_DEG
 ## Full air rotations already paid out this airtime — synced so a resim doesn't double-award.
 var _air_flips_awarded: int = 0
+## Synced — last tick was a real jump (past AIR_TRICK_MIN_AIRTIME). MovementController zeroes
+## _air_time on the landing tick, so the landing check needs last tick's value.
+var _was_airborne: bool = false
 ## Gesture state (all synced: read/written in the rollback tick and gates tricks, so combo_time,
 ## which is synced, stays consistent on resim). Direction the stick is pushed (NO_DIR = neutral)
 ## and for how long, whether this press is the second of a double tap; plus a released tap waiting
@@ -193,6 +199,7 @@ func on_movement_rollback_tick(delta: float):
 		_last_trick = current_trick
 
 	_award_flip_boost()
+	_award_trick_landing()
 	_accrue_combo(delta)
 
 
@@ -295,6 +302,18 @@ func _award_flip_boost():
 			_air_flips_awarded = completed
 	else:
 		_air_flips_awarded = 0
+
+
+## Touching down from a real jump past the wheelie / stoppie threshold banks a bonus. The landing
+## tick already detected that trick, so combo time keeps running as a normal wheelie / stoppie.
+func _award_trick_landing():
+	if _was_airborne and is_landed_in_trick():
+		combo_score += LANDING_TRICK_SCORE
+		_award_trick_boost(BOOST_PER_AIR_TRICK)
+	_was_airborne = (
+		not movement_controller._is_on_floor
+		and movement_controller._air_time >= AIR_TRICK_MIN_AIRTIME
+	)
 
 
 ## Add a lump of trick boost, scaled by the current combo multiplier. Tracked in combo_boost_earned
@@ -401,7 +420,7 @@ func _detect_air_trick() -> Trick:
 	if held != Trick.NONE:
 		return held
 
-	if movement_controller.air_pitch_total < (TAU * 0.9):
+	if not has_flipped():
 		return Trick.NONE
 
 	# Full flip completed — determine direction from pitch_angle sign
@@ -424,6 +443,7 @@ func do_reset():
 	_last_trick = Trick.NONE
 	_flip_emitted = false
 	_air_flips_awarded = 0
+	_was_airborne = false
 	_wheelie_exit_hold = 0.0
 	_hold_dir = NO_DIR
 	_hold_time = 0.0
@@ -441,6 +461,24 @@ func do_reset():
 
 func is_in_wheelie() -> bool:
 	return current_trick in [Trick.WHEELIE_SITTING, Trick.WHEELIE_MOD]
+
+
+## A full flip completed this jump. air_pitch_total resets on landing, so false once grounded.
+func has_flipped() -> bool:
+	return movement_controller.air_pitch_total >= TAU * 0.9
+
+
+## On the ground past the wheelie / stoppie threshold.
+func is_landed_in_trick() -> bool:
+	var pitch := movement_controller.pitch_angle
+	return (
+		movement_controller._is_on_floor
+		and (
+			pitch > deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG)
+			or pitch < deg_to_rad(STOPPIE_PITCH_THRESHOLD_DEG)
+		)
+	)
+
 
 
 ## True while a right-stick trick (BINDINGS) runs in a ground wheelie. Reads the synced _last_trick —

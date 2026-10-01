@@ -219,15 +219,15 @@ func on_movement_rollback_tick(delta: float):
 				pitch_angle -= TAU
 			elif pitch_angle < -PI:
 				pitch_angle += TAU
-			# Landing forgiveness: a near-upright landing after a flip snaps to neutral; over-
-			# rotations past the bike's max still crash via CrashController. A held wheelie off a
-			# jump lands as-is, but a nose-first touchdown flattens rather than becoming a stoppie.
+			# Landing forgiveness: a near-upright landing after a flip snaps to neutral. Past the
+			# wheelie / stoppie thresholds any jump lands as that trick (a stoppie decays unless
+			# braked); over-rotations past the bike's max still crash via CrashController.
 			var did_flip := air_pitch_total >= PI # half-turn+ = a flip attempt, not a held wheelie
-			if did_flip:
-				if absf(pitch_angle) <= deg_to_rad(LANDING_SNAP_ANGLE_DEG):
-					pitch_angle = 0.0
-			elif pitch_angle < 0.0:
-				# Nose-first landing (not a flip) — flatten to the ground, not into a stoppie.
+			if (
+				did_flip
+				and pitch_angle >= deg_to_rad(TrickController.STOPPIE_PITCH_THRESHOLD_DEG)
+				and pitch_angle <= deg_to_rad(TrickController.WHEELIE_PITCH_THRESHOLD_DEG)
+			):
 				pitch_angle = 0.0
 			air_pitch_total = 0.0
 			_air_time = 0.0
