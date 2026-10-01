@@ -25,6 +25,12 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] Make the fill-up mini game work in free roam at gas stations instead of picking up gas cans
+
+- [ ] Clear hitbox on ramp in pickup item since players can crash into it when they already have an item, aka change model?
+- [ ] pickup item should show in nice hud instead of just text
+
+
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [x] make tricks + combos easier to do **WIP**
@@ -41,10 +47,15 @@
 
 ## Notes 📝
 > Stuff to move ASAP
-- [ ] replace csgmesh for houses/other buildings for performance + looks
+
+- [ ] Bunny hop trick like irl
+- [ ] Grinding tricks (jump in air, grind on house fences)
+
+- Knock over light pole & fire hydrants & signs/ street lights 
+- replace csgmesh for houses/other buildings for performance + looks
 - trick animation to move up then play the mixamo anims
-- - [ ] rotate fps cam down while doing wheelie to make it easier to see
-- [ ] try to have the camera look where your eyes are supposed to look irl when riding 
+- rotate fps cam down while doing wheelie to make it easier to see
+- try to have the camera look where your eyes are supposed to look irl when riding 
 - lightning / Rally Up item
 - r => quick respawn, add btn for set full respawn point (if not in race)
 - 1, 2, 3 spam is possible for everyone, debounce this
