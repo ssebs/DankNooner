@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" path="res://player/hud_elements/boost_gauge.tscn" id="7_3xx38"]
 [ext_resource type="Script" uid="uid://bbuk3w2ml0an0" path="res://player/hud_elements/race_leaderboard.gd" id="99_rldbd"]
 [ext_resource type="Script" uid="uid://cqsjngdd8k28k" path="res://player/hud_elements/trick_popups.gd" id="99_scrpp"]
+[ext_resource type="PackedScene" uid="uid://b1thmb3dtnail" path="res://utils/components/thumbnail_3d.tscn" id="99_thumb"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8urt2"]
 content_margin_left = 12.0
@@ -327,11 +328,33 @@ size_flags_vertical = 8
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="HUD_HeldItem" type="Label" parent="UI/AspectContainer/MarginContainer/BoostCluster"]
+[node name="HUD_HeldItem" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/BoostCluster" unique_id=774900946]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 0
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("3_j31af")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/BoostCluster/HUD_HeldItem" unique_id=1604358965]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HUD_HeldItemThumbnail" parent="UI/AspectContainer/MarginContainer/BoostCluster/HUD_HeldItem/VBoxContainer" unique_id=1897137762 instance=ExtResource("99_thumb")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+type = 3
+camera_position = Vector3(2, 1.2, 2)
+camera_look_at = Vector3(0, 0, 0)
+camera_fov = 40.0
+
+[node name="HUD_HeldItemName" type="Label" parent="UI/AspectContainer/MarginContainer/BoostCluster/HUD_HeldItem/VBoxContainer" unique_id=1385063352]
+unique_name_in_owner = true
+layout_mode = 2
 text = "ITEM_SHOTGUN"
+horizontal_alignment = 1
 
 [node name="ComboCounter" parent="UI/AspectContainer/MarginContainer/BoostCluster" unique_id=1303206430 instance=ExtResource("6_x84np")]
 unique_name_in_owner = true

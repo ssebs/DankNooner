@@ -47,7 +47,7 @@ func collect(peer_id: int, definition: PickupItemDefinition) -> bool:
 		return false
 	else:
 		_held[peer_id] = definition
-		riding_hud_state.push_held_item(peer_id, _item_key(item_type))
+		riding_hud_state.push_held_item(peer_id, definition)
 		if item_type == PickupItemDefinition.PickupItemType.SHOTGUN:
 			_rpc_set_shotgun_held.rpc(peer_id, true)
 	spawn_manager.play_pickup_sfx.rpc_id(peer_id)
@@ -57,7 +57,7 @@ func collect(peer_id: int, definition: PickupItemDefinition) -> bool:
 ## Server-only. Empties every slot — a new pickup session (race start, free roam) starts clean.
 func clear_items() -> void:
 	for peer_id in _held:
-		riding_hud_state.push_held_item(peer_id, "")
+		riding_hud_state.push_held_item(peer_id, null)
 		if _held[peer_id].item_type == PickupItemDefinition.PickupItemType.SHOTGUN:
 			_rpc_set_shotgun_held.rpc(peer_id, false)
 	_held.clear()
@@ -76,7 +76,7 @@ func request_use_item():
 		return
 	var definition := _held[peer_id]
 	_held.erase(peer_id)
-	riding_hud_state.push_held_item(peer_id, "")
+	riding_hud_state.push_held_item(peer_id, null)
 	_rpc_play_use_sfx.rpc_id(peer_id, definition.use_sfx)
 	match definition.item_type:
 		PickupItemDefinition.PickupItemType.BAT:
@@ -97,10 +97,6 @@ func _rpc_play_use_sfx(sfx: AudioManager.Sfx):
 
 func _on_player_disconnected(peer_id: int) -> void:
 	_held.erase(peer_id)
-
-
-func _item_key(item_type: PickupItemDefinition.PickupItemType) -> String:
-	return "ITEM_%s" % PickupItemDefinition.PickupItemType.keys()[item_type]
 
 
 #region Oil slick / ramp (server places, every peer spawns)

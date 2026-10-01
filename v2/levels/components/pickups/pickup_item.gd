@@ -35,6 +35,11 @@ func _spawn_mesh():
 		child.queue_free()
 	mesh_root = pickup_item_definition.mesh_res.instantiate()
 	mesh_node.add_child(mesh_root)
+	# Display-only: a held-slot rider passes through the bubble, so its mesh (e.g. the ramp) mustn't collide.
+	for node in mesh_root.find_children("*", "CollisionObject3D", true, false):
+		var body := node as CollisionObject3D
+		body.collision_layer = 0
+		body.collision_mask = 0
 
 	mesh_root.scale *= pickup_item_definition.mesh_scale_multiplier
 	mesh_root.rotation_degrees += pickup_item_definition.mesh_rotation_offset_degrees

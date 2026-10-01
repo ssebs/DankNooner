@@ -3,7 +3,7 @@
 ## Works in-editor for scale/framing preview.
 class_name Thumbnail3D extends SubViewportContainer
 
-enum Type { BIKE, CHARACTER, GENERIC }
+enum Type { BIKE, CHARACTER, GENERIC, PICKUP }
 
 @export var type: Type = Type.BIKE:
 	set(value):
@@ -12,7 +12,7 @@ enum Type { BIKE, CHARACTER, GENERIC }
 			_rebuild()
 
 ## BikeSkinDefinition when type=BIKE, CharacterSkinDefinition when type=CHARACTER,
-## any Resource for GENERIC.
+## PickupItemDefinition when type=PICKUP, any Resource for GENERIC.
 @export var skin_definition: Resource:
 	set(value):
 		skin_definition = value
@@ -35,6 +35,7 @@ enum Type { BIKE, CHARACTER, GENERIC }
 
 const BIKE_SKIN_SCENE: PackedScene = preload("res://player/bikes/bike_skin.tscn")
 const CHARACTER_SKIN_SCENE: PackedScene = preload("res://player/characters/character_skin.tscn")
+const PICKUP_ITEM_SCENE: PackedScene = preload("res://levels/components/pickups/pickup_item.tscn")
 
 @onready var sub_viewport: SubViewport = %SubViewport
 @onready var spawn_parent: Node3D = %SpawnParent
@@ -75,6 +76,8 @@ func _rebuild() -> void:
 			_spawn_bike()
 		Type.CHARACTER:
 			_spawn_character()
+		Type.PICKUP:
+			_spawn_pickup()
 		Type.GENERIC:
 			pass  # Subclasses / external callers can add to spawn_parent themselves.
 
@@ -101,3 +104,16 @@ func _spawn_character() -> void:
 	spawn_parent.add_child(char_node)
 	if Engine.is_editor_hint():
 		char_node.owner = sub_viewport
+
+
+## Reuses PickupItem so the item is scaled/centered exactly as in the world, minus the bubble.
+func _spawn_pickup() -> void:
+	if not (skin_definition is PickupItemDefinition):
+		push_warning("Thumbnail3D: type=PICKUP but skin_definition is not a PickupItemDefinition")
+		return
+	var pickup: PickupItem = PICKUP_ITEM_SCENE.instantiate()
+	pickup.pickup_item_definition = skin_definition
+	spawn_parent.add_child(pickup)
+	pickup.mesh_instance.hide()
+	if Engine.is_editor_hint():
+		pickup.owner = sub_viewport
