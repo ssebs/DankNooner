@@ -184,4 +184,4 @@ FUELUP_GRAB,"Hold click / A on the pump handle","Mantén clic / A en la manguera
 FUELUP_ALIGN,"Hold the nozzle over the gas cap","Pon la boquilla sobre el tanque"
 FUELUP_RETURN,"Let go to hang it back up","Suelta para colgar la manguera"
 FUELUP_EVENT_NAME,"Fill Up","Llenar el tanque"
-FUELUP_EVENT_DESC,"Pull up to a pump and fill your tank to refill your boost. Pause and Cancel Event to leave early with what you've got.","Ve a un surtidor y llena el tanque para recargar tu turbo. Pausa y Cancelar evento para irte antes con lo que tengas."
+FUELUP_EVENT_DESC,"Pull up to a pump and fill your tank to refill your boost.","Ve a un surtidor y llena el tanque para recargar tu turbo."

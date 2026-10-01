@@ -39,6 +39,7 @@ const CURSOR_HOTSPOT := Vector2(32, 32)
 @onready var _gas_cap_marker_tip: Marker3D = %GasCapMarkerTip
 @onready var _pump_marker: Marker3D = %PumpMarker
 @onready var _hose: Path3D = %Hose
+@onready var _hose_mesh: CSGPolygon3D = %HoseMesh
 
 ## Tank level, 0..1. Read by FuelUpHUDState.
 var fill: float = 0.0
@@ -76,6 +77,9 @@ func _ready():
 	_tip_rel = _handle_area.global_basis.inverse() * _handle_marker_tip.global_basis
 	# Own curve per pump — a scene sub_resource would be shared by every instance.
 	_hose.curve = Curve3D.new()
+	# Own material too, so only this pump's hose draws on top while its minigame runs.
+	_hose_mesh.material = _hose_mesh.material.duplicate()
+	_hose_mesh.material.no_depth_test = false
 	_update_hose()
 	_gas_cap_mesh.visible = false
 	set_process(false)
@@ -143,6 +147,7 @@ func end():
 	_audio_manager.stop_sfx(AudioManager.Sfx.GLUG_GLUG)
 	_gas_cap_mesh.visible = false
 	_anim.play(&"loop")
+	_hose_mesh.material.no_depth_test = false
 
 	_player.character_skin.visible = true
 	_audio_manager.play_revs(_player.bike_definition)
@@ -162,6 +167,8 @@ func _start():
 
 	# Local only — the rider sits between the pump camera and the pump.
 	_player.character_skin.visible = false
+	# The pump camera would otherwise lose the hose behind the bike.
+	_hose_mesh.material.no_depth_test = true
 	_audio_manager.stop_revs()
 	_hud_manager.go_to_fuel_up_hud(self)
 
