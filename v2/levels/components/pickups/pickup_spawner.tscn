@@ -7,7 +7,8 @@
 [ext_resource type="Resource" uid="uid://cqeidudggyae1" path="res://levels/components/pickups/gas_can_pickup_definition.tres" id="5_tkrva"]
 [ext_resource type="Resource" uid="uid://m04c10s5cgev" path="res://levels/components/pickups/oil_slick_pickup_definition.tres" id="6_fgppl"]
 [ext_resource type="Resource" uid="uid://cw70e0c7wprwk" path="res://levels/components/pickups/ramp_pickup_definition.tres" id="7_c60v4"]
+[ext_resource type="Resource" path="res://levels/components/pickups/rally_up_pickup_definition.tres" id="8_rally"]
 
 [node name="PickupSpawner" type="Marker3D" unique_id=761218876]
 script = ExtResource("1_tmwld")
-items = Array[ExtResource("2_i5tgj")]([ExtResource("3_i5tgj"), ExtResource("3_ixykb"), ExtResource("5_tkrva"), ExtResource("6_fgppl"), ExtResource("7_c60v4")])
+items = Array[ExtResource("2_i5tgj")]([ExtResource("3_i5tgj"), ExtResource("3_ixykb"), ExtResource("5_tkrva"), ExtResource("6_fgppl"), ExtResource("7_c60v4"), ExtResource("8_rally")])

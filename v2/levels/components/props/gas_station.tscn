@@ -173,3 +173,47 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 1.5249999, 5)
 
 [node name="PickupSpawner9" parent="." unique_id=9328650 instance=ExtResource("2_mru51")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 1.5249999, -2)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=590387679]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -3.6177635, 3.9630222, 1.2970614)
+light_color = Color(0.8392157, 0.7882353, 0.22352941, 1)
+light_energy = 3.0
+distance_fade_enabled = true
+distance_fade_begin = 80.0
+distance_fade_length = 20.0
+spot_range = 10.0
+spot_attenuation = 0.36
+spot_angle = 60.0
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="." unique_id=1583739945]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -3.6177635, 3.9630222, 6.2585635)
+light_color = Color(0.8392157, 0.7882353, 0.22352941, 1)
+light_energy = 3.0
+distance_fade_enabled = true
+distance_fade_begin = 80.0
+distance_fade_length = 20.0
+spot_range = 10.0
+spot_attenuation = 0.36
+spot_angle = 60.0
+
+[node name="SpotLight3D3" type="SpotLight3D" parent="." unique_id=1272341462]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 4.208416, 3.9630222, 1.2970614)
+light_color = Color(0.8392157, 0.7882353, 0.22352941, 1)
+light_energy = 3.0
+distance_fade_enabled = true
+distance_fade_begin = 80.0
+distance_fade_length = 20.0
+spot_range = 10.0
+spot_attenuation = 0.36
+spot_angle = 60.0
+
+[node name="SpotLight3D4" type="SpotLight3D" parent="." unique_id=1801518892]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 4.208416, 3.9630222, 6.2585635)
+light_color = Color(0.8392157, 0.7882353, 0.22352941, 1)
+light_energy = 3.0
+distance_fade_enabled = true
+distance_fade_begin = 80.0
+distance_fade_length = 20.0
+spot_range = 10.0
+spot_attenuation = 0.36
+spot_angle = 60.0

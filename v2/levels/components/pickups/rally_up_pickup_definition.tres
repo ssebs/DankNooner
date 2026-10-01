@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PickupItemDefinition" format=3]
+
+[ext_resource type="PackedScene" uid="uid://dvk30v3uxddp1" path="res://player/characters/scenes/astronaut_skin.tscn" id="1_astro"]
+[ext_resource type="Script" uid="uid://dsfcoucwjtequ" path="res://resources/props/pickup_item_definition.gd" id="2_def"]
+
+[resource]
+script = ExtResource("2_def")
+mesh_res = ExtResource("1_astro")
+mesh_scale_multiplier = Vector3(0.5, 0.5, 0.5)
+item_type = 5
+metadata/_custom_type_script = "uid://dsfcoucwjtequ"

@@ -24,7 +24,6 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [x] make tricks + combos easier to do **WIP**
@@ -49,7 +48,6 @@
 - trick animation to move up then play the mixamo anims
 - rotate fps cam down while doing wheelie to make it easier to see
 - try to have the camera look where your eyes are supposed to look irl when riding 
-- lightning / Rally Up item
 - r => quick respawn, add btn for set full respawn point (if not in race)
 - 1, 2, 3 spam is possible for everyone, debounce this
 - TP commands dont work on multiplayer
@@ -227,6 +225,8 @@
 ---
 
 ## Done ✅
+
+- [x] Mario Kart lightning / Rally Up item
 
 - [x] quick vibe code quality / review
 

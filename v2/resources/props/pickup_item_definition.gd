@@ -1,7 +1,7 @@
 @tool
 class_name PickupItemDefinition extends Resource
 
-enum PickupItemType {GAS_CAN, BAT, OIL_SLICK, RAMP, SHOTGUN, }
+enum PickupItemType {GAS_CAN, BAT, OIL_SLICK, RAMP, SHOTGUN, RALLY_UP, }
 
 @export_group("Mesh")
 ## The Scene to instantiate

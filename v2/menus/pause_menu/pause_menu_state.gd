@@ -119,8 +119,9 @@ func _update_level_select_start_disabled():
 
 
 func _on_main_menu_pressed():
-	connection_manager.disconnect_sp_or_mp()
+	# end_game first: gamemode Exit() needs the peer to run its server cleanup.
 	gamemode_manager.end_game()
+	connection_manager.disconnect_sp_or_mp()
 
 	transitioned.emit(main_menu_state, null)
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_MENU

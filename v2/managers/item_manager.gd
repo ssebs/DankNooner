@@ -23,13 +23,23 @@ class_name ItemManager extends BaseManager
 @export var ramp_min_distance: float = 8.0
 @export var ramp_lifetime: float = 8.0
 
+@export_group("Rally Up")
+## Seconds everyone rides the mini bike as the astronaut before their own skins come back.
+@export var rally_up_duration: float = 10.0
+
 const OIL_SLICK_SCENE := preload("res://levels/components/pickups/oil_slick.tscn")
 const RAMP_SCENE := preload("res://levels/components/pickups/deployable_ramp.tscn")
+const RALLY_UP_BIKE := preload("res://resources/bikes/skins/mini_default_skin_definition.tres")
+const RALLY_UP_CHARACTER := preload(
+	"res://resources/player/skins/astronaut_default_skin_definition.tres"
+)
 
 ## Server-only: peer_id -> the item they're holding. No entry = empty slot.
 var _held: Dictionary[int, PickupItemDefinition] = {}
 ## Server-only: suffix for deployable node names, so despawns can find them by path.
 var _next_deployable_id: int = 0
+## Server-only: bumped per Rally Up so an earlier use's timer can't end a later one early.
+var _rally_up_id: int = 0
 
 
 func _ready():
@@ -87,6 +97,8 @@ func request_use_item():
 			_place_ramp(player)
 		PickupItemDefinition.PickupItemType.SHOTGUN:
 			_fire_shotgun(peer_id, player)
+		PickupItemDefinition.PickupItemType.RALLY_UP:
+			_rally_up()
 
 
 ## The user's own client — SoundEvents aren't positional, so everyone else hearing it would be noise.
@@ -176,6 +188,44 @@ func _on_oil_slick_body_entered(
 		return
 	spawn_manager.knock_out(victim_id, owner_peer_id)
 	_rpc_despawn_deployable.rpc(slick_name)
+
+
+#endregion
+
+#region Rally Up
+
+
+## Server-only. Everyone (user included) swaps to the mini bike + astronaut until the timer ends.
+func _rally_up() -> void:
+	_rally_up_id += 1
+	_rpc_set_rally_up.rpc(true)
+	get_tree().create_timer(rally_up_duration).timeout.connect(
+		_end_rally_up.bind(_rally_up_id), CONNECT_ONE_SHOT
+	)
+
+
+func _end_rally_up(id: int) -> void:
+	if id == _rally_up_id:
+		_rpc_set_rally_up.rpc(false)
+
+
+## Every peer. Ending restores each rider's lobby skins, or the event's forced bike if it has one.
+@rpc("call_local", "reliable")
+func _rpc_set_rally_up(active: bool):
+	var forced: BikeSkinDefinition = null
+	if gamemode_manager.current_event != null:
+		forced = gamemode_manager.current_event.definition.forced_base_bike
+	var lobby_players := gamemode_manager.lobby_manager.lobby_players
+	for peer_id in lobby_players:
+		# Not spawned (late join), or the level changed before the timer ended — skip is intentional
+		var player := spawn_manager.get_player_by_peer_id(peer_id)
+		if player == null:
+			continue
+		if active:
+			player.update_skins(RALLY_UP_BIKE, RALLY_UP_CHARACTER)
+		else:
+			var lobby_def := lobby_players[peer_id]
+			player.update_skins(forced if forced else lobby_def.bike_skin, lobby_def.character_skin)
 
 
 #endregion
