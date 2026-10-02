@@ -115,7 +115,7 @@ func _on_player_disconnected(peer_id: int) -> void:
 
 
 func _drop_oil_slick(peer_id: int, player: PlayerEntity) -> void:
-	var xform := _flat_transform(player, -oil_slick_drop_distance)
+	var xform := _ground_transform(player, -oil_slick_drop_distance)
 	var slick_name := _next_deployable_name()
 	_rpc_spawn_oil_slick.rpc(slick_name, xform, peer_id, Time.get_ticks_msec())
 	_despawn_after(slick_name, oil_slick_lifetime)
@@ -124,14 +124,26 @@ func _drop_oil_slick(peer_id: int, player: PlayerEntity) -> void:
 func _place_ramp(player: PlayerEntity) -> void:
 	var distance := maxf(player.velocity.length() * ramp_lead_time, ramp_min_distance)
 	var ramp_name := _next_deployable_name()
-	_rpc_spawn_ramp.rpc(ramp_name, _flat_transform(player, distance))
+	_rpc_spawn_ramp.rpc(ramp_name, _ground_transform(player, distance))
 	_despawn_after(ramp_name, ramp_lifetime)
 
 
-## Yaw-only transform `distance` along the rider's heading (negative = behind).
-func _flat_transform(player: PlayerEntity, distance: float) -> Transform3D:
+## Transform `distance` along the rider's heading (negative = behind), snapped to the ground there.
+func _ground_transform(player: PlayerEntity, distance: float) -> Transform3D:
 	var basis := Basis(Vector3.UP, player.global_rotation.y)
-	return Transform3D(basis, player.global_position - basis.z * distance)
+	var pos := player.global_position - basis.z * distance
+	# Slopes can put the ground up to ~|distance| above or below the rider at that spot
+	var reach := Vector3.UP * absf(distance)
+	var query := PhysicsRayQueryParameters3D.create(pos + reach, pos - reach)
+	query.exclude = [player.get_rid()]
+	query.collision_mask = 1
+	var hit := get_viewport().get_world_3d().direct_space_state.intersect_ray(query)
+	# No ground in reach (e.g. deployed off a jump) — leave it level at rider height, intentional
+	if hit.is_empty():
+		return Transform3D(basis, pos)
+	var up: Vector3 = hit["normal"]
+	var back := basis.z.slide(up).normalized()
+	return Transform3D(Basis(up.cross(back), up, back), hit["position"])
 
 
 func _next_deployable_name() -> String:

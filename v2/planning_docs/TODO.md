@@ -25,7 +25,8 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] deploying a ramp while going downhill will make it spawn in the air
+- [ ] check the time delta to see how long physics calculations that i control take to see if they should be optimized
+
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [x] make tricks + combos easier to do **WIP**
@@ -45,7 +46,6 @@
 
 - [ ] Grinding tricks (jump in air, grind on house fences)
 - Color balance the blue glow with dark (orange?)
-- Bunny hop in help menu?
 - Knock over light pole & fire hydrants & signs/ street lights 
 - replace csgmesh for houses/other buildings for performance + looks
 - trick animation to move up then play the mixamo anims
@@ -230,6 +230,8 @@
 ---
 
 ## Done ✅
+
+- [x] deploying a ramp while going downhill will make it spawn in the air
 
 - [x] fillup minigame => (new middle step) drive to start location (circle) => (respawn peeps in correct spots) start race countdown
 
