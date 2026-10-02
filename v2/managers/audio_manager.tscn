@@ -33,6 +33,7 @@
 [ext_resource type="AudioStream" uid="uid://btd6hkwtgfd6c" path="res://non_fmod_sounds/Exhaust_Pops/burble.ogg" id="29_06geh"]
 [ext_resource type="AudioStream" uid="uid://dr2dlse0lb64o" path="res://non_fmod_sounds/SFX/bonk.ogg" id="30_bonk"]
 [ext_resource type="AudioStream" uid="uid://x44ke4818qef" path="res://non_fmod_sounds/SFX/glug-glug.ogg" id="31_glug"]
+[ext_resource type="AudioStream" path="res://non_fmod_sounds/SFX/water-flowing-loop.ogg" id="32_water"]
 
 [node name="AudioManager" type="Node" unique_id=625309404 groups=["Managers"]]
 script = ExtResource("1_1k0gc")
@@ -192,11 +193,19 @@ bus = &"SFX"
 script = ExtResource("2_snd")
 metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 
-[node name="GlugGlug" type="AudioStreamPlayer" parent="Sounds"]
+[node name="GlugGlug" type="AudioStreamPlayer" parent="Sounds" unique_id=156245978]
 unique_name_in_owner = true
 stream = ExtResource("31_glug")
 bus = &"SFX"
 script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="WaterFlowing" type="AudioStreamPlayer" parent="Sounds"]
+unique_name_in_owner = true
+stream = ExtResource("32_water")
+bus = &"SFX"
+script = ExtResource("2_snd")
+loop = true
 metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 
 [node name="NOSBoost" type="AudioStreamPlayer" parent="Sounds" unique_id=455949376]

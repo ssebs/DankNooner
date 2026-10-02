@@ -54,6 +54,7 @@
 [ext_resource type="Script" uid="uid://cgy57qlo3xy0x" path="res://managers/gamemodes/types/race/components/traffic_component.gd" id="60_traffic"]
 [ext_resource type="Script" path="res://managers/gamemodes/types/race/components/time_attack_component.gd" id="60_time_attack"]
 [ext_resource type="Script" path="res://managers/gamemodes/types/race/components/knockout_scoring_component.gd" id="60_knockout_scoring"]
+[ext_resource type="Script" path="res://managers/gamemodes/types/race/components/fuel_up_bonus_component.gd" id="60_fuel_up_bonus"]
 [ext_resource type="Script" path="res://managers/item_manager.gd" id="47_itemm"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
@@ -323,7 +324,7 @@ race_mode = NodePath("..")
 script = ExtResource("60_leaderboard")
 race_mode = NodePath("..")
 
-[node name="StuntRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=569716093 node_paths=PackedStringArray("results_hud", "input_state_manager", "riding_hud_state", "traffic", "npc_racers", "pickups", "style_scoring", "finish_bonus", "knockout_scoring", "challenges", "leaderboard", "lobby_manager", "audio_manager", "gamemode_manager", "spawn_manager")]
+[node name="StuntRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=569716093 node_paths=PackedStringArray("results_hud", "input_state_manager", "riding_hud_state", "traffic", "npc_racers", "pickups", "style_scoring", "finish_bonus", "fuel_up_bonus", "knockout_scoring", "challenges", "leaderboard", "lobby_manager", "audio_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("60_racgm")
 race_type = 1
 results_hud = NodePath("../../../HUDManager/StateMachine/ResultsHUDState")
@@ -334,6 +335,7 @@ npc_racers = NodePath("NPCRacers")
 pickups = NodePath("Pickups")
 style_scoring = NodePath("StyleScoring")
 finish_bonus = NodePath("FinishBonus")
+fuel_up_bonus = NodePath("FuelUpBonus")
 knockout_scoring = NodePath("KnockoutScoring")
 challenges = NodePath("Challenges")
 leaderboard = NodePath("Leaderboard")
@@ -364,6 +366,11 @@ race_mode = NodePath("..")
 [node name="FinishBonus" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/StuntRaceGameMode" unique_id=1180011573 node_paths=PackedStringArray("race_mode")]
 script = ExtResource("60_finish_bonus")
 placement_points = PackedInt32Array(300, 200, 150, 100, 50)
+race_mode = NodePath("..")
+
+[node name="FuelUpBonus" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/StuntRaceGameMode" node_paths=PackedStringArray("fuel_up_mode", "race_mode")]
+script = ExtResource("60_fuel_up_bonus")
+fuel_up_mode = NodePath("../../FuelUpGameMode")
 race_mode = NodePath("..")
 
 [node name="KnockoutScoring" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/StuntRaceGameMode" node_paths=PackedStringArray("race_mode")]

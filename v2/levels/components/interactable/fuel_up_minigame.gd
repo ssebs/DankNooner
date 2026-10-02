@@ -1,10 +1,11 @@
 ## One gas pump in a station. FuelUpGameMode assigns each rider a pump pre-race; in free roam it's
-## a FreeRoamActivity. Either way the minigame runs locally on that rider's client: hold click on
-## the handle to carry it, hold it over the gas cap until full, let go to hang it back up (letting
-## go early just returns it). The left stick steers the same cursor, so gamepad plays it too.
+## a FreeRoamActivity. Either way the minigame runs locally on that rider's client: click the
+## handle to pick it up, hold click to spray (recoil kicks the cursor), move it back onto the pump
+## to hang it up, and click %EndBtn to finish whenever. Spray not going into an unfull tank is
+## spilled. The left stick steers the same cursor, so gamepad plays it too.
 class_name FuelUpMinigame extends FreeRoamActivity
 
-enum Step { GRAB, HOLD }
+enum Step { GRAB, CARRY }
 
 ## Seconds of held fill from empty to full.
 @export var fill_secs: float = 3.0
@@ -19,6 +20,15 @@ const HOSE_SAG: float = 0.5
 const CURSOR_OPEN := preload("res://levels/components/interactable/cursors/hand_open.png")
 const CURSOR_CLOSED := preload("res://levels/components/interactable/cursors/hand_closed.png")
 const CURSOR_HOTSPOT := Vector2(32, 32)
+## %EndBtn's material while hovered.
+const HOVER_GLOW := preload("res://levels/assets/props/neon_blue.tres")
+## Upward recoil (px/s) on the cursor while spraying, scaled up by each second of spray.
+const RECOIL_RISE: float = 40.0
+## Random recoil kicks: size (px), and mean seconds between them.
+const RECOIL_KICK_PX: float = 25.0
+const RECOIL_KICK_SECS: float = 0.25
+## How close (m) the grip must come back to its spot on the pump to hang up.
+const HANG_UP_DIST: float = 0.25
 
 @onready var camera: Camera3D = %Camera3D
 ## Where the assigned rider's bike is parked.
@@ -40,9 +50,14 @@ const CURSOR_HOTSPOT := Vector2(32, 32)
 @onready var _pump_marker: Marker3D = %PumpMarker
 @onready var _hose: Path3D = %Hose
 @onready var _hose_mesh: CSGPolygon3D = %HoseMesh
+@onready var _spill_particles: GPUParticles3D = %SpillParticles
+@onready var _end_btn: Area3D = %EndBtn
+@onready var _end_btn_mesh: MeshInstance3D = %EndBtnMesh
 
 ## Tank level, 0..1. Read by FuelUpHUDState.
 var fill: float = 0.0
+## Gas spilled this fill-up, in fill's units. Read by FuelUpGameMode.
+var spilled: float = 0.0
 
 ## All set by begin() while this pump is in use.
 var _player: PlayerEntity
@@ -52,10 +67,16 @@ var _hud_manager: HUDManager
 
 var _step := Step.GRAB
 var _over_cap: bool = false
+var _spraying: bool = false
+var _spray_secs: float = 0.0
+## The grip starts on its hanging spot, so hanging up waits until it has been carried off it.
+var _left_rest: bool = false
 ## View-axis depth the handle keeps while it follows the cursor.
 var _hold_depth: float = 0.0
 ## Grip-to-cap distance at grab; the swing toward the cap pose is measured against it.
 var _grab_dist: float = 0.0
+## Grip's hanging spot on the pump, taken at grab.
+var _rest_grip: Vector3
 var _carry_rest: Transform3D
 ## Tip basis relative to HandleArea — fixed, so the carry basis that lines the tip up with
 ## GasCapMarkerTip can be solved for.
@@ -143,8 +164,10 @@ func end():
 	_handle_area.transform = _carry_rest
 	_update_hose()
 	_set_highlight(null)
+	_end_btn_mesh.set_surface_override_material(0, null)
 	_set_cursor(null)
 	_audio_manager.stop_sfx(AudioManager.Sfx.GLUG_GLUG)
+	_set_spilling(false)
 	_gas_cap_mesh.visible = false
 	_anim.play(&"loop")
 	_hose_mesh.material.no_depth_test = false
@@ -160,6 +183,8 @@ func _start():
 	_gas_cap_area.global_position = _player.gas_cap_marker.global_position
 	_step = Step.GRAB
 	_over_cap = false
+	_spraying = false
+	spilled = 0.0
 	# Settles the ring at rest size (a cancel mid-hover leaves it grown); pauses the circle's loop.
 	_anim.play_backwards(&"gas_cap_hover")
 	_glug_started = false
@@ -185,6 +210,8 @@ func _on_input_state_changed(new_state: InputStateManager.InputState):
 func get_prompt_key() -> String:
 	if _step == Step.GRAB:
 		return "FUELUP_GRAB"
+	if _is_spilling():
+		return "FUELUP_SPILLING"
 	if fill >= 1.0:
 		return "FUELUP_RETURN"
 	return "FUELUP_ALIGN"
@@ -202,40 +229,70 @@ func _process(delta: float):
 	if _input_state_manager.current_input_state != InputStateManager.InputState.IN_MINIGAME:
 		_set_cursor(null)
 		_set_glug(false)
+		_set_spilling(false)
 		return
 	_move_cursor_with_stick(delta)
 	match _step:
 		Step.GRAB:
 			var hovered := _hovered_area()
 			_set_highlight(_handle if hovered == _handle_area else null)
+			_end_btn_mesh.set_surface_override_material(
+				0, HOVER_GLOW if hovered == _end_btn else null
+			)
+			if hovered == _end_btn and _click_pressed():
+				end()
+				finished.emit()
+				return
 			if hovered == _handle_area and _click_pressed():
-				_hold_depth = -camera.to_local(_handle_marker_click.global_position).z
-				_grab_dist = _handle_marker_click.global_position.distance_to(
-					_gas_cap_area.global_position
-				)
+				_rest_grip = _handle_marker_click.global_position
+				_hold_depth = -camera.to_local(_rest_grip).z
+				_grab_dist = _rest_grip.distance_to(_gas_cap_area.global_position)
 				_solve_swing()
 				_set_highlight(null)
 				_gas_cap_mesh.visible = true
-				_step = Step.HOLD
-		Step.HOLD:
-			if _click_held():
-				_follow_cursor()
-				_set_over_cap(_tip_in_cap())
-				if _over_cap:
-					fill = minf(fill + delta / fill_secs, 1.0)
+				_left_rest = false
+				_step = Step.CARRY
+		Step.CARRY:
+			_follow_cursor()
+			_set_over_cap(_tip_in_cap())
+			# Holding on past the grab sprays (and spills), which teaches riders to let go.
+			_spraying = _click_held()
+			if _spraying:
+				_spray(delta)
 			else:
-				# Let go: the handle springs back onto the pump.
+				_spray_secs = 0.0
+			var on_rest := (
+				_handle_marker_click.global_position.distance_to(_rest_grip) < HANG_UP_DIST
+			)
+			_left_rest = _left_rest or !on_rest
+			if _left_rest and on_rest and !_spraying:
 				_handle_area.transform = _carry_rest
 				_set_over_cap(false)
 				_gas_cap_mesh.visible = false
 				_step = Step.GRAB
-				if fill >= 1.0:
-					end()
-					finished.emit()
-					return
-	_set_glug(_step == Step.HOLD and _over_cap and fill < 1.0)
-	_set_cursor(CURSOR_CLOSED if _step == Step.HOLD else CURSOR_OPEN)
+	_set_glug(_spraying and _over_cap and fill < 1.0)
+	_set_spilling(_is_spilling())
+	_set_cursor(CURSOR_CLOSED if _step == Step.CARRY else CURSOR_OPEN)
 	_update_hose()
+
+
+## One frame of spray: into the tank if the tip's in an unfull one, else spilled. Recoil shoves the
+## cursor itself (so the rider pulls back to where they were), harder the longer it sprays. Web
+## ignores warp_mouse, so it has no recoil.
+func _spray(delta: float):
+	_spray_secs += delta
+	var recoil := Vector2.UP * RECOIL_RISE * (1.0 + _spray_secs) * delta
+	if randf() < delta / RECOIL_KICK_SECS:
+		recoil += Vector2(randf_range(-1.0, 1.0), -randf()) * RECOIL_KICK_PX
+	_nudge_cursor(recoil)
+	if _over_cap and fill < 1.0:
+		fill = minf(fill + delta / fill_secs, 1.0)
+	else:
+		spilled += delta / fill_secs
+
+
+func _is_spilling() -> bool:
+	return _spraying and !(_over_cap and fill < 1.0)
 
 
 ## Grows the cap ring while the nozzle's in it, shrinks it back on leaving.
@@ -261,8 +318,12 @@ func _move_cursor_with_stick(delta: float):
 	var stick := Input.get_vector("steer_left", "steer_right", "lean_forward", "lean_back")
 	if stick == Vector2.ZERO:
 		return
+	_nudge_cursor(stick * gamepad_cursor_speed * delta)
+
+
+func _nudge_cursor(offset: Vector2):
 	var viewport := get_viewport()
-	var pos := viewport.get_mouse_position() + stick * gamepad_cursor_speed * delta
+	var pos := viewport.get_mouse_position() + offset
 	viewport.warp_mouse(pos.clamp(Vector2.ZERO, viewport.get_visible_rect().size))
 
 
@@ -334,7 +395,7 @@ func _solve_swing():
 	)
 
 
-## Carry: left click (use_item) or gamepad A (ui_accept).
+## Grab, spray and end: left click (use_item) or gamepad A (ui_accept).
 func _click_pressed() -> bool:
 	return Input.is_action_just_pressed("use_item") or Input.is_action_just_pressed("ui_accept")
 
@@ -351,6 +412,16 @@ func _set_glug(filling: bool):
 		glug.play()
 	if glug.stream_paused == filling:
 		glug.stream_paused = !filling
+
+
+func _set_spilling(spilling: bool):
+	_spill_particles.emitting = spilling
+	var splash := _audio_manager.get_sound_event(AudioManager.Sfx.WATER_FLOWING)
+	if splash.playing != spilling:
+		if spilling:
+			splash.play()
+		else:
+			splash.stop()
 
 
 func _set_cursor(tex: Texture2D):

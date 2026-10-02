@@ -24,6 +24,9 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
+
+- [ ] fillup minigame => drive to start location (circle) => (respawn peeps in correct spots) start race countdown
+  - [ ] add this middle step
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [x] make tricks + combos easier to do **WIP**
@@ -42,7 +45,8 @@
 > Stuff to move ASAP
 
 - [ ] Grinding tricks (jump in air, grind on house fences)
-
+- Color balance the blue glow with dark (orange?)
+- Bunny hop in help menu?
 - Knock over light pole & fire hydrants & signs/ street lights 
 - replace csgmesh for houses/other buildings for performance + looks
 - trick animation to move up then play the mixamo anims
@@ -64,6 +68,8 @@
 ## Tasks 📋
 
 ### Game-breaking bugs
+- [ ] First launch on Mac web stuck in gas pump camera if you leave to main menu then come back it fixes
+  - [ ] need to reproduce
 - [ ] players can move at start on Race, not stunt race
   - [ ] merge shared stuff from race+stuntrace aka spawning stuff like this
 - [ ] Road generator lanes + AI
@@ -225,6 +231,8 @@
 ---
 
 ## Done ✅
+
+- [x] add some penalty to the fill up minigame
 
 - [x] Mario Kart lightning / Rally Up item
 

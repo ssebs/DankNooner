@@ -43,6 +43,7 @@ The stunt race is `RaceGameMode` with `race_type = STUNT_RACE`: the shared race 
   - Style: `StyleScoringComponent`, banked trick points (`TrickManager.get_score`).
   - Placement: `FinishBonusComponent`, `placement_points` by finish place among humans.
   - Knockouts: `KnockoutScoringComponent`, `points_per_knockout` each.
+  - Fuel-up: `FuelUpBonusComponent`, the clean-fill bonus from a `fuel_up_first` event's fuel-up.
 - **Knockouts** go through `SpawnManager.knock_out(victim, aggressor)`: ramming (`CrashController`),
   Oil Slick, Shotgun. Human victims only; Bat wobbles aren't attributed, and a rider's own slick
   doesn't count.
@@ -75,12 +76,22 @@ partial fill.
   cursor; the left stick steers it on gamepad), and `FuelUpHUDState` (boost gauge + step prompt).
   The pump owns all of that: gamemodes call `FuelUpMinigame.begin()` / `end()` and listen for
   `finished`.
-- **Play:** hold carry (`use_item` / A) on the handle, held by `HandleMarkerClick`. Nearing the cap,
-  it swings toward the `GasCapMarkerTip` pose and rides at cap height. It fills while
-  `HandleMarkerTip` is inside `GasCapArea` (no separate fill button, so it works on trackpads). The
-  `GLUG_GLUG` sfx plays only while filling, pausing in place so it plays once across the whole fill. Let go to hang it up; letting go
-  early just returns it. The tank starts at the rider's boost; finishing tells the server, which
-  fills the meter.
+- **Play** (one button, `use_item` / A): click the handle to pick it up; it follows the cursor by
+  `HandleMarkerClick`. Nearing the cap, it swings toward the `GasCapMarkerTip` pose and rides at cap
+  height. Hold to spray (holding on past the pick-up click sprays too, so riders learn to let go); it fills while
+  `HandleMarkerTip` is inside `GasCapArea`. The `GLUG_GLUG` sfx plays only while filling, pausing in
+  place so it plays once across the whole fill. Carry the grip back to its spot on the pump to hang
+  it up, then click `%EndBtn` to finish whenever. The tank starts at the rider's boost.
+- **Recoil and spill:** spraying pushes the cursor itself upward via `warp_mouse` (growing with
+  spray time, plus random kicks) and the rider pulls against it. Web ignores `warp_mouse`, so it
+  has no recoil. Spray not going into an unfull tank, off the cap or overfilling, counts as
+  `spilled`, with `%SpillParticles` spraying from the tip, the looping `WATER_FLOWING` sfx, and a
+  spilling prompt.
+- **Payout differs by mode.** Free roam ignores spill (see above). Pre-race starts every tank at
+  most `FULL_TANK_DRAIN_SEGMENTS` below full so full riders still play; finishing reports fill and
+  `spilled`, the server sets boost to fill minus spill, and a full tank banks a bonus scaling from
+  `MAX_BONUS` down to zero at `SPILL_FOR_NO_BONUS`, read by `FuelUpBonusComponent` in the stunt
+  race.
 - **The cap target is per bike:** `BikeSkinDefinition.gas_cap_position`, authored with
   PlayerEntity's `gas_cap_marker`.
 - **Why the minigame starts on `respawned`, not `Enter`:** the teleport's `do_respawn` flips the HUD
@@ -89,8 +100,6 @@ partial fill.
 
 ## Not built yet
 
-- **Fill-up bonus.** Fuel-up always fills the bar; stopping inside a target range for a bonus
-  (extra boost vs. score) isn't built.
 - **Rest of the item roster:** Nitrous, Siphon Hose, Sticky Tires, Armor, Roll Cage, Rally Up,
   Call the cops (see Items).
 - **Cross-city / open world:** islands, several stations and circuits per level.

@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_kyn7p"]
 [ext_resource type="Script" uid="uid://vc1gxo6x0kdc" path="res://levels/components/interactable/fuel_up_minigame.gd" id="2_fuelup"]
 [ext_resource type="Material" uid="uid://k0dialwj5i42" path="res://levels/assets/props/neon_blue.tres" id="3_ypgq6"]
+[ext_resource type="Texture2D" uid="uid://cjliervng0gbt" path="res://levels/assets/graybox/red.png" id="4_hdsq7"]
 
 [sub_resource type="Animation" id="Animation_0blfn"]
 length = 0.001
@@ -101,6 +102,28 @@ _data = {
 radius = 0.125
 height = 0.6
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_spill"]
+direction = Vector3(0, 1, 0)
+spread = 7.0
+initial_velocity_min = 2.0
+initial_velocity_max = 3.0
+scale_min = 0.6
+scale_max = 1.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_spill"]
+transparency = 1
+no_depth_test = true
+shading_mode = 0
+albedo_color = Color(0.95, 0.8, 0.25, 0.6)
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_spill"]
+material = SubResource("StandardMaterial3D_spill")
+size = Vector2(0.018, 0.018)
+
 [sub_resource type="SphereShape3D" id="SphereShape3D_7jvdf"]
 radius = 0.15
 
@@ -128,6 +151,22 @@ inner_radius = 0.75
 outer_radius = 0.8
 rings = 24
 ring_segments = 6
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_wig4y"]
+radius = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_etntc"]
+albedo_texture = ExtResource("4_hdsq7")
+uv1_triplanar = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_5e4dq"]
+material = SubResource("StandardMaterial3D_etntc")
+top_radius = 0.15
+bottom_radius = 0.15
+height = 0.15
+radial_segments = 8
+rings = 1
+cap_bottom = false
 
 [node name="GasPump" type="Node3D" unique_id=255124490]
 script = ExtResource("2_fuelup")
@@ -211,6 +250,14 @@ color_preset = 1
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09050857, 0)
 
+[node name="SpillParticles" type="GPUParticles3D" parent="HandleArea/Handle2/HandleMarkerTip" unique_id=314910433]
+unique_name_in_owner = true
+emitting = false
+amount = 128
+lifetime = 0.6
+process_material = SubResource("ParticleProcessMaterial_spill")
+draw_pass_1 = SubResource("QuadMesh_spill")
+
 [node name="GasCapArea" type="Area3D" parent="." unique_id=276705214]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.20075673, 0.9556382, -1.5)
@@ -273,3 +320,16 @@ shape = SubResource("CylinderShape3D_hdsq7")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerStartCircle/CollisionShape3D" unique_id=443569514]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9, 0)
 mesh = SubResource("TorusMesh_etntc")
+
+[node name="EndBtn" type="Area3D" parent="." unique_id=427688480]
+unique_name_in_owner = true
+transform = Transform3D(-4.3711385e-08, 4.371139e-08, -1, 1, 0, -4.371139e-08, 0, -1, -4.371139e-08, 0.21062237, 1.1071513, -0.37952912)
+collision_layer = 32
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EndBtn" unique_id=848501549]
+shape = SubResource("SphereShape3D_wig4y")
+
+[node name="EndBtnMesh" type="MeshInstance3D" parent="EndBtn/CollisionShape3D" unique_id=1503376165]
+unique_name_in_owner = true
+mesh = SubResource("CylinderMesh_5e4dq")

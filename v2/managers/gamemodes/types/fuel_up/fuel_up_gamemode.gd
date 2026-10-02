@@ -1,18 +1,27 @@
 @tool
 ## Pre-race fuel-up: every rider is parked at their own pump in the event circle's gas_station
 ## and frozen, while their client plays that pump's FuelUpMinigame locally (outside the rollback
-## sim). Each finish fills that rider's boost; once every rider has reported, the event hands off
-## to its definition's target_gamemode.
+## sim). Each finish sets that rider's boost to their fill less what they spilled, and banks a
+## clean-fill bonus for FuelUpBonusComponent; once every rider has reported, the event hands off to its
+## definition's target_gamemode.
 class_name FuelUpGameMode extends GameModeType
 
 @export var input_state_manager: InputStateManager
 @export var hud_manager: HUDManager
+
+## Riders start at most this many segments below full, so a full tank still has to play.
+const FULL_TANK_DRAIN_SEGMENTS: float = 2.0
+## Bonus for a spill-free fill-up, scaling down to 0 at SPILL_FOR_NO_BONUS (in tanks).
+const MAX_BONUS: float = 200.0
+const SPILL_FOR_NO_BONUS: float = 0.25
 
 var _event: GameModeEvent
 ## This client's pump; null once it's done.
 var _minigame: FuelUpMinigame
 ## Server only — peers still fueling.
 var _pending: Array[int] = []
+## Server only — peer_id -> clean-fill bonus. Kept past Exit for the race it hands off to.
+var _bonus: Dictionary[int, float] = {}
 
 
 func Enter(state_context: StateContext):
@@ -42,8 +51,12 @@ func Enter(state_context: StateContext):
 		gamemode_manager.audio_manager,
 		hud_manager
 	)
+	_minigame.fill = minf(
+		_minigame.fill, 1.0 - FULL_TANK_DRAIN_SEGMENTS / BoostController.BOOST_SEGMENTS
+	)
 
 	if multiplayer.is_server():
+		_bonus.clear()
 		_pending.assign(peer_ids)
 		for i in peer_ids.size():
 			var spot := pumps[i].bike_spot
@@ -84,18 +97,30 @@ func _set_station_objects_active(station: Node3D, active: bool):
 
 ## Local — the pump already handed the rider back.
 func _on_minigame_finished():
+	var fill := _minigame.fill
+	var spilled := _minigame.spilled
 	_minigame = null
-	_rpc_fuel_up_done.rpc_id(1)
+	_rpc_fuel_up_done.rpc_id(1, fill, spilled)
 
 #region Server
 
 
+func get_bonus(peer_id: int) -> float:
+	return _bonus.get(peer_id, 0.0)
+
+
+
+## Only a full tank earns the bonus, so stopping early can't bank a clean one.
 @rpc("any_peer", "call_local", "reliable")
-func _rpc_fuel_up_done():
+func _rpc_fuel_up_done(fill: float, spilled: float):
 	if !multiplayer.is_server():
 		return
 	var peer_id := multiplayer.get_remote_sender_id()
-	spawn_manager.max_boost_player.rpc(peer_id)
+	spawn_manager.set_boost_player.rpc(
+		peer_id, clampf(fill - spilled, 0.0, 1.0) * BoostController.BOOST_SEGMENTS
+	)
+	if fill >= 1.0:
+		_bonus[peer_id] = MAX_BONUS * maxf(0.0, 1.0 - spilled / SPILL_FOR_NO_BONUS)
 	_mark_done(peer_id)
 
 
