@@ -386,7 +386,10 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
   `push_leaderboard`. See [GamemodeSystem — Event pane](./GamemodeSystem.md#event-pane-riding-hud).
 - **`RidingHUDState.push_checkpoint_marker()`** is how the race gamemodes mark each racer's next
   checkpoint on that peer's minimap: the state is a single node at a shared path on every peer, so
-  the server can `rpc_id` the owning client's minimap through it.
+  the server can `rpc_id` the owning client's minimap through it. Pre-race it carries the current
+  step's trigger instead (`is_guide`). `TargetCompass` points at the same target from the top of
+  the HUD: always for guide targets, for race checkpoints only on easy difficulty. It hides near
+  the target, where the server's pass lags the predicted rider and the bearing would spin.
 - Pause hides the current HUD in place (`set_hud_hidden`) instead of transitioning, so unpause
   restores it without a state change.
 

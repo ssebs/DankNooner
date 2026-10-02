@@ -55,6 +55,8 @@
 [ext_resource type="PackedScene" uid="uid://dkk3ym43xrngn" path="res://levels/assets/props/lightpost.tscn" id="52_a4ddl"]
 [ext_resource type="Script" uid="uid://pulnqxx1eaja" path="res://managers/gamemodes/gamemodeobjects/gamemode_event.gd" id="mig_event"]
 [ext_resource type="Script" uid="uid://cm4g6ptfwf37q" path="res://managers/gamemodes/gamemodeobjects/event_route.gd" id="mig_route"]
+[ext_resource type="PackedScene" path="res://managers/gamemodes/gamemodeobjects/start_zone.tscn" id="99_startzone"]
+[ext_resource type="Script" uid="uid://b40syrl038fb3" path="res://managers/gamemodes/tasks/checkpoint_task.gd" id="99_ckpttask"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_ercdn"]
 resource_local_to_scene = true
@@ -1285,10 +1287,25 @@ height = 0.1
 depth = 76.0
 color_preset = 5
 
+[node name="StartZone" parent="StuntRace2/Route" unique_id=610008411 instance=ExtResource("99_startzone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -914.125, 0.25, 461.5625)
+
 [node name="StuntRace2" type="Node" parent="StuntRace2" unique_id=552702521 node_paths=PackedStringArray("route")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_mn4lr")
 route = NodePath("../Route")
+
+[node name="DriveToStartRunner" type="Node" parent="StuntRace2/StuntRace2" unique_id=445709688]
+script = ExtResource("20_grj8g")
+
+[node name="DriveToStartTask" type="Node" parent="StuntRace2/StuntRace2/DriveToStartRunner" unique_id=788500312 node_paths=PackedStringArray("trigger")]
+script = ExtResource("99_ckpttask")
+eval_when = 1
+trigger = NodePath("../../../Route/StartZone")
+respawn_in_place = true
+hide_trigger_on_pass = true
+objective_key = "RACE_DRIVE_TO_START"
+hint_key = "RACE_HINT_DRIVE_TO_START"
 
 [node name="SequentialTaskRunner" type="Node" parent="StuntRace2/StuntRace2" unique_id=1752097366]
 script = ExtResource("20_grj8g")
@@ -1589,10 +1606,25 @@ transform = Transform3D(-4.371138e-08, -1, 2.0663207e-07, 1, -4.3711378e-08, 1.7
 [node name="ArrowWall12" parent="StuntRace4/Route" unique_id=2091127027 instance=ExtResource("25_60x1b")]
 transform = Transform3D(-4.371138e-08, -0.96592575, 0.25881925, 1, -4.222194e-08, 1.1313356e-08, 0, 0.25881925, 0.96592575, -271.2013, 5.500023, 631.072)
 
+[node name="StartZone" parent="StuntRace4/Route" unique_id=872789583 instance=ExtResource("99_startzone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72.8749, 0.25, 720.0625)
+
 [node name="StuntRace4" type="Node" parent="StuntRace4" unique_id=2012942092 node_paths=PackedStringArray("route")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_dsd47")
 route = NodePath("../Route")
+
+[node name="DriveToStartRunner" type="Node" parent="StuntRace4/StuntRace4" unique_id=1554639557]
+script = ExtResource("20_grj8g")
+
+[node name="DriveToStartTask" type="Node" parent="StuntRace4/StuntRace4/DriveToStartRunner" unique_id=1906629879 node_paths=PackedStringArray("trigger")]
+script = ExtResource("99_ckpttask")
+eval_when = 1
+trigger = NodePath("../../../Route/StartZone")
+respawn_in_place = true
+hide_trigger_on_pass = true
+objective_key = "RACE_DRIVE_TO_START"
+hint_key = "RACE_HINT_DRIVE_TO_START"
 
 [node name="SequentialTaskRunner" type="Node" parent="StuntRace4/StuntRace4" unique_id=1194487181]
 script = ExtResource("20_grj8g")
@@ -1750,10 +1782,25 @@ height = 1.5
 depth = 3.0
 color_preset = 1
 
+[node name="StartZone" parent="TrackRace/Route" unique_id=1236162907 instance=ExtResource("99_startzone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -761.4882, 0.25, 242.9597)
+
 [node name="TrackRace" type="Node" parent="TrackRace" unique_id=1208701543 node_paths=PackedStringArray("route")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_2e67r")
 route = NodePath("../Route")
+
+[node name="DriveToStartRunner" type="Node" parent="TrackRace/TrackRace" unique_id=403911400]
+script = ExtResource("20_grj8g")
+
+[node name="DriveToStartTask" type="Node" parent="TrackRace/TrackRace/DriveToStartRunner" unique_id=1342268654 node_paths=PackedStringArray("trigger")]
+script = ExtResource("99_ckpttask")
+eval_when = 1
+trigger = NodePath("../../../Route/StartZone")
+respawn_in_place = true
+hide_trigger_on_pass = true
+objective_key = "RACE_DRIVE_TO_START"
+hint_key = "RACE_HINT_DRIVE_TO_START"
 
 [node name="SequentialTaskRunner" type="Node" parent="TrackRace/TrackRace" unique_id=496057780]
 script = ExtResource("20_grj8g")

@@ -33,6 +33,12 @@ func deactivate():
 	is_active = false
 
 
+## Server -> one rider: show/hide for them only. Leaves is_active alone, so the trigger keeps firing.
+@rpc("call_local", "reliable")
+func rpc_set_shown(shown: bool):
+	visible = shown
+
+
 func _apply_active_state():
 	visible = is_active
 	var area := get_node_or_null("Area3D") as Area3D

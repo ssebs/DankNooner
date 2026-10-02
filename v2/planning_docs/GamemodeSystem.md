@@ -120,8 +120,9 @@ EventStartCircle                       picker lists its GameModeEvent children
    crashed (a frozen `current_trick` would otherwise keep a hold timer running through the respawn).
 5. **Crash respawn:** `player_crashed` → `runner.notify_crashed` clears the peer's scratchpad and
    emits `respawn_requested`; the gamemode owns the delay, then respawns at the player's persistent
-   `rb_respawn_transform` (set by the last `TeleportTask` / grid slot / checkpoint). A crash after
-   the runner finished requests nothing.
+   `rb_respawn_transform` (set by the last `TeleportTask` / grid slot / checkpoint), or where they
+   crashed if the current task has `respawn_in_place` (free-driving steps that set no checkpoint).
+   A crash after the runner finished requests nothing.
 6. **Chain + results:** each runner's `all_completed` starts the next. On the last one,
    `_on_last_runner_completed(runner)` fires **before** `runner.stop()` (which clears the per-peer
    state results read). `_show_results(data)` opens `ResultsHUDState` with a countdown; skip or

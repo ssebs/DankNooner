@@ -11,8 +11,9 @@ class_name TaskRunner extends GameModeTask
 
 ## Notifies the host gamemode that a crashed peer should be respawned (gamemode
 ## owns the actual delay timer). Respawn target is read from the player's own
-## persistent `rb_respawn_transform`, set by TeleportTask via SpawnManager.
-signal respawn_requested(peer_id: int)
+## persistent `rb_respawn_transform`, set by TeleportTask via SpawnManager, unless
+## `in_place` (see GameModeTask.respawn_in_place).
+signal respawn_requested(peer_id: int, in_place: bool)
 
 ## Set by the host gamemode (or a parent runner, for nested cases) before
 ## `start()`. Not @exported because the runner lives in a level scene while the

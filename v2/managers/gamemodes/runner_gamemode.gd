@@ -241,16 +241,20 @@ func _on_player_crashed(peer_id: int):
 
 ## respawn_player uses the player's persistent rb_respawn_transform, set by the most recent
 ## TeleportTask / checkpoint via SpawnManager.
-func _on_runner_respawn_requested(peer_id: int):
+func _on_runner_respawn_requested(peer_id: int, in_place: bool):
 	get_tree().create_timer(_respawn_delay).timeout.connect(
-		func(): _respawn_crashed_player(peer_id), CONNECT_ONE_SHOT
+		func(): _respawn_crashed_player(peer_id, in_place), CONNECT_ONE_SHOT
 	)
 
 
 ## Delayed crash respawn — skip if the player already recovered (R tap) before the timer fired,
 ## so we don't respawn twice.
-func _respawn_crashed_player(peer_id: int):
-	if spawn_manager.get_player_by_peer_id(peer_id).is_crashed:
+func _respawn_crashed_player(peer_id: int, in_place: bool):
+	if !spawn_manager.get_player_by_peer_id(peer_id).is_crashed:
+		return
+	if in_place:
+		spawn_manager.respawn_in_place(peer_id)
+	else:
 		spawn_manager.respawn_player.rpc(peer_id)
 
 

@@ -130,22 +130,30 @@ func _race_end():
 #region Checkpoint markers (server only)
 
 
-## Push each human's next checkpoint to their own minimap (green marker).
-## get_target_checkpoint returns null pre-race/finished — that clears it.
+## Push each human's next checkpoint to their own minimap (green marker). Pre-race, it's the
+## current step's trigger instead (e.g. drive to the start). A null target clears it.
 func _push_checkpoint_markers():
 	for peer_id in lobby_manager.lobby_players:
 		# Player may not be spawned yet (late-join) — skip is intentional.
 		var player := spawn_manager.get_player_by_peer_id(peer_id)
 		if player == null:
 			continue
-		var pos := Vector3.ZERO
-		var has_target := false
-		if race_task.has_racer(peer_id):
-			var ckpt := race_task.get_target_checkpoint(peer_id)
-			if ckpt != null:
-				pos = ckpt.global_position
-				has_target = true
-		riding_hud_state.push_checkpoint_marker(peer_id, pos, has_target)
+		var is_pre_race := !race_task.has_racer(peer_id)
+		var target: Node3D = (
+			_get_step_trigger(peer_id) if is_pre_race
+			else race_task.get_target_checkpoint(peer_id)
+		)
+		var pos := target.global_position if target != null else Vector3.ZERO
+		riding_hud_state.push_checkpoint_marker(peer_id, pos, target != null, is_pre_race)
+
+
+func _get_step_trigger(peer_id: int) -> GameModeObject:
+	var runner := _active_runner as SequentialTaskRunner
+	# No runner through the results countdown, and late joiners free-roam outside it — skip is intentional.
+	if runner == null or !runner.player_states.has(peer_id):
+		return null
+	var task := runner.get_current_task(peer_id)
+	return task.trigger if task != null else null
 
 
 func _clear_checkpoint_markers():
@@ -187,7 +195,8 @@ func _on_results_restart_pressed():
 	results_hud.rpc_hide.rpc()
 	# Already stopped (results show only after all_completed), unless restart races the countdown.
 	_stop_active_runner()
-	_active_runner_index = -1
+	# Straight back to the race's runner (its grid), skipping pre-race ones like drive to the start.
+	_active_runner_index = _runners.find_custom(func(r): return r.is_ancestor_of(race_task)) - 1
 	_inject_runner_deps()
 	_race_end()
 	_race_start()

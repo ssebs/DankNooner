@@ -34,6 +34,10 @@ enum EvalWhen { ALWAYS, ON_ENTER, WHILE_INSIDE }
 ## maintain speed, stay in bounds). Honored by ConcurrentTaskRunner.
 @export var is_constraint: bool = false
 
+## A crash during this task respawns the rider where they crashed (free roam style) instead of
+## at their persistent respawn point. For free-driving steps that set no checkpoint.
+@export var respawn_in_place: bool = false
+
 ## Set by the parent runner when the task becomes active.
 ## Tasks reach shared deps (spawn_manager, riding_hud, audio_manager) via this ref
 ## instead of downcasting to a specific gamemode or runner subclass.

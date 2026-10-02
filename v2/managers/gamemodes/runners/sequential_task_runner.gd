@@ -66,7 +66,8 @@ func notify_crashed(peer_id: int) -> void:
 	# Teleport on crash; clear in/out gating since Godot may not fire body_exited.
 	state.prop_event_fired = false
 	state.inside_zone = false
-	respawn_requested.emit(peer_id)
+	var task := get_current_task(peer_id)
+	respawn_requested.emit(peer_id, task != null and task.respawn_in_place)
 
 
 func notify_disconnected(peer_id: int) -> void:
@@ -91,6 +92,12 @@ func mark_state(peer_id: int, key: String, value: Variant) -> void:
 #endregion
 
 #region Per-peer walk
+
+
+## The peer's step (a nested runner while parked at its gate); null once they've finished.
+func get_current_task(peer_id: int) -> GameModeTask:
+	var state := player_states[peer_id]
+	return null if state.completed else tasks[state.current_index]
 
 
 func _update_player(
@@ -220,8 +227,8 @@ func _disconnect_nested_runner() -> void:
 		_nested_runner.respawn_requested.disconnect(_forward_nested_respawn)
 
 
-func _forward_nested_respawn(peer_id: int) -> void:
-	respawn_requested.emit(peer_id)
+func _forward_nested_respawn(peer_id: int, in_place: bool) -> void:
+	respawn_requested.emit(peer_id, in_place)
 
 
 #endregion

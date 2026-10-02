@@ -61,6 +61,14 @@ The stunt race is `RaceGameMode` with `race_type = STUNT_RACE`: the shared race 
 Events with `fuel_up_first` run `FuelUpGameMode` before the race, which hands the same event to
 its `target_gamemode` once every rider has finished. This is the boost = fuel top-off.
 
+**Drive to the start:** a first runner authored in the event, ahead of the race's own. Riders
+leave the pumps free and ride to a `start_zone.tscn` (a `TriggerZone` wearing the event circle's
+`start_ring.tscn`, a label and a light beam) in the route, via a `CheckpointTask` with
+`respawn_in_place` and `hide_trigger_on_pass` (each rider stops seeing the zone once through it).
+Once the last rider arrives, the race runner grids and counts everyone in as usual. The minimap
+and `TargetCompass` point at the zone meanwhile. A results-screen restart skips straight to the
+race runner.
+
 **Free roam:** each pump is also a `FreeRoamActivity` (see
 [GamemodeSystem](./GamemodeSystem.md)) with its own small `%PlayerStartCircle`. Its `server_start`
 teleports and freezes the rider; its `server_end` sets boost to the higher of the meter and the

@@ -43,6 +43,9 @@ const COLOR_EVENT := Color(1.0, 0.1, 0.8)
 ## (checkpoint progress is server-only), null while not racing.
 var checkpoint_pos: Vector3
 var has_checkpoint: bool = false
+## A pre-race target (e.g. drive to the start) rather than a race checkpoint; TargetCompass
+## always points at these.
+var checkpoint_is_guide: bool = false
 
 var _local_player: PlayerEntity
 var _active: bool = false
@@ -77,6 +80,8 @@ func deactivate() -> void:
 	_active = false
 	set_process(false)
 	_local_player = null
+	# A race left mid-way never sends the clear; races resend it every frame anyway.
+	has_checkpoint = false
 	_sub_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 
 
@@ -234,6 +239,7 @@ func _draw_edge_arrow(pos: Vector2, dir: Vector2, color: Color) -> void:
 ## Server -> owning client: set (or clear) the local racer's next-checkpoint
 ## marker. Sent each frame while racing by the race gamemodes.
 @rpc("authority", "call_local", "unreliable")
-func rpc_set_checkpoint(pos: Vector3, has_target: bool) -> void:
+func rpc_set_checkpoint(pos: Vector3, has_target: bool, is_guide: bool) -> void:
 	checkpoint_pos = pos
 	has_checkpoint = has_target
+	checkpoint_is_guide = is_guide

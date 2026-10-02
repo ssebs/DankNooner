@@ -39,6 +39,7 @@ const _WARNING_PULSE_SECS := 0.35
 @onready var _game_msg: Label = %HUD_GAME_MSG
 @onready var _leaderboard: RaceLeaderboard = %HUD_Leaderboard
 @onready var _trick_popups: TrickPopups = %TrickPopups
+@onready var _target_compass: TargetCompass = %TargetCompass
 @onready var _event_panel: PanelContainer = %EventPanel
 @onready var _event_title: Label = %HUD_EventTitle
 @onready var _event_step: Label = %HUD_EventStep
@@ -346,6 +347,7 @@ func _add_trick_row() -> TrickRow:
 func show_ui() -> void:
 	ui.visible = true
 	minimap.activate(player_entity)
+	_target_compass.activate(player_entity)
 
 	# Only the local client reaches show_ui, so the overlay never spawns on remote
 	# player instances. netfox registers its perf monitors only when NetworkPerformance
@@ -366,9 +368,11 @@ func show_ui() -> void:
 
 
 ## Server-side: forward the local racer's next-checkpoint marker to the owning
-## client's minimap. Called from the race gamemodes.
-func push_checkpoint_marker(peer_id: int, pos: Vector3, has_target: bool) -> void:
-	minimap.rpc_set_checkpoint.rpc_id(peer_id, pos, has_target)
+## client's minimap. Called from the race gamemodes. is_guide: see Minimap.checkpoint_is_guide.
+func push_checkpoint_marker(
+	peer_id: int, pos: Vector3, has_target: bool, is_guide: bool = false
+) -> void:
+	minimap.rpc_set_checkpoint.rpc_id(peer_id, pos, has_target, is_guide)
 
 
 ## Server-side: broadcast the live leaderboard (see RaceLeaderboard.set_board) and the race
@@ -577,6 +581,7 @@ func _rpc_callout(text: String):
 func hide_ui() -> void:
 	ui.visible = false
 	minimap.deactivate()
+	_target_compass.deactivate()
 
 
 ## Called from player_entity.gd's do_respawn

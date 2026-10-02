@@ -25,8 +25,7 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] fillup minigame => drive to start location (circle) => (respawn peeps in correct spots) start race countdown
-  - [ ] add this middle step
+- [ ] deploying a ramp while going downhill will make it spawn in the air
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
   - [x] make tricks + combos easier to do **WIP**
@@ -231,6 +230,8 @@
 ---
 
 ## Done ✅
+
+- [x] fillup minigame => (new middle step) drive to start location (circle) => (respawn peeps in correct spots) start race countdown
 
 - [x] add some penalty to the fill up minigame
 
