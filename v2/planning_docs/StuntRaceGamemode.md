@@ -50,7 +50,7 @@ The stunt race is `RaceGameMode` with `race_type = STUNT_RACE`: the shared race 
 - **Items** (`PickupItem` / `PickupSpawner` / `PickupItemDefinition`, server-auth via `ItemManager`)
   spawn during races (`PickupsComponent`) and in free roam (`PickupSpawnManager`). Gas Can applies
   instantly (boost refill); the rest fill the rider's single held slot, used with double-tap trick or
-  `use_item`. Built: Gas Can, Bat, Oil Slick, Ramp, Shotgun.
+  `use_item`. Built: Gas Can, Bat, Oil Slick, Ramp, Shotgun, Rally Up.
 - **Challenges:** `RaceChallenge` resources in the definition's `race_challenges`
   (`LongestWheelieChallenge`, `BestComboChallenge`, `SuggestedTricksChallenge`), run by
   `ChallengesComponent`. Suggested tricks score double in `TrickManager`.
@@ -108,7 +108,7 @@ partial fill.
 
 ## Not built yet
 
-- **Rest of the item roster:** Nitrous, Siphon Hose, Sticky Tires, Armor, Roll Cage, Rally Up,
+- **Rest of the item roster:** Nitrous, Siphon Hose, Sticky Tires, Armor, Roll Cage,
   Call the cops (see Items).
 - **Cross-city / open world:** islands, several stations and circuits per level.
 - **City aesthetic:** environmental ramps, buildings, vistas, lakes.

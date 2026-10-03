@@ -25,6 +25,8 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] when doing a wheelie, the head should not be pointing downward.
+
 - [ ] check the time delta to see how long physics calculations that i control take to see if they should be optimized
 
 - [ ] get fun gameplay loop going
@@ -35,6 +37,7 @@
   - [x] Time attack / multiple modes per location
   - [x] more items (shotgun, bat, ramp, oil slick)
   - [x] gas pump minigame before some races
+- [ ] basic progression / unlocks / points mean something
 
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
 - [ ] fix game breaking bugs
@@ -60,6 +63,7 @@
   - [ ] maybe add markers & dynamically generate on the player's client (HUdController?)
 
 - Delete most of the NPC AI, keep the basic lane position/movement and racing Ai. Clean it up but don't reimplement until the stunt race is working first.
+  - maybe dont use road lanes for ai at all?
 - npc => have their own collision layers?
 - when chaining gas stations, just have multiple event start circles & have the mini game be an optional thing (smol start circle in front of gas pump)
 ---

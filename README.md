@@ -38,20 +38,26 @@ What works today:
 
 - Free roam multiplayer over WebRTC (NAT punch via a signaling server, no port forwarding)
 - Server-authoritative physics with client prediction and rollback (netfox)
-- Wheelies, stoppies, backflips, frontflips, 360s, heel clickers, high chairs
-- Crash detection and ragdoll
-- Manual gearbox with clutch, RPM, and progressive braking
+- Manual gearbox with clutch, RPM, and progressive braking (or automatic)
+- 17 tricks: wheelies, stoppies, flips, 360s, superman, kickflip, burnouts, bunny hops, and more
+- Trick combos that earn boost
+- Crash detection, ragdoll, and speed wobbles
+- Gamemodes: Race, Stunt Race, Time Attack, and Wheelie-only race, with mid-race challenges and a live leaderboard
+- Stunt Race items: bat, shotgun, oil slick, deployable ramp, gas can, and Rally Up
+- Fuel-up minigame at gas stations before races and in free roam
 - IK rider animation that adapts per bike (hand and foot markers per `BikeSkinDefinition`)
-- FMOD engine audio that blends with RPM
-- Basic tutorial gamemode and start-circle gamemode triggers
+- Custom engine audio that blends with RPM, plus exhaust pops and burbles
 - Bike and character skin customization with color slots and mods
+- Minimap, plus quick and full respawn
 
-What's next (see [GameplayAndModes.md](./v2/planning_docs/GameplayAndModes.md) for the full design):
+What's next (see [TODO.md](./v2/planning_docs/TODO.md)):
 
-- Street race, trick battle, and crash-launch gamemodes
-- Traffic AI and near-miss tricks
+- Racing and traffic AI rework, street races with traffic, and near-miss tricks
+- Trick battle and crash-launch gamemodes
+- More Stunt Race items
 - Customization shop, progression, and saved player stats
-- Larger island map
+- Larger map
+- Music
 - Story mode (V3)
 
 <!-- TODO: short clip or screenshot of multiplayer free roam -->
@@ -84,11 +90,16 @@ Design notes and current status live in [v2/planning_docs/](./v2/planning_docs/)
 
 - [TODO](./v2/planning_docs/TODO.md) - active work and backlog
 - [Architecture](./v2/planning_docs/Architecture.md)
-- [GameplayAndModes](./v2/planning_docs/GameplayAndModes.md)
+- [GamemodeSystem](./v2/planning_docs/GamemodeSystem.md)
+- [StuntRaceGamemode](./v2/planning_docs/StuntRaceGamemode.md)
 - [PlayerController](./v2/planning_docs/PlayerController.md)
+- [ComboAndBoost](./v2/planning_docs/ComboAndBoost.md)
+- [AnimationController](./v2/planning_docs/AnimationController.md)
+- [AudioMiddleware](./v2/planning_docs/AudioMiddleware.md)
+- [LobbyGameFlowMP](./v2/planning_docs/LobbyGameFlowMP.md)
 - [Skins](./v2/planning_docs/Skins.md)
-- [Goals & Requirements](./v2/planning_docs/GoalsRequirements.md)
-- [Story / Singleplayer](./v2/planning_docs/StorySingleplayer.md)
+- [Goals](./v2/planning_docs/Goals4Game.md)
+- [Story](./v2/planning_docs/Story.md)
 - [Marketing](./v2/planning_docs/Marketing.md)
 
 ## Media
