@@ -25,16 +25,12 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-
-- [ ] get fun gameplay loop going
-  - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
-  - [x] make tricks + combos easier to do **WIP**
-  - [x] Trick juice / points / leaderboard
-  - [x] Score complex tricks more (high chair during wheelie vs just on ground)
-  - [x] Time attack / multiple modes per location
-  - [x] more items (shotgun, bat, ramp, oil slick)
-  - [x] gas pump minigame before some races
-- [ ] basic progression / unlocks / points mean something
+- [ ] Get AI working again
+  - [ ] NPC Traffic
+  - [ ] NPC Race AI
+- [ ] Unlocks / Progression for bikes / characters w/ money / XP w/ Story 
+  - [ ] maybe like simpsons hit & run where 1 level has 1 bike type/map?
+  - [ ] How will this work with multiplayer? Could be everyone follows host's save
 
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
 - [ ] fix game breaking bugs
@@ -233,6 +229,15 @@
 ---
 
 ## Done ✅
+
+- [x] get fun gameplay loop going
+  - [x] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
+  - [x] make tricks + combos easier to do **WIP**
+  - [x] Trick juice / points / leaderboard
+  - [x] Score complex tricks more (high chair during wheelie vs just on ground)
+  - [x] Time attack / multiple modes per location
+  - [x] more items (shotgun, bat, ramp, oil slick)
+  - [x] gas pump minigame before some races
 
 - [x] when leaning backward, the head should not be pointing downward.
 
