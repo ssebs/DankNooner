@@ -34,6 +34,9 @@ var default_settings: Dictionary = {
 	"music_vol": 1.0,
 	"menu_vol": 1.0,
 	"sfx_vol": 1.0,
+	"mute": false,
+	"mute_unfocused": true,
+	"language": OS.get_locale_language(),
 	"cam_mode": 0, # 0 is TPS, 1 is FPS. TODO make enum
 	"invert_cam": false,
 	"mouse_cam_sens": 0.5,
@@ -54,6 +57,9 @@ func _ready():
 	if OS.has_feature("web"):
 		default_settings["fullscreen_mode"] = "windowed"
 		default_settings["resolution_scale"] = 0.5
+
+	if default_settings["language"] not in TranslationServer.get_loaded_locales():
+		default_settings["language"] = "en"
 
 	self.call_deferred("deferred_init")
 

@@ -89,6 +89,8 @@ var _active_engine_sfx: int = -1
 ## Round-robin pool of decel pop players (children of %ExhaustPops) + the next index to play.
 var _exhaust_pops: Array[SoundEvent] = []
 var _exhaust_pop_idx: int = 0
+var _audio_disabled := false
+var _app_focused := true
 
 
 func _ready():
@@ -137,12 +139,22 @@ func _ready():
 	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
 	settings_manager.setting_updated.connect(_on_setting_updated)
 
-	var args := OS.get_cmdline_user_args()
-	if "--disable-audio" in args:
-		AudioServer.set_bus_mute(AudioServer.get_bus_index(&"Master"), true)
+	_audio_disabled = "--disable-audio" in OS.get_cmdline_user_args()
+	AudioServer.set_bus_mute(AudioServer.get_bus_index(&"Master"), _audio_disabled)
+
+
+func _notification(what: int):
+	if what != NOTIFICATION_APPLICATION_FOCUS_IN and what != NOTIFICATION_APPLICATION_FOCUS_OUT:
+		return
+	_app_focused = what == NOTIFICATION_APPLICATION_FOCUS_IN
+	# Focus events fire in the editor and before settings load; next settings load applies it
+	if Engine.is_editor_hint() or settings_manager.current_settings.is_empty():
+		return
+	_apply_master_mute()
 
 
 func _on_all_settings_changed(new_settings: Dictionary):
+	_apply_master_mute()
 	for setting_key in VOLUME_SETTING_MAP.keys():
 		var bus_name: String = VOLUME_SETTING_MAP[setting_key]
 		var setting_value: float = new_settings[setting_key]
@@ -161,6 +173,12 @@ func _apply_bus_volume(bus_name: String, linear_volume: float):
 		DebugUtils.DebugErrMsg("audio bus not found: %s" % bus_name)
 		return
 	AudioServer.set_bus_volume_db(idx, linear_to_db(linear_volume))
+
+
+func _apply_master_mute():
+	var s := settings_manager.current_settings
+	var muted: bool = _audio_disabled or s["mute"] or (s["mute_unfocused"] and !_app_focused)
+	AudioServer.set_bus_mute(AudioServer.get_bus_index(&"Master"), muted)
 
 
 ## Silences gameplay SFX (engine revs etc.) without touching the user's volume setting.

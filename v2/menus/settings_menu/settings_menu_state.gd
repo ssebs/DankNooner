@@ -11,10 +11,13 @@ class_name SettingsMenuState extends MenuState
 
 @onready var signal_host_entry: LineEdit = %SignalHostEntry
 @onready var window_mode_opt: OptionButton = %WindowModeOpt
+@onready var language_opt: OptionButton = %LanguageOpt
 @onready var master_vol_slider: HSlider = %MasterVolSlider
 @onready var music_vol_slider: HSlider = %MusicVolSlider
 @onready var sfx_vol_slider: HSlider = %SFXVolSlider
 @onready var menu_vol_slider: HSlider = %MenuVolSlider
+@onready var mute_check: CheckBox = %MuteCheck
+@onready var mute_unfocused_check: CheckBox = %MuteUnfocusedCheck
 
 @onready var resolution_scale_label: Label = %RESOLUTION_SCALE_LABEL
 @onready var resolution_scale: HSlider = %ResolutionScaleSlider
@@ -31,10 +34,16 @@ class_name SettingsMenuState extends MenuState
 func _ready():
 	super._ready()
 	window_mode_opt.clear()
+	# Raw keys: OptionButton auto-translates, so items follow a language change
 	for mode_str in SettingsManager.WINDOW_MODES.keys():
 		window_mode_opt.add_item(
-			tr(SettingsManager.WINDOW_MODE_LABELS[mode_str]), SettingsManager.WINDOW_MODES[mode_str]
+			SettingsManager.WINDOW_MODE_LABELS[mode_str], SettingsManager.WINDOW_MODES[mode_str]
 		)
+
+	language_opt.clear()
+	for locale in TranslationServer.get_loaded_locales():
+		language_opt.add_item(TranslationServer.get_locale_name(locale))
+		language_opt.set_item_metadata(language_opt.item_count - 1, locale)
 
 
 func Enter(state_context: StateContext):
@@ -82,10 +91,17 @@ func load_settings_into_ui():
 			window_mode_opt.select(i)
 			break
 
+	for i in language_opt.item_count:
+		if language_opt.get_item_metadata(i) == settings_manager.current_settings["language"]:
+			language_opt.select(i)
+			break
+
 	master_vol_slider.value = settings_manager.current_settings["master_vol"]
 	music_vol_slider.value = settings_manager.current_settings["music_vol"]
 	sfx_vol_slider.value = settings_manager.current_settings["sfx_vol"]
 	menu_vol_slider.value = settings_manager.current_settings["menu_vol"]
+	mute_check.button_pressed = settings_manager.current_settings["mute"]
+	mute_unfocused_check.button_pressed = settings_manager.current_settings["mute_unfocused"]
 
 	resolution_scale.value = settings_manager.current_settings["resolution_scale"]
 	_on_resolution_scale_changed(resolution_scale.value)
@@ -117,11 +133,16 @@ func _on_save_pressed():
 		SettingsManager.windowmode_to_str(window_mode_opt.get_selected_id()),
 		false
 	)
+	settings_manager.update_setting(
+		"language", language_opt.get_item_metadata(language_opt.selected), false
+	)
 
 	settings_manager.update_setting("master_vol", master_vol_slider.value, false)
 	settings_manager.update_setting("music_vol", music_vol_slider.value, false)
 	settings_manager.update_setting("sfx_vol", sfx_vol_slider.value, false)
 	settings_manager.update_setting("menu_vol", menu_vol_slider.value, false)
+	settings_manager.update_setting("mute", mute_check.button_pressed, false)
+	settings_manager.update_setting("mute_unfocused", mute_unfocused_check.button_pressed, false)
 
 	settings_manager.update_setting("resolution_scale", resolution_scale.value, false)
 	settings_manager.update_setting("joy_cam_sens", joy_cam_sens.value, false)

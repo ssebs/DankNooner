@@ -141,6 +141,15 @@ popup/item_2/id = 4
 popup/item_3/text = "WINDOW_MODE_MAXIMIZED"
 popup/item_3/id = 2
 
+[node name="LANGUAGE_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1382044917]
+layout_mode = 2
+text = "LANGUAGE_LABEL"
+
+[node name="LanguageOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=842316570]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+
 [node name="HSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1039528216]
 layout_mode = 2
 theme_override_constants/separation = 24
@@ -225,6 +234,26 @@ max_value = 1.0
 step = 0.05
 value = 0.5
 ticks_on_borders = true
+
+[node name="MUTE_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1960384521]
+layout_mode = 2
+text = "MUTE_LABEL"
+
+[node name="MuteCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=517290834]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "TRUE"
+
+[node name="MUTE_UNFOCUSED_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1203857466]
+layout_mode = 2
+text = "MUTE_UNFOCUSED_LABEL"
+
+[node name="MuteUnfocusedCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=698412237]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "TRUE"
 
 [node name="VBoxContainer3" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/HBoxContainer" unique_id=659821076]
 layout_mode = 2

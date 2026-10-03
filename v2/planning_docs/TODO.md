@@ -22,9 +22,9 @@
 > Don't forget, have fun :D
 
 - [ ] Quick settings wins
-  - [ ] localization language option
-  - [ ] auto-mute when out of focus
-  - [ ] mute option
+  - [x] localization language option
+  - [x] auto-mute when out of focus
+  - [x] mute option
 - [ ] Get AI working again
   - [ ] NPC Traffic
   - [ ] NPC Race AI

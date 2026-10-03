@@ -41,6 +41,7 @@ func _input(event: InputEvent):
 
 func _on_all_settings_changed(new_settings: Dictionary):
 	_apply_window_mode(new_settings["fullscreen_mode"])
+	TranslationServer.set_locale(new_settings["language"])
 
 	get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
 	get_viewport().scaling_3d_scale = new_settings.get("resolution_scale", 1.0)
