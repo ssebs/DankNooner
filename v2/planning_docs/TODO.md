@@ -24,6 +24,7 @@
 - [ ] Get AI working again
   - [ ] NPC Traffic
   - [ ] NPC Race AI
+- [ ] [Progression](#progression--customization) 
 
 ---
 
