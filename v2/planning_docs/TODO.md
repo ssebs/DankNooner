@@ -25,8 +25,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] when doing a wheelie, the head should not be pointing downward.
-
 - [ ] check the time delta to see how long physics calculations that i control take to see if they should be optimized
 
 - [ ] get fun gameplay loop going
@@ -234,6 +232,8 @@
 ---
 
 ## Done ✅
+
+- [x] when leaning backward, the head should not be pointing downward.
 
 - [x] deploying a ramp while going downhill will make it spawn in the air
 

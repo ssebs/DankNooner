@@ -17,6 +17,7 @@ var ik_right_foot: Marker3D
 var butt_pos: Marker3D
 
 var fabrik_ik: FABRIK3D = FABRIK3D.new()
+var head_rot_mod: _HeadRotationModifier = _HeadRotationModifier.new()
 var ik_settings_map: Array[Dictionary] = []
 
 var can_move_butt: bool = true
@@ -63,11 +64,13 @@ func set_targets(
 
 func enable_ik():
 	fabrik_ik.active = true
+	head_rot_mod.active = true
 	enable_butt_placement()
 
 
 func disable_ik():
 	fabrik_ik.active = false
+	head_rot_mod.active = false
 	disable_butt_placement()
 
 
@@ -116,6 +119,9 @@ func _apply_end_bone_rotations():
 		_rotate_bone_to_marker("RightFoot", ik_right_foot)
 	if ik_chest:
 		_rotate_bone_to_marker("Spine", ik_chest)
+
+
+func _apply_head_rotation():
 	if ik_head:
 		_rotate_bone_to_marker("Head", ik_head)
 
@@ -190,6 +196,13 @@ func create_ik() -> void:
 	skel_3d.add_child(fabrik_ik)
 	fabrik_ik.owner = mesh_skin
 
+	# Must be added after fabrik_ik — modifiers run in child order.
+	if head_rot_mod != null and is_instance_valid(head_rot_mod):
+		head_rot_mod.queue_free()
+	head_rot_mod = _HeadRotationModifier.new()
+	head_rot_mod.ik_ctrl = self
+	skel_3d.add_child(head_rot_mod)
+
 
 func _build_ik_settings_map() -> void:
 	ik_settings_map = [
@@ -231,3 +244,14 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if char_skin == null:
 		issues.append("char_skin must be set")
 	return issues
+
+
+## Head rotation runs after FABRIK so it's relative to the IK'd neck (pre-IK, a back lean tipped it
+## down). Head only — rotating Spine post-IK would drag the solved arms off their targets.
+class _HeadRotationModifier:
+	extends SkeletonModifier3D
+
+	var ik_ctrl: IKController
+
+	func _process_modification_with_delta(_delta: float) -> void:
+		ik_ctrl._apply_head_rotation()
