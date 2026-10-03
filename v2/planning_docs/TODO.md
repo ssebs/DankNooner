@@ -4,119 +4,55 @@
 - [In-Progress 🚨](#in-progress-)
 - [Notes 📝](#notes-)
 - [Tasks 📋](#tasks-)
+	- [Progression \& Customization](#progression--customization)
+	- [Traffic / Racing AI](#traffic--racing-ai)
 	- [Game-breaking bugs](#game-breaking-bugs)
-	- [Gameplay Improvements](#gameplay-improvements)
-		- [Gamemodes / scoring](#gamemodes--scoring)
-		- [Juice / "Feel"](#juice--feel)
-		- [Audio](#audio)
-		- [Progression \& Customization](#progression--customization)
-		- [Tutorials (post-Challenge-system)](#tutorials-post-challenge-system)
-	- [Systems](#systems)
-		- [Traffic / Racing AI](#traffic--racing-ai)
-		- [Tricks / animation](#tricks--animation)
-		- [Multiplayer / netcode](#multiplayer--netcode)
-		- [Cutscenes](#cutscenes)
-	- [Tech Debt / Bugs](#tech-debt--bugs)
-		- [Misc](#misc)
-		- [Polish](#polish)
+	- [Gamemodes / scoring](#gamemodes--scoring)
+	- [Juice / "Feel"](#juice--feel)
+	- [Audio](#audio)
+	- [Tutorials (post-Challenge-system)](#tutorials-post-challenge-system)
+	- [Tricks / animation](#tricks--animation)
+	- [Cutscenes](#cutscenes)
+	- [Misc](#misc)
+	- [Polish](#polish)
 - [Done ✅](#done-)
 ---
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] Trick Battle gamemode (timed, highest score wins)
+- [ ] Quick settings wins
+  - [ ] localization language option
+  - [ ] auto-mute when out of focus
+  - [ ] mute option
 - [ ] Get AI working again
   - [ ] NPC Traffic
   - [ ] NPC Race AI
-- [ ] Unlocks / Progression for bikes / characters w/ money / XP w/ Story 
-  - [ ] maybe like simpsons hit & run where 1 level has 1 bike type/map?
-  - [ ] How will this work with multiplayer? Could be everyone follows host's save
-
-- [ ] fix ai slop / limit scope of game / delete old code/files / simplify
-- [ ] fix game breaking bugs
 
 ---
 
 ## Notes 📝
 > Stuff to move ASAP
 
-- [ ] Grinding tricks (jump in air, grind on house fences)
-- Color balance the blue glow with dark (orange?)
-- Knock over light pole & fire hydrants & signs/ street lights 
-- replace csgmesh for houses/other buildings for performance + looks
-- trick animation to move up then play the mixamo anims
-- rotate fps cam down while doing wheelie to make it easier to see
-- try to have the camera look where your eyes are supposed to look irl when riding 
-- r => quick respawn, add btn for set full respawn point (if not in race)
-- 1, 2, 3 spam is possible for everyone, debounce this
-- TP commands dont work on multiplayer
-- [ ] add racing line to show newbs where to go & brake, forza style
-  - [ ] levels\assets\props\racing_line.gd
-  - [x] curve/mesh gen system
-  - [ ] maybe add markers & dynamically generate on the player's client (HUdController?)
-
-- Delete most of the NPC AI, keep the basic lane position/movement and racing Ai. Clean it up but don't reimplement until the stunt race is working first.
-  - maybe dont use road lanes for ai at all?
-- npc => have their own collision layers?
-- when chaining gas stations, just have multiple event start circles & have the mini game be an optional thing (smol start circle in front of gas pump)
 ---
 
 ## Tasks 📋
 
-### Game-breaking bugs
-- [ ] First launch on Mac web stuck in gas pump camera if you leave to main menu then come back it fixes
-  - [ ] need to reproduce
-- [ ] players can move at start on Race, not stunt race
-  - [ ] merge shared stuff from race+stuntrace aka spawning stuff like this
-- [ ] Road generator lanes + AI
-- [ ] landing mega ramp jump causes crash
-  - [x] only use yaw in speed wobble code
-  - [ ] tweak speed wobbles from yaw
-
-### Gameplay Improvements
-
-#### Gamemodes / scoring
-- [x] Free roam
-- [x] Race gamemode
-- [x] Stunt Race (mario-kart-like — tricks earn items, ramps/jumps on course)
-- [x] Time attack
-- [ ] Crash Launch gamemode (drag race → low fence → furthest body wins)
-- [ ] Endless mode (arcade-style, like the original game — casual / roguelite?)
-- [ ] Trick Battle / Score Attack gamemode
-  - [x] (longest wheelie / most combo tricks)
-  - [ ] follow the Leader / H.O.R.S.E.
-  - [ ] 3 rounds, highest score in 60s wins round, best 2/3 wins game
-  - [ ] Live scoreboard 
-  - [ ] Trickfeed
-- [ ] Pizza Delivery
-
-#### Juice / "Feel"
-- [ ] Label3d + script so all in group are removed on runtime for notes
-- [ ] Slow time on ramp launches (client side somehow?)
-- [ ] Vibe code a painterly shader pass (brush stroke lines)
-- [ ] reactive sounds
-- [ ] Transition animations between menu states
-
-#### Audio
-- [ ] Music
-- [ ] Soundscapes for ambient sounds
-- [ ] Mute option in settings + auto-mute when out of focus
-- [ ] Meme mode setting (for sfx)
-- [ ] Fade out intro sound quicker, make 3 sec version
-
-#### Progression & Customization
-- [ ] Save System for in-game
-  - [ ] player score / $ / progression
+### Progression & Customization
+- [ ] Unlocks / Progression for bikes / characters w/ money / XP w/ Story — see [Progression](./Progression.md)
+  - [ ] maybe like simpsons hit & run where 1 level has 1 bike type/map?
+  - [ ] How will this work with multiplayer? Could be everyone follows host's save
+    - [ ] idea 1 - each player's story progress lives in their own save. When playing together, the host's events run and everyone gets paid, but story progress only advances for the players who were at that point in the story.
+  - [ ] Collectables
+  - [ ] Unlockable mods
   - [ ] Stats
     - [ ] total trick history (total time played, total wheelies, races won, etc.)
-  - [ ] unlocked tricks, mods, etc.
-- [ ] Use Score / XP / $ in shop
-  - [ ] Unlock skins
+- [ ] Garage — in-world shop at a garage / gas station in free roam, also the customize menu's background scene
   - [ ] Shop tab (purchase bike + character skins)
   - [ ] My Stuff tab (choose bike + character skin)
 - [ ] Customization menu / UI
   - [ ] Add constraints to mods (certain skins require 2 colors, etc.)
-  - [ ] Customize menu background scene (garage?)
   - [ ] character customization?
   - [ ] color picker
   - [x] Custom colors option
@@ -124,34 +60,18 @@
   - [x] show character
   - [x] show bike
   - [x] grid w/ icons
-- [ ] More skins:
-  - [ ] cafe racer (xsr) sports bike model
+- [ ] More skins / models (unlocks)
+  - [ ] dirt bike
+  - [ ] retro sport bike / cafe racer (xsr)
   - [ ] tron bike
-  - [ ] pughead from guac and load
-  - [ ] zombie from guac and load
+  - [ ] more characters
+    - [ ] pughead from guac and load
+    - [ ] zombie from guac and load
 - [ ] Mods
   - [ ] Wings as mod for sport bike
   - [ ] Scraper mod — add sparks during wheelie
 
-#### Tutorials (post-Challenge-system)
-- [ ] use cutscene system
-- [ ] 3 short "missions" (tutorial) that players can skip when first launching
-  - [ ] don't force boring tut, make it hidden (see Half-Life 2/Valve games)
-  - [ ] 1: MSF
-    - [ ] Basic movement (gas, brake, steer, camera, shift gears, lean)
-    - [ ] Progressive braking (0% -> 100% causes crash)
-    - [ ] Clutch
-  - [ ] 2: Stunting 101
-    - [ ] Wheelies (basic, balance point, clutch up)
-    - [ ] Stoppies
-    - [ ] Drift
-  - [ ] 3: Stunting 102
-    - [ ] Air tricks
-    - [ ] Trick mods
-
-### Systems
-
-#### Traffic / Racing AI
+### Traffic / Racing AI
 - [ ] **LEARNING TIME** — graph nav + traffic rules, implemented solo
   - [ ] [Navigation](./__Navigation.md) — the ideas: why roads aren't navmeshes, A\* and its three
         rules, who goes first at a junction, why lights are maths not Timers
@@ -169,14 +89,70 @@
   - [ ] they duplicate the spawn/despawn RPC pattern
 - [ ] car hit reaction — a crashed car just stops, the wipeout is rider-only
 - [ ] make racing more realistic + difficulty settings (racing line + speed setting)
-- [x] basic riding-around riders — free roam only (see ___TRAFFIC_AI_PLAN___.md)
-- [x] rider-vs-rider crashes both ways
-- [x] traffic vehicle roster: mixed bikes + cars
-- [x] crash loop
-- [x] per-spawn paint roll off the hash(name)-seeded RNG in NPCRiderEntity._ready
-- [x] tune density / cruise speed once the city map exists (rest in Backlog > AI/traffic)
+- [ ] Delete most of the NPC AI, keep the basic lane position/movement and racing Ai. Clean it up but don't reimplement until the stunt race is working first.
+  - maybe dont use road lanes for ai at all?
+- [ ] npc => have their own collision layers?
+- [ ] add racing line to show newbs where to go & brake, forza style
+  - [ ] levels\assets\props\racing_line.gd
+  - [x] curve/mesh gen system
+  - [ ] maybe add markers & dynamically generate on the player's client (HUdController?)
 
-#### Tricks / animation
+
+### Game-breaking bugs
+- [ ] First launch on Mac web stuck in gas pump camera if you leave to main menu then come back it fixes
+  - [ ] need to reproduce
+- [ ] players can move at start on Race, not stunt race
+  - [ ] merge shared stuff from race+stuntrace aka spawning stuff like this
+- [ ] Road generator lanes + AI
+- [ ] landing mega ramp jump causes crash
+  - [x] only use yaw in speed wobble code
+  - [ ] tweak speed wobbles from yaw
+- [ ] return to lobby (force everyone)
+- [ ] review all code & cleanup to call authority done
+- [ ] Review WebRTC gen code for security
+- [ ] TP commands dont work on multiplayer
+
+### Gamemodes / scoring
+- [ ] Trick Battle / Score Attack gamemode
+  - [x] (longest wheelie / most combo tricks)
+  - [ ] follow the Leader / H.O.R.S.E.
+  - [ ] 3 rounds, highest score in 60s wins round, best 2/3 wins game
+  - [ ] Live scoreboard 
+  - [ ] Trickfeed
+- [ ] Pizza Delivery
+
+### Juice / "Feel"
+- [ ] Label3d + script so all in group are removed on runtime for notes
+- [ ] Slow time on ramp launches (client side somehow?)
+- [ ] Knock over light pole & fire hydrants & signs/ street lights
+- [ ] Color balance the blue glow with dark (orange?)
+- [ ] reactive sounds
+- [ ] Transition animations between menu states
+
+### Audio
+- [ ] Music
+- [ ] Soundscapes for ambient sounds
+- [ ] Meme mode setting (for sfx)
+- [ ] Fade out intro sound quicker, make 3 sec version
+
+### Tutorials (post-Challenge-system)
+- [ ] Basic [story](./Story.md) w/ levels
+- [ ] use cutscene system
+- [ ] 3 short "missions" (tutorial) that players can skip when first launching
+  - [ ] don't force boring tut, make it hidden (see Half-Life 2/Valve games)
+  - [ ] 1: MSF
+    - [ ] Basic movement (gas, brake, steer, camera, shift gears, lean)
+    - [ ] Progressive braking (0% -> 100% causes crash)
+    - [ ] Clutch
+  - [ ] 2: Stunting 101
+    - [ ] Wheelies (basic, balance point, clutch up)
+    - [ ] Stoppies
+    - [ ] Drift
+  - [ ] 3: Stunting 102
+    - [ ] Air tricks
+    - [ ] Trick mods
+
+### Tricks / animation
 - [ ] More tricks
   - [ ] Whip / table
   - [x] Burnout (stationary)
@@ -185,50 +161,58 @@
   - [x] kickflip
   - [ ] https://www.youtube.com/shorts/cAxcIZ83MfU
 - [ ] trick tweaks (just move butt a little from base trick)
-  - [ ] Land into wheelie / stoppie should be a trick
+  - [x] Land into wheelie / stoppie should be a trick
   - [ ] Wheelie + RIGHT animation (hand grab) — IK hand twd ground
-- [ ] head turns wrong direction when leaning/steering
+- [ ] Grinding tricks (jump in air, grind on house fences)
+- [ ] trick animation to move up then play the mixamo anims
 - [ ] wheelie turning animation should yaw
 
-#### Multiplayer / netcode
-- [ ] return to lobby (force everyone)
-- [ ] review all code & cleanup to call authority done
-- [ ] Review WebRTC gen code for security
-- [ ] Online services
-  - [ ] Friends + invites
-    - [ ] https://docs.discord.com/developers/resources/invite
-  - [ ] Server browser
-  - [ ] Dedicated server (matchmaking, quick join, open lobby gamemode)
-- [ ] Add text chat
-- [ ] check the time delta to see how long physics calculations that i control take to see if they should be optimized
-  - [x] done, Debug Prof in player entity
-
-#### Cutscenes
+### Cutscenes
 - [ ] dynamic, use animation player to define
 - [ ] move camera around
 - [ ] merge into existing inputmanager system to disable controls
 
-### Tech Debt / Bugs
 
-#### Misc
-- [ ] Android keystore + github secrets + build.yml
+### Misc
+- [ ] fix ai slop / limit scope of game / delete old code/files / simplify
+- [ ] replace csgmesh for houses/other buildings for performance + looks
 
-#### Polish
+### Polish
 - [ ] crashing during tutorial doesn't stop timers
 - [ ] Improved controller UX — full navigation across menus, HUDs & in-world UI
   - [ ] cant use controller to select in customize menu
   - [ ] cant update settings via controller
 - [ ] Pause => show lobby
-- [ ] Camera behavior
-  - [x] Rotate cam down + shift left look right while doing wheelie (fps mode diff than tps mode)
-  - [x] look at next checkpoint during race
-  - [x] Zoom out FOV w/ speed / current_trick
-  - [x] Should not rotate with player (loops, ramps)
-- [ ] Option to change localization language in settings
+- [ ] rotate fps cam down while doing wheelie to make it easier to see
+- [ ] try to have the camera look where your eyes are supposed to look irl when riding
+- [ ] r => quick respawn, add btn for set full respawn point (if not in race)
+- [ ] 1, 2, 3 spam is possible for everyone, debounce this
 
 ---
 
 ## Done ✅
+
+- [x] head turns wrong direction when leaning/steering
+- [x] Free roam
+- [x] Race gamemode
+- [x] Stunt Race (mario-kart-like — tricks earn items, ramps/jumps on course)
+- [x] Time attack
+
+- [x] basic riding-around riders — free roam only (see ___TRAFFIC_AI_PLAN___.md)
+- [x] rider-vs-rider crashes both ways
+- [x] traffic vehicle roster: mixed bikes + cars
+- [x] crash loop
+- [x] per-spawn paint roll off the hash(name)-seeded RNG in NPCRiderEntity._ready
+- [x] tune density / cruise speed once the city map exists (rest in Backlog > AI/traffic)
+
+- [x] check the time delta to see how long physics calculations that i control take to see if they should be optimized
+  - [x] done, Debug Prof in player entity
+
+- [x] Camera behavior
+  - [x] Rotate cam down + shift left look right while doing wheelie (fps mode diff than tps mode)
+  - [x] look at next checkpoint during race
+  - [x] Zoom out FOV w/ speed / current_trick
+  - [x] Should not rotate with player (loops, ramps)
 
 - [x] get fun gameplay loop going
   - [x] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**

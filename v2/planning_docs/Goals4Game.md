@@ -115,3 +115,18 @@
   - Transparent cosmetic - or xray / etc
 
 ## Full Release
+
+## Someday
+
+> Out of scope for now, moved from TODO.
+
+- Crash Launch gamemode (drag race → low fence → furthest body wins)
+- Endless mode (arcade-style, like the original game — casual / roguelite?)
+- Vibe code a painterly shader pass (brush stroke lines)
+- Online services
+  - Friends + invites
+    - https://docs.discord.com/developers/resources/invite
+  - Server browser
+  - Dedicated server (matchmaking, quick join, open lobby gamemode)
+- Add text chat
+- Android keystore + github secrets + build.yml

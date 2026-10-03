@@ -112,6 +112,8 @@ partial fill.
 - **Rest of the item roster:** Nitrous, Siphon Hose, Sticky Tires, Armor, Roll Cage,
   Call the cops (see Items).
 - **Cross-city / open world:** islands, several stations and circuits per level.
+  - When chaining gas stations, just have multiple event start circles & make the minigame
+    optional (small start circle in front of the gas pump).
 - **City aesthetic:** environmental ramps, buildings, vistas, lakes.
 - **Known gaps:**
   - Wobble-on-ram fires too rarely.
