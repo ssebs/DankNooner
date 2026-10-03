@@ -8,6 +8,7 @@
 - [Decided](#decided)
 - [Ideas](#ideas)
 	- [Story as the spine](#story-as-the-spine)
+	- [World layout](#world-layout)
 	- [Hit \& Run-style systems](#hit--run-style-systems)
 	- [Unlock cadence](#unlock-cadence)
 	- [Avoid](#avoid)
@@ -40,30 +41,57 @@ Make points mean something: players should want to unlock something, and replay 
 
 ### Story as the spine
 
-Grow up through the bikes, Simpsons Hit & Run style:
+Grow up through the bikes, Simpsons Hit & Run style. Each chapter moves you to the next district
+(see [World layout](#world-layout)):
 
-- **Chapter 1, mini bike:** basics missions. Could replace the planned tutorial missions (MSF →
-  Stunting 101 → 102 in TODO).
-- **Chapter 2, naked bike:** the reward for finishing chapter 1. Street riding, races, first stunt race.
-- **Chapter 3, sport bike:** bought, not given, so money has a big goal to save toward.
+- **Chapter 1, bad side, mini bike:** learn tricks. Could replace the planned tutorial missions
+  (MSF → Stunting 101 → 102 in TODO). Save up to buy the naked bike for the area's final race,
+  so money has a goal from the start.
+- **Chapter 2, big city, naked bike:** stunt races, time trials, stunt battles. Sport bike and more
+  customization unlock here.
+- **Chapter 3, calm side:** the ending. Beach town, farms, island track; dirt bike on the beach.
 
-[Story](./Story.md) has an older version starting on a bicycle and a scooter.
+Outside the story, **classic mode** is the road trip: touring bike, an endless loop like the
+original game. The cruiser unlock fits here. Beats are in [Story](./Story.md).
+
+### World layout
+
+One map grown from stunt track 01, not a map per chapter (Hit & Run's approach). Maps are the most
+expensive content.
+
+- **Calm side:** the current map. About 2/3 of it (farms, suburbs, lighthouse coast, island track)
+  becomes the beach/farm/track vibe; the rest is the mountains and city. Its neon gets toned down
+  so the big city stands out.
+- **Interstate:** links the calm side to the big city. It needs real length to feel fast at
+  sport-bike speed, which grows the world several times over. The road generator already has 2x2
+  containers.
+- **Big city:** lots of neon, the nicer streets.
+- **Bad side:** across the railroad tracks from the city. Old and worn: orange sodium streetlights,
+  a few flickering neon signs, chain-link fences, boarded windows. The style stays the same; only
+  the lighting and props change.
+
+**Gates are in-world.** Railroad crossing arms stay down until chapter 1 is done, and the train
+doubles as a set piece or timing hazard. The interstate on-ramp gates the calm side.
+
+**No level streaming** (Godot has none). Keep everything loaded and cull with visibility ranges
+(unused in levels today) and occlusion (stunt track 01 already has it). The risk is long interstate
+sightlines to the city skyline. Hand-roll district streaming only if profiling demands it, and
+even then the host must keep collision loaded wherever any player is.
 
 ### Hit & Run-style systems
 
 - **NPC mission givers:** an NPC + speech bubble (in-world UI exists) on an existing
   `GameModeEvent` start circle. The story is an ordered list of events; finishing one unlocks the next.
+  Animal Crossing-style dialog: text plus gibberish voice blips.
 - **Collectibles in trick spots:** rooftops, gaps, past a jump, so exploring through tricks pays.
   A pickup + a saved set of collected ids.
 - **In-world shop:** buy skins at a garage or gas station in free roam. The gas station is already
   a hub (fuel-up). The same garage can be the customize menu's background scene.
-- **Districts gated per chapter** instead of new maps. Maps are the most expensive content; the
-  bridge to the island already gives a natural gate.
 - **Gags / destructibles:** knock over light poles, hydrants, signs, so free roam feels alive between missions.
 
 ### Unlock cadence
 
-Three bikes is three purchases, then the loop is over. Fill the gaps with cheap, frequent unlocks:
+A handful of bikes is a handful of purchases, then the loop is over. Fill the gaps with cheap, frequent unlocks:
 
 - **Color mods and character skins** as small purchases.
 - **Medals per event** (bronze / silver / gold targets on time, score, or place). Extends the
@@ -88,7 +116,10 @@ Three bikes is three purchases, then the loop is over. Fill the gaps with cheap,
   everything, missions just pay well) vs. shop first, story layered on later.
 - **Multiplayer story progress:** each player's lives in their own save. When playing together,
   the host's event runs and everyone gets paid, but whose story advances, and can a player join
-  an event they haven't unlocked?
+  an event they haven't unlocked, or a district they haven't reached?
+- **Bike per chapter:** locked to the chapter's bike, or free choice once unlocked? In multiplayer,
+  does everyone ride the host's chapter bike?
+- The two skyscrapers sit next to the island, in the middle of the calm side. Move them to the big city?
 - Payout amounts per mode and placement.
 
 
@@ -98,4 +129,4 @@ One map, three chapters of 2–3 missions each, one collectible type, money + bi
 prove the loop before adding content.
 
 The money + unlock layer (payouts, save, locked bikes in customize) doesn't depend on NPCs and is
-what the story would sit on, so it can be built first.
+what the story would sit on, so it can be built first. It doesn't need the world expansion either.

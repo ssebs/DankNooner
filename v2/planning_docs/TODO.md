@@ -21,6 +21,8 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] expand stunt city to have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
+
 - [ ] Get AI working again
   - [ ] NPC Traffic
   - [ ] NPC Race AI
