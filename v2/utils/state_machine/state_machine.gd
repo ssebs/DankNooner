@@ -117,4 +117,6 @@ func _process(delta):
 ## Runs current_state.Physics_Update()
 func _physics_process(delta):
 	if current_state:
+		var t := Time.get_ticks_usec()  # PROF: temp
 		current_state.Physics_Update(delta)
+		DebugUtils.Prof("sm." + current_state.name, t)  # PROF: temp

@@ -30,10 +30,12 @@ var _bone_idx_cache: Dictionary[String, int] = {}
 
 
 func _physics_process(_delta):
+	var t := Time.get_ticks_usec()  # PROF: temp
 	if can_move_butt:
 		_move_hips_to_butt_target()
 	if fabrik_ik.active:
 		_apply_end_bone_rotations()
+	DebugUtils.Prof("ik.pose_writes", t)  # PROF: temp
 
 
 func set_targets(

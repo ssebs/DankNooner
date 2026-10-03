@@ -99,6 +99,7 @@ func initialize() -> void:
 func _physics_process(delta: float):
 	if !_initialized:
 		return
+	var t := Time.get_ticks_usec()  # PROF: temp
 	_update_rig_lod()
 	# Lean/pitch stays on at any distance — it's two lerps on one node, and a bike that
 	# stops leaning through corners is obvious in a way a frozen wrist isn't.
@@ -106,6 +107,7 @@ func _physics_process(delta: float):
 		_sync_targets_from_bike()
 	_update_yaw_rate(delta)
 	_apply_visual_root_rotation(delta)
+	DebugUtils.Prof("npc.anim", t)  # PROF: temp
 
 
 ## Toggle the cosmetic rider rig by distance from the active camera. Runs on every peer

@@ -43,6 +43,8 @@ signal uncrashed
 ## Local-client only: log per-tick reconciliation correction to speed/velocity + rollback
 ## depth (rubber-band probe). Off by default; toggle in the inspector to diagnose desync.
 @export var debug_netcode_metrics: bool = false
+## Print the DebugUtils.Prof physics timing dump every 5s (covers NPCs too). PROF: temp
+@export var debug_prof: bool = false  # PROF: temp
 
 @export_group("IK Targets")
 @export var butt_target: Marker3D
@@ -197,6 +199,7 @@ var _dbg_log_file: FileAccess = null
 func _ready():
 	# Relative to up_direction, which tracks loops — so walls stay walls (slide, not pin).
 	floor_max_angle = deg_to_rad(80.0)
+	DebugUtils.prof_enabled = OS.has_feature("debug") and debug_prof  # PROF: temp
 	_init_mesh()
 	_init_collision_shape()
 	_init_ik()
@@ -277,11 +280,21 @@ func _rollback_tick(delta: float, tick: int, _is_fresh: bool):
 	# Boost first — ahead of every controller AND evaluated even while crashed (unlike the
 	# rest, which bail on is_crashed), so a crash mid-boost cancels the burn and its camera
 	# FX instead of latching them until the respawn.
+	var t := Time.get_ticks_usec()  # PROF: temp
 	boost_controller.on_movement_rollback_tick(delta)
+	DebugUtils.Prof("player.boost", t)  # PROF: temp
+	t = Time.get_ticks_usec()  # PROF: temp
 	movement_controller.on_movement_rollback_tick(delta)
+	DebugUtils.Prof("player.movement", t)  # PROF: temp
+	t = Time.get_ticks_usec()  # PROF: temp
 	gearing_controller.on_movement_rollback_tick(delta)
+	DebugUtils.Prof("player.gearing", t)  # PROF: temp
+	t = Time.get_ticks_usec()  # PROF: temp
 	trick_controller.on_movement_rollback_tick(delta)
+	DebugUtils.Prof("player.trick", t)  # PROF: temp
+	t = Time.get_ticks_usec()  # PROF: temp
 	crash_controller.on_movement_rollback_tick(delta)
+	DebugUtils.Prof("player.crash", t)  # PROF: temp
 
 
 func _process(delta: float) -> void:

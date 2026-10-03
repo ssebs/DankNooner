@@ -25,7 +25,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] check the time delta to see how long physics calculations that i control take to see if they should be optimized
 
 - [ ] get fun gameplay loop going
   - [ ] [Stunt Race Gamemode](./StuntRaceGamemode.md) **WIP**
@@ -205,6 +204,8 @@
   - [ ] Server browser
   - [ ] Dedicated server (matchmaking, quick join, open lobby gamemode)
 - [ ] Add text chat
+- [ ] check the time delta to see how long physics calculations that i control take to see if they should be optimized
+  - [x] done, Debug Prof in player entity
 
 #### Cutscenes
 - [ ] dynamic, use animation player to define

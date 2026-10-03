@@ -97,6 +97,7 @@ func _seed_progress() -> void:
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint() or !walking:
 		return
+	var t := Time.get_ticks_usec()  # PROF: temp
 	var length := path.curve.get_baked_length()
 	_progress = fmod(_progress + animal_skin_definition.move_speed * delta, length)
 
@@ -109,6 +110,7 @@ func _physics_process(delta: float) -> void:
 		# Yaw only, matching NPCRiderEntity._face_velocity — our front is -Z (see _init_mesh),
 		# and letting the curve's tilt through would roll the animal onto its side.
 		rotation.y = atan2(-heading.x, -heading.z)
+	DebugUtils.Prof("npc.animal", t)  # PROF: temp
 
 
 #region init

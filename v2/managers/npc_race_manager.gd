@@ -44,6 +44,7 @@ func _physics_process(_delta: float):
 		return
 	if race_task == null:
 		return
+	var t := Time.get_ticks_usec()  # PROF: temp
 	for npc_id in _npcs:
 		var npc := _npcs[npc_id]
 		if npc.npc_state == NPCRiderEntity.NPCState.CRASHED:
@@ -57,6 +58,7 @@ func _physics_process(_delta: float):
 		# rides its lane while the race body is active. The lane curve, not the
 		# checkpoint, decides where it steers.
 		npc.driving = race_task.get_target_checkpoint(npc_id) != null
+	DebugUtils.Prof("npc_race_manager", t)  # PROF: temp
 
 
 #region Spawn / despawn (server API + broadcast RPCs)
