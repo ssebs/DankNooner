@@ -40,7 +40,8 @@ The stunt race is `RaceGameMode` with `race_type = STUNT_RACE`: the shared race 
   `PickupSpawner`s, props) through `RaceTask`. Legs run station to station. NPC racers, traffic and
   fuel-up are per-event flags on the definition.
 - **Standing = sum of the scoring components, frozen at the finish line:**
-  - Style: `StyleScoringComponent`, banked trick points (`TrickManager.get_score`).
+  - Style: `StyleScoringComponent`, banked trick points (`TrickManager.get_score`) plus any combo
+    still running at the line.
   - Placement: `FinishBonusComponent`, `placement_points` by finish place among humans.
   - Knockouts: `KnockoutScoringComponent`, `points_per_knockout` each.
   - Fuel-up: `FuelUpBonusComponent`, the clean-fill bonus from a `fuel_up_first` event's fuel-up.
@@ -113,7 +114,6 @@ partial fill.
 - **Cross-city / open world:** islands, several stations and circuits per level.
 - **City aesthetic:** environmental ramps, buildings, vistas, lakes.
 - **Known gaps:**
-  - A combo still running at the finish isn't banked, so it doesn't count.
   - Wobble-on-ram fires too rarely.
   - The Oil Slick mesh is a placeholder.
   - Late joiners don't see deployables already down (or a held shotgun).

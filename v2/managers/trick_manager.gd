@@ -67,10 +67,7 @@ func _track_combo(peer_id: int, player: PlayerEntity):
 
 	if player.is_crashed:
 		if st["prev_time"] > 0.0:
-			var lost: float = (
-				(st["prev_score"] + st["bonus_score"]) * points_per_second * st["peak_mult"]
-			)
-			combo_voided.emit(peer_id, st["prev_time"], lost)
+			combo_voided.emit(peer_id, st["prev_time"], get_open_combo_points(peer_id))
 			st["prev_time"] = 0.0
 			st["prev_score"] = 0.0
 			st["bonus_score"] = 0.0
@@ -95,7 +92,7 @@ func _track_combo(peer_id: int, player: PlayerEntity):
 	var duration: float = st["prev_time"]
 	var multiplier: int = st["peak_mult"]
 	var bonus: bool = st["bonus_score"] > 0.0
-	var points: float = (st["prev_score"] + st["bonus_score"]) * points_per_second * multiplier
+	var points: float = get_open_combo_points(peer_id)
 	st["points"] += points
 	st["prev_time"] = 0.0
 	st["prev_score"] = 0.0
@@ -109,6 +106,12 @@ func _track_combo(peer_id: int, player: PlayerEntity):
 ## Total points this peer has banked since their last reset_peer().
 func get_score(peer_id: int) -> float:
 	return _peer_states[peer_id]["points"]
+
+
+## What the combo in progress would bank if it ended now (0 when none is open).
+func get_open_combo_points(peer_id: int) -> float:
+	var st := _peer_states[peer_id]
+	return (st["prev_score"] + st["bonus_score"]) * points_per_second * st["peak_mult"]
 
 
 ## True while a combo is running or ended but not yet banked.
