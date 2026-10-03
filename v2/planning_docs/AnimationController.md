@@ -242,7 +242,7 @@ At 0° the pivot is the ground contact; at 90° it's the back of the tire (wheel
 2. Rider pose values loaded from `BikeSkinDefinition`.
 3. `AnimationController` commits the pose every tick (markers' local position/rotation).
 4. FABRIK3D solves bone positions to those marker targets each `_physics_process`.
-5. `IKController` rotates end bones to match marker rotations (FABRIK is position-only).
+5. `IKController` rotates end bones to match marker rotations (FABRIK is position-only). Hands/feet/spine are set before FABRIK; head is set after it by a `SkeletonModifier3D` added after FABRIK, so it's relative to the solved neck. Only leaf bones are safe post-IK; rotating a parent (e.g. Spine) there drags solved chains off target.
 
 ### Bone ← Marker
 
