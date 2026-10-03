@@ -135,9 +135,11 @@ func request_respawn_in_place():
 		return
 	var sender := multiplayer.get_remote_sender_id()
 	var peer_id := sender if sender > 1 else 1
-	# Every mode except free roam recovers a crash with a full respawn (to the last checkpoint /
-	# TeleportTask); free roam's crash recovery is itself in-place, so a crashed tap there stays put.
-	var full_respawn_on_crash := gamemode_manager.current_game_mode != GameModeType.Kind.FREE_ROAM
+	# A crashed tap does whatever the crash timer would: full respawn (last checkpoint /
+	# TeleportTask) unless the mode recovers crashes in place.
+	var full_respawn_on_crash := !gamemode_manager.get_current_gamemode().respawns_crash_in_place(
+		peer_id
+	)
 	if get_player_by_peer_id(peer_id).is_crashed and full_respawn_on_crash:
 		respawn_player.rpc(peer_id)
 	else:

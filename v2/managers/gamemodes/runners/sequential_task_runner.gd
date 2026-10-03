@@ -66,8 +66,18 @@ func notify_crashed(peer_id: int) -> void:
 	# Teleport on crash; clear in/out gating since Godot may not fire body_exited.
 	state.prop_event_fired = false
 	state.inside_zone = false
+	respawn_requested.emit(peer_id, respawns_in_place(peer_id))
+
+
+#override
+func respawns_in_place(peer_id: int) -> bool:
+	if _nested_runner != null and _nested_runner.player_states.has(peer_id):
+		return _nested_runner.respawns_in_place(peer_id)
+	# Late joiners free-roam outside the runner — skip is intentional
+	if !player_states.has(peer_id):
+		return false
 	var task := get_current_task(peer_id)
-	respawn_requested.emit(peer_id, task != null and task.respawn_in_place)
+	return task != null and task.respawn_in_place
 
 
 func notify_disconnected(peer_id: int) -> void:

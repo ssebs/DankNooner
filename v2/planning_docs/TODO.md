@@ -21,7 +21,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] Trick Battle gamemode (timed, highest score wins)
 - [ ] Quick settings wins
   - [ ] localization language option
   - [ ] auto-mute when out of focus
@@ -97,7 +96,6 @@
   - [x] curve/mesh gen system
   - [ ] maybe add markers & dynamically generate on the player's client (HUdController?)
 
-
 ### Game-breaking bugs
 - [ ] First launch on Mac web stuck in gas pump camera if you leave to main menu then come back it fixes
   - [ ] need to reproduce
@@ -172,7 +170,6 @@
 - [ ] move camera around
 - [ ] merge into existing inputmanager system to disable controls
 
-
 ### Misc
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
 - [ ] replace csgmesh for houses/other buildings for performance + looks
@@ -191,6 +188,8 @@
 ---
 
 ## Done ✅
+
+- [x] Trick Battle gamemode (timed, highest score wins)
 
 - [x] head turns wrong direction when leaning/steering
 - [x] Free roam

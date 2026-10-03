@@ -27,7 +27,11 @@
   - **`TutorialGameMode`** — step-by-step lessons; injects the menu deps `CloseHelpTask` needs.
     Results by completion time.
   - **`StuntChallengeGameMode`** — a trick-sequence race (see [Stunt challenge](#stunt-challenge)).
-  - **`LongJumpGameMode`** — timed trick attempts off one jump (see [Long jump](#long-jump)).
+  - **`TimedScoreGameMode`** (`timed_score_gamemode.gd`) — base for timed, score-ranked modes:
+    session clock, leaderboard cadence, results on timeout or Cancel Event. Subclasses override
+    `_score()`, `_results_title_key()` and `_push_leaderboard()`.
+    - **`LongJumpGameMode`** — timed trick attempts off one jump (see [Long jump](#long-jump)).
+    - **`TrickBattleGameMode`** — timed free tricking, total score wins (see [Trick battle](#trick-battle)).
   - **`RaceGameMode`** — every checkpoint race (see [Races](#races)). `main_game.tscn` holds one
     instance per `race_type`.
 
@@ -122,7 +126,8 @@ EventStartCircle                       picker lists its GameModeEvent children
    emits `respawn_requested`; the gamemode owns the delay, then respawns at the player's persistent
    `rb_respawn_transform` (set by the last `TeleportTask` / grid slot / checkpoint), or where they
    crashed if the current task has `respawn_in_place` (free-driving steps that set no checkpoint).
-   A crash after the runner finished requests nothing.
+   A crash after the runner finished requests nothing. An R tap while crashed skips the delay and
+   gets the same answer (`GameModeType.respawns_crash_in_place`).
 6. **Chain + results:** each runner's `all_completed` starts the next. On the last one,
    `_on_last_runner_completed(runner)` fires **before** `runner.stop()` (which clears the per-peer
    state results read). `_show_results(data)` opens `ResultsHUDState` with a countdown; skip or
@@ -252,7 +257,21 @@ player's pinned tricks.
 - **Session:** the mode's `duration_secs` clock starts with runner 2. The time left shows on the
   progress line, and the leaderboard shows Best / Last. Results rank by best attempt. The host's
   pause → Cancel Event ends it early with results (`GameModeType.handle_cancel_event`). Before
-  runner 2 starts, or while results are up, Cancel Event goes straight to free roam.
+  runner 2 starts, or while results are up, Cancel Event goes straight to free roam. The session
+  half lives in `TimedScoreGameMode`, shared with Trick battle.
+
+## Trick battle
+
+`TrickBattleGameMode`: free tricking for the session clock; the highest total wins.
+
+- **Event shape:** runner 1 = `GridSpawnTask` + countdown; runner 2 = one `TrickBattleTask`, which
+  never completes and only supplies the objective. Set `respawn_in_place` on it so a crash doesn't
+  send the rider back to the grid.
+- **Score:** `TrickManager.get_score` + `get_open_combo_points`, so a combo open at the buzzer counts
+  (a crash still voids it). Every peer's `TrickManager` score resets when runner 2 starts, so
+  free-roam points don't carry in.
+- **Session:** same as Long jump (clock on the progress line, Cancel Event → results). Leaderboard
+  and results show the score.
 
 ## Gamemode refactor (2026-09) — why it looks like this
 

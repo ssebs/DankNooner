@@ -82,6 +82,11 @@ func notify_disconnected(peer_id: int) -> void:
 	player_states.erase(peer_id)
 
 
+## Whether a crash respawns this peer where they crashed (see GameModeTask.respawn_in_place).
+func respawns_in_place(_peer_id: int) -> bool:
+	return respawn_in_place
+
+
 #endregion
 
 #region Per-peer walk

@@ -56,6 +56,7 @@
 [ext_resource type="Script" uid="uid://b40syrl038fb3" path="res://managers/gamemodes/tasks/checkpoint_task.gd" id="99_ckpttask"]
 [ext_resource type="PackedScene" path="res://managers/gamemodes/gamemodeobjects/start_zone.tscn" id="99_startzone"]
 [ext_resource type="Script" uid="uid://pulnqxx1eaja" path="res://managers/gamemodes/gamemodeobjects/gamemode_event.gd" id="mig_event"]
+[ext_resource type="Script" path="res://managers/gamemodes/tasks/trick_battle_task.gd" id="mig_trkbtl"]
 [ext_resource type="Script" uid="uid://cm4g6ptfwf37q" path="res://managers/gamemodes/gamemodeobjects/event_route.gd" id="mig_route"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_ercdn"]
@@ -131,6 +132,13 @@ name = "Track Race"
 description = "Around the island"
 target_gamemode = 1
 fuel_up_first = true
+metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
+
+[sub_resource type="Resource" id="Resource_trkbtl"]
+script = ExtResource("24_l8nu3")
+name = "Trick Battle"
+description = "Trick anywhere until time runs out. Highest score wins."
+target_gamemode = 8
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_5wqg6"]
@@ -6366,3 +6374,153 @@ curve = SubResource("Curve3D_fimhw")
 [editable path="RoadManager/3way_2x3/3way_2x3"]
 [editable path="RoadManager/3way_2x4"]
 [editable path="RoadManager/3way_2x4/3way_2x3"]
+
+[node name="TrickBattle" type="Node" parent="StuntRace" unique_id=1952719947 node_paths=PackedStringArray("route")]
+script = ExtResource("mig_event")
+definition = SubResource("Resource_trkbtl")
+route = NodePath("../Route")
+
+[node name="SequentialTaskRunner" type="Node" parent="StuntRace/TrickBattle" unique_id=2064993660]
+script = ExtResource("20_grj8g")
+
+[node name="GridSpawnTask" type="Node" parent="StuntRace/TrickBattle/SequentialTaskRunner" unique_id=1262497939]
+script = ExtResource("21_gpyq4")
+
+[node name="ConcurrentTaskRunner" type="Node" parent="StuntRace/TrickBattle/SequentialTaskRunner" unique_id=895559258]
+script = ExtResource("16_b3ac3")
+
+[node name="CountdownTask" type="Node" parent="StuntRace/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=971558416]
+script = ExtResource("17_clf25")
+
+[node name="SFXTask" type="Node" parent="StuntRace/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1604029500]
+script = ExtResource("18_k3cxb")
+sound = 2
+advance_mode = 1
+duration_sec = 3.0
+
+[node name="BattleRunner" type="Node" parent="StuntRace/TrickBattle" unique_id=858655541]
+script = ExtResource("20_grj8g")
+
+[node name="TrickBattleTask" type="Node" parent="StuntRace/TrickBattle/BattleRunner" unique_id=2055507808]
+script = ExtResource("mig_trkbtl")
+respawn_in_place = true
+
+[node name="TrickBattle" type="Node" parent="StuntRace2" unique_id=301160341 node_paths=PackedStringArray("route")]
+script = ExtResource("mig_event")
+definition = SubResource("Resource_trkbtl")
+route = NodePath("../Route")
+
+[node name="SequentialTaskRunner" type="Node" parent="StuntRace2/TrickBattle" unique_id=1497471287]
+script = ExtResource("20_grj8g")
+
+[node name="GridSpawnTask" type="Node" parent="StuntRace2/TrickBattle/SequentialTaskRunner" unique_id=2022199958]
+script = ExtResource("21_gpyq4")
+
+[node name="ConcurrentTaskRunner" type="Node" parent="StuntRace2/TrickBattle/SequentialTaskRunner" unique_id=1170463362]
+script = ExtResource("16_b3ac3")
+
+[node name="CountdownTask" type="Node" parent="StuntRace2/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=779537905]
+script = ExtResource("17_clf25")
+
+[node name="SFXTask" type="Node" parent="StuntRace2/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=684261020]
+script = ExtResource("18_k3cxb")
+sound = 2
+advance_mode = 1
+duration_sec = 3.0
+
+[node name="BattleRunner" type="Node" parent="StuntRace2/TrickBattle" unique_id=1124365707]
+script = ExtResource("20_grj8g")
+
+[node name="TrickBattleTask" type="Node" parent="StuntRace2/TrickBattle/BattleRunner" unique_id=1407485692]
+script = ExtResource("mig_trkbtl")
+respawn_in_place = true
+
+[node name="TrickBattle" type="Node" parent="StuntRace3" unique_id=1677624727 node_paths=PackedStringArray("route")]
+script = ExtResource("mig_event")
+definition = SubResource("Resource_trkbtl")
+route = NodePath("../Route")
+
+[node name="SequentialTaskRunner" type="Node" parent="StuntRace3/TrickBattle" unique_id=1955358384]
+script = ExtResource("20_grj8g")
+
+[node name="GridSpawnTask" type="Node" parent="StuntRace3/TrickBattle/SequentialTaskRunner" unique_id=1413026602]
+script = ExtResource("21_gpyq4")
+
+[node name="ConcurrentTaskRunner" type="Node" parent="StuntRace3/TrickBattle/SequentialTaskRunner" unique_id=2026826019]
+script = ExtResource("16_b3ac3")
+
+[node name="CountdownTask" type="Node" parent="StuntRace3/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1861946428]
+script = ExtResource("17_clf25")
+
+[node name="SFXTask" type="Node" parent="StuntRace3/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1738577869]
+script = ExtResource("18_k3cxb")
+sound = 2
+advance_mode = 1
+duration_sec = 3.0
+
+[node name="BattleRunner" type="Node" parent="StuntRace3/TrickBattle" unique_id=672921033]
+script = ExtResource("20_grj8g")
+
+[node name="TrickBattleTask" type="Node" parent="StuntRace3/TrickBattle/BattleRunner" unique_id=129130232]
+script = ExtResource("mig_trkbtl")
+respawn_in_place = true
+
+[node name="TrickBattle" type="Node" parent="StuntRace4" unique_id=1982291109 node_paths=PackedStringArray("route")]
+script = ExtResource("mig_event")
+definition = SubResource("Resource_trkbtl")
+route = NodePath("../Route")
+
+[node name="SequentialTaskRunner" type="Node" parent="StuntRace4/TrickBattle" unique_id=1985018708]
+script = ExtResource("20_grj8g")
+
+[node name="GridSpawnTask" type="Node" parent="StuntRace4/TrickBattle/SequentialTaskRunner" unique_id=1563326385]
+script = ExtResource("21_gpyq4")
+
+[node name="ConcurrentTaskRunner" type="Node" parent="StuntRace4/TrickBattle/SequentialTaskRunner" unique_id=1066195393]
+script = ExtResource("16_b3ac3")
+
+[node name="CountdownTask" type="Node" parent="StuntRace4/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1647656583]
+script = ExtResource("17_clf25")
+
+[node name="SFXTask" type="Node" parent="StuntRace4/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=546874191]
+script = ExtResource("18_k3cxb")
+sound = 2
+advance_mode = 1
+duration_sec = 3.0
+
+[node name="BattleRunner" type="Node" parent="StuntRace4/TrickBattle" unique_id=714359415]
+script = ExtResource("20_grj8g")
+
+[node name="TrickBattleTask" type="Node" parent="StuntRace4/TrickBattle/BattleRunner" unique_id=912749027]
+script = ExtResource("mig_trkbtl")
+respawn_in_place = true
+
+[node name="TrickBattle" type="Node" parent="TrackRace" unique_id=1209693056 node_paths=PackedStringArray("route")]
+script = ExtResource("mig_event")
+definition = SubResource("Resource_trkbtl")
+route = NodePath("../Route")
+
+[node name="SequentialTaskRunner" type="Node" parent="TrackRace/TrickBattle" unique_id=278919434]
+script = ExtResource("20_grj8g")
+
+[node name="GridSpawnTask" type="Node" parent="TrackRace/TrickBattle/SequentialTaskRunner" unique_id=1200162625]
+script = ExtResource("21_gpyq4")
+
+[node name="ConcurrentTaskRunner" type="Node" parent="TrackRace/TrickBattle/SequentialTaskRunner" unique_id=1462012233]
+script = ExtResource("16_b3ac3")
+
+[node name="CountdownTask" type="Node" parent="TrackRace/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=345560449]
+script = ExtResource("17_clf25")
+
+[node name="SFXTask" type="Node" parent="TrackRace/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=134462950]
+script = ExtResource("18_k3cxb")
+sound = 2
+advance_mode = 1
+duration_sec = 3.0
+
+[node name="BattleRunner" type="Node" parent="TrackRace/TrickBattle" unique_id=1732983272]
+script = ExtResource("20_grj8g")
+
+[node name="TrickBattleTask" type="Node" parent="TrackRace/TrickBattle/BattleRunner" unique_id=559961761]
+script = ExtResource("mig_trkbtl")
+respawn_in_place = true

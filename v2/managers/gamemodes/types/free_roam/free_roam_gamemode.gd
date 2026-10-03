@@ -38,6 +38,12 @@ func is_late_joinable() -> bool:
 
 
 #override
+## Free roam's crash recovery is itself in place.
+func respawns_crash_in_place(_peer_id: int) -> bool:
+	return true
+
+
+#override
 ## No lobby event to cancel here — only this rider's own activity.
 func can_cancel_event() -> bool:
 	return _activity != null

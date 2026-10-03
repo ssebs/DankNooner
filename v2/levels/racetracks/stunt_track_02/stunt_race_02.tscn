@@ -20,6 +20,7 @@
 [ext_resource type="Script" uid="uid://8xvij2vjrnn2" path="res://managers/gamemodes/tasks/countdown_task.gd" id="17_count"]
 [ext_resource type="Script" uid="uid://cpdxy3nxph3x0" path="res://managers/gamemodes/tasks/sfx_task.gd" id="18_sfx"]
 [ext_resource type="Script" uid="uid://nyvpj8qcqqww" path="res://managers/gamemodes/tasks/long_jump_task.gd" id="19_lngjmp"]
+[ext_resource type="Script" uid="uid://16q3wevm2ngw" path="res://managers/gamemodes/tasks/trick_battle_task.gd" id="20_trkbtl"]
 
 [sub_resource type="Resource" id="Resource_ehog7"]
 script = ExtResource("4_lgsic")
@@ -49,6 +50,13 @@ script = ExtResource("12_evdef")
 name = "Long Jump"
 description = "Trick off the mega ramp. Best jump wins."
 target_gamemode = 6
+metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
+
+[sub_resource type="Resource" id="Resource_trkbtl"]
+script = ExtResource("12_evdef")
+name = "Trick Battle"
+description = "Trick anywhere until time runs out. Highest score wins."
+target_gamemode = 8
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [node name="StuntRace02" type="Node3D" unique_id=419655892 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug", "grid_markers")]
@@ -139,6 +147,36 @@ script = ExtResource("14_seqrun")
 [node name="LongJumpTask" type="Node" parent="MegaRamp/LongJump/JumpRunner" unique_id=386618439 node_paths=PackedStringArray("trigger")]
 script = ExtResource("19_lngjmp")
 trigger = NodePath("../../../Route/CheckpointMarker1")
+
+[node name="TrickBattle" type="Node" parent="MegaRamp" unique_id=1904417263 node_paths=PackedStringArray("route")]
+script = ExtResource("13_event")
+definition = SubResource("Resource_trkbtl")
+route = NodePath("../Route")
+
+[node name="SequentialTaskRunner" type="Node" parent="MegaRamp/TrickBattle" unique_id=725590318]
+script = ExtResource("14_seqrun")
+
+[node name="GridSpawnTask" type="Node" parent="MegaRamp/TrickBattle/SequentialTaskRunner" unique_id=1286043597]
+script = ExtResource("16_grid")
+
+[node name="ConcurrentTaskRunner" type="Node" parent="MegaRamp/TrickBattle/SequentialTaskRunner" unique_id=318774052]
+script = ExtResource("15_conrun")
+
+[node name="CountdownTask" type="Node" parent="MegaRamp/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1557209834]
+script = ExtResource("17_count")
+
+[node name="SFXTask" type="Node" parent="MegaRamp/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=906631175]
+script = ExtResource("18_sfx")
+sound = 2
+advance_mode = 1
+duration_sec = 3.0
+
+[node name="BattleRunner" type="Node" parent="MegaRamp/TrickBattle" unique_id=1418275960]
+script = ExtResource("14_seqrun")
+
+[node name="TrickBattleTask" type="Node" parent="MegaRamp/TrickBattle/BattleRunner" unique_id=651093846]
+script = ExtResource("20_trkbtl")
+respawn_in_place = true
 
 [node name="Ramp8" parent="." unique_id=1633736762 instance=ExtResource("10_dcsrd")]
 transform = Transform3D(-0.9999999, 0, -8.7422755e-08, 2.2626674e-08, 0.9659258, -0.258819, 8.44439e-08, -0.25881904, -0.9659257, 10.999996, 128.08981, -283.86444)

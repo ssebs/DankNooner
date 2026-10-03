@@ -77,6 +77,12 @@ func Exit(_state_context: StateContext):
 	_active_runner_index = -1
 
 
+#override
+## Same answer the crash timer gets (the current task's respawn_in_place).
+func respawns_crash_in_place(peer_id: int) -> bool:
+	return _active_runner != null and _active_runner.respawns_in_place(peer_id)
+
+
 ## Whether Enter shows the event's props. Modes whose tasks reveal their own props return false.
 func shows_event_props() -> bool:
 	return true

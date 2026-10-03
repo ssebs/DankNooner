@@ -34,6 +34,7 @@
 [ext_resource type="Script" uid="uid://b6yqloe4qv2ck" path="res://managers/gamemodes/types/stunt_challenge/stunt_challenge_gamemode.gd" id="30_chlng"]
 [ext_resource type="Script" path="res://managers/gamemodes/types/long_jump/long_jump_gamemode.gd" id="30_lngjmp"]
 [ext_resource type="Script" path="res://managers/gamemodes/types/fuel_up/fuel_up_gamemode.gd" id="30_fuelup"]
+[ext_resource type="Script" path="res://managers/gamemodes/types/trick_battle/trick_battle_gamemode.gd" id="30_trkbtl"]
 [ext_resource type="PackedScene" path="res://managers/hud/fuel_up_hud_state.tscn" id="30_fuelhud"]
 [ext_resource type="Script" uid="uid://boxia2udg1jxm" path="res://managers/npc_race_manager.gd" id="31_npcrm"]
 [ext_resource type="Script" uid="uid://283a7n5utttx" path="res://resources/player/player_definition.gd" id="35_iihm1"]
@@ -247,7 +248,7 @@ input_state_manager = NodePath("../../../InputStateManager")
 
 [node name="FuelUpHUDState" parent="ManagerManager/HUDManager/StateMachine" instance=ExtResource("30_fuelhud")]
 
-[node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "spawn_manager", "animal_spawn_manager", "audio_manager", "input_state_manager", "state_machine", "loading_menu_state", "free_roam_mode", "race_mode", "stunt_race_mode", "time_attack_mode", "tutorial_mode", "stunt_challenge_mode", "long_jump_mode", "fuel_up_mode") groups=["Managers"]]
+[node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "spawn_manager", "animal_spawn_manager", "audio_manager", "input_state_manager", "state_machine", "loading_menu_state", "free_roam_mode", "race_mode", "stunt_race_mode", "time_attack_mode", "tutorial_mode", "stunt_challenge_mode", "long_jump_mode", "fuel_up_mode", "trick_battle_mode") groups=["Managers"]]
 script = ExtResource("18_ih6an")
 menu_manager = NodePath("../MenuManager")
 settings_manager = NodePath("../SettingsManager")
@@ -268,6 +269,7 @@ tutorial_mode = NodePath("StateMachine/TutorialGameMode")
 stunt_challenge_mode = NodePath("StateMachine/StuntChallengeGameMode")
 long_jump_mode = NodePath("StateMachine/LongJumpGameMode")
 fuel_up_mode = NodePath("StateMachine/FuelUpGameMode")
+trick_battle_mode = NodePath("StateMachine/TrickBattleGameMode")
 
 [node name="StateMachine" type="Node" parent="ManagerManager/GamemodeManager" unique_id=445664816]
 script = ExtResource("4_6bm6p")
@@ -426,6 +428,18 @@ spawn_manager = NodePath("../../../SpawnManager")
 
 [node name="LongJumpGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" node_paths=PackedStringArray("trick_manager", "riding_hud_state", "lobby_manager", "audio_manager", "results_hud", "input_state_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("30_lngjmp")
+trick_manager = NodePath("../../../TrickManager")
+results_hud = NodePath("../../../HUDManager/StateMachine/ResultsHUDState")
+input_state_manager = NodePath("../../../InputStateManager")
+riding_hud_state = NodePath("../../../HUDManager/StateMachine/RidingHUDState")
+lobby_manager = NodePath("../../../LobbyManager")
+audio_manager = NodePath("../../../AudioManager")
+gamemode_manager = NodePath("../..")
+spawn_manager = NodePath("../../../SpawnManager")
+
+[node name="TrickBattleGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1733062841 node_paths=PackedStringArray("trick_manager", "riding_hud_state", "lobby_manager", "audio_manager", "results_hud", "input_state_manager", "gamemode_manager", "spawn_manager")]
+script = ExtResource("30_trkbtl")
+duration_secs = 60.0
 trick_manager = NodePath("../../../TrickManager")
 results_hud = NodePath("../../../HUDManager/StateMachine/ResultsHUDState")
 input_state_manager = NodePath("../../../InputStateManager")
