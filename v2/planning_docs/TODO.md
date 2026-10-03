@@ -21,10 +21,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] Quick settings wins
-  - [x] localization language option
-  - [x] auto-mute when out of focus
-  - [x] mute option
 - [ ] Get AI working again
   - [ ] NPC Traffic
   - [ ] NPC Race AI
@@ -188,6 +184,11 @@
 ---
 
 ## Done ✅
+
+- [x] Quick settings wins
+  - [x] localization language option
+  - [x] auto-mute when out of focus
+  - [x] mute option
 
 - [x] Trick Battle gamemode (timed, highest score wins)
 
