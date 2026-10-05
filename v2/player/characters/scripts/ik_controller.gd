@@ -151,7 +151,11 @@ func _rotate_bone_to_marker(bone_name: String, marker: Marker3D):
 	# Get marker's target rotation in skeleton-local space (strip scale)
 	var target_global_basis = marker.global_transform.basis.orthonormalized()
 	var parent_global_pose = skel_3d.get_bone_global_pose(parent_idx)
-	var parent_global_basis = skel_3d.global_transform.basis * parent_global_pose.basis
+	# Orthonormalize too: the skeleton carries CharacterSkin's height scale, and inverting it
+	# would write 1/scale into the pose, resizing the whole subtree
+	var parent_global_basis = (
+		(skel_3d.global_transform.basis * parent_global_pose.basis).orthonormalized()
+	)
 
 	# Convert to bone-local rotation
 	var pose = skel_3d.get_bone_pose(bone_idx)

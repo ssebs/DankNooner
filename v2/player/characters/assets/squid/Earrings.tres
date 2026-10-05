@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://ck2bpx6t1ws6k"]
+
+[resource]
+resource_name = "Earrings"
+albedo_color = Color(0.62046045, 0.4775248, 0.25597444, 1)
+metallic = 0.4
+roughness = 0.4150871
+metadata/extras = {
+"fromFBX": {
+"isTruePBR": false,
+"shadingModel": "Phong"
+}
+}

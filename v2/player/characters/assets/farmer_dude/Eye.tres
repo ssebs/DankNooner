@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dl4k2tjjx10vm"]
+
+[resource]
+resource_name = "Eye"
+albedo_color = Color(0.17127433, 0.12593362, 0.09351883, 1)
+metallic = 0.4
+roughness = 0.4150871

@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://clpsvjvok2lue"]
+
+[resource]
+resource_name = "Worker_Vest"
+albedo_color = Color(0.6561943, 0.35245606, 0.14519928, 1)
+metallic = 0.4
+roughness = 0.4150871

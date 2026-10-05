@@ -21,8 +21,6 @@ class_name CharacterSkin extends Node3D
 @export var skin_name_for_loading_test = "biker_default"
 @export_tool_button("Load skin from u:disk") var load_skin_btn = _load_skin_to_disk
 
-const HEIGHT: float = 1.65
-
 @onready var ik_controller: IKController = %IKController
 @onready var ragdoll_controller: RagdollController = %RagdollController
 @onready var anim_player: AnimationPlayer = %AnimationPlayer
@@ -124,7 +122,7 @@ func _spawn_mesh():
 	mesh_skin = skin_definition.mesh_res.instantiate()
 	mesh_node.add_child(mesh_skin)
 
-	_scale_to_height(mesh_skin, HEIGHT)
+	_scale_to_height(mesh_skin, skin_definition.height)
 
 	# retarget AnimationMixer => Root Node to new mesh
 	anim_player.root_node = mesh_skin.get_path()

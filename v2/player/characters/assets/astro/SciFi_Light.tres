@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://qd4enrje7fc2"]
+
+[resource]
+resource_name = "SciFi_Light"
+albedo_color = Color(0.63295776, 0.59417015, 0.57693106, 1)
+metallic = 0.4
+roughness = 0.4150871

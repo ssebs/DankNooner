@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cyclgjkaoektk"]
+
+[resource]
+resource_name = "Moustache"
+albedo_color = Color(0.39604124, 0.2270083, 0.013558579, 1)
+metallic = 0.4
+roughness = 0.4150871

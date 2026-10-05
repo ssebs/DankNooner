@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cjxt7muoflw02"]
+
+[resource]
+resource_name = "Swat"
+albedo_color = Color(0.30980393, 0.3254902, 0.3529412, 1)
+metallic = 0.4
+roughness = 0.27216554

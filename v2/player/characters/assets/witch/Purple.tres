@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bm7u2v7wmmtlk"]
+
+[resource]
+resource_name = "Purple"
+albedo_color = Color(0.25726852, 0.09736217, 0.40665615, 1)
+metallic = 0.4
+roughness = 0.27216554

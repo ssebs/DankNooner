@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CharacterSkinDefinition" format=3 uid="uid://bxa7gt83qt1yh"]
+
+[ext_resource type="PackedScene" uid="uid://dpwqbal87d8l1" path="res://player/characters/scenes/squid_skin.tscn" id="1_squid"]
+[ext_resource type="Script" uid="uid://bh7rf77tqy8xb" path="res://resources/player/character_skin_definition.gd" id="2_def"]
+
+[resource]
+script = ExtResource("2_def")
+skin_name = "squid_default"
+mesh_res = ExtResource("1_squid")
+height = 1.75
+metadata/_custom_type_script = "uid://bh7rf77tqy8xb"

@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://duddcf7w0duat"]
+
+[resource]
+resource_name = "Eyebrows"
+albedo_color = Color(0.21666715, 0.18093324, 0.1416259, 1)
+metallic = 0.4
+roughness = 0.4150871
+metadata/extras = {
+"fromFBX": {
+"isTruePBR": false,
+"shadingModel": "Phong"
+}
+}

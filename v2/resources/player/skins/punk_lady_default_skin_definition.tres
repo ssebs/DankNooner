@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CharacterSkinDefinition" format=3]
+
+[ext_resource type="PackedScene" path="res://player/characters/scenes/punk_lady_skin.tscn" id="1_scene"]
+[ext_resource type="Script" uid="uid://bh7rf77tqy8xb" path="res://resources/player/character_skin_definition.gd" id="2_def"]
+
+[resource]
+script = ExtResource("2_def")
+skin_name = "punk_lady_default"
+mesh_res = ExtResource("1_scene")
+height = 1.75
+metadata/_custom_type_script = "uid://bh7rf77tqy8xb"

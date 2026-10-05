@@ -100,6 +100,7 @@ Resource at `resources/player/character_skin_definition.gd`:
 | `skin_name`                    | String       | Name for saving to disk               |
 | `mesh_res`                     | PackedScene  | The SkinColor scene to instantiate    |
 | `colors`                       | Array[Color] | Slot colors (use TRANSPARENT to skip) |
+| `height`                       | float        | Mesh is scaled so its AABB is this tall; raise it when hair etc. inflates the AABB |
 | `back_marker_position`         | Vector3      | Accessory marker position             |
 | `back_marker_rotation_degrees` | Vector3      | Accessory marker rotation             |
 

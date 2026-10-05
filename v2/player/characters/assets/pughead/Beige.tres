@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bkjaefkg82w4q"]
+
+[resource]
+resource_name = "Beige"
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.9058824, 0.8000001, 0.6156863, 1)
+roughness = 0.5

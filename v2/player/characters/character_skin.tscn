@@ -1,15 +1,15 @@
 [gd_scene format=3 uid="uid://cuqtwh0saekmw"]
 
 [ext_resource type="Script" uid="uid://bakxxvsooac7k" path="res://player/characters/scripts/character_skin.gd" id="2_lm8ah"]
-[ext_resource type="Resource" uid="uid://dugcuccseinkn" path="res://resources/player/skins/biker_default_skin_definition.tres" id="2_ycg01"]
+[ext_resource type="Resource" uid="uid://d3v0btsnsgpb3" path="res://resources/player/skins/astronaut_default_skin_definition.tres" id="2_v0g0j"]
 [ext_resource type="AnimationLibrary" uid="uid://bd4erc5yrp7ta" path="res://player/characters/assets/biker/biker_anim_lib.res" id="3_lm8ah"]
 [ext_resource type="Script" uid="uid://bi68ajnu0uufl" path="res://player/characters/scripts/ragdoll_controller.gd" id="3_skpe0"]
 [ext_resource type="Script" uid="uid://d0emq7f6owo2m" path="res://player/characters/scripts/ik_controller.gd" id="4_6a7n1"]
 
 [node name="CharacterSkin" type="Node3D" unique_id=259227641]
 script = ExtResource("2_lm8ah")
-skin_definition = ExtResource("2_ycg01")
-skin_name_for_loading_test = "biker_blue"
+skin_definition = ExtResource("2_v0g0j")
+skin_name_for_loading_test = "squid_default"
 
 [node name="RagdollController" type="Node3D" parent="." unique_id=892761422 node_paths=PackedStringArray("char_skin")]
 unique_name_in_owner = true
@@ -25,7 +25,7 @@ metadata/_custom_type_script = "uid://d0emq7f6owo2m"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2071931266]
 unique_name_in_owner = true
-root_node = NodePath("/root/@EditorNode@18067/@Panel@14/@VBoxContainer@15/DockHSplitMain/@VBoxContainer@28/DockVSplitCenter/@VSplitContainer@70/@VBoxContainer@71/@EditorMainScreen@125/MainScreen/@CanvasItemEditor@9318/@VSplitContainer@9101/@HSplitContainer@9103/@HSplitContainer@9105/@Control@9106/@SubViewportContainer@9107/@SubViewport@9108/CharacterSkin/MeshNode/Biker")
+root_node = NodePath("/root/@EditorNode@19514/@Panel@14/@VBoxContainer@15/DockVSplitMain/DockHSplitMain/@VBoxContainer@37/DockVSplitCenter/@VSplitContainer@101/@VBoxContainer@102/@EditorMainScreen@160/MainScreen/@CanvasItemEditor@10138/@VSplitContainer@9897/@HSplitContainer@9899/@HSplitContainer@9901/@Control@9902/@SubViewportContainer@9903/@SubViewport@9904/CharacterSkin/MeshNode/Astronaut")
 libraries/Biker = ExtResource("3_lm8ah")
 
 [node name="MeshNode" type="Node3D" parent="." unique_id=1624205252]
@@ -33,4 +33,4 @@ unique_name_in_owner = true
 
 [node name="BackAccessoryMarker" type="Marker3D" parent="." unique_id=478042608]
 unique_name_in_owner = true
-transform = Transform3D(-1, 0, -6.2783295e-07, 0, 1, 0, 6.2783295e-07, 0, -1, 0, 1.5575237, -0.14157149)
+transform = Transform3D(-1, 0, -3.8941437e-07, 0, 1, 0, 3.8941437e-07, 0, -1, -1.4947399e-09, 1.6011683, -0.3223374)

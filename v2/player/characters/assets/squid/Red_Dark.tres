@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://brrbtklxmjumt"]
+
+[resource]
+resource_name = "Red_Dark"
+albedo_color = Color(0.44179085, 0.1344791, 0.18093324, 1)
+metallic = 0.4
+roughness = 0.4150871
+metadata/extras = {
+"fromFBX": {
+"isTruePBR": false,
+"shadingModel": "Phong"
+}
+}

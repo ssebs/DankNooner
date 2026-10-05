@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://eerre2hx4y8g"]
+
+[resource]
+resource_name = "Beige"
+albedo_color = Color(0.552566, 0.534699, 0.43821746, 1)
+metallic = 0.4
+roughness = 0.4150871

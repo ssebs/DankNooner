@@ -62,9 +62,10 @@
   - [ ] dirt bike
   - [ ] retro sport bike / cafe racer (xsr)
   - [ ] tron bike
-  - [ ] more characters
-    - [ ] pughead from guac and load
-    - [ ] zombie from guac and load
+  - [x] more characters
+    - [x] pughead from guac and load
+    - [x] zombie from guac and load
+    - [x] misc
 - [ ] Mods
   - [ ] Wings as mod for sport bike
   - [ ] Scraper mod — add sparks during wheelie

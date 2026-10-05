@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bpakvscq5vrbo"]
+
+[resource]
+resource_name = "SciFi_MainDark"
+albedo_color = Color(0.16663967, 0.20952038, 0.22024053, 1)
+metallic = 0.4
+roughness = 0.4150871

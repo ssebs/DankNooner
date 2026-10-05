@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://7653kav0jd1t" path="res://player/characters/assets/swat_lady/SwatLady.glb" id="1_glb"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="2_color"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="3_slot"]
+[ext_resource type="Material" uid="uid://cjxt7muoflw02" path="res://player/characters/assets/swat_lady/Swat.tres" id="4_swat"]
+[ext_resource type="Material" uid="uid://blu7uabcjnbq1" path="res://player/characters/assets/swat_lady/Black.tres" id="6_black"]
+[ext_resource type="Material" uid="uid://b64nhokmiuh61" path="res://player/characters/assets/swat_lady/Hair_Brown.tres" id="8_hair_brown"]
+
+[sub_resource type="Resource" id="Resource_slot0"]
+script = ExtResource("3_slot")
+color = Color(0.30980393, 0.3254902, 0.3529412, 1)
+use_standard_material = true
+surface_index = 1
+standard_material = ExtResource("4_swat")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="Resource" id="Resource_slot1"]
+script = ExtResource("3_slot")
+color = Color(0.1921569, 0.18039216, 0.16862744, 1)
+use_standard_material = true
+standard_material = ExtResource("6_black")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="Resource" id="Resource_slot2"]
+script = ExtResource("3_slot")
+color = Color(0.2431373, 0.2039216, 0.16078432, 1)
+use_standard_material = true
+surface_index = 1
+standard_material = ExtResource("8_hair_brown")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[node name="SwatLady" node_paths=PackedStringArray("meshes") instance=ExtResource("1_glb")]
+script = ExtResource("2_color")
+slots = Array[ExtResource("3_slot")]([SubResource("Resource_slot0"), SubResource("Resource_slot1"), SubResource("Resource_slot2"), SubResource("Resource_slot0"), SubResource("Resource_slot1"), SubResource("Resource_slot1")])
+meshes = [NodePath("Armature/Skeleton/Soldier_Body"), NodePath("Armature/Skeleton/Soldier_Body"), NodePath("Armature/Skeleton/Soldier_Head"), NodePath("Armature/Skeleton/Soldier_Legs"), NodePath("Armature/Skeleton/Soldier_Legs"), NodePath("Armature/Skeleton/Soldier_Feet")]

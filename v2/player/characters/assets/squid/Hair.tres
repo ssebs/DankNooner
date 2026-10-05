@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://ith5kledc8ox"]
+
+[resource]
+resource_name = "Hair"
+albedo_color = Color(0.2563219, 0.1597073, 0.080203705, 1)
+metallic = 0.4
+roughness = 0.4150871
+metadata/extras = {
+"fromFBX": {
+"isTruePBR": false,
+"shadingModel": "Phong"
+}
+}

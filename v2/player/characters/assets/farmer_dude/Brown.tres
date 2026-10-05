@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dcvts7tum0m4t"]
+
+[resource]
+resource_name = "Brown"
+albedo_color = Color(0.41426703, 0.3515693, 0.22392242, 1)
+metallic = 0.4
+roughness = 0.4150871

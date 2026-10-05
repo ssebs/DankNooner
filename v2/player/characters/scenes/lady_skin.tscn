@@ -1,0 +1,35 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://scmmuobw2s5e" path="res://player/characters/assets/lady/Lady.glb" id="1_glb"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="2_color"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="3_slot"]
+[ext_resource type="Material" uid="uid://sjks8tiyigqf" path="res://player/characters/assets/lady/White.tres" id="4_white"]
+[ext_resource type="Material" uid="uid://dosuwj0el1x0c" path="res://player/characters/assets/lady/Orange.tres" id="6_orange"]
+[ext_resource type="Material" uid="uid://cl1ihsucfod3f" path="res://player/characters/assets/lady/Hair_Blond.tres" id="8_hair_blond"]
+
+[sub_resource type="Resource" id="Resource_slot0"]
+script = ExtResource("3_slot")
+color = Color(0.7066537, 0.7066537, 0.7066537, 1)
+use_standard_material = true
+standard_material = ExtResource("4_white")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="Resource" id="Resource_slot1"]
+script = ExtResource("3_slot")
+color = Color(0.6199903, 0.38322118, 0.22044301, 1)
+use_standard_material = true
+standard_material = ExtResource("6_orange")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="Resource" id="Resource_slot2"]
+script = ExtResource("3_slot")
+color = Color(0.5466556, 0.45975056, 0.27785885, 1)
+use_standard_material = true
+surface_index = 1
+standard_material = ExtResource("8_hair_blond")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[node name="Lady" node_paths=PackedStringArray("meshes") instance=ExtResource("1_glb")]
+script = ExtResource("2_color")
+slots = Array[ExtResource("3_slot")]([SubResource("Resource_slot0"), SubResource("Resource_slot1"), SubResource("Resource_slot2")])
+meshes = [NodePath("Armature/Skeleton/Casual_Body"), NodePath("Armature/Skeleton/Casual_Legs"), NodePath("Armature/Skeleton/Casual_Head")]

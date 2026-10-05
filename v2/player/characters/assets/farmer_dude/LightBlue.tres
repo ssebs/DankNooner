@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cksf50rebltew"]
+
+[resource]
+resource_name = "LightBlue"
+albedo_color = Color(0.17735985, 0.22024053, 0.2488277, 1)
+metallic = 0.4
+roughness = 0.4150871

@@ -7,6 +7,7 @@
 script = ExtResource("2_g8gpo")
 skin_name = "astronaut"
 mesh_res = ExtResource("1_3slnl")
+height = 1.8
 back_marker_position = Vector3(-1.4947399e-09, 1.6011683, -0.3223374)
 back_marker_rotation_degrees = Vector3(0, -179.99998, 0)
 metadata/_custom_type_script = "uid://bh7rf77tqy8xb"

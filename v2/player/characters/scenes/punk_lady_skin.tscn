@@ -1,0 +1,28 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://bkvs7amcniiwn" path="res://player/characters/assets/punk_lady/PunkLady.glb" id="1_glb"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="2_color"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="3_slot"]
+[ext_resource type="Material" uid="uid://c1oynlrnf2iih" path="res://player/characters/assets/punk_lady/Pink.tres" id="4_pink"]
+[ext_resource type="Material" uid="uid://ce8m4mwtv1u6s" path="res://player/characters/assets/punk_lady/Hair_Brown.tres" id="6_hair_brown"]
+
+[sub_resource type="Resource" id="Resource_slot0"]
+script = ExtResource("3_slot")
+color = Color(0.40665463, 0.11181209, 0.39570233, 1)
+use_standard_material = true
+surface_index = 1
+standard_material = ExtResource("4_pink")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="Resource" id="Resource_slot1"]
+script = ExtResource("3_slot")
+color = Color(0.2431373, 0.2039216, 0.16078432, 1)
+use_standard_material = true
+surface_index = 3
+standard_material = ExtResource("6_hair_brown")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[node name="PunkLady" node_paths=PackedStringArray("meshes") instance=ExtResource("1_glb")]
+script = ExtResource("2_color")
+slots = Array[ExtResource("3_slot")]([SubResource("Resource_slot0"), SubResource("Resource_slot1"), SubResource("Resource_slot0")])
+meshes = [NodePath("Armature/Skeleton/Punk_Body"), NodePath("Armature/Skeleton/Punk_Head"), NodePath("Armature/Skeleton/Punk_Head")]

@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dp2b3x454ujb6"]
+
+[resource]
+resource_name = "Bones"
+cull_mode = 2
+albedo_color = Color(0.61998934, 0.58368284, 0.4970982, 1)
+roughness = 0.5

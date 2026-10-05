@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://b7j7i7owenypg"]
+
+[resource]
+resource_name = "SciFi_Light_Accent"
+albedo_color = Color(0.57757974, 0.3310157, 0.17021306, 1)
+metallic = 0.4
+roughness = 0.4150871

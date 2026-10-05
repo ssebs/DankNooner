@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cwk1saj14pi6g"]
+
+[resource]
+resource_name = "Hair_Black"
+albedo_color = Color(0.15971734, 0.15522109, 0.15998937, 1)
+metallic = 0.4
+roughness = 0.27216554

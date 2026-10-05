@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://co7wi5854qtw6"]
+
+[resource]
+resource_name = "Black"
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.06665542, 0.06665542, 0.06665542, 1)
+roughness = 0.5

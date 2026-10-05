@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://biwd54x0rffyq"]
+
+[resource]
+resource_name = "Worker_Yellow"
+albedo_color = Color(0.63832736, 0.5239789, 0.06301126, 1)
+metallic = 0.4
+roughness = 0.4150871

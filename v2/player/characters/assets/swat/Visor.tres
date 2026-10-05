@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://ciseq6mxao4bi"]
+
+[resource]
+resource_name = "Visor"
+albedo_color = Color(0.073731445, 0.073731445, 0.073731445, 1)
+metallic = 0.4
+roughness = 0.4150871

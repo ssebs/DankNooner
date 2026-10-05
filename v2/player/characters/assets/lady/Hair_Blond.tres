@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cl1ihsucfod3f"]
+
+[resource]
+resource_name = "Hair_Blond"
+albedo_color = Color(0.5466556, 0.45975056, 0.27785885, 1)
+metallic = 0.4
+roughness = 0.27216554

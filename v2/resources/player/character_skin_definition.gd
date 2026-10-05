@@ -17,6 +17,9 @@ class_name CharacterSkinDefinition extends Resource
 ## See skin_color.gd
 @export var colors: Array[Color] = []
 
+## Mesh is scaled so its AABB is this tall. Raise it when hair etc. inflates the AABB
+@export var height: float = DEFAULT_HEIGHT
+
 ## Marker positions
 @export_group("Markers")
 @export var back_marker_position: Vector3 = Vector3.ZERO
@@ -24,6 +27,7 @@ class_name CharacterSkinDefinition extends Resource
 
 const USER_SKIN_DIR: String = "user://skins/"
 const SKIN_PFX: String = "character_skin_"
+const DEFAULT_HEIGHT: float = 1.65
 
 
 func save_to_disk():
@@ -54,6 +58,7 @@ func _copy_from(other: CharacterSkinDefinition):
 	skin_name = other.skin_name
 	mesh_res = other.mesh_res
 	colors = other.colors.duplicate()
+	height = other.height
 	back_marker_position = other.back_marker_position
 	back_marker_rotation_degrees = other.back_marker_rotation_degrees
 
@@ -67,6 +72,7 @@ func to_dict() -> Dictionary:
 		"skin_name": skin_name,
 		"mesh_res": mesh_res.resource_path,
 		"colors": colors_arr,
+		"height": height,
 		"back_marker_position": DictJSONSaverLoader.vec3_to_dict(back_marker_position),
 		"back_marker_rotation_degrees":
 		DictJSONSaverLoader.vec3_to_dict(back_marker_rotation_degrees)
@@ -82,6 +88,7 @@ func from_dict(dict: Dictionary):
 	var colors_arr: Array = dict.get("colors", [])
 	for c_dict in colors_arr:
 		colors.append(DictJSONSaverLoader.dict_to_color(c_dict))
+	height = dict.get("height", DEFAULT_HEIGHT)
 	back_marker_position = DictJSONSaverLoader.dict_to_vec3(dict.get("back_marker_position", {}))
 	back_marker_rotation_degrees = DictJSONSaverLoader.dict_to_vec3(
 		dict.get("back_marker_rotation_degrees", {})
