@@ -21,8 +21,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] gamma slider, default to 0.5
-
 - [ ] customization garage POC
   - [ ] in-world shop at a garage / gas station in free roam
   - [ ] Customize menu spawns this scene if in main menu, replacing current UI
@@ -33,7 +31,6 @@
   - [ ] GTA V style selector
     - [ ] view changes in real time, autosave when you leave
     - [ ] `*` + Bold text on selected row, price on the right. see tmp/lossantoscustoms.jpg
-
 
 - [ ] expand stunt city to have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
 
@@ -225,6 +222,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+
+- [x] gamma slider, default to 0.5
 
 - [x] Quick settings wins
   - [x] localization language option
