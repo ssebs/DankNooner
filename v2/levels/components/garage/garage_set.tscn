@@ -1,0 +1,22 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://bmyba87m3xuaa" path="res://player/bikes/bike_skin.tscn" id="1_bike"]
+[ext_resource type="PackedScene" uid="uid://cuqtwh0saekmw" path="res://player/characters/character_skin.tscn" id="2_char"]
+
+[node name="GarageSet" type="Node3D"]
+
+[node name="PreviewSpot" type="Marker3D" parent="."]
+unique_name_in_owner = true
+
+[node name="BikeSkin" parent="PreviewSpot" instance=ExtResource("1_bike")]
+unique_name_in_owner = true
+
+[node name="CharacterSkin" parent="PreviewSpot" instance=ExtResource("2_char")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0, 0)
+
+[node name="KeyLight" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 3.5, 0)
+light_energy = 3.0
+spot_range = 6.0
+spot_angle = 50.0

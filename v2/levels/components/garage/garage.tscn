@@ -1,0 +1,144 @@
+[gd_scene format=3 uid="uid://blmmkvwq6fh3b"]
+
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_gb"]
+[ext_resource type="PackedScene" path="res://levels/components/interactable/garage_bay.tscn" id="2_bay"]
+
+[node name="Garage" type="Node3D" unique_id=535153070]
+
+[node name="Ground" parent="." unique_id=1182552842 instance=ExtResource("1_gb")]
+shape_mode = 1
+width = 32.0
+depth = 32.0
+
+[node name="floor" parent="." unique_id=1243239127 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0.05, 0)
+width = 10.0
+height = 0.1
+depth = 16.0
+color_preset = 1
+
+[node name="backwall" parent="." unique_id=36424049 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.891218, 2, -7.75)
+collision_layer = 0
+width = 10.0
+height = 4.0
+depth = 0.5
+color_preset = 1
+neon_edges = true
+
+[node name="roof2" parent="." unique_id=1485126779 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 4.149494, 0)
+collision_layer = 3
+width = 11.0
+height = 0.5
+depth = 16.0
+neon_edges = true
+
+[node name="roof3" parent="." unique_id=351332202 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9481792, 6.040515, 0)
+collision_layer = 3
+width = 20.0
+height = 0.5
+depth = 16.0
+neon_edges = true
+
+[node name="roof" parent="." unique_id=513710082 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 3.0249996, 0)
+collision_layer = 3
+width = 20.0
+height = 6.0
+depth = 14.0
+color_preset = 1
+neon_edges = true
+
+[node name="sidewalk_front" parent="." unique_id=2020644365 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07499999, 14)
+width = 32.0
+height = 0.1
+depth = 4.0
+color_preset = 1
+
+[node name="storefront3" parent="." unique_id=1642612292 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6246705, 1.3499998, 7.0280113)
+collision_layer = 3
+width = 2.0
+height = 2.5
+depth = 0.3
+neon_edges = true
+
+[node name="entrance_canopy" parent="." unique_id=713198592 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6246705, 2.9, 6.907634)
+collision_layer = 3
+width = 4.0
+height = 0.4
+depth = 2.0
+color_preset = 3
+neon_edges = true
+
+[node name="storefront" parent="." unique_id=1640214393 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.73458, 2.994382, 7.149998)
+collision_layer = 3
+width = 4.0
+height = 2.5
+depth = 0.3
+neon_edges = true
+
+[node name="storefront2" parent="." unique_id=110113145 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.905481, 2.994382, 7.149998)
+collision_layer = 3
+width = 4.0
+height = 2.5
+depth = 0.3
+neon_edges = true
+
+[node name="Bay1" type="Node3D" parent="." unique_id=1929112326]
+
+[node name="leftwall" parent="Bay1" unique_id=412471643 instance=ExtResource("1_gb")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -16, 2, 0)
+collision_layer = 3
+width = 16.0
+height = 4.0
+depth = 0.5
+color_preset = 1
+neon_edges = true
+
+[node name="rightwall" parent="Bay1" unique_id=421340848 instance=ExtResource("1_gb")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -6, 2, 0)
+collision_layer = 3
+width = 16.0
+height = 4.0
+depth = 0.5
+color_preset = 1
+neon_edges = true
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Bay1" unique_id=28805637]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, 1)
+light_color = Color(0.8392157, 0.7882353, 0.22352941, 1)
+light_energy = 2.0
+omni_range = 8.0
+
+[node name="GarageBay" parent="Bay1" unique_id=715041386 instance=ExtResource("2_bay")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 0)
+
+[node name="trash" parent="." unique_id=2138124890 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 1.0249999, -8.45809)
+collision_layer = 3
+width = 4.0
+height = 2.0
+depth = 2.0
+color_preset = 2
+
+[node name="SIGN" parent="." unique_id=1452581801 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 8.798382, 7.5253143)
+width = 10.0
+height = 4.0
+depth = 0.2
+color_preset = 5
+neon_edges = true
+
+[node name="Label3D" type="Label3D" parent="SIGN" unique_id=24202]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.16840553)
+double_sided = false
+text = "THE_GARAGE"
+font_size = 256
+outline_size = 64

@@ -189,11 +189,11 @@ color_preset = 5
 neon_edges = true
 
 [node name="pump5" parent="." unique_id=1912590253 instance=ExtResource("1_kyn7p")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.65, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7021382, 0)
 collision_layer = 3
 width = 1.5
-height = 0.5
-depth = 0.76
+height = 0.6
+depth = 0.8
 color_preset = 5
 neon_edges = true
 

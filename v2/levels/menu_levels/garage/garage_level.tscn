@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_lvl"]
+[ext_resource type="PackedScene" path="res://levels/components/garage/garage.tscn" id="2_garage"]
+
+[node name="GarageLevel" type="Node3D"]
+script = ExtResource("1_lvl")
+no_player_spawn_needed = true
+metadata/_custom_type_script = "uid://dv0brm8irhlth"
+
+[node name="Garage" parent="." instance=ExtResource("2_garage")]
+unique_name_in_owner = true

@@ -22,6 +22,7 @@
 > Don't forget, have fun :D
 
 - [ ] customization garage POC
+  - [ ] planning_docs\____GARAGE_WIP.md
   - [ ] in-world shop at a garage / gas station in free roam
   - [ ] Customize menu spawns this scene if in main menu, replacing current UI
   - [ ] 1 Tab per loadout, always have default bikes as an option with default character

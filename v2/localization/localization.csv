@@ -199,3 +199,4 @@ FUELUP_RETURN,"Hang the nozzle back on the pump","Cuelga la manguera en el surti
 FUELUP_SPILLING,"Spilling! Get it back in the tank","¡Se derrama! Vuelve a meterla al tanque"
 FUELUP_EVENT_NAME,"Fill Up","Llenar el tanque"
 FUELUP_EVENT_DESC,"Pull up to a pump and fill your tank to refill your boost.","Ve a un surtidor y llena el tanque para recargar tu turbo."
+THE_GARAGE,"THE GARAGE","EL TALLER"
