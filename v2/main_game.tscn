@@ -36,6 +36,7 @@
 [ext_resource type="Script" path="res://managers/gamemodes/types/fuel_up/fuel_up_gamemode.gd" id="30_fuelup"]
 [ext_resource type="Script" path="res://managers/gamemodes/types/trick_battle/trick_battle_gamemode.gd" id="30_trkbtl"]
 [ext_resource type="PackedScene" path="res://managers/hud/fuel_up_hud_state.tscn" id="30_fuelhud"]
+[ext_resource type="PackedScene" path="res://managers/hud/garage_hud_state.tscn" id="30_garagehud"]
 [ext_resource type="Script" uid="uid://boxia2udg1jxm" path="res://managers/npc_race_manager.gd" id="31_npcrm"]
 [ext_resource type="Script" uid="uid://283a7n5utttx" path="res://resources/player/player_definition.gd" id="35_iihm1"]
 [ext_resource type="Script" uid="uid://37ehv252lkkf" path="res://managers/trick_manager.gd" id="36_trkmg"]
@@ -65,12 +66,13 @@ settings_manager = NodePath("ManagerManager/SettingsManager")
 [node name="ManagerManager" type="Node" parent="." unique_id=1214717395]
 script = ExtResource("2_yx7mw")
 
-[node name="InputStateManager" type="Node" parent="ManagerManager" unique_id=2040238004 node_paths=PackedStringArray("menu_manager", "save_manager", "spawn_manager", "item_manager") groups=["InputManager", "InputStateManager", "Managers"]]
+[node name="InputStateManager" type="Node" parent="ManagerManager" unique_id=2040238004 node_paths=PackedStringArray("menu_manager", "save_manager", "spawn_manager", "item_manager", "hud_manager") groups=["InputManager", "InputStateManager", "Managers"]]
 script = ExtResource("3_krmtw")
 menu_manager = NodePath("../MenuManager")
 save_manager = NodePath("../SaveManager")
 spawn_manager = NodePath("../SpawnManager")
 item_manager = NodePath("../ItemManager")
+hud_manager = NodePath("../HUDManager")
 metadata/_custom_type_script = "uid://b766m1s624u36"
 
 [node name="PauseManager" type="Node" parent="ManagerManager" unique_id=704027696 node_paths=PackedStringArray("menu_manager", "level_manager", "input_state_manager", "audio_manager", "hud_manager") groups=["Managers"]]
@@ -168,12 +170,11 @@ menu_manager = NodePath("../..")
 settings_manager = NodePath("../../../SettingsManager")
 main_menu_state = NodePath("../MainMenuState")
 
-[node name="CustomizeMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1710077363 node_paths=PackedStringArray("menu_manager", "save_manager", "play_menu_state") instance=ExtResource("9_4srsv")]
-menu_manager = NodePath("../..")
+[node name="CustomizeMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1710077363 node_paths=PackedStringArray("save_manager", "level_manager") instance=ExtResource("9_4srsv")]
 save_manager = NodePath("../../../SaveManager")
-play_menu_state = NodePath("../PlayMenuState")
+level_manager = NodePath("../../../LevelManager")
 
-[node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "connection_manager", "level_manager", "input_state_manager", "pause_manager", "gamemode_manager", "spawn_manager", "main_menu_state", "settings_menu_state", "customize_menu_state", "help_menu_state", "tricks_menu_state") instance=ExtResource("6_02kkc")]
+[node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "connection_manager", "level_manager", "input_state_manager", "pause_manager", "gamemode_manager", "spawn_manager", "main_menu_state", "settings_menu_state", "help_menu_state", "tricks_menu_state") instance=ExtResource("6_02kkc")]
 menu_manager = NodePath("../..")
 connection_manager = NodePath("../../../ConnectionManager")
 level_manager = NodePath("../../../LevelManager")
@@ -183,7 +184,6 @@ gamemode_manager = NodePath("../../../GamemodeManager")
 spawn_manager = NodePath("../../../SpawnManager")
 main_menu_state = NodePath("../MainMenuState")
 settings_menu_state = NodePath("../SettingsMenuState")
-customize_menu_state = NodePath("../CustomizeMenuState")
 help_menu_state = NodePath("../HelpMenuState")
 tricks_menu_state = NodePath("../TricksMenuState")
 
@@ -205,12 +205,13 @@ script = ExtResource("19_wt57k")
 default_player_definition = ExtResource("20_pk5u2")
 metadata/_custom_type_script = "uid://didbm7t5dal30"
 
-[node name="HUDManager" type="Node" parent="ManagerManager" unique_id=654912404 node_paths=PackedStringArray("state_machine", "null_hud_state", "riding_hud_state", "fuel_up_hud_state") groups=["Managers"]]
+[node name="HUDManager" type="Node" parent="ManagerManager" unique_id=654912404 node_paths=PackedStringArray("state_machine", "null_hud_state", "riding_hud_state", "fuel_up_hud_state", "garage_hud_state") groups=["Managers"]]
 script = ExtResource("41_8jqmg")
 state_machine = NodePath("StateMachine")
 null_hud_state = NodePath("StateMachine/NullHUDState")
 riding_hud_state = NodePath("StateMachine/RidingHUDState")
 fuel_up_hud_state = NodePath("StateMachine/FuelUpHUDState")
+garage_hud_state = NodePath("StateMachine/GarageHUDState")
 metadata/_custom_type_script = "uid://c4nkca4ah0fwh"
 
 [node name="StateMachine" type="Node" parent="ManagerManager/HUDManager" unique_id=1115217599 node_paths=PackedStringArray("initial_state")]
@@ -248,6 +249,9 @@ save_manager = NodePath("../../../SaveManager")
 input_state_manager = NodePath("../../../InputStateManager")
 
 [node name="FuelUpHUDState" parent="ManagerManager/HUDManager/StateMachine" instance=ExtResource("30_fuelhud")]
+
+[node name="GarageHUDState" parent="ManagerManager/HUDManager/StateMachine" node_paths=PackedStringArray("save_manager") instance=ExtResource("30_garagehud")]
+save_manager = NodePath("../../../SaveManager")
 
 [node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "spawn_manager", "animal_spawn_manager", "audio_manager", "input_state_manager", "state_machine", "loading_menu_state", "free_roam_mode", "race_mode", "stunt_race_mode", "time_attack_mode", "tutorial_mode", "stunt_challenge_mode", "long_jump_mode", "fuel_up_mode", "trick_battle_mode") groups=["Managers"]]
 script = ExtResource("18_ih6an")

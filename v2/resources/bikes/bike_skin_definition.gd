@@ -9,6 +9,9 @@ class_name BikeSkinDefinition extends Resource
 ## and reapplying mods. Empty for un-customized base defs (fall back to resource_path).
 @export var base_res_path: String = ""
 
+## Garage cost; 0 = owned by default.
+@export var price: int = 0
+
 @export_group("Mesh")
 ## The SkinColor scene to instantiate
 @export var mesh_res: PackedScene:
@@ -21,6 +24,8 @@ class_name BikeSkinDefinition extends Resource
 @export var mesh_position_offset: Vector3 = Vector3.ZERO
 @export var mesh_rotation_offset_degrees: Vector3 = Vector3.ZERO
 @export var mesh_scale_multiplier: Vector3 = Vector3.ONE
+## One per unique SkinSlot, applied before mods. Empty = the mesh's own slot colors.
+@export var colors: Array[Color] = []
 
 @export_group("Collision")
 # TODO: use this
@@ -177,10 +182,12 @@ func load_from_disk() -> bool:
 func _copy_from(other: BikeSkinDefinition) -> void:
 	skin_name = other.skin_name
 	base_res_path = other.base_res_path
+	price = other.price
 	mesh_res = other.mesh_res
 	mesh_position_offset = other.mesh_position_offset
 	mesh_rotation_offset_degrees = other.mesh_rotation_offset_degrees
 	mesh_scale_multiplier = other.mesh_scale_multiplier
+	colors = other.colors.duplicate()
 	collision_shape = other.collision_shape
 	collision_position_offset = other.collision_position_offset
 	collision_rotation_offset_degrees = other.collision_rotation_offset_degrees
@@ -251,18 +258,22 @@ func _copy_from(other: BikeSkinDefinition) -> void:
 #region to/from Dictionary
 ## Network/save serialization. We deliberately do NOT include `resource_path` because it can
 ## point at a user:// file that only exists on the local peer. Instead we ship the base
-## bike's res:// path + the list of mod res:// paths; remote peers rebuild via from_dict().
+## bike's res:// path + colors + the list of mod res:// paths; remote peers rebuild via from_dict().
 func to_dict() -> Dictionary:
 	var mod_paths: Array = []
 	for mod in mods:
 		if mod and mod.resource_path != "":
 			mod_paths.append(mod.resource_path)
+	var colors_arr: Array = []
+	for c in colors:
+		colors_arr.append(DictJSONSaverLoader.color_to_dict(c))
 	var base := base_res_path
 	if base == "":
 		base = resource_path # un-customized base def loaded directly from res://
 	return {
 		"skin_name": skin_name,
 		"base_res_path": base,
+		"colors": colors_arr,
 		"mod_paths": mod_paths,
 	}
 
@@ -281,15 +292,32 @@ func from_dict(dict: Dictionary) -> void:
 	_copy_from(base_def)
 	base_res_path = base_path
 	skin_name = dict.get("skin_name", base_def.skin_name)
+	colors.clear()
+	for c_dict in dict.get("colors", []):
+		colors.append(DictJSONSaverLoader.dict_to_color(c_dict))
 
 	var rebuilt_mods: Array[BikeMod] = []
 	for mp in dict.get("mod_paths", []):
 		if mp == "" or not ResourceLoader.exists(mp):
 			continue
 		var mod := ResourceLoader.load(mp) as BikeMod
-		if mod:
+		if mod is ColorMod:
+			_fold_color_mod(mod)
+		elif mod:
 			rebuilt_mods.append(mod)
 	mods = rebuilt_mods
 
 	save_to_disk()
+
+
+## Legacy saves painted player bikes with a ColorMod; that's `colors` now. Same pairing as
+## SkinColor.update_all_colors.
+func _fold_color_mod(mod: ColorMod) -> void:
+	if colors.is_empty():
+		colors = SkinColor.get_unique_slot_colors(mesh_res)
+	if mod.colors.size() == 1:
+		colors.fill(mod.colors[0])
+		return
+	for i in mini(mod.colors.size(), colors.size()):
+		colors[i] = mod.colors[i]
 #endregion

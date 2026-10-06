@@ -1,11 +1,18 @@
 [gd_resource type="Resource" script_class="PlayerDefinition" format=3 uid="uid://ba1bidrtscoc7"]
 
 [ext_resource type="Script" uid="uid://283a7n5utttx" path="res://resources/player/player_definition.gd" id="1_nop61"]
-[ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/bikes/skins/sport_default_skin_definition.tres" id="1_tgx2e"]
-[ext_resource type="Resource" uid="uid://2af1lwc0vbaw" path="res://resources/player/skins/clanker_blue_skin_definition.tres" id="2_a8j14"]
+[ext_resource type="Resource" uid="uid://d2u40ds684dd5" path="res://resources/player/skins/clanker_default_skin_definition.tres" id="2_clank"]
 [ext_resource type="Texture2D" uid="uid://cwf7vhr6hpjoj" path="res://resources/img/Logos/Logo.svg" id="2_hooav"]
+[ext_resource type="Script" uid="uid://ctppcknl8khsn" path="res://resources/player/loadout.gd" id="3_ldout"]
+[ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/bikes/skins/naked_default_skin_definition.tres" id="4_naked"]
+
+[sub_resource type="Resource" id="Resource_ldout"]
+script = ExtResource("3_ldout")
+name = "Loadout 1"
+bike = ExtResource("4_naked")
 
 [resource]
 script = ExtResource("1_nop61")
-bike_skin = ExtResource("1_tgx2e")
+money = 15000.0
+loadouts = Array[ExtResource("3_ldout")]([SubResource("Resource_ldout")])
 metadata/_custom_type_script = "uid://283a7n5utttx"

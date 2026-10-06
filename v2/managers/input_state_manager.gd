@@ -23,6 +23,7 @@ enum InputState {
 @export var save_manager: SaveManager
 @export var spawn_manager: SpawnManager
 @export var item_manager: ItemManager
+@export var hud_manager: HUDManager
 
 # @export var debug_mobile := true
 @export var debug_mobile := false
@@ -117,13 +118,31 @@ func _unhandled_input(event: InputEvent):
 			if event.is_action_pressed("open_map") or event.is_action_pressed("ui_cancel"):
 				current_input_state = InputState.IN_GAME
 		InputStateManager.InputState.IN_MINIGAME:
+			var hud_state := hud_manager.state_machine.current_state as HUDState
+			# Esc is both; pause wins so keyboard can always reach Cancel Event.
 			if event.is_action_pressed("pause"):
 				pause_requested.emit()
+			elif event.is_action_pressed("ui_cancel"):
+				hud_state.on_cancel_key_pressed()
+			elif _tab_dir(event) != 0:
+				hud_state.on_tab_key_pressed(_tab_dir(event))
 		InputStateManager.InputState.IN_MENU:
+			var current_state = menu_manager.state_machine.current_state as MenuState
 			if event.is_action_pressed("ui_cancel"):
-				var current_state = menu_manager.state_machine.current_state as MenuState
 				if current_state:
 					current_state.on_cancel_key_pressed()
+			elif _tab_dir(event) != 0:
+				if current_state:
+					current_state.on_tab_key_pressed(_tab_dir(event))
+
+
+## -1 / 1 for ui_tab_prev / ui_tab_next presses, else 0.
+func _tab_dir(event: InputEvent) -> int:
+	if event.is_action_pressed("ui_tab_prev"):
+		return -1
+	if event.is_action_pressed("ui_tab_next"):
+		return 1
+	return 0
 
 
 ## Double-tap the trick button to use the held item — timed like the trick stick's double tap.

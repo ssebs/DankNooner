@@ -126,3 +126,8 @@ func _on_close_tricks_pressed():
 #override
 func on_cancel_key_pressed():
 	_on_close_tricks_pressed()
+
+
+#override
+func on_tab_key_pressed(dir: int):
+	state_tabs.current_tab = wrapi(state_tabs.current_tab + dir, 0, state_tabs.get_tab_count())

@@ -42,6 +42,11 @@ func on_cancel_key_pressed():
 	pass
 
 
+## Override this to switch tabs. `dir` is -1 (ui_tab_prev) or 1 (ui_tab_next)
+func on_tab_key_pressed(_dir: int):
+	pass
+
+
 func get_first_button_for_focus() -> Button:
 	var buttons = find_children("*", "Button", true, true)
 	if len(buttons) == 0:

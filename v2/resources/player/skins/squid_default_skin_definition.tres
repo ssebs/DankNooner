@@ -7,5 +7,6 @@
 script = ExtResource("2_def")
 skin_name = "squid_default"
 mesh_res = ExtResource("1_squid")
+price = 1000
 height = 1.75
 metadata/_custom_type_script = "uid://bh7rf77tqy8xb"

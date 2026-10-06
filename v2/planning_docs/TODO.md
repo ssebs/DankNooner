@@ -22,18 +22,24 @@
 > Don't forget, have fun :D
 
 - [ ] customization garage POC
-  - [ ] planning_docs\____GARAGE_WIP.md
-  - [ ] in-world shop at a garage / gas station in free roam
-  - [ ] Customize menu spawns this scene if in main menu, replacing current UI
-  - [ ] 1 Tab per loadout, always have default bikes as an option with default character
-    - [ ] each loadout can have override character
-    - [ ] 1st tab is just default character select + name / other medatata
-    - [ ] other tabs are loadouts
-  - [ ] GTA V style selector
-    - [ ] view changes in real time, autosave when you leave
-    - [ ] `*` + Bold text on selected row, price on the right. see tmp/lossantoscustoms.jpg
+  - [x] planning_docs\____GARAGE_WIP.md
+  - [x] in-world shop at a garage / gas station in free roam
+  - [x] Customize menu spawns this scene if in main menu, replacing current UI
+  - [x] 1 Tab per loadout, always have default bikes as an option with default character
+    - [x] each loadout can have override character
+    - [x] 1st tab is just default character select + name / other medatata
+    - [x] other tabs are loadouts
+  - [x] GTA V style selector
+    - [x] view changes in real time, autosave when you leave
+    - [x] `*` + Bold text on selected row, price on the right. see tmp/lossantoscustoms.jpg
+  - [ ] press F to dance
+    - [ ] add btn
+    - [ ] make hud cleaner / more distinct for btns
+    - [ ] verify new savegame data
 
 - [ ] expand stunt city to have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
+
+- [ ] count drifting wheelie trick
 
 - [ ] Get AI working again
   - [ ] NPC Traffic

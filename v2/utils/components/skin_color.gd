@@ -81,6 +81,19 @@ func update_all_colors(colors: Array[Color]) -> void:
 		_apply_color_to_all_materials_for(unique_slots[i], colors[i])
 
 
+## Color of each unique slot in `scene` (a SkinColor scene), in update_all_colors order:
+## `overrides[i]` where set and not TRANSPARENT, else the slot's default.
+static func get_unique_slot_colors(scene: PackedScene, overrides: Array[Color] = []) -> Array[Color]:
+	var skin := scene.instantiate() as SkinColor
+	var out: Array[Color] = []
+	for slot in skin._unique_slots():
+		var i := out.size()
+		var has_override := i < overrides.size() and overrides[i] != Color.TRANSPARENT
+		out.append(overrides[i] if has_override else slot.color)
+	skin.free()
+	return out
+
+
 ## Unique SkinSlot refs in order of first appearance in `slots`.
 func _unique_slots() -> Array[SkinSlot]:
 	var out: Array[SkinSlot] = []

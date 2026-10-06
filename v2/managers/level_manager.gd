@@ -10,6 +10,7 @@ enum LevelName {
 	RACETRACK_01,
 	STUNTTRACK_01,
 	STUNTTRACK_02,
+	GARAGE_LEVEL,
 }
 
 @export var spawn_node: Node3D
@@ -31,6 +32,7 @@ var possible_levels: Dictionary[LevelName, PackedScene] = {
 	load("res://levels/racetracks/racetrack_level_01/racetrack_level_01.tscn"),
 	LevelName.STUNTTRACK_01: load("res://levels/racetracks/stunt_track_01/stunt_track_01.tscn"),
 	LevelName.STUNTTRACK_02: load("res://levels/racetracks/stunt_track_02/stunt_race_02.tscn"),
+	LevelName.GARAGE_LEVEL: load("res://levels/menu_levels/garage/garage_level.tscn"),
 }
 ## LevelName enum => localization.csv's key name
 var level_name_map: Dictionary[LevelName, String] = {
@@ -41,6 +43,7 @@ var level_name_map: Dictionary[LevelName, String] = {
 	LevelName.RACETRACK_01: "LEVEL_RACETRACK_01",
 	LevelName.STUNTTRACK_01: "LEVEL_STUNTTRACK_01",
 	LevelName.STUNTTRACK_02: "LEVEL_STUNTTRACK_02",
+	LevelName.GARAGE_LEVEL: "GarageLevel",
 }
 
 # ___ UI ORDER ___ #

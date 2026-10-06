@@ -66,9 +66,9 @@ func _warm_all_levels() -> void:
 	for scene in level_manager.possible_levels.values():
 		if scene != null and scene not in levels:
 			levels.append(scene)
-	# Every bike/character the customize menu offers — no level contains them
+	# Every bike/character the garage offers — no level contains them
 	var extras: Array[PackedScene] = vfx_scenes.duplicate()
-	for skins_dir in [CustomizeMenuState.BIKE_SKINS_DIR, CustomizeMenuState.CHARACTER_SKINS_DIR]:
+	for skins_dir in [GarageUI.BIKE_SKINS_DIR, GarageUI.CHARACTER_SKINS_DIR]:
 		for res_path in SkinScanner.scan_skin_dir(skins_dir).values():
 			var skin_scene: PackedScene = load(res_path).mesh_res
 			if skin_scene not in extras:

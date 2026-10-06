@@ -6,6 +6,7 @@
 [resource]
 script = ExtResource("2_def")
 skin_name = "punk_lady_default"
+price = 1000
 mesh_res = ExtResource("1_scene")
 height = 1.75
 metadata/_custom_type_script = "uid://bh7rf77tqy8xb"

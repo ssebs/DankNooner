@@ -17,6 +17,9 @@ class_name CharacterSkinDefinition extends Resource
 ## See skin_color.gd
 @export var colors: Array[Color] = []
 
+## Garage cost; 0 = owned by default.
+@export var price: int = 0
+
 ## Mesh is scaled so its AABB is this tall. Raise it when hair etc. inflates the AABB
 @export var height: float = DEFAULT_HEIGHT
 
@@ -58,6 +61,7 @@ func _copy_from(other: CharacterSkinDefinition):
 	skin_name = other.skin_name
 	mesh_res = other.mesh_res
 	colors = other.colors.duplicate()
+	price = other.price
 	height = other.height
 	back_marker_position = other.back_marker_position
 	back_marker_rotation_degrees = other.back_marker_rotation_degrees

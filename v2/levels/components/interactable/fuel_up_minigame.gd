@@ -30,9 +30,6 @@ const RECOIL_KICK_SECS: float = 0.25
 ## How close (m) the grip must come back to its spot on the pump to hang up.
 const HANG_UP_DIST: float = 0.25
 
-@onready var camera: Camera3D = %Camera3D
-## Where the assigned rider's bike is parked.
-@onready var bike_spot: Marker3D = %BikeSpot
 @onready var _handle: GrayBoxStaticBody = %Handle
 @onready var _handle_marker_hose: Marker3D = %HandleMarkerHose
 ## Grip point — held under the cursor.
@@ -58,12 +55,6 @@ const HANG_UP_DIST: float = 0.25
 var fill: float = 0.0
 ## Gas spilled this fill-up, in fill's units. Read by FuelUpGameMode.
 var spilled: float = 0.0
-
-## All set by begin() while this pump is in use.
-var _player: PlayerEntity
-var _input_state_manager: InputStateManager
-var _audio_manager: AudioManager
-var _hud_manager: HUDManager
 
 var _step := Step.GRAB
 var _over_cap: bool = false
@@ -107,15 +98,6 @@ func _ready():
 
 
 #override
-## Park the rider at bike_spot and hold them there.
-func server_start(peer_id: int, spawn_manager: SpawnManager):
-	spawn_manager.respawn_player_in_place.rpc(
-		peer_id, bike_spot.global_position, bike_spot.global_basis
-	)
-	CountdownTask.freeze(spawn_manager.get_player_by_peer_id(peer_id))
-
-
-#override
 func server_end(peer_id: int, result: float, spawn_manager: SpawnManager):
 	var player := spawn_manager.get_player_by_peer_id(peer_id)
 	# The tank started at the rider's boost, so a fill-up never takes any away.
@@ -124,7 +106,7 @@ func server_end(peer_id: int, result: float, spawn_manager: SpawnManager):
 		clampf(result, 0.0, 1.0) * BoostController.BOOST_SEGMENTS
 	)
 	spawn_manager.set_boost_player.rpc(peer_id, amount)
-	CountdownTask.unfreeze(player)
+	super(peer_id, result, spawn_manager)
 
 
 #override
@@ -133,53 +115,19 @@ func get_result() -> float:
 
 
 #override
-## Run this pump for the local `player`, tank at their boost. Starts once their teleport onto
-## bike_spot lands, since that respawn flips the HUD back to riding.
+## Run this pump for the local `player`, tank at their boost.
 func begin(
 	player: PlayerEntity,
 	input_state_manager: InputStateManager,
 	audio_manager: AudioManager,
 	hud_manager: HUDManager
 ):
-	_player = player
-	_input_state_manager = input_state_manager
-	_audio_manager = audio_manager
-	_hud_manager = hud_manager
 	fill = player.boost_controller.boost_amount / BoostController.BOOST_SEGMENTS
-	player.respawned.connect(_start, CONNECT_ONE_SHOT)
+	super(player, input_state_manager, audio_manager, hud_manager)
 
 
 #override
-## Hand the rider back and reset the pump. Runs itself on finish; callers use it to cancel, which
-## is safe even before the teleport landed.
-func end():
-	if _player.respawned.is_connected(_start):
-		_player.respawned.disconnect(_start)
-		_player = null
-		return
-	_input_state_manager.input_state_changed.disconnect(_on_input_state_changed)
-	_input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
-
-	set_process(false)
-	_handle_area.transform = _carry_rest
-	_update_hose()
-	_set_highlight(null)
-	_end_btn_mesh.set_surface_override_material(0, null)
-	_set_cursor(null)
-	_audio_manager.stop_sfx(AudioManager.Sfx.GLUG_GLUG)
-	_set_spilling(false)
-	_gas_cap_mesh.visible = false
-	_anim.play(&"loop")
-	_hose_mesh.material.no_depth_test = false
-
-	_player.character_skin.visible = true
-	_audio_manager.play_revs(_player.bike_definition)
-	_hud_manager.go_to_riding_hud()
-	_player.camera_controller.switch_to_cam(_player.camera_controller.current_cam_mode)
-	_player = null
-
-
-func _start():
+func _on_session_start():
 	_gas_cap_area.global_position = _player.gas_cap_marker.global_position
 	_step = Step.GRAB
 	_over_cap = false
@@ -194,17 +142,26 @@ func _start():
 	_player.character_skin.visible = false
 	# The pump camera would otherwise lose the hose behind the bike.
 	_hose_mesh.material.no_depth_test = true
-	_audio_manager.stop_revs()
 	_hud_manager.go_to_fuel_up_hud(self)
 
-	_input_state_manager.input_state_changed.connect(_on_input_state_changed)
-	_input_state_manager.current_input_state = InputStateManager.InputState.IN_MINIGAME
 
+#override
+## Reset the pump.
+func _on_session_end():
+	set_process(false)
+	_handle_area.transform = _carry_rest
+	_update_hose()
+	_set_highlight(null)
+	_end_btn_mesh.set_surface_override_material(0, null)
+	_set_cursor(null)
+	_audio_manager.stop_sfx(AudioManager.Sfx.GLUG_GLUG)
+	_set_spilling(false)
+	_gas_cap_mesh.visible = false
+	_anim.play(&"loop")
+	_hose_mesh.material.no_depth_test = false
 
-## Unpause always lands on IN_GAME — put the cursor back while the minigame is still up.
-func _on_input_state_changed(new_state: InputStateManager.InputState):
-	if new_state == InputStateManager.InputState.IN_GAME:
-		_input_state_manager.current_input_state = InputStateManager.InputState.IN_MINIGAME
+	_player.character_skin.visible = true
+	_hud_manager.go_to_riding_hud()
 
 
 func get_prompt_key() -> String:
@@ -218,9 +175,6 @@ func get_prompt_key() -> String:
 
 
 func _process(delta: float):
-	# Re-asserted every frame: the teleport's respawn (and its resims) and the switch-cam key
-	# all hand the view back to the rider's own camera.
-	camera.current = true
 	# Web pointer lock lands async, so the event submit's capture can lock after IN_MINIGAME
 	# released it. Asks DisplayServer since Input.mouse_mode caches the last requested mode.
 	if DisplayServer.mouse_get_mode() == DisplayServer.MOUSE_MODE_CAPTURED:

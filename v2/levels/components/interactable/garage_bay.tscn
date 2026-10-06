@@ -1,39 +1,43 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bmti2mikrlp48"]
 
 [ext_resource type="PackedScene" path="res://levels/components/garage/garage_set.tscn" id="1_set"]
 [ext_resource type="Material" uid="uid://k0dialwj5i42" path="res://levels/assets/props/neon_blue.tres" id="2_neon"]
+[ext_resource type="Script" uid="uid://bsiath505wdap" path="res://levels/components/interactable/garage_activity.gd" id="3_act"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_circle"]
-radius = 0.8
+radius = 1.5
 
 [sub_resource type="TorusMesh" id="TorusMesh_circle"]
 material = ExtResource("2_neon")
-inner_radius = 0.75
-outer_radius = 0.8
+inner_radius = 1.5
+outer_radius = 1.55
 rings = 24
 ring_segments = 6
 
-[node name="GarageBay" type="Node3D"]
+[node name="GarageBay" type="Node3D" unique_id=287107545]
+script = ExtResource("3_act")
+event_name = "GARAGE_EVENT_NAME"
+event_description = "GARAGE_EVENT_DESC"
 
-[node name="BikeSpot" type="Marker3D" parent="."]
+[node name="BikeSpot" type="Marker3D" parent="." unique_id=319628266]
 unique_name_in_owner = true
 
-[node name="GarageSet" parent="BikeSpot" instance=ExtResource("1_set")]
+[node name="GarageSet" parent="BikeSpot" unique_id=1292330562 instance=ExtResource("1_set")]
 unique_name_in_owner = true
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1511539158]
 unique_name_in_owner = true
 transform = Transform3D(0.7071, -0.1151, 0.6977, 0, 0.9867, 0.1628, -0.7071, -0.1151, 0.6977, 3, 1.4, 3)
 fov = 60.0
 
-[node name="PlayerStartCircle" type="Area3D" parent="."]
+[node name="PlayerStartCircle" type="Area3D" parent="." unique_id=850932953]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerStartCircle"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerStartCircle" unique_id=1018357235]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_circle")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerStartCircle/CollisionShape3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerStartCircle/CollisionShape3D" unique_id=209088655]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9, 0)
 mesh = SubResource("TorusMesh_circle")

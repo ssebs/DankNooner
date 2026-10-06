@@ -78,6 +78,7 @@ func update_brake_light(brake_amount: float):
 #region resource/definition
 func apply_definition():
 	_spawn_mesh()
+	mesh_skin.update_all_colors(skin_definition.colors)
 	_apply_mods()
 	_create_steering_handlebar_proxy()
 	if Engine.is_editor_hint():

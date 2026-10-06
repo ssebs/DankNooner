@@ -2,8 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://bmyba87m3xuaa" path="res://player/bikes/bike_skin.tscn" id="1_bike"]
 [ext_resource type="PackedScene" uid="uid://cuqtwh0saekmw" path="res://player/characters/character_skin.tscn" id="2_char"]
+[ext_resource type="Script" path="res://levels/components/garage/garage_set.gd" id="3_set"]
 
 [node name="GarageSet" type="Node3D"]
+script = ExtResource("3_set")
 
 [node name="PreviewSpot" type="Marker3D" parent="."]
 unique_name_in_owner = true

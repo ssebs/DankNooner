@@ -6,6 +6,7 @@
 [resource]
 script = ExtResource("2_grq21")
 skin_name = "clanker_default"
+price = 1000
 mesh_res = ExtResource("1_ffhbm")
 back_marker_position = Vector3(0, 1.5575522, -0.1533502)
 back_marker_rotation_degrees = Vector3(0, 179.99998, 0)

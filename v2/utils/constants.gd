@@ -15,3 +15,23 @@ const GROUPS = {
 	## and crash into things), tagged so HUD/scoring can tell them from actual competitors.
 	"Traffic": "Traffic",
 }
+
+## Swatches in the garage's ColorPicker: the deleted character variants' colors + the bike color mods'.
+const SKIN_COLOR_PRESETS: Array[Color] = [
+	Color(1, 0, 0, 1),
+	Color(0, 0, 1, 1),
+	Color(1, 0.41, 0.41, 1),
+	Color(0.45, 0.5875, 1, 1),
+	Color(0.125, 0.125, 0.125, 1),
+	Color(0.17254902, 0.17254902, 0.17254902, 1),
+	Color(0.921875, 0.921875, 0.921875, 1),
+	Color(0.185, 0.5087501, 0.74, 1),
+	Color(0.25490198, 0.6862745, 1, 1),
+	Color(0.054901965, 0.7607843, 0.69460785, 1),
+	Color(0.53624463, 0.15046692, 0.67578125, 1),
+	Color(0.8046875, 0.38034058, 0.69860077, 1),
+	Color(0.9254902, 0.44705883, 0.8862745, 1),
+	Color(0.92578125, 0.4484253, 0.8847585, 1),
+	Color(0.78515625, 0.021469116, 0.021469116, 1),
+	Color(0.9140625, 0.101872444, 0.017852783, 1),
+]

@@ -1,0 +1,196 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://menus/customize_menu/components/garage_ui.gd" id="1_ui"]
+[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 24.0
+content_margin_top = 24.0
+content_margin_right = 24.0
+content_margin_bottom = 24.0
+bg_color = Color(0, 0, 0, 0.78431374)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.25490198, 0.6862745, 1, 1)
+border_blend = true
+corner_radius_top_left = 16
+corner_radius_top_right = 4
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_inset"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_title"]
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+
+[node name="GarageUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_ui")
+
+[node name="Money" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -360.0
+offset_top = 32.0
+offset_right = -32.0
+offset_bottom = 72.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 2
+
+[node name="Column" type="VBoxContainer" parent="."]
+layout_mode = 1
+offset_left = 32.0
+offset_top = 32.0
+offset_right = 476.0
+offset_bottom = 32.0
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="Column"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBox" type="VBoxContainer" parent="Column/Panel"]
+layout_mode = 2
+
+[node name="Top" type="PanelContainer" parent="Column/Panel/VBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_inset")
+
+[node name="VBox" type="VBoxContainer" parent="Column/Panel/VBox/Top"]
+layout_mode = 2
+
+[node name="Tabs" type="GridContainer" parent="Column/Panel/VBox/Top/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 36
+theme_override_constants/v_separation = 12
+columns = 3
+
+[node name="Header" type="HBoxContainer" parent="Column/Panel/VBox/Top/VBox"]
+layout_mode = 2
+
+[node name="BackBtn" type="Button" parent="Column/Panel/VBox/Top/VBox/Header"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "<"
+flat = true
+
+[node name="Title" type="Label" parent="Column/Panel/VBox/Top/VBox/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxEmpty_title")
+text_overrun_behavior = 3
+
+[node name="Count" type="Label" parent="Column/Panel/VBox/Top/VBox/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+vertical_alignment = 1
+
+[node name="Scroll" type="ScrollContainer" parent="Column/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_inset")
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="Rows" type="VBoxContainer" parent="Column/Panel/VBox/Scroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Footer" type="PanelContainer" parent="Column/Panel/VBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_inset")
+
+[node name="LeaveBtn" type="Button" parent="Column/Panel/VBox/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "GARAGE_LEAVE"
+alignment = 0
+
+[node name="ConfirmBox" type="PanelContainer" parent="Column"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Inset" type="PanelContainer" parent="Column/ConfirmBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_inset")
+
+[node name="VBox" type="VBoxContainer" parent="Column/ConfirmBox/Inset"]
+layout_mode = 2
+
+[node name="ConfirmLabel" type="Label" parent="Column/ConfirmBox/Inset/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ConfirmYesBtn" type="Button" parent="Column/ConfirmBox/Inset/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "GARAGE_BUY"
+alignment = 0
+
+[node name="ConfirmNoBtn" type="Button" parent="Column/ConfirmBox/Inset/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "BACK_LABEL"
+alignment = 0
+
+[node name="ColorPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_right = -32.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Inset" type="PanelContainer" parent="ColorPanel"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_inset")
+
+[node name="VBox" type="VBoxContainer" parent="ColorPanel/Inset"]
+layout_mode = 2
+
+[node name="Picker" type="ColorPicker" parent="ColorPanel/Inset/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+edit_alpha = false
+can_add_swatches = false
+sampler_visible = false
+color_modes_visible = false
+
+[node name="ColorDoneBtn" type="Button" parent="ColorPanel/Inset/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "GARAGE_DONE"
+alignment = 0

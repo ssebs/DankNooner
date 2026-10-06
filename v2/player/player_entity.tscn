@@ -2663,11 +2663,11 @@ transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, -1.4
 
 [node name="LeftHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=811111111]
 unique_name_in_owner = true
-transform = Transform3D(0.18152156, 0.93993247, 0.28909656, -0.1336379, 0.31483123, -0.93969256, -0.97426426, 0.13194022, 0.18275924, 0.251, 0.914, 0.287)
+transform = Transform3D(0.18152155, 0.93993235, 0.28909656, -0.13363789, 0.3148312, -0.93969256, -0.9742642, 0.1319402, 0.18275924, 0.251, 0.914, 0.287)
 
 [node name="RightHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=822222222]
 unique_name_in_owner = true
-transform = Transform3D(0.2333382, -0.9285764, -0.28861547, 0.11576331, 0.32122487, -0.93990076, 0.9654802, 0.18590368, 0.18244913, -0.25104135, 0.9143868, 0.28719392)
+transform = Transform3D(0.23333818, -0.9285763, -0.28861547, 0.11576329, 0.32122484, -0.93990076, 0.9654801, 0.18590367, 0.18244913, -0.25104135, 0.9143868, 0.28719392)
 
 [node name="LeftFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=833333333]
 unique_name_in_owner = true
@@ -2680,7 +2680,7 @@ emitting = false
 
 [node name="RightFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=844444444]
 unique_name_in_owner = true
-transform = Transform3D(-0.9787892, 0.022497207, 0.20363149, 0.20170893, 0.27976722, 0.93863934, -0.03585267, 0.9598043, -0.27837098, -0.18314199, 0.5666657, -0.22655825)
+transform = Transform3D(-0.97878957, 0.022497207, 0.20363148, 0.201709, 0.27976722, 0.9386393, -0.03585268, 0.9598043, -0.27837095, -0.18314199, 0.5666657, -0.22655825)
 
 [node name="SparkParticlesRight" parent="VisualRoot/IKTargets/RightFootTarget" unique_id=1985641876 instance=ExtResource("29_3kl2f")]
 unique_name_in_owner = true
@@ -2747,6 +2747,7 @@ transform = Transform3D(1, 0, -2.842171e-13, 0, 1, 0, 2.842171e-13, 0, 1, 0, 0.9
 
 [node name="CharacterSkin" parent="VisualRoot" unique_id=259227641 instance=ExtResource("6_1vqn6")]
 unique_name_in_owner = true
+skin_definition = ExtResource("3_hqggp")
 
 [node name="TPSCam" type="Camera3D" parent="." unique_id=1200816402]
 unique_name_in_owner = true

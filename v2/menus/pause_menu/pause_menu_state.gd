@@ -11,7 +11,6 @@ class_name PauseMenuState extends MenuState
 
 @export var main_menu_state: MenuState
 @export var settings_menu_state: MenuState
-@export var customize_menu_state: MenuState
 @export var help_menu_state: MenuState
 @export var tricks_menu_state: MenuState
 
@@ -19,7 +18,6 @@ class_name PauseMenuState extends MenuState
 @onready var main_menu_btn: Button = %MainMenuBtn
 @onready var respawn_btn: Button = %RespawnBtn
 @onready var cancel_event_btn: Button = %CancelEventBtn
-@onready var customize_btn: Button = %CustomizeBtn
 @onready var settings_btn: Button = %SettingsBtn
 @onready var help_btn: Button = %HelpBtn
 @onready var tricks_btn: Button = %TricksBtn
@@ -39,7 +37,6 @@ func Enter(_state_context: StateContext):
 
 	connection_manager.server_disconnected.connect(_on_server_disconnected)
 	settings_btn.pressed.connect(_on_settings_pressed)
-	customize_btn.pressed.connect(_on_customize_pressed)
 	help_btn.pressed.connect(_on_help_pressed)
 	tricks_btn.pressed.connect(_on_tricks_pressed)
 
@@ -65,7 +62,6 @@ func Exit(_state_context: StateContext):
 
 	connection_manager.server_disconnected.disconnect(_on_server_disconnected)
 	settings_btn.pressed.disconnect(_on_settings_pressed)
-	customize_btn.pressed.disconnect(_on_customize_pressed)
 	help_btn.pressed.disconnect(_on_help_pressed)
 	tricks_btn.pressed.disconnect(_on_tricks_pressed)
 
@@ -130,10 +126,6 @@ func _on_main_menu_pressed():
 
 func _on_settings_pressed():
 	transitioned.emit(settings_menu_state, SettingsStateContext.NewFromPause(self, true))
-
-
-func _on_customize_pressed():
-	transitioned.emit(customize_menu_state, PauseStateContext.NewFromPause(self, true))
 
 
 func _on_server_disconnected():

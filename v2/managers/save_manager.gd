@@ -12,7 +12,6 @@ signal save_item_updated(save_key: String, save_value: Variant)
 	"res://resources/player/default_player_definition.tres"
 )
 
-const BIKE_SKINS_DIR := "res://resources/bikes/skins/"
 
 var save_path: String:
 	get:
@@ -26,6 +25,8 @@ var default_save: Dictionary = {
 	# TrickRow.pin ids shown on the riding HUD
 	"pinned_tricks": [],
 	# Earned per-player records. time_attack: "<level>/<event>" -> {best_lap_ms, best_run_ms}
+	# owned: res paths of bought bike/character skins (see is_owned). Set by new-save seeding or
+	# the pre-garage migration in load_save, so its absence marks an old save.
 	"progression": {"time_attack": {}},
 }
 
@@ -40,47 +41,58 @@ func _ready():
 
 
 func deferred_init():
-	var first_run := not FileAccess.file_exists(save_path)
-	if first_run:
-		_save_default_save()
-	else:
+	Console.add_command("give_money", _give_money, ["amount"], 1, "Add money to your profile")
+	if FileAccess.file_exists(save_path):
 		load_save()
+	else:
+		_save_default_save()
 
-	# First-run: seed one loadout per base bike found on disk.
-	# Migration: existing save with no loadouts (legacy from_dict left it empty) → also seed.
+
+## New save: a private copy of default_player_definition (so edits don't leak into the shared
+## .tres the NPC managers read), owning everything it uses.
+func _seed_default_loadouts() -> void:
+	var player_def := PlayerDefinition.new()
+	player_def.from_dict(default_player_definition.to_dict())
+	current_save["player_definition"] = player_def
+	current_save["progression"]["owned"] = _referenced_skin_paths(player_def)
+	save_save()
+
+
+## res paths of every bike and character `player_def` uses.
+func _referenced_skin_paths(player_def: PlayerDefinition) -> Array:
+	var characters := SkinScanner.scan_skin_dir(PlayerDefinition.CHARACTER_SKINS_DIR)
+	var paths := [characters[player_def.default_character.skin_name]]
+	for loadout in player_def.loadouts:
+		paths.append(loadout.bike.base_res_path)
+		if loadout.character != null:
+			paths.append(characters[loadout.character.skin_name])
+	var unique := []
+	for path in paths:
+		if path not in unique:
+			unique.append(path)
+	return unique
+
+
+## A skin is owned once bought, or if it's free.
+func is_owned(path: String) -> bool:
+	return load(path).price == 0 or path in current_save["progression"]["owned"]
+
+
+## Spend `price` to own `path`. In memory only — the caller's next update_save writes it.
+func purchase(path: String, price: int) -> bool:
 	var player_def := get_player_definition()
-	if first_run or player_def.loadouts.is_empty():
-		_seed_default_loadouts(player_def)
-		save_save()
+	if player_def.money < price:
+		return false
+	player_def.money -= price
+	current_save["progression"]["owned"].append(path)
+	return true
 
 
-## Scans res://resources/bikes/skins/ and creates one loadout per base bike found,
-## with the skin's `skin_name` as the loadout name and no mods.
-func _seed_default_loadouts(player_def: PlayerDefinition) -> void:
-	var dir := DirAccess.open(BIKE_SKINS_DIR)
-	if dir == null:
-		DebugUtils.DebugErrMsg("SaveManager: failed to open %s" % BIKE_SKINS_DIR)
-		return
-
-	var is_exported := !OS.has_feature("editor")
-	var extension := ".tres.remap" if is_exported else ".tres"
-
-	var seeded: Array[BikeSkinDefinition] = []
-	dir.list_dir_begin()
-	var file_name := dir.get_next()
-	while file_name != "":
-		if not dir.current_is_dir() and file_name.ends_with(extension):
-			var res_path := BIKE_SKINS_DIR + file_name.replace(".remap", "")
-			var base := ResourceLoader.load(res_path) as BikeSkinDefinition
-			if base != null:
-				var loadout := BikeSkinDefinition.new()
-				loadout.from_dict({"base_res_path": res_path, "skin_name": base.skin_name})
-				seeded.append(loadout)
-		file_name = dir.get_next()
-	dir.list_dir_end()
-
-	player_def.loadouts = seeded
-	player_def.active_loadout_index = 0
+func _give_money(amount: String) -> void:
+	var player_def := get_player_definition()
+	player_def.money += amount.to_float()
+	update_save("player_definition", player_def, true, true)
+	Console.print_line("money: %d" % player_def.money)
 
 
 func update_save(
@@ -134,6 +146,11 @@ func load_save():
 			current_save[key] = json_dict.get(key, default_save[key])
 	current_save["version"] = save_version
 
+	if !current_save["progression"].has("owned"):
+		# Pre-garage save: keep everything it already uses.
+		current_save["progression"]["owned"] = _referenced_skin_paths(current_save["player_definition"])
+		needs_migration = true
+
 	if needs_migration:
 		save_save()  # persist migrated save
 	save_changed.emit(current_save)
@@ -146,11 +163,12 @@ func get_player_definition() -> PlayerDefinition:
 ## save_save() with default_save
 func _save_default_save():
 	load_default_save()
-	save_save()
+	_seed_default_loadouts()
 
 
 ## Load default_save to current_save
 ## emits save_changed
 func load_default_save():
-	current_save = default_save
+	# Deep copy so new-save seeding doesn't write into default_save's nested dicts.
+	current_save = default_save.duplicate(true)
 	save_changed.emit(current_save)

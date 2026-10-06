@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://dvmp8gii4k5ui" path="res://entities/npc/npc_rider_entity.gd" id="4_npcen"]
 [ext_resource type="Script" uid="uid://dfq5estlsqt7f" path="res://entities/npc/npc_animation_controller.gd" id="5_npcan"]
 [ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/bikes/skins/naked_default_skin_definition.tres" id="6_bkdef"]
-[ext_resource type="Resource" uid="uid://2af1lwc0vbaw" path="res://resources/player/skins/clanker_blue_skin_definition.tres" id="7_chdef"]
+[ext_resource type="Resource" uid="uid://d2u40ds684dd5" path="res://resources/player/skins/clanker_default_skin_definition.tres" id="7_chdef"]
 [ext_resource type="Script" uid="uid://ba7kyb4p3trb1" path="res://utils/state_machine/state_machine.gd" id="8_npcsm"]
 [ext_resource type="Shape3D" uid="uid://bldxfe7d68s3v" path="res://resources/cars/hitbox/suv_hitbox.tres" id="9_1voqy"]
 [ext_resource type="Script" uid="uid://b465356mjtmtr" path="res://entities/npc/states/npc_idle_state.gd" id="9_npcid"]

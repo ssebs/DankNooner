@@ -42,3 +42,8 @@ func _on_close_help_pressed():
 #override
 func on_cancel_key_pressed():
 	_on_close_help_pressed()
+
+
+#override
+func on_tab_key_pressed(dir: int):
+	tab_container.current_tab = wrapi(tab_container.current_tab + dir, 0, tab_container.get_tab_count())

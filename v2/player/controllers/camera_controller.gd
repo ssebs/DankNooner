@@ -129,6 +129,8 @@ var _accel_smooth: float = 0.0 # low-passed |accel| (units/s²) for accel/decel 
 var _prev_on_floor: bool = true
 var _fall_speed: float = 0.0 # peak-held downward speed while airborne, for the landing burst
 var _prev_crashed: bool = false
+## While set, switch_to_cam() makes this current instead of the rider's own cams.
+var _override_cam: Camera3D = null
 
 # TODO - zoom out w/ speed / current_trick != None
 
@@ -360,10 +362,24 @@ func disable_cameras():
 
 
 func switch_to_cam(cam_mode: CameraMode):
+	current_cam_mode = cam_mode
+	if _override_cam != null:
+		_override_cam.current = true
+		return
 	var is_fps: bool = cam_mode == CameraMode.FPS
 	fps_cam.current = is_fps
 	tps_cam.current = !is_fps
-	current_cam_mode = cam_mode
+
+
+## View through `cam` (e.g. a FreeRoamActivity's) until clear_override_cam().
+func set_override_cam(cam: Camera3D):
+	_override_cam = cam
+	switch_to_cam(current_cam_mode)
+
+
+func clear_override_cam():
+	_override_cam = null
+	switch_to_cam(current_cam_mode)
 
 
 ## Force-switch to TPS without persisting to settings — used for crash so the player can

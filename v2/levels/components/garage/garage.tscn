@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://blmmkvwq6fh3b"]
 
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_gb"]
-[ext_resource type="PackedScene" path="res://levels/components/interactable/garage_bay.tscn" id="2_bay"]
+[ext_resource type="PackedScene" uid="uid://bmti2mikrlp48" path="res://levels/components/interactable/garage_bay.tscn" id="2_bay"]
 
 [node name="Garage" type="Node3D" unique_id=535153070]
 
@@ -127,6 +127,39 @@ width = 4.0
 height = 2.0
 depth = 2.0
 color_preset = 2
+
+[node name="trash2" parent="." unique_id=233989253 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.121691, 1.5999999, -3.9414072)
+collision_layer = 3
+width = 8.0
+height = 3.0
+depth = 2.0
+
+[node name="trash3" parent="." unique_id=237508393 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.118918, 0.8499999, 1.4289804)
+collision_layer = 3
+height = 1.5
+depth = 4.0
+
+[node name="trash4" parent="." unique_id=23623236 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.118918, 0.8499999, 5.752895)
+collision_layer = 3
+height = 1.5
+depth = 4.0
+color_preset = 4
+
+[node name="trash5" parent="." unique_id=1973342493 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.8664427, 0.8499999, 1.4289804)
+collision_layer = 3
+height = 1.5
+depth = 4.0
+color_preset = 4
+
+[node name="trash6" parent="." unique_id=757615588 instance=ExtResource("1_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.8664427, 0.8499999, 5.752895)
+collision_layer = 3
+height = 1.5
+depth = 4.0
 
 [node name="SIGN" parent="." unique_id=1452581801 instance=ExtResource("1_gb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 8.798382, 7.5253143)
