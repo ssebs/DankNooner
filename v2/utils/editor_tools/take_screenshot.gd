@@ -7,7 +7,8 @@ extends Node
 func _take_screenshot():
 	var path: String = "res://resources/img/level_previews/Screenshot_RenameMe.jpg"
 
-	var viewport = EditorInterface.get_editor_viewport_3d(0)
+	# Looked up by name: the EditorInterface identifier doesn't exist in exported builds.
+	var viewport = Engine.get_singleton("EditorInterface").get_editor_viewport_3d(0)
 	var img = viewport.get_texture().get_image()
 	img.save_jpg(path)
 

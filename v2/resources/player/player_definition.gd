@@ -14,7 +14,7 @@ class_name PlayerDefinition extends Resource
 @export var active_loadout_index: int = 0
 
 const MAX_LOADOUTS: int = 8
-const DEFAULT_CHARACTER_PATH := "res://resources/player/skins/clanker_default_skin_definition.tres"
+const DEFAULT_CHARACTER_PATH := CharacterSkinDefinition.DEFAULT_PATH
 const CHARACTER_SKINS_DIR := "res://resources/player/skins/"
 ## Deleted character color variants -> [their base def, the variant's color].
 const DELETED_CHARACTER_VARIANTS := {

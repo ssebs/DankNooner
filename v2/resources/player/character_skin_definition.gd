@@ -35,6 +35,9 @@ class_name CharacterSkinDefinition extends Resource
 const USER_SKIN_DIR: String = "user://skins/"
 const SKIN_PFX: String = "character_skin_"
 const DEFAULT_HEIGHT: float = 1.65
+## Lives here, not on PlayerDefinition: referencing PlayerDefinition from this script is a
+## cyclic load (it preloads this .tres) that breaks exported builds.
+const DEFAULT_PATH := "res://resources/player/skins/clanker_default_skin_definition.tres"
 
 
 func save_to_disk():
@@ -87,7 +90,7 @@ func to_dict() -> Dictionary:
 func from_dict(dict: Dictionary):
 	var base_path: String = dict.get("base_res_path", "")
 	if !ResourceLoader.exists(base_path):
-		base_path = PlayerDefinition.DEFAULT_CHARACTER_PATH
+		base_path = DEFAULT_PATH
 	_copy_from(load(base_path))
 	base_res_path = base_path
 	colors.clear()

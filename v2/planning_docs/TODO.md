@@ -24,7 +24,6 @@
 - [ ] expand stunt city to have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
 
 - [ ] count drifting wheelie trick
-
 - [ ] Get AI working again
   - [ ] NPC Traffic
   - [ ] NPC Race AI

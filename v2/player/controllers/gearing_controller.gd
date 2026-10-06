@@ -14,7 +14,10 @@ const RPM_FREE_REV_SPEED: float = 12.0
 ## RPM ratio the limiter drops to on a redline cut. Lower = longer, more audible bounce.
 const REV_LIMIT_CUT_RATIO: float = 0.85
 
-var current_gear: int = 1
+var current_gear: int = 1:
+	# Resim can restore a gear from before a mid-race bike swap (Rally Up) the new bike lacks.
+	set(value):
+		current_gear = clampi(value, 1, player_entity.bike_definition.num_gears)
 var current_rpm: float = 1000.0
 var clutch_value: float = 0.0
 
