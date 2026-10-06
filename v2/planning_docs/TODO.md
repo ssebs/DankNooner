@@ -21,6 +21,20 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] gamma slider, default to 0.5
+
+- [ ] customization garage POC
+  - [ ] in-world shop at a garage / gas station in free roam
+  - [ ] Customize menu spawns this scene if in main menu, replacing current UI
+  - [ ] 1 Tab per loadout, always have default bikes as an option with default character
+    - [ ] each loadout can have override character
+    - [ ] 1st tab is just default character select + name / other medatata
+    - [ ] other tabs are loadouts
+  - [ ] GTA V style selector
+    - [ ] view changes in real time, autosave when you leave
+    - [ ] `*` + Bold text on selected row, price on the right. see tmp/lossantoscustoms.jpg
+
+
 - [ ] expand stunt city to have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
 
 - [ ] Get AI working again
@@ -63,6 +77,7 @@ Simpsons hit and run chapters:
 ## Tasks 📋
 
 ### Progression & Customization
+
 - [ ] Unlocks / Progression for bikes / characters w/ money / XP w/ Story — see [Progression](./Progression.md)
   - [ ] maybe like simpsons hit & run where 1 level has 1 bike type/map?
   - [ ] How will this work with multiplayer? Could be everyone follows host's save
@@ -71,9 +86,6 @@ Simpsons hit and run chapters:
   - [ ] Unlockable mods
   - [ ] Stats
     - [ ] total trick history (total time played, total wheelies, races won, etc.)
-- [ ] Garage — in-world shop at a garage / gas station in free roam, also the customize menu's background scene
-  - [ ] Shop tab (purchase bike + character skins)
-  - [ ] My Stuff tab (choose bike + character skin)
 - [ ] Customization menu / UI
   - [ ] Add constraints to mods (certain skins require 2 colors, etc.)
   - [ ] character customization?

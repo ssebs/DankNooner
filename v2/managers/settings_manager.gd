@@ -29,6 +29,7 @@ var default_settings: Dictionary = {
 	# "username": "change_me",
 	"signal_relay_host": "stun.ssebs.com", # stun.casa.ssebs.com, 192.168.1.247
 	"resolution_scale": 1.0,
+	"gamma": 0.5,
 	"fullscreen_mode": "borderless", # "fullscreen" or "borderless" or "windowed" or "maximized"
 	"master_vol": 0.8,
 	"music_vol": 1.0,

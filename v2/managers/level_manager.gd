@@ -17,6 +17,9 @@ enum LevelName {
 @export var input_state_manager: InputStateManager
 @export var audio_manager: AudioManager
 @export var hud_manager: HUDManager
+@export var settings_manager: SettingsManager
+
+const GAMMA_LUT_SIZE := 256
 
 ## PackedScene of type LevelDefinition
 var possible_levels: Dictionary[LevelName, PackedScene] = {
@@ -66,6 +69,7 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 	# Console.add_command("dbg_gym", spawn_gym_test_level) # broken
+	settings_manager.all_settings_changed.connect(func(_s): _apply_gamma())
 
 
 #region public api
@@ -90,6 +94,7 @@ func spawn_level(level_name: LevelName, input_state: InputStateManager.InputStat
 	spawn_node.add_child(spawned_level)
 	current_level = spawned_level
 	current_level_name = level_name
+	_apply_gamma()
 
 	input_state_manager.current_input_state = input_state
 	if input_state == InputStateManager.InputState.IN_GAME:
@@ -119,6 +124,25 @@ func get_levels_as_option_items() -> Dictionary[String, int]:
 #endregion
 
 
+## Gamma setting 0..1 maps to gamma 0.5..2.0 (0.5 is neutral), applied post-tonemap as a
+## color-correction LUT. Needs adjustment_enabled on the level's Environment (off on web).
+func _apply_gamma():
+	# Settings load deferred and levels spawn later; whichever runs second applies it
+	if current_level == null or settings_manager.current_settings.is_empty():
+		return
+	var gamma := pow(2.0, (settings_manager.current_settings["gamma"] - 0.5) * 2.0)
+	# Half-float so steep curves don't band in dark gradients
+	var lut := Image.create_empty(GAMMA_LUT_SIZE, 1, false, Image.FORMAT_RGBH)
+	for x in GAMMA_LUT_SIZE:
+		var v := pow(x / float(GAMMA_LUT_SIZE - 1), 1.0 / gamma)
+		lut.set_pixel(x, 0, Color(v, v, v))
+	var lut_tex := ImageTexture.create_from_image(lut)
+	for world_env: WorldEnvironment in current_level.find_children(
+		"*", "WorldEnvironment", true, false
+	):
+		world_env.environment.adjustment_color_correction = lut_tex
+
+
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
 
@@ -132,5 +156,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("audio_manager must not be empty")
 	if hud_manager == null:
 		issues.append("hud_manager must not be empty")
+	if settings_manager == null:
+		issues.append("settings_manager must not be empty")
 
 	return issues

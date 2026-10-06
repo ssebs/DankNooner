@@ -21,6 +21,7 @@ class_name SettingsMenuState extends MenuState
 
 @onready var resolution_scale_label: Label = %RESOLUTION_SCALE_LABEL
 @onready var resolution_scale: HSlider = %ResolutionScaleSlider
+@onready var gamma_slider: HSlider = %GammaSlider
 @onready var joy_cam_sens: HSlider = %JoyCamSensSlider
 @onready var mouse_cam_sens: HSlider = %MouseCamSensSlider
 @onready var invert_cam: CheckBox = %InvertCamCheck
@@ -105,6 +106,7 @@ func load_settings_into_ui():
 
 	resolution_scale.value = settings_manager.current_settings["resolution_scale"]
 	_on_resolution_scale_changed(resolution_scale.value)
+	gamma_slider.value = settings_manager.current_settings["gamma"]
 	joy_cam_sens.value = settings_manager.current_settings["joy_cam_sens"]
 	mouse_cam_sens.value = settings_manager.current_settings["mouse_cam_sens"]
 	invert_cam.button_pressed = settings_manager.current_settings["invert_cam"]
@@ -145,6 +147,7 @@ func _on_save_pressed():
 	settings_manager.update_setting("mute_unfocused", mute_unfocused_check.button_pressed, false)
 
 	settings_manager.update_setting("resolution_scale", resolution_scale.value, false)
+	settings_manager.update_setting("gamma", gamma_slider.value, false)
 	settings_manager.update_setting("joy_cam_sens", joy_cam_sens.value, false)
 	settings_manager.update_setting("mouse_cam_sens", mouse_cam_sens.value, false)
 	settings_manager.update_setting("invert_cam", invert_cam.button_pressed, false)
