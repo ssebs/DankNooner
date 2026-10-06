@@ -20,6 +20,7 @@ func Enter(state_context: StateContext):
 	_garage_set = bay.garage_set
 
 	garage_ui.preview_changed.connect(_garage_set.show_preview)
+	garage_ui.pose_requested.connect(_garage_set.cycle_pose)
 	garage_ui.exit_requested.connect(_on_exit_requested)
 	ui.show()
 	garage_ui.open(save_manager)
@@ -30,6 +31,7 @@ func Exit(_state_context: StateContext):
 	ui.hide()
 	garage_ui.commit()
 	garage_ui.preview_changed.disconnect(_garage_set.show_preview)
+	garage_ui.pose_requested.disconnect(_garage_set.cycle_pose)
 	garage_ui.exit_requested.disconnect(_on_exit_requested)
 	_garage_set = null
 

@@ -7,19 +7,35 @@ class_name GarageActivity extends FreeRoamActivity
 
 
 #override
+## Every rider parks on the same spot, hidden and without collision.
+func is_shared() -> bool:
+	return true
+
+
+#override
+func server_start(peer_id: int, spawn_manager: SpawnManager):
+	super(peer_id, spawn_manager)
+	spawn_manager.set_player_hidden.rpc(peer_id, true)
+
+
+#override
+func server_end(peer_id: int, result: float, spawn_manager: SpawnManager):
+	spawn_manager.set_player_hidden.rpc(peer_id, false)
+	super(peer_id, result, spawn_manager)
+
+
+#override
 func get_result() -> float:
 	return 0.0
 
 
 #override
-## Local only — the GarageSet preview takes the rider's place.
+## The GarageSet preview takes the rider's place.
 func _on_session_start():
-	_player.visible = false
 	_hud_manager.go_to_garage_hud(self)
 
 
 #override
 ## Leaving GarageHUDState commits the edits.
 func _on_session_end():
-	_player.visible = true
 	_hud_manager.go_to_riding_hud()

@@ -75,7 +75,7 @@ const GRAVITY: float = 30.0
 const NET_SNAP_DISTANCE: float = 25.0
 const NET_LERP_SPEED: float = 12.0
 
-@onready var visual_root: Node3D = %VisualRoot
+@onready var visual_root: RiderVisual = %VisualRoot
 @onready var name_label: Label3D = %NameLabel
 @onready var collision_shape_3d: CollisionShape3D = $CollisionShape3D
 

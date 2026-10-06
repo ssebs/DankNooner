@@ -266,7 +266,7 @@ func to_dict() -> Dictionary:
 			mod_paths.append(mod.resource_path)
 	var colors_arr: Array = []
 	for c in colors:
-		colors_arr.append(DictJSONSaverLoader.color_to_dict(c))
+		colors_arr.append(c.to_html())
 	var base := base_res_path
 	if base == "":
 		base = resource_path # un-customized base def loaded directly from res://
@@ -293,8 +293,8 @@ func from_dict(dict: Dictionary) -> void:
 	base_res_path = base_path
 	skin_name = dict.get("skin_name", base_def.skin_name)
 	colors.clear()
-	for c_dict in dict.get("colors", []):
-		colors.append(DictJSONSaverLoader.dict_to_color(c_dict))
+	for hex in dict.get("colors", []):
+		colors.append(Color.html(hex))
 
 	var rebuilt_mods: Array[BikeMod] = []
 	for mp in dict.get("mod_paths", []):

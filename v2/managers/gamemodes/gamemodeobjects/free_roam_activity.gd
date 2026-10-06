@@ -1,7 +1,7 @@
 ## Level-placed, per-rider event that FreeRoamGameMode hosts without leaving free roam. Entering
 ## %PlayerStartCircle opens the event picker; only the submitting rider runs it. Server-auth: the
-## server holds the one-rider-at-a-time lock and runs the server_* hooks, the rider's own client
-## runs begin()/end(). The base parks the rider at %BikeSpot, views them through %Camera3D in
+## server holds the one-rider-at-a-time lock (unless is_shared) and runs the server_* hooks, the
+## rider's own client runs begin()/end(). The base parks the rider at %BikeSpot, views them through %Camera3D in
 ## IN_MINIGAME, and hands them back; subclasses fill in _on_session_start/_on_session_end.
 @abstract
 class_name FreeRoamActivity extends Node3D
@@ -31,6 +31,11 @@ func _ready():
 	add_to_group(UtilsConstants.GROUPS["FreeRoamActivities"])
 	_start_circle.body_entered.connect(_on_start_circle_body_entered)
 	_start_circle.body_exited.connect(_on_start_circle_body_exited)
+
+
+## Server: whether several riders can run it at once.
+func is_shared() -> bool:
+	return false
 
 
 ## Server: the rider's start was accepted. Runs after begin() was sent to their client.

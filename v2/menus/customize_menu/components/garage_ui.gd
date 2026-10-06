@@ -1,11 +1,13 @@
 ## GTA-style garage list: a Profile tab, a tab per loadout and a `+` tab, each with a page stack.
 ## Focusing (or hovering) a row previews it; accepting applies or buys it. Edits and purchases
 ## mutate the in-memory PlayerDefinition and commit() saves them in one push. Hosts
-## (CustomizeMenuState, GarageHUDState) wire preview_changed to a GarageSet and route back/tab
-## input to go_back()/cycle_tab().
+## (CustomizeMenuState, GarageHUDState) wire preview_changed and pose_requested to a GarageSet and
+## route back/tab input to go_back()/cycle_tab().
 class_name GarageUI extends Control
 
-signal preview_changed(bike_def: BikeSkinDefinition, char_def: CharacterSkinDefinition)
+## is_character: a character page, so the rider previews off the bike.
+signal preview_changed(bike_def: BikeSkinDefinition, char_def: CharacterSkinDefinition, is_character: bool)
+signal pose_requested
 ## Back was pressed on a tab's root page.
 signal exit_requested
 
@@ -18,13 +20,19 @@ const CHARACTER_SKINS_DIR := PlayerDefinition.CHARACTER_SKINS_DIR
 const FONT_SIZE: int = 18
 ## The list scrolls past this, otherwise the panel fits its rows.
 const MAX_LIST_HEIGHT: float = 480
+## Longer loadout names ellipsize; the tab strip scrolls.
+const TAB_MAX_WIDTH: float = 200
 
-@onready var _tabs: GridContainer = %Tabs
+@onready var _tab_scroll: ScrollContainer = %TabScroll
+@onready var _tabs: HBoxContainer = %Tabs
 @onready var _money: Label = %Money
 @onready var _title: Label = %Title
 @onready var _count: Label = %Count
 @onready var _back_btn: Button = %BackBtn
+@onready var _set_active_btn: Button = %SetActiveBtn
+@onready var _delete_btn: Button = %DeleteBtn
 @onready var _leave_btn: Button = %LeaveBtn
+@onready var _pose_btn: Button = %PoseBtn
 @onready var _scroll: ScrollContainer = %Scroll
 @onready var _rows: VBoxContainer = %Rows
 @onready var _color_panel: Control = %ColorPanel
@@ -58,7 +66,10 @@ func _ready():
 	theme = theme.duplicate()
 	theme.default_font_size = FONT_SIZE
 	_back_btn.pressed.connect(go_back)
+	_set_active_btn.pressed.connect(_set_active)
+	_delete_btn.pressed.connect(_delete_loadout)
 	_leave_btn.pressed.connect(_on_leave_pressed)
+	_pose_btn.pressed.connect(pose_requested.emit)
 	for color in UtilsConstants.SKIN_COLOR_PRESETS:
 		if color not in _picker.get_presets():
 			_picker.add_preset(color)
@@ -134,7 +145,6 @@ func _rebuild_tabs():
 		var add_btn := Button.new()
 		add_btn.text = "+"
 		add_btn.focus_mode = Control.FOCUS_NONE
-		add_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		add_btn.pressed.connect(_add_loadout)
 		_tabs.add_child(add_btn)
 
@@ -142,14 +152,16 @@ func _rebuild_tabs():
 func _add_tab(label: String, tab: int):
 	var btn := Button.new()
 	btn.text = label
-	# Ellipsis drops the text's min width, so long names share equal columns.
-	btn.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btn.toggle_mode = true
 	btn.button_pressed = tab == _tab
 	btn.focus_mode = Control.FOCUS_NONE
 	btn.pressed.connect(_switch_tab.bind(tab))
 	_tabs.add_child(btn)
+	btn.custom_minimum_size.x = minf(btn.get_minimum_size().x, TAB_MAX_WIDTH)
+	btn.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	if tab == _tab:
+		# Deferred so the strip has laid out the new tabs.
+		_tab_scroll.ensure_control_visible.call_deferred(btn)
 
 
 ## Copy of the active loadout.
@@ -174,6 +186,9 @@ func _push(page: Page):
 func _rebuild(focus_index: int = -1):
 	_money.text = _money_text(_player_def.money)
 	_back_btn.visible = _pages.size() > 1
+	var is_loadout_root := _tab != 0 and _pages.size() == 1
+	_set_active_btn.visible = is_loadout_root
+	_delete_btn.visible = is_loadout_root
 	_rebuild_tabs()
 	for child in _rows.get_children():
 		# Not free(): this can run inside a row's own pressed signal.
@@ -239,12 +254,9 @@ func _build_loadout_root():
 	if loadout.character != null:
 		_add_row(tr("GARAGE_CHARACTER_COLORS"), ">", _push.bind(Page.CHARACTER_COLORS))
 	var is_active := _tab - 1 == _player_def.active_loadout_index
-	var set_active_row := _add_row(
-		tr("SET_ACTIVE_LABEL"), tr("GARAGE_ACTIVE") if is_active else "", _set_active
-	)
-	set_active_row.disabled = is_active
-	var delete_row := _add_row(tr("DELETE_LABEL"), "", _delete_loadout)
-	delete_row.disabled = _player_def.loadouts.size() <= 1
+	_set_active_btn.text = tr("GARAGE_ACTIVE") if is_active else tr("SET_ACTIVE_LABEL")
+	_set_active_btn.disabled = is_active
+	_delete_btn.disabled = _player_def.loadouts.size() <= 1
 
 
 func _build_bike_page():
@@ -423,7 +435,7 @@ func _apply_character(path: String):
 
 func _set_active():
 	_player_def.active_loadout_index = _tab - 1
-	_rebuild(_focused_index())
+	_rebuild()
 
 
 func _delete_loadout():
@@ -499,7 +511,7 @@ func _preview_current():
 
 
 func _preview(bike: BikeSkinDefinition, character: CharacterSkinDefinition):
-	preview_changed.emit(bike, character)
+	preview_changed.emit(bike, character, _pages.back() in [Page.CHARACTER, Page.CHARACTER_COLORS])
 
 
 ## Saved colors can be partial (a migrated variant). Full ones let GarageSet repaint instead of

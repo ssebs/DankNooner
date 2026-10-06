@@ -1,6 +1,5 @@
-## Lite rider animation for NPCRiderEntity — seats the rider with the same IK
-## system as the player's AnimationController (set_targets → create_ik →
-## enable_ik), then drives cosmetic lean / wheelie pitch on VisualRoot.
+## Lite rider animation for NPCRiderEntity — seats the rider via its RiderVisual,
+## then drives cosmetic lean / wheelie pitch on VisualRoot.
 ## No trick pipeline, no CustomAnimPlayer, no netfox. Runs locally on every
 ## peer — it derives purely from the synced transform + npc_state.
 ##
@@ -24,18 +23,6 @@ class_name NPCAnimationController extends Node
 ## How often the distance check runs. It's cheap, but there's no reason to do it per tick.
 @export var rig_cull_check_interval: float = 0.5
 
-@onready var _butt_target: Marker3D = %ButtTarget
-@onready var _chest_target: Marker3D = %ChestTarget
-@onready var _head_target: Marker3D = %HeadTarget
-@onready var _left_hand_target: Marker3D = %LeftHandTarget
-@onready var _right_hand_target: Marker3D = %RightHandTarget
-@onready var _left_foot_target: Marker3D = %LeftFootTarget
-@onready var _right_foot_target: Marker3D = %RightFootTarget
-@onready var _left_arm_magnet: Marker3D = %LeftArmMagnet
-@onready var _right_arm_magnet: Marker3D = %RightArmMagnet
-@onready var _left_leg_magnet: Marker3D = %LeftLegMagnet
-@onready var _right_leg_magnet: Marker3D = %RightLegMagnet
-
 var _initialized: bool = false
 var _prev_yaw: float = 0.0
 var _yaw_rate: float = 0.0
@@ -45,54 +32,13 @@ var _ik_ctrl: IKController
 var _rig_active: bool = true
 var _rig_next_check_ms: int = 0
 
-## Rider pose is fixed per bike definition, so these resolve once in initialize() rather
-## than being rebuilt every tick — four Basis.from_euler calls plus a node lookup per
-## rider per tick, all for values that never change.
-var _hb_parent: Node3D
-var _left_hand_local: Transform3D
-var _right_hand_local: Transform3D
-var _left_foot_local: Transform3D
-var _right_foot_local: Transform3D
-
 
 ## Called from NPCRiderEntity._ready after skins are applied. Same sequence as
 ## PlayerEntity._init_ik().
 func initialize() -> void:
-	var ik_ctrl: IKController = npc.character_skin.ik_controller
-	_ik_ctrl = ik_ctrl
-	var def := npc.bike_definition
-	_butt_target.position = def.seat_marker_position
-	ik_ctrl.set_targets(
-		_butt_target,
-		_left_hand_target,
-		_right_hand_target,
-		_left_foot_target,
-		_right_foot_target,
-		_chest_target,
-		_head_target,
-		_left_arm_magnet,
-		_right_arm_magnet,
-		_left_leg_magnet,
-		_right_leg_magnet
-	)
-	_apply_rider_pose_from_definition(def)
-	ik_ctrl.create_ik()
-	npc.character_skin.enable_ik()
+	_ik_ctrl = npc.character_skin.ik_controller
+	npc.visual_root.seat()
 	_prev_yaw = npc.rotation.y
-
-	_hb_parent = npc.bike_skin.steering_handlebar_marker.get_parent() as Node3D
-	_left_hand_local = Transform3D(
-		Basis.from_euler(def.left_hand_rotation), def.left_hand_position
-	)
-	_right_hand_local = Transform3D(
-		Basis.from_euler(def.right_hand_rotation), def.right_hand_position
-	)
-	_left_foot_local = Transform3D(
-		Basis.from_euler(def.left_foot_rotation), def.left_foot_position
-	)
-	_right_foot_local = Transform3D(
-		Basis.from_euler(def.right_foot_rotation), def.right_foot_position
-	)
 	_initialized = true
 
 
@@ -104,7 +50,7 @@ func _physics_process(delta: float):
 	# Lean/pitch stays on at any distance — it's two lerps on one node, and a bike that
 	# stops leaning through corners is obvious in a way a frozen wrist isn't.
 	if _rig_active:
-		_sync_targets_from_bike()
+		npc.visual_root.sync_targets()
 	_update_yaw_rate(delta)
 	_apply_visual_root_rotation(delta)
 	DebugUtils.Prof("npc.anim", t)  # PROF: temp
@@ -139,42 +85,6 @@ func _update_rig_lod() -> void:
 	else:
 		_ik_ctrl.disable_ik()
 	_ik_ctrl.set_physics_process(active)
-
-
-## Same math as AnimationController._sync_targets_from_bike: hands anchored to
-## the steering rotation node, feet to the bike skin, from saved definition
-## transforms.
-func _sync_targets_from_bike() -> void:
-	# Locals and the handlebar parent are cached in initialize() — only the two parent
-	# global_transforms actually change per tick, so read each once.
-	var hb_global := _hb_parent.global_transform
-	var peg_global := npc.bike_skin.global_transform
-
-	_left_hand_target.global_transform = hb_global * _left_hand_local
-	_right_hand_target.global_transform = hb_global * _right_hand_local
-	_left_foot_target.global_transform = peg_global * _left_foot_local
-	_right_foot_target.global_transform = peg_global * _right_foot_local
-
-
-## Rider pose from definition — ZERO means "not yet authored", skip those
-## (same convention as PlayerEntity._apply_rider_pose_from_definition).
-func _apply_rider_pose_from_definition(def: BikeSkinDefinition) -> void:
-	if def.chest_position != Vector3.ZERO:
-		_chest_target.position = def.chest_position
-	if def.chest_rotation != Vector3.ZERO:
-		_chest_target.rotation = def.chest_rotation
-	if def.head_position != Vector3.ZERO:
-		_head_target.position = def.head_position
-	if def.head_rotation != Vector3.ZERO:
-		_head_target.rotation = def.head_rotation
-	if def.left_arm_magnet_position != Vector3.ZERO:
-		_left_arm_magnet.position = def.left_arm_magnet_position
-	if def.right_arm_magnet_position != Vector3.ZERO:
-		_right_arm_magnet.position = def.right_arm_magnet_position
-	if def.left_leg_magnet_position != Vector3.ZERO:
-		_left_leg_magnet.position = def.left_leg_magnet_position
-	if def.right_leg_magnet_position != Vector3.ZERO:
-		_right_leg_magnet.position = def.right_leg_magnet_position
 
 
 func _update_yaw_rate(delta: float) -> void:

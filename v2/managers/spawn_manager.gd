@@ -291,6 +291,14 @@ func set_boost_player(player_peer_id: int, amount: float):
 	player.rb_set_boost = true
 
 
+## Hide the player from everyone, collision included. Server only; broadcast.
+@rpc("any_peer", "call_local", "reliable")
+func set_player_hidden(player_peer_id: int, hidden: bool):
+	if !_sender_is_server():
+		return
+	get_player_by_peer_id(player_peer_id).set_hidden(hidden)
+
+
 ## Respawn player at a specific transform AND store it as the persistent respawn point
 ## (used by subsequent crash respawns until reset). Runs on every peer.
 @rpc("any_peer", "call_local", "reliable")

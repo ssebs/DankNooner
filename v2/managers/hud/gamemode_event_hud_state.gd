@@ -42,13 +42,19 @@ func on_player_entered_circle(
 	if peer_id != 1 and !per_rider:
 		return
 
-	set_gamemode_hud_and_show_ui.rpc_id(peer_id, event_names, event_descriptions, pb_keys)
+	set_gamemode_hud_and_show_ui.rpc_id(
+		peer_id, event_names, event_descriptions, pb_keys, per_rider
+	)
 
 
 @rpc("call_local", "reliable")
 func set_gamemode_hud_and_show_ui(
-	event_names: PackedStringArray, event_descriptions: PackedStringArray, pb_keys: PackedStringArray
+	event_names: PackedStringArray,
+	event_descriptions: PackedStringArray,
+	pb_keys: PackedStringArray,
+	per_rider: bool
 ):
+	submit_btn.text = "ACTIVITY_START_LABEL" if per_rider else "START_LABEL"
 	_names = event_names
 	_descriptions = event_descriptions
 	_pb_keys = pb_keys

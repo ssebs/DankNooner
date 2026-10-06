@@ -29,6 +29,7 @@ var _leaderboard_refresh_accum: float = 0.0
 ## This client's running activity; null otherwise.
 var _activity: FreeRoamActivity
 ## peer_id -> the activity they're running; also the one-rider-per-activity lock. Server only.
+## Shared activities skip the lock.
 var _running: Dictionary[int, FreeRoamActivity] = {}
 
 
@@ -356,7 +357,7 @@ func request_start_activity(activity_path: NodePath):
 	if (
 		gamemode_manager.get_current_gamemode() != self
 		or _running.has(peer_id)
-		or activity in _running.values()
+		or (!activity.is_shared() and activity in _running.values())
 		or spawn_manager.get_player_by_peer_id(peer_id).is_crashed
 	):
 		return

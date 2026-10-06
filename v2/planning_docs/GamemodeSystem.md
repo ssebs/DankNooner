@@ -56,7 +56,8 @@ plumbing, and Road/Street race differed only in traffic start/stop.
 - **`GameModeObject`** — base for dumb props (checkpoints, trigger zones, speech bubbles): emit signals, `is_active` toggles visibility + collision, never decide completion.
 - **`FreeRoamActivity`** — abstract, level-placed, per-rider event that `FreeRoamGameMode` hosts
   without a gamemode change (`FuelUpMinigame` is one). Entering its `%PlayerStartCircle` opens the
-  same picker, for any rider. On submit the server takes a one-rider lock (`_running`), sends
+  same picker, for any rider. On submit the server takes a one-rider lock (`_running`; skipped
+  when `is_shared()`, e.g. the garage, which hides its riders and their collision), sends
   `begin()` to that client, *then* runs `server_start()`, so the client is already listening for
   whatever `server_start` triggers. The client reports `get_result()` on `finished` or on pause →
   Cancel Event (shown via `GameModeType.can_cancel_event`), and the server runs `server_end()`.

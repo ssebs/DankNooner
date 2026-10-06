@@ -2,8 +2,33 @@
 
 [ext_resource type="Script" path="res://menus/customize_menu/components/garage_row.gd" id="1_row"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_idle"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_selected"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.18, 0.4950001, 0.72, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 4
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 4
+expand_margin_left = 12.0
+expand_margin_right = 12.0
+
 [node name="GarageRow" type="Button"]
 size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxEmpty_idle")
+theme_override_styles/hover = SubResource("StyleBoxFlat_selected")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_selected")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_selected")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_idle")
+theme_override_styles/focus = SubResource("StyleBoxFlat_selected")
 script = ExtResource("1_row")
 
 [node name="Marker" type="Label" parent="."]
@@ -15,7 +40,6 @@ anchor_bottom = 1.0
 offset_left = -8.0
 offset_right = 12.0
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.25490198, 0.6862745, 1, 1)
 text = "*"
 horizontal_alignment = 1
 vertical_alignment = 1

@@ -4,6 +4,10 @@ class_name CharacterSkinDefinition extends Resource
 ## Name of the skin for saving to disk
 @export var skin_name: String = "replace_me"
 
+## res:// path of the def this was copied from, so from_dict can rebuild it from the original.
+## Empty for un-customized base defs (fall back to resource_path).
+@export var base_res_path: String = ""
+
 ## The SkinColor scene to instantiate
 @export var mesh_res: PackedScene:
 	set(value):
@@ -59,6 +63,7 @@ func load_from_disk() -> bool:
 
 func _copy_from(other: CharacterSkinDefinition):
 	skin_name = other.skin_name
+	base_res_path = other.base_res_path
 	mesh_res = other.mesh_res
 	colors = other.colors.duplicate()
 	price = other.price
@@ -68,33 +73,24 @@ func _copy_from(other: CharacterSkinDefinition):
 
 
 #region to/from Dictionary
+## Only the base def's path + colors; everything else comes from the base def in from_dict().
 func to_dict() -> Dictionary:
 	var colors_arr: Array = []
 	for c in colors:
-		colors_arr.append(DictJSONSaverLoader.color_to_dict(c))
+		colors_arr.append(c.to_html())
 	return {
-		"skin_name": skin_name,
-		"mesh_res": mesh_res.resource_path,
+		"base_res_path": base_res_path if base_res_path != "" else resource_path,
 		"colors": colors_arr,
-		"height": height,
-		"back_marker_position": DictJSONSaverLoader.vec3_to_dict(back_marker_position),
-		"back_marker_rotation_degrees":
-		DictJSONSaverLoader.vec3_to_dict(back_marker_rotation_degrees)
 	}
 
 
 func from_dict(dict: Dictionary):
-	skin_name = dict.get("skin_name", "failed_to_load")
-	mesh_res = DictJSONSaverLoader.try_load(
-		dict, "mesh_res", "res://player/characters/scenes/clanker_skin.tscn"
-	)
+	var base_path: String = dict.get("base_res_path", "")
+	if !ResourceLoader.exists(base_path):
+		base_path = PlayerDefinition.DEFAULT_CHARACTER_PATH
+	_copy_from(load(base_path))
+	base_res_path = base_path
 	colors.clear()
-	var colors_arr: Array = dict.get("colors", [])
-	for c_dict in colors_arr:
-		colors.append(DictJSONSaverLoader.dict_to_color(c_dict))
-	height = dict.get("height", DEFAULT_HEIGHT)
-	back_marker_position = DictJSONSaverLoader.dict_to_vec3(dict.get("back_marker_position", {}))
-	back_marker_rotation_degrees = DictJSONSaverLoader.dict_to_vec3(
-		dict.get("back_marker_rotation_degrees", {})
-	)
+	for hex in dict.get("colors", []):
+		colors.append(Color.html(hex))
 #endregion

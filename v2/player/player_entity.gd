@@ -559,6 +559,12 @@ func _on_trick_ended(trick_type: TrickController.Trick):
 #region public api
 
 
+## Out of sight and untouchable, e.g. parked in the garage. Set on every peer by SpawnManager.
+func set_hidden(hidden: bool):
+	visible = !hidden
+	collision_shape_3d.disabled = hidden
+
+
 func update_skins(new_bike_def: BikeSkinDefinition, new_char_def: CharacterSkinDefinition):
 	bike_definition = new_bike_def
 	character_definition = new_char_def
