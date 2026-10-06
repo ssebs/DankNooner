@@ -33,6 +33,31 @@
 ## Notes 📝
 > Stuff to move ASAP
 
+- In trick help menu, show animation of biker doing trick
+- Make roads / map in blender
+- Tutorial: msf course 
+
+Simpsons hit and run chapters:
+- e.g. one map per character/each have their own car
+- have to do quests to progress 
+- collectibles
+- skins to unlock
+- DN ideas: 
+    - NPC quests w/ basic animal crossing style dialog
+    - mini bike neighborhood to learn how to do tricks
+        -  dark/dingy? w/ few neon lights, older style
+        - grom mini moto parking lot race w/ cones for level style
+    - save up $ to buy naked bike for final race of the area
+    - naked bike in the city, more quests / stunt races 
+        - nicer parts of the city, lots of neon, 
+        - cross railroad tracks to freeway for longer / fast race
+        - unlock sport bike here, more customization. Stunt races, time trials, stunt battles
+    - touring bike to travel along highway to move / change states (road trip)
+        - iron butt travel across US style
+        - unlock cruiser if you want
+        - classic mode (endless loop like original game)
+    - end at stunt city (what I have now), blend of everything, neon, also quiet/dim/relaxing beach town vibe. Also farms, kinda like Monterey/cali
+        - dirt bike on beach
 ---
 
 ## Tasks 📋
