@@ -73,7 +73,6 @@ background_mode = 2
 sky = ExtResource("4_y7kpu")
 ambient_light_source = 2
 ambient_light_color = Color(0.35, 0.3, 0.6, 1)
-ambient_light_energy = 0.6
 tonemap_mode = 2
 glow_enabled = true
 glow_strength = 1.25
