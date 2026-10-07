@@ -4,12 +4,6 @@ class_name AnimationController extends Node
 
 signal state_changed(new_state: RiderState)
 
-enum PlayMode {
-	ONE_SHOT,  # play(anim, 1.0, false) — fires once, auto-fades when finished
-	LOOP_WHILE_LATCHED,  # play(anim, 1.0, false) — same call as ONE_SHOT today; kept distinct for intent
-	HOLD_WHILE_LATCHED,  # play_one_shot — settles + holds at end pose; pairs with reverse_on_end
-}
-
 enum RiderState {
 	RIDING,  # Procedural active, IK enabled
 	IDLE,  # Procedural paused, playing idle anims
@@ -25,6 +19,7 @@ enum RiderState {
 @export var trick_controller: TrickController
 @export var input_controller: InputController
 @export var ik_anim_player: AnimationPlayer
+@export var rider_vfx: RiderVFX
 
 @export_tool_button("Init IK from Bike") var init_ik_btn = _editor_init_ik_from_bike
 @export_tool_button("Save Default Pose") var save_pose_btn = _editor_save_default_pose
@@ -139,10 +134,8 @@ var _bd: BikeSkinDefinition
 var _anim_runner: CustomAnimPlayer
 var _idle_anim: Animation
 var _idle_layer: CustomAnimPlayer.Layer
-# Trick anims live in _trick_entries (built in initialize()). To add a trick,
-# append one row to _build_trick_entries() — see PLAN-animcontroller-refac.md.
-var _trick_entries: Array = []
-var _trick_by_enum: Dictionary = {}
+# Trick anims: to add a trick, append one row to TrickAnimator._build_entries().
+var _tricks: TrickAnimator
 var _back_up_start_anim: Animation
 var _back_up_loop_anim: Animation
 var _back_up_start_layer: CustomAnimPlayer.Layer
@@ -584,88 +577,26 @@ func initialize() -> void:
 		_anim_runner = CustomAnimPlayer.new()
 		_anim_runner.name = "AnimRunner"
 		add_child(_anim_runner)
-	# Cache anims off the existing AnimationPlayer's library — keeps editor authoring intact.
-	if ik_anim_player.has_animation("idle"):
-		_idle_anim = ik_anim_player.get_animation("idle")
-		_fixup_anim_paths(_idle_anim)
-	_build_trick_entries()
-	for entry in _trick_entries:
-		if ik_anim_player.has_animation(entry.anim_name):
-			entry.anim = ik_anim_player.get_animation(entry.anim_name)
-			_fixup_anim_paths(entry.anim)
-		_trick_by_enum[entry.trick] = entry
-	if ik_anim_player.has_animation("back_up_start"):
-		_back_up_start_anim = ik_anim_player.get_animation("back_up_start")
-		_fixup_anim_paths(_back_up_start_anim)
-	if ik_anim_player.has_animation("back_up_loop"):
-		_back_up_loop_anim = ik_anim_player.get_animation("back_up_loop")
-		_fixup_anim_paths(_back_up_loop_anim)
-	if ik_anim_player.has_animation("bat_swing"):
-		_bat_swing_anim = ik_anim_player.get_animation("bat_swing")
-		_fixup_anim_paths(_bat_swing_anim)
-	if ik_anim_player.has_animation("shotgun_equip"):
-		_shotgun_equip_anim = ik_anim_player.get_animation("shotgun_equip")
-		_fixup_anim_paths(_shotgun_equip_anim)
-	if ik_anim_player.has_animation("shotgun_fire"):
-		_shotgun_fire_anim = ik_anim_player.get_animation("shotgun_fire")
-		_fixup_anim_paths(_shotgun_fire_anim)
-	if ik_anim_player.has_animation("wheelie_cam_start"):
-		_wheelie_cam_anim = ik_anim_player.get_animation("wheelie_cam_start")
-		_fixup_anim_paths(_wheelie_cam_anim)
+	# ik_anim_player authors into TrickAnimator.LIBRARY, so this is the same library it edits.
+	_idle_anim = TrickAnimator.load_anim("idle")
+	_back_up_start_anim = TrickAnimator.load_anim("back_up_start")
+	_back_up_loop_anim = TrickAnimator.load_anim("back_up_loop")
+	_bat_swing_anim = TrickAnimator.load_anim("bat_swing")
+	_shotgun_equip_anim = TrickAnimator.load_anim("shotgun_equip")
+	_shotgun_fire_anim = TrickAnimator.load_anim("shotgun_fire")
+	_wheelie_cam_anim = TrickAnimator.load_anim("wheelie_cam_start")
 	# Bat rests hidden — the RESET pose leaves it visible, and bat_swing shows it while swinging.
 	player_entity.get_node("%BaseballBat").visible = false
 
-	if not trick_controller.trick_started.is_connected(_on_trick_started):
-		trick_controller.trick_started.connect(_on_trick_started)
-		trick_controller.trick_ended.connect(_on_trick_ended)
+	if _tricks == null:
+		_tricks = TrickAnimator.new(_anim_runner)
+		trick_controller.trick_started.connect(_tricks.start)
+		trick_controller.trick_ended.connect(_tricks.end)
 
 	# Places the exhaust-tip marker (+ its flame VFX child) per-bike at runtime, same as the
 	# editor tools do — hand/foot come from _sync_targets_from_bike below.
 	_load_wheel_markers_from_definition(_bd)
 	_sync_targets_from_bike()
-
-
-## Rewrite `%UniqueName:property` track paths to `IKTargets/UniqueName:property` so
-## CustomAnimPlayer.find_track (exact match against _PATH_* constants) resolves them.
-## All IK markers live under VisualRoot/IKTargets, so the rewrite is mechanical.
-func _fixup_anim_paths(anim: Animation) -> void:
-	for i in anim.get_track_count():
-		var path_str := String(anim.track_get_path(i))
-		if path_str.begins_with("%"):
-			anim.track_set_path(i, NodePath("IKTargets/" + path_str.substr(1)))
-
-
-func _on_trick_started(trick_type: TrickController.Trick) -> void:
-	var entry: _TrickAnimEntry = _trick_by_enum.get(trick_type)
-	if entry == null or entry.anim == null:
-		return
-	match entry.play_mode:
-		PlayMode.HOLD_WHILE_LATCHED:
-			# Settle into pose, hold while latched. If a reverse-out is mid-flight (re-entry
-			# during the unwind), flip it back to forward instead of starting a new layer.
-			if entry.layer != null and entry.layer.is_playing():
-				entry.layer.speed = 1.0
-				entry.layer.hold_at_end = true
-				entry.layer.target_weight = 1.0
-			else:
-				entry.layer = _anim_runner.play_one_shot(entry.anim, 1.0)
-		_:
-			# ONE_SHOT / LOOP_WHILE_LATCHED both call play(); trick_ended doesn't stop them,
-			# so the anim plays through fully and auto-fades at end.
-			if entry.layer == null or not entry.layer.is_playing():
-				entry.layer = _anim_runner.play(entry.anim, 1.0, false)
-
-
-func _on_trick_ended(trick_type: TrickController.Trick) -> void:
-	var entry: _TrickAnimEntry = _trick_by_enum.get(trick_type)
-	if entry == null or not entry.reverse_on_end:
-		return
-	# Reverse from current time back to 0 — rider unwinds out of the pose smoothly.
-	# When time hits 0, hold_at_end=false makes the layer auto-fade and clear itself.
-	if entry.layer != null and entry.layer.is_playing():
-		entry.layer.speed = -1.0
-		entry.layer.hold_at_end = false
-		entry.layer.target_weight = 1.0
 
 
 ## Sync hand/foot target transforms from saved positions/rotations in BikeSkinDefinition,
@@ -724,13 +655,13 @@ func disable_target_sync() -> void:
 func start_ragdoll(launch_impulse: Vector3 = Vector3.ZERO) -> void:
 	current_state = RiderState.RAGDOLL
 	# RAGDOLL stops the pose pipeline (_process is `pass`), so any anim layer
-	# mid-flight freezes — including non-pose tracks like spark `:emitting`
-	# flags that latch true→false. Rewind to t=0 + apply, then drop.
+	# mid-flight freezes — including non-pose tracks like the bat's `:visible`
+	# and VFX a method key left on. Rewind to t=0 + apply, then drop.
 	if _anim_runner:
 		_anim_runner.stop_all_and_reset(player_entity, _POSE_PIPELINE_PATHS)
+		_tricks.clear()
+	rider_vfx.stop_all()
 	_idle_layer = null
-	for entry in _trick_entries:
-		entry.layer = null
 	_back_up_start_layer = null
 	_back_up_loop_layer = null
 	_was_reversing = false
@@ -755,13 +686,13 @@ func stop_ragdoll() -> void:
 func do_reset():
 	# Flush any active anim layers (heel clicker, idle, etc.) so a crash mid-trick doesn't leave
 	# deltas baked into the respawn pose. Rewind-and-reset (not a bare stop_all) so latched non-pose
-	# tracks — VFX `:emitting` flags like the two-left-feet sparks — revert to their t=0 value first,
-	# matching start_ragdoll; a bare clear would leave them stuck on through the respawn.
+	# tracks revert to their t=0 value first, matching start_ragdoll; a bare clear would leave them
+	# stuck through the respawn. Method keys don't rewind, so VFX (two-left-feet sparks) stop here.
 	if _anim_runner:
 		_anim_runner.stop_all_and_reset(player_entity, _POSE_PIPELINE_PATHS)
+		_tricks.clear()
+	rider_vfx.stop_all()
 	_idle_layer = null
-	for entry in _trick_entries:
-		entry.layer = null
 	_back_up_start_layer = null
 	_back_up_loop_layer = null
 	_was_reversing = false
@@ -792,12 +723,11 @@ func play_bat_swing(duration: float) -> void:
 
 
 ## Shotgun use: fire on top of the held equip pose, then unequip. Visual only — the server resolves
-## the hit. The flame pops from here since CustomAnimPlayer skips the anim's method track.
+## the hit. The flame pops from the anim's method track.
 func play_shotgun_fire() -> void:
 	if _shotgun_fire_anim == null:
 		return
 	_anim_runner.play(_shotgun_fire_anim, 1.0, false, _SHOTGUN_FIRE_FADE_SPEED)
-	player_entity.get_node("%ShotgunFlameParticle").pop()
 	await get_tree().create_timer(_shotgun_fire_anim.length).timeout
 	shotgun_held = false
 
@@ -1075,48 +1005,9 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_controller must be set")
 	if ik_anim_player == null:
 		issues.append("ik_anim_player must be set")
+	if rider_vfx == null:
+		issues.append("rider_vfx must be set")
 	return issues
-
-
-## Data row for a trick anim. To add a trick: append one _make_entry(...) row in
-## _build_trick_entries(). No new vars, no init branches, no cleanup spots.
-class _TrickAnimEntry:
-	var trick: int  # TrickController.Trick
-	var anim_name: String
-	var play_mode: int  # PlayMode
-	var reverse_on_end: bool
-	var anim: Animation = null
-	var layer: CustomAnimPlayer.Layer = null
-
-
-func _make_entry(
-	trick: int, anim_name: String, play_mode: int, reverse_on_end: bool
-) -> _TrickAnimEntry:
-	var e := _TrickAnimEntry.new()
-	e.trick = trick
-	e.anim_name = anim_name
-	e.play_mode = play_mode
-	e.reverse_on_end = reverse_on_end
-	return e
-
-
-func _build_trick_entries() -> void:
-	_trick_entries = [
-		# One-shots play through and auto-fade; holds (high chair, t-pose, knee knocker) unwind on end.
-		_make_entry(TrickController.Trick.HEEL_CLICKER, "heel_clicker", PlayMode.ONE_SHOT, false),
-		_make_entry(
-			TrickController.Trick.HIGH_CHAIR, "high_chair", PlayMode.HOLD_WHILE_LATCHED, true
-		),
-		_make_entry(TrickController.Trick.TWO_LEFT_FEET, "two_left_feet", PlayMode.ONE_SHOT, false),
-		_make_entry(TrickController.Trick.KICKFLIP, "kickflip", PlayMode.ONE_SHOT, false),
-		_make_entry(TrickController.Trick.BUNNY_HOP, "bunny_hop", PlayMode.ONE_SHOT, false),
-		_make_entry(TrickController.Trick.SPREAD_EAGLE, "spread_eagle", PlayMode.ONE_SHOT, false),
-		_make_entry(TrickController.Trick.SUPERMAN, "superman", PlayMode.ONE_SHOT, false),
-		_make_entry(TrickController.Trick.T_POSE, "t_pose", PlayMode.HOLD_WHILE_LATCHED, true),
-		_make_entry(
-			TrickController.Trick.KNEE_KNOCKER, "knee_knocker", PlayMode.HOLD_WHILE_LATCHED, true
-		),
-	]
 
 
 ## Per-frame snapshot of every value the rider pose pipeline mutates. Pure data;

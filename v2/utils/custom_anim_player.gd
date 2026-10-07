@@ -27,6 +27,10 @@ class Layer:
 	## Cached (node, property_path, track_idx) tuples for tracks not in the pose pipeline's
 	## allowlist. Lazily filled on first apply_to_nodes() call so we don't re-walk per tick.
 	var _extras_resolved: Variant = null
+	## (node, track_idx) pairs for method tracks, resolved alongside _extras_resolved.
+	var _methods_resolved: Array = []
+	## Time method keys have fired up to. Starts before 0 so a key at t=0 fires.
+	var _method_cursor: float = -1.0
 
 	func get_duration() -> float:
 		return anim.length if anim else 0.0
@@ -99,6 +103,8 @@ func stop_all_and_reset(base_node: Node, allowlist: Dictionary) -> void:
 	for layer in _layers:
 		layer.time = 0.0
 		layer.weight = 1.0
+		# Rewinding isn't playback — don't let it fire method keys.
+		layer._method_cursor = 0.0
 	apply_to_nodes(base_node, allowlist)
 	_layers.clear()
 
@@ -174,9 +180,9 @@ func sample_float(track_path: NodePath) -> float:
 	return v if v != null else 0.0
 
 
-## Auto-apply raw track values for anything NOT in the pose pipeline's hardcoded allowlist.
-## Lets animators drop new tracks (VFX emitting, particle positions, materials, etc.) into
-## an animation and have them "just work" without touching this file or AnimationController.
+## Auto-apply raw track values for anything NOT in the pose pipeline's hardcoded allowlist, and
+## call method-track keys (e.g. RiderVFX.set_sparks). Lets animators drop new tracks into an
+## animation and have them "just work" without touching this file or AnimationController.
 ##
 ## - `allowlist`: Dictionary of NodePath → bool for tracks the caller handles via additive deltas.
 ## - Resolution per track: base_node.get_node_or_null(path) → find_child(last_name, true, false).
@@ -193,31 +199,59 @@ func apply_to_nodes(base_node: Node, allowlist: Dictionary) -> void:
 				continue
 			var value = layer.anim.value_track_interpolate(entry[2], layer.time)
 			node.set_indexed(entry[1], value)
+		_fire_method_keys(layer)
+
+
+## Call the method-track keys this layer's time passed since the last apply. Forward only, so a
+## held pose unwinding in reverse doesn't replay its calls.
+func _fire_method_keys(layer: Layer) -> void:
+	var from := layer._method_cursor
+	var to := layer.time
+	layer._method_cursor = to
+	if layer.speed <= 0.0:
+		return
+	var wrapped := layer.looping and to < from
+	for entry in layer._methods_resolved:
+		var track: int = entry[1]
+		for k in layer.anim.track_get_key_count(track):
+			var t := layer.anim.track_get_key_time(track, k)
+			if (t > from and t <= to) or (wrapped and (t > from or t <= to)):
+				entry[0].callv(
+					layer.anim.method_track_get_name(track, k),
+					layer.anim.method_track_get_params(track, k)
+				)
 
 
 func _resolve_layer_extras(layer: Layer, base_node: Node, allowlist: Dictionary) -> void:
 	layer._extras_resolved = []
 	for i in layer.anim.get_track_count():
-		if layer.anim.track_get_type(i) != Animation.TYPE_VALUE:
-			continue
 		if not layer.anim.track_is_enabled(i):
 			continue
 		var path := layer.anim.track_get_path(i)
-		if allowlist.has(path):
-			continue
 		var path_str := String(path)
-		var colon := path_str.find(":")
-		var node_path := NodePath(path_str.substr(0, colon))
-		var prop_path := NodePath(path_str.substr(colon))
-		var node := base_node.get_node_or_null(node_path)
-		if node == null:
-			# Editor sometimes serializes paths that don't resolve from the anim's root_node
-			# (e.g. a unique-name tracked node living elsewhere in the scene gets saved as a
-			# sibling-relative path). Fall back to a recursive find by last component name.
-			var parts := path_str.substr(0, colon).split("/")
-			var leaf := String(parts[parts.size() - 1]).trim_prefix("%")
-			node = base_node.find_child(leaf, true, false)
-		if node == null:
-			push_warning("CustomAnimPlayer: unresolved track path '%s'" % path)
-			continue
-		layer._extras_resolved.append([node, prop_path, i])
+		match layer.anim.track_get_type(i):
+			Animation.TYPE_METHOD:
+				var target := _resolve_track_node(base_node, path_str)
+				if target != null:
+					layer._methods_resolved.append([target, i])
+			Animation.TYPE_VALUE:
+				if allowlist.has(path):
+					continue
+				var colon := path_str.find(":")
+				var node := _resolve_track_node(base_node, path_str.substr(0, colon))
+				if node != null:
+					layer._extras_resolved.append([node, NodePath(path_str.substr(colon)), i])
+
+
+func _resolve_track_node(base_node: Node, node_path: String) -> Node:
+	var node := base_node.get_node_or_null(node_path)
+	if node == null:
+		# Editor sometimes serializes paths that don't resolve from the anim's root_node
+		# (e.g. a unique-name tracked node living elsewhere in the scene gets saved as a
+		# sibling-relative path). Fall back to a recursive find by last component name.
+		var parts := node_path.split("/")
+		var leaf := String(parts[parts.size() - 1]).trim_prefix("%")
+		node = base_node.find_child(leaf, true, false)
+	if node == null:
+		push_warning("CustomAnimPlayer: unresolved track path '%s'" % node_path)
+	return node

@@ -35,10 +35,13 @@ const DIR_ICONS: Dictionary = {
 @onready var howto_label: Label = %HowtoLabel
 @onready var score_label: Label = %ScoreLabel
 @onready var pin_btn: Button = %PinBtn
+## Tricks menu over the TrickDemo: plays this trick there. Hidden elsewhere.
+@onready var show_btn: Button = %ShowBtn
 
 ## Save-safe id of what this row shows: "STATE/TRICK/GESTURE/DIR" for stick tricks, "TRICK" for
 ## how-tos.
 var pin: String = ""
+var trick_type: TrickController.Trick = TrickController.Trick.NONE
 
 
 func _ready() -> void:
@@ -112,6 +115,7 @@ func set_pinned(pinned: bool) -> void:
 
 
 func _populate(trick: TrickController.Trick) -> void:
+	trick_type = trick
 	name_label.text = TrickController.trick_to_str(trick).capitalize()
 	if TrickController.HELD_TRICK_SCORE.has(trick):
 		score_label.text = "+%s/s" % TrickController.HELD_TRICK_SCORE[trick]

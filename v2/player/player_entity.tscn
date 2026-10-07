@@ -23,6 +23,7 @@
 [ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/bikes/hitbox/bike_hitbox.tres" id="19_75npo"]
 [ext_resource type="PackedScene" uid="uid://cu0vh8sgp0l2e" path="res://entities/vfx/spark_particles.tscn" id="29_3kl2f"]
 [ext_resource type="Script" uid="uid://cajkhr7cisa7f" path="res://player/controllers/skidmark_controller.gd" id="30_skid"]
+[ext_resource type="Script" path="res://entities/vfx/rider_vfx.gd" id="31_rvfx"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wig4y"]
 size = Vector3(4, 10, 2)
@@ -88,7 +89,7 @@ unique_name_in_owner = true
 script = ExtResource("7_mrv5j")
 player_entity = NodePath("../..")
 
-[node name="AnimationController" type="Node" parent="_Controllers" unique_id=727350187 node_paths=PackedStringArray("player_entity", "visual_root", "character_skin", "bike_skin", "movement_controller", "trick_controller", "input_controller", "ik_anim_player")]
+[node name="AnimationController" type="Node" parent="_Controllers" unique_id=727350187 node_paths=PackedStringArray("player_entity", "visual_root", "character_skin", "bike_skin", "movement_controller", "trick_controller", "input_controller", "ik_anim_player", "rider_vfx")]
 unique_name_in_owner = true
 script = ExtResource("9_anim")
 player_entity = NodePath("../..")
@@ -99,6 +100,7 @@ movement_controller = NodePath("../MovementController")
 trick_controller = NodePath("../TrickController")
 input_controller = NodePath("../InputController")
 ik_anim_player = NodePath("IKAnimationPlayer")
+rider_vfx = NodePath("../../VisualRoot/RiderVFX")
 
 [node name="IKAnimationPlayer" type="AnimationPlayer" parent="_Controllers/AnimationController" unique_id=292764851]
 unique_name_in_owner = true
@@ -172,6 +174,12 @@ metadata/_custom_type_script = "uid://coopftft0wwho"
 [node name="VisualRoot" type="Node3D" parent="." unique_id=53014519]
 unique_name_in_owner = true
 transform = Transform3D(-0.9999999, 0, -1.509958e-07, 0, 0.9999999, 0, 1.5099579e-07, 0, -1, 0, 0, 0)
+
+[node name="RiderVFX" type="Node" parent="VisualRoot" unique_id=1290417733 node_paths=PackedStringArray("left_sparks", "right_sparks")]
+unique_name_in_owner = true
+script = ExtResource("31_rvfx")
+left_sparks = NodePath("../IKTargets/LeftFootTarget/SparkParticlesLeft")
+right_sparks = NodePath("../IKTargets/RightFootTarget/SparkParticlesRight")
 
 [node name="IKTargets" type="Node3D" parent="VisualRoot" unique_id=1639855549]
 unique_name_in_owner = true

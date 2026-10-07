@@ -190,9 +190,10 @@ tricks_menu_state = NodePath("../TricksMenuState")
 [node name="HelpMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=64073042 node_paths=PackedStringArray("menu_manager") instance=ExtResource("20_lfj8l")]
 menu_manager = NodePath("../..")
 
-[node name="TricksMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1846203517 node_paths=PackedStringArray("menu_manager", "save_manager") instance=ExtResource("38_trkmn")]
+[node name="TricksMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1846203517 node_paths=PackedStringArray("menu_manager", "save_manager", "level_manager") instance=ExtResource("38_trkmn")]
 menu_manager = NodePath("../..")
 save_manager = NodePath("../../../SaveManager")
+level_manager = NodePath("../../../LevelManager")
 
 [node name="LoadingMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1253633817 instance=ExtResource("21_x5kvo")]
 

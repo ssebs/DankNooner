@@ -21,6 +21,9 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] filling up gas before stunt race to max reduces 2 levels
+- [ ] respawn from garage should flip you around
+
 - [ ] new large map
   - [ ] https://github.com/domlysz/BlenderGIS + https://superhivemarket.com/products/roadscape
   - [ ] big enough to cruise around like in Test Drive Unlimited 1
@@ -37,7 +40,6 @@
 ## Notes 📝
 > Stuff to move ASAP
 
-- In trick help menu, show animation of biker doing trick
 - Make roads / map in blender
 - Tutorial: msf course 
 
@@ -207,6 +209,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+
+- [x] In trick help menu, show animation of biker doing trick
 
 - [x] count drifting wheelie trick
 

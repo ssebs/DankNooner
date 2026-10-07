@@ -1,6 +1,7 @@
 ## Bike + rider meshes and the IK targets that seat one on the other, with the same IK system as
 ## the player's AnimationController (set_targets → create_ik → enable_ik). Shared by
-## NPCRiderEntity (as its VisualRoot) and the garage preview.
+## NPCRiderEntity (as its VisualRoot), the garage preview and the tricks-menu TrickDemo. Plays trick
+## anims through the same TrickAnimator as the player.
 class_name RiderVisual extends Node3D
 
 ## Null on a car NPC, which drops both skins in its _enter_tree.
@@ -17,6 +18,7 @@ class_name RiderVisual extends Node3D
 @onready var _right_arm_magnet: Marker3D = %RightArmMagnet
 @onready var _left_leg_magnet: Marker3D = %LeftLegMagnet
 @onready var _right_leg_magnet: Marker3D = %RightLegMagnet
+@onready var _rider_vfx: RiderVFX = %RiderVFX
 
 ## Rider pose is fixed per bike definition, so these resolve once in seat() rather
 ## than being rebuilt every tick — four Basis.from_euler calls plus a node lookup per
@@ -26,6 +28,14 @@ var _left_hand_local: Transform3D
 var _right_hand_local: Transform3D
 var _left_foot_local: Transform3D
 var _right_foot_local: Transform3D
+
+var _anim_runner: CustomAnimPlayer
+var _tricks: TrickAnimator
+## [marker, rest_pos, rest_rot, pos_track, rot_track] per IK marker. Hands and feet have a null rest:
+## they rest wherever sync_targets() put them.
+var _anim_markers: Array = []
+## Track paths the markers take as deltas, so apply_to_nodes leaves them alone.
+var _pose_tracks: Dictionary = {}
 
 
 ## Seat the rider on the bike's skin_definition. Call again after either skin rebuilds.
@@ -49,6 +59,7 @@ func seat() -> void:
 	_apply_rider_pose_from_definition(def)
 	ik_ctrl.create_ik()
 	character_skin.enable_ik()
+	_init_tricks()
 
 	_hb_parent = bike_skin.steering_handlebar_marker.get_parent() as Node3D
 	_left_hand_local = Transform3D(
@@ -100,3 +111,66 @@ func _apply_rider_pose_from_definition(def: BikeSkinDefinition) -> void:
 		_left_leg_magnet.position = def.left_leg_magnet_position
 	if def.right_leg_magnet_position != Vector3.ZERO:
 		_right_leg_magnet.position = def.right_leg_magnet_position
+
+
+## Rest pose the trick anims add onto, captured fresh each seat() from the definition.
+func _init_tricks() -> void:
+	if _anim_runner == null:
+		_anim_runner = CustomAnimPlayer.new()
+		add_child(_anim_runner)
+		_tricks = TrickAnimator.new(_anim_runner)
+	stop_tricks()
+
+	_anim_markers.clear()
+	var synced := [_left_hand_target, _right_hand_target, _left_foot_target, _right_foot_target]
+	for marker: Marker3D in [
+		_butt_target,
+		_chest_target,
+		_head_target,
+		_left_arm_magnet,
+		_right_arm_magnet,
+		_left_leg_magnet,
+		_right_leg_magnet,
+	] + synced:
+		var pos_track := NodePath("IKTargets/%s:position" % marker.name)
+		var rot_track := NodePath("IKTargets/%s:rotation" % marker.name)
+		var rested := marker not in synced
+		_anim_markers.append([
+			marker,
+			marker.position if rested else null,
+			marker.rotation if rested else null,
+			pos_track,
+			rot_track,
+		])
+		_pose_tracks[pos_track] = true
+		_pose_tracks[rot_track] = true
+
+
+## Drop every trick at once, back to the rest pose.
+func stop_tricks() -> void:
+	_anim_runner.stop_all()
+	_tricks.clear()
+	_rider_vfx.stop_all()
+
+
+## Same entry points as TrickController's trick_started / trick_ended.
+func start_trick(trick: TrickController.Trick) -> void:
+	_tricks.start(trick)
+
+
+func end_trick(trick: TrickController.Trick) -> void:
+	_tricks.end(trick)
+
+
+## Advance trick anims. The owner calls it per frame while tricks can play.
+func update_tricks(delta: float) -> void:
+	_anim_runner.tick(delta)
+	sync_targets()
+	for entry in _anim_markers:
+		var marker: Marker3D = entry[0]
+		var rest_pos: Vector3 = marker.position if entry[1] == null else entry[1]
+		var rest_rot: Vector3 = marker.rotation if entry[2] == null else entry[2]
+		marker.position = rest_pos + _anim_runner.sample_vec3(entry[3])
+		marker.rotation = rest_rot + _anim_runner.sample_vec3(entry[4])
+	_anim_runner.apply_to_nodes(self, _pose_tracks)
+

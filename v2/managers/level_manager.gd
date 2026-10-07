@@ -11,6 +11,7 @@ enum LevelName {
 	STUNTTRACK_01,
 	STUNTTRACK_02,
 	GARAGE_LEVEL,
+	TRICK_DEMO_LEVEL,
 }
 
 @export var spawn_node: Node3D
@@ -33,6 +34,7 @@ var possible_levels: Dictionary[LevelName, PackedScene] = {
 	LevelName.STUNTTRACK_01: load("res://levels/racetracks/stunt_track_01/stunt_track_01.tscn"),
 	LevelName.STUNTTRACK_02: load("res://levels/racetracks/stunt_track_02/stunt_race_02.tscn"),
 	LevelName.GARAGE_LEVEL: load("res://levels/menu_levels/garage/garage_level.tscn"),
+	LevelName.TRICK_DEMO_LEVEL: load("res://levels/menu_levels/trick_demo/trick_demo_level.tscn"),
 }
 ## LevelName enum => localization.csv's key name
 var level_name_map: Dictionary[LevelName, String] = {
@@ -44,6 +46,7 @@ var level_name_map: Dictionary[LevelName, String] = {
 	LevelName.STUNTTRACK_01: "LEVEL_STUNTTRACK_01",
 	LevelName.STUNTTRACK_02: "LEVEL_STUNTTRACK_02",
 	LevelName.GARAGE_LEVEL: "GarageLevel",
+	LevelName.TRICK_DEMO_LEVEL: "TrickDemoLevel",
 }
 
 # ___ UI ORDER ___ #
@@ -115,6 +118,14 @@ func despawn_level():
 ## Spawn the menu level
 func spawn_menu_level():
 	spawn_level(LevelName.BG_GRAY_LEVEL, InputStateManager.InputState.IN_MENU)
+
+
+## Spawn the menu garage level, viewed through its bay's camera. Returns the bay.
+func spawn_garage_level() -> GarageActivity:
+	spawn_level(LevelName.GARAGE_LEVEL, InputStateManager.InputState.IN_MENU)
+	var bay: GarageActivity = current_level.find_children("*", "GarageActivity", true, false)[0]
+	bay.camera.make_current()
+	return bay
 
 
 func get_levels_as_option_items() -> Dictionary[String, int]:

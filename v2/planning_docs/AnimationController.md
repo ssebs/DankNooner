@@ -198,18 +198,30 @@ func do_reset()                             # Called from PlayerEntity.do_respaw
 
 ## Trick Animations
 
-`AnimationController` listens to `trick_controller.trick_started` / `trick_ended` and plays/stops cached IK animations via `_anim_runner`. Trick anims are driven by a data table (`_trick_entries`) keyed by `TrickController.Trick`. Each row picks a `PlayMode` and optional `reverse_on_end`. `do_reset()` / `start_ragdoll()` clear all layer refs so respawns flush cleanly.
+Trick playback lives in `TrickAnimator` (`player/trick_animator.gd`), a `RefCounted` shared by `AnimationController` (player) and `RiderVisual` (garage preview, NPCs). It owns the trick table (`_build_entries()`) keyed by `TrickController.Trick`; each row picks a `PlayMode` and optional `reverse_on_end`. `AnimationController` connects `trick_started` / `trick_ended` to `TrickAnimator.start` / `end`; `do_reset()` / `start_ragdoll()` call `clear()` so respawns flush cleanly.
+
+The library is `resources/player/ik_anim_lib.res` (`TrickAnimator.LIBRARY`). It's still authored on PlayerEntity's `IKAnimationPlayer`, which references the same file. `TrickAnimator.load_anim(name)` loads any anim from it (idle, back_up, bat, shotgun too) with `%Name` paths fixed up.
 
 ### Adding a new trick anim
 
 1. Add the enum value to `TrickController.Trick`.
 2. Author the animation in `IKAnimationPlayer` (full track paths, keyframe `t=0`) and name it (e.g. `superman`).
-3. Add one row to `_build_trick_entries()` in `animation_controller.gd`:
+3. Add one row to `_build_entries()` in `trick_animator.gd`:
    ```gdscript
    _make_entry(TrickController.Trick.SUPERMAN, "superman", PlayMode.ONE_SHOT, false),
    ```
 
 `PlayMode`: `ONE_SHOT` (transient gesture, auto-fades), `LOOP_WHILE_LATCHED` (same call today, semantic intent), `HOLD_WHILE_LATCHED` (settles + holds; pair with `reverse_on_end: true` to unwind on trick_ended). No new vars, init branches, or cleanup spots needed — the registry drives everything.
+
+### Trick VFX
+
+VFX go through method-track keys on the `RiderVFX` node (e.g. `two_left_feet` calls `set_sparks(true/false)` at 0.3s / 2.7s), not value tracks on particle nodes. `CustomAnimPlayer.apply_to_nodes` fires method keys on forward playback and resolves the node by name, so the same anim works on PlayerEntity and RiderVisual. Method keys don't rewind, so crash / respawn calls `RiderVFX.stop_all()`.
+
+### RiderVisual & the trick demo
+
+`RiderVisual.start_trick` / `end_trick` / `update_tricks` / `stop_tricks` play the same anims on its markers (rest + delta). Physics-driven tricks aren't simulated there.
+
+The tricks menu, opened from the main menu, loads `TrickDemoLevel` (stunt-map ramp + camera) and plays the hovered / focused row on the active loadout. `TrickDemo` (`levels/menu_levels/trick_demo/`) loops an authored run from `trick_demo_anims.tres`. Each run moves `%Rig` (approach, ramp, air, landing; wheelie / stoppie / flips are just Rig rotation keys) and calls `trick_on` / `trick_off` method keys. The run for a trick is the first that exists of `<state>_<trick>`, `<trick>`, `<state>` (e.g. `air_superman`, `backflip`, `wheelie`), else `ground`, so a trick-specific variant only means adding an anim with that name. Every menu row has its own run (29 in all, e.g. `wheelie_t_pose`, `air_superman`, `drift`), generated from the ramp geometry as a starting point to retime by hand. Each curve is its own eased track (`Rig:position:y`, `Rig:rotation:x`, …); only the air arc is sampled. Runs key every track, so none inherits a value from the previous one. `TrickDemo.rear_wheel_spin` is keyable for burnouts and drifts. The camera follows the rig (`camera_offset`, `camera_lead`, `camera_follow_speed`), keeping the rider in the right of the frame, and cuts when a run loops.
 
 To play arbitrary IK anims from elsewhere, expose `_anim_runner` or wrap with helper methods — same `play()/stop()` API.
 

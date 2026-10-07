@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://57tqf4joqtal"]
+
+[ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_lvl"]
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="2_gb"]
+[ext_resource type="PackedScene" uid="uid://rervqxotioc4" path="res://levels/components/props/ramp.tscn" id="3_ramp"]
+[ext_resource type="Script" uid="uid://b7e2uq4m1cexm" path="res://levels/menu_levels/trick_demo/trick_demo.gd" id="4_demo"]
+[ext_resource type="PackedScene" path="res://entities/npc/rider_visual.tscn" id="5_rider"]
+[ext_resource type="AnimationLibrary" uid="uid://dux0ki7gl63i2" path="res://levels/menu_levels/trick_demo/trick_demo_anims.tres" id="6_anims"]
+[ext_resource type="Sky" uid="uid://dfgbuerpq3y8" path="res://levels/assets/skybox_neon.tres" id="7_cg5um"]
+
+[sub_resource type="Environment" id="Environment_x72xv"]
+background_mode = 2
+sky = ExtResource("7_cg5um")
+ambient_light_source = 2
+ambient_light_color = Color(0.35, 0.3, 0.6, 1)
+tonemap_mode = 2
+glow_enabled = true
+glow_strength = 1.25
+fog_enabled = true
+fog_light_color = Color(0.12, 0.05, 0.3, 1)
+fog_density = 0.002
+fog_sky_affect = 0.268
+adjustment_enabled = true
+adjustment_brightness = 1.14
+adjustment_contrast = 1.15
+adjustment_saturation = 1.1
+
+[node name="TrickDemoLevel" type="Node3D" unique_id=631281267]
+script = ExtResource("1_lvl")
+no_player_spawn_needed = true
+metadata/_custom_type_script = "uid://dv0brm8irhlth"
+
+[node name="Ground" parent="." unique_id=969946351 instance=ExtResource("2_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 12)
+shape_mode = 1
+width = 48.0
+depth = 80.0
+
+[node name="Ramp" parent="." unique_id=2104299910 instance=ExtResource("3_ramp")]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1093149979]
+transform = Transform3D(-0.85749286, 0.4444566, -0.25916052, 0, 0.5037175, 0.8638684, 0.51449573, 0.740761, -0.4319342, 0, 20, 0)
+shadow_enabled = true
+
+[node name="TrickDemo" type="Node3D" parent="." unique_id=1293270488]
+unique_name_in_owner = true
+script = ExtResource("4_demo")
+
+[node name="Rig" type="Node3D" parent="TrickDemo" unique_id=461210167]
+unique_name_in_owner = true
+
+[node name="RiderVisual" parent="TrickDemo/Rig" unique_id=80580870 instance=ExtResource("5_rider")]
+unique_name_in_owner = true
+
+[node name="DemoAnims" type="AnimationPlayer" parent="TrickDemo" unique_id=735467075]
+unique_name_in_owner = true
+libraries/ = ExtResource("6_anims")
+
+[node name="Camera3D" type="Camera3D" parent="TrickDemo" unique_id=790288250]
+unique_name_in_owner = true
+transform = Transform3D(0.24253564, 0.0587157, -0.9683641, 0, 0.9981669, 0.060522757, 0.97014254, -0.014678925, 0.24209103, -32, 5, 4)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=481390754]
+environment = SubResource("Environment_x72xv")

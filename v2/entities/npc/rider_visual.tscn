@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bmyba87m3xuaa" path="res://player/bikes/bike_skin.tscn" id="2_bike"]
 [ext_resource type="PackedScene" uid="uid://cuqtwh0saekmw" path="res://player/characters/character_skin.tscn" id="3_char"]
 [ext_resource type="PackedScene" uid="uid://cu0vh8sgp0l2e" path="res://entities/vfx/spark_particles.tscn" id="3_spark"]
+[ext_resource type="Script" path="res://entities/vfx/rider_vfx.gd" id="4_rvfx"]
 
 [node name="RiderVisual" type="Node3D"]
 script = ExtResource("1_rider")
@@ -87,3 +88,9 @@ transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, -2.0
 [node name="RearWheelBackMarker" type="Marker3D" parent="IKTargets"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, -1.1081411e-08, 0, -0.92412007)
+
+[node name="RiderVFX" type="Node" parent="." node_paths=PackedStringArray("left_sparks", "right_sparks")]
+unique_name_in_owner = true
+script = ExtResource("4_rvfx")
+left_sparks = NodePath("../IKTargets/LeftFootTarget/SparkParticlesLeft")
+right_sparks = NodePath("../IKTargets/RightFootTarget/SparkParticlesRight")

@@ -1,0 +1,3108 @@
+[gd_resource type="AnimationLibrary" format=3 uid="uid://dux0ki7gl63i2"]
+
+[sub_resource type="Animation" id="Animation_3g617"]
+resource_name = "air"
+length = 4.570926675212563
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213998989193397, 6.046171791757635, 6.776518617501065, 7.405039466423688, 7.931734338525501, 8.356603233806508, 8.679646152266706, 8.9008630939061, 9.020254058724682, 9.037819046722454, 8.953558057899421, 8.767471092255581, 8.479558149790932, 8.089819230505473, 7.598254334399211, 7.004863461472137, 6.309646611724256, 5.512603785155566, 4.613734981766072, 3.6130402015557586, 2.510519444524647, 1.306172710672726, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 23.783598808368016, 33.78359880836801]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 3.8209267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.2279279552640238, -0.5050984347171386, -0.7748722046681501, -0.9360003374941616, -0.8879133662987633, -0.8398263951033649, -0.7917394239079666, -0.7436524527125683, -0.6955654815171699, -0.6474785103217717, -0.5993915391263732, -0.5513045679309749, -0.5032175967355765, -0.4551306255401782, -0.40704365434477985, -0.3589566831493818, -0.3108697119539833, -0.2627827407585849, -0.2146957695631866, -0.1666087983677883, -0.11852182717239002, -0.07043485597699162, -0.02234788478159333, 0.02573908641380518, 0.07382605760920347, 0.12191302880460186, 0.17000000000000004, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.3764598, 3.1209266),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_hfd0i"]
+resource_name = "air_heel_clicker"
+length = 4.570926675212563
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213998989193397, 6.046171791757635, 6.776518617501065, 7.405039466423688, 7.931734338525501, 8.356603233806508, 8.679646152266706, 8.9008630939061, 9.020254058724682, 9.037819046722454, 8.953558057899421, 8.767471092255581, 8.479558149790932, 8.089819230505473, 7.598254334399211, 7.004863461472137, 6.309646611724256, 5.512603785155566, 4.613734981766072, 3.6130402015557586, 2.510519444524647, 1.306172710672726, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 23.783598808368016, 33.78359880836801]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 3.8209267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.2279279552640238, -0.5050984347171386, -0.7748722046681501, -0.9360003374941616, -0.8879133662987633, -0.8398263951033649, -0.7917394239079666, -0.7436524527125683, -0.6955654815171699, -0.6474785103217717, -0.5993915391263732, -0.5513045679309749, -0.5032175967355765, -0.4551306255401782, -0.40704365434477985, -0.3589566831493818, -0.3108697119539833, -0.2627827407585849, -0.2146957695631866, -0.1666087983677883, -0.11852182717239002, -0.07043485597699162, -0.02234788478159333, 0.02573908641380518, 0.07382605760920347, 0.12191302880460186, 0.17000000000000004, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.6264598, 3.0709267),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_i4op6"]
+resource_name = "air_high_chair"
+length = 4.570926675212563
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213998989193397, 6.046171791757635, 6.776518617501065, 7.405039466423688, 7.931734338525501, 8.356603233806508, 8.679646152266706, 8.9008630939061, 9.020254058724682, 9.037819046722454, 8.953558057899421, 8.767471092255581, 8.479558149790932, 8.089819230505473, 7.598254334399211, 7.004863461472137, 6.309646611724256, 5.512603785155566, 4.613734981766072, 3.6130402015557586, 2.510519444524647, 1.306172710672726, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 23.783598808368016, 33.78359880836801]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 3.8209267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.2279279552640238, -0.5050984347171386, -0.7748722046681501, -0.9360003374941616, -0.8879133662987633, -0.8398263951033649, -0.7917394239079666, -0.7436524527125683, -0.6955654815171699, -0.6474785103217717, -0.5993915391263732, -0.5513045679309749, -0.5032175967355765, -0.4551306255401782, -0.40704365434477985, -0.3589566831493818, -0.3108697119539833, -0.2627827407585849, -0.2146957695631866, -0.1666087983677883, -0.11852182717239002, -0.07043485597699162, -0.02234788478159333, 0.02573908641380518, 0.07382605760920347, 0.12191302880460186, 0.17000000000000004, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.4264599, 3.0709267),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_tuk1w"]
+resource_name = "air_kickflip"
+length = 4.570926675212563
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213998989193397, 6.046171791757635, 6.776518617501065, 7.405039466423688, 7.931734338525501, 8.356603233806508, 8.679646152266706, 8.9008630939061, 9.020254058724682, 9.037819046722454, 8.953558057899421, 8.767471092255581, 8.479558149790932, 8.089819230505473, 7.598254334399211, 7.004863461472137, 6.309646611724256, 5.512603785155566, 4.613734981766072, 3.6130402015557586, 2.510519444524647, 1.306172710672726, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 23.783598808368016, 33.78359880836801]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 3.8209267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.2279279552640238, -0.5050984347171386, -0.7748722046681501, -0.9360003374941616, -0.8879133662987633, -0.8398263951033649, -0.7917394239079666, -0.7436524527125683, -0.6955654815171699, -0.6474785103217717, -0.5993915391263732, -0.5513045679309749, -0.5032175967355765, -0.4551306255401782, -0.40704365434477985, -0.3589566831493818, -0.3108697119539833, -0.2627827407585849, -0.2146957695631866, -0.1666087983677883, -0.11852182717239002, -0.07043485597699162, -0.02234788478159333, 0.02573908641380518, 0.07382605760920347, 0.12191302880460186, 0.17000000000000004, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.5264598, 3.0709267),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_kavhi"]
+resource_name = "air_knee_knocker"
+length = 4.570926675212563
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213998989193397, 6.046171791757635, 6.776518617501065, 7.405039466423688, 7.931734338525501, 8.356603233806508, 8.679646152266706, 8.9008630939061, 9.020254058724682, 9.037819046722454, 8.953558057899421, 8.767471092255581, 8.479558149790932, 8.089819230505473, 7.598254334399211, 7.004863461472137, 6.309646611724256, 5.512603785155566, 4.613734981766072, 3.6130402015557586, 2.510519444524647, 1.306172710672726, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 23.783598808368016, 33.78359880836801]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 3.8209267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.2279279552640238, -0.5050984347171386, -0.7748722046681501, -0.9360003374941616, -0.8879133662987633, -0.8398263951033649, -0.7917394239079666, -0.7436524527125683, -0.6955654815171699, -0.6474785103217717, -0.5993915391263732, -0.5513045679309749, -0.5032175967355765, -0.4551306255401782, -0.40704365434477985, -0.3589566831493818, -0.3108697119539833, -0.2627827407585849, -0.2146957695631866, -0.1666087983677883, -0.11852182717239002, -0.07043485597699162, -0.02234788478159333, 0.02573908641380518, 0.07382605760920347, 0.12191302880460186, 0.17000000000000004, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.4264599, 3.0709267),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_v8ne4"]
+resource_name = "air_spread_eagle"
+length = 4.570926675212563
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213998989193397, 6.046171791757635, 6.776518617501065, 7.405039466423688, 7.931734338525501, 8.356603233806508, 8.679646152266706, 8.9008630939061, 9.020254058724682, 9.037819046722454, 8.953558057899421, 8.767471092255581, 8.479558149790932, 8.089819230505473, 7.598254334399211, 7.004863461472137, 6.309646611724256, 5.512603785155566, 4.613734981766072, 3.6130402015557586, 2.510519444524647, 1.306172710672726, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 23.783598808368016, 33.78359880836801]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 3.8209267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.2279279552640238, -0.5050984347171386, -0.7748722046681501, -0.9360003374941616, -0.8879133662987633, -0.8398263951033649, -0.7917394239079666, -0.7436524527125683, -0.6955654815171699, -0.6474785103217717, -0.5993915391263732, -0.5513045679309749, -0.5032175967355765, -0.4551306255401782, -0.40704365434477985, -0.3589566831493818, -0.3108697119539833, -0.2627827407585849, -0.2146957695631866, -0.1666087983677883, -0.11852182717239002, -0.07043485597699162, -0.02234788478159333, 0.02573908641380518, 0.07382605760920347, 0.12191302880460186, 0.17000000000000004, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.7264599, 3.0709267),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_3yho6"]
+resource_name = "air_superman"
+length = 4.570926675212563
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213998989193397, 6.046171791757635, 6.776518617501065, 7.405039466423688, 7.931734338525501, 8.356603233806508, 8.679646152266706, 8.9008630939061, 9.020254058724682, 9.037819046722454, 8.953558057899421, 8.767471092255581, 8.479558149790932, 8.089819230505473, 7.598254334399211, 7.004863461472137, 6.309646611724256, 5.512603785155566, 4.613734981766072, 3.6130402015557586, 2.510519444524647, 1.306172710672726, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 23.783598808368016, 33.78359880836801]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 3.8209267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.2279279552640238, -0.5050984347171386, -0.7748722046681501, -0.9360003374941616, -0.8879133662987633, -0.8398263951033649, -0.7917394239079666, -0.7436524527125683, -0.6955654815171699, -0.6474785103217717, -0.5993915391263732, -0.5513045679309749, -0.5032175967355765, -0.4551306255401782, -0.40704365434477985, -0.3589566831493818, -0.3108697119539833, -0.2627827407585849, -0.2146957695631866, -0.1666087983677883, -0.11852182717239002, -0.07043485597699162, -0.02234788478159333, 0.02573908641380518, 0.07382605760920347, 0.12191302880460186, 0.17000000000000004, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.7264599, 3.0709267),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_qkysu"]
+resource_name = "air_t_pose"
+length = 4.570926675212563
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213998989193397, 6.046171791757635, 6.776518617501065, 7.405039466423688, 7.931734338525501, 8.356603233806508, 8.679646152266706, 8.9008630939061, 9.020254058724682, 9.037819046722454, 8.953558057899421, 8.767471092255581, 8.479558149790932, 8.089819230505473, 7.598254334399211, 7.004863461472137, 6.309646611724256, 5.512603785155566, 4.613734981766072, 3.6130402015557586, 2.510519444524647, 1.306172710672726, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 23.783598808368016, 33.78359880836801]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 3.8209267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.2279279552640238, -0.5050984347171386, -0.7748722046681501, -0.9360003374941616, -0.8879133662987633, -0.8398263951033649, -0.7917394239079666, -0.7436524527125683, -0.6955654815171699, -0.6474785103217717, -0.5993915391263732, -0.5513045679309749, -0.5032175967355765, -0.4551306255401782, -0.40704365434477985, -0.3589566831493818, -0.3108697119539833, -0.2627827407585849, -0.2146957695631866, -0.1666087983677883, -0.11852182717239002, -0.07043485597699162, -0.02234788478159333, 0.02573908641380518, 0.07382605760920347, 0.12191302880460186, 0.17000000000000004, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.4264599, 3.0709267),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_3i4d3"]
+resource_name = "backflip"
+length = 4.570926675212563
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213998989193397, 6.046171791757635, 6.776518617501065, 7.405039466423688, 7.931734338525501, 8.356603233806508, 8.679646152266706, 8.9008630939061, 9.020254058724682, 9.037819046722454, 8.953558057899421, 8.767471092255581, 8.479558149790932, 8.089819230505473, 7.598254334399211, 7.004863461472137, 6.309646611724256, 5.512603785155566, 4.613734981766072, 3.6130402015557586, 2.510519444524647, 1.306172710672726, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 23.783598808368016, 33.78359880836801]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 3.8209267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.2279279552640238, -0.5050984347171386, -0.7748722046681501, -0.9360003374941616, -0.8879133662987633, -0.8398263951033649, -0.8263390306788247, -0.939017300812883, -1.1664203451490824, -1.4904812701122814, -1.8931331821273416, -2.3563091876191216, -2.8619423930124803, -3.3919659047322814, -3.9283128292033784, -4.452916272850634, -4.947709342098911, -5.394625143373065, -5.7755967830979555, -6.072557367698444, -6.267440003599392, -6.342177797225656, -6.30553319196118, -6.257446220765781, -6.209359249570383, -6.161272278374985, -6.113185307179586, -6.283185307179586, -6.283185307179586]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.3264599, 3.2709267),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_vlujj"]
+resource_name = "bunny_hop"
+length = 2.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 1.4, 1.65, 1.95, 2.8),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.32, 0.32, 1.1, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 2.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 24.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 1.4, 1.65, 1.95, 2.8),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.5236, -0.5236, -0.09, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.4, 1.8),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_ciwuw"]
+resource_name = "burnout"
+length = 3.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 3.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [4.0, 4.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.5, 0.9, 1.3, 1.7, 2.1, 2.5, 2.9, 3.2),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.05, -0.05, 0.05, -0.05, 0.05, -0.05, 0.0, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.3, 2.7, 3, 3.2),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 40.0, 40.0, 0.0, 0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.3, 2.7),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_eud8r"]
+resource_name = "drift"
+length = 3.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 3.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 30.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.6, 1, 2.6, 3, 3.4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.6, 0.6, 0.0, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.6, 1, 2.6, 3, 3.4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.2, -0.2, 0.0, 0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.6, 0.8, 2.6, 2.8, 3.4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, 25.0, 25.0, 0.0, 0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.8, 2.8),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_u0yg6"]
+resource_name = "frontflip"
+length = 4.570926675212563
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213998989193397, 6.046171791757635, 6.776518617501065, 7.405039466423688, 7.931734338525501, 8.356603233806508, 8.679646152266706, 8.9008630939061, 9.020254058724682, 9.037819046722454, 8.953558057899421, 8.767471092255581, 8.479558149790932, 8.089819230505473, 7.598254334399211, 7.004863461472137, 6.309646611724256, 5.512603785155566, 4.613734981766072, 3.6130402015557586, 2.510519444524647, 1.306172710672726, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 23.783598808368016, 33.78359880836801]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 3.8209267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.2279279552640238, -0.5050984347171386, -0.7748722046681501, -0.9360003374941616, -0.8879133662987633, -0.8398263951033649, -0.7571398171371084, -0.5482876046122536, -0.22471061788525745, 0.19552424946873792, 0.6943501038745955, 1.2537000517571717, 1.8555071995413277, 2.4817046536519247, 3.1142255205138185, 3.7350029065518706, 4.325969918190944, 4.8690596618558954, 5.346205243971583, 5.739339770962868, 6.030396349254612, 6.2013080852716715, 6.260837422397993, 6.308924393593392, 6.357011364788789, 6.405098335984188, 6.453185307179586, 6.283185307179586, 6.283185307179586]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.3264599, 3.2709267),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_12b5o"]
+resource_name = "ground"
+length = 3.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 3.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 28.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.8, 2.3),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_l58wy"]
+resource_name = "ground_heel_clicker"
+length = 2.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 2.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 24.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.8, 1.8),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_c3jhj"]
+resource_name = "ground_high_chair"
+length = 3.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 3.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 30.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.8, 2.6),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_aax4a"]
+resource_name = "ground_kickflip"
+length = 2.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 2.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 24.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.8, 1.8),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_qlx68"]
+resource_name = "ground_knee_knocker"
+length = 3.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 3.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 30.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.8, 2.6),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_twt27"]
+resource_name = "ground_t_pose"
+length = 3.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 3.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 30.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.8, 2.6),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_3c866"]
+resource_name = "ground_two_left_feet"
+length = 4.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 4.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 57.60000000000001]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.6, 3.6),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_b8yhw"]
+resource_name = "stoppie"
+length = 3.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1, 1.3, 2.4, 2.7, 3.4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.23, 0.23, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1, 1.7, 2.4, 3.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 6.0, 12.8, 16.5, 19.5]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1, 1.3, 2.4, 2.7, 3.4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.349, 0.349, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1, 2.4),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_iiunx"]
+resource_name = "wheelie"
+length = 3.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 3, 3.4, 3.8),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.32, 0.32, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 3.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 34.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 3, 3.4, 3.8),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.5236, -0.5236, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1, 2.6),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_8ygjq"]
+resource_name = "wheelie_drift_wheelie"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 3.2, 3.6, 4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.32, 0.32, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 36.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 3.2, 3.6, 4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.5236, -0.5236, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 1, 1.4, 2.8, 3.2, 4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.5, 0.5, 0.0, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 1, 1.2, 2.8, 3, 4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, 25.0, 25.0, 0.0, 0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1, 3),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_vdxnv"]
+resource_name = "wheelie_heel_clicker"
+length = 3.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 2.6, 3, 3.4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.32, 0.32, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 3.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 30.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 2.6, 3, 3.4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.5236, -0.5236, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.1, 2.1),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_xy2bk"]
+resource_name = "wheelie_high_chair"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 3.2, 3.6, 4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.32, 0.32, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 36.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 3.2, 3.6, 4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.5236, -0.5236, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.1, 2.8),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_boqrv"]
+resource_name = "wheelie_kickflip"
+length = 3.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 2.6, 3, 3.4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.32, 0.32, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 3.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 30.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 2.6, 3, 3.4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.5236, -0.5236, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.1, 2.1),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_fegw2"]
+resource_name = "wheelie_knee_knocker"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 3.2, 3.6, 4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.32, 0.32, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 36.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 3.2, 3.6, 4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.5236, -0.5236, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.1, 2.8),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_7j1mf"]
+resource_name = "wheelie_t_pose"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 3.2, 3.6, 4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.32, 0.32, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 36.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 3.2, 3.6, 4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.5236, -0.5236, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.1, 2.8),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_bht78"]
+resource_name = "wheelie_wheelie_sitting"
+length = 3.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 2.8, 3.2, 3.6),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.32, 0.32, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 3.6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 32.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 2.8, 3.2, 3.6),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.5236, -0.5236, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.8, 2.8),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[resource]
+_data = {
+&"air": SubResource("Animation_3g617"),
+&"air_heel_clicker": SubResource("Animation_hfd0i"),
+&"air_high_chair": SubResource("Animation_i4op6"),
+&"air_kickflip": SubResource("Animation_tuk1w"),
+&"air_knee_knocker": SubResource("Animation_kavhi"),
+&"air_spread_eagle": SubResource("Animation_v8ne4"),
+&"air_superman": SubResource("Animation_3yho6"),
+&"air_t_pose": SubResource("Animation_qkysu"),
+&"backflip": SubResource("Animation_3i4d3"),
+&"bunny_hop": SubResource("Animation_vlujj"),
+&"burnout": SubResource("Animation_ciwuw"),
+&"drift": SubResource("Animation_eud8r"),
+&"frontflip": SubResource("Animation_u0yg6"),
+&"ground": SubResource("Animation_12b5o"),
+&"ground_heel_clicker": SubResource("Animation_l58wy"),
+&"ground_high_chair": SubResource("Animation_c3jhj"),
+&"ground_kickflip": SubResource("Animation_aax4a"),
+&"ground_knee_knocker": SubResource("Animation_qlx68"),
+&"ground_t_pose": SubResource("Animation_twt27"),
+&"ground_two_left_feet": SubResource("Animation_3c866"),
+&"stoppie": SubResource("Animation_b8yhw"),
+&"wheelie": SubResource("Animation_iiunx"),
+&"wheelie_drift_wheelie": SubResource("Animation_8ygjq"),
+&"wheelie_heel_clicker": SubResource("Animation_vdxnv"),
+&"wheelie_high_chair": SubResource("Animation_xy2bk"),
+&"wheelie_kickflip": SubResource("Animation_boqrv"),
+&"wheelie_knee_knocker": SubResource("Animation_fegw2"),
+&"wheelie_t_pose": SubResource("Animation_7j1mf"),
+&"wheelie_wheelie_sitting": SubResource("Animation_bht78")
+}

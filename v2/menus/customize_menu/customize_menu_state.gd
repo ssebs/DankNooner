@@ -14,10 +14,7 @@ func Enter(state_context: StateContext):
 	return_ctx = state_context
 	return_state = state_context.return_state
 
-	level_manager.spawn_level(LevelManager.LevelName.GARAGE_LEVEL, InputStateManager.InputState.IN_MENU)
-	var bay: GarageActivity = level_manager.current_level.find_children("*", "GarageActivity", true, false)[0]
-	bay.camera.make_current()
-	_garage_set = bay.garage_set
+	_garage_set = level_manager.spawn_garage_level().garage_set
 
 	garage_ui.preview_changed.connect(_garage_set.show_preview)
 	garage_ui.pose_requested.connect(_garage_set.cycle_pose)
