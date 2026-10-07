@@ -21,7 +21,10 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] expand stunt city to have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
+- [ ] new large map
+  - [ ] https://github.com/domlysz/BlenderGIS
+  - [ ] big enough to cruise around like in Test Drive Unlimited 1
+  - [ ] have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
 
 - [ ] count drifting wheelie trick
 - [ ] Get AI working again

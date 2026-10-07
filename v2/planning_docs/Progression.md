@@ -35,6 +35,9 @@ Make points mean something: players should want to unlock something, and replay 
 ## Decided
 
 - **Every gamemode pays out** currency at its results screen. Winning a race pays more.
+- **Multiplayer events follow the host's progress.** Anyone can join the host's events, locked in
+  their own save or not, and earns money/XP toward their own level and unlocks. Finishing also
+  marks the event completed in their own save.
 
 
 ## Ideas
@@ -62,21 +65,26 @@ expensive content.
 - **Calm side:** the current map. About 2/3 of it (farms, suburbs, lighthouse coast, island track)
   becomes the beach/farm/track vibe; the rest is the mountains and city. Its neon gets toned down
   so the big city stands out.
-- **Interstate:** links the calm side to the big city. It needs real length to feel fast at
-  sport-bike speed, which grows the world several times over. The road generator already has 2x2
-  containers.
+- **Interstate:** a loop, not a connector. A coastal ring road plus a mountain pass or two (Test
+  Drive Unlimited's Oahu as the template) linking the calm side, city and bad side, so friends can
+  cruise without dead ends. The same loop is classic mode's road trip. It needs real length to feel
+  fast at sport-bike speed, which grows the world several times over. The road generator already
+  has 2x2 containers.
 - **Big city:** lots of neon, the nicer streets.
 - **Bad side:** across the railroad tracks from the city. Old and worn: orange sodium streetlights,
   a few flickering neon signs, chain-link fences, boarded windows. The style stays the same; only
   the lighting and props change.
 
-**Gates are in-world.** Railroad crossing arms stay down until chapter 1 is done, and the train
-doubles as a set piece or timing hazard. The interstate on-ramp gates the calm side.
+**The world is never gated** (Forza Horizon 5 style). The map starts under fog of war that clears
+as you ride. Story events you reach early show as locked; collectibles, gas stations and garages
+always work.
 
 **No level streaming** (Godot has none). Keep everything loaded and cull with visibility ranges
 (unused in levels today) and occlusion (stunt track 01 already has it). The risk is long interstate
 sightlines to the city skyline. Hand-roll district streaming only if profiling demands it, and
-even then the host must keep collision loaded wherever any player is.
+even then the host must keep collision loaded wherever any player is. The full map renders the
+live world (`Minimap`), so zoomed out it would show culled terrain; it needs a baked top-down
+image, which is also what the fog of war draws over.
 
 ### Hit & Run-style systems
 
@@ -106,17 +114,16 @@ A handful of bikes is a handful of purchases, then the loop is over. Fill the ga
 ### Avoid
 
 - **Gating tricks:** shrinks the core fun.
+- **Gating the world:** lock events, never roads or districts.
+- **Crew / club systems:** a lobby of friends already is one.
 - **Bike stat upgrades:** break multiplayer fairness.
 - **Dailies / login bonuses:** live-service pattern with no audience here.
 
 
 ## Open questions
 
-- Story as the backbone (chapters gate bikes and districts) vs. a shop backbone (money unlocks
+- Story as the backbone (chapters gate bikes and events) vs. a shop backbone (money unlocks
   everything, missions just pay well) vs. shop first, story layered on later.
-- **Multiplayer story progress:** each player's lives in their own save. When playing together,
-  the host's event runs and everyone gets paid, but whose story advances, and can a player join
-  an event they haven't unlocked, or a district they haven't reached?
 - **Bike per chapter:** locked to the chapter's bike, or free choice once unlocked? In multiplayer,
   does everyone ride the host's chapter bike?
 - The two skyscrapers sit next to the island, in the middle of the calm side. Move them to the big city?
