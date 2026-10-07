@@ -23,6 +23,7 @@ enum Trick {
 	T_POSE,
 	KNEE_KNOCKER,
 	BUNNY_HOP,
+	DRIFT_WHEELIE,
 }
 enum Dir {UP, DOWN, LEFT, RIGHT}
 ## TAP / DOUBLE_TAP latch their trick for TAP_TRICK_DURATION; HOLD / DOUBLE_TAP_HOLD keep it active
@@ -93,6 +94,7 @@ const HELD_TRICK_SCORE: Dictionary = {
 	Trick.STOPPIE: 1.0,
 	Trick.DRIFT: 0.75,
 	Trick.BURNOUT: 0.5,
+	Trick.DRIFT_WHEELIE: 2.0,
 	Trick.HIGH_CHAIR: 1.5,
 	Trick.KNEE_KNOCKER: 1.5,
 	Trick.T_POSE: 1.5,
@@ -385,6 +387,9 @@ func _detect_current_trick(delta: float) -> Trick:
 		# Drifting at a near-standstill is a burnout (rear spinning in place); moving is a drift.
 		if movement_controller.speed < MovementController.DRIFT_MIN_SPEED:
 			return Trick.BURNOUT
+		if movement_controller.pitch_angle > deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG):
+			_wheelie_exit_hold = 0.0
+			return Trick.DRIFT_WHEELIE
 		return Trick.DRIFT
 
 	if movement_controller.pitch_angle > deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG):
@@ -466,7 +471,7 @@ func do_reset():
 
 
 func is_in_wheelie() -> bool:
-	return current_trick in [Trick.WHEELIE_SITTING, Trick.WHEELIE_MOD]
+	return current_trick in [Trick.WHEELIE_SITTING, Trick.WHEELIE_MOD, Trick.DRIFT_WHEELIE]
 
 
 ## A full flip completed this jump. air_pitch_total resets on landing, so false once grounded.
@@ -563,6 +568,8 @@ static func trick_to_str(trick: Trick) -> String:
 			return "KNEE_KNOCKER"
 		Trick.BUNNY_HOP:
 			return "BUNNY_HOP"
+		Trick.DRIFT_WHEELIE:
+			return "DRIFT_WHEELIE"
 	return "NONE"
 
 
@@ -604,6 +611,8 @@ static func str_to_trick(s: String) -> Trick:
 			return Trick.KNEE_KNOCKER
 		"BUNNY_HOP":
 			return Trick.BUNNY_HOP
+		"DRIFT_WHEELIE":
+			return Trick.DRIFT_WHEELIE
 	return Trick.NONE
 
 

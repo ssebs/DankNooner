@@ -20,6 +20,7 @@ const TRICK_CALLOUTS: Dictionary = {
 	TrickController.Trick.WHEELIE_MOD: "CALLOUT_WHEELIE",
 	TrickController.Trick.KNEE_KNOCKER: "CALLOUT_KNEE_KNOCKER",
 	TrickController.Trick.HIGH_CHAIR: "CALLOUT_HIGH_CHAIR",
+	TrickController.Trick.DRIFT_WHEELIE: "CALLOUT_DRIFT_WHEELIE",
 }
 ## Callout text key -> condition: the rider holds one of `tricks` (at the wheelie balance point
 ## too, if `balance_point`) for `hold` seconds. Fires once per continuous hold.
@@ -245,6 +246,9 @@ func _track_trick_start(tc: TrickController) -> void:
 	var started := trick != _last_trick and trick != TrickController.Trick.NONE
 	_last_trick = trick
 	if !started or trick == _last_named:
+		return
+	# The nose dropping mid-slide turns a drift wheelie into a plain drift — already called out.
+	if trick == TrickController.Trick.DRIFT and _last_named == TrickController.Trick.DRIFT_WHEELIE:
 		return
 	if TrickController.HELD_TRICK_SCORE.has(trick):
 		_last_named = trick

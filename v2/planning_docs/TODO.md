@@ -27,7 +27,6 @@
   - [ ] see img/island-map-layout.png/svg
   - [ ] have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
 
-- [ ] count drifting wheelie trick
 - [ ] Get AI working again
   - [ ] NPC Traffic
   - [ ] NPC Race AI
@@ -208,6 +207,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+
+- [x] count drifting wheelie trick
 
 - [x] Customization menu / UI
   - [x] Add constraints to mods (certain skins require 2 colors, etc.)

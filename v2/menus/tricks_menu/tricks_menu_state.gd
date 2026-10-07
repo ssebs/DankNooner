@@ -16,6 +16,10 @@ const HOWTO_TRICKS: Array[TrickController.Trick] = [
 	TrickController.Trick.FRONTFLIP,
 	TrickController.Trick.BUNNY_HOP,
 ]
+## Physics-driven tricks listed under a state's tab instead of the how-to tab (same key rule).
+const STATE_HOWTO_TRICKS: Dictionary = {
+	TrickController.TrickState.WHEELIE: [TrickController.Trick.DRIFT_WHEELIE],
+}
 
 @onready var state_tabs: TabContainer = %StateTabs
 @onready var close_tricks_btn: Button = %CloseTricksBtn
@@ -64,6 +68,8 @@ func _build_tabs():
 				var trick: TrickController.Trick = bindings[gesture][dir]
 				if trick != TrickController.Trick.NONE:
 					_add_row(list).populate_stick(state, trick, gesture, dir)
+		for trick: TrickController.Trick in STATE_HOWTO_TRICKS.get(state, []):
+			_add_row(list).populate_howto(trick)
 
 	var howto_list := _add_tab("TRICKS_HOWTO_TAB")
 	for trick in HOWTO_TRICKS:
