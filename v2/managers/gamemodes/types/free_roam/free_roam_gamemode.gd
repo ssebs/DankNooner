@@ -178,6 +178,10 @@ func _on_event_circle_entered(peer_id: int, source_circle: EventStartCircle):
 
 
 func _on_event_circle_exited(peer_id: int, source_circle: EventStartCircle):
+	# Quitting tears this mode out of the tree before the level, whose circles then report the
+	# riders leaving — nothing to close, so the skip is intentional.
+	if !is_inside_tree():
+		return
 	if peer_id != multiplayer.get_unique_id():
 		return
 	DebugUtils.DebugMsg("%d exited eventcircle: %s" % [peer_id, source_circle.name])
@@ -344,6 +348,9 @@ func _on_activity_entered(peer_id: int, activity: FreeRoamActivity):
 
 
 func _on_activity_exited(peer_id: int, _exited: FreeRoamActivity):
+	# Quitting mid-activity: see _on_event_circle_exited.
+	if !is_inside_tree():
+		return
 	if peer_id != multiplayer.get_unique_id() or _activity != null:
 		return
 	_close_event_picker(peer_id)
