@@ -4,7 +4,8 @@
 ##   tp_list          list all destinations
 ##   max_boost        fill the local player's boost meter
 ##   give_item <item> collect an item as if from a pickup (host only)
-## Destinations are the author-placed `destinations` plus every EventStartCircle in the level.
+##   items_list       list all give_item items
+## Destinations are the author-placed `destinations` plus every EventStartCircle and GarageActivity in the level.
 ## Effects route through the host-authoritative SpawnManager, so they apply when the console user
 ## is the host; a client acting on itself only applies locally and reconciles away.
 class_name DebugTeleporter extends Node3D
@@ -30,6 +31,7 @@ func _ready() -> void:
 	Console.add_command("max_boost", _max_boost, [], 0, "Fill the local player's boost meter")
 	Console.add_command("give_item", _give_item, ["item"], 1, "Collect an item as if from a pickup (host only)")
 	Console.add_command_autocomplete_list("give_item", PackedStringArray(ITEM_DEFINITIONS.keys()))
+	Console.add_command("items_list", _items_list, [], 0, "List all give_item items")
 	# Deferred so every EventStartCircle has run _ready() and joined the group first.
 	_refresh_autocomplete.call_deferred()
 
@@ -41,6 +43,7 @@ func _exit_tree() -> void:
 	Console.remove_command("tp_list")
 	Console.remove_command("max_boost")
 	Console.remove_command("give_item")
+	Console.remove_command("items_list")
 
 
 func _teleport(arg: String) -> void:
@@ -70,6 +73,11 @@ func _max_boost() -> void:
 	_spawn_manager().max_boost_player.rpc(_local_peer_id())
 
 
+func _items_list() -> void:
+	for item in ITEM_DEFINITIONS:
+		Console.print_line(item)
+
+
 ## Straight into ItemManager.collect, which is server-side — a client has no slots to fill.
 func _give_item(arg: String) -> void:
 	if !multiplayer.is_server():
@@ -86,11 +94,14 @@ func _local_peer_id() -> int:
 	return int(get_tree().get_first_node_in_group(UtilsConstants.GROUPS["LocalPlayer"]).name)
 
 
-## Author-placed destinations first (stable 1..N indices), then event circles.
+## Author-placed destinations first (stable 1..N indices), then event circles, then garages.
 func _targets() -> Array[Node3D]:
 	var result := destinations.duplicate()
 	for circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
 		result.append(circle as Node3D)
+	for activity in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["FreeRoamActivities"]):
+		if activity is GarageActivity:
+			result.append(activity)
 	return result
 
 

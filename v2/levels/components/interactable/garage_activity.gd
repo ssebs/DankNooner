@@ -19,7 +19,11 @@ func server_start(peer_id: int, spawn_manager: SpawnManager):
 
 
 #override
+## Turned around on the spot, so the rider rides back out instead of facing the wall.
 func server_end(peer_id: int, result: float, spawn_manager: SpawnManager):
+	spawn_manager.respawn_player_in_place.rpc(
+		peer_id, bike_spot.global_position, bike_spot.global_basis * Basis(Vector3.UP, PI)
+	)
 	spawn_manager.set_player_hidden.rpc(peer_id, false)
 	super(peer_id, result, spawn_manager)
 

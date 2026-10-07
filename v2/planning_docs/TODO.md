@@ -22,7 +22,6 @@
 > Don't forget, have fun :D
 
 - [ ] filling up gas before stunt race to max reduces 2 levels
-- [ ] respawn from garage should flip you around
 
 - [ ] new large map
   - [ ] https://github.com/domlysz/BlenderGIS + https://superhivemarket.com/products/roadscape
@@ -209,6 +208,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+
+- [x] respawn from garage should flip you around
 
 - [x] In trick help menu, show animation of biker doing trick
 
