@@ -22,7 +22,7 @@
 > Don't forget, have fun :D
 
 - [ ] new large map
-  - [ ] https://github.com/domlysz/BlenderGIS
+  - [ ] https://github.com/domlysz/BlenderGIS + https://superhivemarket.com/products/roadscape
   - [ ] big enough to cruise around like in Test Drive Unlimited 1
   - [ ] have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
 
