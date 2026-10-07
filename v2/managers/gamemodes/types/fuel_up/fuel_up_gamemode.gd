@@ -1,13 +1,15 @@
 @tool
 ## Pre-race fuel-up: every rider is parked at their own pump in the event circle's gas_station
-## and frozen, while their client plays that pump's FuelUpMinigame locally (outside the rollback
-## sim). Each finish sets that rider's boost to their fill less what they spilled, and banks a
-## clean-fill bonus for FuelUpBonusComponent; once every rider has reported, the event hands off to its
-## definition's target_gamemode.
+## and frozen, while their client pays the pump's price and plays its FuelUpMinigame locally
+## (outside the rollback sim); a rider who can't pay sits it out. Each finish sets that rider's
+## boost to their fill (spilling caps it), and banks a clean-fill bonus for
+## FuelUpBonusComponent; once every rider has reported, the event hands off to its definition's
+## target_gamemode.
 class_name FuelUpGameMode extends GameModeType
 
 @export var input_state_manager: InputStateManager
 @export var hud_manager: HUDManager
+@export var save_manager: SaveManager
 
 ## Riders start at most this many segments below full, so a full tank still has to play.
 const FULL_TANK_DRAIN_SEGMENTS: float = 2.0
@@ -43,17 +45,24 @@ func Enter(state_context: StateContext):
 	var peer_ids := gamemode_manager.lobby_manager.lobby_players.keys()
 	peer_ids.sort()
 
-	_minigame = pumps[peer_ids.find(multiplayer.get_unique_id())]
-	_minigame.finished.connect(_on_minigame_finished, CONNECT_ONE_SHOT)
-	_minigame.begin(
-		spawn_manager.get_player_by_peer_id(multiplayer.get_unique_id()),
-		input_state_manager,
-		gamemode_manager.audio_manager,
-		hud_manager
-	)
-	_minigame.fill = minf(
-		_minigame.fill, 1.0 - FULL_TANK_DRAIN_SEGMENTS / BoostController.BOOST_SEGMENTS
-	)
+	var pump := pumps[peer_ids.find(multiplayer.get_unique_id())]
+	if save_manager.spend(pump.price):
+		_minigame = pump
+		_minigame.finished.connect(_on_minigame_finished, CONNECT_ONE_SHOT)
+		_minigame.begin(
+			spawn_manager.get_player_by_peer_id(multiplayer.get_unique_id()),
+			input_state_manager,
+			gamemode_manager.audio_manager,
+			hud_manager
+		)
+		_minigame.fill = minf(
+			_minigame.fill, 1.0 - FULL_TANK_DRAIN_SEGMENTS / BoostController.BOOST_SEGMENTS
+		)
+	else:
+		# Can't pay: sit it out at the pump. Deferred so the host's own skip lands after the
+		# server half below has filled _pending.
+		hud_manager.riding_hud_state.flash_money()
+		(func(): _rpc_fuel_up_skipped.rpc_id(1)).call_deferred()
 
 	if multiplayer.is_server():
 		_bonus.clear()
@@ -110,18 +119,26 @@ func get_bonus(peer_id: int) -> float:
 
 
 
-## Only a full tank earns the bonus, so stopping early can't bank a clean one.
+## Only a tank filled to its unspilled space earns the bonus, so stopping early can't bank one.
 @rpc("any_peer", "call_local", "reliable")
 func _rpc_fuel_up_done(fill: float, spilled: float):
 	if !multiplayer.is_server():
 		return
 	var peer_id := multiplayer.get_remote_sender_id()
 	spawn_manager.set_boost_player.rpc(
-		peer_id, clampf(fill - spilled, 0.0, 1.0) * BoostController.BOOST_SEGMENTS
+		peer_id, clampf(fill, 0.0, 1.0) * BoostController.BOOST_SEGMENTS
 	)
-	if fill >= 1.0:
+	if fill >= 1.0 - spilled:
 		_bonus[peer_id] = MAX_BONUS * maxf(0.0, 1.0 - spilled / SPILL_FOR_NO_BONUS)
 	_mark_done(peer_id)
+
+
+## Couldn't pay — keeps their boost, no bonus.
+@rpc("any_peer", "call_local", "reliable")
+func _rpc_fuel_up_skipped():
+	if !multiplayer.is_server():
+		return
+	_mark_done(multiplayer.get_remote_sender_id())
 
 
 func _mark_done(peer_id: int):
@@ -151,4 +168,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_state_manager must not be empty")
 	if hud_manager == null:
 		issues.append("hud_manager must not be empty")
+	if save_manager == null:
+		issues.append("save_manager must not be empty")
 	return issues

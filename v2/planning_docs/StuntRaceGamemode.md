@@ -95,12 +95,17 @@ partial fill.
   spray time, plus random kicks) and the rider pulls against it. Web ignores `warp_mouse`, so it
   has no recoil. Spray not going into an unfull tank, off the cap or overfilling, counts as
   `spilled`, with `%SpillParticles` spraying from the tip, the looping `WATER_FLOWING` sfx, and a
-  spilling prompt.
-- **Payout differs by mode.** Free roam ignores spill (see above). Pre-race starts every tank at
-  most `FULL_TANK_DRAIN_SEGMENTS` below full so full riders still play; finishing reports fill and
-  `spilled`, the server sets boost to fill minus spill, and a full tank banks a bonus scaling from
-  `MAX_BONUS` down to zero at `SPILL_FOR_NO_BONUS`, read by `FuelUpBonusComponent` in the stunt
-  race.
+  spilling prompt. Spill is lost tank space: the tank only fills to `1 - spilled`, and overfilling
+  spills what's already in it. The HUD gauge shows it as red growing in from its right end.
+- **Price:** each pump costs its `FreeRoamActivity.price` ($10), charged via `SaveManager.spend`.
+  Free roam checks it when the picker is submitted and charges when the server accepts; pre-race
+  charges on entering fuel-up, and a rider who can't pay skips their pump (keeps their boost, no
+  bonus). Can't pay flashes the riding HUD's money; paying drops a red "-$10" off the fuel-up HUD's.
+- **Payout differs by mode.** Free roam never lowers the meter (see above), so spill only limits
+  how high it fills. Pre-race starts every tank at most `FULL_TANK_DRAIN_SEGMENTS` below full so
+  full riders still play; finishing reports fill and `spilled`, the server sets boost to the fill,
+  and a tank filled to its unspilled space banks a bonus scaling from `MAX_BONUS` down to zero at
+  `SPILL_FOR_NO_BONUS`, read by `FuelUpBonusComponent` in the stunt race.
 - **The cap target is per bike:** `BikeSkinDefinition.gas_cap_position`, authored with
   PlayerEntity's `gas_cap_marker`.
 - **Why the minigame starts on `respawned`, not `Enter`:** the teleport's `do_respawn` flips the HUD

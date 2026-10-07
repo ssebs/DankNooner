@@ -2,7 +2,8 @@
 ## a FreeRoamActivity. Either way the minigame runs locally on that rider's client: click the
 ## handle to pick it up, hold click to spray (recoil kicks the cursor), move it back onto the pump
 ## to hang it up, and click %EndBtn to finish whenever. Spray not going into an unfull tank is
-## spilled. The left stick steers the same cursor, so gamepad plays it too.
+## spilled, and spilled gas is tank space lost: the tank only fills to 1 - spilled. The left
+## stick steers the same cursor, so gamepad plays it too.
 class_name FuelUpMinigame extends FreeRoamActivity
 
 enum Step { GRAB, CARRY }
@@ -51,7 +52,7 @@ const HANG_UP_DIST: float = 0.25
 @onready var _end_btn: Area3D = %EndBtn
 @onready var _end_btn_mesh: MeshInstance3D = %EndBtnMesh
 
-## Tank level, 0..1. Read by FuelUpHUDState.
+## Tank level, 0..1 - spilled. Read by FuelUpHUDState.
 var fill: float = 0.0
 ## Gas spilled this fill-up, in fill's units. Read by FuelUpGameMode.
 var spilled: float = 0.0
@@ -169,7 +170,7 @@ func get_prompt_key() -> String:
 		return "FUELUP_GRAB"
 	if _is_spilling():
 		return "FUELUP_SPILLING"
-	if fill >= 1.0:
+	if _is_full():
 		return "FUELUP_RETURN"
 	return "FUELUP_ALIGN"
 
@@ -224,7 +225,7 @@ func _process(delta: float):
 				_set_over_cap(false)
 				_gas_cap_mesh.visible = false
 				_step = Step.GRAB
-	_set_glug(_spraying and _over_cap and fill < 1.0)
+	_set_glug(_spraying and _over_cap and !_is_full())
 	_set_spilling(_is_spilling())
 	_set_cursor(CURSOR_CLOSED if _step == Step.CARRY else CURSOR_OPEN)
 	_update_hose()
@@ -239,14 +240,21 @@ func _spray(delta: float):
 	if randf() < delta / RECOIL_KICK_SECS:
 		recoil += Vector2(randf_range(-1.0, 1.0), -randf()) * RECOIL_KICK_PX
 	_nudge_cursor(recoil)
-	if _over_cap and fill < 1.0:
-		fill = minf(fill + delta / fill_secs, 1.0)
+	if _over_cap and !_is_full():
+		fill = minf(fill + delta / fill_secs, 1.0 - spilled)
 	else:
 		spilled += delta / fill_secs
+		# Overfilling a full tank spills what's already in it.
+		fill = minf(fill, 1.0 - spilled)
 
 
 func _is_spilling() -> bool:
-	return _spraying and !(_over_cap and fill < 1.0)
+	return _spraying and !(_over_cap and !_is_full())
+
+
+## Filled to the space spilling left.
+func _is_full() -> bool:
+	return fill >= 1.0 - spilled
 
 
 ## Grows the cap ring while the nozzle's in it, shrinks it back on leaving.

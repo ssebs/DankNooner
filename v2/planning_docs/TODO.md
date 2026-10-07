@@ -21,8 +21,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] filling up gas before stunt race to max reduces 2 levels
-
 - [ ] new large map
   - [ ] https://github.com/domlysz/BlenderGIS + https://superhivemarket.com/products/roadscape
   - [ ] big enough to cruise around like in Test Drive Unlimited 1
@@ -208,6 +206,11 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+
+- [x] fix filling up gas before stunt race to max reduces 2 levels
+  - [x] > due to spilling
+  - [x] cost $ to fill up
+  - [x] show spill indicator
 
 - [x] respawn from garage should flip you around
 

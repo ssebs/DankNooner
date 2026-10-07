@@ -172,6 +172,7 @@ cap_bottom = false
 script = ExtResource("2_fuelup")
 event_name = "FUELUP_EVENT_NAME"
 event_description = "FUELUP_EVENT_DESC"
+price = 10
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=340542507]
 unique_name_in_owner = true

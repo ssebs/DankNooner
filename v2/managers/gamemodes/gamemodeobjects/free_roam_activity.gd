@@ -14,6 +14,8 @@ signal finished
 ## Localization keys shown in the event picker.
 @export var event_name: String
 @export var event_description: String
+## Charged to start it, pre-race fuel-ups included. Riders who can't pay are turned away.
+@export var price: int = 0
 
 @onready var camera: Camera3D = %Camera3D
 ## Where the rider's bike is parked.

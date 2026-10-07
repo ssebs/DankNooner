@@ -23,7 +23,7 @@ Make points mean something: players should want to unlock something, and replay 
 
 ## What exists
 
-- `PlayerDefinition.money` is saved/loaded but nothing reads or writes it.
+- `PlayerDefinition.money` is spent on garage skins (`SaveManager.purchase`) and gas pumps (`SaveManager.spend`); nothing earns it yet besides the `give_money` console command.
 - `current_save["progression"]` holds per-event time attack PBs. `TimeAttackComponent` is the
   pattern for writing a client's save from a server-run event: the server RPCs each client, which
   writes its own save.

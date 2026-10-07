@@ -281,7 +281,7 @@ func max_boost_player(player_peer_id: int):
 
 
 ## Set the player's boost meter to `amount` segments. Server only; broadcast like max_boost_player.
-## Sent when a fuel-up ends: free roam full or cancelled partway, pre-race less its spill.
+## Sent when a fuel-up ends: free roam full or cancelled partway, pre-race capped by its spill.
 @rpc("any_peer", "call_local", "reliable")
 func set_boost_player(player_peer_id: int, amount: float):
 	if !_sender_is_server():

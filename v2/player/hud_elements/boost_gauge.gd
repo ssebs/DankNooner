@@ -13,6 +13,8 @@ class_name BoostGauge extends Control
 
 ## Meter fill in segments, 0..cell count. Set every frame by HUDController.
 @export var current_val: float = 0.0
+## Fuel-up spill in segments, drawn red in from the right end — tank space lost.
+@export var spilled_val: float = 0.0
 ## Exponential smoothing rate for each cell's fill — the raw value steps on network ticks.
 @export var smooth_speed: float = 14.0
 
@@ -24,6 +26,7 @@ const COLOR_DIM: Color = Color(0.16, 0.34, 0.48)
 const COLOR_READY: Color = Color(0.25, 0.69, 1.0)
 ## Rejected-press blink.
 const COLOR_REJECT: Color = Color(1.0, 0.3, 0.2)
+const COLOR_SPILL: Color = Color(0.85, 0.12, 0.1)
 
 ## Slow "ready" glow — pulse rate (Hz) and how far it lifts toward white.
 const READY_PULSE_HZ: float = 1.2
@@ -42,6 +45,11 @@ const BLINK_PERIOD: float = 0.15
 var _is_spending: bool = false
 var _pulse_t: float = 0.0
 var _blink_t: float = 0.0
+
+
+func _ready():
+	for i in _cells.size():
+		_cells[i].draw.connect(_draw_spill.bind(i))
 
 
 func _process(delta: float):
@@ -76,6 +84,16 @@ func _process(delta: float):
 		var target := COLOR_EMPTY.lerp(tint, clampf(cell_pct * 4.0, 0.0, 1.0))
 		# Snap during a blink instead of easing, or the flash smears into mush.
 		cell.tint_progress = target if _blink_t > 0.0 else cell.tint_progress.lerp(target, weight)
+		cell.queue_redraw()
+
+
+## Over cell i: its share of the lost space, which grows leftward from the gauge's right end.
+func _draw_spill(i: int):
+	var cell := _cells[i] as TextureProgressBar
+	var from: float = clampf(_cells.size() - spilled_val - float(i), 0.0, 1.0)
+	if from >= 1.0:
+		return
+	cell.draw_rect(Rect2(cell.size.x * from, 0.0, cell.size.x * (1.0 - from), cell.size.y), COLOR_SPILL)
 
 
 ## Called by HUDController — drives the extra brighten while boost is being consumed.

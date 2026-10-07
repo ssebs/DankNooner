@@ -37,6 +37,7 @@ const _WARNING_PULSE_SECS := 0.35
 @onready var _grip_label: Label = %HUD_GRIP_DGR
 @onready var _fps_label: Label = %HUD_FPS
 @onready var _game_msg: Label = %HUD_GAME_MSG
+@onready var _money: MoneyLabel = %HUD_Money
 @onready var _leaderboard: RaceLeaderboard = %HUD_Leaderboard
 @onready var _trick_popups: TrickPopups = %TrickPopups
 @onready var _target_compass: TargetCompass = %TargetCompass
@@ -180,6 +181,7 @@ func Physics_Update(delta: float):
 	_speed_num.text = "%d" % int(movement_controller.speed)
 	_grip_label.text = tr("HUD_GRIP").format({"value": int(player_entity.grip_usage * 100)})
 	_fps_label.text = tr("HUD_FPS").format({"value": int(Engine.get_frames_per_second())})
+	_money.text = MoneyLabel.format(save_manager.get_player_definition().money)
 
 	# Boost meter + combo multiplier are server-authoritative (TrickManager) and arrive
 	# via RollbackSynchronizer, so poll the synced vars rather than tracking them here.
@@ -303,6 +305,11 @@ func _on_crashed(_peer_id: int):
 
 func _on_respawned():
 	_game_msg.visible = false
+
+
+## Something was too pricey.
+func flash_money():
+	_money.flash()
 
 
 ## Tap (quick in-place respawn) fired — keep "Respawning..." up briefly even for a fast tap.

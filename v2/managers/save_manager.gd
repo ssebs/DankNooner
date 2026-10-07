@@ -88,6 +88,17 @@ func purchase(path: String, price: int) -> bool:
 	return true
 
 
+## Take `amount` off the profile and write it. False, and nothing taken, if it's short.
+## Doesn't emit save_item_updated — that re-pushes player metadata; HUDs poll money instead.
+func spend(amount: int) -> bool:
+	var player_def := get_player_definition()
+	if player_def.money < amount:
+		return false
+	player_def.money -= amount
+	save_save()
+	return true
+
+
 func _give_money(amount: String) -> void:
 	var player_def := get_player_definition()
 	player_def.money += amount.to_float()

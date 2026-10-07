@@ -184,7 +184,7 @@ func _push(page: Page):
 
 ## Rebuild the current page's rows, focusing `focus_index` (-1 = the first button row).
 func _rebuild(focus_index: int = -1):
-	_money.text = _money_text(_player_def.money)
+	_money.text = MoneyLabel.format(_player_def.money)
 	_back_btn.visible = _pages.size() > 1
 	var is_loadout_root := _tab != 0 and _pages.size() == 1
 	_set_active_btn.visible = is_loadout_root
@@ -367,7 +367,7 @@ func _add_skin_row(
 	var on_press := (func(): pass) if is_current else _on_skin_pressed.bind(skin_name, path, price, apply)
 	var row := _add_row(
 		_skin_label(skin_name),
-		tr("GARAGE_OWNED") if owned else _money_text(price),
+		tr("GARAGE_OWNED") if owned else MoneyLabel.format(price),
 		on_press,
 		preview,
 		is_current
@@ -396,7 +396,7 @@ func _on_skin_pressed(skin_name: String, path: String, price: int, apply: Callab
 	if _player_def.money < price:
 		return
 	_open_confirm(
-		tr("GARAGE_BUY_CONFIRM") % [_skin_label(skin_name), _money_text(price)],
+		tr("GARAGE_BUY_CONFIRM") % [_skin_label(skin_name), MoneyLabel.format(price)],
 		func():
 			_save_manager.purchase(path, price)
 			apply.call()
@@ -559,12 +559,3 @@ func _focused_index() -> int:
 static func _skin_label(skin_name: String) -> String:
 	return skin_name.trim_suffix("_default").capitalize()
 
-
-## 15000 -> "$15,000"
-static func _money_text(amount: float) -> String:
-	var digits := str(int(amount))
-	var grouped := ""
-	while digits.length() > 3:
-		grouped = "," + digits.right(3) + grouped
-		digits = digits.left(-3)
-	return "$" + digits + grouped

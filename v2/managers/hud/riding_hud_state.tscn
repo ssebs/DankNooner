@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://cqsjngdd8k28k" path="res://player/hud_elements/trick_popups.gd" id="99_scrpp"]
 [ext_resource type="Script" path="res://player/hud_elements/target_compass.gd" id="99_tcmps"]
 [ext_resource type="PackedScene" uid="uid://b1thmb3dtnail" path="res://utils/components/thumbnail_3d.tscn" id="99_thumb"]
+[ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="99_money"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8urt2"]
 content_margin_left = 12.0
@@ -241,11 +242,28 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_GAME_MSG"
 
-[node name="Minimap" parent="UI/AspectContainer/MarginContainer" unique_id=407372356 instance=ExtResource("4_ltqsj")]
-unique_name_in_owner = true
+[node name="TopRightVBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="MoneyPanel" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/TopRightVBox"]
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("3_j31af")
+
+[node name="HUD_Money" type="Label" parent="UI/AspectContainer/MarginContainer/TopRightVBox/MoneyPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 2
+script = ExtResource("99_money")
+
+[node name="Minimap" parent="UI/AspectContainer/MarginContainer/TopRightVBox" unique_id=407372356 instance=ExtResource("4_ltqsj")]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="ChallengeCluster" type="Control" parent="UI/AspectContainer/MarginContainer" unique_id=1156886570]
 layout_mode = 2
@@ -330,7 +348,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 0
 mouse_filter = 2
 script = ExtResource("99_tcmps")
-minimap = NodePath("../Minimap")
+minimap = NodePath("../TopRightVBox/Minimap")
 
 [node name="BoostCluster" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1216272844]
 layout_mode = 2

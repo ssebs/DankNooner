@@ -150,7 +150,7 @@ func track(
 		var bonus := tc.current_trick in bonus_tricks
 		_live.modulate = BONUS_COLOR if bonus else _tier_color(tc.combo_multiplier)
 	# Placed even while hidden — the icon row anchors under it.
-	_place(_live, SCORE_ORIGIN)
+	_center_on(_live, size / 2.0 + SCORE_ORIGIN)
 
 	_track_trick_start(tc)
 	_track_hold_callouts(player, delta)
@@ -277,10 +277,18 @@ func _track_hold_callouts(player: PlayerEntity, delta: float) -> void:
 
 ## side: 1 drifts right, -1 drifts left.
 func _spawn(text: String, color: Color, origin: Vector2, side: float) -> void:
+	spawn_pop(self, text, color, size / 2.0 + origin, Vector2(DRIFT_PX.x * side, DRIFT_PX.y))
+
+
+## A pop centered on `center` in `parent`'s space, drifting off by `drift`. Static so other HUD
+## elements (MoneyLabel) pop in the same style.
+static func spawn_pop(
+	parent: Control, text: String, color: Color, center: Vector2, drift: Vector2
+) -> void:
 	var label := _make_label(color)
 	label.text = text
-	add_child(label)
-	_place(label, origin)
+	parent.add_child(label)
+	_center_on(label, center)
 	label.scale = Vector2.ONE * POP_START_SCALE
 
 	var tween := label.create_tween()
@@ -288,14 +296,13 @@ func _spawn(text: String, color: Color, origin: Vector2, side: float) -> void:
 	grow.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	# Drift, tilt and fade run together once the pop lands.
 	tween.set_parallel()
-	var drift := Vector2(DRIFT_PX.x * side, DRIFT_PX.y)
 	tween.chain().tween_property(label, "position", label.position + drift, DRIFT_SECS)
 	tween.tween_property(label, "rotation", TILT_RAD * signf(randf() - 0.5), DRIFT_SECS)
 	tween.tween_property(label, "modulate:a", 0.0, FADE_SECS).set_delay(DRIFT_SECS - FADE_SECS)
 	tween.chain().tween_callback(label.queue_free)
 
 
-func _make_label(color: Color) -> Label:
+static func _make_label(color: Color) -> Label:
 	var label := Label.new()
 	label.add_theme_font_size_override("font_size", FONT_SIZE)
 	label.add_theme_constant_override("outline_size", OUTLINE_SIZE)
@@ -305,11 +312,11 @@ func _make_label(color: Color) -> Label:
 	return label
 
 
-## Centers the label on origin (relative to this control's center), pivoting about its middle.
-func _place(label: Label, origin: Vector2) -> void:
+## Centers the label on `center`, pivoting about its middle.
+static func _center_on(label: Label, center: Vector2) -> void:
 	label.reset_size()
 	label.pivot_offset = label.size / 2.0
-	label.position = size / 2.0 + origin - label.size / 2.0
+	label.position = center - label.size / 2.0
 
 
 func _tier_color(multiplier: int) -> Color:

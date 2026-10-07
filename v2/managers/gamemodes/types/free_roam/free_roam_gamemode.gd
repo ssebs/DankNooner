@@ -10,6 +10,7 @@ class_name FreeRoamGameMode extends GameModeType
 @export var riding_hud_state: RidingHUDState
 @export var input_state_manager: InputStateManager
 @export var hud_manager: HUDManager
+@export var save_manager: SaveManager
 @export var _respawn_delay: float = 2.5
 
 ## Trick round: banked combo points add up per human for ROUND_SECS, shown on the live
@@ -217,6 +218,9 @@ func _on_game_mode_event_confirm_hud_submitted(peer_id: int, event_index: int):
 	game_mode_event_hud_state.on_player_close_pressed.rpc_id(1, peer_id)
 	# Per rider: only the submitter runs it, the lobby stays in free roam.
 	if _entered_activity != null:
+		if save_manager.get_player_definition().money < _entered_activity.price:
+			riding_hud_state.flash_money()
+			return
 		request_start_activity.rpc_id(1, _entered_activity.get_path())
 		return
 	var event := _entered_circle.get_events()[event_index]
@@ -386,6 +390,8 @@ func request_end_activity(result: float):
 @rpc("call_local", "reliable")
 func _rpc_begin_activity(activity_path: NodePath):
 	_activity = get_node(activity_path)
+	# Affordable — checked when the picker was submitted.
+	save_manager.spend(_activity.price)
 	_activity.finished.connect(_on_activity_finished, CONNECT_ONE_SHOT)
 	_activity.begin(
 		spawn_manager.get_player_by_peer_id(multiplayer.get_unique_id()),
@@ -452,5 +458,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_state_manager must not be empty")
 	if hud_manager == null:
 		issues.append("hud_manager must not be empty")
+	if save_manager == null:
+		issues.append("save_manager must not be empty")
 
 	return issues
