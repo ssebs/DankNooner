@@ -22,7 +22,7 @@ const BREADCRUMB_INTERVAL_SECS: float = 1.0
 ## Bat pickup: the collector swings for BAT_SWING_DURATION; any OTHER rider within BAT_SWING_RANGE
 ## at each swing (one per BAT_SWING_PERIOD, matching the bat_swing anim loop) gets a speed wobble
 ## strong enough to force an active recovery.
-const BAT_SWING_DURATION: float = 15.0
+const BAT_SWING_DURATION: float = 10.0
 const BAT_SWING_PERIOD: float = 1.0
 const BAT_SWING_RANGE: float = 6.0
 const BAT_SWING_WOBBLE_STRENGTH: float = 10.0

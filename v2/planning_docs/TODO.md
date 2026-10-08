@@ -23,7 +23,6 @@
 
 - [ ] option to drop current item?
 - [ ] 321 + drive to start of race text should be more obvious
-- [ ] reduce bat time to match rally up
 
 - [ ] new large map
   - [ ] https://github.com/domlysz/BlenderGIS + https://superhivemarket.com/products/roadscape
@@ -211,6 +210,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+
+- [x] reduce bat time to match rally up
 
 - [x] hide checkpoint markers unless its the one you need upcoming 
 
