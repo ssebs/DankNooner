@@ -21,7 +21,7 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] hide checkpoint markers unless its the one you need upcoming 
+- [ ] option to drop current item?
 - [ ] 321 + drive to start of race text should be more obvious
 - [ ] reduce bat time to match rally up
 
@@ -211,6 +211,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+
+- [x] hide checkpoint markers unless its the one you need upcoming 
 
 - [x] Earn money from races/events
 

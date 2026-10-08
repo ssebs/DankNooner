@@ -40,6 +40,8 @@ answer. Prefer deleting over adding.
 
 - Only have the human run the project
 - After completing changes with any `.gd` files, verify it lints clean against `.gdlintrc` before reporting done. Fix any reported problems (e.g. class-definitions-order)
+- gdlint misses parse/compile errors — also verify via a headless editor load (no output = clean). Godot path is in `.vscode/settings.json`. `--check-only --script` is useless here: it skips autoloads, so everything fails.
+  `timeout 280 "<godot4 exe>" --headless --path . --editor --quit 2>&1 | grep -E "SCRIPT ERROR|Parse Error|Compile Error" -A1`
 
 ## Patterns
 

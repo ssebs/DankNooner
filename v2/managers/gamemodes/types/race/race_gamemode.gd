@@ -48,6 +48,8 @@ func Enter(state_context: StateContext):
 	DebugUtils.DebugMsg("Race Mode: %s" % RaceType.keys()[race_type])
 
 	super(state_context)
+	# Same frame super() reveals the route, so the other gates are never drawn.
+	_event.route.show_only_checkpoints(RaceTask.START_CHECKPOINTS)
 	results_hud.restart_pressed.connect(_on_results_restart_pressed)
 	results_hud.retry_pressed.connect(_on_results_retry_pressed)
 

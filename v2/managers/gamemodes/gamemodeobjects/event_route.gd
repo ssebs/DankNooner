@@ -26,6 +26,18 @@ func get_checkpoints() -> Array[CheckPointMarker]:
 	return checkpoints
 
 
+## Client-local: only the racer's upcoming gates are shown; the one just passed flashes out.
+func show_only_checkpoints(shown: PackedInt32Array, passed_idx: int = -1):
+	var checkpoints := get_checkpoints()
+	for i in checkpoints.size():
+		if i in shown:
+			checkpoints[i].reset_passed()
+		elif i == passed_idx:
+			checkpoints[i].play_passed()
+		else:
+			checkpoints[i].visible = false
+
+
 func get_pickup_spawners() -> Array[PickupSpawner]:
 	var spawners: Array[PickupSpawner] = []
 	spawners.assign(find_children("*", "PickupSpawner", false))

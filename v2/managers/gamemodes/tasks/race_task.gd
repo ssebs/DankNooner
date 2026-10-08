@@ -32,6 +32,8 @@ const WRONG_WAY_MIN_SPEED: float = 5.0
 const WRONG_WAY_RESPAWN_MS: int = 3000
 ## Time attack restart: frozen on the grid this long (matches COUNTDOWN_3SEC).
 const RESTART_COUNTDOWN_MS: int = 3000
+## Gates shown before the start crossing: the start and the one after (routes have at least 2).
+const START_CHECKPOINTS: PackedInt32Array = [0, 1]
 
 ## Derived from the route by _collect_checkpoints().
 var start_checkpoint: CheckPointMarker
@@ -298,10 +300,6 @@ func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
 		runner.spawn_manager.set_respawn_point.rpc(
 			peer_id, slot.global_position, slot.global_basis
 		)
-		# A new lap clears the passed highlights before this crossing re-marks its gate.
-		if p["waiting_for"] == WaitFor.END and (endless or p["laps_done"] + 1 < total_laps):
-			_rpc_reset_checkpoints.rpc_id(peer_id)
-		_rpc_checkpoint_passed.rpc_id(peer_id, runner.route.get_checkpoints().find(ckpt))
 		p["best_dist"] = INF
 
 	match p["waiting_for"]:
@@ -330,6 +328,27 @@ func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
 				p["waiting_for"] = WaitFor.START
 			# After the row update so listeners see run_done.
 			lap_completed.emit(peer_id, lap_ms)
+
+	if peer_id >= 0:
+		# After the row update so the upcoming gates are known.
+		var ckpt_idx := runner.route.get_checkpoints().find(ckpt)
+		_rpc_checkpoint_passed.rpc_id(peer_id, ckpt_idx, _upcoming_checkpoint_idxs(p))
+
+
+## Route indices of the racer's next gate and the one after; none once finished or parked.
+func _upcoming_checkpoint_idxs(p: Dictionary) -> PackedInt32Array:
+	if p.has("completion_time_ms") or p["run_done"]:
+		return PackedInt32Array()
+	var checkpoints := runner.route.get_checkpoints()
+	var next_idx := checkpoints.find(_expected_checkpoint(p))
+	var final_gate: bool = (
+		p["waiting_for"] == WaitFor.END
+		and (is_point_to_point() or (!endless and p["laps_done"] + 1 >= total_laps))
+	)
+	if final_gate:
+		return PackedInt32Array([next_idx])
+	# Circuits wrap back to StartStop1.
+	return PackedInt32Array([next_idx, (next_idx + 1) % checkpoints.size()])
 
 
 ## Position of the racer's next gate along the whole race (laps included) — only grows.
@@ -458,17 +477,16 @@ func _rpc_play_countdown_sfx() -> void:
 	runner.audio_manager.play_sfx(AudioManager.Sfx.COUNTDOWN_3SEC)
 
 
-## Local-only feedback: the highlight is per-client, other racers' gates are untouched.
+## Local-only feedback: visibility is per-client, other racers' gates are untouched.
 @rpc("call_local", "reliable")
-func _rpc_checkpoint_passed(ckpt_idx: int) -> void:
+func _rpc_checkpoint_passed(ckpt_idx: int, upcoming: PackedInt32Array) -> void:
 	runner.audio_manager.play_mouse_click()
-	runner.route.get_checkpoints()[ckpt_idx].play_passed()
+	runner.route.show_only_checkpoints(upcoming, ckpt_idx)
 
 
 @rpc("call_local", "reliable")
 func _rpc_reset_checkpoints() -> void:
-	for ckpt in runner.route.get_checkpoints():
-		ckpt.reset_passed()
+	runner.route.show_only_checkpoints(START_CHECKPOINTS)
 
 
 #endregion

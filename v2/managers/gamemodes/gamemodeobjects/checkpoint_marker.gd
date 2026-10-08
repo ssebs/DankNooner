@@ -29,12 +29,13 @@ func get_respawn_points() -> Array[Marker3D]:
 	return markers
 
 
-## Client-side race feedback. The pillar material is local-to-scene, so this only
-## recolors this gate.
+## Client-side race feedback: flashes, then hides. The pillar material is local-to-scene, so this
+## only recolors this gate.
 func play_passed():
 	_anim_player.play(&"passed")
 
 
+## Shows the gate in its unpassed color.
 func reset_passed():
 	_anim_player.play(&"RESET")
 
