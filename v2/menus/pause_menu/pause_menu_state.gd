@@ -88,7 +88,8 @@ func _on_cancel_event_pressed():
 	# Only free roam's per-rider fuel-up shows this to clients, and it handles its own cancel.
 	if !gamemode_manager.get_current_gamemode().handle_cancel_event():
 		gamemode_manager.change_gamemode.rpc_id(
-			1, GameModeType.Kind.FREE_ROAM, multiplayer.get_unique_id()
+			1, GameModeType.Kind.FREE_ROAM, multiplayer.get_unique_id(), ^"",
+			GamemodeStateContext.ReturnSpawn.RESPAWN_POINT
 		)
 	_on_resume_pressed()
 

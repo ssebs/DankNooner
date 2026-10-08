@@ -114,7 +114,7 @@ func start_game(
 @rpc("any_peer", "call_local", "reliable")
 func change_gamemode(
 	gamemode: GameModeType.Kind, peer_id: int, event_path: NodePath = ^"",
-	skip_spawn_redistribute: bool = false
+	return_spawn := GamemodeStateContext.ReturnSpawn.LEVEL_GRID
 ):
 	if !multiplayer.is_server():
 		return
@@ -133,7 +133,7 @@ func change_gamemode(
 		return
 
 	current_game_mode = gamemode
-	_rpc_transition_gamemode.rpc(gamemode, peer_id, event_path, skip_spawn_redistribute)
+	_rpc_transition_gamemode.rpc(gamemode, peer_id, event_path, return_spawn)
 
 
 ## All peers transition their state machine to the new gamemode.
@@ -142,11 +142,11 @@ func change_gamemode(
 @rpc("call_local", "reliable")
 func _rpc_transition_gamemode(
 	gamemode: GameModeType.Kind, peer_id: int, event_path: NodePath = ^"",
-	skip_spawn_redistribute: bool = false
+	return_spawn := GamemodeStateContext.ReturnSpawn.LEVEL_GRID
 ):
 	var ctx := GamemodeStateContext.new()
 	ctx.peer_id = peer_id
-	ctx.skip_spawn_redistribute = skip_spawn_redistribute
+	ctx.return_spawn = return_spawn
 	current_event = null
 	if !event_path.is_empty():
 		current_event = get_node(event_path) as GameModeEvent

@@ -116,7 +116,7 @@ EventStartCircle                       picker lists its GameModeEvent children
    event on to the race). It broadcasts
    `_rpc_transition_gamemode`; every peer resolves the **event node path** against its own copy of
    the level — node refs can't cross RPC boundaries, the path is the sync mechanism. The
-   `GamemodeStateContext` carries the event, `peer_id` and `skip_spawn_redistribute`.
+   `GamemodeStateContext` carries the event, `peer_id` and `return_spawn`.
 3. **Enter (`RunnerGameMode`):** shows the event's props (unless `shows_event_props()` is false —
    modes whose tasks reveal their own props), sets the event pane title, injects runner deps
    (every peer — see below), and the server starts the first runner.

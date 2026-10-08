@@ -335,8 +335,15 @@ func _on_player_disconnected(peer_id: int):
 #endregion
 
 
+## Override: where riders land back in free roam.
+func _return_spawn() -> GamemodeStateContext.ReturnSpawn:
+	return GamemodeStateContext.ReturnSpawn.LEVEL_GRID
+
+
 func _return_to_free_roam():
-	gamemode_manager.change_gamemode(GameModeType.Kind.FREE_ROAM, multiplayer.get_unique_id())
+	gamemode_manager.change_gamemode(
+		GameModeType.Kind.FREE_ROAM, multiplayer.get_unique_id(), ^"", _return_spawn()
+	)
 
 
 func _get_configuration_warnings() -> PackedStringArray:

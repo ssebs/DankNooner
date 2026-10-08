@@ -254,11 +254,10 @@ func _on_player_latejoined(peer_id: int):
 
 
 #override
-func _return_to_free_roam():
-	gamemode_manager.change_gamemode(
-		GameModeType.Kind.FREE_ROAM, multiplayer.get_unique_id(), ^"",
-		not teleport_to_start_on_finish
-	)
+func _return_spawn() -> GamemodeStateContext.ReturnSpawn:
+	if teleport_to_start_on_finish:
+		return GamemodeStateContext.ReturnSpawn.LEVEL_GRID
+	return GamemodeStateContext.ReturnSpawn.STAY
 
 
 func _get_configuration_warnings() -> PackedStringArray:

@@ -90,13 +90,15 @@ func Enter(state_context: StateContext):
 		spawn_manager.spawn_all_players()
 
 	if multiplayer.is_server():
-		# Distribute every peer to a unique spot. With grid_markers, each peer gets
-		# its own grid slot (and persistent respawn point). Without, fall back to
-		# the legacy single-spawn behavior.
 		# Must hit every peer, not just _ctx.peer_id â€” that's only the player who
 		# triggered the transition (the server, for race end), leaving clients riding.
-		# Skipped when returning from a finished race — players stay where they finished.
-		if !_ctx.skip_spawn_redistribute:
+		if _ctx.return_spawn == GamemodeStateContext.ReturnSpawn.RESPAWN_POINT:
+			for peer_id in gamemode_manager.lobby_manager.lobby_players:
+				spawn_manager.respawn_player.rpc(peer_id)
+		elif _ctx.return_spawn == GamemodeStateContext.ReturnSpawn.LEVEL_GRID:
+			# Distribute every peer to a unique spot. With grid_markers, each peer gets
+			# its own grid slot (and persistent respawn point). Without, fall back to
+			# the legacy single-spawn behavior.
 			var grid_markers: Array[Marker3D] = level_manager.current_level.grid_markers
 			var slot: int = 0
 			for peer_id in gamemode_manager.lobby_manager.lobby_players:

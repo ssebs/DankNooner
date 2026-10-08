@@ -9,6 +9,8 @@ class_name TimedScoreGameMode extends RunnerGameMode
 
 var _time_left: float = 0.0
 var _refresh_accum: float = 0.0
+## The host ended the session early — riders return to their respawn point, not the level grid.
+var _cancelled: bool = false
 
 
 func Enter(state_context: StateContext):
@@ -17,6 +19,7 @@ func Enter(state_context: StateContext):
 	super(state_context)
 
 	_time_left = duration_secs
+	_cancelled = false
 	if multiplayer.is_server():
 		_start_next_runner()
 
@@ -52,8 +55,16 @@ func Exit(state_context: StateContext):
 func handle_cancel_event() -> bool:
 	if _active_runner == null or !_is_last_runner():
 		return false
+	_cancelled = true
 	_end_session()
 	return true
+
+
+#override
+func _return_spawn() -> GamemodeStateContext.ReturnSpawn:
+	if _cancelled:
+		return GamemodeStateContext.ReturnSpawn.RESPAWN_POINT
+	return super()
 
 
 #override
