@@ -21,7 +21,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] Earn money from races/events
 - [ ] hide checkpoint markers unless its the one you need upcoming 
 - [ ] 321 + drive to start of race text should be more obvious
 - [ ] reduce bat time to match rally up
@@ -45,7 +44,6 @@
 - Make roads / map in blender
 - Tutorial: msf course 
 - move trick battles to new event start circles so they dont spawn checkpoint markers
-
 
 Simpsons hit and run chapters:
 - e.g. one map per character/each have their own car
@@ -213,6 +211,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+
+- [x] Earn money from races/events
 
 - [x] fix filling up gas before stunt race to max reduces 2 levels
   - [x] > due to spilling
