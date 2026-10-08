@@ -27,7 +27,8 @@
 - [ ] new large map
   - [ ] https://github.com/domlysz/BlenderGIS + https://superhivemarket.com/products/roadscape
   - [ ] big enough to cruise around like in Test Drive Unlimited 1
-  - [ ] see img/island-map-layout.png/svg
+  - [ ] "Highside Island"
+  - [ ] see img/island-map-layout.png/svg & levels\assets\highside_island\island-heightmap-preview.png
   - [ ] have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
 
 - [ ] Get AI working again
