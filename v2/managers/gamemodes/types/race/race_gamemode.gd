@@ -178,7 +178,7 @@ func _update_results_countdown(delta: float) -> bool:
 	# NPCs keep racing through the countdown — refresh so a late finisher gets its time.
 	if _results_refresh_accum <= 0.0:
 		_results_refresh_accum = RESULTS_REFRESH_SECS
-		results_hud.rpc_update_rows.rpc(leaderboard.build_results().to_dict())
+		results_hud.rpc_update_rows.rpc(_with_payouts(leaderboard.build_results()).to_dict())
 	return super(delta)
 
 
@@ -186,6 +186,17 @@ func _update_results_countdown(delta: float) -> bool:
 func _on_last_runner_completed(_runner: TaskRunner):
 	_results_refresh_accum = RESULTS_REFRESH_SECS
 	_show_results(leaderboard.build_results())
+
+
+#override
+## Only stunt races score; the rest pay on placement alone.
+func _is_score_mode() -> bool:
+	return race_type == RaceType.STUNT_RACE
+
+
+#override
+func _payout_score(peer_id: int) -> float:
+	return score(peer_id)
 
 
 func _on_results_restart_pressed():

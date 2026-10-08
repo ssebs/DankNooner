@@ -99,6 +99,14 @@ func spend(amount: int) -> bool:
 	return true
 
 
+## Credit an event payout and write it. Like spend(), doesn't emit save_item_updated.
+func earn(money: int, xp: int) -> void:
+	var player_def := get_player_definition()
+	player_def.money += money
+	player_def.xp += xp
+	save_save()
+
+
 func _give_money(amount: String) -> void:
 	var player_def := get_player_definition()
 	player_def.money += amount.to_float()

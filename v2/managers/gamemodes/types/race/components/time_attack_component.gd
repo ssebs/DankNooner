@@ -6,8 +6,6 @@
 ## run-again prompt per run.
 class_name TimeAttackComponent extends RaceComponent
 
-@export var save_manager: SaveManager
-
 ## event_key -> peer_id -> {"best_lap_ms": int, "last_lap_ms": int}. Kept for the
 ## whole host session so re-entries compete against earlier laps.
 var _session_times: Dictionary[String, Dictionary] = {}
@@ -112,6 +110,7 @@ func _on_lap_completed(peer_id: int, lap_ms: int) -> void:
 	var times := _times(peer_id)
 	times["last_lap_ms"] = lap_ms
 	times["best_lap_ms"] = mini(times.get("best_lap_ms", lap_ms), lap_ms)
+	_pay_lap(peer_id, lap_ms < _personal_bests.get(peer_id, INF))
 	_personal_bests[peer_id] = mini(_personal_bests.get(peer_id, lap_ms), lap_ms)
 	_rpc_save_personal_best.rpc_id(peer_id, _event_key(), lap_ms)
 	if race_mode.race_task.is_point_to_point():
@@ -119,6 +118,13 @@ func _on_lap_completed(peer_id: int, lap_ms: int) -> void:
 		race_mode.results_hud.rpc_show_run_finished.rpc_id(
 			peer_id, race_mode.leaderboard.build_results().to_dict()
 		)
+
+
+## Every lap pays a fraction of the event base; a new PB adds the full base.
+func _pay_lap(peer_id: int, is_pb: bool) -> void:
+	var def := race_mode.get_definition()
+	var mult := UtilsConstants.PAYOUT_LAP_FRACTION + (1.0 if is_pb else 0.0)
+	race_mode.rpc_earn.rpc_id(peer_id, int(def.payout_money * mult), int(def.payout_xp * mult))
 
 
 func _times(peer_id: int) -> Dictionary:
@@ -136,21 +142,14 @@ func _time_text(ms: int) -> String:
 
 @rpc("call_local", "reliable")
 func _rpc_report_personal_best(key: String) -> void:
-	request_set_personal_best.rpc_id(1, personal_best_ms(save_manager, key))
+	request_set_personal_best.rpc_id(1, personal_best_ms(race_mode.save_manager, key))
 
 
 @rpc("call_local", "reliable")
 func _rpc_save_personal_best(key: String, lap_ms: int) -> void:
-	var pb_ms := personal_best_ms(save_manager, key)
+	var pb_ms := personal_best_ms(race_mode.save_manager, key)
 	if pb_ms >= 0 and pb_ms <= lap_ms:
 		return
-	var progression: Dictionary = save_manager.current_save["progression"]
+	var progression: Dictionary = race_mode.save_manager.current_save["progression"]
 	progression["time_attack"][key] = {"best_lap_ms": lap_ms}
-	save_manager.update_save("progression", progression, false, true)
-
-
-func _get_configuration_warnings() -> PackedStringArray:
-	var issues := super()
-	if save_manager == null:
-		issues.append("save_manager must not be empty")
-	return issues
+	race_mode.save_manager.update_save("progression", progression, false, true)

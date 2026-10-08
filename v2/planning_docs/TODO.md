@@ -21,6 +21,11 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] Earn money from races/events
+- [ ] hide checkpoint markers unless its the one you need upcoming 
+- [ ] 321 + drive to start of race text should be more obvious
+- [ ] reduce bat time to match rally up
+
 - [ ] new large map
   - [ ] https://github.com/domlysz/BlenderGIS + https://superhivemarket.com/products/roadscape
   - [ ] big enough to cruise around like in Test Drive Unlimited 1
@@ -39,6 +44,8 @@
 
 - Make roads / map in blender
 - Tutorial: msf course 
+- move trick battles to new event start circles so they dont spawn checkpoint markers
+
 
 Simpsons hit and run chapters:
 - e.g. one map per character/each have their own car

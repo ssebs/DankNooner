@@ -5,6 +5,7 @@ class_name PlayerDefinition extends Resource
 @export var ui_icon: Texture = preload("res://resources/img/Logos/Logo.svg")
 @export var username: String = "replace_me"
 @export var money: float = 0.0
+@export var xp: int = 0
 
 ## Rider for every loadout that doesn't pick its own.
 @export var default_character: CharacterSkinDefinition = preload(DEFAULT_CHARACTER_PATH)
@@ -38,6 +39,10 @@ var character_skin: CharacterSkinDefinition:
 		return character if character != null else default_character
 
 
+func level() -> int:
+	return 1 + int(sqrt(xp / float(UtilsConstants.XP_PER_LEVEL)))
+
+
 #region to/from Dictionary
 func to_dict() -> Dictionary:
 	var loadout_dicts: Array = []
@@ -49,6 +54,7 @@ func to_dict() -> Dictionary:
 		"loadouts": loadout_dicts,
 		"active_loadout_index": active_loadout_index,
 		"money": money,
+		"xp": xp,
 		"username": username,
 	}
 
@@ -56,6 +62,7 @@ func to_dict() -> Dictionary:
 func from_dict(dict: Dictionary):
 	username = dict.get("username", "N/A")
 	money = dict.get("money", 0.0)
+	xp = int(dict.get("xp", 0))
 
 	ui_icon = DictJSONSaverLoader.try_load(
 		dict, "ui_icon_res", "res://resources/img/Logos/Logo.svg"

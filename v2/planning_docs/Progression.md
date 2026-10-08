@@ -1,11 +1,13 @@
 # Progression
 
-> Brainstorm, nothing built yet. Parked until NPCs work properly (mission givers depend on them).
+> Brainstorm; only [payouts](#payouts) are built. The rest is parked until NPCs work properly
+> (mission givers depend on them).
 > Story beats live in [Story](./Story.md); this doc is the systems side.
 
 - [Goal](#goal)
 - [What exists](#what-exists)
 - [Decided](#decided)
+	- [Payouts](#payouts)
 - [Ideas](#ideas)
 	- [Story as the spine](#story-as-the-spine)
 	- [World layout](#world-layout)
@@ -23,7 +25,9 @@ Make points mean something: players should want to unlock something, and replay 
 
 ## What exists
 
-- `PlayerDefinition.money` is spent on garage skins (`SaveManager.purchase`) and gas pumps (`SaveManager.spend`); nothing earns it yet besides the `give_money` console command.
+- `PlayerDefinition.money` is spent on garage skins (`SaveManager.purchase`) and gas pumps (`SaveManager.spend`), and earned from event [payouts](#payouts) (`SaveManager.earn`).
+- `PlayerDefinition.xp` is earned the same way. `level()` derives the rider level shown on the
+  riding HUD; it gates nothing yet.
 - `current_save["progression"]` holds per-event time attack PBs. `TimeAttackComponent` is the
   pattern for writing a client's save from a server-run event: the server RPCs each client, which
   writes its own save.
@@ -38,6 +42,29 @@ Make points mean something: players should want to unlock something, and replay 
 - **Multiplayer events follow the host's progress.** Anyone can join the host's events, locked in
   their own save or not, and earns money/XP toward their own level and unlocks. Finishing also
   marks the event completed in their own save.
+- **XP is stored and shown now, gates nothing yet.** A rider level derived from saved XP shows
+  next to money. What it gates is decided when the story work resumes.
+
+### Payouts
+
+- **Formula:** `event base × place multiplier + score × rate`, computed separately for money and
+  XP. Place multipliers fall off from 1st, with a floor for everyone below the podium. Score
+  only applies in score modes (stunt race, trick battle, long jump); pure races and challenges
+  pay on placement alone. In score modes a rider who scored 0 gets the floor whatever their row,
+  so idling never pays 1st.
+- **Tunables:** the base money and XP are per event, on `GameModeEventDefinition`. Place
+  multipliers, score rates and the time attack lap fraction are shared constants.
+- **Placement** is the rider's row on the results screen they see, NPCs included, so beating
+  bots counts.
+- **Where:** the server computes it in `RunnerGameMode._show_results()`, which every
+  results-showing mode goes through. It RPCs each rider, whose client writes its own save (the
+  `TimeAttackComponent` PB pattern) via `RunnerGameMode.rpc_earn`, which also pops `+$N` and `+N XP`
+  off the riding HUD's money and XP panels. The results screen shows the earned money and XP columns. Modes
+  add score through the `_payout_score` override (`TimedScoreGameMode`, stunt races).
+- **Time attack** never reaches the results screen: every lap pays a fraction of the base, and a
+  lap that beats the rider's saved PB pays the full base on top.
+- **Doesn't pay:** free roam, fuel-up, and events the host cancels without results. Late joiners
+  who never raced aren't in the results, so they get nothing.
 
 
 ## Ideas
@@ -127,7 +154,6 @@ A handful of bikes is a handful of purchases, then the loop is over. Fill the ga
 - **Bike per chapter:** locked to the chapter's bike, or free choice once unlocked? In multiplayer,
   does everyone ride the host's chapter bike?
 - The two skyscrapers sit next to the island, in the middle of the calm side. Move them to the big city?
-- Payout amounts per mode and placement.
 
 
 ## MVP slice

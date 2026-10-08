@@ -38,6 +38,7 @@ static func _check_player_definition() -> Array[String]:
 	var player := PlayerDefinition.new()
 	player.username = "validator"
 	player.money = 12.5
+	player.xp = 7
 	var plain := Loadout.new()
 	plain.name = "plain"
 	plain.bike = _fixture_bike()

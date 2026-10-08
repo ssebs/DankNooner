@@ -11,6 +11,7 @@ class_name RunnerGameMode extends GameModeType
 @export var audio_manager: AudioManager
 @export var results_hud: ResultsHUDState
 @export var input_state_manager: InputStateManager
+@export var save_manager: SaveManager
 @export var _respawn_delay: float = 2.5
 
 var _event: GameModeEvent
@@ -19,6 +20,8 @@ var _active_runner: TaskRunner
 var _active_runner_index: int = -1
 var _results_countdown: float = -1.0
 var _results_countdown_total: float = 10.0
+## peer_id -> {"money": int, "xp": int}, this event's payouts for the results columns.
+var _payouts: Dictionary[int, Dictionary] = {}
 
 
 func Enter(state_context: StateContext):
@@ -162,7 +165,60 @@ func _disconnect_runner(runner: TaskRunner):
 func _show_results(data: ResultsData):
 	_results_countdown = _results_countdown_total
 	riding_hud_state.push_event_clear_all()
-	results_hud.rpc_show_results.rpc(data.to_dict(), _results_countdown_total)
+	_pay_out(data)
+	results_hud.rpc_show_results.rpc(_with_payouts(data).to_dict(), _results_countdown_total)
+
+
+## Override: whether riders are scored (_payout_score). False pays on placement alone.
+func _is_score_mode() -> bool:
+	return false
+
+
+## Override: the peer's score, added to the payout in score modes.
+func _payout_score(_peer_id: int) -> float:
+	return 0.0
+
+
+## Pays each rider by their row in `data` (rows are ranked, NPCs included) plus _payout_score.
+## In score modes, a 0 score gets the floor multiplier whatever its row.
+func _pay_out(data: ResultsData):
+	_payouts.clear()
+	var def := _event.definition
+	var mults := UtilsConstants.PAYOUT_PLACE_MULTS
+	for place in data.rows.size():
+		var peer_id: int = data.rows[place].get("_peer_id", 0)
+		# NPC rows don't get paid — skip is intentional
+		if !lobby_manager.lobby_players.has(peer_id):
+			continue
+		var score := _payout_score(peer_id) if _is_score_mode() else 0.0
+		var is_ranked := place < mults.size() and (score > 0.0 or !_is_score_mode())
+		var mult := mults[place] if is_ranked else UtilsConstants.PAYOUT_PLACE_FLOOR
+		var money := int(def.payout_money * mult + score * UtilsConstants.PAYOUT_SCORE_MONEY_RATE)
+		var xp := int(def.payout_xp * mult + score * UtilsConstants.PAYOUT_SCORE_XP_RATE)
+		_payouts[peer_id] = {"money": money, "xp": xp}
+		rpc_earn.rpc_id(peer_id, money, xp)
+
+
+## `data` plus the earned columns; NPC rows stay blank.
+func _with_payouts(data: ResultsData) -> ResultsData:
+	data.columns.append_array(["Money", "XP"])
+	data.headers.append_array(["💵", "⭐ %s" % tr("LB_XP")])
+	for row in data.rows:
+		var payout: Dictionary = _payouts.get(row.get("_peer_id", 0), {})
+		if !payout.is_empty():
+			row["Money"] = "+" + MoneyLabel.format(payout["money"])
+			row["XP"] = "+" + MoneyLabel.group_digits(payout["xp"])
+	return data
+
+
+## Server -> one rider: credit an event payout to their own save.
+@rpc("call_local", "reliable")
+func rpc_earn(money: int, xp: int):
+	# A small base × lap fraction can round to nothing — skip is intentional
+	if money == 0 and xp == 0:
+		return
+	save_manager.earn(money, xp)
+	riding_hud_state.pop_earned(money, xp)
 
 
 ## One row per peer of `runner`, fastest completion first.
@@ -176,6 +232,7 @@ func _completion_results(runner: TaskRunner, title_key: String) -> ResultsData:
 			rows
 			.append(
 				{
+					"_peer_id": peer_id,
 					"Username": username,
 					"Time": "%.1fs" % time_sec,
 					"_sort_key": state.completion_time_ms,
@@ -294,4 +351,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("results_hud must not be empty")
 	if input_state_manager == null:
 		issues.append("input_state_manager must not be empty")
+	if save_manager == null:
+		issues.append("save_manager must not be empty")
 	return issues

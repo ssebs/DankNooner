@@ -261,6 +261,19 @@ theme_override_font_sizes/font_size = 28
 horizontal_alignment = 2
 script = ExtResource("99_money")
 
+[node name="XPPanel" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/TopRightVBox"]
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("3_j31af")
+
+[node name="HUD_XP" type="Label" parent="UI/AspectContainer/MarginContainer/TopRightVBox/XPPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 2
+
 [node name="Minimap" parent="UI/AspectContainer/MarginContainer/TopRightVBox" unique_id=407372356 instance=ExtResource("4_ltqsj")]
 unique_name_in_owner = true
 layout_mode = 2

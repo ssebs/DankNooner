@@ -23,7 +23,7 @@
 [ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/bikes/hitbox/bike_hitbox.tres" id="19_75npo"]
 [ext_resource type="PackedScene" uid="uid://cu0vh8sgp0l2e" path="res://entities/vfx/spark_particles.tscn" id="29_3kl2f"]
 [ext_resource type="Script" uid="uid://cajkhr7cisa7f" path="res://player/controllers/skidmark_controller.gd" id="30_skid"]
-[ext_resource type="Script" path="res://entities/vfx/rider_vfx.gd" id="31_rvfx"]
+[ext_resource type="Script" uid="uid://dbl1ukq1dy3xd" path="res://entities/vfx/rider_vfx.gd" id="31_rvfx"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wig4y"]
 size = Vector3(4, 10, 2)

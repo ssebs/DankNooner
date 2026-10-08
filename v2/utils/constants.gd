@@ -16,6 +16,17 @@ const GROUPS = {
 	"Traffic": "Traffic",
 }
 
+## Event payouts: event base × place multiplier + score × rate (see Progression.md).
+## Multipliers from 1st; everyone below them gets PAYOUT_PLACE_FLOOR.
+const PAYOUT_PLACE_MULTS: Array[float] = [1.0, 0.7, 0.5]
+const PAYOUT_PLACE_FLOOR: float = 0.3
+const PAYOUT_SCORE_MONEY_RATE: float = 0.01
+const PAYOUT_SCORE_XP_RATE: float = 0.02
+## Time attack: every lap pays this fraction of the event base; a new PB adds the full base.
+const PAYOUT_LAP_FRACTION: float = 0.1
+## Level = 1 + sqrt(xp / XP_PER_LEVEL), so each level takes longer than the last.
+const XP_PER_LEVEL: int = 100
+
 ## Swatches in the garage's ColorPicker: the deleted character variants' colors + the bike color mods'.
 const SKIN_COLOR_PRESETS: Array[Color] = [
 	Color(1, 0, 0, 1),

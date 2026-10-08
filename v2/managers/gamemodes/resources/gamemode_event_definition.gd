@@ -10,6 +10,10 @@ var description: String = "Sunt nisi id proident veniam ad laboris pariatur mini
 @export var target_gamemode: GameModeType.Kind
 @export var event_type: EventType = EventType.SEQUENTIAL
 
+## Payout base at the results screen, scaled by placement (see Progression.md).
+@export var payout_money: int = 100
+@export var payout_xp: int = 50
+
 ## If set, every participating player's bike is swapped to this for the duration of the event.
 ## Restored from lobby_players on exit back to free roam. Leave null for no override.
 @export var forced_base_bike: BikeSkinDefinition = null

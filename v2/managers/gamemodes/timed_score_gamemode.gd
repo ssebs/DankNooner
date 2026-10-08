@@ -66,6 +66,16 @@ func _score(_peer_id: int) -> float:
 	return 0.0
 
 
+#override
+func _is_score_mode() -> bool:
+	return true
+
+
+#override
+func _payout_score(peer_id: int) -> float:
+	return _score(peer_id)
+
+
 ## Override: localization key of the results title.
 func _results_title_key() -> String:
 	return ""
@@ -76,16 +86,19 @@ func _push_leaderboard():
 	pass
 
 
+## The last runner's riders only — late joiners never played it.
 func _ranked_peer_ids() -> Array:
-	var peer_ids: Array = lobby_manager.lobby_players.keys()
+	var peer_ids: Array = _active_runner.player_states.keys()
 	peer_ids.sort_custom(func(a, b): return _score(a) > _score(b))
 	return peer_ids
 
 
 func _end_session():
+	# Before stop() — it clears the runner's player_states that results rank.
+	var results := _build_results()
 	_stop_active_runner()
 	riding_hud_state.clear_leaderboard()
-	_show_results(_build_results())
+	_show_results(results)
 
 
 func _build_results() -> ResultsData:
@@ -95,6 +108,7 @@ func _build_results() -> ResultsData:
 			rows
 			. append(
 				{
+					"_peer_id": peer_id,
 					"Username": lobby_manager.lobby_players[peer_id].username,
 					"Score": "%d" % _score(peer_id),
 				}

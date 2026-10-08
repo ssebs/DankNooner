@@ -38,6 +38,7 @@ const _WARNING_PULSE_SECS := 0.35
 @onready var _fps_label: Label = %HUD_FPS
 @onready var _game_msg: Label = %HUD_GAME_MSG
 @onready var _money: MoneyLabel = %HUD_Money
+@onready var _xp_label: Label = %HUD_XP
 @onready var _leaderboard: RaceLeaderboard = %HUD_Leaderboard
 @onready var _trick_popups: TrickPopups = %TrickPopups
 @onready var _target_compass: TargetCompass = %TargetCompass
@@ -181,7 +182,12 @@ func Physics_Update(delta: float):
 	_speed_num.text = "%d" % int(movement_controller.speed)
 	_grip_label.text = tr("HUD_GRIP").format({"value": int(player_entity.grip_usage * 100)})
 	_fps_label.text = tr("HUD_FPS").format({"value": int(Engine.get_frames_per_second())})
-	_money.text = MoneyLabel.format(save_manager.get_player_definition().money)
+	var player_def := save_manager.get_player_definition()
+	_money.text = MoneyLabel.format(player_def.money)
+	_xp_label.text = (
+		tr("HUD_XP")
+		.format({"level": player_def.level(), "xp": MoneyLabel.group_digits(player_def.xp)})
+	)
 
 	# Boost meter + combo multiplier are server-authoritative (TrickManager) and arrive
 	# via RollbackSynchronizer, so poll the synced vars rather than tracking them here.
@@ -310,6 +316,20 @@ func _on_respawned():
 ## Something was too pricey.
 func flash_money():
 	_money.flash()
+
+
+## A "+$N" off the money and a "+N XP" off the XP readout, same pop. Zero amounts don't pop.
+func pop_earned(money: int, xp: int):
+	if money > 0:
+		_money.pop_earned(money)
+	if xp > 0:
+		TrickPopups.spawn_pop(
+			_xp_label,
+			"+%s %s" % [MoneyLabel.group_digits(xp), tr("LB_XP")],
+			_xp_label.get_theme_color("font_color"),
+			_xp_label.size / 2.0,
+			MoneyLabel.EARNED_DRIFT
+		)
 
 
 ## Tap (quick in-place respawn) fired — keep "Respawning..." up briefly even for a fast tap.
