@@ -123,6 +123,7 @@ Simpsons hit and run chapters:
   - [ ] need to reproduce
 - [ ] players can move at start on Race, not stunt race
   - [ ] merge shared stuff from race+stuntrace aka spawning stuff like this
+  - [ ] fixed?
 - [ ] Road generator lanes + AI
 - [ ] landing mega ramp jump causes crash
   - [x] only use yaw in speed wobble code
@@ -153,7 +154,6 @@ Simpsons hit and run chapters:
 - [ ] Music
 - [ ] Soundscapes for ambient sounds
 - [ ] Meme mode setting (for sfx)
-- [ ] Fade out intro sound quicker, make 3 sec version
 
 ### Tutorials (post-Challenge-system)
 - [ ] Basic [story](./Story.md) w/ levels
@@ -210,6 +210,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+
+- [x] Fade out intro sound quicker, make 3 sec version
 
 - [x] reduce bat time to match rally up
 
