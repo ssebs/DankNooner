@@ -143,8 +143,18 @@ Simpsons hit and run chapters:
   - [ ] Stats
     - [ ] total trick history (total time played, total wheelies, races won, etc.)
 - [ ] More skins / models (unlocks)
+	```
+	../assets_excluded_from_export/cruiserbygoogle.glb
+	../assets_excluded_from_export/Exercise Bike by Dave Edwards - 9DwoznfSPHY.glb
+	../assets_excluded_from_export/Office Chair by Quaternius - UfKvrZBK6C.glb
+	../assets_excluded_from_export/Street Vendor Cart by Alan Zimmerman - f_LuAcP2_Yh.glb
+	../assets_excluded_from_export/Unicycle by Poly by Google - c4eT6ivB_Tm.glb
+	../assets_excluded_from_export/Vespa by Jasmine Roberts - blGLclvvdEM.glb
+	../assets_excluded_from_export/Witch Broom by MiniPoly - gwE8397gO3.glb
+	```
   - [ ] dirt bike
   - [ ] retro sport bike / cafe racer (xsr)
+  - [ ] vespa
   - [ ] tron bike
   - [ ] pocket bike
   - [x] more characters

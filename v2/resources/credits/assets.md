@@ -12,7 +12,13 @@
 - Cars Bundle by Quaternius via Poly Pizza (https://poly.pizza/bundle/Cars-Bundle-FE5IWe6OMk)
 - Gas can by Poly by Google [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/bOjbK_rGqRA)
 - Baseball bat by jeremy [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/9FPflHIzK73)
-
+- Motorcycle by Poly by Google [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/5_MTCnqfUTr)
+- Street Vendor Cart by Alan Zimmerman [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/f_LuAcP2_Yh)
+- Vespa by Jasmine Roberts [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/blGLclvvdEM)
+- Office Chair by Quaternius (https://poly.pizza/m/UfKvrZBK6C)
+- Unicycle by Poly by Google [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/c4eT6ivB_Tm)
+- Exercise Bike by Dave Edwards [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/9DwoznfSPHY)
+- Witch Broom by MiniPoly (https://poly.pizza/m/gwE8397gO3)
 
 - Quaternius
   - [Stylized Nature MegaKit by Quaternius via Poly Pizza](https://poly.pizza/bundle/Stylized-Nature-MegaKit-T34GZFA0fm)
