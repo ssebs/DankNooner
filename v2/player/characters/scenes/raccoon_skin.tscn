@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://ckx6a3vrahpwg"]
+
+[ext_resource type="PackedScene" uid="uid://cpsv1lcj40ti8" path="res://player/characters/assets/andrew_westley_raccoon/Coon.glb" id="1_glb"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="2_color"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="3_slot"]
+[ext_resource type="Material" path="res://player/characters/assets/andrew_westley_raccoon/coon_shader_mat.tres" id="4_shader_mat"]
+[ext_resource type="Shader" uid="uid://djo3ltfju324e" path="res://resources/shaders/skin_color.gdshader" id="5_a77ly"]
+[ext_resource type="Texture2D" uid="uid://dn177yifukngq" path="res://player/characters/assets/andrew_westley_raccoon/Coon_cute_raccoon_3d_model_tripo_part_0_basecolor.jpg" id="6_3h0c4"]
+
+[sub_resource type="Resource" id="Resource_slot0"]
+script = ExtResource("3_slot")
+color = Color(1, 1, 1, 0)
+shader_material = ExtResource("4_shader_mat")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0bmbn"]
+render_priority = 0
+shader = ExtResource("5_a77ly")
+shader_parameter/replacement_color = Color(1, 0, 0, 1)
+shader_parameter/albedo_texture = ExtResource("6_3h0c4")
+shader_parameter/tolerance = 0.3
+
+[node name="Coon" unique_id=527856868 node_paths=PackedStringArray("meshes") instance=ExtResource("1_glb")]
+script = ExtResource("2_color")
+slots = Array[ExtResource("3_slot")]([SubResource("Resource_slot0")])
+meshes = [NodePath("Armature/Skeleton/tripo_part_0_001")]
+
+[node name="tripo_part_0_001" parent="Armature/Skeleton" parent_id_path=PackedInt32Array(641522833) index="0" unique_id=795391720]
+surface_material_override/0 = SubResource("ShaderMaterial_0bmbn")

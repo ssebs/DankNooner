@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dbi7256ibq3kw"]
+
+[ext_resource type="Texture2D" uid="uid://dn177yifukngq" path="res://player/characters/assets/andrew_westley_raccoon/Coon_cute_raccoon_3d_model_tripo_part_0_basecolor.jpg" id="1_xywxa"]
+
+[resource]
+resource_name = "tripo_part_0_material"
+cull_mode = 2
+albedo_texture = ExtResource("1_xywxa")
+roughness = 0.5
+metadata/_gltf_primary_texture_coord = 0
