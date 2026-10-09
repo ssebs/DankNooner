@@ -29,6 +29,8 @@
   - [ ] big enough to cruise around like in Test Drive Unlimited 1
   - [ ] "Highside Island"
   - [ ] see img/island-map-layout.png/svg & levels\assets\highside_island\island-heightmap-preview.png
+    - [ ] see ../levels/assets/highside_island/CStoosmall1-4.png
+      - [ ] these show potential styles, but scale is a bit too small 
   - [ ] have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
 
 - [ ] Get AI working again
