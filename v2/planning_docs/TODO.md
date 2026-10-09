@@ -41,6 +41,67 @@
 ## Notes 📝
 > Stuff to move ASAP
 
+
+add guac and load building to map
+
+steam workshop
+
+steam networking / sdk
+
+launch steam page w/ demo, create trailer, ask for wishlists while developing main game. main game is free to play w/ paid dlc for more content/skins
+
+export on github w/o some assets / steam features
+
+Pizza delivery mode + scooter 
+
+Prototype level in cities skyline to get road layout 
+
+bake npc nav paths so they can just follow, respond to player if needed then return to baked path
+
+
+mac first launch stuck in gas fill up cam
+```
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M1 Pro (Apple7)
+
+Dank Nooner
+v0.0.142
+[warmup] UI shown 16389ms after boot
+VP scaling: 1.00
+BikeSkinDefinition: Saved to user://skins/bike_skin_sport_default.tres
+BikeSkinDefinition: Saved to user://skins/bike_skin_loadout_2.tres
+BikeSkinDefinition: Saved to user://skins/bike_skin_loadout_3.tres
+saved user://savegame_1.json
+[warmup] bg_gray_level.tscn: instantiate 448ms, render 1420ms, free 0ms
+[warmup] test_01_level.tscn: instantiate 874ms, render 1943ms, free 0ms
+[warmup] test_city_01.tscn: instantiate 15ms, render 69ms, free 1ms
+WARNING: Road point Track/RP_029 not connected to anything yet
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+WARNING: Road point Track/RP_029 not connected to anything yet
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+[warmup] racetrack_level_01.tscn: instantiate 1143ms, render 1333ms, free 0ms
+[warmup] stunt_track_01.tscn: instantiate 2352ms, render 3651ms, free 62ms
+[warmup] stunt_race_02.tscn: instantiate 8ms, render 27ms, free 0ms
+[warmup] garage_level.tscn: instantiate 10ms, render 24ms, free 37ms
+[warmup] trick_demo_level.tscn: instantiate 8ms, render 22ms, free 0ms
+[warmup] all levels warmed in 13616ms
+saved user://settings.json
+VP scaling: 1.00
+VP scaling: 1.00
+saved user://settings.json
+VP scaling: 1.00
+VP scaling: 1.00
+FreeRoam Mode
+[level load] spawn_level 659ms, gamemode enter 13ms
+Player 1 connected
+_on_client_connection_succeeded 1
+ERROR: RPC '_sync_game_to_late_joiner' on yourself is not allowed by selected mode.
+   at: rpcp (modules/multiplayer/scene_rpc_interface.cpp:489)
+_on_client_connection_succeeded 1
+ERROR: RPC '_sync_game_to_late_joiner' on yourself is not allowed by selected mode.
+   at: rpcp (modules/multiplayer/scene_rpc_interface.cpp:489)
+```
+
 - Make roads / map in blender
 - Tutorial: msf course 
 - move trick battles to new event start circles so they dont spawn checkpoint markers
@@ -85,6 +146,7 @@ Simpsons hit and run chapters:
   - [ ] dirt bike
   - [ ] retro sport bike / cafe racer (xsr)
   - [ ] tron bike
+  - [ ] pocket bike
   - [x] more characters
     - [x] pughead from guac and load
     - [x] zombie from guac and load
