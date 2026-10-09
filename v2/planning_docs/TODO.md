@@ -21,6 +21,8 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] credits btn/menu
+
 - [ ] option to drop current item?
 - [ ] 321 + drive to start of race text should be more obvious
 
