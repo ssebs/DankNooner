@@ -3,6 +3,22 @@
 [ext_resource type="Script" uid="uid://cv4bvroelqvpy" path="res://menus/main_menu/main_menu_state.gd" id="1_k7k4a"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_3qbku"]
 [ext_resource type="Texture2D" uid="uid://bucasypwld3mg" path="res://resources/img/Logos/DankNoonerLogo.png" id="2_k7k4a"]
+[ext_resource type="Shader" uid="uid://bfe77je5epdua" path="res://resources/shaders/soft_shadow.gdshader" id="3_shadow"]
+[ext_resource type="Shader" uid="uid://6etvnw08civj" path="res://resources/shaders/vignette.gdshader" id="4_vignette"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vignette"]
+shader = ExtResource("4_vignette")
+shader_parameter/color = Color(0, 0, 0, 0.85)
+shader_parameter/center = Vector2(0.65, 0.5)
+shader_parameter/inner_radius = 0.35
+shader_parameter/outer_radius = 1.1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_shadow"]
+shader = ExtResource("3_shadow")
+shader_parameter/shadow_color = Color(0, 0, 0, 0.85)
+shader_parameter/pad = Vector2(0.03, 0.13)
+shader_parameter/offset_px = Vector2(3, 5)
+shader_parameter/blur_px = 8.0
 
 [node name="MainMenuState" type="Node" unique_id=494197480]
 script = ExtResource("1_k7k4a")
@@ -17,6 +33,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_3qbku")
+
+[node name="Vignette" type="ColorRect" parent="UI" unique_id=297389049]
+material = SubResource("ShaderMaterial_vignette")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="AspectContainer" type="AspectRatioContainer" parent="UI" unique_id=2056197589]
 layout_mode = 1
@@ -47,6 +73,20 @@ texture = ExtResource("2_k7k4a")
 expand_mode = 5
 stretch_mode = 4
 
+[node name="Shadow" type="TextureRect" parent="UI/AspectContainer/Content/MarginContainer/TitleLogo" unique_id=1293896949]
+show_behind_parent = true
+material = SubResource("ShaderMaterial_shadow")
+layout_mode = 0
+anchor_left = -0.03
+anchor_top = -0.13
+anchor_right = 1.03
+anchor_bottom = 1.13
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_k7k4a")
+expand_mode = 1
+
 [node name="TitleLabel" type="Label" parent="UI/AspectContainer/Content/MarginContainer" unique_id=42565368]
 visible = false
 layout_mode = 2
@@ -58,7 +98,7 @@ text = "Dank"
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/Content/MarginContainer" unique_id=321861134]
 layout_mode = 2
 size_flags_horizontal = 0
-size_flags_vertical = 4
+size_flags_vertical = 8
 
 [node name="PlayBtn" type="Button" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer" unique_id=573512346]
 unique_name_in_owner = true
@@ -112,4 +152,4 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
-text = "v0.0.71"
+text = "v0.0.142"

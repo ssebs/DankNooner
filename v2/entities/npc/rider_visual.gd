@@ -146,9 +146,10 @@ func _init_tricks() -> void:
 		_pose_tracks[rot_track] = true
 
 
-## Drop every trick at once, back to the rest pose.
+## Drop every trick at once, back to the rest pose. Rewinds first so a trick cut mid-flight doesn't
+## leave its non-pose tracks (kickflip's BikeSkin rotation) frozen, like AnimationController.
 func stop_tricks() -> void:
-	_anim_runner.stop_all()
+	_anim_runner.stop_all_and_reset(self, _pose_tracks)
 	_tricks.clear()
 	_rider_vfx.stop_all()
 

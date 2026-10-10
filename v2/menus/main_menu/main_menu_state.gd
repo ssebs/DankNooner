@@ -45,14 +45,16 @@ func Enter(_state_context: StateContext):
 	help_btn.pressed.connect(_on_help_btn_pressed)
 	tricks_btn.pressed.connect(_on_tricks_btn_pressed)
 
-	if level_manager.current_level_name != LevelManager.LevelName.BG_GRAY_LEVEL:
-		level_manager.spawn_menu_level()
+	if level_manager.current_level_name != LevelManager.LevelName.MAIN_MENU_LEVEL:
+		level_manager.spawn_main_menu_level()
 		if audio_manager:
 			audio_manager.play_minimize()
 
 
 func Exit(_state_context: StateContext):
 	ui.hide()
+	# The rider scene is main-menu only; menus opened from here sit on the gray bg
+	level_manager.spawn_menu_level()
 
 	play_btn.pressed.disconnect(_on_play_btn_pressed)
 	settings_btn.pressed.disconnect(_on_settings_btn_pressed)

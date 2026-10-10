@@ -4,7 +4,7 @@ class_name LevelManager extends BaseManager
 enum LevelName {
 	LEVEL_SELECT_LABEL,  # not a level
 	BG_GRAY_LEVEL,
-	# MAIN_MENU_LEVEL,
+	MAIN_MENU_LEVEL,
 	TEST_LEVEL_01,
 	TEST_CITY_01,
 	RACETRACK_01,
@@ -27,6 +27,7 @@ const GAMMA_LUT_SIZE := 256
 var possible_levels: Dictionary[LevelName, PackedScene] = {
 	LevelName.LEVEL_SELECT_LABEL: null,
 	LevelName.BG_GRAY_LEVEL: load("res://levels/menu_levels/bg_gray/bg_gray_level.tscn"),
+	LevelName.MAIN_MENU_LEVEL: load("res://levels/menu_levels/main_menu/main_menu_level.tscn"),
 	LevelName.TEST_LEVEL_01: load("res://levels/test_levels/test_01/test_01_level.tscn"),
 	LevelName.TEST_CITY_01: load("res://levels/test_levels/test_city_01/test_city_01.tscn"),
 	LevelName.RACETRACK_01:
@@ -40,6 +41,7 @@ var possible_levels: Dictionary[LevelName, PackedScene] = {
 var level_name_map: Dictionary[LevelName, String] = {
 	LevelName.LEVEL_SELECT_LABEL: "LEVEL_SELECT_LABEL",
 	LevelName.BG_GRAY_LEVEL: "BgGrayLevel",
+	LevelName.MAIN_MENU_LEVEL: "MainMenuLevel",
 	LevelName.TEST_LEVEL_01: "LEVEL_TEST_1_LABEL",
 	LevelName.TEST_CITY_01: "LEVEL_TEST_CITY_01",
 	LevelName.RACETRACK_01: "LEVEL_RACETRACK_01",
@@ -118,6 +120,19 @@ func despawn_level():
 ## Spawn the menu level
 func spawn_menu_level():
 	spawn_level(LevelName.BG_GRAY_LEVEL, InputStateManager.InputState.IN_MENU)
+
+
+## Spawn the main menu level, its demo rider looping the level's trick + crash run on
+## PlayerEntity's default skins
+func spawn_main_menu_level():
+	spawn_level(LevelName.MAIN_MENU_LEVEL, InputStateManager.InputState.IN_MENU)
+	var demo: TrickDemo = current_level.get_node("%TrickDemo")
+	demo.camera.make_current()
+	# Untyped lookup: resolving player_entity_scene statically here cycles through its preload
+	var level: Node = current_level
+	var player = level.player_entity_scene.instantiate()
+	demo.show_rider(player.bike_definition, player.character_definition)
+	player.free()
 
 
 ## Spawn the menu garage level, viewed through its bay's camera. Returns the bay.

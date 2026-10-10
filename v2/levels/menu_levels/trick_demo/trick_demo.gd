@@ -26,6 +26,7 @@ const CAMERA_CUT_DISTANCE := 5.0
 var _trick: TrickController.Trick = TrickController.Trick.NONE
 var _prev_rig_pos: Vector3
 var _cam_focus: Vector3
+var _crashed := false
 
 
 func _process(delta: float) -> void:
@@ -37,6 +38,8 @@ func _process(delta: float) -> void:
 	if moved > CAMERA_CUT_DISTANCE:
 		moved = 0.0
 		_cam_focus = rig_pos
+		if _crashed:
+			_respawn()
 	# Track the run exactly along the ground (smoothing it lags the rider off-frame at speed); only
 	# height eases, so jumps don't jerk the view.
 	var follow := clampf(camera_follow_speed * delta, 0.0, 1.0)
@@ -52,10 +55,8 @@ func _process(delta: float) -> void:
 ## Seats the active loadout and starts the fallback run, so the scene isn't empty before a hover.
 func show_rider(bike_def: BikeSkinDefinition, char_def: CharacterSkinDefinition) -> void:
 	_rider.bike_skin.skin_definition = bike_def
-	_rider.bike_skin.apply_definition()
 	_rider.character_skin.skin_definition = char_def
-	_rider.character_skin.apply_definition()
-	_rider.seat()
+	_reseat()
 	play(TrickController.Trick.NONE, TrickController.TrickState.NONE)
 
 
@@ -79,6 +80,27 @@ func trick_on() -> void:
 
 func trick_off() -> void:
 	_rider.end_trick(_trick)
+
+
+## Ragdolls the rider off the bike, flung by `impulse` (run space). The run's loop respawns them.
+func crash(impulse: Vector3) -> void:
+	_crashed = true
+	_rider.stop_tricks()
+	_rider.character_skin.disable_ik()
+	_rider.character_skin.start_ragdoll(global_basis * impulse)
+
+
+## Rebuilding both skins also resets the bones a ragdoll left off their base pose.
+func _reseat() -> void:
+	_rider.bike_skin.apply_definition()
+	_rider.character_skin.apply_definition()
+	_rider.seat()
+
+
+func _respawn() -> void:
+	_crashed = false
+	_rider.character_skin.stop_ragdoll()
+	_reseat()
 
 
 func _anim_for(trick: TrickController.Trick, state: TrickController.TrickState) -> String:

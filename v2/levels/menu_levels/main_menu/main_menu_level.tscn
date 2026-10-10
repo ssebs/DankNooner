@@ -1,0 +1,181 @@
+[gd_scene format=3 uid="uid://c7llbk76g45nq"]
+
+[ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_pmxdy"]
+[ext_resource type="Script" uid="uid://b7e2uq4m1cexm" path="res://levels/menu_levels/trick_demo/trick_demo.gd" id="3_demo"]
+[ext_resource type="PackedScene" path="res://entities/npc/rider_visual.tscn" id="4_rider"]
+[ext_resource type="AnimationLibrary" uid="uid://msn7wls55kys" path="res://levels/menu_levels/main_menu/main_menu_anims.tres" id="5_anims"]
+[ext_resource type="PackedScene" uid="uid://blmmkvwq6fh3b" path="res://levels/components/garage/garage.tscn" id="5_iwe6j"]
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="6_gb"]
+[ext_resource type="Texture2D" uid="uid://jpt2tqlxrf2f" path="res://levels/assets/graybox/road_texture_template.png" id="7_road"]
+[ext_resource type="PackedScene" uid="uid://cil6ntcnlqt5e" path="res://levels/components/props/house_1.tscn" id="8_gr0p0"]
+[ext_resource type="PackedScene" uid="uid://bbijpc7rs4he4" path="res://levels/components/props/school.tscn" id="9_ebgro"]
+[ext_resource type="PackedScene" uid="uid://dparkgb4x7k2q" path="res://levels/components/props/park.tscn" id="10_j6e1v"]
+[ext_resource type="PackedScene" uid="uid://i5gn7vx2atly" path="res://levels/components/props/gas_station.tscn" id="11_4mor0"]
+[ext_resource type="Shader" uid="uid://c0t5fou2lybeo" path="res://levels/assets/night_sky.gdshader" id="12_4mor0"]
+[ext_resource type="PackedScene" uid="uid://bxyc2beb2ickm" path="res://levels/assets/props/Pickup Truck.glb" id="13_m7gr6"]
+[ext_resource type="PackedScene" uid="uid://bbhj6lbfpoulv" path="res://levels/assets/props/SUV.glb" id="14_s2csy"]
+[ext_resource type="PackedScene" uid="uid://b58se0c773n34" path="res://levels/assets/props/Sports Car-Gzj704DXdr.glb" id="15_cjcyd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m7gr6"]
+albedo_texture = ExtResource("7_road")
+uv1_scale = Vector3(0.02, 0.02, 0.02)
+uv1_offset = Vector3(0.245, 0, 0)
+uv1_triplanar = true
+texture_filter = 4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wikct"]
+shader = ExtResource("12_4mor0")
+shader_parameter/zenith_color = Color(0.026348038, 0.07843137, 0.011764703, 1)
+shader_parameter/horizon_color = Color(0.17058825, 0.050980393, 0.3019608, 1)
+shader_parameter/ground_color = Color(0.02, 0.01, 0.05, 1)
+shader_parameter/city_glow_color = Color(0, 0.5366668, 0.7, 1)
+shader_parameter/city_glow_height = 0.16100000694898
+shader_parameter/city_glow_energy = 0.3770000179075
+shader_parameter/sky_bands = 16
+shader_parameter/star_scale = 68.00000227999999
+shader_parameter/star_density = 0.3
+shader_parameter/star_size = 0.11600000481148
+shader_parameter/star_energy = 2.50000011875
+shader_parameter/twinkle_speed = 5.600000266
+shader_parameter/moon_color = Color(1, 0.93, 0.85, 1)
+shader_parameter/moon_crater_color = Color(0.67704, 0.59279996, 0.78, 1)
+shader_parameter/moon_radius = 0.06
+shader_parameter/moon_energy = 1.7770000844075
+shader_parameter/halo_color = Color(0.45, 0.3, 1, 1)
+shader_parameter/halo_radius = 0.35000001499506
+shader_parameter/halo_rings = 6
+shader_parameter/cloud_dark_color = Color(0.17254902, 0.050980393, 0.3019608, 1)
+shader_parameter/cloud_lit_color = Color(0.25, 0.15, 0.45, 1)
+shader_parameter/cloud_scale = 0.8
+shader_parameter/cloud_coverage_min = 0.3
+shader_parameter/cloud_coverage_max = 0.5
+shader_parameter/cloud_coverage_speed = 0.1
+shader_parameter/cloud_rim_width = 0.02700000128249999
+shader_parameter/cloud_wind = Vector2(0.02, 0.005)
+
+[sub_resource type="Sky" id="Sky_v84y2"]
+sky_material = SubResource("ShaderMaterial_wikct")
+
+[sub_resource type="Environment" id="Environment_m7gr6"]
+background_mode = 2
+sky = SubResource("Sky_v84y2")
+ambient_light_source = 2
+ambient_light_color = Color(0.35, 0.3, 0.6, 1)
+tonemap_mode = 2
+glow_enabled = true
+glow_strength = 1.25
+fog_enabled = true
+fog_light_color = Color(0.12, 0.05, 0.3, 1)
+fog_density = 0.002
+fog_sky_affect = 0.268
+adjustment_enabled = true
+adjustment_brightness = 0.85
+adjustment_contrast = 1.15
+adjustment_saturation = 1.1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_truck"]
+size = Vector3(2.312, 1.848, 5.18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_suv"]
+size = Vector3(2.111, 1.528, 4.209)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sports"]
+size = Vector3(2.671, 1.865, 5.655)
+
+[node name="MainMenuLevel" type="Node3D" unique_id=2073815857]
+script = ExtResource("1_pmxdy")
+no_player_spawn_needed = true
+metadata/_custom_type_script = "uid://dv0brm8irhlth"
+
+[node name="TrickDemo" type="Node3D" parent="." unique_id=1293270489]
+unique_name_in_owner = true
+script = ExtResource("3_demo")
+camera_offset = Vector3(5.5, 1.6, 0)
+camera_lead = -1.3
+
+[node name="Road" parent="TrickDemo" unique_id=1525375021 instance=ExtResource("6_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0, 0)
+shape_mode = 1
+width = 12.0
+depth = 400.0
+material_override = SubResource("StandardMaterial3D_m7gr6")
+neon_edges = true
+
+[node name="Ground" parent="TrickDemo" unique_id=1485126779 instance=ExtResource("6_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -63, -0.1, 0)
+shape_mode = 1
+width = 200.0
+height = 0.1
+depth = 400.0
+color_preset = 2
+
+[node name="Rig" type="Node3D" parent="TrickDemo" unique_id=461210168]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 0)
+
+[node name="RiderVisual" parent="TrickDemo/Rig" unique_id=80580871 instance=ExtResource("4_rider")]
+unique_name_in_owner = true
+
+[node name="DemoAnims" type="AnimationPlayer" parent="TrickDemo" unique_id=735467076]
+unique_name_in_owner = true
+libraries/ = ExtResource("5_anims")
+
+[node name="Camera3D" type="Camera3D" parent="TrickDemo" unique_id=790288251]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+v_offset = -0.5
+fov = 34.0
+
+[node name="Garage" parent="TrickDemo" unique_id=535153070 instance=ExtResource("5_iwe6j")]
+transform = Transform3D(-4.3711385e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, -4.3711385e-08, -35, 0, 0)
+
+[node name="House1" parent="TrickDemo" unique_id=1355590988 instance=ExtResource("8_gr0p0")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -35, 0, -32)
+
+[node name="House2" parent="TrickDemo" unique_id=1374591226 instance=ExtResource("8_gr0p0")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -35, 0, -64)
+
+[node name="School1" parent="TrickDemo" unique_id=162599137 instance=ExtResource("9_ebgro")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -51, 0, -127)
+
+[node name="Park1" parent="TrickDemo" unique_id=1218467625 instance=ExtResource("10_j6e1v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -51, 0, 80)
+
+[node name="GasStation" parent="TrickDemo" unique_id=1889760024 instance=ExtResource("11_4mor0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, 0, 32)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1040937263]
+transform = Transform3D(0.19617997, -0.94997144, -0.24303903, 0.92850906, 0.100282654, 0.3575113, -0.31525278, -0.29580045, 0.90173054, 12.095804, 144.87276, -1.7741599)
+light_color = Color(0.6, 0.65, 1, 1)
+light_energy = 0.5
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=356720702]
+environment = SubResource("Environment_m7gr6")
+
+[node name="Truck" parent="." unique_id=32433809 instance=ExtResource("13_m7gr6")]
+transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, -16.147648, 0, 102.282745)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Truck" unique_id=1907310001]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Truck/StaticBody3D" unique_id=1907310002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.918, 0.103)
+shape = SubResource("BoxShape3D_truck")
+
+[node name="SUV" parent="." unique_id=1476440099 instance=ExtResource("14_s2csy")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -10.000001, 0, 95.5)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="SUV" unique_id=1907310003]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SUV/StaticBody3D" unique_id=1907310004]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.746, 0)
+shape = SubResource("BoxShape3D_suv")
+
+[node name="Root Scene3" parent="." unique_id=1374440934 instance=ExtResource("15_cjcyd")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -10.000001, 0, 51)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Root Scene3" unique_id=1907310005]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Root Scene3/StaticBody3D" unique_id=1907310006]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.921, 0.112)
+shape = SubResource("BoxShape3D_sports")
