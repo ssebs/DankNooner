@@ -56,6 +56,7 @@ window/stretch/aspect="expand"
 
 [editor]
 
+movie_writer/video_quality=1.0
 movie_writer/movie_file="F:/LocalProgramming/DankNooner/v2/tmp/DankNoonerRecording.avi"
 
 [editor_plugins]

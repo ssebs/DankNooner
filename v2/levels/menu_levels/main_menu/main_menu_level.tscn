@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://c7llbk76g45nq"]
 
 [ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_pmxdy"]
+[ext_resource type="Sky" uid="uid://dfgbuerpq3y8" path="res://levels/assets/skybox_neon.tres" id="2_sky"]
 [ext_resource type="Script" uid="uid://b7e2uq4m1cexm" path="res://levels/menu_levels/trick_demo/trick_demo.gd" id="3_demo"]
 [ext_resource type="PackedScene" path="res://entities/npc/rider_visual.tscn" id="4_rider"]
 [ext_resource type="AnimationLibrary" uid="uid://msn7wls55kys" path="res://levels/menu_levels/main_menu/main_menu_anims.tres" id="5_anims"]
@@ -11,10 +12,8 @@
 [ext_resource type="PackedScene" uid="uid://bbijpc7rs4he4" path="res://levels/components/props/school.tscn" id="9_ebgro"]
 [ext_resource type="PackedScene" uid="uid://dparkgb4x7k2q" path="res://levels/components/props/park.tscn" id="10_j6e1v"]
 [ext_resource type="PackedScene" uid="uid://i5gn7vx2atly" path="res://levels/components/props/gas_station.tscn" id="11_4mor0"]
-[ext_resource type="Shader" uid="uid://c0t5fou2lybeo" path="res://levels/assets/night_sky.gdshader" id="12_4mor0"]
 [ext_resource type="PackedScene" uid="uid://bxyc2beb2ickm" path="res://levels/assets/props/Pickup Truck.glb" id="13_m7gr6"]
 [ext_resource type="PackedScene" uid="uid://bbhj6lbfpoulv" path="res://levels/assets/props/SUV.glb" id="14_s2csy"]
-[ext_resource type="PackedScene" uid="uid://b58se0c773n34" path="res://levels/assets/props/Sports Car-Gzj704DXdr.glb" id="15_cjcyd"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m7gr6"]
 albedo_texture = ExtResource("7_road")
@@ -23,42 +22,15 @@ uv1_offset = Vector3(0.245, 0, 0)
 uv1_triplanar = true
 texture_filter = 4
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_wikct"]
-shader = ExtResource("12_4mor0")
-shader_parameter/zenith_color = Color(0.026348038, 0.07843137, 0.011764703, 1)
-shader_parameter/horizon_color = Color(0.17058825, 0.050980393, 0.3019608, 1)
-shader_parameter/ground_color = Color(0.02, 0.01, 0.05, 1)
-shader_parameter/city_glow_color = Color(0, 0.5366668, 0.7, 1)
-shader_parameter/city_glow_height = 0.16100000694898
-shader_parameter/city_glow_energy = 0.3770000179075
-shader_parameter/sky_bands = 16
-shader_parameter/star_scale = 68.00000227999999
-shader_parameter/star_density = 0.3
-shader_parameter/star_size = 0.11600000481148
-shader_parameter/star_energy = 2.50000011875
-shader_parameter/twinkle_speed = 5.600000266
-shader_parameter/moon_color = Color(1, 0.93, 0.85, 1)
-shader_parameter/moon_crater_color = Color(0.67704, 0.59279996, 0.78, 1)
-shader_parameter/moon_radius = 0.06
-shader_parameter/moon_energy = 1.7770000844075
-shader_parameter/halo_color = Color(0.45, 0.3, 1, 1)
-shader_parameter/halo_radius = 0.35000001499506
-shader_parameter/halo_rings = 6
-shader_parameter/cloud_dark_color = Color(0.17254902, 0.050980393, 0.3019608, 1)
-shader_parameter/cloud_lit_color = Color(0.25, 0.15, 0.45, 1)
-shader_parameter/cloud_scale = 0.8
-shader_parameter/cloud_coverage_min = 0.3
-shader_parameter/cloud_coverage_max = 0.5
-shader_parameter/cloud_coverage_speed = 0.1
-shader_parameter/cloud_rim_width = 0.02700000128249999
-shader_parameter/cloud_wind = Vector2(0.02, 0.005)
+[sub_resource type="BoxShape3D" id="BoxShape3D_truck"]
+size = Vector3(2.312, 1.848, 5.18)
 
-[sub_resource type="Sky" id="Sky_v84y2"]
-sky_material = SubResource("ShaderMaterial_wikct")
+[sub_resource type="BoxShape3D" id="BoxShape3D_suv"]
+size = Vector3(2.111, 1.528, 4.209)
 
-[sub_resource type="Environment" id="Environment_m7gr6"]
+[sub_resource type="Environment" id="Environment_v84y2"]
 background_mode = 2
-sky = SubResource("Sky_v84y2")
+sky = ExtResource("2_sky")
 ambient_light_source = 2
 ambient_light_color = Color(0.35, 0.3, 0.6, 1)
 tonemap_mode = 2
@@ -69,18 +41,9 @@ fog_light_color = Color(0.12, 0.05, 0.3, 1)
 fog_density = 0.002
 fog_sky_affect = 0.268
 adjustment_enabled = true
-adjustment_brightness = 0.85
+adjustment_brightness = 1.14
 adjustment_contrast = 1.15
 adjustment_saturation = 1.1
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_truck"]
-size = Vector3(2.312, 1.848, 5.18)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_suv"]
-size = Vector3(2.111, 1.528, 4.209)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_sports"]
-size = Vector3(2.671, 1.865, 5.655)
 
 [node name="MainMenuLevel" type="Node3D" unique_id=2073815857]
 script = ExtResource("1_pmxdy")
@@ -144,15 +107,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -51, 0, 80)
 [node name="GasStation" parent="TrickDemo" unique_id=1889760024 instance=ExtResource("11_4mor0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, 0, 32)
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1040937263]
-transform = Transform3D(0.19617997, -0.94997144, -0.24303903, 0.92850906, 0.100282654, 0.3575113, -0.31525278, -0.29580045, 0.90173054, 12.095804, 144.87276, -1.7741599)
-light_color = Color(0.6, 0.65, 1, 1)
-light_energy = 0.5
-shadow_enabled = true
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=356720702]
-environment = SubResource("Environment_m7gr6")
-
 [node name="Truck" parent="." unique_id=32433809 instance=ExtResource("13_m7gr6")]
 transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, -16.147648, 0, 102.282745)
 
@@ -171,11 +125,11 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -10.
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.746, 0)
 shape = SubResource("BoxShape3D_suv")
 
-[node name="Root Scene3" parent="." unique_id=1374440934 instance=ExtResource("15_cjcyd")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -10.000001, 0, 51)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=880362593]
+transform = Transform3D(0.19617997, -0.94997144, -0.24303903, 0.92850906, 0.100282654, 0.3575113, -0.31525278, -0.29580045, 0.90173054, 12.095804, 144.87276, -1.7741599)
+light_color = Color(0.6, 0.65, 1, 1)
+light_energy = 0.5
+shadow_enabled = true
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Root Scene3" unique_id=1907310005]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Root Scene3/StaticBody3D" unique_id=1907310006]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.921, 0.112)
-shape = SubResource("BoxShape3D_sports")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=39525027]
+environment = SubResource("Environment_v84y2")
