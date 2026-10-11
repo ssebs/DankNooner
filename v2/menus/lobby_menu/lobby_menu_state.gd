@@ -9,6 +9,7 @@ class_name LobbyMenuState extends MenuState
 @export var input_state_manager: InputStateManager
 @export var gamemode_manager: GamemodeManager
 @export var save_manager: SaveManager
+@export var steam_manager: SteamManager
 
 @export var play_menu_state: MenuState
 @export var customize_menu_state: MenuState
@@ -22,7 +23,7 @@ class_name LobbyMenuState extends MenuState
 
 @onready var ip_label: Label = %IPLabel
 @onready var ip_copy_btn: Button = %IPCopyBtn
-# @onready var invite_btn: Button = %InviteBtn
+@onready var invite_btn: Button = %InviteBtn
 @onready var player_list: VBoxContainer = %PlayersList  # PlayerListUI script
 @onready var loading_ui: ColorRect = %LoadingUI
 @onready var timeout_timer: Timer = %TimeoutTimer
@@ -53,6 +54,7 @@ func Enter(state_context: StateContext):
 	level_select_panel.level_selected.connect(_on_level_selected)
 	ip_copy_btn.pressed.connect(_on_ip_copy_btn_pressed)
 	customize_btn.pressed.connect(_on_customize_pressed)
+	invite_btn.pressed.connect(steam_manager.invite_friends)
 
 	# Connection signals
 	connection_manager.server_disconnected.connect(_on_server_disconnected)
@@ -79,6 +81,7 @@ func Exit(_state_context: StateContext):
 	level_select_panel.level_selected.disconnect(_on_level_selected)
 	ip_copy_btn.pressed.disconnect(_on_ip_copy_btn_pressed)
 	customize_btn.pressed.disconnect(_on_customize_pressed)
+	invite_btn.pressed.disconnect(steam_manager.invite_friends)
 
 	connection_manager.server_disconnected.disconnect(_on_server_disconnected)
 	connection_manager.game_id_set.disconnect(_on_game_id_set)
@@ -221,6 +224,10 @@ func set_single_or_multiplayer_ui():
 		_:
 			singleplayer_ui.hide()
 			multiplayer_ui.show()
+			# Only the host owns the Steam lobby friends get invited to
+			invite_btn.visible = (
+				return_ctx.mode == LobbyStateContext.Mode.HOST and steam_manager.is_logged_in()
+			)
 			if already_connected:
 				ip_label.text = connection_manager.conn_addr
 				ip_copy_btn.disabled = false
@@ -259,6 +266,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("gamemode_manager must not be empty")
 	if save_manager == null:
 		issues.append("save_manager must not be empty")
+	if steam_manager == null:
+		issues.append("steam_manager must not be empty")
 	if customize_menu_state == null:
 		issues.append("customize_menu_state must not be empty")
 	if play_menu_state == null:

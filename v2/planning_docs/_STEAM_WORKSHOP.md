@@ -26,6 +26,8 @@ Mode is picked in `play_menu_state.gd` (`_auto_detect_connection_mode`, `ipport_
 
 ### Option A1 — Steam lobbies + invites only, keep WebRTC transport (smallest)
 
+> Built 2026-10-11, untested. See Architecture → Steam Manager.
+
 Host creates a Steam lobby and stores the WebRTC lobby code in lobby metadata. Joining via invite
 reads the code and calls `connect_client(code)` as normal. Gets invites, "Join Game" from the
 friends list and rich presence. Transport and netfox untouched. Still depends on the signaling server and TURN.

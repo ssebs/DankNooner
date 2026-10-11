@@ -3,6 +3,7 @@ class_name PlayMenuState extends MenuState
 
 @export var menu_manager: MenuManager
 @export var connection_manager: ConnectionManager
+@export var steam_manager: SteamManager
 @export var main_menu_state: MenuState
 @export var lobby_menu_state: MenuState
 @export var customize_menu_state: MenuState
@@ -35,11 +36,15 @@ func Enter(_state_context: StateContext):
 	paste_btn.pressed.connect(_on_paste_btn_pressed)
 	code_entry.text_changed.connect(_on_code_text_changed)
 	ipport_toggle.toggled.connect(_on_ipport_toggled)
+	steam_manager.invite_received.connect(_on_invite_received)
 
 	# Undo the force-IP done by _on_free_roam_btn_pressed when returning here
 	ipport_toggle.button_pressed = false
 	_update_ipport_tooltip()
 	_update_placeholder()
+
+	if !steam_manager.pending_game_id.is_empty():
+		_on_invite_received.call_deferred()
 
 
 func Exit(_state_context: StateContext):
@@ -52,6 +57,7 @@ func Exit(_state_context: StateContext):
 	paste_btn.pressed.disconnect(_on_paste_btn_pressed)
 	code_entry.text_changed.disconnect(_on_code_text_changed)
 	ipport_toggle.toggled.disconnect(_on_ipport_toggled)
+	steam_manager.invite_received.disconnect(_on_invite_received)
 
 
 func _on_paste_btn_pressed():
@@ -129,7 +135,15 @@ func _on_host_btn_pressed():
 
 
 func _on_join_btn_pressed():
-	var game_id := code_entry.text.strip_edges()
+	_join_game(code_entry.text.strip_edges())
+
+
+func _on_invite_received():
+	_join_game(steam_manager.take_pending_game_id())
+
+
+func _join_game(game_id: String):
+	_auto_detect_connection_mode(game_id)
 	var ctx = LobbyStateContext.NewJoin(self, game_id)
 	transitioned.emit(lobby_menu_state, ctx)  # must be before connecting client for ip to show
 
@@ -169,6 +183,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("menu_manager must not be empty")
 	if connection_manager == null:
 		issues.append("connection_manager must not be empty")
+	if steam_manager == null:
+		issues.append("steam_manager must not be empty")
 	if main_menu_state == null:
 		issues.append("main_menu_state must not be empty")
 	if lobby_menu_state == null:

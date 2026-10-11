@@ -85,11 +85,12 @@ audio_manager = NodePath("../AudioManager")
 hud_manager = NodePath("../HUDManager")
 metadata/_custom_type_script = "uid://b2j8gbb336wwq"
 
-[node name="ConnectionManager" type="Node" parent="ManagerManager" unique_id=79087304 node_paths=PackedStringArray("menu_manager", "settings_manager", "level_manager", "ipport_handler", "webrtc_handler") groups=["Managers"]]
+[node name="ConnectionManager" type="Node" parent="ManagerManager" unique_id=79087304 node_paths=PackedStringArray("menu_manager", "settings_manager", "level_manager", "steam_manager", "ipport_handler", "webrtc_handler") groups=["Managers"]]
 script = ExtResource("5_pk5u2")
 menu_manager = NodePath("../MenuManager")
 settings_manager = NodePath("../SettingsManager")
 level_manager = NodePath("../LevelManager")
+steam_manager = NodePath("../SteamManager")
 ipport_handler = NodePath("MultiplayerIPPort")
 webrtc_handler = NodePath("MultiplayerWebRTC")
 metadata/_custom_type_script = "uid://6drc05oyeb7b"
@@ -149,14 +150,15 @@ customize_menu_state = NodePath("../CustomizeMenuState")
 help_menu_state = NodePath("../HelpMenuState")
 tricks_menu_state = NodePath("../TricksMenuState")
 
-[node name="PlayMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=207724047 node_paths=PackedStringArray("menu_manager", "connection_manager", "main_menu_state", "lobby_menu_state", "customize_menu_state") instance=ExtResource("7_f52ns")]
+[node name="PlayMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=207724047 node_paths=PackedStringArray("menu_manager", "connection_manager", "steam_manager", "main_menu_state", "lobby_menu_state", "customize_menu_state") instance=ExtResource("7_f52ns")]
 menu_manager = NodePath("../..")
 connection_manager = NodePath("../../../ConnectionManager")
+steam_manager = NodePath("../../../SteamManager")
 main_menu_state = NodePath("../MainMenuState")
 lobby_menu_state = NodePath("../LobbyMenuState")
 customize_menu_state = NodePath("../CustomizeMenuState")
 
-[node name="LobbyMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1270583406 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "input_state_manager", "gamemode_manager", "save_manager", "play_menu_state", "customize_menu_state") instance=ExtResource("7_l5ukw")]
+[node name="LobbyMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1270583406 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "input_state_manager", "gamemode_manager", "save_manager", "steam_manager", "play_menu_state", "customize_menu_state") instance=ExtResource("7_l5ukw")]
 menu_manager = NodePath("../..")
 settings_manager = NodePath("../../../SettingsManager")
 connection_manager = NodePath("../../../ConnectionManager")
@@ -165,6 +167,7 @@ level_manager = NodePath("../../../LevelManager")
 input_state_manager = NodePath("../../../InputStateManager")
 gamemode_manager = NodePath("../../../GamemodeManager")
 save_manager = NodePath("../../../SaveManager")
+steam_manager = NodePath("../../../SteamManager")
 play_menu_state = NodePath("../PlayMenuState")
 customize_menu_state = NodePath("../CustomizeMenuState")
 

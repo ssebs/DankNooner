@@ -14,6 +14,7 @@ enum ConnectionMode { NORAY, IP_PORT, WEBRTC }
 @export var menu_manager: MenuManager
 @export var settings_manager: SettingsManager
 @export var level_manager: LevelManager
+@export var steam_manager: SteamManager
 @export var connection_mode: ConnectionMode = ConnectionMode.WEBRTC
 @export var ipport_handler: MultiplayerIPPort
 @export var webrtc_handler: MultiplayerWebRTC
@@ -53,6 +54,9 @@ func start_server(solo: bool = false):
 	# emit signal as if the server connected as a client
 	client_connection_succeeded.emit(1)
 
+	if !solo and steam_manager.is_logged_in():
+		steam_manager.host_lobby(conn_addr)
+
 
 ## Stops the running server & disconnects signals
 func stop_server():
@@ -60,6 +64,7 @@ func stop_server():
 	if handler.connection_failed.is_connected(_on_handler_connection_failed):
 		handler.connection_failed.disconnect(_on_handler_connection_failed)
 	handler.stop_server()
+	steam_manager.leave_lobby()
 
 	if multiplayer.peer_connected.is_connected(_on_peer_connected):
 		multiplayer.peer_connected.disconnect(_on_peer_connected)
@@ -193,6 +198,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("level_manager must not be empty")
 	if settings_manager == null:
 		issues.append("settings_manager must not be empty")
+	if steam_manager == null:
+		issues.append("steam_manager must not be empty")
 	# if noray_handler == null:
 	# 	issues.append("noray_handler must not be empty")
 	if ipport_handler == null:

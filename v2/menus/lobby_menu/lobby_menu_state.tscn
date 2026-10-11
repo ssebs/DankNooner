@@ -205,9 +205,9 @@ text = "COPY_LABEL"
 
 [node name="InviteBtn" type="Button" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer/HBoxContainer" unique_id=568535846]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 mouse_default_cursor_shape = 2
-disabled = true
 text = "INVITE_LABEL"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer" unique_id=2077582748]

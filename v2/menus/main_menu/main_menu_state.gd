@@ -48,10 +48,13 @@ func Enter(_state_context: StateContext):
 	customize_btn.pressed.connect(_on_customize_btn_pressed)
 	help_btn.pressed.connect(_on_help_btn_pressed)
 	tricks_btn.pressed.connect(_on_tricks_btn_pressed)
+	steam_manager.invite_received.connect(_on_invite_received)
 
 	var username := save_manager.get_player_definition().username
 	greeting_label.text = tr("MAIN_MENU_GREETING").format({"name": username})
 	steam_status_label.visible = steam_manager.is_logged_in()
+	if !steam_manager.pending_game_id.is_empty():
+		_on_invite_received.call_deferred()
 
 	if level_manager.current_level_name != LevelManager.LevelName.MAIN_MENU_LEVEL:
 		level_manager.spawn_main_menu_level()
@@ -70,6 +73,7 @@ func Exit(_state_context: StateContext):
 	customize_btn.pressed.disconnect(_on_customize_btn_pressed)
 	help_btn.pressed.disconnect(_on_help_btn_pressed)
 	tricks_btn.pressed.disconnect(_on_tricks_btn_pressed)
+	steam_manager.invite_received.disconnect(_on_invite_received)
 
 
 #region button handlers
@@ -96,3 +100,8 @@ func _on_settings_btn_pressed():
 func _on_quit_btn_pressed():
 	get_tree().quit(0)
 #endregion
+
+
+## Play menu joins the pending invite on Enter
+func _on_invite_received():
+	transitioned.emit(play_menu_state, StateContext.NewWithReturn(self))
