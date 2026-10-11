@@ -4,6 +4,8 @@ class_name MainMenuState extends MenuState
 @export var menu_manager: MenuManager
 @export var level_manager: LevelManager
 @export var audio_manager: AudioManager
+@export var save_manager: SaveManager
+@export var steam_manager: SteamManager
 @export var settings_menu_state: MenuState
 @export var play_menu_state: MenuState
 @export var customize_menu_state: MenuState
@@ -17,6 +19,8 @@ class_name MainMenuState extends MenuState
 @onready var help_btn: Button = %HelpBtn
 @onready var tricks_btn: Button = %TricksBtn
 @onready var version_label: Label = %VersionLabel
+@onready var greeting_label: Label = %GreetingLabel
+@onready var steam_status_label: Label = %SteamStatusLabel
 
 
 func _ready():
@@ -44,6 +48,10 @@ func Enter(_state_context: StateContext):
 	customize_btn.pressed.connect(_on_customize_btn_pressed)
 	help_btn.pressed.connect(_on_help_btn_pressed)
 	tricks_btn.pressed.connect(_on_tricks_btn_pressed)
+
+	var username := save_manager.get_player_definition().username
+	greeting_label.text = tr("MAIN_MENU_GREETING").format({"name": username})
+	steam_status_label.visible = steam_manager.is_logged_in()
 
 	if level_manager.current_level_name != LevelManager.LevelName.MAIN_MENU_LEVEL:
 		level_manager.spawn_main_menu_level()

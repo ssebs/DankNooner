@@ -11,6 +11,7 @@ signal save_item_updated(save_key: String, save_value: Variant)
 @export var default_player_definition: PlayerDefinition = load(
 	"res://resources/player/default_player_definition.tres"
 )
+@export var steam_manager: SteamManager
 
 
 var save_path: String:
@@ -46,6 +47,7 @@ func deferred_init():
 		load_save()
 	else:
 		_save_default_save()
+	_seed_steam_username()
 
 
 ## New save: a private copy of default_player_definition (so edits don't leak into the shared
@@ -56,6 +58,15 @@ func _seed_default_loadouts() -> void:
 	current_save["player_definition"] = player_def
 	current_save["progression"]["owned"] = _referenced_skin_paths(player_def)
 	save_save()
+
+
+## Steam name replaces the placeholder once; after that the username is the player's to change.
+func _seed_steam_username() -> void:
+	var player_def := get_player_definition()
+	if player_def.username != default_player_definition.username or !steam_manager.is_logged_in():
+		return
+	player_def.username = steam_manager.steam.getPersonaName()
+	update_save("player_definition", player_def, true, true)
 
 
 ## res paths of every bike and character `player_def` uses.

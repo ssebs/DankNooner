@@ -297,3 +297,7 @@ anti_aliasing/quality/use_taa=true
 occlusion_culling/use_occlusion_culling=true
 mesh_lod/lod_change/threshold_pixels=2.0
 limits/opengl/max_renderable_lights.web=16
+
+[steam]
+
+initialization/app_data/app_id=5416370

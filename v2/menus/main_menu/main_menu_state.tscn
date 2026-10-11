@@ -64,7 +64,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TitleLogo" type="TextureRect" parent="UI/AspectContainer/Content/MarginContainer" unique_id=1293896948]
+[node name="TitleBox" type="VBoxContainer" parent="UI/AspectContainer/Content/MarginContainer" unique_id=1293896950]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="TitleLogo" type="TextureRect" parent="UI/AspectContainer/Content/MarginContainer/TitleBox" unique_id=1293896948]
 custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -73,7 +78,7 @@ texture = ExtResource("2_k7k4a")
 expand_mode = 5
 stretch_mode = 4
 
-[node name="Shadow" type="TextureRect" parent="UI/AspectContainer/Content/MarginContainer/TitleLogo" unique_id=1293896949]
+[node name="Shadow" type="TextureRect" parent="UI/AspectContainer/Content/MarginContainer/TitleBox/TitleLogo" unique_id=1293896949]
 show_behind_parent = true
 material = SubResource("ShaderMaterial_shadow")
 layout_mode = 0
@@ -86,6 +91,12 @@ grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("2_k7k4a")
 expand_mode = 1
+
+[node name="GreetingLabel" type="Label" parent="UI/AspectContainer/Content/MarginContainer/TitleBox" unique_id=1293896951]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Heading1Label"
+text = "Hey, Nooner"
 
 [node name="TitleLabel" type="Label" parent="UI/AspectContainer/Content/MarginContainer" unique_id=42565368]
 visible = false
@@ -147,9 +158,21 @@ size_flags_vertical = 8
 mouse_default_cursor_shape = 2
 text = "HELP_LABEL"
 
-[node name="VersionLabel" type="Label" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer2" unique_id=503333881]
+[node name="VersionRow" type="HBoxContainer" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer2" unique_id=503333882]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+
+[node name="VersionLabel" type="Label" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer2/VersionRow" unique_id=503333881]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 text = "v0.0.142"
+
+[node name="SteamStatusLabel" type="Label" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer2/VersionRow" unique_id=503333883]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 8
+text = "MAIN_MENU_STEAM_CONNECTED"

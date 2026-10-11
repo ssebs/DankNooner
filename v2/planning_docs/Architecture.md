@@ -443,6 +443,14 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
 - Owns the local `PlayerDefinition` (username, bike/character skins, progression)
 - Distinct from `SettingsManager` (which handles device/UI settings)
 
+### Steam Manager
+
+- `SteamManager` (`managers/steam_manager.gd`) - GodotSteam init; the game must run without Steam (offline, Web)
+- `is_logged_in()` is the gate for Steam features; each feature decides its own fallback when false
+- Username: `SaveManager` swaps the placeholder username for the Steam name once at load; after that the save's username wins
+- Never reference `Steam` statically — Web uses stock templates, so it's a parse error there. Go through `steam_manager.steam`
+- No `restartAppIfNecessary()`: it forces a relaunch through Steam and blocks offline play
+
 ### Spawn Manager
 
 `SpawnManager` (`managers/spawn_manager.gd`) owns player spawn/despawn/respawn. Grep `@rpc` there
