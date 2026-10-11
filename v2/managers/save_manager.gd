@@ -47,7 +47,7 @@ func deferred_init():
 		load_save()
 	else:
 		_save_default_save()
-	_seed_steam_username()
+	_apply_steam_profile()
 
 
 ## New save: a private copy of default_player_definition (so edits don't leak into the shared
@@ -60,10 +60,13 @@ func _seed_default_loadouts() -> void:
 	save_save()
 
 
-## Steam name replaces the placeholder once; after that the username is the player's to change.
-func _seed_steam_username() -> void:
+## steam_id is per-session. The Steam name replaces the placeholder once; after that the
+## username is the player's to change.
+func _apply_steam_profile() -> void:
 	var player_def := get_player_definition()
-	if player_def.username != default_player_definition.username or !steam_manager.is_logged_in():
+	var logged_in := steam_manager.is_logged_in()
+	player_def.steam_id = steam_manager.steam.getSteamID() if logged_in else 0
+	if !logged_in or player_def.username != default_player_definition.username:
 		return
 	player_def.username = steam_manager.steam.getPersonaName()
 	update_save("player_definition", player_def, true, true)

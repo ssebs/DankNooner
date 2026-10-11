@@ -245,3 +245,6 @@ text = "BACK_LABEL"
 [node name="TimeoutTimer" type="Timer" parent="." unique_id=2081652172]
 unique_name_in_owner = true
 wait_time = 10.0
+
+[node name="PingTimer" type="Timer" parent="." unique_id=2081652173]
+unique_name_in_owner = true

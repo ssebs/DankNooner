@@ -29,6 +29,9 @@ const DELETED_CHARACTER_VARIANTS := {
 	[CHARACTER_SKINS_DIR + "clanker_default_skin_definition.tres", Color(0.45, 0.5875, 1, 1)],
 }
 
+## 0 when not on Steam. Set each session by SaveManager, so a copied save's stale id is never used
+var steam_id: int = 0
+
 var bike_skin: BikeSkinDefinition:
 	get:
 		return loadouts[active_loadout_index].bike
@@ -56,6 +59,8 @@ func to_dict() -> Dictionary:
 		"money": money,
 		"xp": xp,
 		"username": username,
+		# String: JSON numbers are floats and can't hold a 64-bit Steam id
+		"steam_id": str(steam_id),
 	}
 
 
@@ -63,6 +68,7 @@ func from_dict(dict: Dictionary):
 	username = dict.get("username", "N/A")
 	money = dict.get("money", 0.0)
 	xp = int(dict.get("xp", 0))
+	steam_id = str(dict.get("steam_id", "0")).to_int()
 
 	ui_icon = DictJSONSaverLoader.try_load(
 		dict, "ui_icon_res", "res://resources/img/Logos/Logo.svg"

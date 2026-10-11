@@ -3,12 +3,15 @@ class_name SteamManager extends BaseManager
 
 ## A Steam invite / "Join Game" resolved to a game code; read it with take_pending_game_id()
 signal invite_received
+signal avatar_loaded(steam_id: int, texture: ImageTexture)
 
 # Steamworks enum values; no static `Steam` ref (see `steam`)
 const RESULT_OK := 1
 const LOBBY_TYPE_FRIENDS_ONLY := 1
 const LOBBY_MAX_MEMBERS := 8
 const LOBBY_GAME_ID_KEY := "game_id"
+# getPlayerAvatar size: 1 small, 2 medium (64px), 3 large
+const AVATAR_MEDIUM := 2
 
 ## Null when Steam is unavailable (Web, no client). Via Engine: a static `Steam` ref won't parse on Web
 var steam: Object
@@ -52,6 +55,11 @@ func invite_friends():
 	steam.activateGameOverlayInviteDialog(_lobby_id)
 
 
+## Emits avatar_loaded when Steam has it; users Steam doesn't know (non-friends) never load
+func request_avatar(steam_id: int):
+	steam.getPlayerAvatar(AVATAR_MEDIUM, steam_id)
+
+
 func take_pending_game_id() -> String:
 	var game_id := pending_game_id
 	pending_game_id = ""
@@ -73,6 +81,7 @@ func _init_steam():
 	steam.connect("lobby_created", _on_lobby_created)
 	steam.connect("join_requested", _on_join_requested)
 	steam.connect("lobby_data_update", _on_lobby_data_update)
+	steam.connect("avatar_loaded", _on_avatar_loaded)
 
 	# Cold launch from an invite: Steam appends `+connect_lobby <id>`
 	var args := OS.get_cmdline_args()
@@ -108,3 +117,8 @@ func _on_lobby_data_update(success: int, lobby_id: int, member_id: int):
 		return
 	pending_game_id = steam.getLobbyData(lobby_id, LOBBY_GAME_ID_KEY)
 	invite_received.emit()
+
+
+func _on_avatar_loaded(steam_id: int, size: int, data: PackedByteArray):
+	var image := Image.create_from_data(size, size, false, Image.FORMAT_RGBA8, data)
+	avatar_loaded.emit(steam_id, ImageTexture.create_from_image(image))

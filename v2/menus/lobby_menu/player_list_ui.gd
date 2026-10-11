@@ -28,6 +28,20 @@ func update_from_dict(players: Dictionary):
 			_add_player_item(player_id, player_def)
 
 
+## Steam avatar replaces the default icon until the next update_from_dict
+func set_avatar(steam_id: int, texture: Texture2D):
+	for player_li: PlayerListItem in get_children():
+		if player_li.player_definition.steam_id == steam_id:
+			player_li.set_avatar(texture)
+
+
+func set_ping(peer_id: int, ping_ms: int):
+	# Row can be missing: metadata not synced yet, or the list was just cleared
+	if !has_node(str(peer_id)):
+		return
+	(get_node(str(peer_id)) as PlayerListItem).set_ping(str(ping_ms))
+
+
 ## Clear all players from the list
 func clear():
 	for child in get_children():
@@ -47,6 +61,7 @@ func _add_player_item(player_id: int, player_def: PlayerDefinition):
 		player_li.host_label.text = "YOU_LABEL"
 	else:
 		player_li.host_label.text = ""
+	player_li.set_ping("0" if player_id == 1 else "--")
 
 	player_li.update_ui_from_player_definition()
 

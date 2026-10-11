@@ -4,12 +4,16 @@
 [ext_resource type="Script" uid="uid://d2naekejlkomd" path="res://menus/lobby_menu/player_list_item.gd" id="1_vlnsy"]
 [ext_resource type="Texture2D" uid="uid://cwf7vhr6hpjoj" path="res://resources/img/Logos/Logo.svg" id="2_vlnsy"]
 [ext_resource type="FontFile" uid="uid://tyej4l632h7k" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-Regular.ttf" id="4_fp5ot"]
+[ext_resource type="Shader" path="res://resources/shaders/circle_mask.gdshader" id="5_circle"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_circle"]
+shader = ExtResource("5_circle")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fp5ot"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
 bg_color = Color(0.6, 0.6, 0.6, 0)
 border_width_left = 4
 border_width_top = 4
@@ -48,6 +52,7 @@ layout_mode = 2
 theme_override_constants/separation = 24
 
 [node name="PanelContainer" type="PanelContainer" parent="PanelContainer/HBoxContainer" unique_id=110244629]
+custom_minimum_size = Vector2(88, 88)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_fp5ot")
 
@@ -59,6 +64,14 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = ExtResource("2_vlnsy")
 expand_mode = 3
+
+[node name="AvatarIcon" type="TextureRect" parent="PanelContainer/HBoxContainer/PanelContainer" unique_id=1232060763]
+unique_name_in_owner = true
+visible = false
+material = SubResource("ShaderMaterial_circle")
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 6
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer" unique_id=1927392922]
 layout_mode = 2

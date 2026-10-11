@@ -448,6 +448,7 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
 - `SteamManager` (`managers/steam_manager.gd`) - GodotSteam init; the game must run without Steam (offline, Web)
 - `is_logged_in()` is the gate for Steam features; each feature decides its own fallback when false
 - Username: `SaveManager` swaps the placeholder username for the Steam name once at load; after that the save's username wins
+- Avatars: `PlayerDefinition.steam_id` (set per session, synced as a string) lets each viewer fetch lobby-list avatars from its own Steam client. No Steam, or a non-friend → default icon
 - Never reference `Steam` statically — Web uses stock templates, so it's a parse error there. Go through `steam_manager.steam`
 - No `restartAppIfNecessary()`: it forces a relaunch through Steam and blocks offline play
 - Invites (plan A1 in `_STEAM_WORKSHOP.md`): a non-solo host creates a friends-only Steam lobby holding the game code (`ConnectionManager.start_server`), left in `stop_server`. Joiners never join the Steam lobby — `join_requested` / `+connect_lobby` only reads the code into `pending_game_id`; main menu routes to the play menu, which joins through the normal code path. Transport is unchanged, so web players still join by code
