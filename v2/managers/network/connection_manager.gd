@@ -9,7 +9,7 @@ signal client_connection_failed(reason: String)
 signal client_connection_succeeded(peer_id: int)
 signal connection_reset
 
-enum ConnectionMode { NORAY, IP_PORT, WEBRTC }
+enum ConnectionMode { NORAY, IP_PORT, WEBRTC, STEAM }
 
 @export var menu_manager: MenuManager
 @export var settings_manager: SettingsManager
@@ -18,6 +18,7 @@ enum ConnectionMode { NORAY, IP_PORT, WEBRTC }
 @export var connection_mode: ConnectionMode = ConnectionMode.WEBRTC
 @export var ipport_handler: MultiplayerIPPort
 @export var webrtc_handler: MultiplayerWebRTC
+@export var steam_handler: MultiplayerSteam
 
 ## either ip addr or noray oid
 var conn_addr: String:
@@ -55,7 +56,10 @@ func start_server(solo: bool = false):
 	client_connection_succeeded.emit(1)
 
 	if !solo and steam_manager.is_logged_in():
-		steam_manager.host_lobby(conn_addr)
+		# The Steam handler already hosts on a lobby, whose ID is the code
+		if connection_mode != ConnectionMode.STEAM:
+			await steam_manager.host_lobby()
+		steam_manager.set_lobby_game_id(conn_addr)
 
 
 ## Stops the running server & disconnects signals
@@ -78,7 +82,7 @@ func stop_server():
 
 
 ## Connects to a server at the given address. Returns OK on success, or an error code on failure.
-## Address is Noray OID or IP depending on connection_mode.
+## Address is a game code, IP or Steam lobby ID depending on connection_mode.
 func connect_client(address: String) -> Error:
 	var handler = _get_handler()
 	handler.connection_failed.connect(_on_handler_connection_failed)
@@ -130,13 +134,15 @@ func disconnect_sp_or_mp():
 #endregion
 
 
-## return MultiplayerIPPort, or MultiplayerWebRTC depending on connection_mode
+## return MultiplayerIPPort, MultiplayerWebRTC or MultiplayerSteam depending on connection_mode
 func _get_handler():
 	match connection_mode:
 		ConnectionMode.IP_PORT:
 			return ipport_handler
 		ConnectionMode.WEBRTC:
 			return webrtc_handler
+		ConnectionMode.STEAM:
+			return steam_handler
 	return ipport_handler
 
 
@@ -206,5 +212,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("ipport_handler must not be empty")
 	if webrtc_handler == null:
 		issues.append("webrtc_handler must not be empty")
+	if steam_handler == null:
+		issues.append("steam_handler must not be empty")
 
 	return issues

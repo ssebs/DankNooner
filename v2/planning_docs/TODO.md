@@ -21,6 +21,7 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] in game => main menu the scene doesnt render
 - [ ] credits btn/menu
 
 - [ ] option to drop current item?

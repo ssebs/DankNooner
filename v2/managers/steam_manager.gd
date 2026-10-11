@@ -7,6 +7,7 @@ signal avatar_loaded(steam_id: int, texture: ImageTexture)
 
 # Steamworks enum values; no static `Steam` ref (see `steam`)
 const RESULT_OK := 1
+const CHAT_ROOM_ENTER_SUCCESS := 1
 const LOBBY_TYPE_FRIENDS_ONLY := 1
 const LOBBY_MAX_MEMBERS := 8
 const LOBBY_GAME_ID_KEY := "game_id"
@@ -18,9 +19,10 @@ var steam: Object
 ## Game code from an accepted invite, waiting for the play menu to join it
 var pending_game_id := ""
 
-## The Steam lobby we host; joiners only read its data and never join it
+## The Steam lobby we host, or joined (only the Steam transport joins; others just read its data)
 var _lobby_id := 0
-var _hosting_game_id := ""
+## Cleared by leave_lobby(), so a lobby that finishes creating/joining after that is left
+var _in_session := false
 var _requested_lobby_id := 0
 
 
@@ -36,15 +38,41 @@ func is_logged_in() -> bool:
 	return steam != null and steam.loggedOn()
 
 
-## Advertise `game_id` in a friends-only lobby so friends can be invited or "Join Game"
-func host_lobby(game_id: String):
-	_hosting_game_id = game_id
+## Friends-only lobby so friends can be invited or "Join Game". Returns its ID, 0 on failure
+func host_lobby() -> int:
+	_in_session = true
 	steam.createLobby(LOBBY_TYPE_FRIENDS_ONLY, LOBBY_MAX_MEMBERS)
+	var created: Array = await Signal(steam, "lobby_created")
+	if created[0] != RESULT_OK:
+		DebugUtils.DebugMsg("Steam: lobby creation failed (%s)" % created[0])
+		return 0
+	return _keep_lobby(created[1])
+
+
+## Returns the lobby owner's Steam ID to connect to, 0 on failure
+func join_lobby(lobby_id: int) -> int:
+	_in_session = true
+	steam.joinLobby(lobby_id)
+	var joined: Array = await Signal(steam, "lobby_joined")
+	if joined[3] != CHAT_ROOM_ENTER_SUCCESS:
+		DebugUtils.DebugMsg("Steam: couldn't join lobby %s (%s)" % [lobby_id, joined[3]])
+		return 0
+	if _keep_lobby(lobby_id) == 0:
+		return 0
+	return steam.getLobbyOwner(lobby_id)
+
+
+## The code invitees join with
+func set_lobby_game_id(game_id: String):
+	# Lobby creation failed or the session ended — nothing to advertise
+	if _lobby_id == 0:
+		return
+	steam.setLobbyData(_lobby_id, LOBBY_GAME_ID_KEY, game_id)
 
 
 func leave_lobby():
-	_hosting_game_id = ""
-	# Not hosting a Steam lobby (Steam off, solo, or still being created) — nothing to leave
+	_in_session = false
+	# No Steam lobby (Steam off, solo, or still being created) — nothing to leave
 	if _lobby_id == 0:
 		return
 	steam.leaveLobby(_lobby_id)
@@ -78,7 +106,6 @@ func _init_steam():
 		return
 
 	steam = Engine.get_singleton("Steam")
-	steam.connect("lobby_created", _on_lobby_created)
 	steam.connect("join_requested", _on_join_requested)
 	steam.connect("lobby_data_update", _on_lobby_data_update)
 	steam.connect("avatar_loaded", _on_avatar_loaded)
@@ -90,16 +117,13 @@ func _init_steam():
 		_on_join_requested(args[idx + 1].to_int(), 0)
 
 
-func _on_lobby_created(result: int, lobby_id: int):
-	if result != RESULT_OK:
-		DebugUtils.DebugMsg("Steam: lobby creation failed (%s)" % result)
-		return
+func _keep_lobby(lobby_id: int) -> int:
+	# Session ended while the lobby was being created/joined
+	if !_in_session:
+		steam.leaveLobby(lobby_id)
+		return 0
 	_lobby_id = lobby_id
-	# Session ended while the lobby was being created
-	if _hosting_game_id.is_empty():
-		leave_lobby()
-		return
-	steam.setLobbyData(lobby_id, LOBBY_GAME_ID_KEY, _hosting_game_id)
+	return lobby_id
 
 
 func _on_join_requested(lobby_id: int, _friend_id: int):

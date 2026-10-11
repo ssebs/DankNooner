@@ -100,7 +100,7 @@ partial fill.
 - **Price:** each pump costs its `FreeRoamActivity.price` ($10), charged via `SaveManager.spend`.
   Free roam checks it when the picker is submitted and charges when the server accepts; pre-race
   charges on entering fuel-up, and a rider who can't pay skips their pump (keeps their boost, no
-  bonus). Can't pay flashes the riding HUD's money; paying drops a red "-$10" off the fuel-up HUD's.
+  bonus) and is unfrozen to ride until the handoff. Can't pay flashes the riding HUD's money; paying drops a red "-$10" off the fuel-up HUD's.
 - **Payout differs by mode.** Free roam never lowers the meter (see above), so spill only limits
   how high it fills. Pre-race starts every tank at most `FULL_TANK_DRAIN_SEGMENTS` below full so
   full riders still play; finishing reports fill and `spilled`, the server sets boost to the fill,

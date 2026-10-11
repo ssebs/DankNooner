@@ -177,6 +177,10 @@ var _respawn_target: Transform3D = Transform3D()
 var _boost_grant_tick: int = -1
 var _boost_grant_amount: float = 0.0
 
+## Same resim protection for freezes — a dropped unlock leaves the rider frozen for good.
+var _lock_tick: int = -1
+var _lock_value: bool = false
+
 # Process-side state tracking (not sync'd)
 var _prev_is_crashed: bool = false
 ## Local _process edge for the NOS boost SFX — plays once each time a boost fires.
@@ -249,12 +253,15 @@ func _rollback_tick(delta: float, tick: int, _is_fresh: bool):
 		rb_do_wobble = false
 		wobble_controller.wobble_vel += rb_wobble_strength  # tank-slapper kick (synced state)
 
-	if rb_lock_movement:
+	if rb_lock_movement or rb_unlock_movement:
+		# Unlock wins when both land on one tick
+		movement_locked = !rb_unlock_movement
 		rb_lock_movement = false
-		movement_locked = true
-	if rb_unlock_movement:
 		rb_unlock_movement = false
-		movement_locked = false
+		_lock_tick = tick
+		_lock_value = movement_locked
+	elif tick == _lock_tick:
+		movement_locked = _lock_value
 
 	# Boost grant: apply once, then re-apply the same meter on any resim of that tick (boost
 	# is drained below, so this must land before the controllers run).

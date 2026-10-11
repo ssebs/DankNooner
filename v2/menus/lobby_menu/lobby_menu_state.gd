@@ -131,7 +131,8 @@ func _on_back_pressed():
 
 ## copy game id to clipboard
 func _on_ip_copy_btn_pressed():
-	DisplayServer.clipboard_set(ip_label.text)
+	# Not the label: joining takes a bare IP, without the port
+	DisplayServer.clipboard_set(connection_manager.conn_addr)
 	UiToast.ShowToast("Game ID copied to clipboard!")
 
 
@@ -149,7 +150,7 @@ func _on_customize_pressed():
 #region network signal handlers
 ## set game join id in ui & enable clipboard btn
 func _on_game_id_set(conn_addr: String):
-	ip_label.text = conn_addr
+	_show_game_id(conn_addr)
 	ip_copy_btn.disabled = false
 	level_select_panel.refresh_preview()
 
@@ -230,6 +231,17 @@ func _sync_ping(peer_id: int, ping_ms: int):
 #endregion
 
 
+## IP/Port mode adds the port, which the host has to forward
+func _show_game_id(conn_addr: String):
+	ip_label.text = conn_addr
+	# Empty on connection reset
+	if (
+		!conn_addr.is_empty()
+		and connection_manager.connection_mode == ConnectionManager.ConnectionMode.IP_PORT
+	):
+		ip_label.text += ":%d" % UtilsConstants.PORT
+
+
 ## Hide or Show the singleplayer / multiplayer ui depending on return_ctx.mode
 func set_single_or_multiplayer_ui():
 	# Reset controls disabled by a prior client join — otherwise re-entering as
@@ -264,7 +276,7 @@ func set_single_or_multiplayer_ui():
 				return_ctx.mode == LobbyStateContext.Mode.HOST and steam_manager.is_logged_in()
 			)
 			if already_connected:
-				ip_label.text = connection_manager.conn_addr
+				_show_game_id(connection_manager.conn_addr)
 				ip_copy_btn.disabled = false
 				if !multiplayer.is_server():
 					level_select_panel.set_controls_disabled(true)

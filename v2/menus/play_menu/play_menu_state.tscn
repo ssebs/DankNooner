@@ -83,7 +83,7 @@ size_flags_horizontal = 0
 mouse_default_cursor_shape = 2
 text = "HOST_LABEL"
 
-[node name="IpPortToggle" type="CheckBox" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP/HostContainer" unique_id=98726948]
+[node name="HostModeOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP/HostContainer" unique_id=98726948]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0

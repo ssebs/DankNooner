@@ -251,6 +251,7 @@ What the list can't tell you:
 - `rb_do_respawn` → `do_respawn()`, and `rb_do_crash` → `on_crash()`
 - `rb_respawn_transform` (persistent point) / `rb_respawn_transform_oneshot` (consumed on use) carry the target; `_pick_respawn_target()` prefers the one-shot.
 - The respawn tick is remembered in `_respawn_tick` so a **resimulation** of it re-applies the synced-state half via `_apply_respawn_state()`, skipping one-time cosmetics (mesh/IK/audio). Without that, the resim undoes the teleport — the flag was already consumed on the first pass.
+- Any `rb_` flag that writes synced state needs the same protection: boost grants (`_boost_grant_tick`) and freezes (`rb_lock_movement` / `rb_unlock_movement` → `_lock_tick`) re-apply their result on a resim of their tick. An unprotected unlock gets undone and leaves the rider frozen for good — most often a laggy (web) client, whose ticks the server is still predicting.
 - Gear shifts sync `nfx_target_gear` (absolute requested gear) as netfox input — never edge-triggered flags, which drop/double-apply under stale-input reuse on the server.
 
 #### GearingController
@@ -451,7 +452,8 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
 - Avatars: `PlayerDefinition.steam_id` (set per session, synced as a string) lets each viewer fetch lobby-list avatars from its own Steam client. No Steam, or a non-friend → default icon
 - Never reference `Steam` statically — Web uses stock templates, so it's a parse error there. Go through `steam_manager.steam`
 - No `restartAppIfNecessary()`: it forces a relaunch through Steam and blocks offline play
-- Invites (plan A1 in `_STEAM_WORKSHOP.md`): a non-solo host creates a friends-only Steam lobby holding the game code (`ConnectionManager.start_server`), left in `stop_server`. Joiners never join the Steam lobby — `join_requested` / `+connect_lobby` only reads the code into `pending_game_id`; main menu routes to the play menu, which joins through the normal code path. Transport is unchanged, so web players still join by code
+- Lobbies: `SteamManager` owns create/join/leave (`host_lobby()` / `join_lobby()` await the Steam callback; `leave_lobby()` mid-await leaves the late lobby)
+- Invites (plan A1 in `_STEAM_WORKSHOP.md`): a non-solo, logged-in host has a friends-only Steam lobby whose `game_id` data is the game code (`ConnectionManager.start_server`), left in `stop_server`. `join_requested` / `+connect_lobby` only reads the code into `pending_game_id`; main menu routes to the play menu, which joins through the normal code path. Only the STEAM transport actually joins the lobby
 
 ### Spawn Manager
 
@@ -563,6 +565,10 @@ All modes are **server-authoritative** — the host runs physics, clients predic
 - **WEBRTC** *(default)*: WebRTC peer connections via a custom signaling server (`signal_relay_host`), works for both native and browser clients. Handled by `MultiplayerWebRTC`. See [LobbyGameFlowMP.md](./LobbyGameFlowMP.md)
 - **IP_PORT**: Direct IP/ENet connection on `UtilsConstants.PORT`. Handled by `MultiplayerIPPort`.
   - Fetches public IP via ipify.org API (or private IP in debug)
+- **STEAM**: `SteamMultiplayerPeer` over Steam's relay — no signaling or TURN server. Handled by `MultiplayerSteam`. The game code is the host's Steam lobby ID; joiners join that lobby, then connect to its owner. Steam-only: web / non-Steam players can't join a Steam host
+  - Instantiated via `ClassDB` — a static `SteamMultiplayerPeer` ref won't parse on Web
+
+The host picks the mode in the play menu (`HostModeOpt`; Steam listed first, as the default, when logged in). Joining auto-detects it from the code's format; Steam codes only validate when logged in. Free roam ignores the picker (lobby menu forces local ENet, WebRTC on web).
 
 Like `GameModeType.Kind`, `ConnectionMode` carries entries with no handler behind them. The
 `match` in `connection_manager.gd` is the real list of supported modes, not the enum.

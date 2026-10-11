@@ -1,8 +1,8 @@
 @tool
 ## Pre-race fuel-up: every rider is parked at their own pump in the event circle's gas_station
 ## and frozen, while their client pays the pump's price and plays its FuelUpMinigame locally
-## (outside the rollback sim); a rider who can't pay sits it out. Each finish sets that rider's
-## boost to their fill (spilling caps it), and banks a clean-fill bonus for
+## (outside the rollback sim); a rider who can't pay skips it, free to ride. Each finish sets
+## that rider's boost to their fill (spilling caps it), and banks a clean-fill bonus for
 ## FuelUpBonusComponent; once every rider has reported, the event hands off to its definition's
 ## target_gamemode.
 class_name FuelUpGameMode extends GameModeType
@@ -45,6 +45,10 @@ func Enter(state_context: StateContext):
 	var peer_ids := gamemode_manager.lobby_manager.lobby_players.keys()
 	peer_ids.sort()
 
+	# TEMP fuel-up debug
+	var me := multiplayer.get_unique_id()
+	var money := save_manager.get_player_definition().money
+	DebugUtils.DebugMsg("FuelUp: peer %d in %s, %d pumps, money %s" % [me, peer_ids, pumps.size(), money])
 	var pump := pumps[peer_ids.find(multiplayer.get_unique_id())]
 	if save_manager.spend(pump.price):
 		_minigame = pump
@@ -59,7 +63,7 @@ func Enter(state_context: StateContext):
 			_minigame.fill, 1.0 - FULL_TANK_DRAIN_SEGMENTS / BoostController.BOOST_SEGMENTS
 		)
 	else:
-		# Can't pay: sit it out at the pump. Deferred so the host's own skip lands after the
+		# Can't pay: skip it, unfrozen. Deferred so the host's own skip lands after the
 		# server half below has filled _pending.
 		hud_manager.riding_hud_state.flash_money()
 		(func(): _rpc_fuel_up_skipped.rpc_id(1)).call_deferred()
@@ -133,16 +137,19 @@ func _rpc_fuel_up_done(fill: float, spilled: float):
 	_mark_done(peer_id)
 
 
-## Couldn't pay — keeps their boost, no bonus.
+## Couldn't pay — keeps their boost, no bonus, and rides free until the handoff.
 @rpc("any_peer", "call_local", "reliable")
 func _rpc_fuel_up_skipped():
 	if !multiplayer.is_server():
 		return
-	_mark_done(multiplayer.get_remote_sender_id())
+	var peer_id := multiplayer.get_remote_sender_id()
+	CountdownTask.unfreeze(spawn_manager.get_player_by_peer_id(peer_id))
+	_mark_done(peer_id)
 
 
 func _mark_done(peer_id: int):
 	_pending.erase(peer_id)
+	DebugUtils.DebugMsg("FuelUp: %d done, pending %s" % [peer_id, _pending])  # TEMP fuel-up debug
 	if _pending.is_empty():
 		gamemode_manager.change_gamemode(
 			_event.definition.target_gamemode, multiplayer.get_unique_id(), _event.get_path()

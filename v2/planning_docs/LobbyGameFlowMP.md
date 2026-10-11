@@ -4,9 +4,10 @@ This document explains the complete flow of the multiplayer lobby system, from h
 
 ## Overview
 
-The lobby system uses WebRTC for networking with two connection modes:
+The lobby system has three connection modes (see [Architecture — Connection Modes](./Architecture.md#connection-modes)):
 
-- **WebRTC**: P2P via custom signaling server (default) — [danknoonersignalserver](https://github.com/ssebs/danknoonersignalserver/)
+- **Steam**: `SteamMultiplayerPeer` over Steam's relay (default when logged into Steam)
+- **WebRTC**: P2P via custom signaling server — [danknoonersignalserver](https://github.com/ssebs/danknoonersignalserver/)
 - **IP/Port**: Direct ENet connection (requires port forwarding)
 
 ---

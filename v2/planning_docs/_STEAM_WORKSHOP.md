@@ -21,7 +21,7 @@
 `start_server(solo)`, `stop_server()`, `connect_client(addr)`, `disconnect_client()`, `get_addr()`
 and the `connection_failed` / `connection_succeeded` signals. Steam is a third handler.
 
-Mode is picked in `play_menu_state.gd` (`_auto_detect_connection_mode`, `ipport_toggle`) and
+Mode is picked in `play_menu_state.gd` (`_auto_detect_connection_mode`, `host_mode_opt`) and
 `lobby_menu_state.gd` (freeroam forces IP_PORT / WEBRTC on web).
 
 ### Option A1 — Steam lobbies + invites only, keep WebRTC transport (smallest)
@@ -33,6 +33,8 @@ reads the code and calls `connect_client(code)` as normal. Gets invites, "Join G
 friends list and rich presence. Transport and netfox untouched. Still depends on the signaling server and TURN.
 
 ### Option A2 — `SteamMultiplayerPeer` transport
+
+> Built 2026-10-11, untested (steps 3 + 5). See Architecture → Connection Modes.
 
 Steam Datagram Relay replaces the signaling server and TURN, and hides player IPs.
 

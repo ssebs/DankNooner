@@ -67,6 +67,7 @@ func begin(
 	_audio_manager = audio_manager
 	_hud_manager = hud_manager
 	player.respawned.connect(_start_session, CONNECT_ONE_SHOT)
+	DebugUtils.DebugMsg("Activity %s: begin, waiting for respawn" % name)  # TEMP fuel-up debug
 
 
 ## Client: hand the rider back. Also the cancel path, so it's safe at any point after begin(),
@@ -97,6 +98,7 @@ func end():
 
 
 func _start_session():
+	DebugUtils.DebugMsg("Activity %s: session start" % name)  # TEMP fuel-up debug
 	_audio_manager.stop_revs()
 	_player.camera_controller.set_override_cam(camera)
 	_on_session_start()

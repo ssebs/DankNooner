@@ -14,6 +14,9 @@ const NORAY_OID_CHARSET := "useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfgh
 const WEBRTC_CODE_LENGTH := 32
 const WEBRTC_CODE_CHARSET := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 
+# Lobby-type Steam IDs always have 18 digits
+const STEAM_LOBBY_ID_LENGTH := 18
+
 @onready var back_btn: Button = %BackBtn
 @onready var customize_btn: Button = %CustomizeBtn
 @onready var free_roam_btn: Button = %FreeRoamBtn
@@ -22,7 +25,7 @@ const WEBRTC_CODE_CHARSET := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx
 @onready var join_btn: Button = %JoinBtn
 @onready var paste_btn: Button = %PasteBtn
 @onready var code_entry: LineEdit = %CodeEntry
-@onready var ipport_toggle: CheckBox = %IpPortToggle
+@onready var host_mode_opt: OptionButton = %HostModeOpt
 
 
 func Enter(_state_context: StateContext):
@@ -35,12 +38,15 @@ func Enter(_state_context: StateContext):
 	join_btn.pressed.connect(_on_join_btn_pressed)
 	paste_btn.pressed.connect(_on_paste_btn_pressed)
 	code_entry.text_changed.connect(_on_code_text_changed)
-	ipport_toggle.toggled.connect(_on_ipport_toggled)
 	steam_manager.invite_received.connect(_on_invite_received)
 
-	# Undo the force-IP done by _on_free_roam_btn_pressed when returning here
-	ipport_toggle.button_pressed = false
-	_update_ipport_tooltip()
+	# Raw keys: OptionButton auto-translates. First item is the default
+	host_mode_opt.clear()
+	if steam_manager.is_logged_in():
+		host_mode_opt.add_item("USE_STEAM_LABEL", ConnectionManager.ConnectionMode.STEAM)
+	host_mode_opt.add_item("USE_WEBRTC_LABEL", ConnectionManager.ConnectionMode.WEBRTC)
+	host_mode_opt.add_item("USE_IPPORT_LABEL", ConnectionManager.ConnectionMode.IP_PORT)
+	host_mode_opt.select(0)
 	_update_placeholder()
 
 	if !steam_manager.pending_game_id.is_empty():
@@ -56,7 +62,6 @@ func Exit(_state_context: StateContext):
 	join_btn.pressed.disconnect(_on_join_btn_pressed)
 	paste_btn.pressed.disconnect(_on_paste_btn_pressed)
 	code_entry.text_changed.disconnect(_on_code_text_changed)
-	ipport_toggle.toggled.disconnect(_on_ipport_toggled)
 	steam_manager.invite_received.disconnect(_on_invite_received)
 
 
@@ -82,29 +87,20 @@ func _auto_detect_connection_mode(text: String):
 		connection_manager.connection_mode = ConnectionManager.ConnectionMode.NORAY
 	elif _is_valid_webrtc_id(text):
 		connection_manager.connection_mode = ConnectionManager.ConnectionMode.WEBRTC
+	elif _is_valid_steam_lobby_id(text):
+		connection_manager.connection_mode = ConnectionManager.ConnectionMode.STEAM
 
 
 func _update_placeholder():
 	code_entry.placeholder_text = tr("GAME_CODE_PLACEHOLDER")
 
 
-func _on_ipport_toggled(_toggled_on: bool):
-	_update_ipport_tooltip()
-
-
-func _update_ipport_tooltip():
-	if ipport_toggle.button_pressed:
-		connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
-		ipport_toggle.tooltip_text = tr("USE_WEBRTC_LABEL")
-	else:
-		# HACK
-		connection_manager.connection_mode = ConnectionManager.ConnectionMode.WEBRTC
-		ipport_toggle.tooltip_text = tr("USE_IPPORT_LABEL")
-
-
 func _validate_code(text: String):
 	join_btn.disabled = not (
-		text.is_valid_ip_address() or _is_valid_noray_oid(text) or _is_valid_webrtc_id(text)
+		text.is_valid_ip_address()
+		or _is_valid_noray_oid(text)
+		or _is_valid_webrtc_id(text)
+		or _is_valid_steam_lobby_id(text)
 	)
 
 
@@ -116,6 +112,16 @@ func _is_valid_webrtc_id(text: String) -> bool:
 		if c not in WEBRTC_CODE_CHARSET:
 			return false
 	return true
+
+
+## Joining a Steam lobby needs Steam
+func _is_valid_steam_lobby_id(text: String) -> bool:
+	var trimmed := text.strip_edges()
+	return (
+		steam_manager.is_logged_in()
+		and trimmed.length() == STEAM_LOBBY_ID_LENGTH
+		and trimmed.is_valid_int()
+	)
 
 
 func _is_valid_noray_oid(text: String) -> bool:
@@ -130,6 +136,9 @@ func _is_valid_noray_oid(text: String) -> bool:
 
 #region button handlers
 func _on_host_btn_pressed():
+	connection_manager.connection_mode = (
+		host_mode_opt.get_selected_id() as ConnectionManager.ConnectionMode
+	)
 	transitioned.emit(lobby_menu_state, LobbyStateContext.NewHost(self, "0.0.0.0"))
 	await connection_manager.start_server()
 
@@ -154,9 +163,6 @@ func _join_game(game_id: String):
 
 
 func _on_free_roam_btn_pressed():
-	# Force IP mode
-	ipport_toggle.button_pressed = true
-	_update_ipport_tooltip()
 	transitioned.emit(lobby_menu_state, LobbyStateContext.NewFreeRoam(self))
 
 
