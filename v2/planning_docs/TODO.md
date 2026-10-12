@@ -23,8 +23,12 @@
 
 - [ ] Steam
   - [ ] Steam page [WIP]
+    - [x] $100
+    - [x] basic setup
+    - [ ] builds planning_docs/_STEAM_CI_CD.md
+    - [ ] full setup
+    - [ ] Trailer
   - [ ] Demo release
-  - [ ] Trailer
   - [ ] > steam next fest Feb '27
   - [ ] Release after free to play  w/ paid dlc for more content/skins
 
