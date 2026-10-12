@@ -122,7 +122,6 @@ func _on_main_menu_pressed():
 
 	transitioned.emit(main_menu_state, null)
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_MENU
-	level_manager.spawn_menu_level()
 
 
 func _on_settings_pressed():

@@ -21,7 +21,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] in game => main menu the scene doesnt render
 - [ ] credits btn/menu
 
 - [ ] option to drop current item?
@@ -46,6 +45,13 @@
 ## Notes 📝
 > Stuff to move ASAP
 
+Add integration tests for features
+- mock player going thru stunt race w/ checkpoints and picking up items -& using them 
+- test save file parsing/progression
+
+How to keep open source but DLC paid? release steam version on github actions too?
+
+Tracers when boosting 
 
 add guac and load building to map
 
@@ -63,6 +69,15 @@ Prototype level in cities skyline to get road layout
 
 bake npc nav paths so they can just follow, respond to player if needed then return to baked path
 
+Capsule art:
+- Sky background (darkish)
+- dank nooner logo top left
+- wheelie/stunt trick bike on right 1/3rd
+- they're going left 
+- On the left smol is another guy stunting/crashing 
+- contrast, rule of 3rd, visual heir
+- simple, dominant visual elements, co
+- reuse for main menu 
 
 mac first launch stuck in gas fill up cam
 ```
@@ -288,6 +303,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+
+- [x] in game => main menu the scene doesnt render
 
 - [x] Fade out intro sound quicker, make 3 sec version
 
