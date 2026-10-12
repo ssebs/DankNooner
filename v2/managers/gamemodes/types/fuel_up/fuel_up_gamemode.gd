@@ -45,10 +45,6 @@ func Enter(state_context: StateContext):
 	var peer_ids := gamemode_manager.lobby_manager.lobby_players.keys()
 	peer_ids.sort()
 
-	# TEMP fuel-up debug
-	var me := multiplayer.get_unique_id()
-	var money := save_manager.get_player_definition().money
-	DebugUtils.DebugMsg("FuelUp: peer %d in %s, %d pumps, money %s" % [me, peer_ids, pumps.size(), money])
 	var pump := pumps[peer_ids.find(multiplayer.get_unique_id())]
 	if save_manager.spend(pump.price):
 		_minigame = pump
@@ -149,7 +145,6 @@ func _rpc_fuel_up_skipped():
 
 func _mark_done(peer_id: int):
 	_pending.erase(peer_id)
-	DebugUtils.DebugMsg("FuelUp: %d done, pending %s" % [peer_id, _pending])  # TEMP fuel-up debug
 	if _pending.is_empty():
 		gamemode_manager.change_gamemode(
 			_event.definition.target_gamemode, multiplayer.get_unique_id(), _event.get_path()
