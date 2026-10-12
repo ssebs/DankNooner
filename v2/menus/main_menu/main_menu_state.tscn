@@ -150,7 +150,20 @@ layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 
-[node name="HelpBtn" type="Button" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer2" unique_id=1870908104]
+[node name="HelpRow" type="HBoxContainer" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_constants/separation = 32
+
+[node name="CreditsBtn" type="Button" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer2/HelpRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 8
+mouse_default_cursor_shape = 2
+text = "CREDITS_LABEL"
+
+[node name="HelpBtn" type="Button" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer2/HelpRow" unique_id=1870908104]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8

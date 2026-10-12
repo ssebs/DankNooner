@@ -21,10 +21,12 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] credits btn/menu
-
-- [ ] option to drop current item?
-- [ ] 321 + drive to start of race text should be more obvious
+- [ ] Steam
+  - [ ] Steam page [WIP]
+  - [ ] Demo release
+  - [ ] Trailer
+  - [ ] > steam next fest Feb '27
+  - [ ] Release after free to play  w/ paid dlc for more content/skins
 
 - [ ] new large map
   - [ ] https://github.com/domlysz/BlenderGIS + https://superhivemarket.com/products/roadscape
@@ -36,6 +38,7 @@
   - [ ] have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
 
 - [ ] Get AI working again
+  - [ ] bake npc nav paths so they can just follow, respond to player if needed then return to baked path
   - [ ] NPC Traffic
   - [ ] NPC Race AI
 - [ ] [Progression](#progression--customization) 
@@ -45,29 +48,21 @@
 ## Notes 📝
 > Stuff to move ASAP
 
+- [ ] option to drop current item?
+- [ ] 321 + drive to start of race text should be more obvious
+
 Add integration tests for features
 - mock player going thru stunt race w/ checkpoints and picking up items -& using them 
 - test save file parsing/progression
 
-How to keep open source but DLC paid? release steam version on github actions too?
+Discord page for support/community 
 
-Tracers when boosting 
-
-add guac and load building to map
-
-steam workshop
-
-steam networking / sdk
-
-launch steam page w/ demo, create trailer, ask for wishlists while developing main game. main game is free to play w/ paid dlc for more content/skins
-
-export on github w/o some assets / steam features
-
-Pizza delivery mode + scooter 
-
-Prototype level in cities skyline to get road layout 
-
-bake npc nav paths so they can just follow, respond to player if needed then return to baked path
+- How to keep open source but DLC paid? release steam version on github actions too?
+- Tracers when boosting 
+- add guac and load building to map
+- steam workshop for maps / other assets?
+- export on github w/o some assets / steam features
+- Pizza delivery mode + scooter 
 
 Capsule art:
 - Sky background (darkish)
@@ -76,8 +71,7 @@ Capsule art:
 - they're going left 
 - On the left smol is another guy stunting/crashing 
 - contrast, rule of 3rd, visual heir
-- simple, dominant visual elements, co
-- reuse for main menu 
+- simple, dominant visual elements, 
 
 mac first launch stuck in gas fill up cam
 ```
@@ -147,6 +141,7 @@ Simpsons hit and run chapters:
         - classic mode (endless loop like original game)
     - end at stunt city (what I have now), blend of everything, neon, also quiet/dim/relaxing beach town vibe. Also farms, kinda like Monterey/cali
         - dirt bike on beach
+
 ---
 
 ## Tasks 📋
@@ -303,6 +298,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+
+- [x] credits btn/menu
 
 - [x] in game => main menu the scene doesnt render
 

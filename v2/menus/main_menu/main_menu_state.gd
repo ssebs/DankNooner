@@ -11,6 +11,7 @@ class_name MainMenuState extends MenuState
 @export var customize_menu_state: MenuState
 @export var help_menu_state: MenuState
 @export var tricks_menu_state: MenuState
+@export var credits_menu_state: MenuState
 
 @onready var settings_btn: Button = %SettingsBtn
 @onready var play_btn: Button = %PlayBtn
@@ -18,6 +19,7 @@ class_name MainMenuState extends MenuState
 @onready var quit_btn: Button = %QuitBtn
 @onready var help_btn: Button = %HelpBtn
 @onready var tricks_btn: Button = %TricksBtn
+@onready var credits_btn: Button = %CreditsBtn
 @onready var version_label: Label = %VersionLabel
 @onready var greeting_label: Label = %GreetingLabel
 @onready var steam_status_label: Label = %SteamStatusLabel
@@ -48,6 +50,7 @@ func Enter(_state_context: StateContext):
 	customize_btn.pressed.connect(_on_customize_btn_pressed)
 	help_btn.pressed.connect(_on_help_btn_pressed)
 	tricks_btn.pressed.connect(_on_tricks_btn_pressed)
+	credits_btn.pressed.connect(_on_credits_btn_pressed)
 	steam_manager.invite_received.connect(_on_invite_received)
 
 	var username := save_manager.get_player_definition().username
@@ -73,6 +76,7 @@ func Exit(_state_context: StateContext):
 	customize_btn.pressed.disconnect(_on_customize_btn_pressed)
 	help_btn.pressed.disconnect(_on_help_btn_pressed)
 	tricks_btn.pressed.disconnect(_on_tricks_btn_pressed)
+	credits_btn.pressed.disconnect(_on_credits_btn_pressed)
 	steam_manager.invite_received.disconnect(_on_invite_received)
 
 
@@ -83,6 +87,10 @@ func _on_help_btn_pressed():
 
 func _on_tricks_btn_pressed():
 	transitioned.emit(tricks_menu_state, StateContext.NewWithReturn(self))
+
+
+func _on_credits_btn_pressed():
+	transitioned.emit(credits_menu_state, StateContext.NewWithReturn(self))
 
 
 func _on_customize_btn_pressed():
