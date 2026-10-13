@@ -4,3 +4,15 @@
 tmp/*
 !tmp/convert.bat
 *exe
+
+# root ignores dist/; keep the per-OS export folders + their libs
+!/dist/
+/dist/*
+!/dist/windows/
+!/dist/linux/
+!/dist/mac/
+!/dist/web/
+/dist/*/*
+!/dist/*/.stub
+!/dist/windows/*.dll
+!/dist/linux/*.so

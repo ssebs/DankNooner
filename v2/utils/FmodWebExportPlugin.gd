@@ -11,7 +11,7 @@ func _get_name() -> String:
 
 func _export_begin(features: PackedStringArray, _is_debug: bool, path: String, _flags: int) -> void:
 	_is_web = features.has("web")
-	# path is the full export path (e.g. "F:/...dist/dank-nooner-web/index.html")
+	# path is the full export path (e.g. "F:/...dist/web/index.html")
 	# but may also be res:// — globalize to be safe
 	_export_dir = ProjectSettings.globalize_path(path).get_base_dir()
 	DebugUtils.DebugMsg(
