@@ -11,6 +11,8 @@ matts controller doesnt work with LT/RT, just fwd/back
 
 toomuchinfoonscreen in hud
 
+must be easier to know what the controls are / how to do tricks
+
 need to know when race is completed
 
 zoom out minimap (during race?) so you can see the track
