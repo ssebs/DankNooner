@@ -25,7 +25,7 @@
   - [ ] Steam page [WIP]
     - [x] $100
     - [x] basic setup
-    - [ ] builds planning_docs/_STEAM_CI_CD.md
+    - [ ] working build
     - [ ] full setup
     - [ ] Trailer
   - [ ] Demo release
