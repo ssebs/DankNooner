@@ -21,6 +21,8 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] see playtest [feedback](_ScratchPad.md)
+
 - [ ] Steam
   - [ ] Steam page [WIP]
     - [x] $100
