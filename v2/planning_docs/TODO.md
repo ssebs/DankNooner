@@ -262,6 +262,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] leave btn in customization should be at bottom left, & separate. 
+
 - [x] shouldnt be able to drive while in pause menu
 
 - [x] mac first launch stuck in gas fill up cam

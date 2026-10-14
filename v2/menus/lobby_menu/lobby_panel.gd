@@ -58,14 +58,15 @@ func copy_game_id() -> void:
 
 ## IP/Port mode adds the port, which the host has to forward
 func _on_game_id_set(conn_addr: String) -> void:
-	ip_label.text = conn_addr
 	ip_copy_btn.disabled = conn_addr.is_empty()
 	# Empty on connection reset
-	if (
-		!conn_addr.is_empty()
-		and _connection_manager.connection_mode == ConnectionManager.ConnectionMode.IP_PORT
-	):
-		ip_label.text += ":%d" % UtilsConstants.PORT
+	if conn_addr.is_empty():
+		ip_label.text = ""
+		return
+	var code := conn_addr
+	if _connection_manager.connection_mode == ConnectionManager.ConnectionMode.IP_PORT:
+		code += ":%d" % UtilsConstants.PORT
+	ip_label.text = tr("LOBBY_CODE_LABEL").format({"value": code})
 
 
 func _on_lobby_players_updated(players: Dictionary) -> void:

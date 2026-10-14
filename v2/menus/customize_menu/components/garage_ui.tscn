@@ -136,12 +136,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "DELETE_LABEL"
 
-[node name="LeaveBtn" type="Button" parent="Panel/VBox/Footer/Actions"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-text = "GARAGE_LEAVE"
-
 [node name="PoseBtn" type="Button" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
@@ -156,6 +150,19 @@ grow_horizontal = 2
 grow_vertical = 0
 focus_mode = 0
 text = "GARAGE_POSE"
+
+[node name="LeaveBtn" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = -32.0
+grow_vertical = 0
+text = "GARAGE_LEAVE"
 
 [node name="ConfirmBox" type="PanelContainer" parent="."]
 unique_name_in_owner = true

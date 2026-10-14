@@ -8,12 +8,6 @@
 ### NOW
 
 
-- [ ] leave btn in customization should be at bottom left, & separate. 
-
-also add the text
-  "Lobby Code: " to the IP/steamID/webrtc join code. also - [ ] leave btn in customization should be at bottom
-  left, & separate.
-
 ### NEXT
 
 - [ ] backing up while steering broken
