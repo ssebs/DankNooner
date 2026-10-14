@@ -60,6 +60,7 @@
 Add integration tests for features
 - mock player going thru stunt race w/ checkpoints and picking up items -& using them 
 - test save file parsing/progression
+- e.g. fill up minigame is testable
 
 Discord page for support/community 
 
@@ -304,6 +305,13 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+
+- [x] Long Jump name => megaramp trick comp 
+- [x] minimap show garage
+- [x] zoom out minimap (during race?) so you can see the track
+- [x] make it obvious not to fill up past red in gas fillupp
+  - [x] dont spill after hitting red anymore
+  - [x] add callout for "Spillling! Stop!" like the tricks 
 
 - [x] credits btn/menu
 

@@ -8,10 +8,10 @@
 class_name Minimap extends PanelContainer
 
 ## Camera ortho size — world units across the minimap view (zoom).
-@export var zoom: float = 120.0
+@export var zoom: float = 250.0
 ## Camera height above the player, in metres.
 @export var height: float = 80.0
-@export var dot_radius: float = 5.0
+@export var dot_radius: float = 7.0
 ## Black ring thickness around each blip.
 @export var border_width: float = 2.0
 ## Length of the edge pointer triangle for off-map racers.
@@ -34,10 +34,22 @@ const COLOR_PLAYER := Color(0.2, 0.5, 1.0)
 const COLOR_NPC := Color(0.7, 0.3, 1.0)
 const COLOR_CHECKPOINT := Color(0.15, 0.85, 0.2)
 const COLOR_EVENT := Color(1.0, 0.1, 0.8)
+const COLOR_GARAGE := Color(1.0, 0.55, 0.1)
+## Full-map legend: text key -> blip color.
+const LEGEND := {
+	"MAP_LEGEND_YOU": COLOR_SELF,
+	"MAP_LEGEND_PLAYER": COLOR_PLAYER,
+	"MAP_LEGEND_NPC": COLOR_NPC,
+	"MAP_LEGEND_CHECKPOINT": COLOR_CHECKPOINT,
+	"MAP_LEGEND_EVENT": COLOR_EVENT,
+	"MAP_LEGEND_GARAGE": COLOR_GARAGE,
+}
 
 @onready var _sub_viewport: SubViewport = %MinimapSubViewport
 @onready var _camera: Camera3D = %MinimapCamera
 @onready var _dot_overlay: Control = %DotOverlay
+@onready var _legend: Control = %Legend
+@onready var _legend_rows: VBoxContainer = %LegendRows
 
 ## Next-checkpoint marker for the local racer — server-fed via rpc_set_checkpoint
 ## (checkpoint progress is server-only), null while not racing.
@@ -63,6 +75,24 @@ func _ready():
 	_camera.size = zoom
 	_dot_overlay.draw.connect(_draw_dots)
 	set_process(false)
+	if !Engine.is_editor_hint():
+		_legend.visible = false
+		_build_legend()
+
+
+func _build_legend() -> void:
+	for key in LEGEND:
+		var swatch := Control.new()
+		swatch.custom_minimum_size = Vector2.ONE * (dot_radius + border_width) * 2.0
+		swatch.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		swatch.draw.connect(func(): _draw_blip(swatch, swatch.size * 0.5, LEGEND[key]))
+		var label := Label.new()
+		label.text = tr(key)
+		var row := HBoxContainer.new()
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(swatch)
+		row.add_child(label)
+		_legend_rows.add_child(row)
 
 
 ## Turn the minimap on for the local player. Called from RidingHUDState.show_ui,
@@ -91,6 +121,7 @@ func set_expanded(on: bool) -> void:
 	if on == _expanded:
 		return
 	_expanded = on
+	_legend.visible = on
 	if on:
 		_pan_center = _local_player.global_position
 		_camera.size = clampf(full_zoom, full_zoom_min, full_zoom_max)
@@ -190,11 +221,14 @@ func _draw_dots() -> void:
 			color = COLOR_NPC
 		_draw_marker(racer.global_position, color)
 
-	# Event start circles (local level nodes) — bright pink for testing.
+	# Event start circles (local level nodes) — bright pink for testing — and garages.
 	# Only in free roam; a race hides them so its checkpoint marker stands alone.
 	if _local_player.gamemode_manager.current_game_mode == GameModeType.Kind.FREE_ROAM:
 		for circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
 			_draw_marker(circle.global_position, COLOR_EVENT)
+		for activity in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["FreeRoamActivities"]):
+			if activity is GarageActivity:
+				_draw_marker(activity.global_position, COLOR_GARAGE)
 
 	if has_checkpoint:
 		_draw_marker(checkpoint_pos, COLOR_CHECKPOINT)
@@ -219,12 +253,12 @@ func _draw_marker(world_pos: Vector3, color: Color) -> void:
 			t = minf(t, half.y / absf(offset.y))
 		pos = center + offset * t
 		_draw_edge_arrow(pos, offset.normalized(), color)
-	_draw_blip(pos, color)
+	_draw_blip(_dot_overlay, pos, color)
 
 
-func _draw_blip(pos: Vector2, color: Color) -> void:
-	_dot_overlay.draw_circle(pos, dot_radius + border_width, Color.BLACK)
-	_dot_overlay.draw_circle(pos, dot_radius, color)
+func _draw_blip(canvas: CanvasItem, pos: Vector2, color: Color) -> void:
+	canvas.draw_circle(pos, dot_radius + border_width, Color.BLACK)
+	canvas.draw_circle(pos, dot_radius, color)
 
 
 func _draw_edge_arrow(pos: Vector2, dir: Vector2, color: Color) -> void:

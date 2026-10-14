@@ -12,6 +12,9 @@ class_name FuelUpHUDState extends HUDState
 ## Set by HUDManager.go_to_fuel_up_hud.
 var minigame: FuelUpMinigame
 
+## Spilling last frame, to pop the callout once per spill.
+var _was_spilling: bool = false
+
 
 func _ready() -> void:
 	hide_ui()
@@ -19,6 +22,7 @@ func _ready() -> void:
 
 func Enter(_state_context: StateContext):
 	show_ui()
+	_was_spilling = false
 	_money.text = MoneyLabel.format(save_manager.get_player_definition().money)
 	# A session only starts once its price was paid. Deferred so the label has resized to the
 	# new amount, since the pop centers on it.
@@ -36,6 +40,16 @@ func Update(_delta: float):
 	_gauge.current_val = minigame.fill * BoostController.BOOST_SEGMENTS
 	_gauge.spilled_val = minigame.spilled * BoostController.BOOST_SEGMENTS
 	_prompt.text = tr(minigame.get_prompt_key())
+	var spilling := minigame.is_spilling()
+	if spilling and !_was_spilling:
+		TrickPopups.spawn_pop(
+			_gauge,
+			tr("CALLOUT_SPILLING"),
+			TrickPopups.OOF_COLOR,
+			_gauge.size / 2.0,
+			TrickPopups.DRIFT_PX
+		)
+	_was_spilling = spilling
 
 
 func _get_configuration_warnings() -> PackedStringArray:

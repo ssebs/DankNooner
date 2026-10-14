@@ -47,7 +47,7 @@ adjustment_saturation = 1.1
 
 [sub_resource type="Resource" id="Resource_lngjmp"]
 script = ExtResource("12_evdef")
-name = "Long Jump"
+name = "Megaramp Trick Comp"
 description = "Trick off the mega ramp. Best jump wins."
 target_gamemode = 6
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"

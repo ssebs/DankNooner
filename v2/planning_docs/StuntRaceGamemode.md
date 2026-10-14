@@ -87,16 +87,17 @@ partial fill.
   `finished`.
 - **Play** (one button, `use_item` / A): click the handle to pick it up; it follows the cursor by
   `HandleMarkerClick`. Nearing the cap, it swings toward the `GasCapMarkerTip` pose and rides at cap
-  height. Hold to spray (holding on past the pick-up click sprays too, so riders learn to let go); it fills while
+  height. Hold to spray (holding on past the pick-up click sprays too after a short grace, so riders learn to let go); it fills while
   `HandleMarkerTip` is inside `GasCapArea`. The `GLUG_GLUG` sfx plays only while filling, pausing in
   place so it plays once across the whole fill. Carry the grip back to its spot on the pump to hang
   it up, then click `%EndBtn` to finish whenever. The tank starts at the rider's boost.
 - **Recoil and spill:** spraying pushes the cursor itself upward via `warp_mouse` (growing with
   spray time, plus random kicks) and the rider pulls against it. Web ignores `warp_mouse`, so it
-  has no recoil. Spray not going into an unfull tank, off the cap or overfilling, counts as
-  `spilled`, with `%SpillParticles` spraying from the tip, the looping `WATER_FLOWING` sfx, and a
-  spilling prompt. Spill is lost tank space: the tank only fills to `1 - spilled`, and overfilling
-  spills what's already in it. The HUD gauge shows it as red growing in from its right end.
+  has no recoil. Spray that misses the cap counts as `spilled`, with `%SpillParticles` spraying
+  from the tip, the looping `WATER_FLOWING` sfx, a spilling prompt, and a one-shot callout popped
+  off the gauge. Spill is lost tank space: the tank only fills to `1 - spilled`, and spilling a full
+  tank loses what's already in it. Spraying into a full tank does nothing, so overfilling isn't a
+  spill. The HUD gauge shows spill as red growing in from its right end.
 - **Price:** each pump costs its `FreeRoamActivity.price` ($10), charged via `SaveManager.spend`.
   Free roam checks it when the picker is submitted and charges when the server accepts; pre-race
   charges on entering fuel-up, and a rider who can't pay skips their pump (keeps their boost, no

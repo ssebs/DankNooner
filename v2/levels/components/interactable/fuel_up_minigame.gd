@@ -1,7 +1,7 @@
 ## One gas pump in a station. FuelUpGameMode assigns each rider a pump pre-race; in free roam it's
 ## a FreeRoamActivity. Either way the minigame runs locally on that rider's client: click the
 ## handle to pick it up, hold click to spray (recoil kicks the cursor), move it back onto the pump
-## to hang it up, and click %EndBtn to finish whenever. Spray not going into an unfull tank is
+## to hang it up, and click %EndBtn to finish whenever. Spray that misses the cap is
 ## spilled, and spilled gas is tank space lost: the tank only fills to 1 - spilled. The left
 ## stick steers the same cursor, so gamepad plays it too.
 class_name FuelUpMinigame extends FreeRoamActivity
@@ -30,6 +30,8 @@ const RECOIL_KICK_PX: float = 25.0
 const RECOIL_KICK_SECS: float = 0.25
 ## How close (m) the grip must come back to its spot on the pump to hang up.
 const HANG_UP_DIST: float = 0.25
+## Seconds after the grab before a held click sprays.
+const GRAB_SPRAY_DELAY: float = 0.2
 
 @onready var _handle: GrayBoxStaticBody = %Handle
 @onready var _handle_marker_hose: Marker3D = %HandleMarkerHose
@@ -63,6 +65,7 @@ var _spraying: bool = false
 var _spray_secs: float = 0.0
 ## The grip starts on its hanging spot, so hanging up waits until it has been carried off it.
 var _left_rest: bool = false
+var _since_grab: float = 0.0
 ## View-axis depth the handle keeps while it follows the cursor.
 var _hold_depth: float = 0.0
 ## Grip-to-cap distance at grab; the swing toward the cap pose is measured against it.
@@ -168,7 +171,7 @@ func _on_session_end():
 func get_prompt_key() -> String:
 	if _step == Step.GRAB:
 		return "FUELUP_GRAB"
-	if _is_spilling():
+	if is_spilling():
 		return "FUELUP_SPILLING"
 	if _is_full():
 		return "FUELUP_RETURN"
@@ -206,12 +209,15 @@ func _process(delta: float):
 				_set_highlight(null)
 				_gas_cap_mesh.visible = true
 				_left_rest = false
+				_since_grab = 0.0
 				_step = Step.CARRY
 		Step.CARRY:
 			_follow_cursor()
 			_set_over_cap(_tip_in_cap())
-			# Holding on past the grab sprays (and spills), which teaches riders to let go.
-			_spraying = _click_held()
+			# Holding on past the grab sprays (and spills), which teaches riders to let go. The
+			# grace keeps the grab click itself from spilling.
+			_since_grab += delta
+			_spraying = _click_held() and _since_grab >= GRAB_SPRAY_DELAY
 			if _spraying:
 				_spray(delta)
 			else:
@@ -226,12 +232,12 @@ func _process(delta: float):
 				_gas_cap_mesh.visible = false
 				_step = Step.GRAB
 	_set_glug(_spraying and _over_cap and !_is_full())
-	_set_spilling(_is_spilling())
+	_set_spilling(is_spilling())
 	_set_cursor(CURSOR_CLOSED if _step == Step.CARRY else CURSOR_OPEN)
 	_update_hose()
 
 
-## One frame of spray: into the tank if the tip's in an unfull one, else spilled. Recoil shoves the
+## One frame of spray: into the tank (up to full) if the tip's in the cap, else spilled. Recoil shoves the
 ## cursor itself (so the rider pulls back to where they were), harder the longer it sprays. Web
 ## ignores warp_mouse, so it has no recoil.
 func _spray(delta: float):
@@ -240,16 +246,17 @@ func _spray(delta: float):
 	if randf() < delta / RECOIL_KICK_SECS:
 		recoil += Vector2(randf_range(-1.0, 1.0), -randf()) * RECOIL_KICK_PX
 	_nudge_cursor(recoil)
-	if _over_cap and !_is_full():
+	if _over_cap:
 		fill = minf(fill + delta / fill_secs, 1.0 - spilled)
 	else:
 		spilled += delta / fill_secs
-		# Overfilling a full tank spills what's already in it.
+		# A full tank loses the space it spills.
 		fill = minf(fill, 1.0 - spilled)
 
 
-func _is_spilling() -> bool:
-	return _spraying and !(_over_cap and !_is_full())
+## Spraying off the cap. A full tank just stops taking gas, so overfilling isn't a spill.
+func is_spilling() -> bool:
+	return _spraying and !_over_cap
 
 
 ## Filled to the space spilling left.
