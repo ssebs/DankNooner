@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bhwyygjwnd47v"
-path="res://.godot/imported/store_capsule_header.png-63c7fa9c2bb1ce8e146d38be00cd6c75.ctex"
+path="res://.godot/imported/store_capsule_header.png-e57c8259a58b1187c647b3631e6aaf67.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/Steam Game Templates/store page assets/store_capsule_header.png"
-dest_files=["res://.godot/imported/store_capsule_header.png-63c7fa9c2bb1ce8e146d38be00cd6c75.ctex"]
+source_file="res://resources/img/Logos/Steam Game Templates/store page assets/store_capsule_header.png"
+dest_files=["res://.godot/imported/store_capsule_header.png-e57c8259a58b1187c647b3631e6aaf67.ctex"]
 
 [params]
 

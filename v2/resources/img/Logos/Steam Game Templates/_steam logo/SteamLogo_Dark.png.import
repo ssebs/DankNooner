@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://be85tgivim6sg"
-path="res://.godot/imported/SteamLogo_Dark.png-35aef428952c0d1b961e4adc26fbb42c.ctex"
+path="res://.godot/imported/SteamLogo_Dark.png-d9f05d91d163783f4c5730f5b7301bb0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/Steam Game Templates/_steam logo/SteamLogo_Dark.png"
-dest_files=["res://.godot/imported/SteamLogo_Dark.png-35aef428952c0d1b961e4adc26fbb42c.ctex"]
+source_file="res://resources/img/Logos/Steam Game Templates/_steam logo/SteamLogo_Dark.png"
+dest_files=["res://.godot/imported/SteamLogo_Dark.png-d9f05d91d163783f4c5730f5b7301bb0.ctex"]
 
 [params]
 
