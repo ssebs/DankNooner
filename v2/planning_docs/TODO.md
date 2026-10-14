@@ -21,7 +21,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] leave btn in customization should be at bottom left, separate. 
 
 - [ ] see playtest [feedback](_ScratchPad.md)
 
