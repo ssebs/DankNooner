@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bucasypwld3mg"
-path="res://.godot/imported/DankNoonerLogo.png-134a1933a6af841f625718562eda4a43.ctex"
+uid="uid://b7mda1eajtkqe"
+path="res://.godot/imported/DankNoonerLogo_TextIconOnly.png-db064cfb590122b9391e8b6066f5d377.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/img/Logos/DankNoonerLogo.png"
-dest_files=["res://.godot/imported/DankNoonerLogo.png-134a1933a6af841f625718562eda4a43.ctex"]
+source_file="res://resources/img/Logos/DankNoonerLogo_TextIconOnly.png"
+dest_files=["res://.godot/imported/DankNoonerLogo_TextIconOnly.png-db064cfb590122b9391e8b6066f5d377.ctex"]
 
 [params]
 

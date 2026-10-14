@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ddewlrm47e7qj"
-path="res://.godot/imported/BikeOnly.png-a8906ab41933dc76f0debbdad4e7a429.ctex"
+uid="uid://gyr5wkryrmmk"
+path="res://.godot/imported/DankNoonerLogo_BikeOnlySquare.png-4b44f6f8118b7a1ce2c66257929f090f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/img/Logos/BikeOnly.png"
-dest_files=["res://.godot/imported/BikeOnly.png-a8906ab41933dc76f0debbdad4e7a429.ctex"]
+source_file="res://resources/img/Logos/DankNoonerLogo_BikeOnlySquare.png"
+dest_files=["res://.godot/imported/DankNoonerLogo_BikeOnlySquare.png-4b44f6f8118b7a1ce2c66257929f090f.ctex"]
 
 [params]
 

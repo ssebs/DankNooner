@@ -19,8 +19,8 @@ config/custom_user_dir_name="DankNooner"
 config/features=PackedStringArray("4.7", "Forward Plus")
 boot_splash/bg_color=Color(0.078431375, 0.078431375, 0.078431375, 1)
 boot_splash/show_image=false
-boot_splash/image="uid://dlnqminq87toq"
-config/icon="uid://cwf7vhr6hpjoj"
+boot_splash/image="uid://dm2f07w7n4vuu"
+config/icon="uid://c3b2p5gk67ghq"
 
 [audio]
 
