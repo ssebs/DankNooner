@@ -31,10 +31,8 @@ const _WARNING_PULSE_SECS := 0.35
 
 @onready var _brake_label: Label = %HUD_BRAKE
 @onready var _clutch_label: Label = %HUD_CLUTCH
-@onready var _speed_bar: ProgressBar = %HUD_SpeedProgress
 @onready var _speed_num: Label = %HUD_SPEED_NUM
 @onready var _gear_label: Label = %HUD_GEAR
-@onready var _grip_label: Label = %HUD_GRIP_DGR
 @onready var _fps_label: Label = %HUD_FPS
 @onready var _game_msg: Label = %HUD_GAME_MSG
 @onready var _money: MoneyLabel = %HUD_Money
@@ -48,6 +46,7 @@ const _WARNING_PULSE_SECS := 0.35
 @onready var _event_objective: Label = %HUD_EventObjective
 @onready var _event_progress: Label = %HUD_EventProgress
 @onready var _event_warning: Label = %HUD_EventWarning
+@onready var _event_tricks: Label = %HUD_EventTricks
 @onready var _boost_gauge: BoostGauge = %BoostGauge
 @onready var _combo_counter: ComboCounter = %ComboCounter
 @onready var _respawn_bar: ProgressBar = %HUD_RespawnProgress
@@ -88,7 +87,7 @@ var _wheelie_attempt_t: float = 0.0
 ## and whenever netfox's perf monitors aren't registered — see show_hud.
 var _netfox_debug_label: Label = null
 var _netfox_dbg_accum: float = 0.0
-## Hint tricks of the running race challenges; shown under the player's pinned tricks.
+## Hint tricks of the running race challenges; named under the leaderboard.
 var _challenge_tricks := PackedInt32Array()
 
 func _ready() -> void:
@@ -163,12 +162,9 @@ func Physics_Update(delta: float):
 
 	# Poll continuous values directly from controllers
 	_throttle_bar.value = int(input_controller.nfx_throttle * 100)
-	_brake_label.text = tr("HUD_BRAKE_F").format(
-		{
-			"front": int(input_controller.nfx_front_brake * 100),
-			"rear": int(input_controller.nfx_rear_brake * 100),
-		}
-	)
+	_brake_label.text = tr("HUD_BRAKE").format({"value": int(input_controller.nfx_front_brake * 100)})
+	# Reddens toward a front washout (grip_usage is the brake danger).
+	_brake_label.modulate = Color.WHITE.lerp(_RPM_COLOR_HIGH, player_entity.grip_usage)
 
 	if input_controller.nfx_clutch_held:
 		_clutch_label.text = tr("HUD_CLUTCH_IN")
@@ -178,9 +174,7 @@ func Physics_Update(delta: float):
 	var rpm_ratio := gearing_controller.get_rpm_ratio()
 	_rpm_bar.value = int(rpm_ratio * 100)
 	_rpm_fill_style.bg_color = _RPM_COLOR_LOW.lerp(_RPM_COLOR_HIGH, clampf(rpm_ratio, 0.0, 1.0))
-	_speed_bar.value = int(movement_controller.speed)
 	_speed_num.text = "%d" % int(movement_controller.speed)
-	_grip_label.text = tr("HUD_GRIP").format({"value": int(player_entity.grip_usage * 100)})
 	_fps_label.text = tr("HUD_FPS").format({"value": int(Engine.get_frames_per_second())})
 	var player_def := save_manager.get_player_definition()
 	_money.text = MoneyLabel.format(player_def.money)
@@ -342,21 +336,23 @@ func _on_save_item_updated(key: String, _value: Variant):
 		_rebuild_trick_rows()
 
 
-## Pinned tricks (tricks menu), then the race challenges' hint tricks, skipping duplicates.
+## Pinned tricks (tricks menu).
 func _rebuild_trick_rows():
 	for child in _trick_rows.get_children():
 		child.queue_free()
-	var shown: Array[String] = []
 	for pin: String in save_manager.current_save["pinned_tricks"]:
 		_add_trick_row().populate_pin(pin)
-		shown.append(pin)
+
+
+## The race challenges' hint tricks, by name only, under the leaderboard.
+func _set_suggested_tricks():
+	var names := PackedStringArray()
 	for trick in _challenge_tricks:
-		var row := _add_trick_row()
-		row.populate_trick(trick)
-		if row.pin in shown:
-			row.queue_free()
-		else:
-			shown.append(row.pin)
+		var trick_name := TrickController.trick_to_str(trick).capitalize()
+		if trick_name not in names:
+			names.append(trick_name)
+	_event_tricks.text = tr("HUD_SUGGESTED_TRICKS").format({"tricks": " · ".join(names)})
+	_event_tricks.visible = !names.is_empty()
 
 
 func _add_trick_row() -> TrickRow:
@@ -422,7 +418,7 @@ func _rpc_set_leaderboard(headers: PackedStringArray, rows: Array, tricks: Packe
 	# Resent every refresh; only rebuild when it changes.
 	if tricks != _challenge_tricks:
 		_challenge_tricks = tricks
-		_rebuild_trick_rows()
+		_set_suggested_tricks()
 
 
 @rpc("call_local", "reliable")
@@ -431,7 +427,7 @@ func _rpc_clear_leaderboard():
 	_has_leaderboard = false
 	_update_event_panel()
 	_challenge_tricks = PackedInt32Array()
-	_rebuild_trick_rows()
+	_set_suggested_tricks()
 
 
 ## Server-side, to the holder: the held item's definition, or null once it's spent.

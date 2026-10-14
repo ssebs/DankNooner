@@ -84,17 +84,6 @@ func populate_howto(trick: TrickController.Trick) -> void:
 	howto_label.text = howto
 
 
-## Shows the first BINDINGS slot for the trick, else its how-to.
-func populate_trick(trick: TrickController.Trick) -> void:
-	for state in TrickController.BINDINGS:
-		for gesture in TrickController.BINDINGS[state]:
-			var dir: int = TrickController.BINDINGS[state][gesture].find(trick)
-			if dir != -1:
-				populate_stick(state, trick, gesture, dir)
-				return
-	populate_howto(trick)
-
-
 ## Rebuild a row from its pin id (see `pin`).
 func populate_pin(pin_id: String) -> void:
 	var parts := pin_id.split("/")

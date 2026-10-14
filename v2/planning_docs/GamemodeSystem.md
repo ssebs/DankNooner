@@ -153,9 +153,10 @@ crash, untyped so each task picks its own keys (`PerformTrickTask` accumulates `
 
 ## Event pane (riding HUD)
 
-Every runner event's text lives in `RidingHUDState`'s event pane (top-right, under the minimap):
+Every runner event's text lives in `RidingHUDState`'s event pane (top-left):
 title, step count (`shows_step_count()`; races hide it), objective, a progress line (hint / lap
-clock / countdown / status), a flashing warning line, then the live leaderboard. Runners and tasks
+clock / countdown / status), a flashing warning line, the live leaderboard, then the challenges'
+suggested tricks. Runners and tasks
 call `riding_hud.push_event_*` server-side; the text is pre-localized there, so the client doesn't
 `tr()` again. Label visibility is set in code at `_ready` — the editor kept flipping it in the scene.
 
@@ -202,9 +203,9 @@ configuration warnings) list what each `race_type` needs; the rest are optional.
 
 `RaceChallenge` resources in `GameModeEventDefinition.race_challenges`, run by
 `ChallengesComponent`: ticked from synced player state, fed TrickManager's `combo_banked` /
-`combo_voided` (so a crash voids a combo's challenge stats too), one leaderboard column each.
-`hint_tricks()` reach the riding HUD through `push_leaderboard` and show as trick rows under the
-player's pinned tricks.
+`combo_voided` (so a crash voids a combo's challenge stats too), one results column each (the live
+board leaves them off to stay on standings). `hint_tricks()` reach the riding HUD through
+`push_leaderboard` and are named on one line under the leaderboard.
 
 - **Suggested tricks** (`SuggestedTricksChallenge`) — rolls `pick_count` tricks from `trick_pool`
   each race. `bonus_tricks()` → `TrickManager.set_bonus_tricks()`, which attributes each frame's

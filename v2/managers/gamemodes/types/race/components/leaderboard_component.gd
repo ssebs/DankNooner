@@ -1,6 +1,7 @@
 @tool
 ## The live leaderboard (humans, riding HUD) and the results table (humans + NPCs). Columns: name,
-## race position, score (STUNT_RACE), then every component's column_headers. Standing is fixed by
+## race position, score (STUNT_RACE), then every component's column_headers (challenge columns are
+## results-only, so the live board stays on standings). Standing is fixed by
 ## race_type: STUNT_RACE by RaceGameMode.score, TIME_ATTACK by session best lap, otherwise race
 ## position.
 class_name LeaderboardComponent extends RaceComponent
@@ -26,11 +27,11 @@ func tick(delta: float) -> void:
 	)
 	var rows: Array = []
 	for peer_id in peer_ids:
-		rows.append({"peer_id": peer_id, "cells": _human_cells(peer_id)})
+		rows.append({"peer_id": peer_id, "cells": _human_cells(peer_id, true)})
 	var tricks := PackedInt32Array()
 	if race_mode.challenges != null:
 		tricks = race_mode.challenges.hint_tricks()
-	race_mode.riding_hud_state.push_leaderboard(_headers(), rows, tricks)
+	race_mode.riding_hud_state.push_leaderboard(_headers(true), rows, tricks)
 
 
 func race_end() -> void:
@@ -81,23 +82,29 @@ func _is_time_attack() -> bool:
 	return race_mode.race_type == RaceGameMode.RaceType.TIME_ATTACK
 
 
-func _headers() -> PackedStringArray:
+func _headers(live: bool = false) -> PackedStringArray:
 	var headers := PackedStringArray(["", "🏁 %s" % tr("LB_PLACE")])
 	if _by_score():
 		headers.append("💰 %s" % tr("LB_SCORE"))
-	for component in race_mode.get_components():
+	for component in _column_components(live):
 		headers.append_array(component.column_headers())
 	return headers
 
 
-func _human_cells(peer_id: int) -> PackedStringArray:
+func _human_cells(peer_id: int, live: bool = false) -> PackedStringArray:
 	var username: String = race_mode.lobby_manager.lobby_players[peer_id].username
 	var cells := PackedStringArray([username, _place_text(peer_id)])
 	if _by_score():
 		cells.append("%d" % int(race_mode.score(peer_id)))
-	for component in race_mode.get_components():
+	for component in _column_components(live):
 		cells.append_array(component.column_cells(peer_id))
 	return cells
+
+
+func _column_components(live: bool) -> Array:
+	if !live:
+		return race_mode.get_components()
+	return race_mode.get_components().filter(func(c): return c != race_mode.challenges)
 
 
 func _human_sort_key(peer_id: int) -> float:

@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://cmnmap7blip01"]
 
-[ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="1_bkio3"]
 [ext_resource type="Script" uid="uid://dv5hbxyi6qcpk" path="res://player/controllers/minimap/minimap.gd" id="1_mnmap"]
 
 [sub_resource type="Environment" id="Environment_mnmap"]
@@ -13,7 +12,7 @@ offset_bottom = 220.0
 offset_transform_enabled = true
 offset_transform_position = Vector2(12, 0)
 mouse_filter = 2
-theme_override_styles/panel = ExtResource("1_bkio3")
+theme_type_variation = &"HUDPanel"
 script = ExtResource("1_mnmap")
 metadata/_custom_type_script = "uid://dv5hbxyi6qcpk"
 
@@ -58,7 +57,7 @@ theme_override_constants/margin_bottom = 32
 [node name="LegendPanel" type="PanelContainer" parent="Legend" unique_id=1873462015]
 layout_mode = 2
 mouse_filter = 2
-theme_override_styles/panel = ExtResource("1_bkio3")
+theme_type_variation = &"HUDPanel"
 
 [node name="LegendRows" type="VBoxContainer" parent="Legend/LegendPanel" unique_id=1873462016]
 unique_name_in_owner = true

@@ -1,6 +1,6 @@
 @tool
 ## Rolls pick_count tricks from trick_pool each race; TrickManager scores them 2x. No leaderboard
-## column (leave title_key empty) — the picks show as the riding HUD's hint trick rows.
+## column (leave title_key empty) — the picks are named under the riding HUD's leaderboard.
 class_name SuggestedTricksChallenge extends RaceChallenge
 
 @export var trick_pool: Array[TrickController.Trick] = []

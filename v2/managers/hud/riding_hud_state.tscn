@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://ce4n2xjrhv4j8" path="res://managers/hud/riding_hud_state.gd" id="1_8neiw"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="1_whasa"]
-[ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="3_j31af"]
 [ext_resource type="PackedScene" uid="uid://cmnmap7blip01" path="res://player/controllers/minimap/minimap.tscn" id="4_ltqsj"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/combo_counter.tscn" id="6_x84np"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/boost_gauge.tscn" id="7_3xx38"]
@@ -13,23 +12,18 @@
 [ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="99_money"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8urt2"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
 bg_color = Color(0.103055954, 0.5546875, 0.052001953, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.25490198, 0.6862745, 1, 1)
-border_blend = true
-corner_radius_top_left = 16
+corner_radius_top_left = 4
 corner_radius_top_right = 4
-corner_radius_bottom_right = 16
+corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
-expand_margin_left = 12.0
-expand_margin_right = 12.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_barbg"]
+bg_color = Color(1, 1, 1, 0.1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_respawn"]
 bg_color = Color(0.25, 0.69, 1, 1)
@@ -68,86 +62,48 @@ ratio = 1.778
 layout_mode = 2
 mouse_filter = 2
 
-[node name="GuageCluster" type="Control" parent="UI/AspectContainer/MarginContainer" unique_id=1972969717]
+[node name="GuageCluster" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1972969717]
 layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
 mouse_filter = 2
 theme = ExtResource("1_whasa")
+theme_override_constants/separation = 8
+
+[node name="HUD_TrickRows" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/GuageCluster" unique_id=1846203543]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+theme_override_constants/separation = 8
 
 [node name="PanelContainer" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/GuageCluster" unique_id=214517201]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -465.0
-offset_top = -331.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_styles/panel = ExtResource("3_j31af")
+layout_mode = 2
+size_flags_horizontal = 8
+theme_type_variation = &"HUDPanel"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer" unique_id=1080551582]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_constants/separation = 32
+theme_override_constants/separation = 16
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer" unique_id=521274752]
 layout_mode = 2
 
 [node name="ThrottleLabel" type="Label" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer" unique_id=1245622625]
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "THR"
 
 [node name="HUD_ThrottleProgress" type="ProgressBar" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer" unique_id=1685966791]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(48, 256)
+custom_minimum_size = Vector2(24, 140)
 layout_mode = 2
 size_flags_horizontal = 0
-theme_override_styles/background = ExtResource("3_j31af")
+theme_override_styles/background = SubResource("StyleBoxFlat_barbg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_8urt2")
-step = 1.0
-value = 60.0
-rounded = true
-allow_greater = true
-fill_mode = 3
-
-[node name="VBoxContainer3" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer" unique_id=2046174046]
-layout_mode = 2
-
-[node name="RPMLabel" type="Label" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer3" unique_id=165937916]
-layout_mode = 2
-text = "RPM"
-
-[node name="HUD_RPMProgress" type="ProgressBar" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer3" unique_id=282917128]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(48, 256)
-layout_mode = 2
-size_flags_horizontal = 0
-theme_override_styles/background = ExtResource("3_j31af")
-theme_override_styles/fill = SubResource("StyleBoxFlat_8urt2")
-step = 1.0
-value = 60.0
-rounded = true
-allow_greater = true
-fill_mode = 3
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer" unique_id=559006596]
-layout_mode = 2
-
-[node name="SpeedLabel" type="Label" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer2" unique_id=1091861403]
-layout_mode = 2
-text = "SPD"
-
-[node name="HUD_SpeedProgress" type="ProgressBar" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer2" unique_id=954918963]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(48, 256)
-layout_mode = 2
-size_flags_horizontal = 0
-theme_override_styles/background = ExtResource("3_j31af")
-theme_override_styles/fill = SubResource("StyleBoxFlat_8urt2")
-max_value = 140.0
 step = 1.0
 value = 60.0
 rounded = true
@@ -155,17 +111,44 @@ allow_greater = true
 fill_mode = 3
 show_percentage = false
 
-[node name="HUD_SPEED_NUM" type="Label" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer2/HUD_SpeedProgress" unique_id=647166477]
+[node name="VBoxContainer3" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer" unique_id=2046174046]
+layout_mode = 2
+
+[node name="RPMLabel" type="Label" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer3" unique_id=165937916]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "RPM"
+
+[node name="HUD_RPMProgress" type="ProgressBar" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer3" unique_id=282917128]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -26.0
-offset_right = 26.0
-offset_bottom = 39.0
-grow_horizontal = 2
+custom_minimum_size = Vector2(24, 140)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_barbg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_8urt2")
+step = 1.0
+value = 60.0
+rounded = true
+allow_greater = true
+fill_mode = 3
+show_percentage = false
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer" unique_id=559006596]
+layout_mode = 2
+alignment = 1
+
+[node name="HUD_SPEED_NUM" type="Label" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer2" unique_id=647166477]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
 text = "#"
+horizontal_alignment = 1
+
+[node name="SpeedUnitLabel" type="Label" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer2" unique_id=1091861403]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "HUD_SPEED_UNIT"
 horizontal_alignment = 1
 
 [node name="VBoxContainer4" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer" unique_id=300072820]
@@ -174,43 +157,26 @@ layout_mode = 2
 [node name="HUD_BRAKE" type="Label" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer4" unique_id=1263249485]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "HUD_BRAKE"
 
 [node name="HUD_CLUTCH" type="Label" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer4" unique_id=954017947]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "HUD_CLUTCH"
 
 [node name="HUD_GEAR" type="Label" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer4" unique_id=2072244555]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "HUD_GEAR"
-
-[node name="HUD_GRIP_DGR" type="Label" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer4" unique_id=1092044069]
-unique_name_in_owner = true
-layout_mode = 2
-text = "HUD_GRIP_DGR"
 
 [node name="HUD_FPS" type="Label" parent="UI/AspectContainer/MarginContainer/GuageCluster/PanelContainer/HBoxContainer/VBoxContainer4" unique_id=1874410297]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "HUD_FPS"
-
-[node name="HUD_TrickRows" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/GuageCluster" unique_id=1846203543]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -465.0
-offset_top = -343.0
-offset_bottom = -343.0
-grow_horizontal = 0
-grow_vertical = 0
-mouse_filter = 2
-theme_override_constants/separation = 8
 
 [node name="top left vbox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=2041029131]
 layout_mode = 2
@@ -229,31 +195,27 @@ size_flags_horizontal = 8
 size_flags_vertical = 0
 mouse_filter = 2
 
-[node name="MoneyPanel" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/TopRightVBox"]
+[node name="MoneyXP" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/TopRightVBox"]
 layout_mode = 2
 size_flags_horizontal = 8
 mouse_filter = 2
-theme_override_styles/panel = ExtResource("3_j31af")
+theme_override_constants/separation = 24
 
-[node name="HUD_Money" type="Label" parent="UI/AspectContainer/MarginContainer/TopRightVBox/MoneyPanel"]
+[node name="HUD_Money" type="Label" parent="UI/AspectContainer/MarginContainer/TopRightVBox/MoneyXP"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 28
-horizontal_alignment = 2
 script = ExtResource("99_money")
 
-[node name="XPPanel" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/TopRightVBox"]
-layout_mode = 2
-size_flags_horizontal = 8
-mouse_filter = 2
-theme_override_styles/panel = ExtResource("3_j31af")
-
-[node name="HUD_XP" type="Label" parent="UI/AspectContainer/MarginContainer/TopRightVBox/XPPanel"]
+[node name="HUD_XP" type="Label" parent="UI/AspectContainer/MarginContainer/TopRightVBox/MoneyXP"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 28
-horizontal_alignment = 2
 
 [node name="Minimap" parent="UI/AspectContainer/MarginContainer/TopRightVBox" unique_id=407372356 instance=ExtResource("4_ltqsj")]
 unique_name_in_owner = true
@@ -268,8 +230,6 @@ theme = ExtResource("1_whasa")
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
-offset_right = 344.0
-offset_bottom = 184.0
 mouse_filter = 2
 theme_type_variation = &"HUDPanel"
 
@@ -328,6 +288,14 @@ mouse_filter = 2
 script = ExtResource("99_rldbd")
 font_size = 18
 
+[node name="HUD_EventTricks" type="Label" parent="UI/AspectContainer/MarginContainer/ChallengeCluster/EventPanel/EventPane"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+autowrap_mode = 3
+
 [node name="TrickPopups" type="Control" parent="UI/AspectContainer/MarginContainer" unique_id=1156886590]
 unique_name_in_owner = true
 layout_mode = 2
@@ -357,7 +325,7 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 mouse_filter = 2
-theme_override_styles/panel = ExtResource("3_j31af")
+theme_type_variation = &"HUDPanel"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/BoostCluster/HUD_HeldItem" unique_id=1604358965]
 layout_mode = 2
@@ -407,7 +375,7 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(360, 22)
 layout_mode = 2
-theme_override_styles/background = ExtResource("3_j31af")
+theme_override_styles/background = SubResource("StyleBoxFlat_barbg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_respawn")
 step = 1.0
 show_percentage = false
