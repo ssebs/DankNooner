@@ -17,6 +17,11 @@
   - `--position 1290,0 --resolution 1280x800`
   - User args: (needs to be after `--`)
     - `--disable-audio` to disable audio
+    - `--verbose` turns on every debug toggle in any build (`DebugUtils.verbose`): netfox warnings
+      (hidden by default: `netfox_log_level` is Error), plus the inspector toggles checked through
+      `DebugUtils.is_debug()` — `debug_verbose` (MovementController, EngineSoundEvent),
+      `debug_netcode_metrics`, `debug_prof`. Per-tick prints: expect it to slow the game.
+  - Each instance needs its own `--log-file <path>` or they overwrite each other's `godot.log`
 
 ### Reloading a saved scene
 

@@ -203,7 +203,7 @@ var _dbg_log_file: FileAccess = null
 func _ready():
 	# Relative to up_direction, which tracks loops — so walls stay walls (slide, not pin).
 	floor_max_angle = deg_to_rad(80.0)
-	DebugUtils.prof_enabled = OS.has_feature("debug") and debug_prof  # PROF: temp
+	DebugUtils.prof_enabled = DebugUtils.is_debug(debug_prof)  # PROF: temp
 	_init_mesh()
 	_init_collision_shape()
 	_init_ik()
@@ -502,12 +502,10 @@ func _deferred_init():
 		_init_audio()
 		hud_manager.local_player = self
 		add_to_group(UtilsConstants.GROUPS["LocalPlayer"])
-		if debug_netcode_metrics:
+		if DebugUtils.is_debug(debug_netcode_metrics):
 			_dbg_open_log()
 			NetworkRollback.before_loop.connect(_dbg_before_loop)
 			NetworkRollback.after_loop.connect(_dbg_after_loop)
-	else:
-		hud_manager.hide_all()
 
 
 ## The HUD holds a bare ref to the local player (hud_manager.local_player). Clear it on
@@ -584,9 +582,9 @@ func update_skins(new_bike_def: BikeSkinDefinition, new_char_def: CharacterSkinD
 	animation_controller.initialize()
 	# Flush any active anim layers / procedural pose deltas accumulated against the old bike,
 	# otherwise stale offsets stay baked into the IK markers until the next respawn.
-	for child in controllers_node.get_children():
-		if child.has_method("do_reset"):
-			child.do_reset()
+	# Visual resets only — sim state is only ever written by the rollback tick.
+	animation_controller.do_reset()
+	camera_controller.do_reset()
 	# Restart engine sound so the new bike's EngineSoundEvent gets its rpm_curve/pitch
 	# range assigned — otherwise the next update_revs_rpm tick null-derefs rpm_curve.
 	if is_local_client and audio_manager:

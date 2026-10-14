@@ -157,8 +157,7 @@ func save_to_disk() -> String:
 	var err := ResourceSaver.save(self, path)
 	if err == OK:
 		# Force the cache to point at this in-memory copy. Without this, subsequent
-		# load(path) calls (e.g. from_dict round-trips during lobby sync) return the
-		# stale cached version instead of the freshly-saved one.
+		# load(path) calls return the stale cached version instead of the freshly-saved one.
 		take_over_path(path)
 		DebugUtils.DebugMsg("BikeSkinDefinition: Saved to %s" % path)
 		return path
@@ -278,8 +277,8 @@ func to_dict() -> Dictionary:
 	}
 
 
-## Rebuild from a dict. Loads the base bike from res://, applies mods, then caches to
-## user://skins/ so future loads (and the editor's "Load skin from u:disk") see it.
+## Rebuild from a dict. Loads the base bike from res:// and applies mods. No disk write — this
+## runs per player on every lobby sync, on every peer.
 func from_dict(dict: Dictionary) -> void:
 	const FALLBACK_BASE := "res://resources/bikes/skins/sport_default_skin_definition.tres"
 	var base_path: String = dict.get("base_res_path", "")
@@ -306,8 +305,6 @@ func from_dict(dict: Dictionary) -> void:
 		elif mod:
 			rebuilt_mods.append(mod)
 	mods = rebuilt_mods
-
-	save_to_disk()
 
 
 ## Legacy saves painted player bikes with a ColorMod; that's `colors` now. Same pairing as

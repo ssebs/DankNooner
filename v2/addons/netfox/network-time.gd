@@ -521,6 +521,17 @@ func _get_tick_tag() -> String:
 	return "@%d" % tick
 
 func _loop() -> void:
+	# DankNooner patch: stretch and max_ticks_per_frame only catch up slowly, so a tick far behind
+	# the synced clock (late-join clock correction, hitch run) sends inputs past the host's history
+	# and the peer never gets state again. Snap like a pause instead.
+	var drift := NetworkTimeSynchronizer.get_time() - ticks_to_seconds(_tick)
+	if drift > stall_threshold:
+		_logger.warning("Tick %.2fs behind synced clock, snapping to resync", [drift])
+		_clock.set_time(NetworkTimeSynchronizer.get_time())
+		_last_process_time = _clock.get_time()
+		_next_tick_time = _last_process_time
+		_tick = seconds_to_ticks(NetworkTimeSynchronizer.get_time())
+
 	# Adjust local clock
 	_clock.step(_clock_stretch_factor)
 	var clock_diff: float = NetworkTimeSynchronizer.get_time() - _clock.get_time()

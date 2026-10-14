@@ -108,8 +108,8 @@ func start_traffic(for_race: bool = false) -> void:
 ##
 ## Traffic skins all live in res:// and are byte-identical on every peer, so the
 ## resource paths ARE the serializer. Deliberately not PlayerDefinition.to_dict():
-## that round-trips every loadout through BikeSkinDefinition.from_dict(), which
-## writes a .tres into user://skins/ per rider per peer.
+## that round-trips every loadout through BikeSkinDefinition.from_dict() per rider
+## per peer.
 func _roll_vehicle(def: PlayerDefinition, npc_id: int) -> Dictionary:
 	var chance := level_manager.current_level.traffic_settings.car_chance
 	if !_car_skin_paths.is_empty() and randf() < chance:

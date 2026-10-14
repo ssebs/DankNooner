@@ -262,7 +262,7 @@ Skins can be saved/loaded from `user://skins/` for runtime customization:
 
 Both `CharacterSkinDefinition` and `BikeSkinDefinition` support save/load + dict serialization.
 
-`BikeSkinDefinition.to_dict()` ships only the **base bike res:// path** + **mod res:// paths** — never `resource_path`, which can be a local `user://` file. `from_dict()` loads the base, applies the mods, then writes the rebuilt def to `user://skins/` on the receiving peer for caching. This is what enables customized bikes to sync across the lobby.
+`BikeSkinDefinition.to_dict()` ships only the **base bike res:// path** + **mod res:// paths** — never `resource_path`, which can be a local `user://` file. `from_dict()` loads the base and applies the mods — no disk write, since it runs per player on every lobby sync on every peer. This is what enables customized bikes to sync across the lobby. `SpawnManager._on_lobby_players_updated` compares `to_dict()` contents and only calls `update_skins()` on riders whose skin actually changed.
 
 ## Loadouts
 

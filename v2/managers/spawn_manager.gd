@@ -101,7 +101,14 @@ func _on_lobby_players_updated(players: Dictionary):
 		var player := get_player_by_peer_id(peer_id)
 		if player == null:
 			continue
-		player.update_skins(players[peer_id].bike_skin, players[peer_id].character_skin)
+		# Every sync rebuilds every def, so compare contents — rebuilding an unchanged rider hitches every peer.
+		var def: PlayerDefinition = players[peer_id]
+		if (
+			player.bike_definition.to_dict() == def.bike_skin.to_dict()
+			and player.character_definition.to_dict() == def.character_skin.to_dict()
+		):
+			continue
+		player.update_skins(def.bike_skin, def.character_skin)
 
 
 ## True when the executing RPC came from the server or a local call — sender id is

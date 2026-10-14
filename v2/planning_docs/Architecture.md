@@ -489,7 +489,7 @@ for the current surface. The distinctions that aren't obvious from the signature
   - On `Enter()`, non-server peers call `request_traffic_sync()` to pull everything they missed (covers both the fresh-start timing race and late join); `Exit()` calls `reset_local_traffic()`.
   - Spawn/despawn RPCs are idempotent (dedupe on npc id / tolerant of missing ids), so broadcast + resync can overlap safely.
 - Crashed riders recover onto a clear lane spot after a randomized delay; a rider that rams a player crashes them via `SpawnManager.crash_player`.
-- Vehicle skins ship as `res://` paths, deliberately not `PlayerDefinition.to_dict()` — that round-trips through `BikeSkinDefinition.from_dict()`, which writes a `.tres` into `user://skins/` per rider per peer (open issue).
+- Vehicle skins ship as `res://` paths, deliberately not `PlayerDefinition.to_dict()` — that round-trips every loadout through `BikeSkinDefinition.from_dict()` per rider per peer.
 
 ### Animal Spawn Manager
 
@@ -536,6 +536,15 @@ Each client captures input locally and predicts off it immediately. netfox's
 `RollbackSynchronizer` ships that input to the server, which runs the authoritative physics and
 broadcasts the resulting state properties back; clients resimulate from the corrected state on
 mismatch. There is no hand-written input RPC — netfox owns the whole path.
+
+**Local netfox patch** (`addons/netfox/network-time.gd`, `_loop`, marked `DankNooner patch` —
+re-apply on addon upgrade): if the tick falls more than `stall_threshold` behind the synced
+clock, it snaps to it like a pause. Stock netfox only snaps on a single frame longer than
+`stall_threshold`; otherwise it catches up via clock stretch and `max_ticks_per_frame`, both
+slow. A late joiner whose clock sync corrects by seconds after its level load (or a run of
+shorter hitches) stays behind long enough that its inputs fall out of the host's history — the
+host never simulates it, never sends it state, and it resimulates the full history every frame
+forever.
 
 ### Authority Summary
 

@@ -67,7 +67,7 @@ func update_brake_slide(delta: float):
 				"wobble trigger 1a (rear-brake release): slip=%.0f° hold=%.2fs"
 				% [rad_to_deg(release_slip), wobble_brake_hold_time]
 			),
-			OS.has_feature("debug") and movement_controller.debug_verbose
+			DebugUtils.is_debug(movement_controller.debug_verbose)
 		)
 	wobble_brake_hold_time = 0.0
 
@@ -137,7 +137,7 @@ func kick_from_misalign(source: String, travel_velocity: Vector3):
 			"%s: yaw=%.0f° over=%.0f spd=%.0f | window=%.0f min_spd=%.0f"
 			% [source, rad_to_deg(yaw_off), over, speed, WOBBLE_LANDING_ANGLE_DEG, WOBBLE_MIN_SPEED]
 		),
-		OS.has_feature("debug") and movement_controller.debug_verbose
+		DebugUtils.is_debug(movement_controller.debug_verbose)
 	)
 	if speed < WOBBLE_MIN_SPEED or over <= 0.0: # too slow, or aligned enough — no wobble
 		return
@@ -148,7 +148,7 @@ func kick_from_misalign(source: String, travel_velocity: Vector3):
 	wobble_vel += signf(yaw_off) * kick
 	DebugUtils.DebugMsg(
 		"  -> %s WOBBLE (vel+=%.1f)" % [source, signf(yaw_off) * kick],
-		OS.has_feature("debug") and movement_controller.debug_verbose
+		DebugUtils.is_debug(movement_controller.debug_verbose)
 	)
 
 
@@ -159,7 +159,7 @@ func tick(delta: float):
 	update_is_wobbling()
 	if not is_wobbling:
 		if was_wobbling:
-			DebugUtils.DebugMsg("wobble ended (settled)", OS.has_feature("debug") and movement_controller.debug_verbose)
+			DebugUtils.DebugMsg("wobble ended (settled)", DebugUtils.is_debug(movement_controller.debug_verbose))
 		wobble_angle = 0.0
 		wobble_vel = 0.0
 		wobble_from_trick = false
@@ -167,7 +167,7 @@ func tick(delta: float):
 	if not was_wobbling:
 		DebugUtils.DebugMsg(
 			"wobble started (vel=%.2f rad/s) — see trigger above for cause" % wobble_vel,
-			OS.has_feature("debug") and movement_controller.debug_verbose
+			DebugUtils.is_debug(movement_controller.debug_verbose)
 		)
 
 	var steer := input_controller.nfx_steer

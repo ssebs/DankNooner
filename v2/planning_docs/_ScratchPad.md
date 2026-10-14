@@ -7,8 +7,7 @@
 
 ### NOW
 
-- [ ] rejoining lobby causes host lag
-  - [ ] see claude resume history
+
 
 
 ### NEXT

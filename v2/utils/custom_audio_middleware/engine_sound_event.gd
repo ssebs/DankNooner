@@ -69,7 +69,7 @@ func set_parameter(param_name: String, value: float) -> void:
 				high_gain, high_layer.volume_db, high_layer.playing,
 			]
 		),
-		OS.has_feature("debug") and debug_verbose
+		DebugUtils.is_debug(debug_verbose)
 	)
 
 

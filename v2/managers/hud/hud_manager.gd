@@ -43,13 +43,6 @@ func set_hud_hidden(hidden: bool):
 		hud_state.show_ui()
 
 
-func hide_all():
-	for child in state_machine.get_children():
-		if !child is HUDState:
-			continue
-		child.hide_ui()
-
-
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
 	if null_hud_state == null:

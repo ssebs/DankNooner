@@ -434,8 +434,9 @@ func _on_player_crashed(peer_id: int):
 ## respawn button still returns to the original spawn.
 func _respawn_at_crash_site(peer_id: int):
 	# Already recovered (e.g. pause-menu respawn button) before the timer fired — skip
-	# so we don't respawn a second time.
-	if not spawn_manager.get_player_by_peer_id(peer_id).is_crashed:
+	# so we don't respawn a second time. Null when they left during the delay — skip is intentional.
+	var player := spawn_manager.get_player_by_peer_id(peer_id)
+	if player == null or not player.is_crashed:
 		return
 	spawn_manager.respawn_in_place(peer_id)
 

@@ -20,7 +20,7 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-
+- [ ] ramp follows corkscrew tscn
 
 - [ ] see playtest [feedback](_ScratchPad.md)
 
@@ -306,6 +306,10 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] rejoining lobby causes lag
+
+- [x] new logos
+
 - [x] allow barrel rolls
 - [x] Long Jump name => megaramp trick comp 
 - [x] minimap show garage

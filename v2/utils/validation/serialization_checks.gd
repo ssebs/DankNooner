@@ -5,8 +5,6 @@
 ##
 ## Usage: main_game.gd _run_validation() loads this and calls run() after AutoValidator (debug only)
 
-## BikeSkinDefinition.from_dict caches itself to user://skins/ under its skin_name. A fixture name
-## keeps the checks from overwriting a player's real saved skin; the file is deleted afterwards.
 const FIXTURE_SKIN_NAME := "validator_fixture"
 const FIXTURE_BASE := "res://resources/bikes/skins/naked_default_skin_definition.tres"
 const FIXTURE_MOD := "res://resources/bikes/mods/color_mods/black_blue_color.tres"
@@ -24,7 +22,6 @@ static func run() -> void:
 	errors.append_array(_check_deleted_variant_migration())
 	errors.append_array(_check_color_mod_migration())
 	errors.append_array(_check_results_data())
-	DirAccess.remove_absolute(_fixture_bike().get_user_save_path())
 
 	for error in errors:
 		push_error("SerializationChecks: %s" % error)

@@ -313,7 +313,9 @@ func _on_runner_respawn_requested(peer_id: int, in_place: bool):
 ## Delayed crash respawn — skip if the player already recovered (R tap) before the timer fired,
 ## so we don't respawn twice.
 func _respawn_crashed_player(peer_id: int, in_place: bool):
-	if !spawn_manager.get_player_by_peer_id(peer_id).is_crashed:
+	# Null when they left during the delay — skip is intentional.
+	var player := spawn_manager.get_player_by_peer_id(peer_id)
+	if player == null or !player.is_crashed:
 		return
 	if in_place:
 		spawn_manager.respawn_in_place(peer_id)

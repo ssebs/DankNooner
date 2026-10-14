@@ -234,6 +234,8 @@ func latespawn_player(peer_id: int):
 	# Spawn the new player for everyone
 	var player_def: PlayerDefinition = lobby_manager.lobby_players[peer_id]
 	spawn_manager.rpc_spawn_player.rpc(peer_id, player_def.to_dict())
+	# Respawn like match start does — the joiner's riding HUD only comes up on its own respawn.
+	spawn_manager.respawn_player.rpc(peer_id)
 
 	# Send existing players to the late-joiner
 	for existing_id in lobby_manager.lobby_players:

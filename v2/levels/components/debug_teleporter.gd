@@ -12,25 +12,27 @@ class_name DebugTeleporter extends Node3D
 
 @export var destinations: Array[Node3D] = []
 
-const ITEM_DEFINITIONS: Dictionary[String, PickupItemDefinition] = {
-	"gas_can": preload("res://levels/components/pickups/gas_can_pickup_definition.tres"),
-	"bat": preload("res://levels/components/pickups/bat_pickup_definition.tres"),
-	"oil_slick": preload("res://levels/components/pickups/oil_slick_pickup_definition.tres"),
-	"ramp": preload("res://levels/components/pickups/ramp_pickup_definition.tres"),
-	"shotgun": preload("res://levels/components/pickups/shotgun_pickup_definition.tres"),
-}
+const PICKUP_SPAWNER_SCENE := preload("res://levels/components/pickups/pickup_spawner.tscn")
+
+## Read from the spawner scene's item list, so every spawnable item is givable.
+var _item_definitions: Dictionary[String, PickupItemDefinition] = {}
 
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
+	var spawner: PickupSpawner = PICKUP_SPAWNER_SCENE.instantiate()
+	for definition in spawner.items:
+		var item_name: String = PickupItemDefinition.PickupItemType.keys()[definition.item_type]
+		_item_definitions[item_name.to_lower()] = definition
+	spawner.free()
 	Console.add_command(
 		"tp", _teleport, ["dest"], 1, "Teleport local player to a destination (name or 1-based index)"
 	)
 	Console.add_command("tp_list", _tp_list, [], 0, "List all teleport destinations")
 	Console.add_command("max_boost", _max_boost, [], 0, "Fill the local player's boost meter")
 	Console.add_command("give_item", _give_item, ["item"], 1, "Collect an item as if from a pickup (host only)")
-	Console.add_command_autocomplete_list("give_item", PackedStringArray(ITEM_DEFINITIONS.keys()))
+	Console.add_command_autocomplete_list("give_item", PackedStringArray(_item_definitions.keys()))
 	Console.add_command("items_list", _items_list, [], 0, "List all give_item items")
 	# Deferred so every EventStartCircle has run _ready() and joined the group first.
 	_refresh_autocomplete.call_deferred()
@@ -74,7 +76,7 @@ func _max_boost() -> void:
 
 
 func _items_list() -> void:
-	for item in ITEM_DEFINITIONS:
+	for item in _item_definitions:
 		Console.print_line(item)
 
 
@@ -83,10 +85,10 @@ func _give_item(arg: String) -> void:
 	if !multiplayer.is_server():
 		Console.print_line("give_item: host only")
 		return
-	if !ITEM_DEFINITIONS.has(arg):
-		Console.print_line("give_item: no item '%s' (%s)" % [arg, ", ".join(PackedStringArray(ITEM_DEFINITIONS.keys()))])
+	if !_item_definitions.has(arg):
+		Console.print_line("give_item: no item '%s' (%s)" % [arg, ", ".join(PackedStringArray(_item_definitions.keys()))])
 		return
-	if !_item_manager().collect(_local_peer_id(), ITEM_DEFINITIONS[arg]):
+	if !_item_manager().collect(_local_peer_id(), _item_definitions[arg]):
 		Console.print_line("give_item: already holding an item")
 
 

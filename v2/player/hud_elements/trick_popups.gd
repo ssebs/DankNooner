@@ -47,7 +47,7 @@ const CALLOUT_ORIGIN := Vector2(210.0, -250.0)
 ## Gap from the score's bottom to the stopwatch row (negative tucks it up — the icon's art has
 ## transparent padding). The row's left edge lines up with the score's.
 const WHEELIE_GAP_Y: float = 12.0
-const WHEELIE_ICON := preload("res://resources/img/Logos/BikeOnly.png")
+const WHEELIE_ICON := preload("res://resources/img/Logos/DankNoonerLogo_BikeOnlyHorizontal.png")
 const TINT_SHADER := preload("res://resources/shaders/hud_tint.gdshader")
 const WHEELIE_ICON_PX: float = 64.0
 ## The icon's rear / front wheel contact points, as a fraction of its size — it wheelies /
@@ -60,7 +60,7 @@ const ICON_SHAKE_PX: float = 3.0
 const ICON_SMOOTH_SPEED: float = 12.0
 ## Icon colors: blue before the balance point, green in it, red past it — each edge ramps through
 ## a midtone (teal / yellow) over ICON_BLEND_DEG.
-const ICON_COLOR := Color(0.25, 0.69, 1.0)  # the art's own blue
+const ICON_COLOR := Color(0.25, 0.69, 1.0) # the art's own blue
 const ICON_NEAR_COLOR := Color(0.2, 0.9, 0.8)
 const ICON_BP_COLOR := Color(0.3, 1.0, 0.35)
 const ICON_WARN_COLOR := Color(1.0, 0.85, 0.2)

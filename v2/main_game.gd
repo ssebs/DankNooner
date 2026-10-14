@@ -17,6 +17,10 @@ func _ready() -> void:
 	if OS.has_feature("web"):
 		ProjectSettings.set_setting("netfox/time/tickrate", 20)
 
+	# Netfox warnings are off in project settings (they spam under lag); verbose brings them back.
+	if DebugUtils.verbose:
+		NetfoxLogger.module_log_level["netfox"] = NetfoxLogger.LOG_WARN
+
 	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
 	settings_manager.setting_updated.connect(_on_setting_updated)
 
