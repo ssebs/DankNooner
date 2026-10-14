@@ -175,9 +175,10 @@ func _process(delta: float):
 		_update_follow_camera()
 
 	# Camera follows every frame so the map itself stays smooth; only the blip overlay
-	# throttles. The overlay keeps its last drawn frame in between.
+	# throttles. The overlay keeps its last drawn frame in between. The full map pans and
+	# zooms freely, so it redraws every frame or the blips trail the map.
 	_blip_timer -= delta
-	if _blip_timer <= 0.0:
+	if _expanded or _blip_timer <= 0.0:
 		_blip_timer = 1.0 / blip_refresh_hz
 		_dot_overlay.queue_redraw()
 
