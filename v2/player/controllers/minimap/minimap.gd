@@ -30,6 +30,8 @@ class_name Minimap extends PanelContainer
 @export var full_zoom_max: float = 1500.0
 ## Gamepad pan rate, as a fraction of the current view height per second (scales with zoom).
 @export var map_pan_rate: float = 0.6
+## icon_size on the full map (and its legend).
+@export var full_icon_size: float = 40.0
 
 const COLOR_SELF := Color.WHITE
 const COLOR_PLAYER := Color(0.2, 0.5, 1.0)
@@ -89,7 +91,7 @@ func _ready():
 func _build_legend() -> void:
 	for key in LEGEND:
 		var swatch := Control.new()
-		swatch.custom_minimum_size = Vector2.ONE * icon_size
+		swatch.custom_minimum_size = Vector2.ONE * full_icon_size
 		swatch.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		swatch.draw.connect(
 			func(): _draw_blip(swatch, swatch.size * 0.5, LEGEND[key][0], LEGEND[key][1])
@@ -218,6 +220,7 @@ func _draw_dots() -> void:
 	# activates on remote instances) — nothing to plot without a local player.
 	if !_active:
 		return
+	var self_pos := _local_player.global_position
 	for racer in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Racers"]):
 		# Ambient traffic isn't something you navigate by, and at 100+ riders plotting it
 		# was most of this pass — and most of them pin to the map edge as arrows anyway.
@@ -226,20 +229,36 @@ func _draw_dots() -> void:
 		_draw_marker(racer.global_position, COLOR_NPC if racer is NPCRiderEntity else COLOR_PLAYER)
 
 	# Event start circles (local level nodes) — bright pink for testing — and garages.
-	# Only in free roam; a race hides them so its checkpoint marker stands alone.
+	# Only in free roam; a race hides them so its checkpoint marker stands alone. Off the
+	# corner map they'd crowd its edge, so only the nearest garage keeps a pointer there.
 	if _local_player.gamemode_manager.current_game_mode == GameModeType.Kind.FREE_ROAM:
 		for circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
-			_draw_marker(circle.global_position, COLOR_EVENT, ICON_EVENT)
-		for activity in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["FreeRoamActivities"]):
-			if activity is GarageActivity:
-				_draw_marker(activity.global_position, COLOR_GARAGE, ICON_GARAGE)
+			_draw_marker(circle.global_position, COLOR_EVENT, ICON_EVENT, 0.0, _expanded)
+		var garages := get_tree().get_nodes_in_group(
+			UtilsConstants.GROUPS["FreeRoamActivities"]
+		).filter(func(a): return a is GarageActivity)
+		var nearest_garage: GarageActivity = null
+		for garage in garages:
+			if (
+				nearest_garage == null
+				or self_pos.distance_squared_to(garage.global_position)
+				< self_pos.distance_squared_to(nearest_garage.global_position)
+			):
+				nearest_garage = garage
+		for garage in garages:
+			_draw_marker(
+				garage.global_position,
+				COLOR_GARAGE,
+				ICON_GARAGE,
+				0.0,
+				_expanded or garage == nearest_garage
+			)
 
 	if has_checkpoint:
 		_draw_marker(checkpoint_pos, COLOR_CHECKPOINT, ICON_CHECKPOINT)
 
 	# Last so it sits on top. Heading taken in screen space, so it reads right both heading-up
 	# and north-up.
-	var self_pos := _local_player.global_position
 	var screen_fwd := (
 		_camera.unproject_position(self_pos - _local_player.global_basis.z)
 		- _camera.unproject_position(self_pos)
@@ -248,9 +267,14 @@ func _draw_dots() -> void:
 
 
 ## Plot a world position onto the overlay: clamp off-map points to the edge box
-## with an outward pointer, then draw the bordered blip.
+## with an outward pointer, then draw the bordered blip. Unpinned points are just
+## skipped off-map.
 func _draw_marker(
-	world_pos: Vector3, color: Color, icon: Texture2D = null, angle: float = 0.0
+	world_pos: Vector3,
+	color: Color,
+	icon: Texture2D = null,
+	angle: float = 0.0,
+	pin: bool = true
 ) -> void:
 	var radius := _blip_radius(icon)
 	var center := _dot_overlay.size * 0.5
@@ -260,6 +284,8 @@ func _draw_marker(
 	var pos := _camera.unproject_position(world_pos)
 	var offset := pos - center
 	if absf(offset.x) > half.x or absf(offset.y) > half.y:
+		if !pin:
+			return
 		# Off-map: clamp onto the edge box along the ray from center, then
 		# add an outward pointer toward the real position.
 		var t := 1.0
@@ -274,21 +300,28 @@ func _draw_marker(
 
 ## Outer radius, black ring included.
 func _blip_radius(icon: Texture2D) -> float:
-	return icon_size * 0.5 if icon != null else dot_radius + border_width
+	if icon == null:
+		return dot_radius + border_width
+	return (full_icon_size if _expanded else icon_size) * 0.5
 
 
-## A dot, or an icon tinted `color` on a black disc.
+## A dot, or a pin: black glyph on a `color` disc, ringed white then black so it reads on
+## both dark and light ground.
 func _draw_blip(
 	canvas: CanvasItem, pos: Vector2, color: Color, icon: Texture2D = null, angle: float = 0.0
 ) -> void:
-	canvas.draw_circle(pos, _blip_radius(icon), Color.BLACK)
+	var radius := _blip_radius(icon)
+	canvas.draw_circle(pos, radius, Color.BLACK)
 	if icon == null:
 		canvas.draw_circle(pos, dot_radius, color)
 		return
-	# The icons pad their glyph, so drawn at full size it still fits inside the disc.
+	canvas.draw_circle(pos, radius - border_width, Color.WHITE)
+	var disc := radius - border_width * 2.0
+	canvas.draw_circle(pos, disc, color)
+	# The icons pad their glyph, so a rect the disc's size still fits inside it.
 	canvas.draw_set_transform(pos, angle)
 	canvas.draw_texture_rect(
-		icon, Rect2(Vector2.ONE * -icon_size * 0.5, Vector2.ONE * icon_size), false, color
+		icon, Rect2(Vector2.ONE * -disc, Vector2.ONE * disc * 2.0), false, Color.BLACK
 	)
 	canvas.draw_set_transform(Vector2.ZERO)
 

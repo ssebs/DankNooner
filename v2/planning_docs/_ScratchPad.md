@@ -11,7 +11,6 @@
 
 - [ ] cant cheat in rally up item, all items should be avail in items_list command
 
-- [ ] Make fill up more intuitive 
 - [ ] Make hud simpler/intuitive 
 - [ ] Fill up => race is not obvious where to go/not consistent across all races 
 - [ ] Controller fix? https://www.reddit.com/r/godot/s/d7neQJ0oFb
