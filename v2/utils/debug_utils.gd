@@ -1,7 +1,9 @@
 class_name DebugUtils extends RefCounted
 
-## Launched with `-- --verbose`: every debug toggle on, in any build.
+## Launched with `-- --verbose`: every debug toggle on, in any build — except movement.
 static var verbose := "--verbose" in OS.get_cmdline_user_args()
+## `-- --verbose-movement`: its own flag since it prints every tick, resims included.
+static var verbose_movement := "--verbose-movement" in OS.get_cmdline_user_args()
 
 static var prof_enabled := false  # PROF: temp - set from PlayerEntity.debug_prof
 static var _prof: Dictionary[String, Vector3i] = {}  # key -> (total_usec, calls, max_usec)  # PROF: temp
@@ -20,9 +22,9 @@ static func DebugErrMsg(s: String, should_print: bool = true):
 		printerr(s)
 
 
-## Whether a node's inspector debug toggle is live: set in a debug build, or forced by `verbose`.
-static func is_debug(toggle: bool) -> bool:
-	return verbose or (toggle and OS.has_feature("debug"))
+## Whether a node's inspector debug toggle is live: set in a debug build, or forced by a flag.
+static func is_debug(toggle: bool, forced: bool = verbose) -> bool:
+	return forced or (toggle and OS.has_feature("debug"))
 
 
 #region PROF: temp physics profiling — grep "PROF:" to remove

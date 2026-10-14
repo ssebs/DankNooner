@@ -267,7 +267,7 @@ func on_movement_rollback_tick(delta: float):
 
 	_handle_player_collision(delta)
 
-	if DebugUtils.is_debug(debug_verbose):
+	if DebugUtils.is_debug(debug_verbose, DebugUtils.verbose_movement):
 		_debug_air_state()
 
 
@@ -367,7 +367,7 @@ func _update_surface_alignment(delta: float):
 						rear_raycast.is_colliding()
 					]
 				),
-				DebugUtils.is_debug(debug_verbose)
+				DebugUtils.is_debug(debug_verbose, DebugUtils.verbose_movement)
 			)
 
 		# Adhesion check — need enough speed to ride steep/inverted surfaces
@@ -559,7 +559,7 @@ func _steer_calc(delta: float):
 				"Steer: spd=%.1f spd%%=%.0f%% curve=%.2f rate=%.2f"
 				% [speed, speed_pct * 100, steer_factor, turn_rate]
 			),
-			DebugUtils.is_debug(debug_verbose)
+			DebugUtils.is_debug(debug_verbose, DebugUtils.verbose_movement)
 		)
 		player_entity.rotate_y(-roll_angle * turn_rate * delta)
 
@@ -725,7 +725,7 @@ func _pitch_angle_calc(delta: float):
 				in_balance_point
 			]
 		),
-		DebugUtils.is_debug(debug_verbose)
+		DebugUtils.is_debug(debug_verbose, DebugUtils.verbose_movement)
 	)
 
 	# Lean forward recovery — pull the front wheel down
@@ -1039,7 +1039,7 @@ func _drift_calc(delta: float):
 			wobble_controller.wobble_vel += kick
 			DebugUtils.DebugMsg(
 				"wobble trigger 1b (high-speed brake entry): spd=%.0f%%" % (speed_pct * 100.0),
-				DebugUtils.is_debug(debug_verbose)
+				DebugUtils.is_debug(debug_verbose, DebugUtils.verbose_movement)
 			)
 		else:
 			is_drifting = _can_initiate_drift()
@@ -1087,7 +1087,7 @@ func _drift_calc(delta: float):
 
 	DebugUtils.DebugMsg(
 		"drift: slip=%.1f° drive=%.2f steer=%.2f" % [rad_to_deg(slip_angle), drive, steer],
-		DebugUtils.is_debug(debug_verbose)
+		DebugUtils.is_debug(debug_verbose, DebugUtils.verbose_movement)
 	)
 
 
