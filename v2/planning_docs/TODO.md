@@ -20,7 +20,6 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-- [ ] mac first launch stuck in gas fill up cam
 
 - [ ] see playtest [feedback](_ScratchPad.md)
 
@@ -263,6 +262,12 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] shouldnt be able to drive while in pause menu
+
+- [x] mac first launch stuck in gas fill up cam
+
+- [x] cant cheat in rally up item, all items should be avail in items_list command
+
 - [x] ramp follows corkscrew tscn
 
 - [x] rejoining lobby causes lag

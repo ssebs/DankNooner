@@ -26,12 +26,16 @@ var conn_addr: String:
 		conn_addr = val
 		game_id_set.emit(val)
 
+## Hosting solo free roam — no lobby to show
+var is_solo := false
+
 var _enet_connected_callable: Callable
 
 
 #region Public API
 ## Starts the ENet server and listens for connections.
 func start_server(solo: bool = false):
+	is_solo = solo
 	var handler = _get_handler()
 	var peer: MultiplayerPeer = await handler.start_server(solo)
 	handler.connection_failed.connect(_on_handler_connection_failed)
@@ -84,6 +88,7 @@ func stop_server():
 ## Connects to a server at the given address. Returns OK on success, or an error code on failure.
 ## Address is a game code, IP or Steam lobby ID depending on connection_mode.
 func connect_client(address: String) -> Error:
+	is_solo = false
 	var handler = _get_handler()
 	handler.connection_failed.connect(_on_handler_connection_failed)
 	handler.connection_succeeded.connect(_on_handler_connection_succeeded)

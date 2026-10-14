@@ -4,24 +4,7 @@
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_lphm8"]
 [ext_resource type="PackedScene" path="res://menus/lobby_menu/level_select_panel.tscn" id="3_lspanel"]
 [ext_resource type="Script" uid="uid://muodw5580tnr" path="res://addons/tattomoosa.spinner/spinner.gd" id="4_wpkl5"]
-[ext_resource type="Script" uid="uid://c0mme4m8qonki" path="res://menus/lobby_menu/player_list_ui.gd" id="6_qnklb"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wpkl5"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-bg_color = Color(0.6, 0.6, 0.6, 0)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.25490198, 0.6862745, 1, 1)
-border_blend = true
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+[ext_resource type="PackedScene" path="res://menus/lobby_menu/lobby_panel.tscn" id="6_lpanel"]
 
 [node name="LobbyMenuState" type="Node" unique_id=1093433336]
 script = ExtResource("1_1jh13")
@@ -68,6 +51,7 @@ self_modulate = Color(1, 1, 1, 1)
 show_behind_parent = false
 top_level = false
 clip_children = 0
+oversampling_with_scale = 0
 light_mask = 1
 visibility_layer = 1
 z_index = 0
@@ -77,9 +61,10 @@ texture_filter = 0
 texture_repeat = 0
 material = null
 use_parent_material = false
-clip_contents = true
 custom_minimum_size = Vector2(120, 120)
-layout_direction = 0
+custom_maximum_size = Vector2(-1, -1)
+propagate_maximum_size = false
+clip_contents = true
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -99,7 +84,17 @@ pivot_offset_ratio = Vector2(0, 0)
 size_flags_horizontal = 1
 size_flags_vertical = 1
 size_flags_stretch_ratio = 1.0
+offset_transform_enabled = false
+offset_transform_position = Vector2(0, 0)
+offset_transform_position_ratio = Vector2(0, 0)
+offset_transform_scale = Vector2(1, 1)
+offset_transform_rotation = 0.0
+offset_transform_pivot = Vector2(0, 0)
+offset_transform_pivot_ratio = Vector2(0.5, 0.5)
+offset_transform_visual_only = true
 localize_numeral_system = true
+layout_direction = 0
+translation_context = &""
 tooltip_text = ""
 tooltip_auto_translate_mode = 0
 focus_neighbor_left = NodePath("")
@@ -177,49 +172,17 @@ size_flags_vertical = 0
 theme_type_variation = &"TitleLabel"
 text = "LOBBY_LABEL"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/MultiplayerUI" unique_id=816754844]
+[node name="LobbyPanel" parent="UI/AspectContainer/MarginContainer/MultiplayerUI" unique_id=816754844 instance=ExtResource("6_lpanel")]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_top = -37.5
-offset_right = 236.0
-offset_bottom = 37.5
+offset_top = -237.5
+offset_right = 864.0
+offset_bottom = 328.5
 grow_vertical = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer" unique_id=1630994285]
-layout_mode = 2
-theme_override_constants/separation = 32
-
-[node name="IPLabel" type="Label" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer/HBoxContainer" unique_id=110855405]
-unique_name_in_owner = true
-layout_mode = 2
-text = "IP: 0.0.0.0"
-
-[node name="IPCopyBtn" type="Button" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer/HBoxContainer" unique_id=256877172]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_default_cursor_shape = 2
-disabled = true
-text = "COPY_LABEL"
-
-[node name="InviteBtn" type="Button" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer/HBoxContainer" unique_id=568535846]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-mouse_default_cursor_shape = 2
-text = "INVITE_LABEL"
-
-[node name="ScrollContainer" type="ScrollContainer" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer" unique_id=2077582748]
-custom_minimum_size = Vector2(600, 400)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_wpkl5")
-vertical_scroll_mode = 2
-
-[node name="PlayersList" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/MultiplayerUI/VBoxContainer/ScrollContainer" unique_id=493926022]
-unique_name_in_owner = true
-layout_mode = 2
-script = ExtResource("6_qnklb")
+theme_override_constants/separation = 12
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=495261937]
 layout_mode = 2
@@ -245,6 +208,3 @@ text = "BACK_LABEL"
 [node name="TimeoutTimer" type="Timer" parent="." unique_id=2081652172]
 unique_name_in_owner = true
 wait_time = 10.0
-
-[node name="PingTimer" type="Timer" parent="." unique_id=2081652173]
-unique_name_in_owner = true

@@ -21,13 +21,9 @@ class_name LobbyMenuState extends MenuState
 @onready var level_select_panel: LevelSelectPanel = %LevelSelectPanel
 @onready var customize_btn: Button = %CustomizeBtn
 
-@onready var ip_label: Label = %IPLabel
-@onready var ip_copy_btn: Button = %IPCopyBtn
-@onready var invite_btn: Button = %InviteBtn
-@onready var player_list: VBoxContainer = %PlayersList  # PlayerListUI script
+@onready var lobby_panel: LobbyPanel = %LobbyPanel
 @onready var loading_ui: ColorRect = %LoadingUI
 @onready var timeout_timer: Timer = %TimeoutTimer
-@onready var ping_timer: Timer = %PingTimer
 
 
 #region state lifecycle
@@ -53,10 +49,7 @@ func Enter(state_context: StateContext):
 	back_btn.pressed.connect(_on_back_pressed)
 	level_select_panel.start_pressed.connect(_on_start_pressed)
 	level_select_panel.level_selected.connect(_on_level_selected)
-	ip_copy_btn.pressed.connect(_on_ip_copy_btn_pressed)
 	customize_btn.pressed.connect(_on_customize_pressed)
-	invite_btn.pressed.connect(steam_manager.invite_friends)
-	steam_manager.avatar_loaded.connect(player_list.set_avatar)
 
 	# Connection signals
 	connection_manager.server_disconnected.connect(_on_server_disconnected)
@@ -64,12 +57,13 @@ func Enter(state_context: StateContext):
 	connection_manager.client_connection_failed.connect(_on_client_connection_failed)
 	connection_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
 
-	# Lobby signals
-	lobby_manager.lobby_players_updated.connect(_on_lobby_players_updated)
-
 	timeout_timer.timeout.connect(_on_timeout)
-	ping_timer.timeout.connect(_on_ping_timer_timeout)
-	ping_timer.start()
+
+	# Only the host owns the Steam lobby friends get invited to
+	lobby_panel.open(
+		connection_manager, lobby_manager, steam_manager,
+		return_ctx.mode == LobbyStateContext.Mode.HOST
+	)
 
 	level_select_panel.populate(level_manager, 1)
 	set_single_or_multiplayer_ui()
@@ -78,27 +72,20 @@ func Enter(state_context: StateContext):
 func Exit(_state_context: StateContext):
 	ui.hide()
 	# return_ctx = null
-	player_list.clear()
+	lobby_panel.close()
 
 	back_btn.pressed.disconnect(_on_back_pressed)
 	level_select_panel.start_pressed.disconnect(_on_start_pressed)
 	level_select_panel.level_selected.disconnect(_on_level_selected)
-	ip_copy_btn.pressed.disconnect(_on_ip_copy_btn_pressed)
 	customize_btn.pressed.disconnect(_on_customize_pressed)
-	invite_btn.pressed.disconnect(steam_manager.invite_friends)
-	steam_manager.avatar_loaded.disconnect(player_list.set_avatar)
 
 	connection_manager.server_disconnected.disconnect(_on_server_disconnected)
 	connection_manager.game_id_set.disconnect(_on_game_id_set)
 	connection_manager.client_connection_failed.disconnect(_on_client_connection_failed)
 	connection_manager.client_connection_succeeded.disconnect(_on_client_connection_succeeded)
 
-	lobby_manager.lobby_players_updated.disconnect(_on_lobby_players_updated)
-
 	timeout_timer.timeout.disconnect(_on_timeout)
 	timeout_timer.stop()
-	ping_timer.timeout.disconnect(_on_ping_timer_timeout)
-	ping_timer.stop()
 
 
 #endregion
@@ -121,19 +108,11 @@ func _on_start_pressed():
 ## cleanup before going back
 func _on_back_pressed():
 	connection_manager.disconnect_sp_or_mp()
-	player_list.clear()
 
 	if level_manager.current_level_name != LevelManager.LevelName.BG_GRAY_LEVEL:
 		level_manager.spawn_menu_level()
 
 	transitioned.emit(return_state, return_ctx)
-
-
-## copy game id to clipboard
-func _on_ip_copy_btn_pressed():
-	# Not the label: joining takes a bare IP, without the port
-	DisplayServer.clipboard_set(connection_manager.conn_addr)
-	UiToast.ShowToast("Game ID copied to clipboard!")
 
 
 func _on_customize_pressed():
@@ -148,10 +127,8 @@ func _on_customize_pressed():
 
 
 #region network signal handlers
-## set game join id in ui & enable clipboard btn
-func _on_game_id_set(conn_addr: String):
-	_show_game_id(conn_addr)
-	ip_copy_btn.disabled = false
+## LobbyPanel shows the ID; auto-copy it for the host
+func _on_game_id_set(_conn_addr: String):
 	level_select_panel.refresh_preview()
 
 	if (
@@ -159,18 +136,7 @@ func _on_game_id_set(conn_addr: String):
 		&& multiplayer.is_server()
 		&& return_ctx.mode != LobbyStateContext.Mode.FREEROAM
 	):
-		call_deferred("_on_ip_copy_btn_pressed")
-
-
-## set player list from server's lobby_players
-func _on_lobby_players_updated(players: Dictionary):
-	player_list.update_from_dict(players)
-	# Each viewer fetches avatars from its own Steam client; without Steam the default icon stays
-	if !steam_manager.is_logged_in():
-		return
-	for player_def: PlayerDefinition in players.values():
-		if player_def.steam_id != 0:
-			steam_manager.request_avatar(player_def.steam_id)
+		lobby_panel.copy_game_id.call_deferred()
 
 
 func _on_server_disconnected():
@@ -198,13 +164,6 @@ func _on_timeout():
 	_on_back_pressed()
 
 
-## Only clients measure ping (netfox's time sync RTT to the host)
-func _on_ping_timer_timeout():
-	if !NetworkTime.is_initial_sync_done() or multiplayer.is_server():
-		return
-	request_report_ping.rpc_id(1, roundi(NetworkTime.remote_rtt * 1000.0))
-
-
 #endregion
 
 #region local RPCs
@@ -213,33 +172,7 @@ func share_selected_level_with_clients(idx: int):
 	level_select_panel.set_selected_index(idx)
 
 
-## Client → server: the sender reports its own ping
-@rpc("any_peer", "call_remote", "unreliable")
-func request_report_ping(ping_ms: int):
-	if !multiplayer.is_server():
-		return
-	_sync_ping.rpc(multiplayer.get_remote_sender_id(), ping_ms)
-
-
-@rpc("call_local", "unreliable")
-func _sync_ping(peer_id: int, ping_ms: int):
-	if multiplayer.get_remote_sender_id() > 1:
-		return
-	player_list.set_ping(peer_id, ping_ms)
-
-
 #endregion
-
-
-## IP/Port mode adds the port, which the host has to forward
-func _show_game_id(conn_addr: String):
-	ip_label.text = conn_addr
-	# Empty on connection reset
-	if (
-		!conn_addr.is_empty()
-		and connection_manager.connection_mode == ConnectionManager.ConnectionMode.IP_PORT
-	):
-		ip_label.text += ":%d" % UtilsConstants.PORT
 
 
 ## Hide or Show the singleplayer / multiplayer ui depending on return_ctx.mode
@@ -274,16 +207,9 @@ func set_single_or_multiplayer_ui():
 		_:
 			singleplayer_ui.hide()
 			multiplayer_ui.show()
-			# Only the host owns the Steam lobby friends get invited to
-			invite_btn.visible = (
-				return_ctx.mode == LobbyStateContext.Mode.HOST and steam_manager.is_logged_in()
-			)
 			if already_connected:
-				_show_game_id(connection_manager.conn_addr)
-				ip_copy_btn.disabled = false
 				if !multiplayer.is_server():
 					level_select_panel.set_controls_disabled(true)
-				_on_lobby_players_updated(lobby_manager.lobby_players)
 			else:
 				loading_ui.show()
 				timeout_timer.start()

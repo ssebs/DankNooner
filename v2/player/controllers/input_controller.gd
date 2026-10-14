@@ -50,6 +50,7 @@ var nfx_target_gear: int = 1
 var _pending_gear_reset: bool = false
 var _auto_shift_cooldown: float = 0.0
 var _auto_downshift_hold: float = 0.0
+var _input_state_manager: InputStateManager
 
 
 func _ready():
@@ -57,6 +58,9 @@ func _ready():
 		return
 	NetworkTime.before_tick_loop.connect(_gather)
 	player_entity.respawned.connect(_on_respawned)
+	_input_state_manager = get_tree().get_first_node_in_group(
+		UtilsConstants.GROUPS["InputStateManager"]
+	)
 
 
 ## Netfox's input hook
@@ -74,6 +78,20 @@ func _gather():
 	if _pending_gear_reset:
 		nfx_target_gear = 1
 		_pending_gear_reset = false
+
+	# Zeroed, not skipped: skipping would hold whatever was pressed when the menu opened
+	if _input_state_manager.is_menu_open():
+		nfx_throttle = 0.0
+		nfx_front_brake = 0.0
+		nfx_rear_brake = 0.0
+		nfx_steer = 0.0
+		nfx_lean = 0.0
+		nfx_trick_held = false
+		nfx_clutch_held = false
+		nfx_boost_held = false
+		nfx_cam_x = 0.0
+		nfx_cam_y = 0.0
+		return
 
 	nfx_throttle = Input.get_action_strength("throttle_pct")
 	# Boost drives you forward even off the gas — force full throttle while boosting.
@@ -109,14 +127,15 @@ func _process(delta):
 	if _text_field_focused():
 		return
 
-	if Input.is_action_just_pressed("switch_cam"):
+	var in_menu := _input_state_manager.is_menu_open()
+	if !in_menu and Input.is_action_just_pressed("switch_cam"):
 		cam_switch_pressed.emit()
-	if Input.is_action_just_pressed("reset_cam"):
+	if !in_menu and Input.is_action_just_pressed("reset_cam"):
 		reset_cam_pressed.emit()
 
-	if Input.is_action_just_pressed("gear_up"):
+	if !in_menu and Input.is_action_just_pressed("gear_up"):
 		nfx_target_gear += 1
-	if Input.is_action_just_pressed("gear_down"):
+	if !in_menu and Input.is_action_just_pressed("gear_down"):
 		nfx_target_gear -= 1
 
 	# Boosting always drives the auto box, whatever the setting says — a boost spent bouncing

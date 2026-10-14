@@ -477,4 +477,5 @@ func _auto_detect_connection_mode(text: String):
 | Game start RPC      | gamemode_manager.gd                                                        | start_game(), late-joiner sync                                 |
 | Player spawning     | spawn_manager.gd                                                           | spawn_all_players(), rpc_spawn_player(), add_player_locally()  |
 | Player list UI      | player_list_ui.gd                                                          | update_from_dict() with PlayerDefinition                       |
+| Lobby panel         | lobby_panel.gd                                                             | Game ID, Steam invite, player list + ping; lobby + pause menus |
 | Signal server       | [danknoonersignalserver](https://github.com/ssebs/danknoonersignalserver/) | WebRTC broker (Go)                                             |

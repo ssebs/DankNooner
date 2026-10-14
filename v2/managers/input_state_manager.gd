@@ -166,6 +166,12 @@ func _try_switch_bike_slot(physical_keycode: int):
 	save_manager.update_save("player_definition", player_def, true, true)
 
 
+## Pause or a menu opened from it is on screen. Event prompts and results are HUD, not menus.
+func is_menu_open() -> bool:
+	var menu := menu_manager.state_machine.current_state as MenuState
+	return menu != null and menu.ui.visible
+
+
 ## Shows or hides mouse cursor depending on current_input_state
 func showhide_mouse_cursor():
 	match current_input_state:

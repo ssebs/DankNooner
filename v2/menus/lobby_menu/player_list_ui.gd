@@ -45,6 +45,8 @@ func set_ping(peer_id: int, ping_ms: int):
 ## Clear all players from the list
 func clear():
 	for child in get_children():
+		# Detach now so a same-frame update_from_dict doesn't reuse a row that's about to be freed
+		remove_child(child)
 		child.queue_free()
 
 

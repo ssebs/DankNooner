@@ -8,6 +8,8 @@ class_name PauseMenuState extends MenuState
 @export var pause_manager: PauseManager
 @export var gamemode_manager: GamemodeManager
 @export var spawn_manager: SpawnManager
+@export var lobby_manager: LobbyManager
+@export var steam_manager: SteamManager
 
 @export var main_menu_state: MenuState
 @export var settings_menu_state: MenuState
@@ -22,6 +24,7 @@ class_name PauseMenuState extends MenuState
 @onready var help_btn: Button = %HelpBtn
 @onready var tricks_btn: Button = %TricksBtn
 @onready var level_select_panel: LevelSelectPanel = %LevelSelectPanel
+@onready var lobby_panel: LobbyPanel = %LobbyPanel
 
 @onready var bg_tint: ColorRect = %BGTint
 
@@ -50,6 +53,9 @@ func Enter(_state_context: StateContext):
 		level_select_panel.level_selected.connect(_on_level_select_level_selected)
 		_update_level_select_start_disabled()
 
+	lobby_panel.visible = !connection_manager.is_solo
+	lobby_panel.open(connection_manager, lobby_manager, steam_manager, multiplayer.is_server())
+
 	resume_btn.call_deferred("grab_focus")
 
 
@@ -69,6 +75,8 @@ func Exit(_state_context: StateContext):
 		level_select_panel.start_pressed.disconnect(_on_level_select_start_pressed)
 	if level_select_panel.level_selected.is_connected(_on_level_select_level_selected):
 		level_select_panel.level_selected.disconnect(_on_level_select_level_selected)
+
+	lobby_panel.close()
 
 
 func _on_help_pressed():

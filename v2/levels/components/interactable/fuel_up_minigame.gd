@@ -132,7 +132,6 @@ func begin(
 
 #override
 func _on_session_start():
-	_gas_cap_area.global_position = _player.gas_cap_marker.global_position
 	_step = Step.GRAB
 	_over_cap = false
 	_spraying = false
@@ -179,6 +178,8 @@ func get_prompt_key() -> String:
 
 
 func _process(delta: float):
+	# Tracked, not set once: the session starts mid-respawn, before the riding lean eases off the bike
+	_gas_cap_area.global_position = _player.gas_cap_marker.global_position
 	# Web pointer lock lands async, so the event submit's capture can lock after IN_MINIGAME
 	# released it. Asks DisplayServer since Input.mouse_mode caches the last requested mode.
 	if DisplayServer.mouse_get_mode() == DisplayServer.MOUSE_MODE_CAPTURED:

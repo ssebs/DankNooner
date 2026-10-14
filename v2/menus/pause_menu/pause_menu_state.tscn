@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://b1lxeaxjibabl" path="res://menus/pause_menu/pause_menu_state.gd" id="1_fhu3k"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_wn568"]
 [ext_resource type="PackedScene" path="res://menus/lobby_menu/level_select_panel.tscn" id="3_lspanel"]
+[ext_resource type="PackedScene" path="res://menus/lobby_menu/lobby_panel.tscn" id="4_lpanel"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wn568"]
 
@@ -107,4 +108,11 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="LobbyPanel" parent="UI/AspectContainer/MarginContainer" unique_id=1170908106 instance=ExtResource("4_lpanel")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 4
