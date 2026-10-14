@@ -266,7 +266,10 @@ func set_single_or_multiplayer_ui():
 					connection_manager.connection_mode = ConnectionManager.ConnectionMode.WEBRTC
 				else:
 					connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
+				# The offline peer reports is_server() too — starting now runs the match with no lobby player
+				level_select_panel.set_controls_disabled(true)
 				await connection_manager.start_server(true)
+				level_select_panel.set_controls_disabled(false)
 			level_select_panel.grab_start_focus()
 		_:
 			singleplayer_ui.hide()

@@ -8,15 +8,17 @@ var ip_addr: String = "0.0.0.0"
 
 ## Creates and returns an ENet server peer on UtilsConstants.PORT.
 ## Emits server_started with the public IP after peer is created.
-func start_server(_solo: bool = false) -> ENetMultiplayerPeer:
+func start_server(solo: bool = false) -> ENetMultiplayerPeer:
 	var peer = ENetMultiplayerPeer.new()
 	var err = peer.create_server(UtilsConstants.PORT)
 	if err != OK:
 		DebugUtils.DebugErrMsg("failed to create server on port %d" % UtilsConstants.PORT)
 		return null
 
-	# Fetch public IP in background and emit when ready
-	ip_addr = await _get_public_ip_addr()
+	# Solo has no one to share the address with
+	if !solo:
+		# Fetch public IP in background and emit when ready
+		ip_addr = await _get_public_ip_addr()
 	return peer
 
 
