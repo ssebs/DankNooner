@@ -7,6 +7,7 @@
 
 ### NOW
 
+- [ ] Make hud simpler/intuitive 
 
 ### NEXT
 
@@ -15,7 +16,6 @@
 - [ ] change control for map
   - [ ] use dpad for controls
 
-- [ ] Make hud simpler/intuitive 
 - [ ] Fill up => race is not obvious where to go/not consistent across all races 
 - [ ] toomuchinfoonscreen in hud
 - [ ] must be easier to know what the controls are / how to do tricks

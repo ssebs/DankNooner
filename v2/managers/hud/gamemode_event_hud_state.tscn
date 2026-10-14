@@ -3,25 +3,6 @@
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="1_itqmu"]
 [ext_resource type="Script" uid="uid://s3jilp53lc7w" path="res://managers/hud/gamemode_event_hud_state.gd" id="1_oyi1w"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lg564"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-bg_color = Color(0, 0, 0, 0.78431374)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.25490198, 0.6862745, 1, 1)
-border_blend = true
-corner_radius_top_left = 16
-corner_radius_top_right = 4
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 4
-expand_margin_left = 12.0
-expand_margin_right = 12.0
-
 [node name="GamemodeEventHUDState" type="Node" unique_id=1122284461]
 script = ExtResource("1_oyi1w")
 metadata/_custom_type_script = "uid://s3jilp53lc7w"
@@ -55,7 +36,7 @@ theme_override_constants/margin_bottom = 256
 
 [node name="PanelContainer" type="PanelContainer" parent="UI/AspectContainer/MarginContainer" unique_id=600253178]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_lg564")
+theme_type_variation = &"HUDPanel"
 
 [node name="MarginContainer2" type="MarginContainer" parent="UI/AspectContainer/MarginContainer/PanelContainer" unique_id=1556726122]
 layout_mode = 2
