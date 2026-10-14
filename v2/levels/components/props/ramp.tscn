@@ -1,67 +1,56 @@
 [gd_scene format=3 uid="uid://rervqxotioc4"]
 
-[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_nj8oi"]
 [ext_resource type="Script" uid="uid://cderm5qpsfjuy" path="res://levels/components/props/ramp.gd" id="1_rk1sm"]
+[ext_resource type="Texture2D" uid="uid://2ikkccys8b6w" path="res://levels/assets/graybox/texture_04.png" id="2_tex"]
 
-[node name="Ramp" type="Node3D" unique_id=1633736762]
+[sub_resource type="Curve3D" id="Curve3D_ramp"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0.5, 1.86, 1, 0, 0.92, 0, -1.37, -1.37, 0, 0.43, 0.43, 1, 2.84, 5.97, 0, -0.5, -0.36, 0, 0, 0, 1, 4.31, 7.06),
+"tilts": PackedFloat32Array(0, 0, 0)
+}
+point_count = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_track"]
+albedo_color = Color(2.113, 1.029, 2.418, 1)
+albedo_texture = ExtResource("2_tex")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_walls"]
+albedo_color = Color(2.363, 2.363, 2.363, 1)
+albedo_texture = ExtResource("2_tex")
+uv1_triplanar = true
+
+[node name="Ramp" type="Path3D" unique_id=1633736762]
+curve = SubResource("Curve3D_ramp")
 script = ExtResource("1_rk1sm")
 
-[node name="ramp2" parent="." unique_id=1485126779 instance=ExtResource("1_nj8oi")]
-transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 1, 0.19374347, 1.9000015)
-width = 20.0
-height = 0.1
-depth = 2.0
-color_preset = 5
-neon_edges = true
+[node name="Track" type="CSGPolygon3D" parent="." unique_id=1468215093]
+use_collision = true
+polygon = PackedVector2Array(-10, -0.1, -10, 0, 10, 0, 10, -0.1)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 0.5
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = true
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+material = SubResource("StandardMaterial3D_track")
 
-[node name="ramp3" parent="." unique_id=1779167175 instance=ExtResource("1_nj8oi")]
-transform = Transform3D(1, 0, 0, 0, 0.86602545, 0.50000006, 0, -0.50000006, 0.86602545, 1, 0.8937434, 3.7000046)
-width = 20.0
-height = 0.1
-depth = 2.0
-color_preset = 5
-neon_edges = true
-
-[node name="ramp4" parent="." unique_id=1716846430 instance=ExtResource("1_nj8oi")]
-transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.7071068, 0, -0.7071068, 0.70710677, 1, 2.0937433, 5.300003)
-width = 20.0
-height = 0.1
-depth = 2.0
-color_preset = 5
-neon_edges = true
-
-[node name="EndRamp" parent="." unique_id=412499474 instance=ExtResource("1_nj8oi")]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.583347, 0.81222314, 0, -0.81222314, 0.583347, 1, 3.4679217, 6.5204453)
-width = 20.0
-height = 0.1
-depth = 2.0
-color_preset = 5
-neon_edges = true
-
-[node name="crash" parent="." unique_id=225985917 instance=ExtResource("1_nj8oi")]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 1, 1.25, 6.905)
+[node name="Walls" type="CSGPolygon3D" parent="." unique_id=225985917]
+flip_faces = true
+use_collision = true
 collision_layer = 3
-shape_mode = 1
-width = 20.0
-height = 0.1
-depth = 2.5
-color_preset = 1
-
-[node name="crash2" parent="." unique_id=2140580274 instance=ExtResource("1_nj8oi")]
-transform = Transform3D(0, -0.99999994, 0, -4.371139e-08, 2.3037128e-15, -1, 0.99999994, 0, -4.3711392e-08, -9.063524, 1, 5.9468045)
-collision_layer = 3
-shape_mode = 1
-width = 2.0
-height = 0.1
-depth = 2.0
-color_preset = 1
-
-[node name="crash3" parent="." unique_id=916935309 instance=ExtResource("1_nj8oi")]
-transform = Transform3D(8.742277e-08, 0.99999994, 0, 4.371139e-08, -1.5176582e-15, -1, -0.99999994, 8.742277e-08, -4.3711392e-08, 11.155117, 1, 5.9468045)
-collision_layer = 3
-shape_mode = 1
-width = 2.0
-height = 0.1
-depth = 2.0
-color_preset = 1
+polygon = PackedVector2Array(-10, -5, -10, -0.1, 10, -0.1, 10, -5)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 0.5
+path_simplify_angle = 0.0
+path_rotation = 0
+path_local = true
+path_joined = false
+material = SubResource("StandardMaterial3D_walls")

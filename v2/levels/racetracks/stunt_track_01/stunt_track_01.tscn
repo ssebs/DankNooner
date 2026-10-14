@@ -2789,7 +2789,7 @@ aspect = 2
 density = 2
 layout_seed = -1
 has_collision = true
-snapped_heights = PackedFloat32Array(-250.24358, -249.2505, -251.22661, -254.43802, -253.55634, nan, -255.3305, -255.67227)
+snapped_heights = PackedFloat32Array(-250.24358, -249.2505, -251.22661, -254.43802, -253.55634, -253.58, -255.3305, -255.67227)
 
 [node name="TreeBundle18" parent="_Trees_/Treesoutskirtsandintown" unique_id=1966125027 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -239.5, 256, 160)
@@ -2806,7 +2806,7 @@ aspect = 4
 density = 2
 layout_seed = 3
 has_collision = true
-snapped_heights = PackedFloat32Array(-255.72266, -255.68074, -255.70186, nan, -255.6804, -255.64746, -255.65242, -255.71115, -255.62589, -255.76439, -255.68155, -255.66435, -255.75232, -255.60922, -255.73369, -255.71799)
+snapped_heights = PackedFloat32Array(-255.72266, -255.68074, -255.70186, -255.74911, -255.6804, -255.64746, -255.65242, -255.71115, -255.62589, -255.76439, -255.68155, -255.66435, -255.75232, -255.60922, -255.73369, -255.71799)
 
 [node name="TreeBundle20" parent="_Trees_/Treesoutskirtsandintown" unique_id=567024210 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -121, 256, -45)
@@ -2898,7 +2898,7 @@ transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -475
 size = 16
 aspect = 4
 has_collision = true
-snapped_heights = PackedFloat32Array(nan, -255.67351, -255.59026, -255.65604, -255.62453, -255.68463, -255.59981, nan, nan, -255.64308, -255.72389, -255.72292, -255.75487, -255.59561, -255.64336, nan)
+snapped_heights = PackedFloat32Array(nan, -255.67351, -255.59026, -255.65604, -255.62453, -255.68463, -255.59981, -255.70976, nan, -255.64308, -255.72389, -255.72292, -255.75487, -255.59561, -255.64336, -255.70888)
 
 [node name="TreeBundle50" parent="_Trees_/Treesoutskirtsandintown" unique_id=2106627367 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -413.5, 256, 370)
@@ -3655,7 +3655,7 @@ neon_edges = true
 
 [node name="Ramp" parent="props" unique_id=319877564 instance=ExtResource("6_w1aki")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -232.5, 0, 32)
-del_end_ramp = true
+width = 24
 
 [node name="invisiblewall" parent="props/Ramp" unique_id=1330899296 instance=ExtResource("18_dc022")]
 transform = Transform3D(1, -1.8691035e-09, -3.998224e-11, 1.8691046e-09, 0.9990854, 0.0427601, -3.9978687e-11, -0.0427601, 0.9990854, -10.500011, 4.617072, 105.52756)
@@ -3674,8 +3674,12 @@ transform = Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.
 transform = Transform3D(5.9604645e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, 5.9604645e-08, -512.87823, 0, 462.7878)
 
 [node name="Ramp9" parent="props" unique_id=1825882042 instance=ExtResource("6_w1aki")]
+transform = Transform3D(0.7071067, 0, -0.7071067, 0, 1, 0, 0.7071067, 0, 0.7071067, -199.109, 0, 620.0747)
+height = 0
+
+[node name="Ramp11" parent="props" unique_id=2051288088 instance=ExtResource("6_w1aki")]
 transform = Transform3D(-0.70710665, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710665, -216.03952, 0, 639.20667)
-del_end_ramp = true
+height = 0
 
 [node name="GrayBox_StaticBody" parent="props" unique_id=670183193 instance=ExtResource("18_dc022")]
 transform = Transform3D(0.7071068, 0.20592135, 0.6764588, 0, 0.9566571, -0.29121676, -0.7071068, 0.20592135, 0.6764588, -716.7429, 4.029678, 588.58734)
@@ -3686,7 +3690,6 @@ color_preset = 5
 
 [node name="Ramp10" parent="props" unique_id=1654268796 instance=ExtResource("6_w1aki")]
 transform = Transform3D(0.553933, 0, 0.83256125, 0, 1, 0, -0.83256125, 0, 0.553933, -723.6807, 0, 581.2449)
-del_end_ramp = true
 
 [node name="Ramp2" parent="props" unique_id=1585675927 instance=ExtResource("6_w1aki")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -119, 0, 159)
@@ -3694,11 +3697,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -119, 0, 159)
 [node name="Ramp3" parent="props" unique_id=1552895077 instance=ExtResource("6_w1aki")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -99, 0, 159)
 
-[node name="Ramp4" parent="props" unique_id=1983926453 instance=ExtResource("6_w1aki")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 104.5, 8.289501, 223)
-
 [node name="Ramp5" parent="props" unique_id=113753775 instance=ExtResource("6_w1aki")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 124.5, 8.289501, 223)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 111, 8.289501, 223)
+width = 32
 
 [node name="SedanCar" parent="props" unique_id=1065239879 instance=ExtResource("22_rl138")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -122, 0.028337456, 137.75)
@@ -3806,9 +3807,6 @@ transform = Transform3D(-1, 0, 8.742277e-08, 0, 1, 0, -8.742277e-08, 0, -1, -848
 
 [node name="Business17" parent="Businesses" unique_id=224372232 instance=ExtResource("26_pls18")]
 transform = Transform3D(-1, 0, 8.742277e-08, 0, 1, 0, -8.742277e-08, 0, -1, -880.00006, 0.024999648, 495.99994)
-
-[node name="Business18" parent="Businesses" unique_id=173846780 instance=ExtResource("26_pls18")]
-transform = Transform3D(1.3113416e-07, 0, 1, 0, 1, 0, -1, 0, 1.3113416e-07, -976.00006, 0.024999648, 463.99994)
 
 [node name="Business19" parent="Businesses" unique_id=1624044578 instance=ExtResource("26_pls18")]
 transform = Transform3D(1.3113416e-07, 0, 1, 0, 1, 0, -1, 0, 1.3113416e-07, -976.00006, 0.024999648, 495.99994)
@@ -6520,20 +6518,13 @@ curve = SubResource("Curve3D_ugit3")
 [node name="Garage2" parent="." unique_id=535153070 instance=ExtResource("32_0ogqk")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -144, 0.08432579, 80)
 
-[node name="CorkscrewRamp" type="Node3D" parent="." unique_id=1939044960]
-visible = false
-
-[node name="Ramp" parent="CorkscrewRamp" unique_id=762093833 instance=ExtResource("6_w1aki")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 125.5, 3.8361864, 14)
-
-[node name="Ramp2" parent="CorkscrewRamp" unique_id=1806214697 instance=ExtResource("6_w1aki")]
-transform = Transform3D(-2.1855694e-08, -0.8660253, 0.49999997, -3.7855173e-08, 0.49999997, 0.8660253, -1, 2.1175824e-22, -4.3711385e-08, 132.0842, 7.17677, 14)
-
-[node name="Ramp3" parent="CorkscrewRamp" unique_id=1502652913 instance=ExtResource("6_w1aki")]
-transform = Transform3D(2.1855698e-08, -0.8660253, -0.5, -3.7855173e-08, -0.5, 0.8660253, -1, -1.7763565e-15, -4.371139e-08, 132.52248, 14.521443, 14)
-
 [node name="Corkscrew" parent="." unique_id=1203948571 instance=ExtResource("60_kgknl")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 128, 3.7982864, 12.5)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 123.5, 3.7982864, 12)
+width = 24
+
+[node name="Corkscrew2" parent="." unique_id=1831047760 instance=ExtResource("60_kgknl")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -959.5, 0.8921803, 464)
+width = 32
 
 [editable path="StuntCity_REMEMBER_TO_REPLACE_ME"]
 [editable path="RoadManager/3way_2x3"]

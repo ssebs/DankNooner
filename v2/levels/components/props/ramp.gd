@@ -1,13 +1,18 @@
 @tool
-extends Node3D
-## HACK
-@export var del_end_ramp: bool = false
+extends PathTrack
 
-@onready var end_ramp = %EndRamp
+enum Height { LOW, HIGH }
+
+## LOW drops the curve's last point (the steep lip)
+@export var height: Height = Height.HIGH
+
 
 func _ready() -> void:
+	super._ready()
 	if Engine.is_editor_hint():
 		return
-	
-	if del_end_ramp:
-		end_ramp.queue_free()
+
+	if height == Height.LOW:
+		# Curve is shared by every instance
+		curve = curve.duplicate()
+		curve.remove_point(curve.point_count - 1)

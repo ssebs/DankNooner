@@ -20,9 +20,7 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-- [ ] ramp follows corkscrew tscn
 - [ ] mac first launch stuck in gas fill up cam
-
 
 - [ ] see playtest [feedback](_ScratchPad.md)
 
@@ -82,7 +80,6 @@ Capsule art:
 - On the left smol is another guy stunting/crashing 
 - contrast, rule of 3rd, visual heir
 - simple, dominant visual elements, 
-
 
 - Make roads / map in blender
 - Tutorial: msf course 
@@ -266,6 +263,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] ramp follows corkscrew tscn
+
 - [x] rejoining lobby causes lag
 
 - [x] new logos
