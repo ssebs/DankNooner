@@ -12,6 +12,8 @@ class_name Minimap extends PanelContainer
 ## Camera height above the player, in metres.
 @export var height: float = 80.0
 @export var dot_radius: float = 7.0
+## Icon marker diameter (you, checkpoint, event, garage); players / NPCs stay dots.
+@export var icon_size: float = 24.0
 ## Black ring thickness around each blip.
 @export var border_width: float = 2.0
 ## Length of the edge pointer triangle for off-map racers.
@@ -35,14 +37,18 @@ const COLOR_NPC := Color(0.7, 0.3, 1.0)
 const COLOR_CHECKPOINT := Color(0.15, 0.85, 0.2)
 const COLOR_EVENT := Color(1.0, 0.1, 0.8)
 const COLOR_GARAGE := Color(1.0, 0.55, 0.1)
-## Full-map legend: text key -> blip color.
+const ICON_SELF := preload("res://resources/img/Icons/arrowUp.png")
+const ICON_CHECKPOINT := preload("res://resources/img/Icons/target.png")
+const ICON_EVENT := preload("res://resources/img/Icons/star.png")
+const ICON_GARAGE := preload("res://resources/img/Icons/wrench.png")
+## Full-map legend: text key -> [blip color, icon or null for a dot].
 const LEGEND := {
-	"MAP_LEGEND_YOU": COLOR_SELF,
-	"MAP_LEGEND_PLAYER": COLOR_PLAYER,
-	"MAP_LEGEND_NPC": COLOR_NPC,
-	"MAP_LEGEND_CHECKPOINT": COLOR_CHECKPOINT,
-	"MAP_LEGEND_EVENT": COLOR_EVENT,
-	"MAP_LEGEND_GARAGE": COLOR_GARAGE,
+	"MAP_LEGEND_YOU": [COLOR_SELF, ICON_SELF],
+	"MAP_LEGEND_PLAYER": [COLOR_PLAYER, null],
+	"MAP_LEGEND_NPC": [COLOR_NPC, null],
+	"MAP_LEGEND_CHECKPOINT": [COLOR_CHECKPOINT, ICON_CHECKPOINT],
+	"MAP_LEGEND_EVENT": [COLOR_EVENT, ICON_EVENT],
+	"MAP_LEGEND_GARAGE": [COLOR_GARAGE, ICON_GARAGE],
 }
 
 @onready var _sub_viewport: SubViewport = %MinimapSubViewport
@@ -83,9 +89,11 @@ func _ready():
 func _build_legend() -> void:
 	for key in LEGEND:
 		var swatch := Control.new()
-		swatch.custom_minimum_size = Vector2.ONE * (dot_radius + border_width) * 2.0
+		swatch.custom_minimum_size = Vector2.ONE * icon_size
 		swatch.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		swatch.draw.connect(func(): _draw_blip(swatch, swatch.size * 0.5, LEGEND[key]))
+		swatch.draw.connect(
+			func(): _draw_blip(swatch, swatch.size * 0.5, LEGEND[key][0], LEGEND[key][1])
+		)
 		var label := Label.new()
 		label.text = tr(key)
 		var row := HBoxContainer.new()
@@ -213,34 +221,41 @@ func _draw_dots() -> void:
 	for racer in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Racers"]):
 		# Ambient traffic isn't something you navigate by, and at 100+ riders plotting it
 		# was most of this pass — and most of them pin to the map edge as arrows anyway.
-		if racer.is_in_group(UtilsConstants.GROUPS["Traffic"]):
+		if racer.is_in_group(UtilsConstants.GROUPS["Traffic"]) or racer == _local_player:
 			continue
-		var color := COLOR_PLAYER
-		if racer == _local_player:
-			color = COLOR_SELF
-		elif racer is NPCRiderEntity:
-			color = COLOR_NPC
-		_draw_marker(racer.global_position, color)
+		_draw_marker(racer.global_position, COLOR_NPC if racer is NPCRiderEntity else COLOR_PLAYER)
 
 	# Event start circles (local level nodes) — bright pink for testing — and garages.
 	# Only in free roam; a race hides them so its checkpoint marker stands alone.
 	if _local_player.gamemode_manager.current_game_mode == GameModeType.Kind.FREE_ROAM:
 		for circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
-			_draw_marker(circle.global_position, COLOR_EVENT)
+			_draw_marker(circle.global_position, COLOR_EVENT, ICON_EVENT)
 		for activity in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["FreeRoamActivities"]):
 			if activity is GarageActivity:
-				_draw_marker(activity.global_position, COLOR_GARAGE)
+				_draw_marker(activity.global_position, COLOR_GARAGE, ICON_GARAGE)
 
 	if has_checkpoint:
-		_draw_marker(checkpoint_pos, COLOR_CHECKPOINT)
+		_draw_marker(checkpoint_pos, COLOR_CHECKPOINT, ICON_CHECKPOINT)
+
+	# Last so it sits on top. Heading taken in screen space, so it reads right both heading-up
+	# and north-up.
+	var self_pos := _local_player.global_position
+	var screen_fwd := (
+		_camera.unproject_position(self_pos - _local_player.global_basis.z)
+		- _camera.unproject_position(self_pos)
+	)
+	_draw_marker(self_pos, COLOR_SELF, ICON_SELF, Vector2.UP.angle_to(screen_fwd))
 
 
 ## Plot a world position onto the overlay: clamp off-map points to the edge box
 ## with an outward pointer, then draw the bordered blip.
-func _draw_marker(world_pos: Vector3, color: Color) -> void:
+func _draw_marker(
+	world_pos: Vector3, color: Color, icon: Texture2D = null, angle: float = 0.0
+) -> void:
+	var radius := _blip_radius(icon)
 	var center := _dot_overlay.size * 0.5
 	# Inset the clamp box so a pinned blip + border + arrow stays fully on-screen.
-	var half := center - Vector2.ONE * (dot_radius + border_width + arrow_size)
+	var half := center - Vector2.ONE * (radius + arrow_size)
 	# unproject gives SubViewport pixels; the overlay is sized 1:1 over it.
 	var pos := _camera.unproject_position(world_pos)
 	var offset := pos - center
@@ -253,18 +268,34 @@ func _draw_marker(world_pos: Vector3, color: Color) -> void:
 		if absf(offset.y) > 0.001:
 			t = minf(t, half.y / absf(offset.y))
 		pos = center + offset * t
-		_draw_edge_arrow(pos, offset.normalized(), color)
-	_draw_blip(_dot_overlay, pos, color)
+		_draw_edge_arrow(pos, offset.normalized(), radius, color)
+	_draw_blip(_dot_overlay, pos, color, icon, angle)
 
 
-func _draw_blip(canvas: CanvasItem, pos: Vector2, color: Color) -> void:
-	canvas.draw_circle(pos, dot_radius + border_width, Color.BLACK)
-	canvas.draw_circle(pos, dot_radius, color)
+## Outer radius, black ring included.
+func _blip_radius(icon: Texture2D) -> float:
+	return icon_size * 0.5 if icon != null else dot_radius + border_width
 
 
-func _draw_edge_arrow(pos: Vector2, dir: Vector2, color: Color) -> void:
+## A dot, or an icon tinted `color` on a black disc.
+func _draw_blip(
+	canvas: CanvasItem, pos: Vector2, color: Color, icon: Texture2D = null, angle: float = 0.0
+) -> void:
+	canvas.draw_circle(pos, _blip_radius(icon), Color.BLACK)
+	if icon == null:
+		canvas.draw_circle(pos, dot_radius, color)
+		return
+	# The icons pad their glyph, so drawn at full size it still fits inside the disc.
+	canvas.draw_set_transform(pos, angle)
+	canvas.draw_texture_rect(
+		icon, Rect2(Vector2.ONE * -icon_size * 0.5, Vector2.ONE * icon_size), false, color
+	)
+	canvas.draw_set_transform(Vector2.ZERO)
+
+
+func _draw_edge_arrow(pos: Vector2, dir: Vector2, radius: float, color: Color) -> void:
 	var perp := Vector2(-dir.y, dir.x)
-	var base := pos + dir * (dot_radius + border_width)
+	var base := pos + dir * radius
 	var tip := base + dir * arrow_size
 	_dot_overlay.draw_colored_polygon(
 		PackedVector2Array([tip, base + perp * arrow_size, base - perp * arrow_size]), color

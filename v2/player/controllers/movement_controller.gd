@@ -67,6 +67,10 @@ const UNSTABLE_STEER_SUPPRESSION: float = 0.5 # turn_rate scaled by (1 - factor 
 const SURFACE_BLEND_SPEED_MIN: float = 3.0 # up_direction alignment speed at rest
 const SURFACE_BLEND_SPEED_MAX: float = 40.0 # alignment speed at full speed (must track loops)
 const SURFACE_BLEND_SPEED_FALL: float = 0.25 # airborne alignment back to global UP
+const AIR_ROLL_STEER_SPEED: float = 2.0 # rad/s roll from steering while airborne
+const AIR_ROLL_RIGHTING_SPEED: float = 1.0 # rad/s auto roll back to level while airborne
+# Past this, roll and pitch inversion are indistinguishable — righting stops so loop falls stay on their head
+const AIR_ROLL_RIGHTING_MAX_ANGLE: float = 120.0
 const ADHESION_ANGLE: float = 80.0 # degrees — adhesion speed check kicks in here
 const RAMP_DOWNHILL_FACTOR: float = 1.25 # slope-gravity multiplier rolling downhill (adds speed)
 const RAMP_UPHILL_FACTOR: float = 0.85 # slope-gravity multiplier climbing uphill (bleeds speed)
@@ -394,6 +398,19 @@ func _update_surface_alignment(delta: float):
 ## Blend up_direction back to global up (airborne or detaching).
 ## More inverted = slower correction — rider falls on their head off a loop.
 func _detach_from_surface(delta: float):
+	# Roll about the heading: steer input plus a capped auto-level (e.g. leaving a corkscrew sideways)
+	var forward := -player_entity.global_transform.basis.z.normalized()
+	var roll := input_controller.nfx_steer * AIR_ROLL_STEER_SPEED * delta
+	var level_up := Vector3.UP.slide(forward)
+	if (
+		level_up.length_squared() > 0.001
+		and player_entity.up_direction.angle_to(Vector3.UP) < deg_to_rad(AIR_ROLL_RIGHTING_MAX_ANGLE)
+	):
+		var roll_err := player_entity.up_direction.signed_angle_to(level_up.normalized(), forward)
+		var max_step := AIR_ROLL_RIGHTING_SPEED * delta
+		roll += clampf(roll_err, -max_step, max_step)
+	player_entity.up_direction = player_entity.up_direction.rotated(forward, roll).normalized()
+
 	var inversion = player_entity.up_direction.angle_to(Vector3.UP) / PI # 0=upright, 1=inverted
 	# Upright: corrects quickly. Fully inverted: nearly frozen so they fall on their head.
 	var correction_speed = lerpf(

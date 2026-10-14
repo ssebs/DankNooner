@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://p7r6xx2hxd7u"]
+
+[ext_resource type="Texture2D" uid="uid://2ikkccys8b6w" path="res://levels/assets/graybox/texture_04.png" id="1_tex"]
+
+[sub_resource type="Curve3D" id="Curve3D_corkscrew"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, -6, 0, 0, 0, 0, -6, 0, 0, 6, 0, 0, 10, -12, 0, 0, -6, 0, 0, 0, -0.30204773, 21.456175, -1.2984009),
+"tilts": PackedFloat32Array(0, 0.42, 0.50552845)
+}
+point_count = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_track"]
+albedo_color = Color(2.113, 1.029, 2.418, 1)
+albedo_texture = ExtResource("1_tex")
+uv1_triplanar = true
+
+[node name="Corkscrew" type="Path3D" unique_id=1203948571]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.107819706, 0)
+curve = SubResource("Curve3D_corkscrew")
+
+[node name="Track" type="CSGPolygon3D" parent="." unique_id=884213067]
+use_collision = true
+polygon = PackedVector2Array(-8, -0.1, -8, 0.1, 8, 0.1, 8, -0.1)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 0.5
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = true
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+material = SubResource("StandardMaterial3D_track")

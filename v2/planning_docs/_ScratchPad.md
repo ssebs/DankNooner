@@ -22,5 +22,4 @@
 - [ ] must be easier to know what the controls are / how to do tricks
 - [ ] need to know when race is completed (single player is done vs entire lobby)
 - [ ] Remaping controls
-- [ ] adjust death ramp to do barrel roll
 

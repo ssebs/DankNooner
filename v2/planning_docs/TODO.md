@@ -305,6 +305,7 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] allow barrel rolls
 
 - [x] Long Jump name => megaramp trick comp 
 - [x] minimap show garage
