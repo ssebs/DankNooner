@@ -7,6 +7,12 @@
 
 ### NOW
 
+- [ ] backing up while steering broken
+- [ ] instructions while filling up should have black bg
+- [ ] shouldnt be able to drive while in pause menu
+- [ ] change control for map
+  - [ ] use dpad for controls
+
 ### NEXT
 
 - [ ] cant cheat in rally up item, all items should be avail in items_list command
