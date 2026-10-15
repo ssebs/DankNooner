@@ -21,6 +21,8 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] mac instructions => `sudo xattr -cr DankNooner.app`
+
 - [ ] see playtest [feedback](_ScratchPad.md)
 
 - [ ] Steam
