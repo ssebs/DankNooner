@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dyodmcrpaa4ed"]
+
+[ext_resource type="PackedScene" uid="uid://bkurvk6sfrmuw" path="res://player/characters/assets/o_guy/OGuy.glb" id="1_5r4im"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="2_3xgge"]
+
+[node name="OGuy" unique_id=1430265961 instance=ExtResource("1_5r4im")]
+script = ExtResource("2_3xgge")
+do_not_use_color = true
