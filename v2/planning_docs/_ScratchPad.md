@@ -12,7 +12,6 @@
 ### NEXT
 
 - [ ] corkscrew ramp tweak - doesnt work to flip you over, just steers you right. the one by the bridge should be lowered
-- [ ] Garage delete btn should ask if you're sure and be red 
 
 
 

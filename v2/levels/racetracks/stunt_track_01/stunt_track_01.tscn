@@ -6522,8 +6522,12 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -144
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 123.5, 3.7982864, 12)
 width = 24
 
+[node name="Corkscrew3" parent="." unique_id=559617928 instance=ExtResource("60_kgknl")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 91.49997, -0.09939442, 722.5)
+width = 24
+
 [node name="Corkscrew2" parent="." unique_id=1831047760 instance=ExtResource("60_kgknl")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -959.5, 0.8921803, 464)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -959.5, -0.14025217, 464)
 width = 32
 
 [editable path="StuntCity_REMEMBER_TO_REPLACE_ME"]

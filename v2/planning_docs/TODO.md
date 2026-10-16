@@ -21,6 +21,7 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
+- [ ] Garage delete btn should ask if you're sure and be red 
 - [ ] mac instructions => `sudo xattr -cr DankNooner.app`
 
 - [ ] see playtest [feedback](_ScratchPad.md)

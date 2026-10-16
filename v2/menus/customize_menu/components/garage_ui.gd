@@ -67,7 +67,7 @@ func _ready():
 	theme.default_font_size = FONT_SIZE
 	_back_btn.pressed.connect(go_back)
 	_set_active_btn.pressed.connect(_set_active)
-	_delete_btn.pressed.connect(_delete_loadout)
+	_delete_btn.pressed.connect(_on_delete_pressed)
 	_leave_btn.pressed.connect(_on_leave_pressed)
 	_pose_btn.pressed.connect(pose_requested.emit)
 	for color in UtilsConstants.SKIN_COLOR_PRESETS:
@@ -397,6 +397,7 @@ func _on_skin_pressed(skin_name: String, path: String, price: int, apply: Callab
 		return
 	_open_confirm(
 		tr("GARAGE_BUY_CONFIRM") % [_skin_label(skin_name), MoneyLabel.format(price)],
+		tr("GARAGE_BUY"),
 		func():
 			_save_manager.purchase(path, price)
 			apply.call()
@@ -436,6 +437,10 @@ func _apply_character(path: String):
 func _set_active():
 	_player_def.active_loadout_index = _tab - 1
 	_rebuild()
+
+
+func _on_delete_pressed():
+	_open_confirm(tr("GARAGE_DELETE_CONFIRM") % _loadout().name, tr("DELETE_LABEL"), _delete_loadout)
 
 
 func _delete_loadout():
@@ -483,10 +488,11 @@ func _apply_picked_colors():
 
 
 #region confirm box
-func _open_confirm(text: String, on_confirm: Callable):
+func _open_confirm(text: String, yes_text: String, on_confirm: Callable):
 	_on_confirm = on_confirm
 	_confirm_return_index = _focused_index()
 	_confirm_label.text = text
+	_confirm_yes_btn.text = yes_text
 	_confirm_box.show()
 	_confirm_no_btn.grab_focus()
 
