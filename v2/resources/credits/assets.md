@@ -23,6 +23,21 @@
 - Exercise Bike by Dave Edwards [CC-BY](https://creativecommons.org/licenses/by/3.0/) via [Poly Pizza](https://poly.pizza/m/9DwoznfSPHY)
 - [Witch Broom](https://poly.pizza/m/gwE8397gO3) by MiniPoly
 
+- Characters by Polygonal Mind https://poly.pizza/bundle/100-Avatars-R1-amJ23JjkKG
+  - O by Polygonal Mind (https://poly.pizza/m/qR6fLHpdXM)
+  - Adventurer by Polygonal Mind (https://poly.pizza/m/BCMT02FrVE)
+  - Skeleton Costume by Polygonal Mind (https://poly.pizza/m/6DlLXFdP3r)
+  - Circle Face Character by Polygonal Mind (https://poly.pizza/m/sl1j3UAU3M)
+  - Wizard by Polygonal Mind (https://poly.pizza/m/6kY9VaAfPv)
+  - Frog Man by Polygonal Mind (https://poly.pizza/m/YWkleQeQka)
+  - Woman by Polygonal Mind (https://poly.pizza/m/MecWbYSEVe)
+  - Cool Bannana Guy by Polygonal Mind (https://poly.pizza/m/TFlEjNafR1)
+  - Fucked up little alien guy by Polygonal Mind (https://poly.pizza/m/2gaLTM8Pim)
+  - Old Guy by Polygonal Mind (https://poly.pizza/m/imEy3Tqg80)
+  - Avocado Character by Polygonal Mind (https://poly.pizza/m/2lGhZbQKqS)
+  - Woman by Polygonal Mind (https://poly.pizza/m/QeIc9Mzjzs)
+  - Female Character Base by Polygonal Mind (https://poly.pizza/m/1ryiVvZIfD)
+
 - Quaternius
   - [Stylized Nature MegaKit by Quaternius via Poly Pizza](https://poly.pizza/bundle/Stylized-Nature-MegaKit-T34GZFA0fm)
   - [Farm Buildings Bundle by Quaternius via Poly Pizza](https://poly.pizza/bundle/Farm-Buildings-Bundle-ppbnhEfNEt)
