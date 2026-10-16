@@ -1,63 +1,10 @@
 # Testing
 ---
 
-PASTE TO CLAUDE
 
-
-Build the automated regression test harness specified in planning_docs/Testing.md. Read that doc
-first, then CLAUDE.md and planning_docs/GamemodeSystem.md. Testing.md is the spec; if the code
-contradicts it, stop and ask me rather than improvising.
-
-Scope for this session: Build order step 1 only (wrapper scene, Python orchestrator, error
-capture, host/join through the real menu UI, invariants). Stop after step 1 and report. Steps 2-4
-come in later sessions.
-
-Before writing code, verify the doc's "Open questions / verify before building" items that affect
-step 1, and report what you find:
-- Does Godot 4.7 have Logger / OS.add_logger for in-process error capture? If not, fall back to
-  log parsing in run.py.
-- Does MainGame._apply_window_mode override --position / --resolution? A per-peer settings file
-  set to windowed should avoid that; confirm by reading settings_manager.gd + main_game.gd.
-- Can the wrapper set SaveManager.save_slot and SettingsManager.settings_path before they load?
-  Check _ready / deferred_init ordering in save_manager.gd and settings_manager.gd.
-
-Hard constraints:
-- Near-zero changes to existing game code. Drive the real UI: play menu host_mode_opt +
-  host_btn, code_entry + join_btn, the lobby's start. Find nodes through existing groups, unique
-  names and exports. If you need a game-code change (a getter, a group), ask first and say why.
-- Everything test-only lives in v2/tests/. Add "tests/*" to exclude_filter in all 4 presets in
-  export_presets.cfg. Nothing test-related may ship.
-- Inputs go in-game via Input.parse_input_event / Input.action_press. No external input
-  injection.
-- run.py: Python stdlib only. Godot exe path is in .vscode/settings.json.
-- Director (host) / driver (every peer) split, communicating via RPCs on a TestRunner at the same
-  path on every peer. Read the doc for why.
-- Invariants for step 1: no errors logged; all peers agree on player count + current gamemode;
-  riding HUD present (HUDManager.state_machine current state + visible UI). Countdown, stuck and
-  movement invariants need the drive bot, so they belong to step 2; stub their shape only if it
-  falls out naturally.
-- Success criteria for step 1: `python tests/run.py` launches host + client windows tiled side by
-  side; they connect via 127.0.0.1 through the menus; they enter free roam in an existing level;
-  invariants run for a short window; both quit; a summary table prints; per-peer logs land in
-  tests/out/. Deliberately break something (e.g. hide the riding HUD) and confirm the run fails
-  with a clear message, then revert.
-
-Process:
-- Use superpowers:writing-plans to plan step 1 before coding, and show me the plan before
-  implementing.
-- Follow CLAUDE.md: lint with .gdlintrc, run the headless editor parse check, follow existing
-  patterns, terse comments, no git/gh commands, fail loudly (no silent null guards).
-- I'm granting an exception to "only the human runs the project": you may run
-  `python tests/run.py` to verify the harness.
-- Don't edit planning_docs/TODO.md. Update Testing.md only where the verified facts or the build
-  differ from the spec (no concrete tunable values in docs).
-
-
-TO HERE
-
----
-
-> **Status: spec, not built.** Automated regression run before every Steam upload. Follows the
+> **Status: steps 1–4 written, not yet green.** Step 1 passes on its own. The full timeline
+> (drive bot, solvers, coverage, activities, late join) has only been partly run; see
+> [Next session](#next-session). Automated regression run before every Steam upload. Follows the
 > [Architecture](./Architecture.md#how-to-write-in-this-doc) rule: rosters live in code, this doc
 > holds the shape and the reasons.
 
@@ -87,9 +34,12 @@ Launched as `godot --path . res://tests/test_main.tscn -- <test args>`. The scen
 the main scene, so `main_game.tscn` is untouched. It instances `main_game` plus a `TestRunner`.
 
 Before `main_game` enters the tree, the wrapper points `SaveManager.save_slot` and
-`SettingsManager.settings_path` at per-peer test files. Why: peers on one machine would otherwise
-share (and the garage step would mutate) the real save, and a per-peer settings file is how each
-window is forced windowed.
+`SettingsManager.settings_path` at per-peer test files (both load in `deferred_init`, so that's
+early enough), and resets them every run. Why: peers on one machine would otherwise share (and the
+garage step would mutate) the real save, and a per-peer settings file is how each window is forced
+windowed. The project boots maximized, which ignores `--position` / `--resolution`; Godot keeps
+that rect as the windowed one, so `MainGame._apply_window_mode` switching to the file's
+`windowed` is what lands each window on its tile.
 
 Nothing in the game uses `current_scene` or `/root/` paths, so nesting `main_game` is safe.
 
@@ -97,8 +47,30 @@ Nothing in the game uses `current_scene` or `/root/` paths, so nesting `main_gam
 
 Python (stdlib only). Launches the peer processes, tiles their windows (`--position` /
 `--resolution`), enforces the overall timeout, collects per-peer logs and screenshots into
-`tests/out/`, and prints the summary table. Headed by default; `--headless` where the step allows
-it.
+`tests/out/`, and prints the summary table. Always headed: fuel-up needs a real cursor. Audio runs
+on Godot's dummy driver: the audio code still executes, nothing plays.
+
+The host launches first; clients launch once the director drops a ready marker in `tests/out/`,
+since they join through the menu and need a listening host; a host that never listens is killed
+rather than left to the overall timeout. The late joiner launches when the director drops a second
+marker (start of free roam). Each peer gets its own `--log-file`
+(they would otherwise share `user://` logs) and writes a result JSON (errors, violations) on quit;
+the summary is built from those plus exit codes, so a hung or crashed peer shows as `timeout` /
+`NO RESULT`. The result also carries warnings (untested coverage), printed without failing.
+`tests/out/` carries a `.gdignore` so the editor never imports it.
+
+**Compile check:** the headless editor load misses parse errors in `tests/` (nothing references
+those scripts). Boot the wrapper headless with `--quit-after` for a few frames instead, and grep
+for `SCRIPT ERROR`.
+
+**Error capture:** a `Logger` registered with `OS.add_logger` when the wrapper loads. `push_error`,
+script and shader errors and `printerr` (so `DebugUtils.DebugErrMsg`) all fail the run; warnings
+don't. Errors from before the wrapper loads (autoload init) only reach the log.
+
+Files: `test_runner.gd` (timeline, RPCs), `menu_flows.gd` (every UI path), `task_solvers.gd`,
+`drive_bot.gd` + `trick_recipes.gd`, `invariants.gd`, `coverage.gd`, `activity_players.gd`.
+No `class_name` in `tests/` (keeps them out of the shipped class cache); the helpers take the
+runner untyped, since a cyclic `preload` won't resolve.
 
 Input is **not** injected from Python (pyautogui, Playwright etc.). OS-level input only reaches
 the focused window, so it can't drive tiled peers at once, and the bot needs in-game state
@@ -121,18 +93,43 @@ Why the split: netfox only accepts input from the rider's authority peer, and ho
 director talks to drivers over RPCs on the `TestRunner` node, which sits at the same path on every
 peer.
 
+Invariant sampling runs for the whole session: the director orders a snapshot, every peer reports
+its own, and the director judges the set one interval later (a missing report is itself a
+violation). Agreement isn't judged for a moment after a join, leave or gamemode change. A peer
+that late-joins a running non-late-joinable event is **benched**: expected in free roam until the
+event ends. At the end the director tells the drivers to quit and quits last, so no driver is
+dropped into the server-disconnected flow.
+
+**Orders:** a control loop on the director turns each rider's current task into an order
+(`idle` / `hold` throttle / `go` toward a target, with an optional trick and gear tap) and sends
+it when it changes; the host's own bot gets it directly. The active runner and current task are
+read through public state only (`player_states`, `get_current_task`), no new getters.
+
+**Mouse token:** fuel-up warps the one OS cursor, so peers queue for it on the director and play
+pumps one at a time, including the simultaneous pre-race fuel-up. Don't touch the mouse while a
+pump is being played.
+
 ### Drive bot
 
 Drives, not teleports, so handling and stuck-on-geometry regressions are caught.
 
-- **Waypoints:** a race's `EventRoute.get_checkpoints()` in tree order; otherwise the current
-  task's `trigger` position.
+- **Waypoints:** a race's next checkpoint from `RaceTask.get_target_checkpoint` (the call NPC
+  racers use, so a missed checkpoint is re-targeted); otherwise the current task's `trigger`
+  position. Getting to event circles and activities is a host-side teleport onto the circle.
 - **Steering:** steer toward the waypoint, throttle, brake on sharp heading error. Input goes
   through `Input.parse_input_event` / `Input.action_press`, which `InputController._gather()` picks up and
   netfox records like a human's input.
-- **Recipes:** tasks with no destination (wheelie, stoppie, tricks, speed) use an input recipe
-  keyed by task class. **A task class with no recipe or waypoint fails loudly**, so adding a new
-  task type forces adding its solver.
+- **Solvers** are keyed by task class (`task_solvers.gd`). **A task class with no solver fails
+  loudly**, so adding a new task type forces adding one. A concurrent runner solves its first child
+  with somewhere to go, plus any constraint's trick.
+- **Trick recipes** are closed-loop on the local rider. Stick tricks are derived from
+  `TrickController.BINDINGS` (easiest state first), so a new binding needs no recipe; physics
+  tricks (wheelie, stoppie, drift, burnout, bunny hop, flips) are hand-written. Air tricks aim at
+  the task's `success_zone` / `trigger` ramp, and a rider who overshoots is respawned for another
+  run-up. `WHEELIE_MOD` and `THREESIXTY` have no detection path in `TrickController`, so nothing
+  can perform them; a task requiring one fails loudly.
+- **Endless modes** (time attack, long jump, trick battle) are cancelled through the pause menu
+  after a solve window. Results are skipped through their own button.
 - **No progress toward the waypoint for too long** = failure: screenshot, respawn, continue.
 
 ### Invariants
@@ -151,19 +148,27 @@ Checked on every peer for the whole run, independent of the step:
 Steps only put the game into a situation; the invariants judge it. That is what keeps per-mode
 test code near zero.
 
+Sampling starts once each peer is in free roam with the riding HUD entered: that HUD enters on the
+local player's first respawn, a few ticks after spawn, not at spawn. "Expected HUD" is the riding
+HUD (or the picker / results over it), plus the activity HUDs while that peer runs an activity;
+skipped while a menu is open. The expected player count is the host's lobby.
+
 ### Gym level
 
-A normal `LevelDefinition` registered the usual way (see CLAUDE.md, Level System). Compact, wide,
-flat courses, so a stuck bot means a regression, not hard terrain. It holds:
+`TEST_LEVEL_01`, reused rather than a new level (`GYM_LEVEL` in `test_runner.gd`; the host picks it
+in the lobby's level dropdown). Compact, wide, flat courses, so a stuck bot means a regression,
+not hard terrain. It holds:
 
 - an `EventStartCircle` per gamemode (including each race `race_type` and a `fuel_up_first`
   event);
 - every `FreeRoamActivity` (gas station, garage);
 - pickup spawners on the drive paths.
 
-**Coverage check:** at startup the director compares `GameModeType.Kind`, the race types and the
-`GameModeTask` / `FreeRoamActivity` subclasses in use against what's placed in the gym. Anything
-missing fails the run, so the gym can't silently fall behind the game.
+**Coverage check:** at startup the director compares every `GameModeType.Kind` and every global
+`GameModeTask` / `FreeRoamActivity` subclass against what's placed in the gym. Anything missing
+fails the run, so the gym can't silently fall behind the game. Exceptions, listed in
+`coverage.gd`: the tutorial (and its tutorial-only tasks) is left out, and a short optional list
+(kinds and tasks the gym skips by choice) only warns "untested".
 
 ## Timeline
 
@@ -202,11 +207,27 @@ the project").
 3. Gym level and coverage check.
 4. Free-roam activities, then late join / rejoin.
 
+## Next session
+
+Where the last run stopped, in order:
+
+1. **Fuel-up aim:** the bot sprays off to the side of the cap. `activity_players.gd` points the
+   cursor at the player's `gas_cap_marker`, but the handle's *tip* is what must land in the cap
+   (the pump solves a swing from the grip at grab), so the cursor target needs to account for the
+   grip-to-tip offset. Watch one pump run and correct the aim before anything else.
+2. **First full run on the gym** hasn't completed yet. Expect tuning in the drive bot and trick
+   recipes (steering, wheelie pitch hold, stoppie / drift entry) once it gets that far.
+3. **Late-join netfox errors (real game bug, reported, not fixed):** the late joiner logs
+   `Node not found: …/PlayerSpawn/<id>/RollbackSynchronizer/Node` and "Invalid packet received":
+   rollback RPCs reach it before its copies of the players exist. The no-errors rule fails every
+   run on it until it's fixed in the late-join spawn path.
+4. **Gym gaps:** no `GarageActivity` in the gym yet (coverage fails on it, and the garage step is
+   skipped). The stunt race event was re-added to the TrackRace circle after it went missing from
+   the scene; reload the scene from disk before saving it in the editor.
+5. Measure the budget once a full run passes.
+
 ## Open questions / verify before building
 
-- **Error capture:** Godot 4.5+ `Logger` / `OS.add_logger` may allow failing on `push_error` in
-  process instead of grepping logs. Check it exists on 4.7.
-- **Window placement:** `MainGame._apply_window_mode` may override `--position` / `--resolution`.
 - **Budget:** the cost of process launch + level load is unmeasured; if it eats the budget, the
   gym gets smaller, not the invariants fewer.
 - **Optional `--all-levels`:** load each shipped level, spawn, drive briefly. Off by default;

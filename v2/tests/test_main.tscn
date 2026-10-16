@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://tests/test_main.gd" id="1_main"]
+[ext_resource type="Script" path="res://tests/test_runner.gd" id="2_runner"]
+[ext_resource type="Script" path="res://tests/drive_bot.gd" id="3_bot"]
+
+[node name="TestMain" type="Node"]
+script = ExtResource("1_main")
+
+[node name="TestRunner" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_runner")
+
+[node name="DriveBot" type="Node" parent="TestRunner"]
+unique_name_in_owner = true
+script = ExtResource("3_bot")
