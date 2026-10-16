@@ -21,13 +21,18 @@ func _ready() -> void:
 	test_runner.run(logger, args)
 
 
-## `--peer N --peers N --out DIR`, as run.py passes them
+## `--peer N --peers N --late-join 0|1 --out DIR`, as run.py passes them
 func _parse_args() -> Dictionary:
 	var raw := OS.get_cmdline_user_args()
 	var flags := {}
 	for i in range(0, raw.size(), 2):
 		flags[raw[i].trim_prefix("--")] = raw[i + 1]
-	return {"peer": int(flags["peer"]), "peers": int(flags["peers"]), "out": flags["out"]}
+	return {
+		"peer": int(flags["peer"]),
+		"peers": int(flags["peers"]),
+		"late_join": flags["late-join"] == "1",
+		"out": flags["out"],
+	}
 
 
 ## Both managers load in deferred_init, so this runs before they read anything.

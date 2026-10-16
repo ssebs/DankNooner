@@ -77,6 +77,11 @@ func is_picker_open() -> bool:
 	return _picker().ui.visible
 
 
+## Open on `event_name`'s picker: a neighbouring circle's can still be up when the order lands
+func is_picker_open_for(event_name: String) -> bool:
+	return is_picker_open() and _picker().gm_name.text == _runner.tr(event_name)
+
+
 ## Pause menu → Cancel Event.
 func cancel_event() -> bool:
 	if not await _pause():

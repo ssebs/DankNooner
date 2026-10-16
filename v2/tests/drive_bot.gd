@@ -19,6 +19,8 @@ const FULL_STEER_ANGLE := PI / 6.0
 ## Past this heading error and speed the bot brakes into the turn instead of throttling
 const SHARP_TURN_ANGLE := PI / 2.0
 const SHARP_TURN_SPEED := 15.0
+## The bot lifts off the throttle above this, so it makes the turns; trick recipes may override
+const CRUISE_SPEED := 25.0
 
 var order: Dictionary = IDLE
 
@@ -59,7 +61,7 @@ func _physics_process(delta: float) -> void:
 
 
 func _go(player: PlayerEntity, delta: float) -> void:
-	_inputs[&"throttle_pct"] = 1.0
+	_inputs[&"throttle_pct"] = 1.0 if player.movement_controller.speed < CRUISE_SPEED else 0.0
 	if order.get("target") != null:
 		_steer_to(player, order["target"])
 	if order.get("gear", false) and !_gear_tapped:

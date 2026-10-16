@@ -2,26 +2,53 @@
 summary. Stdlib only. See planning_docs/Testing.md."""
 
 import argparse
+import ctypes
 import json
 import shutil
 import subprocess
 import sys
 import time
+import winsound
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "tests" / "out"
 READY_MARKER = OUT / "peer0.ready"
 LATE_JOIN_MARKER = OUT / "late_join.go"
+MOUSE_MARKER = OUT / "mouse.busy"
 TITLE_BAR = 32  # --position places the client area; leave room for the OS title bar
-POLL_S = 0.25
+POLL_S = 0.05  # fast enough to catch an Esc tap
+# Tiles are sized for this many peers even when fewer run, so a solo window stays small
+TILE_SLOTS = 3
+VK_ESCAPE = 0x1B
+ESC_TWICE_S = 1.0
 # A host not listening by then is broken (it covers a fresh build's shader warmup)
 HOST_READY_TIMEOUT_S = 180.0
+DONE_BANNER_MS = 3000
+# A topmost strip that hands focus straight back, so no peer loses it
+BANNER_SRC = """
+import ctypes, sys, tkinter as tk
+text, bg, geometry, close_ms = sys.argv[1:5]
+user32 = ctypes.windll.user32
+user32.SetProcessDPIAware()
+focused = user32.GetForegroundWindow()
+root = tk.Tk()
+root.overrideredirect(True)
+root.attributes("-topmost", True)
+root.geometry(geometry)
+tk.Label(root, text=text, bg=bg, fg="white", font=("Segoe UI", 28, "bold")).pack(fill="both", expand=True)
+root.update()
+user32.SetForegroundWindow(focused)
+if int(close_ms):
+    root.after(int(close_ms), root.destroy)
+root.mainloop()
+"""
 
 
 def parse_args():
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--peers", type=int, default=2, help="peers at the start; one more joins late")
+    p.add_argument("--peers", type=int, default=2, help="peers at the start (1 = solo)")
+    p.add_argument("--late-join", action="store_true", help="one more peer joins late, then rejoins")
     p.add_argument("--timeout", type=float, default=420.0, help="whole run, seconds")
     p.add_argument("--godot", help="Godot exe; default from .vscode/settings.json")
     return p.parse_args()
@@ -38,7 +65,6 @@ def work_area():
     """Usable desktop rect (x, y, w, h) in physical pixels."""
     if sys.platform != "win32":
         return 0, 0, 1920, 1080
-    import ctypes
     from ctypes import wintypes
 
     ctypes.windll.user32.SetProcessDPIAware()
@@ -55,28 +81,69 @@ def window_rect(peer, total):
     return left + peer * w, top + TITLE_BAR, w, h
 
 
+def total_peers(args):
+    return args.peers + (1 if args.late_join else 0)
+
+
 def launch(exe, peer, args):
-    x, y, w, h = window_rect(peer, args.peers + 1)
+    x, y, w, h = window_rect(peer, max(total_peers(args), TILE_SLOTS))
     cmd = [exe, "--path", str(ROOT), "--log-file", str(OUT / f"peer{peer}.log")]
     # Dummy audio: the audio code still runs, nothing plays
     cmd += ["--audio-driver", "Dummy"]
     cmd += ["--position", f"{x},{y}", "--resolution", f"{w}x{h}"]
     cmd += [
         "res://tests/test_main.tscn", "--",
-        "--peer", str(peer), "--peers", str(args.peers), "--out", str(OUT),
+        "--peer", str(peer), "--peers", str(args.peers),
+        "--late-join", "1" if args.late_join else "0", "--out", str(OUT),
     ]
     return subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
-def wait_for(condition, deadline):
+def banner(text, color, args, close_ms=0):
+    """Topmost strip under the tiled windows, so it never covers what a peer clicks."""
+    left, _, width, _ = work_area()
+    _, y, _, h = window_rect(0, max(total_peers(args), TILE_SLOTS))
+    geometry = f"{width}x90+{left}+{y + h + 40}"
+    return subprocess.Popen([sys.executable, "-c", BANNER_SRC, text, color, geometry, str(close_ms)])
+
+
+class Aborted(Exception):
+    pass
+
+
+class AbortWatch:
+    """Esc twice (from any window) or a peer closed without a result (Alt+F4) stops the run."""
+
+    def __init__(self, procs):
+        self.procs = procs
+        self.esc_down = False
+        self.last_esc = -ESC_TWICE_S
+
+    def check(self):
+        state = ctypes.windll.user32.GetAsyncKeyState(VK_ESCAPE)
+        down = bool(state & 0x8000)
+        # Low bit: pressed since the last poll, so a tap between polls still counts
+        if (down and not self.esc_down) or (not down and state & 1):
+            now = time.monotonic()
+            if now - self.last_esc < ESC_TWICE_S:
+                raise Aborted("Esc pressed twice")
+            self.last_esc = now
+        self.esc_down = down
+        for peer, proc in self.procs.items():
+            if proc.poll() is not None and not (OUT / f"peer{peer}.result.json").exists():
+                raise Aborted(f"peer{peer} exited without a result (closed or crashed)")
+
+
+def wait_for(condition, deadline, abort):
     while not condition():
         if time.monotonic() > deadline:
             return False
+        abort.check()
         time.sleep(POLL_S)
     return True
 
 
-def summarize(procs, timed_out, total):
+def summarize(procs, killed, total, aborted):
     """Prints the table + details. Returns the process exit code."""
     rows, details, failed = [], [], False
     for peer in range(total):
@@ -86,8 +153,8 @@ def summarize(procs, timed_out, total):
         role = result["role"] if result else ("director" if peer == 0 else "driver")
         if proc is None:
             exit_code, status = "-", "NOT LAUNCHED"
-        elif peer in timed_out:
-            exit_code, status = "timeout", "FAIL"
+        elif peer in killed:
+            exit_code, status = ("killed" if aborted else "timeout"), "FAIL"
         else:
             exit_code = str(proc.returncode)
             status = "PASS" if proc.returncode == 0 and result else "FAIL"
@@ -112,7 +179,7 @@ def summarize(procs, timed_out, total):
     if details:
         print("\n" + "\n".join(details))
     print(f"\nlogs + screenshots: {OUT}")
-    print("FAILED" if failed else "PASSED")
+    print(f"ABORTED: {aborted}" if aborted else ("FAILED" if failed else "PASSED"))
     return 1 if failed else 0
 
 
@@ -125,31 +192,53 @@ def main():
 
     deadline = time.monotonic() + args.timeout
     procs = {0: launch(exe, 0, args)}
-    # Clients join through the menu, so the host must be listening first
-    ready_deadline = min(deadline, time.monotonic() + HOST_READY_TIMEOUT_S)
-    host_up = wait_for(lambda: READY_MARKER.exists() or procs[0].poll() is not None, ready_deadline)
-    if not host_up:
-        procs[0].kill()
-    elif procs[0].poll() is None:
-        for peer in range(1, args.peers):
-            procs[peer] = launch(exe, peer, args)
+    abort = AbortWatch(procs)
+    hands_off = None
+    aborted = None
 
-    def running():
-        return any(p.poll() is None for p in procs.values())
+    def mouse_free():
+        hands_off.kill()
+        banner("Done: the mouse is yours again", "#2e7d32", args, DONE_BANNER_MS)
 
-    # The late joiner launches when the director asks, mid-activity
-    late_peer = args.peers
-    while running() and time.monotonic() < deadline:
-        if late_peer not in procs and LATE_JOIN_MARKER.exists():
-            procs[late_peer] = launch(exe, late_peer, args)
-        time.sleep(POLL_S)
+    try:
+        # Clients join through the menu, so the host must be listening first
+        ready_deadline = min(deadline, time.monotonic() + HOST_READY_TIMEOUT_S)
+        host_up = wait_for(
+            lambda: READY_MARKER.exists() or procs[0].poll() is not None, ready_deadline, abort
+        )
+        if not host_up:
+            procs[0].kill()
+            procs[0].wait()
+        elif procs[0].poll() is None:
+            for peer in range(1, args.peers):
+                procs[peer] = launch(exe, peer, args)
 
-    timed_out = [peer for peer, p in procs.items() if p.poll() is None]
-    for peer in timed_out:
+        # The late joiner launches when the director asks, mid-activity
+        late_peer = args.peers
+        while any(p.poll() is None for p in procs.values()) and time.monotonic() < deadline:
+            if late_peer not in procs and LATE_JOIN_MARKER.exists():
+                procs[late_peer] = launch(exe, late_peer, args)
+            # Fuel-up warps the real cursor: a human moving it breaks the pump
+            if MOUSE_MARKER.exists() and hands_off is None:
+                winsound.MessageBeep()
+                hands_off = banner("HANDS OFF THE MOUSE NOW: the bot is using it", "#c62828", args)
+            elif not MOUSE_MARKER.exists() and hands_off is not None:
+                mouse_free()
+                hands_off = None
+            abort.check()
+            time.sleep(POLL_S)
+    except Aborted as e:
+        aborted = str(e)
+    except KeyboardInterrupt:
+        aborted = "Ctrl+C"
+    if hands_off is not None:
+        mouse_free()
+
+    killed = [peer for peer, p in procs.items() if p.poll() is None]
+    for peer in killed:
         procs[peer].kill()
         procs[peer].wait()
-    sys.exit(summarize(procs, timed_out, args.peers + 1))
-
+    sys.exit(summarize(procs, killed, total_peers(args), aborted))
 
 if __name__ == "__main__":
     main()

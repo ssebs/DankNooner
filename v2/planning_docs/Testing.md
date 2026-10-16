@@ -2,9 +2,9 @@
 ---
 
 
-> **Status: steps 1–4 written, not yet green.** Step 1 passes on its own. The full timeline
-> (drive bot, solvers, coverage, activities, late join) has only been partly run; see
-> [Next session](#next-session). Automated regression run before every Steam upload. Follows the
+> **Status: steps 1–4 written, not yet green; being verified run by run.** Solo runs now get
+> through both fuel-up pumps. Every step still has to be seen working (solo, then two peers, then
+> late join) before this is done; see [Next session](#next-session). Automated regression run before every Steam upload. Follows the
 > [Architecture](./Architecture.md#how-to-write-in-this-doc) rule: rosters live in code, this doc
 > holds the shape and the reasons.
 
@@ -49,6 +49,10 @@ Python (stdlib only). Launches the peer processes, tiles their windows (`--posit
 `--resolution`), enforces the overall timeout, collects per-peer logs and screenshots into
 `tests/out/`, and prints the summary table. Always headed: fuel-up needs a real cursor. Audio runs
 on Godot's dummy driver: the audio code still executes, nothing plays.
+
+`--peers 1` runs the host alone; `--late-join` adds the late joiner (off by default, so the late
+join and rejoin steps are skipped). Windows are always sized as if three peers were running, so a
+solo window stays small.
 
 The host launches first; clients launch once the director drops a ready marker in `tests/out/`,
 since they join through the menu and need a listening host; a host that never listens is killed
@@ -106,8 +110,19 @@ it when it changes; the host's own bot gets it directly. The active runner and c
 read through public state only (`player_states`, `get_current_task`), no new getters.
 
 **Mouse token:** fuel-up warps the one OS cursor, so peers queue for it on the director and play
-pumps one at a time, including the simultaneous pre-race fuel-up. Don't touch the mouse while a
-pump is being played.
+pumps one at a time, including the simultaneous pre-race fuel-up. While the token is out the
+director keeps a marker in `tests/out/`; `run.py` beeps and shows a red "hands off" banner under
+the tiled windows, and a green one when the mouse is free. A fresh grant waits a moment after the
+banner goes up. Moving the mouse or alt-tabbing during a pump breaks it.
+
+**Pump play:** the cursor carries the grip, not the nozzle, and the handle swings as it nears the
+cap, so the bot steers by the tip's on-screen error to the cap. It waits for the gas cap to stop
+moving before grabbing: the pump measures the cap at the grab, and the bike is still easing out of
+its lean when the session starts (grabbing that early made hang-up impossible; possibly a real game
+bug, unconfirmed).
+
+**Pickers:** both activities and events check the open picker's title before submitting, since a
+neighbouring circle's picker can still be up when an order lands.
 
 ### Drive bot
 
@@ -200,6 +215,9 @@ test code inside it: run it with Godot's `--quit-after` and fail on any logged e
 Once built, Claude may run `tests/run.py` to verify changes (an exception to "only the human runs
 the project").
 
+**Abort:** Esc twice from any window, Alt+F4 on any peer, or Ctrl+C in the terminal stops every
+peer. A peer that exits without a result also stops the run.
+
 ## Build order
 
 1. Wrapper scene, orchestrator, error capture, host/join through the UI, invariants.
@@ -209,22 +227,36 @@ the project").
 
 ## Next session
 
-Where the last run stopped, in order:
+Testing in progress: the user is running it step by step, and nothing counts as done until each
+step has been seen working. Order: `run.py --peers 1`, then `--peers 2`, then `--late-join`.
 
-1. **Fuel-up aim:** the bot sprays off to the side of the cap. `activity_players.gd` points the
-   cursor at the player's `gas_cap_marker`, but the handle's *tip* is what must land in the cap
-   (the pump solves a swing from the grip at grab), so the cursor target needs to account for the
-   grip-to-tip offset. Watch one pump run and correct the aim before anything else.
-2. **First full run on the gym** hasn't completed yet. Expect tuning in the drive bot and trick
-   recipes (steering, wheelie pitch hold, stoppie / drift entry) once it gets that far.
-3. **Late-join netfox errors (real game bug, reported, not fixed):** the late joiner logs
-   `Node not found: …/PlayerSpawn/<id>/RollbackSynchronizer/Node` and "Invalid packet received":
-   rollback RPCs reach it before its copies of the players exist. The no-errors rule fails every
-   run on it until it's fixed in the late-join spawn path.
-4. **Gym gaps:** no `GarageActivity` in the gym yet (coverage fails on it, and the garage step is
-   skipped). The stunt race event was re-added to the TrackRace circle after it went missing from
-   the scene; reload the scene from disk before saving it in the editor.
-5. Measure the budget once a full run passes.
+Verified so far (solo):
+
+- Host through the menus into free roam; abort hotkeys; mouse banners.
+- Free-roam and pre-race fuel-up pumps fill and hang up with no spill.
+
+Fixed but not yet seen working:
+
+- Activity and event pickers matched by title (the bot used to submit whatever picker was open,
+  so it entered the garage instead of the pump and the race).
+- Garage always leaves, even after a failure.
+- Drive bot cruise speed cap (it overshot turns); the gym's race checkpoints are being spaced out.
+
+Still open:
+
+1. **Garage:** every bike skin is free, so there is nothing to buy and the step fails. The test save
+   starts with a fixed balance (`TEST_MONEY`); a skin needs a price within it.
+2. **Drive bot / trick recipes:** tuning once a solo run gets through the events.
+3. **Two peers:** check the mouse token hands off cleanly between pumps, then remove the TEMP
+   cursor diagnostics (`_diag`, DIAG lines) in `activity_players.gd`.
+4. **Late join (real game bugs, reported, not fixed):** the late joiner logs `Node not found:
+   …/PlayerSpawn/<id>/RollbackSynchronizer/Node` and "Invalid packet received"; a client logs
+   `up_direction can't be equal to Vector3.ZERO` from a netfox snapshot apply at the join. Also
+   seen: "Cancel Event isn't offered in FuelUpGameMode" during recovery, and `Unable to send packet
+   on channel 0` on the host.
+5. **Timeouts:** a stuck event waits out the event timeout before moving on; consider shortening
+   it and the warmup-sized default wait for steps after boot.
+6. Measure the budget once a full run passes.
 
 ## Open questions / verify before building
 

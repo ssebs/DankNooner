@@ -31,6 +31,12 @@ const HOST_ADDR := "127.0.0.1"
 ## run.py launches the clients once READY_MARKER exists, the late joiner on LATE_JOIN_MARKER
 const READY_MARKER := "peer0.ready"
 const LATE_JOIN_MARKER := "late_join.go"
+## run.py shows a hands-off banner while this exists
+const MOUSE_MARKER := "mouse.busy"
+## Between the banner going up and the bot taking the mouse
+const MOUSE_WARNING_S := 5.0
+## The fresh test save's balance
+const TEST_MONEY := 2500
 
 @onready var _drive_bot: DriveBot = %DriveBot
 
@@ -46,6 +52,8 @@ var save_manager: SaveManager
 var _logger: ErrorLogger
 var _peer: int
 var _peers: int
+## Off: no late joiner, so no late join or rejoin steps
+var _late_join: bool
 var _out_dir: String
 ## message -> times seen, so a failure on every sample reads as one line
 var _violations: Dictionary[String, int] = {}
@@ -78,18 +86,20 @@ var _activities_done: Array[int] = []
 ## Fuel-up warps the one OS cursor: peers queue for it
 var _mouse_queue: Array[int] = []
 var _mouse_holder := 0
+var _mouse_warning := false
 
 ## Every peer
 var _busy := false
 var _has_mouse := false
-## Set once this peer finished the activity it was sent to, until the order changes
-var _activity_spent := false
+## The activity this peer last finished; its picker is ignored until the director sends another
+var _spent_activity := ""
 
 
 func run(logger: ErrorLogger, args: Dictionary) -> void:
 	_logger = logger
 	_peer = args["peer"]
 	_peers = args["peers"]
+	_late_join = args["late_join"]
 	_out_dir = args["out"]
 	menu_manager = _find_manager(MenuManager)
 	connection_manager = _find_manager(ConnectionManager)
@@ -107,6 +117,9 @@ func run(logger: ErrorLogger, args: Dictionary) -> void:
 	if not await _menus.reach_play_menu():
 		_quit()
 		return
+	var player_def := save_manager.get_player_definition()
+	player_def.money = TEST_MONEY
+	save_manager.update_save("player_definition", player_def, true, true)
 	if _is_director():
 		await _direct()
 		await _end_run_as_director()
@@ -177,7 +190,8 @@ func _direct() -> void:
 
 ## Fuel-up then garage for every starting rider; the late joiner joins during the first one.
 func _free_roam_phase() -> void:
-	FileAccess.open(_out_dir.path_join(LATE_JOIN_MARKER), FileAccess.WRITE).store_string("")
+	if _late_join:
+		FileAccess.open(_out_dir.path_join(LATE_JOIN_MARKER), FileAccess.WRITE).store_string("")
 	var pump: FuelUpMinigame = null
 	var garage: GarageActivity = null
 	for activity in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["FreeRoamActivities"]):
@@ -191,13 +205,14 @@ func _free_roam_phase() -> void:
 			continue
 		for peer_id in _ready_peers.duplicate():
 			await _run_activity(peer_id, activity)
-	await wait_until(func(): return _late_peer_id != 0, "the late joiner in free roam")
+	if _late_join:
+		await wait_until(func(): return _late_peer_id != 0, "the late joiner in free roam")
 
 
 func _run_activity(peer_id: int, activity: FreeRoamActivity) -> void:
 	var circle: Node3D = activity.get_node("%PlayerStartCircle")
 	_activities_done.erase(peer_id)
-	_activity_orders[peer_id] = {"mode": "idle", "activity": true}
+	_activity_orders[peer_id] = {"mode": "idle", "activity": activity.event_name}
 	# Riding onto the circle opens the picker; the rider's own peer submits it
 	spawn_manager.respawn_player_in_place.rpc(peer_id, circle.global_position, _upright(circle))
 	var done := func(): return peer_id in _activities_done
@@ -223,7 +238,10 @@ func _run_event(circle: EventStartCircle, index: int, rejoined: bool) -> bool:
 	var label := "%s/%s" % [circle.name, event.name]
 	DebugUtils.DebugMsg("[test] event %s" % label)
 	spawn_manager.respawn_player_in_place.rpc(1, circle.global_position, _upright(circle))
-	if not await wait_until(_menus.is_picker_open, "the event picker at %s" % circle.name):
+	# Opens on the circle's first event; the last activity's picker may still be up
+	var first_event := circle.get_events()[0].definition.name
+	var picker_open := func(): return _menus.is_picker_open_for(first_event)
+	if not await wait_until(picker_open, "the event picker at %s" % circle.name):
 		return await _recover(label)
 	_menus.submit_picker(index)
 	if not await wait_until(_is_out_of_free_roam, "%s to start" % label):
@@ -232,7 +250,7 @@ func _run_event(circle: EventStartCircle, index: int, rejoined: bool) -> bool:
 	var kind := event.definition.target_gamemode
 	var started_ms := Time.get_ticks_msec()
 	var cancelled := false
-	var rejoin_due := _was_race(event) and !rejoined
+	var rejoin_due := _late_join and _was_race(event) and !rejoined
 	while _is_out_of_free_roam():
 		var elapsed_s := (Time.get_ticks_msec() - started_ms) / 1000.0
 		if elapsed_s > EVENT_TIMEOUT_S:
@@ -247,7 +265,8 @@ func _run_event(circle: EventStartCircle, index: int, rejoined: bool) -> bool:
 			rejoin_due = false
 			_rejoin.rpc_id(_late_peer_id)
 		await get_tree().create_timer(CONTROL_INTERVAL_S).timeout
-	await wait_until(func(): return _late_peer_id in _ready_peers, "the late joiner back in")
+	if _late_join:
+		await wait_until(func(): return _late_peer_id in _ready_peers, "the late joiner back in")
 	return true
 
 
@@ -340,8 +359,22 @@ static func _was_race(event: GameModeEvent) -> bool:
 
 
 func _grant_next_mouse() -> void:
-	if _mouse_holder != 0 or _mouse_queue.is_empty():
+	if _mouse_holder != 0 or _mouse_warning:
 		return
+	var marker := _out_dir.path_join(MOUSE_MARKER)
+	if _mouse_queue.is_empty():
+		if FileAccess.file_exists(marker):
+			DirAccess.remove_absolute(marker)
+		return
+	# Back-to-back pumps keep the banner up; only a fresh one warns the human first
+	if !FileAccess.file_exists(marker):
+		FileAccess.open(marker, FileAccess.WRITE).store_string("")
+		_mouse_warning = true
+		await get_tree().create_timer(MOUSE_WARNING_S).timeout
+		_mouse_warning = false
+		if _mouse_queue.is_empty():  # its peer left during the warning
+			_grant_next_mouse()
+			return
 	_mouse_holder = _mouse_queue.pop_front()
 	_grant_mouse.rpc_id(_mouse_holder)
 
@@ -362,12 +395,13 @@ func _join() -> bool:
 func _watch_activities() -> void:
 	while true:
 		await get_tree().process_frame
-		if !_drive_bot.order.get("activity", false):
-			_activity_spent = false
+		var activity: String = _drive_bot.order.get("activity", "")
+		if activity == "":
+			_spent_activity = ""
 		if _busy:
 			continue
 		var hud_state := hud_manager.state_machine.current_state
-		if _drive_bot.order.get("activity", false) and !_activity_spent and _menus.is_picker_open():
+		if activity != "" and activity != _spent_activity and _menus.is_picker_open_for(activity):
 			_menus.submit_picker(0)
 		elif hud_state == hud_manager.fuel_up_hud_state:
 			_busy = true
@@ -384,7 +418,7 @@ func _watch_activities() -> void:
 
 func _finish_activity(ok: bool) -> void:
 	_busy = false
-	_activity_spent = true
+	_spent_activity = _drive_bot.order.get("activity", "")
 	request_activity_done.rpc_id(1, ok)
 
 
