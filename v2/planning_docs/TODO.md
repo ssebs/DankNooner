@@ -21,8 +21,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] Garage delete btn should ask if you're sure and be red 
-
 - [ ] see playtest [feedback](_ScratchPad.md)
 
 - [ ] Steam
@@ -264,6 +262,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] Garage delete btn should ask if you're sure and be red 
+
 - [x] leave btn in customization should be at bottom left, & separate. 
 
 - [x] shouldnt be able to drive while in pause menu
