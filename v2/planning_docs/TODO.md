@@ -22,6 +22,12 @@
 > Don't forget, have fun :D
 - [ ] see playtest [feedback](_ScratchPad.md)
 
+- [ ] Add integration tests for features
+  - [ ] Testing.md
+  - mock player going thru stunt race w/ checkpoints and picking up items -& using them 
+  - test save file parsing/progression
+  - e.g. fill up minigame is testable
+
 - [ ] Steam
   - [ ] Steam page [WIP]
     - [x] $100
@@ -56,10 +62,7 @@
 - [ ] option to drop current item?
 - [ ] 321 + drive to start of race text should be more obvious
 
-Add integration tests for features
-- mock player going thru stunt race w/ checkpoints and picking up items -& using them 
-- test save file parsing/progression
-- e.g. fill up minigame is testable
+
 
 Discord page for support/community 
 

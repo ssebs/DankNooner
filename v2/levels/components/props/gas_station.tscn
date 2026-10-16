@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://vumsue2gkkc0" path="res://levels/components/interactable/gas_pump.tscn" id="5_gaspump"]
 [ext_resource type="Script" uid="uid://kqfc4owdojbf" path="res://managers/gamemodes/gamemodeobjects/gamemode_object.gd" id="6_gmobj"]
 
-[node name="GasStation" type="Node3D" unique_id=1355590988]
+[node name="GasStation" type="Node3D" unique_id=1355590988 groups=["GasStations"]]
 
 [node name="Ground" parent="." unique_id=1485126779 instance=ExtResource("1_jbldn")]
 shape_mode = 1

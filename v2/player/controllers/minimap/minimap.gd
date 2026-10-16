@@ -12,7 +12,7 @@ class_name Minimap extends PanelContainer
 ## Camera height above the player, in metres.
 @export var height: float = 80.0
 @export var dot_radius: float = 7.0
-## Icon marker diameter (you, checkpoint, event, garage); players / NPCs stay dots.
+## Icon marker diameter (you, checkpoint, event, garage, gas station); players / NPCs stay dots.
 @export var icon_size: float = 24.0
 ## Black ring thickness around each blip.
 @export var border_width: float = 2.0
@@ -39,10 +39,12 @@ const COLOR_NPC := Color(0.7, 0.3, 1.0)
 const COLOR_CHECKPOINT := Color(0.15, 0.85, 0.2)
 const COLOR_EVENT := Color(1.0, 0.1, 0.8)
 const COLOR_GARAGE := Color(1.0, 0.55, 0.1)
+const COLOR_GAS_STATION := Color(0.95, 0.2, 0.2)
 const ICON_SELF := preload("res://resources/img/Icons/arrowUp.png")
 const ICON_CHECKPOINT := preload("res://resources/img/Icons/target.png")
 const ICON_EVENT := preload("res://resources/img/Icons/star.png")
 const ICON_GARAGE := preload("res://resources/img/Icons/wrench.png")
+const ICON_GAS_STATION := preload("res://resources/img/Icons/fuel.svg")
 ## Full-map legend: text key -> [blip color, icon or null for a dot].
 const LEGEND := {
 	"MAP_LEGEND_YOU": [COLOR_SELF, ICON_SELF],
@@ -51,6 +53,7 @@ const LEGEND := {
 	"MAP_LEGEND_CHECKPOINT": [COLOR_CHECKPOINT, ICON_CHECKPOINT],
 	"MAP_LEGEND_EVENT": [COLOR_EVENT, ICON_EVENT],
 	"MAP_LEGEND_GARAGE": [COLOR_GARAGE, ICON_GARAGE],
+	"MAP_LEGEND_GAS_STATION": [COLOR_GAS_STATION, ICON_GAS_STATION],
 }
 
 @onready var _sub_viewport: SubViewport = %MinimapSubViewport
@@ -228,31 +231,23 @@ func _draw_dots() -> void:
 			continue
 		_draw_marker(racer.global_position, COLOR_NPC if racer is NPCRiderEntity else COLOR_PLAYER)
 
-	# Event start circles (local level nodes) — bright pink for testing — and garages.
-	# Only in free roam; a race hides them so its checkpoint marker stands alone. Off the
-	# corner map they'd crowd its edge, so only the nearest garage keeps a pointer there.
+	# Event start circles (local level nodes) — bright pink for testing — garages and gas stations.
+	# Only in free roam; a race hides them so its checkpoint marker stands alone.
 	if _local_player.gamemode_manager.current_game_mode == GameModeType.Kind.FREE_ROAM:
 		for circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
 			_draw_marker(circle.global_position, COLOR_EVENT, ICON_EVENT, 0.0, _expanded)
-		var garages := get_tree().get_nodes_in_group(
-			UtilsConstants.GROUPS["FreeRoamActivities"]
-		).filter(func(a): return a is GarageActivity)
-		var nearest_garage: GarageActivity = null
-		for garage in garages:
-			if (
-				nearest_garage == null
-				or self_pos.distance_squared_to(garage.global_position)
-				< self_pos.distance_squared_to(nearest_garage.global_position)
-			):
-				nearest_garage = garage
-		for garage in garages:
-			_draw_marker(
-				garage.global_position,
-				COLOR_GARAGE,
-				ICON_GARAGE,
-				0.0,
-				_expanded or garage == nearest_garage
-			)
+		_draw_nearest_pinned(
+			get_tree().get_nodes_in_group(UtilsConstants.GROUPS["FreeRoamActivities"]).filter(
+				func(a): return a is GarageActivity
+			),
+			COLOR_GARAGE,
+			ICON_GARAGE
+		)
+		_draw_nearest_pinned(
+			get_tree().get_nodes_in_group(UtilsConstants.GROUPS["GasStations"]),
+			COLOR_GAS_STATION,
+			ICON_GAS_STATION
+		)
 
 	if has_checkpoint:
 		_draw_marker(checkpoint_pos, COLOR_CHECKPOINT, ICON_CHECKPOINT)
@@ -264,6 +259,21 @@ func _draw_dots() -> void:
 		- _camera.unproject_position(self_pos)
 	)
 	_draw_marker(self_pos, COLOR_SELF, ICON_SELF, Vector2.UP.angle_to(screen_fwd))
+
+
+## Off the corner map they'd crowd its edge, so only the nearest keeps a pointer there.
+func _draw_nearest_pinned(nodes: Array, color: Color, icon: Texture2D) -> void:
+	var self_pos := _local_player.global_position
+	var nearest: Node3D = null
+	for node in nodes:
+		if (
+			nearest == null
+			or self_pos.distance_squared_to(node.global_position)
+			< self_pos.distance_squared_to(nearest.global_position)
+		):
+			nearest = node
+	for node in nodes:
+		_draw_marker(node.global_position, color, icon, 0.0, _expanded or node == nearest)
 
 
 ## Plot a world position onto the overlay: clamp off-map points to the edge box
