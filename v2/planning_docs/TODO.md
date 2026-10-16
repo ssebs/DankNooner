@@ -20,7 +20,6 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-
 - [ ] see playtest [feedback](_ScratchPad.md)
 
 - [ ] Steam
@@ -262,6 +261,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] corkscrew ramp tweaks
+
 - [x] Garage delete btn should ask if you're sure and be red 
 
 - [x] leave btn in customization should be at bottom left, & separate. 
