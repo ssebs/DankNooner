@@ -24,6 +24,7 @@
 
 - [ ] Add integration tests for features
   - [ ] Testing.md
+    - [ ] see the prompt at the top
   - mock player going thru stunt race w/ checkpoints and picking up items -& using them 
   - test save file parsing/progression
   - e.g. fill up minigame is testable
