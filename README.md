@@ -17,12 +17,13 @@ Realistic controls meet arcade tricks: progressive braking, balance point wheeli
 - **V1 POC (wheelie balance):** [itch.io](https://theofficialssebs.itch.io/dank-nooner-poc)
 
 <details>
-<summary>Note for Mac users</summary>
+<summary>Note for Mac users!</summary>
 
 You will need to allow the app explicitly.
 
 - Double click to extract the .zip
 - Double click to run **DankNooner.app**
+  - Note: if you get a warning saying the file can't be run, you must open a terminal, cd to the dir where the .app is, & run this command: `sudo xattr -cr DankNooner.app`
 - Open **System Settings** > **Privacy & Security** > Scroll down to **Security**
 - You should see `"DankNooner" was blocked to protect your Mac.`, click the **Open Anyway** button to the right
 
