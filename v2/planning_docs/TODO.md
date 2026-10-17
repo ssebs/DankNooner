@@ -33,7 +33,7 @@
   - [ ] Steam page [WIP]
     - [x] $100
     - [x] basic setup
-    - [ ] working build
+    - [x] working build
     - [ ] full setup
     - [ ] Trailer
   - [ ] Demo release
@@ -263,6 +263,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] stop bat swing / item effeects while crashed
+
 - [x] hitting obstacle / player makes you do a 180 when you should crash sometimes
 
 - [x] 3d audio / hear other players

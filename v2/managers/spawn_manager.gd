@@ -257,11 +257,11 @@ func _wobble_riders_near_bat(wielder_peer_id: int) -> void:
 	for _i in int(BAT_SWING_DURATION / BAT_SWING_PERIOD):
 		await get_tree().create_timer(BAT_SWING_PERIOD).timeout
 		var wielder := get_player_by_peer_id(wielder_peer_id)
-		# Wielder crashed / left mid-swing — nothing to swing from.
-		if wielder == null:
+		# Wielder crashed / left mid-swing — nothing to swing from (the crash already flushed the anim).
+		if wielder == null or wielder.is_crashed:
 			return
 		for child in level_manager.current_level.player_spawn_pos.get_children():
-			if not child is PlayerEntity or child == wielder:
+			if not child is PlayerEntity or child == wielder or child.is_crashed:
 				continue
 			if wielder.global_position.distance_to(child.global_position) <= BAT_SWING_RANGE:
 				wobble_player.rpc(int(child.name), BAT_SWING_WOBBLE_STRENGTH)

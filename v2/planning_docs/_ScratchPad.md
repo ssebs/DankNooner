@@ -18,7 +18,6 @@
 - [ ] add some form of gamba (spin wheel / roulette / random game)
 - [ ] Make hud simpler/intuitive 
   - [ ] remove throttle bar
-- [ ] stop bat swing while crashed
 - [ ] ramp hitboxes remain after finishing stunt race?
 
 - [ ] free roam wheelie challenge/points scoring should be longer than 1min and explain what it is
