@@ -222,11 +222,11 @@ transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, -1.4
 
 [node name="LeftHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=811111111]
 unique_name_in_owner = true
-transform = Transform3D(0.18152155, 0.93993247, 0.28909656, -0.13363789, 0.31483123, -0.93969256, -0.9742642, 0.13194022, 0.18275924, -0.25099996, 0.010506213, 0.119806916)
+transform = Transform3D(0.18152156, 0.93993247, 0.28909656, -0.1336379, 0.31483123, -0.93969256, -0.97426426, 0.13194022, 0.18275924, 0.251, 0.914, 0.287)
 
 [node name="RightHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=822222222]
 unique_name_in_owner = true
-transform = Transform3D(0.2333382, -0.92857647, -0.28861547, 0.11576331, 0.3212249, -0.93990076, 0.9654802, 0.1859037, 0.18244913, 0.25104138, 0.010893047, 0.11961305)
+transform = Transform3D(0.2333382, -0.9285764, -0.28861547, 0.11576331, 0.32122487, -0.93990076, 0.9654802, 0.18590368, 0.18244913, -0.25104135, 0.9143868, 0.28719392)
 
 [node name="LeftFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=833333333]
 unique_name_in_owner = true
@@ -239,7 +239,7 @@ emitting = false
 
 [node name="RightFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=844444444]
 unique_name_in_owner = true
-transform = Transform3D(-0.9787893, 0.022497118, 0.2036314, 0.20170887, 0.27976713, 0.93863934, -0.035852674, 0.9598043, -0.27837086, -0.18314199, 0.5666657, -0.22655825)
+transform = Transform3D(-0.9787892, 0.022497207, 0.20363149, 0.20170893, 0.27976722, 0.93863934, -0.03585267, 0.9598043, -0.27837098, -0.18314199, 0.5666657, -0.22655825)
 
 [node name="SparkParticlesRight" parent="VisualRoot/IKTargets/RightFootTarget" unique_id=1985641876 instance=ExtResource("29_3kl2f")]
 unique_name_in_owner = true

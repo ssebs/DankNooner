@@ -106,6 +106,8 @@ var current_state: RiderState = RiderState.RIDING:
 var _base_butt_pos: Vector3
 var _base_chest_pos: Vector3
 var _base_chest_rot: Vector3
+var _base_head_pos: Vector3
+var _base_head_rot: Vector3
 var _base_visual_root_position: Vector3
 var _base_visual_root_rotation: Vector3
 # visual_root's rest transform is structural (scene default), not bike-dependent. Capture it
@@ -287,8 +289,8 @@ func _next_proc_pose() -> _RiderPose:
 	pose.butt_pos = _base_butt_pos
 	pose.chest_pos = _base_chest_pos
 	pose.chest_rot = _base_chest_rot
-	pose.head_pos = player_entity.head_target.position
-	pose.head_rot = player_entity.head_target.rotation
+	pose.head_pos = _base_head_pos
+	pose.head_rot = _base_head_rot
 	pose.left_hand_pos = player_entity.left_hand_target.position
 	pose.left_hand_rot = player_entity.left_hand_target.rotation
 	pose.right_hand_pos = player_entity.right_hand_target.position
@@ -557,6 +559,8 @@ func initialize() -> void:
 	_base_butt_pos = _ik_ctrl.butt_pos.position
 	_base_chest_pos = player_entity.chest_target.position
 	_base_chest_rot = player_entity.chest_target.rotation
+	_base_head_pos = player_entity.head_target.position
+	_base_head_rot = player_entity.head_target.rotation
 	if not _visual_root_base_captured:
 		_base_visual_root_position = visual_root.position
 		_base_visual_root_rotation = visual_root.rotation
