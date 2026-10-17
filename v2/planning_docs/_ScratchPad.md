@@ -6,8 +6,7 @@
 > playtest_logs/*.log
 
 ### NOW
-- [ ] hitting obstacle makes you do a 180 when you should crash sometimes
-  - [ ] also when hitting peeps
+
 
 
 ### NEXT

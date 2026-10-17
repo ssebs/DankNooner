@@ -20,7 +20,6 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-
 - [ ] see playtest [feedback](_ScratchPad.md)
 
 - [ ] Add integration tests for features
@@ -264,6 +263,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] hitting obstacle / player makes you do a 180 when you should crash sometimes
+
 - [x] 3d audio / hear other players
 
 - [x] add horns to unlock & select

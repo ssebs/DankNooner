@@ -237,8 +237,9 @@ func _detect_crash():
 			# CSG walls report the CSG node itself as the collider, not a CollisionObject3D.
 			var is_body := collider is CollisionObject3D or collider is CSGShape3D
 			if is_body and collider.collision_layer & 2:
+				# Pre-slide: move_and_slide already stripped the into-wall part, so a head-on hit read as glancing.
 				var angle = rad_to_deg(
-					collision.get_normal().angle_to(-player_entity.velocity.normalized())
+					collision.get_normal().angle_to(-movement_controller.pre_slide_velocity.normalized())
 				)
 				if angle < _crash_angle:
 					# Low-speed player-to-player tap: both riders wobble instead of crashing.

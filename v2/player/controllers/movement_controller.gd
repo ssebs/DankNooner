@@ -146,6 +146,7 @@ var air_time: float = 0.0 # time since takeoff (for wheelie grace window)
 var was_on_floor: bool = false # previous tick's floor state (for landing detection)
 var is_on_floor: bool = false # cached once per tick to avoid redundant move_and_slide calls
 var speed_pct: float = 0.0 # speed / max_speed, cached per tick
+var pre_slide_velocity: Vector3 = Vector3.ZERO # cached per tick — velocity before move_and_slide deflects it
 var _wheelie_grace_consumed: bool = false # true once grace expired and pitch_angle was zeroed
 
 # spawn protection - todo move?
@@ -256,7 +257,7 @@ func on_movement_rollback_tick(delta: float):
 	wobble_controller.trick_feed(delta)
 
 	# Apply movement
-	var pre_slide_velocity := player_entity.velocity
+	pre_slide_velocity = player_entity.velocity
 	player_entity.velocity *= NetworkTime.physics_factor
 	player_entity.move_and_slide()
 	player_entity.velocity /= NetworkTime.physics_factor
