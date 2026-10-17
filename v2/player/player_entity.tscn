@@ -24,7 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://cu0vh8sgp0l2e" path="res://entities/vfx/spark_particles.tscn" id="29_3kl2f"]
 [ext_resource type="Script" uid="uid://cajkhr7cisa7f" path="res://player/controllers/skidmark_controller.gd" id="30_skid"]
 [ext_resource type="Script" uid="uid://dbl1ukq1dy3xd" path="res://entities/vfx/rider_vfx.gd" id="31_rvfx"]
-[ext_resource type="Script" path="res://utils/custom_audio_middleware/engine_sound_event_3d.gd" id="32_eng3d"]
+[ext_resource type="Script" uid="uid://d0qu5fntjsi5d" path="res://utils/custom_audio_middleware/engine_sound_event_3d.gd" id="32_eng3d"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wig4y"]
 size = Vector3(4, 10, 2)
@@ -311,8 +311,8 @@ skin_definition = ExtResource("3_am3pr")
 [node name="TPSCam" type="Camera3D" parent="." unique_id=1200816402]
 unique_name_in_owner = true
 transform = Transform3D(-1, -5.2721823e-08, 1.4149255e-07, 0, 0.9370628, 0.34916085, -1.509958e-07, 0.34916085, -0.9370628, 0.071, 1.382, -1.678)
-fov = 80.0
 doppler_tracking = 1
+fov = 80.0
 
 [node name="FPSCam" type="Camera3D" parent="." unique_id=240466741]
 unique_name_in_owner = true
@@ -334,41 +334,51 @@ collision_layer = 0
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1.056441, -6.0359473)
 shape = SubResource("BoxShape3D_wig4y")
 
-[node name="NameLabel" type="Label3D" parent="." unique_id=1811367941]
+[node name="NameTagMarker" type="Marker3D" parent="." unique_id=1811367941]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1839552, 0)
-billboard = 1
+
+[node name="NameTagLayer" type="CanvasLayer" parent="." unique_id=1460283917]
+layer = -1
+
+[node name="NameLabel" type="Label" parent="NameTagLayer" unique_id=1735092846]
+unique_name_in_owner = true
+theme_override_colors/font_color = Color(0.254902, 1, 0.5459559, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 25
 text = "USERNAME"
+horizontal_alignment = 1
 
-[node name="HornPlayer" type="AudioStreamPlayer3D" parent="."]
+[node name="HornPlayer" type="AudioStreamPlayer3D" parent="." unique_id=983254083]
 unique_name_in_owner = true
 bus = &"SFX"
 
-[node name="RemoteEngine" type="AudioStreamPlayer3D" parent="." node_paths=PackedStringArray("high_layer")]
+[node name="RemoteEngine" type="AudioStreamPlayer3D" parent="." unique_id=1996298367 node_paths=PackedStringArray("high_layer")]
 unique_name_in_owner = true
 bus = &"SFX"
+doppler_tracking = 1
 script = ExtResource("32_eng3d")
 high_layer = NodePath("RemoteEngineHigh")
-doppler_tracking = 1
 
-[node name="RemoteEngineHigh" type="AudioStreamPlayer3D" parent="RemoteEngine"]
+[node name="RemoteEngineHigh" type="AudioStreamPlayer3D" parent="RemoteEngine" unique_id=1451811502]
 bus = &"SFX"
 doppler_tracking = 1
 
-[node name="RemoteSqueal" type="AudioStreamPlayer3D" parent="."]
+[node name="RemoteSqueal" type="AudioStreamPlayer3D" parent="." unique_id=1308472925]
 unique_name_in_owner = true
 bus = &"SFX"
 
-[node name="RemoteExhaustPop" type="AudioStreamPlayer3D" parent="."]
+[node name="RemoteExhaustPop" type="AudioStreamPlayer3D" parent="." unique_id=826860997]
 unique_name_in_owner = true
 max_polyphony = 4
 bus = &"SFX"
 
-[node name="RemoteExhaustBurble" type="AudioStreamPlayer3D" parent="."]
+[node name="RemoteExhaustBurble" type="AudioStreamPlayer3D" parent="." unique_id=75214229]
 unique_name_in_owner = true
 bus = &"SFX"
 
-[node name="RemoteCrash" type="AudioStreamPlayer3D" parent="."]
+[node name="RemoteCrash" type="AudioStreamPlayer3D" parent="." unique_id=796028142]
 unique_name_in_owner = true
 bus = &"SFX"
 

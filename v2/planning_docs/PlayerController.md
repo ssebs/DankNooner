@@ -12,7 +12,7 @@
   - IKTargets/ — all IK markers (butt, chest, head, L/R hand/foot, L/R arm/leg magnets)
   - WheelMarkers/ — editor-authored wheel pivot markers
   - IKAnimationPlayer — IK marker animations (idle, polish)
-  - NameLabel (Label3D)
+  - NameTagMarker + NameTagLayer/NameLabel — 2D, drawn over the 3D glow, placed on the marker each frame
   - CollisionShape3D
   - Front/RearRayCast
   - _Controllers/ — see below

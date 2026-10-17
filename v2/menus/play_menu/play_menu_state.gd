@@ -17,6 +17,8 @@ const WEBRTC_CODE_CHARSET := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx
 # Lobby-type Steam IDs always have 18 digits
 const STEAM_LOBBY_ID_LENGTH := 18
 
+const AUTO_JOIN_ADDR := "127.0.0.1"
+
 @onready var back_btn: Button = %BackBtn
 @onready var customize_btn: Button = %CustomizeBtn
 @onready var free_roam_btn: Button = %FreeRoamBtn
@@ -51,6 +53,14 @@ func Enter(_state_context: StateContext):
 
 	if !steam_manager.pending_game_id.is_empty():
 		_on_invite_received.call_deferred()
+	elif DebugUtils.auto_host:
+		host_mode_opt.select(
+			host_mode_opt.get_item_index(ConnectionManager.ConnectionMode.IP_PORT)
+		)
+		_on_host_btn_pressed.call_deferred()
+	elif DebugUtils.auto_join:
+		# A failed join lands back here and retries, so racing the host's boot is fine
+		_join_game.call_deferred(AUTO_JOIN_ADDR)
 
 
 func Exit(_state_context: StateContext):

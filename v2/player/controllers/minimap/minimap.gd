@@ -229,7 +229,11 @@ func _draw_dots() -> void:
 		# was most of this pass — and most of them pin to the map edge as arrows anyway.
 		if racer.is_in_group(UtilsConstants.GROUPS["Traffic"]) or racer == _local_player:
 			continue
-		_draw_marker(racer.global_position, COLOR_NPC if racer is NPCRiderEntity else COLOR_PLAYER)
+		var pos := _draw_marker(
+			racer.global_position, COLOR_NPC if racer is NPCRiderEntity else COLOR_PLAYER
+		)
+		if _expanded and racer is PlayerEntity:
+			_draw_name_tag((racer as PlayerEntity).name_label, pos)
 
 	# Event start circles (local level nodes) — bright pink for testing — garages and gas stations.
 	# Only in free roam; a race hides them so its checkpoint marker stands alone.
@@ -278,14 +282,14 @@ func _draw_nearest_pinned(nodes: Array, color: Color, icon: Texture2D) -> void:
 
 ## Plot a world position onto the overlay: clamp off-map points to the edge box
 ## with an outward pointer, then draw the bordered blip. Unpinned points are just
-## skipped off-map.
+## skipped off-map. Returns where the blip landed (Vector2.INF if skipped).
 func _draw_marker(
 	world_pos: Vector3,
 	color: Color,
 	icon: Texture2D = null,
 	angle: float = 0.0,
 	pin: bool = true
-) -> void:
+) -> Vector2:
 	var radius := _blip_radius(icon)
 	var center := _dot_overlay.size * 0.5
 	# Inset the clamp box so a pinned blip + border + arrow stays fully on-screen.
@@ -295,7 +299,7 @@ func _draw_marker(
 	var offset := pos - center
 	if absf(offset.x) > half.x or absf(offset.y) > half.y:
 		if !pin:
-			return
+			return Vector2.INF
 		# Off-map: clamp onto the edge box along the ray from center, then
 		# add an outward pointer toward the real position.
 		var t := 1.0
@@ -306,6 +310,37 @@ func _draw_marker(
 		pos = center + offset * t
 		_draw_edge_arrow(pos, offset.normalized(), radius, color)
 	_draw_blip(_dot_overlay, pos, color, icon, angle)
+	return pos
+
+
+## The rider's in-world nametag (text + style) above their blip, kept on the map.
+func _draw_name_tag(label: Label, pos: Vector2) -> void:
+	var font := label.get_theme_font("font")
+	var font_size := label.get_theme_font_size("font_size")
+	var width := font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+	var lift := _blip_radius(null) + font.get_descent(font_size)
+	var baseline := (pos - Vector2(width * 0.5, lift)).clamp(
+		Vector2(0.0, font.get_ascent(font_size)), _dot_overlay.size - Vector2(width, 0.0)
+	)
+	_dot_overlay.draw_string_outline(
+		font,
+		baseline,
+		label.text,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1,
+		font_size,
+		label.get_theme_constant("outline_size"),
+		label.get_theme_color("font_outline_color")
+	)
+	_dot_overlay.draw_string(
+		font,
+		baseline,
+		label.text,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1,
+		font_size,
+		label.get_theme_color("font_color")
+	)
 
 
 ## Outer radius, black ring included.

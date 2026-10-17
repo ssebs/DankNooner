@@ -33,6 +33,9 @@ func Enter(_state_context: StateContext):
 		play_button.pressed.connect(_on_play_pressed, CONNECT_ONE_SHOT)
 		return
 
+	if DebugUtils.auto_host or DebugUtils.auto_join:
+		_finish_splashes.call_deferred()
+		return
 	_start_splash_sequence()
 
 

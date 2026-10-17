@@ -93,7 +93,9 @@ signal uncrashed
 @onready var visual_root: Node3D = %VisualRoot
 @onready var character_skin: CharacterSkin = %CharacterSkin
 @onready var bike_skin: BikeSkin = %BikeSkin
-@onready var name_label: Label3D = %NameLabel
+## 2D so it draws over the 3D pass's glow; placed over name_tag_marker each frame
+@onready var name_label: Label = %NameLabel
+@onready var name_tag_marker: Marker3D = %NameTagMarker
 @onready var rear_raycast: RayCast3D = %RearRayCast
 @onready var front_raycast: RayCast3D = %FrontRayCast
 @onready var rollback_sync: RollbackSynchronizer = %RollbackSynchronizer
@@ -330,6 +332,13 @@ func _process(delta: float) -> void:
 		# Synced state, so a remote rider's RPM is current every frame.
 		if remote_engine.playing:
 			remote_engine.set_rpm(gearing_controller.get_rpm_ratio())
+		var camera := get_viewport().get_camera_3d()
+		var dist := global_position.distance_to(camera.global_position)
+		name_label.text = "%s · %dm" % [username, dist]
+		name_label.visible = !camera.is_position_behind(name_tag_marker.global_position)
+		name_label.position = (
+			camera.unproject_position(name_tag_marker.global_position) - name_label.size / 2
+		)
 		return
 
 	# NOS boost SFX on the is_boosting rising edge — one-shot per boost.

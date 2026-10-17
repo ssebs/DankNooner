@@ -55,6 +55,8 @@ func Enter(_state_context: StateContext):
 	steam_status_label.visible = steam_manager.is_logged_in()
 	if !steam_manager.pending_game_id.is_empty():
 		_on_invite_received.call_deferred()
+	elif DebugUtils.auto_host or DebugUtils.auto_join:
+		_on_play_btn_pressed.call_deferred()
 
 	if level_manager.current_level_name != LevelManager.LevelName.MAIN_MENU_LEVEL:
 		level_manager.spawn_main_menu_level()

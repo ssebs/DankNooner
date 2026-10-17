@@ -21,7 +21,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] see playtest [feedback](_ScratchPad.md)
-
 - [ ] Add integration tests for features
   - [ ] Testing.md
     - [ ] progress made
@@ -263,6 +262,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] better friend name labels
+
 - [x] stop bat swing / item effeects while crashed
 
 - [x] hitting obstacle / player makes you do a 180 when you should crash sometimes

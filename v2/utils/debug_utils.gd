@@ -4,6 +4,9 @@ class_name DebugUtils extends RefCounted
 static var verbose := "--verbose" in OS.get_cmdline_user_args()
 ## `-- --verbose-movement`: its own flag since it prints every tick, resims included.
 static var verbose_movement := "--verbose-movement" in OS.get_cmdline_user_args()
+## `-- --autohost` / `-- --autojoin` (editor Run Instances): skip the menus into a local game. Cleared once in
+static var auto_host := "--autohost" in OS.get_cmdline_user_args()
+static var auto_join := "--autojoin" in OS.get_cmdline_user_args()
 
 static var prof_enabled := false  # PROF: temp - set from PlayerEntity.debug_prof
 static var _prof: Dictionary[String, Vector3i] = {}  # key -> (total_usec, calls, max_usec)  # PROF: temp

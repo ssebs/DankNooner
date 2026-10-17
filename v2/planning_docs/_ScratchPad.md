@@ -8,11 +8,9 @@
 ### NOW
 
 
-
 ### NEXT
 - [ ] holding T pose should not grant so many points / score
   - [ ] need some penalty for simple tricks vs combos
-- [ ] 3D marker showing where people are (bf3? Arrow in the sky?)
 - [ ] Make arrow signs/other things glow other colors to add variety 
 
 - [ ] add some form of gamba (spin wheel / roulette / random game)

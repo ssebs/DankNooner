@@ -14,6 +14,8 @@ class_name LobbyMenuState extends MenuState
 @export var play_menu_state: MenuState
 @export var customize_menu_state: MenuState
 
+const AUTO_HOST_LOBBY_SIZE := 2
+
 @onready var singleplayer_ui: Control = %SingleplayerUI
 @onready var multiplayer_ui: Control = %MultiplayerUI
 
@@ -50,6 +52,7 @@ func Enter(state_context: StateContext):
 	level_select_panel.start_pressed.connect(_on_start_pressed)
 	level_select_panel.level_selected.connect(_on_level_selected)
 	customize_btn.pressed.connect(_on_customize_pressed)
+	lobby_manager.lobby_players_updated.connect(_on_lobby_players_updated)
 
 	# Connection signals
 	connection_manager.server_disconnected.connect(_on_server_disconnected)
@@ -78,6 +81,7 @@ func Exit(_state_context: StateContext):
 	level_select_panel.start_pressed.disconnect(_on_start_pressed)
 	level_select_panel.level_selected.disconnect(_on_level_selected)
 	customize_btn.pressed.disconnect(_on_customize_pressed)
+	lobby_manager.lobby_players_updated.disconnect(_on_lobby_players_updated)
 
 	connection_manager.server_disconnected.disconnect(_on_server_disconnected)
 	connection_manager.game_id_set.disconnect(_on_game_id_set)
@@ -150,6 +154,7 @@ func _on_client_connection_failed(reason: String):
 
 
 func _on_client_connection_succeeded(peer_id: int):
+	DebugUtils.auto_join = false
 	loading_ui.hide()
 	timeout_timer.stop()
 	if !multiplayer.is_server():
@@ -162,6 +167,13 @@ func _on_client_connection_succeeded(peer_id: int):
 func _on_timeout():
 	UiToast.ShowToast("Connection timed out", UiToast.ToastLevel.ERR)
 	_on_back_pressed()
+
+
+## --autohost starts once the --autojoin peer is in
+func _on_lobby_players_updated(players: Dictionary):
+	if DebugUtils.auto_host and players.size() == AUTO_HOST_LOBBY_SIZE:
+		DebugUtils.auto_host = false
+		_on_start_pressed()
 
 
 #endregion
