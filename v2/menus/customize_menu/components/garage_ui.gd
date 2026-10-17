@@ -11,7 +11,7 @@ signal pose_requested
 ## Back was pressed on a tab's root page.
 signal exit_requested
 
-enum Page { ROOT, BIKE, BIKE_COLORS, CHARACTER, CHARACTER_COLORS }
+enum Page { ROOT, BIKE, BIKE_COLORS, CHARACTER, CHARACTER_COLORS, HORN }
 
 const GARAGE_ROW := preload("res://menus/customize_menu/components/garage_row.tscn")
 const BIKE_SKINS_DIR := "res://resources/bikes/skins/"
@@ -44,10 +44,14 @@ const TAB_MAX_WIDTH: float = 200
 @onready var _confirm_no_btn: Button = %ConfirmNoBtn
 
 var _save_manager: SaveManager
+var _audio_manager: AudioManager
 var _player_def: PlayerDefinition
 ## skin_name -> res path
 var _bikes: Dictionary = {}
 var _characters: Dictionary = {}
+var _horns: Dictionary = {}
+## The horn a focused row is previewing, cut when the page changes.
+var _horn_preview: SoundEvent
 ## 0 = Profile, n = loadouts[n - 1].
 var _tab: int = 0
 var _pages: Array[Page] = []
@@ -80,11 +84,13 @@ func _ready():
 
 
 ## Start on the active loadout's tab.
-func open(save_manager: SaveManager):
+func open(save_manager: SaveManager, audio_manager: AudioManager):
 	_save_manager = save_manager
+	_audio_manager = audio_manager
 	_player_def = save_manager.get_player_definition()
 	_bikes = SkinScanner.scan_skin_dir(BIKE_SKINS_DIR)
 	_characters = SkinScanner.scan_skin_dir(CHARACTER_SKINS_DIR)
+	_horns = SkinScanner.scan_skin_dir(HornDefinition.SKINS_DIR)
 	_fill_saved_colors()
 	_color_panel.hide()
 	_confirm_box.hide()
@@ -93,6 +99,7 @@ func open(save_manager: SaveManager):
 
 ## One save: one lobby push, one skin sync.
 func commit():
+	_stop_horn_preview()
 	_save_manager.update_save("player_definition", _player_def, true, true)
 
 
@@ -137,7 +144,9 @@ func _rebuild_tabs():
 	for child in _tabs.get_children():
 		_tabs.remove_child(child)
 		child.queue_free()
-	_add_tab(tr("GARAGE_PROFILE_TAB"), 0)
+	# Accented and set apart: it holds the defaults, not a loadout.
+	_add_tab(tr("GARAGE_PROFILE_TAB"), 0).theme_type_variation = &"ProfileTabButton"
+	_tabs.add_child(VSeparator.new())
 	for i in _player_def.loadouts.size():
 		var loadout := _player_def.loadouts[i]
 		_add_tab(loadout.name if loadout.name != "" else str(i + 1), i + 1)
@@ -149,7 +158,7 @@ func _rebuild_tabs():
 		_tabs.add_child(add_btn)
 
 
-func _add_tab(label: String, tab: int):
+func _add_tab(label: String, tab: int) -> Button:
 	var btn := Button.new()
 	btn.text = label
 	btn.toggle_mode = true
@@ -162,6 +171,7 @@ func _add_tab(label: String, tab: int):
 	if tab == _tab:
 		# Deferred so the strip has laid out the new tabs.
 		_tab_scroll.ensure_control_visible.call_deferred(btn)
+	return btn
 
 
 ## Copy of the active loadout.
@@ -184,6 +194,7 @@ func _push(page: Page):
 
 ## Rebuild the current page's rows, focusing `focus_index` (-1 = the first button row).
 func _rebuild(focus_index: int = -1):
+	_stop_horn_preview()
 	_money.text = MoneyLabel.format(_player_def.money)
 	_back_btn.visible = _pages.size() > 1
 	var is_loadout_root := _tab != 0 and _pages.size() == 1
@@ -209,6 +220,8 @@ func _rebuild(focus_index: int = -1):
 		Page.CHARACTER_COLORS:
 			var character := _edited_character()
 			_build_colors_page(tr("GARAGE_CHARACTER_COLORS"), character.mesh_res, character.colors)
+		Page.HORN:
+			_build_horn_page()
 	_scroll.custom_minimum_size.y = minf(_rows.get_combined_minimum_size().y, MAX_LIST_HEIGHT)
 	# Before focusing, so the focused row's own preview wins.
 	_preview_current()
@@ -235,6 +248,7 @@ func _build_profile_root():
 		_push.bind(Page.CHARACTER)
 	)
 	_add_row(tr("GARAGE_CHARACTER_COLORS"), ">", _push.bind(Page.CHARACTER_COLORS))
+	_add_row(tr("GARAGE_HORN"), _skin_label(_player_def.default_horn.skin_name) + " >", _push.bind(Page.HORN))
 
 
 func _build_loadout_root():
@@ -253,6 +267,10 @@ func _build_loadout_root():
 	_add_row(tr("GARAGE_CHARACTER"), character_label + " >", _push.bind(Page.CHARACTER))
 	if loadout.character != null:
 		_add_row(tr("GARAGE_CHARACTER_COLORS"), ">", _push.bind(Page.CHARACTER_COLORS))
+	var horn_label := tr("GARAGE_PROFILE_DEFAULT")
+	if loadout.horn != null:
+		horn_label = _skin_label(loadout.horn.skin_name)
+	_add_row(tr("GARAGE_HORN"), horn_label + " >", _push.bind(Page.HORN))
 	var is_active := _tab - 1 == _player_def.active_loadout_index
 	_set_active_btn.text = tr("GARAGE_ACTIVE") if is_active else tr("SET_ACTIVE_LABEL")
 	_set_active_btn.disabled = is_active
@@ -300,6 +318,27 @@ func _build_character_page():
 			skin_name == current_name,
 			_preview.bind(_loadout().bike, def),
 			_apply_character.bind(path)
+		)
+
+
+func _build_horn_page():
+	_title.text = tr("GARAGE_HORN")
+	var current := _player_def.default_horn
+	if _tab != 0:
+		var loadout := _loadout()
+		current = loadout.horn
+		_add_row(
+			tr("GARAGE_PROFILE_DEFAULT"),
+			_skin_label(_player_def.default_horn.skin_name),
+			_apply_horn.bind(null),
+			_preview_horn.bind(_player_def.default_horn),
+			loadout.horn == null
+		)
+	for skin_name in _horns:
+		var path: String = _horns[skin_name]
+		var def := load(path) as HornDefinition
+		_add_skin_row(
+			skin_name, path, def.price, def == current, _preview_horn.bind(def), _apply_horn.bind(def)
 		)
 
 
@@ -434,6 +473,14 @@ func _apply_character(path: String):
 		_loadout().character = character
 
 
+## null = back to the profile default (loadout tabs only).
+func _apply_horn(horn: HornDefinition):
+	if _tab == 0:
+		_player_def.default_horn = horn
+	else:
+		_loadout().horn = horn
+
+
 func _set_active():
 	_player_def.active_loadout_index = _tab - 1
 	_rebuild()
@@ -518,6 +565,20 @@ func _preview_current():
 
 func _preview(bike: BikeSkinDefinition, character: CharacterSkinDefinition):
 	preview_changed.emit(bike, character, _pages.back() in [Page.CHARACTER, Page.CHARACTER_COLORS])
+
+
+## Plays once over the current bike preview.
+func _preview_horn(horn: HornDefinition):
+	_preview_current()
+	_stop_horn_preview()
+	_horn_preview = _audio_manager.get_sound_event(horn.sfx)
+	_horn_preview.play()
+
+
+func _stop_horn_preview():
+	if _horn_preview != null:
+		_horn_preview.stop()
+		_horn_preview = null
 
 
 ## Saved colors can be partial (a migrated variant). Full ones let GarageSet repaint instead of

@@ -33,7 +33,40 @@
 [ext_resource type="AudioStream" uid="uid://btd6hkwtgfd6c" path="res://non_fmod_sounds/Exhaust_Pops/burble.ogg" id="29_06geh"]
 [ext_resource type="AudioStream" uid="uid://dr2dlse0lb64o" path="res://non_fmod_sounds/SFX/bonk.ogg" id="30_bonk"]
 [ext_resource type="AudioStream" uid="uid://x44ke4818qef" path="res://non_fmod_sounds/SFX/glug-glug.ogg" id="31_glug"]
-[ext_resource type="AudioStream" path="res://non_fmod_sounds/SFX/water-flowing-loop.ogg" id="32_water"]
+[ext_resource type="AudioStream" uid="uid://b46xpcgj3ud6k" path="res://non_fmod_sounds/SFX/water-flowing-loop.ogg" id="32_water"]
+[ext_resource type="AudioStream" uid="uid://dmimdsxassd62" path="res://non_fmod_sounds/SFX/airhorn.ogg" id="40_airhorn"]
+[ext_resource type="AudioStream" uid="uid://bln46j8ey8eq8" path="res://non_fmod_sounds/SFX/anime-wow-sound-effect.ogg" id="40_anime_wow"]
+[ext_resource type="AudioStream" uid="uid://yfmkoct0n2wg" path="res://non_fmod_sounds/SFX/another-one.ogg" id="40_another_one"]
+[ext_resource type="AudioStream" uid="uid://uh83gx42lcs7" path="res://non_fmod_sounds/SFX/auughhh.ogg" id="40_auughhh"]
+[ext_resource type="AudioStream" uid="uid://qf7tlw6t7i1m" path="res://non_fmod_sounds/SFX/bicycle_horn.ogg" id="40_bicycle_horn"]
+[ext_resource type="AudioStream" uid="uid://soj0knch3s22" path="res://non_fmod_sounds/SFX/boat_horn.ogg" id="40_boat_horn"]
+[ext_resource type="AudioStream" uid="uid://6g5m7uuj8p8s" path="res://non_fmod_sounds/SFX/cartoon-running.ogg" id="40_cartoon_running"]
+[ext_resource type="AudioStream" uid="uid://bbukyd2gwirop" path="res://non_fmod_sounds/SFX/car_horn.ogg" id="40_car_horn"]
+[ext_resource type="AudioStream" uid="uid://cssr3yclx8pvv" path="res://non_fmod_sounds/SFX/clown_horn.ogg" id="40_clown_horn"]
+[ext_resource type="AudioStream" uid="uid://binpeak6mn6sq" path="res://non_fmod_sounds/SFX/confetti_horn.ogg" id="40_confetti_horn"]
+[ext_resource type="AudioStream" uid="uid://bj2wpde3nm4oa" path="res://non_fmod_sounds/SFX/discord-call-sound.ogg" id="40_discord_call"]
+[ext_resource type="AudioStream" uid="uid://ciu5n0yv5gahe" path="res://non_fmod_sounds/SFX/discord-notification.ogg" id="40_discord_notification"]
+[ext_resource type="AudioStream" uid="uid://7i8q6v3dnr8q" path="res://non_fmod_sounds/SFX/elevator_music.ogg" id="40_elevator_music"]
+[ext_resource type="AudioStream" uid="uid://b7o2qfktlb3vi" path="res://non_fmod_sounds/SFX/flashbang.ogg" id="40_flashbang"]
+[ext_resource type="AudioStream" uid="uid://dffen18x5k8t2" path="res://non_fmod_sounds/SFX/fog_horn.ogg" id="40_fog_horn"]
+[ext_resource type="AudioStream" uid="uid://cm2dk7r3j6gn" path="res://non_fmod_sounds/SFX/havetosayyourefine.ogg" id="40_have_to_say_youre_fine"]
+[ext_resource type="AudioStream" uid="uid://dabmcx2kg5xj5" path="res://non_fmod_sounds/SFX/heavenly-music.ogg" id="40_heavenly_music"]
+[ext_resource type="AudioStream" uid="uid://wvd8dyctin0c" path="res://non_fmod_sounds/SFX/homer-lets-the-barts-out.ogg" id="40_homer_barts_out"]
+[ext_resource type="AudioStream" uid="uid://dcbebik70g10f" path="res://non_fmod_sounds/SFX/huh.ogg" id="40_huh"]
+[ext_resource type="AudioStream" uid="uid://dk2lsnfxaerm5" path="res://non_fmod_sounds/SFX/inception_horn.ogg" id="40_inception_horn"]
+[ext_resource type="AudioStream" uid="uid://b8w4lq8and132" path="res://non_fmod_sounds/SFX/italian-brainrot-ringtone.ogg" id="40_italian_brainrot"]
+[ext_resource type="AudioStream" uid="uid://dstjmu6ik5nt" path="res://non_fmod_sounds/SFX/lizard-button.ogg" id="40_lizard"]
+[ext_resource type="AudioStream" uid="uid://bfw527bdutq3y" path="res://non_fmod_sounds/SFX/m-e-o-w.ogg" id="40_meow"]
+[ext_resource type="AudioStream" uid="uid://b54errmgtufvn" path="res://non_fmod_sounds/SFX/nelly_ahh.ogg" id="40_nelly_ahh"]
+[ext_resource type="AudioStream" uid="uid://cpxxigcou10a4" path="res://non_fmod_sounds/SFX/quack.ogg" id="40_quack"]
+[ext_resource type="AudioStream" uid="uid://ob5kjkuw84vr" path="res://non_fmod_sounds/SFX/rizz.ogg" id="40_rizz"]
+[ext_resource type="AudioStream" uid="uid://da3ya513t8kwb" path="res://non_fmod_sounds/SFX/sad_loss_horn.ogg" id="40_sad_loss_horn"]
+[ext_resource type="AudioStream" uid="uid://baxitgc46qdp" path="res://non_fmod_sounds/SFX/sad-meow-song.ogg" id="40_sad_meow_song"]
+[ext_resource type="AudioStream" uid="uid://cdife1axpdee1" path="res://non_fmod_sounds/SFX/sad_violin.ogg" id="40_sad_violin"]
+[ext_resource type="AudioStream" uid="uid://dxxqj7r0gg118" path="res://non_fmod_sounds/SFX/sponge-stank-noise.ogg" id="40_sponge_stank"]
+[ext_resource type="AudioStream" uid="uid://dfbl6m0hjemdj" path="res://non_fmod_sounds/SFX/squidward-walking-sound.ogg" id="40_squidward_walking"]
+[ext_resource type="AudioStream" uid="uid://ug171p6wrsfp" path="res://non_fmod_sounds/SFX/vintage_horn.ogg" id="40_vintage_horn"]
+[ext_resource type="AudioStream" uid="uid://df3nojagkq573" path="res://non_fmod_sounds/SFX/yougotmail.ogg" id="40_you_got_mail"]
 
 [node name="AudioManager" type="Node" unique_id=625309404 groups=["Managers"]]
 script = ExtResource("1_1k0gc")
@@ -200,7 +233,7 @@ bus = &"SFX"
 script = ExtResource("2_snd")
 metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 
-[node name="WaterFlowing" type="AudioStreamPlayer" parent="Sounds"]
+[node name="WaterFlowing" type="AudioStreamPlayer" parent="Sounds" unique_id=945854710]
 unique_name_in_owner = true
 stream = ExtResource("32_water")
 bus = &"SFX"
@@ -277,6 +310,237 @@ unique_name_in_owner = true
 stream = ExtResource("29_06geh")
 volume_db = -8.0
 max_polyphony = 4
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="Airhorn" type="AudioStreamPlayer" parent="Sounds" unique_id=911826706]
+unique_name_in_owner = true
+stream = ExtResource("40_airhorn")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="AnimeWow" type="AudioStreamPlayer" parent="Sounds" unique_id=32028660]
+unique_name_in_owner = true
+stream = ExtResource("40_anime_wow")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="AnotherOne" type="AudioStreamPlayer" parent="Sounds" unique_id=580170450]
+unique_name_in_owner = true
+stream = ExtResource("40_another_one")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="Auughhh" type="AudioStreamPlayer" parent="Sounds" unique_id=2129607470]
+unique_name_in_owner = true
+stream = ExtResource("40_auughhh")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="BicycleHorn" type="AudioStreamPlayer" parent="Sounds" unique_id=1330705104]
+unique_name_in_owner = true
+stream = ExtResource("40_bicycle_horn")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="BoatHorn" type="AudioStreamPlayer" parent="Sounds" unique_id=353063659]
+unique_name_in_owner = true
+stream = ExtResource("40_boat_horn")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="CarHorn" type="AudioStreamPlayer" parent="Sounds" unique_id=1584753088]
+unique_name_in_owner = true
+stream = ExtResource("40_car_horn")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="CartoonRunning" type="AudioStreamPlayer" parent="Sounds" unique_id=28752483]
+unique_name_in_owner = true
+stream = ExtResource("40_cartoon_running")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="ClownHorn" type="AudioStreamPlayer" parent="Sounds" unique_id=1664606364]
+unique_name_in_owner = true
+stream = ExtResource("40_clown_horn")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="ConfettiHorn" type="AudioStreamPlayer" parent="Sounds" unique_id=1001050182]
+unique_name_in_owner = true
+stream = ExtResource("40_confetti_horn")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="DiscordCall" type="AudioStreamPlayer" parent="Sounds" unique_id=2013953755]
+unique_name_in_owner = true
+stream = ExtResource("40_discord_call")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="DiscordNotification" type="AudioStreamPlayer" parent="Sounds" unique_id=1139356608]
+unique_name_in_owner = true
+stream = ExtResource("40_discord_notification")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="ElevatorMusic" type="AudioStreamPlayer" parent="Sounds" unique_id=1720204273]
+unique_name_in_owner = true
+stream = ExtResource("40_elevator_music")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="Flashbang" type="AudioStreamPlayer" parent="Sounds" unique_id=584092155]
+unique_name_in_owner = true
+stream = ExtResource("40_flashbang")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="FogHorn" type="AudioStreamPlayer" parent="Sounds" unique_id=1480918104]
+unique_name_in_owner = true
+stream = ExtResource("40_fog_horn")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="HaveToSayYoureFine" type="AudioStreamPlayer" parent="Sounds" unique_id=1903752556]
+unique_name_in_owner = true
+stream = ExtResource("40_have_to_say_youre_fine")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="HeavenlyMusic" type="AudioStreamPlayer" parent="Sounds" unique_id=1573990130]
+unique_name_in_owner = true
+stream = ExtResource("40_heavenly_music")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="HomerBartsOut" type="AudioStreamPlayer" parent="Sounds" unique_id=1740836858]
+unique_name_in_owner = true
+stream = ExtResource("40_homer_barts_out")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="Huh" type="AudioStreamPlayer" parent="Sounds" unique_id=297794742]
+unique_name_in_owner = true
+stream = ExtResource("40_huh")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="InceptionHorn" type="AudioStreamPlayer" parent="Sounds" unique_id=2010047027]
+unique_name_in_owner = true
+stream = ExtResource("40_inception_horn")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="ItalianBrainrot" type="AudioStreamPlayer" parent="Sounds" unique_id=1393417239]
+unique_name_in_owner = true
+stream = ExtResource("40_italian_brainrot")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="Lizard" type="AudioStreamPlayer" parent="Sounds" unique_id=1890798806]
+unique_name_in_owner = true
+stream = ExtResource("40_lizard")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="Meow" type="AudioStreamPlayer" parent="Sounds" unique_id=1312750831]
+unique_name_in_owner = true
+stream = ExtResource("40_meow")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="NellyAhh" type="AudioStreamPlayer" parent="Sounds" unique_id=1628444283]
+unique_name_in_owner = true
+stream = ExtResource("40_nelly_ahh")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="Quack" type="AudioStreamPlayer" parent="Sounds" unique_id=524377071]
+unique_name_in_owner = true
+stream = ExtResource("40_quack")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="Rizz" type="AudioStreamPlayer" parent="Sounds" unique_id=60457958]
+unique_name_in_owner = true
+stream = ExtResource("40_rizz")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="SadMeowSong" type="AudioStreamPlayer" parent="Sounds" unique_id=124261098]
+unique_name_in_owner = true
+stream = ExtResource("40_sad_meow_song")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="SadLossHorn" type="AudioStreamPlayer" parent="Sounds" unique_id=720789252]
+unique_name_in_owner = true
+stream = ExtResource("40_sad_loss_horn")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="SadViolin" type="AudioStreamPlayer" parent="Sounds" unique_id=974173149]
+unique_name_in_owner = true
+stream = ExtResource("40_sad_violin")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="SpongeStank" type="AudioStreamPlayer" parent="Sounds" unique_id=1346273870]
+unique_name_in_owner = true
+stream = ExtResource("40_sponge_stank")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="SquidwardWalking" type="AudioStreamPlayer" parent="Sounds" unique_id=380104815]
+unique_name_in_owner = true
+stream = ExtResource("40_squidward_walking")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="VintageHorn" type="AudioStreamPlayer" parent="Sounds" unique_id=1080731624]
+unique_name_in_owner = true
+stream = ExtResource("40_vintage_horn")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="YouGotMail" type="AudioStreamPlayer" parent="Sounds" unique_id=362150421]
+unique_name_in_owner = true
+stream = ExtResource("40_you_got_mail")
 bus = &"SFX"
 script = ExtResource("2_snd")
 metadata/_custom_type_script = "uid://dk2ghd454wkc2"

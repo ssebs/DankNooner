@@ -21,8 +21,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 
-- [ ] add horns to unlock & select
-
 - [ ] see playtest [feedback](_ScratchPad.md)
 
 - [ ] Add integration tests for features
@@ -266,6 +264,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] add horns to unlock & select
+
 - [x] change default control for minimap
   - [x] use dpad?
 

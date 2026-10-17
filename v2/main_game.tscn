@@ -182,9 +182,10 @@ menu_manager = NodePath("../..")
 settings_manager = NodePath("../../../SettingsManager")
 main_menu_state = NodePath("../MainMenuState")
 
-[node name="CustomizeMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1710077363 node_paths=PackedStringArray("save_manager", "level_manager") instance=ExtResource("9_4srsv")]
+[node name="CustomizeMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1710077363 node_paths=PackedStringArray("save_manager", "level_manager", "audio_manager") instance=ExtResource("9_4srsv")]
 save_manager = NodePath("../../../SaveManager")
 level_manager = NodePath("../../../LevelManager")
+audio_manager = NodePath("../../../AudioManager")
 
 [node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "connection_manager", "level_manager", "input_state_manager", "pause_manager", "gamemode_manager", "spawn_manager", "lobby_manager", "steam_manager", "main_menu_state", "settings_menu_state", "tricks_menu_state") instance=ExtResource("6_02kkc")]
 menu_manager = NodePath("../..")
@@ -266,8 +267,9 @@ input_state_manager = NodePath("../../../InputStateManager")
 [node name="FuelUpHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=104670419 node_paths=PackedStringArray("save_manager") instance=ExtResource("30_fuelhud")]
 save_manager = NodePath("../../../SaveManager")
 
-[node name="GarageHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=128352564 node_paths=PackedStringArray("save_manager") instance=ExtResource("30_garagehud")]
+[node name="GarageHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=128352564 node_paths=PackedStringArray("save_manager", "audio_manager") instance=ExtResource("30_garagehud")]
 save_manager = NodePath("../../../SaveManager")
+audio_manager = NodePath("../../../AudioManager")
 
 [node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "spawn_manager", "animal_spawn_manager", "audio_manager", "input_state_manager", "state_machine", "loading_menu_state", "free_roam_mode", "race_mode", "stunt_race_mode", "time_attack_mode", "tutorial_mode", "stunt_challenge_mode", "long_jump_mode", "fuel_up_mode", "trick_battle_mode") groups=["Managers"]]
 script = ExtResource("18_ih6an")

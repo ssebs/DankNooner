@@ -9,6 +9,9 @@
 
 
 ### NEXT
+- [ ] holding T pose should not grant so many points / score
+  - [ ] need some penalty for simple tricks vs combos
+- [ ] add some form of gamba (spin wheel / roulette / random game)
 - [ ] dont hear clients crash on host machine
 - [ ] Make hud simpler/intuitive 
   - [ ] remove throttle bar
@@ -22,4 +25,3 @@
 - [ ] must be easier to know what the controls are / how to do tricks
   - [ ] add btn prompts/hints
 - [ ] need to know when race is completed (single player is done vs entire lobby)
-

@@ -4,6 +4,7 @@ class_name CustomizeMenuState extends MenuState
 
 @export var save_manager: SaveManager
 @export var level_manager: LevelManager
+@export var audio_manager: AudioManager
 
 @onready var garage_ui: GarageUI = %GarageUI
 
@@ -20,7 +21,7 @@ func Enter(state_context: StateContext):
 	garage_ui.pose_requested.connect(_garage_set.cycle_pose)
 	garage_ui.exit_requested.connect(_on_exit_requested)
 	ui.show()
-	garage_ui.open(save_manager)
+	garage_ui.open(save_manager, audio_manager)
 
 
 ## Only commits: on a host launch, spawn_level() already freed the garage and is what called this.
@@ -54,4 +55,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("save_manager must not be empty")
 	if level_manager == null:
 		issues.append("level_manager must not be empty")
+	if audio_manager == null:
+		issues.append("audio_manager must not be empty")
 	return issues

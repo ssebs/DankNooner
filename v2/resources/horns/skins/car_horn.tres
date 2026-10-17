@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="HornDefinition" format=3]
+
+[ext_resource type="Script" path="res://resources/horns/horn_definition.gd" id="1_horn"]
+
+[resource]
+script = ExtResource("1_horn")
+skin_name = "car_horn"
+sfx = 30
+price = 0

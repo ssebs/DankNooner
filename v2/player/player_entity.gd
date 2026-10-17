@@ -98,6 +98,7 @@ signal uncrashed
 @onready var front_raycast: RayCast3D = %FrontRayCast
 @onready var rollback_sync: RollbackSynchronizer = %RollbackSynchronizer
 @onready var exhaust_flame_particles: ExhaustFlameParticles = %ExhaustFlameParticles
+@onready var horn_player: AudioStreamPlayer3D = %HornPlayer
 
 var is_local_client: bool = false
 
@@ -106,6 +107,7 @@ var audio_manager: AudioManager
 var settings_manager: SettingsManager
 var gamemode_manager: GamemodeManager
 var hud_manager: HUDManager
+var horn_definition: HornDefinition
 var username: String:
 	set(v):
 		username = v
@@ -315,6 +317,8 @@ func _process(delta: float) -> void:
 		_exit_crash_visuals()
 	_prev_is_crashed = is_crashed
 
+	_update_horn()
+
 	if !is_local_client:
 		return
 
@@ -361,6 +365,21 @@ func _update_exhaust_pops(delta: float) -> void:
 		_exhaust_decel_active = false
 		audio_manager.stop_exhaust_burble()
 		exhaust_flame_particles.stop_burble()
+
+
+## Every peer reads the honker's synced input, so the horn is positional for everyone.
+## Restarting it whenever it finishes loops it for as long as it's held.
+func _update_horn() -> void:
+	if !audio_manager:
+		return
+	var held := input_controller.nfx_horn_held
+	if held and !horn_player.playing:
+		var sound := audio_manager.get_sound_event(horn_definition.sfx)
+		horn_player.stream = sound.stream
+		horn_player.volume_db = sound.volume_db
+		horn_player.play()
+	elif !held and horn_player.playing:
+		horn_player.stop()
 
 
 ## Crash-entered edge. Ragdoll on every peer; camera + SFX local; crashed(peer_id) drives respawn.

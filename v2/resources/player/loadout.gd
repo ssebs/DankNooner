@@ -7,6 +7,8 @@ class_name Loadout extends Resource
 @export var bike: BikeSkinDefinition
 ## null = the profile's default_character.
 @export var character: CharacterSkinDefinition
+## null = the profile's default_horn. Shared res:// def; nothing on it is per-loadout.
+@export var horn: HornDefinition
 
 
 #region to/from Dictionary
@@ -15,6 +17,7 @@ func to_dict() -> Dictionary:
 		"name": name,
 		"bike": bike.to_dict(),
 		"character": character.to_dict() if character != null else {},
+		"horn": horn.resource_path if horn != null else "",
 	}
 
 
@@ -27,4 +30,6 @@ func from_dict(dict: Dictionary):
 	if !char_dict.is_empty():
 		character = CharacterSkinDefinition.new()
 		character.from_dict(char_dict)
+	var horn_path: String = dict.get("horn", "")
+	horn = load(horn_path) if horn_path != "" else null
 #endregion

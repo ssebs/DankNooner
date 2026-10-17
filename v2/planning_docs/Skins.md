@@ -271,6 +271,13 @@ A player owns a flat list of named bike loadouts (cap 8) on `PlayerDefinition.lo
 - First run: `SaveManager._seed_default_loadouts()` scans `res://resources/bikes/skins/` and creates one loadout per base bike, no mods.
 - Legacy saves (pre-loadouts) are migrated by `PlayerDefinition.from_dict()` — the old single `bike_skin_dict` becomes `loadouts[0]`.
 - The Customize menu (`menus/customize_menu/`) shows a grid of loadout cards (each rendering via `Thumbnail3D`) and an edit panel for name / base bike / color mod.
+- Each loadout also picks a `horn` (see [Horns](#horns)), saved as its res path. Like `character`, null = the profile's `default_horn`.
+
+## Horns
+
+`HornDefinition` (`resources/horns/horn_definition.gd`) is a plain shared def: `skin_name`, `sfx: AudioManager.Sfx`, `price`. One `.tres` per horn in `resources/horns/skins/`; the garage's Horn page scans that folder, so a new horn is just a new SoundEvent in `audio_manager.tscn` + `Sfx` entry + `.tres`. Buying goes through the same `SaveManager.is_owned` / `purchase` as bikes and characters; `car_horn` is free, so it's owned from the start and is `PlayerDefinition.default_horn`'s default (also for saves from before horns). The garage's Profile tab edits `default_horn`; loadout tabs get a "Profile default" row on top, same as characters.
+
+Playback: see [AudioMiddleware](./AudioMiddleware.md) (`PlayerEntity._update_horn()`).
 
 ## Reusable 3D Thumbnail
 

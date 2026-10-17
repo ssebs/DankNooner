@@ -10,8 +10,8 @@ enum EngineSfx {
 }
 
 ## Generic SFX id for callers (e.g. GameModeTasks) that need to play a sound
-## without holding a typed ref to a specific SoundEvent. Add new entries here
-## and a matching case in `play_sfx()`.
+## without holding a typed ref to a specific SoundEvent. Add new entries at the end (scenes save
+## them as ints) and to `_sfx_events` in _ready.
 enum Sfx {
 	STARTUP,
 	BOWLING_CRASH,
@@ -36,6 +36,40 @@ enum Sfx {
 	BONK,
 	GLUG_GLUG,
 	WATER_FLOWING,
+	NOS_BOOST,
+	AIRHORN,
+	ANIME_WOW,
+	ANOTHER_ONE,
+	AUUGHHH,
+	BICYCLE_HORN,
+	BOAT_HORN,
+	CAR_HORN,
+	CARTOON_RUNNING,
+	CLOWN_HORN,
+	CONFETTI_HORN,
+	DISCORD_CALL,
+	DISCORD_NOTIFICATION,
+	ELEVATOR_MUSIC,
+	FLASHBANG,
+	FOG_HORN,
+	HAVE_TO_SAY_YOURE_FINE,
+	HEAVENLY_MUSIC,
+	HOMER_BARTS_OUT,
+	HUH,
+	INCEPTION_HORN,
+	ITALIAN_BRAINROT,
+	LIZARD,
+	MEOW,
+	NELLY_AHH,
+	QUACK,
+	RIZZ,
+	SAD_MEOW_SONG,
+	SAD_LOSS_HORN,
+	SAD_VIOLIN,
+	SPONGE_STANK,
+	SQUIDWARD_WALKING,
+	VINTAGE_HORN,
+	YOU_GOT_MAIL,
 }
 
 @export var settings_manager: SettingsManager
@@ -81,7 +115,42 @@ var glug_glug: SoundEvent
 var water_flowing: SoundEvent
 var exhaust_burble: SoundEvent
 var nos_boost: SoundEvent
+var airhorn: SoundEvent
+var anime_wow: SoundEvent
+var another_one: SoundEvent
+var auughhh: SoundEvent
+var bicycle_horn: SoundEvent
+var boat_horn: SoundEvent
+var car_horn: SoundEvent
+var cartoon_running: SoundEvent
+var clown_horn: SoundEvent
+var confetti_horn: SoundEvent
+var discord_call: SoundEvent
+var discord_notification: SoundEvent
+var elevator_music: SoundEvent
+var flashbang: SoundEvent
+var fog_horn: SoundEvent
+var have_to_say_youre_fine: SoundEvent
+var heavenly_music: SoundEvent
+var homer_barts_out: SoundEvent
+var huh: SoundEvent
+var inception_horn: SoundEvent
+var italian_brainrot: SoundEvent
+var lizard: SoundEvent
+var meow: SoundEvent
+var nelly_ahh: SoundEvent
+var quack: SoundEvent
+var rizz: SoundEvent
+var sad_meow_song: SoundEvent
+var sad_loss_horn: SoundEvent
+var sad_violin: SoundEvent
+var sponge_stank: SoundEvent
+var squidward_walking: SoundEvent
+var vintage_horn: SoundEvent
+var you_got_mail: SoundEvent
 
+## Map of Sfx → SoundEvent node, populated in _ready.
+var _sfx_events: Dictionary = {}
 ## Map of EngineSfx → EngineSoundEvent node, populated in _ready.
 var _engine_sounds: Dictionary = {}
 ## Currently-playing engine sound id, or -1 if none.
@@ -123,10 +192,102 @@ func _ready():
 	water_flowing = get_node_or_null("%WaterFlowing") as SoundEvent
 	exhaust_burble = get_node_or_null("%ExhaustBurble") as SoundEvent
 	nos_boost = get_node_or_null("%NOSBoost") as SoundEvent
+	airhorn = get_node_or_null("%Airhorn") as SoundEvent
+	anime_wow = get_node_or_null("%AnimeWow") as SoundEvent
+	another_one = get_node_or_null("%AnotherOne") as SoundEvent
+	auughhh = get_node_or_null("%Auughhh") as SoundEvent
+	bicycle_horn = get_node_or_null("%BicycleHorn") as SoundEvent
+	boat_horn = get_node_or_null("%BoatHorn") as SoundEvent
+	car_horn = get_node_or_null("%CarHorn") as SoundEvent
+	cartoon_running = get_node_or_null("%CartoonRunning") as SoundEvent
+	clown_horn = get_node_or_null("%ClownHorn") as SoundEvent
+	confetti_horn = get_node_or_null("%ConfettiHorn") as SoundEvent
+	discord_call = get_node_or_null("%DiscordCall") as SoundEvent
+	discord_notification = get_node_or_null("%DiscordNotification") as SoundEvent
+	elevator_music = get_node_or_null("%ElevatorMusic") as SoundEvent
+	flashbang = get_node_or_null("%Flashbang") as SoundEvent
+	fog_horn = get_node_or_null("%FogHorn") as SoundEvent
+	have_to_say_youre_fine = get_node_or_null("%HaveToSayYoureFine") as SoundEvent
+	heavenly_music = get_node_or_null("%HeavenlyMusic") as SoundEvent
+	homer_barts_out = get_node_or_null("%HomerBartsOut") as SoundEvent
+	huh = get_node_or_null("%Huh") as SoundEvent
+	inception_horn = get_node_or_null("%InceptionHorn") as SoundEvent
+	italian_brainrot = get_node_or_null("%ItalianBrainrot") as SoundEvent
+	lizard = get_node_or_null("%Lizard") as SoundEvent
+	meow = get_node_or_null("%Meow") as SoundEvent
+	nelly_ahh = get_node_or_null("%NellyAhh") as SoundEvent
+	quack = get_node_or_null("%Quack") as SoundEvent
+	rizz = get_node_or_null("%Rizz") as SoundEvent
+	sad_meow_song = get_node_or_null("%SadMeowSong") as SoundEvent
+	sad_loss_horn = get_node_or_null("%SadLossHorn") as SoundEvent
+	sad_violin = get_node_or_null("%SadViolin") as SoundEvent
+	sponge_stank = get_node_or_null("%SpongeStank") as SoundEvent
+	squidward_walking = get_node_or_null("%SquidwardWalking") as SoundEvent
+	vintage_horn = get_node_or_null("%VintageHorn") as SoundEvent
+	you_got_mail = get_node_or_null("%YouGotMail") as SoundEvent
 	for pop in get_node("%ExhaustPops").get_children():
 		if pop is SoundEvent:
 			_exhaust_pops.append(pop)
 
+	_sfx_events = {
+		Sfx.STARTUP: startup,
+		Sfx.BOWLING_CRASH: bowling_crash,
+		Sfx.COUNTDOWN_3SEC: countdown_3sec,
+		Sfx.COUNTDOWN_5SEC: countdown_5sec,
+		Sfx.COUNTDOWN_LOOP: countdown_loop,
+		Sfx.MENU_CLICK: menu_click,
+		Sfx.MENU_ERR: menu_err,
+		Sfx.MAXIMIZE: maximize,
+		Sfx.MINIMIZE: minimize,
+		Sfx.MOUSE_CLICK: mouse_click,
+		Sfx.CLUNK_GEAR_CHANGE: clunk_gear_change,
+		Sfx.BONE_CRACK: bone_crack,
+		Sfx.DING: ding,
+		Sfx.FAHH: fahh,
+		Sfx.TBELL: tbell,
+		Sfx.VINE_BOOM: vine_boom,
+		Sfx.TADA: tada,
+		Sfx.NUKE: nuke,
+		Sfx.COD_ZOMBIES_KABOOM: cod_zombies_kaboom,
+		Sfx.TIRE_SQUEAL: tire_squeal,
+		Sfx.BONK: bonk,
+		Sfx.GLUG_GLUG: glug_glug,
+		Sfx.WATER_FLOWING: water_flowing,
+		Sfx.NOS_BOOST: nos_boost,
+		Sfx.AIRHORN: airhorn,
+		Sfx.ANIME_WOW: anime_wow,
+		Sfx.ANOTHER_ONE: another_one,
+		Sfx.AUUGHHH: auughhh,
+		Sfx.BICYCLE_HORN: bicycle_horn,
+		Sfx.BOAT_HORN: boat_horn,
+		Sfx.CAR_HORN: car_horn,
+		Sfx.CARTOON_RUNNING: cartoon_running,
+		Sfx.CLOWN_HORN: clown_horn,
+		Sfx.CONFETTI_HORN: confetti_horn,
+		Sfx.DISCORD_CALL: discord_call,
+		Sfx.DISCORD_NOTIFICATION: discord_notification,
+		Sfx.ELEVATOR_MUSIC: elevator_music,
+		Sfx.FLASHBANG: flashbang,
+		Sfx.FOG_HORN: fog_horn,
+		Sfx.HAVE_TO_SAY_YOURE_FINE: have_to_say_youre_fine,
+		Sfx.HEAVENLY_MUSIC: heavenly_music,
+		Sfx.HOMER_BARTS_OUT: homer_barts_out,
+		Sfx.HUH: huh,
+		Sfx.INCEPTION_HORN: inception_horn,
+		Sfx.ITALIAN_BRAINROT: italian_brainrot,
+		Sfx.LIZARD: lizard,
+		Sfx.MEOW: meow,
+		Sfx.NELLY_AHH: nelly_ahh,
+		Sfx.QUACK: quack,
+		Sfx.RIZZ: rizz,
+		Sfx.SAD_MEOW_SONG: sad_meow_song,
+		Sfx.SAD_LOSS_HORN: sad_loss_horn,
+		Sfx.SAD_VIOLIN: sad_violin,
+		Sfx.SPONGE_STANK: sponge_stank,
+		Sfx.SQUIDWARD_WALKING: squidward_walking,
+		Sfx.VINTAGE_HORN: vintage_horn,
+		Sfx.YOU_GOT_MAIL: you_got_mail,
+	}
 	_engine_sounds = {
 		EngineSfx.NINJA500: ninja500_revs,
 		EngineSfx.GROM: grom_revs,
@@ -323,55 +484,7 @@ func stop_sfx(id: Sfx):
 
 
 func get_sound_event(id: Sfx) -> SoundEvent:
-	match id:
-		Sfx.STARTUP:
-			return startup
-		Sfx.BOWLING_CRASH:
-			return bowling_crash
-		Sfx.COUNTDOWN_3SEC:
-			return countdown_3sec
-		Sfx.COUNTDOWN_5SEC:
-			return countdown_5sec
-		Sfx.COUNTDOWN_LOOP:
-			return countdown_loop
-		Sfx.MENU_CLICK:
-			return menu_click
-		Sfx.MENU_ERR:
-			return menu_err
-		Sfx.MAXIMIZE:
-			return maximize
-		Sfx.MINIMIZE:
-			return minimize
-		Sfx.MOUSE_CLICK:
-			return mouse_click
-		Sfx.CLUNK_GEAR_CHANGE:
-			return clunk_gear_change
-		Sfx.BONE_CRACK:
-			return bone_crack
-		Sfx.DING:
-			return ding
-		Sfx.FAHH:
-			return fahh
-		Sfx.TBELL:
-			return tbell
-		Sfx.VINE_BOOM:
-			return vine_boom
-		Sfx.TADA:
-			return tada
-		Sfx.NUKE:
-			return nuke
-		Sfx.COD_ZOMBIES_KABOOM:
-			return cod_zombies_kaboom
-		Sfx.TIRE_SQUEAL:
-			return tire_squeal
-		Sfx.BONK:
-			return bonk
-		Sfx.GLUG_GLUG:
-			return glug_glug
-		Sfx.WATER_FLOWING:
-			return water_flowing
-	push_error("AudioManager.get_sound_event: unhandled Sfx id %s" % id)
-	return null
+	return _sfx_events[id]
 
 
 func stop_all():

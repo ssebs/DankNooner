@@ -175,5 +175,7 @@ For 3D engine sound, do the same for `EngineSoundEvent3D extends SoundEvent3D`.
 - **Loop on import**: For OGG/MP3 streams, the loop flag lives on the `AudioStream` resource. The `loop` export on `SoundEvent` duplicates the resource at runtime so the shared `.ogg` import isn't mutated process-wide.
 - **Volume math**: `SettingsManager` stores linear `[0..1]`; we convert with `linear_to_db()` when applying to the bus. `linear_to_db(0)` returns `-inf` which mutes correctly.
 - **No `OS.has_feature("web")` branches in `AudioManager`**: the system works on web with no special cases. The only web-aware code is the splash Play gate, because of the browser gesture requirement.
+- **`Sfx` ids are saved as ints** (SfxTask exports, `HornDefinition.sfx`), so append new entries, never reorder. Map each in `_sfx_events` in `_ready`.
+- **Horns are the one positional sound**: `PlayerEntity._update_horn()` copies the `Sfx` SoundEvent's `stream` + `volume_db` onto its own `%HornPlayer` (`AudioStreamPlayer3D`) and replays it while `nfx_horn_held`. Every peer runs it off the honker's synced input. See [Skins — Horns](./Skins.md#horns).
 - **Adding buses**: edit `default_bus_layout.tres` (or the editor's Audio panel). Then add the key → bus mapping in `VOLUME_SETTING_MAP` and a matching setting in `SettingsManager`.
 - **Tuning the RPM curve**: open `audio_manager.tscn`, select `Ninja500Revs`, assign a `Curve` resource to `rpm_to_semitones`. If left null, the default curve is built at runtime.

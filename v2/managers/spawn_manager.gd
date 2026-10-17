@@ -103,6 +103,8 @@ func _on_lobby_players_updated(players: Dictionary):
 			continue
 		# Every sync rebuilds every def, so compare contents — rebuilding an unchanged rider hitches every peer.
 		var def: PlayerDefinition = players[peer_id]
+		# No rebuild needed, so outside the skin compare.
+		player.horn_definition = def.horn
 		if (
 			player.bike_definition.to_dict() == def.bike_skin.to_dict()
 			and player.character_definition.to_dict() == def.character_skin.to_dict()
@@ -364,6 +366,7 @@ func add_player_locally(peer_id: int, player_def_dict: Dictionary):
 	player_to_add.hud_manager = hud_manager # HACK
 	player_to_add.bike_definition = player_def.bike_skin
 	player_to_add.character_definition = player_def.character_skin
+	player_to_add.horn_definition = player_def.horn
 
 	level_manager.current_level.player_spawn_pos.add_child(player_to_add, true)
 	player_to_add.username = player_def.username

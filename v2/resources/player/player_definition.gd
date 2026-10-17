@@ -9,6 +9,8 @@ class_name PlayerDefinition extends Resource
 
 ## Rider for every loadout that doesn't pick its own.
 @export var default_character: CharacterSkinDefinition = preload(DEFAULT_CHARACTER_PATH)
+## Horn for every loadout that doesn't pick its own.
+@export var default_horn: HornDefinition = preload(HornDefinition.DEFAULT_PATH)
 
 ## `active_loadout_index` selects which one is currently in use.
 @export var loadouts: Array[Loadout] = []
@@ -41,6 +43,11 @@ var character_skin: CharacterSkinDefinition:
 		var character := loadouts[active_loadout_index].character
 		return character if character != null else default_character
 
+var horn: HornDefinition:
+	get:
+		var loadout_horn := loadouts[active_loadout_index].horn
+		return loadout_horn if loadout_horn != null else default_horn
+
 
 func level() -> int:
 	return 1 + int(sqrt(xp / float(UtilsConstants.XP_PER_LEVEL)))
@@ -54,6 +61,7 @@ func to_dict() -> Dictionary:
 	return {
 		"ui_icon_res": ui_icon.resource_path,
 		"default_character": default_character.to_dict(),
+		"default_horn": default_horn.resource_path,
 		"loadouts": loadout_dicts,
 		"active_loadout_index": active_loadout_index,
 		"money": money,
@@ -79,6 +87,7 @@ func from_dict(dict: Dictionary):
 	else:
 		# Legacy save: a path to a shared res:// def.
 		_migrate_character_res(dict.get("character_skin_res", DEFAULT_CHARACTER_PATH))
+	default_horn = load(dict.get("default_horn", HornDefinition.DEFAULT_PATH))
 
 	loadouts = [] as Array[Loadout]
 	active_loadout_index = int(dict.get("active_loadout_index", 0))

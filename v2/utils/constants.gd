@@ -35,6 +35,7 @@ const CONTROL_CATEGORIES: Dictionary = {
 		"trick",
 		"boost",
 		"use_item",
+		"horn",
 		"respawn",
 		"cam_left",
 		"cam_right",
