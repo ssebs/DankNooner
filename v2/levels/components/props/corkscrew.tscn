@@ -5,10 +5,10 @@
 
 [sub_resource type="Curve3D" id="Curve3D_corkscrew"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 0, 0, -6, 0, 0, 0, 0, -6, 0, 0, 6, 0, 0, 10, -12, 0, 0, -5.665, 0, 0, 6.09, -0.30204773, 21.456175, -1.2984009, 0, 0, 0, 0, 0, 0, -2.4347668, 21.45621, 7.831732),
-"tilts": PackedFloat32Array(0, 0, 0.5, 0.83)
+"points": PackedVector3Array(0, 0, 0, 0, 0, -5.13, 0, 0, 0, 0, -6, 0, 0, 6.05, 0, 0, 8.779089, -9.436512, 0, 0, 0, 0, 0, 6.09, -0.30204773, 17.156654, -1.2984009),
+"tilts": PackedFloat32Array(0, 0, 0)
 }
-point_count = 4
+point_count = 3
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_track"]
 albedo_color = Color(2.113, 1.029, 2.418, 1)
