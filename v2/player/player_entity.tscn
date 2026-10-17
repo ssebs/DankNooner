@@ -24,6 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://cu0vh8sgp0l2e" path="res://entities/vfx/spark_particles.tscn" id="29_3kl2f"]
 [ext_resource type="Script" uid="uid://cajkhr7cisa7f" path="res://player/controllers/skidmark_controller.gd" id="30_skid"]
 [ext_resource type="Script" uid="uid://dbl1ukq1dy3xd" path="res://entities/vfx/rider_vfx.gd" id="31_rvfx"]
+[ext_resource type="Script" path="res://utils/custom_audio_middleware/engine_sound_event_3d.gd" id="32_eng3d"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wig4y"]
 size = Vector3(4, 10, 2)
@@ -311,10 +312,12 @@ skin_definition = ExtResource("3_am3pr")
 unique_name_in_owner = true
 transform = Transform3D(-1, -5.2721823e-08, 1.4149255e-07, 0, 0.9370628, 0.34916085, -1.509958e-07, 0.34916085, -0.9370628, 0.071, 1.382, -1.678)
 fov = 80.0
+doppler_tracking = 1
 
 [node name="FPSCam" type="Camera3D" parent="." unique_id=240466741]
 unique_name_in_owner = true
 transform = Transform3D(-1, 2.7775881e-08, -1.4841912e-07, 0, 0.98293537, 0.18395135, 1.509958e-07, 0.18395135, -0.98293537, 0, 1.179, 0.175)
+doppler_tracking = 1
 fov = 105.0
 near = 0.115
 
@@ -338,6 +341,34 @@ billboard = 1
 text = "USERNAME"
 
 [node name="HornPlayer" type="AudioStreamPlayer3D" parent="."]
+unique_name_in_owner = true
+bus = &"SFX"
+
+[node name="RemoteEngine" type="AudioStreamPlayer3D" parent="." node_paths=PackedStringArray("high_layer")]
+unique_name_in_owner = true
+bus = &"SFX"
+script = ExtResource("32_eng3d")
+high_layer = NodePath("RemoteEngineHigh")
+doppler_tracking = 1
+
+[node name="RemoteEngineHigh" type="AudioStreamPlayer3D" parent="RemoteEngine"]
+bus = &"SFX"
+doppler_tracking = 1
+
+[node name="RemoteSqueal" type="AudioStreamPlayer3D" parent="."]
+unique_name_in_owner = true
+bus = &"SFX"
+
+[node name="RemoteExhaustPop" type="AudioStreamPlayer3D" parent="."]
+unique_name_in_owner = true
+max_polyphony = 4
+bus = &"SFX"
+
+[node name="RemoteExhaustBurble" type="AudioStreamPlayer3D" parent="."]
+unique_name_in_owner = true
+bus = &"SFX"
+
+[node name="RemoteCrash" type="AudioStreamPlayer3D" parent="."]
 unique_name_in_owner = true
 bus = &"SFX"
 

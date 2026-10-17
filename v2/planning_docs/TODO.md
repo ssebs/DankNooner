@@ -264,6 +264,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] 3d audio / hear other players
+
 - [x] add horns to unlock & select
 
 - [x] change default control for minimap

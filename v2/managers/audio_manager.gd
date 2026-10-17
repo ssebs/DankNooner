@@ -373,22 +373,17 @@ func update_revs_rpm(bike_def: BikeSkinDefinition, val: float):
 	_engine_sounds[bike_def.engine_sound_id].set_parameter("RPM", val)
 
 
-## Decel burble. Plays the clip from the start, unmodulated (no pitch/volume/seek); the caller
-## ends it with stop_exhaust_burble() when the decel window closes.
-func play_exhaust_burble():
-	exhaust_burble.play()
+## The authored engine `bike_def` uses, for positional copies (EngineSoundEvent3D).
+func get_engine_sound(bike_def: BikeSkinDefinition) -> EngineSoundEvent:
+	return _engine_sounds[bike_def.engine_sound_id]
 
 
-func stop_exhaust_burble():
-	exhaust_burble.stop()
-
-
-## Plays the next decel pop, round-robin. Add variants by dropping AudioStreamPlayers under the
+## The next decel pop, round-robin. Add variants by dropping AudioStreamPlayers under the
 ## ExhaustPops node — they join the rotation automatically, each played at its authored level.
-func play_exhaust_pop():
+func next_exhaust_pop() -> SoundEvent:
 	var pop := _exhaust_pops[_exhaust_pop_idx]
 	_exhaust_pop_idx = (_exhaust_pop_idx + 1) % _exhaust_pops.size()
-	pop.play()
+	return pop
 
 
 func play_nos_boost():

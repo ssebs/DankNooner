@@ -99,6 +99,12 @@ signal uncrashed
 @onready var rollback_sync: RollbackSynchronizer = %RollbackSynchronizer
 @onready var exhaust_flame_particles: ExhaustFlameParticles = %ExhaustFlameParticles
 @onready var horn_player: AudioStreamPlayer3D = %HornPlayer
+## Positional copies of AudioManager's sounds, for hearing other riders. See play_rider_sound().
+@onready var remote_engine: EngineSoundEvent3D = %RemoteEngine
+@onready var remote_squeal: AudioStreamPlayer3D = %RemoteSqueal
+@onready var remote_exhaust_pop: AudioStreamPlayer3D = %RemoteExhaustPop
+@onready var remote_exhaust_burble: AudioStreamPlayer3D = %RemoteExhaustBurble
+@onready var remote_crash: AudioStreamPlayer3D = %RemoteCrash
 
 var is_local_client: bool = false
 
@@ -318,8 +324,12 @@ func _process(delta: float) -> void:
 	_prev_is_crashed = is_crashed
 
 	_update_horn()
+	_update_exhaust_pops(delta)
 
 	if !is_local_client:
+		# Synced state, so a remote rider's RPM is current every frame.
+		if remote_engine.playing:
+			remote_engine.set_rpm(gearing_controller.get_rpm_ratio())
 		return
 
 	# NOS boost SFX on the is_boosting rising edge — one-shot per boost.
@@ -327,12 +337,11 @@ func _process(delta: float) -> void:
 		audio_manager.play_nos_boost()
 	_prev_is_boosting = boost_controller.is_boosting
 
-	_update_exhaust_pops(delta)
 
-
-## Local cosmetic exhaust sounds on decel, distinguished by how long you coast (works on binary
-## keyboard throttle, unlike release rate): a pop snaps the instant you go off the gas at high RPM,
-## and the burble kicks in only if you keep coasting past exhaust_burble_delay. Runs in _process
+## Cosmetic exhaust sounds on decel, rolled by every peer off the rider's synced throttle.
+## Distinguished by how long you coast (works on binary keyboard throttle, unlike release rate):
+## a pop snaps the instant you go off the gas at high RPM, and the burble kicks in only if you
+## keep coasting past exhaust_burble_delay. Runs in _process
 ## (not the rollback tick) so each rolls exactly once per decel; a resim would otherwise retrigger it.
 func _update_exhaust_pops(delta: float) -> void:
 	if !audio_manager:
@@ -350,7 +359,7 @@ func _update_exhaust_pops(delta: float) -> void:
 		_exhaust_coast_time = 0.0
 		_exhaust_burble_rolled = false
 		if randf() < exhaust_pop_chance:
-			audio_manager.play_exhaust_pop()
+			play_rider_sound(audio_manager.next_exhaust_pop(), remote_exhaust_pop)
 			exhaust_flame_particles.pop()
 	elif decel and _exhaust_decel_active:
 		# Held the coast — after the delay, roll the sustained burble once.
@@ -358,12 +367,12 @@ func _update_exhaust_pops(delta: float) -> void:
 		if not _exhaust_burble_rolled and _exhaust_coast_time >= exhaust_burble_delay:
 			_exhaust_burble_rolled = true
 			if randf() < exhaust_burble_chance:
-				audio_manager.play_exhaust_burble()
+				play_rider_sound(audio_manager.exhaust_burble, remote_exhaust_burble)
 				exhaust_flame_particles.burble()
 	elif not decel and _exhaust_decel_active:
 		# Back on the gas (or revs dropped) — cut any burble.
 		_exhaust_decel_active = false
-		audio_manager.stop_exhaust_burble()
+		stop_rider_sound(audio_manager.exhaust_burble, remote_exhaust_burble)
 		exhaust_flame_particles.stop_burble()
 
 
@@ -374,10 +383,7 @@ func _update_horn() -> void:
 		return
 	var held := input_controller.nfx_horn_held
 	if held and !horn_player.playing:
-		var sound := audio_manager.get_sound_event(horn_definition.sfx)
-		horn_player.stream = sound.stream
-		horn_player.volume_db = sound.volume_db
-		horn_player.play()
+		audio_manager.get_sound_event(horn_definition.sfx).play_on(horn_player)
 	elif !held and horn_player.playing:
 		horn_player.stop()
 
@@ -387,9 +393,10 @@ func _enter_crash_visuals() -> void:
 	animation_controller.start_ragdoll(crash_launch_impulse)
 	crashed.emit(int(name))
 	if !is_local_client:
-		# Everyone else hears another rider go down.
+		# Everyone else hears another rider go down, from where they went down.
 		if audio_manager:
-			audio_manager.play_bone_crack()
+			remote_engine.stop_engine()
+			audio_manager.bone_crack.play_on(remote_crash)
 		return
 	camera_controller.force_tps()
 	if audio_manager:
@@ -415,6 +422,8 @@ func _exit_crash_visuals() -> void:
 	uncrashed.emit()
 	if is_local_client and audio_manager:
 		audio_manager.play_revs(bike_definition)
+	elif !is_local_client:
+		_play_remote_engine()
 
 
 #region init
@@ -525,6 +534,8 @@ func _deferred_init():
 			_dbg_open_log()
 			NetworkRollback.before_loop.connect(_dbg_before_loop)
 			NetworkRollback.after_loop.connect(_dbg_after_loop)
+	else:
+		_play_remote_engine()
 
 
 ## The HUD holds a bare ref to the local player (hud_manager.local_player). Clear it on
@@ -543,6 +554,13 @@ func _init_audio():
 	gearing_controller.rpm_updated.connect(_on_rpm_updated)
 
 	audio_manager.play_revs(bike_definition)
+
+
+## Your own engine plays on AudioManager (_init_audio); everyone else's is positional.
+func _play_remote_engine():
+	if !audio_manager:
+		return
+	remote_engine.play_engine(audio_manager.get_engine_sound(bike_definition), bike_definition)
 
 
 func _init_controller_handlers():
@@ -587,6 +605,28 @@ func _on_trick_ended(trick_type: TrickController.Trick):
 func set_hidden(hidden: bool):
 	visible = !hidden
 	collision_shape_3d.disabled = hidden
+	# A parked rider shouldn't idle where nobody can see it. Your own engine is the activity's call.
+	if !is_local_client:
+		if hidden:
+			remote_engine.stop_engine()
+		else:
+			_play_remote_engine()
+
+
+## Local rider: AudioManager's own non-positional sound. Anyone else: a positional copy on
+## `remote_player`, so you hear where they are.
+func play_rider_sound(event: SoundEvent, remote_player: AudioStreamPlayer3D):
+	if is_local_client:
+		event.play()
+	else:
+		event.play_on(remote_player)
+
+
+func stop_rider_sound(event: SoundEvent, remote_player: AudioStreamPlayer3D):
+	if is_local_client:
+		event.stop()
+	else:
+		remote_player.stop()
 
 
 func update_skins(new_bike_def: BikeSkinDefinition, new_char_def: CharacterSkinDefinition):
@@ -608,6 +648,8 @@ func update_skins(new_bike_def: BikeSkinDefinition, new_char_def: CharacterSkinD
 	# range assigned — otherwise the next update_revs_rpm tick null-derefs rpm_curve.
 	if is_local_client and audio_manager:
 		audio_manager.play_revs(bike_definition)
+	elif !is_local_client:
+		_play_remote_engine()
 
 
 ## Resolve which transform the next respawn should use, consuming the one-shot.

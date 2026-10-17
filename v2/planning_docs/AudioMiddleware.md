@@ -145,30 +145,16 @@ Two web-specific behaviors are already handled:
 2. Add the node in `audio_manager.tscn` using your new script.
 3. Expose `update_<your_sound>_<param>(val)` in `audio_manager.gd` that calls `your_sound.set_parameter("Speed", val)`.
 
-### 3D positional sound (later)
+### 3D positional sound (other riders)
 
-`SoundEvent` extends `AudioStreamPlayer` (non-positional). For 3D, mirror the pattern:
+AudioManager stays the single place sounds are authored. Positional playback borrows from it rather than duplicating nodes:
 
-1. New script `sound_event_3d.gd`:
+- `SoundEvent.play_on(player_3d)` copies the event's `stream` + `volume_db` onto an `AudioStreamPlayer3D` and plays it.
+- `EngineSoundEvent3D` is the positional engine: it takes the bike's AudioManager `EngineSoundEvent` as a template (`AudioManager.get_engine_sound()`) for streams and base volumes, and the bike definition for curves. Pitch and crossfade math are `EngineSoundEvent`'s static `rpm_to_pitch()` / `crossfade_db()`, so both share one formula.
+- `PlayerEntity` carries `%RemoteEngine`, `%RemoteSqueal`, `%RemoteExhaustPop`, `%RemoteExhaustBurble`, `%RemoteCrash`. `play_rider_sound(event, remote_player)` / `stop_rider_sound()` route: the local rider plays the AudioManager event as before (non-positional), anyone else plays on the remote player.
+- Remote engine RPM comes from the synced `GearingController` state each `_process`. Exhaust pops/burble roll on every peer off the rider's synced throttle, so remote rolls (and flames) don't match the rider's own. Remote crashes play the bone crack positionally; your own crash sounds stay non-positional.
 
-   ```gdscript
-   @tool
-   class_name SoundEvent3D extends AudioStreamPlayer3D
-
-   @export var loop: bool = false
-
-   func _ready() -> void:
-       if Engine.is_editor_hint(): return
-       if loop and stream and "loop" in stream:
-           stream = stream.duplicate()
-           stream.loop = true
-
-   func set_parameter(_param_name: String, _value: float) -> void: pass
-   ```
-
-2. Use it as a child of any `Node3D` (e.g. on `PlayerEntity`, or attached to a level prop). The `bus` property still routes through `Menu`/`SFX`/etc. so volume settings keep working.
-
-For 3D engine sound, do the same for `EngineSoundEvent3D extends SoundEvent3D`.
+Attenuation is the stock `AudioStreamPlayer3D` settings on those nodes; tune them in `player_entity.tscn`. Both engine layers and both player cameras (`TPSCam`, `FPSCam`) use idle-step `doppler_tracking`. Idle, not physics, because rider transforms are interpolated per frame by `TickInterpolator`. A camera without tracking (override cams, garage) hears no doppler.
 
 ## Things to be aware of
 
@@ -176,6 +162,6 @@ For 3D engine sound, do the same for `EngineSoundEvent3D extends SoundEvent3D`.
 - **Volume math**: `SettingsManager` stores linear `[0..1]`; we convert with `linear_to_db()` when applying to the bus. `linear_to_db(0)` returns `-inf` which mutes correctly.
 - **No `OS.has_feature("web")` branches in `AudioManager`**: the system works on web with no special cases. The only web-aware code is the splash Play gate, because of the browser gesture requirement.
 - **`Sfx` ids are saved as ints** (SfxTask exports, `HornDefinition.sfx`), so append new entries, never reorder. Map each in `_sfx_events` in `_ready`.
-- **Horns are the one positional sound**: `PlayerEntity._update_horn()` copies the `Sfx` SoundEvent's `stream` + `volume_db` onto its own `%HornPlayer` (`AudioStreamPlayer3D`) and replays it while `nfx_horn_held`. Every peer runs it off the honker's synced input. See [Skins — Horns](./Skins.md#horns).
+- **Horns are positional for everyone, you included**: `PlayerEntity._update_horn()` `play_on`s the horn onto `%HornPlayer` and replays it while `nfx_horn_held`. Every peer runs it off the honker's synced input. See [Skins — Horns](./Skins.md#horns).
 - **Adding buses**: edit `default_bus_layout.tres` (or the editor's Audio panel). Then add the key → bus mapping in `VOLUME_SETTING_MAP` and a matching setting in `SettingsManager`.
 - **Tuning the RPM curve**: open `audio_manager.tscn`, select `Ninja500Revs`, assign a `Curve` resource to `rpm_to_semitones`. If left null, the default curve is built at runtime.

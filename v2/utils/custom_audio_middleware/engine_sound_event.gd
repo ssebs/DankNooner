@@ -15,15 +15,15 @@ var max_pitch: float = 2.828
 ## RPM [0..1] → crossfade position [0..1]. Null = linear. Set by play_revs().
 var blend_curve: Curve
 ## Authored volumes, captured so the crossfade offsets from them instead of clobbering.
-var _base_volume_db: float
-var _base_high_volume_db: float
+var base_volume_db: float
+var base_high_volume_db: float
 
 
 func _ready() -> void:
 	super()
-	_base_volume_db = volume_db
+	base_volume_db = volume_db
 	if high_layer:
-		_base_high_volume_db = high_layer.volume_db
+		base_high_volume_db = high_layer.volume_db
 	if Engine.is_editor_hint():
 		return
 	# Same dup-and-loop the base stream gets in SoundEvent, for the high layer.
@@ -50,29 +50,34 @@ func set_parameter(param_name: String, value: float) -> void:
 	if param_name != "RPM":
 		return
 	var rpm: float = clampf(value, 0.0, 1.0)
-	pitch_scale = lerpf(min_pitch, max_pitch, rpm_curve.sample(rpm))
+	pitch_scale = rpm_to_pitch(rpm, rpm_curve, min_pitch, max_pitch)
 	if high_layer == null:
 		return
 	high_layer.pitch_scale = pitch_scale
-	# Equal-power crossfade: gains trace the sin/cos curves, keeping RMS constant.
-	var t: float = blend_curve.sample(rpm) if blend_curve else rpm
-	var low_gain: float = cos(t * PI / 2.0)
-	var high_gain: float = sin(t * PI / 2.0)
-	volume_db = _base_volume_db + _gain_db(low_gain)
-	high_layer.volume_db = _base_high_volume_db + _gain_db(high_gain)
+	var gains := crossfade_db(rpm, blend_curve)
+	volume_db = base_volume_db + gains.x
+	high_layer.volume_db = base_high_volume_db + gains.y
 	DebugUtils.DebugMsg(
 		(
-			"engine blend: rpm=%.2f t=%.2f pitch=%.2f | low g=%.2f %.1fdB play=%s | high g=%.2f %.1fdB play=%s"
-			% [
-				rpm, t, pitch_scale,
-				low_gain, volume_db, playing,
-				high_gain, high_layer.volume_db, high_layer.playing,
-			]
+			"engine blend: rpm=%.2f pitch=%.2f | low %.1fdB play=%s | high %.1fdB play=%s"
+			% [rpm, pitch_scale, volume_db, playing, high_layer.volume_db, high_layer.playing]
 		),
 		DebugUtils.is_debug(debug_verbose)
 	)
 
 
+## Static so EngineSoundEvent3D shares the math.
+static func rpm_to_pitch(rpm: float, curve: Curve, low_pitch: float, high_pitch: float) -> float:
+	return lerpf(low_pitch, high_pitch, curve.sample(rpm))
+
+
+## Equal-power crossfade: gains trace the sin/cos curves, keeping RMS constant.
+## dB offsets: x = low layer, y = high layer. Null curve = linear.
+static func crossfade_db(rpm: float, curve: Curve) -> Vector2:
+	var t: float = curve.sample(rpm) if curve else rpm
+	return Vector2(_gain_db(cos(t * PI / 2.0)), _gain_db(sin(t * PI / 2.0)))
+
+
 ## Linear gain [0..1] → dB, floored so a fully-faded layer is silent without -inf.
-func _gain_db(gain: float) -> float:
+static func _gain_db(gain: float) -> float:
 	return maxf(linear_to_db(gain), -80.0)

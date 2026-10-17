@@ -14,6 +14,13 @@ func _ready() -> void:
 		stream.loop = true
 
 
+## Plays this sound at its authored level on `player`, for positional copies (horns, remote riders).
+func play_on(player: AudioStreamPlayer3D) -> void:
+	player.stream = stream
+	player.volume_db = volume_db
+	player.play()
+
+
 ## Virtual hook for parameter-driven sounds (e.g. RPM → pitch). Override in subclasses.
 func set_parameter(_param_name: String, _value: float) -> void:
 	pass
