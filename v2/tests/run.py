@@ -16,6 +16,9 @@ OUT = ROOT / "tests" / "out"
 READY_MARKER = OUT / "peer0.ready"
 LATE_JOIN_MARKER = OUT / "late_join.go"
 MOUSE_MARKER = OUT / "mouse.busy"
+# Peers screenshot, write their result and quit when this appears; stragglers are killed after the grace
+ABORT_MARKER = OUT / "abort"
+ABORT_GRACE_S = 5.0
 TITLE_BAR = 32  # --position places the client area; leave room for the OS title bar
 POLL_S = 0.05  # fast enough to catch an Esc tap
 # Tiles are sized for this many peers even when fewer run, so a solo window stays small
@@ -154,7 +157,7 @@ def summarize(procs, killed, total, aborted):
         if proc is None:
             exit_code, status = "-", "NOT LAUNCHED"
         elif peer in killed:
-            exit_code, status = ("killed" if aborted else "timeout"), "FAIL"
+            exit_code, status = "killed", "FAIL"
         else:
             exit_code = str(proc.returncode)
             status = "PASS" if proc.returncode == 0 and result else "FAIL"
@@ -180,7 +183,7 @@ def summarize(procs, killed, total, aborted):
         print("\n" + "\n".join(details))
     print(f"\nlogs + screenshots: {OUT}")
     print(f"ABORTED: {aborted}" if aborted else ("FAILED" if failed else "PASSED"))
-    return 1 if failed else 0
+    return 1 if failed or aborted else 0
 
 
 def main():
@@ -234,6 +237,13 @@ def main():
     if hands_off is not None:
         mouse_free()
 
+    if not aborted and any(p.poll() is None for p in procs.values()):
+        aborted = f"timed out after {args.timeout:.0f}s"
+    if aborted:
+        ABORT_MARKER.touch()
+        grace = time.monotonic() + ABORT_GRACE_S
+        while any(p.poll() is None for p in procs.values()) and time.monotonic() < grace:
+            time.sleep(POLL_S)
     killed = [peer for peer, p in procs.items() if p.poll() is None]
     for peer in killed:
         procs[peer].kill()

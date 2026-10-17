@@ -2,7 +2,17 @@
 
 [ext_resource type="PackedScene" uid="uid://bkurvk6sfrmuw" path="res://player/characters/assets/o_guy/OGuy.glb" id="1_5r4im"]
 [ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="2_3xgge"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="3_ftrlf"]
+[ext_resource type="Material" uid="uid://bafpbhvj87fhx" path="res://player/characters/assets/o_guy/_007_Observer.tres" id="4_ulix7"]
 
-[node name="OGuy" unique_id=1430265961 instance=ExtResource("1_5r4im")]
+[sub_resource type="Resource" id="Resource_qnjnx"]
+script = ExtResource("3_ftrlf")
+use_standard_material = true
+standard_material = ExtResource("4_ulix7")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[node name="OGuy" unique_id=1430265961 node_paths=PackedStringArray("meshes") instance=ExtResource("1_5r4im")]
 script = ExtResource("2_3xgge")
+slots = Array[ExtResource("3_ftrlf")]([SubResource("Resource_qnjnx")])
+meshes = [NodePath("Armature/Skeleton/mesh_char_018")]
 do_not_use_color = true

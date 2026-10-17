@@ -59,7 +59,7 @@ since they join through the menu and need a listening host; a host that never li
 rather than left to the overall timeout. The late joiner launches when the director drops a second
 marker (start of free roam). Each peer gets its own `--log-file`
 (they would otherwise share `user://` logs) and writes a result JSON (errors, violations) on quit;
-the summary is built from those plus exit codes, so a hung or crashed peer shows as `timeout` /
+the summary is built from those plus exit codes, so a hung or crashed peer shows as `killed` /
 `NO RESULT`. The result also carries warnings (untested coverage), printed without failing.
 `tests/out/` carries a `.gdignore` so the editor never imports it.
 
@@ -146,6 +146,10 @@ Drives, not teleports, so handling and stuck-on-geometry regressions are caught.
 - **Endless modes** (time attack, long jump, trick battle) are cancelled through the pause menu
   after a solve window. Results are skipped through their own button.
 - **No progress toward the waypoint for too long** = failure: screenshot, respawn, continue.
+- **Every feature has a time budget**, timed from its own start so queueing for the mouse
+  doesn't count: the pump (mouse grant to End), the garage, and each event by gamemode kind
+  (leaving free roam to coming back; a `fuel_up_first` event adds a pump per rider). A kind with
+  no budget fails loudly.
 
 ### Invariants
 
@@ -216,7 +220,10 @@ Once built, Claude may run `tests/run.py` to verify changes (an exception to "on
 the project").
 
 **Abort:** Esc twice from any window, Alt+F4 on any peer, or Ctrl+C in the terminal stops every
-peer. A peer that exits without a result also stops the run.
+peer. A peer that exits without a result also stops the run. On an abort or the overall timeout,
+`run.py` drops a marker in `tests/out/`: each peer saves a last screenshot and its result, then
+quits, so an aborted run still shows where it was and what failed so far. Peers that don't quit
+within a grace period are killed.
 
 ## Build order
 
@@ -234,29 +241,32 @@ Verified so far (solo):
 
 - Host through the menus into free roam; abort hotkeys; mouse banners.
 - Free-roam and pre-race fuel-up pumps fill and hang up with no spill.
+- Pickers matched by title; garage buys a character skin (every bike skin is free) and leaves.
+- A full solo run gets through every event with no violations: race (with pre-race fuel-up),
+  time attack (cancelled through the pause menu), stunt race, trick battle, long jump.
+- Pause menu wait: `LevelManager` leaves the menu state on a hidden `PauseMenuState` for the whole
+  game, so the runner now waits on `IN_GAME_PAUSED` instead.
 
 Fixed but not yet seen working:
 
-- Activity and event pickers matched by title (the bot used to submit whatever picker was open,
-  so it entered the garage instead of the pump and the race).
-- Garage always leaves, even after a failure.
-- Drive bot cruise speed cap (it overshot turns); the gym's race checkpoints are being spaced out.
+- Abort handshake: a last screenshot and result from every peer on Esc twice, Ctrl+C or timeout.
 
 Still open:
 
-1. **Garage:** every bike skin is free, so there is nothing to buy and the step fails. The test save
-   starts with a fixed balance (`TEST_MONEY`); a skin needs a price within it.
-2. **Drive bot / trick recipes:** tuning once a solo run gets through the events.
-3. **Two peers:** check the mouse token hands off cleanly between pumps, then remove the TEMP
+0. **Real game bug (found by the harness, not fixed):** an unfinished `RaceTask` keeps listening to
+   its checkpoints after its runner stops (`stop()` nulls `runner`; the checkpoint signals and
+   unfinished rows stay). Time attack is endless, so its rows never finish; a later event on the
+   same route errors on `runner.riding_hud` / `runner.spawn_manager` at every crossing.
+1. **Drive bot / trick recipes:** tuning once a solo run gets through the events.
+2. **Two peers:** check the mouse token hands off cleanly between pumps, then remove the TEMP
    cursor diagnostics (`_diag`, DIAG lines) in `activity_players.gd`.
-4. **Late join (real game bugs, reported, not fixed):** the late joiner logs `Node not found:
+3. **Late join (real game bugs, reported, not fixed):** the late joiner logs `Node not found:
    …/PlayerSpawn/<id>/RollbackSynchronizer/Node` and "Invalid packet received"; a client logs
    `up_direction can't be equal to Vector3.ZERO` from a netfox snapshot apply at the join. Also
-   seen: "Cancel Event isn't offered in FuelUpGameMode" during recovery, and `Unable to send packet
-   on channel 0` on the host.
-5. **Timeouts:** a stuck event waits out the event timeout before moving on; consider shortening
-   it and the warmup-sized default wait for steps after boot.
-6. Measure the budget once a full run passes.
+   seen: `Unable to send packet on channel 0` on the host.
+4. **Timeouts:** per-feature budgets are first guesses (the race one most of all); tune them from a
+   passing run. The warmup-sized default wait still applies to steps after boot.
+5. Measure the budget once a full run passes.
 
 ## Open questions / verify before building
 

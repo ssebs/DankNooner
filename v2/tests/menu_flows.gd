@@ -122,7 +122,10 @@ func _pause() -> bool:
 	pause.action = &"pause"
 	pause.pressed = true
 	Input.parse_input_event(pause)
-	return await _runner.wait_until(func(): return _menu_is(PauseMenuState), "the pause menu")
+	# Not the menu state: LevelManager parks it on a hidden PauseMenuState for the whole game
+	var paused := func():
+		return _runner.input_state_manager.current_input_state == InputStateManager.InputState.IN_GAME_PAUSED
+	return await _runner.wait_until(paused, "the pause menu")
 
 
 func _picker() -> GamemodeEventHUDState:

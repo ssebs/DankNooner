@@ -9,8 +9,14 @@
 
 
 ### NEXT
-
+- [ ] dont hear clients crash on host machine
 - [ ] Make hud simpler/intuitive 
+  - [ ] remove throttle bar
+- [ ] stop bat swing while crashed
+- [ ] ramp hitboxes remain after finishing stunt race?
+- [ ] hitting obstacle makes you do a 180 when you should crash sometimes
+  - [ ] also when hitting peeps
+- [ ] free roam wheelie challenge/points scoring should be longer than 1min and explain what it is
 - [ ] backing up while steering broken
 - [ ] change control for minimap
   - [ ] use dpad?

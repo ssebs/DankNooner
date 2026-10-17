@@ -15,7 +15,6 @@ const DriveBot := preload("res://tests/drive_bot.gd")
 ## Generous: a fresh build compiles shaders (WarmupMenuState) before the splash
 const STEP_TIMEOUT_S := 120.0
 const ACTIVITY_TIMEOUT_S := 60.0
-const EVENT_TIMEOUT_S := 150.0
 const DISCONNECT_TIMEOUT_S := 10.0
 const SAMPLE_INTERVAL_S := 0.5
 const CONTROL_INTERVAL_S := 0.1
@@ -24,6 +23,16 @@ const ENDLESS_SOLVE_S := 20.0
 const ENDLESS_KINDS: Array[int] = [
 	GameModeType.Kind.TIME_ATTACK, GameModeType.Kind.LONG_JUMP, GameModeType.Kind.TRICK_BATTLE
 ]
+const ENDLESS_CANCEL_S := 5.0
+## Leaving free roam to coming back, results included. A kind missing here fails loudly
+const EVENT_TIMEOUTS_S: Dictionary[int, float] = {
+	GameModeType.Kind.RACE: 60.0,
+	GameModeType.Kind.STUNT_RACE: 60.0,
+	GameModeType.Kind.STUNT_CHALLENGE: 30.0,
+	GameModeType.Kind.TIME_ATTACK: ENDLESS_SOLVE_S + ENDLESS_CANCEL_S,
+	GameModeType.Kind.LONG_JUMP: ENDLESS_SOLVE_S + ENDLESS_CANCEL_S,
+	GameModeType.Kind.TRICK_BATTLE: ENDLESS_SOLVE_S + ENDLESS_CANCEL_S,
+}
 ## Agreement isn't judged this soon after a join, leave or gamemode change
 const SETTLE_MS := 3000
 const GYM_LEVEL := LevelManager.LevelName.TEST_LEVEL_01
@@ -33,8 +42,11 @@ const READY_MARKER := "peer0.ready"
 const LATE_JOIN_MARKER := "late_join.go"
 ## run.py shows a hands-off banner while this exists
 const MOUSE_MARKER := "mouse.busy"
+## run.py drops this on Esc twice, Ctrl+C or its timeout: leave a last screenshot and result
+const ABORT_MARKER := "abort"
+const ABORT_POLL_S := 0.25
 ## Between the banner going up and the bot taking the mouse
-const MOUSE_WARNING_S := 5.0
+const MOUSE_WARNING_S := 2.0
 ## The fresh test save's balance
 const TEST_MONEY := 2500
 
@@ -113,6 +125,7 @@ func run(logger: ErrorLogger, args: Dictionary) -> void:
 	_activities = ActivityPlayers.new(self)
 	_drive_bot.violate = violate
 	_watch_activities()
+	_watch_abort()
 
 	if not await _menus.reach_play_menu():
 		_quit()
@@ -236,6 +249,14 @@ func _events_phase() -> void:
 func _run_event(circle: EventStartCircle, index: int, rejoined: bool) -> bool:
 	var event := circle.get_events()[index]
 	var label := "%s/%s" % [circle.name, event.name]
+	var kind := event.definition.target_gamemode
+	if kind not in EVENT_TIMEOUTS_S:
+		violate("no timeout for %s events (%s)" % [GameModeType.Kind.find_key(kind), label])
+		return true
+	var budget_s := EVENT_TIMEOUTS_S[kind]
+	if event.definition.fuel_up_first:
+		# Pumps take the one mouse in turn, after the hands-off warning
+		budget_s += ActivityPlayers.PUMP_TIMEOUT_S * _ready_peers.size() + MOUSE_WARNING_S
 	DebugUtils.DebugMsg("[test] event %s" % label)
 	spawn_manager.respawn_player_in_place.rpc(1, circle.global_position, _upright(circle))
 	# Opens on the circle's first event; the last activity's picker may still be up
@@ -247,14 +268,13 @@ func _run_event(circle: EventStartCircle, index: int, rejoined: bool) -> bool:
 	if not await wait_until(_is_out_of_free_roam, "%s to start" % label):
 		return await _recover(label)
 
-	var kind := event.definition.target_gamemode
 	var started_ms := Time.get_ticks_msec()
 	var cancelled := false
 	var rejoin_due := _late_join and _was_race(event) and !rejoined
 	while _is_out_of_free_roam():
 		var elapsed_s := (Time.get_ticks_msec() - started_ms) / 1000.0
-		if elapsed_s > EVENT_TIMEOUT_S:
-			violate("%s didn't finish within %ds" % [label, EVENT_TIMEOUT_S])
+		if elapsed_s > budget_s:
+			violate("%s didn't finish within %ds" % [label, budget_s])
 			return await _recover(label)
 		if _menus.are_results_open():
 			_menus.skip_results()
@@ -425,6 +445,16 @@ func _finish_activity(ok: bool) -> void:
 #endregion
 
 
+## Every peer polls run.py's marker itself, so an abort doesn't depend on the network
+func _watch_abort() -> void:
+	var marker := _out_dir.path_join(ABORT_MARKER)
+	while !FileAccess.file_exists(marker):
+		await get_tree().create_timer(ABORT_POLL_S).timeout
+	DebugUtils.DebugMsg("[test] aborted by run.py")
+	_screenshot("abort")
+	_quit()
+
+
 ## Free roam with the riding HUD up (it enters on the rider's first respawn, after spawn)
 func _wait_in_game() -> bool:
 	var in_game := func():
@@ -514,9 +544,7 @@ func _take_snapshot(sample: int) -> void:
 func _screenshot_all(label: String) -> void:
 	if multiplayer.get_remote_sender_id() > 1:
 		return
-	_screenshot_count += 1
-	var file := "peer%d_%02d_%s.png" % [_peer, _screenshot_count, label.validate_filename()]
-	get_viewport().get_texture().get_image().save_png(_out_dir.path_join(file))
+	_screenshot(label)
 
 
 ## Director → the late joiner: leave mid-race through the pause menu, then join again.
@@ -552,6 +580,12 @@ func _find_manager(type: Script) -> Node:
 		if is_instance_of(mgr, type):
 			return mgr
 	return null
+
+
+func _screenshot(label: String) -> void:
+	_screenshot_count += 1
+	var file := "peer%d_%02d_%s.png" % [_peer, _screenshot_count, label.validate_filename()]
+	get_viewport().get_texture().get_image().save_png(_out_dir.path_join(file))
 
 
 func _quit() -> void:
