@@ -267,6 +267,16 @@ Still open:
 4. **Timeouts:** per-feature budgets are first guesses (the race one most of all); tune them from a
    passing run. The warmup-sized default wait still applies to steps after boot.
 5. Measure the budget once a full run passes.
+6. **Not yet covered: client-predicted crashes the host never sees.** A client rider can crash
+   locally while the host's sim of it doesn't; netfox reconciles it away, so nothing currently
+   flags it (e.g. the reverse + steer brake-grab crash, caused by an unsynced `is_gamepad`).
+   Needs:
+   - an invariant: the host's `is_crashed` for each rider matches what that rider's owner reports
+     (snapshots only carry the local rider today, and `_judge_agreement` checks only player count
+     and gamemode);
+   - the bot to count as a gamepad: `Input.action_press` fires no input event, so `is_gamepad`
+     never flips; send one `InputEventJoypadMotion` through `Input.parse_input_event`;
+   - a reverse + steer recipe (stop, hold front brake, steer), since the bot never reverses.
 
 ## Open questions / verify before building
 

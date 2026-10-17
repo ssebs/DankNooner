@@ -63,8 +63,6 @@
 - [ ] option to drop current item?
 - [ ] 321 + drive to start of race text should be more obvious
 
-
-
 Discord page for support/community 
 
 - How to keep open source but DLC paid? release steam version on github actions too?
@@ -265,6 +263,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] backing up while steering causes crash
+
 - [x] corkscrew ramp tweaks
 
 - [x] Garage delete btn should ask if you're sure and be red 

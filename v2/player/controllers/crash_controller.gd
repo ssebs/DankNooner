@@ -207,10 +207,11 @@ func _detect_crash():
 			trigger_crash()
 			return
 
-		# Brake grab while turning (sim difficulty + gamepad only)
+		# Brake grab while turning (sim difficulty + gamepad only). Not while reversing (see above).
 		if (
 			_brake_was_grabbed
 			# and IS_SIM_DIFFICULTY
+			and not movement_controller.is_reversing
 			and input_controller.is_gamepad
 			and abs(movement_controller.roll_angle) > deg_to_rad(15)
 		):
