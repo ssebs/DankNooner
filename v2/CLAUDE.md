@@ -124,7 +124,7 @@ Broadcast RPCs are server-only and must reject non-server senders. See
 - `main_game.tscn` - root scene, composes all managers
 - `managers/` - all managers (`network/`, `gamemodes/` subdirs)
 - `player/` - PlayerEntity + `controllers/`
-- `menus/` - menu states (main, splash, play, lobby, customize, settings, pause, help, loading)
+- `menus/` - menu states (main, splash, play, lobby, customize, settings, pause, loading)
 - `levels/` - all levels extend `LevelDefinition`
 - `entities/` - non-player entities (`NPCRiderEntity` + its state machine, `NPCAnimalEntity`, `NPCAnimationController`, `TrafficRouteGraph`, `vehicles/`, `vfx/`)
 - `resources/` - `BikeSkinDefinition` / `CharacterSkinDefinition` `.tres` files

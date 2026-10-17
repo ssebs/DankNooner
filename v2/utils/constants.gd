@@ -17,6 +17,37 @@ const GROUPS = {
 	"Traffic": "Traffic",
 }
 
+## Remappable actions, keyed by category localization key. A category is the context its actions
+## are active in, so duplicate binds only conflict within one.
+const CONTROL_CATEGORIES: Dictionary = {
+	"CONTROLS_CATEGORY_RIDING":
+	[
+		"throttle_pct",
+		"brake_front_pct",
+		"brake_rear",
+		"steer_left",
+		"steer_right",
+		"lean_forward",
+		"lean_back",
+		"clutch",
+		"gear_up",
+		"gear_down",
+		"trick",
+		"boost",
+		"use_item",
+		"respawn",
+		"cam_left",
+		"cam_right",
+		"cam_up",
+		"cam_down",
+		"switch_cam",
+		"reset_cam",
+		"open_map",
+		"pause",
+	],
+	"CONTROLS_CATEGORY_MINIGAME": ["fuel_fill"],
+}
+
 ## Event payouts: event base × place multiplier + score × rate (see Progression.md).
 ## Multipliers from 1st; everyone below them gets PAYOUT_PLACE_FLOOR.
 const PAYOUT_PLACE_MULTS: Array[float] = [1.0, 0.7, 0.5]

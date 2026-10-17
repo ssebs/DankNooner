@@ -1,5 +1,5 @@
 @tool
-## Opens the help menu on the active peer and waits until they close it.
+## Opens the settings' Controls tab on the active peer and waits until they close it.
 ##
 ## Holds its own RPCs. Tutorial-specific deps (input/menu/help) live in
 ## main_game.tscn while this task lives in a level scene — TutorialGameMode
@@ -9,7 +9,7 @@ class_name CloseHelpTask extends GameModeTask
 
 var input_state_manager: InputStateManager
 var menu_manager: MenuManager
-var help_menu_state: HelpMenuState
+var settings_menu_state: SettingsMenuState
 
 
 func on_enter(player: PlayerEntity, state: Dictionary) -> void:
@@ -36,20 +36,23 @@ func _rpc_show_help():
 
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME_PAUSED
 	menu_manager.enable_input_and_processing()
-	help_menu_state.ui.show()
-	help_menu_state.show_controls_for_current_device()
+	# Back returns to the (hidden) pause menu like any settings visit; _on_help_closed hides it.
+	menu_manager.state_machine.request_state_change(
+		settings_menu_state, SettingsStateContext.NewFromPause(menu_manager.pause_menu_state, true)
+	)
+	settings_menu_state.show_controls_tab()
 
-	help_menu_state.close_help_btn.pressed.connect(_on_help_closed, CONNECT_ONE_SHOT)
+	settings_menu_state.back_btn.pressed.connect(_on_help_closed, CONNECT_ONE_SHOT)
 	input_state_manager.unpause_requested.connect(_on_help_closed, CONNECT_ONE_SHOT)
 
 
 func _on_help_closed():
-	if help_menu_state.close_help_btn.pressed.is_connected(_on_help_closed):
-		help_menu_state.close_help_btn.pressed.disconnect(_on_help_closed)
+	if settings_menu_state.back_btn.pressed.is_connected(_on_help_closed):
+		settings_menu_state.back_btn.pressed.disconnect(_on_help_closed)
 	if input_state_manager.unpause_requested.is_connected(_on_help_closed):
 		input_state_manager.unpause_requested.disconnect(_on_help_closed)
 
-	help_menu_state.ui.hide()
+	menu_manager.hide_all_menus()
 	menu_manager.disable_input_and_processing()
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
 

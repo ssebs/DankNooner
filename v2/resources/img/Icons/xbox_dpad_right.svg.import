@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bklfbr5l387qb"
-path="res://.godot/imported/controller_xboxone.svg-0e65872e8da03286116040fb0e485b0d.ctex"
+uid="uid://boec1ydrqwy05"
+path="res://.godot/imported/xbox_dpad_right.svg-acfd2290a96de3dd30c847654f3c0330.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/img/Icons/controller_xboxone.svg"
-dest_files=["res://.godot/imported/controller_xboxone.svg-0e65872e8da03286116040fb0e485b0d.ctex"]
+source_file="res://resources/img/Icons/xbox_dpad_right.svg"
+dest_files=["res://.godot/imported/xbox_dpad_right.svg-acfd2290a96de3dd30c847654f3c0330.ctex"]
 
 [params]
 

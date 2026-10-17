@@ -2,16 +2,17 @@
 
 [ext_resource type="Script" uid="uid://b6tnccpx0gwjg" path="res://menus/settings_menu/settings_menu_state.gd" id="1_hdace"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_hdace"]
+[ext_resource type="Script" path="res://menus/settings_menu/controls_tab.gd" id="3_ctrltab"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hdace"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_scrollpad"]
+content_margin_left = 12.0
+content_margin_right = 12.0
 
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_hdace"]
-content_margin_left = 4.0
-content_margin_top = 0.0
-content_margin_right = 4.0
-content_margin_bottom = 0.0
-color = Color(0.5, 0.5, 0.5, 1)
-thickness = 0
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tabpad"]
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
 
 [node name="SettingsMenuState" type="Node" unique_id=207724047]
 script = ExtResource("1_hdace")
@@ -49,68 +50,55 @@ ratio = 1.778
 [node name="MarginContainer" type="MarginContainer" parent="UI/AspectContainer" unique_id=1528918437]
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="UI/AspectContainer/MarginContainer" unique_id=380572322]
+[node name="Layout" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1400000010]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Layout" unique_id=380572322]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_type_variation = &"TitleLabel"
 text = "SETTINGS_LABEL"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1674008939]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 8
-
-[node name="SaveBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1073023423]
+[node name="TabContainer" type="TabContainer" parent="UI/AspectContainer/MarginContainer/Layout" unique_id=1088139743]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_default_cursor_shape = 2
-text = "SAVE_LABEL"
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_tabpad")
+current_tab = 0
+tab_0/title = "DISPLAY_SETTINGS_LABEL"
+tab_1/title = "VOLUME_SETTINGS_LABEL"
+tab_2/title = "GAMEPLAY_SETTINGS_LABEL"
+tab_3/title = "CONTROLS_LABEL"
 
-[node name="BackBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1870693339]
-unique_name_in_owner = true
+[node name="Display" type="ScrollContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer" unique_id=1400000000]
 layout_mode = 2
-mouse_default_cursor_shape = 2
-text = "BACK_LABEL"
+theme_override_styles/panel = SubResource("StyleBoxEmpty_scrollpad")
+horizontal_scroll_mode = 0
+metadata/_tab_index = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1088139743]
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Display" unique_id=1034889296]
+custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 size_flags_horizontal = 0
-size_flags_vertical = 4
-theme_override_constants/separation = 64
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/HBoxContainer" unique_id=1034889296]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-size_flags_horizontal = 0
-
-[node name="DISPLAY_SETTINGS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=569494662]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "DISPLAY_SETTINGS_LABEL"
-
-[node name="VSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1044217289]
-layout_mode = 2
-theme_override_constants/separation = 32
-theme_override_styles/separator = SubResource("StyleBoxEmpty_hdace")
-
-[node name="signal_host_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=677060126]
+[node name="signal_host_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Display/VBoxContainer2" unique_id=677060126]
 visible = false
 layout_mode = 2
 text = "WEBRTC_HOST_LABEL"
 
-[node name="SignalHostEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=132303083]
+[node name="SignalHostEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Display/VBoxContainer2" unique_id=132303083]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 placeholder_text = "home.ssebs.com"
 
-[node name="RESOLUTION_SCALE_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1674945763]
+[node name="RESOLUTION_SCALE_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Display/VBoxContainer2" unique_id=1674945763]
 unique_name_in_owner = true
 layout_mode = 2
 text = "RESOLUTION_SCALE_LABEL"
 
-[node name="ResolutionScaleSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1590972204]
+[node name="ResolutionScaleSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Display/VBoxContainer2" unique_id=1590972204]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -122,11 +110,11 @@ step = 0.25
 value = 1.0
 ticks_on_borders = true
 
-[node name="gamma_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2"]
+[node name="gamma_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Display/VBoxContainer2"]
 layout_mode = 2
 text = "GAMMA_LABEL"
 
-[node name="GammaSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2"]
+[node name="GammaSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Display/VBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -136,11 +124,11 @@ max_value = 1.0
 step = 0.05
 value = 0.5
 
-[node name="window_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1233927487]
+[node name="window_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Display/VBoxContainer2" unique_id=1233927487]
 layout_mode = 2
 text = "WINDOW_SETTINGS_LABEL"
 
-[node name="WindowModeOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1732712393]
+[node name="WindowModeOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Display/VBoxContainer2" unique_id=1732712393]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -155,47 +143,32 @@ popup/item_2/id = 4
 popup/item_3/text = "WINDOW_MODE_MAXIMIZED"
 popup/item_3/id = 2
 
-[node name="LANGUAGE_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1382044917]
+[node name="LANGUAGE_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Display/VBoxContainer2" unique_id=1382044917]
 layout_mode = 2
 text = "LANGUAGE_LABEL"
 
-[node name="LanguageOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=842316570]
+[node name="LanguageOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Display/VBoxContainer2" unique_id=842316570]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 
-[node name="HSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1039528216]
+[node name="Audio" type="ScrollContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer" unique_id=1400000001]
+visible = false
 layout_mode = 2
-theme_override_constants/separation = 24
-theme_override_styles/separator = SubResource("StyleBoxLine_hdace")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_scrollpad")
+horizontal_scroll_mode = 0
+metadata/_tab_index = 1
 
-[node name="ResetBtn" type="Button" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=462288263]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 0
-mouse_default_cursor_shape = 2
-text = "RESET_SETTINGS_LABEL"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/HBoxContainer" unique_id=1712998538]
-custom_minimum_size = Vector2(400, 0)
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Audio" unique_id=1712998538]
+custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="VOLUME_SETTINGS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1729310472]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "VOLUME_SETTINGS_LABEL"
-
-[node name="VSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1291269399]
-layout_mode = 2
-theme_override_constants/separation = 32
-theme_override_styles/separator = SubResource("StyleBoxEmpty_hdace")
-
-[node name="master_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=330750496]
+[node name="master_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Audio/VBoxContainer" unique_id=330750496]
 layout_mode = 2
 text = "MASTER_VOLUME_LABEL"
 
-[node name="MasterVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1475189282]
+[node name="MasterVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Audio/VBoxContainer" unique_id=1475189282]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -205,11 +178,11 @@ max_value = 1.0
 step = 0.05
 value = 0.5
 
-[node name="music_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=55761047]
+[node name="music_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Audio/VBoxContainer" unique_id=55761047]
 layout_mode = 2
 text = "MUSIC_VOLUME_LABEL"
 
-[node name="MusicVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1911176273]
+[node name="MusicVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Audio/VBoxContainer" unique_id=1911176273]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -219,11 +192,11 @@ max_value = 1.0
 step = 0.05
 value = 0.5
 
-[node name="sfx_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1442766106]
+[node name="sfx_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Audio/VBoxContainer" unique_id=1442766106]
 layout_mode = 2
 text = "SFX_VOLUME_LABEL"
 
-[node name="SFXVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=349890090]
+[node name="SFXVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Audio/VBoxContainer" unique_id=349890090]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -234,11 +207,11 @@ step = 0.05
 value = 0.5
 ticks_on_borders = true
 
-[node name="menu_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1261293644]
+[node name="menu_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Audio/VBoxContainer" unique_id=1261293644]
 layout_mode = 2
 text = "MENU_VOLUME_LABEL"
 
-[node name="MenuVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=744152966]
+[node name="MenuVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Audio/VBoxContainer" unique_id=744152966]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -249,44 +222,43 @@ step = 0.05
 value = 0.5
 ticks_on_borders = true
 
-[node name="MUTE_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1960384521]
+[node name="MUTE_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Audio/VBoxContainer" unique_id=1960384521]
 layout_mode = 2
 text = "MUTE_LABEL"
 
-[node name="MuteCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=517290834]
+[node name="MuteCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Audio/VBoxContainer" unique_id=517290834]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "TRUE"
 
-[node name="MUTE_UNFOCUSED_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1203857466]
+[node name="MUTE_UNFOCUSED_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Audio/VBoxContainer" unique_id=1203857466]
 layout_mode = 2
 text = "MUTE_UNFOCUSED_LABEL"
 
-[node name="MuteUnfocusedCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=698412237]
+[node name="MuteUnfocusedCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Audio/VBoxContainer" unique_id=698412237]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "TRUE"
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/HBoxContainer" unique_id=659821076]
+[node name="Gameplay" type="ScrollContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer" unique_id=1400000002]
+visible = false
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_scrollpad")
+horizontal_scroll_mode = 0
+metadata/_tab_index = 2
 
-[node name="GAMEPLAY_SETTINGS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1777761172]
+[node name="VBoxContainer3" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Gameplay" unique_id=659821076]
+custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "GAMEPLAY_SETTINGS_LABEL"
+size_flags_horizontal = 0
 
-[node name="VSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1965111176]
-layout_mode = 2
-theme_override_constants/separation = 32
-theme_override_styles/separator = SubResource("StyleBoxEmpty_hdace")
-
-[node name="difficulty_label" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1699862036]
+[node name="difficulty_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Gameplay/VBoxContainer3" unique_id=1699862036]
 layout_mode = 2
 text = "DIFFICULTY_LABEL"
 
-[node name="DifficultyOptBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=686647650]
+[node name="DifficultyOptBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Gameplay/VBoxContainer3" unique_id=686647650]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -297,11 +269,11 @@ popup/item_0/id = 0
 popup/item_1/text = "DIFFICULTY_HARD"
 popup/item_1/id = 1
 
-[node name="JOY_CAM_SENS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1201152798]
+[node name="JOY_CAM_SENS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Gameplay/VBoxContainer3" unique_id=1201152798]
 layout_mode = 2
 text = "JOY_CAM_SENS_LABEL"
 
-[node name="JoyCamSensSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=316649520]
+[node name="JoyCamSensSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Gameplay/VBoxContainer3" unique_id=316649520]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -312,11 +284,11 @@ step = 0.01
 value = 0.5
 ticks_on_borders = true
 
-[node name="MOUSE_CAM_SENS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=696720195]
+[node name="MOUSE_CAM_SENS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Gameplay/VBoxContainer3" unique_id=696720195]
 layout_mode = 2
 text = "MOUSE_CAM_SENS_LABEL"
 
-[node name="MouseCamSensSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=605227675]
+[node name="MouseCamSensSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Gameplay/VBoxContainer3" unique_id=605227675]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -327,22 +299,74 @@ step = 0.01
 value = 0.5
 ticks_on_borders = true
 
-[node name="INVERT_CAM_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1054639833]
+[node name="INVERT_CAM_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Gameplay/VBoxContainer3" unique_id=1054639833]
 layout_mode = 2
 text = "INVERT_CAM_LABEL"
 
-[node name="InvertCamCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=259754545]
+[node name="InvertCamCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Gameplay/VBoxContainer3" unique_id=259754545]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "TRUE"
 
-[node name="AUTO_TRANSMISSION_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1054639834]
+[node name="AUTO_TRANSMISSION_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Gameplay/VBoxContainer3" unique_id=1054639834]
 layout_mode = 2
 text = "AUTO_TRANSMISSION_LABEL"
 
-[node name="AutoTransmissionCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=259754546]
+[node name="AutoTransmissionCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Gameplay/VBoxContainer3" unique_id=259754546]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "TRUE"
+
+[node name="Controls" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer" unique_id=1400000003]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+script = ExtResource("3_ctrltab")
+metadata/_tab_index = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Controls" unique_id=704281746]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_scrollpad")
+horizontal_scroll_mode = 0
+
+[node name="ControlsGrid" type="GridContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Controls/ScrollContainer" unique_id=1630594025]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 36
+columns = 4
+
+[node name="DuplicateLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Controls" unique_id=1186254733]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "CONTROLS_DUPLICATE_LABEL"
+
+[node name="HintLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Controls" unique_id=388912561]
+unique_name_in_owner = true
+layout_mode = 2
+text = "CONTROLS_HINT_LABEL"
+
+[node name="Footer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/Layout" unique_id=1674008939]
+layout_mode = 2
+theme_override_constants/separation = 36
+
+[node name="ResetBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Layout/Footer" unique_id=462288263]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "RESET_TAB_LABEL"
+
+[node name="SaveBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Layout/Footer" unique_id=1073023423]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "SAVE_LABEL"
+
+[node name="BackBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Layout/Footer" unique_id=1870693339]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "BACK_LABEL"

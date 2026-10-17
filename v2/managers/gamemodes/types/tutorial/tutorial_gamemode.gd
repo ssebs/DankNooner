@@ -2,7 +2,7 @@
 class_name TutorialGameMode extends RunnerGameMode
 
 @export var menu_manager: MenuManager
-@export var help_menu_state: HelpMenuState
+@export var settings_menu_state: SettingsMenuState
 
 func Enter(state_context: StateContext):
 	if Engine.is_editor_hint():
@@ -32,7 +32,7 @@ func _inject_task_deps(runner: TaskRunner):
 		if child is CloseHelpTask:
 			child.input_state_manager = input_state_manager
 			child.menu_manager = menu_manager
-			child.help_menu_state = help_menu_state
+			child.settings_menu_state = settings_menu_state
 		elif child is TaskRunner:
 			_inject_task_deps(child)
 
@@ -49,6 +49,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var issues := super()
 	if menu_manager == null:
 		issues.append("menu_manager must not be empty")
-	if help_menu_state == null:
-		issues.append("help_menu_state must not be empty")
+	if settings_menu_state == null:
+		issues.append("settings_menu_state must not be empty")
 	return issues

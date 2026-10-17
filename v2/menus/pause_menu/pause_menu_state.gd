@@ -13,7 +13,6 @@ class_name PauseMenuState extends MenuState
 
 @export var main_menu_state: MenuState
 @export var settings_menu_state: MenuState
-@export var help_menu_state: MenuState
 @export var tricks_menu_state: MenuState
 
 @onready var resume_btn: Button = %ResumeBtn
@@ -21,7 +20,6 @@ class_name PauseMenuState extends MenuState
 @onready var respawn_btn: Button = %RespawnBtn
 @onready var cancel_event_btn: Button = %CancelEventBtn
 @onready var settings_btn: Button = %SettingsBtn
-@onready var help_btn: Button = %HelpBtn
 @onready var tricks_btn: Button = %TricksBtn
 @onready var level_select_panel: LevelSelectPanel = %LevelSelectPanel
 @onready var lobby_panel: LobbyPanel = %LobbyPanel
@@ -40,7 +38,6 @@ func Enter(_state_context: StateContext):
 
 	connection_manager.server_disconnected.connect(_on_server_disconnected)
 	settings_btn.pressed.connect(_on_settings_pressed)
-	help_btn.pressed.connect(_on_help_pressed)
 	tricks_btn.pressed.connect(_on_tricks_pressed)
 
 	cancel_event_btn.visible = gamemode_manager.get_current_gamemode().can_cancel_event()
@@ -68,7 +65,6 @@ func Exit(_state_context: StateContext):
 
 	connection_manager.server_disconnected.disconnect(_on_server_disconnected)
 	settings_btn.pressed.disconnect(_on_settings_pressed)
-	help_btn.pressed.disconnect(_on_help_pressed)
 	tricks_btn.pressed.disconnect(_on_tricks_pressed)
 
 	if level_select_panel.start_pressed.is_connected(_on_level_select_start_pressed):
@@ -77,10 +73,6 @@ func Exit(_state_context: StateContext):
 		level_select_panel.level_selected.disconnect(_on_level_select_level_selected)
 
 	lobby_panel.close()
-
-
-func _on_help_pressed():
-	transitioned.emit(help_menu_state, PauseStateContext.NewFromPause(self, true))
 
 
 func _on_tricks_pressed():

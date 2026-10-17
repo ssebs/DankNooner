@@ -20,6 +20,9 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
+
+- [ ] add horns to unlock & select
+
 - [ ] see playtest [feedback](_ScratchPad.md)
 
 - [ ] Add integration tests for features
@@ -263,6 +266,11 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] change default control for minimap
+  - [x] use dpad?
+
+- [x] Remaping controls menu
+
 - [x] backing up while steering causes crash
 
 - [x] corkscrew ramp tweaks

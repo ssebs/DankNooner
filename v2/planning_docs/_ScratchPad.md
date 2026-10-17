@@ -18,9 +18,6 @@
   - [ ] also when hitting peeps
 - [ ] free roam wheelie challenge/points scoring should be longer than 1min and explain what it is
 
-- [ ] change control for minimap
-  - [ ] use dpad?
-- [ ] Remaping controls
 - [ ] Fill up => race is not obvious where to go/not consistent across all races 
 - [ ] must be easier to know what the controls are / how to do tricks
   - [ ] add btn prompts/hints

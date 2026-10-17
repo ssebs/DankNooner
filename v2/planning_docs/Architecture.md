@@ -409,6 +409,11 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
   (`SaveManager`), not here. New player-identity fields go there, not in settings
 - Signals: `setting_updated(key, value)`, `all_settings_changed(dict)`
 - Consumers: `AudioManager` (bus volumes), `ConnectionManager` (signal relay host)
+- **Remappable controls**: defaults are the project Input Map; `"controls"` stores only overrides
+  per action slot (kbm / gamepad / addl). `ControlBindings` (`utils/control_bindings.gd`) resolves
+  and applies them to `InputMap` from `MainGame` on `all_settings_changed`. Which actions are
+  remappable, and their categories (duplicates only conflict within one), is
+  `UtilsConstants.CONTROL_CATEGORIES`. Edited in `SettingsMenuState`'s Controls tab (`ControlsTab`)
 
 ### Gamemode Manager
 
