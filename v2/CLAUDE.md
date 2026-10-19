@@ -149,6 +149,16 @@ Broadcast RPCs are server-only and must reject non-server senders. See
 - Tune the root cause, not a band-aid — when something is too slow/weak, look at the formula first (e.g. a stray /2 or a factor that collapses to zero at speed) rather than adding a scaling export to paper over it.
 - Do not write multiline comments where a short one would suffice
 
+### Export-Safe GDScript
+
+Release export templates drop editor-only type info, so some scripts parse in the editor but fail
+in exports. A script that fails to parse silently drops the data on every node using it.
+Neither gdlint nor the headless editor load catches this.
+
+- Don't `:=`-infer from an engine virtual called on another instance
+  (`node._get_configuration_warnings()`); type the var explicitly.
+- Don't name `Editor*` classes in runtime scripts; use `Engine.get_singleton("EditorInterface")`.
+
 ### Fail Loudly — No Silent Null Returns
 
 **Do not guard against null with early returns.** Code like this hides bugs:

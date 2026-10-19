@@ -760,7 +760,7 @@ _data = {
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_p1fwp"]
+[sub_resource type="Curve3D" id="Curve3D_5okja"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 21.54818, 0, 0, 0, 2.9572377, 0, -0.6976037, -33.226196, 0, 11.226105, -28.829102, 0, 19.972229),
 "tilts": PackedFloat32Array(0, 0)
@@ -788,7 +788,7 @@ _data = {
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_5okja"]
+[sub_resource type="Curve3D" id="Curve3D_bfdfn"]
 resource_local_to_scene = true
 closed = true
 _data = {
@@ -805,7 +805,7 @@ _data = {
 }
 point_count = 9
 
-[sub_resource type="Curve3D" id="Curve3D_bfdfn"]
+[sub_resource type="Curve3D" id="Curve3D_p1fwp"]
 resource_local_to_scene = true
 _data = {
 "points": PackedVector3Array(-8.92865, 0, 0.52874756, 8.92865, 0, -0.52874756, 34, 0, -4.745, -21.54486, 0, 22.016861, 31.014343, 0, -22.431305, 128.68286, -0.00012207031, -19.054504, -9.631897, 0, 9.272202, 21.102783, 0, -6.632431, 145.2572, 0, -107.28392, -46.555115, 0, 0.6806793, 40.686005, 0, -2.6257935, 245.79895, -0.00012207031, -62.154755, -9.96225, 0, 12.617401, 2.703827, 0, -12.928055, 298.59647, -0.00012207031, -171.1063, -2.5209656, 0, 28.45018, 2.5209656, 0, -28.45018, 355.38525, -0.00012207031, -252.50856, 23.460876, 0, 2.9641724, -23.460876, 0, -2.9641724, 272.9001, -0.00012207031, -312.0325, 31.641846, 0, -0.7863159, -31.641846, 0, 0.7863159, 27.657104, -0.00012207031, -321.20844, 0, 0, 0, 0, 0, 0, -39.384277, 0, -275.5528, 0, 0, 0, -9.48407, 0.003791809, 38.231415, -54.979187, 8.794067, -246.3847, -14.941711, 0, -14.931335, 14.941711, 0, 14.931335, -32.368835, 4, -156.4422, -4.3065186, 0, -7.504593, 4.3065186, 0, 7.504593, 59.704956, -0.00012207031, -111.84172, 15.05426, 0, 2.2224426, -15.05426, 0, -2.2224426, 51.810608, -0.00012207031, -83.06822, 21.326172, 0, 14.021759, -27.659912, 0, -16.197403, 9.701782, -0.00012207031, -121.675674, 9.928467, 0, -15.177902, -53.569458, 0, 85.03296, -68.497314, -0.00012207031, -112.512955, -47.68042, 0, -7.2508087, 0, 0, 0, -24.953064, 0, -7.7634125),
@@ -6588,7 +6588,7 @@ metadata/_edit_lock_ = true
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Bridgeroad2/RP_007" unique_id=1856818512]
-curve = SubResource("Curve3D_p1fwp")
+curve = SubResource("Curve3D_5okja")
 metadata/_edit_lock_ = true
 
 [node name="RP_002" type="Node3D" parent="RoadManager/Bridgeroad2" unique_id=1869473923]
@@ -6614,7 +6614,7 @@ metadata/_edit_lock_ = true
 
 [node name="RaceWall" parent="." unique_id=1909321819 groups=["navigation_mesh_source_group"] instance=ExtResource("50_7h6ax")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -663, -1.9073486e-06, 164)
-curve = SubResource("Curve3D_5okja")
+curve = SubResource("Curve3D_bfdfn")
 
 [node name="RaceWall2" parent="." unique_id=1382726365 groups=["navigation_mesh_source_group"] instance=ExtResource("50_7h6ax")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -663, 0, 164)
@@ -6622,7 +6622,7 @@ curve = SubResource("Curve3D_ytyv1")
 
 [node name="RaceWall3" parent="." unique_id=481092031 groups=["navigation_mesh_source_group"] instance=ExtResource("50_7h6ax")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -769, 0, 263.5)
-curve = SubResource("Curve3D_bfdfn")
+curve = SubResource("Curve3D_p1fwp")
 
 [node name="Corkscrew" parent="." unique_id=1203948571 groups=["navigation_mesh_source_group"] instance=ExtResource("60_kgknl")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 123.5, 3.7982864, 12)

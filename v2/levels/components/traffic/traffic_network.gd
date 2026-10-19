@@ -155,7 +155,7 @@ func _update_warnings():
 	var nodes := _authoring_nodes()
 	nodes.append(self)
 	for node in nodes:
-		var warnings := node._get_configuration_warnings()
+		var warnings: PackedStringArray = node._get_configuration_warnings()
 		if warnings != _last_warnings.get(node, PackedStringArray()):
 			_last_warnings[node] = warnings
 			node.update_configuration_warnings()
