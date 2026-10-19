@@ -36,6 +36,16 @@ func point_ahead(dist: float) -> Vector3:
 	return network.lane_curve(at_lane).sample_baked(at_offset)
 
 
+## Distance along the latched path to the next junction's stop line (a turn lane's first point).
+func dist_to_junction() -> float:
+	var dist := network.lane_curve(lane).get_baked_length() - offset
+	var at := _next_lane(lane)
+	while network.lanes[at].junction < 0:
+		dist += network.lane_curve(at).get_baked_length()
+		at = _next_lane(at)
+	return dist
+
+
 ## Moves the follower itself along the lanes, e.g. to drop a recovered rider further on.
 func advance(dist: float):
 	offset += dist

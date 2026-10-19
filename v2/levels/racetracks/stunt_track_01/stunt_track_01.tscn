@@ -863,6 +863,7 @@ script = ExtResource("6_udx41")
 north = NodePath("../TrafficRoad")
 east = NodePath("../TrafficRoad2")
 south = NodePath("../TrafficRoad3")
+control = 2
 metadata/_custom_type_script = "uid://bdb83jm5t82md"
 
 [node name="TrafficRoad2" type="Node3D" parent="TrafficNetwork" unique_id=100052177]

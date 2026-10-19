@@ -14,7 +14,8 @@ signal stuck
 @export var npc: NPCRiderEntity
 ## A racer within this range and forward cone that's slower than us gets
 ## followed rather than passed (traffic doesn't overtake in v1).
-@export var follow_detect_range: float = 12.0
+## Must cover braking distance from cruise + the gap + one scan interval of travel.
+@export var follow_detect_range: float = 20.0
 @export var follow_detect_angle: float = 0.7
 ## Speed difference (m/s) that makes contact an actual impact — riders queueing
 ## nose-to-tail brush at matched speed and shouldn't both wipe out for it.
@@ -55,13 +56,21 @@ func Physics_Update(delta: float):
 	follower.update(npc.global_position)
 	var target := follower.point_ahead(npc.steer_lookahead())
 	var target_speed := npc.lane_speed(follower.point_ahead)
-	# Match the rider ahead so we queue up behind it instead of ramming it.
-	var blocker := npc.nearest_racer_ahead(follow_detect_range, follow_detect_angle)
+	# TMP step 4: every junction refuses entry until JunctionState gates it
+	target_speed = minf(target_speed, npc.stop_line_speed(follower.dist_to_junction()))
+	# Close in on the rider ahead only as fast as we can still stop a buffer behind it.
+	# The second buffer is its half length.
+	var blocker := npc.nearest_racer_ahead(follow_detect_range, follow_detect_angle, false)
 	if blocker != null:
-		target_speed = minf(target_speed, npc.horizontal_speed(blocker))
+		var gap := npc.global_position.distance_to(blocker.global_position) - NPCRiderEntity.STOP_LINE_BUFFER
+		target_speed = minf(target_speed, npc.horizontal_speed(blocker) + npc.stop_line_speed(gap))
 	npc.steer_toward(target, target_speed, delta)
 	npc.apply_gravity_and_move(delta)
 
+	# Holding at a stop line or in a queue is waiting, not stuck
+	if target_speed < 1.0:
+		_stuck_timer = 0.0
+		_stuck_anchor = npc.global_position
 	_check_contact()
 	_check_stuck(delta)
 

@@ -75,6 +75,8 @@ const GRAVITY: float = 30.0
 ## Distance beyond which a client snaps instead of lerping (teleport / crash recovery).
 const NET_SNAP_DISTANCE: float = 25.0
 const NET_LERP_SPEED: float = 12.0
+## How far short of a stop point the rider's centre halts — about a car's half length.
+const STOP_LINE_BUFFER: float = 2.5
 
 @onready var visual_root: RiderVisual = %VisualRoot
 @onready var name_label: Label3D = %NameLabel
@@ -292,6 +294,12 @@ func lane_speed(point_ahead: Callable) -> float:
 	return _lane_speed
 
 
+## Fastest speed that can still brake to a halt STOP_LINE_BUFFER short of a point `dist`
+## metres ahead; 0 inside the buffer or past the point.
+func stop_line_speed(dist: float) -> float:
+	return sqrt(2.0 * braking * maxf(dist - STOP_LINE_BUFFER, 0.0))
+
+
 ## How far ahead to place the steering target at the current speed.
 func steer_lookahead() -> float:
 	return clampf(current_speed * steer_lookahead_time, min_steer_lookahead, max_steer_lookahead)
@@ -326,11 +334,12 @@ func apply_gravity_and_move(delta: float) -> void:
 
 ## Nearest racer within range + forward cone that is slower than us — the one
 ## worth passing / tucking in behind. Null if the road ahead is clear. Scans
-## humans too.
+## humans too. Without `slower_only` (traffic) it's any racer not oncoming, so a
+## queue stays held once its speeds match.
 ## Throttled — this sweeps the whole Racers group, so every rider doing it every tick
 ## makes the pack O(n²) (128 riders ≈ 16k iterations a tick). A reaction delay of a
 ## fraction of a second on "ease off behind the rider ahead" reads as normal driving.
-func nearest_racer_ahead(detect_range: float, detect_angle: float) -> Node3D:
+func nearest_racer_ahead(detect_range: float, detect_angle: float, slower_only := true) -> Node3D:
 	var now := Time.get_ticks_msec()
 	if now < _blocker_next_scan_ms:
 		# Whoever we found last sweep may have despawned or crashed out since.
@@ -352,7 +361,9 @@ func nearest_racer_ahead(detect_range: float, detect_angle: float) -> Node3D:
 			continue
 		if forward.dot(to / dist) < detect_angle:
 			continue
-		if horizontal_speed(racer) >= current_speed - 1.0:
+		if slower_only and horizontal_speed(racer) >= current_speed - 1.0:
+			continue
+		if !slower_only and (racer.velocity as Vector3).dot(forward) < -1.0:
 			continue
 		best = racer
 		best_dist = dist
