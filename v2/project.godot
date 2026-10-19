@@ -87,6 +87,7 @@ import/blender/enabled=false
 
 AnimalPaths=""
 stunt_checkpoints=""
+navigation_mesh_source_group=""
 
 [gui]
 
