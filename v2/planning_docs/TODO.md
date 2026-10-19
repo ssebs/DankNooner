@@ -5,7 +5,6 @@
 - [Notes 📝](#notes-)
 - [Tasks 📋](#tasks-)
 	- [Progression \& Customization](#progression--customization)
-	- [Traffic / Racing AI](#traffic--racing-ai)
 	- [Game-breaking bugs](#game-breaking-bugs)
 	- [Gamemodes / scoring](#gamemodes--scoring)
 	- [Juice / "Feel"](#juice--feel)
@@ -145,31 +144,6 @@ Simpsons hit and run chapters:
   - [ ] Wings as mod for sport bike
   - [ ] Scraper mod — add sparks during wheelie
 
-### Traffic / Racing AI
-- [ ] **LEARNING TIME** — graph nav + traffic rules, implemented solo
-  - [ ] [Navigation](./__Navigation.md) — the ideas: why roads aren't navmeshes, A\* and its three
-        rules, who goes first at a junction, why lights are maths not Timers
-  - [ ] [TrafficAI](./__TrafficAI.md) — our code: architecture and ownership, file-by-file, and
-        the traps already hit once
-  - [ ] [TrafficAI_TODO](./__TrafficAI_TODO.md) — build order + pseudocode, one verifiable step
-        at a time
-- [ ] street races (traffic is there+ racing ai simultaneously)
-  - [x] WIP kinda working
-  - [x] rename street race to road race, then actually impl street race w/ traffic
-  - [ ]  **IMPORTANT** - the racers must go thru the checkpoints, they cant finish a race
-- [ ] Traffic lane changes + overtaking (v1 follows one lane per junction leg)
-- [ ] Near-miss detection → trick/score bonus (wheelie variant)
-- [ ] Consolidate NPCRaceManager + NPCTrafficManager onto a shared base
-  - [ ] they duplicate the spawn/despawn RPC pattern
-- [ ] car hit reaction — a crashed car just stops, the wipeout is rider-only
-- [ ] make racing more realistic + difficulty settings (racing line + speed setting)
-- [ ] Delete most of the NPC AI, keep the basic lane position/movement and racing Ai. Clean it up but don't reimplement until the stunt race is working first.
-  - maybe dont use road lanes for ai at all?
-- [ ] npc => have their own collision layers?
-- [ ] add racing line to show newbs where to go & brake, forza style
-  - [ ] levels\assets\props\racing_line.gd
-  - [x] curve/mesh gen system
-  - [ ] maybe add markers & dynamically generate on the player's client (HUdController?)
 
 ### Game-breaking bugs
 - [ ] First launch on Mac web stuck in gas pump camera if you leave to main menu then come back it fixes
