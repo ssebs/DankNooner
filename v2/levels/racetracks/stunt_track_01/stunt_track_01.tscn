@@ -2,8 +2,11 @@
 
 [ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_craaw"]
 [ext_resource type="Resource" uid="uid://b3u0inad4glpn" path="res://resources/traffic/settings/stunt_track_01_traffic_settings.tres" id="1_trfst"]
+[ext_resource type="Script" uid="uid://dunhh6klysrxg" path="res://levels/components/traffic/traffic_network.gd" id="3_4h6qj"]
 [ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/gamemodeobjects/killbox.tscn" id="3_cbnwg"]
+[ext_resource type="Script" uid="uid://b4lvnheib00i8" path="res://levels/components/traffic/traffic_road.gd" id="4_whdav"]
 [ext_resource type="Sky" uid="uid://dfgbuerpq3y8" path="res://levels/assets/skybox_neon.tres" id="4_y7kpu"]
+[ext_resource type="Script" uid="uid://d2kjca82lmnch" path="res://levels/components/traffic/traffic_road_point.gd" id="5_whdav"]
 [ext_resource type="Script" uid="uid://bxp3i4cnonh8y" path="res://addons/road-generator/nodes/road_manager.gd" id="6_3ue8r"]
 [ext_resource type="Script" uid="uid://bjt7k3nrl24c8" path="res://managers/gamemodes/challenges/race_challenge.gd" id="6_a4ddl"]
 [ext_resource type="Resource" uid="uid://djnl61efoa4f" path="res://managers/gamemodes/challenges/best_combo_challenge.tres" id="6_bcmch"]
@@ -815,6 +818,19 @@ player_spawn_pos_debug = NodePath("PlayerSpawn")
 grid_markers = [NodePath("PlayerSpawn"), NodePath("Spawn1"), NodePath("Spawn2"), NodePath("Spawn3"), NodePath("Spawn4")]
 traffic_settings = ExtResource("1_trfst")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
+
+[node name="TrafficNetwork" type="Node3D" parent="." unique_id=1789773144]
+script = ExtResource("3_4h6qj")
+metadata/_custom_type_script = "uid://dunhh6klysrxg"
+
+[node name="TrafficRoad" type="Node3D" parent="TrafficNetwork" unique_id=633176124]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 95.5, 0, 15)
+script = ExtResource("4_whdav")
+metadata/_custom_type_script = "uid://b4lvnheib00i8"
+
+[node name="TrafficRoadPoint" type="Node3D" parent="TrafficNetwork/TrafficRoad" unique_id=1062853961]
+script = ExtResource("5_whdav")
+metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=756147242]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -94, 38, 246)
@@ -3940,6 +3956,7 @@ script = ExtResource("41_ftdt1")
 [node name="RoadManager" type="Node3D" parent="." unique_id=621559166 groups=["navigation_mesh_source_group"]]
 script = ExtResource("6_3ue8r")
 material_resource = ExtResource("46_oxlis")
+collision_layer = 65
 metadata/_custom_type_script = "uid://bxp3i4cnonh8y"
 
 [node name="Road_001" type="Node3D" parent="RoadManager" unique_id=1831057920]

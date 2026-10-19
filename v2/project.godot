@@ -286,6 +286,7 @@ locale/translations=PackedStringArray("res://localization/localization.en.transl
 3d_physics/layer_4="event_start"
 3d_physics/layer_5="unstable_collision"
 3d_physics/layer_6="interactable"
+3d_physics/layer_7="road"
 
 [netfox]
 
