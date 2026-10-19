@@ -24,9 +24,10 @@
 - [ ] see playtest [feedback](_ScratchPad.md)
 
 - [ ] Get AI working again
-  - [ ] [halfway impl](./__TrafficAI_TODO.md)
-  - [ ] bake npc nav paths so they can just follow, respond to player if needed then return to baked path
   - [ ] NPC Traffic
+    - [ ] [halfway impl](./__TrafficAI_TODO.md)
+    - [x] bake npc nav paths so they can just follow, respond to player if needed then return to baked path
+    - [ ] intersections / traffic lights
   - [ ] NPC Race AI
 
 - [ ] Add integration tests for features
