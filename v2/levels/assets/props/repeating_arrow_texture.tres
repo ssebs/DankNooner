@@ -1,12 +1,13 @@
 [gd_resource type="StandardMaterial3D" format=3 uid="uid://bqt8efotw5yp8"]
 
-[ext_resource type="Texture2D" uid="uid://bvwp75yahgco5" path="res://resources/img/arrow_texture_mine/ArrowTex.png" id="1_5di4t"]
+[ext_resource type="Texture2D" uid="uid://fvef6ow02s34" path="res://resources/img/arrow_texture_mine/ArrowTexClear.png" id="1_5di4t"]
 
 [resource]
+transparency = 1
 albedo_texture = ExtResource("1_5di4t")
 emission_enabled = true
-emission = Color(0.25490198, 0.6862745, 1, 1)
-emission_energy_multiplier = 1.75
+emission = Color(0, 1, 0.015686274, 1)
+emission_energy_multiplier = 2.0
 emission_operator = 1
 emission_texture = ExtResource("1_5di4t")
 uv1_scale = Vector3(0.2, 0.2, 0.2)

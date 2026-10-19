@@ -6,17 +6,17 @@
 > playtest_logs/*.log
 
 ### NOW
+- [ ] ramp hitboxes remain after finishing stunt race?
 
 
 ### NEXT
 - [ ] holding T pose should not grant so many points / score
   - [ ] need some penalty for simple tricks vs combos
-- [ ] Make arrow signs/other things glow other colors to add variety 
+
 
 - [ ] add some form of gamba (spin wheel / roulette / random game)
 - [ ] Make hud simpler/intuitive 
   - [ ] remove throttle bar
-- [ ] ramp hitboxes remain after finishing stunt race?
 
 - [ ] free roam wheelie challenge/points scoring should be longer than 1min and explain what it is
 

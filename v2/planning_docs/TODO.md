@@ -262,6 +262,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] Make arrow signs/other things glow other colors to add variety
+
 - [x] better friend name labels
 
 - [x] stop bat swing / item effeects while crashed
