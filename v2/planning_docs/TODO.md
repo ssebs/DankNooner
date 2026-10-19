@@ -27,7 +27,9 @@
   - [ ] NPC Traffic
     - [ ] [halfway impl](./__TrafficAI_TODO.md)
     - [x] bake npc nav paths so they can just follow, respond to player if needed then return to baked path
-    - [ ] intersections / traffic lights
+    - [x] intersections navigation
+    - [ ] optimization (see _scratchpad)
+    - [ ] traffic lights
   - [ ] NPC Race AI
 
 - [ ] Add integration tests for features
