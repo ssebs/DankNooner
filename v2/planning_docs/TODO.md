@@ -21,6 +21,12 @@
 > Don't forget, have fun :D
 - [ ] see playtest [feedback](_ScratchPad.md)
 
+- [ ] Get AI working again
+  - [ ] See `_Scratchpad`, **halfway impl**
+  - [ ] bake npc nav paths so they can just follow, respond to player if needed then return to baked path
+  - [ ] NPC Traffic
+  - [ ] NPC Race AI
+
 - [ ] Add integration tests for features
   - [ ] Testing.md
     - [ ] progress made
@@ -48,10 +54,7 @@
       - [ ] these show potential styles, but scale is a bit too small 
   - [ ] have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
 
-- [ ] Get AI working again
-  - [ ] bake npc nav paths so they can just follow, respond to player if needed then return to baked path
-  - [ ] NPC Traffic
-  - [ ] NPC Race AI
+
 - [ ] [Progression](#progression--customization) 
 
 ---
