@@ -6,9 +6,18 @@
 ## top_level so the route sits in world space, whatever the circle's transform.
 class_name EventRoute extends Node3D
 
+## CSG collision ignores visibility, so set_active toggles the ones authored to collide.
+var _colliding_csgs: Array[CSGShape3D] = []
+
 
 func _init():
 	top_level = true
+
+
+func _ready():
+	for csg: CSGShape3D in find_children("*", "CSGShape3D", true, false):
+		if csg.use_collision:
+			_colliding_csgs.append(csg)
 
 
 ## Grid slots in tree order. PickupSpawner is a Marker3D too — excluded.
@@ -51,6 +60,8 @@ func set_active(active: bool):
 		obj.is_active = active
 	for shape in find_children("*", "CollisionShape3D", true, false):
 		shape.disabled = not active
+	for csg in _colliding_csgs:
+		csg.use_collision = active
 
 
 func _get_configuration_warnings() -> PackedStringArray:

@@ -6,7 +6,6 @@
 > playtest_logs/*.log
 
 ### NOW
-- [ ] ramp hitboxes remain after finishing stunt race?
 
 
 ### NEXT

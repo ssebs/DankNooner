@@ -21,6 +21,7 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] see playtest [feedback](_ScratchPad.md)
+
 - [ ] Add integration tests for features
   - [ ] Testing.md
     - [ ] progress made
@@ -262,6 +263,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] ramp hitboxes remain after finishing stunt race
+
 - [x] Make arrow signs/other things glow other colors to add variety
 
 - [x] better friend name labels
