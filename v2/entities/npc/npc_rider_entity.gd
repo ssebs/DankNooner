@@ -7,10 +7,11 @@
 ## states own the physics tick and call the helpers below. A manager moves a
 ## freshly spawned rider into its behavior state.
 ##
-## Steering follows the road-generator lane curves (via RoadLaneAgent), not a
+## Race steering follows the road-generator lane curves (via RoadLaneAgent), not a
 ## navmesh: the bot reads a point ahead along its current RoadLane, which
 ## auto-wraps to lane_next — so it rides the road's own line and never
 ## corner-cuts. Checkpoints only score laps / set respawns (see RaceTask).
+## Traffic follows the baked TrafficNetwork instead (see NPCTrafficState).
 ##
 ## VisualRoot is yawed 180° (matching the player scene), so the bike front is
 ## entity -Z; steering yaws the body to face velocity with -Z.
@@ -84,8 +85,8 @@ var bike_skin: BikeSkin
 var character_skin: CharacterSkin
 var car_skin: CarSkin
 
-## The level's RoadManager — set by the spawning manager before add_child so the
-## lane agent can find its lanes. Riding follows those lanes.
+## The level's RoadManager — set by NPCRaceManager before add_child so the lane agent
+## can find its lanes. Traffic leaves it null and gets no lane agent.
 var road_manager: RoadManager
 
 ## Synced to clients via MultiplayerSynchronizer (server authority).
@@ -115,7 +116,7 @@ var username: String:
 var driving: bool = false
 ## Current horizontal speed magnitude, ramped toward the turn-scaled target.
 var current_speed: float = 0.0
-## Lane-curve follower — created in _ready once road_manager is known.
+## Lane-curve follower — created in _ready for race riders only (see road_manager).
 var lane_agent: RoadLaneAgent
 ## Fixed lateral offset off the centreline, for line variety between bots.
 var line_offset: float = 0.0
@@ -189,12 +190,13 @@ func _ready():
 	# so it has to land before theirs — see _physics_process.
 	process_physics_priority = -1
 
-	lane_agent = RoadLaneAgent.new()
-	lane_agent.road_manager_path = road_manager.get_path()
-	# Don't auto-free the bot when its lane rebuilds — the manager owns its life.
-	lane_agent.auto_register = false
-	add_child(lane_agent)
-	lane_agent.assign_nearest_lane()
+	if road_manager:
+		lane_agent = RoadLaneAgent.new()
+		lane_agent.road_manager_path = road_manager.get_path()
+		# Don't auto-free the bot when its lane rebuilds — the manager owns its life.
+		lane_agent.auto_register = false
+		add_child(lane_agent)
+		lane_agent.assign_nearest_lane()
 
 	# Per-bot variety: a lateral offset + a speed scale, seeded off the (unique)
 	# node name so both are stable and differ between bots.
@@ -262,22 +264,23 @@ func cruise_speed() -> float:
 
 
 ## Corner-aware target speed: reads the lane's bend over the next
-## `turn_lookahead` metres, sampled along the lane curve (test_move_along_lane
-## doesn't advance the lane). Compare the road's heading over the near half of
-## the window vs the far half: straight -> cruise, a bend eases toward
+## `turn_lookahead` metres via point_ahead(dist) -> Vector3, which must not advance
+## the lane (RoadLaneAgent.test_move_along_lane / TrafficLaneFollower.point_ahead).
+## Compare the road's heading over the near half of the window vs the far half:
+## straight -> cruise, a bend eases toward
 ## min_turn_speed. Because we look ahead, the bot brakes BEFORE the apex and
 ## accelerates back out as the road straightens.
 ## Throttled — two baked-curve searches per call (RoadLaneAgent._move_along_lane does a
 ## get_closest_point AND a get_closest_offset each), and steer_toward ramps toward the
 ## result anyway, so a reading a fraction of a second old is indistinguishable.
-func lane_speed() -> float:
+func lane_speed(point_ahead: Callable) -> float:
 	var now := Time.get_ticks_msec()
 	if now < _lane_speed_next_scan_ms:
 		return _lane_speed
 	_lane_speed_next_scan_ms = now + _next_scan_delay_ms()
 
-	var mid := lane_agent.test_move_along_lane(turn_lookahead)
-	var far := lane_agent.test_move_along_lane(turn_lookahead * 2.0)
+	var mid: Vector3 = point_ahead.call(turn_lookahead)
+	var far: Vector3 = point_ahead.call(turn_lookahead * 2.0)
 	var lead := mid - global_position
 	var trail := far - mid
 	lead.y = 0.0
@@ -411,8 +414,10 @@ func teleport_to(pos: Vector3, basis: Basis) -> void:
 	velocity = Vector3.ZERO
 	current_speed = 0.0
 	npc_state = NPCState.RIDING
-	# Position jumped — re-latch to the nearest lane from here.
-	lane_agent.assign_nearest_lane()
+	# Position jumped — re-latch to the nearest lane from here. Traffic has no lane agent;
+	# its manager re-places the follower itself.
+	if lane_agent:
+		lane_agent.assign_nearest_lane()
 
 
 #endregion

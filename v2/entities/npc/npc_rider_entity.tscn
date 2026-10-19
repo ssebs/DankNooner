@@ -66,9 +66,11 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0
 
 [node name="CarSkin" parent="VisualRoot" unique_id=1482523663 instance=ExtResource("12_carsk")]
 unique_name_in_owner = true
+skin_definition = ExtResource("2_ft2i1")
 
 [node name="NameLabel" type="Label3D" parent="." unique_id=1205672131]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1839552, 0)
+visible = false
 billboard = 1
 text = "NPC"

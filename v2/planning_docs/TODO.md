@@ -4,6 +4,8 @@
 - [In-Progress 🚨](#in-progress-)
 - [Notes 📝](#notes-)
 - [Tasks 📋](#tasks-)
+	- [new large map](#new-large-map)
+	- [Discord page for support/community](#discord-page-for-supportcommunity)
 	- [Progression \& Customization](#progression--customization)
 	- [Game-breaking bugs](#game-breaking-bugs)
 	- [Gamemodes / scoring](#gamemodes--scoring)
@@ -22,7 +24,7 @@
 - [ ] see playtest [feedback](_ScratchPad.md)
 
 - [ ] Get AI working again
-  - [ ] See `_Scratchpad`, **halfway impl**
+  - [ ] [halfway impl](./__TrafficAI_TODO.md)
   - [ ] bake npc nav paths so they can just follow, respond to player if needed then return to baked path
   - [ ] NPC Traffic
   - [ ] NPC Race AI
@@ -45,15 +47,6 @@
   - [ ] > steam next fest Feb '27
   - [ ] Release after free to play  w/ paid dlc for more content/skins
 
-- [ ] new large map
-  - [ ] https://github.com/domlysz/BlenderGIS + https://superhivemarket.com/products/roadscape
-  - [ ] big enough to cruise around like in Test Drive Unlimited 1
-  - [ ] "Highside Island"
-  - [ ] see img/island-map-layout.png/svg & levels\assets\highside_island\island-heightmap-preview.png
-    - [ ] see ../levels/assets/highside_island/CStoosmall1-4.png
-      - [ ] these show potential styles, but scale is a bit too small 
-  - [ ] have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
-
 
 - [ ] [Progression](#progression--customization) 
 
@@ -64,24 +57,6 @@
 
 - [ ] option to drop current item?
 - [ ] 321 + drive to start of race text should be more obvious
-
-Discord page for support/community 
-
-- How to keep open source but DLC paid? release steam version on github actions too?
-- Tracers when boosting 
-- add guac and load building to map
-- steam workshop for maps / other assets?
-- export on github w/o some assets / steam features
-- Pizza delivery mode + scooter 
-
-Capsule art:
-- Sky background (darkish)
-- dank nooner logo top left
-- wheelie/stunt trick bike on right 1/3rd
-- they're going left 
-- On the left smol is another guy stunting/crashing 
-- contrast, rule of 3rd, visual heir
-- simple, dominant visual elements, 
 
 - Make roads / map in blender
 - Tutorial: msf course 
@@ -112,6 +87,23 @@ Simpsons hit and run chapters:
 ---
 
 ## Tasks 📋
+
+### new large map
+- [ ] https://github.com/domlysz/BlenderGIS + https://superhivemarket.com/products/roadscape
+- [ ] big enough to cruise around like in Test Drive Unlimited 1
+- [ ] "Highside Island"
+- [ ] see img/island-map-layout.png/svg & levels\assets\highside_island\island-heightmap-preview.png
+  - [ ] see ../levels/assets/highside_island/CStoosmall1-4.png
+    - [ ] these show potential styles, but scale is a bit too small 
+- [ ] have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
+
+### Discord page for support/community 
+- [ ] How to keep open source but DLC paid? release steam version on github actions too?
+- [ ] Tracers when boosting 
+- [ ] add guac and load building to map
+- [ ] steam workshop for maps / other assets?
+- [ ] export on github w/o some assets / steam features
+- [ ] Pizza delivery mode + scooter 
 
 ### Progression & Customization
 

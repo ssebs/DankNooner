@@ -124,7 +124,7 @@ func _drive(delta: float) -> void:
 			_update_lane_choice(blocker, forward, right)
 
 	var target := npc.lane_point_ahead(npc.steer_lookahead())
-	var target_speed := npc.lane_speed()
+	var target_speed := npc.lane_speed(npc.lane_agent.test_move_along_lane)
 	# Couldn't get past the blocker this tick — match its speed so we tuck in
 	# behind instead of ramming it.
 	if blocker != null:

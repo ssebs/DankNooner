@@ -1,6 +1,6 @@
 @tool
-## Owns ambient traffic riders (NPCRiderEntity in NPCTrafficState): builds the
-## level's TrafficRouteGraph, spawns riders spread across the road network, and
+## Owns ambient traffic riders (NPCRiderEntity in NPCTrafficState): reads the
+## level's baked TrafficNetwork, spawns riders spread across its road lanes, and
 ## recovers them when they crash or get wedged.
 ##
 ## Count, car/bike mix, cruise speed and the vehicle rosters are all per-map — see
@@ -37,10 +37,11 @@ const CAR_SKINS_DIR: String = "res://resources/cars/skins/"
 const FIRST_ID: int = -1000
 ## How far along its lane a recovered rider is dropped back in.
 const RECOVER_AHEAD: float = 4.0
-## Room a recovering rider needs at its drop point before it will take it. Without this
-## a rider lands back on whoever it just crashed into and the pair loop forever.
+## Room a spawning or recovering rider needs at its drop point before it will take it.
+## Without this a rider lands back on whoever it just crashed into and the pair loop forever.
 const PLACEMENT_CLEARANCE: float = 5.0
-## Random lanes tried for a clear spot before giving up and waiting out another delay.
+## Random spots tried for a clear one before giving up (skipping a spawn, or waiting
+## out another recovery delay).
 const PLACEMENT_ATTEMPTS: int = 4
 
 var _npcs: Dictionary[int, NPCRiderEntity] = {}
@@ -54,31 +55,29 @@ var _accept_spawns: bool = false
 ## res:// paths of the vehicle skins this map rolls, refreshed each start_traffic.
 var _bike_skin_paths: Array = []
 var _car_skin_paths: Array = []
-var _route_graph: TrafficRouteGraph
-var _graph_rebuild_queued: bool = false
+var _network: TrafficNetworkData
+## Lanes riders spawn and recover on: road lanes only, turn lanes all cluster at junctions.
+var _road_lanes: Array[int] = []
 var _next_id: int = FIRST_ID
 
 
 #region Traffic lifecycle (server only)
 
 
-## Build the route graph for the current level and populate it with riders.
+## Populate the current level's traffic network with riders.
 ##
 ## `for_race` picks TrafficSettings.race_traffic_amount over traffic_count — a race
 ## through free-roam density is a wall rather than a challenge.
 func start_traffic(for_race: bool = false) -> void:
-	var road_manager := _find_road_manager()
-	# Maps with no road network (the stunt map) simply get no traffic.
-	if road_manager == null:
+	var network_node := _find_network_node()
+	# Maps with no traffic network, or one never baked, simply get no traffic.
+	if network_node == null or network_node.baked == null:
 		return
-	_route_graph = TrafficRouteGraph.new(TrafficRouteGraph.gather_lanes(get_tree(), road_manager))
-
-	# Containers defer their first rebuild_segments(true) — which frees and
-	# regenerates every lane — so the graph we just built goes stale moments
-	# from now. Follow their updates and re-derive it in place.
-	for container in road_manager.get_containers():
-		if !container.on_road_updated.is_connected(_on_road_updated):
-			container.on_road_updated.connect(_on_road_updated)
+	_network = network_node.baked
+	_road_lanes.clear()
+	for i in _network.lanes.size():
+		if _network.lanes[i].junction < 0:
+			_road_lanes.append(i)
 
 	var settings := level_manager.current_level.traffic_settings
 	_bike_skin_paths = _roster_paths(settings.bike_roster, BIKE_SKINS_DIR)
@@ -86,21 +85,24 @@ func start_traffic(for_race: bool = false) -> void:
 
 	var count := settings.race_traffic_amount if for_race else settings.traffic_count
 
-	# Shuffled distinct lanes — spreads riders over the whole network instead of
-	# stacking them all at one spawn point. Dropped at a random point ALONG each lane
-	# rather than at its start: junction lanes all start within a few metres of each
-	# other, so spawning at starts piles riders into intersections and leaves the roads
-	# between them empty.
-	var spawn_lanes := _route_graph.lanes.duplicate()
+	# Round-robin over shuffled lanes — every lane gets a rider before any gets a second,
+	# so traffic spreads over the whole network instead of stacking at one spot.
+	var spawn_lanes := _road_lanes.duplicate()
 	spawn_lanes.shuffle()
-	for i in mini(count, spawn_lanes.size()):
-		var lane_transform := _route_graph.lane_transform_at(spawn_lanes[i], randf())
+	for i in count:
+		var follower := _clear_follower_on(spawn_lanes[i % spawn_lanes.size()])
+		# Lane too crowded for another rider — skip rather than spawn on top of someone
+		if follower == null:
+			continue
+		var lane_transform := follower.get_transform()
 		var npc_id := _next_id
 		_next_id -= 1
 		var def := npc_definitions[(-npc_id + FIRST_ID) % npc_definitions.size()]
 		var vehicle := _roll_vehicle(def, npc_id)
 		_vehicles[npc_id] = vehicle
 		rpc_spawn_npc.rpc(npc_id, vehicle, lane_transform.origin, lane_transform.basis)
+		# call_local ran the spawn synchronously, so the rider exists now
+		_traffic_state(npc_id).follower = follower
 
 
 ## Roll one rider's vehicle. The server rolls and ships the result — rolling on
@@ -145,9 +147,7 @@ func stop_traffic() -> void:
 	for npc_id in _npcs.keys():
 		rpc_despawn_npc.rpc(npc_id)
 	_vehicles.clear()
-	# The containers' on_road_updated connections die with them on level unload,
-	# and start_traffic re-connects whatever survives.
-	_route_graph = null
+	_network = null
 
 
 #endregion
@@ -197,28 +197,6 @@ func _rpc_request_traffic_sync() -> void:
 
 #endregion
 
-#region Route graph upkeep (server only)
-
-
-## A container finished (re)building. It fires per rebuild pass and there are
-## several containers, so coalesce into one graph rebuild at the end of the frame.
-func _on_road_updated(_segments: Array) -> void:
-	if _graph_rebuild_queued:
-		return
-	_graph_rebuild_queued = true
-	_rebuild_route_graph.call_deferred()
-
-
-func _rebuild_route_graph() -> void:
-	_graph_rebuild_queued = false
-	# Traffic was stopped while the rebuild was queued — nothing to re-derive.
-	if _route_graph == null:
-		return
-	_route_graph.rebuild(TrafficRouteGraph.gather_lanes(get_tree(), _find_road_manager()))
-
-
-#endregion
-
 #region Spawn / despawn (broadcast RPCs, mirrors NPCRaceManager)
 
 
@@ -246,10 +224,8 @@ func rpc_spawn_npc(npc_id: int, vehicle: Dictionary, pos: Vector3, basis: Basis)
 	# Read per peer rather than shipped — every peer has the same level loaded.
 	npc.move_speed = level_manager.current_level.traffic_settings.cruise_speed
 	npc.paint_colors = level_manager.current_level.traffic_settings.paint_colors
-	# Lane follower needs the level's RoadManager before _ready runs.
-	npc.road_manager = _find_road_manager()
 
-	level_manager.current_level.player_spawn_pos.add_child(npc, true)
+	_find_network_node().add_child(npc, true)
 	npc.global_transform = Transform3D(basis, pos)
 	_npcs[npc_id] = npc
 	# Tagged on every peer, not just the server — the HUD runs client-side and uses this
@@ -258,8 +234,7 @@ func rpc_spawn_npc(npc_id: int, vehicle: Dictionary, pos: Vector3, basis: Basis)
 
 	if !multiplayer.is_server():
 		return
-	var traffic_state := npc.state_machine.get_state_by_name("NPCTrafficState") as NPCTrafficState
-	traffic_state.route_graph = _route_graph
+	var traffic_state := _traffic_state(npc_id)
 	traffic_state.crashed.connect(_on_npc_crashed.bind(npc_id))
 	traffic_state.stuck.connect(_place_on_lane.bind(npc_id))
 	npc.driving = true
@@ -278,13 +253,29 @@ func rpc_despawn_npc(npc_id: int):
 	_npcs.erase(npc_id)
 
 
-## The current level's RoadManager, whose lanes the traffic follows. Null on
-## maps that have no road network at all.
-func _find_road_manager() -> RoadManager:
-	var found := level_manager.current_level.find_children("*", "RoadManager", true, false)
-	if found.is_empty():
-		return null
-	return found[0]
+## The current level's TrafficNetwork, which also parents its riders. Null on maps without one.
+func _find_network_node() -> TrafficNetwork:
+	var found := level_manager.current_level.find_children("*", "TrafficNetwork", true, false)
+	return null if found.is_empty() else found[0]
+
+
+func _traffic_state(npc_id: int) -> NPCTrafficState:
+	return _npcs[npc_id].state_machine.get_state_by_name("NPCTrafficState") as NPCTrafficState
+
+
+## A follower at a random point ALONG the lane rather than its start: lanes start at
+## junctions, so starts would pile riders into intersections.
+func _follower_on(lane: int) -> TrafficLaneFollower:
+	return TrafficLaneFollower.new(_network, lane, randf() * _network.lane_curve(lane).get_baked_length())
+
+
+## A follower at a clear random spot along the lane, or null if every spot tried was taken.
+func _clear_follower_on(lane: int) -> TrafficLaneFollower:
+	for _attempt in PLACEMENT_ATTEMPTS:
+		var follower := _follower_on(lane)
+		if _is_spot_clear(follower.get_transform().origin, null):
+			return follower
+	return null
 
 
 #endregion
@@ -307,39 +298,32 @@ func _respawn_after_delay(npc_id: int) -> void:
 	)
 
 
-## Drop the rider back onto the road a little ahead of where it went wrong, or
-## onto a random lane if that spot is taken or it no longer has a lane under it.
+## Drop the rider back onto its lane a little ahead of where it went wrong, or onto
+## a random lane if that spot is taken.
 func _place_on_lane(npc_id: int) -> void:
 	# Rider may have been despawned while the respawn timer ran — skip is intentional
 	if !_npcs.has(npc_id):
 		return
 	var npc := _npcs[npc_id]
-	if is_instance_valid(npc.lane_agent.current_lane):
-		var here := npc.lane_agent.test_move_along_lane(0.0)
-		var ahead := npc.lane_agent.test_move_along_lane(RECOVER_AHEAD)
-		var dir := ahead - here
-		dir.y = 0.0
-		# Blocked here usually means whoever we crashed into hasn't moved — fall through
-		# to a random lane instead of landing on them and starting the loop again.
-		if dir.length_squared() > 0.01 and _is_spot_clear(ahead, npc):
-			npc.teleport_to(ahead, Basis.looking_at(dir))
-			return
+	var traffic_state := _traffic_state(npc_id)
+	traffic_state.follower.advance(RECOVER_AHEAD)
+	var ahead := traffic_state.follower.get_transform()
+	# Blocked here usually means whoever we crashed into hasn't moved — fall through
+	# to a random lane instead of landing on them and starting the loop again.
+	if _is_spot_clear(ahead.origin, npc):
+		npc.teleport_to(ahead.origin, ahead.basis)
+		return
 
-	# Random point along a random lane, same reason as spawning — otherwise every
-	# recovered rider lands on the same handful of junction lane starts and stacks up.
 	for _attempt in PLACEMENT_ATTEMPTS:
-		var lane := _route_graph.random_lane()
-		# Every cached lane was freed and the graph hasn't caught up yet (road rebuild).
-		if lane == null:
-			break
-		var lane_transform := _route_graph.lane_transform_at(lane, randf())
+		var follower := _follower_on(_road_lanes.pick_random())
+		var lane_transform := follower.get_transform()
 		if !_is_spot_clear(lane_transform.origin, npc):
 			continue
+		traffic_state.follower = follower
 		npc.teleport_to(lane_transform.origin, lane_transform.basis)
 		return
 
-	# No lanes at all, or everything we sampled was occupied. Wait it out rather than
-	# teleporting into the void or onto someone.
+	# Everything we sampled was occupied. Wait it out rather than teleporting onto someone.
 	_respawn_after_delay(npc_id)
 
 

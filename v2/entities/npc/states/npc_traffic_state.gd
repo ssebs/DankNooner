@@ -1,9 +1,8 @@
 @tool
-## Free-roam traffic behavior: circulate the road network forever. Follows the
-## lane like the race state, but picks a random exit at junctions (via
-## TrafficRouteGraph, since the road generator can't link through them), tucks
-## in behind whatever is ahead instead of overtaking, and reports crashes /
-## getting wedged to NPCTrafficManager, which owns the recovery.
+## Free-roam traffic behavior: circulate the level's baked TrafficNetwork forever.
+## Follows its lane via a TrafficLaneFollower (random turn at each fork), tucks in
+## behind whatever is ahead instead of overtaking, and reports crashes / getting
+## wedged to NPCTrafficManager, which owns the recovery.
 class_name NPCTrafficState extends State
 
 ## Hit another racer — the manager wipes the rider out, respawns it, and takes
@@ -17,28 +16,18 @@ signal stuck
 ## followed rather than passed (traffic doesn't overtake in v1).
 @export var follow_detect_range: float = 12.0
 @export var follow_detect_angle: float = 0.7
-## How close to the end of an unlinked lane before picking the next one.
-@export var junction_proximity: float = 4.0
 ## Speed difference (m/s) that makes contact an actual impact — riders queueing
 ## nose-to-tail brush at matched speed and shouldn't both wipe out for it.
 @export var contact_min_speed_delta: float = 6.0
 ## Report stuck after moving less than this (metres) over this window (seconds).
 @export var stuck_window: float = 3.0
 @export var stuck_min_progress: float = 2.0
-## How long a rider with no lane under it waits before trying to re-latch. Rolled fresh
-## per rider on every retry, so riders never sync up into one big scan tick.
-## Re-latching scans EVERY lane in the level — RoadLaneAgent.find_nearest_lane is brute
-## force with a Curve3D.get_closest_point per lane — and it gives up on anything past its
-## 50m cutoff, so a stranded rider retrying every tick paid that scan forever.
-@export var relatch_retry_delay_min: float = 2.0
-@export var relatch_retry_delay_max: float = 5.0
 
-## Set by NPCTrafficManager right after spawn — junction routing needs it.
-var route_graph: TrafficRouteGraph
+## Set by NPCTrafficManager on spawn and on every recovery.
+var follower: TrafficLaneFollower
 
 var _stuck_timer: float = 0.0
 var _stuck_anchor: Vector3
-var _relatch_timer: float = 0.0
 
 
 func Enter(_state_context: StateContext):
@@ -46,10 +35,6 @@ func Enter(_state_context: StateContext):
 		return
 	_stuck_timer = 0.0
 	_stuck_anchor = npc.global_position
-	# Spread the first retry across the window so a wave of riders spawned together
-	# doesn't run all its lane scans on the same tick. Server-only state, so rolling
-	# this locally can't desync anything.
-	_relatch_timer = randf_range(0.0, relatch_retry_delay_max)
 	npc.hit_by_racer.connect(_on_hit_by_racer)
 
 
@@ -62,34 +47,14 @@ func Exit(_state_context: StateContext):
 func Physics_Update(delta: float):
 	if Engine.is_editor_hint():
 		return
-	# HACK - DISABLE TMP
-	# TODO FIX THIS
-	return
-
-	# Lanes may not have been built yet at spawn, or we just got teleported. This
-	# can come up empty — the containers free and regenerate every lane on their
-	# deferred first rebuild, so there's a window with no lane to latch onto.
-	# Throttled: see relatch_retry_delay for why this must not run every tick.
-	if npc.driving and !is_instance_valid(npc.lane_agent.current_lane):
-		_relatch_timer -= delta
-		if _relatch_timer <= 0.0:
-			_relatch_timer = randf_range(relatch_retry_delay_min, relatch_retry_delay_max)
-			npc.lane_agent.assign_nearest_lane()
-
-	var can_drive := (
-		npc.driving
-		and is_instance_valid(npc.lane_agent.current_lane)
-		and npc.npc_state != NPCRiderEntity.NPCState.CRASHED
-	)
-	if !can_drive:
+	if !npc.driving or npc.npc_state == NPCRiderEntity.NPCState.CRASHED:
 		npc.coast_to_stop(delta)
 		npc.apply_gravity_and_move(delta)
 		return
 
-	_pick_next_lane_at_junction()
-
-	var target := npc.lane_point_ahead(npc.steer_lookahead())
-	var target_speed := npc.lane_speed()
+	follower.update(npc.global_position)
+	var target := follower.point_ahead(npc.steer_lookahead())
+	var target_speed := npc.lane_speed(follower.point_ahead)
 	# Match the rider ahead so we queue up behind it instead of ramming it.
 	var blocker := npc.nearest_racer_ahead(follow_detect_range, follow_detect_angle)
 	if blocker != null:
@@ -99,19 +64,6 @@ func Physics_Update(delta: float):
 
 	_check_contact()
 	_check_stuck(delta)
-
-
-## close_to_lane_end only reports true for lanes with no lane_next — exactly the
-## junction (and road-narrowing) case the route graph exists to cover.
-func _pick_next_lane_at_junction() -> void:
-	if !npc.lane_agent.close_to_lane_end(junction_proximity, RoadLaneAgent.MoveDir.FORWARD):
-		return
-	var successors := route_graph.next_lanes(npc.lane_agent.current_lane)
-	if successors.is_empty():
-		# Dead end the graph didn't cover — grab whatever lane is nearest.
-		npc.lane_agent.assign_nearest_lane()
-		return
-	npc.lane_agent.assign_lane(successors.pick_random())
 
 
 ## Someone rode into us. Nothing to pass along — the hitter already took itself

@@ -3,7 +3,7 @@ class_name FreeRoamGameMode extends GameModeType
 
 @export var game_mode_event_hud_state: GamemodeEventHUDState
 @export var level_manager: LevelManager
-## Optional — unlinked in main_game while traffic is disabled for perf; null skips traffic.
+## Optional — null skips traffic.
 @export var npc_traffic_manager: NPCTrafficManager
 @export var pickup_spawn_manager: PickupSpawnManager
 @export var trick_manager: TrickManager
