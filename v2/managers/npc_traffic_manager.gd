@@ -1,7 +1,7 @@
 @tool
 ## Owns ambient traffic riders (NPCRiderEntity in NPCTrafficState): reads the
 ## level's baked TrafficNetwork, spawns riders spread across its road lanes, and
-## recovers them when they crash or get wedged.
+## recovers them when they crash.
 ##
 ## Count, car/bike mix, cruise speed and the vehicle rosters are all per-map — see
 ## LevelDefinition.traffic_settings.
@@ -58,6 +58,8 @@ var _car_skin_paths: Array = []
 var _network: TrafficNetworkData
 ## Lanes riders spawn and recover on: road lanes only, turn lanes all cluster at junctions.
 var _road_lanes: Array[int] = []
+## One per baked junction, shared by every rider's NPCTrafficState.
+var _junctions: Array[JunctionState] = []
 var _next_id: int = FIRST_ID
 
 
@@ -78,6 +80,9 @@ func start_traffic(for_race: bool = false) -> void:
 	for i in _network.lanes.size():
 		if _network.lanes[i].junction < 0:
 			_road_lanes.append(i)
+	_junctions = []
+	for _junction in _network.junctions:
+		_junctions.append(JunctionState.new(_network))
 
 	var settings := level_manager.current_level.traffic_settings
 	_bike_skin_paths = _roster_paths(settings.bike_roster, BIKE_SKINS_DIR)
@@ -103,6 +108,7 @@ func start_traffic(for_race: bool = false) -> void:
 		rpc_spawn_npc.rpc(npc_id, vehicle, lane_transform.origin, lane_transform.basis)
 		# call_local ran the spawn synchronously, so the rider exists now
 		_traffic_state(npc_id).follower = follower
+		_traffic_state(npc_id).junctions = _junctions
 
 
 ## Roll one rider's vehicle. The server rolls and ships the result — rolling on
@@ -224,6 +230,10 @@ func rpc_spawn_npc(npc_id: int, vehicle: Dictionary, pos: Vector3, basis: Basis)
 	# Read per peer rather than shipped — every peer has the same level loaded.
 	npc.move_speed = level_manager.current_level.traffic_settings.cruise_speed
 	npc.paint_colors = level_manager.current_level.traffic_settings.paint_colors
+	# On every peer, or a predicting client would bump into a body the server rides through.
+	# Traffic rides rails; its ContactArea reports hits instead.
+	npc.collision_layer = 0
+	npc.collision_mask = 0
 
 	_find_network_node().add_child(npc, true)
 	npc.global_transform = Transform3D(basis, pos)
@@ -236,7 +246,6 @@ func rpc_spawn_npc(npc_id: int, vehicle: Dictionary, pos: Vector3, basis: Basis)
 		return
 	var traffic_state := _traffic_state(npc_id)
 	traffic_state.crashed.connect(_on_npc_crashed.bind(npc_id))
-	traffic_state.stuck.connect(_place_on_lane.bind(npc_id))
 	npc.driving = true
 	# StateMachine._ready defers its own transition into the idle state — queue
 	# ours behind it so the rider isn't flipped straight back to idle.
@@ -284,8 +293,10 @@ func _clear_follower_on(lane: int) -> TrafficLaneFollower:
 
 
 func _on_npc_crashed(victim: Node3D, npc_id: int) -> void:
-	_npcs[npc_id].crash()
-	_respawn_after_delay(npc_id)
+	# A wreck still reports contacts so it can take players down, but only goes down once
+	if _npcs[npc_id].npc_state != NPCRiderEntity.NPCState.CRASHED:
+		_npcs[npc_id].crash()
+		_respawn_after_delay(npc_id)
 	# We rode into a player — they never see that collision from their side, so
 	# take them down with us (same broadcast CrashController uses).
 	if victim is PlayerEntity:

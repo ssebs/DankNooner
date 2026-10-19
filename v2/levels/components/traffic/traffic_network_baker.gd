@@ -51,7 +51,8 @@ static func source_hash(network: TrafficNetwork) -> int:
 	return parts.hash()
 
 
-func build(with_conflicts: bool) -> TrafficNetworkData:
+# The editor preview skips conflicts and the per-sample height snap
+func build(for_bake: bool) -> TrafficNetworkData:
 	for intersection in _intersections:
 		var junction := TrafficJunctionData.new()
 		junction.position = intersection.global_position
@@ -63,10 +64,25 @@ func build(with_conflicts: bool) -> TrafficNetworkData:
 		_build_road(road)
 	for i in _intersections.size():
 		_build_turns(i)
-		if with_conflicts:
+		if for_bake:
 			_mark_conflicts(i)
+	if for_bake:
+		_snap_lanes()
 	data.source_hash = source_hash(_network)
 	return data
+
+
+# Traffic rides lanes on rails, so every sample sits on the road, not just the authored points.
+# A miss keeps its height; the authored points' misses are already warned about.
+func _snap_lanes():
+	var world := _network.get_world_3d()
+	for lane in data.lanes:
+		var points := lane.points
+		for i in points.size():
+			var hit := TrafficRoadPoint.road_hit_at(world, points[i])
+			if not hit.is_empty():
+				points[i] = hit.position
+		lane.points = points
 
 
 func _build_road(road: TrafficRoad):

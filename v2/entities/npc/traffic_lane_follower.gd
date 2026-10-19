@@ -3,9 +3,6 @@ class_name TrafficLaneFollower extends RefCounted
 ## A traffic rider's place on a baked TrafficNetworkData: current lane + distance along it. Forks
 ## pick a random successor, latched until the rider leaves that lane.
 
-# Within this of a lane's end counts as having left it
-const END_MARGIN := 0.5
-
 var network: TrafficNetworkData
 var lane: int
 var offset: float
@@ -19,14 +16,6 @@ func _init(network_data: TrafficNetworkData, start_lane: int, start_offset: floa
 	offset = start_offset
 
 
-## Re-reads offset off the rider's position, moving onto the next lane once past the end.
-func update(pos: Vector3):
-	offset = network.lane_curve(lane).get_closest_offset(pos)
-	while offset >= network.lane_curve(lane).get_baked_length() - END_MARGIN:
-		_leave_lane()
-		offset = network.lane_curve(lane).get_closest_offset(pos)
-
-
 func point_ahead(dist: float) -> Vector3:
 	var at_lane := lane
 	var at_offset := offset + dist
@@ -34,6 +23,14 @@ func point_ahead(dist: float) -> Vector3:
 		at_offset -= network.lane_curve(at_lane).get_baked_length()
 		at_lane = _next_lane(at_lane)
 	return network.lane_curve(at_lane).sample_baked(at_offset)
+
+
+## The next turn lane on the latched path, past the one we're on if we're in a junction.
+func next_turn_lane() -> int:
+	var at := _next_lane(lane)
+	while network.lanes[at].junction < 0:
+		at = _next_lane(at)
+	return at
 
 
 ## Distance along the latched path to the next junction's stop line (a turn lane's first point).
@@ -46,7 +43,7 @@ func dist_to_junction() -> float:
 	return dist
 
 
-## Moves the follower itself along the lanes, e.g. to drop a recovered rider further on.
+## Moves along the lanes. The rider rides wherever this puts it.
 func advance(dist: float):
 	offset += dist
 	while offset > network.lane_curve(lane).get_baked_length():

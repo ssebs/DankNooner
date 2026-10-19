@@ -32,9 +32,13 @@ func resolved_lane_count() -> int:
 
 # Empty when there's no road surface below this point
 func road_hit() -> Dictionary:
-	var from := global_position + Vector3.UP * RAY_START_HEIGHT
+	return road_hit_at(get_world_3d(), global_position)
+
+
+static func road_hit_at(world: World3D, pos: Vector3) -> Dictionary:
+	var from := pos + Vector3.UP * RAY_START_HEIGHT
 	var query := PhysicsRayQueryParameters3D.create(from, from + Vector3.DOWN * RAY_LENGTH, ROAD_LAYER_MASK)
-	return get_world_3d().direct_space_state.intersect_ray(query)
+	return world.direct_space_state.intersect_ray(query)
 
 
 func _get_configuration_warnings() -> PackedStringArray:

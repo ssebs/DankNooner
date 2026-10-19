@@ -11,7 +11,8 @@
 ## navmesh: the bot reads a point ahead along its current RoadLane, which
 ## auto-wraps to lane_next — so it rides the road's own line and never
 ## corner-cuts. Checkpoints only score laps / set respawns (see RaceTask).
-## Traffic follows the baked TrafficNetwork instead (see NPCTrafficState).
+## Traffic rides the baked TrafficNetwork on rails instead, with no body collision —
+## its ContactArea reports hits (see NPCTrafficState).
 ##
 ## VisualRoot is yawed 180° (matching the player scene), so the bike front is
 ## entity -Z; steering yaws the body to face velocity with -Z.
@@ -81,6 +82,8 @@ const STOP_LINE_BUFFER: float = 2.5
 @onready var visual_root: RiderVisual = %VisualRoot
 @onready var name_label: Label3D = %NameLabel
 @onready var collision_shape_3d: CollisionShape3D = $CollisionShape3D
+@onready var contact_area: Area3D = $ContactArea
+@onready var contact_shape: CollisionShape3D = $ContactArea/CollisionShape3D
 
 ## Only the half this vehicle actually uses survives — see _enter_tree.
 var bike_skin: BikeSkin
@@ -310,10 +313,22 @@ func steer_toward(target: Vector3, target_speed: float, delta: float) -> void:
 	var dir := target - global_position
 	dir.y = 0.0
 	dir = dir.normalized()
-	var rate := acceleration if target_speed > current_speed else braking
-	current_speed = move_toward(current_speed, target_speed, rate * delta)
+	ramp_speed(target_speed, delta)
 	velocity.x = dir.x * current_speed
 	velocity.z = dir.z * current_speed
+
+
+func ramp_speed(target_speed: float, delta: float) -> void:
+	var rate := acceleration if target_speed > current_speed else braking
+	current_speed = move_toward(current_speed, target_speed, rate * delta)
+
+
+## Traffic's rails: put the rider on pos heading along dir, with no physics.
+func ride_to(pos: Vector3, dir: Vector3, delta: float) -> void:
+	velocity = dir * current_speed
+	global_position = pos
+	_face_velocity(delta)
+	sync_transform = global_transform
 
 
 ## Decay horizontal velocity — not driving, crashed, or finished.
@@ -510,6 +525,8 @@ func _init_collision_shape() -> void:
 	collision_shape_3d.position = definition.collision_position_offset
 	collision_shape_3d.rotation_degrees = definition.collision_rotation_offset_degrees
 	collision_shape_3d.scale = definition.collision_scale_multiplier
+	contact_shape.shape = collision_shape_3d.shape
+	contact_shape.transform = collision_shape_3d.transform
 
 
 func _get_configuration_warnings() -> PackedStringArray:
