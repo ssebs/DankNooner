@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://bdb83jm5t82md" path="res://levels/components/traffic/traffic_intersection.gd" id="1_script"]
+
+[node name="TrafficIntersection" type="Marker3D"]
+script = ExtResource("1_script")

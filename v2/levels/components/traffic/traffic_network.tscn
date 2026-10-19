@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://dunhh6klysrxg" path="res://levels/components/traffic/traffic_network.gd" id="1_script"]
+
+[node name="TrafficNetwork" type="Node3D"]
+script = ExtResource("1_script")

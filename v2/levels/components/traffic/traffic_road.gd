@@ -7,6 +7,11 @@ class_name TrafficRoad extends Node3D
 @export var lane_width := 4.0
 
 
+func _ready():
+	if Engine.is_editor_hint():
+		child_order_changed.connect(TrafficNetwork.request_redraw.bind(self))
+
+
 func get_points() -> Array[TrafficRoadPoint]:
 	var points: Array[TrafficRoadPoint] = []
 	points.assign(get_children().filter(func(c): return c is TrafficRoadPoint))
@@ -29,8 +34,7 @@ func draw_editor():
 	var path := PackedVector3Array()
 	for point in get_points():
 		path.append(point.global_position)
-		point.draw_editor()
-	DebugDraw3D.draw_line_path(path, Color.WHITE)
+	DebugDraw3D.draw_line_path(path, Color.CYAN, TrafficNetwork.DRAW_SECONDS)
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -42,6 +46,9 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if points.size() < 2:
 		warnings.append("Needs at least 2 TrafficRoadPoint children.")
 		return warnings
+	var counts := points.map(func(p): return p.resolved_lane_count())
+	if counts[0] != counts[1] or counts[-1] != counts[-2]:
+		warnings.append("Lane count can't change on the first or last segment.")
 	for end in [points[0], points[-1]]:
 		if not _is_end_claimed(end):
 			warnings.append("End point %s isn't linked by any TrafficIntersection." % end.name)

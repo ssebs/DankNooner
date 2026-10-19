@@ -50,11 +50,13 @@ TrafficNetwork (Node3D, @tool)           ← one per level; Bake button; holds t
 - Four slot exports, `north` / `east` / `south` / `west`: `TrafficRoad` or empty (n/a). Directions
   are in the intersection's own basis (north = -Z, east = +X), so rotating the node works.
 - `radius` — the box; road lanes stop here (the stop line), turn lanes live inside it.
-- `control`: `enum Control { NONE, STOP, LIGHT }`.
+- `control`: `enum ControlType { NONE, STOP, LIGHT }` (`Control` shadows the native class).
 - `LIGHT` phases: north/south green together, then east/west. Phase is a pure function of
   `NetworkTime.time` (no Timer, no stored index) so every peer agrees with no sync. Green and
   amber durations are exports.
 - Which end of a slotted road connects is resolved by proximity (nearest end point).
+- **Cul-de-sac / dead end:** an intersection with exactly one linked slot. It's the only case that
+  gets U-turn lanes; `control` is ignored there.
 
 **`TrafficNetwork`**
 - `@export_tool_button("Bake")` → builds and saves `baked: TrafficNetworkData` to a `.tres` next to
@@ -63,17 +65,21 @@ TrafficNetwork (Node3D, @tool)           ← one per level; Bake button; holds t
 
 ### Editor visuals
 
-Drawn with the `debug_draw_3d` addon in `_process` under `Engine.is_editor_hint()` only — nothing
-is saved into the scene.
+Drawn with the `debug_draw_3d` addon, editor only, nothing saved into the scene. **No per-frame
+work:** nodes call `TrafficNetwork.request_redraw()` on transform / export / child-order changes;
+the network clears and redraws once (deferred) with long-lived draws, depth test off.
 
 - **Road:** polyline through its points; live preview of the lanes + direction arrows, so you see
-  merges as you drag points; lane count label per point.
+  merges as you drag points. No text labels.
 - **Intersection:** the `radius` box, an arm per slot — grey stub = empty, green = linked and the
-  road's near end is within reach, red = linked but too far / wrong side. `Label3D` for `control`.
+  road's near end is on the slot's side (~45°), red = wrong side. Distance isn't checked; a gap
+  just makes a longer turn lane.
 - **Road point not over the `road` layer:** red sphere.
 - `_get_configuration_warnings()` on all three: road with < 2 points, odd/unset lane count, road
-  end not claimed by any intersection, slot road whose nearest end is on the wrong side, empty
-  intersection, network with no bake / stale bake.
+  end not claimed by any intersection, lane count changing on a road's first/last segment, slot
+  road whose nearest end is on the wrong side, empty intersection, network with no bake / stale
+  bake. **Bake refuses while any of these exist**, and after building rejects lanes clipped away
+  or with no successor.
 
 ### Bake
 
@@ -87,6 +93,8 @@ is saved into the scene.
 4. **Turn lanes.** Per intersection, every incoming lane gets connections to each other
    non-empty slot (no U-turns): right turn from the rightmost lane → rightmost exit lane, left
    from leftmost → leftmost, through lane *i* → exit lane *i* (clamped when counts differ).
+   A 1-slot cul-de-sac instead gets U-turns only: incoming lane *i* → outgoing lane *i*.
+   An approach with a single exit (L-bend, cul-de-sac) pairs every lane with it, lane-for-lane.
    Geometry is a sampled bezier from the stop line to the exit lane start. Each turn lane
    records its intersection, entry slot, and `TurnDir { LEFT, THROUGH, RIGHT }`.
 5. **Conflicts.** Per intersection, mark every pair of turn lanes whose sampled paths come within

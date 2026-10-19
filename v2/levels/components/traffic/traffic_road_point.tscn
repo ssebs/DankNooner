@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://d2kjca82lmnch" path="res://levels/components/traffic/traffic_road_point.gd" id="1_script"]
+
+[node name="TrafficRoadPoint" type="Marker3D"]
+script = ExtResource("1_script")

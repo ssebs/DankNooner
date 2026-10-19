@@ -1,13 +1,25 @@
 @tool
-class_name TrafficRoadPoint extends Node3D
+class_name TrafficRoadPoint extends Marker3D
 
 ## Total lanes across both directions (4 = 2 each way); must be even. 0 = same as the previous
 ## point. A change between two points is a merge/split there.
-@export var lane_count := 0
+@export var lane_count := 4:
+	set(v):
+		lane_count = v
+		TrafficNetwork.request_redraw(self)
 
 const ROAD_LAYER_MASK: int = 64 # 1 << 6 (layer 7 "road")
 const RAY_START_HEIGHT := 5.0
 const RAY_LENGTH := 100.0
+
+
+func _ready():
+	set_notify_transform(Engine.is_editor_hint())
+
+
+func _notification(what: int):
+	if what == NOTIFICATION_TRANSFORM_CHANGED:
+		TrafficNetwork.request_redraw(self)
 
 
 func resolved_lane_count() -> int:
@@ -23,14 +35,6 @@ func road_hit() -> Dictionary:
 	var from := global_position + Vector3.UP * RAY_START_HEIGHT
 	var query := PhysicsRayQueryParameters3D.create(from, from + Vector3.DOWN * RAY_LENGTH, ROAD_LAYER_MASK)
 	return get_world_3d().direct_space_state.intersect_ray(query)
-
-
-func draw_editor():
-	if road_hit().is_empty():
-		DebugDraw3D.draw_sphere(global_position, 1.0, Color.RED)
-	# Grey = inherited from a previous point
-	var color := Color.WHITE if lane_count != 0 else Color.GRAY
-	DebugDraw3D.draw_text(global_position + Vector3.UP * 2.0, str(resolved_lane_count()), 64, color)
 
 
 func _get_configuration_warnings() -> PackedStringArray:
