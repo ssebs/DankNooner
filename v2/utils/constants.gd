@@ -2,6 +2,9 @@ class_name UtilsConstants extends Node
 
 const PORT = 42068
 
+const DISCORD_URL = "https://discord.gg/nA7VY4MHW"
+const STEAM_STORE_URL = "https://store.steampowered.com/app/5416370/Dank_Nooner/"
+
 ## Godot Group names.
 const GROUPS = {
 	"Managers": "Managers",

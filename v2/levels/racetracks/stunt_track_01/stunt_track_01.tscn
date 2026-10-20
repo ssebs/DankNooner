@@ -1761,7 +1761,7 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -136
 [node name="Spawn4" type="Marker3D" parent="." unique_id=4523445]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -134.30089, -5.722046e-06, 50.575108)
 
-[node name="StuntRace" parent="." unique_id=459761741 instance=ExtResource("22_eair3")]
+[node name="StuntRace" parent="." unique_id=459761741 groups=["EditorHideable"] instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -150, 0, 59)
 visible = false
 
@@ -2064,7 +2064,7 @@ script = ExtResource("20_grj8g")
 script = ExtResource("mig_trkbtl")
 respawn_in_place = true
 
-[node name="StuntRace2" parent="." unique_id=1917820002 node_paths=PackedStringArray("gas_station") instance=ExtResource("22_eair3")]
+[node name="StuntRace2" parent="." unique_id=1917820002 node_paths=PackedStringArray("gas_station") groups=["EditorHideable"] instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -919.5519, 0, 506.39148)
 visible = false
 gas_station = NodePath("../GasStations/StuntRace2Gasstation")
@@ -2315,7 +2315,7 @@ script = ExtResource("20_grj8g")
 script = ExtResource("mig_trkbtl")
 respawn_in_place = true
 
-[node name="StuntRace3" parent="." unique_id=1774353091 instance=ExtResource("22_eair3")]
+[node name="StuntRace3" parent="." unique_id=1774353091 groups=["EditorHideable"] instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 86.94812, 0, 532.8915)
 visible = false
 
@@ -2481,7 +2481,7 @@ script = ExtResource("20_grj8g")
 script = ExtResource("mig_trkbtl")
 respawn_in_place = true
 
-[node name="StuntRace4" parent="." unique_id=1657448105 node_paths=PackedStringArray("gas_station") instance=ExtResource("22_eair3")]
+[node name="StuntRace4" parent="." unique_id=1657448105 node_paths=PackedStringArray("gas_station") groups=["EditorHideable"] instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 54.44812, 0, 677.8915)
 visible = false
 gas_station = NodePath("../GasStations/StuntRace4Gasstation")
@@ -2696,7 +2696,7 @@ script = ExtResource("20_grj8g")
 script = ExtResource("mig_trkbtl")
 respawn_in_place = true
 
-[node name="TrackRace" parent="." unique_id=584445287 node_paths=PackedStringArray("gas_station") instance=ExtResource("22_eair3")]
+[node name="TrackRace" parent="." unique_id=584445287 node_paths=PackedStringArray("gas_station") groups=["EditorHideable"] instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -751, 0.5, 259)
 visible = false
 gas_station = NodePath("TrackGasstation")
