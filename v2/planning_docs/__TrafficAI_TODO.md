@@ -203,6 +203,111 @@ it.
 
 ---
 
+## LOD + network culling
+
+**Intent:** rider count scales on a basic PC **and online** (Steam). The server keeps the whole
+city moving; each peer only draws, and only receives updates for, the riders near its own
+player. Triggered by v0.0.151's Steam lag: 64 riders syncing a full `Transform3D` every
+rendered frame flooded the link (fixed for now with `replication_interval` on the rider's
+`MultiplayerSynchronizer`).
+
+**Non-goals:** racers (`NPCRaceManager` riders keep today's path, apart from the pose change
+below), the `nearest_racer_ahead` O(n²) fix, hysteresis at the radius edge (add only if
+flicker shows up in play).
+
+**Anti-goals:** far traffic that freezes or teleports (the city keeps moving); stale "ghost"
+riders on a client where a rider used to be; per-frame, per-peer visibility callbacks.
+
+### One radius
+
+`near_radius` (export on `NPCTrafficManager`) is the single line for everything: a rider within
+it of **any** player is *near* — full-rate tick, `ContactArea` on. A rider is only synced to and
+drawn by the peers whose player is within it. Pop-in at the edge is accepted; there's no fog to
+hide it on current maps, so tune it in play.
+
+### Pose: position + yaw
+
+Riders only ever rotate around Y (`_face_velocity`, `Basis.looking_at` on a flattened dir), so
+`sync_transform: Transform3D` becomes `sync_position: Vector3` + `sync_yaw: float`, both
+`ALWAYS` in the synchronizer. Applies to racers too — same entity, same synchronizer.
+`NPCRaceManager._respawn_npc` teleports to a checkpoint's `global_transform`, which may be
+tilted; `teleport_to` flattens it to yaw so server and clients agree.
+
+### One write per tick
+
+`ride_to` keeps yaw in a var (same `lerp_angle` as `_face_velocity`) and writes
+`global_transform` once, instead of restore → `global_position` → `rotation.y`. Traffic skips
+`NPCRiderEntity._physics_process`'s restore — the follower, not the node, is traffic's
+authoritative position. `ride_to` also takes over setting `_phys_prev` (the pose before this
+write) for the host's render smoothing. Traffic's reads of other racers' `global_position` may
+see the server's render-smoothed pose (≤ 1 tick behind); accepted, they're already throttled
+scans.
+
+### Batched tick (server)
+
+`NPCTrafficManager._physics_process` loops its riders and calls
+`npc.state_machine.current_state.Physics_Update(dt)` — through the state machine, so a rider
+still in idle before its deferred transition is handled. Traffic riders' own `StateMachine` and
+`NPCRiderEntity` physics processing are switched off at spawn (server branch of
+`rpc_spawn_npc`). Clients already have the state machine off.
+
+### Server LOD
+
+A LOD pass on a fixed interval (not every tick) measures each rider against every
+`PlayerEntity` in the Racers group (peer id = node name) and records which peers it's near.
+Distance is from the player, not the camera. A player respawning onto a far rider can go
+untouched by it for up to one pass interval; accepted.
+
+- **Near:** ticks every physics tick.
+- **Far** (near nobody): ticks every `far_tick_interval`-th tick with the time accumulated
+  since its own last tick. Far riders are bucketed round-robin so 1 / `far_tick_interval` of
+  them tick per frame. A far rider that turns near ticks next frame with its accumulated time.
+- `ContactArea` `monitoring` / `monitorable` on only while near (still only in
+  `NPCTrafficState`).
+- Rails make the big step safe: `advance(speed · dt)` doesn't care. The gate and blocker just
+  react later. A far rider can overshoot a stop line by one coarse step — unseen, and it settles
+  once near.
+- **Lights (step 6):** far riders still run `_gate` on their coarse ticks and read the light
+  phase from `NetworkTime.time` at that tick, so they obey lights unseen. Nothing here changes
+  how `_gate` is built.
+
+### Network visibility
+
+- Traffic riders' synchronizer: `public_visibility = false`,
+  `visibility_update_mode = NONE`, set on the server at spawn. Racers keep the defaults.
+- The LOD pass calls `set_visibility_for(peer, near)` only when a peer's near set changes. The
+  host (peer 1) is skipped — it's local.
+- Every peer still **spawns every rider** (`rpc_spawn_npc` / `request_traffic_sync`
+  unchanged). Only the sync stream is culled.
+- `npc_state` (`ON_CHANGE`) must arrive correct when a rider becomes visible again. Godot
+  resets a peer's delta baseline when visibility drops, which should resend it; **verify** (see
+  L4).
+
+### Drawing
+
+Hidden = root `visible = false`, `set_process(false)` (client smoothing), and the
+`NPCAnimationController`'s physics off. Showing snaps `global_transform` to the synced pose
+instead of lerping from a stale one.
+
+- **Host:** shown when near its own player — straight from the LOD pass.
+- **Client:** spawns hidden; shown when its last sync arrived recently. The `sync_position` setter records the
+  time and shows a hidden rider. `NPCTrafficManager` sweeps its riders on an interval and hides
+  stale ones. No client distance math, and nothing can render at a position the server stopped
+  updating.
+
+### Tunables
+
+| Export (`NPCTrafficManager`) | Effect |
+| --- | --- |
+| `near_radius` | Full tick, contact, sync and drawing inside it. Bigger = less pop-in, more cost and bandwidth |
+| `far_tick_interval` | Far riders tick once per this many physics ticks. Bigger = cheaper, coarser far behavior |
+
+The LOD pass interval and the client stale timeout stay constants. The stale timeout must cover
+several missed packets at the synchronizer's `replication_interval`, or riders blink on lossy
+links.
+
+---
+
 ## Build order
 
 Each step lints clean + headless-loads before the next. The user runs the game and checks each
@@ -216,6 +321,16 @@ step in-game; stop after each one.
 - [x] **5. `JunctionState` + gate.** Clauses 1, 4, 5; claim on grant. Verified on a 4-way in
       stunttrack01. Followed by the rails + `ContactArea` rework (verified: better FPS, player
       contact crashes both).
+- [ ] **L1. Pose + one write.** `sync_position` / `sync_yaw`, flattened `teleport_to`, single
+      `global_transform` write in `ride_to`. **Verify:** solo + 2 peers, traffic and race bots
+      look the same as before.
+- [ ] **L2. Batched tick.** **Verify:** traffic behaves the same solo; the per-rider
+      `StateMachine._physics_process` dispatch is gone from the profiler.
+- [ ] **L3. Server LOD + host drawing.** **Verify:** solo, drive across the map — riders appear
+      within `near_radius` already moving along the lanes, with no visible stutter near the player.
+- [ ] **L4. Network visibility + client drawing.** **Verify:** 2 peers far apart each see only
+      their local traffic; ping stays at LAN levels over Steam; crash a rider, drive away and back
+      — the other peer sees the wreck state correctly.
 - [ ] **6. Lights + stop signs.** Gate clauses 2 + 3. Light phase is a **pure function of
       `NetworkTime.time`** (no Timer, no stored index) so every peer agrees with no sync; N/S
       green together, then E/W, using the junction's `green_duration` / `amber_duration`.

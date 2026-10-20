@@ -30,7 +30,11 @@ The profile also says the expensive work is gone. What's left is mostly per-call
 
 traffic AI
 
+- [ ] add near miss
+- [ ] add 180 / 360 / 720 tricks
+- [ ] add hardflip / mix backflip / 180 tricks
 
+- [ ] tell the users when changing colors that they have to press done (or change that)
 
 ### NEXT
 - [ ] pause when out of focus
