@@ -25,11 +25,12 @@
 
 - [ ] Get AI working again
   - [ ] NPC Traffic
-    - [ ] [halfway impl](./__TrafficAI_TODO.md)
     - [x] bake npc nav paths so they can just follow, respond to player if needed then return to baked path
     - [x] intersections navigation
-    - [ ] optimization (see _scratchpad)
-    - [ ] traffic lights
+    - [x] optimization (see _scratchpad)
+    - [x] traffic lights
+    - [ ] cleanup ugly traffic lights
+    - [ ] add more roads
   - [ ] NPC Race AI
 
 - [ ] Add integration tests for features

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="1_hpiy0"]
 [ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="2_l2b5r"]
-[ext_resource type="PackedScene" uid="uid://tebarjn4qpyn" path="res://entities/npc/assets/Cars Bundle-glb/Car-unqqkULtRU.glb" id="3_l2b5r"]
+[ext_resource type="PackedScene" uid="uid://tebarjn4qpyn" path="res://entities/npc/assets/Cars/Car-unqqkULtRU.glb" id="3_l2b5r"]
 [ext_resource type="Material" uid="uid://hvmgv2l4yfyt" path="res://resources/terrain_tex/Metal062C_2K-JPG/Metal062C_2K-JPG.tres" id="3_mibol"]
 [ext_resource type="Texture2D" uid="uid://c8si3h86fi55g" path="res://resources/terrain_tex/Metal062C_2K-JPG/Metal062C_2K-JPG_Color.jpg" id="5_u551j"]
 [ext_resource type="Texture2D" uid="uid://c1opeuk4dty7b" path="res://resources/terrain_tex/Metal062C_2K-JPG/Metal062C_2K-JPG_Displacement.jpg" id="6_puuyu"]
@@ -37,10 +37,14 @@ standard_material = ExtResource("3_mibol")
 metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lyhtb"]
+emission_enabled = true
+emission = Color(0.85490197, 0.74509805, 0.13725491, 1)
+emission_energy_multiplier = 4.24
+emission_operator = 1
 
 [sub_resource type="Resource" id="Resource_ie68h"]
 script = ExtResource("2_l2b5r")
-color = Color(0.85546875, 0.74320936, 0.13700867, 1)
+color = Color(1.9766563, 1.7362248, 0.37378052, 1)
 use_standard_material = true
 surface_index = 4
 standard_material = SubResource("StandardMaterial3D_lyhtb")
@@ -111,7 +115,10 @@ heightmap_scale = 1.0
 heightmap_texture = SubResource("CompressedTexture2D_6i1yq")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vsib8"]
-albedo_color = Color(0.85546875, 0.74320936, 0.13700867, 1)
+emission_enabled = true
+emission = Color(0.85490197, 0.74509805, 0.13725491, 1)
+emission_energy_multiplier = 4.24
+emission_operator = 1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_83v6i"]
 albedo_texture = ExtResource("5_u551j")
@@ -133,7 +140,7 @@ meshes = [NodePath("Car-unqqkULtRU/NormalCar2_Cube_002"), NodePath("Car-unqqkULt
 
 [node name="Car-unqqkULtRU" parent="." unique_id=799729513 instance=ExtResource("3_l2b5r")]
 
-[node name="NormalCar2_Cube_002" parent="Car-unqqkULtRU" index="0" unique_id=1099824368]
+[node name="NormalCar2_Cube_002" parent="Car-unqqkULtRU" index="0" unique_id=801525222]
 surface_material_override/0 = SubResource("StandardMaterial3D_u551j")
 surface_material_override/1 = SubResource("StandardMaterial3D_puuyu")
 surface_material_override/2 = SubResource("StandardMaterial3D_fnupp")

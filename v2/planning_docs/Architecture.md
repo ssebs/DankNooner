@@ -28,9 +28,10 @@ Same rule as tunables: name and behavior, never current values.
 
 #### Debug levels
 
-- Nothing is registered today. `level_manager.gd` has one commented-out `Console.add_command`
-  (`dbg_gym`, marked broken — its handler no longer exists). Re-add a command there to load a
-  level straight from the main menu (\` opens the console).
+- No level-loading command is registered. `level_manager.gd` has one commented-out
+  `Console.add_command` (`dbg_gym`, marked broken — its handler no longer exists) beside the live
+  `dbg_traffic`. Re-add one there to load a level straight from the main menu (\` opens the
+  console).
 
 ### Stuff to plan out:
 
@@ -156,11 +157,13 @@ This is the third attempt. Hand-built `StaticBody3D` road pieces and Terrain3D b
 What the plugins don't give you:
 
 - **Junction routing.** `RoadContainer` links lanes segment-to-segment and never gives an
-  intersection's lanes a `lane_next`, so bots dead-end at every junction. `TrafficRouteGraph`
-  rebuilds those links geometrically — read its header comment.
+  intersection's lanes a `lane_next`, so race bots dead-end at every junction. `TrafficRouteGraph`
+  rebuilds those links geometrically — read its header comment. Traffic doesn't use the addon's
+  lanes at all (see [Traffic Network](#traffic-network)).
 - **A road/off-road distinction.** Road mesh and terrain both sit on the default world layer.
   Surface feel comes from the separately authored unstable-surface layer
-  (see [CrashController](#crashcontroller)), not from being on a `RoadContainer`.
+  (see [CrashController](#crashcontroller)), not from being on a `RoadContainer`. The `road` layer
+  exists only for the traffic bake's height snap.
 - **Stability.** Generated lanes are still rough in places; treat lane geometry as suspect before
   blaming the AI that follows it.
 
@@ -486,15 +489,50 @@ for the current surface. The distinctions that aren't obvious from the signature
 - `NPCRaceManager` (`managers/npc_race_manager.gd`) - owns AI race riders (`NPCRiderEntity`) on a negative-id roster (ids from -1) with spawn/despawn RPCs mirroring `SpawnManager`. `RaceGameMode`'s `NPCRacersComponent` drives its lifecycle; the server-only AI tick points each NPC at its next checkpoint from `RaceTask`.
 - Late joiners get every live bot re-sent at its current transform via `sync_npcs_to_peer(peer_id)` (from `RaceGameMode._on_player_latejoined` via `NPCRacersComponent.sync_to_peer`) — without it the newcomer has no bot nodes and takes a MultiplayerSynchronizer error per packet per bot.
 
+### Traffic Network
+
+Ambient traffic drives a hand-placed network baked in the editor, not the road addon's lanes.
+Code: `levels/components/traffic/`, plus `TrafficLaneFollower` and `JunctionState` in `entities/npc/`.
+
+- **Why not the road addon.** Roads will change (new map, non-addon road meshes), so traffic never
+  reads `RoadManager` / `RoadLane`. What counts as road is the `road` collision layer, used only by
+  the bake's height snap. Authoring is placeable nodes because the Godot curve editor is the thing
+  being avoided.
+- **Authoring.** One `TrafficNetwork` per level parents `TrafficRoad`s and `TrafficIntersection`s.
+  A road's child points in tree order are its path; `lane_count` is the total over both directions,
+  so it must be even. Intersections link roads through N/E/S/W slots in their own basis
+  (north = −Z, so rotating the node works), and whichever road end is nearest connects. Roads never
+  link back: one source of truth. A one-slot intersection is a cul-de-sac (U-turns only, control
+  ignored).
+- **Every problem is visible in the editor.** Config warnings on all three node types; Bake refuses
+  while any exist, and after building rejects lanes clipped away or with no way out. A stale bake
+  is flagged by `source_hash`. Editor drawing (debug_draw_3d) redraws only on change via
+  `TrafficNetwork.request_redraw()`, never per frame — a per-frame version tanked editor FPS.
+  Known bug, left alone: the preview vanishes while nothing is moving.
+- **Bake** (`TrafficNetworkBaker`) saves `<level>_traffic.tres` beside the level scene; runtime reads
+  only that. Lanes are offset right of travel per direction (keep right), corners rounded by
+  sampling, and clipped at each intersection's box, which is the stop line. Lane-count changes
+  taper the outer lanes into their neighbours. Turn lanes are sampled beziers from stop line to
+  exit, with no U-turns outside cul-de-sacs. Conflicts are marked from the horizontal proximity of
+  sampled paths, except pairs sharing an entry lane (same queue); if cars clip mid-junction, raise
+  the baker's vehicle width and rebake. Lane samples snap to the `road` layer with a single
+  down-ray, so stacked roads (overpasses) would need a closer start height.
+
 ### NPC Traffic Manager
 
-- `NPCTrafficManager` (`managers/npc_traffic_manager.gd`) - ambient traffic riders/cars (ids counting down from its `FIRST_ID` const, far enough below the race roster to guarantee the two id spaces never collide). Builds a `TrafficRouteGraph` from the level's road network; count, car/bike mix, cruise speed and vehicle rosters are per-map via `LevelDefinition.traffic_settings` (a `TrafficSettings` resource). `FreeRoamGameMode` and `RaceGameMode`'s `TrafficComponent` (events with `enable_traffic`) start/stop it, server-only.
+- `NPCTrafficManager` (`managers/npc_traffic_manager.gd`) - ambient traffic riders/cars on the level's baked `TrafficNetwork` (no node or no bake = no traffic). Ids count down from its `FIRST_ID` const, far enough below the race roster to guarantee the two id spaces never collide. Count, car/bike mix, cruise speed and vehicle rosters are per-map via `LevelDefinition.traffic_settings` (a `TrafficSettings` resource). Linked into free roam only; race `TrafficComponent`s are deliberately unlinked.
 - **Spawn sync contract** (this is the fix for "traffic only loads for host"):
   - The server broadcasts `rpc_spawn_npc`, but clients only *accept* spawns after their own gamemode `Enter()` runs (level guaranteed loaded) — earlier broadcasts would parent riders under the outgoing level and be freed with it.
   - On `Enter()`, non-server peers call `request_traffic_sync()` to pull everything they missed (covers both the fresh-start timing race and late join); `Exit()` calls `reset_local_traffic()`.
   - Spawn/despawn RPCs are idempotent (dedupe on npc id / tolerant of missing ids), so broadcast + resync can overlap safely.
-- Crashed riders recover onto a clear lane spot after a randomized delay; a rider that rams a player crashes them via `SpawnManager.crash_player`.
+- **Rails, no physics.** The rider's `TrafficLaneFollower` is its authoritative position: `NPCTrafficState` picks a speed, the follower advances, `ride_to` places the rider. `move_and_slide` was most of the traffic cost, so traffic has no body collision at all: `collision_layer` / `mask` are zeroed on every peer (a predicting client would otherwise bump a body the server rides through), and the `ContactArea` reports hits server-side. A player has no body to bump off, so any touch from a player crashes both; rider-to-rider contact needs a relative-speed threshold so queues don't wipe out. Side effect: traffic no longer kills animals, which only listen for `body_entered`.
+- **Behavior.** Corner speed, capped to stop a gap behind whatever is ahead, capped again by the junction gate. Forks are a random turn, latched until the rider leaves that lane. No overtaking and no go-around: a stopped player just gets queued behind (go-around was dropped; it doesn't fit rails).
+- **Junction gate** (`_gate`). Only the rider the stop line is actually slowing asks, and it claims the junction on grant, so two riders can't both see it empty (the server ticks riders sequentially). A red always holds. Past that, `junction_timeout` breaks deadlocks the gate can't see; STOP needs a full stop and the head of `JunctionState`'s arrival queue; an occupied conflicting turn lane waits; a stopped racer just past the exit waits (a spatial check instead of a lane-occupancy table).
+- **Lights** are a pure function of `NetworkTime.time` (`TrafficJunctionData.light`): no Timer and no sync, every peer agrees, and far riders on coarse ticks still obey them. North/south are green together, then east/west; amber counts as stop. The `TrafficLight` prop and LevelManager's `dbg_traffic` console command read the same function. A slot's light is for traffic coming *from* that side.
+- **LOD + network culling.** One radius, `near_radius`: a rider within it of any player is near. The manager ticks every rider itself (each rider's own state machine and pose restore are off): near ones every tick, far ones round-robin every `far_tick_interval`-th tick with their accumulated time, which rails make safe. An interval LOD pass applies only what changed: ContactArea, per-peer `set_visibility_for` (traffic synchronizers are private with update mode none), and host drawing. Clients spawn every rider hidden, show it on first sync and hide it when stale, so there's no client distance math and nothing renders where the server stopped updating. Every peer still spawns every rider; only the sync stream is culled. Pop-in at the edge is accepted. This came from Steam lag: GodotSteam maps unreliable to reliable, so full-rate transform sync showed up as ever-growing lag rather than drops.
+- Crashed riders recover onto a clear lane spot after a randomized delay; a rider that rams a player crashes them via `SpawnManager.crash_player`. No stuck recovery: riders on rails can't wedge.
 - Vehicle skins ship as `res://` paths, deliberately not `PlayerDefinition.to_dict()` — that round-trips every loadout through `BikeSkinDefinition.from_dict()` per rider per peer.
+- Next bottleneck as rider count grows: `nearest_racer_ahead` is O(n²) over the Racers group. Idea: take the rider ahead from per-lane order and check players separately.
 
 ### Animal Spawn Manager
 
@@ -511,11 +549,11 @@ for the current surface. The distinctions that aren't obvious from the signature
 
 Shared by both NPC managers, implemented on `NPCRiderEntity`. NPCs use a plain `MultiplayerSynchronizer` (server authority) with **no** netfox rollback or TickInterpolator.
 
-- The replicated property is `sync_transform`, not the node's raw transform. The server writes it at the end of every movement tick (all three behavior states route through `apply_gravity_and_move()`) and on `teleport_to()`.
-- Nothing renders straight off it. A body that only moves on the tick reads as stepping at render rate — the player bike doesn't, because netfox's TickInterpolator smooths it, and that gap is what this closes for NPCs. Both peers ease toward `sync_transform` in `_process()`, with different math because they know different things:
+- The replicated pose is `sync_position` + `sync_yaw`, not the node's raw transform: riders only ever turn about Y, and `teleport_to()` flattens a tilted checkpoint to yaw so server and clients agree. `sync_yaw` is listed first in the synchronizer so a packet's yaw has landed by the time the `sync_position` setter runs. The server writes the pose at the end of every movement tick (`apply_gravity_and_move()` for idle / race, `ride_to()` for traffic, which is traffic's single transform write) and on `teleport_to()`.
+- Nothing renders straight off it. A body that only moves on the tick reads as stepping at render rate — the player bike doesn't, because netfox's TickInterpolator smooths it, and that gap is what this closes for NPCs. Both peers ease toward the synced pose in `_process()`, with different math because they know different things:
   - **Server** knows both ends of the step, so it interpolates exactly between the last two authoritative poses by the physics interpolation fraction. One tick of visual latency and no more, so what you see still lines up with what you collide with.
   - **Client** only ever knows the latest pose, arriving at replication rate on irregular timing, so it eases toward it exponentially. Jumps past a snap threshold (teleport / crash recovery) snap instead of sliding across the map.
-- The server puts the body back on `sync_transform` in its own `_physics_process` before the behavior states run, so steering and `move_and_slide()` never see a smoothed pose. That restore has to land first, which is why the entity sets a negative `process_physics_priority` rather than relying on parent-before-child order alone.
+- The server puts the body back on the synced pose in its own `_physics_process` before the behavior states run, so steering and `move_and_slide()` never see a smoothed pose. That restore has to land first, which is why the entity sets a negative `process_physics_priority` rather than relying on parent-before-child order alone. Traffic turns the restore off: its follower, not the node, is its position, so its reads of other racers may see a pose up to a tick behind (accepted, those scans are throttled anyway).
 - Clients never simulate: `_ready` disables the behavior state machine's physics on non-server peers.
 
 ### Unlocks / progression

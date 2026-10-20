@@ -16,6 +16,7 @@ signal exited_event_circle(peer_id: int, event_start_circle: EventStartCircle)
 
 func _ready():
 	add_to_group(UtilsConstants.GROUPS["EventCircles"], true)
+	add_to_group(UtilsConstants.GROUPS["EditorHideable"], true)
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 

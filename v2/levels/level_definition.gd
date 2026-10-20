@@ -27,6 +27,8 @@ func _ready():
 		return
 	if OS.has_feature("debug"):
 		player_spawn_pos = player_spawn_pos_debug
+	for node: Node3D in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EditorHideable"]):
+		node.visible = true
 	# WebGL can't afford the post-process pass (glow + adjustments) or shadow maps. Neon edges still
 	# draw, unbloomed. Runs in warmup too, so warmed shader variants match this.
 	if OS.has_feature("web"):

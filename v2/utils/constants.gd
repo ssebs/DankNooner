@@ -8,6 +8,8 @@ const GROUPS = {
 	"Validate": "Validate",
 	"InputStateManager": "InputStateManager",
 	"EventCircles": "EventCircles",
+	## Level clutter you can hide in the editor; LevelDefinition re-shows it at runtime.
+	"EditorHideable": "EditorHideable",
 	"FreeRoamActivities": "FreeRoamActivities",
 	"GasStations": "GasStations",
 	"Racers": "Racers",
