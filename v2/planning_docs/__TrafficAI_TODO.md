@@ -373,7 +373,10 @@ step in-game; stop after each one.
 
 ## Later
 
-- Traffic light props from `levels/assets/props/Traffic Light.glb`, reading the same clock phase.
+- Traffic light props: a graybox `TrafficLight` (`levels/components/props/traffic_light.tscn`)
+  exists, placed by hand with `intersection` + `slot` exports, reading the baked phase off
+  `NetworkTime.time`. Lenses are `TrafficLightLamp` (shared emissive materials per color/lit).
+  Untested. Possible later: auto-place a pole per lit slot.
 - Route-driven traffic (destinations + A\* over intersections).
 - NPC racers on the new network.
 - Overpasses: the height snap is a single down-ray, so stacked roads need a closer start height.

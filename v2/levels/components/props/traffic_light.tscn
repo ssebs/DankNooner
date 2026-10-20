@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_chs31"]
 [ext_resource type="Script" uid="uid://q14flbhix8rv" path="res://levels/components/props/traffic_light.gd" id="1_qv33m"]
+[ext_resource type="PackedScene" path="res://levels/components/props/traffic_light_lamp.tscn" id="3_lamp"]
 
 [node name="TrafficLight" type="Node3D" unique_id=968735672]
 script = ExtResource("1_qv33m")
@@ -33,26 +34,16 @@ height = 6.0
 depth = 0.2
 neon_edges = true
 
-[node name="redlight" parent="." unique_id=2014046368 instance=ExtResource("1_chs31")]
+[node name="RedLamp" parent="." unique_id=2014046368 instance=ExtResource("3_lamp")]
+unique_name_in_owner = true
 transform = Transform3D(0.99999976, 0, 0, 0, -4.3711378e-08, 0.99999994, 0, -0.9999998, -4.371139e-08, 9.575455, 14.899999, -0.68831605)
-shape_mode = 1
-width = 1.5
-depth = 1.5
-color_preset = 4
-neon_edges = true
 
-[node name="yellowlight" parent="." unique_id=1276269906 instance=ExtResource("1_chs31")]
+[node name="YellowLamp" parent="." unique_id=1276269906 instance=ExtResource("3_lamp")]
+unique_name_in_owner = true
 transform = Transform3D(0.99999976, 0, 0, 0, -4.3711378e-08, 0.99999994, 0, -0.9999998, -4.371139e-08, 9.575455, 13.099999, -0.68831605)
-shape_mode = 1
-width = 1.5
-depth = 1.5
-color_preset = 6
-neon_edges = true
+color = Color(1, 0.7, 0, 1)
 
-[node name="greenlight" parent="." unique_id=1045507326 instance=ExtResource("1_chs31")]
+[node name="GreenLamp" parent="." unique_id=1045507326 instance=ExtResource("3_lamp")]
+unique_name_in_owner = true
 transform = Transform3D(0.99999976, 0, 0, 0, -4.3711378e-08, 0.99999994, 0, -0.9999998, -4.371139e-08, 9.575455, 11.299999, -0.68831605)
-shape_mode = 1
-width = 1.5
-depth = 1.5
-color_preset = 2
-neon_edges = true
+color = Color(0, 1, 0.3, 1)
