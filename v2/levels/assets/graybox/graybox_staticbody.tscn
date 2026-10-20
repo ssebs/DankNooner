@@ -19,6 +19,7 @@ depth = 1.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1922891733]
 unique_name_in_owner = true
+layers = 3
 mesh = SubResource("BoxMesh_0l3j2")
 surface_material_override/0 = SubResource("StandardMaterial3D_esfoe")
 

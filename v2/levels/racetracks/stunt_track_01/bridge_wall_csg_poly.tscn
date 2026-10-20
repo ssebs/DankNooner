@@ -3,6 +3,7 @@
 [ext_resource type="Material" uid="uid://bdn26favvnenb" path="res://levels/assets/graybox/repeating_gray.tres" id="1_sagb8"]
 
 [node name="BridgeWallCSGPoly" type="CSGPolygon3D" unique_id=227368666]
+layers = 3
 use_collision = true
 collision_layer = 3
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 0.5, 0.1)

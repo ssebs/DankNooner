@@ -167,6 +167,12 @@ What the plugins don't give you:
 - **Stability.** Generated lanes are still rough in places; treat lane geometry as suspect before
   blaming the AI that follows it.
 
+**Minimap layer.** The minimap camera draws only render layer 2 (`minimap`), so it skips
+traffic, riders and props. Anything that should show on the map needs layers 1+2: the
+`GrayBoxStaticBody` mesh (which covers the building props), the farm glbs and the race/bridge wall
+CSGs have it in their scenes, but each level's
+`RoadContainer`s (`render_layers`) and terrain meshes have to be tagged by hand.
+
 ### Input System
 
 The `InputStateManager` (`managers/input_state_manager.gd`) is a centralized input handler that routes input based on the current game context.

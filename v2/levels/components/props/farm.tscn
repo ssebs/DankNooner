@@ -137,3 +137,15 @@ script = ExtResource("6_n8j2u")
 energy = 2.5
 width_px = 0.5
 normal_threshold = 1.112
+
+[node name="BigBarn_Cube_034" parent="Big Barn"]
+layers = 3
+
+[node name="Barn_Cube_005" parent="Barn"]
+layers = 3
+
+[node name="ChickenCoop_Cube_015" parent="ChickenCoop"]
+layers = 3
+
+[node name="Silo_House_Cylinder_003" parent="Silo House"]
+layers = 3

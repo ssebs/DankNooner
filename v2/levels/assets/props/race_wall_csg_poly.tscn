@@ -26,6 +26,7 @@ uv1_triplanar = true
 curve = SubResource("Curve3D_wall")
 
 [node name="Base" type="CSGPolygon3D" parent="." unique_id=2101160584]
+layers = 3
 use_collision = true
 collision_layer = 3
 polygon = PackedVector2Array(-0.25, -4, -0.25, 2, 0.25, 2, 0.25, -4)
