@@ -24,14 +24,6 @@
 - [ ] see playtest [feedback](_ScratchPad.md)
 
 - [ ] Get AI working again
-  - [ ] NPC Traffic
-    - [x] bake npc nav paths so they can just follow, respond to player if needed then return to baked path
-    - [x] intersections navigation
-    - [x] optimization (see _scratchpad)
-    - [x] traffic lights
-    - [x] cleanup ugly traffic lights
-    - [ ] add more roads
-  - [ ] NPC Race AI
 
 - [ ] Add integration tests for features
   - [ ] Testing.md
@@ -234,6 +226,15 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] NPC Traffic
+  - [x] bake npc nav paths so they can just follow, respond to player if needed then return to baked path
+  - [x] intersections navigation
+  - [x] optimization (see _scratchpad)
+  - [x] traffic lights
+  - [x] cleanup ugly traffic lights
+  - [x] add more roads
+  - [ ] NPC Race AI
+
 - [x] stop syncing duplicate skin definitions (npcs, etc)
 
 - [x] ramp hitboxes remain after finishing stunt race
