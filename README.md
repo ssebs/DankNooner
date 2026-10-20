@@ -14,7 +14,7 @@ Realistic controls meet arcade tricks: progressive braking, balance point wheeli
 > Best played with a controller! But Keyboard + Mouse works too
 
 - **Steam:** [Dank Nooner on Steam](https://store.steampowered.com/app/5416370/Dank_Nooner/)
-- **Discord:** [discord.gg/nA7VY4MHW](https://discord.gg/nA7VY4MHW)
+- **Discord:** [discord.gg/HCe4XcCFw3](https://discord.gg/HCe4XcCFw3)
 - **V1 POC (wheelie balance):** [itch.io](https://theofficialssebs.itch.io/dank-nooner-poc)
 
 ## V2 Status
