@@ -14,6 +14,14 @@ class_name TrafficNetwork extends Node3D
 
 # Drawings live until the next redraw clears them
 const DRAW_SECONDS := 1.0e9
+# Indexed by TrafficJunctionData.Light
+const LIGHT_COLORS: Array[Color] = [Color.GREEN, Color.YELLOW, Color.RED]
+
+## Runtime: LevelManager's dbg_traffic console command draws each light at its stop lines.
+var show_lights := false:
+	set(v):
+		show_lights = v
+		set_process(v)
 
 var _redraw_queued := false
 var _last_warnings := {}
@@ -25,8 +33,20 @@ func _enter_tree():
 
 
 func _ready():
+	# Only show_lights processes, never the editor
+	set_process(false)
 	if Engine.is_editor_hint():
 		child_order_changed.connect(queue_redraw)
+
+
+func _process(_delta: float):
+	# Seen through the road and props. Held only to keep the scope alive
+	@warning_ignore("unused_variable")
+	var cfg := DebugDraw3D.new_scoped_config().set_no_depth_test(true)
+	for i in baked.lanes.size():
+		var lane := baked.lanes[i]
+		if lane.junction >= 0 and baked.control(i) == TrafficIntersection.ControlType.LIGHT:
+			DebugDraw3D.draw_sphere(lane.points[0] + Vector3.UP * 2.0, 0.5, LIGHT_COLORS[baked.light(i, NetworkTime.time)])
 
 
 func _exit_tree():

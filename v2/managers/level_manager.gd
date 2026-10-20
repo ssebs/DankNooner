@@ -77,6 +77,7 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 	# Console.add_command("dbg_gym", spawn_gym_test_level) # broken
+	Console.add_command("dbg_traffic", _toggle_traffic_lights_debug, [], 0, "Toggle the traffic light debug draw")
 	settings_manager.all_settings_changed.connect(func(_s): _apply_gamma())
 
 
@@ -170,6 +171,11 @@ func _apply_gamma():
 		"*", "WorldEnvironment", true, false
 	):
 		world_env.environment.adjustment_color_correction = lut_tex
+
+
+func _toggle_traffic_lights_debug():
+	for network: TrafficNetwork in current_level.find_children("*", "TrafficNetwork", true, false):
+		network.show_lights = !network.show_lights
 
 
 func _get_configuration_warnings() -> PackedStringArray:

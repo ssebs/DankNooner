@@ -1,7 +1,8 @@
 @tool
 ## Owns ambient traffic riders (NPCRiderEntity in NPCTrafficState): reads the
-## level's baked TrafficNetwork, spawns riders spread across its road lanes, and
-## recovers them when they crash.
+## level's baked TrafficNetwork, spawns riders spread across its road lanes, ticks them
+## (riders far from every player tick coarsely and aren't synced), and recovers them when
+## they crash.
 ##
 ## Count, car/bike mix, cruise speed and the vehicle rosters are all per-map — see
 ## LevelDefinition.traffic_settings.
@@ -26,6 +27,12 @@ class_name NPCTrafficManager extends BaseManager
 ## doesn't pop back all at once either.
 @export var respawn_delay_min: float = 5.0
 @export var respawn_delay_max: float = 8.0
+## A rider within this of any player is near: full-rate tick, ContactArea on, and synced to
+## and drawn by only the peers whose player it's near. Bigger = less pop-in, more cost and
+## bandwidth.
+@export var near_radius: float = 150.0
+## Far riders tick once per this many physics ticks, with the time since their last one.
+@export var far_tick_interval: int = 8
 
 const NPC_SCENE: PackedScene = preload("res://entities/npc/npc_rider_entity.tscn")
 ## Fallback pools for maps whose TrafficSettings leave a roster empty — the same
@@ -43,6 +50,11 @@ const PLACEMENT_CLEARANCE: float = 5.0
 ## Random spots tried for a clear one before giving up (skipping a spawn, or waiting
 ## out another recovery delay).
 const PLACEMENT_ATTEMPTS: int = 4
+## How often the server's LOD pass re-measures riders, and clients sweep for stale ones.
+const LOD_INTERVAL_MS: int = 250
+## A client hides a rider not synced for this long. Covers several missed packets at the
+## synchronizer's replication_interval, or riders blink on lossy links.
+const SYNC_STALE_MS: int = 500
 
 var _npcs: Dictionary[int, NPCRiderEntity] = {}
 ## Server-side copy of each rider's rolled vehicle dict, kept so a peer whose level
@@ -61,6 +73,12 @@ var _road_lanes: Array[int] = []
 ## One per baked junction, shared by every rider's NPCTrafficState.
 var _junctions: Array[JunctionState] = []
 var _next_id: int = FIRST_ID
+## Server: peers whose player each rider was near on the last LOD pass.
+var _near_peers: Dictionary[int, PackedInt32Array] = {}
+## Server: time each far rider has gone without a tick.
+var _pending_delta: Dictionary[int, float] = {}
+var _tick_count: int = 0
+var _next_lod_ms: int = 0
 
 
 #region Traffic lifecycle (server only)
@@ -241,9 +259,22 @@ func rpc_spawn_npc(npc_id: int, vehicle: Dictionary, pos: Vector3, basis: Basis)
 	# Tagged on every peer, not just the server — the HUD runs client-side and uses this
 	# to tell ambient traffic from actual competitors.
 	npc.add_to_group(UtilsConstants.GROUPS["Traffic"])
+	# Drawn once near: the LOD pass shows it on the host, its first sync on a client
+	npc.set_drawn(false)
 
 	if !multiplayer.is_server():
 		return
+	# Seeds the synced yaw ride_to eases from
+	npc.teleport_to(pos, basis)
+	# Ticked by our _physics_process instead; the follower, not the node, is its pose
+	npc.state_machine.set_physics_process(false)
+	npc.set_physics_process(false)
+	# Synced only to the peers it's near, see _update_lod
+	npc.synchronizer.public_visibility = false
+	npc.synchronizer.visibility_update_mode = MultiplayerSynchronizer.VISIBILITY_PROCESS_NONE
+	_near_peers[npc_id] = PackedInt32Array()
+	_pending_delta[npc_id] = 0.0
+	_next_lod_ms = 0
 	var traffic_state := _traffic_state(npc_id)
 	traffic_state.crashed.connect(_on_npc_crashed.bind(npc_id))
 	npc.driving = true
@@ -260,6 +291,8 @@ func rpc_despawn_npc(npc_id: int):
 		return
 	_npcs[npc_id].queue_free()
 	_npcs.erase(npc_id)
+	_near_peers.erase(npc_id)
+	_pending_delta.erase(npc_id)
 
 
 ## The current level's TrafficNetwork, which also parents its riders. Null on maps without one.
@@ -285,6 +318,79 @@ func _clear_follower_on(lane: int) -> TrafficLaneFollower:
 		if _is_spot_clear(follower.get_transform().origin, null):
 			return follower
 	return null
+
+
+#endregion
+
+#region LOD + network culling
+
+
+## Server: ticks every rider's state, far ones round-robin every far_tick_interval-th tick.
+## Clients: hides riders the server stopped syncing to us.
+func _physics_process(delta: float) -> void:
+	if Engine.is_editor_hint() or _npcs.is_empty() or multiplayer.multiplayer_peer == null:
+		return
+	var now := Time.get_ticks_msec()
+	var lod_due := now >= _next_lod_ms
+	if lod_due:
+		_next_lod_ms = now + LOD_INTERVAL_MS
+	if !multiplayer.is_server():
+		if lod_due:
+			_hide_stale_riders(now)
+		return
+	if lod_due:
+		_update_lod()
+
+	_tick_count += 1
+	for npc_id in _npcs:
+		var dt := _pending_delta[npc_id] + delta
+		# Ids are consecutive, so this spreads far riders evenly over the ticks
+		if _near_peers[npc_id].is_empty() and posmod(npc_id + _tick_count, far_tick_interval) != 0:
+			_pending_delta[npc_id] = dt
+			continue
+		_pending_delta[npc_id] = 0.0
+		var state := _npcs[npc_id].state_machine.current_state
+		# Null until StateMachine._ready's deferred transition into idle runs — skip is intentional
+		if state != null:
+			state.Physics_Update(dt)
+
+
+## Which peers' players each rider is near, applied only where that changed: the far tick,
+## ContactArea, which peers get its sync stream, and whether the host draws it.
+func _update_lod() -> void:
+	var players := get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Racers"]).filter(
+		func(racer: Node) -> bool: return racer is PlayerEntity
+	)
+	# Remote peers only; the host (1) has no sync stream to cull, just drawing
+	var remote_peers := multiplayer.get_peers()
+	var radius_sq := near_radius * near_radius
+	for npc_id in _npcs:
+		var npc := _npcs[npc_id]
+		var near := PackedInt32Array()
+		for player in players:
+			if player.global_position.distance_squared_to(npc.global_position) < radius_sq:
+				near.append(int(player.name))
+		var was := _near_peers[npc_id]
+		if near == was:
+			continue
+		_near_peers[npc_id] = near
+		if near.is_empty() != was.is_empty():
+			_traffic_state(npc_id).set_contact(!near.is_empty())
+		# A peer that just left still has a player for a frame; visibility for it would error
+		for peer in remote_peers:
+			if near.has(peer) != was.has(peer):
+				npc.synchronizer.set_visibility_for(peer, near.has(peer))
+		if near.has(1) != was.has(1):
+			npc.set_drawn(near.has(1))
+
+
+func _hide_stale_riders(now: int) -> void:
+	for npc in _npcs.values():
+		# Freed with an old level until request_traffic_sync purges it — skip is intentional
+		if !is_instance_valid(npc):
+			continue
+		if npc.visible and now - npc.last_sync_ms > SYNC_STALE_MS:
+			npc.set_drawn(false)
 
 
 #endregion

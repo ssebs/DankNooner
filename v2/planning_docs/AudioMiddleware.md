@@ -154,7 +154,7 @@ AudioManager stays the single place sounds are authored. Positional playback bor
 - `PlayerEntity` carries `%RemoteEngine`, `%RemoteSqueal`, `%RemoteExhaustPop`, `%RemoteExhaustBurble`, `%RemoteCrash`. `play_rider_sound(event, remote_player)` / `stop_rider_sound()` route: the local rider plays the AudioManager event as before (non-positional), anyone else plays on the remote player.
 - Remote engine RPM comes from the synced `GearingController` state each `_process`. Exhaust pops/burble roll on every peer off the rider's synced throttle, so remote rolls (and flames) don't match the rider's own. Remote crashes play the bone crack positionally; your own crash sounds stay non-positional.
 
-Attenuation is the stock `AudioStreamPlayer3D` settings on those nodes; tune them in `player_entity.tscn`. Both engine layers and both player cameras (`TPSCam`, `FPSCam`) use idle-step `doppler_tracking`. Idle, not physics, because rider transforms are interpolated per frame by `TickInterpolator`. A camera without tracking (override cams, garage) hears no doppler.
+Attenuation is stock `AudioStreamPlayer3D` inverse-distance on those nodes, with `unit_size` (the range heard at full volume, which also delays the distance low-pass) raised on all seven, horn included; tune it in `player_entity.tscn`. Both engine layers and both player cameras (`TPSCam`, `FPSCam`) use idle-step `doppler_tracking`. Idle, not physics, because rider transforms are interpolated per frame by `TickInterpolator`. A camera without tracking (override cams, garage) hears no doppler.
 
 ## Things to be aware of
 

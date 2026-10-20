@@ -919,6 +919,59 @@ script = ExtResource("6_udx41")
 north = NodePath("../TrafficRoad3")
 metadata/_custom_type_script = "uid://bdb83jm5t82md"
 
+[node name="TrafficLight" type="Node3D" parent="TrafficNetwork" unique_id=78446927]
+
+[node name="pipe" parent="TrafficNetwork/TrafficLight" unique_id=1485126779 instance=ExtResource("18_dc022")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -191.92453, 7.999998, 413.99554)
+height = 16.0
+neon_edges = true
+
+[node name="pipe2" parent="TrafficNetwork/TrafficLight" unique_id=19749359 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.25881898, 0.9659258, 0, -0.9659258, 0.25881898, 0, 0, 0, 1, -190.32452, 15.999998, 413.99554)
+height = 4.0
+neon_edges = true
+
+[node name="pipe3" parent="TrafficNetwork/TrafficLight" unique_id=42632665 instance=ExtResource("18_dc022")]
+transform = Transform3D(-5.9604645e-08, 0.99999994, 0, -0.99999994, -5.9604645e-08, 0, 0, 0, 1, -186.52452, 16.499998, 413.99554)
+height = 4.0
+neon_edges = true
+
+[node name="pipe4" parent="TrafficNetwork/TrafficLight" unique_id=836610609 instance=ExtResource("18_dc022")]
+transform = Transform3D(-0.25881904, 0.9659257, 0, -0.9659257, -0.25881904, 0, 0, 0, 1, -182.72452, 15.999998, 413.99554)
+height = 4.0
+neon_edges = true
+
+[node name="bg" parent="TrafficNetwork/TrafficLight" unique_id=1565693270 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.9999998, 0, 0, 0, 0.9999998, 0, 0, 0, 1, -182.52452, 13.099998, 413.29553)
+width = 3.0
+height = 6.0
+depth = 0.2
+neon_edges = true
+
+[node name="redlight" parent="TrafficNetwork/TrafficLight" unique_id=949788985 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.99999976, 0, 0, 0, -4.3711378e-08, 0.99999994, 0, -0.9999998, -4.371139e-08, -182.52452, 14.899999, 413.09552)
+shape_mode = 1
+width = 1.5
+depth = 1.5
+color_preset = 4
+neon_edges = true
+
+[node name="yellowlight" parent="TrafficNetwork/TrafficLight" unique_id=866540642 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.99999976, 0, 0, 0, -4.3711378e-08, 0.99999994, 0, -0.9999998, -4.371139e-08, -182.52452, 13.099999, 413.09552)
+shape_mode = 1
+width = 1.5
+depth = 1.5
+color_preset = 6
+neon_edges = true
+
+[node name="greenlight" parent="TrafficNetwork/TrafficLight" unique_id=175312643 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.99999976, 0, 0, 0, -4.3711378e-08, 0.99999994, 0, -0.9999998, -4.371139e-08, -182.52452, 11.299999, 413.09552)
+shape_mode = 1
+width = 1.5
+depth = 1.5
+color_preset = 2
+neon_edges = true
+
 [node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=756147242]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -94, 38, 246)
 visible = false
@@ -957,6 +1010,7 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -134
 
 [node name="StuntRace" parent="." unique_id=459761741 instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -150, 0, 59)
+visible = false
 
 [node name="Route" type="Node3D" parent="StuntRace" unique_id=1981174591]
 top_level = true
@@ -1102,7 +1156,7 @@ transform = Transform3D(0.70710677, 0, -0.7071068, 0, 1, 0, 0.7071068, 0, 0.7071
 [node name="PickupSpawner24" parent="StuntRace/Route" unique_id=1113636932 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(0.70710677, 0, -0.7071068, 0, 1, 0, 0.7071068, 0, 0.70710677, -517.92896, 1.5, 516.5858)
 
-[node name="ArrowWall2" parent="StuntRace/Route" unique_id=1485126779 instance=ExtResource("25_60x1b")]
+[node name="ArrowWall2" parent="StuntRace/Route" unique_id=1948640552 instance=ExtResource("25_60x1b")]
 transform = Transform3D(-4.3711378e-08, -0.7071067, 0.70710677, 1, -3.0908613e-08, 3.0908623e-08, 0, 0.70710677, 0.7071067, -166.69745, 5.2500005, 397.47864)
 
 [node name="ArrowWall14" parent="StuntRace/Route" unique_id=1157836351 instance=ExtResource("25_60x1b")]
@@ -1259,6 +1313,7 @@ respawn_in_place = true
 
 [node name="StuntRace2" parent="." unique_id=1917820002 node_paths=PackedStringArray("gas_station") instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -919.5519, 0, 506.39148)
+visible = false
 gas_station = NodePath("../GasStations/StuntRace2Gasstation")
 
 [node name="Route" type="Node3D" parent="StuntRace2" unique_id=1085111944]
@@ -1509,6 +1564,7 @@ respawn_in_place = true
 
 [node name="StuntRace3" parent="." unique_id=1774353091 instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 86.94812, 0, 532.8915)
+visible = false
 
 [node name="Route" type="Node3D" parent="StuntRace3" unique_id=1874158033]
 top_level = true
@@ -1674,6 +1730,7 @@ respawn_in_place = true
 
 [node name="StuntRace4" parent="." unique_id=1657448105 node_paths=PackedStringArray("gas_station") instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 54.44812, 0, 677.8915)
+visible = false
 gas_station = NodePath("../GasStations/StuntRace4Gasstation")
 
 [node name="Route" type="Node3D" parent="StuntRace4" unique_id=356842632]
@@ -1888,6 +1945,7 @@ respawn_in_place = true
 
 [node name="TrackRace" parent="." unique_id=584445287 node_paths=PackedStringArray("gas_station") instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -751, 0.5, 259)
+visible = false
 gas_station = NodePath("TrackGasstation")
 metadata/_edit_group_ = true
 

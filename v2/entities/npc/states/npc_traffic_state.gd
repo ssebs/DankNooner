@@ -32,6 +32,8 @@ var junctions: Array[JunctionState]
 
 # Turn lane we've been let onto, -1 when none
 var _claimed := -1
+# Stop-sign junction whose arrival queue we're in
+var _queued: JunctionState
 var _wait_time := 0.0
 
 
@@ -40,8 +42,6 @@ func Enter(_state_context: StateContext):
 		return
 	npc.contact_area.body_entered.connect(_on_contact)
 	npc.contact_area.area_entered.connect(_on_contact)
-	npc.contact_area.set_deferred("monitoring", true)
-	npc.contact_area.set_deferred("monitorable", true)
 
 
 func Exit(_state_context: StateContext):
@@ -49,9 +49,14 @@ func Exit(_state_context: StateContext):
 		return
 	npc.contact_area.body_entered.disconnect(_on_contact)
 	npc.contact_area.area_entered.disconnect(_on_contact)
-	npc.contact_area.set_deferred("monitoring", false)
-	npc.contact_area.set_deferred("monitorable", false)
+	set_contact(false)
 	_leave_junction()
+
+
+## NPCTrafficManager's LOD turns contact on only while a player is near.
+func set_contact(on: bool) -> void:
+	npc.contact_area.set_deferred("monitoring", on)
+	npc.contact_area.set_deferred("monitorable", on)
 
 
 func Physics_Update(delta: float):
@@ -89,18 +94,39 @@ func _gate(target_speed: float, delta: float) -> float:
 	if line_speed >= target_speed:
 		return target_speed
 	var turn := follower.next_turn_lane()
-	var junction := junctions[follower.network.lanes[turn].junction]
+	var network := follower.network
+	var junction := junctions[network.lanes[turn].junction]
+	# A red holds however long we've waited; the timeout is for deadlocks the gate can't see
+	var lit := network.control(turn) == TrafficIntersection.ControlType.LIGHT
+	if lit and network.light(turn, NetworkTime.time) != TrafficJunctionData.Light.GREEN:
+		return line_speed
 	_wait_time += delta
-	if _wait_time < junction_timeout and !(junction.may_enter(turn) and _exit_clear(turn)):
+	var let_in := _stop_sign_lets_in(junction, turn) and junction.may_enter(turn) and _exit_clear(turn)
+	if _wait_time < junction_timeout and !let_in:
 		return line_speed
 	# Claimed on grant, not on crossing the line, so two riders can't both see it empty
 	junction.enter(npc, turn)
+	_queued = null
 	_claimed = turn
 	_wait_time = 0.0
 	return target_speed
 
 
+## STOP: a full stop at the line, then first come first served.
+func _stop_sign_lets_in(junction: JunctionState, turn: int) -> bool:
+	if follower.network.control(turn) != TrafficIntersection.ControlType.STOP:
+		return true
+	if !is_zero_approx(npc.current_speed):
+		return false
+	_queued = junction
+	return junction.arrive(npc)
+
+
 func _leave_junction() -> void:
+	# A wreck mustn't hold its place in a stop-sign queue either
+	if _queued:
+		_queued.leave(npc)
+		_queued = null
 	if _claimed < 0:
 		return
 	junctions[follower.network.lanes[_claimed].junction].leave(npc)

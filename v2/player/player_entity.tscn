@@ -351,10 +351,12 @@ text = "USERNAME"
 horizontal_alignment = 1
 
 [node name="HornPlayer" type="AudioStreamPlayer3D" parent="." unique_id=983254083]
+unit_size = 30.0
 unique_name_in_owner = true
 bus = &"SFX"
 
 [node name="RemoteEngine" type="AudioStreamPlayer3D" parent="." unique_id=1996298367 node_paths=PackedStringArray("high_layer")]
+unit_size = 30.0
 unique_name_in_owner = true
 bus = &"SFX"
 doppler_tracking = 1
@@ -362,23 +364,28 @@ script = ExtResource("32_eng3d")
 high_layer = NodePath("RemoteEngineHigh")
 
 [node name="RemoteEngineHigh" type="AudioStreamPlayer3D" parent="RemoteEngine" unique_id=1451811502]
+unit_size = 30.0
 bus = &"SFX"
 doppler_tracking = 1
 
 [node name="RemoteSqueal" type="AudioStreamPlayer3D" parent="." unique_id=1308472925]
+unit_size = 30.0
 unique_name_in_owner = true
 bus = &"SFX"
 
 [node name="RemoteExhaustPop" type="AudioStreamPlayer3D" parent="." unique_id=826860997]
+unit_size = 30.0
 unique_name_in_owner = true
 max_polyphony = 4
 bus = &"SFX"
 
 [node name="RemoteExhaustBurble" type="AudioStreamPlayer3D" parent="." unique_id=75214229]
+unit_size = 30.0
 unique_name_in_owner = true
 bus = &"SFX"
 
 [node name="RemoteCrash" type="AudioStreamPlayer3D" parent="." unique_id=796028142]
+unit_size = 30.0
 unique_name_in_owner = true
 bus = &"SFX"
 

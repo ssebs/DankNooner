@@ -171,10 +171,14 @@ ramp_speed; follower.advance(current_speed · delta); ride_to(lane point + line_
   - **Claims on grant** (`JunctionState.enter` the same tick `may_enter` says yes), so two
     riders can't both see an empty junction — the server ticks riders sequentially.
   - Clauses, in order:
-    1. Waited longer than `junction_timeout` → go. Wait time is per rider in the state.
-    2. `LIGHT`: turn's entry slot isn't green → wait. **(step 6, not built)**
-    3. `STOP`: rider hasn't fully stopped, or isn't head of the arrival queue → wait.
-       **(step 6, not built)**
+    1. Waited longer than `junction_timeout` → go. Wait time is per rider in the state, and
+       only counts while the light (if any) is green: a red always holds.
+    2. `LIGHT`: turn's entry slot isn't green (amber included) → wait. Phase from
+       `TrafficJunctionData.light(slot, NetworkTime.time)`.
+    3. `STOP`: rider hasn't fully stopped, or isn't head of `JunctionState`'s arrival queue →
+       wait. A rider joins on its first stopped ask; `enter()` / `leave()` take it out, and a
+       crash leaves via `_leave_junction`.
+    - `TrafficNetworkData.control(turn)` gives a turn's control; cul-de-sac U-turns get `NONE`.
     4. A conflicting turn lane is occupied (`JunctionState.may_enter`) → wait.
     5. Exit not clear (`_exit_clear`): a stopped racer within `EXIT_CLEARANCE` of the turn
        lane's last point, along the exit direction and within a vehicle width of its line →
@@ -189,10 +193,8 @@ ramp_speed; follower.advance(current_speed · delta); ride_to(lane point + line_
   - A player has no body to bump off, so **any touch from a player crashes both**, wrecks
     included. Rider-to-rider contact needs relative velocity ≥ `contact_min_speed_delta` so
     queued riders brushing don't wipe out.
-- **Player in front (step 7, needs re-design):** the blocker cap already brakes for a player and
-  stops behind a stopped one. The original plan (detour waypoint via `NPCNavRegion` +
-  steering) doesn't fit rails — a go-around on rails would be a temporary lateral offset off the
-  lane. Decide with the user before building.
+- **Player in front:** the blocker cap brakes for a player and stops behind a stopped one.
+  No go-around (dropped 2026-10-19: doesn't fit rails).
 
 ### Kept as-is
 
@@ -321,6 +323,8 @@ step in-game; stop after each one.
 - [x] **5. `JunctionState` + gate.** Clauses 1, 4, 5; claim on grant. Verified on a 4-way in
       stunttrack01. Followed by the rails + `ContactArea` rework (verified: better FPS, player
       contact crashes both).
+> L1–L4 and 6 were built together on 2026-10-19 and none is verified yet. Check them in order.
+
 - [ ] **L1. Pose + one write.** `sync_position` / `sync_yaw`, flattened `teleport_to`, single
       `global_transform` write in `ride_to`. **Verify:** solo + 2 peers, traffic and race bots
       look the same as before.
@@ -335,12 +339,11 @@ step in-game; stop after each one.
       `NetworkTime.time`** (no Timer, no stored index) so every peer agrees with no sync; N/S
       green together, then E/W, using the junction's `green_duration` / `amber_duration`.
       `STOP`: full stop + arrival queue. Cul-de-sacs ignore control. Runtime debug draw of each
-      slot's light state, behind a `dbg_traffic` console command next to the other level console
-      commands in `managers/level_manager.gd` (check how those are registered first). The light
+      slot's light state, behind a `dbg_traffic` console command (`LevelManager` registers it,
+      `TrafficNetwork.show_lights` draws a sphere over each lit turn lane's stop line). The light
       state matters on the server for the gate and on every peer for the debug draw.
-      **Verify:** two peers show the same light at the same moment.
-- [ ] **7. Go-around.** Needs re-design for rails (see Runtime). **Verify:** stop on a lane in
-      front of traffic — they stop, wait, go around, rejoin.
+      **Verify:** two peers show the same light at the same moment; riders hold at red past
+      `junction_timeout`; a STOP junction lets riders go one at a time in arrival order.
 - [ ] **8. Docs.** Fold the final shape into `Architecture.md` (NPC / traffic section), then
       delete this file.
 
