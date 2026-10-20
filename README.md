@@ -1,4 +1,5 @@
-# ![DankNoonerLogo](./v2/resources/img/Logos/DankNoonerLogo_SteamLibraryLogo.png)
+# <img src="./v2/resources/img/Logos/DankNoonerLogo_TextIconOnly.png" alt="DankNoonerLogo" height="200">
+
 
 [![.github/workflows/build.yml](https://github.com/ssebs/DankNooner/actions/workflows/build.yml/badge.svg)](https://github.com/ssebs/DankNooner/actions/workflows/build.yml) [![GitHub Release](https://img.shields.io/github/v/release/ssebs/DankNooner?sort=semver&display_name=release)](https://github.com/ssebs/DankNooner/releases)
 
