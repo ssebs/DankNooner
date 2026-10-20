@@ -12,53 +12,39 @@ Realistic controls meet arcade tricks: progressive braking, balance point wheeli
 
 > Best played with a controller! But Keyboard + Mouse works too
 
-- **In-Browser:** [ssebs.github.io/DankNooner](https://ssebs.github.io/DankNooner/)
-- **Desktop builds (Win/Mac/Linux):** [latest release](https://github.com/ssebs/DankNooner/releases)
+- **Steam:** [Dank Nooner on Steam](https://store.steampowered.com/app/5416370/Dank_Nooner/)
+- **Discord:** [discord.gg/nA7VY4MHW](https://discord.gg/nA7VY4MHW)
 - **V1 POC (wheelie balance):** [itch.io](https://theofficialssebs.itch.io/dank-nooner-poc)
-
-<details>
-<summary>Note for Mac users!</summary>
-
-You will need to allow the app explicitly.
-
-- Double click to extract the .zip
-- Double click to run **DankNooner.app**
-  - Note: if you get a warning saying the file can't be run, you must open a terminal, cd to the dir where the .app is, & run this command: `sudo xattr -cr DankNooner.app`
-- Open **System Settings** > **Privacy & Security** > Scroll down to **Security**
-- You should see `"DankNooner" was blocked to protect your Mac.`, click the **Open Anyway** button to the right
-
-![MacInstallStep.png](img/MacInstallStep.png)
-
-</details>
 
 ## V2 Status
 
-V2 is the multiplayer open-world rewrite, in active development. The browser build and desktop releases above are all V2. For live progress see [planning_docs/TODO.md](./v2/planning_docs/TODO.md).
+V2 is the multiplayer open-world rewrite, in active development. For live progress see [planning_docs/TODO.md](./v2/planning_docs/TODO.md).
 
 What works today:
 
-- Free roam multiplayer over WebRTC (NAT punch via a signaling server, no port forwarding)
+- Free roam multiplayer over Steam (invites, lobby codes) or WebRTC (NAT punch via a signaling server, no port forwarding)
 - Server-authoritative physics with client prediction and rollback (netfox)
 - Manual gearbox with clutch, RPM, and progressive braking (or automatic)
-- 17 tricks: wheelies, stoppies, flips, 360s, superman, kickflip, burnouts, bunny hops, and more
+- 18 tricks: wheelies, stoppies, flips, 360s, superman, kickflip, burnouts, bunny hops, drift wheelies, and more
 - Trick combos that earn boost
 - Crash detection, ragdoll, and speed wobbles
-- Gamemodes: Race, Stunt Race, Time Attack, and Wheelie-only race, with mid-race challenges and a live leaderboard
+- Gamemodes: Race, Stunt Race, Time Attack, Wheelie-only race, Trick Battle, and Megaramp Trick Comp, with mid-race challenges and a live leaderboard
 - Stunt Race items: bat, shotgun, oil slick, deployable ramp, gas can, and Rally Up
 - Fuel-up minigame at gas stations before races and in free roam
+- NPC traffic that follows baked lanes through intersections and stops at traffic lights
+- In-world garage: earn money from events, spend it on bike and character skins, color slots, mods, and horns
 - IK rider animation that adapts per bike (hand and foot markers per `BikeSkinDefinition`)
-- Custom engine audio that blends with RPM, plus exhaust pops and burbles
-- Bike and character skin customization with color slots and mods
-- Minimap, plus quick and full respawn
+- Custom engine audio that blends with RPM, plus exhaust pops and burbles, positional for other riders
+- Remappable controls, minimap, plus quick and full respawn
 
 What's next (see [TODO.md](./v2/planning_docs/TODO.md)):
 
-- Racing and traffic AI rework, street races with traffic, and near-miss tricks
-- Trick battle and crash-launch gamemodes
-- More Stunt Race items
-- Customization shop, progression, and saved player stats
+- Racing AI, street races with traffic, and near-miss tricks
+- More gamemodes (crash-launch, follow-the-leader trick battles) and Stunt Race items
+- Progression: unlockable bikes, collectibles, and saved player stats
 - Larger map
 - Music
+- Steam demo
 - Story mode (V3)
 
 <!-- TODO: short clip or screenshot of multiplayer free roam -->
