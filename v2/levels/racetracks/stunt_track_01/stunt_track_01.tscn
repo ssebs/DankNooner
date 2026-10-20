@@ -937,7 +937,22 @@ script = ExtResource("6_udx41")
 north = NodePath("../TrafficRoad3")
 east = NodePath("../TrafficRoad19")
 west = NodePath("../TrafficRoad18")
+control = 2
 metadata/_custom_type_script = "uid://bdb83jm5t82md"
+
+[node name="TrafficLight" parent="TrafficNetwork/TrafficIntersection3" unique_id=1878552491 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 0, 12)
+intersection = NodePath("..")
+
+[node name="TrafficLight2" parent="TrafficNetwork/TrafficIntersection3" unique_id=312280793 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -16.899994, 0, -13.900024)
+intersection = NodePath("..")
+slot = 1
+
+[node name="TrafficLight3" parent="TrafficNetwork/TrafficIntersection3" unique_id=2009980831 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 18.40001, 0, 11.799988)
+intersection = NodePath("..")
+slot = 3
 
 [node name="TrafficRoad4" type="Node3D" parent="TrafficNetwork" unique_id=535054213]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -198.18, 0.25, 402.18)
@@ -1134,7 +1149,22 @@ script = ExtResource("6_udx41")
 north = NodePath("../TrafficRoad9")
 east = NodePath("../TrafficRoad8")
 south = NodePath("../TrafficRoad17")
+control = 2
 metadata/_custom_type_script = "uid://bdb83jm5t82md"
+
+[node name="TrafficLight" parent="TrafficNetwork/TrafficIntersection6" unique_id=1813778497 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.832764, 0, 12.55719)
+intersection = NodePath("..")
+
+[node name="TrafficLight2" parent="TrafficNetwork/TrafficIntersection6" unique_id=1434975135 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 13.167236, 0, -16.542816)
+intersection = NodePath("..")
+slot = 2
+
+[node name="TrafficLight3" parent="TrafficNetwork/TrafficIntersection6" unique_id=1809419271 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -12.632751, 0, -14.642822)
+intersection = NodePath("..")
+slot = 1
 
 [node name="TrafficRoad9" type="Node3D" parent="TrafficNetwork" unique_id=1795233855]
 script = ExtResource("4_whdav")
@@ -1171,7 +1201,23 @@ script = ExtResource("6_udx41")
 east = NodePath("../TrafficRoad9")
 south = NodePath("../TrafficRoad10")
 west = NodePath("../TrafficRoad14")
+control = 2
 metadata/_custom_type_script = "uid://bdb83jm5t82md"
+
+[node name="TrafficLight" parent="TrafficNetwork/TrafficIntersection7" unique_id=142349835 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -11.90564, 0, -12.623962)
+intersection = NodePath("..")
+slot = 1
+
+[node name="TrafficLight2" parent="TrafficNetwork/TrafficIntersection7" unique_id=1959931474 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 15.59436, 0, 12.676025)
+intersection = NodePath("..")
+slot = 3
+
+[node name="TrafficLight3" parent="TrafficNetwork/TrafficIntersection7" unique_id=326184438 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 11.294373, 0, -13.123962)
+intersection = NodePath("..")
+slot = 2
 
 [node name="TrafficRoad10" type="Node3D" parent="TrafficNetwork" unique_id=1203279342]
 script = ExtResource("4_whdav")
@@ -1263,7 +1309,22 @@ script = ExtResource("6_udx41")
 north = NodePath("../TrafficRoad11")
 east = NodePath("../TrafficRoad10")
 west = NodePath("../TrafficRoad12")
+control = 2
 metadata/_custom_type_script = "uid://bdb83jm5t82md"
+
+[node name="TrafficLight" parent="TrafficNetwork/TrafficIntersection8" unique_id=884454866 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.898254, 0, 12.83905)
+intersection = NodePath("..")
+
+[node name="TrafficLight2" parent="TrafficNetwork/TrafficIntersection8" unique_id=415788947 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -16.698303, 0, -13.260986)
+intersection = NodePath("..")
+slot = 1
+
+[node name="TrafficLight3" parent="TrafficNetwork/TrafficIntersection8" unique_id=778749177 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 16.401672, 0, 13.739014)
+intersection = NodePath("..")
+slot = 3
 
 [node name="TrafficRoad11" type="Node3D" parent="TrafficNetwork" unique_id=1305478831]
 script = ExtResource("4_whdav")
@@ -1325,7 +1386,22 @@ script = ExtResource("6_udx41")
 north = NodePath("../TrafficRoad13")
 east = NodePath("../TrafficRoad11")
 west = NodePath("../TrafficRoad12")
+control = 2
 metadata/_custom_type_script = "uid://bdb83jm5t82md"
+
+[node name="TrafficLight" parent="TrafficNetwork/TrafficIntersection9" unique_id=311947533 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.837463, 0, 14.561462)
+intersection = NodePath("..")
+
+[node name="TrafficLight2" parent="TrafficNetwork/TrafficIntersection9" unique_id=1916217422 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -17.337463, 0, -12.038513)
+intersection = NodePath("..")
+slot = 1
+
+[node name="TrafficLight3" parent="TrafficNetwork/TrafficIntersection9" unique_id=1958293647 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 13.962524, 0, 14.461487)
+intersection = NodePath("..")
+slot = 3
 
 [node name="TrafficRoad12" type="Node3D" parent="TrafficNetwork" unique_id=25963941]
 script = ExtResource("4_whdav")
@@ -1376,7 +1452,22 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -943.76996, 0.24987602, 462.6
 script = ExtResource("6_udx41")
 east = NodePath("../TrafficRoad15")
 south = NodePath("../TrafficRoad13")
+control = 2
 metadata/_custom_type_script = "uid://bdb83jm5t82md"
+
+[node name="TrafficLight" parent="TrafficNetwork/TrafficIntersection10" unique_id=1723843781 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.513245, 0, 13.579559)
+intersection = NodePath("..")
+
+[node name="TrafficLight2" parent="TrafficNetwork/TrafficIntersection10" unique_id=1643499103 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 12.38678, 0, -14.020416)
+intersection = NodePath("..")
+slot = 2
+
+[node name="TrafficLight3" parent="TrafficNetwork/TrafficIntersection10" unique_id=351380117 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -13.013245, 0, -12.520416)
+intersection = NodePath("..")
+slot = 1
 
 [node name="TrafficRoad13" type="Node3D" parent="TrafficNetwork" unique_id=1080278871]
 script = ExtResource("4_whdav")
@@ -1398,7 +1489,23 @@ script = ExtResource("6_udx41")
 east = NodePath("../TrafficRoad14")
 south = NodePath("../TrafficRoad16")
 west = NodePath("../TrafficRoad15")
+control = 2
 metadata/_custom_type_script = "uid://bdb83jm5t82md"
+
+[node name="TrafficLight" parent="TrafficNetwork/TrafficIntersection11" unique_id=1861278378 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 12, 0, -13.5)
+intersection = NodePath("..")
+slot = 2
+
+[node name="TrafficLight2" parent="TrafficNetwork/TrafficIntersection11" unique_id=393553529 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 14.700012, 0, 12.899994)
+intersection = NodePath("..")
+slot = 3
+
+[node name="TrafficLight3" parent="TrafficNetwork/TrafficIntersection11" unique_id=597986957 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -13.700012, 0, -13.700012)
+intersection = NodePath("..")
+slot = 1
 
 [node name="TrafficRoad14" type="Node3D" parent="TrafficNetwork" unique_id=1527229134]
 script = ExtResource("4_whdav")
@@ -1498,7 +1605,27 @@ script = ExtResource("6_udx41")
 north = NodePath("../TrafficRoad17")
 east = NodePath("../TrafficRoad18")
 west = NodePath("../TrafficRoad16")
+control = 2
 metadata/_custom_type_script = "uid://bdb83jm5t82md"
+
+[node name="TrafficLight" parent="TrafficNetwork/TrafficIntersection12" unique_id=1571970439 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 14.400024)
+intersection = NodePath("..")
+
+[node name="TrafficLight2" parent="TrafficNetwork/TrafficIntersection12" unique_id=497528803 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 14, 0, -13.5)
+intersection = NodePath("..")
+slot = 2
+
+[node name="TrafficLight3" parent="TrafficNetwork/TrafficIntersection12" unique_id=1313276185 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -14.200012, 0, -12.700012)
+intersection = NodePath("..")
+slot = 1
+
+[node name="TrafficLight4" parent="TrafficNetwork/TrafficIntersection12" unique_id=1467588325 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
+transform = Transform3D(-2.1855693e-07, 0, 1, 0, 1, 0, -1, 0, -2.1855693e-07, 15.099976, 0, 13.200012)
+intersection = NodePath("..")
+slot = 3
 
 [node name="TrafficRoad17" type="Node3D" parent="TrafficNetwork" unique_id=126119289]
 script = ExtResource("4_whdav")

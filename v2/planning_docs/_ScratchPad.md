@@ -14,7 +14,6 @@
 - [ ] filling up - pay per second of fuel, so spilling costs $. show in diagetic UI on pump
 - [ ] give cars headlights
 
-
 - [ ] tell the users when changing colors that they have to press done (or change that)
 - [ ] change spawn rate for diff items
 - [ ] animate lowside crash

@@ -23,15 +23,13 @@
 > Don't forget, have fun :D
 - [ ] see playtest [feedback](_ScratchPad.md)
 
-- [ ] stop syncing duplicate skin definitions (npcs, etc)
-
 - [ ] Get AI working again
   - [ ] NPC Traffic
     - [x] bake npc nav paths so they can just follow, respond to player if needed then return to baked path
     - [x] intersections navigation
     - [x] optimization (see _scratchpad)
     - [x] traffic lights
-    - [ ] cleanup ugly traffic lights
+    - [x] cleanup ugly traffic lights
     - [ ] add more roads
   - [ ] NPC Race AI
 
@@ -52,7 +50,6 @@
   - [ ] Demo release
   - [ ] > steam next fest Feb '27
   - [ ] Release after free to play  w/ paid dlc for more content/skins
-
 
 - [ ] [Progression](#progression--customization) 
 
@@ -144,7 +141,6 @@ Simpsons hit and run chapters:
 - [ ] Mods
   - [ ] Wings as mod for sport bike
   - [ ] Scraper mod — add sparks during wheelie
-
 
 ### Game-breaking bugs
 - [ ] First launch on Mac web stuck in gas pump camera if you leave to main menu then come back it fixes
@@ -238,6 +234,8 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] stop syncing duplicate skin definitions (npcs, etc)
+
 - [x] ramp hitboxes remain after finishing stunt race
 
 - [x] Make arrow signs/other things glow other colors to add variety
