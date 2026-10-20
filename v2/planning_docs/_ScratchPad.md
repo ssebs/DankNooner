@@ -38,6 +38,9 @@ traffic AI
 - [ ] stop syncing duplicate skin definitions (npcs, etc)
 
 - [ ] tell the users when changing colors that they have to press done (or change that)
+- [ ] change spawn rate for diff items
+- [ ] animate lowside crash
+- [ ] animate car crash
 
 ### NEXT
 - [ ] pause when out of focus
