@@ -64,6 +64,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.788, 0)
 shape = ExtResource("9_1voqy")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1384892474]
+replication_interval = 0.05
 replication_config = SubResource("SceneReplicationConfig_npc01")
 
 [node name="NPCAnimationController" type="Node" parent="." unique_id=423487287 node_paths=PackedStringArray("npc")]

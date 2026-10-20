@@ -46,9 +46,12 @@
 [ext_resource type="AudioStream" uid="uid://binpeak6mn6sq" path="res://non_fmod_sounds/SFX/confetti_horn.ogg" id="40_confetti_horn"]
 [ext_resource type="AudioStream" uid="uid://bj2wpde3nm4oa" path="res://non_fmod_sounds/SFX/discord-call-sound.ogg" id="40_discord_call"]
 [ext_resource type="AudioStream" uid="uid://ciu5n0yv5gahe" path="res://non_fmod_sounds/SFX/discord-notification.ogg" id="40_discord_notification"]
+[ext_resource type="AudioStream" uid="uid://cd6pud0mgd0yw" path="res://non_fmod_sounds/SFX/du-bist-gut-genug.ogg" id="40_du_bist_gut_genug"]
 [ext_resource type="AudioStream" uid="uid://7i8q6v3dnr8q" path="res://non_fmod_sounds/SFX/elevator_music.ogg" id="40_elevator_music"]
 [ext_resource type="AudioStream" uid="uid://b7o2qfktlb3vi" path="res://non_fmod_sounds/SFX/flashbang.ogg" id="40_flashbang"]
 [ext_resource type="AudioStream" uid="uid://dffen18x5k8t2" path="res://non_fmod_sounds/SFX/fog_horn.ogg" id="40_fog_horn"]
+[ext_resource type="AudioStream" uid="uid://02tki2mxlii6" path="res://non_fmod_sounds/SFX/4bigguys.ogg" id="40_four_big_guys"]
+[ext_resource type="AudioStream" uid="uid://bey3e2x1yqkks" path="res://non_fmod_sounds/SFX/hah-chew.ogg" id="40_hah_chew"]
 [ext_resource type="AudioStream" uid="uid://cm2dk7r3j6gn" path="res://non_fmod_sounds/SFX/havetosayyourefine.ogg" id="40_have_to_say_youre_fine"]
 [ext_resource type="AudioStream" uid="uid://dabmcx2kg5xj5" path="res://non_fmod_sounds/SFX/heavenly-music.ogg" id="40_heavenly_music"]
 [ext_resource type="AudioStream" uid="uid://wvd8dyctin0c" path="res://non_fmod_sounds/SFX/homer-lets-the-barts-out.ogg" id="40_homer_barts_out"]
@@ -57,6 +60,7 @@
 [ext_resource type="AudioStream" uid="uid://b8w4lq8and132" path="res://non_fmod_sounds/SFX/italian-brainrot-ringtone.ogg" id="40_italian_brainrot"]
 [ext_resource type="AudioStream" uid="uid://dstjmu6ik5nt" path="res://non_fmod_sounds/SFX/lizard-button.ogg" id="40_lizard"]
 [ext_resource type="AudioStream" uid="uid://bfw527bdutq3y" path="res://non_fmod_sounds/SFX/m-e-o-w.ogg" id="40_meow"]
+[ext_resource type="AudioStream" uid="uid://swipfk7w7tvh" path="res://non_fmod_sounds/SFX/metal-pipe-dropping.mp3" id="40_metal_pipe"]
 [ext_resource type="AudioStream" uid="uid://b54errmgtufvn" path="res://non_fmod_sounds/SFX/nelly_ahh.ogg" id="40_nelly_ahh"]
 [ext_resource type="AudioStream" uid="uid://cpxxigcou10a4" path="res://non_fmod_sounds/SFX/quack.ogg" id="40_quack"]
 [ext_resource type="AudioStream" uid="uid://ob5kjkuw84vr" path="res://non_fmod_sounds/SFX/rizz.ogg" id="40_rizz"]
@@ -66,6 +70,7 @@
 [ext_resource type="AudioStream" uid="uid://dxxqj7r0gg118" path="res://non_fmod_sounds/SFX/sponge-stank-noise.ogg" id="40_sponge_stank"]
 [ext_resource type="AudioStream" uid="uid://dfbl6m0hjemdj" path="res://non_fmod_sounds/SFX/squidward-walking-sound.ogg" id="40_squidward_walking"]
 [ext_resource type="AudioStream" uid="uid://ug171p6wrsfp" path="res://non_fmod_sounds/SFX/vintage_horn.ogg" id="40_vintage_horn"]
+[ext_resource type="AudioStream" uid="uid://csl33y4jwrvqd" path="res://non_fmod_sounds/SFX/what-the-dog-doin.ogg" id="40_what_the_dog_doin"]
 [ext_resource type="AudioStream" uid="uid://df3nojagkq573" path="res://non_fmod_sounds/SFX/yougotmail.ogg" id="40_you_got_mail"]
 
 [node name="AudioManager" type="Node" unique_id=625309404 groups=["Managers"]]
@@ -541,6 +546,43 @@ metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 [node name="YouGotMail" type="AudioStreamPlayer" parent="Sounds" unique_id=362150421]
 unique_name_in_owner = true
 stream = ExtResource("40_you_got_mail")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="FourBigGuys" type="AudioStreamPlayer" parent="Sounds" unique_id=718203941]
+unique_name_in_owner = true
+stream = ExtResource("40_four_big_guys")
+volume_db = -2.0
+pitch_scale = 0.69
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="DuBistGutGenug" type="AudioStreamPlayer" parent="Sounds" unique_id=402918377]
+unique_name_in_owner = true
+stream = ExtResource("40_du_bist_gut_genug")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="HahChew" type="AudioStreamPlayer" parent="Sounds" unique_id=1593027714]
+unique_name_in_owner = true
+stream = ExtResource("40_hah_chew")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="MetalPipe" type="AudioStreamPlayer" parent="Sounds" unique_id=871365042]
+unique_name_in_owner = true
+stream = ExtResource("40_metal_pipe")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="WhatTheDogDoin" type="AudioStreamPlayer" parent="Sounds" unique_id=1260483195]
+unique_name_in_owner = true
+stream = ExtResource("40_what_the_dog_doin")
 bus = &"SFX"
 script = ExtResource("2_snd")
 metadata/_custom_type_script = "uid://dk2ghd454wkc2"

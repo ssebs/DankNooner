@@ -70,6 +70,11 @@ enum Sfx {
 	SQUIDWARD_WALKING,
 	VINTAGE_HORN,
 	YOU_GOT_MAIL,
+	FOUR_BIG_GUYS,
+	DU_BIST_GUT_GENUG,
+	HAH_CHEW,
+	METAL_PIPE,
+	WHAT_THE_DOG_DOIN,
 }
 
 @export var settings_manager: SettingsManager
@@ -148,6 +153,11 @@ var sponge_stank: SoundEvent
 var squidward_walking: SoundEvent
 var vintage_horn: SoundEvent
 var you_got_mail: SoundEvent
+var four_big_guys: SoundEvent
+var du_bist_gut_genug: SoundEvent
+var hah_chew: SoundEvent
+var metal_pipe: SoundEvent
+var what_the_dog_doin: SoundEvent
 
 ## Map of Sfx → SoundEvent node, populated in _ready.
 var _sfx_events: Dictionary = {}
@@ -225,6 +235,11 @@ func _ready():
 	squidward_walking = get_node_or_null("%SquidwardWalking") as SoundEvent
 	vintage_horn = get_node_or_null("%VintageHorn") as SoundEvent
 	you_got_mail = get_node_or_null("%YouGotMail") as SoundEvent
+	four_big_guys = get_node_or_null("%FourBigGuys") as SoundEvent
+	du_bist_gut_genug = get_node_or_null("%DuBistGutGenug") as SoundEvent
+	hah_chew = get_node_or_null("%HahChew") as SoundEvent
+	metal_pipe = get_node_or_null("%MetalPipe") as SoundEvent
+	what_the_dog_doin = get_node_or_null("%WhatTheDogDoin") as SoundEvent
 	for pop in get_node("%ExhaustPops").get_children():
 		if pop is SoundEvent:
 			_exhaust_pops.append(pop)
@@ -287,6 +302,11 @@ func _ready():
 		Sfx.SQUIDWARD_WALKING: squidward_walking,
 		Sfx.VINTAGE_HORN: vintage_horn,
 		Sfx.YOU_GOT_MAIL: you_got_mail,
+		Sfx.FOUR_BIG_GUYS: four_big_guys,
+		Sfx.DU_BIST_GUT_GENUG: du_bist_gut_genug,
+		Sfx.HAH_CHEW: hah_chew,
+		Sfx.METAL_PIPE: metal_pipe,
+		Sfx.WHAT_THE_DOG_DOIN: what_the_dog_doin,
 	}
 	_engine_sounds = {
 		EngineSfx.NINJA500: ninja500_revs,

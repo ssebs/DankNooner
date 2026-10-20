@@ -1,8 +1,9 @@
-[gd_resource type="Resource" script_class="HornDefinition" format=3]
+[gd_resource type="Resource" script_class="HornDefinition" format=3 uid="uid://d3nr18ibneh35"]
 
-[ext_resource type="Script" path="res://resources/horns/horn_definition.gd" id="1_horn"]
+[ext_resource type="Script" uid="uid://bcqu031qb4spn" path="res://resources/horns/horn_definition.gd" id="1_horn"]
 
 [resource]
 script = ExtResource("1_horn")
 skin_name = "italian_brainrot_ringtone"
 sfx = 44
+price = 1500
