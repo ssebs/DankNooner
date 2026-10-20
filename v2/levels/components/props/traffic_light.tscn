@@ -1,49 +1,38 @@
 [gd_scene format=3 uid="uid://d073032v4aawd"]
 
-[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_chs31"]
 [ext_resource type="Script" uid="uid://q14flbhix8rv" path="res://levels/components/props/traffic_light.gd" id="1_qv33m"]
+[ext_resource type="PackedScene" uid="uid://cpk3rb3x0mr5o" path="res://levels/assets/props/Traffic Light.glb" id="2_model"]
 [ext_resource type="PackedScene" path="res://levels/components/props/traffic_light_lamp.tscn" id="3_lamp"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_pole"]
+height = 4.6
+radius = 0.15
 
 [node name="TrafficLight" type="Node3D" unique_id=968735672]
 script = ExtResource("1_qv33m")
 
-[node name="pipe" parent="." unique_id=1485126779 instance=ExtResource("1_chs31")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17544556, 7.999998, 0)
-height = 16.0
-neon_edges = true
+[node name="Model" type="Node3D" parent="."]
+transform = Transform3D(-2, 0, 0, 0, 2, 0, 0, 0, -2, 0, 0, 0)
 
-[node name="pipe2" parent="." unique_id=1046624208 instance=ExtResource("1_chs31")]
-transform = Transform3D(0.25881898, 0.9659258, 0, -0.9659258, 0.25881898, 0, 0, 0, 1, 1.7754517, 15.999998, 0)
-height = 4.0
-neon_edges = true
+[node name="TrafficLightMesh" parent="Model" instance=ExtResource("2_model")]
 
-[node name="pipe3" parent="." unique_id=427132038 instance=ExtResource("1_chs31")]
-transform = Transform3D(-5.9604645e-08, 0.99999994, 0, -0.99999994, -5.9604645e-08, 0, 0, 0, 1, 5.5754547, 16.499998, 0)
-height = 4.0
-neon_edges = true
-
-[node name="pipe4" parent="." unique_id=1184727583 instance=ExtResource("1_chs31")]
-transform = Transform3D(-0.25881904, 0.9659257, 0, -0.9659257, -0.25881904, 0, 0, 0, 1, 9.375458, 15.999998, 0)
-height = 4.0
-neon_edges = true
-
-[node name="bg" parent="." unique_id=36920883 instance=ExtResource("1_chs31")]
-transform = Transform3D(0.9999998, 0, 0, 0, 0.9999998, 0, 0, 0, 1, 9.575455, 13.099998, -0.5)
-width = 3.0
-height = 6.0
-depth = 0.2
-neon_edges = true
-
-[node name="RedLamp" parent="." unique_id=2014046368 instance=ExtResource("3_lamp")]
+[node name="RedLamp" parent="Model" unique_id=2014046368 instance=ExtResource("3_lamp")]
 unique_name_in_owner = true
-transform = Transform3D(0.99999976, 0, 0, 0, -4.3711378e-08, 0.99999994, 0, -0.9999998, -4.371139e-08, 9.575455, 14.899999, -0.68831605)
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -3.764, 4.091, 0.1)
 
-[node name="YellowLamp" parent="." unique_id=1276269906 instance=ExtResource("3_lamp")]
+[node name="YellowLamp" parent="Model" unique_id=1276269906 instance=ExtResource("3_lamp")]
 unique_name_in_owner = true
-transform = Transform3D(0.99999976, 0, 0, 0, -4.3711378e-08, 0.99999994, 0, -0.9999998, -4.371139e-08, 9.575455, 13.099999, -0.68831605)
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -3.764, 3.797, 0.1)
 color = Color(1, 0.7, 0, 1)
 
-[node name="GreenLamp" parent="." unique_id=1045507326 instance=ExtResource("3_lamp")]
+[node name="GreenLamp" parent="Model" unique_id=1045507326 instance=ExtResource("3_lamp")]
 unique_name_in_owner = true
-transform = Transform3D(0.99999976, 0, 0, 0, -4.3711378e-08, 0.99999994, 0, -0.9999998, -4.371139e-08, 9.575455, 11.299999, -0.68831605)
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -3.764, 3.502, 0.1)
 color = Color(0, 1, 0.3, 1)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Model"]
+collision_layer = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Model/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 0)
+shape = SubResource("CylinderShape3D_pole")

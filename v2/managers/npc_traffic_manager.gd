@@ -15,8 +15,8 @@ class_name NPCTrafficManager extends BaseManager
 @export var level_manager: LevelManager
 ## Used to crash a player a traffic rider rammed.
 @export var spawn_manager: SpawnManager
-## Round-robin source of NPC names + character skins, same as NPCRaceManager.
-## The bike itself is rolled per rider from the map's roster, not taken from here.
+## Round-robin source of bike riders' character skins, same as NPCRaceManager.
+## The vehicle itself is rolled per rider from the map's roster, not taken from here.
 @export var npc_definitions: Array[PlayerDefinition] = [
 	load("res://resources/player/default_player_definition.tres")
 ]
@@ -57,16 +57,16 @@ const LOD_INTERVAL_MS: int = 250
 const SYNC_STALE_MS: int = 500
 
 var _npcs: Dictionary[int, NPCRiderEntity] = {}
-## Server-side copy of each rider's rolled vehicle dict, kept so a peer whose level
+## Server-side copy of each rider's rolled _skins index, kept so a peer whose level
 ## loaded after the spawn broadcast can be resynced (see request_traffic_sync).
-var _vehicles: Dictionary[int, Dictionary] = {}
+var _skin_indices: Dictionary[int, int] = {}
 ## Client-side gate: false until this peer's gamemode Enter confirms the level is
 ## loaded. Spawn broadcasts arriving earlier would parent riders under the outgoing
 ## level and be freed with it — they're dropped here and recovered by the sync request.
 var _accept_spawns: bool = false
-## res:// paths of the vehicle skins this map rolls, refreshed each start_traffic.
-var _bike_skin_paths: Array = []
-var _car_skin_paths: Array = []
+## The vehicle skins this map rolls, cars first. Built on every peer, so spawns ship an index.
+var _skins: Array = []
+var _car_count: int = 0
 var _network: TrafficNetworkData
 ## Lanes riders spawn and recover on: road lanes only, turn lanes all cluster at junctions.
 var _road_lanes: Array[int] = []
@@ -102,10 +102,8 @@ func start_traffic(for_race: bool = false) -> void:
 	for _junction in _network.junctions:
 		_junctions.append(JunctionState.new(_network))
 
+	_build_skins()
 	var settings := level_manager.current_level.traffic_settings
-	_bike_skin_paths = _roster_paths(settings.bike_roster, BIKE_SKINS_DIR)
-	_car_skin_paths = _roster_paths(settings.car_roster, CAR_SKINS_DIR)
-
 	var count := settings.race_traffic_amount if for_race else settings.traffic_count
 
 	# Round-robin over shuffled lanes — every lane gets a rider before any gets a second,
@@ -120,10 +118,9 @@ func start_traffic(for_race: bool = false) -> void:
 		var lane_transform := follower.get_transform()
 		var npc_id := _next_id
 		_next_id -= 1
-		var def := npc_definitions[(-npc_id + FIRST_ID) % npc_definitions.size()]
-		var vehicle := _roll_vehicle(def, npc_id)
-		_vehicles[npc_id] = vehicle
-		rpc_spawn_npc.rpc(npc_id, vehicle, lane_transform.origin, lane_transform.basis)
+		var skin_index := _roll_skin_index()
+		_skin_indices[npc_id] = skin_index
+		rpc_spawn_npc.rpc(npc_id, skin_index, lane_transform.origin, lane_transform.basis)
 		# call_local ran the spawn synchronously, so the rider exists now
 		_traffic_state(npc_id).follower = follower
 		_traffic_state(npc_id).junctions = _junctions
@@ -131,46 +128,37 @@ func start_traffic(for_race: bool = false) -> void:
 
 ## Roll one rider's vehicle. The server rolls and ships the result — rolling on
 ## each peer would give the same rider a different car on every screen.
-##
-## Traffic skins all live in res:// and are byte-identical on every peer, so the
-## resource paths ARE the serializer. Deliberately not PlayerDefinition.to_dict():
-## that round-trips every loadout through BikeSkinDefinition.from_dict() per rider
-## per peer.
-func _roll_vehicle(def: PlayerDefinition, npc_id: int) -> Dictionary:
+func _roll_skin_index() -> int:
 	var chance := level_manager.current_level.traffic_settings.car_chance
-	if !_car_skin_paths.is_empty() and randf() < chance:
-		# No rider on a car, so no character skin and no name to label it with.
-		return {
-			"type": NPCRiderEntity.VehicleType.CAR,
-			"skin": _car_skin_paths.pick_random(),
-			"character": "",
-			"username": "",
-		}
-	return {
-		"type": NPCRiderEntity.VehicleType.BIKE,
-		"skin": _bike_skin_paths.pick_random(),
-		"character": def.character_skin.resource_path,
-		"username": "%s %d" % [def.username, -npc_id],
-	}
+	if _car_count > 0 and randf() < chance:
+		return randi() % _car_count
+	return randi_range(_car_count, _skins.size() - 1)
 
 
-## res:// paths of the skins this map may roll: the level's roster if it named one,
-## otherwise everything in the global folder. Paths, not the resources themselves —
-## _roll_vehicle ships them across the wire.
-func _roster_paths(roster: Array, fallback_dir: String) -> Array:
-	if roster.is_empty():
-		# Only the paths matter here — the skin_name keys are the menu's concern.
-		return SkinScanner.scan_skin_dir(fallback_dir).values()
-	var out: Array = []
-	for skin in roster:
-		out.append(skin.resource_path)
-	return out
+## The level's rosters if it named them, otherwise everything in the global folders.
+## Skins ship with the game, so peers only need to agree on the order.
+func _build_skins() -> void:
+	var settings := level_manager.current_level.traffic_settings
+	var cars := _roster(settings.car_roster, CAR_SKINS_DIR)
+	_car_count = cars.size()
+	_skins = []
+	_skins.append_array(cars)
+	_skins.append_array(_roster(settings.bike_roster, BIKE_SKINS_DIR))
+
+
+func _roster(roster: Array, fallback_dir: String) -> Array:
+	if !roster.is_empty():
+		return roster
+	var paths := SkinScanner.scan_skin_dir(fallback_dir).values()
+	# Folder listing order can differ between editor and exported peers
+	paths.sort()
+	return paths.map(func(path: String) -> Resource: return load(path))
 
 
 func stop_traffic() -> void:
 	for npc_id in _npcs.keys():
 		rpc_despawn_npc.rpc(npc_id)
-	_vehicles.clear()
+	_skin_indices.clear()
 	_network = null
 
 
@@ -190,6 +178,7 @@ func request_traffic_sync() -> void:
 	for npc_id in _npcs.keys():
 		if !is_instance_valid(_npcs[npc_id]):
 			_npcs.erase(npc_id)
+	_build_skins()
 	_accept_spawns = true
 	_rpc_request_traffic_sync.rpc_id(1)
 
@@ -215,7 +204,7 @@ func _rpc_request_traffic_sync() -> void:
 	for npc_id in _npcs:
 		var npc := _npcs[npc_id]
 		rpc_spawn_npc.rpc_id(
-			peer_id, npc_id, _vehicles[npc_id], npc.global_position, npc.global_basis
+			peer_id, npc_id, _skin_indices[npc_id], npc.global_position, npc.global_basis
 		)
 
 
@@ -225,7 +214,7 @@ func _rpc_request_traffic_sync() -> void:
 
 
 @rpc("call_local", "reliable")
-func rpc_spawn_npc(npc_id: int, vehicle: Dictionary, pos: Vector3, basis: Basis):
+func rpc_spawn_npc(npc_id: int, skin_index: int, pos: Vector3, basis: Basis):
 	# Our level isn't loaded yet (spawn broadcast raced our spawn_level) — dropped
 	# here, recovered by request_traffic_sync once the gamemode enters.
 	if !multiplayer.is_server() and !_accept_spawns:
@@ -233,18 +222,21 @@ func rpc_spawn_npc(npc_id: int, vehicle: Dictionary, pos: Vector3, basis: Basis)
 	# Broadcast and resync can both deliver the same rider — first one wins.
 	if _npcs.has(npc_id):
 		return
-	DebugUtils.DebugMsg("Adding traffic NPC locally: %s - %s" % [npc_id, vehicle["skin"]])
+	var skin: Resource = _skins[skin_index]
+	DebugUtils.DebugMsg("Adding traffic NPC locally: %s - %s" % [npc_id, skin.resource_path])
 
 	var npc := NPC_SCENE.instantiate() as NPCRiderEntity
 	npc.name = str(npc_id)
 	# vehicle_type must land before add_child — _enter_tree drops the other skins.
-	npc.vehicle_type = vehicle["type"]
-	if npc.vehicle_type == NPCRiderEntity.VehicleType.CAR:
-		npc.car_definition = load(vehicle["skin"])
+	if skin is CarSkinDefinition:
+		npc.vehicle_type = NPCRiderEntity.VehicleType.CAR
+		npc.car_definition = skin
 	else:
-		npc.bike_definition = load(vehicle["skin"])
-		npc.character_definition = load(vehicle["character"])
-		npc.username = vehicle["username"]
+		npc.vehicle_type = NPCRiderEntity.VehicleType.BIKE
+		npc.bike_definition = skin
+		# Same round-robin on every peer, so only the id ships
+		var def := npc_definitions[(-npc_id + FIRST_ID) % npc_definitions.size()]
+		npc.character_definition = def.character_skin
 	# Read per peer rather than shipped — every peer has the same level loaded.
 	npc.move_speed = level_manager.current_level.traffic_settings.cruise_speed
 	npc.paint_colors = level_manager.current_level.traffic_settings.paint_colors

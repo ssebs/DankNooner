@@ -14,6 +14,8 @@ func play_engine(template: EngineSoundEvent, bike_def: BikeSkinDefinition) -> vo
 	_bike_def = bike_def
 	stream = template.stream
 	volume_db = template.base_volume_db
+	# Inverse-distance boosts gain inside unit_size; cap at the authored level
+	max_db = volume_db
 	play()
 	if template.high_layer:
 		high_layer.stream = template.high_layer.stream
@@ -38,6 +40,8 @@ func set_rpm(value: float) -> void:
 	var gains := EngineSoundEvent.crossfade_db(rpm, _bike_def.engine_blend_curve)
 	volume_db = _template.base_volume_db + gains.x
 	high_layer.volume_db = _template.base_high_volume_db + gains.y
+	max_db = volume_db
+	high_layer.max_db = high_layer.volume_db
 
 
 func _get_configuration_warnings() -> PackedStringArray:

@@ -3,9 +3,9 @@
 [ext_resource type="Script" path="res://levels/components/props/traffic_light_lamp.gd" id="1_lamp"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_lamp"]
-top_radius = 0.7
-bottom_radius = 0.7
-height = 0.1
+top_radius = 0.12
+bottom_radius = 0.12
+height = 0.02
 
 [node name="TrafficLightLamp" type="Node3D"]
 script = ExtResource("1_lamp")

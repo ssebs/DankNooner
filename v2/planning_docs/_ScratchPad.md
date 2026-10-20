@@ -13,7 +13,7 @@
 - [ ] add hardflip / mix backflip / 180 tricks
 - [ ] filling up - pay per second of fuel, so spilling costs $. show in diagetic UI on pump
 - [ ] give cars headlights
-- [ ] stop syncing duplicate skin definitions (npcs, etc)
+
 
 - [ ] tell the users when changing colors that they have to press done (or change that)
 - [ ] change spawn rate for diff items

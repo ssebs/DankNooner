@@ -21,8 +21,6 @@ const NPC_SCENE: PackedScene = preload("res://entities/npc/npc_rider_entity.tscn
 var race_task: RaceTask
 
 var _npcs: Dictionary[int, NPCRiderEntity] = {}
-## Server-side copy of each bot's PlayerDefinition dict for late-joiner resync.
-var _defs: Dictionary[int, Dictionary] = {}
 ## Junction routing for the bots. RoadContainer never gives intersection lanes a
 ## lane_next, so without this they dead-end at every junction — fine on a closed-loop
 ## racetrack, fatal on a map with 3-way/4-way/roundabout containers.
@@ -75,10 +73,7 @@ func spawn_npc(pos: Vector3, basis: Basis) -> int:
 		)
 	var npc_id := _next_id
 	_next_id -= 1
-	var def := npc_definitions[(-npc_id - 1) % npc_definitions.size()]
-	var def_dict := def.to_dict()
-	_defs[npc_id] = def_dict
-	rpc_spawn_npc.rpc(npc_id, def_dict, pos, basis)
+	rpc_spawn_npc.rpc(npc_id, pos, basis)
 	return npc_id
 
 
@@ -86,7 +81,6 @@ func spawn_npc(pos: Vector3, basis: Basis) -> int:
 func despawn_all_npcs() -> void:
 	for npc_id in _npcs.keys():
 		rpc_despawn_npc.rpc(npc_id)
-	_defs.clear()
 	# Its lanes belong to the level being torn down; the next race rebuilds it.
 	_route_graph = null
 
@@ -97,7 +91,7 @@ func despawn_all_npcs() -> void:
 func sync_npcs_to_peer(peer_id: int) -> void:
 	for npc_id in _npcs:
 		var npc := _npcs[npc_id]
-		rpc_spawn_npc.rpc_id(peer_id, npc_id, _defs[npc_id], npc.global_position, npc.global_basis)
+		rpc_spawn_npc.rpc_id(peer_id, npc_id, npc.global_position, npc.global_basis)
 
 
 func get_npc_ids() -> Array[int]:
@@ -112,12 +106,12 @@ func get_npc(npc_id: int) -> NPCRiderEntity:
 
 
 @rpc("call_local", "reliable")
-func rpc_spawn_npc(npc_id: int, def_dict: Dictionary, pos: Vector3, basis: Basis):
+func rpc_spawn_npc(npc_id: int, pos: Vector3, basis: Basis):
 	# Broadcast and late-join resync can both deliver the same bot — first one wins.
 	if _npcs.has(npc_id):
 		return
-	var def := PlayerDefinition.new()
-	def.from_dict(def_dict)
+	# Same round-robin on every peer — the definitions ship with the game, so only the id is sent.
+	var def := npc_definitions[(-npc_id - 1) % npc_definitions.size()]
 
 	DebugUtils.DebugMsg("Adding NPC locally: %s - %s" % [npc_id, def.username])
 

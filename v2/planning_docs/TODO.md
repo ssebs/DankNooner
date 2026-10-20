@@ -23,6 +23,8 @@
 > Don't forget, have fun :D
 - [ ] see playtest [feedback](_ScratchPad.md)
 
+- [ ] stop syncing duplicate skin definitions (npcs, etc)
+
 - [ ] Get AI working again
   - [ ] NPC Traffic
     - [x] bake npc nav paths so they can just follow, respond to player if needed then return to baked path

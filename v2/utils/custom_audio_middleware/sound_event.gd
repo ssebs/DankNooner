@@ -18,6 +18,8 @@ func _ready() -> void:
 func play_on(player: AudioStreamPlayer3D) -> void:
 	player.stream = stream
 	player.volume_db = volume_db
+	# Inverse-distance boosts gain inside unit_size; cap at the authored level
+	player.max_db = volume_db
 	player.play()
 
 
