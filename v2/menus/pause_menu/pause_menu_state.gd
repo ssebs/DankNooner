@@ -10,10 +10,14 @@ class_name PauseMenuState extends MenuState
 @export var spawn_manager: SpawnManager
 @export var lobby_manager: LobbyManager
 @export var steam_manager: SteamManager
+@export var audio_manager: AudioManager
 
 @export var main_menu_state: MenuState
 @export var settings_menu_state: MenuState
 @export var tricks_menu_state: MenuState
+
+const PLAY_ICON := preload("res://resources/img/Icons/play.png")
+const PAUSE_ICON := preload("res://resources/img/Icons/pause.png")
 
 @onready var resume_btn: Button = %ResumeBtn
 @onready var main_menu_btn: Button = %MainMenuBtn
@@ -23,6 +27,11 @@ class_name PauseMenuState extends MenuState
 @onready var tricks_btn: Button = %TricksBtn
 @onready var level_select_panel: LevelSelectPanel = %LevelSelectPanel
 @onready var lobby_panel: LobbyPanel = %LobbyPanel
+@onready var now_playing_title: Label = %NowPlayingTitle
+@onready var now_playing_artist: Label = %NowPlayingArtist
+@onready var prev_song_btn: Button = %PrevSongBtn
+@onready var play_pause_btn: Button = %PlayPauseBtn
+@onready var skip_song_btn: Button = %SkipSongBtn
 
 @onready var bg_tint: ColorRect = %BGTint
 
@@ -39,6 +48,11 @@ func Enter(_state_context: StateContext):
 	connection_manager.server_disconnected.connect(_on_server_disconnected)
 	settings_btn.pressed.connect(_on_settings_pressed)
 	tricks_btn.pressed.connect(_on_tricks_pressed)
+	prev_song_btn.pressed.connect(audio_manager.previous_music_track)
+	play_pause_btn.pressed.connect(_on_play_pause_pressed)
+	skip_song_btn.pressed.connect(audio_manager.skip_music_track)
+	audio_manager.music_track_changed.connect(_update_now_playing)
+	_update_now_playing()
 
 	cancel_event_btn.visible = gamemode_manager.get_current_gamemode().can_cancel_event()
 
@@ -66,6 +80,10 @@ func Exit(_state_context: StateContext):
 	connection_manager.server_disconnected.disconnect(_on_server_disconnected)
 	settings_btn.pressed.disconnect(_on_settings_pressed)
 	tricks_btn.pressed.disconnect(_on_tricks_pressed)
+	prev_song_btn.pressed.disconnect(audio_manager.previous_music_track)
+	play_pause_btn.pressed.disconnect(_on_play_pause_pressed)
+	skip_song_btn.pressed.disconnect(audio_manager.skip_music_track)
+	audio_manager.music_track_changed.disconnect(_update_now_playing)
 
 	if level_select_panel.start_pressed.is_connected(_on_level_select_start_pressed):
 		level_select_panel.start_pressed.disconnect(_on_level_select_start_pressed)
@@ -73,6 +91,17 @@ func Exit(_state_context: StateContext):
 		level_select_panel.level_selected.disconnect(_on_level_select_level_selected)
 
 	lobby_panel.close()
+
+
+func _update_now_playing():
+	now_playing_title.text = audio_manager.get_music_title()
+	now_playing_artist.text = audio_manager.get_music_artist()
+	play_pause_btn.icon = PLAY_ICON if audio_manager.is_music_paused() else PAUSE_ICON
+
+
+func _on_play_pause_pressed():
+	audio_manager.toggle_music_paused()
+	_update_now_playing()
 
 
 func _on_tricks_pressed():

@@ -4,6 +4,9 @@
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_wn568"]
 [ext_resource type="PackedScene" path="res://menus/lobby_menu/level_select_panel.tscn" id="3_lspanel"]
 [ext_resource type="PackedScene" path="res://menus/lobby_menu/lobby_panel.tscn" id="4_lpanel"]
+[ext_resource type="Texture2D" path="res://resources/img/Icons/previous.png" id="5_prev"]
+[ext_resource type="Texture2D" path="res://resources/img/Icons/pause.png" id="6_pause"]
+[ext_resource type="Texture2D" path="res://resources/img/Icons/next.png" id="7_next"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wn568"]
 
@@ -95,6 +98,53 @@ layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "MAIN_MENU_LABEL"
 
+
+[node name="MusicPanel" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1846203601]
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="NowPlayingLabel" type="Label" parent="UI/AspectContainer/MarginContainer/MusicPanel" unique_id=1846203602]
+layout_mode = 2
+horizontal_alignment = 1
+text = "NOW_PLAYING_LABEL"
+
+[node name="NowPlayingTitle" type="Label" parent="UI/AspectContainer/MarginContainer/MusicPanel" unique_id=1846203603]
+unique_name_in_owner = true
+layout_mode = 2
+auto_translate_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="NowPlayingArtist" type="Label" parent="UI/AspectContainer/MarginContainer/MusicPanel" unique_id=1846203604]
+unique_name_in_owner = true
+layout_mode = 2
+auto_translate_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="MusicControls" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/MusicPanel" unique_id=1846203606]
+layout_mode = 2
+alignment = 1
+
+[node name="PrevSongBtn" type="Button" parent="UI/AspectContainer/MarginContainer/MusicPanel/MusicControls" unique_id=1846203607]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+icon = ExtResource("5_prev")
+
+[node name="PlayPauseBtn" type="Button" parent="UI/AspectContainer/MarginContainer/MusicPanel/MusicControls" unique_id=1846203608]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+icon = ExtResource("6_pause")
+
+[node name="SkipSongBtn" type="Button" parent="UI/AspectContainer/MarginContainer/MusicPanel/MusicControls" unique_id=1846203605]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+icon = ExtResource("7_next")
 
 [node name="LevelSelectPanel" parent="UI/AspectContainer/MarginContainer" unique_id=1170908105 instance=ExtResource("3_lspanel")]
 unique_name_in_owner = true

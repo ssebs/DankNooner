@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://tdq14ju136xo"
+path="res://.godot/imported/fassounds - Escape Your Love.mp3-d2fcd0f813073d373e804e79a35622c1.mp3str"
+
+[deps]
+
+source_file="res://non_fmod_sounds/Music/FreeRoam/fassounds - Escape Your Love.mp3"
+dest_files=["res://.godot/imported/fassounds - Escape Your Love.mp3-d2fcd0f813073d373e804e79a35622c1.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

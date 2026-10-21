@@ -23,3 +23,9 @@
 - https://freemusicarchive.org/music/david-j-barrios/single/becoming-nature-progressive-djent-melodic-metal/
 - https://freemusicarchive.org/music/lite-saturation/rock-sports-electro/rock-sports-electro-full/
 - https://freemusicarchive.org/music/david-j-barrios/single/technological-integration-la-integracion-de-la-tecnologia-cyberpunk-darksynth-metal-instrumental/
+- https://pixabay.com/users/eugenemyers-40510887/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=620019
+- https://pixabay.com/users/evolvingvibes-56407377/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=617230
+- https://pixabay.com/users/lnplusmusic-47631836/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=597971
+- https://pixabay.com/users/alexguz-37772443/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=541097
+- https://pixabay.com/users/fassounds-3433550/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=412230
+- https://pixabay.com/users/lightbeatsmusic-53332028/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=513936

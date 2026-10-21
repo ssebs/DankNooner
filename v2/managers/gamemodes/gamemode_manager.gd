@@ -69,6 +69,7 @@ func _ready():
 	connection_manager.player_connected.connect(_on_player_connected)
 	connection_manager.player_disconnected.connect(_on_player_disconnected)
 	spawn_manager.player_spawned.connect(_on_player_spawned)
+	state_machine.state_transitioned.connect(_on_gamemode_transitioned)
 
 
 func get_current_gamemode() -> GameModeType:
@@ -199,6 +200,7 @@ func end_game():
 	_release_level_animals()
 
 	audio_manager.stop_all()
+	audio_manager.play_music(AudioManager.MusicType.MENU)
 	match_ended.emit()
 
 
@@ -243,6 +245,15 @@ func latespawn_player(peer_id: int):
 			continue
 		var existing_player_def: PlayerDefinition = lobby_manager.lobby_players[existing_id]
 		spawn_manager.rpc_spawn_player.rpc_id(peer_id, existing_id, existing_player_def.to_dict())
+
+
+# Runs on every peer (all transitions are call_local or client-side), so each plays its own music
+func _on_gamemode_transitioned(_old_state: State, new_state: State):
+	# Fuel-up and the tutorial are lead-ins, so they keep the free roam playlist
+	if new_state in [free_roam_mode, fuel_up_mode, tutorial_mode]:
+		audio_manager.play_music(AudioManager.MusicType.FREE_ROAM)
+	else:
+		audio_manager.play_music(AudioManager.MusicType.EVENT)
 
 
 func _on_player_spawned(player: PlayerEntity):

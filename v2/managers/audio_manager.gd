@@ -1,6 +1,8 @@
 @tool
 class_name AudioManager extends BaseManager
 
+signal music_track_changed
+
 ## Looping engine sounds driven by RPM. Used by BikeSkinDefinition.engine_sound_id
 ## to pick which sound `play_revs()` activates.
 enum EngineSfx {
@@ -77,8 +79,18 @@ enum Sfx {
 	WHAT_THE_DOG_DOIN,
 }
 
+## Music playlists, one per container under the Music node. Add a song by dropping a
+## SoundEvent into its container; volume_db is its level, the "Artist - Title" filename its name.
+enum MusicType {
+	MENU,
+	FREE_ROAM,
+	EVENT,
+}
+
 @export var settings_manager: SettingsManager
 @export_tool_button("Play Startup") var tool_btn_1 = play_startup
+## Crossfade length when switching playlists or skipping a song.
+@export var music_fade_time: float = 1.5
 
 ## Map of settings_manager key → audio bus name. Buses are defined in `default_bus_layout.tres`
 ## (must be created in the editor — runtime AudioServer.add_bus() doesn't work on web exports).
@@ -168,6 +180,14 @@ var _active_engine_sfx: int = -1
 ## Round-robin pool of decel pop players (children of %ExhaustPops) + the next index to play.
 var _exhaust_pops: Array[SoundEvent] = []
 var _exhaust_pop_idx: int = 0
+## Map of MusicType → its songs, populated in _ready.
+var _music_tracks: Dictionary = {}
+var _music_type: int = -1
+## The rest of this pass through _music_type's songs, shuffled, so none repeat early.
+var _music_queue: Array[SoundEvent] = []
+## Songs already played from _music_type, most recent last, for previous_music_track().
+var _music_history: Array[SoundEvent] = []
+var _music_track: SoundEvent
 var _audio_disabled := false
 var _app_focused := true
 
@@ -240,9 +260,12 @@ func _ready():
 	hah_chew = get_node_or_null("%HahChew") as SoundEvent
 	metal_pipe = get_node_or_null("%MetalPipe") as SoundEvent
 	what_the_dog_doin = get_node_or_null("%WhatTheDogDoin") as SoundEvent
-	for pop in get_node("%ExhaustPops").get_children():
-		if pop is SoundEvent:
-			_exhaust_pops.append(pop)
+	_exhaust_pops = _sound_events_in("%ExhaustPops")
+	_music_tracks = {
+		MusicType.MENU: _sound_events_in("%MenuMusic"),
+		MusicType.FREE_ROAM: _sound_events_in("%FreeRoamMusic"),
+		MusicType.EVENT: _sound_events_in("%EventMusic"),
+	}
 
 	_sfx_events = {
 		Sfx.STARTUP: startup,
@@ -319,6 +342,9 @@ func _ready():
 
 	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
 	settings_manager.setting_updated.connect(_on_setting_updated)
+	for tracks in _music_tracks.values():
+		for track: SoundEvent in tracks:
+			track.finished.connect(_on_music_track_finished)
 
 	_audio_disabled = "--disable-audio" in OS.get_cmdline_user_args()
 	AudioServer.set_bus_mute(AudioServer.get_bus_index(&"Master"), _audio_disabled)
@@ -404,6 +430,86 @@ func next_exhaust_pop() -> SoundEvent:
 	var pop := _exhaust_pops[_exhaust_pop_idx]
 	_exhaust_pop_idx = (_exhaust_pop_idx + 1) % _exhaust_pops.size()
 	return pop
+
+
+## Crossfades to a shuffled song from `type`. No-op while `type` is already playing.
+func play_music(type: MusicType):
+	if type == _music_type:
+		return
+	_music_type = type
+	_music_queue.clear()
+	_music_history.clear()
+	_play_next_music(music_fade_time)
+
+
+func skip_music_track():
+	_play_next_music(music_fade_time)
+
+
+## Back to the last song, or restarts this one if it's the first played from this playlist.
+func previous_music_track():
+	if _music_history.is_empty():
+		_switch_music_track(_music_track, music_fade_time)
+		return
+	# Requeued so skipping forward returns to it
+	_music_queue.push_back(_music_track)
+	_switch_music_track(_music_history.pop_back(), music_fade_time)
+
+
+## Any song change resumes playback.
+func toggle_music_paused():
+	_music_track.stream_paused = !_music_track.stream_paused
+
+
+func is_music_paused() -> bool:
+	return _music_track.stream_paused
+
+
+func get_music_title() -> String:
+	return _music_name_parts()[-1]
+
+
+## Empty for a filename without " - ".
+func get_music_artist() -> String:
+	var parts := _music_name_parts()
+	return parts[0] if parts.size() > 1 else ""
+
+
+func _music_name_parts() -> PackedStringArray:
+	return _music_track.stream.resource_path.get_file().get_basename().split(" - ", true, 1)
+
+
+func _play_next_music(fade_time: float):
+	if _music_queue.is_empty():
+		_music_queue.assign(_music_tracks[_music_type])
+		_music_queue.shuffle()
+		# Don't open the new pass with the song that just played
+		if _music_queue.size() > 1 and _music_queue[-1] == _music_track:
+			_music_queue.push_front(_music_queue.pop_back())
+	if _music_track:
+		_music_history.push_back(_music_track)
+	_switch_music_track(_music_queue.pop_back(), fade_time)
+
+
+func _switch_music_track(track: SoundEvent, fade_time: float):
+	if _music_track:
+		_music_track.fade_out(fade_time)
+	_music_track = track
+	_music_track.fade_in(fade_time)
+	music_track_changed.emit()
+
+
+# stop() doesn't emit finished, so this is only ever the current song ending on its own
+func _on_music_track_finished():
+	_play_next_music(0.0)
+
+
+func _sound_events_in(container_path: String) -> Array[SoundEvent]:
+	var events: Array[SoundEvent] = []
+	for child in get_node(container_path).get_children():
+		if child is SoundEvent:
+			events.append(child)
+	return events
 
 
 func play_nos_boost():

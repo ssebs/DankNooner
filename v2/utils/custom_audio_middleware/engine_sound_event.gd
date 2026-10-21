@@ -15,13 +15,11 @@ var max_pitch: float = 2.828
 ## RPM [0..1] → crossfade position [0..1]. Null = linear. Set by play_revs().
 var blend_curve: Curve
 ## Authored volumes, captured so the crossfade offsets from them instead of clobbering.
-var base_volume_db: float
 var base_high_volume_db: float
 
 
 func _ready() -> void:
 	super()
-	base_volume_db = volume_db
 	if high_layer:
 		base_high_volume_db = high_layer.volume_db
 	if Engine.is_editor_hint():

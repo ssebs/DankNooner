@@ -156,6 +156,26 @@ AudioManager stays the single place sounds are authored. Positional playback bor
 
 Attenuation is stock `AudioStreamPlayer3D` inverse-distance on those nodes, with `unit_size` (the range heard at full volume, which also delays the distance low-pass) raised on all seven, horn included; tune it in `player_entity.tscn`. Inside `unit_size` inverse-distance gain exceeds 1, so `max_db` tracks each player's current `volume_db`: an adjacent rider is never louder than the sound's authored level. Both engine layers and both player cameras (`TPSCam`, `FPSCam`) use idle-step `doppler_tracking`. Idle, not physics, because rider transforms are interpolated per frame by `TickInterpolator`. A camera without tracking (override cams, garage) hears no doppler.
 
+## Music
+
+Songs live in `audio_manager.tscn` under `Music`, one `SoundEvent` (bus `Music`) per song, split into a container per `AudioManager.MusicType`:
+
+```
+AudioManager
+├── Sounds
+└── Music
+    ├── MenuMusic      (%MenuMusic)
+    ├── FreeRoamMusic  (%FreeRoamMusic)
+    └── EventMusic     (%EventMusic)
+```
+
+- **Adding a song:** drop the file in `non_fmod_sounds/Music/<type>/`, add a `SoundEvent` under the matching container. Its `volume_db` is the song's level. Import with loop off, or the song never ends and the playlist never advances.
+- **Names:** the pause menu's now-playing shows the stream's filename split on the first `" - "` into artist and title. A file without `" - "` is all title.
+- **Playback:** `play_music(type)` crossfades (`music_fade_time`) to a shuffled song from that playlist and is a no-op if it's already playing. Each pass plays every song once before reshuffling. A song ending on its own goes straight to the next; `skip_music_track()` crossfades. `previous_music_track()` walks back through this playlist's history (restarting the song when there is none) and requeues the current one so skip returns to it. `toggle_music_paused()` pauses the current song; any song change resumes. The pause menu's music panel drives all three. Fades are `SoundEvent.fade_in()` / `fade_out()`, which return to the authored `base_volume_db`.
+- **Who picks the playlist:** `GamemodeManager` on its state machine's `state_transitioned` (free roam, fuel-up and tutorial → `FREE_ROAM`, every other mode → `EVENT`), and `end_game()` / `SplashMenuState.Exit()` → `MENU`. Transitions run on every peer, so music is local per player and skipping only affects you.
+- **Outside `Sounds` on purpose:** `stop_all()` only stops `Sounds`, so match end crossfades to menu music instead of cutting.
+- `AudioStreamPlaylist` isn't used: its playback exposes no current track or skip.
+
 ## Things to be aware of
 
 - **Loop on import**: For OGG/MP3 streams, the loop flag lives on the `AudioStream` resource. The `loop` export on `SoundEvent` duplicates the resource at runtime so the shared `.ogg` import isn't mutated process-wide.

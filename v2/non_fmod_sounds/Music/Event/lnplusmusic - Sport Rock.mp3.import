@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://7apd62upsbqm"
+path="res://.godot/imported/lnplusmusic - Sport Rock.mp3-d359dc8a119e43fbb19c2ef165f95d80.mp3str"
+
+[deps]
+
+source_file="res://non_fmod_sounds/Music/Event/lnplusmusic - Sport Rock.mp3"
+dest_files=["res://.godot/imported/lnplusmusic - Sport Rock.mp3-d359dc8a119e43fbb19c2ef165f95d80.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
