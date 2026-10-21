@@ -104,9 +104,11 @@ custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
+theme_override_constants/separation = 0
 
 [node name="NowPlayingLabel" type="Label" parent="UI/AspectContainer/MarginContainer/MusicPanel" unique_id=1846203602]
 layout_mode = 2
+theme_type_variation = &"TableHeaderLabel"
 horizontal_alignment = 1
 text = "NOW_PLAYING_LABEL"
 
@@ -126,24 +128,34 @@ autowrap_mode = 3
 
 [node name="MusicControls" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/MusicPanel" unique_id=1846203606]
 layout_mode = 2
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="PrevSongBtn" type="Button" parent="UI/AspectContainer/MarginContainer/MusicPanel/MusicControls" unique_id=1846203607]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 40)
 layout_mode = 2
 mouse_default_cursor_shape = 2
+icon_alignment = 1
+expand_icon = true
 icon = ExtResource("5_prev")
 
 [node name="PlayPauseBtn" type="Button" parent="UI/AspectContainer/MarginContainer/MusicPanel/MusicControls" unique_id=1846203608]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 40)
 layout_mode = 2
 mouse_default_cursor_shape = 2
+icon_alignment = 1
+expand_icon = true
 icon = ExtResource("6_pause")
 
 [node name="SkipSongBtn" type="Button" parent="UI/AspectContainer/MarginContainer/MusicPanel/MusicControls" unique_id=1846203605]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 40)
 layout_mode = 2
 mouse_default_cursor_shape = 2
+icon_alignment = 1
+expand_icon = true
 icon = ExtResource("7_next")
 
 [node name="LevelSelectPanel" parent="UI/AspectContainer/MarginContainer" unique_id=1170908105 instance=ExtResource("3_lspanel")]

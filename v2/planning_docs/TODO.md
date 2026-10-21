@@ -23,6 +23,14 @@
 > Don't forget, have fun :D
 - [ ] see playtest [feedback](_ScratchPad.md)
 
+- [ ] add music
+  - [x] files + credits
+  - [x] add to audiomgr
+  - [x] add in game
+  - [x] add controls in pause menu
+  - [ ] add vol slider in pause menu
+  - [ ] test mid-game
+
 - [ ] Get AI working again
 
 - [ ] Add integration tests for features
