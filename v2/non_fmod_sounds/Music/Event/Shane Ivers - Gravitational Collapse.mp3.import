@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dwilurrhuytsl"
+path="res://.godot/imported/Shane Ivers - Gravitational Collapse.mp3-958619af1fbf4635c23b97989aa14318.mp3str"
+
+[deps]
+
+source_file="res://non_fmod_sounds/Music/Event/Shane Ivers - Gravitational Collapse.mp3"
+dest_files=["res://.godot/imported/Shane Ivers - Gravitational Collapse.mp3-958619af1fbf4635c23b97989aa14318.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

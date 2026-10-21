@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://p4fnw6v5qd3p"
+path="res://.godot/imported/Lite Saturation - Rock Sports Electro - Full.mp3-0e3ae85d77831c95b84d231e2cafb6d4.mp3str"
+
+[deps]
+
+source_file="res://non_fmod_sounds/Music/Event/Lite Saturation - Rock Sports Electro - Full.mp3"
+dest_files=["res://.godot/imported/Lite Saturation - Rock Sports Electro - Full.mp3-0e3ae85d77831c95b84d231e2cafb6d4.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://pjwyyr7whfbd"
+path="res://.godot/imported/Jesse Spillane - Dance Rocket.mp3-e6aecad27eab5b8cd3ed9a2ef6f1bdb2.mp3str"
+
+[deps]
+
+source_file="res://non_fmod_sounds/Music/FreeRoam/Jesse Spillane - Dance Rocket.mp3"
+dest_files=["res://.godot/imported/Jesse Spillane - Dance Rocket.mp3-e6aecad27eab5b8cd3ed9a2ef6f1bdb2.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

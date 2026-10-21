@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cutrlmknjo02a"
+path="res://.godot/imported/JMHBM - 11 MPH.mp3-301a51e495a82323ee77bf90c1c29c06.mp3str"
+
+[deps]
+
+source_file="res://non_fmod_sounds/Music/FreeRoam/JMHBM - 11 MPH.mp3"
+dest_files=["res://.godot/imported/JMHBM - 11 MPH.mp3-301a51e495a82323ee77bf90c1c29c06.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

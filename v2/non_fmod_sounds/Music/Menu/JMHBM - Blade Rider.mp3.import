@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b6nwkdkdid10c"
+path="res://.godot/imported/JMHBM - Blade Rider.mp3-bae9d5800be93fe215e87142d3287e92.mp3str"
+
+[deps]
+
+source_file="res://non_fmod_sounds/Music/Menu/JMHBM - Blade Rider.mp3"
+dest_files=["res://.godot/imported/JMHBM - Blade Rider.mp3-bae9d5800be93fe215e87142d3287e92.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

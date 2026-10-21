@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b0hhha7ext0ls"
+path="res://.godot/imported/David J. Barrios - Love and Strength for La Palma (Amor y Fuerza para La Palma) – Instrumental Post-Rock.mp3-59c3348631fab39c271a2931a8333882.mp3str"
+
+[deps]
+
+source_file="res://non_fmod_sounds/Music/FreeRoam/David J. Barrios - Love and Strength for La Palma (Amor y Fuerza para La Palma) – Instrumental Post-Rock.mp3"
+dest_files=["res://.godot/imported/David J. Barrios - Love and Strength for La Palma (Amor y Fuerza para La Palma) – Instrumental Post-Rock.mp3-59c3348631fab39c271a2931a8333882.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

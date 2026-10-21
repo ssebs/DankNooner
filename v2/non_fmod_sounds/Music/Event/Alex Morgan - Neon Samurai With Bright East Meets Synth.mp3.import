@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bq1mrorf5gtjb"
+path="res://.godot/imported/Alex Morgan - Neon Samurai With Bright East Meets Synth.mp3-c30cefe9d94342b72e8099c4f6cdb649.mp3str"
+
+[deps]
+
+source_file="res://non_fmod_sounds/Music/Event/Alex Morgan - Neon Samurai With Bright East Meets Synth.mp3"
+dest_files=["res://.godot/imported/Alex Morgan - Neon Samurai With Bright East Meets Synth.mp3-c30cefe9d94342b72e8099c4f6cdb649.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

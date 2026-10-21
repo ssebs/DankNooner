@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bdoxu4sdwjmsj"
+path="res://.godot/imported/JMHBM - Addiction II.mp3-6da58c3b23d77884711694c5b8806c6d.mp3str"
+
+[deps]
+
+source_file="res://non_fmod_sounds/Music/FreeRoam/JMHBM - Addiction II.mp3"
+dest_files=["res://.godot/imported/JMHBM - Addiction II.mp3-6da58c3b23d77884711694c5b8806c6d.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

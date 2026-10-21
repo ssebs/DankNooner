@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dinno213admu3"
+path="res://.godot/imported/David J. Barrios - Blood Ascendant – Epic Symphonic Metal Trailer (Cinematic Boss Battle).mp3-48d4c1eb087290f34edf16582b909c2e.mp3str"
+
+[deps]
+
+source_file="res://non_fmod_sounds/Music/Event/David J. Barrios - Blood Ascendant – Epic Symphonic Metal Trailer (Cinematic Boss Battle).mp3"
+dest_files=["res://.godot/imported/David J. Barrios - Blood Ascendant – Epic Symphonic Metal Trailer (Cinematic Boss Battle).mp3-48d4c1eb087290f34edf16582b909c2e.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
