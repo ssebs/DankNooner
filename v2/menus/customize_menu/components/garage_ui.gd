@@ -73,7 +73,7 @@ func _ready():
 	_profile_tab.pressed.connect(_switch_tab.bind(0))
 	_add_tab_btn.pressed.connect(_add_loadout)
 	_back_btn.pressed.connect(go_back)
-	_set_active_btn.pressed.connect(_set_active)
+	_set_active_btn.pressed.connect(func(): _set_active(_tab))
 	_delete_btn.pressed.connect(_on_delete_pressed)
 	_leave_btn.pressed.connect(exit_requested.emit)
 	_pose_btn.pressed.connect(pose_requested.emit)
@@ -142,7 +142,9 @@ func _rebuild_tabs():
 	_profile_tab.button_pressed = _tab == 0
 	for i in _player_def.loadouts.size():
 		var loadout := _player_def.loadouts[i]
-		_add_tab(loadout.name if loadout.name != "" else str(i + 1), i + 1)
+		var label := loadout.name if loadout.name != "" else str(i + 1)
+		# Same marker as a row's current pick.
+		_add_tab(("* " if i == _player_def.active_loadout_index else "") + label, i + 1)
 	_add_tab_btn.visible = _player_def.loadouts.size() < PlayerDefinition.MAX_LOADOUTS
 
 
@@ -154,12 +156,21 @@ func _add_tab(label: String, tab: int):
 	btn.button_pressed = tab == _tab
 	btn.focus_mode = Control.FOCUS_NONE
 	btn.pressed.connect(_switch_tab.bind(tab))
+	btn.gui_input.connect(_on_tab_input.bind(tab))
+	btn.tooltip_text = tr("GARAGE_TAB_TOOLTIP")
 	_tabs.add_child(btn)
 	btn.custom_minimum_size.x = minf(btn.get_minimum_size().x, TAB_MAX_WIDTH)
 	btn.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	if tab == _tab:
 		# Deferred so the strip has laid out the new tabs.
 		_tab_scroll.ensure_control_visible.call_deferred(btn)
+
+
+## Right-click makes a loadout active without switching to it.
+func _on_tab_input(event: InputEvent, tab: int):
+	var mouse := event as InputEventMouseButton
+	if mouse != null and mouse.pressed and mouse.button_index == MOUSE_BUTTON_RIGHT:
+		_set_active(tab)
 
 
 ## Copy of the active loadout.
@@ -469,8 +480,8 @@ func _apply_horn(horn: HornDefinition):
 		_loadout().horn = horn
 
 
-func _set_active():
-	_player_def.active_loadout_index = _tab - 1
+func _set_active(tab: int):
+	_player_def.active_loadout_index = tab - 1
 	_rebuild()
 
 

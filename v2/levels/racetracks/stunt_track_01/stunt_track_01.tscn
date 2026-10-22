@@ -1161,7 +1161,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.832764, 0, 12.55719)
 intersection = NodePath("..")
 
 [node name="TrafficLight2" parent="TrafficNetwork/TrafficIntersection6" unique_id=1434975135 node_paths=PackedStringArray("intersection") instance=ExtResource("8_6lq47")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 13.167236, 0, -16.542816)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 13.167236, -0.5, -16.542816)
 intersection = NodePath("..")
 slot = 2
 
