@@ -4381,6 +4381,13 @@ width = 16.0
 depth = 16.0
 color_preset = 1
 
+[node name="GrayBox_StaticBody22" parent="props/BridgeSupports" unique_id=1485126779 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.4738947, 0.52480817, -0.7071068, -0.74219096, 0.6701882, 0, 0.4738948, 0.5248082, 0.7071067, -685.6579, 7.14, 617.50793)
+width = 4.0
+height = 0.1
+depth = 10.0
+color_preset = 1
+
 [node name="GrayBox_StaticBody19" parent="props/BridgeSupports" unique_id=1528883164 instance=ExtResource("18_dc022")]
 transform = Transform3D(0.8660253, -0.49999988, 0, 0.49999997, 0.8660252, 0, 0, 0, 0.9999999, -637.57776, 0.71232915, 641.82495)
 width = 4.0

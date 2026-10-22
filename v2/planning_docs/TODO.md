@@ -22,7 +22,8 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-- [ ] see playtest [feedback](_ScratchPad.md)
+
+- [ ] [WIP MiniTasks](_ScratchPad.md)
 
 - [ ] NPC traffic during race? Needs to clip thru existing wall barriers for now
 
@@ -41,12 +42,10 @@
   - [ ] > steam next fest Feb '27
   - [ ] Release after free to play  w/ paid dlc for more content/skins
 
-
 ---
 
 ## Notes 📝
 > Stuff to move ASAP
-
 
 ---
 
@@ -84,7 +83,6 @@
 - [ ] add guac and load building to map
 - [ ] steam workshop for maps / other assets?
 - [ ] replace csgmesh for houses/other buildings for performance + looks
-
 
 ### Progression & Customization for final game
 
@@ -156,6 +154,7 @@
 - [ ] Knock over light pole & fire hydrants & signs/ street lights
 - [ ] Transition animations between menu states
 - [ ] Tracers when boosting 
+- [ ] VFX on horn (to beat would be cool)
 
 ### Audio
 - [ ] Music
@@ -223,6 +222,10 @@
 ---
 
 ## Done ✅
+- [x] Crashing in free roam doesn't auto respawn sometimes
+
+- [x] option to drop current item (honk)
+
 - [x] Pause => show lobby
 - [x] reactive sounds
 - [x] Discord page for support/community 

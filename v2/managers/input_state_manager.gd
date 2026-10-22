@@ -46,6 +46,8 @@ var _respawn_hold_time: float = 0.0
 var _respawn_full_fired: bool = false
 ## Last trick-button release; a press within TrickController.DOUBLE_TAP_WINDOW of it uses the held item.
 var _trick_released_msec: int = -1
+## Last horn release; a honk within the same window discards the held item.
+var _horn_released_msec: int = -1
 
 
 func _ready():
@@ -109,6 +111,10 @@ func _unhandled_input(event: InputEvent):
 				_try_use_item()
 			elif event.is_action_pressed("use_item"):
 				item_manager.request_use_item.rpc_id(1)
+			elif event.is_action_released("horn"):
+				_horn_released_msec = Time.get_ticks_msec()
+			elif event.is_action_pressed("horn"):
+				_try_drop_item()
 			elif event is InputEventKey and event.pressed and not event.echo:
 				_try_switch_bike_slot(event.physical_keycode)
 		InputStateManager.InputState.IN_GAME_PAUSED:
@@ -149,6 +155,12 @@ func _tab_dir(event: InputEvent) -> int:
 func _try_use_item():
 	if Time.get_ticks_msec() - _trick_released_msec <= TrickController.DOUBLE_TAP_WINDOW * 1000.0:
 		item_manager.request_use_item.rpc_id(1)
+
+
+## Double-tap the horn to discard the held item.
+func _try_drop_item():
+	if Time.get_ticks_msec() - _horn_released_msec <= TrickController.DOUBLE_TAP_WINDOW * 1000.0:
+		item_manager.request_drop_item.rpc_id(1)
 
 
 ## Switch the local player's active bike to the loadout for a number-row key

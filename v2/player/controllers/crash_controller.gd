@@ -350,6 +350,7 @@ func _highside_launch(dir_sign: float) -> Vector3:
 func trigger_crash(launch_impulse: Vector3 = Vector3.ZERO):
 	# Sim state only — visuals ride the is_crashed edge in _process (firing them in rollback left them stuck).
 	player_entity.is_crashed = true
+	player_entity.crash_count += 1
 	player_entity.velocity = launch_impulse
 	player_entity.crash_launch_impulse = launch_impulse
 

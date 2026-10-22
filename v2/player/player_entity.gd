@@ -132,6 +132,8 @@ var username: String:
 
 # Crash state (synced)
 var is_crashed: bool = false
+## Bumped per crash so _process catches a respawn + re-crash between frames, which is_crashed alone hides.
+var crash_count: int = 0
 
 ## Synced freeze MovementController honors in rollback. Set only via rb_lock_movement/rb_unlock_movement.
 var movement_locked: bool = false
@@ -193,6 +195,7 @@ var _lock_value: bool = false
 
 # Process-side state tracking (not sync'd)
 var _prev_is_crashed: bool = false
+var _prev_crash_count: int = 0
 ## Local _process edge for the NOS boost SFX — plays once each time a boost fires.
 var _prev_is_boosting: bool = false
 ## Exhaust-sound detection (local, _process): whether we're inside a decel window, how long we've
@@ -319,11 +322,16 @@ func _process(delta: float) -> void:
 		return
 
 	# is_crashed-edge visuals (outside rollback) so a reconciled-away predicted crash un-ragdolls itself.
-	if is_crashed and !_prev_is_crashed:
+	var new_crash := is_crashed and crash_count != _prev_crash_count
+	if new_crash:
+		# Respawned and re-crashed since last frame — close out the old crash first.
+		if _prev_is_crashed:
+			_exit_crash_visuals()
 		_enter_crash_visuals()
 	elif !is_crashed and _prev_is_crashed:
 		_exit_crash_visuals()
 	_prev_is_crashed = is_crashed
+	_prev_crash_count = crash_count
 
 	_update_horn()
 	_update_exhaust_pops(delta)

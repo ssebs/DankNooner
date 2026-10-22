@@ -1,8 +1,9 @@
 @tool
 ## Server authority for pickup items. Instant items (Gas Can) apply on collect; the rest fill the
 ## rider's single held slot and are spent by double-tapping the trick button or the use_item action
-## (InputStateManager → request_use_item). Deployables (oil slick, ramp) are level children spawned
-## on every peer by RPC-by-path, the same model as PickupSpawner.
+## (InputStateManager → request_use_item), or discarded by double-tapping the horn. Deployables
+## (oil slick, ramp) are level children spawned on every peer by RPC-by-path, the same model as
+## PickupSpawner.
 class_name ItemManager extends BaseManager
 
 @export var level_manager: LevelManager
@@ -66,11 +67,8 @@ func collect(peer_id: int, definition: PickupItemDefinition) -> bool:
 
 ## Server-only. Empties every slot — a new pickup session (race start, free roam) starts clean.
 func clear_items() -> void:
-	for peer_id in _held:
-		riding_hud_state.push_held_item(peer_id, null)
-		if _held[peer_id].item_type == PickupItemDefinition.PickupItemType.SHOTGUN:
-			_rpc_set_shotgun_held.rpc(peer_id, false)
-	_held.clear()
+	for peer_id in _held.keys():
+		_empty_slot(peer_id)
 
 
 ## Client-callable: use YOUR held item. The server derives the rider from the sender.
@@ -101,6 +99,18 @@ func request_use_item():
 			_rally_up()
 
 
+## Client-callable: discard YOUR held item. The server derives the rider from the sender.
+@rpc("any_peer", "call_local", "reliable")
+func request_drop_item():
+	if !multiplayer.is_server():
+		return
+	var sender := multiplayer.get_remote_sender_id()
+	var peer_id := sender if sender > 1 else 1
+	# Empty-handed double honks are just honking.
+	if _held.has(peer_id):
+		_empty_slot(peer_id)
+
+
 ## The user's own client — SoundEvents aren't positional, so everyone else hearing it would be noise.
 @rpc("call_local", "reliable")
 func _rpc_play_use_sfx(sfx: AudioManager.Sfx):
@@ -108,6 +118,14 @@ func _rpc_play_use_sfx(sfx: AudioManager.Sfx):
 
 
 func _on_player_disconnected(peer_id: int) -> void:
+	_held.erase(peer_id)
+
+
+## Server-only. Empties the slot without using it, unequipping a held shotgun.
+func _empty_slot(peer_id: int) -> void:
+	riding_hud_state.push_held_item(peer_id, null)
+	if _held[peer_id].item_type == PickupItemDefinition.PickupItemType.SHOTGUN:
+		_rpc_set_shotgun_held.rpc(peer_id, false)
 	_held.erase(peer_id)
 
 

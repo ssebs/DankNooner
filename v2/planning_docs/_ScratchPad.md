@@ -7,10 +7,6 @@
 ### NOW
 
 
-- [ ] option to drop current item (honk)
-
-- [ ] Crashing in free roam doesn't auto respawn sometimes
-
 - [ ] Race track time trial shows "Start" drive-to-location from reg race. rm during any race
 
 - [ ] Add drivable floor to other side of bridge ramp
