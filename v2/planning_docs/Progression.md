@@ -1,6 +1,6 @@
 # Progression
 
-> Brainstorm; only [payouts](#payouts) are built. The rest is parked until NPCs work properly
+> Brainstorm; only [payouts](#payouts) and the garage shop are built. The rest is parked until NPCs work properly
 > (mission givers depend on them).
 > Story beats live in [Story](./Story.md); this doc is the systems side.
 
@@ -25,15 +25,20 @@ Make points mean something: players should want to unlock something, and replay 
 
 ## What exists
 
-- `PlayerDefinition.money` is spent on garage skins (`SaveManager.purchase`) and gas pumps (`SaveManager.spend`), and earned from event [payouts](#payouts) (`SaveManager.earn`).
+- `PlayerDefinition.money` is spent on garage skins and horns (`SaveManager.purchase`) and on
+  priced `FreeRoamActivity`s and fuel-up pumps (`SaveManager.spend`), and earned from event
+  [payouts](#payouts) (`SaveManager.earn`).
 - `PlayerDefinition.xp` is earned the same way. `level()` derives the rider level shown on the
   riding HUD; it gates nothing yet.
 - `current_save["progression"]` holds per-event time attack PBs. `TimeAttackComponent` is the
   pattern for writing a client's save from a server-run event: the server RPCs each client, which
   writes its own save.
 - `LeaderboardComponent.build_results()` has every rider's final standing at the end of a race.
-- Everything is unlocked today: `SaveManager` seeds one loadout per bike on first run, and the
-  customize menu lists every skin it finds on disk.
+- **Garage shop:** characters and horns cost money; bikes and colors are free. Bought paths live
+  in `current_save["progression"]["owned"]`, and `SaveManager.is_owned()` treats a 0 price as
+  owned. A new save gets the default profile's loadout and owns only what it uses. The garage
+  (free roam `GarageActivity` or the customize menu) lists every skin on disk with its price,
+  tinted when unaffordable.
 
 
 ## Decided
@@ -41,7 +46,7 @@ Make points mean something: players should want to unlock something, and replay 
 - **Every gamemode pays out** currency at its results screen. Winning a race pays more.
 - **Multiplayer events follow the host's progress.** Anyone can join the host's events, locked in
   their own save or not, and earns money/XP toward their own level and unlocks. Finishing also
-  marks the event completed in their own save.
+  marks the event completed in their own save (not built: nothing records completion yet).
 - **XP is stored and shown now, gates nothing yet.** A rider level derived from saved XP shows
   next to money. What it gates is decided when the story work resumes.
 
@@ -86,8 +91,8 @@ original game. The cruiser unlock fits here. Beats are in [Story](./Story.md).
 
 ### World layout
 
-One map grown from stunt track 01, not a map per chapter (Hit & Run's approach). Maps are the most
-expensive content.
+One map ("Highside Island") grown from stunt track 01, not a map per chapter (Hit & Run's
+approach). Maps are the most expensive content.
 
 - **Calm side:** the current map. About 2/3 of it (farms, suburbs, lighthouse coast, island track)
   becomes the beach/farm/track vibe; the rest is the mountains and city. Its neon gets toned down
@@ -118,17 +123,19 @@ image, which is also what the fog of war draws over.
 - **NPC mission givers:** an NPC + speech bubble (in-world UI exists) on an existing
   `GameModeEvent` start circle. The story is an ordered list of events; finishing one unlocks the next.
   Animal Crossing-style dialog: text plus gibberish voice blips.
+- **Delivery missions:** pizza or newspaper runs as a mission type alongside races and battles.
 - **Collectibles in trick spots:** rooftops, gaps, past a jump, so exploring through tricks pays.
   A pickup + a saved set of collected ids.
-- **In-world shop:** buy skins at a garage or gas station in free roam. The gas station is already
-  a hub (fuel-up). The same garage can be the customize menu's background scene.
 - **Gags / destructibles:** knock over light poles, hydrants, signs, so free roam feels alive between missions.
 
 ### Unlock cadence
 
 A handful of bikes is a handful of purchases, then the loop is over. Fill the gaps with cheap, frequent unlocks:
 
-- **Color mods and character skins** as small purchases.
+- **Character skins and horns** as small purchases. Colors stay free.
+- **Bike mods:** accessories like wings on the sport bike, or a scraper that sparks during wheelies.
+- **More vehicles:** dirt bike, cafe racer, vespa, tron bike, pocket bike, plus joke rides
+  (unicycle, office chair, witch broom) from `assets_excluded_from_export/`.
 - **Medals per event** (bronze / silver / gold targets on time, score, or place). Extends the
   saved time attack PBs and gives a reason to replay.
 - **Money buys, medals gate:** money is the grind (cosmetics), medals are skill (e.g. a bike needs
@@ -136,7 +143,8 @@ A handful of bikes is a handful of purchases, then the loop is over. Fill the ga
 - **First-clear bonus:** one-time payout per event, so players try every event once.
 - **Challenge payouts:** completing a `RaceChallenge` pays a small bonus.
 - **Stats page:** total wheelies, races won, best combo (already a TODO).
-- **Visible locks:** locked bikes show in the customize grid with a padlock and their price or requirement.
+- **Visible locks:** the garage already shows prices; non-money requirements (medals, chapter)
+  would need a lock state there too.
 
 ### Avoid
 
@@ -154,6 +162,8 @@ A handful of bikes is a handful of purchases, then the loop is over. Fill the ga
 - **Bike per chapter:** locked to the chapter's bike, or free choice once unlocked? In multiplayer,
   does everyone ride the host's chapter bike?
 - The two skyscrapers sit next to the island, in the middle of the calm side. Move them to the big city?
+- **Paid DLC:** the Steam plan is free to play with paid DLC for content and skins. Which unlocks
+  are earned vs. bought, and how does that fit an open-source build?
 
 
 ## MVP slice
@@ -161,5 +171,6 @@ A handful of bikes is a handful of purchases, then the loop is over. Fill the ga
 One map, three chapters of 2–3 missions each, one collectible type, money + bike unlocks. Enough to
 prove the loop before adding content.
 
-The money + unlock layer (payouts, save, locked bikes in customize) doesn't depend on NPCs and is
-what the story would sit on, so it can be built first. It doesn't need the world expansion either.
+The money layer (payouts, owned skins, garage shop) is built. Left before the story can sit on
+it: priced or locked bikes, and saved event completion. Neither depends on NPCs or the world
+expansion.

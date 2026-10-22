@@ -3,11 +3,14 @@
 
 ## Feedback
 
-> playtest_logs/*.log
 
 ### NOW
 
-
+- [ ] Improved controller UX — full navigation across menus, HUDs & in-world UI
+  - [ ] cant use controller to select in customize menu
+  - [ ] cant update settings via controller
+- [ ] 321 + drive to start of race text should be more obvious (race/hud objective)
+- [ ] option to drop current item?
 - [ ] add near miss
 - [ ] add 180 / 360 / 720 tricks
 - [ ] add hardflip / mix backflip / 180 tricks

@@ -4,6 +4,7 @@ class_name CreditsMenuState extends MenuState
 const CREDITS_FILES: Array[String] = [
 	"res://resources/credits/people.md",
 	"res://resources/credits/assets.md",
+	"res://resources/credits/music.md",
 ]
 const LINK_COLOR := "#41afff"
 

@@ -5,8 +5,7 @@
 - [Notes 📝](#notes-)
 - [Tasks 📋](#tasks-)
 	- [new large map](#new-large-map)
-	- [Discord page for support/community](#discord-page-for-supportcommunity)
-	- [Progression \& Customization](#progression--customization)
+	- [Progression \& Customization for final game](#progression--customization-for-final-game)
 	- [Game-breaking bugs](#game-breaking-bugs)
 	- [Gamemodes / scoring](#gamemodes--scoring)
 	- [Juice / "Feel"](#juice--feel)
@@ -23,22 +22,10 @@
 > Don't forget, have fun :D
 - [ ] see playtest [feedback](_ScratchPad.md)
 
-- [ ] add music
-  - [x] files + credits
-  - [x] add to audiomgr
-  - [x] add in game
-  - [x] add controls in pause menu
-  - [ ] add vol slider in pause menu
-  - [ ] test mid-game
 
-- [ ] Get AI working again
 
-- [ ] Add integration tests for features
-  - [ ] Testing.md
-    - [ ] progress made
-  - mock player going thru stunt race w/ checkpoints and picking up items -& using them 
-  - test save file parsing/progression
-  - e.g. fill up minigame is testable
+- [ ] Racing AI working again
+- [ ] NPC traffic during race? Needs to clip thru existing wall barriers for now
 
 - [ ] Steam
   - [ ] Steam page [WIP]
@@ -51,19 +38,10 @@
   - [ ] > steam next fest Feb '27
   - [ ] Release after free to play  w/ paid dlc for more content/skins
 
-- [ ] [Progression](#progression--customization) 
-
 ---
 
 ## Notes 📝
 > Stuff to move ASAP
-
-- [ ] option to drop current item?
-- [ ] 321 + drive to start of race text should be more obvious
-
-- Make roads / map in blender
-- Tutorial: msf course 
-- move trick battles to new event start circles so they dont spawn checkpoint markers
 
 Simpsons hit and run chapters:
 - e.g. one map per character/each have their own car
@@ -92,6 +70,7 @@ Simpsons hit and run chapters:
 ## Tasks 📋
 
 ### new large map
+- [ ] Make roads / map in blender
 - [ ] https://github.com/domlysz/BlenderGIS + https://superhivemarket.com/products/roadscape
 - [ ] big enough to cruise around like in Test Drive Unlimited 1
 - [ ] "Highside Island"
@@ -99,18 +78,17 @@ Simpsons hit and run chapters:
   - [ ] see ../levels/assets/highside_island/CStoosmall1-4.png
     - [ ] these show potential styles, but scale is a bit too small 
 - [ ] have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
-
-### Discord page for support/community 
 - [ ] How to keep open source but DLC paid? release steam version on github actions too?
-- [ ] Tracers when boosting 
+  - [ ] export on github w/o some assets / steam features
 - [ ] add guac and load building to map
 - [ ] steam workshop for maps / other assets?
-- [ ] export on github w/o some assets / steam features
-- [ ] Pizza delivery mode + scooter 
+- [ ] replace csgmesh for houses/other buildings for performance + looks
 
-### Progression & Customization
+
+### Progression & Customization for final game
 
 - [ ] Unlocks / Progression for bikes / characters w/ money / XP w/ Story — see [Progression](./Progression.md)
+  - [ ] pay to unlock bikes + unlock at certain level?
   - [ ] maybe like simpsons hit & run where 1 level has 1 bike type/map?
   - [ ] How will this work with multiplayer? Could be everyone follows host's save
     - [ ] idea 1 - each player's story progress lives in their own save. When playing together, the host's events run and everyone gets paid, but story progress only advances for the players who were at that point in the story.
@@ -170,9 +148,8 @@ Simpsons hit and run chapters:
 - [ ] Label3d + script so all in group are removed on runtime for notes
 - [ ] Slow time on ramp launches (client side somehow?)
 - [ ] Knock over light pole & fire hydrants & signs/ street lights
-- [ ] Color balance the blue glow with dark (orange?)
-- [ ] reactive sounds
 - [ ] Transition animations between menu states
+- [ ] Tracers when boosting 
 
 ### Audio
 - [ ] Music
@@ -184,7 +161,7 @@ Simpsons hit and run chapters:
 - [ ] use cutscene system
 - [ ] 3 short "missions" (tutorial) that players can skip when first launching
   - [ ] don't force boring tut, make it hidden (see Half-Life 2/Valve games)
-  - [ ] 1: MSF
+  - [ ] 1: MSF Course
     - [ ] Basic movement (gas, brake, steer, camera, shift gears, lean)
     - [ ] Progressive braking (0% -> 100% causes crash)
     - [ ] Clutch
@@ -218,14 +195,16 @@ Simpsons hit and run chapters:
 
 ### Misc
 - [ ] fix ai slop / limit scope of game / delete old code/files / simplify
-- [ ] replace csgmesh for houses/other buildings for performance + looks
+- [ ] Add integration tests for features
+  - [ ] Testing.md
+    - [ ] progress made
+  - mock player going thru stunt race w/ checkpoints and picking up items -& using them 
+  - test save file parsing/progression
+  - e.g. fill up minigame is testable
 
 ### Polish
 - [ ] crashing during tutorial doesn't stop timers
-- [ ] Improved controller UX — full navigation across menus, HUDs & in-world UI
-  - [ ] cant use controller to select in customize menu
-  - [ ] cant update settings via controller
-- [ ] Pause => show lobby
+
 - [ ] rotate fps cam down while doing wheelie to make it easier to see
 - [ ] try to have the camera look where your eyes are supposed to look irl when riding
 - [ ] r => quick respawn, add btn for set full respawn point (if not in race)
@@ -234,6 +213,17 @@ Simpsons hit and run chapters:
 ---
 
 ## Done ✅
+- [x] Pause => show lobby
+
+- [x] reactive sounds
+- [x] Discord page for support/community 
+- [x] add music
+  - [x] files + credits
+  - [x] add to audiomgr
+  - [x] add in game
+  - [x] add controls in pause menu
+  - [ ] ~~add vol slider in pause menu~~
+  - [x] test mid-game
 - [x] NPC Traffic
   - [x] bake npc nav paths so they can just follow, respond to player if needed then return to baked path
   - [x] intersections navigation
@@ -241,49 +231,27 @@ Simpsons hit and run chapters:
   - [x] traffic lights
   - [x] cleanup ugly traffic lights
   - [x] add more roads
-  - [ ] NPC Race AI
-
 - [x] stop syncing duplicate skin definitions (npcs, etc)
-
 - [x] ramp hitboxes remain after finishing stunt race
-
 - [x] Make arrow signs/other things glow other colors to add variety
-
 - [x] better friend name labels
-
 - [x] stop bat swing / item effeects while crashed
-
 - [x] hitting obstacle / player makes you do a 180 when you should crash sometimes
-
 - [x] 3d audio / hear other players
-
 - [x] add horns to unlock & select
-
 - [x] change default control for minimap
   - [x] use dpad?
-
 - [x] Remaping controls menu
-
 - [x] backing up while steering causes crash
-
 - [x] corkscrew ramp tweaks
-
 - [x] Garage delete btn should ask if you're sure and be red 
-
 - [x] leave btn in customization should be at bottom left, & separate. 
-
 - [x] shouldnt be able to drive while in pause menu
-
 - [x] mac first launch stuck in gas fill up cam
-
 - [x] cant cheat in rally up item, all items should be avail in items_list command
-
 - [x] ramp follows corkscrew tscn
-
 - [x] rejoining lobby causes lag
-
 - [x] new logos
-
 - [x] allow barrel rolls
 - [x] Long Jump name => megaramp trick comp 
 - [x] minimap show garage
