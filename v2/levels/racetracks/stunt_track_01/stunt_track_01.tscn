@@ -1728,7 +1728,6 @@ metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=756147242]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -94, 38, 246)
-visible = false
 occluder = ExtResource("20_a57fq")
 
 [node name="NPCNavRegion" type="NavigationRegion3D" parent="." unique_id=1990556521]

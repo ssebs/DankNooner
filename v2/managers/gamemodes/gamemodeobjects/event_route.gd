@@ -58,6 +58,9 @@ func set_active(active: bool):
 	visible = active
 	for obj in find_children("*", "GameModeObject", true, false):
 		obj.is_active = active
+		# Start zones stay hidden unless a CheckpointTask shows them to its rider.
+		if obj is TriggerZone:
+			obj.visible = false
 	for shape in find_children("*", "CollisionShape3D", true, false):
 		shape.disabled = not active
 	for csg in _colliding_csgs:
