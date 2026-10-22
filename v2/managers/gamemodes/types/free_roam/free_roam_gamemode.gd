@@ -17,6 +17,10 @@ class_name FreeRoamGameMode extends GameModeType
 ## leaderboard with the time left, then the winner is called out and it resets.
 const ROUND_SECS: float = 60.0
 const LEADERBOARD_REFRESH_SECS: float = 0.25
+## A crash this soon after an in-place respawn means the crash site itself is deadly (killbox, wreck).
+const CRASH_LOOP_WINDOW_MS: int = 1000
+## Looped crashes in a row before giving up on the crash site for a full respawn.
+const CRASH_LOOP_LIMIT: int = 3
 
 var _ctx: GamemodeStateContext
 ## The circle whose event picker is open — its events are what the picker indexes.
@@ -32,6 +36,9 @@ var _activity: FreeRoamActivity
 ## peer_id -> the activity they're running; also the one-rider-per-activity lock. Server only.
 ## Shared activities skip the lock.
 var _running: Dictionary[int, FreeRoamActivity] = {}
+## peer_id -> when they were last respawned in place / looped crashes in a row. Server only.
+var _in_place_respawn_ms: Dictionary[int, int] = {}
+var _crash_loops: Dictionary[int, int] = {}
 
 
 #override
@@ -423,6 +430,9 @@ func _on_player_crashed(peer_id: int):
 	if !multiplayer.is_server():
 		return
 
+	var since_respawn: int = Time.get_ticks_msec() - _in_place_respawn_ms.get(peer_id, -CRASH_LOOP_WINDOW_MS)
+	var looped := since_respawn < CRASH_LOOP_WINDOW_MS
+	_crash_loops[peer_id] = _crash_loops.get(peer_id, 0) + 1 if looped else 0
 	get_tree().create_timer(_respawn_delay).timeout.connect(
 		func(): _respawn_at_crash_site(peer_id), CONNECT_ONE_SHOT
 	)
@@ -438,6 +448,11 @@ func _respawn_at_crash_site(peer_id: int):
 	var player := spawn_manager.get_player_by_peer_id(peer_id)
 	if player == null or not player.is_crashed:
 		return
+	if _crash_loops[peer_id] >= CRASH_LOOP_LIMIT:
+		_crash_loops[peer_id] = 0
+		spawn_manager.respawn_player.rpc(peer_id)
+		return
+	_in_place_respawn_ms[peer_id] = Time.get_ticks_msec()
 	spawn_manager.respawn_in_place(peer_id)
 
 
@@ -449,6 +464,8 @@ func _on_player_disconnected(peer_id: int):
 	if gamemode_manager.match_state == GamemodeManager.MatchState.IN_GAME:
 		spawn_manager.rpc_despawn_player.rpc(peer_id)
 	_running.erase(peer_id)
+	_in_place_respawn_ms.erase(peer_id)
+	_crash_loops.erase(peer_id)
 
 
 func _get_configuration_warnings() -> PackedStringArray:
