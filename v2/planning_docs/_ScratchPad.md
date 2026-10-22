@@ -6,13 +6,12 @@
 
 ### NOW
 
-- [ ] pause when out of focus
 
-- [ ] option to drop current item?
+- [ ] option to drop current item (honk)
+
+- [ ] Crashing in free roam doesn't auto respawn sometimes
 
 - [ ] Race track time trial shows "Start" drive-to-location from reg race. rm during any race
-
-- [ ] Crashing in free roam doesn't auto respawn sometimes?
 
 - [ ] Add drivable floor to other side of bridge ramp
 
@@ -20,10 +19,11 @@
 
 - [ ] Users shouldn't have to press Done when setting a color, it should auto save.
 
-- [ ] Create separate location (new event start circles) just for stunt/trick battle, remove from existing races so they dont spawn checkpoint markers
 
 ### NEXT
 
+
+- [ ] pause when out of focus
 - [ ] Add first person checkbox option to force it for everyone during an event
 
 - [ ] Add more ramp flow / alternate driving line on level
@@ -32,4 +32,4 @@
 
 - [ ] give cars headlights
 
-- [ ] change spawn rate for diff items
+- [ ] change spawn rate for diff items in item spawner

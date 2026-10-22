@@ -24,8 +24,9 @@
 > Don't forget, have fun :D
 - [ ] see playtest [feedback](_ScratchPad.md)
 
-- [ ] Racing AI working again
 - [ ] NPC traffic during race? Needs to clip thru existing wall barriers for now
+
+- [ ] Create separate location (new event start circles) just for stunt/trick battle, remove from existing races so they dont spawn checkpoint markers
 
 - [ ] Steam
   - [ ] Steam page [WIP]
@@ -35,14 +36,16 @@
     - [ ] full setup
     - [ ] Trailer
   - [ ] Demo release
+    - [ ] Get racing AI working
+    - [ ] Balancing points
   - [ ] > steam next fest Feb '27
   - [ ] Release after free to play  w/ paid dlc for more content/skins
+
 
 ---
 
 ## Notes 📝
 > Stuff to move ASAP
-
 
 
 ---
@@ -212,7 +215,6 @@
 
 ### Polish
 - [ ] crashing during tutorial doesn't stop timers
-
 - [ ] rotate fps cam down while doing wheelie to make it easier to see
 - [ ] try to have the camera look where your eyes are supposed to look irl when riding
 - [ ] r => quick respawn, add btn for set full respawn point (if not in race)
@@ -222,7 +224,6 @@
 
 ## Done ✅
 - [x] Pause => show lobby
-
 - [x] reactive sounds
 - [x] Discord page for support/community 
 - [x] add music
