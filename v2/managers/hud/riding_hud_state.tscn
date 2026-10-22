@@ -204,8 +204,6 @@ theme_override_constants/separation = 24
 [node name="HUD_Money" type="Label" parent="UI/AspectContainer/MarginContainer/TopRightVBox/MoneyXP"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 28
 script = ExtResource("99_money")
 

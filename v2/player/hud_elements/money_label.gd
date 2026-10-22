@@ -15,6 +15,8 @@ var _flash_tween: Tween
 
 func _ready():
 	add_theme_color_override("font_color", COLOR)
+	add_theme_color_override("font_outline_color", Color.BLACK)
+	add_theme_constant_override("outline_size", 10)
 
 
 ## 15000 -> "$15,000"

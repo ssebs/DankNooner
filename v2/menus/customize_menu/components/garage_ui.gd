@@ -27,7 +27,7 @@ const TAB_MAX_WIDTH: float = 200
 @onready var _tab_scroll: ScrollContainer = %TabScroll
 @onready var _tabs: HBoxContainer = %Tabs
 @onready var _add_tab_btn: Button = %AddTabBtn
-@onready var _money: Label = %Money
+@onready var _money: MoneyLabel = %Money
 @onready var _title: Label = %Title
 @onready var _count: Label = %Count
 @onready var _back_btn: Button = %BackBtn
@@ -439,6 +439,8 @@ func _on_skin_pressed(skin_name: String, path: String, price: int, apply: Callab
 		func():
 			_save_manager.purchase(path, price)
 			apply.call()
+			# Deferred so it centers on the label after _close_confirm's rebuild resizes it.
+			_money.pop_spent.call_deferred(price)
 	)
 
 

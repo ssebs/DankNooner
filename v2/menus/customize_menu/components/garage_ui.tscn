@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://menus/customize_menu/components/garage_ui.gd" id="1_ui"]
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_theme"]
+[ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="3_money"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 content_margin_left = 24.0
@@ -52,6 +53,7 @@ offset_bottom = 72.0
 grow_horizontal = 0
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 2
+script = ExtResource("3_money")
 
 [node name="Panel" type="PanelContainer" parent="."]
 layout_mode = 1
