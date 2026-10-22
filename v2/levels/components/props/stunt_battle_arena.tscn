@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://dwxnbvlhx15la"]
+
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_c4fsf"]
+[ext_resource type="PackedScene" uid="uid://pimxd647gw4v" path="res://levels/assets/props/arrow_wall.tscn" id="2_ymnmw"]
+
+[node name="StuntBattleArena" type="Node3D" unique_id=1920932027]
+
+[node name="Ground" parent="." unique_id=1485126779 instance=ExtResource("1_c4fsf")]
+shape_mode = 1
+width = 192.0
+depth = 128.0
+
+[node name="ArrowWall" parent="Ground" unique_id=273267628 instance=ExtResource("2_ymnmw")]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -2.1855695e-07, 5, -64)
+height = 192.0
+
+[node name="ArrowWall2" parent="Ground" unique_id=1866628743 instance=ExtResource("2_ymnmw")]
+transform = Transform3D(-4.371139e-08, 1, -8.742278e-08, 1, 4.371139e-08, -3.821371e-15, 0, -8.742278e-08, -1, 3.846602e-06, 5, 64)
+height = 192.0
+
+[node name="ArrowWall3" parent="Ground" unique_id=764455779 instance=ExtResource("2_ymnmw")]
+transform = Transform3D(-4.3711385e-08, -1.3113416e-07, -1, 1, -3.821371e-15, -4.371139e-08, 0, -1, 1.3113416e-07, 96, 5.0000043, -7.95723e-06)
+height = 128.0
+
+[node name="ArrowWall4" parent="Ground" unique_id=1654964587 instance=ExtResource("2_ymnmw")]
+transform = Transform3D(-4.3711385e-08, 2.1855693e-07, 1, 1, 1.14641115e-14, 4.371138e-08, 0, 1, -2.1855693e-07, -96, 4.9999957, 1.722053e-05)
+height = 128.0
