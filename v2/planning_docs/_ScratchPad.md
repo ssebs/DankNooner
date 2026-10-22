@@ -6,34 +6,30 @@
 
 ### NOW
 
-- [ ] Improved controller UX — full navigation across menus, HUDs & in-world UI
-  - [ ] cant use controller to select in customize menu
-  - [ ] cant update settings via controller
-- [ ] 321 + drive to start of race text should be more obvious (race/hud objective)
-- [ ] option to drop current item?
-- [ ] add near miss
-- [ ] add 180 / 360 / 720 tricks
-- [ ] add hardflip / mix backflip / 180 tricks
-- [ ] filling up - pay per second of fuel, so spilling costs $. show in diagetic UI on pump
-- [ ] give cars headlights
+- [ ] pause when out of focus
 
-- [ ] tell the users when changing colors that they have to press done (or change that)
-- [ ] change spawn rate for diff items
-- [ ] animate lowside crash
-- [ ] animate car crash
+- [ ] option to drop current item?
+
+- [ ] Race track time trial shows "Start" drive-to-location from reg race. rm during any race
+
+- [ ] Crashing in free roam doesn't auto respawn sometimes?
+
+- [ ] Add drivable floor to other side of bridge ramp
+
+- [ ] Traffic can pile up and stop at intersections
+
+- [ ] Users shouldn't have to press Done when setting a color, it should auto save.
+
+- [ ] Create separate location (new event start circles) just for stunt/trick battle, remove from existing races so they dont spawn checkpoint markers
 
 ### NEXT
-- [ ] pause when out of focus
-- [ ] holding T pose should not grant so many points / score
-  - [ ] need some penalty for simple tricks vs combos
 
-- [ ] add some form of gamba (spin wheel / roulette / random game)
-- [ ] Make hud simpler/intuitive 
-  - [ ] remove throttle bar
+- [ ] Add first person checkbox option to force it for everyone during an event
 
-- [ ] free roam wheelie challenge/points scoring should be longer than 1min and explain what it is
+- [ ] Add more ramp flow / alternate driving line on level
 
-- [ ] Fill up => race is not obvious where to go/not consistent across all races 
-- [ ] must be easier to know what the controls are / how to do tricks
-  - [ ] add btn prompts/hints
-- [ ] need to know when race is completed (single player is done vs entire lobby)
+- [ ] filling up - pay per second of fuel, so spilling costs $. show in diagetic UI on pump
+
+- [ ] give cars headlights
+
+- [ ] change spawn rate for diff items

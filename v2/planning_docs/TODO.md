@@ -4,7 +4,9 @@
 - [In-Progress 🚨](#in-progress-)
 - [Notes 📝](#notes-)
 - [Tasks 📋](#tasks-)
-	- [new large map](#new-large-map)
+	- [Controller UX Improvements](#controller-ux-improvements)
+	- [HUD Improvements](#hud-improvements)
+	- [New Large Map](#new-large-map)
 	- [Progression \& Customization for final game](#progression--customization-for-final-game)
 	- [Game-breaking bugs](#game-breaking-bugs)
 	- [Gamemodes / scoring](#gamemodes--scoring)
@@ -21,8 +23,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] see playtest [feedback](_ScratchPad.md)
-
-
 
 - [ ] Racing AI working again
 - [ ] NPC traffic during race? Needs to clip thru existing wall barriers for now
@@ -43,33 +43,31 @@
 ## Notes 📝
 > Stuff to move ASAP
 
-Simpsons hit and run chapters:
-- e.g. one map per character/each have their own car
-- have to do quests to progress 
-- collectibles
-- skins to unlock
-- DN ideas: 
-    - NPC quests w/ basic animal crossing style dialog
-    - mini bike neighborhood to learn how to do tricks
-        -  dark/dingy? w/ few neon lights, older style
-        - grom mini moto parking lot race w/ cones for level style
-    - save up $ to buy naked bike for final race of the area
-    - naked bike in the city, more quests / stunt races 
-        - nicer parts of the city, lots of neon, 
-        - cross railroad tracks to freeway for longer / fast race
-        - unlock sport bike here, more customization. Stunt races, time trials, stunt battles
-    - touring bike to travel along highway to move / change states (road trip)
-        - iron butt travel across US style
-        - unlock cruiser if you want
-        - classic mode (endless loop like original game)
-    - end at stunt city (what I have now), blend of everything, neon, also quiet/dim/relaxing beach town vibe. Also farms, kinda like Monterey/cali
-        - dirt bike on beach
+
 
 ---
 
 ## Tasks 📋
 
-### new large map
+### Controller UX Improvements
+- [ ] full navigation across menus, HUDs & in-world UI
+- [ ] cant use controller to select in customize menu
+- [ ] hard to use fill up minigame
+
+### HUD Improvements
+- [ ] must be easier to know what the controls are / how to do tricks
+  - [ ] add btn prompts/hints
+- [ ] Fill up => race is not obvious where to go/not consistent across all races 
+- [ ] need to know when race is completed (single player is done vs entire lobby)
+- [ ] Improve pvp hud during stunt race/events
+  - [ ] more juice when score goes up in that menu?
+  - [ ] larger text?
+- [ ] remove gray bgs + border from more things / aka simplify?
+- [ ] Cancel from fill up should be more obvious
+- [ ] Btn white while hovering btns instead of green outline
+- [ ] 321 + drive to start of race text + current objective should be more obvious during races/events (race/hud objective)
+
+### New Large Map
 - [ ] Make roads / map in blender
 - [ ] https://github.com/domlysz/BlenderGIS + https://superhivemarket.com/products/roadscape
 - [ ] big enough to cruise around like in Test Drive Unlimited 1
@@ -143,6 +141,11 @@ Simpsons hit and run chapters:
   - [ ] Live scoreboard 
   - [ ] Trickfeed
 - [ ] Pizza Delivery
+- [ ] holding T pose should not grant so many points / score
+  - [ ] need some penalty for simple tricks vs combos
+- [ ] add some form of gamba (spin wheel / roulette / random game)
+- [ ] free roam wheelie challenge/points scoring should be longer than 1min and explain what it is
+- [ ] Time trial/pb scores should factor in which bike you're riding (have separate ones for each bike)
 
 ### Juice / "Feel"
 - [ ] Label3d + script so all in group are removed on runtime for notes
@@ -181,12 +184,17 @@ Simpsons hit and run chapters:
   - [x] no-handed spread eagle
   - [x] kickflip
   - [ ] https://www.youtube.com/shorts/cAxcIZ83MfU
+  - [ ] near miss tricks / score
+  - [ ] 180 / 360 / 720 tricks
+  - [ ] hardflip / mix backflip / 180 tricks
 - [ ] trick tweaks (just move butt a little from base trick)
   - [x] Land into wheelie / stoppie should be a trick
   - [ ] Wheelie + RIGHT animation (hand grab) — IK hand twd ground
 - [ ] Grinding tricks (jump in air, grind on house fences)
 - [ ] trick animation to move up then play the mixamo anims
 - [ ] wheelie turning animation should yaw
+- [ ] animate lowside crash
+- [ ] animate car crash
 
 ### Cutscenes
 - [ ] dynamic, use animation player to define
