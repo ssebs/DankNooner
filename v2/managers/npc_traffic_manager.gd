@@ -124,6 +124,7 @@ func start_traffic(for_race: bool = false) -> void:
 		# call_local ran the spawn synchronously, so the rider exists now
 		_traffic_state(npc_id).follower = follower
 		_traffic_state(npc_id).junctions = _junctions
+	DebugUtils.DebugMsg("Spawned %d traffic riders" % _npcs.size())
 
 
 ## Roll one rider's vehicle. The server rolls and ships the result — rolling on
@@ -223,7 +224,6 @@ func rpc_spawn_npc(npc_id: int, skin_index: int, pos: Vector3, basis: Basis):
 	if _npcs.has(npc_id):
 		return
 	var skin: Resource = _skins[skin_index]
-	DebugUtils.DebugMsg("Adding traffic NPC locally: %s - %s" % [npc_id, skin.resource_path])
 
 	var npc := NPC_SCENE.instantiate() as NPCRiderEntity
 	npc.name = str(npc_id)

@@ -103,6 +103,7 @@ script = ExtResource("24_l8nu3")
 name = "Stunt Race"
 description = "Do a flip!"
 target_gamemode = 2
+enable_traffic = true
 race_challenges = Array[ExtResource("6_a4ddl")]([ExtResource("6_lwhch"), ExtResource("6_bcmch"), SubResource("Resource_sgtch")])
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
@@ -124,6 +125,7 @@ script = ExtResource("24_l8nu3")
 name = "Stunt Race 2"
 description = "Get Gud"
 target_gamemode = 2
+enable_traffic = true
 fuel_up_first = true
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
@@ -132,6 +134,7 @@ script = ExtResource("24_l8nu3")
 name = "Stunt Race 3"
 description = "Go fill up"
 target_gamemode = 2
+enable_traffic = true
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_dsd47"]
@@ -139,6 +142,7 @@ script = ExtResource("24_l8nu3")
 name = "Stunt Race 4"
 description = "Go back to 2?"
 target_gamemode = 2
+enable_traffic = true
 fuel_up_first = true
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
@@ -4381,6 +4385,12 @@ depth = 16.0
 color_preset = 1
 
 [node name="GrayBox_StaticBody22" parent="props/BridgeSupports" unique_id=1485126779 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.7052541, 0.051152382, -0.7071068, -0.07234039, 0.9973797, 9.313226e-10, 0.70525414, 0.05115243, 0.7071067, -705.22076, 10.00478, 599.8724)
+width = 2.0
+height = 0.1
+depth = 10.0
+
+[node name="GrayBox_StaticBody23" parent="props/BridgeSupports" unique_id=789178132 instance=ExtResource("18_dc022")]
 transform = Transform3D(0.4738947, 0.52480817, -0.7071068, -0.74219096, 0.6701882, 0, 0.4738948, 0.5248082, 0.7071067, -685.6579, 7.14, 617.50793)
 width = 4.0
 height = 0.1

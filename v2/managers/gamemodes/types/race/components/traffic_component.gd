@@ -4,7 +4,7 @@
 ## fight over spawn points.
 class_name TrafficComponent extends RaceComponent
 
-## Optional — unlinked in main_game while traffic is disabled for perf; null skips traffic.
+## Optional — null skips traffic.
 @export var npc_traffic_manager: NPCTrafficManager
 
 

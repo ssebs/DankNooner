@@ -22,9 +22,7 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-
 - [ ] [WIP MiniTasks](_ScratchPad.md)
-- [ ] NPC traffic during race? Needs to clip thru existing wall barriers for now
 
 - [ ] Create separate location (new event start circles) just for stunt/trick battle, remove from existing races so they dont spawn checkpoint markers
 
@@ -221,6 +219,12 @@
 ---
 
 ## Done ✅
+- [x] Users shouldn't have to press Done when setting a color, it should auto save.
+
+- [x] NPC traffic during race? Needs to clip thru existing wall barriers for now
+
+- [x] Add drivable floor to other side of bridge ramp
+
 - [x] Race track time trial shows "Start" drive-to-location from reg race. rm during any race
 
 - [x] Crashing in free roam doesn't auto respawn sometimes

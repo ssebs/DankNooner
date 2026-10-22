@@ -342,8 +342,9 @@ save_manager = NodePath("../../../SaveManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
-[node name="Traffic" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/RaceGameMode" unique_id=875810429 node_paths=PackedStringArray("race_mode")]
+[node name="Traffic" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/RaceGameMode" unique_id=875810429 node_paths=PackedStringArray("npc_traffic_manager", "race_mode")]
 script = ExtResource("60_traffic")
+npc_traffic_manager = NodePath("../../../../NPCTrafficManager")
 race_mode = NodePath("..")
 
 [node name="NPCRacers" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/RaceGameMode" unique_id=263939457 node_paths=PackedStringArray("npc_race_manager", "race_mode")]
@@ -376,8 +377,9 @@ save_manager = NodePath("../../../SaveManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
-[node name="Traffic" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/StuntRaceGameMode" unique_id=2143942882 node_paths=PackedStringArray("race_mode")]
+[node name="Traffic" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/StuntRaceGameMode" unique_id=2143942882 node_paths=PackedStringArray("npc_traffic_manager", "race_mode")]
 script = ExtResource("60_traffic")
+npc_traffic_manager = NodePath("../../../../NPCTrafficManager")
 race_mode = NodePath("..")
 
 [node name="NPCRacers" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/StuntRaceGameMode" unique_id=367152527 node_paths=PackedStringArray("npc_race_manager", "race_mode")]

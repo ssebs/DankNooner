@@ -64,16 +64,44 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 [node name="VBox" type="VBoxContainer" parent="Panel"]
 layout_mode = 2
 
-[node name="TabScroll" type="ScrollContainer" parent="Panel/VBox"]
-unique_name_in_owner = true
+[node name="TabBar" type="PanelContainer" parent="Panel/VBox"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_inset")
-vertical_scroll_mode = 0
 
-[node name="Tabs" type="HBoxContainer" parent="Panel/VBox/TabScroll"]
+[node name="HBox" type="HBoxContainer" parent="Panel/VBox/TabBar"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ProfileTab" type="Button" parent="Panel/VBox/TabBar/HBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 36
+size_flags_vertical = 0
+focus_mode = 0
+theme_type_variation = &"ProfileTabButton"
+toggle_mode = true
+text = "GARAGE_PROFILE_TAB"
+
+[node name="VSeparator" type="VSeparator" parent="Panel/VBox/TabBar/HBox"]
+layout_mode = 2
+
+[node name="TabScroll" type="ScrollContainer" parent="Panel/VBox/TabBar/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+vertical_scroll_mode = 0
+
+[node name="Tabs" type="HBoxContainer" parent="Panel/VBox/TabBar/HBox/TabScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="AddTabBtn" type="Button" parent="Panel/VBox/TabBar/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+focus_mode = 0
+theme_type_variation = &"TabButton"
+text = "+"
 
 [node name="Top" type="PanelContainer" parent="Panel/VBox"]
 layout_mode = 2
@@ -227,19 +255,10 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_inset")
 
-[node name="VBox" type="VBoxContainer" parent="ColorPanel/Inset"]
-layout_mode = 2
-
-[node name="Picker" type="ColorPicker" parent="ColorPanel/Inset/VBox"]
+[node name="Picker" type="ColorPicker" parent="ColorPanel/Inset"]
 unique_name_in_owner = true
 layout_mode = 2
 edit_alpha = false
 can_add_swatches = false
 sampler_visible = false
 color_modes_visible = false
-
-[node name="ColorDoneBtn" type="Button" parent="ColorPanel/Inset/VBox"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "GARAGE_DONE"
-alignment = 0

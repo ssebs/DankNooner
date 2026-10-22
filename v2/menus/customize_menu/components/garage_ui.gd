@@ -17,14 +17,16 @@ const GARAGE_ROW := preload("res://menus/customize_menu/components/garage_row.ts
 const BIKE_SKINS_DIR := "res://resources/bikes/skins/"
 const CHARACTER_SKINS_DIR := PlayerDefinition.CHARACTER_SKINS_DIR
 ## Smaller than the shared theme's default, so the list stays out of the way of the preview.
-const FONT_SIZE: int = 18
+const FONT_SIZE: int = 16
 ## The list scrolls past this, otherwise the panel fits its rows.
 const MAX_LIST_HEIGHT: float = 480
 ## Longer loadout names ellipsize; the tab strip scrolls.
 const TAB_MAX_WIDTH: float = 200
 
+@onready var _profile_tab: Button = %ProfileTab
 @onready var _tab_scroll: ScrollContainer = %TabScroll
 @onready var _tabs: HBoxContainer = %Tabs
+@onready var _add_tab_btn: Button = %AddTabBtn
 @onready var _money: Label = %Money
 @onready var _title: Label = %Title
 @onready var _count: Label = %Count
@@ -37,7 +39,6 @@ const TAB_MAX_WIDTH: float = 200
 @onready var _rows: VBoxContainer = %Rows
 @onready var _color_panel: Control = %ColorPanel
 @onready var _picker: ColorPicker = %Picker
-@onready var _color_done_btn: Button = %ColorDoneBtn
 @onready var _confirm_box: Control = %ConfirmBox
 @onready var _confirm_label: Label = %ConfirmLabel
 @onready var _confirm_yes_btn: Button = %ConfirmYesBtn
@@ -69,16 +70,17 @@ var _confirm_return_index: int = -1
 func _ready():
 	theme = theme.duplicate()
 	theme.default_font_size = FONT_SIZE
+	_profile_tab.pressed.connect(_switch_tab.bind(0))
+	_add_tab_btn.pressed.connect(_add_loadout)
 	_back_btn.pressed.connect(go_back)
 	_set_active_btn.pressed.connect(_set_active)
 	_delete_btn.pressed.connect(_on_delete_pressed)
-	_leave_btn.pressed.connect(_on_leave_pressed)
+	_leave_btn.pressed.connect(exit_requested.emit)
 	_pose_btn.pressed.connect(pose_requested.emit)
 	for color in UtilsConstants.SKIN_COLOR_PRESETS:
 		if color not in _picker.get_presets():
 			_picker.add_preset(color)
 	_picker.color_changed.connect(_on_picker_color_changed)
-	_color_done_btn.pressed.connect(_close_color_panel)
 	_confirm_yes_btn.pressed.connect(_on_confirm_yes)
 	_confirm_no_btn.pressed.connect(_close_confirm)
 
@@ -116,12 +118,6 @@ func go_back():
 		exit_requested.emit()
 
 
-func _on_leave_pressed():
-	if _color_panel.visible:
-		_apply_picked_colors()
-	exit_requested.emit()
-
-
 ## Skips the `+` tab, so cycling never creates a loadout.
 func cycle_tab(dir: int):
 	if _confirm_box.visible or _color_panel.visible:
@@ -132,8 +128,7 @@ func cycle_tab(dir: int):
 #region tabs
 func _switch_tab(tab: int):
 	# A mouse click can switch tabs under an open overlay.
-	if _color_panel.visible:
-		_apply_picked_colors()
+	_color_panel.hide()
 	_confirm_box.hide()
 	_tab = tab
 	_pages = [Page.ROOT]
@@ -144,23 +139,17 @@ func _rebuild_tabs():
 	for child in _tabs.get_children():
 		_tabs.remove_child(child)
 		child.queue_free()
-	# Accented and set apart: it holds the defaults, not a loadout.
-	_add_tab(tr("GARAGE_PROFILE_TAB"), 0).theme_type_variation = &"ProfileTabButton"
-	_tabs.add_child(VSeparator.new())
+	_profile_tab.button_pressed = _tab == 0
 	for i in _player_def.loadouts.size():
 		var loadout := _player_def.loadouts[i]
 		_add_tab(loadout.name if loadout.name != "" else str(i + 1), i + 1)
-	if _player_def.loadouts.size() < PlayerDefinition.MAX_LOADOUTS:
-		var add_btn := Button.new()
-		add_btn.text = "+"
-		add_btn.focus_mode = Control.FOCUS_NONE
-		add_btn.pressed.connect(_add_loadout)
-		_tabs.add_child(add_btn)
+	_add_tab_btn.visible = _player_def.loadouts.size() < PlayerDefinition.MAX_LOADOUTS
 
 
-func _add_tab(label: String, tab: int) -> Button:
+func _add_tab(label: String, tab: int):
 	var btn := Button.new()
 	btn.text = label
+	btn.theme_type_variation = &"TabButton"
 	btn.toggle_mode = true
 	btn.button_pressed = tab == _tab
 	btn.focus_mode = Control.FOCUS_NONE
@@ -171,7 +160,6 @@ func _add_tab(label: String, tab: int) -> Button:
 	if tab == _tab:
 		# Deferred so the strip has laid out the new tabs.
 		_tab_scroll.ensure_control_visible.call_deferred(btn)
-	return btn
 
 
 ## Copy of the active loadout.
@@ -507,11 +495,14 @@ func _open_color_panel(slot: int):
 	_color_slot = slot
 	_picker.color = _colors[slot]
 	_color_panel.show()
-	_color_done_btn.grab_focus()
 
 
 func _on_picker_color_changed(color: Color):
 	_colors[_color_slot] = color
+	_color_target.colors = _colors.duplicate()
+	# Slot rows are the colors page's only rows.
+	(_rows.get_child(_color_slot) as GarageRow).set_swatch(color)
+	# A copy, since GarageSet skips a def it's already showing.
 	var painted := _color_target.duplicate()
 	painted.colors = _colors.duplicate()
 	if painted is BikeSkinDefinition:
@@ -520,15 +511,9 @@ func _on_picker_color_changed(color: Color):
 		_preview(_loadout().bike, painted)
 
 
-## Closing applies the picked color.
 func _close_color_panel():
-	_apply_picked_colors()
-	_rebuild(_color_slot)
-
-
-func _apply_picked_colors():
 	_color_panel.hide()
-	_color_target.colors = _colors.duplicate()
+	_rebuild(_color_slot)
 
 
 #endregion

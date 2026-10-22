@@ -4,15 +4,15 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_idle"]
 content_margin_left = 12.0
-content_margin_top = 12.0
+content_margin_top = 6.0
 content_margin_right = 12.0
-content_margin_bottom = 12.0
+content_margin_bottom = 6.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_selected"]
 content_margin_left = 12.0
-content_margin_top = 12.0
+content_margin_top = 6.0
 content_margin_right = 12.0
-content_margin_bottom = 12.0
+content_margin_bottom = 6.0
 bg_color = Color(0.18, 0.4950001, 0.72, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 4

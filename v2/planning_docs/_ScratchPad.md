@@ -6,14 +6,8 @@
 
 ### NOW
 
-
-
-
-- [ ] Add drivable floor to other side of bridge ramp
-
 - [ ] Traffic can pile up and stop at intersections
 
-- [ ] Users shouldn't have to press Done when setting a color, it should auto save.
 
 
 ### NEXT
