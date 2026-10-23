@@ -20,6 +20,8 @@
 - [Done ✅](#done-)
 ---
 
+> NOTE - WHEN BUILDING FOR DEMO, USE `5431410`, MAIN RELEASE USE `5416370`
+
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MiniTasks](_ScratchPad.md)
