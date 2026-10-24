@@ -13,7 +13,7 @@ signal crashed(victim: Node3D)
 ## A racer within this range and forward cone that's slower than us gets
 ## followed rather than passed (traffic doesn't overtake in v1).
 ## Must cover braking distance from cruise + the gap + one scan interval of travel.
-@export var follow_detect_range: float = 20.0
+@export var follow_detect_range: float = 36.0
 @export var follow_detect_angle: float = 0.7
 ## Relative speed (m/s) that makes rider-to-rider contact an actual impact — riders
 ## queueing nose-to-tail brush at matched speed and shouldn't both wipe out for it.
@@ -72,12 +72,13 @@ func Physics_Update(delta: float):
 	if _claimed >= 0 and follower.lane != _claimed and follower.next_turn_lane() != _claimed:
 		_leave_junction()
 	var target_speed := npc.lane_speed(follower.point_ahead)
-	# Close in on the rider ahead only as fast as we can still stop a buffer behind it.
-	# The second buffer is its half length.
+	# Close in on the rider ahead only as fast as we can still stop a buffer behind where it
+	# would stop braking flat out: v² = its v² + 2·braking·gap. The second buffer is its half length.
 	var blocker := npc.nearest_racer_ahead(follow_detect_range, follow_detect_angle, follower.point_ahead)
 	if blocker != null:
 		var gap := npc.global_position.distance_to(blocker.global_position) - NPCRiderEntity.STOP_LINE_BUFFER
-		target_speed = minf(target_speed, npc.horizontal_speed(blocker) + npc.stop_line_speed(gap))
+		var follow_speed := Vector2(npc.horizontal_speed(blocker), npc.stop_line_speed(gap)).length()
+		target_speed = minf(target_speed, follow_speed)
 	target_speed = _gate(target_speed, delta)
 	npc.ramp_speed(target_speed, delta)
 	follower.advance(npc.current_speed * delta)

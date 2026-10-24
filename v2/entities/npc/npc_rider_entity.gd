@@ -42,8 +42,8 @@ enum VehicleType {BIKE, CAR}
 ## riders don't all travel at exactly the same speed.
 @export var speed_variance: float = 0.1
 ## Speed ramp rates (units/s^2) — accel when speeding up, braking when slowing.
-@export var acceleration: float = 64.0
-@export var braking: float = 40.0
+@export var acceleration: float = 10.0
+@export var braking: float = 12.0
 ## Speed floor through the sharpest turns. The bot eases down toward this as the
 ## road bends ahead, then accelerates back to move_speed as it straightens.
 @export var min_turn_speed: float = 8.0
