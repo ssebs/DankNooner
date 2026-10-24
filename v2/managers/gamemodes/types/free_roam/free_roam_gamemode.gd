@@ -17,7 +17,7 @@ class_name FreeRoamGameMode extends GameModeType
 ## leaderboard with the time left, then the winner is called out and it resets.
 const ROUND_SECS: float = 60.0
 const LEADERBOARD_REFRESH_SECS: float = 0.25
-## A crash this soon after an in-place respawn means the crash site itself is deadly (killbox, wreck).
+## A crash this soon after an in-place respawn means the crash site itself is deadly (e.g. killbox).
 const CRASH_LOOP_WINDOW_MS: int = 1000
 ## Looped crashes in a row before giving up on the crash site for a full respawn.
 const CRASH_LOOP_LIMIT: int = 3

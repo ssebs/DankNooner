@@ -395,10 +395,8 @@ func _hide_stale_riders(now: int) -> void:
 
 
 func _on_npc_crashed(victim: Node3D, npc_id: int) -> void:
-	# A wreck still reports contacts so it can take players down, but only goes down once
-	if _npcs[npc_id].npc_state != NPCRiderEntity.NPCState.CRASHED:
-		_npcs[npc_id].crash()
-		_respawn_after_delay(npc_id)
+	_npcs[npc_id].crash()
+	_respawn_after_delay(npc_id)
 	# We rode into a player — they never see that collision from their side, so
 	# take them down with us (same broadcast CrashController uses).
 	if victim is PlayerEntity:

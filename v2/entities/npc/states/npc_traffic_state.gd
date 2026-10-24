@@ -168,11 +168,14 @@ func _exit_clear(turn: int) -> bool:
 ## ContactArea touched a racer's body, or another traffic rider's ContactArea. Both sides of a
 ## hit see it, so each rider only crashes itself; the manager takes a player victim down too.
 func _on_contact(other: Node3D) -> void:
+	# A wreck is inert — otherwise a rider respawned at the crash site re-crashes on it
+	if npc.npc_state == NPCRiderEntity.NPCState.CRASHED:
+		return
 	var racer: Node3D = other.get_parent() if other is Area3D else other
 	# The crash_collision mask also catches level obstacles
 	if !racer.is_in_group(UtilsConstants.GROUPS["Racers"]):
 		return
-	# A player has no body to bump off, so any touch crashes them, wrecks included
+	# A player has no body to bump off, so any touch crashes them
 	if racer is not PlayerEntity and (npc.velocity - racer.velocity).length() < contact_min_speed_delta:
 		return
 	crashed.emit(racer)
