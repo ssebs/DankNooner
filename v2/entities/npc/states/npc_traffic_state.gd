@@ -175,11 +175,11 @@ func _gate(target_speed: float, delta: float) -> float:
 		return line_speed
 	_wait_time += delta
 	_queued = junction
-	var first_in_line := junction.arrive(npc, turn)
+	junction.arrive(npc, turn)
 	# A conflicting rider inside or ahead in line holds too: forcing past one is how the box gridlocks
 	if !junction.may_enter(npc, turn):
 		return line_speed
-	var let_in := _stop_sign_lets_in(turn, first_in_line) and _exit_clear(turn)
+	var let_in := _stop_sign_lets_in(turn) and _exit_clear(turn)
 	if _wait_time < junction_timeout and !let_in:
 		return line_speed
 	# Claimed on grant, not on crossing the line, so two riders can't both see it empty
@@ -190,11 +190,11 @@ func _gate(target_speed: float, delta: float) -> float:
 	return target_speed
 
 
-## STOP: a full stop at the line, then first come first served.
-func _stop_sign_lets_in(turn: int, first_in_line: bool) -> bool:
+## STOP: a full stop at the line. Turn order is may_enter's, so turns that don't cross go together.
+func _stop_sign_lets_in(turn: int) -> bool:
 	if follower.network.control(turn) != TrafficIntersection.ControlType.STOP:
 		return true
-	return is_zero_approx(npc.current_speed) and first_in_line
+	return is_zero_approx(npc.current_speed)
 
 
 func _leave_junction() -> void:

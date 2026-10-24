@@ -28,11 +28,10 @@ func may_enter(rider: Node3D, turn_lane: int) -> bool:
 	return true
 
 
-## Queues a rider held at a line; true once it's first in line.
-func arrive(rider: Node3D, turn_lane: int) -> bool:
+## Queues a rider held at a line.
+func arrive(rider: Node3D, turn_lane: int):
 	if not _arrivals.has(rider):
 		_arrivals[rider] = turn_lane
-	return _arrivals.keys()[0] == rider
 
 
 func enter(rider: Node3D, turn_lane: int):
