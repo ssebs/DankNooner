@@ -178,9 +178,10 @@ steam_manager = NodePath("../../../SteamManager")
 play_menu_state = NodePath("../PlayMenuState")
 customize_menu_state = NodePath("../CustomizeMenuState")
 
-[node name="SettingsMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1653152871 node_paths=PackedStringArray("menu_manager", "settings_manager", "main_menu_state") instance=ExtResource("6_f52ns")]
+[node name="SettingsMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1653152871 node_paths=PackedStringArray("menu_manager", "settings_manager", "audio_manager", "main_menu_state") instance=ExtResource("6_f52ns")]
 menu_manager = NodePath("../..")
 settings_manager = NodePath("../../../SettingsManager")
+audio_manager = NodePath("../../../AudioManager")
 main_menu_state = NodePath("../MainMenuState")
 
 [node name="CustomizeMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1710077363 node_paths=PackedStringArray("save_manager", "level_manager", "audio_manager") instance=ExtResource("9_4srsv")]

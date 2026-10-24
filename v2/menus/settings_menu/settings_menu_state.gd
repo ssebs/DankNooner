@@ -3,6 +3,7 @@ class_name SettingsMenuState extends MenuState
 
 @export var menu_manager: MenuManager
 @export var settings_manager: SettingsManager
+@export var audio_manager: AudioManager
 @export var main_menu_state: MenuState
 
 ## Settings keys each tab's Reset restores, by tab index. Controls reset through ControlsTab.
@@ -17,6 +18,7 @@ const TAB_SETTING_KEYS: Array = [
 @onready var reset_btn: Button = %ResetBtn
 @onready var tab_container: TabContainer = %TabContainer
 @onready var controls_tab: ControlsTab = %Controls
+@onready var audio_tab: Control = %Audio
 
 @onready var signal_host_entry: LineEdit = %SignalHostEntry
 @onready var window_mode_opt: OptionButton = %WindowModeOpt
@@ -75,6 +77,8 @@ func Enter(state_context: StateContext):
 	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
 
 	resolution_scale.value_changed.connect(_on_resolution_scale_changed)
+	tab_container.tab_changed.connect(_on_tab_changed)
+	_on_tab_changed(tab_container.current_tab)
 
 	settings_manager.load_settings()
 
@@ -90,6 +94,8 @@ func Exit(_state_context: StateContext):
 	settings_manager.all_settings_changed.disconnect(_on_all_settings_changed)
 
 	resolution_scale.value_changed.disconnect(_on_resolution_scale_changed)
+	tab_container.tab_changed.disconnect(_on_tab_changed)
+	audio_manager.set_music_ducked(self, false)
 
 
 ## Polled rather than wiring every widget's change signal.
@@ -183,6 +189,11 @@ func _on_setting_updated(_key: String, _value: Variant):
 func _on_resolution_scale_changed(val: float):
 	var s = "%.2f" % val
 	resolution_scale_label.text = tr("RESOLUTION_SCALE_LABEL").format({"scale": s.rstrip("0").rstrip(".")})
+
+
+## Unducked on the Audio tab so the music slider previews its real level.
+func _on_tab_changed(tab: int):
+	audio_manager.set_music_ducked(self, tab_container.get_tab_control(tab) != audio_tab)
 
 
 func _on_save_pressed():

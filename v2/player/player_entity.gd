@@ -415,8 +415,10 @@ func _update_horn() -> void:
 	var held := input_controller.nfx_horn_held
 	if held and !horn_player.playing:
 		audio_manager.get_sound_event(horn_definition.sfx).play_on(horn_player)
+		audio_manager.set_music_ducked(self, true)
 	elif !held and horn_player.playing:
 		horn_player.stop()
+		audio_manager.set_music_ducked(self, false)
 
 
 ## Crash-entered edge. Ragdoll on every peer; camera + SFX local; crashed(peer_id) drives respawn.
@@ -575,6 +577,9 @@ func _deferred_init():
 func _exit_tree():
 	if is_local_client and hud_manager.local_player == self:
 		hud_manager.local_player = null
+	# Despawned mid-honk would otherwise hold the music ducked forever
+	if audio_manager:
+		audio_manager.set_music_ducked(self, false)
 	if _dbg_log_file != null:
 		_dbg_log_file.close()
 

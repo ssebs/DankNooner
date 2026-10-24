@@ -91,11 +91,14 @@ Defined in `default_bus_layout.tres` at the project root. Godot loads this autom
 Current layout:
 
 ```
-Master  →  (output)
-Menu    →  Master
-SFX     →  Master
-Music   →  Master
+Master     →  (output)
+Menu       →  Master
+SFX        →  Master
+MusicDuck  →  Master
+Music      →  MusicDuck
 ```
+
+`MusicDuck` has no setting; it exists so ducking never touches the user's `Music` volume (see [Music](#music)).
 
 ## Web export considerations
 
@@ -175,6 +178,7 @@ AudioManager
 - **Who picks the playlist:** `GamemodeManager` on its state machine's `state_transitioned` (free roam, fuel-up and tutorial → `FREE_ROAM`, every other mode → `EVENT`), and `end_game()` / `SplashMenuState.Exit()` → `MENU`. Transitions run on every peer, so music is local per player and skipping only affects you.
 - **Outside `Sounds` on purpose:** `stop_all()` only stops `Sounds`, so match end crossfades to menu music instead of cutting.
 - `AudioStreamPlaylist` isn't used: its playback exposes no current track or skip.
+- **Ducking:** `set_music_ducked(source, ducked)` tweens the `MusicDuck` bus down by `music_duck_db` while any source holds it. Sources: `SettingsMenuState` (every tab but Audio, so the music slider previews its real level) and each `PlayerEntity` while its horn plays, any rider, any distance. A sidechain compressor would be the textbook fix for horns, but web's sample playback skips bus effects.
 
 ## Things to be aware of
 

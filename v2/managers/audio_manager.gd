@@ -91,6 +91,9 @@ enum MusicType {
 @export_tool_button("Play Startup") var tool_btn_1 = play_startup
 ## Crossfade length when switching playlists or skipping a song.
 @export var music_fade_time: float = 1.5
+## How far music dips while ducked (settings menu, horns).
+@export var music_duck_db: float = -12.0
+@export var music_duck_time: float = 0.3
 
 ## Map of settings_manager key → audio bus name. Buses are defined in `default_bus_layout.tres`
 ## (must be created in the editor — runtime AudioServer.add_bus() doesn't work on web exports).
@@ -188,6 +191,9 @@ var _music_queue: Array[SoundEvent] = []
 ## Songs already played from _music_type, most recent last, for previous_music_track().
 var _music_history: Array[SoundEvent] = []
 var _music_track: SoundEvent
+## Whatever currently holds the music ducked; see set_music_ducked().
+var _music_duckers: Array[Object] = []
+var _music_duck: Tween
 var _audio_disabled := false
 var _app_focused := true
 
@@ -477,6 +483,31 @@ func get_music_artist() -> String:
 
 func _music_name_parts() -> PackedStringArray:
 	return _music_track.stream.resource_path.get_file().get_basename().split(" - ", true, 1)
+
+
+## Music stays ducked while any `source` holds it. Tweens the MusicDuck bus so the
+## Music bus stays the user's volume setting.
+func set_music_ducked(source: Object, ducked: bool):
+	var was_ducked := !_music_duckers.is_empty()
+	if ducked and source not in _music_duckers:
+		_music_duckers.append(source)
+	elif !ducked:
+		_music_duckers.erase(source)
+	var is_ducked := !_music_duckers.is_empty()
+	if is_ducked == was_ducked:
+		return
+
+	var idx := AudioServer.get_bus_index(&"MusicDuck")
+	var target := music_duck_db if is_ducked else 0.0
+	if _music_duck:
+		_music_duck.kill()
+	_music_duck = create_tween()
+	_music_duck.tween_method(
+		func(db: float): AudioServer.set_bus_volume_db(idx, db),
+		AudioServer.get_bus_volume_db(idx),
+		target,
+		music_duck_time
+	)
 
 
 func _play_next_music(fade_time: float):

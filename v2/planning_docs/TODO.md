@@ -3,7 +3,6 @@
 > They're loosely priority-ordered, tails are wishes. Items go stale; verify against code.
 - [In-Progress 🚨](#in-progress-)
 - [Notes 📝](#notes-)
-- [https://www.myinstants.com/en/instant/gah-dayum-29041/](#httpswwwmyinstantscomeninstantgah-dayum-29041)
 - [Tasks 📋](#tasks-)
 	- [Controller UX Improvements](#controller-ux-improvements)
 	- [HUD Improvements](#hud-improvements)
@@ -48,10 +47,6 @@
 ## Notes 📝
 > Stuff to move ASAP
 
-https://www.myinstants.com/en/instant/gah-dayum-29041/
-https://www.myinstants.com/en/instant/cat-is-calling-you-iphone-39599/
-https://www.myinstants.com/en/instant/yapapa-cat-15221/
-https://www.myinstants.com/en/instant/gah-dayum-29041/
 ---
 
 ## Tasks 📋
@@ -226,6 +221,10 @@ https://www.myinstants.com/en/instant/gah-dayum-29041/
 ---
 
 ## Done ✅
+- [x] Horns should be audible thru music
+
+- [x] Turn down music when going to settings 
+
 - [x] pause when out of focus
 
 - [x] Music
