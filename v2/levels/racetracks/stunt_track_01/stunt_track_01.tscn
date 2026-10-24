@@ -984,27 +984,27 @@ script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint5" type="Marker3D" parent="TrafficNetwork/TrafficRoad4" unique_id=1610699508]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -90.399994, 0.00012207031, 27.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -89.34564, 0.00012207031, 26.495972)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint6" type="Marker3D" parent="TrafficNetwork/TrafficRoad4" unique_id=2106582045]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -98.5, 0.000118255615, 31.799988)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -98.70087, 0.000118255615, 34.15985)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint7" type="Marker3D" parent="TrafficNetwork/TrafficRoad4" unique_id=514702153]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -105.899994, 0.00012207031, 51.799988)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -107.70755, 0.00012207031, 52.55313)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint8" type="Marker3D" parent="TrafficNetwork/TrafficRoad4" unique_id=167396537]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -114, 0.000118255615, 58.69998)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -114.200836, 0.000118255615, 58.64978)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint9" type="Marker3D" parent="TrafficNetwork/TrafficRoad4" unique_id=287124107]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -122.399994, 0.00012207031, 61.299988)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -122.04852, 0.00012207031, 60.597046)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
@@ -1026,42 +1026,42 @@ script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint2" type="Marker3D" parent="TrafficNetwork/TrafficRoad5" unique_id=537736398]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -390.69998, 0.25004196, 466.87997)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -382.31494, 0.25004196, 467.9846)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint3" type="Marker3D" parent="TrafficNetwork/TrafficRoad5" unique_id=512896421]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -397.59998, 0.24985886, 463.77997)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -398.7548, 0.24985886, 465.28625)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint4" type="Marker3D" parent="TrafficNetwork/TrafficRoad5" unique_id=1433022577]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -400.09998, 0.24985123, 442.57996)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -401.45566, 0.24985123, 442.831)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint5" type="Marker3D" parent="TrafficNetwork/TrafficRoad5" unique_id=71498902]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -405.19998, 0.24995422, 434.97995)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -407.5096, 0.24995422, 433.17242)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint6" type="Marker3D" parent="TrafficNetwork/TrafficRoad5" unique_id=1560870017]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -417.09998, 0.25, 432.37994)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -418.7569, 0.25, 432.6812)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint7" type="Marker3D" parent="TrafficNetwork/TrafficRoad5" unique_id=887245822]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -425.89996, 0.25006866, 429.87994)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -428.8121, 0.25006866, 430.08075)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint8" type="Marker3D" parent="TrafficNetwork/TrafficRoad5" unique_id=469948378]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -428.89996, 0.250206, 425.87994)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -430.5569, 0.250206, 417.997)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint9" type="Marker3D" parent="TrafficNetwork/TrafficRoad5" unique_id=360313521]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -433.39996, 0.250103, 404.87994)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -432.74722, 0.250103, 404.7795)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
@@ -1086,17 +1086,17 @@ script = ExtResource("4_whdav")
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad6" unique_id=1375438577]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -335.58, 0.25003052, 483.34)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -334.62497, 0.25003815, 484.77655)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint2" type="Marker3D" parent="TrafficNetwork/TrafficRoad6" unique_id=1403694935]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -335.58, 0.24999237, 518.14)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -334.28073, 0.24999237, 516.7754)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint3" type="Marker3D" parent="TrafficNetwork/TrafficRoad6" unique_id=56825964]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -340.38, 0.25, 526.94)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -342.29266, 0.25, 527.75977)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
@@ -1118,7 +1118,7 @@ script = ExtResource("4_whdav")
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad7" unique_id=1770770712]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -400.16, 0.48659134, 546.79)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -399.68185, 0.48659134, 546.79)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
@@ -1175,27 +1175,27 @@ script = ExtResource("4_whdav")
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad9" unique_id=1465647725]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -530.99, 0.4884987, 511.49)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -530.9217, 0.4884987, 511.49)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint2" type="Marker3D" parent="TrafficNetwork/TrafficRoad9" unique_id=637888771]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -531.79, 0.43985748, 474.78998)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -530.4238, 0.43985748, 474.78998)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint3" type="Marker3D" parent="TrafficNetwork/TrafficRoad9" unique_id=231487782]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -537.08997, 0.24777603, 466.99)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -537.08997, 0.24777603, 466.5801)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint4" type="Marker3D" parent="TrafficNetwork/TrafficRoad9" unique_id=605630582]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -547.99, 0.22615433, 462.88998)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -548.7414, 0.22615433, 462.3435)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint5" type="Marker3D" parent="TrafficNetwork/TrafficRoad9" unique_id=1460621123]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -605.99, 0.49959564, 462.68997)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -605.99, 0.49959564, 461.80197)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
@@ -1228,12 +1228,12 @@ script = ExtResource("4_whdav")
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad10" unique_id=1073345507]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -623.94, 0.49333954, 478.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -623.66675, 0.49333954, 478.9)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint2" type="Marker3D" parent="TrafficNetwork/TrafficRoad10" unique_id=1057775827]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -622.94, 1.8121681, 535)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -623.21326, 1.8121681, 534.65845)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
