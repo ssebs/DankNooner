@@ -113,7 +113,7 @@ func _spawn_pickup() -> void:
 		return
 	var pickup: PickupItem = PICKUP_ITEM_SCENE.instantiate()
 	pickup.pickup_item_definition = skin_definition
-	pickup.silhouette = false
+	pickup.in_world = false
 	spawn_parent.add_child(pickup)
 	pickup.ring.hide()
 	if Engine.is_editor_hint():

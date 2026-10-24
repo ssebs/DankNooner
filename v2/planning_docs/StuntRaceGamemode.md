@@ -52,6 +52,9 @@ The stunt race is `RaceGameMode` with `race_type = STUNT_RACE`: the shared race 
   spawn during races (`PickupsComponent`) and in free roam (`PickupSpawnManager`). Gas Can applies
   instantly (boost refill); the rest fill the rider's single held slot, used with double-tap trick or
   `use_item`, discarded with double-tap horn. Built: Gas Can, Bat, Oil Slick, Ramp, Shotgun, Rally Up.
+  A `PickupSpawner` is a row of `count` slots `spacing` apart along its local Z (riders cross along
+  local X); each slot picks by `PickupItemDefinition.weight` and respawns on its own. Items render as
+  a black silhouette with a gold `NeonEdges` border over a gold ring.
 - **Challenges:** `RaceChallenge` resources in the definition's `race_challenges`
   (`LongestWheelieChallenge`, `BestComboChallenge`, `SuggestedTricksChallenge`), run by
   `ChallengesComponent`. Suggested tricks score double in `TrickManager`.

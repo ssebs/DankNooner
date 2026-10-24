@@ -12,6 +12,8 @@ class_name PickupItem extends Area3D
 			_apply_definition()
 
 const SILHOUETTE_MATERIAL := preload("res://levels/assets/props/silhouette_fill.tres")
+## World-look gap between the item's lowest point and the ring.
+const RING_GAP := 0.25
 
 @onready var mesh_node: Node3D = %MeshNode
 @onready var collishion_shape: CollisionShape3D = %CollisionShape3D
@@ -19,9 +21,9 @@ const SILHOUETTE_MATERIAL := preload("res://levels/assets/props/silhouette_fill.
 @onready var ring_mesh: MeshInstance3D = %StartRing/MeshInstance3D
 
 var mesh_root: Node3D
-## Black-filled item (NeonEdges draws its glowing border) so it reads by shape alone in the world;
-## Thumbnail3D turns it off for the real look.
-var silhouette := true
+## World look: black-filled item (NeonEdges draws its glowing border) resting just above the ring, so
+## it reads by shape alone. Thumbnail3D turns it off for the plain item, centered.
+var in_world := true
 
 
 func _ready():
@@ -46,19 +48,23 @@ func _spawn_mesh():
 		var body := node as CollisionObject3D
 		body.collision_layer = 0
 		body.collision_mask = 0
-	if silhouette:
+	if in_world:
 		for node in mesh_root.find_children("*", "GeometryInstance3D", true, false):
 			(node as GeometryInstance3D).material_override = SILHOUETTE_MATERIAL
 
 	mesh_root.scale *= pickup_item_definition.mesh_scale_multiplier
 	mesh_root.rotation_degrees += pickup_item_definition.mesh_rotation_offset_degrees
-	# Recenter the mesh's bounds on the bubble (position still 0 here), then add the authored offset.
-	mesh_root.position = pickup_item_definition.mesh_position_offset - _mesh_bounds_center()
+	# Recenter the mesh's bounds on the collider (position still 0 here), then add the authored offset.
+	var bounds := _mesh_bounds()
+	mesh_root.position = pickup_item_definition.mesh_position_offset - bounds.get_center()
+	# Rest the lowest point RING_GAP above the ring (at -radius), however big the item is scaled.
+	if in_world:
+		mesh_root.position.y += bounds.size.y / 2.0 - pickup_item_definition.radius + RING_GAP
 
 
-## Center of the spawned mesh's combined AABB, in MeshNode space. Merges every VisualInstance3D
-## in the subtree so any .glb (however its pivot sits) can be auto-centered in the bubble.
-func _mesh_bounds_center() -> Vector3:
+## The spawned mesh's combined AABB, in MeshNode space. Merges every VisualInstance3D in the
+## subtree so any .glb (however its pivot sits) can be auto-centered.
+func _mesh_bounds() -> AABB:
 	var to_mesh_node := mesh_node.global_transform.affine_inverse()
 	var bounds := AABB()
 	var found := false
@@ -67,9 +73,7 @@ func _mesh_bounds_center() -> Vector3:
 		var local_aabb := (to_mesh_node * vi.global_transform) * vi.get_aabb()
 		bounds = local_aabb if not found else bounds.merge(local_aabb)
 		found = true
-	if not found:
-		return Vector3.ZERO
-	return bounds.get_center()
+	return bounds
 
 
 ## Sphere collider of the definition's radius, with the ring flat at its bottom.

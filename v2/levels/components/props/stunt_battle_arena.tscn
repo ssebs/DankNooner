@@ -60,169 +60,21 @@ width = 128
 [node name="Spawners" type="Node3D" parent="." unique_id=608849879]
 
 [node name="PickupSpawner" parent="Spawners" unique_id=761218876 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, 31)
-
-[node name="PickupSpawner2" parent="Spawners" unique_id=2030440979 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, 26)
-
-[node name="PickupSpawner3" parent="Spawners" unique_id=180895337 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, 21.5)
-
-[node name="PickupSpawner4" parent="Spawners" unique_id=1961093340 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, 17)
-
-[node name="PickupSpawner5" parent="Spawners" unique_id=642035886 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, 12.5)
-
-[node name="PickupSpawner6" parent="Spawners" unique_id=1641614058 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, 7)
-
-[node name="PickupSpawner7" parent="Spawners" unique_id=18316652 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, 2)
-
-[node name="PickupSpawner8" parent="Spawners" unique_id=1253928132 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, -2.5)
-
-[node name="PickupSpawner9" parent="Spawners" unique_id=963406141 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, -7)
-
-[node name="PickupSpawner10" parent="Spawners" unique_id=1588348722 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, -11.5)
-
-[node name="PickupSpawner11" parent="Spawners" unique_id=1330575673 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, -17)
-
-[node name="PickupSpawner12" parent="Spawners" unique_id=938389386 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, -22)
-
-[node name="PickupSpawner13" parent="Spawners" unique_id=781352852 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, -26.5)
-
-[node name="PickupSpawner14" parent="Spawners" unique_id=634380176 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, -31)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, -0.035714)
+count = 14
+spacing = 4.77
 
 [node name="PickupSpawner15" parent="Spawners" unique_id=1807387469 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, 31)
-
-[node name="PickupSpawner16" parent="Spawners" unique_id=1917874455 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, 26)
-
-[node name="PickupSpawner17" parent="Spawners" unique_id=1472319009 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, 21.5)
-
-[node name="PickupSpawner18" parent="Spawners" unique_id=1492987221 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, 17)
-
-[node name="PickupSpawner19" parent="Spawners" unique_id=1572182056 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, 12.5)
-
-[node name="PickupSpawner20" parent="Spawners" unique_id=2076165984 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, 7)
-
-[node name="PickupSpawner21" parent="Spawners" unique_id=1563551303 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, 2)
-
-[node name="PickupSpawner22" parent="Spawners" unique_id=1537553523 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, -2.5)
-
-[node name="PickupSpawner23" parent="Spawners" unique_id=249098892 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, -7)
-
-[node name="PickupSpawner24" parent="Spawners" unique_id=1379177831 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, -11.5)
-
-[node name="PickupSpawner25" parent="Spawners" unique_id=1523049607 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, -17)
-
-[node name="PickupSpawner26" parent="Spawners" unique_id=978954800 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, -22)
-
-[node name="PickupSpawner27" parent="Spawners" unique_id=495887214 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, -26.5)
-
-[node name="PickupSpawner28" parent="Spawners" unique_id=924687421 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, -31)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, -0.035714)
+count = 14
+spacing = 4.77
 
 [node name="PickupSpawner29" parent="Spawners" unique_id=1807297309 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -31.035715, 0, -50.035717)
-
-[node name="PickupSpawner30" parent="Spawners" unique_id=130343690 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -26.035715, 0, -50.035717)
-
-[node name="PickupSpawner31" parent="Spawners" unique_id=856178658 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -21.535715, 0, -50.035717)
-
-[node name="PickupSpawner32" parent="Spawners" unique_id=1896560893 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -17.035715, 0, -50.035713)
-
-[node name="PickupSpawner33" parent="Spawners" unique_id=411271409 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -12.535714, 0, -50.035713)
-
-[node name="PickupSpawner34" parent="Spawners" unique_id=772825266 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -7.035714, 0, -50.035713)
-
-[node name="PickupSpawner35" parent="Spawners" unique_id=1053021640 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -2.0357141, 0, -50.035713)
-
-[node name="PickupSpawner36" parent="Spawners" unique_id=585657984 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 2.464285, 0, -50.035713)
-
-[node name="PickupSpawner37" parent="Spawners" unique_id=597390711 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 6.964287, 0, -50.035713)
-
-[node name="PickupSpawner38" parent="Spawners" unique_id=116606571 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 11.464287, 0, -50.035713)
-
-[node name="PickupSpawner39" parent="Spawners" unique_id=1457117270 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 16.964287, 0, -50.035713)
-
-[node name="PickupSpawner40" parent="Spawners" unique_id=840893044 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 21.964287, 0, -50.035713)
-
-[node name="PickupSpawner41" parent="Spawners" unique_id=635307713 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 26.464287, 0, -50.035713)
-
-[node name="PickupSpawner42" parent="Spawners" unique_id=2078470811 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 30.964287, 0, -50.035713)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, -50.035714)
+count = 14
+spacing = 4.77
 
 [node name="PickupSpawner43" parent="Spawners" unique_id=1884260859 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -31.035715, 0, 46.464283)
-
-[node name="PickupSpawner44" parent="Spawners" unique_id=151032564 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -26.035715, 0, 46.464283)
-
-[node name="PickupSpawner45" parent="Spawners" unique_id=1748339883 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -21.535715, 0, 46.464283)
-
-[node name="PickupSpawner46" parent="Spawners" unique_id=1540137959 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -17.035715, 0, 46.464287)
-
-[node name="PickupSpawner47" parent="Spawners" unique_id=524235841 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -12.535714, 0, 46.464287)
-
-[node name="PickupSpawner48" parent="Spawners" unique_id=1378884698 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -7.035714, 0, 46.464287)
-
-[node name="PickupSpawner49" parent="Spawners" unique_id=1168119765 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -2.0357141, 0, 46.464287)
-
-[node name="PickupSpawner50" parent="Spawners" unique_id=1375667442 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 2.464285, 0, 46.464287)
-
-[node name="PickupSpawner51" parent="Spawners" unique_id=1962781084 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 6.964287, 0, 46.464287)
-
-[node name="PickupSpawner52" parent="Spawners" unique_id=167939648 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 11.464287, 0, 46.464287)
-
-[node name="PickupSpawner53" parent="Spawners" unique_id=1812264660 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 16.964287, 0, 46.464287)
-
-[node name="PickupSpawner54" parent="Spawners" unique_id=1776685519 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 21.964287, 0, 46.464287)
-
-[node name="PickupSpawner55" parent="Spawners" unique_id=1014369133 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 26.464287, 0, 46.464287)
-
-[node name="PickupSpawner56" parent="Spawners" unique_id=948013606 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 30.964287, 0, 46.464287)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, 46.464286)
+count = 14
+spacing = 4.77
