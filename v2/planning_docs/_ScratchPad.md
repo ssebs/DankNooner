@@ -21,4 +21,3 @@ replace pickup item bubble with gold ring like the circle in gas pump
 
 - [ ] give cars headlights
 
-- [ ] change spawn rate for diff items in item spawner

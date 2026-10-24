@@ -239,6 +239,8 @@ https://www.myinstants.com/en/instant/gah-dayum-29041/
 ---
 
 ## Done ✅
+- [x] weigh randomness of item spawners
+
 - [x] Traffic can pile up and stop at intersections
 
 - [x] Gas pump occlusion is broken
