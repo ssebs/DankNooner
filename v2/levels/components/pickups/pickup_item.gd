@@ -1,8 +1,8 @@
 @tool
 ## Spawns a pickup's item mesh from its PickupItemDefinition (mirrors CarSkin's definition-driven
-## setup) and sizes the pickup's sphere collider + bubble mesh to the definition's radius. The
-## Area3D, sphere collider, MeshNode and bubble MeshInstance3D all live in the scene; the spawned
-## item lives inside MeshNode.
+## setup) and sizes the pickup's sphere collider + gold ring to the definition's radius. The
+## Area3D, sphere collider, MeshNode and StartRing all live in the scene; the spawned item lives
+## inside MeshNode.
 class_name PickupItem extends Area3D
 
 @export var pickup_item_definition: PickupItemDefinition:
@@ -11,11 +11,17 @@ class_name PickupItem extends Area3D
 		if Engine.is_editor_hint() and is_node_ready():
 			_apply_definition()
 
+const SILHOUETTE_MATERIAL := preload("res://levels/assets/props/silhouette_fill.tres")
+
 @onready var mesh_node: Node3D = %MeshNode
 @onready var collishion_shape: CollisionShape3D = %CollisionShape3D
-@onready var mesh_instance: MeshInstance3D = %MeshInstance3D
+@onready var ring: Node3D = %StartRing
+@onready var ring_mesh: MeshInstance3D = %StartRing/MeshInstance3D
 
 var mesh_root: Node3D
+## Black-filled item (NeonEdges draws its glowing border) so it reads by shape alone in the world;
+## Thumbnail3D turns it off for the real look.
+var silhouette := true
 
 
 func _ready():
@@ -25,7 +31,7 @@ func _ready():
 #region resource/definition
 func _apply_definition():
 	_spawn_mesh()
-	_size_bubble()
+	_size_ring()
 	if Engine.is_editor_hint():
 		mesh_root.owner = self
 
@@ -40,6 +46,9 @@ func _spawn_mesh():
 		var body := node as CollisionObject3D
 		body.collision_layer = 0
 		body.collision_mask = 0
+	if silhouette:
+		for node in mesh_root.find_children("*", "GeometryInstance3D", true, false):
+			(node as GeometryInstance3D).material_override = SILHOUETTE_MATERIAL
 
 	mesh_root.scale *= pickup_item_definition.mesh_scale_multiplier
 	mesh_root.rotation_degrees += pickup_item_definition.mesh_rotation_offset_degrees
@@ -63,19 +72,21 @@ func _mesh_bounds_center() -> Vector3:
 	return bounds.get_center()
 
 
-## Collider and bubble mesh are both spheres of the definition's radius. Fresh shape + a
-## duplicated mesh so instances don't share (and mutate) the scene's sub-resources.
-func _size_bubble():
+## Sphere collider of the definition's radius, with the ring flat at its bottom.
+## Fresh shape + a duplicated mesh so instances don't share (and mutate) the scene's sub-resources;
+## the shallow duplicate keeps the shared gold material the ring's pulse animation drives.
+func _size_ring():
 	var radius := pickup_item_definition.radius
 
 	var sphere := SphereShape3D.new()
 	sphere.radius = radius
 	collishion_shape.shape = sphere
 
-	var bubble := mesh_instance.mesh.duplicate() as SphereMesh
-	bubble.radius = radius
-	bubble.height = radius * 2.0
-	mesh_instance.mesh = bubble
+	var torus := ring_mesh.mesh.duplicate() as TorusMesh
+	torus.outer_radius = radius
+	torus.inner_radius = radius - 0.1
+	ring_mesh.mesh = torus
+	ring.position.y = -radius
 
 
 #endregion

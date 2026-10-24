@@ -19,7 +19,7 @@ enum PickupItemType {GAS_CAN, BAT, OIL_SLICK, RAMP, SHOTGUN, RALLY_UP, }
 @export var mesh_scale_multiplier: Vector3 = Vector3.ONE
 
 @export_group("Bubble")
-## Radius of the pickup's spherical collider and its bubble mesh (both always spheres).
+## Radius of the pickup's spherical collider and its gold ring.
 @export var radius: float = 1.25
 
 @export_group("Type")

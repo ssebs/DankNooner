@@ -3,18 +3,19 @@
 [ext_resource type="Script" uid="uid://be51aqt01qvag" path="res://levels/components/pickups/pickup_item.gd" id="1_eppld"]
 [ext_resource type="Resource" uid="uid://cqeidudggyae1" path="res://levels/components/pickups/gas_can_pickup_definition.tres" id="2_eppld"]
 [ext_resource type="PackedScene" uid="uid://cu4qunatj2j2r" path="res://levels/assets/props/gas_can.glb" id="3_eppld"]
+[ext_resource type="PackedScene" path="res://managers/gamemodes/gamemodeobjects/start_ring.tscn" id="4_ring"]
+[ext_resource type="Material" path="res://levels/assets/props/neon_gold.tres" id="5_gold"]
+[ext_resource type="Script" uid="uid://bkho4nxye7goy" path="res://levels/components/neon_edges.gd" id="6_edges"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_38q4i"]
 radius = 1.5
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wig4y"]
-transparency = 1
-albedo_color = Color(0.17, 0.72533333, 0.85, 0.29411766)
-
-[sub_resource type="SphereMesh" id="SphereMesh_7bco1"]
-material = SubResource("StandardMaterial3D_wig4y")
-radius = 1.5
-height = 3.0
+[sub_resource type="TorusMesh" id="TorusMesh_gold"]
+material = ExtResource("5_gold")
+inner_radius = 1.4
+outer_radius = 1.5
+rings = 24
+ring_segments = 6
 
 [node name="PickupItem" type="Area3D" unique_id=195507555]
 script = ExtResource("1_eppld")
@@ -30,6 +31,19 @@ unique_name_in_owner = true
 [node name="gas_can" type="Node3D" parent="MeshNode" unique_id=2119897232 instance=ExtResource("3_eppld")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.6174736e-05, -1.0148959, 0.21233809)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=882169721]
+[node name="StartRing" parent="." unique_id=882169721 instance=ExtResource("4_ring")]
 unique_name_in_owner = true
-mesh = SubResource("SphereMesh_7bco1")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 0)
+
+[node name="MeshInstance3D" parent="StartRing" index="0"]
+mesh = SubResource("TorusMesh_gold")
+
+[node name="NeonEdges" type="Node" parent="." unique_id=1730582214 node_paths=PackedStringArray("targets")]
+script = ExtResource("6_edges")
+targets = [NodePath("../MeshNode")]
+color = Color(1, 0.7529412, 0.14901961, 1)
+energy = 3.0
+width_px = 3.5
+normal_threshold = 2.0
+
+[editable path="StartRing"]

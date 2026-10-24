@@ -1979,6 +1979,24 @@ transform = Transform3D(-4.3711374e-08, 1, -5.9604645e-08, 1, 4.3711367e-08, 1.2
 [node name="ArrowWall7" parent="StuntRace/Route" unique_id=477506796 instance=ExtResource("25_60x1b")]
 transform = Transform3D(-4.371137e-08, 1.5893256e-08, 1, 1, -4.5000264e-15, 4.371139e-08, 0, 1, -1.5893256e-08, -963.58105, 5.2552032, 464.3767)
 
+[node name="PickupSpawner27" parent="StuntRace/Route" unique_id=106093711 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 103, 10.867197, 124.5)
+
+[node name="PickupSpawner28" parent="StuntRace/Route" unique_id=98651864 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 107, 10.867197, 124.5)
+
+[node name="PickupSpawner29" parent="StuntRace/Route" unique_id=221403186 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 111, 10.867197, 124.5)
+
+[node name="PickupSpawner30" parent="StuntRace/Route" unique_id=274502485 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 115, 10.867197, 124.5)
+
+[node name="PickupSpawner31" parent="StuntRace/Route" unique_id=942243348 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 119, 10.867197, 124.5)
+
+[node name="PickupSpawner32" parent="StuntRace/Route" unique_id=73621434 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 123, 10.867197, 124.5)
+
 [node name="StuntRace" type="Node" parent="StuntRace" unique_id=286026007 node_paths=PackedStringArray("route")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_pls18")

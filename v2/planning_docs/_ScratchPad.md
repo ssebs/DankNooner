@@ -6,7 +6,6 @@
 
 ### NOW
 
-replace pickup item bubble with gold ring like the circle in gas pump
 
 
 ### NEXT

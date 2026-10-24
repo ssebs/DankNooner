@@ -66,9 +66,10 @@ func _ready():
 
 
 # Catches meshes spawned after _ready, e.g. PlayerEntity rebuilding its skins after a crash.
+# Deferred so it lands after the spawned subtree's own _ready overlays (e.g. a graybox's neon_edges).
 func _on_node_added(node: Node):
 	if node is MeshInstance3D and _get_targets().any(func(t: Node3D): return t.is_ancestor_of(node)):
-		node.material_overlay = _mat
+		node.set_deferred("material_overlay", _mat)
 
 
 func _get_targets() -> Array[Node3D]:

@@ -58,9 +58,6 @@ Demo = start with tutorial
 Turn down music when going to settings 
 Horns should be audible thru music
 
-Make.items in bubble easier to see what they are
-    Maybe instead of bubble use ring like start circles, but make it gold colored
-
 https://www.myinstants.com/en/instant/cat-is-calling-you-iphone-39599/
 https://www.myinstants.com/en/instant/yapapa-cat-15221/
 https://www.myinstants.com/en/instant/gah-dayum-29041/
@@ -239,6 +236,8 @@ https://www.myinstants.com/en/instant/gah-dayum-29041/
 ---
 
 ## Done ✅
+- [x] replace pickup item bubble with gold ring like the circle in gas pump
+
 - [x] weigh randomness of item spawners
 
 - [x] Traffic can pile up and stop at intersections
