@@ -26,7 +26,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MiniTasks](_ScratchPad.md)
-
 - [ ] Create separate location (new event start circles) just for stunt/trick battle, remove from existing races so they dont spawn checkpoint markers
   - [ ] wip - stunt_battle_arena
 
@@ -236,6 +235,8 @@ https://www.myinstants.com/en/instant/gah-dayum-29041/
 ---
 
 ## Done ✅
+- [x] pause when out of focus
+
 - [x] Music
 
 - [x] replace pickup item bubble with gold ring like the circle in gas pump

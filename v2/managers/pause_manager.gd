@@ -16,6 +16,14 @@ func _ready():
 	input_state_manager.unpause_requested.connect(do_unpause)
 
 
+func _notification(what: int):
+	if what != NOTIFICATION_APPLICATION_FOCUS_OUT or Engine.is_editor_hint():
+		return
+	match input_state_manager.current_input_state:
+		InputStateManager.InputState.IN_GAME, InputStateManager.InputState.IN_MINIGAME, InputStateManager.InputState.IN_MAP:
+			do_pause()
+
+
 func do_pause():
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME_PAUSED
 	menu_manager.switch_to_pause_menu()
