@@ -39,6 +39,7 @@
     - [ ] Trailer
   - [ ] Demo release
     - [ ] Get racing AI working
+      - [ ] easy/hard difficulty setting for AI
     - [ ] Balancing points
   - [ ] > steam next fest Feb '27
   - [ ] Release after free to play  w/ paid dlc for more content/skins
@@ -171,7 +172,6 @@ https://www.myinstants.com/en/instant/gah-dayum-29041/
 - [ ] VFX on horn (to beat would be cool)
 
 ### Audio
-- [ ] Music
 - [ ] Soundscapes for ambient sounds
 - [ ] Meme mode setting (for sfx)
 
@@ -200,7 +200,7 @@ https://www.myinstants.com/en/instant/gah-dayum-29041/
   - [x] no-handed spread eagle
   - [x] kickflip
   - [ ] https://www.youtube.com/shorts/cAxcIZ83MfU
-  - [ ] near miss tricks / score
+  - [x] near miss tricks / score
   - [ ] 180 / 360 / 720 tricks
   - [ ] hardflip / mix backflip / 180 tricks
 - [ ] trick tweaks (just move butt a little from base trick)
@@ -236,6 +236,8 @@ https://www.myinstants.com/en/instant/gah-dayum-29041/
 ---
 
 ## Done ✅
+- [x] Music
+
 - [x] replace pickup item bubble with gold ring like the circle in gas pump
 
 - [x] weigh randomness of item spawners

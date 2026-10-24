@@ -160,6 +160,10 @@ var rb_do_max_boost: bool = false
 ## Set by SpawnManager.set_boost_player (free-roam fuel-up) — sets the meter to rb_set_boost_amount.
 var rb_set_boost: bool = false
 var rb_set_boost_amount: float = 0.0
+## Set by SpawnManager.near_miss_player — adds rb_near_miss_score to the combo. Rides the same
+## rollback tick + resim machinery as rb_add_boost.
+var rb_near_miss: bool = false
+var rb_near_miss_score: float = 0.0
 ## Freeze/unfreeze, set by CountdownTask + gamemode teardown. movement_locked is synced state, so
 ## applying it in the rollback tick lets the freeze reach clients — a write from outside never syncs.
 var rb_lock_movement: bool = false
@@ -188,6 +192,7 @@ var _respawn_target: Transform3D = Transform3D()
 ## that tick re-applies the same absolute value instead of dropping the +1.
 var _boost_grant_tick: int = -1
 var _boost_grant_amount: float = 0.0
+var _near_miss_tick: int = -1
 
 ## Same resim protection for freezes — a dropped unlock leaves the rider frozen for good.
 var _lock_tick: int = -1
@@ -295,6 +300,15 @@ func _rollback_tick(delta: float, tick: int, _is_fresh: bool):
 		_boost_grant_amount = boost_controller.boost_amount
 	elif tick == _boost_grant_tick:
 		boost_controller.boost_amount = _boost_grant_amount
+
+	# Near miss: apply once, then again on any resim of that tick — resim restores the combo from
+	# before it, so re-adding the same award lands it exactly once.
+	if rb_near_miss:
+		rb_near_miss = false
+		_near_miss_tick = tick
+		trick_controller.on_near_miss(rb_near_miss_score)
+	elif tick == _near_miss_tick:
+		trick_controller.on_near_miss(rb_near_miss_score)
 
 	# Run other controllers (ORDER MATTERS)
 	# Boost first — ahead of every controller AND evaluated even while crashed (unlike the

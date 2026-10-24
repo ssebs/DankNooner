@@ -505,11 +505,12 @@ settings_manager = NodePath("../SettingsManager")
 gamemode_manager = NodePath("../GamemodeManager")
 metadata/_custom_type_script = "uid://cug5kob8cndk4"
 
-[node name="TrickManager" type="Node" parent="ManagerManager" unique_id=1405416094 node_paths=PackedStringArray("spawn_manager", "gamemode_manager", "riding_hud_state") groups=["Managers"]]
+[node name="TrickManager" type="Node" parent="ManagerManager" unique_id=1405416094 node_paths=PackedStringArray("spawn_manager", "gamemode_manager", "riding_hud_state", "npc_traffic_manager") groups=["Managers"]]
 script = ExtResource("36_trkmg")
 spawn_manager = NodePath("../SpawnManager")
 gamemode_manager = NodePath("../GamemodeManager")
 riding_hud_state = NodePath("../HUDManager/StateMachine/RidingHUDState")
+npc_traffic_manager = NodePath("../NPCTrafficManager")
 
 [node name="NPCRaceManager" type="Node" parent="ManagerManager" unique_id=1218916391 node_paths=PackedStringArray("level_manager") groups=["Managers"]]
 script = ExtResource("31_npcrm")

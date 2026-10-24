@@ -66,6 +66,16 @@ monitorable = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.788, 0)
 shape = ExtResource("9_1voqy")
 
+[node name="NearMissArea" type="Area3D" parent="." unique_id=1930571048]
+collision_layer = 0
+collision_mask = 2
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NearMissArea" unique_id=1930571049]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.788, 0)
+shape = ExtResource("9_1voqy")
+
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1384892474]
 replication_interval = 0.05
 replication_config = SubResource("SceneReplicationConfig_npc01")

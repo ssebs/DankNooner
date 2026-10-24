@@ -12,6 +12,9 @@
 ## plan); the two share the spawn RPC shape but nothing else.
 class_name NPCTrafficManager extends BaseManager
 
+## Server: a player passed a traffic rider close without hitting it — TrickManager scores it.
+signal player_near_missed(player: PlayerEntity)
+
 @export var level_manager: LevelManager
 ## Used to crash a player a traffic rider rammed.
 @export var spawn_manager: SpawnManager
@@ -269,6 +272,7 @@ func rpc_spawn_npc(npc_id: int, skin_index: int, pos: Vector3, basis: Basis):
 	_next_lod_ms = 0
 	var traffic_state := _traffic_state(npc_id)
 	traffic_state.crashed.connect(_on_npc_crashed.bind(npc_id))
+	traffic_state.near_missed.connect(player_near_missed.emit)
 	npc.driving = true
 	# StateMachine._ready defers its own transition into the idle state — queue
 	# ours behind it so the rider isn't flipped straight back to idle.

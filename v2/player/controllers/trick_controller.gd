@@ -75,6 +75,16 @@ const BOOST_PER_AIR_TRICK: float = 0.5
 ## One-time score for touching down from a real jump straight into a wheelie or stoppie. Its boost
 ## reuses BOOST_PER_AIR_TRICK. Const (rollback).
 const LANDING_TRICK_SCORE: float = 3.0
+## Near miss (passing traffic close, see NPCTrafficState) score by the HUD's speed: nothing under
+## NEAR_MISS_MIN_SPEED, NEAR_MISS_SCORE up to NEAR_MISS_MAX_SPEED, NEAR_MISS_MAX_SCORE past it.
+## Each one also counts as NEAR_MISS_COMBO_SECS of trick time, so it can open a combo on its own.
+## Consts (rollback).
+const NEAR_MISS_MIN_SPEED: float = 20.0
+const NEAR_MISS_MAX_SPEED: float = 60.0
+const NEAR_MISS_SCORE: float = 2.0
+const NEAR_MISS_MAX_SCORE: float = 4.0
+const NEAR_MISS_COMBO_SECS: float = 1.0
+const BOOST_PER_NEAR_MISS: float = 0.25
 ## A cam flick released before this is a tap; holding longer is a HOLD gesture. Const (rollback):
 ## byte-identical on every peer. Raising it makes the tap more forgiving but delays holds.
 const TAP_TRICK_MAX_SECS: float = 0.25
@@ -322,6 +332,20 @@ func _award_trick_landing():
 		not movement_controller.is_on_floor
 		and movement_controller.air_time >= AIR_TRICK_MIN_AIRTIME
 	)
+
+
+## Called from PlayerEntity's rollback tick (rb_near_miss). TrickManager only banks a combo whose
+## combo_time ran, hence the time bump.
+func on_near_miss(score: float):
+	combo_time += NEAR_MISS_COMBO_SECS
+	combo_score += score
+	_award_trick_boost(BOOST_PER_NEAR_MISS)
+
+
+static func near_miss_score(speed: float) -> float:
+	if speed < NEAR_MISS_MIN_SPEED:
+		return 0.0
+	return NEAR_MISS_MAX_SCORE if speed > NEAR_MISS_MAX_SPEED else NEAR_MISS_SCORE
 
 
 ## Add a lump of trick boost, scaled by the current combo multiplier. Tracked in combo_boost_earned

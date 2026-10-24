@@ -238,6 +238,17 @@ func grant_boost(player_peer_id: int):
 	get_player_by_peer_id(player_peer_id).rb_add_boost = true
 
 
+## Set player's rb_near_miss on every peer so each adds the score to its combo in its rollback tick
+## (combo_score is synced state). Server only — sent by TrickManager when a rider passes traffic close.
+@rpc("any_peer", "call_local", "reliable")
+func near_miss_player(player_peer_id: int, score: float):
+	if !_sender_is_server():
+		return
+	var player := get_player_by_peer_id(player_peer_id)
+	player.rb_near_miss_score = score
+	player.rb_near_miss = true
+
+
 ## Bat pickup effect: every peer plays the swing anim on the collector; the server also wobbles
 ## any other rider within range once per swing over the duration. Sent by PickupSpawner.
 @rpc("any_peer", "call_local", "reliable")

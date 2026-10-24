@@ -8,6 +8,8 @@ class_name NPCTrafficState extends State
 ## Hit another racer — the manager wipes the rider out, respawns it, and takes
 ## the racer we hit down with us if it's a player.
 signal crashed(victim: Node3D)
+## A player passed through our NearMissArea and out again without crashing.
+signal near_missed(player: PlayerEntity)
 
 @export var npc: NPCRiderEntity
 ## A racer within this range and forward cone that's slower than us gets
@@ -36,6 +38,8 @@ var _claimed := -1
 # Junction whose arrival queue we're in
 var _queued: JunctionState
 var _wait_time := 0.0
+# Player inside NearMissArea -> its crash_count on the way in
+var _passing: Dictionary[Node3D, int] = {}
 
 
 func Enter(_state_context: StateContext):
@@ -43,6 +47,8 @@ func Enter(_state_context: StateContext):
 		return
 	npc.contact_area.body_entered.connect(_on_contact)
 	npc.contact_area.area_entered.connect(_on_contact)
+	npc.near_miss_area.body_entered.connect(_on_near_miss_entered)
+	npc.near_miss_area.body_exited.connect(_on_near_miss_exited)
 
 
 func Exit(_state_context: StateContext):
@@ -50,6 +56,9 @@ func Exit(_state_context: StateContext):
 		return
 	npc.contact_area.body_entered.disconnect(_on_contact)
 	npc.contact_area.area_entered.disconnect(_on_contact)
+	npc.near_miss_area.body_entered.disconnect(_on_near_miss_entered)
+	npc.near_miss_area.body_exited.disconnect(_on_near_miss_exited)
+	_passing.clear()
 	set_contact(false)
 	_leave_junction()
 
@@ -58,6 +67,7 @@ func Exit(_state_context: StateContext):
 func set_contact(on: bool) -> void:
 	npc.contact_area.set_deferred("monitoring", on)
 	npc.contact_area.set_deferred("monitorable", on)
+	npc.near_miss_area.set_deferred("monitoring", on)
 
 
 func Physics_Update(delta: float):
@@ -166,6 +176,23 @@ func _on_contact(other: Node3D) -> void:
 	if racer is not PlayerEntity and (npc.velocity - racer.velocity).length() < contact_min_speed_delta:
 		return
 	crashed.emit(racer)
+
+
+func _on_near_miss_entered(body: Node3D) -> void:
+	# The crash_collision mask also catches level obstacles
+	if body is PlayerEntity:
+		_passing[body] = body.crash_count
+
+
+func _on_near_miss_exited(body: Node3D) -> void:
+	# Untracked: an obstacle, or a player already inside when this state cleared _passing
+	if !_passing.has(body):
+		return
+	var clean: bool = _passing[body] == body.crash_count and !body.is_crashed
+	_passing.erase(body)
+	# A crash since entering (into us or anything else) or a despawn mid-pass isn't a near miss
+	if clean and !body.is_queued_for_deletion():
+		near_missed.emit(body)
 
 
 func _get_configuration_warnings() -> PackedStringArray:

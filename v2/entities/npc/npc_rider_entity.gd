@@ -78,12 +78,16 @@ const NET_SNAP_DISTANCE: float = 25.0
 const NET_LERP_SPEED: float = 12.0
 ## How far short of a stop point the rider's centre halts — about a car's half length.
 const STOP_LINE_BUFFER: float = 2.5
+## Metres NearMissArea reaches past the collision shape — a player leaving it uncrashed passed us close.
+const NEAR_MISS_MARGIN: float = 1.0
 
 @onready var visual_root: RiderVisual = %VisualRoot
 @onready var name_label: Label3D = %NameLabel
 @onready var collision_shape_3d: CollisionShape3D = $CollisionShape3D
 @onready var contact_area: Area3D = $ContactArea
 @onready var contact_shape: CollisionShape3D = $ContactArea/CollisionShape3D
+@onready var near_miss_area: Area3D = $NearMissArea
+@onready var near_miss_shape: CollisionShape3D = $NearMissArea/CollisionShape3D
 @onready var synchronizer: MultiplayerSynchronizer = $MultiplayerSynchronizer
 
 ## Only the half this vehicle actually uses survives — see _enter_tree.
@@ -565,6 +569,20 @@ func _init_collision_shape() -> void:
 	collision_shape_3d.scale = definition.collision_scale_multiplier
 	contact_shape.shape = collision_shape_3d.shape
 	contact_shape.transform = collision_shape_3d.transform
+	near_miss_shape.shape = _grown_shape(collision_shape_3d.shape, NEAR_MISS_MARGIN)
+	near_miss_shape.transform = collision_shape_3d.transform
+
+
+## shape grown by margin on every side — a box (car) or capsule (bike), the only two in use.
+func _grown_shape(shape: Shape3D, margin: float) -> Shape3D:
+	if shape is BoxShape3D:
+		var box := BoxShape3D.new()
+		box.size = shape.size + Vector3.ONE * margin * 2.0
+		return box
+	var capsule := CapsuleShape3D.new()
+	capsule.radius = shape.radius + margin
+	capsule.height = shape.height + margin * 2.0
+	return capsule
 
 
 func _get_configuration_warnings() -> PackedStringArray:

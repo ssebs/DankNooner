@@ -20,6 +20,7 @@ signal combo_voided(peer_id: int, lost_duration: float, lost_points: float)
 @export var spawn_manager: SpawnManager
 @export var gamemode_manager: GamemodeManager
 @export var riding_hud_state: RidingHUDState
+@export var npc_traffic_manager: NPCTrafficManager
 
 @export_group("Scoring")
 ## Points per unit of TrickController.combo_score (a 1.0 held trick earns this per second), before
@@ -40,6 +41,7 @@ func _ready():
 	spawn_manager.player_spawned.connect(_on_player_spawned)
 	gamemode_manager.player_disconnected.connect(_on_player_disconnected)
 	gamemode_manager.match_ended.connect(_on_match_ended)
+	npc_traffic_manager.player_near_missed.connect(_on_player_near_missed)
 
 
 func _process(_delta: float):
@@ -153,6 +155,18 @@ func _on_player_disconnected(peer_id: int):
 func _on_match_ended():
 	_peer_states.clear()
 	_bonus_tricks.clear()
+
+
+## Server. The score rides into the rider's combo via the rollback tick (see SpawnManager).
+func _on_player_near_missed(player: PlayerEntity):
+	var score := TrickController.near_miss_score(player.movement_controller.speed)
+	# Too slow to count — no bonus is intentional
+	if score <= 0.0:
+		return
+	var peer_id := int(str(player.name))
+	spawn_manager.near_miss_player.rpc(peer_id, score)
+	var key := "CALLOUT_NEAR_MISS" if score < TrickController.NEAR_MISS_MAX_SCORE else "CALLOUT_CLOSE_CALL"
+	riding_hud_state.push_callout(peer_id, tr(key))
 #endregion
 
 
@@ -165,5 +179,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("gamemode_manager must not be empty")
 	if riding_hud_state == null:
 		issues.append("riding_hud_state must not be empty")
+	if npc_traffic_manager == null:
+		issues.append("npc_traffic_manager must not be empty")
 
 	return issues

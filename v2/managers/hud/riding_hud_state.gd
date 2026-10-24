@@ -596,6 +596,11 @@ func push_callout_all(text: String) -> void:
 	_rpc_callout.rpc(text)
 
 
+## Server-side: show a (pre-localized) callout on one rider's HUD.
+func push_callout(peer_id: int, text: String) -> void:
+	_rpc_callout.rpc_id(peer_id, text)
+
+
 @rpc("call_local", "reliable")
 func _rpc_callout(text: String):
 	_trick_popups.pop_callout(text)

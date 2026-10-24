@@ -53,6 +53,16 @@ A crash should cost you the combo you were in the middle of, not boost you alrea
 
 `PlayerEntity._apply_respawn_state()` then hands the claim to `BoostController.apply_crash_void()`, which subtracts it from `boost_amount` (clamped at zero). It must run **before** the `do_reset()` loop in that same function, which is what clears the combo state it depends on.
 
+### Near misses
+
+Passing traffic close without hitting it scores into the combo like a one-time trick.
+
+- **Detection (server):** each traffic rider has a `NearMissArea`, its collision shape grown by `NPCRiderEntity.NEAR_MISS_MARGIN` on every side, toggled with `ContactArea` by the traffic LOD. `NPCTrafficState` records a player's `crash_count` on entry; leaving with it unchanged (and not crashed) emits `near_missed` → `NPCTrafficManager.player_near_missed`.
+- **Scoring (server):** `TrickManager` tiers the player's HUD speed via `TrickController.near_miss_score()`, then sends `SpawnManager.near_miss_player` (score) and a per-rider callout.
+- **Award (rollback):** `rb_near_miss` → `TrickController.on_near_miss()` adds the score, `NEAR_MISS_COMBO_SECS` of combo time (so it opens a combo on its own — `TrickManager` only banks one whose `combo_time` ran) and boost. Re-applied on resim of its tick, like `rb_add_boost`.
+
+Traffic only — race bots and animals don't count.
+
 ## Tunables
 
 > Values live in the source — this lists what each knob *does*, not what it's currently set to.
@@ -69,6 +79,8 @@ Consts, deliberately **not** `@export`: this code runs inside the rollback tick 
 | `HELD_TRICK_SCORE` | Per-trick score earned per second while a held trick is active. |
 | `ONE_TIME_TRICK_SCORE` | Per-trick score banked once when a one-time trick (flip, kickflip…) starts. |
 | `LANDING_TRICK_SCORE` | Score banked when a real jump (past `AIR_TRICK_MIN_AIRTIME`) touches down past the wheelie or stoppie threshold. Also awards `BOOST_PER_AIR_TRICK`. |
+| `NEAR_MISS_MIN_SPEED` / `NEAR_MISS_MAX_SPEED` | HUD speed tiers: under min scores nothing, up to max scores `NEAR_MISS_SCORE`, past it `NEAR_MISS_MAX_SCORE`. |
+| `NEAR_MISS_COMBO_SECS` / `BOOST_PER_NEAR_MISS` | Combo time and boost (before multiplier) each near miss adds. |
 
 **Keep `COMBO_MULT_THRESHOLDS` in the same ballpark as the meter fill time implied by `BOOST_PER_SEC`.** The gauge is the only feedback the player can see, so a multiplier that steps far behind it reads as broken. Changing one without re-checking the other has already caused a false bug report once.
 
