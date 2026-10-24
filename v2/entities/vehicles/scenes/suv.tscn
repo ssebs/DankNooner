@@ -24,6 +24,16 @@ meshes = [NodePath("SUV/SUV_Cube")]
 [node name="SUV" parent="." unique_id=1067595615 instance=ExtResource("3_l24hu")]
 
 [node name="SUV_Cube" parent="SUV" index="0" unique_id=557581072]
+layers = 4
 surface_material_override/0 = SubResource("StandardMaterial3D_l24hu")
+
+[node name="SUV_BackWheels_Cylinder_009" parent="SUV" index="1"]
+layers = 4
+
+[node name="SUV_FrontLeftWheel_Cylinder_010" parent="SUV" index="2"]
+layers = 4
+
+[node name="SUV_FrontRightWheel_Cylinder_005" parent="SUV" index="3"]
+layers = 4
 
 [editable path="SUV"]

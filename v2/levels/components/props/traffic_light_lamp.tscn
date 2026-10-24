@@ -12,4 +12,5 @@ script = ExtResource("1_lamp")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 unique_name_in_owner = true
+layers = 4
 mesh = SubResource("CylinderMesh_lamp")

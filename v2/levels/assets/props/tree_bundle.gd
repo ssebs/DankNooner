@@ -114,4 +114,7 @@ func _build():
 			tree.position = Vector3(pos.x, 0, pos.y)
 			tree.rotation.y = rng.randf() * TAU
 			tree.scale = Vector3.ONE * rng.randf_range(1.0, 1.75)
+			# exclude_from_occluder render layer: still culled, but never baked as an occluder
+			var mesh: MeshInstance3D = tree.find_children("*", "MeshInstance3D")[0]
+			mesh.layers = 4
 			add_child(tree)

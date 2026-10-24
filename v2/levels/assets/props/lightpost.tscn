@@ -85,9 +85,11 @@ radius = 0.25
 collision_layer = 3
 
 [node name="lightPostModern(Clone)" type="MeshInstance3D" parent="." unique_id=482373573]
+layers = 4
 mesh = SubResource("ArrayMesh_migb7")
 
 [node name="Sphere" type="MeshInstance3D" parent="." unique_id=132923817]
+layers = 4
 transform = Transform3D(0.5529974, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.167846, 1.5826325)
 mesh = SubResource("ArrayMesh_thsxa")
 

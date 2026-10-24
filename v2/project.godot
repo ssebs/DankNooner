@@ -282,6 +282,7 @@ locale/translations=PackedStringArray("res://localization/localization.en.transl
 [layer_names]
 
 3d_render/layer_2="minimap"
+3d_render/layer_3="exclude_from_occluder"
 3d_physics/layer_2="crash_collision"
 3d_physics/layer_3="ragdoll_bones"
 3d_physics/layer_4="event_start"

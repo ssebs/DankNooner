@@ -141,11 +141,21 @@ meshes = [NodePath("Car-unqqkULtRU/NormalCar2_Cube_002"), NodePath("Car-unqqkULt
 [node name="Car-unqqkULtRU" parent="." unique_id=799729513 instance=ExtResource("3_l2b5r")]
 
 [node name="NormalCar2_Cube_002" parent="Car-unqqkULtRU" index="0" unique_id=801525222]
+layers = 4
 surface_material_override/0 = SubResource("StandardMaterial3D_u551j")
 surface_material_override/1 = SubResource("StandardMaterial3D_puuyu")
 surface_material_override/2 = SubResource("StandardMaterial3D_fnupp")
 surface_material_override/3 = SubResource("StandardMaterial3D_w6rtf")
 surface_material_override/4 = SubResource("StandardMaterial3D_vsib8")
 surface_material_override/5 = SubResource("StandardMaterial3D_83v6i")
+
+[node name="NormalCar2_BackWheels_Cylinder_003" parent="Car-unqqkULtRU" index="1"]
+layers = 4
+
+[node name="NormalCar2_FrontLeftWheel_Cylinder_015" parent="Car-unqqkULtRU" index="2"]
+layers = 4
+
+[node name="NormalCar2_FrontRightWheel_Cylinder_016" parent="Car-unqqkULtRU" index="3"]
+layers = 4
 
 [editable path="Car-unqqkULtRU"]

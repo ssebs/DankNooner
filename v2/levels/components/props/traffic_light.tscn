@@ -16,6 +16,9 @@ transform = Transform3D(-2, 0, 0, 0, 2, 0, 0, 0, -2, 0, 0, 0)
 
 [node name="TrafficLightMesh" parent="Model" instance=ExtResource("2_model")]
 
+[node name="TrafficLight_2" parent="Model/TrafficLightMesh/RootNode" index="0"]
+layers = 4
+
 [node name="RedLamp" parent="Model" unique_id=2014046368 instance=ExtResource("3_lamp")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -3.764, 4.091, 0.1)
@@ -36,3 +39,5 @@ collision_layer = 3
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Model/StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 0)
 shape = SubResource("CylinderShape3D_pole")
+
+[editable path="Model/TrafficLightMesh"]

@@ -25,6 +25,16 @@ do_not_use_color = true
 [node name="Taxi" parent="." unique_id=1653174780 instance=ExtResource("2_4nr0m")]
 
 [node name="Taxi_Cube_009" parent="Taxi" index="0" unique_id=85110398]
+layers = 4
 surface_material_override/0 = SubResource("StandardMaterial3D_wcbnl")
+
+[node name="Taxi_BackWheels_Cube_010" parent="Taxi" index="1"]
+layers = 4
+
+[node name="Taxi_FrontLeftWheel_Cube_013" parent="Taxi" index="2"]
+layers = 4
+
+[node name="Taxi_FrontRightWheel_Cube_014" parent="Taxi" index="3"]
+layers = 4
 
 [editable path="Taxi"]

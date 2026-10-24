@@ -2,8 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_kyn7p"]
 [ext_resource type="Script" uid="uid://vc1gxo6x0kdc" path="res://levels/components/interactable/fuel_up_minigame.gd" id="2_fuelup"]
+[ext_resource type="Shader" uid="uid://bwfk4b7mg5rv4" path="res://levels/assets/graybox/neon_edges.gdshader" id="3_7j6ok"]
 [ext_resource type="Material" uid="uid://k0dialwj5i42" path="res://levels/assets/props/neon_blue.tres" id="3_ypgq6"]
 [ext_resource type="Texture2D" uid="uid://cjliervng0gbt" path="res://levels/assets/graybox/red.png" id="4_hdsq7"]
+[ext_resource type="Texture2D" uid="uid://2ikkccys8b6w" path="res://levels/assets/graybox/texture_04.png" id="4_i6kcm"]
 
 [sub_resource type="Animation" id="Animation_0blfn"]
 length = 0.001
@@ -98,6 +100,56 @@ _data = {
 &"loop": SubResource("Animation_edjov")
 }
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ta7nf"]
+render_priority = 0
+shader = ExtResource("3_7j6ok")
+shader_parameter/edge_color = Color(0.25490198, 0.6862745, 1, 1)
+shader_parameter/edge_energy = 4.0
+shader_parameter/edge_width = 0.06
+shader_parameter/size = Vector3(1.5, 1.5, 0.76)
+
+[sub_resource type="BoxMesh" id="BoxMesh_62tkk"]
+size = Vector3(1.5, 1.5, 0.76)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wm34l"]
+albedo_color = Color(2.113, 1.029, 2.418, 1)
+albedo_texture = ExtResource("4_i6kcm")
+uv1_triplanar = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_25apl"]
+size = Vector3(1.5, 1.5, 0.76)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3wjr0"]
+render_priority = 0
+shader = ExtResource("3_7j6ok")
+shader_parameter/edge_color = Color(0.25490198, 0.6862745, 1, 1)
+shader_parameter/edge_energy = 4.0
+shader_parameter/edge_width = 0.06
+shader_parameter/size = Vector3(1.5, 0.6, 0.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_oc2hq"]
+size = Vector3(1.5, 0.6, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lppnx"]
+size = Vector3(1.5, 0.6, 0.8)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mjim1"]
+render_priority = 0
+shader = ExtResource("3_7j6ok")
+shader_parameter/edge_color = Color(0.25490198, 0.6862745, 1, 1)
+shader_parameter/edge_energy = 4.0
+shader_parameter/edge_width = 0.06
+shader_parameter/size = Vector3(0.25, 1, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_juatd"]
+size = Vector3(0.25, 1, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5g2wu"]
+size = Vector3(0.25, 1, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ec60c"]
+size = Vector3(0.25, 1, 0.5)
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kyn7p"]
 radius = 0.125
 height = 0.6
@@ -189,6 +241,15 @@ depth = 0.76
 color_preset = 5
 neon_edges = true
 
+[node name="MeshInstance3D" parent="pump2" index="0" unique_id=1922891733]
+layers = 4
+material_overlay = SubResource("ShaderMaterial_ta7nf")
+mesh = SubResource("BoxMesh_62tkk")
+surface_material_override/0 = SubResource("StandardMaterial3D_wm34l")
+
+[node name="CollisionShape3D" parent="pump2" index="1" unique_id=1147968358]
+shape = SubResource("BoxShape3D_25apl")
+
 [node name="pump5" parent="." unique_id=1912590253 instance=ExtResource("1_kyn7p")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7021382, 0)
 collision_layer = 3
@@ -198,6 +259,15 @@ depth = 0.8
 color_preset = 5
 neon_edges = true
 
+[node name="MeshInstance3D" parent="pump5" index="0" unique_id=1922891733]
+layers = 4
+material_overlay = SubResource("ShaderMaterial_3wjr0")
+mesh = SubResource("BoxMesh_oc2hq")
+surface_material_override/0 = SubResource("StandardMaterial3D_wm34l")
+
+[node name="CollisionShape3D" parent="pump5" index="1" unique_id=1147968358]
+shape = SubResource("BoxShape3D_lppnx")
+
 [node name="pump3" parent="." unique_id=175949848 instance=ExtResource("1_kyn7p")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.62, 1.95, 0)
 collision_layer = 3
@@ -206,6 +276,15 @@ depth = 0.5
 color_preset = 5
 neon_edges = true
 
+[node name="MeshInstance3D" parent="pump3" index="0" unique_id=1922891733]
+layers = 4
+material_overlay = SubResource("ShaderMaterial_mjim1")
+mesh = SubResource("BoxMesh_juatd")
+surface_material_override/0 = SubResource("StandardMaterial3D_wm34l")
+
+[node name="CollisionShape3D" parent="pump3" index="1" unique_id=1147968358]
+shape = SubResource("BoxShape3D_5g2wu")
+
 [node name="pump4" parent="." unique_id=2144116125 instance=ExtResource("1_kyn7p")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.62, 1.95, 0)
 collision_layer = 3
@@ -213,6 +292,15 @@ width = 0.25
 depth = 0.5
 color_preset = 5
 neon_edges = true
+
+[node name="MeshInstance3D" parent="pump4" index="0" unique_id=1922891733]
+layers = 4
+material_overlay = SubResource("ShaderMaterial_mjim1")
+mesh = SubResource("BoxMesh_juatd")
+surface_material_override/0 = SubResource("StandardMaterial3D_wm34l")
+
+[node name="CollisionShape3D" parent="pump4" index="1" unique_id=1147968358]
+shape = SubResource("BoxShape3D_ec60c")
 
 [node name="HandleArea" type="Area3D" parent="." unique_id=1410637629]
 unique_name_in_owner = true
@@ -230,6 +318,9 @@ width = 0.1
 height = 0.5
 depth = 0.15
 
+[node name="MeshInstance3D" parent="HandleArea/Handle" index="0"]
+layers = 4
+
 [node name="HandleMarkerHose" type="Marker3D" parent="HandleArea/Handle" unique_id=486557463]
 unique_name_in_owner = true
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.0011457801, -0.25311095, 2.1354862e-09)
@@ -246,6 +337,9 @@ width = 0.05
 height = 0.18
 depth = 0.05
 color_preset = 1
+
+[node name="MeshInstance3D" parent="HandleArea/Handle2" index="0"]
+layers = 4
 
 [node name="HandleMarkerTip" type="Marker3D" parent="HandleArea/Handle2" unique_id=1999055910]
 unique_name_in_owner = true
@@ -270,6 +364,7 @@ shape = SubResource("SphereShape3D_7jvdf")
 
 [node name="GasCapMeshCircle" type="MeshInstance3D" parent="GasCapArea" unique_id=1865431248]
 unique_name_in_owner = true
+layers = 4
 mesh = SubResource("TorusMesh_7jvdf")
 surface_material_override/0 = SubResource("StandardMaterial3D_ypgq6")
 
@@ -320,6 +415,7 @@ shape = SubResource("CylinderShape3D_hdsq7")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerStartCircle/CollisionShape3D" unique_id=443569514]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9, 0)
+layers = 4
 mesh = SubResource("TorusMesh_etntc")
 
 [node name="EndBtn" type="Area3D" parent="." unique_id=427688480]
@@ -333,4 +429,12 @@ shape = SubResource("SphereShape3D_wig4y")
 
 [node name="EndBtnMesh" type="MeshInstance3D" parent="EndBtn/CollisionShape3D" unique_id=1503376165]
 unique_name_in_owner = true
+layers = 4
 mesh = SubResource("CylinderMesh_5e4dq")
+
+[editable path="pump2"]
+[editable path="pump5"]
+[editable path="pump3"]
+[editable path="pump4"]
+[editable path="HandleArea/Handle"]
+[editable path="HandleArea/Handle2"]

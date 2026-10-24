@@ -3,6 +3,7 @@
 > They're loosely priority-ordered, tails are wishes. Items go stale; verify against code.
 - [In-Progress 🚨](#in-progress-)
 - [Notes 📝](#notes-)
+- [https://www.myinstants.com/en/instant/gah-dayum-29041/](#httpswwwmyinstantscomeninstantgah-dayum-29041)
 - [Tasks 📋](#tasks-)
 	- [Controller UX Improvements](#controller-ux-improvements)
 	- [HUD Improvements](#hud-improvements)
@@ -47,6 +48,22 @@
 ## Notes 📝
 > Stuff to move ASAP
 
+Hud should show btn prompts 
+
+Figure out open source vs steam demo vs full game vs dlc
+    Make just the demo open source, new repo for full version 
+
+Demo = start with tutorial
+
+Turn down music when going to settings 
+Horns should be audible thru music
+
+Make.items in bubble easier to see what they are
+    Maybe instead of bubble use ring like start circles, but make it gold colored
+
+https://www.myinstants.com/en/instant/cat-is-calling-you-iphone-39599/
+https://www.myinstants.com/en/instant/yapapa-cat-15221/
+https://www.myinstants.com/en/instant/gah-dayum-29041/
 ---
 
 ## Tasks 📋
@@ -222,6 +239,8 @@
 ---
 
 ## Done ✅
+- [x] Gas pump occlusion is broken
+
 - [x] Users shouldn't have to press Done when setting a color, it should auto save.
 
 - [x] NPC traffic during race? Needs to clip thru existing wall barriers for now
