@@ -31,6 +31,7 @@ var default_settings: Dictionary = {
 	"resolution_scale": 1.0,
 	"gamma": 0.5,
 	"fullscreen_mode": "borderless", # "fullscreen" or "borderless" or "windowed" or "maximized"
+	"vsync": true,
 	"master_vol": 0.8,
 	"music_vol": 1.0,
 	"menu_vol": 1.0,

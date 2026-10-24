@@ -5,27 +5,34 @@ class_name JunctionState extends RefCounted
 var network: TrafficNetworkData
 # Rider -> turn lane it entered on
 var _inside := {}
-# STOP: riders stopped at a line, in arrival order
-var _arrivals: Array[Node3D] = []
+# Riders held at a line -> turn lane they're waiting on, in arrival order
+var _arrivals := {}
 
 
 func _init(network_data: TrafficNetworkData):
 	network = network_data
 
 
-func may_enter(turn_lane: int) -> bool:
+## No conflicting turn is occupied, or waited on by anyone who arrived before `rider`.
+func may_enter(rider: Node3D, turn_lane: int) -> bool:
 	var conflicts := network.lanes[turn_lane].conflicts
 	for lane in _inside.values():
 		if lane in conflicts:
 			return false
+	# First come first served, or a stream of riders claiming ahead starves a crossing turn
+	for waiting in _arrivals:
+		if waiting == rider:
+			break
+		if _arrivals[waiting] in conflicts:
+			return false
 	return true
 
 
-## STOP: queues a stopped rider; true once it's first in line.
-func arrive(rider: Node3D) -> bool:
-	if rider not in _arrivals:
-		_arrivals.append(rider)
-	return _arrivals[0] == rider
+## Queues a rider held at a line; true once it's first in line.
+func arrive(rider: Node3D, turn_lane: int) -> bool:
+	if not _arrivals.has(rider):
+		_arrivals[rider] = turn_lane
+	return _arrivals.keys()[0] == rider
 
 
 func enter(rider: Node3D, turn_lane: int):

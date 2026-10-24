@@ -45,6 +45,9 @@ func _input(event: InputEvent):
 
 func _on_all_settings_changed(new_settings: Dictionary):
 	_apply_window_mode(new_settings["fullscreen_mode"])
+	DisplayServer.window_set_vsync_mode(
+		DisplayServer.VSYNC_ENABLED if new_settings["vsync"] else DisplayServer.VSYNC_DISABLED
+	)
 	TranslationServer.set_locale(new_settings["language"])
 	ControlBindings.apply(new_settings["controls"])
 

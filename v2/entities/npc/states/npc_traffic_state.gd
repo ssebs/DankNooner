@@ -18,7 +18,8 @@ signal crashed(victim: Node3D)
 ## Relative speed (m/s) that makes rider-to-rider contact an actual impact — riders
 ## queueing nose-to-tail brush at matched speed and shouldn't both wipe out for it.
 @export var contact_min_speed_delta: float = 6.0
-## Waited this long at a stop line, go anyway. Breaks deadlocks the gate can't see.
+## Waited this long at a stop line, go anyway unless a conflicting turn is occupied. Breaks
+## deadlocks the gate can't see.
 @export var junction_timeout: float = 8.0
 
 ## A stopped rider this far into our exit lane leaves no room past the box: our half
@@ -32,7 +33,7 @@ var junctions: Array[JunctionState]
 
 # Turn lane we've been let onto, -1 when none
 var _claimed := -1
-# Stop-sign junction whose arrival queue we're in
+# Junction whose arrival queue we're in
 var _queued: JunctionState
 var _wait_time := 0.0
 
@@ -73,7 +74,7 @@ func Physics_Update(delta: float):
 	var target_speed := npc.lane_speed(follower.point_ahead)
 	# Close in on the rider ahead only as fast as we can still stop a buffer behind it.
 	# The second buffer is its half length.
-	var blocker := npc.nearest_racer_ahead(follow_detect_range, follow_detect_angle, false)
+	var blocker := npc.nearest_racer_ahead(follow_detect_range, follow_detect_angle, follower.point_ahead)
 	if blocker != null:
 		var gap := npc.global_position.distance_to(blocker.global_position) - NPCRiderEntity.STOP_LINE_BUFFER
 		target_speed = minf(target_speed, npc.horizontal_speed(blocker) + npc.stop_line_speed(gap))
@@ -99,9 +100,16 @@ func _gate(target_speed: float, delta: float) -> float:
 	# A red holds however long we've waited; the timeout is for deadlocks the gate can't see
 	var lit := network.control(turn) == TrafficIntersection.ControlType.LIGHT
 	if lit and network.light(turn, NetworkTime.time) != TrafficJunctionData.Light.GREEN:
+		# Out of line while held, or we'd hold up the cross street's green
+		_leave_junction()
 		return line_speed
 	_wait_time += delta
-	var let_in := _stop_sign_lets_in(junction, turn) and junction.may_enter(turn) and _exit_clear(turn)
+	_queued = junction
+	var first_in_line := junction.arrive(npc, turn)
+	# A conflicting rider inside or ahead in line holds too: forcing past one is how the box gridlocks
+	if !junction.may_enter(npc, turn):
+		return line_speed
+	var let_in := _stop_sign_lets_in(turn, first_in_line) and _exit_clear(turn)
 	if _wait_time < junction_timeout and !let_in:
 		return line_speed
 	# Claimed on grant, not on crossing the line, so two riders can't both see it empty
@@ -113,17 +121,14 @@ func _gate(target_speed: float, delta: float) -> float:
 
 
 ## STOP: a full stop at the line, then first come first served.
-func _stop_sign_lets_in(junction: JunctionState, turn: int) -> bool:
+func _stop_sign_lets_in(turn: int, first_in_line: bool) -> bool:
 	if follower.network.control(turn) != TrafficIntersection.ControlType.STOP:
 		return true
-	if !is_zero_approx(npc.current_speed):
-		return false
-	_queued = junction
-	return junction.arrive(npc)
+	return is_zero_approx(npc.current_speed) and first_in_line
 
 
 func _leave_junction() -> void:
-	# A wreck mustn't hold its place in a stop-sign queue either
+	# A wreck mustn't hold its place in an arrival queue either
 	if _queued:
 		_queued.leave(npc)
 		_queued = null

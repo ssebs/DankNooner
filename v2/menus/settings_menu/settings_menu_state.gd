@@ -7,7 +7,7 @@ class_name SettingsMenuState extends MenuState
 
 ## Settings keys each tab's Reset restores, by tab index. Controls reset through ControlsTab.
 const TAB_SETTING_KEYS: Array = [
-	["signal_relay_host", "resolution_scale", "gamma", "fullscreen_mode", "language"],
+	["signal_relay_host", "resolution_scale", "gamma", "fullscreen_mode", "vsync", "language"],
 	["master_vol", "music_vol", "sfx_vol", "menu_vol", "mute", "mute_unfocused"],
 	["difficulty", "joy_cam_sens", "mouse_cam_sens", "invert_cam", "auto_transmission"],
 ]
@@ -20,6 +20,7 @@ const TAB_SETTING_KEYS: Array = [
 
 @onready var signal_host_entry: LineEdit = %SignalHostEntry
 @onready var window_mode_opt: OptionButton = %WindowModeOpt
+@onready var vsync_check: CheckBox = %VSyncCheck
 @onready var language_opt: OptionButton = %LanguageOpt
 @onready var master_vol_slider: HSlider = %MasterVolSlider
 @onready var music_vol_slider: HSlider = %MusicVolSlider
@@ -108,6 +109,7 @@ func load_settings_into_ui(settings: Dictionary):
 		if window_mode_opt.get_item_id(i) == wmode_id:
 			window_mode_opt.select(i)
 			break
+	vsync_check.button_pressed = settings["vsync"]
 
 	for i in language_opt.item_count:
 		if language_opt.get_item_metadata(i) == settings["language"]:
@@ -136,6 +138,7 @@ func _settings_from_ui() -> Dictionary:
 	return {
 		"signal_relay_host": signal_host_entry.text,
 		"fullscreen_mode": SettingsManager.windowmode_to_str(window_mode_opt.get_selected_id()),
+		"vsync": vsync_check.button_pressed,
 		"language": language_opt.get_item_metadata(language_opt.selected),
 		"master_vol": master_vol_slider.value,
 		"music_vol": music_vol_slider.value,

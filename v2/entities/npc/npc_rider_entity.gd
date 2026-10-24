@@ -374,12 +374,13 @@ func apply_gravity_and_move(delta: float) -> void:
 
 ## Nearest racer within range + forward cone that is slower than us — the one
 ## worth passing / tucking in behind. Null if the road ahead is clear. Scans
-## humans too. Without `slower_only` (traffic) it's any racer not oncoming, so a
-## queue stays held once its speeds match.
+## humans too. Traffic passes its lane's `path` (point_ahead(dist), as in lane_speed) and
+## gets any racer on it not oncoming, so a queue stays held once its speeds match and a
+## racer beside the lane doesn't stop it.
 ## Throttled — this sweeps the whole Racers group, so every rider doing it every tick
 ## makes the pack O(n²) (128 riders ≈ 16k iterations a tick). A reaction delay of a
 ## fraction of a second on "ease off behind the rider ahead" reads as normal driving.
-func nearest_racer_ahead(detect_range: float, detect_angle: float, slower_only := true) -> Node3D:
+func nearest_racer_ahead(detect_range: float, detect_angle: float, path := Callable()) -> Node3D:
 	var now := Time.get_ticks_msec()
 	if now < _blocker_next_scan_ms:
 		# Whoever we found last sweep may have despawned or crashed out since.
@@ -401,10 +402,14 @@ func nearest_racer_ahead(detect_range: float, detect_angle: float, slower_only :
 			continue
 		if forward.dot(to / dist) < detect_angle:
 			continue
-		if slower_only and horizontal_speed(racer) >= current_speed - 1.0:
+		if path.is_null() and horizontal_speed(racer) >= current_speed - 1.0:
 			continue
-		if !slower_only and (racer.velocity as Vector3).dot(forward) < -1.0:
-			continue
+		if path.is_valid():
+			if (racer.velocity as Vector3).dot(forward) < -1.0:
+				continue
+			var on_path: Vector3 = path.call(dist)
+			if (racer.global_position - on_path).slide(Vector3.UP).length() > TrafficNetworkBaker.VEHICLE_WIDTH:
+				continue
 		best = racer
 		best_dist = dist
 	_blocker = best
