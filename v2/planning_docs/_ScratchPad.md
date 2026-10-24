@@ -6,7 +6,6 @@
 
 ### NOW
 
-- [ ] Traffic can pile up and stop at intersections
 
 
 

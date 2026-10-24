@@ -194,10 +194,10 @@ func _ready():
 	# A car has no rider to name. Written on both paths — a hidden label could
 	# otherwise have been saved into the scene by an earlier editor session.
 	name_label.visible = vehicle_type != VehicleType.CAR
+	# Runtime only, unlike PlayerEntity: IKTargets is a child of VisualRoot
+	# here, so running IK in-editor re-poses markers that live in the scene.
+	animation_controller.initialize()
 	if vehicle_type != VehicleType.CAR:
-		# Runtime only, unlike PlayerEntity: IKTargets is a child of VisualRoot
-		# here, so running IK in-editor re-poses markers that live in the scene.
-		animation_controller.initialize()
 		name_label.text = username
 
 	add_to_group(UtilsConstants.GROUPS["Racers"])

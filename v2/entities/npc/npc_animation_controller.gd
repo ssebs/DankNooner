@@ -13,6 +13,8 @@ class_name NPCAnimationController extends Node
 @export var lean_per_yaw_rate: float = 0.5
 @export var wheelie_pitch_deg: float = 35.0
 @export var crash_roll_deg: float = 80.0
+## Cars flip onto their roof instead of falling on their side.
+@export var car_crash_roll_deg: float = 180.0
 @export var rotation_blend_speed: float = 6.0
 ## Past this distance from the active camera the rider's rig stops updating — limb IK is
 ## cosmetic, so a distant rider holding its last pose reads fine. The bike keeps driving,
@@ -36,16 +38,24 @@ var _rig_next_check_ms: int = 0
 ## Called from NPCRiderEntity._ready after skins are applied. Same sequence as
 ## PlayerEntity._init_ik().
 func initialize() -> void:
-	_ik_ctrl = npc.character_skin.ik_controller
-	npc.visual_root.seat()
 	_prev_yaw = npc.rotation.y
 	_initialized = true
+	# A car has no rider to seat
+	if npc.vehicle_type == NPCRiderEntity.VehicleType.CAR:
+		return
+	_ik_ctrl = npc.character_skin.ik_controller
+	npc.visual_root.seat()
 
 
 func _physics_process(delta: float):
 	if !_initialized:
 		return
 	var t := Time.get_ticks_usec()  # PROF: temp
+	# A car has no rig to pose and doesn't lean, it only flips when it crashes
+	if npc.vehicle_type == NPCRiderEntity.VehicleType.CAR:
+		_apply_car_flip(delta)
+		DebugUtils.Prof("npc.anim", t)  # PROF: temp
+		return
 	_update_rig_lod()
 	# Lean/pitch stays on at any distance — it's two lerps on one node, and a bike that
 	# stops leaning through corners is obvious in a way a frozen wrist isn't.
@@ -113,6 +123,15 @@ func _apply_visual_root_rotation(delta: float) -> void:
 	var blend := rotation_blend_speed * delta
 	vr.rotation.z = lerp_angle(vr.rotation.z, target_roll, blend)
 	vr.rotation.x = lerp_angle(vr.rotation.x, target_pitch, blend)
+
+
+func _apply_car_flip(delta: float) -> void:
+	var crashed := npc.npc_state == NPCRiderEntity.NPCState.CRASHED
+	var target_roll := deg_to_rad(car_crash_roll_deg) if crashed else 0.0
+	var vr := npc.visual_root
+	vr.rotation.z = lerp_angle(vr.rotation.z, target_roll, rotation_blend_speed * delta)
+	# Rolling about the base would bury the roof, so lift it as rolling about the hitbox centre would
+	vr.position.y = npc.collision_shape_3d.position.y * (1.0 - cos(vr.rotation.z))
 
 
 func _lean_target() -> float:

@@ -239,6 +239,8 @@ https://www.myinstants.com/en/instant/gah-dayum-29041/
 ---
 
 ## Done ✅
+- [x] Traffic can pile up and stop at intersections
+
 - [x] Gas pump occlusion is broken
 
 - [x] Users shouldn't have to press Done when setting a color, it should auto save.
