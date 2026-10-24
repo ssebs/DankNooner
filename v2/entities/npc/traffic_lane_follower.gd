@@ -43,6 +43,19 @@ func dist_to_junction() -> float:
 	return dist
 
 
+## Each lane on the latched path starting within max_dist, mapped to how far ahead it starts
+## (negative for the one we're on).
+func lanes_ahead(max_dist: float) -> Dictionary[int, float]:
+	var starts: Dictionary[int, float] = {}
+	var at := lane
+	var start := -offset
+	while start < max_dist:
+		starts[at] = start
+		start += network.lane_curve(at).get_baked_length()
+		at = _next_lane(at)
+	return starts
+
+
 ## Moves along the lanes. The rider rides wherever this puts it.
 func advance(dist: float):
 	offset += dist

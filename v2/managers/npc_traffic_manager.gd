@@ -75,6 +75,10 @@ var _network: TrafficNetworkData
 var _road_lanes: Array[int] = []
 ## One per baked junction, shared by every rider's NPCTrafficState.
 var _junctions: Array[JunctionState] = []
+## Traffic on each lane, indexed like TrafficNetworkData.lanes, shared by every NPCTrafficState.
+var _lane_riders: Array[Array] = []
+## Every racer but traffic, shared by every NPCTrafficState — only ever mutated in place.
+var _other_racers: Array = []
 var _next_id: int = FIRST_ID
 ## Server: peers whose player each rider was near on the last LOD pass.
 var _near_peers: Dictionary[int, PackedInt32Array] = {}
@@ -104,6 +108,9 @@ func start_traffic(for_race: bool = false) -> void:
 	_junctions = []
 	for _junction in _network.junctions:
 		_junctions.append(JunctionState.new(_network))
+	_lane_riders = []
+	for _lane in _network.lanes:
+		_lane_riders.append([])
 
 	_build_skins()
 	var settings := level_manager.current_level.traffic_settings
@@ -125,8 +132,11 @@ func start_traffic(for_race: bool = false) -> void:
 		_skin_indices[npc_id] = skin_index
 		rpc_spawn_npc.rpc(npc_id, skin_index, lane_transform.origin, lane_transform.basis)
 		# call_local ran the spawn synchronously, so the rider exists now
-		_traffic_state(npc_id).follower = follower
-		_traffic_state(npc_id).junctions = _junctions
+		var traffic_state := _traffic_state(npc_id)
+		traffic_state.follower = follower
+		traffic_state.junctions = _junctions
+		traffic_state.lane_riders = _lane_riders
+		traffic_state.other_racers = _other_racers
 	DebugUtils.DebugMsg("Spawned %d traffic riders" % _npcs.size())
 
 
@@ -354,9 +364,10 @@ func _physics_process(delta: float) -> void:
 ## Which peers' players each rider is near, applied only where that changed: the far tick,
 ## ContactArea, which peers get its sync stream, and whether the host draws it.
 func _update_lod() -> void:
-	var players := get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Racers"]).filter(
-		func(racer: Node) -> bool: return racer is PlayerEntity
-	)
+	_other_racers.assign(get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Racers"]).filter(
+		func(racer: Node) -> bool: return !racer.is_in_group(UtilsConstants.GROUPS["Traffic"])
+	))
+	var players := _other_racers.filter(func(racer: Node) -> bool: return racer is PlayerEntity)
 	# Remote peers only; the host (1) has no sync stream to cull, just drawing
 	var remote_peers := multiplayer.get_peers()
 	var radius_sq := near_radius * near_radius

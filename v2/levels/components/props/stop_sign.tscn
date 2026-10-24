@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://cqo42gc7ph2in"]
+
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_5cq82"]
+
+[node name="StopSign" type="Node3D" unique_id=23860843]
+
+[node name="GrayBox_StaticBody" parent="." unique_id=1485126779 instance=ExtResource("1_5cq82")]
+width = 0.1
+height = 2.0
+depth = 0.1
+
+[node name="GrayBox_StaticBody2" parent="." unique_id=2025265755 instance=ExtResource("1_5cq82")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+depth = 0.11
+color_preset = 4
