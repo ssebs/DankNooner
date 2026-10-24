@@ -429,12 +429,6 @@ func _live_progress_keys() -> Dictionary[int, float]:
 	return keys
 
 
-## "P2/6".
-func _position_text(peer_id: int) -> String:
-	var total := _live_progress_keys().size()
-	return tr("RACE_POSITION").format({"pos": get_race_position(peer_id), "total": total})
-
-
 func _after_start_or_lap_advance(p: Dictionary) -> void:
 	if p["next_lap_idx"] < lap_checkpoints.size():
 		p["waiting_for"] = WaitFor.LAP_CP
@@ -454,7 +448,8 @@ func _push_lap_hud(peer_id: int, p: Dictionary) -> void:
 	var text := format_time_ms(Time.get_ticks_msec() - p["start_ms"])
 	if total_laps > 1:
 		text = tr("RACE_LAP").format({"current": current_lap, "total": total_laps, "time": text})
-	runner.riding_hud.push_event_progress(peer_id, "%s  -  %s" % [_position_text(peer_id), text])
+	# No place here — the leaderboard (every race type has one) shows it.
+	runner.riding_hud.push_event_progress(peer_id, text)
 
 
 ## "m:ss.cc".

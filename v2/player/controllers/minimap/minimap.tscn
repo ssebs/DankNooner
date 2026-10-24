@@ -9,8 +9,6 @@ background_color = Color(0.25490198, 0.6862745, 1, 1)
 [node name="Minimap" type="PanelContainer" unique_id=407372356]
 offset_right = 220.0
 offset_bottom = 220.0
-offset_transform_enabled = true
-offset_transform_position = Vector2(12, 0)
 mouse_filter = 2
 theme_type_variation = &"HUDPanel"
 script = ExtResource("1_mnmap")

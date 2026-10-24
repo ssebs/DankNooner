@@ -17,6 +17,10 @@ class_name BoostGauge extends Control
 @export var spilled_val: float = 0.0
 ## Exponential smoothing rate for each cell's fill — the raw value steps on network ticks.
 @export var smooth_speed: float = 14.0
+## Stack the cells bottom-up (riding HUD). The spill only draws horizontally.
+@export var vertical: bool = false
+
+const VERTICAL_CELL_SIZE := Vector2(20, 52)
 
 ## Unfilled remainder of a cell.
 const COLOR_EMPTY: Color = Color(0.22, 0.26, 0.30)
@@ -50,6 +54,13 @@ var _blink_t: float = 0.0
 func _ready():
 	for i in _cells.size():
 		_cells[i].draw.connect(_draw_spill.bind(i))
+	if vertical:
+		%Cells.vertical = true
+		for cell: TextureProgressBar in _cells:
+			cell.fill_mode = TextureProgressBar.FILL_BOTTOM_TO_TOP
+			cell.custom_minimum_size = VERTICAL_CELL_SIZE
+			# Cell 0 ends up at the bottom, so the meter fills upward.
+			%Cells.move_child(cell, 0)
 
 
 func _process(delta: float):

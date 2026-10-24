@@ -80,6 +80,8 @@ var _pan_center: Vector3
 var _saved_anchors: Array
 var _saved_offsets: Array
 var _saved_offset_transform
+## move_to_front() reorders siblings; restored so the minimap keeps its slot in the HUD's row.
+var _saved_index: int
 
 
 func _ready():
@@ -145,9 +147,11 @@ func set_expanded(on: bool) -> void:
 		# Escape the parent container, else its next re-sort (e.g. move_to_front) snaps us back.
 		top_level = true
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		_saved_index = get_index()
 		move_to_front()
 	else:
 		_camera.size = zoom
+		get_parent().move_child(self, _saved_index)
 		top_level = false
 		set("offset_transform_enabled", _saved_offset_transform)
 		anchor_left = _saved_anchors[0]

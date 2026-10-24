@@ -9,48 +9,6 @@ const CLEAR_HOLD_MSEC: int = 1000
 const AXIS_BIND_THRESHOLD: float = 0.5
 const CELL_WIDTH: float = 220.0
 
-## Only these buttons/axes are bindable, so every binding has a label or icon.
-const MOUSE_BUTTON_LABELS: Dictionary = {
-	MOUSE_BUTTON_LEFT: "MOUSE_LEFT_LABEL",
-	MOUSE_BUTTON_RIGHT: "MOUSE_RIGHT_LABEL",
-	MOUSE_BUTTON_MIDDLE: "MOUSE_MIDDLE_LABEL",
-	MOUSE_BUTTON_WHEEL_UP: "MOUSE_WHEEL_UP_LABEL",
-	MOUSE_BUTTON_WHEEL_DOWN: "MOUSE_WHEEL_DOWN_LABEL",
-	MOUSE_BUTTON_XBUTTON1: "MOUSE_BACK_LABEL",
-	MOUSE_BUTTON_XBUTTON2: "MOUSE_FORWARD_LABEL",
-}
-const JOY_BUTTON_ICONS: Dictionary = {
-	JOY_BUTTON_A: preload("res://resources/img/Icons/xbox_button_color_a.svg"),
-	JOY_BUTTON_B: preload("res://resources/img/Icons/xbox_button_color_b.svg"),
-	JOY_BUTTON_X: preload("res://resources/img/Icons/xbox_button_color_x.svg"),
-	JOY_BUTTON_Y: preload("res://resources/img/Icons/xbox_button_color_y.svg"),
-	JOY_BUTTON_BACK: preload("res://resources/img/Icons/xbox_button_view.svg"),
-	JOY_BUTTON_GUIDE: preload("res://resources/img/Icons/xbox_guide.svg"),
-	JOY_BUTTON_START: preload("res://resources/img/Icons/xbox_button_menu.svg"),
-	JOY_BUTTON_LEFT_STICK: preload("res://resources/img/Icons/xbox_stick_l_press.svg"),
-	JOY_BUTTON_RIGHT_STICK: preload("res://resources/img/Icons/xbox_stick_r_press.svg"),
-	JOY_BUTTON_LEFT_SHOULDER: preload("res://resources/img/Icons/xbox_lb.svg"),
-	JOY_BUTTON_RIGHT_SHOULDER: preload("res://resources/img/Icons/xbox_rb.svg"),
-	JOY_BUTTON_DPAD_UP: preload("res://resources/img/Icons/xbox_dpad_up.svg"),
-	JOY_BUTTON_DPAD_DOWN: preload("res://resources/img/Icons/xbox_dpad_down.svg"),
-	JOY_BUTTON_DPAD_LEFT: preload("res://resources/img/Icons/xbox_dpad_left.svg"),
-	JOY_BUTTON_DPAD_RIGHT: preload("res://resources/img/Icons/xbox_dpad_right.svg"),
-	JOY_BUTTON_MISC1: preload("res://resources/img/Icons/xbox_button_share.svg"),
-}
-## Keyed by Vector2i(axis, direction).
-const JOY_AXIS_ICONS: Dictionary = {
-	Vector2i(JOY_AXIS_LEFT_X, -1): preload("res://resources/img/Icons/xbox_stick_l_left.svg"),
-	Vector2i(JOY_AXIS_LEFT_X, 1): preload("res://resources/img/Icons/xbox_stick_l_right.svg"),
-	Vector2i(JOY_AXIS_LEFT_Y, -1): preload("res://resources/img/Icons/xbox_stick_l_up.svg"),
-	Vector2i(JOY_AXIS_LEFT_Y, 1): preload("res://resources/img/Icons/xbox_stick_l_down.svg"),
-	Vector2i(JOY_AXIS_RIGHT_X, -1): preload("res://resources/img/Icons/xbox_stick_r_left.svg"),
-	Vector2i(JOY_AXIS_RIGHT_X, 1): preload("res://resources/img/Icons/xbox_stick_r_right.svg"),
-	Vector2i(JOY_AXIS_RIGHT_Y, -1): preload("res://resources/img/Icons/xbox_stick_r_up.svg"),
-	Vector2i(JOY_AXIS_RIGHT_Y, 1): preload("res://resources/img/Icons/xbox_stick_r_down.svg"),
-	Vector2i(JOY_AXIS_TRIGGER_LEFT, 1): preload("res://resources/img/Icons/xbox_lt.svg"),
-	Vector2i(JOY_AXIS_TRIGGER_RIGHT, 1): preload("res://resources/img/Icons/xbox_rt.svg"),
-}
-
 @onready var controls_grid: GridContainer = %ControlsGrid
 @onready var hint_label: Label = %HintLabel
 @onready var duplicate_label: Label = %DuplicateLabel
@@ -181,32 +139,23 @@ func _refresh():
 
 func _draw_cell(cell: Button, event: InputEvent):
 	cell.modulate = Color.WHITE
-	cell.text = ""
-	cell.icon = null
-	if event is InputEventKey:
-		var keycode := DisplayServer.keyboard_get_keycode_from_physical(event.physical_keycode)
-		cell.text = OS.get_keycode_string(keycode)
-	elif event is InputEventMouseButton:
-		cell.text = tr(MOUSE_BUTTON_LABELS[event.button_index])
-	elif event is InputEventJoypadButton:
-		cell.icon = JOY_BUTTON_ICONS[event.button_index]
-	elif event is InputEventJoypadMotion:
-		cell.icon = JOY_AXIS_ICONS[_axis_key(event)]
-
-
-func _axis_key(event: InputEventJoypadMotion) -> Vector2i:
-	return Vector2i(event.axis, int(signf(event.axis_value)))
+	# Cells don't auto-translate, so the mouse button loc key needs tr() here.
+	cell.text = tr(ControlBindings.event_text(event))
+	cell.icon = ControlBindings.event_icon(event)
 
 
 func _is_bindable_press(event: InputEvent) -> bool:
 	if event is InputEventKey:
 		return event.pressed and not event.echo
 	if event is InputEventMouseButton:
-		return event.pressed and MOUSE_BUTTON_LABELS.has(event.button_index)
+		return event.pressed and ControlBindings.MOUSE_BUTTON_LABELS.has(event.button_index)
 	if event is InputEventJoypadButton:
-		return event.pressed and JOY_BUTTON_ICONS.has(event.button_index)
+		return event.pressed and ControlBindings.JOY_BUTTON_ICONS.has(event.button_index)
 	if event is InputEventJoypadMotion:
-		return absf(event.axis_value) >= AXIS_BIND_THRESHOLD and JOY_AXIS_ICONS.has(_axis_key(event))
+		return (
+			absf(event.axis_value) >= AXIS_BIND_THRESHOLD
+			and ControlBindings.JOY_AXIS_ICONS.has(ControlBindings.axis_key(event))
+		)
 	return false
 
 

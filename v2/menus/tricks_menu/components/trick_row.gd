@@ -42,6 +42,8 @@ const DIR_ICONS: Dictionary = {
 ## how-tos.
 var pin: String = ""
 var trick_type: TrickController.Trick = TrickController.Trick.NONE
+## Stick rows' TrickController.Dir; NO_DIR for how-to rows.
+var _dir: int = TrickController.NO_DIR
 
 
 func _ready() -> void:
@@ -61,6 +63,7 @@ func populate_stick(state: int, trick: TrickController.Trick, gesture: int, dir:
 	var gesture_name: String = TrickController.Gesture.keys()[gesture]
 	var dir_name: String = TrickController.Dir.keys()[dir]
 	_populate(trick)
+	_dir = dir
 	pin = "/".join([state_name, TrickController.trick_to_str(trick), gesture_name, dir_name])
 	state_label.visible = show_state
 	state_label.text = state_name.capitalize()
@@ -96,6 +99,19 @@ func populate_pin(pin_id: String) -> void:
 		TrickController.Gesture[parts[2]],
 		TrickController.Dir[parts[3]]
 	)
+
+
+## HUD: off a pad, show the key the stick direction's cam_* action is bound to instead.
+func set_gamepad(gamepad: bool) -> void:
+	# How-to rows have no stick input.
+	if _dir == TrickController.NO_DIR:
+		return
+	var dir_name: String = TrickController.Dir.keys()[_dir]
+	var event := ControlBindings.event_for("cam_" + dir_name.to_lower(), false)
+	# Unbound key: fall back to the stick, which still works.
+	var use_key := not gamepad and event != null
+	dir_icon.visible = not use_key
+	dir_label.text = ControlBindings.event_text(event) if use_key else "TRICK_DIR_" + dir_name
 
 
 func set_pinned(pinned: bool) -> void:

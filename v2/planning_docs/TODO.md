@@ -57,14 +57,11 @@
 - [ ] hard to use fill up minigame
 
 ### HUD Improvements
-- [ ] must be easier to know what the controls are / how to do tricks
-  - [ ] add btn prompts/hints
 - [ ] Fill up => race is not obvious where to go/not consistent across all races 
 - [ ] need to know when race is completed (single player is done vs entire lobby)
 - [ ] Improve pvp hud during stunt race/events
   - [ ] more juice when score goes up in that menu?
   - [ ] larger text?
-- [ ] remove gray bgs + border from more things / aka simplify?
 - [ ] Cancel from fill up should be more obvious
 - [ ] Btn white while hovering btns instead of green outline
 - [ ] 321 + drive to start of race text + current objective should be more obvious during races/events (race/hud objective)
@@ -221,6 +218,11 @@
 ---
 
 ## Done ✅
+- [x] remove gray bgs + border from more things / aka simplify?
+
+- [x] must be easier to know what the controls are / how to do tricks
+  - [x] add btn prompts/hints
+
 - [x] Horns should be audible thru music
 
 - [x] Turn down music when going to settings 

@@ -154,7 +154,7 @@ var _default_spawn_timer: float = 1.0
 var _spawn_timer: float = _default_spawn_timer
 
 # Wheelie physics
-var _rb_prev_held: bool = false # synced — RB rising-edge detection for the balance-lock toggle
+var _rb_prev_held: bool = false # synced — RB rising-edge detection for engaging the balance lock
 var _lock_throttle_released: bool = false # synced — rule C: re-pressing throttle exits after a release
 var _prev_clutch_held: bool = false
 var _clutch_kick_window: float = 0.0
@@ -670,7 +670,7 @@ func _pitch_angle_calc(delta: float):
 	if _bunny_hop_calc(in_wheelie, delta):
 		return
 
-	# Balance lock: RB-tap toggle + exit rules, then hover at the balance point. Leaning fwd/back
+	# Balance lock: RB-tap engage + exit rules, then hover at the balance point. Leaning fwd/back
 	# nudges the held pitch; drift out of the sweet spot and the lock drops (rider lost balance).
 	_update_balance_lock()
 	if balance_locked:
@@ -802,7 +802,7 @@ func set_balance_locked(locked: bool) -> void:
 	_lock_throttle_released = false
 
 
-## RB-tap toggle + exit rules for the balance lock. Runs after in_balance_point is known this tick.
+## RB-tap engage + exit rules for the balance lock. Runs after in_balance_point is known this tick.
 func _update_balance_lock() -> void:
 	var rb := input_controller.nfx_trick_held
 	var rb_tapped := rb and not _rb_prev_held
@@ -821,7 +821,8 @@ func _update_balance_lock() -> void:
 			_effective_front_brake() > BALANCE_LOCK_INPUT_EPS
 			or _effective_rear_brake() > BALANCE_LOCK_INPUT_EPS
 		)
-		if rb_tapped or throttle_exit or control_exit:
+		# RB doesn't release — it's free to open the HUD's trick list while locked.
+		if throttle_exit or control_exit:
 			set_balance_locked(false)
 	elif rb_tapped and in_balance_point:
 		set_balance_locked(true)

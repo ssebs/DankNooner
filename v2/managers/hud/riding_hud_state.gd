@@ -24,13 +24,12 @@ const _RESPAWN_QUICK_FLASH_SECS := 0.6
 ## Event warning: how long a one-shot stays up, and a looping one's half-pulse.
 const _WARNING_HOLD_SECS := 1.5
 const _WARNING_PULSE_SECS := 0.35
+## Trick prompt opacity while no trick state is active (just the trick button hint).
+const _TRICK_PROMPT_IDLE_ALPHA := 0.5
 
 @onready var minimap: Minimap = %Minimap
-@onready var _throttle_bar: ProgressBar = %HUD_ThrottleProgress
 @onready var _rpm_bar: ProgressBar = %HUD_RPMProgress
 
-@onready var _brake_label: Label = %HUD_BRAKE
-@onready var _clutch_label: Label = %HUD_CLUTCH
 @onready var _speed_num: Label = %HUD_SPEED_NUM
 @onready var _gear_label: Label = %HUD_GEAR
 @onready var _fps_label: Label = %HUD_FPS
@@ -40,7 +39,7 @@ const _WARNING_PULSE_SECS := 0.35
 @onready var _leaderboard: RaceLeaderboard = %HUD_Leaderboard
 @onready var _trick_popups: TrickPopups = %TrickPopups
 @onready var _target_compass: TargetCompass = %TargetCompass
-@onready var _event_panel: PanelContainer = %EventPanel
+@onready var _event_panel: VBoxContainer = %EventPanel
 @onready var _event_title: Label = %HUD_EventTitle
 @onready var _event_step: Label = %HUD_EventStep
 @onready var _event_objective: Label = %HUD_EventObjective
@@ -52,7 +51,13 @@ const _WARNING_PULSE_SECS := 0.35
 @onready var _respawn_bar: ProgressBar = %HUD_RespawnProgress
 @onready var _respawn_label: Label = %HUD_RespawnLabel
 @onready var _trick_rows: VBoxContainer = %HUD_TrickRows
-@onready var _held_item_panel: PanelContainer = %HUD_HeldItem
+@onready var _trick_prompt: VBoxContainer = %TrickPrompt
+@onready var _trick_prompt_title: Label = %HUD_TrickPromptTitle
+@onready var _trick_prompt_rows: VBoxContainer = %HUD_TrickPromptRows
+@onready var _prompts: Array[InputPrompt] = [
+	%HUD_TrickPromptBtn, %HUD_BoostPrompt, %HUD_MapPrompt, %HUD_RespawnPrompt, %HUD_ItemPrompt
+]
+@onready var _held_item_panel: VBoxContainer = %HUD_HeldItem
 @onready var _held_item_thumbnail: Thumbnail3D = %HUD_HeldItemThumbnail
 @onready var _held_item_name: Label = %HUD_HeldItemName
 
@@ -89,6 +94,12 @@ var _netfox_debug_label: Label = null
 var _netfox_dbg_accum: float = 0.0
 ## Hint tricks of the running race challenges; named under the leaderboard.
 var _challenge_tricks := PackedInt32Array()
+## Device the prompts and trick rows currently show glyphs for.
+var _shown_gamepad: bool = false
+## TrickState the trick prompt currently lists.
+var _shown_trick_state := TrickController.TrickState.NONE
+## Seconds trick_state() has differed from _shown_trick_state.
+var _trick_state_diff_t: float = 0.0
 
 func _ready() -> void:
 	hide_ui()
@@ -135,6 +146,7 @@ func Enter(_state_context: StateContext):
 	# Manual inits
 	_on_gear_changed(1)
 	_rebuild_trick_rows()
+	_show_trick_prompt(TrickController.TrickState.NONE)
 
 
 	show_ui()
@@ -161,20 +173,13 @@ func Physics_Update(delta: float):
 		return
 
 	# Poll continuous values directly from controllers
-	_throttle_bar.value = int(input_controller.nfx_throttle * 100)
-	_brake_label.text = tr("HUD_BRAKE").format({"value": int(input_controller.nfx_front_brake * 100)})
-	# Reddens toward a front washout (grip_usage is the brake danger).
-	_brake_label.modulate = Color.WHITE.lerp(_RPM_COLOR_HIGH, player_entity.grip_usage)
-
-	if input_controller.nfx_clutch_held:
-		_clutch_label.text = tr("HUD_CLUTCH_IN")
-	else:
-		_clutch_label.text = tr("HUD_CLUTCH_OUT")
-
 	var rpm_ratio := gearing_controller.get_rpm_ratio()
 	_rpm_bar.value = int(rpm_ratio * 100)
 	_rpm_fill_style.bg_color = _RPM_COLOR_LOW.lerp(_RPM_COLOR_HIGH, clampf(rpm_ratio, 0.0, 1.0))
 	_speed_num.text = "%d" % int(movement_controller.speed)
+	# Reddens toward a front washout (grip_usage is the brake danger).
+	_speed_num.modulate = Color.WHITE.lerp(_RPM_COLOR_HIGH, player_entity.grip_usage)
+	_fps_label.visible = player_entity.settings_manager.current_settings["show_fps"]
 	_fps_label.text = tr("HUD_FPS").format({"value": int(Engine.get_frames_per_second())})
 	var player_def := save_manager.get_player_definition()
 	_money.text = MoneyLabel.format(player_def.money)
@@ -212,6 +217,20 @@ func Physics_Update(delta: float):
 	)
 	_wheelie_attempt_t = _wheelie_attempt_t + delta if _has_leaderboard and wheelie_held else 0.0
 	_update_pitch_icon()
+
+	if input_controller.is_gamepad != _shown_gamepad:
+		_refresh_prompts()
+	# The list only opens while the trick button is held, in any state.
+	var held := input_controller.nfx_trick_held
+	var trick_state := trick_controller.trick_state() if held else TrickController.TrickState.NONE
+	_trick_state_diff_t = 0.0 if trick_state == _shown_trick_state else _trick_state_diff_t + delta
+	# Press/release is instant; while held, a change must outlast a flicker (nose bobbing across the
+	# wheelie threshold, the rear wheel skipping off the floor).
+	var button_toggled := held == (_shown_trick_state == TrickController.TrickState.NONE)
+	if trick_state != _shown_trick_state and (
+		button_toggled or _trick_state_diff_t >= TrickController.WHEELIE_EXIT_DELAY
+	):
+		_show_trick_prompt(trick_state)
 
 	# Respawn feedback. A tap shows "Respawning..." for a split second; holding past
 	# _RESPAWN_SHOW_SECS switches to "Full respawning..." with the bar charging toward the
@@ -341,7 +360,39 @@ func _rebuild_trick_rows():
 	for child in _trick_rows.get_children():
 		child.queue_free()
 	for pin: String in save_manager.current_save["pinned_tricks"]:
-		_add_trick_row().populate_pin(pin)
+		var row := _add_trick_row(_trick_rows)
+		row.show_state = true
+		row.populate_pin(pin)
+		row.set_gamepad(_shown_gamepad)
+
+
+## Every stick trick bound in `state`; NONE leaves just the dimmed trick-button hint.
+func _show_trick_prompt(state: TrickController.TrickState):
+	_shown_trick_state = state
+	_trick_prompt_title.text = "HUD_TRICKS_" + TrickController.TrickState.keys()[state]
+	_trick_prompt.modulate.a = _TRICK_PROMPT_IDLE_ALPHA if state == TrickController.TrickState.NONE else 1.0
+	for child in _trick_prompt_rows.get_children():
+		child.queue_free()
+	if state == TrickController.TrickState.NONE:
+		return
+	var gestures: Dictionary = TrickController.BINDINGS[state]
+	for gesture: TrickController.Gesture in gestures:
+		for dir in TrickController.Dir.values():
+			var trick: TrickController.Trick = gestures[gesture][dir]
+			if trick == TrickController.Trick.NONE:
+				continue
+			var row := _add_trick_row(_trick_prompt_rows)
+			row.populate_stick(state, trick, gesture, dir)
+			row.set_gamepad(_shown_gamepad)
+
+
+## Re-glyph every prompt for the rider's current device and bindings.
+func _refresh_prompts():
+	_shown_gamepad = input_controller.is_gamepad
+	for prompt in _prompts:
+		prompt.refresh(_shown_gamepad)
+	for row: TrickRow in _trick_rows.get_children() + _trick_prompt_rows.get_children():
+		row.set_gamepad(_shown_gamepad)
 
 
 ## The race challenges' hint tricks, by name only, under the leaderboard.
@@ -355,12 +406,12 @@ func _set_suggested_tricks():
 	_event_tricks.visible = !names.is_empty()
 
 
-func _add_trick_row() -> TrickRow:
+func _add_trick_row(parent: VBoxContainer) -> TrickRow:
 	var row: TrickRow = _TRICK_ROW_SCENE.instantiate()
 	row.compact = true
-	row.show_state = true
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_trick_rows.add_child(row)
+	row.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	parent.add_child(row)
 	return row
 
 
@@ -371,6 +422,8 @@ func show_ui() -> void:
 	ui.visible = true
 	minimap.activate(player_entity)
 	_target_compass.activate(player_entity)
+	# Also on re-show after pause, since Settings may have remapped a binding.
+	_refresh_prompts()
 
 	# Only the local client reaches show_ui, so the overlay never spawns on remote
 	# player instances. netfox registers its perf monitors only when NetworkPerformance
@@ -569,10 +622,8 @@ func _rpc_clear_event_warning():
 
 func _update_event_panel() -> void:
 	_event_panel.visible = (
-		_has_leaderboard
-		or _event_title.visible
+		_event_title.visible
 		or _event_objective.visible
-		or _event_progress.visible
 		or _event_warning.visible
 	)
 
