@@ -75,6 +75,10 @@ const DRIFT_PX := Vector2(90.0, -110.0)
 ## Max tilt either way (radians); the sign is random per pop.
 const TILT_RAD: float = 0.25
 const FADE_SECS: float = 0.4
+## A new callout pushes the ones still on screen down a row, so rapid callouts stack instead of piling
+## up at CALLOUT_ORIGIN. The push eases in at CALLOUT_STACK_SPEED.
+const CALLOUT_STACK_PX: float = 50.0
+const CALLOUT_STACK_SPEED: float = 12.0
 
 ## Set by RidingHUDState on Enter — the local player's.
 var audio_manager: AudioManager = null
@@ -102,6 +106,9 @@ var _held: Dictionary[String, float] = {}
 ## A flip was completed last frame, to catch it landing into a wheelie / stoppie.
 var _was_flipped: bool = false
 var _oof_index: int = 0
+## Callouts on screen, oldest first — each in its own holder, so the stack push moves the holder and
+## never fights the label's drift tween.
+var _callouts: Array[Control] = []
 
 
 func _ready():
@@ -214,9 +221,15 @@ func hide_pitch_icon() -> void:
 
 
 func _process(delta: float) -> void:
-	if Engine.is_editor_hint() or not _wheelie_row.visible:
+	if Engine.is_editor_hint():
 		return
-	_ease_icon(1.0 - exp(-ICON_SMOOTH_SPEED * delta))
+	# Newest sits at its origin, each older one a row further down
+	var stack_weight := 1.0 - exp(-CALLOUT_STACK_SPEED * delta)
+	for i in _callouts.size():
+		var row := _callouts.size() - 1 - i
+		_callouts[i].position.y = lerpf(_callouts[i].position.y, row * CALLOUT_STACK_PX, stack_weight)
+	if _wheelie_row.visible:
+		_ease_icon(1.0 - exp(-ICON_SMOOTH_SPEED * delta))
 
 
 func _ease_icon(weight: float) -> void:
@@ -234,7 +247,18 @@ func _ramp(a: Color, b: Color, c: Color, s: float) -> Color:
 
 ## text is already localized.
 func pop_callout(text: String) -> void:
-	_spawn(text, CALLOUT_COLOR, CALLOUT_ORIGIN, 1.0)
+	var holder := Control.new()
+	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(holder)
+	_callouts.append(holder)
+	spawn_pop(holder, text, CALLOUT_COLOR, size / 2.0 + CALLOUT_ORIGIN, DRIFT_PX)
+	# The pop frees its label when done; the holder goes with it
+	holder.child_exiting_tree.connect(_drop_callout.bind(holder).unbind(1))
+
+
+func _drop_callout(holder: Control) -> void:
+	_callouts.erase(holder)
+	holder.queue_free()
 
 
 ## Held tricks flicker at their thresholds, so they're called out once per combo; one-shot
