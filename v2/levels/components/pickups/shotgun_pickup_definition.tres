@@ -6,8 +6,8 @@
 [resource]
 script = ExtResource("2_def")
 mesh_res = ExtResource("1_m7hxb")
-mesh_rotation_offset_degrees = Vector3(0, 0, 45)
-mesh_scale_multiplier = Vector3(0.6, 0.6, 1)
+mesh_rotation_offset_degrees = Vector3(0, 90, 15)
+mesh_scale_multiplier = Vector3(0.75, 1, 1.25)
 item_type = 4
 use_sfx = 18
 metadata/_custom_type_script = "uid://dsfcoucwjtequ"

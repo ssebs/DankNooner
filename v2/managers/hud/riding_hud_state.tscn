@@ -335,7 +335,7 @@ custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 size_flags_horizontal = 4
 type = 3
-camera_position = Vector3(2, 1.2, 2)
+camera_position = Vector3(2.5, 1.5, 2.5)
 camera_look_at = Vector3(0, 0, 0)
 camera_fov = 40.0
 
