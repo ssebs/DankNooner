@@ -9,4 +9,5 @@ mesh_res = ExtResource("1_pj80y")
 mesh_rotation_offset_degrees = Vector3(0, -45, 0)
 mesh_scale_multiplier = Vector3(0.28, 0.28, 0.28)
 item_type = 3
+weight = 1.25
 metadata/_custom_type_script = "uid://dsfcoucwjtequ"

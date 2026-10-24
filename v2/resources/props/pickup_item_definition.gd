@@ -24,5 +24,8 @@ enum PickupItemType {GAS_CAN, BAT, OIL_SLICK, RAMP, SHOTGUN, RALLY_UP, }
 
 @export_group("Type")
 @export var item_type: PickupItemType
+## Spawn odds relative to the spawner's other items (default 1.0):
+## 2.0 = twice as likely, 0.2 = one-fifth as likely, 0 = never.
+@export var weight: float = 1.0
 ## Played for the rider when they use a held item.
 @export var use_sfx: AudioManager.Sfx = AudioManager.Sfx.CLUNK_GEAR_CHANGE

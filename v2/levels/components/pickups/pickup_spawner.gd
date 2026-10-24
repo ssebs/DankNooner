@@ -7,7 +7,7 @@
 ## Driven by RaceGameMode's PickupsComponent via activate() / deactivate(), so pickups only exist during the race.
 class_name PickupSpawner extends Marker3D
 
-## Item definitions this spawner can produce; one is picked at random per spawn.
+## Item definitions this spawner can produce; one is picked per spawn, weighted by each item's weight.
 @export var items: Array[PickupItemDefinition] = []:
 	set(value):
 		items = value
@@ -19,6 +19,7 @@ class_name PickupSpawner extends Marker3D
 const PICKUP_ITEM_SCENE := preload("res://levels/components/pickups/pickup_item.tscn")
 
 var _active: bool = false
+var _rng := RandomNumberGenerator.new()
 var _current: PickupItem
 ## Item index currently showing, resent on a late-join/load-race sync so every peer builds the same one.
 var _current_index: int = -1
@@ -58,9 +59,12 @@ func sync_to_peer(peer_id: int) -> void:
 #region spawn / despawn (server drives, all peers apply)
 
 
-## Server picks the item; the index is broadcast so every peer builds the same one.
+## Server picks the item by weight; the index is broadcast so every peer builds the same one.
 func _spawn_random() -> void:
-	_rpc_spawn.rpc(randi() % items.size())
+	var weights := PackedFloat32Array(
+		items.map(func(item: PickupItemDefinition) -> float: return item.weight)
+	)
+	_rpc_spawn.rpc(_rng.rand_weighted(weights))
 
 
 @rpc("call_local", "reliable")
