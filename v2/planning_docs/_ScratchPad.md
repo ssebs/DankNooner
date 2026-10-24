@@ -11,12 +11,12 @@
 ### NEXT
 
 
-
+- [ ] Hud should show btn prompts 
+- [ ] Demo = start with tutorial
+- [ ] Turn down music when going to settings 
+- [ ] Horns should be audible thru music
 - [ ] Add first person checkbox option to force it for everyone during an event
-
 - [ ] Add more ramp flow / alternate driving line on level
-
 - [ ] filling up - pay per second of fuel, so spilling costs $. show in diagetic UI on pump
-
 - [ ] give cars headlights
 

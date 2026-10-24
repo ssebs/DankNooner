@@ -40,23 +40,13 @@
     - [ ] Get racing AI working
       - [ ] easy/hard difficulty setting for AI
     - [ ] Balancing points
+    - [ ] Demo is open source, new private repo for full version
   - [ ] > steam next fest Feb '27
   - [ ] Release after free to play  w/ paid dlc for more content/skins
-
 ---
 
 ## Notes 📝
 > Stuff to move ASAP
-
-Hud should show btn prompts 
-
-Figure out open source vs steam demo vs full game vs dlc
-    Make just the demo open source, new repo for full version 
-
-Demo = start with tutorial
-
-Turn down music when going to settings 
-Horns should be audible thru music
 
 https://www.myinstants.com/en/instant/gah-dayum-29041/
 https://www.myinstants.com/en/instant/cat-is-calling-you-iphone-39599/
