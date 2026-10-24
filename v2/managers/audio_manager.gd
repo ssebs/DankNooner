@@ -77,6 +77,12 @@ enum Sfx {
 	HAH_CHEW,
 	METAL_PIPE,
 	WHAT_THE_DOG_DOIN,
+	CAT_IS_CALLING_YOU,
+	GAH_DAYUM,
+	BURGER_KING,
+	NOOT_NOOT,
+	POLISH_COW,
+	YAPAPA_CAT,
 }
 
 ## Music playlists, one per container under the Music node. Add a song by dropping a
@@ -173,6 +179,12 @@ var du_bist_gut_genug: SoundEvent
 var hah_chew: SoundEvent
 var metal_pipe: SoundEvent
 var what_the_dog_doin: SoundEvent
+var cat_is_calling_you: SoundEvent
+var gah_dayum: SoundEvent
+var burger_king: SoundEvent
+var noot_noot: SoundEvent
+var polish_cow: SoundEvent
+var yapapa_cat: SoundEvent
 
 ## Map of Sfx → SoundEvent node, populated in _ready.
 var _sfx_events: Dictionary = {}
@@ -266,6 +278,12 @@ func _ready():
 	hah_chew = get_node_or_null("%HahChew") as SoundEvent
 	metal_pipe = get_node_or_null("%MetalPipe") as SoundEvent
 	what_the_dog_doin = get_node_or_null("%WhatTheDogDoin") as SoundEvent
+	cat_is_calling_you = get_node_or_null("%CatIsCallingYou") as SoundEvent
+	gah_dayum = get_node_or_null("%GahDayum") as SoundEvent
+	burger_king = get_node_or_null("%BurgerKing") as SoundEvent
+	noot_noot = get_node_or_null("%NootNoot") as SoundEvent
+	polish_cow = get_node_or_null("%PolishCow") as SoundEvent
+	yapapa_cat = get_node_or_null("%YapapaCat") as SoundEvent
 	_exhaust_pops = _sound_events_in("%ExhaustPops")
 	_music_tracks = {
 		MusicType.MENU: _sound_events_in("%MenuMusic"),
@@ -336,6 +354,12 @@ func _ready():
 		Sfx.HAH_CHEW: hah_chew,
 		Sfx.METAL_PIPE: metal_pipe,
 		Sfx.WHAT_THE_DOG_DOIN: what_the_dog_doin,
+		Sfx.CAT_IS_CALLING_YOU: cat_is_calling_you,
+		Sfx.GAH_DAYUM: gah_dayum,
+		Sfx.BURGER_KING: burger_king,
+		Sfx.NOOT_NOOT: noot_noot,
+		Sfx.POLISH_COW: polish_cow,
+		Sfx.YAPAPA_CAT: yapapa_cat,
 	}
 	_engine_sounds = {
 		EngineSfx.NINJA500: ninja500_revs,

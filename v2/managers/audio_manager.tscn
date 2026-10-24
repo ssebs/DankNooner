@@ -72,6 +72,12 @@
 [ext_resource type="AudioStream" uid="uid://ug171p6wrsfp" path="res://non_fmod_sounds/SFX/vintage_horn.ogg" id="40_vintage_horn"]
 [ext_resource type="AudioStream" uid="uid://csl33y4jwrvqd" path="res://non_fmod_sounds/SFX/what-the-dog-doin.ogg" id="40_what_the_dog_doin"]
 [ext_resource type="AudioStream" uid="uid://df3nojagkq573" path="res://non_fmod_sounds/SFX/yougotmail.ogg" id="40_you_got_mail"]
+[ext_resource type="AudioStream" uid="uid://bgkp1r2ltic3i" path="res://non_fmod_sounds/SFX/cat-is-calling-you-iphone.mp3" id="40_cat_is_calling_you"]
+[ext_resource type="AudioStream" uid="uid://iavklk57xk22" path="res://non_fmod_sounds/SFX/gah-dayum.mp3" id="40_gah_dayum"]
+[ext_resource type="AudioStream" uid="uid://db284ehms2odw" path="res://non_fmod_sounds/SFX/Im-at-Burger-King-with-my-Burger-Queen.ogg" id="40_burger_king"]
+[ext_resource type="AudioStream" uid="uid://cndiytfw50qbr" path="res://non_fmod_sounds/SFX/noot_noot.mp3" id="40_noot_noot"]
+[ext_resource type="AudioStream" uid="uid://brubiy414r2ni" path="res://non_fmod_sounds/SFX/polish-cow-dancing.ogg" id="40_polish_cow"]
+[ext_resource type="AudioStream" uid="uid://ci5d8rlesx07h" path="res://non_fmod_sounds/SFX/yapapa-cat.ogg" id="40_yapapa_cat"]
 [ext_resource type="AudioStream" uid="uid://b6nwkdkdid10c" path="res://non_fmod_sounds/Music/Menu/JMHBM - Blade Rider.mp3" id="music_1"]
 [ext_resource type="AudioStream" uid="uid://dtfwtyhfxg3rm" path="res://non_fmod_sounds/Music/FreeRoam/Colorcast - Meanwhile.mp3" id="music_2"]
 [ext_resource type="AudioStream" uid="uid://b0hhha7ext0ls" path="res://non_fmod_sounds/Music/FreeRoam/David J. Barrios - Love and Strength for La Palma (Amor y Fuerza para La Palma) – Instrumental Post-Rock.mp3" id="music_3"]
@@ -610,6 +616,48 @@ metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 [node name="WhatTheDogDoin" type="AudioStreamPlayer" parent="Sounds" unique_id=1260483195]
 unique_name_in_owner = true
 stream = ExtResource("40_what_the_dog_doin")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="CatIsCallingYou" type="AudioStreamPlayer" parent="Sounds" unique_id=1654372785]
+unique_name_in_owner = true
+stream = ExtResource("40_cat_is_calling_you")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="GahDayum" type="AudioStreamPlayer" parent="Sounds" unique_id=363361511]
+unique_name_in_owner = true
+stream = ExtResource("40_gah_dayum")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="BurgerKing" type="AudioStreamPlayer" parent="Sounds" unique_id=2031899847]
+unique_name_in_owner = true
+stream = ExtResource("40_burger_king")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="NootNoot" type="AudioStreamPlayer" parent="Sounds" unique_id=1796359138]
+unique_name_in_owner = true
+stream = ExtResource("40_noot_noot")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="PolishCow" type="AudioStreamPlayer" parent="Sounds" unique_id=1459928675]
+unique_name_in_owner = true
+stream = ExtResource("40_polish_cow")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="YapapaCat" type="AudioStreamPlayer" parent="Sounds" unique_id=1775343318]
+unique_name_in_owner = true
+stream = ExtResource("40_yapapa_cat")
 bus = &"SFX"
 script = ExtResource("2_snd")
 metadata/_custom_type_script = "uid://dk2ghd454wkc2"

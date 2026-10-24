@@ -97,11 +97,13 @@ func open(save_manager: SaveManager, audio_manager: AudioManager):
 	_color_panel.hide()
 	_confirm_box.hide()
 	_switch_tab(_player_def.active_loadout_index + 1)
+	_audio_manager.set_music_ducked(self, true)
 
 
 ## One save: one lobby push, one skin sync.
 func commit():
 	_stop_horn_preview()
+	_audio_manager.set_music_ducked(self, false)
 	_save_manager.update_save("player_definition", _player_def, true, true)
 
 
