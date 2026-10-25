@@ -226,6 +226,16 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     when `crash_count` changes while crashed, which emits `crashed(peer_id)`; the gamemode schedules
     the respawn. The counter (not the `is_crashed` edge) is what catches a respawn + re-crash inside
     one frame's ticks, which would otherwise emit nothing and leave the rider down for good
+  - Every crash site tags a `CrashType` (lowside / highside / wall), stashed on
+    `PlayerEntity.crash_type` (visual-only, not synced) for the bike wreck
+- **BikeWreck** (`player/bikes/scripts/bike_wreck.gd`) — visual-only `RigidBody3D` the bike
+  rides while crashed. On the crash edge it takes `IKTargets`' transform, fits a box to the bike
+  meshes, and launches with `MovementController.pre_slide_velocity`: lowside tips onto the lean
+  side and slides, highside pops up and barrel-rolls / flips, wall keeps its speed and lets
+  physics bounce it. `IKTargets` (bike mesh, headlight, exhaust) follows the body in `_process`
+  and is restored on the uncrash edge. Collides with the world but sits on no layer, so nothing
+  hits it back. Sparks + the `CRASH_GRIND` loop run while it slides on contact. Simulated per
+  peer, so each screen tumbles differently
 - **Riding HUD** — no longer a player controller. `hud_controller.gd` was replaced by
   `RidingHUDState` (`managers/hud/riding_hud_state.gd`) under the global `HUDManager`. It polls the
   same controllers off `hud_manager.local_player` and feeds `BoostGauge` / `ComboCounter`
