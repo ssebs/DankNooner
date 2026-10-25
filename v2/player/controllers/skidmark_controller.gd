@@ -71,7 +71,7 @@ func _process(delta: float) -> void:
 	elif _active != null:
 		_finalize_active()
 
-	_set_squeal(movement_controller.is_drifting)
+	_set_squeal(movement_controller.is_drifting or player_entity.crash_controller.washout_time > 0.0)
 
 
 ## Start/stop the looping tire-squeal on drift edges. Runs for every player on every client, so

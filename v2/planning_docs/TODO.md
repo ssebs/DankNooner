@@ -25,6 +25,9 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MiniTasks](_ScratchPad.md)
+
+- [ ] make hands fit on handle bars
+
 - [ ] Create separate location (new event start circles) just for stunt/trick battle, remove from existing races so they dont spawn checkpoint markers
   - [ ] wip - stunt_battle_arena
 
@@ -33,10 +36,10 @@
     - [x] $100
     - [x] basic setup
     - [x] working build
-    - [ ] full setup
+    - [x] full setup / link live
     - [ ] Trailer
   - [ ] Demo release
-    - [ ] Get racing AI working
+    - [ ] Get racing AI working [WIP]
       - [ ] easy/hard difficulty setting for AI
     - [ ] Balancing points
     - [ ] Demo is open source, new private repo for full version
@@ -191,8 +194,6 @@
 - [ ] Grinding tricks (jump in air, grind on house fences)
 - [ ] trick animation to move up then play the mixamo anims
 - [ ] wheelie turning animation should yaw
-- [ ] animate lowside crash
-- [ ] animate car crash
 
 ### Cutscenes
 - [ ] dynamic, use animation player to define
@@ -218,6 +219,10 @@
 ---
 
 ## Done ✅
+- [x] animate crashes w/ bike physics
+
+- [x] animate car crash
+
 - [x] remove gray bgs + border from more things / aka simplify?
 
 - [x] must be easier to know what the controls are / how to do tricks

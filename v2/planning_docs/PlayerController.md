@@ -219,7 +219,7 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     but deliberately leaves `boost_amount` alone
 - **CrashController** (`crash_controller.gd`)
   - Runs in rollback tick after the other controllers
-  - Detects crashes from over-rotation (wheelie/stoppie past trick limits, side lean), stoppie steer washout, steep-slope stalls, speed-wobble and drift highsides / spinouts, brake grabs while turning, killbox/obstacle collisions (a glancing layer-2 hit reflects the heading off the wall, wobbles the rider away, and costs `WALL_GLANCE_SPEED_LOSS` instead), upside-down landings, and landing while still mid air-trick (`TrickController.is_air_trick` — stick tricks only, not flips)
+  - Detects crashes from over-rotation (wheelie/stoppie past trick limits, side lean), stoppie steer washout, steep-slope stalls, speed-wobble and drift highsides / spinouts, brake grabs while turning (gamepad) or a held front brake while leaned at speed (KBM washout: `washout_time` drives `grip_usage` and the tire squeal as the warning), killbox/obstacle collisions (a glancing layer-2 hit reflects the heading off the wall, wobbles the rider away, and costs `WALL_GLANCE_SPEED_LOSS` instead), upside-down landings, and landing while still mid air-trick (`TrickController.is_air_trick` — stick tricks only, not flips)
   - **Unstable surfaces**: lean-crash threshold tightens (scaled by `movement_controller.get_unstable_factor()` via `UNSTABLE_LEAN_THRESHOLD_REDUCTION_DEG`); front brake while steering on unstable triggers a lowside (`UNSTABLE_LOWSIDE_BRAKE_THRESHOLD`, `UNSTABLE_LOWSIDE_STEER_THRESHOLD_DEG`)
   - `trigger_crash()` — sim state only: sets `is_crashed`, bumps the synced `crash_count`, and sets
     velocity (zero, or the highside launch). Ragdoll, camera and SFX fire in `PlayerEntity._process()`
@@ -234,8 +234,10 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   side and slides, highside pops up and barrel-rolls / flips, wall keeps its speed and lets
   physics bounce it. `IKTargets` (bike mesh, headlight, exhaust) follows the body in `_process`
   and is restored on the uncrash edge. Collides with the world but sits on no layer, so nothing
-  hits it back. Sparks + the `CRASH_GRIND` loop run while it slides on contact. Simulated per
-  peer, so each screen tumbles differently
+  hits it back. Sparks + the `CRASH_GRIND` loop run while it slides on contact, and a hard hit
+  plays the gear clunk. A riderless bike only rests on a side: while touching something upright or
+  upside down, it's rolled toward the nearer side. Doubled gravity keeps flights short. Simulated per peer, so each
+  screen tumbles differently
 - **Riding HUD** — no longer a player controller. `hud_controller.gd` was replaced by
   `RidingHUDState` (`managers/hud/riding_hud_state.gd`) under the global `HUDManager`. It polls the
   same controllers off `hud_manager.local_player` and feeds `BoostGauge` / `ComboCounter`

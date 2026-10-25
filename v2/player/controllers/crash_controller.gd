@@ -1,6 +1,13 @@
 @tool
 class_name CrashController extends Node
 
+## Picks how the bike wreck tumbles (BikeWreck). Visual only.
+enum CrashType {
+	LOWSIDE,
+	HIGHSIDE,
+	WALL,
+}
+
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
 @export var movement_controller: MovementController
@@ -48,6 +55,14 @@ const WOBBLE_RAM_MAX_SPEED: float = 15.0
 const WOBBLE_RAM_STRENGTH: float = 6.0
 ## Fraction of speed lost on a glancing (non-crash) layer-2 wall hit.
 const WALL_GLANCE_SPEED_LOSS: float = 0.25
+## KBM stand-in for the brake grab (a digital brake always "grabs"): front brake held this long (s)
+## while leaned past KBM_WASHOUT_MIN_LEAN_DEG above KBM_WASHOUT_MIN_SPEED washes the front out.
+const KBM_WASHOUT_TIME: float = 0.6
+const KBM_WASHOUT_MIN_LEAN_DEG: float = 15.0
+const KBM_WASHOUT_MIN_SPEED: float = 10.0
+
+## Seconds into a KBM brake washout, 0 when not washing out. Synced; drives grip_usage + squeal.
+var washout_time: float = 0.0
 
 var _prev_front_brake: float = 0.0
 var _prev_throttle: float = 0.0
@@ -93,7 +108,7 @@ func _detect_air_trick_landing():
 	var just_landed = not movement_controller.was_on_floor
 	if just_landed and TrickController.is_air_trick(_prev_air_trick):
 		DebugUtils.DebugMsg("landed mid air-trick crash (%s)" % TrickController.trick_to_str(_prev_air_trick))
-		trigger_crash()
+		trigger_crash(CrashType.HIGHSIDE)
 
 
 ## Sets player_entity.grip_usage
@@ -108,10 +123,23 @@ func _update_brake_grab(delta: float):
 	elif front_brake > 0.9 and brake_delta > BRAKE_GRAB_RATE_THRESHOLD:
 		_brake_was_grabbed = true
 
+	var washing_out := (
+		not input_controller.is_gamepad
+		and front_brake > 0.9
+		and movement_controller.is_on_floor
+		and not movement_controller.is_reversing
+		and movement_controller.speed > KBM_WASHOUT_MIN_SPEED
+		and absf(movement_controller.roll_angle) > deg_to_rad(KBM_WASHOUT_MIN_LEAN_DEG)
+	)
+	washout_time = washout_time + delta if washing_out else 0.0
+
 	# Compute brake danger (grip_usage) for HUD display
 	var lean_ratio = abs(movement_controller.roll_angle) / deg_to_rad(CRASH_LEAN_THRESHOLD_DEG)
 	var max_safe_brake = 1.0 - (lean_ratio * BRAKE_LEAN_SENSITIVITY)
-	if front_brake > 0.1:
+	if not input_controller.is_gamepad:
+		# A digital brake pins the ratio below at 1 on any lean, so show washout progress instead.
+		player_entity.grip_usage = washout_time / KBM_WASHOUT_TIME
+	elif front_brake > 0.1:
 		player_entity.grip_usage = clamp(front_brake / max(max_safe_brake, 0.01), 0.0, 1.0)
 	else:
 		player_entity.grip_usage = move_toward(player_entity.grip_usage, 0.0, 3.0 * delta)
@@ -125,7 +153,7 @@ func _detect_crash():
 		var collision = player_entity.get_slide_collision(i)
 		if collision.get_collider() is Killbox:
 			DebugUtils.DebugMsg("killbox crash")
-			trigger_crash()
+			trigger_crash(CrashType.WALL)
 			return
 
 	# If in air, don't crash by angle
@@ -133,13 +161,13 @@ func _detect_crash():
 		# Wheelie crash
 		if movement_controller.pitch_angle > deg_to_rad(bd.max_wheelie_angle_deg):
 			DebugUtils.DebugMsg("wheelie crash")
-			trigger_crash()
+			trigger_crash(CrashType.HIGHSIDE)
 			return
 
 		# Stoppie crash — over-rotated past the limit (went over the bars)
 		if movement_controller.pitch_angle < -deg_to_rad(bd.max_stoppie_angle_deg):
 			DebugUtils.DebugMsg("stoppie crash")
-			trigger_crash()
+			trigger_crash(CrashType.HIGHSIDE)
 			return
 
 		# Stoppie washout — leaning too hard on the single loaded front tire tucks it (lowside).
@@ -158,13 +186,13 @@ func _detect_crash():
 			and absf(movement_controller.roll_angle) > deg_to_rad(STOPPIE_STEER_CRASH_ANGLE_DEG)
 		):
 			DebugUtils.DebugMsg("stoppie steer washout crash")
-			trigger_crash()
+			trigger_crash(CrashType.LOWSIDE)
 			return
 
 		# Stalled on a grade too steep to climb — bike can't hold, rider drops it
 		if movement_controller.is_stalled_on_steep_slope():
 			DebugUtils.DebugMsg("steep slope stall crash")
-			trigger_crash()
+			trigger_crash(CrashType.LOWSIDE)
 			return
 
 		# Speed wobble peaked past the limit — the tank-slapper throws them over the high side.
@@ -178,7 +206,7 @@ func _detect_crash():
 			DebugUtils.DebugMsg(
 				"speed wobble HIGHSIDE (angle=%.1f°)" % rad_to_deg(wobble_controller.wobble_angle)
 			)
-			trigger_crash(_highside_launch(signf(wobble_controller.wobble_angle)))
+			trigger_crash(CrashType.HIGHSIDE, _highside_launch(signf(wobble_controller.wobble_angle)))
 			return
 
 		# Lean crash — threshold tightens on unstable surfaces (gravel/sand)
@@ -188,7 +216,7 @@ func _detect_crash():
 		)
 		if abs(movement_controller.roll_angle) >= deg_to_rad(effective_lean_threshold):
 			DebugUtils.DebugMsg("lean crash")
-			trigger_crash()
+			trigger_crash(CrashType.LOWSIDE)
 			return
 
 		# Unstable lowside — front brake while steering on gravel/sand washes the front wheel out.
@@ -204,7 +232,7 @@ func _detect_crash():
 			)
 		):
 			DebugUtils.DebugMsg("unstable lowside crash")
-			trigger_crash()
+			trigger_crash(CrashType.LOWSIDE)
 			return
 
 		# Brake grab while turning (sim difficulty + gamepad only). Not while reversing (see above).
@@ -216,7 +244,13 @@ func _detect_crash():
 			and abs(movement_controller.roll_angle) > deg_to_rad(15)
 		):
 			DebugUtils.DebugMsg("brake grab crash")
-			trigger_crash()
+			trigger_crash(CrashType.LOWSIDE)
+			return
+
+		if washout_time >= KBM_WASHOUT_TIME:
+			DebugUtils.DebugMsg("KBM brake washout crash")
+			trigger_crash(CrashType.LOWSIDE)
+			return
 
 	# Upside-down landing — checked separately because inverted up_direction breaks is_on_floor()
 	# Skip on steep surfaces (loops) — inverted up_direction is expected there
@@ -226,7 +260,7 @@ func _detect_crash():
 			var collision = player_entity.get_slide_collision(i)
 			if collision.get_normal().angle_to(Vector3.UP) < deg_to_rad(45):
 				DebugUtils.DebugMsg("upside-down crash (angle=%.1f°)" % rad_to_deg(bike_up_angle))
-				trigger_crash()
+				trigger_crash(CrashType.HIGHSIDE)
 				return
 
 	# Collision with layer 2 obstacle — only head-on hits at speed
@@ -251,7 +285,7 @@ func _detect_crash():
 						return
 					DebugUtils.DebugMsg("obstacle crash (angle=%.1f)" % angle)
 					_crash_rammed_racer(collider)
-					trigger_crash()
+					trigger_crash(CrashType.WALL)
 					return
 				# Glancing hit: reflect heading off the wall, wobble away + speed penalty.
 				# Once per wobble so contact can't stack it.
@@ -308,7 +342,7 @@ func _detect_drift_crash(delta: float):
 	# Spin-out — tail came all the way around.
 	if slip > deg_to_rad(DRIFT_SPINOUT_ANGLE_DEG):
 		DebugUtils.DebugMsg("drift spinout crash (slip=%.1f°)" % rad_to_deg(slip))
-		trigger_crash()
+		trigger_crash(CrashType.LOWSIDE)
 		return
 
 	# Highside — fast throttle chop while deep + fast. Chop tolerance shrinks as slip grows.
@@ -332,7 +366,7 @@ func _detect_drift_crash(delta: float):
 				DebugUtils.DebugMsg(
 					"drift HIGHSIDE crash (slip=%.1f° rate=%.1f)" % [rad_to_deg(slip), release_rate]
 				)
-				trigger_crash(_highside_launch(slip_sign))
+				trigger_crash(CrashType.HIGHSIDE, _highside_launch(slip_sign))
 			else:
 				# Recoverable angle — throw a wobble first; it highsides only if it grows past the limit.
 				wobble_controller.wobble_vel += slip_sign * DRIFT_CHOP_WOBBLE_STRENGTH
@@ -347,12 +381,13 @@ func _highside_launch(dir_sign: float) -> Vector3:
 	return (Vector3.UP + right * dir_sign).normalized() * HIGHSIDE_LAUNCH_FORCE
 
 
-func trigger_crash(launch_impulse: Vector3 = Vector3.ZERO):
+func trigger_crash(crash_type: CrashType, launch_impulse: Vector3 = Vector3.ZERO):
 	# Sim state only — visuals ride the is_crashed edge in _process (firing them in rollback left them stuck).
 	player_entity.is_crashed = true
 	player_entity.crash_count += 1
 	player_entity.velocity = launch_impulse
 	player_entity.crash_launch_impulse = launch_impulse
+	player_entity.crash_type = crash_type
 
 
 ## Called from player_entity.gd's do_respawn
@@ -360,6 +395,7 @@ func do_reset():
 	_prev_front_brake = 0.0
 	_prev_throttle = 0.0
 	_brake_was_grabbed = false
+	washout_time = 0.0
 	_prev_air_trick = TrickController.Trick.NONE
 
 

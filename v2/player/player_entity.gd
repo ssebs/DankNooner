@@ -93,6 +93,7 @@ signal uncrashed
 @onready var visual_root: Node3D = %VisualRoot
 @onready var character_skin: CharacterSkin = %CharacterSkin
 @onready var bike_skin: BikeSkin = %BikeSkin
+@onready var bike_wreck: BikeWreck = %BikeWreck
 ## 2D so it draws over the 3D pass's glow; placed over name_tag_marker each frame
 @onready var name_label: Label = %NameLabel
 @onready var name_tag_marker: Marker3D = %NameTagMarker
@@ -178,6 +179,8 @@ var rb_respawn_transform: Transform3D = Transform3D()
 var rb_respawn_transform_oneshot: Transform3D = Transform3D()
 ## Highside launch stashed by trigger_crash for the is_crashed-edge ragdoll. Visual-only, not synced.
 var crash_launch_impulse: Vector3 = Vector3.ZERO
+## Stashed by trigger_crash for the is_crashed-edge bike wreck. Visual-only, not synced.
+var crash_type: CrashController.CrashType = CrashController.CrashType.LOWSIDE
 
 ## Tick the last respawn was anchored to + its resolved target. Netfox resimulates
 ## recent ticks when late input arrives (server: remote players; client: own prediction),
@@ -424,6 +427,8 @@ func _update_horn() -> void:
 ## Crash-entered edge. Ragdoll on every peer; camera + SFX local; crashed(peer_id) drives respawn.
 func _enter_crash_visuals() -> void:
 	animation_controller.start_ragdoll(crash_launch_impulse)
+	# MovementController bails while crashed, so pre_slide_velocity still holds the crash tick's.
+	bike_wreck.start(crash_type, movement_controller.pre_slide_velocity)
 	crashed.emit(int(name))
 	if !is_local_client:
 		# Everyone else hears another rider go down, from where they went down.
@@ -449,6 +454,7 @@ func _enter_crash_visuals() -> void:
 
 ## Crash-cleared edge. Rebuild mesh + IK because the ragdoll left rider/handlebar bones off base pose.
 func _exit_crash_visuals() -> void:
+	bike_wreck.stop()
 	animation_controller.stop_ragdoll()
 	_init_mesh()
 	_init_ik()
@@ -724,7 +730,7 @@ func on_crash():
 	# re-triggering would restart the ragdoll on top of itself.
 	if is_crashed:
 		return
-	crash_controller.trigger_crash()
+	crash_controller.trigger_crash(CrashController.CrashType.WALL)
 
 
 func do_respawn():

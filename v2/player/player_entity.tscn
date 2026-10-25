@@ -25,6 +25,10 @@
 [ext_resource type="Script" uid="uid://cajkhr7cisa7f" path="res://player/controllers/skidmark_controller.gd" id="30_skid"]
 [ext_resource type="Script" uid="uid://dbl1ukq1dy3xd" path="res://entities/vfx/rider_vfx.gd" id="31_rvfx"]
 [ext_resource type="Script" uid="uid://d0qu5fntjsi5d" path="res://utils/custom_audio_middleware/engine_sound_event_3d.gd" id="32_eng3d"]
+[ext_resource type="Script" uid="uid://ba88hqva8tywk" path="res://player/bikes/scripts/bike_wreck.gd" id="33_wreck"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_wreck"]
+friction = 0.5
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wig4y"]
 size = Vector3(4, 10, 2)
@@ -72,7 +76,7 @@ unique_name_in_owner = true
 script = ExtResource("3_faflk")
 root = NodePath("..")
 enable_prediction = true
-state_properties = Array[String]([":global_transform", ":velocity", ":up_direction", ":is_crashed", ":crash_count", ":movement_locked", "%BoostController:boost_amount", "%BoostController:boost_burn_target", "%BoostController:boost_burn_rate", "%BoostController:boost_prev_held", "%BoostController:boost_tap_window", "%BoostController:is_boosting", "%TrickController:combo_time", "%TrickController:combo_grace", "%TrickController:combo_boost_earned", "%TrickController:combo_multiplier", "%TrickController:combo_score", "%TrickController:_air_flips_awarded", "%TrickController:_was_airborne", "%TrickController:_hold_dir", "%TrickController:_hold_time", "%TrickController:_press_double", "%TrickController:_tap_dir", "%TrickController:_tap_age", "%TrickController:_tap_trick", "%TrickController:_tap_trick_timer", "%MovementController:pitch_angle", "%MovementController:wheelie_committed", "%MovementController:roll_angle", "%MovementController:speed", "%MovementController:slip_angle", "%WobbleController:wobble_angle", "%WobbleController:wobble_vel", "%WobbleController:wobble_brake_hold_time", "%WobbleController:wobble_from_trick", "%MovementController:stoppie_brake_hold_time", "%MovementController:balance_locked", "%MovementController:_rb_prev_held", "%MovementController:_lock_throttle_released", "%GearingController:current_gear", "%GearingController:current_rpm", "%GearingController:clutch_value", "%GearingController:is_rev_limited", "%GearingController:shift_cut_timer", "%MovementController:is_on_floor", "%MovementController:air_time", "%CrashController:_prev_air_trick", "%CrashController:_prev_throttle", "%CrashController:_prev_front_brake", "%CrashController:_brake_was_grabbed", "%MovementController:air_pitch_total", "%MovementController:_wheelie_grace_consumed", "%MovementController:hop_pitch_vel", "%MovementController:_hop_launch_vel", "%TrickController:_flip_emitted", "%TrickController:_last_trick", "%TrickController:_trick_timer", "%TrickController:_wheelie_exit_hold", "%MovementController:_prev_clutch_held", "%MovementController:_clutch_kick_window"])
+state_properties = Array[String]([":global_transform", ":velocity", ":up_direction", ":is_crashed", ":crash_count", ":movement_locked", "%BoostController:boost_amount", "%BoostController:boost_burn_target", "%BoostController:boost_burn_rate", "%BoostController:boost_prev_held", "%BoostController:boost_tap_window", "%BoostController:is_boosting", "%TrickController:combo_time", "%TrickController:combo_grace", "%TrickController:combo_boost_earned", "%TrickController:combo_multiplier", "%TrickController:combo_score", "%TrickController:_air_flips_awarded", "%TrickController:_was_airborne", "%TrickController:_hold_dir", "%TrickController:_hold_time", "%TrickController:_press_double", "%TrickController:_tap_dir", "%TrickController:_tap_age", "%TrickController:_tap_trick", "%TrickController:_tap_trick_timer", "%MovementController:pitch_angle", "%MovementController:wheelie_committed", "%MovementController:roll_angle", "%MovementController:speed", "%MovementController:slip_angle", "%WobbleController:wobble_angle", "%WobbleController:wobble_vel", "%WobbleController:wobble_brake_hold_time", "%WobbleController:wobble_from_trick", "%MovementController:stoppie_brake_hold_time", "%MovementController:balance_locked", "%MovementController:_rb_prev_held", "%MovementController:_lock_throttle_released", "%GearingController:current_gear", "%GearingController:current_rpm", "%GearingController:clutch_value", "%GearingController:is_rev_limited", "%GearingController:shift_cut_timer", "%MovementController:is_on_floor", "%MovementController:air_time", "%CrashController:_prev_air_trick", "%CrashController:_prev_throttle", "%CrashController:_prev_front_brake", "%CrashController:_brake_was_grabbed", "%CrashController:washout_time", "%MovementController:air_pitch_total", "%MovementController:_wheelie_grace_consumed", "%MovementController:hop_pitch_vel", "%MovementController:_hop_launch_vel", "%TrickController:_flip_emitted", "%TrickController:_last_trick", "%TrickController:_trick_timer", "%TrickController:_wheelie_exit_hold", "%MovementController:_prev_clutch_held", "%MovementController:_clutch_kick_window"])
 input_properties = Array[String](["%InputController:nfx_throttle", "%InputController:nfx_front_brake", "%InputController:nfx_rear_brake", "%InputController:nfx_steer", "%InputController:nfx_lean", "%InputController:nfx_trick_held", "%InputController:nfx_clutch_held", "%InputController:nfx_boost_held", "%InputController:nfx_horn_held", "%InputController:nfx_cam_x", "%InputController:nfx_cam_y", "%InputController:nfx_target_gear", "%InputController:is_gamepad"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
@@ -385,6 +389,38 @@ unit_size = 30.0
 bus = &"SFX"
 
 [node name="RemoteCrash" type="AudioStreamPlayer3D" parent="." unique_id=796028142]
+unique_name_in_owner = true
+unit_size = 30.0
+bus = &"SFX"
+
+[node name="BikeWreck" type="RigidBody3D" parent="." node_paths=PackedStringArray("player_entity", "ik_targets")]
+unique_name_in_owner = true
+top_level = true
+collision_layer = 0
+collision_mask = 19
+gravity_scale = 2.0
+physics_material_override = SubResource("PhysicsMaterial_wreck")
+continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 1
+freeze = true
+script = ExtResource("33_wreck")
+player_entity = NodePath("..")
+ik_targets = NodePath("../VisualRoot/IKTargets")
+
+[node name="WreckShape" type="CollisionShape3D" parent="BikeWreck"]
+unique_name_in_owner = true
+
+[node name="WreckSparks" parent="BikeWreck" instance=ExtResource("29_3kl2f")]
+unique_name_in_owner = true
+emitting = false
+
+[node name="WreckGrind" type="AudioStreamPlayer3D" parent="BikeWreck"]
+unique_name_in_owner = true
+unit_size = 30.0
+bus = &"SFX"
+
+[node name="WreckImpact" type="AudioStreamPlayer3D" parent="BikeWreck"]
 unique_name_in_owner = true
 unit_size = 30.0
 bus = &"SFX"

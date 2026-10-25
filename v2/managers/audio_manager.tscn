@@ -26,6 +26,7 @@
 [ext_resource type="AudioStream" uid="uid://dh4kgxmx1kba5" path="res://non_fmod_sounds/SFX/nuke-bomb.ogg" id="23_wigfl"]
 [ext_resource type="AudioStream" uid="uid://dapyaegjsje1r" path="res://non_fmod_sounds/SFX/cod-zombies-kaboom.ogg" id="24_7lx2g"]
 [ext_resource type="AudioStream" uid="uid://ck0twuq6xhxmm" path="res://non_fmod_sounds/SFX/tire_squeal_loop_01.ogg" id="26_2gp0e"]
+[ext_resource type="AudioStream" uid="uid://b6nit10b22lh7" path="res://non_fmod_sounds/SFX/concrete-scrape.mp3" id="crash_grind"]
 [ext_resource type="AudioStream" uid="uid://0k35edkokth6" path="res://non_fmod_sounds/XSR900/xsr-idle-loop-w-exhaust.ogg" id="26_holwe"]
 [ext_resource type="AudioStream" uid="uid://bulh350cqoa0a" path="res://non_fmod_sounds/XSR900/xsr900-mid.ogg" id="26_uckac"]
 [ext_resource type="AudioStream" uid="uid://btsdhy0nfx6rj" path="res://non_fmod_sounds/Exhaust_Pops/pop2.ogg" id="28_holwe"]
@@ -660,6 +661,14 @@ unique_name_in_owner = true
 stream = ExtResource("40_yapapa_cat")
 bus = &"SFX"
 script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="CrashGrind" type="AudioStreamPlayer" parent="Sounds"]
+unique_name_in_owner = true
+stream = ExtResource("crash_grind")
+bus = &"SFX"
+script = ExtResource("2_snd")
+loop = true
 metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 
 [node name="Music" type="Node" parent="." unique_id=795425564]

@@ -83,6 +83,7 @@ enum Sfx {
 	NOOT_NOOT,
 	POLISH_COW,
 	YAPAPA_CAT,
+	CRASH_GRIND,
 }
 
 ## Music playlists, one per container under the Music node. Add a song by dropping a
@@ -185,6 +186,7 @@ var burger_king: SoundEvent
 var noot_noot: SoundEvent
 var polish_cow: SoundEvent
 var yapapa_cat: SoundEvent
+var crash_grind: SoundEvent
 
 ## Map of Sfx → SoundEvent node, populated in _ready.
 var _sfx_events: Dictionary = {}
@@ -284,6 +286,7 @@ func _ready():
 	noot_noot = get_node_or_null("%NootNoot") as SoundEvent
 	polish_cow = get_node_or_null("%PolishCow") as SoundEvent
 	yapapa_cat = get_node_or_null("%YapapaCat") as SoundEvent
+	crash_grind = get_node_or_null("%CrashGrind") as SoundEvent
 	_exhaust_pops = _sound_events_in("%ExhaustPops")
 	_music_tracks = {
 		MusicType.MENU: _sound_events_in("%MenuMusic"),
@@ -360,6 +363,7 @@ func _ready():
 		Sfx.NOOT_NOOT: noot_noot,
 		Sfx.POLISH_COW: polish_cow,
 		Sfx.YAPAPA_CAT: yapapa_cat,
+		Sfx.CRASH_GRIND: crash_grind,
 	}
 	_engine_sounds = {
 		EngineSfx.NINJA500: ninja500_revs,

@@ -5,10 +5,9 @@
 
 
 ### NOW
-
-- [ ] record gameplay for page
+- [ ] hud toggle in editor for trailer
 - [ ] record gameplay for trailer
-- [ ] record streamer moments
+- [ ] record "streamer" moments
 
 ### NEXT
 - [ ] slow speed turning anim doesn't look right (front wheel going into ground, not sharp enough turn / realistic counter leaning)
