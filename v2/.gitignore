@@ -16,3 +16,13 @@ tmp/*
 !/dist/*/.stub
 !/dist/windows/*.dll
 !/dist/linux/*.so
+
+# same for the demo builds in dist/demo/
+!/dist/demo/
+!/dist/demo/windows/
+!/dist/demo/linux/
+!/dist/demo/mac/
+/dist/demo/*/*
+!/dist/demo/*/.stub
+!/dist/demo/windows/*.dll
+!/dist/demo/linux/*.so

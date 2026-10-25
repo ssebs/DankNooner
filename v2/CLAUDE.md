@@ -126,7 +126,7 @@ Broadcast RPCs are server-only and must reject non-server senders. See
 - `player/` - PlayerEntity + `controllers/`
 - `menus/` - menu states (main, splash, play, lobby, customize, settings, pause, loading)
 - `levels/` - all levels extend `LevelDefinition`
-- `entities/` - non-player entities (`NPCRiderEntity` + its state machine, `NPCAnimalEntity`, `NPCAnimationController`, `TrafficRouteGraph`, `vehicles/`, `vfx/`)
+- `entities/` - non-player entities (`NPCRiderEntity` + its state machine, `NPCAnimalEntity`, `NPCAnimationController`, `NPCRacingLine`, `vehicles/`, `vfx/`)
 - `resources/` - `BikeSkinDefinition` / `CharacterSkinDefinition` `.tres` files
 - `utils/state_machine/` - base `State`, `StateMachine`, `StateContext` classes
 - `utils/constants.gd` - global constants/enums
