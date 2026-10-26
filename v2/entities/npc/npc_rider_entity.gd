@@ -7,10 +7,7 @@
 ## states own the physics tick and call the helpers below. A manager moves a
 ## freshly spawned rider into its behavior state.
 ##
-## Race steering follows the road-generator lane curves (via RoadLaneAgent), not a
-## navmesh: the bot reads a point ahead along its current RoadLane, which
-## auto-wraps to lane_next — so it rides the road's own line and never
-## corner-cuts. Checkpoints only score laps / set respawns (see RaceTask).
+## Race bots ride the shared NPCRacingLine baked off the navmesh (see NPCRaceState).
 ## Traffic rides the baked TrafficNetwork on rails instead, with no body collision —
 ## its ContactArea reports hits (see NPCTrafficState).
 ##
@@ -54,8 +51,8 @@ enum VehicleType {BIKE, CAR}
 ## picking corner speed — larger = brakes earlier for upcoming turns.
 @export var turn_lookahead: float = 12.0
 @export var turn_speed: float = 4.0
-## How many seconds of travel ahead to place the steering target on the lane
-## curve — larger smooths the line, smaller hugs it. Clamped to a sane range.
+## How many seconds of travel ahead to place the steering target on the path
+## — larger smooths the line, smaller hugs it. Clamped to a sane range.
 @export var steer_lookahead_time: float = 0.25
 @export var min_steer_lookahead: float = 3.0
 @export var max_steer_lookahead: float = 12.0
@@ -65,8 +62,8 @@ enum VehicleType {BIKE, CAR}
 ## level's TrafficSettings. Empty leaves the skin's authored color alone.
 @export var paint_colors: Array[Color] = []
 ## How long a cached "rider ahead" / corner-speed reading is reused before re-scanning.
-## Both sweeps are expensive: nearest_racer_ahead walks every racer in the level (so the
-## pack costs O(n²) a tick), and lane_speed does two baked-curve searches. Running either
+## Both sweeps are expensive: NPCRaceState's forward scan is a physics shape query, and
+## lane_speed does two baked-curve searches. Running either
 ## at full tick rate is what caps rider count. Rolled per rider so scans spread across
 ## frames instead of spiking on one. Steering itself still updates every tick.
 @export var scan_interval_min: float = 0.15
@@ -94,10 +91,6 @@ const NEAR_MISS_MARGIN: float = 1.0
 var bike_skin: BikeSkin
 var character_skin: CharacterSkin
 var car_skin: CarSkin
-
-## The level's RoadManager — set by NPCRaceManager before add_child so the lane agent
-## can find its lanes. Traffic leaves it null and gets no lane agent.
-var road_manager: RoadManager
 
 ## Synced to clients via MultiplayerSynchronizer (server authority).
 var npc_state: NPCState = NPCState.RIDING
@@ -132,12 +125,10 @@ var username: String:
 		if is_node_ready():
 			name_label.text = username
 
-## Server sets this to start/stop the bot riding along its lane.
+## Server sets this to start/stop a race bot riding.
 var driving: bool = false
 ## Current horizontal speed magnitude, ramped toward the turn-scaled target.
 var current_speed: float = 0.0
-## Lane-curve follower — created in _ready for race riders only (see road_manager).
-var lane_agent: RoadLaneAgent
 ## Fixed lateral offset off the centreline, for line variety between bots.
 var line_offset: float = 0.0
 
@@ -149,9 +140,7 @@ var _has_sync_pose: bool = false
 ## The tick before the synced pose, so the server can render exactly between the two.
 var _phys_prev: Transform3D
 
-## Cached sweep results, refreshed on the scan_interval cadence rather than per tick.
-var _blocker: Node3D
-var _blocker_next_scan_ms: int = 0
+## Cached lane_speed reading, refreshed on the scan_interval cadence rather than per tick.
 var _lane_speed: float = 0.0
 var _lane_speed_next_scan_ms: int = 0
 
@@ -188,7 +177,7 @@ func _enter_tree() -> void:
 func _ready():
 	# Same shape as PlayerEntity._ready: definitions → mesh → collision up front so
 	# the scene previews correctly in-editor, then bail before anything that needs
-	# a spawning manager (road_manager is null until one runs).
+	# a spawning manager.
 	_init_mesh()
 	_init_collision_shape()
 
@@ -209,14 +198,6 @@ func _ready():
 	# Our _physics_process restores the authoritative pose the behavior states simulate from,
 	# so it has to land before theirs — see _physics_process.
 	process_physics_priority = -1
-
-	if road_manager:
-		lane_agent = RoadLaneAgent.new()
-		lane_agent.road_manager_path = road_manager.get_path()
-		# Don't auto-free the bot when its lane rebuilds — the manager owns its life.
-		lane_agent.auto_register = false
-		add_child(lane_agent)
-		lane_agent.assign_nearest_lane()
 
 	# Per-bot variety: a lateral offset + a speed scale, seeded off the (unique)
 	# node name so both are stable and differ between bots.
@@ -281,14 +262,6 @@ func set_drawn(drawn: bool) -> void:
 #region Steering helpers (called by the behavior states, server-side)
 
 
-## Point this far ahead along the current lane curve, nudged sideways by this
-## rider's fixed line offset. Advances current_lane across segment boundaries.
-func lane_point_ahead(dist: float) -> Vector3:
-	# a.cross(UP) is always horizontal, so no need to flatten the facing first.
-	var right := (-global_transform.basis.z).cross(Vector3.UP).normalized()
-	return lane_agent.move_along_lane(dist) + right * line_offset
-
-
 ## This rider's flat-out speed — move_speed with its personal variance applied.
 func cruise_speed() -> float:
 	return move_speed * _speed_scale
@@ -296,19 +269,18 @@ func cruise_speed() -> float:
 
 ## Corner-aware target speed: reads the lane's bend over the next
 ## `turn_lookahead` metres via point_ahead(dist) -> Vector3, which must not advance
-## the lane (RoadLaneAgent.test_move_along_lane / TrafficLaneFollower.point_ahead).
+## the lane (TrafficLaneFollower.point_ahead).
 ## Compare the road's heading over the near half of the window vs the far half:
 ## straight -> cruise, a bend eases toward
 ## min_turn_speed. Because we look ahead, the bot brakes BEFORE the apex and
 ## accelerates back out as the road straightens.
-## Throttled — two baked-curve searches per call (RoadLaneAgent._move_along_lane does a
-## get_closest_point AND a get_closest_offset each), and steer_toward ramps toward the
+## Throttled — two baked-curve searches per call, and the speed ramps toward the
 ## result anyway, so a reading a fraction of a second old is indistinguishable.
 func lane_speed(point_ahead: Callable) -> float:
 	var now := Time.get_ticks_msec()
 	if now < _lane_speed_next_scan_ms:
 		return _lane_speed
-	_lane_speed_next_scan_ms = now + _next_scan_delay_ms()
+	_lane_speed_next_scan_ms = now + next_scan_delay_ms()
 
 	var mid: Vector3 = point_ahead.call(turn_lookahead)
 	var far: Vector3 = point_ahead.call(turn_lookahead * 2.0)
@@ -376,44 +348,8 @@ func apply_gravity_and_move(delta: float) -> void:
 	sync_position = global_position
 
 
-## Nearest racer within range + forward cone that is slower than us — the one
-## worth passing / tucking in behind. Null if the road ahead is clear. Scans
-## humans too. Race bots only; traffic uses NPCTrafficState's per-lane lookup.
-## Throttled — this sweeps the whole Racers group, so every rider doing it every tick
-## makes the pack O(n²) (128 riders ≈ 16k iterations a tick). A reaction delay of a
-## fraction of a second on "ease off behind the rider ahead" reads as normal driving.
-func nearest_racer_ahead(detect_range: float, detect_angle: float) -> Node3D:
-	var now := Time.get_ticks_msec()
-	if now < _blocker_next_scan_ms:
-		# Whoever we found last sweep may have despawned or crashed out since.
-		return _blocker if is_instance_valid(_blocker) else null
-	_blocker_next_scan_ms = now + _next_scan_delay_ms()
-
-	var forward := -global_transform.basis.z
-	forward.y = 0.0
-	forward = forward.normalized()
-	var best: Node3D = null
-	var best_dist := detect_range
-	for racer in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Racers"]):
-		if racer == self:
-			continue
-		var to: Vector3 = racer.global_position - global_position
-		to.y = 0.0
-		var dist := to.length()
-		if dist < 0.5 or dist > best_dist:
-			continue
-		if forward.dot(to / dist) < detect_angle:
-			continue
-		if horizontal_speed(racer) >= current_speed - 1.0:
-			continue
-		best = racer
-		best_dist = dist
-	_blocker = best
-	return best
-
-
 ## Randomized per call so riders never settle into scanning on the same tick.
-func _next_scan_delay_ms() -> int:
+func next_scan_delay_ms() -> int:
 	return int(randf_range(scan_interval_min, scan_interval_max) * 1000.0)
 
 
@@ -468,10 +404,6 @@ func teleport_to(pos: Vector3, basis: Basis) -> void:
 	velocity = Vector3.ZERO
 	current_speed = 0.0
 	npc_state = NPCState.RIDING
-	# Position jumped — re-latch to the nearest lane from here. Traffic has no lane agent;
-	# its manager re-places the follower itself.
-	if lane_agent:
-		lane_agent.assign_nearest_lane()
 
 
 #endregion

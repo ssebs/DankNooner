@@ -70,8 +70,10 @@ leave the pumps free and ride to a `start_zone.tscn` (a `TriggerZone` wearing th
 `start_ring.tscn`, a label and a light beam) in the route, via a `CheckpointTask` with
 `respawn_in_place` and `hide_trigger_on_pass` (each rider stops seeing the zone once through it).
 Once the last rider arrives, the race runner grids and counts everyone in as usual. The minimap
-and `TargetCompass` point at the zone meanwhile. A results-screen restart skips straight to the
-race runner.
+and `TargetCompass` point at the zone meanwhile, and the camera is held facing it briefly as the
+step begins. Until the race runner starts, the route's props are hidden and uncollided
+(`EventRoute.set_props_active`, lobby-wide so collision matches on every peer) and pickups stay
+unspawned. A results-screen restart skips straight to the race runner.
 
 **Free roam:** each pump is also a `FreeRoamActivity` (see
 [GamemodeSystem](./GamemodeSystem.md)) with its own small `%PlayerStartCircle`. Its `server_start`

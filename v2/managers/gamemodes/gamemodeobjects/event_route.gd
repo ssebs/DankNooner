@@ -56,15 +56,34 @@ func get_pickup_spawners() -> Array[PickupSpawner]:
 ## Show + collide only while one of its events runs — a hidden prop mustn't be an invisible wall.
 func set_active(active: bool):
 	visible = active
-	for obj in find_children("*", "GameModeObject", true, false):
-		obj.is_active = active
-		# Start zones stay hidden unless a CheckpointTask shows them to its rider.
-		if obj is TriggerZone:
-			obj.visible = false
-	for shape in find_children("*", "CollisionShape3D", true, false):
-		shape.disabled = not active
+	set_props_active(active)
+	for child in get_children():
+		if child is TriggerZone:
+			_set_prop_active(child, active)
+			# Start zones stay hidden unless a CheckpointTask shows them to its rider.
+			child.visible = false
+
+
+## Everything but the start zones, so the drive to the start can hide the race's props.
+func set_props_active(active: bool):
+	for child in get_children():
+		if child is TriggerZone:
+			continue
+		if child is Node3D:
+			child.visible = active
+		_set_prop_active(child, active)
 	for csg in _colliding_csgs:
 		csg.use_collision = active
+
+
+## Recurses so nested GameModeObjects and shapes are caught.
+func _set_prop_active(node: Node, active: bool):
+	if node is GameModeObject:
+		node.is_active = active
+	elif node is CollisionShape3D:
+		node.disabled = not active
+	for child in node.get_children():
+		_set_prop_active(child, active)
 
 
 func _get_configuration_warnings() -> PackedStringArray:

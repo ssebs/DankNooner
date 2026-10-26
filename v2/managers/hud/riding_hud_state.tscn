@@ -184,6 +184,13 @@ mouse_filter = 2
 script = ExtResource("99_tcmps")
 minimap = NodePath("../BottomLeftVBox/MapRow/Minimap")
 
+[node name="Distance" type="Label" parent="UI/AspectContainer/MarginContainer/TargetCompass"]
+unique_name_in_owner = true
+layout_mode = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+
 [node name="TrickPrompt" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2

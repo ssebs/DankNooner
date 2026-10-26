@@ -18,6 +18,8 @@ const PITCH_MAX_DEG: float = 60.0
 const TPS_LOOK_HEIGHT: float = 0.75
 ## Street race: max yaw (deg) the resting cam turns toward the next checkpoint.
 const CHECKPOINT_YAW_MAX_DEG: float = 15.0
+## Drive to the start: how long the cam is held facing the start once the step begins.
+const GUIDE_LOOK_SECS: float = 2.0
 
 const FPS_PITCH_MIN_DEG: float = -30.0
 const FPS_PITCH_MAX_DEG: float = 45.0
@@ -107,6 +109,9 @@ var _mouse_delta: Vector2 = Vector2.ZERO
 var _no_input_timer: float = 0.0
 var _stick_trick_latched: bool = false # stick held since it was last trick input
 var _checkpoint_yaw_bias: float = 0.0
+## Counts down while the cam is held facing a guide target, see _update_guide_look.
+var _guide_look_timer: float = 0.0
+var _was_guided: bool = false
 ## Smoothed tps_marker.position — eases the wheelie-cam reframe in/out (the anim ramps it linearly).
 var _tps_marker_offset: Vector3 = Vector3.ZERO
 
@@ -159,6 +164,7 @@ func _process(delta: float):
 	# Once the stick is trick input it stays so until released — a direction still held as the
 	# wheelie / jump ends shouldn't swing the camera.
 	_stick_trick_latched = _stick_held() and _stick_is_trick_input()
+	_update_guide_look(delta)
 
 	match current_cam_mode:
 		CameraMode.TPS:
@@ -200,9 +206,24 @@ func _stick_is_trick_input() -> bool:
 	)
 
 
+## Starts the hold when a guide target (drive to the start) first appears on the minimap.
+func _update_guide_look(delta: float):
+	var minimap := player_entity.hud_manager.riding_hud_state.minimap
+	var guided := minimap.has_checkpoint and minimap.checkpoint_is_guide
+	if guided and not _was_guided:
+		_guide_look_timer = GUIDE_LOOK_SECS
+	_was_guided = guided
+	_guide_look_timer = maxf(_guide_look_timer - delta, 0.0)
+
+
 #region TPS orbit
 func _update_tps_input(delta: float, mouse: Vector2):
-	if _has_cam_input(mouse):
+	if _guide_look_timer > 0.0:
+		var t: float = RESET_SPEED * delta
+		_orbit_yaw = wrapf(lerp_angle(_orbit_yaw, _get_checkpoint_bearing(), t), -PI, PI)
+		_orbit_pitch = lerpf(_orbit_pitch, _default_orbit_pitch, t)
+		_no_input_timer = 0.0
+	elif _has_cam_input(mouse):
 		_orbit_yaw -= mouse.x * _mouse_cam_sens
 		_orbit_pitch -= mouse.y * _mouse_cam_sens
 
@@ -287,13 +308,17 @@ func _is_street_racing() -> bool:
 func _get_checkpoint_yaw_bias() -> float:
 	if not _is_street_racing():
 		return 0.0
+	var limit: float = deg_to_rad(CHECKPOINT_YAW_MAX_DEG)
+	return clampf(_get_checkpoint_bearing(), -limit, limit)
+
+
+## Yaw off the bike's heading that faces the minimap's checkpoint target.
+func _get_checkpoint_bearing() -> float:
 	var to_ckpt: Vector3 = (
 		player_entity.hud_manager.riding_hud_state.minimap.checkpoint_pos
 		- player_entity.global_position
 	)
-	var bias: float = wrapf(atan2(-to_ckpt.x, -to_ckpt.z) - _get_tps_base_yaw(), -PI, PI)
-	var limit: float = deg_to_rad(CHECKPOINT_YAW_MAX_DEG)
-	return clampf(bias, -limit, limit)
+	return wrapf(atan2(-to_ckpt.x, -to_ckpt.z) - _get_tps_base_yaw(), -PI, PI)
 
 
 #endregion
@@ -301,7 +326,13 @@ func _get_checkpoint_yaw_bias() -> float:
 
 #region FPS look
 func _update_fps_input(delta: float, mouse: Vector2):
-	if _has_cam_input(mouse):
+	if _guide_look_timer > 0.0:
+		var t: float = RESET_SPEED * delta
+		var limit: float = deg_to_rad(FPS_YAW_LIMIT_DEG)
+		_fps_yaw_offset = lerpf(_fps_yaw_offset, clampf(_get_checkpoint_bearing(), -limit, limit), t)
+		_fps_pitch_offset = lerpf(_fps_pitch_offset, 0.0, t)
+		_no_input_timer = 0.0
+	elif _has_cam_input(mouse):
 		_fps_yaw_offset -= mouse.x * _mouse_cam_sens
 		_fps_pitch_offset -= mouse.y * _mouse_cam_sens
 

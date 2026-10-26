@@ -791,6 +791,13 @@ bus = &"Music"
 script = ExtResource("2_snd")
 metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 
+[node name="BladeRider" type="AudioStreamPlayer" parent="Music/FreeRoamMusic" unique_id=1739420586]
+stream = ExtResource("music_1")
+volume_db = -8.0
+bus = &"Music"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
 [node name="EventMusic" type="Node" parent="Music" unique_id=561060838]
 unique_name_in_owner = true
 

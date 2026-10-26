@@ -22,6 +22,10 @@ const GROUPS = {
 	"Traffic": "Traffic",
 }
 
+## Navigation layers (bitmasks, not physics layers) of each level's NPCNavRegions.
+const NAV_LAYER_ROAD: int = 1
+const NAV_LAYER_GRASS: int = 2
+
 ## Remappable actions, keyed by category localization key. A category is the context its actions
 ## are active in, so duplicate binds only conflict within one.
 const CONTROL_CATEGORIES: Dictionary = {

@@ -14,21 +14,38 @@ class_name NPCRaceManager extends BaseManager
 	load("res://resources/player/default_player_definition.tres")
 ]
 @export var respawn_delay: float = 3.0
+## Racing line bake (see NPCRacingLine): metres between samples, Laplacian smoothing passes, the
+## lateral acceleration (m/s^2) the line's corner speeds allow, and how far road room is probed.
+@export var line_sample_spacing: float = 4.0
+@export var line_smoothing_passes: int = 6
+@export var corner_grip: float = 14.0
+@export var line_max_half_width: float = 12.0
 
 const NPC_SCENE: PackedScene = preload("res://entities/npc/npc_rider_entity.tscn")
+## dbg_racing_line drawings live until the next toggle or bake clears them
+const DRAW_SECONDS := 1.0e9
 
 ## Set by NPCRacersComponent while a race runs; null otherwise.
 var race_task: RaceTask
 
+## Server only. The line every bot rides, baked by bake_racing_line; null until then.
+var racing_line: NPCRacingLine
+
 var _npcs: Dictionary[int, NPCRiderEntity] = {}
-## Junction routing for the bots. RoadContainer never gives intersection lanes a
-## lane_next, so without this they dead-end at every junction — fine on a closed-loop
-## racetrack, fatal on a map with 3-way/4-way/roundabout containers.
-var _route_graph: TrafficRouteGraph
 ## Grid-slot spawn transform per NPC — crash-respawn fallback until the NPC
 ## passes its first checkpoint.
 var _spawn_transforms: Dictionary[int, Transform3D] = {}
 var _next_id: int = -1
+## Bumped on despawn, so a bake still waiting on the nav map from a race that ended is dropped.
+var _bake_generation: int = 0
+var _draw_racing_line: bool = false
+
+
+func _ready():
+	super()
+	if Engine.is_editor_hint():
+		return
+	Console.add_command("dbg_racing_line", _toggle_racing_line_debug, [], 0, "Toggle the NPC racing line debug draw")
 
 
 ## Server-only AI tick: retarget each NPC at the checkpoint RaceTask expects
@@ -65,12 +82,6 @@ func _physics_process(_delta: float):
 ## Server only. Spawns an NPC on every peer at the given transform and
 ## returns its (negative) racer id.
 func spawn_npc(pos: Vector3, basis: Basis) -> int:
-	# Built once per race on the first spawn — the road network is up by now, and doing
-	# it here keeps both race gamemodes from needing their own call. Cleared on despawn.
-	if _route_graph == null:
-		_route_graph = TrafficRouteGraph.new(
-			TrafficRouteGraph.gather_lanes(get_tree(), _find_road_manager())
-		)
 	var npc_id := _next_id
 	_next_id -= 1
 	rpc_spawn_npc.rpc(npc_id, pos, basis)
@@ -81,8 +92,50 @@ func spawn_npc(pos: Vector3, basis: Basis) -> int:
 func despawn_all_npcs() -> void:
 	for npc_id in _npcs.keys():
 		rpc_despawn_npc.rpc(npc_id)
-	# Its lanes belong to the level being torn down; the next race rebuilds it.
-	_route_graph = null
+	# Its navmesh belongs to the level being torn down; the next race bakes its own.
+	racing_line = null
+	_bake_generation += 1
+
+
+## Server only. Bakes the racing line through route's checkpoints. Bots hold on the grid until it
+## lands, so callers don't await it.
+func bake_racing_line(route: EventRoute) -> void:
+	var region := level_manager.current_level.npc_nav_region
+	var generation := _bake_generation
+	# A level loaded this frame has no synced nav map yet, and paths on it come back empty
+	while NavigationServer3D.map_get_iteration_id(region.get_navigation_map()) == 0:
+		await NavigationServer3D.map_changed
+	# The race ended (or restarted) while we waited — skip is intentional
+	if generation != _bake_generation:
+		return
+	var checkpoints := route.get_checkpoints()
+	var is_lap := RaceTask.is_lap_route(checkpoints)
+	var positions := PackedVector3Array()
+	# A point-to-point first checkpoint can sit far up the road, so start the line on the grid
+	if !is_lap:
+		var grid_markers := route.get_grid_markers()
+		var grid_center := Vector3.ZERO
+		for marker in grid_markers:
+			grid_center += marker.global_position
+		positions.append(grid_center / grid_markers.size())
+	for checkpoint in checkpoints:
+		positions.append(checkpoint.global_position)
+	racing_line = NPCRacingLine.new(
+		region.get_rid(),
+		positions,
+		is_lap,
+		line_sample_spacing,
+		line_smoothing_passes,
+		corner_grip,
+		line_max_half_width
+	)
+	DebugUtils.DebugMsg(
+		"NPC racing line baked: %.0fm, closed=%s" % [racing_line.get_length(), racing_line.closed]
+	)
+	for npc_id in _npcs:
+		_race_state(npc_id).racing_line = racing_line
+	if _draw_racing_line:
+		_draw_line()
 
 
 ## Server only. A late joiner's level just loaded — resend every live bot at its
@@ -126,8 +179,6 @@ func rpc_spawn_npc(npc_id: int, pos: Vector3, basis: Basis):
 	# Paint pool lives on the level's TrafficSettings — race bots on this map paint
 	# from the same one. Read per peer, like the rest of the level's settings.
 	npc.paint_colors = level_manager.current_level.traffic_settings.paint_colors
-	# Lane follower needs the level's RoadManager before _ready runs.
-	npc.road_manager = _find_road_manager()
 
 	level_manager.current_level.player_spawn_pos.add_child(npc, true)
 	npc.global_transform = Transform3D(basis, pos)
@@ -138,18 +189,17 @@ func rpc_spawn_npc(npc_id: int, pos: Vector3, basis: Basis):
 		return
 	# StateMachine._ready defers its own transition into the idle state — queue
 	# ours behind it so the bot isn't flipped straight back to idle.
-	var race_state := npc.state_machine.get_state_by_name("NPCRaceState") as NPCRaceState
-	race_state.route_graph = _route_graph
-	race_state.race_task = race_task
+	var race_state := _race_state(npc_id)
+	# Null while the bake waits on the nav map — the bake hands it over when it lands
+	race_state.racing_line = racing_line
 	# Wedged on geometry the lanes don't model — same wipeout + checkpoint respawn a
 	# crash gets, which is exactly the recovery we want.
 	race_state.stuck.connect(crash_npc.bind(npc_id))
 	npc.state_machine.request_state_change.call_deferred(race_state)
 
 
-## The current level's RoadManager, whose lanes the NPCs follow.
-func _find_road_manager() -> RoadManager:
-	return level_manager.current_level.find_children("*", "RoadManager", true, false)[0]
+func _race_state(npc_id: int) -> NPCRaceState:
+	return _npcs[npc_id].state_machine.get_state_by_name("NPCRaceState") as NPCRaceState
 
 
 @rpc("call_local", "reliable")
@@ -186,6 +236,41 @@ func _respawn_npc(npc_id: int) -> void:
 		if ckpt != null:
 			t = ckpt.global_transform
 	_npcs[npc_id].teleport_to(t.origin, t.basis)
+	_race_state(npc_id).reset_line_progress()
+
+
+#endregion
+
+#region Debug draw (server only)
+
+
+func _toggle_racing_line_debug() -> void:
+	_draw_racing_line = !_draw_racing_line
+	DebugDraw3D.clear_all()
+	if _draw_racing_line and racing_line != null:
+		_draw_line()
+
+
+## The line coloured slow (red) to fast (green) by the first bot's braking profile, with the road
+## room either side.
+func _draw_line() -> void:
+	var profile := racing_line.braking_profile(_npcs.values()[0].braking, 1.0)
+	var cruise: float = _npcs.values()[0].move_speed
+	var step := racing_line.sample_spacing
+	DebugDraw3D.clear_all()
+	# Seen through the road and props. Held only to keep the scope alive
+	@warning_ignore("unused_variable")
+	var cfg := DebugDraw3D.new_scoped_config().set_no_depth_test(true)
+	var s := 0.0
+	while s < racing_line.get_length():
+		var a := racing_line.point_at(s) + Vector3.UP * 0.3
+		var b := racing_line.point_at(s + step) + Vector3.UP * 0.3
+		var color := Color.RED.lerp(Color.GREEN, clampf(racing_line.profile_speed(profile, s) / cruise, 0.0, 1.0))
+		DebugDraw3D.draw_line(a, b, color, DRAW_SECONDS)
+		var right := racing_line.right_at(s)
+		DebugDraw3D.draw_line(a + right * racing_line.half_width_at(s, 1.0), a, Color.GRAY, DRAW_SECONDS)
+		DebugDraw3D.draw_line(a - right * racing_line.half_width_at(s, -1.0), a, Color.DIM_GRAY, DRAW_SECONDS)
+		s += step
 
 
 #endregion

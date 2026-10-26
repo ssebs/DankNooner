@@ -12,6 +12,12 @@ func race_start() -> void:
 	pass
 
 
+## The race's own runner started (the grid): after pre-race runners like the drive to the start,
+## and on restart.
+func race_runner_start() -> void:
+	pass
+
+
 ## Every frame while a leg is live (not during the results screen).
 func tick(_delta: float) -> void:
 	pass

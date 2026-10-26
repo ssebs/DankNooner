@@ -5,7 +5,7 @@
 
 
 ### NOW
-
+- [ ] close call oncoming traffic should 2x vs close call same dir
 - [ ] find start of race after filling up needs to be more obvious (arrow is a good start, but how?)
 - [ ] fill up spil hud height changes
 - [ ] controller press b to go back in menu (aka unpause, or go back to prev page)

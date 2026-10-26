@@ -5,7 +5,7 @@ class_name PickupsComponent extends RaceComponent
 @export var item_manager: ItemManager
 
 
-func race_start() -> void:
+func race_runner_start() -> void:
 	item_manager.clear_items()
 	for spawner in race_mode.get_route().get_pickup_spawners():
 		spawner.activate(item_manager)

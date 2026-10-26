@@ -96,10 +96,7 @@ func show_ui():
 		submit_btn.pressed.connect(_on_submit_pressed)
 	if !close_btn.pressed.is_connected(_on_close_pressed):
 		close_btn.pressed.connect(_on_close_pressed)
-	if event_picker.visible:
-		event_picker.call_deferred("grab_focus")
-	else:
-		submit_btn.call_deferred("grab_focus")
+	submit_btn.call_deferred("grab_focus")
 
 
 func hide_ui():

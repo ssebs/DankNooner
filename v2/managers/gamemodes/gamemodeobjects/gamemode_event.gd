@@ -41,6 +41,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 	for race_task: RaceTask in race_tasks:
 		if checkpoints.size() < 2:
 			issues.append("route needs at least 2 CheckPointMarker children")
-		elif race_task.total_laps > 1 and not "StartStop" in checkpoints[0].name:
+		elif race_task.total_laps > 1 and not RaceTask.is_lap_route(checkpoints):
 			issues.append("lap races need the route's first CheckPointMarker named ending in \"StartStop1\"")
 	return issues

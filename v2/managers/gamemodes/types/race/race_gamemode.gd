@@ -38,6 +38,8 @@ const REQUIRED_COMPONENTS: Dictionary[RaceType, Array] = {
 
 ## Server only — the event's RaceTask, the single source of race position and finish times.
 var race_task: RaceTask
+## The runner holding the RaceTask; pre-race runners (drive to the start) come before it.
+var _race_runner_index: int = -1
 var _components: Array[RaceComponent] = []
 var _results_refresh_accum: float = 0.0
 
@@ -48,13 +50,18 @@ func Enter(state_context: StateContext):
 	DebugUtils.DebugMsg("Race Mode: %s" % RaceType.keys()[race_type])
 
 	super(state_context)
-	# Same frame super() reveals the route, so the other gates are never drawn.
-	_event.route.show_only_checkpoints(RaceTask.START_CHECKPOINTS)
+	var task: RaceTask = _event.find_children("*", "RaceTask", true, false)[0]
+	_race_runner_index = _runners.find_custom(func(r): return r.is_ancestor_of(task))
+	# Same frame super() reveals the route, so the other gates are never drawn. Pre-race runners
+	# keep the props hidden until _rpc_show_race_props.
+	if _race_runner_index > 0:
+		_event.route.set_props_active(false)
+	else:
+		_event.route.show_only_checkpoints(RaceTask.START_CHECKPOINTS)
 	results_hud.restart_pressed.connect(_on_results_restart_pressed)
 	results_hud.retry_pressed.connect(_on_results_retry_pressed)
 
-	# Hook order: traffic before NPCs (the route graph must exist before riders circulate),
-	# scoring before the leaderboard reads it.
+	# Hook order: scoring before the leaderboard reads it.
 	_components.assign(
 		[
 			traffic, npc_racers, pickups, style_scoring, finish_bonus, fuel_up_bonus,
@@ -64,7 +71,7 @@ func Enter(state_context: StateContext):
 	)
 
 	if multiplayer.is_server():
-		race_task = _event.find_children("*", "RaceTask", true, false)[0]
+		race_task = task
 		_race_start()
 		_start_next_runner()
 	elif traffic != null:
@@ -127,6 +134,24 @@ func _race_start():
 func _race_end():
 	for component in _components:
 		component.race_end()
+
+
+#override
+func _start_next_runner():
+	super()
+	if _active_runner_index != _race_runner_index:
+		return
+	if _race_runner_index > 0:
+		_rpc_show_race_props.rpc()
+	for component in _components:
+		component.race_runner_start()
+
+
+## Server -> all: everyone's through the pre-race runners, so show the props Enter hid.
+@rpc("call_local", "reliable")
+func _rpc_show_race_props():
+	_event.route.set_props_active(true)
+	_event.route.show_only_checkpoints(RaceTask.START_CHECKPOINTS)
 
 
 #region Checkpoint markers (server only)
@@ -209,7 +234,7 @@ func _on_results_restart_pressed():
 	# Already stopped (results show only after all_completed), unless restart races the countdown.
 	_stop_active_runner()
 	# Straight back to the race's runner (its grid), skipping pre-race ones like drive to the start.
-	_active_runner_index = _runners.find_custom(func(r): return r.is_ancestor_of(race_task)) - 1
+	_active_runner_index = _race_runner_index - 1
 	_inject_runner_deps()
 	_race_end()
 	_race_start()

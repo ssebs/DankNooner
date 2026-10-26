@@ -17,6 +17,9 @@ class_name LevelDefinition extends Node3D
 	"res://resources/traffic/settings/default_traffic_settings.tres"
 )
 
+## Road navmesh the race bots' racing line is baked on. Only levels with NPC races need one.
+@export var npc_nav_region: NPCNavRegion
+
 ## Set in level_manager
 var level_manager: LevelManager
 var level_name: LevelManager.LevelName

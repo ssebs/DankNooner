@@ -147,6 +147,12 @@ func is_point_to_point() -> bool:
 	return end_checkpoint != start_checkpoint
 
 
+## A route whose first checkpoint is a StartStop is a lap circuit (see the class docstring).
+## Static so callers can ask before the race body has collected its checkpoints.
+static func is_lap_route(checkpoints: Array[CheckPointMarker]) -> bool:
+	return "StartStop" in checkpoints[0].name
+
+
 ## Running clock of the racer's current lap, -1 while parked after an endless point-to-point run
 ## or counting down a restart.
 func get_lap_elapsed_ms(racer_id: int) -> int:
@@ -225,7 +231,7 @@ func get_npc_respawn_checkpoint(npc_id: int) -> CheckPointMarker:
 func _collect_checkpoints() -> void:
 	var checkpoints := runner.route.get_checkpoints()
 	start_checkpoint = checkpoints[0]
-	if "StartStop" in start_checkpoint.name:
+	if is_lap_route(checkpoints):
 		end_checkpoint = start_checkpoint
 		lap_checkpoints = checkpoints.slice(1)
 	else:

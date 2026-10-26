@@ -10,12 +10,12 @@ radius = 4.0
 transparency = 1
 cull_mode = 2
 shading_mode = 0
-albedo_color = Color(0.25490198, 0.6862745, 1, 0.3)
+albedo_color = Color(0.25490198, 0.6862745, 1, 0.5)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_beam"]
 material = SubResource("StandardMaterial3D_beam")
-top_radius = 1.0
-bottom_radius = 1.0
+top_radius = 1.5
+bottom_radius = 1.5
 height = 80.0
 cap_top = false
 cap_bottom = false
@@ -34,6 +34,7 @@ shape = SubResource("CylinderShape3D_start")
 [node name="Label3D" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
 billboard = 1
+no_depth_test = true
 double_sided = false
 text = "START_ZONE_LABEL"
 font_size = 128

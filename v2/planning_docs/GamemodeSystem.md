@@ -52,6 +52,7 @@ plumbing, and Road/Street race differed only in traffic start/stop.
   and `PickupSpawner`s as direct children (each group in tree order), plus props (arrow walls,
   ramps). Several events on a circle can share one route. `set_active()` toggles `visible`, every
   `GameModeObject` and every `CollisionShape3D` — a hidden ramp mustn't be an invisible wall.
+  `set_props_active()` does the same for everything but the start zones (drive to the start).
   `top_level`, so it sits in world space whatever the circle's transform.
 - **`GameModeObject`** — base for dumb props (checkpoints, trigger zones, speech bubbles): emit signals, `is_active` toggles visibility + collision, never decide completion.
 - **`FreeRoamActivity`** — abstract, level-placed, per-rider event that `FreeRoamGameMode` hosts
@@ -172,7 +173,8 @@ the standing and which components are required; everything beyond the shared rac
 `RaceComponent` children of each `RaceGameMode` node, wired both ways by `@export`. The mode calls
 their hooks server-side in a fixed, explicit order (`_components` in `Enter`) — scoring before the
 leaderboard reads it:
-`race_start()`, `tick(delta)`, `racer_finished(peer_id)`, `race_end()`, plus `score(peer_id)` and the
+`race_start()`, `race_runner_start()` (the race's own runner, after any pre-race ones), `tick(delta)`,
+`racer_finished(peer_id)`, `race_end()`, plus `score(peer_id)` and the
 `column_headers()` / `column_cells()` leaderboard builders. `REQUIRED_COMPONENTS` (and the `@tool`
 configuration warnings) list what each `race_type` needs; the rest are optional.
 
