@@ -36,6 +36,6 @@ static func load_json_from_file(path: String) -> Dictionary:
 #region (de)serializers
 ## Try to load a resource path from dict[dict_key], fall back to default_path on failure
 static func try_load(dict: Dictionary, dict_key: String, default_path: String) -> Resource:
-	var loaded = load(dict.get(dict_key, ""))
+	var loaded = load(dict.get(dict_key, default_path))
 	return loaded if loaded else load(default_path)
 #endregion

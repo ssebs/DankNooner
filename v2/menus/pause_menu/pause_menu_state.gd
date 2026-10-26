@@ -48,9 +48,9 @@ func Enter(_state_context: StateContext):
 	connection_manager.server_disconnected.connect(_on_server_disconnected)
 	settings_btn.pressed.connect(_on_settings_pressed)
 	tricks_btn.pressed.connect(_on_tricks_pressed)
-	prev_song_btn.pressed.connect(audio_manager.previous_music_track)
+	prev_song_btn.pressed.connect(_on_prev_song_pressed)
 	play_pause_btn.pressed.connect(_on_play_pause_pressed)
-	skip_song_btn.pressed.connect(audio_manager.skip_music_track)
+	skip_song_btn.pressed.connect(_on_skip_song_pressed)
 	audio_manager.music_track_changed.connect(_update_now_playing)
 	_update_now_playing()
 
@@ -80,9 +80,9 @@ func Exit(_state_context: StateContext):
 	connection_manager.server_disconnected.disconnect(_on_server_disconnected)
 	settings_btn.pressed.disconnect(_on_settings_pressed)
 	tricks_btn.pressed.disconnect(_on_tricks_pressed)
-	prev_song_btn.pressed.disconnect(audio_manager.previous_music_track)
+	prev_song_btn.pressed.disconnect(_on_prev_song_pressed)
 	play_pause_btn.pressed.disconnect(_on_play_pause_pressed)
-	skip_song_btn.pressed.disconnect(audio_manager.skip_music_track)
+	skip_song_btn.pressed.disconnect(_on_skip_song_pressed)
 	audio_manager.music_track_changed.disconnect(_update_now_playing)
 
 	if level_select_panel.start_pressed.is_connected(_on_level_select_start_pressed):
@@ -99,9 +99,17 @@ func _update_now_playing():
 	play_pause_btn.icon = PLAY_ICON if audio_manager.is_music_paused() else PAUSE_ICON
 
 
+func _on_prev_song_pressed():
+	audio_manager.previous_music_track()
+
+
 func _on_play_pause_pressed():
 	audio_manager.toggle_music_paused()
 	_update_now_playing()
+
+
+func _on_skip_song_pressed():
+	audio_manager.skip_music_track()
 
 
 func _on_tricks_pressed():
