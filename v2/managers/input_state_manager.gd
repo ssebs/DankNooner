@@ -118,8 +118,15 @@ func _unhandled_input(event: InputEvent):
 			elif event is InputEventKey and event.pressed and not event.echo:
 				_try_switch_bike_slot(event.physical_keycode)
 		InputStateManager.InputState.IN_GAME_PAUSED:
+			var menu_state := menu_manager.state_machine.current_state as MenuState
 			if event.is_action_pressed("pause"):
 				unpause_requested.emit()
+			# Results/event HUDs share this state with no menu up — don't drive the stale menu.
+			elif menu_state.ui.visible:
+				if event.is_action_pressed("ui_cancel"):
+					menu_state.on_cancel_key_pressed()
+				elif _tab_dir(event) != 0:
+					menu_state.on_tab_key_pressed(_tab_dir(event))
 		InputStateManager.InputState.IN_MAP:
 			if event.is_action_pressed("open_map") or event.is_action_pressed("ui_cancel"):
 				current_input_state = InputState.IN_GAME

@@ -226,7 +226,8 @@ func _on_back_pressed():
 
 #override
 func on_cancel_key_pressed():
-	_on_back_pressed()
+	# Emit, not _on_back_pressed(): CloseHelpTask listens on the button to close its help screen.
+	back_btn.pressed.emit()
 
 
 #override

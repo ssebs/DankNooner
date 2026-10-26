@@ -41,6 +41,7 @@
         - [ ] continue w/ `____NPC_RACER_AI_WIP.md`
       - [ ] easy/hard difficulty setting for AI
     - [ ] Balancing points / score
+    - [ ] Demo savegame should be different from main game
     - [ ] Start with tutorial level (lock StuntCity until tutorial is complete)
     - [ ] Demo is open source, new private repo for full version
   - [ ] > steam next fest Feb '27
@@ -219,6 +220,8 @@
 ---
 
 ## Done ✅
+- [x] controller press b to go back in menu (aka unpause, or go back to prev page)
+
 - [x] demo build - filter out all maps but stunt_city + characters + horns
 
 - [x] find start of race after filling up needs to be more obvious 

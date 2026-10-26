@@ -7,7 +7,6 @@
 ### NOW
 
 - [ ] fill up spil hud height changes
-- [ ] controller press b to go back in menu (aka unpause, or go back to prev page)
 
 - [ ] hud toggle in editor for trailer
 - [ ] record gameplay for trailer

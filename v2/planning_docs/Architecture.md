@@ -184,7 +184,8 @@ The design points behind it:
 - **The same physical "pause" press means different things per state**, resolved here rather than
   by the presser. IN_GAME emits `pause_requested`; IN_GAME_PAUSED emits `unpause_requested`.
   Nothing downstream has to know which is appropriate.
-- **Menu cancel delegates rather than dispatches** — IN_MENU routes `ui_cancel` to the current
+- **Menu cancel delegates rather than dispatches** — IN_MENU (and IN_GAME_PAUSED, while a menu is
+  visible) routes `ui_cancel` (and tab keys) to the current
   MenuState's `on_cancel_key_pressed()`, so back-navigation lives with the screen that knows where
   "back" goes.
 - **Mouse capture is derived from input state, never set ad hoc.** Menu and paused states show the
