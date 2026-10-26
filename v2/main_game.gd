@@ -2,6 +2,11 @@
 class_name MainGame extends Node
 
 @export var settings_manager: SettingsManager
+## Run as the Steam demo build. Setter, not _ready: child menus read it in their own _ready first
+@export var debug_demo_mode: bool = false:
+	set(value):
+		debug_demo_mode = value
+		UtilsConstants.debug_demo_mode = DebugUtils.is_debug(value, false)
 
 @export_tool_button("Run Validation") var run_validation = _run_validation
 
@@ -28,6 +33,8 @@ func _ready() -> void:
 
 	DebugUtils.DebugMsg(tr("GAME_TITLE"))
 	DebugUtils.DebugMsg(ProjectSettings.get_setting("application/config/version"))
+	if UtilsConstants.debug_demo_mode:
+		DebugUtils.DebugErrMsg("MainGame.debug_demo_mode is on: running as the Steam demo build")
 
 
 ## Alt+Enter flips between windowed and the fullscreen default. Goes through the

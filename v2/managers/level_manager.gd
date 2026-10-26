@@ -61,6 +61,8 @@ var levels_names_in_level_select: Array[String] = [
 	"LEVEL_TEST_CITY_01",
 	"LEVEL_TEST_1_LABEL",
 ]
+## The only selectable levels in the Steam demo build; the rest show locked
+var demo_levels: Array[LevelName] = [LevelName.STUNTTRACK_01]
 ## LevelName enum => image used in level preview
 var level_img_map: Dictionary[LevelName,Texture] = {
 	LevelName.TEST_LEVEL_01: load("res://resources/img/level_previews/TEST_LEVEL_01.jpg"),
@@ -74,6 +76,7 @@ var current_level: LevelDefinition
 
 
 func _ready():
+	super()
 	if Engine.is_editor_hint():
 		return
 	# Console.add_command("dbg_gym", spawn_gym_test_level) # broken
@@ -149,6 +152,10 @@ func get_levels_as_option_items() -> Dictionary[String, int]:
 	for lvl_name in levels_names_in_level_select:
 		options[lvl_name] = level_name_map.find_key(lvl_name)
 	return options
+
+
+func is_locked_in_demo(level_name: LevelName) -> bool:
+	return UtilsConstants.is_demo_build() and level_name not in demo_levels
 
 
 #endregion

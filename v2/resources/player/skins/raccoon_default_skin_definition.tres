@@ -6,7 +6,8 @@
 [resource]
 script = ExtResource("2_def")
 skin_name = "raccoon_default"
+demo_locked = true
 mesh_res = ExtResource("1_scene")
-price = 1000
+price = 2000
 height = 1.2
 metadata/_custom_type_script = "uid://bh7rf77tqy8xb"

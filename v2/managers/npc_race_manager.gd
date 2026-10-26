@@ -18,7 +18,7 @@ class_name NPCRaceManager extends BaseManager
 ## lateral acceleration (m/s^2) the line's corner speeds allow, and how far road room is probed.
 @export var line_sample_spacing: float = 4.0
 @export var line_smoothing_passes: int = 6
-@export var corner_grip: float = 14.0
+@export var corner_grip: float = 16.0
 @export var line_max_half_width: float = 12.0
 
 const NPC_SCENE: PackedScene = preload("res://entities/npc/npc_rider_entity.tscn")
@@ -120,15 +120,30 @@ func bake_racing_line(route: EventRoute) -> void:
 		positions.append(grid_center / grid_markers.size())
 	for checkpoint in checkpoints:
 		positions.append(checkpoint.global_position)
-	racing_line = NPCRacingLine.new(
-		region.get_rid(),
-		positions,
-		is_lap,
-		line_sample_spacing,
-		line_smoothing_passes,
-		corner_grip,
-		line_max_half_width
+	var region_rid := region.get_rid()
+	var baked: Array[NPCRacingLine] = []
+	# About a second of navmesh queries — off the main thread so the race start doesn't hitch
+	var task := WorkerThreadPool.add_task(
+		func():
+			baked.append(
+				NPCRacingLine.new(
+					region_rid,
+					positions,
+					is_lap,
+					line_sample_spacing,
+					line_smoothing_passes,
+					corner_grip,
+					line_max_half_width
+				)
+			)
 	)
+	while !WorkerThreadPool.is_task_completed(task):
+		await get_tree().process_frame
+	WorkerThreadPool.wait_for_task_completion(task)
+	# As above, the race ended while it baked
+	if generation != _bake_generation:
+		return
+	racing_line = baked[0]
 	DebugUtils.DebugMsg(
 		"NPC racing line baked: %.0fm, closed=%s" % [racing_line.get_length(), racing_line.closed]
 	)
@@ -174,6 +189,10 @@ func rpc_spawn_npc(npc_id: int, pos: Vector3, basis: Basis):
 	# scene was last saved with. Must land before add_child (see _enter_tree).
 	npc.vehicle_type = NPCRiderEntity.VehicleType.BIKE
 	npc.bike_definition = def.bike_skin
+	# Ride the bike's own numbers, so bots keep pace with players on the same bike
+	npc.move_speed = def.bike_skin.max_speed
+	npc.acceleration = def.bike_skin.acceleration
+	npc.braking = def.bike_skin.brake_strength
 	npc.character_definition = def.character_skin
 	npc.username = "%s %d" % [def.username, -npc_id]
 	# Paint pool lives on the level's TrafficSettings — race bots on this map paint

@@ -5,5 +5,6 @@
 [resource]
 script = ExtResource("1_horn")
 skin_name = "discord_notification"
+demo_locked = true
 sfx = 35
 price = 2000

@@ -12,7 +12,7 @@ class_name LevelDefinition extends Node3D
 ## Empty → all peers stack on player_spawn_pos (legacy behavior).
 @export var grid_markers: Array[Marker3D] = []
 ## Per-map traffic density. Swap in a different .tres to make this map busier,
-## quieter, or car-heavy. Maps with no RoadManager get no traffic regardless.
+## quieter, or car-heavy. Maps with no baked TrafficNetwork get no traffic regardless.
 @export var traffic_settings: TrafficSettings = preload(
 	"res://resources/traffic/settings/default_traffic_settings.tres"
 )

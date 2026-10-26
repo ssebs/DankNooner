@@ -19,7 +19,7 @@ var _runners: Array[TaskRunner] = []
 var _active_runner: TaskRunner
 var _active_runner_index: int = -1
 var _results_countdown: float = -1.0
-var _results_countdown_total: float = 10.0
+var _results_countdown_total: float = 30.0
 ## peer_id -> {"money": int, "xp": int}, this event's payouts for the results columns.
 var _payouts: Dictionary[int, Dictionary] = {}
 

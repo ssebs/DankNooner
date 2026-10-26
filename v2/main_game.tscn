@@ -38,7 +38,6 @@
 [ext_resource type="Script" uid="uid://cdt21wq6ap1cq" path="res://managers/gamemodes/types/long_jump/long_jump_gamemode.gd" id="30_lngjmp"]
 [ext_resource type="Script" uid="uid://uisn3s8ykmg2" path="res://managers/gamemodes/types/trick_battle/trick_battle_gamemode.gd" id="30_trkbtl"]
 [ext_resource type="Script" uid="uid://boxia2udg1jxm" path="res://managers/npc_race_manager.gd" id="31_npcrm"]
-[ext_resource type="Script" uid="uid://uj0l0u0v0f0d" path="res://managers/npc_traffic_manager.gd" id="99_npctm"]
 [ext_resource type="Script" uid="uid://283a7n5utttx" path="res://resources/player/player_definition.gd" id="35_iihm1"]
 [ext_resource type="Script" uid="uid://37ehv252lkkf" path="res://managers/trick_manager.gd" id="36_trkmg"]
 [ext_resource type="Script" uid="uid://c7rb62smxqgpp" path="res://managers/animal_spawn_manager.gd" id="38_anspm"]
@@ -59,8 +58,9 @@
 [ext_resource type="Script" uid="uid://b1k6yj01eqpsi" path="res://managers/gamemodes/types/race/components/style_scoring_component.gd" id="60_style_scoring"]
 [ext_resource type="Script" uid="uid://c5ej5fq2aphma" path="res://managers/gamemodes/types/race/components/time_attack_component.gd" id="60_time_attack"]
 [ext_resource type="Script" uid="uid://cgy57qlo3xy0x" path="res://managers/gamemodes/types/race/components/traffic_component.gd" id="60_traffic"]
-[ext_resource type="Script" path="res://managers/steam_manager.gd" id="61_steam"]
+[ext_resource type="Script" uid="uid://bohgpnc0q47hq" path="res://managers/steam_manager.gd" id="61_steam"]
 [ext_resource type="PackedScene" path="res://menus/credits_menu/credits_menu_state.tscn" id="62_credits"]
+[ext_resource type="Script" uid="uid://uj0l0u0v0f0d" path="res://managers/npc_traffic_manager.gd" id="99_npctm"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("1_1oj5k")
@@ -204,8 +204,7 @@ main_menu_state = NodePath("../MainMenuState")
 settings_menu_state = NodePath("../SettingsMenuState")
 tricks_menu_state = NodePath("../TricksMenuState")
 
-
-[node name="CreditsMenuState" parent="ManagerManager/MenuManager/StateMachine" instance=ExtResource("62_credits")]
+[node name="CreditsMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1489866704 instance=ExtResource("62_credits")]
 
 [node name="TricksMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1846203517 node_paths=PackedStringArray("menu_manager", "save_manager", "level_manager") instance=ExtResource("38_trkmn")]
 menu_manager = NodePath("../..")
@@ -301,11 +300,11 @@ trick_battle_mode = NodePath("StateMachine/TrickBattleGameMode")
 script = ExtResource("4_6bm6p")
 metadata/_custom_type_script = "uid://ba7kyb4p3trb1"
 
-[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("npc_traffic_manager", "game_mode_event_hud_state", "level_manager", "pickup_spawn_manager", "trick_manager", "riding_hud_state", "input_state_manager", "hud_manager", "save_manager", "gamemode_manager", "spawn_manager")]
+[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_hud_state", "level_manager", "npc_traffic_manager", "pickup_spawn_manager", "trick_manager", "riding_hud_state", "input_state_manager", "hud_manager", "save_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("25_6krrg")
-npc_traffic_manager = NodePath("../../../NPCTrafficManager")
 game_mode_event_hud_state = NodePath("../../../HUDManager/StateMachine/GamemodeEventHUDState")
 level_manager = NodePath("../../../LevelManager")
+npc_traffic_manager = NodePath("../../../NPCTrafficManager")
 pickup_spawn_manager = NodePath("../../../PickupSpawnManager")
 trick_manager = NodePath("../../../TrickManager")
 riding_hud_state = NodePath("../../../HUDManager/StateMachine/RidingHUDState")
@@ -522,6 +521,7 @@ npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_pk5u2")])
 script = ExtResource("99_npctm")
 level_manager = NodePath("../LevelManager")
 spawn_manager = NodePath("../SpawnManager")
+npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_pk5u2")])
 
 [node name="AnimalSpawnManager" type="Node" parent="ManagerManager" unique_id=1218916393 node_paths=PackedStringArray("level_manager") groups=["Managers"]]
 script = ExtResource("38_anspm")

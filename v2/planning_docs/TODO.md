@@ -25,12 +25,8 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MiniTasks](_ScratchPad.md)
-
-- [ ] make hands fit on handle bars
-
 - [ ] Create separate location (new event start circles) just for stunt/trick battle, remove from existing races so they dont spawn checkpoint markers
   - [ ] wip - stunt_battle_arena
-
 - [ ] Steam
   - [ ] Steam page [WIP]
     - [x] $100
@@ -39,9 +35,12 @@
     - [x] full setup / link live
     - [ ] Trailer
   - [ ] Demo release
-    - [ ] Get racing AI working [WIP]
+    - [x] Get racing AI working [WIP]
+      - [ ] tricks / Items
+        - [ ] continue w/ `____NPC_RACER_AI_WIP.md`
       - [ ] easy/hard difficulty setting for AI
-    - [ ] Balancing points
+    - [ ] Balancing points / score
+    - [ ] Start with tutorial level (lock StuntCity until tutorial is complete)
     - [ ] Demo is open source, new private repo for full version
   - [ ] > steam next fest Feb '27
   - [ ] Release after free to play  w/ paid dlc for more content/skins
@@ -219,6 +218,12 @@
 ---
 
 ## Done ✅
+- [x] demo build - filter out all maps but stunt_city + characters + horns
+
+- [x] find start of race after filling up needs to be more obvious 
+
+- [x] make hands fit on handle bars
+
 - [x] animate crashes w/ bike physics
 
 - [x] animate car crash

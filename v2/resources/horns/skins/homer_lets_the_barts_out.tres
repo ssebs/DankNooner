@@ -5,5 +5,6 @@
 [resource]
 script = ExtResource("1_horn")
 skin_name = "homer_lets_the_barts_out"
+demo_locked = true
 sfx = 41
 price = 1500

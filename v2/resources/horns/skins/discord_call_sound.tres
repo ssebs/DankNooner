@@ -5,5 +5,6 @@
 [resource]
 script = ExtResource("1_horn")
 skin_name = "discord_call_sound"
+demo_locked = true
 sfx = 34
 price = 2000

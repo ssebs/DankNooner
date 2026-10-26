@@ -7,5 +7,6 @@
 script = ExtResource("2_r1i4i")
 skin_name = "o_guy"
 mesh_res = ExtResource("1_n866w")
-price = 1000
+price = 2000
+demo_locked = true
 metadata/_custom_type_script = "uid://bh7rf77tqy8xb"

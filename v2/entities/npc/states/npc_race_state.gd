@@ -31,6 +31,8 @@ enum Mistake { NONE, LATE_BRAKE, RUN_WIDE }
 @export var style_spread: float = 0.1
 ## How fast (m/s) the lateral offset follows its target: the bot's steering reaction.
 @export var offset_response: float = 2.0
+## Most the bot may cut inside the line (m) chasing its steer point; bends shorten the lookahead.
+@export var max_corner_cut: float = 0.5
 ## Further than this (m) from its spot on the line, the bot paths back instead of steering at it.
 @export var rejoin_distance: float = 6.0
 ## How far ahead on the line (m) a rejoin aims, so the bot merges rather than turning square on.
@@ -98,6 +100,7 @@ var _next_mistake_ms: int = 0
 var _rejoin_next_path_ms: int = 0
 var _stuck_timer: float = 0.0
 var _stuck_anchor: Vector3
+var _dbg_drive := ""  # DEBUG: temp - last tick's steering, printed when stuck fires
 
 
 func Enter(_state_context: StateContext):
@@ -202,7 +205,7 @@ func _drive(delta: float) -> void:
 	_update_mistake(now)
 	var speed_cap := _avoid(now)
 
-	var steer_s := _s + npc.steer_lookahead()
+	var steer_s := _s + _steer_lookahead()
 	_lateral = move_toward(_lateral, _lateral_target(steer_s, now), offset_response * _reaction * delta)
 	var spot := racing_line.point_at(_s) + racing_line.right_at(_s) * _lateral
 	var target: Vector3
@@ -220,6 +223,19 @@ func _drive(delta: float) -> void:
 	var line_speed := maxf(npc.min_turn_speed, racing_line.profile_speed(_profile, speed_s))
 	var target_speed := minf(speed_cap, minf(npc.cruise_speed(), line_speed))
 	npc.steer_toward(target, target_speed, delta)
+	_dbg_drive = (  # DEBUG: temp
+		"s=%.1f line_pt=%s off_line=%.1f lat=%.2f rejoin=%s target=%s speed=%.1f/%.1f path=%s"  # DEBUG: temp
+		% [_s, racing_line.point_at(_s), off_line, _lateral, rejoining, target,  # DEBUG: temp
+		npc.current_speed, target_speed, _rejoin_path.slice(0, 4)]  # DEBUG: temp
+	)  # DEBUG: temp
+
+
+## The speed-based lookahead, shortened through bends: chasing a point L ahead on curvature k
+## cuts inside the line by about L²·k/2, so L is capped to keep that under max_corner_cut.
+func _steer_lookahead() -> float:
+	var lookahead := npc.steer_lookahead()
+	var k := maxf(racing_line.peak_curvature(_s, lookahead), NPCRacingLine.MIN_CURVATURE)
+	return maxf(minf(lookahead, sqrt(2.0 * max_corner_cut / k)), npc.min_steer_lookahead)
 
 
 ## Where the lateral offset is heading at line offset s (m, + = right): a committed overtake,
@@ -398,6 +414,9 @@ func _check_stuck(delta: float) -> void:
 	_stuck_timer = 0.0
 	_stuck_anchor = npc.global_position
 	if progress < stuck_min_progress:
+		DebugUtils.DebugMsg(  # DEBUG: temp
+			"[npc %s] STUCK pos=%s moved=%.1f %s" % [npc.name, npc.global_position, progress, _dbg_drive]  # DEBUG: temp
+		)  # DEBUG: temp
 		stuck.emit()
 
 

@@ -76,7 +76,7 @@ geometry_collision_mask = 3
 geometry_source_geometry_mode = 1
 cell_size = 0.5
 cell_height = 0.5
-agent_radius = 1.0
+agent_radius = 1.5
 agent_max_climb = 0.5
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_grass"]
@@ -137,6 +137,7 @@ script = ExtResource("24_l8nu3")
 name = "Stunt Race 2"
 description = "Get Gud"
 target_gamemode = 2
+enable_npcs = true
 enable_traffic = true
 fuel_up_first = true
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
@@ -146,6 +147,7 @@ script = ExtResource("24_l8nu3")
 name = "Stunt Race 3"
 description = "Go fill up"
 target_gamemode = 2
+enable_npcs = true
 enable_traffic = true
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
@@ -154,6 +156,7 @@ script = ExtResource("24_l8nu3")
 name = "Stunt Race 4"
 description = "Go back to 2?"
 target_gamemode = 2
+enable_npcs = true
 enable_traffic = true
 fuel_up_first = true
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"

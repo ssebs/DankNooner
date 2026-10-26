@@ -5,5 +5,6 @@
 [resource]
 script = ExtResource("1_horn")
 skin_name = "metal_pipe"
+demo_locked = true
 sfx = 60
 price = 2000

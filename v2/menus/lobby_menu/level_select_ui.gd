@@ -15,7 +15,13 @@ func populate(level_manager: LevelManager, default_id: int = 1):
 	clear()
 
 	for level_name_str in items:
-		add_item(level_name_str, items[level_name_str])
+		var level_id: int = items[level_name_str]
+		if level_id != LevelManager.LevelName.LEVEL_SELECT_LABEL and level_manager.is_locked_in_demo(level_id):
+			add_item("%s %s" % [tr(level_name_str), tr("DEMO_LOCKED_LABEL")], level_id)
+			set_item_disabled(item_count - 1, true)
+			set_item_tooltip(item_count - 1, tr("DEMO_LOCKED_TOOLTIP"))
+		else:
+			add_item(level_name_str, level_id)
 
 	set_item_disabled(0, true)  # Always set to LEVEL_SELECT_LABEL
 	selected = default_id

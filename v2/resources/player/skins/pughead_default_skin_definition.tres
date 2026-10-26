@@ -6,7 +6,8 @@
 [resource]
 script = ExtResource("2_def")
 skin_name = "pughead_default"
-price = 1000
+demo_locked = true
+price = 2500
 mesh_res = ExtResource("1_scene")
 height = 1.5
 metadata/_custom_type_script = "uid://bh7rf77tqy8xb"

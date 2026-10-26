@@ -91,8 +91,8 @@ func open(save_manager: SaveManager, audio_manager: AudioManager):
 	_audio_manager = audio_manager
 	_player_def = save_manager.get_player_definition()
 	_bikes = SkinScanner.scan_skin_dir(BIKE_SKINS_DIR)
-	_characters = SkinScanner.scan_skin_dir(CHARACTER_SKINS_DIR)
-	_horns = SkinScanner.scan_skin_dir(HornDefinition.SKINS_DIR)
+	_characters = _sorted_skins(SkinScanner.scan_skin_dir(CHARACTER_SKINS_DIR))
+	_horns = _sorted_skins(SkinScanner.scan_skin_dir(HornDefinition.SKINS_DIR))
 	_fill_saved_colors()
 	_color_panel.hide()
 	_confirm_box.hide()
@@ -318,7 +318,8 @@ func _build_character_page():
 			def.price,
 			skin_name == current_name,
 			_preview.bind(_loadout().bike, def),
-			_apply_character.bind(path)
+			_apply_character.bind(path),
+			def.demo_locked
 		)
 
 
@@ -339,7 +340,13 @@ func _build_horn_page():
 		var path: String = _horns[skin_name]
 		var def := load(path) as HornDefinition
 		_add_skin_row(
-			skin_name, path, def.price, def == current, _preview_horn.bind(def), _apply_horn.bind(def)
+			skin_name,
+			path,
+			def.price,
+			def == current,
+			_preview_horn.bind(def),
+			_apply_horn.bind(def),
+			def.demo_locked
 		)
 
 
@@ -400,8 +407,14 @@ func _add_skin_row(
 	price: int,
 	is_current: bool,
 	preview: Callable,
-	apply: Callable
+	apply: Callable,
+	demo_locked := false
 ):
+	if demo_locked and UtilsConstants.is_demo_build():
+		var locked_row := _add_row(_skin_label(skin_name), tr("DEMO_LOCKED_LABEL"), func(): pass, preview)
+		locked_row.disabled = true
+		locked_row.tooltip_text = tr("DEMO_LOCKED_TOOLTIP")
+		return
 	var owned := _save_manager.is_owned(path)
 	# Re-picking the current one would reset its colors.
 	var on_press := (func(): pass) if is_current else _on_skin_pressed.bind(skin_name, path, price, apply)
@@ -625,4 +638,22 @@ func _focused_index() -> int:
 ## "naked_default" -> "Naked"
 static func _skin_label(skin_name: String) -> String:
 	return skin_name.trim_suffix("_default").capitalize()
+
+
+## Demo-locked last, then alphabetical by label.
+static func _sorted_skins(skins: Dictionary) -> Dictionary:
+	var is_demo := UtilsConstants.is_demo_build()
+	var names := skins.keys()
+	names.sort_custom(
+		func(a: String, b: String) -> bool:
+			var a_locked: bool = is_demo and load(skins[a]).demo_locked
+			var b_locked: bool = is_demo and load(skins[b]).demo_locked
+			if a_locked != b_locked:
+				return b_locked
+			return _skin_label(a).naturalnocasecmp_to(_skin_label(b)) < 0
+	)
+	var sorted: Dictionary = {}
+	for skin_name in names:
+		sorted[skin_name] = skins[skin_name]
+	return sorted
 

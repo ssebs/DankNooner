@@ -65,6 +65,16 @@ func curvature_at(s: float) -> float:
 	return _curvature[_index(s)]
 
 
+## Sharpest unsigned curvature over the length metres from s.
+func peak_curvature(s: float, length: float) -> float:
+	var peak := 0.0
+	var at := s
+	while at <= s + length:
+		peak = maxf(peak, absf(curvature_at(at)))
+		at += sample_spacing
+	return peak
+
+
 ## Road room from the line to the eroded road edge, on the right for side > 0, else the left.
 func half_width_at(s: float, side: float) -> float:
 	return (_room_right if side > 0.0 else _room_left)[_index(s)]

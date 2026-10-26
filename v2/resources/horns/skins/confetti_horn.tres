@@ -5,4 +5,5 @@
 [resource]
 script = ExtResource("1_horn")
 skin_name = "confetti_horn"
+demo_locked = true
 sfx = 33

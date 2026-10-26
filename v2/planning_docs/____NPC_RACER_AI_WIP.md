@@ -8,6 +8,8 @@
 - [What exists today](#what-exists-today)
 - [Phases](#phases)
   - [Phase 1: racing line + driving](#phase-1-racing-line--driving)
+  - [Phase 1 status (handoff)](#phase-1-status-handoff)
+  - [Ramp riding (next, design in progress)](#ramp-riding-next-design-in-progress)
   - [Phase 2: contact + crashes](#phase-2-contact--crashes)
   - [Phase 3: tricks, scoring, boost](#phase-3-tricks-scoring-boost)
   - [Phase 4: items](#phase-4-items)
@@ -82,11 +84,14 @@ Verified 2026-10-25 — re-verify before acting.
 
 ## Phases
 
-Each phase is playable on its own. Order decided: 1 → 2 → 3 → 4.
+Each phase is playable on its own. Order decided: 1 → 2 → 3 → 4. Added 2026-10-25: **ramp riding**
+goes before Phase 3, which needs bots that get airborne. Whether it lands before or after Phase 2
+is not decided.
 
 ### Phase 1: racing line + driving
 
-> **Built 2026-10-25, untested** ([plan](./PLAN-npc-racer-phase1-20261025.md)); how it works is in
+> **Built 2026-10-25, playtested, still getting stuck**; see [status](#phase-1-status-handoff)
+> ([plan](./PLAN-npc-racer-phase1-20261025.md)); how it works is in
 > [Architecture](./Architecture.md#npc-race-manager). One rule changed with the user: grass is
 > **drivable but avoided**. The racing line and wander stay on the road; overtakes, dodges and
 > rejoin paths may cross grass (a costlier nav region), never walls.
@@ -128,6 +133,84 @@ Ends with the lane bot and its road-generator dependency deleted.
 
 **Delete:** `NPCRaceState`'s lane logic (rewrite the state), `TrafficRouteGraph`, the race-only
 lane helpers on `NPCRiderEntity`, the `RoadManager` lookups in `NPCRaceManager`.
+
+### Phase 1 status (handoff)
+
+> 2026-10-25. Built and playtested by the user on the `stunt_track_01` StuntRace (host/solo). The
+> playtest checklists in the [plan](./PLAN-npc-racer-phase1-20261025.md)'s tasks have not been run.
+
+**Fixed after playtesting** (lint + headless parse clean, user confirmed the first two felt better):
+- **Rubber-banding.** Between refreshes the rejoin path's first point fell behind the bot, and
+  `steer_toward` points velocity straight at the target, so the bot reversed every tick.
+  `_rejoin_target` now consumes reached points from the front.
+- **Line start.** Point-to-point lines start at the grid centre; the first checkpoint can be far up
+  the road, which left every bot rejoining for most of the race.
+- **Bake hitch.** The line bake runs on a `WorkerThreadPool` task (first threading in project code).
+- **Corner cutting.** Chasing a point `L` ahead on curvature `k` cuts inside the line by about
+  `L²·k/2`. `NPCRaceState._steer_lookahead` caps the lookahead so the cut stays under
+  `max_corner_cut`. If corners still look cut, the next suspect is the line itself: Laplacian
+  smoothing hugs the inside for the whole corner instead of wide-apex-wide.
+- **Speed.** Bots take `move_speed` / `acceleration` / `braking` from their `bike_definition`
+  (`max_speed` / `acceleration` / `brake_strength`) at spawn in `rpc_spawn_npc`, then `Difficulty`
+  scales them.
+- **Clearance.** Raised the road navmesh's `agent_radius` in all three levels (the bike's nose sat
+  right at the old erosion edge), and `3d/default_edge_connection_margin` with it so road and grass
+  regions still connect. **The user must press Bake on `NPCNavRegion` in `racetrack_level_01`,
+  `test_city_01` and `stunt_track_01` and save** — until then the shipped navmesh data is stale.
+
+**Still getting stuck** (evidence from the temp `STUCK` log on `stunt_track_01`; every hit had
+`rejoin=false`, so these are on the line itself):
+- **Event props aren't in the nav bake.** Event routes (`StuntRace*/Route`, `top_level`) aren't in
+  `navigation_mesh_source_group`, so `StuntRace/Route/Ramp8` and the arrow walls don't exist to the
+  bake. The line runs straight through `Ramp8` and bots stall partway up its lip, which is steeper
+  than the NPC body can climb. Ramp riding (below) replaces "go around"; it still has to decide how
+  event props reach the bake.
+- **Thin obstacle tip near (-352, 509)**, between checkpoints 4 and 5. A narrow navmesh hole the line
+  wraps tightly; bots offset toward it pin on its end. The object isn't in the level `.tscn`
+  (probably the `StuntCity` mesh or road geometry). Re-check after the clearance rebake.
+- **Lightposts 31 / 33.** Wander pushed bots to the road edge and they clipped the pole. Same
+  clearance fix; re-check.
+- **(-180, 180), unknown.** Three bots abreast stopped dead at full speed, raised about 1.6 m, where
+  the navmesh is solid. Something raised the bake doesn't see. Look at it in the editor.
+- **Finish.** A bot parked at the line's end a couple of metres short of the last checkpoint's
+  trigger: the line's end (the checkpoint snapped to the navmesh) can miss the trigger.
+
+**Temp code:** the `# DEBUG: temp` `STUCK` log in `NPCRaceState` (`_dbg_drive` is formatted every
+tick) — strip it once sticking is resolved. The `PROF: temp` lines stay; it's a codebase-wide pattern.
+
+**Parked by the user:** reusing `NPCRacingLine` for the player-visible racing line prop
+(`levels/assets/props/racing_line.gd`). Open when it resumes: does the server send the baked points
+(at race start + to late joiners) or does every peer bake; one colour or Forza-style brake zones.
+
+**Small fixes made alongside:** `level_definition.gd`'s traffic comment now names `TrafficNetwork`;
+`LevelManager._ready` calls `super()` (it now joins the startup validation group).
+
+### Ramp riding (next, design in progress)
+
+Brainstorm started 2026-10-25 and paused here; continue with `superpowers:brainstorming`, then a
+written design, then `superpowers:writing-plans`.
+
+**Decided with the user**
+- Bots ride **over** stunt ramps, not around them: up at race speed like a player, launch, maybe an
+  air trick, land and carry on.
+- The air trick scores like the player's. That's Phase 3, done as its own design after this.
+
+**Facts for the builder** (verified 2026-10-25)
+- The player launches because its velocity follows the slope
+  (`travel_dir.slide(_floor_normal) * speed` in `MovementController`). A bot's velocity is
+  horizontal only plus gravity (`steer_toward` + `apply_gravity_and_move`), so it can't launch, and
+  a lip steeper than its floor angle stops it like a wall.
+- `ramp.gd` (a `PathTrack`): the curve ends in a steep lip. `Height.LOW` drops that last point at
+  runtime only, so an editor bake always sees the high version.
+- The navmesh can't cross a jump gap. Without a link from lip to landing the line can't route over a
+  ramp. Nothing in the project uses `NavigationLink3D` yet.
+
+**My guesses, not yet confirmed:** the line routes over each ramp via a link; the bot launches
+along the ramp's angle and picks the line back up at the landing.
+
+**Not yet asked:** what a bad landing does (a crash belongs to Phase 2); whether jump links are
+placed by hand per ramp or computed from the ramp's curve and launch speed; whether ramps bigger
+than a jump (quarter pipes, the corkscrews) are in scope.
 
 ### Phase 2: contact + crashes
 

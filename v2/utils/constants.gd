@@ -4,6 +4,9 @@ const PORT = 42068
 
 const DISCORD_URL = "https://discord.gg/HCe4XcCFw3"
 const STEAM_STORE_URL = "https://store.steampowered.com/app/5416370/Dank_Nooner/"
+## export.sh swaps this into project.godot for demo builds
+const STEAM_DEMO_APP_ID = 5431410
+const STEAM_FULL_APP_ID = 5416370
 
 ## Godot Group names.
 const GROUPS = {
@@ -88,3 +91,13 @@ const SKIN_COLOR_PRESETS: Array[Color] = [
 	Color(0.78515625, 0.021469116, 0.021469116, 1),
 	Color(0.9140625, 0.101872444, 0.017852783, 1),
 ]
+
+## Set from MainGame.debug_demo_mode
+static var debug_demo_mode := false
+
+
+static func is_demo_build() -> bool:
+	return (
+		debug_demo_mode
+		or ProjectSettings.get_setting("steam/initialization/app_data/app_id") == STEAM_DEMO_APP_ID
+	)

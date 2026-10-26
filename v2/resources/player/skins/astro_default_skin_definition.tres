@@ -6,6 +6,7 @@
 [resource]
 script = ExtResource("2_def")
 skin_name = "astro_default"
+demo_locked = true
 price = 1000
 mesh_res = ExtResource("1_scene")
 height = 1.75

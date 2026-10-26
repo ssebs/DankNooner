@@ -23,6 +23,8 @@ class_name CharacterSkinDefinition extends Resource
 
 ## Garage cost; 0 = owned by default.
 @export var price: int = 0
+## Unavailable in the Steam demo build
+@export var demo_locked: bool = false
 
 ## Mesh is scaled so its AABB is this tall. Raise it when hair etc. inflates the AABB
 @export var height: float = DEFAULT_HEIGHT
@@ -70,6 +72,7 @@ func _copy_from(other: CharacterSkinDefinition):
 	mesh_res = other.mesh_res
 	colors = other.colors.duplicate()
 	price = other.price
+	demo_locked = other.demo_locked
 	height = other.height
 	back_marker_position = other.back_marker_position
 	back_marker_rotation_degrees = other.back_marker_rotation_degrees
