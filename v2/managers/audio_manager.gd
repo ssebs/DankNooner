@@ -579,10 +579,6 @@ func play_startup():
 	startup.play()
 
 
-func play_bowling_crash():
-	bowling_crash.play()
-
-
 func play_countdown_3sec():
 	countdown_3sec.play()
 

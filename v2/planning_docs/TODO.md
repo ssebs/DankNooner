@@ -37,6 +37,7 @@
   - [ ] Demo release
     - [x] Get racing AI working [WIP]
       - [ ] tricks / Items
+        - [ ] npcs get stuck on corners + cant go fast enough for the ramps
         - [ ] continue w/ `____NPC_RACER_AI_WIP.md`
       - [ ] easy/hard difficulty setting for AI
     - [ ] Balancing points / score

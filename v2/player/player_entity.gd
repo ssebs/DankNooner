@@ -441,14 +441,12 @@ func _enter_crash_visuals() -> void:
 		audio_manager.stop_revs()
 		# TODO - use meme mode instead of hard coding this randomization
 		randomize()
-		match randi_range(0, 3):
+		match randi_range(0, 2):
 			0:
-				audio_manager.play_bowling_crash()
-			1:
 				audio_manager.play_vine_boom()
-			2:
+			1:
 				audio_manager.play_nuke()
-			3:
+			2:
 				audio_manager.play_bone_crack()
 
 

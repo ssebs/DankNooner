@@ -190,6 +190,7 @@ func on_movement_rollback_tick(delta: float):
 	if player_entity.movement_locked:
 		player_entity.velocity = Vector3.ZERO
 		speed = 0.0
+		is_reversing = false
 		return
 
 	was_on_floor = is_on_floor
