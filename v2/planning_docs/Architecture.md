@@ -156,16 +156,13 @@ This is the third attempt. Hand-built `StaticBody3D` road pieces and Terrain3D b
 
 What the plugins don't give you:
 
-- **Junction routing.** `RoadContainer` links lanes segment-to-segment and never gives an
-  intersection's lanes a `lane_next`, so race bots dead-end at every junction. `TrafficRouteGraph`
-  rebuilds those links geometrically — read its header comment. Traffic doesn't use the addon's
-  lanes at all (see [Traffic Network](#traffic-network)).
+- **AI lanes nobody uses.** No game code reads the addon's lanes: race bots ride a navmesh racing
+  line (see [NPC Race Manager](#npc-race-manager)) and traffic its own baked network
+  (see [Traffic Network](#traffic-network)).
 - **A road/off-road distinction.** Road mesh and terrain both sit on the default world layer.
   Surface feel comes from the separately authored unstable-surface layer
   (see [CrashController](#crashcontroller)), not from being on a `RoadContainer`. The `road` layer
   exists only for the traffic bake's height snap.
-- **Stability.** Generated lanes are still rough in places; treat lane geometry as suspect before
-  blaming the AI that follows it.
 
 **Minimap layer.** The minimap camera draws only render layer 2 (`minimap`), so it skips
 traffic, riders and props. Anything that should show on the map needs layers 1+2: the
@@ -408,8 +405,10 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
   checkpoint on that peer's minimap: the state is a single node at a shared path on every peer, so
   the server can `rpc_id` the owning client's minimap through it. Pre-race it carries the current
   step's trigger instead (`is_guide`). `TargetCompass` points at the same target from the top of
-  the HUD: always for guide targets, for race checkpoints only on easy difficulty. It hides near
-  the target, where the server's pass lags the predicted rider and the bearing would spin.
+  the HUD: always for guide targets, for race checkpoints only on easy difficulty. While a
+  guide target is on screen it pins over it instead, and the distance shows under the arrow or pin.
+  It hides near the target, where the server's pass lags the predicted rider and the bearing
+  would spin.
 - Pause hides the current HUD in place (`set_hud_hidden`) instead of transitioning, so unpause
   restores it without a state change.
 
@@ -502,8 +501,18 @@ for the current surface. The distinctions that aren't obvious from the signature
 
 ### NPC Race Manager
 
-- `NPCRaceManager` (`managers/npc_race_manager.gd`) - owns AI race riders (`NPCRiderEntity`) on a negative-id roster (ids from -1) with spawn/despawn RPCs mirroring `SpawnManager`. `RaceGameMode`'s `NPCRacersComponent` drives its lifecycle; the server-only AI tick points each NPC at its next checkpoint from `RaceTask`.
+- `NPCRaceManager` (`managers/npc_race_manager.gd`) - owns AI race riders (`NPCRiderEntity`) on a negative-id roster (ids from -1) with spawn/despawn RPCs mirroring `SpawnManager`. `RaceGameMode`'s `NPCRacersComponent` drives its lifecycle; the server-only AI tick sets `npc.driving` while `RaceTask` has a target checkpoint for it (not on the grid, countdown or after finishing).
 - Late joiners get every live bot re-sent at its current transform via `sync_npcs_to_peer(peer_id)` (from `RaceGameMode._on_player_latejoined` via `NPCRacersComponent.sync_to_peer`) — without it the newcomer has no bot nodes and takes a MultiplayerSynchronizer error per packet per bot.
+- **Navmesh: two regions per race level** (`NPCNavRegion`, `levels/components/npc_nav_region.gd`). The road region (`LevelDefinition.npc_nav_region`, nav layer `UtilsConstants.NAV_LAYER_ROAD`) parses the default + `crash_collision` layers, so walls cut it. Its `exclude_layers` drops anything on `unstable_collision`: grass carries the default layer on some maps, and the parser only has an include mask, so Bake hides excluded colliders from it for the parse. The grass region (`NPCNavGrassRegion`, `NAV_LAYER_GRASS`) is the rest, with a travel cost so paths prefer road. The two regions are eroded apart, so the project's nav edge-connection margin is set wide enough to join them. Bake is a button on each region; re-bake after moving road, walls or grass.
+- **Racing line** (`NPCRacingLine`). Built once per race on the server by `bake_racing_line`, called from `NPCRacersComponent.race_start`. It waits until the nav map has synced (a level loaded this frame returns empty paths), and a generation counter bumped on despawn drops a bake that lands after its race ended. Road-only navmesh paths are chained through the checkpoints (closed on lap routes, `RaceTask.is_lap_route`; point-to-point routes start from the grid centre, since their first checkpoint can be far up the road), Laplacian-smoothed with every point clamped back onto the road, then fit with a `Curve3D`. The navmesh's own erosion is the edge margin. Each sample keeps curvature, the corner speed that implies (`corner_grip`), and the road room either side. An unreachable checkpoint `push_error`s and is bridged straight. `dbg_racing_line` draws it.
+- **Braking is per bot.** The line stores only corner speeds; each `NPCRaceState` runs `braking_profile` with its own `npc.braking` × style, so there's no shared braking knob and no two bots brake identically.
+- **Driving** (`NPCRaceState`). Steer at a point `steer_lookahead()` ahead on the line, offset sideways by `_lateral` and clamped onto the whole nav map: grass allowed, walls not. Progress `_s` is tracked in a local window (`track_offset`), so a line passing near itself can't make a bot jump to the other pass. The global search runs only after a teleport (`reset_line_progress`). A bot further than `rejoin_distance` from its spot paths back over road + grass. Stuck detection → `crash_npc` as before. Lean is the existing yaw-rate lean, which is speed × curvature, so it needs nothing from the bake.
+- **Anti-train** (hard requirement: the last navmesh attempt rode nose to tail):
+  - **Wander.** A per-bot lateral from two seeded sines, a share (`wander_fraction`) of the road room. Wavelengths are rounded to fit the lap so there's no jump at the seam.
+  - **Style.** Corner carry, braking and steering reaction rolled per bot (`style_spread`), scaled by `Difficulty`.
+  - **Overtaking.** A throttled forward box scan (`intersect_shape` on `crash_collision`, areas included, because traffic only has a `ContactArea`) finds the slower rider in our offset band. The bot then commits to whichever side no other scanned rider holds, for `overtake_commit_time`, or tucks in at its speed.
+  - **Mistakes.** A late brake or running wide every `mistake_interval` or so, more often on EASY.
+- Accepted gap: traffic beyond `NPCTrafficManager.near_radius` of every player has its `ContactArea` off, so scans can't see it. Nobody can see that encounter either.
 
 ### Traffic Network
 

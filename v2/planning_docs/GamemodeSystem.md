@@ -170,8 +170,8 @@ the standing and which components are required; everything beyond the shared rac
 ### Components (PlayerEntity controller pattern)
 
 `RaceComponent` children of each `RaceGameMode` node, wired both ways by `@export`. The mode calls
-their hooks server-side in a fixed, explicit order (`_components` in `Enter`) — traffic before NPCs
-(the route graph must exist first), scoring before the leaderboard reads it:
+their hooks server-side in a fixed, explicit order (`_components` in `Enter`) — scoring before the
+leaderboard reads it:
 `race_start()`, `tick(delta)`, `racer_finished(peer_id)`, `race_end()`, plus `score(peer_id)` and the
 `column_headers()` / `column_cells()` leaderboard builders. `REQUIRED_COMPONENTS` (and the `@tool`
 configuration warnings) list what each `race_type` needs; the rest are optional.

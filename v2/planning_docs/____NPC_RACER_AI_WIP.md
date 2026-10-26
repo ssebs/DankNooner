@@ -86,6 +86,11 @@ Each phase is playable on its own. Order decided: 1 → 2 → 3 → 4.
 
 ### Phase 1: racing line + driving
 
+> **Built 2026-10-25, untested** ([plan](./PLAN-npc-racer-phase1-20261025.md)); how it works is in
+> [Architecture](./Architecture.md#npc-race-manager). One rule changed with the user: grass is
+> **drivable but avoided**. The racing line and wander stay on the road; overtakes, dodges and
+> rejoin paths may cross grass (a costlier nav region), never walls.
+
 Ends with the lane bot and its road-generator dependency deleted.
 
 **Navmesh bake (decided)**

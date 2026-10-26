@@ -4,7 +4,7 @@
 
 **Goal:** Replace the lane-following race bot with bots that ride a navmesh-baked racing line, and delete the race bot's road-generator dependency.
 
-**Architecture:** Each race level gets two nav regions on the default map: a road region and a grass region with a higher travel cost. A small `@tool` bake script keeps grass out of the road region. At `race_start`, `NPCRaceManager` builds one `RacingLine` (a `RefCounted`) on the server. It chains road-only navmesh paths through the checkpoints, smooths them into a `Curve3D`, and samples curvature speed and road half-width along it. Each bot's rewritten `NPCRaceState` runs its own braking pass over that line and steers at a lookahead point. The steer point carries a per-bot lateral offset: a wandering offset normally, a committed one while overtaking. Every steer point is clamped onto the nav map.
+**Architecture:** Each race level gets two nav regions on the default map: a road region and a grass region with a higher travel cost. A small `@tool` bake script keeps grass out of the road region. At `race_start`, `NPCRaceManager` builds one `NPCRacingLine` (a `RefCounted`) on the server. It chains road-only navmesh paths through the checkpoints, smooths them into a `Curve3D`, and samples curvature speed and road half-width along it. Each bot's rewritten `NPCRaceState` runs its own braking pass over that line and steers at a lookahead point. The steer point carries a per-bot lateral offset: a wandering offset normally, a committed one while overtaking. Every steer point is clamped onto the nav map.
 
 **Tech Stack:** Godot 4.7 GDScript, `NavigationServer3D`, `Curve3D`, `PhysicsDirectSpaceState3D.intersect_shape`, DebugDraw3D (debug only).
 
@@ -91,10 +91,10 @@ Accurate, except for these differences:
 
 ---
 
-### Task 2: `RacingLine` bake + manager orchestration
+### Task 2: `NPCRacingLine` bake + manager orchestration
 
 **Files:**
-- Create: `entities/npc/racing_line.gd`
+- Create: `entities/npc/npc_racing_line.gd`
 - Modify: `managers/gamemodes/tasks/race_task.gd:225-233` (`_collect_checkpoints`)
 - Modify: `managers/npc_race_manager.gd`
 - Modify: `managers/gamemodes/types/race/components/npc_racers_component.gd:9-20`
@@ -102,7 +102,7 @@ Accurate, except for these differences:
 **Interfaces:**
 - Consumes: `LevelDefinition.npc_nav_region`, `UtilsConstants.NAV_LAYER_ROAD` (Task 1).
 - Produces: `static func RaceTask.is_lap_route(checkpoints: Array[CheckPointMarker]) -> bool`, which holds the existing `"StartStop" in checkpoints[0].name` rule. `_collect_checkpoints()` calls it, so the rule lives in one place.
-- Produces: `class_name RacingLine extends RefCounted`
+- Produces: `class_name NPCRacingLine extends RefCounted`
   - `func _init(road_region: RID, checkpoints: PackedVector3Array, closed: bool, sample_spacing: float, smoothing_passes: int, corner_grip: float, max_half_width: float)`
   - `var closed: bool`
   - `func get_length() -> float`
@@ -116,13 +116,13 @@ Accurate, except for these differences:
   - `func closest_offset(pos: Vector3) -> float`: global search
   - `func track_offset(pos: Vector3, s_hint: float, window: float) -> float`: local search
 - Produces on `NPCRaceManager`:
-  - `var racing_line: RacingLine` (null until baked and after despawn)
+  - `var racing_line: NPCRacingLine` (null until baked and after despawn)
   - `func bake_racing_line(route: EventRoute) -> void` (coroutine)
   - Exports: `line_sample_spacing`, `line_smoothing_passes`, `corner_grip`, `line_max_half_width`
 - The old lane bot still drives during this task. Its `road_manager` wiring stays until Task 3, and nothing hands the line to bots yet.
 
 - [ ] **Step 1: `RaceTask.is_lap_route`** and route `_collect_checkpoints` through it. `is_point_to_point()` stays as is.
-- [ ] **Step 2: Bake corridor in `RacingLine._init`.**
+- [ ] **Step 2: Bake corridor in `NPCRacingLine._init`.**
   - Snap each checkpoint with `NavigationServer3D.region_get_closest_point(road_region, p)`.
   - Chain `map_get_path(region_get_map(road_region), a, b, true, UtilsConstants.NAV_LAYER_ROAD)` between consecutive checkpoints, plus last→first when `closed`. Road layer only: the line never routes over grass.
   - If a path's last point lands more than `sample_spacing` short of its target, `push_error` naming both checkpoint indices, then bridge straight to it.
@@ -144,7 +144,7 @@ Accurate, except for these differences:
     - Take `region := level_manager.current_level.npc_nav_region` (no null guard; a NPC race on a level without one should crash).
     - Capture `_bake_generation`. While `map_get_iteration_id(region.get_navigation_map()) == 0`, `await NavigationServer3D.map_changed` (Review Focus 2).
     - Drop the result if the generation changed. `despawn_all_npcs` bumps it and nulls `racing_line` (Review Focus 4).
-    - Build `racing_line = RacingLine.new(region.get_rid(), <route checkpoint positions>, RaceTask.is_lap_route(route.get_checkpoints()), …exports)`.
+    - Build `racing_line = NPCRacingLine.new(region.get_rid(), <route checkpoint positions>, RaceTask.is_lap_route(route.get_checkpoints()), …exports)`.
 - [ ] **Step 8: Call `npc_race_manager.bake_racing_line(race_mode.get_route())`** from `NPCRacersComponent.race_start` after the spawn loop, without `await` (bots hold until it lands).
 - [ ] **Step 9: Debug draw.** `Console.add_command("dbg_racing_line", …)` in `NPCRaceManager._ready`, following `LevelManager`'s `dbg_traffic` pattern. On toggle, DebugDraw3D draws the line once, coloured slow→fast by `braking_profile(<any bot>.braking, 1.0)`, with both half-width edges. It's server/host only, and it's here only to verify the bake. Delete it with the WIP doc if unwanted.
 - [ ] **Step 10: Lint + parse.**
@@ -168,10 +168,10 @@ Accurate, except for these differences:
 - Delete: `entities/npc/traffic_route_graph.gd`, `entities/npc/traffic_route_graph.gd.uid`
 
 **Interfaces:**
-- Consumes: `RacingLine` API, `NPCRaceManager.racing_line` / `bake_racing_line` (Task 2).
+- Consumes: `NPCRacingLine` API, `NPCRaceManager.racing_line` / `bake_racing_line` (Task 2).
 - Produces on `NPCRaceManager`: `func _race_state(npc_id: int) -> NPCRaceState`, mirroring `NPCTrafficManager._traffic_state`.
 - Produces on `NPCRaceState`:
-  - `var racing_line: RacingLine`, whose setter builds this bot's `_profile` via `racing_line.braking_profile(npc.braking * _brake_scale, _corner_carry)` and calls `reset_line_progress()`
+  - `var racing_line: NPCRacingLine`, whose setter builds this bot's `_profile` via `racing_line.braking_profile(npc.braking * _brake_scale, _corner_carry)` and calls `reset_line_progress()`
   - `func reset_line_progress() -> void`, which sets `_s = racing_line.closest_offset(npc.global_position)`
   - Keeps `signal stuck`, `enum Difficulty`, `difficulty`, `stuck_window`, `stuck_min_progress`, `enable_overtaking` (now: off = ride the line with wander only)
   - New exports: `wander_fraction`, `wander_wavelength`, `style_spread`, `offset_response`, `rejoin_distance`, `rejoin_lookahead`
@@ -180,7 +180,7 @@ Accurate, except for these differences:
 - [ ] **Step 1: Entity cleanup.**
   - Delete `road_manager`, `lane_agent`, the `_ready` lane-agent block, `lane_point_ahead`, `nearest_racer_ahead`, `_blocker`, `_blocker_next_scan_ms`, and the `teleport_to` lane re-latch.
   - Rename `_next_scan_delay_ms` → `next_scan_delay_ms`.
-  - Rewrite the class docstring's race paragraph (lines 10-13) to one line: race steering rides the shared `RacingLine` (see `NPCRaceState`).
+  - Rewrite the class docstring's race paragraph (lines 10-13) to one line: race steering rides the shared `NPCRacingLine` (see `NPCRaceState`).
   - Drop the `RoadLaneAgent` mentions in `lane_speed`'s docstring (traffic is now its only caller).
   - Everything traffic uses stays byte-identical.
 - [ ] **Step 2: Delete `traffic_route_graph.gd` + `.uid`.**
@@ -263,7 +263,7 @@ Accurate, except for these differences:
 **Files:**
 - Modify: `planning_docs/Architecture.md`: the "Terrain & Roads" junction-routing bullet (drop `TrafficRouteGraph`, since race bots no longer read the addon), plus "NPC Race Manager"
 - Modify: `planning_docs/GamemodeSystem.md:174` and `managers/gamemodes/types/race/race_gamemode.gd:56` (drop the dead "route graph must exist" reason; the order stays)
-- Modify: `CLAUDE.md:129` (`TrafficRouteGraph` → `RacingLine`)
+- Modify: `CLAUDE.md:129` (`TrafficRouteGraph` → `NPCRacingLine`)
 - Modify: `planning_docs/____NPC_RACER_AI_WIP.md`: mark Phase 1 done, and record the grass decision against the original rule. Don't delete it; Phases 2–4 remain.
 
 - [ ] **Step 1: Architecture "NPC Race Manager".** Cover:
