@@ -73,6 +73,18 @@ func end(trick: TrickController.Trick) -> void:
 		entry.layer.target_weight = 1.0
 
 
+## Sum of playing tricks' torso_offset, scaled by layer weight and progress so it eases in and
+## unwinds with the anim. Bike-local, like the anim deltas it's added to.
+func torso_offset() -> Vector3:
+	var total := Vector3.ZERO
+	for entry: _Entry in _by_trick.values():
+		if entry.torso_offset == Vector3.ZERO or entry.layer == null or not entry.layer.is_playing():
+			continue
+		var progress := clampf(entry.layer.time / entry.layer.get_duration(), 0.0, 1.0)
+		total += entry.torso_offset * entry.layer.weight * progress
+	return total
+
+
 ## Forget the layers after the runner dropped them (crash / respawn flush).
 func clear() -> void:
 	for entry: _Entry in _by_trick.values():
@@ -86,18 +98,25 @@ class _Entry:
 	var anim_name: String
 	var play_mode: int  # PlayMode
 	var reverse_on_end: bool
+	## Extra butt/chest/head shift (bike-local) at full pose — tunes a trick without re-authoring.
+	var torso_offset: Vector3
 	var anim: Animation = null
 	var layer: CustomAnimPlayer.Layer = null
 
 
 static func _make_entry(
-	trick: int, anim_name: String, play_mode: int, reverse_on_end: bool
+	trick: int,
+	anim_name: String,
+	play_mode: int,
+	reverse_on_end: bool,
+	torso_offset: Vector3 = Vector3.ZERO
 ) -> _Entry:
 	var e := _Entry.new()
 	e.trick = trick
 	e.anim_name = anim_name
 	e.play_mode = play_mode
 	e.reverse_on_end = reverse_on_end
+	e.torso_offset = torso_offset
 	return e
 
 
@@ -114,7 +133,12 @@ static func _build_entries() -> Array[_Entry]:
 		_make_entry(TrickController.Trick.SPREAD_EAGLE, "spread_eagle", PlayMode.ONE_SHOT, false),
 		_make_entry(TrickController.Trick.SUPERMAN, "superman", PlayMode.ONE_SHOT, false),
 		_make_entry(TrickController.Trick.T_POSE, "t_pose", PlayMode.HOLD_WHILE_LATCHED, true),
+		# Stands up ~0.4m off a tucked rest pose — shift toward the bars so the hands still reach.
 		_make_entry(
-			TrickController.Trick.KNEE_KNOCKER, "knee_knocker", PlayMode.HOLD_WHILE_LATCHED, true
+			TrickController.Trick.KNEE_KNOCKER,
+			"knee_knocker",
+			PlayMode.HOLD_WHILE_LATCHED,
+			true,
+			Vector3(0.0, 0.0, 0.25)
 		),
 	]

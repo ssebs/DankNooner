@@ -173,5 +173,9 @@ func update_tricks(delta: float) -> void:
 		var rest_rot: Vector3 = marker.rotation if entry[2] == null else entry[2]
 		marker.position = rest_pos + _anim_runner.sample_vec3(entry[3])
 		marker.rotation = rest_rot + _anim_runner.sample_vec3(entry[4])
+	# Same per-trick torso shift as AnimationController._apply_anim_deltas.
+	var torso_offset := _tricks.torso_offset()
+	for marker: Marker3D in [_butt_target, _chest_target, _head_target]:
+		marker.position += torso_offset
 	_anim_runner.apply_to_nodes(self, _pose_tracks)
 

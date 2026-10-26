@@ -357,11 +357,13 @@ func _apply_riding_common(pose: _RiderPose, _delta: float, blend: float, roll: f
 	var lean_input = input_controller.nfx_lean
 	var target_chest_pitch = _base_chest_rot.x - lean_input * deg_to_rad(MAX_CHEST_LEAN_PITCH_DEG)
 	pose.chest_rot.x = lerpf(pose.chest_rot.x, target_chest_pitch, blend)
+	# Forward shift only: rest pose is already at arm's reach, so shifting back drops the bars.
+	var shift_input := maxf(lean_input, 0.0)
 	pose.chest_pos.z = lerpf(
-		pose.chest_pos.z, _base_chest_pos.z + lean_input * MAX_CHEST_Z_OFFSET, blend
+		pose.chest_pos.z, _base_chest_pos.z + shift_input * MAX_CHEST_Z_OFFSET, blend
 	)
 	pose.butt_pos.z = lerpf(
-		pose.butt_pos.z, _base_butt_pos.z + lean_input * MAX_BUTT_Z_OFFSET, blend
+		pose.butt_pos.z, _base_butt_pos.z + shift_input * MAX_BUTT_Z_OFFSET, blend
 	)
 
 
@@ -410,10 +412,11 @@ func _apply_anim_deltas(pose: _RiderPose, delta: float) -> void:
 	if _anim_runner.get_layers().is_empty():
 		return
 	pose.visual_root_rot += _anim_runner.sample_vec3(_PATH_VISUAL_ROOT_ROT)
-	pose.butt_pos += _anim_runner.sample_vec3(_PATH_BUTT_POS)
-	pose.chest_pos += _anim_runner.sample_vec3(_PATH_CHEST_POS)
+	var torso_offset := _tricks.torso_offset()
+	pose.butt_pos += _anim_runner.sample_vec3(_PATH_BUTT_POS) + torso_offset
+	pose.chest_pos += _anim_runner.sample_vec3(_PATH_CHEST_POS) + torso_offset
 	pose.chest_rot += _anim_runner.sample_vec3(_PATH_CHEST_ROT)
-	pose.head_pos += _anim_runner.sample_vec3(_PATH_HEAD_POS)
+	pose.head_pos += _anim_runner.sample_vec3(_PATH_HEAD_POS) + torso_offset
 	pose.head_rot += _anim_runner.sample_vec3(_PATH_HEAD_ROT)
 	pose.left_hand_pos += _anim_runner.sample_vec3(_PATH_LHAND_POS)
 	pose.left_hand_rot += _anim_runner.sample_vec3(_PATH_LHAND_ROT)
