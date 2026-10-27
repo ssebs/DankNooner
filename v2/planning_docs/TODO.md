@@ -220,6 +220,8 @@
 ---
 
 ## Done ✅
+- [x] fill up spil hud height changes
+
 - [x] controller press b to go back in menu (aka unpause, or go back to prev page)
 
 - [x] demo build - filter out all maps but stunt_city + characters + horns

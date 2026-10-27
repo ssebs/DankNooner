@@ -6,7 +6,6 @@
 
 ### NOW
 
-- [ ] fill up spil hud height changes
 - [ ] Disable NPC traffic debug command
 - [ ] Create/join public/private lobbies 
 
