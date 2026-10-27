@@ -59,7 +59,6 @@
 
 ## Notes 📝
 > Stuff to move ASAP
-
 ---
 
 ## Tasks 📋
@@ -224,6 +223,8 @@
 ---
 
 ## Done ✅
+- [x] Fix steam tags
+
 - [x] improve traffic density
 
 - [x] Disable NPC traffic debug command
