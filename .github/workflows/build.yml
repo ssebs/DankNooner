@@ -108,6 +108,17 @@ jobs:
     runs-on: ubuntu-latest
     name: Create Release
     steps:
+      - name: checkout
+        uses: actions/checkout@v5
+
+      # This tag's section of v2/CHANGELOG.md, written by deploy-version.sh.
+      # Tags from before CHANGELOG.md existed get an empty body (generated notes only).
+      - name: extract changelog
+        run: |
+          if [ -f v2/CHANGELOG.md ]; then
+            awk -v tag="## ${{ github.ref_name }} " 'index($0, tag) == 1 {f = 1; next} /^## / {f = 0} f' v2/CHANGELOG.md
+          fi > /tmp/release_notes.md
+
       - name: download all builds
         uses: actions/download-artifact@v4
         with:
@@ -119,6 +130,8 @@ jobs:
         uses: ncipollo/release-action@v1.18.0
         with:
           # token: ${{ secrets.GITHUB_TOKEN }}
+          # body is prepended to the generated notes (keeps the compare link)
+          bodyFile: /tmp/release_notes.md
           generateReleaseNotes: true
           allowUpdates: true
           tag: ${{ github.ref_name }}
