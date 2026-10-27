@@ -3,7 +3,7 @@
 ## "-$N" off it, in TrickPopups' pop style; pop_earned() floats a green "+$N" up.
 class_name MoneyLabel extends Label
 
-const COLOR := Color(0.3, 1.0, 0.35)
+const COLOR := UtilsConstants.UI_GREEN
 ## Straight down — money leaving, vs TrickPopups' up-and-out.
 const SPENT_DRIFT := Vector2(0.0, 110.0)
 const EARNED_DRIFT := Vector2(0.0, -110.0)
@@ -14,9 +14,7 @@ var _flash_tween: Tween
 
 
 func _ready():
-	add_theme_color_override("font_color", COLOR)
-	add_theme_color_override("font_outline_color", Color.BLACK)
-	add_theme_constant_override("outline_size", 10)
+	theme_type_variation = &"MoneyLabel"
 
 
 ## 15000 -> "$15,000"

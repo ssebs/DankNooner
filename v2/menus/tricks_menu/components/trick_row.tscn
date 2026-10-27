@@ -1,13 +1,11 @@
 [gd_scene format=3 uid="uid://df6h32t6hu8uv"]
 
 [ext_resource type="Script" uid="uid://t87lixsaor5q" path="res://menus/tricks_menu/components/trick_row.gd" id="1_row"]
-[ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://c2efmbslc8wa3" path="res://resources/img/Icons/xbox_stick_r_left.svg" id="3_dir"]
 
 [node name="TrickRow" type="PanelContainer" unique_id=1846203531]
 offset_right = 900.0
 offset_bottom = 44.0
-theme = ExtResource("2_theme")
 theme_type_variation = &"TrickRowPanel"
 script = ExtResource("1_row")
 

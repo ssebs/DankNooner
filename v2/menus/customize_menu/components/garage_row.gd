@@ -1,8 +1,8 @@
 ## One line in GarageUI's list: `*` + label on the left, price / OWNED / value on the right.
 class_name GarageRow extends Button
 
-const OWNED_COLOR := Color(0.35, 1, 0.45)
-const UNAFFORDABLE_COLOR := Color(1, 0.3, 0.3)
+const OWNED_COLOR := UtilsConstants.UI_GREEN
+const UNAFFORDABLE_COLOR := UtilsConstants.UI_RED
 
 @onready var _marker: Label = %Marker
 @onready var _label: Label = %Label

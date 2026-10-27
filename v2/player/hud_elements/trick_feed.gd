@@ -17,7 +17,11 @@ const FLASH_COLOR := Color(2.4, 2.4, 2.4)
 const FLASH_OWN_COLOR := Color(3.2, 2.6, 0.8)
 const FLASH_BAIL_COLOR := Color(3.2, 0.6, 0.6)
 const FLASH_SECS: float = 0.8
-const NAME_COLOR := TrickPopups.ICON_COLOR
+const NAME_COLOR := UtilsConstants.UI_BLUE
+## Your name and every line's points: white with a blue outline, like GlowLabel.
+const GLOW_BBCODE := "[outline_size=6][outline_color=#%s]%s[/outline_color][/outline_size]"
+## A combo longer than this shows only its last tricks, plus how many were cut.
+const MAX_TRICK_NAMES: int = 3
 
 
 ## tricks: TrickController.Trick values in the order they were done. points: banked, or what the
@@ -62,7 +66,8 @@ func push(
 	tween.tween_callback(panel.queue_free)
 
 
-## [b]Name[/b]  Bailed  Wheelie → Knee Knocker  [b]+1240 ×3[/b] — a bail strikes its lost points.
+## [b]Name[/b]  Bailed  …Wheelie → Knee Knocker → Drift (+2)  [b]+1240 ×3[/b] — a bail strikes its
+## lost points.
 func _format(
 	username: String,
 	is_own: bool,
@@ -71,17 +76,22 @@ func _format(
 	multiplier: int,
 	crashed: bool
 ) -> String:
-	var name_color := RaceLeaderboard.OWN_ROW_COLOR if is_own else NAME_COLOR
 	# [lb] escapes BBCode in the username.
-	var parts := PackedStringArray(
-		["[b][color=#%s]%s[/color][/b]" % [name_color.to_html(false), username.replace("[", "[lb]")]]
-	)
+	var shown_name := username.replace("[", "[lb]")
+	if is_own:
+		shown_name = _glow(shown_name)
+	else:
+		shown_name = "[color=#%s]%s[/color]" % [NAME_COLOR.to_html(false), shown_name]
+	var parts := PackedStringArray(["[b]%s[/b]" % shown_name])
 	if crashed:
 		parts.append("[color=#%s]%s[/color]" % [TrickPopups.OOF_COLOR.to_html(false), tr("FEED_BAILED")])
 	var names := PackedStringArray()
 	for trick in tricks:
 		names.append(TrickController.trick_to_str(trick).capitalize())
-	if !names.is_empty():
+	if names.size() > MAX_TRICK_NAMES:
+		var cut := names.size() - MAX_TRICK_NAMES
+		parts.append("…%s (+%d)" % [" → ".join(names.slice(cut)), cut])
+	elif !names.is_empty():
 		parts.append(" → ".join(names))
 	if points > 0:
 		var points_text := "+%d" % points
@@ -89,6 +99,13 @@ func _format(
 			points_text += " ×%d" % multiplier
 		if crashed:
 			points_text = "[s]%s[/s]" % points_text
-		var points_color := TrickPopups.OOF_COLOR if crashed else TrickPopups.CALLOUT_COLOR
-		parts.append("[b][color=#%s]%s[/color][/b]" % [points_color.to_html(false), points_text])
+		if crashed:
+			points_text = "[color=#%s]%s[/color]" % [TrickPopups.OOF_COLOR.to_html(false), points_text]
+		else:
+			points_text = _glow(points_text)
+		parts.append("[b]%s[/b]" % points_text)
 	return "  ".join(parts)
+
+
+func _glow(bbcode: String) -> String:
+	return GLOW_BBCODE % [UtilsConstants.UI_BLUE.to_html(false), bbcode]

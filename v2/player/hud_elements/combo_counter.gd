@@ -8,9 +8,9 @@ class_name ComboCounter extends Control
 
 ## Tint per multiplier tier, index 0 = x1. The last entry is reused past the end.
 const TIER_COLORS: Array[Color] = [
-	Color(0.6, 0.85, 1.0),  # x1 — cool blue
-	Color(1.0, 0.72, 0.15),  # x2 — gold
-	Color(1.0, 0.25, 0.15),  # x3+ — hot red
+	UtilsConstants.UI_ICE,  # x1
+	UtilsConstants.UI_GOLD,  # x2
+	UtilsConstants.UI_RED,  # x3+
 ]
 ## Base scale added per tier above x1, so a x3 sits noticeably larger than a x2.
 const SCALE_PER_TIER: float = 0.35

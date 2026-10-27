@@ -8,14 +8,14 @@ class_name RidingHUDState extends HUDState
 @export var trick_manager: TrickManager
 
 const _TRICK_ROW_SCENE := preload("res://menus/tricks_menu/components/trick_row.tscn")
-const _RPM_COLOR_LOW := Color(0.103055954, 0.5546875, 0.052001953, 1)
-const _RPM_COLOR_HIGH := Color(0.85, 0.1, 0.1, 1)
+const _RPM_COLOR_LOW := UtilsConstants.UI_BLUE
+const _RPM_COLOR_HIGH := UtilsConstants.UI_RED
 
 ## Respawn hold bar: only appears once the hold passes this, so a quick tap (in-place respawn)
 ## doesn't flash it. Fills toward InputStateManager.RESPAWN_HOLD_THRESHOLD.
 const _RESPAWN_SHOW_SECS := 0.1
 ## Boost-gauge "ready" blue while filling; snaps to bright white when the full-respawn fires.
-const _RESPAWN_COLOR := Color(0.25, 0.69, 1.0)
+const _RESPAWN_COLOR := UtilsConstants.UI_BLUE
 const _RESPAWN_COLOR_DONE := Color.WHITE
 const _RESPAWN_PULSE_HZ := 2.0
 const _RESPAWN_GLOW := 0.35

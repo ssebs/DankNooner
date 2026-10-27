@@ -9,6 +9,12 @@
 - [ ] Create/join public/private lobbies 
   - [ ] ____STEAM_LOBBIES_WIP.md
 
+- [ ] Fix steam tags
+	**Tags (in this order)**
+	Motorbike, Physics, Multiplayer, Funny, Open World, Racing, Arcade, Sandbox, Stylized, 3D, Third Person, Indie, Free to Play, Casual, PvP, Score Attack, Party Game
+	Remove: Psychedelic, Atmospheric, PvE, Combat Racing
+
+
 - [ ] more car models / cleaner w/ neon fx & working lights/blinder
 ### NEXT
 - [ ] 3d model & rig my daily riding outfit

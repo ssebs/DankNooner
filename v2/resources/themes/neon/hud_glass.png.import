@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fx410tmlax7o"
-path="res://.godot/imported/hud_panel.png-223876104c0d5d4e815bd2edc40532ea.ctex"
+uid="uid://31lgthaeexvg"
+path="res://.godot/imported/hud_glass.png-c193d01014762d8dc53e5e2d0239bdf4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/themes/neon/hud_panel.png"
-dest_files=["res://.godot/imported/hud_panel.png-223876104c0d5d4e815bd2edc40532ea.ctex"]
+source_file="res://resources/themes/neon/hud_glass.png"
+dest_files=["res://.godot/imported/hud_glass.png-c193d01014762d8dc53e5e2d0239bdf4.ctex"]
 
 [params]
 

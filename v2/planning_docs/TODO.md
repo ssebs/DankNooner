@@ -29,7 +29,10 @@
 - [ ] Improve pvp hud during stunt race/events
   - [x] trick feed
   - [x] more juice when score goes up in that menu?
-  - [ ] new hud styling
+  - [x] new hud styling
+  - [ ] cleanup / finalize hud style
+    - [ ] rm scanlines? or animate them
+    - [ ] name should not be glowing white/blue, make green?
 
 - [ ] Create separate location (new event start circles) just for stunt/trick battle, remove from existing races so they dont spawn checkpoint markers
   - [ ] wip - stunt_battle_arena

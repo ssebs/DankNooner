@@ -23,14 +23,14 @@ class_name BoostGauge extends Control
 const VERTICAL_CELL_SIZE := Vector2(20, 52)
 
 ## Unfilled remainder of a cell.
-const COLOR_EMPTY: Color = Color(0.22, 0.26, 0.30)
+const COLOR_EMPTY: Color = UtilsConstants.UI_TRACK
 ## Filled, but under one whole segment — nothing is spendable yet, so it stays muted.
-const COLOR_DIM: Color = Color(0.16, 0.34, 0.48)
-## At least one full segment banked — the same blue as the boost camera FX.
-const COLOR_READY: Color = Color(0.25, 0.69, 1.0)
+const COLOR_DIM: Color = UtilsConstants.UI_BLUE_DIM
+## At least one full segment banked.
+const COLOR_READY: Color = UtilsConstants.UI_BLUE
 ## Rejected-press blink.
-const COLOR_REJECT: Color = Color(1.0, 0.3, 0.2)
-const COLOR_SPILL: Color = Color(0.85, 0.12, 0.1)
+const COLOR_REJECT: Color = UtilsConstants.UI_RED
+const COLOR_SPILL: Color = UtilsConstants.UI_RED
 
 ## Slow "ready" glow — pulse rate (Hz) and how far it lifts toward white.
 const READY_PULSE_HZ: float = 1.2

@@ -6,7 +6,7 @@ const CREDITS_FILES: Array[String] = [
 	"res://resources/credits/assets.md",
 	"res://resources/credits/music.md",
 ]
-const LINK_COLOR := "#41afff"
+const LINK_COLOR := UtilsConstants.UI_BLUE
 
 @onready var credits_text: RichTextLabel = %CreditsText
 @onready var close_credits_btn: Button = %CloseCreditsBtn
@@ -61,7 +61,7 @@ func _md_to_bbcode(md: String) -> String:
 			text = "[b][font_size=32]%s[/font_size][/b]" % text.substr(3)
 		elif text.begins_with("# "):
 			text = "[b][font_size=48]%s[/font_size][/b]" % text.substr(2)
-		out += link_re.sub(text, "[url=$2][color=%s]$1[/color][/url]" % LINK_COLOR, true) + "\n"
+		out += link_re.sub(text, "[url=$2][color=#%s]$1[/color][/url]" % LINK_COLOR.to_html(false), true) + "\n"
 
 	while depth > 0:
 		out += "[/ul]\n"

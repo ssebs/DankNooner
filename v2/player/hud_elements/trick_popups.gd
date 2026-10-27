@@ -35,12 +35,11 @@ const HOLD_CALLOUTS: Dictionary = {
 }
 ## Cycled in order so back-to-back crashes don't repeat.
 const OOF_KEYS: Array[String] = ["CALLOUT_OOF_1", "CALLOUT_OOF_2", "CALLOUT_OOF_3", "CALLOUT_OOF_4"]
-const OOF_COLOR := Color(1.0, 0.2, 0.15)
-const CALLOUT_COLOR := Color(1.0, 0.85, 0.2)
-const BONUS_COLOR := Color(1.0, 0.35, 0.9)
+const OOF_COLOR := UtilsConstants.UI_RED
+## Untinted: PopupLabel's own white with a blue glow.
+const CALLOUT_COLOR := Color.WHITE
+const BONUS_COLOR := UtilsConstants.UI_ICE
 
-const FONT_SIZE: int = 40
-const OUTLINE_SIZE: int = 10
 ## Pop origins, as offsets from this control's center.
 const SCORE_ORIGIN := Vector2(30.0, 96.0)
 const CALLOUT_ORIGIN := Vector2(210.0, -250.0)
@@ -59,12 +58,12 @@ const ICON_MAX_SCALE: float = 1.3
 const ICON_SHAKE_PX: float = 3.0
 const ICON_SMOOTH_SPEED: float = 12.0
 ## Icon colors: blue before the balance point, green in it, red past it — each edge ramps through
-## a midtone (teal / yellow) over ICON_BLEND_DEG.
-const ICON_COLOR := Color(0.25, 0.69, 1.0) # the art's own blue
-const ICON_NEAR_COLOR := Color(0.2, 0.9, 0.8)
-const ICON_BP_COLOR := Color(0.3, 1.0, 0.35)
-const ICON_WARN_COLOR := Color(1.0, 0.85, 0.2)
-const ICON_HOT_COLOR := Color(1.0, 0.15, 0.1)
+## a midtone (ice / gold) over ICON_BLEND_DEG.
+const ICON_COLOR := UtilsConstants.UI_BLUE # the art's own blue
+const ICON_NEAR_COLOR := UtilsConstants.UI_ICE
+const ICON_BP_COLOR := UtilsConstants.UI_GREEN
+const ICON_WARN_COLOR := UtilsConstants.UI_GOLD
+const ICON_HOT_COLOR := UtilsConstants.UI_RED
 const ICON_BLEND_DEG: float = 6.0
 const POP_SECS: float = 0.2
 const POP_START_SCALE: float = 0.3
@@ -155,7 +154,7 @@ func track(
 	if _live.visible:
 		_live.text = "+%d" % int(tc.combo_score * points_per_second * tc.combo_multiplier)
 		var bonus := tc.current_trick in bonus_tricks
-		_live.modulate = BONUS_COLOR if bonus else _tier_color(tc.combo_multiplier)
+		_live.modulate = BONUS_COLOR if bonus else CALLOUT_COLOR
 	# Placed even while hidden — the icon row anchors under it.
 	_center_on(_live, size / 2.0 + SCORE_ORIGIN)
 
@@ -166,8 +165,8 @@ func track(
 	_was_flipped = tc.has_flipped()
 
 
-func pop_score(points: int, multiplier: int, bonus: bool) -> void:
-	_spawn("+%d" % points, BONUS_COLOR if bonus else _tier_color(multiplier), SCORE_ORIGIN, 1.0)
+func pop_score(points: int, _multiplier: int, bonus: bool) -> void:
+	_spawn("+%d" % points, BONUS_COLOR if bonus else CALLOUT_COLOR, SCORE_ORIGIN, 1.0)
 	audio_manager.play_ding()
 
 
@@ -328,9 +327,7 @@ static func spawn_pop(
 
 static func _make_label(color: Color) -> Label:
 	var label := Label.new()
-	label.add_theme_font_size_override("font_size", FONT_SIZE)
-	label.add_theme_constant_override("outline_size", OUTLINE_SIZE)
-	label.add_theme_color_override("font_outline_color", Color.BLACK)
+	label.theme_type_variation = &"PopupLabel"
 	label.modulate = color
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return label
@@ -342,7 +339,3 @@ static func _center_on(label: Label, center: Vector2) -> void:
 	label.pivot_offset = label.size / 2.0
 	label.position = center - label.size / 2.0
 
-
-func _tier_color(multiplier: int) -> Color:
-	var tiers := ComboCounter.TIER_COLORS
-	return tiers[mini(multiplier - 1, tiers.size() - 1)]

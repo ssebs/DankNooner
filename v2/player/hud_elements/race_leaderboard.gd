@@ -20,10 +20,9 @@ const NAME_MIN_WIDTH: float = 60.0
 const CELL_PADDING: float = 12.0
 ## Duration of the slide to a new rank.
 const REORDER_SECS: float = 0.35
-const OWN_ROW_COLOR := Color(1.0, 0.8, 0.2)
 const POP_SCALE: float = 1.5
 const POP_SECS: float = 0.4
-const POP_COLOR := Color(0.4, 1.0, 0.4)
+const POP_COLOR := UtilsConstants.UI_ICE
 ## Your row punches up when your score or place improves.
 const OWN_PUNCH_SCALE: float = 1.2
 const OWN_PUNCH_SECS: float = 0.4
@@ -59,15 +58,13 @@ func set_board(headers: PackedStringArray, all_rows: Array) -> void:
 		if !_rows.has(peer_id):
 			var row := _add_row()
 			row.position.y = _rank_y(rank)
-			if peer_id == own_id:
-				row.modulate = OWN_ROW_COLOR
 			_rows[peer_id] = row
 			_ranks[peer_id] = rank
 		elif _ranks[peer_id] != rank:
 			_ranks[peer_id] = rank
 			var tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 			tween.tween_property(_rows[peer_id], "position:y", _rank_y(rank), REORDER_SECS)
-		if _set_cells(_rows[peer_id], rows[rank]["cells"]) and peer_id == own_id:
+		if _set_cells(_rows[peer_id], rows[rank]["cells"], peer_id == own_id) and peer_id == own_id:
 			score_up = true
 
 	for peer_id in _rows.keys():
@@ -151,9 +148,9 @@ func _add_row() -> HBoxContainer:
 	return row
 
 
-## Grows/trims the row's labels to match, then sets their text. First column is the (wider) name.
-## True if a cell popped.
-func _set_cells(row: HBoxContainer, texts: PackedStringArray) -> bool:
+## Grows/trims the row's labels to match, then sets their text. First column is the (wider) name;
+## your own row glows. True if a cell popped.
+func _set_cells(row: HBoxContainer, texts: PackedStringArray, own: bool = false) -> bool:
 	var popped := false
 	while row.get_child_count() > texts.size():
 		var extra := row.get_child(row.get_child_count() - 1)
@@ -166,6 +163,8 @@ func _set_cells(row: HBoxContainer, texts: PackedStringArray) -> bool:
 			HORIZONTAL_ALIGNMENT_LEFT if is_name else HORIZONTAL_ALIGNMENT_CENTER
 		)
 		label.add_theme_font_size_override("font_size", _font_size())
+		if own:
+			label.theme_type_variation = &"GlowLabel"
 		row.add_child(label)
 	for i in texts.size():
 		var label := row.get_child(i) as Label

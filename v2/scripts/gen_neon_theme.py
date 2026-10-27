@@ -2,12 +2,14 @@
 """Neon UI theme generator.
 
 Renders 9-patch PNGs (vertical gradient fill, neon border, inner + outer glow) into
-resources/themes/neon/, then writes resources/themes/DankNoonerNeon.tres: a copy of
-DankNooner.tres with the StyleBoxFlats listed in SWAPS replaced by StyleBoxTextures and PROPS
-set. Content margins carry over and the glow sits in the expand margin, so both themes lay out
-identically.
+resources/themes/neon/, then writes two themes, each a copy of its classic base with the
+StyleBoxFlats in its swaps replaced by StyleBoxTextures and its props set:
+    DankNooner.tres -> DankNoonerNeon.tres  (menus; SWAPS, PROPS)
+    hud.tres        -> hud_neon.tres        (riding HUD overlay; HUD_PROPS)
+Content margins carry over and the glow sits in the expand margin, so each pair lays out
+identically. Colors come from UtilsConstants' UI_* palette, shared with the game code.
 
-Edit DankNooner.tres or this script, never DankNoonerNeon.tres (it's overwritten). Run from
+Edit the bases or this script, never the generated themes (they're overwritten). Run from
 anywhere, standard library only:
     python3 scripts/gen_neon_theme.py
 """
@@ -16,24 +18,33 @@ import math
 import re
 import struct
 import zlib
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-BASE_THEME = ROOT / "resources/themes/DankNooner.tres"
-OUT_THEME = ROOT / "resources/themes/DankNoonerNeon.tres"
+THEME_DIR = ROOT / "resources/themes"
+CONSTANTS = ROOT / "utils/constants.gd"
 TEX_DIR = ROOT / "resources/themes/neon"
 TEX_RES_DIR = "res://resources/themes/neon"
 FONT_RES_DIR = "res://resources/fonts/MuseoModerno/static"
 EMOJI_FONT = "res://resources/fonts/Noto_Color_Emoji/NotoColorEmoji-Regular.ttf"
 
-# Palette lifted from the world shaders so the UI belongs to it.
-BLUE = (0.255, 0.686, 1.0)  # neon_edges.gdshader edge_color
-ICE = (0.65, 0.9, 1.0)
-PINK = (1.0, 0.25, 0.55)  # night_sky city_glow_color
-AURORA = (0.2, 1.0, 0.55)  # skybox_aurora aurora_a
-HORIZON = (0.12, 0.05, 0.3)  # night_sky horizon_color
-SKY = (0.02, 0.04, 0.12)  # skybox_aurora sky_color
+
+
+def _palette() -> dict:
+    """UtilsConstants' `const UI_X: Color = Color(r, g, b)` lines, by name."""
+    found = re.findall(r"^const (UI_\w+): Color = Color\(([^)]*)\)", CONSTANTS.read_text(), re.M)
+    return {name: tuple(float(c) for c in args.split(",")) for name, args in found}
+
+
+PALETTE = _palette()
+BLUE = PALETTE["UI_BLUE"]
+ICE = PALETTE["UI_ICE"]
+GOLD = PALETTE["UI_GOLD"]
+GREEN = PALETTE["UI_GREEN"]
+RED = PALETTE["UI_RED"]
+GLASS = PALETTE["UI_GLASS"]
+SKY = PALETTE["UI_SKY"]
 WHITE = (1.0, 1.0, 1.0)
 
 PANEL_RADII = (16, 4, 16, 4)  # tl, tr, br, bl — the house slanted corners
@@ -134,14 +145,25 @@ def _font(weight: str) -> str:
 
 # Menus: clean glass — hairline borders, light only where you act, scanlines for the 80s.
 MENU = Look(
-    top=(0.02, 0.027, 0.06), bot=(0.02, 0.027, 0.06), edge=BLUE, hot=BLUE, hot_border=ICE,
+    top=GLASS, bot=GLASS, edge=BLUE, hot=BLUE, hot_border=ICE,
     focus=ICE, border=1, alpha=0.75, rest_glow=0.0, scan=0.08,
 )
-# HUD panels: the sky's pink, which holds its contrast over the blue-edged world.
-HUD = Look(
-    top=HORIZON, bot=SKY, edge=PINK, hot=PINK, hot_border=(1, 0.7, 0.85),
-    focus=AURORA, border=3, alpha=0.85, rest_glow=1.0,
-)
+# White text in a blue neon tube with a faint halo: callouts, +points, your own leaderboard row.
+# In both themes — hud_neon's Label outline would otherwise win over the menu theme's.
+GLOW_PROPS = {
+    "GlowLabel/base_type": '&"Label"',
+    "GlowLabel/colors/font_color": (1, 1, 1, 1),
+    "GlowLabel/colors/font_outline_color": (*BLUE, 1),
+    "GlowLabel/constants/outline_size": 4,
+    "GlowLabel/colors/font_shadow_color": (*BLUE, 0.3),
+    "GlowLabel/constants/shadow_offset_x": 0,
+    "GlowLabel/constants/shadow_offset_y": 0,
+    "GlowLabel/constants/shadow_outline_size": 12,
+    "PopupLabel/base_type": '&"GlowLabel"',
+    "PopupLabel/font_sizes/font_size": 40,
+    "PopupLabel/constants/outline_size": 6,
+    "PopupLabel/constants/shadow_outline_size": 16,
+}
 
 # Set on top of DankNooner.tres's [resource]: a drop shadow for legibility over the world, dark
 # text on the solid pressed fill (a checked CheckBox keeps its normal box, so not there).
@@ -163,6 +185,17 @@ PROPS = {
     "CheckBox/colors/font_hover_pressed_color": (1, 1, 1, 1),
     "Heading1Label/fonts/font": _font("Bold"),
     "TableHeaderLabel/fonts/font": _font("Bold"),
+    "TableHeaderLabel/colors/font_color": (*BLUE, 1),
+    **GLOW_PROPS,
+    "MoneyLabel/base_type": '&"Label"',
+    "MoneyLabel/colors/font_color": (*GREEN, 1),
+    "MoneyLabel/colors/font_outline_color": (*GLASS, 1),
+    "MoneyLabel/constants/outline_size": 4,
+    "NameTagLabel/colors/font_color": (*GREEN, 1),
+    "PingLabel/colors/font_color": (*GREEN, 1),
+    **{f"DangerButton/colors/{c}": (*RED, 1) for c in (
+        "font_color", "font_focus_color", "font_hover_color", "font_hover_pressed_color", "font_pressed_color"
+    )},
 }
 
 # DankNooner.tres StyleBox id -> _boxes() name. Ids missing here (empty spacers, the avatar ring)
@@ -174,7 +207,7 @@ SWAPS = {
     "StyleBoxFlat_yn56u": "btn_hover",
     "StyleBoxFlat_7depn": "btn_pressed",
     "StyleBoxFlat_4v18w": "btn_primary",
-    "StyleBoxFlat_hudpanel": "hud_panel",
+    "StyleBoxFlat_hudpanel": "hud_glass",
     "StyleBoxFlat_menupanel": "panel",
     "StyleBoxFlat_6tpw2": "panel",
     "StyleBoxFlat_backdrop": "backdrop",
@@ -199,6 +232,21 @@ SWAPS = {
 }
 # External StyleBox files the base theme references: ext id -> _boxes() name.
 EXT_SWAPS = {"1_bvbyg": "btn_normal"}
+
+# hud_neon.tres overlays the riding HUD: thin dark outlines on text instead of 8px black.
+HUD_PROPS = {
+    "Label/colors/font_outline_color": (*GLASS, 1),
+    "Label/constants/outline_size": 4,
+    "Label/colors/font_shadow_color": (0, 0, 0, 0.6),
+    "Label/constants/shadow_offset_x": 0,
+    "Label/constants/shadow_offset_y": 2,
+    "RichTextLabel/colors/font_outline_color": (*GLASS, 1),
+    "RichTextLabel/constants/outline_size": 4,
+    "XPLabel/colors/font_color": (*GOLD, 1),
+    "XPLabel/constants/outline_size": 4,
+    "WarningLabel/colors/font_color": (*RED, 1),
+    **GLOW_PROPS,
+}
 
 SIDES = ("left", "top", "right", "bottom")
 
@@ -339,23 +387,26 @@ def _texture_box(sub_id: str, box: Box, name: str, props: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-def build_theme(boxes: dict) -> set:
-    text = BASE_THEME.read_text()
+def build_theme(
+    base: str, out: str, swaps: dict, ext_swaps: dict, props: dict, boxes: dict
+) -> set:
+    """Write THEME_DIR/out from THEME_DIR/base; returns the box names it uses."""
+    text = (THEME_DIR / base).read_text()
     used = set()
 
     def swap_sub(match: re.Match) -> str:
         sub_id, body = match.group(1), match.group(2)
-        if sub_id not in SWAPS:
+        if sub_id not in swaps:
             return match.group(0)
-        used.add(SWAPS[sub_id])
-        return _texture_box(sub_id, boxes[SWAPS[sub_id]], SWAPS[sub_id], _props(body)) + "\n"
+        used.add(swaps[sub_id])
+        return _texture_box(sub_id, boxes[swaps[sub_id]], swaps[sub_id], _props(body)) + "\n"
 
     text = re.sub(
         r'\[sub_resource type="StyleBoxFlat" id="([^"]+)"\]\n((?:[^\[\n].*\n)*)\n', swap_sub, text
     )
 
-    font_ext, new_subs = _fonts(PROPS)
-    for ext_id, name in EXT_SWAPS.items():
+    font_ext, new_subs = _fonts(props)
+    for ext_id, name in ext_swaps.items():
         ext_line = re.search(r'\[ext_resource [^\n]*path="([^"]+)" id="%s"\]\n' % ext_id, text)
         source = (ROOT / ext_line.group(1).removeprefix("res://")).read_text()
         sub_id = f"StyleBoxTexture_{name}"
@@ -370,10 +421,10 @@ def build_theme(boxes: dict) -> set:
     ) + font_ext
     first_sub = text.index("[sub_resource")
     text = text[:first_sub].rstrip("\n") + "\n" + ext_lines + "\n" + new_subs + text[first_sub:]
-    text = _set_props(text, PROPS)
+    text = _set_props(text, props)
     # Its own resource — drop the base theme's uid.
     text = re.sub(r'^\[gd_resource type="Theme" format=3 uid="[^"]+"\]', '[gd_resource type="Theme" format=3]', text)
-    OUT_THEME.write_text(text)
+    (THEME_DIR / out).write_text(text)
     return used
 
 
@@ -381,14 +432,16 @@ def build_theme(boxes: dict) -> set:
 
 
 def main() -> None:
-    hud = _boxes(HUD)
-    boxes = {**_boxes(MENU), "hud_panel": hud["panel"], "feed": hud["feed"]}
+    menu = _boxes(MENU)
+    # Scanlines are for the large menu panels, not the small HUD ones.
+    boxes = {**menu, "hud_glass": replace(menu["panel"], scan=0.0)}
     TEX_DIR.mkdir(parents=True, exist_ok=True)
-    used = build_theme(boxes)
+    used = build_theme("DankNooner.tres", "DankNoonerNeon.tres", SWAPS, EXT_SWAPS, PROPS, boxes)
+    used |= build_theme("hud.tres", "hud_neon.tres", {}, {}, HUD_PROPS, boxes)
     for name in sorted(used):
         size, raw = render(boxes[name])
         write_png(TEX_DIR / f"{name}.png", size, raw)
-    print(f"wrote {OUT_THEME.relative_to(ROOT)} + {len(used)} textures in {TEX_DIR.relative_to(ROOT)}")
+    print(f"wrote DankNoonerNeon.tres + hud_neon.tres + {len(used)} textures in {TEX_DIR.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

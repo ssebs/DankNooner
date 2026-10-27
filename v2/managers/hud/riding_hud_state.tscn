@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ce4n2xjrhv4j8" path="res://managers/hud/riding_hud_state.gd" id="1_8neiw"]
 [ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="1_whasa"]
-[ext_resource type="Theme" path="res://resources/themes/hud.tres" id="2_hudth"]
+[ext_resource type="Theme" path="res://resources/themes/hud_neon.tres" id="2_hudth"]
 [ext_resource type="PackedScene" uid="uid://cmnmap7blip01" path="res://player/controllers/minimap/minimap.tscn" id="4_ltqsj"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/combo_counter.tscn" id="6_x84np"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/boost_gauge.tscn" id="7_3xx38"]
@@ -113,7 +113,6 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 mouse_filter = 2
-theme_override_constants/outline_size = 16
 theme_override_font_sizes/font_size = 48
 horizontal_alignment = 1
 autowrap_mode = 3

@@ -1,0 +1,59 @@
+[gd_resource type="Theme" format=3 uid="uid://b4safwe5ne38d"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_barbg"]
+bg_color = Color(0.02, 0.027, 0.06, 0.7)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.255, 0.686, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rpmfill"]
+bg_color = Color(0.103055954, 0.5546875, 0.052001953, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_respawnfill"]
+bg_color = Color(0.25, 0.69, 1, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[resource]
+GlowLabel/base_type = &"Label"
+GlowLabel/colors/font_color = Color(1, 1, 1, 1)
+GlowLabel/colors/font_outline_color = Color(0.255, 0.686, 1, 1)
+GlowLabel/colors/font_shadow_color = Color(0.255, 0.686, 1, 0.3)
+GlowLabel/constants/outline_size = 4
+GlowLabel/constants/shadow_offset_x = 0
+GlowLabel/constants/shadow_offset_y = 0
+GlowLabel/constants/shadow_outline_size = 12
+Label/colors/font_outline_color = Color(0.02, 0.027, 0.06, 1)
+Label/colors/font_shadow_color = Color(0, 0, 0, 0.6)
+Label/constants/outline_size = 4
+Label/constants/shadow_offset_x = 0
+Label/constants/shadow_offset_y = 2
+PopupLabel/base_type = &"GlowLabel"
+PopupLabel/constants/outline_size = 6
+PopupLabel/constants/shadow_outline_size = 16
+PopupLabel/font_sizes/font_size = 40
+RPMBar/base_type = &"ProgressBar"
+RPMBar/styles/background = SubResource("StyleBoxFlat_barbg")
+RPMBar/styles/fill = SubResource("StyleBoxFlat_rpmfill")
+RespawnBar/base_type = &"ProgressBar"
+RespawnBar/styles/background = SubResource("StyleBoxFlat_barbg")
+RespawnBar/styles/fill = SubResource("StyleBoxFlat_respawnfill")
+RichTextLabel/colors/font_outline_color = Color(0.02, 0.027, 0.06, 1)
+RichTextLabel/constants/outline_size = 4
+WarningLabel/base_type = &"Label"
+WarningLabel/colors/font_color = Color(1, 0.24, 0.24, 1)
+XPLabel/base_type = &"Label"
+XPLabel/colors/font_color = Color(1, 0.82, 0.25, 1)
+XPLabel/constants/outline_size = 4
