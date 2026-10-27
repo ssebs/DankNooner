@@ -220,6 +220,8 @@
 ---
 
 ## Done ✅
+- [x] Disable NPC traffic debug command
+
 - [x] fill up spil hud height changes
 
 - [x] controller press b to go back in menu (aka unpause, or go back to prev page)

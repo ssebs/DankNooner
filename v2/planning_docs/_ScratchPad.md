@@ -6,7 +6,6 @@
 
 ### NOW
 
-- [ ] Disable NPC traffic debug command
 - [ ] Create/join public/private lobbies 
 
 

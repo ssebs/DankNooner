@@ -86,6 +86,18 @@ var _near_peers: Dictionary[int, PackedInt32Array] = {}
 var _pending_delta: Dictionary[int, float] = {}
 var _tick_count: int = 0
 var _next_lod_ms: int = 0
+## Server: set_traffic's rider count, overriding the map's. -1 = the map's.
+var _debug_count: int = -1
+var _for_race: bool = false
+
+
+func _ready():
+	super()
+	if Engine.is_editor_hint():
+		return
+	Console.add_command(
+		"set_traffic", _set_debug_count, ["count"], 1, "Set the NPC traffic count, -1 for the map's (host only)"
+	)
 
 
 #region Traffic lifecycle (server only)
@@ -115,6 +127,9 @@ func start_traffic(for_race: bool = false) -> void:
 	_build_skins()
 	var settings := level_manager.current_level.traffic_settings
 	var count := settings.race_traffic_amount if for_race else settings.traffic_count
+	if _debug_count >= 0:
+		count = _debug_count
+	_for_race = for_race
 
 	# Round-robin over shuffled lanes — every lane gets a rider before any gets a second,
 	# so traffic spreads over the whole network instead of stacking at one spot.
@@ -174,6 +189,22 @@ func stop_traffic() -> void:
 		rpc_despawn_npc.rpc(npc_id)
 	_skin_indices.clear()
 	_network = null
+
+
+func _set_debug_count(arg: String) -> void:
+	# Null peer in menus — the count still applies to the next session
+	if multiplayer.multiplayer_peer != null and !multiplayer.is_server():
+		Console.print_line("set_traffic: host only")
+		return
+	if !arg.is_valid_int():
+		Console.print_line("set_traffic: '%s' is not a number" % arg)
+		return
+	_debug_count = int(arg)
+	# Running (_network is set) — respawn at the new count
+	if _network != null:
+		var for_race := _for_race
+		stop_traffic()
+		start_traffic(for_race)
 
 
 #endregion
