@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://menus/credits_menu/credits_menu_state.gd" id="1_credits"]
-[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_theme"]
+[ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://dombbuh0a3fxn" path="res://resources/img/Icons/flair_disabled_cross.svg" id="3_close"]
 [ext_resource type="FontFile" uid="uid://tyej4l632h7k" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-Regular.ttf" id="4_regular"]
 [ext_resource type="FontFile" uid="uid://8tlasykxhy4g" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-SemiBold.ttf" id="5_semibold"]

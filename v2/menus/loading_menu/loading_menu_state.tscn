@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://pg4u70n43ksy"]
 
 [ext_resource type="Script" uid="uid://cwsho04hxmdls" path="res://menus/loading_menu/loading_menu_state.gd" id="1_script"]
-[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_theme"]
+[ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_theme"]
 [ext_resource type="Script" uid="uid://muodw5580tnr" path="res://addons/tattomoosa.spinner/spinner.gd" id="3_r1wma"]
 
 [node name="LoadingMenuState" type="Node" unique_id=1530997643]

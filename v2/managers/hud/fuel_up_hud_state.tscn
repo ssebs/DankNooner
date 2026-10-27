@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="1_theme"]
+[ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="1_theme"]
 [ext_resource type="Script" path="res://managers/hud/fuel_up_hud_state.gd" id="2_script"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/boost_gauge.tscn" id="3_gauge"]
 [ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="4_money"]

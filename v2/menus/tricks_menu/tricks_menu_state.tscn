@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://det2e0yice867"]
 
 [ext_resource type="Script" uid="uid://bemkxmpmhjikk" path="res://menus/tricks_menu/tricks_menu_state.gd" id="1_tricks"]
-[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_theme"]
+[ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_theme"]
 
 [node name="TricksMenuState" type="Node" unique_id=1846203517]
 script = ExtResource("1_tricks")

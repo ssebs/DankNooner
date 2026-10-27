@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c1rey02kvrh1h"]
 
 [ext_resource type="Script" uid="uid://duo3u7f7gl4vb" path="res://managers/hud/results_hud_state.gd" id="1_script"]
-[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_theme"]
+[ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_theme"]
 [ext_resource type="Script" uid="uid://bbuk3w2ml0an0" path="res://player/hud_elements/race_leaderboard.gd" id="3_board"]
 
 [node name="ResultsHUDState" type="Node" unique_id=852348249]

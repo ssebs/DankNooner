@@ -26,6 +26,13 @@ const _WARNING_HOLD_SECS := 1.5
 const _WARNING_PULSE_SECS := 0.35
 ## Trick prompt opacity while no trick state is active (just the trick button hint).
 const _TRICK_PROMPT_IDLE_ALPHA := 0.5
+## Panel flashes (HUDFlash): your score up, you moved up a place, you bailed.
+const _FLASH_SCORE := Color(2.2, 2.6, 3.2)
+const _FLASH_SCORE_SECS := 0.6
+const _FLASH_RANK_UP := Color(3.2, 2.6, 0.8)
+const _FLASH_RANK_UP_SECS := 1.2
+const _FLASH_BAIL := Color(3.2, 0.6, 0.6)
+const _FLASH_BAIL_SECS := 0.9
 
 @onready var minimap: Minimap = %Minimap
 @onready var _rpm_bar: ProgressBar = %HUD_RPMProgress
@@ -37,10 +44,11 @@ const _TRICK_PROMPT_IDLE_ALPHA := 0.5
 @onready var _money: MoneyLabel = %HUD_Money
 @onready var _xp_label: Label = %HUD_XP
 @onready var _leaderboard: RaceLeaderboard = %HUD_Leaderboard
+@onready var _leaderboard_panel: PanelContainer = %HUD_LeaderboardPanel
 @onready var _trick_popups: TrickPopups = %TrickPopups
 @onready var _trick_feed: TrickFeed = %HUD_TrickFeed
 @onready var _target_compass: TargetCompass = %TargetCompass
-@onready var _event_panel: VBoxContainer = %EventPanel
+@onready var _event_panel: PanelContainer = %EventPanel
 @onready var _event_title: Label = %HUD_EventTitle
 @onready var _event_step: Label = %HUD_EventStep
 @onready var _event_objective: Label = %HUD_EventObjective
@@ -107,6 +115,7 @@ func _ready() -> void:
 	# Event text starts hidden in code, not in the scene — the editor flips label visibility.
 	clear_event_text()
 	_held_item_panel.hide()
+	_leaderboard.own_improved.connect(_on_leaderboard_own_improved)
 
 func Enter(_state_context: StateContext):
 	player_entity = hud_manager.local_player
@@ -321,6 +330,15 @@ func _on_crashed(_peer_id: int):
 	# combo_time freezes on a crash, so it's still set here if a combo just got voided.
 	if trick_controller.combo_time > 0.0:
 		_trick_popups.pop_oof()
+	HUDFlash.flash(_leaderboard_panel, _FLASH_BAIL, _FLASH_BAIL_SECS)
+	HUDFlash.flash(_event_panel, _FLASH_BAIL, _FLASH_BAIL_SECS)
+
+
+func _on_leaderboard_own_improved(rank_up: bool):
+	if rank_up:
+		HUDFlash.flash(_leaderboard_panel, _FLASH_RANK_UP, _FLASH_RANK_UP_SECS)
+	else:
+		HUDFlash.flash(_leaderboard_panel, _FLASH_SCORE, _FLASH_SCORE_SECS)
 
 
 func _on_respawned():
@@ -467,6 +485,7 @@ func clear_leaderboard() -> void:
 @rpc("call_local", "unreliable")
 func _rpc_set_leaderboard(headers: PackedStringArray, rows: Array, tricks: PackedInt32Array):
 	_leaderboard.set_board(headers, rows)
+	_leaderboard_panel.show()
 	_has_leaderboard = true
 	_update_event_panel()
 	# Resent every refresh; only rebuild when it changes.
@@ -478,6 +497,7 @@ func _rpc_set_leaderboard(headers: PackedStringArray, rows: Array, tricks: Packe
 @rpc("call_local", "reliable")
 func _rpc_clear_leaderboard():
 	_leaderboard.clear()
+	_leaderboard_panel.hide()
 	_has_leaderboard = false
 	_update_event_panel()
 	_challenge_tricks = PackedInt32Array()

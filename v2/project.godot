@@ -91,7 +91,7 @@ navigation_mesh_source_group=""
 
 [gui]
 
-theme/custom="uid://de2t3r1ewrlw5"
+theme/custom="res://resources/themes/DankNoonerNeon.tres"
 
 [input]
 

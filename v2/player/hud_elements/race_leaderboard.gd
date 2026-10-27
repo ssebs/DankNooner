@@ -1,14 +1,17 @@
 @tool
-## Live stunt-race leaderboard: a header row, then one row per human sorted by score.
-## Rows slide to their new rank on reorder, so they're placed by hand rather than in a
-## container (which would snap them). A score-like cell pops when it climbs. Fed by
-## RidingHUDState from the server's snapshot.
+## Leaderboard table: a header row, then one row per racer, best first. Rows slide to their new
+## rank on reorder, so they're placed by hand rather than in a container (which would snap them).
+## A score-like cell pops when it climbs. Fed by RidingHUDState (live) and ResultsHUDState.
 class_name RaceLeaderboard extends Control
+
+## Your score went up; rank_up if you also moved up a place.
+signal own_improved(rank_up: bool)
 
 ## Cell font size; 0 keeps the theme's Label size.
 @export var font_size: int = 0
-## Drawn behind the whole board, header included; use expand margins for padding. Empty = none.
-@export var background: StyleBox
+## Show only the top this many, then "…" and one more row: yours when you're further down, else
+## last place (so the board still reads as a bigger field). 0 = everyone.
+@export var top_count: int = 0
 
 ## Row step as a multiple of the font size — the font's own line height is too loose.
 const ROW_HEIGHT_SCALE: float = 1.3
@@ -21,19 +24,33 @@ const OWN_ROW_COLOR := Color(1.0, 0.8, 0.2)
 const POP_SCALE: float = 1.5
 const POP_SECS: float = 0.4
 const POP_COLOR := Color(0.4, 1.0, 0.4)
+## Your row punches up when your score or place improves.
+const OWN_PUNCH_SCALE: float = 1.2
+const OWN_PUNCH_SECS: float = 0.4
+## Row key for the "…" gap — no peer (>= 1) or NPC (< 0) uses 0.
+const GAP_ID: int = 0
 
 var _header: HBoxContainer = null
 ## peer_id -> row, and the rank each row last slid to.
 var _rows: Dictionary[int, HBoxContainer] = {}
 var _ranks: Dictionary[int, int] = {}
+## Your rank on the full board last refresh; -1 while you're not on it.
+var _own_rank: int = -1
 
 
-## rows: [{"peer_id": int, "cells": PackedStringArray}], already sorted best-first.
+## all_rows: [{"peer_id": int, "cells": PackedStringArray}], already sorted best-first.
 ## cells line up with headers (name first).
-func set_board(headers: PackedStringArray, rows: Array) -> void:
+func set_board(headers: PackedStringArray, all_rows: Array) -> void:
 	if _header == null:
 		_header = _add_row()
 	_set_cells(_header, headers)
+
+	var own_id := multiplayer.get_unique_id()
+	var own_rank := all_rows.find_custom(func(r): return r["peer_id"] == own_id)
+	var rank_up := _own_rank >= 0 and own_rank >= 0 and own_rank < _own_rank
+	_own_rank = own_rank
+	var rows := _shown_rows(all_rows, own_rank, headers.size())
+	var score_up := false
 
 	var live: Dictionary[int, bool] = {}
 	for rank in rows.size():
@@ -42,7 +59,7 @@ func set_board(headers: PackedStringArray, rows: Array) -> void:
 		if !_rows.has(peer_id):
 			var row := _add_row()
 			row.position.y = _rank_y(rank)
-			if peer_id == multiplayer.get_unique_id():
+			if peer_id == own_id:
 				row.modulate = OWN_ROW_COLOR
 			_rows[peer_id] = row
 			_ranks[peer_id] = rank
@@ -50,7 +67,8 @@ func set_board(headers: PackedStringArray, rows: Array) -> void:
 			_ranks[peer_id] = rank
 			var tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 			tween.tween_property(_rows[peer_id], "position:y", _rank_y(rank), REORDER_SECS)
-		_set_cells(_rows[peer_id], rows[rank]["cells"])
+		if _set_cells(_rows[peer_id], rows[rank]["cells"]) and peer_id == own_id:
+			score_up = true
 
 	for peer_id in _rows.keys():
 		if !live.has(peer_id):
@@ -66,7 +84,9 @@ func set_board(headers: PackedStringArray, rows: Array) -> void:
 	for w in widths:
 		total_width += w
 	custom_minimum_size = Vector2(total_width, _rank_y(rows.size()))
-	queue_redraw()
+	if rank_up or score_up:
+		_punch(_rows[own_id])
+		own_improved.emit(rank_up)
 
 
 func clear() -> void:
@@ -75,15 +95,29 @@ func clear() -> void:
 	_header = null
 	_rows.clear()
 	_ranks.clear()
-	custom_minimum_size = Vector2.ZERO
-	queue_redraw()
+	_own_rank = -1
 
 
-func _draw() -> void:
-	# Cleared board — no rows to back.
-	if background == null or _header == null:
-		return
-	draw_style_box(background, Rect2(Vector2.ZERO, custom_minimum_size))
+## Scales from the row's left edge, so the name stays put.
+func _punch(row: HBoxContainer) -> void:
+	row.pivot_offset = Vector2(0.0, row.size.y / 2.0)
+	row.scale = Vector2.ONE * OWN_PUNCH_SCALE
+	var tween := row.create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(row, "scale", Vector2.ONE, OWN_PUNCH_SECS)
+
+
+## The top top_count, a "…" gap when rows are skipped, then your row (or last place).
+func _shown_rows(rows: Array, own_rank: int, columns: int) -> Array:
+	if top_count <= 0 or rows.size() <= top_count:
+		return rows
+	var shown := rows.slice(0, top_count)
+	var extra := own_rank if own_rank >= top_count else rows.size() - 1
+	if extra > top_count:
+		var gap := PackedStringArray(["…"])
+		gap.resize(columns)
+		shown.append({"peer_id": GAP_ID, "cells": gap})
+	shown.append(rows[extra])
+	return shown
 
 
 func _column_widths(headers: PackedStringArray, rows: Array) -> PackedFloat32Array:
@@ -118,7 +152,9 @@ func _add_row() -> HBoxContainer:
 
 
 ## Grows/trims the row's labels to match, then sets their text. First column is the (wider) name.
-func _set_cells(row: HBoxContainer, texts: PackedStringArray) -> void:
+## True if a cell popped.
+func _set_cells(row: HBoxContainer, texts: PackedStringArray) -> bool:
+	var popped := false
 	while row.get_child_count() > texts.size():
 		var extra := row.get_child(row.get_child_count() - 1)
 		row.remove_child(extra)
@@ -141,7 +177,9 @@ func _set_cells(row: HBoxContainer, texts: PackedStringArray) -> void:
 			and texts[i].to_int() > label.text.to_int()
 		):
 			_pop(label)
+			popped = true
 		label.text = texts[i]
+	return popped
 
 
 func _pop(label: Label) -> void:

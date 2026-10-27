@@ -1,9 +1,10 @@
 @tool
 ## The live leaderboard (riding HUD) and the results table, both humans + NPCs. Columns: name,
-## race position, score (STUNT_RACE), then every component's column_headers (challenge columns are
-## results-only, so the live board stays on standings). Standing is fixed by
-## race_type: STUNT_RACE by RaceGameMode.score, TIME_ATTACK by session best lap, otherwise race
-## position.
+## place, score (STUNT_RACE), then every component's column_headers (challenge columns are
+## results-only). The live board orders by race position (TIME_ATTACK: best lap), so its order and
+## Pos always agree. Results order by standing, fixed by race_type: STUNT_RACE by
+## RaceGameMode.score, TIME_ATTACK by session best lap, otherwise race position — and their Pos is
+## that final placement, not finish order.
 class_name LeaderboardComponent extends RaceComponent
 
 ## Cadence for pushing the live leaderboard to clients (a few Hz — the values crawl).
@@ -25,7 +26,7 @@ func tick(delta: float) -> void:
 				{
 					"peer_id": peer_id,
 					"cells": _human_cells(peer_id, true),
-					"_sort_key": _human_sort_key(peer_id),
+					"_sort_key": _live_sort_key(peer_id),
 				}
 			)
 	if race_mode.npc_racers != null:
@@ -35,7 +36,7 @@ func tick(delta: float) -> void:
 				{
 					"peer_id": npc_id,
 					"cells": _npc_cells(npc, true),
-					"_sort_key": _npc_sort_key(npc_id),
+					"_sort_key": _live_sort_key(npc_id),
 				}
 			)
 	rows.sort_custom(
@@ -62,11 +63,11 @@ func build_results() -> ResultsData:
 		var player := race_mode.spawn_manager.get_player_by_peer_id(peer_id)
 		if player == null or !race_task.has_racer(peer_id):
 			continue
-		rows.append(_result_row(peer_id, _human_cells(peer_id), _human_sort_key(peer_id)))
+		rows.append(_result_row(peer_id, _human_cells(peer_id), _human_standing_key(peer_id)))
 	if race_mode.npc_racers != null:
 		for npc in race_mode.npc_racers.get_npcs():
 			var npc_id := int(npc.name)
-			rows.append(_result_row(npc_id, _npc_cells(npc), _npc_sort_key(npc_id)))
+			rows.append(_result_row(npc_id, _npc_cells(npc), _npc_standing_key(npc_id)))
 	rows.sort_custom(
 		func(a, b): return _ranks_above(a["_sort_key"], a["_peer_id"], b["_sort_key"], b["_peer_id"])
 	)
@@ -77,6 +78,9 @@ func build_results() -> ResultsData:
 	if !_is_time_attack():
 		headers.insert(1, "⏱ %s" % tr("LB_TIME"))
 		title = tr("RACE_COMPLETE")
+	var place_column := str(headers.find("🏁 %s" % tr("LB_PLACE")))
+	for i in rows.size():
+		rows[i][place_column] = "P%d" % (i + 1)
 	var columns: Array[String] = []
 	for i in headers.size():
 		columns.append(str(i))
@@ -97,6 +101,10 @@ func _headers(live: bool = false) -> PackedStringArray:
 		headers.append("💰 %s" % tr("LB_SCORE"))
 	for component in _column_components(live):
 		headers.append_array(component.column_headers())
+	# The live board keeps just the icon of each "icon word" header, so it stays narrow.
+	if live:
+		for i in headers.size():
+			headers[i] = headers[i].get_slice(" ", 0)
 	return headers
 
 
@@ -117,7 +125,7 @@ func _npc_cells(npc: NPCRiderEntity, live: bool = false) -> PackedStringArray:
 	return cells
 
 
-func _npc_sort_key(npc_id: int) -> float:
+func _npc_standing_key(npc_id: int) -> float:
 	return 0.0 if _by_score() else _position_key(npc_id)
 
 
@@ -127,7 +135,14 @@ func _column_components(live: bool) -> Array:
 	return race_mode.get_components().filter(func(c): return c != race_mode.challenges)
 
 
-func _human_sort_key(peer_id: int) -> float:
+## Live board order. TIME_ATTACK riders each run their own laps — no race to place in.
+func _live_sort_key(racer_id: int) -> float:
+	if _is_time_attack():
+		return race_mode.time_attack.best_lap_ms(racer_id)
+	return _position_key(racer_id)
+
+
+func _human_standing_key(peer_id: int) -> float:
 	if _by_score():
 		return -race_mode.score(peer_id)
 	if _is_time_attack():
@@ -135,7 +150,7 @@ func _human_sort_key(peer_id: int) -> float:
 	return _position_key(peer_id)
 
 
-## Standing first; race position breaks ties (e.g. everyone on 0 score at a stunt race's start).
+## Sort key first; race position breaks ties (e.g. everyone on 0 score at a stunt race's start).
 func _ranks_above(key_a: float, id_a: int, key_b: float, id_b: int) -> bool:
 	if key_a != key_b:
 		return key_a < key_b

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://do131g4o4kcam"]
 
 [ext_resource type="Script" uid="uid://ce4n2xjrhv4j8" path="res://managers/hud/riding_hud_state.gd" id="1_8neiw"]
-[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="1_whasa"]
+[ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="1_whasa"]
 [ext_resource type="Theme" path="res://resources/themes/hud.tres" id="2_hudth"]
 [ext_resource type="PackedScene" uid="uid://cmnmap7blip01" path="res://player/controllers/minimap/minimap.tscn" id="4_ltqsj"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/combo_counter.tscn" id="6_x84np"]
@@ -14,17 +14,6 @@
 [ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="99_money"]
 [ext_resource type="Script" path="res://player/hud_elements/trick_feed.gd" id="99_tfeed"]
 [ext_resource type="FontFile" uid="uid://dftvb58jromba" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-Black.ttf" id="99_fblk"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lbbg"]
-bg_color = Color(0, 0, 0, 0.6)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-expand_margin_left = 12.0
-expand_margin_top = 4.0
-expand_margin_right = 12.0
-expand_margin_bottom = 4.0
 
 [node name="RidingHUDState" type="Node" unique_id=1177239669]
 script = ExtResource("1_8neiw")
@@ -70,26 +59,32 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "HUD_FPS"
 
-[node name="EventPanel" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/TopLeftVBox" unique_id=1156886571]
+[node name="EventPanel" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/TopLeftVBox" unique_id=1156886571]
 unique_name_in_owner = true
 visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+theme_type_variation = &"HUDPanel"
+
+[node name="EventVBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 2
 
-[node name="HUD_EventTitle" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel" unique_id=2138217353]
+[node name="HUD_EventTitle" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel/EventVBox" unique_id=2138217353]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 
-[node name="HUD_EventStep" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel" unique_id=1247704292]
+[node name="HUD_EventStep" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel/EventVBox" unique_id=1247704292]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 
-[node name="HUD_EventObjective" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel" unique_id=1605934630]
+[node name="HUD_EventObjective" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel/EventVBox" unique_id=1605934630]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(320, 0)
@@ -97,7 +92,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 autowrap_mode = 3
 
-[node name="HUD_EventWarning" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel" unique_id=1935886846]
+[node name="HUD_EventWarning" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel/EventVBox" unique_id=1935886846]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(320, 0)
@@ -147,14 +142,21 @@ layout_mode = 2
 theme_type_variation = &"XPLabel"
 theme_override_font_sizes/font_size = 28
 
-[node name="HUD_Leaderboard" type="Control" parent="UI/AspectContainer/MarginContainer/TopRightVBox" unique_id=1156886562]
+[node name="HUD_LeaderboardPanel" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/TopRightVBox"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 8
 mouse_filter = 2
+theme_type_variation = &"HUDPanel"
+
+[node name="HUD_Leaderboard" type="Control" parent="UI/AspectContainer/MarginContainer/TopRightVBox/HUD_LeaderboardPanel" unique_id=1156886562]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
 script = ExtResource("99_rldbd")
 font_size = 24
-background = SubResource("StyleBoxFlat_lbbg")
+top_count = 3
 
 [node name="HUD_EventTricks" type="Label" parent="UI/AspectContainer/MarginContainer/TopRightVBox"]
 unique_name_in_owner = true

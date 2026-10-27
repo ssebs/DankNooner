@@ -1,7 +1,7 @@
 [gd_resource type="Theme" format=3 uid="uid://de2t3r1ewrlw5"]
 
 [ext_resource type="StyleBox" uid="uid://b7y8mffqnrc2f" path="res://resources/themes/DankNooner/button_normal.tres" id="1_bvbyg"]
-[ext_resource type="FontFile" uid="uid://8tlasykxhy4g" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-SemiBold.ttf" id="1_kytw6"]
+[ext_resource type="FontVariation" path="res://resources/fonts/museo_moderno_emoji.tres" id="1_kytw6"]
 [ext_resource type="Texture2D" uid="uid://drilpv5hu6f3o" path="res://resources/icons/checkbox-checked.svg" id="2_hydtf"]
 [ext_resource type="Texture2D" uid="uid://bpsmj74n6f4lq" path="res://resources/icons/checkbox-unchecked.svg" id="3_7depn"]
 [ext_resource type="Texture2D" uid="uid://vvvtkn4b0s0q" path="res://resources/img/Icons/circleIcon.png" id="4_7depn"]
@@ -494,6 +494,17 @@ corner_radius_bottom_left = 4
 expand_margin_left = 12.0
 expand_margin_right = 12.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_feedpanel"]
+content_margin_left = 10.0
+content_margin_top = 2.0
+content_margin_right = 10.0
+content_margin_bottom = 2.0
+bg_color = Color(0, 0, 0, 0.55)
+corner_radius_top_left = 10
+corner_radius_top_right = 3
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 3
+
 [resource]
 default_font = ExtResource("1_kytw6")
 default_font_size = 24
@@ -520,6 +531,8 @@ DangerButton/colors/font_focus_color = Color(1, 0.3, 0.3, 1)
 DangerButton/colors/font_hover_color = Color(1, 0.3, 0.3, 1)
 DangerButton/colors/font_hover_pressed_color = Color(1, 0.3, 0.3, 1)
 DangerButton/colors/font_pressed_color = Color(1, 0.3, 0.3, 1)
+FeedPanel/base_type = &"PanelContainer"
+FeedPanel/styles/panel = SubResource("StyleBoxFlat_feedpanel")
 GarageRowButton/base_type = &"Button"
 GarageRowButton/styles/disabled = SubResource("StyleBoxEmpty_garagerowidle")
 GarageRowButton/styles/focus = SubResource("StyleBoxFlat_garagerowsel")

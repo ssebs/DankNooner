@@ -201,6 +201,8 @@ configuration warnings) list what each `race_type` needs; the rest are optional.
     `KnockoutScoring` = points per knockout credited via `SpawnManager.player_knocked_out`. All
     freeze at the finish line. Axis weighting = each component's own points tunable.
   - `TIME_ATTACK` → session best lap.
+- **Display:** the live board orders by race position (TIME_ATTACK: best lap), so its order and Pos
+  column agree. Results order by standing, and their Pos column is the final placement.
 
 ### Race challenges
 

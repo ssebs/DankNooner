@@ -1,0 +1,8 @@
+[gd_resource type="FontVariation" format=3]
+
+[ext_resource type="FontFile" uid="uid://8tlasykxhy4g" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-SemiBold.ttf" id="1_museo"]
+[ext_resource type="FontFile" path="res://resources/fonts/Noto_Color_Emoji/NotoColorEmoji-Regular.ttf" id="2_emoji"]
+
+[resource]
+fallbacks = Array[Font]([ExtResource("2_emoji")])
+base_font = ExtResource("1_museo")

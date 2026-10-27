@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://menus/customize_menu/components/garage_ui.gd" id="1_ui"]
-[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_theme"]
+[ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_theme"]
 [ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="3_money"]
 
 [node name="GarageUI" type="Control"]

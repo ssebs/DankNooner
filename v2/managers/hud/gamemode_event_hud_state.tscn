@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dr5dms10u4b2o"]
 
-[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="1_itqmu"]
+[ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="1_itqmu"]
 [ext_resource type="Script" uid="uid://s3jilp53lc7w" path="res://managers/hud/gamemode_event_hud_state.gd" id="1_oyi1w"]
 
 [node name="GamemodeEventHUDState" type="Node" unique_id=1122284461]

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bl26780k5sr"]
 
 [ext_resource type="Script" uid="uid://d3f7uthyd114r" path="res://menus/lobby_menu/lobby_menu_state.gd" id="1_1jh13"]
-[ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_lphm8"]
+[ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_lphm8"]
 [ext_resource type="PackedScene" path="res://menus/lobby_menu/level_select_panel.tscn" id="3_lspanel"]
 [ext_resource type="Script" uid="uid://muodw5580tnr" path="res://addons/tattomoosa.spinner/spinner.gd" id="4_wpkl5"]
 [ext_resource type="PackedScene" path="res://menus/lobby_menu/lobby_panel.tscn" id="6_lpanel"]
