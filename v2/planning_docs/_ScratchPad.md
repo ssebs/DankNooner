@@ -7,12 +7,15 @@
 ### NOW
 
 - [ ] fill up spil hud height changes
+- [ ] Disable NPC traffic debug command
+- [ ] Create/join public/private lobbies 
+
+
+### NEXT
 
 - [ ] hud toggle in editor for trailer
 - [ ] record gameplay for trailer
 - [ ] record "streamer" moments
-
-### NEXT
 - [ ] close call oncoming traffic should 2x vs close call same dir?
 - [ ] slow speed turning anim doesn't look right (front wheel going into ground, not sharp enough turn / realistic counter leaning)
 
