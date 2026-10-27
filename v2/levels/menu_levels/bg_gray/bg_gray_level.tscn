@@ -1,16 +1,38 @@
 [gd_scene format=3 uid="uid://cpnvtdw28xn2p"]
 
 [ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_pmxdy"]
+[ext_resource type="Environment" path="res://levels/assets/night_environment.tres" id="2_env"]
+[ext_resource type="Shader" uid="uid://6etvnw08civj" path="res://resources/shaders/vignette.gdshader" id="3_vignette"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vignette"]
+shader = ExtResource("3_vignette")
+shader_parameter/color = Color(0, 0, 0, 0.85)
+shader_parameter/center = Vector2(0.65, 0.5)
+shader_parameter/inner_radius = 0.35
+shader_parameter/outer_radius = 1.1
 
 [node name="BgGrayLevel" type="Node3D" unique_id=2073815857]
 script = ExtResource("1_pmxdy")
 no_player_spawn_needed = true
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
-[node name="BGClear" type="ColorRect" parent="." unique_id=1068101641]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("2_env")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.19617997, -0.94997144, -0.24303903, 0.92850906, 0.100282654, 0.3575113, -0.31525278, -0.29580045, 0.90173054, 0, 0, 0)
+light_color = Color(0.6, 0.65, 1, 1)
+light_energy = 0.5
+
+[node name="SkyCamera" type="Camera3D" parent="."]
+transform = Transform3D(-0.9851093, -0.07266038, -0.1558207, 0, 0.9063078, -0.4226183, 0.1719291, -0.4163252, -0.8928123, 0, 0, 0)
+current = true
+
+[node name="Vignette" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_vignette")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.078431375, 0.078431375, 0.078431375, 1)
+mouse_filter = 2

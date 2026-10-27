@@ -25,7 +25,7 @@ script = ExtResource("2_lsui")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 2
-theme_type_variation = &"OutlinePanel"
+theme_type_variation = &"BarePanel"
 
 [node name="LevelPreview" type="TextureRect" parent="PanelContainer"]
 unique_name_in_owner = true

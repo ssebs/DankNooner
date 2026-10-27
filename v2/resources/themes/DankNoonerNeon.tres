@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" path="res://resources/themes/neon/btn_primary.png" id="neon_btn_primary"]
 [ext_resource type="Texture2D" path="res://resources/themes/neon/chip.png" id="neon_chip"]
 [ext_resource type="Texture2D" path="res://resources/themes/neon/feed.png" id="neon_feed"]
+[ext_resource type="Texture2D" path="res://resources/themes/neon/hud_panel.png" id="neon_hud_panel"]
 [ext_resource type="Texture2D" path="res://resources/themes/neon/input.png" id="neon_input"]
 [ext_resource type="Texture2D" path="res://resources/themes/neon/input_focus.png" id="neon_input_focus"]
 [ext_resource type="Texture2D" path="res://resources/themes/neon/outline.png" id="neon_outline"]
@@ -27,6 +28,12 @@
 [ext_resource type="Texture2D" path="res://resources/themes/neon/tab_profile.png" id="neon_tab_profile"]
 [ext_resource type="Texture2D" path="res://resources/themes/neon/tab_sel.png" id="neon_tab_sel"]
 [ext_resource type="Texture2D" path="res://resources/themes/neon/tab_unsel.png" id="neon_tab_unsel"]
+[ext_resource type="FontFile" path="res://resources/fonts/Noto_Color_Emoji/NotoColorEmoji-Regular.ttf" id="font_emoji"]
+[ext_resource type="FontFile" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-Bold.ttf" id="font_Bold"]
+
+[sub_resource type="FontVariation" id="Font_Bold"]
+fallbacks = Array[Font]([ExtResource("font_emoji")])
+base_font = ExtResource("font_Bold")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_normal"]
 content_margin_left = 12.0
@@ -34,406 +41,14 @@ content_margin_top = 12.0
 content_margin_right = 12.0
 content_margin_bottom = 12.0
 texture = ExtResource("neon_btn_normal")
-texture_margin_left = 31.0
-texture_margin_top = 31.0
-texture_margin_right = 31.0
-texture_margin_bottom = 31.0
-expand_margin_left = 22.0
-expand_margin_top = 10.0
-expand_margin_right = 22.0
-expand_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_vtut7"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_btn_disabled")
-texture_margin_left = 21.0
-texture_margin_top = 21.0
-texture_margin_right = 21.0
-texture_margin_bottom = 21.0
+texture_margin_left = 19.0
+texture_margin_top = 19.0
+texture_margin_right = 19.0
+texture_margin_bottom = 19.0
 expand_margin_left = 12.0
 expand_margin_top = 0.0
 expand_margin_right = 12.0
 expand_margin_bottom = 0.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_bvbyg"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_btn_focus")
-texture_margin_left = 33.0
-texture_margin_top = 33.0
-texture_margin_right = 33.0
-texture_margin_bottom = 33.0
-expand_margin_left = 24.0
-expand_margin_top = 12.0
-expand_margin_right = 24.0
-expand_margin_bottom = 12.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_hydtf"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_btn_hover")
-texture_margin_left = 35.0
-texture_margin_top = 35.0
-texture_margin_right = 35.0
-texture_margin_bottom = 35.0
-expand_margin_left = 26.0
-expand_margin_top = 14.0
-expand_margin_right = 26.0
-expand_margin_bottom = 14.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_yn56u"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_btn_hover")
-texture_margin_left = 35.0
-texture_margin_top = 35.0
-texture_margin_right = 35.0
-texture_margin_bottom = 35.0
-expand_margin_left = 26.0
-expand_margin_top = 14.0
-expand_margin_right = 26.0
-expand_margin_bottom = 14.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_7depn"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_btn_pressed")
-texture_margin_left = 37.0
-texture_margin_top = 37.0
-texture_margin_right = 37.0
-texture_margin_bottom = 37.0
-expand_margin_left = 28.0
-expand_margin_top = 16.0
-expand_margin_right = 28.0
-expand_margin_bottom = 16.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_trkchip"]
-content_margin_left = 16.0
-content_margin_top = 4.0
-content_margin_right = 16.0
-content_margin_bottom = 4.0
-texture = ExtResource("neon_chip")
-texture_margin_left = 24.0
-texture_margin_top = 24.0
-texture_margin_right = 24.0
-texture_margin_bottom = 24.0
-expand_margin_left = 8.0
-expand_margin_top = 8.0
-expand_margin_right = 8.0
-expand_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_k75rx"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_btn_pressed")
-texture_margin_left = 37.0
-texture_margin_top = 37.0
-texture_margin_right = 37.0
-texture_margin_bottom = 37.0
-expand_margin_left = 16.0
-expand_margin_top = 16.0
-expand_margin_right = 16.0
-expand_margin_bottom = 16.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_iu7fo"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_input")
-texture_margin_left = 29.0
-texture_margin_top = 29.0
-texture_margin_right = 29.0
-texture_margin_bottom = 29.0
-expand_margin_left = 8.0
-expand_margin_top = 8.0
-expand_margin_right = 8.0
-expand_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_hudpanel"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_panel")
-texture_margin_left = 35.0
-texture_margin_top = 35.0
-texture_margin_right = 35.0
-texture_margin_bottom = 35.0
-expand_margin_left = 26.0
-expand_margin_top = 14.0
-expand_margin_right = 26.0
-expand_margin_bottom = 14.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_wtkwa"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_input_focus")
-texture_margin_left = 33.0
-texture_margin_top = 33.0
-texture_margin_right = 33.0
-texture_margin_bottom = 33.0
-expand_margin_left = 24.0
-expand_margin_top = 12.0
-expand_margin_right = 24.0
-expand_margin_bottom = 12.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_gbla1"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_input")
-texture_margin_left = 29.0
-texture_margin_top = 29.0
-texture_margin_right = 29.0
-texture_margin_bottom = 29.0
-expand_margin_left = 20.0
-expand_margin_top = 8.0
-expand_margin_right = 20.0
-expand_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_backdrop"]
-content_margin_left = 32.0
-content_margin_top = 24.0
-content_margin_right = 32.0
-content_margin_bottom = 24.0
-texture = ExtResource("neon_backdrop")
-texture_margin_left = 46.0
-texture_margin_top = 46.0
-texture_margin_right = 46.0
-texture_margin_bottom = 46.0
-expand_margin_left = 18.0
-expand_margin_top = 18.0
-expand_margin_right = 18.0
-expand_margin_bottom = 18.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_6tpw2"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_panel")
-texture_margin_left = 35.0
-texture_margin_top = 35.0
-texture_margin_right = 35.0
-texture_margin_bottom = 35.0
-expand_margin_left = 14.0
-expand_margin_top = 14.0
-expand_margin_right = 14.0
-expand_margin_bottom = 14.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_4v18w"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_btn_primary")
-texture_margin_left = 37.0
-texture_margin_top = 37.0
-texture_margin_right = 37.0
-texture_margin_bottom = 37.0
-expand_margin_left = 28.0
-expand_margin_top = 16.0
-expand_margin_right = 28.0
-expand_margin_bottom = 16.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_tabsel"]
-content_margin_left = 20.0
-content_margin_top = 6.0
-content_margin_right = 20.0
-content_margin_bottom = 6.0
-texture = ExtResource("neon_tab_sel")
-texture_margin_left = 26.0
-texture_margin_top = 26.0
-texture_margin_right = 26.0
-texture_margin_bottom = 26.0
-expand_margin_left = 10.0
-expand_margin_top = 10.0
-expand_margin_right = 10.0
-expand_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_profiletab"]
-content_margin_left = 20.0
-content_margin_top = 6.0
-content_margin_right = 20.0
-content_margin_bottom = 6.0
-texture = ExtResource("neon_tab_profile")
-texture_margin_left = 24.0
-texture_margin_top = 24.0
-texture_margin_right = 24.0
-texture_margin_bottom = 24.0
-expand_margin_left = 8.0
-expand_margin_top = 8.0
-expand_margin_right = 8.0
-expand_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_rowbtnfocus"]
-content_margin_left = 14.0
-content_margin_top = 4.0
-content_margin_right = 14.0
-content_margin_bottom = 4.0
-texture = ExtResource("neon_row_focus")
-texture_margin_left = 22.0
-texture_margin_top = 22.0
-texture_margin_right = 22.0
-texture_margin_bottom = 22.0
-expand_margin_left = 10.0
-expand_margin_top = 10.0
-expand_margin_right = 10.0
-expand_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_rowbtnhover"]
-content_margin_left = 14.0
-content_margin_top = 4.0
-content_margin_right = 14.0
-content_margin_bottom = 4.0
-texture = ExtResource("neon_row_hover")
-texture_margin_left = 24.0
-texture_margin_top = 24.0
-texture_margin_right = 24.0
-texture_margin_bottom = 24.0
-expand_margin_left = 10.0
-expand_margin_top = 10.0
-expand_margin_right = 10.0
-expand_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_rowbtnhoverpressed"]
-content_margin_left = 14.0
-content_margin_top = 4.0
-content_margin_right = 14.0
-content_margin_bottom = 4.0
-texture = ExtResource("neon_row_hover_pressed")
-texture_margin_left = 24.0
-texture_margin_top = 24.0
-texture_margin_right = 24.0
-texture_margin_bottom = 24.0
-expand_margin_left = 10.0
-expand_margin_top = 10.0
-expand_margin_right = 10.0
-expand_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_rowbtn"]
-content_margin_left = 14.0
-content_margin_top = 4.0
-content_margin_right = 14.0
-content_margin_bottom = 4.0
-texture = ExtResource("neon_row_normal")
-texture_margin_left = 20.0
-texture_margin_top = 20.0
-texture_margin_right = 20.0
-texture_margin_bottom = 20.0
-expand_margin_left = 6.0
-expand_margin_top = 6.0
-expand_margin_right = 6.0
-expand_margin_bottom = 6.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_rowbtnpressed"]
-content_margin_left = 14.0
-content_margin_top = 4.0
-content_margin_right = 14.0
-content_margin_bottom = 4.0
-texture = ExtResource("neon_row_pressed")
-texture_margin_left = 24.0
-texture_margin_top = 24.0
-texture_margin_right = 24.0
-texture_margin_bottom = 24.0
-expand_margin_left = 10.0
-expand_margin_top = 10.0
-expand_margin_right = 10.0
-expand_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iun4r"]
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_tabhover"]
-content_margin_left = 20.0
-content_margin_top = 6.0
-content_margin_right = 20.0
-content_margin_bottom = 6.0
-texture = ExtResource("neon_tab_hover")
-texture_margin_left = 24.0
-texture_margin_top = 24.0
-texture_margin_right = 24.0
-texture_margin_bottom = 24.0
-expand_margin_left = 8.0
-expand_margin_top = 8.0
-expand_margin_right = 8.0
-expand_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_tabunsel"]
-content_margin_left = 20.0
-content_margin_top = 6.0
-content_margin_right = 20.0
-content_margin_bottom = 6.0
-texture = ExtResource("neon_tab_unsel")
-texture_margin_left = 16.0
-texture_margin_top = 16.0
-texture_margin_right = 16.0
-texture_margin_bottom = 16.0
-expand_margin_left = 0.0
-expand_margin_top = 0.0
-expand_margin_right = 0.0
-expand_margin_bottom = 0.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_trkrow"]
-content_margin_left = 24.0
-content_margin_top = 8.0
-content_margin_right = 24.0
-content_margin_bottom = 8.0
-texture = ExtResource("neon_row_panel")
-texture_margin_left = 28.0
-texture_margin_top = 28.0
-texture_margin_right = 28.0
-texture_margin_bottom = 28.0
-expand_margin_left = 8.0
-expand_margin_top = 8.0
-expand_margin_right = 8.0
-expand_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_menupanel"]
-content_margin_left = 24.0
-content_margin_top = 24.0
-content_margin_right = 24.0
-content_margin_bottom = 24.0
-texture = ExtResource("neon_panel")
-texture_margin_left = 35.0
-texture_margin_top = 35.0
-texture_margin_right = 35.0
-texture_margin_bottom = 35.0
-expand_margin_left = 14.0
-expand_margin_top = 14.0
-expand_margin_right = 14.0
-expand_margin_bottom = 14.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_outline"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_outline")
-texture_margin_left = 35.0
-texture_margin_top = 35.0
-texture_margin_right = 35.0
-texture_margin_bottom = 35.0
-expand_margin_left = 26.0
-expand_margin_top = 14.0
-expand_margin_right = 26.0
-expand_margin_bottom = 14.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_avatarring"]
 content_margin_left = 0.0
@@ -456,19 +71,97 @@ expand_margin_top = 4.0
 expand_margin_right = 4.0
 expand_margin_bottom = 4.0
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_inset"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iun4r"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_vtut7"]
 content_margin_left = 12.0
-content_margin_right = 12.0
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_labelpad"]
 content_margin_top = 12.0
+content_margin_right = 12.0
 content_margin_bottom = 12.0
+texture = ExtResource("neon_btn_disabled")
+texture_margin_left = 19.0
+texture_margin_top = 19.0
+texture_margin_right = 19.0
+texture_margin_bottom = 19.0
+expand_margin_left = 12.0
+expand_margin_top = 0.0
+expand_margin_right = 12.0
+expand_margin_bottom = 0.0
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tabpad"]
-content_margin_left = 32.0
-content_margin_top = 24.0
-content_margin_right = 32.0
-content_margin_bottom = 24.0
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_bvbyg"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("neon_btn_focus")
+texture_margin_left = 32.0
+texture_margin_top = 32.0
+texture_margin_right = 32.0
+texture_margin_bottom = 32.0
+expand_margin_left = 24.0
+expand_margin_top = 12.0
+expand_margin_right = 24.0
+expand_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_hydtf"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("neon_btn_hover")
+texture_margin_left = 33.0
+texture_margin_top = 33.0
+texture_margin_right = 33.0
+texture_margin_bottom = 33.0
+expand_margin_left = 26.0
+expand_margin_top = 14.0
+expand_margin_right = 26.0
+expand_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_yn56u"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("neon_btn_hover")
+texture_margin_left = 33.0
+texture_margin_top = 33.0
+texture_margin_right = 33.0
+texture_margin_bottom = 33.0
+expand_margin_left = 26.0
+expand_margin_top = 14.0
+expand_margin_right = 26.0
+expand_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_7depn"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("neon_btn_pressed")
+texture_margin_left = 35.0
+texture_margin_top = 35.0
+texture_margin_right = 35.0
+texture_margin_bottom = 35.0
+expand_margin_left = 28.0
+expand_margin_top = 16.0
+expand_margin_right = 28.0
+expand_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_feedpanel"]
+content_margin_left = 10.0
+content_margin_top = 2.0
+content_margin_right = 10.0
+content_margin_bottom = 2.0
+texture = ExtResource("neon_feed")
+texture_margin_left = 23.0
+texture_margin_top = 23.0
+texture_margin_right = 23.0
+texture_margin_bottom = 23.0
+expand_margin_left = 8.0
+expand_margin_top = 8.0
+expand_margin_right = 8.0
+expand_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_garagerowidle"]
 content_margin_left = 12.0
@@ -482,6 +175,66 @@ content_margin_top = 6.0
 content_margin_right = 12.0
 content_margin_bottom = 6.0
 texture = ExtResource("neon_btn_hover")
+texture_margin_left = 33.0
+texture_margin_top = 33.0
+texture_margin_right = 33.0
+texture_margin_bottom = 33.0
+expand_margin_left = 26.0
+expand_margin_top = 14.0
+expand_margin_right = 26.0
+expand_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_trkchip"]
+content_margin_left = 16.0
+content_margin_top = 4.0
+content_margin_right = 16.0
+content_margin_bottom = 4.0
+texture = ExtResource("neon_chip")
+texture_margin_left = 15.0
+texture_margin_top = 15.0
+texture_margin_right = 15.0
+texture_margin_bottom = 15.0
+expand_margin_left = 0.0
+expand_margin_top = 0.0
+expand_margin_right = 0.0
+expand_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_k75rx"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("neon_btn_pressed")
+texture_margin_left = 35.0
+texture_margin_top = 35.0
+texture_margin_right = 35.0
+texture_margin_bottom = 35.0
+expand_margin_left = 16.0
+expand_margin_top = 16.0
+expand_margin_right = 16.0
+expand_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_iu7fo"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("neon_input")
+texture_margin_left = 19.0
+texture_margin_top = 19.0
+texture_margin_right = 19.0
+texture_margin_bottom = 19.0
+expand_margin_left = 0.0
+expand_margin_top = 0.0
+expand_margin_right = 0.0
+expand_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_hudpanel"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("neon_hud_panel")
 texture_margin_left = 35.0
 texture_margin_top = 35.0
 texture_margin_right = 35.0
@@ -491,20 +244,277 @@ expand_margin_top = 14.0
 expand_margin_right = 26.0
 expand_margin_bottom = 14.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_feedpanel"]
-content_margin_left = 10.0
-content_margin_top = 2.0
-content_margin_right = 10.0
-content_margin_bottom = 2.0
-texture = ExtResource("neon_feed")
-texture_margin_left = 22.0
-texture_margin_top = 22.0
-texture_margin_right = 22.0
-texture_margin_bottom = 22.0
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_inset"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_wtkwa"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("neon_input_focus")
+texture_margin_left = 31.0
+texture_margin_top = 31.0
+texture_margin_right = 31.0
+texture_margin_bottom = 31.0
+expand_margin_left = 24.0
+expand_margin_top = 12.0
+expand_margin_right = 24.0
+expand_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_gbla1"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("neon_input")
+texture_margin_left = 19.0
+texture_margin_top = 19.0
+texture_margin_right = 19.0
+texture_margin_bottom = 19.0
+expand_margin_left = 12.0
+expand_margin_top = 0.0
+expand_margin_right = 12.0
+expand_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_backdrop"]
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
+texture = ExtResource("neon_backdrop")
+axis_stretch_vertical = 2
+texture_margin_left = 27.0
+texture_margin_top = 27.0
+texture_margin_right = 27.0
+texture_margin_bottom = 27.0
+expand_margin_left = 0.0
+expand_margin_top = 0.0
+expand_margin_right = 0.0
+expand_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_menupanel"]
+content_margin_left = 24.0
+content_margin_top = 24.0
+content_margin_right = 24.0
+content_margin_bottom = 24.0
+texture = ExtResource("neon_panel")
+axis_stretch_vertical = 2
+texture_margin_left = 19.0
+texture_margin_top = 19.0
+texture_margin_right = 19.0
+texture_margin_bottom = 19.0
+expand_margin_left = 0.0
+expand_margin_top = 0.0
+expand_margin_right = 0.0
+expand_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_outline"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("neon_outline")
+texture_margin_left = 19.0
+texture_margin_top = 19.0
+texture_margin_right = 19.0
+texture_margin_bottom = 19.0
+expand_margin_left = 12.0
+expand_margin_top = 0.0
+expand_margin_right = 12.0
+expand_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_labelpad"]
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tabpad"]
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_6tpw2"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("neon_panel")
+axis_stretch_vertical = 2
+texture_margin_left = 19.0
+texture_margin_top = 19.0
+texture_margin_right = 19.0
+texture_margin_bottom = 19.0
+expand_margin_left = 0.0
+expand_margin_top = 0.0
+expand_margin_right = 0.0
+expand_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_4v18w"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("neon_btn_primary")
+texture_margin_left = 35.0
+texture_margin_top = 35.0
+texture_margin_right = 35.0
+texture_margin_bottom = 35.0
+expand_margin_left = 28.0
+expand_margin_top = 16.0
+expand_margin_right = 28.0
+expand_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_tabsel"]
+content_margin_left = 20.0
+content_margin_top = 6.0
+content_margin_right = 20.0
+content_margin_bottom = 6.0
+texture = ExtResource("neon_tab_sel")
+texture_margin_left = 15.0
+texture_margin_top = 15.0
+texture_margin_right = 15.0
+texture_margin_bottom = 15.0
+expand_margin_left = 0.0
+expand_margin_top = 0.0
+expand_margin_right = 0.0
+expand_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_profiletab"]
+content_margin_left = 20.0
+content_margin_top = 6.0
+content_margin_right = 20.0
+content_margin_bottom = 6.0
+texture = ExtResource("neon_tab_profile")
+texture_margin_left = 15.0
+texture_margin_top = 15.0
+texture_margin_right = 15.0
+texture_margin_bottom = 15.0
+expand_margin_left = 0.0
+expand_margin_top = 0.0
+expand_margin_right = 0.0
+expand_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_rowbtnfocus"]
+content_margin_left = 14.0
+content_margin_top = 4.0
+content_margin_right = 14.0
+content_margin_bottom = 4.0
+texture = ExtResource("neon_row_focus")
+texture_margin_left = 21.0
+texture_margin_top = 21.0
+texture_margin_right = 21.0
+texture_margin_bottom = 21.0
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_rowbtnhover"]
+content_margin_left = 14.0
+content_margin_top = 4.0
+content_margin_right = 14.0
+content_margin_bottom = 4.0
+texture = ExtResource("neon_row_hover")
+texture_margin_left = 27.0
+texture_margin_top = 27.0
+texture_margin_right = 27.0
+texture_margin_bottom = 27.0
+expand_margin_left = 14.0
+expand_margin_top = 14.0
+expand_margin_right = 14.0
+expand_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_rowbtnhoverpressed"]
+content_margin_left = 14.0
+content_margin_top = 4.0
+content_margin_right = 14.0
+content_margin_bottom = 4.0
+texture = ExtResource("neon_row_hover_pressed")
+texture_margin_left = 23.0
+texture_margin_top = 23.0
+texture_margin_right = 23.0
+texture_margin_bottom = 23.0
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_rowbtn"]
+content_margin_left = 14.0
+content_margin_top = 4.0
+content_margin_right = 14.0
+content_margin_bottom = 4.0
+texture = ExtResource("neon_row_normal")
+texture_margin_left = 13.0
+texture_margin_top = 13.0
+texture_margin_right = 13.0
+texture_margin_bottom = 13.0
+expand_margin_left = 0.0
+expand_margin_top = 0.0
+expand_margin_right = 0.0
+expand_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_rowbtnpressed"]
+content_margin_left = 14.0
+content_margin_top = 4.0
+content_margin_right = 14.0
+content_margin_bottom = 4.0
+texture = ExtResource("neon_row_pressed")
+texture_margin_left = 29.0
+texture_margin_top = 29.0
+texture_margin_right = 29.0
+texture_margin_bottom = 29.0
+expand_margin_left = 16.0
+expand_margin_top = 16.0
+expand_margin_right = 16.0
+expand_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_tabhover"]
+content_margin_left = 20.0
+content_margin_top = 6.0
+content_margin_right = 20.0
+content_margin_bottom = 6.0
+texture = ExtResource("neon_tab_hover")
+texture_margin_left = 23.0
+texture_margin_top = 23.0
+texture_margin_right = 23.0
+texture_margin_bottom = 23.0
 expand_margin_left = 8.0
 expand_margin_top = 8.0
 expand_margin_right = 8.0
 expand_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_tabunsel"]
+content_margin_left = 20.0
+content_margin_top = 6.0
+content_margin_right = 20.0
+content_margin_bottom = 6.0
+texture = ExtResource("neon_tab_unsel")
+texture_margin_left = 15.0
+texture_margin_top = 15.0
+texture_margin_right = 15.0
+texture_margin_bottom = 15.0
+expand_margin_left = 0.0
+expand_margin_top = 0.0
+expand_margin_right = 0.0
+expand_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_trkrow"]
+content_margin_left = 24.0
+content_margin_top = 8.0
+content_margin_right = 24.0
+content_margin_bottom = 8.0
+texture = ExtResource("neon_row_panel")
+texture_margin_left = 19.0
+texture_margin_top = 19.0
+texture_margin_right = 19.0
+texture_margin_bottom = 19.0
+expand_margin_left = 0.0
+expand_margin_top = 0.0
+expand_margin_right = 0.0
+expand_margin_bottom = 0.0
 
 [resource]
 default_font = ExtResource("1_kytw6")
@@ -523,7 +533,9 @@ Button/styles/pressed = SubResource("StyleBoxFlat_7depn")
 CheckBox/constants/icon_max_width = 36
 CheckBox/icons/checked = ExtResource("2_hydtf")
 CheckBox/icons/unchecked = ExtResource("3_7depn")
+CheckBox/styles/hover_pressed = SubResource("StyleBoxFlat_hydtf")
 CheckBox/styles/normal = SubResource("StyleBoxTexture_btn_normal")
+CheckBox/styles/pressed = SubResource("StyleBoxTexture_btn_normal")
 ChipPanel/base_type = &"PanelContainer"
 ChipPanel/styles/panel = SubResource("StyleBoxTexture_btn_normal")
 DangerButton/base_type = &"Button"
@@ -573,8 +585,6 @@ NameTagLabel/base_type = &"Label"
 NameTagLabel/colors/font_color = Color(0.254902, 1, 0.5459559, 1)
 NameTagLabel/colors/font_outline_color = Color(0, 0, 0, 1)
 NameTagLabel/constants/outline_size = 12
-OutlinePanel/base_type = &"PanelContainer"
-OutlinePanel/styles/panel = SubResource("StyleBoxFlat_outline")
 OutlineScroll/base_type = &"ScrollContainer"
 OutlineScroll/styles/panel = SubResource("StyleBoxFlat_outline")
 PaddedLabel/base_type = &"Label"
@@ -632,10 +642,24 @@ TableHeaderLabel/base_type = &"Label"
 TableHeaderLabel/colors/font_color = Color(0.25490198, 0.6862745, 1, 1)
 TableHeaderLabel/font_sizes/font_size = 32
 TitleLabel/base_type = &"Label"
-TitleLabel/colors/font_color = Color(0.13333334, 0.13333334, 0.13333334, 1)
+TitleLabel/colors/font_color = Color(0.92, 0.98, 1, 1)
 TitleLabel/colors/font_outline_color = Color(0.25490198, 0.6862745, 1, 1)
-TitleLabel/constants/outline_size = 8
+TitleLabel/constants/outline_size = 3
 TitleLabel/font_sizes/font_size = 76
 TrickRowPanel/base_type = &"PanelContainer"
 TrickRowPanel/styles/panel = SubResource("StyleBoxFlat_trkrow")
 VBoxContainer/constants/separation = 12
+Label/colors/font_shadow_color = Color(0, 0, 0, 0.6)
+Label/constants/shadow_offset_x = 0
+Label/constants/shadow_offset_y = 2
+TitleLabel/colors/font_shadow_color = Color(0.255, 0.686, 1, 0.3)
+TitleLabel/constants/shadow_offset_y = 0
+TitleLabel/constants/shadow_outline_size = 16
+Button/colors/font_pressed_color = Color(0.02, 0.027, 0.06, 1)
+Button/colors/font_hover_pressed_color = Color(0.02, 0.027, 0.06, 1)
+TabButton/colors/font_pressed_color = Color(1, 1, 1, 1)
+TabButton/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+CheckBox/colors/font_pressed_color = Color(1, 1, 1, 1)
+CheckBox/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+Heading1Label/fonts/font = SubResource("Font_Bold")
+TableHeaderLabel/fonts/font = SubResource("Font_Bold")

@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://b6tnccpx0gwjg" path="res://menus/settings_menu/settings_menu_state.gd" id="1_hdace"]
 [ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_hdace"]
 [ext_resource type="Script" path="res://menus/settings_menu/controls_tab.gd" id="3_ctrltab"]
+[ext_resource type="Theme" path="res://resources/themes/compact.tres" id="9_compact"]
 
 [node name="SettingsMenuState" type="Node" unique_id=207724047]
 script = ExtResource("1_hdace")
@@ -54,6 +55,7 @@ text = "SETTINGS_LABEL"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("9_compact")
 theme_type_variation = &"PaddedTabContainer"
 current_tab = 0
 tab_0/title = "DISPLAY_SETTINGS_LABEL"
