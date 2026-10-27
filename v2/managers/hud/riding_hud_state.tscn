@@ -15,29 +15,6 @@
 [ext_resource type="Script" path="res://player/hud_elements/trick_feed.gd" id="99_tfeed"]
 [ext_resource type="FontFile" uid="uid://dftvb58jromba" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-Black.ttf" id="99_fblk"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8urt2"]
-bg_color = Color(0.103055954, 0.5546875, 0.052001953, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_barbg"]
-bg_color = Color(1, 1, 1, 0.1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_respawn"]
-bg_color = Color(0.25, 0.69, 1, 1)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nopanel"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lbbg"]
 bg_color = Color(0, 0, 0, 0.6)
 corner_radius_top_left = 8
@@ -125,7 +102,7 @@ unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_type_variation = &"WarningLabel"
 theme_override_font_sizes/font_size = 28
 
 [node name="HUD_GAME_MSG" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox" unique_id=411038987]
@@ -167,9 +144,7 @@ script = ExtResource("99_money")
 [node name="HUD_XP" type="Label" parent="UI/AspectContainer/MarginContainer/TopRightVBox/MoneyXP"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
+theme_type_variation = &"XPLabel"
 theme_override_font_sizes/font_size = 28
 
 [node name="HUD_Leaderboard" type="Control" parent="UI/AspectContainer/MarginContainer/TopRightVBox" unique_id=1156886562]
@@ -397,8 +372,7 @@ custom_minimum_size = Vector2(260, 8)
 layout_mode = 2
 size_flags_horizontal = 8
 mouse_filter = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_barbg")
-theme_override_styles/fill = SubResource("StyleBoxFlat_8urt2")
+theme_type_variation = &"RPMBar"
 step = 1.0
 value = 60.0
 rounded = true
@@ -414,7 +388,7 @@ theme_override_constants/separation = 8
 [node name="BoostGauge" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/BoostColumn" unique_id=2102865523 instance=ExtResource("7_3xx38")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_nopanel")
+theme_type_variation = &"BarePanel"
 vertical = true
 
 [node name="HUD_BoostPrompt" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/BoostColumn" instance=ExtResource("8_inpmt")]
@@ -447,7 +421,6 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(360, 22)
 layout_mode = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_barbg")
-theme_override_styles/fill = SubResource("StyleBoxFlat_respawn")
+theme_type_variation = &"RespawnBar"
 step = 1.0
 show_percentage = false

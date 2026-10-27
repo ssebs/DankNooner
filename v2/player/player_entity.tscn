@@ -347,9 +347,7 @@ layer = -1
 
 [node name="NameLabel" type="Label" parent="NameTagLayer" unique_id=1735092846]
 unique_name_in_owner = true
-theme_override_colors/font_color = Color(0.254902, 1, 0.5459559, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 12
+theme_type_variation = &"NameTagLabel"
 theme_override_font_sizes/font_size = 25
 text = "USERNAME"
 horizontal_alignment = 1

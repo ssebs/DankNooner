@@ -12,7 +12,6 @@ const MAX_LINES: int = 6
 const FADE_IN_SECS: float = 0.15
 const HOLD_SECS: float = 4.0
 const FADE_OUT_SECS: float = 0.5
-const OUTLINE_SIZE: int = 8
 const NAME_COLOR := TrickPopups.ICON_COLOR
 
 
@@ -36,8 +35,6 @@ func push(
 	line.add_theme_font_override("bold_font", bold_font)
 	line.add_theme_font_size_override("normal_font_size", font_size)
 	line.add_theme_font_size_override("bold_font_size", font_size)
-	line.add_theme_constant_override("outline_size", OUTLINE_SIZE)
-	line.add_theme_color_override("font_outline_color", Color.BLACK)
 	line.text = _format(username, is_own, tricks, points, multiplier, crashed)
 	add_child(line)
 	move_child(line, 0)

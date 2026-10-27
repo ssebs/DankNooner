@@ -8,8 +8,6 @@
 [ext_resource type="Texture2D" path="res://resources/img/Icons/pause.png" id="6_pause"]
 [ext_resource type="Texture2D" path="res://resources/img/Icons/next.png" id="7_next"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wn568"]
-
 [node name="PauseMenuState" type="Node" unique_id=1626689768]
 script = ExtResource("1_fhu3k")
 
@@ -78,7 +76,7 @@ text = "CANCEL_EVENT_LABEL"
 [node name="HSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=35406676]
 layout_mode = 2
 theme_override_constants/separation = 32
-theme_override_styles/separator = SubResource("StyleBoxEmpty_wn568")
+theme_type_variation = &"SpacerSeparator"
 
 [node name="SettingsBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1875851933]
 unique_name_in_owner = true

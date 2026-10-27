@@ -4,31 +4,6 @@
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_theme"]
 [ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="3_money"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-content_margin_left = 24.0
-content_margin_top = 24.0
-content_margin_right = 24.0
-content_margin_bottom = 24.0
-bg_color = Color(0, 0, 0, 0.78431374)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.25490198, 0.6862745, 1, 1)
-border_blend = true
-corner_radius_top_left = 16
-corner_radius_top_right = 4
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 4
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_inset"]
-content_margin_left = 12.0
-content_margin_right = 12.0
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_title"]
-content_margin_top = 12.0
-content_margin_bottom = 12.0
-
 [node name="GarageUI" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -61,14 +36,14 @@ offset_left = 32.0
 offset_top = 32.0
 offset_right = 592.0
 offset_bottom = 32.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_type_variation = &"MenuPanel"
 
 [node name="VBox" type="VBoxContainer" parent="Panel"]
 layout_mode = 2
 
 [node name="TabBar" type="PanelContainer" parent="Panel/VBox"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_inset")
+theme_type_variation = &"InsetPanel"
 
 [node name="HBox" type="HBoxContainer" parent="Panel/VBox/TabBar"]
 layout_mode = 2
@@ -107,7 +82,7 @@ text = "+"
 
 [node name="Top" type="PanelContainer" parent="Panel/VBox"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_inset")
+theme_type_variation = &"InsetPanel"
 
 [node name="Header" type="HBoxContainer" parent="Panel/VBox/Top"]
 layout_mode = 2
@@ -125,7 +100,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("StyleBoxEmpty_title")
+theme_type_variation = &"PaddedLabel"
 text_overrun_behavior = 3
 
 [node name="Count" type="Label" parent="Panel/VBox/Top/Header"]
@@ -136,7 +111,7 @@ vertical_alignment = 1
 [node name="Scroll" type="ScrollContainer" parent="Panel/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_inset")
+theme_type_variation = &"InsetScroll"
 follow_focus = true
 horizontal_scroll_mode = 0
 
@@ -148,7 +123,7 @@ theme_override_constants/separation = 4
 
 [node name="Footer" type="PanelContainer" parent="Panel/VBox"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_inset")
+theme_type_variation = &"InsetPanel"
 
 [node name="Actions" type="HBoxContainer" parent="Panel/VBox/Footer"]
 layout_mode = 2
@@ -207,11 +182,11 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_type_variation = &"MenuPanel"
 
 [node name="Inset" type="PanelContainer" parent="ConfirmBox"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_inset")
+theme_type_variation = &"InsetPanel"
 
 [node name="VBox" type="VBoxContainer" parent="ConfirmBox/Inset"]
 layout_mode = 2
@@ -251,11 +226,11 @@ offset_left = -32.0
 offset_right = -32.0
 grow_horizontal = 0
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_type_variation = &"MenuPanel"
 
 [node name="Inset" type="PanelContainer" parent="ColorPanel"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_inset")
+theme_type_variation = &"InsetPanel"
 
 [node name="Picker" type="ColorPicker" parent="ColorPanel/Inset"]
 unique_name_in_owner = true

@@ -4,16 +4,6 @@
 [ext_resource type="Theme" uid="uid://de2t3r1ewrlw5" path="res://resources/themes/DankNooner.tres" id="2_hdace"]
 [ext_resource type="Script" path="res://menus/settings_menu/controls_tab.gd" id="3_ctrltab"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_scrollpad"]
-content_margin_left = 12.0
-content_margin_right = 12.0
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tabpad"]
-content_margin_left = 32.0
-content_margin_top = 24.0
-content_margin_right = 32.0
-content_margin_bottom = 24.0
-
 [node name="SettingsMenuState" type="Node" unique_id=207724047]
 script = ExtResource("1_hdace")
 metadata/_custom_type_script = "uid://b6tnccpx0gwjg"
@@ -64,7 +54,7 @@ text = "SETTINGS_LABEL"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxEmpty_tabpad")
+theme_type_variation = &"PaddedTabContainer"
 current_tab = 0
 tab_0/title = "DISPLAY_SETTINGS_LABEL"
 tab_1/title = "VOLUME_SETTINGS_LABEL"
@@ -73,7 +63,7 @@ tab_3/title = "CONTROLS_LABEL"
 
 [node name="Display" type="ScrollContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer" unique_id=1400000000]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_scrollpad")
+theme_type_variation = &"InsetScroll"
 horizontal_scroll_mode = 0
 metadata/_tab_index = 0
 
@@ -176,7 +166,7 @@ mouse_default_cursor_shape = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_scrollpad")
+theme_type_variation = &"InsetScroll"
 horizontal_scroll_mode = 0
 metadata/_tab_index = 1
 
@@ -266,7 +256,7 @@ text = "TRUE"
 [node name="Gameplay" type="ScrollContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer" unique_id=1400000002]
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_scrollpad")
+theme_type_variation = &"InsetScroll"
 horizontal_scroll_mode = 0
 metadata/_tab_index = 2
 
@@ -350,7 +340,7 @@ metadata/_tab_index = 3
 [node name="ScrollContainer" type="ScrollContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Controls" unique_id=704281746]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxEmpty_scrollpad")
+theme_type_variation = &"InsetScroll"
 horizontal_scroll_mode = 0
 
 [node name="ControlsGrid" type="GridContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabContainer/Controls/ScrollContainer" unique_id=1630594025]

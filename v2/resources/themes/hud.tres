@@ -1,8 +1,42 @@
 [gd_resource type="Theme" format=3]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_barbg"]
+bg_color = Color(1, 1, 1, 0.1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rpmfill"]
+bg_color = Color(0.103055954, 0.5546875, 0.052001953, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_respawnfill"]
+bg_color = Color(0.25, 0.69, 1, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
 [resource]
 Label/colors/font_outline_color = Color(0, 0, 0, 1)
 Label/colors/font_shadow_color = Color(0, 0, 0, 0.5)
 Label/constants/outline_size = 8
 Label/constants/shadow_offset_x = 2
 Label/constants/shadow_offset_y = 3
+RPMBar/base_type = &"ProgressBar"
+RPMBar/styles/background = SubResource("StyleBoxFlat_barbg")
+RPMBar/styles/fill = SubResource("StyleBoxFlat_rpmfill")
+RespawnBar/base_type = &"ProgressBar"
+RespawnBar/styles/background = SubResource("StyleBoxFlat_barbg")
+RespawnBar/styles/fill = SubResource("StyleBoxFlat_respawnfill")
+RichTextLabel/colors/font_outline_color = Color(0, 0, 0, 1)
+RichTextLabel/constants/outline_size = 8
+WarningLabel/base_type = &"Label"
+WarningLabel/colors/font_color = Color(1, 0.3, 0.3, 1)
+XPLabel/base_type = &"Label"
+XPLabel/colors/font_color = Color(1, 0.8, 0.2, 1)
+XPLabel/constants/outline_size = 10

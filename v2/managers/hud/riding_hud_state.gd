@@ -411,7 +411,7 @@ func _add_trick_row(parent: VBoxContainer) -> TrickRow:
 	var row: TrickRow = _TRICK_ROW_SCENE.instantiate()
 	row.compact = true
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	row.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	row.theme_type_variation = &"BarePanel"
 	parent.add_child(row)
 	return row
 
