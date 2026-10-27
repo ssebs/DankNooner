@@ -7,6 +7,9 @@
 ### NOW
 
 - [ ] Create/join public/private lobbies 
+  - [ ] ____STEAM_LOBBIES_WIP.md
+- [ ] traffic density near player
+  - [ ] ____TRAFFIC_DENSITY_WIP.md
 
 
 ### NEXT
