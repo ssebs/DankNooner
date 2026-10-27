@@ -23,13 +23,25 @@ signal near_missed(player: PlayerEntity)
 ## Waited this long at a stop line, go anyway unless a conflicting turn is occupied. Breaks
 ## deadlocks the gate can't see.
 @export var junction_timeout: float = 8.0
+## Sat still this long counts as a full stop, at a STOP sign or before turning right on red.
+@export var full_stop_time: float = 1.0
 
+## Room a stopped queue leaves between riders, beyond both their half lengths.
+const QUEUE_GAP := 1.5
 ## A stopped rider this far into our exit lane leaves no room past the box: our half
 ## length, the queue gap, its half length.
-const EXIT_CLEARANCE := 3.0 * NPCRiderEntity.STOP_LINE_BUFFER
+const EXIT_CLEARANCE := 2.0 * NPCRiderEntity.STOP_LINE_BUFFER + QUEUE_GAP
+## Metres sideways per metre driven while easing into a new lane.
+const LANE_CHANGE_SLOPE := 0.5
 
-## Set by NPCTrafficManager on spawn and on every recovery.
-var follower: TrafficLaneFollower
+## Set by NPCTrafficManager on spawn, recovery and recycle, and by lane changes. Moving a rider
+## drops its junction, or its stale arrival would hold that junction's conflicting turns forever.
+var follower: TrafficLaneFollower:
+	set(v):
+		_leave_junction()
+		_wait_time = 0.0
+		_lane_shift = 0.0
+		follower = v
 ## Set by NPCTrafficManager on spawn, indexed like TrafficNetworkData.junctions.
 var junctions: Array[JunctionState]
 ## Set by NPCTrafficManager on spawn, indexed like TrafficNetworkData.lanes: the traffic on each.
@@ -44,8 +56,12 @@ var _claimed := -1
 # Junction whose arrival queue we're in
 var _queued: JunctionState
 var _wait_time := 0.0
+var _stopped_time := 0.0
 # Player inside NearMissArea -> its crash_count on the way in
 var _passing: Dictionary[Node3D, int] = {}
+# Sideways offset off our lane left by a lane change, eased out as we drive
+var _lane_shift := 0.0
+var _next_lane_check_ms := 0
 
 
 func Enter(_state_context: StateContext):
@@ -89,28 +105,33 @@ func Physics_Update(delta: float):
 	if _claimed >= 0 and follower.lane != _claimed and follower.next_turn_lane() != _claimed:
 		_leave_junction()
 	var target_speed := npc.lane_speed(follower.point_ahead)
-	# Close in on the rider ahead only as fast as we can still stop a buffer behind where it
-	# would stop braking flat out: v² = its v² + 2·braking·gap. The second buffer is its half length.
-	var blocker := _rider_ahead()
+	# Close in on the rider ahead only as fast as we can still stop short of where it is now. It can
+	# stop dead (a wreck does), so assuming it brakes like us chain-crashed whole queues.
+	var blocker := _rider_ahead(follower)
 	if blocker != null:
-		var gap := npc.global_position.distance_to(blocker.global_position) - NPCRiderEntity.STOP_LINE_BUFFER
-		var follow_speed := Vector2(npc.horizontal_speed(blocker), npc.stop_line_speed(gap)).length()
-		target_speed = minf(target_speed, follow_speed)
+		# Takes effect next tick; this one still follows the old blocker
+		_change_lane_around(blocker)
+		target_speed = minf(target_speed, _follow_speed(npc, npc.global_position.distance_to(blocker.global_position)))
 	target_speed = _gate(target_speed, delta)
 	npc.ramp_speed(target_speed, delta)
+	_stopped_time = _stopped_time + delta if is_zero_approx(npc.current_speed) else 0.0
 	follower.advance(npc.current_speed * delta)
 	_track_lane(follower.lane)
+	_lane_shift = move_toward(_lane_shift, 0.0, npc.current_speed * delta * LANE_CHANGE_SLOPE)
 	var lane_transform := follower.get_transform()
-	npc.ride_to(lane_transform.origin + lane_transform.basis.x * npc.line_offset, -lane_transform.basis.z, delta)
+	var right := lane_transform.basis.x
+	# Heading into the lane while still easing over
+	var dir := (-lane_transform.basis.z - right * signf(_lane_shift) * LANE_CHANGE_SLOPE).normalized()
+	npc.ride_to(lane_transform.origin + right * (npc.line_offset + _lane_shift), dir, delta)
 
 
-## Nearest racer within follow_detect_range on our latched lane path, or null. Traffic comes off
+## Nearest racer within follow_detect_range on `from`'s latched lane path, or null. Traffic comes off
 ## lane_riders, so no rider ever sweeps the whole pack. Other racers count if they're within the
 ## baker's vehicle width of the path and not oncoming, so one beside the lane doesn't stop us.
-func _rider_ahead() -> Node3D:
+func _rider_ahead(from: TrafficLaneFollower) -> Node3D:
 	var best: Node3D = null
 	var best_dist := follow_detect_range
-	var starts := follower.lanes_ahead(follow_detect_range)
+	var starts := from.lanes_ahead(follow_detect_range)
 	for lane in starts:
 		for other: NPCTrafficState in lane_riders[lane]:
 			# Recovered onto another lane and not ticked since — skip is intentional
@@ -133,12 +154,75 @@ func _rider_ahead() -> Node3D:
 			continue
 		if (racer.velocity as Vector3).dot(forward) < -1.0:
 			continue
-		var off_path: Vector3 = (racer.global_position - follower.point_ahead(dist)).slide(Vector3.UP)
+		var off_path: Vector3 = (racer.global_position - from.point_ahead(dist)).slide(Vector3.UP)
 		if off_path.length() > TrafficNetworkBaker.VEHICLE_WIDTH:
 			continue
 		best = racer
 		best_dist = dist
 	return best
+
+
+## Fastest `rider` can go and still stop a queue's spacing (EXIT_CLEARANCE) behind a racer `dist`
+## ahead, centre to centre. stop_line_speed already leaves our half length.
+static func _follow_speed(rider: NPCRiderEntity, dist: float) -> float:
+	return rider.stop_line_speed(dist - EXIT_CLEARANCE + NPCRiderEntity.STOP_LINE_BUFFER)
+
+
+## Blocked: moves to a neighbour lane taking the same turn at the next junction, if its nearest
+## rider ahead is further off than ours and it's clear to merge. Throttled like lane_speed.
+func _change_lane_around(blocker: Node3D) -> void:
+	var now := Time.get_ticks_msec()
+	# Claimed means we're at or in the junction; mid-change, don't weave straight back
+	if _claimed >= 0 or !is_zero_approx(_lane_shift) or now < _next_lane_check_ms:
+		return
+	_next_lane_check_ms = now + npc.next_scan_delay_ms()
+	var network := follower.network
+	var turn := network.lanes[follower.next_turn_lane()]
+	var blocked_at := npc.global_position.distance_to(blocker.global_position)
+	for lane in network.lanes[follower.lane].neighbors:
+		var next := network.lanes[lane].successors.filter(
+			func(s: int) -> bool:
+				return network.lanes[s].junction == turn.junction and network.lanes[s].turn_dir == turn.turn_dir
+		)
+		if next.is_empty():
+			continue
+		var curve := network.lane_curve(lane)
+		var offset := curve.get_closest_offset(npc.global_position)
+		# Off either end: that lane doesn't run beside us here
+		if offset <= 0.0 or offset >= curve.get_baked_length():
+			continue
+		var there := TrafficLaneFollower.new(network, lane, offset)
+		there.latch(next[0])
+		var ahead := _rider_ahead(there)
+		if ahead != null and npc.global_position.distance_to(ahead.global_position) <= blocked_at:
+			continue
+		if !_clear_to_merge(there):
+			continue
+		follower = there
+		# Starts where we are and eases onto the new lane as we drive
+		var lane_transform := there.get_transform()
+		_lane_shift = (npc.global_position - lane_transform.origin).dot(lane_transform.basis.x) - npc.line_offset
+		return
+
+
+## No racer beside us on `there`'s lane, and every rider behind us on it can still stop short.
+func _clear_to_merge(there: TrafficLaneFollower) -> bool:
+	var pos := there.point_ahead(0.0)
+	for racer in other_racers:
+		# Despawned since the last LOD pass — skip is intentional
+		if !is_instance_valid(racer):
+			continue
+		# Two half lengths
+		if racer.global_position.distance_to(pos) < 2.0 * NPCRiderEntity.STOP_LINE_BUFFER:
+			return false
+	for other: NPCTrafficState in lane_riders[there.lane]:
+		var gap := there.offset - other.follower.offset
+		# Recovered onto another lane and not ticked since — skip is intentional
+		if other.follower.lane != there.lane or gap < 0.0:
+			continue
+		if _follow_speed(other.npc, gap) <= other.npc.current_speed:
+			return false
+	return true
 
 
 ## Moves us between lane_riders' lists as the follower changes lane; -1 drops us from all.
@@ -167,21 +251,23 @@ func _gate(target_speed: float, delta: float) -> float:
 	var turn := follower.next_turn_lane()
 	var network := follower.network
 	var junction := junctions[network.lanes[turn].junction]
-	# A red holds however long we've waited; the timeout is for deadlocks the gate can't see
+	# A red holds however long we've waited (bar right on red); the timeout is for deadlocks the gate can't see
 	var lit := network.control(turn) == TrafficIntersection.ControlType.LIGHT
 	if lit and network.light(turn, NetworkTime.time) != TrafficJunctionData.Light.GREEN:
 		# Out of line while held, or we'd hold up the cross street's green
 		_leave_junction()
-		return line_speed
-	_wait_time += delta
-	_queued = junction
-	junction.arrive(npc, turn)
-	# A conflicting rider inside or ahead in line holds too: forcing past one is how the box gridlocks
-	if !junction.may_enter(npc, turn):
-		return line_speed
-	var let_in := _stop_sign_lets_in(turn) and _exit_clear(turn)
-	if _wait_time < junction_timeout and !let_in:
-		return line_speed
+		if !_right_on_red(turn, junction):
+			return line_speed
+	else:
+		_wait_time += delta
+		_queued = junction
+		junction.arrive(npc, turn)
+		# A conflicting rider inside or ahead in line holds too: forcing past one is how the box gridlocks
+		if !junction.may_enter(npc, turn):
+			return line_speed
+		var let_in := _stop_sign_lets_in(turn) and _exit_clear(turn)
+		if _wait_time < junction_timeout and !let_in:
+			return line_speed
 	# Claimed on grant, not on crossing the line, so two riders can't both see it empty
 	junction.enter(npc, turn)
 	_queued = null
@@ -194,7 +280,18 @@ func _gate(target_speed: float, delta: float) -> float:
 func _stop_sign_lets_in(turn: int) -> bool:
 	if follower.network.control(turn) != TrafficIntersection.ControlType.STOP:
 		return true
-	return is_zero_approx(npc.current_speed)
+	return _stopped_time >= full_stop_time
+
+
+## A red lets a right turn in after a full stop, if nothing conflicting is inside or waiting. Never
+## queued, so may_enter checks every arrival and it yields to the green instead of holding it up.
+func _right_on_red(turn: int, junction: JunctionState) -> bool:
+	return (
+		follower.network.lanes[turn].turn_dir == TrafficLaneData.TurnDir.RIGHT
+		and _stopped_time >= full_stop_time
+		and junction.may_enter(npc, turn)
+		and _exit_clear(turn)
+	)
 
 
 func _leave_junction() -> void:

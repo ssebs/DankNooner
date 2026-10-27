@@ -39,7 +39,7 @@ func _init(network: TrafficNetwork):
 static func source_hash(network: TrafficNetwork) -> int:
 	var parts := []
 	for road in network.get_roads():
-		parts.append([road.name, road.lane_width])
+		parts.append([road.name, road.lane_width, road.traffic_weight])
 		for point in road.get_points():
 			parts.append([point.global_position, point.lane_count])
 	for intersection in network.get_intersections():
@@ -100,10 +100,10 @@ func _build_road(road: TrafficRoad):
 		counts.append(int(point.resolved_lane_count() / 2.0))
 	var start := _attachment(road, points[0])
 	var end := _attachment(road, points[-1])
-	_build_direction(road.lane_width, positions, counts, start, end)
+	_build_direction(road, positions, counts, start, end)
 	positions.reverse()
 	counts.reverse()
-	_build_direction(road.lane_width, positions, counts, end, start)
+	_build_direction(road, positions, counts, end, start)
 
 
 # Vector2i(junction, slot), or (-1, -1) for an unlinked end (a config warning)
@@ -118,7 +118,7 @@ func _attachment(road: TrafficRoad, end: TrafficRoadPoint) -> Vector2i:
 # Lanes travelling positions[0] -> positions[-1] on the right. Built as one piece per lane per
 # segment, then joined back into whole lanes wherever nothing merges or splits.
 func _build_direction(
-	lane_width: float, positions: PackedVector3Array, counts: PackedInt32Array, start: Vector2i, end: Vector2i
+	road: TrafficRoad, positions: PackedVector3Array, counts: PackedInt32Array, start: Vector2i, end: Vector2i
 ):
 	var samples := PackedVector3Array()
 	var markers := _round_corners(positions, samples)
@@ -129,9 +129,10 @@ func _build_direction(
 	for k in last_seg + 1:
 		for j in maxi(counts[k], counts[k + 1]):
 			# A lane missing at one end sits on the outermost remaining lane there, so it tapers
-			var from_offset := (mini(j, counts[k] - 1) + 0.5) * lane_width
-			var to_offset := (mini(j, counts[k + 1] - 1) + 0.5) * lane_width
+			var from_offset := (mini(j, counts[k] - 1) + 0.5) * road.lane_width
+			var to_offset := (mini(j, counts[k + 1] - 1) + 0.5) * road.lane_width
 			var lane := TrafficLaneData.new()
+			lane.weight = road.traffic_weight
 			lane.points = _offset_slice(samples, rights, markers[k], markers[k + 1], from_offset, to_offset)
 			if k == 0 and start.x >= 0:
 				lane.points = _clip_start(lane.points, _intersections[start.x])
@@ -154,6 +155,14 @@ func _build_direction(
 					lane.successors.append(grid[Vector2i(split, k + 1)])
 
 	var lane_index := _join_pieces(pieces)
+	# Later segments overwrite, so each lane keeps its neighbours at its end, where riders pick a lane
+	for k in last_seg + 1:
+		for j in maxi(counts[k], counts[k + 1]):
+			var neighbors: Array[int] = []
+			for side in [j - 1, j + 1]:
+				if grid.has(Vector2i(side, k)):
+					neighbors.append(lane_index[grid[Vector2i(side, k)]])
+			data.lanes[lane_index[grid[Vector2i(j, k)]]].neighbors = neighbors
 	if start.x >= 0:
 		_outgoing[start] = range(counts[0]).map(func(j): return lane_index[grid[Vector2i(j, 0)]])
 	if end.x >= 0:
@@ -334,6 +343,7 @@ func _add_turn(junction: int, entry: int, turn_dir: TrafficLaneData.TurnDir, fro
 	for s in steps + 1:
 		turn.points.append(start.bezier_interpolate(control_in, control_out, end, float(s) / steps))
 	turn.successors.append(to_lane)
+	turn.weight = data.lanes[to_lane].weight
 	turn.junction = junction
 	turn.entry_slot = entry
 	turn.turn_dir = turn_dir

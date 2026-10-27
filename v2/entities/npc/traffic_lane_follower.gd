@@ -1,7 +1,9 @@
 class_name TrafficLaneFollower extends RefCounted
 
 ## A traffic rider's place on a baked TrafficNetworkData: current lane + distance along it. Forks
-## pick a random successor, latched until the rider leaves that lane.
+## pick a successor by weight, latched until the rider leaves that lane.
+
+static var _rng := RandomNumberGenerator.new()
 
 var network: TrafficNetworkData
 var lane: int
@@ -56,6 +58,11 @@ func lanes_ahead(max_dist: float) -> Dictionary[int, float]:
 	return starts
 
 
+## Takes `next` off the current lane instead of a random successor.
+func latch(next: int):
+	_choices[lane] = next
+
+
 ## Moves along the lanes. The rider rides wherever this puts it.
 func advance(dist: float):
 	offset += dist
@@ -79,5 +86,7 @@ func _leave_lane():
 
 func _next_lane(from: int) -> int:
 	if not _choices.has(from):
-		_choices[from] = network.lanes[from].successors.pick_random()
+		var successors := network.lanes[from].successors
+		var weights := PackedFloat32Array(successors.map(func(s: int) -> float: return network.lanes[s].weight))
+		_choices[from] = successors[_rng.rand_weighted(weights)]
 	return _choices[from]

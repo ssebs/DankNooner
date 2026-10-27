@@ -15,3 +15,8 @@ enum TurnDir { LEFT, THROUGH, RIGHT, U_TURN }
 @export var turn_dir := -1
 ## Turn lanes in the same junction that can't be occupied at the same time as this one.
 @export var conflicts: Array[int] = []
+## Road lanes: the same direction's lanes either side where this one ends, for lane changes.
+@export var neighbors: Array[int] = []
+## Road lanes: their TrafficRoad.traffic_weight. Turn lanes: their exit road's, so forks favour
+## busy roads.
+@export var weight := 1.0

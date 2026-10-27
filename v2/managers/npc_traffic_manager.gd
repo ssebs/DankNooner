@@ -53,6 +53,8 @@ const PLACEMENT_CLEARANCE: float = 5.0
 ## Random spots tried for a clear one before giving up (skipping a spawn, or waiting
 ## out another recovery delay).
 const PLACEMENT_ATTEMPTS: int = 4
+## Gap between the spots riders spawn and recycle onto along each road lane.
+const SPOT_SPACING: float = 10.0
 ## How often the server's LOD pass re-measures riders, and clients sweep for stale ones.
 const LOD_INTERVAL_MS: int = 250
 ## A client hides a rider not synced for this long. Covers several missed packets at the
@@ -73,6 +75,14 @@ var _car_count: int = 0
 var _network: TrafficNetworkData
 ## Lanes riders spawn and recover on: road lanes only, turn lanes all cluster at junctions.
 var _road_lanes: Array[int] = []
+## Server: every SPOT_SPACING along the road lanes, where riders spawn and recycle onto.
+var _spots: Array[_Spot] = []
+## Server: each spot's lane weight, indexed like _spots. Evenly spaced, so a pick is weight × length.
+var _spot_weights := PackedFloat32Array()
+## Server: road lane metres × weight, summed — riders spread exactly by weight would be
+## _npcs.size() / this per weighted metre on every lane.
+var _weighted_length := 0.0
+var _rng := RandomNumberGenerator.new()
 ## One per baked junction, shared by every rider's NPCTrafficState.
 var _junctions: Array[JunctionState] = []
 ## Traffic on each lane, indexed like TrafficNetworkData.lanes, shared by every NPCTrafficState.
@@ -114,9 +124,13 @@ func start_traffic(for_race: bool = false) -> void:
 		return
 	_network = network_node.baked
 	_road_lanes.clear()
+	_spots.clear()
+	_spot_weights.clear()
+	_weighted_length = 0.0
 	for i in _network.lanes.size():
 		if _network.lanes[i].junction < 0:
 			_road_lanes.append(i)
+			_add_spots(i)
 	_junctions = []
 	for _junction in _network.junctions:
 		_junctions.append(JunctionState.new(_network))
@@ -131,16 +145,13 @@ func start_traffic(for_race: bool = false) -> void:
 		count = _debug_count
 	_for_race = for_race
 
-	# Round-robin over shuffled lanes — every lane gets a rider before any gets a second,
-	# so traffic spreads over the whole network instead of stacking at one spot.
-	var spawn_lanes := _road_lanes.duplicate()
-	spawn_lanes.shuffle()
 	for i in count:
-		var follower := _clear_follower_on(spawn_lanes[i % spawn_lanes.size()])
-		# Lane too crowded for another rider — skip rather than spawn on top of someone
-		if follower == null:
+		var spot := _clear_spot(_spots, _spot_weights, null)
+		# Network too crowded for another rider — skip rather than spawn on top of someone
+		if spot == null:
 			continue
-		var lane_transform := follower.get_transform()
+		var follower := TrafficLaneFollower.new(_network, spot.lane, spot.offset)
+		var lane_transform := spot.transform
 		var npc_id := _next_id
 		_next_id -= 1
 		var skin_index := _roll_skin_index()
@@ -152,7 +163,7 @@ func start_traffic(for_race: bool = false) -> void:
 		traffic_state.junctions = _junctions
 		traffic_state.lane_riders = _lane_riders
 		traffic_state.other_racers = _other_racers
-	DebugUtils.DebugMsg("Spawned %d traffic riders" % _npcs.size())
+	DebugUtils.DebugMsg("Spawned %d traffic riders over %d spots" % [_npcs.size(), _spots.size()])
 
 
 ## Roll one rider's vehicle. The server rolls and ships the result — rolling on
@@ -348,12 +359,24 @@ func _follower_on(lane: int) -> TrafficLaneFollower:
 	return TrafficLaneFollower.new(_network, lane, randf() * _network.lane_curve(lane).get_baked_length())
 
 
-## A follower at a clear random spot along the lane, or null if every spot tried was taken.
-func _clear_follower_on(lane: int) -> TrafficLaneFollower:
+## Half a spacing in from each end, so no spot sits at a junction's stop line.
+func _add_spots(lane: int) -> void:
+	for k in floori(_network.lane_curve(lane).get_baked_length() / SPOT_SPACING):
+		var spot := _Spot.new()
+		spot.lane = lane
+		spot.offset = (k + 0.5) * SPOT_SPACING
+		spot.transform = TrafficLaneFollower.new(_network, lane, spot.offset).get_transform()
+		_spots.append(spot)
+		_spot_weights.append(_network.lanes[lane].weight)
+		_weighted_length += SPOT_SPACING * _network.lanes[lane].weight
+
+
+## A clear spot picked by weight, or null if every spot tried was taken.
+func _clear_spot(spots: Array[_Spot], weights: PackedFloat32Array, mover: NPCRiderEntity) -> _Spot:
 	for _attempt in PLACEMENT_ATTEMPTS:
-		var follower := _follower_on(lane)
-		if _is_spot_clear(follower.get_transform().origin, null):
-			return follower
+		var spot := spots[_rng.rand_weighted(weights)]
+		if _is_spot_clear(spot.transform.origin, mover):
+			return spot
 	return null
 
 
@@ -402,12 +425,16 @@ func _update_lod() -> void:
 	# Remote peers only; the host (1) has no sync stream to cull, just drawing
 	var remote_peers := multiplayer.get_peers()
 	var radius_sq := near_radius * near_radius
+	var near_counts: Dictionary[int, int] = {}
+	for player in players:
+		near_counts[int(player.name)] = 0
 	for npc_id in _npcs:
 		var npc := _npcs[npc_id]
 		var near := PackedInt32Array()
 		for player in players:
 			if player.global_position.distance_squared_to(npc.global_position) < radius_sq:
 				near.append(int(player.name))
+				near_counts[int(player.name)] += 1
 		var was := _near_peers[npc_id]
 		if near == was:
 			continue
@@ -420,6 +447,105 @@ func _update_lod() -> void:
 				npc.synchronizer.set_visibility_for(peer, near.has(peer))
 		if near.has(1) != was.has(1):
 			npc.set_drawn(near.has(1))
+	# Races keep their even spread
+	if !_for_race:
+		_recycle(players, near_counts)
+	_rebalance(players)
+
+
+## Free roam: moves one far rider to just outside the view of the player with the fewest riders
+## near, if that's under near_target, heading their way. One per LOD pass, so it never floods.
+func _recycle(players: Array, near_counts: Dictionary[int, int]) -> void:
+	var settings := level_manager.current_level.traffic_settings
+	var target: PlayerEntity = null
+	for player in players:
+		var count := near_counts[int(player.name)]
+		if count < settings.near_target and (target == null or count < near_counts[int(target.name)]):
+			target = player
+	if target == null:
+		return
+	var npc_id := _worst_far_rider()
+	# Every rider is already near someone — skip is intentional
+	if npc_id == 0:
+		return
+
+	var band_max_sq := pow(near_radius + settings.recycle_band, 2.0)
+	var spots: Array[_Spot] = []
+	var weights := PackedFloat32Array()
+	for i in _spots.size():
+		var pos := _spots[i].transform.origin
+		var to_target := target.global_position - pos
+		# Lanes leading away would just carry it off to be recycled again
+		if to_target.length_squared() > band_max_sq or to_target.dot(-_spots[i].transform.basis.z) <= 0.0:
+			continue
+		if _out_of_view(pos, players):
+			spots.append(_spots[i])
+			weights.append(_spot_weights[i])
+	# No road near the player (off-road, or the band misses the network) — skip is intentional
+	if spots.is_empty():
+		return
+	_move_to(npc_id, spots, weights)
+
+
+## Moves the far rider furthest over its lane's share to a weighted spot out of every player's view.
+## Forks can only split the traffic reaching them, so without this the road layout, not
+## traffic_weight, decides how busy each road is.
+func _rebalance(players: Array) -> void:
+	var npc_id := _worst_far_rider()
+	# Every far rider is at or under its lane's share — skip is intentional
+	if npc_id == 0 or _lane_share(_traffic_state(npc_id).follower.lane) <= _npcs.size() / _weighted_length:
+		return
+	var spots: Array[_Spot] = []
+	var weights := PackedFloat32Array()
+	for i in _spots.size():
+		if _out_of_view(_spots[i].transform.origin, players):
+			spots.append(_spots[i])
+			weights.append(_spot_weights[i])
+	# A map small enough for players to see all of it — skip is intentional
+	if spots.is_empty():
+		return
+	_move_to(npc_id, spots, weights)
+
+
+## Riders on a road lane per metre per unit of its weight. Above _npcs.size() / _weighted_length,
+## the lane holds more than its share.
+func _lane_share(lane: int) -> float:
+	return _lane_riders[lane].size() / (_network.lane_curve(lane).get_baked_length() * _network.lanes[lane].weight)
+
+
+## The far rider on the road lane furthest over its share, or 0 if there's none (ids are negative).
+func _worst_far_rider() -> int:
+	var worst_id := 0
+	var worst_share := -1.0
+	for npc_id in _npcs:
+		var lane := _traffic_state(npc_id).follower.lane
+		# Near someone, down, or inside a junction
+		if !_near_peers[npc_id].is_empty() or _npcs[npc_id].npc_state == NPCRiderEntity.NPCState.CRASHED:
+			continue
+		if _network.lanes[lane].junction >= 0:
+			continue
+		var share := _lane_share(lane)
+		if share > worst_share:
+			worst_id = npc_id
+			worst_share = share
+	return worst_id
+
+
+func _out_of_view(pos: Vector3, players: Array) -> bool:
+	var radius_sq := near_radius * near_radius
+	return !players.any(func(player: Node3D) -> bool: return player.global_position.distance_squared_to(pos) < radius_sq)
+
+
+## Drops a far rider onto a clear weighted pick of `spots`, at cruise speed: it's out of view, so it
+## drives in rather than pops in. Every spot tried taken means the next LOD pass tries again.
+func _move_to(npc_id: int, spots: Array[_Spot], weights: PackedFloat32Array) -> void:
+	var spot := _clear_spot(spots, weights, _npcs[npc_id])
+	if spot == null:
+		return
+	_traffic_state(npc_id).follower = TrafficLaneFollower.new(_network, spot.lane, spot.offset)
+	_npcs[npc_id].teleport_to(spot.transform.origin, spot.transform.basis)
+	# teleport_to stops it
+	_npcs[npc_id].current_speed = _npcs[npc_id].cruise_speed()
 
 
 func _hide_stale_riders(now: int) -> void:
@@ -493,6 +619,13 @@ func _is_spot_clear(pos: Vector3, mover: NPCRiderEntity) -> bool:
 
 
 #endregion
+
+
+## A place on a road lane a rider can be dropped onto.
+class _Spot:
+	var lane: int
+	var offset: float
+	var transform: Transform3D
 
 
 func _get_configuration_warnings() -> PackedStringArray:

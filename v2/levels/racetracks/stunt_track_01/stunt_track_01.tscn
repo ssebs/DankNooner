@@ -192,7 +192,7 @@ point_count = 2
 [sub_resource type="Curve3D" id="Curve3D_yucqr"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0.04449463, 0, -15.999939, 0, 0, 0, -0.55548096, 0.25, -4.3699646, -0.5751953, 0.25, -9.369934, 0.60131836, 0.25, 9.368317),
-"tilts": PackedFloat32Array(0, -2.4387026)
+"tilts": PackedFloat32Array(0, -2.4387028)
 }
 point_count = 2
 
@@ -374,7 +374,7 @@ point_count = 2
 [sub_resource type="Curve3D" id="Curve3D_463k5"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11804199, -0.12613839, 15.999054, 12, -4.3655746e-11, 0, 0.65527344, 0.1812275, -1.1180725, 0.6867676, 0.1812275, 6.8818665, -11.2616825, 0.23650542, 7.010801),
-"tilts": PackedFloat32Array(-0.007883737, -0.18591078)
+"tilts": PackedFloat32Array(-0.007883737, -0.18591079)
 }
 point_count = 2
 
@@ -415,15 +415,15 @@ point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_jago7"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 4.7732107e-07, -9.3226774e-08, 25.625984, 12.000002, -3.3527613e-08, 2.2351742e-07, 11.719773, -0.1745466, 0.28594375, 26.593994, 0.074409604, 16.322662, -17.046408, 1.3710165, 38.292862),
-"tilts": PackedFloat32Array(7.793959e-09, -0.016778847)
+"points": PackedVector3Array(0, 0, 0, 4.7732107e-07, -9.322677e-08, 25.625982, 12.000002, -3.3527613e-08, 2.2351742e-07, 11.719773, -0.1745466, 0.28594375, 26.593994, 0.074409604, 16.322662, -17.046408, 1.3710165, 38.292862),
+"tilts": PackedFloat32Array(7.793959e-09, -0.016778862)
 }
 point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_5ls82"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 3.6504036e-07, -7.1296945e-08, 19.597958, 0, 0, 0, 7.5511684, -0.11246214, 0.18423644, 26.593994, 0.074409604, 16.322662, -16.758698, 1.0435133, 26.300781),
-"tilts": PackedFloat32Array(7.793959e-09, -0.030049952)
+"tilts": PackedFloat32Array(7.793959e-09, -0.030049944)
 }
 point_count = 2
 
@@ -436,15 +436,15 @@ point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_rbh0l"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 0, 0, 29.24434, 12, 0, 0, -0.009787529, 0.020153007, -0.7481833, 50.114685, -0.09000921, 0.2796936, 11.520447, 0.09650725, 49.961296),
-"tilts": PackedFloat32Array(0, 0.015103085)
+"points": PackedVector3Array(0, 0, 0, 0, 0, 29.24434, 12, 0, 0, -0.009787528, 0.020153005, -0.74818325, 50.114685, -0.09000921, 0.2796936, 11.520447, 0.09650725, 49.961296),
+"tilts": PackedFloat32Array(0, 0.015103116)
 }
 point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_nal0m"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 29.09605, 0, 0, 0, -0.013278132, 0.027340334, -1.0150138, 50.114685, -0.09000921, 0.2796936, -0.47714233, -0.09000921, 50.11322),
-"tilts": PackedFloat32Array(0, 0.015053386)
+"tilts": PackedFloat32Array(0, 0.015053385)
 }
 point_count = 2
 
@@ -521,7 +521,7 @@ point_count = 2
 [sub_resource type="Curve3D" id="Curve3D_dhvic"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 32.62003, 12, 0, 0, 25.766813, 0, -0.9090448, -57.078796, -0.00024414063, 13.786011, -56.32111, -0.00024414063, 27.096786),
-"tilts": PackedFloat32Array(0, 4.860527e-06)
+"tilts": PackedFloat32Array(0, 4.860984e-06)
 }
 point_count = 2
 
@@ -535,7 +535,7 @@ point_count = 2
 [sub_resource type="Curve3D" id="Curve3D_44yky"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -4.1820505e-07, -8.712605e-09, 9.355087, -12, 1.6763806e-08, 5.364418e-07, -3.7633698, -0.18538216, -16.368944, -0.75213623, -1.1040066, 27.69635, -5.5688114, -1.0307107, 29.722975),
-"tilts": PackedFloat32Array(2.3283067e-09, 0.0073268116)
+"tilts": PackedFloat32Array(2.3283067e-09, 0.00732682)
 }
 point_count = 2
 
@@ -556,21 +556,21 @@ point_count = 2
 [sub_resource type="Curve3D" id="Curve3D_58ha2"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -1.0495243e-06, -3.2797633e-08, 17.608097, -12, 0, 7.1525574e-07, -5.319589, -0.11297146, -9.214865, -23.731628, -6.645993, 47.955627, 6.321026, -6.1794567, 56.9004),
-"tilts": PackedFloat32Array(3.7252903e-09, -0.034298744)
+"tilts": PackedFloat32Array(3.7252903e-09, -0.034298748)
 }
 point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_cdtsq"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, -7.213675e-07, -2.2542734e-08, 12.10254, 12, 0, -7.1525574e-07, -3.8753722, -0.082300805, -6.713118, -23.731628, -6.645993, 47.955627, 27.10445, -5.979101, 44.900017),
-"tilts": PackedFloat32Array(3.7252899e-09, -0.040770363)
+"points": PackedVector3Array(0, 0, 0, -7.213675e-07, -2.2542734e-08, 12.10254, 12, 0, -7.1525574e-07, -3.8753724, -0.08230081, -6.7131186, -23.731628, -6.645993, 47.955627, 27.10445, -5.979101, 44.900017),
+"tilts": PackedFloat32Array(3.7252899e-09, -0.04077035)
 }
 point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_j3ken"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -8.854459e-07, -2.7670184e-08, 14.855319, 0, 0, 0, -4.5974803, -0.09763613, -7.963991, -23.731628, -6.645993, 47.955627, 16.712738, -6.079279, 50.900208),
-"tilts": PackedFloat32Array(3.7252903e-09, -0.03726352)
+"tilts": PackedFloat32Array(3.7252903e-09, -0.037263535)
 }
 point_count = 2
 
@@ -625,8 +625,8 @@ point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_0c48d"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 1.2577493e-07, 0, 8.440611, 11.999996, -8.381903e-08, 1.7881393e-07, 3.3948226, 0.4102248, -5.0193005, -16.406311, 6.000122, 38.57184, -5.36224, 1.758825, 46.078804),
-"tilts": PackedFloat32Array(6.98492e-09, -0.06554856)
+"points": PackedVector3Array(0, 0, 0, 1.2577495e-07, 0, 8.440612, 11.999996, -8.381903e-08, 1.7881393e-07, 3.3948226, 0.4102248, -5.0193005, -16.406311, 6.000122, 38.57184, -5.36224, 1.758825, 46.078804),
+"tilts": PackedFloat32Array(6.98492e-09, -0.06554859)
 }
 point_count = 2
 
@@ -808,7 +808,7 @@ _data = {
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_71wu4"]
+[sub_resource type="Curve3D" id="Curve3D_p1fwp"]
 resource_local_to_scene = true
 closed = true
 _data = {
@@ -825,7 +825,7 @@ _data = {
 }
 point_count = 9
 
-[sub_resource type="Curve3D" id="Curve3D_rbe0j"]
+[sub_resource type="Curve3D" id="Curve3D_71wu4"]
 resource_local_to_scene = true
 _data = {
 "points": PackedVector3Array(-8.92865, 0, 0.52874756, 8.92865, 0, -0.52874756, 34, 0, -4.745, -21.54486, 0, 22.016861, 31.014343, 0, -22.431305, 128.68286, -0.00012207031, -19.054504, -9.631897, 0, 9.272202, 21.102783, 0, -6.632431, 145.2572, 0, -107.28392, -46.555115, 0, 0.6806793, 40.686005, 0, -2.6257935, 245.79895, -0.00012207031, -62.154755, -9.96225, 0, 12.617401, 2.703827, 0, -12.928055, 298.59647, -0.00012207031, -171.1063, -2.5209656, 0, 28.45018, 2.5209656, 0, -28.45018, 355.38525, -0.00012207031, -252.50856, 23.460876, 0, 2.9641724, -23.460876, 0, -2.9641724, 272.9001, -0.00012207031, -312.0325, 31.641846, 0, -0.7863159, -31.641846, 0, 0.7863159, 27.657104, -0.00012207031, -321.20844, 0, 0, 0, 0, 0, 0, -39.384277, 0, -275.5528, 0, 0, 0, -9.48407, 0.003791809, 38.231415, -54.979187, 8.794067, -246.3847, -14.941711, 0, -14.931335, 14.941711, 0, 14.931335, -32.368835, 4, -156.4422, -4.3065186, 0, -7.504593, 4.3065186, 0, 7.504593, 59.704956, -0.00012207031, -111.84172, 15.05426, 0, 2.2224426, -15.05426, 0, -2.2224426, 51.810608, -0.00012207031, -83.06822, 21.326172, 0, 14.021759, -27.659912, 0, -16.197403, 9.701782, -0.00012207031, -121.675674, 9.928467, 0, -15.177902, -53.569458, 0, 85.03296, -68.497314, -0.00012207031, -112.512955, -47.68042, 0, -7.2508087, 0, 0, 0, -24.953064, 0, -7.7634125),
@@ -855,6 +855,8 @@ metadata/_custom_type_script = "uid://bdb83jm5t82md"
 
 [node name="TrafficRoad" type="Node3D" parent="TrafficNetwork" unique_id=633176124]
 script = ExtResource("4_whdav")
+lane_width = 5.0
+traffic_weight = 0.5
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad" unique_id=143380962]
@@ -873,12 +875,17 @@ script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint4" type="Marker3D" parent="TrafficNetwork/TrafficRoad" unique_id=631714958]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -177, 0.25, 44.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -177, 0.25, 46.9)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint5" type="Marker3D" parent="TrafficNetwork/TrafficRoad" unique_id=1403282943]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -177.81842, 0.25, 378.03418)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -177.81842, 0.25, 358.03418)
+script = ExtResource("5_whdav")
+metadata/_custom_type_script = "uid://d2kjca82lmnch"
+
+[node name="TrafficRoadPoint6" type="Marker3D" parent="TrafficNetwork/TrafficRoad" unique_id=1968634939]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -178.81842, 0.25, 378.03418)
 script = ExtResource("5_whdav")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
@@ -914,6 +921,7 @@ slot = 1
 [node name="TrafficRoad2" type="Node3D" parent="TrafficNetwork" unique_id=100052177]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -178.84242, 0, 401.4716)
 script = ExtResource("4_whdav")
+traffic_weight = 0.1
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad2" unique_id=737129769]
@@ -944,6 +952,7 @@ metadata/_custom_type_script = "uid://bdb83jm5t82md"
 
 [node name="TrafficRoad3" type="Node3D" parent="TrafficNetwork" unique_id=133406380]
 script = ExtResource("4_whdav")
+traffic_weight = 2.0
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad3" unique_id=144187871]
@@ -982,6 +991,7 @@ slot = 3
 [node name="TrafficRoad4" type="Node3D" parent="TrafficNetwork" unique_id=535054213]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -198.18, 0.25, 402.18)
 script = ExtResource("4_whdav")
+traffic_weight = 3.0
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad4" unique_id=1297011942]
@@ -1040,6 +1050,7 @@ metadata/_custom_type_script = "uid://bdb83jm5t82md"
 
 [node name="TrafficRoad5" type="Node3D" parent="TrafficNetwork" unique_id=1723261908]
 script = ExtResource("4_whdav")
+traffic_weight = 0.1
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad5" unique_id=1012534728]
@@ -1105,6 +1116,7 @@ metadata/_custom_type_script = "uid://bdb83jm5t82md"
 
 [node name="TrafficRoad6" type="Node3D" parent="TrafficNetwork" unique_id=1129439024]
 script = ExtResource("4_whdav")
+traffic_weight = 2.0
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad6" unique_id=1375438577]
@@ -1137,6 +1149,7 @@ metadata/_custom_type_script = "uid://bdb83jm5t82md"
 
 [node name="TrafficRoad7" type="Node3D" parent="TrafficNetwork" unique_id=1234263741]
 script = ExtResource("4_whdav")
+traffic_weight = 0.1
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad7" unique_id=1770770712]
@@ -1157,6 +1170,7 @@ metadata/_custom_type_script = "uid://bdb83jm5t82md"
 
 [node name="TrafficRoad8" type="Node3D" parent="TrafficNetwork" unique_id=828523452]
 script = ExtResource("4_whdav")
+traffic_weight = 2.0
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad8" unique_id=1608019961]
@@ -1194,6 +1208,7 @@ slot = 1
 
 [node name="TrafficRoad9" type="Node3D" parent="TrafficNetwork" unique_id=1795233855]
 script = ExtResource("4_whdav")
+traffic_weight = 2.0
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad9" unique_id=1465647725]
@@ -1498,6 +1513,7 @@ slot = 1
 
 [node name="TrafficRoad13" type="Node3D" parent="TrafficNetwork" unique_id=1080278871]
 script = ExtResource("4_whdav")
+traffic_weight = 2.0
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad13" unique_id=1062898552]
@@ -1536,6 +1552,7 @@ slot = 1
 
 [node name="TrafficRoad14" type="Node3D" parent="TrafficNetwork" unique_id=1527229134]
 script = ExtResource("4_whdav")
+traffic_weight = 3.0
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad14" unique_id=784770359]
@@ -1550,6 +1567,7 @@ metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoad15" type="Node3D" parent="TrafficNetwork" unique_id=195450384]
 script = ExtResource("4_whdav")
+traffic_weight = 2.0
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad15" unique_id=7014408]
@@ -1564,6 +1582,7 @@ metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoad16" type="Node3D" parent="TrafficNetwork" unique_id=1954578113]
 script = ExtResource("4_whdav")
+traffic_weight = 2.0
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad16" unique_id=1338990244]
@@ -1656,6 +1675,7 @@ slot = 3
 
 [node name="TrafficRoad17" type="Node3D" parent="TrafficNetwork" unique_id=126119289]
 script = ExtResource("4_whdav")
+traffic_weight = 2.0
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad17" unique_id=538740801]
@@ -1670,6 +1690,7 @@ metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoad18" type="Node3D" parent="TrafficNetwork" unique_id=163464481]
 script = ExtResource("4_whdav")
+traffic_weight = 2.0
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad18" unique_id=1428022444]
@@ -1690,6 +1711,7 @@ metadata/_custom_type_script = "uid://bdb83jm5t82md"
 
 [node name="TrafficRoad19" type="Node3D" parent="TrafficNetwork" unique_id=1208989463]
 script = ExtResource("4_whdav")
+traffic_weight = 0.2
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint" type="Marker3D" parent="TrafficNetwork/TrafficRoad19" unique_id=1781973679]
@@ -2883,25 +2905,25 @@ respawn_in_place = true
 [node name="StuntCity_REMEMBER_TO_REPLACE_ME" parent="." unique_id=1750931100 groups=["navigation_mesh_source_group"] instance=ExtResource("27_grj8g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 0)
 
-[node name="grass" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="0" unique_id=1434498815]
+[node name="grass" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="0" unique_id=1855413113]
 layers = 3
 
-[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/grass" index="0" unique_id=1902094466]
+[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/grass" index="0" unique_id=649719389]
 collision_layer = 17
 
-[node name="ground" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="1" unique_id=1650114735]
+[node name="ground" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="1" unique_id=204493026]
 layers = 3
 
-[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/ground" index="0" unique_id=768195441]
+[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/ground" index="0" unique_id=824161194]
 collision_layer = 17
 
-[node name="road" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="2" unique_id=330481511]
+[node name="road" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="2" unique_id=1908981655]
 layers = 3
 
-[node name="water" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="3" unique_id=448821427]
+[node name="water" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="3" unique_id=1323724107]
 layers = 3
 
-[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/water" index="0" unique_id=1545230634]
+[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/water" index="0" unique_id=1559516157]
 collision_layer = 0
 
 [node name="Houses" type="Node3D" parent="." unique_id=697015734 groups=["navigation_mesh_source_group"]]
@@ -5174,7 +5196,7 @@ lane_width = 6.0
 [node name="RP_004" parent="RoadManager/3way_2x3" index="3"]
 lane_width = 6.0
 
-[node name="3way_2x2" parent="RoadManager/3way_2x3/3way_2x3" index="0" unique_id=792373302]
+[node name="3way_2x2" parent="RoadManager/3way_2x3/3way_2x3" index="0" unique_id=1118283580]
 surface_material_override/0 = ExtResource("46_oxlis")
 
 [node name="Road_004" type="Node3D" parent="RoadManager" unique_id=1679953535]
@@ -5261,7 +5283,7 @@ lane_width = 6.0
 [node name="RP_004" parent="RoadManager/3way_2x4" index="3"]
 lane_width = 6.0
 
-[node name="3way_2x2" parent="RoadManager/3way_2x4/3way_2x3" index="0" unique_id=792373302]
+[node name="3way_2x2" parent="RoadManager/3way_2x4/3way_2x3" index="0" unique_id=1118283580]
 surface_material_override/0 = ExtResource("46_oxlis")
 
 [node name="4way_2x2" parent="RoadManager" unique_id=4089390 instance=ExtResource("11_s2l3m")]
@@ -7476,7 +7498,7 @@ metadata/_edit_lock_ = true
 
 [node name="RaceWall" parent="." unique_id=1909321819 groups=["navigation_mesh_source_group"] instance=ExtResource("50_7h6ax")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -663, -1.9073486e-06, 164)
-curve = SubResource("Curve3D_71wu4")
+curve = SubResource("Curve3D_p1fwp")
 
 [node name="RaceWall2" parent="." unique_id=1382726365 groups=["navigation_mesh_source_group"] instance=ExtResource("50_7h6ax")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -663, 0, 164)
@@ -7484,7 +7506,7 @@ curve = SubResource("Curve3D_ytyv1")
 
 [node name="RaceWall3" parent="." unique_id=481092031 groups=["navigation_mesh_source_group"] instance=ExtResource("50_7h6ax")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -769, 0, 263.5)
-curve = SubResource("Curve3D_rbe0j")
+curve = SubResource("Curve3D_71wu4")
 
 [node name="Corkscrew" parent="." unique_id=1203948571 groups=["navigation_mesh_source_group"] instance=ExtResource("60_kgknl")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 123.5, 3.7982864, 12)

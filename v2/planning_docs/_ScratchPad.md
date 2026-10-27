@@ -8,10 +8,8 @@
 
 - [ ] Create/join public/private lobbies 
   - [ ] ____STEAM_LOBBIES_WIP.md
-- [ ] traffic density near player
-  - [ ] ____TRAFFIC_DENSITY_WIP.md
 
-
+- [ ] more car models / cleaner w/ neon fx & working lights/blinder
 ### NEXT
 
 - [ ] hud toggle in editor for trailer

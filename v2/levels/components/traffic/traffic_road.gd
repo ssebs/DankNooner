@@ -8,6 +8,11 @@ class_name TrafficRoad extends Node3D
 	set(v):
 		lane_width = v
 		TrafficNetwork.request_redraw(self)
+## Relative traffic per metre against other roads: spawns and free-roam recycles favour busier roads.
+@export var traffic_weight := 1.0:
+	set(v):
+		traffic_weight = v
+		TrafficNetwork.request_redraw(self)
 
 
 func _ready():
