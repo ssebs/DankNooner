@@ -26,6 +26,11 @@
 > Don't forget, have fun :D
 - [ ] [WIP MiniTasks](_ScratchPad.md)
 
+- [ ] Improve pvp hud during stunt race/events
+  - [x] trick feed
+  - [x] more juice when score goes up in that menu?
+  - [ ] new hud styling
+
 - [ ] Create separate location (new event start circles) just for stunt/trick battle, remove from existing races so they dont spawn checkpoint markers
   - [ ] wip - stunt_battle_arena
 - [ ] Steam
@@ -64,9 +69,6 @@
 ### HUD Improvements
 - [ ] Fill up => race is not obvious where to go/not consistent across all races 
 - [ ] need to know when race is completed (single player is done vs entire lobby)
-- [ ] Improve pvp hud during stunt race/events
-  - [ ] more juice when score goes up in that menu?
-  - [ ] larger text?
 - [ ] Cancel from fill up should be more obvious
 - [ ] Btn white while hovering btns instead of green outline
 - [ ] 321 + drive to start of race text + current objective should be more obvious during races/events (race/hud objective)
@@ -141,8 +143,6 @@
   - [x] (longest wheelie / most combo tricks)
   - [ ] follow the Leader / H.O.R.S.E.
   - [ ] 3 rounds, highest score in 60s wins round, best 2/3 wins game
-  - [ ] Live scoreboard 
-  - [ ] Trickfeed
 - [ ] Pizza Delivery
 - [ ] holding T pose should not grant so many points / score
   - [ ] need some penalty for simple tricks vs combos

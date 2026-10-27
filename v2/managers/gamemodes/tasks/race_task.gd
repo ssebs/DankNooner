@@ -139,8 +139,10 @@ func get_completion_time_ms(racer_id: int) -> float:
 	return peer_progress[racer_id].get("completion_time_ms", -1.0)
 
 
+## In the race body. NPCs are registered at gamemode Enter but have no checkpoints to rank
+## against until the first human on_enter.
 func has_racer(racer_id: int) -> bool:
-	return peer_progress.has(racer_id)
+	return _race_active and peer_progress.has(racer_id)
 
 
 func is_point_to_point() -> bool:

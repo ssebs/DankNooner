@@ -11,6 +11,8 @@
 
 - [ ] more car models / cleaner w/ neon fx & working lights/blinder
 ### NEXT
+- [ ] 3d model & rig my daily riding outfit
+- [ ] track ragdoll vs bike distance on a crash (how far the rider flew from the bike) — show it in the trick feed's bail line, and use it for a new gamemode (furthest launch wins?)
 
 - [ ] hud toggle in editor for trailer
 - [ ] record gameplay for trailer

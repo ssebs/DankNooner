@@ -1,19 +1,26 @@
 @tool
 ## Live stunt-race leaderboard: a header row, then one row per human sorted by score.
 ## Rows slide to their new rank on reorder, so they're placed by hand rather than in a
-## container (which would snap them). Fed by RidingHUDState from the server's snapshot.
+## container (which would snap them). A score-like cell pops when it climbs. Fed by
+## RidingHUDState from the server's snapshot.
 class_name RaceLeaderboard extends Control
 
 ## Cell font size; 0 keeps the theme's Label size.
 @export var font_size: int = 0
+## Drawn behind the whole board, header included; use expand margins for padding. Empty = none.
+@export var background: StyleBox
 
-const ROW_HEIGHT: float = 26.0
+## Row step as a multiple of the font size — the font's own line height is too loose.
+const ROW_HEIGHT_SCALE: float = 1.3
 ## Columns size to their widest text; the name column never shrinks below this.
 const NAME_MIN_WIDTH: float = 60.0
-const CELL_PADDING: float = 16.0
+const CELL_PADDING: float = 12.0
 ## Duration of the slide to a new rank.
 const REORDER_SECS: float = 0.35
 const OWN_ROW_COLOR := Color(1.0, 0.8, 0.2)
+const POP_SCALE: float = 1.5
+const POP_SECS: float = 0.4
+const POP_COLOR := Color(0.4, 1.0, 0.4)
 
 var _header: HBoxContainer = null
 ## peer_id -> row, and the rank each row last slid to.
@@ -59,6 +66,7 @@ func set_board(headers: PackedStringArray, rows: Array) -> void:
 	for w in widths:
 		total_width += w
 	custom_minimum_size = Vector2(total_width, _rank_y(rows.size()))
+	queue_redraw()
 
 
 func clear() -> void:
@@ -67,6 +75,15 @@ func clear() -> void:
 	_header = null
 	_rows.clear()
 	_ranks.clear()
+	custom_minimum_size = Vector2.ZERO
+	queue_redraw()
+
+
+func _draw() -> void:
+	# Cleared board — no rows to back.
+	if background == null or _header == null:
+		return
+	draw_style_box(background, Rect2(Vector2.ZERO, custom_minimum_size))
 
 
 func _column_widths(headers: PackedStringArray, rows: Array) -> PackedFloat32Array:
@@ -88,7 +105,7 @@ func _font_size() -> int:
 
 ## Header sits at rank -1, so data rank 0 is the second line.
 func _rank_y(rank: int) -> float:
-	return (rank + 1) * ROW_HEIGHT
+	return (rank + 1) * _font_size() * ROW_HEIGHT_SCALE
 
 
 func _add_row() -> HBoxContainer:
@@ -115,4 +132,24 @@ func _set_cells(row: HBoxContainer, texts: PackedStringArray) -> void:
 		label.add_theme_font_size_override("font_size", _font_size())
 		row.add_child(label)
 	for i in texts.size():
-		(row.get_child(i) as Label).text = texts[i]
+		var label := row.get_child(i) as Label
+		# Only plain integers (scores, knockouts) pop — places slide, and lap clocks tick every refresh.
+		if (
+			row != _header
+			and label.text.is_valid_int()
+			and texts[i].is_valid_int()
+			and texts[i].to_int() > label.text.to_int()
+		):
+			_pop(label)
+		label.text = texts[i]
+
+
+func _pop(label: Label) -> void:
+	label.pivot_offset = label.size / 2.0
+	label.scale = Vector2.ONE * POP_SCALE
+	label.modulate = POP_COLOR
+	var tween := label.create_tween().set_parallel()
+	tween.tween_property(label, "scale", Vector2.ONE, POP_SECS).set_trans(Tween.TRANS_BACK).set_ease(
+		Tween.EASE_OUT
+	)
+	tween.tween_property(label, "modulate", Color.WHITE, POP_SECS)

@@ -38,6 +38,7 @@ const _TRICK_PROMPT_IDLE_ALPHA := 0.5
 @onready var _xp_label: Label = %HUD_XP
 @onready var _leaderboard: RaceLeaderboard = %HUD_Leaderboard
 @onready var _trick_popups: TrickPopups = %TrickPopups
+@onready var _trick_feed: TrickFeed = %HUD_TrickFeed
 @onready var _target_compass: TargetCompass = %TargetCompass
 @onready var _event_panel: VBoxContainer = %EventPanel
 @onready var _event_title: Label = %HUD_EventTitle
@@ -640,6 +641,32 @@ func push_score_popup(peer_id: int, points: int, multiplier: int, bonus: bool) -
 @rpc("call_local", "reliable")
 func _rpc_score_popup(points: int, multiplier: int, bonus: bool):
 	_trick_popups.pop_score(points, multiplier, bonus)
+
+
+## Server-side: log a rider's banked combo, or a crash and the combo it voided, on every HUD.
+## Called from TrickManager.
+func push_trickfeed(
+	username: String,
+	peer_id: int,
+	tricks: PackedInt32Array,
+	points: int,
+	multiplier: int,
+	crashed: bool
+) -> void:
+	_rpc_trickfeed.rpc(username, peer_id, tricks, points, multiplier, crashed)
+
+
+@rpc("call_local", "reliable")
+func _rpc_trickfeed(
+	username: String,
+	peer_id: int,
+	tricks: PackedInt32Array,
+	points: int,
+	multiplier: int,
+	crashed: bool
+):
+	var is_own := peer_id == multiplayer.get_unique_id()
+	_trick_feed.push(username, is_own, tricks, points, multiplier, crashed)
 
 
 ## Server-side: show a (pre-localized) callout on every rider's HUD, e.g. a round winner.

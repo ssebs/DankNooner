@@ -156,8 +156,8 @@ crash, untyped so each task picks its own keys (`PerformTrickTask` accumulates `
 
 Every runner event's text lives in `RidingHUDState`'s event pane (top-left):
 title, step count (`shows_step_count()`; races hide it), objective and a flashing warning line. The
-large progress line (hint / lap clock / countdown / status), the live leaderboard and the
-challenges' suggested tricks sit top-right, under money/XP. Races don't put the rider's place in
+large progress line (hint / lap clock / countdown / status) sits top-centre; the live
+leaderboard, the challenges' suggested tricks and the trick feed sit top-right, under money/XP. Races don't put the rider's place in
 the progress line; the leaderboard's Pos column has it. Runners and tasks
 call `riding_hud.push_event_*` server-side; the text is pre-localized there, so the client doesn't
 `tr()` again. Label visibility is set in code at `_ready` — the editor kept flipping it in the scene.

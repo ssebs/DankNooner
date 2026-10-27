@@ -1,5 +1,5 @@
 @tool
-## The live leaderboard (humans, riding HUD) and the results table (humans + NPCs). Columns: name,
+## The live leaderboard (riding HUD) and the results table, both humans + NPCs. Columns: name,
 ## race position, score (STUNT_RACE), then every component's column_headers (challenge columns are
 ## results-only, so the live board stays on standings). Standing is fixed by
 ## race_type: STUNT_RACE by RaceGameMode.score, TIME_ATTACK by session best lap, otherwise race
@@ -17,17 +17,30 @@ func tick(delta: float) -> void:
 	if _refresh_accum > 0.0:
 		return
 	_refresh_accum = REFRESH_SECS
-	var peer_ids: Array[int] = []
+	var rows: Array = []
 	for peer_id in race_mode.lobby_manager.lobby_players:
 		# Player may not be spawned yet (late-join) — skip is intentional.
 		if race_mode.spawn_manager.get_player_by_peer_id(peer_id) != null:
-			peer_ids.append(peer_id)
-	peer_ids.sort_custom(
-		func(a, b): return _ranks_above(_human_sort_key(a), a, _human_sort_key(b), b)
+			rows.append(
+				{
+					"peer_id": peer_id,
+					"cells": _human_cells(peer_id, true),
+					"_sort_key": _human_sort_key(peer_id),
+				}
+			)
+	if race_mode.npc_racers != null:
+		for npc in race_mode.npc_racers.get_npcs():
+			var npc_id := int(npc.name)
+			rows.append(
+				{
+					"peer_id": npc_id,
+					"cells": _npc_cells(npc, true),
+					"_sort_key": _npc_sort_key(npc_id),
+				}
+			)
+	rows.sort_custom(
+		func(a, b): return _ranks_above(a["_sort_key"], a["peer_id"], b["_sort_key"], b["peer_id"])
 	)
-	var rows: Array = []
-	for peer_id in peer_ids:
-		rows.append({"peer_id": peer_id, "cells": _human_cells(peer_id, true)})
 	var tricks := PackedInt32Array()
 	if race_mode.challenges != null:
 		tricks = race_mode.challenges.hint_tricks()
@@ -53,11 +66,7 @@ func build_results() -> ResultsData:
 	if race_mode.npc_racers != null:
 		for npc in race_mode.npc_racers.get_npcs():
 			var npc_id := int(npc.name)
-			var cells := PackedStringArray([npc.username, _place_text(npc_id)])
-			# NPCs don't score — blank the rest of the columns.
-			cells.resize(_headers().size())
-			var sort_key := 0.0 if _by_score() else _position_key(npc_id)
-			rows.append(_result_row(npc_id, cells, sort_key))
+			rows.append(_result_row(npc_id, _npc_cells(npc), _npc_sort_key(npc_id)))
 	rows.sort_custom(
 		func(a, b): return _ranks_above(a["_sort_key"], a["_peer_id"], b["_sort_key"], b["_peer_id"])
 	)
@@ -99,6 +108,17 @@ func _human_cells(peer_id: int, live: bool = false) -> PackedStringArray:
 	for component in _column_components(live):
 		cells.append_array(component.column_cells(peer_id))
 	return cells
+
+
+## NPCs don't score — blank every column past the place.
+func _npc_cells(npc: NPCRiderEntity, live: bool = false) -> PackedStringArray:
+	var cells := PackedStringArray([npc.username, _place_text(int(npc.name))])
+	cells.resize(_headers(live).size())
+	return cells
+
+
+func _npc_sort_key(npc_id: int) -> float:
+	return 0.0 if _by_score() else _position_key(npc_id)
 
 
 func _column_components(live: bool) -> Array:

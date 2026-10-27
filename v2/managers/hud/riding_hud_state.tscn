@@ -12,6 +12,8 @@
 [ext_resource type="Script" path="res://player/hud_elements/target_compass.gd" id="99_tcmps"]
 [ext_resource type="PackedScene" uid="uid://b1thmb3dtnail" path="res://utils/components/thumbnail_3d.tscn" id="99_thumb"]
 [ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="99_money"]
+[ext_resource type="Script" path="res://player/hud_elements/trick_feed.gd" id="99_tfeed"]
+[ext_resource type="FontFile" uid="uid://dftvb58jromba" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-Black.ttf" id="99_fblk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8urt2"]
 bg_color = Color(0.103055954, 0.5546875, 0.052001953, 1)
@@ -35,6 +37,17 @@ corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nopanel"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lbbg"]
+bg_color = Color(0, 0, 0, 0.6)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 12.0
+expand_margin_top = 4.0
+expand_margin_right = 12.0
+expand_margin_bottom = 4.0
 
 [node name="RidingHUDState" type="Node" unique_id=1177239669]
 script = ExtResource("1_8neiw")
@@ -120,6 +133,19 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "HUD_GAME_MSG"
 
+[node name="HUD_EventProgress" type="Label" parent="UI/AspectContainer/MarginContainer" unique_id=1723272740]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(900, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 48
+horizontal_alignment = 1
+autowrap_mode = 3
+
 [node name="TopRightVBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
@@ -146,23 +172,14 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 28
 
-[node name="HUD_EventProgress" type="Label" parent="UI/AspectContainer/MarginContainer/TopRightVBox" unique_id=1723272740]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(320, 0)
-layout_mode = 2
-size_flags_horizontal = 8
-theme_override_font_sizes/font_size = 48
-horizontal_alignment = 2
-autowrap_mode = 3
-
 [node name="HUD_Leaderboard" type="Control" parent="UI/AspectContainer/MarginContainer/TopRightVBox" unique_id=1156886562]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 mouse_filter = 2
 script = ExtResource("99_rldbd")
-font_size = 18
+font_size = 24
+background = SubResource("StyleBoxFlat_lbbg")
 
 [node name="HUD_EventTricks" type="Label" parent="UI/AspectContainer/MarginContainer/TopRightVBox"]
 unique_name_in_owner = true
@@ -173,6 +190,14 @@ size_flags_horizontal = 8
 theme_override_font_sizes/font_size = 18
 horizontal_alignment = 2
 autowrap_mode = 3
+
+[node name="HUD_TrickFeed" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/TopRightVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+script = ExtResource("99_tfeed")
+bold_font = ExtResource("99_fblk")
 
 [node name="TargetCompass" type="Control" parent="UI/AspectContainer/MarginContainer" node_paths=PackedStringArray("minimap")]
 unique_name_in_owner = true
