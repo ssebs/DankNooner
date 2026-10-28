@@ -11,6 +11,14 @@
 
 
 - [ ] Wheelie scoring doesn't depend on the angle, it should. (with SFX depending on angle, esp for balance point)
+- [ ] Create model combo for Dilly
+  - [ ] e-bike
+  - [ ] guy riding a bicycle with gloves & bicycle helmet
+  - [ ] use adventurer from Ultimate Modular Men Pack-glb
+    - [ ] add bicycle helmet + gloves on the src model
+  - [ ] (char mods? add a marker for top of head per character, then scale/offsets for each skin for the generic "hat", each hat should work on a base char size for it to fit on all)
+    - [ ] maybe place for: top of head, front of head, back
+- [ ] use shrunken car as a joke motorcycle
 
 ### NEXT
 

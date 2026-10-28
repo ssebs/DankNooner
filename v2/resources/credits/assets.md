@@ -8,6 +8,18 @@
 - ["Sports Bike"](https://skfb.ly/oHORO) by appsnation is licensed under [Creative Commons Attribution](http://creativecommons.org/licenses/by/4.0/).
 - Astronaut by Poly by Google [CC-BY](https://creativecommons.org/licenses/by/3.0/) via [Poly Pizza](https://poly.pizza/m/dLHpzNdygsg)
 - Lighthouse by Poly by Google [CC-BY](https://creativecommons.org/licenses/by/3.0/) via [Poly Pizza](https://poly.pizza/m/7H8is9jrGeB)
+- Bike by Poly by Google [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/edNZoeH3lVP)
+- Football helmet by Poly by Google [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/dCmNk08B6gs)
+- Hard hat by Poly by Google [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/9AMKar2NlkX)
+- Sheriff Hat by Poly by Google [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/ayNYjI4jcW4)
+- Headphones by J-Toastie [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/EwlPidEswV)
+- Top hat by Poly by Google [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/1PP65IsuNwv)
+- Hiking Backpack by Voxel_dev (https://poly.pizza/m/pVuHdEBRUs)
+- Open Backpack by Emmett “TawpShelf” Baber [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/26m92LMKK4e)
+- Backpack by J-Toastie [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/N2wKlicUau)
+- Suitcase by J-Toastie [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/041xs8FnZZ)
+
+
 - Mixamo
 - [Animated Woman](https://poly.pizza/m/qJ2gsTUBHL) by Quaternius
 - [Low poly and mid poly sport motorcycle](https://www.cgtrader.com/free-3d-models/sports/game/low-poly-and-mid-poly-sport-motorcycle-3d-model-game-ready-asset)
@@ -45,6 +57,9 @@
   - [Ultimate Modular Men Pack by Quaternius via Poly Pizza](https://poly.pizza/bundle/Ultimate-Modular-Men-Pack-ZiH8muWqwQ)
   - [Animated Animal Pack by Quaternius via Poly Pizza](https://poly.pizza/bundle/Animated-Animal-Pack-ILAPXeUYiS)
   - [Shotgun Sawed Off](https://poly.pizza/m/29FXKu7G91) by Quaternius
+  - Backpack by Quaternius (https://poly.pizza/m/vF7TuXCPDH)
+  - Bottles by Quaternius (https://poly.pizza/m/UpU7H3QbAR)
+  - Dumpster by Quaternius (https://poly.pizza/m/PKsbolkZSr)
 - J-Toastie
   - [City Pack by J-Toastie (CC-BY) via Poly Pizza](https://poly.pizza/bundle/City-Pack-kJqRAIGsw0)
 
