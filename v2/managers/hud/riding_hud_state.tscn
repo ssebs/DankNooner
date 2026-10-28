@@ -5,7 +5,6 @@
 [ext_resource type="Theme" path="res://resources/themes/hud_neon.tres" id="2_hudth"]
 [ext_resource type="Shader" path="res://resources/shaders/hud_scrim.gdshader" id="3_scrim"]
 [ext_resource type="PackedScene" uid="uid://cmnmap7blip01" path="res://player/controllers/minimap/minimap.tscn" id="4_ltqsj"]
-[ext_resource type="PackedScene" path="res://player/hud_elements/combo_counter.tscn" id="6_x84np"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/boost_gauge.tscn" id="7_3xx38"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/input_prompt.tscn" id="8_inpmt"]
 [ext_resource type="Script" uid="uid://bbuk3w2ml0an0" path="res://player/hud_elements/race_leaderboard.gd" id="99_rldbd"]
@@ -367,16 +366,16 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 0
 
 [node name="HUD_HeldItemThumbnail" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster/HUD_HeldItem" unique_id=1897137762 instance=ExtResource("99_thumb")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(128, 128)
+custom_minimum_size = Vector2(192, 192)
 layout_mode = 2
 size_flags_horizontal = 4
 type = 3
-camera_position = Vector3(2.5, 1.5, 2.5)
-camera_look_at = Vector3(0, 0, 0)
+camera_position = Vector3(5.25, 3.1, 5.25)
+camera_look_at = Vector3(0, 0.4, 0)
 camera_fov = 40.0
 
 [node name="HUD_HeldItemName" type="Label" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster/HUD_HeldItem" unique_id=1385063352]
@@ -384,11 +383,6 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "ITEM_SHOTGUN"
 horizontal_alignment = 1
-
-[node name="ComboCounter" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster" unique_id=1303206430 instance=ExtResource("6_x84np")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
 
 [node name="SpeedRow" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster"]
 layout_mode = 2

@@ -79,7 +79,7 @@ Every group hangs off a corner or the screen's horizontal middle line; right-sid
 | Mid-left, above middle line | Pinned tricks, under a dim "Pinned" label. **Only exists if something is pinned.** |
 | Mid-left, below middle line | Trick feed, newest on top, growing down toward the map, capped short of it. 48 gap to pinned. |
 | Bottom-left | Minimap, then a hint column: `T Tricks` above `M Map` / `R Respawn` / `Use Item` |
-| Bottom-right | Centred stack: compass arrow + distance → combo (×N) → speed + unit + gear → RPM bar; boost column + boost key to its right |
+| Bottom-right | Centred stack: compass arrow + distance → speed + unit + gear → RPM bar; boost column + boost key to its right |
 | Bottom-centre | Warnings (Wrong way!, missed checkpoint), red, shaking |
 | Centre | Hero moments only: trick callouts + score pops, the wheelie meter, countdown, respawn bar |
 

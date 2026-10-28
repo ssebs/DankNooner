@@ -48,7 +48,6 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _event_warning: Label = %HUD_EventWarning
 @onready var _event_tricks: Label = %HUD_EventTricks
 @onready var _boost_gauge: BoostGauge = %BoostGauge
-@onready var _combo_counter: ComboCounter = %ComboCounter
 @onready var _respawn_bar: ProgressBar = %HUD_RespawnProgress
 @onready var _respawn_label: Label = %HUD_RespawnLabel
 @onready var _trick_rows: VBoxContainer = %HUD_TrickRows
@@ -204,11 +203,6 @@ func Physics_Update(delta: float):
 		if not boost_controller.is_boosting and boost_controller.boost_amount < 1.0:
 			_boost_gauge.flash_rejected()
 	_prev_boost_held = boost_held
-	# A crash voids the run (TrickManager), but combo_multiplier / combo_time stay frozen
-	# until the respawn clears them — force x1 + inactive so the loss reads immediately.
-	var comboing: bool = trick_controller.combo_time > 0.0 and not player_entity.is_crashed
-	var combo: int = trick_controller.combo_multiplier if comboing else 1
-	_combo_counter.set_combo(combo, comboing)
 	_trick_popups.track(player_entity, trick_manager.points_per_second, _challenge_tricks, delta)
 
 	# Live wheelie-attempt stopwatch, only while a race leaderboard (and its challenges) is up.
@@ -711,7 +705,6 @@ func hide_ui() -> void:
 func do_reset():
 	_gear_label.text = tr("HUD_GEAR").format({"value": 1})
 	_game_msg.visible = false
-	_combo_counter.do_reset()
 	_prev_boost_held = false
 	_wheelie_attempt_t = 0.0
 	_trick_popups.hide_pitch_icon()

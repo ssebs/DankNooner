@@ -21,8 +21,8 @@ const RING_GAP := 0.25
 @onready var ring_mesh: MeshInstance3D = %StartRing/MeshInstance3D
 
 var mesh_root: Node3D
-## World look: black-filled item (NeonEdges draws its glowing border) resting just above the ring, so
-## it reads by shape alone. Thumbnail3D turns it off for the plain item, centered.
+## World look: black-filled item (NeonEdges draws its glowing border), so it reads by shape alone.
+## Thumbnail3D turns it off for the plain item.
 var in_world := true
 
 
@@ -60,8 +60,7 @@ func _spawn_mesh():
 	var bounds := _mesh_bounds()
 	mesh_root.position = pickup_item_definition.mesh_position_offset - bounds.get_center()
 	# Rest the lowest point RING_GAP above the ring (at -radius), however big the item is scaled.
-	if in_world:
-		mesh_root.position.y += bounds.size.y / 2.0 - pickup_item_definition.radius + RING_GAP
+	mesh_root.position.y += bounds.size.y / 2.0 - pickup_item_definition.radius + RING_GAP
 
 
 ## The spawned mesh's combined AABB, in MeshNode space. Merges every VisualInstance3D in the

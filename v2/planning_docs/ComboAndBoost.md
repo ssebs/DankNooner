@@ -23,8 +23,8 @@ Earn, spend and bank are three separate owners:
 | Combo timer, multiplier, boost fill | `TrickController._accrue_combo()` | Rollback tick, every peer |
 | Boost spend / drain | `BoostController` | Rollback tick, every peer |
 | Score banking | `TrickManager._track_combo()` | Server `_process()` |
-| Gauge + counter UI | `RidingHUDState.Physics_Update()` → `BoostGauge` / `ComboCounter` | Local client |
-| Live "+N", bank pop, crash "OOF!", trick callouts (`TrickPopups.TRICK_CALLOUTS` / `HOLD_CALLOUTS`) | `TrickPopups` — bank pop RPC'd from `TrickManager` | Local client |
+| Gauge + counter UI | `RidingHUDState.Physics_Update()` → `BoostGauge` | Local client |
+| Live "+N" + its xN multiplier, bank pop, crash "OOF!", trick callouts (`TrickPopups.TRICK_CALLOUTS` / `HOLD_CALLOUTS`) | `TrickPopups` — bank pop RPC'd from `TrickManager` | Local client |
 | Trick feed (every rider's banked combo with its trick names, every crash + the combo it voided) | `TrickManager._push_feed()` → `RidingHUDState.push_trickfeed` → `TrickFeed` | Server → all |
 | Free-roam 1-min points round + leaderboard | `FreeRoamGameMode` (sums `combo_banked`) → `RaceLeaderboard` | Server → all |
 | Camera FX | `CameraController._update_juice_fx()` | Local client |
@@ -150,11 +150,11 @@ Both live bottom-left in a `BoostCluster` VBox (counter above gauge). Consts in 
 
 Cell tint **snaps** during a blink instead of easing — at a short blink period the normal smoothing averages the on/off frames into a muddy constant.
 
-**`combo_counter.gd`** — gold (`COLOR`, reward) at every tier, fading in and out with the combo
-(`FADE_SPEED`). A step up plays `HUDFlash.punch`, the HUD's "a tier changed" verb; it never
+**Combo multiplier** — the gold (reward) `xN` right of `TrickPopups`' live "+N", from x2 up. A
+step up plays `HUDFlash.punch`, the HUD's "a tier changed" verb; it never
 shakes, since shake means danger.
 
-Visibility keys off `combo_time > 0`, **not** the multiplier — an earlier version gated on `multiplier > 1` and so showed nothing until the first multiplier step, which read as broken.
+x1 stays hidden: the live "+N" (keyed off `combo_time > 0`) already shows the combo is running.
 
 ## Input
 

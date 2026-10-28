@@ -106,7 +106,7 @@ func _spawn_character() -> void:
 		char_node.owner = sub_viewport
 
 
-## Reuses PickupItem so the item is scaled/centered exactly as in the world, minus the ring.
+## Reuses PickupItem so the item, ring and spin match the world.
 func _spawn_pickup() -> void:
 	if not (skin_definition is PickupItemDefinition):
 		push_warning("Thumbnail3D: type=PICKUP but skin_definition is not a PickupItemDefinition")
@@ -115,6 +115,5 @@ func _spawn_pickup() -> void:
 	pickup.pickup_item_definition = skin_definition
 	pickup.in_world = false
 	spawn_parent.add_child(pickup)
-	pickup.ring.hide()
 	if Engine.is_editor_hint():
 		pickup.owner = sub_viewport

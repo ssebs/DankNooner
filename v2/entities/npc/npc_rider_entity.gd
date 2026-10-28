@@ -218,7 +218,7 @@ func _ready():
 ## move_and_slide must never see a smoothed pose or the simulation drifts.
 ## Traffic turns this off: its follower, not the node, is its authoritative position.
 func _physics_process(_delta: float) -> void:
-	if Engine.is_editor_hint() or !multiplayer.is_server() or !_has_sync_pose or multiplayer.multiplayer_peer == null:
+	if Engine.is_editor_hint() or multiplayer.multiplayer_peer == null or !multiplayer.is_server() or !_has_sync_pose:
 		return
 	_phys_prev = _sync_pose()
 	global_transform = _phys_prev

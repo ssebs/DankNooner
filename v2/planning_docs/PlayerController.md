@@ -240,6 +240,6 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   screen tumbles differently
 - **Riding HUD** — no longer a player controller. `hud_controller.gd` was replaced by
   `RidingHUDState` (`managers/hud/riding_hud_state.gd`) under the global `HUDManager`. It polls the
-  same controllers off `hud_manager.local_player` and feeds `BoostGauge` / `ComboCounter`
+  same controllers off `hud_manager.local_player` and feeds `BoostGauge` / `TrickPopups`
   (`player/hud_elements/`), with all display strings on `tr()` keys. See
   [Architecture — HUD Manager](./Architecture.md#hud-manager).

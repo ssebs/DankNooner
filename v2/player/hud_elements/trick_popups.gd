@@ -2,7 +2,8 @@
 ## Borderlands-style trick feedback over the riding HUD — all local and display-only:
 ##  - below center, under the rider: live "+N" for the combo in progress, popped when the server
 ##    banks it, or turned into a red "OOF!" when a crash voids it. BONUS_COLOR while holding a race
-##    challenge's hint trick (suggested tricks score 2x), and on a pop that included one
+##    challenge's hint trick (suggested tricks score 2x), and on a pop that included one. The
+##    combo's gold xN (x2 up) sits to its right, punched on every step up
 ##  - under the score: the bike icon, tilted to the bike's pitch vs its balance point while
 ##    wheelieing / stoppieing / airborne, plus the race wheelie stopwatch
 ##  - up and right of center: a callout for every trick started (TRICK_CALLOUTS, else the trick's
@@ -40,6 +41,8 @@ const CALLOUT_COLOR := UtilsConstants.UI_GOLD
 const SCORE_COLOR := Color.WHITE
 ## The live score and its pop while a suggested trick doubled it.
 const BONUS_COLOR := UtilsConstants.UI_GOLD
+const MULTIPLIER_COLOR := UtilsConstants.UI_GOLD
+const MULTIPLIER_GAP_PX: float = 12.0
 
 ## Pop origins, as offsets from this control's center.
 const SCORE_ORIGIN := Vector2(30.0, 96.0)
@@ -79,6 +82,8 @@ const CALLOUT_STACK_SPEED: float = 12.0
 var audio_manager: AudioManager = null
 
 var _live: Label = null
+## The combo's xN, right of the live score.
+var _multiplier: Label = null
 var _wheelie_row: HBoxContainer = null
 var _wheelie_icon: TextureRect = null
 var _wheelie_label: Label = null
@@ -112,6 +117,9 @@ func _ready():
 	_live = _make_label(Color.WHITE)
 	_live.visible = false
 	add_child(_live)
+	_multiplier = _make_label(MULTIPLIER_COLOR)
+	_multiplier.visible = false
+	add_child(_multiplier)
 
 	_wheelie_row = HBoxContainer.new()
 	_wheelie_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -144,15 +152,20 @@ func track(
 ) -> void:
 	var tc := player.trick_controller
 	_live.visible = tc.combo_time > 0.0 and not player.is_crashed
+	_multiplier.visible = _live.visible and tc.combo_multiplier > 1
 	if _live.visible and tc.combo_multiplier > _last_multiplier:
 		audio_manager.play_tada()
+		HUDFlash.punch(_multiplier)
 	_last_multiplier = tc.combo_multiplier if _live.visible else 1
 	if _live.visible:
 		_live.text = "+%d" % int(tc.combo_score * points_per_second * tc.combo_multiplier)
+		_multiplier.text = tr("HUD_COMBO").format({"value": tc.combo_multiplier})
 		var bonus := tc.current_trick in bonus_tricks
 		_live.modulate = BONUS_COLOR if bonus else SCORE_COLOR
 	# Placed even while hidden — the icon row anchors under it.
 	_center_on(_live, size / 2.0 + SCORE_ORIGIN)
+	_multiplier.reset_size()
+	_multiplier.position = _live.position + Vector2(_live.size.x + MULTIPLIER_GAP_PX, 0.0)
 
 	_track_trick_start(tc)
 	_track_hold_callouts(player, delta)

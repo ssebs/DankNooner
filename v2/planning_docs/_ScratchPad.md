@@ -10,10 +10,11 @@
   - [ ] ____STEAM_LOBBIES_WIP.md
 
 
+- [ ] Wheelie scoring doesn't depend on the angle, it should. (with SFX depending on angle, esp for balance point)
 
+### NEXT
 
 - [ ] more car models / cleaner w/ neon fx & working lights/blinder
-### NEXT
 - [ ] 3d model & rig my daily riding outfit
 - [ ] track ragdoll vs bike distance on a crash (how far the rider flew from the bike) — show it in the trick feed's bail line, and use it for a new gamemode (furthest launch wins?)
 

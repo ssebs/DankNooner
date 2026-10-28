@@ -1,42 +1,104 @@
 [gd_scene format=3 uid="uid://c26p7f4114vxw"]
 
 [ext_resource type="Script" uid="uid://be51aqt01qvag" path="res://levels/components/pickups/pickup_item.gd" id="1_eppld"]
-[ext_resource type="Resource" uid="uid://cqeidudggyae1" path="res://levels/components/pickups/gas_can_pickup_definition.tres" id="2_eppld"]
-[ext_resource type="PackedScene" uid="uid://cu4qunatj2j2r" path="res://levels/assets/props/gas_can.glb" id="3_eppld"]
+[ext_resource type="Resource" uid="uid://cw70e0c7wprwk" path="res://levels/components/pickups/ramp_pickup_definition.tres" id="2_ehjlu"]
+[ext_resource type="PackedScene" uid="uid://lrddpwsrpo3w" path="res://levels/components/pickups/deployable_ramp.tscn" id="3_tu51h"]
 [ext_resource type="PackedScene" path="res://managers/gamemodes/gamemodeobjects/start_ring.tscn" id="4_ring"]
-[ext_resource type="Material" path="res://levels/assets/props/neon_gold.tres" id="5_gold"]
+[ext_resource type="Material" uid="uid://cmka0blrg4r11" path="res://levels/assets/props/neon_gold.tres" id="5_gold"]
 [ext_resource type="Script" uid="uid://bkho4nxye7goy" path="res://levels/components/neon_edges.gd" id="6_edges"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_38q4i"]
-radius = 1.5
+[sub_resource type="SphereShape3D" id="SphereShape3D_58sqh"]
+radius = 1.25
 
-[sub_resource type="TorusMesh" id="TorusMesh_gold"]
+[sub_resource type="TorusMesh" id="TorusMesh_q7hs0"]
 material = ExtResource("5_gold")
-inner_radius = 1.4
-outer_radius = 1.5
+inner_radius = 1.15
+outer_radius = 1.25
 rings = 24
 ring_segments = 6
 
+[sub_resource type="Animation" id="Animation_reset"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshNode:rotation:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MeshNode:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_spin"]
+resource_name = "spin"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshNode:rotation:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.2831855]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MeshNode:position:y")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1, 2, 3, 4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.15, 0.0, 0.15, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_spin"]
+_data = {
+&"RESET": SubResource("Animation_reset"),
+&"spin": SubResource("Animation_spin")
+}
+
 [node name="PickupItem" type="Area3D" unique_id=195507555]
 script = ExtResource("1_eppld")
-pickup_item_definition = ExtResource("2_eppld")
+pickup_item_definition = ExtResource("2_ehjlu")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=552384891]
 unique_name_in_owner = true
-shape = SubResource("SphereShape3D_38q4i")
+shape = SubResource("SphereShape3D_58sqh")
 
 [node name="MeshNode" type="Node3D" parent="." unique_id=180618646]
 unique_name_in_owner = true
 
-[node name="gas_can" type="Node3D" parent="MeshNode" unique_id=2119897232 instance=ExtResource("3_eppld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.6174736e-05, -1.0148959, 0.21233809)
+[node name="DeployableRamp" type="Node3D" parent="MeshNode" unique_id=672895301 instance=ExtResource("3_tu51h")]
+transform = Transform3D(0.14142136, 0, -0.14142136, 0, 0.3, 0, 0.14142136, 0, 0.14142136, -0.28786796, -1, 0.30502522)
 
 [node name="StartRing" parent="." unique_id=882169721 instance=ExtResource("4_ring")]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.25, 0)
 
 [node name="MeshInstance3D" parent="StartRing" index="0"]
-mesh = SubResource("TorusMesh_gold")
+mesh = SubResource("TorusMesh_q7hs0")
 
 [node name="NeonEdges" type="Node" parent="." unique_id=1730582214 node_paths=PackedStringArray("targets")]
 script = ExtResource("6_edges")
@@ -45,5 +107,9 @@ color = Color(1, 0.7529412, 0.14901961, 1)
 energy = 3.0
 width_px = 3.5
 normal_threshold = 2.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries/ = SubResource("AnimationLibrary_spin")
+autoplay = &"spin"
 
 [editable path="StartRing"]
