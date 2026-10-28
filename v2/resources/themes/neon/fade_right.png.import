@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xfgssqgfx1di"
-path="res://.godot/imported/outline.png-92f6af41832f17e6f593f85d17bbdd90.ctex"
+uid="uid://d2bwh8rvajoad"
+path="res://.godot/imported/fade_right.png-6b1479d9c157d6a5902996266c2b4721.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/themes/neon/outline.png"
-dest_files=["res://.godot/imported/outline.png-92f6af41832f17e6f593f85d17bbdd90.ctex"]
+source_file="res://resources/themes/neon/fade_right.png"
+dest_files=["res://.godot/imported/fade_right.png-6b1479d9c157d6a5902996266c2b4721.ctex"]
 
 [params]
 

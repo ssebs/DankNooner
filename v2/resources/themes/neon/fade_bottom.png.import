@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://2dcw865yfuni"
-path="res://.godot/imported/tab_sel.png-1c3a68764cc0922c01d9031b6072d793.ctex"
+uid="uid://uj1mf65mxl8"
+path="res://.godot/imported/fade_bottom.png-8d8697a41704c6eeafc1a5f63e13d68f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/themes/neon/tab_sel.png"
-dest_files=["res://.godot/imported/tab_sel.png-1c3a68764cc0922c01d9031b6072d793.ctex"]
+source_file="res://resources/themes/neon/fade_bottom.png"
+dest_files=["res://.godot/imported/fade_bottom.png-8d8697a41704c6eeafc1a5f63e13d68f.ctex"]
 
 [params]
 

@@ -47,13 +47,14 @@ GLASS = PALETTE["UI_GLASS"]
 SKY = PALETTE["UI_SKY"]
 WHITE = (1.0, 1.0, 1.0)
 
-PANEL_RADII = (16, 4, 16, 4)  # tl, tr, br, bl — the house slanted corners
-ROW_RADII = (10, 3, 10, 3)
-CHIP_RADII = (12, 4, 12, 4)
-TAB_RADII = (12, 4, 0, 0)
-BACKDROP_RADII = (24, 6, 24, 6)
+PANEL_RADII = (16, 16, 16, 4)  # tl, tr, br, bl — every corner rounded but the bottom left
+ROW_RADII = (10, 10, 10, 3)
+CHIP_RADII = (12, 12, 12, 4)
+BACKDROP_RADII = (24, 24, 24, 6)
 CLEAR = (0, 0, 0, 0)
 CENTRE = 8  # px; the stretched middle of each 9-patch
+FADE = 96  # px; how far a faded side ramps to transparent
+HEAVY = 1  # px; extra border on the side facing away from a fade
 
 
 @dataclass
@@ -65,9 +66,14 @@ class Box:
     border_color: tuple = CLEAR
     glow_color: tuple = CLEAR
     glow: int = 0
+    fade: str = ""  # a SIDES entry: that side has no edge and ramps to transparent
+    fade_px: int = FADE
 
     def margin(self) -> int:
         return self.glow + max(self.radii) + self.border + 2
+
+    def side_margin(self, side: str) -> int:
+        return self.fade_px if side == self.fade else self.margin()
 
 
 @dataclass
@@ -100,7 +106,9 @@ def _boxes(k: Look) -> dict:
         )
 
     b = k.border
-    rest = lit(k.edge, 0.5 * k.rest_glow, 14)
+    # Edges at rest are present but unlit, so only what you act on is bright.
+    dim = _mix(k.bot, k.edge, 0.55)
+    rest = lit(k.edge, 0.5 * k.rest_glow, 14, dim)
     panel = fill(k.top, k.bot, k.alpha)
     button = fill(_mix(k.top, k.hot, 0.08), k.bot, 1.0)
     hover = {**fill(_mix(k.top, k.hot, 0.3), _mix(k.bot, k.hot, 0.1), 1.0), **lit(k.hot, 0.75, 14, k.hot_border)}
@@ -110,28 +118,28 @@ def _boxes(k: Look) -> dict:
     dark = fill(SKY, SKY, 0.95)
     return {
         "panel": Box(border=b, **panel, **rest),
-        "backdrop": Box(BACKDROP_RADII, b, **fill(k.top, k.bot, k.alpha - 0.05), **lit(k.edge, 0.3 * k.rest_glow, 18)),
-        "outline": Box(border=b, **rest),
-        "btn_normal": Box(border=b, **button, **lit(k.edge, 0.3 * k.rest_glow, 10)),
+        "backdrop": Box(BACKDROP_RADII, b, **fill(k.top, k.bot, k.alpha - 0.05), **lit(k.edge, 0.3 * k.rest_glow, 18, dim)),
+        "btn_normal": Box(border=b, **button, **lit(k.edge, 0.3 * k.rest_glow, 10, dim)),
         "btn_hover": Box(border=b, **hover),
         "btn_pressed": Box(border=b, **pressed),
         "btn_focus": Box(border=b + 1, **focus),
         "btn_disabled": Box(border=b, **disabled),
         "btn_primary": Box(border=b, **fill(_mix(k.top, k.hot, 0.6), _mix(k.bot, k.hot, 0.25), 1.0), **lit(k.hot, 0.7, 16, k.hot_border)),
-        "input": Box(border=b, **dark, **lit(k.edge, 0.2 * k.rest_glow, 8)),
+        # BoostCell is 20px across either way, its fill 12px: margins must fit inside those.
+        "boost_track": Box((6, 6, 6, 2), 2, **fill(GLASS, GLASS, 0.85), **lit(k.edge, 0.45, 8)),
+        # White, so BoostGauge can tint it through modulate_color.
+        "boost_fill": Box((4, 4, 4, 1), 0, **fill(WHITE, WHITE, 1.0)),
+        "input": Box(border=b, **dark, **lit(k.edge, 0.2 * k.rest_glow, 8, dim)),
         "input_focus": Box(border=b, **dark, **lit(k.edge, 0.7, 12)),
-        "chip": Box(CHIP_RADII, b, **fill(k.top, k.bot, 0.95), **lit(k.edge, 0.35 * k.rest_glow, 8)),
-        "row_panel": Box(border=b, **fill(k.top, k.bot, 0.9), **lit(k.edge, 0.2 * k.rest_glow, 8, _mix(k.bot, k.edge, 0.45))),
-        "row_normal": Box(ROW_RADII, b, **button, **lit(k.edge, 0.25 * k.rest_glow, 6)),
+        "chip": Box(CHIP_RADII, b, **fill(k.top, k.bot, 0.95), **lit(k.edge, 0.35 * k.rest_glow, 8, dim)),
+        "row_panel": Box(border=b, **fill(k.top, k.bot, 0.9), **lit(k.edge, 0.2 * k.rest_glow, 8, dim)),
+        "row_normal": Box(ROW_RADII, b, **button, **lit(k.edge, 0.25 * k.rest_glow, 6, dim)),
         "row_hover": Box(ROW_RADII, b, **hover),
         "row_hover_pressed": Box(ROW_RADII, b, **fill(_mix(k.hot, WHITE, 0.35), k.hot, 1.0), **lit(k.hot, 0.8, 10, k.hot_border)),
         "row_pressed": Box(ROW_RADII, b, **pressed),
         "row_focus": Box(ROW_RADII, b, **lit(k.focus, 0.6, 8)),
-        "tab_sel": Box(TAB_RADII, b, **fill(k.top, k.bot, 1.0), **lit(k.edge, 0.5 * k.rest_glow, 10)),
-        "tab_hover": Box(TAB_RADII, b, **fill(k.top, k.bot, 0.85), **lit(k.edge, 0.2, 8, _mix(k.bot, k.edge, 0.5))),
-        "tab_unsel": Box(TAB_RADII, b, **fill(k.bot, k.bot, 0.6)),
-        "tab_profile": Box(TAB_RADII, b, **fill(k.top, k.bot, 1.0), **lit(k.edge, 0.35 * k.rest_glow, 8)),
         "feed": Box(ROW_RADII, b, **fill(k.top, k.bot, 0.7), **lit(k.edge, 0.3 * k.rest_glow, 8, _mix(k.bot, k.edge, 0.7))),
+        **{f"fade_{side}": Box(border=b, **panel, **rest, fade=side) for side in SIDES},
     }
 
 
@@ -187,8 +195,8 @@ PROPS = {
     )},
 }
 
-# DankNooner.tres StyleBox id -> _boxes() name. Ids missing here (empty spacers, the avatar ring)
-# stay as they are.
+# DankNooner.tres StyleBox id -> _boxes() name. Ids missing here (empty spacers, the avatar ring,
+# the underline tabs) stay as they are.
 SWAPS = {
     "StyleBoxFlat_vtut7": "btn_disabled",
     "StyleBoxFlat_bvbyg": "btn_focus",
@@ -200,7 +208,6 @@ SWAPS = {
     "StyleBoxFlat_menupanel": "panel",
     "StyleBoxFlat_6tpw2": "panel",
     "StyleBoxFlat_backdrop": "backdrop",
-    "StyleBoxFlat_outline": "outline",
     "StyleBoxFlat_gbla1": "input",
     "StyleBoxFlat_wtkwa": "input_focus",
     "StyleBoxFlat_iu7fo": "input",
@@ -212,15 +219,17 @@ SWAPS = {
     "StyleBoxFlat_rowbtnhoverpressed": "row_hover_pressed",
     "StyleBoxFlat_rowbtnpressed": "row_pressed",
     "StyleBoxFlat_rowbtnfocus": "row_focus",
-    "StyleBoxFlat_tabsel": "tab_sel",
-    "StyleBoxFlat_tabhover": "tab_hover",
-    "StyleBoxFlat_tabunsel": "tab_unsel",
-    "StyleBoxFlat_profiletab": "tab_profile",
     "StyleBoxFlat_garagerowsel": "btn_hover",
     "StyleBoxFlat_feedpanel": "feed",
+    "StyleBoxFlat_fadeleft": "fade_left",
+    "StyleBoxFlat_fadetop": "fade_top",
+    "StyleBoxFlat_faderight": "fade_right",
+    "StyleBoxFlat_fadebottom": "fade_bottom",
+    "StyleBoxFlat_tabpad": "panel",
+    "StyleBoxFlat_boostfill": "boost_fill",
 }
 # External StyleBox files the base theme references: ext id -> _boxes() name.
-EXT_SWAPS = {"1_bvbyg": "btn_normal"}
+EXT_SWAPS = {"1_bvbyg": "btn_normal", "5_object": "boost_track"}
 
 def _outlined(theme_type: str, size: int) -> dict:
     """The dark outline, and a hard drop of the outlined glyph under it."""
@@ -292,38 +301,56 @@ def _clamp01(v: float) -> float:
 
 
 def render(box: Box) -> tuple:
-    m = box.margin()
-    size = 2 * m + CENTRE
-    hw = hh = size / 2.0 - box.glow
+    w = box.side_margin("left") + CENTRE + box.side_margin("right")
+    h = box.side_margin("top") + CENTRE + box.side_margin("bottom")
+    hw, hh = w / 2.0 - box.glow, h / 2.0 - box.glow
     inner_px = box.border + 6
     pixels = bytearray()
-    for y in range(size):
+    for y in range(h):
         pixels.append(0)  # PNG filter: none
-        t = _clamp01((y + 0.5 - box.glow) / (size - 2 * box.glow))
+        t = _clamp01((y + 0.5 - box.glow) / (h - 2 * box.glow))
         fill = _mix(box.fill_top, box.fill_bot, t)
-        for x in range(size):
-            d = _sdf(x + 0.5 - size / 2.0, y + 0.5 - size / 2.0, hw, hh, box.radii)
+        for x in range(w):
+            sx, sy = x + 0.5 - w / 2.0, y + 0.5 - h / 2.0
+            # The faded half samples the middle, so its borders run straight out under the ramp.
+            if box.fade == "left":
+                sx = max(sx, 0.0)
+            elif box.fade == "right":
+                sx = min(sx, 0.0)
+            elif box.fade == "top":
+                sy = max(sy, 0.0)
+            elif box.fade == "bottom":
+                sy = min(sy, 0.0)
+            d = _sdf(sx, sy, hw, hh, box.radii)
             inside = _clamp01(0.5 - d)
             px = [0.0, 0.0, 0.0, 0.0]
             if box.glow > 0 and d > 0.0:
                 falloff = _clamp01(1.0 - d / box.glow) ** 2
                 _over(px, box.glow_color[:3], box.glow_color[3] * falloff * (1.0 - inside))
             _over(px, fill[:3], fill[3] * inside)
+            # Inner edge of the border; the side facing away from a fade is drawn heavier.
+            d_in = d + box.border
+            if box.fade:
+                away, half = {"left": (sx, hw), "right": (-sx, hw), "top": (sy, hh), "bottom": (-sy, hh)}[box.fade]
+                d_in = max(d_in, away - (half - box.border - HEAVY))
             # Inner glow: the border's light bleeding inward, like a neon tube.
             if d < 0.0:
-                inner = _clamp01(1.0 - (-d - box.border) / inner_px) ** 2
+                inner = _clamp01(1.0 - -d_in / inner_px) ** 2
                 _over(px, box.border_color[:3], box.glow_color[3] * 0.4 * inner * inside)
-            ring = inside * _clamp01(d + box.border + 0.5)
+            ring = inside * _clamp01(d_in + 0.5)
             _over(px, box.border_color[:3], box.border_color[3] * ring)
+            if box.fade:
+                into = {"left": x, "right": w - 1 - x, "top": y, "bottom": h - 1 - y}[box.fade]
+                px[3] *= _clamp01((into + 0.5) / box.fade_px)
             pixels += bytes(round(_clamp01(c) * 255) for c in px)
-    return size, bytes(pixels)
+    return w, h, bytes(pixels)
 
 
-def write_png(path: Path, size: int, raw: bytes) -> None:
+def write_png(path: Path, w: int, h: int, raw: bytes) -> None:
     def chunk(tag: bytes, data: bytes) -> bytes:
         return struct.pack(">I", len(data)) + tag + data + struct.pack(">I", zlib.crc32(tag + data))
 
-    header = struct.pack(">IIBBBBB", size, size, 8, 6, 0, 0, 0)  # 8-bit RGBA
+    header = struct.pack(">IIBBBBB", w, h, 8, 6, 0, 0, 0)  # 8-bit RGBA
     path.write_bytes(
         b"\x89PNG\r\n\x1a\n"
         + chunk(b"IHDR", header)
@@ -387,9 +414,10 @@ def _texture_box(sub_id: str, box: Box, name: str, props: dict) -> str:
         lines.append(f"content_margin_{side} = {float(content)}")
     lines.append(f'texture = ExtResource("neon_{name}")')
     for side in SIDES:
-        lines.append(f"texture_margin_{side} = {float(box.margin())}")
+        lines.append(f"texture_margin_{side} = {float(box.side_margin(side))}")
     for side in SIDES:
-        expand = float(props.get(f"expand_margin_{side}", "0")) + box.glow
+        # No glow past a faded side, so its ramp starts at the box edge.
+        expand = float(props.get(f"expand_margin_{side}", "0")) + (0 if side == box.fade else box.glow)
         lines.append(f"expand_margin_{side} = {expand}")
     return "\n".join(lines) + "\n"
 
@@ -431,7 +459,7 @@ def build_theme(
     text = _set_props(text, props)
     # Its own resource — drop the base theme's uid.
     text = re.sub(r'^\[gd_resource type="Theme" format=3 uid="[^"]+"\]', '[gd_resource type="Theme" format=3]', text)
-    (THEME_DIR / out).write_text(text)
+    (THEME_DIR / out).write_text(text, newline="\n")
     return used
 
 
@@ -444,8 +472,7 @@ def main() -> None:
     used = build_theme("DankNooner.tres", "DankNoonerNeon.tres", SWAPS, EXT_SWAPS, PROPS, boxes)
     used |= build_theme("hud.tres", "hud_neon.tres", {}, {}, HUD_PROPS, boxes)
     for name in sorted(used):
-        size, raw = render(boxes[name])
-        write_png(TEX_DIR / f"{name}.png", size, raw)
+        write_png(TEX_DIR / f"{name}.png", *render(boxes[name]))
     print(f"wrote DankNoonerNeon.tres + hud_neon.tres + {len(used)} textures in {TEX_DIR.relative_to(ROOT)}")
 
 

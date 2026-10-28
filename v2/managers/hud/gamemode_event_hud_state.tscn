@@ -29,61 +29,59 @@ ratio = 1.778
 [node name="MarginContainer" type="MarginContainer" parent="UI/AspectContainer" unique_id=241509155]
 layout_mode = 2
 theme = ExtResource("1_itqmu")
-theme_override_constants/margin_left = 400
-theme_override_constants/margin_top = 256
-theme_override_constants/margin_right = 400
-theme_override_constants/margin_bottom = 256
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 48
 
 [node name="PanelContainer" type="PanelContainer" parent="UI/AspectContainer/MarginContainer" unique_id=600253178]
+custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_type_variation = &"HUDPanel"
 
 [node name="MarginContainer2" type="MarginContainer" parent="UI/AspectContainer/MarginContainer/PanelContainer" unique_id=1556726122]
 layout_mode = 2
 theme = ExtResource("1_itqmu")
-theme_override_constants/margin_left = 64
-theme_override_constants/margin_top = 64
-theme_override_constants/margin_right = 64
-theme_override_constants/margin_bottom = 64
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/PanelContainer/MarginContainer2" unique_id=1799834661]
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
+theme_override_constants/separation = 16
 
 [node name="GamemodeName" type="Label" parent="UI/AspectContainer/MarginContainer/PanelContainer/MarginContainer2/VBoxContainer2" unique_id=1622990918]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
 theme_type_variation = &"Heading1Label"
 
 [node name="GamemodeDesc" type="Label" parent="UI/AspectContainer/MarginContainer/PanelContainer/MarginContainer2/VBoxContainer2" unique_id=564594915]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
 theme_type_variation = &"Heading2Label"
+autowrap_mode = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/PanelContainer/MarginContainer2" unique_id=1174846257]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/PanelContainer/MarginContainer2/VBoxContainer2" unique_id=1174846257]
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 8
 theme_override_constants/separation = 32
 
-[node name="SubmitBtn" type="Button" parent="UI/AspectContainer/MarginContainer/PanelContainer/MarginContainer2/HBoxContainer" unique_id=817092111]
+[node name="SubmitBtn" type="Button" parent="UI/AspectContainer/MarginContainer/PanelContainer/MarginContainer2/VBoxContainer2/HBoxContainer" unique_id=817092111]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "START_LABEL"
 
-[node name="EventPicker" type="OptionButton" parent="UI/AspectContainer/MarginContainer/PanelContainer/MarginContainer2/HBoxContainer"]
+[node name="EventPicker" type="OptionButton" parent="UI/AspectContainer/MarginContainer/PanelContainer/MarginContainer2/VBoxContainer2/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 
-[node name="CloseBtn" type="Button" parent="UI/AspectContainer/MarginContainer/PanelContainer/MarginContainer2/HBoxContainer" unique_id=557344837]
+[node name="CloseBtn" type="Button" parent="UI/AspectContainer/MarginContainer/PanelContainer/MarginContainer2/VBoxContainer2/HBoxContainer" unique_id=557344837]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "CLOSE_LABEL"
+flat = true

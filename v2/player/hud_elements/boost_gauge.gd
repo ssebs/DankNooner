@@ -21,6 +21,8 @@ class_name BoostGauge extends Control
 @export var vertical: bool = false
 
 const VERTICAL_CELL_SIZE := Vector2(20, 52)
+## Top cell's opacity when stacked; the cells below step back up to opaque, fading the meter as one.
+const VERTICAL_TOP_ALPHA: float = 0.5
 
 ## Unfilled remainder of a cell.
 const COLOR_EMPTY: Color = UtilsConstants.UI_TRACK
@@ -47,7 +49,7 @@ const BLINK_PERIOD: float = 0.15
 @onready var _cells: Array[Node] = %Cells.get_children()
 
 ## Each cell's own copy of the BoostCell fill, tinted per frame.
-var _fills: Array[StyleBoxFlat] = []
+var _fills: Array[StyleBoxTexture] = []
 var _is_spending: bool = false
 var _pulse_t: float = 0.0
 var _blink_t: float = 0.0
@@ -58,15 +60,18 @@ func _ready():
 		_cells[i].draw.connect(_draw_spill.bind(i))
 	if vertical:
 		%Cells.vertical = true
-		for cell: ProgressBar in _cells:
+		for i in _cells.size():
+			var cell := _cells[i] as ProgressBar
 			cell.fill_mode = ProgressBar.FILL_BOTTOM_TO_TOP
 			cell.custom_minimum_size = VERTICAL_CELL_SIZE
+			cell.modulate.a = lerpf(1.0, VERTICAL_TOP_ALPHA, float(i) / (_cells.size() - 1))
 			# Cell 0 ends up at the bottom, so the meter fills upward.
 			%Cells.move_child(cell, 0)
 	if Engine.is_editor_hint():
 		return
 	for cell: ProgressBar in _cells:
-		var fill := cell.get_theme_stylebox("fill").duplicate() as StyleBoxFlat
+		var fill := cell.get_theme_stylebox("fill").duplicate() as StyleBoxTexture
+		fill.modulate_color = COLOR_EMPTY
 		cell.add_theme_stylebox_override("fill", fill)
 		_fills.append(fill)
 
@@ -102,7 +107,7 @@ func _process(delta: float):
 		cell.value = lerpf(cell.value, cell_pct * 100.0, weight)
 		var target := COLOR_EMPTY.lerp(tint, clampf(cell_pct * 4.0, 0.0, 1.0))
 		# Snap during a blink instead of easing, or the flash smears into mush.
-		_fills[i].bg_color = target if _blink_t > 0.0 else _fills[i].bg_color.lerp(target, weight)
+		_fills[i].modulate_color = target if _blink_t > 0.0 else _fills[i].modulate_color.lerp(target, weight)
 		cell.queue_redraw()
 
 

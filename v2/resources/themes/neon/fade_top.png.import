@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dkeg4qhld4bqk"
-path="res://.godot/imported/tab_profile.png-4b7b03ce7b906491b2c7c795eec4ccb4.ctex"
+uid="uid://gqmyh6a52j1e"
+path="res://.godot/imported/fade_top.png-7da52b7b35d87b004a379d1057281614.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/themes/neon/tab_profile.png"
-dest_files=["res://.godot/imported/tab_profile.png-4b7b03ce7b906491b2c7c795eec4ccb4.ctex"]
+source_file="res://resources/themes/neon/fade_top.png"
+dest_files=["res://.godot/imported/fade_top.png-7da52b7b35d87b004a379d1057281614.ctex"]
 
 [params]
 

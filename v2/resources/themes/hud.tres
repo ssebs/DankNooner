@@ -9,10 +9,10 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0, 0, 0, 0)
-corner_radius_top_left = 10
-corner_radius_top_right = 3
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 3
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 1
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_respawnfill"]
 bg_color = Color(0.25, 0.69, 1, 1)
@@ -21,10 +21,10 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0, 0, 0, 0)
-corner_radius_top_left = 10
-corner_radius_top_right = 3
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 3
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 1
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_keyheld"]
 content_margin_left = 4.0
@@ -37,10 +37,10 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.255, 0.686, 1, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 3
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 3
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 2
 shadow_color = Color(0.255, 0.686, 1, 0.45)
 shadow_size = 8
 

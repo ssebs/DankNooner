@@ -275,6 +275,8 @@ func _build_loadout_root():
 	var is_active := _tab - 1 == _player_def.active_loadout_index
 	_set_active_btn.text = tr("GARAGE_ACTIVE") if is_active else tr("SET_ACTIVE_LABEL")
 	_set_active_btn.disabled = is_active
+	# Already active reads as a status, not a dead button.
+	_set_active_btn.flat = is_active
 	_delete_btn.disabled = _player_def.loadouts.size() <= 1
 
 

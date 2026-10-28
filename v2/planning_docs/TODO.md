@@ -222,6 +222,8 @@
 ---
 
 ## Done ✅
+- [x] HUD: add Horn hint (with "double tap to drop current item" sub-hint) to action hints; move Use Item hint beside RPM gauge; both item hints only show while holding an item
+
 - [x] pickup items icons are awful, replace with proper imgs
 
 - [x] Fix steam tags

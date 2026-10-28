@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cya03bolvdj1m"
-path="res://.godot/imported/tab_hover.png-c43d373a32b583d8c48dd417c6dc97e7.ctex"
+uid="uid://djwscw5kcevby"
+path="res://.godot/imported/fade_left.png-3be3705c838b0fb5a9b47e11263d5740.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/themes/neon/tab_hover.png"
-dest_files=["res://.godot/imported/tab_hover.png-c43d373a32b583d8c48dd417c6dc97e7.ctex"]
+source_file="res://resources/themes/neon/fade_left.png"
+dest_files=["res://.godot/imported/fade_left.png-3be3705c838b0fb5a9b47e11263d5740.ctex"]
 
 [params]
 

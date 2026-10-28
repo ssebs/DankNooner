@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bor3k8mbtkx7d"
-path="res://.godot/imported/tab_unsel.png-159c88366f3f0cc0a443ecb92bf11e7a.ctex"
+uid="uid://ojeew371p2ue"
+path="res://.godot/imported/boost_track.png-efab2e10527a579753797d5574c8eb7e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/themes/neon/tab_unsel.png"
-dest_files=["res://.godot/imported/tab_unsel.png-159c88366f3f0cc0a443ecb92bf11e7a.ctex"]
+source_file="res://resources/themes/neon/boost_track.png"
+dest_files=["res://.godot/imported/boost_track.png-efab2e10527a579753797d5574c8eb7e.ctex"]
 
 [params]
 
