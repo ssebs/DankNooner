@@ -57,11 +57,14 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _trick_prompt_rows: HBoxContainer = %HUD_TrickPromptRows
 @onready var _action_hints: VBoxContainer = %HUD_ActionHints
 @onready var _prompts: Array[InputPrompt] = [
-	%HUD_TrickPromptBtn, %HUD_BoostPrompt, %HUD_MapPrompt, %HUD_RespawnPrompt, %HUD_ItemPrompt
+	%HUD_TrickPromptBtn, %HUD_BoostPrompt, %HUD_MapPrompt, %HUD_RespawnPrompt, %HUD_ItemPrompt,
+	%HUD_HornPrompt
 ]
 @onready var _held_item_panel: HBoxContainer = %HUD_HeldItem
 @onready var _held_item_thumbnail: Thumbnail3D = %HUD_HeldItemThumbnail
 @onready var _held_item_name: Label = %HUD_HeldItemName
+@onready var _item_hint: HBoxContainer = %HUD_ItemHint
+@onready var _horn_drop_hint: Label = %HUD_HornDropHint
 
 
 var player_entity: PlayerEntity
@@ -108,6 +111,8 @@ func _ready() -> void:
 	# Event text starts hidden in code, not in the scene — the editor flips label visibility.
 	clear_event_text()
 	_held_item_panel.hide()
+	_item_hint.hide()
+	_horn_drop_hint.hide()
 
 func Enter(_state_context: StateContext):
 	player_entity = hud_manager.local_player
@@ -508,6 +513,8 @@ func push_held_item(peer_id: int, definition: PickupItemDefinition) -> void:
 @rpc("call_local", "reliable")
 func _rpc_set_held_item(definition_path: String):
 	_held_item_panel.visible = definition_path != ""
+	_item_hint.visible = _held_item_panel.visible
+	_horn_drop_hint.visible = _held_item_panel.visible
 	# Slot emptied — nothing to show.
 	if definition_path == "":
 		return
