@@ -18,3 +18,9 @@ func refresh(gamepad: bool) -> void:
 	_icon.visible = _icon.texture != null
 	_key.text = ControlBindings.event_text(event)
 	_key.visible = _key.text != ""
+
+
+## The key fills blue while its action is held.
+func set_held(held: bool) -> void:
+	_key.theme_type_variation = &"HeldKeyLabel" if held else &"GestureChipLabel"
+	_icon.modulate = UtilsConstants.UI_BLUE if held else Color.WHITE

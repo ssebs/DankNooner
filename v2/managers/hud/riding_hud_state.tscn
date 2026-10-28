@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://ce4n2xjrhv4j8" path="res://managers/hud/riding_hud_state.gd" id="1_8neiw"]
 [ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="1_whasa"]
 [ext_resource type="Theme" path="res://resources/themes/hud_neon.tres" id="2_hudth"]
+[ext_resource type="Shader" path="res://resources/shaders/hud_scrim.gdshader" id="3_scrim"]
 [ext_resource type="PackedScene" uid="uid://cmnmap7blip01" path="res://player/controllers/minimap/minimap.tscn" id="4_ltqsj"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/combo_counter.tscn" id="6_x84np"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/boost_gauge.tscn" id="7_3xx38"]
@@ -13,7 +14,9 @@
 [ext_resource type="PackedScene" uid="uid://b1thmb3dtnail" path="res://utils/components/thumbnail_3d.tscn" id="99_thumb"]
 [ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="99_money"]
 [ext_resource type="Script" path="res://player/hud_elements/trick_feed.gd" id="99_tfeed"]
-[ext_resource type="FontFile" uid="uid://dftvb58jromba" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-Black.ttf" id="99_fblk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_scrim"]
+shader = ExtResource("3_scrim")
 
 [node name="RidingHUDState" type="Node" unique_id=1177239669]
 script = ExtResource("1_8neiw")
@@ -31,6 +34,16 @@ grow_vertical = 2
 mouse_filter = 2
 theme = ExtResource("1_whasa")
 
+[node name="Scrim" type="ColorRect" parent="UI"]
+material = SubResource("ShaderMaterial_scrim")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="AspectContainer" type="AspectRatioContainer" parent="UI" unique_id=877271308]
 layout_mode = 1
 anchors_preset = 15
@@ -45,65 +58,51 @@ ratio = 1.778
 layout_mode = 2
 mouse_filter = 2
 theme = ExtResource("2_hudth")
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 48
 
 [node name="TopLeftVBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=2041029131]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 mouse_filter = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 8
 
 [node name="HUD_FPS" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox" unique_id=1874410297]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"DimLabel"
 theme_override_font_sizes/font_size = 16
 text = "HUD_FPS"
 
-[node name="EventPanel" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/TopLeftVBox" unique_id=1156886571]
+[node name="EventPanel" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/TopLeftVBox" unique_id=1156886571]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 mouse_filter = 2
-theme_type_variation = &"HUDPanel"
+theme_override_constants/separation = 8
 
-[node name="EventVBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 2
-
-[node name="HUD_EventTitle" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel/EventVBox" unique_id=2138217353]
+[node name="HUD_EventTitle" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel" unique_id=2138217353]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+theme_type_variation = &"HUDTitleLabel"
 theme_override_font_sizes/font_size = 28
 
-[node name="HUD_EventStep" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel/EventVBox" unique_id=1247704292]
+[node name="HUD_EventStep" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel" unique_id=1247704292]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
 
-[node name="HUD_EventObjective" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel/EventVBox" unique_id=1605934630]
+[node name="HUD_EventObjective" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel" unique_id=1605934630]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
 autowrap_mode = 3
-
-[node name="HUD_EventWarning" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel/EventVBox" unique_id=1935886846]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(320, 0)
-layout_mode = 2
-theme_type_variation = &"WarningLabel"
-theme_override_font_sizes/font_size = 28
-
-[node name="HUD_GAME_MSG" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox" unique_id=411038987]
-unique_name_in_owner = true
-layout_mode = 2
-text = "HUD_GAME_MSG"
 
 [node name="HUD_EventProgress" type="Label" parent="UI/AspectContainer/MarginContainer" unique_id=1723272740]
 unique_name_in_owner = true
@@ -113,7 +112,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 mouse_filter = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 36
 horizontal_alignment = 1
 autowrap_mode = 3
 
@@ -122,6 +121,7 @@ layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
 mouse_filter = 2
+theme_override_constants/separation = 24
 
 [node name="MoneyXP" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/TopRightVBox"]
 layout_mode = 2
@@ -141,21 +141,14 @@ layout_mode = 2
 theme_type_variation = &"XPLabel"
 theme_override_font_sizes/font_size = 28
 
-[node name="HUD_LeaderboardPanel" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/TopRightVBox"]
+[node name="HUD_Leaderboard" type="Control" parent="UI/AspectContainer/MarginContainer/TopRightVBox" unique_id=1156886562]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 8
 mouse_filter = 2
-theme_type_variation = &"HUDPanel"
-
-[node name="HUD_Leaderboard" type="Control" parent="UI/AspectContainer/MarginContainer/TopRightVBox/HUD_LeaderboardPanel" unique_id=1156886562]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 2
 script = ExtResource("99_rldbd")
-font_size = 24
-top_count = 3
+font_size = 20
 
 [node name="HUD_EventTricks" type="Label" parent="UI/AspectContainer/MarginContainer/TopRightVBox"]
 unique_name_in_owner = true
@@ -163,86 +156,220 @@ visible = false
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 size_flags_horizontal = 8
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 horizontal_alignment = 2
 autowrap_mode = 3
 
-[node name="HUD_TrickFeed" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/TopRightVBox"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 8
-mouse_filter = 2
-script = ExtResource("99_tfeed")
-bold_font = ExtResource("99_fblk")
-
-[node name="TargetCompass" type="Control" parent="UI/AspectContainer/MarginContainer" node_paths=PackedStringArray("minimap")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(56, 56)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 0
-mouse_filter = 2
-script = ExtResource("99_tcmps")
-minimap = NodePath("../BottomLeftVBox/MapRow/Minimap")
-
-[node name="Distance" type="Label" parent="UI/AspectContainer/MarginContainer/TargetCompass"]
-unique_name_in_owner = true
-layout_mode = 0
-mouse_filter = 2
-theme_override_font_sizes/font_size = 20
-horizontal_alignment = 1
-
-[node name="TrickPrompt" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer"]
-unique_name_in_owner = true
+[node name="MidLeftVBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
-size_flags_vertical = 4
+mouse_filter = 2
+theme_override_constants/separation = 48
+
+[node name="PinnedVBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/MidLeftVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/separation = 8
+alignment = 2
+
+[node name="HUD_PinnedLabel" type="Label" parent="UI/AspectContainer/MarginContainer/MidLeftVBox/PinnedVBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"DimLabel"
+theme_override_font_sizes/font_size = 16
+text = "PINNED_LABEL"
+
+[node name="HUD_TrickRows" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/MidLeftVBox/PinnedVBox" unique_id=1846203543]
+unique_name_in_owner = true
+layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 
-[node name="Header" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/TrickPrompt"]
+[node name="HUD_TrickFeed" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/MidLeftVBox"]
+unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 3
 mouse_filter = 2
 theme_override_constants/separation = 8
-
-[node name="HUD_TrickPromptBtn" parent="UI/AspectContainer/MarginContainer/TrickPrompt/Header" instance=ExtResource("8_inpmt")]
-unique_name_in_owner = true
-layout_mode = 2
-action = "trick"
-
-[node name="HUD_TrickPromptTitle" type="Label" parent="UI/AspectContainer/MarginContainer/TrickPrompt/Header"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 28
-text = "HUD_TRICKS_NONE"
-
-[node name="HUD_TrickPromptRows" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/TrickPrompt"]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 4
-
-[node name="HUD_TrickRows" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/TrickPrompt" unique_id=1846203543]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 4
+script = ExtResource("99_tfeed")
 
 [node name="BottomLeftVBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 mouse_filter = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 24
 
-[node name="HUD_HeldItem" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox" unique_id=774900946]
+[node name="MapRow" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 24
+
+[node name="MapVBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow"]
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="CompassSlot" type="Control" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/MapVBox"]
+custom_minimum_size = Vector2(56, 88)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+
+[node name="TargetCompass" type="Control" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/MapVBox/CompassSlot" node_paths=PackedStringArray("minimap")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 56.0
+offset_bottom = 56.0
+mouse_filter = 2
+script = ExtResource("99_tcmps")
+minimap = NodePath("../../Minimap")
+
+[node name="Distance" type="Label" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/MapVBox/CompassSlot/TargetCompass"]
+unique_name_in_owner = true
+layout_mode = 0
+mouse_filter = 2
+theme_type_variation = &"HUDTitleLabel"
+horizontal_alignment = 1
+
+[node name="Minimap" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/MapVBox" unique_id=407372356 instance=ExtResource("4_ltqsj")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HintVBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow"]
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="TrickHint" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="HUD_TrickPromptBtn" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/TrickHint" instance=ExtResource("8_inpmt")]
+unique_name_in_owner = true
+layout_mode = 2
+action = "trick"
+
+[node name="TrickTitleVBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/TrickHint"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="HUD_TrickPromptTitle" type="Label" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/TrickHint/TrickTitleVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "HUD_TRICKS_NONE"
+
+[node name="TrickLockHint" type="Label" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/TrickHint/TrickTitleVBox"]
+layout_mode = 2
+theme_type_variation = &"DimLabel"
+theme_override_font_sizes/font_size = 16
+text = "HUD_TRICK_LOCK_HINT"
+
+[node name="HUD_ActionHints" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="MapHint" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="HUD_MapPrompt" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints/MapHint" instance=ExtResource("8_inpmt")]
+unique_name_in_owner = true
+layout_mode = 2
+action = "open_map"
+
+[node name="Label" type="Label" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints/MapHint"]
+layout_mode = 2
+text = "ACTION_OPEN_MAP"
+
+[node name="RespawnHint" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="HUD_RespawnPrompt" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints/RespawnHint" instance=ExtResource("8_inpmt")]
+unique_name_in_owner = true
+layout_mode = 2
+action = "respawn"
+
+[node name="Label" type="Label" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints/RespawnHint"]
+layout_mode = 2
+text = "ACTION_RESPAWN"
+
+[node name="ItemHint" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="HUD_ItemPrompt" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints/ItemHint" instance=ExtResource("8_inpmt")]
+unique_name_in_owner = true
+layout_mode = 2
+action = "use_item"
+
+[node name="Label" type="Label" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints/ItemHint"]
+layout_mode = 2
+text = "ACTION_USE_ITEM"
+
+[node name="HUD_TrickPromptRows" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-size_flags_horizontal = 0
 mouse_filter = 2
+theme_override_constants/separation = 24
 
-[node name="HUD_HeldItemThumbnail" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/HUD_HeldItem" unique_id=1897137762 instance=ExtResource("99_thumb")]
+[node name="BottomCenterVBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="HUD_EventWarning" type="Label" parent="UI/AspectContainer/MarginContainer/BottomCenterVBox" unique_id=1935886846]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"WarningLabel"
+theme_override_font_sizes/font_size = 36
+horizontal_alignment = 1
+
+[node name="HUD_GAME_MSG" type="Label" parent="UI/AspectContainer/MarginContainer/BottomCenterVBox" unique_id=411038987]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "HUD_GAME_MSG"
+horizontal_alignment = 1
+
+[node name="BottomRightHBox" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+mouse_filter = 2
+theme_override_constants/separation = 24
+
+[node name="GuageCluster" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomRightHBox" unique_id=1972969717]
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="HUD_HeldItem" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster" unique_id=774900946]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="HUD_HeldItemThumbnail" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster/HUD_HeldItem" unique_id=1897137762 instance=ExtResource("99_thumb")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
@@ -252,100 +379,28 @@ camera_position = Vector3(2.5, 1.5, 2.5)
 camera_look_at = Vector3(0, 0, 0)
 camera_fov = 40.0
 
-[node name="HUD_HeldItemName" type="Label" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/HUD_HeldItem" unique_id=1385063352]
+[node name="HUD_HeldItemName" type="Label" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster/HUD_HeldItem" unique_id=1385063352]
 unique_name_in_owner = true
 layout_mode = 2
 text = "ITEM_SHOTGUN"
 horizontal_alignment = 1
 
-[node name="MapRow" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 16
-
-[node name="Minimap" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow" unique_id=407372356 instance=ExtResource("4_ltqsj")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="ActionHints" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow"]
-layout_mode = 2
-size_flags_vertical = 8
-mouse_filter = 2
-theme_override_constants/separation = 8
-
-[node name="MapHint" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/ActionHints"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 8
-
-[node name="HUD_MapPrompt" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/ActionHints/MapHint" instance=ExtResource("8_inpmt")]
-unique_name_in_owner = true
-layout_mode = 2
-action = "open_map"
-
-[node name="Label" type="Label" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/ActionHints/MapHint"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "ACTION_OPEN_MAP"
-
-[node name="RespawnHint" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/ActionHints"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 8
-
-[node name="HUD_RespawnPrompt" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/ActionHints/RespawnHint" instance=ExtResource("8_inpmt")]
-unique_name_in_owner = true
-layout_mode = 2
-action = "respawn"
-
-[node name="Label" type="Label" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/ActionHints/RespawnHint"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "ACTION_RESPAWN"
-
-[node name="ItemHint" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/ActionHints"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 8
-
-[node name="HUD_ItemPrompt" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/ActionHints/ItemHint" instance=ExtResource("8_inpmt")]
-unique_name_in_owner = true
-layout_mode = 2
-action = "use_item"
-
-[node name="Label" type="Label" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/ActionHints/ItemHint"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "ACTION_USE_ITEM"
-
-[node name="BottomRightHBox" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer"]
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 8
-mouse_filter = 2
-theme_override_constants/separation = 16
-
-[node name="GuageCluster" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomRightHBox" unique_id=1972969717]
-layout_mode = 2
-size_flags_vertical = 8
-mouse_filter = 2
-theme_override_constants/separation = 4
-
 [node name="ComboCounter" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster" unique_id=1303206430 instance=ExtResource("6_x84np")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 4
 
 [node name="SpeedRow" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster"]
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 4
 mouse_filter = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 8
 
 [node name="HUD_SPEED_NUM" type="Label" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster/SpeedRow" unique_id=647166477]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
+theme_type_variation = &"HUDHeroLabel"
 theme_override_font_sizes/font_size = 80
 text = "#"
 horizontal_alignment = 2
@@ -358,20 +413,20 @@ alignment = 1
 
 [node name="SpeedUnitLabel" type="Label" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster/SpeedRow/UnitGear" unique_id=1091861403]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
 text = "HUD_SPEED_UNIT"
 
 [node name="HUD_GEAR" type="Label" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster/SpeedRow/UnitGear" unique_id=2072244555]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_type_variation = &"HUDTitleLabel"
+theme_override_font_sizes/font_size = 28
 text = "HUD_GEAR"
 
 [node name="HUD_RPMProgress" type="ProgressBar" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster" unique_id=282917128]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(260, 8)
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 4
 mouse_filter = 2
 theme_type_variation = &"RPMBar"
 step = 1.0
@@ -410,7 +465,7 @@ mouse_filter = 2
 
 [node name="RespawnCluster" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/RespawnCenter" unique_id=1500000003]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
 [node name="HUD_RespawnLabel" type="Label" parent="UI/AspectContainer/MarginContainer/RespawnCenter/RespawnCluster" unique_id=1500000004]
 unique_name_in_owner = true

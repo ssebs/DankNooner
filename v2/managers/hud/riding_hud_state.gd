@@ -21,18 +21,11 @@ const _RESPAWN_PULSE_HZ := 2.0
 const _RESPAWN_GLOW := 0.35
 ## How long the "Respawning..." text lingers after a quick tap, so a brief tap still reads.
 const _RESPAWN_QUICK_FLASH_SECS := 0.6
-## Event warning: how long a one-shot stays up, and a looping one's half-pulse.
+## Event warning: how long a one-shot stays up, and how often a looping one shakes.
 const _WARNING_HOLD_SECS := 1.5
-const _WARNING_PULSE_SECS := 0.35
-## Trick prompt opacity while no trick state is active (just the trick button hint).
-const _TRICK_PROMPT_IDLE_ALPHA := 0.5
-## Panel flashes (HUDFlash): your score up, you moved up a place, you bailed.
-const _FLASH_SCORE := Color(2.2, 2.6, 3.2)
-const _FLASH_SCORE_SECS := 0.6
-const _FLASH_RANK_UP := Color(3.2, 2.6, 0.8)
-const _FLASH_RANK_UP_SECS := 1.2
-const _FLASH_BAIL := Color(3.2, 0.6, 0.6)
-const _FLASH_BAIL_SECS := 0.9
+const _WARNING_SHAKE_EVERY_SECS := 0.7
+## Held trick rows per column — the height of the hints they swap in for.
+const _TRICK_ROWS_PER_COLUMN := 3
 
 @onready var minimap: Minimap = %Minimap
 @onready var _rpm_bar: ProgressBar = %HUD_RPMProgress
@@ -44,11 +37,10 @@ const _FLASH_BAIL_SECS := 0.9
 @onready var _money: MoneyLabel = %HUD_Money
 @onready var _xp_label: Label = %HUD_XP
 @onready var _leaderboard: RaceLeaderboard = %HUD_Leaderboard
-@onready var _leaderboard_panel: PanelContainer = %HUD_LeaderboardPanel
 @onready var _trick_popups: TrickPopups = %TrickPopups
 @onready var _trick_feed: TrickFeed = %HUD_TrickFeed
 @onready var _target_compass: TargetCompass = %TargetCompass
-@onready var _event_panel: PanelContainer = %EventPanel
+@onready var _event_panel: VBoxContainer = %EventPanel
 @onready var _event_title: Label = %HUD_EventTitle
 @onready var _event_step: Label = %HUD_EventStep
 @onready var _event_objective: Label = %HUD_EventObjective
@@ -60,9 +52,11 @@ const _FLASH_BAIL_SECS := 0.9
 @onready var _respawn_bar: ProgressBar = %HUD_RespawnProgress
 @onready var _respawn_label: Label = %HUD_RespawnLabel
 @onready var _trick_rows: VBoxContainer = %HUD_TrickRows
-@onready var _trick_prompt: VBoxContainer = %TrickPrompt
+@onready var _pinned_label: Label = %HUD_PinnedLabel
+@onready var _trick_prompt_btn: InputPrompt = %HUD_TrickPromptBtn
 @onready var _trick_prompt_title: Label = %HUD_TrickPromptTitle
-@onready var _trick_prompt_rows: VBoxContainer = %HUD_TrickPromptRows
+@onready var _trick_prompt_rows: HBoxContainer = %HUD_TrickPromptRows
+@onready var _action_hints: VBoxContainer = %HUD_ActionHints
 @onready var _prompts: Array[InputPrompt] = [
 	%HUD_TrickPromptBtn, %HUD_BoostPrompt, %HUD_MapPrompt, %HUD_RespawnPrompt, %HUD_ItemPrompt
 ]
@@ -115,7 +109,6 @@ func _ready() -> void:
 	# Event text starts hidden in code, not in the scene — the editor flips label visibility.
 	clear_event_text()
 	_held_item_panel.hide()
-	_leaderboard.own_improved.connect(_on_leaderboard_own_improved)
 
 func Enter(_state_context: StateContext):
 	player_entity = hud_manager.local_player
@@ -330,15 +323,6 @@ func _on_crashed(_peer_id: int):
 	# combo_time freezes on a crash, so it's still set here if a combo just got voided.
 	if trick_controller.combo_time > 0.0:
 		_trick_popups.pop_oof()
-	HUDFlash.flash(_leaderboard_panel, _FLASH_BAIL, _FLASH_BAIL_SECS)
-	HUDFlash.flash(_event_panel, _FLASH_BAIL, _FLASH_BAIL_SECS)
-
-
-func _on_leaderboard_own_improved(rank_up: bool):
-	if rank_up:
-		HUDFlash.flash(_leaderboard_panel, _FLASH_RANK_UP, _FLASH_RANK_UP_SECS)
-	else:
-		HUDFlash.flash(_leaderboard_panel, _FLASH_SCORE, _FLASH_SCORE_SECS)
 
 
 func _on_respawned():
@@ -355,12 +339,15 @@ func pop_earned(money: int, xp: int):
 	if money > 0:
 		_money.pop_earned(money)
 	if xp > 0:
-		TrickPopups.spawn_pop(
-			_xp_label,
-			"+%s %s" % [MoneyLabel.group_digits(xp), tr("LB_XP")],
-			_xp_label.get_theme_color("font_color"),
-			_xp_label.size / 2.0,
-			MoneyLabel.EARNED_DRIFT
+		HUDFlash.pop(_xp_label)
+		HUDFlash.pop(
+			TrickPopups.spawn_pop(
+				_xp_label,
+				"+%s %s" % [MoneyLabel.group_digits(xp), tr("LB_XP")],
+				_xp_label.get_theme_color("font_color"),
+				_xp_label.size / 2.0,
+				MoneyLabel.EARNED_DRIFT
+			)
 		)
 
 
@@ -378,29 +365,41 @@ func _on_save_item_updated(key: String, _value: Variant):
 func _rebuild_trick_rows():
 	for child in _trick_rows.get_children():
 		child.queue_free()
-	for pin: String in save_manager.current_save["pinned_tricks"]:
+	var pins: Array = save_manager.current_save["pinned_tricks"]
+	_pinned_label.visible = !pins.is_empty()
+	for pin: String in pins:
 		var row := _add_trick_row(_trick_rows)
 		row.show_state = true
 		row.populate_pin(pin)
 		row.set_gamepad(_shown_gamepad)
 
 
-## Every stick trick bound in `state`; NONE leaves just the dimmed trick-button hint.
+## Holding the trick button swaps the action hints for every stick trick bound in `state`, in
+## columns of _TRICK_ROWS_PER_COLUMN; NONE swaps them back.
 func _show_trick_prompt(state: TrickController.TrickState):
 	_shown_trick_state = state
+	var held := state != TrickController.TrickState.NONE
 	_trick_prompt_title.text = "HUD_TRICKS_" + TrickController.TrickState.keys()[state]
-	_trick_prompt.modulate.a = _TRICK_PROMPT_IDLE_ALPHA if state == TrickController.TrickState.NONE else 1.0
+	_trick_prompt_btn.set_held(held)
+	_action_hints.visible = !held
+	_trick_prompt_rows.visible = held
 	for child in _trick_prompt_rows.get_children():
 		child.queue_free()
-	if state == TrickController.TrickState.NONE:
+	if !held:
 		return
+	var column: VBoxContainer = null
 	var gestures: Dictionary = TrickController.BINDINGS[state]
 	for gesture: TrickController.Gesture in gestures:
 		for dir in TrickController.Dir.values():
 			var trick: TrickController.Trick = gestures[gesture][dir]
 			if trick == TrickController.Trick.NONE:
 				continue
-			var row := _add_trick_row(_trick_prompt_rows)
+			if column == null or column.get_child_count() == _TRICK_ROWS_PER_COLUMN:
+				column = VBoxContainer.new()
+				column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				column.add_theme_constant_override("separation", 8)
+				_trick_prompt_rows.add_child(column)
+			var row := _add_trick_row(column)
 			row.populate_stick(state, trick, gesture, dir)
 			row.set_gamepad(_shown_gamepad)
 
@@ -410,7 +409,10 @@ func _refresh_prompts():
 	_shown_gamepad = input_controller.is_gamepad
 	for prompt in _prompts:
 		prompt.refresh(_shown_gamepad)
-	for row: TrickRow in _trick_rows.get_children() + _trick_prompt_rows.get_children():
+	var rows := _trick_rows.get_children()
+	for column in _trick_prompt_rows.get_children():
+		rows += column.get_children()
+	for row: TrickRow in rows:
 		row.set_gamepad(_shown_gamepad)
 
 
@@ -485,7 +487,7 @@ func clear_leaderboard() -> void:
 @rpc("call_local", "unreliable")
 func _rpc_set_leaderboard(headers: PackedStringArray, rows: Array, tricks: PackedInt32Array):
 	_leaderboard.set_board(headers, rows)
-	_leaderboard_panel.show()
+	_leaderboard.show()
 	_has_leaderboard = true
 	_update_event_panel()
 	# Resent every refresh; only rebuild when it changes.
@@ -497,7 +499,7 @@ func _rpc_set_leaderboard(headers: PackedStringArray, rows: Array, tricks: Packe
 @rpc("call_local", "reliable")
 func _rpc_clear_leaderboard():
 	_leaderboard.clear()
-	_leaderboard_panel.hide()
+	_leaderboard.hide()
 	_has_leaderboard = false
 	_update_event_panel()
 	_challenge_tricks = PackedInt32Array()
@@ -547,7 +549,7 @@ func push_event_status_all(text_key: String) -> void:
 	_rpc_set_event_status.rpc(text_key)
 
 
-## Server-side: flash a warning (missed checkpoint, wrong way); `looping` pulses until cleared.
+## Server-side: flash a warning (missed checkpoint, wrong way); `looping` shakes until cleared.
 func push_event_warning(peer_id: int, text_key: String, looping: bool = false) -> void:
 	_rpc_flash_event_warning.rpc_id(peer_id, text_key, looping)
 
@@ -560,9 +562,9 @@ func push_event_clear_all() -> void:
 	_rpc_clear_event_text.rpc()
 
 
-## Local, from CountdownTask: the 3-2-1 on the progress line (the next step replaces it).
+## Local, from CountdownTask: the 3-2-1, called out in the centre.
 func show_event_countdown(num: int) -> void:
-	_rpc_set_event_progress(str(num))
+	_trick_popups.pop_callout(str(num))
 
 
 ## Local, on every peer from RunnerGameMode.Enter: the running event's name.
@@ -620,17 +622,16 @@ func _rpc_flash_event_warning(text_key: String, looping: bool):
 	if _event_warning_tween != null:
 		_event_warning_tween.kill()
 	_event_warning.text = tr(text_key)
-	_event_warning.modulate.a = 1.0
 	_event_warning.show()
 	_event_warning_tween = create_tween()
 	if looping:
 		_event_warning_tween.set_loops()
-		_event_warning_tween.tween_property(_event_warning, "modulate:a", 0.3, _WARNING_PULSE_SECS)
-		_event_warning_tween.tween_property(_event_warning, "modulate:a", 1.0, _WARNING_PULSE_SECS)
+		_event_warning_tween.tween_callback(HUDFlash.shake.bind(_event_warning))
+		_event_warning_tween.tween_interval(_WARNING_SHAKE_EVERY_SECS)
 	else:
+		_event_warning_tween.tween_callback(HUDFlash.shake.bind(_event_warning))
 		_event_warning_tween.tween_interval(_WARNING_HOLD_SECS)
 		_event_warning_tween.tween_callback(_event_warning.hide)
-	_update_event_panel()
 
 
 @rpc("call_local", "reliable")
@@ -642,11 +643,7 @@ func _rpc_clear_event_warning():
 
 
 func _update_event_panel() -> void:
-	_event_panel.visible = (
-		_event_title.visible
-		or _event_objective.visible
-		or _event_warning.visible
-	)
+	_event_panel.visible = _event_title.visible or _event_objective.visible
 
 
 #endregion

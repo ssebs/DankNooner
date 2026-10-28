@@ -8,8 +8,8 @@
 ##  - up and right of center: a callout for every trick started (TRICK_CALLOUTS, else the trick's
 ##    name), timed HOLD_CALLOUTS, and any server-sent callout
 ## Sfx: tada on a combo multiplier step up, ding on a score pop. Callouts stay silent.
-## A pop grows small -> big, then drifts outward with a slight tilt and fades. Each pop is its
-## own Label, so rapid pops stack instead of resetting.
+## Each pop enters with a HUDFlash verb (callouts wheelie, scores pop, bails shake), holds, then
+## sinks as it fades. Each is its own Label, so rapid pops stack instead of resetting.
 class_name TrickPopups extends Control
 
 ## Trick -> callout text key, popped when the trick starts. Tricks missing here pop their name.
@@ -36,9 +36,10 @@ const HOLD_CALLOUTS: Dictionary = {
 ## Cycled in order so back-to-back crashes don't repeat.
 const OOF_KEYS: Array[String] = ["CALLOUT_OOF_1", "CALLOUT_OOF_2", "CALLOUT_OOF_3", "CALLOUT_OOF_4"]
 const OOF_COLOR := UtilsConstants.UI_RED
-## Untinted: PopupLabel's own white with a blue glow.
-const CALLOUT_COLOR := Color.WHITE
-const BONUS_COLOR := UtilsConstants.UI_ICE
+const CALLOUT_COLOR := UtilsConstants.UI_GOLD
+const SCORE_COLOR := Color.WHITE
+## The live score and its pop while a suggested trick doubled it.
+const BONUS_COLOR := UtilsConstants.UI_GOLD
 
 ## Pop origins, as offsets from this control's center.
 const SCORE_ORIGIN := Vector2(30.0, 96.0)
@@ -55,25 +56,20 @@ const WHEELIE_ICON_PIVOT := Vector2(0.35, 0.63)
 const STOPPIE_ICON_PIVOT := Vector2(0.65, 0.63)
 const ICON_MIN_SCALE: float = 0.6
 const ICON_MAX_SCALE: float = 1.3
-const ICON_SHAKE_PX: float = 3.0
 const ICON_SMOOTH_SPEED: float = 12.0
-## Icon colors: blue before the balance point, green in it, red past it — each edge ramps through
-## a midtone (ice / gold) over ICON_BLEND_DEG.
+## Icon colors: blue approaching the balance point, gold in it, red past it; each edge blends over
+## ICON_BLEND_DEG.
 const ICON_COLOR := UtilsConstants.UI_BLUE # the art's own blue
-const ICON_NEAR_COLOR := UtilsConstants.UI_ICE
-const ICON_BP_COLOR := UtilsConstants.UI_GREEN
-const ICON_WARN_COLOR := UtilsConstants.UI_GOLD
+const ICON_BP_COLOR := UtilsConstants.UI_GOLD
 const ICON_HOT_COLOR := UtilsConstants.UI_RED
 const ICON_BLEND_DEG: float = 6.0
-const POP_SECS: float = 0.2
-const POP_START_SCALE: float = 0.3
-const POP_PEAK_SCALE: float = 1.3
-const DRIFT_SECS: float = 1.0
-## Drift for a right-side pop; mirrored on x for the left side.
-const DRIFT_PX := Vector2(90.0, -110.0)
-## Max tilt either way (radians); the sign is random per pop.
-const TILT_RAD: float = 0.25
-const FADE_SECS: float = 0.4
+## The icon's throb in the balance point: scale depth and rate.
+const ICON_THROB: float = 0.08
+const ICON_THROB_HZ: float = 2.5
+## A pop holds, then sinks by SINK_PX as it fades.
+const HOLD_SECS: float = 0.5
+const SINK_SECS: float = 0.6
+const SINK_PX := Vector2(0.0, 60.0)
 ## A new callout pushes the ones still on screen down a row, so rapid callouts stack instead of piling
 ## up at CALLOUT_ORIGIN. The push eases in at CALLOUT_STACK_SPEED.
 const CALLOUT_STACK_PX: float = 50.0
@@ -154,7 +150,7 @@ func track(
 	if _live.visible:
 		_live.text = "+%d" % int(tc.combo_score * points_per_second * tc.combo_multiplier)
 		var bonus := tc.current_trick in bonus_tricks
-		_live.modulate = BONUS_COLOR if bonus else CALLOUT_COLOR
+		_live.modulate = BONUS_COLOR if bonus else SCORE_COLOR
 	# Placed even while hidden — the icon row anchors under it.
 	_center_on(_live, size / 2.0 + SCORE_ORIGIN)
 
@@ -166,28 +162,32 @@ func track(
 
 
 func pop_score(points: int, _multiplier: int, bonus: bool) -> void:
-	_spawn("+%d" % points, BONUS_COLOR if bonus else CALLOUT_COLOR, SCORE_ORIGIN, 1.0)
+	HUDFlash.pop(_spawn("+%d" % points, BONUS_COLOR if bonus else SCORE_COLOR, SCORE_ORIGIN))
 	audio_manager.play_ding()
 
 
 ## The live combo was voided by a crash.
 func pop_oof() -> void:
 	_live.visible = false
-	_spawn(tr(OOF_KEYS[_oof_index]), OOF_COLOR, SCORE_ORIGIN, 1.0)
+	HUDFlash.shake(_spawn(tr(OOF_KEYS[_oof_index]), OOF_COLOR, SCORE_ORIGIN))
 	_oof_index = (_oof_index + 1) % OOF_KEYS.size()
 
 
 ## The bike icon, tilted to pitch (degrees, + = wheelie; the icon faces right, so a wheelie tilts
 ## it counter-clockwise). window is (min, low, high, max): the pitch range and its balance point.
-## The icon grows toward the balance point, shakes inside it, and shrinks past it (away from
-## level); see ICON_COLOR for its colors. pivot: rotation point as a fraction of the icon's size.
-## timer: the race wheelie stopwatch's seconds, 0 to hide it.
+## The icon grows toward the balance point, throbs inside it, and shrinks past it (away from
+## level), shaking there only on a wheelie / stoppie; see ICON_COLOR for its colors. pivot:
+## rotation point as a fraction of the icon's size. timer: the race wheelie stopwatch's seconds, 0
+## to hide it.
 func show_pitch_icon(pitch: float, window: Vector4, pivot: Vector2, timer: float) -> void:
 	var low := window.y
 	var high := window.z
+	# A wheelie / stoppie window sits on one side of level; air's spans both and has no over-rotation.
+	var one_sided := window.x >= 0.0 or window.w <= 0.0
+	_icon_offset = Vector2.ZERO
 	if pitch >= low and pitch <= high:
-		_icon_scale = ICON_MAX_SCALE
-		_icon_offset = Vector2(randf_range(-1, 1), randf_range(-1, 1)) * ICON_SHAKE_PX
+		var throb := sin(Time.get_ticks_msec() / 1000.0 * TAU * ICON_THROB_HZ) * ICON_THROB
+		_icon_scale = ICON_MAX_SCALE * (1.0 + throb)
 		_icon_target_tint = ICON_BP_COLOR
 	else:
 		# 0 at the window's edge, 1 at the end of the range on that side.
@@ -196,13 +196,10 @@ func show_pitch_icon(pitch: float, window: Vector4, pivot: Vector2, timer: float
 		var t := clampf((pitch - edge) / (end - edge), 0.0, 1.0)
 		var past := (pitch > high and high >= 0.0) or (pitch < low and low <= 0.0)
 		_icon_scale = lerpf(ICON_MAX_SCALE, ICON_MIN_SCALE, t)
-		_icon_offset = Vector2.ZERO
-		# Flat colors, with a short ramp through a midtone just outside the window.
+		if past and one_sided:
+			_icon_offset = Vector2(randf_range(-1, 1), randf_range(-1, 1)) * HUDFlash.SHAKE_PX
 		var s := clampf(absf(pitch - edge) / ICON_BLEND_DEG, 0.0, 1.0)
-		if past:
-			_icon_target_tint = _ramp(ICON_BP_COLOR, ICON_WARN_COLOR, ICON_HOT_COLOR, s)
-		else:
-			_icon_target_tint = _ramp(ICON_BP_COLOR, ICON_NEAR_COLOR, ICON_COLOR, s)
+		_icon_target_tint = ICON_BP_COLOR.lerp(ICON_HOT_COLOR if past else ICON_COLOR, s)
 	_icon_rotation = - deg_to_rad(pitch)
 	_wheelie_icon.pivot_offset = _wheelie_icon.size * pivot
 	_wheelie_label.text = tr("RACE_WHEELIE_ATTEMPT").format({"time": "%.1f" % timer})
@@ -239,18 +236,13 @@ func _ease_icon(weight: float) -> void:
 	_icon_material.set_shader_parameter("tint", _icon_tint)
 
 
-## a -> b -> c as s goes 0 -> 1.
-func _ramp(a: Color, b: Color, c: Color, s: float) -> Color:
-	return a.lerp(b, s * 2.0) if s < 0.5 else b.lerp(c, s * 2.0 - 1.0)
-
-
 ## text is already localized.
 func pop_callout(text: String) -> void:
 	var holder := Control.new()
 	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(holder)
 	_callouts.append(holder)
-	spawn_pop(holder, text, CALLOUT_COLOR, size / 2.0 + CALLOUT_ORIGIN, DRIFT_PX)
+	HUDFlash.wheelie(spawn_pop(holder, text, CALLOUT_COLOR, size / 2.0 + CALLOUT_ORIGIN, SINK_PX))
 	# The pop frees its label when done; the holder goes with it
 	holder.child_exiting_tree.connect(_drop_callout.bind(holder).unbind(1))
 
@@ -268,6 +260,9 @@ func _track_trick_start(tc: TrickController) -> void:
 		_last_named = TrickController.Trick.NONE
 	var started := trick != _last_trick and trick != TrickController.Trick.NONE
 	_last_trick = trick
+	# A new trick is the live score's next climb.
+	if started and _live.visible:
+		HUDFlash.pop(_live)
 	if !started or trick == _last_named:
 		return
 	# The nose dropping mid-slide turns a drift wheelie into a plain drift — already called out.
@@ -298,31 +293,28 @@ func _track_hold_callouts(player: PlayerEntity, delta: float) -> void:
 			pop_callout(tr(key))
 
 
-## side: 1 drifts right, -1 drifts left.
-func _spawn(text: String, color: Color, origin: Vector2, side: float) -> void:
-	spawn_pop(self, text, color, size / 2.0 + origin, Vector2(DRIFT_PX.x * side, DRIFT_PX.y))
+func _spawn(text: String, color: Color, origin: Vector2) -> Label:
+	return spawn_pop(self, text, color, size / 2.0 + origin, SINK_PX)
 
 
-## A pop centered on `center` in `parent`'s space, drifting off by `drift`. Static so other HUD
-## elements (MoneyLabel) pop in the same style.
+## A pop centered on `center` in `parent`'s space: holds, then moves by `drift` as it fades. The
+## caller gives it its entry verb (HUDFlash). Static so other HUD elements (MoneyLabel) pop the
+## same way.
 static func spawn_pop(
 	parent: Control, text: String, color: Color, center: Vector2, drift: Vector2
-) -> void:
+) -> Label:
 	var label := _make_label(color)
 	label.text = text
 	parent.add_child(label)
 	_center_on(label, center)
-	label.scale = Vector2.ONE * POP_START_SCALE
 
 	var tween := label.create_tween()
-	var grow := tween.tween_property(label, "scale", Vector2.ONE * POP_PEAK_SCALE, POP_SECS)
-	grow.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	# Drift, tilt and fade run together once the pop lands.
+	tween.tween_interval(HOLD_SECS)
 	tween.set_parallel()
-	tween.chain().tween_property(label, "position", label.position + drift, DRIFT_SECS)
-	tween.tween_property(label, "rotation", TILT_RAD * signf(randf() - 0.5), DRIFT_SECS)
-	tween.tween_property(label, "modulate:a", 0.0, FADE_SECS).set_delay(DRIFT_SECS - FADE_SECS)
+	tween.chain().tween_property(label, "position", label.position + drift, SINK_SECS)
+	tween.tween_property(label, "modulate:a", 0.0, SINK_SECS)
 	tween.chain().tween_callback(label.queue_free)
+	return label
 
 
 static func _make_label(color: Color) -> Label:

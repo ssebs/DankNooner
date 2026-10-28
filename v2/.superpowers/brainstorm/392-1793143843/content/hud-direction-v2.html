@@ -1,0 +1,129 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=MuseoModerno:wght@400;500;600;700&display=swap');
+:root {
+  --blue: #41afff; --ice: #a6e6ff; --gold: #ffd140; --green: #33ff8c; --red: #ff3d3d;
+  --glass: rgba(5, 7, 15, 0.62); --dim: rgba(255, 255, 255, 0.62);
+}
+.spec { background: #05070f; border-radius: 12px; padding: 20px 24px; margin-bottom: 20px;
+  font-family: 'MuseoModerno', sans-serif; color: #fff; display: grid; grid-template-columns: 300px 1fr; gap: 24px; align-items: center; }
+.spec img { width: 100%; }
+.spec .row { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
+.spec .t { font-weight: 600; } .spec .m { font-weight: 500; }
+.spec small { font-family: system-ui, sans-serif; color: #8a93a8; font-size: 12px; display: block; margin-top: 6px; }
+
+.card-image { aspect-ratio: auto; display: block; }
+.hud { width: 100%; position: relative; aspect-ratio: 16 / 9; container-type: inline-size; overflow: hidden;
+  background: url('/files/bg.png') center / cover; border-radius: 8px; font-family: 'MuseoModerno', sans-serif; color: #fff; }
+.hud * { --u: calc(100cqw / 1920); }
+.hud .title { font-weight: 600; }
+.hud .main { font-weight: 500; }
+.hud .sh { text-shadow: 0 calc(var(--u) * 2) calc(var(--u) * 8) rgba(0, 0, 0, 0.7); }
+.abs { position: absolute; }
+.f16 { font-size: calc(var(--u) * 16); } .f20 { font-size: calc(var(--u) * 20); }
+.f28 { font-size: calc(var(--u) * 28); } .f48 { font-size: calc(var(--u) * 48); }
+.f80 { font-size: calc(var(--u) * 80); line-height: 0.9; }
+.dim { color: var(--dim); }
+
+/* B: every corner cluster on the same plate */
+.plated .plate { background: var(--glass); border: calc(var(--u) * 1.5) solid rgba(65, 175, 255, 0.45);
+  border-radius: calc(var(--u) * 16) calc(var(--u) * 4); padding: calc(var(--u) * 12) calc(var(--u) * 18);
+  backdrop-filter: blur(6px); }
+.flat .plate { padding: 0; }
+
+.chip { display: inline-flex; align-items: center; justify-content: center; min-width: calc(var(--u) * 40);
+  height: calc(var(--u) * 40); padding: 0 calc(var(--u) * 10); border-radius: calc(var(--u) * 10) calc(var(--u) * 3);
+  border: calc(var(--u) * 1.5) solid var(--blue); background: rgba(5, 7, 15, 0.7); margin-right: calc(var(--u) * 12); }
+.hint { display: flex; align-items: center; margin-bottom: calc(var(--u) * 10); }
+.map { width: calc(var(--u) * 240); height: calc(var(--u) * 240); border-radius: calc(var(--u) * 16) calc(var(--u) * 4);
+  border: calc(var(--u) * 1.5) solid var(--blue); background: linear-gradient(135deg, #1e5a2c, #2b2f3e 60%, #6b4a2a);
+  box-shadow: 0 0 calc(var(--u) * 14) rgba(65, 175, 255, 0.4); }
+.lb { display: grid; grid-template-columns: auto auto auto; column-gap: calc(var(--u) * 28); row-gap: calc(var(--u) * 2); }
+.you { color: var(--blue); }
+.feed { margin-top: calc(var(--u) * 10); display: flex; flex-direction: column; align-items: flex-end; gap: calc(var(--u) * 6); }
+.feed div { padding: calc(var(--u) * 4) calc(var(--u) * 12); border-radius: calc(var(--u) * 10) calc(var(--u) * 3); background: rgba(5, 7, 15, 0.55); }
+.bar { height: calc(var(--u) * 6); border-radius: 99px; background: rgba(255, 255, 255, 0.15); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 62%; background: var(--blue); box-shadow: 0 0 calc(var(--u) * 10) var(--blue); }
+.boost { display: flex; flex-direction: column-reverse; gap: calc(var(--u) * 6); }
+.boost i { width: calc(var(--u) * 18); height: calc(var(--u) * 52); border-radius: calc(var(--u) * 4); background: rgba(255, 255, 255, 0.15); }
+.boost i.on { background: var(--blue); box-shadow: 0 0 calc(var(--u) * 10) var(--blue); }
+.callout { transform: rotate(-8deg); transform-origin: left bottom; }
+</style>
+
+<h2>One HUD language, from the logo</h2>
+<p class="subtitle">Same content as your riding screenshot. Text is flat white like the logo, two styles only; neon lives on the chrome (minimap, chips, bars). Blue = you.</p>
+
+<div class="spec">
+  <img src="/files/logo.png" alt="logo">
+  <div>
+    <div class="row"><span class="t" style="font-size:44px">38</span><span class="t" style="font-size:28px">NEAR MISS!</span><span class="t" style="font-size:20px">Title · SemiBold</span></div>
+    <div class="row"><span class="m" style="font-size:20px">Respawn</span><span class="m" style="font-size:16px; color:rgba(255,255,255,.62)">mph · secondary</span><span class="m" style="font-size:16px">Main · Medium</span></div>
+    <small>Scale: 16 · 20 · 28 · 48 · 80 (was 16 · 18 · 20 · 24 · 28 · 40 · 48 · 80). Colors always on: white + logo blue. Gold / red / green only for reward / danger / money.</small>
+  </div>
+</div>
+
+<div class="cards" style="grid-template-columns: 1fr;">
+  <div class="card" data-choice="flat" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="hud flat"></div></div>
+    <div class="card-body"><h3>A · Floating</h3><p>Closest to the trailer-era HUD and to the logo on socials: no plates, text sits on the world with a soft shadow. Lightest, most "brand", but busiest backgrounds hurt it.</p></div>
+  </div>
+  <div class="card" data-choice="plated" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="hud plated"></div></div>
+    <div class="card-body"><h3>B · Plated</h3><p>Same type and colors, but every corner cluster sits on the same dark glass plate with a hairline blue edge and the house slanted corners. Always readable; heavier.</p></div>
+  </div>
+</div>
+
+<template id="hud-content">
+  <div class="abs plate" style="left:calc(var(--u)*56); top:calc(var(--u)*48)">
+    <div class="title f28 sh">Stunt Race 2</div>
+    <div class="main f20 dim sh">Race to the finish and trick for points!</div>
+  </div>
+
+  <div class="abs" style="right:calc(var(--u)*56); top:calc(var(--u)*48); display:flex; flex-direction:column; align-items:flex-end; gap:calc(var(--u)*12)">
+    <div class="title f28 sh"><span style="color:var(--green)">$13,516</span>&nbsp;&nbsp;<span style="color:var(--gold)">Lv 5 · 2,461 XP</span></div>
+    <div class="plate">
+      <div class="lb main f20 sh">
+        <span class="dim f16">Rider</span><span class="dim f16">Pos</span><span class="dim f16">Score</span>
+        <span class="title you">ssebs</span><span class="title you">P1</span><span class="title you">30</span>
+        <span>rival_01</span><span>P2</span><span>22</span>
+      </div>
+    </div>
+    <div class="feed main f20 sh">
+      <div><span class="title you">ssebs</span> <span style="color:var(--red)">bailed</span> Wheelie Sitting <s style="color:var(--red)">+56</s></div>
+      <div><span class="title">rival_01</span> Wheelie → Drift <span class="title">+240 ×2</span></div>
+    </div>
+  </div>
+
+  <div class="abs callout" style="left:calc(var(--u)*900); top:calc(var(--u)*300)">
+    <div class="title f48 sh">NEAR MISS!</div>
+    <div class="title f28 sh" style="margin-left:calc(var(--u)*30)">+121</div>
+  </div>
+
+  <div class="abs" style="left:calc(var(--u)*56); bottom:calc(var(--u)*48); display:flex; align-items:flex-end; gap:calc(var(--u)*16)">
+    <div class="map"></div>
+    <div class="plate main f20 sh">
+      <div class="hint"><span class="chip">M</span>Map</div>
+      <div class="hint"><span class="chip">R</span>Respawn</div>
+      <div class="hint" style="margin-bottom:0"><span class="chip">LMB</span>Use Item</div>
+    </div>
+  </div>
+
+  <div class="abs" style="right:calc(var(--u)*56); bottom:calc(var(--u)*48); display:flex; align-items:flex-end; gap:calc(var(--u)*20)">
+    <div class="plate" style="min-width:calc(var(--u)*280)">
+      <div class="title f48 sh" style="color:var(--gold); text-align:right">×2</div>
+      <div style="display:flex; align-items:flex-end; justify-content:flex-end; gap:calc(var(--u)*10)">
+        <div class="title f80 sh">38</div>
+        <div class="main f20 sh" style="text-align:left; line-height:1.15"><div class="dim">mph</div><div>Gear <span class="title">3</span></div></div>
+      </div>
+      <div class="bar" style="margin-top:calc(var(--u)*12)"><i></i></div>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:calc(var(--u)*10)">
+      <div class="boost"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+      <span class="chip main f20" style="margin:0">F</span>
+    </div>
+  </div>
+</template>
+
+<script>
+  const tpl = document.getElementById('hud-content').innerHTML;
+  document.querySelectorAll('.hud').forEach(h => h.innerHTML = tpl);
+</script>

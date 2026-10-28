@@ -1,6 +1,7 @@
 @tool
 ## A "$1,234" money readout. flash() blinks it red (can't afford); pop_spent() also drops a red
-## "-$N" off it, in TrickPopups' pop style; pop_earned() floats a green "+$N" up.
+## "-$N" off it, in TrickPopups' pop style; pop_earned() pops it (HUDFlash) and floats a green
+## "+$N" up.
 class_name MoneyLabel extends Label
 
 const COLOR := UtilsConstants.UI_GREEN
@@ -35,6 +36,8 @@ static func group_digits(amount: float) -> String:
 func flash() -> void:
 	if _flash_tween != null:
 		_flash_tween.kill()
+	# The override is unset until the first flash, and a tween can't start from Nil.
+	add_theme_color_override("font_color", COLOR)
 	_flash_tween = create_tween().set_loops(FLASH_COUNT)
 	_flash_tween.tween_property(
 		self, "theme_override_colors/font_color", TrickPopups.OOF_COLOR, FLASH_HALF_SECS
@@ -48,4 +51,5 @@ func pop_spent(amount: int) -> void:
 
 
 func pop_earned(amount: int) -> void:
-	TrickPopups.spawn_pop(self, "+" + format(amount), COLOR, size / 2.0, EARNED_DRIFT)
+	HUDFlash.pop(self)
+	HUDFlash.pop(TrickPopups.spawn_pop(self, "+" + format(amount), COLOR, size / 2.0, EARNED_DRIFT))

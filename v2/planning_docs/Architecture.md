@@ -405,8 +405,8 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
 - **`RidingHUDState.push_checkpoint_marker()`** is how the race gamemodes mark each racer's next
   checkpoint on that peer's minimap: the state is a single node at a shared path on every peer, so
   the server can `rpc_id` the owning client's minimap through it. Pre-race it carries the current
-  step's trigger instead (`is_guide`). `TargetCompass` points at the same target from the top of
-  the HUD: always for guide targets, for race checkpoints only on easy difficulty. While a
+  step's trigger instead (`is_guide`). `TargetCompass` points at the same target from above the
+  minimap: always for guide targets, for race checkpoints only on easy difficulty. While a
   guide target is on screen it pins over it instead, and the distance shows under the arrow or pin.
   It hides near the target, where the server's pass lags the predicted rider and the bearing
   would spin.

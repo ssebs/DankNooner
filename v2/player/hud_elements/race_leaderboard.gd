@@ -1,17 +1,12 @@
 @tool
 ## Leaderboard table: a header row, then one row per racer, best first. Rows slide to their new
 ## rank on reorder, so they're placed by hand rather than in a container (which would snap them).
-## A score-like cell pops when it climbs. Fed by RidingHUDState (live) and ResultsHUDState.
+## A score-like cell pops when it climbs; your row punches when you move up a place (HUDFlash).
+## Fed by RidingHUDState (live) and ResultsHUDState.
 class_name RaceLeaderboard extends Control
-
-## Your score went up; rank_up if you also moved up a place.
-signal own_improved(rank_up: bool)
 
 ## Cell font size; 0 keeps the theme's Label size.
 @export var font_size: int = 0
-## Show only the top this many, then "…" and one more row: yours when you're further down, else
-## last place (so the board still reads as a bigger field). 0 = everyone.
-@export var top_count: int = 0
 
 ## Row step as a multiple of the font size — the font's own line height is too loose.
 const ROW_HEIGHT_SCALE: float = 1.3
@@ -20,14 +15,8 @@ const NAME_MIN_WIDTH: float = 60.0
 const CELL_PADDING: float = 12.0
 ## Duration of the slide to a new rank.
 const REORDER_SECS: float = 0.35
-const POP_SCALE: float = 1.5
-const POP_SECS: float = 0.4
-const POP_COLOR := UtilsConstants.UI_ICE
-## Your row punches up when your score or place improves.
-const OWN_PUNCH_SCALE: float = 1.2
-const OWN_PUNCH_SECS: float = 0.4
-## Row key for the "…" gap — no peer (>= 1) or NPC (< 0) uses 0.
-const GAP_ID: int = 0
+## Column headers are labels, so dim.
+const HEADER_ALPHA: float = 0.6
 
 var _header: HBoxContainer = null
 ## peer_id -> row, and the rank each row last slid to.
@@ -37,19 +26,18 @@ var _ranks: Dictionary[int, int] = {}
 var _own_rank: int = -1
 
 
-## all_rows: [{"peer_id": int, "cells": PackedStringArray}], already sorted best-first.
+## rows: [{"peer_id": int, "cells": PackedStringArray}], already sorted best-first.
 ## cells line up with headers (name first).
-func set_board(headers: PackedStringArray, all_rows: Array) -> void:
+func set_board(headers: PackedStringArray, rows: Array) -> void:
 	if _header == null:
 		_header = _add_row()
+		_header.modulate.a = HEADER_ALPHA
 	_set_cells(_header, headers)
 
 	var own_id := multiplayer.get_unique_id()
-	var own_rank := all_rows.find_custom(func(r): return r["peer_id"] == own_id)
+	var own_rank := rows.find_custom(func(r): return r["peer_id"] == own_id)
 	var rank_up := _own_rank >= 0 and own_rank >= 0 and own_rank < _own_rank
 	_own_rank = own_rank
-	var rows := _shown_rows(all_rows, own_rank, headers.size())
-	var score_up := false
 
 	var live: Dictionary[int, bool] = {}
 	for rank in rows.size():
@@ -64,8 +52,7 @@ func set_board(headers: PackedStringArray, all_rows: Array) -> void:
 			_ranks[peer_id] = rank
 			var tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 			tween.tween_property(_rows[peer_id], "position:y", _rank_y(rank), REORDER_SECS)
-		if _set_cells(_rows[peer_id], rows[rank]["cells"], peer_id == own_id) and peer_id == own_id:
-			score_up = true
+		_set_cells(_rows[peer_id], rows[rank]["cells"], peer_id == own_id)
 
 	for peer_id in _rows.keys():
 		if !live.has(peer_id):
@@ -81,9 +68,8 @@ func set_board(headers: PackedStringArray, all_rows: Array) -> void:
 	for w in widths:
 		total_width += w
 	custom_minimum_size = Vector2(total_width, _rank_y(rows.size()))
-	if rank_up or score_up:
-		_punch(_rows[own_id])
-		own_improved.emit(rank_up)
+	if rank_up:
+		HUDFlash.punch(_rows[own_id])
 
 
 func clear() -> void:
@@ -95,30 +81,9 @@ func clear() -> void:
 	_own_rank = -1
 
 
-## Scales from the row's left edge, so the name stays put.
-func _punch(row: HBoxContainer) -> void:
-	row.pivot_offset = Vector2(0.0, row.size.y / 2.0)
-	row.scale = Vector2.ONE * OWN_PUNCH_SCALE
-	var tween := row.create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_property(row, "scale", Vector2.ONE, OWN_PUNCH_SECS)
-
-
-## The top top_count, a "…" gap when rows are skipped, then your row (or last place).
-func _shown_rows(rows: Array, own_rank: int, columns: int) -> Array:
-	if top_count <= 0 or rows.size() <= top_count:
-		return rows
-	var shown := rows.slice(0, top_count)
-	var extra := own_rank if own_rank >= top_count else rows.size() - 1
-	if extra > top_count:
-		var gap := PackedStringArray(["…"])
-		gap.resize(columns)
-		shown.append({"peer_id": GAP_ID, "cells": gap})
-	shown.append(rows[extra])
-	return shown
-
-
 func _column_widths(headers: PackedStringArray, rows: Array) -> PackedFloat32Array:
-	var font := get_theme_font("font", "Label")
+	# The cells' own font: their variation picks it, and it differs per theme.
+	var font := (_header.get_child(0) as Label).get_theme_font("font")
 	var size := _font_size()
 	var widths := PackedFloat32Array()
 	for i in headers.size():
@@ -149,9 +114,8 @@ func _add_row() -> HBoxContainer:
 
 
 ## Grows/trims the row's labels to match, then sets their text. First column is the (wider) name;
-## your own row glows. True if a cell popped.
-func _set_cells(row: HBoxContainer, texts: PackedStringArray, own: bool = false) -> bool:
-	var popped := false
+## your own row is blue.
+func _set_cells(row: HBoxContainer, texts: PackedStringArray, own: bool = false) -> void:
 	while row.get_child_count() > texts.size():
 		var extra := row.get_child(row.get_child_count() - 1)
 		row.remove_child(extra)
@@ -163,8 +127,7 @@ func _set_cells(row: HBoxContainer, texts: PackedStringArray, own: bool = false)
 			HORIZONTAL_ALIGNMENT_LEFT if is_name else HORIZONTAL_ALIGNMENT_CENTER
 		)
 		label.add_theme_font_size_override("font_size", _font_size())
-		if own:
-			label.theme_type_variation = &"GlowLabel"
+		label.theme_type_variation = &"OwnLabel" if own else &"HUDTitleLabel"
 		row.add_child(label)
 	for i in texts.size():
 		var label := row.get_child(i) as Label
@@ -175,18 +138,5 @@ func _set_cells(row: HBoxContainer, texts: PackedStringArray, own: bool = false)
 			and texts[i].is_valid_int()
 			and texts[i].to_int() > label.text.to_int()
 		):
-			_pop(label)
-			popped = true
+			HUDFlash.pop(label)
 		label.text = texts[i]
-	return popped
-
-
-func _pop(label: Label) -> void:
-	label.pivot_offset = label.size / 2.0
-	label.scale = Vector2.ONE * POP_SCALE
-	label.modulate = POP_COLOR
-	var tween := label.create_tween().set_parallel()
-	tween.tween_property(label, "scale", Vector2.ONE, POP_SECS).set_trans(Tween.TRANS_BACK).set_ease(
-		Tween.EASE_OUT
-	)
-	tween.tween_property(label, "modulate", Color.WHITE, POP_SECS)

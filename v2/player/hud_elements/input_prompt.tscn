@@ -16,8 +16,9 @@ stretch_mode = 5
 
 [node name="Key" type="Label" parent="."]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 size_flags_vertical = 4
 theme_type_variation = &"GestureChipLabel"
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1

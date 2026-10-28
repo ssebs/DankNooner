@@ -11,7 +11,8 @@ signal pin_pressed(pin: String)
 		pinnable = value
 		if is_node_ready():
 			pin_btn.visible = value
-## Drops the fixed column widths so the row fits narrow spots (HUD).
+## HUD: reads like the action hints, input key cap first, then the trick and its state, with no
+## fixed column widths or score.
 @export var compact: bool = false
 ## Shows which TrickState the stick input applies in (HUD; the menu's tab already says it).
 @export var show_state: bool = false
@@ -49,9 +50,16 @@ var _dir: int = TrickController.NO_DIR
 func _ready() -> void:
 	pin_btn.visible = pinnable
 	if compact:
-		columns.add_theme_constant_override("separation", 12)
-		for col: Control in [dir_box, gesture_col, score_label]:
+		columns.add_theme_constant_override("separation", 8)
+		for col: Control in [dir_box, gesture_col]:
 			col.custom_minimum_size.x = 0
+		columns.move_child(stick_input, 0)
+		score_label.hide()
+		dir_label.theme_type_variation = &"GestureChipLabel"
+		# Only the key is a cap; a boxed gesture reads as a button to press.
+		gesture_chip.theme_type_variation = &"DimLabel"
+		for label: Label in [dir_label, gesture_chip, state_label]:
+			label.add_theme_font_size_override("font_size", 16)
 	if Engine.is_editor_hint():
 		return
 	pin_btn.pressed.connect(func(): pin_pressed.emit(pin))
@@ -111,6 +119,8 @@ func set_gamepad(gamepad: bool) -> void:
 	# Unbound key: fall back to the stick, which still works.
 	var use_key := not gamepad and event != null
 	dir_icon.visible = not use_key
+	# Compact: the stick glyph already says the direction.
+	dir_label.visible = use_key or not compact
 	dir_label.text = ControlBindings.event_text(event) if use_key else "TRICK_DIR_" + dir_name
 
 

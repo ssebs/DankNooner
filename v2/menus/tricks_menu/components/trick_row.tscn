@@ -14,11 +14,11 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="NameBox" type="VBoxContainer" parent="Columns" unique_id=1846203546]
+[node name="NameBox" type="HBoxContainer" parent="Columns" unique_id=1846203546]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_constants/separation = 0
+theme_override_constants/separation = 8
 
 [node name="NameLabel" type="Label" parent="Columns/NameBox" unique_id=1846203533]
 unique_name_in_owner = true

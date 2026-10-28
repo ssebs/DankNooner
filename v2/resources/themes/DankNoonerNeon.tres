@@ -1,9 +1,10 @@
-[gd_resource type="Theme" format=3 uid="uid://10l0tsac3ai2"]
+[gd_resource type="Theme" format=3 uid="uid://ch7eafrslsmen"]
 
 [ext_resource type="FontVariation" path="res://resources/fonts/museo_moderno_emoji.tres" id="1_kytw6"]
 [ext_resource type="Texture2D" uid="uid://drilpv5hu6f3o" path="res://resources/icons/checkbox-checked.svg" id="2_hydtf"]
 [ext_resource type="Texture2D" uid="uid://bpsmj74n6f4lq" path="res://resources/icons/checkbox-unchecked.svg" id="3_7depn"]
 [ext_resource type="Texture2D" uid="uid://vvvtkn4b0s0q" path="res://resources/img/Icons/circleIcon.png" id="4_7depn"]
+[ext_resource type="StyleBox" path="res://resources/themes/DankNooner/object.tres" id="5_object"]
 [ext_resource type="FontFile" uid="uid://dypj4f1xkypun" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-Bold.ttf" id="font_Bold"]
 [ext_resource type="FontFile" uid="uid://drtwjd40gf17m" path="res://resources/fonts/Noto_Color_Emoji/NotoColorEmoji-Regular.ttf" id="font_emoji"]
 [ext_resource type="Texture2D" uid="uid://ddukuq0mh7dna" path="res://resources/themes/neon/backdrop.png" id="neon_backdrop"]
@@ -15,7 +16,6 @@
 [ext_resource type="Texture2D" uid="uid://cr7s2rg88h443" path="res://resources/themes/neon/btn_primary.png" id="neon_btn_primary"]
 [ext_resource type="Texture2D" uid="uid://bj4n8a0mkwnp8" path="res://resources/themes/neon/chip.png" id="neon_chip"]
 [ext_resource type="Texture2D" uid="uid://b2yf07epfuapg" path="res://resources/themes/neon/feed.png" id="neon_feed"]
-[ext_resource type="Texture2D" uid="uid://31lgthaeexvg" path="res://resources/themes/neon/hud_glass.png" id="neon_hud_glass"]
 [ext_resource type="Texture2D" uid="uid://c5wfkaapm7ags" path="res://resources/themes/neon/input.png" id="neon_input"]
 [ext_resource type="Texture2D" uid="uid://clwyxswxu6hy5" path="res://resources/themes/neon/input_focus.png" id="neon_input_focus"]
 [ext_resource type="Texture2D" uid="uid://xfgssqgfx1di" path="res://resources/themes/neon/outline.png" id="neon_outline"]
@@ -53,6 +53,18 @@ expand_margin_right = 4.0
 expand_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iun4r"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_boostfill"]
+bg_color = Color(0.16, 0.34, 0.48, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 10
+corner_radius_top_right = 3
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_vtut7"]
 content_margin_left = 12.0
@@ -214,7 +226,7 @@ content_margin_left = 12.0
 content_margin_top = 12.0
 content_margin_right = 12.0
 content_margin_bottom = 12.0
-texture = ExtResource("neon_hud_glass")
+texture = ExtResource("neon_panel")
 texture_margin_left = 19.0
 texture_margin_top = 19.0
 texture_margin_right = 19.0
@@ -268,7 +280,6 @@ texture_margin_left = 27.0
 texture_margin_top = 27.0
 texture_margin_right = 27.0
 texture_margin_bottom = 27.0
-axis_stretch_vertical = 2
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_menupanel"]
 content_margin_left = 24.0
@@ -280,7 +291,6 @@ texture_margin_left = 19.0
 texture_margin_top = 19.0
 texture_margin_right = 19.0
 texture_margin_bottom = 19.0
-axis_stretch_vertical = 2
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_outline"]
 content_margin_left = 12.0
@@ -315,7 +325,6 @@ texture_margin_left = 19.0
 texture_margin_top = 19.0
 texture_margin_right = 19.0
 texture_margin_bottom = 19.0
-axis_stretch_vertical = 2
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_4v18w"]
 content_margin_left = 12.0
@@ -469,6 +478,9 @@ AvatarRingPanel/base_type = &"PanelContainer"
 AvatarRingPanel/styles/panel = SubResource("StyleBoxFlat_avatarring")
 BarePanel/base_type = &"PanelContainer"
 BarePanel/styles/panel = SubResource("StyleBoxEmpty_iun4r")
+BoostCell/base_type = &"ProgressBar"
+BoostCell/styles/background = ExtResource("5_object")
+BoostCell/styles/fill = SubResource("StyleBoxFlat_boostfill")
 Button/colors/font_hover_pressed_color = Color(0.02, 0.027, 0.06, 1)
 Button/colors/font_pressed_color = Color(0.02, 0.027, 0.06, 1)
 Button/constants/h_separation = 12
@@ -505,14 +517,6 @@ GarageRowButton/styles/normal = SubResource("StyleBoxEmpty_garagerowidle")
 GarageRowButton/styles/pressed = SubResource("StyleBoxFlat_garagerowsel")
 GestureChipLabel/base_type = &"Label"
 GestureChipLabel/styles/normal = SubResource("StyleBoxFlat_trkchip")
-GlowLabel/base_type = &"Label"
-GlowLabel/colors/font_color = Color(1, 1, 1, 1)
-GlowLabel/colors/font_outline_color = Color(0.255, 0.686, 1, 1)
-GlowLabel/colors/font_shadow_color = Color(0.255, 0.686, 1, 0.3)
-GlowLabel/constants/outline_size = 4
-GlowLabel/constants/shadow_offset_x = 0
-GlowLabel/constants/shadow_offset_y = 0
-GlowLabel/constants/shadow_outline_size = 12
 HBoxContainer/constants/separation = 12
 HSlider/icons/grabber = ExtResource("4_7depn")
 HSlider/icons/grabber_highlight = ExtResource("4_7depn")
@@ -553,16 +557,16 @@ NameTagLabel/colors/font_outline_color = Color(0, 0, 0, 1)
 NameTagLabel/constants/outline_size = 12
 OutlineScroll/base_type = &"ScrollContainer"
 OutlineScroll/styles/panel = SubResource("StyleBoxFlat_outline")
+OwnLabel/base_type = &"Label"
+OwnLabel/colors/font_color = Color(0.255, 0.686, 1, 1)
 PaddedLabel/base_type = &"Label"
 PaddedLabel/styles/normal = SubResource("StyleBoxEmpty_labelpad")
 PaddedTabContainer/base_type = &"TabContainer"
 PaddedTabContainer/styles/panel = SubResource("StyleBoxEmpty_tabpad")
 PingLabel/base_type = &"Label"
 PingLabel/colors/font_color = Color(0.2, 1, 0.55, 1)
-PopupLabel/base_type = &"GlowLabel"
-PopupLabel/constants/outline_size = 6
-PopupLabel/constants/shadow_outline_size = 16
-PopupLabel/font_sizes/font_size = 40
+PopupLabel/base_type = &"Label"
+PopupLabel/font_sizes/font_size = 36
 PopupMenu/styles/normal = SubResource("StyleBoxTexture_btn_normal")
 PopupMenu/styles/panel = SubResource("StyleBoxFlat_6tpw2")
 PrimaryButton/base_type = &"Button"

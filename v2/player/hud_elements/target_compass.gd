@@ -1,4 +1,4 @@
-## Top-center HUD arrow pointing the local rider at the minimap's checkpoint target, relative to
+## HUD arrow above the minimap, pointing the local rider at the minimap's checkpoint target, relative to
 ## the camera, with the distance under it. While a guide target is on screen it pins over the
 ## target instead. Guide targets (drive to the start) always show it; race checkpoints only on easy.
 ## Local and display-only.
@@ -9,6 +9,11 @@ class_name TargetCompass extends Control
 ## Hidden this close to the target: the server registers a pass after the predicted rider has
 ## crossed, so the arrow would spin round as you go through.
 const HIDE_WITHIN: float = 15.0
+## A short nudge along the heading, looped: how far and how often.
+const NUDGE_PX: float = 4.0
+const NUDGE_HZ: float = 1.5
+const HALO_COLOR := Color(UtilsConstants.UI_BLUE, 0.4)
+const HALO_WIDTH: float = 8.0
 
 @onready var _distance: Label = %Distance
 
@@ -18,6 +23,7 @@ var _angle: float = 0.0
 ## Whether the target is in view, and where it is in this control's space if so.
 var _pinned: bool = false
 var _pin_pos: Vector2
+var _nudge_t: float = 0.0
 
 
 func _ready():
@@ -37,7 +43,8 @@ func deactivate() -> void:
 	hide()
 
 
-func _process(_delta: float):
+func _process(delta: float):
+	_nudge_t += delta
 	var to_target := minimap.checkpoint_pos - _local_player.global_position
 	var to_target_xz := Vector2(to_target.x, to_target.z)
 	visible = (
@@ -78,9 +85,14 @@ func _draw():
 		draw_set_transform(_pin_pos - Vector2(0, r), PI)
 	else:
 		draw_set_transform(size * 0.5, _angle)
+	var nudge := Vector2(0, -NUDGE_PX * (sin(_nudge_t * TAU * NUDGE_HZ) * 0.5 + 0.5))
 	var points := PackedVector2Array(
 		[Vector2(0, -r), Vector2(r * 0.7, r * 0.6), Vector2(0, r * 0.25), Vector2(-r * 0.7, r * 0.6)]
 	)
-	draw_colored_polygon(points, Minimap.COLOR_CHECKPOINT)
-	points.append(points[0])
-	draw_polyline(points, Color.BLACK, 2.0)
+	for i in points.size():
+		points[i] += nudge
+	var outline := points.duplicate()
+	outline.append(points[0])
+	draw_polyline(outline, HALO_COLOR, HALO_WIDTH, true)
+	draw_colored_polygon(points, Color.WHITE)
+	draw_polyline(outline, UtilsConstants.UI_GLASS, 2.0, true)

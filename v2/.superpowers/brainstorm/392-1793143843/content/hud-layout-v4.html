@@ -1,0 +1,173 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500;600&display=swap');
+:root { --blue: #41afff; --gold: #ffd140; --green: #33ff8c; --red: #ff3d3d; --dim: rgba(255,255,255,.6); --track: rgba(255,255,255,.16); }
+
+.wrap { display: grid; grid-template-columns: 1fr 300px; gap: 20px; align-items: start; }
+@media (max-width: 1100px) { .wrap { grid-template-columns: 1fr; } }
+.rules { font-size: 14px; line-height: 1.45; }
+.rules h3 { margin: 0 0 4px; font-size: 15px; }
+.rules p { margin: 0 0 14px; }
+.toggle { margin: 10px 0; font-size: 14px; user-select: none; }
+
+.hud { width: 100%; position: relative; aspect-ratio: 16 / 9; container-type: inline-size; overflow: hidden;
+  background: url('/files/bg.png') center / cover; border-radius: 8px; font-family: 'MuseoModerno', sans-serif; color: #fff; }
+.hud * { --u: calc(100cqw / 1920); }
+/* Readability comes from the screen, not from boxes: one scrim per HUD corner. */
+.hud::before { content: ''; position: absolute; inset: 0; pointer-events: none; background:
+  radial-gradient(ellipse 38% 45% at 0 0, rgba(0,0,0,.55), transparent),
+  radial-gradient(ellipse 38% 55% at 100% 0, rgba(0,0,0,.55), transparent),
+  radial-gradient(ellipse 38% 45% at 0 100%, rgba(0,0,0,.55), transparent),
+  radial-gradient(ellipse 38% 45% at 100% 100%, rgba(0,0,0,.55), transparent); }
+.t { font-weight: 600; } .m { font-weight: 500; }
+.hud .t, .hud .m { text-shadow: 0 calc(var(--u)*2) calc(var(--u)*6) rgba(0,0,0,.75); }
+.f16 { font-size: calc(var(--u)*16); } .f20 { font-size: calc(var(--u)*20); } .f28 { font-size: calc(var(--u)*28); }
+.f48 { font-size: calc(var(--u)*48); } .f80 { font-size: calc(var(--u)*80); line-height: .85; }
+.dim { color: var(--dim); } .you { color: var(--blue); }
+
+/* Spacing: 8 inside a group, 24 between groups, 48 to the screen edge. */
+.corner { position: absolute; display: flex; flex-direction: column; gap: calc(var(--u)*24); }
+.tl { left: calc(var(--u)*48); top: calc(var(--u)*48); }
+.tr { right: calc(var(--u)*48); top: calc(var(--u)*48); align-items: flex-end; text-align: right; }
+.bl { left: calc(var(--u)*48); bottom: calc(var(--u)*48); flex-direction: row; align-items: flex-end; }
+.br { right: calc(var(--u)*48); bottom: calc(var(--u)*48); flex-direction: row; align-items: flex-end; }
+.group { display: flex; flex-direction: column; gap: calc(var(--u)*8); }
+
+/* The ONE object style: key caps, minimap, bars. Same stroke, same corners, same fill. */
+.obj { border: calc(var(--u)*2) solid var(--blue); border-radius: calc(var(--u)*12) calc(var(--u)*4);
+  background: rgba(5,7,15,.75); box-shadow: 0 0 calc(var(--u)*12) rgba(65,175,255,.35); }
+.key { display: inline-flex; align-items: center; justify-content: center; min-width: calc(var(--u)*40); height: calc(var(--u)*40);
+  padding: 0 calc(var(--u)*8); box-sizing: border-box; margin-right: calc(var(--u)*8); }
+.map { width: calc(var(--u)*232); height: calc(var(--u)*232); background: linear-gradient(135deg,#1e5a2c,#2b2f3e 60%,#6b4a2a); }
+.bar { height: calc(var(--u)*8); border-radius: 99px; background: var(--track); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 62%; background: var(--blue); }
+.boost { display: flex; flex-direction: column-reverse; gap: calc(var(--u)*8); }
+.boost i { width: calc(var(--u)*16); height: calc(var(--u)*48); border-radius: calc(var(--u)*4); background: var(--track); }
+.boost i.on { background: var(--blue); }
+.lb { display: grid; grid-template-columns: auto auto auto; column-gap: calc(var(--u)*24); row-gap: calc(var(--u)*4); text-align: right; }
+.lb > :nth-child(3n+1) { text-align: left; }
+.hint { display: flex; align-items: center; }
+
+/* Juice: three verbs, shared by everything. */
+.pop, .wheelie, .punch, .enter { display: inline-block; }
+.pop { animation: pop 4s infinite; transform-origin: center; }
+@keyframes pop { 0%,48% { transform: scale(1); } 52% { transform: scale(1.35) rotate(-6deg); } 60%,100% { transform: scale(1); } }
+.wheelie { transform-origin: left bottom; animation: wheelie 4s infinite; }
+@keyframes wheelie {
+  0%,30% { opacity: 0; transform: scale(.4) rotate(0); }
+  34% { opacity: 1; transform: scale(1.12) rotate(-12deg); }
+  40% { transform: scale(1) rotate(-6deg); }
+  80% { opacity: 1; transform: translateY(0) rotate(-6deg); }
+  92%,100% { opacity: 0; transform: translateY(calc(var(--u)*-40)) rotate(-6deg); } }
+.punch { animation: punch 4s infinite; transform-origin: right bottom; }
+@keyframes punch { 0%,34% { transform: scale(1); } 37% { transform: scale(1.4); } 45%,100% { transform: scale(1); } }
+.enter { animation: enter 4s infinite; }
+@keyframes enter { 0%,54% { opacity: 0; transform: translateX(calc(var(--u)*40)); filter: brightness(1); }
+  58% { opacity: 1; transform: none; filter: brightness(2.2); } 70%,100% { opacity: 1; filter: brightness(1); } }
+.paused .pop, .paused .wheelie, .paused .punch, .paused .enter { animation: none; opacity: 1; }
+
+/* Grid overlay: the 48 safe edge + group bounds. */
+.grid-on .hud::after { content: ''; position: absolute; inset: calc(100cqw/1920*48); border: 1px dashed rgba(255,80,200,.9); pointer-events: none; }
+.grid-on .corner, .grid-on .group { outline: 1px dashed rgba(255,80,200,.6); }
+/* v4: mid-screen rails */
+.rail { position: absolute; top: 50%; display: flex; flex-direction: column; gap: calc(var(--u)*8); }
+.rail.left { left: calc(var(--u)*48); }
+.rail.right { right: calc(var(--u)*48); align-items: flex-end; text-align: right; transform: translateY(-100%); }
+.trow { display: flex; align-items: center; gap: calc(var(--u)*8); justify-content: flex-end; }
+.tag { color: var(--gold); }
+.mid-line { position: absolute; left: 0; right: 0; top: 50%; border-top: 1px dashed rgba(255,80,200,.9); display: none; }
+.grid-on .mid-line { display: block; }
+.grid-on .rail { outline: 1px dashed rgba(255,80,200,.6); }
+</style>
+
+<h2>Feed left, tricks right</h2>
+<p class="subtitle">Left side = the world (map, what others did). Right side = you and your thumbs (trick inputs, combo, speed, boost). Both mid-screen lists hang off the screen's middle line.</p>
+
+<div class="wrap">
+  <div>
+    <div class="hud" id="hud">
+      <div class="mid-line"></div>
+      <div class="corner tl">
+        <div class="group">
+          <div class="t f28">Stunt Race 2</div>
+          <div class="m f20 dim">Race to the finish and trick for points!</div>
+        </div>
+      </div>
+
+      <div class="corner tr">
+        <div class="group">
+          <div class="t f28"><span style="color:var(--green)">$13,516</span>&nbsp;&nbsp;<span style="color:var(--gold)">Lv 5</span></div>
+          <div class="bar" style="width:calc(var(--u)*220); align-self:flex-end"><i style="width:40%; background:var(--gold)"></i></div>
+        </div>
+        <div class="group">
+          <div class="lb m f20">
+            <span class="dim f16">0:42</span><span class="dim f16">Pos</span><span class="dim f16">Score</span>
+            <span class="t you">ssebs</span><span class="t you">P1</span><span class="t you"><span class="pop">30</span></span>
+            <span>rival_01</span><span>P2</span><span>22</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feed: first line sits on the middle line, newest on top, older lines push down toward the map. -->
+      <div class="rail left m f20">
+        <div class="enter"><span class="t you">ssebs</span>&nbsp; Wheelie → Drift &nbsp;<span class="t">+121</span></div>
+        <div><span class="t">rival_01</span>&nbsp; <span style="color:var(--red)">bailed</span> Stoppie &nbsp;<s class="t" style="color:var(--red)">+56</s></div>
+        <div style="opacity:.6"><span class="t">rival_02</span>&nbsp; Superman &nbsp;<span class="t">+49</span></div>
+      </div>
+
+      <!-- Tricks: bottom edge sits on the middle line, list grows upward. Header is the T prompt. -->
+      <div class="rail right m f20">
+        <div class="trow"><span class="t">Tricks</span><span class="obj key" style="margin:0">T</span></div>
+        <div class="trow"><span class="dim f16">Wheelie</span><span>Superman</span><span class="obj key" style="margin:0">↑ flick</span></div>
+        <div class="trow"><span class="dim f16">Air</span><span>Heel Clicker</span><span class="obj key" style="margin:0">← hold</span></div>
+        <div class="trow"><span class="tag f16">event</span><span>Stoppie</span><span class="obj key" style="margin:0">↓ hold</span></div>
+      </div>
+
+      <div style="position:absolute; left:calc(var(--u)*880); top:calc(var(--u)*300)">
+        <div class="wheelie">
+          <div class="t f48">NEAR MISS!</div>
+          <div class="t f28" style="margin-left:calc(var(--u)*24)">+121</div>
+        </div>
+      </div>
+
+      <div class="corner bl">
+        <div class="obj map"></div>
+        <div class="group m f20">
+          <div class="hint"><span class="obj key">M</span>Map</div>
+          <div class="hint"><span class="obj key">R</span>Respawn</div>
+          <div class="hint"><span class="obj key">LMB</span>Use Item</div>
+        </div>
+      </div>
+
+      <div class="corner br">
+        <div class="group" style="align-items:flex-end; width:calc(var(--u)*260)">
+          <div class="t f48" style="color:var(--gold)"><span class="punch">×2</span></div>
+          <div style="display:flex; align-items:flex-end; gap:calc(var(--u)*8)">
+            <div class="t f80">38</div>
+            <div class="group m f20" style="gap:0"><span class="dim">mph</span><span><span class="dim">gear</span> <span class="t">3</span></span></div>
+          </div>
+          <div class="bar" style="width:100%"><i></i></div>
+        </div>
+        <div class="group" style="align-items:center">
+          <div class="boost"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+          <span class="obj key m f20" style="margin:0">F</span>
+        </div>
+      </div>
+    </div>
+    <div class="toggle">
+      <label><input type="checkbox" onchange="document.getElementById('hud').parentElement.classList.toggle('grid-on', this.checked)"> show spacing grid</label>
+      &nbsp;&nbsp;
+      <label><input type="checkbox" onchange="document.getElementById('hud').classList.toggle('paused', this.checked)"> pause motion</label>
+    </div>
+  </div>
+
+  <div class="rules">
+    <h3>Feed → left, from the middle down</h3>
+    <p>Newest line lands on the middle line; older ones push down toward the map and fade. Capped so it never reaches the map. Now left-aligned like everything on the left.</p>
+    <h3>Pinned tricks → right, from the middle up</h3>
+    <p>Takes the spot the feed left. The <b>T</b> prompt becomes the list's header. Rows: state (dim) · trick · input as a key cap, so the input reads like the other key hints.</p>
+    <h3>Mid-trick, same list</h3>
+    <p>When you enter a wheelie/air, the list swaps to that state's bindings in place (today's contextual rows), then swaps back.</p>
+    <h3>Idea: event tricks join it</h3>
+    <p>The race's suggested tricks (now a separate line under the leaderboard) become rows tagged gold <span class="tag">event</span>. One trick list instead of two.</p>
+  </div>
+</div>

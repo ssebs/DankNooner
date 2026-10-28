@@ -48,6 +48,8 @@ func _spawn_mesh():
 		var body := node as CollisionObject3D
 		body.collision_layer = 0
 		body.collision_mask = 0
+	for node in mesh_root.find_children("*", "CSGShape3D", true, false):
+		(node as CSGShape3D).use_collision = false
 	if in_world:
 		for node in mesh_root.find_children("*", "GeometryInstance3D", true, false):
 			(node as GeometryInstance3D).material_override = SILHOUETTE_MATERIAL

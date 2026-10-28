@@ -11,4 +11,4 @@
 
 [node name="PickupSpawner" type="Marker3D" unique_id=761218876]
 script = ExtResource("1_tmwld")
-items = Array[ExtResource("2_i5tgj")]([ExtResource("3_i5tgj"), ExtResource("3_ixykb"), ExtResource("5_tkrva"), ExtResource("6_fgppl"), ExtResource("7_c60v4"), ExtResource("8_rally")])
+items = Array[ExtResource("2_i5tgj")]([ExtResource("7_c60v4"), ExtResource("3_i5tgj"), ExtResource("3_ixykb"), ExtResource("5_tkrva"), ExtResource("6_fgppl"), ExtResource("8_rally")])

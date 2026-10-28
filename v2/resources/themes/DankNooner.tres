@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://drilpv5hu6f3o" path="res://resources/icons/checkbox-checked.svg" id="2_hydtf"]
 [ext_resource type="Texture2D" uid="uid://bpsmj74n6f4lq" path="res://resources/icons/checkbox-unchecked.svg" id="3_7depn"]
 [ext_resource type="Texture2D" uid="uid://vvvtkn4b0s0q" path="res://resources/img/Icons/circleIcon.png" id="4_7depn"]
+[ext_resource type="StyleBox" path="res://resources/themes/DankNooner/object.tres" id="5_object"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_avatarring"]
 content_margin_left = 0.0
@@ -28,6 +29,18 @@ expand_margin_right = 4.0
 expand_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iun4r"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_boostfill"]
+bg_color = Color(0.16, 0.34, 0.48, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 10
+corner_radius_top_right = 3
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vtut7"]
 content_margin_left = 12.0
@@ -512,6 +525,9 @@ AvatarRingPanel/base_type = &"PanelContainer"
 AvatarRingPanel/styles/panel = SubResource("StyleBoxFlat_avatarring")
 BarePanel/base_type = &"PanelContainer"
 BarePanel/styles/panel = SubResource("StyleBoxEmpty_iun4r")
+BoostCell/base_type = &"ProgressBar"
+BoostCell/styles/background = ExtResource("5_object")
+BoostCell/styles/fill = SubResource("StyleBoxFlat_boostfill")
 Button/constants/h_separation = 12
 Button/styles/disabled = SubResource("StyleBoxFlat_vtut7")
 Button/styles/focus = SubResource("StyleBoxFlat_bvbyg")

@@ -150,17 +150,9 @@ Both live bottom-left in a `BoostCluster` VBox (counter above gauge). Consts in 
 
 Cell tint **snaps** during a blink instead of easing — at a short blink period the normal smoothing averages the on/off frames into a muddy constant.
 
-**`combo_counter.gd`** — escalates with the tier (`tier = multiplier - 1`):
-
-| Const | Effect |
-| --- | --- |
-| `TIER_COLORS` | Tint per tier; last entry reused past the end. |
-| `SCALE_PER_TIER` | Base size added per tier, so higher tiers read bigger. |
-| `PUNCH_SCALE` / `PUNCH_DECAY` | Size spike on step-up and how fast it settles. |
-| `PUNCH_TRAUMA` / `TRAUMA_PER_TIER` / `TRAUMA_DECAY` | Shake spike on step-up, the constant floor held per tier, decay rate. |
-| `SHAKE_MAX_PX` | Shake displacement at full trauma. |
-| `THROB_HZ` / `THROB_PER_TIER` | Idle throb so a high combo never sits still. |
-| `FADE_SPEED` | Fade in/out rate. |
+**`combo_counter.gd`** — gold (`COLOR`, reward) at every tier, fading in and out with the combo
+(`FADE_SPEED`). A step up plays `HUDFlash.punch`, the HUD's "a tier changed" verb; it never
+shakes, since shake means danger.
 
 Visibility keys off `combo_time > 0`, **not** the multiplier — an earlier version gated on `multiplier > 1` and so showed nothing until the first multiplier step, which read as broken.
 

@@ -18,7 +18,7 @@ import math
 import re
 import struct
 import zlib
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -53,8 +53,7 @@ CHIP_RADII = (12, 4, 12, 4)
 TAB_RADII = (12, 4, 0, 0)
 BACKDROP_RADII = (24, 6, 24, 6)
 CLEAR = (0, 0, 0, 0)
-SCAN_PERIOD = 8  # px; the tiled centre is one period tall so the lines run seamlessly
-SCAN_LINE = 3  # px lit per period
+CENTRE = 8  # px; the stretched middle of each 9-patch
 
 
 @dataclass
@@ -66,7 +65,6 @@ class Box:
     border_color: tuple = CLEAR
     glow_color: tuple = CLEAR
     glow: int = 0
-    scan: float = 0.0  # 80s scanline strength (border-tinted lines over the fill); 0 = none
 
     def margin(self) -> int:
         return self.glow + max(self.radii) + self.border + 2
@@ -84,7 +82,6 @@ class Look:
     border: int
     alpha: float  # panel fill opacity
     rest_glow: float  # resting glow strength; 0 = glow only on hover / focus / press
-    scan: float = 0.0  # scanlines on the large panels
 
 
 def _mix(a: tuple, b: tuple, t: float) -> tuple:
@@ -112,8 +109,8 @@ def _boxes(k: Look) -> dict:
     disabled = dict(fill_top=(0.12, 0.12, 0.16, 1), fill_bot=(0.06, 0.06, 0.09, 1), border_color=(0.28, 0.3, 0.4, 1))
     dark = fill(SKY, SKY, 0.95)
     return {
-        "panel": Box(border=b, scan=k.scan, **panel, **rest),
-        "backdrop": Box(BACKDROP_RADII, b, scan=k.scan, **fill(k.top, k.bot, k.alpha - 0.05), **lit(k.edge, 0.3 * k.rest_glow, 18)),
+        "panel": Box(border=b, **panel, **rest),
+        "backdrop": Box(BACKDROP_RADII, b, **fill(k.top, k.bot, k.alpha - 0.05), **lit(k.edge, 0.3 * k.rest_glow, 18)),
         "outline": Box(border=b, **rest),
         "btn_normal": Box(border=b, **button, **lit(k.edge, 0.3 * k.rest_glow, 10)),
         "btn_hover": Box(border=b, **hover),
@@ -143,26 +140,18 @@ def _font(weight: str) -> str:
     return f'SubResource("Font_{weight}")'
 
 
-# Menus: clean glass — hairline borders, light only where you act, scanlines for the 80s.
+# Menus: clean glass — hairline borders, light only where you act.
 MENU = Look(
     top=GLASS, bot=GLASS, edge=BLUE, hot=BLUE, hot_border=ICE,
-    focus=ICE, border=1, alpha=0.75, rest_glow=0.0, scan=0.08,
+    focus=ICE, border=1, alpha=0.75, rest_glow=0.0,
 )
-# White text in a blue neon tube with a faint halo: callouts, +points, your own leaderboard row.
-# In both themes — hud_neon's Label outline would otherwise win over the menu theme's.
-GLOW_PROPS = {
-    "GlowLabel/base_type": '&"Label"',
-    "GlowLabel/colors/font_color": (1, 1, 1, 1),
-    "GlowLabel/colors/font_outline_color": (*BLUE, 1),
-    "GlowLabel/constants/outline_size": 4,
-    "GlowLabel/colors/font_shadow_color": (*BLUE, 0.3),
-    "GlowLabel/constants/shadow_offset_x": 0,
-    "GlowLabel/constants/shadow_offset_y": 0,
-    "GlowLabel/constants/shadow_outline_size": 12,
-    "PopupLabel/base_type": '&"GlowLabel"',
-    "PopupLabel/font_sizes/font_size": 40,
-    "PopupLabel/constants/outline_size": 6,
-    "PopupLabel/constants/shadow_outline_size": 16,
+# Flat text, like the logo: callouts / +points, and your own leaderboard row in blue. In both
+# themes, as the results screen and garage pops only get the menu theme.
+FLAT_PROPS = {
+    "PopupLabel/base_type": '&"Label"',
+    "PopupLabel/font_sizes/font_size": 36,
+    "OwnLabel/base_type": '&"Label"',
+    "OwnLabel/colors/font_color": (*BLUE, 1),
 }
 
 # Set on top of DankNooner.tres's [resource]: a drop shadow for legibility over the world, dark
@@ -186,7 +175,7 @@ PROPS = {
     "Heading1Label/fonts/font": _font("Bold"),
     "TableHeaderLabel/fonts/font": _font("Bold"),
     "TableHeaderLabel/colors/font_color": (*BLUE, 1),
-    **GLOW_PROPS,
+    **FLAT_PROPS,
     "MoneyLabel/base_type": '&"Label"',
     "MoneyLabel/colors/font_color": (*GREEN, 1),
     "MoneyLabel/colors/font_outline_color": (*GLASS, 1),
@@ -207,7 +196,7 @@ SWAPS = {
     "StyleBoxFlat_yn56u": "btn_hover",
     "StyleBoxFlat_7depn": "btn_pressed",
     "StyleBoxFlat_4v18w": "btn_primary",
-    "StyleBoxFlat_hudpanel": "hud_glass",
+    "StyleBoxFlat_hudpanel": "panel",
     "StyleBoxFlat_menupanel": "panel",
     "StyleBoxFlat_6tpw2": "panel",
     "StyleBoxFlat_backdrop": "backdrop",
@@ -233,19 +222,41 @@ SWAPS = {
 # External StyleBox files the base theme references: ext id -> _boxes() name.
 EXT_SWAPS = {"1_bvbyg": "btn_normal"}
 
-# hud_neon.tres overlays the riding HUD: thin dark outlines on text instead of 8px black.
+def _outlined(theme_type: str, size: int) -> dict:
+    """The dark outline, and a hard drop of the outlined glyph under it."""
+    return {
+        f"{theme_type}/colors/font_outline_color": (*GLASS, 1),
+        f"{theme_type}/constants/outline_size": size,
+        f"{theme_type}/colors/font_shadow_color": (*GLASS, 0.8),
+        f"{theme_type}/constants/shadow_offset_x": 0,
+        f"{theme_type}/constants/shadow_offset_y": size // 2,
+        f"{theme_type}/constants/shadow_outline_size": size,
+    }
+
+
+# Values: speed, scores, names, money. The closest theme wins per item, so each needs its own font
+# here or it gets hud_neon's Label font.
+TITLE_TYPES = ("HUDTitleLabel", "MoneyLabel", "XPLabel", "OwnLabel", "PopupLabel")
+
+# hud_neon.tres overlays the riding HUD: Main (Medium) for words, Title (SemiBold) for values, and
+# one dark outline on every text so white can't blend into the world's neon.
 HUD_PROPS = {
-    "Label/colors/font_outline_color": (*GLASS, 1),
-    "Label/constants/outline_size": 4,
-    "Label/colors/font_shadow_color": (0, 0, 0, 0.6),
-    "Label/constants/shadow_offset_x": 0,
-    "Label/constants/shadow_offset_y": 2,
-    "RichTextLabel/colors/font_outline_color": (*GLASS, 1),
-    "RichTextLabel/constants/outline_size": 4,
+    "Label/fonts/font": _font("Medium"),
+    "Label/font_sizes/font_size": 20,
+    **_outlined("Label", 6),
+    "RichTextLabel/fonts/normal_font": _font("Medium"),
+    "RichTextLabel/fonts/bold_font": _font("SemiBold"),
+    **_outlined("RichTextLabel", 6),
+    "HUDTitleLabel/base_type": '&"Label"',
+    **{f"{t}/fonts/font": _font("SemiBold") for t in TITLE_TYPES},
+    # 48 / 80
+    "HUDHeroLabel/base_type": '&"HUDTitleLabel"',
+    **_outlined("HUDHeroLabel", 10),
+    "DimLabel/base_type": '&"Label"',
+    "DimLabel/colors/font_color": (1, 1, 1, 0.6),
     "XPLabel/colors/font_color": (*GOLD, 1),
-    "XPLabel/constants/outline_size": 4,
     "WarningLabel/colors/font_color": (*RED, 1),
-    **GLOW_PROPS,
+    **FLAT_PROPS,
 }
 
 SIDES = ("left", "top", "right", "bottom")
@@ -282,7 +293,7 @@ def _clamp01(v: float) -> float:
 
 def render(box: Box) -> tuple:
     m = box.margin()
-    size = 2 * m + SCAN_PERIOD
+    size = 2 * m + CENTRE
     hw = hh = size / 2.0 - box.glow
     inner_px = box.border + 6
     pixels = bytearray()
@@ -298,8 +309,6 @@ def render(box: Box) -> tuple:
                 falloff = _clamp01(1.0 - d / box.glow) ** 2
                 _over(px, box.glow_color[:3], box.glow_color[3] * falloff * (1.0 - inside))
             _over(px, fill[:3], fill[3] * inside)
-            if box.scan > 0 and y % SCAN_PERIOD < SCAN_LINE:
-                _over(px, box.border_color[:3], box.scan * inside)
             # Inner glow: the border's light bleeding inward, like a neon tube.
             if d < 0.0:
                 inner = _clamp01(1.0 - (-d - box.border) / inner_px) ** 2
@@ -377,8 +386,6 @@ def _texture_box(sub_id: str, box: Box, name: str, props: dict) -> str:
         content = props.get(f"content_margin_{side}", props.get(f"border_width_{side}", "0"))
         lines.append(f"content_margin_{side} = {float(content)}")
     lines.append(f'texture = ExtResource("neon_{name}")')
-    if box.scan > 0:
-        lines.append("axis_stretch_vertical = 2")  # tile-fit the centre so scanlines don't smear
     for side in SIDES:
         lines.append(f"texture_margin_{side} = {float(box.margin())}")
     for side in SIDES:
@@ -432,9 +439,7 @@ def build_theme(
 
 
 def main() -> None:
-    menu = _boxes(MENU)
-    # Scanlines are for the large menu panels, not the small HUD ones.
-    boxes = {**menu, "hud_glass": replace(menu["panel"], scan=0.0)}
+    boxes = _boxes(MENU)
     TEX_DIR.mkdir(parents=True, exist_ok=True)
     used = build_theme("DankNooner.tres", "DankNoonerNeon.tres", SWAPS, EXT_SWAPS, PROPS, boxes)
     used |= build_theme("hud.tres", "hud_neon.tres", {}, {}, HUD_PROPS, boxes)

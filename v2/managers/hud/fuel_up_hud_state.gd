@@ -43,12 +43,14 @@ func Update(_delta: float):
 	var spilling := minigame.is_spilling()
 	if spilling and !_was_spilling:
 		# Popped off ui, not the gauge: the gauge is a PanelContainer and would grow to fit the label.
-		TrickPopups.spawn_pop(
-			ui,
-			tr("CALLOUT_SPILLING"),
-			TrickPopups.OOF_COLOR,
-			_gauge.get_global_rect().get_center() - ui.global_position,
-			TrickPopups.DRIFT_PX
+		HUDFlash.shake(
+			TrickPopups.spawn_pop(
+				ui,
+				tr("CALLOUT_SPILLING"),
+				TrickPopups.OOF_COLOR,
+				_gauge.get_global_rect().get_center() - ui.global_position,
+				TrickPopups.SINK_PX
+			)
 		)
 	_was_spilling = spilling
 

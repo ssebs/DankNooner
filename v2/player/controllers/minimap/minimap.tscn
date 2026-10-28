@@ -10,7 +10,7 @@ background_color = Color(0.25490198, 0.6862745, 1, 1)
 offset_right = 220.0
 offset_bottom = 220.0
 mouse_filter = 2
-theme_type_variation = &"HUDPanel"
+theme_type_variation = &"ObjectPanel"
 script = ExtResource("1_mnmap")
 metadata/_custom_type_script = "uid://dv5hbxyi6qcpk"
 
@@ -56,7 +56,7 @@ theme_override_constants/margin_bottom = 32
 [node name="LegendPanel" type="PanelContainer" parent="Legend" unique_id=1873462015]
 layout_mode = 2
 mouse_filter = 2
-theme_type_variation = &"HUDPanel"
+theme_type_variation = &"BarePanel"
 
 [node name="LegendRows" type="VBoxContainer" parent="Legend/LegendPanel" unique_id=1873462016]
 unique_name_in_owner = true
