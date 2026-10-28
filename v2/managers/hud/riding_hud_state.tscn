@@ -360,7 +360,7 @@ size_flags_vertical = 8
 mouse_filter = 2
 theme_override_constants/separation = 8
 
-[node name="HUD_HeldItem" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster" unique_id=774900946]
+[node name="HUD_HeldItem" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster" unique_id=774900946]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -370,19 +370,21 @@ theme_override_constants/separation = 0
 
 [node name="HUD_HeldItemThumbnail" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster/HUD_HeldItem" unique_id=1897137762 instance=ExtResource("99_thumb")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(192, 192)
+custom_minimum_size = Vector2(160, 192)
 layout_mode = 2
 size_flags_horizontal = 4
 type = 3
-camera_position = Vector3(5.25, 3.1, 5.25)
-camera_look_at = Vector3(0, 0.4, 0)
+camera_position = Vector3(4.2, 2.06, 4.2)
+camera_look_at = Vector3(0, -0.1, 0)
 camera_fov = 40.0
 
 [node name="HUD_HeldItemName" type="Label" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster/HUD_HeldItem" unique_id=1385063352]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 8
+theme_type_variation = &"DimLabel"
+theme_override_font_sizes/font_size = 16
 text = "ITEM_SHOTGUN"
-horizontal_alignment = 1
 
 [node name="SpeedRow" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/GuageCluster"]
 layout_mode = 2

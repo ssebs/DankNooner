@@ -59,7 +59,7 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _prompts: Array[InputPrompt] = [
 	%HUD_TrickPromptBtn, %HUD_BoostPrompt, %HUD_MapPrompt, %HUD_RespawnPrompt, %HUD_ItemPrompt
 ]
-@onready var _held_item_panel: VBoxContainer = %HUD_HeldItem
+@onready var _held_item_panel: HBoxContainer = %HUD_HeldItem
 @onready var _held_item_thumbnail: Thumbnail3D = %HUD_HeldItemThumbnail
 @onready var _held_item_name: Label = %HUD_HeldItemName
 
