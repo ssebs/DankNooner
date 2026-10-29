@@ -45,6 +45,8 @@ const CAR_SKINS_DIR: String = "res://resources/cars/skins/"
 ## Race NPCs count down from -1; traffic starts far below so the two can never
 ## produce the same node name under the level's spawn node.
 const FIRST_ID: int = -1000
+## Only BikeWreck masks this, so traffic shoves crashed bikes while riders still pass through.
+const TRAFFIC_BODY_LAYER_MASK: int = 128 # 1 << 7 (layer 8 "traffic_body")
 ## How far along its lane a recovered rider is dropped back in.
 const RECOVER_AHEAD: float = 4.0
 ## Room a spawning or recovering rider needs at its drop point before it will take it.
@@ -297,7 +299,7 @@ func rpc_spawn_npc(npc_id: int, skin_index: int, pos: Vector3, basis: Basis):
 	npc.paint_colors = level_manager.current_level.traffic_settings.paint_colors
 	# On every peer, or a predicting client would bump into a body the server rides through.
 	# Traffic rides rails; its ContactArea reports hits instead.
-	npc.collision_layer = 0
+	npc.collision_layer = TRAFFIC_BODY_LAYER_MASK
 	npc.collision_mask = 0
 
 	_find_network_node().add_child(npc, true)

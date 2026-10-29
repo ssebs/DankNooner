@@ -27,8 +27,6 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 
-- [ ] Replace win tada sound usage
-
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
 
@@ -71,7 +69,7 @@
   - [ ] Gamba: spin the wheel (or roulette / random game) to win unique prizes when leveling up? Can buy with $
 - [ ] Save slot menu: save/load specific saves, split between demo vs full game saves (see "Demo savegame" under Steam Prep)
   - `SaveManager.save_slot` already picks `user://savegame_%d.json`, no menu yet
-  - both builds share `user://` (export.sh only swaps app_id) and Steam Cloud syncs `savegame_*.json`, so demo saves are `savegame_01_demo.json` (still matches the pattern; names never collide with full saves)
+  - both builds share `user://` (export.sh only swaps app_id) and Steam Cloud syncs `savegame_*.json`, so demo saves are `savegame_%d_demo.json`, existing files stay full game saves (still matches the pattern; names never collide with full saves)
 
 ### Controller UX Improvements
 - [ ] full navigation across menus, HUDs & in-world UI
@@ -244,6 +242,8 @@
 ---
 
 ## Done ✅
+- [x] Replace win tada sound usage
+
 - [x] Grinding sound should be in 3d space
 
 - [x] free ride => host private lobby of default type, can invite friends but no need to wait in lobby.

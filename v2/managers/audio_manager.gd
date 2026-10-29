@@ -635,10 +635,6 @@ func play_vine_boom():
 	vine_boom.play()
 
 
-func play_tada():
-	tada.play()
-
-
 func play_nuke():
 	nuke.play()
 

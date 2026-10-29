@@ -171,7 +171,7 @@ requirement next to the price; locked items can't be bought.
 
 A save slot menu to save/load specific saves. Demo and full builds share `user://` (`export.sh`
 only swaps the app id) and Steam Cloud syncs `savegame_*.json`, so demo saves are named
-`savegame_01_demo.json`: still inside the cloud pattern, never colliding with a full save. Each
+`savegame_%d_demo.json`: still inside the cloud pattern, never colliding with a full save. Each
 build lists only its own saves. See also "Demo savegame" in TODO's Steam Prep.
 
 - **Existing saves are full game saves.** Full saves keep today's `savegame_%d.json` names, so

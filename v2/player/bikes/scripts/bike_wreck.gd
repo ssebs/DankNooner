@@ -15,8 +15,9 @@ const HIGHSIDE_ROLL_SPEED: float = 8.0
 const HIGHSIDE_FLIP_SPEED: float = 3.0
 ## Min contact speed (m/s) that throws sparks and grinds.
 const GRIND_MIN_SPEED: float = 2.0
-## A riderless bike only rests on a side: while touching with |up · world up| above ON_SIDE_MAX_UP_DOT
-## (upright or upside down), it's rolled toward horizontal at SIDE_ROLL_ACCEL (rad/s²), at any speed.
+## A riderless bike only rests on a side: while touching with its up or length axis within
+## ON_SIDE_MAX_UP_DOT of vertical (upright, upside down, or on a wheel end), that axis is tipped
+## toward horizontal at SIDE_ROLL_ACCEL (rad/s²), at any speed.
 const ON_SIDE_MAX_UP_DOT: float = 0.5
 const SIDE_ROLL_ACCEL: float = 30.0
 ## Speed change (m/s) within one physics step that counts as a hard hit, and min gap (s) between hit sounds.
@@ -45,13 +46,13 @@ func _ready() -> void:
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	var touching := state.get_contact_count() > 0
-	var bike_up := state.transform.basis.y
-	var up_dot := bike_up.dot(Vector3.UP)
+	var bike_basis := state.transform.basis
 
-	# Upright it's rolling on its tires, so only a side or upside-down slide scrapes.
+	# Upright or on a wheel end it's on its tires, so only a side or upside-down slide scrapes.
 	_is_grinding = (
 		touching
-		and up_dot <= ON_SIDE_MAX_UP_DOT
+		and bike_basis.y.dot(Vector3.UP) <= ON_SIDE_MAX_UP_DOT
+		and absf(basis.z.dot(Vector3.UP)) <= ON_SIDE_MAX_UP_DOT
 		and state.linear_velocity.length() > GRIND_MIN_SPEED
 	)
 	if _is_grinding:
@@ -61,13 +62,10 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		_impact_pending = true
 	_prev_velocity = state.linear_velocity
 
-	if touching and absf(up_dot) > ON_SIDE_MAX_UP_DOT:
-		# Upright: tip bike_up away from world up. Upside down: toward it. Either way, toward a side.
-		var roll_axis := Vector3.UP.cross(bike_up).normalized() * signf(up_dot)
-		# Dead vertical has no lean to follow, so roll about the bike's length.
-		if roll_axis.is_zero_approx():
-			roll_axis = state.transform.basis.z
-		state.angular_velocity += roll_axis * SIDE_ROLL_ACCEL * state.step
+	if touching:
+		# Roll off upright / upside down, pitch off a wheel end.
+		_tip_off_vertical(state, bike_basis.y, bike_basis.z)
+		_tip_off_vertical(state, bike_basis.z, bike_basis.x)
 
 
 func _process(delta: float) -> void:
@@ -131,6 +129,18 @@ func _fit_shape() -> void:
 	shape.size = box.size
 	wreck_shape.shape = shape
 	wreck_shape.position = box.get_center()
+
+
+## Spin `axis` away from world up if it's near vertical, either way up, toward a side. Dead vertical
+## has no lean to follow, so it spins about `fallback`.
+func _tip_off_vertical(state: PhysicsDirectBodyState3D, axis: Vector3, fallback: Vector3) -> void:
+	var up_dot := axis.dot(Vector3.UP)
+	if absf(up_dot) <= ON_SIDE_MAX_UP_DOT:
+		return
+	var tip_axis := Vector3.UP.cross(axis).normalized() * signf(up_dot)
+	if tip_axis.is_zero_approx():
+		tip_axis = fallback
+	state.angular_velocity += tip_axis * SIDE_ROLL_ACCEL * state.step
 
 
 ## Start/stop the looping grind on slide edges, like SkidmarkController's tire squeal.

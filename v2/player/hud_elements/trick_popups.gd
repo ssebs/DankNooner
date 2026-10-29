@@ -8,7 +8,7 @@
 ##    wheelieing / stoppieing / airborne, plus the race wheelie stopwatch
 ##  - up and right of center: a callout for every trick started (TRICK_CALLOUTS, else the trick's
 ##    name), timed HOLD_CALLOUTS, and any server-sent callout
-## Sfx: tada on a combo multiplier step up, ding on a score pop. Callouts stay silent.
+## Sfx: rizz on a combo multiplier step up, ding on a score pop. Callouts stay silent.
 ## Each pop enters with a HUDFlash verb (callouts wheelie, scores pop, bails shake), holds, then
 ## sinks as it fades. Each is its own Label, so rapid pops stack instead of resetting.
 class_name TrickPopups extends Control
@@ -154,7 +154,7 @@ func track(
 	_live.visible = tc.combo_time > 0.0 and not player.is_crashed
 	_multiplier.visible = _live.visible and tc.combo_multiplier > 1
 	if _live.visible and tc.combo_multiplier > _last_multiplier:
-		audio_manager.play_tada()
+		audio_manager.play_sfx(AudioManager.Sfx.RIZZ)
 		HUDFlash.punch(_multiplier)
 	_last_multiplier = tc.combo_multiplier if _live.visible else 1
 	if _live.visible:

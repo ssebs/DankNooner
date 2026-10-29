@@ -289,6 +289,7 @@ locale/translations=PackedStringArray("res://localization/localization.en.transl
 3d_physics/layer_5="unstable_collision"
 3d_physics/layer_6="interactable"
 3d_physics/layer_7="road"
+3d_physics/layer_8="traffic_body"
 
 [navigation]
 
