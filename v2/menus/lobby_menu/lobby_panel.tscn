@@ -32,7 +32,7 @@ text = "INVITE_LABEL"
 custom_minimum_size = Vector2(600, 400)
 layout_mode = 2
 theme_type_variation = &"InsetScroll"
-vertical_scroll_mode = 2
+vertical_scroll_mode = 1
 
 [node name="PlayersList" type="VBoxContainer" parent="ScrollContainer"]
 unique_name_in_owner = true

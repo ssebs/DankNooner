@@ -2,13 +2,14 @@
 > **Convention:** `In-Progress 🚨` is the high-level focus; `Tasks 📋` has the details.
 > They're loosely priority-ordered, tails are wishes. Items go stale; verify against code.
 - [In-Progress 🚨](#in-progress-)
-- [Notes 📝](#notes-)
+		- [Steam Prep](#steam-prep)
 - [Tasks 📋](#tasks-)
+	- [Game-breaking bugs](#game-breaking-bugs)
+	- [Challenges](#challenges)
 	- [Controller UX Improvements](#controller-ux-improvements)
 	- [HUD Improvements](#hud-improvements)
 	- [New Large Map](#new-large-map)
 	- [Progression \& Customization for final game](#progression--customization-for-final-game)
-	- [Game-breaking bugs](#game-breaking-bugs)
 	- [Gamemodes / scoring](#gamemodes--scoring)
 	- [Juice / "Feel"](#juice--feel)
 	- [Audio](#audio)
@@ -24,48 +25,54 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-- [ ] [WIP MiniTasks](_ScratchPad.md)
+- [ ] [WIP MISC](_ScratchPad.md)
 
-- [ ] Improve pvp hud during stunt race/events
-  - [x] trick feed
-  - [x] more juice when score goes up in that menu?
-  - [x] new hud styling
-  - [ ] cleanup / finalize hud style
-    - [ ] rm scanlines? or animate them
-    - [ ] name should not be glowing white/blue, make green?
-- [ ] Create separate location (new event start circles) just for stunt/trick battle, remove from existing races so they dont spawn checkpoint markers
-  - [ ] wip - stunt_battle_arena
-- [ ] Steam
-  - [ ] Steam page [WIP]
-    - [x] $100
-    - [x] basic setup
-    - [x] working build
-    - [x] full setup / link live
-    - [ ] Trailer
-  - [ ] Demo release
-    - [x] Get racing AI working [WIP]
-      - [ ] tricks / Items
-        - [ ] npcs get stuck on corners + cant go fast enough for the ramps
-        - [ ] continue w/ `____NPC_RACER_AI_WIP.md`
-      - [ ] easy/hard difficulty setting for AI
-    - [ ] Balancing points / score
-    - [ ] Demo savegame should be different from main game
-    - [ ] Start with tutorial level (lock StuntCity until tutorial is complete)
-    - [ ] Demo is open source, new private repo for full version
-  - [ ] > steam next fest Feb '27
-  - [ ] Release after free to play  w/ paid dlc for more content/skins
----
+#### Steam Prep
+> Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
 
-## Notes 📝
-> Stuff to move ASAP
+- [ ] Demo release
+  - [x] Get racing AI working [WIP]
+    - [ ] tricks / Items
+      - [ ] npcs get stuck on corners + cant go fast enough for the ramps
+      - [ ] continue w/ `____NPC_RACER_AI_WIP.md`
+    - [ ] easy/hard difficulty setting for AI
+  - [ ] Balancing points / score
+  - [ ] Demo savegame should be different from main game
+  - [ ] Start with tutorial level (lock StuntCity until tutorial is complete)
+  - [ ] Demo is open source, new private repo for full version
+- [ ] Better / Offical Trailer (concise, hook-y)
+  - [ ] hud toggle in editor for trailer
+  - [ ] record gameplay for trailer
+  - [ ] record "streamer" moments
+- [ ] reach out to [streamers](https://www.reddit.com/r/indiegames/comments/164i572/comment/jyb6rgq/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
+
 ---
 
 ## Tasks 📋
+
+### Game-breaking bugs
+- [ ] Npcs missing checkpoints makes the player respawn
+  - [ ] need to confirm
+- [ ] Npcs drive off road too much
+- [ ] when a car crashes it jitters back/forth after you respawn
+- [ ] return to lobby (force everyone)
+- [ ] review all code & cleanup to call authority done
+- [ ] Review WebRTC gen code for security
+- [ ] TP commands dont work on multiplayer?
+
+### Challenges
+- [ ] Make challenges like cod skin grind
+  - [ ] Daily challenges, per bike challenges (10x double backflip, 10 mins of total wheelie duration, etc), win/loss challenges
+  - [ ] Menu for checking stats
+- [ ] Rewards are skin unlocks? Or currency to buy unlocks
+  - [ ] Xp unlocks, money buys items?
+  - [ ] Gamba: spin the wheel (or roulette / random game) to win unique prizes when leveling up? Can buy with $
 
 ### Controller UX Improvements
 - [ ] full navigation across menus, HUDs & in-world UI
 - [ ] cant use controller to select in customize menu
 - [ ] hard to use fill up minigame
+- [ ] PC? RMB + move up/left/right like joystick should do tricks too instead of only arrow keys
 
 ### HUD Improvements
 - [ ] Fill up => race is not obvious where to go/not consistent across all races 
@@ -96,6 +103,7 @@
   - [ ] maybe like simpsons hit & run where 1 level has 1 bike type/map?
   - [ ] How will this work with multiplayer? Could be everyone follows host's save
     - [ ] idea 1 - each player's story progress lives in their own save. When playing together, the host's events run and everyone gets paid, but story progress only advances for the players who were at that point in the story.
+  - [ ] Story/Plot - growing a social media account to be a biketok content creator, need to get followers to progress (like skate 2/3), events are hosted like actual stunt events/competitions in skate
   - [ ] Collectables
   - [ ] Unlockable mods
   - [x] unlockable skins
@@ -116,6 +124,15 @@
   - [ ] vespa
   - [ ] tron bike
   - [ ] pocket bike
+  - [ ] use shrunken car as a joke motorcycle
+  - [ ] Create model combo for Dilly
+    - [ ] e-bike
+    - [ ] guy riding a bicycle with gloves & bicycle helmet
+    - [ ] use adventurer from Ultimate Modular Men Pack-glb
+      - [ ] add bicycle helmet + gloves on the src model
+    - [ ] (char mods? add a marker for top of head per character, then scale/offsets for each skin for the generic "hat", each hat should work on a base char size for it to fit on all)
+      - [ ] maybe place for: top of head, front of head, back
+  - [ ] 3d model & rig my daily riding outfit
   - [x] more characters
     - [x] pughead from guac and load
     - [x] zombie from guac and load
@@ -123,21 +140,9 @@
 - [ ] Mods
   - [ ] Wings as mod for sport bike
   - [ ] Scraper mod — add sparks during wheelie
-
-### Game-breaking bugs
-- [ ] First launch on Mac web stuck in gas pump camera if you leave to main menu then come back it fixes
-  - [ ] need to reproduce
-- [ ] players can move at start on Race, not stunt race
-  - [ ] merge shared stuff from race+stuntrace aka spawning stuff like this
-  - [ ] fixed?
-- [ ] Road generator lanes + AI
-- [ ] landing mega ramp jump causes crash
-  - [x] only use yaw in speed wobble code
-  - [ ] tweak speed wobbles from yaw
-- [ ] return to lobby (force everyone)
-- [ ] review all code & cleanup to call authority done
-- [ ] Review WebRTC gen code for security
-- [ ] TP commands dont work on multiplayer
+  - [ ] Training wheels (lowside prevention)
+  - [ ] Underglow on bike
+  - [ ] exhaust
 
 ### Gamemodes / scoring
 - [ ] Trick Battle / Score Attack gamemode
@@ -147,9 +152,11 @@
 - [ ] Pizza Delivery
 - [ ] holding T pose should not grant so many points / score
   - [ ] need some penalty for simple tricks vs combos
-- [ ] add some form of gamba (spin wheel / roulette / random game)
 - [ ] free roam wheelie challenge/points scoring should be longer than 1min and explain what it is
 - [ ] Time trial/pb scores should factor in which bike you're riding (have separate ones for each bike)
+- [ ] Armor/shield item stops you from getting hit by cars/items
+- [ ] close call oncoming traffic should 2x vs close call same dir?
+- [ ] Add first person checkbox option to force it for everyone during an event
 
 ### Juice / "Feel"
 - [ ] Label3d + script so all in group are removed on runtime for notes
@@ -197,6 +204,7 @@
 - [ ] Grinding tricks (jump in air, grind on house fences)
 - [ ] trick animation to move up then play the mixamo anims
 - [ ] wheelie turning animation should yaw
+- [ ] slow speed turning anim doesn't look right (front wheel going into ground, not sharp enough turn / realistic counter leaning)
 
 ### Cutscenes
 - [ ] dynamic, use animation player to define
@@ -218,67 +226,59 @@
 - [ ] try to have the camera look where your eyes are supposed to look irl when riding
 - [ ] r => quick respawn, add btn for set full respawn point (if not in race)
 - [ ] 1, 2, 3 spam is possible for everyone, debounce this
+- [ ] more car models / cleaner w/ neon fx & working lights/blinder
+  - [ ] give cars headlights
+- [ ] Add more ramp flow / alternate driving line on level
+- [ ] eventstartcircle event names are too big / ugly
 
 ---
 
 ## Done ✅
+- [x] Customize menu glow on select gets cut off
+- [x] Bottom left btn corner should be round
+- [x] Steam page
+  - [x] $100
+  - [x] basic setup
+  - [x] working build
+  - [x] full setup / link live
+  - [x] improved tags
+- [x] Improve pvp hud during stunt race/events
+  - [x] trick feed
+  - [x] more juice when score goes up in that menu?
+  - [x] new hud styling
+  - [x] cleanup hud
+- [x] landing mega ramp jump causes crash
+  - [x] only use yaw in speed wobble code
+  - [ ] tweak speed wobbles from yaw
 - [x] HUD: add Horn hint (with "double tap to drop current item" sub-hint) to action hints; move Use Item hint beside RPM gauge; both item hints only show while holding an item
-
 - [x] pickup items icons are awful, replace with proper imgs
-
 - [x] Fix steam tags
-
 - [x] improve traffic density
-
 - [x] Disable NPC traffic debug command
-
 - [x] fill up spil hud height changes
-
 - [x] controller press b to go back in menu (aka unpause, or go back to prev page)
-
 - [x] demo build - filter out all maps but stunt_city + characters + horns
-
 - [x] find start of race after filling up needs to be more obvious 
-
 - [x] make hands fit on handle bars
-
 - [x] animate crashes w/ bike physics
-
 - [x] animate car crash
-
 - [x] remove gray bgs + border from more things / aka simplify?
-
 - [x] must be easier to know what the controls are / how to do tricks
   - [x] add btn prompts/hints
-
-- [x] Horns should be audible thru music
-
+- [x] Horns should be audible thru musi
 - [x] Turn down music when going to settings 
-
 - [x] pause when out of focus
-
 - [x] Music
-
 - [x] replace pickup item bubble with gold ring like the circle in gas pump
-
 - [x] weigh randomness of item spawners
-
 - [x] Traffic can pile up and stop at intersections
-
 - [x] Gas pump occlusion is broken
-
 - [x] Users shouldn't have to press Done when setting a color, it should auto save.
-
 - [x] NPC traffic during race? Needs to clip thru existing wall barriers for now
-
 - [x] Add drivable floor to other side of bridge ramp
-
 - [x] Race track time trial shows "Start" drive-to-location from reg race. rm during any race
-
 - [x] Crashing in free roam doesn't auto respawn sometimes
-
 - [x] option to drop current item (honk)
-
 - [x] Pause => show lobby
 - [x] reactive sounds
 - [x] Discord page for support/community 

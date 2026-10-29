@@ -140,6 +140,7 @@ theme = ExtResource("2_lphm8")
 [node name="LevelSelectPanel" parent="UI/AspectContainer/MarginContainer" unique_id=590154309 instance=ExtResource("3_lspanel")]
 unique_name_in_owner = true
 layout_mode = 2
+custom_minimum_size = Vector2(512, 0)
 size_flags_horizontal = 8
 size_flags_vertical = 4
 

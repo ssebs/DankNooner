@@ -60,6 +60,7 @@ func Enter(_state_context: StateContext):
 	level_select_panel.visible = multiplayer.is_server()
 	if multiplayer.is_server():
 		level_select_panel.populate(level_manager, gamemode_manager.current_level_name as int)
+		level_select_panel.start_btn.text = "SELECT_LABEL"
 		level_select_panel.start_pressed.connect(_on_level_select_start_pressed)
 		level_select_panel.level_selected.connect(_on_level_select_level_selected)
 		_update_level_select_start_disabled()
@@ -96,6 +97,9 @@ func Exit(_state_context: StateContext):
 func _update_now_playing():
 	now_playing_title.text = audio_manager.get_music_title()
 	now_playing_artist.text = audio_manager.get_music_artist()
+	# Both labels truncate; hover shows the full text.
+	now_playing_title.tooltip_text = now_playing_title.text
+	now_playing_artist.tooltip_text = now_playing_artist.text
 	play_pause_btn.icon = PLAY_ICON if audio_manager.is_music_paused() else PAUSE_ICON
 
 

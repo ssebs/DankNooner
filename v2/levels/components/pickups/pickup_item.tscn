@@ -7,10 +7,10 @@
 [ext_resource type="Material" uid="uid://cmka0blrg4r11" path="res://levels/assets/props/neon_gold.tres" id="5_gold"]
 [ext_resource type="Script" uid="uid://bkho4nxye7goy" path="res://levels/components/neon_edges.gd" id="6_edges"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_58sqh"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_ehjlu"]
 radius = 1.25
 
-[sub_resource type="TorusMesh" id="TorusMesh_q7hs0"]
+[sub_resource type="TorusMesh" id="TorusMesh_tu51h"]
 material = ExtResource("5_gold")
 inner_radius = 1.15
 outer_radius = 1.25
@@ -85,12 +85,12 @@ pickup_item_definition = ExtResource("2_ehjlu")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=552384891]
 unique_name_in_owner = true
-shape = SubResource("SphereShape3D_58sqh")
+shape = SubResource("SphereShape3D_ehjlu")
 
 [node name="MeshNode" type="Node3D" parent="." unique_id=180618646]
 unique_name_in_owner = true
 
-[node name="DeployableRamp" type="Node3D" parent="MeshNode" unique_id=672895301 instance=ExtResource("3_tu51h")]
+[node name="@Node3D@22260" type="Node3D" parent="MeshNode" unique_id=672895301 instance=ExtResource("3_tu51h")]
 transform = Transform3D(0.14142136, 0, -0.14142136, 0, 0.3, 0, 0.14142136, 0, 0.14142136, -0.28786796, -1, 0.30502522)
 
 [node name="StartRing" parent="." unique_id=882169721 instance=ExtResource("4_ring")]
@@ -98,7 +98,7 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.25, 0)
 
 [node name="MeshInstance3D" parent="StartRing" index="0"]
-mesh = SubResource("TorusMesh_q7hs0")
+mesh = SubResource("TorusMesh_tu51h")
 
 [node name="NeonEdges" type="Node" parent="." unique_id=1730582214 node_paths=PackedStringArray("targets")]
 script = ExtResource("6_edges")
@@ -108,7 +108,7 @@ energy = 3.0
 width_px = 3.5
 normal_threshold = 2.0
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1335824827]
 libraries/ = SubResource("AnimationLibrary_spin")
 autoplay = &"spin"
 

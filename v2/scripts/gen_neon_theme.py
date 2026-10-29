@@ -47,10 +47,10 @@ GLASS = PALETTE["UI_GLASS"]
 SKY = PALETTE["UI_SKY"]
 WHITE = (1.0, 1.0, 1.0)
 
-PANEL_RADII = (16, 16, 16, 4)  # tl, tr, br, bl — every corner rounded but the bottom left
-ROW_RADII = (10, 10, 10, 3)
-CHIP_RADII = (12, 12, 12, 4)
-BACKDROP_RADII = (24, 24, 24, 6)
+PANEL_RADII = (16, 16, 16, 16)  # tl, tr, br, bl
+ROW_RADII = (10, 10, 10, 10)
+CHIP_RADII = (12, 12, 12, 12)
+BACKDROP_RADII = (24, 24, 24, 24)
 CLEAR = (0, 0, 0, 0)
 CENTRE = 8  # px; the stretched middle of each 9-patch
 FADE = 96  # px; how far a faded side ramps to transparent

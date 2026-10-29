@@ -113,16 +113,18 @@ text = "NOW_PLAYING_LABEL"
 [node name="NowPlayingTitle" type="Label" parent="UI/AspectContainer/MarginContainer/MusicPanel" unique_id=1846203603]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 1
 auto_translate_mode = 2
 horizontal_alignment = 1
-autowrap_mode = 3
+text_overrun_behavior = 3
 
 [node name="NowPlayingArtist" type="Label" parent="UI/AspectContainer/MarginContainer/MusicPanel" unique_id=1846203604]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 1
 auto_translate_mode = 2
 horizontal_alignment = 1
-autowrap_mode = 3
+text_overrun_behavior = 3
 
 [node name="MusicControls" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/MusicPanel" unique_id=1846203606]
 layout_mode = 2
@@ -156,16 +158,30 @@ icon_alignment = 1
 expand_icon = true
 icon = ExtResource("7_next")
 
-[node name="LevelSelectPanel" parent="UI/AspectContainer/MarginContainer" unique_id=1170908105 instance=ExtResource("3_lspanel")]
-unique_name_in_owner = true
-visible = false
+[node name="PanelSlot" type="MarginContainer" parent="UI/AspectContainer/MarginContainer"]
 layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 4
+mouse_filter = 2
+theme_override_constants/margin_left = 256
+theme_override_constants/margin_top = 280
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
 
-[node name="LobbyPanel" parent="UI/AspectContainer/MarginContainer" unique_id=1170908106 instance=ExtResource("4_lpanel")]
+[node name="PanelRow" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/PanelSlot"]
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="LobbyPanel" parent="UI/AspectContainer/MarginContainer/PanelSlot/PanelRow" unique_id=1170908106 instance=ExtResource("4_lpanel")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="LevelSelectPanel" parent="UI/AspectContainer/MarginContainer/PanelSlot/PanelRow" unique_id=1170908105 instance=ExtResource("3_lspanel")]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 0
