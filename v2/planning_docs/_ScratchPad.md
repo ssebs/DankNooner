@@ -5,7 +5,6 @@
 
 
 ### NOW
-- [ ] filling up - pay per second of fuel, so spilling costs $. show in diagetic UI on pump
 - [ ] clip - how long can you make the trickfeed?!
 
 - [ ] [Progression/Challenges](./Progression.md)

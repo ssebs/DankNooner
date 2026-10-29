@@ -1,7 +1,7 @@
 @tool
 ## Pre-race fuel-up: every rider is parked at their own pump in the event circle's gas_station
-## and frozen, while their client pays the pump's price and plays its FuelUpMinigame locally
-## (outside the rollback sim); a rider who can't pay skips it, free to ride. Each finish sets
+## and frozen, while their client plays its FuelUpMinigame locally (outside the rollback sim),
+## paying by the second for the gas it pumps. Each finish sets
 ## that rider's boost to their fill (spilling caps it), and banks a clean-fill bonus for
 ## FuelUpBonusComponent; once every rider has reported, the event hands off to its definition's
 ## target_gamemode.
@@ -45,24 +45,18 @@ func Enter(state_context: StateContext):
 	var peer_ids := gamemode_manager.lobby_manager.lobby_players.keys()
 	peer_ids.sort()
 
-	var pump := pumps[peer_ids.find(multiplayer.get_unique_id())]
-	if save_manager.spend(pump.price):
-		_minigame = pump
-		_minigame.finished.connect(_on_minigame_finished, CONNECT_ONE_SHOT)
-		_minigame.begin(
-			spawn_manager.get_player_by_peer_id(multiplayer.get_unique_id()),
-			input_state_manager,
-			gamemode_manager.audio_manager,
-			hud_manager
-		)
-		_minigame.fill = minf(
-			_minigame.fill, 1.0 - FULL_TANK_DRAIN_SEGMENTS / BoostController.BOOST_SEGMENTS
-		)
-	else:
-		# Can't pay: skip it, unfrozen. Deferred so the host's own skip lands after the
-		# server half below has filled _pending.
-		hud_manager.riding_hud_state.flash_money()
-		(func(): _rpc_fuel_up_skipped.rpc_id(1)).call_deferred()
+	_minigame = pumps[peer_ids.find(multiplayer.get_unique_id())]
+	_minigame.finished.connect(_on_minigame_finished, CONNECT_ONE_SHOT)
+	_minigame.begin(
+		spawn_manager.get_player_by_peer_id(multiplayer.get_unique_id()),
+		input_state_manager,
+		gamemode_manager.audio_manager,
+		hud_manager,
+		save_manager
+	)
+	_minigame.fill = minf(
+		_minigame.fill, 1.0 - FULL_TANK_DRAIN_SEGMENTS / BoostController.BOOST_SEGMENTS
+	)
 
 	if multiplayer.is_server():
 		_bonus.clear()
@@ -130,16 +124,6 @@ func _rpc_fuel_up_done(fill: float, spilled: float):
 	)
 	if fill >= 1.0 - spilled:
 		_bonus[peer_id] = MAX_BONUS * maxf(0.0, 1.0 - spilled / SPILL_FOR_NO_BONUS)
-	_mark_done(peer_id)
-
-
-## Couldn't pay — keeps their boost, no bonus, and rides free until the handoff.
-@rpc("any_peer", "call_local", "reliable")
-func _rpc_fuel_up_skipped():
-	if !multiplayer.is_server():
-		return
-	var peer_id := multiplayer.get_remote_sender_id()
-	CountdownTask.unfreeze(spawn_manager.get_player_by_peer_id(peer_id))
 	_mark_done(peer_id)
 
 

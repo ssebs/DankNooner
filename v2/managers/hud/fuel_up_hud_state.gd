@@ -1,6 +1,6 @@
 @tool
 ## Fuel-up minigame HUD, in place of the riding HUD: the tank (the rider's boost meter, filling
-## live) and the current step's prompt.
+## live), the wallet less the pump's running bill, and the current step's prompt.
 class_name FuelUpHUDState extends HUDState
 
 @export var save_manager: SaveManager
@@ -24,9 +24,6 @@ func Enter(_state_context: StateContext):
 	show_ui()
 	_was_spilling = false
 	_money.text = MoneyLabel.format(save_manager.get_player_definition().money)
-	# A session only starts once its price was paid. Deferred so the label has resized to the
-	# new amount, since the pop centers on it.
-	_money.pop_spent.call_deferred(minigame.price)
 
 
 func Exit(_state_context: StateContext):
@@ -36,7 +33,7 @@ func Exit(_state_context: StateContext):
 func Update(_delta: float):
 	if Engine.is_editor_hint():
 		return
-	_money.text = MoneyLabel.format(save_manager.get_player_definition().money)
+	_money.text = MoneyLabel.format(save_manager.get_player_definition().money - minigame.bill)
 	_gauge.current_val = minigame.fill * BoostController.BOOST_SEGMENTS
 	_gauge.spilled_val = minigame.spilled * BoostController.BOOST_SEGMENTS
 	_prompt.text = tr(minigame.get_prompt_key())

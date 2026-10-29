@@ -2,8 +2,9 @@
 ## a FreeRoamActivity. Either way the minigame runs locally on that rider's client: click the
 ## handle to pick it up, hold click to spray (recoil kicks the cursor), move it back onto the pump
 ## to hang it up, and click %EndBtn to finish whenever. Spray that misses the cap is
-## spilled, and spilled gas is tank space lost: the tank only fills to 1 - spilled. The left
-## stick steers the same cursor, so gamepad plays it too.
+## spilled, and spilled gas is tank space lost: the tank only fills to 1 - spilled. Gas is paid by
+## the second, spilled or not: `price` is a full tank's cost, and the pump cuts off at the rider's
+## last dollar. The left stick steers the same cursor, so gamepad plays it too.
 class_name FuelUpMinigame extends FreeRoamActivity
 
 enum Step { GRAB, CARRY }
@@ -53,11 +54,14 @@ const GRAB_SPRAY_DELAY: float = 0.2
 @onready var _spill_particles: GPUParticles3D = %SpillParticles
 @onready var _end_btn: Area3D = %EndBtn
 @onready var _end_btn_mesh: MeshInstance3D = %EndBtnMesh
+@onready var _sale_label: Label3D = %SaleLabel
 
 ## Tank level, 0..1 - spilled. Read by FuelUpHUDState.
 var fill: float = 0.0
 ## Gas spilled this fill-up, in fill's units. Read by FuelUpGameMode.
 var spilled: float = 0.0
+## Owed for gas pumped this session, spill included. Paid in _on_session_end.
+var bill: float = 0.0
 
 var _step := Step.GRAB
 var _over_cap: bool = false
@@ -119,15 +123,22 @@ func get_result() -> float:
 
 
 #override
+## Billed by the second instead.
+func get_start_price() -> int:
+	return 0
+
+
+#override
 ## Run this pump for the local `player`, tank at their boost.
 func begin(
 	player: PlayerEntity,
 	input_state_manager: InputStateManager,
 	audio_manager: AudioManager,
-	hud_manager: HUDManager
+	hud_manager: HUDManager,
+	save_manager: SaveManager
 ):
 	fill = player.boost_controller.boost_amount / BoostController.BOOST_SEGMENTS
-	super(player, input_state_manager, audio_manager, hud_manager)
+	super(player, input_state_manager, audio_manager, hud_manager, save_manager)
 
 
 #override
@@ -136,6 +147,7 @@ func _on_session_start():
 	_over_cap = false
 	_spraying = false
 	spilled = 0.0
+	bill = 0.0
 	# Settles the ring at rest size (a cancel mid-hover leaves it grown); pauses the circle's loop.
 	_anim.play_backwards(&"gas_cap_hover")
 	_glug_started = false
@@ -152,6 +164,8 @@ func _on_session_start():
 ## Reset the pump.
 func _on_session_end():
 	set_process(false)
+	# The cutoff keeps the bill within the wallet, which is whole dollars.
+	_save_manager.spend(ceili(bill))
 	_handle_area.transform = _carry_rest
 	_update_hose()
 	_set_highlight(null)
@@ -170,6 +184,8 @@ func _on_session_end():
 func get_prompt_key() -> String:
 	if _step == Step.GRAB:
 		return "FUELUP_GRAB"
+	if _is_broke():
+		return "FUELUP_BROKE"
 	if is_spilling():
 		return "FUELUP_SPILLING"
 	if _is_full():
@@ -218,7 +234,7 @@ func _process(delta: float):
 			# Holding on past the grab sprays (and spills), which teaches riders to let go. The
 			# grace keeps the grab click itself from spilling.
 			_since_grab += delta
-			_spraying = _click_held() and _since_grab >= GRAB_SPRAY_DELAY
+			_spraying = _click_held() and _since_grab >= GRAB_SPRAY_DELAY and !_is_broke()
 			if _spraying:
 				_spray(delta)
 			else:
@@ -236,6 +252,7 @@ func _process(delta: float):
 	_set_spilling(is_spilling())
 	_set_cursor(CURSOR_CLOSED if _step == Step.CARRY else CURSOR_OPEN)
 	_update_hose()
+	_sale_label.text = "$%.2f" % bill
 
 
 ## One frame of spray: into the tank (up to full) if the tip's in the cap, else spilled. Recoil shoves the
@@ -247,17 +264,26 @@ func _spray(delta: float):
 	if randf() < delta / RECOIL_KICK_SECS:
 		recoil += Vector2(randf_range(-1.0, 1.0), -randf()) * RECOIL_KICK_PX
 	_nudge_cursor(recoil)
+	var pumped := delta / fill_secs
 	if _over_cap:
-		fill = minf(fill + delta / fill_secs, 1.0 - spilled)
+		# A full tank takes no more, so isn't billed for more.
+		pumped = minf(pumped, 1.0 - spilled - fill)
+		fill += pumped
 	else:
-		spilled += delta / fill_secs
+		spilled += pumped
 		# A full tank loses the space it spills.
 		fill = minf(fill, 1.0 - spilled)
+	bill = minf(bill + pumped * price, _save_manager.get_player_definition().money)
 
 
 ## Spraying off the cap. A full tank just stops taking gas, so overfilling isn't a spill.
 func is_spilling() -> bool:
 	return _spraying and !_over_cap
+
+
+## The bill has reached the wallet, so the pump's cut off.
+func _is_broke() -> bool:
+	return bill >= _save_manager.get_player_definition().money
 
 
 ## Filled to the space spilling left.

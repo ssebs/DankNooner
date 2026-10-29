@@ -231,7 +231,7 @@ func _on_game_mode_event_confirm_hud_submitted(peer_id: int, event_index: int):
 	game_mode_event_hud_state.on_player_close_pressed.rpc_id(1, peer_id)
 	# Per rider: only the submitter runs it, the lobby stays in free roam.
 	if _entered_activity != null:
-		if save_manager.get_player_definition().money < _entered_activity.price:
+		if save_manager.get_player_definition().money < _entered_activity.get_start_price():
 			riding_hud_state.flash_money()
 			return
 		request_start_activity.rpc_id(1, _entered_activity.get_path())
@@ -407,13 +407,14 @@ func request_end_activity(result: float):
 func _rpc_begin_activity(activity_path: NodePath):
 	_activity = get_node(activity_path)
 	# Affordable — checked when the picker was submitted.
-	save_manager.spend(_activity.price)
+	save_manager.spend(_activity.get_start_price())
 	_activity.finished.connect(_on_activity_finished, CONNECT_ONE_SHOT)
 	_activity.begin(
 		spawn_manager.get_player_by_peer_id(multiplayer.get_unique_id()),
 		input_state_manager,
 		gamemode_manager.audio_manager,
-		hud_manager
+		hud_manager,
+		save_manager
 	)
 
 

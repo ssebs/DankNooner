@@ -243,6 +243,8 @@
 ---
 
 ## Done ✅
+- [x] filling up - pay per second of fuel, so spilling costs $. show in diagetic UI on pump
+
 - [x] Wheelie scoring now depends on the angle, it should.
 
 - [x] bike wreck reacts to cars

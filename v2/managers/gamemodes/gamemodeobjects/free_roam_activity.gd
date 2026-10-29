@@ -14,7 +14,7 @@ signal finished
 ## Localization keys shown in the event picker.
 @export var event_name: String
 @export var event_description: String
-## Charged to start it, pre-race fuel-ups included. Riders who can't pay are turned away.
+## Charged to start it, unless get_start_price overrides. Riders who can't pay are turned away.
 @export var price: int = 0
 
 @onready var camera: Camera3D = %Camera3D
@@ -27,6 +27,7 @@ var _player: PlayerEntity
 var _input_state_manager: InputStateManager
 var _audio_manager: AudioManager
 var _hud_manager: HUDManager
+var _save_manager: SaveManager
 
 
 func _ready():
@@ -38,6 +39,11 @@ func _ready():
 ## Server: whether several riders can run it at once.
 func is_shared() -> bool:
 	return false
+
+
+## Client: what starting it costs, checked at the picker and charged once the server accepts.
+func get_start_price() -> int:
+	return price
 
 
 ## Server: the rider's start was accepted. Runs after begin() was sent to their client.
@@ -60,12 +66,14 @@ func begin(
 	player: PlayerEntity,
 	input_state_manager: InputStateManager,
 	audio_manager: AudioManager,
-	hud_manager: HUDManager
+	hud_manager: HUDManager,
+	save_manager: SaveManager
 ):
 	_player = player
 	_input_state_manager = input_state_manager
 	_audio_manager = audio_manager
 	_hud_manager = hud_manager
+	_save_manager = save_manager
 	player.respawned.connect(_start_session, CONNECT_ONE_SHOT)
 
 

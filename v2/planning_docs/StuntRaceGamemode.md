@@ -103,10 +103,12 @@ partial fill.
   off the gauge. Spill is lost tank space: the tank only fills to `1 - spilled`, and spilling a full
   tank loses what's already in it. Spraying into a full tank does nothing, so overfilling isn't a
   spill. The HUD gauge shows spill as red growing in from its right end.
-- **Price:** each pump costs its `FreeRoamActivity.price` ($10), charged via `SaveManager.spend`.
-  Free roam checks it when the picker is submitted and charges when the server accepts; pre-race
-  charges on entering fuel-up, and a rider who can't pay skips their pump (keeps their boost, no
-  bonus) and is unfrozen to ride until the handoff. Can't pay flashes the riding HUD's money; paying drops a red "-$10" off the fuel-up HUD's.
+- **Price:** gas is paid by the second of spray, spilled or not. The pump's
+  `FreeRoamActivity.price` is a full tank's cost, and its `get_start_price()` is 0, so nothing is
+  charged to start. The running `bill` shows on the pump's `%SaleLabel` and comes off the fuel-up
+  HUD's money live; the pump cuts off when the bill reaches the wallet, and `_on_session_end` pays
+  it (rounded up) via `SaveManager.spend`, so cancels pay too. A broke rider still gets their pump,
+  it just won't pump.
 - **Payout differs by mode.** Free roam never lowers the meter (see above), so spill only limits
   how high it fills. Pre-race starts every tank at most `FULL_TANK_DRAIN_SEGMENTS` below full so
   full riders still play; finishing reports fill and `spilled`, the server sets boost to the fill,
