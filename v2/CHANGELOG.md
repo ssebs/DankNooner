@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.0.161 - 2026-10-28
+
+- Wheelie scoring now depends on the angle, it should.
+- bike wreck reacts to cars
+- combo sound
+- Grinding sound should be in 3d space
+- free ride => host private lobby of default type, can invite friends but no need to wait in lobby.
+- cleanup hud mor
+- todo + theme tweaks
+
 ## v0.0.160 - 2026-10-27
 
 - transparent top neon theme
