@@ -74,17 +74,18 @@ func _process(delta: float) -> void:
 	_set_squeal(movement_controller.is_drifting or player_entity.crash_controller.washout_time > 0.0)
 
 
-## Start/stop the looping tire-squeal on drift edges. Runs for every player on every client, so
-## remote riders' drifts squeal positionally.
+## Start/stop the looping tire-squeal on drift edges. Runs for every player on every client, and
+## is positional for the local rider too.
 func _set_squeal(on: bool) -> void:
 	if on == _squealing:
 		return
 	_squealing = on
-	var squeal := player_entity.audio_manager.get_sound_event(AudioManager.Sfx.TIRE_SQUEAL)
 	if on:
-		player_entity.play_rider_sound(squeal, player_entity.remote_squeal)
+		player_entity.audio_manager.get_sound_event(AudioManager.Sfx.TIRE_SQUEAL).play_on(
+			player_entity.squeal_player
+		)
 	else:
-		player_entity.stop_rider_sound(squeal, player_entity.remote_squeal)
+		player_entity.squeal_player.stop()
 
 
 ## A despawn mid-drift (e.g. level change) never hits the drift-end edge, so stop the loop here.

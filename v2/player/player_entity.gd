@@ -102,9 +102,9 @@ signal uncrashed
 @onready var rollback_sync: RollbackSynchronizer = %RollbackSynchronizer
 @onready var exhaust_flame_particles: ExhaustFlameParticles = %ExhaustFlameParticles
 @onready var horn_player: AudioStreamPlayer3D = %HornPlayer
+@onready var squeal_player: AudioStreamPlayer3D = %SquealPlayer
 ## Positional copies of AudioManager's sounds, for hearing other riders. See play_rider_sound().
 @onready var remote_engine: EngineSoundEvent3D = %RemoteEngine
-@onready var remote_squeal: AudioStreamPlayer3D = %RemoteSqueal
 @onready var remote_exhaust_pop: AudioStreamPlayer3D = %RemoteExhaustPop
 @onready var remote_exhaust_burble: AudioStreamPlayer3D = %RemoteExhaustBurble
 @onready var remote_crash: AudioStreamPlayer3D = %RemoteCrash

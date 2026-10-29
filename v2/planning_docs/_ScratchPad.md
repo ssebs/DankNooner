@@ -8,15 +8,14 @@
 
 - [ ] clip - how long can you make the trickfeed?!
 
+- [ ] [Progression/Challenges](./Progression.md)
+
+### NEXT
 
 - [ ] Create/join public/private lobbies 
   - [ ] ____STEAM_LOBBIES_WIP.md
 
-- [ ] Challenges / progression
 
-- [ ] check event payouts / see how they're calculated
-
-- [ ] Grinding sound should be in 3d space
 - [ ] Replace win tada sound usage
 
 - [ ] Wheelie scoring doesn't depend on the angle, it should. (with SFX depending on angle, esp for balance point)
@@ -25,6 +24,3 @@
 
 - [ ] Create separate location (new event start circles) just for stunt/trick battle, remove from existing races so they dont spawn checkpoint markers
   - [ ] wip - stunt_battle_arena
-
-### NEXT
-

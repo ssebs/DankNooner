@@ -107,6 +107,11 @@ func start_server(solo: bool = false) -> MultiplayerPeer:
 			return null
 		await get_tree().process_frame
 		_poll_ws()
+		# Refused / bad handshake (e.g. 502): fail now instead of waiting out the timeout
+		if _ws.get_ready_state() == WebSocketPeer.STATE_CLOSED:
+			DebugUtils.DebugErrMsg("WebRTC: signaling server unreachable")
+			_setup_in_progress = false
+			return null
 
 	_setup_in_progress = false
 	return _rtc_mp

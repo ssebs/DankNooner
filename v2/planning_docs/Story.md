@@ -3,7 +3,7 @@
 ## Rise to Glory / Zero to Hero / Stank to Dank
 
 Simpsons Hit & Run style: each chapter moves you across one world and comes with its own bike.
-The systems side and the world layout are in [Progression](./Progression.md).
+The demo's progression systems are in [Progression](./Progression.md); the world layout is in TODO's New Large Map.
 
 - Be the best racer in town 😎
 - Start on crappy races, then do harder ones

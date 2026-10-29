@@ -27,6 +27,8 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 
+- [ ] Grinding sound should be in 3d space
+
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
 
@@ -69,7 +71,7 @@
   - [ ] Gamba: spin the wheel (or roulette / random game) to win unique prizes when leveling up? Can buy with $
 - [ ] Save slot menu: save/load specific saves, split between demo vs full game saves (see "Demo savegame" under Steam Prep)
   - `SaveManager.save_slot` already picks `user://savegame_%d.json`, no menu yet
-  - both builds share `user://` (export.sh only swaps app_id) and Steam Cloud syncs `savegame_*.json`, so demo needs its own file pattern + matching Auto-Cloud rule on the demo app
+  - both builds share `user://` (export.sh only swaps app_id) and Steam Cloud syncs `savegame_*.json`, so demo saves are `savegame_01_demo.json` (still matches the pattern; names never collide with full saves)
 
 ### Controller UX Improvements
 - [ ] full navigation across menus, HUDs & in-world UI

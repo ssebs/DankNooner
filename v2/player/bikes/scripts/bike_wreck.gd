@@ -25,7 +25,7 @@ const IMPACT_COOLDOWN: float = 0.15
 
 @onready var wreck_shape: CollisionShape3D = %WreckShape
 @onready var wreck_sparks: GPUParticles3D = %WreckSparks
-## Positional grind / hit for remote riders. See PlayerEntity.play_rider_sound().
+## Positional grind for every rider; hit only for remote ones. See PlayerEntity.play_rider_sound().
 @onready var wreck_grind: AudioStreamPlayer3D = %WreckGrind
 @onready var wreck_impact: AudioStreamPlayer3D = %WreckImpact
 
@@ -138,11 +138,11 @@ func _set_grind(on: bool) -> void:
 	if on == _grind_playing:
 		return
 	_grind_playing = on
-	var grind := player_entity.audio_manager.get_sound_event(AudioManager.Sfx.CRASH_GRIND)
+	# Positional for the local rider too, so the grind follows the bike as it slides away.
 	if on:
-		player_entity.play_rider_sound(grind, wreck_grind)
+		player_entity.audio_manager.get_sound_event(AudioManager.Sfx.CRASH_GRIND).play_on(wreck_grind)
 	else:
-		player_entity.stop_rider_sound(grind, wreck_grind)
+		wreck_grind.stop()
 
 
 ## A despawn mid-crash never hits stop(), so cut the loop here.

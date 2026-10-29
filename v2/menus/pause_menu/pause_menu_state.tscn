@@ -177,6 +177,7 @@ icon = ExtResource("7_next")
 [node name="Card" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/Root/Body"]
 layout_mode = 2
 size_flags_horizontal = 8
+size_flags_vertical = 8
 theme_type_variation = &"MenuPanel"
 
 [node name="CardMargin" type="MarginContainer" parent="UI/AspectContainer/MarginContainer/Root/Body/Card"]
@@ -187,6 +188,7 @@ theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 0
 
 [node name="CardContent" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/Body/Card/CardMargin"]
+custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2

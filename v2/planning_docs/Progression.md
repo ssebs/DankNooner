@@ -1,26 +1,44 @@
 # Progression
 
-> Brainstorm; only [payouts](#payouts) and the garage shop are built. The rest is parked until NPCs work properly
-> (mission givers depend on them).
-> Story beats live in [Story](./Story.md); this doc is the systems side.
+> **Demo scope.** The full release adds a story on top ([Story](./Story.md)); the big map's plans
+> are in TODO's New Large Map. Neither is covered here.
+> Built: [payouts](#payouts), the garage shop, money + XP. Everything else is the plan.
 
 - [Goal](#goal)
+- [The loop](#the-loop)
 - [What exists](#what-exists)
-- [Decided](#decided)
-	- [Payouts](#payouts)
-- [Ideas](#ideas)
-	- [Story as the spine](#story-as-the-spine)
-	- [World layout](#world-layout)
-	- [Hit \& Run-style systems](#hit--run-style-systems)
-	- [Unlock cadence](#unlock-cadence)
-	- [Avoid](#avoid)
+- [Economy](#economy)
+	- [Pacing](#pacing)
+	- [What's locked](#whats-locked)
+- [Bike types and skins](#bike-types-and-skins)
+- [Challenges](#challenges)
+	- [Bike challenges and mastery](#bike-challenges-and-mastery)
+	- [Dailies](#dailies)
+	- [Completion](#completion)
+- [Stats and achievements](#stats-and-achievements)
+- [Challenges menu](#challenges-menu)
+- [Save slots](#save-slots)
+- [Payouts](#payouts)
+- [New systems](#new-systems)
+- [Avoid](#avoid)
 - [Open questions](#open-questions)
-- [MVP slice](#mvp-slice)
 
 
 ## Goal
 
-Make points mean something: players should want to unlock something, and replay events to get it.
+Give players something to grind while they ride, Call of Duty camo style: challenges to chase in
+free roam and in events, unlocks that show progress, and money to spend on what they want.
+
+
+## The loop
+
+- **Money buys, levels unlock.** Most things must be unlocked first, then bought with $.
+- **Events** pay money + XP (see [Payouts](#payouts)). They're the main income.
+- **Challenges** pay money + XP and level up the bike type you did them on. Bike levels unlock
+  mods and, at the top, the type's other skins.
+- **Dailies** are short challenges that rotate each day, a bonus on top of events.
+- **Stats** count everything, lifetime and per bike type. They feed challenges, Steam
+  achievements and the Career page.
 
 
 ## What exists
@@ -29,148 +47,219 @@ Make points mean something: players should want to unlock something, and replay 
   priced `FreeRoamActivity`s and fuel-up pumps (`SaveManager.spend`), and earned from event
   [payouts](#payouts) (`SaveManager.earn`).
 - `PlayerDefinition.xp` is earned the same way. `level()` derives the rider level shown on the
-  riding HUD; it gates nothing yet.
-- `current_save["progression"]` holds per-event time attack PBs. `TimeAttackComponent` is the
-  pattern for writing a client's save from a server-run event: the server RPCs each client, which
-  writes its own save.
-- `LeaderboardComponent.build_results()` has every rider's final standing at the end of a race.
-- **Garage shop:** characters and horns cost money; bikes and colors are free. Bought paths live
-  in `current_save["progression"]["owned"]`, and `SaveManager.is_owned()` treats a 0 price as
-  owned. A new save gets the default profile's loadout and owns only what it uses. The garage
-  (free roam `GarageActivity` or the customize menu) lists every skin on disk with its price,
-  tinted when unaffordable.
+  riding HUD from `XP_PER_LEVEL`; each level costs more than the last. It gates nothing yet.
+- `current_save["progression"]` holds per-event time attack PBs and `owned` skin paths.
+  `TimeAttackComponent` and `RunnerGameMode.rpc_earn` are the pattern for writing a client's save
+  from a server-run event: the server RPCs each client, which writes its own save.
+- **Garage shop:** characters and horns cost money; bikes and colors are free today. A 0 price
+  counts as owned (`SaveManager.is_owned()`). A new save owns only what its default loadout uses.
+  The garage (`garage_ui.gd`, free roam `GarageActivity` or the customize menu) lists every skin on
+  disk with its price, tinted when unaffordable.
+- `RaceChallenge` (mid-race side challenges) and `StuntChallengeGameMode` already use the word
+  "challenge". The new challenges are a separate system; code names must not collide.
 
 
-## Decided
+## Economy
 
-- **Every gamemode pays out** currency at its results screen. Winning a race pays more.
-- **Multiplayer events follow the host's progress.** Anyone can join the host's events, locked in
-  their own save or not, and earns money/XP toward their own level and unlocks. Finishing also
-  marks the event completed in their own save (not built: nothing records completion yet).
-- **XP is stored and shown now, gates nothing yet.** A rider level derived from saved XP shows
-  next to money. What it gates is decided when the story work resumes.
+### Pacing
 
-### Payouts
+Targets to tune toward. Prices, levels and payout bases are set on the definitions.
+
+- A new save owns the mini bike, at rider level 1, with starting money that buys neither of the
+  other bikes.
+- The naked bike is a short save-up plus a rider level; the sport bike takes roughly half an hour
+  of events. Raise the per-event `payout_money` bases to hit this, not the formula.
+- Event XP scales with event difficulty (per-event `payout_xp`).
+- Three dailies are worth about ten races of XP.
+- Cosmetics are cheap next to bikes, so buying one doesn't wreck the bike savings.
+
+### What's locked
+
+| Item | Unlocked by | Then |
+|---|---|---|
+| Mini bike (Grom) | owned on a new save | — |
+| Naked, sport bikes | rider level (naked) | bought with $ |
+| Other skins of a type | finishing that type's challenge list | bought with $ |
+| Bike mods | bike-type mastery level | bought with $ |
+| Characters | rider level | bought with $ |
+| Horns | nothing | bought with $ |
+| Colors | nothing | free |
+
+Bike textures are mods too (later). Unlocked mods fit any bike, not only the type that unlocked
+them; each skin places its own attach markers.
+
+
+## Bike types and skins
+
+Three types, each with skins that share its stats:
+
+- **Mini:** Grom; bicycle.
+- **Naked:** naked; cruiser, ADV.
+- **Sport:** sport; retro sport.
+
+The first skin is the one you buy; the rest unlock when the type's challenge list is finished.
+Today `BikeSkinDefinition` holds both the look and the stats, so the stats move to a shared
+per-type resource (see [New systems](#new-systems)).
+
+
+## Challenges
+
+One system serves bike challenges and dailies. A challenge has a goal, a target, an optional
+context (which mode it must happen in), and pays money + XP.
+
+Goal shapes seen so far:
+
+- **Count of qualifying events:** 10× 5s wheelies, 10× 3s stoppies, 50 bunny hops, win 5 stunt
+  battles, spill no gas 10×.
+- **Cumulative total:** 1 minute of total airtime.
+- **Single best:** hold a 10s wheelie.
+- **In a context:** 10 backflips *in a stunt race*, complete 5 time trials.
+
+Challenges count in single player and multiplayer, free roam and events, each rider into their own
+save (same rule as payouts). NPCs never count.
+
+### Bike challenges and mastery
+
+- **One list per bike type,** about 10 challenges, about half unique to the type. All skins of a
+  type count toward its list. More tricks are planned, so lists will grow.
+- **Mastery:** each finished challenge levels the bike type up by one, to a max of 10. "Mastery"
+  is a working name to keep it apart from rider level on screen.
+- Mods unlock at mastery levels (e.g. wheelie bar, exhaust, training wheels). The ladder is
+  per type and will grow.
+- A **capstone** (e.g. the airtime total) is naturally the last one done but isn't locked behind
+  the others. Finishing the list (max mastery) unlocks the type's other skins.
+
+### Dailies
+
+Same goal shapes as bike challenges, smaller targets. Three a day, drawn from a pool of templates,
+counted on any bike, reset at local midnight, no rerolls.
+
+### Completion
+
+Only on completion, never as a live tracker: a toast with confetti VFX and a party-balloon sfx,
+plus the existing `+$N` / `+N XP` pops (`RidingHUDState.pop_earned`). `AudioManager` has a
+`CONFETTI_HORN` sfx that may fit. Progress shows in the pause menu and the
+[Challenges menu](#challenges-menu).
+
+
+## Stats and achievements
+
+- **Two scopes:** lifetime totals, and per-bike-type counters. Both saved.
+- **Save is the source of truth.** The same counters push to Steam stats, which drive Steam
+  achievements. Achievements are bragging rights for 100%ing; they unlock nothing in game.
+- **The demo ships no Steam achievements,** but the system is built and the demo still saves
+  stats; achievements are configured on the full app only.
+- Achievement ideas: 5 minutes total wheelie time in the balance point; unlock each bike type;
+  win 100 stunt races; win 100 stunt battles; crash 1,000 times.
+- "In the balance point" already exists as a HUD check (`trick_popups.gd`); stats must share one
+  definition with it, not copy it.
+
+
+## Challenges menu
+
+A new menu, reachable from the main, play, lobby and pause menus:
+
+- **Career:** lifetime stats, achievement progress, rider level and its unlock track.
+- **Daily:** today's three, progress, time to reset.
+- **Per-bike:** each type's mastery level, challenge list, mod ladder and the skins it unlocks.
+
+The pause menu also shows challenge progress. The garage must show a lock state with its
+requirement next to the price; locked items can't be bought.
+
+
+## Save slots
+
+A save slot menu to save/load specific saves. Demo and full builds share `user://` (`export.sh`
+only swaps the app id) and Steam Cloud syncs `savegame_*.json`, so demo saves are named
+`savegame_01_demo.json`: still inside the cloud pattern, never colliding with a full save. Each
+build lists only its own saves. See also "Demo savegame" in TODO's Steam Prep.
+
+- **Existing saves carry over** as slots, keeping what they own. Old `savegame_%d.json` files are
+  migrated into the new naming, not reset.
+- **Slots are renamable.** The name is stored inside the save, so file names stay slot-numbered
+  and inside the cloud pattern.
+
+
+## Payouts
+
+Built.
 
 - **Formula:** `event base × place multiplier + score × rate`, computed separately for money and
   XP. Place multipliers fall off from 1st, with a floor for everyone below the podium. Score
-  only applies in score modes (stunt race, trick battle, long jump); pure races and challenges
-  pay on placement alone. In score modes a rider who scored 0 gets the floor whatever their row,
-  so idling never pays 1st.
+  only applies in score modes (stunt race, trick battle, long jump); pure races and stunt
+  challenges pay on placement alone. In score modes a rider who scored 0 gets the floor whatever
+  their row, so idling never pays 1st.
 - **Tunables:** the base money and XP are per event, on `GameModeEventDefinition`. Place
   multipliers, score rates and the time attack lap fraction are shared constants.
 - **Placement** is the rider's row on the results screen they see, NPCs included, so beating
   bots counts.
 - **Where:** the server computes it in `RunnerGameMode._show_results()`, which every
-  results-showing mode goes through. It RPCs each rider, whose client writes its own save (the
-  `TimeAttackComponent` PB pattern) via `RunnerGameMode.rpc_earn`, which also pops `+$N` and `+N XP`
-  off the riding HUD's money and XP panels. The results screen shows the earned money and XP columns. Modes
-  add score through the `_payout_score` override (`TimedScoreGameMode`, stunt races).
+  results-showing mode goes through. It RPCs each rider, whose client writes its own save via
+  `RunnerGameMode.rpc_earn`, which also pops `+$N` and `+N XP` off the riding HUD. The results
+  screen shows the earned money and XP columns. Modes add score through the `_payout_score`
+  override (`TimedScoreGameMode`, stunt races).
 - **Time attack** never reaches the results screen: every lap pays a fraction of the base, and a
   lap that beats the rider's saved PB pays the full base on top.
 - **Doesn't pay:** free roam, fuel-up, and events the host cancels without results. Late joiners
-  who never raced aren't in the results, so they get nothing.
+  who never raced aren't in the results, so they get nothing. (Challenges finished in free roam
+  still pay their own reward.)
 
 
-## Ideas
+## New systems
 
-### Story as the spine
+A sketch for whoever builds this, roughly in build order. Calls marked *(builder)* are open to a
+better idea; the rest were decided.
 
-Grow up through the bikes, Simpsons Hit & Run style. Each chapter moves you to the next district
-(see [World layout](#world-layout)):
+1. **Bike type split.** A per-type resource holds everything that affects simulation: the
+   Gearing, Physics and Tricks groups, and collision *(builder: collision is simulation, so it
+   goes with the type)*. `BikeSkinDefinition` keeps mesh, markers, rider pose, mods and audio,
+   and points at its type. The type also carries its challenge list and mod ladder. ~24 scripts
+   reference `BikeSkinDefinition` (player, NPC racers, traffic, garage), so read through the
+   definition rather than renaming every field read.
+2. **Unlock requirements.** Purchasable definitions (bike skins, characters, mods) get a
+   requirement: rider level, mastery level, or finished list. One check (beside
+   `SaveManager.is_owned()`) answers "locked, and why", used by the garage and `purchase()`.
+3. **Stats tracker.** Server-side, ticking every rider from synced state like `RaceChallenge`
+   does, and listening to `TrickManager.combo_banked` / `combo_voided` and crashes. Server-side
+   because `trick_started` / `trick_ended` fire inside the rollback tick and repeat on resim.
+   It sends each rider their own increments, batched rather than per frame *(builder: cadence)*,
+   and the client writes its save and pushes Steam stats. Saved under
+   `current_save["progression"]` as lifetime totals plus per-type counters.
+4. **Challenges.** `ChallengeDefinition` resources *(builder: name, any that doesn't collide)*
+   with a goal shape, target, optional mode context and reward. Bike lists live on the type
+   resource; daily templates in a pool. Progress is fed by the same increments as stats. Saved
+   per challenge, plus today's date and picks for dailies. Completion pays through
+   `SaveManager.earn` and plays the [completion](#completion) juice.
+5. **Steam stats + achievements.** Through `SteamManager` (never a static `Steam.` call).
+   Several save slots share one Steam account, so Steam should only ever move up: push a stat
+   only when the save's value is higher *(builder)*. The demo app has none configured, so the
+   demo build (`UtilsConstants.is_demo_build()`) skips the Steam push; its stats still save.
+6. **Challenges menu + pause panel.** A new `MenuState` with Career / Daily / Per-bike sections,
+   wired from main, play, lobby and pause.
+7. **Garage lock state.** The requirement next to the price; locked rows can't be bought.
+8. **Save slot menu + demo file naming.** Changing `save_path`'s name format renames existing
+   saves, so `load_save`'s migration moves old files to the new names (see
+   [Save slots](#save-slots)).
+9. **Console commands** for playtesting, beside `give_money` in `SaveManager`:
+   `add_player_xp <amount>`, `add_bike_level <type> <levels>` (completes that many of the
+   type's challenges, since mastery comes from challenges, not XP) and `unlock_bike_max <type>`.
+   They write the save like normal progress, so the unlocks behave the same as earned ones.
+10. **Economy pass.** Bike prices and level gates, per-event payout bases, daily rewards, starting
+   money on `default_player_definition.tres`.
 
-- **Chapter 1, bad side, mini bike:** learn tricks. Could replace the planned tutorial missions
-  (MSF → Stunting 101 → 102 in TODO). Save up to buy the naked bike for the area's final race,
-  so money has a goal from the start.
-- **Chapter 2, big city, naked bike:** stunt races, time trials, stunt battles. Sport bike and more
-  customization unlock here.
-- **Chapter 3, calm side:** the ending. Beach town, farms, island track; dirt bike on the beach.
+Depends on, but isn't part of this: NPC racer AI difficulty ramping with event difficulty, more
+tricks for unique challenges, and the tutorial (which comes before all of this for a new player).
 
-Outside the story, **classic mode** is the road trip: touring bike, an endless loop like the
-original game. The cruiser unlock fits here. Beats are in [Story](./Story.md).
 
-### World layout
-
-One map ("Highside Island") grown from stunt track 01, not a map per chapter (Hit & Run's
-approach). Maps are the most expensive content.
-
-- **Calm side:** the current map. About 2/3 of it (farms, suburbs, lighthouse coast, island track)
-  becomes the beach/farm/track vibe; the rest is the mountains and city. Its neon gets toned down
-  so the big city stands out.
-- **Interstate:** a loop, not a connector. A coastal ring road plus a mountain pass or two (Test
-  Drive Unlimited's Oahu as the template) linking the calm side, city and bad side, so friends can
-  cruise without dead ends. The same loop is classic mode's road trip. It needs real length to feel
-  fast at sport-bike speed, which grows the world several times over. The road generator already
-  has 2x2 containers.
-- **Big city:** lots of neon, the nicer streets.
-- **Bad side:** across the railroad tracks from the city. Old and worn: orange sodium streetlights,
-  a few flickering neon signs, chain-link fences, boarded windows. The style stays the same; only
-  the lighting and props change.
-
-**The world is never gated** (Forza Horizon 5 style). The map starts under fog of war that clears
-as you ride. Story events you reach early show as locked; collectibles, gas stations and garages
-always work.
-
-**No level streaming** (Godot has none). Keep everything loaded and cull with visibility ranges
-(unused in levels today) and occlusion (stunt track 01 already has it). The risk is long interstate
-sightlines to the city skyline. Hand-roll district streaming only if profiling demands it, and
-even then the host must keep collision loaded wherever any player is. The full map renders the
-live world (`Minimap`), so zoomed out it would show culled terrain; it needs a baked top-down
-image, which is also what the fog of war draws over.
-
-### Hit & Run-style systems
-
-- **NPC mission givers:** an NPC + speech bubble (in-world UI exists) on an existing
-  `GameModeEvent` start circle. The story is an ordered list of events; finishing one unlocks the next.
-  Animal Crossing-style dialog: text plus gibberish voice blips.
-- **Delivery missions:** pizza or newspaper runs as a mission type alongside races and battles.
-- **Collectibles in trick spots:** rooftops, gaps, past a jump, so exploring through tricks pays.
-  A pickup + a saved set of collected ids.
-- **Gags / destructibles:** knock over light poles, hydrants, signs, so free roam feels alive between missions.
-
-### Unlock cadence
-
-A handful of bikes is a handful of purchases, then the loop is over. Fill the gaps with cheap, frequent unlocks:
-
-- **Character skins and horns** as small purchases. Colors stay free.
-- **Bike mods:** accessories like wings on the sport bike, or a scraper that sparks during wheelies.
-- **More vehicles:** dirt bike, cafe racer, vespa, tron bike, pocket bike, plus joke rides
-  (unicycle, office chair, witch broom) from `assets_excluded_from_export/`.
-- **Medals per event** (bronze / silver / gold targets on time, score, or place). Extends the
-  saved time attack PBs and gives a reason to replay.
-- **Money buys, medals gate:** money is the grind (cosmetics), medals are skill (e.g. a bike needs
-  N golds). Grinding can't skip skill; skill alone doesn't empty the shop.
-- **First-clear bonus:** one-time payout per event, so players try every event once.
-- **Challenge payouts:** completing a `RaceChallenge` pays a small bonus.
-- **Stats page:** total wheelies, races won, best combo (already a TODO).
-- **Visible locks:** the garage already shows prices; non-money requirements (medals, chapter)
-  would need a lock state there too.
-
-### Avoid
+## Avoid
 
 - **Gating tricks:** shrinks the core fun.
-- **Gating the world:** lock events, never roads or districts.
+- **Bike stat upgrades:** break multiplayer fairness. Skins of a type share stats for the same
+  reason.
 - **Crew / club systems:** a lobby of friends already is one.
-- **Bike stat upgrades:** break multiplayer fairness.
-- **Dailies / login bonuses:** live-service pattern with no audience here.
 
 
 ## Open questions
 
-- Story as the backbone (chapters gate bikes and events) vs. a shop backbone (money unlocks
-  everything, missions just pay well) vs. shop first, story layered on later.
-- **Bike per chapter:** locked to the chapter's bike, or free choice once unlocked? In multiplayer,
-  does everyone ride the host's chapter bike?
-- The two skyscrapers sit next to the island, in the middle of the calm side. Move them to the big city?
-- **Paid DLC:** the Steam plan is free to play with paid DLC for content and skins. Which unlocks
-  are earned vs. bought, and how does that fit an open-source build?
-
-
-## MVP slice
-
-One map, three chapters of 2–3 missions each, one collectible type, money + bike unlocks. Enough to
-prove the loop before adding content.
-
-The money layer (payouts, owned skins, garage shop) is built. Left before the story can sit on
-it: priced or locked bikes, and saved event completion. Neither depends on NPCs or the world
-expansion.
+- **Character level gates:** which characters unlock at which rider level.
+- **Gamba wheel** on level up (in TODO): in or out of the demo?
