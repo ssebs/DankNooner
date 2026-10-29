@@ -5,8 +5,7 @@
 
 
 ### NOW
-- [ ] clip - how long can you make the trickfeed?!
-- [ ] Color sliders shouldn't have glow fx
+
 - [ ] Event finish should always show how much money you made 
 - [ ] traffic density -> use setting. Aka choose low/mid/hi. 
 - [ ] Hitbox on car needs to be smaller 

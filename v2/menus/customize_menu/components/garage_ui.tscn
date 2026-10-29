@@ -3,6 +3,66 @@
 [ext_resource type="Script" path="res://menus/customize_menu/components/garage_ui.gd" id="1_ui"]
 [ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_theme"]
 [ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="3_money"]
+[ext_resource type="Texture2D" uid="uid://dombbuh0a3fxn" path="res://resources/img/Icons/flair_disabled_cross.svg" id="4_close"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bare"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_picker_box"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.02, 0.039, 0.122, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.149, 0.388, 0.576, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_picker_hover"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.02, 0.039, 0.122, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.255, 0.686, 1, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_picker_focus"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.255, 0.686, 1, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="Theme" id="Theme_picker"]
+Button/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/styles/focus = SubResource("StyleBoxFlat_picker_focus")
+Button/styles/hover = SubResource("StyleBoxFlat_picker_hover")
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_picker_hover")
+Button/styles/normal = SubResource("StyleBoxFlat_picker_box")
+Button/styles/pressed = SubResource("StyleBoxFlat_picker_hover")
+HSlider/styles/grabber_area = SubResource("StyleBoxEmpty_bare")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxEmpty_bare")
+LineEdit/styles/focus = SubResource("StyleBoxFlat_picker_focus")
+LineEdit/styles/normal = SubResource("StyleBoxFlat_picker_box")
 
 [node name="GarageUI" type="Control"]
 layout_mode = 3
@@ -143,6 +203,31 @@ theme_type_variation = &"DangerButton"
 text = "DELETE_LABEL"
 flat = true
 
+[node name="CloseBtn" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+custom_minimum_size = Vector2(16, 16)
+offset_left = 582.0
+offset_top = 42.0
+offset_right = 582.0
+offset_bottom = 42.0
+grow_horizontal = 0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme_override_colors/icon_normal_color = Color(1, 1, 1, 0.7)
+theme_override_colors/icon_hover_color = Color(1.4, 1.4, 1.4, 1)
+theme_override_colors/icon_pressed_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/icon_hover_pressed_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_styles/focus = SubResource("StyleBoxEmpty_bare")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_bare")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_bare")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_bare")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_bare")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_bare")
+icon = ExtResource("4_close")
+flat = true
+expand_icon = true
+
 [node name="PoseBtn" type="Button" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
@@ -236,7 +321,9 @@ theme_type_variation = &"InsetPanel"
 [node name="Picker" type="ColorPicker" parent="ColorPanel/Inset"]
 unique_name_in_owner = true
 layout_mode = 2
+theme = SubResource("Theme_picker")
 edit_alpha = false
+edit_intensity = false
 can_add_swatches = false
 sampler_visible = false
 color_modes_visible = false

@@ -25,7 +25,7 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-
+- [ ] Color sliders shouldn't have glow fx
 - [ ] [WIP MISC](_ScratchPad.md)
 
 #### Steam Prep

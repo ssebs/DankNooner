@@ -27,6 +27,7 @@ const TAB_MAX_WIDTH: float = 200
 @onready var _tab_scroll: ScrollContainer = %TabScroll
 @onready var _tabs: HBoxContainer = %Tabs
 @onready var _add_tab_btn: Button = %AddTabBtn
+@onready var _close_btn: Button = %CloseBtn
 @onready var _money: MoneyLabel = %Money
 @onready var _title: Label = %Title
 @onready var _count: Label = %Count
@@ -76,6 +77,7 @@ func _ready():
 	_set_active_btn.pressed.connect(func(): _set_active(_tab))
 	_delete_btn.pressed.connect(_on_delete_pressed)
 	_leave_btn.pressed.connect(exit_requested.emit)
+	_close_btn.pressed.connect(exit_requested.emit)
 	_pose_btn.pressed.connect(pose_requested.emit)
 	for color in UtilsConstants.SKIN_COLOR_PRESETS:
 		if color not in _picker.get_presets():
