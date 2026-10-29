@@ -25,9 +25,7 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
-- [ ] Color sliders shouldn't have glow fx
 - [ ] [WIP MISC](_ScratchPad.md)
-
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
 
@@ -243,6 +241,12 @@
 ---
 
 ## Done ✅
+- [x] Hitbox on car needs to be smaller 
+
+- [x] Customize menu x at top right of panel to leave
+
+- [x] Color sliders shouldn't have glow fx
+
 - [x] Add ramp on bridge so if you land on top you can drive off both ways
 
 - [x] filling up - pay per second of fuel, so spilling costs $. show in diagetic UI on pump

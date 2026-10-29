@@ -8,8 +8,7 @@
 
 - [ ] Event finish should always show how much money you made 
 - [ ] traffic density -> use setting. Aka choose low/mid/hi. 
-- [ ] Hitbox on car needs to be smaller 
-- [ ] Customize menu x at top right of panel to leave
+
 
 
 - [ ] [Progression/Challenges](./Progression.md)
