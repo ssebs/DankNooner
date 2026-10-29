@@ -78,8 +78,6 @@
 - [ ] Fill up => race is not obvious where to go/not consistent across all races 
 - [ ] need to know when race is completed (single player is done vs entire lobby)
 - [ ] Cancel from fill up should be more obvious
-- [ ] Btn white while hovering btns instead of green outline
-- [ ] 321 + drive to start of race text + current objective should be more obvious during races/events (race/hud objective)
 
 ### New Large Map
 - [ ] Make roads / map in blender
@@ -234,6 +232,8 @@
 ---
 
 ## Done ✅
+- [x] 321 + drive to start of race text + current objective should be more obvious during races/events (race/hud objective)
+
 - [x] Customize menu glow on select gets cut off
 - [x] Bottom left btn corner should be round
 - [x] Steam page
