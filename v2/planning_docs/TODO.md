@@ -243,6 +243,8 @@
 ---
 
 ## Done ✅
+- [x] Add ramp on bridge so if you land on top you can drive off both ways
+
 - [x] filling up - pay per second of fuel, so spilling costs $. show in diagetic UI on pump
 
 - [x] Wheelie scoring now depends on the angle, it should.

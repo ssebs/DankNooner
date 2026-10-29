@@ -19,6 +19,7 @@ uv1_triplanar = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.107819706, 0)
 curve = SubResource("Curve3D_corkscrew")
 script = ExtResource("2_path")
+color_preset = 5
 
 [node name="Track" type="CSGPolygon3D" parent="." unique_id=884213067]
 use_collision = true

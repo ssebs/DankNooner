@@ -175,6 +175,13 @@ name = "Time Attack"
 description = "Set your best run"
 target_gamemode = 3
 
+[sub_resource type="Curve3D" id="Curve3D_rbe0j"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1.5, 0, 0, 1.5, 0, 2, 2.5, 0, 0, 0, 0, 0, 6.09, 0, 0, 5),
+"tilts": PackedFloat32Array(0, 0, 0)
+}
+point_count = 3
+
 [sub_resource type="Curve3D" id="Curve3D_6lq47"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0.04449463, 0, -15.999939, -12.000002, 0, 0, -0.55548096, 0.25, -4.3699646, -0.5751953, 0.25, -9.369934, -11.398411, 0.25, 9.44899),
@@ -844,6 +851,7 @@ metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="TrafficNetwork" type="Node3D" parent="." unique_id=1789773144]
 script = ExtResource("3_4h6qj")
+show_in_editor = false
 baked = ExtResource("4_emu8c")
 metadata/_custom_type_script = "uid://dunhh6klysrxg"
 
@@ -1780,11 +1788,13 @@ occluder = ExtResource("20_a57fq")
 bake_mask = 4294967291
 
 [node name="NPCNavRegion" type="NavigationRegion3D" parent="." unique_id=1990556521]
+visible = false
 navigation_mesh = SubResource("NavigationMesh_ercdn")
 script = ExtResource("npc_nav_region")
 exclude_layers = 16
 
 [node name="NPCNavGrassRegion" type="NavigationRegion3D" parent="." unique_id=1990556522]
+visible = false
 navigation_mesh = SubResource("NavigationMesh_grass")
 navigation_layers = 2
 enter_cost = 10.0
@@ -1890,10 +1900,12 @@ transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -926
 [node name="Ramp8" parent="StuntRace/Route" unique_id=1633736762 instance=ExtResource("6_w1aki")]
 transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, -694.99994, 0, 474.99997)
 width = 16
+color_preset = null
 
 [node name="Ramp9" parent="StuntRace/Route" unique_id=2096296363 instance=ExtResource("6_w1aki")]
 transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, -694.99994, 0, 454.79996)
 width = 16
+color_preset = null
 
 [node name="PickupSpawner1" parent="StuntRace/Route" unique_id=1012215384 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 5.867197, 15.5)
@@ -4347,17 +4359,22 @@ color_preset = 1
 
 [node name="BridgeSupports" type="Node3D" parent="props" unique_id=1179143975]
 
+[node name="Corkscrew4" parent="props/BridgeSupports" unique_id=1203948571 instance=ExtResource("60_kgknl")]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -707.09204, 8.09218, 598.024)
+curve = SubResource("Curve3D_rbe0j")
+width = 6
+
+[node name="Corkscrew5" parent="props/BridgeSupports" unique_id=2049646595 instance=ExtResource("60_kgknl")]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -690.475, 7.2921805, 614.64105)
+curve = SubResource("Curve3D_rbe0j")
+width = 6
+color_preset = 0
+
 [node name="GrayBox_StaticBody4" parent="props/BridgeSupports" unique_id=924713284 instance=ExtResource("18_dc022")]
 transform = Transform3D(0.61237234, 0.3535533, -0.70710677, -0.49999994, 0.8660252, 0, 0.61237246, 0.35355335, 0.70710665, -683.06036, 2.9150636, 622.82495)
 width = 16.0
 depth = 16.0
 color_preset = 1
-
-[node name="GrayBox_StaticBody22" parent="props/BridgeSupports" unique_id=1485126779 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.7052541, 0.051152382, -0.7071068, -0.07234039, 0.9973797, 9.313226e-10, 0.70525414, 0.05115243, 0.7071067, -705.22076, 10.00478, 599.8724)
-width = 2.0
-height = 0.1
-depth = 10.0
 
 [node name="GrayBox_StaticBody23" parent="props/BridgeSupports" unique_id=789178132 instance=ExtResource("18_dc022")]
 transform = Transform3D(0.4738947, 0.52480817, -0.7071068, -0.74219096, 0.6701882, 0, 0.4738948, 0.5248082, 0.7071067, -685.6579, 7.14, 617.50793)
@@ -4573,6 +4590,7 @@ neon_edges = true
 [node name="Ramp" parent="props" unique_id=319877564 instance=ExtResource("6_w1aki")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -232.5, 0, 32)
 width = 24
+color_preset = null
 
 [node name="invisiblewall" parent="props/Ramp" unique_id=1330899296 instance=ExtResource("18_dc022")]
 transform = Transform3D(1, -1.8691035e-09, -3.998224e-11, 1.8691046e-09, 0.9990854, 0.0427601, -3.9978687e-11, -0.0427601, 0.9990854, -10.500011, 4.617072, 105.52756)
@@ -4583,20 +4601,25 @@ material_override = ExtResource("29_a4ddl")
 
 [node name="Ramp7" parent="props" unique_id=347389674 instance=ExtResource("6_w1aki")]
 transform = Transform3D(0.7071067, 0, -0.7071068, 0, 1, 0, 0.7071068, 0, 0.7071067, -199.67159, 0, 364.57108)
+color_preset = null
 
 [node name="Ramp12" parent="props" unique_id=1242527810 instance=ExtResource("6_w1aki")]
 transform = Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, -208.51044, 0, 376.23834)
+color_preset = null
 
 [node name="Ramp8" parent="props" unique_id=1887397100 instance=ExtResource("6_w1aki")]
 transform = Transform3D(5.9604645e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, 5.9604645e-08, -512.87823, 0, 462.7878)
+color_preset = null
 
 [node name="Ramp9" parent="props" unique_id=1825882042 instance=ExtResource("6_w1aki")]
 transform = Transform3D(0.7071067, 0, -0.7071067, 0, 1, 0, 0.7071067, 0, 0.7071067, -199.109, 0, 620.0747)
 height = 0
+color_preset = null
 
 [node name="Ramp11" parent="props" unique_id=2051288088 instance=ExtResource("6_w1aki")]
 transform = Transform3D(-0.70710665, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710665, -216.03952, 0, 639.20667)
 height = 0
+color_preset = null
 
 [node name="GrayBox_StaticBody" parent="props" unique_id=670183193 instance=ExtResource("18_dc022")]
 transform = Transform3D(0.7071068, 0.20592135, 0.6764588, 0, 0.9566571, -0.29121676, -0.7071068, 0.20592135, 0.6764588, -716.7429, 4.029678, 588.58734)
@@ -4607,16 +4630,20 @@ color_preset = 5
 
 [node name="Ramp10" parent="props" unique_id=1654268796 instance=ExtResource("6_w1aki")]
 transform = Transform3D(0.553933, 0, 0.83256125, 0, 1, 0, -0.83256125, 0, 0.553933, -723.6807, 0, 581.2449)
+color_preset = null
 
 [node name="Ramp2" parent="props" unique_id=1585675927 instance=ExtResource("6_w1aki")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -119, 0, 159)
+color_preset = null
 
 [node name="Ramp3" parent="props" unique_id=1552895077 instance=ExtResource("6_w1aki")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -99, 0, 159)
+color_preset = null
 
 [node name="Ramp5" parent="props" unique_id=113753775 instance=ExtResource("6_w1aki")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 111, 8.289501, 223)
 width = 32
+color_preset = null
 
 [node name="SedanCar" parent="props" unique_id=1065239879 instance=ExtResource("22_rl138")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -122, 0.028337456, 137.75)
@@ -7513,17 +7540,20 @@ curve = SubResource("Curve3D_ytyv1")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -769, 0, 263.5)
 curve = SubResource("Curve3D_71wu4")
 
-[node name="Corkscrew" parent="." unique_id=1203948571 groups=["navigation_mesh_source_group"] instance=ExtResource("60_kgknl")]
+[node name="Corkscrew" parent="." unique_id=1046466621 groups=["navigation_mesh_source_group"] instance=ExtResource("60_kgknl")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 123.5, 3.7982864, 12)
 width = 24
+color_preset = 5
 
 [node name="Corkscrew3" parent="." unique_id=559617928 groups=["navigation_mesh_source_group"] instance=ExtResource("60_kgknl")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 91.49997, -0.09939442, 722.5)
 width = 24
+color_preset = 5
 
 [node name="Corkscrew2" parent="." unique_id=1831047760 groups=["navigation_mesh_source_group"] instance=ExtResource("60_kgknl")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -959.5, -0.14025217, 464)
 width = 32
+color_preset = 5
 
 [node name="StopSign" parent="." unique_id=23860843 instance=ExtResource("67_dhvxm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -322.1, 0.9999981, 451.1)

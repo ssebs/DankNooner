@@ -6,7 +6,6 @@
 
 ### NOW
 - [ ] clip - how long can you make the trickfeed?!
-- [ ] Add ramp on bridge so if you land on top you can drive off both ways
 - [ ] Color sliders shouldn't have glow fx
 - [ ] Event finish should always show how much money you made 
 - [ ] traffic density -> use setting. Aka choose low/mid/hi. 
