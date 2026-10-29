@@ -20,7 +20,7 @@ var _active_runner: TaskRunner
 var _active_runner_index: int = -1
 var _results_countdown: float = -1.0
 var _results_countdown_total: float = 30.0
-## peer_id -> {"money": int, "xp": int}, this event's payouts for the results columns.
+## peer_id -> {"money": int, "xp": int}, what each rider earned this event, for the results columns.
 var _payouts: Dictionary[int, Dictionary] = {}
 
 
@@ -29,6 +29,7 @@ func Enter(state_context: StateContext):
 		return
 	var ctx := state_context as GamemodeStateContext
 	_event = ctx.event
+	_payouts.clear()
 	if shows_event_props():
 		_event.get_circle().set_active_event(_event)
 	_runners = _event.get_runners()
@@ -166,7 +167,7 @@ func _show_results(data: ResultsData):
 	_results_countdown = _results_countdown_total
 	riding_hud_state.push_event_clear_all()
 	_pay_out(data)
-	results_hud.rpc_show_results.rpc(_with_payouts(data).to_dict(), _results_countdown_total)
+	results_hud.rpc_show_results.rpc(with_payouts(data).to_dict(), _results_countdown_total)
 
 
 ## Override: whether riders are scored (_payout_score). False pays on placement alone.
@@ -195,12 +196,19 @@ func _pay_out(data: ResultsData):
 		var mult := mults[place] if is_ranked else UtilsConstants.PAYOUT_PLACE_FLOOR
 		var money := int(def.payout_money * mult + score * UtilsConstants.PAYOUT_SCORE_MONEY_RATE)
 		var xp := int(def.payout_xp * mult + score * UtilsConstants.PAYOUT_SCORE_XP_RATE)
-		_payouts[peer_id] = {"money": money, "xp": xp}
-		rpc_earn.rpc_id(peer_id, money, xp)
+		earn(peer_id, money, xp)
+
+
+## Server: pay one rider and add it to their results columns.
+func earn(peer_id: int, money: int, xp: int):
+	var payout: Dictionary = _payouts.get_or_add(peer_id, {"money": 0, "xp": 0})
+	payout["money"] += money
+	payout["xp"] += xp
+	rpc_earn.rpc_id(peer_id, money, xp)
 
 
 ## `data` plus the earned columns; NPC rows stay blank.
-func _with_payouts(data: ResultsData) -> ResultsData:
+func with_payouts(data: ResultsData) -> ResultsData:
 	data.columns.append_array(["Money", "XP"])
 	data.headers.append_array(["💵", "⭐ %s" % tr("LB_XP")])
 	for row in data.rows:

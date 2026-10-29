@@ -199,7 +199,8 @@ Built.
   screen shows the earned money and XP columns. Modes add score through the `_payout_score`
   override (`TimedScoreGameMode`, stunt races).
 - **Time attack** never reaches the results screen: every lap pays a fraction of the base, and a
-  lap that beats the rider's saved PB pays the full base on top.
+  lap that beats the rider's saved PB pays the full base on top. Laps pay through
+  `RunnerGameMode.earn`, so the point-to-point run screen shows the event's earnings so far.
 - **Doesn't pay:** free roam, fuel-up, and events the host cancels without results. Late joiners
   who never raced aren't in the results, so they get nothing. (Challenges finished in free roam
   still pay their own reward.)

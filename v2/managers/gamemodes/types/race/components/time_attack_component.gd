@@ -116,7 +116,7 @@ func _on_lap_completed(peer_id: int, lap_ms: int) -> void:
 	if race_mode.race_task.is_point_to_point():
 		race_mode.riding_hud_state.push_event_status(peer_id, "TIME_ATTACK_RUN_DONE")
 		race_mode.results_hud.rpc_show_run_finished.rpc_id(
-			peer_id, race_mode.leaderboard.build_results().to_dict()
+			peer_id, race_mode.with_payouts(race_mode.leaderboard.build_results()).to_dict()
 		)
 
 
@@ -124,7 +124,7 @@ func _on_lap_completed(peer_id: int, lap_ms: int) -> void:
 func _pay_lap(peer_id: int, is_pb: bool) -> void:
 	var def := race_mode.get_definition()
 	var mult := UtilsConstants.PAYOUT_LAP_FRACTION + (1.0 if is_pb else 0.0)
-	race_mode.rpc_earn.rpc_id(peer_id, int(def.payout_money * mult), int(def.payout_xp * mult))
+	race_mode.earn(peer_id, int(def.payout_money * mult), int(def.payout_xp * mult))
 
 
 func _times(peer_id: int) -> Dictionary:

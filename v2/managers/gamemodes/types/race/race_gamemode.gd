@@ -205,7 +205,7 @@ func _update_results_countdown(delta: float) -> bool:
 	# NPCs keep racing through the countdown — refresh so a late finisher gets its time.
 	if _results_refresh_accum <= 0.0:
 		_results_refresh_accum = RESULTS_REFRESH_SECS
-		results_hud.rpc_update_rows.rpc(_with_payouts(leaderboard.build_results()).to_dict())
+		results_hud.rpc_update_rows.rpc(with_payouts(leaderboard.build_results()).to_dict())
 	return super(delta)
 
 
