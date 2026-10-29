@@ -517,9 +517,10 @@ script = ExtResource("31_npcrm")
 level_manager = NodePath("../LevelManager")
 npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_pk5u2")])
 
-[node name="NPCTrafficManager" type="Node" parent="ManagerManager" unique_id=1218916395 node_paths=PackedStringArray("level_manager", "spawn_manager") groups=["Managers"]]
+[node name="NPCTrafficManager" type="Node" parent="ManagerManager" unique_id=1218916395 node_paths=PackedStringArray("level_manager", "settings_manager", "spawn_manager") groups=["Managers"]]
 script = ExtResource("99_npctm")
 level_manager = NodePath("../LevelManager")
+settings_manager = NodePath("../SettingsManager")
 spawn_manager = NodePath("../SpawnManager")
 npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_pk5u2")])
 

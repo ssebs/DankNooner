@@ -6,14 +6,12 @@
 
 ### NOW
 
-- [ ] traffic density -> use setting. Aka choose low/mid/hi. 
+- [ ] backing up steering / going uphill is jittery
 
 - [ ] [Progression/Challenges](./Progression.md)
   - [ ] track ragdoll vs bike distance on a crash (how far the rider flew from the bike) — show it in the trick feed's bail line, and use it for a new gamemode (furthest launch wins?)
 
 ### NEXT
-
-- [ ] Items hard to see in world, need outline. 
 
 - [ ] Tweak camera:
   - [ ] Camera zoom level select (choose diff camera)

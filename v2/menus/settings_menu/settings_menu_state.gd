@@ -10,7 +10,7 @@ class_name SettingsMenuState extends MenuState
 const TAB_SETTING_KEYS: Array = [
 	["signal_relay_host", "resolution_scale", "gamma", "fullscreen_mode", "vsync", "show_fps", "language"],
 	["master_vol", "music_vol", "sfx_vol", "menu_vol", "mute", "mute_unfocused"],
-	["difficulty", "joy_cam_sens", "mouse_cam_sens", "invert_cam", "auto_transmission"],
+	["difficulty", "joy_cam_sens", "mouse_cam_sens", "invert_cam", "auto_transmission", "traffic_density"],
 ]
 
 @onready var back_btn: Button = %BackBtn
@@ -41,6 +41,8 @@ const TAB_SETTING_KEYS: Array = [
 @onready var auto_transmission: CheckBox = %AutoTransmissionCheck
 ## 0 is easy, 1 is hard. TODO make enum
 @onready var difficulty_opt: OptionButton = %DifficultyOptBtn
+@onready var traffic_density_label: Label = %TRAFFIC_DENSITY_LABEL
+@onready var traffic_density: HSlider = %TrafficDensitySlider
 
 @onready var bg_tint: ColorRect = %BGTint
 
@@ -78,6 +80,7 @@ func Enter(state_context: StateContext):
 	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
 
 	resolution_scale.value_changed.connect(_on_resolution_scale_changed)
+	traffic_density.value_changed.connect(_on_traffic_density_changed)
 	tab_container.tab_changed.connect(_on_tab_changed)
 	_on_tab_changed(tab_container.current_tab)
 
@@ -95,6 +98,7 @@ func Exit(_state_context: StateContext):
 	settings_manager.all_settings_changed.disconnect(_on_all_settings_changed)
 
 	resolution_scale.value_changed.disconnect(_on_resolution_scale_changed)
+	traffic_density.value_changed.disconnect(_on_traffic_density_changed)
 	tab_container.tab_changed.disconnect(_on_tab_changed)
 	audio_manager.set_music_ducked(self, false)
 
@@ -139,6 +143,8 @@ func load_settings_into_ui(settings: Dictionary):
 	invert_cam.button_pressed = settings["invert_cam"]
 	auto_transmission.button_pressed = settings["auto_transmission"]
 	difficulty_opt.selected = settings["difficulty"]
+	traffic_density.value = settings["traffic_density"]
+	_on_traffic_density_changed(traffic_density.value)
 
 
 ## Every TAB_SETTING_KEYS value as currently shown in the UI.
@@ -162,6 +168,7 @@ func _settings_from_ui() -> Dictionary:
 		"invert_cam": invert_cam.button_pressed,
 		"auto_transmission": auto_transmission.button_pressed,
 		"difficulty": difficulty_opt.selected,
+		"traffic_density": traffic_density.value,
 	}
 
 
@@ -190,8 +197,16 @@ func _on_setting_updated(_key: String, _value: Variant):
 
 
 func _on_resolution_scale_changed(val: float):
-	var s = "%.2f" % val
-	resolution_scale_label.text = tr("RESOLUTION_SCALE_LABEL").format({"scale": s.rstrip("0").rstrip(".")})
+	resolution_scale_label.text = tr("RESOLUTION_SCALE_LABEL").format({"scale": _scale_str(val)})
+
+
+func _on_traffic_density_changed(val: float):
+	traffic_density_label.text = tr("TRAFFIC_DENSITY_LABEL").format({"scale": _scale_str(val)})
+
+
+## 1.50 -> "1.5", 0.00 -> "0"
+func _scale_str(val: float) -> String:
+	return ("%.2f" % val).rstrip("0").rstrip(".")
 
 
 ## Unducked on the Audio tab so the music slider previews its real level.

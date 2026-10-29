@@ -16,6 +16,8 @@ class_name NPCTrafficManager extends BaseManager
 signal player_near_missed(player: PlayerEntity)
 
 @export var level_manager: LevelManager
+## Host's traffic_density setting scales free-roam traffic_count.
+@export var settings_manager: SettingsManager
 ## Used to crash a player a traffic rider rammed.
 @export var spawn_manager: SpawnManager
 ## Round-robin source of bike riders' character skins, same as NPCRaceManager.
@@ -101,6 +103,8 @@ var _next_lod_ms: int = 0
 ## Server: set_traffic's rider count, overriding the map's. -1 = the map's.
 var _debug_count: int = -1
 var _for_race: bool = false
+## The traffic_density setting, kept in step by _on_all_settings_changed.
+var _density: float = 1.0
 
 
 func _ready():
@@ -110,6 +114,7 @@ func _ready():
 	Console.add_command(
 		"set_traffic", _set_debug_count, ["count"], 1, "Set the NPC traffic count, -1 for the map's (host only)"
 	)
+	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
 
 
 #region Traffic lifecycle (server only)
@@ -142,7 +147,7 @@ func start_traffic(for_race: bool = false) -> void:
 
 	_build_skins()
 	var settings := level_manager.current_level.traffic_settings
-	var count := settings.race_traffic_amount if for_race else settings.traffic_count
+	var count := settings.race_traffic_amount if for_race else roundi(settings.traffic_count * _density)
 	if _debug_count >= 0:
 		count = _debug_count
 	_for_race = for_race
@@ -215,9 +220,22 @@ func _set_debug_count(arg: String) -> void:
 	_debug_count = int(arg)
 	# Running (_network is set) — respawn at the new count
 	if _network != null:
-		var for_race := _for_race
-		stop_traffic()
-		start_traffic(for_race)
+		_restart_traffic()
+
+
+func _on_all_settings_changed(current_settings: Dictionary) -> void:
+	if is_equal_approx(current_settings["traffic_density"], _density):
+		return
+	_density = current_settings["traffic_density"]
+	# Only the server sets _network. Race traffic ignores density, so it's left alone.
+	if _network != null and !_for_race:
+		_restart_traffic()
+
+
+func _restart_traffic() -> void:
+	var for_race := _for_race
+	stop_traffic()
+	start_traffic(for_race)
 
 
 #endregion
@@ -634,6 +652,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
 	if level_manager == null:
 		issues.append("level_manager must not be empty")
+	if settings_manager == null:
+		issues.append("settings_manager must not be empty")
 	if spawn_manager == null:
 		issues.append("spawn_manager must not be empty")
 	if npc_definitions.is_empty():

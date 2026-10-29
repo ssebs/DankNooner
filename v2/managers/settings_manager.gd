@@ -46,6 +46,7 @@ var default_settings: Dictionary = {
 	"joy_cam_sens": 0.5,
 	"difficulty": 0, # 0 is easy, 1 is hard. TODO make enum
 	"auto_transmission": true,
+	"traffic_density": 1.0, # host only, scales free-roam traffic_count
 	"controls": {}, # Input Map overrides, see ControlBindings
 	# "bike_skin": "res://resources/bikes/skins/sport_default_skin_definition.tres",
 	# "character_skin": "res://resources/player/skins/biker_default_skin_definition.tres",

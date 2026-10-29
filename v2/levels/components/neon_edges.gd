@@ -1,6 +1,6 @@
 @tool
 ## Drop into any scene to light up the edges of the target meshes and every mesh under them
-## (including instanced .glb meshes and ones spawned later). One shared overlay material per NeonEdges node.
+## (including instanced .glb meshes, CSG, and ones spawned later). One shared overlay material per NeonEdges node.
 class_name NeonEdges extends Node
 
 ## Empty = this node's parent. Applied in _ready, so reload the scene after changing.
@@ -59,17 +59,23 @@ func _ready():
 	_apply_params()
 	for target in _get_targets():
 		var meshes := target.find_children("*", "MeshInstance3D", true, false)
-		if target is MeshInstance3D:
+		meshes.append_array(target.find_children("*", "CSGShape3D", true, false))
+		if _takes_overlay(target):
 			meshes.append(target)
-		for mesh: MeshInstance3D in meshes:
+		for mesh: GeometryInstance3D in meshes:
 			mesh.material_overlay = _mat
 
 
 # Catches meshes spawned after _ready, e.g. PlayerEntity rebuilding its skins after a crash.
 # Deferred so it lands after the spawned subtree's own _ready overlays (e.g. a graybox's neon_edges).
 func _on_node_added(node: Node):
-	if node is MeshInstance3D and _get_targets().any(func(t: Node3D): return t.is_ancestor_of(node)):
+	if _takes_overlay(node) and _get_targets().any(func(t: Node3D): return t.is_ancestor_of(node)):
 		node.set_deferred("material_overlay", _mat)
+
+
+# CSG renders its own geometry (e.g. the ramp pickup), so it takes an overlay like a mesh.
+func _takes_overlay(node: Node) -> bool:
+	return node is MeshInstance3D or node is CSGShape3D
 
 
 func _get_targets() -> Array[Node3D]:
