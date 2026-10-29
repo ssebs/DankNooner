@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.0.163 - 2026-10-29
+
+- better wheelie cam
+- consistent camera delay
+- ramp item needed outline, traffic density setting
+- show $ on time attack
+- cleanup settings menu
+- reduce hitbox on vehicles a bit
+- rm glow fx from color sliders in customization
+- Add ramp on bridge so if you land on top you can drive off both ways
+
 ## v0.0.162 - 2026-10-28
 
 - filling up - pay per second of fuel, so spilling costs $. show in diagetic UI on pump
