@@ -27,6 +27,7 @@ const PAUSE_ICON := preload("res://resources/img/Icons/pause.png")
 @onready var tricks_btn: Button = %TricksBtn
 @onready var level_select_panel: LevelSelectPanel = %LevelSelectPanel
 @onready var lobby_panel: LobbyPanel = %LobbyPanel
+@onready var card_divider: HSeparator = %CardDivider
 @onready var now_playing_title: Label = %NowPlayingTitle
 @onready var now_playing_artist: Label = %NowPlayingArtist
 @onready var prev_song_btn: Button = %PrevSongBtn
@@ -61,11 +62,14 @@ func Enter(_state_context: StateContext):
 	if multiplayer.is_server():
 		level_select_panel.populate(level_manager, gamemode_manager.current_level_name as int)
 		level_select_panel.start_btn.text = "SELECT_LABEL"
+		# Secondary action here; Start is the lobby's primary CTA
+		level_select_panel.start_btn.theme_type_variation = &""
 		level_select_panel.start_pressed.connect(_on_level_select_start_pressed)
 		level_select_panel.level_selected.connect(_on_level_select_level_selected)
 		_update_level_select_start_disabled()
 
 	lobby_panel.visible = !connection_manager.is_solo
+	card_divider.visible = lobby_panel.visible and level_select_panel.visible
 	lobby_panel.open(connection_manager, lobby_manager, steam_manager, multiplayer.is_server())
 
 	resume_btn.call_deferred("grab_focus")

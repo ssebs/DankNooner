@@ -2,11 +2,14 @@
 
 [ext_resource type="Script" uid="uid://b1lxeaxjibabl" path="res://menus/pause_menu/pause_menu_state.gd" id="1_fhu3k"]
 [ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_wn568"]
-[ext_resource type="PackedScene" path="res://menus/lobby_menu/level_select_panel.tscn" id="3_lspanel"]
+[ext_resource type="PackedScene" path="res://menus/lobby_menu/level_select_row.tscn" id="3_lspanel"]
 [ext_resource type="PackedScene" path="res://menus/lobby_menu/lobby_panel.tscn" id="4_lpanel"]
 [ext_resource type="Texture2D" path="res://resources/img/Icons/previous.png" id="5_prev"]
 [ext_resource type="Texture2D" path="res://resources/img/Icons/pause.png" id="6_pause"]
 [ext_resource type="Texture2D" path="res://resources/img/Icons/next.png" id="7_next"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_divider"]
+color = Color(0.149, 0.389, 0.577, 1)
 
 [node name="PauseMenuState" type="Node" unique_id=1626689768]
 script = ExtResource("1_fhu3k")
@@ -43,74 +46,86 @@ ratio = 1.778
 layout_mode = 2
 theme = ExtResource("2_wn568")
 
-[node name="TitleLabel" type="Label" parent="UI/AspectContainer/MarginContainer" unique_id=956935648]
+[node name="Root" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Root" unique_id=956935648]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_type_variation = &"TitleLabel"
 text = "PAUSE_LABEL"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1251177702]
+[node name="Body" type="MarginContainer" parent="UI/AspectContainer/MarginContainer/Root"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/Body" unique_id=1251177702]
+custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 
-[node name="ResumeBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=843270122]
+[node name="ResumeBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Root/Body/VBoxContainer" unique_id=843270122]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "RESUME_LABEL"
 
-[node name="RespawnBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1557111191]
+[node name="RespawnBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Root/Body/VBoxContainer" unique_id=1557111191]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "RESPAWN_LABEL"
 
-[node name="CancelEventBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1557111192]
+[node name="CancelEventBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Root/Body/VBoxContainer" unique_id=1557111192]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "CANCEL_EVENT_LABEL"
 
-[node name="HSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=35406676]
+[node name="HSeparator" type="HSeparator" parent="UI/AspectContainer/MarginContainer/Root/Body/VBoxContainer" unique_id=35406676]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 16
 theme_type_variation = &"SpacerSeparator"
 
-[node name="SettingsBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1875851933]
+[node name="SettingsBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Root/Body/VBoxContainer" unique_id=1875851933]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "SETTINGS_LABEL"
 
-[node name="TricksBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1846203528]
+[node name="TricksBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Root/Body/VBoxContainer" unique_id=1846203528]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "TRICKS_LABEL"
 
-[node name="MainMenuBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=588914279]
+[node name="MainMenuBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Root/Body/VBoxContainer" unique_id=588914279]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "MAIN_MENU_LABEL"
 
-
-[node name="MusicPanel" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1846203601]
+[node name="MusicPanel" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/Body" unique_id=1846203601]
 custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
-theme_override_constants/separation = 0
+theme_override_constants/separation = 4
 
-[node name="NowPlayingLabel" type="Label" parent="UI/AspectContainer/MarginContainer/MusicPanel" unique_id=1846203602]
+[node name="NowPlayingLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Root/Body/MusicPanel" unique_id=1846203602]
 layout_mode = 2
 theme_type_variation = &"TableHeaderLabel"
+theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
 text = "NOW_PLAYING_LABEL"
 
-[node name="NowPlayingTitle" type="Label" parent="UI/AspectContainer/MarginContainer/MusicPanel" unique_id=1846203603]
+[node name="NowPlayingTitle" type="Label" parent="UI/AspectContainer/MarginContainer/Root/Body/MusicPanel" unique_id=1846203603]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 1
@@ -118,70 +133,76 @@ auto_translate_mode = 2
 horizontal_alignment = 1
 text_overrun_behavior = 3
 
-[node name="NowPlayingArtist" type="Label" parent="UI/AspectContainer/MarginContainer/MusicPanel" unique_id=1846203604]
+[node name="NowPlayingArtist" type="Label" parent="UI/AspectContainer/MarginContainer/Root/Body/MusicPanel" unique_id=1846203604]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 1
 auto_translate_mode = 2
+theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
 text_overrun_behavior = 3
 
-[node name="MusicControls" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/MusicPanel" unique_id=1846203606]
+[node name="MusicControls" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/Body/MusicPanel" unique_id=1846203606]
 layout_mode = 2
 theme_override_constants/separation = 32
 alignment = 1
 
-[node name="PrevSongBtn" type="Button" parent="UI/AspectContainer/MarginContainer/MusicPanel/MusicControls" unique_id=1846203607]
+[node name="PrevSongBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Root/Body/MusicPanel/MusicControls" unique_id=1846203607]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(48, 40)
+custom_minimum_size = Vector2(64, 48)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 icon_alignment = 1
 expand_icon = true
 icon = ExtResource("5_prev")
 
-[node name="PlayPauseBtn" type="Button" parent="UI/AspectContainer/MarginContainer/MusicPanel/MusicControls" unique_id=1846203608]
+[node name="PlayPauseBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Root/Body/MusicPanel/MusicControls" unique_id=1846203608]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(48, 40)
+custom_minimum_size = Vector2(64, 48)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 icon_alignment = 1
 expand_icon = true
 icon = ExtResource("6_pause")
 
-[node name="SkipSongBtn" type="Button" parent="UI/AspectContainer/MarginContainer/MusicPanel/MusicControls" unique_id=1846203605]
+[node name="SkipSongBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Root/Body/MusicPanel/MusicControls" unique_id=1846203605]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(48, 40)
+custom_minimum_size = Vector2(64, 48)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 icon_alignment = 1
 expand_icon = true
 icon = ExtResource("7_next")
 
-[node name="PanelSlot" type="MarginContainer" parent="UI/AspectContainer/MarginContainer"]
+[node name="Card" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/Root/Body"]
 layout_mode = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 256
-theme_override_constants/margin_top = 280
-theme_override_constants/margin_right = 0
+size_flags_horizontal = 8
+theme_type_variation = &"MenuPanel"
+
+[node name="CardMargin" type="MarginContainer" parent="UI/AspectContainer/MarginContainer/Root/Body/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 0
 
-[node name="PanelRow" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/PanelSlot"]
+[node name="CardContent" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/Body/Card/CardMargin"]
 layout_mode = 2
-size_flags_vertical = 0
-mouse_filter = 2
+theme_override_constants/separation = 24
+alignment = 2
 
-[node name="LobbyPanel" parent="UI/AspectContainer/MarginContainer/PanelSlot/PanelRow" unique_id=1170908106 instance=ExtResource("4_lpanel")]
+[node name="LobbyPanel" parent="UI/AspectContainer/MarginContainer/Root/Body/Card/CardMargin/CardContent" unique_id=1170908106 instance=ExtResource("4_lpanel")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
+size_flags_vertical = 3
 
-[node name="LevelSelectPanel" parent="UI/AspectContainer/MarginContainer/PanelSlot/PanelRow" unique_id=1170908105 instance=ExtResource("3_lspanel")]
+[node name="CardDivider" type="HSeparator" parent="UI/AspectContainer/MarginContainer/Root/Body/Card/CardMargin/CardContent"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_divider")
+
+[node name="LevelSelectPanel" parent="UI/AspectContainer/MarginContainer/Root/Body/Card/CardMargin/CardContent" unique_id=1170908105 instance=ExtResource("3_lspanel")]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
-size_flags_horizontal = 10
-size_flags_vertical = 0

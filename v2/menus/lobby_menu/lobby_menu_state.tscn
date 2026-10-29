@@ -137,74 +137,67 @@ metadata/_custom_type_script = "uid://muodw5580tnr"
 layout_mode = 2
 theme = ExtResource("2_lphm8")
 
-[node name="LevelSelectPanel" parent="UI/AspectContainer/MarginContainer" unique_id=590154309 instance=ExtResource("3_lspanel")]
-unique_name_in_owner = true
+[node name="Body" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer"]
 layout_mode = 2
-custom_minimum_size = Vector2(512, 0)
-size_flags_horizontal = 8
-size_flags_vertical = 4
+theme_override_constants/separation = 64
 
-[node name="SingleplayerUI" type="Control" parent="UI/AspectContainer/MarginContainer" unique_id=1062874427]
+[node name="LeftColumn" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SingleplayerUI" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Body/LeftColumn" unique_id=1062874427]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-size_flags_horizontal = 0
 
-[node name="TitleLabel" type="Label" parent="UI/AspectContainer/MarginContainer/SingleplayerUI" unique_id=1979153626]
-layout_mode = 0
-offset_right = 227.0
-offset_bottom = 122.0
+[node name="TitleLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Body/LeftColumn/SingleplayerUI" unique_id=1979153626]
+layout_mode = 2
 size_flags_horizontal = 0
-size_flags_vertical = 0
 theme_type_variation = &"TitleLabel"
 text = "FREE_ROAM_LABEL"
 
-[node name="MultiplayerUI" type="Control" parent="UI/AspectContainer/MarginContainer" unique_id=904581325]
+[node name="MultiplayerUI" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Body/LeftColumn" unique_id=904581325]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 0
 
-[node name="TitleLabel" type="Label" parent="UI/AspectContainer/MarginContainer/MultiplayerUI" unique_id=1260742798]
-layout_mode = 0
-offset_right = 227.0
-offset_bottom = 122.0
+[node name="TitleLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Body/LeftColumn/MultiplayerUI" unique_id=1260742798]
+layout_mode = 2
 size_flags_horizontal = 0
-size_flags_vertical = 0
 theme_type_variation = &"TitleLabel"
 text = "LOBBY_LABEL"
 
-[node name="LobbyPanel" parent="UI/AspectContainer/MarginContainer/MultiplayerUI" unique_id=816754844 instance=ExtResource("6_lpanel")]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_top = -237.5
-offset_right = 864.0
-offset_bottom = 328.5
-grow_vertical = 2
-theme_override_constants/separation = 12
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=495261937]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 8
-
-[node name="CustomizeBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=2048864256]
+[node name="LobbyPanel" parent="UI/AspectContainer/MarginContainer/Body/LeftColumn/MultiplayerUI" unique_id=816754844 instance=ExtResource("6_lpanel")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
-size_flags_vertical = 4
+
+[node name="Spacer" type="Control" parent="UI/AspectContainer/MarginContainer/Body/LeftColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Body/LeftColumn" unique_id=495261937]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="CustomizeBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Body/LeftColumn/VBoxContainer" unique_id=2048864256]
+unique_name_in_owner = true
+layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "CUSTOMIZE_LABEL"
 
-[node name="BackBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer" unique_id=1870693339]
+[node name="BackBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Body/LeftColumn/VBoxContainer" unique_id=1870693339]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 8
 mouse_default_cursor_shape = 2
 text = "BACK_LABEL"
+
+[node name="LevelSelectPanel" parent="UI/AspectContainer/MarginContainer/Body" unique_id=590154309 instance=ExtResource("3_lspanel")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(512, 0)
+layout_mode = 2
+size_flags_vertical = 4
 
 [node name="TimeoutTimer" type="Timer" parent="." unique_id=2081652172]
 unique_name_in_owner = true

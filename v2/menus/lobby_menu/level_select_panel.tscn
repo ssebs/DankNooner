@@ -12,8 +12,6 @@ script = ExtResource("1_panel")
 [node name="LevelSelectBtn" type="OptionButton" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
 mouse_default_cursor_shape = 2
 selected = 0
 item_count = 2
@@ -38,9 +36,6 @@ stretch_mode = 6
 [node name="StartBtn" type="Button" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
-theme_override_font_sizes/font_size = 32
 text = "START_LABEL"
