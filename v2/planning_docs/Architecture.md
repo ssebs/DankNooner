@@ -478,6 +478,7 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
 - No `restartAppIfNecessary()`: it forces a relaunch through Steam and blocks offline play
 - Lobbies: `SteamManager` owns create/join/leave (`host_lobby()` / `join_lobby()` await the Steam callback; `leave_lobby()` mid-await leaves the late lobby)
 - Invites (plan A1 in `_STEAM_WORKSHOP.md`): a non-solo, logged-in host has a friends-only Steam lobby whose `game_id` data is the game code (`ConnectionManager.start_server`), left in `stop_server`. `join_requested` / `+connect_lobby` only reads the code into `pending_game_id`; main menu routes to the play menu, which joins through the normal code path. Only the STEAM transport actually joins the lobby
+- Free ride hosts like Host does, but always on the Host dropdown's default transport, and the lobby menu shows no player list, so the host never waits there. Friends late-join into free roam, invited from the pause menu. Only if hosting fails does it fall back to a solo local server (`is_solo`, no lobby)
 
 ### Spawn Manager
 

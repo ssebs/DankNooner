@@ -173,6 +173,10 @@ func _join_game(game_id: String):
 
 
 func _on_free_roam_btn_pressed():
+	# Host on the default transport, not the selected one
+	connection_manager.connection_mode = (
+		host_mode_opt.get_item_id(0) as ConnectionManager.ConnectionMode
+	)
 	transitioned.emit(lobby_menu_state, LobbyStateContext.NewFreeRoam(self))
 
 

@@ -149,6 +149,9 @@ func _on_server_disconnected():
 
 
 func _on_client_connection_failed(reason: String):
+	# Free ride falls back to solo instead (set_single_or_multiplayer_ui)
+	if return_ctx.mode == LobbyStateContext.Mode.FREEROAM:
+		return
 	UiToast.ShowToast("Connection failed: %s" % reason, UiToast.ToastLevel.ERR)
 	_on_back_pressed()
 
@@ -206,14 +209,15 @@ func set_single_or_multiplayer_ui():
 			multiplayer_ui.hide()
 			singleplayer_ui.show()
 			if not already_connected:
-				# ENet doesn't work on web — use WebRTC there
-				if OS.has_feature("web"):
-					connection_manager.connection_mode = ConnectionManager.ConnectionMode.WEBRTC
-				else:
-					connection_manager.connection_mode = ConnectionManager.ConnectionMode.IP_PORT
 				# The offline peer reports is_server() too — starting now runs the match with no lobby player
 				level_select_panel.set_controls_disabled(true)
-				await connection_manager.start_server(true)
+				# Friends late-join; free ride must still work offline, so fall back to a local server
+				var err: Error = await connection_manager.start_server()
+				# Not after Back mid-host: that would leave a server running behind the play menu
+				if err != OK and menu_manager.state_machine.current_state == self:
+					UiToast.ShowToast("Couldn't go online, riding solo", UiToast.ToastLevel.WARN)
+					connection_manager.connection_mode = ConnectionManager.ConnectionMode.WEBRTC
+					await connection_manager.start_server(true)
 				level_select_panel.set_controls_disabled(false)
 			level_select_panel.grab_start_focus()
 		_:

@@ -33,8 +33,8 @@ var _enet_connected_callable: Callable
 
 
 #region Public API
-## Starts the ENet server and listens for connections.
-func start_server(solo: bool = false):
+## Starts the ENet server and listens for connections. Returns OK on success.
+func start_server(solo: bool = false) -> Error:
 	is_solo = solo
 	var handler = _get_handler()
 	var peer: MultiplayerPeer = await handler.start_server(solo)
@@ -48,7 +48,7 @@ func start_server(solo: bool = false):
 		handler.stop_server()
 		# Reset back to the pre-host state so the lobby toasts + returns to the play menu.
 		client_connection_failed.emit("Could not create server")
-		return
+		return ERR_CANT_CREATE
 
 	multiplayer.multiplayer_peer = peer
 
@@ -64,6 +64,7 @@ func start_server(solo: bool = false):
 		if connection_mode != ConnectionMode.STEAM:
 			await steam_manager.host_lobby()
 		steam_manager.set_lobby_game_id(conn_addr)
+	return OK
 
 
 ## Stops the running server & disconnects signals

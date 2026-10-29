@@ -8,7 +8,6 @@
 
 - [ ] clip - how long can you make the trickfeed?!
 
-- [ ] free ride => host private lobby of default type, can invite friends but no need to wait in lobby.
 
 - [ ] Create/join public/private lobbies 
   - [ ] ____STEAM_LOBBIES_WIP.md

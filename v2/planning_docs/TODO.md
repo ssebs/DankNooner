@@ -67,6 +67,9 @@
 - [ ] Rewards are skin unlocks? Or currency to buy unlocks
   - [ ] Xp unlocks, money buys items?
   - [ ] Gamba: spin the wheel (or roulette / random game) to win unique prizes when leveling up? Can buy with $
+- [ ] Save slot menu: save/load specific saves, split between demo vs full game saves (see "Demo savegame" under Steam Prep)
+  - `SaveManager.save_slot` already picks `user://savegame_%d.json`, no menu yet
+  - both builds share `user://` (export.sh only swaps app_id) and Steam Cloud syncs `savegame_*.json`, so demo needs its own file pattern + matching Auto-Cloud rule on the demo app
 
 ### Controller UX Improvements
 - [ ] full navigation across menus, HUDs & in-world UI
@@ -88,6 +91,13 @@
   - [ ] see ../levels/assets/highside_island/CStoosmall1-4.png
     - [ ] these show potential styles, but scale is a bit too small 
 - [ ] have a bad/dark part of the map to start story with, nice big city part, and freeway to nice/calm part w/ track
+- [ ] Interstate is a loop, not a connector: coastal ring + a mountain pass or two (TDU Oahu), links calm side / city / bad side; doubles as classic mode's road trip
+- [ ] Never gate roads/districts (FH5): fog-of-war map clears as you ride, early story events show locked; collectibles/gas stations/garages always work
+- [ ] No level streaming: keep it all loaded, cull with visibility ranges + occlusion; risk is long interstate sightlines to the skyline. Host must keep collision loaded wherever any player is
+  - [ ] full map/minimap needs a baked top-down image (also what fog of war draws over)
+- [ ] Calm side = current map (~2/3 beach/farm/track), tone its neon down so the city stands out
+- [ ] Bad side: across the rail tracks, orange sodium lights, flickering neon, chain-link, boarded windows; same style, only lighting/props change
+- [ ] Move the two skyscrapers by the island to the big city?
 - [ ] How to keep open source but DLC paid? release steam version on github actions too?
   - [ ] export on github w/o some assets / steam features
 - [ ] add guac and load building to map
@@ -232,6 +242,8 @@
 ---
 
 ## Done ✅
+- [x] free ride => host private lobby of default type, can invite friends but no need to wait in lobby.
+
 - [x] 321 + drive to start of race text + current objective should be more obvious during races/events (race/hud objective)
 
 - [x] Customize menu glow on select gets cut off
