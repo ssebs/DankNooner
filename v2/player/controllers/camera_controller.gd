@@ -27,6 +27,8 @@ const FPS_YAW_LIMIT_DEG: float = 120.0
 
 const RESET_DELAY: float = 3.0
 const RESET_SPEED: float = 3.0
+## Ragdoll speed (units/s) below which the crash cam holds its last travel direction.
+const CRASH_DIR_MIN_SPEED: float = 1.0
 
 ## How fast accumulated screen-shake trauma bleeds off (per second).
 const TRAUMA_DECAY: float = 1.8
@@ -114,6 +116,9 @@ var _guide_look_timer: float = 0.0
 var _was_guided: bool = false
 ## Smoothed tps_marker.position — eases the wheelie-cam reframe in/out (the anim ramps it linearly).
 var _tps_marker_offset: Vector3 = Vector3.ZERO
+## Orbit base yaw while crashed — follows the ragdoll's travel direction.
+var _crash_yaw: float = 0.0
+var _prev_focus_pos: Vector3 = Vector3.ZERO
 
 var _fps_yaw_offset: float = 0.0
 var _fps_pitch_offset: float = 0.0
@@ -165,6 +170,13 @@ func _process(delta: float):
 	# wheelie / jump ends shouldn't swing the camera.
 	_stick_trick_latched = _stick_held() and _stick_is_trick_input()
 	_update_guide_look(delta)
+	_update_crash_yaw(delta)
+
+	if _has_cam_input(adjusted_mouse):
+		_guide_look_timer = 0.0
+	# A stick held as trick input still counts, so the cam never recenters mid-trick.
+	var touched := _stick_held() or adjusted_mouse.length_squared() > 0.01
+	_no_input_timer = 0.0 if touched or _guide_look_timer > 0.0 else _no_input_timer + delta
 
 	match current_cam_mode:
 		CameraMode.TPS:
@@ -194,8 +206,10 @@ func _stick_held() -> bool:
 ## True when the right stick is consumed by trick input (airborne / any wheelie / RB for
 ## TWO_LEFT_FEET, or still held since one of those), so the joystick must not also drive the camera.
 ## The mouse still can. The whole wheelie, not just the balance point, so drifting out of it
-## mid-trick doesn't swing the camera.
+## mid-trick doesn't swing the camera. Never while crashed — movement state freezes on crash.
 func _stick_is_trick_input() -> bool:
+	if player_entity.is_crashed:
+		return false
 	var mc := player_entity.movement_controller
 	var in_wheelie := mc.pitch_angle > deg_to_rad(TrickController.WHEELIE_PITCH_THRESHOLD_DEG)
 	return (
@@ -222,7 +236,6 @@ func _update_tps_input(delta: float, mouse: Vector2):
 		var t: float = RESET_SPEED * delta
 		_orbit_yaw = wrapf(lerp_angle(_orbit_yaw, _get_checkpoint_bearing(), t), -PI, PI)
 		_orbit_pitch = lerpf(_orbit_pitch, _default_orbit_pitch, t)
-		_no_input_timer = 0.0
 	elif _has_cam_input(mouse):
 		_orbit_yaw -= mouse.x * _mouse_cam_sens
 		_orbit_pitch -= mouse.y * _mouse_cam_sens
@@ -234,18 +247,12 @@ func _update_tps_input(delta: float, mouse: Vector2):
 
 		_orbit_pitch = clampf(_orbit_pitch, deg_to_rad(PITCH_MIN_DEG), deg_to_rad(PITCH_MAX_DEG))
 		_orbit_yaw = wrapf(_orbit_yaw, -PI, PI)
-		_no_input_timer = 0.0
-	else:
-		# In the balance point settle right away so the wheelie_cam marker anim frames the shot;
-		# otherwise settle after the idle delay.
-		var wheelie_cam := player_entity.movement_controller.in_balance_point
-		_no_input_timer += delta
-		if wheelie_cam or _no_input_timer >= RESET_DELAY:
-			var t: float = RESET_SPEED * delta
-			# Ease the bias itself too — it jumps when the next checkpoint changes.
-			_checkpoint_yaw_bias = lerpf(_checkpoint_yaw_bias, _get_checkpoint_yaw_bias(), t)
-			_orbit_yaw = lerpf(_orbit_yaw, _checkpoint_yaw_bias, t)
-			_orbit_pitch = lerpf(_orbit_pitch, _default_orbit_pitch, t)
+	elif _no_input_timer >= RESET_DELAY:
+		var t: float = RESET_SPEED * delta
+		# Ease the bias itself too — it jumps when the next checkpoint changes.
+		_checkpoint_yaw_bias = lerpf(_checkpoint_yaw_bias, _get_checkpoint_yaw_bias(), t)
+		_orbit_yaw = lerpf(_orbit_yaw, _checkpoint_yaw_bias, t)
+		_orbit_pitch = lerpf(_orbit_pitch, _default_orbit_pitch, t)
 
 
 func _update_tps_camera(delta: float):
@@ -284,12 +291,24 @@ func _get_tps_focus_position() -> Vector3:
 	return player_entity.global_position
 
 
-## Player rotation is meaningless once ragdolling — drop the body yaw so the orbit stays
-## stable around the hips instead of snapping with the frozen entity transform.
+## Player rotation is meaningless once ragdolling — follow the ragdoll's travel direction instead.
 func _get_tps_base_yaw() -> float:
 	if player_entity.is_crashed:
-		return 0.0
+		return _crash_yaw
 	return player_entity.global_rotation.y
+
+
+## Eases _crash_yaw from the bike heading toward the hips' horizontal travel direction.
+func _update_crash_yaw(delta: float):
+	var focus_pos: Vector3 = _get_tps_focus_position()
+	var vel: Vector3 = (focus_pos - _prev_focus_pos) / maxf(delta, 0.0001)
+	vel.y = 0.0
+	_prev_focus_pos = focus_pos
+	# _prev_crashed still holds last frame here (juice FX updates it) — skip the bike→hips jump.
+	if not player_entity.is_crashed or not _prev_crashed:
+		_crash_yaw = player_entity.global_rotation.y
+	elif vel.length() > CRASH_DIR_MIN_SPEED:
+		_crash_yaw = lerp_angle(_crash_yaw, atan2(-vel.x, -vel.z), RESET_SPEED * delta)
 
 
 ## A race event with traffic. The minimap's live checkpoint (null pre-race / after finishing)
@@ -331,7 +350,6 @@ func _update_fps_input(delta: float, mouse: Vector2):
 		var limit: float = deg_to_rad(FPS_YAW_LIMIT_DEG)
 		_fps_yaw_offset = lerpf(_fps_yaw_offset, clampf(_get_checkpoint_bearing(), -limit, limit), t)
 		_fps_pitch_offset = lerpf(_fps_pitch_offset, 0.0, t)
-		_no_input_timer = 0.0
 	elif _has_cam_input(mouse):
 		_fps_yaw_offset -= mouse.x * _mouse_cam_sens
 		_fps_pitch_offset -= mouse.y * _mouse_cam_sens
@@ -349,13 +367,10 @@ func _update_fps_input(delta: float, mouse: Vector2):
 		_fps_pitch_offset = clampf(
 			_fps_pitch_offset, deg_to_rad(FPS_PITCH_MIN_DEG), deg_to_rad(FPS_PITCH_MAX_DEG)
 		)
-		_no_input_timer = 0.0
-	else:
-		_no_input_timer += delta
-		if _no_input_timer >= RESET_DELAY:
-			var t: float = RESET_SPEED * delta
-			_fps_yaw_offset = lerpf(_fps_yaw_offset, 0.0, t)
-			_fps_pitch_offset = lerpf(_fps_pitch_offset, 0.0, t)
+	elif _no_input_timer >= RESET_DELAY:
+		var t: float = RESET_SPEED * delta
+		_fps_yaw_offset = lerpf(_fps_yaw_offset, 0.0, t)
+		_fps_pitch_offset = lerpf(_fps_pitch_offset, 0.0, t)
 
 
 func _update_fps_camera():

@@ -78,7 +78,6 @@
 - [ ] PC? RMB + move up/left/right like joystick should do tricks too instead of only arrow keys
 
 ### HUD Improvements
-- [ ] Fill up => race is not obvious where to go/not consistent across all races 
 - [ ] need to know when race is completed (single player is done vs entire lobby)
 - [ ] Cancel from fill up should be more obvious
 
@@ -242,6 +241,8 @@
 ---
 
 ## Done ✅
+- [x] Fill up => race is not obvious where to go/not consistent across all races 
+
 - [x] traffic density -> use setting. Aka choose low/mid/hi. 
 
 - [x] Hitbox on car needs to be smaller 
