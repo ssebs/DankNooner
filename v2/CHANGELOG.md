@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.0.162 - 2026-10-28
+
+- filling up - pay per second of fuel, so spilling costs $. show in diagetic UI on pump
+
 ## v0.0.161 - 2026-10-28
 
 - Wheelie scoring now depends on the angle, it should.
