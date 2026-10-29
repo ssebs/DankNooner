@@ -1,17 +1,35 @@
-[gd_resource type="Theme" format=3]
+[gd_resource type="Theme" format=3 uid="uid://cr2wmf2lxyt1k"]
 
 [ext_resource type="StyleBox" path="res://resources/themes/DankNooner/object.tres" id="1_object"]
-[ext_resource type="FontFile" path="res://resources/fonts/Noto_Color_Emoji/NotoColorEmoji-Regular.ttf" id="font_emoji"]
-[ext_resource type="FontFile" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-Medium.ttf" id="font_Medium"]
-[ext_resource type="FontFile" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-SemiBold.ttf" id="font_SemiBold"]
-
-[sub_resource type="FontVariation" id="Font_Medium"]
-fallbacks = Array[Font]([ExtResource("font_emoji")])
-base_font = ExtResource("font_Medium")
+[ext_resource type="FontFile" uid="uid://drtwjd40gf17m" path="res://resources/fonts/Noto_Color_Emoji/NotoColorEmoji-Regular.ttf" id="font_emoji"]
+[ext_resource type="FontFile" uid="uid://dhdw41xtyrr50" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-Medium.ttf" id="font_Medium"]
+[ext_resource type="FontFile" uid="uid://8tlasykxhy4g" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-SemiBold.ttf" id="font_SemiBold"]
 
 [sub_resource type="FontVariation" id="Font_SemiBold"]
 fallbacks = Array[Font]([ExtResource("font_emoji")])
 base_font = ExtResource("font_SemiBold")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_keyheld"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.255, 0.686, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.255, 0.686, 1, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 2
+shadow_color = Color(0.255, 0.686, 1, 0.45)
+shadow_size = 8
+
+[sub_resource type="FontVariation" id="Font_Medium"]
+fallbacks = Array[Font]([ExtResource("font_emoji")])
+base_font = ExtResource("font_Medium")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rpmfill"]
 bg_color = Color(0.103055954, 0.5546875, 0.052001953, 1)
@@ -37,27 +55,20 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 1
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_keyheld"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.255, 0.686, 1, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.255, 0.686, 1, 1)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 2
-shadow_color = Color(0.255, 0.686, 1, 0.45)
-shadow_size = 8
-
 [resource]
+DimLabel/base_type = &"Label"
+DimLabel/colors/font_color = Color(1, 1, 1, 0.6)
 GestureChipLabel/base_type = &"Label"
 GestureChipLabel/styles/normal = ExtResource("1_object")
+HUDHeroLabel/base_type = &"HUDTitleLabel"
+HUDHeroLabel/colors/font_outline_color = Color(0.02, 0.027, 0.06, 1)
+HUDHeroLabel/colors/font_shadow_color = Color(0.02, 0.027, 0.06, 0.8)
+HUDHeroLabel/constants/outline_size = 10
+HUDHeroLabel/constants/shadow_offset_x = 0
+HUDHeroLabel/constants/shadow_offset_y = 5
+HUDHeroLabel/constants/shadow_outline_size = 10
+HUDTitleLabel/base_type = &"Label"
+HUDTitleLabel/fonts/font = SubResource("Font_SemiBold")
 HeldKeyLabel/base_type = &"GestureChipLabel"
 HeldKeyLabel/styles/normal = SubResource("StyleBoxFlat_keyheld")
 Label/colors/font_outline_color = Color(0.02, 0.027, 0.06, 1)
@@ -65,8 +76,18 @@ Label/colors/font_shadow_color = Color(0.02, 0.027, 0.06, 0.8)
 Label/constants/outline_size = 6
 Label/constants/shadow_offset_x = 0
 Label/constants/shadow_offset_y = 3
+Label/constants/shadow_outline_size = 6
+Label/font_sizes/font_size = 20
+Label/fonts/font = SubResource("Font_Medium")
+MoneyLabel/fonts/font = SubResource("Font_SemiBold")
 ObjectPanel/base_type = &"PanelContainer"
 ObjectPanel/styles/panel = ExtResource("1_object")
+OwnLabel/base_type = &"Label"
+OwnLabel/colors/font_color = Color(0.255, 0.686, 1, 1)
+OwnLabel/fonts/font = SubResource("Font_SemiBold")
+PopupLabel/base_type = &"Label"
+PopupLabel/font_sizes/font_size = 36
+PopupLabel/fonts/font = SubResource("Font_SemiBold")
 RPMBar/base_type = &"ProgressBar"
 RPMBar/styles/background = ExtResource("1_object")
 RPMBar/styles/fill = SubResource("StyleBoxFlat_rpmfill")
@@ -74,36 +95,15 @@ RespawnBar/base_type = &"ProgressBar"
 RespawnBar/styles/background = ExtResource("1_object")
 RespawnBar/styles/fill = SubResource("StyleBoxFlat_respawnfill")
 RichTextLabel/colors/font_outline_color = Color(0.02, 0.027, 0.06, 1)
+RichTextLabel/colors/font_shadow_color = Color(0.02, 0.027, 0.06, 0.8)
 RichTextLabel/constants/outline_size = 6
+RichTextLabel/constants/shadow_offset_x = 0
+RichTextLabel/constants/shadow_offset_y = 3
+RichTextLabel/constants/shadow_outline_size = 6
+RichTextLabel/fonts/bold_font = SubResource("Font_SemiBold")
+RichTextLabel/fonts/normal_font = SubResource("Font_Medium")
 WarningLabel/base_type = &"Label"
 WarningLabel/colors/font_color = Color(1, 0.24, 0.24, 1)
 XPLabel/base_type = &"Label"
 XPLabel/colors/font_color = Color(1, 0.82, 0.25, 1)
-Label/fonts/font = SubResource("Font_Medium")
-Label/font_sizes/font_size = 20
-Label/constants/shadow_outline_size = 6
-RichTextLabel/fonts/normal_font = SubResource("Font_Medium")
-RichTextLabel/fonts/bold_font = SubResource("Font_SemiBold")
-RichTextLabel/colors/font_shadow_color = Color(0.02, 0.027, 0.06, 0.8)
-RichTextLabel/constants/shadow_offset_x = 0
-RichTextLabel/constants/shadow_offset_y = 3
-RichTextLabel/constants/shadow_outline_size = 6
-HUDTitleLabel/base_type = &"Label"
-HUDTitleLabel/fonts/font = SubResource("Font_SemiBold")
-MoneyLabel/fonts/font = SubResource("Font_SemiBold")
 XPLabel/fonts/font = SubResource("Font_SemiBold")
-OwnLabel/fonts/font = SubResource("Font_SemiBold")
-PopupLabel/fonts/font = SubResource("Font_SemiBold")
-HUDHeroLabel/base_type = &"HUDTitleLabel"
-HUDHeroLabel/colors/font_outline_color = Color(0.02, 0.027, 0.06, 1)
-HUDHeroLabel/constants/outline_size = 10
-HUDHeroLabel/colors/font_shadow_color = Color(0.02, 0.027, 0.06, 0.8)
-HUDHeroLabel/constants/shadow_offset_x = 0
-HUDHeroLabel/constants/shadow_offset_y = 5
-HUDHeroLabel/constants/shadow_outline_size = 10
-DimLabel/base_type = &"Label"
-DimLabel/colors/font_color = Color(1, 1, 1, 0.6)
-PopupLabel/base_type = &"Label"
-PopupLabel/font_sizes/font_size = 36
-OwnLabel/base_type = &"Label"
-OwnLabel/colors/font_color = Color(0.255, 0.686, 1, 1)

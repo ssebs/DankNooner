@@ -52,7 +52,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	_is_grinding = (
 		touching
 		and bike_basis.y.dot(Vector3.UP) <= ON_SIDE_MAX_UP_DOT
-		and absf(basis.z.dot(Vector3.UP)) <= ON_SIDE_MAX_UP_DOT
+		and absf(bike_basis.z.dot(Vector3.UP)) <= ON_SIDE_MAX_UP_DOT
 		and state.linear_velocity.length() > GRIND_MIN_SPEED
 	)
 	if _is_grinding:

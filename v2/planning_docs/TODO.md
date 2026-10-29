@@ -25,7 +25,10 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
+
 - [ ] [WIP MISC](_ScratchPad.md)
+- [ ] Wheelie scoring doesn't depend on the angle, it should. (with SFX depending on angle, esp for balance point)
+- [ ] bike wreck reacts to cars
 
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
