@@ -165,7 +165,7 @@ input_controller = NodePath("../InputController")
 movement_controller = NodePath("../MovementController")
 wobble_controller = NodePath("../WobbleController")
 
-[node name="CameraController" type="Node3D" parent="_Controllers" unique_id=1983563789 node_paths=PackedStringArray("player_entity", "input_controller", "fps_cam", "tps_cam", "fps_marker", "tps_marker")]
+[node name="CameraController" type="Node3D" parent="_Controllers" unique_id=1983563789 node_paths=PackedStringArray("player_entity", "input_controller", "fps_cam", "tps_cam", "fps_marker", "tps_marker", "tps_far_marker", "tps_trick_marker")]
 unique_name_in_owner = true
 script = ExtResource("17_0jgj5")
 player_entity = NodePath("../..")
@@ -174,6 +174,8 @@ fps_cam = NodePath("../../FPSCam")
 tps_cam = NodePath("../../TPSCam")
 fps_marker = NodePath("../../VisualRoot/IKTargets/FPSCamMarker")
 tps_marker = NodePath("../../VisualRoot/IKTargets/TPSCamMarker")
+tps_far_marker = NodePath("../../VisualRoot/IKTargets/TPSFarMarker")
+tps_trick_marker = NodePath("../../VisualRoot/IKTargets/TPSTrickMarker")
 metadata/_custom_type_script = "uid://coopftft0wwho"
 
 [node name="VisualRoot" type="Node3D" parent="." unique_id=53014519]
@@ -193,6 +195,14 @@ transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, 0, 0, 
 [node name="TPSCamMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=748255221]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0.99999976, 0, 0, 0, 1, -0.4, 1.4, -1.778)
+
+[node name="TPSFarMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=1847263510]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1.9, -3.2)
+
+[node name="TPSTrickMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=902174635]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0, 1.3, -2.1)
 
 [node name="FPSCamMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=2035762363]
 unique_name_in_owner = true

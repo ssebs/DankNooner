@@ -241,6 +241,11 @@
 ---
 
 ## Done ✅
+- [x] Tweak camera:
+  - [x] Manual rotation should always work, reset timer for auto move back
+  - [x] far cam + near cam + fps cam
+  - [x] better wheelie cam
+
 - [x] Fill up => race is not obvious where to go/not consistent across all races 
 
 - [x] traffic density -> use setting. Aka choose low/mid/hi. 

@@ -40,7 +40,7 @@ var default_settings: Dictionary = {
 	"mute": false,
 	"mute_unfocused": true,
 	"language": OS.get_locale_language(),
-	"cam_mode": 0, # 0 is TPS, 1 is FPS. TODO make enum
+	"cam_mode": 0, # CameraController.CameraMode: 0 TPS near, 1 FPS, 2 TPS far. TODO make enum
 	"invert_cam": false,
 	"mouse_cam_sens": 0.5,
 	"joy_cam_sens": 0.5,

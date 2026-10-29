@@ -70,7 +70,7 @@
   - TrickController — detects current trick from `movement_controller.pitch_angle`
   - CrashController — brake grab, crash detection, emits `crashed`
   - AnimationController — procedural animation + RiderState machine + IK target sync
-  - CameraController — FPS/TPS switching
+  - CameraController — TPS near / TPS far / FPS switching
   - Audio — engine sound RPM parameter via `rpm_updated` signal
 
 The riding HUD polls these same controllers, but it's no longer a player component — it lives in
@@ -128,6 +128,11 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
 - **CameraController**
   - Local to client
   - Directly set current_camera on client
+  - `cam_switch_pressed` cycles TPS near → TPS far → FPS (saved as the `cam_mode` setting)
+  - TPS framing comes from markers under `IKTargets`: `TPSCamMarker` (near), `TPSFarMarker`, and
+    `TPSTrickMarker`, used during any trick (wheelies only once they reach the balance point) or after `TrickController.AIR_TRICK_MIN_AIRTIME` in the air (shorter
+    hops keep the takeoff framing). During a trick the aim also swings from
+    straight ahead onto the rider. Recenter starts `RESET_DELAY` after the last camera touch
   - Street race: while the minimap has a next checkpoint, the TPS cam drops the marker's lateral
     offset (centered behind the bike) and its resting orbit yaw eases toward that checkpoint,
     clamped by `CHECKPOINT_YAW_MAX_DEG`. Player cam input still overrides it until `RESET_DELAY`

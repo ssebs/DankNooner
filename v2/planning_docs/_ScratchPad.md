@@ -13,10 +13,6 @@
 
 ### NEXT
 
-- [ ] Tweak camera:
-  - [ ] Camera zoom level select (choose diff camera)
-  - [ ] when doing tricks, hard to see traffic, zoom out / pan left move right during trick?
-  - [ ] Manual rotation should always work, reset timer for auto move back
 
 - [ ] Create/join public/private lobbies 
   - [ ] ____STEAM_LOBBIES_WIP.md

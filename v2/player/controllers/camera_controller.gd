@@ -1,7 +1,8 @@
 @tool
 class_name CameraController extends Node3D
 
-enum CameraMode {TPS = 0, FPS, NONE}
+# Saved as the cam_mode setting — append only.
+enum CameraMode {TPS = 0, FPS, TPS_FAR, NONE}
 
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
@@ -11,6 +12,9 @@ enum CameraMode {TPS = 0, FPS, NONE}
 
 @export var fps_marker: Marker3D
 @export var tps_marker: Marker3D
+@export var tps_far_marker: Marker3D
+## Framing used while airborne or in any trick, in both near and far.
+@export var tps_trick_marker: Marker3D
 
 const DEFAULT_CAMERA_MODE: CameraMode = CameraMode.TPS
 const PITCH_MIN_DEG: float = -45.0
@@ -114,8 +118,11 @@ var _checkpoint_yaw_bias: float = 0.0
 ## Counts down while the cam is held facing a guide target, see _update_guide_look.
 var _guide_look_timer: float = 0.0
 var _was_guided: bool = false
-## Smoothed tps_marker.position — eases the wheelie-cam reframe in/out (the anim ramps it linearly).
+## Smoothed marker position — eases switches between the near / far / trick markers.
 var _tps_marker_offset: Vector3 = Vector3.ZERO
+## Smoothed 0..1 trick framing — swings the aim from straight ahead onto the rider.
+var _trick_blend: float = 0.0
+var _trick_framed: bool = false
 ## Orbit base yaw while crashed — follows the ragdoll's travel direction.
 var _crash_yaw: float = 0.0
 var _prev_focus_pos: Vector3 = Vector3.ZERO
@@ -179,7 +186,7 @@ func _process(delta: float):
 	_no_input_timer = 0.0 if touched or _guide_look_timer > 0.0 else _no_input_timer + delta
 
 	match current_cam_mode:
-		CameraMode.TPS:
+		CameraMode.TPS, CameraMode.TPS_FAR:
 			_update_tps_input(delta, adjusted_mouse)
 			_update_tps_camera(delta)
 		CameraMode.FPS:
@@ -256,11 +263,24 @@ func _update_tps_input(delta: float, mouse: Vector2):
 
 
 func _update_tps_camera(delta: float):
-	# Ease the marker read so the wheelie-cam reframe glides in/out instead of tracking the anim's
-	# linear ramp — matches the orbit-pitch ease in _update_tps_input (same RESET_SPEED).
-	var marker_target: Vector3 = tps_marker.position
+	# Any long jump frames like a trick, so starting an air trick doesn't reframe mid-jump. Short
+	# airtime holds the framing from takeoff. is_on_floor freezes on crash, so crash is checked first.
+	var mc := player_entity.movement_controller
+	var trick := player_entity.trick_controller.current_trick
+	if player_entity.is_crashed or (mc.is_on_floor and trick == TrickController.Trick.NONE):
+		_trick_framed = false
+	elif mc.is_on_floor:
+		# A wheelie reframes once it reaches the balance point, then holds until it ends.
+		var is_wheelie := trick in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]
+		_trick_framed = _trick_framed or not is_wheelie or mc.in_balance_point
+	elif mc.air_time >= TrickController.AIR_TRICK_MIN_AIRTIME:
+		_trick_framed = true
+	_trick_blend = lerpf(_trick_blend, 1.0 if _trick_framed else 0.0, RESET_SPEED * delta)
+	var marker_target: Vector3 = (
+		tps_trick_marker.position if _trick_framed else _get_tps_base_marker().position
+	)
 	# Center behind the bike while racing — the free-roam lateral offset hides the road ahead.
-	if _is_street_racing():
+	if _is_street_racing() and not _trick_framed:
 		marker_target.x = 0.0
 	_tps_marker_offset = _tps_marker_offset.lerp(marker_target, RESET_SPEED * delta)
 	# Marker lives under VisualRoot (yawed 180°), so x/z negate into the player-space orbit frame.
@@ -270,9 +290,11 @@ func _update_tps_camera(delta: float):
 
 	var focus: Vector3 = _get_tps_focus_position()
 	var yaw: float = _get_tps_base_yaw() + _orbit_yaw
-	# Aim point shares the marker's lateral offset so the cam looks straight ahead, not angled in
+	# Aim point shares the marker's lateral offset so the cam looks straight ahead, not angled in;
+	# a trick drops it so the cam aims at the rider.
+	var look_lateral: float = lateral * (1.0 - _trick_blend)
 	var look_target: Vector3 = (
-		focus + Vector3.UP * TPS_LOOK_HEIGHT + Basis(Vector3.UP, yaw) * Vector3(lateral, 0, 0)
+		focus + Vector3.UP * TPS_LOOK_HEIGHT + Basis(Vector3.UP, yaw) * Vector3(look_lateral, 0, 0)
 	)
 
 	var orbit_rot := Basis(Vector3.UP, yaw) * Basis(Vector3.RIGHT, -_orbit_pitch)
@@ -281,6 +303,10 @@ func _update_tps_camera(delta: float):
 
 	tps_cam.global_position = focus + cam_offset
 	tps_cam.look_at(look_target)
+
+
+func _get_tps_base_marker() -> Marker3D:
+	return tps_far_marker if current_cam_mode == CameraMode.TPS_FAR else tps_marker
 
 
 ## When crashed, follow the ragdoll's hips so the camera tracks the tumbling character
@@ -441,9 +467,9 @@ func do_reset():
 	if !player_entity.is_local_client:
 		return
 	_default_orbit_pitch = deg_to_rad(DEFAULT_ORBIT_PITCH)
-	_tps_marker_offset = tps_marker.position
 	_on_reset_cam_pressed()
 	switch_to_cam(_int_to_cam_mode(player_entity.settings_manager.current_settings["cam_mode"]))
+	_tps_marker_offset = _get_tps_base_marker().position
 
 
 #endregion
@@ -620,8 +646,10 @@ func _on_trick_ended_fx(trick_type: TrickController.Trick):
 #endregion
 
 
+## Cycles near → far → FPS.
 func _on_cam_switch_pressed():
-	var new_cam_mode: int = 1 if current_cam_mode == 0 else 0
+	var next := {CameraMode.TPS: CameraMode.TPS_FAR, CameraMode.TPS_FAR: CameraMode.FPS}
+	var new_cam_mode: int = next.get(current_cam_mode, CameraMode.TPS)
 	player_entity.settings_manager.update_setting("cam_mode", new_cam_mode, true, true)
 
 
@@ -649,6 +677,8 @@ func _int_to_cam_mode(inp: int) -> CameraMode:
 			return CameraMode.TPS
 		1:
 			return CameraMode.FPS
+		2:
+			return CameraMode.TPS_FAR
 	return CameraMode.NONE
 
 
@@ -668,6 +698,10 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("fps_marker must not be empty")
 	if tps_marker == null:
 		issues.append("tps_marker must not be empty")
+	if tps_far_marker == null:
+		issues.append("tps_far_marker must not be empty")
+	if tps_trick_marker == null:
+		issues.append("tps_trick_marker must not be empty")
 	if player_entity == null:
 		issues.append("player_entity must not be empty")
 	if input_controller == null:
