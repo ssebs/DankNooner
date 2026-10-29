@@ -16,7 +16,6 @@
   - [ ] ____STEAM_LOBBIES_WIP.md
 
 
-- [ ] Replace win tada sound usage
 
 - [ ] Wheelie scoring doesn't depend on the angle, it should. (with SFX depending on angle, esp for balance point)
 - [ ] track ragdoll vs bike distance on a crash (how far the rider flew from the bike) — show it in the trick feed's bail line, and use it for a new gamemode (furthest launch wins?)

@@ -27,7 +27,7 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 
-- [ ] Grinding sound should be in 3d space
+- [ ] Replace win tada sound usage
 
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -244,6 +244,8 @@
 ---
 
 ## Done ✅
+- [x] Grinding sound should be in 3d space
+
 - [x] free ride => host private lobby of default type, can invite friends but no need to wait in lobby.
 
 - [x] 321 + drive to start of race text + current objective should be more obvious during races/events (race/hud objective)

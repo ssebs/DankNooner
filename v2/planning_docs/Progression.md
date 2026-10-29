@@ -174,8 +174,8 @@ only swaps the app id) and Steam Cloud syncs `savegame_*.json`, so demo saves ar
 `savegame_01_demo.json`: still inside the cloud pattern, never colliding with a full save. Each
 build lists only its own saves. See also "Demo savegame" in TODO's Steam Prep.
 
-- **Existing saves carry over** as slots, keeping what they own. Old `savegame_%d.json` files are
-  migrated into the new naming, not reset.
+- **Existing saves are full game saves.** Full saves keep today's `savegame_%d.json` names, so
+  old files show up as full-build slots with no migration. The demo starts with no slots.
 - **Slots are renamable.** The name is stored inside the save, so file names stay slot-numbered
   and inside the cloud pattern.
 
@@ -237,9 +237,8 @@ better idea; the rest were decided.
 6. **Challenges menu + pause panel.** A new `MenuState` with Career / Daily / Per-bike sections,
    wired from main, play, lobby and pause.
 7. **Garage lock state.** The requirement next to the price; locked rows can't be bought.
-8. **Save slot menu + demo file naming.** Changing `save_path`'s name format renames existing
-   saves, so `load_save`'s migration moves old files to the new names (see
-   [Save slots](#save-slots)).
+8. **Save slot menu + demo file naming.** Only the demo's `save_path` changes (adds `_demo`);
+   full saves keep their names (see [Save slots](#save-slots)).
 9. **Console commands** for playtesting, beside `give_money` in `SaveManager`:
    `add_player_xp <amount>`, `add_bike_level <type> <levels>` (completes that many of the
    type's challenges, since mastery comes from challenges, not XP) and `unlock_bike_max <type>`.
