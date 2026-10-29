@@ -27,8 +27,6 @@
 > Don't forget, have fun :D
 
 - [ ] [WIP MISC](_ScratchPad.md)
-- [ ] Wheelie scoring doesn't depend on the angle, it should. (with SFX depending on angle, esp for balance point)
-- [ ] bike wreck reacts to cars
 
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -245,6 +243,10 @@
 ---
 
 ## Done ✅
+- [x] Wheelie scoring now depends on the angle, it should.
+
+- [x] bike wreck reacts to cars
+
 - [x] Replace win tada sound usage
 
 - [x] Grinding sound should be in 3d space

@@ -78,6 +78,7 @@ Consts, deliberately **not** `@export`: this code runs inside the rollback tick 
 | `COMBO_GRACE_SECS` | How long you can be trickless before the combo breaks. Higher = more forgiving chaining. |
 | `COMBO_MULT_THRESHOLDS` | Seconds of unbroken trick time per multiplier step, ascending. Add entries for higher tiers. |
 | `HELD_TRICK_SCORE` | Per-trick score earned per second while a held trick is active. |
+| `WHEELIE_MIN_SCORE_MULT` / `WHEELIE_BP_SCORE_MULT` / `WHEELIE_LOCKED_SCORE_MULT` | Scale `HELD_TRICK_SCORE` by wheelie height, for any trick held in a wheelie: ramps from MIN at the wheelie threshold to 1 below the bike's balance point, BP from the balance point up (past it included), LOCKED while balance-locked. |
 | `ONE_TIME_TRICK_SCORE` | Per-trick score banked once when a one-time trick (flip, kickflip…) starts. |
 | `LANDING_TRICK_SCORE` | Score banked when a real jump (past `AIR_TRICK_MIN_AIRTIME`) touches down past the wheelie or stoppie threshold. Also awards `BOOST_PER_AIR_TRICK`. |
 | `NEAR_MISS_MIN_SPEED` / `NEAR_MISS_MAX_SPEED` | HUD speed tiers: under min scores nothing, up to max scores `NEAR_MISS_SCORE`, past it `NEAR_MISS_MAX_SCORE`. |

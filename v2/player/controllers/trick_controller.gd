@@ -112,6 +112,11 @@ const HELD_TRICK_SCORE: Dictionary = {
 	Trick.SPREAD_EAGLE: 2.0,
 	Trick.SUPERMAN: 2.0,
 }
+## Held-trick score scale while wheelieing (_wheelie_score_mult): ramps from MIN at the wheelie
+## threshold to 1 below the balance point, BP from it up; LOCKED while balance-locked. Consts (rollback).
+const WHEELIE_MIN_SCORE_MULT: float = 0.5
+const WHEELIE_BP_SCORE_MULT: float = 2.0
+const WHEELIE_LOCKED_SCORE_MULT: float = 1.5
 const ONE_TIME_TRICK_SCORE: Dictionary = {
 	Trick.HEEL_CLICKER: 1.5,
 	Trick.KICKFLIP: 3.0,
@@ -367,7 +372,7 @@ func _award_trick_boost(base: float):
 func _accrue_combo(delta: float):
 	if current_trick != Trick.NONE:
 		combo_time += delta
-		combo_score += HELD_TRICK_SCORE.get(current_trick, 0.0) * delta
+		combo_score += HELD_TRICK_SCORE.get(current_trick, 0.0) * _wheelie_score_mult() * delta
 		combo_grace = COMBO_GRACE_SECS
 		# Track what this combo contributed (post-cap, so a full meter doesn't inflate the
 		# claim) — a crash voids exactly this much and nothing that was banked earlier.
@@ -391,6 +396,21 @@ func _accrue_combo(delta: float):
 		if combo_time >= threshold:
 			mult += 1
 	combo_multiplier = mult
+
+
+## 1 unless wheelieing; see WHEELIE_MIN_SCORE_MULT. Covers stick tricks held in a wheelie too.
+func _wheelie_score_mult() -> float:
+	if not (is_in_wheelie() or trick_state() == TrickState.WHEELIE):
+		return 1.0
+	if movement_controller.balance_locked:
+		return WHEELIE_LOCKED_SCORE_MULT
+	var bd = player_entity.bike_definition
+	var bp_low: float = bd.wheelie_balance_point_deg - bd.wheelie_balance_point_width_deg
+	var pitch_deg := rad_to_deg(movement_controller.pitch_angle)
+	if pitch_deg >= bp_low:
+		return WHEELIE_BP_SCORE_MULT
+	var t := clampf(inverse_lerp(WHEELIE_PITCH_THRESHOLD_DEG, bp_low, pitch_deg), 0.0, 1.0)
+	return lerpf(WHEELIE_MIN_SCORE_MULT, 1.0, t)
 
 
 func _detect_current_trick(delta: float) -> Trick:
