@@ -2,6 +2,10 @@
 ## One selectable event on its parent EventStartCircle: a definition, links to the circle's groups
 ## it uses, and the TaskRunner children the target gamemode runs, in tree order. See
 ## EventStartCircle for the layout.
+##
+## Always needs `definition`. Also `spawn` when a RaceTask / GridSpawnTask / GridRespawnTask runs,
+## `checkpoints` when a RaceTask runs, `pickups` for a stunt race, `start_zone` with a
+## DriveToStartRunner.
 class_name GameModeEvent extends Node3D
 
 @export var definition: GameModeEventDefinition

@@ -1,6 +1,7 @@
 @tool
-## All Level objects should inherit from this
-## levels are defined in level_manager.gd
+## Root script of every level scene. Register the level in LevelManager (LevelName enum,
+## possible_levels, level_name_map). Needs player_entity_scene and player_spawn_pos (riders spawn as
+## its children) unless no_player_spawn_needed; npc_nav_region only for levels with NPC races.
 class_name LevelDefinition extends Node3D
 
 ## Hack - for ui background levels where the player doesn't need to spawn

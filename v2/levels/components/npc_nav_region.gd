@@ -1,9 +1,9 @@
 @tool
-class_name NPCNavRegion extends NavigationRegion3D
-
 ## NavigationRegion3D whose Bake can leave colliders out by layer. Grass carries the default layer
 ## on some maps, so the road region's include mask alone would make it driveable road. Each race
 ## level has a road region (racing line) and a costlier grass region (dodges, rejoin paths).
+## Needs a navigation_mesh.
+class_name NPCNavRegion extends NavigationRegion3D
 
 @export_tool_button("Bake") var bake_btn = bake
 ## A collider carrying any of these is left out, even if it matches the mesh's collision mask.

@@ -1,7 +1,7 @@
 @tool
 ## Runs child GameModeTasks one at a time per peer.
 ##
-## Lives as a child of an EventStartCircle (or nested under another runner).
+## Lives as a child of a GameModeEvent (or nested under another runner).
 ## Owns the per-peer task walk, eval_when dispatch, and trigger wiring. The
 ## host gamemode delegates to this runner and listens to `all_completed`.
 ##

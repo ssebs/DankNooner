@@ -236,12 +236,11 @@ total_laps = 1
 endless = true
 objective_key = "TIME_ATTACK_RUN_OBJECTIVE"
 
-[node name="StuntRace" type="Node3D" parent="TrackRace" unique_id=248913301 node_paths=PackedStringArray("spawn", "checkpoints", "pickups")]
+[node name="StuntRace" type="Node3D" parent="TrackRace" unique_id=248913301 node_paths=PackedStringArray("spawn", "checkpoints")]
 script = ExtResource("7_4m0o6")
 definition = SubResource("Resource_stntr")
 spawn = NodePath("../Spawns/RaceSpawns")
 checkpoints = NodePath("../Checkpoints/RaceCheckpoints")
-pickups = NodePath("../TrackRace/Pickups")
 
 [node name="SequentialTaskRunner" type="Node" parent="TrackRace/StuntRace" unique_id=797608096]
 script = ExtResource("10_ssdfk")

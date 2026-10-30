@@ -6,7 +6,8 @@
 ##
 ## The route is the event's `checkpoints` CheckPointMarkers, in tree order. A first marker named
 ## `…StartStop1` is both start and finish (a lap circuit: StartStop1 -> 2 -> 3 … -> StartStop1);
-## otherwise it's point-to-point (first = start, last = finish).
+## otherwise it's point-to-point (first = start, last = finish). Time-attack restarts use the
+## event's `spawn` grid slots.
 ##
 ## On every recognized checkpoint crossing, the player's persistent respawn
 ## transform is updated to that marker (same mechanism as TeleportTask), so

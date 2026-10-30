@@ -1,8 +1,7 @@
 @tool
-class_name TrafficIntersection extends Marker3D
-
 ## Links up to four TrafficRoads by slot, in this node's basis (north = -Z, east = +X). Each road
 ## connects at whichever end is nearest.
+class_name TrafficIntersection extends Marker3D
 
 enum ControlType { NONE, STOP, LIGHT }
 enum Slot { NORTH, EAST, SOUTH, WEST }

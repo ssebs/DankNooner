@@ -4,8 +4,8 @@
 ## Works for both duration tricks (wheelie, stoppie) and instantaneous tricks
 ## (heel_clicker, high_chair) — set `min_duration = 0` for instant.
 ##
-## When used in a challenge, set `eval_when = WHILE_INSIDE` and `trigger` to the
-## ChallengeStartCircle so progress only accumulates while the player is inside.
+## When used in a challenge, set `eval_when = WHILE_INSIDE` and `trigger` to a
+## TriggerZone so progress only accumulates while the player is inside.
 class_name PerformTrickTask extends GameModeTask
 
 @export var required_trick: TrickController.Trick = TrickController.Trick.WHEELIE_SITTING

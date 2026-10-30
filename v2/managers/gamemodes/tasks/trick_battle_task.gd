@@ -1,6 +1,7 @@
 @tool
 ## The battle itself: free riding that never completes. TrickBattleGameMode owns the clock and the
-## scoring; this only gives the event pane its objective.
+## scoring; this only gives the event pane its objective. Goes in the event's last runner, after
+## the grid + countdown runner (the clock runs the last one).
 class_name TrickBattleTask extends GameModeTask
 
 @export var objective_key: String = "TRICK_BATTLE_OBJECTIVE"

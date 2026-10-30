@@ -9,7 +9,6 @@
 - [ ] ragdoll launch game mode (furthest launch wins)
   - [x] basic working gameplay / mode
   - [ ] make beach have colliders so distance matters
-  - [ ] add arrowwalls / glow fence for each game mode
 
 - [ ] give cars headlights since they're impossible to see during a race
 

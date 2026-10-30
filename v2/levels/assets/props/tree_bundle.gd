@@ -1,9 +1,8 @@
 @tool
-class_name TreeBundle extends Node3D
-
 ## Scatters pines on a jittered grid, then drops each tree's mesh base onto the unstable_collision
 ## layer below the bundle origin; trees over anything else are deleted. Baked in-editor into
 ## snapped_heights, since generated children aren't saved.
+class_name TreeBundle extends Node3D
 
 enum Density {DENSE, MID, SPARSE}
 

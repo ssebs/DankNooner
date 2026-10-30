@@ -1,9 +1,8 @@
 @tool
-class_name TrafficNetwork extends Node3D
-
 ## One per level. Parent of every TrafficRoad and TrafficIntersection. Bake saves them as
 ## TrafficNetworkData next to the level scene; the editor previews the same build, redrawing only
 ## when one of them changes.
+class_name TrafficNetwork extends Node3D
 
 @export_tool_button("Bake") var bake_btn = bake
 @export var show_in_editor := true:

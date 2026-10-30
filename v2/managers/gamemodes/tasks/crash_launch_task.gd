@@ -1,6 +1,7 @@
 @tool
 ## One heat's charge at the launch wall. Never completes: CrashLaunchGameMode measures the launches
-## and ends the heat; this only gives the event pane its objective.
+## and ends the heat; this only gives the event pane its objective. The last step of the event's
+## one runner, after GridSpawnTask + countdown, since that runner reruns per heat.
 class_name CrashLaunchTask extends GameModeTask
 
 @export var objective_key: String = "CRASH_LAUNCH_OBJECTIVE"

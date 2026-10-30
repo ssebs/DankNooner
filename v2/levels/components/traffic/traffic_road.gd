@@ -1,8 +1,7 @@
 @tool
-class_name TrafficRoad extends Node3D
-
 ## Child TrafficRoadPoints in tree order are the road. Never links to anything; intersections
 ## link to roads.
+class_name TrafficRoad extends Node3D
 
 @export var lane_width := 4.0:
 	set(v):

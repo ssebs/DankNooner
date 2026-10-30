@@ -1,6 +1,6 @@
 @tool
-class_name PathTrack extends Path3D
 ## Path3D with CSGPolygon3D children swept along it
+class_name PathTrack extends Path3D
 
 @export var width: int = 20:
 	set(v):

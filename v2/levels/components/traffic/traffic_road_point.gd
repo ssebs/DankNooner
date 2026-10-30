@@ -1,4 +1,5 @@
 @tool
+## One point on its parent TrafficRoad; siblings in tree order trace the road.
 class_name TrafficRoadPoint extends Marker3D
 
 ## Total lanes across both directions (4 = 2 each way); must be even. 0 = same as the previous

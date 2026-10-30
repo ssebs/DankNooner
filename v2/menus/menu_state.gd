@@ -1,5 +1,5 @@
 @tool
-## All Menu objects should inherit from this
+## Base for every menu. Needs a %UI Control child, the menu's whole screen (shown/hidden as one).
 ## Be sure to set return_state on Enter()!
 class_name MenuState extends State
 

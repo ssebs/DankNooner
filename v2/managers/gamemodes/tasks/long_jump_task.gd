@@ -3,6 +3,7 @@
 ## start gate). An attempt ends `reset_delay` seconds after landing, once its combo has banked: the
 ## score is reported and the rider goes back to their grid slot. A crash voids it (the runner
 ## respawns them there). Never completes — LongJumpGameMode owns the session clock and the ranking.
+## Goes in the event's last runner, after the grid + countdown runner (the clock runs the last one).
 class_name LongJumpTask extends GameModeTask
 
 signal attempt_scored(peer_id: int, points: float)
