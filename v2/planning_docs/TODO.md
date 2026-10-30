@@ -241,6 +241,8 @@
 ---
 
 ## Done ✅
+- [x] backing up steering / going uphill is jittery
+
 - [x] Tweak camera:
   - [x] Manual rotation should always work, reset timer for auto move back
   - [x] far cam + near cam + fps cam

@@ -546,7 +546,7 @@ func _update_juice_fx(delta: float):
 	var grip_strain: float = (
 		absf(mc.roll_angle) / max_lean_for_speed if max_lean_for_speed > 0.001 else 0.0
 	)
-	if grip_strain > GRIP_SHAKE_THRESHOLD:
+	if not mc.is_reversing and grip_strain > GRIP_SHAKE_THRESHOLD:
 		_trauma = maxf(
 			_trauma,
 			clampf(

@@ -196,6 +196,7 @@ func on_movement_rollback_tick(delta: float):
 	was_on_floor = is_on_floor
 	is_on_floor = is_on_floor_netfox()
 	_on_unstable_surface = _detect_unstable_surface()
+	if DebugUtils.is_debug(debug_verbose, DebugUtils.verbose_movement):
 	if is_on_floor:
 		_floor_normal = _get_blended_surface_normal()
 		# Landing — normalize pitch to effective angle from upright
@@ -262,6 +263,16 @@ func on_movement_rollback_tick(delta: float):
 	player_entity.velocity *= NetworkTime.physics_factor
 	player_entity.move_and_slide()
 	player_entity.velocity /= NetworkTime.physics_factor
+	# Godot skips its snap when velocity·up_direction > 0, but up_direction lags the surface, so
+	# surface-following velocity reads as "up" on slopes. Re-check against the real floor normal.
+	# is_zero_approx: slide() leaves float noise of either sign on a tilted normal.
+	var off_floor_vel := pre_slide_velocity.dot(_floor_normal)
+	if (
+		is_on_floor
+		and not player_entity.is_on_floor()
+		and (off_floor_vel <= 0.0 or is_zero_approx(off_floor_vel))
+	):
+		player_entity.apply_floor_snap()
 
 	# Trigger 2 — judged here because the touchdown slide deflects velocity (a steep landing can reverse it).
 	if not is_on_floor and player_entity.is_on_floor():

@@ -29,6 +29,9 @@ const GROUPS = {
 const NAV_LAYER_ROAD: int = 1
 const NAV_LAYER_GRASS: int = 2
 
+## Seconds a crashed player stays down (ragdolled) before respawning.
+const CRASH_RESPAWN_DELAY: float = 5.0
+
 ## Remappable actions, keyed by category localization key. A category is the context its actions
 ## are active in, so duplicate binds only conflict within one.
 const CONTROL_CATEGORIES: Dictionary = {

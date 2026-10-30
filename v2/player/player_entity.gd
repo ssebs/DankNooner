@@ -10,6 +10,8 @@ signal respawned(peer_id: int)
 signal crashed(peer_id: int)
 ## Crash-cleared edge (is_crashed true→false) — off-switch for crash visuals. See _process.
 signal uncrashed
+## Server, once per crash: how far the ragdoll flew from the bike wreck. See _update_launch_measure.
+signal launch_measured(peer_id: int, meters: float)
 # signal trick_started(peer_id: int, trick_type: int)
 # signal trick_ended(peer_id: int, trick_type: int)
 
@@ -87,6 +89,11 @@ signal uncrashed
 @export var exhaust_burble_delay: float = 0.35
 ## Chance the burble plays once you've coasted past exhaust_burble_delay.
 @export_range(0.0, 1.0) var exhaust_burble_chance: float = 0.5
+
+## A crash's launch is measured once the ragdoll's hips slow below this (m/s)...
+const LAUNCH_SETTLE_SPEED: float = 0.5
+## ...but no sooner than this, so the first frames by the bike don't read as settled.
+const LAUNCH_SETTLE_MIN_SECS: float = 0.5
 
 @onready var controllers_node: Node3D = %_Controllers
 
@@ -204,6 +211,9 @@ var _lock_value: bool = false
 # Process-side state tracking (not sync'd)
 var _prev_is_crashed: bool = false
 var _prev_crash_count: int = 0
+## Server: seconds into the crash whose launch is being measured, -1 when none is.
+var _launch_t: float = -1.0
+var _launch_prev_hips: Vector3 = Vector3.ZERO
 ## Local _process edge for the NOS boost SFX — plays once each time a boost fires.
 var _prev_is_boosting: bool = false
 ## Exhaust-sound detection (local, _process): whether we're inside a decel window, how long we've
@@ -349,6 +359,8 @@ func _process(delta: float) -> void:
 		_exit_crash_visuals()
 	_prev_is_crashed = is_crashed
 	_prev_crash_count = crash_count
+	if _launch_t >= 0.0:
+		_update_launch_measure(delta)
 
 	_update_horn()
 	_update_exhaust_pops(delta)
@@ -429,6 +441,10 @@ func _enter_crash_visuals() -> void:
 	animation_controller.start_ragdoll(crash_launch_impulse)
 	# MovementController bails while crashed, so pre_slide_velocity still holds the crash tick's.
 	bike_wreck.start(crash_type, movement_controller.pre_slide_velocity)
+	# The host's ragdoll is the official one; every peer's tumbles differently.
+	if multiplayer.is_server():
+		_launch_t = 0.0
+		_launch_prev_hips = character_skin.ragdoll_controller.get_hips_global_position()
 	crashed.emit(int(name))
 	if !is_local_client:
 		# Everyone else hears another rider go down, from where they went down.
@@ -452,6 +468,9 @@ func _enter_crash_visuals() -> void:
 
 ## Crash-cleared edge. Rebuild mesh + IK because the ragdoll left rider/handlebar bones off base pose.
 func _exit_crash_visuals() -> void:
+	# Respawned before the body settled — measure where it got to.
+	if _launch_t >= 0.0:
+		_report_launch()
 	bike_wreck.stop()
 	animation_controller.stop_ragdoll()
 	_init_mesh()
@@ -461,6 +480,23 @@ func _exit_crash_visuals() -> void:
 		audio_manager.play_revs(bike_definition)
 	elif !is_local_client:
 		_play_remote_engine()
+
+
+## Server: report the launch once the ragdoll comes to rest.
+func _update_launch_measure(delta: float) -> void:
+	_launch_t += delta
+	var hips := character_skin.ragdoll_controller.get_hips_global_position()
+	var hips_speed := hips.distance_to(_launch_prev_hips) / delta
+	_launch_prev_hips = hips
+	if _launch_t >= LAUNCH_SETTLE_MIN_SECS and hips_speed < LAUNCH_SETTLE_SPEED:
+		_report_launch()
+
+
+## Flat distance, so landing on something tall doesn't add to it.
+func _report_launch() -> void:
+	_launch_t = -1.0
+	var gap := character_skin.ragdoll_controller.get_hips_global_position() - bike_wreck.global_position
+	launch_measured.emit(int(name), Vector2(gap.x, gap.z).length())
 
 
 #region init

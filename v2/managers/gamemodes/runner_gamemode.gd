@@ -12,7 +12,6 @@ class_name RunnerGameMode extends GameModeType
 @export var results_hud: ResultsHUDState
 @export var input_state_manager: InputStateManager
 @export var save_manager: SaveManager
-@export var _respawn_delay: float = 2.5
 
 var _event: GameModeEvent
 var _runners: Array[TaskRunner] = []
@@ -313,7 +312,7 @@ func _on_player_crashed(peer_id: int):
 ## respawn_player uses the player's persistent rb_respawn_transform, set by the most recent
 ## TeleportTask / checkpoint via SpawnManager.
 func _on_runner_respawn_requested(peer_id: int, in_place: bool):
-	get_tree().create_timer(_respawn_delay).timeout.connect(
+	get_tree().create_timer(UtilsConstants.CRASH_RESPAWN_DELAY).timeout.connect(
 		func(): _respawn_crashed_player(peer_id, in_place), CONNECT_ONE_SHOT
 	)
 

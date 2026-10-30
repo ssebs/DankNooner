@@ -5,6 +5,8 @@ class_name GamemodeManager extends BaseManager
 signal player_spawned(peer_id: int)
 ## connected to player_spawned
 signal player_crashed(peer_id: int)
+## Server: how far a crashed rider flew from their bike (PlayerEntity.launch_measured).
+signal player_launch_measured(peer_id: int, meters: float)
 signal player_latejoined(peer_id: int)
 signal player_disconnected(peer_id: int)
 ## Emitted when a match ends and we return to the lobby/menu.
@@ -261,6 +263,7 @@ func _on_player_spawned(player: PlayerEntity):
 		return
 	player_spawned.emit(int(str(player.name)))  # node name is the peer id
 	player.crashed.connect(_on_player_crashed)
+	player.launch_measured.connect(player_launch_measured.emit)
 
 
 func _on_player_crashed(peer_id: int):

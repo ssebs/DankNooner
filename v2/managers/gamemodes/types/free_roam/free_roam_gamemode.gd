@@ -11,7 +11,6 @@ class_name FreeRoamGameMode extends GameModeType
 @export var input_state_manager: InputStateManager
 @export var hud_manager: HUDManager
 @export var save_manager: SaveManager
-@export var _respawn_delay: float = 2.5
 
 ## Trick round: banked combo points add up per human for ROUND_SECS, shown on the live
 ## leaderboard with the time left, then the winner is called out and it resets.
@@ -434,7 +433,7 @@ func _on_player_crashed(peer_id: int):
 	var since_respawn: int = Time.get_ticks_msec() - _in_place_respawn_ms.get(peer_id, -CRASH_LOOP_WINDOW_MS)
 	var looped := since_respawn < CRASH_LOOP_WINDOW_MS
 	_crash_loops[peer_id] = _crash_loops.get(peer_id, 0) + 1 if looped else 0
-	get_tree().create_timer(_respawn_delay).timeout.connect(
+	get_tree().create_timer(UtilsConstants.CRASH_RESPAWN_DELAY).timeout.connect(
 		func(): _respawn_at_crash_site(peer_id), CONNECT_ONE_SHOT
 	)
 

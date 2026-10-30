@@ -26,11 +26,11 @@ signal player_near_missed(player: PlayerEntity)
 	load("res://resources/player/default_player_definition.tres")
 ]
 ## How long a crashed rider stays down before it's put back on the road. Deliberately
-## longer than the player's own respawn (FreeRoamGameMode._respawn_delay, 2.5s): a rider
+## longer than the player's own respawn (UtilsConstants.CRASH_RESPAWN_DELAY): a rider
 ## recovers roughly where it went down, so matching the player's timer drops it straight
 ## back onto the player it just took out — crash, respawn, crash. Randomized so a pile-up
 ## doesn't pop back all at once either.
-@export var respawn_delay_min: float = 5.0
+@export var respawn_delay_min: float = 6.0
 @export var respawn_delay_max: float = 8.0
 ## A rider within this of any player is near: full-rate tick, ContactArea on, and synced to
 ## and drawn by only the peers whose player it's near. Bigger = less pop-in, more cost and

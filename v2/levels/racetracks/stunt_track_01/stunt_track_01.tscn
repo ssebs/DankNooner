@@ -1900,12 +1900,10 @@ transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -926
 [node name="Ramp8" parent="StuntRace/Route" unique_id=1633736762 instance=ExtResource("6_w1aki")]
 transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, -694.99994, 0, 474.99997)
 width = 16
-color_preset = null
 
 [node name="Ramp9" parent="StuntRace/Route" unique_id=2096296363 instance=ExtResource("6_w1aki")]
 transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, -694.99994, 0, 454.79996)
 width = 16
-color_preset = null
 
 [node name="PickupSpawner1" parent="StuntRace/Route" unique_id=1012215384 instance=ExtResource("21_mn4lr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 5.867197, 15.5)
@@ -2116,6 +2114,32 @@ script = ExtResource("20_grj8g")
 [node name="TrickBattleTask" type="Node" parent="StuntRace/TrickBattle/BattleRunner" unique_id=2055507808]
 script = ExtResource("mig_trkbtl")
 respawn_in_place = true
+
+[node name="CrashLaunchSpawns" type="Node3D" parent="StuntRace" unique_id=304460237]
+
+[node name="Spawn1" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=1806100665]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0.25, 100)
+
+[node name="Spawn2" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=1695219141]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.25, 100)
+
+[node name="Spawn3" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=624781234]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.25, 100)
+
+[node name="Spawn4" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=241127819]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 0.25, 100)
+
+[node name="Spawn5" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=512294711]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 0.25, 100)
+
+[node name="Spawn6" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=454430346]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 0.25, 100)
+
+[node name="Spawn7" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=390441434]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 0.25, 110.1)
+
+[node name="Spawn8" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=408975919]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.25, 110.1)
 
 [node name="StuntRace2" parent="." unique_id=1917820002 node_paths=PackedStringArray("gas_station") groups=["EditorHideable"] instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -919.5519, 0, 506.39148)
@@ -3162,9 +3186,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -112, 0.024994373, -16)
 
 [node name="House12" parent="Houses" unique_id=1058400281 instance=ExtResource("22_7qjpf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -144, 0.024994373, -16)
-
-[node name="House13" parent="Houses" unique_id=765405150 instance=ExtResource("22_7qjpf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -176, 0.024994373, -16)
 
 [node name="House14" parent="Houses" unique_id=68116052 instance=ExtResource("22_7qjpf")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -208, 0.024994373, 11.5)
@@ -4590,7 +4611,6 @@ neon_edges = true
 [node name="Ramp" parent="props" unique_id=319877564 instance=ExtResource("6_w1aki")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -232.5, 0, 32)
 width = 24
-color_preset = null
 
 [node name="invisiblewall" parent="props/Ramp" unique_id=1330899296 instance=ExtResource("18_dc022")]
 transform = Transform3D(1, -1.8691035e-09, -3.998224e-11, 1.8691046e-09, 0.9990854, 0.0427601, -3.9978687e-11, -0.0427601, 0.9990854, -10.500011, 4.617072, 105.52756)
@@ -4601,25 +4621,20 @@ material_override = ExtResource("29_a4ddl")
 
 [node name="Ramp7" parent="props" unique_id=347389674 instance=ExtResource("6_w1aki")]
 transform = Transform3D(0.7071067, 0, -0.7071068, 0, 1, 0, 0.7071068, 0, 0.7071067, -199.67159, 0, 364.57108)
-color_preset = null
 
 [node name="Ramp12" parent="props" unique_id=1242527810 instance=ExtResource("6_w1aki")]
 transform = Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, -208.51044, 0, 376.23834)
-color_preset = null
 
 [node name="Ramp8" parent="props" unique_id=1887397100 instance=ExtResource("6_w1aki")]
 transform = Transform3D(5.9604645e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, 5.9604645e-08, -512.87823, 0, 462.7878)
-color_preset = null
 
 [node name="Ramp9" parent="props" unique_id=1825882042 instance=ExtResource("6_w1aki")]
 transform = Transform3D(0.7071067, 0, -0.7071067, 0, 1, 0, 0.7071067, 0, 0.7071067, -199.109, 0, 620.0747)
 height = 0
-color_preset = null
 
 [node name="Ramp11" parent="props" unique_id=2051288088 instance=ExtResource("6_w1aki")]
 transform = Transform3D(-0.70710665, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710665, -216.03952, 0, 639.20667)
 height = 0
-color_preset = null
 
 [node name="GrayBox_StaticBody" parent="props" unique_id=670183193 instance=ExtResource("18_dc022")]
 transform = Transform3D(0.7071068, 0.20592135, 0.6764588, 0, 0.9566571, -0.29121676, -0.7071068, 0.20592135, 0.6764588, -716.7429, 4.029678, 588.58734)
@@ -4630,20 +4645,16 @@ color_preset = 5
 
 [node name="Ramp10" parent="props" unique_id=1654268796 instance=ExtResource("6_w1aki")]
 transform = Transform3D(0.553933, 0, 0.83256125, 0, 1, 0, -0.83256125, 0, 0.553933, -723.6807, 0, 581.2449)
-color_preset = null
 
 [node name="Ramp2" parent="props" unique_id=1585675927 instance=ExtResource("6_w1aki")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -119, 0, 159)
-color_preset = null
 
 [node name="Ramp3" parent="props" unique_id=1552895077 instance=ExtResource("6_w1aki")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -99, 0, 159)
-color_preset = null
 
 [node name="Ramp5" parent="props" unique_id=113753775 instance=ExtResource("6_w1aki")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 111, 8.289501, 223)
 width = 32
-color_preset = null
 
 [node name="SedanCar" parent="props" unique_id=1065239879 instance=ExtResource("22_rl138")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -122, 0.028337456, 137.75)
@@ -7543,17 +7554,14 @@ curve = SubResource("Curve3D_71wu4")
 [node name="Corkscrew" parent="." unique_id=1046466621 groups=["navigation_mesh_source_group"] instance=ExtResource("60_kgknl")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 123.5, 3.7982864, 12)
 width = 24
-color_preset = 5
 
 [node name="Corkscrew3" parent="." unique_id=559617928 groups=["navigation_mesh_source_group"] instance=ExtResource("60_kgknl")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 91.49997, -0.09939442, 722.5)
 width = 24
-color_preset = 5
 
 [node name="Corkscrew2" parent="." unique_id=1831047760 groups=["navigation_mesh_source_group"] instance=ExtResource("60_kgknl")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -959.5, -0.14025217, 464)
 width = 32
-color_preset = 5
 
 [node name="StopSign" parent="." unique_id=23860843 instance=ExtResource("67_dhvxm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -322.1, 0.9999981, 451.1)
@@ -7563,6 +7571,14 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -352
 
 [node name="StopSign3" parent="." unique_id=1810459759 instance=ExtResource("67_dhvxm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -323.60004, 0.9999981, 480.1)
+
+[node name="LaunchFenceWall" parent="." unique_id=1485126779 instance=ExtResource("18_dc022")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -178, 0.37499797, -4)
+collision_layer = 3
+width = 36.0
+height = 0.75
+depth = 0.1
+color_preset = 6
 
 [editable path="StuntCity_REMEMBER_TO_REPLACE_ME"]
 [editable path="RoadManager/3way_2x3"]
