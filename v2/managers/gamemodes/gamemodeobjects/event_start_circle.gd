@@ -78,12 +78,15 @@ func set_group_active(group: Node3D, active: bool):
 	_set_collision_active(group, active)
 
 
-## Recurses so nested GameModeObjects and shapes are caught.
+## Recurses so nested GameModeObjects and shapes are caught. CSG roots (ramps, race walls) own
+## their collision body, which hiding doesn't remove.
 func _set_collision_active(node: Node, active: bool):
 	if node is GameModeObject:
 		node.is_active = active
 	elif node is CollisionShape3D:
 		node.disabled = not active
+	elif node is CSGShape3D and node.is_root_shape():
+		node.use_collision = active
 	for child in node.get_children():
 		_set_collision_active(child, active)
 

@@ -1,9 +1,9 @@
-[gd_resource type="StandardMaterial3D" format=3]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://b0j8obvrokyvt"]
 
 [resource]
 resource_name = "CarHeadlight"
+disable_fog = true
 albedo_color = Color(1, 0.96, 0.85, 1)
 emission_enabled = true
 emission = Color(1, 0.95, 0.8, 1)
 emission_energy_multiplier = 16.0
-disable_fog = true

@@ -6,9 +6,6 @@
 
 ## NOW
 
-- [ ] props arent being fully hidden!
-  - [ ] back to 2 race you hit the ramps from race 1
-
 - [ ] ragdoll launch game mode (furthest launch wins)
   - [x] basic working gameplay / mode
   - [ ] make beach have colliders so distance matters
