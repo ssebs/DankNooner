@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="1_82y5a"]
 [ext_resource type="PackedScene" uid="uid://bn2qvn1cja35l" path="res://entities/npc/assets/Cars Bundle-glb/Taxi.glb" id="2_4nr0m"]
 [ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="2_4tdhq"]
+[ext_resource type="Material" path="res://resources/cars/materials/car_headlight.tres" id="car_headlight"]
+[ext_resource type="Material" path="res://resources/cars/materials/car_taillight.tres" id="car_taillight"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o356b"]
 
@@ -16,10 +18,28 @@ metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wcbnl"]
 albedo_color = Color(0.859375, 0.6912923, 0.117492676, 1)
 
-[node name="TaxiCar" type="Node3D" unique_id=1065239879 node_paths=PackedStringArray("meshes")]
+[sub_resource type="Resource" id="Resource_headlight"]
+script = ExtResource("2_4tdhq")
+color = Color(1, 0.96, 0.85, 1)
+use_standard_material = true
+surface_index = 4
+standard_material = ExtResource("car_headlight")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="Resource" id="Resource_taillight"]
+script = ExtResource("2_4tdhq")
+color = Color(0.58, 0, 0.066, 1)
+use_standard_material = true
+surface_index = 5
+standard_material = ExtResource("car_taillight")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[node name="TaxiCar" type="Node3D" unique_id=1065239879 node_paths=PackedStringArray("meshes", "taillight_mesh")]
 script = ExtResource("1_82y5a")
-slots = Array[ExtResource("2_4tdhq")]([SubResource("Resource_wcbnl")])
-meshes = [NodePath("Taxi/Taxi_Cube_009")]
+slots = Array[ExtResource("2_4tdhq")]([SubResource("Resource_wcbnl"), SubResource("Resource_headlight")])
+meshes = [NodePath("Taxi/Taxi_Cube_009"), NodePath("Taxi/Taxi_Cube_009")]
+taillight_slot = SubResource("Resource_taillight")
+taillight_mesh = NodePath("Taxi/Taxi_Cube_009")
 do_not_use_color = true
 
 [node name="Taxi" parent="." unique_id=1653174780 instance=ExtResource("2_4nr0m")]

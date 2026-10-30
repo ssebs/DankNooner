@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "CarTaillight"
+albedo_color = Color(0.58, 0, 0.066, 1)
+emission_enabled = true
+emission = Color(1, 0.03, 0.03, 1)
+emission_energy_multiplier = 5.0

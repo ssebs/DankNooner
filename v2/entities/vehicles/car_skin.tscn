@@ -34,10 +34,14 @@ standard_material = ExtResource("6_emg6f")
 metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lyhtb"]
+emission_enabled = true
+emission = Color(0.85490197, 0.74509805, 0.13725491, 1)
+emission_energy_multiplier = 4.24
+emission_operator = 1
 
 [sub_resource type="Resource" id="Resource_ie68h"]
 script = ExtResource("5_66s4w")
-color = Color(0.85546875, 0.74320936, 0.13700867, 1)
+color = Color(1.9766563, 1.7362248, 0.37378052, 1)
 use_standard_material = true
 surface_index = 4
 standard_material = SubResource("StandardMaterial3D_lyhtb")

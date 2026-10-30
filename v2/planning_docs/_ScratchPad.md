@@ -10,7 +10,6 @@
   - [x] basic working gameplay / mode
   - [ ] make beach have colliders so distance matters
 
-- [ ] give cars headlights since they're impossible to see during a race
 
 - [ ] event circle descriptions / not all text is localized
 

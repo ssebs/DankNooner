@@ -240,6 +240,8 @@
 ---
 
 ## Done ✅
+- [x] give cars headlights since they're impossible to see during a race
+
 - [x] separate props per game mode under an event start circle
 
 - [x] backing up steering / going uphill is jittery
