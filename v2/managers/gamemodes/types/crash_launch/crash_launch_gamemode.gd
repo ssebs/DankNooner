@@ -2,7 +2,8 @@
 ## Crash launch: `heat_count` heats of everyone at once, from a side-by-side grid into a low wall.
 ## The event's runner (grid + countdown + CrashLaunchTask) reruns per heat. A rider's heat counts
 ## its first measured wall crash; any other crash respawns them on their grid slot to go again. A
-## heat ends once every rider has launched, or at `heat_timeout_secs`. Score: distance plus heat
+## crashed rider respawns once their body stops, the crash timer being the cap. A heat ends once
+## every rider has launched, or at `heat_timeout_secs`. Score: distance plus heat
 ## placement points, summed over the heats, plus a bonus for the match's longest launch.
 class_name CrashLaunchGameMode extends RunnerGameMode
 
@@ -206,6 +207,8 @@ func _on_player_launch_measured(peer_id: int, meters: float):
 	# Late joiners free-roam outside the runner — skip is intentional
 	if !_active_runner.player_states.has(peer_id):
 		return
+	# The body came to rest: respawn now rather than waiting out the crash timer (the cap).
+	_respawn_crashed_player(peer_id, respawns_crash_in_place(peer_id))
 	# Only the first wall crash of the launch step counts; other crashes just respawn for another go.
 	var is_wall := (
 		spawn_manager.get_player_by_peer_id(peer_id).crash_type == CrashController.CrashType.WALL

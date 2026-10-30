@@ -90,10 +90,10 @@ signal launch_measured(peer_id: int, meters: float)
 ## Chance the burble plays once you've coasted past exhaust_burble_delay.
 @export_range(0.0, 1.0) var exhaust_burble_chance: float = 0.5
 
-## A crash's launch is measured once the ragdoll's hips slow below this (m/s)...
+## A crash's launch is measured once the ragdoll's hips stay below this (m/s)...
 const LAUNCH_SETTLE_SPEED: float = 0.5
-## ...but no sooner than this, so the first frames by the bike don't read as settled.
-const LAUNCH_SETTLE_MIN_SECS: float = 0.5
+## ...for this long, so the stall on first hitting the ground doesn't read as stopped.
+const LAUNCH_SETTLE_HOLD_SECS: float = 0.75
 
 @onready var controllers_node: Node3D = %_Controllers
 
@@ -211,7 +211,7 @@ var _lock_value: bool = false
 # Process-side state tracking (not sync'd)
 var _prev_is_crashed: bool = false
 var _prev_crash_count: int = 0
-## Server: seconds into the crash whose launch is being measured, -1 when none is.
+## Server: seconds the measured crash's ragdoll has been still, -1 when none is being measured.
 var _launch_t: float = -1.0
 var _launch_prev_hips: Vector3 = Vector3.ZERO
 ## Local _process edge for the NOS boost SFX — plays once each time a boost fires.
@@ -484,11 +484,11 @@ func _exit_crash_visuals() -> void:
 
 ## Server: report the launch once the ragdoll comes to rest.
 func _update_launch_measure(delta: float) -> void:
-	_launch_t += delta
 	var hips := character_skin.ragdoll_controller.get_hips_global_position()
 	var hips_speed := hips.distance_to(_launch_prev_hips) / delta
 	_launch_prev_hips = hips
-	if _launch_t >= LAUNCH_SETTLE_MIN_SECS and hips_speed < LAUNCH_SETTLE_SPEED:
+	_launch_t = _launch_t + delta if hips_speed < LAUNCH_SETTLE_SPEED else 0.0
+	if _launch_t >= LAUNCH_SETTLE_HOLD_SECS:
 		_report_launch()
 
 

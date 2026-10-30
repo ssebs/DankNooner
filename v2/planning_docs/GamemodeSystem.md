@@ -32,6 +32,7 @@
     `_score()`, `_results_title_key()` and `_push_leaderboard()`.
     - **`LongJumpGameMode`** — timed trick attempts off one jump (see [Long jump](#long-jump)).
     - **`TrickBattleGameMode`** — timed free tricking, total score wins (see [Trick battle](#trick-battle)).
+  - **`CrashLaunchGameMode`** — heats of wall crashes, furthest launch wins (see [Crash launch](#crash-launch)).
   - **`RaceGameMode`** — every checkpoint race (see [Races](#races)). `main_game.tscn` holds one
     instance per `race_type`.
 
@@ -279,6 +280,30 @@ board leaves them off to stay on standings). `hint_tricks()` reach the riding HU
   free-roam points don't carry in.
 - **Session:** same as Long jump (clock on the progress line, Cancel Event → results). Leaderboard
   and results show the score.
+
+## Crash launch
+
+`CrashLaunchGameMode`: heats of everyone at once, side by side, into a low wall; the furthest
+launch from the bike wins each heat.
+
+- **Event shape:** one runner = `GridSpawnTask` + countdown + one `CrashLaunchTask`, which never
+  completes and only supplies the objective. The mode reruns that runner per heat (`heat_count`)
+  instead of chaining runners, so it extends `RunnerGameMode`, not `TimedScoreGameMode`. The route is
+  its own `EventRoute` (grid facing the wall); the wall is any layer-2 obstacle in the level.
+- **Launch:** `PlayerEntity` measures on the host only (each peer's ragdoll tumbles differently): flat
+  distance from the ragdoll's hips to the `BikeWreck`, once the hips settle or at the respawn.
+  It reaches the mode as `GamemodeManager.player_launch_measured`. A rider's heat takes the first
+  `WALL` crash measured during the launch step; any other crash respawns them on their grid slot to
+  go again. Here a crashed rider respawns as soon as their body stops, with
+  `CRASH_RESPAWN_DELAY` as the cap (other modes always wait it out).
+- **Heat end:** every rider has launched, or `heat_timeout_secs` (counted from the grid) runs out and
+  the stragglers score nothing.
+- **Score:** distance × `points_per_meter` plus `placement_points` by heat rank, summed over the
+  heats, plus `longest_launch_bonus` for the match's longest launch. Payout reads that score.
+- **HUD:** heat + time left on the progress line once the countdown ends; the live board shows total
+  and this heat's distance; results show total and best launch. Cancel Event goes straight to free
+  roam.
+- Known gap: heats start with every lobby player, so a late joiner is pulled into the next heat.
 
 ## Gamemode refactor (2026-09) — why it looks like this
 

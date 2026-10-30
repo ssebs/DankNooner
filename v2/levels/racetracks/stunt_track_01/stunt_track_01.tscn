@@ -64,6 +64,7 @@
 [ext_resource type="PackedScene" path="res://managers/gamemodes/gamemodeobjects/start_zone.tscn" id="99_startzone"]
 [ext_resource type="Script" uid="uid://pulnqxx1eaja" path="res://managers/gamemodes/gamemodeobjects/gamemode_event.gd" id="mig_event"]
 [ext_resource type="Script" uid="uid://cm4g6ptfwf37q" path="res://managers/gamemodes/gamemodeobjects/event_route.gd" id="mig_route"]
+[ext_resource type="Script" uid="uid://cs1xwvbafeajh" path="res://managers/gamemodes/tasks/crash_launch_task.gd" id="99_crshlchtask"]
 [ext_resource type="Script" uid="uid://16q3wevm2ngw" path="res://managers/gamemodes/tasks/trick_battle_task.gd" id="mig_trkbtl"]
 [ext_resource type="Script" uid="uid://5vyieksd13uf" path="res://levels/components/npc_nav_region.gd" id="npc_nav_region"]
 
@@ -130,6 +131,13 @@ script = ExtResource("24_l8nu3")
 name = "Trick Battle"
 description = "Trick anywhere until time runs out. Highest score wins."
 target_gamemode = 8
+metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
+
+[sub_resource type="Resource" id="Resource_crshlch"]
+script = ExtResource("24_l8nu3")
+name = "Crash Launch"
+description = "Everyone charges the wall at once. Furthest from your bike wins."
+target_gamemode = 9
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_mn4lr"]
@@ -2116,6 +2124,9 @@ script = ExtResource("mig_trkbtl")
 respawn_in_place = true
 
 [node name="CrashLaunchSpawns" type="Node3D" parent="StuntRace" unique_id=304460237]
+top_level = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -150, 0, 59)
+script = ExtResource("mig_route")
 
 [node name="Spawn1" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=1806100665]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0.25, 100)
@@ -2140,6 +2151,32 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 0.25, 110.1)
 
 [node name="Spawn8" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=408975919]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.25, 110.1)
+
+[node name="CrashLaunch" type="Node" parent="StuntRace" unique_id=1777000011 node_paths=PackedStringArray("route")]
+script = ExtResource("mig_event")
+definition = SubResource("Resource_crshlch")
+route = NodePath("../CrashLaunchSpawns")
+
+[node name="SequentialTaskRunner" type="Node" parent="StuntRace/CrashLaunch" unique_id=1777000012]
+script = ExtResource("20_grj8g")
+
+[node name="GridSpawnTask" type="Node" parent="StuntRace/CrashLaunch/SequentialTaskRunner" unique_id=1777000013]
+script = ExtResource("21_gpyq4")
+
+[node name="ConcurrentTaskRunner" type="Node" parent="StuntRace/CrashLaunch/SequentialTaskRunner" unique_id=1777000014]
+script = ExtResource("16_b3ac3")
+
+[node name="CountdownTask" type="Node" parent="StuntRace/CrashLaunch/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1777000015]
+script = ExtResource("17_clf25")
+
+[node name="SFXTask" type="Node" parent="StuntRace/CrashLaunch/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1777000016]
+script = ExtResource("18_k3cxb")
+sound = 2
+advance_mode = 1
+duration_sec = 3.0
+
+[node name="CrashLaunchTask" type="Node" parent="StuntRace/CrashLaunch/SequentialTaskRunner" unique_id=1777000017]
+script = ExtResource("99_crshlchtask")
 
 [node name="StuntRace2" parent="." unique_id=1917820002 node_paths=PackedStringArray("gas_station") groups=["EditorHideable"] instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -919.5519, 0, 506.39148)

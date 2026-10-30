@@ -25,7 +25,7 @@ Earn, spend and bank are three separate owners:
 | Score banking | `TrickManager._track_combo()` | Server `_process()` |
 | Gauge + counter UI | `RidingHUDState.Physics_Update()` → `BoostGauge` | Local client |
 | Live "+N" + its xN multiplier, bank pop, crash "OOF!", trick callouts (`TrickPopups.TRICK_CALLOUTS` / `HOLD_CALLOUTS`) | `TrickPopups` — bank pop RPC'd from `TrickManager` | Local client |
-| Trick feed (every rider's banked combo with its trick names, every crash + the combo it voided) | `TrickManager._push_feed()` → `RidingHUDState.push_trickfeed` → `TrickFeed` | Server → all |
+| Trick feed (every rider's banked combo with its trick names, every crash + the combo it voided and its launch distance) | `TrickManager` → `RidingHUDState.push_trickfeed` → `TrickFeed`; a bail's line waits for `GamemodeManager.player_launch_measured` | Server → all |
 | Free-roam 1-min points round + leaderboard | `FreeRoamGameMode` (sums `combo_banked`) → `RaceLeaderboard` | Server → all |
 | Camera FX | `CameraController._update_juice_fx()` | Local client |
 

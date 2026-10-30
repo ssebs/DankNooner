@@ -6,9 +6,15 @@
 
 ### NOW
 
+- [ ] ragdoll launch game mode (furthest launch wins)
+  - [x] basic working gameplay / mode
+  - [ ] make beach have colliders so distance matters
+  - [ ] add arrowwalls / glow fence for each game mode
+    - [ ] separate props per game mode under an event start circle
 
 - [ ] [Progression/Challenges](./Progression.md)
-  - [ ] track ragdoll vs bike distance on a crash (how far the rider flew from the bike) — show it in the trick feed's bail line, and use it for a new gamemode (furthest launch wins?)
+
+- [ ] event circle descriptions / not all text is localized
 
 ### NEXT
 
