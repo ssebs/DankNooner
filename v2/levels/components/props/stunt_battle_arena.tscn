@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://p7r6xx2hxd7u" path="res://levels/components/props/corkscrew.tscn" id="4_a1dn2"]
 [ext_resource type="PackedScene" uid="uid://cv3uyj3m3nj6t" path="res://levels/components/pickups/pickup_spawner.tscn" id="5_a1dn2"]
 
-[node name="StuntBattleArena" type="Node3D" unique_id=1920932027]
+[node name="TrickBattleArena" type="Node3D" unique_id=1920932027]
 
 [node name="Ground" parent="." unique_id=1485126779 instance=ExtResource("1_c4fsf")]
 shape_mode = 1
@@ -70,11 +70,11 @@ count = 14
 spacing = 4.77
 
 [node name="PickupSpawner29" parent="Spawners" unique_id=1807297309 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, -50.035714)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, -50.035713)
 count = 14
 spacing = 4.77
 
 [node name="PickupSpawner43" parent="Spawners" unique_id=1884260859 instance=ExtResource("5_a1dn2")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, 46.464286)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, 46.464287)
 count = 14
 spacing = 4.77

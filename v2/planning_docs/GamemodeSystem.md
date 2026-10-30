@@ -42,19 +42,19 @@ plumbing, and Road/Street race differed only in traffic start/stop.
 ### Events and props (`managers/gamemodes/gamemodeobjects/`)
 
 - **`EventStartCircle`** — level-placed `Area3D`; its `GameModeEvent` children are the events the
-  picker lists. `set_active_event()` owns show/hide of the events' props. `gas_station` picks the
-  station whose pumps its fuel-up events use.
-- **`GameModeEvent`** — one selectable event: `@export definition`, `@export route`, and the
-  `TaskRunner` children the target mode runs **in tree order**.
+  picker lists. Its `props` / `spawns` / `checkpoints` exports link level-owned Node3Ds holding the
+  groups events link; a warning flags an event linking a group outside them. `set_active_event()`
+  hides + uncollides every group under `props` / `checkpoints` and every event's own, then shows
+  the active event's. `gas_station` picks the station whose pumps its fuel-up events use. The class
+  docstring carries the layout.
+- **`GameModeEvent`** — one selectable event (`Node3D`, moves with its circle): `@export definition`,
+  links to the circle's groups (`props: Array[Node3D]`, `spawn`, `checkpoints`), its own `pickups`
+  and `start_zone`, and the `TaskRunner` children the target mode runs **in tree order**. Events
+  share a group by linking the same one. `set_props_active()` toggles everything but the start zone
+  (drive to the start); configuration warnings flag missing links for race / grid events.
 - **`GameModeEventDefinition`** (`resources/`) — name/description, `target_gamemode`, forced bike,
   and the race flags (`enable_npcs`, `enable_traffic`, `race_challenges`, `fuel_up_first`). Authored as an embedded
   sub-resource on the event.
-- **`EventRoute`** — `Node3D` holding a route's physical stuff: grid `Marker3D`s, `CheckPointMarker`s
-  and `PickupSpawner`s as direct children (each group in tree order), plus props (arrow walls,
-  ramps). Several events on a circle can share one route. `set_active()` toggles `visible`, every
-  `GameModeObject` and every `CollisionShape3D` — a hidden ramp mustn't be an invisible wall.
-  `set_props_active()` does the same for everything but the start zones (drive to the start).
-  `top_level`, so it sits in world space whatever the circle's transform.
 - **`GameModeObject`** — base for dumb props (checkpoints, trigger zones, speech bubbles): emit signals, `is_active` toggles visibility + collision, never decide completion.
 - **`FreeRoamActivity`** — abstract, level-placed, per-rider event that `FreeRoamGameMode` hosts
   without a gamemode change (`FuelUpMinigame` is one). Entering its `%PlayerStartCircle` opens the
@@ -77,7 +77,7 @@ plumbing, and Road/Street race differed only in traffic start/stop.
   never gate completion; they enforce their own fail-condition each frame (`MaintainTrickTask`).
   Place one as a sibling of the objective inside a `ConcurrentTaskRunner`.
 - **`TaskRunner`** — base for runners. Holds the shared deps leaf tasks reach via `_runner.<dep>`
-  (`spawn_manager`, `riding_hud`, `audio_manager`, `route`, `show_step_count`) and the
+  (`spawn_manager`, `riding_hud`, `audio_manager`, `event`, `show_step_count`) and the
   `respawn_requested` signal.
 - **`SequentialTaskRunner`** — walks its children one at a time **per peer**. A child that is
   itself a `TaskRunner` is a **gate**: peers park there, and it starts only once every unfinished
@@ -92,21 +92,23 @@ plumbing, and Road/Street race differed only in traffic start/stop.
 ## Level scene shape
 
 ```
-EventStartCircle                       picker lists its GameModeEvent children
-├── EventRoute "IslandLoop"            grid markers, CheckPointMarkers, PickupSpawners, props
-├── GameModeEvent "Island Race"        definition (kind=RACE, flags), route -> IslandLoop
+IslandStation (EventStartCircle)       picker lists its GameModeEvent children
+├── Props / IslandWalls                arrow walls, ramps — shown only by events linking them
+├── Spawns / IslandGrid                grid Marker3Ds
+├── Checkpoints / IslandLoop           CheckPointMarkers
+├── GameModeEvent "Island Race"        props=[IslandWalls], spawn=IslandGrid, checkpoints=IslandLoop
+│   ├── Pickups, StartZone             its own PickupSpawners + drive-to-start TriggerZone
 │   └── SequentialTaskRunner -> GridSpawnTask -> ConcurrentTaskRunner(Countdown, SFX) -> RaceTask
-└── GameModeEvent "Island Time Attack" definition (kind=TIME_ATTACK), route -> IslandLoop
+└── GameModeEvent "Island Trick Battle" props=[], spawn=IslandGrid
     └── SequentialTaskRunner -> GridSpawnTask -> ...
 ```
 
-- Tasks read markers from `_runner.route`, never from `@export` NodePath arrays. `GridSpawnTask`
-  takes `route.get_grid_markers()`; `RaceTask` takes `route.get_checkpoints()` — a first checkpoint
+- Tasks read markers from `_runner.event`, never from their own `@export` NodePath arrays. `GridSpawnTask`
+  takes `event.get_spawn_markers()`; `RaceTask` takes `event.get_checkpoints()` — a first checkpoint
   named ending in `StartStop1` makes it a lap circuit (start = finish), anything else is
-  point-to-point. `GameModeEvent` / `EventRoute` configuration warnings flag a missing route, too
-  few checkpoints, and first children not named ending in `1` (tree order is the sequence).
-- Events without a route (tutorials) leave `route` empty.
-- Any other `GameModeObject` under the circle (not in a route) belongs to every event on it.
+  point-to-point. `GameModeEvent` configuration warnings flag missing links, too few checkpoints,
+  and first children not named ending in `1` (tree order is the sequence).
+- Events without a grid or race (tutorials) leave the links empty.
 
 ## Flow
 
@@ -288,8 +290,8 @@ launch from the bike wins each heat.
 
 - **Event shape:** one runner = `GridSpawnTask` + countdown + one `CrashLaunchTask`, which never
   completes and only supplies the objective. The mode reruns that runner per heat (`heat_count`)
-  instead of chaining runners, so it extends `RunnerGameMode`, not `TimedScoreGameMode`. The route is
-  its own `EventRoute` (grid facing the wall); the wall is any layer-2 obstacle in the level.
+  instead of chaining runners, so it extends `RunnerGameMode`, not `TimedScoreGameMode`. Its `spawn`
+  is its own grid facing the wall; the wall is any layer-2 obstacle in the level.
 - **Launch:** `PlayerEntity` measures on the host only (each peer's ragdoll tumbles differently): flat
   distance from the ragdoll's hips to the `BikeWreck`, once the hips settle or at the respawn.
   It reaches the mode as `GamemodeManager.player_launch_measured`. A rider's heat takes the first

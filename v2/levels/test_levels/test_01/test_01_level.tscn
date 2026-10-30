@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_m4ipn"]
 [ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.tscn" id="2_tmett"]
 [ext_resource type="PackedScene" uid="uid://i5gn7vx2atly" path="res://levels/components/props/gas_station.tscn" id="2_u7lq8"]
-[ext_resource type="Script" uid="uid://cm4g6ptfwf37q" path="res://managers/gamemodes/gamemodeobjects/event_route.gd" id="3_pu0o3"]
 [ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="4_fb0ik"]
 [ext_resource type="Script" uid="uid://pulnqxx1eaja" path="res://managers/gamemodes/gamemodeobjects/gamemode_event.gd" id="7_4m0o6"]
 [ext_resource type="Script" uid="uid://bjt7k3nrl24c8" path="res://managers/gamemodes/challenges/race_challenge.gd" id="8_udgxj"]
@@ -21,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://blmmkvwq6fh3b" path="res://levels/components/garage/garage.tscn" id="21_fb0ik"]
 [ext_resource type="Script" uid="uid://nyvpj8qcqqww" path="res://managers/gamemodes/tasks/long_jump_task.gd" id="22_ps8o8"]
 [ext_resource type="PackedScene" uid="uid://rervqxotioc4" path="res://levels/components/props/ramp.tscn" id="23_4m0o6"]
+[ext_resource type="Script" path="res://managers/gamemodes/runners/drive_to_start_runner.gd" id="drive_to_start_runner"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ps8o8"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -106,17 +106,26 @@ shape_mode = 1
 width = 256.0
 depth = 256.0
 
-[node name="TrackRace" parent="." unique_id=1835723501 node_paths=PackedStringArray("gas_station") instance=ExtResource("2_tmett")]
+[node name="TrackRace" parent="." unique_id=1835723501 node_paths=PackedStringArray("gas_station", "spawns", "checkpoints") instance=ExtResource("2_tmett")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -39.032005, 0, -52.776093)
 gas_station = NodePath("TrackGasstation")
 metadata/_edit_group_ = true
+spawns = NodePath("Spawns")
+checkpoints = NodePath("Checkpoints")
+
+[node name="Spawns" type="Node3D" parent="TrackRace" unique_id=1218865132]
+
+[node name="RaceSpawns" type="Node3D" parent="TrackRace/Spawns" unique_id=1105808162]
+
+[node name="Checkpoints" type="Node3D" parent="TrackRace" unique_id=2049950847]
+
+[node name="RaceCheckpoints" type="Node3D" parent="TrackRace/Checkpoints" unique_id=100706639]
 
 [node name="TrackGasstation" parent="TrackRace" unique_id=616956386 instance=ExtResource("2_u7lq8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.126999, 0, -22.819817)
 
 [node name="Route" type="Node3D" parent="TrackRace" unique_id=1898345049]
 top_level = true
-script = ExtResource("3_pu0o3")
 
 [node name="Marker3D1" type="Marker3D" parent="TrackRace/Route" unique_id=2054562534]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, -44.414806, 0.25000763, -49.412)
@@ -159,22 +168,18 @@ width = 24.0
 [node name="StartZone" parent="TrackRace/Route" unique_id=186067291 instance=ExtResource("16_fb0ik")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -47.45167, 0.25, -45.100384)
 
-[node name="TrackRace" type="Node" parent="TrackRace" unique_id=180664999 node_paths=PackedStringArray("route")]
+[node name="TrackRace" type="Node3D" parent="TrackRace" unique_id=180664999 node_paths=PackedStringArray("spawn", "checkpoints", "pickups", "start_zone")]
 script = ExtResource("7_4m0o6")
 definition = SubResource("Resource_ssdfk")
-route = NodePath("../Route")
+spawn = NodePath("../Spawns/RaceSpawns")
+checkpoints = NodePath("../Checkpoints/RaceCheckpoints")
+pickups = NodePath("Pickups")
+start_zone = NodePath("../Route/StartZone")
+
+[node name="Pickups" type="Node3D" parent="TrackRace/TrackRace" unique_id=1051527756]
 
 [node name="DriveToStartRunner" type="Node" parent="TrackRace/TrackRace" unique_id=1816487405]
-script = ExtResource("10_ssdfk")
-
-[node name="DriveToStartTask" type="Node" parent="TrackRace/TrackRace/DriveToStartRunner" unique_id=665746015 node_paths=PackedStringArray("trigger")]
-script = ExtResource("17_fviyc")
-objective_key = "RACE_DRIVE_TO_START"
-hint_key = "RACE_HINT_DRIVE_TO_START"
-hide_trigger_on_pass = true
-eval_when = 1
-trigger = NodePath("../../../Route/StartZone")
-respawn_in_place = true
+script = ExtResource("drive_to_start_runner")
 
 [node name="SequentialTaskRunner" type="Node" parent="TrackRace/TrackRace" unique_id=1410867313]
 script = ExtResource("10_ssdfk")
@@ -204,10 +209,11 @@ script = ExtResource("15_4y04b")
 total_laps = 2
 metadata/_custom_type_script = "uid://bk8siml2v41d1"
 
-[node name="TimeAttack" type="Node" parent="TrackRace" unique_id=1579880728 node_paths=PackedStringArray("route")]
+[node name="TimeAttack" type="Node3D" parent="TrackRace" unique_id=1579880728 node_paths=PackedStringArray("spawn", "checkpoints")]
 script = ExtResource("7_4m0o6")
 definition = SubResource("Resource_tv2pq")
-route = NodePath("../Route")
+spawn = NodePath("../Spawns/RaceSpawns")
+checkpoints = NodePath("../Checkpoints/RaceCheckpoints")
 
 [node name="SequentialTaskRunner" type="Node" parent="TrackRace/TimeAttack" unique_id=45586883]
 script = ExtResource("10_ssdfk")
@@ -233,10 +239,12 @@ total_laps = 1
 endless = true
 objective_key = "TIME_ATTACK_RUN_OBJECTIVE"
 
-[node name="StuntRace" type="Node" parent="TrackRace" unique_id=248913301 node_paths=PackedStringArray("route")]
+[node name="StuntRace" type="Node3D" parent="TrackRace" unique_id=248913301 node_paths=PackedStringArray("spawn", "checkpoints", "pickups")]
 script = ExtResource("7_4m0o6")
 definition = SubResource("Resource_stntr")
-route = NodePath("../Route")
+spawn = NodePath("../Spawns/RaceSpawns")
+checkpoints = NodePath("../Checkpoints/RaceCheckpoints")
+pickups = NodePath("../TrackRace/Pickups")
 
 [node name="SequentialTaskRunner" type="Node" parent="TrackRace/StuntRace" unique_id=797608096]
 script = ExtResource("10_ssdfk")
@@ -260,10 +268,10 @@ duration_sec = 3.0
 script = ExtResource("15_4y04b")
 total_laps = 1
 
-[node name="TrickBattle" type="Node" parent="TrackRace" unique_id=228087331 node_paths=PackedStringArray("route")]
+[node name="TrickBattle" type="Node3D" parent="TrackRace" unique_id=228087331 node_paths=PackedStringArray("spawn")]
 script = ExtResource("7_4m0o6")
 definition = SubResource("Resource_qci16")
-route = NodePath("../Route")
+spawn = NodePath("../Spawns/RaceSpawns")
 
 [node name="SequentialTaskRunner" type="Node" parent="TrackRace/TrickBattle" unique_id=440522999]
 script = ExtResource("10_ssdfk")
@@ -290,13 +298,22 @@ script = ExtResource("10_ssdfk")
 script = ExtResource("21_aul3u")
 respawn_in_place = true
 
-[node name="MegaRamp" parent="." unique_id=1818775210 instance=ExtResource("2_tmett")]
+[node name="MegaRamp" parent="." unique_id=1818775210 node_paths=PackedStringArray("spawns", "checkpoints") instance=ExtResource("2_tmett")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -149)
+spawns = NodePath("Spawns")
+checkpoints = NodePath("Checkpoints")
+
+[node name="Spawns" type="Node3D" parent="MegaRamp" unique_id=1468459801]
+
+[node name="JumpSpawns" type="Node3D" parent="MegaRamp/Spawns" unique_id=1727910438]
+
+[node name="Checkpoints" type="Node3D" parent="MegaRamp" unique_id=486858504]
+
+[node name="JumpCheckpoints" type="Node3D" parent="MegaRamp/Checkpoints" unique_id=973743795]
 
 [node name="Route" type="Node3D" parent="MegaRamp" unique_id=702473703]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -135.69302)
 top_level = true
-script = ExtResource("3_pu0o3")
 
 [node name="RaceGridSpot1" type="Marker3D" parent="MegaRamp/Route" unique_id=530282508]
 transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 6.750005, 0.024999857, -7.0091553)
@@ -314,10 +331,11 @@ transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.999996, -127.636154, -251.68484)
 width = 32.0
 
-[node name="LongJump" type="Node" parent="MegaRamp" unique_id=570880783 node_paths=PackedStringArray("route")]
+[node name="LongJump" type="Node3D" parent="MegaRamp" unique_id=570880783 node_paths=PackedStringArray("spawn", "checkpoints")]
 script = ExtResource("7_4m0o6")
 definition = SubResource("Resource_udgxj")
-route = NodePath("../Route")
+spawn = NodePath("../Spawns/JumpSpawns")
+checkpoints = NodePath("../Checkpoints/JumpCheckpoints")
 
 [node name="SequentialTaskRunner" type="Node" parent="MegaRamp/LongJump" unique_id=1368527158]
 script = ExtResource("10_ssdfk")

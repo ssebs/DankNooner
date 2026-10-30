@@ -1,5 +1,5 @@
 @tool
-## Respawns each entering peer to a grid slot from the event's EventRoute. Auto-advances.
+## Respawns each entering peer to a grid slot from the event's `spawn` group. Auto-advances.
 ## Used to reset players to the grid between stages of a challenge (e.g. before each trick step).
 ##
 ## Slots cycle independently of GridSpawnTask's counter — peers entering this task get
@@ -11,7 +11,7 @@ var _next_slot: int = 0
 
 func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
 	var peer_id := int(player.name)
-	var markers := runner.route.get_grid_markers()
+	var markers := runner.event.get_spawn_markers()
 	var idx: int = min(_next_slot, markers.size() - 1)
 	var marker := markers[idx]
 	runner.spawn_manager.respawn_player_at.rpc(

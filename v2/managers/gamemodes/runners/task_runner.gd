@@ -2,7 +2,7 @@
 ## Base for composite runners (Sequential, Concurrent).
 ##
 ## Holds the deps shared by every runner so leaf tasks can address them via
-## `runner.spawn_manager` / `runner.riding_hud` / `runner.audio_manager` / `runner.route`
+## `runner.spawn_manager` / `runner.riding_hud` / `runner.audio_manager` / `runner.event`
 ## regardless of which runner type owns them.
 ##
 ## Owns the per-peer bookkeeping (states, task list, completion). Subclasses call super()
@@ -24,8 +24,8 @@ var riding_hud: RidingHUDState
 ## "2 / 5" on the event pane — tutorials yes, races no (see RunnerGameMode.shows_step_count).
 var show_step_count: bool = true
 var audio_manager: AudioManager
-## The event's EventRoute (grid, checkpoints) — null for events without one.
-var route: EventRoute
+## The event these runners belong to (spawns, checkpoints).
+var event: GameModeEvent
 
 var player_states: Dictionary[int, PlayerTaskState] = {}
 var tasks: Array[GameModeTask] = []
@@ -131,6 +131,6 @@ func wire_task_refs() -> void:
 			c.riding_hud = riding_hud
 			c.show_step_count = show_step_count
 			c.audio_manager = audio_manager
-			c.route = route
+			c.event = event
 			c.wire_task_refs()
 

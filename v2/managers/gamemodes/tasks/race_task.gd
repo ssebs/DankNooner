@@ -4,7 +4,7 @@
 ## Watches multiple CheckPointMarkers directly via their `entered` signal
 ## instead of using the runner's single-`trigger` system.
 ##
-## The route is the EventRoute's CheckPointMarkers, in tree order. A first marker named
+## The route is the event's `checkpoints` CheckPointMarkers, in tree order. A first marker named
 ## `…StartStop1` is both start and finish (a lap circuit: StartStop1 -> 2 -> 3 … -> StartStop1);
 ## otherwise it's point-to-point (first = start, last = finish).
 ##
@@ -175,7 +175,7 @@ func restart_run(peer_id: int) -> void:
 	p["best_dist"] = INF
 	p["wrong_way_since_ms"] = 0
 	p["countdown_end_ms"] = Time.get_ticks_msec() + RESTART_COUNTDOWN_MS
-	var markers := runner.route.get_grid_markers()
+	var markers := runner.event.get_spawn_markers()
 	var marker := markers[mini(p["respawn_slot"], markers.size() - 1)]
 	runner.spawn_manager.respawn_player_at.rpc(peer_id, marker.global_position, marker.global_basis)
 	CountdownTask.freeze(runner.spawn_manager.get_player_by_peer_id(peer_id))
@@ -231,7 +231,7 @@ func get_npc_respawn_checkpoint(npc_id: int) -> CheckPointMarker:
 
 
 func _collect_checkpoints() -> void:
-	var checkpoints := runner.route.get_checkpoints()
+	var checkpoints := runner.event.get_checkpoints()
 	start_checkpoint = checkpoints[0]
 	if is_lap_route(checkpoints):
 		end_checkpoint = start_checkpoint
@@ -339,7 +339,7 @@ func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
 
 	if peer_id >= 0:
 		# After the row update so the upcoming gates are known.
-		var ckpt_idx := runner.route.get_checkpoints().find(ckpt)
+		var ckpt_idx := runner.event.get_checkpoints().find(ckpt)
 		_rpc_checkpoint_passed.rpc_id(peer_id, ckpt_idx, _upcoming_checkpoint_idxs(p))
 
 
@@ -347,7 +347,7 @@ func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
 func _upcoming_checkpoint_idxs(p: Dictionary) -> PackedInt32Array:
 	if p.has("completion_time_ms") or p["run_done"]:
 		return PackedInt32Array()
-	var checkpoints := runner.route.get_checkpoints()
+	var checkpoints := runner.event.get_checkpoints()
 	var next_idx := checkpoints.find(_expected_checkpoint(p))
 	var final_gate: bool = (
 		p["waiting_for"] == WaitFor.END
@@ -484,18 +484,18 @@ func _rpc_play_countdown_sfx() -> void:
 @rpc("call_local", "reliable")
 func _rpc_checkpoint_passed(ckpt_idx: int, upcoming: PackedInt32Array) -> void:
 	runner.audio_manager.play_mouse_click()
-	runner.route.show_only_checkpoints(upcoming, ckpt_idx)
+	runner.event.show_only_checkpoints(upcoming, ckpt_idx)
 
 
 @rpc("call_local", "reliable")
 func _rpc_reset_checkpoints() -> void:
-	runner.route.show_only_checkpoints(START_CHECKPOINTS)
+	runner.event.show_only_checkpoints(START_CHECKPOINTS)
 
 
 #endregion
 
 
-## Route checks live on GameModeEvent / EventRoute — they see both the task and the route.
+## Checkpoint checks live on GameModeEvent — it sees both the task and the checkpoints.
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues := super()
 	if !endless and total_laps <= 0:

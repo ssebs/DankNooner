@@ -1,5 +1,5 @@
 @tool
-## Assigns each entering peer the next grid slot from the event's EventRoute (in tree order) and
+## Assigns each entering peer the next grid slot from the event's `spawn` group (in tree order) and
 ## teleports them there, also storing that transform as their persistent respawn point
 ## (same mechanism as TeleportTask). Auto-advances.
 ##
@@ -11,7 +11,7 @@ var _next_slot: int = 0
 
 
 func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
-	var grid_markers := runner.route.get_grid_markers()
+	var grid_markers := runner.event.get_spawn_markers()
 	var peer_id := int(player.name)
 	var idx: int = min(_next_slot, grid_markers.size() - 1)
 	var marker := grid_markers[idx]

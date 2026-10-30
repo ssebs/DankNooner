@@ -281,7 +281,7 @@ func _inject_runner_deps():
 		runner.riding_hud = riding_hud_state
 		runner.show_step_count = shows_step_count()
 		runner.audio_manager = audio_manager
-		runner.route = _event.route
+		runner.event = _event
 		runner.wire_task_refs()
 
 

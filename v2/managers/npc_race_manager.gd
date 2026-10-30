@@ -97,9 +97,9 @@ func despawn_all_npcs() -> void:
 	_bake_generation += 1
 
 
-## Server only. Bakes the racing line through route's checkpoints. Bots hold on the grid until it
+## Server only. Bakes the racing line through event's checkpoints. Bots hold on the grid until it
 ## lands, so callers don't await it.
-func bake_racing_line(route: EventRoute) -> void:
+func bake_racing_line(event: GameModeEvent) -> void:
 	var region := level_manager.current_level.npc_nav_region
 	var generation := _bake_generation
 	# A level loaded this frame has no synced nav map yet, and paths on it come back empty
@@ -108,12 +108,12 @@ func bake_racing_line(route: EventRoute) -> void:
 	# The race ended (or restarted) while we waited — skip is intentional
 	if generation != _bake_generation:
 		return
-	var checkpoints := route.get_checkpoints()
+	var checkpoints := event.get_checkpoints()
 	var is_lap := RaceTask.is_lap_route(checkpoints)
 	var positions := PackedVector3Array()
 	# A point-to-point first checkpoint can sit far up the road, so start the line on the grid
 	if !is_lap:
-		var grid_markers := route.get_grid_markers()
+		var grid_markers := event.get_spawn_markers()
 		var grid_center := Vector3.ZERO
 		for marker in grid_markers:
 			grid_center += marker.global_position

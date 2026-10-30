@@ -9,7 +9,7 @@ class_name NPCRacersComponent extends RaceComponent
 func race_start() -> void:
 	if !race_mode.get_definition().enable_npcs:
 		return
-	var grid_markers := race_mode.get_route().get_grid_markers()
+	var grid_markers := race_mode.get_event().get_spawn_markers()
 	var npc_count := grid_markers.size() - race_mode.lobby_manager.lobby_players.size()
 	if npc_count <= 0:
 		return
@@ -18,7 +18,7 @@ func race_start() -> void:
 		var marker: Marker3D = grid_markers[maxi(0, grid_markers.size() - 1 - i)]
 		var npc_id := npc_race_manager.spawn_npc(marker.global_position, marker.global_basis)
 		race_mode.race_task.register_npc(npc_id)
-	npc_race_manager.bake_racing_line(race_mode.get_route())
+	npc_race_manager.bake_racing_line(race_mode.get_event())
 
 
 func race_end() -> void:

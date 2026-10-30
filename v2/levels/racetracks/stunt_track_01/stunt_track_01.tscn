@@ -24,6 +24,7 @@
 [ext_resource type="Material" uid="uid://bdn26favvnenb" path="res://levels/assets/graybox/repeating_gray.tres" id="15_7kcev"]
 [ext_resource type="PackedScene" uid="uid://1qii5r1owvt1" path="res://levels/components/props/lighthouse.tscn" id="16_7kcev"]
 [ext_resource type="Script" uid="uid://1hiltkmgy4i3" path="res://managers/gamemodes/runners/concurrent_task_runner.gd" id="16_b3ac3"]
+[ext_resource type="PackedScene" uid="uid://dwxnbvlhx15la" path="res://levels/components/props/stunt_battle_arena.tscn" id="16_dhvxm"]
 [ext_resource type="Script" uid="uid://8xvij2vjrnn2" path="res://managers/gamemodes/tasks/countdown_task.gd" id="17_clf25"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="18_dc022"]
 [ext_resource type="Script" uid="uid://cpdxy3nxph3x0" path="res://managers/gamemodes/tasks/sfx_task.gd" id="18_k3cxb"]
@@ -60,11 +61,10 @@
 [ext_resource type="PackedScene" uid="uid://dkk3ym43xrngn" path="res://levels/assets/props/lightpost.tscn" id="52_a4ddl"]
 [ext_resource type="PackedScene" uid="uid://p7r6xx2hxd7u" path="res://levels/components/props/corkscrew.tscn" id="60_kgknl"]
 [ext_resource type="PackedScene" uid="uid://cqo42gc7ph2in" path="res://levels/components/props/stop_sign.tscn" id="67_dhvxm"]
-[ext_resource type="Script" uid="uid://b40syrl038fb3" path="res://managers/gamemodes/tasks/checkpoint_task.gd" id="99_ckpttask"]
-[ext_resource type="PackedScene" path="res://managers/gamemodes/gamemodeobjects/start_zone.tscn" id="99_startzone"]
-[ext_resource type="Script" uid="uid://pulnqxx1eaja" path="res://managers/gamemodes/gamemodeobjects/gamemode_event.gd" id="mig_event"]
-[ext_resource type="Script" uid="uid://cm4g6ptfwf37q" path="res://managers/gamemodes/gamemodeobjects/event_route.gd" id="mig_route"]
 [ext_resource type="Script" uid="uid://cs1xwvbafeajh" path="res://managers/gamemodes/tasks/crash_launch_task.gd" id="99_crshlchtask"]
+[ext_resource type="PackedScene" path="res://managers/gamemodes/gamemodeobjects/start_zone.tscn" id="99_startzone"]
+[ext_resource type="Script" uid="uid://cpw0t2dffsgdo" path="res://managers/gamemodes/runners/drive_to_start_runner.gd" id="drive_to_start_runner"]
+[ext_resource type="Script" uid="uid://pulnqxx1eaja" path="res://managers/gamemodes/gamemodeobjects/gamemode_event.gd" id="mig_event"]
 [ext_resource type="Script" uid="uid://16q3wevm2ngw" path="res://managers/gamemodes/tasks/trick_battle_task.gd" id="mig_trkbtl"]
 [ext_resource type="Script" uid="uid://5vyieksd13uf" path="res://levels/components/npc_nav_region.gd" id="npc_nav_region"]
 
@@ -174,6 +174,7 @@ script = ExtResource("24_l8nu3")
 name = "Track Race"
 description = "Around the island"
 target_gamemode = 1
+enable_npcs = true
 fuel_up_first = true
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
@@ -190,504 +191,504 @@ _data = {
 }
 point_count = 3
 
-[sub_resource type="Curve3D" id="Curve3D_6lq47"]
+[sub_resource type="Curve3D" id="Curve3D_dhvxm"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0.04449463, 0, -15.999939, -12.000002, 0, 0, -0.55548096, 0.25, -4.3699646, -0.5751953, 0.25, -9.369934, -11.398411, 0.25, 9.44899),
 "tilts": PackedFloat32Array(0, -2.4386518)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_dhvxm"]
+[sub_resource type="Curve3D" id="Curve3D_yucqr"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0.04449463, 0, -15.999939, 12.000002, 0, 0, -0.55548096, 0.25, -4.3699646, -0.5751953, 0.25, -9.369934, 12.6010475, 0.25, 9.287643),
 "tilts": PackedFloat32Array(0, -2.4387524)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_yucqr"]
+[sub_resource type="Curve3D" id="Curve3D_i2g37"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0.04449463, 0, -15.999939, 0, 0, 0, -0.55548096, 0.25, -4.3699646, -0.5751953, 0.25, -9.369934, 0.60131836, 0.25, 9.368317),
-"tilts": PackedFloat32Array(0, -2.4387026)
+"tilts": PackedFloat32Array(0, -2.4387028)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_i2g37"]
+[sub_resource type="Curve3D" id="Curve3D_nn4in"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 0.057932608, -12, 0, 0, 1.8177354, 0, -19.39651, 0.9206543, 0, -20.482147, -14.718891, 0, 19.195028),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_nn4in"]
+[sub_resource type="Curve3D" id="Curve3D_eiesv"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 31.942072, 12, 0, 0, -0.8846801, 0, 9.440156, 0.9206543, 0, -20.482147, 9.176411, 0, 21.434366),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_eiesv"]
+[sub_resource type="Curve3D" id="Curve3D_5y7ao"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 16.000002, 0, 0, 0, 0.46652767, 0, -4.9781766, 0.9206543, 0, -20.482147, -2.7712402, 0, 20.314697),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_5y7ao"]
+[sub_resource type="Curve3D" id="Curve3D_7hvei"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 8.43212, -11.999998, 0, 0, 6.2934136, 0, -2.7136495, -15.273621, 0, -19.4841, -18.515057, 0, 9.559159),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_7hvei"]
+[sub_resource type="Curve3D" id="Curve3D_i66y0"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 6.7633924, 11.999998, 0, 0, 23.091312, 0, -9.956715, -15.273621, 0, -19.4841, -9.012286, 0, 31.597702),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_i66y0"]
+[sub_resource type="Curve3D" id="Curve3D_2ay7t"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 7.5977564, 0, 0, 0, 14.692363, 0, -6.335182, -15.273621, 0, -19.4841, -13.763672, 0, 20.57843),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_2ay7t"]
+[sub_resource type="Curve3D" id="Curve3D_d5rj0"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 16.654081, -12, 0, 0, -9.3593235, 0, -9.543202, -19.766357, 0, -22.537354, -1.4036608, 0, 37.511135),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_d5rj0"]
+[sub_resource type="Curve3D" id="Curve3D_jp5v4"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 15.345941, 12, 0, 0, -3.5396667, 0, -3.609209, -19.766357, 0, -22.537354, 15.731175, 0, 20.706455),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_jp5v4"]
+[sub_resource type="Curve3D" id="Curve3D_ls3o1"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 16.000011, 0, 0, 0, -6.4494953, 0, -6.5762057, -19.766357, 0, -22.537354, 7.1637573, 0, 29.108795),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_ls3o1"]
+[sub_resource type="Curve3D" id="Curve3D_smo70"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 5.926729e-07, 0, 21.21259, -12.000002, 0, -3.3527613e-07, 3.4563496, 0, -1.8701571, -37.119568, 0, -8.330627, -13.398405, 0, 26.703957),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_smo70"]
+[sub_resource type="Curve3D" id="Curve3D_4hi6c"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 4.1544112e-07, 0, 14.869217, 12.000002, 0, 3.3527613e-07, 25.008858, 0, -13.531759, -37.119568, 0, -8.330627, -1.9772048, 0, 47.812157),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_4hi6c"]
+[sub_resource type="Curve3D" id="Curve3D_0yvxw"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 5.04057e-07, 0, 18.040903, 0, 0, 0, 14.232603, 0, -7.7009583, -37.119568, 0, -8.330627, -7.687805, 0, 37.258057),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_0yvxw"]
+[sub_resource type="Curve3D" id="Curve3D_v0061"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 11.027318, -12, 0, 0, -23.620975, 0, -23.728691, -29.038269, 0, -18.080322, -0.2569437, 0, 41.663803),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_v0061"]
+[sub_resource type="Curve3D" id="Curve3D_dpvtx"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 24.833218, 12, 0, 0, -1.6785339, 0, -1.6861883, -29.038269, 0, -18.080322, 16.752182, 0, 24.731888),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_dpvtx"]
+[sub_resource type="Curve3D" id="Curve3D_m8kd6"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 17.930267, 0, 0, 0, -12.649755, 0, -12.707439, -29.038269, 0, -18.080322, 8.24762, 0, 33.197845),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_m8kd6"]
+[sub_resource type="Curve3D" id="Curve3D_wktpq"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, -25.454878, -12, 0, 0, -0.6370961, 0, -58.315475, -19.741089, 0, -22.473755, -13.156876, 0, 30.021564),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_wktpq"]
+[sub_resource type="Curve3D" id="Curve3D_mmjc8"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 57.454884, 12, 0, 0, 0.2875171, 0, 26.317375, -19.741089, 0, -22.473755, 10.84169, 0, 29.75938),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_mmjc8"]
+[sub_resource type="Curve3D" id="Curve3D_xh2aq"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 16.000002, 0, 0, 0, -0.17478949, 0, -15.99905, -19.741089, 0, -22.473755, -1.1575928, 0, 29.890472),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_xh2aq"]
+[sub_resource type="Curve3D" id="Curve3D_660yo"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 10.937413, -12, 0, 0, -5.8667903, 0, -7.527119, -9.720825, 0, -22.689636, -1.9963646, 0, 30.904375),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_660yo"]
+[sub_resource type="Curve3D" id="Curve3D_4a300"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 7.0514045, 12, 0, 0, -3.3264427, 0, -4.2678413, -9.720825, 0, -22.689636, 16.93301, 0, 16.150434),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_4a300"]
+[sub_resource type="Curve3D" id="Curve3D_gyn7v"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 8.994409, 0, 0, 0, -4.5966167, 0, -5.8974805, -9.720825, 0, -22.689636, 7.4683228, 0, 23.527405),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_gyn7v"]
+[sub_resource type="Curve3D" id="Curve3D_pci2k"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 8.493381, -12.000002, 0, 0, 9.302959, 0, -1.3363287, -17.973328, 0, -33.409607, -34.268246, 0, 7.5887785),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_pci2k"]
+[sub_resource type="Curve3D" id="Curve3D_ij01o"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 36.997322, 12.000002, 0, 0, 5.544562, 0, -0.7964516, -17.973328, 0, -33.409607, -30.855778, 0, 31.344936),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_ij01o"]
+[sub_resource type="Curve3D" id="Curve3D_sfwv2"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 22.745352, 0, 0, 0, 7.4237604, 0, -1.0663902, -17.973328, 0, -33.409607, -32.56201, 0, 19.466858),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_sfwv2"]
+[sub_resource type="Curve3D" id="Curve3D_463k5"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11804199, -0.12613839, 15.999054, -12, 4.3655746e-11, 0, 0.65527344, 0.1812275, -1.1180725, 0.6867676, 0.1812275, 6.8818665, 12.73678, 0.23436365, 6.739138),
 "tilts": PackedFloat32Array(-0.007883737, 0.38368732)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_463k5"]
+[sub_resource type="Curve3D" id="Curve3D_iyu83"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11804199, -0.12613839, 15.999054, 12, -4.3655746e-11, 0, 0.65527344, 0.1812275, -1.1180725, 0.6867676, 0.1812275, 6.8818665, -11.2616825, 0.23650542, 7.010801),
-"tilts": PackedFloat32Array(-0.007883737, -0.18591078)
+"tilts": PackedFloat32Array(-0.007883737, -0.18591079)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_iyu83"]
+[sub_resource type="Curve3D" id="Curve3D_eqhci"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11804199, -0.12613839, 15.999054, 0, 0, 0, 0.65527344, 0.1812275, -1.1180725, 0.6867676, 0.1812275, 6.8818665, 0.7375488, 0.23543453, 6.8749695),
 "tilts": PackedFloat32Array(-0.007883737, 0.25729567)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_eqhci"]
+[sub_resource type="Curve3D" id="Curve3D_ajuuv"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 16.132545, -12.000002, 7.903834e-16, 0, 5.4285874e-06, 0.038746223, -4.914604, -0.19708252, -0.16562802, 26.712006, -11.999939, -0.16562791, 26.712694),
 "tilts": PackedFloat32Array(6.586528e-17, 2.8560976e-08)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_ajuuv"]
+[sub_resource type="Curve3D" id="Curve3D_r58c1"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 15.867474, 12.000002, -7.903834e-16, 0, 5.6168687e-06, 0.04009007, -5.0850587, -0.19708252, -0.16562802, 26.712006, 12.000061, -0.16562812, 26.71272),
 "tilts": PackedFloat32Array(6.586528e-17, 2.6038789e-08)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_r58c1"]
+[sub_resource type="Curve3D" id="Curve3D_wyckw"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 16.00001, 0, 0, 0, 5.5227283e-06, 0.039418146, -4.999831, -0.19708252, -0.16562802, 26.712006, 6.1035156e-05, -0.16562802, 26.712708),
 "tilts": PackedFloat32Array(6.586528e-17, 2.6894545e-08)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_wyckw"]
+[sub_resource type="Curve3D" id="Curve3D_jago7"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 2.527597e-07, -4.9367124e-08, 13.569934, -12.000002, 3.3527613e-08, -2.2351742e-07, 3.3825629, -0.050377667, 0.08252913, 26.593994, 0.074409604, 16.322662, -16.470987, 0.71601003, 14.308701),
 "tilts": PackedFloat32Array(7.793959e-09, -0.11134139)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_jago7"]
-_data = {
-"points": PackedVector3Array(0, 0, 0, 4.7732107e-07, -9.3226774e-08, 25.625984, 12.000002, -3.3527613e-08, 2.2351742e-07, 11.719773, -0.1745466, 0.28594375, 26.593994, 0.074409604, 16.322662, -17.046408, 1.3710165, 38.292862),
-"tilts": PackedFloat32Array(7.793959e-09, -0.016778847)
-}
-point_count = 2
-
 [sub_resource type="Curve3D" id="Curve3D_5ls82"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 3.6504036e-07, -7.1296945e-08, 19.597958, 0, 0, 0, 7.5511684, -0.11246214, 0.18423644, 26.593994, 0.074409604, 16.322662, -16.758698, 1.0435133, 26.300781),
-"tilts": PackedFloat32Array(7.793959e-09, -0.030049952)
+"points": PackedVector3Array(0, 0, 0, 4.7732107e-07, -9.322677e-08, 25.625982, 12.000002, -3.3527613e-08, 2.2351742e-07, 11.719773, -0.1745466, 0.28594375, 26.593994, 0.074409604, 16.322662, -17.046408, 1.3710165, 38.292862),
+"tilts": PackedFloat32Array(7.793959e-09, -0.016778862)
 }
 point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_okah6"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 3.6504036e-07, -7.1296945e-08, 19.597958, 0, 0, 0, 7.5511684, -0.11246214, 0.18423644, 26.593994, 0.074409604, 16.322662, -16.758698, 1.0435133, 26.300781),
+"tilts": PackedFloat32Array(7.793959e-09, -0.030049944)
+}
+point_count = 2
+
+[sub_resource type="Curve3D" id="Curve3D_rbh0l"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 28.94776, -12, 0, 0, -0.016768737, 0.03452766, -1.2818444, 50.114685, -0.09000921, 0.2796936, -12.474731, -0.27652568, 50.265144),
 "tilts": PackedFloat32Array(0, 0.015004844)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_rbh0l"]
-_data = {
-"points": PackedVector3Array(0, 0, 0, 0, 0, 29.24434, 12, 0, 0, -0.009787529, 0.020153007, -0.7481833, 50.114685, -0.09000921, 0.2796936, 11.520447, 0.09650725, 49.961296),
-"tilts": PackedFloat32Array(0, 0.015103085)
-}
-point_count = 2
-
 [sub_resource type="Curve3D" id="Curve3D_nal0m"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 0, 0, 29.09605, 0, 0, 0, -0.013278132, 0.027340334, -1.0150138, 50.114685, -0.09000921, 0.2796936, -0.47714233, -0.09000921, 50.11322),
-"tilts": PackedFloat32Array(0, 0.015053386)
+"points": PackedVector3Array(0, 0, 0, 0, 0, 29.24434, 12, 0, 0, -0.009787528, 0.020153005, -0.74818325, 50.114685, -0.09000921, 0.2796936, 11.520447, 0.09650725, 49.961296),
+"tilts": PackedFloat32Array(0, 0.015103116)
 }
 point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_mwlmy"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 29.09605, 0, 0, 0, -0.013278132, 0.027340334, -1.0150138, 50.114685, -0.09000921, 0.2796936, -0.47714233, -0.09000921, 50.11322),
+"tilts": PackedFloat32Array(0, 0.015053385)
+}
+point_count = 2
+
+[sub_resource type="Curve3D" id="Curve3D_vppsu"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 31.010399, -12, 0, 0, 2.3345995, 0, -32.175705, -67.216125, -7.6293945e-06, -0.9801636, -14.773712, -7.6293945e-06, 66.296326),
 "tilts": PackedFloat32Array(0, 1.2171887e-08)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_vppsu"]
+[sub_resource type="Curve3D" id="Curve3D_y6c4p"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 32.69608, 12, 0, 0, 2.275687, 0, -31.363764, -67.216125, -7.6293945e-06, -0.9801636, 9.163361, -7.6293945e-06, 68.03314),
 "tilts": PackedFloat32Array(0, 1.1608536e-08)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_y6c4p"]
+[sub_resource type="Curve3D" id="Curve3D_qukl4"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 31.85324, 0, 0, 0, 2.305143, 0, -31.769735, -67.216125, -7.6293945e-06, -0.9801636, -2.8051758, -7.6293945e-06, 67.164734),
 "tilts": PackedFloat32Array(0, 1.1930838e-08)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_qukl4"]
+[sub_resource type="Curve3D" id="Curve3D_05twp"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -8, 0, -0.0017700195, -12, -3.1019273e-25, 0, 6.8029175, 7.6293945e-06, -0.98443604, -25.038574, 7.6293945e-06, -0.1194458, 12.109456, 7.6293945e-06, -25.36715),
 "tilts": PackedFloat32Array(0, -4.530578e-06)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_05twp"]
+[sub_resource type="Curve3D" id="Curve3D_r4ej8"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -8, 0, -0.0017700195, 12, 3.1019273e-25, 0, 6.8029175, 7.6293945e-06, -0.98443604, -25.038574, 7.6293945e-06, -0.1194458, -11.881551, 7.6293945e-06, -24.710121),
 "tilts": PackedFloat32Array(0, -1.3594329e-06)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_r4ej8"]
+[sub_resource type="Curve3D" id="Curve3D_punjn"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -8, 0, -0.0017700195, 0, 0, 0, 6.8029175, 7.6293945e-06, -0.98443604, -25.038574, 7.6293945e-06, -0.1194458, 0.11395264, 7.6293945e-06, -25.038635),
 "tilts": PackedFloat32Array(0, -2.281481e-06)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_punjn"]
+[sub_resource type="Curve3D" id="Curve3D_wyqag"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11578369, 0, 4.998657, -12, 0, 0, 0.7178345, 0, -9.396362, -0.07171631, 0, 24.684082, -11.499939, 0, 24.6792),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_wyqag"]
+[sub_resource type="Curve3D" id="Curve3D_bop2h"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11578369, 0, 4.998657, 12, 0, 0, 0.7178345, 0, -9.396362, -0.07171631, 0, 24.684082, 12.500061, 0, 24.6792),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_bop2h"]
+[sub_resource type="Curve3D" id="Curve3D_022se"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -0.11578369, 0, 4.998657, 0, 0, 0, 0.7178345, 0, -9.396362, -0.07171631, 0, 24.684082, 0.50006104, 0, 24.6792),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_022se"]
+[sub_resource type="Curve3D" id="Curve3D_dhvic"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 4.7197003, -12, 0, 0, 27.995186, 0, -0.98766106, -57.078796, -0.00024414063, 13.786011, -57.167294, -0.00024414063, 3.1117086),
 "tilts": PackedFloat32Array(0, 1.2103818e-05)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_dhvic"]
+[sub_resource type="Curve3D" id="Curve3D_ruwj7"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 32.62003, 12, 0, 0, 25.766813, 0, -0.9090448, -57.078796, -0.00024414063, 13.786011, -56.32111, -0.00024414063, 27.096786),
-"tilts": PackedFloat32Array(0, 4.860527e-06)
+"tilts": PackedFloat32Array(0, 4.860984e-06)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_ruwj7"]
+[sub_resource type="Curve3D" id="Curve3D_44yky"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 18.669865, 0, 0, 0, 26.880999, 0, -0.94835293, -57.078796, -0.00024414063, 13.786011, -56.7442, -0.00024414063, 15.104248),
 "tilts": PackedFloat32Array(0, 6.734742e-06)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_44yky"]
+[sub_resource type="Curve3D" id="Curve3D_cad8g"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -4.1820505e-07, -8.712605e-09, 9.355087, -12, 1.6763806e-08, 5.364418e-07, -3.7633698, -0.18538216, -16.368944, -0.75213623, -1.1040066, 27.69635, -5.5688114, -1.0307107, 29.722975),
-"tilts": PackedFloat32Array(2.3283067e-09, 0.0073268116)
+"tilts": PackedFloat32Array(2.3283067e-09, 0.00732682)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_cad8g"]
+[sub_resource type="Curve3D" id="Curve3D_8dg3l"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -4.8356654e-08, -1.0074303e-09, 1.0817199, 12, -1.6763806e-08, -5.364418e-07, -5.1086736, -0.25165132, -22.220402, -0.75213623, -1.1040066, 27.69635, 17.815516, -0.5694366, 24.341478),
 "tilts": PackedFloat32Array(2.328307e-09, -0.0029715886)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_8dg3l"]
+[sub_resource type="Curve3D" id="Curve3D_58ha2"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -2.3328084e-07, -4.8600177e-09, 5.218404, 0, 0, 0, -4.436022, -0.21851674, -19.294672, -0.75213623, -1.1040066, 27.69635, 6.123352, -0.8000736, 27.032227),
 "tilts": PackedFloat32Array(2.3283067e-09, 0.006194006)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_58ha2"]
-_data = {
-"points": PackedVector3Array(0, 0, 0, -1.0495243e-06, -3.2797633e-08, 17.608097, -12, 0, 7.1525574e-07, -5.319589, -0.11297146, -9.214865, -23.731628, -6.645993, 47.955627, 6.321026, -6.1794567, 56.9004),
-"tilts": PackedFloat32Array(3.7252903e-09, -0.034298744)
-}
-point_count = 2
-
 [sub_resource type="Curve3D" id="Curve3D_cdtsq"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, -7.213675e-07, -2.2542734e-08, 12.10254, 12, 0, -7.1525574e-07, -3.8753722, -0.082300805, -6.713118, -23.731628, -6.645993, 47.955627, 27.10445, -5.979101, 44.900017),
-"tilts": PackedFloat32Array(3.7252899e-09, -0.040770363)
+"points": PackedVector3Array(0, 0, 0, -1.0495243e-06, -3.2797633e-08, 17.608097, -12, 0, 7.1525574e-07, -5.319589, -0.11297146, -9.214865, -23.731628, -6.645993, 47.955627, 6.321026, -6.1794567, 56.9004),
+"tilts": PackedFloat32Array(3.7252903e-09, -0.034298748)
 }
 point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_j3ken"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, -8.854459e-07, -2.7670184e-08, 14.855319, 0, 0, 0, -4.5974803, -0.09763613, -7.963991, -23.731628, -6.645993, 47.955627, 16.712738, -6.079279, 50.900208),
-"tilts": PackedFloat32Array(3.7252903e-09, -0.03726352)
+"points": PackedVector3Array(0, 0, 0, -7.213675e-07, -2.2542734e-08, 12.10254, 12, 0, -7.1525574e-07, -3.8753724, -0.08230081, -6.7131186, -23.731628, -6.645993, 47.955627, 27.10445, -5.979101, 44.900017),
+"tilts": PackedFloat32Array(3.7252899e-09, -0.04077035)
 }
 point_count = 2
 
 [sub_resource type="Curve3D" id="Curve3D_s5tfl"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, -8.854459e-07, -2.7670184e-08, 14.855319, 0, 0, 0, -4.5974803, -0.09763613, -7.963991, -23.731628, -6.645993, 47.955627, 16.712738, -6.079279, 50.900208),
+"tilts": PackedFloat32Array(3.7252903e-09, -0.037263535)
+}
+point_count = 2
+
+[sub_resource type="Curve3D" id="Curve3D_1nt7f"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 11.26405, -12, 2.6645353e-15, 0, -13.2831135, 4.3842842e-08, -20.06907, -33.695984, 0, 14.713196, -2.750204, 0.40945268, 42.66542),
 "tilts": PackedFloat32Array(2.220446e-16, -0.027724633)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_1nt7f"]
+[sub_resource type="Curve3D" id="Curve3D_rhwn7"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 15.412031, 12, -2.6645353e-15, 0, -6.662755, 2.199139e-08, -10.066564, -33.695984, 0, 14.713196, 17.251547, -0.40945077, 29.426865),
 "tilts": PackedFloat32Array(2.220446e-16, -0.0448057)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_rhwn7"]
+[sub_resource type="Curve3D" id="Curve3D_mmlbl"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 13.33804, 0, 0, 0, -9.972934, 3.2917114e-08, -15.067817, -33.695984, 0, 14.713196, 7.2506714, 9.536743e-07, 36.046143),
 "tilts": PackedFloat32Array(2.220446e-16, -0.034127582)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_mmlbl"]
+[sub_resource type="Curve3D" id="Curve3D_la3vg"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 2.562258e-07, 0, 4.298755, -12.000002, -2.2351742e-08, -7.1525574e-07, 3.564316, -0.11404709, -3.8943985, -21.453491, 0, 16.677307, -16.711414, 0.534715, 17.90451),
 "tilts": PackedFloat32Array(-1.8626454e-09, -0.04455372)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_la3vg"]
+[sub_resource type="Curve3D" id="Curve3D_g4kdb"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 3.4091966e-07, 0, 5.719682, 12.000002, 2.2351742e-08, 7.1525574e-07, 8.781821, -0.2809911, -9.595083, -21.453491, 0, 16.677307, 0.97966385, -0.03134471, 34.1127),
 "tilts": PackedFloat32Array(-1.8626454e-09, -0.025401322)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_g4kdb"]
+[sub_resource type="Curve3D" id="Curve3D_ow6x7"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 2.9857273e-07, 0, 5.0092187, 0, 0, 0, 6.1730685, -0.1975191, -6.744741, -21.453491, 0, 16.677307, -7.8658752, 0.25168514, 26.008606),
 "tilts": PackedFloat32Array(-1.8626454e-09, -0.03198602)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_ow6x7"]
+[sub_resource type="Curve3D" id="Curve3D_0c48d"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 5.0734236e-08, 0, 3.4047163, -11.999996, 8.381903e-08, -1.7881393e-07, 1.7594445, 0.21260838, -2.6013675, -16.406311, 6.000122, 38.57184, -25.261906, 3.0847573, 32.72796),
 "tilts": PackedFloat32Array(6.98492e-09, -0.08187109)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_0c48d"]
+[sub_resource type="Curve3D" id="Curve3D_c0ooj"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 1.2577493e-07, 0, 8.440611, 11.999996, -8.381903e-08, 1.7881393e-07, 3.3948226, 0.4102248, -5.0193005, -16.406311, 6.000122, 38.57184, -5.36224, 1.758825, 46.078804),
-"tilts": PackedFloat32Array(6.98492e-09, -0.06554856)
+"points": PackedVector3Array(0, 0, 0, 1.2577495e-07, 0, 8.440612, 11.999996, -8.381903e-08, 1.7881393e-07, 3.3948226, 0.4102248, -5.0193005, -16.406311, 6.000122, 38.57184, -5.36224, 1.758825, 46.078804),
+"tilts": PackedFloat32Array(6.98492e-09, -0.06554859)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_c0ooj"]
+[sub_resource type="Curve3D" id="Curve3D_pdy6h"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 8.825459e-08, 0, 5.9226637, 0, 0, 0, 2.5771337, 0.3114166, -3.810334, -16.406311, 6.000122, 38.57184, -15.312073, 2.421791, 39.40338),
 "tilts": PackedFloat32Array(6.98492e-09, -0.07281607)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_pdy6h"]
+[sub_resource type="Curve3D" id="Curve3D_thlma"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 5.2937226, -12, 0, 0, 0.217638, -0.8714205, -8.279898, 0.025024414, 1.75, 31.502075, -11.964718, 1.3348355, 31.230618),
 "tilts": PackedFloat32Array(0, 0.03245914)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_thlma"]
+[sub_resource type="Curve3D" id="Curve3D_2okop"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 4.7062774, 12, 0, 0, 0.23981327, -0.96021, -9.123541, 0.025024414, 1.75, 31.502075, 12.014767, 2.1651645, 31.773533),
 "tilts": PackedFloat32Array(0, 0.031993154)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_2okop"]
+[sub_resource type="Curve3D" id="Curve3D_wtb5w"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 5, 0, 0, 0, 0.22872563, -0.91581523, -8.701719, 0.025024414, 1.75, 31.502075, 0.025024414, 1.75, 31.502075),
 "tilts": PackedFloat32Array(0, 0.03222478)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_wtb5w"]
+[sub_resource type="Curve3D" id="Curve3D_amwrg"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 11.714025, -12.000002, 0, 0, 0.07225293, 0, -8.851563, -23.014465, 0.25012016, -0.04333496, -12.321501, 0.25012016, 22.914257),
 "tilts": PackedFloat32Array(0, -0.00012105423)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_amwrg"]
+[sub_resource type="Curve3D" id="Curve3D_crtc4"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 13.486921, 12.000002, 0, 0, 0.05834643, 0, -7.147906, -23.014465, 0.25012016, -0.04333496, 11.677702, 0.25012016, 23.110157),
 "tilts": PackedFloat32Array(0, -0.0001228862)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_crtc4"]
+[sub_resource type="Curve3D" id="Curve3D_8ki22"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 12.600473, 0, 0, 0, 0.06529968, 0, -7.999735, -23.014465, 0.25012016, -0.04333496, -0.3218994, 0.25012016, 23.012207),
 "tilts": PackedFloat32Array(0, -0.00012164235)
@@ -718,84 +719,84 @@ point_count = 2
 [sub_resource type="Resource" id="Resource_h88f7"]
 script = ExtResource("49_y7kpu")
 
-[sub_resource type="Curve3D" id="Curve3D_8ki22"]
+[sub_resource type="Curve3D" id="Curve3D_wybhb"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 5.0356207, -12, 0, 0, 1.1318064e-13, 0, -7.9643793, 0.93640137, -0.00012207031, 170.72806, -11.063599, -0.00012207031, 170.72806),
 "tilts": PackedFloat32Array(0, 7.683878e-14)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_wybhb"]
+[sub_resource type="Curve3D" id="Curve3D_ellli"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 4.9643793, 12, 0, 0, 1.1419304e-13, 0, -8.035621, 0.93640137, -0.00012207031, 170.72806, 12.936401, -0.00012207031, 170.72806),
 "tilts": PackedFloat32Array(0, 1.7759728e-13)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_ellli"]
+[sub_resource type="Curve3D" id="Curve3D_bqfqq"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 5, 0, 0, 0, 1.1368684e-13, 0, -8, 0.93640137, -0.00012207031, 170.72806, 0.93640137, -0.00012207031, 170.72806),
 "tilts": PackedFloat32Array(0, 5.8161917e-13)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_bqfqq"]
+[sub_resource type="Curve3D" id="Curve3D_fimhw"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 19.55136, -12.000002, 0, 0, -36.8639, 0, -0.5723612, -48.86084, 0, 19.155685, 18.208544, 0, 61.150898),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_fimhw"]
+[sub_resource type="Curve3D" id="Curve3D_ekkip"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 21.485327, 12.000002, 0, 0, -9.099925, 0, -0.14128849, -48.86084, 0, 19.155685, 18.58113, 0, 37.15379),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_ekkip"]
+[sub_resource type="Curve3D" id="Curve3D_pxn0e"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 20.518343, 0, 0, 0, -22.98191, 0, -0.35682485, -48.86084, 0, 19.155685, 18.394836, 0, 49.152344),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_pxn0e"]
+[sub_resource type="Curve3D" id="Curve3D_ugit3"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 0.7049773, -12.000002, 0, 0, -1.2884146, 0, -20.135296, -81.73981, 0, -14.562881, -22.56868, 0, 83.11468),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_ugit3"]
+[sub_resource type="Curve3D" id="Curve3D_oq14l"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 2.969487, 12.000002, 0, 0, -1.094243, 0, -17.100792, -81.73981, 0, -14.562881, 1.3823395, 0, 81.5821),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_oq14l"]
+[sub_resource type="Curve3D" id="Curve3D_va7c2"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 1.8372322, 0, 0, 0, -1.1913289, 0, -18.618044, -81.73981, 0, -14.562881, -10.59317, 0, 82.34839),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_va7c2"]
+[sub_resource type="Curve3D" id="Curve3D_5okja"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 8.447406, -11.999999, 0, 0, 4.837984, 0, -1.1412662, -33.226196, 0, 11.226105, -31.584246, 0, 8.292793),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_5okja"]
+[sub_resource type="Curve3D" id="Curve3D_bfdfn"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 34.648952, 11.999999, 0, 0, 1.0764918, 0, -0.25394127, -33.226196, 0, 11.226105, -26.073957, 0, 31.651665),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_bfdfn"]
+[sub_resource type="Curve3D" id="Curve3D_p1fwp"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 21.54818, 0, 0, 0, 2.9572377, 0, -0.6976037, -33.226196, 0, 11.226105, -28.829102, 0, 19.972229),
 "tilts": PackedFloat32Array(0, 0)
@@ -823,7 +824,7 @@ _data = {
 }
 point_count = 2
 
-[sub_resource type="Curve3D" id="Curve3D_p1fwp"]
+[sub_resource type="Curve3D" id="Curve3D_71wu4"]
 resource_local_to_scene = true
 closed = true
 _data = {
@@ -840,7 +841,7 @@ _data = {
 }
 point_count = 9
 
-[sub_resource type="Curve3D" id="Curve3D_71wu4"]
+[sub_resource type="Curve3D" id="Curve3D_kk4sc"]
 resource_local_to_scene = true
 _data = {
 "points": PackedVector3Array(-8.92865, 0, 0.52874756, 8.92865, 0, -0.52874756, 34, 0, -4.745, -21.54486, 0, 22.016861, 31.014343, 0, -22.431305, 128.68286, -0.00012207031, -19.054504, -9.631897, 0, 9.272202, 21.102783, 0, -6.632431, 145.2572, 0, -107.28392, -46.555115, 0, 0.6806793, 40.686005, 0, -2.6257935, 245.79895, -0.00012207031, -62.154755, -9.96225, 0, 12.617401, 2.703827, 0, -12.928055, 298.59647, -0.00012207031, -171.1063, -2.5209656, 0, 28.45018, 2.5209656, 0, -28.45018, 355.38525, -0.00012207031, -252.50856, 23.460876, 0, 2.9641724, -23.460876, 0, -2.9641724, 272.9001, -0.00012207031, -312.0325, 31.641846, 0, -0.7863159, -31.641846, 0, 0.7863159, 27.657104, -0.00012207031, -321.20844, 0, 0, 0, 0, 0, 0, -39.384277, 0, -275.5528, 0, 0, 0, -9.48407, 0.003791809, 38.231415, -54.979187, 8.794067, -246.3847, -14.941711, 0, -14.931335, 14.941711, 0, 14.931335, -32.368835, 4, -156.4422, -4.3065186, 0, -7.504593, 4.3065186, 0, 7.504593, 59.704956, -0.00012207031, -111.84172, 15.05426, 0, 2.2224426, -15.05426, 0, -2.2224426, 51.810608, -0.00012207031, -83.06822, 21.326172, 0, 14.021759, -27.659912, 0, -16.197403, 9.701782, -0.00012207031, -121.675674, 9.928467, 0, -15.177902, -53.569458, 0, 85.03296, -68.497314, -0.00012207031, -112.512955, -47.68042, 0, -7.2508087, 0, 0, 0, -24.953064, 0, -7.7634125),
@@ -1837,1061 +1838,1048 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -136
 [node name="Spawn4" type="Marker3D" parent="." unique_id=4523445]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -134.30089, -5.722046e-06, 50.575108)
 
-[node name="StuntRace" parent="." unique_id=459761741 node_paths=PackedStringArray("gas_station") groups=["EditorHideable"] instance=ExtResource("22_eair3")]
+[node name="EventStartCircle1" parent="." unique_id=459761741 node_paths=PackedStringArray("gas_station", "props", "spawns", "checkpoints") groups=["EditorHideable"] instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -150, 0, 59)
 visible = false
 gas_station = NodePath("../GasStations/StuntRace01GasStation")
+props = NodePath("Props")
+spawns = NodePath("Spawns")
+checkpoints = NodePath("Checkpoints")
 
-[node name="Route" type="Node3D" parent="StuntRace" unique_id=1981174591]
-top_level = true
-script = ExtResource("mig_route")
+[node name="Props" type="Node3D" parent="EventStartCircle1" unique_id=1093725110]
 
-[node name="RaceGridSpot1" type="Marker3D" parent="StuntRace/Route" unique_id=184031090]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 109.75001, 8.738047, 203)
+[node name="CrashLaunchProps" type="Node3D" parent="EventStartCircle1/Props" unique_id=10929451]
 
-[node name="RaceGridSpot2" type="Marker3D" parent="StuntRace/Route" unique_id=2131537679]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 114.00001, 8.737827, 203)
+[node name="LaunchFenceWall" parent="EventStartCircle1/Props/CrashLaunchProps" unique_id=1485126779 instance=ExtResource("18_dc022")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 0.37499797, -63)
+collision_layer = 3
+width = 36.0
+height = 0.75
+depth = 0.1
+color_preset = 6
+neon_edges = true
 
-[node name="RaceGridSpot3" type="Marker3D" parent="StuntRace/Route" unique_id=220232422]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 118.00001, 8.737623, 203)
+[node name="RaceProps" type="Node3D" parent="EventStartCircle1/Props" unique_id=2107813837]
 
-[node name="RaceGridSpot4" type="Marker3D" parent="StuntRace/Route" unique_id=687594107]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 111.75001, 8.698217, 206.75)
+[node name="ArrowWall2" parent="EventStartCircle1/Props/RaceProps" unique_id=1948640552 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711378e-08, -0.7071067, 0.70710677, 1, -3.0908613e-08, 3.0908623e-08, 0, 0.70710677, 0.7071067, -16.697449, 5.2500005, 338.47864)
 
-[node name="RaceGridSpot5" type="Marker3D" parent="StuntRace/Route" unique_id=1295064058]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 116.00001, 8.697976, 206.75)
+[node name="ArrowWall14" parent="EventStartCircle1/Props/RaceProps" unique_id=1157836351 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711378e-08, -0.8660253, 0.5, 1, -3.7855166e-08, 2.1855701e-08, 0, 0.5, 0.8660253, -56.516037, 5.249999, 367.1597)
+height = 64.0
 
-[node name="RaceGridSpot6" type="Marker3D" parent="StuntRace/Route" unique_id=941931326]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 113.75001, 8.661385, 210)
+[node name="ArrowWall8" parent="EventStartCircle1/Props/RaceProps" unique_id=666559956 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711374e-08, 5.9604645e-08, -1, 1, -5.3290705e-15, -4.3711367e-08, 0, -1, -5.9604645e-08, 216.53217, 13.678643, 107.05058)
+height = 120.0
 
-[node name="RaceGridSpot7" type="Marker3D" parent="StuntRace/Route" unique_id=119741231]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 109.75001, 8.661641, 210)
+[node name="ArrowWall9" parent="EventStartCircle1/Props/RaceProps" unique_id=446945008 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371137e-08, -1, -1.5893256e-08, 1, -4.371138e-08, 4.5000264e-15, 0, -1.5893256e-08, 1, 260.53217, 9.159892, -62.449417)
 
-[node name="RaceGridSpot8" type="Marker3D" parent="StuntRace/Route" unique_id=1719694009]
-transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 118.00001, 8.661114, 210)
+[node name="ArrowWall10" parent="EventStartCircle1/Props/RaceProps" unique_id=173354119 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371137e-08, -1, -1.5893256e-08, 1, -4.371138e-08, 4.5000264e-15, 0, -1.5893256e-08, 1, 135.03217, 6.78174, -61.449417)
 
-[node name="CheckpointMarker1" parent="StuntRace/Route" unique_id=1048335829 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.5, 4.2673445, 16)
+[node name="ArrowWall11" parent="EventStartCircle1/Props/RaceProps" unique_id=884168624 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371137e-08, -1, -1.5893256e-08, 1, -4.371138e-08, 4.5000264e-15, 0, -1.5893256e-08, 1, 135.03217, 6.78174, -24.449417)
+
+[node name="ArrowWall12" parent="EventStartCircle1/Props/RaceProps" unique_id=421925773 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711367e-08, 2.7818132e-08, 1, 1, -1.1352857e-14, 4.3711374e-08, 0, 1, -2.7818132e-08, -7.9678345, 4.9999976, 84.55058)
+
+[node name="ArrowWall13" parent="EventStartCircle1/Props/RaceProps" unique_id=1562302330 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711367e-08, 2.7818132e-08, 1, 1, -1.1352857e-14, 4.3711374e-08, 0, 1, -2.7818132e-08, -5.4678345, 4.9999976, 293.5506)
+height = 64.0
+
+[node name="ArrowWall3" parent="EventStartCircle1/Props/RaceProps" unique_id=1003909341 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711374e-08, 5.9604645e-08, 1, 1, -1.7763568e-15, 4.3711392e-08, 0, 1, -5.9604645e-08, -201.87894, 5.250122, 402.38425)
+
+[node name="ArrowWall15" parent="EventStartCircle1/Props/RaceProps" unique_id=289439854 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371137e-08, -1, 1.5893256e-08, 1, -4.3711378e-08, 2.0368969e-14, 0, 1.5893256e-08, 1, -250.87894, 5.2501197, 486.88428)
+
+[node name="ArrowWall16" parent="EventStartCircle1/Props/RaceProps" unique_id=1141342731 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371137e-08, -0.8660254, -0.5, 1, -3.7855163e-08, -2.1855666e-08, 0, -0.5, 0.8660254, -371.06195, 5.2501144, 478.40704)
+height = 30.0
+
+[node name="ArrowWall18" parent="EventStartCircle1/Props/RaceProps" unique_id=1555154824 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371137e-08, -0.95409244, 0.29951233, 1, -4.170469e-08, 1.3092114e-08, 0, 0.29951233, 0.95409244, -474.19537, 5.25011, 421.12396)
+
+[node name="ArrowWall19" parent="EventStartCircle1/Props/RaceProps" unique_id=1972442618 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -634.0772, 5.262818, 424.01154)
+
+[node name="ArrowWall20" parent="EventStartCircle1/Props/RaceProps" unique_id=1072716656 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -761.5772, -2.2371876, 424.01154)
+height = 30.0
+
+[node name="ArrowWall5" parent="EventStartCircle1/Props/RaceProps" unique_id=1593677337 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711385e-08, 4.371139e-08, 1, 1, 0, 4.371139e-08, 0, 1, -4.371139e-08, -44.5, 4.999997, -37)
+height = 45.0
+
+[node name="ArrowWall4" parent="EventStartCircle1/Props/RaceProps" unique_id=658731916 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711374e-08, -0.5000001, -0.8660253, 1, -2.1855696e-08, -3.785514e-08, 0, -0.8660253, 0.5000001, -390.25812, 5.2499857, 460.0769)
+height = 26.0
+
+[node name="ArrowWall17" parent="EventStartCircle1/Props/RaceProps" unique_id=1336520665 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711374e-08, -1, 1.7881393e-07, 1, -4.3711378e-08, 2.3092639e-14, 0, 1.7881393e-07, 1, -383.12195, 5.249986, 390.2577)
+height = 55.0
+
+[node name="ArrowWall6" parent="EventStartCircle1/Props/RaceProps" unique_id=214698557 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711374e-08, 1, -5.9604645e-08, 1, 4.3711367e-08, 1.2434498e-14, 0, -5.9604645e-08, -1, -793.58105, 5.2552037, 452.3767)
+
+[node name="ArrowWall7" parent="EventStartCircle1/Props/RaceProps" unique_id=477506796 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371137e-08, 1.5893256e-08, 1, 1, -4.5000264e-15, 4.371139e-08, 0, 1, -1.5893256e-08, -813.58105, 5.2552032, 405.3767)
+
+[node name="Ramp8" parent="EventStartCircle1/Props/RaceProps" unique_id=1633736762 instance=ExtResource("6_w1aki")]
+transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, -544.99994, 0, 415.99997)
+width = 16
+
+[node name="Ramp9" parent="EventStartCircle1/Props/RaceProps" unique_id=2096296363 instance=ExtResource("6_w1aki")]
+transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, -544.99994, 0, 395.79996)
+width = 16
+
+[node name="TrickBattleProps" type="Node3D" parent="EventStartCircle1/Props" unique_id=2021901003]
+
+[node name="TrickBattleArena" parent="EventStartCircle1/Props/TrickBattleProps" unique_id=1920932027 instance=ExtResource("16_dhvxm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.1, -155)
+
+[node name="Spawns" type="Node3D" parent="EventStartCircle1" unique_id=760860456]
+
+[node name="CrashLaunchSpawns" type="Node3D" parent="EventStartCircle1/Spawns" unique_id=1943584799]
+
+[node name="Spawn1" type="Marker3D" parent="EventStartCircle1/Spawns/CrashLaunchSpawns" unique_id=196907988]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0.25, 100)
+
+[node name="Spawn2" type="Marker3D" parent="EventStartCircle1/Spawns/CrashLaunchSpawns" unique_id=1669180241]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.25, 100)
+
+[node name="Spawn3" type="Marker3D" parent="EventStartCircle1/Spawns/CrashLaunchSpawns" unique_id=98957652]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.25, 100)
+
+[node name="Spawn4" type="Marker3D" parent="EventStartCircle1/Spawns/CrashLaunchSpawns" unique_id=1960332276]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 0.25, 100)
+
+[node name="Spawn5" type="Marker3D" parent="EventStartCircle1/Spawns/CrashLaunchSpawns" unique_id=1294986613]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 0.25, 100)
+
+[node name="Spawn6" type="Marker3D" parent="EventStartCircle1/Spawns/CrashLaunchSpawns" unique_id=754740344]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 0.25, 100)
+
+[node name="Spawn7" type="Marker3D" parent="EventStartCircle1/Spawns/CrashLaunchSpawns" unique_id=1494297431]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 0.25, 110.1)
+
+[node name="Spawn8" type="Marker3D" parent="EventStartCircle1/Spawns/CrashLaunchSpawns" unique_id=849936389]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.25, 110.1)
+
+[node name="TrickBattleSpawns" type="Node3D" parent="EventStartCircle1/Spawns" unique_id=1235134733]
+
+[node name="Spawn1" type="Marker3D" parent="EventStartCircle1/Spawns/TrickBattleSpawns" unique_id=1159102219]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -87, 0.25, -145)
+
+[node name="Spawn2" type="Marker3D" parent="EventStartCircle1/Spawns/TrickBattleSpawns" unique_id=555276114]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -87, 0.25, -149)
+
+[node name="Spawn3" type="Marker3D" parent="EventStartCircle1/Spawns/TrickBattleSpawns" unique_id=1385962260]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -87, 0.25, -153)
+
+[node name="Spawn4" type="Marker3D" parent="EventStartCircle1/Spawns/TrickBattleSpawns" unique_id=1350243029]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -87, 0.25, -157)
+
+[node name="Spawn5" type="Marker3D" parent="EventStartCircle1/Spawns/TrickBattleSpawns" unique_id=1323523042]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 74, 0.25, -151)
+
+[node name="Spawn6" type="Marker3D" parent="EventStartCircle1/Spawns/TrickBattleSpawns" unique_id=322906002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0.25, -151)
+
+[node name="Spawn7" type="Marker3D" parent="EventStartCircle1/Spawns/TrickBattleSpawns" unique_id=903604537]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 66, 0.25, -151)
+
+[node name="Spawn8" type="Marker3D" parent="EventStartCircle1/Spawns/TrickBattleSpawns" unique_id=1822443067]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 62, 0.25, -151)
+
+[node name="RaceSpawns" type="Node3D" parent="EventStartCircle1/Spawns" unique_id=1744865833]
+
+[node name="RaceGridSpot1" type="Marker3D" parent="EventStartCircle1/Spawns/RaceSpawns" unique_id=184031090]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 259.75, 8.738047, 144)
+
+[node name="RaceGridSpot2" type="Marker3D" parent="EventStartCircle1/Spawns/RaceSpawns" unique_id=2131537679]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 264, 8.737827, 144)
+
+[node name="RaceGridSpot3" type="Marker3D" parent="EventStartCircle1/Spawns/RaceSpawns" unique_id=220232422]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 268, 8.737623, 144)
+
+[node name="RaceGridSpot4" type="Marker3D" parent="EventStartCircle1/Spawns/RaceSpawns" unique_id=687594107]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 261.75, 8.698217, 147.75)
+
+[node name="RaceGridSpot5" type="Marker3D" parent="EventStartCircle1/Spawns/RaceSpawns" unique_id=1295064058]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 266, 8.697976, 147.75)
+
+[node name="RaceGridSpot6" type="Marker3D" parent="EventStartCircle1/Spawns/RaceSpawns" unique_id=941931326]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 263.75, 8.661385, 151)
+
+[node name="RaceGridSpot7" type="Marker3D" parent="EventStartCircle1/Spawns/RaceSpawns" unique_id=119741231]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 259.75, 8.661641, 151)
+
+[node name="RaceGridSpot8" type="Marker3D" parent="EventStartCircle1/Spawns/RaceSpawns" unique_id=1719694009]
+transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 268, 8.661114, 151)
+
+[node name="Checkpoints" type="Node3D" parent="EventStartCircle1" unique_id=1554112175]
+
+[node name="RaceCheckpoints" type="Node3D" parent="EventStartCircle1/Checkpoints" unique_id=1577481590]
+
+[node name="CheckpointMarker1" parent="EventStartCircle1/Checkpoints/RaceCheckpoints" unique_id=1048335829 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 159.5, 4.2673445, -43)
 width = 32.0
 
-[node name="CheckpointMarker2" parent="StuntRace/Route" unique_id=985843259 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -177, 0.24999905, 122.00001)
+[node name="CheckpointMarker2" parent="EventStartCircle1/Checkpoints/RaceCheckpoints" unique_id=985843259 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -27, 0.24999905, 63.000008)
 width = 32.0
 
-[node name="CheckpointMarker3" parent="StuntRace/Route" unique_id=437231926 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.7071068, 0, 0.7071067, 0, 1, 0, -0.7071067, 0, -0.7071068, -235.2894, 0.25012207, 409.61603)
+[node name="CheckpointMarker3" parent="EventStartCircle1/Checkpoints/RaceCheckpoints" unique_id=437231926 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-0.7071068, 0, 0.7071067, 0, 1, 0, -0.7071067, 0, -0.7071068, -85.2894, 0.25012207, 350.61603)
 width = 32.0
 
-[node name="CheckpointMarker4" parent="StuntRace/Route" unique_id=448904890 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -333.99997, 0.2500236, 482.5)
+[node name="CheckpointMarker4" parent="EventStartCircle1/Checkpoints/RaceCheckpoints" unique_id=448904890 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -183.99997, 0.2500236, 423.5)
 width = 34.0
 
-[node name="CheckpointMarker5" parent="StuntRace/Route" unique_id=2128726192 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -528, 0.50000143, 507.5)
+[node name="CheckpointMarker5" parent="EventStartCircle1/Checkpoints/RaceCheckpoints" unique_id=2128726192 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -378, 0.50000143, 448.5)
 width = 32.0
 
-[node name="CheckpointMarker6" parent="StuntRace/Route" unique_id=366678913 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -684.5, 0.50000143, 462)
+[node name="CheckpointMarker6" parent="EventStartCircle1/Checkpoints/RaceCheckpoints" unique_id=366678913 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -534.5, 0.50000143, 403)
 width = 32.0
 
-[node name="CheckpointMarker7" parent="StuntRace/Route" unique_id=163288397 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -875, 0.29067922, 462)
+[node name="CheckpointMarker7" parent="EventStartCircle1/Checkpoints/RaceCheckpoints" unique_id=163288397 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -725, 0.29067922, 403)
 width = 32.0
 
-[node name="CheckpointMarker8" parent="StuntRace/Route" unique_id=563312185 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -945, 0.29067922, 480.5)
+[node name="CheckpointMarker8" parent="EventStartCircle1/Checkpoints/RaceCheckpoints" unique_id=563312185 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -795, 0.29067922, 421.5)
 width = 32.0
 
-[node name="CheckpointMarker9" parent="StuntRace/Route" unique_id=190446377 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -926.5, 0.29067922, 494)
+[node name="CheckpointMarker9" parent="EventStartCircle1/Checkpoints/RaceCheckpoints" unique_id=190446377 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -776.5, 0.29067922, 435)
 
-[node name="Ramp8" parent="StuntRace/Route" unique_id=1633736762 instance=ExtResource("6_w1aki")]
-transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, -694.99994, 0, 474.99997)
-width = 16
+[node name="StartZone" parent="EventStartCircle1" unique_id=55016785 instance=ExtResource("99_startzone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 262.4, 8.799999, 126.229996)
 
-[node name="Ramp9" parent="StuntRace/Route" unique_id=2096296363 instance=ExtResource("6_w1aki")]
-transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, -694.99994, 0, 454.79996)
-width = 16
+[node name="StartZoneTrickBattle" parent="EventStartCircle1" unique_id=2376948 instance=ExtResource("99_startzone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.5, 0.2, -98.100006)
 
-[node name="PickupSpawner1" parent="StuntRace/Route" unique_id=1012215384 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 5.867197, 15.5)
+[node name="StuntRace" type="Node3D" parent="EventStartCircle1" unique_id=286026007 node_paths=PackedStringArray("props", "spawn", "checkpoints", "pickups", "start_zone")]
+script = ExtResource("mig_event")
+definition = SubResource("Resource_pls18")
+props = [NodePath("../Props/RaceProps")]
+spawn = NodePath("../Spawns/RaceSpawns")
+checkpoints = NodePath("../Checkpoints/RaceCheckpoints")
+pickups = NodePath("Pickups")
+start_zone = NodePath("../StartZone")
+
+[node name="Pickups" type="Node3D" parent="EventStartCircle1/StuntRace" unique_id=1741631173]
+
+[node name="PickupSpawner1" parent="EventStartCircle1/StuntRace/Pickups" unique_id=1012215384 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 164, 5.867197, -43.5)
 count = 6
 spacing = 4.0
 
-[node name="PickupSpawner7" parent="StuntRace/Route" unique_id=1098221561 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -205.50075, 6.25, 372.1206)
+[node name="PickupSpawner7" parent="EventStartCircle1/StuntRace/Pickups" unique_id=1098221561 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -55.500748, 6.25, 313.1206)
 count = 3
 spacing = 4.59
 
-[node name="PickupSpawner8" parent="StuntRace/Route" unique_id=1463645906 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.771698, 0, 0.635989, 0, 1, 0, -0.635989, 0, 0.771698, -179.9142, 1.565304, 370.0858)
+[node name="PickupSpawner8" parent="EventStartCircle1/StuntRace/Pickups" unique_id=1463645906 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(0.771698, 0, 0.635989, 0, 1, 0, -0.635989, 0, 0.771698, -29.9142, 1.565304, 311.0858)
 count = 2
 spacing = 7.37
 
-[node name="PickupSpawner9" parent="StuntRace/Route" unique_id=712062457 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -194.41422, 1.5, 361.5858)
+[node name="PickupSpawner9" parent="EventStartCircle1/StuntRace/Pickups" unique_id=712062457 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -44.414215, 1.5, 302.5858)
 count = 3
 spacing = 4.0
 
-[node name="PickupSpawner13" parent="StuntRace/Route" unique_id=277724163 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -232.67157, 1.595152, 406.32843)
+[node name="PickupSpawner13" parent="EventStartCircle1/StuntRace/Pickups" unique_id=277724163 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -82.67157, 1.595152, 347.32843)
 count = 4
 spacing = 4.0
 
-[node name="PickupSpawner17" parent="StuntRace/Route" unique_id=919268758 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -331.17157, 1.595152, 471.82843)
+[node name="PickupSpawner17" parent="EventStartCircle1/StuntRace/Pickups" unique_id=919268758 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -181.17157, 1.595152, 412.82843)
 count = 4
 spacing = 4.0
 
-[node name="PickupSpawner21" parent="StuntRace/Route" unique_id=1189900512 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -522.1716, 1.7254004, 520.8284)
+[node name="PickupSpawner21" parent="EventStartCircle1/StuntRace/Pickups" unique_id=1189900512 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -372.17157, 1.7254004, 461.82843)
 count = 4
 spacing = 4.0
 
-[node name="ArrowWall2" parent="StuntRace/Route" unique_id=1948640552 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711378e-08, -0.7071067, 0.70710677, 1, -3.0908613e-08, 3.0908623e-08, 0, 0.70710677, 0.7071067, -166.69745, 5.2500005, 397.47864)
-
-[node name="ArrowWall14" parent="StuntRace/Route" unique_id=1157836351 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711378e-08, -0.8660253, 0.5, 1, -3.7855166e-08, 2.1855701e-08, 0, 0.5, 0.8660253, -206.51604, 5.249999, 426.1597)
-height = 64.0
-
-[node name="ArrowWall8" parent="StuntRace/Route" unique_id=666559956 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711374e-08, 5.9604645e-08, -1, 1, -5.3290705e-15, -4.3711367e-08, 0, -1, -5.9604645e-08, 66.532166, 13.678643, 166.05058)
-height = 120.0
-
-[node name="ArrowWall9" parent="StuntRace/Route" unique_id=446945008 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371137e-08, -1, -1.5893256e-08, 1, -4.371138e-08, 4.5000264e-15, 0, -1.5893256e-08, 1, 110.53217, 9.159892, -3.449417)
-
-[node name="ArrowWall10" parent="StuntRace/Route" unique_id=173354119 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371137e-08, -1, -1.5893256e-08, 1, -4.371138e-08, 4.5000264e-15, 0, -1.5893256e-08, 1, -14.967827, 6.78174, -2.449419)
-
-[node name="ArrowWall11" parent="StuntRace/Route" unique_id=884168624 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371137e-08, -1, -1.5893256e-08, 1, -4.371138e-08, 4.5000264e-15, 0, -1.5893256e-08, 1, -14.967828, 6.78174, 34.550583)
-
-[node name="ArrowWall12" parent="StuntRace/Route" unique_id=421925773 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711367e-08, 2.7818132e-08, 1, 1, -1.1352857e-14, 4.3711374e-08, 0, 1, -2.7818132e-08, -157.96783, 4.9999976, 143.55058)
-
-[node name="ArrowWall13" parent="StuntRace/Route" unique_id=1562302330 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711367e-08, 2.7818132e-08, 1, 1, -1.1352857e-14, 4.3711374e-08, 0, 1, -2.7818132e-08, -155.46783, 4.9999976, 352.5506)
-height = 64.0
-
-[node name="ArrowWall3" parent="StuntRace/Route" unique_id=1003909341 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711374e-08, 5.9604645e-08, 1, 1, -1.7763568e-15, 4.3711392e-08, 0, 1, -5.9604645e-08, -351.87894, 5.250122, 461.38425)
-
-[node name="ArrowWall15" parent="StuntRace/Route" unique_id=289439854 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371137e-08, -1, 1.5893256e-08, 1, -4.3711378e-08, 2.0368969e-14, 0, 1.5893256e-08, 1, -400.87894, 5.2501197, 545.8843)
-
-[node name="ArrowWall16" parent="StuntRace/Route" unique_id=1141342731 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371137e-08, -0.8660254, -0.5, 1, -3.7855163e-08, -2.1855666e-08, 0, -0.5, 0.8660254, -521.06195, 5.2501144, 537.40704)
-height = 30.0
-
-[node name="ArrowWall18" parent="StuntRace/Route" unique_id=1555154824 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371137e-08, -0.95409244, 0.29951233, 1, -4.170469e-08, 1.3092114e-08, 0, 0.29951233, 0.95409244, -624.1954, 5.25011, 480.12396)
-
-[node name="ArrowWall19" parent="StuntRace/Route" unique_id=1972442618 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -784.0772, 5.262818, 483.01154)
-
-[node name="ArrowWall20" parent="StuntRace/Route" unique_id=1072716656 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -911.5772, -2.2371876, 483.01154)
-height = 30.0
-
-[node name="ArrowWall5" parent="StuntRace/Route" unique_id=1593677337 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711385e-08, 4.371139e-08, 1, 1, 0, 4.371139e-08, 0, 1, -4.371139e-08, -194.5, 4.999997, 22.000002)
-height = 45.0
-
-[node name="ArrowWall4" parent="StuntRace/Route" unique_id=658731916 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711374e-08, -0.5000001, -0.8660253, 1, -2.1855696e-08, -3.785514e-08, 0, -0.8660253, 0.5000001, -540.2581, 5.2499857, 519.0769)
-height = 26.0
-
-[node name="ArrowWall17" parent="StuntRace/Route" unique_id=1336520665 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711374e-08, -1, 1.7881393e-07, 1, -4.3711378e-08, 2.3092639e-14, 0, 1.7881393e-07, 1, -533.12195, 5.249986, 449.2577)
-height = 55.0
-
-[node name="ArrowWall6" parent="StuntRace/Route" unique_id=214698557 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711374e-08, 1, -5.9604645e-08, 1, 4.3711367e-08, 1.2434498e-14, 0, -5.9604645e-08, -1, -943.58105, 5.2552037, 511.3767)
-
-[node name="ArrowWall7" parent="StuntRace/Route" unique_id=477506796 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371137e-08, 1.5893256e-08, 1, 1, -4.5000264e-15, 4.371139e-08, 0, 1, -1.5893256e-08, -963.58105, 5.2552032, 464.3767)
-
-[node name="PickupSpawner27" parent="StuntRace/Route" unique_id=106093711 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 113, 10.867197, 124.5)
+[node name="PickupSpawner27" parent="EventStartCircle1/StuntRace/Pickups" unique_id=106093711 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 263, 10.867197, 65.5)
 count = 6
 spacing = 4.0
 
-[node name="StartZone2" parent="StuntRace/Route" unique_id=55016785 instance=ExtResource("99_startzone")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 112.399994, 8.799999, 185.23)
+[node name="DriveToStartRunner" type="Node" parent="EventStartCircle1/StuntRace" unique_id=957455660]
+script = ExtResource("drive_to_start_runner")
 
-[node name="StuntRace" type="Node" parent="StuntRace" unique_id=286026007 node_paths=PackedStringArray("route")]
-script = ExtResource("mig_event")
-definition = SubResource("Resource_pls18")
-route = NodePath("../Route")
-
-[node name="DriveToStartRunner" type="Node" parent="StuntRace/StuntRace" unique_id=957455660]
-script = ExtResource("20_grj8g")
-
-[node name="DriveToStartTask" type="Node" parent="StuntRace/StuntRace/DriveToStartRunner" unique_id=1786703972 node_paths=PackedStringArray("trigger")]
-script = ExtResource("99_ckpttask")
-objective_key = "RACE_DRIVE_TO_START"
-hint_key = "RACE_HINT_DRIVE_TO_START"
-hide_trigger_on_pass = true
-eval_when = 1
-trigger = NodePath("../../../Route/StartZone2")
-respawn_in_place = true
-
-[node name="SequentialTaskRunner" type="Node" parent="StuntRace/StuntRace" unique_id=414706176]
+[node name="SequentialTaskRunner" type="Node" parent="EventStartCircle1/StuntRace" unique_id=414706176]
 script = ExtResource("20_grj8g")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="GridSpawnTask" type="Node" parent="StuntRace/StuntRace/SequentialTaskRunner" unique_id=202912682]
+[node name="GridSpawnTask" type="Node" parent="EventStartCircle1/StuntRace/SequentialTaskRunner" unique_id=202912682]
 script = ExtResource("21_gpyq4")
 
-[node name="ConcurrentTaskRunner2" type="Node" parent="StuntRace/StuntRace/SequentialTaskRunner" unique_id=297690689]
+[node name="ConcurrentTaskRunner2" type="Node" parent="EventStartCircle1/StuntRace/SequentialTaskRunner" unique_id=297690689]
 script = ExtResource("16_b3ac3")
 
-[node name="CountdownTask" type="Node" parent="StuntRace/StuntRace/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1097372777]
+[node name="CountdownTask" type="Node" parent="EventStartCircle1/StuntRace/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1097372777]
 script = ExtResource("17_clf25")
 metadata/_custom_type_script = "uid://8xvij2vjrnn2"
 
-[node name="SFXTask" type="Node" parent="StuntRace/StuntRace/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1875498786]
+[node name="SFXTask" type="Node" parent="EventStartCircle1/StuntRace/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1875498786]
 script = ExtResource("18_k3cxb")
 sound = 2
 advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="RaceTask" type="Node" parent="StuntRace/StuntRace/SequentialTaskRunner" unique_id=1438498696]
+[node name="RaceTask" type="Node" parent="EventStartCircle1/StuntRace/SequentialTaskRunner" unique_id=1438498696]
 script = ExtResource("22_x6w3k")
 total_laps = 1
 objective_key = "STUNT_RACE_OBJECTIVE"
 
-[node name="TimeAttack" type="Node" parent="StuntRace" unique_id=1860006243 node_paths=PackedStringArray("route")]
+[node name="TimeAttack" type="Node3D" parent="EventStartCircle1" unique_id=1860006243 node_paths=PackedStringArray("props", "spawn", "checkpoints", "start_zone")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_timeattack")
-route = NodePath("../Route")
+props = [NodePath("../Props/RaceProps")]
+spawn = NodePath("../Spawns/RaceSpawns")
+checkpoints = NodePath("../Checkpoints/RaceCheckpoints")
+start_zone = NodePath("../StartZone")
 
-[node name="SequentialTaskRunner" type="Node" parent="StuntRace/TimeAttack" unique_id=518598388]
+[node name="DriveToStartRunner" type="Node" parent="EventStartCircle1/TimeAttack" unique_id=910911953]
+script = ExtResource("drive_to_start_runner")
+
+[node name="SequentialTaskRunner" type="Node" parent="EventStartCircle1/TimeAttack" unique_id=518598388]
 script = ExtResource("20_grj8g")
 
-[node name="GridSpawnTask" type="Node" parent="StuntRace/TimeAttack/SequentialTaskRunner" unique_id=1361004937]
+[node name="GridSpawnTask" type="Node" parent="EventStartCircle1/TimeAttack/SequentialTaskRunner" unique_id=1361004937]
 script = ExtResource("21_gpyq4")
 
-[node name="ConcurrentTaskRunner2" type="Node" parent="StuntRace/TimeAttack/SequentialTaskRunner" unique_id=390299267]
+[node name="ConcurrentTaskRunner2" type="Node" parent="EventStartCircle1/TimeAttack/SequentialTaskRunner" unique_id=390299267]
 script = ExtResource("16_b3ac3")
 
-[node name="CountdownTask" type="Node" parent="StuntRace/TimeAttack/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1638197108]
+[node name="CountdownTask" type="Node" parent="EventStartCircle1/TimeAttack/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1638197108]
 script = ExtResource("17_clf25")
 
-[node name="SFXTask" type="Node" parent="StuntRace/TimeAttack/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=389346971]
+[node name="SFXTask" type="Node" parent="EventStartCircle1/TimeAttack/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=389346971]
 script = ExtResource("18_k3cxb")
 sound = 2
 advance_mode = 1
 duration_sec = 3.0
 
-[node name="RaceTask" type="Node" parent="StuntRace/TimeAttack/SequentialTaskRunner" unique_id=1052023422]
+[node name="RaceTask" type="Node" parent="EventStartCircle1/TimeAttack/SequentialTaskRunner" unique_id=1052023422]
 script = ExtResource("22_x6w3k")
 total_laps = 1
 endless = true
 objective_key = "TIME_ATTACK_RUN_OBJECTIVE"
 
-[node name="TrickBattle" type="Node" parent="StuntRace" unique_id=1952719947 node_paths=PackedStringArray("route")]
+[node name="TrickBattle" type="Node3D" parent="EventStartCircle1" unique_id=1952719947 node_paths=PackedStringArray("props", "spawn", "start_zone")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_trkbtl")
-route = NodePath("../Route")
+props = [NodePath("../Props/TrickBattleProps")]
+spawn = NodePath("../Spawns/TrickBattleSpawns")
+start_zone = NodePath("../StartZoneTrickBattle")
 
-[node name="SequentialTaskRunner" type="Node" parent="StuntRace/TrickBattle" unique_id=2064993660]
+[node name="DriveToStartRunner" type="Node" parent="EventStartCircle1/TrickBattle" unique_id=534378408]
+script = ExtResource("drive_to_start_runner")
+
+[node name="SequentialTaskRunner" type="Node" parent="EventStartCircle1/TrickBattle" unique_id=2064993660]
 script = ExtResource("20_grj8g")
 
-[node name="GridSpawnTask" type="Node" parent="StuntRace/TrickBattle/SequentialTaskRunner" unique_id=1262497939]
+[node name="GridSpawnTask" type="Node" parent="EventStartCircle1/TrickBattle/SequentialTaskRunner" unique_id=1262497939]
 script = ExtResource("21_gpyq4")
 
-[node name="ConcurrentTaskRunner" type="Node" parent="StuntRace/TrickBattle/SequentialTaskRunner" unique_id=895559258]
+[node name="ConcurrentTaskRunner" type="Node" parent="EventStartCircle1/TrickBattle/SequentialTaskRunner" unique_id=895559258]
 script = ExtResource("16_b3ac3")
 
-[node name="CountdownTask" type="Node" parent="StuntRace/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=971558416]
+[node name="CountdownTask" type="Node" parent="EventStartCircle1/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=971558416]
 script = ExtResource("17_clf25")
 
-[node name="SFXTask" type="Node" parent="StuntRace/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1604029500]
+[node name="SFXTask" type="Node" parent="EventStartCircle1/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1604029500]
 script = ExtResource("18_k3cxb")
 sound = 2
 advance_mode = 1
 duration_sec = 3.0
 
-[node name="BattleRunner" type="Node" parent="StuntRace/TrickBattle" unique_id=858655541]
+[node name="BattleRunner" type="Node" parent="EventStartCircle1/TrickBattle" unique_id=858655541]
 script = ExtResource("20_grj8g")
 
-[node name="TrickBattleTask" type="Node" parent="StuntRace/TrickBattle/BattleRunner" unique_id=2055507808]
+[node name="TrickBattleTask" type="Node" parent="EventStartCircle1/TrickBattle/BattleRunner" unique_id=2055507808]
 script = ExtResource("mig_trkbtl")
 respawn_in_place = true
 
-[node name="CrashLaunchSpawns" type="Node3D" parent="StuntRace" unique_id=304460237]
-top_level = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -150, 0, 59)
-script = ExtResource("mig_route")
-
-[node name="Spawn1" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=1806100665]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0.25, 100)
-
-[node name="Spawn2" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=1695219141]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.25, 100)
-
-[node name="Spawn3" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=624781234]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.25, 100)
-
-[node name="Spawn4" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=241127819]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 0.25, 100)
-
-[node name="Spawn5" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=512294711]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 0.25, 100)
-
-[node name="Spawn6" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=454430346]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 0.25, 100)
-
-[node name="Spawn7" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=390441434]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 0.25, 110.1)
-
-[node name="Spawn8" type="Marker3D" parent="StuntRace/CrashLaunchSpawns" unique_id=408975919]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.25, 110.1)
-
-[node name="CrashLaunch" type="Node" parent="StuntRace" unique_id=1777000011 node_paths=PackedStringArray("route")]
+[node name="CrashLaunch" type="Node3D" parent="EventStartCircle1" unique_id=1777000011 node_paths=PackedStringArray("props", "spawn")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_crshlch")
-route = NodePath("../CrashLaunchSpawns")
+props = [NodePath("../Props/CrashLaunchProps")]
+spawn = NodePath("../Spawns/CrashLaunchSpawns")
 
-[node name="SequentialTaskRunner" type="Node" parent="StuntRace/CrashLaunch" unique_id=1777000012]
+[node name="SequentialTaskRunner" type="Node" parent="EventStartCircle1/CrashLaunch" unique_id=1777000012]
 script = ExtResource("20_grj8g")
 
-[node name="GridSpawnTask" type="Node" parent="StuntRace/CrashLaunch/SequentialTaskRunner" unique_id=1777000013]
+[node name="GridSpawnTask" type="Node" parent="EventStartCircle1/CrashLaunch/SequentialTaskRunner" unique_id=1777000013]
 script = ExtResource("21_gpyq4")
 
-[node name="ConcurrentTaskRunner" type="Node" parent="StuntRace/CrashLaunch/SequentialTaskRunner" unique_id=1777000014]
+[node name="ConcurrentTaskRunner" type="Node" parent="EventStartCircle1/CrashLaunch/SequentialTaskRunner" unique_id=1777000014]
 script = ExtResource("16_b3ac3")
 
-[node name="CountdownTask" type="Node" parent="StuntRace/CrashLaunch/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1777000015]
+[node name="CountdownTask" type="Node" parent="EventStartCircle1/CrashLaunch/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1777000015]
 script = ExtResource("17_clf25")
 
-[node name="SFXTask" type="Node" parent="StuntRace/CrashLaunch/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1777000016]
+[node name="SFXTask" type="Node" parent="EventStartCircle1/CrashLaunch/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1777000016]
 script = ExtResource("18_k3cxb")
 sound = 2
 advance_mode = 1
 duration_sec = 3.0
 
-[node name="CrashLaunchTask" type="Node" parent="StuntRace/CrashLaunch/SequentialTaskRunner" unique_id=1777000017]
+[node name="CrashLaunchTask" type="Node" parent="EventStartCircle1/CrashLaunch/SequentialTaskRunner" unique_id=1777000017]
 script = ExtResource("99_crshlchtask")
 
-[node name="StuntRace2" parent="." unique_id=1917820002 node_paths=PackedStringArray("gas_station") groups=["EditorHideable"] instance=ExtResource("22_eair3")]
+[node name="EventStartCircle2" parent="." unique_id=1917820002 node_paths=PackedStringArray("gas_station", "props", "spawns", "checkpoints") groups=["EditorHideable"] instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -919.5519, 0, 506.39148)
 visible = false
 gas_station = NodePath("../GasStations/StuntRace2Gasstation")
+props = NodePath("Props")
+spawns = NodePath("Spawns")
+checkpoints = NodePath("Checkpoints")
 
-[node name="Route" type="Node3D" parent="StuntRace2" unique_id=1085111944]
-top_level = true
-script = ExtResource("mig_route")
+[node name="Props" type="Node3D" parent="EventStartCircle2" unique_id=1994409922]
 
-[node name="RaceGridSpot1" type="Marker3D" parent="StuntRace2/Route" unique_id=236846729]
-transform = Transform3D(0, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, 0, -910.5625, 0.24992228, 457.4375)
+[node name="RaceProps" type="Node3D" parent="EventStartCircle2/Props" unique_id=500393162]
 
-[node name="RaceGridSpot2" type="Marker3D" parent="StuntRace2/Route" unique_id=2067304005]
-transform = Transform3D(0, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, 0, -910.5625, 0.2499224, 461.6875)
+[node name="ArrowWall2" parent="EventStartCircle2/Props/RaceProps" unique_id=1639704062 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 0.50000006, 0.8660254, 1, 2.185569e-08, 3.7855173e-08, 0, 0.8660254, -0.50000006, 142.71857, 5.5000005, -41.00174)
 
-[node name="RaceGridSpot3" type="Marker3D" parent="StuntRace2/Route" unique_id=1935885483]
-transform = Transform3D(0, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, 0, -910.5625, 0.2499224, 465.6875)
+[node name="ArrowWall3" parent="EventStartCircle2/Props/RaceProps" unique_id=1440237634 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, 390.36884, 5.5000114, 131.91486)
 
-[node name="RaceGridSpot4" type="Marker3D" parent="StuntRace2/Route" unique_id=128703007]
-transform = Transform3D(0, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, 0, -914.3125, 0.24992263, 459.4375)
+[node name="ArrowWall5" parent="EventStartCircle2/Props/RaceProps" unique_id=805742350 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, 390.36884, 5.5000114, 170.41486)
 
-[node name="RaceGridSpot5" type="Marker3D" parent="StuntRace2/Route" unique_id=931796856]
-transform = Transform3D(0, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, 0, -914.3125, 0.24992228, 463.6875)
+[node name="ArrowWall8" parent="EventStartCircle2/Props/RaceProps" unique_id=1839600488 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, 457.36884, 5.5000143, 170.41486)
 
-[node name="RaceGridSpot6" type="Marker3D" parent="StuntRace2/Route" unique_id=1125695750]
-transform = Transform3D(0, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, 0, -917.5625, 0.2499224, 461.4375)
+[node name="ArrowWall9" parent="EventStartCircle2/Props/RaceProps" unique_id=650967640 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, 521.86884, 5.500017, 170.41486)
 
-[node name="RaceGridSpot7" type="Marker3D" parent="StuntRace2/Route" unique_id=1700942332]
-transform = Transform3D(0, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, 0, -917.5625, 0.24992228, 457.4375)
+[node name="ArrowWall10" parent="EventStartCircle2/Props/RaceProps" unique_id=644254049 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, 585.36884, 5.50002, 170.41486)
 
-[node name="RaceGridSpot8" type="Marker3D" parent="StuntRace2/Route" unique_id=191309419]
-transform = Transform3D(0, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, 0, -917.5625, 0.24992776, 465.6875)
+[node name="ArrowWall11" parent="EventStartCircle2/Props/RaceProps" unique_id=1888310639 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, 649.86884, 5.500023, 170.41486)
 
-[node name="ArrowWall2" parent="StuntRace2/Route" unique_id=1639704062 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, 0.50000006, 0.8660254, 1, 2.185569e-08, 3.7855173e-08, 0, 0.8660254, -0.50000006, -776.8333, 5.5000005, 465.38974)
+[node name="ArrowWall12" parent="EventStartCircle2/Props/RaceProps" unique_id=1013451802 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 0.96592575, -0.25881916, 1, 4.2221956e-08, -1.1313334e-08, 0, -0.25881916, -0.96592575, 648.3506, 5.500023, 124.68054)
 
-[node name="ArrowWall3" parent="StuntRace2/Route" unique_id=1440237634 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, -529.18304, 5.5000114, 638.30634)
-
-[node name="ArrowWall5" parent="StuntRace2/Route" unique_id=805742350 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, -529.18304, 5.5000114, 676.80634)
-
-[node name="ArrowWall8" parent="StuntRace2/Route" unique_id=1839600488 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, -462.18304, 5.5000143, 676.80634)
-
-[node name="ArrowWall9" parent="StuntRace2/Route" unique_id=650967640 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, -397.68304, 5.500017, 676.80634)
-
-[node name="ArrowWall10" parent="StuntRace2/Route" unique_id=644254049 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, -334.18304, 5.50002, 676.80634)
-
-[node name="ArrowWall11" parent="StuntRace2/Route" unique_id=1888310639 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, 1, -1.1920929e-07, 1, 4.3711385e-08, 3.5527137e-15, 0, -1.1920929e-07, -1, -269.68304, 5.500023, 676.80634)
-
-[node name="ArrowWall12" parent="StuntRace2/Route" unique_id=1013451802 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, 0.96592575, -0.25881916, 1, 4.2221956e-08, -1.1313334e-08, 0, -0.25881916, -0.96592575, -271.2013, 5.500023, 631.072)
-
-[node name="ArrowWall13" parent="StuntRace2/Route" unique_id=1400049010 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-5.2125306e-16, -1.1924879e-08, -0.9999999, 1, -4.3711385e-08, 0, -4.371139e-08, -0.9999999, 1.1924879e-08, -156.88792, 5.500028, 575.34564)
+[node name="ArrowWall13" parent="EventStartCircle2/Props/RaceProps" unique_id=1400049010 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-5.2125306e-16, -1.1924879e-08, -0.9999999, 1, -4.3711385e-08, 0, -4.371139e-08, -0.9999999, 1.1924879e-08, 762.66394, 5.500028, 68.95416)
 collision_layer = 1
 height = 76.0
 
-[node name="ArrowWall7" parent="StuntRace2/Route" unique_id=231303715 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, 0.8660252, -0.5, 1, 3.7855163e-08, -2.1855685e-08, 0, -0.5, -0.8660252, -180.84494, 5.500027, 395.14178)
+[node name="ArrowWall7" parent="EventStartCircle2/Props/RaceProps" unique_id=231303715 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 0.8660252, -0.5, 1, 3.7855163e-08, -2.1855685e-08, 0, -0.5, -0.8660252, 738.7069, 5.500027, -111.249695)
 height = 55.0
 
-[node name="ArrowWall15" parent="StuntRace2/Route" unique_id=238441043 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711378e-08, 0.25881904, 0.9659255, 1, 1.1313345e-08, 4.2221945e-08, 0, 0.9659255, -0.25881904, 51.920235, 3.7171812e-05, 504.8558)
+[node name="ArrowWall15" parent="EventStartCircle2/Props/RaceProps" unique_id=238441043 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711378e-08, 0.25881904, 0.9659255, 1, 1.1313345e-08, 4.2221945e-08, 0, 0.9659255, -0.25881904, 971.4721, 3.7171812e-05, -1.535675)
 height = 12.0
 
-[node name="ArrowWall14" parent="StuntRace2/Route" unique_id=1820189027 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, 0.45227775, -0.891877, 1, 1.976969e-08, -3.8985167e-08, 0, -0.891877, -0.45227775, -214.6275, 5.5000257, 428.3274)
+[node name="ArrowWall14" parent="EventStartCircle2/Props/RaceProps" unique_id=1820189027 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 0.45227775, -0.891877, 1, 1.976969e-08, -3.8985167e-08, 0, -0.891877, -0.45227775, 704.9244, 5.5000257, -78.06409)
 height = 44.0
 
-[node name="ArrowWall6" parent="StuntRace2/Route" unique_id=1755254922 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, 0.25881892, -0.96592575, 1, 1.1313339e-08, -4.222194e-08, 0, -0.96592575, -0.25881892, -167.43684, 5.5000277, 649.43024)
+[node name="ArrowWall6" parent="EventStartCircle2/Props/RaceProps" unique_id=1755254922 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 0.25881892, -0.96592575, 1, 1.1313339e-08, -4.222194e-08, 0, -0.96592575, -0.25881892, 752.11505, 5.5000277, 143.03876)
 height = 46.0
 
-[node name="PickupSpawner1" parent="StuntRace2/Route" unique_id=385871693 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.819232, 0, -0.573462, 0, 1, 0, 0.573462, 0, 0.819232, -794.4, 2.367197, 468.9)
-count = 5
-spacing = 6.1
-
-[node name="PickupSpawner10" parent="StuntRace2/Route" unique_id=539220794 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -440, 1.867197, 655.5)
-count = 5
-spacing = 5.0
-
-[node name="PickupSpawner15" parent="StuntRace2/Route" unique_id=14174415 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -204.29173, 9.367197, 627.3763)
-count = 5
-spacing = 4.38
-
-[node name="PickupSpawner6" parent="StuntRace2/Route" unique_id=1681096213 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.830577, 0, -0.556904, 0, 1, 0, 0.556904, 0, 0.830577, -715.31744, 6.867197, 585.5053)
-count = 4
-
-[node name="PickupSpawner20" parent="StuntRace2/Route" unique_id=2090557582 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.752899, 0, 0.658136, 0, 1, 0, -0.658136, 0, 0.752899, -676.4703, 1.499998, 578.74384)
-
-[node name="PickupSpawner21" parent="StuntRace2/Route" unique_id=85576469 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.752899, 0, 0.658136, 0, 1, 0, -0.658136, 0, 0.752899, -682.86993, 1.499998, 584.338)
-
-[node name="CheckpointMarker1" parent="StuntRace2/Route" unique_id=770419617 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -822.5, 0.5781336, 462.5)
-width = 32.0
-
-[node name="CheckpointMarker2" parent="StuntRace2/Route" unique_id=2022938861 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -784, 0.25000095, 512)
-width = 32.0
-
-[node name="CheckpointMarker3" parent="StuntRace2/Route" unique_id=1382040154 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -509.5, 0.25992203, 655)
-width = 36.0
-
-[node name="CheckpointMarker4" parent="StuntRace2/Route" unique_id=168658589 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -176, 0.24999905, 531.5)
-width = 32.0
-
-[node name="CheckpointMarker5" parent="StuntRace2/Route" unique_id=710560741 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(8.7422784e-08, 0, -1.0000001, 0, 1, 0, 1.0000001, 0, 8.7422784e-08, -142.5, 0.2500019, 401)
-width = 32.0
-
-[node name="CheckpointMarker6" parent="StuntRace2/Route" unique_id=992391668 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.13022624, 0, -0.9914843, 0, 1, 0, 0.9914843, 0, -0.13022624, 30.376049, 0.24975586, 494.14523)
-width = 36.0
-
-[node name="CheckpointMarker7" parent="StuntRace2/Route" unique_id=533510433 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.6085214, 0, -0.79353744, 0, 1, 0, 0.79353744, 0, -0.6085214, 47.199055, -3.8146973e-06, 518.8475)
-
-[node name="GrayBox_StaticBody" parent="StuntRace2/Route" unique_id=1623305030 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.86602527, -0.49999997, 0, 0.49999997, 0.8660254, 0, 0, 0, 0.9999999, -136.5, 22.5, 575.5)
+[node name="bigwallhalframp" parent="EventStartCircle2/Props/RaceProps" unique_id=1623305030 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.86602527, -0.49999997, 0, 0.49999997, 0.8660254, 0, 0, 0, 0.9999999, 783.0519, 22.5, 69.10852)
 width = 48.0
 height = 0.1
 depth = 76.0
 color_preset = 5
 
-[node name="StartZone" parent="StuntRace2/Route" unique_id=610008411 instance=ExtResource("99_startzone")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -914.125, 0.25, 461.5625)
+[node name="Spawns" type="Node3D" parent="EventStartCircle2" unique_id=1386249249]
 
-[node name="StuntRace2" type="Node" parent="StuntRace2" unique_id=552702521 node_paths=PackedStringArray("route")]
+[node name="RaceSpawns" type="Node3D" parent="EventStartCircle2/Spawns" unique_id=872296236]
+
+[node name="RaceGridSpot1" type="Marker3D" parent="EventStartCircle2/Spawns/RaceSpawns" unique_id=236846729]
+transform = Transform3D(0, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, 0, 8.98938, 0.24992228, -48.95398)
+
+[node name="RaceGridSpot2" type="Marker3D" parent="EventStartCircle2/Spawns/RaceSpawns" unique_id=2067304005]
+transform = Transform3D(0, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, 0, 8.98938, 0.2499224, -44.70398)
+
+[node name="RaceGridSpot3" type="Marker3D" parent="EventStartCircle2/Spawns/RaceSpawns" unique_id=1935885483]
+transform = Transform3D(0, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, 0, 8.98938, 0.2499224, -40.70398)
+
+[node name="RaceGridSpot4" type="Marker3D" parent="EventStartCircle2/Spawns/RaceSpawns" unique_id=128703007]
+transform = Transform3D(0, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, 0, 5.23938, 0.24992263, -46.95398)
+
+[node name="RaceGridSpot5" type="Marker3D" parent="EventStartCircle2/Spawns/RaceSpawns" unique_id=931796856]
+transform = Transform3D(0, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, 0, 5.23938, 0.24992228, -42.70398)
+
+[node name="RaceGridSpot6" type="Marker3D" parent="EventStartCircle2/Spawns/RaceSpawns" unique_id=1125695750]
+transform = Transform3D(0, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, 0, 1.9893799, 0.2499224, -44.95398)
+
+[node name="RaceGridSpot7" type="Marker3D" parent="EventStartCircle2/Spawns/RaceSpawns" unique_id=1700942332]
+transform = Transform3D(0, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, 0, 1.9893799, 0.24992228, -48.95398)
+
+[node name="RaceGridSpot8" type="Marker3D" parent="EventStartCircle2/Spawns/RaceSpawns" unique_id=191309419]
+transform = Transform3D(0, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, 0, 1.9893799, 0.24992776, -40.70398)
+
+[node name="Checkpoints" type="Node3D" parent="EventStartCircle2" unique_id=758345335]
+
+[node name="RaceCheckpoints" type="Node3D" parent="EventStartCircle2/Checkpoints" unique_id=1666078355]
+
+[node name="CheckpointMarker1" parent="EventStartCircle2/Checkpoints/RaceCheckpoints" unique_id=770419617 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 97.05188, 0.5781336, -43.89148)
+width = 32.0
+
+[node name="CheckpointMarker2" parent="EventStartCircle2/Checkpoints/RaceCheckpoints" unique_id=2022938861 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 135.55188, 0.25000095, 5.6085205)
+width = 32.0
+
+[node name="CheckpointMarker3" parent="EventStartCircle2/Checkpoints/RaceCheckpoints" unique_id=1382040154 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 410.05188, 0.25992203, 148.60852)
+width = 36.0
+
+[node name="CheckpointMarker4" parent="EventStartCircle2/Checkpoints/RaceCheckpoints" unique_id=168658589 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 743.5519, 0.24999905, 25.10852)
+width = 32.0
+
+[node name="CheckpointMarker5" parent="EventStartCircle2/Checkpoints/RaceCheckpoints" unique_id=710560741 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(8.7422784e-08, 0, -1.0000001, 0, 1, 0, 1.0000001, 0, 8.7422784e-08, 777.0519, 0.2500019, -105.39148)
+width = 32.0
+
+[node name="CheckpointMarker6" parent="EventStartCircle2/Checkpoints/RaceCheckpoints" unique_id=992391668 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-0.13022624, 0, -0.9914843, 0, 1, 0, 0.9914843, 0, -0.13022624, 949.9279, 0.24975586, -12.246246)
+width = 36.0
+
+[node name="CheckpointMarker7" parent="EventStartCircle2/Checkpoints/RaceCheckpoints" unique_id=533510433 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-0.6085214, 0, -0.79353744, 0, 1, 0, 0.79353744, 0, -0.6085214, 966.7509, -3.8146973e-06, 12.455994)
+
+[node name="StartZone" parent="EventStartCircle2" unique_id=610008411 instance=ExtResource("99_startzone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.42688, 0.25, -44.82898)
+
+[node name="StuntRace2" type="Node3D" parent="EventStartCircle2" unique_id=552702521 node_paths=PackedStringArray("props", "spawn", "checkpoints", "pickups", "start_zone")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_mn4lr")
-route = NodePath("../Route")
+props = [NodePath("../Props/RaceProps")]
+spawn = NodePath("../Spawns/RaceSpawns")
+checkpoints = NodePath("../Checkpoints/RaceCheckpoints")
+pickups = NodePath("Pickups")
+start_zone = NodePath("../StartZone")
 
-[node name="DriveToStartRunner" type="Node" parent="StuntRace2/StuntRace2" unique_id=445709688]
-script = ExtResource("20_grj8g")
+[node name="Pickups" type="Node3D" parent="EventStartCircle2/StuntRace2" unique_id=204507573]
 
-[node name="DriveToStartTask" type="Node" parent="StuntRace2/StuntRace2/DriveToStartRunner" unique_id=788500312 node_paths=PackedStringArray("trigger")]
-script = ExtResource("99_ckpttask")
-objective_key = "RACE_DRIVE_TO_START"
-hint_key = "RACE_HINT_DRIVE_TO_START"
-hide_trigger_on_pass = true
-eval_when = 1
-trigger = NodePath("../../../Route/StartZone")
-respawn_in_place = true
-
-[node name="SequentialTaskRunner" type="Node" parent="StuntRace2/StuntRace2" unique_id=1752097366]
-script = ExtResource("20_grj8g")
-metadata/_custom_type_script = "uid://f840hmifnv7g"
-
-[node name="GridSpawnTask" type="Node" parent="StuntRace2/StuntRace2/SequentialTaskRunner" unique_id=1639229684]
-script = ExtResource("21_gpyq4")
-
-[node name="ConcurrentTaskRunner2" type="Node" parent="StuntRace2/StuntRace2/SequentialTaskRunner" unique_id=1327193269]
-script = ExtResource("16_b3ac3")
-
-[node name="CountdownTask" type="Node" parent="StuntRace2/StuntRace2/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1614608333]
-script = ExtResource("17_clf25")
-metadata/_custom_type_script = "uid://8xvij2vjrnn2"
-
-[node name="SFXTask" type="Node" parent="StuntRace2/StuntRace2/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=798439589]
-script = ExtResource("18_k3cxb")
-sound = 2
-advance_mode = 1
-duration_sec = 3.0
-metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
-
-[node name="RaceTask" type="Node" parent="StuntRace2/StuntRace2/SequentialTaskRunner" unique_id=860300605]
-script = ExtResource("22_x6w3k")
-total_laps = 1
-objective_key = "STUNT_RACE_OBJECTIVE"
-
-[node name="TrickBattle" type="Node" parent="StuntRace2" unique_id=301160341 node_paths=PackedStringArray("route")]
-script = ExtResource("mig_event")
-definition = SubResource("Resource_trkbtl")
-route = NodePath("../Route")
-
-[node name="SequentialTaskRunner" type="Node" parent="StuntRace2/TrickBattle" unique_id=1497471287]
-script = ExtResource("20_grj8g")
-
-[node name="GridSpawnTask" type="Node" parent="StuntRace2/TrickBattle/SequentialTaskRunner" unique_id=2022199958]
-script = ExtResource("21_gpyq4")
-
-[node name="ConcurrentTaskRunner" type="Node" parent="StuntRace2/TrickBattle/SequentialTaskRunner" unique_id=1170463362]
-script = ExtResource("16_b3ac3")
-
-[node name="CountdownTask" type="Node" parent="StuntRace2/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=779537905]
-script = ExtResource("17_clf25")
-
-[node name="SFXTask" type="Node" parent="StuntRace2/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=684261020]
-script = ExtResource("18_k3cxb")
-sound = 2
-advance_mode = 1
-duration_sec = 3.0
-
-[node name="BattleRunner" type="Node" parent="StuntRace2/TrickBattle" unique_id=1124365707]
-script = ExtResource("20_grj8g")
-
-[node name="TrickBattleTask" type="Node" parent="StuntRace2/TrickBattle/BattleRunner" unique_id=1407485692]
-script = ExtResource("mig_trkbtl")
-respawn_in_place = true
-
-[node name="StuntRace3" parent="." unique_id=1774353091 groups=["EditorHideable"] instance=ExtResource("22_eair3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 86.94812, 0, 532.8915)
-visible = false
-
-[node name="Route" type="Node3D" parent="StuntRace3" unique_id=1874158033]
-top_level = true
-script = ExtResource("mig_route")
-
-[node name="RaceGridSpot1" type="Marker3D" parent="StuntRace3/Route" unique_id=689061254]
-transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 62.36615, -1.9073486e-06, 497.6249)
-
-[node name="RaceGridSpot2" type="Marker3D" parent="StuntRace3/Route" unique_id=1606015054]
-transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 63.466125, -1.9073486e-06, 493.5197)
-
-[node name="RaceGridSpot3" type="Marker3D" parent="StuntRace3/Route" unique_id=1317395701]
-transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 64.5014, -2.3841858e-06, 489.656)
-
-[node name="RaceGridSpot4" type="Marker3D" parent="StuntRace3/Route" unique_id=1419540099]
-transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 66.50601, -1.4305115e-06, 496.66364)
-
-[node name="RaceGridSpot5" type="Marker3D" parent="StuntRace3/Route" unique_id=716411169]
-transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 67.60599, -1.4305115e-06, 492.55844)
-
-[node name="RaceGridSpot6" type="Marker3D" parent="StuntRace3/Route" unique_id=1880405047]
-transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 70.1629, -1.4305115e-06, 495.57294)
-
-[node name="RaceGridSpot7" type="Marker3D" parent="StuntRace3/Route" unique_id=535861066]
-transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 69.127625, -1.4305115e-06, 499.43665)
-
-[node name="RaceGridSpot8" type="Marker3D" parent="StuntRace3/Route" unique_id=1092288334]
-transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 71.26288, -1.4305115e-06, 491.46774)
-
-[node name="CheckpointMarker1" parent="StuntRace3/Route" unique_id=1400657112 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-4.3711392e-08, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, -4.3711392e-08, -14.678253, 0.2499981, 399.5091)
-width = 32.0
-
-[node name="CheckpointMarker2" parent="StuntRace3/Route" unique_id=942527325 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-1.0000001, 0, -8.7422784e-08, 0, 1, 0, 8.7422784e-08, 0, -1.0000001, -177.67827, 0.24999714, 472.5091)
-width = 32.0
-
-[node name="CheckpointMarker3" parent="StuntRace3/Route" unique_id=1101634320 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(1.3113417e-07, 0, -1.0000001, 0, 1, 0, 1.0000001, 0, 1.3113417e-07, -158.17825, 0.48388386, 654.0091)
-width = 32.0
-
-[node name="CheckpointMarker4" parent="StuntRace3/Route" unique_id=1601959176 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(1.3113417e-07, 0, -1.0000001, 0, 1, 0, 1.0000001, 0, 1.3113417e-07, 32.321777, 0.24987507, 719.5091)
-width = 32.0
-
-[node name="CheckpointMarker5" parent="StuntRace3/Route" unique_id=395736886 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(1.0000001, 0, 1.7484557e-07, 0, 1, 0, -1.7484557e-07, 0, 1.0000001, 77.82177, 0.24987602, 701.5091)
-width = 32.0
-
-[node name="CheckpointMarker6" parent="StuntRace3/Route" unique_id=1531819014 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-2.1855696e-07, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, -2.1855696e-07, 62.321762, 0.04999733, 690.0091)
-
-[node name="ArrowWall" parent="StuntRace3/Route" unique_id=876676702 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711378e-08, -0.4999999, 0.8660253, 1, -2.185569e-08, 3.7855177e-08, 0, 0.8660253, 0.4999999, -180.04071, 5.25, 395.22382)
-height = 55.0
-
-[node name="ArrowWall16" parent="StuntRace3/Route" unique_id=2143912383 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711378e-08, -0.7071067, -0.7071065, 1, -3.09086e-08, -3.0908588e-08, 0, -0.7071065, 0.7071067, 94.705154, 3.9042e-05, 486.80106)
-height = 12.0
-
-[node name="ArrowWall17" parent="StuntRace3/Route" unique_id=997335547 instance=ExtResource("25_60x1b")]
-transform = Transform3D(1.9106855e-15, 4.371138e-08, -0.9999998, 1, -4.371138e-08, 0, -4.371139e-08, -0.9999998, -4.371138e-08, 96.88222, 5.5000386, 716.0863)
-height = 44.0
-
-[node name="ArrowWall19" parent="StuntRace3/Route" unique_id=547278223 instance=ExtResource("25_60x1b")]
-transform = Transform3D(3.5527137e-15, 0.86602515, 0.49999994, 1, 2.1855692e-08, -3.7855163e-08, -4.3711392e-08, 0.49999994, -0.86602515, -179.46579, 5.5000362, 658.7873)
-height = 44.0
-
-[node name="ArrowWall18" parent="StuntRace3/Route" unique_id=1258479156 instance=ExtResource("25_60x1b")]
-transform = Transform3D(3.5527137e-15, -0.9999998, 0, 1, 0, 4.371138e-08, -4.3711385e-08, 0, 0.9999998, 81.88222, 5.5000367, 672.0863)
-height = 44.0
-
-[node name="PickupSpawner1" parent="StuntRace3/Route" unique_id=79579103 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.819232, 0, -0.573462, 0, 1, 0, 0.573462, 0, 0.819232, 23.6, 2.367197, 493.9)
+[node name="PickupSpawner1" parent="EventStartCircle2/StuntRace2/Pickups" unique_id=385871693 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(0.819232, 0, -0.573462, 0, 1, 0, 0.573462, 0, 0.819232, 125.151855, 2.367197, -37.491486)
 count = 5
 spacing = 6.1
 
-[node name="PickupSpawner6" parent="StuntRace3/Route" unique_id=337854146 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -176.9, 2.367197, 483.5)
+[node name="PickupSpawner10" parent="EventStartCircle2/StuntRace2/Pickups" unique_id=539220794 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 479.55188, 1.867197, 149.10852)
 count = 5
-spacing = 6.08
+spacing = 5.0
 
-[node name="StuntRace3" type="Node" parent="StuntRace3" unique_id=758310714 node_paths=PackedStringArray("route")]
-script = ExtResource("mig_event")
-definition = SubResource("Resource_i0vae")
-route = NodePath("../Route")
+[node name="PickupSpawner15" parent="EventStartCircle2/StuntRace2/Pickups" unique_id=14174415 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 715.26013, 9.367197, 120.9848)
+count = 5
+spacing = 4.38
 
-[node name="SequentialTaskRunner" type="Node" parent="StuntRace3/StuntRace3" unique_id=622153036]
+[node name="PickupSpawner6" parent="EventStartCircle2/StuntRace2/Pickups" unique_id=1681096213 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(0.830577, 0, -0.556904, 0, 1, 0, 0.556904, 0, 0.830577, 204.23444, 6.867197, 79.11383)
+count = 4
+
+[node name="PickupSpawner20" parent="EventStartCircle2/StuntRace2/Pickups" unique_id=2090557582 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(0.752899, 0, 0.658136, 0, 1, 0, -0.658136, 0, 0.752899, 243.0816, 1.499998, 72.352356)
+
+[node name="PickupSpawner21" parent="EventStartCircle2/StuntRace2/Pickups" unique_id=85576469 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(0.752899, 0, 0.658136, 0, 1, 0, -0.658136, 0, 0.752899, 236.68195, 1.499998, 77.94653)
+
+[node name="DriveToStartRunner" type="Node" parent="EventStartCircle2/StuntRace2" unique_id=445709688]
+script = ExtResource("drive_to_start_runner")
+
+[node name="SequentialTaskRunner" type="Node" parent="EventStartCircle2/StuntRace2" unique_id=1752097366]
 script = ExtResource("20_grj8g")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="GridSpawnTask" type="Node" parent="StuntRace3/StuntRace3/SequentialTaskRunner" unique_id=1058107095]
+[node name="GridSpawnTask" type="Node" parent="EventStartCircle2/StuntRace2/SequentialTaskRunner" unique_id=1639229684]
 script = ExtResource("21_gpyq4")
 
-[node name="ConcurrentTaskRunner2" type="Node" parent="StuntRace3/StuntRace3/SequentialTaskRunner" unique_id=727375242]
+[node name="ConcurrentTaskRunner2" type="Node" parent="EventStartCircle2/StuntRace2/SequentialTaskRunner" unique_id=1327193269]
 script = ExtResource("16_b3ac3")
 
-[node name="CountdownTask" type="Node" parent="StuntRace3/StuntRace3/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=2073277325]
+[node name="CountdownTask" type="Node" parent="EventStartCircle2/StuntRace2/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1614608333]
 script = ExtResource("17_clf25")
 metadata/_custom_type_script = "uid://8xvij2vjrnn2"
 
-[node name="SFXTask" type="Node" parent="StuntRace3/StuntRace3/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=218621471]
+[node name="SFXTask" type="Node" parent="EventStartCircle2/StuntRace2/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=798439589]
 script = ExtResource("18_k3cxb")
 sound = 2
 advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="RaceTask" type="Node" parent="StuntRace3/StuntRace3/SequentialTaskRunner" unique_id=1109009782]
+[node name="RaceTask" type="Node" parent="EventStartCircle2/StuntRace2/SequentialTaskRunner" unique_id=860300605]
 script = ExtResource("22_x6w3k")
 total_laps = 1
 objective_key = "STUNT_RACE_OBJECTIVE"
 
-[node name="TrickBattle" type="Node" parent="StuntRace3" unique_id=1677624727 node_paths=PackedStringArray("route")]
+[node name="EventStartCircle3" parent="." unique_id=1774353091 node_paths=PackedStringArray("props", "spawns", "checkpoints") groups=["EditorHideable"] instance=ExtResource("22_eair3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 86.94812, 0, 532.8915)
+visible = false
+props = NodePath("Props")
+spawns = NodePath("Spawns")
+checkpoints = NodePath("Checkpoints")
+
+[node name="Props" type="Node3D" parent="EventStartCircle3" unique_id=133958445]
+
+[node name="RaceProps" type="Node3D" parent="EventStartCircle3/Props" unique_id=1325878297]
+
+[node name="ArrowWall" parent="EventStartCircle3/Props/RaceProps" unique_id=876676702 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711378e-08, -0.4999999, 0.8660253, 1, -2.185569e-08, 3.7855177e-08, 0, 0.8660253, 0.4999999, -266.98883, 5.25, -137.66766)
+height = 55.0
+
+[node name="ArrowWall16" parent="EventStartCircle3/Props/RaceProps" unique_id=2143912383 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711378e-08, -0.7071067, -0.7071065, 1, -3.09086e-08, -3.0908588e-08, 0, -0.7071065, 0.7071067, 7.7570343, 3.9042e-05, -46.090424)
+height = 12.0
+
+[node name="ArrowWall17" parent="EventStartCircle3/Props/RaceProps" unique_id=997335547 instance=ExtResource("25_60x1b")]
+transform = Transform3D(1.9106855e-15, 4.371138e-08, -0.9999998, 1, -4.371138e-08, 0, -4.371139e-08, -0.9999998, -4.371138e-08, 9.934097, 5.5000386, 183.19482)
+height = 44.0
+
+[node name="ArrowWall19" parent="EventStartCircle3/Props/RaceProps" unique_id=547278223 instance=ExtResource("25_60x1b")]
+transform = Transform3D(3.5527137e-15, 0.86602515, 0.49999994, 1, 2.1855692e-08, -3.7855163e-08, -4.3711392e-08, 0.49999994, -0.86602515, -266.4139, 5.5000362, 125.89581)
+height = 44.0
+
+[node name="ArrowWall18" parent="EventStartCircle3/Props/RaceProps" unique_id=1258479156 instance=ExtResource("25_60x1b")]
+transform = Transform3D(3.5527137e-15, -0.9999998, 0, 1, 0, 4.371138e-08, -4.3711385e-08, 0, 0.9999998, -5.0659027, 5.5000367, 139.19482)
+height = 44.0
+
+[node name="Spawns" type="Node3D" parent="EventStartCircle3" unique_id=1394512957]
+
+[node name="RaceSpawns" type="Node3D" parent="EventStartCircle3/Spawns" unique_id=2016786219]
+
+[node name="RaceGridSpot1" type="Marker3D" parent="EventStartCircle3/Spawns/RaceSpawns" unique_id=689061254]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, -24.58197, -1.9073486e-06, -35.26657)
+
+[node name="RaceGridSpot2" type="Marker3D" parent="EventStartCircle3/Spawns/RaceSpawns" unique_id=1606015054]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, -23.481995, -1.9073486e-06, -39.371765)
+
+[node name="RaceGridSpot3" type="Marker3D" parent="EventStartCircle3/Spawns/RaceSpawns" unique_id=1317395701]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, -22.446716, -2.3841858e-06, -43.235474)
+
+[node name="RaceGridSpot4" type="Marker3D" parent="EventStartCircle3/Spawns/RaceSpawns" unique_id=1419540099]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, -20.442108, -1.4305115e-06, -36.227844)
+
+[node name="RaceGridSpot5" type="Marker3D" parent="EventStartCircle3/Spawns/RaceSpawns" unique_id=716411169]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, -19.342133, -1.4305115e-06, -40.33304)
+
+[node name="RaceGridSpot6" type="Marker3D" parent="EventStartCircle3/Spawns/RaceSpawns" unique_id=1880405047]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, -16.785217, -1.4305115e-06, -37.318542)
+
+[node name="RaceGridSpot7" type="Marker3D" parent="EventStartCircle3/Spawns/RaceSpawns" unique_id=535861066]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, -17.820496, -1.4305115e-06, -33.454834)
+
+[node name="RaceGridSpot8" type="Marker3D" parent="EventStartCircle3/Spawns/RaceSpawns" unique_id=1092288334]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, -15.685242, -1.4305115e-06, -41.423737)
+
+[node name="Checkpoints" type="Node3D" parent="EventStartCircle3" unique_id=937408177]
+
+[node name="RaceCheckpoints" type="Node3D" parent="EventStartCircle3/Checkpoints" unique_id=1680818168]
+
+[node name="CheckpointMarker1" parent="EventStartCircle3/Checkpoints/RaceCheckpoints" unique_id=1400657112 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-4.3711392e-08, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, -4.3711392e-08, -101.62637, 0.2499981, -133.38239)
+width = 32.0
+
+[node name="CheckpointMarker2" parent="EventStartCircle3/Checkpoints/RaceCheckpoints" unique_id=942527325 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-1.0000001, 0, -8.7422784e-08, 0, 1, 0, 8.7422784e-08, 0, -1.0000001, -264.6264, 0.24999714, -60.382385)
+width = 32.0
+
+[node name="CheckpointMarker3" parent="EventStartCircle3/Checkpoints/RaceCheckpoints" unique_id=1101634320 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(1.3113417e-07, 0, -1.0000001, 0, 1, 0, 1.0000001, 0, 1.3113417e-07, -245.12637, 0.48388386, 121.117615)
+width = 32.0
+
+[node name="CheckpointMarker4" parent="EventStartCircle3/Checkpoints/RaceCheckpoints" unique_id=1601959176 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(1.3113417e-07, 0, -1.0000001, 0, 1, 0, 1.0000001, 0, 1.3113417e-07, -54.626343, 0.24987507, 186.61761)
+width = 32.0
+
+[node name="CheckpointMarker5" parent="EventStartCircle3/Checkpoints/RaceCheckpoints" unique_id=395736886 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(1.0000001, 0, 1.7484557e-07, 0, 1, 0, -1.7484557e-07, 0, 1.0000001, -9.12635, 0.24987602, 168.61761)
+width = 32.0
+
+[node name="CheckpointMarker6" parent="EventStartCircle3/Checkpoints/RaceCheckpoints" unique_id=1531819014 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-2.1855696e-07, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, -2.1855696e-07, -24.626358, 0.04999733, 157.11761)
+
+[node name="StuntRace3" type="Node3D" parent="EventStartCircle3" unique_id=758310714 node_paths=PackedStringArray("props", "spawn", "checkpoints", "pickups")]
 script = ExtResource("mig_event")
-definition = SubResource("Resource_trkbtl")
-route = NodePath("../Route")
+definition = SubResource("Resource_i0vae")
+props = [NodePath("../Props/RaceProps")]
+spawn = NodePath("../Spawns/RaceSpawns")
+checkpoints = NodePath("../Checkpoints/RaceCheckpoints")
+pickups = NodePath("Pickups")
 
-[node name="SequentialTaskRunner" type="Node" parent="StuntRace3/TrickBattle" unique_id=1955358384]
+[node name="Pickups" type="Node3D" parent="EventStartCircle3/StuntRace3" unique_id=2086028288]
+
+[node name="PickupSpawner1" parent="EventStartCircle3/StuntRace3/Pickups" unique_id=79579103 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(0.819232, 0, -0.573462, 0, 1, 0, 0.573462, 0, 0.819232, -63.34812, 2.367197, -38.991486)
+count = 5
+spacing = 6.1
+
+[node name="PickupSpawner6" parent="EventStartCircle3/StuntRace3/Pickups" unique_id=337854146 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -263.8481, 2.367197, -49.39148)
+count = 5
+spacing = 6.08
+
+[node name="SequentialTaskRunner" type="Node" parent="EventStartCircle3/StuntRace3" unique_id=622153036]
 script = ExtResource("20_grj8g")
+metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="GridSpawnTask" type="Node" parent="StuntRace3/TrickBattle/SequentialTaskRunner" unique_id=1413026602]
+[node name="GridSpawnTask" type="Node" parent="EventStartCircle3/StuntRace3/SequentialTaskRunner" unique_id=1058107095]
 script = ExtResource("21_gpyq4")
 
-[node name="ConcurrentTaskRunner" type="Node" parent="StuntRace3/TrickBattle/SequentialTaskRunner" unique_id=2026826019]
+[node name="ConcurrentTaskRunner2" type="Node" parent="EventStartCircle3/StuntRace3/SequentialTaskRunner" unique_id=727375242]
 script = ExtResource("16_b3ac3")
 
-[node name="CountdownTask" type="Node" parent="StuntRace3/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1861946428]
+[node name="CountdownTask" type="Node" parent="EventStartCircle3/StuntRace3/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=2073277325]
 script = ExtResource("17_clf25")
+metadata/_custom_type_script = "uid://8xvij2vjrnn2"
 
-[node name="SFXTask" type="Node" parent="StuntRace3/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1738577869]
+[node name="SFXTask" type="Node" parent="EventStartCircle3/StuntRace3/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=218621471]
 script = ExtResource("18_k3cxb")
 sound = 2
 advance_mode = 1
 duration_sec = 3.0
+metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="BattleRunner" type="Node" parent="StuntRace3/TrickBattle" unique_id=672921033]
-script = ExtResource("20_grj8g")
+[node name="RaceTask" type="Node" parent="EventStartCircle3/StuntRace3/SequentialTaskRunner" unique_id=1109009782]
+script = ExtResource("22_x6w3k")
+total_laps = 1
+objective_key = "STUNT_RACE_OBJECTIVE"
 
-[node name="TrickBattleTask" type="Node" parent="StuntRace3/TrickBattle/BattleRunner" unique_id=129130232]
-script = ExtResource("mig_trkbtl")
-respawn_in_place = true
-
-[node name="StuntRace4" parent="." unique_id=1657448105 node_paths=PackedStringArray("gas_station") groups=["EditorHideable"] instance=ExtResource("22_eair3")]
+[node name="EventStartCircle4" parent="." unique_id=1657448105 node_paths=PackedStringArray("gas_station", "props", "spawns", "checkpoints") groups=["EditorHideable"] instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 54.44812, 0, 677.8915)
 visible = false
 gas_station = NodePath("../GasStations/StuntRace4Gasstation")
+props = NodePath("Props")
+spawns = NodePath("Spawns")
+checkpoints = NodePath("Checkpoints")
 
-[node name="Route" type="Node3D" parent="StuntRace4" unique_id=356842632]
-top_level = true
-script = ExtResource("mig_route")
+[node name="Props" type="Node3D" parent="EventStartCircle4" unique_id=1050090734]
 
-[node name="RaceGridSpot1" type="Marker3D" parent="StuntRace4/Route" unique_id=1495455921]
-transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 68.36615, 0.24987817, 723.1249)
+[node name="RaceProps" type="Node3D" parent="EventStartCircle4/Props" unique_id=979550673]
 
-[node name="RaceGridSpot2" type="Marker3D" parent="StuntRace4/Route" unique_id=537476495]
-transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 69.466125, 0.24987793, 719.0197)
+[node name="ArrowWall" parent="EventStartCircle4/Props/RaceProps" unique_id=1184740642 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-3.0908605e-08, -0.9659257, 0.258819, 1, -2.1855687e-08, 3.785517e-08, -3.0908605e-08, 0.258819, 0.9659257, -229.48883, 5.25, -38.667664)
+height = 45.0
 
-[node name="RaceGridSpot3" type="Marker3D" parent="StuntRace4/Route" unique_id=556131025]
-transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 70.5014, 0.24987793, 715.156)
+[node name="ArrowWall5" parent="EventStartCircle4/Props/RaceProps" unique_id=2046419567 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, -1, 3.1786513e-08, 1, -4.3711378e-08, 1.01529486e-14, 0, 3.1786513e-08, 1, -583.63116, 5.5000114, -1.085144)
 
-[node name="RaceGridSpot4" type="Marker3D" parent="StuntRace4/Route" unique_id=1941522833]
-transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 72.50601, 0.24987817, 722.16364)
+[node name="ArrowWall6" parent="EventStartCircle4/Props/RaceProps" unique_id=1306382139 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, -1, 3.1786513e-08, 1, -4.3711378e-08, 1.01529486e-14, 0, 3.1786513e-08, 1, -583.63116, 5.5000114, -40.085144)
 
-[node name="RaceGridSpot5" type="Marker3D" parent="StuntRace4/Route" unique_id=588269745]
-transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 73.60599, 0.2498784, 718.0585)
+[node name="ArrowWall7" parent="EventStartCircle4/Props/RaceProps" unique_id=1471212688 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, -0.25881904, -0.9659258, 1, -1.1313336e-08, -4.2221945e-08, 0, -0.9659258, 0.25881904, -724.62634, 5.5000057, -21.452759)
 
-[node name="RaceGridSpot6" type="Marker3D" parent="StuntRace4/Route" unique_id=1441556280]
-transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 76.1629, 0.24987769, 721.07294)
+[node name="ArrowWall14" parent="EventStartCircle4/Props/RaceProps" unique_id=766030565 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711378e-08, -8.940697e-08, 1, 1, -1.7763568e-15, 4.371138e-08, 0, 1, 8.940697e-08, -662.3474, 5.5000086, -214.23877)
 
-[node name="RaceGridSpot7" type="Marker3D" parent="StuntRace4/Route" unique_id=2071192338]
-transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 75.127625, 0.24987793, 724.93665)
+[node name="ArrowWall15" parent="EventStartCircle4/Props/RaceProps" unique_id=1008042415 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711374e-08, -1, -1.3311836e-07, 1, -4.3711374e-08, -3.5538792e-16, 0, -1.3311836e-07, 1, -870.8474, 5.4999995, 25.26123)
 
-[node name="RaceGridSpot8" type="Marker3D" parent="StuntRace4/Route" unique_id=414175483]
-transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 77.26288, 0.24987769, 716.9678)
+[node name="ArrowWall16" parent="EventStartCircle4/Props/RaceProps" unique_id=103884739 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.3711374e-08, 1.937151e-07, -0.99999994, 1, 9.769963e-15, -4.3711367e-08, 0, -0.99999994, -1.937151e-07, -983.0405, 5.5, -56.895752)
 
-[node name="CheckpointMarker1" parent="StuntRace4/Route" unique_id=2112484092 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-4.3711392e-08, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, -4.3711392e-08, -27.178253, 0.24987662, 722.0091)
+[node name="ArrowWall17" parent="EventStartCircle4/Props/RaceProps" unique_id=889733882 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371137e-08, 0.99999994, 2.3742648e-07, 1, 4.371137e-08, 1.2020267e-14, 0, 2.3742648e-07, -0.99999994, -1000.0405, 5.499999, -195.89575)
+
+[node name="ArrowWall13" parent="EventStartCircle4/Props/RaceProps" unique_id=1010798248 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, 0.7071068, -0.70710677, 1, 3.090862e-08, -3.090861e-08, 0, -0.70710677, -0.7071068, -840.5066, 5.500001, -212.26645)
+height = 55.0
+
+[node name="ArrowWall8" parent="EventStartCircle4/Props/RaceProps" unique_id=774339263 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, -1, 2.0663207e-07, 1, -4.3711378e-08, 1.779569e-14, 0, 2.0663207e-07, 1, -516.63116, 5.5000143, -1.085144)
+
+[node name="ArrowWall9" parent="EventStartCircle4/Props/RaceProps" unique_id=20779626 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, -1, 2.0663207e-07, 1, -4.3711378e-08, 1.779569e-14, 0, 2.0663207e-07, 1, -452.13116, 5.500017, -1.085144)
+
+[node name="ArrowWall10" parent="EventStartCircle4/Props/RaceProps" unique_id=854653767 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, -1, 2.0663207e-07, 1, -4.3711378e-08, 1.779569e-14, 0, 2.0663207e-07, 1, -388.63116, 5.50002, -1.085144)
+
+[node name="ArrowWall11" parent="EventStartCircle4/Props/RaceProps" unique_id=1718646821 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, -1, 2.0663207e-07, 1, -4.3711378e-08, 1.779569e-14, 0, 2.0663207e-07, 1, -324.13116, 5.500023, -1.085144)
+
+[node name="ArrowWall12" parent="EventStartCircle4/Props/RaceProps" unique_id=2091127027 instance=ExtResource("25_60x1b")]
+transform = Transform3D(-4.371138e-08, -0.96592575, 0.25881925, 1, -4.222194e-08, 1.1313356e-08, 0, 0.25881925, 0.96592575, -325.6494, 5.500023, -46.819458)
+
+[node name="Spawns" type="Node3D" parent="EventStartCircle4" unique_id=181771205]
+
+[node name="RaceSpawns" type="Node3D" parent="EventStartCircle4/Spawns" unique_id=1386951677]
+
+[node name="RaceGridSpot1" type="Marker3D" parent="EventStartCircle4/Spawns/RaceSpawns" unique_id=1495455921]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 13.91803, 0.24987817, 45.2334)
+
+[node name="RaceGridSpot2" type="Marker3D" parent="EventStartCircle4/Spawns/RaceSpawns" unique_id=537476495]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 15.018005, 0.24987793, 41.128235)
+
+[node name="RaceGridSpot3" type="Marker3D" parent="EventStartCircle4/Spawns/RaceSpawns" unique_id=556131025]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 16.053284, 0.24987793, 37.264526)
+
+[node name="RaceGridSpot4" type="Marker3D" parent="EventStartCircle4/Spawns/RaceSpawns" unique_id=1941522833]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 18.057892, 0.24987817, 44.272156)
+
+[node name="RaceGridSpot5" type="Marker3D" parent="EventStartCircle4/Spawns/RaceSpawns" unique_id=588269745]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 19.157867, 0.2498784, 40.166992)
+
+[node name="RaceGridSpot6" type="Marker3D" parent="EventStartCircle4/Spawns/RaceSpawns" unique_id=1441556280]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 21.714783, 0.24987769, 43.181458)
+
+[node name="RaceGridSpot7" type="Marker3D" parent="EventStartCircle4/Spawns/RaceSpawns" unique_id=2071192338]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 20.679504, 0.24987793, 47.045166)
+
+[node name="RaceGridSpot8" type="Marker3D" parent="EventStartCircle4/Spawns/RaceSpawns" unique_id=414175483]
+transform = Transform3D(-4.3711378e-08, 0, 0.99999976, 0, 1, 0, -0.99999976, 0, -4.3711378e-08, 22.814758, 0.24987769, 39.076294)
+
+[node name="Checkpoints" type="Node3D" parent="EventStartCircle4" unique_id=1677697666]
+
+[node name="RaceCheckpoints" type="Node3D" parent="EventStartCircle4/Checkpoints" unique_id=1416987623]
+
+[node name="CheckpointMarker1" parent="EventStartCircle4/Checkpoints/RaceCheckpoints" unique_id=2112484092 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-4.3711392e-08, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, -4.3711392e-08, -81.62637, 0.24987662, 44.117615)
 width = 32.0
 
-[node name="CheckpointMarker2" parent="StuntRace4/Route" unique_id=1252288006 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-4.3711392e-08, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, -4.3711392e-08, -157.17827, 0.47513998, 654.5091)
+[node name="CheckpointMarker2" parent="EventStartCircle4/Checkpoints/RaceCheckpoints" unique_id=1252288006 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-4.3711392e-08, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, -4.3711392e-08, -211.62639, 0.47513998, -23.382385)
 width = 32.0
 
-[node name="CheckpointMarker3" parent="StuntRace4/Route" unique_id=426851831 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-4.3711392e-08, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, -4.3711392e-08, -417.17828, 0.49999845, 654.5091)
+[node name="CheckpointMarker3" parent="EventStartCircle4/Checkpoints/RaceCheckpoints" unique_id=426851831 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-4.3711392e-08, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, -4.3711392e-08, -471.6264, 0.49999845, -23.382385)
 width = 32.0
 
-[node name="CheckpointMarker4" parent="StuntRace4/Route" unique_id=800196772 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(0.70710677, 0, 0.7071069, 0, 1, 0, -0.7071069, 0, 0.70710677, -646.49634, 0.24999869, 650.2266)
+[node name="CheckpointMarker4" parent="EventStartCircle4/Checkpoints/RaceCheckpoints" unique_id=800196772 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(0.70710677, 0, 0.7071069, 0, 1, 0, -0.7071069, 0, 0.70710677, -700.94446, 0.24999869, -27.664856)
 width = 32.0
 
-[node name="CheckpointMarker5" parent="StuntRace4/Route" unique_id=1160690968 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(0.70710677, 0, 0.7071069, 0, 1, 0, -0.7071069, 0, 0.70710677, -779.43243, 0.24999845, 522.94745)
+[node name="CheckpointMarker5" parent="EventStartCircle4/Checkpoints/RaceCheckpoints" unique_id=1160690968 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(0.70710677, 0, 0.7071069, 0, 1, 0, -0.7071069, 0, 0.70710677, -833.88055, 0.24999845, -154.94403)
 width = 32.0
 
-[node name="CheckpointMarker6" parent="StuntRace4/Route" unique_id=2075083611 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(8.940697e-08, 0, -1, 0, 1, 0, 1, 0, 8.940697e-08, -733.11694, 0.49999857, 461.7827)
+[node name="CheckpointMarker6" parent="EventStartCircle4/Checkpoints/RaceCheckpoints" unique_id=2075083611 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(8.940697e-08, 0, -1, 0, 1, 0, 1, 0, 8.940697e-08, -787.56506, 0.49999857, -216.10876)
 width = 32.0
 
-[node name="CheckpointMarker7" parent="StuntRace4/Route" unique_id=825962939 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.7071067, 0, -0.7071068, 0, 1, 0, 0.7071068, 0, -0.7071067, -629.8995, 0.4999988, 473.53577)
+[node name="CheckpointMarker7" parent="EventStartCircle4/Checkpoints/RaceCheckpoints" unique_id=825962939 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-0.7071067, 0, -0.7071068, 0, 1, 0, 0.7071068, 0, -0.7071067, -684.3476, 0.4999988, -204.35571)
 width = 32.0
 
-[node name="CheckpointMarker8" parent="StuntRace4/Route" unique_id=276714769 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.99999994, 0, -5.9604645e-08, 0, 1, 0, 5.9604645e-08, 0, -0.99999994, -719.8129, 0.25012076, 683.6868)
+[node name="CheckpointMarker8" parent="EventStartCircle4/Checkpoints/RaceCheckpoints" unique_id=276714769 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-0.99999994, 0, -5.9604645e-08, 0, 1, 0, 5.9604645e-08, 0, -0.99999994, -774.26105, 0.25012076, 5.795349)
 width = 32.0
 
-[node name="CheckpointMarker9" parent="StuntRace4/Route" unique_id=285780755 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-1.589326e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, -1.589326e-08, -833.8129, 0.35736382, 720.6868)
+[node name="CheckpointMarker9" parent="EventStartCircle4/Checkpoints/RaceCheckpoints" unique_id=285780755 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(-1.589326e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, -1.589326e-08, -888.26105, 0.35736382, 42.79535)
 width = 32.0
 
-[node name="CheckpointMarker10" parent="StuntRace4/Route" unique_id=107396237 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(0.5, 0, -0.8660253, 0, 1, 0, 0.8660253, 0, 0.5, -953.42065, 0.49999845, 621.9548)
+[node name="CheckpointMarker10" parent="EventStartCircle4/Checkpoints/RaceCheckpoints" unique_id=107396237 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(0.5, 0, -0.8660253, 0, 1, 0, 0.8660253, 0, 0.5, -1007.8688, 0.49999845, -55.936707)
 width = 32.0
 
-[node name="CheckpointMarker11" parent="StuntRace4/Route" unique_id=1749864708 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(1, 0, 8.940697e-08, 0, 1, 0, -8.940697e-08, 0, 1, -943.52606, 0.25787127, 518.09265)
+[node name="CheckpointMarker11" parent="EventStartCircle4/Checkpoints/RaceCheckpoints" unique_id=1749864708 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(1, 0, 8.940697e-08, 0, 1, 0, -8.940697e-08, 0, 1, -997.9742, 0.25787127, -159.79883)
 width = 32.0
 
-[node name="CheckpointMarker12" parent="StuntRace4/Route" unique_id=812351859 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(4.569558e-08, 0, -1, 0, 1, 0, 1, 0, 4.569558e-08, -926.52606, 0.049999118, 493.59265)
+[node name="CheckpointMarker12" parent="EventStartCircle4/Checkpoints/RaceCheckpoints" unique_id=812351859 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
+transform = Transform3D(4.569558e-08, 0, -1, 0, 1, 0, 1, 0, 4.569558e-08, -980.9742, 0.049999118, -184.29883)
 
-[node name="PickupSpawner1" parent="StuntRace4/Route" unique_id=223493394 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -7.9, 2.367197, 720.5)
+[node name="StartZone" parent="EventStartCircle4" unique_id=872789583 instance=ExtResource("99_startzone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.42678, 0.25, 42.17102)
+
+[node name="StuntRace4" type="Node3D" parent="EventStartCircle4" unique_id=2012942092 node_paths=PackedStringArray("props", "spawn", "checkpoints", "pickups", "start_zone")]
+script = ExtResource("mig_event")
+definition = SubResource("Resource_dsd47")
+props = [NodePath("../Props/RaceProps")]
+spawn = NodePath("../Spawns/RaceSpawns")
+checkpoints = NodePath("../Checkpoints/RaceCheckpoints")
+pickups = NodePath("Pickups")
+start_zone = NodePath("../StartZone")
+
+[node name="Pickups" type="Node3D" parent="EventStartCircle4/StuntRace4" unique_id=1412449485]
+
+[node name="PickupSpawner1" parent="EventStartCircle4/StuntRace4/Pickups" unique_id=223493394 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -62.34812, 2.367197, 42.60852)
 count = 5
 spacing = 6.08
 
-[node name="ArrowWall" parent="StuntRace4/Route" unique_id=1184740642 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-3.0908605e-08, -0.9659257, 0.258819, 1, -2.1855687e-08, 3.785517e-08, -3.0908605e-08, 0.258819, 0.9659257, -175.04071, 5.25, 639.2238)
-height = 45.0
+[node name="PickupSpawner2" parent="EventStartCircle4/StuntRace4/Pickups" unique_id=761218876 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -229.34811, 2.367197, -19.39148)
+count = 5
+spacing = 6.08
 
-[node name="ArrowWall5" parent="StuntRace4/Route" unique_id=2046419567 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, -1, 3.1786513e-08, 1, -4.3711378e-08, 1.01529486e-14, 0, 3.1786513e-08, 1, -529.18304, 5.5000114, 676.80634)
+[node name="PickupSpawner3" parent="EventStartCircle4/StuntRace4/Pickups" unique_id=1830418053 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -476.3481, 2.367197, -22.39148)
+count = 5
+spacing = 6.08
 
-[node name="ArrowWall6" parent="StuntRace4/Route" unique_id=1306382139 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, -1, 3.1786513e-08, 1, -4.3711378e-08, 1.01529486e-14, 0, 3.1786513e-08, 1, -529.18304, 5.5000114, 637.80634)
+[node name="PickupSpawner4" parent="EventStartCircle4/StuntRace4/Pickups" unique_id=985266836 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, -705.34814, 2.367197, -32.39148)
+count = 5
+spacing = 6.08
 
-[node name="ArrowWall7" parent="StuntRace4/Route" unique_id=1471212688 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, -0.25881904, -0.9659258, 1, -1.1313336e-08, -4.2221945e-08, 0, -0.9659258, 0.25881904, -670.1782, 5.5000057, 656.4387)
+[node name="PickupSpawner5" parent="EventStartCircle4/StuntRace4/Pickups" unique_id=1324765779 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(-0.99999994, 0, 0, 0, 1, 0, 0, 0, -0.99999994, -780.34814, 2.367197, -215.39148)
+count = 5
+spacing = 6.08
 
-[node name="ArrowWall14" parent="StuntRace4/Route" unique_id=766030565 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711378e-08, -8.940697e-08, 1, 1, -1.7763568e-15, 4.371138e-08, 0, 1, 8.940697e-08, -607.8993, 5.5000086, 463.6527)
+[node name="PickupSpawner6" parent="EventStartCircle4/StuntRace4/Pickups" unique_id=1138556808 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(-0.99999994, 0, 0, 0, 1, 0, 0, 0, -0.99999994, -800.34814, 2.367197, 44.60852)
+count = 5
+spacing = 6.08
 
-[node name="ArrowWall15" parent="StuntRace4/Route" unique_id=1008042415 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711374e-08, -1, -1.3311836e-07, 1, -4.3711374e-08, -3.5538792e-16, 0, -1.3311836e-07, 1, -816.3993, 5.4999995, 703.1527)
+[node name="DriveToStartRunner" type="Node" parent="EventStartCircle4/StuntRace4" unique_id=1554639557]
+script = ExtResource("drive_to_start_runner")
 
-[node name="ArrowWall16" parent="StuntRace4/Route" unique_id=103884739 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.3711374e-08, 1.937151e-07, -0.99999994, 1, 9.769963e-15, -4.3711367e-08, 0, -0.99999994, -1.937151e-07, -928.5924, 5.5, 620.9957)
-
-[node name="ArrowWall17" parent="StuntRace4/Route" unique_id=889733882 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371137e-08, 0.99999994, 2.3742648e-07, 1, 4.371137e-08, 1.2020267e-14, 0, 2.3742648e-07, -0.99999994, -945.5924, 5.499999, 481.99573)
-
-[node name="ArrowWall13" parent="StuntRace4/Route" unique_id=1010798248 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, 0.7071068, -0.70710677, 1, 3.090862e-08, -3.090861e-08, 0, -0.70710677, -0.7071068, -786.0585, 5.500001, 465.62503)
-height = 55.0
-
-[node name="ArrowWall8" parent="StuntRace4/Route" unique_id=774339263 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, -1, 2.0663207e-07, 1, -4.3711378e-08, 1.779569e-14, 0, 2.0663207e-07, 1, -462.18304, 5.5000143, 676.80634)
-
-[node name="ArrowWall9" parent="StuntRace4/Route" unique_id=20779626 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, -1, 2.0663207e-07, 1, -4.3711378e-08, 1.779569e-14, 0, 2.0663207e-07, 1, -397.68304, 5.500017, 676.80634)
-
-[node name="ArrowWall10" parent="StuntRace4/Route" unique_id=854653767 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, -1, 2.0663207e-07, 1, -4.3711378e-08, 1.779569e-14, 0, 2.0663207e-07, 1, -334.18304, 5.50002, 676.80634)
-
-[node name="ArrowWall11" parent="StuntRace4/Route" unique_id=1718646821 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, -1, 2.0663207e-07, 1, -4.3711378e-08, 1.779569e-14, 0, 2.0663207e-07, 1, -269.68304, 5.500023, 676.80634)
-
-[node name="ArrowWall12" parent="StuntRace4/Route" unique_id=2091127027 instance=ExtResource("25_60x1b")]
-transform = Transform3D(-4.371138e-08, -0.96592575, 0.25881925, 1, -4.222194e-08, 1.1313356e-08, 0, 0.25881925, 0.96592575, -271.2013, 5.500023, 631.072)
-
-[node name="StartZone" parent="StuntRace4/Route" unique_id=872789583 instance=ExtResource("99_startzone")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72.8749, 0.25, 720.0625)
-
-[node name="StuntRace4" type="Node" parent="StuntRace4" unique_id=2012942092 node_paths=PackedStringArray("route")]
-script = ExtResource("mig_event")
-definition = SubResource("Resource_dsd47")
-route = NodePath("../Route")
-
-[node name="DriveToStartRunner" type="Node" parent="StuntRace4/StuntRace4" unique_id=1554639557]
-script = ExtResource("20_grj8g")
-
-[node name="DriveToStartTask" type="Node" parent="StuntRace4/StuntRace4/DriveToStartRunner" unique_id=1906629879 node_paths=PackedStringArray("trigger")]
-script = ExtResource("99_ckpttask")
-objective_key = "RACE_DRIVE_TO_START"
-hint_key = "RACE_HINT_DRIVE_TO_START"
-hide_trigger_on_pass = true
-eval_when = 1
-trigger = NodePath("../../../Route/StartZone")
-respawn_in_place = true
-
-[node name="SequentialTaskRunner" type="Node" parent="StuntRace4/StuntRace4" unique_id=1194487181]
+[node name="SequentialTaskRunner" type="Node" parent="EventStartCircle4/StuntRace4" unique_id=1194487181]
 script = ExtResource("20_grj8g")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
 
-[node name="GridSpawnTask" type="Node" parent="StuntRace4/StuntRace4/SequentialTaskRunner" unique_id=117287693]
+[node name="GridSpawnTask" type="Node" parent="EventStartCircle4/StuntRace4/SequentialTaskRunner" unique_id=117287693]
 script = ExtResource("21_gpyq4")
 
-[node name="ConcurrentTaskRunner2" type="Node" parent="StuntRace4/StuntRace4/SequentialTaskRunner" unique_id=135542498]
+[node name="ConcurrentTaskRunner2" type="Node" parent="EventStartCircle4/StuntRace4/SequentialTaskRunner" unique_id=135542498]
 script = ExtResource("16_b3ac3")
 
-[node name="CountdownTask" type="Node" parent="StuntRace4/StuntRace4/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1607996985]
+[node name="CountdownTask" type="Node" parent="EventStartCircle4/StuntRace4/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1607996985]
 script = ExtResource("17_clf25")
 metadata/_custom_type_script = "uid://8xvij2vjrnn2"
 
-[node name="SFXTask" type="Node" parent="StuntRace4/StuntRace4/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1522632770]
+[node name="SFXTask" type="Node" parent="EventStartCircle4/StuntRace4/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1522632770]
 script = ExtResource("18_k3cxb")
 sound = 2
 advance_mode = 1
 duration_sec = 3.0
 metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 
-[node name="RaceTask" type="Node" parent="StuntRace4/StuntRace4/SequentialTaskRunner" unique_id=156318237]
+[node name="RaceTask" type="Node" parent="EventStartCircle4/StuntRace4/SequentialTaskRunner" unique_id=156318237]
 script = ExtResource("22_x6w3k")
 total_laps = 1
 objective_key = "STUNT_RACE_OBJECTIVE"
 
-[node name="TrickBattle" type="Node" parent="StuntRace4" unique_id=1982291109 node_paths=PackedStringArray("route")]
-script = ExtResource("mig_event")
-definition = SubResource("Resource_trkbtl")
-route = NodePath("../Route")
-
-[node name="SequentialTaskRunner" type="Node" parent="StuntRace4/TrickBattle" unique_id=1985018708]
-script = ExtResource("20_grj8g")
-
-[node name="GridSpawnTask" type="Node" parent="StuntRace4/TrickBattle/SequentialTaskRunner" unique_id=1563326385]
-script = ExtResource("21_gpyq4")
-
-[node name="ConcurrentTaskRunner" type="Node" parent="StuntRace4/TrickBattle/SequentialTaskRunner" unique_id=1066195393]
-script = ExtResource("16_b3ac3")
-
-[node name="CountdownTask" type="Node" parent="StuntRace4/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1647656583]
-script = ExtResource("17_clf25")
-
-[node name="SFXTask" type="Node" parent="StuntRace4/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=546874191]
-script = ExtResource("18_k3cxb")
-sound = 2
-advance_mode = 1
-duration_sec = 3.0
-
-[node name="BattleRunner" type="Node" parent="StuntRace4/TrickBattle" unique_id=714359415]
-script = ExtResource("20_grj8g")
-
-[node name="TrickBattleTask" type="Node" parent="StuntRace4/TrickBattle/BattleRunner" unique_id=912749027]
-script = ExtResource("mig_trkbtl")
-respawn_in_place = true
-
-[node name="TrackRace" parent="." unique_id=584445287 node_paths=PackedStringArray("gas_station") groups=["EditorHideable"] instance=ExtResource("22_eair3")]
+[node name="TrackRace" parent="." unique_id=584445287 node_paths=PackedStringArray("gas_station", "props", "spawns", "checkpoints") groups=["EditorHideable"] instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -751, 0.5, 259)
 visible = false
 gas_station = NodePath("TrackGasstation")
+props = NodePath("Props")
+spawns = NodePath("Spawns")
+checkpoints = NodePath("Checkpoints")
 metadata/_edit_group_ = true
+
+[node name="Props" type="Node3D" parent="TrackRace" unique_id=833451240]
+
+[node name="RaceProps" type="Node3D" parent="TrackRace/Props" unique_id=595813403]
+
+[node name="Spawns" type="Node3D" parent="TrackRace" unique_id=1706613842]
+
+[node name="RaceSpawns" type="Node3D" parent="TrackRace/Spawns" unique_id=1984895072]
+
+[node name="Marker3D1" type="Marker3D" parent="TrackRace/Spawns/RaceSpawns" unique_id=1408665817]
+transform = Transform3D(-0.06504503, 0, -0.9978823, 0, 1, 0, 0.9978823, 0, -0.06504503, -7.451355, -0.24999237, -20.351913)
+
+[node name="Marker3D2" type="Marker3D" parent="TrackRace/Spawns/RaceSpawns" unique_id=224210273]
+transform = Transform3D(-0.06504503, 0, -0.9978823, 0, 1, 0, 0.9978823, 0, -0.06504503, -7.7440796, -0.24999237, -15.86145)
+
+[node name="Marker3D3" type="Marker3D" parent="TrackRace/Spawns/RaceSpawns" unique_id=1853957605]
+transform = Transform3D(-0.06504503, 0, -0.9978823, 0, 1, 0, 0.9978823, 0, -0.06504503, -8.036804, -0.24999213, -11.370987)
+
+[node name="Marker3D4" type="Marker3D" parent="TrackRace/Spawns/RaceSpawns" unique_id=1358978181]
+transform = Transform3D(-0.06504503, 0, -0.9978823, 0, 1, 0, 0.9978823, 0, -0.06504503, -12.939697, -0.24999237, -20.709656)
+
+[node name="Marker3D5" type="Marker3D" parent="TrackRace/Spawns/RaceSpawns" unique_id=241817388]
+transform = Transform3D(-0.06504503, 0, -0.9978823, 0, 1, 0, 0.9978823, 0, -0.06504503, -13.232422, -0.24999237, -16.219193)
+
+[node name="Marker3D6" type="Marker3D" parent="TrackRace/Spawns/RaceSpawns" unique_id=752547074]
+transform = Transform3D(-0.06504503, 0, -0.9978823, 0, 1, 0, 0.9978823, 0, -0.06504503, -13.5251465, -0.24999213, -11.728729)
+
+[node name="Marker3D7" type="Marker3D" parent="TrackRace/Spawns/RaceSpawns" unique_id=1973905691]
+transform = Transform3D(-0.06504503, 0, -0.9978823, 0, 1, 0, 0.9978823, 0, -0.06504503, -16.525146, -0.24999213, -14.728729)
+
+[node name="Marker3D8" type="Marker3D" parent="TrackRace/Spawns/RaceSpawns" unique_id=1065290828]
+transform = Transform3D(-0.06504503, 0, -0.9978823, 0, 1, 0, 0.9978823, 0, -0.06504503, -16.525146, -0.24999213, -19.72873)
+
+[node name="Checkpoints" type="Node3D" parent="TrackRace" unique_id=125856032]
+
+[node name="RaceCheckpoints" type="Node3D" parent="TrackRace/Checkpoints" unique_id=1617660463]
+
+[node name="CheckpointMarkerStartStop1" parent="TrackRace/Checkpoints/RaceCheckpoints" unique_id=371754582 instance=ExtResource("19_clf25")]
+transform = Transform3D(-0.03847803, 0, -0.9992594, 0, 1, 0, 0.9992594, 0, -0.03847803, 18, -0.24999237, -13.5)
+width = 24.0
+
+[node name="CheckpointMarker2" parent="TrackRace/Checkpoints/RaceCheckpoints" unique_id=601636242 instance=ExtResource("19_clf25")]
+transform = Transform3D(0.46630675, 0, -0.88462305, 0, 1, 0, 0.88462305, 0, 0.46630675, 91.07831, -0.25, -20.626373)
+width = 24.0
+
+[node name="CheckpointMarker3" parent="TrackRace/Checkpoints/RaceCheckpoints" unique_id=672311881 instance=ExtResource("19_clf25")]
+transform = Transform3D(-0.07521814, 0, -0.99716705, 0, 1, 0, 0.99716705, 0, -0.07521814, 138.88214, -0.25009608, -119.509094)
+width = 24.0
+
+[node name="CheckpointMarker4" parent="TrackRace/Checkpoints/RaceCheckpoints" unique_id=1861321699 instance=ExtResource("19_clf25")]
+transform = Transform3D(0.9218392, 0, -0.38757256, 0, 1, 0, 0.38757256, 0, 0.9218392, 246.03394, -0.2501223, -105.17386)
+width = 24.0
+
+[node name="CheckpointMarker5" parent="TrackRace/Checkpoints/RaceCheckpoints" unique_id=936713619 instance=ExtResource("19_clf25")]
+transform = Transform3D(0.7221247, 0, -0.6917628, 0, 1, 0, 0.6917628, 0, 0.7221247, 305.3105, -0.25012207, -221.57619)
+width = 24.0
+
+[node name="CheckpointMarker6" parent="TrackRace/Checkpoints/RaceCheckpoints" unique_id=998212527 instance=ExtResource("19_clf25")]
+transform = Transform3D(0.051546, 0, 0.9986705, 0, 1, 0, -0.9986705, 0, 0.051546, 145.672, -0.22996545, -296.09293)
+width = 24.0
+
+[node name="CheckpointMarker7" parent="TrackRace/Checkpoints/RaceCheckpoints" unique_id=2055149992 instance=ExtResource("19_clf25")]
+transform = Transform3D(-0.13855901, 0, 0.99035406, 0, 1, 0, -0.99035406, 0, -0.13855901, 10.298706, -0.11324024, -294.43903)
+width = 24.0
+
+[node name="CheckpointMarker8" parent="TrackRace/Checkpoints/RaceCheckpoints" unique_id=206261677 instance=ExtResource("19_clf25")]
+transform = Transform3D(-0.34367758, 0, -0.9390876, 0, 1, 0, 0.9390876, 0, -0.34367758, 43.73059, -0.07460594, -128.94583)
+width = 24.0
+
+[node name="CheckpointMarker9" parent="TrackRace/Checkpoints/RaceCheckpoints" unique_id=2070740217 instance=ExtResource("19_clf25")]
+transform = Transform3D(-0.42101845, 0, 0.9070519, 0, 1, 0, -0.9070519, 0, -0.42101845, 49.873962, -0.30647278, -62.805756)
+width = 24.0
+
+[node name="CheckpointMarker10" parent="TrackRace/Checkpoints/RaceCheckpoints" unique_id=1933255950 instance=ExtResource("19_clf25")]
+transform = Transform3D(-0.42101845, 0, 0.9070519, 0, 1, 0, -0.9070519, 0, -0.42101845, -58.233765, -0.2500999, -106.887726)
+width = 24.0
+
+[node name="CheckpointMarker11" parent="TrackRace/Checkpoints/RaceCheckpoints" unique_id=779541876 instance=ExtResource("19_clf25")]
+transform = Transform3D(-0.57502073, 0, -0.8181387, 0, 1, 0, 0.8181387, 0, -0.57502073, -80.19238, -0.25002193, -26.412796)
+width = 24.0
 
 [node name="TrackGasstation" parent="TrackRace" unique_id=622963410 instance=ExtResource("7_7qjpf")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -0.45, 14.5)
 
-[node name="Route" type="Node3D" parent="TrackRace" unique_id=1008001461]
-top_level = true
-script = ExtResource("mig_route")
+[node name="StartZone" parent="TrackRace" unique_id=1236162907 instance=ExtResource("99_startzone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.48822, -0.25, -16.040298)
 
-[node name="Marker3D1" type="Marker3D" parent="TrackRace/Route" unique_id=1408665817]
-transform = Transform3D(-0.06504503, 0, -0.9978823, 0, 1, 0, 0.9978823, 0, -0.06504503, -758.45135, 0.25000763, 238.64809)
-
-[node name="Marker3D2" type="Marker3D" parent="TrackRace/Route" unique_id=224210273]
-transform = Transform3D(-0.06504503, 0, -0.9978823, 0, 1, 0, 0.9978823, 0, -0.06504503, -758.7441, 0.25000763, 243.13855)
-
-[node name="Marker3D3" type="Marker3D" parent="TrackRace/Route" unique_id=1853957605]
-transform = Transform3D(-0.06504503, 0, -0.9978823, 0, 1, 0, 0.9978823, 0, -0.06504503, -759.0368, 0.25000787, 247.62901)
-
-[node name="Marker3D4" type="Marker3D" parent="TrackRace/Route" unique_id=1358978181]
-transform = Transform3D(-0.06504503, 0, -0.9978823, 0, 1, 0, 0.9978823, 0, -0.06504503, -763.9397, 0.25000763, 238.29034)
-
-[node name="Marker3D5" type="Marker3D" parent="TrackRace/Route" unique_id=241817388]
-transform = Transform3D(-0.06504503, 0, -0.9978823, 0, 1, 0, 0.9978823, 0, -0.06504503, -764.2324, 0.25000763, 242.7808)
-
-[node name="Marker3D6" type="Marker3D" parent="TrackRace/Route" unique_id=752547074]
-transform = Transform3D(-0.06504503, 0, -0.9978823, 0, 1, 0, 0.9978823, 0, -0.06504503, -764.52515, 0.25000787, 247.27127)
-
-[node name="CheckpointMarkerStartStop1" parent="TrackRace/Route" unique_id=371754582 instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.03847803, 0, -0.9992594, 0, 1, 0, 0.9992594, 0, -0.03847803, -733, 0.25000763, 245.5)
-width = 24.0
-
-[node name="CheckpointMarker2" parent="TrackRace/Route" unique_id=601636242 instance=ExtResource("19_clf25")]
-transform = Transform3D(0.46630675, 0, -0.88462305, 0, 1, 0, 0.88462305, 0, 0.46630675, -659.9217, 0.25, 238.37363)
-width = 24.0
-
-[node name="CheckpointMarker3" parent="TrackRace/Route" unique_id=672311881 instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.07521814, 0, -0.99716705, 0, 1, 0, 0.99716705, 0, -0.07521814, -612.11786, 0.24990392, 139.4909)
-width = 24.0
-
-[node name="CheckpointMarker4" parent="TrackRace/Route" unique_id=1861321699 instance=ExtResource("19_clf25")]
-transform = Transform3D(0.9218392, 0, -0.38757256, 0, 1, 0, 0.38757256, 0, 0.9218392, -504.96606, 0.24987769, 153.82614)
-width = 24.0
-
-[node name="CheckpointMarker5" parent="TrackRace/Route" unique_id=936713619 instance=ExtResource("19_clf25")]
-transform = Transform3D(0.7221247, 0, -0.6917628, 0, 1, 0, 0.6917628, 0, 0.7221247, -445.6895, 0.24987793, 37.42381)
-width = 24.0
-
-[node name="CheckpointMarker6" parent="TrackRace/Route" unique_id=998212527 instance=ExtResource("19_clf25")]
-transform = Transform3D(0.051546, 0, 0.9986705, 0, 1, 0, -0.9986705, 0, 0.051546, -605.328, 0.27003455, -37.092926)
-width = 24.0
-
-[node name="CheckpointMarker7" parent="TrackRace/Route" unique_id=2055149992 instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.13855901, 0, 0.99035406, 0, 1, 0, -0.99035406, 0, -0.13855901, -740.7013, 0.38675976, -35.43903)
-width = 24.0
-
-[node name="CheckpointMarker8" parent="TrackRace/Route" unique_id=206261677 instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.34367758, 0, -0.9390876, 0, 1, 0, 0.9390876, 0, -0.34367758, -707.2694, 0.42539406, 130.05417)
-width = 24.0
-
-[node name="CheckpointMarker9" parent="TrackRace/Route" unique_id=2070740217 instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.42101845, 0, 0.9070519, 0, 1, 0, -0.9070519, 0, -0.42101845, -701.12604, 0.19352722, 196.19424)
-width = 24.0
-
-[node name="CheckpointMarker10" parent="TrackRace/Route" unique_id=1933255950 instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.42101845, 0, 0.9070519, 0, 1, 0, -0.9070519, 0, -0.42101845, -809.23376, 0.2499001, 152.11227)
-width = 24.0
-
-[node name="CheckpointMarker11" parent="TrackRace/Route" unique_id=779541876 instance=ExtResource("19_clf25")]
-transform = Transform3D(-0.57502073, 0, -0.8181387, 0, 1, 0, 0.8181387, 0, -0.57502073, -831.1924, 0.24997807, 232.5872)
-width = 24.0
-
-[node name="GrayBox_StaticBody" parent="TrackRace/Route" unique_id=1644147130 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.99526596, 0, 0.09718746, 0, 1, 0, -0.09718746, 0, 0.99526596, -684.41846, 0.7499982, 230.79498)
-collision_layer = 3
-width = 0.2
-height = 1.5
-depth = 3.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody2" parent="TrackRace/Route" unique_id=1234363892 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.03961526, 0, 0.9992148, 0, 1, 0, -0.9992148, 0, 0.03961526, -628.72943, 0.7499982, 171.14989)
-collision_layer = 3
-width = 0.2
-height = 1.5
-depth = 3.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody3" parent="TrackRace/Route" unique_id=2026174968 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.7041016, 0, 0.710099, 0, 1, 0, -0.710099, 0, 0.7041016, -479.746, 0.7499982, 51.62038)
-collision_layer = 3
-width = 0.2
-height = 1.5
-depth = 3.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody4" parent="TrackRace/Route" unique_id=53219200 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.998425, 0, 0.05609882, 0, 1, 0, -0.05609882, 0, 0.998425, -725.34064, 0.7499982, -23.448944)
-collision_layer = 3
-width = 0.2
-height = 1.5
-depth = 3.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody5" parent="TrackRace/Route" unique_id=780484300 instance=ExtResource("18_dc022")]
-transform = Transform3D(-0.91414315, 0, 0.40539104, 0, 1, 0, -0.40539104, 0, -0.91414315, -729.9289, 0.7499982, 137.80652)
-collision_layer = 3
-width = 0.2
-height = 1.5
-depth = 3.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody6" parent="TrackRace/Route" unique_id=670774984 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.84788585, 0, -0.5301784, 0, 1, 0, 0.5301784, 0, 0.84788585, -780.3175, 0.7499982, 166.32819)
-collision_layer = 3
-width = 0.2
-height = 1.5
-depth = 3.0
-color_preset = 1
-
-[node name="GrayBox_StaticBody7" parent="TrackRace/Route" unique_id=2133219538 instance=ExtResource("18_dc022")]
-transform = Transform3D(0.035205036, 0, 0.99937993, 0, 1, 0, -0.99937993, 0, 0.035205036, -829.8027, 0.7499982, 202.71724)
-collision_layer = 3
-width = 0.2
-height = 1.5
-depth = 3.0
-color_preset = 1
-
-[node name="StartZone" parent="TrackRace/Route" unique_id=1236162907 instance=ExtResource("99_startzone")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -761.4882, 0.25, 242.9597)
-
-[node name="TrackRace" type="Node" parent="TrackRace" unique_id=1208701543 node_paths=PackedStringArray("route")]
+[node name="TrackRace" type="Node3D" parent="TrackRace" unique_id=1208701543 node_paths=PackedStringArray("props", "spawn", "checkpoints", "pickups", "start_zone")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_2e67r")
-route = NodePath("../Route")
+props = [NodePath("../Props/RaceProps")]
+spawn = NodePath("../Spawns/RaceSpawns")
+checkpoints = NodePath("../Checkpoints/RaceCheckpoints")
+pickups = NodePath("Pickups")
+start_zone = NodePath("../StartZone")
+
+[node name="Pickups" type="Node3D" parent="TrackRace/TrackRace" unique_id=1633861075]
 
 [node name="DriveToStartRunner" type="Node" parent="TrackRace/TrackRace" unique_id=403911400]
-script = ExtResource("20_grj8g")
-
-[node name="DriveToStartTask" type="Node" parent="TrackRace/TrackRace/DriveToStartRunner" unique_id=1342268654 node_paths=PackedStringArray("trigger")]
-script = ExtResource("99_ckpttask")
-objective_key = "RACE_DRIVE_TO_START"
-hint_key = "RACE_HINT_DRIVE_TO_START"
-hide_trigger_on_pass = true
-eval_when = 1
-trigger = NodePath("../../../Route/StartZone")
-respawn_in_place = true
+script = ExtResource("drive_to_start_runner")
 
 [node name="SequentialTaskRunner" type="Node" parent="TrackRace/TrackRace" unique_id=496057780]
 script = ExtResource("20_grj8g")
@@ -2921,10 +2909,12 @@ script = ExtResource("22_x6w3k")
 total_laps = 2
 metadata/_custom_type_script = "uid://bk8siml2v41d1"
 
-[node name="TimeAttack" type="Node" parent="TrackRace" unique_id=442534700 node_paths=PackedStringArray("route")]
+[node name="TimeAttack" type="Node3D" parent="TrackRace" unique_id=442534700 node_paths=PackedStringArray("props", "spawn", "checkpoints")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_5wqg6")
-route = NodePath("../Route")
+props = [NodePath("../Props/RaceProps")]
+spawn = NodePath("../Spawns/RaceSpawns")
+checkpoints = NodePath("../Checkpoints/RaceCheckpoints")
 
 [node name="SequentialTaskRunner" type="Node" parent="TrackRace/TimeAttack" unique_id=400080734]
 script = ExtResource("20_grj8g")
@@ -2950,58 +2940,28 @@ total_laps = 1
 endless = true
 objective_key = "TIME_ATTACK_RUN_OBJECTIVE"
 
-[node name="TrickBattle" type="Node" parent="TrackRace" unique_id=1209693056 node_paths=PackedStringArray("route")]
-script = ExtResource("mig_event")
-definition = SubResource("Resource_trkbtl")
-route = NodePath("../Route")
-
-[node name="SequentialTaskRunner" type="Node" parent="TrackRace/TrickBattle" unique_id=278919434]
-script = ExtResource("20_grj8g")
-
-[node name="GridSpawnTask" type="Node" parent="TrackRace/TrickBattle/SequentialTaskRunner" unique_id=1200162625]
-script = ExtResource("21_gpyq4")
-
-[node name="ConcurrentTaskRunner" type="Node" parent="TrackRace/TrickBattle/SequentialTaskRunner" unique_id=1462012233]
-script = ExtResource("16_b3ac3")
-
-[node name="CountdownTask" type="Node" parent="TrackRace/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=345560449]
-script = ExtResource("17_clf25")
-
-[node name="SFXTask" type="Node" parent="TrackRace/TrickBattle/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=134462950]
-script = ExtResource("18_k3cxb")
-sound = 2
-advance_mode = 1
-duration_sec = 3.0
-
-[node name="BattleRunner" type="Node" parent="TrackRace/TrickBattle" unique_id=1732983272]
-script = ExtResource("20_grj8g")
-
-[node name="TrickBattleTask" type="Node" parent="TrackRace/TrickBattle/BattleRunner" unique_id=559961761]
-script = ExtResource("mig_trkbtl")
-respawn_in_place = true
-
 [node name="StuntCity_REMEMBER_TO_REPLACE_ME" parent="." unique_id=1750931100 groups=["navigation_mesh_source_group"] instance=ExtResource("27_grj8g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 0)
 
-[node name="grass" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="0" unique_id=1434498815]
+[node name="grass" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="0" unique_id=1855413113]
 layers = 3
 
-[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/grass" index="0" unique_id=1902094466]
+[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/grass" index="0" unique_id=649719389]
 collision_layer = 17
 
-[node name="ground" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="1" unique_id=1650114735]
+[node name="ground" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="1" unique_id=204493026]
 layers = 3
 
-[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/ground" index="0" unique_id=768195441]
+[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/ground" index="0" unique_id=824161194]
 collision_layer = 17
 
-[node name="road" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="2" unique_id=330481511]
+[node name="road" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="2" unique_id=1908981655]
 layers = 3
 
-[node name="water" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="3" unique_id=448821427]
+[node name="water" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="3" unique_id=1323724107]
 layers = 3
 
-[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/water" index="0" unique_id=1545230634]
+[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/water" index="0" unique_id=1559516157]
 collision_layer = 0
 
 [node name="Houses" type="Node3D" parent="." unique_id=697015734 groups=["navigation_mesh_source_group"]]
@@ -3779,14 +3739,6 @@ layout_seed = 3
 has_collision = true
 snapped_heights = PackedFloat32Array(-255.72266, -255.68074, -255.70186, -255.74911, -255.6804, -255.64746, -255.65242, -255.71115, -255.62589, -255.76439, -255.68155, -255.66435, -255.75232, -255.60922, -255.73369, -255.71799)
 
-[node name="TreeBundle20" parent="_Trees_/Treesoutskirtsandintown" unique_id=567024210 instance=ExtResource("25_x6w3k")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -121, 256, -45)
-size = 32
-aspect = 4
-density = 2
-layout_seed = 3
-snapped_heights = PackedFloat32Array(-255.72264, -255.68073, -255.70186, -255.74911, -255.68039, -255.64745, -255.6524, -255.71115, -255.62587, -255.76437, -255.68155, -255.66434, -255.7523, -255.6092, -255.73367, -255.71797)
-
 [node name="TreeBundle21" parent="_Trees_/Treesoutskirtsandintown" unique_id=1459682998 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 64.5, 256, -48)
 size = 32
@@ -3998,6 +3950,65 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -144
 [node name="props" type="Node3D" parent="." unique_id=1428165132 groups=["navigation_mesh_source_group"]]
 
 [node name="Island" type="Node3D" parent="props" unique_id=188517865]
+
+[node name="TrackBrakingZoneWalls" type="Node3D" parent="props/Island" unique_id=1008001461]
+top_level = true
+
+[node name="GrayBox_StaticBody" parent="props/Island/TrackBrakingZoneWalls" unique_id=1644147130 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.99526596, 0, 0.09718746, 0, 1, 0, -0.09718746, 0, 0.99526596, -684.41846, 0.7499982, 230.79498)
+collision_layer = 3
+width = 0.2
+height = 1.5
+depth = 3.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody2" parent="props/Island/TrackBrakingZoneWalls" unique_id=1234363892 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.03961526, 0, 0.9992148, 0, 1, 0, -0.9992148, 0, 0.03961526, -628.72943, 0.7499982, 171.14989)
+collision_layer = 3
+width = 0.2
+height = 1.5
+depth = 3.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody3" parent="props/Island/TrackBrakingZoneWalls" unique_id=2026174968 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.7041016, 0, 0.710099, 0, 1, 0, -0.710099, 0, 0.7041016, -479.746, 0.7499982, 51.62038)
+collision_layer = 3
+width = 0.2
+height = 1.5
+depth = 3.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody4" parent="props/Island/TrackBrakingZoneWalls" unique_id=53219200 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.998425, 0, 0.05609882, 0, 1, 0, -0.05609882, 0, 0.998425, -725.34064, 0.7499982, -23.448944)
+collision_layer = 3
+width = 0.2
+height = 1.5
+depth = 3.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody5" parent="props/Island/TrackBrakingZoneWalls" unique_id=780484300 instance=ExtResource("18_dc022")]
+transform = Transform3D(-0.91414315, 0, 0.40539104, 0, 1, 0, -0.40539104, 0, -0.91414315, -729.9289, 0.7499982, 137.80652)
+collision_layer = 3
+width = 0.2
+height = 1.5
+depth = 3.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody6" parent="props/Island/TrackBrakingZoneWalls" unique_id=670774984 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.84788585, 0, -0.5301784, 0, 1, 0, 0.5301784, 0, 0.84788585, -780.3175, 0.7499982, 166.32819)
+collision_layer = 3
+width = 0.2
+height = 1.5
+depth = 3.0
+color_preset = 1
+
+[node name="GrayBox_StaticBody7" parent="props/Island/TrackBrakingZoneWalls" unique_id=2133219538 instance=ExtResource("18_dc022")]
+transform = Transform3D(0.035205036, 0, 0.99937993, 0, 1, 0, -0.99937993, 0, 0.035205036, -829.8027, 0.7499982, 202.71724)
+collision_layer = 3
+width = 0.2
+height = 1.5
+depth = 3.0
+color_preset = 1
 
 [node name="GrayBox_StaticBody" parent="props/Island" unique_id=927672150 instance=ExtResource("18_dc022")]
 transform = Transform3D(0.9762052, 0, 0.21684878, 0, 1, 0, -0.21684878, 0, 0.9762052, -451.18613, 0.10090068, 12.531288)
@@ -5276,7 +5287,7 @@ lane_width = 6.0
 [node name="RP_004" parent="RoadManager/3way_2x3" index="3"]
 lane_width = 6.0
 
-[node name="3way_2x2" parent="RoadManager/3way_2x3/3way_2x3" index="0" unique_id=792373302]
+[node name="3way_2x2" parent="RoadManager/3way_2x3/3way_2x3" index="0" unique_id=1118283580]
 surface_material_override/0 = ExtResource("46_oxlis")
 
 [node name="Road_004" type="Node3D" parent="RoadManager" unique_id=1679953535]
@@ -5363,7 +5374,7 @@ lane_width = 6.0
 [node name="RP_004" parent="RoadManager/3way_2x4" index="3"]
 lane_width = 6.0
 
-[node name="3way_2x2" parent="RoadManager/3way_2x4/3way_2x3" index="0" unique_id=792373302]
+[node name="3way_2x2" parent="RoadManager/3way_2x4/3way_2x3" index="0" unique_id=1118283580]
 surface_material_override/0 = ExtResource("46_oxlis")
 
 [node name="4way_2x2" parent="RoadManager" unique_id=4089390 instance=ExtResource("11_s2l3m")]
@@ -6336,15 +6347,15 @@ prior_pt_init = NodePath("../RP_002")
 next_pt_init = NodePath("../RP_013")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_001" unique_id=178060121]
-curve = SubResource("Curve3D_6lq47")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_001" unique_id=310261972]
 curve = SubResource("Curve3D_dhvxm")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_001" unique_id=1859346658]
+[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_001" unique_id=310261972]
 curve = SubResource("Curve3D_yucqr")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_001" unique_id=1859346658]
+curve = SubResource("Curve3D_i2g37")
 metadata/_edit_lock_ = true
 
 [node name="RP_002" type="Node3D" parent="RoadManager/Road_026" unique_id=373419492]
@@ -6358,15 +6369,15 @@ prior_pt_init = NodePath("../RP_003")
 next_pt_init = NodePath("../RP_001")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_002" unique_id=1954073844]
-curve = SubResource("Curve3D_i2g37")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_002" unique_id=8778028]
 curve = SubResource("Curve3D_nn4in")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_002" unique_id=217191205]
+[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_002" unique_id=8778028]
 curve = SubResource("Curve3D_eiesv")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_002" unique_id=217191205]
+curve = SubResource("Curve3D_5y7ao")
 metadata/_edit_lock_ = true
 
 [node name="RP_003" type="Node3D" parent="RoadManager/Road_026" unique_id=732619955]
@@ -6380,15 +6391,15 @@ prior_pt_init = NodePath("../RP_004")
 next_pt_init = NodePath("../RP_002")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_003" unique_id=87675341]
-curve = SubResource("Curve3D_5y7ao")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_003" unique_id=1503123557]
 curve = SubResource("Curve3D_7hvei")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_003" unique_id=1236241332]
+[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_003" unique_id=1503123557]
 curve = SubResource("Curve3D_i66y0")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_003" unique_id=1236241332]
+curve = SubResource("Curve3D_2ay7t")
 metadata/_edit_lock_ = true
 
 [node name="RP_004" type="Node3D" parent="RoadManager/Road_026" unique_id=1458535917]
@@ -6402,15 +6413,15 @@ prior_pt_init = NodePath("../RP_005")
 next_pt_init = NodePath("../RP_003")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_004" unique_id=983293870]
-curve = SubResource("Curve3D_2ay7t")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_004" unique_id=889597465]
 curve = SubResource("Curve3D_d5rj0")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_004" unique_id=570980754]
+[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_004" unique_id=889597465]
 curve = SubResource("Curve3D_jp5v4")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_004" unique_id=570980754]
+curve = SubResource("Curve3D_ls3o1")
 metadata/_edit_lock_ = true
 
 [node name="RP_005" type="Node3D" parent="RoadManager/Road_026" unique_id=2033250797]
@@ -6424,15 +6435,15 @@ prior_pt_init = NodePath("../RP_006")
 next_pt_init = NodePath("../RP_004")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_005" unique_id=801600540]
-curve = SubResource("Curve3D_ls3o1")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_005" unique_id=831801444]
 curve = SubResource("Curve3D_smo70")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_005" unique_id=567061192]
+[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_005" unique_id=831801444]
 curve = SubResource("Curve3D_4hi6c")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_005" unique_id=567061192]
+curve = SubResource("Curve3D_0yvxw")
 metadata/_edit_lock_ = true
 
 [node name="RP_006" type="Node3D" parent="RoadManager/Road_026" unique_id=382769729]
@@ -6446,15 +6457,15 @@ prior_pt_init = NodePath("../RP_007")
 next_pt_init = NodePath("../RP_005")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_006" unique_id=1412821470]
-curve = SubResource("Curve3D_0yvxw")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_006" unique_id=1321545878]
 curve = SubResource("Curve3D_v0061")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_006" unique_id=6522191]
+[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_006" unique_id=1321545878]
 curve = SubResource("Curve3D_dpvtx")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_006" unique_id=6522191]
+curve = SubResource("Curve3D_m8kd6")
 metadata/_edit_lock_ = true
 
 [node name="RP_007" type="Node3D" parent="RoadManager/Road_026" unique_id=174035746]
@@ -6468,15 +6479,15 @@ prior_pt_init = NodePath("../RP_008")
 next_pt_init = NodePath("../RP_006")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_007" unique_id=1468443031]
-curve = SubResource("Curve3D_m8kd6")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_007" unique_id=372730496]
 curve = SubResource("Curve3D_wktpq")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_007" unique_id=1860557356]
+[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_007" unique_id=372730496]
 curve = SubResource("Curve3D_mmjc8")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_007" unique_id=1860557356]
+curve = SubResource("Curve3D_xh2aq")
 metadata/_edit_lock_ = true
 
 [node name="RP_008" type="Node3D" parent="RoadManager/Road_026" unique_id=1993203289]
@@ -6490,15 +6501,15 @@ prior_pt_init = NodePath("../RP_009")
 next_pt_init = NodePath("../RP_007")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_008" unique_id=237278491]
-curve = SubResource("Curve3D_xh2aq")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_008" unique_id=1389987177]
 curve = SubResource("Curve3D_660yo")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_008" unique_id=1561850552]
+[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_008" unique_id=1389987177]
 curve = SubResource("Curve3D_4a300")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_008" unique_id=1561850552]
+curve = SubResource("Curve3D_gyn7v")
 metadata/_edit_lock_ = true
 
 [node name="RP_009" type="Node3D" parent="RoadManager/Road_026" unique_id=825904578]
@@ -6512,15 +6523,15 @@ prior_pt_init = NodePath("../RP_010")
 next_pt_init = NodePath("../RP_008")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_009" unique_id=748279703]
-curve = SubResource("Curve3D_gyn7v")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_009" unique_id=1779650588]
 curve = SubResource("Curve3D_pci2k")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_009" unique_id=245516932]
+[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_009" unique_id=1779650588]
 curve = SubResource("Curve3D_ij01o")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_009" unique_id=245516932]
+curve = SubResource("Curve3D_sfwv2")
 metadata/_edit_lock_ = true
 
 [node name="RP_013" type="Node3D" parent="RoadManager/Road_026" unique_id=1905323819]
@@ -6541,15 +6552,15 @@ prior_pt_init = NodePath("../RP_015")
 next_pt_init = NodePath("../RP_018")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_014" unique_id=1903044859]
-curve = SubResource("Curve3D_sfwv2")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_014" unique_id=1708523577]
 curve = SubResource("Curve3D_463k5")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_014" unique_id=378834212]
+[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_014" unique_id=1708523577]
 curve = SubResource("Curve3D_iyu83")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_014" unique_id=378834212]
+curve = SubResource("Curve3D_eqhci")
 metadata/_edit_lock_ = true
 
 [node name="RP_015" type="Node3D" parent="RoadManager/Road_026" unique_id=1008527756]
@@ -6563,15 +6574,15 @@ prior_pt_init = NodePath("../RP_016")
 next_pt_init = NodePath("../RP_014")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_015" unique_id=17391926]
-curve = SubResource("Curve3D_eqhci")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_015" unique_id=301163245]
 curve = SubResource("Curve3D_ajuuv")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_015" unique_id=1930353955]
+[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_015" unique_id=301163245]
 curve = SubResource("Curve3D_r58c1")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_015" unique_id=1930353955]
+curve = SubResource("Curve3D_wyckw")
 metadata/_edit_lock_ = true
 
 [node name="RP_016" type="Node3D" parent="RoadManager/Road_026" unique_id=317647550]
@@ -6585,15 +6596,15 @@ prior_pt_init = NodePath("../RP_017")
 next_pt_init = NodePath("../RP_015")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_016" unique_id=159930296]
-curve = SubResource("Curve3D_wyckw")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_016" unique_id=87938582]
 curve = SubResource("Curve3D_jago7")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_016" unique_id=1044141348]
+[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_016" unique_id=87938582]
 curve = SubResource("Curve3D_5ls82")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_016" unique_id=1044141348]
+curve = SubResource("Curve3D_okah6")
 metadata/_edit_lock_ = true
 
 [node name="RP_017" type="Node3D" parent="RoadManager/Road_026" unique_id=448347375]
@@ -6606,21 +6617,21 @@ next_mag = 29.09607
 next_pt_init = NodePath("../RP_016")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_017" unique_id=1722395293]
-curve = SubResource("Curve3D_okah6")
+curve = SubResource("Curve3D_rbh0l")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Road_026/RP_017/edge_R" unique_id=227368666 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_017" unique_id=1251156025]
-curve = SubResource("Curve3D_rbh0l")
+curve = SubResource("Curve3D_nal0m")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Road_026/RP_017/edge_F" unique_id=348371621 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_017" unique_id=713924321]
-curve = SubResource("Curve3D_nal0m")
+curve = SubResource("Curve3D_mwlmy")
 metadata/_edit_lock_ = true
 
 [node name="RP_018" type="Node3D" parent="RoadManager/Road_026" unique_id=1062224018]
@@ -6643,7 +6654,7 @@ prior_pt_init = NodePath("../RP_011")
 next_pt_init = NodePath("../RP_009")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_010" unique_id=1717314078]
-curve = SubResource("Curve3D_mwlmy")
+curve = SubResource("Curve3D_vppsu")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Road_026/RP_010/edge_R" unique_id=1226340263 instance=ExtResource("12_3twxm")]
@@ -6651,7 +6662,7 @@ collision_layer = 2
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_010" unique_id=1781715613]
-curve = SubResource("Curve3D_vppsu")
+curve = SubResource("Curve3D_y6c4p")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Road_026/RP_010/edge_F" unique_id=591334515 instance=ExtResource("12_3twxm")]
@@ -6659,7 +6670,7 @@ collision_layer = 2
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_010" unique_id=579864184]
-curve = SubResource("Curve3D_y6c4p")
+curve = SubResource("Curve3D_qukl4")
 metadata/_edit_lock_ = true
 
 [node name="RP_011" type="Node3D" parent="RoadManager/Road_026" unique_id=2124795648]
@@ -6672,15 +6683,15 @@ next_mag = 8.0
 prior_pt_init = NodePath("../RP_010")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Road_026/RP_011" unique_id=291517936]
-curve = SubResource("Curve3D_qukl4")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_011" unique_id=1503427741]
 curve = SubResource("Curve3D_05twp")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_011" unique_id=1402498689]
+[node name="edge_F" type="Path3D" parent="RoadManager/Road_026/RP_011" unique_id=1503427741]
 curve = SubResource("Curve3D_r4ej8")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/Road_026/RP_011" unique_id=1402498689]
+curve = SubResource("Curve3D_punjn")
 metadata/_edit_lock_ = true
 
 [node name="Road_027" type="Node3D" parent="RoadManager" unique_id=1958268287]
@@ -6949,15 +6960,15 @@ prior_pt_init = NodePath("../RP_005")
 next_pt_init = NodePath("../RP_002")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_001" unique_id=1986150321]
-curve = SubResource("Curve3D_punjn")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_001" unique_id=1878071296]
 curve = SubResource("Curve3D_wyqag")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_001" unique_id=1599986307]
+[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_001" unique_id=1878071296]
 curve = SubResource("Curve3D_bop2h")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_001" unique_id=1599986307]
+curve = SubResource("Curve3D_022se")
 metadata/_edit_lock_ = true
 
 [node name="RP_002" type="Node3D" parent="RoadManager/bridgeroad" unique_id=1770111972]
@@ -6971,15 +6982,15 @@ prior_pt_init = NodePath("../RP_001")
 next_pt_init = NodePath("../RP_003")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_002" unique_id=1812409607]
-curve = SubResource("Curve3D_022se")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_002" unique_id=909327310]
 curve = SubResource("Curve3D_dhvic")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_002" unique_id=1375997108]
+[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_002" unique_id=909327310]
 curve = SubResource("Curve3D_ruwj7")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_002" unique_id=1375997108]
+curve = SubResource("Curve3D_44yky")
 metadata/_edit_lock_ = true
 
 [node name="RP_005" type="Node3D" parent="RoadManager/bridgeroad" unique_id=104417362]
@@ -6993,21 +7004,21 @@ prior_pt_init = NodePath("../RP_006")
 next_pt_init = NodePath("../RP_001")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_005" unique_id=209340463]
-curve = SubResource("Curve3D_44yky")
+curve = SubResource("Curve3D_cad8g")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_005/edge_R" unique_id=354494324 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_005" unique_id=1460038946]
-curve = SubResource("Curve3D_cad8g")
+curve = SubResource("Curve3D_8dg3l")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_005/edge_F" unique_id=1416033416 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_005" unique_id=882996704]
-curve = SubResource("Curve3D_8dg3l")
+curve = SubResource("Curve3D_58ha2")
 metadata/_edit_lock_ = true
 
 [node name="RP_006" type="Node3D" parent="RoadManager/bridgeroad" unique_id=1878248579]
@@ -7021,21 +7032,21 @@ prior_pt_init = NodePath("../RP_007")
 next_pt_init = NodePath("../RP_005")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_006" unique_id=912126381]
-curve = SubResource("Curve3D_58ha2")
+curve = SubResource("Curve3D_cdtsq")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_006/edge_R" unique_id=1410673700 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_006" unique_id=2027731395]
-curve = SubResource("Curve3D_cdtsq")
+curve = SubResource("Curve3D_j3ken")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_006/edge_F" unique_id=344925828 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_006" unique_id=1742019994]
-curve = SubResource("Curve3D_j3ken")
+curve = SubResource("Curve3D_s5tfl")
 metadata/_edit_lock_ = true
 
 [node name="RP_007" type="Node3D" parent="RoadManager/bridgeroad" unique_id=322917356]
@@ -7049,21 +7060,21 @@ prior_pt_init = NodePath("../RP_008")
 next_pt_init = NodePath("../RP_006")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_007" unique_id=1634234280]
-curve = SubResource("Curve3D_s5tfl")
+curve = SubResource("Curve3D_1nt7f")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_007/edge_R" unique_id=819865914 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_007" unique_id=1707585009]
-curve = SubResource("Curve3D_1nt7f")
+curve = SubResource("Curve3D_rhwn7")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_007/edge_F" unique_id=2085483279 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_007" unique_id=126214080]
-curve = SubResource("Curve3D_rhwn7")
+curve = SubResource("Curve3D_mmlbl")
 metadata/_edit_lock_ = true
 
 [node name="RP_008" type="Node3D" parent="RoadManager/bridgeroad" unique_id=58407875]
@@ -7077,21 +7088,21 @@ prior_pt_init = NodePath("../RP_009")
 next_pt_init = NodePath("../RP_007")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_008" unique_id=694602661]
-curve = SubResource("Curve3D_mmlbl")
+curve = SubResource("Curve3D_la3vg")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_008/edge_R" unique_id=1703846035 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_008" unique_id=72102539]
-curve = SubResource("Curve3D_la3vg")
+curve = SubResource("Curve3D_g4kdb")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_008/edge_F" unique_id=740523124 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_008" unique_id=1882487803]
-curve = SubResource("Curve3D_g4kdb")
+curve = SubResource("Curve3D_ow6x7")
 metadata/_edit_lock_ = true
 
 [node name="RP_009" type="Node3D" parent="RoadManager/bridgeroad" unique_id=1339023966]
@@ -7105,21 +7116,21 @@ prior_pt_init = NodePath("../RP_010")
 next_pt_init = NodePath("../RP_008")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_009" unique_id=1955638473]
-curve = SubResource("Curve3D_ow6x7")
+curve = SubResource("Curve3D_0c48d")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_009/edge_R" unique_id=382722042 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_009" unique_id=1693336786]
-curve = SubResource("Curve3D_0c48d")
+curve = SubResource("Curve3D_c0ooj")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_009/edge_F" unique_id=747350104 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_009" unique_id=1681721669]
-curve = SubResource("Curve3D_c0ooj")
+curve = SubResource("Curve3D_pdy6h")
 metadata/_edit_lock_ = true
 
 [node name="RP_010" type="Node3D" parent="RoadManager/bridgeroad" unique_id=1317145902]
@@ -7130,21 +7141,21 @@ lanes = Array[int]([2, 4, 4, 2])
 next_pt_init = NodePath("../RP_009")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_010" unique_id=693373319]
-curve = SubResource("Curve3D_pdy6h")
+curve = SubResource("Curve3D_thlma")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_010/edge_R" unique_id=1668919672 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_010" unique_id=1055047765]
-curve = SubResource("Curve3D_thlma")
+curve = SubResource("Curve3D_2okop")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/bridgeroad/RP_010/edge_F" unique_id=1622523373 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_010" unique_id=1219700673]
-curve = SubResource("Curve3D_2okop")
+curve = SubResource("Curve3D_wtb5w")
 metadata/_edit_lock_ = true
 
 [node name="RP_003" type="Node3D" parent="RoadManager/bridgeroad" unique_id=1626909351]
@@ -7158,15 +7169,15 @@ prior_pt_init = NodePath("../RP_002")
 next_pt_init = NodePath("../RP_004")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/bridgeroad/RP_003" unique_id=1130543593]
-curve = SubResource("Curve3D_wtb5w")
-metadata/_edit_lock_ = true
-
-[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_003" unique_id=816150197]
 curve = SubResource("Curve3D_amwrg")
 metadata/_edit_lock_ = true
 
-[node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_003" unique_id=72864931]
+[node name="edge_F" type="Path3D" parent="RoadManager/bridgeroad/RP_003" unique_id=816150197]
 curve = SubResource("Curve3D_crtc4")
+metadata/_edit_lock_ = true
+
+[node name="edge_C" type="Path3D" parent="RoadManager/bridgeroad/RP_003" unique_id=72864931]
+curve = SubResource("Curve3D_8ki22")
 metadata/_edit_lock_ = true
 
 [node name="RP_004" type="Node3D" parent="RoadManager/bridgeroad" unique_id=304205764]
@@ -7455,21 +7466,21 @@ prior_pt_init = NodePath("../RP_003")
 next_pt_init = NodePath("../RP_002")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Bridgeroad2/RP_001" unique_id=1873575921]
-curve = SubResource("Curve3D_8ki22")
+curve = SubResource("Curve3D_wybhb")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Bridgeroad2/RP_001/edge_R" unique_id=2099936115 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Bridgeroad2/RP_001" unique_id=1351785388]
-curve = SubResource("Curve3D_wybhb")
+curve = SubResource("Curve3D_ellli")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Bridgeroad2/RP_001/edge_F" unique_id=1491277127 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Bridgeroad2/RP_001" unique_id=1471574737]
-curve = SubResource("Curve3D_ellli")
+curve = SubResource("Curve3D_bqfqq")
 metadata/_edit_lock_ = true
 
 [node name="RP_003" type="Node3D" parent="RoadManager/Bridgeroad2" unique_id=1483991054]
@@ -7483,21 +7494,21 @@ prior_pt_init = NodePath("../RP_006")
 next_pt_init = NodePath("../RP_001")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Bridgeroad2/RP_003" unique_id=524920057]
-curve = SubResource("Curve3D_bqfqq")
+curve = SubResource("Curve3D_fimhw")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Bridgeroad2/RP_003/edge_R" unique_id=1473906858 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Bridgeroad2/RP_003" unique_id=1282266261]
-curve = SubResource("Curve3D_fimhw")
+curve = SubResource("Curve3D_ekkip")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Bridgeroad2/RP_003/edge_F" unique_id=931586216 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Bridgeroad2/RP_003" unique_id=770387062]
-curve = SubResource("Curve3D_ekkip")
+curve = SubResource("Curve3D_pxn0e")
 metadata/_edit_lock_ = true
 
 [node name="RP_006" type="Node3D" parent="RoadManager/Bridgeroad2" unique_id=250666018]
@@ -7511,21 +7522,21 @@ prior_pt_init = NodePath("../RP_007")
 next_pt_init = NodePath("../RP_003")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Bridgeroad2/RP_006" unique_id=641999320]
-curve = SubResource("Curve3D_pxn0e")
+curve = SubResource("Curve3D_ugit3")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Bridgeroad2/RP_006/edge_R" unique_id=608459918 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Bridgeroad2/RP_006" unique_id=975483433]
-curve = SubResource("Curve3D_ugit3")
+curve = SubResource("Curve3D_oq14l")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Bridgeroad2/RP_006/edge_F" unique_id=354978774 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Bridgeroad2/RP_006" unique_id=504664830]
-curve = SubResource("Curve3D_oq14l")
+curve = SubResource("Curve3D_va7c2")
 metadata/_edit_lock_ = true
 
 [node name="RP_007" type="Node3D" parent="RoadManager/Bridgeroad2" unique_id=2044872247]
@@ -7538,21 +7549,21 @@ next_mag = 21.548187
 next_pt_init = NodePath("../RP_006")
 
 [node name="edge_R" type="Path3D" parent="RoadManager/Bridgeroad2/RP_007" unique_id=350264463]
-curve = SubResource("Curve3D_va7c2")
+curve = SubResource("Curve3D_5okja")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Bridgeroad2/RP_007/edge_R" unique_id=1515237878 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_F" type="Path3D" parent="RoadManager/Bridgeroad2/RP_007" unique_id=2059330650]
-curve = SubResource("Curve3D_5okja")
+curve = SubResource("Curve3D_bfdfn")
 metadata/_edit_lock_ = true
 
 [node name="BridgeWallCSGPoly" parent="RoadManager/Bridgeroad2/RP_007/edge_F" unique_id=267140248 instance=ExtResource("12_3twxm")]
 polygon = PackedVector2Array(-0.5, -0.5, 0, 1.5, 1, 1.5, 1, -0.5)
 
 [node name="edge_C" type="Path3D" parent="RoadManager/Bridgeroad2/RP_007" unique_id=1856818512]
-curve = SubResource("Curve3D_bfdfn")
+curve = SubResource("Curve3D_p1fwp")
 metadata/_edit_lock_ = true
 
 [node name="RP_002" type="Node3D" parent="RoadManager/Bridgeroad2" unique_id=1869473923]
@@ -7578,7 +7589,7 @@ metadata/_edit_lock_ = true
 
 [node name="RaceWall" parent="." unique_id=1909321819 groups=["navigation_mesh_source_group"] instance=ExtResource("50_7h6ax")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -663, -1.9073486e-06, 164)
-curve = SubResource("Curve3D_p1fwp")
+curve = SubResource("Curve3D_71wu4")
 
 [node name="RaceWall2" parent="." unique_id=1382726365 groups=["navigation_mesh_source_group"] instance=ExtResource("50_7h6ax")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -663, 0, 164)
@@ -7586,7 +7597,7 @@ curve = SubResource("Curve3D_ytyv1")
 
 [node name="RaceWall3" parent="." unique_id=481092031 groups=["navigation_mesh_source_group"] instance=ExtResource("50_7h6ax")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -769, 0, 263.5)
-curve = SubResource("Curve3D_71wu4")
+curve = SubResource("Curve3D_kk4sc")
 
 [node name="Corkscrew" parent="." unique_id=1046466621 groups=["navigation_mesh_source_group"] instance=ExtResource("60_kgknl")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 123.5, 3.7982864, 12)
@@ -7609,14 +7620,7 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -352
 [node name="StopSign3" parent="." unique_id=1810459759 instance=ExtResource("67_dhvxm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -323.60004, 0.9999981, 480.1)
 
-[node name="LaunchFenceWall" parent="." unique_id=1485126779 instance=ExtResource("18_dc022")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -178, 0.37499797, -4)
-collision_layer = 3
-width = 36.0
-height = 0.75
-depth = 0.1
-color_preset = 6
-
+[editable path="EventStartCircle1/Props/TrickBattleProps/TrickBattleArena"]
 [editable path="StuntCity_REMEMBER_TO_REPLACE_ME"]
 [editable path="RoadManager/3way_2x3"]
 [editable path="RoadManager/3way_2x3/3way_2x3"]

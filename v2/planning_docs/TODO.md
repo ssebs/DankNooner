@@ -26,6 +26,7 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
+- [ ] separate props per game mode under an event start circle
 
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -234,7 +235,6 @@
 - [ ] r => quick respawn, add btn for set full respawn point (if not in race)
 - [ ] 1, 2, 3 spam is possible for everyone, debounce this
 - [ ] more car models / cleaner w/ neon fx & working lights/blinder
-  - [ ] give cars headlights
 - [ ] Add more ramp flow / alternate driving line on level
 - [ ] eventstartcircle event names are too big / ugly
 

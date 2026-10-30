@@ -7,7 +7,6 @@
 [ext_resource type="Sky" uid="uid://dfgbuerpq3y8" path="res://levels/assets/skybox_neon.tres" id="5_py6on"]
 [ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/gamemodeobjects/killbox.tscn" id="6_nm3k2"]
 [ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.tscn" id="7_py6on"]
-[ext_resource type="Script" uid="uid://cm4g6ptfwf37q" path="res://managers/gamemodes/gamemodeobjects/event_route.gd" id="8_nm3k2"]
 [ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="9_ehog7"]
 [ext_resource type="PackedScene" uid="uid://rervqxotioc4" path="res://levels/components/props/ramp.tscn" id="10_dcsrd"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="11_nm3k2"]
@@ -83,12 +82,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -256, 0)
 unique_name_in_owner = true
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 256, 0)
 
-[node name="MegaRamp" parent="." unique_id=459761741 instance=ExtResource("7_py6on")]
+[node name="MegaRamp" parent="." unique_id=459761741 node_paths=PackedStringArray("spawns", "checkpoints") instance=ExtResource("7_py6on")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 256, -57.5)
+spawns = NodePath("Spawns")
+checkpoints = NodePath("Checkpoints")
+
+[node name="Spawns" type="Node3D" parent="MegaRamp" unique_id=1064863161]
+
+[node name="JumpSpawns" type="Node3D" parent="MegaRamp/Spawns" unique_id=1652503227]
+
+[node name="Checkpoints" type="Node3D" parent="MegaRamp" unique_id=2018343162]
+
+[node name="JumpCheckpoints" type="Node3D" parent="MegaRamp/Checkpoints" unique_id=1464274845]
 
 [node name="Route" type="Node3D" parent="MegaRamp" unique_id=1387059771]
 top_level = true
-script = ExtResource("8_nm3k2")
 
 [node name="RaceGridSpot1" type="Marker3D" parent="MegaRamp/Route" unique_id=64511581]
 transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, 0.99999994, 6.750005, 256.025, -53.99998)
@@ -118,10 +126,11 @@ transform = Transform3D(0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.999996, 128.08981, -285.36444)
 width = 32.0
 
-[node name="LongJump" type="Node" parent="MegaRamp" unique_id=431557644 node_paths=PackedStringArray("route")]
+[node name="LongJump" type="Node3D" parent="MegaRamp" unique_id=431557644 node_paths=PackedStringArray("spawn", "checkpoints")]
 script = ExtResource("13_event")
 definition = SubResource("Resource_lngjmp")
-route = NodePath("../Route")
+spawn = NodePath("../Spawns/JumpSpawns")
+checkpoints = NodePath("../Checkpoints/JumpCheckpoints")
 
 [node name="SequentialTaskRunner" type="Node" parent="MegaRamp/LongJump" unique_id=540005593]
 script = ExtResource("14_seqrun")
@@ -148,10 +157,10 @@ script = ExtResource("14_seqrun")
 script = ExtResource("19_lngjmp")
 trigger = NodePath("../../../Route/CheckpointMarker1")
 
-[node name="TrickBattle" type="Node" parent="MegaRamp" unique_id=1904417263 node_paths=PackedStringArray("route")]
+[node name="TrickBattle" type="Node3D" parent="MegaRamp" unique_id=1904417263 node_paths=PackedStringArray("spawn")]
 script = ExtResource("13_event")
 definition = SubResource("Resource_trkbtl")
-route = NodePath("../Route")
+spawn = NodePath("../Spawns/JumpSpawns")
 
 [node name="SequentialTaskRunner" type="Node" parent="MegaRamp/TrickBattle" unique_id=725590318]
 script = ExtResource("14_seqrun")

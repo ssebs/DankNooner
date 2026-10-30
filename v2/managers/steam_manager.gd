@@ -9,7 +9,6 @@ signal avatar_loaded(steam_id: int, texture: ImageTexture)
 const RESULT_OK := 1
 const CHAT_ROOM_ENTER_SUCCESS := 1
 const LOBBY_TYPE_FRIENDS_ONLY := 1
-const LOBBY_MAX_MEMBERS := 8
 const LOBBY_GAME_ID_KEY := "game_id"
 # getPlayerAvatar size: 1 small, 2 medium (64px), 3 large
 const AVATAR_MEDIUM := 2
@@ -41,7 +40,7 @@ func is_logged_in() -> bool:
 ## Friends-only lobby so friends can be invited or "Join Game". Returns its ID, 0 on failure
 func host_lobby() -> int:
 	_in_session = true
-	steam.createLobby(LOBBY_TYPE_FRIENDS_ONLY, LOBBY_MAX_MEMBERS)
+	steam.createLobby(LOBBY_TYPE_FRIENDS_ONLY, UtilsConstants.MAX_LOBBY_SIZE)
 	var created: Array = await Signal(steam, "lobby_created")
 	if created[0] != RESULT_OK:
 		DebugUtils.DebugMsg("Steam: lobby creation failed (%s)" % created[0])

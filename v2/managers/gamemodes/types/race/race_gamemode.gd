@@ -55,9 +55,9 @@ func Enter(state_context: StateContext):
 	# Same frame super() reveals the route, so the other gates are never drawn. Pre-race runners
 	# keep the props hidden until _rpc_show_race_props.
 	if _race_runner_index > 0:
-		_event.route.set_props_active(false)
+		_event.set_props_active(false)
 	else:
-		_event.route.show_only_checkpoints(RaceTask.START_CHECKPOINTS)
+		_event.show_only_checkpoints(RaceTask.START_CHECKPOINTS)
 	results_hud.restart_pressed.connect(_on_results_restart_pressed)
 	results_hud.retry_pressed.connect(_on_results_retry_pressed)
 
@@ -110,8 +110,8 @@ func get_definition() -> GameModeEventDefinition:
 	return _event.definition
 
 
-func get_route() -> EventRoute:
-	return _event.route
+func get_event() -> GameModeEvent:
+	return _event
 
 
 ## A human's STUNT_RACE standing: every component's score summed.
@@ -150,8 +150,8 @@ func _start_next_runner():
 ## Server -> all: everyone's through the pre-race runners, so show the props Enter hid.
 @rpc("call_local", "reliable")
 func _rpc_show_race_props():
-	_event.route.set_props_active(true)
-	_event.route.show_only_checkpoints(RaceTask.START_CHECKPOINTS)
+	_event.set_props_active(true)
+	_event.show_only_checkpoints(RaceTask.START_CHECKPOINTS)
 
 
 #region Checkpoint markers (server only)

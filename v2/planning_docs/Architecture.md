@@ -452,7 +452,7 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
   - The `Kind` enum runs ahead of the implementation — it carries reserved entries with no
     gamemode file and no state node in `main_game.tscn`. A `Kind` value is not evidence the mode
     exists; check for the type under `types/` and the node in `main_game.tscn`.
-- Events run via a composable **task/runner system** (`GameModeTask` leaves + `SequentialTaskRunner` / `ConcurrentTaskRunner`), authored in level scenes as `GameModeEvent`s under an `EventStartCircle`, with a shared `EventRoute` for the physical route. See [GamemodeSystem.md](./GamemodeSystem.md)
+- Events run via a composable **task/runner system** (`GameModeTask` leaves + `SequentialTaskRunner` / `ConcurrentTaskRunner`), authored in level scenes as `GameModeEvent`s under an `EventStartCircle`, linking the circle's `Props` / `Spawns` / `Checkpoints` groups. See [GamemodeSystem.md](./GamemodeSystem.md)
 - Context passed between gamemode states via `GamemodeStateContext`
 - RPC guards (signatures: grep `@rpc` in `gamemode_manager.gd`):
   - `start_game` - server calls on all peers; ignores anything sent by a client

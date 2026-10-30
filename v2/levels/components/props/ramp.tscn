@@ -10,19 +10,15 @@ _data = {
 }
 point_count = 3
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_track"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rk1sm"]
 albedo_color = Color(2.113, 1.029, 2.418, 1)
-albedo_texture = ExtResource("2_tex")
-uv1_triplanar = true
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_walls"]
-albedo_color = Color(2.363, 2.363, 2.363, 1)
 albedo_texture = ExtResource("2_tex")
 uv1_triplanar = true
 
 [node name="Ramp" type="Path3D" unique_id=1633736762]
 curve = SubResource("Curve3D_ramp")
 script = ExtResource("1_rk1sm")
+color_preset = 5
 
 [node name="Track" type="CSGPolygon3D" parent="." unique_id=1468215093]
 use_collision = true
@@ -38,12 +34,12 @@ path_local = true
 path_continuous_u = true
 path_u_distance = 1.0
 path_joined = false
-material = SubResource("StandardMaterial3D_track")
+material = SubResource("StandardMaterial3D_rk1sm")
 
 [node name="Walls" type="CSGPolygon3D" parent="." unique_id=225985917]
-flip_faces = true
 use_collision = true
 collision_layer = 3
+flip_faces = true
 polygon = PackedVector2Array(-10, -5, -10, -0.1, 10, -0.1, 10, -5)
 mode = 2
 path_node = NodePath("..")
@@ -51,6 +47,9 @@ path_interval_type = 0
 path_interval = 0.5
 path_simplify_angle = 0.0
 path_rotation = 0
+path_rotation_accurate = false
 path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
 path_joined = false
-material = SubResource("StandardMaterial3D_walls")
+material = SubResource("StandardMaterial3D_rk1sm")

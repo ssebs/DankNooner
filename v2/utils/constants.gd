@@ -8,6 +8,9 @@ const STEAM_STORE_URL = "https://store.steampowered.com/app/5416370/Dank_Nooner/
 const STEAM_DEMO_APP_ID = 5431410
 const STEAM_FULL_APP_ID = 5416370
 
+## Most riders in one lobby. Every event's spawn group needs this many grid slots.
+const MAX_LOBBY_SIZE = 8
+
 ## Godot Group names.
 const GROUPS = {
 	"Managers": "Managers",

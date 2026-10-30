@@ -24,7 +24,6 @@
 [ext_resource type="Script" uid="uid://07fvlfaumhio" path="res://managers/gamemodes/tasks/perform_trick_task.gd" id="20_tcy6e"]
 [ext_resource type="ArrayOccluder3D" uid="uid://c78oj3warrr3w" path="res://levels/test_levels/test_city_01/test_city_01.occ" id="26_dmi5q"]
 [ext_resource type="Script" uid="uid://pulnqxx1eaja" path="res://managers/gamemodes/gamemodeobjects/gamemode_event.gd" id="mig_event"]
-[ext_resource type="Script" uid="uid://cm4g6ptfwf37q" path="res://managers/gamemodes/gamemodeobjects/event_route.gd" id="mig_route"]
 [ext_resource type="Script" path="res://levels/components/npc_nav_region.gd" id="npc_nav_region"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2lumj"]
@@ -2295,7 +2294,7 @@ depth = 0.1
 [node name="TestEventStartCircle" parent="." unique_id=1014716352 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 81)
 
-[node name="TutorialTEST" type="Node" parent="TestEventStartCircle" unique_id=1247244260]
+[node name="TutorialTEST" type="Node3D" parent="TestEventStartCircle" unique_id=1247244260]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_i711f")
 
@@ -2324,7 +2323,7 @@ metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
 [node name="Tutorial01EventStartCircle" parent="." unique_id=459761741 instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 93)
 
-[node name="TutorialMoto101" type="Node" parent="Tutorial01EventStartCircle" unique_id=1987635211]
+[node name="TutorialMoto101" type="Node3D" parent="Tutorial01EventStartCircle" unique_id=1987635211]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_asds5")
 
@@ -2413,12 +2412,21 @@ script = ExtResource("11_st")
 
 [node name="Race01Event" type="Node3D" parent="." unique_id=409874786]
 
-[node name="RaceTestEventStartCircle" parent="Race01Event" unique_id=423241463 instance=ExtResource("3_ffs5v")]
+[node name="RaceTestEventStartCircle" parent="Race01Event" unique_id=423241463 node_paths=PackedStringArray("spawns", "checkpoints") instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 131, -0.020000111, 81)
+spawns = NodePath("Spawns")
+checkpoints = NodePath("Checkpoints")
+
+[node name="Spawns" type="Node3D" parent="Race01Event/RaceTestEventStartCircle" unique_id=719645933]
+
+[node name="RaceSpawns" type="Node3D" parent="Race01Event/RaceTestEventStartCircle/Spawns" unique_id=511491770]
+
+[node name="Checkpoints" type="Node3D" parent="Race01Event/RaceTestEventStartCircle" unique_id=1243687032]
+
+[node name="RaceCheckpoints" type="Node3D" parent="Race01Event/RaceTestEventStartCircle/Checkpoints" unique_id=1527982801]
 
 [node name="Route" type="Node3D" parent="Race01Event/RaceTestEventStartCircle" unique_id=1636586915]
 top_level = true
-script = ExtResource("mig_route")
 
 [node name="RaceGridSpot1" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/Route" unique_id=10711231]
 transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, 128, 0, 67)
@@ -2468,10 +2476,14 @@ width = 11.0
 transform = Transform3D(-1, 0, -2.6226834e-07, 0, 1, 0, 2.6226834e-07, 0, -1, 110, 0.049997926, 60.000008)
 width = 11.0
 
-[node name="CityRace" type="Node" parent="Race01Event/RaceTestEventStartCircle" unique_id=498788711 node_paths=PackedStringArray("route")]
+[node name="CityRace" type="Node3D" parent="Race01Event/RaceTestEventStartCircle" unique_id=498788711 node_paths=PackedStringArray("spawn", "checkpoints", "pickups")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_cf4ia")
-route = NodePath("../Route")
+spawn = NodePath("../Spawns/RaceSpawns")
+checkpoints = NodePath("../Checkpoints/RaceCheckpoints")
+pickups = NodePath("Pickups")
+
+[node name="Pickups" type="Node3D" parent="Race01Event/RaceTestEventStartCircle/CityRace" unique_id=1768462902]
 
 [node name="SequentialTaskRunner" type="Node" parent="Race01Event/RaceTestEventStartCircle/CityRace" unique_id=593871239]
 script = ExtResource("13_runner")
@@ -2500,12 +2512,21 @@ total_laps = 2
 
 [node name="JumpEvent" type="Node3D" parent="." unique_id=2082413095]
 
-[node name="RaceJumpEventStartCircle" parent="JumpEvent" unique_id=787539754 instance=ExtResource("3_ffs5v")]
+[node name="RaceJumpEventStartCircle" parent="JumpEvent" unique_id=787539754 node_paths=PackedStringArray("spawns", "checkpoints") instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 255, -0.020000111, 11)
+spawns = NodePath("Spawns")
+checkpoints = NodePath("Checkpoints")
+
+[node name="Spawns" type="Node3D" parent="JumpEvent/RaceJumpEventStartCircle" unique_id=1787699596]
+
+[node name="RaceSpawns" type="Node3D" parent="JumpEvent/RaceJumpEventStartCircle/Spawns" unique_id=375710582]
+
+[node name="Checkpoints" type="Node3D" parent="JumpEvent/RaceJumpEventStartCircle" unique_id=1786417717]
+
+[node name="RaceCheckpoints" type="Node3D" parent="JumpEvent/RaceJumpEventStartCircle/Checkpoints" unique_id=2087484303]
 
 [node name="Route" type="Node3D" parent="JumpEvent/RaceJumpEventStartCircle" unique_id=781751401]
 top_level = true
-script = ExtResource("mig_route")
 
 [node name="RaceGridSpot1" type="Marker3D" parent="JumpEvent/RaceJumpEventStartCircle/Route" unique_id=1837168242]
 transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 274, 0, 1)
@@ -2531,10 +2552,14 @@ width = 21.0
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 273, 0.050000906, 199)
 width = 21.0
 
-[node name="MegaJumpRace" type="Node" parent="JumpEvent/RaceJumpEventStartCircle" unique_id=1908742542 node_paths=PackedStringArray("route")]
+[node name="MegaJumpRace" type="Node3D" parent="JumpEvent/RaceJumpEventStartCircle" unique_id=1908742542 node_paths=PackedStringArray("spawn", "checkpoints", "pickups")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_mhobo")
-route = NodePath("../Route")
+spawn = NodePath("../Spawns/RaceSpawns")
+checkpoints = NodePath("../Checkpoints/RaceCheckpoints")
+pickups = NodePath("Pickups")
+
+[node name="Pickups" type="Node3D" parent="JumpEvent/RaceJumpEventStartCircle/MegaJumpRace" unique_id=836151928]
 
 [node name="SequentialTaskRunner" type="Node" parent="JumpEvent/RaceJumpEventStartCircle/MegaJumpRace" unique_id=916068132]
 script = ExtResource("13_runner")
@@ -2563,12 +2588,16 @@ total_laps = 1
 
 [node name="Challenge01Event" type="Node3D" parent="." unique_id=963449666]
 
-[node name="Chall01EventStartCircle" parent="Challenge01Event" unique_id=1107517821 instance=ExtResource("3_ffs5v")]
+[node name="Chall01EventStartCircle" parent="Challenge01Event" unique_id=1107517821 node_paths=PackedStringArray("spawns") instance=ExtResource("3_ffs5v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 209, -0.01999998, -11)
+spawns = NodePath("Spawns")
+
+[node name="Spawns" type="Node3D" parent="Challenge01Event/Chall01EventStartCircle" unique_id=501469439]
+
+[node name="ChallengeSpawns" type="Node3D" parent="Challenge01Event/Chall01EventStartCircle/Spawns" unique_id=1149689268]
 
 [node name="Route" type="Node3D" parent="Challenge01Event/Chall01EventStartCircle" unique_id=360356363]
 top_level = true
-script = ExtResource("mig_route")
 
 [node name="RaceGridSpot1" type="Marker3D" parent="Challenge01Event/Chall01EventStartCircle/Route" unique_id=1181169093]
 transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 223, 0, -74)
@@ -2582,10 +2611,10 @@ transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 
 [node name="RaceGridSpot4" type="Marker3D" parent="Challenge01Event/Chall01EventStartCircle/Route" unique_id=873962186]
 transform = Transform3D(-0.99999994, 0, 4.3711385e-08, 0, 1, 0, -4.3711385e-08, 0, -0.99999994, 219, 0, -69)
 
-[node name="WheelieChallenge" type="Node" parent="Challenge01Event/Chall01EventStartCircle" unique_id=248616427 node_paths=PackedStringArray("route")]
+[node name="WheelieChallenge" type="Node3D" parent="Challenge01Event/Chall01EventStartCircle" unique_id=248616427 node_paths=PackedStringArray("spawn")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_tcy6e")
-route = NodePath("../Route")
+spawn = NodePath("../Spawns/ChallengeSpawns")
 
 [node name="SequentialTaskRunner" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge" unique_id=621649203]
 script = ExtResource("13_runner")

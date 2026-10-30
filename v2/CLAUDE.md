@@ -148,6 +148,7 @@ Broadcast RPCs are server-only and must reject non-server senders. See
 - Reuse existing exports before adding new ones — a new knob that duplicates bd.return_speed (or similar) is a smell; wire the behavior to the export that already exists.
 - Tune the root cause, not a band-aid — when something is too slow/weak, look at the formula first (e.g. a stray /2 or a factor that collapses to zero at speed) rather than adding a scaling export to paper over it.
 - Do not write multiline comments where a short one would suffice
+- Level-authored nodes (`EventStartCircle`, `GameModeEvent`, tasks) document their expected child tree and required exports in the `##` class docstring, so the inspector tooltip is the how-to. Update it when the layout changes.
 
 ### Export-Safe GDScript
 

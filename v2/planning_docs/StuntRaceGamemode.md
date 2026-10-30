@@ -36,7 +36,7 @@ The stunt race is `RaceGameMode` with `race_type = STUNT_RACE`: the shared race 
 `RaceComponent` children. See [GamemodeSystem — Races](./GamemodeSystem.md#races).
 
 - **A leg is one event.** A `GameModeEvent` with `target_gamemode = STUNT_RACE` under an
-  `EventStartCircle`, running its `EventRoute` (point-to-point checkpoints, grid slots,
+  `EventStartCircle`, running its linked groups (point-to-point checkpoints, grid slots,
   `PickupSpawner`s, props) through `RaceTask`. Legs run station to station. NPC racers, traffic and
   fuel-up are per-event flags on the definition.
 - **Standing = sum of the scoring components, frozen at the finish line:**
@@ -65,14 +65,15 @@ The stunt race is `RaceGameMode` with `race_type = STUNT_RACE`: the shared race 
 Events with `fuel_up_first` run `FuelUpGameMode` before the race, which hands the same event to
 its `target_gamemode` once every rider has finished. This is the boost = fuel top-off.
 
-**Drive to the start:** a first runner authored in the event, ahead of the race's own. Riders
-leave the pumps free and ride to a `start_zone.tscn` (a `TriggerZone` wearing the event circle's
-`start_ring.tscn`, a label and a light beam) in the route, via a `CheckpointTask` with
-`respawn_in_place` and `hide_trigger_on_pass` (each rider stops seeing the zone once through it).
+**Drive to the start:** a `DriveToStartRunner` placed in the event, ahead of the race's runner.
+Riders leave the pumps free and ride to the event's `start_zone` (a `start_zone.tscn`: a
+`TriggerZone` wearing the event circle's `start_ring.tscn`, a label and a light beam). The runner
+builds its own `CheckpointTask` (`respawn_in_place`, `hide_trigger_on_pass`: each rider stops
+seeing the zone once through it), so the zone is linked once, on the event.
 Once the last rider arrives, the race runner grids and counts everyone in as usual. The minimap
 and `TargetCompass` point at the zone meanwhile, and the camera is held facing it briefly as the
-step begins. Until the race runner starts, the route's props are hidden and uncollided
-(`EventRoute.set_props_active`, lobby-wide so collision matches on every peer) and pickups stay
+step begins. Until the race runner starts, the event's props are hidden and uncollided
+(`GameModeEvent.set_props_active`, lobby-wide so collision matches on every peer) and pickups stay
 unspawned. A results-screen restart skips straight to the race runner.
 
 **Free roam:** each pump is also a `FreeRoamActivity` (see
