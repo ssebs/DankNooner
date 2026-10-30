@@ -16,7 +16,8 @@ enum Kind {
 	STUNT_CHALLENGE,
 	LONG_JUMP,
 	FUEL_UP,
-	TRICK_BATTLE
+	TRICK_BATTLE,
+	CRASH_LAUNCH
 }
 
 @export var gamemode_manager: GamemodeManager

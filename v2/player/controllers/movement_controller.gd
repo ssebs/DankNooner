@@ -196,7 +196,6 @@ func on_movement_rollback_tick(delta: float):
 	was_on_floor = is_on_floor
 	is_on_floor = is_on_floor_netfox()
 	_on_unstable_surface = _detect_unstable_surface()
-	if DebugUtils.is_debug(debug_verbose, DebugUtils.verbose_movement):
 	if is_on_floor:
 		_floor_normal = _get_blended_surface_normal()
 		# Landing — normalize pitch to effective angle from upright

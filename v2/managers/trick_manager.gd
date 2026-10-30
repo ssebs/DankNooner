@@ -10,7 +10,8 @@
 ## scoring out of the rollback path entirely (no resimulation double-counting) and keeps the
 ## rules in one gamemode-agnostic place. Gamemodes read get_score(peer_id) and clear with
 ## reset_peer(peer_id). Bonus tricks (set_bonus_tricks) score 2x, already in get_score.
-## Every bank and every crash goes to the riding HUD's trick feed, with the combo's tricks.
+## Every bank and every crash goes to the riding HUD's trick feed, with the combo's tricks. A bail's
+## line waits for the crash's launch distance (GamemodeManager.player_launch_measured).
 class_name TrickManager extends BaseManager
 
 ## Emitted (server) when a combo ends cleanly and its score is banked.
@@ -28,7 +29,8 @@ signal combo_voided(peer_id: int, lost_duration: float, lost_points: float)
 ## the multiplier.
 @export var points_per_second: float = 10.0
 
-## peer_id -> {"points", "prev_time", "prev_score", "bonus_score", "peak_mult", "tricks", "crashed"}
+## peer_id -> {"points", "prev_time", "prev_score", "bonus_score", "peak_mult", "tricks", "crashed",
+## "bail"}. "bail" holds the last crash's feed line until its launch is measured.
 var _peer_states: Dictionary[int, Dictionary] = {}
 ## peer_id -> tricks whose combo_score counts twice. Apart from _peer_states so reset_peer (every
 ## spawn) keeps it.
@@ -42,6 +44,7 @@ func _ready():
 	spawn_manager.player_spawned.connect(_on_player_spawned)
 	gamemode_manager.player_disconnected.connect(_on_player_disconnected)
 	gamemode_manager.match_ended.connect(_on_match_ended)
+	gamemode_manager.player_launch_measured.connect(_on_player_launch_measured)
 	npc_traffic_manager.player_near_missed.connect(_on_player_near_missed)
 
 
@@ -74,7 +77,12 @@ func _track_combo(peer_id: int, player: PlayerEntity):
 			return
 		st["crashed"] = true
 		var lost_points := get_open_combo_points(peer_id) if st["prev_time"] > 0.0 else 0.0
-		_push_feed(peer_id, player.username, int(lost_points), true)
+		st["bail"] = {
+			"username": player.username,
+			"tricks": PackedInt32Array(st["tricks"]),
+			"points": int(lost_points),
+			"multiplier": st["peak_mult"],
+		}
 		if st["prev_time"] > 0.0:
 			combo_voided.emit(peer_id, st["prev_time"], lost_points)
 			st["prev_time"] = 0.0
@@ -112,7 +120,9 @@ func _track_combo(peer_id: int, player: PlayerEntity):
 	var bonus: bool = st["bonus_score"] > 0.0
 	var points: float = get_open_combo_points(peer_id)
 	st["points"] += points
-	_push_feed(peer_id, player.username, int(points), false)
+	riding_hud_state.push_trickfeed(
+		player.username, peer_id, PackedInt32Array(st["tricks"]), int(points), multiplier, false, 0.0
+	)
 	st["prev_time"] = 0.0
 	st["prev_score"] = 0.0
 	st["bonus_score"] = 0.0
@@ -120,18 +130,6 @@ func _track_combo(peer_id: int, player: PlayerEntity):
 	st["tricks"] = []
 	combo_banked.emit(peer_id, points, duration, multiplier)
 	riding_hud_state.push_score_popup(peer_id, int(points), multiplier, bonus)
-
-
-func _push_feed(peer_id: int, username: String, points: int, crashed: bool):
-	var st := _peer_states[peer_id]
-	riding_hud_state.push_trickfeed(
-		username,
-		peer_id,
-		PackedInt32Array(st["tricks"]),
-		points,
-		st["peak_mult"],
-		crashed
-	)
 
 
 #region public api
@@ -153,8 +151,9 @@ func is_combo_open(peer_id: int) -> bool:
 
 ## Wipe a peer's banked score. Gamemodes call this when a run starts.
 func reset_peer(peer_id: int):
-	# Kept across the reset — a reset mid-crash mustn't post the bail again.
-	var crashed: bool = _peer_states.get(peer_id, {}).get("crashed", false)
+	# Kept across the reset — a reset mid-crash mustn't post the bail again, or drop its pending line.
+	var old: Dictionary = _peer_states.get(peer_id, {})
+	var crashed: bool = old.get("crashed", false)
 	_peer_states[peer_id] = {
 		"points": 0.0,
 		"prev_time": 0.0,
@@ -163,6 +162,7 @@ func reset_peer(peer_id: int):
 		"peak_mult": 1,
 		"tricks": [],
 		"crashed": crashed,
+		"bail": old.get("bail", {}),
 	}
 
 
@@ -189,6 +189,13 @@ func _on_player_disconnected(peer_id: int):
 func _on_match_ended():
 	_peer_states.clear()
 	_bonus_tricks.clear()
+
+
+func _on_player_launch_measured(peer_id: int, meters: float):
+	var bail: Dictionary = _peer_states[peer_id]["bail"]
+	riding_hud_state.push_trickfeed(
+		bail["username"], peer_id, bail["tricks"], bail["points"], bail["multiplier"], true, meters
+	)
 
 
 ## Server. The score rides into the rider's combo via the rollback tick (see SpawnManager).

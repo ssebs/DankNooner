@@ -669,9 +669,10 @@ func push_trickfeed(
 	tricks: PackedInt32Array,
 	points: int,
 	multiplier: int,
-	crashed: bool
+	crashed: bool,
+	launch_m: float
 ) -> void:
-	_rpc_trickfeed.rpc(username, peer_id, tricks, points, multiplier, crashed)
+	_rpc_trickfeed.rpc(username, peer_id, tricks, points, multiplier, crashed, launch_m)
 
 
 @rpc("call_local", "reliable")
@@ -681,10 +682,11 @@ func _rpc_trickfeed(
 	tricks: PackedInt32Array,
 	points: int,
 	multiplier: int,
-	crashed: bool
+	crashed: bool,
+	launch_m: float
 ):
 	var is_own := peer_id == multiplayer.get_unique_id()
-	_trick_feed.push(username, is_own, tricks, points, multiplier, crashed)
+	_trick_feed.push(username, is_own, tricks, points, multiplier, crashed, launch_m)
 
 
 ## Server-side: show a (pre-localized) callout on every rider's HUD, e.g. a round winner.

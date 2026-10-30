@@ -41,6 +41,7 @@ enum MatchState {
 @export var long_jump_mode: LongJumpGameMode
 @export var fuel_up_mode: FuelUpGameMode
 @export var trick_battle_mode: TrickBattleGameMode
+@export var crash_launch_mode: CrashLaunchGameMode
 
 var match_state: MatchState = MatchState.IN_LOBBY
 var current_game_mode: GameModeType.Kind = GameModeType.Kind.FREE_ROAM
@@ -65,6 +66,7 @@ func _ready():
 		GameModeType.Kind.LONG_JUMP: long_jump_mode,
 		GameModeType.Kind.FUEL_UP: fuel_up_mode,
 		GameModeType.Kind.TRICK_BATTLE: trick_battle_mode,
+		GameModeType.Kind.CRASH_LAUNCH: crash_launch_mode,
 	}
 
 	connection_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
@@ -371,6 +373,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("fuel_up_mode must not be empty")
 	if trick_battle_mode == null:
 		issues.append("trick_battle_mode must not be empty")
+	if crash_launch_mode == null:
+		issues.append("crash_launch_mode must not be empty")
 	if state_machine == null:
 		issues.append("state_machine must not be empty")
 

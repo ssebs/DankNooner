@@ -21,14 +21,15 @@ const MAX_TRICK_NAMES: int = 3
 
 
 ## tricks: TrickController.Trick values in the order they were done. points: banked, or what the
-## crash voided.
+## crash voided. launch_m: how far a bail threw the rider from the bike.
 func push(
 	username: String,
 	is_own: bool,
 	tricks: PackedInt32Array,
 	points: int,
 	multiplier: int,
-	crashed: bool
+	crashed: bool,
+	launch_m: float
 ) -> void:
 	var line := RichTextLabel.new()
 	line.bbcode_enabled = true
@@ -39,7 +40,7 @@ func push(
 	line.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	line.add_theme_font_size_override("normal_font_size", font_size)
 	line.add_theme_font_size_override("bold_font_size", font_size)
-	line.text = _format(username, is_own, tricks, points, multiplier, crashed)
+	line.text = _format(username, is_own, tricks, points, multiplier, crashed, launch_m)
 	add_child(line)
 	move_child(line, 0)
 	while get_child_count() > MAX_LINES:
@@ -55,15 +56,16 @@ func push(
 	tween.tween_callback(line.queue_free)
 
 
-## [b]Name[/b]  Bailed  …Wheelie → Knee Knocker → Drift (+2)  [b]+1240 ×3[/b] — a bail strikes its
-## lost points.
+## [b]Name[/b]  Bailed 23m  …Wheelie → Knee Knocker → Drift (+2)  [b]+1240 ×3[/b] — a bail strikes
+## its lost points.
 func _format(
 	username: String,
 	is_own: bool,
 	tricks: PackedInt32Array,
 	points: int,
 	multiplier: int,
-	crashed: bool
+	crashed: bool,
+	launch_m: float
 ) -> String:
 	# [lb] escapes BBCode in the username.
 	var name_color := OWN_NAME_COLOR if is_own else NAME_COLOR
@@ -72,7 +74,12 @@ func _format(
 	)
 	var parts := PackedStringArray(["[b]%s[/b]" % shown_name])
 	if crashed:
-		parts.append("[color=#%s]%s[/color]" % [TrickPopups.OOF_COLOR.to_html(false), tr("FEED_BAILED")])
+		parts.append(
+			(
+				"[color=#%s]%s %dm[/color]"
+				% [TrickPopups.OOF_COLOR.to_html(false), tr("FEED_BAILED"), launch_m]
+			)
+		)
 	var names := PackedStringArray()
 	for trick in tricks:
 		names.append(TrickController.trick_to_str(trick).capitalize())
