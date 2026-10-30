@@ -26,7 +26,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
-- [ ] separate props per game mode under an event start circle
 
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -241,6 +240,8 @@
 ---
 
 ## Done ✅
+- [x] separate props per game mode under an event start circle
+
 - [x] backing up steering / going uphill is jittery
 
 - [x] Tweak camera:
