@@ -73,6 +73,8 @@ func Enter(state_context: StateContext):
 	if multiplayer.is_server():
 		race_task = task
 		_race_start()
+		if gamemode_manager.dbg_skip_prerace:
+			_active_runner_index = _race_runner_index - 1
 		_start_next_runner()
 	elif traffic != null:
 		traffic.client_enter()

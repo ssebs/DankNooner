@@ -21,10 +21,12 @@ const BREADCRUMB_INTERVAL_SECS: float = 1.0
 
 ## Bat pickup: the collector swings for BAT_SWING_DURATION; any OTHER rider within BAT_SWING_RANGE
 ## at each swing (one per BAT_SWING_PERIOD, matching the bat_swing anim loop) gets a speed wobble
-## strong enough to force an active recovery.
+## strong enough to force an active recovery. Race bots have no wobble, so it crashes them.
 const BAT_SWING_DURATION: float = 10.0
 const BAT_SWING_PERIOD: float = 1.0
 const BAT_SWING_RANGE: float = 6.0
+## The bat's range stretches this far ahead of the wielder: a capsule, not a sphere.
+const BAT_SWING_FORWARD_REACH: float = 6.0
 const BAT_SWING_WOBBLE_STRENGTH: float = 10.0
 
 ## Server-only: last known flat-ground transform per peer. In-place respawns fall back here
@@ -218,6 +220,18 @@ func knock_out(victim_peer_id: int, aggressor_peer_id: int) -> void:
 	crash_player.rpc(victim_peer_id)
 
 
+## Server-only. knock_out for any rider (bots have negative ids). An NPC (race bot or traffic) goes
+## down through report_hit, and a player knocked out by a bot goes down uncredited: whether bots
+## score knockouts is still open.
+func knock_out_rider(victim: Node3D, aggressor_id: int) -> void:
+	if victim is NPCRiderEntity:
+		(victim as NPCRiderEntity).report_hit(get_rider(aggressor_id))
+	elif aggressor_id < 0:
+		crash_player.rpc(int(victim.name))
+	else:
+		knock_out(int(victim.name), aggressor_id)
+
+
 ## Set player's rb_do_wobble on every peer so each injects the wobble in its rollback tick
 ## (wobble_vel is synced state). Server only — the callable the bat and any wobble source uses.
 @rpc("any_peer", "call_local", "reliable")
@@ -262,8 +276,9 @@ func swing_bat(wielder_peer_id: int):
 
 
 ## Server-only. Once per swing over the swing duration, wobble every OTHER spawned rider within
-## range of the wielder. An await loop rather than a rollback tick — proximity is a server call,
-## and wobble_player already routes the kick through synced state on every peer.
+## range of the wielder (stretched forward, see BAT_SWING_FORWARD_REACH). An await loop rather
+## than a rollback tick — proximity is a server call, and wobble_player already routes the kick
+## through synced state on every peer.
 func _wobble_riders_near_bat(wielder_peer_id: int) -> void:
 	for _i in int(BAT_SWING_DURATION / BAT_SWING_PERIOD):
 		await get_tree().create_timer(BAT_SWING_PERIOD).timeout
@@ -271,11 +286,19 @@ func _wobble_riders_near_bat(wielder_peer_id: int) -> void:
 		# Wielder crashed / left mid-swing — nothing to swing from (the crash already flushed the anim).
 		if wielder == null or wielder.is_crashed:
 			return
+		var reach_end := wielder.global_position - wielder.global_basis.z * BAT_SWING_FORWARD_REACH
 		for child in level_manager.current_level.player_spawn_pos.get_children():
-			if not child is PlayerEntity or child == wielder or child.is_crashed:
+			var is_rider := child is PlayerEntity or child is NPCRiderEntity
+			if not is_rider or child == wielder or child.is_crashed:
 				continue
-			if wielder.global_position.distance_to(child.global_position) <= BAT_SWING_RANGE:
-				wobble_player.rpc(int(child.name), BAT_SWING_WOBBLE_STRENGTH)
+			var nearest := Geometry3D.get_closest_point_to_segment(
+				child.global_position, wielder.global_position, reach_end
+			)
+			if nearest.distance_to(child.global_position) <= BAT_SWING_RANGE:
+				if child is PlayerEntity:
+					wobble_player.rpc(int(child.name), BAT_SWING_WOBBLE_STRENGTH)
+				else:
+					(child as NPCRiderEntity).report_hit(wielder)
 				play_bonk_sfx.rpc_id(wielder_peer_id)
 
 
@@ -398,6 +421,11 @@ func remove_player_locally(peer_id: int):
 
 
 ## Get player from multiplayer peer id found in level_manager.current_level
+## A player or race bot by id, both spawned under player_spawn_pos. Null when not spawned.
+func get_rider(rider_id: int) -> Node3D:
+	return level_manager.current_level.player_spawn_pos.get_node_or_null(str(rider_id))
+
+
 func get_player_by_peer_id(player_peer_id: int) -> PlayerEntity:
 	# No current level (startup / mid-swap) or a menu/background level with no player_spawn_pos —
 	# no players to find. Return null (the "not spawned" contract every caller already handles)

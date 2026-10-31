@@ -26,9 +26,10 @@
 [ext_resource type="Script" uid="uid://dbl1ukq1dy3xd" path="res://entities/vfx/rider_vfx.gd" id="31_rvfx"]
 [ext_resource type="Script" uid="uid://d0qu5fntjsi5d" path="res://utils/custom_audio_middleware/engine_sound_event_3d.gd" id="32_eng3d"]
 [ext_resource type="Script" uid="uid://ba88hqva8tywk" path="res://player/bikes/scripts/bike_wreck.gd" id="33_wreck"]
+[ext_resource type="Script" path="res://entities/vfx/shotgun_tracers.gd" id="34_tracers"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wig4y"]
-size = Vector3(4, 10, 2)
+size = Vector3(8, 20, 2)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_wreck"]
 friction = 0.5
@@ -222,6 +223,12 @@ visible = false
 unique_name_in_owner = true
 transform = Transform3D(9, 7.5730604e-28, -3.4106053e-14, 0, 1.5, 2.131627e-14, 2.5579538e-13, -2.6645337e-14, 1.2, 3.8689702, 0.41110802, 0.13644364)
 
+[node name="ShotgunTracers" type="Node3D" parent="VisualRoot/IKTargets/Shotgun" node_paths=PackedStringArray("hitbox")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8689702, 0.41110802, 0.13644364)
+script = ExtResource("34_tracers")
+hitbox = NodePath("../../../../GunCollisionArea/GunCollisionShape")
+
 [node name="ButtTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=2080337299]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, -9.947598e-14, 0, 1, 0, 9.947598e-14, 0, 1, 1.385633e-07, 0.95820665, -0.34479797)
@@ -343,9 +350,10 @@ shape = ExtResource("19_75npo")
 [node name="GunCollisionArea" type="Area3D" parent="." unique_id=1949974523]
 unique_name_in_owner = true
 collision_layer = 0
+collision_mask = 129
 
 [node name="GunCollisionShape" type="CollisionShape3D" parent="GunCollisionArea" unique_id=169461816]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1.056441, -6.0359473)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1.056441, -11.035947)
 shape = SubResource("BoxShape3D_wig4y")
 
 [node name="NameTagMarker" type="Marker3D" parent="." unique_id=1811367941]

@@ -93,7 +93,21 @@ var character_skin: CharacterSkin
 var car_skin: CarSkin
 
 ## Synced to clients via MultiplayerSynchronizer (server authority).
-var npc_state: NPCState = NPCState.RIDING
+var npc_state: NPCState = NPCState.RIDING:
+	set(value):
+		# A wreck is inert: riders ride through it instead of crashing on a bot that just stopped dead
+		# in front of them. Every peer, or a predicting client would still hit it. Mask kept, so it
+		# stays on the ground.
+		if value == NPCState.CRASHED and npc_state != NPCState.CRASHED:
+			_riding_layer = collision_layer
+			collision_layer = 0
+		elif value != NPCState.CRASHED and npc_state == NPCState.CRASHED:
+			collision_layer = _riding_layer
+		npc_state = value
+## PlayerEntity's name for it, so item and crash code can ask either rider.
+var is_crashed: bool:
+	get:
+		return npc_state == NPCState.CRASHED
 
 ## The authoritative pose (position + yaw; riders never pitch or roll), written by the server
 ## each movement tick and replicated in place of the raw transform. Nothing renders straight
@@ -129,11 +143,17 @@ var username: String:
 var driving: bool = false
 ## Current horizontal speed magnitude, ramped toward the turn-scaled target.
 var current_speed: float = 0.0
+## Velocity before move_and_slide deflects it, like MovementController's — crash checks read it.
+var pre_slide_velocity: Vector3 = Vector3.ZERO
 ## Fixed lateral offset off the centreline, for line variety between bots.
 var line_offset: float = 0.0
 
 ## Stable per-rider scale on move_speed (see speed_variance).
 var _speed_scale: float = 1.0
+## The paint _roll_paint picked, kept so a skin swap can put it back.
+var _paint: Color
+## collision_layer while upright, put back when a crash ends (see npc_state).
+var _riding_layer: int
 
 ## True once sync_position has been written at least once — see its docstring.
 var _has_sync_pose: bool = false
@@ -340,6 +360,7 @@ func coast_to_stop(delta: float) -> void:
 
 func apply_gravity_and_move(delta: float) -> void:
 	velocity.y -= GRAVITY * delta
+	pre_slide_velocity = velocity
 	move_and_slide()
 	# Server-only in practice: clients have the behavior state machine's physics disabled
 	# (see _ready), so this is the one place the replicated pose is written. The body turns
@@ -365,16 +386,30 @@ func horizontal_speed(racer: Node3D) -> float:
 #region AI control (server-side, called by the managers)
 
 
-## Cosmetic only — the bot stops and the rig reads as wiped out (no ragdoll v1).
+## The bot stops; every peer's NPCAnimationController sees npc_state and ragdolls the rider.
 ## The owning manager owns the recovery timer + teleport.
 func crash() -> void:
 	npc_state = NPCState.CRASHED
 	velocity = Vector3.ZERO
 
 
-## Called by whoever rode into us (see CrashController).
+## Called by whoever rode into us (see CrashController) or hit us with an item.
 func report_hit(hitter: Node3D) -> void:
 	hit_by_racer.emit(hitter)
+
+
+## A bike rider changes bikes (Rally Up), on every peer. Speeds follow the new bike in proportion,
+## so whatever the behavior scaled them by (difficulty) still holds.
+func update_skins(bike: BikeSkinDefinition, character: CharacterSkinDefinition) -> void:
+	move_speed *= bike.max_speed / bike_definition.max_speed
+	acceleration *= bike.acceleration / bike_definition.acceleration
+	braking *= bike.brake_strength / bike_definition.brake_strength
+	bike_definition = bike
+	character_definition = character
+	_init_mesh()
+	_init_collision_shape()
+	_apply_paint()
+	visual_root.seat()
 
 
 ## Cosmetic stub — v1 has no trick variety; kept as the hook for it.
@@ -464,13 +499,20 @@ func _init_mesh() -> void:
 func _roll_paint(rng: RandomNumberGenerator) -> void:
 	if paint_colors.is_empty():
 		return
+	_paint = paint_colors[rng.randi() % paint_colors.size()]
+	_apply_paint()
+
+
+func _apply_paint() -> void:
+	if paint_colors.is_empty():
+		return
 	var skin: SkinColor = (
 		car_skin.mesh_skin if vehicle_type == VehicleType.CAR else bike_skin.mesh_skin
 	)
 	# Taxis, cop cars — liveries that have to stay recognizable opt out.
 	if skin.do_not_use_color:
 		return
-	skin.update_slot_color(0, paint_colors[rng.randi() % paint_colors.size()])
+	skin.update_slot_color(0, _paint)
 
 
 ## free(), not queue_free() — a deferred free still lets the node's _ready run and

@@ -47,14 +47,26 @@ The stunt race is `RaceGameMode` with `race_type = STUNT_RACE`: the shared race 
   - Fuel-up: `FuelUpBonusComponent`, the clean-fill bonus from a `fuel_up_first` event's fuel-up.
 - **Knockouts** go through `SpawnManager.knock_out(victim, aggressor)`: ramming (`CrashController`),
   Oil Slick, Shotgun. Human victims only; Bat wobbles aren't attributed, and a rider's own slick
-  doesn't count.
+  doesn't count. Item hits route through `SpawnManager.knock_out_rider`, which takes race bots down
+  too (via `report_hit`) and lets a bot take a player down uncredited (bot knockouts are an open
+  question).
 - **Items** (`PickupItem` / `PickupSpawner` / `PickupItemDefinition`, server-auth via `ItemManager`)
   spawn during races (`PickupsComponent`) and in free roam (`PickupSpawnManager`). Gas Can applies
   instantly (boost refill); the rest fill the rider's single held slot, used with double-tap trick or
   `use_item`, discarded with double-tap horn. Built: Gas Can, Bat, Oil Slick, Ramp, Shotgun, Rally Up.
   A `PickupSpawner` is a row of `count` slots `spacing` apart along its local Z (riders cross along
   local X); each slot picks by `PickupItemDefinition.weight` and respawns on its own. Items render as
-  a black silhouette with a gold `NeonEdges` border over a gold ring.
+  a black silhouette with a gold `NeonEdges` border over a gold ring. The Shotgun draws pellet
+  tracers (`ShotgunTracers`, at the muzzle) out to the far end of `GunCollisionArea`, so the streaks
+  show its real reach; on a hit the server sends the target's position and one streak lands on it.
+  Its mask includes `traffic_body`, so it also takes down traffic: `NPCTrafficState` answers
+  `report_hit` through its usual `crashed` → respawn path, and the wreck is inert until then.
+- **Race bots and items.** Bots are hit by every item: Shotgun and Oil Slick knock them out, the Bat
+  crashes them (they have no wobble), Rally Up swaps their skins (`NPCRaceManager.set_rally_up`).
+  Bots hold items in the same `ItemManager` slot (negative rider ids) but only pick up
+  `ItemManager.BOT_ITEMS` (Oil Slick, Rally Up): the bot rider has no bat / shotgun props, and no
+  boost for a Gas Can yet. `NPCRaceManager._maybe_use_item` drops a slick when a rider is within
+  `oil_slick_trigger_distance` behind and sets off Rally Up after `rally_up_hold_time` on average.
 - **Challenges:** `RaceChallenge` resources in the definition's `race_challenges`
   (`LongestWheelieChallenge`, `BestComboChallenge`, `SuggestedTricksChallenge`), run by
   `ChallengesComponent`. Suggested tricks score double in `TrickManager`.

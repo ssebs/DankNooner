@@ -589,6 +589,10 @@ func _on_npc_crashed(victim: Node3D, npc_id: int) -> void:
 	# take them down with us (same broadcast CrashController uses).
 	if victim is PlayerEntity:
 		spawn_manager.crash_player.rpc(int(victim.name))
+	# A race bot can't see the hit either: traffic has no body for it to collide with. A traffic
+	# victim also sees the touch itself, and ignores whichever report lands second.
+	elif victim is NPCRiderEntity:
+		(victim as NPCRiderEntity).report_hit(_npcs[npc_id])
 
 
 func _respawn_after_delay(npc_id: int) -> void:

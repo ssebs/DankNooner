@@ -60,6 +60,10 @@ const WALL_GLANCE_SPEED_LOSS: float = 0.25
 const KBM_WASHOUT_TIME: float = 0.6
 const KBM_WASHOUT_MIN_LEAN_DEG: float = 15.0
 const KBM_WASHOUT_MIN_SPEED: float = 10.0
+## Layer-2 hits only crash at/above this speed, and only head-on: within this angle of the wall's
+## normal. Race bots crash by the same rule (NPCRaceState).
+const CRASH_MIN_SPEED: float = 10.0
+const CRASH_MAX_ANGLE_DEG: float = 60.0
 
 ## Seconds into a KBM brake washout, 0 when not washing out. Synced; drives grip_usage + squeal.
 var washout_time: float = 0.0
@@ -68,9 +72,6 @@ var _prev_front_brake: float = 0.0
 var _prev_throttle: float = 0.0
 var _brake_was_grabbed: bool = false
 var _prev_air_trick: TrickController.Trick = TrickController.Trick.NONE
-
-var _crash_min_speed: float = 10.0
-var _crash_angle: float = 60.0
 
 
 func _ready():
@@ -264,18 +265,13 @@ func _detect_crash():
 				return
 
 	# Collision with layer 2 obstacle — only head-on hits at speed
-	if movement_controller.speed >= _crash_min_speed:
+	if movement_controller.speed >= CRASH_MIN_SPEED:
 		for i in player_entity.get_slide_collision_count():
 			var collision = player_entity.get_slide_collision(i)
 			var collider = collision.get_collider()
-			# CSG walls report the CSG node itself as the collider, not a CollisionObject3D.
-			var is_body := collider is CollisionObject3D or collider is CSGShape3D
-			if is_body and collider.collision_layer & 2:
-				# Pre-slide: move_and_slide already stripped the into-wall part, so a head-on hit read as glancing.
-				var angle = rad_to_deg(
-					collision.get_normal().angle_to(-movement_controller.pre_slide_velocity.normalized())
-				)
-				if angle < _crash_angle:
+			if is_crash_obstacle(collider):
+				var angle := impact_angle_deg(collision, movement_controller.pre_slide_velocity)
+				if angle < CRASH_MAX_ANGLE_DEG:
 					# Low-speed player-to-player tap: both riders wobble instead of crashing.
 					# NPCs and static obstacles fall through to the hard crash.
 					if collider is PlayerEntity and movement_controller.speed < WOBBLE_RAM_MAX_SPEED:
@@ -302,6 +298,19 @@ func _detect_crash():
 					movement_controller.speed *= 1.0 - WALL_GLANCE_SPEED_LOSS
 					DebugUtils.DebugMsg("wall glance wobble (angle=%.1f)" % angle)
 					return
+
+
+## Walls, obstacles and racers: anything on layer 2.
+static func is_crash_obstacle(collider: Object) -> bool:
+	# CSG walls report the CSG node itself as the collider, not a CollisionObject3D.
+	var is_body := collider is CollisionObject3D or collider is CSGShape3D
+	return is_body and collider.collision_layer & 2
+
+
+## 0° is dead head-on. Pre-slide velocity: move_and_slide already stripped the into-wall part, so a
+## head-on hit would read as glancing.
+static func impact_angle_deg(collision: KinematicCollision3D, pre_slide_velocity: Vector3) -> float:
+	return rad_to_deg(collision.get_normal().angle_to(-pre_slide_velocity.normalized()))
 
 
 ## We rode into another racer: they never see that collision from their side

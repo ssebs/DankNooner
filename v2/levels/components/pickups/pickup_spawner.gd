@@ -130,10 +130,10 @@ func _refresh_preview() -> void:
 
 
 func _on_item_body_entered(body: Node3D, slot: int) -> void:
-	# Only players collect — NPC riders are Racers too but have no boost, so granting to them derefs a null player.
-	if !_active or not body is PlayerEntity:
+	# Players and race bots; traffic sits on a layer the bubble doesn't see
+	if !_active or not (body is PlayerEntity or body is NPCRiderEntity):
 		return
-	# Rider's slot is full — the bubble stays for someone else.
+	# Rider's slot is full, or a bot passing on this item — the bubble stays for someone else.
 	if !_item_manager.collect(int(body.name), _current[slot].pickup_item_definition):
 		return
 	_rpc_despawn.rpc(slot)

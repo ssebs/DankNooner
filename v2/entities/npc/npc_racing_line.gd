@@ -1,6 +1,6 @@
 ## The racing line race bots ride, baked once per race on the server from the level's road
-## navmesh: road-only navmesh paths chained through the checkpoints, smoothed toward corner
-## insides, then fit with a Curve3D. Every sample keeps its curvature, the corner speed that
+## navmesh: road-only navmesh paths chained through the checkpoints, smoothed, widened so corners
+## run wide-in-wide, then fit with a Curve3D. Every sample keeps its curvature, the corner speed that
 ## implies, and the road room either side. Offsets `s` are metres along the line.
 ##
 ## Braking is per bot, not baked here: each bot runs braking_profile with its own deceleration,
@@ -11,6 +11,11 @@ class_name NPCRacingLine extends RefCounted
 const ROOM_STEP: float = 0.5
 ## Below this curvature (1/m) a sample counts as straight, which caps corner speed.
 const MIN_CURVATURE: float = 0.0001
+## _widen: the widest neighbour spacing (in points) it starts at, and passes per spacing.
+const WIDEN_COARSEST_STEP: int = 16
+const WIDEN_PASSES: int = 50
+## Sideways nudge (m) _widen measures how curvature responds with.
+const WIDEN_PROBE: float = 0.01
 
 var closed: bool
 var sample_spacing: float
@@ -37,6 +42,7 @@ func _init(
 	var points := _resample(_corridor(road_region, checkpoints))
 	for i in smoothing_passes:
 		points = _smooth(points, road_region)
+	points = _widen(points, road_region, max_half_width)
 	_fit_curve(points)
 	_bake_samples(road_region, corner_grip, max_half_width)
 
@@ -181,6 +187,85 @@ func _smooth(points: PackedVector3Array, road_region: RID) -> PackedVector3Array
 		var mid := (points[posmod(i - 1, n)] + points[(i + 1) % n]) * 0.5
 		smoothed[i] = NavigationServer3D.region_get_closest_point(road_region, points[i].lerp(mid, 0.5))
 	return smoothed
+
+
+## The smoothed line hugs corner insides the whole way round. Coulom's K1999 fixes that: slide
+## each point sideways within the road room until its curvature is the average of its neighbours',
+## which swings entries and exits wide. Coarse spacings first, so whole corners move before single
+## points are tuned.
+func _widen(points: PackedVector3Array, road_region: RID, max_half_width: float) -> PackedVector3Array:
+	var n := points.size()
+	var base := PackedVector2Array()
+	var right := PackedVector2Array()
+	var room_left := PackedFloat32Array()
+	var room_right := PackedFloat32Array()
+	for i in n:
+		var forward := points[_wrap(i + 1, n)] - points[_wrap(i - 1, n)]
+		forward.y = 0.0
+		var right_3d := forward.normalized().cross(Vector3.UP)
+		base.append(Vector2(points[i].x, points[i].z))
+		right.append(Vector2(right_3d.x, right_3d.z))
+		room_left.append(_room(road_region, points[i], -right_3d, max_half_width))
+		room_right.append(_room(road_region, points[i], right_3d, max_half_width))
+	var lateral := PackedFloat32Array()
+	lateral.resize(n)
+
+	var step := WIDEN_COARSEST_STEP
+	while step >= 1:
+		for _pass in WIDEN_PASSES:
+			for i in range(0, n, step):
+				# An open line's ends stay on their checkpoints
+				if !closed and (i == 0 or i == n - 1):
+					continue
+				var prev := _shifted(base, right, lateral, i - step)
+				var here := _shifted(base, right, lateral, i)
+				var next := _shifted(base, right, lateral, i + step)
+				var k_prev := _curvature_through(_shifted(base, right, lateral, i - 2 * step), prev, here)
+				var k_next := _curvature_through(here, next, _shifted(base, right, lateral, i + 2 * step))
+				var len_prev := here.distance_to(prev)
+				var len_next := here.distance_to(next)
+				var target := (len_next * k_prev + len_prev * k_next) / maxf(len_prev + len_next, 0.001)
+				var k := _curvature_through(prev, here, next)
+				var dk_dt := (_curvature_through(prev, here + right[i] * WIDEN_PROBE, next) - k) / WIDEN_PROBE
+				if absf(dk_dt) > 0.000001:
+					lateral[i] = clampf(lateral[i] + (target - k) / dk_dt, -room_left[i], room_right[i])
+		# Fill the points this spacing skipped, so the next one starts from the whole shape
+		for i in n:
+			var from := i - i % step
+			# An open line's tail past the last spaced point blends into its fixed end
+			var to := from + step if closed else mini(from + step, n - 1)
+			if i == from or to == from:
+				continue
+			lateral[i] = lerpf(lateral[from], lateral[_wrap(to, n)], float(i - from) / (to - from))
+		@warning_ignore("integer_division")
+		step /= 2
+
+	var widened := PackedVector3Array()
+	for i in n:
+		var flat := _shifted(base, right, lateral, i)
+		widened.append(NavigationServer3D.region_get_closest_point(road_region, Vector3(flat.x, points[i].y, flat.y)))
+	return widened
+
+
+## Point i of base, moved lateral[i] along right[i].
+func _shifted(
+	base: PackedVector2Array, right: PackedVector2Array, lateral: PackedFloat32Array, i: int
+) -> Vector2:
+	i = _wrap(i, base.size())
+	return base[i] + right[i] * lateral[i]
+
+
+## Signed curvature (1/m) of the circle through a, b, c; 0 when two of them coincide.
+func _curvature_through(a: Vector2, b: Vector2, c: Vector2) -> float:
+	var lengths := a.distance_to(b) * b.distance_to(c) * c.distance_to(a)
+	if lengths < 0.000001:
+		return 0.0
+	return 2.0 * (b - a).cross(c - b) / lengths
+
+
+## Point index i on this line: round the loop when closed, else held at the ends.
+func _wrap(i: int, n: int) -> int:
+	return posmod(i, n) if closed else clampi(i, 0, n - 1)
 
 
 ## Catmull-Rom through the points, as Bezier handles.

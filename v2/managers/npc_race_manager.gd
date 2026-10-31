@@ -8,18 +8,27 @@
 class_name NPCRaceManager extends BaseManager
 
 @export var level_manager: LevelManager
+@export var settings_manager: SettingsManager
+@export var spawn_manager: SpawnManager
+@export var item_manager: ItemManager
 ## Round-robin source of NPC names + skins. Spawned NPCs get
 ## "<username> <n>" so reused definitions stay distinguishable in results.
 @export var npc_definitions: Array[PlayerDefinition] = [
 	load("res://resources/player/default_player_definition.tres")
 ]
 @export var respawn_delay: float = 3.0
+## How far the host's Easy / Hard difficulty setting moves bot skill off its centre.
+@export var difficulty_skill_shift: float = 0.25
 ## Racing line bake (see NPCRacingLine): metres between samples, Laplacian smoothing passes, the
 ## lateral acceleration (m/s^2) the line's corner speeds allow, and how far road room is probed.
 @export var line_sample_spacing: float = 4.0
 @export var line_smoothing_passes: int = 6
 @export var corner_grip: float = 16.0
 @export var line_max_half_width: float = 12.0
+## Bot item use: a held oil slick drops once a rider is within this many metres behind, and a held
+## Rally Up goes off after this many seconds on average.
+@export var oil_slick_trigger_distance: float = 15.0
+@export var rally_up_hold_time: float = 8.0
 
 const NPC_SCENE: PackedScene = preload("res://entities/npc/npc_rider_entity.tscn")
 ## dbg_racing_line drawings live until the next toggle or bake clears them
@@ -50,7 +59,7 @@ func _ready():
 
 ## Server-only AI tick: retarget each NPC at the checkpoint RaceTask expects
 ## it to cross next. The same crossing that scores the lap retargets nav.
-func _physics_process(_delta: float):
+func _physics_process(delta: float):
 	# Peer is null in menus / after a session teardown (ConnectionManager nulls it on
 	# disconnect) — is_server() errors on a null peer, so check it first.
 	if Engine.is_editor_hint() or multiplayer.multiplayer_peer == null:
@@ -73,6 +82,8 @@ func _physics_process(_delta: float):
 		# rides its lane while the race body is active. The lane curve, not the
 		# checkpoint, decides where it steers.
 		npc.driving = race_task.get_target_checkpoint(npc_id) != null
+		if npc.driving:
+			_maybe_use_item(npc_id, npc, delta)
 	DebugUtils.Prof("npc_race_manager", t)  # PROF: temp
 
 
@@ -178,8 +189,7 @@ func rpc_spawn_npc(npc_id: int, pos: Vector3, basis: Basis):
 	# Broadcast and late-join resync can both deliver the same bot — first one wins.
 	if _npcs.has(npc_id):
 		return
-	# Same round-robin on every peer — the definitions ship with the game, so only the id is sent.
-	var def := npc_definitions[(-npc_id - 1) % npc_definitions.size()]
+	var def := _definition_for(npc_id)
 
 	DebugUtils.DebugMsg("Adding NPC locally: %s - %s" % [npc_id, def.username])
 
@@ -211,10 +221,25 @@ func rpc_spawn_npc(npc_id: int, pos: Vector3, basis: Basis):
 	var race_state := _race_state(npc_id)
 	# Null while the bake waits on the nav map — the bake hands it over when it lands
 	race_state.racing_line = racing_line
+	race_state.skill = _bot_skill()
 	# Wedged on geometry the lanes don't model — same wipeout + checkpoint respawn a
 	# crash gets, which is exactly the recovery we want.
 	race_state.stuck.connect(crash_npc.bind(npc_id))
+	race_state.crashed.connect(_on_npc_crashed.bind(npc_id))
 	npc.state_machine.request_state_change.call_deferred(race_state)
+
+
+## Host's view: centred on the base tuning, shifted by its difficulty setting (0 = easy).
+func _bot_skill() -> float:
+	# TODO: centre on the host's player level once it exists
+	var centre := 0.5
+	var easy: bool = settings_manager.current_settings["difficulty"] == 0
+	return clampf(centre + (-difficulty_skill_shift if easy else difficulty_skill_shift), 0.0, 1.0)
+
+
+## Same round-robin on every peer — the definitions ship with the game, so only the id is sent.
+func _definition_for(npc_id: int) -> PlayerDefinition:
+	return npc_definitions[(-npc_id - 1) % npc_definitions.size()]
 
 
 func _race_state(npc_id: int) -> NPCRaceState:
@@ -233,16 +258,71 @@ func rpc_despawn_npc(npc_id: int):
 
 #endregion
 
+#region Items
+
+
+## Every peer, from ItemManager's Rally Up: bots ride its skins too, then their own.
+func set_rally_up(active: bool) -> void:
+	for npc_id in _npcs:
+		var def := _definition_for(npc_id)
+		_npcs[npc_id].update_skins(
+			ItemManager.RALLY_UP_BIKE if active else def.bike_skin,
+			ItemManager.RALLY_UP_CHARACTER if active else def.character_skin
+		)
+
+
+## Server only. Simple rules for whatever the bot holds (ItemManager.BOT_ITEMS): an oil slick for
+## a rider close behind, a Rally Up whenever.
+func _maybe_use_item(npc_id: int, npc: NPCRiderEntity, delta: float) -> void:
+	var held := item_manager.get_held(npc_id)
+	if held == null:
+		return
+	match held.item_type:
+		PickupItemDefinition.PickupItemType.OIL_SLICK:
+			if _rider_close_behind(npc):
+				item_manager.use_item(npc_id)
+		PickupItemDefinition.PickupItemType.RALLY_UP:
+			if randf() < delta / rally_up_hold_time:
+				item_manager.use_item(npc_id)
+
+
+func _rider_close_behind(npc: NPCRiderEntity) -> bool:
+	var forward := -npc.global_basis.z
+	for rider in level_manager.current_level.player_spawn_pos.get_children():
+		if rider == npc or rider.is_crashed:
+			continue
+		var to_rider: Vector3 = rider.global_position - npc.global_position
+		if to_rider.dot(forward) < 0.0 and to_rider.length() < oil_slick_trigger_distance:
+			return true
+	return false
+
+
+#endregion
+
 #region Crash / respawn (server only)
 
 
-## Cosmetic wipeout + delayed teleport back to the last checkpoint passed
+## Wipeout + delayed teleport back to the last checkpoint passed
 ## (or the grid slot before any checkpoint) — mirrors the human crash flow.
 func crash_npc(npc_id: int) -> void:
+	# A wall hit and a stuck report can land on the same tick — skip is intentional
+	if _npcs[npc_id].npc_state == NPCRiderEntity.NPCState.CRASHED:
+		return
 	_npcs[npc_id].crash()
 	get_tree().create_timer(respawn_delay).timeout.connect(
 		_respawn_npc.bind(npc_id), CONNECT_ONE_SHOT
 	)
+
+
+## A racer we rode into never sees the collision from its side, so take it down with us (as
+## CrashController and NPCTrafficManager do). A player goes down uncredited: whether bots score
+## knockouts is still open.
+func _on_npc_crashed(victim: Node3D, npc_id: int) -> void:
+	crash_npc(npc_id)
+	if victim is PlayerEntity:
+		spawn_manager.crash_player.rpc(int(victim.name))
+	elif victim is NPCRiderEntity:
+		(victim as NPCRiderEntity).report_hit(_npcs[npc_id])
 
 
 func _respawn_npc(npc_id: int) -> void:
@@ -299,6 +379,12 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var issues = []
 	if level_manager == null:
 		issues.append("level_manager must not be empty")
+	if settings_manager == null:
+		issues.append("settings_manager must not be empty")
+	if spawn_manager == null:
+		issues.append("spawn_manager must not be empty")
+	if item_manager == null:
+		issues.append("item_manager must not be empty")
 	if npc_definitions.is_empty():
 		issues.append("npc_definitions must not be empty")
 	return issues

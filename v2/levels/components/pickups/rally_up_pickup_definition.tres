@@ -9,5 +9,5 @@ mesh_res = ExtResource("1_astro")
 mesh_rotation_offset_degrees = Vector3(0, 90, 0)
 mesh_scale_multiplier = Vector3(0.625, 0.625, 0.625)
 item_type = 5
-weight = 0.2
+weight = 0.1
 metadata/_custom_type_script = "uid://dsfcoucwjtequ"

@@ -71,11 +71,13 @@ func Enter(_state_context: StateContext):
 	npc.contact_area.area_entered.connect(_on_contact)
 	npc.near_miss_area.body_entered.connect(_on_near_miss_entered)
 	npc.near_miss_area.body_exited.connect(_on_near_miss_exited)
+	npc.hit_by_racer.connect(_on_hit_by_racer)
 
 
 func Exit(_state_context: StateContext):
 	if Engine.is_editor_hint():
 		return
+	npc.hit_by_racer.disconnect(_on_hit_by_racer)
 	npc.contact_area.body_entered.disconnect(_on_contact)
 	npc.contact_area.area_entered.disconnect(_on_contact)
 	npc.near_miss_area.body_entered.disconnect(_on_near_miss_entered)
@@ -335,6 +337,14 @@ func _on_contact(other: Node3D) -> void:
 	if racer is not PlayerEntity and (npc.velocity - racer.velocity).length() < contact_min_speed_delta:
 		return
 	crashed.emit(racer)
+
+
+## Shot (ItemManager) or reported by a racer that detected the contact from its side.
+func _on_hit_by_racer(_hitter: Node3D) -> void:
+	# Our own ContactArea may have crashed us on the same touch — skip is intentional
+	if npc.npc_state == NPCRiderEntity.NPCState.CRASHED:
+		return
+	crashed.emit(null)
 
 
 func _on_near_miss_entered(body: Node3D) -> void:

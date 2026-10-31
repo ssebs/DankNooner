@@ -124,7 +124,8 @@ Ends with the lane bot and its road-generator dependency deleted.
 - **Wandering offset:** per-bot lateral offset from the line that drifts smoothly over the lap,
   seeded per bot. A constant offset just makes parallel trains.
 - **Per-bot style:** braking point, corner-speed carry, steering reaction rolled per bot; difficulty
-  scales them (keep `Difficulty` EASY / MEDIUM / HARD).
+  scales them. Now a continuous `skill` (2026-10-31) so it can follow the host's player level; the
+  host's Easy / Hard setting shifts it.
 - **Overtaking shifts the line, not a lane:** closing on a rider ahead → pick the open side, commit
   to an offset for a while, go around. Not tuck-in-forever.
 - **Avoidance:** forward shape casts / raycasts against players, bots and traffic. Traffic has no
@@ -151,7 +152,7 @@ lane helpers on `NPCRiderEntity`, the `RoadManager` lookups in `NPCRaceManager`.
   `max_corner_cut`. If corners still look cut, the next suspect is the line itself: Laplacian
   smoothing hugs the inside for the whole corner instead of wide-apex-wide.
 - **Speed.** Bots take `move_speed` / `acceleration` / `braking` from their `bike_definition`
-  (`max_speed` / `acceleration` / `brake_strength`) at spawn in `rpc_spawn_npc`, then `Difficulty`
+  (`max_speed` / `acceleration` / `brake_strength`) at spawn in `rpc_spawn_npc`, then `skill`
   scales them.
 - **Clearance.** Raised the road navmesh's `agent_radius` in all three levels (the bike's nose sat
   right at the old erosion edge), and `3d/default_edge_connection_margin` with it so road and grass
@@ -174,6 +175,12 @@ lane helpers on `NPCRiderEntity`, the `RoadManager` lookups in `NPCRaceManager`.
   the navmesh is solid. Something raised the bake doesn't see. Look at it in the editor.
 - **Finish.** A bot parked at the line's end a couple of metres short of the last checkpoint's
   trigger: the line's end (the checkpoint snapped to the navmesh) can miss the trigger.
+
+**2026-10-31, untested:** the `STUCK` log showed four bots pinned on the thin wall end near
+(-351, 505), each steering at a goal past the wall. Bots now steer through a navmesh path to their
+goal (`_path_target`), and the line gets a K1999 widen pass so corners run wide-in-wide instead of
+hugging the inside. Order agreed with the user: corner fix → Phase 2 → ramp riding → Phase 3 →
+Phase 4, each its own build.
 
 **Temp code:** the `# DEBUG: temp` `STUCK` log in `NPCRaceState` (`_dbg_drive` is formatted every
 tick) — strip it once sticking is resolved. The `PROF: temp` lines stay; it's a codebase-wide pattern.
@@ -214,6 +221,12 @@ than a jump (quarter pipes, the corkscrews) are in scope.
 
 ### Phase 2: contact + crashes
 
+> **Built 2026-10-31, untested**; how it works is in
+> [Architecture](./Architecture.md#npc-race-manager). Rider ragdolls like the player (user: "if
+> easy"); the bike keeps the old tip-over, `BikeWreck` is `PlayerEntity`-bound. Not done: a bot
+> tapping a player under ram speed doesn't wobble them, bad landings (needs ramp riding), bat
+> wobble on bots (open question below). Trick-bail crashes may be simpler than the player's (user).
+
 - Bots crash into each other, into players, and into obstacles. Follow the player's crash rules,
   dumbed down: impact speed / angle over a threshold → crash. Reuse what `CrashController`
   already decides where possible (e.g. `_crash_rammed_racer` / wobble on low-speed taps) rather
@@ -232,6 +245,11 @@ than a jump (quarter pipes, the corkscrews) are in scope.
 - Visuals: the `NPCAnimationController` needs to show the trick (currently only `WHEELIE`).
 
 ### Phase 4: items
+
+> **Built 2026-10-31, untested** (pulled ahead of ramps and tricks by the user); how it works is in
+> [StuntRaceGamemode](./StuntRaceGamemode.md). User: a bat hit crashes a bot. Not done: bots using
+> Bat / Shotgun (needs the player's `BaseballBat` / `Shotgun` props + anims on `RiderVisual`), Ramp
+> (needs ramp riding), Gas Can (needs boost, Phase 3), veering off-line toward pickups.
 
 - **Pick up** by riding through pickups (`PickupSpawner` already passes `int(body.name)` — negative
   bot ids). Bots may veer slightly off-line for a nearby pickup.

@@ -1,8 +1,9 @@
 @tool
 ## Racing behavior for NPCRiderEntity: ride the shared NPCRacingLine on this bot's own braking
 ## profile, offset sideways by a lateral that wanders over the lap. A bot knocked well off the
-## line navmesh-paths back onto it. NPCRaceManager toggles `npc.driving`, hands over the line
-## once it's baked, and owns the crash/respawn timers.
+## line navmesh-paths back onto it. Crashes by the player's rules, dumbed down (see _detect_crash).
+## NPCRaceManager toggles `npc.driving`, hands over the line once it's baked, and owns the
+## crash/respawn timers.
 ##
 ## Anti-train: bots must never ride one line nose to tail. Each rolls its own style (corner
 ## carry, braking, reaction) and wander off its name, so their offsets drift apart rather than
@@ -13,14 +14,16 @@ class_name NPCRaceState extends State
 ## its last checkpoint. A graybox parked on the line or a barrier the navmesh missed can
 ## still pin a bot; traffic has had this since day one.
 signal stuck
+## Went down: hit a wall, rode into a racer (victim, else null), or got rammed. NPCRaceManager
+## takes the victim down too, since it never sees the collision from its side.
+signal crashed(victim: Node3D)
 
-enum Difficulty { EASY, MEDIUM, HARD }
 enum Mistake { NONE, LATE_BRAKE, RUN_WIDE }
 
 @export var npc: NPCRiderEntity
-## Scales speed / corner carry / braking / wander off the base tuning. MEDIUM leaves it
-## untouched. Applied once on Enter.
-@export var difficulty: Difficulty = Difficulty.MEDIUM
+## 0 = easiest, 1 = hardest, 0.5 = the base tuning. Scales speed / corner carry / braking /
+## wander / mistakes. NPCRaceManager sets it at spawn; applied once on Enter.
+@export_range(0.0, 1.0) var skill: float = 0.5
 ## Off = ride the line with wander only — flip off to isolate overtaking issues.
 @export var enable_overtaking: bool = true
 ## Widest the wander strays from the line, as a fraction of the road room on that side.
@@ -83,7 +86,8 @@ var _profile := PackedFloat32Array()
 ## Progress along the line (m) and current sideways offset from it (m, + = right).
 var _s: float = 0.0
 var _lateral: float = 0.0
-var _rejoin_path := PackedVector3Array()
+## Navmesh path to the current steer goal: where it was asked from, its corners, its end.
+var _path := PackedVector3Array()
 ## Last forward scan, reused until the next (see NPCRiderEntity.scan_interval_min): each rider
 ## ahead with its distance along our heading and its sideways offset from the line.
 var _ahead_riders: Array[Node3D] = []
@@ -97,7 +101,7 @@ var _overtake_until_ms: int = 0
 var _mistake: Mistake = Mistake.NONE
 var _mistake_until_ms: int = 0
 var _next_mistake_ms: int = 0
-var _rejoin_next_path_ms: int = 0
+var _path_next_ms: int = 0
 var _stuck_timer: float = 0.0
 var _stuck_anchor: Vector3
 var _dbg_drive := ""  # DEBUG: temp - last tick's steering, printed when stuck fires
@@ -116,18 +120,20 @@ func Enter(_state_context: StateContext):
 	_next_mistake_ms = Time.get_ticks_msec() + _mistake_gap_ms()
 	_stuck_timer = 0.0
 	_stuck_anchor = npc.global_position
+	npc.hit_by_racer.connect(_on_hit_by_racer)
+
+
+func Exit(_state_context: StateContext):
+	if Engine.is_editor_hint():
+		return
+	npc.hit_by_racer.disconnect(_on_hit_by_racer)
 
 
 func Physics_Update(delta: float):
 	if Engine.is_editor_hint():
 		return
 
-	var can_drive := (
-		npc.driving
-		and racing_line != null
-		and npc.npc_state != NPCRiderEntity.NPCState.CRASHED
-		and npc.npc_state != NPCRiderEntity.NPCState.FINISHED
-	)
+	var can_drive := _can_drive()
 	if can_drive:
 		var t := Time.get_ticks_usec()  # PROF: temp
 		_drive(delta)
@@ -138,16 +144,26 @@ func Physics_Update(delta: float):
 	npc.apply_gravity_and_move(delta)
 
 	# Only while it's actually trying to move — sitting on the grid or waiting out the
-	# countdown is not being stuck.
+	# countdown is not being stuck, or crashing.
 	if can_drive:
+		_detect_crash()
 		_check_stuck(delta)
+
+
+func _can_drive() -> bool:
+	return (
+		npc.driving
+		and racing_line != null
+		and npc.npc_state != NPCRiderEntity.NPCState.CRASHED
+		and npc.npc_state != NPCRiderEntity.NPCState.FINISHED
+	)
 
 
 ## Re-find this bot on the line after a teleport (crash respawn).
 func reset_line_progress() -> void:
 	_s = racing_line.closest_offset(npc.global_position)
 	_lateral = 0.0
-	_rejoin_path.clear()
+	_path.clear()
 
 
 ## Seeded off the bot's name, salted so it doesn't repeat the entity's own hash(name) roll.
@@ -166,25 +182,21 @@ func _roll_style() -> void:
 	_style_rolled = true
 
 
-## Scale the base tuning and this bot's style for its difficulty tier. MEDIUM is a no-op.
+## Scale the base tuning and this bot's style by skill.
 func _apply_difficulty() -> void:
-	match difficulty:
-		Difficulty.EASY:
-			npc.move_speed *= 0.82
-			npc.min_turn_speed *= 0.85
-			_corner_carry *= 0.9
-			_brake_scale *= 0.85
-			wander_fraction *= 1.2
-			mistake_interval *= 0.6
-		Difficulty.HARD:
-			npc.move_speed *= 1.12
-			npc.min_turn_speed *= 1.15
-			_corner_carry *= 1.08
-			_brake_scale *= 1.1
-			wander_fraction *= 0.5
-			mistake_interval *= 2.0
-		Difficulty.MEDIUM:
-			pass
+	npc.move_speed *= _skill_scale(0.82, 1.12)
+	npc.min_turn_speed *= _skill_scale(0.85, 1.15)
+	_corner_carry *= _skill_scale(0.9, 1.08)
+	_brake_scale *= _skill_scale(0.85, 1.1)
+	wander_fraction *= _skill_scale(1.2, 0.5)
+	mistake_interval *= _skill_scale(0.6, 2.0)
+
+
+## easy at skill 0, 1.0 (the base tuning) at 0.5, hard at 1.
+func _skill_scale(easy: float, hard: float) -> float:
+	if skill < 0.5:
+		return lerpf(easy, 1.0, skill * 2.0)
+	return lerpf(1.0, hard, skill * 2.0 - 1.0)
 
 
 func _fit_to_line() -> void:
@@ -208,16 +220,16 @@ func _drive(delta: float) -> void:
 	var steer_s := _s + _steer_lookahead()
 	_lateral = move_toward(_lateral, _lateral_target(steer_s, now), offset_response * _reaction * delta)
 	var spot := racing_line.point_at(_s) + racing_line.right_at(_s) * _lateral
-	var target: Vector3
+	var goal: Vector3
 	var off_line := Vector2(spot.x - pos.x, spot.z - pos.z).length()
 	var rejoining := off_line > rejoin_distance
 	if rejoining:
-		target = _rejoin_target(pos)
+		goal = racing_line.point_at(_s + rejoin_lookahead)
 	else:
-		_rejoin_path.clear()
 		var ahead := racing_line.point_at(steer_s) + racing_line.right_at(steer_s) * _lateral
 		# Dodges may cross grass but never a wall: the whole nav map, not just the road
-		target = NavigationServer3D.map_get_closest_point(npc.get_world_3d().navigation_map, ahead)
+		goal = NavigationServer3D.map_get_closest_point(npc.get_world_3d().navigation_map, ahead)
+	var target := _path_target(pos, goal)
 
 	var speed_s := _s - late_brake_distance if _mistake == Mistake.LATE_BRAKE else _s
 	var line_speed := maxf(npc.min_turn_speed, racing_line.profile_speed(_profile, speed_s))
@@ -226,7 +238,7 @@ func _drive(delta: float) -> void:
 	_dbg_drive = (  # DEBUG: temp
 		"s=%.1f line_pt=%s off_line=%.1f lat=%.2f rejoin=%s target=%s speed=%.1f/%.1f path=%s"  # DEBUG: temp
 		% [_s, racing_line.point_at(_s), off_line, _lateral, rejoining, target,  # DEBUG: temp
-		npc.current_speed, target_speed, _rejoin_path.slice(0, 4)]  # DEBUG: temp
+		npc.current_speed, target_speed, _path.slice(0, 4)]  # DEBUG: temp
 	)  # DEBUG: temp
 
 
@@ -279,8 +291,9 @@ func _scan_ahead(pos: Vector3, now: int) -> void:
 	_ahead_lateral.clear()
 	for hit in npc.get_world_3d().direct_space_state.intersect_shape(_scan_query, MAX_SCAN_RESULTS):
 		var rider := _rider_of(hit["collider"])
-		# Walls are the navmesh's job, and a rider's body and ContactArea both hit — skip is intentional
-		if rider == null or _ahead_riders.has(rider):
+		# Walls are the navmesh's job, a rider's body and ContactArea both hit, and a wreck is
+		# nothing to brake for — skip is intentional
+		if rider == null or _ahead_riders.has(rider) or rider.is_crashed:
 			continue
 		var dist := (rider.global_position - pos).dot(forward)
 		var rider_s := _s + dist
@@ -377,31 +390,62 @@ func _mistake_gap_ms() -> int:
 	return int(mistake_interval * randf_range(0.5, 1.5) * 1000.0)
 
 
-## Knocked well off the line (pushed, respawned, the grid): follow a navmesh path to a point ahead
-## on it. Road and grass both, the grass region's travel cost keeps it on the road where it can.
-func _rejoin_target(pos: Vector3) -> Vector3:
+## Steer at goal, or at the next navmesh corner on the way when a wall is in between: a straight
+## shot at a point ahead cuts through any wall the line wraps round. Also how a bot knocked off the
+## line paths back. Road and grass both, the grass region's travel cost keeps it on the road.
+func _path_target(pos: Vector3, goal: Vector3) -> Vector3:
 	var now := Time.get_ticks_msec()
-	if now >= _rejoin_next_path_ms:
-		_rejoin_next_path_ms = now + npc.next_scan_delay_ms()
-		_rejoin_path = NavigationServer3D.map_get_path(
+	if now >= _path_next_ms:
+		_path_next_ms = now + npc.next_scan_delay_ms()
+		_path = NavigationServer3D.map_get_path(
 			npc.get_world_3d().navigation_map,
 			pos,
-			racing_line.point_at(_s + rejoin_lookahead),
+			goal,
 			true,
 			UtilsConstants.NAV_LAYER_ROAD | UtilsConstants.NAV_LAYER_GRASS
 		)
-	# Consume reached points rather than skipping near ones: between refreshes the path's start
-	# falls behind the bot, and steering at it reverses the bike
-	while !_rejoin_path.is_empty() and _flat_dist(_rejoin_path[0], pos) <= npc.min_steer_lookahead:
-		_rejoin_path.remove_at(0)
-	if !_rejoin_path.is_empty():
-		return _rejoin_path[0]
-	# No path (off the navmesh entirely) or already at its end — aim straight at the line
-	return racing_line.point_at(_s + rejoin_lookahead)
+	# Drop corners we've crossed the perpendicular of, so a stale path never steers the bike back.
+	# A hairpin's corner stays ahead until we're actually round it.
+	while _path.size() > 2 and _flat(pos - _path[1]).dot(_flat(_path[1] - _path[0])) >= 0.0:
+		_path.remove_at(0)
+	# The end is goal as it was at the last refresh; goal itself has moved on since
+	return _path[1] if _path.size() > 2 else goal
 
 
-func _flat_dist(a: Vector3, b: Vector3) -> float:
-	return Vector2(a.x - b.x, a.z - b.z).length()
+func _flat(v: Vector3) -> Vector2:
+	return Vector2(v.x, v.z)
+
+
+## CrashController's rules, dumbed down: a killbox, or a head-on hit on layer 2. Walls take our own
+## speed, like the player. Racers take closing speed instead, or a pack touching wheels at race
+## pace would pile up; under the player's ram-wobble speed it's a harmless bump.
+func _detect_crash() -> void:
+	for i in npc.get_slide_collision_count():
+		var collision := npc.get_slide_collision(i)
+		var collider := collision.get_collider()
+		if collider is Killbox:
+			crashed.emit(null)
+			return
+		if !CrashController.is_crash_obstacle(collider):
+			continue
+		var angle := CrashController.impact_angle_deg(collision, npc.pre_slide_velocity)
+		if angle >= CrashController.CRASH_MAX_ANGLE_DEG:
+			continue
+		if collider.is_in_group(UtilsConstants.GROUPS["Racers"]):
+			var closing: Vector3 = npc.pre_slide_velocity - collider.velocity
+			if Vector2(closing.x, closing.z).length() >= CrashController.WOBBLE_RAM_MAX_SPEED:
+				crashed.emit(collider)
+				return
+		elif npc.current_speed >= CrashController.CRASH_MIN_SPEED:
+			crashed.emit(null)
+			return
+
+
+## Rammed by a racer that detected the hit from its side (CrashController, another bot, traffic).
+func _on_hit_by_racer(_hitter: Node3D) -> void:
+	# On the grid, already down, or done racing — skip is intentional
+	if _can_drive():
+		crashed.emit(null)
 
 
 ## Leaning on something the navmesh can't see. Sampled over a window rather than

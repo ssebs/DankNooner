@@ -730,11 +730,12 @@ func play_bat_swing(duration: float) -> void:
 
 
 ## Shotgun use: fire on top of the held equip pose, then unequip. Visual only — the server resolves
-## the hit. The flame pops from the anim's method track.
-func play_shotgun_fire() -> void:
+## the hit and sends where it landed. The flame pops from the anim's method track.
+func play_shotgun_fire(has_hit: bool, hit_pos: Vector3) -> void:
 	if _shotgun_fire_anim == null:
 		return
 	_anim_runner.play(_shotgun_fire_anim, 1.0, false, _SHOTGUN_FIRE_FADE_SPEED)
+	(player_entity.get_node("%ShotgunTracers") as ShotgunTracers).fire(has_hit, hit_pos)
 	await get_tree().create_timer(_shotgun_fire_anim.length).timeout
 	shotgun_held = false
 

@@ -1,5 +1,5 @@
 ## Lite rider animation for NPCRiderEntity — seats the rider via its RiderVisual,
-## then drives cosmetic lean / wheelie pitch on VisualRoot.
+## then drives cosmetic lean / wheelie pitch on VisualRoot, and ragdolls the rider on a crash.
 ## No trick pipeline, no CustomAnimPlayer, no netfox. Runs locally on every
 ## peer — it derives purely from the synced transform + npc_state.
 ##
@@ -26,6 +26,7 @@ class_name NPCAnimationController extends Node
 @export var rig_cull_check_interval: float = 0.5
 
 var _initialized: bool = false
+var _was_crashed: bool = false
 var _prev_yaw: float = 0.0
 var _yaw_rate: float = 0.0
 
@@ -56,11 +57,20 @@ func _physics_process(delta: float):
 		_apply_car_flip(delta)
 		DebugUtils.Prof("npc.anim", t)  # PROF: temp
 		return
-	_update_rig_lod()
-	# Lean/pitch stays on at any distance — it's two lerps on one node, and a bike that
-	# stops leaning through corners is obvious in a way a frozen wrist isn't.
-	if _rig_active:
-		npc.visual_root.sync_targets()
+	var crashed := npc.npc_state == NPCRiderEntity.NPCState.CRASHED
+	if crashed != _was_crashed:
+		_was_crashed = crashed
+		if crashed:
+			_start_ragdoll()
+		else:
+			_stop_ragdoll()
+	# The ragdoll owns the rig until the respawn
+	if !crashed:
+		_update_rig_lod()
+		# Lean/pitch stays on at any distance — it's two lerps on one node, and a bike that
+		# stops leaning through corners is obvious in a way a frozen wrist isn't.
+		if _rig_active:
+			npc.visual_root.sync_targets()
 	_update_yaw_rate(delta)
 	_apply_visual_root_rotation(delta)
 	DebugUtils.Prof("npc.anim", t)  # PROF: temp
@@ -95,6 +105,24 @@ func _update_rig_lod() -> void:
 	else:
 		_ik_ctrl.disable_ik()
 	_ik_ctrl.set_physics_process(active)
+
+
+## Same as the player's crash: the rider drops off the bike under physics, no launch.
+func _start_ragdoll() -> void:
+	npc.character_skin.disable_ik()
+	npc.character_skin.start_ragdoll()
+
+
+## Rebuilding the character resets the bones the ragdoll left off their base pose, like
+## PlayerEntity._exit_crash_visuals.
+func _stop_ragdoll() -> void:
+	npc.character_skin.stop_ragdoll()
+	npc.character_skin.apply_definition()
+	npc.visual_root.seat()
+	# seat() turns IK on, so start from an active rig and let the next check cull a far rider
+	_ik_ctrl.set_physics_process(true)
+	_rig_active = true
+	_rig_next_check_ms = 0
 
 
 func _update_yaw_rate(delta: float) -> void:

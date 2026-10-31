@@ -48,6 +48,8 @@ var current_game_mode: GameModeType.Kind = GameModeType.Kind.FREE_ROAM
 var current_level_name: LevelManager.LevelName = LevelManager.LevelName.LEVEL_SELECT_LABEL
 ## The running event, set on every peer by the transition; null in free roam.
 var current_event: GameModeEvent
+## Server: events skip fuel-up and drive-to-start, starting at the grid (dbg_skip_prerace).
+var dbg_skip_prerace: bool = false
 
 var _gamemode_map: Dictionary[GameModeType.Kind,GameModeType] = {}
 
@@ -74,6 +76,9 @@ func _ready():
 	connection_manager.player_disconnected.connect(_on_player_disconnected)
 	spawn_manager.player_spawned.connect(_on_player_spawned)
 	state_machine.state_transitioned.connect(_on_gamemode_transitioned)
+	Console.add_command(
+		"dbg_skip_prerace", _toggle_skip_prerace, [], 0, "Toggle events skipping fuel-up and drive-to-start (host only)"
+	)
 
 
 func get_current_gamemode() -> GameModeType:
@@ -123,6 +128,8 @@ func change_gamemode(
 ):
 	if !multiplayer.is_server():
 		return
+	if gamemode == GameModeType.Kind.FUEL_UP and dbg_skip_prerace:
+		gamemode = (get_node(event_path) as GameModeEvent).definition.target_gamemode
 
 	# A race is running — only a return to free roam (host cancel / race end) may
 	# interrupt it. Blocks a free-roaming late joiner starting a second event.
@@ -190,6 +197,15 @@ func _restore_lobby_bikes() -> void:
 		if lobby_bike == null or player.bike_definition == lobby_bike:
 			continue
 		player.update_skins(lobby_bike, player.character_definition)
+
+
+func _toggle_skip_prerace() -> void:
+	# Null peer in menus — the flag still applies to the next session
+	if multiplayer.multiplayer_peer != null and !multiplayer.is_server():
+		Console.print_line("dbg_skip_prerace: host only")
+		return
+	dbg_skip_prerace = !dbg_skip_prerace
+	Console.print_line("dbg_skip_prerace: %s" % dbg_skip_prerace)
 
 
 ## Called when returning to lobby

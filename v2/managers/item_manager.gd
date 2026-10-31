@@ -4,6 +4,9 @@
 ## (InputStateManager → request_use_item), or discarded by double-tapping the horn. Deployables
 ## (oil slick, ramp) are level children spawned on every peer by RPC-by-path, the same model as
 ## PickupSpawner.
+##
+## Race bots (negative rider ids) hold and use items through the same slot; NPCRaceManager decides
+## when. They only take items whose use reads on screen without the player's bat / shotgun props.
 class_name ItemManager extends BaseManager
 
 @export var level_manager: LevelManager
@@ -11,6 +14,7 @@ class_name ItemManager extends BaseManager
 @export var gamemode_manager: GamemodeManager
 @export var riding_hud_state: RidingHUDState
 @export var audio_manager: AudioManager
+@export var npc_race_manager: NPCRaceManager
 
 @export_group("Oil Slick")
 @export var oil_slick_drop_distance: float = 3.0
@@ -34,8 +38,13 @@ const RALLY_UP_BIKE := preload("res://resources/bikes/skins/mini_default_skin_de
 const RALLY_UP_CHARACTER := preload(
 	"res://resources/player/skins/astronaut_default_skin_definition.tres"
 )
+## What a race bot picks up: no boost to fill yet, and no bat / shotgun props on its rider.
+const BOT_ITEMS: Array[PickupItemDefinition.PickupItemType] = [
+	PickupItemDefinition.PickupItemType.OIL_SLICK,
+	PickupItemDefinition.PickupItemType.RALLY_UP,
+]
 
-## Server-only: peer_id -> the item they're holding. No entry = empty slot.
+## Server-only: rider id -> the item they're holding. No entry = empty slot.
 var _held: Dictionary[int, PickupItemDefinition] = {}
 ## Server-only: suffix for deployable node names, so despawns can find them by path.
 var _next_deployable_id: int = 0
@@ -49,9 +58,15 @@ func _ready():
 	gamemode_manager.player_disconnected.connect(_on_player_disconnected)
 
 
-## Server-only. Returns false (pickup stays put) when a held item would overflow the slot.
+## Server-only. Returns false (pickup stays put) when a held item would overflow the slot, or a
+## race bot doesn't take that item.
 func collect(peer_id: int, definition: PickupItemDefinition) -> bool:
 	var item_type := definition.item_type
+	if peer_id < 0:
+		if _held.has(peer_id) or item_type not in BOT_ITEMS:
+			return false
+		_held[peer_id] = definition
+		return true
 	if item_type == PickupItemDefinition.PickupItemType.GAS_CAN:
 		spawn_manager.grant_boost.rpc(peer_id)
 	elif _held.has(peer_id):
@@ -71,21 +86,31 @@ func clear_items() -> void:
 		_empty_slot(peer_id)
 
 
+## Server-only. The item rider_id is holding, null for an empty slot.
+func get_held(rider_id: int) -> PickupItemDefinition:
+	return _held.get(rider_id)
+
+
 ## Client-callable: use YOUR held item. The server derives the rider from the sender.
 @rpc("any_peer", "call_local", "reliable")
 func request_use_item():
 	if !multiplayer.is_server():
 		return
 	var sender := multiplayer.get_remote_sender_id()
-	var peer_id := sender if sender > 1 else 1
-	var player := spawn_manager.get_player_by_peer_id(peer_id)
+	use_item(sender if sender > 1 else 1)
+
+
+## Server-only. A player's request_use_item, or a race bot deciding to.
+func use_item(peer_id: int) -> void:
+	var player := spawn_manager.get_rider(peer_id) as CharacterBody3D
 	# Empty-handed double taps are normal trick-button use, and a crashed rider can't use items.
 	if !_held.has(peer_id) or player.is_crashed:
 		return
 	var definition := _held[peer_id]
 	_held.erase(peer_id)
-	riding_hud_state.push_held_item(peer_id, null)
-	_rpc_play_use_sfx.rpc_id(peer_id, definition.use_sfx)
+	if peer_id > 0:
+		riding_hud_state.push_held_item(peer_id, null)
+		_rpc_play_use_sfx.rpc_id(peer_id, definition.use_sfx)
 	match definition.item_type:
 		PickupItemDefinition.PickupItemType.BAT:
 			spawn_manager.swing_bat.rpc(peer_id)
@@ -94,7 +119,8 @@ func request_use_item():
 		PickupItemDefinition.PickupItemType.RAMP:
 			_place_ramp(player)
 		PickupItemDefinition.PickupItemType.SHOTGUN:
-			_fire_shotgun(peer_id, player)
+			# Bots never hold one (BOT_ITEMS)
+			_fire_shotgun(peer_id, player as PlayerEntity)
 		PickupItemDefinition.PickupItemType.RALLY_UP:
 			_rally_up()
 
@@ -123,7 +149,8 @@ func _on_player_disconnected(peer_id: int) -> void:
 
 ## Server-only. Empties the slot without using it, unequipping a held shotgun.
 func _empty_slot(peer_id: int) -> void:
-	riding_hud_state.push_held_item(peer_id, null)
+	if peer_id > 0:
+		riding_hud_state.push_held_item(peer_id, null)
 	if _held[peer_id].item_type == PickupItemDefinition.PickupItemType.SHOTGUN:
 		_rpc_set_shotgun_held.rpc(peer_id, false)
 	_held.erase(peer_id)
@@ -132,14 +159,14 @@ func _empty_slot(peer_id: int) -> void:
 #region Oil slick / ramp (server places, every peer spawns)
 
 
-func _drop_oil_slick(peer_id: int, player: PlayerEntity) -> void:
+func _drop_oil_slick(peer_id: int, player: CharacterBody3D) -> void:
 	var xform := _ground_transform(player, -oil_slick_drop_distance)
 	var slick_name := _next_deployable_name()
 	_rpc_spawn_oil_slick.rpc(slick_name, xform, peer_id, Time.get_ticks_msec())
 	_despawn_after(slick_name, oil_slick_lifetime)
 
 
-func _place_ramp(player: PlayerEntity) -> void:
+func _place_ramp(player: CharacterBody3D) -> void:
 	var distance := maxf(player.velocity.length() * ramp_lead_time, ramp_min_distance)
 	var ramp_name := _next_deployable_name()
 	_rpc_spawn_ramp.rpc(ramp_name, _ground_transform(player, distance))
@@ -147,7 +174,7 @@ func _place_ramp(player: PlayerEntity) -> void:
 
 
 ## Transform `distance` along the rider's heading (negative = behind), snapped to the ground there.
-func _ground_transform(player: PlayerEntity, distance: float) -> Transform3D:
+func _ground_transform(player: CharacterBody3D, distance: float) -> Transform3D:
 	var basis := Basis(Vector3.UP, player.global_rotation.y)
 	var pos := player.global_position - basis.z * distance
 	# Slopes can put the ground up to ~|distance| above or below the rider at that spot
@@ -206,17 +233,18 @@ func _rpc_despawn_deployable(node_name: String):
 		node.queue_free()
 
 
-## Server-only. NPC racers ride through, and a rider already down doesn't use it up.
+## Server-only. Players and race bots go down; a rider already down doesn't use it up.
 func _on_oil_slick_body_entered(
 	body: Node3D, slick_name: String, owner_peer_id: int, dropped_msec: int
 ) -> void:
-	if not body is PlayerEntity or body.is_crashed:
+	# Walls on layer 2 enter too — skip is intentional
+	if not (body is PlayerEntity or body is NPCRiderEntity) or body.is_crashed:
 		return
 	var victim_id := int(body.name)
 	var in_grace := Time.get_ticks_msec() - dropped_msec < oil_slick_owner_grace * 1000.0
 	if victim_id == owner_peer_id and in_grace:
 		return
-	spawn_manager.knock_out(victim_id, owner_peer_id)
+	spawn_manager.knock_out_rider(body, owner_peer_id)
 	_rpc_despawn_deployable.rpc(slick_name)
 
 
@@ -240,8 +268,10 @@ func _end_rally_up(id: int) -> void:
 
 
 ## Every peer. Ending restores each rider's lobby skins, or the event's forced bike if it has one.
+## Race bots swap too, back to their own definitions.
 @rpc("call_local", "reliable")
 func _rpc_set_rally_up(active: bool):
+	npc_race_manager.set_rally_up(active)
 	var forced: BikeSkinDefinition = null
 	if gamemode_manager.current_event != null:
 		forced = gamemode_manager.current_event.definition.forced_base_bike
@@ -263,15 +293,16 @@ func _rpc_set_rally_up(active: bool):
 #region Shotgun
 
 
-## Server-only. Knocks out the nearest other rider inside the shooter's %GunCollisionArea.
+## Server-only. Knocks out the nearest other rider (player, race bot or traffic) inside the
+## shooter's %GunCollisionArea.
 ## Toggle Debug > Visible Collision Shapes to see the hitbox.
 func _fire_shotgun(peer_id: int, shooter: PlayerEntity) -> void:
-	_rpc_fire_shotgun.rpc(peer_id)
 	var in_hitbox: Array[Node3D] = shooter.get_node("%GunCollisionArea").get_overlapping_bodies()
-	var target: PlayerEntity = null
+	var target: Node3D = null
 	var nearest := INF
 	for body in in_hitbox:
-		if not body is PlayerEntity or body == shooter or body.is_crashed:
+		var is_rider := body is PlayerEntity or body is NPCRiderEntity
+		if not is_rider or body == shooter or body.is_crashed:
 			continue
 		var dist := shooter.global_position.distance_to(body.global_position)
 		if dist < nearest:
@@ -280,9 +311,10 @@ func _fire_shotgun(peer_id: int, shooter: PlayerEntity) -> void:
 	DebugUtils.DebugMsg(
 		"shotgun: %d bodies in hitbox, hit %s" % [in_hitbox.size(), target.name if target else "none"]
 	)
+	_rpc_fire_shotgun.rpc(peer_id, target != null, target.global_position if target else Vector3.ZERO)
 	# Nobody in the hitbox is a plain miss.
 	if target != null:
-		spawn_manager.knock_out(int(target.name), peer_id)
+		spawn_manager.knock_out_rider(target, peer_id)
 
 
 ## Every peer: the holder's equip pose follows the held shotgun.
@@ -293,8 +325,8 @@ func _rpc_set_shotgun_held(peer_id: int, held: bool):
 
 ## Every peer: fire, then unequip (AnimationController clears shotgun_held after the shot).
 @rpc("call_local", "reliable")
-func _rpc_fire_shotgun(peer_id: int):
-	spawn_manager.get_player_by_peer_id(peer_id).animation_controller.play_shotgun_fire()
+func _rpc_fire_shotgun(peer_id: int, has_hit: bool, hit_pos: Vector3):
+	spawn_manager.get_player_by_peer_id(peer_id).animation_controller.play_shotgun_fire(has_hit, hit_pos)
 
 
 #endregion
@@ -312,4 +344,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("riding_hud_state must not be empty")
 	if audio_manager == null:
 		issues.append("audio_manager must not be empty")
+	if npc_race_manager == null:
+		issues.append("npc_race_manager must not be empty")
 	return issues
