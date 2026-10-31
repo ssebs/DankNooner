@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.0.164 - 2026-10-31
+
+- vibrate on near miss
+- riding hud adjustments
+- RMB + move mouse = T + Arrow keys
+- improved npc racers
+- npc race use items
+- npc race: difficulty, crashing, item use,, nav improvements
+- cleaned up crash launch mode
+- fix colliders in city
+- fix ground colliders in blender for stunt city
+- fix props collision between races
+- give cars headlights since they're impossible to see during a race
+- doc tweaks
+- migrate other maps (might be broken)
+- separate props per game mode under an event start circle
+- start ragdoll launch game mode
+- fix backing up steering / going uphill is jittery
+- fix backing up steering / going uphill is jittery
+
 ## v0.0.163 - 2026-10-29
 
 - better wheelie cam
