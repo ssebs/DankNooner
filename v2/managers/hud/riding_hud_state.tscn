@@ -368,22 +368,78 @@ size_flags_vertical = 8
 mouse_filter = 2
 theme_override_constants/separation = 24
 
-[node name="HUD_ItemHint" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomRightHBox"]
-unique_name_in_owner = true
-visible = false
+[node name="RideHints" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomRightHBox"]
 layout_mode = 2
 size_flags_vertical = 8
 mouse_filter = 2
 theme_override_constants/separation = 8
 
-[node name="HUD_ItemPrompt" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/HUD_ItemHint" instance=ExtResource("8_inpmt")]
+[node name="LeanHint" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/RideHints"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+alignment = 2
+
+[node name="Label" type="Label" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/RideHints/LeanHint"]
+layout_mode = 2
+text = "HUD_LEAN"
+
+[node name="HUD_LeanForwardPrompt" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/RideHints/LeanHint" instance=ExtResource("8_inpmt")]
+unique_name_in_owner = true
+layout_mode = 2
+action = "lean_forward"
+
+[node name="HUD_LeanBackPrompt" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/RideHints/LeanHint" instance=ExtResource("8_inpmt")]
+unique_name_in_owner = true
+layout_mode = 2
+action = "lean_back"
+
+[node name="ClutchHint" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/RideHints"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+alignment = 2
+
+[node name="Label" type="Label" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/RideHints/ClutchHint"]
+layout_mode = 2
+text = "ACTION_CLUTCH"
+
+[node name="HUD_ClutchPrompt" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/RideHints/ClutchHint" instance=ExtResource("8_inpmt")]
+unique_name_in_owner = true
+layout_mode = 2
+action = "clutch"
+
+[node name="RearBrakeHint" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/RideHints"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+alignment = 2
+
+[node name="Label" type="Label" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/RideHints/RearBrakeHint"]
+layout_mode = 2
+text = "ACTION_BRAKE_REAR"
+
+[node name="HUD_RearBrakePrompt" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/RideHints/RearBrakeHint" instance=ExtResource("8_inpmt")]
+unique_name_in_owner = true
+layout_mode = 2
+action = "brake_rear"
+
+[node name="HUD_ItemHint" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/RideHints"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+alignment = 2
+
+[node name="Label" type="Label" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/RideHints/HUD_ItemHint"]
+layout_mode = 2
+text = "ACTION_USE_ITEM"
+
+[node name="HUD_ItemPrompt" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/RideHints/HUD_ItemHint" instance=ExtResource("8_inpmt")]
 unique_name_in_owner = true
 layout_mode = 2
 action = "use_item"
-
-[node name="Label" type="Label" parent="UI/AspectContainer/MarginContainer/BottomRightHBox/HUD_ItemHint"]
-layout_mode = 2
-text = "ACTION_USE_ITEM"
 
 [node name="GuageCluster" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomRightHBox" unique_id=1972969717]
 layout_mode = 2

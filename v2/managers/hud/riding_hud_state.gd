@@ -59,7 +59,8 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _action_hints: VBoxContainer = %HUD_ActionHints
 @onready var _prompts: Array[InputPrompt] = [
 	%HUD_TrickPromptBtn, %HUD_BoostPrompt, %HUD_MapPrompt, %HUD_RespawnPrompt, %HUD_ItemPrompt,
-	%HUD_HornPrompt
+	%HUD_HornPrompt, %HUD_LeanForwardPrompt, %HUD_LeanBackPrompt, %HUD_RearBrakePrompt,
+	%HUD_ClutchPrompt
 ]
 @onready var _held_item_panel: HBoxContainer = %HUD_HeldItem
 @onready var _held_item_thumbnail: Thumbnail3D = %HUD_HeldItemThumbnail
@@ -234,8 +235,12 @@ func Physics_Update(delta: float):
 		button_toggled or _trick_state_diff_t >= TrickController.WHEELIE_EXIT_DELAY
 	):
 		_show_trick_prompt(trick_state)
-	# Pad sticks spring back on their own; KBM (the mouse stick) needs to see where it sits.
-	_trick_stick.visible = held and not input_controller.is_gamepad
+	# Whenever the stick does tricks: wheelie / air need no button held, the ground does.
+	# is_crashed first: movement state (and so trick_state) freezes on crash.
+	_trick_stick.visible = (
+		not player_entity.is_crashed
+		and trick_controller.trick_state() != TrickController.TrickState.NONE
+	)
 	if _trick_stick.visible:
 		_trick_stick.set_stick(Vector2(input_controller.nfx_cam_x, input_controller.nfx_cam_y))
 

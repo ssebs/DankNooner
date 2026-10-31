@@ -6,7 +6,7 @@
 
 ## NOW
 
-
+- [ ] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
 
 ---
 ###

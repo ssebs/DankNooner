@@ -1,6 +1,7 @@
 ## Trick-stick readout left of the live combo score: the right stick as TrickController reads it, inside
-## the dead zone it must leave to register a direction. The mouse stick has no spring-back, so this
-## is how a flick back to center gets judged. Local and display-only; RidingHUDState drives it.
+## the dead zone it must leave to register a direction. Shown while trick is held, on any device; the
+## mouse stick has no spring-back, so it's how a flick back to center gets judged there. Local and
+## display-only; RidingHUDState drives it.
 class_name TrickStickIndicator extends Control
 
 const DOT_RADIUS: float = 4.0
