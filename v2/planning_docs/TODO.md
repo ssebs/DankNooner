@@ -240,6 +240,8 @@
 ---
 
 ## Done ✅
+- [x] fix ground colliders in blender for stunt city
+
 - [x] give cars headlights since they're impossible to see during a race
 
 - [x] separate props per game mode under an event start circle

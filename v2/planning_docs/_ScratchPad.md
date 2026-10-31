@@ -8,8 +8,6 @@
 
 - [ ] ragdoll launch game mode (furthest launch wins)
   - [x] basic working gameplay / mode
-  - [ ] make beach have colliders so distance matters
-
 
 - [ ] event circle descriptions / not all text is localized
 
