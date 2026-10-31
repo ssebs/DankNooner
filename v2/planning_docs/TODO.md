@@ -26,7 +26,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
-
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
 
@@ -240,6 +239,8 @@
 ---
 
 ## Done ✅
+- [x] ragdoll launch game mode (furthest launch wins)
+
 - [x] fix ground colliders in blender for stunt city
 
 - [x] give cars headlights since they're impossible to see during a race

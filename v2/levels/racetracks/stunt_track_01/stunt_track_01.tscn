@@ -1797,11 +1797,13 @@ occluder = ExtResource("20_a57fq")
 bake_mask = 4294967291
 
 [node name="NPCNavRegion" type="NavigationRegion3D" parent="." unique_id=1990556521]
+visible = false
 navigation_mesh = SubResource("NavigationMesh_ercdn")
 script = ExtResource("npc_nav_region")
 exclude_layers = 16
 
 [node name="NPCNavGrassRegion" type="NavigationRegion3D" parent="." unique_id=1990556522]
+visible = false
 navigation_mesh = SubResource("NavigationMesh_grass")
 navigation_layers = 2
 enter_cost = 10.0
@@ -1856,6 +1858,17 @@ height = 0.75
 depth = 0.1
 color_preset = 4
 neon_edges = true
+
+[node name="ArrowWall2" parent="EventStartCircle1/Props/CrashLaunchProps" unique_id=1250368385 instance=ExtResource("25_60x1b")]
+transform = Transform3D(3.0908613e-08, -2.9802322e-08, -0.9999999, 1, -3.0908613e-08, 3.0908623e-08, -3.090861e-08, -0.9999999, 2.9802322e-08, -10.478134, 4.9999986, 33.31469)
+height = 200.0
+
+[node name="ArrowWall3" parent="EventStartCircle1/Props/CrashLaunchProps" unique_id=383306683 instance=ExtResource("25_60x1b")]
+transform = Transform3D(3.0908613e-08, -2.9802322e-08, -0.9999999, 1, -3.0908613e-08, 3.0908623e-08, -3.090861e-08, -0.9999999, 2.9802322e-08, -42.478134, 4.9999986, 33.31469)
+height = 200.0
+
+[node name="ArrowWall4" parent="EventStartCircle1/Props/CrashLaunchProps" unique_id=2125912501 instance=ExtResource("25_60x1b")]
+transform = Transform3D(3.090861e-08, 0.9999999, 1.3909059e-08, 1, -3.0908613e-08, 3.0908623e-08, 3.0908616e-08, 1.3909062e-08, -0.9999999, -26.125, 5.25, 132.55)
 
 [node name="RaceProps" type="Node3D" parent="EventStartCircle1/Props" unique_id=2107813837]
 
@@ -1942,28 +1955,28 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.2, -155)
 [node name="CrashLaunchSpawns" type="Node3D" parent="EventStartCircle1/Spawns" unique_id=1943584799]
 
 [node name="Spawn1" type="Marker3D" parent="EventStartCircle1/Spawns/CrashLaunchSpawns" unique_id=196907988]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0.25, 100)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0.25, 115.75)
 
 [node name="Spawn2" type="Marker3D" parent="EventStartCircle1/Spawns/CrashLaunchSpawns" unique_id=1669180241]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.25, 100)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.25, 115.75)
 
 [node name="Spawn3" type="Marker3D" parent="EventStartCircle1/Spawns/CrashLaunchSpawns" unique_id=98957652]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.25, 100)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.25, 115.75)
 
 [node name="Spawn4" type="Marker3D" parent="EventStartCircle1/Spawns/CrashLaunchSpawns" unique_id=1960332276]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 0.25, 100)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 0.25, 115.75)
 
 [node name="Spawn5" type="Marker3D" parent="EventStartCircle1/Spawns/CrashLaunchSpawns" unique_id=1294986613]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 0.25, 100)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 0.25, 115.75)
 
 [node name="Spawn6" type="Marker3D" parent="EventStartCircle1/Spawns/CrashLaunchSpawns" unique_id=754740344]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 0.25, 100)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 0.25, 115.75)
 
 [node name="Spawn7" type="Marker3D" parent="EventStartCircle1/Spawns/CrashLaunchSpawns" unique_id=1494297431]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 0.25, 110.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 0.25, 125.850006)
 
 [node name="Spawn8" type="Marker3D" parent="EventStartCircle1/Spawns/CrashLaunchSpawns" unique_id=849936389]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.25, 110.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.25, 125.850006)
 
 [node name="TrickBattleSpawns" type="Node3D" parent="EventStartCircle1/Spawns" unique_id=1235134733]
 
@@ -3397,7 +3410,7 @@ transform = Transform3D(0.039946012, 0, 0.9992018, 0, 1, 0, -0.9992018, 0, 0.039
 size = 32
 density = 2
 layout_seed = 15
-snapped_heights = PackedFloat32Array(nan, -255.63728, -255.71912, -255.62662)
+snapped_heights = PackedFloat32Array(-255.65047, -255.63728, -255.71912, -255.62662)
 
 [node name="TreeBundle19" parent="_Trees_/IslandTrackTrees" unique_id=1069682775 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, -607.4633, 256, 254.91446)
@@ -3484,7 +3497,7 @@ transform = Transform3D(-0.019094229, 0, -0.99981767, 0, 1, 0, 0.99981767, 0, -0
 size = 32
 density = 1
 layout_seed = 23
-snapped_heights = PackedFloat32Array(nan, -255.7152, -255.64899, -255.6631)
+snapped_heights = PackedFloat32Array(-255.64131, -255.7152, -255.64899, -255.6631)
 
 [node name="TreeBundle32" parent="_Trees_/IslandTrackTrees" unique_id=687172498 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(-0.27373877, 0, -0.96180403, 0, 1, 0, 0.96180403, 0, -0.27373877, -905.3496, 256, 232.02315)
@@ -3716,7 +3729,7 @@ aspect = 2
 density = 2
 layout_seed = -1
 has_collision = true
-snapped_heights = PackedFloat32Array(-250.23627, -249.24321, -251.21628, -254.4277, -253.54903, nan, -255.32013, -255.66383)
+snapped_heights = PackedFloat32Array(-250.23627, -249.24321, -251.21628, -254.4277, -253.54903, -253.57274, -255.32013, -255.66383)
 
 [node name="TreeBundle18" parent="_Trees_/Treesoutskirtsandintown" unique_id=1966125027 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -239.5, 256, 160)
@@ -3733,7 +3746,7 @@ aspect = 4
 density = 2
 layout_seed = 3
 has_collision = true
-snapped_heights = PackedFloat32Array(-255.7142, -255.67229, -255.6934, nan, -255.67195, -255.639, -255.64397, -255.7027, -255.61743, -255.75594, -255.6731, -255.6559, -255.74387, -255.60077, -255.72523, -255.70953)
+snapped_heights = PackedFloat32Array(-255.7142, -255.67229, -255.6934, -255.74066, -255.67195, -255.639, -255.64397, -255.7027, -255.61743, -255.75594, -255.6731, -255.6559, -255.74387, -255.60077, -255.72523, -255.70953)
 
 [node name="TreeBundle21" parent="_Trees_/Treesoutskirtsandintown" unique_id=1459682998 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 64.5, 256, -48)
@@ -3831,7 +3844,7 @@ transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -475
 size = 16
 aspect = 4
 has_collision = true
-snapped_heights = PackedFloat32Array(nan, -255.66507, -255.58182, -255.6476, -255.61609, -255.6762, -255.59137, nan, nan, -255.63464, -255.71545, -255.71448, -255.74643, -255.58717, -255.63492, nan)
+snapped_heights = PackedFloat32Array(nan, -255.66507, -255.58182, -255.6476, -255.61609, -255.6762, -255.59137, -255.70132, nan, -255.63464, -255.71545, -255.71448, -255.74643, -255.58717, -255.63492, -255.70044)
 
 [node name="TreeBundle50" parent="_Trees_/Treesoutskirtsandintown" unique_id=2106627367 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -413.5, 256, 370)
