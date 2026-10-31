@@ -73,6 +73,8 @@ const CRASH_TRAUMA: float = 1.0
 const WOBBLE_MAX_TRAUMA: float = 0.9
 ## Trauma floor held the whole time the bike is drifting.
 const DRIFT_TRAUMA: float = 0.6
+## One-shot trauma burst on passing traffic close.
+const NEAR_MISS_TRAUMA: float = 0.6
 ## Fraction of the bike's max_speed where the FOV widen + blur begins.
 const FOV_SPEED_PCT_MIN: float = 0.2
 ## Fraction of the bike's max_speed where the FOV widen + blur is maxed out.
@@ -646,6 +648,11 @@ func _on_trick_ended_fx(trick_type: TrickController.Trick):
 			1.0
 		)
 		_trauma = minf(_trauma + WHEELIE_LAND_TRAUMA * landing, 1.0)
+
+
+## Local rider only. Called by SpawnManager.near_miss_player.
+func on_near_miss():
+	_trauma = minf(_trauma + NEAR_MISS_TRAUMA, 1.0)
 
 
 #endregion

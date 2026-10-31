@@ -7,6 +7,8 @@
 ## NOW
 
 - [ ] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
+- [ ] shouldnt be so easy to drift & steer on gamepad
+- [ ] keep vibrating controller after a crash til you respawn
 
 ---
 ###

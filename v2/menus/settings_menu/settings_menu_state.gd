@@ -212,6 +212,12 @@ func _scale_str(val: float) -> String:
 ## Unducked on the Audio tab so the music slider previews its real level.
 func _on_tab_changed(tab: int):
 	audio_manager.set_music_ducked(self, tab_container.get_tab_control(tab) != audio_tab)
+	# Hiding the old tab drops focus, stranding a gamepad. Deferred to land after MenuManager's grab.
+	_focus_current_tab.call_deferred()
+
+
+func _focus_current_tab():
+	tab_container.get_current_tab_control().find_next_valid_focus().grab_focus()
 
 
 func _on_save_pressed():

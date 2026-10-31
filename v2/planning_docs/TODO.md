@@ -245,6 +245,8 @@
 
 ## Done ✅
 
+- [x] add vibration on near miss trick
+
 - [x] PC? RMB + move up/left/right like joystick should do tricks too instead of only arrow keys
 - [x] ragdoll launch game mode (furthest launch wins)
 - [x] Create separate location for stunt/trick battle, remove from existing races

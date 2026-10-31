@@ -264,6 +264,8 @@ func near_miss_player(player_peer_id: int, score: float):
 	var player := get_player_by_peer_id(player_peer_id)
 	player.rb_near_miss_score = score
 	player.rb_near_miss = true
+	if player.is_local_client:
+		player.camera_controller.on_near_miss()
 
 
 ## Bat pickup effect: every peer plays the swing anim on the collector; the server also wobbles

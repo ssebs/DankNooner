@@ -72,6 +72,7 @@ tab_3/title = "CONTROLS_LABEL"
 layout_mode = 2
 theme_type_variation = &"InsetScroll"
 horizontal_scroll_mode = 0
+follow_focus = true
 metadata/_tab_index = 0
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display" unique_id=1034889296]
@@ -175,6 +176,7 @@ visible = false
 layout_mode = 2
 theme_type_variation = &"InsetScroll"
 horizontal_scroll_mode = 0
+follow_focus = true
 metadata/_tab_index = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio" unique_id=1712998538]
@@ -265,6 +267,7 @@ visible = false
 layout_mode = 2
 theme_type_variation = &"InsetScroll"
 horizontal_scroll_mode = 0
+follow_focus = true
 metadata/_tab_index = 2
 
 [node name="VBoxContainer3" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay" unique_id=659821076]
@@ -365,6 +368,7 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_type_variation = &"InsetScroll"
 horizontal_scroll_mode = 0
+follow_focus = true
 
 [node name="ControlsGrid" type="GridContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Controls/ScrollContainer" unique_id=1630594025]
 unique_name_in_owner = true
