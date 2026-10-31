@@ -162,7 +162,12 @@ func _input(event: InputEvent):
 		return
 	if !player_entity.is_local_client:
 		return
-	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+	# Held trick turns the mouse into the trick stick (InputController), so it can't look too.
+	if (
+		event is InputEventMouseMotion
+		and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
+		and not Input.is_action_pressed("trick")
+	):
 		_mouse_delta += event.relative
 
 

@@ -42,9 +42,18 @@ loops, the temp logs below say why.
 **Temp code to strip once the grid is confirmed:** in `NPCRaceState`, every `# DEBUG: temp` line
 (the `CRASH …` / `landed …` logs, the `STUCK` log and `_dbg_drive`).
 
+**2026-10-31 later, untested:** the logopol *is* in the bake (a small hole in an open lot). The
+steer point landed inside the hole and `map_get_closest_point` snapped it to the near rim, aiming
+the bot head-on at the pole; `_steer_point` now walks it back toward the line instead. Bot crashes
+push a bare bail line to the trick feed (`NPCRaceManager.crash_npc`).
+
 **Known, not fixed:**
-- `StuntRace01GasStation/logopol` (gas station logo pole) catches bots at speed: a real wall
-  crash. It probably isn't in the nav bake, so the line runs through it.
+- The grid ram loop still happens (rear bot rams the one ahead at ~19 m/s closing, both respawn
+  in their grid slots and repeat). User: ignore for now.
+- Traffic lights (`TrafficNetwork`) aren't in `navigation_mesh_source_group`, so they have no
+  navmesh hole and bots hit them. Add the group + rebake.
+- Bad landings fire off road crests: `_launched` (`pre_slide_velocity.y > 0`) is true on almost
+  any rise. User picked an airtime threshold instead; not built.
 - Bots ride up event props at (-700, 452) (props aren't in the nav bake). May be fixed by ramp
   riding; re-check.
 - Bot can stop short of the finish trigger (line end vs trigger).

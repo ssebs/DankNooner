@@ -74,12 +74,11 @@ func _format(
 	)
 	var parts := PackedStringArray(["[b]%s[/b]" % shown_name])
 	if crashed:
-		parts.append(
-			(
-				"[color=#%s]%s %dm[/color]"
-				% [TrickPopups.OOF_COLOR.to_html(false), tr("FEED_BAILED"), launch_m]
-			)
-		)
+		var bailed := tr("FEED_BAILED")
+		# Bots don't measure a launch
+		if launch_m > 0.0:
+			bailed += " %dm" % launch_m
+		parts.append("[color=#%s]%s[/color]" % [TrickPopups.OOF_COLOR.to_html(false), bailed])
 	var names := PackedStringArray()
 	for trick in tricks:
 		names.append(TrickController.trick_to_str(trick).capitalize())

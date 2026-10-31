@@ -284,7 +284,8 @@ The trick roster is the `Trick` enum in `trick_controller.gd`.
   definition's `max_wheelie_angle_deg` / `max_stoppie_angle_deg` are the *crash* limits instead —
   see `CrashController`.
 - The trick-button variants (`WHEELIE_MOD` / `HIGH_CHAIR` / `HEEL_CLICKER` / `TWO_LEFT_FEET`) are
-  picked by camera-stick direction while the trick button is held; `HIGH_CHAIR` latches until the
+  picked by camera-stick direction while the trick button is held (on KBM, mouse motion while it's
+  held drives a virtual stick in `InputController`); `HIGH_CHAIR` latches until the
   button drops or the wheelie ends. `DRIFT` mirrors `MovementController.is_drifting`.
 - Stick tricks work in any ground wheelie. Outside the balance point they pump a speed wobble
   (`WobbleController.trick_feed()`, rate `WOBBLE_TRICK_FEED`) toward a swing sized by how far

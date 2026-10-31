@@ -239,9 +239,7 @@ func _drive(delta: float) -> void:
 	if rejoining:
 		goal = racing_line.point_at(_s + rejoin_lookahead)
 	else:
-		var ahead := racing_line.point_at(steer_s) + racing_line.right_at(steer_s) * _lateral
-		# Dodges may cross grass but never a wall: the whole nav map, not just the road
-		goal = NavigationServer3D.map_get_closest_point(npc.get_world_3d().navigation_map, ahead)
+		goal = _steer_point(steer_s)
 	var target := _path_target(pos, goal)
 
 	var speed_s := _s - late_brake_distance if _mistake == Mistake.LATE_BRAKE else _s
@@ -254,6 +252,26 @@ func _drive(delta: float) -> void:
 		rejoining, target,  # DEBUG: temp
 		npc.current_speed, target_speed, _path.slice(0, 4)]  # DEBUG: temp
 	)  # DEBUG: temp
+
+
+## Our offset's point on the line at s, walked back toward the line until it's on the nav map.
+## Snapping it straight to the closest point puts it on the near rim of a small hole (a pole),
+## aiming the bot head-on at it. Whole nav map, so dodges may still cross grass, never a wall.
+func _steer_point(s: float) -> Vector3:
+	var map := npc.get_world_3d().navigation_map
+	var line_point := racing_line.point_at(s)
+	var right := racing_line.right_at(s)
+	var lateral := _lateral
+	var ahead := line_point + right * lateral
+	var on_map := NavigationServer3D.map_get_closest_point(map, ahead)
+	while (
+		_flat(on_map - ahead).length() > NPCRacingLine.ROOM_STEP * 0.5
+		and absf(lateral) > NPCRacingLine.ROOM_STEP
+	):
+		lateral = move_toward(lateral, 0.0, NPCRacingLine.ROOM_STEP)
+		ahead = line_point + right * lateral
+		on_map = NavigationServer3D.map_get_closest_point(map, ahead)
+	return on_map
 
 
 ## The speed-based lookahead, shortened through bends: chasing a point L ahead on curvature k

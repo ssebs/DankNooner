@@ -64,7 +64,6 @@ const CONTROL_CATEGORIES: Dictionary = {
 		"open_map",
 		"pause",
 	],
-	"CONTROLS_CATEGORY_MINIGAME": ["fuel_fill"],
 }
 
 ## Event payouts: event base × place multiplier + score × rate (see Progression.md).

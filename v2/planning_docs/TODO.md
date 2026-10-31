@@ -33,9 +33,14 @@
 - [ ] Demo release
   - [x] Get racing AI working [WIP]
     - [ ] tricks / Items
-      - [ ] npcs get stuck on corners + cant go fast enough for the ramps
+      - [x] cant go fast enough for the ramps
+      - [x] npcs get stuck on corners + 
+      - [x] easy/hard difficulty setting for AI
+      - [x] bots crash into gas station pole
+      - [x] add to trick feed
       - [ ] continue w/ `____NPC_RACER_AI_WIP.md`
-    - [ ] easy/hard difficulty setting for AI
+      - [ ] Phase 3 (they do tricks + get boost)
+      - [ ] verify difficulty works
   - [ ] Balancing points / score
   - [ ] Demo savegame should be different from main game
   - [ ] Start with tutorial level (lock StuntCity until tutorial is complete)
@@ -75,7 +80,6 @@
 - [ ] full navigation across menus, HUDs & in-world UI
 - [ ] cant use controller to select in customize menu
 - [ ] hard to use fill up minigame
-- [ ] PC? RMB + move up/left/right like joystick should do tricks too instead of only arrow keys
 
 ### HUD Improvements
 - [ ] need to know when race is completed (single player is done vs entire lobby)
@@ -240,47 +244,32 @@
 ---
 
 ## Done ✅
+
+- [x] PC? RMB + move up/left/right like joystick should do tricks too instead of only arrow keys
+
 - [x] ragdoll launch game mode (furthest launch wins)
-
+- [x] Create separate location for stunt/trick battle, remove from existing races
 - [x] fix ground colliders in blender for stunt city
-
 - [x] give cars headlights since they're impossible to see during a race
-
 - [x] separate props per game mode under an event start circle
-
 - [x] backing up steering / going uphill is jittery
-
 - [x] Tweak camera:
   - [x] Manual rotation should always work, reset timer for auto move back
   - [x] far cam + near cam + fps cam
   - [x] better wheelie cam
-
 - [x] Fill up => race is not obvious where to go/not consistent across all races 
-
 - [x] traffic density -> use setting. Aka choose low/mid/hi. 
-
 - [x] Hitbox on car needs to be smaller 
-
 - [x] Customize menu x at top right of panel to leave
-
 - [x] Color sliders shouldn't have glow fx
-
 - [x] Add ramp on bridge so if you land on top you can drive off both ways
-
 - [x] filling up - pay per second of fuel, so spilling costs $. show in diagetic UI on pump
-
 - [x] Wheelie scoring now depends on the angle, it should.
-
 - [x] bike wreck reacts to cars
-
 - [x] Replace win tada sound usage
-
 - [x] Grinding sound should be in 3d space
-
 - [x] free ride => host private lobby of default type, can invite friends but no need to wait in lobby.
-
 - [x] 321 + drive to start of race text + current objective should be more obvious during races/events (race/hud objective)
-
 - [x] Customize menu glow on select gets cut off
 - [x] Bottom left btn corner should be round
 - [x] Steam page

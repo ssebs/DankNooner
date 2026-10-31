@@ -20,6 +20,8 @@ const AUTO_SHIFT_COOLDOWN: float = 0.4
 const AUTO_DOWNSHIFT_DELAY: float = 1.0
 ## Highest RPM ratio a downshift may land at, leaving headroom before the next upshift.
 const AUTO_DOWNSHIFT_MAX_LANDING: float = 0.75
+## Mouse travel (px) for full trick-stick deflection while trick is held.
+const MOUSE_TRICK_STICK_PX: float = 60.0
 
 var is_gamepad := false
 var input_disabled := false
@@ -53,6 +55,8 @@ var _pending_gear_reset: bool = false
 var _auto_shift_cooldown: float = 0.0
 var _auto_downshift_hold: float = 0.0
 var _input_state_manager: InputStateManager
+## Mouse as a virtual right stick: accumulates while trick is held, recenters on release.
+var _mouse_trick_stick := Vector2.ZERO
 
 
 func _ready():
@@ -108,8 +112,18 @@ func _gather():
 	nfx_clutch_held = Input.is_action_pressed("clutch")
 	nfx_boost_held = Input.is_action_pressed("boost")
 	nfx_horn_held = Input.is_action_pressed("horn")
-	nfx_cam_x = (Input.get_action_strength("cam_right") - Input.get_action_strength("cam_left"))
-	nfx_cam_y = Input.get_action_strength("cam_up") - Input.get_action_strength("cam_down")
+	nfx_cam_x = clampf(
+		Input.get_action_strength("cam_right") - Input.get_action_strength("cam_left")
+		+ _mouse_trick_stick.x,
+		-1.0,
+		1.0
+	)
+	nfx_cam_y = clampf(
+		Input.get_action_strength("cam_up") - Input.get_action_strength("cam_down")
+		+ _mouse_trick_stick.y,
+		-1.0,
+		1.0
+	)
 
 
 ## Reset requested gear on respawn — respawned fires from do_respawn (rollback), so defer
@@ -212,6 +226,16 @@ func _unhandled_input(event: InputEvent):
 	if !player_entity.is_local_client:
 		return
 	_detect_gamepad_or_kbm(event)
+
+
+func _input(event: InputEvent):
+	if Engine.is_editor_hint() or !player_entity.is_local_client:
+		return
+	if event.is_action_released("trick"):
+		_mouse_trick_stick = Vector2.ZERO
+	elif event is InputEventMouseMotion and Input.is_action_pressed("trick"):
+		var rel := Vector2(event.relative.x, -event.relative.y) / MOUSE_TRICK_STICK_PX
+		_mouse_trick_stick = (_mouse_trick_stick + rel).limit_length(1.0)
 
 
 func _detect_gamepad_or_kbm(event: InputEvent):

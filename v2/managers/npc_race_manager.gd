@@ -11,10 +11,11 @@ class_name NPCRaceManager extends BaseManager
 @export var settings_manager: SettingsManager
 @export var spawn_manager: SpawnManager
 @export var item_manager: ItemManager
+@export var riding_hud_state: RidingHUDState
 ## Round-robin source of NPC names + skins. Spawned NPCs get
 ## "<username> <n>" so reused definitions stay distinguishable in results.
 @export var npc_definitions: Array[PlayerDefinition] = [
-	load("res://resources/player/default_player_definition.tres")
+	load("res://resources/player/npc_racer_definition.tres")
 ]
 @export var respawn_delay: float = 3.0
 ## How far the host's Easy / Hard difficulty setting moves bot skill off its centre.
@@ -341,6 +342,8 @@ func crash_npc(npc_id: int) -> void:
 	if _npcs[npc_id].npc_state == NPCRiderEntity.NPCState.CRASHED:
 		return
 	_npcs[npc_id].crash()
+	# No tricks or launch measure yet (Phase 3), so a bare bail line
+	riding_hud_state.push_trickfeed(_npcs[npc_id].username, npc_id, PackedInt32Array(), 0, 1, true, 0.0)
 	get_tree().create_timer(respawn_delay).timeout.connect(
 		_respawn_npc.bind(npc_id), CONNECT_ONE_SHOT
 	)
@@ -417,6 +420,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("spawn_manager must not be empty")
 	if item_manager == null:
 		issues.append("item_manager must not be empty")
+	if riding_hud_state == null:
+		issues.append("riding_hud_state must not be empty")
 	if npc_definitions.is_empty():
 		issues.append("npc_definitions must not be empty")
 	return issues

@@ -24,6 +24,7 @@
 [ext_resource type="Script" uid="uid://didbm7t5dal30" path="res://managers/save_manager.gd" id="19_wt57k"]
 [ext_resource type="PackedScene" uid="uid://b27jgs5kv1310" path="res://managers/audio_manager.tscn" id="20_2i4tw"]
 [ext_resource type="Resource" uid="uid://ba1bidrtscoc7" path="res://resources/player/default_player_definition.tres" id="20_pk5u2"]
+[ext_resource type="Resource" path="res://resources/player/npc_racer_definition.tres" id="20_npcdef"]
 [ext_resource type="Script" uid="uid://cug5kob8cndk4" path="res://managers/spawn_manager.gd" id="21_euc45"]
 [ext_resource type="PackedScene" uid="uid://pg4u70n43ksy" path="res://menus/loading_menu/loading_menu_state.tscn" id="21_x5kvo"]
 [ext_resource type="PackedScene" path="res://menus/warmup_menu/warmup_menu_state.tscn" id="22_warmup"]
@@ -525,13 +526,14 @@ gamemode_manager = NodePath("../GamemodeManager")
 riding_hud_state = NodePath("../HUDManager/StateMachine/RidingHUDState")
 npc_traffic_manager = NodePath("../NPCTrafficManager")
 
-[node name="NPCRaceManager" type="Node" parent="ManagerManager" unique_id=1218916391 node_paths=PackedStringArray("level_manager", "settings_manager", "spawn_manager", "item_manager") groups=["Managers"]]
+[node name="NPCRaceManager" type="Node" parent="ManagerManager" unique_id=1218916391 node_paths=PackedStringArray("level_manager", "settings_manager", "spawn_manager", "item_manager", "riding_hud_state") groups=["Managers"]]
 script = ExtResource("31_npcrm")
 level_manager = NodePath("../LevelManager")
 settings_manager = NodePath("../SettingsManager")
 spawn_manager = NodePath("../SpawnManager")
 item_manager = NodePath("../ItemManager")
-npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_pk5u2")])
+riding_hud_state = NodePath("../HUDManager/StateMachine/RidingHUDState")
+npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_npcdef")])
 
 [node name="NPCTrafficManager" type="Node" parent="ManagerManager" unique_id=1218916395 node_paths=PackedStringArray("level_manager", "settings_manager", "spawn_manager") groups=["Managers"]]
 script = ExtResource("99_npctm")
