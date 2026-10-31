@@ -55,6 +55,7 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _trick_prompt_btn: InputPrompt = %HUD_TrickPromptBtn
 @onready var _trick_prompt_title: Label = %HUD_TrickPromptTitle
 @onready var _trick_prompt_rows: HBoxContainer = %HUD_TrickPromptRows
+@onready var _trick_stick: TrickStickIndicator = %HUD_TrickStick
 @onready var _action_hints: VBoxContainer = %HUD_ActionHints
 @onready var _prompts: Array[InputPrompt] = [
 	%HUD_TrickPromptBtn, %HUD_BoostPrompt, %HUD_MapPrompt, %HUD_RespawnPrompt, %HUD_ItemPrompt,
@@ -233,6 +234,10 @@ func Physics_Update(delta: float):
 		button_toggled or _trick_state_diff_t >= TrickController.WHEELIE_EXIT_DELAY
 	):
 		_show_trick_prompt(trick_state)
+	# Pad sticks spring back on their own; KBM (the mouse stick) needs to see where it sits.
+	_trick_stick.visible = held and not input_controller.is_gamepad
+	if _trick_stick.visible:
+		_trick_stick.set_stick(Vector2(input_controller.nfx_cam_x, input_controller.nfx_cam_y))
 
 	# Respawn feedback. A tap shows "Respawning..." for a split second; holding past
 	# _RESPAWN_SHOW_SECS switches to "Full respawning..." with the bar charging toward the

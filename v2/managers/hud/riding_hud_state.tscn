@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://bbuk3w2ml0an0" path="res://player/hud_elements/race_leaderboard.gd" id="99_rldbd"]
 [ext_resource type="Script" uid="uid://cqsjngdd8k28k" path="res://player/hud_elements/trick_popups.gd" id="99_scrpp"]
 [ext_resource type="Script" path="res://player/hud_elements/target_compass.gd" id="99_tcmps"]
+[ext_resource type="Script" path="res://player/hud_elements/trick_stick_indicator.gd" id="99_tstik"]
 [ext_resource type="PackedScene" uid="uid://b1thmb3dtnail" path="res://utils/components/thumbnail_3d.tscn" id="99_thumb"]
 [ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="99_money"]
 [ext_resource type="Script" path="res://player/hud_elements/trick_feed.gd" id="99_tfeed"]
@@ -484,6 +485,22 @@ unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("99_scrpp")
+
+[node name="HUD_TrickStick" type="Control" parent="UI/AspectContainer/MarginContainer/TrickPopups"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 80.0
+offset_top = 76.0
+offset_right = 120.0
+offset_bottom = 116.0
+mouse_filter = 2
+script = ExtResource("99_tstik")
 
 [node name="RespawnCenter" type="CenterContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1500000001]
 layout_mode = 2

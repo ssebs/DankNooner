@@ -16,7 +16,12 @@ func refresh(gamepad: bool) -> void:
 		return
 	_icon.texture = ControlBindings.event_icon(event)
 	_icon.visible = _icon.texture != null
-	_key.text = ControlBindings.event_text(event)
+	# Every key/mouse binding on this device, e.g. trick reads "T / Right Click".
+	var texts := PackedStringArray()
+	for bound in InputMap.action_get_events(action):
+		if ControlBindings.is_gamepad(bound) == gamepad and ControlBindings.event_text(bound) != "":
+			texts.append(tr(ControlBindings.event_text(bound)))
+	_key.text = " / ".join(texts)
 	_key.visible = _key.text != ""
 
 

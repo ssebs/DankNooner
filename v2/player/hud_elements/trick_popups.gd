@@ -45,8 +45,9 @@ const MULTIPLIER_COLOR := UtilsConstants.UI_GOLD
 const MULTIPLIER_GAP_PX: float = 12.0
 
 ## Pop origins, as offsets from this control's center.
-const SCORE_ORIGIN := Vector2(30.0, 96.0)
-const CALLOUT_ORIGIN := Vector2(210.0, -250.0)
+## SCORE_ORIGIN.x clears the HUD_TrickStick indicator to its left.
+const SCORE_ORIGIN := Vector2(170.0, 96.0)
+const CALLOUT_ORIGIN := Vector2(210.0, -200.0)
 ## Gap from the score's bottom to the stopwatch row (negative tucks it up — the icon's art has
 ## transparent padding). The row's left edge lines up with the score's.
 const WHEELIE_GAP_Y: float = 12.0
