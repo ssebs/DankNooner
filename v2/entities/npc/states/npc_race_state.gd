@@ -59,6 +59,9 @@ enum Mistake { NONE, LATE_BRAKE, RUN_WIDE }
 @export var mistake_duration: float = 1.5
 @export var late_brake_distance: float = 15.0
 @export var run_wide_fraction: float = 0.4
+## Chance a landing after a real jump (past TrickController.AIR_TRICK_MIN_AIRTIME) goes wrong and
+## crashes the bot. Bots almost always land.
+@export var bad_landing_chance: float = 0.05
 
 ## Racer bodies carry this layer, and so do traffic ContactAreas (traffic has no body).
 const CRASH_COLLISION_MASK: int = 2  # 1 << 1 (layer 2)
@@ -103,6 +106,9 @@ var _mistake_until_ms: int = 0
 var _next_mistake_ms: int = 0
 var _path_next_ms: int = 0
 var _stuck_timer: float = 0.0
+var _air_time: float = 0.0
+## Left the ground moving up (a ramp lip), not off a bump or another bike.
+var _launched: bool = false
 var _stuck_anchor: Vector3
 var _dbg_drive := ""  # DEBUG: temp - last tick's steering, printed when stuck fires
 
@@ -146,6 +152,7 @@ func Physics_Update(delta: float):
 	# Only while it's actually trying to move — sitting on the grid or waiting out the
 	# countdown is not being stuck, or crashing.
 	if can_drive:
+		_detect_landing(delta)
 		_detect_crash()
 		_check_stuck(delta)
 
@@ -159,11 +166,16 @@ func _can_drive() -> bool:
 	)
 
 
-## Re-find this bot on the line after a teleport (crash respawn).
+## Re-find this bot on the line after a teleport (grid, crash respawn). It keeps the sideways offset
+## it's standing at: zeroing it sent a whole grid at one point on the line, where they piled up.
 func reset_line_progress() -> void:
 	_s = racing_line.closest_offset(npc.global_position)
-	_lateral = 0.0
+	var side := (npc.global_position - racing_line.point_at(_s)).dot(racing_line.right_at(_s))
+	_lateral = clampf(side, -racing_line.half_width_at(_s, -1.0), racing_line.half_width_at(_s, 1.0))
 	_path.clear()
+	_air_time = 0.0
+	_stuck_timer = 0.0
+	_stuck_anchor = npc.global_position
 
 
 ## Seeded off the bot's name, salted so it doesn't repeat the entity's own hash(name) roll.
@@ -190,6 +202,7 @@ func _apply_difficulty() -> void:
 	_brake_scale *= _skill_scale(0.85, 1.1)
 	wander_fraction *= _skill_scale(1.2, 0.5)
 	mistake_interval *= _skill_scale(0.6, 2.0)
+	bad_landing_chance *= _skill_scale(2.0, 0.5)
 
 
 ## easy at skill 0, 1.0 (the base tuning) at 0.5, hard at 1.
@@ -236,8 +249,9 @@ func _drive(delta: float) -> void:
 	var target_speed := minf(speed_cap, minf(npc.cruise_speed(), line_speed))
 	npc.steer_toward(target, target_speed, delta)
 	_dbg_drive = (  # DEBUG: temp
-		"s=%.1f line_pt=%s off_line=%.1f lat=%.2f rejoin=%s target=%s speed=%.1f/%.1f path=%s"  # DEBUG: temp
-		% [_s, racing_line.point_at(_s), off_line, _lateral, rejoining, target,  # DEBUG: temp
+		"floor=%s wall=%s s=%.1f line_pt=%s off_line=%.1f lat=%.2f rejoin=%s target=%s speed=%.1f/%.1f path=%s"  # DEBUG: temp
+		% [npc.is_on_floor(), npc.is_on_wall(), _s, racing_line.point_at(_s), off_line, _lateral,  # DEBUG: temp
+		rejoining, target,  # DEBUG: temp
 		npc.current_speed, target_speed, _path.slice(0, 4)]  # DEBUG: temp
 	)  # DEBUG: temp
 
@@ -416,14 +430,32 @@ func _flat(v: Vector3) -> Vector2:
 	return Vector2(v.x, v.z)
 
 
+## Touching down after a launch: almost always fine, a bad_landing_chance roll crashes it.
+func _detect_landing(delta: float) -> void:
+	if !npc.is_on_floor():
+		if _air_time == 0.0:
+			_launched = npc.pre_slide_velocity.y > 0.0
+		_air_time += delta
+		return
+	var jumped := _launched and _air_time >= TrickController.AIR_TRICK_MIN_AIRTIME
+	if _air_time > 0.2:  # DEBUG: temp
+		DebugUtils.DebugMsg("[npc %s] landed air=%.2f launched=%s" % [npc.name, _air_time, _launched])  # DEBUG: temp
+	_air_time = 0.0
+	if jumped and randf() < bad_landing_chance:
+		DebugUtils.DebugMsg("[npc %s] CRASH bad landing" % npc.name)  # DEBUG: temp
+		crashed.emit(null)
+
+
 ## CrashController's rules, dumbed down: a killbox, or a head-on hit on layer 2. Walls take our own
-## speed, like the player. Racers take closing speed instead, or a pack touching wheels at race
-## pace would pile up; under the player's ram-wobble speed it's a harmless bump.
+## speed, like the player. Racers take the speed into the contact instead (relative velocity along
+## its normal): a pack riding side by side or swerving past each other only bumps, a real ram
+## crashes. Under the player's ram-wobble speed it's a harmless bump.
 func _detect_crash() -> void:
 	for i in npc.get_slide_collision_count():
 		var collision := npc.get_slide_collision(i)
 		var collider := collision.get_collider()
 		if collider is Killbox:
+			DebugUtils.DebugMsg("[npc %s] CRASH killbox %s" % [npc.name, collider.get_path()])  # DEBUG: temp
 			crashed.emit(null)
 			return
 		if !CrashController.is_crash_obstacle(collider):
@@ -432,11 +464,21 @@ func _detect_crash() -> void:
 		if angle >= CrashController.CRASH_MAX_ANGLE_DEG:
 			continue
 		if collider.is_in_group(UtilsConstants.GROUPS["Racers"]):
-			var closing: Vector3 = npc.pre_slide_velocity - collider.velocity
-			if Vector2(closing.x, closing.z).length() >= CrashController.WOBBLE_RAM_MAX_SPEED:
+			var relative: Vector3 = npc.pre_slide_velocity - collider.velocity
+			var into := -collision.get_normal().slide(Vector3.UP).normalized()
+			var closing := relative.slide(Vector3.UP).dot(into)
+			if closing >= CrashController.WOBBLE_RAM_MAX_SPEED:
+				DebugUtils.DebugMsg(  # DEBUG: temp
+					"[npc %s] CRASH ram %s angle=%.0f closing=%.1f"  # DEBUG: temp
+					% [npc.name, collider.name, angle, closing]  # DEBUG: temp
+				)  # DEBUG: temp
 				crashed.emit(collider)
 				return
 		elif npc.current_speed >= CrashController.CRASH_MIN_SPEED:
+			DebugUtils.DebugMsg(  # DEBUG: temp
+				"[npc %s] CRASH wall %s angle=%.0f speed=%.1f"  # DEBUG: temp
+				% [npc.name, collider.get_path(), angle, npc.current_speed]  # DEBUG: temp
+			)  # DEBUG: temp
 			crashed.emit(null)
 			return
 
@@ -445,6 +487,7 @@ func _detect_crash() -> void:
 func _on_hit_by_racer(_hitter: Node3D) -> void:
 	# On the grid, already down, or done racing — skip is intentional
 	if _can_drive():
+		DebugUtils.DebugMsg("[npc %s] CRASH rammed by %s" % [npc.name, _hitter.name if _hitter else "?"])  # DEBUG: temp
 		crashed.emit(null)
 
 

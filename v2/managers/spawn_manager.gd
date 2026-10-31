@@ -21,13 +21,16 @@ const BREADCRUMB_INTERVAL_SECS: float = 1.0
 
 ## Bat pickup: the collector swings for BAT_SWING_DURATION; any OTHER rider within BAT_SWING_RANGE
 ## at each swing (one per BAT_SWING_PERIOD, matching the bat_swing anim loop) gets a speed wobble
-## strong enough to force an active recovery. Race bots have no wobble, so it crashes them.
+## strong enough to force an active recovery. NPCs (race bots, traffic) have no wobble, so it
+## crashes them.
 const BAT_SWING_DURATION: float = 10.0
 const BAT_SWING_PERIOD: float = 1.0
 const BAT_SWING_RANGE: float = 6.0
 ## The bat's range stretches this far ahead of the wielder: a capsule, not a sphere.
 const BAT_SWING_FORWARD_REACH: float = 6.0
 const BAT_SWING_WOBBLE_STRENGTH: float = 10.0
+## What a swing hits: riders' crash_collision (layer 2) and traffic_body (layer 8).
+const BAT_HIT_MASK: int = 2 | 128
 
 ## Server-only: last known flat-ground transform per peer. In-place respawns fall back here
 ## when the site is a ramp/loop/steep grade (or has no ground at all — e.g. fell out of the
@@ -269,7 +272,7 @@ func near_miss_player(player_peer_id: int, score: float):
 func swing_bat(wielder_peer_id: int):
 	if !_sender_is_server():
 		return
-	get_player_by_peer_id(wielder_peer_id).animation_controller.play_bat_swing(BAT_SWING_DURATION)
+	get_rider(wielder_peer_id).animation_controller.play_bat_swing(BAT_SWING_DURATION)
 	# Proximity + wobble is a server decision; clients above just show the swing.
 	if multiplayer.is_server():
 		_wobble_riders_near_bat(wielder_peer_id)
@@ -282,24 +285,43 @@ func swing_bat(wielder_peer_id: int):
 func _wobble_riders_near_bat(wielder_peer_id: int) -> void:
 	for _i in int(BAT_SWING_DURATION / BAT_SWING_PERIOD):
 		await get_tree().create_timer(BAT_SWING_PERIOD).timeout
-		var wielder := get_player_by_peer_id(wielder_peer_id)
+		var wielder := get_rider(wielder_peer_id) as CharacterBody3D
 		# Wielder crashed / left mid-swing — nothing to swing from (the crash already flushed the anim).
 		if wielder == null or wielder.is_crashed:
 			return
-		var reach_end := wielder.global_position - wielder.global_basis.z * BAT_SWING_FORWARD_REACH
-		for child in level_manager.current_level.player_spawn_pos.get_children():
-			var is_rider := child is PlayerEntity or child is NPCRiderEntity
-			if not is_rider or child == wielder or child.is_crashed:
+		for hit in wielder.get_world_3d().direct_space_state.intersect_shape(_bat_query(wielder), 32):
+			var rider: Node3D = hit["collider"]
+			# Walls are on layer 2 too, and a wreck can't be hit twice — skip is intentional
+			var is_rider := rider is PlayerEntity or rider is NPCRiderEntity
+			if not is_rider or rider.is_crashed:
 				continue
-			var nearest := Geometry3D.get_closest_point_to_segment(
-				child.global_position, wielder.global_position, reach_end
-			)
-			if nearest.distance_to(child.global_position) <= BAT_SWING_RANGE:
-				if child is PlayerEntity:
-					wobble_player.rpc(int(child.name), BAT_SWING_WOBBLE_STRENGTH)
-				else:
-					(child as NPCRiderEntity).report_hit(wielder)
+			if rider is PlayerEntity:
+				wobble_player.rpc(int(rider.name), BAT_SWING_WOBBLE_STRENGTH)
+			else:
+				(rider as NPCRiderEntity).report_hit(wielder)
+			# A race bot (negative id) has no client to hear it
+			if wielder_peer_id > 0:
 				play_bonk_sfx.rpc_id(wielder_peer_id)
+
+
+## Everything within BAT_SWING_RANGE of the stretch from the wielder to BAT_SWING_FORWARD_REACH
+## ahead: a capsule along the heading. A query rather than a walk over spawned riders, because
+## traffic lives under its network, not player_spawn_pos.
+func _bat_query(wielder: CharacterBody3D) -> PhysicsShapeQueryParameters3D:
+	var capsule := CapsuleShape3D.new()
+	capsule.radius = BAT_SWING_RANGE
+	capsule.height = BAT_SWING_FORWARD_REACH + 2.0 * BAT_SWING_RANGE
+	var forward := -wielder.global_basis.z
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = capsule
+	# The capsule's axis is its local Y; turn that onto the heading
+	query.transform = Transform3D(
+		Basis.looking_at(forward) * Basis(Vector3.RIGHT, -PI / 2.0),
+		wielder.global_position + forward * BAT_SWING_FORWARD_REACH * 0.5
+	)
+	query.collision_mask = BAT_HIT_MASK
+	query.exclude = [wielder.get_rid()]
+	return query
 
 
 ## Play the pickup "pop" (Ding) on the collecting rider's own client. Server → that peer via rpc_id.

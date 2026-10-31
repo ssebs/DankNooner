@@ -3,6 +3,7 @@
 > Brainstormed 2026-10-25. Replaces the lane-following race bot. Delete this file once the system
 > ships and its "how it works" is folded into [Architecture](./Architecture.md#npc-race-manager).
 
+- [Handoff (2026-10-31, read first)](#handoff-2026-10-31-read-first)
 - [Why](#why)
 - [Goals / non-goals / anti-goals](#goals--non-goals--anti-goals)
 - [What exists today](#what-exists-today)
@@ -15,6 +16,48 @@
   - [Phase 4: items](#phase-4-items)
 - [Open questions (ask before the phase that needs them)](#open-questions-ask-before-the-phase-that-needs-them)
 - [Left to the builder](#left-to-the-builder)
+
+## Handoff (2026-10-31, read first)
+
+Built this session, in order; per-phase notes are in each phase's section below.
+
+- **Difficulty:** `NPCRaceState.skill` (0 easy … 1 hard, 0.5 = base tuning) replaces the
+  `Difficulty` enum. `NPCRaceManager._bot_skill` = 0.5 ± `difficulty_skill_shift` from the host's
+  Easy/Hard setting. TODO there: centre on the host's player level once it exists.
+- **Corners:** `_path_target` (navmesh path to the steer goal, corners first) + `NPCRacingLine._widen`
+  (K1999 wide-in-wide). Untested on its own; corner pile-ups weren't reported again.
+- **Phase 2 crashes:** working (user saw bots ragdoll). Wrecks are inert (`npc_state` setter drops
+  `collision_layer` to 0 while crashed).
+- **Phase 4 items:** working on bots: shotgun (now 8 m wide × 21 m, glowing tracers that grow from the
+  barrel), bat (capsule query, reaches `BAT_SWING_FORWARD_REACH` ahead), oil slick, Rally Up. Shotgun
+  and bat also crash **traffic**. Bots use bat / shotgun / oil slick / Rally Up; untested.
+- **Ramp riding:** slope-following `steer_toward`, no steering in the air, 80° floor angle, visual
+  climb pitch, `bad_landing_chance` only after an upward launch. Untested.
+
+**Waiting on the user's next race (the grid crash loop):** bots rammed the bot beside them at
+~50° because closing speed used the whole relative velocity; now it's the component along the
+contact normal. Bad landings fired off bumps; now only after an upward launch. If the grid still
+loops, the temp logs below say why.
+
+**Temp code to strip once the grid is confirmed:** in `NPCRaceState`, every `# DEBUG: temp` line
+(the `CRASH …` / `landed …` logs, the `STUCK` log and `_dbg_drive`).
+
+**Known, not fixed:**
+- `StuntRace01GasStation/logopol` (gas station logo pole) catches bots at speed: a real wall
+  crash. It probably isn't in the nav bake, so the line runs through it.
+- Bots ride up event props at (-700, 452) (props aren't in the nav bake). May be fixed by ramp
+  riding; re-check.
+- Bot can stop short of the finish trigger (line end vs trigger).
+- The user still has to Bake `NPCNavRegion` in all three race levels after the `agent_radius` raise.
+
+**Next, in order:** confirm the grid fix → strip temp logs → Phase 3 (tricks, score, boost; bots
+**do** take stunt-race placement points, user 2026-10-31) → bots aiming for ramps (also unlocks
+the Ramp item and air tricks off ramps) → Gas Can for bots (needs boost).
+
+**Still open:** do bot knockouts score (bots as victims or aggressors)? Today bots go down
+uncredited and take players down uncredited (`SpawnManager.knock_out_rider`).
+
+**Out of scope (user):** a slow bot tap wobbling the player; landing extras beyond the random roll.
 
 ## Why
 
@@ -194,6 +237,12 @@ tick) — strip it once sticking is resolved. The `PROF: temp` lines stay; it's 
 
 ### Ramp riding (next, design in progress)
 
+> **Built 2026-10-31, untested.** User: bots almost always land, a bad landing crashes them; only
+> the ramps in races for now. Bots ride whatever ramp the line crosses (slope-following velocity,
+> ballistic in the air); they don't seek ramps out yet, and no jump links were needed because event
+> ramps sit on the road the line already follows. How it works is in
+> [Architecture](./Architecture.md#npc-race-manager).
+
 Brainstorm started 2026-10-25 and paused here; continue with `superpowers:brainstorming`, then a
 written design, then `superpowers:writing-plans`.
 
@@ -250,6 +299,9 @@ than a jump (quarter pipes, the corkscrews) are in scope.
 > [StuntRaceGamemode](./StuntRaceGamemode.md). User: a bat hit crashes a bot. Not done: bots using
 > Bat / Shotgun (needs the player's `BaseballBat` / `Shotgun` props + anims on `RiderVisual`), Ramp
 > (needs ramp riding), Gas Can (needs boost, Phase 3), veering off-line toward pickups.
+> **2026-10-31:** Bat / Shotgun now used by bots (user: "copy over the animations for now"); the
+> props + `GunCollisionArea` live in `npc_rider_entity.tscn`, the anims are copied onto `RiderVisual`.
+> Ramp item still not used (bots don't aim for ramps).
 
 - **Pick up** by riding through pickups (`PickupSpawner` already passes `int(body.name)` — negative
   bot ids). Bots may veer slightly off-line for a nearby pickup.
@@ -263,7 +315,7 @@ than a jump (quarter pipes, the corkscrews) are in scope.
 - **Phase 2/4:** knockouts currently score human victims only. Do bot victims (and bot aggressors)
   count toward `KnockoutScoringComponent`?
 - **Phase 3:** `FinishBonusComponent` awards placement points "among humans". Do bots take
-  placement slots / points in the stunt-race standings?
+  placement slots / points in the stunt-race standings? **User 2026-10-31: yes.**
 - **Phase 2:** what does a bat wobble do to a bot — a scripted swerve with a crash chance, or
   something closer to the player's `WobbleController`?
 

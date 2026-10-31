@@ -6,7 +6,7 @@
 ## PickupSpawner.
 ##
 ## Race bots (negative rider ids) hold and use items through the same slot; NPCRaceManager decides
-## when. They only take items whose use reads on screen without the player's bat / shotgun props.
+## when. They only take BOT_ITEMS.
 class_name ItemManager extends BaseManager
 
 @export var level_manager: LevelManager
@@ -38,9 +38,11 @@ const RALLY_UP_BIKE := preload("res://resources/bikes/skins/mini_default_skin_de
 const RALLY_UP_CHARACTER := preload(
 	"res://resources/player/skins/astronaut_default_skin_definition.tres"
 )
-## What a race bot picks up: no boost to fill yet, and no bat / shotgun props on its rider.
+## What a race bot picks up: no boost to fill with a Gas Can yet, and it can't ride a Ramp.
 const BOT_ITEMS: Array[PickupItemDefinition.PickupItemType] = [
+	PickupItemDefinition.PickupItemType.BAT,
 	PickupItemDefinition.PickupItemType.OIL_SLICK,
+	PickupItemDefinition.PickupItemType.SHOTGUN,
 	PickupItemDefinition.PickupItemType.RALLY_UP,
 ]
 
@@ -62,21 +64,21 @@ func _ready():
 ## race bot doesn't take that item.
 func collect(peer_id: int, definition: PickupItemDefinition) -> bool:
 	var item_type := definition.item_type
-	if peer_id < 0:
-		if _held.has(peer_id) or item_type not in BOT_ITEMS:
-			return false
-		_held[peer_id] = definition
-		return true
-	if item_type == PickupItemDefinition.PickupItemType.GAS_CAN:
+	var is_bot := peer_id < 0
+	if item_type == PickupItemDefinition.PickupItemType.GAS_CAN and !is_bot:
 		spawn_manager.grant_boost.rpc(peer_id)
-	elif _held.has(peer_id):
+	elif _held.has(peer_id) or (is_bot and item_type not in BOT_ITEMS):
 		return false
 	else:
 		_held[peer_id] = definition
-		riding_hud_state.push_held_item(peer_id, definition)
+		# A bot has no HUD
+		if !is_bot:
+			riding_hud_state.push_held_item(peer_id, definition)
 		if item_type == PickupItemDefinition.PickupItemType.SHOTGUN:
 			_rpc_set_shotgun_held.rpc(peer_id, true)
-	spawn_manager.play_pickup_sfx.rpc_id(peer_id)
+	# Nor a client to hear it
+	if !is_bot:
+		spawn_manager.play_pickup_sfx.rpc_id(peer_id)
 	return true
 
 
@@ -119,8 +121,7 @@ func use_item(peer_id: int) -> void:
 		PickupItemDefinition.PickupItemType.RAMP:
 			_place_ramp(player)
 		PickupItemDefinition.PickupItemType.SHOTGUN:
-			# Bots never hold one (BOT_ITEMS)
-			_fire_shotgun(peer_id, player as PlayerEntity)
+			_fire_shotgun(peer_id, player)
 		PickupItemDefinition.PickupItemType.RALLY_UP:
 			_rally_up()
 
@@ -296,7 +297,7 @@ func _rpc_set_rally_up(active: bool):
 ## Server-only. Knocks out the nearest other rider (player, race bot or traffic) inside the
 ## shooter's %GunCollisionArea.
 ## Toggle Debug > Visible Collision Shapes to see the hitbox.
-func _fire_shotgun(peer_id: int, shooter: PlayerEntity) -> void:
+func _fire_shotgun(peer_id: int, shooter: CharacterBody3D) -> void:
 	var in_hitbox: Array[Node3D] = shooter.get_node("%GunCollisionArea").get_overlapping_bodies()
 	var target: Node3D = null
 	var nearest := INF
@@ -320,13 +321,13 @@ func _fire_shotgun(peer_id: int, shooter: PlayerEntity) -> void:
 ## Every peer: the holder's equip pose follows the held shotgun.
 @rpc("call_local", "reliable")
 func _rpc_set_shotgun_held(peer_id: int, held: bool):
-	spawn_manager.get_player_by_peer_id(peer_id).animation_controller.shotgun_held = held
+	spawn_manager.get_rider(peer_id).animation_controller.shotgun_held = held
 
 
-## Every peer: fire, then unequip (AnimationController clears shotgun_held after the shot).
+## Every peer: fire, then unequip (the rider's animation_controller clears shotgun_held after).
 @rpc("call_local", "reliable")
 func _rpc_fire_shotgun(peer_id: int, has_hit: bool, hit_pos: Vector3):
-	spawn_manager.get_player_by_peer_id(peer_id).animation_controller.play_shotgun_fire(has_hit, hit_pos)
+	spawn_manager.get_rider(peer_id).animation_controller.play_shotgun_fire(has_hit, hit_pos)
 
 
 #endregion

@@ -326,14 +326,16 @@ func steer_lookahead() -> float:
 	return clampf(current_speed * steer_lookahead_time, min_steer_lookahead, max_steer_lookahead)
 
 
-## Ramp toward target_speed and point the horizontal velocity at target.
+## Ramp toward target_speed and point the velocity at target, along the floor like the player's
+## (MovementController), so a ramp's lip launches us instead of stopping us. In the air we keep the
+## launch: no steering, no throttle.
 func steer_toward(target: Vector3, target_speed: float, delta: float) -> void:
+	if !is_on_floor():
+		return
 	var dir := target - global_position
 	dir.y = 0.0
-	dir = dir.normalized()
 	ramp_speed(target_speed, delta)
-	velocity.x = dir.x * current_speed
-	velocity.z = dir.z * current_speed
+	velocity = dir.slide(get_floor_normal()).normalized() * current_speed
 
 
 func ramp_speed(target_speed: float, delta: float) -> void:

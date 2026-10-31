@@ -4,6 +4,8 @@
 ## anims through the same TrickAnimator as the player.
 class_name RiderVisual extends Node3D
 
+const _SHOTGUN_FIRE_FADE_SPEED := 20.0
+
 ## Null on a car NPC, which drops both skins in its _enter_tree.
 @onready var bike_skin: BikeSkin = get_node_or_null("BikeSkin")
 @onready var character_skin: CharacterSkin = get_node_or_null("CharacterSkin")
@@ -19,6 +21,11 @@ class_name RiderVisual extends Node3D
 @onready var _left_leg_magnet: Marker3D = %LeftLegMagnet
 @onready var _right_leg_magnet: Marker3D = %RightLegMagnet
 @onready var _rider_vfx: RiderVFX = %RiderVFX
+
+## Race bots' item anims, copied from AnimationController; they need the bat / shotgun props under
+## IKTargets, which only NPCRiderEntity adds. The shotgun equip pose holds while true, reverses to
+## hidden when cleared.
+var shotgun_held: bool = false
 
 ## Rider pose is fixed per bike definition, so these resolve once in seat() rather
 ## than being rebuilt every tick — four Basis.from_euler calls plus a node lookup per
@@ -36,6 +43,13 @@ var _tricks: TrickAnimator
 var _anim_markers: Array = []
 ## Track paths the markers take as deltas, so apply_to_nodes leaves them alone.
 var _pose_tracks: Dictionary = {}
+
+## Item anims, copied from AnimationController for race bots (see shotgun_held).
+var _bat_swing_anim: Animation
+var _bat_swing_layer: CustomAnimPlayer.Layer
+var _shotgun_equip_anim: Animation
+var _shotgun_fire_anim: Animation
+var _shotgun_equip_layer: CustomAnimPlayer.Layer
 
 
 ## Seat the rider on the bike's skin_definition. Call again after either skin rebuilds.
@@ -119,6 +133,9 @@ func _init_tricks() -> void:
 		_anim_runner = CustomAnimPlayer.new()
 		add_child(_anim_runner)
 		_tricks = TrickAnimator.new(_anim_runner)
+		_bat_swing_anim = TrickAnimator.load_anim("bat_swing")
+		_shotgun_equip_anim = TrickAnimator.load_anim("shotgun_equip")
+		_shotgun_fire_anim = TrickAnimator.load_anim("shotgun_fire")
 	stop_tricks()
 
 	_anim_markers.clear()
@@ -152,6 +169,13 @@ func stop_tricks() -> void:
 	_anim_runner.stop_all_and_reset(self, _pose_tracks)
 	_tricks.clear()
 	_rider_vfx.stop_all()
+	_bat_swing_layer = null
+	_shotgun_equip_layer = null
+
+
+## Anything for update_tricks to play; otherwise sync_targets alone poses the rider.
+func is_animating() -> bool:
+	return shotgun_held or !_anim_runner.get_layers().is_empty()
 
 
 ## Same entry points as TrickController's trick_started / trick_ended.
@@ -165,6 +189,7 @@ func end_trick(trick: TrickController.Trick) -> void:
 
 ## Advance trick anims. The owner calls it per frame while tricks can play.
 func update_tricks(delta: float) -> void:
+	_update_shotgun_anim()
 	_anim_runner.tick(delta)
 	sync_targets()
 	for entry in _anim_markers:
@@ -179,3 +204,46 @@ func update_tricks(delta: float) -> void:
 		marker.position += torso_offset
 	_anim_runner.apply_to_nodes(self, _pose_tracks)
 
+
+## AnimationController.play_bat_swing: loop the bat_swing anim (rider pose + bat mesh) for
+## `duration`, then fade.
+func play_bat_swing(duration: float) -> void:
+	if _bat_swing_anim == null or (_bat_swing_layer != null and _bat_swing_layer.is_playing()):
+		return
+	var layer := _anim_runner.play(_bat_swing_anim, 1.0, true)
+	_bat_swing_layer = layer
+	await get_tree().create_timer(duration).timeout
+	# A re-pickup or crash reset may have replaced/flushed the layer during the wait — only clean
+	# up the one this call started. Freeze on t=0 (bat hidden) so the fade-out can't re-show it.
+	if layer.is_playing():
+		layer.time = 0.0
+		layer.speed = 0.0
+		_anim_runner.stop(layer)
+	if _bat_swing_layer == layer:
+		_bat_swing_layer = null
+
+
+## AnimationController.play_shotgun_fire, minus the tracers (the owner fires those): fire on top of
+## the held equip pose, then unequip.
+func play_shotgun_fire() -> void:
+	if _shotgun_fire_anim == null:
+		return
+	_anim_runner.play(_shotgun_fire_anim, 1.0, false, _SHOTGUN_FIRE_FADE_SPEED)
+	await get_tree().create_timer(_shotgun_fire_anim.length).timeout
+	shotgun_held = false
+
+
+## AnimationController._update_shotgun_anim: equip and hold while shotgun_held, else reverse to t=0
+## (hidden) and fade.
+func _update_shotgun_anim() -> void:
+	if _shotgun_equip_anim == null:
+		return
+	var layer := _shotgun_equip_layer
+	if layer == null or not layer.is_playing():
+		if shotgun_held:
+			_shotgun_equip_layer = _anim_runner.play_one_shot(_shotgun_equip_anim, 1.0)
+		return
+	layer.speed = 1.0 if shotgun_held else -1.0
+	layer.hold_at_end = shotgun_held
+	if shotgun_held:
+		layer.target_weight = 1.0

@@ -60,7 +60,9 @@ The stunt race is `RaceGameMode` with `race_type = STUNT_RACE`: the shared race 
   tracers (`ShotgunTracers`, at the muzzle) out to the far end of `GunCollisionArea`, so the streaks
   show its real reach; on a hit the server sends the target's position and one streak lands on it.
   Its mask includes `traffic_body`, so it also takes down traffic: `NPCTrafficState` answers
-  `report_hit` through its usual `crashed` → respawn path, and the wreck is inert until then.
+  `report_hit` through its usual `crashed` → respawn path, and the wreck is inert until then. The
+  Bat does the same: each swing is a capsule shape query (`SpawnManager._bat_query`) on riders +
+  `traffic_body`, reaching `BAT_SWING_FORWARD_REACH` ahead.
 - **Race bots and items.** Bots are hit by every item: Shotgun and Oil Slick knock them out, the Bat
   crashes them (they have no wobble), Rally Up swaps their skins (`NPCRaceManager.set_rally_up`).
   Bots hold items in the same `ItemManager` slot (negative rider ids) but only pick up

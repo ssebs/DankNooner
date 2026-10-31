@@ -25,10 +25,24 @@ class_name NPCAnimationController extends Node
 ## How often the distance check runs. It's cheap, but there's no reason to do it per tick.
 @export var rig_cull_check_interval: float = 0.5
 
+const MAX_CLIMB_PITCH: float = deg_to_rad(60.0)
+
+## Item anims, under the same names as AnimationController's so ItemManager / SpawnManager can call
+## either rider's animation_controller. The anims themselves live on RiderVisual.
+var shotgun_held: bool:
+	get:
+		return npc.visual_root.shotgun_held
+	set(value):
+		npc.visual_root.shotgun_held = value
+
 var _initialized: bool = false
 var _was_crashed: bool = false
 var _prev_yaw: float = 0.0
 var _yaw_rate: float = 0.0
+var _prev_pos: Vector3
+## Pitch (rad) of the rider's travel, + = climbing. The synced pose is yaw-only, so without it a bot
+## rides up a ramp and flies off it dead level.
+var _climb: float = 0.0
 
 ## Rig LOD state — see rig_cull_distance.
 var _ik_ctrl: IKController
@@ -70,8 +84,12 @@ func _physics_process(delta: float):
 		# Lean/pitch stays on at any distance — it's two lerps on one node, and a bike that
 		# stops leaning through corners is obvious in a way a frozen wrist isn't.
 		if _rig_active:
-			npc.visual_root.sync_targets()
+			if npc.visual_root.is_animating():
+				npc.visual_root.update_tricks(delta)
+			else:
+				npc.visual_root.sync_targets()
 	_update_yaw_rate(delta)
+	_update_climb(delta)
 	_apply_visual_root_rotation(delta)
 	DebugUtils.Prof("npc.anim", t)  # PROF: temp
 
@@ -107,8 +125,19 @@ func _update_rig_lod() -> void:
 	_ik_ctrl.set_physics_process(active)
 
 
-## Same as the player's crash: the rider drops off the bike under physics, no launch.
+func play_bat_swing(duration: float) -> void:
+	npc.visual_root.play_bat_swing(duration)
+
+
+func play_shotgun_fire(has_hit: bool, hit_pos: Vector3) -> void:
+	npc.visual_root.play_shotgun_fire()
+	(npc.get_node("%ShotgunTracers") as ShotgunTracers).fire(has_hit, hit_pos)
+
+
+## Same as the player's crash: the rider drops off the bike under physics, no launch. Item anims
+## are dropped like AnimationController.start_ragdoll does, or a mid-swing bat would freeze in view.
 func _start_ragdoll() -> void:
+	npc.visual_root.stop_tricks()
 	npc.character_skin.disable_ik()
 	npc.character_skin.start_ragdoll()
 
@@ -125,6 +154,18 @@ func _stop_ragdoll() -> void:
 	_rig_next_check_ms = 0
 
 
+## From the pose's movement, so it reads the same on clients, which only get position.
+func _update_climb(delta: float) -> void:
+	var moved := npc.global_position - _prev_pos
+	_prev_pos = npc.global_position
+	var horizontal := Vector2(moved.x, moved.z).length()
+	# Barely moving says nothing about the slope, and a teleport isn't a climb
+	var target := _climb
+	if horizontal > 0.01 and moved.length() < NPCRiderEntity.NET_SNAP_DISTANCE:
+		target = clampf(atan2(moved.y, horizontal), -MAX_CLIMB_PITCH, MAX_CLIMB_PITCH)
+	_climb = lerpf(_climb, target, 10.0 * delta)
+
+
 func _update_yaw_rate(delta: float) -> void:
 	var yaw := npc.rotation.y
 	var raw_rate := wrapf(yaw - _prev_yaw, -PI, PI) / delta
@@ -133,7 +174,7 @@ func _update_yaw_rate(delta: float) -> void:
 	_yaw_rate = lerpf(_yaw_rate, raw_rate, 10.0 * delta)
 
 
-## visual_root.rotation.z = lean, .x = wheelie pitch (negative x pitches the
+## visual_root.rotation.z = lean, .x = wheelie pitch + climb (negative x pitches the
 ## front up — same mapping as AnimationController._apply_pitch_ground).
 func _apply_visual_root_rotation(delta: float) -> void:
 	var target_roll: float = 0.0
@@ -142,9 +183,10 @@ func _apply_visual_root_rotation(delta: float) -> void:
 		NPCRiderEntity.NPCState.CRASHED:
 			target_roll = deg_to_rad(crash_roll_deg)
 		NPCRiderEntity.NPCState.WHEELIE:
-			target_pitch = -deg_to_rad(wheelie_pitch_deg)
+			target_pitch = -deg_to_rad(wheelie_pitch_deg) - _climb
 			target_roll = _lean_target()
 		_:
+			target_pitch = -_climb
 			target_roll = _lean_target()
 
 	var vr := npc.visual_root

@@ -226,6 +226,8 @@ func rpc_spawn_npc(npc_id: int, pos: Vector3, basis: Basis):
 	# crash gets, which is exactly the recovery we want.
 	race_state.stuck.connect(crash_npc.bind(npc_id))
 	race_state.crashed.connect(_on_npc_crashed.bind(npc_id))
+	# Only race bots shoot; traffic shares the scene and leaves its hitbox off
+	npc.get_node("%GunCollisionArea").monitoring = true
 	npc.state_machine.request_state_change.call_deferred(race_state)
 
 
@@ -271,13 +273,19 @@ func set_rally_up(active: bool) -> void:
 		)
 
 
-## Server only. Simple rules for whatever the bot holds (ItemManager.BOT_ITEMS): an oil slick for
-## a rider close behind, a Rally Up whenever.
+## Server only. Simple rules for whatever the bot holds (ItemManager.BOT_ITEMS): bat or shotgun
+## once a racer is in reach, an oil slick for a rider close behind, a Rally Up whenever.
 func _maybe_use_item(npc_id: int, npc: NPCRiderEntity, delta: float) -> void:
 	var held := item_manager.get_held(npc_id)
 	if held == null:
 		return
 	match held.item_type:
+		PickupItemDefinition.PickupItemType.BAT:
+			if _rider_within(npc, SpawnManager.BAT_SWING_RANGE):
+				item_manager.use_item(npc_id)
+		PickupItemDefinition.PickupItemType.SHOTGUN:
+			if _racer_in_sights(npc):
+				item_manager.use_item(npc_id)
 		PickupItemDefinition.PickupItemType.OIL_SLICK:
 			if _rider_close_behind(npc):
 				item_manager.use_item(npc_id)
@@ -286,11 +294,35 @@ func _maybe_use_item(npc_id: int, npc: NPCRiderEntity, delta: float) -> void:
 				item_manager.use_item(npc_id)
 
 
+func _rider_within(npc: NPCRiderEntity, radius: float) -> bool:
+	for rider in _riders_besides(npc):
+		if npc.global_position.distance_to(rider.global_position) <= radius:
+			return true
+	return false
+
+
+## Every upright player and race bot but npc. player_spawn_pos holds more than riders.
+func _riders_besides(npc: NPCRiderEntity) -> Array[Node3D]:
+	var riders: Array[Node3D] = []
+	for child in level_manager.current_level.player_spawn_pos.get_children():
+		var is_rider := child is PlayerEntity or child is NPCRiderEntity
+		if is_rider and child != npc and !child.is_crashed:
+			riders.append(child)
+	return riders
+
+
+## A player or race bot inside the bot's shotgun hitbox. Not traffic, which would waste the shot.
+func _racer_in_sights(npc: NPCRiderEntity) -> bool:
+	for body in npc.get_node("%GunCollisionArea").get_overlapping_bodies():
+		var is_racer := body is PlayerEntity or (body is NPCRiderEntity and _npcs.has(int(body.name)))
+		if is_racer and body != npc and !body.is_crashed:
+			return true
+	return false
+
+
 func _rider_close_behind(npc: NPCRiderEntity) -> bool:
 	var forward := -npc.global_basis.z
-	for rider in level_manager.current_level.player_spawn_pos.get_children():
-		if rider == npc or rider.is_crashed:
-			continue
+	for rider in _riders_besides(npc):
 		var to_rider: Vector3 = rider.global_position - npc.global_position
 		if to_rider.dot(forward) < 0.0 and to_rider.length() < oil_slick_trigger_distance:
 			return true
