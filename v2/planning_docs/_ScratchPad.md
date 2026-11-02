@@ -1,7 +1,7 @@
 # Scratch Pad
 ---
 
-
+- [ ] cant start stunt battle bc arrow walls are in the way before you drive to it
 ---
 
 ## NOW
