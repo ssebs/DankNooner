@@ -1,12 +1,10 @@
 # Scratch Pad
 ---
 
-VID:
-- Use a bat to knock away your opponents, or a gun to blast them away
-
 ---
 
 ## NOW
+- [ ] disable hud dbg option for recording clips
 - [ ] cant pickup items at race 3 start
 - [ ] cant start stunt battle bc arrow walls are in the way before you drive to it
 - [ ] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
