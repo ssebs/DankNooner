@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.0.165 - 2026-11-02
+
+- npc racers can trick + boost + boost VFX prework
+- npc racers can trick + boost + boost VFX prework
+- fix cant start stunt battle bc arrow walls are in the way before you drive to it
+- add disable hud dbg option for recording clips
+
 ## v0.0.164 - 2026-10-31
 
 - vibrate on near miss
