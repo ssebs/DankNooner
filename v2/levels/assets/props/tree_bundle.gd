@@ -24,7 +24,8 @@ enum Density {DENSE, MID, SPARSE}
 	set(v):
 		layout_seed = v
 		_rebuild()
-## Trunk colliders on every tree; only enable for bundles players can reach.
+## Trunk colliders on every tree, and the navmesh holes bots steer round; only enable for bundles
+## players can reach.
 @export var has_collision := false
 @export var snapped_heights: PackedFloat32Array
 
@@ -55,6 +56,8 @@ func _ready():
 			trees[i].position.y = snapped_heights[i]
 			if trunk:
 				_add_trunk_collider(trees[i], trunk)
+			elif has_collision:
+				_add_nav_obstacle(trees[i])
 
 
 func _notification(what: int):
@@ -89,6 +92,22 @@ func _add_trunk_collider(tree: Node3D, trunk: CylinderShape3D):
 	shape.position.y = TRUNK_HEIGHT / 2.0
 	body.add_child(shape)
 	tree.add_child(body)
+
+
+## Editor only: the trunk colliders are runtime-only, so this is what an NPCNavRegion bake (the bundle
+## is under navigation_mesh_source_group) cuts out, or race bots path straight through the trees.
+func _add_nav_obstacle(tree: Node3D):
+	var obstacle := NavigationObstacle3D.new()
+	obstacle.avoidance_enabled = false
+	obstacle.affect_navigation_mesh = true
+	obstacle.carve_navigation_mesh = true
+	obstacle.height = TRUNK_HEIGHT
+	var outline := PackedVector3Array()
+	for i in 8:
+		var angle := TAU * i / 8.0
+		outline.append(Vector3(cos(angle), 0.0, sin(angle)) * TRUNK_RADIUS)
+	obstacle.vertices = outline
+	tree.add_child(obstacle)
 
 
 func _rebuild():

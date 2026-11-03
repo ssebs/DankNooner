@@ -16,6 +16,9 @@
 [ext_resource type="PackedScene" uid="uid://hh20gge5vix1" path="res://levels/assets/props/shotgun_sawed_offglb.glb" id="15_gun"]
 [ext_resource type="PackedScene" uid="uid://c73uvu152n4lh" path="res://entities/vfx/exhaust_flame_particles.tscn" id="16_flame"]
 [ext_resource type="Script" path="res://entities/vfx/shotgun_tracers.gd" id="17_tracers"]
+[ext_resource type="Script" path="res://entities/npc/npc_trick_controller.gd" id="18_npctr"]
+[ext_resource type="Script" path="res://entities/vfx/boost_trail.gd" id="19_trail"]
+[ext_resource type="Material" uid="uid://tsxn2jb72gby" path="res://levels/assets/props/neon_red.tres" id="20_neon"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gun"]
 size = Vector3(8, 20, 2)
@@ -33,8 +36,14 @@ properties/1/replication_mode = 1
 properties/2/path = NodePath(".:npc_state")
 properties/2/spawn = true
 properties/2/replication_mode = 2
+properties/3/path = NodePath("NPCTrickController:current_trick")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath("NPCTrickController:boost_burn_target")
+properties/4/spawn = true
+properties/4/replication_mode = 2
 
-[node name="NPCRiderEntity" type="CharacterBody3D" unique_id=1768842520 node_paths=PackedStringArray("animation_controller", "state_machine")]
+[node name="NPCRiderEntity" type="CharacterBody3D" unique_id=1768842520 node_paths=PackedStringArray("animation_controller", "trick_controller", "state_machine")]
 collision_layer = 3
 collision_mask = 19
 floor_max_angle = 1.3962634
@@ -44,6 +53,7 @@ car_definition = ExtResource("2_pibo6")
 bike_definition = ExtResource("6_bkdef")
 character_definition = ExtResource("7_chdef")
 animation_controller = NodePath("NPCAnimationController")
+trick_controller = NodePath("NPCTrickController")
 state_machine = NodePath("StateMachine")
 
 [node name="StateMachine" type="Node" parent="." unique_id=1768842521 node_paths=PackedStringArray("initial_state")]
@@ -95,6 +105,9 @@ replication_config = SubResource("SceneReplicationConfig_npc01")
 script = ExtResource("5_npcan")
 npc = NodePath("..")
 
+[node name="NPCTrickController" type="Node" parent="."]
+script = ExtResource("18_npctr")
+
 [node name="VisualRoot" parent="." unique_id=253831679 instance=ExtResource("13_rider")]
 unique_name_in_owner = true
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
@@ -140,3 +153,11 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8689702, 0.41110802, 0.13644364)
 script = ExtResource("17_tracers")
 hitbox = NodePath("../../../../GunCollisionArea/GunCollisionShape")
+
+[node name="BoostTrail" type="MeshInstance3D" parent="." node_paths=PackedStringArray("bike_skin")]
+unique_name_in_owner = true
+top_level = true
+cast_shadow = 0
+material_override = ExtResource("20_neon")
+script = ExtResource("19_trail")
+bike_skin = NodePath("../VisualRoot/BikeSkin")

@@ -24,7 +24,7 @@ func reset(peer_ids: Array) -> void:
 
 
 ## Accumulate one peer's state for this frame. Override in the subclass.
-func tick(_peer_id: int, _player: PlayerEntity, _delta: float) -> void:
+func tick(_peer_id: int, _rider: Node3D, _delta: float) -> void:
 	pass
 
 

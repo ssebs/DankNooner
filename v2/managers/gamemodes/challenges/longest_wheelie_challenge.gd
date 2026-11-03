@@ -20,10 +20,10 @@ func reset(peer_ids: Array) -> void:
 		_pending[peer_id] = 0.0
 
 
-func tick(peer_id: int, player: PlayerEntity, delta: float) -> void:
-	var is_wheelie := (
-		not player.is_crashed
-		and player.trick_controller.current_trick
+func tick(peer_id: int, rider: Node3D, delta: float) -> void:
+	var is_wheelie: bool = (
+		not rider.is_crashed
+		and rider.trick_controller.current_trick
 		in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]
 	)
 	if !is_wheelie:

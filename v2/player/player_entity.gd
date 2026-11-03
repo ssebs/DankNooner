@@ -108,6 +108,7 @@ const LAUNCH_SETTLE_HOLD_SECS: float = 0.75
 @onready var front_raycast: RayCast3D = %FrontRayCast
 @onready var rollback_sync: RollbackSynchronizer = %RollbackSynchronizer
 @onready var exhaust_flame_particles: ExhaustFlameParticles = %ExhaustFlameParticles
+@onready var boost_trail: BoostTrail = %BoostTrail
 @onready var horn_player: AudioStreamPlayer3D = %HornPlayer
 @onready var squeal_player: AudioStreamPlayer3D = %SquealPlayer
 ## Positional copies of AudioManager's sounds, for hearing other riders. See play_rider_sound().
@@ -364,6 +365,7 @@ func _process(delta: float) -> void:
 
 	_update_horn()
 	_update_exhaust_pops(delta)
+	boost_trail.emitting = boost_controller.is_boosting
 
 	if !is_local_client:
 		# Synced state, so a remote rider's RPM is current every frame.

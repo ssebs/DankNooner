@@ -223,16 +223,20 @@ func knock_out(victim_peer_id: int, aggressor_peer_id: int) -> void:
 	crash_player.rpc(victim_peer_id)
 
 
-## Server-only. knock_out for any rider (bots have negative ids). An NPC (race bot or traffic) goes
-## down through report_hit, and a player knocked out by a bot goes down uncredited: whether bots
-## score knockouts is still open.
+## Server-only. knock_out for any rider (bots have negative ids), crediting bots like players. An NPC
+## goes down through report_hit, and only counts if it actually went down (a bot on the grid or past
+## the finish shrugs it off). Traffic isn't a racer, so it's never credited.
 func knock_out_rider(victim: Node3D, aggressor_id: int) -> void:
-	if victim is NPCRiderEntity:
-		(victim as NPCRiderEntity).report_hit(get_rider(aggressor_id))
-	elif aggressor_id < 0:
-		crash_player.rpc(int(victim.name))
-	else:
-		knock_out(int(victim.name), aggressor_id)
+	var victim_id := int(victim.name)
+	if !(victim is NPCRiderEntity):
+		knock_out(victim_id, aggressor_id)
+		return
+	var npc := victim as NPCRiderEntity
+	var was_down := npc.is_crashed
+	npc.report_hit(get_rider(aggressor_id))
+	var is_racer := !npc.is_in_group(UtilsConstants.GROUPS["Traffic"])
+	if is_racer and !was_down and npc.is_crashed and victim_id != aggressor_id:
+		player_knocked_out.emit(victim_id, aggressor_id)
 
 
 ## Set player's rb_do_wobble on every peer so each injects the wobble in its rollback tick

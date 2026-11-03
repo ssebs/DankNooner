@@ -1,12 +1,14 @@
 @tool
 ## Fills the grid slots humans don't take with AI racers (events with enable_npcs) and registers
-## them as racers in the RaceTask. Spawns from the back — humans keep the front rows.
+## them as racers in the RaceTask. Spawns from the back — humans keep the front rows. A bot that
+## finishes counts in every component's standings, like a human.
 class_name NPCRacersComponent extends RaceComponent
 
 @export var npc_race_manager: NPCRaceManager
 
 
 func race_start() -> void:
+	race_mode.race_task.lap_completed.connect(_on_lap_completed)
 	if !race_mode.get_definition().enable_npcs:
 		return
 	var grid_markers := race_mode.get_event().get_spawn_markers()
@@ -22,6 +24,7 @@ func race_start() -> void:
 
 
 func race_end() -> void:
+	race_mode.race_task.lap_completed.disconnect(_on_lap_completed)
 	var race_task := npc_race_manager.race_task
 	if race_task != null:
 		for npc_id in npc_race_manager.get_npc_ids():
@@ -35,6 +38,14 @@ func get_npcs() -> Array[NPCRiderEntity]:
 	for npc_id in npc_race_manager.get_npc_ids():
 		npcs.append(npc_race_manager.get_npc(npc_id))
 	return npcs
+
+
+## Humans finish through the runner (RaceGameMode._on_runner_player_completed); bots only here.
+func _on_lap_completed(racer_id: int, _lap_ms: int) -> void:
+	if racer_id >= 0 or race_mode.race_task.get_completion_time_ms(racer_id) < 0.0:
+		return
+	for component in race_mode.get_components():
+		component.racer_finished(racer_id)
 
 
 func sync_to_peer(peer_id: int) -> void:

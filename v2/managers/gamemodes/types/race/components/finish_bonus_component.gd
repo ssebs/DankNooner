@@ -1,5 +1,5 @@
 @tool
-## Points by finish order among humans (NPCs ignored).
+## Points by finish order among every racer, bots included.
 class_name FinishBonusComponent extends RaceComponent
 
 ## Score by finish place; 0 past the end.

@@ -38,7 +38,7 @@ const RALLY_UP_BIKE := preload("res://resources/bikes/skins/mini_default_skin_de
 const RALLY_UP_CHARACTER := preload(
 	"res://resources/player/skins/astronaut_default_skin_definition.tres"
 )
-## What a race bot picks up: no boost to fill with a Gas Can yet, and it can't ride a Ramp.
+## What a race bot holds: it can't ride a Ramp. Gas Cans aren't held, they fill its boost on pickup.
 const BOT_ITEMS: Array[PickupItemDefinition.PickupItemType] = [
 	PickupItemDefinition.PickupItemType.BAT,
 	PickupItemDefinition.PickupItemType.OIL_SLICK,
@@ -65,8 +65,12 @@ func _ready():
 func collect(peer_id: int, definition: PickupItemDefinition) -> bool:
 	var item_type := definition.item_type
 	var is_bot := peer_id < 0
-	if item_type == PickupItemDefinition.PickupItemType.GAS_CAN and !is_bot:
-		spawn_manager.grant_boost.rpc(peer_id)
+	if item_type == PickupItemDefinition.PickupItemType.GAS_CAN:
+		if is_bot:
+			# Bot boost is server-only state, so no rollback round trip
+			ComboRules.add_segment(npc_race_manager.get_npc(peer_id).trick_controller)
+		else:
+			spawn_manager.grant_boost.rpc(peer_id)
 	elif _held.has(peer_id) or (is_bot and item_type not in BOT_ITEMS):
 		return false
 	else:

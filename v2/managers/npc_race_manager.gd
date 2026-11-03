@@ -7,11 +7,14 @@
 ## spawn_npc / register — see that component for the lifecycle.
 class_name NPCRaceManager extends BaseManager
 
+## Server: a bot joined / left the roster (TrickManager keeps a scoring row per bot).
+signal npc_spawned(npc_id: int)
+signal npc_despawned(npc_id: int)
+
 @export var level_manager: LevelManager
 @export var settings_manager: SettingsManager
 @export var spawn_manager: SpawnManager
 @export var item_manager: ItemManager
-@export var riding_hud_state: RidingHUDState
 ## Round-robin source of NPC names + skins. Spawned NPCs get
 ## "<username> <n>" so reused definitions stay distinguishable in results.
 @export var npc_definitions: Array[PlayerDefinition] = [
@@ -30,6 +33,8 @@ class_name NPCRaceManager extends BaseManager
 ## Rally Up goes off after this many seconds on average.
 @export var oil_slick_trigger_distance: float = 15.0
 @export var rally_up_hold_time: float = 8.0
+## A bot boosts once its next checkpoint is within this many degrees of its heading, down a straight.
+@export var boost_cone_deg: float = 10.0
 
 const NPC_SCENE: PackedScene = preload("res://entities/npc/npc_rider_entity.tscn")
 ## dbg_racing_line drawings live until the next toggle or bake clears them
@@ -85,6 +90,7 @@ func _physics_process(delta: float):
 		npc.driving = race_task.get_target_checkpoint(npc_id) != null
 		if npc.driving:
 			_maybe_use_item(npc_id, npc, delta)
+			_maybe_boost(npc_id, npc)
 	DebugUtils.Prof("npc_race_manager", t)  # PROF: temp
 
 
@@ -114,6 +120,7 @@ func despawn_all_npcs() -> void:
 func bake_racing_line(event: GameModeEvent) -> void:
 	var region := level_manager.current_level.npc_nav_region
 	var generation := _bake_generation
+	var t_bake := Time.get_ticks_msec()  # DEBUG: temp
 	# A level loaded this frame has no synced nav map yet, and paths on it come back empty
 	while NavigationServer3D.map_get_iteration_id(region.get_navigation_map()) == 0:
 		await NavigationServer3D.map_changed
@@ -157,7 +164,8 @@ func bake_racing_line(event: GameModeEvent) -> void:
 		return
 	racing_line = baked[0]
 	DebugUtils.DebugMsg(
-		"NPC racing line baked: %.0fm, closed=%s" % [racing_line.get_length(), racing_line.closed]
+		"NPC racing line baked: %.0fm, closed=%s, %dms"  # DEBUG: temp ms
+		% [racing_line.get_length(), racing_line.closed, Time.get_ticks_msec() - t_bake]
 	)
 	for npc_id in _npcs:
 		_race_state(npc_id).racing_line = racing_line
@@ -230,6 +238,7 @@ func rpc_spawn_npc(npc_id: int, pos: Vector3, basis: Basis):
 	# Only race bots shoot; traffic shares the scene and leaves its hitbox off
 	npc.get_node("%GunCollisionArea").monitoring = true
 	npc.state_machine.request_state_change.call_deferred(race_state)
+	npc_spawned.emit(npc_id)
 
 
 ## Host's view: centred on the base tuning, shifted by its difficulty setting (0 = easy).
@@ -257,6 +266,8 @@ func rpc_despawn_npc(npc_id: int):
 	_npcs[npc_id].queue_free()
 	_npcs.erase(npc_id)
 	_spawn_transforms.erase(npc_id)
+	if multiplayer.is_server():
+		npc_despawned.emit(npc_id)
 
 
 #endregion
@@ -330,6 +341,19 @@ func _rider_close_behind(npc: NPCRiderEntity) -> bool:
 	return false
 
 
+## Server only. One segment when the next checkpoint is dead ahead down a straight; a burn into a
+## corner is wasted.
+func _maybe_boost(npc_id: int, npc: NPCRiderEntity) -> void:
+	var tc := npc.trick_controller
+	if tc.is_boosting or tc.boost_amount < 1.0:
+		return
+	var to_checkpoint := race_task.get_target_checkpoint(npc_id).global_position - npc.global_position
+	var forward := -npc.global_basis.z
+	var angle := Vector2(forward.x, forward.z).angle_to(Vector2(to_checkpoint.x, to_checkpoint.z))
+	if absf(angle) <= deg_to_rad(boost_cone_deg) and _race_state(npc_id).is_straight_ahead():
+		tc.boost()
+
+
 #endregion
 
 #region Crash / respawn (server only)
@@ -342,22 +366,18 @@ func crash_npc(npc_id: int) -> void:
 	if _npcs[npc_id].npc_state == NPCRiderEntity.NPCState.CRASHED:
 		return
 	_npcs[npc_id].crash()
-	# No tricks or launch measure yet (Phase 3), so a bare bail line
-	riding_hud_state.push_trickfeed(_npcs[npc_id].username, npc_id, PackedInt32Array(), 0, 1, true, 0.0)
 	get_tree().create_timer(respawn_delay).timeout.connect(
 		_respawn_npc.bind(npc_id), CONNECT_ONE_SHOT
 	)
 
 
 ## A racer we rode into never sees the collision from its side, so take it down with us (as
-## CrashController and NPCTrafficManager do). A player goes down uncredited: whether bots score
-## knockouts is still open.
+## CrashController does), credited to this bot like a player's ram.
 func _on_npc_crashed(victim: Node3D, npc_id: int) -> void:
 	crash_npc(npc_id)
-	if victim is PlayerEntity:
-		spawn_manager.crash_player.rpc(int(victim.name))
-	elif victim is NPCRiderEntity:
-		(victim as NPCRiderEntity).report_hit(_npcs[npc_id])
+	# null for a wall or a bad landing — nobody else goes down
+	if victim != null:
+		spawn_manager.knock_out_rider(victim, npc_id)
 
 
 func _respawn_npc(npc_id: int) -> void:
@@ -369,6 +389,7 @@ func _respawn_npc(npc_id: int) -> void:
 		var ckpt := race_task.get_npc_respawn_checkpoint(npc_id)
 		if ckpt != null:
 			t = ckpt.global_transform
+	_npcs[npc_id].trick_controller.do_reset()
 	_npcs[npc_id].teleport_to(t.origin, t.basis)
 	_race_state(npc_id).reset_line_progress()
 
@@ -420,8 +441,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("spawn_manager must not be empty")
 	if item_manager == null:
 		issues.append("item_manager must not be empty")
-	if riding_hud_state == null:
-		issues.append("riding_hud_state must not be empty")
 	if npc_definitions.is_empty():
 		issues.append("npc_definitions must not be empty")
 	return issues

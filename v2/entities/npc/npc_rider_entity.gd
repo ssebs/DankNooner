@@ -32,6 +32,7 @@ enum VehicleType {BIKE, CAR}
 @export var bike_definition: BikeSkinDefinition
 @export var character_definition: CharacterSkinDefinition
 @export var animation_controller: NPCAnimationController
+@export var trick_controller: NPCTrickController
 ## Behavior states live here — managers move the rider with request_state_change.
 @export var state_machine: StateMachine
 @export var move_speed: float = 35.0
@@ -86,6 +87,7 @@ const NEAR_MISS_MARGIN: float = 1.0
 @onready var near_miss_area: Area3D = $NearMissArea
 @onready var near_miss_shape: CollisionShape3D = $NearMissArea/CollisionShape3D
 @onready var synchronizer: MultiplayerSynchronizer = $MultiplayerSynchronizer
+@onready var boost_trail: BoostTrail = %BoostTrail
 
 ## Only the half this vehicle actually uses survives — see _enter_tree.
 var bike_skin: BikeSkin
@@ -251,6 +253,8 @@ func _process(delta: float) -> void:
 	if Engine.is_editor_hint() or !_has_sync_pose:
 		return
 
+	# A crashed bot keeps its burn until the respawn resets it.
+	boost_trail.emitting = trick_controller.is_boosting and npc_state != NPCState.CRASHED
 	if multiplayer.is_server():
 		# We own the simulation, so both ends of the step are known: interpolate exactly
 		# between them. Costs one tick of visual latency and no more, so what you see still
@@ -282,9 +286,11 @@ func set_drawn(drawn: bool) -> void:
 #region Steering helpers (called by the behavior states, server-side)
 
 
-## This rider's flat-out speed — move_speed with its personal variance applied.
+## This rider's flat-out speed — move_speed with its personal variance applied, raised by a boost
+## like the player's bd.max_speed ceiling.
 func cruise_speed() -> float:
-	return move_speed * _speed_scale
+	var boost := BoostController.BOOST_SPEED_MULT if trick_controller.is_boosting else 1.0
+	return move_speed * _speed_scale * boost
 
 
 ## Corner-aware target speed: reads the lane's bend over the next
@@ -339,7 +345,8 @@ func steer_toward(target: Vector3, target_speed: float, delta: float) -> void:
 
 
 func ramp_speed(target_speed: float, delta: float) -> void:
-	var rate := acceleration if target_speed > current_speed else braking
+	var accel := acceleration * (BoostController.BOOST_ACCEL_MULT if trick_controller.is_boosting else 1.0)
+	var rate := accel if target_speed > current_speed else braking
 	current_speed = move_toward(current_speed, target_speed, rate * delta)
 
 
@@ -414,7 +421,7 @@ func update_skins(bike: BikeSkinDefinition, character: CharacterSkinDefinition) 
 	visual_root.seat()
 
 
-## Cosmetic stub — v1 has no trick variety; kept as the hook for it.
+## Front wheel up (the pitch); which trick it scores as is trick_controller's (NPCRaceState).
 func wheelie() -> void:
 	npc_state = NPCState.WHEELIE
 
@@ -426,6 +433,7 @@ func stop_wheelie() -> void:
 func finish() -> void:
 	npc_state = NPCState.FINISHED
 	driving = false
+	trick_controller.end_trick()
 
 
 ## Teleport (crash recovery / grid placement). Resets driving state.
@@ -565,6 +573,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 			issues.append("character_definition must not be empty")
 	if animation_controller == null:
 		issues.append("animation_controller must not be empty")
+	if trick_controller == null:
+		issues.append("trick_controller must not be empty")
 	if state_machine == null:
 		issues.append("state_machine must not be empty")
 	return issues

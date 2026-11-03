@@ -53,28 +53,6 @@ const STOPPIE_PITCH_THRESHOLD_DEG: float = -10.0
 ## fading in a tall gear — stays one wheelie instead of restarting the trick every crossing.
 const WHEELIE_EXIT_PITCH_DEG: float = 5.0
 const WHEELIE_EXIT_DELAY: float = 0.2
-## Boost segments earned per second of trick, before the combo multiplier. At x1 that's ~2s
-## of wheelie per segment, ~6s for a full meter — short enough that a casual wheelie earns
-## something usable. Consts, not @exports: this runs inside the rollback tick and must be
-## byte-identical on every peer or predictions diverge from the server.
-const BOOST_PER_SEC: float = 0.2
-## Dropping every trick starts this grace window instead of breaking the combo outright,
-## so wheelie -> stoppie -> wheelie chains keep their multiplier.
-const COMBO_GRACE_SECS: float = 1.5
-## Seconds of unbroken trick time to reach each multiplier above x1, ascending.
-## Keep these in the same ballpark as the meter fill time (BOOST_PER_SEC) — the gauge is the
-## only feedback the player can actually see, so a multiplier that lags far behind it reads
-## as broken. At 0.2/sec: x2 lands around the first full segment, x3 well after the meter
-## caps (where it still matters, since score = duration x rate x peak multiplier).
-const COMBO_MULT_THRESHOLDS: Array[float] = [5.0, 15.0]
-## Boost segments banked per completed air rotation (each flip) and per landed air trick, before
-## the combo multiplier. A chunk, not a full meter — a big combo multiplier is what fills a bar.
-## Consts (rollback): must be byte-identical on every peer.
-const BOOST_PER_FLIP: float = 0.5
-const BOOST_PER_AIR_TRICK: float = 0.5
-## One-time score for touching down from a real jump straight into a wheelie or stoppie. Its boost
-## reuses BOOST_PER_AIR_TRICK. Const (rollback).
-const LANDING_TRICK_SCORE: float = 3.0
 ## Near miss (passing traffic close, see NPCTrafficState) score by the HUD's speed: nothing under
 ## NEAR_MISS_MIN_SPEED, NEAR_MISS_SCORE up to NEAR_MISS_MAX_SPEED, NEAR_MISS_MAX_SCORE past it.
 ## Each one also counts as NEAR_MISS_COMBO_SECS of trick time, so it can open a combo on its own.
@@ -96,35 +74,20 @@ const DOUBLE_TAP_WINDOW: float = 0.25
 ## it). Latched because a tap has no held phase to keep it alive, unlike the stick-held tricks.
 const TAP_TRICK_DURATION: float = 1.0
 const NO_DIR: int = -1
-## Per-trick score, in "seconds at TrickManager.points_per_second". Held tricks earn their value per
-## second while active; one-time tricks bank it once, when they start. Consts (rollback).
-const HELD_TRICK_SCORE: Dictionary = {
-	Trick.WHEELIE_SITTING: 1.0,
-	Trick.WHEELIE_MOD: 1.0,
-	Trick.STOPPIE: 1.0,
-	Trick.DRIFT: 0.75,
-	Trick.BURNOUT: 0.5,
-	Trick.DRIFT_WHEELIE: 2.0,
-	Trick.HIGH_CHAIR: 1.5,
-	Trick.KNEE_KNOCKER: 1.5,
-	Trick.T_POSE: 1.5,
-	Trick.TWO_LEFT_FEET: 1.5,
-	Trick.SPREAD_EAGLE: 2.0,
-	Trick.SUPERMAN: 2.0,
-}
+## See is_air_trick. Race bots pick their air tricks from it.
+const AIR_TRICKS: Array[Trick] = [
+	Trick.HEEL_CLICKER,
+	Trick.SPREAD_EAGLE,
+	Trick.SUPERMAN,
+	Trick.KICKFLIP,
+	Trick.T_POSE,
+	Trick.KNEE_KNOCKER,
+]
 ## Held-trick score scale while wheelieing (_wheelie_score_mult): ramps from MIN at the wheelie
 ## threshold to 1 below the balance point, BP from it up; LOCKED while balance-locked. Consts (rollback).
 const WHEELIE_MIN_SCORE_MULT: float = 0.5
 const WHEELIE_BP_SCORE_MULT: float = 2.0
 const WHEELIE_LOCKED_SCORE_MULT: float = 1.5
-const ONE_TIME_TRICK_SCORE: Dictionary = {
-	Trick.HEEL_CLICKER: 1.5,
-	Trick.KICKFLIP: 3.0,
-	Trick.BACKFLIP: 5.0,
-	Trick.FRONTFLIP: 5.0,
-	Trick.THREESIXTY: 5.0,
-	Trick.BUNNY_HOP: 4.0,
-}
 ## Right-stick control scheme: state -> gesture -> trick per Dir (UP, DOWN, LEFT, RIGHT). Guideline:
 ## shared tricks keep one tap / double-tap slot across states (double tap = harder trick); HOLD is
 ## for state-specific tricks. Const (rollback): byte-identical on every peer.
@@ -166,7 +129,7 @@ var combo_grace: float = 0.0
 var combo_boost_earned: float = 0.0
 ## Combo multiplier (1+), derived from combo_time each rollback tick.
 var combo_multiplier: int = 1
-## Score the combo in progress has earned (see HELD_TRICK_SCORE / ONE_TIME_TRICK_SCORE).
+## Score the combo in progress has earned (see ComboRules.HELD_TRICK_SCORE / ONE_TIME_TRICK_SCORE).
 ## TrickManager banks it when the combo ends.
 var combo_score: float = 0.0
 
@@ -215,15 +178,16 @@ func on_movement_rollback_tick(delta: float):
 			trick_ended.emit(_last_trick)
 		if current_trick != Trick.NONE:
 			trick_started.emit(current_trick)
-			combo_score += ONE_TIME_TRICK_SCORE.get(current_trick, 0.0)
-			# Landing an air trick banks a chunk (void-on-crash means you must land it clean).
-			if not movement_controller.is_on_floor and is_air_trick(current_trick):
-				_award_trick_boost(BOOST_PER_AIR_TRICK)
+			ComboRules.start_trick(
+				self, boost_controller, current_trick, not movement_controller.is_on_floor
+			)
 		_last_trick = current_trick
 
 	_award_flip_boost()
 	_award_trick_landing()
-	_accrue_combo(delta)
+	# Here (rollback), not in TrickManager: the combo vars are netfox state properties, re-applied
+	# from history every tick, so writes from a manager's _process() would never accumulate.
+	ComboRules.accrue(self, boost_controller, current_trick, _wheelie_score_mult(), delta)
 
 
 ## Turn the right stick into TAP / DOUBLE_TAP gestures and latch their BINDINGS trick. The held
@@ -321,7 +285,7 @@ func _award_flip_boost():
 	if not movement_controller.is_on_floor:
 		var completed := int(movement_controller.air_pitch_total / TAU)
 		if completed > _air_flips_awarded:
-			_award_trick_boost(BOOST_PER_FLIP * (completed - _air_flips_awarded))
+			ComboRules.award_flips(self, boost_controller, completed - _air_flips_awarded)
 			_air_flips_awarded = completed
 	else:
 		_air_flips_awarded = 0
@@ -331,8 +295,7 @@ func _award_flip_boost():
 ## tick already detected that trick, so combo time keeps running as a normal wheelie / stoppie.
 func _award_trick_landing():
 	if _was_airborne and is_landed_in_trick():
-		combo_score += LANDING_TRICK_SCORE
-		_award_trick_boost(BOOST_PER_AIR_TRICK)
+		ComboRules.award_landing(self, boost_controller)
 	_was_airborne = (
 		not movement_controller.is_on_floor
 		and movement_controller.air_time >= AIR_TRICK_MIN_AIRTIME
@@ -344,58 +307,13 @@ func _award_trick_landing():
 func on_near_miss(score: float):
 	combo_time += NEAR_MISS_COMBO_SECS
 	combo_score += score
-	_award_trick_boost(BOOST_PER_NEAR_MISS)
+	ComboRules.award_boost(self, boost_controller, BOOST_PER_NEAR_MISS)
 
 
 static func near_miss_score(speed: float) -> float:
 	if speed < NEAR_MISS_MIN_SPEED:
 		return 0.0
 	return NEAR_MISS_MAX_SCORE if speed > NEAR_MISS_MAX_SPEED else NEAR_MISS_SCORE
-
-
-## Add a lump of trick boost, scaled by the current combo multiplier. Tracked in combo_boost_earned
-## like the per-second accrual, so a crash before the combo banks (incl. a mid-trick landing) voids
-## it — land it to keep it.
-func _award_trick_boost(base: float):
-	var before: float = boost_controller.boost_amount
-	boost_controller.boost_amount = minf(
-		boost_controller.boost_amount + base * combo_multiplier, BoostController.BOOST_SEGMENTS
-	)
-	combo_boost_earned += boost_controller.boost_amount - before
-	combo_grace = COMBO_GRACE_SECS # keep the combo alive so chained tricks build the multiplier
-
-
-## Accrue combo time + boost for the tick. Lives here (rollback) rather than in TrickManager
-## because these are netfox state properties — RollbackSynchronizer re-applies them from
-## history every tick, so a manager writing them in _process() would be overwritten before
-## anything accumulated. TrickManager banks the SCORE when the combo ends, off these values.
-func _accrue_combo(delta: float):
-	if current_trick != Trick.NONE:
-		combo_time += delta
-		combo_score += HELD_TRICK_SCORE.get(current_trick, 0.0) * _wheelie_score_mult() * delta
-		combo_grace = COMBO_GRACE_SECS
-		# Track what this combo contributed (post-cap, so a full meter doesn't inflate the
-		# claim) — a crash voids exactly this much and nothing that was banked earlier.
-		var before: float = boost_controller.boost_amount
-		boost_controller.boost_amount = minf(
-			boost_controller.boost_amount + BOOST_PER_SEC * combo_multiplier * delta,
-			BoostController.BOOST_SEGMENTS
-		)
-		combo_boost_earned += boost_controller.boost_amount - before
-	elif combo_time > 0.0:
-		combo_grace -= delta
-		if combo_grace <= 0.0:
-			combo_time = 0.0
-			combo_grace = 0.0
-			combo_score = 0.0
-			# Survived the grace window — this combo's boost is banked for good now.
-			combo_boost_earned = 0.0
-
-	var mult := 1
-	for threshold in COMBO_MULT_THRESHOLDS:
-		if combo_time >= threshold:
-			mult += 1
-	combo_multiplier = mult
 
 
 ## 1 unless wheelieing; see WHEELIE_MIN_SCORE_MULT. Covers stick tricks held in a wheelie too.
@@ -507,11 +425,7 @@ func do_reset():
 	_tap_age = 0.0
 	_tap_trick = Trick.NONE
 	_tap_trick_timer = 0.0
-	combo_time = 0.0
-	combo_grace = 0.0
-	combo_boost_earned = 0.0
-	combo_multiplier = 1
-	combo_score = 0.0
+	ComboRules.reset(self)
 
 
 func is_in_wheelie() -> bool:
@@ -564,14 +478,7 @@ func wheelie_setting_down(delta: float) -> bool:
 ## CrashController._detect_air_trick_landing). That only checks the landing tick, so the ground
 ## versions of kickflip / T-pose / knee knocker stay safe.
 static func is_air_trick(trick: Trick) -> bool:
-	return trick in [
-		Trick.HEEL_CLICKER,
-		Trick.SPREAD_EAGLE,
-		Trick.SUPERMAN,
-		Trick.KICKFLIP,
-		Trick.T_POSE,
-		Trick.KNEE_KNOCKER,
-	]
+	return trick in AIR_TRICKS
 
 
 static func trick_to_str(trick: Trick) -> String:

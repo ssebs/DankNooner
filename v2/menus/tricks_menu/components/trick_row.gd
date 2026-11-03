@@ -132,7 +132,7 @@ func set_pinned(pinned: bool) -> void:
 func _populate(trick: TrickController.Trick) -> void:
 	trick_type = trick
 	name_label.text = TrickController.trick_to_str(trick).capitalize()
-	if TrickController.HELD_TRICK_SCORE.has(trick):
-		score_label.text = "+%s/s" % TrickController.HELD_TRICK_SCORE[trick]
+	if ComboRules.HELD_TRICK_SCORE.has(trick):
+		score_label.text = "+%s/s" % ComboRules.HELD_TRICK_SCORE[trick]
 	else:
-		score_label.text = "+%s" % TrickController.ONE_TIME_TRICK_SCORE[trick]
+		score_label.text = "+%s" % ComboRules.ONE_TIME_TRICK_SCORE[trick]

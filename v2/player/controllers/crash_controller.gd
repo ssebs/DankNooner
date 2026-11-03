@@ -320,11 +320,8 @@ static func impact_angle_deg(collision: KinematicCollision3D, pre_slide_velocity
 func _crash_rammed_racer(collider: Object) -> void:
 	if !multiplayer.is_server():
 		return
-	if collider is PlayerEntity:
-		var victim := collider as PlayerEntity
-		player_entity.gamemode_manager.spawn_manager.knock_out(int(victim.name), int(player_entity.name))
-	elif collider is NPCRiderEntity:
-		(collider as NPCRiderEntity).report_hit(player_entity)
+	if collider is PlayerEntity or collider is NPCRiderEntity:
+		player_entity.gamemode_manager.spawn_manager.knock_out_rider(collider, int(player_entity.name))
 
 
 ## Low-speed tap into another player: broadcast their wobble. Server only — the victim never sees

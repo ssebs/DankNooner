@@ -91,7 +91,7 @@ state property from history each tick, wiping the write.
 - **BoostController** (synced) — the boost meter
   - `boost_amount` (in segments, capacity `BOOST_SEGMENTS`), `boost_burn_target`,
     `boost_burn_rate`, `boost_prev_held`, `is_boosting`
-  - Filled by `TrickController._accrue_combo()`, spent here, both inside the rollback tick
+  - Filled by `ComboRules.accrue()` from `TrickController`'s tick, spent here, both inside the rollback tick
 - **MovementController** (local, derived from physics)
   - `speed` — scalar speed from velocity
   - `roll_angle` — lean left/right
@@ -206,7 +206,7 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   - Detects ground tricks (wheelie variants, stoppie) from `movement_controller.pitch_angle` and air tricks (flips, heel clicker, high chair) from input + airtime
   - Some tricks (e.g. high chair) latch — entry on a gesture, persist while the gating input + condition hold
   - Emits `trick_started(trick_type)` / `trick_ended(trick_type)` on transitions
-  - `_accrue_combo()` — accrues its own `combo_time` / `combo_grace` / `combo_multiplier` and
+  - `ComboRules.accrue()` (`utils/combo_rules.gd`, shared with race bots) — accrues its `combo_time` / `combo_grace` / `combo_multiplier` and
     fills `BoostController.boost_amount` while any trick is held. `TrickManager` banks the
     score off these when the combo ends — see [ComboAndBoost.md](./ComboAndBoost.md) for the
     full system + tunables

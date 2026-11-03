@@ -3,7 +3,7 @@
 > Brainstormed 2026-10-25. Replaces the lane-following race bot. Delete this file once the system
 > ships and its "how it works" is folded into [Architecture](./Architecture.md#npc-race-manager).
 
-- [Handoff (2026-10-31, read first)](#handoff-2026-10-31-read-first)
+- [Handoff (2026-11-02, read first)](#handoff-2026-11-02-read-first)
 - [Why](#why)
 - [Goals / non-goals / anti-goals](#goals--non-goals--anti-goals)
 - [What exists today](#what-exists-today)
@@ -17,56 +17,62 @@
 - [Open questions (ask before the phase that needs them)](#open-questions-ask-before-the-phase-that-needs-them)
 - [Left to the builder](#left-to-the-builder)
 
-## Handoff (2026-10-31, read first)
+## Handoff (2026-11-02, read first)
 
-Built this session, in order; per-phase notes are in each phase's section below.
+Per-phase notes are in each phase's section below; how it works is in
+[Architecture](./Architecture.md#npc-race-manager).
 
-- **Difficulty:** `NPCRaceState.skill` (0 easy … 1 hard, 0.5 = base tuning) replaces the
-  `Difficulty` enum. `NPCRaceManager._bot_skill` = 0.5 ± `difficulty_skill_shift` from the host's
-  Easy/Hard setting. TODO there: centre on the host's player level once it exists.
-- **Corners:** `_path_target` (navmesh path to the steer goal, corners first) + `NPCRacingLine._widen`
-  (K1999 wide-in-wide). Untested on its own; corner pile-ups weren't reported again.
-- **Phase 2 crashes:** working (user saw bots ragdoll). Wrecks are inert (`npc_state` setter drops
-  `collision_layer` to 0 while crashed).
-- **Phase 4 items:** working on bots: shotgun (now 8 m wide × 21 m, glowing tracers that grow from the
-  barrel), bat (capsule query, reaches `BAT_SWING_FORWARD_REACH` ahead), oil slick, Rally Up. Shotgun
-  and bat also crash **traffic**. Bots use bat / shotgun / oil slick / Rally Up; untested.
-- **Ramp riding:** slope-following `steer_toward`, no steering in the air, 80° floor angle, visual
-  climb pitch, `bad_landing_chance` only after an upward launch. Untested.
+**Phase 3 (tricks, score, boost): built and playtested 2026-11-02.** The user saw bots wheelie, do
+wheelie holds and air tricks, and boost (15 boosts in one log). Combo rules are a static
+`ComboRules` (`utils/combo_rules.gd`) shared by the player's `TrickController` / `BoostController`
+and the bot's `NPCTrickController`. Bots score in stunt races: style, placement, knockouts (both
+ways, user 2026-11-02) and challenges, and every final-leaderboard column fills for them. Gas Cans
+fill bot boost.
 
-**Waiting on the user's next race (the grid crash loop):** bots rammed the bot beside them at
-~50° because closing speed used the whole relative velocity; now it's the component along the
-contact normal. Bad landings fired off bumps; now only after an upward launch. If the grid still
-loops, the temp logs below say why.
+**Fixed this session, from playtest logs:**
+- **No tricks at first.** The straight check compared the line's speed to cruise speed (the bike's
+  `max_speed`, which the line never allows); it now checks for no braking below current speed. Air
+  tricks now wait for `TrickController.AIR_TRICK_MIN_AIRTIME` of real airtime, like the player.
+- **Grid crash loop.** Side-by-side bots (a grid row) wandered into each other, and seeded wander +
+  grid-slot respawns replayed the same crash forever. The scan now covers `alongside_length` behind,
+  and the offset stays `overtake_clearance` off any rider alongside. The `stunt_track_01` StuntRace
+  grid markers were spread to 5.5 m.
+- **Trees.** `TreeBundle` trunk colliders are runtime-only, so the bake never saw them. Bundles with
+  `has_collision` now add editor-only `NavigationObstacle3D`s that carve the bake.
+- **Too many jump crashes.** Lower `bad_landing_chance` / `trick_bail_chance`, and the roll needs
+  `air_trick_min_airtime` of measured airtime (the airtime threshold the user picked).
 
-**Temp code to strip once the grid is confirmed:** in `NPCRaceState`, every `# DEBUG: temp` line
-(the `CRASH …` / `landed …` logs, the `STUCK` log and `_dbg_drive`).
+**Not confirmed in game yet:** bot lines and bails in the trick feed; bot knockouts / challenge values
+on the final leaderboard; a bot picking up a Gas Can; flips (none in the last log: they need ~1.1 s
+predicted airtime).
 
-**2026-10-31 later, untested:** the logopol *is* in the bake (a small hole in an open lot). The
-steer point landed inside the hole and `map_get_closest_point` snapped it to the near rim, aiming
-the bot head-on at the pole; `_steer_point` now walks it back toward the line instead. Bot crashes
-push a bare bail line to the trick feed (`NPCRaceManager.crash_npc`).
+**Boost, accepted as is (user):** bots are capped by the line's corner speeds (~40 m/s), far below
+their bike's top speed, so boost mostly adds acceleration. No visible boost effect on bots.
+
+**Temp code to strip:** every `# DEBUG: temp` line in `NPCRaceState` (`CRASH` / `landed` / `STUCK` /
+`RESET` / `FIRST DRIVE` logs, `_dbg_drive`, `_dbg_log_drive`), `NPCTrickController` (trick / boost
+logs), `RaceGameMode` (`[race start]` timers, `[race hitch]`) and `NPCRaceManager` (bake ms).
 
 **Known, not fixed:**
-- The grid ram loop still happens (rear bot rams the one ahead at ~19 m/s closing, both respawn
-  in their grid slots and repeat). User: ignore for now.
-- Traffic lights (`TrafficNetwork`) aren't in `navigation_mesh_source_group`, so they have no
-  navmesh hole and bots hit them. Add the group + rebake.
-- Bad landings fire off road crests: `_launched` (`pre_slide_velocity.y > 0`) is true on almost
-  any rise. User picked an airtime threshold instead; not built.
-- Bots ride up event props at (-700, 452) (props aren't in the nav bake). May be fixed by ramp
-  riding; re-check.
-- Bot can stop short of the finish trigger (line end vs trigger).
-- The user still has to Bake `NPCNavRegion` in all three race levels after the `agent_radius` raise.
+- Traffic lights (`TrafficNetwork`) aren't in `navigation_mesh_source_group`, so bots hit them (6 in
+  the last log). The gas station `logopol` still gets hit too.
+- Bots can't steer in the air, so a ramp can throw one off the line into a fence on landing. User
+  2026-11-02: leave it.
+- Traffic rams bots now and then.
+- Race start: `TrafficComponent.race_start` took ~960 ms once (spawning 63 traffic riders); the
+  user's last run had no lag. The line bake has two ~130 ms main-thread hitches.
+- The user tweaked `NPCNavGrassRegion` in `stunt_track_01` (`travel_cost` 50,
+  `geometry_collision_mask` 18 → 16). At 16 the grass bake ignores `crash_collision`, so walls on
+  grass aren't holes. Unconfirmed whether that was intended.
+- Bots ride up event props at (-700, 452) (props aren't in the nav bake); re-check.
+- A bot can stop short of the finish trigger (line end vs trigger).
+- After any bake-affecting change, rebake `NPCNavRegion` + `NPCNavGrassRegion` in the race levels.
 
-**Next, in order:** confirm the grid fix → strip temp logs → Phase 3 (tricks, score, boost; bots
-**do** take stunt-race placement points, user 2026-10-31) → bots aiming for ramps (also unlocks
-the Ramp item and air tricks off ramps) → Gas Can for bots (needs boost).
+**Next, in order:** strip temp logs → bots aiming for ramps (also unlocks the Ramp item and air
+tricks off ramps).
 
-**Still open:** do bot knockouts score (bots as victims or aggressors)? Today bots go down
-uncredited and take players down uncredited (`SpawnManager.knock_out_rider`).
-
-**Out of scope (user):** a slow bot tap wobbling the player; landing extras beyond the random roll.
+**Out of scope (user):** a slow bot tap wobbling the player; landing extras beyond the random roll;
+steering in the air.
 
 ## Why
 
@@ -294,6 +300,17 @@ than a jump (quarter pipes, the corkscrews) are in scope.
 
 ### Phase 3: tricks, scoring, boost
 
+> **Built + playtested 2026-11-02** (what's confirmed is in the
+> [handoff](#handoff-2026-11-02-read-first)); how it works is in
+> [Architecture](./Architecture.md#npc-race-manager). User picks: wheelies, occasional mod wheelies,
+> air tricks + flips, no stoppies / burnouts; a small bail chance; boost when the next checkpoint is
+> dead ahead down a straight. Combo rules moved to a static `ComboRules` (`utils/`) that the player
+> and bots share. My calls: "mod wheelie" = a held wheelie trick from `BINDINGS` (high chair, knee
+> knocker, T-pose), since nothing ever produces `Trick.WHEELIE_MOD`; bails only out of air tricks;
+> bots get no landing bonus or wheelie-height score scaling; a bot holding boost spends one segment
+> at a time, never a double-tap burn. Gas Can for bots added 2026-11-02 (untested). Not done: bots
+> aiming for ramps.
+
 - Same trick set (`TrickController.Trick`), same combo / multiplier / bank rules, same boost
   economy as the player — fed into `TrickManager` so `StyleScoringComponent`, challenges and the
   leaderboard see bots like anyone else. Dumbed down: no trick physics — pick a trick, hold it for
@@ -321,8 +338,8 @@ than a jump (quarter pipes, the corkscrews) are in scope.
 
 ## Open questions (ask before the phase that needs them)
 
-- **Phase 2/4:** knockouts currently score human victims only. Do bot victims (and bot aggressors)
-  count toward `KnockoutScoringComponent`?
+- **Phase 2/4:** do bot knockouts count toward `KnockoutScoringComponent`? **User 2026-11-02: yes, both
+  ways.**
 - **Phase 3:** `FinishBonusComponent` awards placement points "among humans". Do bots take
   placement slots / points in the stunt-race standings? **User 2026-10-31: yes.**
 - **Phase 2:** what does a bat wobble do to a bot — a scripted swerve with a crash chance, or

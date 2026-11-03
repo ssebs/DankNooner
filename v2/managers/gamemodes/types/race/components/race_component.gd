@@ -23,7 +23,7 @@ func tick(_delta: float) -> void:
 	pass
 
 
-## A human crossed the finish line of the event's last runner.
+## A racer crossed the finish line of the event's last runner (bots: NPCRacersComponent).
 func racer_finished(_peer_id: int) -> void:
 	pass
 
@@ -33,7 +33,7 @@ func race_end() -> void:
 	pass
 
 
-## This component's share of a human's STUNT_RACE standing.
+## This component's share of a racer's STUNT_RACE standing (bots included).
 func score(_peer_id: int) -> float:
 	return 0.0
 

@@ -25,7 +25,7 @@ func tick(delta: float) -> void:
 			rows.append(
 				{
 					"peer_id": peer_id,
-					"cells": _human_cells(peer_id, true),
+					"cells": _cells(peer_id, _username(peer_id), true),
 					"_sort_key": _live_sort_key(peer_id),
 				}
 			)
@@ -35,7 +35,7 @@ func tick(delta: float) -> void:
 			rows.append(
 				{
 					"peer_id": npc_id,
-					"cells": _npc_cells(npc, true),
+					"cells": _cells(npc_id, npc.username, true),
 					"_sort_key": _live_sort_key(npc_id),
 				}
 			)
@@ -63,11 +63,11 @@ func build_results() -> ResultsData:
 		var player := race_mode.spawn_manager.get_player_by_peer_id(peer_id)
 		if player == null or !race_task.has_racer(peer_id):
 			continue
-		rows.append(_result_row(peer_id, _human_cells(peer_id), _human_standing_key(peer_id)))
+		rows.append(_result_row(peer_id, _cells(peer_id, _username(peer_id)), _standing_key(peer_id)))
 	if race_mode.npc_racers != null:
 		for npc in race_mode.npc_racers.get_npcs():
 			var npc_id := int(npc.name)
-			rows.append(_result_row(npc_id, _npc_cells(npc), _npc_standing_key(npc_id)))
+			rows.append(_result_row(npc_id, _cells(npc_id, npc.username), _standing_key(npc_id)))
 	rows.sort_custom(
 		func(a, b): return _ranks_above(a["_sort_key"], a["_peer_id"], b["_sort_key"], b["_peer_id"])
 	)
@@ -108,25 +108,17 @@ func _headers(live: bool = false) -> PackedStringArray:
 	return headers
 
 
-func _human_cells(peer_id: int, live: bool = false) -> PackedStringArray:
-	var username: String = race_mode.lobby_manager.lobby_players[peer_id].username
-	var cells := PackedStringArray([username, _place_text(peer_id)])
+func _cells(racer_id: int, username: String, live: bool = false) -> PackedStringArray:
+	var cells := PackedStringArray([username, _place_text(racer_id)])
 	if _by_score():
-		cells.append("%d" % int(race_mode.score(peer_id)))
+		cells.append("%d" % int(race_mode.score(racer_id)))
 	for component in _column_components(live):
-		cells.append_array(component.column_cells(peer_id))
+		cells.append_array(component.column_cells(racer_id))
 	return cells
 
 
-## NPCs don't score — blank every column past the place.
-func _npc_cells(npc: NPCRiderEntity, live: bool = false) -> PackedStringArray:
-	var cells := PackedStringArray([npc.username, _place_text(int(npc.name))])
-	cells.resize(_headers(live).size())
-	return cells
-
-
-func _npc_standing_key(npc_id: int) -> float:
-	return 0.0 if _by_score() else _position_key(npc_id)
+func _username(peer_id: int) -> String:
+	return race_mode.lobby_manager.lobby_players[peer_id].username
 
 
 func _column_components(live: bool) -> Array:
@@ -142,12 +134,12 @@ func _live_sort_key(racer_id: int) -> float:
 	return _position_key(racer_id)
 
 
-func _human_standing_key(peer_id: int) -> float:
+func _standing_key(racer_id: int) -> float:
 	if _by_score():
-		return -race_mode.score(peer_id)
+		return -race_mode.score(racer_id)
 	if _is_time_attack():
-		return race_mode.time_attack.best_lap_ms(peer_id)
-	return _position_key(peer_id)
+		return race_mode.time_attack.best_lap_ms(racer_id)
+	return _position_key(racer_id)
 
 
 ## Sort key first; race position breaks ties (e.g. everyone on 0 score at a stunt race's start).

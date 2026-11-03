@@ -1,7 +1,7 @@
 ## Lite rider animation for NPCRiderEntity — seats the rider via its RiderVisual,
-## then drives cosmetic lean / wheelie pitch on VisualRoot, and ragdolls the rider on a crash.
-## No trick pipeline, no CustomAnimPlayer, no netfox. Runs locally on every
-## peer — it derives purely from the synced transform + npc_state.
+## then drives cosmetic lean / wheelie pitch / flips on VisualRoot, plays the bot's trick anims
+## through RiderVisual, and ragdolls the rider on a crash. No netfox. Runs locally on every
+## peer — it derives purely from the synced transform, npc_state and trick_controller.current_trick.
 ##
 ## NOTE: unlike the player scene, IKTargets is a CHILD of VisualRoot here, so
 ## the markers lean/pitch together with the bike — the rider stays glued on.
@@ -43,6 +43,11 @@ var _prev_pos: Vector3
 ## Pitch (rad) of the rider's travel, + = climbing. The synced pose is yaw-only, so without it a bot
 ## rides up a ramp and flies off it dead level.
 var _climb: float = 0.0
+## VisualRoot pitch before the flip spin is added on top.
+var _pitch: float = 0.0
+## The trick RiderVisual is playing, and how far into it (s) — a flip spins over FLIP_SECS.
+var _shown_trick: TrickController.Trick = TrickController.Trick.NONE
+var _trick_time: float = 0.0
 
 ## Rig LOD state — see rig_cull_distance.
 var _ik_ctrl: IKController
@@ -80,6 +85,7 @@ func _physics_process(delta: float):
 			_stop_ragdoll()
 	# The ragdoll owns the rig until the respawn
 	if !crashed:
+		_update_trick(delta)
 		_update_rig_lod()
 		# Lean/pitch stays on at any distance — it's two lerps on one node, and a bike that
 		# stops leaning through corners is obvious in a way a frozen wrist isn't.
@@ -138,6 +144,7 @@ func play_shotgun_fire(has_hit: bool, hit_pos: Vector3) -> void:
 ## are dropped like AnimationController.start_ragdoll does, or a mid-swing bat would freeze in view.
 func _start_ragdoll() -> void:
 	npc.visual_root.stop_tricks()
+	_shown_trick = TrickController.Trick.NONE
 	npc.character_skin.disable_ik()
 	npc.character_skin.start_ragdoll()
 
@@ -152,6 +159,30 @@ func _stop_ragdoll() -> void:
 	_ik_ctrl.set_physics_process(true)
 	_rig_active = true
 	_rig_next_check_ms = 0
+
+
+## Follow the synced trick: RiderVisual's anims take the same start / end calls as the player's
+## trick_started / trick_ended.
+func _update_trick(delta: float) -> void:
+	_trick_time += delta
+	var trick := npc.trick_controller.current_trick
+	if trick == _shown_trick:
+		return
+	npc.visual_root.end_trick(_shown_trick)
+	npc.visual_root.start_trick(trick)
+	_shown_trick = trick
+	_trick_time = 0.0
+
+
+## The flip in progress as a pitch (rad), negative = nose up like the wheelie. 0 outside a flip.
+func _flip_angle() -> float:
+	var direction := 0.0
+	match _shown_trick:
+		TrickController.Trick.BACKFLIP:
+			direction = -1.0
+		TrickController.Trick.FRONTFLIP:
+			direction = 1.0
+	return direction * TAU * minf(_trick_time / NPCTrickController.FLIP_SECS, 1.0)
 
 
 ## From the pose's movement, so it reads the same on clients, which only get position.
@@ -192,7 +223,9 @@ func _apply_visual_root_rotation(delta: float) -> void:
 	var vr := npc.visual_root
 	var blend := rotation_blend_speed * delta
 	vr.rotation.z = lerp_angle(vr.rotation.z, target_roll, blend)
-	vr.rotation.x = lerp_angle(vr.rotation.x, target_pitch, blend)
+	# The flip goes on top of the eased pitch; easing it would cut the spin short
+	_pitch = lerp_angle(_pitch, target_pitch, blend)
+	vr.rotation.x = _pitch + _flip_angle()
 
 
 func _apply_car_flip(delta: float) -> void:

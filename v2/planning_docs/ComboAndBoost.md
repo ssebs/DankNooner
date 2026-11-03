@@ -20,7 +20,7 @@ Earn, spend and bank are three separate owners:
 
 | Concern | Location | Runs on |
 | --- | --- | --- |
-| Combo timer, multiplier, boost fill | `TrickController._accrue_combo()` | Rollback tick, every peer |
+| Combo timer, multiplier, boost fill | `ComboRules.accrue()` from `TrickController`'s tick | Rollback tick, every peer |
 | Boost spend / drain | `BoostController` | Rollback tick, every peer |
 | Score banking | `TrickManager._track_combo()` | Server `_process()` |
 | Gauge + counter UI | `RidingHUDState.Physics_Update()` → `BoostGauge` | Local client |
@@ -28,6 +28,7 @@ Earn, spend and bank are three separate owners:
 | Trick feed (every rider's banked combo with its trick names, every crash + the combo it voided and its launch distance) | `TrickManager` → `RidingHUDState.push_trickfeed` → `TrickFeed`; a bail's line waits for `GamemodeManager.player_launch_measured` | Server → all |
 | Free-roam 1-min points round + leaderboard | `FreeRoamGameMode` (sums `combo_banked`) → `RaceLeaderboard` | Server → all |
 | Camera FX | `CameraController._update_juice_fx()` | Local client |
+| Boost trail | `BoostTrail`, toggled from the rider's `_process` | Every peer |
 
 Each controller owns its own state: the combo vars are `%TrickController:*` and the meter vars
 are `%BoostController:*` on the RollbackSynchronizer.
@@ -48,7 +49,7 @@ Related: the rollback tick bails early on `is_crashed`, so a crash freezes combo
 
 A crash should cost you the combo you were in the middle of, not boost you already banked and were saving. `combo_boost_earned` tracks how much of the current meter the *in-progress* combo contributed, and is maintained in three places:
 
-- **Earning** (`TrickController._accrue_combo()`) — incremented by the actual post-cap delta, so topping out a full meter doesn't inflate the claim.
+- **Earning** (`ComboRules.accrue()` from `TrickController`'s tick) — incremented by the actual post-cap delta, so topping out a full meter doesn't inflate the claim.
 - **Clean combo end** (grace window expires) — reset to zero. That boost is permanent now.
 - **Spending** (`BoostController`) — drawn down alongside `boost_amount`. Without this, spending would leave a claim larger than the meter, and the next crash would eat previously banked boost too.
 
@@ -68,7 +69,9 @@ Traffic only — race bots and animals don't count.
 
 > Values live in the source — this lists what each knob *does*, not what it's currently set to.
 
-### Earning — `player/controllers/trick_controller.gd`
+### Earning — `utils/combo_rules.gd` (`ComboRules`)
+
+Static rules shared by `TrickController` / `BoostController` and race bots' `NPCTrickController`, so a bot's combo can't drift from the player's. The wheelie score mults and near-miss consts stay in `player/controllers/trick_controller.gd`.
 
 Consts, deliberately **not** `@export`: this code runs inside the rollback tick on every peer and must be byte-identical, or client prediction diverges from the server.
 
@@ -134,6 +137,18 @@ Shader uniforms in `resources/shaders/radial_blur.gdshader` (shared with the spe
 | `boost_clear_radius` | How far inward the tint reaches. Lower = more full-screen. Reaches further in than the blur's `clear_radius` on purpose. |
 
 > Hook for flame VFX later: `BoostController.is_boosting` is synced, so remote players' flames work off the same bool.
+
+### Boost trail — `entities/vfx/boost_trail.gd`
+
+A thin camera-facing ribbon laid in world space from the taillight's bounds centre, or the definition's `exhaust_tip_position` on bikes without a taillight. Points thin to nothing over their lifetime, and each burn starts a new strip. Material is `levels/assets/props/neon_red.tres`.
+
+Players set `emitting` from synced `BoostController.is_boosting`. Race bots use `NPCTrickController.is_boosting`, with `boost_burn_target` replicated for it and gated on `NPCState.CRASHED` because a bot's burn outlives its crash. The node must stay `top_level` and after the rider's `TickInterpolator` / visuals in the tree, so the head samples this frame's smoothed position.
+
+| Export | Effect |
+| --- | --- |
+| `lifetime` | Seconds each point lives; sets trail length. |
+| `width` | Ribbon width at the head. |
+| `min_spacing` | Metres between recorded points; lower = smoother curves, more verts. |
 
 ### UI — `player/hud_elements/`
 

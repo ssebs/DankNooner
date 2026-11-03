@@ -39,17 +39,20 @@ The stunt race is `RaceGameMode` with `race_type = STUNT_RACE`: the shared race 
   `EventStartCircle`, running its linked groups (point-to-point checkpoints, grid slots,
   `PickupSpawner`s, props) through `RaceTask`. Legs run station to station. NPC racers, traffic and
   fuel-up are per-event flags on the definition.
-- **Standing = sum of the scoring components, frozen at the finish line:**
+- **Standing = sum of the scoring components, frozen at the finish line.** Race bots have one too
+  (style + placement; see [Architecture](./Architecture.md#npc-race-manager)):
   - Style: `StyleScoringComponent`, banked trick points (`TrickManager.get_score`) plus any combo
     still running at the line.
-  - Placement: `FinishBonusComponent`, `placement_points` by finish place among humans.
+  - Placement: `FinishBonusComponent`, `placement_points` by finish place among every racer, bots
+    included.
   - Knockouts: `KnockoutScoringComponent`, `points_per_knockout` each.
   - Fuel-up: `FuelUpBonusComponent`, the clean-fill bonus from a `fuel_up_first` event's fuel-up.
-- **Knockouts** go through `SpawnManager.knock_out(victim, aggressor)`: ramming (`CrashController`),
-  Oil Slick, Shotgun. Human victims only; Bat wobbles aren't attributed, and a rider's own slick
-  doesn't count. Item hits route through `SpawnManager.knock_out_rider`, which takes race bots down
-  too (via `report_hit`) and lets a bot take a player down uncredited (bot knockouts are an open
-  question).
+- **Knockouts** go through `SpawnManager.knock_out_rider(victim, aggressor_id)`: ramming
+  (`CrashController`, a bot's `NPCRaceManager._on_npc_crashed`), Oil Slick, Shotgun, the Bat on a
+  bot. Bots count both ways, as victims and aggressors; a bot only counts once it actually goes down
+  (`report_hit`), and traffic never does. Bat wobbles on players aren't attributed, and a rider's own
+  slick doesn't count. Bots also take the race's challenges (`ChallengesComponent`), so every
+  leaderboard column has their numbers.
 - **Items** (`PickupItem` / `PickupSpawner` / `PickupItemDefinition`, server-auth via `ItemManager`)
   spawn during races (`PickupsComponent`) and in free roam (`PickupSpawnManager`). Gas Can applies
   instantly (boost refill); the rest fill the rider's single held slot, used with double-tap trick or
@@ -66,9 +69,10 @@ The stunt race is `RaceGameMode` with `race_type = STUNT_RACE`: the shared race 
 - **Race bots and items.** Bots are hit by every item: Shotgun and Oil Slick knock them out, the Bat
   crashes them (they have no wobble), Rally Up swaps their skins (`NPCRaceManager.set_rally_up`).
   Bots hold items in the same `ItemManager` slot (negative rider ids) but only pick up
-  `ItemManager.BOT_ITEMS` (Oil Slick, Rally Up): the bot rider has no bat / shotgun props, and no
-  boost for a Gas Can yet. `NPCRaceManager._maybe_use_item` drops a slick when a rider is within
-  `oil_slick_trigger_distance` behind and sets off Rally Up after `rally_up_hold_time` on average.
+  `ItemManager.BOT_ITEMS` (Bat, Oil Slick, Shotgun, Rally Up; no Ramp, they can't aim for it). A Gas
+  Can fills a bot's `NPCTrickController` boost on pickup. `NPCRaceManager._maybe_use_item` drops
+  a slick when a rider is within `oil_slick_trigger_distance` behind and sets off Rally Up after
+  `rally_up_hold_time` on average.
 - **Challenges:** `RaceChallenge` resources in the definition's `race_challenges`
   (`LongestWheelieChallenge`, `BestComboChallenge`, `SuggestedTricksChallenge`), run by
   `ChallengesComponent`. Suggested tricks score double in `TrickManager`.

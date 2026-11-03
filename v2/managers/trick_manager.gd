@@ -12,6 +12,9 @@
 ## reset_peer(peer_id). Bonus tricks (set_bonus_tricks) score 2x, already in get_score.
 ## Every bank and every crash goes to the riding HUD's trick feed, with the combo's tricks. A bail's
 ## line waits for the crash's launch distance (GamemodeManager.player_launch_measured).
+##
+## Race bots (negative ids) bank the same way, off their NPCTrickController: both riders expose
+## `trick_controller`, `is_crashed` and `username`. A bot's bail posts straight away (no launch).
 class_name TrickManager extends BaseManager
 
 ## Emitted (server) when a combo ends cleanly and its score is banked.
@@ -23,6 +26,7 @@ signal combo_voided(peer_id: int, lost_duration: float, lost_points: float)
 @export var gamemode_manager: GamemodeManager
 @export var riding_hud_state: RidingHUDState
 @export var npc_traffic_manager: NPCTrafficManager
+@export var npc_race_manager: NPCRaceManager
 
 @export_group("Scoring")
 ## Points per unit of TrickController.combo_score (a 1.0 held trick earns this per second), before
@@ -46,6 +50,8 @@ func _ready():
 	gamemode_manager.match_ended.connect(_on_match_ended)
 	gamemode_manager.player_launch_measured.connect(_on_player_launch_measured)
 	npc_traffic_manager.player_near_missed.connect(_on_player_near_missed)
+	npc_race_manager.npc_spawned.connect(reset_peer)
+	npc_race_manager.npc_despawned.connect(_on_player_disconnected)
 
 
 func _process(_delta: float):
@@ -55,6 +61,9 @@ func _process(_delta: float):
 		return
 
 	for peer_id in _peer_states:
+		if peer_id < 0:
+			_track_combo(peer_id, npc_race_manager.get_npc(peer_id))
+			continue
 		# Player despawns (level swap / disconnect) before its row is cleared — skip until
 		# _on_player_disconnected catches up.
 		var player := spawn_manager.get_player_by_peer_id(peer_id)
@@ -63,22 +72,22 @@ func _process(_delta: float):
 		_track_combo(peer_id, player)
 
 
-## Watch a peer's synced combo state; bank the run the frame it drops back to zero.
+## Watch a rider's combo state; bank the run the frame it drops back to zero.
 ##
 ## Crashing voids the run outright — no partial credit. Checked before the combo_time test
 ## because a crash freezes combo_time (the rollback tick bails on is_crashed) and only zeroes
 ## it at the respawn; without this the run would bank on the way down like a clean finish.
-func _track_combo(peer_id: int, player: PlayerEntity):
+func _track_combo(peer_id: int, rider: Node3D):
 	var st := _peer_states[peer_id]
 
-	if player.is_crashed:
+	if rider.is_crashed:
 		# Once per crash — is_crashed stays up until the respawn.
 		if st["crashed"]:
 			return
 		st["crashed"] = true
 		var lost_points := get_open_combo_points(peer_id) if st["prev_time"] > 0.0 else 0.0
 		st["bail"] = {
-			"username": player.username,
+			"username": rider.username,
 			"tricks": PackedInt32Array(st["tricks"]),
 			"points": int(lost_points),
 			"multiplier": st["peak_mult"],
@@ -90,10 +99,13 @@ func _track_combo(peer_id: int, player: PlayerEntity):
 			st["bonus_score"] = 0.0
 			st["peak_mult"] = 1
 			st["tricks"] = []
+		# Bots get no launch measure, so their bail line posts now
+		if peer_id < 0:
+			_on_player_launch_measured(peer_id, 0.0)
 		return
 	st["crashed"] = false
 
-	var tc := player.trick_controller
+	var tc = rider.trick_controller  # TrickController or NPCTrickController
 	var elapsed: float = tc.combo_time
 
 	if elapsed > 0.0:
@@ -121,7 +133,7 @@ func _track_combo(peer_id: int, player: PlayerEntity):
 	var points: float = get_open_combo_points(peer_id)
 	st["points"] += points
 	riding_hud_state.push_trickfeed(
-		player.username, peer_id, PackedInt32Array(st["tricks"]), int(points), multiplier, false, 0.0
+		rider.username, peer_id, PackedInt32Array(st["tricks"]), int(points), multiplier, false, 0.0
 	)
 	st["prev_time"] = 0.0
 	st["prev_score"] = 0.0
@@ -129,7 +141,9 @@ func _track_combo(peer_id: int, player: PlayerEntity):
 	st["peak_mult"] = 1
 	st["tricks"] = []
 	combo_banked.emit(peer_id, points, duration, multiplier)
-	riding_hud_state.push_score_popup(peer_id, int(points), multiplier, bonus)
+	# A bot has no HUD to pop on
+	if peer_id >= 0:
+		riding_hud_state.push_score_popup(peer_id, int(points), multiplier, bonus)
 
 
 #region public api
@@ -222,5 +236,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("riding_hud_state must not be empty")
 	if npc_traffic_manager == null:
 		issues.append("npc_traffic_manager must not be empty")
+	if npc_race_manager == null:
+		issues.append("npc_race_manager must not be empty")
 
 	return issues

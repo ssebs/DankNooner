@@ -73,29 +73,20 @@ func on_movement_rollback_tick(delta: float):
 			boost_tap_window = 0.0
 		elif boost_burn_target < 0.0:
 			# First tap — spend exactly one segment, and open the double-tap window.
-			boost_burn_target = boost_amount - 1.0
-			boost_burn_rate = 1.0 / BOOST_SEGMENT_SECS
+			ComboRules.burn_segment(self)
 			boost_tap_window = BOOST_DOUBLE_TAP_SECS
 
 	is_boosting = boost_burn_target >= 0.0
 	if !is_boosting:
 		return
 
-	var before: float = boost_amount
-	boost_amount = maxf(boost_amount - boost_burn_rate * delta, boost_burn_target)
-	# Draw the in-progress combo's claim down alongside the meter, or spending would leave a
-	# claim larger than what's left and a later crash would eat previously banked boost too.
-	trick_controller.combo_boost_earned = maxf(
-		trick_controller.combo_boost_earned - (before - boost_amount), 0.0
-	)
-	if boost_amount <= boost_burn_target:
-		boost_burn_target = -1.0
+	ComboRules.drain_burn(trick_controller, self, delta)
 
 
 ## +1 segment, clamped to full. Called from PlayerEntity's rollback tick (rb_add_boost) so the
 ## write to the synced boost_amount survives resimulation. Gas Can pickup.
 func add_segment():
-	boost_amount = minf(boost_amount + 1.0, BOOST_SEGMENTS)
+	ComboRules.add_segment(self)
 
 
 ## Fills the meter. Routed through the rollback tick (rb_do_max_boost) like add_segment so the

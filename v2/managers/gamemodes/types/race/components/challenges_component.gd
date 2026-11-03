@@ -1,6 +1,7 @@
 @tool
-## The event's RaceChallenges (definition.race_challenges): ticked from synced player state, fed
+## The event's RaceChallenges (definition.race_challenges): ticked from synced rider state, fed
 ## TrickManager's combo bank/void events, one leaderboard column each. Frozen at the finish line.
+## Race bots take them too, off the same trick_controller / is_crashed a player exposes.
 class_name ChallengesComponent extends RaceComponent
 
 @export var trick_manager: TrickManager
@@ -13,16 +14,18 @@ func race_start() -> void:
 	_challenges = race_mode.get_definition().race_challenges
 	_finished.clear()
 	var bonus := PackedInt32Array()
+	var rider_ids := _riders().keys()
 	for challenge in _challenges:
-		challenge.reset(race_mode.lobby_manager.lobby_players.keys())
+		challenge.reset(rider_ids)
 		bonus.append_array(challenge.bonus_tricks())
-	for peer_id in race_mode.lobby_manager.lobby_players:
-		trick_manager.set_bonus_tricks(peer_id, bonus)
+	for rider_id in rider_ids:
+		trick_manager.set_bonus_tricks(rider_id, bonus)
 	trick_manager.combo_banked.connect(_on_combo_banked)
 	trick_manager.combo_voided.connect(_on_combo_voided)
 
 
 func race_end() -> void:
+	# Bots despawned already (NPCRacersComponent ends first), taking their bonus tricks with them
 	for peer_id in race_mode.lobby_manager.lobby_players:
 		trick_manager.set_bonus_tricks(peer_id, PackedInt32Array())
 	trick_manager.combo_banked.disconnect(_on_combo_banked)
@@ -30,13 +33,13 @@ func race_end() -> void:
 
 
 func tick(delta: float) -> void:
-	for peer_id in race_mode.lobby_manager.lobby_players:
-		# Unspawned (late-join) and finished riders don't tick — skip is intentional.
-		var player := race_mode.spawn_manager.get_player_by_peer_id(peer_id)
-		if player == null or _finished.has(peer_id):
+	var riders := _riders()
+	for rider_id in riders:
+		# Finished riders don't tick — skip is intentional.
+		if _finished.has(rider_id):
 			continue
 		for challenge in _challenges:
-			challenge.tick(peer_id, player, delta)
+			challenge.tick(rider_id, riders[rider_id], delta)
 
 
 func racer_finished(peer_id: int) -> void:
@@ -70,6 +73,20 @@ func _titled() -> Array[RaceChallenge]:
 	var out: Array[RaceChallenge] = []
 	out.assign(_challenges.filter(func(c): return c.title_key != ""))
 	return out
+
+
+## rider id -> PlayerEntity or race bot, for every spawned racer.
+func _riders() -> Dictionary[int, Node3D]:
+	var riders: Dictionary[int, Node3D] = {}
+	for peer_id in race_mode.lobby_manager.lobby_players:
+		# Unspawned (late-join) players don't ride yet — skip is intentional.
+		var player := race_mode.spawn_manager.get_player_by_peer_id(peer_id)
+		if player != null:
+			riders[peer_id] = player
+	if race_mode.npc_racers != null:
+		for npc in race_mode.npc_racers.get_npcs():
+			riders[int(npc.name)] = npc
+	return riders
 
 
 func _on_combo_banked(peer_id: int, points: float, _duration: float, _multiplier: int):

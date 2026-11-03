@@ -27,6 +27,8 @@
 [ext_resource type="Script" uid="uid://d0qu5fntjsi5d" path="res://utils/custom_audio_middleware/engine_sound_event_3d.gd" id="32_eng3d"]
 [ext_resource type="Script" uid="uid://ba88hqva8tywk" path="res://player/bikes/scripts/bike_wreck.gd" id="33_wreck"]
 [ext_resource type="Script" path="res://entities/vfx/shotgun_tracers.gd" id="34_tracers"]
+[ext_resource type="Script" path="res://entities/vfx/boost_trail.gd" id="35_trail"]
+[ext_resource type="Material" uid="uid://tsxn2jb72gby" path="res://levels/assets/props/neon_red.tres" id="36_neon"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wig4y"]
 size = Vector3(8, 20, 2)
@@ -450,3 +452,11 @@ target_position = Vector3(0, -1.5, 0)
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.9372065e-08, 0.5, -0.70154446)
 target_position = Vector3(0, -1.5, 0)
+
+[node name="BoostTrail" type="MeshInstance3D" parent="." node_paths=PackedStringArray("bike_skin")]
+unique_name_in_owner = true
+top_level = true
+cast_shadow = 0
+material_override = ExtResource("36_neon")
+script = ExtResource("35_trail")
+bike_skin = NodePath("../VisualRoot/IKTargets/BikeSkin")

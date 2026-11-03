@@ -4,7 +4,8 @@
 ---
 
 ## NOW
-
+- [ ] minimap rotate w/ cam
+- [ ] ramp should spawn right in front of you
 - [ ] respawn timer => 15s max for CrashLaunch, during stuntrace =>3s, free roam => 5s
 - [ ] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
 - [ ] shouldnt be so easy to drift & steer on gamepad

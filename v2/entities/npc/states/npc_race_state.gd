@@ -50,6 +50,9 @@ enum Mistake { NONE, LATE_BRAKE, RUN_WIDE }
 @export var avoid_min_range: float = 8.0
 @export var avoid_scan_half_width: float = 6.0
 @export var avoid_lane_half_width: float = 1.2
+## A rider within this many metres fore or aft is alongside: our offset stops overtake_clearance
+## short of its line instead of riding into it.
+@export var alongside_length: float = 4.0
 ## Overtaking: how far beside the rider ahead to pass, and how long to commit to that side.
 @export var overtake_clearance: float = 2.2
 @export var overtake_commit_time: float = 2.5
@@ -59,9 +62,27 @@ enum Mistake { NONE, LATE_BRAKE, RUN_WIDE }
 @export var mistake_duration: float = 1.5
 @export var late_brake_distance: float = 15.0
 @export var run_wide_fraction: float = 0.4
-## Chance a landing after a real jump (past TrickController.AIR_TRICK_MIN_AIRTIME) goes wrong and
-## crashes the bot. Bots almost always land.
-@export var bad_landing_chance: float = 0.05
+## Chance a landing after a real jump (past air_trick_min_airtime, so crests never roll it) crashes
+## the bot. Bots almost always land.
+@export var bad_landing_chance: float = 0.02
+
+@export_group("Tricks")
+## Metres of line ahead the bot must be able to take flat out to wheelie or boost.
+@export var straight_distance: float = 60.0
+## Average seconds between wheelies while the line ahead is straight, and how long one lasts.
+@export var wheelie_interval: float = 6.0
+@export var wheelie_min_secs: float = 1.5
+@export var wheelie_max_secs: float = 4.0
+## Share of wheelies spent in a held wheelie trick (TrickController.BINDINGS' wheelie holds).
+@export var mod_wheelie_chance: float = 0.25
+## Shortest airtime worth a trick (predicted at takeoff) or a bad-landing roll (measured); road crests
+## launch too.
+@export var air_trick_min_airtime: float = 0.4
+## Share of real jumps the bot tricks off, and the share of those that are flips when it has time.
+@export var air_trick_chance: float = 0.8
+@export var flip_chance: float = 0.3
+## Chance landing out of an air trick bails: a crash that voids the combo.
+@export var trick_bail_chance: float = 0.04
 
 ## Racer bodies carry this layer, and so do traffic ContactAreas (traffic has no body).
 const CRASH_COLLISION_MASK: int = 2  # 1 << 1 (layer 2)
@@ -109,8 +130,14 @@ var _stuck_timer: float = 0.0
 var _air_time: float = 0.0
 ## Left the ground moving up (a ramp lip), not off a bump or another bike.
 var _launched: bool = false
+## Vertical speed at takeoff, for the airtime prediction.
+var _launch_vy: float = 0.0
+## Started an air trick this jump, so the landing may bail.
+var _air_tricked: bool = false
+var _wheelie_left: float = 0.0
 var _stuck_anchor: Vector3
 var _dbg_drive := ""  # DEBUG: temp - last tick's steering, printed when stuck fires
+var _dbg_log_drive := false  # DEBUG: temp - print the first drive tick after a reset
 
 
 func Enter(_state_context: StateContext):
@@ -152,6 +179,7 @@ func Physics_Update(delta: float):
 	# Only while it's actually trying to move — sitting on the grid or waiting out the
 	# countdown is not being stuck, or crashing.
 	if can_drive:
+		_update_tricks(delta)
 		_detect_landing(delta)
 		_detect_crash()
 		_check_stuck(delta)
@@ -172,8 +200,16 @@ func reset_line_progress() -> void:
 	_s = racing_line.closest_offset(npc.global_position)
 	var side := (npc.global_position - racing_line.point_at(_s)).dot(racing_line.right_at(_s))
 	_lateral = clampf(side, -racing_line.half_width_at(_s, -1.0), racing_line.half_width_at(_s, 1.0))
+	DebugUtils.DebugMsg(  # DEBUG: temp
+		"[npc %s] RESET pos=%s s=%.1f side=%.2f lat=%.2f room L/R=%.1f/%.1f"  # DEBUG: temp
+		% [npc.name, npc.global_position, _s, side, _lateral,  # DEBUG: temp
+		racing_line.half_width_at(_s, -1.0), racing_line.half_width_at(_s, 1.0)]  # DEBUG: temp
+	)  # DEBUG: temp
+	_dbg_log_drive = true  # DEBUG: temp
 	_path.clear()
 	_air_time = 0.0
+	_air_tricked = false
+	_wheelie_left = 0.0
 	_stuck_timer = 0.0
 	_stuck_anchor = npc.global_position
 
@@ -203,6 +239,7 @@ func _apply_difficulty() -> void:
 	wander_fraction *= _skill_scale(1.2, 0.5)
 	mistake_interval *= _skill_scale(0.6, 2.0)
 	bad_landing_chance *= _skill_scale(2.0, 0.5)
+	trick_bail_chance *= _skill_scale(2.0, 0.5)
 
 
 ## easy at skill 0, 1.0 (the base tuning) at 0.5, hard at 1.
@@ -231,7 +268,8 @@ func _drive(delta: float) -> void:
 	var speed_cap := _avoid(now)
 
 	var steer_s := _s + _steer_lookahead()
-	_lateral = move_toward(_lateral, _lateral_target(steer_s, now), offset_response * _reaction * delta)
+	var lateral_target := _clear_of_alongside(_lateral_target(steer_s, now))
+	_lateral = move_toward(_lateral, lateral_target, offset_response * _reaction * delta)
 	var spot := racing_line.point_at(_s) + racing_line.right_at(_s) * _lateral
 	var goal: Vector3
 	var off_line := Vector2(spot.x - pos.x, spot.z - pos.z).length()
@@ -252,6 +290,9 @@ func _drive(delta: float) -> void:
 		rejoining, target,  # DEBUG: temp
 		npc.current_speed, target_speed, _path.slice(0, 4)]  # DEBUG: temp
 	)  # DEBUG: temp
+	if _dbg_log_drive:  # DEBUG: temp
+		_dbg_log_drive = false  # DEBUG: temp
+		DebugUtils.DebugMsg("[npc %s] FIRST DRIVE goal=%s %s" % [npc.name, goal, _dbg_drive])  # DEBUG: temp
 
 
 ## Our offset's point on the line at s, walked back toward the line until it's on the nav map.
@@ -304,8 +345,9 @@ func _wander(s: float) -> float:
 	return wave * wander_fraction * racing_line.half_width_at(s, wave)
 
 
-## One box ahead along our heading, hitting racer bodies and traffic ContactAreas alike.
-## Throttled: a shape query per bot per tick is what the scan cadence exists to avoid.
+## One box along our heading, from alongside_length behind to the avoid reach ahead, hitting racer
+## bodies and traffic ContactAreas alike. Throttled: a shape query per bot per tick is what the scan
+## cadence exists to avoid.
 func _scan_ahead(pos: Vector3, now: int) -> void:
 	if now < _scan_next_ms:
 		return
@@ -314,9 +356,10 @@ func _scan_ahead(pos: Vector3, now: int) -> void:
 	forward.y = 0.0
 	forward = forward.normalized()
 	var reach := maxf(avoid_min_range, npc.current_speed * avoid_lookahead_time)
-	_scan_box.size = Vector3(avoid_scan_half_width * 2.0, SCAN_HEIGHT, reach)
+	_scan_box.size = Vector3(avoid_scan_half_width * 2.0, SCAN_HEIGHT, reach + alongside_length)
+	var mid := forward * (reach - alongside_length) * 0.5
 	_scan_query.transform = Transform3D(
-		Basis.looking_at(forward), pos + forward * reach * 0.5 + Vector3.UP * SCAN_HEIGHT * 0.5
+		Basis.looking_at(forward), pos + mid + Vector3.UP * SCAN_HEIGHT * 0.5
 	)
 	_ahead_riders.clear()
 	_ahead_dist.clear()
@@ -399,6 +442,19 @@ func _open_side(blocker: int) -> float:
 	return best
 
 
+## target, held overtake_clearance short of any rider alongside. Wander and overtakes would otherwise
+## steer bots side by side (a grid row) straight into each other.
+func _clear_of_alongside(target: float) -> float:
+	for i in _ahead_riders.size():
+		if !is_instance_valid(_ahead_riders[i]) or absf(_ahead_dist[i]) > alongside_length:
+			continue
+		if _ahead_lateral[i] >= _lateral:
+			target = minf(target, _ahead_lateral[i] - overtake_clearance)
+		else:
+			target = maxf(target, _ahead_lateral[i] + overtake_clearance)
+	return target
+
+
 func _lane_taken(lateral: float, skip: int) -> bool:
 	for i in _ahead_riders.size():
 		if i != skip and is_instance_valid(_ahead_riders[i]):
@@ -448,20 +504,94 @@ func _flat(v: Vector3) -> Vector2:
 	return Vector2(v.x, v.z)
 
 
-## Touching down after a launch: almost always fine, a bad_landing_chance roll crashes it.
+## A launch may start an air trick. Touching down after one is almost always fine: a
+## bad_landing_chance roll crashes it, plus trick_bail_chance out of an air trick.
 func _detect_landing(delta: float) -> void:
 	if !npc.is_on_floor():
 		if _air_time == 0.0:
 			_launched = npc.pre_slide_velocity.y > 0.0
+			_launch_vy = npc.pre_slide_velocity.y
+		# The player's gate: a crest or bump isn't a jump until it's been airborne this long
+		var min_air := TrickController.AIR_TRICK_MIN_AIRTIME
+		if _launched and _air_time < min_air and _air_time + delta >= min_air:
+			_try_air_trick()
 		_air_time += delta
 		return
-	var jumped := _launched and _air_time >= TrickController.AIR_TRICK_MIN_AIRTIME
+	var jumped := _launched and _air_time >= air_trick_min_airtime
 	if _air_time > 0.2:  # DEBUG: temp
 		DebugUtils.DebugMsg("[npc %s] landed air=%.2f launched=%s" % [npc.name, _air_time, _launched])  # DEBUG: temp
 	_air_time = 0.0
-	if jumped and randf() < bad_landing_chance:
+	var bail_chance := bad_landing_chance
+	if _air_tricked:
+		_air_tricked = false
+		bail_chance += trick_bail_chance
+		npc.trick_controller.end_trick()
+	if jumped and randf() < bail_chance:
 		DebugUtils.DebugMsg("[npc %s] CRASH bad landing" % npc.name)  # DEBUG: temp
 		crashed.emit(null)
+
+
+## Airtime predicted from the launch as a flat-ground jump. The trick fills what's left of it with time
+## to spare, and a flip only goes when it fits.
+func _try_air_trick() -> void:
+	var tc := npc.trick_controller
+	var airtime := 2.0 * _launch_vy / NPCRiderEntity.GRAVITY
+	if (
+		tc.current_trick != TrickController.Trick.NONE
+		or airtime < air_trick_min_airtime
+		or randf() >= air_trick_chance
+	):
+		return
+	var hold := 0.7 * (airtime - _air_time)
+	_air_tricked = true
+	if hold >= NPCTrickController.FLIP_SECS and randf() < flip_chance:
+		var flip: TrickController.Trick = [
+			TrickController.Trick.BACKFLIP, TrickController.Trick.FRONTFLIP
+		].pick_random()
+		tc.start_trick(flip, NPCTrickController.FLIP_SECS, true)
+	else:
+		tc.start_trick(TrickController.AIR_TRICKS.pick_random(), hold, true)
+
+
+## Tick the combo and run wheelies: one now and then down a straight, set down for a corner, a jump,
+## or when it runs out. Air tricks start once a launch is a real jump (_detect_landing).
+func _update_tricks(delta: float) -> void:
+	var tc := npc.trick_controller
+	tc.tick(delta)
+	if npc.npc_state == NPCRiderEntity.NPCState.WHEELIE:
+		_wheelie_left -= delta
+		if _wheelie_left <= 0.0 or !npc.is_on_floor() or !is_straight_ahead():
+			npc.stop_wheelie()
+			tc.end_trick()
+		return
+	if (
+		tc.current_trick != TrickController.Trick.NONE
+		or !npc.is_on_floor()
+		or randf() >= delta / wheelie_interval
+		or !is_straight_ahead()
+	):
+		return
+	_wheelie_left = randf_range(wheelie_min_secs, wheelie_max_secs)
+	npc.wheelie()
+	var trick := TrickController.Trick.WHEELIE_SITTING
+	if randf() < mod_wheelie_chance:
+		var holds: Array = TrickController.BINDINGS[TrickController.TrickState.WHEELIE][
+			TrickController.Gesture.HOLD
+		]
+		trick = holds.filter(func(t): return t != TrickController.Trick.NONE).pick_random()
+	tc.start_trick(trick, _wheelie_left, false)
+
+
+## True when nothing on the line in the next straight_distance metres makes this bot brake below its
+## current speed. Not cruise speed: that's the bike's top speed, which the line's corner speeds almost
+## never allow. Gates wheelies, and NPCRaceManager's boosts.
+func is_straight_ahead() -> bool:
+	var s := _s
+	while s <= _s + straight_distance:
+		if racing_line.profile_speed(_profile, s) < npc.current_speed:
+			return false
+		s += racing_line.sample_spacing
+	return true
 
 
 ## CrashController's rules, dumbed down: a killbox, or a head-on hit on layer 2. Walls take our own

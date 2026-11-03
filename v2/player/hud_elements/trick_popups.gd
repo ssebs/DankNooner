@@ -282,7 +282,7 @@ func _track_trick_start(tc: TrickController) -> void:
 	# The nose dropping mid-slide turns a drift wheelie into a plain drift — already called out.
 	if trick == TrickController.Trick.DRIFT and _last_named == TrickController.Trick.DRIFT_WHEELIE:
 		return
-	if TrickController.HELD_TRICK_SCORE.has(trick):
+	if ComboRules.HELD_TRICK_SCORE.has(trick):
 		_last_named = trick
 	if TRICK_CALLOUTS.has(trick):
 		pop_callout(tr(TRICK_CALLOUTS[trick]))

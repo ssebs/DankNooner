@@ -27,7 +27,6 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 
-
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
 
@@ -39,8 +38,9 @@
       - [x] easy/hard difficulty setting for AI
       - [x] bots crash into gas station pole
       - [x] add to trick feed
+      - [x] Phase 3 (they do tricks + get boost)
       - [ ] continue w/ `____NPC_RACER_AI_WIP.md`
-      - [ ] Phase 3 (they do tricks + get boost)
+      - [ ] phase 4 (cleanup debug msgs?)
       - [ ] verify difficulty works
   - [ ] Balancing points / score
   - [ ] Demo savegame should be different from main game
@@ -175,7 +175,6 @@
 - [ ] Slow time on ramp launches (client side somehow?)
 - [ ] Knock over light pole & fire hydrants & signs/ street lights
 - [ ] Transition animations between menu states
-- [ ] Tracers when boosting 
 - [ ] VFX on horn (to beat would be cool)
 
 ### Audio
@@ -231,6 +230,7 @@
   - mock player going thru stunt race w/ checkpoints and picking up items -& using them 
   - test save file parsing/progression
   - e.g. fill up minigame is testable
+- [ ] Sweep for repeated pure helpers (math, formatting, lookups) duplicated across controllers/managers and move them into static `utils/` classes, starting from `ComboRules` (built with NPC racer Phase 3)
 
 ### Polish
 - [ ] crashing during tutorial doesn't stop timers
@@ -245,6 +245,8 @@
 ---
 
 ## Done ✅
+
+- [x] Tracers when boosting 
 
 - [x] cant start stunt battle bc arrow walls are in the way before you drive to it
 

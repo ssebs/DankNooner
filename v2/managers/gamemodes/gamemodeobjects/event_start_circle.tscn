@@ -2,11 +2,60 @@
 
 [ext_resource type="Script" uid="uid://0i4uny3m27jm" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.gd" id="1_3ysdx"]
 [ext_resource type="PackedScene" path="res://managers/gamemodes/gamemodeobjects/start_ring.tscn" id="2_ring"]
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="3_gb"]
+[ext_resource type="FontVariation" path="res://resources/fonts/museo_moderno_emoji.tres" id="5_font"]
+[ext_resource type="Material" uid="uid://cueh7p18wietx" path="res://levels/assets/props/neon_teal.tres" id="6_43eef"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_3ysdx"]
 radius = 4.0
 
-[node name="EventStartCircle" type="Area3D" unique_id=459761741 groups=["EventCircles"]]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_disc"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.25098038, 1, 0.9648897, 0.023529412)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_disc"]
+material = SubResource("StandardMaterial3D_disc")
+top_radius = 3.9
+bottom_radius = 3.9
+height = 0.02
+radial_segments = 24
+rings = 1
+
+[sub_resource type="PrismMesh" id="PrismMesh_icon"]
+material = ExtResource("6_43eef")
+size = Vector3(1, 0.8, 0.2)
+
+[sub_resource type="Animation" id="Animation_spin"]
+resource_name = "spin"
+length = 3.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Icon:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 3.1415927), Vector3(0, 6.2831855, 3.1415927)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_spin"]
+_data = {
+&"spin": SubResource("Animation_spin")
+}
+
+[sub_resource type="TorusMesh" id="TorusMesh_43eef"]
+material = ExtResource("6_43eef")
+inner_radius = 3.9
+outer_radius = 4.0
+rings = 24
+ring_segments = 6
+
+[node name="EventStartCircle" type="Area3D" unique_id=459761741 groups=["EditorHideable", "EventCircles"]]
 collision_layer = 8
 script = ExtResource("1_3ysdx")
 
@@ -14,13 +63,63 @@ script = ExtResource("1_3ysdx")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_3ysdx")
 
-[node name="Label3D" type="Label3D" parent="." unique_id=2069409638]
+[node name="Sign" type="Node3D" parent="." unique_id=1838205114]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 4.7)
+
+[node name="Panel" parent="Sign" unique_id=2046411287 instance=ExtResource("3_gb")]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
-billboard = 1
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3675, 0)
+width = 3.0
+height = 2.06499996278435
+depth = 0.2
+neon_edges = true
+neon_color = Color(0.25490198, 1, 0.7372549, 1)
+
+[node name="Header" type="Label3D" parent="Sign" unique_id=1594031875]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0.11)
 double_sided = false
-text = "EVENT_LABEL_NAME"
-font_size = 128
-outline_size = 32
+text = "EVENT_SIGN_HEADER"
+font = ExtResource("5_font")
+font_size = 96
+outline_size = 24
+vertical_alignment = 0
+
+[node name="Label3D" type="Label3D" parent="Sign" unique_id=2069409638]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.435, 0.11)
+double_sided = false
+font = ExtResource("5_font")
+font_size = 64
+outline_size = 16
+vertical_alignment = 0
+
+[node name="Footer" type="Label3D" parent="Sign" unique_id=1302760458]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.82, 0.11)
+double_sided = false
+text = "EVENT_SIGN_ENTER"
+font = ExtResource("5_font")
+font_size = 48
+vertical_alignment = 0
+
+[node name="Disc" type="MeshInstance3D" parent="." unique_id=1405839216]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_disc")
+
+[node name="Icon" type="MeshInstance3D" parent="." unique_id=1983150427]
+transform = Transform3D(-1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0, 1, 0, 2.75, 0)
+cast_shadow = 0
+mesh = SubResource("PrismMesh_icon")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1163870532]
+libraries/ = SubResource("AnimationLibrary_spin")
+autoplay = &"spin"
 
 [node name="StartRing" parent="." unique_id=1746768751 instance=ExtResource("2_ring")]
+
+[node name="MeshInstance3D" parent="StartRing" index="0"]
+mesh = SubResource("TorusMesh_43eef")
+
+[editable path="StartRing"]

@@ -35,7 +35,14 @@ signal exited_event_circle(peer_id: int, event_start_circle: EventStartCircle)
 ## Parent of the groups events link as `checkpoints`.
 @export var checkpoints: Node3D
 
+## Sign's top edge, in Sign space. The panel grows down from here to fit the event list.
+const SIGN_TOP := 4.4
+const SIGN_PAD := 0.1
+
 @onready var event_label: Label3D = %Label3D
+@onready var sign_header: Label3D = %Header
+@onready var sign_footer: Label3D = %Footer
+@onready var sign_panel: GrayBoxStaticBody = %Panel
 
 
 func _ready():
@@ -48,6 +55,7 @@ func _ready():
 	for event in get_events():
 		names.append(tr(event.definition.name))
 	event_label.text = "\n".join(names)
+	_fit_sign()
 
 
 func get_events() -> Array[GameModeEvent]:
@@ -89,6 +97,22 @@ func _set_collision_active(node: Node, active: bool):
 		node.use_collision = active
 	for child in node.get_children():
 		_set_collision_active(child, active)
+
+
+## Stacks the labels top-down and sizes the panel around them, so any event count fits.
+func _fit_sign():
+	var y := SIGN_TOP - SIGN_PAD
+	for label: Label3D in [sign_header, event_label, sign_footer]:
+		label.position.y = y
+		y -= _text_height(label) + SIGN_PAD
+	var height := SIGN_TOP - y
+	sign_panel.height = height
+	sign_panel.position.y = SIGN_TOP - height / 2
+
+
+func _text_height(label: Label3D) -> float:
+	var lines := label.text.count("\n") + 1
+	return lines * label.font.get_height(label.font_size) * label.pixel_size
 
 
 func _on_body_entered(body: Node3D):
