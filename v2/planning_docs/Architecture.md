@@ -413,6 +413,8 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
   would spin.
 - Pause hides the current HUD in place (`set_hud_hidden`) instead of transitioning, so unpause
   restores it without a state change.
+- The `dbg_hud` console command hides every HUD state for recording clips. It sets alpha
+  rather than `visible`, so state changes and unpause can't re-show it.
 
 ### Audio Manager
 

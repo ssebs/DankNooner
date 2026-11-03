@@ -1950,6 +1950,18 @@ width = 16
 [node name="TrickBattleArena" parent="EventStartCircle1/Props/TrickBattleProps" unique_id=1920932027 instance=ExtResource("16_dhvxm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.2, -155)
 
+[node name="PickupSpawner" parent="EventStartCircle1/Props/TrickBattleProps/TrickBattleArena/Spawners" parent_id_path=PackedInt32Array(1920932027, 608849879) index="0" unique_id=761218876]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 1.2749999, -0.035713196)
+
+[node name="PickupSpawner15" parent="EventStartCircle1/Props/TrickBattleProps/TrickBattleArena/Spawners" parent_id_path=PackedInt32Array(1920932027, 608849879) index="1" unique_id=1807387469]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 1.2749999, -0.035713196)
+
+[node name="PickupSpawner29" parent="EventStartCircle1/Props/TrickBattleProps/TrickBattleArena/Spawners" parent_id_path=PackedInt32Array(1920932027, 608849879) index="2" unique_id=1807297309]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 1.2749999, -50.035706)
+
+[node name="PickupSpawner43" parent="EventStartCircle1/Props/TrickBattleProps/TrickBattleArena/Spawners" parent_id_path=PackedInt32Array(1920932027, 608849879) index="3" unique_id=1884260859]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 1.2749999, 46.464287)
+
 [node name="Spawns" type="Node3D" parent="EventStartCircle1" unique_id=760860456]
 
 [node name="CrashLaunchSpawns" type="Node3D" parent="EventStartCircle1/Spawns" unique_id=1943584799]
@@ -2087,42 +2099,42 @@ start_zone = NodePath("../StartZone")
 [node name="Pickups" type="Node3D" parent="EventStartCircle1/StuntRace" unique_id=1741631173]
 
 [node name="PickupSpawner1" parent="EventStartCircle1/StuntRace/Pickups" unique_id=1012215384 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 164, 5.867197, -43.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 164, 5.515213, -43.5)
 count = 6
 spacing = 4.0
 
 [node name="PickupSpawner7" parent="EventStartCircle1/StuntRace/Pickups" unique_id=1098221561 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -55.500748, 6.25, 313.1206)
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -55.500748, 3.2754002, 313.1206)
 count = 3
 spacing = 4.59
 
 [node name="PickupSpawner8" parent="EventStartCircle1/StuntRace/Pickups" unique_id=1463645906 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.771698, 0, 0.635989, 0, 1, 0, -0.635989, 0, 0.771698, -29.9142, 1.565304, 311.0858)
+transform = Transform3D(0.771698, 0, 0.635989, 0, 1, 0, -0.635989, 0, 0.771698, -29.9142, 1.5, 311.0858)
 count = 2
 spacing = 7.37
 
 [node name="PickupSpawner9" parent="EventStartCircle1/StuntRace/Pickups" unique_id=712062457 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -44.414215, 1.5, 302.5858)
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -44.414215, 1.2584553, 302.5858)
 count = 3
 spacing = 4.0
 
 [node name="PickupSpawner13" parent="EventStartCircle1/StuntRace/Pickups" unique_id=277724163 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -82.67157, 1.595152, 347.32843)
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -82.67157, 1.5001221, 347.32843)
 count = 4
 spacing = 4.0
 
 [node name="PickupSpawner17" parent="EventStartCircle1/StuntRace/Pickups" unique_id=919268758 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -181.17157, 1.595152, 412.82843)
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -181.17157, 1.5001221, 412.82843)
 count = 4
 spacing = 4.0
 
 [node name="PickupSpawner21" parent="EventStartCircle1/StuntRace/Pickups" unique_id=1189900512 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -372.17157, 1.7254004, 461.82843)
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -372.17157, 1.75, 461.82843)
 count = 4
 spacing = 4.0
 
 [node name="PickupSpawner27" parent="EventStartCircle1/StuntRace/Pickups" unique_id=106093711 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 263, 10.867197, 65.5)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 263, 10.326304, 65.5)
 count = 6
 spacing = 4.0
 
@@ -2392,29 +2404,29 @@ start_zone = NodePath("../StartZone")
 [node name="Pickups" type="Node3D" parent="EventStartCircle2/StuntRace2" unique_id=204507573]
 
 [node name="PickupSpawner1" parent="EventStartCircle2/StuntRace2/Pickups" unique_id=385871693 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.819232, 0, -0.573462, 0, 1, 0, 0.573462, 0, 0.819232, 125.151855, 2.367197, -37.491486)
+transform = Transform3D(0.819232, 0, -0.573462, 0, 1, 0, 0.573462, 0, 0.819232, 125.151855, 1.75, -37.491486)
 count = 5
 spacing = 6.1
 
 [node name="PickupSpawner10" parent="EventStartCircle2/StuntRace2/Pickups" unique_id=539220794 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 479.55188, 1.867197, 149.10852)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 479.55188, 1.75, 149.10852)
 count = 5
 spacing = 5.0
 
 [node name="PickupSpawner15" parent="EventStartCircle2/StuntRace2/Pickups" unique_id=14174415 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 715.26013, 9.367197, 120.9848)
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 715.26013, 1.2584553, 120.9848)
 count = 5
 spacing = 4.38
 
 [node name="PickupSpawner6" parent="EventStartCircle2/StuntRace2/Pickups" unique_id=1681096213 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.830577, 0, -0.556904, 0, 1, 0, 0.556904, 0, 0.830577, 204.23444, 6.867197, 79.11383)
+transform = Transform3D(0.830577, 0, -0.556904, 0, 1, 0, 0.556904, 0, 0.830577, 204.23444, 1.3000014, 79.11383)
 count = 4
 
 [node name="PickupSpawner20" parent="EventStartCircle2/StuntRace2/Pickups" unique_id=2090557582 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.752899, 0, 0.658136, 0, 1, 0, -0.658136, 0, 0.752899, 243.0816, 1.499998, 72.352356)
+transform = Transform3D(0.752899, 0, 0.658136, 0, 1, 0, -0.658136, 0, 0.752899, 243.0816, 1.5, 72.352356)
 
 [node name="PickupSpawner21" parent="EventStartCircle2/StuntRace2/Pickups" unique_id=85576469 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.752899, 0, 0.658136, 0, 1, 0, -0.658136, 0, 0.752899, 236.68195, 1.499998, 77.94653)
+transform = Transform3D(0.752899, 0, 0.658136, 0, 1, 0, -0.658136, 0, 0.752899, 236.68195, 10.970562, 77.94653)
 
 [node name="DriveToStartRunner" type="Node" parent="EventStartCircle2/StuntRace2" unique_id=445709688]
 script = ExtResource("drive_to_start_runner")
@@ -2543,12 +2555,12 @@ pickups = NodePath("Pickups")
 [node name="Pickups" type="Node3D" parent="EventStartCircle3/StuntRace3" unique_id=2086028288]
 
 [node name="PickupSpawner1" parent="EventStartCircle3/StuntRace3/Pickups" unique_id=79579103 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0.819232, 0, -0.573462, 0, 1, 0, 0.573462, 0, 0.819232, -63.34812, 2.367197, -38.991486)
+transform = Transform3D(0.819232, 0, -0.573462, 0, 1, 0, 0.573462, 0, 0.819232, -63.34812, 1.4997559, -38.991486)
 count = 5
 spacing = 6.1
 
 [node name="PickupSpawner6" parent="EventStartCircle3/StuntRace3/Pickups" unique_id=337854146 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -263.8481, 2.367197, -49.39148)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -263.8481, 1.5, -49.39148)
 count = 5
 spacing = 6.08
 
@@ -2729,32 +2741,32 @@ start_zone = NodePath("../StartZone")
 [node name="Pickups" type="Node3D" parent="EventStartCircle4/StuntRace4" unique_id=1412449485]
 
 [node name="PickupSpawner1" parent="EventStartCircle4/StuntRace4/Pickups" unique_id=223493394 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -62.34812, 2.367197, 42.60852)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -62.34812, 1.4998779, 42.60852)
 count = 5
 spacing = 6.08
 
-[node name="PickupSpawner2" parent="EventStartCircle4/StuntRace4/Pickups" unique_id=761218876 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -229.34811, 2.367197, -19.39148)
+[node name="PickupSpawner2" parent="EventStartCircle4/StuntRace4/Pickups" unique_id=143714814 instance=ExtResource("21_mn4lr")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -229.34811, 1.7499999, -19.39148)
 count = 5
 spacing = 6.08
 
 [node name="PickupSpawner3" parent="EventStartCircle4/StuntRace4/Pickups" unique_id=1830418053 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -476.3481, 2.367197, -22.39148)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -476.3481, 1.75, -22.39148)
 count = 5
 spacing = 6.08
 
 [node name="PickupSpawner4" parent="EventStartCircle4/StuntRace4/Pickups" unique_id=985266836 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, -705.34814, 2.367197, -32.39148)
+transform = Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, -705.34814, 1.5, -32.39148)
 count = 5
 spacing = 6.08
 
 [node name="PickupSpawner5" parent="EventStartCircle4/StuntRace4/Pickups" unique_id=1324765779 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(-0.99999994, 0, 0, 0, 1, 0, 0, 0, -0.99999994, -780.34814, 2.367197, -215.39148)
+transform = Transform3D(-0.99999994, 0, 0, 0, 1, 0, 0, 0, -0.99999994, -780.34814, 1.75, -215.39148)
 count = 5
 spacing = 6.08
 
 [node name="PickupSpawner6" parent="EventStartCircle4/StuntRace4/Pickups" unique_id=1138556808 instance=ExtResource("21_mn4lr")]
-transform = Transform3D(-0.99999994, 0, 0, 0, 1, 0, 0, 0, -0.99999994, -800.34814, 2.367197, 44.60852)
+transform = Transform3D(-0.99999994, 0, 0, 0, 1, 0, 0, 0, -0.99999994, -800.34814, 1.4999217, 44.60852)
 count = 5
 spacing = 6.08
 

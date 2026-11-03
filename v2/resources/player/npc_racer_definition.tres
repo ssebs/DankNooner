@@ -1,8 +1,11 @@
-[gd_resource type="Resource" script_class="PlayerDefinition" format=3]
+[gd_resource type="Resource" script_class="PlayerDefinition" format=3 uid="uid://c15xpdl1cqt7f"]
 
 [ext_resource type="Script" uid="uid://283a7n5utttx" path="res://resources/player/player_definition.gd" id="1_nop61"]
+[ext_resource type="Resource" uid="uid://d2u40ds684dd5" path="res://resources/player/skins/clanker_default_skin_definition.tres" id="1_tn4gh"]
+[ext_resource type="Resource" path="res://resources/horns/skins/car_horn.tres" id="2_8xcno"]
 [ext_resource type="Script" uid="uid://ctppcknl8khsn" path="res://resources/player/loadout.gd" id="3_ldout"]
 [ext_resource type="Resource" uid="uid://dlrtemwuyd7jy" path="res://resources/bikes/skins/naked_default_skin_definition.tres" id="4_naked"]
+[ext_resource type="Texture2D" uid="uid://c3b2p5gk67ghq" path="res://resources/img/Logos/Logo.svg" id="6_rq76g"]
 
 [sub_resource type="Resource" id="Resource_ldout"]
 script = ExtResource("3_ldout")

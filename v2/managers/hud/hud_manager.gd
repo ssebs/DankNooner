@@ -10,8 +10,13 @@ class_name HUDManager extends BaseManager
 
 var local_player: PlayerEntity
 
+var _dbg_hud_hidden: bool = false
+
 func _ready() -> void:
-	pass
+	super()
+	if Engine.is_editor_hint():
+		return
+	Console.add_command("dbg_hud", _toggle_hud_debug, [], 0, "Toggle hiding the HUD, for recording clips")
 
 func go_to_riding_hud():
 	state_machine.request_state_change(riding_hud_state)
@@ -41,6 +46,17 @@ func set_hud_hidden(hidden: bool):
 		hud_state.hide_ui()
 	else:
 		hud_state.show_ui()
+
+
+## Alpha, not visible, so state changes and unpause (which all show()) can't undo it.
+## Covers every CanvasItem under a HUD state, e.g. RidingHUDState's netfox debug label.
+func _toggle_hud_debug() -> void:
+	_dbg_hud_hidden = !_dbg_hud_hidden
+	for hud_state in state_machine.get_children():
+		for child in hud_state.get_children():
+			if child is CanvasItem:
+				child.modulate.a = 0.0 if _dbg_hud_hidden else 1.0
+	Console.print_line("dbg_hud: %s" % ("hidden" if _dbg_hud_hidden else "shown"))
 
 
 func _get_configuration_warnings() -> PackedStringArray:

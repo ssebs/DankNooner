@@ -245,6 +245,10 @@
 
 ## Done ✅
 
+- [x] cant pickup items at race 3 start
+
+- [x] disable hud dbg option for recording clips
+
 - [x] add vibration on near miss trick
 
 - [x] PC? RMB + move up/left/right like joystick should do tricks too instead of only arrow keys
