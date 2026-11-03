@@ -2085,7 +2085,7 @@ transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -776
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 262.4, 8.799999, 126.229996)
 
 [node name="StartZoneTrickBattle" parent="EventStartCircle1" unique_id=2376948 instance=ExtResource("99_startzone")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.5, 0.2, -98.100006)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.5, 0.2, -85)
 
 [node name="StuntRace" type="Node3D" parent="EventStartCircle1" unique_id=286026007 node_paths=PackedStringArray("props", "spawn", "checkpoints", "pickups", "start_zone")]
 script = ExtResource("mig_event")

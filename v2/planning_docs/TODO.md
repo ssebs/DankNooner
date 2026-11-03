@@ -27,6 +27,7 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 
+
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
 
@@ -244,6 +245,8 @@
 ---
 
 ## Done ✅
+
+- [x] cant start stunt battle bc arrow walls are in the way before you drive to it
 
 - [x] cant pickup items at race 3 start
 
