@@ -76,12 +76,13 @@ func _draw(head: Vector3) -> void:
 		var side := (b - a).cross(cam_pos - a).normalized()
 		var sa := side * _half_width(births[i - 1])
 		var sb := side * _half_width(births[i])
+		# Clockwise as seen from the camera: Godot's front face, so the material's back-face cull keeps it
 		_imesh.surface_add_vertex(a - sa)
+		_imesh.surface_add_vertex(b + sb)
 		_imesh.surface_add_vertex(a + sa)
-		_imesh.surface_add_vertex(b + sb)
 		_imesh.surface_add_vertex(a - sa)
-		_imesh.surface_add_vertex(b + sb)
 		_imesh.surface_add_vertex(b - sb)
+		_imesh.surface_add_vertex(b + sb)
 	_imesh.surface_end()
 
 
