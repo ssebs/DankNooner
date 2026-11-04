@@ -36,6 +36,12 @@ func _inject_runner_deps():
 	_jump_task.trick_manager = trick_manager
 
 
+#override
+func _restart():
+	_scores.clear()
+	super()
+
+
 func _on_attempt_scored(peer_id: int, points: float):
 	var scores: Dictionary = _scores.get_or_add(peer_id, {"best": 0.0})
 	scores["last"] = points

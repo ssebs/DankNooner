@@ -72,6 +72,13 @@ func shows_step_count() -> bool:
 	return false
 
 
+#override
+func _restart():
+	_time_left = duration_secs
+	_cancelled = false
+	super()
+
+
 ## Override: the peer's standing. Results rank by it, highest first.
 func _score(_peer_id: int) -> float:
 	return 0.0

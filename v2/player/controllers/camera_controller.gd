@@ -69,6 +69,8 @@ const JUMP_LAND_IMPACT_MIN: float = 4.0
 const JUMP_LAND_IMPACT_MAX: float = 20.0
 ## One-shot trauma burst on crashing — the hardest hit.
 const CRASH_TRAUMA: float = 1.0
+## Rumble floor held while crashed, until respawn. Controller only — the screen doesn't shake.
+const CRASH_RUMBLE: float = 0.4
 ## Trauma floor at a full-blown speed wobble (tank-slapper); scales up as the wobble nears highside.
 const WOBBLE_MAX_TRAUMA: float = 0.9
 ## Trauma floor held the whole time the bike is drifting.
@@ -604,6 +606,8 @@ func _update_juice_fx(delta: float):
 
 	# Rumble at the same level the screen shakes — add_vibration stops itself when shake hits 0.
 	var rumble: float = shake * SHAKE_VIBRATION_SCALE
+	if crashed:
+		rumble = maxf(rumble, CRASH_RUMBLE)
 	input_controller.add_vibration(rumble, rumble)
 
 	_trauma = maxf(_trauma - TRAUMA_DECAY * delta, 0.0)

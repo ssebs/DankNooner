@@ -69,6 +69,13 @@ func shows_step_count() -> bool:
 	return false
 
 
+#override
+func _restart():
+	_heat = 0
+	_totals.clear()
+	_start_heat()
+
+
 #region Heats
 
 

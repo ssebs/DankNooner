@@ -37,6 +37,7 @@ func Enter(state_context: StateContext):
 	_inject_runner_deps()
 	riding_hud_state.set_event_title(tr(_event.definition.name))
 	results_hud.skip_pressed.connect(_on_results_skip_pressed)
+	results_hud.restart_pressed.connect(_on_results_restart_pressed)
 
 	gamemode_manager.player_crashed.connect(_on_player_crashed)
 	gamemode_manager.player_disconnected.connect(_on_player_disconnected)
@@ -59,6 +60,7 @@ func Exit(_state_context: StateContext):
 	gamemode_manager.player_disconnected.disconnect(_on_player_disconnected)
 	gamemode_manager.player_latejoined.disconnect(_on_player_latejoined)
 	results_hud.skip_pressed.disconnect(_on_results_skip_pressed)
+	results_hud.restart_pressed.disconnect(_on_results_restart_pressed)
 	_results_countdown = -1.0
 	# results_hud sets IN_GAME_PAUSED when it shows; restore IN_GAME on the way out so
 	# the cursor doesn't stay visible after skip→free-roam.
@@ -268,6 +270,22 @@ func _on_results_skip_pressed():
 		return
 	_results_countdown = -1.0
 	_return_to_free_roam()
+
+
+func _on_results_restart_pressed():
+	if !multiplayer.is_server():
+		return
+	_results_countdown = -1.0
+	results_hud.rpc_hide.rpc()
+	# Already stopped (results show only after all_completed), unless restart races the countdown.
+	_stop_active_runner()
+	_restart()
+
+
+## Override: reset the mode's per-event state, then call super() to rerun the event's runners.
+func _restart():
+	_active_runner_index = -1
+	_start_next_runner()
 
 
 #endregion

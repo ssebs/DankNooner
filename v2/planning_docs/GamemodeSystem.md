@@ -136,7 +136,9 @@ IslandStation (EventStartCircle)       picker lists its GameModeEvent children
 6. **Chain + results:** each runner's `all_completed` starts the next. On the last one,
    `_on_last_runner_completed(runner)` fires **before** `runner.stop()` (which clears the per-peer
    state results read). `_show_results(data)` opens `ResultsHUDState` with a countdown; skip or
-   timeout returns to free roam. Exiting a mode restores `IN_GAME` input and hides results.
+   timeout returns to free roam. The host's Restart reruns the event via `_restart()`, which modes
+   override to reset their own state (race skips its pre-race runners). Exiting a mode restores
+   `IN_GAME` input and hides results.
 
 ## Dependency injection
 

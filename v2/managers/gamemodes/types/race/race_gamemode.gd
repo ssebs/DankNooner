@@ -60,7 +60,6 @@ func Enter(state_context: StateContext):
 		_event.set_props_active(false)
 	else:
 		_event.show_only_checkpoints(RaceTask.START_CHECKPOINTS)
-	results_hud.restart_pressed.connect(_on_results_restart_pressed)
 	results_hud.retry_pressed.connect(_on_results_retry_pressed)
 
 	# Hook order: scoring before the leaderboard reads it.
@@ -98,7 +97,6 @@ func Update(delta: float):
 func Exit(state_context: StateContext):
 	if Engine.is_editor_hint():
 		return
-	results_hud.restart_pressed.disconnect(_on_results_restart_pressed)
 	results_hud.retry_pressed.disconnect(_on_results_retry_pressed)
 
 	if multiplayer.is_server():
@@ -234,14 +232,9 @@ func _payout_score(peer_id: int) -> float:
 	return score(peer_id)
 
 
-func _on_results_restart_pressed():
-	if !multiplayer.is_server():
-		return
-	_results_countdown = -1.0
-	results_hud.rpc_hide.rpc()
-	# Already stopped (results show only after all_completed), unless restart races the countdown.
-	_stop_active_runner()
-	# Straight back to the race's runner (its grid), skipping pre-race ones like drive to the start.
+#override
+## Straight back to the race's runner (its grid), skipping pre-race ones like drive to the start.
+func _restart():
 	_active_runner_index = _race_runner_index - 1
 	_inject_runner_deps()
 	_race_end()
