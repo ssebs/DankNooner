@@ -55,6 +55,9 @@ const WALL_GLANCE_SPEED_LOSS: float = 0.25
 const WASHOUT_TIME: float = 0.4
 const WASHOUT_MIN_LEAN_DEG: float = 15.0
 const WASHOUT_MIN_SPEED: float = 10.0
+## Power washout: lean_usage² + (drive · this)² over 1 (friction circle) for WASHOUT_TIME above
+## WASHOUT_MIN_SPEED spins the rear out (lowside). This is the share of grip full drive uses.
+const POWER_WASHOUT_DRIVE_SHARE: float = 0.6
 ## Layer-2 hits only crash at/above this speed, and only head-on: within this angle of the wall's
 ## normal. Race bots crash by the same rule (NPCRaceState).
 const CRASH_MIN_SPEED: float = 10.0
@@ -62,6 +65,8 @@ const CRASH_MAX_ANGLE_DEG: float = 60.0
 
 ## Seconds into a brake washout, 0 when not washing out. Synced; drives grip_usage + squeal.
 var washout_time: float = 0.0
+## Seconds into a power washout (gas at lean), 0 when not. Synced; drives grip_usage + skids.
+var power_washout_time: float = 0.0
 
 var _prev_front_brake: float = 0.0
 var _prev_drift_drive_held: bool = false
@@ -107,7 +112,7 @@ func _detect_air_trick_landing():
 		trigger_crash(CrashType.HIGHSIDE)
 
 
-## Sets washout_time + player_entity.grip_usage
+## Sets washout_time, power_washout_time + player_entity.grip_usage
 func _update_brake_grab(delta: float):
 	var front_brake = input_controller.nfx_front_brake
 
@@ -130,8 +135,24 @@ func _update_brake_grab(delta: float):
 	)
 	washout_time = washout_time + delta if washing_out else 0.0
 
-	# Brake danger (grip_usage) for HUD/shake: washout progress, plus a fast squeeze while leaned.
-	var danger := washout_time / WASHOUT_TIME
+	# Power risk: share of the grip left over from lean that the gas is using (1 = washing out).
+	var power_risk := 0.0
+	if (
+		movement_controller.is_on_floor
+		and not movement_controller.is_reversing
+		and not movement_controller.is_drifting
+		and not movement_controller.is_grinding
+		and not player_entity.trick_controller.is_in_wheelie()
+		and movement_controller.speed > WASHOUT_MIN_SPEED
+	):
+		var drive_grip := movement_controller.drive * POWER_WASHOUT_DRIVE_SHARE
+		var drive_limit := sqrt(maxf(1.0 - pow(movement_controller.get_lean_usage(), 2), 0.0))
+		power_risk = clampf(drive_grip / maxf(drive_limit, 0.001), 0.0, 1.0)
+	power_washout_time = power_washout_time + delta if power_risk >= 1.0 else 0.0
+
+	# Grip danger (grip_usage) for HUD/shake: washout progress, the gas closing in on the limit, plus
+	# a fast squeeze while leaned.
+	var danger := maxf(washout_time / WASHOUT_TIME, power_risk)
 	if input_controller.is_gamepad:
 		var lean_factor := clampf(lean / deg_to_rad(WASHOUT_MIN_LEAN_DEG), 0.0, 1.0)
 		danger = maxf(danger, clampf(brake_delta / BRAKE_GRAB_RATE_THRESHOLD, 0.0, 1.0) * lean_factor)
@@ -243,6 +264,11 @@ func _detect_crash():
 		if washout_time >= WASHOUT_TIME:
 			DebugUtils.DebugMsg("brake washout crash")
 			trigger_crash(CrashType.LOWSIDE, Vector3.ZERO, "FEED_BAILED_BRAKE_GRAB")
+			return
+
+		if power_washout_time >= WASHOUT_TIME:
+			DebugUtils.DebugMsg("power washout crash")
+			trigger_crash(CrashType.LOWSIDE, Vector3.ZERO, "FEED_BAILED_POWER_WASHOUT")
 			return
 
 	# Upside-down landing — checked separately because inverted up_direction breaks is_on_floor()

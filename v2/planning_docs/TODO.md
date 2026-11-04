@@ -246,6 +246,8 @@
 
 ## Done ✅
 
+- [x] lowside when gassing it during corner
+
 - [x] slow speed turning anim doesn't look right (front wheel going into ground, not sharp enough turn / realistic counter leaning, player leans super far going 2mph - theyd crash irl)
 
 - [x] Grinding tricks (jump in air, grind on house fences, etc.)

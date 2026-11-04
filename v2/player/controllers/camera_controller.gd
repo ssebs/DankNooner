@@ -550,12 +550,7 @@ func _update_juice_fx(delta: float):
 	# Hard cornering holds a trauma floor: the closer the lean gets to the max the bike can
 	# hold at this speed, the more the tires strain — the tightest turn radius this speed allows.
 	var mc := player_entity.movement_controller
-	var bd := player_entity.bike_definition
-	var lean_factor: float = bd.lean_curve.sample(mc.speed_pct)
-	var max_lean_for_speed: float = bd.max_lean_angle_rad * lean_factor
-	var grip_strain: float = (
-		absf(mc.roll_angle) / max_lean_for_speed if max_lean_for_speed > 0.001 else 0.0
-	)
+	var grip_strain: float = mc.get_lean_usage()
 	if not mc.is_reversing and grip_strain > GRIP_SHAKE_THRESHOLD:
 		_trauma = maxf(
 			_trauma,
@@ -568,7 +563,7 @@ func _update_juice_fx(delta: float):
 
 	# Brake danger holds a trauma floor: as grip_usage nears 1 the front tire is on the edge of
 	# locking / washing out — the same near-the-limit feel as hard cornering. grip_usage is the
-	# brake-danger signal the HUD shows (CrashController._update_brake_grab).
+	# brake + power danger signal the HUD shows (CrashController._update_brake_grab).
 	var brake_danger: float = player_entity.grip_usage
 	if brake_danger > BRAKE_SHAKE_THRESHOLD and mc.speed > BRAKE_SHAKE_MIN_SPEED:
 		_trauma = maxf(

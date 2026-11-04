@@ -157,6 +157,7 @@ var air_time: float = 0.0 # time since takeoff (for wheelie grace window)
 var was_on_floor: bool = false # previous tick's floor state (for landing detection)
 var is_on_floor: bool = false # cached once per tick to avoid redundant move_and_slide calls
 var speed_pct: float = 0.0 # speed / max_speed, cached per tick
+var drive: float = 0.0 # 0..1 engine drive applied this tick (set in _speed_calc; stale while grinding)
 var pre_slide_velocity: Vector3 = Vector3.ZERO # cached per tick — velocity before move_and_slide deflects it
 var _wheelie_grace_consumed: bool = false # true once grace expired and pitch_angle was zeroed
 
@@ -564,6 +565,7 @@ func _speed_calc(delta: float):
 	var is_boosting: bool = player_entity.boost_controller.is_boosting
 	var boost_accel: float = BoostController.BOOST_ACCEL_MULT if is_boosting else 1.0
 	var boost_speed: float = BoostController.BOOST_SPEED_MULT if is_boosting else 1.0
+	drive = 0.0
 
 	# Balance lock hovers the bike — hold speed steady (pitch is held in _pitch_angle_calc).
 	if balance_locked:
@@ -610,6 +612,7 @@ func _speed_calc(delta: float):
 	var power = gearing_controller.get_power_output()
 	var gear_max_speed = gearing_controller.get_gear_max_speed(gearing_controller.current_gear) * boost_speed
 	if power > 0 and speed < gear_max_speed and brake_total <= 0.5 and not too_steep_to_climb:
+		drive = minf(power, 1.0)
 		speed += bd.acceleration * power * boost_accel * delta
 		speed = minf(speed, gear_max_speed)
 	# Engine braking — applies when not on throttle, stronger at higher RPM
@@ -691,6 +694,13 @@ func _steer_calc(delta: float):
 		right = right.normalized()
 		var adjusted_forward = target_up.cross(right).normalized()
 		player_entity.global_transform.basis = Basis(right, target_up, -adjusted_forward)
+
+
+## |roll_angle| as a fraction of the max lean this bike allows at this speed (1 = at the limit).
+func get_lean_usage() -> float:
+	var bd = player_entity.bike_definition
+	var max_lean_for_speed: float = bd.max_lean_angle_rad * bd.lean_curve.sample(speed_pct)
+	return absf(roll_angle) / max_lean_for_speed if max_lean_for_speed > 0.001 else 0.0
 
 
 ## Yaw rate per radian of roll_angle.

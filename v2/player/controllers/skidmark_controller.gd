@@ -76,8 +76,12 @@ func _process(delta: float) -> void:
 		player_entity.wobble_controller.is_wobbling
 		and player_entity.input_controller.nfx_rear_brake > MovementController.DRIFT_BRAKE_HOLD
 	)
+	var cc := player_entity.crash_controller
 	_set_squeal(
-		movement_controller.is_drifting or brake_wobble or player_entity.crash_controller.washout_time > 0.0
+		movement_controller.is_drifting
+		or brake_wobble
+		or cc.washout_time > 0.0
+		or cc.power_washout_time > 0.0
 	)
 
 

@@ -186,7 +186,7 @@ func Physics_Update(delta: float):
 	_rpm_bar.value = int(rpm_ratio * 100)
 	_rpm_fill_style.bg_color = _RPM_COLOR_LOW.lerp(_RPM_COLOR_HIGH, clampf(rpm_ratio, 0.0, 1.0))
 	_speed_num.text = "%d" % int(movement_controller.speed)
-	# Reddens toward a front washout (grip_usage is the brake danger).
+	# Reddens toward a washout (grip_usage is the brake + power danger).
 	_speed_num.modulate = Color.WHITE.lerp(_RPM_COLOR_HIGH, player_entity.grip_usage)
 	_fps_label.visible = player_entity.settings_manager.current_settings["show_fps"]
 	_fps_label.text = tr("HUD_FPS").format({"value": int(Engine.get_frames_per_second())})
