@@ -26,7 +26,7 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
-- [ ] Grinding tricks (jump in air, grind on house fences, etc.)
+- [ ] slow speed turning anim doesn't look right (front wheel going into ground, not sharp enough turn / realistic counter leaning, player leans super far going 2mph - theyd crash irl)
 
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -217,7 +217,7 @@
   - [ ] Wheelie + RIGHT animation (hand grab) — IK hand twd ground
 - [ ] trick animation to move up then play the mixamo anims
 - [ ] wheelie turning animation should yaw
-- [ ] slow speed turning anim doesn't look right (front wheel going into ground, not sharp enough turn / realistic counter leaning)
+
 
 ### Cutscenes
 - [ ] dynamic, use animation player to define
@@ -247,6 +247,8 @@
 ---
 
 ## Done ✅
+
+- [x] Grinding tricks (jump in air, grind on house fences, etc.)
 
 - [x] pickup spawners dont work in stunt battle arena
 

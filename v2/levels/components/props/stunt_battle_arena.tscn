@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://rervqxotioc4" path="res://levels/components/props/ramp.tscn" id="3_gaum0"]
 [ext_resource type="PackedScene" uid="uid://p7r6xx2hxd7u" path="res://levels/components/props/corkscrew.tscn" id="4_a1dn2"]
 [ext_resource type="PackedScene" uid="uid://cv3uyj3m3nj6t" path="res://levels/components/pickups/pickup_spawner.tscn" id="5_a1dn2"]
+[ext_resource type="PackedScene" uid="uid://dtckadkd3wndc" path="res://levels/assets/props/grind_rail.tscn" id="6_aoo65"]
 
 [node name="TrickBattleArena" type="Node3D" unique_id=1920932027]
 
@@ -78,3 +79,7 @@ spacing = 4.77
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, 46.464287)
 count = 14
 spacing = 4.77
+
+[node name="GrindRail" parent="." unique_id=575280884 instance=ExtResource("6_aoo65")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 8.5, 0)
+length = 120.0

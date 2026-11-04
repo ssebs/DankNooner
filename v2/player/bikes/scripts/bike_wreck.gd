@@ -71,9 +71,11 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 
 func _process(delta: float) -> void:
 	if freeze:
-		# Riding: a rail grind borrows the sparks + grind loop, at the wheels.
+		# Riding: a rail grind borrows the sparks + grind loop. top_level, so follow the wheels.
 		var rail_grind := player_entity.movement_controller.is_grinding
-		wreck_sparks.global_position = player_entity.global_position
+		if rail_grind:
+			global_position = player_entity.global_position
+			wreck_sparks.global_position = global_position
 		wreck_sparks.emitting = rail_grind
 		_set_grind(rail_grind)
 		return

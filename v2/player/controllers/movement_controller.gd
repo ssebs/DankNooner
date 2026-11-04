@@ -119,6 +119,8 @@ const GRIND_YAW_RATE: float = 2.0 # rad/s turn across the rail at full steer
 const GRIND_MAX_YAW_DEG: float = 120.0 # turned further across the rail bails (CrashController)
 const GRIND_SNAP_RADIUS: float = 1.0 # rail magnetism: a descending bike this close gets pulled on
 const GRIND_SNAP_BELOW: float = 0.3 # snaps even once this far under the rail's top (fell past it this tick)
+# Upward pop leaving a rail. Airtime clears AIR_TRICK_MIN_AIRTIME, so a straight drive-off lands back on it.
+const GRIND_POP: float = 6.0
 var is_reversing: bool = false
 var speed: float = 0.0
 var roll_angle: float = 0.0 # lean left/right
@@ -173,6 +175,7 @@ var _stoppie_locked_by_wheelie: bool = false
 var _floor_normal: Vector3 = Vector3.UP # cached per tick — only valid when is_on_floor
 var _on_unstable_surface: bool = false # touching layer 5 (unstable_collision), cached per tick
 var _grind_query := PhysicsShapeQueryParameters3D.new() # GRIND_SNAP_RADIUS sphere, set up in _ready
+var _grind_gas_released: bool = false # synced — arms the gas drive-off (gas is often held from the run-up)
 
 
 func _ready():
@@ -378,10 +381,12 @@ func _try_start_grind():
 		.signed_angle_to(forward.slide(Vector3.UP), Vector3.UP)
 	)
 	is_grinding = true
+	_grind_gas_released = false
 
 
 ## Rides the rail kinematically. Lean sets pitch and steer turns the bike across the rail; both hold
-## with no input, so a shift held too long bails (CrashController). The rail's end pops the bike off.
+## with no input, so a shift held too long bails (CrashController). The rail's end pops the bike off;
+## gas drives it off along its heading, so turn across the rail first to leave sideways.
 func _grind_calc(delta: float):
 	var bd = player_entity.bike_definition
 	var rail := grind_to - grind_from
@@ -390,9 +395,12 @@ func _grind_calc(delta: float):
 	grind_yaw -= input_controller.nfx_steer * GRIND_YAW_RATE * delta
 	roll_angle = lerpf(roll_angle, 0.0, bd.lean_speed * delta)
 	speed = move_toward(speed, bd.max_speed, GRIND_ACCEL * delta) - dir.y * SLOPE_GRAVITY * delta
+	if input_controller.nfx_throttle < 0.5:
+		_grind_gas_released = true
+	var drive_off := _grind_gas_released and input_controller.nfx_throttle >= 0.5
 
 	var progress := (player_entity.global_position - grind_from).dot(dir) + speed * delta
-	var off_end := progress >= rail.length()
+	var off_end := progress >= rail.length() and not drive_off
 	if off_end:
 		grind_yaw = 0.0 # face the momentum, or the ground landing yanks velocity to the heading
 
@@ -400,13 +408,13 @@ func _grind_calc(delta: float):
 	var forward := dir.rotated(up, grind_yaw)
 	player_entity.up_direction = up
 	player_entity.global_transform.basis = Basis(forward.cross(up), up, -forward)
-	player_entity.velocity = dir * speed
+	player_entity.velocity = (forward if drive_off else dir) * speed
 	pre_slide_velocity = player_entity.velocity # the crash wreck launches from it
 
-	if off_end:
+	if off_end or drive_off:
 		is_grinding = false
 		# A real move off the top, else next tick's floor check snaps back onto the rail as ground.
-		player_entity.velocity += Vector3.UP * HOP_VELOCITY
+		player_entity.velocity += up * GRIND_POP
 		_slide()
 		return
 	player_entity.global_position = grind_from + dir * progress
@@ -1287,6 +1295,7 @@ func do_reset():
 	bunny_hopped = false
 	is_grinding = false
 	grind_yaw = 0.0
+	_grind_gas_released = false
 	air_pitch_total = 0.0
 	air_time = 0.0
 	_wheelie_grace_consumed = false

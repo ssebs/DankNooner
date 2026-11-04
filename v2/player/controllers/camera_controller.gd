@@ -219,7 +219,7 @@ func _stick_held() -> bool:
 	return absf(input_controller.nfx_cam_x) > 0.05 or absf(input_controller.nfx_cam_y) > 0.05
 
 
-## True when the right stick is consumed by trick input (airborne / any wheelie / RB for
+## True when the right stick is consumed by trick input (airborne / any wheelie / grinding / RB for
 ## TWO_LEFT_FEET, or still held since one of those), so the joystick must not also drive the camera.
 ## The mouse still can. The whole wheelie, not just the balance point, so drifting out of it
 ## mid-trick doesn't swing the camera. Never while crashed — movement state freezes on crash.
@@ -233,6 +233,7 @@ func _stick_is_trick_input() -> bool:
 		or input_controller.nfx_trick_held
 		or not mc.is_on_floor
 		or in_wheelie
+		or mc.is_grinding
 	)
 
 

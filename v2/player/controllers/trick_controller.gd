@@ -99,7 +99,7 @@ const WHEELIE_MIN_SCORE_MULT: float = 0.5
 const WHEELIE_BP_SCORE_MULT: float = 2.0
 const WHEELIE_LOCKED_SCORE_MULT: float = 1.5
 ## Grind yaw zones (off the rail's direction): straight under ANGLED, sideways from SIDEWAYS.
-## See _detect_grind_trick.
+## See _grind_pose_trick.
 const GRIND_ANGLED_YAW_DEG: float = 20.0
 const GRIND_SIDEWAYS_YAW_DEG: float = 60.0
 ## Right-stick control scheme: state -> gesture -> trick per Dir (UP, DOWN, LEFT, RIGHT). Guideline:
@@ -209,6 +209,11 @@ func on_movement_rollback_tick(delta: float):
 	# Here (rollback), not in TrickManager: the combo vars are netfox state properties, re-applied
 	# from history every tick, so writes from a manager's _process() would never accumulate.
 	ComboRules.accrue(self, boost_controller, current_trick, _wheelie_score_mult(), delta)
+	# A stick trick over a grind stacks: the grind keeps scoring underneath it.
+	if trick_state() == TrickState.GRIND:
+		var grind := _grind_pose_trick()
+		if current_trick != grind:
+			ComboRules.accrue_stacked(self, grind, delta)
 
 
 ## Turn the right stick into TAP / DOUBLE_TAP gestures and latch their BINDINGS trick. The held
@@ -371,7 +376,8 @@ func _detect_current_trick(delta: float) -> Trick:
 	_flip_emitted = false
 
 	if movement_controller.is_grinding:
-		return _detect_grind_trick()
+		var grind_held := _held_trick()
+		return grind_held if grind_held != Trick.NONE else _grind_pose_trick()
 
 	if movement_controller.is_drifting:
 		# Drifting at a near-standstill is a burnout (rear spinning in place); moving is a drift.
@@ -435,13 +441,9 @@ func _detect_air_trick() -> Trick:
 	return Trick.FRONTFLIP
 
 
-## The rail pose picks the grind; a held stick trick rides on top. Pitch zones are the wheelie /
-## stoppie thresholds, yaw zones GRIND_ANGLED_YAW_DEG / GRIND_SIDEWAYS_YAW_DEG.
-func _detect_grind_trick() -> Trick:
-	var held := _held_trick()
-	if held != Trick.NONE:
-		return held
-
+## The grind the rail pose makes. Pitch zones are the wheelie / stoppie thresholds, yaw zones
+## GRIND_ANGLED_YAW_DEG / GRIND_SIDEWAYS_YAW_DEG.
+func _grind_pose_trick() -> Trick:
 	var pitch := movement_controller.pitch_angle
 	var front := pitch < deg_to_rad(STOPPIE_PITCH_THRESHOLD_DEG)
 	var back := pitch > deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG)

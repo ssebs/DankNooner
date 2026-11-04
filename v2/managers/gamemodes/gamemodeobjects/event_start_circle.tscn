@@ -75,6 +75,15 @@ depth = 0.2
 neon_edges = true
 neon_color = Color(0.25490198, 1, 0.7372549, 1)
 
+[node name="pole" parent="Sign" unique_id=1485126779 instance=ExtResource("3_gb")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1175001, 0)
+width = 0.4
+height = 2.58
+depth = 0.18
+neon_edges = true
+neon_color = Color(0.25490198, 1, 0.7372549, 1)
+
 [node name="Header" type="Label3D" parent="Sign" unique_id=1594031875]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0.11)

@@ -86,6 +86,12 @@ static func accrue(combo, boost, trick: TrickController.Trick, score_mult: float
 	combo.combo_multiplier = mult
 
 
+## A held trick scoring underneath the current one (a grind under a stick trick), so stacking pays
+## both. Combo time and boost already run from accrue().
+static func accrue_stacked(combo, trick: TrickController.Trick, delta: float) -> void:
+	combo.combo_score += HELD_TRICK_SCORE[trick] * delta
+
+
 ## A trick just started: its one-time score, plus a chunk of boost for an air trick (void-on-crash
 ## means you must land it clean).
 static func start_trick(combo, boost, trick: TrickController.Trick, airborne: bool) -> void:
