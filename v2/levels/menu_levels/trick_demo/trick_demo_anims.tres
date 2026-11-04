@@ -954,6 +954,112 @@ tracks/7/keys = {
 }]
 }
 
+[sub_resource type="Animation" id="Animation_grind_boardslide"]
+resource_name = "boardslide"
+length = 7.21869
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 0.5, 2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.1, 1.1, 1.1, 1.6, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, 0.0, 0.0, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.4, 1.4, 0.0, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(3.835083, 5.26869),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
 [sub_resource type="Animation" id="Animation_vlujj"]
 resource_name = "bunny_hop"
 length = 2.8
@@ -1166,6 +1272,112 @@ tracks/7/keys = {
 }]
 }
 
+[sub_resource type="Animation" id="Animation_grind_crooked"]
+resource_name = "crooked"
+length = 7.21869
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 0.5, 2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.340028, 1.340028, 1.1, 1.6, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, 0.35, 0.35, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.6, 0.6, 0.0, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(3.835083, 5.26869),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
 [sub_resource type="Animation" id="Animation_eud8r"]
 resource_name = "drift"
 length = 3.4
@@ -1272,6 +1484,218 @@ tracks/7/keys = {
 }]
 }
 
+[sub_resource type="Animation" id="Animation_grind_feeble"]
+resource_name = "feeble"
+length = 7.21869
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 0.5, 2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.340028, 1.340028, 1.1, 1.6, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, -0.35, -0.35, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.6, 0.6, 0.0, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(3.835083, 5.26869),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_grind_five_o"]
+resource_name = "five_o"
+length = 7.21869
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 0.5, 2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.340028, 1.340028, 1.1, 1.6, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, -0.35, -0.35, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(3.835083, 5.26869),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
 [sub_resource type="Animation" id="Animation_u0yg6"]
 resource_name = "frontflip"
 length = 4.570926675212563
@@ -1368,6 +1792,112 @@ tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
 "times": PackedFloat32Array(1.3264599, 3.2709267),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_grind_grind"]
+resource_name = "grind"
+length = 7.21869
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 0.5, 2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.1, 1.1, 1.1, 1.6, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, 0.0, 0.0, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(3.835083, 5.26869),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
 "args": [],
@@ -2120,6 +2650,430 @@ tracks/7/keys = {
 }]
 }
 
+[sub_resource type="Animation" id="Animation_grind_lipslide"]
+resource_name = "lipslide"
+length = 7.21869
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 0.5, 2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.1, 1.1, 1.1, 1.6, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, 0.0, 0.0, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, -1.4, -1.4, 0.0, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(3.835083, 5.26869),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_grind_nosegrind"]
+resource_name = "nosegrind"
+length = 7.21869
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 0.5, 2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.340028, 1.340028, 1.1, 1.6, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, 0.35, 0.35, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(3.835083, 5.26869),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_grind_noseslide"]
+resource_name = "noseslide"
+length = 7.21869
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 0.5, 2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.340028, 1.340028, 1.1, 1.6, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, 0.35, 0.35, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.4, 1.4, 0.0, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(3.835083, 5.26869),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_grind_salad"]
+resource_name = "salad"
+length = 7.21869
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 0.5, 2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.340028, 1.340028, 1.1, 1.6, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, -0.35, -0.35, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, -0.6, -0.6, 0.0, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(3.835083, 5.26869),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
 [sub_resource type="Animation" id="Animation_b8yhw"]
 resource_name = "stoppie"
 length = 3.4
@@ -2216,6 +3170,112 @@ tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
 "times": PackedFloat32Array(1, 2.4),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_grind_tailslide"]
+resource_name = "tailslide"
+length = 7.21869
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 0.5, 2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.340028, 1.340028, 1.1, 1.6, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, -0.35, -0.35, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
+"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.4, 1.4, 0.0, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(3.835083, 5.26869),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
 "args": [],
@@ -3074,1078 +4134,8 @@ tracks/7/keys = {
 }]
 }
 
-[sub_resource type="Animation" id="Animation_grind_grind"]
-resource_name = "grind"
-length = 7.21869
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Rig:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [1.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Rig:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 0.5, 2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.1, 1.1, 1.1, 1.6, 0.0, 0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Rig:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Rig:rotation:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, 0.0, 0.0, 0.0, 0.0]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Rig:rotation:y")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0.0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Rig:rotation:z")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath(".:rear_wheel_spin")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/7/type = "method"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath(".")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(3.835083, 5.26869),
-"transitions": PackedFloat32Array(1, 1),
-"values": [{
-"args": [],
-"method": &"trick_on"
-}, {
-"args": [],
-"method": &"trick_off"
-}]
-}
-
-[sub_resource type="Animation" id="Animation_grind_five_o"]
-resource_name = "five_o"
-length = 7.21869
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Rig:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [1.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Rig:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 0.5, 2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.340028, 1.340028, 1.1, 1.6, 0.0, 0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Rig:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Rig:rotation:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, -0.35, -0.35, 0.0, 0.0]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Rig:rotation:y")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0.0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Rig:rotation:z")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath(".:rear_wheel_spin")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/7/type = "method"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath(".")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(3.835083, 5.26869),
-"transitions": PackedFloat32Array(1, 1),
-"values": [{
-"args": [],
-"method": &"trick_on"
-}, {
-"args": [],
-"method": &"trick_off"
-}]
-}
-
-[sub_resource type="Animation" id="Animation_grind_nosegrind"]
-resource_name = "nosegrind"
-length = 7.21869
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Rig:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [1.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Rig:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 0.5, 2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.340028, 1.340028, 1.1, 1.6, 0.0, 0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Rig:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Rig:rotation:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, 0.35, 0.35, 0.0, 0.0]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Rig:rotation:y")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0.0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Rig:rotation:z")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath(".:rear_wheel_spin")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/7/type = "method"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath(".")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(3.835083, 5.26869),
-"transitions": PackedFloat32Array(1, 1),
-"values": [{
-"args": [],
-"method": &"trick_on"
-}, {
-"args": [],
-"method": &"trick_off"
-}]
-}
-
-[sub_resource type="Animation" id="Animation_grind_crooked"]
-resource_name = "crooked"
-length = 7.21869
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Rig:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [1.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Rig:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 0.5, 2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.340028, 1.340028, 1.1, 1.6, 0.0, 0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Rig:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Rig:rotation:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, 0.35, 0.35, 0.0, 0.0]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Rig:rotation:y")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0.0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.6, 0.6, 0.0, 0.0]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Rig:rotation:z")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath(".:rear_wheel_spin")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/7/type = "method"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath(".")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(3.835083, 5.26869),
-"transitions": PackedFloat32Array(1, 1),
-"values": [{
-"args": [],
-"method": &"trick_on"
-}, {
-"args": [],
-"method": &"trick_off"
-}]
-}
-
-[sub_resource type="Animation" id="Animation_grind_feeble"]
-resource_name = "feeble"
-length = 7.21869
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Rig:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [1.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Rig:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 0.5, 2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.340028, 1.340028, 1.1, 1.6, 0.0, 0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Rig:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Rig:rotation:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, -0.35, -0.35, 0.0, 0.0]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Rig:rotation:y")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0.0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.6, 0.6, 0.0, 0.0]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Rig:rotation:z")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath(".:rear_wheel_spin")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/7/type = "method"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath(".")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(3.835083, 5.26869),
-"transitions": PackedFloat32Array(1, 1),
-"values": [{
-"args": [],
-"method": &"trick_on"
-}, {
-"args": [],
-"method": &"trick_off"
-}]
-}
-
-[sub_resource type="Animation" id="Animation_grind_salad"]
-resource_name = "salad"
-length = 7.21869
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Rig:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [1.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Rig:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 0.5, 2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.340028, 1.340028, 1.1, 1.6, 0.0, 0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Rig:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Rig:rotation:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, -0.35, -0.35, 0.0, 0.0]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Rig:rotation:y")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0.0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, -0.6, -0.6, 0.0, 0.0]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Rig:rotation:z")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath(".:rear_wheel_spin")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/7/type = "method"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath(".")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(3.835083, 5.26869),
-"transitions": PackedFloat32Array(1, 1),
-"values": [{
-"args": [],
-"method": &"trick_on"
-}, {
-"args": [],
-"method": &"trick_off"
-}]
-}
-
-[sub_resource type="Animation" id="Animation_grind_boardslide"]
-resource_name = "boardslide"
-length = 7.21869
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Rig:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [1.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Rig:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 0.5, 2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.1, 1.1, 1.1, 1.6, 0.0, 0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Rig:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Rig:rotation:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, 0.0, 0.0, 0.0, 0.0]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Rig:rotation:y")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0.0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 1.4, 1.4, 0.0, 0.0]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Rig:rotation:z")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath(".:rear_wheel_spin")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/7/type = "method"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath(".")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(3.835083, 5.26869),
-"transitions": PackedFloat32Array(1, 1),
-"values": [{
-"args": [],
-"method": &"trick_on"
-}, {
-"args": [],
-"method": &"trick_off"
-}]
-}
-
-[sub_resource type="Animation" id="Animation_grind_lipslide"]
-resource_name = "lipslide"
-length = 7.21869
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Rig:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [1.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Rig:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 0.5, 2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.1, 1.1, 1.1, 1.6, 0.0, 0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Rig:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Rig:rotation:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, 0.0, 0.0, 0.0, 0.0]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Rig:rotation:y")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0.0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, -1.4, -1.4, 0.0, 0.0]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Rig:rotation:z")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath(".:rear_wheel_spin")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/7/type = "method"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath(".")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(3.835083, 5.26869),
-"transitions": PackedFloat32Array(1, 1),
-"values": [{
-"args": [],
-"method": &"trick_on"
-}, {
-"args": [],
-"method": &"trick_off"
-}]
-}
-
-[sub_resource type="Animation" id="Animation_grind_noseslide"]
-resource_name = "noseslide"
-length = 7.21869
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Rig:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [1.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Rig:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 0.5, 2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.340028, 1.340028, 1.1, 1.6, 0.0, 0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Rig:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Rig:rotation:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, 0.35, 0.35, 0.0, 0.0]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Rig:rotation:y")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0.0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 1.4, 1.4, 0.0, 0.0]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Rig:rotation:z")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath(".:rear_wheel_spin")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/7/type = "method"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath(".")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(3.835083, 5.26869),
-"transitions": PackedFloat32Array(1, 1),
-"values": [{
-"args": [],
-"method": &"trick_on"
-}, {
-"args": [],
-"method": &"trick_off"
-}]
-}
-
-[sub_resource type="Animation" id="Animation_grind_tailslide"]
-resource_name = "tailslide"
-length = 7.21869
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Rig:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [1.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Rig:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 5.76869, 6.21869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 0.5, 2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213999, 6.046172, 6.776519, 7.405039, 7.931734, 8.356603, 8.679646, 8.900863, 9.020254, 9.037819, 8.953558, 8.767471, 8.479558, 8.089819, 7.598254, 7.004863, 6.309647, 5.512604, 4.613735, 3.61304, 2.510519, 1.306173, 1.1, 1.340028, 1.340028, 1.1, 1.6, 0.0, 0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Rig:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 7.21869),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 49.741663]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Rig:rotation:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0.0, 0.5775, 0.743459, 0.90534, 1.073287, 1.22646, 1.328393, 1.430327, 1.53226, 1.634193, 1.736126, 1.83806, 1.939993, 2.041927, 2.14386, 2.245793, 2.347727, 2.44966, 2.551593, 2.653526, 2.75546, 2.857393, 2.959327, 3.06126, 3.163193, 3.265127, 3.36706, 3.468993, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, -0.227928, -0.505098, -0.774872, -0.936, -0.887913, -0.839826, -0.791739, -0.743652, -0.695565, -0.647479, -0.599392, -0.551305, -0.503218, -0.455131, -0.407044, -0.358957, -0.31087, -0.262783, -0.214696, -0.166609, -0.118522, -0.070435, -0.022348, 0.025739, 0.073826, 0.121913, 0.0, -0.35, -0.35, 0.0, 0.0]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Rig:rotation:y")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0.0, 3.485083, 3.835083, 5.26869, 5.56869, 7.21869),
-"transitions": PackedFloat32Array(1, -2, 1, -2, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 1.4, 1.4, 0.0, 0.0]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Rig:rotation:z")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath(".:rear_wheel_spin")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0.0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/7/type = "method"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath(".")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(3.835083, 5.26869),
-"transitions": PackedFloat32Array(1, 1),
-"values": [{
-"args": [],
-"method": &"trick_on"
-}, {
-"args": [],
-"method": &"trick_off"
-}]
-}
-
 [resource]
 _data = {
-&"grind": SubResource("Animation_grind_grind"),
-&"five_o": SubResource("Animation_grind_five_o"),
-&"nosegrind": SubResource("Animation_grind_nosegrind"),
-&"crooked": SubResource("Animation_grind_crooked"),
-&"feeble": SubResource("Animation_grind_feeble"),
-&"salad": SubResource("Animation_grind_salad"),
-&"boardslide": SubResource("Animation_grind_boardslide"),
-&"lipslide": SubResource("Animation_grind_lipslide"),
-&"noseslide": SubResource("Animation_grind_noseslide"),
-&"tailslide": SubResource("Animation_grind_tailslide"),
 &"air": SubResource("Animation_3g617"),
 &"air_heel_clicker": SubResource("Animation_hfd0i"),
 &"air_high_chair": SubResource("Animation_i4op6"),
@@ -4155,10 +4145,15 @@ _data = {
 &"air_superman": SubResource("Animation_3yho6"),
 &"air_t_pose": SubResource("Animation_qkysu"),
 &"backflip": SubResource("Animation_3i4d3"),
+&"boardslide": SubResource("Animation_grind_boardslide"),
 &"bunny_hop": SubResource("Animation_vlujj"),
 &"burnout": SubResource("Animation_ciwuw"),
+&"crooked": SubResource("Animation_grind_crooked"),
 &"drift": SubResource("Animation_eud8r"),
+&"feeble": SubResource("Animation_grind_feeble"),
+&"five_o": SubResource("Animation_grind_five_o"),
 &"frontflip": SubResource("Animation_u0yg6"),
+&"grind": SubResource("Animation_grind_grind"),
 &"ground": SubResource("Animation_12b5o"),
 &"ground_heel_clicker": SubResource("Animation_l58wy"),
 &"ground_high_chair": SubResource("Animation_c3jhj"),
@@ -4166,7 +4161,12 @@ _data = {
 &"ground_knee_knocker": SubResource("Animation_qlx68"),
 &"ground_t_pose": SubResource("Animation_twt27"),
 &"ground_two_left_feet": SubResource("Animation_3c866"),
+&"lipslide": SubResource("Animation_grind_lipslide"),
+&"nosegrind": SubResource("Animation_grind_nosegrind"),
+&"noseslide": SubResource("Animation_grind_noseslide"),
+&"salad": SubResource("Animation_grind_salad"),
 &"stoppie": SubResource("Animation_b8yhw"),
+&"tailslide": SubResource("Animation_grind_tailslide"),
 &"wheelie": SubResource("Animation_iiunx"),
 &"wheelie_drift_wheelie": SubResource("Animation_8ygjq"),
 &"wheelie_heel_clicker": SubResource("Animation_vdxnv"),

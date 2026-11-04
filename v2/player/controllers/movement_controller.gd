@@ -119,8 +119,8 @@ const GRIND_MIN_SPEED: float = 6.0 # along the rail: slower won't start a grind,
 const GRIND_ACCEL: float = 2.0 # speed gain per sec on the rail, up to bd.max_speed
 const GRIND_YAW_RATE: float = 2.0 # rad/s turn across the rail at full steer
 const GRIND_MAX_YAW_DEG: float = 120.0 # turned further across the rail bails (CrashController)
-const GRIND_SNAP_RADIUS: float = 1.0 # rail magnetism: a descending bike this close gets pulled on
-const GRIND_SNAP_BELOW: float = 0.3 # snaps even once this far under the rail's top (fell past it this tick)
+const GRIND_SNAP_RADIUS: float = 2.0 # rail magnetism: a descending bike this close gets pulled on
+const GRIND_SNAP_BELOW: float = 0.6 # snaps even once this far under the rail's top (fell past it this tick)
 # Upward pop leaving a rail. Airtime clears AIR_TRICK_MIN_AIRTIME, so a straight drive-off lands back on it.
 const GRIND_POP: float = 6.0
 var is_reversing: bool = false

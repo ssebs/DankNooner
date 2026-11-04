@@ -1840,7 +1840,6 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -134
 
 [node name="EventStartCircle1" parent="." unique_id=459761741 node_paths=PackedStringArray("gas_station", "props", "spawns", "checkpoints") instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -150, 0, 59)
-visible = false
 gas_station = NodePath("../GasStations/StuntRace01GasStation")
 props = NodePath("Props")
 spawns = NodePath("Spawns")
@@ -1877,6 +1876,14 @@ transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70
 
 [node name="GrindRail4" parent="EventStartCircle1/Props/RaceProps" unique_id=1069831906 instance=ExtResource("44_yucqr")]
 transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -22.34262, 12, 279.34262)
+
+[node name="GrindRail5" parent="EventStartCircle1/Props/RaceProps" unique_id=575280884 instance=ExtResource("44_yucqr")]
+transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, -667.10004, 5.25, 398.375)
+length = 200.0
+
+[node name="GrindRail6" parent="EventStartCircle1/Props/RaceProps" unique_id=1296436957 instance=ExtResource("44_yucqr")]
+transform = Transform3D(0, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, 0, -667.10004, 5.25, 412.625)
+length = 200.0
 
 [node name="ArrowWall2" parent="EventStartCircle1/Props/RaceProps" unique_id=1948640552 instance=ExtResource("25_60x1b")]
 transform = Transform3D(-4.3711378e-08, -0.7071067, 0.70710677, 1, -3.0908613e-08, 3.0908623e-08, 0, 0.70710677, 0.7071067, -16.697449, 5.2500005, 338.47864)
@@ -4717,7 +4724,7 @@ height = 0.1
 depth = 13.0
 color_preset = 1
 
-[node name="GrindRail" parent="props/Ramp" unique_id=575280884 instance=ExtResource("44_yucqr")]
+[node name="GrindRail" parent="props/Ramp" unique_id=361593493 instance=ExtResource("44_yucqr")]
 transform = Transform3D(1, -4.944203e-10, -2.7959857e-12, 4.944203e-10, 0.99993604, 0.011311018, -2.7959857e-12, -0.011311018, 0.99993604, 1, 4.1760693, 95.60837)
 length = 176.0
 
