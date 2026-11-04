@@ -26,7 +26,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
-- [ ] slow speed turning anim doesn't look right (front wheel going into ground, not sharp enough turn / realistic counter leaning, player leans super far going 2mph - theyd crash irl)
 
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -218,7 +217,6 @@
 - [ ] trick animation to move up then play the mixamo anims
 - [ ] wheelie turning animation should yaw
 
-
 ### Cutscenes
 - [ ] dynamic, use animation player to define
 - [ ] move camera around
@@ -247,6 +245,8 @@
 ---
 
 ## Done ✅
+
+- [x] slow speed turning anim doesn't look right (front wheel going into ground, not sharp enough turn / realistic counter leaning, player leans super far going 2mph - theyd crash irl)
 
 - [x] Grinding tricks (jump in air, grind on house fences, etc.)
 

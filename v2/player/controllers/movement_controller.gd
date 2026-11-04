@@ -32,6 +32,8 @@ const WHEELIE_CLUTCH_KICK_BOOST: float = 0.75
 const WHEELIE_STEER_SCALE: float = 0.5
 ## At/below this speed the wheelie steering cut is lifted so tight circle wheelies stay possible.
 const WHEELIE_STEER_FULL_SPEED: float = 8.0
+## Below this the bike doesn't turn and roll eases back to upright.
+const MIN_STEER_SPEED: float = 0.5
 ## Rear brake pulls the front down during a wheelie, scaled by bd.return_speed (works on throttle too).
 const WHEELIE_REAR_BRAKE_DROP: float = 3.0
 
@@ -645,7 +647,7 @@ func _steer_calc(delta: float):
 	var amount_normalized_rename_me := 1.0
 	if player_entity.trick_controller.current_trick == TrickController.Trick.TWO_LEFT_FEET:
 		amount_normalized_rename_me = 0.5
-	elif speed < 1 and not is_reversing:
+	elif speed < MIN_STEER_SPEED and not is_reversing:
 		amount_normalized_rename_me = 0.2
 
 	# One wheel off the ground cuts steering authority. Scale the TARGET, not the accumulated
@@ -673,14 +675,10 @@ func _steer_calc(delta: float):
 
 	# Steering — bell curve: low at standstill, peaks mid-low speed, tapers at top speed.
 	# Uses abs(speed) so reverse rolling still turns the body.
-	if absf(speed) > 0.5 and not is_drifting: # steering stays live while wobbling — the wobble rides on top
-		var steer_factor = 1.0 if is_reversing else (bd.steer_curve.sample(speed_pct) if bd.steer_curve else 1.0)
-		var turn_rate = bd.turn_speed * steer_factor * (1.0 - get_unstable_factor() * UNSTABLE_STEER_SUPPRESSION)
+	if absf(speed) > MIN_STEER_SPEED and not is_drifting: # steering stays live while wobbling — the wobble rides on top
+		var turn_rate = get_turn_rate()
 		DebugUtils.DebugMsg(
-			(
-				"Steer: spd=%.1f spd%%=%.0f%% curve=%.2f rate=%.2f"
-				% [speed, speed_pct * 100, steer_factor, turn_rate]
-			),
+			"Steer: spd=%.1f spd%%=%.0f%% rate=%.2f" % [speed, speed_pct * 100, turn_rate],
 			DebugUtils.is_debug(debug_verbose, DebugUtils.verbose_movement)
 		)
 		player_entity.rotate_y(-roll_angle * turn_rate * delta)
@@ -693,6 +691,16 @@ func _steer_calc(delta: float):
 		right = right.normalized()
 		var adjusted_forward = target_up.cross(right).normalized()
 		player_entity.global_transform.basis = Basis(right, target_up, -adjusted_forward)
+
+
+## Yaw rate per radian of roll_angle.
+func get_turn_rate() -> float:
+	var bd = player_entity.bike_definition
+	var steer_factor := 1.0
+	if not is_reversing and bd.steer_curve:
+		# From speed, not tick-cached speed_pct — AnimationController calls this from _process.
+		steer_factor = bd.steer_curve.sample(clampf(speed / bd.max_speed, 0.0, 1.0))
+	return bd.turn_speed * steer_factor * (1.0 - get_unstable_factor() * UNSTABLE_STEER_SUPPRESSION)
 
 
 ## Calculate player_entity.velocity & set slope angle

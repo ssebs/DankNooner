@@ -26,9 +26,15 @@ enum RiderState {
 @export_tool_button("Play Default Pose") var reset_pose_btn = _editor_reset_to_default_pose
 
 const IDLE_TIMEOUT: float = 0.1
-const MAX_BUTT_OFFSET := 0.12
+const MAX_BUTT_OFFSET := 0.2
 ## Max chest yaw (deg) when leaning into a turn — chest twists toward turn direction.
 const MAX_CHEST_YAW_DEG: float = 30.0
+## Slow-turn counterweight: the bike leans away from the turn by this fraction of roll, peaking
+## at COUNTER_LEAN_PEAK_SPEED (fades out toward a stop) and blending into a normal lean-in by
+## COUNTER_LEAN_END_SPEED.
+const COUNTER_LEAN_RATIO: float = 0.6
+const COUNTER_LEAN_PEAK_SPEED: float = 2.0
+const COUNTER_LEAN_END_SPEED: float = 10.0
 ## Max chest pitch (deg) when leaning fwd/back. Negate to flip direction.
 const MAX_CHEST_LEAN_PITCH_DEG: float = -15.0
 ## Max chest z shift when leaning fwd/back. Negate to flip direction.
@@ -251,7 +257,9 @@ func _update_riding(delta: float) -> void:
 	# Steering + wheels run direct on bike_skin — they're not part of the rider pose.
 	# Reverse inverts roll_angle (so the body rotates the correct way for input), but the
 	# handlebars should still visually point in the input direction — un-invert here.
-	var steer_input := roll if _targets_synced_from_bike else 0.0
+	# Drift keeps roll-driven bars — the slide, not the bike-model turn, sets its heading.
+	var bars := roll if movement_controller.is_drifting else _bar_angle(roll)
+	var steer_input := bars if _targets_synced_from_bike else 0.0
 	if movement_controller.is_reversing:
 		steer_input = -steer_input
 	bike_skin.rotate_steering(steer_input, delta)
@@ -345,12 +353,21 @@ func _set_pose_local_from_bike(
 ## Lean (Z), chest yaw, butt/chest X+Z weight shift. Reads + writes pose only —
 ## NEVER touch the live nodes here, they hold post-anim values from last frame.
 func _apply_riding_common(pose: _RiderPose, _delta: float, blend: float, roll: float) -> void:
-	pose.visual_root_rot.z = lerpf(pose.visual_root_rot.z, roll, blend)
+	# Slow-turn counterweight: the bike leans away from the turn and the rider leans in, keeping
+	# their combined lean at `lean`.
+	var lean := _visual_lean(roll)
+	var spd := absf(movement_controller.speed)
+	var t := smoothstep(0.0, COUNTER_LEAN_END_SPEED, spd)
+	var fade_in := smoothstep(MovementController.MIN_STEER_SPEED, COUNTER_LEAN_PEAK_SPEED, spd)
+	var bike_lean := lerpf(-roll * COUNTER_LEAN_RATIO * fade_in, lean, t)
+	pose.visual_root_rot.z = lerpf(pose.visual_root_rot.z, bike_lean, blend)
+	pose.chest_rot.z = lerpf(pose.chest_rot.z, _base_chest_rot.z + lean - bike_lean, blend)
 
 	var target_chest_y = roll * deg_to_rad(MAX_CHEST_YAW_DEG)
 	pose.chest_rot.y = lerpf(pose.chest_rot.y, target_chest_y, blend)
 
-	var lean_x_offset = clampf(pose.visual_root_rot.z, -MAX_BUTT_OFFSET, MAX_BUTT_OFFSET)
+	# From roll, not bike lean — the butt scoots toward the steer even while the bike leans away.
+	var lean_x_offset = clampf(roll, -MAX_BUTT_OFFSET, MAX_BUTT_OFFSET)
 	pose.butt_pos.x = lerpf(pose.butt_pos.x, _base_butt_pos.x - lean_x_offset, blend)
 	pose.chest_pos.x = lerpf(pose.chest_pos.x, _base_chest_pos.x - lean_x_offset, blend)
 
@@ -365,6 +382,23 @@ func _apply_riding_common(pose: _RiderPose, _delta: float, blend: float, roll: f
 	pose.butt_pos.z = lerpf(
 		pose.butt_pos.z, _base_butt_pos.z + shift_input * MAX_BUTT_Z_OFFSET, blend
 	)
+
+
+## Real bikes barely lean at a crawl, so cap lean at what the turn needs: atan(v·ω / g).
+## At speed roll already sits under the cap, so high-speed lean is unchanged.
+func _visual_lean(roll: float) -> float:
+	var yaw_rate := absf(roll * movement_controller.get_turn_rate())
+	var needed := atan(absf(movement_controller.speed) * yaw_rate / MovementController.FALL_GRAVITY)
+	return signf(roll) * minf(absf(roll), needed)
+
+
+## Bicycle-model steer angle for the turn: atan(wheelbase·ω / v). Big at a crawl, near straight at
+## speed. Capped by roll so the bars never exceed their old roll-driven angle (and settle when stopped).
+func _bar_angle(roll: float) -> float:
+	var yaw_rate := absf(roll * movement_controller.get_turn_rate())
+	var wheelbase := _bd.front_wheel_ground_position.distance_to(_bd.rear_wheel_ground_position)
+	var bar := atan2(wheelbase * yaw_rate, absf(movement_controller.speed))
+	return signf(roll) * minf(absf(roll), bar)
 
 
 func _apply_pitch_ground(pose: _RiderPose, blend: float, pitch: float) -> void:
