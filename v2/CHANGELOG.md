@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.0.166 - 2026-11-03
+
+- - [ ] lowside when gassing it during corner
+- - [ ] lowside when gassing it during corner
+- better grind snap
+- improve: slow speed turning anim doesn't look right (front wheel going into ground, not sharp enough turn / realistic counter leaning, player leans super far going 2mph - theyd crash irl)
+- tweak grinding tricks
+- tweak grinding tricks
+- start creating grinding tricks
+- tweak drifting physics + fix pickup spawners dont work in stunt battle arena
+- fix not enough feedback for brakedanger / helping the user know they should be progressively braking instead of braking hard quickly
+- shouldnt be so easy to drift & steer on gamepad, only drift from rear brake, not lean fwd except burnout
+- keep vibrating controller after a crash til you respawn + respawn timer => 15s max for CrashLaunch, during stuntrace =>3s, free roam => 5s
+- crash respawn timer => 15s max for CrashLaunch, during stuntrace =>3s, free roam => 5s
+- ramp should spawn right in front of you
+- minimap rotate w/ cam
+
 ## v0.0.165 - 2026-11-02
 
 - npc racers can trick + boost + boost VFX prework
