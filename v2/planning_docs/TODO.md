@@ -30,6 +30,7 @@
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
 
+- [ ] [_store_fixes](./_store_fixes.md)
 - [ ] Demo release
   - [x] Get racing AI working [WIP]
     - [ ] tricks / Items

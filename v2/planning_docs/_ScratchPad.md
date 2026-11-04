@@ -1,6 +1,9 @@
 # Scratch Pad
 ---
 
+Vid: where we started, where we are now 
+
+
 ---
 
 ## NOW
