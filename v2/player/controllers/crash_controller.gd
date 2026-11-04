@@ -184,6 +184,16 @@ func _detect_crash():
 			trigger_crash(CrashType.LOWSIDE)
 			return
 
+		# Grind bail — turned too far across the rail, or out of speed on it. Pitch bails are the
+		# wheelie / stoppie limits above.
+		if movement_controller.is_grinding and (
+			absf(movement_controller.grind_yaw) > deg_to_rad(MovementController.GRIND_MAX_YAW_DEG)
+			or movement_controller.speed < MovementController.GRIND_MIN_SPEED
+		):
+			DebugUtils.DebugMsg("grind bail crash")
+			trigger_crash(CrashType.LOWSIDE)
+			return
+
 		# Stalled on a grade too steep to climb — bike can't hold, rider drops it
 		if movement_controller.is_stalled_on_steep_slope():
 			DebugUtils.DebugMsg("steep slope stall crash")

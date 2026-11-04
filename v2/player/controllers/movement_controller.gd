@@ -111,6 +111,14 @@ const DRIFT_YAW_RATE: float = 1.6 # rad/s at full steer, scaled by steer_curve o
 const DRIFT_SPEED_SCRUB: float = 0.6 # speed bleed per sec, proportional to |slip_angle|
 const DRIFT_MAX_SLIP_ANGLE_DEG: float = 70.0 # clamp just past the 60° spinout so crash fires, no wrap
 const BALANCE_LOCK_INPUT_EPS: float = 0.1 # throttle/brake/lean "touch" that releases the balance lock
+# Grinding — landing a real jump on a collision layer 9 (grind) box. See _grind_calc.
+const GRIND_LAYER_MASK: int = 256 # 1 << 8 (layer 9)
+const GRIND_MIN_SPEED: float = 6.0 # along the rail: slower won't start a grind, and bails one (CrashController)
+const GRIND_ACCEL: float = 2.0 # speed gain per sec on the rail, up to bd.max_speed
+const GRIND_YAW_RATE: float = 2.0 # rad/s turn across the rail at full steer
+const GRIND_MAX_YAW_DEG: float = 120.0 # turned further across the rail bails (CrashController)
+const GRIND_SNAP_RADIUS: float = 1.0 # rail magnetism: a descending bike this close gets pulled on
+const GRIND_SNAP_BELOW: float = 0.3 # snaps even once this far under the rail's top (fell past it this tick)
 var is_reversing: bool = false
 var speed: float = 0.0
 var roll_angle: float = 0.0 # lean left/right
@@ -134,6 +142,11 @@ var in_balance_point: bool = false
 var balance_locked: bool = false
 var hop_pitch_vel: float = 0.0 # synced — nose-down rate from the hop, cleared on landing
 var bunny_hopped: bool = false # true on the tick a hop fires; TrickController latches it
+var is_grinding: bool = false # synced
+# Synced — the rail's top line, grind_to being the end the bike travels toward
+var grind_from: Vector3 = Vector3.ZERO
+var grind_to: Vector3 = Vector3.ZERO
+var grind_yaw: float = 0.0 # synced — heading vs rail direction, + = turned left
 
 var air_pitch_total: float = 0.0 # cumulative pitch rotation while airborne (for flip counting)
 var air_time: float = 0.0 # time since takeoff (for wheelie grace window)
@@ -159,6 +172,7 @@ var _balance_point_decay_mult: float = 0.85
 var _stoppie_locked_by_wheelie: bool = false
 var _floor_normal: Vector3 = Vector3.UP # cached per tick — only valid when is_on_floor
 var _on_unstable_surface: bool = false # touching layer 5 (unstable_collision), cached per tick
+var _grind_query := PhysicsShapeQueryParameters3D.new() # GRIND_SNAP_RADIUS sphere, set up in _ready
 
 
 func _ready():
@@ -166,6 +180,10 @@ func _ready():
 		return
 
 	player_entity.respawned.connect(_on_respawn)
+	var snap_sphere := SphereShape3D.new()
+	snap_sphere.radius = GRIND_SNAP_RADIUS
+	_grind_query.shape = snap_sphere
+	_grind_query.collision_mask = GRIND_LAYER_MASK
 
 
 func _on_respawn():
@@ -188,7 +206,7 @@ func on_movement_rollback_tick(delta: float):
 		return
 
 	was_on_floor = is_on_floor
-	is_on_floor = is_on_floor_netfox()
+	is_on_floor = is_grinding or is_on_floor_netfox()
 	_on_unstable_surface = _detect_unstable_surface()
 	if is_on_floor:
 		_floor_normal = _get_blended_surface_normal()
@@ -235,6 +253,10 @@ func on_movement_rollback_tick(delta: float):
 				pitch_angle = 0.0
 				air_pitch_total = 0.0
 			_wheelie_grace_consumed = true
+	# After the landing block, so a rail landing gets the same pitch normalization.
+	if is_grinding:
+		_grind_calc(delta)
+		return
 	_speed_calc(delta)
 	speed_pct = clampf(speed / player_entity.bike_definition.max_speed, 0.0, 1.0)
 	_update_surface_alignment(delta)
@@ -253,9 +275,7 @@ func on_movement_rollback_tick(delta: float):
 
 	# Apply movement
 	pre_slide_velocity = player_entity.velocity
-	player_entity.velocity *= NetworkTime.physics_factor
-	player_entity.move_and_slide()
-	player_entity.velocity /= NetworkTime.physics_factor
+	_slide()
 	# Godot skips its snap when velocity·up_direction > 0, but up_direction lags the surface, so
 	# surface-following velocity reads as "up" on slopes. Re-check against the real floor normal.
 	# is_zero_approx: slide() leaves float noise of either sign on a tilted normal.
@@ -267,8 +287,11 @@ func on_movement_rollback_tick(delta: float):
 	):
 		player_entity.apply_floor_snap()
 
+	if not is_on_floor and air_time >= TrickController.AIR_TRICK_MIN_AIRTIME:
+		_try_start_grind()
+
 	# Trigger 2 — judged here because the touchdown slide deflects velocity (a steep landing can reverse it).
-	if not is_on_floor and player_entity.is_on_floor():
+	if not is_on_floor and not is_grinding and player_entity.is_on_floor():
 		wobble_controller.kick_bad_landing(pre_slide_velocity)
 
 	_handle_player_collision(delta)
@@ -303,6 +326,90 @@ func _debug_air_state():
 			TrickController.trick_to_str(player_entity.trick_controller.current_trick),
 		]
 	)
+
+
+## move_and_slide at the netfox tick rate.
+func _slide():
+	player_entity.velocity *= NetworkTime.physics_factor
+	player_entity.move_and_slide()
+	player_entity.velocity /= NetworkTime.physics_factor
+
+
+## Starts a grind on the nearest grind-layer rail within GRIND_SNAP_RADIUS of a descending bike
+## (magnetism, so it needn't land squarely on a thin box) that it's moving fast enough along.
+func _try_start_grind():
+	if pre_slide_velocity.y > 0.0:
+		return
+	var pos := player_entity.global_position
+	_grind_query.transform = Transform3D(Basis(), pos)
+	var best_dist := INF
+	for hit in player_entity.get_world_3d().direct_space_state.intersect_shape(_grind_query):
+		var collider: CollisionObject3D = hit["collider"]
+		var shape_node: CollisionShape3D = collider.shape_owner_get_owner(
+			collider.shape_find_owner(hit["shape"])
+		)
+		var box: BoxShape3D = shape_node.shape
+		var xf := shape_node.global_transform
+		# The rail runs along the box's longer horizontal axis; ride its top face.
+		var half_rail := xf.basis.z * box.size.z * 0.5
+		if box.size.x > box.size.z:
+			half_rail = xf.basis.x * box.size.x * 0.5
+		if pre_slide_velocity.dot(half_rail) < 0.0:
+			half_rail = -half_rail
+		var top := xf.origin + xf.basis.y * box.size.y * 0.5
+		var on_rail := Geometry3D.get_closest_point_to_segment(pos, top - half_rail, top + half_rail)
+		var rail_speed := pre_slide_velocity.dot(half_rail.normalized())
+		if (
+			pos.y < on_rail.y - GRIND_SNAP_BELOW
+			or rail_speed < GRIND_MIN_SPEED
+			or pos.distance_to(on_rail) >= best_dist
+		):
+			continue
+		best_dist = pos.distance_to(on_rail)
+		grind_from = top - half_rail
+		grind_to = top + half_rail
+		speed = rail_speed
+	if best_dist == INF:
+		return
+	var forward := -player_entity.global_transform.basis.z
+	grind_yaw = (
+		(grind_to - grind_from)
+		.slide(Vector3.UP)
+		.signed_angle_to(forward.slide(Vector3.UP), Vector3.UP)
+	)
+	is_grinding = true
+
+
+## Rides the rail kinematically. Lean sets pitch and steer turns the bike across the rail; both hold
+## with no input, so a shift held too long bails (CrashController). The rail's end pops the bike off.
+func _grind_calc(delta: float):
+	var bd = player_entity.bike_definition
+	var rail := grind_to - grind_from
+	var dir := rail.normalized()
+	pitch_angle -= input_controller.nfx_lean * bd.rotation_speed * delta
+	grind_yaw -= input_controller.nfx_steer * GRIND_YAW_RATE * delta
+	roll_angle = lerpf(roll_angle, 0.0, bd.lean_speed * delta)
+	speed = move_toward(speed, bd.max_speed, GRIND_ACCEL * delta) - dir.y * SLOPE_GRAVITY * delta
+
+	var progress := (player_entity.global_position - grind_from).dot(dir) + speed * delta
+	var off_end := progress >= rail.length()
+	if off_end:
+		grind_yaw = 0.0 # face the momentum, or the ground landing yanks velocity to the heading
+
+	var up := dir.cross(Vector3.UP).cross(dir).normalized()
+	var forward := dir.rotated(up, grind_yaw)
+	player_entity.up_direction = up
+	player_entity.global_transform.basis = Basis(forward.cross(up), up, -forward)
+	player_entity.velocity = dir * speed
+	pre_slide_velocity = player_entity.velocity # the crash wreck launches from it
+
+	if off_end:
+		is_grinding = false
+		# A real move off the top, else next tick's floor check snaps back onto the rail as ground.
+		player_entity.velocity += Vector3.UP * HOP_VELOCITY
+		_slide()
+		return
+	player_entity.global_position = grind_from + dir * progress
 
 
 ## True if any current slide collision is on layer 5 (unstable_collision).
@@ -1178,6 +1285,8 @@ func do_reset():
 	hop_pitch_vel = 0.0
 	_hop_launch_vel = 0.0
 	bunny_hopped = false
+	is_grinding = false
+	grind_yaw = 0.0
 	air_pitch_total = 0.0
 	air_time = 0.0
 	_wheelie_grace_consumed = false

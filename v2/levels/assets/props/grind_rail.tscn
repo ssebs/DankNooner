@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://dtckadkd3wndc"]
+
+[ext_resource type="Script" path="res://levels/assets/props/grind_rail.gd" id="1_rail"]
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_2vl3d"]
+
+[node name="GrindRail" type="Node3D" unique_id=575280884]
+script = ExtResource("1_rail")
+
+[node name="Post1" parent="." unique_id=1485126779 instance=ExtResource("1_2vl3d")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -24.75)
+width = 0.5
+height = 2.0
+depth = 0.5
+
+[node name="Post2" parent="." unique_id=546625001 instance=ExtResource("1_2vl3d")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 24.75)
+width = 0.5
+height = 2.0
+depth = 0.5
+
+[node name="Rail" parent="." unique_id=355236726 instance=ExtResource("1_2vl3d")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_layer = 257
+width = 0.2
+height = 0.2
+depth = 50.0
+color_preset = 5
+neon_edges = true

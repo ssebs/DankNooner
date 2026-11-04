@@ -28,6 +28,19 @@ const STATE_HOWTO_TRICKS: Dictionary = {
 	TrickController.TrickState.WHEELIE:
 	[TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.DRIFT_WHEELIE],
 	TrickController.TrickState.GROUND: [TrickController.Trick.STOPPIE],
+	TrickController.TrickState.GRIND:
+	[
+		TrickController.Trick.FIFTY_FIFTY,
+		TrickController.Trick.FIVE_O,
+		TrickController.Trick.NOSEGRIND,
+		TrickController.Trick.CROOKED,
+		TrickController.Trick.FEEBLE,
+		TrickController.Trick.SALAD,
+		TrickController.Trick.BOARDSLIDE,
+		TrickController.Trick.LIPSLIDE,
+		TrickController.Trick.NOSESLIDE,
+		TrickController.Trick.TAILSLIDE,
+	],
 }
 
 @onready var state_tabs: TabContainer = %StateTabs

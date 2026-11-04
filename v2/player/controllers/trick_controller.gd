@@ -24,13 +24,23 @@ enum Trick {
 	KNEE_KNOCKER,
 	BUNNY_HOP,
 	DRIFT_WHEELIE,
+	FIFTY_FIFTY,
+	FIVE_O,
+	NOSEGRIND,
+	CROOKED,
+	FEEBLE,
+	SALAD,
+	BOARDSLIDE,
+	LIPSLIDE,
+	NOSESLIDE,
+	TAILSLIDE,
 }
 enum Dir {UP, DOWN, LEFT, RIGHT}
 ## TAP / DOUBLE_TAP latch their trick for TAP_TRICK_DURATION; HOLD / DOUBLE_TAP_HOLD keep it active
 ## while the stick stays pushed. Any trick works in any slot.
 enum Gesture {TAP, DOUBLE_TAP, HOLD, DOUBLE_TAP_HOLD}
 ## Which BINDINGS table the right stick reads. NONE = stick tricks gated off.
-enum TrickState {NONE, GROUND, WHEELIE, AIR}
+enum TrickState {NONE, GROUND, WHEELIE, AIR, GRIND}
 @export var player_entity: PlayerEntity
 @export var input_controller: InputController
 @export var gearing_controller: GearingController
@@ -88,6 +98,10 @@ const AIR_TRICKS: Array[Trick] = [
 const WHEELIE_MIN_SCORE_MULT: float = 0.5
 const WHEELIE_BP_SCORE_MULT: float = 2.0
 const WHEELIE_LOCKED_SCORE_MULT: float = 1.5
+## Grind yaw zones (off the rail's direction): straight under ANGLED, sideways from SIDEWAYS.
+## See _detect_grind_trick.
+const GRIND_ANGLED_YAW_DEG: float = 20.0
+const GRIND_SIDEWAYS_YAW_DEG: float = 60.0
 ## Right-stick control scheme: state -> gesture -> trick per Dir (UP, DOWN, LEFT, RIGHT). Guideline:
 ## shared tricks keep one tap / double-tap slot across states (double tap = harder trick); HOLD is
 ## for state-specific tricks. Const (rollback): byte-identical on every peer.
@@ -112,6 +126,13 @@ const BINDINGS: Dictionary = {
 		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.NONE],
 		Gesture.HOLD: [Trick.HIGH_CHAIR, Trick.NONE, Trick.KNEE_KNOCKER, Trick.T_POSE],
 		Gesture.DOUBLE_TAP_HOLD: [Trick.NONE, Trick.NONE, Trick.SPREAD_EAGLE, Trick.SUPERMAN],
+	},
+	TrickState.GRIND:
+	{
+		Gesture.TAP: [Trick.NONE, Trick.HEEL_CLICKER, Trick.NONE, Trick.NONE],
+		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.NONE],
+		Gesture.HOLD: [Trick.HIGH_CHAIR, Trick.NONE, Trick.KNEE_KNOCKER, Trick.T_POSE],
+		Gesture.DOUBLE_TAP_HOLD: [Trick.NONE, Trick.NONE, Trick.NONE, Trick.NONE],
 	},
 }
 
@@ -254,6 +275,10 @@ func _bound_trick(gesture: Gesture, dir: int) -> Trick:
 
 ## Which BINDINGS table applies right now, or NONE when stick tricks are gated off.
 func trick_state() -> TrickState:
+	# Not on the touchdown tick (still airborne): the held air trick must stay visible so landing
+	# mid-trick on a rail crashes (CrashController reads it next tick).
+	if movement_controller.is_grinding and movement_controller.is_on_floor:
+		return TrickState.GRIND
 	if not movement_controller.is_on_floor:
 		# A brief hop (curb, bump) isn't a real jump — a ground trick held over a bump would
 		# otherwise flick to an air trick and crash on touchdown (landed-mid-air-trick).
@@ -345,6 +370,9 @@ func _detect_current_trick(delta: float) -> Trick:
 	# Reset flip tracking on landing
 	_flip_emitted = false
 
+	if movement_controller.is_grinding:
+		return _detect_grind_trick()
+
 	if movement_controller.is_drifting:
 		# Drifting at a near-standstill is a burnout (rear spinning in place); moving is a drift.
 		if movement_controller.speed < MovementController.DRIFT_MIN_SPEED:
@@ -405,6 +433,36 @@ func _detect_air_trick() -> Trick:
 		return Trick.BACKFLIP
 
 	return Trick.FRONTFLIP
+
+
+## The rail pose picks the grind; a held stick trick rides on top. Pitch zones are the wheelie /
+## stoppie thresholds, yaw zones GRIND_ANGLED_YAW_DEG / GRIND_SIDEWAYS_YAW_DEG.
+func _detect_grind_trick() -> Trick:
+	var held := _held_trick()
+	if held != Trick.NONE:
+		return held
+
+	var pitch := movement_controller.pitch_angle
+	var front := pitch < deg_to_rad(STOPPIE_PITCH_THRESHOLD_DEG)
+	var back := pitch > deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG)
+	var yaw := movement_controller.grind_yaw
+	var left := yaw > 0.0
+	if absf(yaw) >= deg_to_rad(GRIND_SIDEWAYS_YAW_DEG):
+		if front:
+			return Trick.NOSESLIDE
+		if back:
+			return Trick.TAILSLIDE
+		return Trick.BOARDSLIDE if left else Trick.LIPSLIDE
+	if absf(yaw) >= deg_to_rad(GRIND_ANGLED_YAW_DEG):
+		if front:
+			return Trick.CROOKED
+		if back:
+			return Trick.FEEBLE if left else Trick.SALAD
+	if front:
+		return Trick.NOSEGRIND
+	if back:
+		return Trick.FIVE_O
+	return Trick.FIFTY_FIFTY
 
 
 ## Called from player_entity.gd's do_respawn
@@ -521,6 +579,26 @@ static func trick_to_str(trick: Trick) -> String:
 			return "BUNNY_HOP"
 		Trick.DRIFT_WHEELIE:
 			return "DRIFT_WHEELIE"
+		Trick.FIFTY_FIFTY:
+			return "FIFTY_FIFTY"
+		Trick.FIVE_O:
+			return "FIVE_O"
+		Trick.NOSEGRIND:
+			return "NOSEGRIND"
+		Trick.CROOKED:
+			return "CROOKED"
+		Trick.FEEBLE:
+			return "FEEBLE"
+		Trick.SALAD:
+			return "SALAD"
+		Trick.BOARDSLIDE:
+			return "BOARDSLIDE"
+		Trick.LIPSLIDE:
+			return "LIPSLIDE"
+		Trick.NOSESLIDE:
+			return "NOSESLIDE"
+		Trick.TAILSLIDE:
+			return "TAILSLIDE"
 	return "NONE"
 
 
@@ -564,6 +642,26 @@ static func str_to_trick(s: String) -> Trick:
 			return Trick.BUNNY_HOP
 		"DRIFT_WHEELIE":
 			return Trick.DRIFT_WHEELIE
+		"FIFTY_FIFTY":
+			return Trick.FIFTY_FIFTY
+		"FIVE_O":
+			return Trick.FIVE_O
+		"NOSEGRIND":
+			return Trick.NOSEGRIND
+		"CROOKED":
+			return Trick.CROOKED
+		"FEEBLE":
+			return Trick.FEEBLE
+		"SALAD":
+			return Trick.SALAD
+		"BOARDSLIDE":
+			return Trick.BOARDSLIDE
+		"LIPSLIDE":
+			return Trick.LIPSLIDE
+		"NOSESLIDE":
+			return Trick.NOSESLIDE
+		"TAILSLIDE":
+			return Trick.TAILSLIDE
 	return Trick.NONE
 
 

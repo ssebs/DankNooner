@@ -42,6 +42,16 @@ const HELD_TRICK_SCORE: Dictionary = {
 	TrickController.Trick.TWO_LEFT_FEET: 1.5,
 	TrickController.Trick.SPREAD_EAGLE: 2.0,
 	TrickController.Trick.SUPERMAN: 2.0,
+	TrickController.Trick.FIFTY_FIFTY: 1.5,
+	TrickController.Trick.FIVE_O: 2.0,
+	TrickController.Trick.NOSEGRIND: 2.0,
+	TrickController.Trick.BOARDSLIDE: 2.0,
+	TrickController.Trick.LIPSLIDE: 2.0,
+	TrickController.Trick.CROOKED: 2.5,
+	TrickController.Trick.FEEBLE: 2.5,
+	TrickController.Trick.SALAD: 2.5,
+	TrickController.Trick.NOSESLIDE: 2.5,
+	TrickController.Trick.TAILSLIDE: 2.5,
 }
 const ONE_TIME_TRICK_SCORE: Dictionary = {
 	TrickController.Trick.HEEL_CLICKER: 1.5,

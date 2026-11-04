@@ -1,5 +1,6 @@
 ## Visual-only stand-in for the bike while crashed: a rigid body that IKTargets (bike mesh, lights,
 ## exhaust) rides, launched per CrashType. Simulated locally on every peer, so tumbles differ per screen.
+## While riding (frozen) its sparks + grind loop play for rail grinds.
 class_name BikeWreck extends RigidBody3D
 
 @export var player_entity: PlayerEntity
@@ -70,6 +71,11 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 
 func _process(delta: float) -> void:
 	if freeze:
+		# Riding: a rail grind borrows the sparks + grind loop, at the wheels.
+		var rail_grind := player_entity.movement_controller.is_grinding
+		wreck_sparks.global_position = player_entity.global_position
+		wreck_sparks.emitting = rail_grind
+		_set_grind(rail_grind)
 		return
 	ik_targets.global_transform = global_transform * _ik_targets_offset
 	wreck_sparks.global_position = _contact_pos

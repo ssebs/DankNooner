@@ -26,11 +26,13 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
+- [ ] Grinding tricks (jump in air, grind on house fences, etc.)
 
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
 
 - [ ] [_store_fixes](./_store_fixes.md)
+- [ ] test steam save sync
 - [ ] Demo release
   - [x] Get racing AI working [WIP]
     - [ ] tricks / Items
@@ -48,7 +50,7 @@
   - [ ] Start with tutorial level (lock StuntCity until tutorial is complete)
   - [ ] Demo is open source, new private repo for full version
 - [ ] Better / Offical Trailer (concise, hook-y)
-  - [ ] hud toggle in editor for trailer
+  - [x] hud toggle in editor for trailer
   - [ ] record gameplay for trailer
   - [ ] record "streamer" moments
 - [ ] reach out to [streamers](https://www.reddit.com/r/indiegames/comments/164i572/comment/jyb6rgq/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
@@ -213,7 +215,6 @@
 - [ ] trick tweaks (just move butt a little from base trick)
   - [x] Land into wheelie / stoppie should be a trick
   - [ ] Wheelie + RIGHT animation (hand grab) — IK hand twd ground
-- [ ] Grinding tricks (jump in air, grind on house fences)
 - [ ] trick animation to move up then play the mixamo anims
 - [ ] wheelie turning animation should yaw
 - [ ] slow speed turning anim doesn't look right (front wheel going into ground, not sharp enough turn / realistic counter leaning)
