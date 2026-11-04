@@ -247,6 +247,10 @@
 
 ## Done ✅
 
+- [x] pickup spawners dont work in stunt battle arena
+
+- [x] tweak drifting physics
+
 - [x] not enough feedback for brakedanger / helping the user know they should be progressively braking instead of braking hard quickly
 
 - [x] shouldnt be so easy to drift & steer on gamepad, only drift from rear brake, not lean fwd except burnout

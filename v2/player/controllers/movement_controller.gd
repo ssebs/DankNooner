@@ -107,7 +107,7 @@ const BURNOUT_FRONT_BRAKE_MIN: float = 0.5 # front brake to pin the bike; also b
 const BURNOUT_MIN_RPM_RATIO: float = 0.85
 const DRIFT_RECOVER_RATE: float = 2.0 # rad/s grip pulls the travel line back to heading
 const DRIFT_RECOVER_SUPPRESS: float = 0.8 # how much drive (0..1) suppresses recovery (holds the slide)
-const DRIFT_YAW_RATE: float = 1.6 # rad/s the heading carves per full steer while drifting
+const DRIFT_YAW_RATE: float = 1.6 # rad/s at full steer, scaled by steer_curve only: tighter than steering at speed
 const DRIFT_SPEED_SCRUB: float = 0.6 # speed bleed per sec, proportional to |slip_angle|
 const DRIFT_MAX_SLIP_ANGLE_DEG: float = 70.0 # clamp just past the 60° spinout so crash fires, no wrap
 const BALANCE_LOCK_INPUT_EPS: float = 0.1 # throttle/brake/lean "touch" that releases the balance lock
@@ -1012,7 +1012,6 @@ func _drift_calc(delta: float):
 	# A tank-slapper takes over from drifting (and airborne / crashed unwind slip too).
 	if player_entity.is_crashed or not is_on_floor or wobble_controller.is_wobbling:
 		is_drifting = false
-		wobble_controller.wobble_brake_hold_time = 0.0
 		slip_angle = move_toward(slip_angle, 0.0, DRIFT_RECOVER_RATE * delta)
 		return
 
@@ -1027,8 +1026,6 @@ func _drift_calc(delta: float):
 			)
 		else:
 			is_drifting = _can_initiate_drift()
-
-	wobble_controller.update_brake_slide(delta) # trigger 1a
 
 	if not is_drifting:
 		# Not drifting — make sure any residual slip unwinds.
@@ -1056,7 +1053,7 @@ func _drift_calc(delta: float):
 	# travel direction (forward.rotated(UP, slip_angle) in _velocity_calc) hold its
 	# world heading instead of being dragged with the nose. Steering builds the
 	# slide; countersteer unwinds it. This is the momentum-based (Forza-style) feel.
-	var carve = steer * DRIFT_YAW_RATE * delta
+	var carve = steer * DRIFT_YAW_RATE * player_entity.bike_definition.steer_curve.sample(speed_pct) * delta
 	player_entity.rotate_y(-carve)
 	slip_angle += carve
 

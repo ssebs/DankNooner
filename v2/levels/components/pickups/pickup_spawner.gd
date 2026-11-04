@@ -5,7 +5,8 @@
 ## peer (mirrors AnimalSpawnManager's RPC-by-path model — the spawner is a level node at the same
 ## path on all peers).
 ##
-## Driven by RaceGameMode's PickupsComponent via activate() / deactivate(), so pickups only exist during the race.
+## Driven by RaceGameMode's PickupsComponent / TrickBattleGameMode via activate() / deactivate(), so
+## pickups only exist during the event.
 class_name PickupSpawner extends Marker3D
 
 ## Item definitions this spawner can produce; one is picked per spawn, weighted by each item's weight.

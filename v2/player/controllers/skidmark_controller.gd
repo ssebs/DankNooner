@@ -71,7 +71,14 @@ func _process(delta: float) -> void:
 	elif _active != null:
 		_finalize_active()
 
-	_set_squeal(movement_controller.is_drifting or player_entity.crash_controller.washout_time > 0.0)
+	# A high-speed brake slide wobbles instead of drifting (trigger 1b) — still squeals while held.
+	var brake_wobble := (
+		player_entity.wobble_controller.is_wobbling
+		and player_entity.input_controller.nfx_rear_brake > MovementController.DRIFT_BRAKE_HOLD
+	)
+	_set_squeal(
+		movement_controller.is_drifting or brake_wobble or player_entity.crash_controller.washout_time > 0.0
+	)
 
 
 ## Start/stop the looping tire-squeal on drift edges. Runs for every player on every client, and

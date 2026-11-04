@@ -4,6 +4,9 @@
 ## total wins.
 class_name TrickBattleGameMode extends TimedScoreGameMode
 
+## The event's PickupSpawners grant / hold items through it.
+@export var item_manager: ItemManager
+
 
 func Enter(state_context: StateContext):
 	if Engine.is_editor_hint():
@@ -14,13 +17,34 @@ func Enter(state_context: StateContext):
 	super(state_context)
 
 
+func Exit(state_context: StateContext):
+	if Engine.is_editor_hint():
+		return
+	_deactivate_pickups()
+	super(state_context)
+
+
 #override
-## Points banked before the battle (free roam) don't count.
+## Points and items held before the battle (free roam) don't count.
 func _start_next_runner():
 	super()
 	if _is_last_runner():
 		for peer_id in lobby_manager.lobby_players:
 			trick_manager.reset_peer(peer_id)
+		item_manager.clear_items()
+		for spawner in _event.get_pickup_spawners():
+			spawner.activate(item_manager)
+
+
+#override
+func _restart():
+	_deactivate_pickups()
+	super()
+
+
+func _deactivate_pickups():
+	for spawner in _event.get_pickup_spawners():
+		spawner.deactivate()
 
 
 #override
@@ -43,3 +67,10 @@ func _push_leaderboard():
 		rows.append({"peer_id": peer_id, "cells": cells})
 	var headers := PackedStringArray(["", "🏆 %s" % tr("LB_SCORE")])
 	riding_hud_state.push_leaderboard(headers, rows, PackedInt32Array())
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var issues := super()
+	if item_manager == null:
+		issues.append("item_manager must not be empty")
+	return issues

@@ -24,12 +24,12 @@ const UNSTABLE_LOWSIDE_BRAKE_THRESHOLD: float = 0.5
 const UNSTABLE_LOWSIDE_STEER_THRESHOLD_DEG: float = 15.0
 ## Drift over-rotation crash angle (tail came all the way around).
 const DRIFT_SPINOUT_ANGLE_DEG: float = 70.0  # matches DRIFT_MAX_SLIP_ANGLE_DEG in movement controller
-## Min |slip| for a highside on grip regain.
-const DRIFT_HIGHSIDE_ANGLE_DEG: float = 40.0
-## |slip| at/above which a chop highsides instantly; below it (down to DRIFT_HIGHSIDE_ANGLE_DEG) a
-## chop throws a recoverable speed wobble first that only highsides if it grows past the limit.
+## Min |slip| when grip returns (drive released) that wobbles — countersteer under it to exit clean.
+const DRIFT_HIGHSIDE_ANGLE_DEG: float = 30.0
+## |slip| at/above which grip returning highsides instantly; below it (down to DRIFT_HIGHSIDE_ANGLE_DEG)
+## it throws a recoverable speed wobble first that only highsides if it grows past the limit.
 const DRIFT_HIGHSIDE_HARD_ANGLE_DEG: float = 65.0
-## Angular kick (rad/s) a moderate drift chop injects into the wobble instead of an instant highside.
+## Angular kick (rad/s) a moderate drift release injects into the wobble instead of an instant highside.
 ## Big enough to swing wide and last a beat so there's time to countersteer out of it.
 const DRIFT_CHOP_WOBBLE_STRENGTH: float = 9.0
 ## Min speed for a highside to be dangerous.
@@ -42,10 +42,6 @@ const STOPPIE_STEER_CRASH_ANGLE_DEG: float = 10.0
 const STOPPIE_PIVOT_MAX_SPEED: float = 10.0
 ## Fraction of max_stoppie_angle_deg the nose must be past to count as "high enough" to pivot.
 const STOPPIE_PIVOT_MIN_ANGLE_FRAC: float = 0.7
-## Throttle release rate (per sec) that highsides at DRIFT_HIGHSIDE_ANGLE_DEG (forgiving).
-const HIGHSIDE_CHOP_FORGIVING: float = 6.0
-## Throttle release rate that highsides near the spinout angle (twitchy — small lift snaps).
-const HIGHSIDE_CHOP_TWITCHY: float = 1.5
 ## Upward+lateral launch speed applied to a highside crash.
 const HIGHSIDE_LAUNCH_FORCE: float = 14.0
 ## At/above this impact speed a player-to-player hit hard-crashes; below it both riders wobble.
@@ -68,7 +64,7 @@ const CRASH_MAX_ANGLE_DEG: float = 60.0
 var washout_time: float = 0.0
 
 var _prev_front_brake: float = 0.0
-var _prev_throttle: float = 0.0
+var _prev_drift_drive_held: bool = false
 var _brake_was_grabbed: bool = false
 var _prev_air_trick: TrickController.Trick = TrickController.Trick.NONE
 
@@ -85,7 +81,7 @@ func on_movement_rollback_tick(delta: float):
 
 	_update_brake_grab(delta)
 	_detect_air_trick_landing()
-	_detect_drift_crash(delta)
+	_detect_drift_crash()
 	_detect_crash()
 	# Cache AFTER detection — trick_controller already ran this tick and transitioned to ground
 	# state on landing, so we use last tick's value to detect "landed mid-trick". Only a real jump
@@ -319,12 +315,15 @@ func _wobble_rammed_racer(collider: Object) -> void:
 	player_entity.gamemode_manager.spawn_manager.wobble_player.rpc(int(victim.name), WOBBLE_RAM_STRENGTH)
 
 
-## Drift crashes: spin-out (tail past the limit) or highside (tire hooks up on a
-## throttle chop while still slipped). Rolling the throttle off slowly is safe.
-func _detect_drift_crash(delta: float):
-	var throttle = input_controller.nfx_throttle
-	var release_rate = (_prev_throttle - throttle) / delta  # > 0 means letting off
-	_prev_throttle = throttle
+## Drift crashes: spin-out (tail past the limit) or highside (tire hooks up when throttle and rear
+## brake are both released while still slipped). Countersteer the slip down before letting go.
+func _detect_drift_crash():
+	var drive_held := (
+		maxf(input_controller.nfx_throttle, input_controller.nfx_rear_brake)
+		> MovementController.DRIFT_BRAKE_HOLD
+	)
+	var grip_returned := _prev_drift_drive_held and not drive_held
+	_prev_drift_drive_held = drive_held
 
 	if not movement_controller.is_drifting:
 		return
@@ -337,34 +336,21 @@ func _detect_drift_crash(delta: float):
 		trigger_crash(CrashType.LOWSIDE)
 		return
 
-	# Highside — fast throttle chop while deep + fast. Chop tolerance shrinks as slip grows.
+	# Highside — grip returned while still slid out. Release speed doesn't matter, only the angle.
 	if (
-		slip > deg_to_rad(DRIFT_HIGHSIDE_ANGLE_DEG)
+		grip_returned
+		and slip > deg_to_rad(DRIFT_HIGHSIDE_ANGLE_DEG)
 		and movement_controller.speed > DRIFT_HIGHSIDE_MIN_SPEED
 	):
-		var slip_ratio = clampf(
-			(
-				(slip - deg_to_rad(DRIFT_HIGHSIDE_ANGLE_DEG))
-				/ deg_to_rad(DRIFT_SPINOUT_ANGLE_DEG - DRIFT_HIGHSIDE_ANGLE_DEG)
-			),
-			0.0,
-			1.0
-		)
-		var chop_threshold = lerpf(HIGHSIDE_CHOP_FORGIVING, HIGHSIDE_CHOP_TWITCHY, slip_ratio)
-		if release_rate > chop_threshold:
-			var slip_sign = signf(movement_controller.slip_angle)
-			if slip > deg_to_rad(DRIFT_HIGHSIDE_HARD_ANGLE_DEG):
-				# Crazy angle — straight over the high side.
-				DebugUtils.DebugMsg(
-					"drift HIGHSIDE crash (slip=%.1f° rate=%.1f)" % [rad_to_deg(slip), release_rate]
-				)
-				trigger_crash(CrashType.HIGHSIDE, _highside_launch(slip_sign))
-			else:
-				# Recoverable angle — throw a wobble first; it highsides only if it grows past the limit.
-				wobble_controller.wobble_vel += slip_sign * DRIFT_CHOP_WOBBLE_STRENGTH
-				DebugUtils.DebugMsg(
-					"drift chop -> wobble (slip=%.1f° rate=%.1f)" % [rad_to_deg(slip), release_rate]
-				)
+		var slip_sign = signf(movement_controller.slip_angle)
+		if slip > deg_to_rad(DRIFT_HIGHSIDE_HARD_ANGLE_DEG):
+			# Crazy angle — straight over the high side.
+			DebugUtils.DebugMsg("drift HIGHSIDE crash (slip=%.1f°)" % rad_to_deg(slip))
+			trigger_crash(CrashType.HIGHSIDE, _highside_launch(slip_sign))
+		else:
+			# Recoverable angle — throw a wobble first; it highsides only if it grows past the limit.
+			wobble_controller.wobble_vel += slip_sign * DRIFT_CHOP_WOBBLE_STRENGTH
+			DebugUtils.DebugMsg("drift release -> wobble (slip=%.1f°)" % rad_to_deg(slip))
 
 
 ## Highside launch: up + lateral toward the outside of the slide/swing (opposite the tail-out).
@@ -389,7 +375,7 @@ func trigger_crash(
 ## Called from player_entity.gd's do_respawn
 func do_reset():
 	_prev_front_brake = 0.0
-	_prev_throttle = 0.0
+	_prev_drift_drive_held = false
 	_brake_was_grabbed = false
 	washout_time = 0.0
 	_prev_air_trick = TrickController.Trick.NONE

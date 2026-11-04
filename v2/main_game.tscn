@@ -475,9 +475,10 @@ save_manager = NodePath("../../../SaveManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
-[node name="TrickBattleGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1733062841 node_paths=PackedStringArray("trick_manager", "riding_hud_state", "lobby_manager", "audio_manager", "results_hud", "input_state_manager", "save_manager", "gamemode_manager", "spawn_manager")]
+[node name="TrickBattleGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1733062841 node_paths=PackedStringArray("trick_manager", "riding_hud_state", "lobby_manager", "audio_manager", "results_hud", "input_state_manager", "save_manager", "gamemode_manager", "spawn_manager", "item_manager")]
 script = ExtResource("30_trkbtl")
 trick_manager = NodePath("../../../TrickManager")
+item_manager = NodePath("../../../ItemManager")
 duration_secs = 60.0
 riding_hud_state = NodePath("../../../HUDManager/StateMachine/RidingHUDState")
 lobby_manager = NodePath("../../../LobbyManager")

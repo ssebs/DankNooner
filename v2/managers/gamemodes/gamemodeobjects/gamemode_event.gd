@@ -4,7 +4,7 @@
 ## EventStartCircle for the layout.
 ##
 ## Always needs `definition`. Also `spawn` when a RaceTask / GridSpawnTask / GridRespawnTask runs,
-## `checkpoints` when a RaceTask runs, `pickups` for a stunt race, `start_zone` with a
+## `checkpoints` when a RaceTask runs, `pickups` for a stunt race / trick battle, `start_zone` with a
 ## DriveToStartRunner.
 class_name GameModeEvent extends Node3D
 
@@ -16,7 +16,8 @@ class_name GameModeEvent extends Node3D
 ## A group under the circle's Checkpoints. Its CheckPointMarker children are the race route, in
 ## tree order.
 @export var checkpoints: Node3D
-## This event's own child holding its PickupSpawners. Leave empty for none (time attack).
+## The node whose direct children are this event's PickupSpawners (its own child, or a prop's).
+## Leave empty for none (time attack).
 @export var pickups: Node3D
 ## Where a DriveToStartRunner sends riders. Fires while this event runs, hidden until that runner
 ## shows it.

@@ -2200,14 +2200,12 @@ endless = true
 objective_key = "TIME_ATTACK_RUN_OBJECTIVE"
 respawn_in_place = true
 
-[node name="TrickBattle" type="Node3D" parent="EventStartCircle1" unique_id=1952719947 node_paths=PackedStringArray("props", "spawn")]
+[node name="TrickBattle" type="Node3D" parent="EventStartCircle1" unique_id=1952719947 node_paths=PackedStringArray("props", "spawn", "pickups")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_trkbtl")
 props = [NodePath("../Props/TrickBattleProps")]
 spawn = NodePath("../Spawns/TrickBattleSpawns")
-
-[node name="DriveToStartRunner" type="Node" parent="EventStartCircle1/TrickBattle" unique_id=534378408]
-script = ExtResource("drive_to_start_runner")
+pickups = NodePath("../Props/TrickBattleProps/TrickBattleArena/Spawners")
 
 [node name="SequentialTaskRunner" type="Node" parent="EventStartCircle1/TrickBattle" unique_id=2064993660]
 script = ExtResource("20_grj8g")

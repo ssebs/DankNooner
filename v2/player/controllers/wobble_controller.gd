@@ -16,11 +16,8 @@ const WOBBLE_FEED: float = 6.0 # energy/sec added when steering into the swing
 const WOBBLE_RECOVER_BOOST: float = 6.0 # extra damping that ramps up as you near center (forgiving)
 const WOBBLE_MIN_SPEED: float = 15.0 # below this no wobble starts, and slowing kills an active one
 const WOBBLE_CRASH_ANGLE_DEG: float = 60.0 # |wobble_angle| past this highsides
-# Triggers 1a (brake-slide release), 1b (high-speed brake entry), 5 (wheelie set-down) and 6 (wheelie
-# trick off the balance point) are always on.
-const WOBBLE_RELEASE_MIN_HOLD: float = 0.25 # 1a: brake-slide hold (sec) that wobbles
-const WOBBLE_RELEASE_MIN_ANGLE_DEG: float = 30.0 # 1a: release slip (deg) that wobbles
-const WOBBLE_RELEASE_STRENGTH: float = 6.0 # 1a kick (rad/s)
+# Triggers 1b (high-speed brake entry), 5 (wheelie set-down) and 6 (wheelie trick off the balance
+# point) are always on. A drift released while slid out wobbles via CrashController._detect_drift_crash.
 const WOBBLE_BRAKE_ENTRY_SPEED_FRAC: float = 0.6 # 1b: speed frac above which entry wobbles
 const WOBBLE_BRAKE_ENTRY_STRENGTH: float = 7.0 # 1b kick (rad/s)
 const WOBBLE_LANDING_MIN_AIRTIME: float = 0.5 # trigger 2: only jumps longer than this wobble
@@ -32,10 +29,9 @@ const WOBBLE_TRICK_CRASH_MISS_DEG: float = 45.0 # trigger 6: deg off balance poi
 
 const WOBBLE_EPS: float = 0.03 # |wobble_angle|/|wobble_vel| below this counts as settled (snaps clean)
 
-# Tank-slapper. angle/vel/hold are synced (perturb heading — see CLAUDE.md Multiplayer); is_wobbling re-derived.
+# Tank-slapper. angle/vel are synced (perturb heading — see CLAUDE.md Multiplayer); is_wobbling re-derived.
 var wobble_angle: float = 0.0 # signed yaw perturbation (rad)
 var wobble_vel: float = 0.0 # its angular velocity (rad/s)
-var wobble_brake_hold_time: float = 0.0 # brake-slide hold accumulator (trigger 1a)
 var is_wobbling: bool = false
 var wobble_from_trick: bool = false # synced — trigger 6 fed this wobble; the wheelie stays up until it settles
 
@@ -43,33 +39,6 @@ var wobble_from_trick: bool = false # synced — trigger 6 fed this wobble; the 
 ## Re-derive is_wobbling from the synced angle/vel (is_wobbling itself isn't synced).
 func update_is_wobbling() -> void:
 	is_wobbling = absf(wobble_angle) > WOBBLE_EPS or absf(wobble_vel) > WOBBLE_EPS
-
-
-## Trigger 1a. Accumulate brake-slide hold; on release a long hold OR big angle wobbles.
-func update_brake_slide(delta: float):
-	var mc := movement_controller
-	if mc.is_drifting and input_controller.nfx_rear_brake > MovementController.DRIFT_BRAKE_HOLD:
-		wobble_brake_hold_time += delta
-		return
-	if wobble_brake_hold_time <= 0.0:
-		return
-	var release_slip := absf(mc.slip_angle)
-	if (
-		wobble_brake_hold_time > WOBBLE_RELEASE_MIN_HOLD
-		or release_slip > deg_to_rad(WOBBLE_RELEASE_MIN_ANGLE_DEG)
-	):
-		var kick_sign := signf(mc.slip_angle) if release_slip > 0.01 else signf(input_controller.nfx_steer)
-		if kick_sign == 0.0:
-			kick_sign = 1.0
-		wobble_vel += kick_sign * WOBBLE_RELEASE_STRENGTH
-		DebugUtils.DebugMsg(
-			(
-				"wobble trigger 1a (rear-brake release): slip=%.0f° hold=%.2fs"
-				% [rad_to_deg(release_slip), wobble_brake_hold_time]
-			),
-			DebugUtils.is_debug(movement_controller.debug_verbose, DebugUtils.verbose_movement)
-		)
-	wobble_brake_hold_time = 0.0
 
 
 ## Trigger 6. A right-stick trick run outside the wheelie balance point pumps a wobble up to a swing
@@ -153,7 +122,7 @@ func kick_from_misalign(source: String, travel_velocity: Vector3):
 
 
 ## The tank-slapper: damped harmonic oscillator on the heading (countersteer/off-gas damp, steering
-## in feeds; CrashController fires past the limit). Re-derives is_wobbling — 1a/1b inject in _drift_calc.
+## in feeds; CrashController fires past the limit). Re-derives is_wobbling — 1b injects in _drift_calc.
 func tick(delta: float):
 	var was_wobbling := is_wobbling # captured pre-recompute for the start/stop edge logs
 	update_is_wobbling()
@@ -206,7 +175,6 @@ func tick(delta: float):
 func do_reset():
 	wobble_angle = 0.0
 	wobble_vel = 0.0
-	wobble_brake_hold_time = 0.0
 	is_wobbling = false
 	wobble_from_trick = false
 
