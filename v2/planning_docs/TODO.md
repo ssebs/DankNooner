@@ -247,6 +247,8 @@
 
 ## Done ✅
 
+- [x] respawn timer => 15s max for CrashLaunch, during stuntrace =>3s, free roam => 5s
+
 - [x] ramp should spawn right in front of you
 
 - [x] minimap rotate w/ cam

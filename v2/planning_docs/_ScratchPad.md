@@ -7,7 +7,6 @@ Vid: where we started, where we are now
 ---
 
 ## NOW
-- [ ] respawn timer => 15s max for CrashLaunch, during stuntrace =>3s, free roam => 5s
 - [ ] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
 - [ ] shouldnt be so easy to drift & steer on gamepad
 - [ ] keep vibrating controller after a crash til you respawn

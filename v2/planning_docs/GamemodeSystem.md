@@ -297,7 +297,7 @@ launch from the bike wins each heat.
   It reaches the mode as `GamemodeManager.player_launch_measured`. A rider's heat takes the first
   `WALL` crash measured during the launch step; any other crash respawns them on their grid slot to
   go again. Here a crashed rider respawns as soon as their body stops, with
-  `CRASH_RESPAWN_DELAY` as the cap (other modes always wait it out).
+  `crash_respawn_delay` as the cap (other modes always wait it out).
 - **Heat end:** every rider has launched, or `heat_timeout_secs` (counted from the grid) runs out and
   the stragglers score nothing.
 - **Score:** distance × `points_per_meter` plus `placement_points` by heat rank, summed over the
