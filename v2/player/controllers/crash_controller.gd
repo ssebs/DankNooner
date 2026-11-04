@@ -55,9 +55,12 @@ const WALL_GLANCE_SPEED_LOSS: float = 0.25
 const WASHOUT_TIME: float = 0.4
 const WASHOUT_MIN_LEAN_DEG: float = 15.0
 const WASHOUT_MIN_SPEED: float = 10.0
-## Power washout: lean_usage² + (drive · this)² over 1 (friction circle) for WASHOUT_TIME above
-## WASHOUT_MIN_SPEED spins the rear out (lowside). This is the share of grip full drive uses.
-const POWER_WASHOUT_DRIVE_SHARE: float = 0.6
+## Power washout: too much gas for the lean, held WASHOUT_TIME above WASHOUT_MIN_SPEED, spins the
+## rear out (lowside). Gas allowed falls off steeply only near max lean — like IRL, roll on as you
+## stand it up. Drive you can hold at full lean (maintenance throttle):
+const POWER_WASHOUT_MAX_LEAN_DRIVE: float = 0.45
+## Lean usage (fraction of max lean for this speed) at which full gas starts washing out.
+const POWER_WASHOUT_FULL_GAS_LEAN: float = 0.9
 ## Layer-2 hits only crash at/above this speed, and only head-on: within this angle of the wall's
 ## normal. Race bots crash by the same rule (NPCRaceState).
 const CRASH_MIN_SPEED: float = 10.0
@@ -135,7 +138,8 @@ func _update_brake_grab(delta: float):
 	)
 	washout_time = washout_time + delta if washing_out else 0.0
 
-	# Power risk: share of the grip left over from lean that the gas is using (1 = washing out).
+	# Power risk: drive / gas allowed at this lean (1 = washing out). Allowed gas is
+	# MAX_LEAN_DRIVE / lean^k, with k picked so full gas hits the limit at FULL_GAS_LEAN.
 	var power_risk := 0.0
 	if (
 		movement_controller.is_on_floor
@@ -145,9 +149,9 @@ func _update_brake_grab(delta: float):
 		and not player_entity.trick_controller.is_in_wheelie()
 		and movement_controller.speed > WASHOUT_MIN_SPEED
 	):
-		var drive_grip := movement_controller.drive * POWER_WASHOUT_DRIVE_SHARE
-		var drive_limit := sqrt(maxf(1.0 - pow(movement_controller.get_lean_usage(), 2), 0.0))
-		power_risk = clampf(drive_grip / maxf(drive_limit, 0.001), 0.0, 1.0)
+		var k := log(POWER_WASHOUT_MAX_LEAN_DRIVE) / log(POWER_WASHOUT_FULL_GAS_LEAN)
+		var lean_load := pow(movement_controller.get_lean_usage(), k)
+		power_risk = clampf(movement_controller.drive * lean_load / POWER_WASHOUT_MAX_LEAN_DRIVE, 0.0, 1.0)
 	power_washout_time = power_washout_time + delta if power_risk >= 1.0 else 0.0
 
 	# Grip danger (grip_usage) for HUD/shake: washout progress, the gas closing in on the limit, plus
