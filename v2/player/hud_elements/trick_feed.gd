@@ -21,7 +21,8 @@ const MAX_TRICK_NAMES: int = 3
 
 
 ## tricks: TrickController.Trick values in the order they were done. points: banked, or what the
-## crash voided. launch_m: how far a bail threw the rider from the bike.
+## crash voided. launch_m: how far a bail threw the rider from the bike. crash_hint: localization
+## key that replaces "bailed", "" for none.
 func push(
 	username: String,
 	is_own: bool,
@@ -29,7 +30,8 @@ func push(
 	points: int,
 	multiplier: int,
 	crashed: bool,
-	launch_m: float
+	launch_m: float,
+	crash_hint: String
 ) -> void:
 	var line := RichTextLabel.new()
 	line.bbcode_enabled = true
@@ -40,7 +42,7 @@ func push(
 	line.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	line.add_theme_font_size_override("normal_font_size", font_size)
 	line.add_theme_font_size_override("bold_font_size", font_size)
-	line.text = _format(username, is_own, tricks, points, multiplier, crashed, launch_m)
+	line.text = _format(username, is_own, tricks, points, multiplier, crashed, launch_m, crash_hint)
 	add_child(line)
 	move_child(line, 0)
 	while get_child_count() > MAX_LINES:
@@ -65,7 +67,8 @@ func _format(
 	points: int,
 	multiplier: int,
 	crashed: bool,
-	launch_m: float
+	launch_m: float,
+	crash_hint: String
 ) -> String:
 	# [lb] escapes BBCode in the username.
 	var name_color := OWN_NAME_COLOR if is_own else NAME_COLOR
@@ -74,7 +77,7 @@ func _format(
 	)
 	var parts := PackedStringArray(["[b]%s[/b]" % shown_name])
 	if crashed:
-		var bailed := tr("FEED_BAILED")
+		var bailed := tr(crash_hint if crash_hint != "" else "FEED_BAILED")
 		# Bots don't measure a launch
 		if launch_m > 0.0:
 			bailed += " %dm" % launch_m

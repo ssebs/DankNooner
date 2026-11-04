@@ -321,7 +321,9 @@ limit on `BikeSkinDefinition` — read the values there, not here.
   `UNSTABLE_LEAN_THRESHOLD_REDUCTION_DEG` × `get_unstable_factor()`
 - **Unstable lowside** — front brake while steering on gravel/sand
   (`UNSTABLE_LOWSIDE_BRAKE_THRESHOLD` + `UNSTABLE_LOWSIDE_STEER_THRESHOLD_DEG`)
-- **Brake grab** while turning (`BRAKE_GRAB_RATE_THRESHOLD`, gamepad only)
+- **Brake washout** — a grabbed front brake (gamepad: squeezed faster than
+  `BRAKE_GRAB_RATE_THRESHOLD`; KBM: any press) held while leaned at speed for `WASHOUT_TIME`.
+  Easing off inside the window saves it; its trick feed line reads `FEED_BAILED_BRAKE_GRAB` instead of "bailed"
 - **Upside-down landing** — checked separately, because an inverted `up_direction` breaks
   `is_on_floor()`; skipped on steep surfaces where being inverted is expected (loops)
 - **Head-on obstacle collision** above a min speed

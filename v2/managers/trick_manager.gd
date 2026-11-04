@@ -91,6 +91,8 @@ func _track_combo(peer_id: int, rider: Node3D):
 			"tricks": PackedInt32Array(st["tricks"]),
 			"points": int(lost_points),
 			"multiplier": st["peak_mult"],
+			# Bots have no crash hint
+			"hint": rider.crash_hint if rider is PlayerEntity else "",
 		}
 		if st["prev_time"] > 0.0:
 			combo_voided.emit(peer_id, st["prev_time"], lost_points)
@@ -133,7 +135,7 @@ func _track_combo(peer_id: int, rider: Node3D):
 	var points: float = get_open_combo_points(peer_id)
 	st["points"] += points
 	riding_hud_state.push_trickfeed(
-		rider.username, peer_id, PackedInt32Array(st["tricks"]), int(points), multiplier, false, 0.0
+		rider.username, peer_id, PackedInt32Array(st["tricks"]), int(points), multiplier, false, 0.0, ""
 	)
 	st["prev_time"] = 0.0
 	st["prev_score"] = 0.0
@@ -208,7 +210,14 @@ func _on_match_ended():
 func _on_player_launch_measured(peer_id: int, meters: float):
 	var bail: Dictionary = _peer_states[peer_id]["bail"]
 	riding_hud_state.push_trickfeed(
-		bail["username"], peer_id, bail["tricks"], bail["points"], bail["multiplier"], true, meters
+		bail["username"],
+		peer_id,
+		bail["tricks"],
+		bail["points"],
+		bail["multiplier"],
+		true,
+		meters,
+		bail["hint"]
 	)
 
 

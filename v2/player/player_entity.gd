@@ -189,6 +189,8 @@ var rb_respawn_transform_oneshot: Transform3D = Transform3D()
 var crash_launch_impulse: Vector3 = Vector3.ZERO
 ## Stashed by trigger_crash for the is_crashed-edge bike wreck. Visual-only, not synced.
 var crash_type: CrashController.CrashType = CrashController.CrashType.LOWSIDE
+## Stashed by trigger_crash for the trick feed's bail line (read on the server). Not synced.
+var crash_hint: String = ""
 
 ## Tick the last respawn was anchored to + its resolved target. Netfox resimulates
 ## recent ticks when late input arrives (server: remote players; client: own prediction),

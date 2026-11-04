@@ -8,6 +8,7 @@ Vid: where we started, where we are now
 
 ## NOW
 - [ ] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
+- [ ] pickup spawners dont work in stunt battle arena
 
 
 

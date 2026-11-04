@@ -27,7 +27,6 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 
-
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
 
@@ -247,6 +246,8 @@
 ---
 
 ## Done ✅
+
+- [x] not enough feedback for brakedanger / helping the user know they should be progressively braking instead of braking hard quickly
 
 - [x] shouldnt be so easy to drift & steer on gamepad, only drift from rear brake, not lean fwd except burnout
 
