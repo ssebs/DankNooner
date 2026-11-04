@@ -1,7 +1,7 @@
 @tool
 ## Client-side HUD minimap: a real orthographic top-down Camera3D in a
 ## SubViewport (sharing the live World3D) that follows the local player
-## heading-up, with racer blips drawn as a 2D overlay on top.
+## camera-up, with racer blips drawn as a 2D overlay on top.
 ##
 ## Dormant until activate() — only the local player's HUD turns it on
 ## (see HUDController.show_hud), so remote player instances never render it.
@@ -18,10 +18,6 @@ class_name Minimap extends PanelContainer
 @export var border_width: float = 2.0
 ## Length of the edge pointer triangle for off-map racers.
 @export var arrow_size: float = 6.0
-## Blip redraw rate. The map camera still follows every frame — only the overlay throttles.
-## Each blip is two draw_circle calls, so at 100+ racers this pass cost several ms a frame,
-## and blips do not need 60Hz.
-@export var blip_refresh_hz: float = 20.0
 
 @export_group("Full Map")
 ## Ortho size (world units across) the full map opens at — much more zoomed out than the minimap.
@@ -72,8 +68,7 @@ var checkpoint_is_guide: bool = false
 
 var _local_player: PlayerEntity
 var _active: bool = false
-var _blip_timer: float = 0.0
-## Full-map state: expanded to fullscreen + free-pan (north-up) instead of heading-up follow.
+## Full-map state: expanded to fullscreen + free-pan (north-up) instead of camera-up follow.
 var _expanded: bool = false
 var _pan_center: Vector3
 ## Layout snapshot restored on collapse (the minimap lives at a fixed corner offset).
@@ -130,7 +125,7 @@ func deactivate() -> void:
 	_sub_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 
 
-## Toggle between the corner minimap (heading-up follow) and the fullscreen pannable
+## Toggle between the corner minimap (camera-up follow) and the fullscreen pannable
 ## map (north-up). Driven by HUDController off the IN_MAP input state.
 func set_expanded(on: bool) -> void:
 	if on == _expanded:
@@ -191,22 +186,17 @@ func _process(delta: float):
 	else:
 		_update_follow_camera()
 
-	# Camera follows every frame so the map itself stays smooth; only the blip overlay
-	# throttles. The overlay keeps its last drawn frame in between. The full map pans and
-	# zooms freely, so it redraws every frame or the blips trail the map.
-	_blip_timer -= delta
-	if _expanded or _blip_timer <= 0.0:
-		_blip_timer = 1.0 / blip_refresh_hz
-		_dot_overlay.queue_redraw()
+	_dot_overlay.queue_redraw()
 
 
-## Heading-up follow: look straight down at the player; player's forward becomes screen-up.
-## Bike front is -Z (Godot convention, matches NPC rig).
+## Camera-up follow: look straight down at the player; the gameplay camera's facing becomes screen-up.
 func _update_follow_camera() -> void:
-	var player_fwd := -_local_player.global_transform.basis.z
-	player_fwd.y = 0.0
+	var game_cam := get_viewport().get_camera_3d().global_basis
+	# Adding cam-up keeps a horizontal heading even when the camera looks straight down.
+	var cam_fwd := -game_cam.z + game_cam.y
+	cam_fwd.y = 0.0
 	var cam_pos := _local_player.global_position + Vector3.UP * height
-	_camera.look_at_from_position(cam_pos, _local_player.global_position, player_fwd)
+	_camera.look_at_from_position(cam_pos, _local_player.global_position, cam_fwd)
 
 
 ## North-up free-pan: look straight down at the pan target, world -Z as screen-up.
@@ -260,7 +250,7 @@ func _draw_dots() -> void:
 	if has_checkpoint:
 		_draw_marker(checkpoint_pos, COLOR_CHECKPOINT, ICON_CHECKPOINT)
 
-	# Last so it sits on top. Heading taken in screen space, so it reads right both heading-up
+	# Last so it sits on top. Heading taken in screen space, so it reads right both camera-up
 	# and north-up.
 	var screen_fwd := (
 		_camera.unproject_position(self_pos - _local_player.global_basis.z)

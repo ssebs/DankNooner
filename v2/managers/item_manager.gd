@@ -24,8 +24,8 @@ class_name ItemManager extends BaseManager
 
 @export_group("Ramp")
 ## Spawned this many seconds of travel ahead, but never closer than ramp_min_distance.
-@export var ramp_lead_time: float = 0.6
-@export var ramp_min_distance: float = 8.0
+@export var ramp_lead_time: float = 0.15
+@export var ramp_min_distance: float = 4.0
 @export var ramp_lifetime: float = 8.0
 
 @export_group("Rally Up")

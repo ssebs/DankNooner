@@ -4,7 +4,7 @@
 
 [sub_resource type="Environment" id="Environment_mnmap"]
 background_mode = 1
-background_color = Color(0.25490198, 0.6862745, 1, 1)
+background_color = Color(0, 0, 0, 1)
 
 [node name="Minimap" type="PanelContainer" unique_id=407372356]
 offset_right = 220.0

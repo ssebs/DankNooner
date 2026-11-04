@@ -26,6 +26,7 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
+- [ ] ramp should spawn right in front of you
 
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -246,6 +247,8 @@
 ---
 
 ## Done ✅
+
+- [x] minimap rotate w/ cam
 
 - [x] Tracers when boosting 
 

@@ -2972,13 +2972,19 @@ respawn_in_place = true
 [node name="StuntCity_REMEMBER_TO_REPLACE_ME" parent="." unique_id=1750931100 groups=["navigation_mesh_source_group"] instance=ExtResource("27_grj8g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 0)
 
-[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/grass" parent_id_path=PackedInt32Array(1750931100, 1744687010) index="0" unique_id=1815728221]
+[node name="grass" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="0" unique_id=1744687010]
+layers = 3
+
+[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/grass" index="0" unique_id=1815728221]
 collision_layer = 17
 
 [node name="CollisionShape3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/grass/StaticBody3D" index="0" unique_id=1055287678]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0034866333, 0.008457184, -0.009155273)
 
-[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/ground" parent_id_path=PackedInt32Array(1750931100, 1526127125) index="0" unique_id=1169599101]
+[node name="ground" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="1" unique_id=1526127125]
+layers = 3
+
+[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/ground" index="0" unique_id=1169599101]
 collision_layer = 17
 
 [node name="road" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="2" unique_id=58878963]

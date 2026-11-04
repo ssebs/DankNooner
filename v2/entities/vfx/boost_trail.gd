@@ -6,7 +6,7 @@
 class_name BoostTrail extends MeshInstance3D
 
 @export var bike_skin: BikeSkin
-@export var lifetime: float = 1.5
+@export var lifetime: float = 2.5
 @export var width: float = 0.04
 ## Metres between recorded points; the live head always tracks the source.
 @export var min_spacing: float = 0.25
