@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://entities/npc/rider_visual.tscn" id="5_rider"]
 [ext_resource type="AnimationLibrary" uid="uid://dux0ki7gl63i2" path="res://levels/menu_levels/trick_demo/trick_demo_anims.tres" id="6_anims"]
 [ext_resource type="Sky" uid="uid://dfgbuerpq3y8" path="res://levels/assets/skybox_neon.tres" id="7_cg5um"]
+[ext_resource type="PackedScene" uid="uid://dtckadkd3wndc" path="res://levels/assets/props/grind_rail.tscn" id="8_rail"]
 
 [sub_resource type="Environment" id="Environment_x72xv"]
 background_mode = 2
@@ -37,6 +38,10 @@ width = 48.0
 depth = 80.0
 
 [node name="Ramp" parent="." unique_id=2104299910 instance=ExtResource("3_ramp")]
+
+[node name="GrindRail" parent="." unique_id=1741630928 instance=ExtResource("8_rail")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 30)
+length = 16.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1093149979]
 transform = Transform3D(-0.85749286, 0.4444566, -0.25916052, 0, 0.5037175, 0.8638684, 0.51449573, 0.740761, -0.4319342, 0, 20, 0)
