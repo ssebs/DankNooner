@@ -276,7 +276,7 @@ Still open:
      and gamemode);
    - the bot to count as a gamepad: `Input.action_press` fires no input event, so `is_gamepad`
      never flips; send one `InputEventJoypadMotion` through `Input.parse_input_event`;
-   - a reverse + steer recipe (stop, hold front brake, steer), since the bot never reverses.
+   - a reverse + steer recipe (stop, hold rear brake, steer), since the bot never reverses.
 
 ## Open questions / verify before building
 

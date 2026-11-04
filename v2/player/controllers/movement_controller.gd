@@ -36,8 +36,6 @@ const WHEELIE_STEER_FULL_SPEED: float = 8.0
 const WHEELIE_REAR_BRAKE_DROP: float = 3.0
 
 const CLUTCH_KICK_WINDOW: float = 0.2
-# Fraction of bike's 1st-gear torque needed to clutch-pop — blocks high-gear pops
-const CLUTCH_POP_MIN_POWER_FRAC: float = 0.65
 # Clutch pops are a low-speed launch move. Above this fraction of max_speed (e.g. rolling fast
 # downhill on slope gravity) a clutch dump must NOT loft the front — use a power wheelie instead.
 const CLUTCH_POP_MAX_SPEED_FRAC: float = 0.4
@@ -52,7 +50,7 @@ const HOP_PITCH_KICK: float = 8.0
 # Wheel-force (power × bd.acceleration) floor to start a wheelie / clutch-pop — auto-scales by bike
 # strength. Kept low enough that a light bike (the mini) clears it across a usable RPM band, not just
 # a sliver at peak; this also makes clutch-ups easier in general. NOT the loop threshold (that's the
-# balance-point crossing). Decoupled from DRIFT_BREAK_FORCE so drift traction-break is unaffected.
+# balance-point crossing).
 const POWER_WHEELIE_MIN_FORCE: float = 15.0
 const FALL_GRAVITY: float = 40
 const AIR_DRAG: float = 11.0 # speed loss while airborne. TODO - turn into a curve
@@ -95,7 +93,7 @@ const STOPPIE_STEER_SCALE: float = 0.5
 const AUTO_STOPPIE_BRAKE: float = 0.9
 const AUTO_STOPPIE_SPEED_FRAC: float = 0.6
 const AUTO_STOPPIE_HOLD_SECS: float = 0.25
-# Reverse — hold any brake while stopped to roll backwards. No clutch needed.
+# Reverse — hold the rear brake alone while stopped to roll backwards. No clutch needed.
 const REVERSE_MAX_SPEED: float = 2.0
 const REVERSE_ACCEL: float = 8.0
 const REVERSE_BRAKE_THRESHOLD: float = 0.3
@@ -104,10 +102,6 @@ const REVERSE_THROTTLE_MAX: float = 0.5 # on the gas = burnout/launch prep, not 
 const DRIFT_MIN_SPEED: float = 6.0 # below this it's a stationary burnout (slip stays ~0)
 const DRIFT_BRAKE_HOLD: float = 0.4 # rear-brake input that sustains a brake slide
 const DRIFT_STEER_ENTRY: float = 0.3 # steer needed to kick a brake slide loose
-# power×accel torque gate to break traction. Kept at the wheelie gate's OLD value (was aliased to it)
-# so lowering that gate for easier wheelies/clutch-ups leaves drift feel unchanged.
-const DRIFT_BREAK_FORCE: float = 21.6
-const DRIFT_POWER_MIN_RPM_RATIO: float = 0.7 # power slide needs revs — can't lug into a burnout at low RPM
 # Stationary burnout — a max-RPM clutch dump against a held front brake spins up the rear from a standstill
 const BURNOUT_FRONT_BRAKE_MIN: float = 0.5 # front brake to pin the bike; also blocks throttle accel in _speed_calc
 const BURNOUT_MIN_RPM_RATIO: float = 0.85
@@ -463,11 +457,12 @@ func _speed_calc(delta: float):
 		is_reversing = false
 		return
 
-	# Reverse — hold any brake from a near-stop. Bypasses normal accel/brake/slope.
 	var brake_total = _effective_front_brake() + _effective_rear_brake()
-	# Off-gas only — a burnout / launch prep (front brake + throttle) must not read as reverse.
+	# Reverse — rear brake only, from a near-stop. Bypasses normal accel/brake/slope.
+	# Off-gas only — launch prep (brake + throttle) must not read as reverse.
 	var reverse_input = (
-		brake_total > REVERSE_BRAKE_THRESHOLD
+		_effective_rear_brake() > REVERSE_BRAKE_THRESHOLD
+		and input_controller.nfx_front_brake == 0.0
 		and input_controller.nfx_throttle < REVERSE_THROTTLE_MAX
 	)
 	if reverse_input and (is_reversing or speed <= 0.5):
@@ -985,8 +980,8 @@ func _can_initiate_wheelie(in_wheelie: bool) -> bool:
 	return input_controller.nfx_throttle > 0.7 and force > POWER_WHEELIE_MIN_FORCE
 
 
-## Drift entry. Mirror of the wheelie clutch/power gates but gated on lean FORWARD
-## (lean back = wheelie, lean forward = drift), plus a rear-brake-slide entry.
+## Drift entry: rear-brake slide, or a stationary burnout. No lean-forward entry — on gamepad lean
+## shares the steer stick, so a diagonal push kept starting drifts by accident.
 func _can_initiate_drift() -> bool:
 	if is_drifting:
 		return true
@@ -996,7 +991,7 @@ func _can_initiate_drift() -> bool:
 	# Stationary burnout — a max-RPM clutch dump against a held front brake lights up the rear from
 	# a standstill. Checked before the min-speed gate so it starts at ~0 velocity; the front brake
 	# also blocks throttle accel in _speed_calc, so you sit and spin until you release it and roll
-	# into a normal power drift (is_drifting carries straight over).
+	# off (the drift ends past DRIFT_MIN_SPEED unless the slide is still open).
 	if speed < DRIFT_MIN_SPEED:
 		return (
 			_clutch_kick_window > 0
@@ -1007,31 +1002,7 @@ func _can_initiate_drift() -> bool:
 		)
 
 	# Brake-slide entry — steer + hold rear brake breaks the rear loose. Accessible, safe to release.
-	if _is_brake_slide_input():
-		return true
-
-	# Power entry — needs lean forward (distinguishes from wheelie's lean back).
-	if input_controller.nfx_lean <= 0.3:
-		return false
-	var bd = player_entity.bike_definition
-
-	# Clutch-dump pop (lean-forward variant) — same low-gear torque gate the wheelie pop uses.
-	var clutch_pop = _clutch_kick_window > 0 and input_controller.nfx_throttle > 0.5
-	if clutch_pop:
-		var max_torque_mult = bd.gear_ratios[0] / bd.gear_ratios[bd.num_gears - 1]
-		return (
-			gearing_controller.get_potential_power_output()
-			> max_torque_mult * CLUTCH_POP_MIN_POWER_FRAC
-		)
-
-	# Power slide — floored throttle at high RPM + enough delivered force to break traction.
-	# The RPM gate is what stops a lean-forward + gas + steer burnout in any gear at any revs.
-	var force = gearing_controller.get_power_output() * bd.acceleration
-	return (
-		input_controller.nfx_throttle > 0.7
-		and gearing_controller.get_rpm_ratio() > DRIFT_POWER_MIN_RPM_RATIO
-		and force > DRIFT_BREAK_FORCE
-	)
+	return _is_brake_slide_input()
 
 
 ## Maintain is_drifting and integrate slip_angle. Runs before _velocity_calc so
@@ -1066,14 +1037,18 @@ func _drift_calc(delta: float):
 
 	# Sustain check — drift ends once nothing is feeding it and the slide has closed.
 	var brake_sustain = input_controller.nfx_rear_brake > DRIFT_BRAKE_HOLD
-	var power_sustain = input_controller.nfx_throttle > 0.5 and input_controller.nfx_lean > 0.0
-	if not brake_sustain and not power_sustain and absf(slip_angle) < deg_to_rad(2.0):
+	var burnout_sustain = (
+		speed < DRIFT_MIN_SPEED
+		and input_controller.nfx_throttle > 0.5
+		and input_controller.nfx_lean > 0.0
+	)
+	if not brake_sustain and not burnout_sustain and absf(slip_angle) < deg_to_rad(2.0):
 		is_drifting = false
 		slip_angle = 0.0
 		return
 
 	var steer = input_controller.nfx_steer
-	# Drive = how hard the slide is fed (throttle for power drift, rear brake for brake slide).
+	# Drive = how hard the slide is fed (throttle or rear brake).
 	var drive = clampf(maxf(input_controller.nfx_throttle, input_controller.nfx_rear_brake), 0.0, 1.0)
 
 	# Carve the heading from steer. Momentum keeps the travel line put as the bike

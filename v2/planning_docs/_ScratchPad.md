@@ -8,8 +8,7 @@ Vid: where we started, where we are now
 
 ## NOW
 - [ ] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
-- [ ] shouldnt be so easy to drift & steer on gamepad
-  - [ ] only drift from rear brake, not lean fwd except burnout
+
 
 
 ---

@@ -27,6 +27,7 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 
+
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
 
@@ -246,6 +247,8 @@
 ---
 
 ## Done ✅
+
+- [x] shouldnt be so easy to drift & steer on gamepad, only drift from rear brake, not lean fwd except burnout
 
 - [x] respawn timer => 15s max for CrashLaunch, during stuntrace =>3s, free roam => 5s
 
