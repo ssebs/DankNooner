@@ -36,6 +36,9 @@ const RAY_LENGTH := 500.0
 # Pine.glb bark is ~0.5 wide; canopy starts ~1.5 up. Tree scale applies on top.
 const TRUNK_RADIUS := 0.5
 const TRUNK_HEIGHT := 2.0
+# Trees past this stop drawing entirely (LOD alone still pays per tree), dithering out over the margin
+const VISIBLE_RANGE := 500.0
+const VISIBLE_RANGE_FADE := 50.0
 
 
 func _ready():
@@ -135,4 +138,7 @@ func _build():
 			# exclude_from_occluder render layer: still culled, but never baked as an occluder
 			var mesh: MeshInstance3D = tree.find_children("*", "MeshInstance3D")[0]
 			mesh.layers = 4
+			mesh.visibility_range_end = VISIBLE_RANGE
+			mesh.visibility_range_end_margin = VISIBLE_RANGE_FADE
+			mesh.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 			add_child(tree)

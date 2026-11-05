@@ -22,6 +22,9 @@ enum LevelName {
 @export var settings_manager: SettingsManager
 
 const GAMMA_LUT_SIZE := 256
+## reduced_effects multipliers: TreeBundle's 500m -> 300m, lightposts' 80m light fade -> 40m.
+const REDUCED_VISIBILITY_RANGE_SCALE := 0.6
+const REDUCED_LIGHT_FADE_SCALE := 0.5
 
 ## PackedScene of type LevelDefinition
 var possible_levels: Dictionary[LevelName, PackedScene] = {
@@ -81,7 +84,7 @@ func _ready():
 		return
 	# Console.add_command("dbg_gym", spawn_gym_test_level) # broken
 	Console.add_command("dbg_traffic", _toggle_traffic_lights_debug, [], 0, "Toggle the traffic light debug draw")
-	settings_manager.all_settings_changed.connect(func(_s): _apply_gamma())
+	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
 
 
 func _process(_delta: float):
@@ -112,6 +115,7 @@ func spawn_level(level_name: LevelName, input_state: InputStateManager.InputStat
 	current_level = spawned_level
 	current_level_name = level_name
 	_apply_gamma()
+	_apply_reduced_effects()
 
 	input_state_manager.current_input_state = input_state
 	if input_state == InputStateManager.InputState.IN_GAME:
@@ -183,6 +187,37 @@ func _apply_gamma():
 		"*", "WorldEnvironment", true, false
 	):
 		world_env.environment.adjustment_color_correction = lut_tex
+
+
+func _on_all_settings_changed(_settings: Dictionary):
+	_apply_gamma()
+	_apply_reduced_effects()
+
+
+## reduced_effects setting (the Low quality preset): glow and shadows off, trees and lights culled
+## nearer. Live from the pause menu too, so it scales the level's authored values, not the current.
+func _apply_reduced_effects():
+	# Settings load deferred and levels spawn later; whichever runs second applies it
+	if current_level == null or settings_manager.current_settings.is_empty():
+		return
+	var reduced: bool = settings_manager.current_settings["reduced_effects"]
+	for world_env: WorldEnvironment in current_level.find_children("*", "WorldEnvironment", true, false):
+		world_env.environment.glow_enabled = !reduced and _authored(world_env.environment, &"glow_enabled")
+	for light: Light3D in current_level.find_children("*", "Light3D", true, false):
+		light.shadow_enabled = !reduced and _authored(light, &"shadow_enabled")
+		var fade_scale := REDUCED_LIGHT_FADE_SCALE if reduced else 1.0
+		light.distance_fade_begin = _authored(light, &"distance_fade_begin") * fade_scale
+	var range_scale := REDUCED_VISIBILITY_RANGE_SCALE if reduced else 1.0
+	for geometry: GeometryInstance3D in current_level.find_children("*", "GeometryInstance3D", true, false):
+		geometry.visibility_range_end = _authored(geometry, &"visibility_range_end") * range_scale
+
+
+## `object`'s `property` as it was before _apply_reduced_effects first touched it.
+func _authored(object: Object, property: StringName) -> Variant:
+	var key := StringName("authored_" + property)
+	if !object.has_meta(key):
+		object.set_meta(key, object.get(property))
+	return object.get_meta(key)
 
 
 func _toggle_traffic_lights_debug():

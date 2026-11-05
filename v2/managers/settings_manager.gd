@@ -22,6 +22,22 @@ const AA_MODE_LABELS: Dictionary = {
 	"taa": "AA_TAA",
 }
 
+# Graphics presets, each pinning these settings. Not stored: the menu shows whichever preset the
+# current values match, else Custom. reduced_effects drops glow + shadows and culls nearer.
+const QUALITY_PRESETS: Dictionary = {
+	"low": {"resolution_scale": 0.75, "anti_aliasing": "fxaa", "reduced_effects": true},
+	"mid": {"resolution_scale": 1.0, "anti_aliasing": "fxaa", "reduced_effects": false},
+	"high": {"resolution_scale": 1.25, "anti_aliasing": "taa", "reduced_effects": false},
+}
+
+# QUALITY_PRESETS keys + "custom" -> dropdown labels (localization keys)
+const QUALITY_LABELS: Dictionary = {
+	"low": "QUALITY_LOW",
+	"mid": "QUALITY_MID",
+	"high": "QUALITY_HIGH",
+	"custom": "QUALITY_CUSTOM",
+}
+
 # json stores the string, this maps to the godot enum
 const WINDOW_MODES: Dictionary = {
 	"windowed": DisplayServer.WINDOW_MODE_WINDOWED,
@@ -35,11 +51,10 @@ var default_settings: Dictionary = {
 	"version": settings_version,
 	# "username": "change_me",
 	"signal_relay_host": "stun.ssebs.com", # stun.casa.ssebs.com, 192.168.1.247
-	"resolution_scale": 1.0,
+	# resolution_scale, anti_aliasing, reduced_effects: merged in from QUALITY_PRESETS in _ready
 	"gamma": 0.5,
 	"fullscreen_mode": "borderless", # "fullscreen" or "borderless" or "windowed" or "maximized"
 	"vsync": true,
-	"anti_aliasing": "taa", # key of AA_MODE_LABELS
 	"show_fps": true,
 	"master_vol": 0.8,
 	"music_vol": 1.0,
@@ -67,9 +82,11 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 
+	var quality := "mid"
 	if OS.has_feature("web"):
 		default_settings["fullscreen_mode"] = "windowed"
-		default_settings["resolution_scale"] = 0.5
+		quality = "low"
+	default_settings.merge(QUALITY_PRESETS[quality])
 
 	if default_settings["language"] not in TranslationServer.get_loaded_locales():
 		default_settings["language"] = "en"
@@ -162,3 +179,17 @@ static func windowmode_to_str(wmode: int) -> String:
 ## convert string to windowmode from WINDOW_MODES map
 static func str_to_windowmode(mode_str: String) -> int:
 	return WINDOW_MODES.get(mode_str, DisplayServer.WINDOW_MODE_WINDOWED)
+
+
+## The QUALITY_PRESETS key `settings` matches, or "custom".
+static func quality_of(settings: Dictionary) -> String:
+	for quality in QUALITY_PRESETS:
+		var preset: Dictionary = QUALITY_PRESETS[quality]
+		# JSON loads every number as a float
+		if (
+			is_equal_approx(settings["resolution_scale"], preset["resolution_scale"])
+			and settings["anti_aliasing"] == preset["anti_aliasing"]
+			and settings["reduced_effects"] == preset["reduced_effects"]
+		):
+			return quality
+	return "custom"

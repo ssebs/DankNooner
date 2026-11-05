@@ -15,6 +15,7 @@ const TAB_SETTING_KEYS: Array = [
 		"fullscreen_mode",
 		"vsync",
 		"anti_aliasing",
+		"reduced_effects",
 		"show_fps",
 		"language",
 	],
@@ -29,10 +30,12 @@ const TAB_SETTING_KEYS: Array = [
 @onready var controls_tab: ControlsTab = %Controls
 @onready var audio_tab: Control = %Audio
 
+@onready var quality_opt: OptionButton = %QualityOpt
 @onready var signal_host_entry: LineEdit = %SignalHostEntry
 @onready var window_mode_opt: OptionButton = %WindowModeOpt
 @onready var vsync_check: CheckBox = %VSyncCheck
 @onready var aa_opt: OptionButton = %AAOpt
+@onready var reduced_effects_check: CheckBox = %ReducedEffectsCheck
 @onready var show_fps_check: CheckBox = %ShowFPSCheck
 @onready var language_opt: OptionButton = %LanguageOpt
 @onready var master_vol_slider: HSlider = %MasterVolSlider
@@ -66,6 +69,13 @@ func _ready():
 			SettingsManager.WINDOW_MODE_LABELS[mode_str], SettingsManager.WINDOW_MODES[mode_str]
 		)
 
+	quality_opt.clear()
+	for quality in SettingsManager.QUALITY_LABELS:
+		quality_opt.add_item(SettingsManager.QUALITY_LABELS[quality])
+		quality_opt.set_item_metadata(quality_opt.item_count - 1, quality)
+	# Display only: shown when the settings below match no preset
+	quality_opt.set_item_disabled(quality_opt.item_count - 1, true)
+
 	aa_opt.clear()
 	for aa_mode in SettingsManager.AA_MODE_LABELS:
 		aa_opt.add_item(SettingsManager.AA_MODE_LABELS[aa_mode])
@@ -94,6 +104,9 @@ func Enter(state_context: StateContext):
 	settings_manager.setting_updated.connect(_on_setting_updated)
 	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
 
+	quality_opt.item_selected.connect(_on_quality_selected)
+	aa_opt.item_selected.connect(_on_quality_setting_changed)
+	reduced_effects_check.toggled.connect(_on_quality_setting_changed)
 	resolution_scale.value_changed.connect(_on_resolution_scale_changed)
 	traffic_density.value_changed.connect(_on_traffic_density_changed)
 	tab_container.tab_changed.connect(_on_tab_changed)
@@ -112,6 +125,9 @@ func Exit(_state_context: StateContext):
 	settings_manager.setting_updated.disconnect(_on_setting_updated)
 	settings_manager.all_settings_changed.disconnect(_on_all_settings_changed)
 
+	quality_opt.item_selected.disconnect(_on_quality_selected)
+	aa_opt.item_selected.disconnect(_on_quality_setting_changed)
+	reduced_effects_check.toggled.disconnect(_on_quality_setting_changed)
 	resolution_scale.value_changed.disconnect(_on_resolution_scale_changed)
 	traffic_density.value_changed.disconnect(_on_traffic_density_changed)
 	tab_container.tab_changed.disconnect(_on_tab_changed)
@@ -136,10 +152,7 @@ func load_settings_into_ui(settings: Dictionary):
 			window_mode_opt.select(i)
 			break
 	vsync_check.button_pressed = settings["vsync"]
-	for i in aa_opt.item_count:
-		if aa_opt.get_item_metadata(i) == settings["anti_aliasing"]:
-			aa_opt.select(i)
-			break
+	_select_metadata(aa_opt, settings["anti_aliasing"])
 	show_fps_check.button_pressed = settings["show_fps"]
 
 	for i in language_opt.item_count:
@@ -154,7 +167,9 @@ func load_settings_into_ui(settings: Dictionary):
 	mute_check.button_pressed = settings["mute"]
 	mute_unfocused_check.button_pressed = settings["mute_unfocused"]
 
+	reduced_effects_check.button_pressed = settings["reduced_effects"]
 	resolution_scale.value = settings["resolution_scale"]
+	# Also syncs quality_opt, now that every setting it reads is loaded
 	_on_resolution_scale_changed(resolution_scale.value)
 	gamma_slider.value = settings["gamma"]
 	joy_cam_sens.value = settings["joy_cam_sens"]
@@ -173,6 +188,7 @@ func _settings_from_ui() -> Dictionary:
 		"fullscreen_mode": SettingsManager.windowmode_to_str(window_mode_opt.get_selected_id()),
 		"vsync": vsync_check.button_pressed,
 		"anti_aliasing": aa_opt.get_item_metadata(aa_opt.selected),
+		"reduced_effects": reduced_effects_check.button_pressed,
 		"show_fps": show_fps_check.button_pressed,
 		"language": language_opt.get_item_metadata(language_opt.selected),
 		"master_vol": master_vol_slider.value,
@@ -218,6 +234,27 @@ func _on_setting_updated(_key: String, _value: Variant):
 
 func _on_resolution_scale_changed(val: float):
 	resolution_scale_label.text = tr("RESOLUTION_SCALE_LABEL").format({"scale": _scale_str(val)})
+	_on_quality_setting_changed(val)
+
+
+## Sets the preset's settings in the UI. Still needs Save.
+func _on_quality_selected(idx: int):
+	var preset: Dictionary = SettingsManager.QUALITY_PRESETS[quality_opt.get_item_metadata(idx)]
+	_select_metadata(aa_opt, preset["anti_aliasing"])
+	reduced_effects_check.button_pressed = preset["reduced_effects"]
+	resolution_scale.value = preset["resolution_scale"]
+
+
+## A setting a preset pins changed: show the preset it now matches, or Custom.
+func _on_quality_setting_changed(_value: Variant):
+	_select_metadata(quality_opt, SettingsManager.quality_of(_settings_from_ui()))
+
+
+func _select_metadata(opt: OptionButton, metadata: Variant):
+	for i in opt.item_count:
+		if opt.get_item_metadata(i) == metadata:
+			opt.select(i)
+			return
 
 
 func _on_traffic_density_changed(val: float):

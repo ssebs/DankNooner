@@ -27,6 +27,7 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 - [ ] add steam launch option for compatibility renderer (old macs / non-vulkan)
+- [ ] alt tab back/forth you cant move in game, have to click in game
 
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -246,6 +247,8 @@
 ---
 
 ## Done ✅
+
+- [x] graphics quality settings
 
 - [x] lowside when gassing it during corner
 
