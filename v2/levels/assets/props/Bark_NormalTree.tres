@@ -1,0 +1,18 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://stojq84mkv5y"]
+
+[ext_resource type="Texture2D" uid="uid://5muxgh3nimpk" path="res://levels/assets/props/Pine_Bark_NormalTree.png" id="1_no0s4"]
+[ext_resource type="Texture2D" uid="uid://codcx0cx0y8vp" path="res://levels/assets/props/Pine_Bark_NormalTree_Normal.png" id="2_ogqph"]
+
+[resource]
+resource_name = "Bark_NormalTree"
+albedo_texture = ExtResource("1_no0s4")
+metallic = 0.4
+normal_enabled = true
+normal_texture = ExtResource("2_ogqph")
+metadata/extras = {
+"fromFBX": {
+"isTruePBR": false,
+"shadingModel": "Phong"
+}
+}
+metadata/_gltf_primary_texture_coord = 0

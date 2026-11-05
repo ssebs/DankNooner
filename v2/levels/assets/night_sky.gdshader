@@ -1,5 +1,8 @@
 shader_type sky;
 
+// Stands in for TIME: a sky using TIME rebuilds its radiance map every frame. Set by LevelManager.
+global uniform float sky_time;
+
 group_uniforms sky;
 uniform vec3 zenith_color : source_color = vec3(0.01, 0.015, 0.08);
 uniform vec3 horizon_color : source_color = vec3(0.12, 0.05, 0.3);
@@ -106,7 +109,7 @@ float stars(vec3 dir) {
 	}
 	// Jitter stays inside the cell so a star never gets clipped by its border
 	vec2 star_pos = cell + 0.3 + 0.4 * hash22(seed);
-	float twinkle = 0.6 + 0.4 * sin(TIME * twinkle_speed + hash21(seed + 7.0) * TAU);
+	float twinkle = 0.6 + 0.4 * sin(sky_time * twinkle_speed + hash21(seed + 7.0) * TAU);
 	// Solid core so TAA doesn't smear stars away while the camera moves
 	return (1.0 - smoothstep(star_size * 0.5, star_size, length(uv - star_pos))) * twinkle;
 }
@@ -128,9 +131,9 @@ vec3 add_moon(vec3 col, vec3 dir, vec3 moon_dir) {
 
 // rgb = color, a = coverage
 vec4 clouds(vec3 dir, vec3 moon_dir) {
-	vec2 uv = dir.xz / (dir.y + 0.15) * cloud_scale + TIME * cloud_wind;
+	vec2 uv = dir.xz / (dir.y + 0.15) * cloud_scale + sky_time * cloud_wind;
 	float density = fbm(uv);
-	float drift = 0.5 + 0.5 * sin(TIME * cloud_coverage_speed);
+	float drift = 0.5 + 0.5 * sin(sky_time * cloud_coverage_speed);
 	float threshold = 1.0 - mix(cloud_coverage_min, cloud_coverage_max, drift);
 	float mask = smoothstep(threshold, threshold + 0.01, density);
 	float core = smoothstep(threshold + cloud_rim_width, threshold + cloud_rim_width + 0.01, density);
@@ -148,7 +151,7 @@ vec4 clouds(vec3 dir, vec3 moon_dir) {
 
 void sky() {
 	vec3 col = sky_gradient(EYEDIR);
-	// Reflections don't need the detail, and TIME forces a per-frame radiance update
+	// Reflections don't need the detail
 	if (AT_CUBEMAP_PASS) {
 		COLOR = col;
 	} else {

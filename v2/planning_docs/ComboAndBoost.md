@@ -128,13 +128,13 @@ Consts, visual-only (local client).
 | `BOOST_FOV_ADD` | Extra FOV degrees while boosting, on top of the speed-driven widen. |
 | `BOOST_BLEND_SPEED` | How fast the tint / FOV punch ramps in and out. |
 
-Shader uniforms in `resources/shaders/radial_blur.gdshader` (shared with the speed blur):
+Shader uniforms in `resources/shaders/boost_tint.gdshader`:
 
 | Uniform | Effect |
 | --- | --- |
 | `boost_color` | The wash color. |
 | `boost_tint_amount` | How strongly the tint pushes at full boost + screen edge. |
-| `boost_clear_radius` | How far inward the tint reaches. Lower = more full-screen. Reaches further in than the blur's `clear_radius` on purpose. |
+| `boost_clear_radius` | How far inward the tint reaches. Lower = more full-screen. |
 
 > Hook for flame VFX later: `BoostController.is_boosting` is synced, so remote players' flames work off the same bool.
 

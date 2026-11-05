@@ -26,6 +26,7 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
+- [ ] add steam launch option for compatibility renderer (old macs / non-vulkan)
 
 #### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins

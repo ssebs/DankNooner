@@ -23,8 +23,8 @@
 [ext_resource type="Script" uid="uid://dxn3rquhf7sfs" path="res://managers/gamemodes/gamemode_manager.gd" id="18_ih6an"]
 [ext_resource type="Script" uid="uid://didbm7t5dal30" path="res://managers/save_manager.gd" id="19_wt57k"]
 [ext_resource type="PackedScene" uid="uid://b27jgs5kv1310" path="res://managers/audio_manager.tscn" id="20_2i4tw"]
+[ext_resource type="Resource" uid="uid://c15xpdl1cqt7f" path="res://resources/player/npc_racer_definition.tres" id="20_npcdef"]
 [ext_resource type="Resource" uid="uid://ba1bidrtscoc7" path="res://resources/player/default_player_definition.tres" id="20_pk5u2"]
-[ext_resource type="Resource" path="res://resources/player/npc_racer_definition.tres" id="20_npcdef"]
 [ext_resource type="Script" uid="uid://cug5kob8cndk4" path="res://managers/spawn_manager.gd" id="21_euc45"]
 [ext_resource type="PackedScene" uid="uid://pg4u70n43ksy" path="res://menus/loading_menu/loading_menu_state.tscn" id="21_x5kvo"]
 [ext_resource type="PackedScene" path="res://menus/warmup_menu/warmup_menu_state.tscn" id="22_warmup"]
@@ -33,12 +33,12 @@
 [ext_resource type="Script" uid="uid://2sjea5ct6un7" path="res://managers/gamemodes/types/tutorial/tutorial_gamemode.gd" id="27_8slmw"]
 [ext_resource type="PackedScene" uid="uid://c1rey02kvrh1h" path="res://managers/hud/results_hud_state.tscn" id="29_o8ab5"]
 [ext_resource type="Script" uid="uid://b6yqloe4qv2ck" path="res://managers/gamemodes/types/stunt_challenge/stunt_challenge_gamemode.gd" id="30_chlng"]
+[ext_resource type="Script" uid="uid://yep5qcjkpcpb" path="res://managers/gamemodes/types/crash_launch/crash_launch_gamemode.gd" id="30_crshlch"]
 [ext_resource type="PackedScene" path="res://managers/hud/fuel_up_hud_state.tscn" id="30_fuelhud"]
 [ext_resource type="Script" uid="uid://crs7yf824r4on" path="res://managers/gamemodes/types/fuel_up/fuel_up_gamemode.gd" id="30_fuelup"]
 [ext_resource type="PackedScene" path="res://managers/hud/garage_hud_state.tscn" id="30_garagehud"]
 [ext_resource type="Script" uid="uid://cdt21wq6ap1cq" path="res://managers/gamemodes/types/long_jump/long_jump_gamemode.gd" id="30_lngjmp"]
 [ext_resource type="Script" uid="uid://uisn3s8ykmg2" path="res://managers/gamemodes/types/trick_battle/trick_battle_gamemode.gd" id="30_trkbtl"]
-[ext_resource type="Script" uid="uid://yep5qcjkpcpb" path="res://managers/gamemodes/types/crash_launch/crash_launch_gamemode.gd" id="30_crshlch"]
 [ext_resource type="Script" uid="uid://boxia2udg1jxm" path="res://managers/npc_race_manager.gd" id="31_npcrm"]
 [ext_resource type="Script" uid="uid://283a7n5utttx" path="res://resources/player/player_definition.gd" id="35_iihm1"]
 [ext_resource type="Script" uid="uid://37ehv252lkkf" path="res://managers/trick_manager.gd" id="36_trkmg"]
@@ -362,7 +362,6 @@ race_mode = NodePath("..")
 [node name="StuntRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=569716093 node_paths=PackedStringArray("traffic", "npc_racers", "pickups", "style_scoring", "finish_bonus", "fuel_up_bonus", "knockout_scoring", "challenges", "leaderboard", "riding_hud_state", "lobby_manager", "audio_manager", "results_hud", "input_state_manager", "save_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("60_racgm")
 race_type = 1
-crash_respawn_delay = 3.0
 traffic = NodePath("Traffic")
 npc_racers = NodePath("NPCRacers")
 pickups = NodePath("Pickups")
@@ -378,6 +377,7 @@ audio_manager = NodePath("../../../AudioManager")
 results_hud = NodePath("../../../HUDManager/StateMachine/ResultsHUDState")
 input_state_manager = NodePath("../../../InputStateManager")
 save_manager = NodePath("../../../SaveManager")
+crash_respawn_delay = 3.0
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
@@ -475,10 +475,10 @@ save_manager = NodePath("../../../SaveManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
-[node name="TrickBattleGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1733062841 node_paths=PackedStringArray("trick_manager", "riding_hud_state", "lobby_manager", "audio_manager", "results_hud", "input_state_manager", "save_manager", "gamemode_manager", "spawn_manager", "item_manager")]
+[node name="TrickBattleGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1733062841 node_paths=PackedStringArray("item_manager", "trick_manager", "riding_hud_state", "lobby_manager", "audio_manager", "results_hud", "input_state_manager", "save_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("30_trkbtl")
-trick_manager = NodePath("../../../TrickManager")
 item_manager = NodePath("../../../ItemManager")
+trick_manager = NodePath("../../../TrickManager")
 duration_secs = 60.0
 riding_hud_state = NodePath("../../../HUDManager/StateMachine/RidingHUDState")
 lobby_manager = NodePath("../../../LobbyManager")
@@ -491,13 +491,14 @@ spawn_manager = NodePath("../../../SpawnManager")
 
 [node name="CrashLaunchGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1777000001 node_paths=PackedStringArray("riding_hud_state", "lobby_manager", "audio_manager", "results_hud", "input_state_manager", "save_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("30_crshlch")
-crash_respawn_delay = 15.0
+placement_points = PackedInt32Array(300, 200, 150, 100, 50)
 riding_hud_state = NodePath("../../../HUDManager/StateMachine/RidingHUDState")
 lobby_manager = NodePath("../../../LobbyManager")
 audio_manager = NodePath("../../../AudioManager")
 results_hud = NodePath("../../../HUDManager/StateMachine/ResultsHUDState")
 input_state_manager = NodePath("../../../InputStateManager")
 save_manager = NodePath("../../../SaveManager")
+crash_respawn_delay = 15.0
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 

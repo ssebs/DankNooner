@@ -77,26 +77,22 @@ const WOBBLE_MAX_TRAUMA: float = 0.9
 const DRIFT_TRAUMA: float = 0.6
 ## One-shot trauma burst on passing traffic close.
 const NEAR_MISS_TRAUMA: float = 0.6
-## Fraction of the bike's max_speed where the FOV widen + blur begins.
+## Fraction of the bike's max_speed where the FOV widen begins.
 const FOV_SPEED_PCT_MIN: float = 0.2
-## Fraction of the bike's max_speed where the FOV widen + blur is maxed out.
+## Fraction of the bike's max_speed where the FOV widen is maxed out.
 const FOV_SPEED_PCT_MAX: float = 1.0
 ## Degrees added to the camera's base FOV at full speed.
 const FOV_MAX_ADD: float = 15.0
-## Radial blur shader strength at full speed.
-const BLUR_MAX_STRENGTH: float = 1.0
 ## Degrees of extra FOV punch while boosting, on top of the speed-driven widen.
 const BOOST_FOV_ADD: float = 12.0
 ## How fast the boost tint / FOV punch ramps in and out (exponential rate).
 const BOOST_BLEND_SPEED: float = 6.0
-## UV radius around screen center kept fully sharp — blur only sits in the outer ring beyond this.
-const BLUR_CLEAR_RADIUS: float = 0.7
 
 ## Base values when slider is at 0.5 (middle)
 const MOUSE_SENS_SCALE: float = 0.003
 const JOY_SENS_SCALE: float = 6.0
 const DEFAULT_ORBIT_PITCH: float = -0.5
-const RADIAL_BLUR_SHADER := preload("res://resources/shaders/radial_blur.gdshader")
+const BOOST_TINT_SHADER := preload("res://resources/shaders/boost_tint.gdshader")
 ## How quickly the smoothed accel estimate tracks raw frame-to-frame speed change.
 const ACCEL_SMOOTH_RATE: float = 12.0
 ## Peak-hold decay (rad/s per second) for the wheelie-drop rate sampled across the land event.
@@ -139,8 +135,8 @@ var _fps_cam_offset := 0.75
 var _trauma: float = 0.0
 var _tps_base_fov: float = 0.0
 var _fps_base_fov: float = 0.0
-var _blur_layer: CanvasLayer = null
-var _blur_mat: ShaderMaterial = null
+var _tint_layer: CanvasLayer = null
+var _tint_mat: ShaderMaterial = null
 ## Smoothed 0..1 boost blend — is_boosting is a hard bool, so ease it for the FX.
 var _boost_blend: float = 0.0
 var _prev_pitch: float = 0.0
@@ -432,7 +428,7 @@ func deferred_init():
 		_tps_base_fov = tps_cam.fov
 		_fps_base_fov = fps_cam.fov
 		player_entity.trick_controller.trick_ended.connect(_on_trick_ended_fx)
-		_create_blur_overlay()
+		_create_tint_overlay()
 	else:
 		DebugUtils.DebugMsg("disable_cameras %s" % multiplayer.multiplayer_peer.get_unique_id())
 		disable_cameras()
@@ -486,7 +482,7 @@ func do_reset():
 
 
 #region Juice FX
-## Drives the high-speed FOV widen + radial blur and the screen shake each frame.
+## Drives the high-speed FOV widen, the boost tint and the screen shake each frame.
 ## Runs after the camera transform is set so shake jitter doesn't accumulate.
 func _update_juice_fx(delta: float):
 	var cam: Camera3D = fps_cam if current_cam_mode == CameraMode.FPS else tps_cam
@@ -509,8 +505,9 @@ func _update_juice_fx(delta: float):
 	_boost_blend = lerpf(_boost_blend, boost_target, 1.0 - exp(-BOOST_BLEND_SPEED * delta))
 
 	cam.fov = base_fov + FOV_MAX_ADD * speed_factor + BOOST_FOV_ADD * _boost_blend
-	_blur_mat.set_shader_parameter("strength", speed_factor * BLUR_MAX_STRENGTH)
-	_blur_mat.set_shader_parameter("boost", _boost_blend)
+	_tint_mat.set_shader_parameter("boost", _boost_blend)
+	# Hidden when it draws nothing, or every frame pays its full-screen draw anyway
+	_tint_layer.visible = !is_zero_approx(_boost_blend)
 
 	# Track the front-wheel drop speed (peak-held) so the wheelie-landing burst can scale by it.
 	var pitch: float = player_entity.movement_controller.pitch_angle
@@ -609,25 +606,22 @@ func _update_juice_fx(delta: float):
 	_trauma = maxf(_trauma - TRAUMA_DECAY * delta, 0.0)
 
 
-## Full-screen radial blur overlay, created locally so remote players don't pay for it.
+## Full-screen boost tint overlay, created locally so remote players don't pay for it.
 ## CanvasLayer -1 keeps it above the 3D world but below the HUD (canvas layer 0).
-func _create_blur_overlay():
-	_blur_mat = ShaderMaterial.new()
-	_blur_mat.shader = RADIAL_BLUR_SHADER
-	_blur_mat.set_shader_parameter("strength", 0.0)
-	_blur_mat.set_shader_parameter("boost", 0.0)
-	# Set explicitly — relying on the shader's uniform default isn't reliable at runtime.
-	_blur_mat.set_shader_parameter("clear_radius", BLUR_CLEAR_RADIUS)
+func _create_tint_overlay():
+	_tint_mat = ShaderMaterial.new()
+	_tint_mat.shader = BOOST_TINT_SHADER
+	_tint_mat.set_shader_parameter("boost", 0.0)
 
 	var rect := ColorRect.new()
 	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	rect.material = _blur_mat
+	rect.material = _tint_mat
 	rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
-	_blur_layer = CanvasLayer.new()
-	_blur_layer.layer = -1
-	_blur_layer.add_child(rect)
-	add_child(_blur_layer)
+	_tint_layer = CanvasLayer.new()
+	_tint_layer.layer = -1
+	_tint_layer.add_child(rect)
+	add_child(_tint_layer)
 
 
 func _on_trick_ended_fx(trick_type: TrickController.Trick):

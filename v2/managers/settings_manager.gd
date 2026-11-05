@@ -15,6 +15,13 @@ const WINDOW_MODE_LABELS: Dictionary = {
 	"maximized": "WINDOW_MODE_MAXIMIZED",
 }
 
+# anti_aliasing values -> dropdown labels (localization keys). "taa" keeps FXAA on too.
+const AA_MODE_LABELS: Dictionary = {
+	"none": "AA_NONE",
+	"fxaa": "AA_FXAA",
+	"taa": "AA_TAA",
+}
+
 # json stores the string, this maps to the godot enum
 const WINDOW_MODES: Dictionary = {
 	"windowed": DisplayServer.WINDOW_MODE_WINDOWED,
@@ -32,6 +39,7 @@ var default_settings: Dictionary = {
 	"gamma": 0.5,
 	"fullscreen_mode": "borderless", # "fullscreen" or "borderless" or "windowed" or "maximized"
 	"vsync": true,
+	"anti_aliasing": "taa", # key of AA_MODE_LABELS
 	"show_fps": true,
 	"master_vol": 0.8,
 	"music_vol": 1.0,

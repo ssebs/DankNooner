@@ -312,6 +312,13 @@ occlusion_culling/use_occlusion_culling=true
 mesh_lod/lod_change/threshold_pixels=2.0
 limits/opengl/max_renderable_lights.web=16
 
+[shader_globals]
+
+sky_time={
+"type": "float",
+"value": 0.0
+}
+
 [steam]
 
 initialization/app_data/app_id=5416370

@@ -84,6 +84,11 @@ func _ready():
 	settings_manager.all_settings_changed.connect(func(_s): _apply_gamma())
 
 
+func _process(_delta: float):
+	# Drives night_sky.gdshader's animation in place of TIME, see the shader
+	RenderingServer.global_shader_parameter_set(&"sky_time", Time.get_ticks_msec() / 1000.0)
+
+
 #region public api
 
 

@@ -8,7 +8,16 @@ class_name SettingsMenuState extends MenuState
 
 ## Settings keys each tab's Reset restores, by tab index. Controls reset through ControlsTab.
 const TAB_SETTING_KEYS: Array = [
-	["signal_relay_host", "resolution_scale", "gamma", "fullscreen_mode", "vsync", "show_fps", "language"],
+	[
+		"signal_relay_host",
+		"resolution_scale",
+		"gamma",
+		"fullscreen_mode",
+		"vsync",
+		"anti_aliasing",
+		"show_fps",
+		"language",
+	],
 	["master_vol", "music_vol", "sfx_vol", "menu_vol", "mute", "mute_unfocused"],
 	["difficulty", "joy_cam_sens", "mouse_cam_sens", "invert_cam", "auto_transmission", "traffic_density"],
 ]
@@ -23,6 +32,7 @@ const TAB_SETTING_KEYS: Array = [
 @onready var signal_host_entry: LineEdit = %SignalHostEntry
 @onready var window_mode_opt: OptionButton = %WindowModeOpt
 @onready var vsync_check: CheckBox = %VSyncCheck
+@onready var aa_opt: OptionButton = %AAOpt
 @onready var show_fps_check: CheckBox = %ShowFPSCheck
 @onready var language_opt: OptionButton = %LanguageOpt
 @onready var master_vol_slider: HSlider = %MasterVolSlider
@@ -55,6 +65,11 @@ func _ready():
 		window_mode_opt.add_item(
 			SettingsManager.WINDOW_MODE_LABELS[mode_str], SettingsManager.WINDOW_MODES[mode_str]
 		)
+
+	aa_opt.clear()
+	for aa_mode in SettingsManager.AA_MODE_LABELS:
+		aa_opt.add_item(SettingsManager.AA_MODE_LABELS[aa_mode])
+		aa_opt.set_item_metadata(aa_opt.item_count - 1, aa_mode)
 
 	language_opt.clear()
 	for locale in TranslationServer.get_loaded_locales():
@@ -121,6 +136,10 @@ func load_settings_into_ui(settings: Dictionary):
 			window_mode_opt.select(i)
 			break
 	vsync_check.button_pressed = settings["vsync"]
+	for i in aa_opt.item_count:
+		if aa_opt.get_item_metadata(i) == settings["anti_aliasing"]:
+			aa_opt.select(i)
+			break
 	show_fps_check.button_pressed = settings["show_fps"]
 
 	for i in language_opt.item_count:
@@ -153,6 +172,7 @@ func _settings_from_ui() -> Dictionary:
 		"signal_relay_host": signal_host_entry.text,
 		"fullscreen_mode": SettingsManager.windowmode_to_str(window_mode_opt.get_selected_id()),
 		"vsync": vsync_check.button_pressed,
+		"anti_aliasing": aa_opt.get_item_metadata(aa_opt.selected),
 		"show_fps": show_fps_check.button_pressed,
 		"language": language_opt.get_item_metadata(language_opt.selected),
 		"master_vol": master_vol_slider.value,

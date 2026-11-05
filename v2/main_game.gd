@@ -61,6 +61,11 @@ func _on_all_settings_changed(new_settings: Dictionary):
 	get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
 	get_viewport().scaling_3d_scale = new_settings.get("resolution_scale", 1.0)
 	DebugUtils.DebugMsg("VP scaling: %.2f" % get_viewport().scaling_3d_scale)
+	var aa: String = new_settings["anti_aliasing"]
+	get_viewport().use_taa = aa == "taa"
+	get_viewport().screen_space_aa = (
+		Viewport.SCREEN_SPACE_AA_DISABLED if aa == "none" else Viewport.SCREEN_SPACE_AA_FXAA
+	)
 
 
 func _on_setting_updated(key: String, value: Variant):
