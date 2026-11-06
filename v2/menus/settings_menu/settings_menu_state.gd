@@ -83,7 +83,9 @@ func _ready():
 
 	language_opt.clear()
 	for locale in TranslationServer.get_loaded_locales():
-		language_opt.add_item(TranslationServer.get_locale_name(locale))
+		language_opt.add_item(
+			TranslationServer.get_translation_object(locale).get_message("LANGUAGE_NAME")
+		)
 		language_opt.set_item_metadata(language_opt.item_count - 1, locale)
 
 
