@@ -47,7 +47,7 @@ func start_server(solo: bool = false) -> Error:
 			handler.connection_failed.disconnect(_on_handler_connection_failed)
 		handler.stop_server()
 		# Reset back to the pre-host state so the lobby toasts + returns to the play menu.
-		client_connection_failed.emit("Could not create server")
+		client_connection_failed.emit(tr("CONN_ERR_CREATE_SERVER"))
 		return ERR_CANT_CREATE
 
 	multiplayer.multiplayer_peer = peer

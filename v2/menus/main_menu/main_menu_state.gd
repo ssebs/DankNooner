@@ -29,7 +29,7 @@ func _ready():
 	super._ready()
 	var version: String = ProjectSettings.get_setting("application/config/version")
 	if UtilsConstants.is_demo_build():
-		version += " (demo)"
+		version += " " + tr("DEMO_VERSION_LABEL")
 	version_label.text = version
 	var digits := RegEx.create_from_string("[^0-9]").sub(version, "", true)
 	if "69" in digits:

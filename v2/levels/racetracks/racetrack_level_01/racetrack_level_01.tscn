@@ -74,8 +74,8 @@ agent_max_climb = 0.5
 
 [sub_resource type="Resource" id="Resource_ihuqi"]
 script = ExtResource("7_y3pck")
-name = "Race"
-description = "Around the track"
+name = "EVENT_RACE_NAME"
+description = "EVENT_TRACK_RACE_DESC"
 target_gamemode = 1
 enable_npcs = true
 forced_base_bike = ExtResource("6_8cigu")
@@ -83,8 +83,8 @@ metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_timeattack"]
 script = ExtResource("7_y3pck")
-name = "Time Attack"
-description = "Set your best lap"
+name = "EVENT_TIME_ATTACK_NAME"
+description = "EVENT_TIME_ATTACK_LAP_DESC"
 target_gamemode = 3
 forced_base_bike = ExtResource("6_8cigu")
 

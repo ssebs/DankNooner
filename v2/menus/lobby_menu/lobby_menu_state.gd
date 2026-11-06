@@ -144,7 +144,7 @@ func _on_game_id_set(_conn_addr: String):
 
 
 func _on_server_disconnected():
-	UiToast.ShowToast("Server disconnected")
+	UiToast.ShowToast(tr("TOAST_SERVER_DISCONNECTED"))
 	_on_back_pressed()
 
 
@@ -152,7 +152,7 @@ func _on_client_connection_failed(reason: String):
 	# Free ride falls back to solo instead (set_single_or_multiplayer_ui)
 	if return_ctx.mode == LobbyStateContext.Mode.FREEROAM:
 		return
-	UiToast.ShowToast("Connection failed: %s" % reason, UiToast.ToastLevel.ERR)
+	UiToast.ShowToast(tr("TOAST_CONNECTION_FAILED").format({"reason": reason}), UiToast.ToastLevel.ERR)
 	_on_back_pressed()
 
 
@@ -168,7 +168,7 @@ func _on_client_connection_succeeded(peer_id: int):
 
 
 func _on_timeout():
-	UiToast.ShowToast("Connection timed out", UiToast.ToastLevel.ERR)
+	UiToast.ShowToast(tr("TOAST_CONNECTION_TIMED_OUT"), UiToast.ToastLevel.ERR)
 	_on_back_pressed()
 
 
@@ -215,7 +215,7 @@ func set_single_or_multiplayer_ui():
 				var err: Error = await connection_manager.start_server()
 				# Not after Back mid-host: that would leave a server running behind the play menu
 				if err != OK and menu_manager.state_machine.current_state == self:
-					UiToast.ShowToast("Couldn't go online, riding solo", UiToast.ToastLevel.WARN)
+					UiToast.ShowToast(tr("TOAST_OFFLINE_SOLO"), UiToast.ToastLevel.WARN)
 					connection_manager.connection_mode = ConnectionManager.ConnectionMode.WEBRTC
 					await connection_manager.start_server(true)
 				level_select_panel.set_controls_disabled(false)

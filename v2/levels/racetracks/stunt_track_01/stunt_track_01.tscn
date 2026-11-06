@@ -111,8 +111,8 @@ adjustment_saturation = 1.1
 
 [sub_resource type="Resource" id="Resource_pls18"]
 script = ExtResource("24_l8nu3")
-name = "Stunt Race"
-description = "Do a flip!"
+name = "EVENT_STUNT_RACE_NAME"
+description = "EVENT_STUNT_RACE_DESC"
 target_gamemode = 2
 enable_npcs = true
 enable_traffic = true
@@ -122,28 +122,28 @@ metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_timeattack"]
 script = ExtResource("24_l8nu3")
-name = "Time Attack"
-description = "Set your best run"
+name = "EVENT_TIME_ATTACK_NAME"
+description = "EVENT_TIME_ATTACK_RUN_DESC"
 target_gamemode = 3
 
 [sub_resource type="Resource" id="Resource_trkbtl"]
 script = ExtResource("24_l8nu3")
-name = "Trick Battle"
-description = "Trick anywhere until time runs out. Highest score wins."
+name = "EVENT_TRICK_BATTLE_NAME"
+description = "EVENT_TRICK_BATTLE_DESC"
 target_gamemode = 8
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_crshlch"]
 script = ExtResource("24_l8nu3")
-name = "Crash Launch"
-description = "Everyone charges the wall at once. Furthest from your bike wins."
+name = "EVENT_CRASH_LAUNCH_NAME"
+description = "EVENT_CRASH_LAUNCH_DESC"
 target_gamemode = 9
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_mn4lr"]
 script = ExtResource("24_l8nu3")
-name = "Stunt Race 2"
-description = "Get Gud"
+name = "EVENT_STUNT_RACE_2_NAME"
+description = "EVENT_STUNT_RACE_2_DESC"
 target_gamemode = 2
 enable_npcs = true
 enable_traffic = true
@@ -152,8 +152,8 @@ metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_i0vae"]
 script = ExtResource("24_l8nu3")
-name = "Stunt Race 3"
-description = "Go fill up"
+name = "EVENT_STUNT_RACE_3_NAME"
+description = "EVENT_STUNT_RACE_3_DESC"
 target_gamemode = 2
 enable_npcs = true
 enable_traffic = true
@@ -161,8 +161,8 @@ metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_dsd47"]
 script = ExtResource("24_l8nu3")
-name = "Stunt Race 4"
-description = "Go back to 2?"
+name = "EVENT_STUNT_RACE_4_NAME"
+description = "EVENT_STUNT_RACE_4_DESC"
 target_gamemode = 2
 enable_npcs = true
 enable_traffic = true
@@ -171,8 +171,8 @@ metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_2e67r"]
 script = ExtResource("24_l8nu3")
-name = "Track Race"
-description = "Around the island"
+name = "EVENT_TRACK_RACE_NAME"
+description = "EVENT_ISLAND_RACE_DESC"
 target_gamemode = 1
 enable_npcs = true
 fuel_up_first = true
@@ -180,8 +180,8 @@ metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_5wqg6"]
 script = ExtResource("24_l8nu3")
-name = "Time Attack"
-description = "Set your best run"
+name = "EVENT_TIME_ATTACK_NAME"
+description = "EVENT_TIME_ATTACK_RUN_DESC"
 target_gamemode = 3
 
 [sub_resource type="Curve3D" id="Curve3D_rbe0j"]
@@ -425,7 +425,7 @@ point_count = 2
 [sub_resource type="Curve3D" id="Curve3D_jago7"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 2.527597e-07, -4.9367124e-08, 13.569934, -12.000002, 3.3527613e-08, -2.2351742e-07, 3.3825629, -0.050377667, 0.08252913, 26.593994, 0.074409604, 16.322662, -16.470987, 0.71601003, 14.308701),
-"tilts": PackedFloat32Array(7.793959e-09, -0.11134143)
+"tilts": PackedFloat32Array(7.793959e-09, -0.11134139)
 }
 point_count = 2
 
@@ -502,7 +502,7 @@ point_count = 2
 [sub_resource type="Curve3D" id="Curve3D_punjn"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, -8, 0, -0.0017700195, 0, 0, 0, 6.8029175, 7.6293945e-06, -0.98443604, -25.038574, 7.6293945e-06, -0.1194458, 0.11395264, 7.6293945e-06, -25.038635),
-"tilts": PackedFloat32Array(0, -2.281482e-06)
+"tilts": PackedFloat32Array(0, -2.281481e-06)
 }
 point_count = 2
 
@@ -2980,28 +2980,28 @@ respawn_in_place = true
 [node name="StuntCity_REMEMBER_TO_REPLACE_ME" parent="." unique_id=1750931100 groups=["navigation_mesh_source_group"] instance=ExtResource("27_grj8g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 0)
 
-[node name="grass" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="0" unique_id=568492584]
+[node name="grass" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="0" unique_id=1744687010]
 layers = 3
 
-[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/grass" index="0" unique_id=1512120447]
+[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/grass" index="0" unique_id=1815728221]
 collision_layer = 17
 
-[node name="CollisionShape3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/grass/StaticBody3D" index="0" unique_id=831196527]
+[node name="CollisionShape3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/grass/StaticBody3D" index="0" unique_id=1055287678]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0034866333, 0.008457184, -0.009155273)
 
-[node name="ground" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="1" unique_id=142876848]
+[node name="ground" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="1" unique_id=1526127125]
 layers = 3
 
-[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/ground" index="0" unique_id=1398738028]
+[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/ground" index="0" unique_id=1169599101]
 collision_layer = 17
 
-[node name="road" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="2" unique_id=1379174355]
+[node name="road" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="2" unique_id=58878963]
 layers = 3
 
-[node name="water" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="3" unique_id=1553369894]
+[node name="water" parent="StuntCity_REMEMBER_TO_REPLACE_ME" index="3" unique_id=314810811]
 layers = 3
 
-[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/water" index="0" unique_id=314773329]
+[node name="StaticBody3D" parent="StuntCity_REMEMBER_TO_REPLACE_ME/water" index="0" unique_id=870779503]
 collision_layer = 0
 collision_mask = 0
 
@@ -5426,7 +5426,7 @@ lane_width = 6.0
 [node name="RP_004" parent="RoadManager/3way_2x3" index="3"]
 lane_width = 6.0
 
-[node name="3way_2x2" parent="RoadManager/3way_2x3/3way_2x3" index="0" unique_id=460501945]
+[node name="3way_2x2" parent="RoadManager/3way_2x3/3way_2x3" index="0" unique_id=792373302]
 surface_material_override/0 = ExtResource("46_oxlis")
 
 [node name="Road_004" type="Node3D" parent="RoadManager" unique_id=1679953535]
@@ -5513,7 +5513,7 @@ lane_width = 6.0
 [node name="RP_004" parent="RoadManager/3way_2x4" index="3"]
 lane_width = 6.0
 
-[node name="3way_2x2" parent="RoadManager/3way_2x4/3way_2x3" index="0" unique_id=460501945]
+[node name="3way_2x2" parent="RoadManager/3way_2x4/3way_2x3" index="0" unique_id=792373302]
 surface_material_override/0 = ExtResource("46_oxlis")
 
 [node name="4way_2x2" parent="RoadManager" unique_id=4089390 instance=ExtResource("11_s2l3m")]

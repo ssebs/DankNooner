@@ -53,7 +53,7 @@ func close() -> void:
 func copy_game_id() -> void:
 	# Not the label: joining takes a bare IP, without the port
 	DisplayServer.clipboard_set(_connection_manager.conn_addr)
-	UiToast.ShowToast("Game ID copied to clipboard!")
+	UiToast.ShowToast(tr("TOAST_GAME_ID_COPIED"))
 
 
 ## IP/Port mode adds the port, which the host has to forward

@@ -84,7 +84,7 @@ func _format(
 		parts.append("[color=#%s]%s[/color]" % [TrickPopups.OOF_COLOR.to_html(false), bailed])
 	var names := PackedStringArray()
 	for trick in tricks:
-		names.append(TrickController.trick_to_str(trick).capitalize())
+		names.append(tr("TRICK_NAME_" + TrickController.trick_to_str(trick)))
 	if names.size() > MAX_TRICK_NAMES:
 		var cut := names.size() - MAX_TRICK_NAMES
 		parts.append("…%s (+%d)" % [" → ".join(names.slice(cut)), cut])

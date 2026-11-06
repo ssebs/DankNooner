@@ -105,7 +105,7 @@ func Exit(_state_context: StateContext):
 ## One tab per trick state, listing only the tricks bound there.
 func _build_tabs():
 	for state in TrickController.BINDINGS:
-		var list := _add_tab(TrickController.TrickState.keys()[state].capitalize())
+		var list := _add_tab("TRICK_STATE_" + TrickController.TrickState.keys()[state])
 		for trick: TrickController.Trick in STATE_HOWTO_TRICKS.get(state, []):
 			_add_row(list, state).populate_howto(trick)
 		var bindings: Dictionary = TrickController.BINDINGS[state]

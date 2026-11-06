@@ -33,7 +33,7 @@ func connect_client(ip: String) -> Error:
 	var err = peer.create_client(ip, UtilsConstants.PORT)
 
 	if err != OK:
-		connection_failed.emit("Failed to connect to %s:%d" % [ip, UtilsConstants.PORT])
+		connection_failed.emit(tr("CONN_ERR_IPPORT").format({"ip": ip, "port": UtilsConstants.PORT}))
 		return err
 
 	multiplayer.multiplayer_peer = peer

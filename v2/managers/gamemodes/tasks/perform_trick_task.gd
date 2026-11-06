@@ -38,7 +38,7 @@ func get_progress(state: Dictionary) -> String:
 func get_objective_text() -> String:
 	if objective_key != "":
 		return tr(objective_key).format({"duration": min_duration})
-	return TrickController.trick_to_str(required_trick)
+	return tr("TRICK_NAME_" + TrickController.trick_to_str(required_trick))
 
 
 func get_hint_text() -> String:

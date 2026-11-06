@@ -133,7 +133,7 @@ func connect_client(address: String) -> Error:
 	_ws_old_state = WebSocketPeer.STATE_CLOSED
 
 	if _lobby_code.is_empty():
-		connection_failed.emit("Lobby code is required")
+		connection_failed.emit(tr("CONN_ERR_LOBBY_CODE_REQUIRED"))
 		_setup_in_progress = false
 		return ERR_INVALID_PARAMETER
 
@@ -145,7 +145,7 @@ func connect_client(address: String) -> Error:
 	while not _peer_ready:
 		if Time.get_ticks_msec() - start_time > SETUP_TIMEOUT_MS:
 			DebugUtils.DebugErrMsg("WebRTC: signaling timed out")
-			connection_failed.emit("Signaling timed out")
+			connection_failed.emit(tr("CONN_ERR_SIGNALING_TIMEOUT"))
 			_cleanup()
 			_setup_in_progress = false
 			return ERR_TIMEOUT
@@ -160,7 +160,7 @@ func connect_client(address: String) -> Error:
 	while _rtc_mp.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTING:
 		if Time.get_ticks_msec() - start_time > SETUP_TIMEOUT_MS:
 			DebugUtils.DebugErrMsg("WebRTC: ICE negotiation timed out (no data channel opened)")
-			connection_failed.emit("ICE connection timed out")
+			connection_failed.emit(tr("CONN_ERR_ICE_TIMEOUT"))
 			multiplayer.multiplayer_peer = null
 			_cleanup()
 			_setup_in_progress = false
@@ -172,7 +172,7 @@ func connect_client(address: String) -> Error:
 		DebugUtils.DebugErrMsg(
 			"WebRTC: connection failed (status: %d)" % _rtc_mp.get_connection_status()
 		)
-		connection_failed.emit("WebRTC connection failed")
+		connection_failed.emit(tr("CONN_ERR_WEBRTC_FAILED"))
 		multiplayer.multiplayer_peer = null
 		_cleanup()
 		_setup_in_progress = false
@@ -224,7 +224,7 @@ func _poll_ws() -> void:
 	# Handle disconnect
 	if state != _ws_old_state and state == WebSocketPeer.STATE_CLOSED:
 		if not _peer_ready:
-			connection_failed.emit("Signaling server disconnected")
+			connection_failed.emit(tr("CONN_ERR_SIGNALING_DISCONNECTED"))
 
 	_ws_old_state = state
 

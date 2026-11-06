@@ -168,7 +168,7 @@ func _join_game(game_id: String):
 
 	var err = await connection_manager.connect_client(game_id)
 	if err != OK:
-		UiToast.ShowToast("Failed to connect to server", UiToast.ToastLevel.ERR, 3)
+		UiToast.ShowToast(tr("TOAST_FAILED_TO_CONNECT"), UiToast.ToastLevel.ERR, 3)
 		return
 
 

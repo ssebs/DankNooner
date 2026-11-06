@@ -64,8 +64,7 @@ offset_bottom = 238.4325
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 32
-text = "Made by @ssebs
-Sebastian Safari"
+text = "SPLASH_CREDIT"
 horizontal_alignment = 1
 
 [node name="PlayGate" type="CenterContainer" parent="UI" unique_id=2000000001]
@@ -83,7 +82,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(240, 96)
 layout_mode = 2
 theme = ExtResource("2_id3t2")
-text = "Play"
+text = "PLAY_LABEL"
 
 [node name="Timer" type="Timer" parent="." unique_id=1491517648]
 unique_name_in_owner = true

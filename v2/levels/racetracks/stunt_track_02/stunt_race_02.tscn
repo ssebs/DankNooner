@@ -46,15 +46,15 @@ adjustment_saturation = 1.1
 
 [sub_resource type="Resource" id="Resource_lngjmp"]
 script = ExtResource("12_evdef")
-name = "Megaramp Trick Comp"
-description = "Trick off the mega ramp. Best jump wins."
+name = "EVENT_MEGARAMP_NAME"
+description = "EVENT_MEGARAMP_DESC"
 target_gamemode = 6
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_trkbtl"]
 script = ExtResource("12_evdef")
-name = "Trick Battle"
-description = "Trick anywhere until time runs out. Highest score wins."
+name = "EVENT_TRICK_BATTLE_NAME"
+description = "EVENT_TRICK_BATTLE_DESC"
 target_gamemode = 8
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 

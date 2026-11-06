@@ -429,7 +429,7 @@ func _refresh_prompts():
 func _set_suggested_tricks():
 	var names := PackedStringArray()
 	for trick in _challenge_tricks:
-		var trick_name := TrickController.trick_to_str(trick).capitalize()
+		var trick_name := tr("TRICK_NAME_" + TrickController.trick_to_str(trick))
 		if trick_name not in names:
 			names.append(trick_name)
 	_event_tricks.text = tr("HUD_SUGGESTED_TRICKS").format({"tricks": " · ".join(names)})

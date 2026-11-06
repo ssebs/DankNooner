@@ -67,13 +67,13 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
-text = "Skip"
+text = "RESULTS_SKIP_LABEL"
 
 [node name="RestartBtn" type="Button" parent="UI/AspectContainer/CenterContainer/PanelContainer/VBoxContainer" unique_id=1723648654]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
-text = "Restart Race"
+text = "RESULTS_RESTART_LABEL"
 
 [node name="RetryBtn" type="Button" parent="UI/AspectContainer/CenterContainer/PanelContainer/VBoxContainer"]
 unique_name_in_owner = true

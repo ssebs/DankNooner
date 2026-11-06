@@ -74,7 +74,7 @@ func populate_stick(state: int, trick: TrickController.Trick, gesture: int, dir:
 	_dir = dir
 	pin = "/".join([state_name, TrickController.trick_to_str(trick), gesture_name, dir_name])
 	state_label.visible = show_state
-	state_label.text = state_name.capitalize()
+	state_label.text = "TRICK_STATE_" + state_name
 	stick_input.show()
 	howto_label.hide()
 	dir_icon.texture = DIR_ICONS[dir]
@@ -131,7 +131,7 @@ func set_pinned(pinned: bool) -> void:
 
 func _populate(trick: TrickController.Trick) -> void:
 	trick_type = trick
-	name_label.text = TrickController.trick_to_str(trick).capitalize()
+	name_label.text = "TRICK_NAME_" + TrickController.trick_to_str(trick)
 	if ComboRules.HELD_TRICK_SCORE.has(trick):
 		score_label.text = "+%s/s" % ComboRules.HELD_TRICK_SCORE[trick]
 	else:

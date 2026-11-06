@@ -2,7 +2,7 @@
 > **Convention:** `In-Progress 🚨` is the high-level focus; `Tasks 📋` has the details.
 > They're loosely priority-ordered, tails are wishes. Items go stale; verify against code.
 - [In-Progress 🚨](#in-progress-)
-		- [Steam Prep](#steam-prep)
+	- [Steam Prep](#steam-prep)
 - [Tasks 📋](#tasks-)
 	- [Game-breaking bugs](#game-breaking-bugs)
 	- [Challenges](#challenges)
@@ -27,9 +27,8 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 - [ ] add steam launch option for compatibility renderer (old macs / non-vulkan)
-- [ ] alt tab back/forth you cant move in game, have to click in game
 
-#### Steam Prep
+### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
 
 - [ ] [_store_fixes](./_store_fixes.md)
@@ -247,6 +246,8 @@
 ---
 
 ## Done ✅
+
+- [x] Localize more text + more langs
 
 - [x] graphics quality settings
 

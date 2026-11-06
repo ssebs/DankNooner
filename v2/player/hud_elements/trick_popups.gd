@@ -287,7 +287,8 @@ func _track_trick_start(tc: TrickController) -> void:
 	if TRICK_CALLOUTS.has(trick):
 		pop_callout(tr(TRICK_CALLOUTS[trick]))
 	else:
-		pop_callout("%s!" % TrickController.trick_to_str(trick).capitalize().to_upper())
+		var trick_name := tr("TRICK_NAME_" + TrickController.trick_to_str(trick)).to_upper()
+		pop_callout(tr("CALLOUT_TRICK_NAME").format({"trick": trick_name}))
 
 
 func _track_hold_callouts(player: PlayerEntity, delta: float) -> void:
