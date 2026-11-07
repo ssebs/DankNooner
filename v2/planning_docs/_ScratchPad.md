@@ -15,9 +15,6 @@ Vid: where we started, where we are now
 
 - [ ] [Progression/Challenges](./Progression.md)
 
-- [ ] Create/join public/private lobbies 
-  - [ ] ____STEAM_LOBBIES_WIP.md
-
 - [ ] move checkpoint / race spawns on right side of road
   - [ ] checkpoint should have left/right/full enum to move the repawn locations
 

@@ -26,7 +26,8 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
-- [ ] add steam launch option for compatibility renderer (old macs / non-vulkan)
+- [ ] Create/join public/private lobbies 
+  - [ ] ____STEAM_LOBBIES_WIP.md
 
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -34,20 +35,12 @@
 - [ ] [_store_fixes](./_store_fixes.md)
 - [ ] test steam save sync
 - [ ] Demo release
-  - [x] Get racing AI working [WIP]
-    - [ ] tricks / Items
-      - [x] cant go fast enough for the ramps
-      - [x] npcs get stuck on corners + 
-      - [x] easy/hard difficulty setting for AI
-      - [x] bots crash into gas station pole
-      - [x] add to trick feed
-      - [x] Phase 3 (they do tricks + get boost)
-      - [ ] continue w/ `____NPC_RACER_AI_WIP.md`
-      - [ ] phase 4 (cleanup debug msgs?)
-      - [ ] verify difficulty works
+  - [ ] verify difficulty works
   - [ ] Balancing points / score
   - [ ] Demo savegame should be different from main game
   - [ ] Start with tutorial level (lock StuntCity until tutorial is complete)
+  - [ ] Basic progression, limit content
+
   - [ ] Demo is open source, new private repo for full version
 - [ ] Better / Offical Trailer (concise, hook-y)
   - [x] hud toggle in editor for trailer
@@ -246,6 +239,19 @@
 ---
 
 ## Done ✅
+
+- [x] Get racing AI working [WIP]
+  - [x] tricks / Items
+    - [x] cant go fast enough for the ramps
+    - [x] npcs get stuck on corners + 
+    - [x] easy/hard difficulty setting for AI
+    - [x] bots crash into gas station pole
+    - [x] add to trick feed
+    - [x] Phase 3 (they do tricks + get boost)
+    - [x] continue w/ `____NPC_RACER_AI_WIP.md`
+    - [x] phase 4 (cleanup debug msgs?)
+
+- [x] add steam launch option for compatibility renderer (old macs / non-vulkan)
 
 - [x] Localize more text + more langs
 

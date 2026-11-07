@@ -57,7 +57,6 @@ Show the racing line the bots ride (`NPCRacingLine`) to players during a race, u
 ### 5. Docs
 
 - Add an Architecture.md note.
-- Resolve the "Parked by the user" paragraph in `____NPC_RACER_AI_WIP.md`.
 
 ## Open
 

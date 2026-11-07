@@ -136,8 +136,6 @@ var _launch_vy: float = 0.0
 var _air_tricked: bool = false
 var _wheelie_left: float = 0.0
 var _stuck_anchor: Vector3
-var _dbg_drive := ""  # DEBUG: temp - last tick's steering, printed when stuck fires
-var _dbg_log_drive := false  # DEBUG: temp - print the first drive tick after a reset
 
 
 func Enter(_state_context: StateContext):
@@ -200,12 +198,6 @@ func reset_line_progress() -> void:
 	_s = racing_line.closest_offset(npc.global_position)
 	var side := (npc.global_position - racing_line.point_at(_s)).dot(racing_line.right_at(_s))
 	_lateral = clampf(side, -racing_line.half_width_at(_s, -1.0), racing_line.half_width_at(_s, 1.0))
-	DebugUtils.DebugMsg(  # DEBUG: temp
-		"[npc %s] RESET pos=%s s=%.1f side=%.2f lat=%.2f room L/R=%.1f/%.1f"  # DEBUG: temp
-		% [npc.name, npc.global_position, _s, side, _lateral,  # DEBUG: temp
-		racing_line.half_width_at(_s, -1.0), racing_line.half_width_at(_s, 1.0)]  # DEBUG: temp
-	)  # DEBUG: temp
-	_dbg_log_drive = true  # DEBUG: temp
 	_path.clear()
 	_air_time = 0.0
 	_air_tricked = false
@@ -284,15 +276,6 @@ func _drive(delta: float) -> void:
 	var line_speed := maxf(npc.min_turn_speed, racing_line.profile_speed(_profile, speed_s))
 	var target_speed := minf(speed_cap, minf(npc.cruise_speed(), line_speed))
 	npc.steer_toward(target, target_speed, delta)
-	_dbg_drive = (  # DEBUG: temp
-		"floor=%s wall=%s s=%.1f line_pt=%s off_line=%.1f lat=%.2f rejoin=%s target=%s speed=%.1f/%.1f path=%s"  # DEBUG: temp
-		% [npc.is_on_floor(), npc.is_on_wall(), _s, racing_line.point_at(_s), off_line, _lateral,  # DEBUG: temp
-		rejoining, target,  # DEBUG: temp
-		npc.current_speed, target_speed, _path.slice(0, 4)]  # DEBUG: temp
-	)  # DEBUG: temp
-	if _dbg_log_drive:  # DEBUG: temp
-		_dbg_log_drive = false  # DEBUG: temp
-		DebugUtils.DebugMsg("[npc %s] FIRST DRIVE goal=%s %s" % [npc.name, goal, _dbg_drive])  # DEBUG: temp
 
 
 ## Our offset's point on the line at s, walked back toward the line until it's on the nav map.
@@ -518,8 +501,6 @@ func _detect_landing(delta: float) -> void:
 		_air_time += delta
 		return
 	var jumped := _launched and _air_time >= air_trick_min_airtime
-	if _air_time > 0.2:  # DEBUG: temp
-		DebugUtils.DebugMsg("[npc %s] landed air=%.2f launched=%s" % [npc.name, _air_time, _launched])  # DEBUG: temp
 	_air_time = 0.0
 	var bail_chance := bad_landing_chance
 	if _air_tricked:
@@ -527,7 +508,6 @@ func _detect_landing(delta: float) -> void:
 		bail_chance += trick_bail_chance
 		npc.trick_controller.end_trick()
 	if jumped and randf() < bail_chance:
-		DebugUtils.DebugMsg("[npc %s] CRASH bad landing" % npc.name)  # DEBUG: temp
 		crashed.emit(null)
 
 
@@ -603,7 +583,6 @@ func _detect_crash() -> void:
 		var collision := npc.get_slide_collision(i)
 		var collider := collision.get_collider()
 		if collider is Killbox:
-			DebugUtils.DebugMsg("[npc %s] CRASH killbox %s" % [npc.name, collider.get_path()])  # DEBUG: temp
 			crashed.emit(null)
 			return
 		if !CrashController.is_crash_obstacle(collider):
@@ -616,17 +595,9 @@ func _detect_crash() -> void:
 			var into := -collision.get_normal().slide(Vector3.UP).normalized()
 			var closing := relative.slide(Vector3.UP).dot(into)
 			if closing >= CrashController.WOBBLE_RAM_MAX_SPEED:
-				DebugUtils.DebugMsg(  # DEBUG: temp
-					"[npc %s] CRASH ram %s angle=%.0f closing=%.1f"  # DEBUG: temp
-					% [npc.name, collider.name, angle, closing]  # DEBUG: temp
-				)  # DEBUG: temp
 				crashed.emit(collider)
 				return
 		elif npc.current_speed >= CrashController.CRASH_MIN_SPEED:
-			DebugUtils.DebugMsg(  # DEBUG: temp
-				"[npc %s] CRASH wall %s angle=%.0f speed=%.1f"  # DEBUG: temp
-				% [npc.name, collider.get_path(), angle, npc.current_speed]  # DEBUG: temp
-			)  # DEBUG: temp
 			crashed.emit(null)
 			return
 
@@ -635,7 +606,6 @@ func _detect_crash() -> void:
 func _on_hit_by_racer(_hitter: Node3D) -> void:
 	# On the grid, already down, or done racing — skip is intentional
 	if _can_drive():
-		DebugUtils.DebugMsg("[npc %s] CRASH rammed by %s" % [npc.name, _hitter.name if _hitter else "?"])  # DEBUG: temp
 		crashed.emit(null)
 
 
@@ -649,9 +619,6 @@ func _check_stuck(delta: float) -> void:
 	_stuck_timer = 0.0
 	_stuck_anchor = npc.global_position
 	if progress < stuck_min_progress:
-		DebugUtils.DebugMsg(  # DEBUG: temp
-			"[npc %s] STUCK pos=%s moved=%.1f %s" % [npc.name, npc.global_position, progress, _dbg_drive]  # DEBUG: temp
-		)  # DEBUG: temp
 		stuck.emit()
 
 

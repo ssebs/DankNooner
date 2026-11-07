@@ -49,9 +49,7 @@ func Enter(state_context: StateContext):
 		return
 	DebugUtils.DebugMsg("Race Mode: %s" % RaceType.keys()[race_type])
 
-	var t_enter := Time.get_ticks_msec()  # DEBUG: temp
 	super(state_context)
-	DebugUtils.DebugMsg("[race start] super Enter %dms" % (Time.get_ticks_msec() - t_enter))  # DEBUG: temp
 	var task: RaceTask = _event.find_children("*", "RaceTask", true, false)[0]
 	_race_runner_index = _runners.find_custom(func(r): return r.is_ancestor_of(task))
 	# Same frame super() reveals the route, so the other gates are never drawn. Pre-race runners
@@ -82,8 +80,6 @@ func Enter(state_context: StateContext):
 
 
 func Update(delta: float):
-	if delta > 0.05:  # DEBUG: temp
-		DebugUtils.DebugMsg("[race hitch] frame %dms" % int(delta * 1000.0))  # DEBUG: temp
 	if !multiplayer.is_server():
 		return
 	_push_checkpoint_markers()
@@ -132,9 +128,7 @@ func get_components() -> Array[RaceComponent]:
 
 func _race_start():
 	for component in _components:
-		var t := Time.get_ticks_msec()  # DEBUG: temp
 		component.race_start()
-		DebugUtils.DebugMsg("[race start] %s %dms" % [component.name, Time.get_ticks_msec() - t])  # DEBUG: temp
 
 
 func _race_end():

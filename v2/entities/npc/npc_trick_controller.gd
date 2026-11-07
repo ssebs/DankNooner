@@ -32,8 +32,6 @@ var _trick_left: float = 0.0
 func start_trick(trick: TrickController.Trick, duration: float, airborne: bool) -> void:
 	current_trick = trick
 	_trick_left = duration
-	var trick_name := TrickController.trick_to_str(trick)  # DEBUG: temp
-	DebugUtils.DebugMsg("[npc %s] trick %s %.1fs" % [get_parent().name, trick_name, duration])  # DEBUG: temp
 	ComboRules.start_trick(self, self, trick, airborne)
 	if trick in [TrickController.Trick.BACKFLIP, TrickController.Trick.FRONTFLIP]:
 		ComboRules.award_flips(self, self, 1)
@@ -58,7 +56,6 @@ func tick(delta: float) -> void:
 ## Server. Spends one segment, like a player's single tap; nothing under a full segment or mid-burn.
 func boost() -> void:
 	if boost_amount >= 1.0 and !is_boosting:
-		DebugUtils.DebugMsg("[npc %s] boost (%.1f left)" % [get_parent().name, boost_amount - 1.0])  # DEBUG: temp
 		ComboRules.burn_segment(self)
 
 

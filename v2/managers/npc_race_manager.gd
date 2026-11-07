@@ -120,7 +120,6 @@ func despawn_all_npcs() -> void:
 func bake_racing_line(event: GameModeEvent) -> void:
 	var region := level_manager.current_level.npc_nav_region
 	var generation := _bake_generation
-	var t_bake := Time.get_ticks_msec()  # DEBUG: temp
 	# A level loaded this frame has no synced nav map yet, and paths on it come back empty
 	while NavigationServer3D.map_get_iteration_id(region.get_navigation_map()) == 0:
 		await NavigationServer3D.map_changed
@@ -164,8 +163,7 @@ func bake_racing_line(event: GameModeEvent) -> void:
 		return
 	racing_line = baked[0]
 	DebugUtils.DebugMsg(
-		"NPC racing line baked: %.0fm, closed=%s, %dms"  # DEBUG: temp ms
-		% [racing_line.get_length(), racing_line.closed, Time.get_ticks_msec() - t_bake]
+		"NPC racing line baked: %.0fm, closed=%s" % [racing_line.get_length(), racing_line.closed]
 	)
 	for npc_id in _npcs:
 		_race_state(npc_id).racing_line = racing_line
