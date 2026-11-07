@@ -272,7 +272,7 @@ pointing/emulate_touch_from_mouse=true
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://localization/localization.en.translation", "res://localization/localization.es.translation", "res://localization/localization.fr.translation")
+locale/translations=PackedStringArray("res://localization/localization.en.translation", "res://localization/localization.es.translation", "res://localization/localization.fr.translation", "res://localization/localization.de.translation", "res://localization/localization.it.translation", "res://localization/localization.ja.translation", "res://localization/localization.ko.translation", "res://localization/localization.zh.translation", "res://localization/localization.ru.translation", "res://localization/localization.pl.translation")
 
 [layer_names]
 
