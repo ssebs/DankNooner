@@ -17,8 +17,10 @@ Red triangles over enemy head
 ## NOW
 - [ ] Add product feature tour / walk thru for tutorials
   - [ ] `planning_docs/____TUTORIAL_WIP.md`
-  - [ ] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
-  - [ ] Each one saves saying it's done
+  - [x] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
+  - [x] Each one saves saying it's done
+  - [ ] customization warning
+  - [ ] tutorial level / tutorials + lock out main game until tut is done
 
 --
 ###

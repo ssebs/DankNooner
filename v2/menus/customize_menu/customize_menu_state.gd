@@ -46,27 +46,25 @@ func Exit(_state_context: StateContext):
 	_garage_set = null
 
 
-## The tour has the player add a loadout, recolor it, then set it active.
+## The tour has the player add a loadout and recolor it, then explains the active marker.
 func _play_tour():
 	_profile_step.target = garage_ui.get_profile_tab()
 	_loadouts_step.target = garage_ui.get_loadout_tabs()
 	_add_step.target = garage_ui.get_add_tab()
 	_recolor_step.target = garage_ui.get_panel()
-	_set_active_step.target = garage_ui.get_panel()
+	_set_active_step.target = garage_ui.get_loadout_tabs()
 	# GarageUI edits this same PlayerDefinition in place.
 	var player_def := save_manager.get_player_definition()
 	var loadout_count := player_def.loadouts.size()
-	var active := player_def.active_loadout_index
+	# The new loadout starts as a copy of the active one.
+	var source_colors := player_def.loadouts[player_def.active_loadout_index].bike.colors.duplicate()
 	# At the cap, + is hidden and there's nothing to add.
 	_add_step.done_when = func():
 		return (
 			player_def.loadouts.size() > loadout_count
 			or loadout_count >= PlayerDefinition.MAX_LOADOUTS
 		)
-	# The new loadout starts as a copy of the active one.
-	_recolor_step.done_when = func():
-		return player_def.loadouts.back().bike.colors != player_def.loadouts[active].bike.colors
-	_set_active_step.done_when = func(): return player_def.active_loadout_index != active
+	_recolor_step.done_when = func(): return player_def.loadouts.back().bike.colors != source_colors
 	tour_manager.play_once(_tour)
 
 

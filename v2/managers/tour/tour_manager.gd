@@ -276,8 +276,13 @@ func _beside(hole: Rect2, panel_size: Vector2, screen: Vector2) -> Vector2:
 
 
 ## Four dim rects around the hole plus a neon outline. No hole dims the whole screen.
+## Action steps only outline: the player works outside the hole too (e.g. the color picker).
 func _draw_spotlight():
 	var screen := _spotlight.size
+	if _is_action_step():
+		if _hole.has_area():
+			_spotlight.draw_rect(_hole, UtilsConstants.UI_BLUE, false, OUTLINE_WIDTH)
+		return
 	if !_hole.has_area():
 		_spotlight.draw_rect(Rect2(Vector2.ZERO, screen), DIM_COLOR)
 		return

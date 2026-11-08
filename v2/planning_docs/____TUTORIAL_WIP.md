@@ -14,6 +14,38 @@ Two connected pieces, built in this order:
 
 ---
 
+## Progress (2026-11-07)
+
+**Tasks 1 to 5 are built; 1 to 4 are playtested.** Task 5's last round (outline-only action
+steps, the read-only `*` step, the recolor snapshot) still needs a playtest. Then resume at
+**Task 6**. Where the built code differs
+from the task text below, this section wins:
+
+- **Tour buttons:** no `InputPrompt`s beside Next/Back (user cut them). Back reuses
+  `BACK_LABEL`; new keys are only `TOUR_NEXT`, `TOUR_SKIP`, `TOUR_DONE`.
+- **Device detection** lives in `InputStateManager` (`is_gamepad` + `device_changed`), not in
+  `TourManager`. Menus with no player read it; `GarageUI.open()` takes `input_state_manager`.
+- **Token aliases:** `TourManager.ALIASES` maps tokens that aren't one action, per device:
+  `{cursor}` (mouse / plain left stick icon) and `{click}` (`use_item` / `ui_accept`).
+- **Action steps:** `TourStep.done_when: Callable`, set at runtime by the owning scene. While it's
+  set, Next hides, input goes back to the saved state (menu works normally), the screen isn't
+  dimmed (outline only), and the tour advances once it returns true. `TourManager.skip()` closes a
+  tour whose owner is leaving. Usable for tutorial lessons too.
+- **Fill-up tour:** `play_once` is `call_deferred` from `_on_session_start()`, because
+  `_start_session` sets `IN_MINIGAME` after it. The input state restore on close is deferred, so
+  the closing press isn't read by the minigame. The warning line is a plain Label (no tokens).
+- **Customize tour** (6 steps): intro, Profile tab, loadout tabs, **add a loadout** (action,
+  targets `+`), **recolor it** (action, targets the garage panel), then a read-only step on `*`
+  and Set Active (targets the tabs). Not forcing Set Active was a user call.
+- **Garage pad support:** LB/RB `InputPrompt`s beside the tab strip (pad only). RB past the last
+  tab focuses `+` (focus shows the selected-tab underline + blue text); accept adds a loadout.
+- **Debug:** `dbg_reset_tutorials` clears tours and tutorial progress.
+- **Icons added:** `resources/img/Icons/xbox_stick_l.svg`, `mouse_move.svg` (from the Kenney pack).
+- **Open nit:** new loadouts are named "2", "3" while the first is "Loadout 1"
+  (`GarageUI._add_loadout`). Not changed.
+
+---
+
 ## Part A: Spec
 
 ### Why
@@ -195,10 +227,10 @@ These are risks no task's happy path covers; each one is handled in the task nam
 - `load_save` copies `progression` wholesale, so read with `.get(key, default)` and create on
   first write. No migration.
 
-- [ ] **Step 1:** Add the seven functions beside `is_owned` and `purchase`.
-- [ ] **Step 2:** In `deferred_init`, next to `give_money`, register
+- [x] **Step 1:** Add the seven functions beside `is_owned` and `purchase`.
+- [x] **Step 2:** In `deferred_init`, next to `give_money`, register
   `Console.add_command("dbg_skip_tutorial", mark_tutorial_complete, [], 0, "Mark the tutorial complete")`.
-- [ ] **Step 3:** Run gdlint and the headless load. Expected: clean.
+- [x] **Step 3:** Run gdlint and the headless load. Expected: clean.
 
 ---
 
@@ -224,8 +256,8 @@ These are risks no task's happy path covers; each one is handled in the task nam
     step always renders as the intro modal.
   - Warnings: an empty `title_key`, or a `target` that's none of the three allowed kinds.
 
-- [ ] **Step 1:** Write both scripts.
-- [ ] **Step 2:** Run gdlint and the headless load. Expected: clean.
+- [x] **Step 1:** Write both scripts.
+- [x] **Step 2:** Run gdlint and the headless load. Expected: clean.
 
 ---
 
@@ -315,13 +347,13 @@ These are risks no task's happy path covers; each one is handled in the task nam
 TourManager and, once the save has loaded (after `deferred_init`), calls
 `save_manager.mark_tutorial_complete()`.
 
-- [ ] **Step 1:** Add `IN_TOUR` to `InputStateManager`: the enum, `_unhandled_input` and
+- [x] **Step 1:** Add `IN_TOUR` to `InputStateManager`: the enum, `_unhandled_input` and
   `showhide_mouse_cursor`.
-- [ ] **Step 2:** Build `tour_manager.tscn` and `.gd` as above, and add the manager to
+- [x] **Step 2:** Build `tour_manager.tscn` and `.gd` as above, and add the manager to
   `main_game.tscn` with its exports wired.
-- [ ] **Step 3:** Add the 4 button strings in all 10 languages.
-- [ ] **Step 4:** Add the test bypass.
-- [ ] **Step 5:** Run gdlint and the headless load. Expected: clean. Task 4 is the first
+- [x] **Step 3:** Add the 4 button strings in all 10 languages.
+- [x] **Step 4:** Add the test bypass.
+- [x] **Step 5:** Run gdlint and the headless load. Expected: clean. Task 4 is the first
   playtest.
 
 ---
@@ -355,10 +387,10 @@ TourManager and, once the save has loaded (after `deferred_init`), calls
 **Where it plays:** `play_once` goes at the end of `_on_session_start()`, after
 `go_to_fuel_up_hud`.
 
-- [ ] **Step 1:** Thread `tour_manager` through `begin()` and all its callers and overrides.
-- [ ] **Step 2:** Author the tour, add the gauge getter, the `play_once` call and the strings.
-- [ ] **Step 3:** Run gdlint and the headless load. Expected: clean.
-- [ ] **Step 4:** **User playtest:**
+- [x] **Step 1:** Thread `tour_manager` through `begin()` and all its callers and overrides.
+- [x] **Step 2:** Author the tour, add the gauge getter, the `play_once` call and the strings.
+- [x] **Step 3:** Run gdlint and the headless load. Expected: clean.
+- [x] **Step 4:** **User playtest:**
   - The first pump shows the intro, then Next walks the spotlight across the handle, cap, gauge,
     price and button.
   - The icons match the device, and swapping between KBM and pad mid-tour swaps them.
@@ -386,9 +418,9 @@ TourManager and, once the save has loaded (after `deferred_init`), calls
 
 **Where it plays:** `play_once` goes at the end of `Enter()`, after `garage_ui.open(...)`.
 
-- [ ] **Step 1:** Author the tour, add the getters, the `play_once` call and the strings.
-- [ ] **Step 2:** Run gdlint and the headless load. Expected: clean.
-- [ ] **Step 3:** **User playtest:**
+- [x] **Step 1:** Author the tour, add the getters, the `play_once` call and the strings.
+- [x] **Step 2:** Run gdlint and the headless load. Expected: clean.
+- [x] **Step 3:** **User playtest:**
   - The first Customize visit runs the tour over the menu.
   - The menu ignores input while the tour is open.
   - Later visits show nothing.
