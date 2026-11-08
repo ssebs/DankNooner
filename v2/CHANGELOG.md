@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.0.167 - 2026-11-07
+
+- Create/join public/private lobbies w/ Steam
+- Create/join public/private lobbies w/ Steam
+- start working on steam lobbies
+- performance tweaks
+- replace houses with mesh
+- basic racing npcs done
+- more langs
+- fr
+- Localize more text + more langs
+- graphics quality settings
+- some graphical performance tweaks + settings
+
 ## v0.0.166 - 2026-11-03
 
 - - [ ] lowside when gassing it during corner
