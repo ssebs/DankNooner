@@ -33,6 +33,20 @@ mouse_default_cursor_shape = 2
 theme_override_font_sizes/font_size = 18
 text = "INVITE_LABEL"
 
+[node name="VisibilityOpt" type="OptionButton" parent="HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 18
+disabled = true
+selected = 0
+item_count = 2
+popup/item_0/text = "LOBBY_FRIENDS_ONLY_LABEL"
+popup/item_0/id = 0
+popup/item_1/text = "LOBBY_PUBLIC_LABEL"
+popup/item_1/id = 1
+
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 custom_minimum_size = Vector2(600, 320)
 layout_mode = 2

@@ -202,9 +202,8 @@ budget.
    `unproject_position` + mouse warp, holding `use_item`), then the garage (a purchase lands in the
    test save slot). **Late joiner** joins mid-activity.
 3. **Race:** lobby start, countdown, both drive the route. The late joiner leaves and rejoins
-   mid-race. That covers mid-race late join and rejoin: per `is_late_joinable()`, races sync the
-   joiner into the fallback mode, and they must be able to move, see a HUD, and not disturb the
-   race.
+   mid-race. Per `is_late_joinable()`, the host turns a mid-race join away (a kick back to the
+   play menu), so `_join()` retries until the race is over and the joiner lands in free roam.
 4. Every remaining event in the gym, in sequence.
 5. Quit and print the summary.
 

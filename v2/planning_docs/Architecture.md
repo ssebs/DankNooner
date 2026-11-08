@@ -464,7 +464,7 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
   - `_sync_game_to_late_joiner` - authority-mode RPC, server → one peer
   - `_request_late_spawn` - a peer may only request its own spawn
 - **`change_gamemode()` is the single entry point for transitions.** It is the only thing that calls the `_rpc_transition_gamemode` broadcast — gamemodes returning to free roam go through it too, so every transition passes the same guards. Calling the broadcast directly bypasses them.
-- **Late-join contract**: `GameModeType.is_late_joinable()` (default false, true on `FreeRoamGameMode`). A peer joining mid-race is synced into free roam on the same level instead of the live race — races need mid-match context (start circle, runner state) the joiner has no way to reconstruct, and dropping them straight in crashed the client on a null `event_start_circle`. They still spawn and ride; when the race ends, everyone transitions to free roam and the joiner's same-state transition is a harmless no-op.
+- **Late-join contract**: `GameModeType.is_late_joinable()` (default false, true on `FreeRoamGameMode`). A peer joining mid-race is turned away (`ConnectionManager.kick_peer()` with a reason toast) on every transport. Races need mid-match context (start circle, runner state) the joiner has no way to reconstruct. The host also marks its Steam lobby non-joinable on every transition into such a mode (`SteamManager.set_lobby_state()`), so Steam joins and invites are refused before they connect.
 - While a non-late-joinable mode is running, `change_gamemode()` accepts only a return to `FREE_ROAM`. That stops a free-roaming late joiner from driving into an event circle and restarting the mode out from under a live race.
 
 ### Save Manager

@@ -27,7 +27,8 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 - [ ] Create/join public/private lobbies 
-  - [ ] ____STEAM_LOBBIES_WIP.md
+  - [ ] WIP `____STEAM_LOBBIES_WIP.md`
+  - [ ] Test on 2 pcs
 
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins

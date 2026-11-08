@@ -47,6 +47,8 @@ const ABORT_MARKER := "abort"
 const ABORT_POLL_S := 0.25
 ## Between the banner going up and the bot taking the mouse
 const MOUSE_WARNING_S := 2.0
+## Between the host turning a mid-event join away and the next try
+const JOIN_RETRY_S := 2.0
 ## The fresh test save's balance
 const TEST_MONEY := 2500
 
@@ -403,10 +405,20 @@ func _grant_next_mouse() -> void:
 
 
 #region drivers
-## Joins via the play menu. False if it never got into the game.
+## Joins via the play menu. False if it never got into the game. Mid-event the host turns the join
+## away, which lands back in the play menu, so it retries until the event is over.
 func _join() -> bool:
-	if not _menus.join(HOST_ADDR) or not await _wait_in_game():
-		return false
+	var at_play := func(): return menu_manager.state_machine.current_state is PlayMenuState
+	var settled := func(): return _is_in_game() or at_play.call()
+	while true:
+		if not _menus.join(HOST_ADDR):
+			return false
+		if not await wait_until(settled, "free roam, or the host turning the join away"):
+			return false
+		if _is_in_game():
+			break
+		DebugUtils.DebugMsg("[test] join turned away mid-event, retrying")
+		await get_tree().create_timer(JOIN_RETRY_S).timeout
 	request_mark_ready.rpc_id(1, _peer == _peers)
 	return true
 
@@ -455,14 +467,16 @@ func _watch_abort() -> void:
 	_quit()
 
 
-## Free roam with the riding HUD up (it enters on the rider's first respawn, after spawn)
 func _wait_in_game() -> bool:
-	var in_game := func():
-		return (
-			gamemode_manager.state_machine.current_state == gamemode_manager.free_roam_mode
-			and hud_manager.state_machine.current_state == hud_manager.riding_hud_state
-		)
-	return await wait_until(in_game, "free roam with the riding HUD")
+	return await wait_until(_is_in_game, "free roam with the riding HUD")
+
+
+## Free roam with the riding HUD up (it enters on the rider's first respawn, after spawn)
+func _is_in_game() -> bool:
+	return (
+		gamemode_manager.state_machine.current_state == gamemode_manager.free_roam_mode
+		and hud_manager.state_machine.current_state == hud_manager.riding_hud_state
+	)
 
 
 #region RPCs
@@ -547,7 +561,8 @@ func _screenshot_all(label: String) -> void:
 	_screenshot(label)
 
 
-## Director → the late joiner: leave mid-race through the pause menu, then join again.
+## Director → the late joiner: leave mid-race through the pause menu, then join again (turned away
+## until the race is over).
 @rpc("call_remote", "reliable")
 func _rejoin() -> void:
 	if multiplayer.get_remote_sender_id() > 1:

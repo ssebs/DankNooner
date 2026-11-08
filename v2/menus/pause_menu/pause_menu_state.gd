@@ -173,7 +173,8 @@ func _on_settings_pressed():
 	transitioned.emit(settings_menu_state, SettingsStateContext.NewFromPause(self, true))
 
 
-func _on_server_disconnected():
+func _on_server_disconnected(reason: String):
+	UiToast.ShowToast(tr(reason))
 	_on_main_menu_pressed()
 
 

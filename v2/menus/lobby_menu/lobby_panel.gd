@@ -1,10 +1,14 @@
 @tool
-## Game ID + copy, Steam invite and player list. Shared by the lobby and pause menus.
+## Game ID + copy, Steam invite + visibility, player list + kick. Shared by the lobby and pause menus.
 class_name LobbyPanel extends VBoxContainer
+
+## VisibilityOpt's items: friends-only, then public
+const VISIBILITY_PUBLIC_IDX := 1
 
 @onready var ip_label: Label = %IPLabel
 @onready var ip_copy_btn: Button = %IPCopyBtn
 @onready var invite_btn: Button = %InviteBtn
+@onready var visibility_opt: OptionButton = %VisibilityOpt
 @onready var player_list: PlayerListUI = %PlayersList
 @onready var ping_timer: Timer = %PingTimer
 
@@ -24,6 +28,8 @@ func open(
 
 	ip_copy_btn.pressed.connect(copy_game_id)
 	invite_btn.pressed.connect(_steam_manager.invite_friends)
+	visibility_opt.item_selected.connect(_on_visibility_selected)
+	player_list.kick_requested.connect(_on_kick_requested)
 	_steam_manager.avatar_loaded.connect(player_list.set_avatar)
 	_connection_manager.game_id_set.connect(_on_game_id_set)
 	_lobby_manager.lobby_players_updated.connect(_on_lobby_players_updated)
@@ -33,6 +39,8 @@ func open(
 	invite_btn.visible = (
 		can_invite and _connection_manager.connection_mode == ConnectionManager.ConnectionMode.STEAM
 	)
+	# Other transports' Steam lobby only carries invites, so it stays friends-only
+	visibility_opt.visible = invite_btn.visible
 	_on_game_id_set(_connection_manager.conn_addr)
 	_on_lobby_players_updated(_lobby_manager.lobby_players)
 
@@ -43,6 +51,8 @@ func close() -> void:
 
 	ip_copy_btn.pressed.disconnect(copy_game_id)
 	invite_btn.pressed.disconnect(_steam_manager.invite_friends)
+	visibility_opt.item_selected.disconnect(_on_visibility_selected)
+	player_list.kick_requested.disconnect(_on_kick_requested)
 	_steam_manager.avatar_loaded.disconnect(player_list.set_avatar)
 	_connection_manager.game_id_set.disconnect(_on_game_id_set)
 	_lobby_manager.lobby_players_updated.disconnect(_on_lobby_players_updated)
@@ -59,6 +69,9 @@ func copy_game_id() -> void:
 ## IP/Port mode adds the port, which the host has to forward
 func _on_game_id_set(conn_addr: String) -> void:
 	ip_copy_btn.disabled = conn_addr.is_empty()
+	# On Steam the code is the lobby ID, so the lobby exists once it's set
+	visibility_opt.disabled = conn_addr.is_empty()
+	visibility_opt.select(VISIBILITY_PUBLIC_IDX if _steam_manager.is_lobby_public else 0)
 	# Empty on connection reset
 	if conn_addr.is_empty():
 		ip_label.text = ""
@@ -67,6 +80,14 @@ func _on_game_id_set(conn_addr: String) -> void:
 	if _connection_manager.connection_mode == ConnectionManager.ConnectionMode.IP_PORT:
 		code += ":%d" % UtilsConstants.PORT
 	ip_label.text = tr("LOBBY_CODE_LABEL").format({"value": code})
+
+
+func _on_visibility_selected(index: int) -> void:
+	_steam_manager.set_lobby_public(index == VISIBILITY_PUBLIC_IDX)
+
+
+func _on_kick_requested(peer_id: int) -> void:
+	_connection_manager.kick_peer(peer_id, "TOAST_KICKED_BY_HOST")
 
 
 func _on_lobby_players_updated(players: Dictionary) -> void:

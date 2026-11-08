@@ -27,6 +27,7 @@ enum MatchState {
 @export var animal_spawn_manager: AnimalSpawnManager
 @export var audio_manager: AudioManager
 @export var input_state_manager: InputStateManager
+@export var steam_manager: SteamManager
 
 @export var state_machine: StateMachine
 
@@ -269,6 +270,9 @@ func latespawn_player(peer_id: int):
 
 # Runs on every peer (all transitions are call_local or client-side), so each plays its own music
 func _on_gamemode_transitioned(_old_state: State, new_state: State):
+	if _is_server():
+		steam_manager.set_lobby_state((new_state as GameModeType).is_late_joinable(), current_level_name)
+
 	# Fuel-up and the tutorial are lead-ins, so they keep the free roam playlist
 	if new_state in [free_roam_mode, fuel_up_mode, tutorial_mode]:
 		audio_manager.play_music(AudioManager.MusicType.FREE_ROAM)
@@ -309,12 +313,11 @@ func _on_client_connection_succeeded(peer_id: int):
 	DebugUtils.DebugMsg("_on_client_connection_succeeded %s" % peer_id)
 
 	if match_state == MatchState.IN_GAME:
-		# Modes that can't take a late joiner mid-flight (races) sync the joiner
-		# into free roam on the same level instead — they still spawn and ride.
-		var sync_mode := current_game_mode
-		if !_gamemode_map[current_game_mode].is_late_joinable():
-			sync_mode = GameModeType.Kind.FREE_ROAM
-		_sync_game_to_late_joiner.rpc_id(peer_id, current_level_name, sync_mode as int)
+		# Modes that can't take a late joiner mid-flight (races) turn them away until free roam
+		if !get_current_gamemode().is_late_joinable():
+			connection_manager.kick_peer(peer_id, "TOAST_KICK_EVENT_IN_PROGRESS")
+			return
+		_sync_game_to_late_joiner.rpc_id(peer_id, current_level_name, current_game_mode as int)
 
 
 #endregion
@@ -369,6 +372,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("level_manager must not be empty")
 	if input_state_manager == null:
 		issues.append("input_state_manager must not be empty")
+	if steam_manager == null:
+		issues.append("steam_manager must not be empty")
 	if spawn_manager == null:
 		issues.append("spawn_manager must not be empty")
 	if animal_spawn_manager == null:

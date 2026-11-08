@@ -143,8 +143,8 @@ func _on_game_id_set(_conn_addr: String):
 		lobby_panel.copy_game_id.call_deferred()
 
 
-func _on_server_disconnected():
-	UiToast.ShowToast(tr("TOAST_SERVER_DISCONNECTED"))
+func _on_server_disconnected(reason: String):
+	UiToast.ShowToast(tr(reason))
 	_on_back_pressed()
 
 

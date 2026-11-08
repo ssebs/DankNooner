@@ -29,13 +29,13 @@ func stop_server():
 
 ## Joins the Steam lobby, then connects to its owner. Returns OK on success.
 func connect_client(lobby_id: String) -> Error:
-	var owner_id: int = await steam_manager.join_lobby(lobby_id.to_int())
-	if owner_id == 0:
-		connection_failed.emit(tr("CONN_ERR_STEAM_LOBBY").format({"lobby_id": lobby_id}))
+	var join_error: String = await steam_manager.join_lobby(lobby_id.to_int())
+	if !join_error.is_empty():
+		connection_failed.emit(join_error)
 		return ERR_CANT_CONNECT
 
 	var peer = ClassDB.instantiate("SteamMultiplayerPeer")
-	var err: Error = peer.create_client(owner_id, 0)
+	var err: Error = peer.create_client(steam_manager.get_lobby_owner(), 0)
 	if err != OK:
 		connection_failed.emit(tr("CONN_ERR_STEAM_HOST"))
 		return err

@@ -3,7 +3,8 @@ class_name ConnectionManager extends BaseManager
 
 signal player_connected(id: int)
 signal player_disconnected(id: int)
-signal server_disconnected
+## reason: localization key for the toast
+signal server_disconnected(reason: String)
 signal game_id_set(conn_addr: String)
 signal client_connection_failed(reason: String)
 signal client_connection_succeeded(peer_id: int)
@@ -19,6 +20,9 @@ enum ConnectionMode { NORAY, IP_PORT, WEBRTC, STEAM }
 @export var ipport_handler: MultiplayerIPPort
 @export var webrtc_handler: MultiplayerWebRTC
 @export var steam_handler: MultiplayerSteam
+
+## How long a kicked peer gets to leave by itself before the server drops it
+const KICK_GRACE_SEC := 1.0
 
 ## either ip addr or noray oid
 var conn_addr: String:
@@ -124,6 +128,17 @@ func disconnect_client():
 	connection_reset.emit()
 
 
+## Server: tells the peer why (reason: localization key) so it leaves through server_disconnected.
+## Dropping it right away could lose the RPC on some transports
+func kick_peer(peer_id: int, reason: String):
+	_rpc_kicked.rpc_id(peer_id, reason)
+	await get_tree().create_timer(KICK_GRACE_SEC).timeout
+	# Already gone (it left as asked), or our session ended meanwhile
+	if multiplayer.multiplayer_peer == null or peer_id not in multiplayer.get_peers():
+		return
+	multiplayer.multiplayer_peer.disconnect_peer(peer_id)
+
+
 func disconnect_sp_or_mp():
 	if multiplayer.multiplayer_peer == null:
 		# Peer not set yet, but we may have pending handler signals to clean up
@@ -152,11 +167,18 @@ func _get_handler():
 	return ipport_handler
 
 
+@rpc("reliable")
+func _rpc_kicked(reason: String):
+	if multiplayer.get_remote_sender_id() > 1:
+		return
+	_on_server_disconnected(reason)
+
+
 #region signal handlers
-func _on_server_disconnected():
-	DebugUtils.DebugMsg("Disconnected from server")
+func _on_server_disconnected(reason := "TOAST_SERVER_DISCONNECTED"):
+	DebugUtils.DebugMsg("Disconnected from server (%s)" % reason)
 	disconnect_client()
-	server_disconnected.emit()
+	server_disconnected.emit(reason)
 
 
 func _on_peer_connected(id: int):

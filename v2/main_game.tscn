@@ -62,6 +62,7 @@
 [ext_resource type="Script" uid="uid://cgy57qlo3xy0x" path="res://managers/gamemodes/types/race/components/traffic_component.gd" id="60_traffic"]
 [ext_resource type="Script" uid="uid://bohgpnc0q47hq" path="res://managers/steam_manager.gd" id="61_steam"]
 [ext_resource type="PackedScene" path="res://menus/credits_menu/credits_menu_state.tscn" id="62_credits"]
+[ext_resource type="PackedScene" path="res://menus/server_browser_menu/server_browser_menu_state.tscn" id="63_srvbrowse"]
 [ext_resource type="Script" uid="uid://uj0l0u0v0f0d" path="res://managers/npc_traffic_manager.gd" id="99_npctm"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
@@ -159,13 +160,19 @@ customize_menu_state = NodePath("../CustomizeMenuState")
 tricks_menu_state = NodePath("../TricksMenuState")
 credits_menu_state = NodePath("../CreditsMenuState")
 
-[node name="PlayMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=207724047 node_paths=PackedStringArray("menu_manager", "connection_manager", "steam_manager", "main_menu_state", "lobby_menu_state", "customize_menu_state") instance=ExtResource("7_f52ns")]
+[node name="PlayMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=207724047 node_paths=PackedStringArray("menu_manager", "connection_manager", "steam_manager", "main_menu_state", "lobby_menu_state", "customize_menu_state", "server_browser_menu_state") instance=ExtResource("7_f52ns")]
 menu_manager = NodePath("../..")
 connection_manager = NodePath("../../../ConnectionManager")
 steam_manager = NodePath("../../../SteamManager")
 main_menu_state = NodePath("../MainMenuState")
 lobby_menu_state = NodePath("../LobbyMenuState")
 customize_menu_state = NodePath("../CustomizeMenuState")
+server_browser_menu_state = NodePath("../ServerBrowserMenuState")
+
+[node name="ServerBrowserMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1700000003 node_paths=PackedStringArray("steam_manager", "level_manager", "play_menu_state") instance=ExtResource("63_srvbrowse")]
+steam_manager = NodePath("../../../SteamManager")
+level_manager = NodePath("../../../LevelManager")
+play_menu_state = NodePath("../PlayMenuState")
 
 [node name="LobbyMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1270583406 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "input_state_manager", "gamemode_manager", "save_manager", "steam_manager", "play_menu_state", "customize_menu_state") instance=ExtResource("7_l5ukw")]
 menu_manager = NodePath("../..")
@@ -275,7 +282,7 @@ save_manager = NodePath("../../../SaveManager")
 save_manager = NodePath("../../../SaveManager")
 audio_manager = NodePath("../../../AudioManager")
 
-[node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "spawn_manager", "animal_spawn_manager", "audio_manager", "input_state_manager", "state_machine", "loading_menu_state", "free_roam_mode", "race_mode", "stunt_race_mode", "time_attack_mode", "tutorial_mode", "stunt_challenge_mode", "long_jump_mode", "fuel_up_mode", "trick_battle_mode", "crash_launch_mode") groups=["Managers"]]
+[node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "spawn_manager", "animal_spawn_manager", "audio_manager", "input_state_manager", "steam_manager", "state_machine", "loading_menu_state", "free_roam_mode", "race_mode", "stunt_race_mode", "time_attack_mode", "tutorial_mode", "stunt_challenge_mode", "long_jump_mode", "fuel_up_mode", "trick_battle_mode", "crash_launch_mode") groups=["Managers"]]
 script = ExtResource("18_ih6an")
 menu_manager = NodePath("../MenuManager")
 settings_manager = NodePath("../SettingsManager")
@@ -286,6 +293,7 @@ spawn_manager = NodePath("../SpawnManager")
 animal_spawn_manager = NodePath("../AnimalSpawnManager")
 audio_manager = NodePath("../AudioManager")
 input_state_manager = NodePath("../InputStateManager")
+steam_manager = NodePath("../SteamManager")
 state_machine = NodePath("StateMachine")
 loading_menu_state = NodePath("../MenuManager/StateMachine/LoadingMenuState")
 free_roam_mode = NodePath("StateMachine/FreeRoamGameMode")

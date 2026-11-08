@@ -74,3 +74,11 @@ layout_mode = 2
 theme_type_variation = &"PingLabel"
 text = "Ping: -1"
 horizontal_alignment = 2
+
+[node name="KickBtn" type="Button" parent="HBoxContainer/PanelContainer/HBoxContainer" unique_id=1716978133]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 18
+text = "KICK_LABEL"

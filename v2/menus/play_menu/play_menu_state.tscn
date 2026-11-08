@@ -113,6 +113,14 @@ mouse_default_cursor_shape = 2
 disabled = true
 text = "JOIN_LABEL"
 
+[node name="ServerBrowserBtn" type="Button" parent="UI/AspectContainer/MarginContainer/VBoxContainer/MP" unique_id=1406859643]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_default_cursor_shape = 2
+text = "SERVER_BROWSER_LABEL"
+
 [node name="VBoxContainer2" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=235352440]
 layout_mode = 2
 size_flags_horizontal = 0

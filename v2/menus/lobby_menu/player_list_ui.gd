@@ -1,6 +1,8 @@
 @tool
 class_name PlayerListUI extends VBoxContainer
 
+signal kick_requested(peer_id: int)
+
 @export
 var player_list_item_scene: PackedScene = preload("res://menus/lobby_menu/player_list_item.tscn")
 
@@ -64,6 +66,8 @@ func _add_player_item(player_id: int, player_def: PlayerDefinition):
 	else:
 		player_li.host_label.text = ""
 	player_li.set_ping("0" if player_id == 1 else "--")
+	player_li.kick_btn.visible = multiplayer.is_server() and player_id != 1
+	player_li.kick_btn.pressed.connect(kick_requested.emit.bind(player_id))
 
 	player_li.update_ui_from_player_definition()
 

@@ -59,6 +59,13 @@
 6. **Localization:** keys for all new labels.
 7. **Docs:** fold into LobbyGameFlowMP.md and Architecture.md, then delete this file.
 
+## Answers (2026-11-07)
+
+A2 is tested and works. Q1: Steam-only picker. Q2: friends-only default. Q3: automatic name.
+Q4: no Friends section. Q5: the server rejects mid-race joins on every transport (kick with a
+reason), and the harness rejoin step is updated to match. Q6: kick in the pause menu too. Q7: Back
+returns to the browser. Q8: exact version match. Q9: accept the risk for now. Q10: fix avatars.
+
 ## Open questions
 
 1. **Public lobbies on non-Steam transports?** Recommend: the visibility picker only appears on the

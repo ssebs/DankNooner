@@ -7,6 +7,7 @@ class_name PlayMenuState extends MenuState
 @export var main_menu_state: MenuState
 @export var lobby_menu_state: MenuState
 @export var customize_menu_state: MenuState
+@export var server_browser_menu_state: MenuState
 
 const NORAY_OID_LENGTH := 21
 const NORAY_OID_CHARSET := "useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict"
@@ -28,6 +29,7 @@ const AUTO_JOIN_ADDR := "127.0.0.1"
 @onready var paste_btn: Button = %PasteBtn
 @onready var code_entry: LineEdit = %CodeEntry
 @onready var host_mode_opt: OptionButton = %HostModeOpt
+@onready var server_browser_btn: Button = %ServerBrowserBtn
 
 
 func Enter(_state_context: StateContext):
@@ -40,7 +42,10 @@ func Enter(_state_context: StateContext):
 	join_btn.pressed.connect(_on_join_btn_pressed)
 	paste_btn.pressed.connect(_on_paste_btn_pressed)
 	code_entry.text_changed.connect(_on_code_text_changed)
+	server_browser_btn.pressed.connect(_on_server_browser_pressed)
 	steam_manager.invite_received.connect(_on_invite_received)
+
+	server_browser_btn.visible = steam_manager.is_logged_in()
 
 	# Raw keys: OptionButton auto-translates. First item is the default
 	host_mode_opt.clear()
@@ -60,7 +65,7 @@ func Enter(_state_context: StateContext):
 		_on_host_btn_pressed.call_deferred()
 	elif DebugUtils.auto_join:
 		# A failed join lands back here and retries, so racing the host's boot is fine
-		_join_game.call_deferred(AUTO_JOIN_ADDR)
+		join_game.call_deferred(AUTO_JOIN_ADDR)
 
 
 func Exit(_state_context: StateContext):
@@ -72,6 +77,7 @@ func Exit(_state_context: StateContext):
 	join_btn.pressed.disconnect(_on_join_btn_pressed)
 	paste_btn.pressed.disconnect(_on_paste_btn_pressed)
 	code_entry.text_changed.disconnect(_on_code_text_changed)
+	server_browser_btn.pressed.disconnect(_on_server_browser_pressed)
 	steam_manager.invite_received.disconnect(_on_invite_received)
 
 
@@ -154,16 +160,17 @@ func _on_host_btn_pressed():
 
 
 func _on_join_btn_pressed():
-	_join_game(code_entry.text.strip_edges())
+	join_game(code_entry.text.strip_edges())
 
 
 func _on_invite_received():
-	_join_game(steam_manager.take_pending_game_id())
+	join_game(steam_manager.take_pending_game_id())
 
 
-func _join_game(game_id: String):
+## Also the server browser's join, with itself as the lobby's Back target
+func join_game(game_id: String, back_to: MenuState = self):
 	_auto_detect_connection_mode(game_id)
-	var ctx = LobbyStateContext.NewJoin(self, game_id)
+	var ctx = LobbyStateContext.NewJoin(back_to, game_id)
 	transitioned.emit(lobby_menu_state, ctx)  # must be before connecting client for ip to show
 
 	var err = await connection_manager.connect_client(game_id)
@@ -182,6 +189,10 @@ func _on_free_roam_btn_pressed():
 
 func _on_customize_pressed():
 	transitioned.emit(customize_menu_state, StateContext.NewWithReturn(self))
+
+
+func _on_server_browser_pressed():
+	transitioned.emit(server_browser_menu_state, StateContext.NewWithReturn(self))
 
 
 func _on_back_pressed():
@@ -211,5 +222,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("lobby_menu_state must not be empty")
 	if customize_menu_state == null:
 		issues.append("customize_menu_state must not be empty")
+	if server_browser_menu_state == null:
+		issues.append("server_browser_menu_state must not be empty")
 
 	return issues
