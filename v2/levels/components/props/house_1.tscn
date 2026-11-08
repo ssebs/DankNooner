@@ -4,8 +4,6 @@
 [ext_resource type="Shader" uid="uid://bdmdtwvpsr2w6" path="res://levels/components/screen_neon_edges.gdshader" id="2_7kpfu"]
 [ext_resource type="Texture2D" uid="uid://c841by2vaiw7j" path="res://levels/assets/graybox/darkgray.png" id="2_lhqsi"]
 [ext_resource type="Texture2D" uid="uid://cjrex0qopeses" path="res://levels/assets/graybox/lightgray.png" id="3_6yfuy"]
-[ext_resource type="Script" uid="uid://bkho4nxye7goy" path="res://levels/components/neon_edges.gd" id="5_lqlj0"]
-[ext_resource type="PackedScene" uid="uid://dtckadkd3wndc" path="res://levels/assets/props/grind_rail.tscn" id="6_lqlj0"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yxl4f"]
 render_priority = 0
@@ -19,18 +17,18 @@ shader_parameter/normal_threshold = 0.4
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7kpfu"]
 albedo_texture = ExtResource("2_lhqsi")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_lqlj0"]
-render_priority = 0
-shader = ExtResource("2_7kpfu")
-shader_parameter/edge_color = Color(0.25490198, 0.6862745, 1, 1)
-shader_parameter/edge_energy = 1.5
-shader_parameter/edge_width_px = 1.5
-shader_parameter/depth_threshold = 0.05
-shader_parameter/normal_threshold = 0.4
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lqlj0"]
 albedo_texture = ExtResource("3_6yfuy")
 uv1_triplanar = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rail28"]
+size = Vector3(0.2, 0.2, 28)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rail21"]
+size = Vector3(0.2, 0.2, 21)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rail4"]
+size = Vector3(0.2, 0.2, 4)
 
 [node name="House1" type="Node3D" unique_id=1355590988]
 
@@ -67,21 +65,17 @@ collision_layer = 3
 [node name="garagedoor" parent="House_1" index="5" unique_id=589785898]
 material_overlay = SubResource("ShaderMaterial_yxl4f")
 
-[node name="Grass" parent="House_1" index="6" unique_id=1214194997]
-material_overlay = SubResource("ShaderMaterial_yxl4f")
-
-[node name="StaticBody3D" parent="House_1/Grass" index="0" unique_id=19494715]
+[node name="StaticBody3D" parent="House_1/Grass" parent_id_path=PackedInt32Array(62583360, 1214194997) index="0" unique_id=19494715]
 collision_layer = 3
 
 [node name="ground" parent="House_1" index="7" unique_id=1883086462]
 material_override = SubResource("StandardMaterial3D_7kpfu")
-material_overlay = SubResource("ShaderMaterial_yxl4f")
 
 [node name="StaticBody3D" parent="House_1/ground" index="0" unique_id=763614088]
 collision_layer = 3
 
 [node name="House" parent="House_1" index="8" unique_id=797538227]
-material_overlay = SubResource("ShaderMaterial_lqlj0")
+material_overlay = SubResource("ShaderMaterial_yxl4f")
 
 [node name="StaticBody3D" parent="House_1/House" index="0" unique_id=491579398]
 collision_layer = 3
@@ -93,35 +87,32 @@ material_overlay = SubResource("ShaderMaterial_yxl4f")
 collision_layer = 3
 
 [node name="Sidewalk" parent="House_1" index="10" unique_id=860925618]
-material_overlay = SubResource("ShaderMaterial_yxl4f")
 surface_material_override/0 = SubResource("StandardMaterial3D_lqlj0")
 
 [node name="StaticBody3D" parent="House_1/Sidewalk" index="0" unique_id=615665569]
 collision_layer = 3
 
-[node name="NeonEdges" type="Node" parent="." unique_id=1252709246]
-script = ExtResource("5_lqlj0")
-energy = 1.5
-metadata/_custom_type_script = "uid://bkho4nxye7goy"
+[node name="GrindRails" type="StaticBody3D" parent="." unique_id=575280884]
+collision_layer = 257
 
-[node name="GrindRail" parent="." unique_id=575280884 instance=ExtResource("6_lqlj0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0.34, -2)
-length = 28.0
+[node name="BackFence" type="CollisionShape3D" parent="GrindRails" unique_id=599572407]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 1.1, -15.9)
+shape = SubResource("BoxShape3D_rail28")
 
-[node name="GrindRail2" parent="." unique_id=599572407 instance=ExtResource("6_lqlj0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0.34, -2)
-length = 28.0
+[node name="SideFenceLeft" type="CollisionShape3D" parent="GrindRails" unique_id=1442212322]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.9, 1.1, -2)
+shape = SubResource("BoxShape3D_rail28")
 
-[node name="GrindRail3" parent="." unique_id=1442212322 instance=ExtResource("6_lqlj0")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -2.9802322e-08, 0.34, -16)
-length = 28.0
+[node name="SideFenceRight" type="CollisionShape3D" parent="GrindRails" unique_id=1096871253]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.9, 1.1, -2)
+shape = SubResource("BoxShape3D_rail28")
 
-[node name="GrindRail4" parent="." unique_id=1096871253 instance=ExtResource("6_lqlj0")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -5.0000014, 0.34, 12)
-length = 21.0
+[node name="FrontFence1" type="CollisionShape3D" parent="GrindRails" unique_id=980812266]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -5.5, 1.1, 12.1)
+shape = SubResource("BoxShape3D_rail21")
 
-[node name="GrindRail5" parent="." unique_id=980812266 instance=ExtResource("6_lqlj0")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 13.999998, 0.34, 12.000001)
-length = 4.0
+[node name="FrontFence2" type="CollisionShape3D" parent="GrindRails" unique_id=1188120450]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 14, 1.1, 12.1)
+shape = SubResource("BoxShape3D_rail4")
 
 [editable path="House_1"]

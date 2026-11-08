@@ -12,7 +12,7 @@
 
 [resource]
 script = ExtResource("1_trfst")
-traffic_count = 150
+traffic_count = 128
 near_target = 16
 race_traffic_amount = 64
 car_chance = 0.9

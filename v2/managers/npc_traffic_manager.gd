@@ -328,6 +328,8 @@ func rpc_spawn_npc(npc_id: int, skin_index: int, pos: Vector3, basis: Basis):
 	npc.add_to_group(UtilsConstants.GROUPS["Traffic"])
 	# Drawn once near: the LOD pass shows it on the host, its first sync on a client
 	npc.set_drawn(false)
+	# NPCTrafficState has no Update, and 150 riders polling an empty one every frame adds up
+	npc.state_machine.set_process(false)
 
 	if !multiplayer.is_server():
 		return
