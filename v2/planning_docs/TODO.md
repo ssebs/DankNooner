@@ -32,6 +32,7 @@
 
 - [ ] [_store_fixes](./_store_fixes.md)
 - [ ] test steam save sync
+- [ ] Audit `any_peer` RPCs for sender validation (public lobbies let strangers in)
 - [ ] Demo release
   - [ ] verify difficulty works
   - [ ] Balancing points / score
