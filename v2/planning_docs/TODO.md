@@ -26,9 +26,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
-- [ ] Create/join public/private lobbies 
-  - [ ] WIP `____STEAM_LOBBIES_WIP.md`
-  - [ ] Test on 2 pcs
 
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -240,6 +237,8 @@
 ---
 
 ## Done ✅
+
+- [x] Create/join public/private lobbies w/ Steam
 
 - [x] Get racing AI working [WIP]
   - [x] tricks / Items

@@ -29,6 +29,10 @@ const LOBBY_LEVEL_KEY := "level"
 const LOBBY_VERSION_KEY := "version"
 # getPlayerAvatar size: 1 small, 2 medium (64px), 3 large
 const AVATAR_MEDIUM := 2
+## Regular friends, not blocked/requests
+const FRIEND_FLAG_IMMEDIATE := 4
+## How long the browser waits on friends' lobby data before listing without the stragglers
+const FRIEND_LOBBY_DATA_TIMEOUT_MS := 3000
 
 ## Null when Steam is unavailable (Web, no client). Via Engine: a static `Steam` ref won't parse on Web
 var steam: Object
@@ -44,6 +48,8 @@ var _in_session := false
 var _requested_lobby_id := 0
 ## Steam is still fetching these non-friends' info; their avatars are requested when it lands
 var _pending_avatar_ids: Dictionary[int, bool] = {}
+## Friends' lobbies whose data the browser is still waiting on
+var _pending_lobby_data: Dictionary[int, bool] = {}
 
 
 func _ready():
@@ -109,23 +115,33 @@ func set_lobby_state(joinable: bool, level_name: LevelManager.LevelName):
 	steam.setLobbyData(_lobby_id, LOBBY_LEVEL_KEY, str(level_name))
 
 
-## Joinable public lobbies on our version, as rows for the server browser
+## Server browser rows on our version: friends' lobbies first (friends-only ones never show up in
+## search), then joinable public ones
 func find_lobbies() -> Array[Dictionary]:
+	var friend_lobby_ids := _get_friend_lobby_ids()
+	for lobby_id in friend_lobby_ids:
+		_pending_lobby_data[lobby_id] = true
+		steam.requestLobbyData(lobby_id)
+
 	steam.addRequestLobbyListStringFilter(LOBBY_VERSION_KEY, _get_version(), LOBBY_COMPARISON_EQUAL)
 	steam.addRequestLobbyListDistanceFilter(LOBBY_DISTANCE_FILTER_WORLDWIDE)
 	steam.requestLobbyList()
-	var lobby_ids: Array = await Signal(steam, "lobby_match_list")
+	var public_lobby_ids: Array = await Signal(steam, "lobby_match_list")
+
+	var deadline := Time.get_ticks_msec() + FRIEND_LOBBY_DATA_TIMEOUT_MS
+	while !_pending_lobby_data.is_empty() and Time.get_ticks_msec() < deadline:
+		await get_tree().process_frame
+	_pending_lobby_data.clear()
 
 	var rows: Array[Dictionary] = []
-	for lobby_id: int in lobby_ids:
-		rows.append({
-			"id": lobby_id,
-			"host_name": steam.getLobbyData(lobby_id, LOBBY_HOST_NAME_KEY),
-			"members": steam.getNumLobbyMembers(lobby_id),
-			"max_members": steam.getLobbyMemberLimit(lobby_id),
-			# Empty before the host's first gamemode: still in the lobby menu
-			"level": steam.getLobbyData(lobby_id, LOBBY_LEVEL_KEY).to_int(),
-		})
+	for lobby_id in friend_lobby_ids:
+		# Search filters by version; friends' lobbies need it checked here (empty if data never came)
+		if steam.getLobbyData(lobby_id, LOBBY_VERSION_KEY) == _get_version():
+			rows.append(_get_lobby_row(lobby_id))
+	for lobby_id: int in public_lobby_ids:
+		# A friend's public lobby is already listed above
+		if lobby_id not in friend_lobby_ids:
+			rows.append(_get_lobby_row(lobby_id))
 	return rows
 
 
@@ -189,6 +205,31 @@ func _init_steam():
 		_on_join_requested(args[idx + 1].to_int(), 0)
 
 
+## Lobbies friends are in on this app
+func _get_friend_lobby_ids() -> Array[int]:
+	var lobby_ids: Array[int] = []
+	for i in steam.getFriendCount(FRIEND_FLAG_IMMEDIATE):
+		var friend_id: int = steam.getFriendByIndex(i, FRIEND_FLAG_IMMEDIATE)
+		# Empty when the friend isn't in a game; "lobby" is 0 outside a lobby
+		var game: Dictionary = steam.getFriendGamePlayed(friend_id)
+		var lobby_id: int = game.get("lobby", 0)
+		if game.get("id", 0) == steam.getAppID() and lobby_id != 0 and lobby_id not in lobby_ids:
+			lobby_ids.append(lobby_id)
+	return lobby_ids
+
+
+func _get_lobby_row(lobby_id: int) -> Dictionary:
+	return {
+		# What invites join with too: the lobby ID on the Steam transport, else the WebRTC code / IP
+		"game_id": steam.getLobbyData(lobby_id, LOBBY_GAME_ID_KEY),
+		"host_name": steam.getLobbyData(lobby_id, LOBBY_HOST_NAME_KEY),
+		"members": steam.getNumLobbyMembers(lobby_id),
+		"max_members": steam.getLobbyMemberLimit(lobby_id),
+		# Empty before the host's first gamemode: still in the lobby menu
+		"level": steam.getLobbyData(lobby_id, LOBBY_LEVEL_KEY).to_int(),
+	}
+
+
 func _get_version() -> String:
 	return ProjectSettings.get_setting("application/config/version")
 
@@ -208,8 +249,12 @@ func _on_join_requested(lobby_id: int, _friend_id: int):
 
 
 func _on_lobby_data_update(success: int, lobby_id: int, member_id: int):
-	# Also fires for our own hosted lobby and per-member updates
-	if lobby_id != _requested_lobby_id or member_id != lobby_id:
+	# Per-member updates don't carry the lobby's data
+	if member_id != lobby_id:
+		return
+	_pending_lobby_data.erase(lobby_id)
+	# Also fires for our own hosted lobby and the browser's friend lobbies
+	if lobby_id != _requested_lobby_id:
 		return
 	_requested_lobby_id = 0
 	if !success:

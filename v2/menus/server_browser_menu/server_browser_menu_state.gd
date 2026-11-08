@@ -1,5 +1,6 @@
 @tool
-## Public Steam lobbies on our version. Joins go through the play menu, with Back returning here
+## Friends' Steam lobbies, then public ones, on our version. Joins go through the play menu, with Back
+## returning here
 class_name ServerBrowserMenuState extends MenuState
 
 @export var steam_manager: SteamManager
@@ -71,7 +72,7 @@ func _add_row(lobby: Dictionary):
 		"max_members": lobby["max_members"],
 		"where": where,
 	})
-	row.pressed.connect(play_menu_state.join_game.bind(str(lobby["id"]), self))
+	row.pressed.connect(play_menu_state.join_game.bind(lobby["game_id"], self))
 	lobby_list.add_child(row)
 
 
