@@ -5,17 +5,9 @@
 [ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.tscn" id="3_ffs5v"]
 [ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://managers/gamemodes/resources/gamemode_event_definition.gd" id="4_dr5sf"]
 [ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="4_yaxf8"]
-[ext_resource type="Script" uid="uid://cks7nbapumc55" path="res://managers/gamemodes/tasks/speed_above_task.gd" id="7_spd"]
-[ext_resource type="Script" uid="uid://bjt7k3nrl24c8" path="res://managers/gamemodes/challenges/race_challenge.gd" id="8_20hdw"]
 [ext_resource type="Script" uid="uid://1hiltkmgy4i3" path="res://managers/gamemodes/runners/concurrent_task_runner.gd" id="8_cf4ia"]
-[ext_resource type="Script" uid="uid://cw2cdgs7dv7ww" path="res://managers/gamemodes/tasks/close_help_task.gd" id="8_hlp"]
 [ext_resource type="Script" uid="uid://8xvij2vjrnn2" path="res://managers/gamemodes/tasks/countdown_task.gd" id="9_7dagn"]
-[ext_resource type="Script" uid="uid://c4b6sy0eliiac" path="res://managers/gamemodes/tasks/teleport_task.gd" id="9_ccoso"]
-[ext_resource type="Script" uid="uid://4s0cvl1pm1ae" path="res://managers/gamemodes/tasks/change_gear_task.gd" id="9_gear"]
 [ext_resource type="Script" uid="uid://cpdxy3nxph3x0" path="res://managers/gamemodes/tasks/sfx_task.gd" id="9_whmyo"]
-[ext_resource type="Script" uid="uid://8jkuycs74mo3" path="res://managers/gamemodes/tasks/wheelie_duration_task.gd" id="10_wh"]
-[ext_resource type="Script" uid="uid://c71ent6f2ecq" path="res://managers/gamemodes/tasks/stoppie_duration_task.gd" id="11_st"]
-[ext_resource type="Script" uid="uid://b40syrl038fb3" path="res://managers/gamemodes/tasks/checkpoint_task.gd" id="12_25rwx"]
 [ext_resource type="Script" uid="uid://f840hmifnv7g" path="res://managers/gamemodes/runners/sequential_task_runner.gd" id="13_runner"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="17_cf4ia"]
 [ext_resource type="Script" uid="uid://bk8siml2v41d1" path="res://managers/gamemodes/tasks/race_task.gd" id="18_ecphy"]
@@ -40,20 +32,6 @@ sky = SubResource("Sky_6hu6n")
 tonemap_mode = 2
 glow_enabled = true
 adjustment_enabled = true
-
-[sub_resource type="Resource" id="Resource_i711f"]
-script = ExtResource("4_dr5sf")
-name = "Tutorial: TEST"
-description = "Only 1 thing..."
-target_gamemode = 4
-metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
-
-[sub_resource type="Resource" id="Resource_asds5"]
-script = ExtResource("4_dr5sf")
-name = "Tutorial: Moto 101"
-description = "Learn the basics to get your M1 license."
-target_gamemode = 4
-metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_cf4ia"]
 script = ExtResource("4_dr5sf")
@@ -2210,68 +2188,6 @@ height = 20.0
 depth = 200.0
 color_preset = 4
 
-[node name="Tut01Location" type="Node3D" parent="Stuff" unique_id=799554907]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -624, 51, -1977)
-
-[node name="Ground" parent="Stuff/Tut01Location" unique_id=977666578 instance=ExtResource("17_cf4ia")]
-width = 512.0
-height = 0.1
-depth = 256.0
-
-[node name="Tutorial01StartMarker" type="Marker3D" parent="Stuff/Tut01Location" unique_id=492544271]
-unique_name_in_owner = true
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 247, 0.049987793, -120.00001)
-
-[node name="Tutorial01CheckpointTest" type="Marker3D" parent="Stuff/Tut01Location" unique_id=191667890]
-unique_name_in_owner = true
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 231, 0.049987793, -94.00001)
-
-[node name="borderwall0" parent="Stuff/Tut01Location" unique_id=1563737870 instance=ExtResource("17_cf4ia")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -255, 6.049988, 0)
-collision_layer = 3
-width = 2.0
-height = 12.0
-depth = 252.0
-color_preset = 3
-
-[node name="borderwall1" parent="Stuff/Tut01Location" unique_id=1280414458 instance=ExtResource("17_cf4ia")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 255, 6.05, 0)
-collision_layer = 3
-width = 2.0
-height = 12.0
-depth = 252.0
-color_preset = 3
-
-[node name="borderwall2" parent="Stuff/Tut01Location" unique_id=738918424 instance=ExtResource("17_cf4ia")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.05, -127)
-collision_layer = 3
-width = 512.0
-height = 12.0
-depth = 2.0
-color_preset = 3
-
-[node name="borderwall3" parent="Stuff/Tut01Location" unique_id=605876305 instance=ExtResource("17_cf4ia")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.05, 127)
-collision_layer = 3
-width = 512.0
-height = 12.0
-depth = 2.0
-color_preset = 3
-
-[node name="wall" parent="Stuff/Tut01Location" unique_id=1367724436 instance=ExtResource("17_cf4ia")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 214, 6.049988, -113)
-collision_layer = 3
-width = 80.0
-height = 12.0
-depth = 2.0
-color_preset = 3
-
-[node name="CheckpointMarker" parent="Stuff/Tut01Location" unique_id=1048335829 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 217, 0.049995422, -95)
-
-[node name="CheckpointMarker2" parent="Stuff/Tut01Location" unique_id=1281968215 instance=ExtResource("4_yaxf8")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 194, 0.049995422, -95)
-
 [node name="rampwall" parent="Stuff" unique_id=873398629 instance=ExtResource("17_cf4ia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 119, 4.0499997, 108.64206)
 collision_layer = 3
@@ -2291,125 +2207,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 99, 0.42999983, 119.87393)
 collision_layer = 3
 width = 16.0
 depth = 0.1
-
-[node name="TestEventStartCircle" parent="." unique_id=1014716352 instance=ExtResource("3_ffs5v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 81)
-
-[node name="TutorialTEST" type="Node3D" parent="TestEventStartCircle" unique_id=1247244260]
-script = ExtResource("mig_event")
-definition = SubResource("Resource_i711f")
-
-[node name="SequentialTaskRunner" type="Node" parent="TestEventStartCircle/TutorialTEST" unique_id=2098834758]
-script = ExtResource("13_runner")
-metadata/_custom_type_script = "uid://f840hmifnv7g"
-
-[node name="Teleport_Start" type="Node" parent="TestEventStartCircle/TutorialTEST/SequentialTaskRunner" unique_id=1014716353 node_paths=PackedStringArray("marker")]
-script = ExtResource("9_ccoso")
-marker = NodePath("../../../../Stuff/Tut01Location/Tutorial01StartMarker")
-
-[node name="ConcurrentTaskRunner" type="Node" parent="TestEventStartCircle/TutorialTEST/SequentialTaskRunner" unique_id=2080321246]
-script = ExtResource("8_cf4ia")
-
-[node name="CountdownStep1" type="Node" parent="TestEventStartCircle/TutorialTEST/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=1010143940]
-script = ExtResource("9_7dagn")
-seconds = 2.0
-
-[node name="SFXTask" type="Node" parent="TestEventStartCircle/TutorialTEST/SequentialTaskRunner/ConcurrentTaskRunner" unique_id=463781277]
-script = ExtResource("9_whmyo")
-sound = 3
-advance_mode = 1
-duration_sec = 2.0
-metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
-
-[node name="Tutorial01EventStartCircle" parent="." unique_id=459761741 instance=ExtResource("3_ffs5v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 93)
-
-[node name="TutorialMoto101" type="Node3D" parent="Tutorial01EventStartCircle" unique_id=1987635211]
-script = ExtResource("mig_event")
-definition = SubResource("Resource_asds5")
-
-[node name="SequentialTaskRunner" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101" unique_id=1305171110]
-script = ExtResource("13_runner")
-metadata/_custom_type_script = "uid://f840hmifnv7g"
-
-[node name="Teleport_Start" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=459761742 node_paths=PackedStringArray("marker")]
-script = ExtResource("9_ccoso")
-marker = NodePath("../../../../Stuff/Tut01Location/Tutorial01StartMarker")
-
-[node name="CloseHelp_ShowHelp" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=710662388]
-script = ExtResource("8_hlp")
-
-[node name="ConcurrentTaskRunner2" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=894900473]
-script = ExtResource("8_cf4ia")
-
-[node name="CountdownTask" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=799982134]
-script = ExtResource("9_7dagn")
-metadata/_custom_type_script = "uid://8xvij2vjrnn2"
-
-[node name="SFXTask" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner/ConcurrentTaskRunner2" unique_id=1939024796]
-script = ExtResource("9_whmyo")
-sound = 2
-advance_mode = 1
-duration_sec = 3.0
-metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
-
-[node name="SpeedAbove_PressRT" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=1518672603]
-script = ExtResource("7_spd")
-min_speed = 2.0
-objective_key = "TUT_PRESS_RT"
-hint_key = "TUT_HINT_PRESS_RT"
-
-[node name="SpeedAbove_ReachSpeed" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=217992485]
-script = ExtResource("7_spd")
-
-[node name="ChangeGear" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=417285950]
-script = ExtResource("9_gear")
-
-[node name="CountdownTask" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=686746654]
-script = ExtResource("9_7dagn")
-seconds = 1.0
-show_hud = false
-metadata/_custom_type_script = "uid://8xvij2vjrnn2"
-
-[node name="Teleport_step2" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=550997663 node_paths=PackedStringArray("marker")]
-script = ExtResource("9_ccoso")
-marker = NodePath("../../../../Stuff/Tut01Location/Tutorial01CheckpointTest")
-
-[node name="EnterCheckpoint1" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=1365254219 node_paths=PackedStringArray("trigger")]
-script = ExtResource("12_25rwx")
-eval_when = 1
-trigger = NodePath("../../../../Stuff/Tut01Location/CheckpointMarker")
-metadata/_custom_type_script = "uid://c22suxxblut73"
-
-[node name="SFXTask" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=729296987]
-script = ExtResource("9_whmyo")
-sound = 9
-metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
-
-[node name="EnterCheckpoint2" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=325730336 node_paths=PackedStringArray("trigger")]
-script = ExtResource("12_25rwx")
-eval_when = 1
-trigger = NodePath("../../../../Stuff/Tut01Location/CheckpointMarker2")
-metadata/_custom_type_script = "uid://c22suxxblut73"
-
-[node name="SFXTask2" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=795043335]
-script = ExtResource("9_whmyo")
-sound = 9
-metadata/_custom_type_script = "uid://cpdxy3nxph3x0"
-
-[node name="Teleport_step" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=146409448 node_paths=PackedStringArray("marker")]
-script = ExtResource("9_ccoso")
-marker = NodePath("../../../../Stuff/Tut01Location/Tutorial01StartMarker")
-
-[node name="WheelieDuration_Wheelie" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=2060995372]
-script = ExtResource("10_wh")
-
-[node name="Teleport_step3" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=228101148 node_paths=PackedStringArray("marker")]
-script = ExtResource("9_ccoso")
-marker = NodePath("../../../../Stuff/Tut01Location/Tutorial01StartMarker")
-
-[node name="StoppieDuration_Stoppie" type="Node" parent="Tutorial01EventStartCircle/TutorialMoto101/SequentialTaskRunner" unique_id=1257142628]
-script = ExtResource("11_st")
 
 [node name="Race01Event" type="Node3D" parent="." unique_id=409874786]
 

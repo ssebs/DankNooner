@@ -138,7 +138,7 @@ func _on_game_id_set(_conn_addr: String):
 	if (
 		multiplayer.multiplayer_peer
 		&& multiplayer.is_server()
-		&& return_ctx.mode != LobbyStateContext.Mode.FREEROAM
+		&& return_ctx.mode == LobbyStateContext.Mode.HOST
 	):
 		lobby_panel.copy_game_id.call_deferred()
 
@@ -220,6 +220,15 @@ func set_single_or_multiplayer_ui():
 					await connection_manager.start_server(true)
 				level_select_panel.set_controls_disabled(false)
 			level_select_panel.grab_start_focus()
+		LobbyStateContext.Mode.STORY:
+			# Solo, straight into the tutorial: no lobby to show and nobody can join.
+			singleplayer_ui.hide()
+			multiplayer_ui.hide()
+			loading_ui.show()
+			connection_manager.connection_mode = ConnectionManager.ConnectionMode.WEBRTC
+			await connection_manager.start_server(true)
+			gamemode_manager.start_game.rpc(LevelManager.LevelName.TUTORIAL_LEVEL)
+			return
 		_:
 			singleplayer_ui.hide()
 			multiplayer_ui.show()

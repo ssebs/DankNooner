@@ -181,6 +181,8 @@ PROPS = {
     "CheckBox/colors/font_pressed_color": (1, 1, 1, 1),
     "CheckBox/colors/font_hover_pressed_color": (1, 1, 1, 1),
     "Heading1Label/fonts/font": _font("Bold"),
+    # [b] in tour text, e.g. item names.
+    "RichTextLabel/fonts/bold_font": _font("Bold"),
     "TableHeaderLabel/fonts/font": _font("Bold"),
     "TableHeaderLabel/colors/font_color": (*BLUE, 1),
     **FLAT_PROPS,

@@ -44,12 +44,6 @@ layout_mode = 2
 theme_type_variation = &"Heading2Label"
 autowrap_mode = 3
 
-[node name="Warning" type="Label" parent="CanvasLayer/UI/Panel/VBox"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.82, 0.25, 1)
-autowrap_mode = 3
-
 [node name="Image" type="TextureRect" parent="CanvasLayer/UI/Panel/VBox"]
 unique_name_in_owner = true
 visible = false
@@ -61,6 +55,7 @@ stretch_mode = 5
 [node name="Body" type="RichTextLabel" parent="CanvasLayer/UI/Panel/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
+bbcode_enabled = true
 autowrap_mode = 3
 
 [node name="Dots" type="HBoxContainer" parent="CanvasLayer/UI/Panel/VBox"]

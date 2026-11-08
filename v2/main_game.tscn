@@ -63,8 +63,8 @@
 [ext_resource type="Script" uid="uid://bohgpnc0q47hq" path="res://managers/steam_manager.gd" id="61_steam"]
 [ext_resource type="PackedScene" path="res://menus/credits_menu/credits_menu_state.tscn" id="62_credits"]
 [ext_resource type="PackedScene" path="res://menus/server_browser_menu/server_browser_menu_state.tscn" id="63_srvbrowse"]
-[ext_resource type="Script" uid="uid://uj0l0u0v0f0d" path="res://managers/npc_traffic_manager.gd" id="99_npctm"]
 [ext_resource type="PackedScene" path="res://managers/tour/tour_manager.tscn" id="64_tour"]
+[ext_resource type="Script" uid="uid://uj0l0u0v0f0d" path="res://managers/npc_traffic_manager.gd" id="99_npctm"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("1_1oj5k")
@@ -161,10 +161,11 @@ customize_menu_state = NodePath("../CustomizeMenuState")
 tricks_menu_state = NodePath("../TricksMenuState")
 credits_menu_state = NodePath("../CreditsMenuState")
 
-[node name="PlayMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=207724047 node_paths=PackedStringArray("menu_manager", "connection_manager", "steam_manager", "main_menu_state", "lobby_menu_state", "customize_menu_state", "server_browser_menu_state") instance=ExtResource("7_f52ns")]
+[node name="PlayMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=207724047 node_paths=PackedStringArray("menu_manager", "connection_manager", "steam_manager", "save_manager", "main_menu_state", "lobby_menu_state", "customize_menu_state", "server_browser_menu_state") instance=ExtResource("7_f52ns")]
 menu_manager = NodePath("../..")
 connection_manager = NodePath("../../../ConnectionManager")
 steam_manager = NodePath("../../../SteamManager")
+save_manager = NodePath("../../../SaveManager")
 main_menu_state = NodePath("../MainMenuState")
 lobby_menu_state = NodePath("../LobbyMenuState")
 customize_menu_state = NodePath("../CustomizeMenuState")
@@ -195,12 +196,12 @@ settings_manager = NodePath("../../../SettingsManager")
 audio_manager = NodePath("../../../AudioManager")
 main_menu_state = NodePath("../MainMenuState")
 
-[node name="CustomizeMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1710077363 node_paths=PackedStringArray("save_manager", "level_manager", "audio_manager", "tour_manager", "input_state_manager") instance=ExtResource("9_4srsv")]
+[node name="CustomizeMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1710077363 node_paths=PackedStringArray("save_manager", "level_manager", "audio_manager", "input_state_manager", "tour_manager") instance=ExtResource("9_4srsv")]
 save_manager = NodePath("../../../SaveManager")
 level_manager = NodePath("../../../LevelManager")
 audio_manager = NodePath("../../../AudioManager")
-tour_manager = NodePath("../../../TourManager")
 input_state_manager = NodePath("../../../InputStateManager")
+tour_manager = NodePath("../../../TourManager")
 
 [node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "connection_manager", "level_manager", "input_state_manager", "pause_manager", "gamemode_manager", "spawn_manager", "lobby_manager", "steam_manager", "audio_manager", "main_menu_state", "settings_menu_state", "tricks_menu_state") instance=ExtResource("6_02kkc")]
 menu_manager = NodePath("../..")
@@ -219,10 +220,11 @@ tricks_menu_state = NodePath("../TricksMenuState")
 
 [node name="CreditsMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1489866704 instance=ExtResource("62_credits")]
 
-[node name="TricksMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1846203517 node_paths=PackedStringArray("menu_manager", "save_manager", "level_manager") instance=ExtResource("38_trkmn")]
+[node name="TricksMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1846203517 node_paths=PackedStringArray("menu_manager", "save_manager", "level_manager", "input_state_manager") instance=ExtResource("38_trkmn")]
 menu_manager = NodePath("../..")
 save_manager = NodePath("../../../SaveManager")
 level_manager = NodePath("../../../LevelManager")
+input_state_manager = NodePath("../../../InputStateManager")
 
 [node name="LoadingMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1253633817 instance=ExtResource("21_x5kvo")]
 
@@ -316,7 +318,7 @@ crash_launch_mode = NodePath("StateMachine/CrashLaunchGameMode")
 script = ExtResource("4_6bm6p")
 metadata/_custom_type_script = "uid://ba7kyb4p3trb1"
 
-[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_hud_state", "level_manager", "npc_traffic_manager", "pickup_spawn_manager", "trick_manager", "riding_hud_state", "input_state_manager", "hud_manager", "save_manager", "gamemode_manager", "spawn_manager", "tour_manager")]
+[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_hud_state", "level_manager", "npc_traffic_manager", "pickup_spawn_manager", "trick_manager", "riding_hud_state", "input_state_manager", "hud_manager", "save_manager", "tour_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("25_6krrg")
 game_mode_event_hud_state = NodePath("../../../HUDManager/StateMachine/GamemodeEventHUDState")
 level_manager = NodePath("../../../LevelManager")
@@ -327,14 +329,16 @@ riding_hud_state = NodePath("../../../HUDManager/StateMachine/RidingHUDState")
 input_state_manager = NodePath("../../../InputStateManager")
 hud_manager = NodePath("../../../HUDManager")
 save_manager = NodePath("../../../SaveManager")
+tour_manager = NodePath("../../../TourManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
-tour_manager = NodePath("../../../TourManager")
 
-[node name="TutorialGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1184474950 node_paths=PackedStringArray("menu_manager", "settings_menu_state", "riding_hud_state", "lobby_manager", "audio_manager", "results_hud", "input_state_manager", "save_manager", "gamemode_manager", "spawn_manager")]
+[node name="TutorialGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1184474950 node_paths=PackedStringArray("menu_manager", "tour_manager", "item_manager", "play_menu_state", "riding_hud_state", "lobby_manager", "audio_manager", "results_hud", "input_state_manager", "save_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("27_8slmw")
 menu_manager = NodePath("../../../MenuManager")
-settings_menu_state = NodePath("../../../MenuManager/StateMachine/SettingsMenuState")
+tour_manager = NodePath("../../../TourManager")
+item_manager = NodePath("../../../ItemManager")
+play_menu_state = NodePath("../../../MenuManager/StateMachine/PlayMenuState")
 riding_hud_state = NodePath("../../../HUDManager/StateMachine/RidingHUDState")
 lobby_manager = NodePath("../../../LobbyManager")
 audio_manager = NodePath("../../../AudioManager")
@@ -516,14 +520,14 @@ crash_respawn_delay = 15.0
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
-[node name="FuelUpGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=139970958 node_paths=PackedStringArray("input_state_manager", "hud_manager", "save_manager", "gamemode_manager", "spawn_manager", "tour_manager")]
+[node name="FuelUpGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=139970958 node_paths=PackedStringArray("input_state_manager", "hud_manager", "save_manager", "tour_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("30_fuelup")
 input_state_manager = NodePath("../../../InputStateManager")
 hud_manager = NodePath("../../../HUDManager")
 save_manager = NodePath("../../../SaveManager")
+tour_manager = NodePath("../../../TourManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
-tour_manager = NodePath("../../../TourManager")
 
 [node name="AudioManager" parent="ManagerManager" unique_id=625309404 node_paths=PackedStringArray("settings_manager") instance=ExtResource("20_2i4tw")]
 settings_manager = NodePath("../SettingsManager")

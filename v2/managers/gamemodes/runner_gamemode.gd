@@ -71,7 +71,7 @@ func Exit(_state_context: StateContext):
 	_stop_active_runner()
 
 	if multiplayer.is_server():
-		# Tasks (Countdown, CloseHelp) disable input during their on_enter. If we
+		# Tasks (Countdown, ShowTour) disable input during their on_enter. If we
 		# exit mid-task (player quit, skip) on_exit never runs — reset everyone.
 		_reset_all_player_input()
 

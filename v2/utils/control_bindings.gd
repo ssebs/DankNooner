@@ -47,6 +47,18 @@ const JOY_AXIS_ICONS: Dictionary = {
 	Vector2i(JOY_AXIS_TRIGGER_LEFT, 1): preload("res://resources/img/Icons/xbox_lt.svg"),
 	Vector2i(JOY_AXIS_TRIGGER_RIGHT, 1): preload("res://resources/img/Icons/xbox_rt.svg"),
 }
+## Text tokens that aren't one InputMap action: {token: [kbm, gamepad]}, each an action or an icon.
+const TOKEN_ALIASES: Dictionary = {
+	"cursor":
+	[
+		preload("res://resources/img/Icons/mouse_move.svg"),
+		preload("res://resources/img/Icons/xbox_stick_l.svg"),
+	],
+	# A cursor click: use_item's pad binding is the d-pad, so the pad clicks with A.
+	"click": ["use_item", "ui_accept"],
+}
+
+static var _token_regex := RegEx.create_from_string("\\{(\\w+)\\}")
 
 
 ## Rebuild InputMap for every remappable action from defaults + overrides.
@@ -161,3 +173,49 @@ static func from_dict(dict: Dictionary) -> InputEvent:
 	# -1 matches every device, like the Input Map's own events
 	event.device = -1
 	return event
+
+
+#region {action} tokens
+
+
+## The {action} token names in `text`, in order.
+static func tokens_in(text: String) -> PackedStringArray:
+	var tokens := PackedStringArray()
+	for token in _token_regex.search_all(text):
+		tokens.append(token.get_string(1))
+	return tokens
+
+
+## Appends BBCode `text` to `label`, each {action} token (or TOKEN_ALIASES token) swapped for its
+## binding on that device: a pad glyph, or a key chip.
+static func append_tokens(label: RichTextLabel, text: String, gamepad: bool) -> void:
+	var at := 0
+	for token in _token_regex.search_all(text):
+		label.append_text(text.substr(at, token.get_start() - at))
+		_append_token(label, token.get_string(1), gamepad)
+		at = token.get_end()
+	label.append_text(text.substr(at))
+
+
+static func _append_token(label: RichTextLabel, token: String, gamepad: bool) -> void:
+	var glyph = TOKEN_ALIASES[token][int(gamepad)] if TOKEN_ALIASES.has(token) else token
+	if glyph is Texture2D:
+		_append_icon(label, glyph)
+		return
+	var event := event_for(glyph, gamepad)
+	assert(event != null, "Text names unbound action {%s}" % glyph)
+	if is_gamepad(event):
+		_append_icon(label, event_icon(event))
+		return
+	# RichTextLabel can't draw GestureChipLabel's StyleBoxTexture inline; a bgcolor stands in.
+	label.push_bgcolor(UtilsConstants.UI_BLUE_DIM)
+	label.add_text(" %s " % TranslationServer.translate(event_text(event)))
+	label.pop()
+
+
+static func _append_icon(label: RichTextLabel, icon: Texture2D) -> void:
+	var font_size := label.get_theme_font_size("normal_font_size")
+	label.add_image(icon, 0, int(label.get_theme_font("normal_font").get_height(font_size)))
+
+
+#endregion

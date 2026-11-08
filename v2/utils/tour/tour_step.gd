@@ -1,11 +1,11 @@
 @tool
-## One step of a Tour. Body text may use {action} tokens for live button icons.
+## One step of a Tour. Text may use {action} tokens for live button icons, and BBCode ([b]).
 class_name TourStep extends Node
 
 @export var title_key: String
 @export var body_key: String
-## Optional highlighted line.
-@export var warning_key: String = ""
+## Optional gold line under the body: what to do, or a caution. Takes {action} tokens too.
+@export var highlight_key: String = ""
 ## Unused for now; the panel layout reserves room for it.
 @export var image: Texture2D
 ## Control, Node3D, or null to center the step. Ignored on step 0 (the intro modal).

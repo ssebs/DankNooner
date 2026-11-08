@@ -125,6 +125,15 @@ func Enter(state_context: StateContext):
 		pickup_spawn_manager.activate_pickups()
 		_round_points.clear()
 		_round_left = ROUND_SECS
+		# Only start_game enters without a GamemodeStateContext, so this fires once per load.
+		# Deferred so this Enter finishes before the gamemode changes.
+		var auto_start := level_manager.current_level.auto_start_event
+		if !(state_context is GamemodeStateContext) and auto_start != null:
+			gamemode_manager.change_gamemode.call_deferred(
+				auto_start.definition.target_gamemode,
+				multiplayer.get_unique_id(),
+				auto_start.get_path()
+			)
 	else:
 		# Our level just finished loading — pull any traffic spawned before we could
 		# accept it (fresh-start broadcasts race our spawn_level; late join misses

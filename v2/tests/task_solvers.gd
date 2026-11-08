@@ -36,7 +36,6 @@ func _init(runner: Node) -> void:
 		SpeedAboveTask: _straight,
 		ChangeGearTask: _change_gear,
 		WheelieDurationTask: _wheelie,
-		StoppieDurationTask: _stoppie,
 		PerformTrickTask: _perform_trick,
 		LongJumpTask: _long_jump,
 		TrickBattleTask: _trick_battle,
@@ -137,10 +136,6 @@ func _change_gear(_task: ChangeGearTask, _peer_id: int) -> Dictionary:
 
 func _wheelie(_task: WheelieDurationTask, _peer_id: int) -> Dictionary:
 	return _go(null, TrickController.Trick.WHEELIE_SITTING)
-
-
-func _stoppie(_task: StoppieDurationTask, _peer_id: int) -> Dictionary:
-	return _go(null, TrickController.Trick.STOPPIE)
 
 
 func _perform_trick(task: PerformTrickTask, peer_id: int) -> Dictionary:

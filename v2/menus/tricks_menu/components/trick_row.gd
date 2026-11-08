@@ -33,7 +33,7 @@ const DIR_ICONS: Dictionary = {
 @onready var dir_label: Label = %DirLabel
 @onready var gesture_col: CenterContainer = %GestureCol
 @onready var gesture_chip: Label = %GestureChip
-@onready var howto_label: Label = %HowtoLabel
+@onready var howto_label: RichTextLabel = %HowtoLabel
 @onready var score_label: Label = %ScoreLabel
 @onready var pin_btn: Button = %PinBtn
 ## Tricks menu over the TrickDemo: plays this trick there. Hidden elsewhere.
@@ -45,6 +45,9 @@ var pin: String = ""
 var trick_type: TrickController.Trick = TrickController.Trick.NONE
 ## Stick rows' TrickController.Dir; NO_DIR for how-to rows.
 var _dir: int = TrickController.NO_DIR
+## How-to rows' TRICK_HOWTO_ key, whose {action} tokens show this device's bindings.
+var _howto_key: String = ""
+var _gamepad: bool = false
 
 
 func _ready() -> void:
@@ -60,6 +63,12 @@ func _ready() -> void:
 		gesture_chip.theme_type_variation = &"DimLabel"
 		for label: Label in [dir_label, gesture_chip, state_label]:
 			label.add_theme_font_size_override("font_size", 16)
+		# How-to text rides the name's subtitle line like a stick row's state, not a wrapped column.
+		howto_label.reparent(state_label.get_parent())
+		howto_label.custom_minimum_size.x = 0
+		howto_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+		howto_label.modulate = state_label.modulate
+		howto_label.add_theme_font_size_override("normal_font_size", 14)
 	if Engine.is_editor_hint():
 		return
 	pin_btn.pressed.connect(func(): pin_pressed.emit(pin))
@@ -87,12 +96,10 @@ func populate_howto(trick: TrickController.Trick) -> void:
 	_populate(trick)
 	pin = TrickController.trick_to_str(trick)
 	stick_input.hide()
-	var howto := "TRICK_HOWTO_" + pin
-	# Compact (HUD): rides the name's subtitle line like a stick row's state, instead of a wrapped column.
-	state_label.visible = compact
-	state_label.text = howto
-	howto_label.visible = !compact
-	howto_label.text = howto
+	state_label.hide()
+	howto_label.show()
+	_howto_key = "TRICK_HOWTO_" + pin
+	_render_howto()
 
 
 ## Rebuild a row from its pin id (see `pin`).
@@ -109,10 +116,11 @@ func populate_pin(pin_id: String) -> void:
 	)
 
 
-## HUD: off a pad, show the key the stick direction's cam_* action is bound to instead.
+## Off a pad, show the keys: the stick direction's cam_* key, or a how-to's bound keys.
 func set_gamepad(gamepad: bool) -> void:
-	# How-to rows have no stick input.
+	_gamepad = gamepad
 	if _dir == TrickController.NO_DIR:
+		_render_howto()
 		return
 	var dir_name: String = TrickController.Dir.keys()[_dir]
 	var event := ControlBindings.event_for("cam_" + dir_name.to_lower(), false)
@@ -122,6 +130,15 @@ func set_gamepad(gamepad: bool) -> void:
 	# Compact: the stick glyph already says the direction.
 	dir_label.visible = use_key or not compact
 	dir_label.text = ControlBindings.event_text(event) if use_key else "TRICK_DIR_" + dir_name
+
+
+func _render_howto() -> void:
+	howto_label.clear()
+	# The editor's InputMap lacks the project's actions, so its preview keeps the raw tokens.
+	if Engine.is_editor_hint():
+		howto_label.append_text(tr(_howto_key))
+		return
+	ControlBindings.append_tokens(howto_label, tr(_howto_key), _gamepad)
 
 
 func set_pinned(pinned: bool) -> void:

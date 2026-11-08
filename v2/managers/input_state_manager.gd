@@ -58,6 +58,9 @@ var _horn_released_msec: int = -1
 
 func _ready():
 	add_to_group(UtilsConstants.GROUPS["InputStateManager"], true)
+	if !Engine.is_editor_hint():
+		# Device detection keeps tour icons live while a tutorial tour pauses the game (IN_TOUR is inert).
+		process_mode = Node.PROCESS_MODE_ALWAYS
 
 	if (
 		(OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios"))

@@ -7,6 +7,8 @@ class_name TricksMenuState extends MenuState
 @export var menu_manager: MenuManager
 @export var save_manager: SaveManager
 @export var level_manager: LevelManager
+## Rows show the bindings of the device in use.
+@export var input_state_manager: InputStateManager
 
 const TRICK_ROW_SCENE := preload("res://menus/tricks_menu/components/trick_row.tscn")
 const LIST_PADDING := 16
@@ -89,10 +91,12 @@ func Enter(state_context: StateContext):
 	)
 
 	_refresh_pins()
+	_on_device_changed(input_state_manager.is_gamepad)
 	ui.show()
 
 	close_tricks_btn.pressed.connect(_on_close_tricks_pressed)
 	clear_pin_btn.pressed.connect(_on_clear_pin_pressed)
+	input_state_manager.device_changed.connect(_on_device_changed)
 
 
 func Exit(_state_context: StateContext):
@@ -100,6 +104,12 @@ func Exit(_state_context: StateContext):
 	_trick_demo = null
 	close_tricks_btn.pressed.disconnect(_on_close_tricks_pressed)
 	clear_pin_btn.pressed.disconnect(_on_clear_pin_pressed)
+	input_state_manager.device_changed.disconnect(_on_device_changed)
+
+
+func _on_device_changed(gamepad: bool):
+	for row in _rows:
+		row.set_gamepad(gamepad)
 
 
 ## One tab per trick state, listing only the tricks bound there.

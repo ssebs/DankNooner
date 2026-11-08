@@ -620,6 +620,7 @@ ProfileTabButton/colors/font_hover_pressed_color = Color(0.25490198, 0.6862745, 
 ProfileTabButton/colors/font_pressed_color = Color(0.25490198, 0.6862745, 1, 1)
 ProfileTabButton/styles/hover = SubResource("StyleBoxFlat_tabsel")
 ProfileTabButton/styles/normal = SubResource("StyleBoxFlat_profiletab")
+RichTextLabel/fonts/bold_font = SubResource("Font_Bold")
 RowButton/base_type = &"Button"
 RowButton/colors/font_color = Color(1, 1, 1, 1)
 RowButton/colors/font_focus_color = Color(1, 1, 1, 1)

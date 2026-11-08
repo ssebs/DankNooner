@@ -91,7 +91,7 @@ func notify_disconnected(peer_id: int) -> void:
 #region Task callbacks
 
 
-## Called by tasks (e.g. CloseHelpTask ack RPC) to write into the per-peer scratchpad.
+## Called by tasks (e.g. ShowTourTask ack RPC) to write into the per-peer scratchpad.
 func mark_state(peer_id: int, key: String, value: Variant) -> void:
 	# Player may have disconnected before the ack arrived — skip is intentional
 	if !player_states.has(peer_id):

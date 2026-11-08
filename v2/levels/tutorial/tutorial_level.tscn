@@ -1,0 +1,601 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="lvl"]
+[ext_resource type="Sky" uid="uid://dfgbuerpq3y8" path="res://levels/assets/skybox_neon.tres" id="2_sky"]
+[ext_resource type="PackedScene" uid="uid://blmmkvwq6fh3b" path="res://levels/components/garage/garage.tscn" id="5_iwe6j"]
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="6_gb"]
+[ext_resource type="Texture2D" uid="uid://jpt2tqlxrf2f" path="res://levels/assets/graybox/road_texture_template.png" id="7_road"]
+[ext_resource type="PackedScene" uid="uid://cil6ntcnlqt5e" path="res://levels/components/props/house_1.tscn" id="8_gr0p0"]
+[ext_resource type="PackedScene" uid="uid://bbijpc7rs4he4" path="res://levels/components/props/school.tscn" id="9_ebgro"]
+[ext_resource type="PackedScene" uid="uid://dparkgb4x7k2q" path="res://levels/components/props/park.tscn" id="10_j6e1v"]
+[ext_resource type="PackedScene" uid="uid://i5gn7vx2atly" path="res://levels/components/props/gas_station.tscn" id="11_4mor0"]
+[ext_resource type="PackedScene" uid="uid://ylnfkd3cjyjp" path="res://levels/assets/props/tree_bundle.tscn" id="16_s2csy"]
+[ext_resource type="PackedScene" uid="uid://dfi8s52umbdwg" path="res://levels/assets/map_terrain_mine/MainMenuMountains.glb" id="17_cjcyd"]
+[ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.tscn" id="circle"]
+[ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="gate"]
+[ext_resource type="PackedScene" uid="uid://rervqxotioc4" path="res://levels/components/props/ramp.tscn" id="ramp"]
+[ext_resource type="PackedScene" uid="uid://cv3uyj3m3nj6t" path="res://levels/components/pickups/pickup_spawner.tscn" id="spawner"]
+[ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/bikes/skins/sport_default_skin_definition.tres" id="sport"]
+[ext_resource type="Script" uid="uid://pulnqxx1eaja" path="res://managers/gamemodes/gamemodeobjects/gamemode_event.gd" id="event"]
+[ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://managers/gamemodes/resources/gamemode_event_definition.gd" id="eventdef"]
+[ext_resource type="Script" uid="uid://f840hmifnv7g" path="res://managers/gamemodes/runners/sequential_task_runner.gd" id="seq"]
+[ext_resource type="Script" uid="uid://dbaichncqvkge" path="res://managers/gamemodes/tasks/show_tour_task.gd" id="showtour"]
+[ext_resource type="Script" uid="uid://ljjg3bwn4yr2" path="res://utils/tour/tour.gd" id="tour"]
+[ext_resource type="Script" uid="uid://smimwtt21200" path="res://utils/tour/tour_step.gd" id="step"]
+[ext_resource type="Script" uid="uid://c4b6sy0eliiac" path="res://managers/gamemodes/tasks/teleport_task.gd" id="teleport"]
+[ext_resource type="Script" uid="uid://cks7nbapumc55" path="res://managers/gamemodes/tasks/speed_above_task.gd" id="speed"]
+[ext_resource type="Script" uid="uid://bfcxkq0mfh0a6" path="res://managers/gamemodes/tasks/speed_below_task.gd" id="speedbelow"]
+[ext_resource type="Script" uid="uid://b40syrl038fb3" path="res://managers/gamemodes/tasks/checkpoint_task.gd" id="checkpoint"]
+[ext_resource type="Script" uid="uid://8jkuycs74mo3" path="res://managers/gamemodes/tasks/wheelie_duration_task.gd" id="wheelie"]
+[ext_resource type="Script" path="res://managers/gamemodes/tasks/look_around_task.gd" id="lookaround"]
+[ext_resource type="Script" path="res://managers/gamemodes/tasks/drop_item_task.gd" id="dropitem"]
+[ext_resource type="Script" uid="uid://07fvlfaumhio" path="res://managers/gamemodes/tasks/perform_trick_task.gd" id="trick"]
+[ext_resource type="Script" path="res://managers/gamemodes/tasks/boost_task.gd" id="boost"]
+[ext_resource type="Script" path="res://managers/gamemodes/tasks/knock_out_target_task.gd" id="knockout"]
+[ext_resource type="Script" uid="uid://dsfcoucwjtequ" path="res://resources/props/pickup_item_definition.gd" id="pickupdef"]
+[ext_resource type="Resource" uid="uid://cqeidudggyae1" path="res://levels/components/pickups/gas_can_pickup_definition.tres" id="gascan"]
+[ext_resource type="Resource" uid="uid://cw70e0c7wprwk" path="res://levels/components/pickups/ramp_pickup_definition.tres" id="rampitem"]
+[ext_resource type="Resource" uid="uid://bv0gsgv7tp3cy" path="res://levels/components/pickups/shotgun_pickup_definition.tres" id="shotgun"]
+[ext_resource type="PackedScene" uid="uid://b1unpyfbdidcb" path="res://entities/npc/npc_rider_entity.tscn" id="npc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m7gr6"]
+albedo_texture = ExtResource("7_road")
+uv1_scale = Vector3(0.02, 0.02, 0.02)
+uv1_offset = Vector3(0.245, 0, 0)
+uv1_triplanar = true
+texture_filter = 4
+
+[sub_resource type="Resource" id="TutorialEventDef"]
+script = ExtResource("eventdef")
+name = "TUT_EVENT_NAME"
+target_gamemode = 4
+forced_base_bike = ExtResource("sport")
+
+[sub_resource type="Environment" id="Environment_v84y2"]
+background_mode = 2
+sky = ExtResource("2_sky")
+ambient_light_source = 2
+ambient_light_color = Color(0.35, 0.3, 0.6, 1)
+tonemap_mode = 2
+glow_enabled = true
+glow_strength = 1.25
+fog_enabled = true
+fog_light_color = Color(0.12, 0.05, 0.3, 1)
+fog_density = 0.002
+fog_sky_affect = 0.268
+adjustment_enabled = true
+adjustment_brightness = 1.14
+adjustment_contrast = 1.15
+adjustment_saturation = 1.1
+
+[node name="TutorialLevel" type="Node3D" node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug", "auto_start_event")]
+script = ExtResource("lvl")
+player_spawn_pos = NodePath("Markers/RoadStart")
+player_spawn_pos_debug = NodePath("Markers/RoadStart")
+auto_start_event = NodePath("TutorialCircle/TutorialEvent")
+
+[node name="Scenery" type="Node3D" parent="."]
+
+[node name="Road" parent="Scenery" instance=ExtResource("6_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0, 0)
+shape_mode = 1
+width = 16.0
+depth = 400.0
+material_override = SubResource("StandardMaterial3D_m7gr6")
+neon_edges = true
+
+[node name="RampRoad" parent="Scenery" instance=ExtResource("6_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
+shape_mode = 1
+width = 12.0
+depth = 400.0
+material_override = SubResource("StandardMaterial3D_m7gr6")
+neon_edges = true
+
+[node name="ItemsRoad" parent="Scenery" instance=ExtResource("6_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, 0)
+shape_mode = 1
+width = 12.0
+depth = 400.0
+material_override = SubResource("StandardMaterial3D_m7gr6")
+neon_edges = true
+
+[node name="Ground" parent="Scenery" instance=ExtResource("6_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -63, -0.1, 0)
+collision_layer = 17
+shape_mode = 1
+width = 200.0
+height = 0.1
+depth = 400.0
+color_preset = 2
+
+[node name="Garage" parent="Scenery" instance=ExtResource("5_iwe6j")]
+transform = Transform3D(-4.3711385e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, -4.3711385e-08, -35, 0, 0)
+
+[node name="House1" parent="Scenery" instance=ExtResource("8_gr0p0")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -35, 0, -32)
+
+[node name="House2" parent="Scenery" instance=ExtResource("8_gr0p0")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -35, 0, -64)
+
+[node name="School1" parent="Scenery" instance=ExtResource("9_ebgro")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -51, 0, -127)
+
+[node name="Park1" parent="Scenery" instance=ExtResource("10_j6e1v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -51, 0, 80)
+
+[node name="GasStation" parent="Scenery" instance=ExtResource("11_4mor0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, 0, 32)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.19617997, -0.94997144, -0.24303903, 0.92850906, 0.100282654, 0.3575113, -0.31525278, -0.29580045, 0.90173054, 12.095804, 144.87276, -1.7741599)
+light_color = Color(0.6, 0.65, 1, 1)
+light_energy = 0.5
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_v84y2")
+
+[node name="TreeBundle" parent="." instance=ExtResource("16_s2csy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -233.5, 248.5, -20.5)
+size = 192
+aspect = 4
+density = 2
+snapped_heights = PackedFloat32Array(-194.30981, -209.93831, -194.49507, -202.73814, -203.85603, -209.14482, -208.46873, -208.61879, -215.10208, -208.1794, -202.1094, -209.2391, -198.76692, -197.28658, -203.32356, -198.1788, -198.2552, -211.24242, -213.79877, -218.3288, -226.9762, -220.30046, -214.71143, -206.84274, -214.8091, -204.01617, -216.89027, -222.8989, -227.97116, -211.34988, -196.47343, -201.13754, -215.1602, -215.5084, -211.29793, -212.83488, -223.25864, -222.8221, -211.80515, -201.15302, -204.52853, -211.40146, -207.12715, -207.55104, -220.73598, -213.62367, -214.64575, -219.25313, -218.43512, -213.69504, -224.2459, -224.84206, -232.63644, -228.9172, -224.02533, -221.4419, -222.24606, -224.23853, -221.46832, -219.03345, -214.39632, -212.60342, -226.55139, -230.6076, -215.65868, -211.93547, -212.40503, -220.96469, -220.83461, -223.1835, -237.61551, -241.3948, -235.92343, -234.67792, -238.9423, -221.7623, -237.64906, -232.60738, -235.1149, -236.0776, -237.0393, -234.8019, -217.86806, -223.8927, -225.8723, -228.85579, -238.93561, -239.68427, -241.9668, -249.53471, -234.61557, -236.71733, -229.69193, -238.53859, -229.16165, -231.56882, -226.27026, -226.44945, -225.35147, -223.45546, -233.1479, -246.51372, -221.18489, -232.3967, -227.92969, -225.36359, -224.29877, -224.30511, -224.18199, -224.25479, -224.20393, -224.25003, -227.77386, -230.03667, -232.1709, -225.98955, -224.29482, -224.21643, -225.72795, -228.00525, -234.86166, -242.23514, -248.28627, -246.37828, -240.20868, -239.02597, -238.99431, -238.9495, -238.95967, -241.5368, -246.96892, -248.01805, -237.20451, -227.55933, -227.60622, -227.5355, -232.89935, -238.06741, -244.99615, -247.65996, -249.45413, -249.33876, -246.83997, -241.05286, -239.0619, -238.91504, -236.92383, -230.35487, -227.51572, -227.5023, -232.13101, -237.8029, -248.54933, -221.74838, -232.57234, -228.42671, -225.64944, -224.24216, -224.25479, -225.52017, -224.2169, -224.25328, -224.17453, -225.00937, -229.52345, -232.35716, -227.32631, -224.39633, -224.76802, -226.48413, -229.08049, -232.42981, -243.30978, -246.17986, -245.75746, -239.88904, -239.00606, -238.90106, -239.05116, -239.01947, -239.37581, -246.29524, -247.75508, -232.59708, -227.58682, -227.46513, -227.58574, -234.76332, -239.71077, -242.6565, -248.3244, -249.39326, -249.47908, -244.75536, -240.75508, -238.97505, -238.97766, -236.11565, -232.50272, -227.492, -227.47266, -227.5222, -239.51845, -249.16707, -235.66515, -241.33722, -238.41617, -235.90773, -233.8428, -230.56952, -230.22112, -231.03188, -232.01137, -231.70053, -229.84334, -241.34573, -235.94571, -236.17984, -228.97432, -228.42682, -230.54564, -234.04417, -240.7893, -242.47795, -249.51518, -249.52745, -244.0819, -244.72711, -243.61952, -244.63722, -242.09541, -245.7341, -249.37401, -249.50217, -245.5235, -232.40977, -235.94048, -238.75015, -236.06876, -244.21422, -245.09389, -249.4649, -249.54503, -249.48085, -249.49849, -245.97406, -243.34747, -241.37794, -243.63675, -238.6916, -234.20534, -236.4556, -239.30447, -249.48605, -249.49231, -248.6857, -249.04257, -246.97575, -246.71912, -243.2257, -241.26537, -243.2379, -248.43913, -248.06065, -247.52615, -246.41673, -246.54561, -249.48706, -248.1851, -241.7913, -249.52719, -244.88222, -247.43643, -249.4127, -249.43672, -249.38637, -249.42288, -248.53769, -248.75209, -248.00754, -247.66649, -247.74176, -249.46837, -249.46422, -249.41411, -249.38683, -248.59898, -249.39648, -246.97505, -246.154, -249.42749, -249.48119, -249.52211, -249.45134, -249.46959, -249.3731, -249.53717, -246.17393, -246.46426, -249.29535, -249.52281, -243.22893, -242.7828, -244.54262, -249.51155, -249.47508, -249.48544, -249.45978, -249.47781, -249.51741, -249.46953, -249.41716, -249.49873, -249.45673, -249.46965, -249.43954, -249.53664, -249.37439, -249.52301, -249.53159, -249.41855, -249.49005, -249.53606, -249.37541, -249.48662, -249.54153, -249.45126, -249.39644, -249.37537, -249.43336, -249.37799, -249.46675, -249.39632, -249.43478, -249.50577, -249.54523, -249.5037, -249.4058, -249.52121, -249.48216, -249.48003, -249.4341, -249.54683, -249.4501, -249.41934, -249.40283, -249.39081, -249.5184, -249.39777, -249.47481, -249.54425, -249.37903, -249.41914, -249.37909, -249.45528, -249.39963, -249.43663, -249.39925, -249.45322, -249.38185, -249.50006, -249.51419, -249.44717, -249.51778, -249.38103, -249.3846, -249.49492, -249.52524, -249.49004, -249.39676, -249.43636, -249.40765, -249.44363, -249.5226, -249.40378, -249.5268, -249.3887, -249.46877, -249.50246, -249.40512, -249.523, -249.53014, -249.52531, -249.39334, -249.48763, -249.4813, -249.39339, -249.40036, -249.40271, -249.38162, -249.4305, -249.41913, -249.4312, -249.4098, -249.39856, -249.545, -249.49954, -249.43837, -249.4008, -249.52841, -249.41295, -249.37308, -249.47397, -249.49545, -249.48128, -249.4151, -249.3732, -249.43568, -249.48679, -249.48192, -249.4939, -249.53981, -249.54916, -249.37799, -249.48947, -249.41315, -249.49478, -249.37329, -249.38614, -249.431, -249.53046, -249.4716, -249.49428, -249.50455, -249.4957, -249.41637, -249.41484, -249.54124, -249.47942, -249.40715, -249.44814, -249.4454, -249.40698, -249.46147, -249.44862, -249.41272, -249.39792, -249.37373, -249.39346, -249.53777, -249.38457, -249.48373, -249.46379, -249.51448, -249.50914, -249.51138, -249.3839, -249.53566, -249.4241, -249.51181, -249.49384, -249.47343, -249.41707, -249.44008, -249.40247, -249.4737, -249.4202, -249.39723, -249.54794, -249.54703, -249.51027, -249.52837, -249.4479, -249.49715, -249.39778, -249.44415, -249.46297, -249.37479, -249.50905, -249.47105, -249.52956, -249.50986, -249.45319, -249.51366, -249.51523, -249.41801, -249.49507, -249.42252, -249.37602, -249.42377, -249.50407, -249.49257, -249.39212, -249.3951, -249.40889, -249.3953, -249.5195, -249.52586, -249.41597, -249.50815, -249.43085, -249.39946, -249.45837, -249.44312, -249.41707, -249.49289, -249.49203, -249.47696, -249.44305, -249.42534, -249.53654, -249.52676, -249.40569, -249.37611, -249.4456, -249.3742, -249.40515, -249.45638, -249.41725, -249.3732, -249.39095, -249.38638, -249.49254, -249.41643, -249.53339, -249.45732, -249.47774, -249.37459, -249.49182, -249.4675, -249.48195, -249.54681, -249.40256, -248.27689, -249.46954, -249.47906, -248.28532, -248.25627, -248.21817, -249.41806, -249.54794, -248.25311, -249.53088, -248.25899, -249.47243, -248.24039, -249.52435, -249.49228, -248.22054, -248.31114, -248.28923, -249.48744, -248.19106, -248.27562, -248.30449, -248.25862, -249.45624, -248.30078, -249.53127, -248.21465, -249.39763, -249.50578, -249.45772, -249.50746, -249.4155, -249.48749, -249.44373, -249.38048, -249.42117, -249.48083, -249.50989, -249.40436, -249.45776, -249.51901, -249.40227, -249.45074, -249.42639, -249.48189, -249.4509, -249.39209, -249.41933, -249.39229, -249.43658, -249.49164, -249.52315, -248.25449, -248.29004, -248.19475, -248.19658, -248.25885, -248.31438, -248.2461, -248.19363, -248.3366, -248.20013, -248.25339, -248.27962, -248.27547, -248.29805, -248.28906, -248.16373, -248.26273, -248.31885, -248.2672, -248.24356, -248.25949, -248.20425, -248.27657, -248.23586, -248.2421, -248.20078, -249.39476, -249.41528, -249.48323, -249.51517, -249.48785, -249.40791, -249.38855, -249.44247, -249.41394, -249.50314, -249.3783)
+
+[node name="MainMenuMountains" parent="." instance=ExtResource("17_cjcyd")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -29, 8.5, -61.5)
+
+[node name="StaticBody3D" parent="MainMenuMountains/grass" index="0"]
+collision_layer = 17
+
+[node name="Markers" type="Node3D" parent="."]
+
+[node name="RoadStart" type="Marker3D" parent="Markers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0.05, 190)
+
+[node name="RampStart" type="Marker3D" parent="Markers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.05, 190)
+
+[node name="ItemsStart" type="Marker3D" parent="Markers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.05, 190)
+
+[node name="RampItemStart" type="Marker3D" parent="Markers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.05, 60)
+
+[node name="ShotgunStart" type="Marker3D" parent="Markers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.05, -70)
+
+[node name="Gates" type="Node3D" parent="."]
+
+[node name="SteerGate1" parent="Gates" instance=ExtResource("gate")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 0, 140)
+width = 7.0
+
+[node name="SteerGate2" parent="Gates" instance=ExtResource("gate")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 105)
+width = 7.0
+
+[node name="SteerGate3" parent="Gates" instance=ExtResource("gate")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 0, 70)
+width = 7.0
+
+[node name="Ramps" type="Node3D" parent="."]
+
+[node name="AirRamp" parent="Ramps" instance=ExtResource("ramp")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 8, 0, 100)
+width = 12
+
+[node name="Targets" type="Node3D" parent="."]
+
+[node name="ShotgunTarget" parent="Targets" instance=ExtResource("npc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.5, -150)
+vehicle_type = 0
+
+[node name="TutorialCircle" parent="." instance=ExtResource("circle")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 0, 180)
+
+[node name="TutorialEvent" type="Node3D" parent="TutorialCircle" node_paths=PackedStringArray("pickups")]
+script = ExtResource("event")
+definition = SubResource("TutorialEventDef")
+pickups = NodePath("Pickups")
+
+[node name="Pickups" type="Node3D" parent="TutorialCircle/TutorialEvent"]
+
+[node name="GasCanPickups" parent="TutorialCircle/TutorialEvent/Pickups" instance=ExtResource("spawner")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 126, 0, -20)
+items = Array[ExtResource("pickupdef")]([ExtResource("gascan")])
+count = 3
+
+[node name="RampPickups" parent="TutorialCircle/TutorialEvent/Pickups" instance=ExtResource("spawner")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 126, 0, -150)
+items = Array[ExtResource("pickupdef")]([ExtResource("rampitem")])
+count = 3
+
+[node name="ShotgunPickups" parent="TutorialCircle/TutorialEvent/Pickups" instance=ExtResource("spawner")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 126, 0, -280)
+items = Array[ExtResource("pickupdef")]([ExtResource("shotgun")])
+count = 3
+
+[node name="Mission1_MSF" type="Node" parent="TutorialCircle/TutorialEvent"]
+script = ExtResource("seq")
+
+[node name="Teleport_Road" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF" node_paths=PackedStringArray("marker")]
+script = ExtResource("teleport")
+marker = NodePath("../../../../Markers/RoadStart")
+
+[node name="Gas_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF/Gas_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_gas"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF/Gas_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_GAS_TITLE"
+body_key = "TOUR_TUT_GAS_BODY"
+highlight_key = "TOUR_TUT_GAS_HIGHLIGHT"
+
+[node name="SpeedAbove_Cruise" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF"]
+script = ExtResource("speed")
+min_speed = 50.0
+
+[node name="Brake_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF/Brake_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_brake"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF/Brake_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_BRAKE_TITLE"
+body_key = "TOUR_TUT_BRAKE_BODY"
+highlight_key = "TOUR_TUT_BRAKE_HIGHLIGHT"
+
+[node name="SpeedBelow_Stop" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF"]
+script = ExtResource("speedbelow")
+
+[node name="Teleport_Steer" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF" node_paths=PackedStringArray("marker")]
+script = ExtResource("teleport")
+marker = NodePath("../../../../Markers/RoadStart")
+
+[node name="Steer_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF/Steer_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_steer"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF/Steer_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_STEER_TITLE"
+body_key = "TOUR_TUT_STEER_BODY"
+highlight_key = "TOUR_TUT_STEER_HIGHLIGHT"
+
+[node name="Gate1" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF" node_paths=PackedStringArray("trigger")]
+script = ExtResource("checkpoint")
+eval_when = 1
+trigger = NodePath("../../../../Gates/SteerGate1")
+hide_trigger_on_pass = true
+
+[node name="Gate2" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF" node_paths=PackedStringArray("trigger")]
+script = ExtResource("checkpoint")
+eval_when = 1
+trigger = NodePath("../../../../Gates/SteerGate2")
+hide_trigger_on_pass = true
+
+[node name="Gate3" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF" node_paths=PackedStringArray("trigger")]
+script = ExtResource("checkpoint")
+eval_when = 1
+trigger = NodePath("../../../../Gates/SteerGate3")
+hide_trigger_on_pass = true
+
+[node name="Camera_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF/Camera_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_camera"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF/Camera_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_CAMERA_TITLE"
+body_key = "TOUR_TUT_CAMERA_BODY"
+highlight_key = "TOUR_TUT_CAMERA_HIGHLIGHT"
+
+[node name="LookAround_Camera" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF"]
+script = ExtResource("lookaround")
+
+[node name="Mission2_Stunting101" type="Node" parent="TutorialCircle/TutorialEvent"]
+script = ExtResource("seq")
+
+[node name="Teleport_Wheelie" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101" node_paths=PackedStringArray("marker")]
+script = ExtResource("teleport")
+marker = NodePath("../../../../Markers/RoadStart")
+
+[node name="Wheelie_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Wheelie_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_wheelie"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Wheelie_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_WHEELIE_TITLE"
+body_key = "TOUR_TUT_WHEELIE_BODY"
+highlight_key = "TOUR_TUT_WHEELIE_HIGHLIGHT"
+
+[node name="WheelieDuration_Wheelie" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101"]
+script = ExtResource("wheelie")
+
+[node name="Teleport_Balance" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101" node_paths=PackedStringArray("marker")]
+script = ExtResource("teleport")
+marker = NodePath("../../../../Markers/RoadStart")
+
+[node name="Balance_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Balance_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_balance"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Balance_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_BALANCE_TITLE"
+body_key = "TOUR_TUT_BALANCE_BODY"
+highlight_key = "TOUR_TUT_BALANCE_HIGHLIGHT"
+
+[node name="WheelieDuration_Balance" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101"]
+script = ExtResource("wheelie")
+duration = 4.0
+
+[node name="Teleport_ClutchUp" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101" node_paths=PackedStringArray("marker")]
+script = ExtResource("teleport")
+marker = NodePath("../../../../Markers/RoadStart")
+
+[node name="ClutchUp_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/ClutchUp_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_clutchup"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/ClutchUp_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_CLUTCHUP_TITLE"
+body_key = "TOUR_TUT_CLUTCHUP_BODY"
+highlight_key = "TOUR_TUT_CLUTCHUP_HIGHLIGHT"
+
+[node name="WheelieDuration_ClutchUp" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101"]
+script = ExtResource("wheelie")
+duration = 1.0
+clutch_up = true
+
+[node name="Teleport_Lock" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101" node_paths=PackedStringArray("marker")]
+script = ExtResource("teleport")
+marker = NodePath("../../../../Markers/RoadStart")
+
+[node name="Lock_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Lock_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_lock"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Lock_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_LOCK_TITLE"
+body_key = "TOUR_TUT_LOCK_BODY"
+highlight_key = "TOUR_TUT_LOCK_HIGHLIGHT"
+
+[node name="WheelieDuration_Lock" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101"]
+script = ExtResource("wheelie")
+locked = true
+
+[node name="Teleport_Mods" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101" node_paths=PackedStringArray("marker")]
+script = ExtResource("teleport")
+marker = NodePath("../../../../Markers/RoadStart")
+
+[node name="Mods_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Mods_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_mods"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Mods_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_MODS_TITLE"
+body_key = "TOUR_TUT_MODS_BODY"
+highlight_key = "TOUR_TUT_MODS_HIGHLIGHT"
+
+[node name="PerformTrick_KneeKnocker" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101"]
+script = ExtResource("trick")
+required_trick = 16
+min_duration = 1.0
+must_land = true
+
+[node name="Teleport_Stoppie" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101" node_paths=PackedStringArray("marker")]
+script = ExtResource("teleport")
+marker = NodePath("../../../../Markers/RoadStart")
+
+[node name="Stoppie_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Stoppie_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_stoppie"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Stoppie_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_STOPPIE_TITLE"
+body_key = "TOUR_TUT_STOPPIE_BODY"
+highlight_key = "TOUR_TUT_STOPPIE_HIGHLIGHT"
+
+[node name="PerformTrick_Stoppie" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101"]
+script = ExtResource("trick")
+required_trick = 3
+min_duration = 0.5
+must_land = true
+objective_key = "TUT_DO_STOPPIE"
+
+[node name="Teleport_Drift" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101" node_paths=PackedStringArray("marker")]
+script = ExtResource("teleport")
+marker = NodePath("../../../../Markers/RoadStart")
+
+[node name="Drift_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Drift_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_drift"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Drift_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_DRIFT_TITLE"
+body_key = "TOUR_TUT_DRIFT_BODY"
+highlight_key = "TOUR_TUT_DRIFT_HIGHLIGHT"
+
+[node name="PerformTrick_Drift" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101"]
+script = ExtResource("trick")
+required_trick = 13
+min_duration = 1.0
+must_land = true
+
+[node name="Mission3_Stunting102" type="Node" parent="TutorialCircle/TutorialEvent"]
+script = ExtResource("seq")
+
+[node name="Teleport_Ramp" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102" node_paths=PackedStringArray("marker")]
+script = ExtResource("teleport")
+marker = NodePath("../../../../Markers/RampStart")
+
+[node name="Air_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/Air_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_air"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/Air_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_AIR_TITLE"
+body_key = "TOUR_TUT_AIR_BODY"
+highlight_key = "TOUR_TUT_AIR_HIGHLIGHT"
+
+[node name="PerformTrick_HighChair" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102"]
+script = ExtResource("trick")
+required_trick = 8
+min_duration = 0.5
+must_land = true
+
+[node name="Teleport_Boost" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102" node_paths=PackedStringArray("marker")]
+script = ExtResource("teleport")
+marker = NodePath("../../../../Markers/RoadStart")
+
+[node name="Boost_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/Boost_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_boost"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/Boost_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_BOOST_TITLE"
+body_key = "TOUR_TUT_BOOST_BODY"
+highlight_key = "TOUR_TUT_BOOST_HIGHLIGHT"
+
+[node name="Boost_Burn" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102"]
+script = ExtResource("boost")
+fill_meter = true
+
+[node name="Teleport_Items" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102" node_paths=PackedStringArray("marker")]
+script = ExtResource("teleport")
+marker = NodePath("../../../../Markers/ItemsStart")
+
+[node name="Items_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/Items_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_items"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/Items_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_ITEMS_TITLE"
+body_key = "TOUR_TUT_ITEMS_BODY"
+highlight_key = "TOUR_TUT_ITEMS_HIGHLIGHT"
+
+[node name="Boost_GasCan" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102"]
+script = ExtResource("boost")
+objective_key = "TUT_GAS_CAN_BOOST"
+
+[node name="Teleport_RampItem" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102" node_paths=PackedStringArray("marker")]
+script = ExtResource("teleport")
+marker = NodePath("../../../../Markers/RampItemStart")
+
+[node name="RampItem_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/RampItem_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_ramp_item"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/RampItem_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_RAMP_ITEM_TITLE"
+body_key = "TOUR_TUT_RAMP_ITEM_BODY"
+highlight_key = "TOUR_TUT_RAMP_ITEM_HIGHLIGHT"
+
+[node name="PerformTrick_RampHighChair" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102"]
+script = ExtResource("trick")
+required_trick = 8
+min_duration = 0.5
+must_land = true
+objective_key = "TUT_RAMP_HIGH_CHAIR"
+
+[node name="Teleport_Drop" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102" node_paths=PackedStringArray("marker")]
+script = ExtResource("teleport")
+marker = NodePath("../../../../Markers/RampItemStart")
+
+[node name="Drop_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/Drop_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_drop_item"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/Drop_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_DROP_ITEM_TITLE"
+body_key = "TOUR_TUT_DROP_ITEM_BODY"
+highlight_key = "TOUR_TUT_DROP_ITEM_HIGHLIGHT"
+
+[node name="DropItem_Ramp" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102"]
+script = ExtResource("dropitem")
+
+[node name="Teleport_Shotgun" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102" node_paths=PackedStringArray("marker")]
+script = ExtResource("teleport")
+marker = NodePath("../../../../Markers/ShotgunStart")
+
+[node name="Shotgun_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102"]
+script = ExtResource("showtour")
+
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/Shotgun_Tour"]
+script = ExtResource("tour")
+tour_id = &"tut_shotgun"
+
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/Shotgun_Tour/Tour"]
+script = ExtResource("step")
+title_key = "TOUR_TUT_SHOTGUN_TITLE"
+body_key = "TOUR_TUT_SHOTGUN_BODY"
+highlight_key = "TOUR_TUT_SHOTGUN_HIGHLIGHT"
+
+[node name="KnockOut_Target" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102" node_paths=PackedStringArray("target")]
+script = ExtResource("knockout")
+target = NodePath("../../../../Targets/ShotgunTarget")
+
+[editable path="MainMenuMountains"]

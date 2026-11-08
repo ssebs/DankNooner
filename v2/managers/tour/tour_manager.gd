@@ -18,22 +18,11 @@ const TARGET_3D_PADDING: float = 64.0
 const DIM_COLOR: Color = Color(0, 0, 0, 0.7)
 const OUTLINE_WIDTH: float = 3.0
 const DOT_SIZE: Vector2 = Vector2(12, 12)
-## Tokens that aren't one InputMap action: {token: [kbm, gamepad]}, each an action or an icon.
-const ALIASES: Dictionary = {
-	"cursor":
-	[
-		preload("res://resources/img/Icons/mouse_move.svg"),
-		preload("res://resources/img/Icons/xbox_stick_l.svg"),
-	],
-	# A cursor click: use_item's pad binding is the d-pad, so the pad clicks with A.
-	"click": ["use_item", "ui_accept"],
-}
 
 @onready var _ui: Control = %UI
 @onready var _spotlight: Control = %Spotlight
 @onready var _panel: PanelContainer = %Panel
 @onready var _title: Label = %Title
-@onready var _warning: Label = %Warning
 @onready var _image: TextureRect = %Image
 @onready var _body: RichTextLabel = %Body
 @onready var _dots: HBoxContainer = %Dots
@@ -52,7 +41,6 @@ var _saved_input_state: InputStateManager.InputState
 ## The menu's focus, handed back on close and during action steps. Null while riding, where
 ## nothing has focus.
 var _saved_focus: Control
-var _token_regex := RegEx.create_from_string("\\{(\\w+)\\}")
 
 
 func _ready():
@@ -60,6 +48,8 @@ func _ready():
 	set_process(false)
 	if Engine.is_editor_hint():
 		return
+	# Tutorial tours pause the game (ShowTourTask); the overlay still has to run.
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_spotlight.draw.connect(_draw_spotlight)
 	_back_btn.pressed.connect(func(): _show_step(_step_idx - 1))
 	_skip_btn.pressed.connect(_close.bind(true))
@@ -70,13 +60,19 @@ func _ready():
 func _input(event: InputEvent):
 	if Engine.is_editor_hint():
 		return
-	# Action steps leave ui_cancel to the menu underneath.
-	if is_open() and !_is_action_step() and event.is_action_pressed("ui_cancel"):
+	# Action steps leave input to the menu underneath.
+	if !is_open() or _is_action_step():
+		return
+	if event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		if _step_idx == 0:
 			_close(true)
 		else:
 			_show_step(_step_idx - 1)
+	elif _is_body_action(event):
+		# Trying a control the step teaches counts as Next.
+		get_viewport().set_input_as_handled()
+		_on_next_pressed()
 
 
 func _process(_delta: float):
@@ -118,6 +114,15 @@ func _is_action_step() -> bool:
 	return is_open() and _steps[_step_idx].done_when.is_valid()
 
 
+## Whether `event` presses an {action} token in the step's text. TOKEN_ALIASES aren't one action.
+func _is_body_action(event: InputEvent) -> bool:
+	var step := _steps[_step_idx]
+	for action in ControlBindings.tokens_in(tr(step.body_key) + tr(step.highlight_key)):
+		if !ControlBindings.TOKEN_ALIASES.has(action) and event.is_action_pressed(action):
+			return true
+	return false
+
+
 func _on_device_changed(_is_gamepad: bool):
 	if is_open():
 		_render_body()
@@ -138,8 +143,6 @@ func _show_step(idx: int):
 	var step := _steps[idx]
 	var is_last := idx == _steps.size() - 1
 	_title.text = tr(step.title_key)
-	_warning.text = tr(step.warning_key) if !step.warning_key.is_empty() else ""
-	_warning.visible = !step.warning_key.is_empty()
 	_image.texture = step.image
 	_image.visible = step.image != null
 	_panel.custom_minimum_size.x = INTRO_WIDTH if idx == 0 else CALLOUT_WIDTH
@@ -191,38 +194,18 @@ func _rebuild_dots():
 		_dots.add_child(dot)
 
 
-## Body text with each {action} token (or ALIASES token) swapped for its pad glyph or key chip.
+## The body, then the highlighted line under it, with live button icons for {action} tokens.
 func _render_body():
-	_body.clear()
-	var text := tr(_steps[_step_idx].body_key)
-	var at := 0
-	for token in _token_regex.search_all(text):
-		_body.add_text(text.substr(at, token.get_start() - at))
-		_add_token(token.get_string(1))
-		at = token.get_end()
-	_body.add_text(text.substr(at))
-
-
-func _add_token(token: String):
+	var step := _steps[_step_idx]
 	var gamepad := input_state_manager.is_gamepad
-	var glyph = ALIASES[token][int(gamepad)] if ALIASES.has(token) else token
-	if glyph is Texture2D:
-		_add_icon(glyph)
+	_body.clear()
+	ControlBindings.append_tokens(_body, tr(step.body_key), gamepad)
+	if step.highlight_key.is_empty():
 		return
-	var event := ControlBindings.event_for(glyph, gamepad)
-	assert(event != null, "Tour body names unbound action {%s}" % glyph)
-	if ControlBindings.is_gamepad(event):
-		_add_icon(ControlBindings.event_icon(event))
-		return
-	# RichTextLabel can't draw GestureChipLabel's StyleBoxTexture inline; a bgcolor stands in.
-	_body.push_bgcolor(UtilsConstants.UI_BLUE_DIM)
-	_body.add_text(" %s " % tr(ControlBindings.event_text(event)))
+	_body.append_text("\n\n")
+	_body.push_color(UtilsConstants.UI_GOLD)
+	ControlBindings.append_tokens(_body, tr(step.highlight_key), gamepad)
 	_body.pop()
-
-
-func _add_icon(icon: Texture2D):
-	var font_size := _body.get_theme_font_size("normal_font_size")
-	_body.add_image(icon, 0, int(_body.get_theme_font("normal_font").get_height(font_size)))
 
 
 #endregion

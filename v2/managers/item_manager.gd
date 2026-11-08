@@ -9,6 +9,9 @@
 ## when. They only take BOT_ITEMS.
 class_name ItemManager extends BaseManager
 
+## Server: a rider discarded their held item (double honk) instead of using it.
+signal item_dropped(peer_id: int)
+
 @export var level_manager: LevelManager
 @export var spawn_manager: SpawnManager
 @export var gamemode_manager: GamemodeManager
@@ -140,6 +143,7 @@ func request_drop_item():
 	# Empty-handed double honks are just honking.
 	if _held.has(peer_id):
 		_empty_slot(peer_id)
+		item_dropped.emit(peer_id)
 
 
 ## The user's own client — SoundEvents aren't positional, so everyone else hearing it would be noise.

@@ -453,7 +453,7 @@ tour_id = &"fuel_up"
 script = ExtResource("6_tourstep")
 title_key = "TOUR_FUELUP_INTRO_TITLE"
 body_key = "TOUR_FUELUP_INTRO_BODY"
-warning_key = "TOUR_FUELUP_INTRO_WARNING"
+highlight_key = "TOUR_FUELUP_INTRO_WARNING"
 
 [node name="HandleStep" type="Node" parent="FuelUpTour" node_paths=PackedStringArray("target")]
 script = ExtResource("6_tourstep")

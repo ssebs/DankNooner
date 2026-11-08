@@ -1082,6 +1082,11 @@ func _update_clutch_dump_detection():
 	_prev_clutch_held = clutch_held
 
 
+## A clutch dump's kick is live: its wheelie and burnout boosts apply.
+func is_clutch_dumping() -> bool:
+	return _clutch_kick_window > 0
+
+
 ## Check if a wheelie can start or is already in progress
 func _can_initiate_wheelie(in_wheelie: bool) -> bool:
 	var bd = player_entity.bike_definition

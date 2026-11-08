@@ -16,10 +16,9 @@ Two connected pieces, built in this order:
 
 ## Progress (2026-11-07)
 
-**Tasks 1 to 5 are built; 1 to 4 are playtested.** Task 5's last round (outline-only action
-steps, the read-only `*` step, the recolor snapshot) still needs a playtest. Then resume at
-**Task 6**. Where the built code differs
-from the task text below, this section wins:
+**Tasks 1 to 8 are built; 1 to 4 are playtested.** Task 5's last round (outline-only action
+steps, the read-only `*` step, the recolor snapshot) and Task 8's playtest are next. Then resume
+at **Task 9**. Where the built code differs from the task text below, this section wins:
 
 - **Tour buttons:** no `InputPrompt`s beside Next/Back (user cut them). Back reuses
   `BACK_LABEL`; new keys are only `TOUR_NEXT`, `TOUR_SKIP`, `TOUR_DONE`.
@@ -43,6 +42,65 @@ from the task text below, this section wins:
 - **Icons added:** `resources/img/Icons/xbox_stick_l.svg`, `mouse_move.svg` (from the Kenney pack).
 - **Open nit:** new loadouts are named "2", "3" while the first is "Loadout 1"
   (`GarageUI._add_loadout`). Not changed.
+- **`leave_session`** also spawns the gray menu level when the target isn't the main menu (the
+  Play menu doesn't spawn one). The tutorial's results skip/countdown go through it.
+- **Tutorial pickups (user call):** `TutorialGameMode` activates its event's PickupSpawners in
+  `Enter` and deactivates them in `Exit` (same as TrickBattle), via a new `item_manager` export.
+- **Clutch (user call):** clutch-up and clutch dump are one lesson (`tut_clutchup`), checked by a
+  1s `WheelieDurationTask`.
+- **Tutorial event** forces the sport bike (`forced_base_bike`), so a replay on the mini can still
+  wheelie.
+- **Lessons merged:** progressive braking is the Brake tour's warning; "no gas while leaned" is
+  the Steer tour's warning. Every tour is one step (the intro modal).
+- **Playtest round 1 (user):**
+  - No shifting lesson (the gearbox is automatic). No lowside crash lesson; the Brake warning covers it.
+  - Braking: reach speed 50, then the Brake tour, then a `SpeedBelowTask` (pulled forward from
+    Task 9). Superseded in round 3: tours pause instead of freezing, so no check-child mode.
+  - Pressing any `{action}` token in a step's body acts as Next (`TourManager._is_body_action`),
+    except on action steps.
+  - Every lesson rides on road, inside the main menu's flat ground (z ±200; the mountains rise past
+    it): main road (x=-13, 16 wide, with the steering gates), ramp road (x=8), items road (x=26).
+- **Playtest round 2 (user):**
+  - Cut the Lean and Clutch tours from Mission 1; the wheelie lessons cover both.
+  - Lock: `WheelieDurationTask.locked` checks `balance_locked` (2s). Mods follows it straight
+    away: lock in, then a 1s Knee Knocker.
+  - `PerformTrickTask.must_land`: passes only once the trick is over and the rider is on the
+    ground and not crashed (HUD shows `TUT_LAND_TRICK`). Used on Knee Knocker and both High
+    Chairs (air lessons), so the next tour can't cut the trick off.
+  - Removed the outdated gear/redline hints from the wheelie and stoppie task HUD text.
+  - Copy fixes: Balance (save it with the rear brake), Drift (kick with rear brake, hold with
+    gas), Boost (double-tap burns it all; the old "press on a full meter" was wrong).
+  - Boost: `BoostTask` passes once the meter is spent. `fill_meter` tops it up first.
+  - Items, each on the items road with its own start marker and single-item spawner row: gas can
+    (`BoostTask` again, no fill), ramp (drop it, then a must-land High Chair), shotgun
+    (`KnockOutTargetTask` on the parked `Targets/ShotgunTarget` NPC). The old spawner had no
+    `items` set, which is why nothing spawned. `UseItemTask` is no longer planned.
+- **Playtest round 3 (user):**
+  - `ShowTourTask` pauses the tree (solo only) instead of freezing, one tick after entering so a
+    preceding teleport lands. Speed survives the tour. Its check-child mode is gone; every check is
+    the next sibling. `TourManager` and `InputStateManager` run with `PROCESS_MODE_ALWAYS`.
+  - netfox patch (`NetworkTime._notification`): on unpause, a solo host rewinds both netfox
+    clocks by the pause. Stock netfox jumps the tick past the pause, which trimmed the input
+    history and replayed ~64 ticks with the first fresh input (held W launched the bike).
+  - `TourStep.warning_key` is now `highlight_key`: a gold line under the body (blank line between),
+    with `{action}` tokens. The separate `%Warning` label is gone. Tutorial tours: body explains,
+    highlight says what to do. Body text is BBCode; item names are `[b]`. The menu theme (and
+    `gen_neon_theme.py`) gives RichTextLabel a Bold `bold_font`.
+  - Token rendering lives in `ControlBindings` (`TOKEN_ALIASES`, `tokens_in`, `append_tokens`),
+    shared with `TrickRow`: `TRICK_HOWTO_*` use tokens, and the tricks menu passes the device.
+  - New checks: `LookAroundTask` (camera), `WheelieDurationTask.clutch_up` (wheelie within 0.5s of
+    a clutch dump, via `MovementController.is_clutch_dumping()`), `DropItemTask` (on the new
+    `ItemManager.item_dropped` signal; injected by TutorialGameMode).
+  - Stoppie and drift must land. `StoppieDurationTask` was deleted (the stoppie uses
+    `PerformTrickTask`). High Chairs need 0.5s.
+  - Drop lesson after the ramp: teleport to `RampItemStart`, then double-honk a held ramp away.
+- **Level layout:** lanes start at z=190 heading -Z. The event circle is parked at (-100, 0, 180).
+- **CloseHelpTask deleted** with `SettingsMenuState.show_controls_tab()`, TutorialGameMode's
+  `settings_menu_state` export, and the `TUT_SHOW_HELP` / `TUT_PRESS_RT` strings. The empty
+  `TestEventStartCircle` went too. `TUT_HINT_CHANGE_GEAR` no longer names pad buttons.
+- **Play menu:** the old disabled `StoryBtn` became `%TutorialBtn` (`STORY_LABEL` replaced by
+  `TUTORIAL_BTN_LABEL`). It's first in the tree, so `MenuManager` focuses it on Enter. The game-id
+  auto-copy now runs only in `HOST` mode, so STORY's solo server doesn't copy one.
 
 ---
 
@@ -475,11 +533,11 @@ TourManager and, once the save has loaded (after `deferred_init`), calls
 `gamemode_manager.current_game_mode == GameModeType.Kind.TUTORIAL`. Extend the panel's existing
 visibility logic; don't add a second one.
 
-- [ ] **Step 1:** Write `ShowTourTask` and add it to `coverage.gd`.
-- [ ] **Step 2:** Pull `leave_session` out of `_on_main_menu_pressed`.
-- [ ] **Step 3:** Make the `TutorialGameMode` changes, inject `tour_manager`, wire the exports in
+- [x] **Step 1:** Write `ShowTourTask` and add it to `coverage.gd`.
+- [x] **Step 2:** Pull `leave_session` out of `_on_main_menu_pressed`.
+- [x] **Step 3:** Make the `TutorialGameMode` changes, inject `tour_manager`, wire the exports in
   `main_game.tscn`, and hide the pause level select.
-- [ ] **Step 4:** Run gdlint and the headless load. Expected: clean. Task 8 is the first
+- [x] **Step 4:** Run gdlint and the headless load. Expected: clean. Task 8 is the first
   playtest.
 
 ---
@@ -536,15 +594,15 @@ visibility logic; don't add a second one.
 - **Explain-only lessons:** not gassing mid-lean and the locked wheelie's $/sec are a tour with
   no check. Task 9 adds the checks that are still missing.
 
-- [ ] **Step 1:** Add the `LevelManager` entries, `auto_start_event` and the free-roam
+- [x] **Step 1:** Add the `LevelManager` entries, `auto_start_event` and the free-roam
   auto-start.
-- [ ] **Step 2:** Build the graybox level and its event, with all 3 missions authored using the
+- [x] **Step 2:** Build the graybox level and its event, with all 3 missions authored using the
   existing tasks.
-- [ ] **Step 3:** Delete the `test_city_01` tutorial nodes. If nothing references
+- [x] **Step 3:** Delete the `test_city_01` tutorial nodes. If nothing references
   `CloseHelpTask` any more, delete it, its injection in `TutorialGameMode`, its `coverage.gd`
   entry, and any of its strings that are now unused.
-- [ ] **Step 4:** Write the strings in all 10 languages.
-- [ ] **Step 5:** Run gdlint and the headless load. Expected: clean.
+- [x] **Step 4:** Write the strings in all 10 languages.
+- [x] **Step 5:** Run gdlint and the headless load. Expected: clean.
 
 ---
 
@@ -576,8 +634,8 @@ visibility logic; don't add a second one.
 `UiToast.ShowToast(tr("TOAST_FINISH_TUTORIAL_FIRST"))` and clear
 `steam_manager.pending_game_id` instead of joining.
 
-- [ ] **Step 1:** Add the button, the gate, the STORY branch, the invite block and the strings.
-- [ ] **Step 2:** Run gdlint and the headless load. Expected: clean.
+- [x] **Step 1:** Add the button, the gate, the STORY branch, the invite block and the strings.
+- [x] **Step 2:** Run gdlint and the headless load. Expected: clean.
 - [ ] **Step 3:** **User playtest,** on a fresh save:
   - Only Tutorial is enabled, and it loads the map and starts Mission 1 with its intro tour.
   - The bike is frozen during tours.

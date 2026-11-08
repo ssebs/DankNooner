@@ -141,10 +141,6 @@ func Update(_delta: float):
 	save_btn.text = tr("SAVE_LABEL") + (" *" if _is_dirty() else "")
 
 
-func show_controls_tab():
-	tab_container.current_tab = tab_container.get_tab_idx_from_control(controls_tab)
-
-
 func load_settings_into_ui(settings: Dictionary):
 	signal_host_entry.text = settings["signal_relay_host"]
 
@@ -306,7 +302,6 @@ func _on_back_pressed():
 
 #override
 func on_cancel_key_pressed():
-	# Emit, not _on_back_pressed(): CloseHelpTask listens on the button to close its help screen.
 	back_btn.pressed.emit()
 
 

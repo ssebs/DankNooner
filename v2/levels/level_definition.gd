@@ -21,6 +21,9 @@ class_name LevelDefinition extends Node3D
 ## Road navmesh the race bots' racing line is baked on. Only levels with NPC races need one.
 @export var npc_nav_region: NPCNavRegion
 
+## Started as soon as the level loads, with no start circle to drive into (e.g. the tutorial).
+@export var auto_start_event: GameModeEvent
+
 ## Set in level_manager
 var level_manager: LevelManager
 var level_name: LevelManager.LevelName

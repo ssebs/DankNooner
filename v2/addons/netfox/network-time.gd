@@ -378,6 +378,8 @@ var _state: int = _STATE_INACTIVE
 # Timing
 var _tick: int = 0
 var _was_paused: bool = false
+# DankNooner patch: see _notification
+var _paused_at: float = 0.
 var _initial_sync_done = false
 var _process_delta: float = 0
 
@@ -591,8 +593,17 @@ func _physics_process(delta: float) -> void:
 		_loop()
 
 func _notification(what) -> void:
+	if what == NOTIFICATION_PAUSED:
+		_paused_at = Time.get_unix_time_from_system()
 	if what == NOTIFICATION_UNPAUSED:
 		_was_paused = true
+		# DankNooner patch: a solo host's tree pause (tutorial tours) rewinds both clocks by its
+		# length, so the tick carries on instead of jumping. A jump trims the input history, and
+		# rollback then replays the gap with the first fresh input (a burst of held throttle).
+		if multiplayer.is_server() and multiplayer.get_peers().is_empty():
+			var paused_for := Time.get_unix_time_from_system() - _paused_at
+			NetworkTimeSynchronizer._clock.adjust(-paused_for)
+			_clock.adjust(-paused_for)
 
 func _is_active() -> bool:
 	return _state == _STATE_ACTIVE

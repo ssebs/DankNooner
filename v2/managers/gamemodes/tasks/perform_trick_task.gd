@@ -6,17 +6,27 @@
 ##
 ## When used in a challenge, set `eval_when = WHILE_INSIDE` and `trigger` to a
 ## TriggerZone so progress only accumulates while the player is inside.
+##
+## `must_land` holds the pass until the trick is over and the rider is back on the ground, so a
+## following step (e.g. a tutorial tour) doesn't cut the trick off. A crash clears it.
 class_name PerformTrickTask extends GameModeTask
 
 @export var required_trick: TrickController.Trick = TrickController.Trick.WHEELIE_SITTING
 @export var min_duration: float = 0.0
 @export var success_zone: Area3D = null
+@export var must_land: bool = false
 ## Localization keys (optional — fall back to a generic label if empty).
 @export var objective_key: String = ""
 @export var hint_key: String = ""
 
 
 func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
+	if state.get("trick_done", false):
+		return (
+			!player.is_crashed
+			and player.movement_controller.is_on_floor
+			and player.trick_controller.current_trick == TrickController.Trick.NONE
+		)
 	var active := player.trick_controller.current_trick == required_trick
 	if !active:
 		state["t"] = 0.0
@@ -26,10 +36,15 @@ func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
 		return false
 	if success_zone != null and !success_zone.overlaps_body(player):
 		return false
+	if must_land:
+		state["trick_done"] = true
+		return false
 	return true
 
 
 func get_progress(state: Dictionary) -> String:
+	if state.get("trick_done", false):
+		return tr("TUT_LAND_TRICK")
 	if min_duration <= 0.0:
 		return get_hint_text()
 	return "%.1f / %.1fs" % [state.get("t", 0.0), min_duration]

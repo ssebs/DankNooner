@@ -58,8 +58,12 @@ func Enter(_state_context: StateContext):
 	cancel_event_btn.visible = gamemode_manager.get_current_gamemode().can_cancel_event()
 
 	# Host-only level switcher: lets the host swap maps without tearing down the lobby.
-	level_select_panel.visible = multiplayer.is_server()
-	if multiplayer.is_server():
+	# Hidden in the tutorial, which mustn't be left for another map.
+	level_select_panel.visible = (
+		multiplayer.is_server()
+		and gamemode_manager.current_game_mode != GameModeType.Kind.TUTORIAL
+	)
+	if level_select_panel.visible:
 		level_select_panel.populate(level_manager, gamemode_manager.current_level_name as int)
 		level_select_panel.start_btn.text = "SELECT_LABEL"
 		# Secondary action here; Start is the lobby's primary CTA
@@ -161,11 +165,19 @@ func _update_level_select_start_disabled():
 
 
 func _on_main_menu_pressed():
+	leave_session(main_menu_state)
+
+
+## Ends the match, drops the connection and opens `to`.
+func leave_session(to: MenuState):
 	# end_game first: gamemode Exit() needs the peer to run its server cleanup.
 	gamemode_manager.end_game()
 	connection_manager.disconnect_sp_or_mp()
+	# The main menu spawns its own level; any other menu sits on the gray bg.
+	if to != main_menu_state:
+		level_manager.spawn_menu_level()
 
-	transitioned.emit(main_menu_state, null)
+	transitioned.emit(to, null)
 	input_state_manager.current_input_state = InputStateManager.InputState.IN_MENU
 
 

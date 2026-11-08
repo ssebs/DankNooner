@@ -70,14 +70,17 @@ theme_type_variation = &"GestureChipLabel"
 theme_override_font_sizes/font_size = 18
 text = "TRICK_GESTURE_DOUBLE_TAP"
 
-[node name="HowtoLabel" type="Label" parent="Columns" unique_id=1846203540]
+[node name="HowtoLabel" type="RichTextLabel" parent="Columns" unique_id=1846203540]
 unique_name_in_owner = true
 visible = false
 modulate = Color(1, 1, 1, 0.7)
 custom_minimum_size = Vector2(312, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+size_flags_vertical = 4
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
 text = "TRICK_HOWTO_DRIFT"
+fit_content = true
 autowrap_mode = 3
 
 [node name="ScoreLabel" type="Label" parent="Columns" unique_id=1846203541]

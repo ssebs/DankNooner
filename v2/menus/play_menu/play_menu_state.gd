@@ -4,6 +4,7 @@ class_name PlayMenuState extends MenuState
 @export var menu_manager: MenuManager
 @export var connection_manager: ConnectionManager
 @export var steam_manager: SteamManager
+@export var save_manager: SaveManager
 @export var main_menu_state: MenuState
 @export var lobby_menu_state: MenuState
 @export var customize_menu_state: MenuState
@@ -22,8 +23,8 @@ const AUTO_JOIN_ADDR := "127.0.0.1"
 
 @onready var back_btn: Button = %BackBtn
 @onready var customize_btn: Button = %CustomizeBtn
+@onready var tutorial_btn: Button = %TutorialBtn
 @onready var free_roam_btn: Button = %FreeRoamBtn
-# @onready var story_btn: Button = %StoryBtn
 @onready var host_btn: Button = %HostBtn
 @onready var join_btn: Button = %JoinBtn
 @onready var paste_btn: Button = %PasteBtn
@@ -37,6 +38,7 @@ func Enter(_state_context: StateContext):
 
 	back_btn.pressed.connect(_on_back_pressed)
 	customize_btn.pressed.connect(_on_customize_pressed)
+	tutorial_btn.pressed.connect(_on_tutorial_btn_pressed)
 	free_roam_btn.pressed.connect(_on_free_roam_btn_pressed)
 	host_btn.pressed.connect(_on_host_btn_pressed)
 	join_btn.pressed.connect(_on_join_btn_pressed)
@@ -56,6 +58,18 @@ func Enter(_state_context: StateContext):
 	host_mode_opt.select(0)
 	_update_placeholder()
 
+	# Everything but the tutorial stays locked until it's been finished once.
+	var locked := !save_manager.is_tutorial_complete()
+	for control: BaseButton in [
+		customize_btn, free_roam_btn, host_btn, paste_btn, host_mode_opt, server_browser_btn
+	]:
+		control.disabled = locked
+	code_entry.editable = !locked
+	if locked:
+		join_btn.disabled = true
+	else:
+		_validate_code(code_entry.text)
+
 	if !steam_manager.pending_game_id.is_empty():
 		_on_invite_received.call_deferred()
 	elif DebugUtils.auto_host:
@@ -72,6 +86,7 @@ func Exit(_state_context: StateContext):
 	ui.hide()
 	back_btn.pressed.disconnect(_on_back_pressed)
 	customize_btn.pressed.disconnect(_on_customize_pressed)
+	tutorial_btn.pressed.disconnect(_on_tutorial_btn_pressed)
 	free_roam_btn.pressed.disconnect(_on_free_roam_btn_pressed)
 	host_btn.pressed.disconnect(_on_host_btn_pressed)
 	join_btn.pressed.disconnect(_on_join_btn_pressed)
@@ -164,6 +179,10 @@ func _on_join_btn_pressed():
 
 
 func _on_invite_received():
+	if !save_manager.is_tutorial_complete():
+		steam_manager.pending_game_id = ""
+		UiToast.ShowToast(tr("TOAST_FINISH_TUTORIAL_FIRST"))
+		return
 	join_game(steam_manager.take_pending_game_id())
 
 
@@ -185,6 +204,10 @@ func _on_free_roam_btn_pressed():
 		host_mode_opt.get_item_id(0) as ConnectionManager.ConnectionMode
 	)
 	transitioned.emit(lobby_menu_state, LobbyStateContext.NewFreeRoam(self))
+
+
+func _on_tutorial_btn_pressed():
+	transitioned.emit(lobby_menu_state, LobbyStateContext.NewStory(self))
 
 
 func _on_customize_pressed():
@@ -216,6 +239,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("connection_manager must not be empty")
 	if steam_manager == null:
 		issues.append("steam_manager must not be empty")
+	if save_manager == null:
+		issues.append("save_manager must not be empty")
 	if main_menu_state == null:
 		issues.append("main_menu_state must not be empty")
 	if lobby_menu_state == null:

@@ -11,7 +11,7 @@
 ## Per-peer scratchpad: `state: Dictionary`
 ##   - One dict per peer, owned by the runner (`player_states[peer_id].lesson_state`).
 ##   - Passed into every leaf hook. Tasks read/write whatever keys they need
-##     (e.g. StoppieDurationTask uses `state["t"]` to accumulate elapsed hold time).
+##     (e.g. WheelieDurationTask uses `state["t"]` to accumulate elapsed hold time).
 ##   - Cleared on advance (next task starts with empty {}) and on crash.
 ##   - Untyped on purpose — each task chooses its own keys.
 ##

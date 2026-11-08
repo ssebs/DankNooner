@@ -342,8 +342,8 @@ func play_bonk_sfx():
 	audio_manager.play_bonk()
 
 
-## Debug: fill the player's boost meter. Server only; broadcast so each peer sets the setter and
-## fills boost_amount in its own rollback tick (boost_amount is synced state).
+## Fill the player's boost meter (debug console, tutorial BoostTask). Server only; broadcast so each
+## peer sets the setter and fills boost_amount in its own rollback tick (boost_amount is synced state).
 @rpc("any_peer", "call_local", "reliable")
 func max_boost_player(player_peer_id: int):
 	if !_sender_is_server():
