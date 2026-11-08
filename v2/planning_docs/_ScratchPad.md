@@ -4,10 +4,21 @@
 Vid: where we started, where we are now 
 
 
+Trailer= hook + vibes. Show what the game will feel like
+Description has gifs for unique features 
+
+   
+Ads at FHK? Print out? Merch?
+
+Red triangles over enemy head
+
 ---
 
 ## NOW
-- [ ] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
+- [ ] Add product feature tour / walk thru for tutorials
+  - [ ] `planning_docs/____TUTORIAL_WIP.md`
+  - [ ] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
+  - [ ] Each one saves saying it's done
 
 --
 ###
