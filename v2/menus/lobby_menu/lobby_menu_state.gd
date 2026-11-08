@@ -239,6 +239,9 @@ func set_single_or_multiplayer_ui():
 				loading_ui.show()
 				timeout_timer.start()
 				level_select_panel.set_start_disabled(false)
+			# Not the first button in the tree (LobbyPanel's copy button): the host is here to start.
+			if return_ctx.mode == LobbyStateContext.Mode.HOST:
+				level_select_panel.grab_start_focus()
 
 	level_select_panel.call_deferred("refresh_preview")
 

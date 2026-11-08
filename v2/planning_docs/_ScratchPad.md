@@ -37,6 +37,8 @@ Red triangles over enemy head
     - [ ] grab gas can => just check boost used, not full amount. (ended up grabbing next item & being confused)
     - [ ] using shotgun but missing needs to reset you but say you were too far away
     - [ ] shorten tutorial
+    - [ ] exit garage / fillup should not say end event
+    - [ ] reset tutorial doesnt work for customization
 
 --
 ###
