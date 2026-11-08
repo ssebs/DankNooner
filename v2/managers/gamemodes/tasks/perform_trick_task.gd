@@ -11,7 +11,9 @@
 ## following step (e.g. a tutorial tour) doesn't cut the trick off. A crash clears it.
 ##
 ## Teaching aids (tutorial): `help_pin` shows the trick's controls on the HUD while the task runs,
-## and `warn_wrong_trick` flashes a warning naming `required_trick` on any other air trick.
+## `warn_wrong_trick` flashes a warning naming `required_trick` on any other air trick, and
+## `retry_on_miss` sends the rider back to their respawn point (the lesson's TeleportTask marker)
+## when a real jump lands without the trick.
 class_name PerformTrickTask extends GameModeTask
 
 @export var required_trick: TrickController.Trick = TrickController.Trick.WHEELIE_SITTING
@@ -21,6 +23,7 @@ class_name PerformTrickTask extends GameModeTask
 ## A TrickRow pin id (e.g. "AIR/HIGH_CHAIR/HOLD/UP", or "BACKFLIP" for a how-to), or "" for none.
 @export var help_pin: String = ""
 @export var warn_wrong_trick: bool = false
+@export var retry_on_miss: bool = false
 ## Localization keys (optional — fall back to a generic label if empty).
 @export var objective_key: String = ""
 @export var hint_key: String = ""
@@ -43,6 +46,10 @@ func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
 			and player.movement_controller.is_on_floor
 			and player.trick_controller.current_trick == TrickController.Trick.NONE
 		)
+	if retry_on_miss and _missed_jump(player, state):
+		state.clear()
+		runner.spawn_manager.respawn_player.rpc(int(player.name))
+		return false
 	if warn_wrong_trick:
 		_warn_wrong_trick(player, state)
 	var active := player.trick_controller.current_trick == required_trick
@@ -58,6 +65,19 @@ func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
 		state["trick_done"] = true
 		return false
 	return true
+
+
+## A real jump (past the air-trick min airtime) that came down without the trick. A crash is the
+## runner's to handle.
+func _missed_jump(player: PlayerEntity, state: Dictionary) -> bool:
+	if player.trick_controller.trick_state() == TrickController.TrickState.AIR:
+		state["jumped"] = true
+		return false
+	return (
+		state.get("jumped", false)
+		and player.movement_controller.is_on_floor
+		and !player.is_crashed
+	)
 
 
 ## Once per wrong trick per jump.

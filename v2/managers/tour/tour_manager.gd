@@ -18,6 +18,8 @@ const TARGET_3D_PADDING: float = 64.0
 const DIM_COLOR: Color = Color(0, 0, 0, 0.7)
 const OUTLINE_WIDTH: float = 3.0
 const DOT_SIZE: Vector2 = Vector2(12, 12)
+## Input ignored for this long after a tour opens, so a rider still mashing buttons can't skip it.
+const OPEN_GRACE_MSEC: int = 1000
 
 @onready var _ui: Control = %UI
 @onready var _spotlight: Control = %Spotlight
@@ -38,6 +40,7 @@ var _steps: Array[TourStep]
 var _step_idx: int = 0
 var _hole: Rect2
 var _saved_input_state: InputStateManager.InputState
+var _opened_msec: int = 0
 ## The menu's focus, handed back on close and during action steps. Null while riding, where
 ## nothing has focus.
 var _saved_focus: Control
@@ -62,6 +65,9 @@ func _input(event: InputEvent):
 		return
 	# Action steps leave input to the menu underneath.
 	if !is_open() or _is_action_step():
+		return
+	if Time.get_ticks_msec() - _opened_msec < OPEN_GRACE_MSEC:
+		get_viewport().set_input_as_handled()
 		return
 	if event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
@@ -88,6 +94,7 @@ func play(tour: Tour) -> void:
 	_steps = tour.get_steps()
 	_saved_input_state = input_state_manager.current_input_state
 	_saved_focus = null
+	_opened_msec = Time.get_ticks_msec()
 	_ui.show()
 	set_process(true)
 	_show_step(0)

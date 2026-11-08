@@ -31,7 +31,7 @@ Red triangles over enemy head
   - [x] tutorial level / tutorials + lock out main game until tut is done
     - [x] working level
     - [x] working steps / explainations
-    - [ ] improve tutorial feel
+    - [x] improve tutorial feel
     - [ ] improve tutorial level map
     - [ ] shorten tutorial
 

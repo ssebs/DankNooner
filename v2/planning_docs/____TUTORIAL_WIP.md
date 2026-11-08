@@ -104,12 +104,25 @@ at **Task 9**. Where the built code differs from the task text below, this secti
   - Steering gates start `is_active = false` and each has a red wall blocking the other half of
     the road. The new `SetActiveTask` (`ShowGates` / `HideGates`) turns them on only for the
     steering lesson, so they're gone during gas and braking.
-  - Air ramp: a must-land Backflip, a teleport back to `RampStart`, then the High Chair. The
-    dropped ramp asks for a Heel Clicker (`TUT_RAMP_HEEL_CLICKER`).
+  - Air ramp: a must-land Backflip, a teleport back to `RampStart`, then the High Chair.
   - `PerformTrickTask.help_pin` shows a `TrickRow` pin id on the HUD's Pinned list while the task
     runs, unsaved (`RidingHUDState.push_event_pin`; `clear_event_text` drops it).
     `warn_wrong_trick` flashes `TUT_WRONG_TRICK` once per wrong air trick per jump.
     `push_event_warning` gained `args` (their values are keys, localized on the client).
+- **Playtest round 5 (user):**
+  - Balance body colors "gold" / "red" (`UI_GOLD` / `UI_RED` hex in BBCode). Its step shows the
+    HUD's bike icon inline via a `{bike_icon}` token alias.
+  - `TourManager` swallows input for `OPEN_GRACE_MSEC` after a tour opens, so a rider still
+    mashing buttons can't skip it.
+  - Every trick lesson must land: `WheelieDurationTask.must_land` (on all four wheelie lessons)
+    holds the pass until the front wheel is down.
+  - `PerformTrickTask.retry_on_miss` (the three air lessons): a real jump that lands without the
+    trick respawns the rider at the lesson's TeleportTask marker.
+  - Dropped ramp asks for a T-Pose (`TUT_RAMP_T_POSE`), not a Heel Clicker (too short a jump), and
+    the copy says to build speed first.
+  - Air is two lessons: Flips (`tut_flip`, Backflip), then a teleport back to `RampStart` and Air
+    Tricks (`tut_air`, High Chair), each with its own tour.
+  - **Open:** ramp pickups are invisible on the items road (driving through still grabs one).
 - **Level layout:** lanes start at z=190 heading -Z. The event circle is parked at (-100, 0, 180).
 - **CloseHelpTask deleted** with `SettingsMenuState.show_controls_tab()`, TutorialGameMode's
   `settings_menu_state` export, and the `TUT_SHOW_HELP` / `TUT_PRESS_RT` strings. The empty

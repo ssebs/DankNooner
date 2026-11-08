@@ -9,6 +9,8 @@ class_name WheelieDurationTask extends GameModeTask
 @export var balance_point: bool = false
 ## Only a wheelie popped by a clutch dump counts.
 @export var clutch_up: bool = false
+## Holds the pass until the front wheel is back down (see PerformTrickTask.must_land).
+@export var must_land: bool = false
 
 ## A clutch-up's front comes up at most this long after the clutch dump.
 const CLUTCH_UP_GRACE: float = 0.5
@@ -20,6 +22,8 @@ func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
 		player.trick_controller.current_trick
 		in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]
 	)
+	if state.get("trick_done", false):
+		return !player.is_crashed and !is_wheelie
 	if !is_wheelie:
 		state.erase("t")
 		var since_dump: float = state.get("since_dump", INF) + delta
@@ -36,10 +40,17 @@ func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
 	if balance_point and !movement.in_balance_point:
 		return false
 	state["t"] += delta
-	return state["t"] >= duration
+	if state["t"] < duration:
+		return false
+	if must_land:
+		state["trick_done"] = true
+		return false
+	return true
 
 
 func get_progress(state: Dictionary) -> String:
+	if state.get("trick_done", false):
+		return tr("TUT_LAND_TRICK")
 	return "%.1f / %.1fs" % [state.get("t", 0.0), duration]
 
 

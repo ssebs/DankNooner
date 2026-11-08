@@ -52,6 +52,8 @@ const MOUSE_MOVE_ICON: Texture2D = preload("res://resources/img/Icons/mouse_move
 const TOKEN_ALIASES: Dictionary = {
 	"cursor": [MOUSE_MOVE_ICON, preload("res://resources/img/Icons/xbox_stick_l.svg")],
 	"look": [MOUSE_MOVE_ICON, preload("res://resources/img/Icons/xbox_stick_r.svg")],
+	# The riding HUD's balance-point icon (TrickPopups.WHEELIE_ICON), for the tutorial's copy.
+	"bike_icon": [TrickPopups.WHEELIE_ICON, TrickPopups.WHEELIE_ICON],
 	# A cursor click: use_item's pad binding is the d-pad, so the pad clicks with A.
 	"click": ["use_item", "ui_accept"],
 }
