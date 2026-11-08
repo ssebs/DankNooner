@@ -11,6 +11,7 @@ class_name FreeRoamGameMode extends GameModeType
 @export var input_state_manager: InputStateManager
 @export var hud_manager: HUDManager
 @export var save_manager: SaveManager
+@export var tour_manager: TourManager
 
 ## Trick round: banked combo points add up per human for ROUND_SECS, shown on the live
 ## leaderboard with the time left, then the winner is called out and it resets.
@@ -413,7 +414,8 @@ func _rpc_begin_activity(activity_path: NodePath):
 		input_state_manager,
 		gamemode_manager.audio_manager,
 		hud_manager,
-		save_manager
+		save_manager,
+		tour_manager
 	)
 
 
@@ -487,5 +489,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("hud_manager must not be empty")
 	if save_manager == null:
 		issues.append("save_manager must not be empty")
+	if tour_manager == null:
+		issues.append("tour_manager must not be empty")
 
 	return issues

@@ -64,6 +64,7 @@
 [ext_resource type="PackedScene" path="res://menus/credits_menu/credits_menu_state.tscn" id="62_credits"]
 [ext_resource type="PackedScene" path="res://menus/server_browser_menu/server_browser_menu_state.tscn" id="63_srvbrowse"]
 [ext_resource type="Script" uid="uid://uj0l0u0v0f0d" path="res://managers/npc_traffic_manager.gd" id="99_npctm"]
+[ext_resource type="PackedScene" path="res://managers/tour/tour_manager.tscn" id="64_tour"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("1_1oj5k")
@@ -312,7 +313,7 @@ crash_launch_mode = NodePath("StateMachine/CrashLaunchGameMode")
 script = ExtResource("4_6bm6p")
 metadata/_custom_type_script = "uid://ba7kyb4p3trb1"
 
-[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_hud_state", "level_manager", "npc_traffic_manager", "pickup_spawn_manager", "trick_manager", "riding_hud_state", "input_state_manager", "hud_manager", "save_manager", "gamemode_manager", "spawn_manager")]
+[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_hud_state", "level_manager", "npc_traffic_manager", "pickup_spawn_manager", "trick_manager", "riding_hud_state", "input_state_manager", "hud_manager", "save_manager", "gamemode_manager", "spawn_manager", "tour_manager")]
 script = ExtResource("25_6krrg")
 game_mode_event_hud_state = NodePath("../../../HUDManager/StateMachine/GamemodeEventHUDState")
 level_manager = NodePath("../../../LevelManager")
@@ -325,6 +326,7 @@ hud_manager = NodePath("../../../HUDManager")
 save_manager = NodePath("../../../SaveManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
+tour_manager = NodePath("../../../TourManager")
 
 [node name="TutorialGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1184474950 node_paths=PackedStringArray("menu_manager", "settings_menu_state", "riding_hud_state", "lobby_manager", "audio_manager", "results_hud", "input_state_manager", "save_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("27_8slmw")
@@ -511,13 +513,14 @@ crash_respawn_delay = 15.0
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 
-[node name="FuelUpGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=139970958 node_paths=PackedStringArray("input_state_manager", "hud_manager", "save_manager", "gamemode_manager", "spawn_manager")]
+[node name="FuelUpGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=139970958 node_paths=PackedStringArray("input_state_manager", "hud_manager", "save_manager", "gamemode_manager", "spawn_manager", "tour_manager")]
 script = ExtResource("30_fuelup")
 input_state_manager = NodePath("../../../InputStateManager")
 hud_manager = NodePath("../../../HUDManager")
 save_manager = NodePath("../../../SaveManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
+tour_manager = NodePath("../../../TourManager")
 
 [node name="AudioManager" parent="ManagerManager" unique_id=625309404 node_paths=PackedStringArray("settings_manager") instance=ExtResource("20_2i4tw")]
 settings_manager = NodePath("../SettingsManager")
@@ -575,3 +578,7 @@ npc_race_manager = NodePath("../NPCRaceManager")
 
 [node name="SteamManager" type="Node" parent="ManagerManager" unique_id=1700000001 groups=["Managers"]]
 script = ExtResource("61_steam")
+
+[node name="TourManager" parent="ManagerManager" unique_id=1700000010 node_paths=PackedStringArray("input_state_manager", "save_manager") groups=["Managers"] instance=ExtResource("64_tour")]
+input_state_manager = NodePath("../InputStateManager")
+save_manager = NodePath("../SaveManager")

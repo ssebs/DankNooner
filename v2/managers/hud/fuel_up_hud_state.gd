@@ -52,6 +52,11 @@ func Update(_delta: float):
 	_was_spilling = spilling
 
 
+## The tank gauge, for the fill-up tour to point at.
+func get_gauge() -> Control:
+	return _gauge
+
+
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues: PackedStringArray = []
 	if save_manager == null:

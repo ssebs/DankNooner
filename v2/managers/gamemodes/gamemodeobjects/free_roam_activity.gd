@@ -28,6 +28,7 @@ var _input_state_manager: InputStateManager
 var _audio_manager: AudioManager
 var _hud_manager: HUDManager
 var _save_manager: SaveManager
+var _tour_manager: TourManager
 
 
 func _ready():
@@ -67,13 +68,15 @@ func begin(
 	input_state_manager: InputStateManager,
 	audio_manager: AudioManager,
 	hud_manager: HUDManager,
-	save_manager: SaveManager
+	save_manager: SaveManager,
+	tour_manager: TourManager
 ):
 	_player = player
 	_input_state_manager = input_state_manager
 	_audio_manager = audio_manager
 	_hud_manager = hud_manager
 	_save_manager = save_manager
+	_tour_manager = tour_manager
 	player.respawned.connect(_start_session, CONNECT_ONE_SHOT)
 
 

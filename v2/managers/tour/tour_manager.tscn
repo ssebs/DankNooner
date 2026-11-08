@@ -1,0 +1,125 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://managers/tour/tour_manager.gd" id="1_script"]
+[ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_theme"]
+[ext_resource type="PackedScene" path="res://player/hud_elements/input_prompt.tscn" id="3_prompt"]
+
+[node name="TourManager" type="Node"]
+script = ExtResource("1_script")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 1
+
+[node name="UI" type="Control" parent="CanvasLayer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="Spotlight" type="Control" parent="CanvasLayer/UI"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="CanvasLayer/UI"]
+unique_name_in_owner = true
+layout_mode = 0
+theme_type_variation = &"HUDPanel"
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/UI/Panel"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CanvasLayer/UI/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Heading2Label"
+autowrap_mode = 3
+
+[node name="Warning" type="Label" parent="CanvasLayer/UI/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.25, 1)
+autowrap_mode = 3
+
+[node name="Image" type="TextureRect" parent="CanvasLayer/UI/Panel/VBox"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Body" type="RichTextLabel" parent="CanvasLayer/UI/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Dots" type="HBoxContainer" parent="CanvasLayer/UI/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+
+[node name="Buttons" type="HBoxContainer" parent="CanvasLayer/UI/Panel/VBox"]
+layout_mode = 2
+
+[node name="BackGroup" type="HBoxContainer" parent="CanvasLayer/UI/Panel/VBox/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BackPrompt" parent="CanvasLayer/UI/Panel/VBox/Buttons/BackGroup" instance=ExtResource("3_prompt")]
+unique_name_in_owner = true
+layout_mode = 2
+action = "ui_cancel"
+
+[node name="BackBtn" type="Button" parent="CanvasLayer/UI/Panel/VBox/Buttons/BackGroup"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_left = NodePath("../../NextBtn")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath("../../SkipBtn")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../../SkipBtn")
+focus_previous = NodePath("../../NextBtn")
+text = "BACK_LABEL"
+
+[node name="SkipBtn" type="Button" parent="CanvasLayer/UI/Panel/VBox/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_left = NodePath("../BackGroup/BackBtn")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath("../NextBtn")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../NextBtn")
+focus_previous = NodePath("../BackGroup/BackBtn")
+text = "TOUR_SKIP"
+
+[node name="Spacer" type="Control" parent="CanvasLayer/UI/Panel/VBox/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="NextBtn" type="Button" parent="CanvasLayer/UI/Panel/VBox/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_left = NodePath("../SkipBtn")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath("../BackGroup/BackBtn")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../BackGroup/BackBtn")
+focus_previous = NodePath("../SkipBtn")
+text = "TOUR_NEXT"
+
+[node name="NextPrompt" parent="CanvasLayer/UI/Panel/VBox/Buttons" instance=ExtResource("3_prompt")]
+unique_name_in_owner = true
+layout_mode = 2
+action = "ui_accept"

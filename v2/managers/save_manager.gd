@@ -43,6 +43,7 @@ func _ready():
 
 func deferred_init():
 	Console.add_command("give_money", _give_money, ["amount"], 1, "Add money to your profile")
+	Console.add_command("dbg_skip_tutorial", mark_tutorial_complete, [], 0, "Mark the tutorial complete")
 	if FileAccess.file_exists(save_path):
 		load_save()
 	else:
@@ -100,6 +101,41 @@ func purchase(path: String, price: int) -> bool:
 	player_def.money -= price
 	current_save["progression"]["owned"].append(path)
 	return true
+
+
+func is_tour_done(tour_id: StringName) -> bool:
+	return String(tour_id) in current_save["progression"].get("tours_done", [])
+
+
+func mark_tour_done(tour_id: StringName) -> void:
+	var tours: Array = current_save["progression"].get_or_add("tours_done", [])
+	if String(tour_id) not in tours:
+		tours.append(String(tour_id))
+	save_save()
+
+
+func reset_tours() -> void:
+	current_save["progression"]["tours_done"] = []
+	save_save()
+
+
+## JSON loads numbers as floats, hence the int().
+func get_tutorial_missions_done() -> int:
+	return int(current_save["progression"].get("tutorial", {}).get("missions_done", 0))
+
+
+func set_tutorial_missions_done(count: int) -> void:
+	current_save["progression"].get_or_add("tutorial", {})["missions_done"] = count
+	save_save()
+
+
+func is_tutorial_complete() -> bool:
+	return current_save["progression"].get("tutorial", {}).get("complete", false)
+
+
+func mark_tutorial_complete() -> void:
+	current_save["progression"].get_or_add("tutorial", {})["complete"] = true
+	save_save()
 
 
 ## Take `amount` off the profile and write it. False, and nothing taken, if it's short.

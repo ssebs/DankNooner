@@ -48,3 +48,9 @@ func _use_test_files(main_game: MainGame, peer: int) -> void:
 		if manager is SaveManager:
 			manager.save_slot = SAVE_SLOT_BASE + peer
 			DirAccess.remove_absolute(manager.save_path)  # fresh save every run
+			# A fresh save gates the Play menu behind the tutorial. Deferred past deferred_init's seeding.
+			manager.save_changed.connect(
+				manager.mark_tutorial_complete.unbind(1), CONNECT_DEFERRED | CONNECT_ONE_SHOT
+			)
+		elif manager is TourManager:
+			manager.dbg_disable_tours = true

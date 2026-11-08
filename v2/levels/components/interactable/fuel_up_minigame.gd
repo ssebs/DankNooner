@@ -55,6 +55,9 @@ const GRAB_SPRAY_DELAY: float = 0.2
 @onready var _end_btn: Area3D = %EndBtn
 @onready var _end_btn_mesh: MeshInstance3D = %EndBtnMesh
 @onready var _sale_label: Label3D = %SaleLabel
+@onready var _tour: Tour = %FuelUpTour
+## Points at the HUD's tank gauge, which lives outside this scene.
+@onready var _gauge_step: TourStep = %GaugeStep
 
 ## Tank level, 0..1 - spilled. Read by FuelUpHUDState.
 var fill: float = 0.0
@@ -135,10 +138,11 @@ func begin(
 	input_state_manager: InputStateManager,
 	audio_manager: AudioManager,
 	hud_manager: HUDManager,
-	save_manager: SaveManager
+	save_manager: SaveManager,
+	tour_manager: TourManager
 ):
 	fill = player.boost_controller.boost_amount / BoostController.BOOST_SEGMENTS
-	super(player, input_state_manager, audio_manager, hud_manager, save_manager)
+	super(player, input_state_manager, audio_manager, hud_manager, save_manager, tour_manager)
 
 
 #override
@@ -158,6 +162,9 @@ func _on_session_start():
 	# The pump camera would otherwise lose the hose behind the bike.
 	_hose_mesh.material.no_depth_test = true
 	_hud_manager.go_to_fuel_up_hud(self)
+	_gauge_step.target = _hud_manager.fuel_up_hud_state.get_gauge()
+	# Deferred past _start_session switching to IN_MINIGAME, which would replace IN_TOUR.
+	_tour_manager.play_once.call_deferred(_tour)
 
 
 #override

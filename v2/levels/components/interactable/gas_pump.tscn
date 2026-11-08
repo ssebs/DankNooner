@@ -6,6 +6,8 @@
 [ext_resource type="Material" uid="uid://k0dialwj5i42" path="res://levels/assets/props/neon_blue.tres" id="3_ypgq6"]
 [ext_resource type="Texture2D" uid="uid://cjliervng0gbt" path="res://levels/assets/graybox/red.png" id="4_hdsq7"]
 [ext_resource type="Texture2D" uid="uid://2ikkccys8b6w" path="res://levels/assets/graybox/texture_04.png" id="4_i6kcm"]
+[ext_resource type="Script" path="res://utils/tour/tour.gd" id="5_tour"]
+[ext_resource type="Script" path="res://utils/tour/tour_step.gd" id="6_tourstep"]
 
 [sub_resource type="Animation" id="Animation_0blfn"]
 length = 0.001
@@ -441,6 +443,47 @@ outline_modulate = Color(0.02, 0.02, 0.06, 1)
 text = "$0.00"
 font_size = 32
 outline_size = 16
+
+[node name="FuelUpTour" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("5_tour")
+tour_id = &"fuel_up"
+
+[node name="IntroStep" type="Node" parent="FuelUpTour"]
+script = ExtResource("6_tourstep")
+title_key = "TOUR_FUELUP_INTRO_TITLE"
+body_key = "TOUR_FUELUP_INTRO_BODY"
+warning_key = "TOUR_FUELUP_INTRO_WARNING"
+
+[node name="HandleStep" type="Node" parent="FuelUpTour" node_paths=PackedStringArray("target")]
+script = ExtResource("6_tourstep")
+title_key = "TOUR_FUELUP_HANDLE_TITLE"
+body_key = "TOUR_FUELUP_HANDLE_BODY"
+target = NodePath("../../HandleArea")
+
+[node name="GasCapStep" type="Node" parent="FuelUpTour" node_paths=PackedStringArray("target")]
+script = ExtResource("6_tourstep")
+title_key = "TOUR_FUELUP_GASCAP_TITLE"
+body_key = "TOUR_FUELUP_GASCAP_BODY"
+target = NodePath("../../GasCapArea")
+
+[node name="GaugeStep" type="Node" parent="FuelUpTour"]
+unique_name_in_owner = true
+script = ExtResource("6_tourstep")
+title_key = "TOUR_FUELUP_GAUGE_TITLE"
+body_key = "TOUR_FUELUP_GAUGE_BODY"
+
+[node name="PriceStep" type="Node" parent="FuelUpTour" node_paths=PackedStringArray("target")]
+script = ExtResource("6_tourstep")
+title_key = "TOUR_FUELUP_PRICE_TITLE"
+body_key = "TOUR_FUELUP_PRICE_BODY"
+target = NodePath("../../SaleLabel")
+
+[node name="EndBtnStep" type="Node" parent="FuelUpTour" node_paths=PackedStringArray("target")]
+script = ExtResource("6_tourstep")
+title_key = "TOUR_FUELUP_ENDBTN_TITLE"
+body_key = "TOUR_FUELUP_ENDBTN_BODY"
+target = NodePath("../../EndBtn")
 
 [editable path="pump2"]
 [editable path="pump5"]

@@ -10,6 +10,7 @@ class_name FuelUpGameMode extends GameModeType
 @export var input_state_manager: InputStateManager
 @export var hud_manager: HUDManager
 @export var save_manager: SaveManager
+@export var tour_manager: TourManager
 
 ## Riders start at most this many segments below full, so a full tank still has to play.
 const FULL_TANK_DRAIN_SEGMENTS: float = 2.0
@@ -52,7 +53,8 @@ func Enter(state_context: StateContext):
 		input_state_manager,
 		gamemode_manager.audio_manager,
 		hud_manager,
-		save_manager
+		save_manager,
+		tour_manager
 	)
 	_minigame.fill = minf(
 		_minigame.fill, 1.0 - FULL_TANK_DRAIN_SEGMENTS / BoostController.BOOST_SEGMENTS
@@ -156,4 +158,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("hud_manager must not be empty")
 	if save_manager == null:
 		issues.append("save_manager must not be empty")
+	if tour_manager == null:
+		issues.append("tour_manager must not be empty")
 	return issues

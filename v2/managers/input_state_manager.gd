@@ -17,6 +17,8 @@ enum InputState {
 	DISABLED,
 	## Cursor-driven 3D minigame (fuel-up) — cursor shown, riding input ignored.
 	IN_MINIGAME,
+	## A TourManager overlay is open; it handles its own input.
+	IN_TOUR,
 }
 
 @export var menu_manager: MenuManager
@@ -96,7 +98,7 @@ func get_respawn_hold_time() -> float:
 #region InputState (in game vs in menu)
 func _unhandled_input(event: InputEvent):
 	match current_input_state:
-		InputStateManager.InputState.DISABLED:
+		InputStateManager.InputState.DISABLED, InputStateManager.InputState.IN_TOUR:
 			return
 		InputStateManager.InputState.IN_GAME:
 			if event.is_action_pressed("pause"):
@@ -196,7 +198,7 @@ func showhide_mouse_cursor():
 	match current_input_state:
 		InputStateManager.InputState.IN_MENU, InputStateManager.InputState.IN_GAME_PAUSED:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		InputStateManager.InputState.IN_MAP, InputStateManager.InputState.IN_MINIGAME:
+		InputStateManager.InputState.IN_MAP, InputStateManager.InputState.IN_MINIGAME, InputStateManager.InputState.IN_TOUR:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		InputStateManager.InputState.IN_GAME, InputStateManager.InputState.DISABLED:
 			if !is_mobile:
