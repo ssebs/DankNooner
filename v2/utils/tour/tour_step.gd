@@ -11,6 +11,10 @@ class_name TourStep extends Node
 ## Control, Node3D, or null to center the step. Ignored on step 0 (the intro modal).
 @export var target: Node
 
+## Set at runtime by the owning scene to make this an action step: Next hides, input passes
+## to the game, and the tour moves on once this returns true.
+var done_when: Callable
+
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues: PackedStringArray = []

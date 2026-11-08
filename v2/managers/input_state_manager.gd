@@ -8,6 +8,8 @@ signal unpause_requested
 ## A tap (release before the hold threshold) fired a quick in-place respawn. Lets the HUD flash
 ## its "Respawning..." text even for a tap too brief to observe via the hold timer.
 signal respawn_quick_fired
+## Last input flipped between gamepad and keyboard/mouse. For UI with no player to ask.
+signal device_changed(is_gamepad: bool)
 
 enum InputState {
 	IN_MENU,
@@ -41,6 +43,8 @@ var current_input_state = InputState.IN_MENU:
 		input_state_changed.emit(val)
 
 var is_mobile := false
+## Same split as InputController._detect_gamepad_or_kbm, which only runs while riding.
+var is_gamepad: bool = false
 
 ## Respawn tap/hold tracking for the local player. Full respawn fires once the hold crosses
 ## the threshold; a release before then is a tap → quick in-place respawn.
@@ -63,6 +67,14 @@ func _ready():
 
 
 func _input(event: InputEvent):
+	var gamepad := is_gamepad
+	if event is InputEventKey or event is InputEventMouse:
+		gamepad = false
+	elif ControlBindings.is_gamepad(event):
+		gamepad = true
+	if gamepad != is_gamepad:
+		is_gamepad = gamepad
+		device_changed.emit(gamepad)
 	# Web browsers require mouse capture to happen inside an input event callback
 	if event is InputEventMouseButton and event.pressed:
 		showhide_mouse_cursor()

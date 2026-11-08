@@ -5,6 +5,7 @@ class_name GarageHUDState extends HUDState
 
 @export var save_manager: SaveManager
 @export var audio_manager: AudioManager
+@export var input_state_manager: InputStateManager
 
 @onready var _garage_ui: GarageUI = %GarageUI
 
@@ -21,7 +22,7 @@ func Enter(_state_context: StateContext):
 	_garage_ui.pose_requested.connect(activity.garage_set.cycle_pose)
 	_garage_ui.exit_requested.connect(_on_exit_requested)
 	show_ui()
-	_garage_ui.open(save_manager, audio_manager)
+	_garage_ui.open(save_manager, audio_manager, input_state_manager)
 
 
 func Exit(_state_context: StateContext):
@@ -54,4 +55,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("save_manager must not be empty")
 	if audio_manager == null:
 		issues.append("audio_manager must not be empty")
+	if input_state_manager == null:
+		issues.append("input_state_manager must not be empty")
 	return issues

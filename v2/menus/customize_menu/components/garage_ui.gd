@@ -23,10 +23,13 @@ const MAX_LIST_HEIGHT: float = 480
 ## Longer loadout names ellipsize; the tab strip scrolls.
 const TAB_MAX_WIDTH: float = 200
 
+@onready var _panel: PanelContainer = %Panel
 @onready var _profile_tab: Button = %ProfileTab
 @onready var _tab_scroll: ScrollContainer = %TabScroll
 @onready var _tabs: HBoxContainer = %Tabs
 @onready var _add_tab_btn: Button = %AddTabBtn
+@onready var _prev_tab_prompt: InputPrompt = %PrevTabPrompt
+@onready var _next_tab_prompt: InputPrompt = %NextTabPrompt
 @onready var _close_btn: Button = %CloseBtn
 @onready var _money: MoneyLabel = %Money
 @onready var _title: Label = %Title
@@ -47,6 +50,7 @@ const TAB_MAX_WIDTH: float = 200
 
 var _save_manager: SaveManager
 var _audio_manager: AudioManager
+var _input_state_manager: InputStateManager
 var _player_def: PlayerDefinition
 ## skin_name -> res path
 var _bikes: Dictionary = {}
@@ -73,6 +77,9 @@ func _ready():
 	theme.default_font_size = FONT_SIZE
 	_profile_tab.pressed.connect(_switch_tab.bind(0))
 	_add_tab_btn.pressed.connect(_add_loadout)
+	# TabButton's focus style is empty; the pad reaches + by focus (cycle_tab), so it must show.
+	_add_tab_btn.add_theme_stylebox_override("focus", _add_tab_btn.get_theme_stylebox("pressed"))
+	_add_tab_btn.add_theme_color_override("font_focus_color", UtilsConstants.UI_BLUE)
 	_back_btn.pressed.connect(go_back)
 	_set_active_btn.pressed.connect(func(): _set_active(_tab))
 	_delete_btn.pressed.connect(_on_delete_pressed)
@@ -88,9 +95,14 @@ func _ready():
 
 
 ## Start on the active loadout's tab.
-func open(save_manager: SaveManager, audio_manager: AudioManager):
+func open(
+	save_manager: SaveManager, audio_manager: AudioManager, input_state_manager: InputStateManager
+):
 	_save_manager = save_manager
 	_audio_manager = audio_manager
+	_input_state_manager = input_state_manager
+	_input_state_manager.device_changed.connect(_show_tab_prompts)
+	_show_tab_prompts(_input_state_manager.is_gamepad)
 	_player_def = save_manager.get_player_definition()
 	_bikes = SkinScanner.scan_skin_dir(BIKE_SKINS_DIR)
 	_characters = _sorted_skins(SkinScanner.scan_skin_dir(CHARACTER_SKINS_DIR))
@@ -102,6 +114,14 @@ func open(save_manager: SaveManager, audio_manager: AudioManager):
 	_audio_manager.set_music_ducked(self, true)
 
 
+## LB/RB beside the tab strip. Pad only: the mouse clicks the tabs.
+func _show_tab_prompts(gamepad: bool):
+	_prev_tab_prompt.refresh(true)
+	_next_tab_prompt.refresh(true)
+	_prev_tab_prompt.visible = gamepad
+	_next_tab_prompt.visible = gamepad
+
+
 ## For the Customize tour to point at.
 func get_profile_tab() -> Control:
 	return _profile_tab
@@ -111,8 +131,17 @@ func get_loadout_tabs() -> Control:
 	return _tabs
 
 
+func get_add_tab() -> Control:
+	return _add_tab_btn
+
+
+func get_panel() -> Control:
+	return _panel
+
+
 ## One save: one lobby push, one skin sync.
 func commit():
+	_input_state_manager.device_changed.disconnect(_show_tab_prompts)
 	_stop_horn_preview()
 	_audio_manager.set_music_ducked(self, false)
 	_save_manager.update_save("player_definition", _player_def, true, true)
@@ -131,11 +160,18 @@ func go_back():
 		exit_requested.emit()
 
 
-## Skips the `+` tab, so cycling never creates a loadout.
+## Only focuses the `+` tab, so cycling never creates a loadout by itself.
 func cycle_tab(dir: int):
 	if _confirm_box.visible or _color_panel.visible:
 		return
-	_switch_tab(wrapi(_tab + dir, 0, _player_def.loadouts.size() + 1))
+	var last := _player_def.loadouts.size()
+	# The pad reaches + by cycling past the last tab, where accept presses it.
+	if _add_tab_btn.has_focus():
+		_switch_tab(last if dir < 0 else 0)
+	elif dir > 0 and _tab == last and _add_tab_btn.visible:
+		_add_tab_btn.grab_focus()
+	else:
+		_switch_tab(wrapi(_tab + dir, 0, last + 1))
 
 
 #region tabs

@@ -48,9 +48,9 @@ var _tour: Tour
 var _steps: Array[TourStep]
 var _step_idx: int = 0
 var _hole: Rect2
-var _gamepad: bool = false
 var _saved_input_state: InputStateManager.InputState
-## Restored on close so menus keep gamepad focus. Null while riding, where nothing has focus.
+## The menu's focus, handed back on close and during action steps. Null while riding, where
+## nothing has focus.
 var _saved_focus: Control
 var _token_regex := RegEx.create_from_string("\\{(\\w+)\\}")
 
@@ -64,22 +64,14 @@ func _ready():
 	_back_btn.pressed.connect(func(): _show_step(_step_idx - 1))
 	_skip_btn.pressed.connect(_close.bind(true))
 	_next_btn.pressed.connect(_on_next_pressed)
+	input_state_manager.device_changed.connect(_on_device_changed)
 
 
 func _input(event: InputEvent):
 	if Engine.is_editor_hint():
 		return
-	# Same split as InputController._detect_gamepad_or_kbm; menus have no player to ask.
-	var was_gamepad := _gamepad
-	if event is InputEventKey or event is InputEventMouse:
-		_gamepad = false
-	elif ControlBindings.is_gamepad(event):
-		_gamepad = true
-	if !is_open():
-		return
-	if _gamepad != was_gamepad:
-		_render_body()
-	if event.is_action_pressed("ui_cancel"):
+	# Action steps leave ui_cancel to the menu underneath.
+	if is_open() and !_is_action_step() and event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		if _step_idx == 0:
 			_close(true)
@@ -88,6 +80,9 @@ func _input(event: InputEvent):
 
 
 func _process(_delta: float):
+	if _is_action_step() and _steps[_step_idx].done_when.call():
+		_on_next_pressed()
+		return
 	_layout()
 
 
@@ -96,9 +91,7 @@ func play(tour: Tour) -> void:
 	_tour = tour
 	_steps = tour.get_steps()
 	_saved_input_state = input_state_manager.current_input_state
-	_saved_focus = get_viewport().gui_get_focus_owner()
-	# The setter shows the cursor (showhide_mouse_cursor).
-	input_state_manager.current_input_state = InputStateManager.InputState.IN_TOUR
+	_saved_focus = null
 	_ui.show()
 	set_process(true)
 	_show_step(0)
@@ -116,6 +109,20 @@ func is_open() -> bool:
 	return _tour != null
 
 
+## Closes the open tour as skipped, for an owner that's going away mid-tour.
+func skip() -> void:
+	_close(true)
+
+
+func _is_action_step() -> bool:
+	return is_open() and _steps[_step_idx].done_when.is_valid()
+
+
+func _on_device_changed(_is_gamepad: bool):
+	if is_open():
+		_render_body()
+
+
 func _on_next_pressed():
 	if _step_idx == _steps.size() - 1:
 		_close(false)
@@ -124,6 +131,9 @@ func _on_next_pressed():
 
 
 func _show_step(idx: int):
+	var focus := get_viewport().gui_get_focus_owner()
+	if focus != null and !_panel.is_ancestor_of(focus):
+		_saved_focus = focus
 	_step_idx = idx
 	var step := _steps[idx]
 	var is_last := idx == _steps.size() - 1
@@ -135,9 +145,20 @@ func _show_step(idx: int):
 	_panel.custom_minimum_size.x = INTRO_WIDTH if idx == 0 else CALLOUT_WIDTH
 	_next_btn.text = tr("TOUR_DONE") if is_last else tr("TOUR_NEXT")
 	_back_btn.visible = idx > 0
+	var is_action := _is_action_step()
+	_next_btn.visible = !is_action
+	# An action step hands input back so the player can do it; done_when moves the tour on.
+	_ui.mouse_filter = Control.MOUSE_FILTER_IGNORE if is_action else Control.MOUSE_FILTER_STOP
+	# The setter shows the cursor (showhide_mouse_cursor).
+	input_state_manager.current_input_state = (
+		_saved_input_state if is_action else InputStateManager.InputState.IN_TOUR
+	)
 	_rebuild_dots()
 	_render_body()
-	_next_btn.grab_focus()
+	if is_action:
+		_restore_focus()
+	else:
+		_next_btn.grab_focus()
 	_layout()
 
 
@@ -148,10 +169,15 @@ func _close(skipped: bool):
 	set_process(false)
 	# Deferred so whatever polls Input this frame doesn't also read the press that closed it.
 	input_state_manager.set_deferred("current_input_state", _saved_input_state)
-	if _saved_focus != null:
-		_saved_focus.grab_focus()
+	_restore_focus()
 	save_manager.mark_tour_done(tour.tour_id)
 	tour_closed.emit(tour, skipped)
+
+
+## Freed when the menu rebuilt its rows during an action step; it focuses the new ones itself.
+func _restore_focus():
+	if is_instance_valid(_saved_focus):
+		_saved_focus.grab_focus()
 
 
 #region Live button icons
@@ -178,11 +204,12 @@ func _render_body():
 
 
 func _add_token(token: String):
-	var glyph = ALIASES[token][int(_gamepad)] if ALIASES.has(token) else token
+	var gamepad := input_state_manager.is_gamepad
+	var glyph = ALIASES[token][int(gamepad)] if ALIASES.has(token) else token
 	if glyph is Texture2D:
 		_add_icon(glyph)
 		return
-	var event := ControlBindings.event_for(glyph, _gamepad)
+	var event := ControlBindings.event_for(glyph, gamepad)
 	assert(event != null, "Tour body names unbound action {%s}" % glyph)
 	if ControlBindings.is_gamepad(event):
 		_add_icon(ControlBindings.event_icon(event))

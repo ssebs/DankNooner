@@ -43,3 +43,21 @@ unique_name_in_owner = true
 script = ExtResource("4_tourstep")
 title_key = "TOUR_CUSTOMIZE_LOADOUTS_TITLE"
 body_key = "TOUR_CUSTOMIZE_LOADOUTS_BODY"
+
+[node name="AddStep" type="Node" parent="CustomizeTour"]
+unique_name_in_owner = true
+script = ExtResource("4_tourstep")
+title_key = "TOUR_CUSTOMIZE_ADD_TITLE"
+body_key = "TOUR_CUSTOMIZE_ADD_BODY"
+
+[node name="RecolorStep" type="Node" parent="CustomizeTour"]
+unique_name_in_owner = true
+script = ExtResource("4_tourstep")
+title_key = "TOUR_CUSTOMIZE_RECOLOR_TITLE"
+body_key = "TOUR_CUSTOMIZE_RECOLOR_BODY"
+
+[node name="SetActiveStep" type="Node" parent="CustomizeTour"]
+unique_name_in_owner = true
+script = ExtResource("4_tourstep")
+title_key = "TOUR_CUSTOMIZE_SET_ACTIVE_TITLE"
+body_key = "TOUR_CUSTOMIZE_SET_ACTIVE_BODY"
