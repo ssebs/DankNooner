@@ -18,6 +18,16 @@ const TARGET_3D_PADDING: float = 64.0
 const DIM_COLOR: Color = Color(0, 0, 0, 0.7)
 const OUTLINE_WIDTH: float = 3.0
 const DOT_SIZE: Vector2 = Vector2(12, 12)
+## Tokens that aren't one InputMap action: {token: [kbm, gamepad]}, each an action or an icon.
+const ALIASES: Dictionary = {
+	"cursor":
+	[
+		preload("res://resources/img/Icons/mouse_move.svg"),
+		preload("res://resources/img/Icons/xbox_stick_l.svg"),
+	],
+	# A cursor click: use_item's pad binding is the d-pad, so the pad clicks with A.
+	"click": ["use_item", "ui_accept"],
+}
 
 @onready var _ui: Control = %UI
 @onready var _spotlight: Control = %Spotlight
@@ -27,9 +37,6 @@ const DOT_SIZE: Vector2 = Vector2(12, 12)
 @onready var _image: TextureRect = %Image
 @onready var _body: RichTextLabel = %Body
 @onready var _dots: HBoxContainer = %Dots
-@onready var _back_group: Control = %BackGroup
-@onready var _back_prompt: InputPrompt = %BackPrompt
-@onready var _next_prompt: InputPrompt = %NextPrompt
 @onready var _back_btn: Button = %BackBtn
 @onready var _skip_btn: Button = %SkipBtn
 @onready var _next_btn: Button = %NextBtn
@@ -71,7 +78,7 @@ func _input(event: InputEvent):
 	if !is_open():
 		return
 	if _gamepad != was_gamepad:
-		_refresh_icons()
+		_render_body()
 	if event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		if _step_idx == 0:
@@ -127,9 +134,9 @@ func _show_step(idx: int):
 	_image.visible = step.image != null
 	_panel.custom_minimum_size.x = INTRO_WIDTH if idx == 0 else CALLOUT_WIDTH
 	_next_btn.text = tr("TOUR_DONE") if is_last else tr("TOUR_NEXT")
-	_back_group.visible = idx > 0
+	_back_btn.visible = idx > 0
 	_rebuild_dots()
-	_refresh_icons()
+	_render_body()
 	_next_btn.grab_focus()
 	_layout()
 
@@ -148,12 +155,6 @@ func _close(skipped: bool):
 
 
 #region Live button icons
-func _refresh_icons():
-	_back_prompt.refresh(_gamepad)
-	_next_prompt.refresh(_gamepad)
-	_render_body()
-
-
 func _rebuild_dots():
 	for dot in _dots.get_children():
 		dot.free()
@@ -164,30 +165,37 @@ func _rebuild_dots():
 		_dots.add_child(dot)
 
 
-## Body text with each {action} token swapped for its pad glyph or key chip.
+## Body text with each {action} token (or ALIASES token) swapped for its pad glyph or key chip.
 func _render_body():
 	_body.clear()
 	var text := tr(_steps[_step_idx].body_key)
 	var at := 0
 	for token in _token_regex.search_all(text):
 		_body.add_text(text.substr(at, token.get_start() - at))
-		_add_action(token.get_string(1))
+		_add_token(token.get_string(1))
 		at = token.get_end()
 	_body.add_text(text.substr(at))
 
 
-func _add_action(action: String):
-	var event := ControlBindings.event_for(action, _gamepad)
-	assert(event != null, "Tour body names unbound action {%s}" % action)
+func _add_token(token: String):
+	var glyph = ALIASES[token][int(_gamepad)] if ALIASES.has(token) else token
+	if glyph is Texture2D:
+		_add_icon(glyph)
+		return
+	var event := ControlBindings.event_for(glyph, _gamepad)
+	assert(event != null, "Tour body names unbound action {%s}" % glyph)
 	if ControlBindings.is_gamepad(event):
-		var font_size := _body.get_theme_font_size("normal_font_size")
-		var line_height := _body.get_theme_font("normal_font").get_height(font_size)
-		_body.add_image(ControlBindings.event_icon(event), 0, int(line_height))
+		_add_icon(ControlBindings.event_icon(event))
 		return
 	# RichTextLabel can't draw GestureChipLabel's StyleBoxTexture inline; a bgcolor stands in.
 	_body.push_bgcolor(UtilsConstants.UI_BLUE_DIM)
 	_body.add_text(" %s " % tr(ControlBindings.event_text(event)))
 	_body.pop()
+
+
+func _add_icon(icon: Texture2D):
+	var font_size := _body.get_theme_font_size("normal_font_size")
+	_body.add_image(icon, 0, int(_body.get_theme_font("normal_font").get_height(font_size)))
 
 
 #endregion

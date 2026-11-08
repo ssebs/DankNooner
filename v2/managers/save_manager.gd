@@ -44,6 +44,7 @@ func _ready():
 func deferred_init():
 	Console.add_command("give_money", _give_money, ["amount"], 1, "Add money to your profile")
 	Console.add_command("dbg_skip_tutorial", mark_tutorial_complete, [], 0, "Mark the tutorial complete")
+	Console.add_command("dbg_reset_tutorials", _reset_tutorials, [], 0, "Clear tour and tutorial progress")
 	if FileAccess.file_exists(save_path):
 		load_save()
 	else:
@@ -117,6 +118,12 @@ func mark_tour_done(tour_id: StringName) -> void:
 func reset_tours() -> void:
 	current_save["progression"]["tours_done"] = []
 	save_save()
+
+
+func _reset_tutorials() -> void:
+	current_save["progression"].erase("tutorial")
+	reset_tours()
+	Console.print_line("tours and tutorial reset")
 
 
 ## JSON loads numbers as floats, hence the int().

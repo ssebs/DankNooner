@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://managers/tour/tour_manager.gd" id="1_script"]
 [ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_theme"]
-[ext_resource type="PackedScene" path="res://player/hud_elements/input_prompt.tscn" id="3_prompt"]
 
 [node name="TourManager" type="Node"]
 script = ExtResource("1_script")
@@ -71,36 +70,30 @@ alignment = 1
 
 [node name="Buttons" type="HBoxContainer" parent="CanvasLayer/UI/Panel/VBox"]
 layout_mode = 2
+theme_override_constants/separation = 32
 
-[node name="BackGroup" type="HBoxContainer" parent="CanvasLayer/UI/Panel/VBox/Buttons"]
+[node name="BackBtn" type="Button" parent="CanvasLayer/UI/Panel/VBox/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="BackPrompt" parent="CanvasLayer/UI/Panel/VBox/Buttons/BackGroup" instance=ExtResource("3_prompt")]
-unique_name_in_owner = true
-layout_mode = 2
-action = "ui_cancel"
-
-[node name="BackBtn" type="Button" parent="CanvasLayer/UI/Panel/VBox/Buttons/BackGroup"]
-unique_name_in_owner = true
-layout_mode = 2
-focus_neighbor_left = NodePath("../../NextBtn")
+focus_neighbor_left = NodePath("../NextBtn")
 focus_neighbor_top = NodePath(".")
-focus_neighbor_right = NodePath("../../SkipBtn")
+focus_neighbor_right = NodePath("../SkipBtn")
 focus_neighbor_bottom = NodePath(".")
-focus_next = NodePath("../../SkipBtn")
-focus_previous = NodePath("../../NextBtn")
+focus_next = NodePath("../SkipBtn")
+focus_previous = NodePath("../NextBtn")
+theme_override_font_sizes/font_size = 20
 text = "BACK_LABEL"
 
 [node name="SkipBtn" type="Button" parent="CanvasLayer/UI/Panel/VBox/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
-focus_neighbor_left = NodePath("../BackGroup/BackBtn")
+focus_neighbor_left = NodePath("../BackBtn")
 focus_neighbor_top = NodePath(".")
 focus_neighbor_right = NodePath("../NextBtn")
 focus_neighbor_bottom = NodePath(".")
 focus_next = NodePath("../NextBtn")
-focus_previous = NodePath("../BackGroup/BackBtn")
+focus_previous = NodePath("../BackBtn")
+theme_override_font_sizes/font_size = 20
 text = "TOUR_SKIP"
 
 [node name="Spacer" type="Control" parent="CanvasLayer/UI/Panel/VBox/Buttons"]
@@ -113,13 +106,9 @@ unique_name_in_owner = true
 layout_mode = 2
 focus_neighbor_left = NodePath("../SkipBtn")
 focus_neighbor_top = NodePath(".")
-focus_neighbor_right = NodePath("../BackGroup/BackBtn")
+focus_neighbor_right = NodePath("../BackBtn")
 focus_neighbor_bottom = NodePath(".")
-focus_next = NodePath("../BackGroup/BackBtn")
+focus_next = NodePath("../BackBtn")
 focus_previous = NodePath("../SkipBtn")
+theme_override_font_sizes/font_size = 20
 text = "TOUR_NEXT"
-
-[node name="NextPrompt" parent="CanvasLayer/UI/Panel/VBox/Buttons" instance=ExtResource("3_prompt")]
-unique_name_in_owner = true
-layout_mode = 2
-action = "ui_accept"

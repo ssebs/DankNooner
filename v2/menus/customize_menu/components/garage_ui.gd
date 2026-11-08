@@ -102,6 +102,15 @@ func open(save_manager: SaveManager, audio_manager: AudioManager):
 	_audio_manager.set_music_ducked(self, true)
 
 
+## For the Customize tour to point at.
+func get_profile_tab() -> Control:
+	return _profile_tab
+
+
+func get_loadout_tabs() -> Control:
+	return _tabs
+
+
 ## One save: one lobby push, one skin sync.
 func commit():
 	_stop_horn_preview()

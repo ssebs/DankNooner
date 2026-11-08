@@ -195,10 +195,11 @@ settings_manager = NodePath("../../../SettingsManager")
 audio_manager = NodePath("../../../AudioManager")
 main_menu_state = NodePath("../MainMenuState")
 
-[node name="CustomizeMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1710077363 node_paths=PackedStringArray("save_manager", "level_manager", "audio_manager") instance=ExtResource("9_4srsv")]
+[node name="CustomizeMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1710077363 node_paths=PackedStringArray("save_manager", "level_manager", "audio_manager", "tour_manager") instance=ExtResource("9_4srsv")]
 save_manager = NodePath("../../../SaveManager")
 level_manager = NodePath("../../../LevelManager")
 audio_manager = NodePath("../../../AudioManager")
+tour_manager = NodePath("../../../TourManager")
 
 [node name="PauseMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1626689768 node_paths=PackedStringArray("menu_manager", "connection_manager", "level_manager", "input_state_manager", "pause_manager", "gamemode_manager", "spawn_manager", "lobby_manager", "steam_manager", "audio_manager", "main_menu_state", "settings_menu_state", "tricks_menu_state") instance=ExtResource("6_02kkc")]
 menu_manager = NodePath("../..")

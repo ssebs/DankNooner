@@ -5,8 +5,12 @@ class_name CustomizeMenuState extends MenuState
 @export var save_manager: SaveManager
 @export var level_manager: LevelManager
 @export var audio_manager: AudioManager
+@export var tour_manager: TourManager
 
 @onready var garage_ui: GarageUI = %GarageUI
+@onready var _tour: Tour = %CustomizeTour
+@onready var _profile_step: TourStep = %ProfileStep
+@onready var _loadouts_step: TourStep = %LoadoutsStep
 
 var _garage_set: GarageSet
 
@@ -22,6 +26,9 @@ func Enter(state_context: StateContext):
 	garage_ui.exit_requested.connect(_on_exit_requested)
 	ui.show()
 	garage_ui.open(save_manager, audio_manager)
+	_profile_step.target = garage_ui.get_profile_tab()
+	_loadouts_step.target = garage_ui.get_loadout_tabs()
+	tour_manager.play_once(_tour)
 
 
 ## Only commits: on a host launch, spawn_level() already freed the garage and is what called this.
@@ -57,4 +64,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("level_manager must not be empty")
 	if audio_manager == null:
 		issues.append("audio_manager must not be empty")
+	if tour_manager == null:
+		issues.append("tour_manager must not be empty")
 	return issues
