@@ -1,244 +1,127 @@
 [gd_scene format=3 uid="uid://cil6ntcnlqt5e"]
 
-[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_3mdmw"]
+[ext_resource type="PackedScene" uid="uid://bbsfxh4dri7y4" path="res://levels/assets/map_terrain_mine/House_1.glb" id="1_3mdmw"]
+[ext_resource type="Shader" uid="uid://bdmdtwvpsr2w6" path="res://levels/components/screen_neon_edges.gdshader" id="2_7kpfu"]
+[ext_resource type="Texture2D" uid="uid://c841by2vaiw7j" path="res://levels/assets/graybox/darkgray.png" id="2_lhqsi"]
+[ext_resource type="Texture2D" uid="uid://cjrex0qopeses" path="res://levels/assets/graybox/lightgray.png" id="3_6yfuy"]
+[ext_resource type="Script" uid="uid://bkho4nxye7goy" path="res://levels/components/neon_edges.gd" id="5_lqlj0"]
+[ext_resource type="PackedScene" uid="uid://dtckadkd3wndc" path="res://levels/assets/props/grind_rail.tscn" id="6_lqlj0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yxl4f"]
+render_priority = 0
+shader = ExtResource("2_7kpfu")
+shader_parameter/edge_color = Color(0.25490198, 0.6862745, 1, 1)
+shader_parameter/edge_energy = 1.5
+shader_parameter/edge_width_px = 1.5
+shader_parameter/depth_threshold = 0.05
+shader_parameter/normal_threshold = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7kpfu"]
+albedo_texture = ExtResource("2_lhqsi")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lqlj0"]
+render_priority = 0
+shader = ExtResource("2_7kpfu")
+shader_parameter/edge_color = Color(0.25490198, 0.6862745, 1, 1)
+shader_parameter/edge_energy = 1.5
+shader_parameter/edge_width_px = 1.5
+shader_parameter/depth_threshold = 0.05
+shader_parameter/normal_threshold = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lqlj0"]
+albedo_texture = ExtResource("3_6yfuy")
+uv1_triplanar = true
 
 [node name="House1" type="Node3D" unique_id=1355590988]
 
-[node name="Ground" parent="." unique_id=1485126779 instance=ExtResource("1_3mdmw")]
-shape_mode = 1
-width = 32.0
-depth = 32.0
-color_preset = 2
+[node name="House_1" parent="." unique_id=62583360 instance=ExtResource("1_3mdmw")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
 
-[node name="wall_back" parent="." unique_id=210000002 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 2.05, -5)
+[node name="BackFence" parent="House_1" index="0" unique_id=341596757]
+material_overlay = SubResource("ShaderMaterial_yxl4f")
+
+[node name="StaticBody3D" parent="House_1/BackFence" index="0" unique_id=2045302443]
 collision_layer = 3
-shape_mode = 1
-width = 12.0
-height = 4.0
-depth = 4.0
-color_preset = 1
 
-[node name="wall_left" parent="." unique_id=210000003 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -6, 2.05, 0)
+[node name="chimney" parent="House_1" index="1" unique_id=679985927]
+material_overlay = SubResource("ShaderMaterial_yxl4f")
+
+[node name="StaticBody3D" parent="House_1/chimney" index="0" unique_id=632499343]
 collision_layer = 3
-shape_mode = 1
-width = 4.0
-height = 4.0
-depth = 10.0
-color_preset = 1
 
-[node name="wall_right" parent="." unique_id=210000004 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 6, 2.05, 0)
+[node name="door" parent="House_1" index="2" unique_id=977943409]
+material_overlay = SubResource("ShaderMaterial_yxl4f")
+
+[node name="FrontFence1" parent="House_1" index="3" unique_id=2086048616]
+material_overlay = SubResource("ShaderMaterial_yxl4f")
+
+[node name="StaticBody3D" parent="House_1/FrontFence1" index="0" unique_id=737461098]
 collision_layer = 3
-shape_mode = 1
-width = 4.0
-height = 4.0
-depth = 10.0
-color_preset = 1
 
-[node name="wall_front_left" parent="." unique_id=210000005 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -3.5, 2.05, 5)
+[node name="FrontFence2" parent="House_1" index="4" unique_id=383859777]
+material_overlay = SubResource("ShaderMaterial_yxl4f")
+
+[node name="StaticBody3D" parent="House_1/FrontFence2" index="0" unique_id=1336209853]
 collision_layer = 3
-shape_mode = 1
-width = 5.0
-height = 4.0
-depth = 4.0
-color_preset = 1
 
-[node name="wall_front_right" parent="." unique_id=210000006 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 3.5, 2.05, 5)
+[node name="garagedoor" parent="House_1" index="5" unique_id=589785898]
+material_overlay = SubResource("ShaderMaterial_yxl4f")
+
+[node name="Grass" parent="House_1" index="6" unique_id=1214194997]
+material_overlay = SubResource("ShaderMaterial_yxl4f")
+
+[node name="StaticBody3D" parent="House_1/Grass" index="0" unique_id=19494715]
 collision_layer = 3
-shape_mode = 1
-width = 5.0
-height = 4.0
-depth = 4.0
-color_preset = 1
 
-[node name="door" parent="." unique_id=210000008 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5249999, 5)
+[node name="ground" parent="House_1" index="7" unique_id=1883086462]
+material_override = SubResource("StandardMaterial3D_7kpfu")
+material_overlay = SubResource("ShaderMaterial_yxl4f")
+
+[node name="StaticBody3D" parent="House_1/ground" index="0" unique_id=763614088]
 collision_layer = 3
-width = 1.9
-height = 3.0
-depth = 0.15
-color_preset = 5
-neon_edges = true
 
-[node name="roof_right" parent="." unique_id=210000009 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(0.923077, 0.384615, 0, -0.384615, 0.923077, 0, 0, 0, 1, 3, 5.25, 0)
-width = 7.0
-height = 0.3
-depth = 11.0
-color_preset = 5
-neon_edges = true
+[node name="House" parent="House_1" index="8" unique_id=797538227]
+material_overlay = SubResource("ShaderMaterial_lqlj0")
 
-[node name="roof_left" parent="." unique_id=210000010 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(0.923077, -0.384615, 0, 0.384615, 0.923077, 0, 0, 0, 1, -3, 5.25, 0)
-width = 7.0
-height = 0.3
-depth = 11.0
-color_preset = 5
-neon_edges = true
-
-[node name="chimney" parent="." unique_id=210000011 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 6, -2)
+[node name="StaticBody3D" parent="House_1/House" index="0" unique_id=491579398]
 collision_layer = 3
-width = 0.8
-height = 3.0
-depth = 0.8
-color_preset = 1
 
-[node name="gable_front_right" parent="." unique_id=210000012 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(0.9230773, 3.3800426e-08, -0.38461506, -0.38461512, 1.2284444e-07, -0.92307717, -3.5527137e-15, 0.99999994, 1.3113417e-07, 2.423, 3.89, 4.934026)
+[node name="SideFences" parent="House_1" index="9" unique_id=818960978]
+material_overlay = SubResource("ShaderMaterial_yxl4f")
+
+[node name="StaticBody3D" parent="House_1/SideFences" index="0" unique_id=634575602]
 collision_layer = 3
-shape_mode = 1
-width = 6.5
-height = 3.0
-depth = 3.0
-color_preset = 1
 
-[node name="gable_front_left" parent="." unique_id=210000013 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(0.9230773, -3.3800426e-08, 0.38461506, 0.38461512, 1.2284444e-07, -0.92307717, 3.5527137e-15, 0.99999994, 1.3113417e-07, -2.423, 3.89, 4.934026)
+[node name="Sidewalk" parent="House_1" index="10" unique_id=860925618]
+material_overlay = SubResource("ShaderMaterial_yxl4f")
+surface_material_override/0 = SubResource("StandardMaterial3D_lqlj0")
+
+[node name="StaticBody3D" parent="House_1/Sidewalk" index="0" unique_id=615665569]
 collision_layer = 3
-shape_mode = 1
-width = 6.5
-height = 3.0
-depth = 3.0
-color_preset = 1
 
-[node name="gable_back_right" parent="." unique_id=210000014 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(0.9230771, -2.9802322e-08, 0.38461506, -0.38461506, -2.9802322e-08, 0.9230771, 0, -0.99999994, -4.371139e-08, 2.423, 3.89, -4.9755287)
-collision_layer = 3
-shape_mode = 1
-width = 6.5
-height = 3.0
-depth = 3.0
-color_preset = 1
+[node name="NeonEdges" type="Node" parent="." unique_id=1252709246]
+script = ExtResource("5_lqlj0")
+energy = 1.5
+metadata/_custom_type_script = "uid://bkho4nxye7goy"
 
-[node name="gable_back_left" parent="." unique_id=210000015 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(0.9230771, 2.9802322e-08, -0.38461506, 0.38461506, -2.9802322e-08, 0.9230771, 0, -0.99999994, -4.371139e-08, -2.423, 3.89, -4.9755287)
-collision_layer = 3
-shape_mode = 1
-width = 6.5
-height = 3.0
-depth = 3.0
-color_preset = 1
+[node name="GrindRail" parent="." unique_id=575280884 instance=ExtResource("6_lqlj0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0.34, -2)
+length = 28.0
 
-[node name="garage_wall_back" parent="." unique_id=210000019 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 9, 1.8, -3)
-collision_layer = 3
-shape_mode = 1
-width = 6.0
-height = 3.5
-depth = 3.5
-color_preset = 1
+[node name="GrindRail2" parent="." unique_id=599572407 instance=ExtResource("6_lqlj0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0.34, -2)
+length = 28.0
 
-[node name="garage_wall_right" parent="." unique_id=210000020 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 12, 1.8, 0)
-collision_layer = 3
-shape_mode = 1
-width = 3.5
-height = 3.5
-depth = 6.0
-color_preset = 1
+[node name="GrindRail3" parent="." unique_id=1442212322 instance=ExtResource("6_lqlj0")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -2.9802322e-08, 0.34, -16)
+length = 28.0
 
-[node name="garage_front_left" parent="." unique_id=210000021 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 6.5, 1.8, 3)
-collision_layer = 3
-shape_mode = 1
-height = 3.5
-depth = 3.5
-color_preset = 1
+[node name="GrindRail4" parent="." unique_id=1096871253 instance=ExtResource("6_lqlj0")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -5.0000014, 0.34, 12)
+length = 21.0
 
-[node name="garage_front_right" parent="." unique_id=210000022 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 11.5, 1.8, 3)
-collision_layer = 3
-shape_mode = 1
-height = 3.5
-depth = 3.5
-color_preset = 1
+[node name="GrindRail5" parent="." unique_id=980812266 instance=ExtResource("6_lqlj0")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 13.999998, 0.34, 12.000001)
+length = 4.0
 
-[node name="garage_door_header" parent="." unique_id=210000023 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 9, 3.2, 3)
-collision_layer = 3
-shape_mode = 1
-width = 4.0
-height = 0.7
-depth = 0.7
-color_preset = 1
-
-[node name="garage_door" parent="." unique_id=210000024 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 9, 1.5036317, 3)
-collision_layer = 3
-shape_mode = 1
-width = 4.0
-height = 3.0
-depth = 2.7
-neon_edges = true
-
-[node name="garage_roof" parent="." unique_id=210000025 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3.7, 0)
-width = 6.4
-height = 0.3
-depth = 6.4
-color_preset = 5
-neon_edges = true
-
-[node name="driveway" parent="." unique_id=210000026 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.049999833, 9.5)
-shape_mode = 1
-width = 5.0
-height = 0.12
-depth = 13.0
-
-[node name="fence_back" parent="." unique_id=210000027 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6249999, -16)
-collision_layer = 3
-width = 28.0
-height = 1.2
-depth = 0.15
-color_preset = 6
-neon_edges = true
-
-[node name="fence_left" parent="." unique_id=210000028 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0.625, -2)
-collision_layer = 3
-width = 0.15
-height = 1.2
-depth = 28.0
-color_preset = 6
-neon_edges = true
-
-[node name="fence_left2" parent="." unique_id=1035061368 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0.625, -2)
-collision_layer = 3
-width = 0.15
-height = 1.2
-depth = 28.0
-color_preset = 6
-neon_edges = true
-
-[node name="fence_front_left" parent="." unique_id=210000030 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.7249998, 12)
-collision_layer = 3
-width = 21.0
-height = 1.2
-depth = 0.15
-color_preset = 6
-neon_edges = true
-
-[node name="fence_front_right" parent="." unique_id=210000031 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0.7249998, 12)
-collision_layer = 3
-width = 3.0
-height = 1.2
-depth = 0.15
-color_preset = 6
-neon_edges = true
-
-[node name="sidewalk_front" parent="." unique_id=210000034 instance=ExtResource("1_3mdmw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07499999, 14)
-width = 32.0
-height = 0.1
-depth = 4.0
-color_preset = 1
+[editable path="House_1"]
