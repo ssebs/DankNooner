@@ -23,6 +23,7 @@ const AUTO_JOIN_ADDR := "127.0.0.1"
 
 @onready var back_btn: Button = %BackBtn
 @onready var customize_btn: Button = %CustomizeBtn
+@onready var tutorials_section: Control = %Tutorials
 @onready var tutorial_btn: Button = %TutorialBtn
 @onready var free_roam_btn: Button = %FreeRoamBtn
 @onready var host_btn: Button = %HostBtn
@@ -60,6 +61,8 @@ func Enter(_state_context: StateContext):
 
 	# Everything but the tutorial stays locked until it's been finished once.
 	var locked := !save_manager.is_tutorial_complete()
+	# On top (so MenuManager focuses it) until the tutorial's done, then last.
+	tutorials_section.get_parent().move_child(tutorials_section, 0 if locked else -1)
 	for control: BaseButton in [
 		customize_btn, free_roam_btn, host_btn, paste_btn, host_mode_opt, server_browser_btn
 	]:

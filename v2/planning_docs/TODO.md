@@ -180,17 +180,19 @@
 - [ ] use cutscene system
 - [ ] 3 short "missions" (tutorial) that players can skip when first launching
   - [ ] don't force boring tut, make it hidden (see Half-Life 2/Valve games)
-  - [ ] 1: MSF Course
-    - [ ] Basic movement (gas, brake, steer, camera, shift gears, lean)
+  - [x] 1: MSF Course
+    - [x] Basic movement (gas, brake, steer, camera, shift gears, lean, clutch)
+    - [x] Wheelies (basic, balance point, clutch up)
+    - [x] Stoppies
+    - [x] Drift
+    - [x] Air tricks
+    - [x] Trick mods
+  - [ ] 2: Advanced:
     - [ ] Progressive braking (0% -> 100% causes crash)
-    - [ ] Clutch
-  - [ ] 2: Stunting 101
-    - [ ] Wheelies (basic, balance point, clutch up)
-    - [ ] Stoppies
-    - [ ] Drift
-  - [ ] 3: Stunting 102
-    - [ ] Air tricks
-    - [ ] Trick mods
+    - [ ] burnouts
+    - [ ] kickflip / superman
+    - [ ] grinds w/ tweaks
+    - [ ] bunny hops
 
 ### Tricks / animation
 - [ ] More tricks

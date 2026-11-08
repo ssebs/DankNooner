@@ -32,7 +32,10 @@ Red triangles over enemy head
     - [x] working level
     - [x] working steps / explainations
     - [x] improve tutorial feel
-    - [ ] improve tutorial level map
+    - [x] improve tutorial level map
+    - [ ] fix backflip not counting unless you rotate allll the way
+    - [ ] grab gas can => just check boost used, not full amount. (ended up grabbing next item & being confused)
+    - [ ] using shotgun but missing needs to reset you but say you were too far away
     - [ ] shorten tutorial
 
 --

@@ -16,16 +16,18 @@ Two connected pieces, built in this order:
 
 ## Progress (2026-11-07)
 
-**Tasks 1 to 8 are built; 1 to 4 are playtested.** Task 5's last round (outline-only action
-steps, the read-only `*` step, the recolor snapshot) and Task 8's playtest are next. Then resume
-at **Task 9**. Where the built code differs from the task text below, this section wins:
+**Tasks 1 to 9 are built.** Playtested and passing: the fill-up tour, the Customize tour and
+Mission 1 (MSF). Still to pass: Missions 2 and 3 after round 5's fixes, and Task 8's gate checks.
+Next is **Task 10** (Reset tutorials + Advanced button), then **Task 11** (Advanced tutorial).
+Where the built code differs from the task text below, this section wins:
 
 - **Tour buttons:** no `InputPrompt`s beside Next/Back (user cut them). Back reuses
   `BACK_LABEL`; new keys are only `TOUR_NEXT`, `TOUR_SKIP`, `TOUR_DONE`.
 - **Device detection** lives in `InputStateManager` (`is_gamepad` + `device_changed`), not in
   `TourManager`. Menus with no player read it; `GarageUI.open()` takes `input_state_manager`.
-- **Token aliases:** `TourManager.ALIASES` maps tokens that aren't one action, per device:
-  `{cursor}` (mouse / plain left stick icon) and `{click}` (`use_item` / `ui_accept`).
+- **Token aliases:** `ControlBindings.TOKEN_ALIASES` maps tokens that aren't one action, per
+  device: `{cursor}` (mouse / left stick icon), `{look}` (mouse / right stick icon), `{click}`
+  (`use_item` / `ui_accept`) and `{bike_icon}` (the HUD's balance-point icon).
 - **Action steps:** `TourStep.done_when: Callable`, set at runtime by the owning scene. While it's
   set, Next hides, input goes back to the saved state (menu works normally), the screen isn't
   dimmed (outline only), and the tour advances once it returns true. `TourManager.skip()` closes a
@@ -122,13 +124,15 @@ at **Task 9**. Where the built code differs from the task text below, this secti
     the copy says to build speed first.
   - Air is two lessons: Flips (`tut_flip`, Backflip), then a teleport back to `RampStart` and Air
     Tricks (`tut_air`, High Chair), each with its own tour.
-  - **Open:** ramp pickups are invisible on the items road (driving through still grabs one).
+  - Ramp pickups were invisible on the items road: they spawned too low (user fixed).
 - **Level layout:** lanes start at z=190 heading -Z. The event circle is parked at (-100, 0, 180).
 - **CloseHelpTask deleted** with `SettingsMenuState.show_controls_tab()`, TutorialGameMode's
   `settings_menu_state` export, and the `TUT_SHOW_HELP` / `TUT_PRESS_RT` strings. The empty
   `TestEventStartCircle` went too. `TUT_HINT_CHANGE_GEAR` no longer names pad buttons.
 - **Play menu:** the old disabled `StoryBtn` became `%TutorialBtn` (`STORY_LABEL` replaced by
-  `TUTORIAL_BTN_LABEL`). It's first in the tree, so `MenuManager` focuses it on Enter. The game-id
+  `TUTORIAL_BTN_LABEL`). Menu order: Multiplayer (host, join, server browser), Solo, then a
+  `%Tutorials` section (`TUTORIALS_LABEL`). Until the tutorial's done, `Enter` moves `%Tutorials`
+  to the top so `MenuManager` focuses its button; Task 10's Advanced button goes in it. The game-id
   auto-copy now runs only in `HOST` mode, so STORY's solo server doesn't copy one.
 
 ---
@@ -154,6 +158,7 @@ Both are in the demo's scope (Next Fest, Feb '27).
 - **Images and long text in tour steps:** the layout leaves room for them, but no step uses them
   yet.
 - **More tours:** only fill-up and Customize for now.
+- **Advanced lessons in the main tutorial:** they're a separate, optional tutorial (Task 11).
 
 ### Anti-goals
 
@@ -691,25 +696,54 @@ visibility logic; don't add a second one.
   - `tests/coverage.gd`: add the new task names to `OPTIONAL_TASKS`.
 - **Clutch dump** needs no task of its own; the wheelie check after its tour covers it.
 
-- [ ] **Step 1:** Write the tasks, then wire them into the level and `coverage.gd`.
-- [ ] **Step 2:** Run gdlint and the headless load. Expected: clean.
+- [x] **Step 1:** Write the tasks, then wire them into the level and `coverage.gd`.
+- [x] **Step 2:** Run gdlint and the headless load. Expected: clean.
 - [ ] **Step 3:** **User playtest:** all 3 missions complete start to finish, and every check
   fires.
 
 ---
 
-### Task 10 (cut first): Reset tutorials in Settings
+### Task 10: Reset tutorials + Advanced tutorial button
 
 **Files:**
-- Modify: the Settings tab that holds general options (find it), and
-  `localization/localization.csv` (`SETTINGS_RESET_TOURS`).
+- Modify: the Settings tab that holds general options (find it), the Play menu, and
+  `localization/localization.csv` (`SETTINGS_RESET_TOURS`, the Advanced button label).
 
-**Behaviour:** a button that calls `save_manager.reset_tours()`. If Settings already has a
-confirm pattern, use it.
+**Behaviour:**
+- **Reset tutorials:** a Settings button that calls `save_manager.reset_tours()`. If Settings
+  already has a confirm pattern, use it.
+- **Advanced tutorial:** a button in the Play menu's `%Tutorials` section that starts Task 11's
+  tutorial.
+  Wire it once Task 11 exists.
 
-- [ ] **Step 1:** Add the button.
+- [ ] **Step 1:** Add the reset button.
 - [ ] **Step 2:** Run gdlint and the headless load. Expected: clean.
 - [ ] **Step 3:** **User playtest:** after a reset, the pump tour shows again.
+
+---
+
+### Task 11: Advanced tutorial (separate from the main tutorial)
+
+From TODO.md's Tutorials "2: Advanced" list, plus trail braking. Optional: it doesn't gate the
+Play menu. **Brainstorm with the user before writing a plan.**
+
+**Lessons:**
+- Progressive braking: ramp the front brake up; a 0% to 100% grab crashes.
+- Trail braking: keep some brake on into the corner and ease it off as you lean.
+- Burnouts
+- Kickflip and Superman
+- Grinds with tweaks
+- Bunny hops
+
+**Reuse:** `PerformTrickTask` already covers `BURNOUT`, `KICKFLIP`, `SUPERMAN`, `BUNNY_HOP` and the
+grind tricks. The two braking lessons need new checks.
+
+**Open decisions (ask the user):**
+- Map: the tutorial level (a second `GameModeEvent`, plus a grind rail), or a new one.
+- Unlock: available from the start, or only after the main tutorial.
+- Save: its own progress key, separate from the gate's `progression.tutorial`.
+- Trail braking: verify what `MovementController` does with front brake while leaned before
+  designing the check.
 
 ---
 
