@@ -28,6 +28,7 @@
 [ext_resource type="Script" uid="uid://b40syrl038fb3" path="res://managers/gamemodes/tasks/checkpoint_task.gd" id="checkpoint"]
 [ext_resource type="Script" uid="uid://8jkuycs74mo3" path="res://managers/gamemodes/tasks/wheelie_duration_task.gd" id="wheelie"]
 [ext_resource type="Script" path="res://managers/gamemodes/tasks/look_around_task.gd" id="lookaround"]
+[ext_resource type="Script" path="res://managers/gamemodes/tasks/set_active_task.gd" id="setactive"]
 [ext_resource type="Script" path="res://managers/gamemodes/tasks/drop_item_task.gd" id="dropitem"]
 [ext_resource type="Script" uid="uid://07fvlfaumhio" path="res://managers/gamemodes/tasks/perform_trick_task.gd" id="trick"]
 [ext_resource type="Script" path="res://managers/gamemodes/tasks/boost_task.gd" id="boost"]
@@ -170,15 +171,42 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.05, -70)
 
 [node name="SteerGate1" parent="Gates" instance=ExtResource("gate")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 0, 140)
+is_active = false
 width = 7.0
+
+[node name="Wall" parent="Gates/SteerGate1" instance=ExtResource("6_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.75, 1.5, 0)
+width = 8.5
+height = 3.0
+depth = 1.0
+color_preset = 4
+neon_edges = true
 
 [node name="SteerGate2" parent="Gates" instance=ExtResource("gate")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 105)
+is_active = false
 width = 7.0
+
+[node name="Wall" parent="Gates/SteerGate2" instance=ExtResource("6_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.75, 1.5, 0)
+width = 8.5
+height = 3.0
+depth = 1.0
+color_preset = 4
+neon_edges = true
 
 [node name="SteerGate3" parent="Gates" instance=ExtResource("gate")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 0, 70)
+is_active = false
 width = 7.0
+
+[node name="Wall" parent="Gates/SteerGate3" instance=ExtResource("6_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.75, 1.5, 0)
+width = 8.5
+height = 3.0
+depth = 1.0
+color_preset = 4
+neon_edges = true
 
 [node name="Ramps" type="Node3D" parent="."]
 
@@ -239,7 +267,7 @@ highlight_key = "TOUR_TUT_GAS_HIGHLIGHT"
 
 [node name="SpeedAbove_Cruise" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF"]
 script = ExtResource("speed")
-min_speed = 50.0
+min_speed = 35.0
 
 [node name="Brake_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF"]
 script = ExtResource("showtour")
@@ -260,6 +288,10 @@ script = ExtResource("speedbelow")
 [node name="Teleport_Steer" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF" node_paths=PackedStringArray("marker")]
 script = ExtResource("teleport")
 marker = NodePath("../../../../Markers/RoadStart")
+
+[node name="ShowGates" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF" node_paths=PackedStringArray("objects")]
+script = ExtResource("setactive")
+objects = [NodePath("../../../../Gates/SteerGate1"), NodePath("../../../../Gates/SteerGate2"), NodePath("../../../../Gates/SteerGate3")]
 
 [node name="Steer_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF"]
 script = ExtResource("showtour")
@@ -291,6 +323,11 @@ script = ExtResource("checkpoint")
 eval_when = 1
 trigger = NodePath("../../../../Gates/SteerGate3")
 hide_trigger_on_pass = true
+
+[node name="HideGates" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF" node_paths=PackedStringArray("objects")]
+script = ExtResource("setactive")
+objects = [NodePath("../../../../Gates/SteerGate1"), NodePath("../../../../Gates/SteerGate2"), NodePath("../../../../Gates/SteerGate3")]
+active = false
 
 [node name="Camera_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF"]
 script = ExtResource("showtour")
@@ -350,7 +387,8 @@ highlight_key = "TOUR_TUT_BALANCE_HIGHLIGHT"
 
 [node name="WheelieDuration_Balance" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101"]
 script = ExtResource("wheelie")
-duration = 4.0
+duration = 2.0
+balance_point = true
 
 [node name="Teleport_ClutchUp" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101" node_paths=PackedStringArray("marker")]
 script = ExtResource("teleport")
@@ -485,11 +523,24 @@ title_key = "TOUR_TUT_AIR_TITLE"
 body_key = "TOUR_TUT_AIR_BODY"
 highlight_key = "TOUR_TUT_AIR_HIGHLIGHT"
 
+[node name="PerformTrick_Backflip" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102"]
+script = ExtResource("trick")
+required_trick = 4
+must_land = true
+help_pin = "BACKFLIP"
+warn_wrong_trick = true
+
+[node name="Teleport_RampAgain" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102" node_paths=PackedStringArray("marker")]
+script = ExtResource("teleport")
+marker = NodePath("../../../../Markers/RampStart")
+
 [node name="PerformTrick_HighChair" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102"]
 script = ExtResource("trick")
 required_trick = 8
 min_duration = 0.5
 must_land = true
+help_pin = "AIR/HIGH_CHAIR/HOLD/UP"
+warn_wrong_trick = true
 
 [node name="Teleport_Boost" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102" node_paths=PackedStringArray("marker")]
 script = ExtResource("teleport")
@@ -550,12 +601,13 @@ title_key = "TOUR_TUT_RAMP_ITEM_TITLE"
 body_key = "TOUR_TUT_RAMP_ITEM_BODY"
 highlight_key = "TOUR_TUT_RAMP_ITEM_HIGHLIGHT"
 
-[node name="PerformTrick_RampHighChair" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102"]
+[node name="PerformTrick_RampHeelClicker" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102"]
 script = ExtResource("trick")
-required_trick = 8
-min_duration = 0.5
+required_trick = 7
 must_land = true
-objective_key = "TUT_RAMP_HIGH_CHAIR"
+help_pin = "AIR/HEEL_CLICKER/TAP/DOWN"
+warn_wrong_trick = true
+objective_key = "TUT_RAMP_HEEL_CLICKER"
 
 [node name="Teleport_Drop" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102" node_paths=PackedStringArray("marker")]
 script = ExtResource("teleport")

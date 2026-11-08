@@ -9,15 +9,31 @@
 ##
 ## `must_land` holds the pass until the trick is over and the rider is back on the ground, so a
 ## following step (e.g. a tutorial tour) doesn't cut the trick off. A crash clears it.
+##
+## Teaching aids (tutorial): `help_pin` shows the trick's controls on the HUD while the task runs,
+## and `warn_wrong_trick` flashes a warning naming `required_trick` on any other air trick.
 class_name PerformTrickTask extends GameModeTask
 
 @export var required_trick: TrickController.Trick = TrickController.Trick.WHEELIE_SITTING
 @export var min_duration: float = 0.0
 @export var success_zone: Area3D = null
 @export var must_land: bool = false
+## A TrickRow pin id (e.g. "AIR/HIGH_CHAIR/HOLD/UP", or "BACKFLIP" for a how-to), or "" for none.
+@export var help_pin: String = ""
+@export var warn_wrong_trick: bool = false
 ## Localization keys (optional — fall back to a generic label if empty).
 @export var objective_key: String = ""
 @export var hint_key: String = ""
+
+
+func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
+	if help_pin != "":
+		runner.riding_hud.push_event_pin(int(player.name), help_pin)
+
+
+func on_exit(player: PlayerEntity, _state: Dictionary) -> void:
+	if help_pin != "":
+		runner.riding_hud.push_event_pin(int(player.name), "")
 
 
 func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
@@ -27,6 +43,8 @@ func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
 			and player.movement_controller.is_on_floor
 			and player.trick_controller.current_trick == TrickController.Trick.NONE
 		)
+	if warn_wrong_trick:
+		_warn_wrong_trick(player, state)
 	var active := player.trick_controller.current_trick == required_trick
 	if !active:
 		state["t"] = 0.0
@@ -40,6 +58,22 @@ func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
 		state["trick_done"] = true
 		return false
 	return true
+
+
+## Once per wrong trick per jump.
+func _warn_wrong_trick(player: PlayerEntity, state: Dictionary) -> void:
+	var tricks := player.trick_controller
+	if tricks.trick_state() != TrickController.TrickState.AIR:
+		state.erase("wrong")
+		return
+	var trick := tricks.current_trick
+	if trick in [TrickController.Trick.NONE, required_trick, state.get("wrong")]:
+		return
+	state["wrong"] = trick
+	var trick_key := "TRICK_NAME_" + TrickController.trick_to_str(required_trick)
+	runner.riding_hud.push_event_warning(
+		int(player.name), "TUT_WRONG_TRICK", false, {"trick": trick_key}
+	)
 
 
 func get_progress(state: Dictionary) -> String:

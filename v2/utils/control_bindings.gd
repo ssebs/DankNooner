@@ -47,13 +47,11 @@ const JOY_AXIS_ICONS: Dictionary = {
 	Vector2i(JOY_AXIS_TRIGGER_LEFT, 1): preload("res://resources/img/Icons/xbox_lt.svg"),
 	Vector2i(JOY_AXIS_TRIGGER_RIGHT, 1): preload("res://resources/img/Icons/xbox_rt.svg"),
 }
+const MOUSE_MOVE_ICON: Texture2D = preload("res://resources/img/Icons/mouse_move.svg")
 ## Text tokens that aren't one InputMap action: {token: [kbm, gamepad]}, each an action or an icon.
 const TOKEN_ALIASES: Dictionary = {
-	"cursor":
-	[
-		preload("res://resources/img/Icons/mouse_move.svg"),
-		preload("res://resources/img/Icons/xbox_stick_l.svg"),
-	],
+	"cursor": [MOUSE_MOVE_ICON, preload("res://resources/img/Icons/xbox_stick_l.svg")],
+	"look": [MOUSE_MOVE_ICON, preload("res://resources/img/Icons/xbox_stick_r.svg")],
 	# A cursor click: use_item's pad binding is the d-pad, so the pad clicks with A.
 	"click": ["use_item", "ui_accept"],
 }

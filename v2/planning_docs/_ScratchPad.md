@@ -21,6 +21,7 @@ Red triangles over enemy head
 
 ## NOW
 - [ ] rm red bar part of fillup mini game, increase price instead
+- [ ] Flips (BACKFLIP/FRONTFLIP) are current_trick for only one rollback tick, but task check()s poll it once per rendered frame, so a frame that runs 2+ ticks can miss the flip. The fix is to latch flips in TrickController the way tap tricks are (_tap_trick / TAP_TRICK_DURATION) rather than special-casing them in tasks.
 - [ ] grinding - smith should lower so the center of the tank is whats grinding & not floating in the air
 - [ ] Add product feature tour / walk thru for tutorials
   - [ ] `planning_docs/____TUTORIAL_WIP.md`
@@ -30,6 +31,8 @@ Red triangles over enemy head
   - [x] tutorial level / tutorials + lock out main game until tut is done
     - [x] working level
     - [x] working steps / explainations
+    - [ ] improve tutorial feel
+    - [ ] improve tutorial level map
     - [ ] shorten tutorial
 
 --

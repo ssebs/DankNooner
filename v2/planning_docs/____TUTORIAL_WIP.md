@@ -94,6 +94,22 @@ at **Task 9**. Where the built code differs from the task text below, this secti
   - Stoppie and drift must land. `StoppieDurationTask` was deleted (the stoppie uses
     `PerformTrickTask`). High Chairs need 0.5s.
   - Drop lesson after the ramp: teleport to `RampItemStart`, then double-honk a held ramp away.
+- **Playtest round 4 (user):**
+  - Braking lesson's cruise speed is 35, down from 50.
+  - `LookAroundTask` also counts mouse look (`Input.get_last_mouse_velocity()`, solo only). The
+    Camera highlight uses a new `{look}` alias (mouse icon / right stick, `xbox_stick_r.svg`).
+  - Balance copy names the bike icon under the score (gold in the balance point, red past it).
+    `WheelieDurationTask.balance_point` makes the check count only time in it (2s; leaving the
+    balance point pauses the timer rather than resetting it, since locking is taught next).
+  - Steering gates start `is_active = false` and each has a red wall blocking the other half of
+    the road. The new `SetActiveTask` (`ShowGates` / `HideGates`) turns them on only for the
+    steering lesson, so they're gone during gas and braking.
+  - Air ramp: a must-land Backflip, a teleport back to `RampStart`, then the High Chair. The
+    dropped ramp asks for a Heel Clicker (`TUT_RAMP_HEEL_CLICKER`).
+  - `PerformTrickTask.help_pin` shows a `TrickRow` pin id on the HUD's Pinned list while the task
+    runs, unsaved (`RidingHUDState.push_event_pin`; `clear_event_text` drops it).
+    `warn_wrong_trick` flashes `TUT_WRONG_TRICK` once per wrong air trick per jump.
+    `push_event_warning` gained `args` (their values are keys, localized on the client).
 - **Level layout:** lanes start at z=190 heading -Z. The event circle is parked at (-100, 0, 180).
 - **CloseHelpTask deleted** with `SettingsMenuState.show_controls_tab()`, TutorialGameMode's
   `settings_menu_state` export, and the `TUT_SHOW_HELP` / `TUT_PRESS_RT` strings. The empty

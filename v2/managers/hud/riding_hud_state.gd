@@ -101,6 +101,8 @@ var _netfox_debug_label: Label = null
 var _netfox_dbg_accum: float = 0.0
 ## Hint tricks of the running race challenges; named under the leaderboard.
 var _challenge_tricks := PackedInt32Array()
+## A TrickRow pin id the running event shows above your own pins (see push_event_pin).
+var _event_pin: String = ""
 ## Device the prompts and trick rows currently show glyphs for.
 var _shown_gamepad: bool = false
 ## TrickState the trick prompt currently lists.
@@ -374,7 +376,9 @@ func _on_save_item_updated(key: String, _value: Variant):
 func _rebuild_trick_rows():
 	for child in _trick_rows.get_children():
 		child.queue_free()
-	var pins: Array = save_manager.current_save["pinned_tricks"]
+	var pins: Array = save_manager.current_save["pinned_tricks"].duplicate()
+	if _event_pin != "" and _event_pin not in pins:
+		pins.push_front(_event_pin)
 	_pinned_label.visible = !pins.is_empty()
 	for pin: String in pins:
 		var row := _add_trick_row(_trick_rows)
@@ -561,8 +565,17 @@ func push_event_status_all(text_key: String) -> void:
 
 
 ## Server-side: flash a warning (missed checkpoint, wrong way); `looping` shakes until cleared.
-func push_event_warning(peer_id: int, text_key: String, looping: bool = false) -> void:
-	_rpc_flash_event_warning.rpc_id(peer_id, text_key, looping)
+## `args` fill the text's {placeholders}; their values are keys too, localized per client.
+func push_event_warning(
+	peer_id: int, text_key: String, looping: bool = false, args: Dictionary = {}
+) -> void:
+	_rpc_flash_event_warning.rpc_id(peer_id, text_key, looping, args)
+
+
+## Server-side: show a TrickRow pin id (e.g. a tutorial lesson's trick) on the peer's HUD, unsaved.
+## "" clears it.
+func push_event_pin(peer_id: int, pin_id: String) -> void:
+	_rpc_set_event_pin.rpc_id(peer_id, pin_id)
 
 
 func clear_event_warning(peer_id: int) -> void:
@@ -592,6 +605,7 @@ func clear_event_text() -> void:
 	_event_objective.hide()
 	_event_progress.hide()
 	_rpc_clear_event_warning()
+	_rpc_set_event_pin("")
 	_update_event_panel()
 
 
@@ -629,10 +643,13 @@ func _rpc_set_event_status(text_key: String):
 
 
 @rpc("call_local", "reliable")
-func _rpc_flash_event_warning(text_key: String, looping: bool):
+func _rpc_flash_event_warning(text_key: String, looping: bool, args: Dictionary):
 	if _event_warning_tween != null:
 		_event_warning_tween.kill()
-	_event_warning.text = tr(text_key)
+	var translated := {}
+	for key in args:
+		translated[key] = tr(args[key])
+	_event_warning.text = tr(text_key).format(translated)
 	_event_warning.show()
 	_event_warning_tween = create_tween()
 	if looping:
@@ -643,6 +660,14 @@ func _rpc_flash_event_warning(text_key: String, looping: bool):
 		_event_warning_tween.tween_callback(HUDFlash.shake.bind(_event_warning))
 		_event_warning_tween.tween_interval(_WARNING_HOLD_SECS)
 		_event_warning_tween.tween_callback(_event_warning.hide)
+
+
+@rpc("call_local", "reliable")
+func _rpc_set_event_pin(pin_id: String):
+	if pin_id == _event_pin:
+		return
+	_event_pin = pin_id
+	_rebuild_trick_rows()
 
 
 @rpc("call_local", "reliable")
