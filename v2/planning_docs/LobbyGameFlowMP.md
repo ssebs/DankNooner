@@ -394,8 +394,13 @@ stateDiagram-v2
         Failed --> [*]
     }
 
+    PlayMenu --> ServerBrowser: Server Browser (Steam)
+    ServerBrowser --> LobbyMenu: Join row
+    ServerBrowser --> PlayMenu: Back
+
     LobbyMenu --> InGame: start_game.rpc()
     LobbyMenu --> PlayMenu: Back
+    LobbyMenu --> ServerBrowser: Back (joined from the browser)
 
     InGame --> PauseMenu: ESC
     PauseMenu --> InGame: Resume
@@ -432,9 +437,13 @@ sequenceDiagram
 
     Godot->>CM: server_disconnected
     CM->>CM: disconnect_client()
-    CM-->>Lobby: server_disconnected
-    Lobby->>Lobby: _on_back_pressed()
+    CM-->>Lobby: server_disconnected(reason)
+    Lobby->>Lobby: toast reason, _on_back_pressed()
 ```
+
+A kick takes the same path: the server's `_rpc_kicked(reason)` calls the client's
+`_on_server_disconnected(reason)`, so a kicked or turned-away player sees why (see
+[Architecture — Connection Modes](./Architecture.md#connection-modes)).
 
 ---
 
@@ -477,5 +486,6 @@ func _auto_detect_connection_mode(text: String):
 | Game start RPC      | gamemode_manager.gd                                                        | start_game(), late-joiner sync                                 |
 | Player spawning     | spawn_manager.gd                                                           | spawn_all_players(), rpc_spawn_player(), add_player_locally()  |
 | Player list UI      | player_list_ui.gd                                                          | update_from_dict() with PlayerDefinition                       |
-| Lobby panel         | lobby_panel.gd                                                             | Game ID, Steam invite, player list + ping; lobby + pause menus |
+| Lobby panel         | lobby_panel.gd                                                             | Game ID, Steam invite + visibility, player list + ping + kick  |
+| Server browser      | server_browser_menu_state.gd, steam_manager.gd                             | Friends' then public Steam lobbies; find_lobbies()             |
 | Signal server       | [danknoonersignalserver](https://github.com/ssebs/danknoonersignalserver/) | WebRTC broker (Go)                                             |

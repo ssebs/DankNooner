@@ -6,6 +6,8 @@ class_name ServerBrowserMenuState extends MenuState
 @export var steam_manager: SteamManager
 @export var level_manager: LevelManager
 @export var play_menu_state: PlayMenuState
+## Rows are made after MenuState wires click sounds, so they're wired here
+@export var audio_manager: AudioManager
 
 @onready var back_btn: Button = %BackBtn
 @onready var refresh_btn: Button = %RefreshBtn
@@ -72,6 +74,7 @@ func _add_row(lobby: Dictionary):
 		"max_members": lobby["max_members"],
 		"where": where,
 	})
+	row.pressed.connect(audio_manager.play_menu_click)
 	row.pressed.connect(play_menu_state.join_game.bind(lobby["game_id"], self))
 	lobby_list.add_child(row)
 
@@ -94,5 +97,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("level_manager must not be empty")
 	if play_menu_state == null:
 		issues.append("play_menu_state must not be empty")
+	if audio_manager == null:
+		issues.append("audio_manager must not be empty")
 
 	return issues

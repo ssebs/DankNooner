@@ -478,11 +478,15 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
 - `SteamManager` (`managers/steam_manager.gd`) - GodotSteam init; the game must run without Steam (offline, Web)
 - `is_logged_in()` is the gate for Steam features; each feature decides its own fallback when false
 - Username: `SaveManager` swaps the placeholder username for the Steam name once at load; after that the save's username wins
-- Avatars: `PlayerDefinition.steam_id` (set per session, synced as a string) lets each viewer fetch lobby-list avatars from its own Steam client. No Steam, or a non-friend → default icon
+- Avatars: `PlayerDefinition.steam_id` (set per session, synced as a string) lets each viewer fetch lobby-list avatars from its own Steam client. No Steam → default icon. Steam doesn't know non-friends, so `request_avatar()` asks for their info first and fetches the avatar on `persona_state_change`
 - Never reference `Steam` statically — Web uses stock templates, so it's a parse error there. Go through `steam_manager.steam`
 - No `restartAppIfNecessary()`: it forces a relaunch through Steam and blocks offline play
 - Lobbies: `SteamManager` owns create/join/leave (`host_lobby()` / `join_lobby()` await the Steam callback; `leave_lobby()` mid-await leaves the late lobby)
 - Invites (plan A1 in `_STEAM_WORKSHOP.md`): a non-solo, logged-in host has a friends-only Steam lobby whose `game_id` data is the game code (`ConnectionManager.start_server`), left in `stop_server`. `join_requested` / `+connect_lobby` only reads the code into `pending_game_id`; main menu routes to the play menu, which joins through the normal code path. Only the STEAM transport actually joins the lobby
+- Visibility: lobbies start friends-only; the host flips public/friends-only live from `LobbyPanel`'s picker. Steam transport only: on other transports the Steam lobby only carries invites
+- Joinability: on every gamemode transition the host calls `set_lobby_state()` with the new mode's `is_late_joinable()` and the level. A locked lobby drops out of search and Steam refuses joins and invites (surfaced as "not allowed", see `ENTER_RESPONSE_ERRORS`). Covers Steam joins only; the server-side kick in the [late-join contract](#gamemode-manager) covers every transport
+- Server browser (`ServerBrowserMenuState` → `find_lobbies()`): friends' lobbies first, found through `getFriendGamePlayed` because friends-only lobbies never appear in Steam's search, then the public search. Both are limited to the exact `config/version`, since synced state changes between releases. Rows join with the lobby's `game_id` data, as invites do, so a friend hosting on WebRTC/IP is joinable too. Joins go through `PlayMenuState.join_game(code, back_to)` so the lobby's Back returns to the browser
+- Public lobbies end the friends-only assumption behind skipping auth/anti-cheat: `any_peer` RPCs aren't audited for strangers yet
 - Free ride hosts like Host does, but always on the Host dropdown's default transport, and the lobby menu shows no player list, so the host never waits there. Friends late-join into free roam, invited from the pause menu. Only if hosting fails does it fall back to a solo local server (`is_solo`, no lobby)
 
 ### Spawn Manager
@@ -668,6 +672,12 @@ The host picks the mode in the play menu (`HostModeOpt`; Steam listed first, as 
 
 Like `GameModeType.Kind`, `ConnectionMode` carries entries with no handler behind them. The
 `match` in `connection_manager.gd` is the real list of supported modes, not the enum.
+
+**Kick** (`ConnectionManager.kick_peer(peer_id, reason)`): the host's player-list Kick button and
+the mid-race join rejection both use it. The server RPCs the reason and the client leaves on its
+own through `server_disconnected(reason)`, which the lobby and pause menus toast. The server only
+drops the peer itself after a grace period: disconnecting right away can discard the queued RPC,
+and the client would never learn why. No bans; a kicked player can rejoin.
 
 ### RPC Signatures
 

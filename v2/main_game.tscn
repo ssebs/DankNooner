@@ -169,10 +169,11 @@ lobby_menu_state = NodePath("../LobbyMenuState")
 customize_menu_state = NodePath("../CustomizeMenuState")
 server_browser_menu_state = NodePath("../ServerBrowserMenuState")
 
-[node name="ServerBrowserMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1700000003 node_paths=PackedStringArray("steam_manager", "level_manager", "play_menu_state") instance=ExtResource("63_srvbrowse")]
+[node name="ServerBrowserMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1700000003 node_paths=PackedStringArray("steam_manager", "level_manager", "play_menu_state", "audio_manager") instance=ExtResource("63_srvbrowse")]
 steam_manager = NodePath("../../../SteamManager")
 level_manager = NodePath("../../../LevelManager")
 play_menu_state = NodePath("../PlayMenuState")
+audio_manager = NodePath("../../../AudioManager")
 
 [node name="LobbyMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1270583406 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "input_state_manager", "gamemode_manager", "save_manager", "steam_manager", "play_menu_state", "customize_menu_state") instance=ExtResource("7_l5ukw")]
 menu_manager = NodePath("../..")

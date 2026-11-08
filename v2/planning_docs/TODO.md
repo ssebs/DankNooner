@@ -38,7 +38,6 @@
   - [ ] Demo savegame should be different from main game
   - [ ] Start with tutorial level (lock StuntCity until tutorial is complete)
   - [ ] Basic progression, limit content
-
   - [ ] Demo is open source, new private repo for full version
 - [ ] Better / Offical Trailer (concise, hook-y)
   - [x] hud toggle in editor for trailer
