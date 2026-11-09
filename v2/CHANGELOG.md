@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.0.168 - 2026-11-08
+
+- improve salad grind
+- adv tut start
+- loadout ui tweaks
+- d-pad menu to swap loadouts
+- tutorial tweaks + set respawn point
+- tut fix
+- grinds
+- smith/feeble/willy grinds nice
+- improved ragdolls + new smith/feeble/willy grinds
+- fix backflip not counting unless you rotate allll the way
+- add visual feedback when getting an item
+- ragdoll interacts w/ traffic
+- rm red bar part of fillup mini game, increase price instead + add a popup when you crash "Press R to respawn"
+- improved tutorial
+- improved tutorial
+- improve tutorial
+- tutorial
+- verbiage
+- start Adding product feature tour / walk thru for tutorials
+- start Adding product feature tour / walk thru for tutorials
+- start Adding product feature tour / walk thru for tutorials
+- start Adding product feature tour / walk thru for tutorials
+- plan: Add product feature tour / walk thru for tutorials
+
 ## v0.0.167 - 2026-11-07
 
 - Create/join public/private lobbies w/ Steam
