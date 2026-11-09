@@ -132,7 +132,10 @@ func Enter(state_context: StateContext):
 		_round_left = ROUND_SECS
 		# Only start_game enters without a GamemodeStateContext, so this fires once per load.
 		# Deferred so this Enter finishes before the gamemode changes.
-		var auto_start := level_manager.current_level.auto_start_event
+		var level := level_manager.current_level
+		var auto_start := (
+			level.advanced_tutorial_event if gamemode_manager.advanced_tutorial else level.auto_start_event
+		)
 		if !(state_context is GamemodeStateContext) and auto_start != null:
 			gamemode_manager.change_gamemode.call_deferred(
 				auto_start.definition.target_gamemode,

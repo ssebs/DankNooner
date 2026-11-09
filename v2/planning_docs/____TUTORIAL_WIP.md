@@ -142,6 +142,33 @@ Where the built code differs from the task text below, this section wins:
   `%Tutorials` section (`TUTORIALS_LABEL`). Until the tutorial's done, `Enter` moves `%Tutorials`
   to the top so `MenuManager` focuses its button; Task 10's Advanced button goes in it. The game-id
   auto-copy now runs only in `HOST` mode, so STORY's solo server doesn't copy one.
+- **Advanced tutorial (Task 11), built 2026-11-08, untested.** `AdvancedEvent` sits beside
+  `TutorialEvent` under `TutorialCircle`: Braking (brake grab crash, power washout crash,
+  progressive, trail on the steering gates), Ground and Air (burnout, bunny hop, kickflip,
+  superman) and Grinds (50/50, salad, smith), each lesson an optional teleport + `tut_adv_<lesson>`
+  tour + check. Differences from the Task 11 text:
+  - **Picking the event:** `LobbyStateContext.NewStory(rs, advanced)` → `start_game`'s new
+    `start_advanced_tutorial` arg (stored as `GamemodeManager.advanced_tutorial`) → free roam
+    auto-starts `LevelDefinition.advanced_tutorial_event` instead of `auto_start_event`.
+  - **Save:** `SaveManager.TUTORIAL_KEY` / `ADVANCED_TUTORIAL_KEY`; the missions-done functions
+    take the key. `TutorialGameMode` picks it by comparing the running event to
+    `advanced_tutorial_event`. Finishing Advanced shows `TUT_ADV_COMPLETE` and marks nothing.
+  - **Prop groups:** the circle's existing `props` mechanism. `TutorialCircle/Props` holds
+    `Tutorial1Props` (`ShotgunTarget`, moved from `Targets`) and `AdvancedProps` (a LOW ramp
+    kicker + `grind_rail.tscn` on the items road, z 120 to 62, start marker `GrindStart`).
+    `EventStartCircle._set_collision_active` now also disables processing on hidden
+    `PhysicsBody3D`s, or the parked NPC would fall through the ground with its shapes off.
+  - **`CrashTask`:** the export is `crash_hint` (not `hint_key`, which other tasks use for HUD
+    text). `on_enter` clears `player.crash_hint`; `check` passes once it matches. The runner
+    already skips crashed riders and `notify_crashed` respawns them at the TeleportTask marker,
+    so the pass lands after that respawn. No runner changes.
+  - **`LeanBrakeTask`:** leaned = CrashController's `WASHOUT_*`; "hard" uses the new
+    `CrashController.WASHOUT_BRAKE` (was a literal 0.9 twice). Trail's ~0.3s tap grace applies on
+    pad too.
+  - **Per-device copy:** no mechanism exists, so braking highlights name both in one line
+    ("squeeze on a pad, tap on a keyboard").
+  - Reused strings: `TRICK_NAME_*` as tour titles and `TRICK_HOWTO_*` as highlights where they fit.
+  - Task 10's Advanced button is in (locked until Tutorial 1 is done). The reset button isn't.
 
 ---
 

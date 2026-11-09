@@ -4,6 +4,8 @@ enum Mode { FREEROAM, STORY, HOST, JOIN }
 
 var mode: Mode
 var ip_addr: String
+## STORY: start the Advanced tutorial instead of the main one.
+var advanced_tutorial: bool
 
 
 static func NewHost(rs: MenuState, ip: String) -> LobbyStateContext:
@@ -33,8 +35,10 @@ static func NewFreeRoam(
 
 static func NewStory(
 	rs: MenuState,
+	advanced: bool = false,
 ) -> LobbyStateContext:
 	var ctx = LobbyStateContext.new()
 	ctx.mode = Mode.STORY
+	ctx.advanced_tutorial = advanced
 	ctx.return_state = rs
 	return ctx

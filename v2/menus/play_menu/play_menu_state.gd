@@ -25,6 +25,7 @@ const AUTO_JOIN_ADDR := "127.0.0.1"
 @onready var customize_btn: Button = %CustomizeBtn
 @onready var tutorials_section: Control = %Tutorials
 @onready var tutorial_btn: Button = %TutorialBtn
+@onready var advanced_tutorial_btn: Button = %AdvancedTutorialBtn
 @onready var free_roam_btn: Button = %FreeRoamBtn
 @onready var host_btn: Button = %HostBtn
 @onready var join_btn: Button = %JoinBtn
@@ -40,6 +41,7 @@ func Enter(_state_context: StateContext):
 	back_btn.pressed.connect(_on_back_pressed)
 	customize_btn.pressed.connect(_on_customize_pressed)
 	tutorial_btn.pressed.connect(_on_tutorial_btn_pressed)
+	advanced_tutorial_btn.pressed.connect(_on_advanced_tutorial_btn_pressed)
 	free_roam_btn.pressed.connect(_on_free_roam_btn_pressed)
 	host_btn.pressed.connect(_on_host_btn_pressed)
 	join_btn.pressed.connect(_on_join_btn_pressed)
@@ -59,12 +61,13 @@ func Enter(_state_context: StateContext):
 	host_mode_opt.select(0)
 	_update_placeholder()
 
-	# Everything but the tutorial stays locked until it's been finished once.
+	# Everything but the main tutorial (Advanced too) stays locked until it's been finished once.
 	var locked := !save_manager.is_tutorial_complete()
 	# On top (so MenuManager focuses it) until the tutorial's done, then last.
 	tutorials_section.get_parent().move_child(tutorials_section, 0 if locked else -1)
 	for control: BaseButton in [
-		customize_btn, free_roam_btn, host_btn, paste_btn, host_mode_opt, server_browser_btn
+		customize_btn, free_roam_btn, host_btn, paste_btn, host_mode_opt, server_browser_btn,
+		advanced_tutorial_btn
 	]:
 		control.disabled = locked
 	code_entry.editable = !locked
@@ -90,6 +93,7 @@ func Exit(_state_context: StateContext):
 	back_btn.pressed.disconnect(_on_back_pressed)
 	customize_btn.pressed.disconnect(_on_customize_pressed)
 	tutorial_btn.pressed.disconnect(_on_tutorial_btn_pressed)
+	advanced_tutorial_btn.pressed.disconnect(_on_advanced_tutorial_btn_pressed)
 	free_roam_btn.pressed.disconnect(_on_free_roam_btn_pressed)
 	host_btn.pressed.disconnect(_on_host_btn_pressed)
 	join_btn.pressed.disconnect(_on_join_btn_pressed)
@@ -211,6 +215,10 @@ func _on_free_roam_btn_pressed():
 
 func _on_tutorial_btn_pressed():
 	transitioned.emit(lobby_menu_state, LobbyStateContext.NewStory(self))
+
+
+func _on_advanced_tutorial_btn_pressed():
+	transitioned.emit(lobby_menu_state, LobbyStateContext.NewStory(self, true))
 
 
 func _on_customize_pressed():

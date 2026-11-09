@@ -53,6 +53,8 @@ const WALL_GLANCE_SPEED_LOSS: float = 0.25
 ## A grabbed front brake (KBM: any press — a digital brake always grabs) held this long (s) while
 ## leaned past WASHOUT_MIN_LEAN_DEG above WASHOUT_MIN_SPEED washes the front out. Easing off saves it.
 const WASHOUT_TIME: float = 0.4
+## Front brake past this is a grab (pad: squeezed fast) and counts toward a washout.
+const WASHOUT_BRAKE: float = 0.9
 const WASHOUT_MIN_LEAN_DEG: float = 15.0
 const WASHOUT_MIN_SPEED: float = 10.0
 ## Power washout: too much gas for the lean, held WASHOUT_TIME above WASHOUT_MIN_SPEED, spins the
@@ -124,13 +126,13 @@ func _update_brake_grab(delta: float):
 
 	if front_brake < 0.2:
 		_brake_was_grabbed = false
-	elif front_brake > 0.9 and brake_delta > BRAKE_GRAB_RATE_THRESHOLD:
+	elif front_brake > WASHOUT_BRAKE and brake_delta > BRAKE_GRAB_RATE_THRESHOLD:
 		_brake_was_grabbed = true
 
 	var lean := absf(movement_controller.roll_angle)
 	var washing_out := (
 		(_brake_was_grabbed or not input_controller.is_gamepad)
-		and front_brake > 0.9
+		and front_brake > WASHOUT_BRAKE
 		and movement_controller.is_on_floor
 		and not movement_controller.is_reversing
 		and movement_controller.speed > WASHOUT_MIN_SPEED

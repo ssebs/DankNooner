@@ -47,14 +47,22 @@
     - [x] Trick mods
   - [ ] 2: Advanced:
     - [ ] Progressive braking (0% -> 100% causes crash)
-    - [ ] trail braking
-    - [ ] kickflip / superman
-    - [ ] grinds
-      - [ ] 50/50
-      - [ ] salad
-      - [ ] smith
-    - [ ] burnouts
-    - [ ] bunny hops
+    - [x] trail braking
+    - [x] kickflip / superman
+    - [x] grinds
+      - [x] 50/50
+      - [x] salad
+      - [x] smith
+    - [x] burnouts
+    - [x] bunny hops
+    - [ ] FIX:
+      - [ ] trail braking needs more run up space, not going fast enough to trail brake
+      - [ ] respawn player if they do the wrong trick/grind
+      - [ ] cleanup map / events for adv tricks
+      - [ ] first grind should say do a 50/50 instead of saying land facing it
+      - [ ] trail braking / progressive braking needs a redo
+      - [ ] burnout msg confusing
+	
 
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -249,35 +257,20 @@
 ## Done ✅
 
 - [x] r => quick respawn, add btn for set full respawn point (if not in race)
-
 - [x] d-pad menu to swap loadouts. have it slide out & let you choose a class (like vertical minecraft hotbar w/ person on the bike for the icon)
-
 - [x] eventstartcircle event names are too big / ugly
-
 - [x] try to have the camera look where your eyes are supposed to look irl when riding
-
 - [x] crashing during tutorial doesn't stop timers
-
 - [x] cant use controller to select in customize menu
-
 - [x] hard to use fill up minigame
-
 - [x] Cancel from fill up should be more obvious
-
 - [x] add proper smith/feeble/willy grinds & lower the bike visually so it's not floating in the air
-
 - [x] fix backflip not counting unless you rotate allll the way
-
 - [x] add visual feedback when getting an item
-
 - [x] my ragdoll when crashing should interact w/ npc traffic like the bike does
-
 - [x] add a popup when you crash "Press R to respawn"
-
 - [x] rm red bar part of fillup mini game, increase price instead
-
 - [x] Create/join public/private lobbies w/ Steam
-
 - [x] Get racing AI working [WIP]
   - [x] tricks / Items
     - [x] cant go fast enough for the ramps
@@ -288,43 +281,24 @@
     - [x] Phase 3 (they do tricks + get boost)
     - [x] continue w/ `____NPC_RACER_AI_WIP.md`
     - [x] phase 4 (cleanup debug msgs?)
-
 - [x] add steam launch option for compatibility renderer (old macs / non-vulkan)
-
 - [x] Localize more text + more langs
-
 - [x] graphics quality settings
-
 - [x] lowside when gassing it during corner
-
 - [x] slow speed turning anim doesn't look right (front wheel going into ground, not sharp enough turn / realistic counter leaning, player leans super far going 2mph - theyd crash irl)
-
 - [x] Grinding tricks (jump in air, grind on house fences, etc.)
-
 - [x] pickup spawners dont work in stunt battle arena
-
 - [x] tweak drifting physics
-
 - [x] not enough feedback for brakedanger / helping the user know they should be progressively braking instead of braking hard quickly
-
 - [x] shouldnt be so easy to drift & steer on gamepad, only drift from rear brake, not lean fwd except burnout
-
 - [x] respawn timer => 15s max for CrashLaunch, during stuntrace =>3s, free roam => 5s
-
 - [x] ramp should spawn right in front of you
-
 - [x] minimap rotate w/ cam
-
 - [x] Tracers when boosting 
-
 - [x] cant start stunt battle bc arrow walls are in the way before you drive to it
-
 - [x] cant pickup items at race 3 start
-
 - [x] disable hud dbg option for recording clips
-
 - [x] add vibration on near miss trick
-
 - [x] PC? RMB + move up/left/right like joystick should do tricks too instead of only arrow keys
 - [x] ragdoll launch game mode (furthest launch wins)
 - [x] Create separate location for stunt/trick battle, remove from existing races

@@ -13,6 +13,9 @@ signal save_item_updated(save_key: String, save_value: Variant)
 )
 @export var steam_manager: SteamManager
 
+## Progression keys each tutorial's milestones save under. Only the first gates the Play menu.
+const TUTORIAL_KEY := "tutorial"
+const ADVANCED_TUTORIAL_KEY := "tutorial_advanced"
 
 var save_path: String:
 	get:
@@ -121,27 +124,28 @@ func reset_tours() -> void:
 
 
 func _reset_tutorials() -> void:
-	current_save["progression"].erase("tutorial")
+	current_save["progression"].erase(TUTORIAL_KEY)
+	current_save["progression"].erase(ADVANCED_TUTORIAL_KEY)
 	reset_tours()
 	Console.print_line("tours and tutorial reset")
 
 
 ## JSON loads numbers as floats, hence the int().
-func get_tutorial_missions_done() -> int:
-	return int(current_save["progression"].get("tutorial", {}).get("missions_done", 0))
+func get_tutorial_missions_done(key: String) -> int:
+	return int(current_save["progression"].get(key, {}).get("missions_done", 0))
 
 
-func set_tutorial_missions_done(count: int) -> void:
-	current_save["progression"].get_or_add("tutorial", {})["missions_done"] = count
+func set_tutorial_missions_done(key: String, count: int) -> void:
+	current_save["progression"].get_or_add(key, {})["missions_done"] = count
 	save_save()
 
 
 func is_tutorial_complete() -> bool:
-	return current_save["progression"].get("tutorial", {}).get("complete", false)
+	return current_save["progression"].get(TUTORIAL_KEY, {}).get("complete", false)
 
 
 func mark_tutorial_complete() -> void:
-	current_save["progression"].get_or_add("tutorial", {})["complete"] = true
+	current_save["progression"].get_or_add(TUTORIAL_KEY, {})["complete"] = true
 	save_save()
 
 

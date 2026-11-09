@@ -226,7 +226,11 @@ func set_single_or_multiplayer_ui():
 			loading_ui.show()
 			connection_manager.connection_mode = ConnectionManager.ConnectionMode.WEBRTC
 			await connection_manager.start_server(true)
-			gamemode_manager.start_game.rpc(LevelManager.LevelName.TUTORIAL_LEVEL)
+			gamemode_manager.start_game.rpc(
+				LevelManager.LevelName.TUTORIAL_LEVEL,
+				GameModeType.Kind.FREE_ROAM,
+				return_ctx.advanced_tutorial
+			)
 			return
 		_:
 			singleplayer_ui.hide()

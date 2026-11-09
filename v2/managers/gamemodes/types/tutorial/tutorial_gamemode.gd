@@ -18,7 +18,7 @@ func Enter(state_context: StateContext):
 
 	if multiplayer.is_server():
 		# Resume at the first unfinished mission; a replay after finishing starts at mission 1.
-		var missions_done := save_manager.get_tutorial_missions_done()
+		var missions_done := save_manager.get_tutorial_missions_done(_save_key())
 		_active_runner_index = missions_done - 1 if missions_done < _runners.size() else -1
 		item_manager.clear_items()
 		for spawner in _event.get_pickup_spawners():
@@ -66,14 +66,26 @@ func can_cancel_event() -> bool:
 #override
 ## Each mission is a milestone: progress saves only when one completes.
 func _on_runner_all_completed():
-	save_manager.set_tutorial_missions_done(_active_runner_index + 1)
+	save_manager.set_tutorial_missions_done(_save_key(), _active_runner_index + 1)
 	super()
 
 
 #override
 func _on_last_runner_completed(runner: TaskRunner):
+	if _is_advanced():
+		_show_results(_completion_results(runner, "TUT_ADV_COMPLETE"))
+		return
 	save_manager.mark_tutorial_complete()
 	_show_results(_completion_results(runner, "TUT_COMPLETE"))
+
+
+## The Advanced tutorial saves its own progress and unlocks nothing.
+func _is_advanced() -> bool:
+	return _event == gamemode_manager.level_manager.current_level.advanced_tutorial_event
+
+
+func _save_key() -> String:
+	return SaveManager.ADVANCED_TUTORIAL_KEY if _is_advanced() else SaveManager.TUTORIAL_KEY
 
 
 #override

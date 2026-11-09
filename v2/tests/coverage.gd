@@ -6,7 +6,8 @@ extends RefCounted
 ## No tutorial in the gym; these tasks only make sense in one
 const SKIPPED_KINDS: Array[int] = [GameModeType.Kind.FREE_ROAM, GameModeType.Kind.TUTORIAL]
 const TUTORIAL_ONLY_TASKS: Array[String] = [
-	"ShowSpeechBubbleTask", "HideSpeechBubbleTask", "ShowTourTask", "DropItemTask", "SetActiveTask"
+	"ShowSpeechBubbleTask", "HideSpeechBubbleTask", "ShowTourTask", "DropItemTask", "SetActiveTask",
+	"CrashTask", "LeanBrakeTask",
 ]
 ## Not in the gym by choice. Delete an entry once the gym has it.
 const OPTIONAL_KINDS: Array[int] = [GameModeType.Kind.STUNT_CHALLENGE]

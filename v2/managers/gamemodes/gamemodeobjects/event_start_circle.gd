@@ -70,7 +70,7 @@ func get_events() -> Array[GameModeEvent]:
 ## first so a group shared with the active event ends up shown.
 func set_active_event(active_event: GameModeEvent):
 	for root in [props, checkpoints]:
-		# Tutorial circles have no groups — skip is intentional
+		# Tutorial circles have no checkpoints — skip is intentional
 		if root != null:
 			for group in root.get_children():
 				set_group_active(group, false)
@@ -95,6 +95,9 @@ func _set_collision_active(node: Node, active: bool):
 		node.disabled = not active
 	elif node is CSGShape3D and node.is_root_shape():
 		node.use_collision = active
+	elif node is PhysicsBody3D:
+		# Nor simulate: with its own shapes off, a parked NPC would fall through the ground.
+		node.process_mode = PROCESS_MODE_INHERIT if active else PROCESS_MODE_DISABLED
 	for child in node.get_children():
 		_set_collision_active(child, active)
 
