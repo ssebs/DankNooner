@@ -1,10 +1,9 @@
 ## One gas pump in a station. FuelUpGameMode assigns each rider a pump pre-race; in free roam it's
 ## a FreeRoamActivity. Either way the minigame runs locally on that rider's client: click the
 ## handle to pick it up, hold click to spray (recoil kicks the cursor), move it back onto the pump
-## to hang it up, and click %EndBtn to finish whenever. Spray that misses the cap is
-## spilled, and spilled gas is tank space lost: the tank only fills to 1 - spilled. Gas is paid by
-## the second, spilled or not: `price` is a full tank's cost, and the pump cuts off at the rider's
-## last dollar. The left stick steers the same cursor, so gamepad plays it too.
+## to hang it up, and click %EndBtn to finish whenever. Spray that misses the cap is spilled.
+## Gas is paid by the second, spilled or not: `price` is a full tank's cost, and the pump cuts off
+## at the rider's last dollar. The left stick steers the same cursor, so gamepad plays it too.
 class_name FuelUpMinigame extends FreeRoamActivity
 
 enum Step { GRAB, CARRY }
@@ -59,10 +58,8 @@ const GRAB_SPRAY_DELAY: float = 0.2
 ## Points at the HUD's tank gauge, which lives outside this scene.
 @onready var _gauge_step: TourStep = %GaugeStep
 
-## Tank level, 0..1 - spilled. Read by FuelUpHUDState.
+## Tank level, 0..1. Read by FuelUpHUDState.
 var fill: float = 0.0
-## Gas spilled this fill-up, in fill's units. Read by FuelUpGameMode.
-var spilled: float = 0.0
 ## Owed for gas pumped this session, spill included. Paid in _on_session_end.
 var bill: float = 0.0
 
@@ -150,7 +147,6 @@ func _on_session_start():
 	_step = Step.GRAB
 	_over_cap = false
 	_spraying = false
-	spilled = 0.0
 	bill = 0.0
 	# Settles the ring at rest size (a cancel mid-hover leaves it grown); pauses the circle's loop.
 	_anim.play_backwards(&"gas_cap_hover")
@@ -274,12 +270,8 @@ func _spray(delta: float):
 	var pumped := delta / fill_secs
 	if _over_cap:
 		# A full tank takes no more, so isn't billed for more.
-		pumped = minf(pumped, 1.0 - spilled - fill)
+		pumped = minf(pumped, 1.0 - fill)
 		fill += pumped
-	else:
-		spilled += pumped
-		# A full tank loses the space it spills.
-		fill = minf(fill, 1.0 - spilled)
 	bill = minf(bill + pumped * price, _save_manager.get_player_definition().money)
 
 
@@ -293,9 +285,8 @@ func _is_broke() -> bool:
 	return bill >= _save_manager.get_player_definition().money
 
 
-## Filled to the space spilling left.
 func _is_full() -> bool:
-	return fill >= 1.0 - spilled
+	return fill >= 1.0
 
 
 ## Grows the cap ring while the nozzle's in it, shrinks it back on leaving.

@@ -13,11 +13,9 @@ class_name BoostGauge extends Control
 
 ## Meter fill in segments, 0..cell count. Set every frame by HUDController.
 @export var current_val: float = 0.0
-## Fuel-up spill in segments, drawn red in from the right end — tank space lost.
-@export var spilled_val: float = 0.0
 ## Exponential smoothing rate for each cell's fill — the raw value steps on network ticks.
 @export var smooth_speed: float = 14.0
-## Stack the cells bottom-up (riding HUD). The spill only draws horizontally.
+## Stack the cells bottom-up (riding HUD).
 @export var vertical: bool = false
 
 const VERTICAL_CELL_SIZE := Vector2(20, 52)
@@ -32,7 +30,6 @@ const COLOR_DIM: Color = UtilsConstants.UI_BLUE_DIM
 const COLOR_READY: Color = UtilsConstants.UI_BLUE
 ## Rejected-press blink.
 const COLOR_REJECT: Color = UtilsConstants.UI_RED
-const COLOR_SPILL: Color = UtilsConstants.UI_RED
 
 ## Slow "ready" glow — pulse rate (Hz) and how far it lifts toward white.
 const READY_PULSE_HZ: float = 1.2
@@ -56,8 +53,6 @@ var _blink_t: float = 0.0
 
 
 func _ready():
-	for i in _cells.size():
-		_cells[i].draw.connect(_draw_spill.bind(i))
 	if vertical:
 		%Cells.vertical = true
 		for i in _cells.size():
@@ -108,16 +103,6 @@ func _process(delta: float):
 		var target := COLOR_EMPTY.lerp(tint, clampf(cell_pct * 4.0, 0.0, 1.0))
 		# Snap during a blink instead of easing, or the flash smears into mush.
 		_fills[i].modulate_color = target if _blink_t > 0.0 else _fills[i].modulate_color.lerp(target, weight)
-		cell.queue_redraw()
-
-
-## Over cell i: its share of the lost space, which grows leftward from the gauge's right end.
-func _draw_spill(i: int):
-	var cell := _cells[i] as ProgressBar
-	var from: float = clampf(_cells.size() - spilled_val - float(i), 0.0, 1.0)
-	if from >= 1.0:
-		return
-	cell.draw_rect(Rect2(cell.size.x * from, 0.0, cell.size.x * (1.0 - from), cell.size.y), COLOR_SPILL)
 
 
 ## Called by HUDController — drives the extra brighten while boost is being consumed.

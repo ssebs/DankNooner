@@ -217,7 +217,7 @@ Both are in the demo's scope (Next Fest, Feb '27).
    **TAP to grab, don't hold.**
 2. Handle: move the hand and tap to pick it up.
 3. Gas cap: hold only while the nozzle is in the ring, and let go if it misses.
-4. Tank gauge: how full the tank is, and what's been spilled.
+4. Tank gauge: how full the tank is, i.e. the boost you leave with.
 5. Pump `$` sign: what you're paying.
 6. Red button: hang the nozzle back up, then press it to finish.
 

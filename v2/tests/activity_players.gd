@@ -59,11 +59,12 @@ func play_fuel_up(pump: FuelUpMinigame) -> bool:
 	var filling := func():
 		# Recoil shoves the cursor; keep pulling the tip back onto the cap
 		_steer_tip(tip, cap)
-		return pump.fill >= FULL or pump.get_prompt_key() == "FUELUP_RETURN"
+		return pump.is_spilling() or pump.fill >= FULL or pump.get_prompt_key() == "FUELUP_RETURN"
 	var filled: bool = await _runner.wait_until(filling, "the tank to fill", _left_s(deadline))
+	var spilled := pump.is_spilling()
 	Input.action_release(&"use_item")
-	if pump.spilled > 0.0:
-		_runner.violate("fuel-up spilled %.2f with the cursor on the cap" % pump.spilled)
+	if spilled:
+		_runner.violate("fuel-up spilled with the cursor on the cap")
 	if !filled:
 		return false
 

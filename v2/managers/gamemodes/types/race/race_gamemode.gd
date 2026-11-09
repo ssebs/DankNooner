@@ -20,7 +20,6 @@ enum RaceType { RACE, STUNT_RACE, TIME_ATTACK }
 @export var pickups: PickupsComponent
 @export var style_scoring: StyleScoringComponent
 @export var finish_bonus: FinishBonusComponent
-@export var fuel_up_bonus: FuelUpBonusComponent
 @export var knockout_scoring: KnockoutScoringComponent
 @export var challenges: ChallengesComponent
 @export var time_attack: TimeAttackComponent
@@ -63,7 +62,7 @@ func Enter(state_context: StateContext):
 	# Hook order: scoring before the leaderboard reads it.
 	_components.assign(
 		[
-			traffic, npc_racers, pickups, style_scoring, finish_bonus, fuel_up_bonus,
+			traffic, npc_racers, pickups, style_scoring, finish_bonus,
 			knockout_scoring, challenges, time_attack, leaderboard
 		]
 		.filter(func(c): return c != null)

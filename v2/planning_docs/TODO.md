@@ -240,6 +240,10 @@
 
 ## Done ✅
 
+- [x] add a popup when you crash "Press R to respawn"
+
+- [x] rm red bar part of fillup mini game, increase price instead
+
 - [x] Create/join public/private lobbies w/ Steam
 
 - [x] Get racing AI working [WIP]

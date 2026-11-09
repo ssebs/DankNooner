@@ -35,7 +35,6 @@ func Update(_delta: float):
 		return
 	_money.text = MoneyLabel.format(save_manager.get_player_definition().money - minigame.bill)
 	_gauge.current_val = minigame.fill * BoostController.BOOST_SEGMENTS
-	_gauge.spilled_val = minigame.spilled * BoostController.BOOST_SEGMENTS
 	_prompt.text = tr(minigame.get_prompt_key())
 	var spilling := minigame.is_spilling()
 	if spilling and !_was_spilling:

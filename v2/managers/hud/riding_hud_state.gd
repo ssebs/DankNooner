@@ -34,6 +34,7 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _gear_label: Label = %HUD_GEAR
 @onready var _fps_label: Label = %HUD_FPS
 @onready var _game_msg: Label = %HUD_GAME_MSG
+@onready var _crash_respawn_hint: HBoxContainer = %HUD_CrashRespawnHint
 @onready var _money: MoneyLabel = %HUD_Money
 @onready var _xp_label: Label = %HUD_XP
 @onready var _leaderboard: RaceLeaderboard = %HUD_Leaderboard
@@ -60,7 +61,7 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _prompts: Array[InputPrompt] = [
 	%HUD_TrickPromptBtn, %HUD_BoostPrompt, %HUD_MapPrompt, %HUD_RespawnPrompt, %HUD_ItemPrompt,
 	%HUD_HornPrompt, %HUD_LeanForwardPrompt, %HUD_LeanBackPrompt, %HUD_RearBrakePrompt,
-	%HUD_ClutchPrompt
+	%HUD_ClutchPrompt, %HUD_CrashRespawnPrompt
 ]
 @onready var _held_item_panel: HBoxContainer = %HUD_HeldItem
 @onready var _held_item_thumbnail: Thumbnail3D = %HUD_HeldItemThumbnail
@@ -331,6 +332,7 @@ func _on_gear_changed(new_gear: int):
 func _on_crashed(_peer_id: int):
 	_game_msg.text = tr("HUD_CRASHED")
 	_game_msg.visible = true
+	_crash_respawn_hint.visible = true
 	# combo_time freezes on a crash, so it's still set here if a combo just got voided.
 	if trick_controller.combo_time > 0.0:
 		_trick_popups.pop_oof()
@@ -338,6 +340,7 @@ func _on_crashed(_peer_id: int):
 
 func _on_respawned():
 	_game_msg.visible = false
+	_crash_respawn_hint.visible = false
 
 
 ## Something was too pricey.
@@ -751,6 +754,7 @@ func hide_ui() -> void:
 func do_reset():
 	_gear_label.text = tr("HUD_GEAR").format({"value": 1})
 	_game_msg.visible = false
+	_crash_respawn_hint.visible = false
 	_prev_boost_held = false
 	_wheelie_attempt_t = 0.0
 	_trick_popups.hide_pitch_icon()

@@ -46,7 +46,6 @@ The stunt race is `RaceGameMode` with `race_type = STUNT_RACE`: the shared race 
   - Placement: `FinishBonusComponent`, `placement_points` by finish place among every racer, bots
     included.
   - Knockouts: `KnockoutScoringComponent`, `points_per_knockout` each.
-  - Fuel-up: `FuelUpBonusComponent`, the clean-fill bonus from a `fuel_up_first` event's fuel-up.
 - **Knockouts** go through `SpawnManager.knock_out_rider(victim, aggressor_id)`: ramming
   (`CrashController`, a bot's `NPCRaceManager._on_npc_crashed`), Oil Slick, Shotgun, the Bat on a
   bot. Bots count both ways, as victims and aggressors; a bot only counts once it actually goes down
@@ -117,22 +116,19 @@ partial fill.
   it up, then click `%EndBtn` to finish whenever. The tank starts at the rider's boost.
 - **Recoil and spill:** spraying pushes the cursor itself upward via `warp_mouse` (growing with
   spray time, plus random kicks) and the rider pulls against it. Web ignores `warp_mouse`, so it
-  has no recoil. Spray that misses the cap counts as `spilled`, with `%SpillParticles` spraying
+  has no recoil. Spray that misses the cap spills, with `%SpillParticles` spraying
   from the tip, the looping `WATER_FLOWING` sfx, a spilling prompt, and a one-shot callout popped
-  off the gauge. Spill is lost tank space: the tank only fills to `1 - spilled`, and spilling a full
-  tank loses what's already in it. Spraying into a full tank does nothing, so overfilling isn't a
-  spill. The HUD gauge shows spill as red growing in from its right end.
+  off the gauge. Spill costs only money; spraying into a full tank does nothing, so overfilling
+  isn't a spill.
 - **Price:** gas is paid by the second of spray, spilled or not. The pump's
   `FreeRoamActivity.price` is a full tank's cost, and its `get_start_price()` is 0, so nothing is
   charged to start. The running `bill` shows on the pump's `%SaleLabel` and comes off the fuel-up
   HUD's money live; the pump cuts off when the bill reaches the wallet, and `_on_session_end` pays
   it (rounded up) via `SaveManager.spend`, so cancels pay too. A broke rider still gets their pump,
   it just won't pump.
-- **Payout differs by mode.** Free roam never lowers the meter (see above), so spill only limits
-  how high it fills. Pre-race starts every tank at most `FULL_TANK_DRAIN_SEGMENTS` below full so
-  full riders still play; finishing reports fill and `spilled`, the server sets boost to the fill,
-  and a tank filled to its unspilled space banks a bonus scaling from `MAX_BONUS` down to zero at
-  `SPILL_FOR_NO_BONUS`, read by `FuelUpBonusComponent` in the stunt race.
+- **Payout differs by mode.** Free roam never lowers the meter (see above). Pre-race starts every
+  tank at most `FULL_TANK_DRAIN_SEGMENTS` below full so full riders still play; finishing reports
+  the fill and the server sets boost to it.
 - **The cap target is per bike:** `BikeSkinDefinition.gas_cap_position`, authored with
   PlayerEntity's `gas_cap_marker`.
 - **Why the minigame starts on `respawned`, not `Enter`:** the teleport's `do_respawn` flips the HUD
