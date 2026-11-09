@@ -89,9 +89,6 @@ collision_layer = 3
 [node name="Sidewalk" parent="House_1" index="10" unique_id=860925618]
 surface_material_override/0 = SubResource("StandardMaterial3D_lqlj0")
 
-[node name="StaticBody3D" parent="House_1/Sidewalk" index="0" unique_id=615665569]
-collision_layer = 3
-
 [node name="GrindRails" type="StaticBody3D" parent="." unique_id=575280884]
 collision_layer = 257
 

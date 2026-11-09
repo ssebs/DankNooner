@@ -53,12 +53,19 @@ direction bails.
 
 Pitch zone uses the existing wheelie / stoppie thresholds. Yaw zones: straight, angled
 (`GRIND_ANGLED_YAW_DEG`), sideways (`GRIND_SIDEWAYS_YAW_DEG`). Positive yaw = turned left.
+Sideways also splits pitch at `GRIND_SIDEWAYS_HARD_PITCH_DEG`. Cells read left / right.
 
 | pitch \ yaw | straight | angled | sideways |
 |---|---|---|---|
-| front (stoppie side) | nosegrind | crooked | noseslide |
-| level | 50-50 | 50-50 | boardslide (left) / lipslide (right) |
-| back (wheelie side) | 5-0 | feeble (left) / salad (right) | tailslide |
+| hard front | nosegrind | crooked / overcrook | noseslide / noseblunt |
+| front (stoppie side) | nosegrind | crooked / overcrook | willy / over willy |
+| level | 50-50 | smith / feeble | boardslide / lipslide |
+| back (wheelie side) | 5-0 | suski / salad | smith / feeble |
+| hard back | 5-0 | suski / salad | tailslide / bluntslide |
+
+- Tank grinds (`AnimationController.TANK_GRINDS`: smith, feeble, willy, over willy) sink the
+  visual root until the rail meets the tank's underside (`TANK_GRIND_DEPTH` below the gas cap).
+  Visual only.
 
 - A held right-stick trick overrides the grind as `current_trick` (e.g. knee knocker), via a
   `TrickState.GRIND` row in `BINDINGS`. No trick button needed on the rail.

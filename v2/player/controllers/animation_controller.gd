@@ -41,6 +41,15 @@ const MAX_CHEST_LEAN_PITCH_DEG: float = -15.0
 const MAX_CHEST_Z_OFFSET: float = 0.2
 ## Max butt z shift when leaning fwd/back. Negate to flip direction.
 const MAX_BUTT_Z_OFFSET: float = 0.1
+## Grinds ridden on the tank: the bike sinks until the rail meets the tank's underside,
+## TANK_GRIND_DEPTH below the gas cap.
+const TANK_GRIND_DEPTH: float = 0.3
+const TANK_GRINDS: Array[TrickController.Trick] = [
+	TrickController.Trick.SMITH,
+	TrickController.Trick.FEEBLE,
+	TrickController.Trick.WILLY,
+	TrickController.Trick.OVER_WILLY,
+]
 
 # Animation track paths (relative to visual_root, which is anim root_node).
 # Cached as NodePaths so CustomAnimPlayer.find_track lookups are cheap.
@@ -135,6 +144,7 @@ var _targets_synced_from_bike: bool = true
 # pitched landing rises to its resting pivot offset over a few frames instead of popping there.
 var _pivot_blend: float = 1.0
 var _pivot_suppressed_last: bool = false
+var _tank_grind_drop: float = 0.0
 
 # Cached refs (set in initialize)
 var _ik_ctrl: IKController
@@ -253,6 +263,14 @@ func _update_riding(delta: float) -> void:
 		_apply_pivot_offset_to_pose(pose)
 		pose.visual_root_pos = _base_visual_root_position.lerp(pose.visual_root_pos, _pivot_blend)
 	_pivot_suppressed_last = suppress_pivot
+
+	# The rail runs along the body origin, so sink by the tank underside's height above it.
+	var drop_target := 0.0
+	if movement_controller.is_grinding and trick_controller.grind_pose_trick() in TANK_GRINDS:
+		var gas_cap := Basis.from_euler(pose.visual_root_rot) * _bd.gas_cap_position
+		drop_target = pose.visual_root_pos.y + gas_cap.y - TANK_GRIND_DEPTH
+	_tank_grind_drop = lerpf(_tank_grind_drop, drop_target, blend)
+	pose.visual_root_pos.y -= _tank_grind_drop
 
 	# Steering + wheels run direct on bike_skin — they're not part of the rider pose.
 	# Reverse inverts roll_angle (so the body rotates the correct way for input), but the

@@ -34,6 +34,13 @@ enum Trick {
 	LIPSLIDE,
 	NOSESLIDE,
 	TAILSLIDE,
+	SMITH,
+	SUSKI,
+	OVERCROOK,
+	NOSEBLUNT,
+	BLUNTSLIDE,
+	WILLY,
+	OVER_WILLY,
 }
 enum Dir {UP, DOWN, LEFT, RIGHT}
 ## TAP / DOUBLE_TAP latch their trick for TAP_TRICK_DURATION; HOLD / DOUBLE_TAP_HOLD keep it active
@@ -99,9 +106,10 @@ const WHEELIE_MIN_SCORE_MULT: float = 0.5
 const WHEELIE_BP_SCORE_MULT: float = 2.0
 const WHEELIE_LOCKED_SCORE_MULT: float = 1.5
 ## Grind yaw zones (off the rail's direction): straight under ANGLED, sideways from SIDEWAYS.
-## See _grind_pose_trick.
+## Sideways also splits pitch at HARD (slides past it). See grind_pose_trick.
 const GRIND_ANGLED_YAW_DEG: float = 20.0
 const GRIND_SIDEWAYS_YAW_DEG: float = 60.0
+const GRIND_SIDEWAYS_HARD_PITCH_DEG: float = 30.0
 ## Right-stick control scheme: state -> gesture -> trick per Dir (UP, DOWN, LEFT, RIGHT). Guideline:
 ## shared tricks keep one tap / double-tap slot across states (double tap = harder trick); HOLD is
 ## for state-specific tricks. Const (rollback): byte-identical on every peer.
@@ -211,7 +219,7 @@ func on_movement_rollback_tick(delta: float):
 	ComboRules.accrue(self, boost_controller, current_trick, _wheelie_score_mult(), delta)
 	# A stick trick over a grind stacks: the grind keeps scoring underneath it.
 	if trick_state() == TrickState.GRIND:
-		var grind := _grind_pose_trick()
+		var grind := grind_pose_trick()
 		if current_trick != grind:
 			ComboRules.accrue_stacked(self, grind, delta)
 
@@ -377,7 +385,7 @@ func _detect_current_trick(delta: float) -> Trick:
 
 	if movement_controller.is_grinding:
 		var grind_held := _held_trick()
-		return grind_held if grind_held != Trick.NONE else _grind_pose_trick()
+		return grind_held if grind_held != Trick.NONE else grind_pose_trick()
 
 	if movement_controller.is_drifting:
 		# Drifting at a near-standstill is a burnout (rear spinning in place); moving is a drift.
@@ -442,24 +450,30 @@ func _detect_air_trick() -> Trick:
 
 
 ## The grind the rail pose makes. Pitch zones are the wheelie / stoppie thresholds, yaw zones
-## GRIND_ANGLED_YAW_DEG / GRIND_SIDEWAYS_YAW_DEG.
-func _grind_pose_trick() -> Trick:
+## GRIND_ANGLED_YAW_DEG / GRIND_SIDEWAYS_YAW_DEG. Each turned grind pairs left / right.
+func grind_pose_trick() -> Trick:
 	var pitch := movement_controller.pitch_angle
 	var front := pitch < deg_to_rad(STOPPIE_PITCH_THRESHOLD_DEG)
 	var back := pitch > deg_to_rad(WHEELIE_PITCH_THRESHOLD_DEG)
 	var yaw := movement_controller.grind_yaw
 	var left := yaw > 0.0
 	if absf(yaw) >= deg_to_rad(GRIND_SIDEWAYS_YAW_DEG):
+		var hard := absf(pitch) > deg_to_rad(GRIND_SIDEWAYS_HARD_PITCH_DEG)
+		if front and hard:
+			return Trick.NOSESLIDE if left else Trick.NOSEBLUNT
+		if back and hard:
+			return Trick.TAILSLIDE if left else Trick.BLUNTSLIDE
 		if front:
-			return Trick.NOSESLIDE
+			return Trick.WILLY if left else Trick.OVER_WILLY
 		if back:
-			return Trick.TAILSLIDE
+			return Trick.SMITH if left else Trick.FEEBLE
 		return Trick.BOARDSLIDE if left else Trick.LIPSLIDE
 	if absf(yaw) >= deg_to_rad(GRIND_ANGLED_YAW_DEG):
 		if front:
-			return Trick.CROOKED
+			return Trick.CROOKED if left else Trick.OVERCROOK
 		if back:
-			return Trick.FEEBLE if left else Trick.SALAD
+			return Trick.SUSKI if left else Trick.SALAD
+		return Trick.SMITH if left else Trick.FEEBLE
 	if front:
 		return Trick.NOSEGRIND
 	if back:
@@ -601,6 +615,20 @@ static func trick_to_str(trick: Trick) -> String:
 			return "NOSESLIDE"
 		Trick.TAILSLIDE:
 			return "TAILSLIDE"
+		Trick.SMITH:
+			return "SMITH"
+		Trick.SUSKI:
+			return "SUSKI"
+		Trick.OVERCROOK:
+			return "OVERCROOK"
+		Trick.NOSEBLUNT:
+			return "NOSEBLUNT"
+		Trick.BLUNTSLIDE:
+			return "BLUNTSLIDE"
+		Trick.WILLY:
+			return "WILLY"
+		Trick.OVER_WILLY:
+			return "OVER_WILLY"
 	return "NONE"
 
 
@@ -664,6 +692,20 @@ static func str_to_trick(s: String) -> Trick:
 			return Trick.NOSESLIDE
 		"TAILSLIDE":
 			return Trick.TAILSLIDE
+		"SMITH":
+			return Trick.SMITH
+		"SUSKI":
+			return Trick.SUSKI
+		"OVERCROOK":
+			return Trick.OVERCROOK
+		"NOSEBLUNT":
+			return Trick.NOSEBLUNT
+		"BLUNTSLIDE":
+			return Trick.BLUNTSLIDE
+		"WILLY":
+			return Trick.WILLY
+		"OVER_WILLY":
+			return Trick.OVER_WILLY
 	return Trick.NONE
 
 

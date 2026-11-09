@@ -26,8 +26,8 @@
 [ext_resource type="Script" uid="uid://dbl1ukq1dy3xd" path="res://entities/vfx/rider_vfx.gd" id="31_rvfx"]
 [ext_resource type="Script" uid="uid://d0qu5fntjsi5d" path="res://utils/custom_audio_middleware/engine_sound_event_3d.gd" id="32_eng3d"]
 [ext_resource type="Script" uid="uid://ba88hqva8tywk" path="res://player/bikes/scripts/bike_wreck.gd" id="33_wreck"]
-[ext_resource type="Script" path="res://entities/vfx/shotgun_tracers.gd" id="34_tracers"]
-[ext_resource type="Script" path="res://entities/vfx/boost_trail.gd" id="35_trail"]
+[ext_resource type="Script" uid="uid://bwdtoema4uxn2" path="res://entities/vfx/shotgun_tracers.gd" id="34_tracers"]
+[ext_resource type="Script" uid="uid://dw30pbra6r0a4" path="res://entities/vfx/boost_trail.gd" id="35_trail"]
 [ext_resource type="Material" uid="uid://tsxn2jb72gby" path="res://levels/assets/props/neon_red.tres" id="36_neon"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wig4y"]
@@ -35,6 +35,8 @@ size = Vector3(8, 20, 2)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_wreck"]
 friction = 0.5
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_3kl2f"]
 
 [node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("collision_shape_3d", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "movement_controller", "wobble_controller", "camera_controller", "boost_controller", "butt_target", "left_hand_target", "right_hand_target", "left_foot_target", "right_foot_target", "chest_target", "head_target", "left_arm_magnet", "right_arm_magnet", "left_leg_magnet", "right_leg_magnet", "front_wheel_ground_marker", "rear_wheel_ground_marker", "front_wheel_front_marker", "rear_wheel_back_marker", "exhaust_tip_marker", "headlight_marker", "gas_cap_marker")]
 collision_layer = 3
@@ -225,7 +227,7 @@ visible = false
 unique_name_in_owner = true
 transform = Transform3D(9, 7.5730604e-28, -3.4106053e-14, 0, 1.5, 2.131627e-14, 2.5579538e-13, -2.6645337e-14, 1.2, 3.8689702, 0.41110802, 0.13644364)
 
-[node name="ShotgunTracers" type="Node3D" parent="VisualRoot/IKTargets/Shotgun" node_paths=PackedStringArray("hitbox")]
+[node name="ShotgunTracers" type="Node3D" parent="VisualRoot/IKTargets/Shotgun" unique_id=1739711857 node_paths=PackedStringArray("hitbox")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8689702, 0.41110802, 0.13644364)
 script = ExtResource("34_tracers")
@@ -262,7 +264,7 @@ emitting = false
 
 [node name="RightFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=844444444]
 unique_name_in_owner = true
-transform = Transform3D(-0.9787892, 0.022497207, 0.20363149, 0.20170893, 0.27976722, 0.93863934, -0.03585267, 0.9598043, -0.27837098, -0.18314199, 0.5666657, -0.22655825)
+transform = Transform3D(-0.9787893, 0.022497118, 0.2036314, 0.20170887, 0.27976713, 0.93863934, -0.035852674, 0.9598043, -0.27837086, -0.18314199, 0.5666657, -0.22655825)
 
 [node name="SparkParticlesRight" parent="VisualRoot/IKTargets/RightFootTarget" unique_id=1985641876 instance=ExtResource("29_3kl2f")]
 unique_name_in_owner = true
@@ -326,6 +328,14 @@ spot_angle = 26.0
 [node name="GasCapMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=1414693499]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, -2.842171e-13, 0, 1, 0, 2.842171e-13, 0, 1, 0, 0.97512925, 0.1212935)
+
+[node name="GrindSpotFrontMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=614634209]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.359349e-08, 0.18483545, 0.40625262)
+
+[node name="GrindSpotRearMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=1333420793]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.495558e-08, 0.22485137, -0.36395437)
 
 [node name="CharacterSkin" parent="VisualRoot" unique_id=259227641 instance=ExtResource("6_1vqn6")]
 unique_name_in_owner = true
@@ -453,10 +463,11 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.9372065e-08, 0.5, -0.70154446)
 target_position = Vector3(0, -1.5, 0)
 
-[node name="BoostTrail" type="MeshInstance3D" parent="." node_paths=PackedStringArray("bike_skin")]
+[node name="BoostTrail" type="MeshInstance3D" parent="." unique_id=240067857 node_paths=PackedStringArray("bike_skin")]
 unique_name_in_owner = true
 top_level = true
-cast_shadow = 0
 material_override = ExtResource("36_neon")
+cast_shadow = 0
+mesh = SubResource("ImmediateMesh_3kl2f")
 script = ExtResource("35_trail")
 bike_skin = NodePath("../VisualRoot/IKTargets/BikeSkin")

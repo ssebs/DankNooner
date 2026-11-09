@@ -27,8 +27,6 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 
-
-
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
 
@@ -241,6 +239,10 @@
 ---
 
 ## Done ✅
+
+- [x] add proper smith/feeble/willy grinds & lower the bike visually so it's not floating in the air
+
+- [x] fix backflip not counting unless you rotate allll the way
 
 - [x] add visual feedback when getting an item
 

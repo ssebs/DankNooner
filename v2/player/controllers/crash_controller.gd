@@ -318,7 +318,16 @@ func _detect_crash():
 					var away := signf(fwd.signed_angle_to(n, Vector3.UP))
 					wobble_controller.wobble_vel += away * WOBBLE_RAM_STRENGTH
 					movement_controller.speed *= 1.0 - WALL_GLANCE_SPEED_LOSS
-					DebugUtils.DebugMsg("wall glance wobble (angle=%.1f)" % angle)
+					DebugUtils.DebugMsg(
+						"wall glance wobble (angle=%.1f) collider=%s shape=%s pos=%s normal=%s"
+						% [
+							angle,
+							collider.get_path(),
+							collision.get_collider_shape(),
+							collision.get_position(),
+							n,
+						]
+					)
 					return
 
 

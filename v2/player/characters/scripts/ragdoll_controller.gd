@@ -4,24 +4,56 @@ class_name RagdollController extends Node3D
 @export var char_skin: CharacterSkin
 
 const ROOT_BONE_NAME = "Hips"
-const JOINT_TYPE_MAP = {
-	"CONE": PhysicalBone3D.JOINT_TYPE_CONE,
-	"HINGE": PhysicalBone3D.JOINT_TYPE_HINGE,
-}
 
 ## Needs to be generated in code, used in ragdoll simulation
 var skel_root: PhysicalBoneSimulator3D = PhysicalBoneSimulator3D.new()
 
-## Only Left-side bones need to be defined; Right variants are mirrored automatically
+## 6DOF rotation limits in degrees about the bone's own x/y/z, from rest (y runs along the bone, so y is twist).
+## Import retargeting gives every skin the same bone axes. Only Left-side bones need to be defined; Right
+## variants are mirrored automatically. angular_damp settles light extremities instead of letting them spin.
+## Collider: a capsule along the bone to its "end" bone, or "length" when skins lack one. "length" and
+## "radius" are fractions of the torso (Spine to Head), so every skin gets the same proportions.
 var ragdoll_bone_constraints_base = {
-	"Spine": {"type": "CONE", "min_bounds": [-0.5, -0.4, -0.6], "max_bounds": [1, 0.4, 0.6]},
-	"Head": {"type": "CONE", "min_bounds": [-0.6, -0.6, -0.3], "max_bounds": [0.35, 0.6, 0.3]},
-	"LeftUpperArm": {"type": "CONE", "min_bounds": [-0.3, 1, -0.8], "max_bounds": [1.0, 1, 0.8]},
-	"LeftLowerArm": {"type": "CONE", "min_bounds": [-0.1, -2, -2], "max_bounds": [2.5, -0.7, 2]},
-	"LeftHand": {"type": "CONE", "min_bounds": [-0.3, 0, -0.3], "max_bounds": [0.5, 3, 0.3]},
-	"LeftUpperLeg": {"type": "CONE", "min_bounds": [-0.7, -0.8, 1], "max_bounds": [0.7, 1.2, 1]},
-	"LeftLowerLeg": {"type": "HINGE", "min_bounds": [0, 1, 0], "max_bounds": [0, 1, -1.5]},
-	"LeftFoot": {"type": "CONE", "min_bounds": [-0.4, 1.5, -1.4], "max_bounds": [0.4, 0.3, 0]},
+	"Hips": {"radius": 0.25},
+	# x: +bend forward, z: +lean right. Chest and neck have no bodies, so this is the whole spine's range.
+	"Spine": {
+		"end": "Head", "radius": 0.3,
+		"min_bounds": [-45, -45, -45], "max_bounds": [90, 45, 45],
+	},
+	"Head": {
+		"length": 0.45, "radius": 0.22, "angular_damp": 1.0,
+		"min_bounds": [-35, -40, -30], "max_bounds": [40, 40, 30],
+	},
+	# x: +lower toward the side, z: +swing forward
+	"LeftUpperArm": {
+		"end": "LeftLowerArm", "radius": 0.12,
+		"min_bounds": [-110, -60, -60], "max_bounds": [100, 60, 130],
+	},
+	# x: +elbow bend
+	"LeftLowerArm": {
+		"end": "LeftHand", "radius": 0.11,
+		"min_bounds": [0, -45, -5], "max_bounds": [150, 45, 5],
+	},
+	# x: +fingers down, z: +fingers forward
+	"LeftHand": {
+		"length": 0.3, "radius": 0.08, "angular_damp": 1.0,
+		"min_bounds": [-50, -10, -20], "max_bounds": [60, 10, 20],
+	},
+	# x: +swing forward, z: +swing outward
+	"LeftUpperLeg": {
+		"end": "LeftLowerLeg", "radius": 0.18,
+		"min_bounds": [-40, -45, -35], "max_bounds": [130, 45, 75],
+	},
+	# x: +knee bend
+	"LeftLowerLeg": {
+		"end": "LeftFoot", "radius": 0.17,
+		"min_bounds": [0, -5, -5], "max_bounds": [150, 5, 5],
+	},
+	# x: +toes up, y: roll, z: toes in/out
+	"LeftFoot": {
+		"length": 0.45, "radius": 0.09, "angular_damp": 1.0,
+		"min_bounds": [-45, -20, -10], "max_bounds": [20, 20, 10],
+	},
 }
 
 var ragdoll_bone_constraints: Dictionary = {}
@@ -69,13 +101,15 @@ func create_skeleton_for_ragdoll():
 
 func _populate_skeleton_for_ragdoll():
 	var skel_3d = char_skin.skel_3d
+	var spine_pos: Vector3 = skel_3d.get_bone_global_rest(skel_3d.find_bone("Spine")).origin
+	var torso: float = spine_pos.distance_to(skel_3d.get_bone_global_rest(skel_3d.find_bone("Head")).origin)
 	for i in skel_3d.get_bone_count():
 		var b_name = skel_3d.get_bone_name(i)
 
-		# Skip bones not in our constraint dict (except root bone)
-		var is_root = b_name == ROOT_BONE_NAME
-		if not is_root and not ragdoll_bone_constraints.has(b_name):
+		if not ragdoll_bone_constraints.has(b_name):
 			continue
+		var is_root = b_name == ROOT_BONE_NAME
+		var constraint: Dictionary = ragdoll_bone_constraints[b_name]
 
 		var one_physical_bone: PhysicalBone3D = PhysicalBone3D.new()
 		skel_root.add_child(one_physical_bone)
@@ -90,11 +124,17 @@ func _populate_skeleton_for_ragdoll():
 		var rest_bone: Transform3D = skel_3d.get_bone_global_rest(i)
 		one_physical_bone.transform = rest_bone
 
+		var length: float = constraint.get("length", 0.0) * torso
+		if constraint.has("end"):
+			var end_pos: Vector3 = skel_3d.get_bone_global_rest(skel_3d.find_bone(constraint["end"])).origin
+			length = rest_bone.origin.distance_to(end_pos)
 		var capsule_shape: CapsuleShape3D = CapsuleShape3D.new()
-		capsule_shape.height = 0.2
-		capsule_shape.radius = 0.2
+		capsule_shape.radius = constraint["radius"] * torso
+		capsule_shape.height = maxf(length, capsule_shape.radius * 2.0)
 		var collision_shape: CollisionShape3D = CollisionShape3D.new()
 		collision_shape.shape = capsule_shape
+		# Centred along the bone, not on the joint, so gravity swings the limb instead of it holding its pose
+		collision_shape.position = Vector3(0, length / 2.0, 0)
 		one_physical_bone.add_child(collision_shape)
 
 		# Root bone has no joint constraints
@@ -102,25 +142,31 @@ func _populate_skeleton_for_ragdoll():
 			one_physical_bone.set_joint_type(PhysicalBone3D.JOINT_TYPE_PIN)
 			continue
 
-		# Apply joint type and bounds from constraint dict
-		var constraint = ragdoll_bone_constraints[b_name]
-		var joint_type = JOINT_TYPE_MAP.get(constraint["type"], PhysicalBone3D.JOINT_TYPE_CONE)
-		one_physical_bone.set_joint_type(joint_type)
-
-		var min_bounds: Array = constraint.get("min_bounds", [0, 0, 0])
-		one_physical_bone.set_joint_rotation(Vector3(min_bounds[0], min_bounds[1], min_bounds[2]))
+		one_physical_bone.set_joint_type(PhysicalBone3D.JOINT_TYPE_6DOF)
+		for a in 3:
+			var axis := "joint_constraints/%s/" % "xyz"[a]
+			# Godot inverts 6DOF angular limits: [lower, upper] allows rotation in [-upper, -lower]
+			one_physical_bone.set(axis + "angular_limit_lower", -constraint["max_bounds"][a])
+			one_physical_bone.set(axis + "angular_limit_upper", -constraint["min_bounds"][a])
+		one_physical_bone.angular_damp = constraint.get("angular_damp", 0.0)
 
 
 func _build_ragdoll_constraints() -> void:
 	ragdoll_bone_constraints.clear()
 	# Copy base constraints and mirror Left -> Right
 	for bone_name in ragdoll_bone_constraints_base:
-		ragdoll_bone_constraints[bone_name] = ragdoll_bone_constraints_base[bone_name].duplicate()
+		var base: Dictionary = ragdoll_bone_constraints_base[bone_name]
+		ragdoll_bone_constraints[bone_name] = base.duplicate()
 		if bone_name.begins_with("Left"):
-			var right_name = bone_name.replace("Left", "Right")
-			ragdoll_bone_constraints[right_name] = (
-				ragdoll_bone_constraints_base[bone_name].duplicate()
-			)
+			# A Right bone is its mirrored Left with x flipped, so x carries over and y/z negate
+			var right: Dictionary = base.duplicate()
+			var lo: Array = base["min_bounds"]
+			var hi: Array = base["max_bounds"]
+			right["min_bounds"] = [lo[0], -hi[1], -hi[2]]
+			right["max_bounds"] = [hi[0], -lo[1], -lo[2]]
+			if base.has("end"):
+				right["end"] = base["end"].replace("Left", "Right")
+			ragdoll_bone_constraints[bone_name.replace("Left", "Right")] = right
 
 
 func _get_configuration_warnings() -> PackedStringArray:

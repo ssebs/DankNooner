@@ -13,13 +13,11 @@ Ads at FHK? Print out? Merch?
 Red triangles over enemy head
 
 
-- [ ] d-pad menu to swap loadouts. have it slide out & let you choose a class (like vertical minecraft hotbar w/ person on the bike for the icon)
 
 ---
 
 ## NOW
-- [ ] Flips (BACKFLIP/FRONTFLIP) are current_trick for only one rollback tick, but task check()s poll it once per rendered frame, so a frame that runs 2+ ticks can miss the flip. The fix is to latch flips in TrickController the way tap tricks are (_tap_trick / TAP_TRICK_DURATION) rather than special-casing them in tasks.
-- [ ] grinding - smith should lower so the center of the tank is whats grinding & not floating in the air
+
 - [ ] Add product feature tour / walk thru for tutorials
   - [ ] `planning_docs/____TUTORIAL_WIP.md`
   - [x] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
@@ -30,13 +28,13 @@ Red triangles over enemy head
     - [x] working steps / explainations
     - [x] improve tutorial feel
     - [x] improve tutorial level map
-    - [ ] fix backflip not counting unless you rotate allll the way
     - [ ] grab gas can => just check boost used, not full amount. (ended up grabbing next item & being confused)
     - [ ] using shotgun but missing needs to reset you but say you were too far away
     - [ ] shorten tutorial
-    - [ ] exit garage / fillup should not say end event
     - [ ] reset tutorial doesnt work for customization
 
+- [ ] exit garage / fillup should not say end event
+- [ ] d-pad menu to swap loadouts. have it slide out & let you choose a class (like vertical minecraft hotbar w/ person on the bike for the icon)
 
 --
 ###
