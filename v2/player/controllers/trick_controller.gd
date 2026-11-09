@@ -435,10 +435,10 @@ func _detect_air_trick() -> Trick:
 		return Trick.NONE
 
 	_flip_emitted = true
-	if movement_controller.pitch_angle > 0:
-		return Trick.BACKFLIP
-
-	return Trick.FRONTFLIP
+	# Latched like a tap trick: a one-tick flip is missed by per-frame pollers (tasks, HUD).
+	_tap_trick = Trick.BACKFLIP if movement_controller.pitch_angle > 0 else Trick.FRONTFLIP
+	_tap_trick_timer = TAP_TRICK_DURATION
+	return _tap_trick
 
 
 ## The grind the rail pose makes. Pitch zones are the wheelie / stoppie thresholds, yaw zones
