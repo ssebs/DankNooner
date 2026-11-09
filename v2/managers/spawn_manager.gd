@@ -160,21 +160,42 @@ func request_respawn_in_place():
 		respawn_in_place(peer_id)
 
 
-## Server-only: resolve where a player should respawn in place — current spot upright, or the
-## last flat breadcrumb if the site is too steep — and broadcast it. Shared by the R tap
-## (request_respawn_in_place) and free-roam crash recovery so both behave identically.
+## Client-callable: R double tap. Saves where the first tap just put you as your persistent
+## respawn point, so a held R returns there. The server derives the target from the sender.
+@rpc("any_peer", "call_local", "reliable")
+func request_set_respawn_point():
+	if !multiplayer.is_server():
+		return
+	var sender := multiplayer.get_remote_sender_id()
+	var peer_id := sender if sender > 1 else 1
+	# Disallowed mode, or still crashed (the first tap's respawn hasn't landed) — ignoring is intentional.
+	if (
+		!gamemode_manager.get_current_gamemode().allows_set_respawn_point()
+		or get_player_by_peer_id(peer_id).is_crashed
+	):
+		return
+	var target := _in_place_target(peer_id)
+	set_respawn_point.rpc(peer_id, target.origin, target.basis)
+	hud_manager.riding_hud_state.push_respawn_point_set(peer_id)
+
+
+## Server-only: respawn a player in place (see _in_place_target) and broadcast it. Shared by the
+## R tap (request_respawn_in_place) and free-roam crash recovery so both behave identically.
 func respawn_in_place(player_peer_id: int):
+	var target := _in_place_target(player_peer_id)
+	respawn_player_in_place.rpc(player_peer_id, target.origin, target.basis)
+
+
+## Current spot upright, or the last flat breadcrumb if the site is too steep.
+func _in_place_target(player_peer_id: int) -> Transform3D:
 	var player := get_player_by_peer_id(player_peer_id)
 	var normal := _ground_normal_at(player)
 	var too_steep := (
 		normal == Vector3.ZERO or normal.angle_to(Vector3.UP) > deg_to_rad(RESPAWN_STEEP_SLOPE_DEG)
 	)
 	if too_steep and _flat_breadcrumbs.has(player_peer_id):
-		var crumb := _flat_breadcrumbs[player_peer_id]
-		respawn_player_in_place.rpc(player_peer_id, crumb.origin, crumb.basis)
-		return
-	var upright := Basis(Vector3.UP, player.global_rotation.y)
-	respawn_player_in_place.rpc(player_peer_id, player.global_position, upright)
+		return _flat_breadcrumbs[player_peer_id]
+	return Transform3D(Basis(Vector3.UP, player.global_rotation.y), player.global_position)
 
 
 ## Ground normal just under the player, Vector3.ZERO when there is no ground within 3m.
@@ -383,7 +404,7 @@ func respawn_player_at(player_peer_id: int, pos: Vector3, basis: Basis):
 
 ## Respawn a player at a one-shot transform WITHOUT changing the persistent respawn point.
 ## Free roam crash respawns use this so you respawn where you crashed, while the pause-menu
-## respawn button still returns to the original spawn (rb_respawn_transform). Runs on every peer.
+## respawn button still returns to the persistent point (rb_respawn_transform). Runs on every peer.
 @rpc("any_peer", "call_local", "reliable")
 func respawn_player_in_place(player_peer_id: int, pos: Vector3, basis: Basis):
 	if !_sender_is_server():

@@ -2,8 +2,6 @@
 
 [ext_resource type="Script" uid="uid://7ucyugkoihsv" path="res://menus/customize_menu/customize_menu_state.gd" id="1_hwmj7"]
 [ext_resource type="PackedScene" path="res://menus/customize_menu/components/garage_ui.tscn" id="2_garage"]
-[ext_resource type="Script" path="res://utils/tour/tour.gd" id="3_tour"]
-[ext_resource type="Script" path="res://utils/tour/tour_step.gd" id="4_tourstep"]
 
 [node name="CustomizeMenuState" type="Node" unique_id=1584947550]
 script = ExtResource("1_hwmj7")
@@ -21,43 +19,3 @@ mouse_filter = 2
 [node name="GarageUI" parent="UI" instance=ExtResource("2_garage")]
 unique_name_in_owner = true
 layout_mode = 1
-
-[node name="CustomizeTour" type="Node" parent="."]
-unique_name_in_owner = true
-script = ExtResource("3_tour")
-tour_id = &"customize"
-
-[node name="IntroStep" type="Node" parent="CustomizeTour"]
-script = ExtResource("4_tourstep")
-title_key = "TOUR_CUSTOMIZE_INTRO_TITLE"
-body_key = "TOUR_CUSTOMIZE_INTRO_BODY"
-
-[node name="ProfileStep" type="Node" parent="CustomizeTour"]
-unique_name_in_owner = true
-script = ExtResource("4_tourstep")
-title_key = "TOUR_CUSTOMIZE_PROFILE_TITLE"
-body_key = "TOUR_CUSTOMIZE_PROFILE_BODY"
-
-[node name="LoadoutsStep" type="Node" parent="CustomizeTour"]
-unique_name_in_owner = true
-script = ExtResource("4_tourstep")
-title_key = "TOUR_CUSTOMIZE_LOADOUTS_TITLE"
-body_key = "TOUR_CUSTOMIZE_LOADOUTS_BODY"
-
-[node name="AddStep" type="Node" parent="CustomizeTour"]
-unique_name_in_owner = true
-script = ExtResource("4_tourstep")
-title_key = "TOUR_CUSTOMIZE_ADD_TITLE"
-body_key = "TOUR_CUSTOMIZE_ADD_BODY"
-
-[node name="RecolorStep" type="Node" parent="CustomizeTour"]
-unique_name_in_owner = true
-script = ExtResource("4_tourstep")
-title_key = "TOUR_CUSTOMIZE_RECOLOR_TITLE"
-body_key = "TOUR_CUSTOMIZE_RECOLOR_BODY"
-
-[node name="SetActiveStep" type="Node" parent="CustomizeTour"]
-unique_name_in_owner = true
-script = ExtResource("4_tourstep")
-title_key = "TOUR_CUSTOMIZE_SET_ACTIVE_TITLE"
-body_key = "TOUR_CUSTOMIZE_SET_ACTIVE_BODY"

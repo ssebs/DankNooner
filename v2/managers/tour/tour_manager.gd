@@ -20,6 +20,10 @@ const OUTLINE_WIDTH: float = 3.0
 const DOT_SIZE: Vector2 = Vector2(12, 12)
 ## Input ignored for this long after a tour opens, so a rider still mashing buttons can't skip it.
 const OPEN_GRACE_MSEC: int = 1000
+## Where the pause menu can open, so Esc pauses instead of going back.
+const PAUSABLE_STATES: Array[InputStateManager.InputState] = [
+	InputStateManager.InputState.IN_GAME, InputStateManager.InputState.IN_MINIGAME
+]
 
 @onready var _ui: Control = %UI
 @onready var _spotlight: Control = %Spotlight
@@ -41,6 +45,10 @@ var _step_idx: int = 0
 var _hole: Rect2
 var _saved_input_state: InputStateManager.InputState
 var _opened_msec: int = 0
+## This tour paused the tree, so closing it unpauses.
+var _paused_tree: bool = false
+## A play() or a hidden tour held while the pause menu is up; runs on resume.
+var _pending_play: Callable
 ## The menu's focus, handed back on close and during action steps. Null while riding, where
 ## nothing has focus.
 var _saved_focus: Control
@@ -51,25 +59,31 @@ func _ready():
 	set_process(false)
 	if Engine.is_editor_hint():
 		return
-	# Tutorial tours pause the game (ShowTourTask); the overlay still has to run.
+	# play(pause_tree) pauses the game; the overlay still has to run.
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_spotlight.draw.connect(_draw_spotlight)
 	_back_btn.pressed.connect(func(): _show_step(_step_idx - 1))
 	_skip_btn.pressed.connect(_close.bind(true))
 	_next_btn.pressed.connect(_on_next_pressed)
 	input_state_manager.device_changed.connect(_on_device_changed)
+	input_state_manager.input_state_changed.connect(_on_input_state_changed)
 
 
 func _input(event: InputEvent):
 	if Engine.is_editor_hint():
 		return
-	# Action steps leave input to the menu underneath.
-	if !is_open() or _is_action_step():
+	# Action steps leave input to the menu underneath. Hidden = held under the pause menu.
+	if !is_open() or !_ui.visible or _is_action_step():
 		return
 	if Time.get_ticks_msec() - _opened_msec < OPEN_GRACE_MSEC:
 		get_viewport().set_input_as_handled()
 		return
-	if event.is_action_pressed("ui_cancel"):
+	# Checked before ui_cancel: Esc is both.
+	if event.is_action_pressed("pause") and _saved_input_state in PAUSABLE_STATES:
+		get_viewport().set_input_as_handled()
+		# InputStateManager ignores input during IN_TOUR, so the tour forwards it.
+		input_state_manager.pause_requested.emit()
+	elif event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		if _step_idx == 0:
 			_close(true)
@@ -88,8 +102,16 @@ func _process(_delta: float):
 	_layout()
 
 
-## Always shows the tour. Finishing or skipping saves it as done.
-func play(tour: Tour) -> void:
+## Always shows the tour, after the pause menu if it's up. Finishing or skipping saves it as done.
+## pause_tree stops the game under it until it closes.
+func play(tour: Tour, pause_tree: bool = false) -> void:
+	# The pause menu doesn't stop the sim, so a tutorial lesson can pass under it.
+	if input_state_manager.current_input_state == InputStateManager.InputState.IN_GAME_PAUSED:
+		_pending_play = play.bind(tour, pause_tree)
+		return
+	_paused_tree = pause_tree
+	if pause_tree:
+		get_tree().paused = true
 	_tour = tour
 	_steps = tour.get_steps()
 	_saved_input_state = input_state_manager.current_input_state
@@ -128,6 +150,43 @@ func _is_body_action(event: InputEvent) -> bool:
 		if !ControlBindings.TOKEN_ALIASES.has(action) and event.is_action_pressed(action):
 			return true
 	return false
+
+
+## Pausing hides the open tour. Resuming plays what's held; quitting from the pause menu drops it.
+func _on_input_state_changed(new_state: InputStateManager.InputState):
+	if new_state == InputStateManager.InputState.IN_GAME_PAUSED:
+		if is_open() and _ui.visible:
+			_hide_for_pause()
+		return
+	if !_pending_play.is_valid():
+		return
+	if new_state == InputStateManager.InputState.IN_GAME:
+		# Deferred so the unpause finishes before the tour takes over input.
+		_pending_play.call_deferred()
+	else:
+		# Not saved as done, so it plays again next time.
+		_tour = null
+		_paused_tree = false
+	_pending_play = Callable()
+
+
+## The pause menu needs the tree running for its buttons.
+func _hide_for_pause():
+	_ui.hide()
+	set_process(false)
+	if _paused_tree:
+		get_tree().paused = false
+	_pending_play = _show_after_pause
+
+
+## Back at the step it was on.
+func _show_after_pause():
+	if _paused_tree:
+		get_tree().paused = true
+	_opened_msec = Time.get_ticks_msec()
+	_ui.show()
+	set_process(true)
+	_show_step(_step_idx)
 
 
 func _on_device_changed(_is_gamepad: bool):
@@ -177,8 +236,15 @@ func _close(skipped: bool):
 	_tour = null
 	_ui.hide()
 	set_process(false)
-	# Deferred so whatever polls Input this frame doesn't also read the press that closed it.
-	input_state_manager.set_deferred("current_input_state", _saved_input_state)
+	# skip() can land while it's hidden under the pause menu.
+	_pending_play = Callable()
+	if _paused_tree:
+		get_tree().paused = false
+		_paused_tree = false
+	# Action steps already handed input back, and the owner may have moved it on since (skip()).
+	if input_state_manager.current_input_state == InputStateManager.InputState.IN_TOUR:
+		# Deferred so whatever polls Input this frame doesn't also read the press that closed it.
+		input_state_manager.set_deferred("current_input_state", _saved_input_state)
 	_restore_focus()
 	save_manager.mark_tour_done(tour.tour_id)
 	tour_closed.emit(tour, skipped)

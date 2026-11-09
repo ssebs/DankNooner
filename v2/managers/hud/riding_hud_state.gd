@@ -546,6 +546,20 @@ func _rpc_set_held_item(definition_path: String):
 	HUDFlash.punch.call_deferred(_held_item_panel)
 
 
+## Server-side, to the rider whose R double tap saved their respawn point.
+func push_respawn_point_set(peer_id: int) -> void:
+	_rpc_respawn_point_set.rpc_id(peer_id)
+
+
+@rpc("call_local", "reliable")
+func _rpc_respawn_point_set():
+	# Swap the first tap's "Respawning..." for the confirmation.
+	_respawn_flash_t = 0.0
+	_trick_popups.pop_callout(tr("HUD_RESPAWN_POINT_SET"), _RESPAWN_COLOR)
+	HUDFlash.punch(%HUD_RespawnPrompt)
+	player_entity.audio_manager.play_ding()
+
+
 #region Event pane — every runner event's step text, above the race leaderboard
 
 

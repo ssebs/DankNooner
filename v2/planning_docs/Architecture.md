@@ -502,8 +502,10 @@ for the current surface. The distinctions that aren't obvious from the signature
   store it, teleport with a one-shot and leave it (free-roam crash), or update/clear it without
   teleporting (race checkpoints, entering free roam). Picking the wrong one is silent — you find
   out when a later respawn lands somewhere stale.
-- **`request_respawn()` is the only client-callable entry point.** The server derives the target
-  from the RPC sender, so a client can never respawn anyone but itself.
+- **The `request_*` RPCs are the only client-callable entry points.** R tap → `request_respawn_in_place`,
+  hold → `request_respawn`, double tap → `request_set_respawn_point` (saves the tap's spot as the
+  persistent point; only where `GameModeType.allows_set_respawn_point`). The server derives the
+  target from the RPC sender, so a client can never respawn anyone but itself.
 - **Sender guards**: broadcasts stay `any_peer` only because the server has to `call_local` them,
   and each rejects any sender that isn't the server. This relies on a subtle mechanic — during
   `call_local` the sender id is the *local* peer's own id, so it reads as 1 on the host and as the

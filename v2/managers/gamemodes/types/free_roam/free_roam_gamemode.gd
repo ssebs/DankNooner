@@ -53,6 +53,11 @@ func respawns_crash_in_place(_peer_id: int) -> bool:
 
 
 #override
+func allows_set_respawn_point() -> bool:
+	return true
+
+
+#override
 ## No lobby event to cancel here — only this rider's own activity.
 func can_cancel_event() -> bool:
 	return _activity != null
@@ -452,7 +457,7 @@ func _on_player_crashed(peer_id: int):
 ## Free roam respawns you where you crashed (upright, same heading) rather than back at
 ## spawn. Delegates to the shared SpawnManager path so crash recovery and the R tap behave
 ## identically; that path doesn't touch the persistent respawn point, so the pause-menu
-## respawn button still returns to the original spawn.
+## respawn button still returns to the persistent point (spawn, or one saved by an R double tap).
 func _respawn_at_crash_site(peer_id: int):
 	# Already recovered (e.g. pause-menu respawn button) before the timer fired — skip
 	# so we don't respawn a second time. Null when they left during the delay — skip is intentional.

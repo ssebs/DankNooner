@@ -181,7 +181,7 @@ var rb_near_miss_score: float = 0.0
 ## applying it in the rollback tick lets the freeze reach clients — a write from outside never syncs.
 var rb_lock_movement: bool = false
 var rb_unlock_movement: bool = false
-## Persistent respawn point. Set by SpawnManager.respawn_player_at (e.g. TeleportTask),
+## Persistent respawn point. Set by SpawnManager.respawn_player_at (e.g. TeleportTask) or an R double tap,
 ## reset to identity to fall back to `get_parent().global_transform` (player_spawn_pos).
 ## Persists across respawns so crashes after a checkpoint return to the checkpoint.
 var rb_respawn_transform: Transform3D = Transform3D()

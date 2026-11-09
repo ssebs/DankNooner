@@ -25,6 +25,11 @@ func Exit(state_context: StateContext):
 
 
 #override
+func allows_set_respawn_point() -> bool:
+	return true
+
+
+#override
 ## Points and items held before the battle (free roam) don't count.
 func _start_next_runner():
 	super()

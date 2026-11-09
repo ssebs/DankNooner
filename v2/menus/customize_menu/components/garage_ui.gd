@@ -2,7 +2,7 @@
 ## Focusing (or hovering) a row previews it; accepting applies or buys it. Edits and purchases
 ## mutate the in-memory PlayerDefinition and commit() saves them in one push. Hosts
 ## (CustomizeMenuState, GarageHUDState) wire preview_changed and pose_requested to a GarageSet and
-## route back/tab input to go_back()/cycle_tab().
+## route back/tab input to go_back()/cycle_tab(). The first open plays the Customize tour.
 class_name GarageUI extends Control
 
 ## is_character: a character page, so the rider previews off the bike.
@@ -47,10 +47,17 @@ const TAB_MAX_WIDTH: float = 200
 @onready var _confirm_label: Label = %ConfirmLabel
 @onready var _confirm_yes_btn: Button = %ConfirmYesBtn
 @onready var _confirm_no_btn: Button = %ConfirmNoBtn
+@onready var _tour: Tour = %CustomizeTour
+@onready var _profile_step: TourStep = %ProfileStep
+@onready var _loadouts_step: TourStep = %LoadoutsStep
+@onready var _add_step: TourStep = %AddStep
+@onready var _recolor_step: TourStep = %RecolorStep
+@onready var _set_active_step: TourStep = %SetActiveStep
 
 var _save_manager: SaveManager
 var _audio_manager: AudioManager
 var _input_state_manager: InputStateManager
+var _tour_manager: TourManager
 var _player_def: PlayerDefinition
 ## skin_name -> res path
 var _bikes: Dictionary = {}
@@ -96,11 +103,15 @@ func _ready():
 
 ## Start on the active loadout's tab.
 func open(
-	save_manager: SaveManager, audio_manager: AudioManager, input_state_manager: InputStateManager
+	save_manager: SaveManager,
+	audio_manager: AudioManager,
+	input_state_manager: InputStateManager,
+	tour_manager: TourManager,
 ):
 	_save_manager = save_manager
 	_audio_manager = audio_manager
 	_input_state_manager = input_state_manager
+	_tour_manager = tour_manager
 	_input_state_manager.device_changed.connect(_show_tab_prompts)
 	_show_tab_prompts(_input_state_manager.is_gamepad)
 	_player_def = save_manager.get_player_definition()
@@ -112,6 +123,7 @@ func open(
 	_confirm_box.hide()
 	_switch_tab(_player_def.active_loadout_index + 1)
 	_audio_manager.set_music_ducked(self, true)
+	_play_tour()
 
 
 ## LB/RB beside the tab strip. Pad only: the mouse clicks the tabs.
@@ -122,25 +134,32 @@ func _show_tab_prompts(gamepad: bool):
 	_next_tab_prompt.visible = gamepad
 
 
-## For the Customize tour to point at.
-func get_profile_tab() -> Control:
-	return _profile_tab
-
-
-func get_loadout_tabs() -> Control:
-	return _tabs
-
-
-func get_add_tab() -> Control:
-	return _add_tab_btn
-
-
-func get_panel() -> Control:
-	return _panel
+## The tour has the player add a loadout and recolor it, then explains the active marker.
+func _play_tour():
+	_profile_step.target = _profile_tab
+	_loadouts_step.target = _tabs
+	_add_step.target = _add_tab_btn
+	_recolor_step.target = _panel
+	_set_active_step.target = _tabs
+	var loadout_count := _player_def.loadouts.size()
+	# The new loadout starts as a copy of the active one.
+	var source_colors := _player_def.loadouts[_player_def.active_loadout_index].bike.colors.duplicate()
+	# At the cap, + is hidden and there's nothing to add.
+	_add_step.done_when = func():
+		return (
+			_player_def.loadouts.size() > loadout_count
+			or loadout_count >= PlayerDefinition.MAX_LOADOUTS
+		)
+	_recolor_step.done_when = func(): return _player_def.loadouts.back().bike.colors != source_colors
+	# Deferred past FreeRoamActivity._start_session switching to IN_MINIGAME, which would replace IN_TOUR.
+	_tour_manager.play_once.call_deferred(_tour)
 
 
 ## One save: one lobby push, one skin sync.
 func commit():
+	# Backing out mid-tour is only possible during an action step, and counts as a skip.
+	if _tour_manager.is_open():
+		_tour_manager.skip()
 	_input_state_manager.device_changed.disconnect(_show_tab_prompts)
 	_stop_horn_preview()
 	_audio_manager.set_music_ducked(self, false)

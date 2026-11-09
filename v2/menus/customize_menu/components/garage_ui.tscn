@@ -5,6 +5,8 @@
 [ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="3_money"]
 [ext_resource type="Texture2D" uid="uid://dombbuh0a3fxn" path="res://resources/img/Icons/flair_disabled_cross.svg" id="4_close"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/input_prompt.tscn" id="5_prompt"]
+[ext_resource type="Script" path="res://utils/tour/tour.gd" id="6_tour"]
+[ext_resource type="Script" path="res://utils/tour/tour_step.gd" id="7_tourstep"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bare"]
 
@@ -339,3 +341,43 @@ edit_intensity = false
 can_add_swatches = false
 sampler_visible = false
 color_modes_visible = false
+
+[node name="CustomizeTour" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("6_tour")
+tour_id = &"customize"
+
+[node name="IntroStep" type="Node" parent="CustomizeTour"]
+script = ExtResource("7_tourstep")
+title_key = "TOUR_CUSTOMIZE_INTRO_TITLE"
+body_key = "TOUR_CUSTOMIZE_INTRO_BODY"
+
+[node name="ProfileStep" type="Node" parent="CustomizeTour"]
+unique_name_in_owner = true
+script = ExtResource("7_tourstep")
+title_key = "TOUR_CUSTOMIZE_PROFILE_TITLE"
+body_key = "TOUR_CUSTOMIZE_PROFILE_BODY"
+
+[node name="LoadoutsStep" type="Node" parent="CustomizeTour"]
+unique_name_in_owner = true
+script = ExtResource("7_tourstep")
+title_key = "TOUR_CUSTOMIZE_LOADOUTS_TITLE"
+body_key = "TOUR_CUSTOMIZE_LOADOUTS_BODY"
+
+[node name="AddStep" type="Node" parent="CustomizeTour"]
+unique_name_in_owner = true
+script = ExtResource("7_tourstep")
+title_key = "TOUR_CUSTOMIZE_ADD_TITLE"
+body_key = "TOUR_CUSTOMIZE_ADD_BODY"
+
+[node name="RecolorStep" type="Node" parent="CustomizeTour"]
+unique_name_in_owner = true
+script = ExtResource("7_tourstep")
+title_key = "TOUR_CUSTOMIZE_RECOLOR_TITLE"
+body_key = "TOUR_CUSTOMIZE_RECOLOR_BODY"
+
+[node name="SetActiveStep" type="Node" parent="CustomizeTour"]
+unique_name_in_owner = true
+script = ExtResource("7_tourstep")
+title_key = "TOUR_CUSTOMIZE_SET_ACTIVE_TITLE"
+body_key = "TOUR_CUSTOMIZE_SET_ACTIVE_BODY"

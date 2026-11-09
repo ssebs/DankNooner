@@ -37,7 +37,10 @@ Where the built code differs from the task text below, this section wins:
   the closing press isn't read by the minigame. The warning line is a plain Label (no tokens).
 - **Customize tour** (6 steps): intro, Profile tab, loadout tabs, **add a loadout** (action,
   targets `+`), **recolor it** (action, targets the garage panel), then a read-only step on `*`
-  and Set Active (targets the tabs). Not forcing Set Active was a user call.
+  and Set Active (targets the tabs). Not forcing Set Active was a user call. Lives in `GarageUI`,
+  so the menu and the free-roam garage share it (one `customize` save key); `open()` defers
+  `play_once` like the fill-up tour, and `commit()` skips it if still open. A skip leaves the
+  input state alone unless it's still `IN_TOUR`, since the free-roam teardown already moved it on.
 - **Garage pad support:** LB/RB `InputPrompt`s beside the tab strip (pad only). RB past the last
   tab focuses `+` (focus shows the selected-tab underline + blue text); accept adds a loadout.
 - **Debug:** `dbg_reset_tutorials` clears tours and tutorial progress.
@@ -81,6 +84,11 @@ Where the built code differs from the task text below, this section wins:
   - `ShowTourTask` pauses the tree (solo only) instead of freezing, one tick after entering so a
     preceding teleport lands. Speed survives the tour. Its check-child mode is gone; every check is
     the next sibling. `TourManager` and `InputStateManager` run with `PROCESS_MODE_ALWAYS`.
+  - The pause menu doesn't stop the sim, so a lesson can pass under it. `TourManager.play()` holds
+    a tour until resume (dropped on quit) and owns the tree pause (`pause_tree`), so a held tour
+    doesn't freeze the pause menu's buttons. In game, pause (Esc/Start) on a tour opens the pause
+    menu; the tour hides under it (tree unpaused) and comes back at the same step on resume. In
+    menus Esc still goes back / skips.
   - netfox patch (`NetworkTime._notification`): on unpause, a solo host rewinds both netfox
     clocks by the pause. Stock netfox jumps the tick past the pause, which trimmed the input
     history and replayed ~64 ticks with the first fresh input (held W launched the bike).

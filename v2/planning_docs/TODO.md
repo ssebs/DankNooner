@@ -26,6 +26,7 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
+- [ ] d-pad menu to swap loadouts. have it slide out & let you choose a class (like vertical minecraft hotbar w/ person on the bike for the icon)
 - [ ] r => quick respawn, add btn for set full respawn point (if not in race)
 - [ ] Add product feature tour / walk thru for tutorials
   - [ ] `planning_docs/____TUTORIAL_WIP.md`
@@ -38,7 +39,26 @@
     - [x] improve tutorial level map
     - [x] grab gas can => just check boost used, not full amount. (ended up grabbing next item & being confused)
     - [x] using shotgun but missing needs to reset you but say you were too far away
-  - [ ] reset tutorial doesnt work for customization
+  - [x] reset tutorial doesnt work for customization
+  - [x] 1: MSF Course
+    - [x] Basic movement (gas, brake, steer, camera, shift gears, lean, clutch)
+    - [x] Wheelies (basic, balance point, clutch up)
+    - [x] Stoppies
+    - [x] Drift
+    - [x] Air tricks
+    - [x] Trick mods
+  - [ ] 2: Advanced:
+    - [ ] Progressive braking (0% -> 100% causes crash)
+    - [ ] trail braking
+    - [ ] kickflip / superman
+    - [ ] grinds
+      - [ ] 50/50
+      - [ ] salad
+      - [ ] smith
+    - [ ] burnouts
+    - [ ] bunny hops
+
+
 
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -189,21 +209,7 @@
 ### Tutorials (post-Challenge-system)
 - [ ] Basic [story](./Story.md) w/ levels
 - [ ] use cutscene system
-- [ ] 3 short "missions" (tutorial) that players can skip when first launching
-  - [ ] don't force boring tut, make it hidden (see Half-Life 2/Valve games)
-  - [x] 1: MSF Course
-    - [x] Basic movement (gas, brake, steer, camera, shift gears, lean, clutch)
-    - [x] Wheelies (basic, balance point, clutch up)
-    - [x] Stoppies
-    - [x] Drift
-    - [x] Air tricks
-    - [x] Trick mods
-  - [ ] 2: Advanced:
-    - [ ] Progressive braking (0% -> 100% causes crash)
-    - [ ] burnouts
-    - [ ] kickflip / superman
-    - [ ] grinds w/ tweaks
-    - [ ] bunny hops
+- [ ] don't force boring tut, make it hidden (see Half-Life 2/Valve games)
 
 ### Tricks / animation
 - [ ] More tricks

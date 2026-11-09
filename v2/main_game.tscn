@@ -283,10 +283,11 @@ input_state_manager = NodePath("../../../InputStateManager")
 [node name="FuelUpHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=104670419 node_paths=PackedStringArray("save_manager") instance=ExtResource("30_fuelhud")]
 save_manager = NodePath("../../../SaveManager")
 
-[node name="GarageHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=128352564 node_paths=PackedStringArray("save_manager", "audio_manager", "input_state_manager") instance=ExtResource("30_garagehud")]
+[node name="GarageHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=128352564 node_paths=PackedStringArray("save_manager", "audio_manager", "input_state_manager", "tour_manager") instance=ExtResource("30_garagehud")]
 save_manager = NodePath("../../../SaveManager")
 audio_manager = NodePath("../../../AudioManager")
 input_state_manager = NodePath("../../../InputStateManager")
+tour_manager = NodePath("../../../TourManager")
 
 [node name="GamemodeManager" type="Node" parent="ManagerManager" unique_id=4471528 node_paths=PackedStringArray("menu_manager", "settings_manager", "connection_manager", "lobby_manager", "level_manager", "spawn_manager", "animal_spawn_manager", "audio_manager", "input_state_manager", "steam_manager", "state_machine", "loading_menu_state", "free_roam_mode", "race_mode", "stunt_race_mode", "time_attack_mode", "tutorial_mode", "stunt_challenge_mode", "long_jump_mode", "fuel_up_mode", "trick_battle_mode", "crash_launch_mode") groups=["Managers"]]
 script = ExtResource("18_ih6an")

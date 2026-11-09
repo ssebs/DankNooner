@@ -9,12 +9,6 @@ class_name CustomizeMenuState extends MenuState
 @export var tour_manager: TourManager
 
 @onready var garage_ui: GarageUI = %GarageUI
-@onready var _tour: Tour = %CustomizeTour
-@onready var _profile_step: TourStep = %ProfileStep
-@onready var _loadouts_step: TourStep = %LoadoutsStep
-@onready var _add_step: TourStep = %AddStep
-@onready var _recolor_step: TourStep = %RecolorStep
-@onready var _set_active_step: TourStep = %SetActiveStep
 
 var _garage_set: GarageSet
 
@@ -29,43 +23,18 @@ func Enter(state_context: StateContext):
 	garage_ui.pose_requested.connect(_garage_set.cycle_pose)
 	garage_ui.exit_requested.connect(_on_exit_requested)
 	ui.show()
-	garage_ui.open(save_manager, audio_manager, input_state_manager)
-	_play_tour()
+	garage_ui.open(save_manager, audio_manager, input_state_manager, tour_manager)
 
 
 ## Only commits: on a host launch, spawn_level() already freed the garage and is what called this.
 func Exit(_state_context: StateContext):
-	# Backing out mid-tour is only possible during an action step, and counts as a skip.
-	if tour_manager.is_open():
-		tour_manager.skip()
-	ui.hide()
+	# Before hiding: a mid-tour skip refocuses a garage row, which hiding then releases.
 	garage_ui.commit()
+	ui.hide()
 	garage_ui.preview_changed.disconnect(_garage_set.show_preview)
 	garage_ui.pose_requested.disconnect(_garage_set.cycle_pose)
 	garage_ui.exit_requested.disconnect(_on_exit_requested)
 	_garage_set = null
-
-
-## The tour has the player add a loadout and recolor it, then explains the active marker.
-func _play_tour():
-	_profile_step.target = garage_ui.get_profile_tab()
-	_loadouts_step.target = garage_ui.get_loadout_tabs()
-	_add_step.target = garage_ui.get_add_tab()
-	_recolor_step.target = garage_ui.get_panel()
-	_set_active_step.target = garage_ui.get_loadout_tabs()
-	# GarageUI edits this same PlayerDefinition in place.
-	var player_def := save_manager.get_player_definition()
-	var loadout_count := player_def.loadouts.size()
-	# The new loadout starts as a copy of the active one.
-	var source_colors := player_def.loadouts[player_def.active_loadout_index].bike.colors.duplicate()
-	# At the cap, + is hidden and there's nothing to add.
-	_add_step.done_when = func():
-		return (
-			player_def.loadouts.size() > loadout_count
-			or loadout_count >= PlayerDefinition.MAX_LOADOUTS
-		)
-	_recolor_step.done_when = func(): return player_def.loadouts.back().bike.colors != source_colors
-	tour_manager.play_once(_tour)
 
 
 func _on_exit_requested():

@@ -49,7 +49,10 @@ var is_gamepad: bool = false
 ## Respawn tap/hold tracking for the local player. Full respawn fires once the hold crosses
 ## the threshold; a release before then is a tap → quick in-place respawn.
 var _respawn_hold_time: float = 0.0
-var _respawn_full_fired: bool = false
+## This press already did its action (full respawn or set point), so its release is no tap.
+var _respawn_press_spent: bool = false
+## Last tap's release; a press within TrickController.DOUBLE_TAP_WINDOW of it sets the respawn point.
+var _respawn_tapped_msec: int = -1
 ## Last trick-button release; a press within TrickController.DOUBLE_TAP_WINDOW of it uses the held item.
 var _trick_released_msec: int = -1
 ## Last horn release; a honk within the same window discards the held item.
@@ -83,25 +86,32 @@ func _input(event: InputEvent):
 		showhide_mouse_cursor()
 
 
-## Respawn tap vs hold. Polled here rather than in _unhandled_input because the hold needs
-## per-frame timing: crossing the threshold fires a full respawn immediately, and releasing
-## before it fires a quick in-place respawn.
+## Respawn tap vs hold vs double tap. Polled here rather than in _unhandled_input because the hold
+## needs per-frame timing: crossing the threshold fires a full respawn immediately, and releasing
+## before it fires a quick in-place respawn. A second tap saves that spot as the respawn point.
 func _process(delta: float):
 	if current_input_state != InputState.IN_GAME:
 		_respawn_hold_time = 0.0
-		_respawn_full_fired = false
+		_respawn_press_spent = false
 		return
-	if Input.is_action_pressed("respawn"):
+	if (
+		Input.is_action_just_pressed("respawn")
+		and Time.get_ticks_msec() - _respawn_tapped_msec <= TrickController.DOUBLE_TAP_WINDOW * 1000.0
+	):
+		_respawn_press_spent = true
+		spawn_manager.request_set_respawn_point.rpc_id(1)
+	if Input.is_action_pressed("respawn") and not _respawn_press_spent:
 		_respawn_hold_time += delta
-		if _respawn_hold_time >= RESPAWN_HOLD_THRESHOLD and not _respawn_full_fired:
-			_respawn_full_fired = true
+		if _respawn_hold_time >= RESPAWN_HOLD_THRESHOLD:
+			_respawn_press_spent = true
 			spawn_manager.request_respawn.rpc_id(1)
 	if Input.is_action_just_released("respawn"):
-		if not _respawn_full_fired:
+		if not _respawn_press_spent:
 			spawn_manager.request_respawn_in_place.rpc_id(1)
 			respawn_quick_fired.emit()
+			_respawn_tapped_msec = Time.get_ticks_msec()
 		_respawn_hold_time = 0.0
-		_respawn_full_fired = false
+		_respawn_press_spent = false
 
 
 ## Seconds the respawn action has been held (0 when not held). Polled by RidingHUDState to

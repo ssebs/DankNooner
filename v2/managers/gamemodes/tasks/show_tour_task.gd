@@ -15,7 +15,6 @@ func on_enter(player: PlayerEntity, state: Dictionary) -> void:
 	state["closed"] = false
 	# One more tick first, so a TeleportTask right before this has landed the rider.
 	await NetworkTime.after_tick_loop
-	get_tree().paused = true
 	_rpc_show_tour.rpc_id(int(player.name))
 
 
@@ -34,7 +33,7 @@ func get_tour() -> Tour:
 @rpc("call_local", "reliable")
 func _rpc_show_tour():
 	tour_manager.tour_closed.connect(_on_tour_closed, CONNECT_ONE_SHOT)
-	tour_manager.play(get_tour())
+	tour_manager.play(get_tour(), true)
 
 
 func _on_tour_closed(_tour: Tour, skipped: bool):
@@ -44,7 +43,6 @@ func _on_tour_closed(_tour: Tour, skipped: bool):
 ## Skip passes this lesson's check too, on to the next tour.
 @rpc("any_peer", "call_local", "reliable")
 func request_tour_closed(skipped: bool):
-	get_tree().paused = false
 	var peer_id := multiplayer.get_remote_sender_id()
 	if skipped:
 		runner.skip_to_next_tour(peer_id)

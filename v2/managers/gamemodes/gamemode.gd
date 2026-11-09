@@ -35,6 +35,12 @@ func respawns_crash_in_place(_peer_id: int) -> bool:
 	return false
 
 
+## Server-side: whether an R double tap may save the rider's own respawn point. Off where the
+## mode owns that point (race checkpoints).
+func allows_set_respawn_point() -> bool:
+	return false
+
+
 ## Whether this peer's pause menu offers Cancel Event. Host-only, since events are lobby-wide.
 func can_cancel_event() -> bool:
 	return multiplayer.is_server()

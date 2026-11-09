@@ -107,6 +107,7 @@ AUTO_TRANSMISSION_LABEL,"Automatic Transmission","Transmisión Automática","Bo�
 HUD_CRASHED,"CRASHED - Respawning...","CHOCADO - Reapareciendo...","CHUTE - Réapparition...","GESTÜRZT - Respawn...","CADUTO - Riapparizione...","転倒 - リスポーン中...","넘어짐 - 리스폰 중...","翻车 - 重生中...","АВАРИЯ - Возрождение...","GLEBA - Odradzanie..."
 HUD_RESPAWNING,"Respawning...","Reapareciendo...","Réapparition...","Respawn...","Riapparizione...","リスポーン中...","리스폰 중...","重生中...","Возрождение...","Odradzanie..."
 HUD_FULL_RESPAWNING,"Full respawning...","Reaparición completa...","Réapparition complète...","Kompletter Respawn...","Riapparizione completa...","完全リスポーン中...","완전 리스폰 중...","完全重生中...","Полное возрождение...","Pełne odradzanie..."
+HUD_RESPAWN_POINT_SET,"Respawn point set!","¡Punto de reaparición fijado!","Point de réapparition fixé !","Respawn-Punkt gesetzt!","Punto di riapparizione impostato!","リスポーン地点を設定!","리스폰 지점 설정!","重生点已设置！","Точка возрождения задана!","Punkt odrodzenia ustawiony!"
 MAP_LEGEND_YOU,"You","Tú","Vous","Du","Tu","あなた","나","你","Вы","Ty"
 MAP_LEGEND_PLAYER,"Player","Jugador","Joueur","Spieler","Giocatore","プレイヤー","플레이어","玩家","Игрок","Gracz"
 MAP_LEGEND_NPC,"Rider","Piloto","Pilote","Fahrer","Pilota","ライダー","라이더","车手","Гонщик","Motocyklista"
