@@ -52,6 +52,9 @@ class_name BikeSkinDefinition extends Resource
 @export var headlight_rotation_degrees: Vector3 = Vector3.ZERO
 ## Gas cap: where the fuel-up nozzle goes (per-bike).
 @export var gas_cap_position: Vector3 = Vector3(0, 0.97512925, 0.1212935)
+## Grind spots: the point that rides the rail in belly grinds (rear: smith / feeble, front: willys).
+@export var grind_spot_rear_position: Vector3 = Vector3(0, 0.22485137, -0.36395437)
+@export var grind_spot_front_position: Vector3 = Vector3(0, 0.18483545, 0.40625262)
 
 @export_group("Rider Pose")
 @export var chest_position: Vector3 = Vector3.ZERO
@@ -203,6 +206,8 @@ func _copy_from(other: BikeSkinDefinition) -> void:
 	headlight_position = other.headlight_position
 	headlight_rotation_degrees = other.headlight_rotation_degrees
 	gas_cap_position = other.gas_cap_position
+	grind_spot_rear_position = other.grind_spot_rear_position
+	grind_spot_front_position = other.grind_spot_front_position
 	chest_position = other.chest_position
 	chest_rotation = other.chest_rotation
 	head_position = other.head_position

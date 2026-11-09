@@ -3,7 +3,7 @@ class_name TutorialGameMode extends RunnerGameMode
 
 @export var menu_manager: MenuManager
 @export var tour_manager: TourManager
-## The event's PickupSpawners grant items through it, and DropItemTask listens to it.
+## The event's PickupSpawners grant items through it; DropItemTask and KnockOutTargetTask watch it.
 @export var item_manager: ItemManager
 ## Where the player lands once the tutorial ends.
 @export var play_menu_state: MenuState
@@ -49,7 +49,7 @@ func _inject_task_deps(runner: TaskRunner):
 	for child in runner.get_children():
 		if child is ShowTourTask:
 			child.tour_manager = tour_manager
-		elif child is DropItemTask:
+		elif child is DropItemTask or child is KnockOutTargetTask:
 			child.item_manager = item_manager
 		elif child is TaskRunner:
 			_inject_task_deps(child)

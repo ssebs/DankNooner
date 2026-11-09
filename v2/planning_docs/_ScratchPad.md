@@ -28,10 +28,9 @@ Red triangles over enemy head
     - [x] working steps / explainations
     - [x] improve tutorial feel
     - [x] improve tutorial level map
-    - [ ] grab gas can => just check boost used, not full amount. (ended up grabbing next item & being confused)
+    - [x] grab gas can => just check boost used, not full amount. (ended up grabbing next item & being confused)
     - [ ] using shotgun but missing needs to reset you but say you were too far away
-    - [ ] shorten tutorial
-    - [ ] reset tutorial doesnt work for customization
+  - [ ] reset tutorial doesnt work for customization
 
 - [ ] exit garage / fillup should not say end event
 - [ ] d-pad menu to swap loadouts. have it slide out & let you choose a class (like vertical minecraft hotbar w/ person on the bike for the icon)

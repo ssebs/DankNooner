@@ -41,15 +41,19 @@ const MAX_CHEST_LEAN_PITCH_DEG: float = -15.0
 const MAX_CHEST_Z_OFFSET: float = 0.2
 ## Max butt z shift when leaning fwd/back. Negate to flip direction.
 const MAX_BUTT_Z_OFFSET: float = 0.1
-## Grinds ridden on the tank: the bike sinks until the rail meets the tank's underside,
-## TANK_GRIND_DEPTH below the gas cap.
-const TANK_GRIND_DEPTH: float = 0.3
-const TANK_GRINDS: Array[TrickController.Trick] = [
-	TrickController.Trick.SMITH,
-	TrickController.Trick.FEEBLE,
-	TrickController.Trick.WILLY,
-	TrickController.Trick.OVER_WILLY,
-]
+## Belly grinds ride a grind spot on the rail instead of the wheels, keyed by which end drops
+## BELLY_GRIND_TILT_DEG past the rail: -1 nose down on the rear spot, 1 tail down on the front
+## spot, 0 level on their midpoint.
+const BELLY_GRIND_TILT_DEG: float = 15.0
+const BELLY_GRINDS: Dictionary = {
+	TrickController.Trick.SMITH: -1,
+	TrickController.Trick.FEEBLE: -1,
+	TrickController.Trick.WILLY: 1,
+	TrickController.Trick.OVER_WILLY: 1,
+	TrickController.Trick.FIFTY_FIFTY: 0,
+	TrickController.Trick.BOARDSLIDE: 0,
+	TrickController.Trick.LIPSLIDE: 0,
+}
 
 # Animation track paths (relative to visual_root, which is anim root_node).
 # Cached as NodePaths so CustomAnimPlayer.find_track lookups are cheap.
@@ -144,7 +148,7 @@ var _targets_synced_from_bike: bool = true
 # pitched landing rises to its resting pivot offset over a few frames instead of popping there.
 var _pivot_blend: float = 1.0
 var _pivot_suppressed_last: bool = false
-var _tank_grind_drop: float = 0.0
+var _grind_hinge_offset: Vector3 = Vector3.ZERO
 
 # Cached refs (set in initialize)
 var _ik_ctrl: IKController
@@ -247,7 +251,14 @@ func _update_riding(delta: float) -> void:
 		not movement_controller.is_on_floor
 		and movement_controller.air_pitch_total > deg_to_rad(30.0)
 	)
-	if not movement_controller.is_on_floor:
+	var grind := TrickController.Trick.NONE
+	if movement_controller.is_grinding:
+		grind = trick_controller.grind_pose_trick()
+	var belly_grind := BELLY_GRINDS.has(grind)
+	var tilt_dir: int = BELLY_GRINDS.get(grind, 0)
+	if belly_grind:
+		_apply_pitch_ground(pose, blend, tilt_dir * deg_to_rad(BELLY_GRIND_TILT_DEG))
+	elif not movement_controller.is_on_floor:
 		_apply_pitch_air(pose, blend, pitch)
 	else:
 		_apply_pitch_ground(pose, blend, pitch)
@@ -264,13 +275,15 @@ func _update_riding(delta: float) -> void:
 		pose.visual_root_pos = _base_visual_root_position.lerp(pose.visual_root_pos, _pivot_blend)
 	_pivot_suppressed_last = suppress_pivot
 
-	# The rail runs along the body origin, so sink by the tank underside's height above it.
-	var drop_target := 0.0
-	if movement_controller.is_grinding and trick_controller.grind_pose_trick() in TANK_GRINDS:
-		var gas_cap := Basis.from_euler(pose.visual_root_rot) * _bd.gas_cap_position
-		drop_target = pose.visual_root_pos.y + gas_cap.y - TANK_GRIND_DEPTH
-	_tank_grind_drop = lerpf(_tank_grind_drop, drop_target, blend)
-	pose.visual_root_pos.y -= _tank_grind_drop
+	# The rail runs through the body origin, so move the grind spot onto it.
+	var hinge_offset := Vector3.ZERO
+	if belly_grind:
+		var spot := _bd.grind_spot_rear_position.lerp(
+			_bd.grind_spot_front_position, (tilt_dir + 1) * 0.5
+		)
+		hinge_offset = -(Basis.from_euler(pose.visual_root_rot) * spot) - pose.visual_root_pos
+	_grind_hinge_offset = _grind_hinge_offset.lerp(hinge_offset, blend)
+	pose.visual_root_pos += _grind_hinge_offset
 
 	# Steering + wheels run direct on bike_skin — they're not part of the rider pose.
 	# Reverse inverts roll_angle (so the body rotates the correct way for input), but the
@@ -932,6 +945,10 @@ func _load_wheel_markers_from_definition(def: BikeSkinDefinition) -> void:
 		player_entity.headlight_marker.rotation_degrees = def.headlight_rotation_degrees
 	if player_entity.gas_cap_marker:
 		player_entity.gas_cap_marker.position = def.gas_cap_position
+	if player_entity.grind_spot_rear_marker:
+		player_entity.grind_spot_rear_marker.position = def.grind_spot_rear_position
+	if player_entity.grind_spot_front_marker:
+		player_entity.grind_spot_front_marker.position = def.grind_spot_front_position
 
 
 ## Exact inverse of _sync_targets_from_bike's `parent.global * Transform3D(from_euler(rot), pos)`:
@@ -1017,6 +1034,10 @@ func _editor_save_default_pose() -> void:
 		def.headlight_rotation_degrees = player_entity.headlight_marker.rotation_degrees
 	if player_entity.gas_cap_marker:
 		def.gas_cap_position = player_entity.gas_cap_marker.position
+	if player_entity.grind_spot_rear_marker:
+		def.grind_spot_rear_position = player_entity.grind_spot_rear_marker.position
+	if player_entity.grind_spot_front_marker:
+		def.grind_spot_front_position = player_entity.grind_spot_front_marker.position
 
 	var err = ResourceSaver.save(def)
 	if err == OK:

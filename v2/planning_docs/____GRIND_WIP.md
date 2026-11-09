@@ -63,9 +63,10 @@ Sideways also splits pitch at `GRIND_SIDEWAYS_HARD_PITCH_DEG`. Cells read left /
 | back (wheelie side) | 5-0 | suski / salad | smith / feeble |
 | hard back | 5-0 | suski / salad | tailslide / bluntslide |
 
-- Tank grinds (`AnimationController.TANK_GRINDS`: smith, feeble, willy, over willy) sink the
-  visual root until the rail meets the tank's underside (`TANK_GRIND_DEPTH` below the gas cap).
-  Visual only.
+- Belly grinds hinge on a per-bike grind spot (`BikeSkinDefinition.grind_spot_rear/front_position`,
+  authored with the `GrindSpot*Marker` handles) instead of the wheels (`AnimationController.BELLY_GRINDS`):
+  smith / feeble on the rear spot nose down, willys on the front spot tail down
+  (`BELLY_GRIND_TILT_DEG`), 50-50 / boardslide / lipslide level on their midpoint. Visual only.
 
 - A held right-stick trick overrides the grind as `current_trick` (e.g. knee knocker), via a
   `TrickState.GRIND` row in `BINDINGS`. No trick button needed on the rail.
