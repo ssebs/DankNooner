@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://b1thmb3dtnail" path="res://utils/components/thumbnail_3d.tscn" id="99_thumb"]
 [ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="99_money"]
 [ext_resource type="Script" path="res://player/hud_elements/trick_feed.gd" id="99_tfeed"]
+[ext_resource type="Script" path="res://player/hud_elements/loadout_bar.gd" id="99_ldbar"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_scrim"]
 shader = ExtResource("3_scrim")
@@ -202,6 +203,14 @@ size_flags_vertical = 8
 mouse_filter = 2
 theme_override_constants/separation = 24
 
+[node name="HUD_LoadoutBar" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+script = ExtResource("99_ldbar")
+
 [node name="MapRow" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox"]
 layout_mode = 2
 mouse_filter = 2
@@ -301,9 +310,34 @@ unique_name_in_owner = true
 layout_mode = 2
 action = "respawn"
 
-[node name="Label" type="Label" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints/RespawnHint"]
+[node name="RespawnTitleVBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints/RespawnHint"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints/RespawnHint/RespawnTitleVBox"]
 layout_mode = 2
 text = "ACTION_RESPAWN"
+
+[node name="RespawnPointHint" type="Label" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints/RespawnHint/RespawnTitleVBox"]
+layout_mode = 2
+theme_type_variation = &"DimLabel"
+theme_override_font_sizes/font_size = 16
+text = "HUD_RESPAWN_POINT_HINT"
+
+[node name="LoadoutsHint" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="HUD_LoadoutsPrompt" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints/LoadoutsHint" instance=ExtResource("8_inpmt")]
+unique_name_in_owner = true
+layout_mode = 2
+action = "loadouts"
+
+[node name="Label" type="Label" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints/LoadoutsHint"]
+layout_mode = 2
+text = "ACTION_LOADOUTS"
 
 [node name="HornHint" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/BottomLeftVBox/MapRow/HintVBox/HUD_ActionHints"]
 layout_mode = 2

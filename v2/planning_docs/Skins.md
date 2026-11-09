@@ -272,6 +272,7 @@ A player owns a flat list of named bike loadouts (cap 8) on `PlayerDefinition.lo
 - Legacy saves (pre-loadouts) are migrated by `PlayerDefinition.from_dict()` — the old single `bike_skin_dict` becomes `loadouts[0]`.
 - The Customize menu (`menus/customize_menu/`) shows a grid of loadout cards (each rendering via `Thumbnail3D`) and an edit panel for name / base bike / color mod.
 - Each loadout also picks a `horn` (see [Horns](#horns)), saved as its res path. Like `character`, null = the profile's `default_horn`.
+- Swapping while riding: number keys 1–8, or hold the `loadouts` action (D-pad Down / Tab) to open `LoadoutBar` above the minimap, pick with cam up/down, release to swap. `InputStateManager` owns the input and zeroes the camera stick while the bar is open. During an event (`GamemodeManager.current_event`) only loadouts sharing the ridden bike's base (`BikeSkinDefinition.get_base_path()`) can be picked, so you can change skin but not bike.
 
 ## Horns
 

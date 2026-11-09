@@ -23,6 +23,10 @@ const _RESPAWN_PULSE_HZ := 2.0
 const _RESPAWN_GLOW := 0.35
 ## How long the "Respawning..." text lingers after a quick tap, so a brief tap still reads.
 const _RESPAWN_QUICK_FLASH_SECS := 0.6
+## Ground ring marking your R-double-tap respawn point. The event circle's ring, scaled down.
+const _RESPAWN_RING_SCENE := preload("res://managers/gamemodes/gamemodeobjects/start_ring.tscn")
+const _RESPAWN_RING_SCALE := 0.4
+const _RESPAWN_RING_POP_SECS := 0.4
 ## Event warning: how long a one-shot stays up, and how often a looping one shakes.
 const _WARNING_HOLD_SECS := 1.5
 const _WARNING_SHAKE_EVERY_SECS := 0.7
@@ -63,13 +67,14 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _prompts: Array[InputPrompt] = [
 	%HUD_TrickPromptBtn, %HUD_BoostPrompt, %HUD_MapPrompt, %HUD_RespawnPrompt, %HUD_ItemPrompt,
 	%HUD_HornPrompt, %HUD_LeanForwardPrompt, %HUD_LeanBackPrompt, %HUD_RearBrakePrompt,
-	%HUD_ClutchPrompt, %HUD_CrashRespawnPrompt
+	%HUD_ClutchPrompt, %HUD_CrashRespawnPrompt, %HUD_LoadoutsPrompt
 ]
 @onready var _held_item_panel: HBoxContainer = %HUD_HeldItem
 @onready var _held_item_thumbnail: Thumbnail3D = %HUD_HeldItemThumbnail
 @onready var _held_item_name: Label = %HUD_HeldItemName
 @onready var _item_hint: HBoxContainer = %HUD_ItemHint
 @onready var _horn_drop_hint: Label = %HUD_HornDropHint
+@onready var _loadout_bar: LoadoutBar = %HUD_LoadoutBar
 
 
 var player_entity: PlayerEntity
@@ -89,6 +94,10 @@ var _respawn_pulse_t: float = 0.0
 ## Countdown keeping the quick-tap "Respawning..." text up for a split second after release.
 var _respawn_flash_t: float = 0.0
 var _event_warning_tween: Tween = null
+## Local-only marker for the respawn point you saved (see _rpc_respawn_point_set). A child of your
+## player so it goes with them; hidden once anything else moves the point.
+var _respawn_ring: Node3D = null
+var _saved_respawn := Transform3D()
 ## A race leaderboard is up (see _rpc_set_leaderboard).
 var _has_leaderboard: bool = false
 ## Local-only edge tracking for the boost button, so a press with nothing banked can blink
@@ -155,6 +164,7 @@ func Enter(_state_context: StateContext):
 	# Local-only: expand the minimap into the full map while IN_MAP.
 	input_state_mgr.input_state_changed.connect(_on_input_state_changed)
 	input_state_mgr.respawn_quick_fired.connect(_on_respawn_quick_fired)
+	input_state_mgr.loadout_pick_changed.connect(_on_loadout_pick_changed)
 	save_manager.save_item_updated.connect(_on_save_item_updated)
 
 	# Manual inits
@@ -178,6 +188,7 @@ func Exit(_state_context: StateContext):
 	player_entity.respawned.disconnect(_on_respawned)
 	input_state_mgr.input_state_changed.disconnect(_on_input_state_changed)
 	input_state_mgr.respawn_quick_fired.disconnect(_on_respawn_quick_fired)
+	input_state_mgr.loadout_pick_changed.disconnect(_on_loadout_pick_changed)
 	save_manager.save_item_updated.disconnect(_on_save_item_updated)
 
 	hide_ui()
@@ -253,6 +264,9 @@ func Physics_Update(delta: float):
 	# _RESPAWN_SHOW_SECS switches to "Full respawning..." with the bar charging toward the
 	# full-respawn threshold. The bar hits solid white at 100% so you can see you held long enough.
 	_respawn_flash_t = maxf(_respawn_flash_t - delta, 0.0)
+	# A checkpoint, grid spawn or reset replaced the point you saved. Freed with a despawned player.
+	if is_instance_valid(_respawn_ring) and player_entity.rb_respawn_transform != _saved_respawn:
+		_respawn_ring.hide()
 	var respawn_hold := input_state_mgr.get_respawn_hold_time()
 	if respawn_hold > _RESPAWN_SHOW_SECS:
 		_respawn_label.text = tr("HUD_FULL_RESPAWNING")
@@ -365,6 +379,15 @@ func pop_earned(money: int, xp: int):
 				MoneyLabel.EARNED_DRIFT
 			)
 		)
+
+
+func _on_loadout_pick_changed(index: int):
+	if index < 0:
+		_loadout_bar.hide()
+		return
+	if !_loadout_bar.visible:
+		_loadout_bar.open(save_manager.get_player_definition(), input_state_mgr.can_swap_loadout)
+	_loadout_bar.pick(index)
 
 
 ## Tap (quick in-place respawn) fired — keep "Respawning..." up briefly even for a fast tap.
@@ -547,12 +570,23 @@ func _rpc_set_held_item(definition_path: String):
 
 
 ## Server-side, to the rider whose R double tap saved their respawn point.
-func push_respawn_point_set(peer_id: int) -> void:
-	_rpc_respawn_point_set.rpc_id(peer_id)
+func push_respawn_point_set(peer_id: int, point: Transform3D) -> void:
+	_rpc_respawn_point_set.rpc_id(peer_id, point)
 
 
 @rpc("call_local", "reliable")
-func _rpc_respawn_point_set():
+func _rpc_respawn_point_set(point: Transform3D):
+	if !is_instance_valid(_respawn_ring):
+		_respawn_ring = _RESPAWN_RING_SCENE.instantiate()
+		_respawn_ring.top_level = true
+		player_entity.add_child(_respawn_ring)
+	_saved_respawn = point
+	_respawn_ring.global_transform = point
+	_respawn_ring.show()
+	_respawn_ring.scale = Vector3.ZERO
+	_respawn_ring.create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).tween_property(
+		_respawn_ring, "scale", Vector3.ONE * _RESPAWN_RING_SCALE, _RESPAWN_RING_POP_SECS
+	)
 	# Swap the first tap's "Respawning..." for the confirmation.
 	_respawn_flash_t = 0.0
 	_trick_popups.pop_callout(tr("HUD_RESPAWN_POINT_SET"), _RESPAWN_COLOR)
@@ -765,6 +799,7 @@ func _rpc_callout(text: String):
 
 func hide_ui() -> void:
 	ui.visible = false
+	_loadout_bar.hide()
 	minimap.deactivate()
 	_target_compass.deactivate()
 

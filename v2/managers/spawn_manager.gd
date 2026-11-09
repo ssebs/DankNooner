@@ -176,7 +176,7 @@ func request_set_respawn_point():
 		return
 	var target := _in_place_target(peer_id)
 	set_respawn_point.rpc(peer_id, target.origin, target.basis)
-	hud_manager.riding_hud_state.push_respawn_point_set(peer_id)
+	hud_manager.riding_hud_state.push_respawn_point_set(peer_id, target)
 
 
 ## Server-only: respawn a player in place (see _in_place_target) and broadcast it. Shared by the

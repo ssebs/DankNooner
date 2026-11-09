@@ -124,6 +124,10 @@ func _gather():
 		-1.0,
 		1.0
 	)
+	# The stick is picking a loadout, not steering the camera or tricks.
+	if _input_state_manager.is_loadout_bar_open():
+		nfx_cam_x = 0.0
+		nfx_cam_y = 0.0
 
 
 ## Reset requested gear on respawn — respawned fires from do_respawn (rollback), so defer

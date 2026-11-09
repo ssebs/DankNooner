@@ -8,6 +8,8 @@ signal unpause_requested
 ## A tap (release before the hold threshold) fired a quick in-place respawn. Lets the HUD flash
 ## its "Respawning..." text even for a tap too brief to observe via the hold timer.
 signal respawn_quick_fired
+## The loadout bar's highlighted slot moved, or -1 when the bar closed.
+signal loadout_pick_changed(index: int)
 ## Last input flipped between gamepad and keyboard/mouse. For UI with no player to ask.
 signal device_changed(is_gamepad: bool)
 
@@ -28,6 +30,8 @@ enum InputState {
 @export var spawn_manager: SpawnManager
 @export var item_manager: ItemManager
 @export var hud_manager: HUDManager
+## Read for current_event: events only allow same-bike loadout swaps.
+@export var gamemode_manager: GamemodeManager
 
 # @export var debug_mobile := true
 @export var debug_mobile := false
@@ -57,6 +61,8 @@ var _respawn_tapped_msec: int = -1
 var _trick_released_msec: int = -1
 ## Last horn release; a honk within the same window discards the held item.
 var _horn_released_msec: int = -1
+## Loadout bar's highlighted slot while the loadouts action is held, else -1.
+var _loadout_pick: int = -1
 
 
 func _ready():
@@ -93,7 +99,9 @@ func _process(delta: float):
 	if current_input_state != InputState.IN_GAME:
 		_respawn_hold_time = 0.0
 		_respawn_press_spent = false
+		_close_loadout_bar()
 		return
+	_poll_loadout_bar()
 	if (
 		Input.is_action_just_pressed("respawn")
 		and Time.get_ticks_msec() - _respawn_tapped_msec <= TrickController.DOUBLE_TAP_WINDOW * 1000.0
@@ -120,6 +128,43 @@ func get_respawn_hold_time() -> float:
 	return _respawn_hold_time
 
 
+## Hold loadouts to open the bar, cam up/down to pick, release to swap.
+func _poll_loadout_bar():
+	if Input.is_action_just_pressed("loadouts"):
+		_loadout_pick = save_manager.get_player_definition().active_loadout_index
+		loadout_pick_changed.emit(_loadout_pick)
+	if _loadout_pick < 0:
+		return
+	if Input.is_action_just_released("loadouts"):
+		_switch_loadout(_loadout_pick)
+		_close_loadout_bar()
+		return
+	var step := int(Input.is_action_just_pressed("cam_down")) - int(Input.is_action_just_pressed("cam_up"))
+	var last := save_manager.get_player_definition().loadouts.size() - 1
+	if step != 0 and clampi(_loadout_pick + step, 0, last) != _loadout_pick:
+		_loadout_pick += step
+		loadout_pick_changed.emit(_loadout_pick)
+
+
+func _close_loadout_bar():
+	if _loadout_pick >= 0:
+		_loadout_pick = -1
+		loadout_pick_changed.emit(-1)
+
+
+## The loadout bar owns the camera stick while it's open.
+func is_loadout_bar_open() -> bool:
+	return _loadout_pick >= 0
+
+
+## Events only swap skins: the loadout must share the base bike you're riding.
+func can_swap_loadout(idx: int) -> bool:
+	if gamemode_manager.current_event == null:
+		return true
+	var bike := save_manager.get_player_definition().loadouts[idx].bike
+	return bike.get_base_path() == hud_manager.local_player.bike_definition.get_base_path()
+
+
 #region InputState (in game vs in menu)
 func _unhandled_input(event: InputEvent):
 	match current_input_state:
@@ -142,8 +187,6 @@ func _unhandled_input(event: InputEvent):
 				_horn_released_msec = Time.get_ticks_msec()
 			elif event.is_action_pressed("horn"):
 				_try_drop_item()
-			elif event is InputEventKey and event.pressed and not event.echo:
-				_try_switch_bike_slot(event.physical_keycode)
 		InputStateManager.InputState.IN_GAME_PAUSED:
 			var menu_state := menu_manager.state_machine.current_state as MenuState
 			if event.is_action_pressed("pause"):
@@ -197,16 +240,12 @@ func _try_drop_item():
 		item_manager.request_drop_item.rpc_id(1)
 
 
-## Switch the local player's active bike to the loadout for a number-row key
-## (1 → slot 0, 2 → slot 1, …). Reuses the customize menu's active-loadout path, which
-## syncs the swap to every peer via SpawnManager.update_skins.
-func _try_switch_bike_slot(physical_keycode: int):
-	if physical_keycode < KEY_1 or physical_keycode > KEY_8:
-		return
-	var idx := physical_keycode - KEY_1
+## Make loadout idx active. Reuses the customize menu's active-loadout path, which syncs the
+## swap to every peer via SpawnManager.update_skins.
+func _switch_loadout(idx: int):
 	var player_def := save_manager.get_player_definition()
-	# Slot past your last bike, or already active — nothing to do (e.g. "2" with one bike).
-	if idx >= player_def.loadouts.size() or idx == player_def.active_loadout_index:
+	# Already active, or locked by the event — nothing to do.
+	if idx == player_def.active_loadout_index or !can_swap_loadout(idx):
 		return
 	player_def.active_loadout_index = idx
 	save_manager.update_save("player_definition", player_def, true, true)

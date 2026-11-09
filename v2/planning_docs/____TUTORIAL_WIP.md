@@ -732,26 +732,97 @@ visibility logic; don't add a second one.
 
 ### Task 11: Advanced tutorial (separate from the main tutorial)
 
-From TODO.md's Tutorials "2: Advanced" list, plus trail braking. Optional: it doesn't gate the
-Play menu. **Brainstorm with the user before writing a plan.**
+Designed with the user 2026-11-08. A second, optional tutorial built the same way as the main one
+(missions of tour + check), from TODO.md's Tutorials "2: Advanced" list. Not yet planned into
+steps: run superpowers:writing-plans on this section first.
 
-**Lessons:**
-- Progressive braking: ramp the front brake up; a 0% to 100% grab crashes.
-- Trail braking: keep some brake on into the corner and ease it off as you lean.
-- Burnouts
-- Kickflip and Superman
-- Grinds with tweaks
-- Bunny hops
+**Goals:**
+- Teach the six advanced mechanics: progressive braking, trail braking, burnouts, bunny hops,
+  kickflip/superman, and grinds (50/50, salad, smith).
+- Show what *not* to do in a lean by letting the player crash on purpose, once with the front
+  brake and once with the gas.
 
-**Reuse:** `PerformTrickTask` already covers `BURNOUT`, `KICKFLIP`, `SUPERMAN`, `BUNNY_HOP` and the
-grind tricks. The two braking lessons need new checks.
+**Non-goals:**
+- **No upright-grab crash (user):** a 0 to 100% grab in a straight line stays safe. Progressive
+  braking is taught with the existing leaned washout.
+- No grind tweaks, no scripted crash demos (the player does the crash), no new map.
 
-**Open decisions (ask the user):**
-- Map: the tutorial level (a second `GameModeEvent`, plus a grind rail), or a new one.
-- Unlock: available from the start, or only after the main tutorial.
-- Save: its own progress key, separate from the gate's `progression.tutorial`.
-- Trail braking: verify what `MovementController` does with front brake while leaned before
-  designing the check.
+**Anti-goals:**
+- Advanced props leaking into Tutorial 1, or Tutorial 1's into Advanced.
+- Advanced progress touching the Play-menu gate.
+
+**How braking works today** (`CrashController._update_brake_grab`, verified):
+- A brake washout needs a lean past `WASHOUT_MIN_LEAN_DEG` and speed above `WASHOUT_MIN_SPEED`.
+  Upright never washes out.
+- Pad: only a fast squeeze (`BRAKE_GRAB_RATE_THRESHOLD`) to above 90% starts one. Easing on, or a
+  partial hold, is safe.
+- KBM: the brake is digital, so any front brake above 90% while leaned washes out after
+  `WASHOUT_TIME`. Tapping (each press shorter than `WASHOUT_TIME`) is the KBM technique (user).
+- The crashes tag themselves: `FEED_BAILED_BRAKE_GRAB` and `FEED_BAILED_POWER_WASHOUT`
+  (`player.crash_hint`).
+
+**Unlock (user):** the Advanced button sits in the Play menu's `%Tutorials` section and is
+locked with the other buttons until Tutorial 1 is complete (Task 10 adds it).
+
+**Map (user):** the existing tutorial level, with a second event (`AdvancedEvent`) parked out of
+reach beside `TutorialEvent`. Each tutorial's props are hidden from the other:
+- Shared, always on: the roads, `AirRamp`, the steering gates (already toggled per lesson by
+  `SetActiveTask`).
+- Tutorial 1 only: `ShotgunTarget` (the item pickups are already per event).
+- Advanced only: a new `grind_rail.tscn` placed on its own stretch of flat ground.
+- The running tutorial turns its own group on and the other's off. Off means hidden with no
+  collision.
+
+**Missions (user-approved order):**
+1. **Braking**
+   - **Brake grab crash:** the tour says what will happen, the highlight says "lean hard and grab
+     `{brake_front_pct}`". Check: `CrashTask` with `FEED_BAILED_BRAKE_GRAB`.
+   - **Power washout crash:** same pattern, "lean hard and hold `{throttle_pct}`". Check: `CrashTask`
+     with `FEED_BAILED_POWER_WASHOUT`.
+   - **Progressive braking:** check: `LeanBrakeTask` in progressive mode.
+   - **Trail braking:** check: `LeanBrakeTask` in trail mode, on a corner.
+2. **Ground and Air:** burnout, bunny hop, kickflip, superman.
+3. **Grinds:** 50/50, salad, smith.
+
+Braking tours have per-device highlight copy: "squeeze" on pad, "tap" on keyboard. Every trick
+lesson is must-land, the air ones also use `retry_on_miss`, and the grinds use `help_pin`, all
+as in Tutorial 1.
+
+**New tasks** (in `managers/gamemodes/tasks/`, added to `coverage.gd`):
+- **`CrashTask`:** `@export var hint_key: String`. Passes when the rider crashes with that
+  `crash_hint`. Any other crash resets the step as usual. The builder must check how
+  `SequentialTaskRunner.notify_crashed` (which clears `lesson_state` and requests a respawn)
+  interacts with a task that *wants* the crash, and that the respawn lands at the lesson's
+  `TeleportTask` marker.
+- **`LeanBrakeTask`:** one task with a mode export.
+  - **"Leaned":** past `WASHOUT_MIN_LEAN_DEG`, above `WASHOUT_MIN_SPEED`, on the floor. Reuse
+    `CrashController`'s constants; don't copy them.
+  - **Progressive:** total 1s of front brake at 90% or more while leaned, with no crash. On pad
+    that's only possible by easing in. On KBM each tap adds its pressed time.
+  - **Trail:** in sequence: front brake on while upright, then leaned with the brake still on,
+    then the brake released while still leaned, with no crash. On KBM, "still on" means a tap in
+    the last ~0.3s.
+
+**Reused checks:** `PerformTrickTask` with `BURNOUT` (with a `min_duration`), `BUNNY_HOP`,
+`KICKFLIP`, `SUPERMAN`, `FIFTY_FIFTY`, `SALAD` and `SMITH`.
+
+**Save (user):**
+- The same milestone rules as Tutorial 1: progress saves when a mission completes, and a replay
+  resumes at the first unfinished mission (mission 1 once finished).
+- It has its own key under `progression`. Finishing it unlocks nothing.
+- `TutorialGameMode` picks the key from the running event. `dbg_reset_tutorials` clears both.
+  The gate still reads only Tutorial 1's `complete`.
+
+**Left to the builder (Claude's calls, not the user's):**
+- **Picking the event:** how the Advanced button's choice reaches the auto-start. Today it goes
+  `NewStory` → `start_game(TUTORIAL_LEVEL)` → `LevelDefinition.auto_start_event` (only one).
+  Pass the choice along that path; don't add a second level scene.
+- **Toggling prop groups:** reuse `GameModeObject.is_active` where the props already are
+  `GameModeObject`s; otherwise use the simplest toggle that also kills collision.
+- **Layout:** where the rail and the trail-braking corner go. Reusing the steering gates for
+  trail braking is fine if they force enough lean at speed.
+- Tour ids `tut_adv_<lesson>`, a results key for finishing Advanced, and all strings in 10
+  languages.
 
 ---
 

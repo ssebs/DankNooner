@@ -259,6 +259,12 @@ func _copy_from(other: BikeSkinDefinition) -> void:
 	unstable_surface_factor = other.unstable_surface_factor
 
 
+## res:// path of the base bike (sport, mini, ...) this def is, or was customized from.
+func get_base_path() -> String:
+	# Empty on an un-customized base def loaded directly from res://
+	return base_res_path if base_res_path != "" else resource_path
+
+
 #region to/from Dictionary
 ## Network/save serialization. We deliberately do NOT include `resource_path` because it can
 ## point at a user:// file that only exists on the local peer. Instead we ship the base
@@ -271,12 +277,9 @@ func to_dict() -> Dictionary:
 	var colors_arr: Array = []
 	for c in colors:
 		colors_arr.append(c.to_html())
-	var base := base_res_path
-	if base == "":
-		base = resource_path # un-customized base def loaded directly from res://
 	return {
 		"skin_name": skin_name,
-		"base_res_path": base,
+		"base_res_path": get_base_path(),
 		"colors": colors_arr,
 		"mod_paths": mod_paths,
 	}

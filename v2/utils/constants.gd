@@ -55,6 +55,7 @@ const CONTROL_CATEGORIES: Dictionary = {
 		"use_item",
 		"horn",
 		"respawn",
+		"loadouts",
 		"cam_left",
 		"cam_right",
 		"cam_up",

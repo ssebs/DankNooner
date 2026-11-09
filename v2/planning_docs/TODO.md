@@ -26,8 +26,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
-- [ ] d-pad menu to swap loadouts. have it slide out & let you choose a class (like vertical minecraft hotbar w/ person on the bike for the icon)
-- [ ] r => quick respawn, add btn for set full respawn point (if not in race)
 - [ ] Add product feature tour / walk thru for tutorials
   - [ ] `planning_docs/____TUTORIAL_WIP.md`
   - [x] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
@@ -57,8 +55,6 @@
       - [ ] smith
     - [ ] burnouts
     - [ ] bunny hops
-
-
 
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -251,6 +247,10 @@
 ---
 
 ## Done ✅
+
+- [x] r => quick respawn, add btn for set full respawn point (if not in race)
+
+- [x] d-pad menu to swap loadouts. have it slide out & let you choose a class (like vertical minecraft hotbar w/ person on the bike for the icon)
 
 - [x] eventstartcircle event names are too big / ugly
 
