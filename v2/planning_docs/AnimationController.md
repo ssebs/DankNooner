@@ -38,6 +38,7 @@ All IK markers are **owned by `PlayerEntity`** and exported on it directly. Per-
 - **Chest/head/butt** are positioned once at init from `BikeSkinDefinition`, then driven procedurally and/or by animation deltas.
 - **Arm/leg magnets** are positioned once at init and driven by animation deltas only (no procedural state) — written direct in `_commit_pose` as `base + anim_runner.sample(...)`.
 - Wheel markers are editor handles for pivot/raycast positions; values live on `BikeSkinDefinition`.
+- `GrindSpotRearMarker` / `GrindSpotFrontMarker` (under `IKTargets`) are editor handles for the belly-grind contact points (`grind_spot_rear_position` / `grind_spot_front_position`), saved and loaded like the gas cap marker. See [Belly grinds](#belly-grinds).
 
 ### Steering
 
@@ -243,6 +244,12 @@ In the air, target sync is disabled and pitch directly lerps to `-pitch_angle`. 
 `_apply_pivot_offset_to_pose()` lerps the pivot along the tire's contact arc based on `pose.visual_root_rot.x`. Which wheel arc is chosen comes from `trick_controller.current_trick` (wheelie → rear, stoppie → front); when not in a trick, the sign of `rotation.x` decides, letting mid-transition unwind smoothly.
 
 At 0° the pivot is the ground contact; at 90° it's the back of the tire (wheelie) or front of the tire (stoppie). Keeps the bike from clipping through the ground on deep tricks.
+
+## Belly grinds
+
+Some grinds ride the bike's underside rather than its wheels. `BELLY_GRINDS` maps each to which end drops past the rail: smith / feeble hinge on the rear grind spot nose down, willy / over willy on the front spot tail down (both by `BELLY_GRIND_TILT_DEG`), and boardslide / lipslide sit level on the midpoint of the two spots. Straight grinds (50-50, 5-0, nosegrind) stay on the wheels: riding along the rail, they're already on the rail line.
+
+While one is active (`TrickController.grind_pose_trick()`, read every frame from synced state), `_update_riding` swaps the pitch target for that tilt and eases an offset (`_grind_hinge_offset`) that moves the grind spot onto the body origin, which is the rail line. Visual only: the sim's `pitch_angle` keeps classifying the grind, so leaning still changes grinds while the pose holds.
 
 ---
 

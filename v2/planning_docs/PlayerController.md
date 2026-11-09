@@ -248,3 +248,82 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   same controllers off `hud_manager.local_player` and feeds `BoostGauge` / `TrickPopups`
   (`player/hud_elements/`), with all display strings on `tr()` keys. See
   [Architecture — HUD Manager](./Architecture.md#hud-manager).
+
+## Grinding
+
+Skate-style rail grinds: land on a rail from a jump and ride it as a held trick. Lean and steer
+set the pose, and the pose is the grind. Holding a shift too far bails. Limits reuse the bike's
+pitch limits plus a yaw limit; there's no balance meter.
+
+### Rails
+
+- Collision layer 9 `grind` (`MovementController.GRIND_LAYER_MASK`), `BoxShape3D` colliders only,
+  e.g. `levels/assets/props/grind_rail.tscn` (`length` export). Rails stay on layer 1 too, so the
+  bike collides with them normally.
+- The rail runs along the box's longer horizontal axis and the bike rides its top face. Sloped
+  rails work (rotate the box); curved ones don't.
+
+### Entry — `MovementController._try_start_grind()`
+
+- Any tick of a real jump while descending, the bike snaps to the nearest `grind`-layer rail
+  within `GRIND_SNAP_RADIUS` (a shape query, not slide contacts, so it needn't land squarely on a
+  thin box), even up to `GRIND_SNAP_BELOW` under the rail's top (fell past it this tick).
+- Travel direction is whichever end the velocity points toward. Speed along the rail under
+  `GRIND_MIN_SPEED` is a normal landing instead.
+- `grind_yaw` starts at heading vs rail direction, so landing crooked starts crooked. The usual
+  landing crashes still apply (mid air-trick, upside down, pitch past the bike's limits).
+
+### On the rail — `_grind_calc()`
+
+- Kinematic: position is snapped to the rail's top line each tick (no `move_and_slide`), velocity
+  is rail direction × speed, and `is_on_floor` reads true.
+- Lean drives `pitch_angle` at `bd.rotation_speed`, steer drives `grind_yaw` at `GRIND_YAW_RATE`.
+  Both hold with no input. Heading is the rail direction turned by `grind_yaw`.
+- Speed eases toward `bd.max_speed` at `GRIND_ACCEL`, plus slope gravity (`SLOPE_GRAVITY`) along
+  the rail. Roll eases to level.
+
+### Exit
+
+- Rail end: pops off with `GRIND_POP` up, keeping rail-direction momentum.
+- Gas: drives off along the heading with the same pop, so turn across the rail first to leave
+  sideways (straight lands back on the rail and re-grinds). Armed only once the gas has been
+  released on the rail (`_grind_gas_released`), since it's often still held from the run-up.
+- Bail (CrashController, `trigger_crash`): pitch past `max_wheelie_angle_deg` /
+  `max_stoppie_angle_deg` (the existing checks), `|grind_yaw|` past `GRIND_MAX_YAW_DEG`, or speed
+  under `GRIND_MIN_SPEED`.
+- Respawn clears grind state (`do_reset`).
+
+### Grind classification — `TrickController.grind_pose_trick()`
+
+Pitch zones are the wheelie / stoppie thresholds. Yaw zones: straight, angled
+(`GRIND_ANGLED_YAW_DEG`), sideways (`GRIND_SIDEWAYS_YAW_DEG`). Sideways also splits pitch at
+`GRIND_SIDEWAYS_HARD_PITCH_DEG`. Positive yaw = turned left; cells read left / right.
+
+| pitch \ yaw | straight | angled | sideways |
+|---|---|---|---|
+| hard front | nosegrind | crooked / overcrook | noseslide / noseblunt |
+| front (stoppie side) | nosegrind | crooked / overcrook | willy / over willy |
+| level | 50-50 | smith / feeble | boardslide / lipslide |
+| back (wheelie side) | 5-0 | suski / salad | smith / feeble |
+| hard back | 5-0 | suski / salad | tailslide / bluntslide |
+
+- How you land picks the starting cell (level, wheelie or stoppie); steering and leaning move
+  between cells. The tricks menu's Grind tab lists each grind with a `TRICK_HOWTO_<NAME>` phrased
+  as "land X, then steer / lean Y".
+- A held right-stick trick overrides the grind as `current_trick` (`TrickState.GRIND` row in
+  `BINDINGS`; no trick button needed on the rail), and the grind keeps scoring underneath it. See
+  [ComboAndBoost.md](./ComboAndBoost.md).
+
+### Visuals
+
+- Belly grinds (`AnimationController.BELLY_GRINDS`) ride a per-bike grind spot on the rail
+  instead of the wheels. See [AnimationController — Belly grinds](./AnimationController.md#belly-grinds).
+- `BikeWreck`'s sparks + `CRASH_GRIND` loop play at the wheels while `is_grinding`, so remote
+  riders grind audibly too.
+
+### Netcode
+
+State properties on `MovementController`: `is_grinding`, `grind_from`, `grind_to`, `grind_yaw`,
+`_grind_gas_released`. Entry is a shape query inside the rollback tick against static rails, so
+resims reproduce it. The grind pose is derived from synced pitch / yaw, so every peer classifies
+it the same way.

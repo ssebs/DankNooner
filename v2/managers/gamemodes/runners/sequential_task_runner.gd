@@ -99,6 +99,21 @@ func mark_state(peer_id: int, key: String, value: Variant) -> void:
 	player_states[peer_id].lesson_state[key] = value
 
 
+## A tour's Skip: pass every step up to the next ShowTourTask (or nested runner, or the end). Each
+## still enters and exits, so teleports and SetActiveTasks along the way apply.
+func skip_to_next_tour(peer_id: int) -> void:
+	var state := player_states[peer_id]
+	var player := spawn_manager.get_player_by_peer_id(peer_id)
+	while true:
+		tasks[state.current_index].on_exit(player, state.lesson_state)
+		_advance_player(peer_id, state)
+		if state.completed:
+			return
+		var task := tasks[state.current_index]
+		if task is ShowTourTask or task is TaskRunner:
+			return
+
+
 #endregion
 
 #region Per-peer walk

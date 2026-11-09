@@ -37,14 +37,19 @@ func _rpc_show_tour():
 	tour_manager.play(get_tour())
 
 
-func _on_tour_closed(_tour: Tour, _skipped: bool):
-	request_tour_closed.rpc_id(1)
+func _on_tour_closed(_tour: Tour, skipped: bool):
+	request_tour_closed.rpc_id(1, skipped)
 
 
+## Skip passes this lesson's check too, on to the next tour.
 @rpc("any_peer", "call_local", "reliable")
-func request_tour_closed():
+func request_tour_closed(skipped: bool):
 	get_tree().paused = false
-	runner.mark_state(multiplayer.get_remote_sender_id(), "closed", true)
+	var peer_id := multiplayer.get_remote_sender_id()
+	if skipped:
+		runner.skip_to_next_tour(peer_id)
+	else:
+		runner.mark_state(peer_id, "closed", true)
 
 
 func _get_configuration_warnings() -> PackedStringArray:

@@ -3,37 +3,17 @@
 
 Vid: where we started, where we are now 
 
+- Steam Trailer:
+  - hook + vibes
+  - Show what the game will feel like
+  - Description has gifs for unique features 
 
-Trailer= hook + vibes. Show what the game will feel like
-Description has gifs for unique features 
-
-   
 Ads at FHK? Print out? Merch?
-
-Red triangles over enemy head
-
-
 
 ---
 
 ## NOW
 
-- [ ] Add product feature tour / walk thru for tutorials
-  - [ ] `planning_docs/____TUTORIAL_WIP.md`
-  - [x] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
-  - [x] Each one saves saying it's done
-  - [ ] customization warning
-  - [x] tutorial level / tutorials + lock out main game until tut is done
-    - [x] working level
-    - [x] working steps / explainations
-    - [x] improve tutorial feel
-    - [x] improve tutorial level map
-    - [x] grab gas can => just check boost used, not full amount. (ended up grabbing next item & being confused)
-    - [ ] using shotgun but missing needs to reset you but say you were too far away
-  - [ ] reset tutorial doesnt work for customization
-
-- [ ] exit garage / fillup should not say end event
-- [ ] d-pad menu to swap loadouts. have it slide out & let you choose a class (like vertical minecraft hotbar w/ person on the bike for the icon)
 
 --
 ###
@@ -41,6 +21,9 @@ Red triangles over enemy head
 
 - [ ] [Progression/Challenges](./Progression.md)
 
+- [ ] Red triangles over enemy racers head
+- [ ] d-pad menu to swap loadouts. have it slide out & let you choose a class (like vertical minecraft hotbar w/ person on the bike for the icon)
+- [ ] exit garage / fillup should not say end event
 - [ ] move checkpoint / race spawns on right side of road
   - [ ] checkpoint should have left/right/full enum to move the repawn locations
 

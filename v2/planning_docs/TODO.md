@@ -26,6 +26,18 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
+- [ ] Add product feature tour / walk thru for tutorials
+  - [ ] `planning_docs/____TUTORIAL_WIP.md`
+  - [x] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
+  - [x] Each one saves saying it's done
+  - [x] tutorial level / tutorials + lock out main game until tut is done
+    - [x] working level
+    - [x] working steps / explainations
+    - [x] improve tutorial feel
+    - [x] improve tutorial level map
+    - [x] grab gas can => just check boost used, not full amount. (ended up grabbing next item & being confused)
+    - [x] using shotgun but missing needs to reset you but say you were too far away
+  - [ ] reset tutorial doesnt work for customization
 
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -73,12 +85,9 @@
 
 ### Controller UX Improvements
 - [ ] full navigation across menus, HUDs & in-world UI
-- [ ] cant use controller to select in customize menu
-- [ ] hard to use fill up minigame
 
 ### HUD Improvements
 - [ ] need to know when race is completed (single player is done vs entire lobby)
-- [ ] Cancel from fill up should be more obvious
 
 ### New Large Map
 - [ ] Make roads / map in blender
@@ -154,6 +163,7 @@
 - [ ] Trick Battle / Score Attack gamemode
   - [x] (longest wheelie / most combo tricks)
   - [ ] follow the Leader / H.O.R.S.E.
+  - [x] 1 round highest score in 60s wins round
   - [ ] 3 rounds, highest score in 60s wins round, best 2/3 wins game
 - [ ] Pizza Delivery
 - [ ] holding T pose should not grant so many points / score
@@ -209,7 +219,6 @@
   - [x] Land into wheelie / stoppie should be a trick
   - [ ] Wheelie + RIGHT animation (hand grab) — IK hand twd ground
 - [ ] trick animation to move up then play the mixamo anims
-- [ ] wheelie turning animation should yaw
 
 ### Cutscenes
 - [ ] dynamic, use animation player to define
@@ -227,18 +236,27 @@
 - [ ] Sweep for repeated pure helpers (math, formatting, lookups) duplicated across controllers/managers and move them into static `utils/` classes, starting from `ComboRules` (built with NPC racer Phase 3)
 
 ### Polish
-- [ ] crashing during tutorial doesn't stop timers
 - [ ] rotate fps cam down while doing wheelie to make it easier to see
-- [ ] try to have the camera look where your eyes are supposed to look irl when riding
 - [ ] r => quick respawn, add btn for set full respawn point (if not in race)
 - [ ] 1, 2, 3 spam is possible for everyone, debounce this
 - [ ] more car models / cleaner w/ neon fx & working lights/blinder
 - [ ] Add more ramp flow / alternate driving line on level
-- [ ] eventstartcircle event names are too big / ugly
 
 ---
 
 ## Done ✅
+
+- [x] eventstartcircle event names are too big / ugly
+
+- [x] try to have the camera look where your eyes are supposed to look irl when riding
+
+- [x] crashing during tutorial doesn't stop timers
+
+- [x] cant use controller to select in customize menu
+
+- [x] hard to use fill up minigame
+
+- [x] Cancel from fill up should be more obvious
 
 - [x] add proper smith/feeble/willy grinds & lower the bike visually so it's not floating in the air
 

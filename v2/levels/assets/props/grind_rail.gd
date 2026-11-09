@@ -1,6 +1,6 @@
 @tool
 ## Grindable rail between two posts. %Rail is on collision layer 9 (grind); see
-## planning_docs/____GRIND_WIP.md.
+## planning_docs/PlayerController.md#grinding.
 extends Node3D
 
 ## Rail length in meters, end to end. The posts stay flush with its ends.

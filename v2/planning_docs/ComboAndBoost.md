@@ -4,7 +4,7 @@
 
 ## Player-facing loop
 
-1. Hold any trick (wheelie, stoppie, drift, air tricks) — the combo timer runs and the boost meter fills.
+1. Hold any trick (wheelie, stoppie, drift, grinds, air tricks) — the combo timer runs and the boost meter fills.
 2. Unbroken trick time raises the **combo multiplier**, which fills boost faster.
 3. Drop every trick and a **grace window** starts — re-enter a trick in time and the combo survives, so wheelie → stoppie → wheelie chains keep their multiplier.
 4. **Tap the boost button** to spend. It is a *tap, not a hold*: the press commits a burn that releasing cannot cancel.
@@ -90,6 +90,8 @@ Consts, deliberately **not** `@export`: this code runs inside the rollback tick 
 **Keep `COMBO_MULT_THRESHOLDS` in the same ballpark as the meter fill time implied by `BOOST_PER_SEC`.** The gauge is the only feedback the player can see, so a multiplier that steps far behind it reads as broken. Changing one without re-checking the other has already caused a false bug report once.
 
 Any trick counts toward combo *time* (multiplier, boost). Score is separate: it accumulates in the synced `combo_score` from the two tables above; a trick in neither scores nothing.
+
+Grinds are held tricks in `HELD_TRICK_SCORE`; switching grinds keeps the combo. A stick trick held over a grind stacks: `ComboRules.accrue_stacked()` keeps the grind scoring underneath, so the pair pays both rates (combo time and boost still run once, from `accrue()`). See [PlayerController — Grinding](./PlayerController.md#grinding).
 
 ### Spending — `player/controllers/boost_controller.gd`
 

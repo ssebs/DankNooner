@@ -50,7 +50,6 @@ const BELLY_GRINDS: Dictionary = {
 	TrickController.Trick.FEEBLE: -1,
 	TrickController.Trick.WILLY: 1,
 	TrickController.Trick.OVER_WILLY: 1,
-	TrickController.Trick.FIFTY_FIFTY: 0,
 	TrickController.Trick.BOARDSLIDE: 0,
 	TrickController.Trick.LIPSLIDE: 0,
 }
