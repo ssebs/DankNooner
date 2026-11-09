@@ -160,8 +160,7 @@ func _on_client_connection_succeeded(peer_id: int):
 	DebugUtils.auto_join = false
 	loading_ui.hide()
 	timeout_timer.stop()
-	if !multiplayer.is_server():
-		level_select_panel.set_controls_disabled(true)
+	level_select_panel.set_controls_disabled(!multiplayer.is_server())
 
 	var player_def = save_manager.get_player_definition()
 	lobby_manager.update_player_metadata.rpc_id(1, peer_id, player_def.to_dict())
@@ -238,7 +237,8 @@ func set_single_or_multiplayer_ui():
 			else:
 				loading_ui.show()
 				timeout_timer.start()
-				level_select_panel.set_start_disabled(false)
+				# The offline peer reports is_server() too, so Start waits for the real one
+				level_select_panel.set_controls_disabled(true)
 			# Not the first button in the tree (LobbyPanel's copy button): the host is here to start.
 			if return_ctx.mode == LobbyStateContext.Mode.HOST:
 				level_select_panel.grab_start_focus()

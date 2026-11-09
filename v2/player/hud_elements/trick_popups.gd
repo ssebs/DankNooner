@@ -251,12 +251,12 @@ func _ease_icon(weight: float) -> void:
 
 
 ## text is already localized.
-func pop_callout(text: String) -> void:
+func pop_callout(text: String, color: Color = CALLOUT_COLOR) -> void:
 	var holder := Control.new()
 	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(holder)
 	_callouts.append(holder)
-	HUDFlash.wheelie(spawn_pop(holder, text, CALLOUT_COLOR, size / 2.0 + CALLOUT_ORIGIN, SINK_PX))
+	HUDFlash.wheelie(spawn_pop(holder, text, color, size / 2.0 + CALLOUT_ORIGIN, SINK_PX))
 	# The pop frees its label when done; the holder goes with it
 	holder.child_exiting_tree.connect(_drop_callout.bind(holder).unbind(1))
 

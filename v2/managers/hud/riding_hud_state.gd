@@ -10,6 +10,8 @@ class_name RidingHUDState extends HUDState
 const _TRICK_ROW_SCENE := preload("res://menus/tricks_menu/components/trick_row.tscn")
 const _RPM_COLOR_LOW := UtilsConstants.UI_BLUE
 const _RPM_COLOR_HIGH := UtilsConstants.UI_RED
+## Not trick gold, so a grabbed item doesn't read as a trick callout.
+const _ITEM_CALLOUT_COLOR := UtilsConstants.UI_BLUE
 
 ## Respawn hold bar: only appears once the hold passes this, so a quick tap (in-place respawn)
 ## doesn't flash it. Fills toward InputStateManager.RESPAWN_HOLD_THRESHOLD.
@@ -539,6 +541,9 @@ func _rpc_set_held_item(definition_path: String):
 	_held_item_thumbnail.skin_definition = definition
 	var type_name: String = PickupItemDefinition.PickupItemType.keys()[definition.item_type]
 	_held_item_name.text = tr("ITEM_%s" % type_name)
+	_trick_popups.pop_callout(_held_item_name.text, _ITEM_CALLOUT_COLOR)
+	# Deferred: the just-shown panel has no size (punch's pivot) until its container sorts
+	HUDFlash.punch.call_deferred(_held_item_panel)
 
 
 #region Event pane — every runner event's step text, above the race leaderboard
