@@ -27,6 +27,9 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 
+- [ ] add sound / visual feedback when getting an item to direct the user to look to see what they got.
+  - [ ] prob is i got a ramp and didnt realize.
+
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
 
@@ -239,6 +242,8 @@
 ---
 
 ## Done ✅
+
+- [x] my ragdoll when crashing should interact w/ npc traffic like the bike does
 
 - [x] add a popup when you crash "Press R to respawn"
 

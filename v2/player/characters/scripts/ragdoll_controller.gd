@@ -82,7 +82,10 @@ func _populate_skeleton_for_ragdoll():
 		one_physical_bone.owner = skel_3d.get_parent().get_parent()
 		one_physical_bone.bone_name = b_name
 		one_physical_bone.collision_layer = 1 << 2  # Layer 3
-		one_physical_bone.collision_mask = (1 << 0) | (1 << 2)  # Layers 1 and 3
+		# Layers 1, 3 and traffic, like BikeWreck
+		one_physical_bone.collision_mask = (
+			(1 << 0) | (1 << 2) | NPCTrafficManager.TRAFFIC_BODY_LAYER_MASK
+		)
 
 		var rest_bone: Transform3D = skel_3d.get_bone_global_rest(i)
 		one_physical_bone.transform = rest_bone

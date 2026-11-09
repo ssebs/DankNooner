@@ -14,8 +14,7 @@ Red triangles over enemy head
 
 
 - [ ] d-pad menu to swap loadouts. have it slide out & let you choose a class (like vertical minecraft hotbar w/ person on the bike for the icon)
-- [ ] add sound / visual feedback when getting an item to direct the user to look to see what they got.
-  - [ ] prob is i got a ramp and didnt realize.
+
 ---
 
 ## NOW
@@ -37,7 +36,7 @@ Red triangles over enemy head
     - [ ] shorten tutorial
     - [ ] exit garage / fillup should not say end event
     - [ ] reset tutorial doesnt work for customization
-- [ ] my ragdoll when crashing should interact w/ npc traffic like the bike does
+
 
 --
 ###
