@@ -1,5 +1,5 @@
 @tool
-## A bike + rider pair on PlayerDefinition.loadouts. Hotkeys 1–8 swap between them.
+## A bike + rider pair on PlayerDefinition.loadouts. Swapped mid-ride via LoadoutBar.
 class_name Loadout extends Resource
 
 @export var name: String = ""
