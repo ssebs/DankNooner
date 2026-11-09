@@ -26,6 +26,7 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
+- [ ] r => quick respawn, add btn for set full respawn point (if not in race)
 - [ ] Add product feature tour / walk thru for tutorials
   - [ ] `planning_docs/____TUTORIAL_WIP.md`
   - [x] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
@@ -237,7 +238,6 @@
 
 ### Polish
 - [ ] rotate fps cam down while doing wheelie to make it easier to see
-- [ ] r => quick respawn, add btn for set full respawn point (if not in race)
 - [ ] 1, 2, 3 spam is possible for everyone, debounce this
 - [ ] more car models / cleaner w/ neon fx & working lights/blinder
 - [ ] Add more ramp flow / alternate driving line on level

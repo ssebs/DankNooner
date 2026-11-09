@@ -597,7 +597,7 @@ highlight_key = "TOUR_TUT_ITEMS_HIGHLIGHT"
 
 [node name="Boost_GasCan" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102" unique_id=1679145489]
 script = ExtResource("boost")
-boost_seconds = 1.0
+burn_all = false
 objective_key = "TUT_GAS_CAN_BOOST"
 
 [node name="Teleport_RampItem" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102" unique_id=1580739721 node_paths=PackedStringArray("marker")]
