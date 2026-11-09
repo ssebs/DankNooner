@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dtckadkd3wndc"]
 
-[ext_resource type="Script" path="res://levels/assets/props/grind_rail.gd" id="1_rail"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="1_2vl3d"]
+[ext_resource type="Script" uid="uid://ddxh45ms5na3e" path="res://levels/assets/props/grind_rail.gd" id="1_rail"]
 
 [node name="GrindRail" type="Node3D" unique_id=575280884]
 script = ExtResource("1_rail")

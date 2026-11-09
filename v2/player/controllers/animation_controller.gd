@@ -5,10 +5,10 @@ class_name AnimationController extends Node
 signal state_changed(new_state: RiderState)
 
 enum RiderState {
-	RIDING,  # Procedural active, IK enabled
-	IDLE,  # Procedural paused, playing idle anims
+	RIDING, # Procedural active, IK enabled
+	IDLE, # Procedural paused, playing idle anims
 	# TRICK,  # IK disabled, skeleton anim playing
-	RAGDOLL,  # Everything disabled
+	RAGDOLL, # Everything disabled
 }
 
 @export var player_entity: PlayerEntity
@@ -41,17 +41,21 @@ const MAX_CHEST_LEAN_PITCH_DEG: float = -15.0
 const MAX_CHEST_Z_OFFSET: float = 0.2
 ## Max butt z shift when leaning fwd/back. Negate to flip direction.
 const MAX_BUTT_Z_OFFSET: float = 0.1
-## Belly grinds ride a grind spot on the rail instead of the wheels, keyed by which end drops
-## BELLY_GRIND_TILT_DEG past the rail: -1 nose down on the rear spot, 1 tail down on the front
-## spot, 0 level on their midpoint.
-const BELLY_GRIND_TILT_DEG: float = 15.0
+## Belly grinds ride a grind spot on the rail instead of the wheels: Vector2i(spot, tilt).
+## spot: -1 rear, 1 front, 0 midpoint. tilt: -1 nose down, 1 tail down, 0 level, by
+## BELLY_GRIND_TILT_DEG.
+const BELLY_GRIND_TILT_DEG: float = 20.0
 const BELLY_GRINDS: Dictionary = {
-	TrickController.Trick.SMITH: -1,
-	TrickController.Trick.FEEBLE: -1,
-	TrickController.Trick.WILLY: 1,
-	TrickController.Trick.OVER_WILLY: 1,
-	TrickController.Trick.BOARDSLIDE: 0,
-	TrickController.Trick.LIPSLIDE: 0,
+	TrickController.Trick.SMITH: Vector2i(-1, -1),
+	TrickController.Trick.FEEBLE: Vector2i(-1, -1),
+	TrickController.Trick.WILLY: Vector2i(1, 1),
+	TrickController.Trick.OVER_WILLY: Vector2i(1, 1),
+	TrickController.Trick.CROOKED: Vector2i(1, -1),
+	TrickController.Trick.OVERCROOK: Vector2i(1, -1),
+	TrickController.Trick.BOARDSLIDE: Vector2i(0, 0),
+	TrickController.Trick.LIPSLIDE: Vector2i(0, 0),
+	TrickController.Trick.SUSKI: Vector2i(-1, 1),
+	TrickController.Trick.SALAD: Vector2i(-1, 1),
 }
 
 # Animation track paths (relative to visual_root, which is anim root_node).
@@ -254,9 +258,9 @@ func _update_riding(delta: float) -> void:
 	if movement_controller.is_grinding:
 		grind = trick_controller.grind_pose_trick()
 	var belly_grind := BELLY_GRINDS.has(grind)
-	var tilt_dir: int = BELLY_GRINDS.get(grind, 0)
+	var belly: Vector2i = BELLY_GRINDS.get(grind, Vector2i.ZERO)
 	if belly_grind:
-		_apply_pitch_ground(pose, blend, tilt_dir * deg_to_rad(BELLY_GRIND_TILT_DEG))
+		_apply_pitch_ground(pose, blend, belly.y * deg_to_rad(BELLY_GRIND_TILT_DEG))
 	elif not movement_controller.is_on_floor:
 		_apply_pitch_air(pose, blend, pitch)
 	else:
@@ -278,9 +282,9 @@ func _update_riding(delta: float) -> void:
 	var hinge_offset := Vector3.ZERO
 	if belly_grind:
 		var spot := _bd.grind_spot_rear_position.lerp(
-			_bd.grind_spot_front_position, (tilt_dir + 1) * 0.5
+			_bd.grind_spot_front_position, (belly.x + 1) * 0.5
 		)
-		hinge_offset = -(Basis.from_euler(pose.visual_root_rot) * spot) - pose.visual_root_pos
+		hinge_offset = - (Basis.from_euler(pose.visual_root_rot) * spot) - pose.visual_root_pos
 	_grind_hinge_offset = _grind_hinge_offset.lerp(hinge_offset, blend)
 	pose.visual_root_pos += _grind_hinge_offset
 
@@ -291,7 +295,7 @@ func _update_riding(delta: float) -> void:
 	var bars := roll if movement_controller.is_drifting else _bar_angle(roll)
 	var steer_input := bars if _targets_synced_from_bike else 0.0
 	if movement_controller.is_reversing:
-		steer_input = -steer_input
+		steer_input = - steer_input
 	bike_skin.rotate_steering(steer_input, delta)
 	# Rear breaks loose in a drift/burnout — spin it by throttle so it keeps lighting up even at 0
 	# road speed (a standstill burnout), where the road-speed spin would read as stopped.
@@ -435,7 +439,7 @@ func _apply_pitch_ground(pose: _RiderPose, blend: float, pitch: float) -> void:
 	enable_target_sync()
 	var max_wheelie_rad = deg_to_rad(_bd.max_wheelie_angle_deg)
 	var max_stoppie_rad = deg_to_rad(_bd.max_stoppie_angle_deg)
-	var target = -clampf(pitch, -max_stoppie_rad, max_wheelie_rad)
+	var target = - clampf(pitch, -max_stoppie_rad, max_wheelie_rad)
 	pose.visual_root_rot.x = lerp_angle(pose.visual_root_rot.x, target, blend)
 	# Keep bounded so a flip's accumulated visual angle can't wind through the ground on landing.
 	pose.visual_root_rot.x = wrapf(pose.visual_root_rot.x, -PI, PI)
@@ -707,7 +711,7 @@ func set_procedural_enabled(enabled: bool) -> void:
 	_procedural_enabled = enabled
 	if enabled:
 		_reset_to_base_positions()
-		_proc_pose = null  # reseed from defaults next tick
+		_proc_pose = null # reseed from defaults next tick
 
 
 ## Hand ownership of the hand/foot targets back to procedural riding. Next tick's
@@ -867,7 +871,7 @@ func _editor_init_ik_from_bike() -> void:
 	if not _editor_refs_ready():
 		(
 			DebugUtils
-			. DebugErrMsg(
+			.DebugErrMsg(
 				"AnimationController: bike_skin, character_skin, player_entity, and IKController must be set"
 			)
 		)

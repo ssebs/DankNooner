@@ -1,6 +1,7 @@
 # Scratch Pad
 ---
 
+## Marketing
 Vid: where we started, where we are now 
 
 - Steam Trailer:
@@ -14,8 +15,10 @@ Ads at FHK? Print out? Merch?
 
 ## NOW
 
+- [ ] adjust `BELLY_GRIND_TILT_DEG: float = 20.0` by current lean so it doesn't snap so much, try to blend with existing pitch like tailslide/other grinds not in `BELLY_GRINDS`
 
 --
+
 ###
 ## NEXT
 
