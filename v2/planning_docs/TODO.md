@@ -58,6 +58,7 @@
     - [ ] FIX:
       - [ ] trail braking needs more run up space, not going fast enough to trail brake
       - [ ] respawn player if they do the wrong trick/grind
+      - [ ] AdvancedTutorialEvent should not be part of the leveldefinition, autostartevent should handle it.
       - [ ] cleanup map / events for adv tricks
       - [ ] first grind should say do a 50/50 instead of saying land facing it
       - [ ] trail braking / progressive braking needs a redo
@@ -76,6 +77,7 @@
   - [ ] Start with tutorial level (lock StuntCity until tutorial is complete)
   - [ ] Basic progression, limit content
   - [ ] Demo is open source, new private repo for full version
+  - [ ] Some cleanup / refactor (del unused code/assets, cleanup repo for public, etc.)
 - [ ] Better / Offical Trailer (concise, hook-y)
   - [x] hud toggle in editor for trailer
   - [ ] record gameplay for trailer

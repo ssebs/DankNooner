@@ -201,7 +201,7 @@ func _on_player_disconnected(peer_id: int):
 
 
 ## Match teardown — drop every peer's scoring row so it can't outlive the match into a menu
-## level (whose current_level has no player_spawn_pos), which would crash the _process scan.
+## level (whose current_level has no player_spawn), which would crash the _process scan.
 func _on_match_ended():
 	_peer_states.clear()
 	_bonus_tricks.clear()

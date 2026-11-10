@@ -55,6 +55,12 @@ plumbing, and Road/Street race differed only in traffic start/stop.
 - **`GameModeEventDefinition`** (`resources/`) — name/description, `target_gamemode`, forced bike,
   and the race flags (`enable_npcs`, `enable_traffic`, `race_challenges`, `fuel_up_first`). Authored as an embedded
   sub-resource on the event.
+- **`SpawnGrid`** — `@tool` Node3D placed on the road's centre line facing travel (-Z); lays out its
+  Marker3D children across the road's `side` (LEFT / RIGHT / FULL) of `width`, as many columns as
+  fit `MIN_LANE_WIDTH`, rows back along +Z. An event's `spawn` group can be one. Every
+  `CheckPointMarker` has one as its crash respawn slots, fed the gate's `width` and its own `side`;
+  `RaceTask` gives each racer (humans count up from slot 0, NPCs down from the last grid slot) the
+  same slot at every checkpoint, and NPCs respawn on theirs too.
 - **`GameModeObject`** — base for dumb props (checkpoints, trigger zones, speech bubbles): emit signals, `is_active` toggles visibility + collision, never decide completion.
 - **`FreeRoamActivity`** — abstract, level-placed, per-rider event that `FreeRoamGameMode` hosts
   without a gamemode change (`FuelUpMinigame` is one). Entering its `%PlayerStartCircle` opens the
@@ -95,7 +101,7 @@ plumbing, and Road/Street race differed only in traffic start/stop.
 ```
 IslandStation (EventStartCircle)       picker lists its GameModeEvent children
 ├── Props / IslandWalls                arrow walls, ramps — shown only by events linking them
-├── Spawns / IslandGrid                grid Marker3Ds
+├── Spawns / IslandGrid                SpawnGrid (or hand-placed grid Marker3Ds)
 ├── Checkpoints / IslandLoop           CheckPointMarkers
 ├── GameModeEvent "Island Race"        props=[IslandWalls], spawn=IslandGrid, checkpoints=IslandLoop
 │   ├── Pickups, StartZone             its own PickupSpawners + drive-to-start TriggerZone

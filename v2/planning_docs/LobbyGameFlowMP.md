@@ -369,7 +369,7 @@ func add_player_locally(peer_id: int, player_def_dict: Dictionary):
     player_to_add.name = str(peer_id)  # Critical for netfox sync
     player_to_add.bike_definition = player_def.bike_skin
     player_to_add.character_definition = player_def.character_skin
-    level_manager.current_level.player_spawn_pos.add_child(player_to_add, true)
+    level_manager.current_level.player_spawn.add_child(player_to_add, true)
     player_to_add.username = player_def.username
 ```
 

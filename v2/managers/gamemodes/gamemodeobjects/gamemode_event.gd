@@ -12,6 +12,7 @@ class_name GameModeEvent extends Node3D
 ## Groups under the circle's Props, shown + collided only while this event runs.
 @export var props: Array[Node3D] = []
 ## A group under the circle's Spawns. Its Marker3D children are the grid slots, in tree order.
+## Instance spawn_grid.tscn to have them laid out on one side of the road.
 @export var spawn: Node3D
 ## A group under the circle's Checkpoints. Its CheckPointMarker children are the race route, in
 ## tree order.

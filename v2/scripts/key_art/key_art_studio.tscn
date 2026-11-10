@@ -1,0 +1,97 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/key_art/key_art_studio.gd" id="1_studio"]
+[ext_resource type="PackedScene" path="res://levels/menu_levels/trick_demo/trick_demo_level.tscn" id="2_level"]
+[ext_resource type="Resource" path="res://resources/bikes/skins/sport_default_skin_definition.tres" id="3_bike"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/color_mods/black_blue_color.tres" id="4_colors"]
+[ext_resource type="Resource" path="res://resources/player/skins/squid_default_skin_definition.tres" id="5_squid"]
+[ext_resource type="Texture2D" path="res://resources/img/Logos/DankNoonerLogo_SteamLibraryLogo.png" id="6_logo"]
+[ext_resource type="PackedScene" path="res://levels/racetracks/stunt_track_01/stunt_track_01.tscn" id="7_city"]
+[node name="KeyArtStudio" type="Node3D" node_paths=PackedStringArray("featured_prop")]
+script = ExtResource("1_studio")
+bike_definition = ExtResource("3_bike")
+bike_colors = ExtResource("4_colors")
+character_definition = ExtResource("5_squid")
+character_colors = Array[Color]([Color(1, 0.82, 0.1, 1), Color(0, 0, 0, 0), Color(0, 0, 0, 0)])
+sky_overrides = {
+"halo_radius": 0.25,
+"moon_energy": 1.1,
+"moon_radius": 0.06
+}
+featured_prop = NodePath("StuntCity/EventStartCircle1/Props/TrickBattleProps/TrickBattleArena/Borders/ArrowWall2")
+logo = ExtResource("6_logo")
+
+[node name="StuntCity" parent="." instance=ExtResource("7_city")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 54.92970, 0, 141.92339)
+
+[node name="DirectionalLight3D" parent="StuntCity"]
+sky_mode = 1
+
+[node name="TrickDemoLevel" parent="." instance=ExtResource("2_level")]
+unique_name_in_owner = true
+
+[node name="Ground" parent="TrickDemoLevel"]
+visible = false
+
+[node name="Ramp" parent="TrickDemoLevel"]
+visible = false
+
+[node name="GrindRail" parent="TrickDemoLevel"]
+visible = false
+
+[node name="DirectionalLight3D" parent="TrickDemoLevel"]
+visible = false
+
+[node name="WorldEnvironment" parent="TrickDemoLevel"]
+environment = null
+
+[node name="MoonLight" type="DirectionalLight3D" parent="."]
+unique_name_in_owner = true
+sky_mode = 2
+
+[node name="KeyLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 9, 10)
+light_color = Color(0.8, 0.85, 1, 1)
+light_energy = 2.5
+omni_range = 15.0
+
+[node name="FillLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 12)
+light_color = Color(0.8392157, 0.7882353, 0.22352941, 1)
+light_energy = 2.0
+omni_range = 12.0
+
+[node name="SubViewport" type="SubViewport" parent="."]
+unique_name_in_owner = true
+msaa_3d = 2
+size = Vector2i(1536, 768)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport"]
+unique_name_in_owner = true
+transform = Transform3D(-0.5692, -0.1384, -0.8105, 0, 0.9858, -0.1683, 0.8222, -0.0958, -0.5611, -5.5, 7, 8.5)
+current = true
+fov = 50.0
+
+[node name="PreviewLayer" type="CanvasLayer" parent="."]
+
+[node name="Backdrop" type="ColorRect" parent="PreviewLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Preview" type="TextureRect" parent="PreviewLayer"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[editable path="StuntCity"]
+[editable path="TrickDemoLevel"]

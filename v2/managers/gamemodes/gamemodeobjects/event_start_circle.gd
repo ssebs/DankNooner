@@ -9,7 +9,7 @@
 ## ├ Props
 ## │ └ RaceWalls        any Node3D group: arrow walls, ramps, ...
 ## ├ Spawns
-## │ └ RaceSpawns       Marker3D children = grid slots, in tree order
+## │ └ RaceSpawns       SpawnGrid (or any Marker3D children = grid slots, in tree order)
 ## ├ Checkpoints
 ## │ └ RaceCheckpoints  CheckPointMarker children, in tree order
 ## └ StuntRace (GameModeEvent)   links props / spawn / checkpoints / pickups / start_zone

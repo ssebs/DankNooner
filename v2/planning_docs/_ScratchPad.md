@@ -22,9 +22,11 @@ Make a hoodie
 
 - [ ] find a way to record my gameplay but play it back from another camera angle/slowmo
   - [ ] Replay studio for trailer footage: review the "Calls I made" section, then plan. Spec: [____REPLAY_WIP.md](./____REPLAY_WIP.md)
+  - [ ] also see resources/img/marketing and scripts/key_art. currently exists but jank!
 
 - [ ] move checkpoint / race spawns on right side of road
   - [ ] checkpoint should have left/right/full enum to move the repawn locations
+  - [ ] > claude resume!
 
 
 ---

@@ -182,7 +182,7 @@ var rb_near_miss_score: float = 0.0
 var rb_lock_movement: bool = false
 var rb_unlock_movement: bool = false
 ## Persistent respawn point. Set by SpawnManager.respawn_player_at (e.g. TeleportTask) or an R double tap,
-## reset to identity to fall back to `get_parent().global_transform` (player_spawn_pos).
+## reset to identity to fall back to `get_parent().global_transform` (player_spawn).
 ## Persists across respawns so crashes after a checkpoint return to the checkpoint.
 var rb_respawn_transform: Transform3D = Transform3D()
 ## One-shot respawn override, consumed by the next do_respawn() WITHOUT touching the

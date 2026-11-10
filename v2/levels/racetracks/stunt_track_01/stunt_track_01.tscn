@@ -3793,9 +3793,9 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -239
 size = 32
 aspect = 4
 density = 2
-layout_seed = 3
+layout_seed = 15
 has_collision = true
-snapped_heights = PackedFloat32Array(-255.7142, -255.67229, -255.6934, -255.74066, -255.67195, -255.639, -255.64397, -255.7027, -255.61743, -255.75594, -255.6731, -255.6559, -255.74387, -255.60077, -255.72523, -255.70953)
+snapped_heights = PackedFloat32Array(-255.65047, -255.63728, -255.71912, -255.62662, -255.69574, -255.64786, -255.67892, -255.71112, -255.72742, -255.68494, -255.6704, -255.61578, -255.69019, -255.72537, -255.643, -255.58774)
 
 [node name="TreeBundle21" parent="_Trees_/Treesoutskirtsandintown" unique_id=1459682998 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 64.5, 256, -48)

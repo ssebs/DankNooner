@@ -51,7 +51,7 @@ func _physics_process(delta: float):
 	if Engine.is_editor_hint() or multiplayer.multiplayer_peer == null or !multiplayer.is_server():
 		return
 	# Runs every physics frame from startup, so current_level can be null before the first
-	# level spawns; menu/background levels (BG_GRAY_LEVEL) also have no player_spawn_pos to
+	# level spawns; menu/background levels (BG_GRAY_LEVEL) also have no player_spawn to
 	# scan. Either way there are no players to breadcrumb — bail (mirrors _on_lobby_players_updated).
 	if level_manager.current_level == null or level_manager.current_level.no_player_spawn_needed:
 		return
@@ -333,7 +333,7 @@ func _wobble_riders_near_bat(wielder_peer_id: int) -> void:
 
 ## Everything within BAT_SWING_RANGE of the stretch from the wielder to BAT_SWING_FORWARD_REACH
 ## ahead: a capsule along the heading. A query rather than a walk over spawned riders, because
-## traffic lives under its network, not player_spawn_pos.
+## traffic lives under its network, not player_spawn.
 func _bat_query(wielder: CharacterBody3D) -> PhysicsShapeQueryParameters3D:
 	var capsule := CapsuleShape3D.new()
 	capsule.radius = BAT_SWING_RANGE
@@ -423,15 +423,6 @@ func set_respawn_point(player_peer_id: int, pos: Vector3, basis: Basis):
 	get_player_by_peer_id(player_peer_id).rb_respawn_transform = Transform3D(basis, pos)
 
 
-## Clear the persistent respawn point so the next respawn falls back to player_spawn_pos.
-## Used when entering free roam from another gamemode.
-@rpc("any_peer", "call_local", "reliable")
-func reset_respawn_point(player_peer_id: int):
-	if !_sender_is_server():
-		return
-	get_player_by_peer_id(player_peer_id).rb_respawn_transform = Transform3D()
-
-
 ## Instantiate and add player node locally (no authority check)
 func add_player_locally(peer_id: int, player_def_dict: Dictionary):
 	var player_def = PlayerDefinition.new()
@@ -451,7 +442,7 @@ func add_player_locally(peer_id: int, player_def_dict: Dictionary):
 	player_to_add.character_definition = player_def.character_skin
 	player_to_add.horn_definition = player_def.horn
 
-	level_manager.current_level.player_spawn_pos.add_child(player_to_add, true)
+	level_manager.current_level.player_spawn.add_child(player_to_add, true)
 	player_to_add.username = player_def.username
 	player_spawned.emit(player_to_add)
 
@@ -459,30 +450,30 @@ func add_player_locally(peer_id: int, player_def_dict: Dictionary):
 ## Remove player node locally (no authority check)
 func remove_player_locally(peer_id: int):
 	_flat_breadcrumbs.erase(peer_id) # server-only dict; harmless no-op on clients
-	# No current level or a menu/background level with no player_spawn_pos — nothing to remove.
+	# No current level or a menu/background level with no player_spawn — nothing to remove.
 	# Guards the raw deref below (this doesn't route through get_player_by_peer_id).
 	if level_manager.current_level == null or level_manager.current_level.no_player_spawn_needed:
 		return
-	if !level_manager.current_level.player_spawn_pos.has_node(str(peer_id)):
+	if !level_manager.current_level.player_spawn.has_node(str(peer_id)):
 		return
 
-	level_manager.current_level.player_spawn_pos.get_node(str(peer_id)).queue_free()
+	level_manager.current_level.player_spawn.get_node(str(peer_id)).queue_free()
 
 
 ## Get player from multiplayer peer id found in level_manager.current_level
-## A player or race bot by id, both spawned under player_spawn_pos. Null when not spawned.
+## A player or race bot by id, both spawned under player_spawn. Null when not spawned.
 func get_rider(rider_id: int) -> Node3D:
-	return level_manager.current_level.player_spawn_pos.get_node_or_null(str(rider_id))
+	return level_manager.current_level.player_spawn.get_node_or_null(str(rider_id))
 
 
 func get_player_by_peer_id(player_peer_id: int) -> PlayerEntity:
-	# No current level (startup / mid-swap) or a menu/background level with no player_spawn_pos —
+	# No current level (startup / mid-swap) or a menu/background level with no player_spawn —
 	# no players to find. Return null (the "not spawned" contract every caller already handles)
 	# rather than null-deref get_children.
 	if level_manager.current_level == null or level_manager.current_level.no_player_spawn_needed:
 		return null
 	var player_node: PlayerEntity
-	for child in level_manager.current_level.player_spawn_pos.get_children():
+	for child in level_manager.current_level.player_spawn.get_children():
 		if child is PlayerEntity:
 			if child.name == str(player_peer_id):
 				player_node = child

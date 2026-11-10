@@ -47,7 +47,7 @@ var end_checkpoint: CheckPointMarker
 ## callbacks.
 ##   racer_id -> { "laps_done": int, "next_lap_idx": int, "waiting_for": WaitFor,
 ##                 "start_ms": int, "lap_start_ms": int, ["completion_time_ms": int],
-##                 ["respawn_ckpt": CheckPointMarker  (NPC rows only)] }
+##                 "respawn_slot": int, ["respawn_point": Marker3D  (NPC rows only)] }
 var peer_progress: Dictionary[int, Dictionary] = {}
 var _signals_wired: bool = false
 ## False until the race body actually starts (first human on_enter) — NPCs are
@@ -191,7 +191,7 @@ func restart_run(peer_id: int) -> void:
 ## Adds an NPC row so checkpoint crossings score it like any peer. Called at
 ## gamemode Enter — before the race body starts — so this also resets
 ## _race_active, holding NPCs at the grid until the first human on_enter.
-func register_npc(npc_id: int) -> void:
+func register_npc(npc_id: int, respawn_slot: int) -> void:
 	_race_active = false
 	peer_progress[npc_id] = {
 		"laps_done": 0,
@@ -199,6 +199,7 @@ func register_npc(npc_id: int) -> void:
 		"waiting_for": WaitFor.START,
 		"start_ms": Time.get_ticks_msec(),
 		"lap_start_ms": Time.get_ticks_msec(),
+		"respawn_slot": respawn_slot,
 	}
 
 
@@ -219,10 +220,10 @@ func get_target_checkpoint(npc_id: int) -> CheckPointMarker:
 	return _expected_checkpoint(p)
 
 
-## Last checkpoint the NPC passed — its crash respawn point. Null until the
+## The NPC's slot at the last checkpoint it passed — its crash respawn point. Null until the
 ## first crossing; caller falls back to the spawn grid slot.
-func get_npc_respawn_checkpoint(npc_id: int) -> CheckPointMarker:
-	return peer_progress[npc_id].get("respawn_ckpt")
+func get_npc_respawn_point(npc_id: int) -> Marker3D:
+	return peer_progress[npc_id].get("respawn_point")
 
 
 #endregion
@@ -296,16 +297,15 @@ func _expected_checkpoint(p: Dictionary) -> CheckPointMarker:
 
 
 func _advance(peer_id: int, p: Dictionary, ckpt: CheckPointMarker) -> void:
+	# This racer's lane, so crashed racers spread across the checkpoint instead of stacking.
+	var slots := ckpt.get_respawn_points()
+	var slot := slots[p["respawn_slot"] % slots.size()]
 	if peer_id < 0:
 		# NPC — no PlayerEntity rb_* respawn mechanism; NPCRaceManager reads
-		# this back via get_npc_respawn_checkpoint for crash recovery.
-		p["respawn_ckpt"] = ckpt
+		# this back via get_npc_respawn_point for crash recovery.
+		p["respawn_point"] = slot
 	else:
 		# Update persistent respawn only — don't teleport the racing player.
-		# Pick this racer's lane so crashed racers spread across the checkpoint
-		# instead of stacking on its origin.
-		var slots := ckpt.get_respawn_points()
-		var slot := slots[p["respawn_slot"] % slots.size()]
 		runner.spawn_manager.set_respawn_point.rpc(
 			peer_id, slot.global_position, slot.global_basis
 		)

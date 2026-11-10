@@ -140,7 +140,7 @@ as a level that lists but won't load.
 
 #### Adding a New Level
 
-1. Create level scene extending `LevelDefinition` (no need to wire `level_manager` export - it's set automatically on spawn)
+1. Create level scene extending `LevelDefinition` (no need to wire `level_manager` export - it's set automatically on spawn). Instance a `SpawnGrid` for `player_spawn`: riders spawn as its children and free roam spreads them across its slots.
 2. Add entry to `LevelName` enum in `level_manager.gd`
 3. Add entry to `level_name_map` (enum -> localization key)
 4. Add entry to `possible_levels` (enum -> `preload("res://path/to/level.tscn")`)

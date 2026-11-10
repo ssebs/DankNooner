@@ -86,8 +86,8 @@ Mod scenes reference base-game scripts/assets by `res://` path, which resolve ag
 
 ### Why it fits (verified 2026-10-08)
 
-- A level is just a `LevelDefinition` root + `player_spawn_pos` marker
-  (`levels/level_definition.gd`). `grid_markers` and `traffic_settings` are optional.
+- A level is just a `LevelDefinition` root + `player_spawn` SpawnGrid
+  (`levels/level_definition.gd`). `traffic_settings` is optional.
 - Gamemode tasks are authored in the level scene, so custom maps get races/events for free.
 
 ### Steps

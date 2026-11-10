@@ -1,17 +1,14 @@
 @tool
 ## Root script of every level scene. Register the level in LevelManager (LevelName enum,
-## possible_levels, level_name_map). Needs player_entity_scene and player_spawn_pos (riders spawn as
+## possible_levels, level_name_map). Needs player_entity_scene and player_spawn (riders spawn as
 ## its children) unless no_player_spawn_needed; npc_nav_region only for levels with NPC races.
 class_name LevelDefinition extends Node3D
 
 ## Hack - for ui background levels where the player doesn't need to spawn
 @export var no_player_spawn_needed: bool
 @export var player_entity_scene: PackedScene = preload("res://player/player_entity.tscn")
-@export var player_spawn_pos: Marker3D
-@export var player_spawn_pos_debug: Marker3D
-## Optional grid for FreeRoamGameMode to distribute peers across on entry.
-## Empty → all peers stack on player_spawn_pos (legacy behavior).
-@export var grid_markers: Array[Marker3D] = []
+## Riders spawn as its children; FreeRoamGameMode spreads peers across its slots on entry.
+@export var player_spawn: SpawnGrid
 ## Per-map traffic density. Swap in a different .tres to make this map busier,
 ## quieter, or car-heavy. Maps with no baked TrafficNetwork get no traffic regardless.
 @export var traffic_settings: TrafficSettings = preload(
@@ -34,8 +31,6 @@ var level_name: LevelManager.LevelName
 func _ready():
 	if Engine.is_editor_hint():
 		return
-	if OS.has_feature("debug"):
-		player_spawn_pos = player_spawn_pos_debug
 	for node: Node3D in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EditorHideable"]):
 		node.visible = true
 	# WebGL can't afford the post-process pass (glow + adjustments) or shadow maps. Neon edges still
@@ -54,7 +49,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 	if player_entity_scene == null:
 		issues.append("player_entity_scene must not be empty")
-	if player_spawn_pos == null:
-		issues.append("player_spawn_pos must not be empty")
+	if player_spawn == null:
+		issues.append("player_spawn must not be empty")
 
 	return issues

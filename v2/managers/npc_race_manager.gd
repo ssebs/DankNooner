@@ -216,7 +216,7 @@ func rpc_spawn_npc(npc_id: int, pos: Vector3, basis: Basis):
 	# from the same one. Read per peer, like the rest of the level's settings.
 	npc.paint_colors = level_manager.current_level.traffic_settings.paint_colors
 
-	level_manager.current_level.player_spawn_pos.add_child(npc, true)
+	level_manager.current_level.player_spawn.add_child(npc, true)
 	npc.global_transform = Transform3D(basis, pos)
 	_npcs[npc_id] = npc
 	_spawn_transforms[npc_id] = Transform3D(basis, pos)
@@ -311,10 +311,10 @@ func _rider_within(npc: NPCRiderEntity, radius: float) -> bool:
 	return false
 
 
-## Every upright player and race bot but npc. player_spawn_pos holds more than riders.
+## Every upright player and race bot but npc. player_spawn holds more than riders.
 func _riders_besides(npc: NPCRiderEntity) -> Array[Node3D]:
 	var riders: Array[Node3D] = []
-	for child in level_manager.current_level.player_spawn_pos.get_children():
+	for child in level_manager.current_level.player_spawn.get_children():
 		var is_rider := child is PlayerEntity or child is NPCRiderEntity
 		if is_rider and child != npc and !child.is_crashed:
 			riders.append(child)
@@ -384,9 +384,9 @@ func _respawn_npc(npc_id: int) -> void:
 		return
 	var t := _spawn_transforms[npc_id]
 	if race_task != null:
-		var ckpt := race_task.get_npc_respawn_checkpoint(npc_id)
-		if ckpt != null:
-			t = ckpt.global_transform
+		var point := race_task.get_npc_respawn_point(npc_id)
+		if point != null:
+			t = point.global_transform
 	_npcs[npc_id].trick_controller.do_reset()
 	_npcs[npc_id].teleport_to(t.origin, t.basis)
 	_race_state(npc_id).reset_line_progress()

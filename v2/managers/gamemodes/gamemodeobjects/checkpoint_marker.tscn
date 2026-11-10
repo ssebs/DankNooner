@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://mxwmcd3vtr5w"]
 
 [ext_resource type="Script" uid="uid://dlukxvp4mme8d" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.gd" id="1_jt853"]
+[ext_resource type="PackedScene" path="res://managers/gamemodes/gamemodeobjects/spawn_grid.tscn" id="2_grid"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_fjdpx"]
-size = Vector3(16, 64, 1)
+[sub_resource type="BoxShape3D" id="BoxShape3D_lpp3f"]
+size = Vector3(20, 64, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2lumj"]
 resource_local_to_scene = true
@@ -88,46 +89,23 @@ script = ExtResource("1_jt853")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1448077944]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 32, 0)
-shape = SubResource("BoxShape3D_fjdpx")
+shape = SubResource("BoxShape3D_lpp3f")
 
 [node name="BorderCylLeft" type="MeshInstance3D" parent="." unique_id=1433966497]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 64, 0)
-mesh = SubResource("CylinderMesh_sx6t6")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 64, 0)
 material_override = SubResource("StandardMaterial3D_2lumj")
+mesh = SubResource("CylinderMesh_sx6t6")
 
 [node name="BorderCylRight" type="MeshInstance3D" parent="." unique_id=706259786]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 64, 0)
-mesh = SubResource("CylinderMesh_sx6t6")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 64, 0)
 material_override = SubResource("StandardMaterial3D_2lumj")
+mesh = SubResource("CylinderMesh_sx6t6")
 
-[node name="RespawnPoints" type="Node3D" parent="." unique_id=697950746]
+[node name="RespawnPoints" parent="." unique_id=1895047560 instance=ExtResource("2_grid")]
 unique_name_in_owner = true
-
-[node name="1" type="Marker3D" parent="RespawnPoints" unique_id=2098645286]
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, -4.2499995, 0, 8)
-
-[node name="2" type="Marker3D" parent="RespawnPoints" unique_id=414214546]
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, -0.99999976, 0, 8)
-
-[node name="3" type="Marker3D" parent="RespawnPoints" unique_id=1033088437]
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 2.2499995, 0, 8)
-
-[node name="4" type="Marker3D" parent="RespawnPoints" unique_id=1218158579]
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 5.499999, 0, 8)
-
-[node name="5" type="Marker3D" parent="RespawnPoints" unique_id=1042766571]
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, -4.2499995, 0, 14.5)
-
-[node name="6" type="Marker3D" parent="RespawnPoints" unique_id=1295223792]
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, -0.99999976, 0, 14.5)
-
-[node name="7" type="Marker3D" parent="RespawnPoints" unique_id=232918980]
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 2.2499995, 0, 14.5)
-
-[node name="8" type="Marker3D" parent="RespawnPoints" unique_id=1947466951]
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 5.499999, 0, 14.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1386204517]
 unique_name_in_owner = true

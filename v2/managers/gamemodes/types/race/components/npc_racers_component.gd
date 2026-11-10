@@ -17,9 +17,10 @@ func race_start() -> void:
 		return
 	npc_race_manager.race_task = race_mode.race_task
 	for i in npc_count:
-		var marker: Marker3D = grid_markers[maxi(0, grid_markers.size() - 1 - i)]
+		var slot := maxi(0, grid_markers.size() - 1 - i)
+		var marker: Marker3D = grid_markers[slot]
 		var npc_id := npc_race_manager.spawn_npc(marker.global_position, marker.global_basis)
-		race_mode.race_task.register_npc(npc_id)
+		race_mode.race_task.register_npc(npc_id, slot)
 	npc_race_manager.bake_racing_line(race_mode.get_event())
 
 
