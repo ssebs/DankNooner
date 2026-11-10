@@ -63,7 +63,6 @@
       - [ ] trail braking / progressive braking needs a redo
       - [ ] burnout msg confusing
 	
-
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
 
@@ -255,6 +254,10 @@
 ---
 
 ## Done ✅
+
+- [x] exit garage / fillup should not say end event
+
+- [x] adjust `BELLY_GRIND_TILT_DEG: float = 20.0` by current lean so it doesn't snap so much, try to blend with existing pitch like tailslide/other grinds not in `BELLY_GRINDS`
 
 - [x] r => quick respawn, add btn for set full respawn point (if not in race)
 - [x] d-pad menu to swap loadouts. have it slide out & let you choose a class (like vertical minecraft hotbar w/ person on the bike for the icon)

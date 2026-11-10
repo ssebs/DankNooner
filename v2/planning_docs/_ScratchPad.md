@@ -2,32 +2,38 @@
 ---
 
 ## Marketing
+
 Vid: where we started, where we are now 
 
-- Steam Trailer:
-  - hook + vibes
-  - Show what the game will feel like
-  - Description has gifs for unique features 
+Clip: backflip off a deployed ramp onto Smith grind in first 5 sec, then add kick flip or other trick back to the race
+Clip: kickflip, heelflip, tre flip, lazerflip, drifting to shuvit then crash
 
-Ads at FHK? Print out? Merch?
+Must make good Steam trailer + marketing materials before publishing demo
+- hook + vibes
+- Show what the game will feel like
+- Description has gifs for unique features 
+
+Ask Eddie if I can put up a sign with a QR code
+Make a hoodie
 
 ---
 
 ## NOW
 
-- [ ] adjust `BELLY_GRIND_TILT_DEG: float = 20.0` by current lean so it doesn't snap so much, try to blend with existing pitch like tailslide/other grinds not in `BELLY_GRINDS`
+- [ ] find a way to record my gameplay but play it back from another camera angle/slowmo
+  - [ ] Replay studio for trailer footage: review the "Calls I made" section, then plan. Spec: [____REPLAY_WIP.md](./____REPLAY_WIP.md)
 
---
+- [ ] move checkpoint / race spawns on right side of road
+  - [ ] checkpoint should have left/right/full enum to move the repawn locations
 
-###
+
+---
+##
 ## NEXT
 
 - [ ] [Progression/Challenges](./Progression.md)
 
 - [ ] Red triangles over enemy racers head
-- [ ] exit garage / fillup should not say end event
-- [ ] move checkpoint / race spawns on right side of road
-  - [ ] checkpoint should have left/right/full enum to move the repawn locations
 
 
 
