@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.0.169 - 2026-11-09
+
+- cleanup advanced tutorial + Don't allow skate flip tricks during wheelie
+- rename stunt city in files
+- - [x] move checkpoint / race spawns on right side of road - [x] add reusable spawn grid component
+- - [x] move checkpoint / race spawns on right side of road - [x] add reusable spawn grid component
+- jank art studio + change spawn/checkpoints
+- exit garage / fillup should not say end event
+- new horns
+- adjust `BELLY_GRIND_TILT_DEG: float = 20.0` by current lean so it doesn't snap so much, try to blend with existing pitch like tailslide/other grinds not in `BELLY_GRINDS`
+- add lazerflip, tre flip, 360 shuvits
+
 ## v0.0.168 - 2026-11-08
 
 - improve salad grind
