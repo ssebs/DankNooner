@@ -1,3 +1,4 @@
+@tool
 ## HUD arrow above the minimap, pointing the local rider at the minimap's checkpoint target, relative to
 ## the camera, with the distance under it. While a guide target is on screen it pins over the
 ## target instead. Guide targets (drive to the start) always show it; race checkpoints only on easy.

@@ -257,10 +257,10 @@
 
 ## Done ✅
 
+- [x] move checkpoint / race spawns on right side of road
+- [x] add reusable spawn grid component
 - [x] exit garage / fillup should not say end event
-
 - [x] adjust `BELLY_GRIND_TILT_DEG: float = 20.0` by current lean so it doesn't snap so much, try to blend with existing pitch like tailslide/other grinds not in `BELLY_GRINDS`
-
 - [x] r => quick respawn, add btn for set full respawn point (if not in race)
 - [x] d-pad menu to swap loadouts. have it slide out & let you choose a class (like vertical minecraft hotbar w/ person on the bike for the icon)
 - [x] eventstartcircle event names are too big / ugly
