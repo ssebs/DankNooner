@@ -62,7 +62,8 @@ plumbing, and Road/Street race differed only in traffic start/stop.
   when `is_shared()`, e.g. the garage, which hides its riders and their collision), sends
   `begin()` to that client, *then* runs `server_start()`, so the client is already listening for
   whatever `server_start` triggers. The client reports `get_result()` on `finished` or on pause →
-  Cancel Event (shown via `GameModeType.can_cancel_event`), and the server runs `server_end()`.
+  Cancel Event, labelled Exit in free roam (shown via `GameModeType.can_cancel_event`), and the
+  server runs `server_end()`.
   Free roam's Exit ends every running activity with result 0. Props must stay identical on every
   peer (rollback needs the same bodies everywhere), so an activity's local-only state is visuals
   and input.

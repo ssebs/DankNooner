@@ -56,6 +56,12 @@ func Enter(_state_context: StateContext):
 	_update_now_playing()
 
 	cancel_event_btn.visible = gamemode_manager.get_current_gamemode().can_cancel_event()
+	# Free roam only shows this for its garage / fill-up activities, which aren't events.
+	cancel_event_btn.text = (
+		"GARAGE_LEAVE"
+		if gamemode_manager.current_game_mode == GameModeType.Kind.FREE_ROAM
+		else "CANCEL_EVENT_LABEL"
+	)
 
 	# Host-only level switcher: lets the host swap maps without tearing down the lobby.
 	# Hidden in the tutorial, which mustn't be left for another map.
