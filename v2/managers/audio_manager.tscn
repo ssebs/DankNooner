@@ -77,6 +77,8 @@
 [ext_resource type="AudioStream" uid="uid://ug171p6wrsfp" path="res://non_fmod_sounds/SFX/vintage_horn.ogg" id="40_vintage_horn"]
 [ext_resource type="AudioStream" uid="uid://csl33y4jwrvqd" path="res://non_fmod_sounds/SFX/what-the-dog-doin.ogg" id="40_what_the_dog_doin"]
 [ext_resource type="AudioStream" uid="uid://ci5d8rlesx07h" path="res://non_fmod_sounds/SFX/yapapa-cat.ogg" id="40_yapapa_cat"]
+[ext_resource type="AudioStream" uid="uid://dm4atijgltfii" path="res://non_fmod_sounds/SFX/helicopter-helicopter.mp3" id="40_helicopter_helicopter"]
+[ext_resource type="AudioStream" uid="uid://hk8ff6lrsd13" path="res://non_fmod_sounds/SFX/hello-im-under-the-water.mp3" id="40_hello_im_under_the_water"]
 [ext_resource type="AudioStream" uid="uid://df3nojagkq573" path="res://non_fmod_sounds/SFX/yougotmail.ogg" id="40_you_got_mail"]
 [ext_resource type="AudioStream" uid="uid://b6nit10b22lh7" path="res://non_fmod_sounds/SFX/concrete-scrape.mp3" id="crash_grind"]
 [ext_resource type="AudioStream" uid="uid://b6nwkdkdid10c" path="res://non_fmod_sounds/Music/Menu/JMHBM - Blade Rider.mp3" id="music_1"]
@@ -669,6 +671,20 @@ stream = ExtResource("crash_grind")
 bus = &"SFX"
 script = ExtResource("2_snd")
 loop = true
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="HelicopterHelicopter" type="AudioStreamPlayer" parent="Sounds" unique_id=1592846307]
+unique_name_in_owner = true
+stream = ExtResource("40_helicopter_helicopter")
+bus = &"SFX"
+script = ExtResource("2_snd")
+metadata/_custom_type_script = "uid://dk2ghd454wkc2"
+
+[node name="HelloImUnderTheWater" type="AudioStreamPlayer" parent="Sounds" unique_id=874120593]
+unique_name_in_owner = true
+stream = ExtResource("40_hello_im_under_the_water")
+bus = &"SFX"
+script = ExtResource("2_snd")
 metadata/_custom_type_script = "uid://dk2ghd454wkc2"
 
 [node name="Music" type="Node" parent="." unique_id=795425564]
