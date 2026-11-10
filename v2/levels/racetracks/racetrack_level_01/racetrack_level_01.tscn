@@ -36,6 +36,7 @@
 [ext_resource type="ArrayOccluder3D" uid="uid://6yicqq5aik2s" path="res://levels/racetracks/racetrack_level_01/racetrack_level_01.occ" id="33_6j553"]
 [ext_resource type="Script" uid="uid://dunhh6klysrxg" path="res://levels/components/traffic/traffic_network.gd" id="37_jowm6"]
 [ext_resource type="Script" uid="uid://b4lvnheib00i8" path="res://levels/components/traffic/traffic_road.gd" id="38_2jj0w"]
+[ext_resource type="Resource" uid="uid://dbttxguypar5h" path="res://levels/racetracks/racetrack_level_01/racetrack_level_01_traffic.tres" id="38_j70wt"]
 [ext_resource type="Script" uid="uid://d2kjca82lmnch" path="res://levels/components/traffic/traffic_road_point.gd" id="39_j70wt"]
 [ext_resource type="Script" uid="uid://bdb83jm5t82md" path="res://levels/components/traffic/traffic_intersection.gd" id="40_2jj0w"]
 [ext_resource type="Script" uid="uid://pulnqxx1eaja" path="res://managers/gamemodes/gamemodeobjects/gamemode_event.gd" id="mig_event"]
@@ -2610,14 +2611,16 @@ metadata/_custom_type_script = "uid://dw5nubakvddy7"
 
 [node name="TrafficNetwork" type="Node3D" parent="." unique_id=139128070]
 script = ExtResource("37_jowm6")
+baked = ExtResource("38_j70wt")
 metadata/_custom_type_script = "uid://dunhh6klysrxg"
 
 [node name="TrafficRoad" type="Node3D" parent="TrafficNetwork" unique_id=1451330465]
 script = ExtResource("38_2jj0w")
+one_way = true
 metadata/_custom_type_script = "uid://b4lvnheib00i8"
 
 [node name="TrafficRoadPoint1" type="Marker3D" parent="TrafficNetwork/TrafficRoad" unique_id=1521150510]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.685444, 0.29991913, 121.03797)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.955391, 0.29991913, 112.17466)
 script = ExtResource("39_j70wt")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
@@ -2882,12 +2885,13 @@ script = ExtResource("39_j70wt")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
 [node name="TrafficRoadPoint54" type="Marker3D" parent="TrafficNetwork/TrafficRoad" unique_id=769015140]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.583054, 0.29992676, 128.35172)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.638163, 0.29992676, 139.19466)
 script = ExtResource("39_j70wt")
 metadata/_custom_type_script = "uid://d2kjca82lmnch"
 
-[node name="TrafficIntersection" type="Marker3D" parent="TrafficNetwork" unique_id=26137862 node_paths=PackedStringArray("south")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.393129, 0.2998047, 125.57739)
+[node name="TrafficIntersection" type="Marker3D" parent="TrafficNetwork" unique_id=26137862 node_paths=PackedStringArray("north", "south")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.850138, 0.2998047, 123.53759)
 script = ExtResource("40_2jj0w")
+north = NodePath("../TrafficRoad")
 south = NodePath("../TrafficRoad")
 metadata/_custom_type_script = "uid://bdb83jm5t82md"

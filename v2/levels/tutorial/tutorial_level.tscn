@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dxaeatgkn7vn3"]
 
 [ext_resource type="Sky" uid="uid://dfgbuerpq3y8" path="res://levels/assets/skybox_neon.tres" id="2_sky"]
+[ext_resource type="PackedScene" path="res://managers/gamemodes/gamemodeobjects/spawn_grid.tscn" id="spawn_grid"]
 [ext_resource type="PackedScene" uid="uid://blmmkvwq6fh3b" path="res://levels/components/garage/garage.tscn" id="5_iwe6j"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="6_gb"]
 [ext_resource type="Texture2D" uid="uid://jpt2tqlxrf2f" path="res://levels/assets/graybox/road_texture_template.png" id="7_road"]
@@ -79,10 +80,9 @@ name = "TUT_ADV_EVENT_NAME"
 target_gamemode = 4
 forced_base_bike = ExtResource("sport")
 
-[node name="TutorialLevel" type="Node3D" unique_id=175695285 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug", "auto_start_event", "advanced_tutorial_event")]
+[node name="TutorialLevel" type="Node3D" unique_id=175695285 node_paths=PackedStringArray("player_spawn", "auto_start_event", "advanced_tutorial_event")]
 script = ExtResource("lvl")
-player_spawn_pos = NodePath("Markers/RoadStart")
-player_spawn_pos_debug = NodePath("Markers/RoadStart")
+player_spawn = NodePath("InitialSpawn")
 auto_start_event = NodePath("TutorialCircle/TutorialEvent")
 advanced_tutorial_event = NodePath("TutorialCircle/AdvancedEvent")
 
@@ -158,6 +158,9 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -29,
 
 [node name="StaticBody3D" parent="MainMenuMountains/grass" parent_id_path=PackedInt32Array(650339427, 972202691) index="0" unique_id=1781322675]
 collision_layer = 17
+
+[node name="InitialSpawn" parent="." instance=ExtResource("spawn_grid")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0.05, 190)
 
 [node name="Markers" type="Node3D" parent="." unique_id=587579084]
 

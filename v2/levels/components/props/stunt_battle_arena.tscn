@@ -60,22 +60,22 @@ width = 128
 
 [node name="Spawners" type="Node3D" parent="." unique_id=608849879]
 
-[node name="PickupSpawner" parent="Spawners" unique_id=761218876 instance=ExtResource("5_a1dn2")]
+[node name="PickupSpawner1" parent="Spawners" unique_id=761218876 instance=ExtResource("5_a1dn2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, -0.035714)
 count = 14
 spacing = 4.77
 
-[node name="PickupSpawner15" parent="Spawners" unique_id=1807387469 instance=ExtResource("5_a1dn2")]
+[node name="PickupSpawner2" parent="Spawners" unique_id=1807387469 instance=ExtResource("5_a1dn2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, -0.035714)
 count = 14
 spacing = 4.77
 
-[node name="PickupSpawner29" parent="Spawners" unique_id=1807297309 instance=ExtResource("5_a1dn2")]
+[node name="PickupSpawner3" parent="Spawners" unique_id=1807297309 instance=ExtResource("5_a1dn2")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, -50.035713)
 count = 14
 spacing = 4.77
 
-[node name="PickupSpawner43" parent="Spawners" unique_id=1884260859 instance=ExtResource("5_a1dn2")]
+[node name="PickupSpawner4" parent="Spawners" unique_id=1884260859 instance=ExtResource("5_a1dn2")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, 46.464287)
 count = 14
 spacing = 4.77

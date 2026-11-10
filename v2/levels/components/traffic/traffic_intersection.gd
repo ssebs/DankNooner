@@ -1,6 +1,7 @@
 @tool
 ## Links up to four TrafficRoads by slot, in this node's basis (north = -Z, east = +X). Each road
-## connects at whichever end is nearest.
+## connects at whichever end is nearest; a road in two slots here (a loop) connects each slot to the
+## end on its side. One-way roads must leave every entering lane a way out, and be fed if they leave.
 class_name TrafficIntersection extends Marker3D
 
 enum ControlType { NONE, STOP, LIGHT }
@@ -62,7 +63,22 @@ func slot_dir(slot: Slot) -> Vector3:
 # Null when the slot is empty or its road has no points
 func slot_end(slot: Slot) -> TrafficRoadPoint:
 	var road := get_slot_road(slot)
-	return road.nearest_end(global_position) if road else null
+	if road == null:
+		return null
+	if [north, east, south, west].count(road) > 1:
+		return road.end_toward(global_position, slot_dir(slot))
+	return road.nearest_end(global_position)
+
+
+# One-way roads run first point -> last, so they only flow in at their last point
+func slot_flows_in(slot: Slot) -> bool:
+	var end := slot_end(slot)
+	return end != null and (not get_slot_road(slot).one_way or end == get_slot_road(slot).get_points()[-1])
+
+
+func slot_flows_out(slot: Slot) -> bool:
+	var end := slot_end(slot)
+	return end != null and (not get_slot_road(slot).one_way or end == get_slot_road(slot).get_points()[0])
 
 
 func is_slot_aligned(slot: Slot) -> bool:
@@ -103,4 +119,12 @@ func _get_configuration_warnings() -> PackedStringArray:
 	for slot in Slot.values():
 		if get_slot_road(slot) and not is_slot_aligned(slot):
 			warnings.append("%s: the road's nearest end is on the wrong side." % Slot.keys()[slot])
+	var linked := Slot.values().filter(func(s): return slot_end(s) != null)
+	for slot in linked:
+		# Same exits as the bake: no U-turns outside a cul-de-sac
+		var others := linked if linked.size() == 1 else linked.filter(func(s): return s != slot)
+		if slot_flows_in(slot) and not others.any(slot_flows_out):
+			warnings.append("%s: traffic comes in but one-way roads leave it no way out." % Slot.keys()[slot])
+		if slot_flows_out(slot) and not others.any(slot_flows_in):
+			warnings.append("%s: one-way roads leave nothing to feed this road." % Slot.keys()[slot])
 	return warnings

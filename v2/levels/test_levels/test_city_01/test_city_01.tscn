@@ -5,8 +5,10 @@
 [ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.tscn" id="3_ffs5v"]
 [ext_resource type="Script" uid="uid://dr7rsj2xcl6ga" path="res://managers/gamemodes/resources/gamemode_event_definition.gd" id="4_dr5sf"]
 [ext_resource type="PackedScene" uid="uid://mxwmcd3vtr5w" path="res://managers/gamemodes/gamemodeobjects/checkpoint_marker.tscn" id="4_yaxf8"]
+[ext_resource type="PackedScene" path="res://managers/gamemodes/gamemodeobjects/spawn_grid.tscn" id="6_mhobo"]
 [ext_resource type="Script" uid="uid://1hiltkmgy4i3" path="res://managers/gamemodes/runners/concurrent_task_runner.gd" id="8_cf4ia"]
 [ext_resource type="Script" uid="uid://8xvij2vjrnn2" path="res://managers/gamemodes/tasks/countdown_task.gd" id="9_7dagn"]
+[ext_resource type="Script" uid="uid://bjt7k3nrl24c8" path="res://managers/gamemodes/challenges/race_challenge.gd" id="9_tcy6e"]
 [ext_resource type="Script" uid="uid://cpdxy3nxph3x0" path="res://managers/gamemodes/tasks/sfx_task.gd" id="9_whmyo"]
 [ext_resource type="Script" uid="uid://f840hmifnv7g" path="res://managers/gamemodes/runners/sequential_task_runner.gd" id="13_runner"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="17_cf4ia"]
@@ -81,11 +83,9 @@ cell_height = 0.5
 agent_radius = 1.0
 agent_max_climb = 0.5
 
-[node name="Test_City_01" type="Node3D" unique_id=721643000 node_paths=PackedStringArray("player_spawn_pos", "player_spawn_pos_debug", "grid_markers", "npc_nav_region")]
+[node name="Test_City_01" type="Node3D" unique_id=721643000 node_paths=PackedStringArray("player_spawn", "npc_nav_region")]
 script = ExtResource("1_qt85o")
-player_spawn_pos = NodePath("PlayerSpawn")
-player_spawn_pos_debug = NodePath("PlayerSpawnTest")
-grid_markers = [NodePath("PlayerSpawn"), NodePath("PlayerSpawnTest"), NodePath("Race01Event/RaceTestEventStartCircle/Spawns/RaceSpawns/RaceGridSpot3"), NodePath("Race01Event/RaceTestEventStartCircle/Spawns/RaceSpawns/RaceGridSpot4"), NodePath("JumpEvent/RaceJumpEventStartCircle/Spawns/RaceSpawns/RaceGridSpot1"), NodePath("JumpEvent/RaceJumpEventStartCircle/Spawns/RaceSpawns/RaceGridSpot2")]
+player_spawn = NodePath("Race01Event/RaceTestEventStartCircle/Spawns/SpawnGrid")
 npc_nav_region = NodePath("NPCNavRegion")
 metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
@@ -2217,19 +2217,10 @@ checkpoints = NodePath("Checkpoints")
 
 [node name="Spawns" type="Node3D" parent="Race01Event/RaceTestEventStartCircle" unique_id=719645933]
 
-[node name="RaceSpawns" type="Node3D" parent="Race01Event/RaceTestEventStartCircle/Spawns" unique_id=511491770]
-
-[node name="RaceGridSpot1" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/Spawns/RaceSpawns" unique_id=10711231]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -3, 0.020000111, -14)
-
-[node name="RaceGridSpot2" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/Spawns/RaceSpawns" unique_id=1583486806]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -3, 0.020000111, -9)
-
-[node name="RaceGridSpot3" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/Spawns/RaceSpawns" unique_id=366641358]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -7, 0.020000111, -14)
-
-[node name="RaceGridSpot4" type="Marker3D" parent="Race01Event/RaceTestEventStartCircle/Spawns/RaceSpawns" unique_id=1541205078]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -7, 0.020000111, -9)
+[node name="SpawnGrid" parent="Race01Event/RaceTestEventStartCircle/Spawns" unique_id=1685547518 instance=ExtResource("6_mhobo")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -1.8294373, 0.069997445, -11.095642)
+side = 0
+width = 10.0
 
 [node name="Checkpoints" type="Node3D" parent="Race01Event/RaceTestEventStartCircle" unique_id=1243687032]
 
@@ -2274,7 +2265,7 @@ width = 11.0
 [node name="CityRace" type="Node3D" parent="Race01Event/RaceTestEventStartCircle" unique_id=498788711 node_paths=PackedStringArray("spawn", "checkpoints", "pickups")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_cf4ia")
-spawn = NodePath("../Spawns/RaceSpawns")
+spawn = NodePath("../Spawns/SpawnGrid")
 checkpoints = NodePath("../Checkpoints/RaceCheckpoints")
 pickups = NodePath("Pickups")
 
@@ -2314,19 +2305,9 @@ checkpoints = NodePath("Checkpoints")
 
 [node name="Spawns" type="Node3D" parent="JumpEvent/RaceJumpEventStartCircle" unique_id=1787699596]
 
-[node name="RaceSpawns" type="Node3D" parent="JumpEvent/RaceJumpEventStartCircle/Spawns" unique_id=375710582]
-
-[node name="RaceGridSpot1" type="Marker3D" parent="JumpEvent/RaceJumpEventStartCircle/Spawns/RaceSpawns" unique_id=1837168242]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 19, 0.020000111, -10)
-
-[node name="RaceGridSpot2" type="Marker3D" parent="JumpEvent/RaceJumpEventStartCircle/Spawns/RaceSpawns" unique_id=1494621042]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 21, 0.020000111, -10)
-
-[node name="RaceGridSpot3" type="Marker3D" parent="JumpEvent/RaceJumpEventStartCircle/Spawns/RaceSpawns" unique_id=559746481]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 15, 0.020000111, -10)
-
-[node name="RaceGridSpot4" type="Marker3D" parent="JumpEvent/RaceJumpEventStartCircle/Spawns/RaceSpawns" unique_id=1650787341]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 17, 0.020000111, -10)
+[node name="SpawnGrid" parent="JumpEvent/RaceJumpEventStartCircle/Spawns" unique_id=507104616 instance=ExtResource("6_mhobo")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 18.242462, 0.06999935, -10.489426)
+side = 0
 
 [node name="Checkpoints" type="Node3D" parent="JumpEvent/RaceJumpEventStartCircle" unique_id=1786417717]
 
@@ -2347,7 +2328,7 @@ width = 21.0
 [node name="MegaJumpRace" type="Node3D" parent="JumpEvent/RaceJumpEventStartCircle" unique_id=1908742542 node_paths=PackedStringArray("spawn", "checkpoints", "pickups")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_mhobo")
-spawn = NodePath("../Spawns/RaceSpawns")
+spawn = NodePath("../Spawns/SpawnGrid")
 checkpoints = NodePath("../Checkpoints/RaceCheckpoints")
 pickups = NodePath("Pickups")
 
@@ -2386,24 +2367,13 @@ spawns = NodePath("Spawns")
 
 [node name="Spawns" type="Node3D" parent="Challenge01Event/Chall01EventStartCircle" unique_id=501469439]
 
-[node name="ChallengeSpawns" type="Node3D" parent="Challenge01Event/Chall01EventStartCircle/Spawns" unique_id=1149689268]
-
-[node name="RaceGridSpot1" type="Marker3D" parent="Challenge01Event/Chall01EventStartCircle/Spawns/ChallengeSpawns" unique_id=1181169093]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 14, 0.01999998, -63)
-
-[node name="RaceGridSpot2" type="Marker3D" parent="Challenge01Event/Chall01EventStartCircle/Spawns/ChallengeSpawns" unique_id=322445514]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 14, 0.01999998, -58)
-
-[node name="RaceGridSpot3" type="Marker3D" parent="Challenge01Event/Chall01EventStartCircle/Spawns/ChallengeSpawns" unique_id=349276639]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 10, 0.01999998, -63)
-
-[node name="RaceGridSpot4" type="Marker3D" parent="Challenge01Event/Chall01EventStartCircle/Spawns/ChallengeSpawns" unique_id=873962186]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 10, 0.01999998, -58)
+[node name="SpawnGrid" parent="Challenge01Event/Chall01EventStartCircle/Spawns" unique_id=8765861 instance=ExtResource("6_mhobo")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 13.800007, 0.11999998, -57.6)
 
 [node name="WheelieChallenge" type="Node3D" parent="Challenge01Event/Chall01EventStartCircle" unique_id=248616427 node_paths=PackedStringArray("spawn")]
 script = ExtResource("mig_event")
 definition = SubResource("Resource_tcy6e")
-spawn = NodePath("../Spawns/ChallengeSpawns")
+spawn = NodePath("../Spawns/SpawnGrid")
 
 [node name="SequentialTaskRunner" type="Node" parent="Challenge01Event/Chall01EventStartCircle/WheelieChallenge" unique_id=621649203]
 script = ExtResource("13_runner")

@@ -142,8 +142,8 @@ static func _find_button_handler(node: Node, var_name: String) -> String:
 
     # _on_back_btn_pressed (exact match on var name)
     candidates.append("_on_%s_pressed" % var_name)
-    # _on_back_pressed (without _btn suffix)
-    var stripped = var_name.replace("_btn", "").replace("_button", "")
+    # _on_back_pressed (without _btn suffix, or a private var's leading _)
+    var stripped = var_name.trim_prefix("_").replace("_btn", "").replace("_button", "")
     candidates.append("_on_%s_pressed" % stripped)
 
     for candidate in candidates:

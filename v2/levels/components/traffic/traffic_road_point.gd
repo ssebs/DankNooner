@@ -47,8 +47,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if not get_parent() is TrafficRoad:
 		warnings.append("Must be a child of a TrafficRoad.")
 		return warnings
-	if lane_count % 2 != 0:
-		warnings.append("lane_count must be even (it counts both directions).")
+	if lane_count % 2 != 0 and not (get_parent() as TrafficRoad).one_way:
+		warnings.append("lane_count must be even on a two-way road (it counts both directions).")
 	if lane_count == 0 and (get_parent() as TrafficRoad).get_points()[0] == self:
 		warnings.append("The first point must set lane_count.")
 	return warnings

@@ -12,6 +12,11 @@ class_name TrafficRoad extends Node3D
 	set(v):
 		traffic_weight = v
 		TrafficNetwork.request_redraw(self)
+## Traffic only runs first point -> last. lane_count then counts that one direction, centred on the points.
+@export var one_way := false:
+	set(v):
+		one_way = v
+		TrafficNetwork.request_redraw(self)
 
 
 func _ready():
@@ -33,6 +38,18 @@ func nearest_end(pos: Vector3) -> TrafficRoadPoint:
 	var first := points[0]
 	var last := points[-1]
 	if first.global_position.distance_squared_to(pos) <= last.global_position.distance_squared_to(pos):
+		return first
+	return last
+
+
+# The end lying furthest toward dir from pos. Null for a road with no points yet
+func end_toward(pos: Vector3, dir: Vector3) -> TrafficRoadPoint:
+	var points := get_points()
+	if points.is_empty():
+		return null
+	var first := points[0]
+	var last := points[-1]
+	if (first.global_position - pos).dot(dir) >= (last.global_position - pos).dot(dir):
 		return first
 	return last
 

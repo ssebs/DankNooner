@@ -39,7 +39,7 @@ func _init(network: TrafficNetwork):
 static func source_hash(network: TrafficNetwork) -> int:
 	var parts := []
 	for road in network.get_roads():
-		parts.append([road.name, road.lane_width, road.traffic_weight])
+		parts.append([road.name, road.lane_width, road.traffic_weight, road.one_way])
 		for point in road.get_points():
 			parts.append([point.global_position, point.lane_count])
 	for intersection in network.get_intersections():
@@ -88,7 +88,7 @@ func _snap_lanes():
 func _build_road(road: TrafficRoad):
 	var points := road.get_points()
 	# Invalid roads are reported by config warnings; the preview just skips them
-	if points.size() < 2 or points[0].resolved_lane_count() < 2:
+	if points.size() < 2 or points[0].resolved_lane_count() < (1 if road.one_way else 2):
 		return
 	var positions := PackedVector3Array()
 	var counts := PackedInt32Array()
@@ -97,10 +97,12 @@ func _build_road(road: TrafficRoad):
 		if hit.is_empty():
 			missed_points.append(point)
 		positions.append(point.global_position if hit.is_empty() else hit.position)
-		counts.append(int(point.resolved_lane_count() / 2.0))
+		counts.append(point.resolved_lane_count() if road.one_way else int(point.resolved_lane_count() / 2.0))
 	var start := _attachment(road, points[0])
 	var end := _attachment(road, points[-1])
 	_build_direction(road, positions, counts, start, end)
+	if road.one_way:
+		return
 	positions.reverse()
 	counts.reverse()
 	_build_direction(road, positions, counts, end, start)
@@ -128,9 +130,12 @@ func _build_direction(
 	var grid := {}  # Vector2i(lane, segment) -> piece index
 	for k in last_seg + 1:
 		for j in maxi(counts[k], counts[k + 1]):
-			# A lane missing at one end sits on the outermost remaining lane there, so it tapers
-			var from_offset := (mini(j, counts[k] - 1) + 0.5) * road.lane_width
-			var to_offset := (mini(j, counts[k + 1] - 1) + 0.5) * road.lane_width
+			# A lane missing at one end sits on the outermost remaining lane there, so it tapers.
+			# One-way lanes centre on the points; two-way lanes keep right of them.
+			var from_shift := counts[k] / 2.0 if road.one_way else 0.0
+			var to_shift := counts[k + 1] / 2.0 if road.one_way else 0.0
+			var from_offset := (mini(j, counts[k] - 1) + 0.5 - from_shift) * road.lane_width
+			var to_offset := (mini(j, counts[k + 1] - 1) + 0.5 - to_shift) * road.lane_width
 			var lane := TrafficLaneData.new()
 			lane.weight = road.traffic_weight
 			lane.points = _offset_slice(samples, rights, markers[k], markers[k + 1], from_offset, to_offset)
@@ -296,10 +301,13 @@ func _join_pieces(pieces: Array[TrafficLaneData]) -> PackedInt32Array:
 
 
 func _build_turns(junction: int):
-	var slots := TrafficIntersection.Slot.values().filter(func(s): return _incoming.has(Vector2i(junction, s)))
-	for entry in slots:
+	var slots := TrafficIntersection.Slot.values()
+	var entries := slots.filter(func(s): return _incoming.has(Vector2i(junction, s)))
+	var outs := slots.filter(func(s): return _outgoing.has(Vector2i(junction, s)))
+	var linked := slots.filter(func(s): return s in entries or s in outs)
+	for entry in entries:
 		# A cul-de-sac (one linked slot) only turns back; otherwise no U-turns
-		var exits := slots if slots.size() == 1 else slots.filter(func(s): return s != entry)
+		var exits := outs if linked.size() == 1 else outs.filter(func(s): return s != entry)
 		for exit in exits:
 			var turn_dir := TURN_BY_SLOT_DELTA[(exit - entry + 4) % 4]
 			var from: Array = _incoming[Vector2i(junction, entry)]

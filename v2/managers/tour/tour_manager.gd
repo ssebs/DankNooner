@@ -62,8 +62,8 @@ func _ready():
 	# play(pause_tree) pauses the game; the overlay still has to run.
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_spotlight.draw.connect(_draw_spotlight)
-	_back_btn.pressed.connect(func(): _show_step(_step_idx - 1))
-	_skip_btn.pressed.connect(_close.bind(true))
+	_back_btn.pressed.connect(_on_back_pressed)
+	_skip_btn.pressed.connect(_on_skip_pressed)
 	_next_btn.pressed.connect(_on_next_pressed)
 	input_state_manager.device_changed.connect(_on_device_changed)
 	input_state_manager.input_state_changed.connect(_on_input_state_changed)
@@ -192,6 +192,14 @@ func _show_after_pause():
 func _on_device_changed(_is_gamepad: bool):
 	if is_open():
 		_render_body()
+
+
+func _on_back_pressed():
+	_show_step(_step_idx - 1)
+
+
+func _on_skip_pressed():
+	_close(true)
 
 
 func _on_next_pressed():

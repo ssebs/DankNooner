@@ -549,10 +549,14 @@ Code: `levels/components/traffic/`, plus `TrafficLaneFollower` and `JunctionStat
 - **Authoring.** One `TrafficNetwork` per level parents `TrafficRoad`s and `TrafficIntersection`s.
   A road's child points in tree order are its path; `lane_count` is the total over both directions,
   so it must be even. Intersections link roads through N/E/S/W slots in their own basis
-  (north = −Z, so rotating the node works), and whichever road end is nearest connects. Roads never
-  link back: one source of truth. A one-slot intersection is a cul-de-sac (U-turns only, control
-  ignored). A road's `traffic_weight` sets its traffic per metre relative to other roads; there are
-  no one-way roads, so a quiet road is just a low weight.
+  (north = −Z, so rotating the node works), and whichever road end is nearest connects. A road in
+  two slots of one intersection (a ring track) connects each slot to the end on its side instead.
+  Roads never link back: one source of truth. A one-slot intersection is a cul-de-sac (U-turns only,
+  control ignored). A road's `traffic_weight` sets its traffic per metre relative to other roads.
+- **One-way roads** (`TrafficRoad.one_way`, optional) run first point → last only; `lane_count`
+  then counts that one direction (odd is fine) and the lanes centre on the points. Intersections
+  warn when a slot's incoming traffic has no way out or an outgoing road has nothing feeding it,
+  using the same exit rules as the bake, so Bake refuses a network that would strand or starve a road.
 - **Every problem is visible in the editor.** Config warnings on all three node types; Bake refuses
   while any exist, and after building rejects lanes clipped away or with no way out. A stale bake
   is flagged by `source_hash`. Editor drawing (debug_draw_3d) redraws only on change via

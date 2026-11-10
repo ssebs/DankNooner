@@ -23,18 +23,18 @@ func Enter(_state_context: StateContext):
 	return_state = play_menu_state
 	ui.show()
 	back_btn.pressed.connect(_on_back_pressed)
-	refresh_btn.pressed.connect(_refresh)
-	_refresh()
+	refresh_btn.pressed.connect(_on_refresh_pressed)
+	_on_refresh_pressed()
 
 
 func Exit(_state_context: StateContext):
 	ui.hide()
 	_search_id += 1
 	back_btn.pressed.disconnect(_on_back_pressed)
-	refresh_btn.pressed.disconnect(_refresh)
+	refresh_btn.pressed.disconnect(_on_refresh_pressed)
 
 
-func _refresh():
+func _on_refresh_pressed():
 	_search_id += 1
 	var search_id := _search_id
 	for row in lobby_list.get_children():
