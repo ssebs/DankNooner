@@ -4,8 +4,8 @@ enum Mode { FREEROAM, STORY, HOST, JOIN }
 
 var mode: Mode
 var ip_addr: String
-## STORY: start the Advanced tutorial instead of the main one.
-var advanced_tutorial: bool
+## STORY: definition name of the tutorial event to start; "" = the level's auto_start_event.
+var event_name: String
 
 
 static func NewHost(rs: MenuState, ip: String) -> LobbyStateContext:
@@ -35,10 +35,10 @@ static func NewFreeRoam(
 
 static func NewStory(
 	rs: MenuState,
-	advanced: bool = false,
+	story_event_name: String = "",
 ) -> LobbyStateContext:
 	var ctx = LobbyStateContext.new()
 	ctx.mode = Mode.STORY
-	ctx.advanced_tutorial = advanced
+	ctx.event_name = story_event_name
 	ctx.return_state = rs
 	return ctx

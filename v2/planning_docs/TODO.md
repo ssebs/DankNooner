@@ -26,6 +26,7 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
+
 - [ ] Add product feature tour / walk thru for tutorials
   - [ ] `planning_docs/____TUTORIAL_WIP.md`
   - [x] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
@@ -56,13 +57,14 @@
     - [x] burnouts
     - [x] bunny hops
     - [ ] FIX:
-      - [ ] trail braking needs more run up space, not going fast enough to trail brake
+      - [x] trail braking needs more run up space, not going fast enough to trail brake
       - [ ] respawn player if they do the wrong trick/grind
-      - [ ] AdvancedTutorialEvent should not be part of the leveldefinition, autostartevent should handle it.
-      - [ ] cleanup map / events for adv tricks
-      - [ ] first grind should say do a 50/50 instead of saying land facing it
-      - [ ] trail braking / progressive braking needs a redo
+      - [x] AdvancedTutorialEvent should not be part of the leveldefinition, autostartevent should handle it.
+      - [x] cleanup map / events for adv tricks
+      - [x] first grind should say do a 50/50 instead of saying land facing it
+      - [x] trail braking / progressive braking needs a redo
       - [ ] burnout msg confusing
+      - [ ] !tell player that you cant use front brake if youre doing a wheelie!
 	
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -256,6 +258,10 @@
 ---
 
 ## Done ✅
+
+- [x] Don't allow skate flip tricks during wheelie 
+
+- [x] Swap heel flip kick flip dir controls
 
 - [x] move checkpoint / race spawns on right side of road
 - [x] add reusable spawn grid component

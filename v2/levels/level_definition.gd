@@ -20,8 +20,6 @@ class_name LevelDefinition extends Node3D
 
 ## Started as soon as the level loads, with no start circle to drive into (e.g. the tutorial).
 @export var auto_start_event: GameModeEvent
-## Tutorial level: auto-started instead when the Play menu's Advanced button starts the session.
-@export var advanced_tutorial_event: GameModeEvent
 
 ## Set in level_manager
 var level_manager: LevelManager

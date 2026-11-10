@@ -4,9 +4,10 @@ extends Node3D
 ## rider with the logo stamped on, and quits. Writes out_dir/{full,simple}/<format>.png, plus
 ## contact_sheet.png: the Steam capsules at their real display sizes on Steam's background.
 ## "simple" drops the clouds and zooms in.
-## Frame the shot by moving SubViewport/Camera3D; move the StuntCity instance to change the spot.
+## Frame the shot by moving SubViewport/Camera3D. StuntCity is key_art_backdrop.tscn: only the Stunt
+## City pieces this camera sees, so a new angle needs the missing pieces copied over from the level.
 ## Lighting: StuntCity's light is LIGHT_ONLY and MoonLight is SKY_ONLY, so placing the moon never
-## backlights the rider; KeyLight / FillLight light him.
+## backlights the rider; KeyLight / FillLight light him, RimLight outlines him against the sky.
 
 @export var bike_definition: BikeSkinDefinition
 @export var bike_colors: ColorMod
@@ -31,8 +32,6 @@ extends Node3D
 @export var sky_overrides: Dictionary = {}
 ## Moon position relative to the rider, in degrees of camera right / up.
 @export var moon_offset_deg := Vector2(5, 7)
-## One event prop kept in shot after the free-roam hide, e.g. a single arrow wall. Null = none.
-@export var featured_prop: Node3D
 @export var logo: Texture2D
 @export_dir var out_dir: String = "res://resources/img/marketing/key_art"
 
@@ -41,6 +40,9 @@ const STEAM_BG := Color("1b2838")
 const PREVIEW_DIVISOR := 4
 ## Seconds before freeze_time to start pose_trick: long enough to settle into a held pose.
 const POSE_LEAD := 0.8
+## RimLight sits behind the rider (away from the camera) and above, in metres.
+const RIM_BEHIND := 3.0
+const RIM_ABOVE := 1.5
 const SIMPLE_ZOOM := 1.25
 const SIMPLE_SKY := {"cloud_coverage_min": 0.0, "cloud_coverage_max": 0.0}
 const SHADOW_SHRINK := 16
@@ -53,8 +55,8 @@ const BORDER_WIDTH := 0.022
 const BORDER_STEPS := 16
 ## Edge darkening: starts at VIGNETTE_START of the way to the edge midpoints, VIGNETTE_STRENGTH at
 ## the corners. Follows each format's aspect, since one small gradient is stretched to fit.
-const VIGNETTE_START := 0.55
-const VIGNETTE_STRENGTH := 0.6
+const VIGNETTE_START := 0.4
+const VIGNETTE_STRENGTH := 0.85
 ## "sheet": contact-sheet sizes (Steam display sizes). "layout": logo_only centres the logo over the
 ## rider, centered centres the rider; "logo": false leaves it off.
 const FORMATS := [
@@ -87,6 +89,7 @@ const FORMATS := [
 @onready var _rig: Node3D = $TrickDemoLevel/%Rig
 @onready var _rider: RiderVisual = $TrickDemoLevel/%RiderVisual
 @onready var _moon_light: DirectionalLight3D = %MoonLight
+@onready var _rim_light: OmniLight3D = %RimLight
 
 var _logo: Image
 var _silhouette: Image
@@ -118,13 +121,6 @@ func _ready() -> void:
 		_sky_mat.set_shader_parameter(uniform, sky_overrides[uniform])
 	for uniform: String in SIMPLE_SKY:
 		_full_sky[uniform] = _sky_mat.get_shader_parameter(uniform)
-
-	# What FreeRoamGameMode does on entry: event-only props (race walls, checkpoints) stay hidden.
-	for circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
-		(circle as EventStartCircle).set_active_event(null)
-	if featured_prop != null:
-		# Out from under its hidden event group; reparent keeps the global transform.
-		featured_prop.reparent(self)
 
 	_viewport.size = master_size / PREVIEW_DIVISOR
 	_preview.texture = _viewport.get_texture()
@@ -162,6 +158,8 @@ func _capture() -> void:
 	moon_dir = moon_dir.rotated(cam_basis.x, deg_to_rad(moon_offset_deg.y))
 	# Sky shaders put the moon along the light's +Z.
 	_moon_light.global_basis = Basis.looking_at(-moon_dir)
+	var away := (center - _camera.global_position).normalized()
+	_rim_light.global_position = center + away * RIM_BEHIND + cam_basis.y * RIM_ABOVE
 	var center_px := _camera.unproject_position(center)
 	var radius_px := center_px.distance_to(
 		_camera.unproject_position(center + _camera.global_basis.y * subject_radius)

@@ -49,8 +49,8 @@ var current_game_mode: GameModeType.Kind = GameModeType.Kind.FREE_ROAM
 var current_level_name: LevelManager.LevelName = LevelManager.LevelName.LEVEL_SELECT_LABEL
 ## The running event, set on every peer by the transition; null in free roam.
 var current_event: GameModeEvent
-## Set by start_game: the level auto-starts its advanced_tutorial_event, not auto_start_event.
-var advanced_tutorial: bool = false
+## Set by start_game: the definition name of the auto_start_event sibling to start instead; "" = auto_start_event.
+var auto_start_event_name: String = ""
 ## Server: events skip fuel-up and drive-to-start, starting at the grid (dbg_skip_prerace).
 var dbg_skip_prerace: bool = false
 
@@ -93,13 +93,13 @@ func get_current_gamemode() -> GameModeType:
 func start_game(
 	level_name: LevelManager.LevelName,
 	gamemode: GameModeType.Kind = GameModeType.Kind.FREE_ROAM,
-	start_advanced_tutorial: bool = false
+	start_event_name: String = ""
 ):
 	# Only the server starts matches — a client RPCing this is misbehaving.
 	if multiplayer.get_remote_sender_id() > 1:
 		return
 	current_level_name = level_name
-	advanced_tutorial = start_advanced_tutorial
+	auto_start_event_name = start_event_name
 	current_game_mode = gamemode
 	match_state = MatchState.IN_GAME
 	# Clear gamemode state so re-entering the same gamemode (e.g. host changing maps mid-match

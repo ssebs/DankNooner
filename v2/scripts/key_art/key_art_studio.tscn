@@ -6,8 +6,8 @@
 [ext_resource type="Resource" path="res://resources/bikes/mods/color_mods/black_blue_color.tres" id="4_colors"]
 [ext_resource type="Resource" path="res://resources/player/skins/squid_default_skin_definition.tres" id="5_squid"]
 [ext_resource type="Texture2D" path="res://resources/img/Logos/DankNoonerLogo_SteamLibraryLogo.png" id="6_logo"]
-[ext_resource type="PackedScene" path="res://levels/racetracks/stunt_city/stunt_city.tscn" id="7_city"]
-[node name="KeyArtStudio" type="Node3D" node_paths=PackedStringArray("featured_prop")]
+[ext_resource type="PackedScene" path="res://scripts/key_art/key_art_backdrop.tscn" id="7_city"]
+[node name="KeyArtStudio" type="Node3D"]
 script = ExtResource("1_studio")
 bike_definition = ExtResource("3_bike")
 bike_colors = ExtResource("4_colors")
@@ -18,14 +18,10 @@ sky_overrides = {
 "moon_energy": 1.1,
 "moon_radius": 0.06
 }
-featured_prop = NodePath("StuntCity/EventStartCircle1/Props/TrickBattleProps/TrickBattleArena/Borders/ArrowWall2")
 logo = ExtResource("6_logo")
 
 [node name="StuntCity" parent="." instance=ExtResource("7_city")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 54.92970, 0, 141.92339)
-
-[node name="DirectionalLight3D" parent="StuntCity"]
-sky_mode = 1
 
 [node name="TrickDemoLevel" parent="." instance=ExtResource("2_level")]
 unique_name_in_owner = true
@@ -61,6 +57,12 @@ light_color = Color(0.8392157, 0.7882353, 0.22352941, 1)
 light_energy = 2.0
 omni_range = 12.0
 
+[node name="RimLight" type="OmniLight3D" parent="."]
+unique_name_in_owner = true
+light_color = Color(0.4, 0.9, 1, 1)
+light_energy = 4.0
+omni_range = 6.0
+
 [node name="SubViewport" type="SubViewport" parent="."]
 unique_name_in_owner = true
 msaa_3d = 2
@@ -93,5 +95,4 @@ grow_vertical = 2
 expand_mode = 1
 stretch_mode = 5
 
-[editable path="StuntCity"]
 [editable path="TrickDemoLevel"]

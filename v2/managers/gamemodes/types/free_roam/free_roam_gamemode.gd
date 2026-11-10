@@ -126,10 +126,7 @@ func Enter(state_context: StateContext):
 		_round_left = ROUND_SECS
 		# Only start_game enters without a GamemodeStateContext, so this fires once per load.
 		# Deferred so this Enter finishes before the gamemode changes.
-		var level := level_manager.current_level
-		var auto_start := (
-			level.advanced_tutorial_event if gamemode_manager.advanced_tutorial else level.auto_start_event
-		)
+		var auto_start := _auto_start_event()
 		if !(state_context is GamemodeStateContext) and auto_start != null:
 			gamemode_manager.change_gamemode.call_deferred(
 				auto_start.definition.target_gamemode,
@@ -143,6 +140,16 @@ func Enter(state_context: StateContext):
 		if npc_traffic_manager != null:
 			npc_traffic_manager.request_traffic_sync()
 		pickup_spawn_manager.request_pickup_sync()
+
+
+## The level's auto_start_event, or its circle sibling named by auto_start_event_name.
+func _auto_start_event() -> GameModeEvent:
+	var event := level_manager.current_level.auto_start_event
+	var event_name := gamemode_manager.auto_start_event_name
+	if event == null or event_name == "":
+		return event
+	var circle: EventStartCircle = event.get_parent()
+	return circle.get_events().filter(func(e): return e.definition.name == event_name)[0]
 
 
 ## param is whether to connect() or disconnect()

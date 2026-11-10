@@ -8,6 +8,9 @@ class_name TutorialGameMode extends RunnerGameMode
 ## Where the player lands once the tutorial ends.
 @export var play_menu_state: MenuState
 
+## Definition name of the tutorial level's Advanced event (the Play menu's Advanced button).
+const ADVANCED_EVENT_NAME := "TUT_ADV_EVENT_NAME"
+
 func Enter(state_context: StateContext):
 	if Engine.is_editor_hint():
 		return
@@ -81,7 +84,7 @@ func _on_last_runner_completed(runner: TaskRunner):
 
 ## The Advanced tutorial saves its own progress and unlocks nothing.
 func _is_advanced() -> bool:
-	return _event == gamemode_manager.level_manager.current_level.advanced_tutorial_event
+	return _event.definition.name == ADVANCED_EVENT_NAME
 
 
 func _save_key() -> String:

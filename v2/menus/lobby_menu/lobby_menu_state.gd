@@ -229,7 +229,7 @@ func set_single_or_multiplayer_ui():
 			gamemode_manager.start_game.rpc(
 				LevelManager.LevelName.TUTORIAL_LEVEL,
 				GameModeType.Kind.FREE_ROAM,
-				return_ctx.advanced_tutorial
+				return_ctx.event_name
 			)
 			return
 		_:

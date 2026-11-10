@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://dxaeatgkn7vn3"]
 
 [ext_resource type="Sky" uid="uid://dfgbuerpq3y8" path="res://levels/assets/skybox_neon.tres" id="2_sky"]
-[ext_resource type="PackedScene" path="res://managers/gamemodes/gamemodeobjects/spawn_grid.tscn" id="spawn_grid"]
 [ext_resource type="PackedScene" uid="uid://blmmkvwq6fh3b" path="res://levels/components/garage/garage.tscn" id="5_iwe6j"]
 [ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="6_gb"]
 [ext_resource type="Texture2D" uid="uid://jpt2tqlxrf2f" path="res://levels/assets/graybox/road_texture_template.png" id="7_road"]
 [ext_resource type="PackedScene" uid="uid://cil6ntcnlqt5e" path="res://levels/components/props/house_1.tscn" id="8_gr0p0"]
 [ext_resource type="PackedScene" uid="uid://bbijpc7rs4he4" path="res://levels/components/props/school.tscn" id="9_ebgro"]
+[ext_resource type="PackedScene" uid="uid://pimxd647gw4v" path="res://levels/assets/props/arrow_wall.tscn" id="9_nwqio"]
 [ext_resource type="PackedScene" uid="uid://dparkgb4x7k2q" path="res://levels/components/props/park.tscn" id="10_j6e1v"]
 [ext_resource type="PackedScene" uid="uid://i5gn7vx2atly" path="res://levels/components/props/gas_station.tscn" id="11_4mor0"]
 [ext_resource type="PackedScene" uid="uid://ylnfkd3cjyjp" path="res://levels/assets/props/tree_bundle.tscn" id="16_s2csy"]
@@ -35,6 +35,7 @@
 [ext_resource type="Resource" uid="uid://bv0gsgv7tp3cy" path="res://levels/components/pickups/shotgun_pickup_definition.tres" id="shotgun"]
 [ext_resource type="Script" uid="uid://dbaichncqvkge" path="res://managers/gamemodes/tasks/show_tour_task.gd" id="showtour"]
 [ext_resource type="PackedScene" uid="uid://cv3uyj3m3nj6t" path="res://levels/components/pickups/pickup_spawner.tscn" id="spawner"]
+[ext_resource type="PackedScene" path="res://managers/gamemodes/gamemodeobjects/spawn_grid.tscn" id="spawn_grid"]
 [ext_resource type="Script" uid="uid://cks7nbapumc55" path="res://managers/gamemodes/tasks/speed_above_task.gd" id="speed"]
 [ext_resource type="Script" uid="uid://bfcxkq0mfh0a6" path="res://managers/gamemodes/tasks/speed_below_task.gd" id="speedbelow"]
 [ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/bikes/skins/sport_default_skin_definition.tres" id="sport"]
@@ -80,11 +81,10 @@ name = "TUT_ADV_EVENT_NAME"
 target_gamemode = 4
 forced_base_bike = ExtResource("sport")
 
-[node name="TutorialLevel" type="Node3D" unique_id=175695285 node_paths=PackedStringArray("player_spawn", "auto_start_event", "advanced_tutorial_event")]
+[node name="TutorialLevel" type="Node3D" unique_id=175695285 node_paths=PackedStringArray("player_spawn", "auto_start_event")]
 script = ExtResource("lvl")
 player_spawn = NodePath("InitialSpawn")
 auto_start_event = NodePath("TutorialCircle/TutorialEvent")
-advanced_tutorial_event = NodePath("TutorialCircle/AdvancedEvent")
 
 [node name="Scenery" type="Node3D" parent="." unique_id=773524769]
 
@@ -137,6 +137,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -51, 0, 80)
 [node name="GasStation" parent="Scenery" unique_id=2139322693 instance=ExtResource("11_4mor0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, 0, 32)
 
+[node name="ArrowWall" parent="Scenery" unique_id=1485126779 instance=ExtResource("9_nwqio")]
+transform = Transform3D(-4.371139e-08, 1, -8.742278e-08, 1, 4.371139e-08, -3.821371e-15, 0, -8.742278e-08, -1, -110.375, 4.9250035, -16.375002)
+height = 120.0
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1803781262]
 transform = Transform3D(0.19617997, -0.94997144, -0.24303903, 0.92850906, 0.100282654, 0.3575113, -0.31525278, -0.29580045, 0.90173054, 12.095804, 144.87276, -1.7741599)
 light_color = Color(0.6, 0.65, 1, 1)
@@ -156,10 +160,10 @@ snapped_heights = PackedFloat32Array(-194.30981, -209.93831, -194.49507, -202.73
 [node name="MainMenuMountains" parent="." unique_id=650339427 instance=ExtResource("17_cjcyd")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -29, 8.5, -61.5)
 
-[node name="StaticBody3D" parent="MainMenuMountains/grass" parent_id_path=PackedInt32Array(650339427, 972202691) index="0" unique_id=1781322675]
+[node name="StaticBody3D" parent="MainMenuMountains/grass" parent_id_path=PackedInt32Array(650339427, 1928741559) index="0" unique_id=1584680360]
 collision_layer = 17
 
-[node name="InitialSpawn" parent="." instance=ExtResource("spawn_grid")]
+[node name="InitialSpawn" parent="." unique_id=71584871 instance=ExtResource("spawn_grid")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0.05, 190)
 
 [node name="Markers" type="Node3D" parent="." unique_id=587579084]
@@ -180,7 +184,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.05, 60)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.05, -70)
 
 [node name="GrindStart" type="Marker3D" parent="Markers" unique_id=535716078]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.05, 190)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.05, 160.5)
+
+[node name="BrakingStart" type="Marker3D" parent="Markers" unique_id=480209241]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -140, 0.05, 190)
 
 [node name="Gates" type="Node3D" parent="." unique_id=1613385607]
 
@@ -247,7 +254,89 @@ height = 0
 width = 12
 
 [node name="GrindRail" parent="TutorialCircle/Props/AdvancedProps" unique_id=629004975 instance=ExtResource("rail")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, 87)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, 64.75)
+length = 80.0
+
+[node name="BrakingCourse" type="Node3D" parent="TutorialCircle/Props/AdvancedProps" unique_id=1281942702]
+
+[node name="Straight" parent="TutorialCircle/Props/AdvancedProps/BrakingCourse" unique_id=1962869990 instance=ExtResource("6_gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -140, 0, 117.5)
+shape_mode = 1
+width = 12.0
+depth = 155.0
+material_override = SubResource("StandardMaterial3D_m7gr6")
+neon_edges = true
+
+[node name="Turn1" parent="TutorialCircle/Props/AdvancedProps/BrakingCourse" unique_id=1459645154 instance=ExtResource("6_gb")]
+transform = Transform3D(0.996195, 0, -0.087156, 0, 1, 0, 0.087156, 0, 0.996195, -139.829, 0, 36.078)
+shape_mode = 1
+width = 12.0
+depth = 9.0
+material_override = SubResource("StandardMaterial3D_m7gr6")
+
+[node name="Turn2" parent="TutorialCircle/Props/AdvancedProps/BrakingCourse" unique_id=1417434294 instance=ExtResource("6_gb")]
+transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, -138.467, 0, 28.3531)
+shape_mode = 1
+width = 12.0
+depth = 9.0
+material_override = SubResource("StandardMaterial3D_m7gr6")
+
+[node name="Turn3" parent="TutorialCircle/Props/AdvancedProps/BrakingCourse" unique_id=1326453173 instance=ExtResource("6_gb")]
+transform = Transform3D(0.906308, 0, -0.422618, 0, 1, 0, 0.422618, 0, 0.906308, -135.784, 0, 20.9822)
+shape_mode = 1
+width = 12.0
+depth = 9.0
+material_override = SubResource("StandardMaterial3D_m7gr6")
+
+[node name="Turn4" parent="TutorialCircle/Props/AdvancedProps/BrakingCourse" unique_id=1382412598 instance=ExtResource("6_gb")]
+transform = Transform3D(0.819152, 0, -0.573576, 0, 1, 0, 0.573576, 0, 0.819152, -131.862, 0, 14.1891)
+shape_mode = 1
+width = 12.0
+depth = 9.0
+material_override = SubResource("StandardMaterial3D_m7gr6")
+
+[node name="Turn5" parent="TutorialCircle/Props/AdvancedProps/BrakingCourse" unique_id=1185902745 instance=ExtResource("6_gb")]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -126.82, 0, 8.18019)
+shape_mode = 1
+width = 12.0
+depth = 9.0
+material_override = SubResource("StandardMaterial3D_m7gr6")
+
+[node name="Turn6" parent="TutorialCircle/Props/AdvancedProps/BrakingCourse" unique_id=1825675578 instance=ExtResource("6_gb")]
+transform = Transform3D(0.573576, 0, -0.819152, 0, 1, 0, 0.819152, 0, 0.573576, -120.811, 0, 3.13816)
+shape_mode = 1
+width = 12.0
+depth = 9.0
+material_override = SubResource("StandardMaterial3D_m7gr6")
+
+[node name="Turn7" parent="TutorialCircle/Props/AdvancedProps/BrakingCourse" unique_id=384856084 instance=ExtResource("6_gb")]
+transform = Transform3D(0.422618, 0, -0.906308, 0, 1, 0, 0.906308, 0, 0.422618, -114.018, 0, -0.78385)
+shape_mode = 1
+width = 12.0
+depth = 9.0
+material_override = SubResource("StandardMaterial3D_m7gr6")
+
+[node name="Turn8" parent="TutorialCircle/Props/AdvancedProps/BrakingCourse" unique_id=1267834995 instance=ExtResource("6_gb")]
+transform = Transform3D(0.258819, 0, -0.965926, 0, 1, 0, 0.965926, 0, 0.258819, -106.647, 0, -3.46666)
+shape_mode = 1
+width = 12.0
+depth = 9.0
+material_override = SubResource("StandardMaterial3D_m7gr6")
+
+[node name="Turn9" parent="TutorialCircle/Props/AdvancedProps/BrakingCourse" unique_id=1679683520 instance=ExtResource("6_gb")]
+transform = Transform3D(0.087156, 0, -0.996195, 0, 1, 0, 0.996195, 0, 0.087156, -98.922, 0, -4.82876)
+shape_mode = 1
+width = 12.0
+depth = 9.0
+material_override = SubResource("StandardMaterial3D_m7gr6")
+
+[node name="Exit" parent="TutorialCircle/Props/AdvancedProps/BrakingCourse" unique_id=1742339558 instance=ExtResource("6_gb")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -82.5, 0, -5)
+shape_mode = 1
+width = 12.0
+depth = 25.0
+material_override = SubResource("StandardMaterial3D_m7gr6")
+neon_edges = true
 
 [node name="TutorialEvent" type="Node3D" parent="TutorialCircle" unique_id=330746778 node_paths=PackedStringArray("props", "pickups")]
 script = ExtResource("event")
@@ -566,14 +655,14 @@ retry_on_miss = true
 script = ExtResource("teleport")
 marker = NodePath("../../../../Markers/RampStart")
 
-[node name="AirTrick_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102"]
+[node name="AirTrick_Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102" unique_id=726670341]
 script = ExtResource("showtour")
 
-[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/AirTrick_Tour"]
+[node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/AirTrick_Tour" unique_id=957951028]
 script = ExtResource("tour")
 tour_id = &"tut_air"
 
-[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/AirTrick_Tour/Tour"]
+[node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/AirTrick_Tour/Tour" unique_id=675686270]
 script = ExtResource("step")
 title_key = "TOUR_TUT_AIR_TITLE"
 body_key = "TOUR_TUT_AIR_BODY"
@@ -708,7 +797,7 @@ script = ExtResource("seq")
 
 [node name="Teleport_GrabCrash" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking" unique_id=1500950164 node_paths=PackedStringArray("marker")]
 script = ExtResource("teleport")
-marker = NodePath("../../../../Markers/RoadStart")
+marker = NodePath("../../../../Markers/BrakingStart")
 
 [node name="GrabCrash_Tour" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking" unique_id=1729044428]
 script = ExtResource("showtour")
@@ -729,7 +818,7 @@ objective_key = "TUT_ADV_GRAB_CRASH"
 
 [node name="Teleport_PowerCrash" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking" unique_id=806016544 node_paths=PackedStringArray("marker")]
 script = ExtResource("teleport")
-marker = NodePath("../../../../Markers/RoadStart")
+marker = NodePath("../../../../Markers/BrakingStart")
 
 [node name="PowerCrash_Tour" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking" unique_id=179367666]
 script = ExtResource("showtour")
@@ -751,7 +840,7 @@ objective_key = "TUT_ADV_POWER_WASHOUT"
 
 [node name="Teleport_Progressive" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking" unique_id=310394740 node_paths=PackedStringArray("marker")]
 script = ExtResource("teleport")
-marker = NodePath("../../../../Markers/RoadStart")
+marker = NodePath("../../../../Markers/BrakingStart")
 
 [node name="Progressive_Tour" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking" unique_id=217592971]
 script = ExtResource("showtour")
@@ -771,11 +860,7 @@ script = ExtResource("leanbrake")
 
 [node name="Teleport_Trail" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking" unique_id=292209346 node_paths=PackedStringArray("marker")]
 script = ExtResource("teleport")
-marker = NodePath("../../../../Markers/RoadStart")
-
-[node name="ShowGates" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking" unique_id=1772666055 node_paths=PackedStringArray("objects")]
-script = ExtResource("setactive")
-objects = [NodePath("../../../../Gates/SteerGate1"), NodePath("../../../../Gates/SteerGate2"), NodePath("../../../../Gates/SteerGate3")]
+marker = NodePath("../../../../Markers/BrakingStart")
 
 [node name="Trail_Tour" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking" unique_id=1691227800]
 script = ExtResource("showtour")
@@ -793,11 +878,6 @@ highlight_key = "TOUR_TUT_ADV_TRAIL_HIGHLIGHT"
 [node name="LeanBrake_Trail" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking" unique_id=221901568]
 script = ExtResource("leanbrake")
 mode = 1
-
-[node name="HideGates" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking" unique_id=432593439 node_paths=PackedStringArray("objects")]
-script = ExtResource("setactive")
-objects = [NodePath("../../../../Gates/SteerGate1"), NodePath("../../../../Gates/SteerGate2"), NodePath("../../../../Gates/SteerGate3")]
-active = false
 
 [node name="Mission2_GroundAndAir" type="Node" parent="TutorialCircle/AdvancedEvent" unique_id=1203496836]
 script = ExtResource("seq")
@@ -817,7 +897,13 @@ tour_id = &"tut_adv_burnout"
 script = ExtResource("step")
 title_key = "TRICK_NAME_BURNOUT"
 body_key = "TOUR_TUT_ADV_BURNOUT_BODY"
-highlight_key = "TRICK_HOWTO_BURNOUT"
+highlight_key = "TOUR_TUT_ADV_BURNOUT_REV_HIGHLIGHT"
+
+[node name="Step2" type="Node" parent="TutorialCircle/AdvancedEvent/Mission2_GroundAndAir/Burnout_Tour/Tour" unique_id=1964001337]
+script = ExtResource("step")
+title_key = "TRICK_NAME_BURNOUT"
+body_key = "TOUR_TUT_ADV_BURNOUT_DUMP_BODY"
+highlight_key = "TOUR_TUT_ADV_BURNOUT_DUMP_HIGHLIGHT"
 
 [node name="PerformTrick_Burnout" type="Node" parent="TutorialCircle/AdvancedEvent/Mission2_GroundAndAir" unique_id=878927701]
 script = ExtResource("trick")
@@ -871,7 +957,7 @@ highlight_key = "TOUR_TUT_ADV_KICKFLIP_HIGHLIGHT"
 script = ExtResource("trick")
 required_trick = 10
 must_land = true
-help_pin = "AIR/KICKFLIP/DOUBLE_TAP/LEFT"
+help_pin = "AIR/KICKFLIP/DOUBLE_TAP/RIGHT"
 warn_wrong_trick = true
 retry_on_miss = true
 
@@ -919,7 +1005,7 @@ tour_id = &"tut_adv_fifty_fifty"
 script = ExtResource("step")
 title_key = "TOUR_TUT_ADV_FIFTY_FIFTY_TITLE"
 body_key = "TOUR_TUT_ADV_FIFTY_FIFTY_BODY"
-highlight_key = "TRICK_HOWTO_FIFTY_FIFTY"
+highlight_key = "TOUR_TUT_ADV_FIFTY_FIFTY_HIGHLIGHT"
 
 [node name="PerformTrick_FiftyFifty" type="Node" parent="TutorialCircle/AdvancedEvent/Mission3_Grinds" unique_id=1324315501]
 script = ExtResource("trick")
@@ -927,6 +1013,7 @@ required_trick = 19
 min_duration = 1.0
 must_land = true
 help_pin = "FIFTY_FIFTY"
+retry_on_miss = true
 
 [node name="Teleport_Salad" type="Node" parent="TutorialCircle/AdvancedEvent/Mission3_Grinds" unique_id=160700520 node_paths=PackedStringArray("marker")]
 script = ExtResource("teleport")
@@ -951,6 +1038,7 @@ required_trick = 24
 min_duration = 0.5
 must_land = true
 help_pin = "SALAD"
+retry_on_miss = true
 
 [node name="Teleport_Smith" type="Node" parent="TutorialCircle/AdvancedEvent/Mission3_Grinds" unique_id=1203497434 node_paths=PackedStringArray("marker")]
 script = ExtResource("teleport")
@@ -975,5 +1063,6 @@ required_trick = 29
 min_duration = 0.5
 must_land = true
 help_pin = "SMITH"
+retry_on_miss = true
 
 [editable path="MainMenuMountains"]

@@ -252,8 +252,8 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
 
 ## Shuvits
 
-The rider is goofy: the flips' legs point left. Kickflip (double tap left) kicks the right foot
-back and rolls the bike +Z; heelflip (double tap right) flicks it forward and rolls −Z.
+The rider is goofy: the flips' legs point left. Kickflip (double tap right) kicks the right foot
+back and rolls the bike +Z; heelflip (double tap left) flicks it forward and rolls −Z.
 
 - **Spin** — leaving the ground mid-drift (`TrickController._update_drift_shuvit()`: the synced
   `_drift_takeoff_dir` from the last ground tick, fired once the jump is real so a drift over a

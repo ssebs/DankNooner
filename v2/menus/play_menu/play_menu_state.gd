@@ -218,7 +218,7 @@ func _on_tutorial_btn_pressed():
 
 
 func _on_advanced_tutorial_btn_pressed():
-	transitioned.emit(lobby_menu_state, LobbyStateContext.NewStory(self, true))
+	transitioned.emit(lobby_menu_state, LobbyStateContext.NewStory(self, TutorialGameMode.ADVANCED_EVENT_NAME))
 
 
 func _on_customize_pressed():

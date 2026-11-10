@@ -13,7 +13,7 @@
 ## Teaching aids (tutorial): `help_pin` shows the trick's controls on the HUD while the task runs,
 ## `warn_wrong_trick` flashes a warning naming `required_trick` on any other air trick, and
 ## `retry_on_miss` sends the rider back to their respawn point (the lesson's TeleportTask marker)
-## when a real jump lands without the trick.
+## when a real jump or a grind ends back on the ground without the trick.
 class_name PerformTrickTask extends GameModeTask
 
 @export var required_trick: TrickController.Trick = TrickController.Trick.WHEELIE_SITTING
@@ -67,10 +67,11 @@ func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
 	return true
 
 
-## A real jump (past the air-trick min airtime) that came down without the trick. A crash is the
-## runner's to handle.
+## A real jump (past the air-trick min airtime) or a grind that ended without the trick. A crash is
+## the runner's to handle.
 func _missed_jump(player: PlayerEntity, state: Dictionary) -> bool:
-	if player.trick_controller.trick_state() == TrickController.TrickState.AIR:
+	var trick_state := player.trick_controller.trick_state()
+	if trick_state in [TrickController.TrickState.AIR, TrickController.TrickState.GRIND]:
 		state["jumped"] = true
 		return false
 	return (

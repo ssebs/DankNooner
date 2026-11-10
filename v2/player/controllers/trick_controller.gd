@@ -112,11 +112,11 @@ const AIR_TRICKS: Array[Trick] = [
 ## tre / lazer's spin follows it so both turn at once (paired_flip_progress).
 const FLIP_ROLL_START: float = 0.2
 const FLIP_ROLL_END: float = 0.75
-## Shuvit -> [its flip, the two combined]. Goofy: BS (nose left) pairs with the kickflip, so steer
+## Shuvit -> [its flip, the two combined]. FS (nose right) pairs with the kickflip, so steer
 ## and flip go the same way.
 const SHUV_FLIP_PAIRS: Dictionary = {
-	Trick.BS_SHUVIT: [Trick.KICKFLIP, Trick.TRE_FLIP],
-	Trick.FS_SHUVIT: [Trick.HEELFLIP, Trick.LAZERFLIP],
+	Trick.BS_SHUVIT: [Trick.HEELFLIP, Trick.LAZERFLIP],
+	Trick.FS_SHUVIT: [Trick.KICKFLIP, Trick.TRE_FLIP],
 }
 ## Held-trick score scale while wheelieing (_wheelie_score_mult): ramps from MIN at the wheelie
 ## threshold to 1 below the balance point, BP from it up; LOCKED while balance-locked. Consts (rollback).
@@ -135,28 +135,28 @@ const BINDINGS: Dictionary = {
 	TrickState.WHEELIE:
 	{
 		Gesture.TAP: [Trick.NONE, Trick.HEEL_CLICKER, Trick.NONE, Trick.NONE],
-		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.HEELFLIP],
+		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.NONE, Trick.NONE],
 		Gesture.HOLD: [Trick.HIGH_CHAIR, Trick.NONE, Trick.KNEE_KNOCKER, Trick.T_POSE],
 		Gesture.DOUBLE_TAP_HOLD: [Trick.NONE, Trick.NONE, Trick.NONE, Trick.NONE],
 	},
 	TrickState.GROUND:
 	{
 		Gesture.TAP: [Trick.NONE, Trick.HEEL_CLICKER, Trick.NONE, Trick.NONE],
-		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.HEELFLIP],
+		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.HEELFLIP, Trick.KICKFLIP],
 		Gesture.HOLD: [Trick.HIGH_CHAIR, Trick.TWO_LEFT_FEET, Trick.KNEE_KNOCKER, Trick.T_POSE],
 		Gesture.DOUBLE_TAP_HOLD: [Trick.NONE, Trick.NONE, Trick.NONE, Trick.NONE],
 	},
 	TrickState.AIR:
 	{
 		Gesture.TAP: [Trick.NONE, Trick.HEEL_CLICKER, Trick.NONE, Trick.NONE],
-		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.HEELFLIP],
+		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.HEELFLIP, Trick.KICKFLIP],
 		Gesture.HOLD: [Trick.HIGH_CHAIR, Trick.NONE, Trick.KNEE_KNOCKER, Trick.T_POSE],
 		Gesture.DOUBLE_TAP_HOLD: [Trick.NONE, Trick.NONE, Trick.SPREAD_EAGLE, Trick.SUPERMAN],
 	},
 	TrickState.GRIND:
 	{
 		Gesture.TAP: [Trick.NONE, Trick.HEEL_CLICKER, Trick.NONE, Trick.NONE],
-		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.HEELFLIP],
+		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.HEELFLIP, Trick.KICKFLIP],
 		Gesture.HOLD: [Trick.HIGH_CHAIR, Trick.NONE, Trick.KNEE_KNOCKER, Trick.T_POSE],
 		Gesture.DOUBLE_TAP_HOLD: [Trick.NONE, Trick.NONE, Trick.NONE, Trick.NONE],
 	},
