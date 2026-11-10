@@ -3,7 +3,7 @@
 
 ## Marketing
 
-Vid: where we started, where we are now 
+Vid: where we started, where we are now
 
 Clip: backflip off a deployed ramp onto Smith grind in first 5 sec, then add kick flip or other trick back to the race
 Clip: kickflip, heelflip, tre flip, lazerflip, drifting to shuvit then crash
@@ -15,6 +15,10 @@ Must make good Steam trailer + marketing materials before publishing demo
 
 Ask Eddie if I can put up a sign with a QR code
 Make a hoodie
+
+- [ ] Improved Steam art assets / game press kit
+- [ ] Better / Offical Trailer (concise, hook-y)
+- [ ] Keymailer once demo stuff is ready
 
 ---
 

@@ -46,8 +46,8 @@
     - [x] Drift
     - [x] Air tricks
     - [x] Trick mods
-  - [ ] 2: Advanced:
-    - [ ] Progressive braking (0% -> 100% causes crash)
+  - [x] 2: Advanced:
+    - [x] Progressive braking (0% -> 100% causes crash)
     - [x] trail braking
     - [x] kickflip / superman
     - [x] grinds
@@ -56,15 +56,15 @@
       - [x] smith
     - [x] burnouts
     - [x] bunny hops
-    - [ ] FIX:
-      - [x] trail braking needs more run up space, not going fast enough to trail brake
-      - [ ] respawn player if they do the wrong trick/grind
-      - [x] AdvancedTutorialEvent should not be part of the leveldefinition, autostartevent should handle it.
-      - [x] cleanup map / events for adv tricks
-      - [x] first grind should say do a 50/50 instead of saying land facing it
-      - [x] trail braking / progressive braking needs a redo
-      - [ ] burnout msg confusing
-      - [ ] !tell player that you cant use front brake if youre doing a wheelie!
+  - [ ] FIX:
+    - [x] trail braking needs more run up space, not going fast enough to trail brake
+    - [ ] respawn player if they do the wrong trick/grind
+    - [x] AdvancedTutorialEvent should not be part of the leveldefinition, autostartevent should handle it.
+    - [x] cleanup map / events for adv tricks
+    - [x] first grind should say do a 50/50 instead of saying land facing it
+    - [x] trail braking / progressive braking needs a redo
+    - [ ] burnout msg confusing
+    - [ ] !tell player that you cant use front brake if youre doing a wheelie!
 	
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -73,18 +73,16 @@
 - [ ] test steam save sync
 - [ ] Audit `any_peer` RPCs for sender validation (public lobbies let strangers in)
 - [ ] Demo release
+  - [x] Start with tutorial level (lock StuntCity until tutorial is complete)
+  - [x] Demo build validated
+  - [ ] Demo savegame should be different from main game
   - [ ] verify difficulty works
   - [ ] Balancing points / score
-  - [ ] Demo savegame should be different from main game
-  - [ ] Start with tutorial level (lock StuntCity until tutorial is complete)
   - [ ] Basic progression, limit content
-  - [ ] Demo is open source, new private repo for full version
-  - [ ] Some cleanup / refactor (del unused code/assets, cleanup repo for public, etc.)
-- [ ] Better / Offical Trailer (concise, hook-y)
-  - [x] hud toggle in editor for trailer
-  - [ ] record gameplay for trailer
-  - [ ] record "streamer" moments
-- [ ] reach out to [streamers](https://www.reddit.com/r/indiegames/comments/164i572/comment/jyb6rgq/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
+  - [ ] Cleanup / refactor:
+    - [ ] del unused code/assets
+    - [ ] cleanup repo for public (Demo is open source, new private repo for full version)
+  - [ ] see [Marketing section of Scratchpad](./_ScratchPad.md#marketing)
 
 ---
 
