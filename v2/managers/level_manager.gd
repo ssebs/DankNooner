@@ -36,7 +36,7 @@ var possible_levels: Dictionary[LevelName, PackedScene] = {
 	LevelName.TEST_CITY_01: load("res://levels/test_levels/test_city_01/test_city_01.tscn"),
 	LevelName.RACETRACK_01:
 	load("res://levels/racetracks/racetrack_level_01/racetrack_level_01.tscn"),
-	LevelName.STUNTTRACK_01: load("res://levels/racetracks/stunt_track_01/stunt_track_01.tscn"),
+	LevelName.STUNTTRACK_01: load("res://levels/racetracks/stunt_city/stunt_city.tscn"),
 	LevelName.STUNTTRACK_02: load("res://levels/racetracks/stunt_track_02/stunt_race_02.tscn"),
 	LevelName.GARAGE_LEVEL: load("res://levels/menu_levels/garage/garage_level.tscn"),
 	LevelName.TRICK_DEMO_LEVEL: load("res://levels/menu_levels/trick_demo/trick_demo_level.tscn"),

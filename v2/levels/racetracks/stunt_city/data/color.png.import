@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bucebw5we31k5"
-path="res://.godot/imported/global_albedo.png-3ac97d4b589fbfeb05e427a21f8c63aa.ctex"
+uid="uid://b8wlo7skuwgpw"
+path="res://.godot/imported/color.png-46e58adf5233cb179e33b495d10278b5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://levels/racetracks/stunt_track_01/data/global_albedo.png"
-dest_files=["res://.godot/imported/global_albedo.png-3ac97d4b589fbfeb05e427a21f8c63aa.ctex"]
+source_file="res://levels/racetracks/stunt_city/data/color.png"
+dest_files=["res://.godot/imported/color.png-46e58adf5233cb179e33b495d10278b5.ctex"]
 
 [params]
 

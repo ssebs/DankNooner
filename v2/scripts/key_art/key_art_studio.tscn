@@ -6,7 +6,7 @@
 [ext_resource type="Resource" path="res://resources/bikes/mods/color_mods/black_blue_color.tres" id="4_colors"]
 [ext_resource type="Resource" path="res://resources/player/skins/squid_default_skin_definition.tres" id="5_squid"]
 [ext_resource type="Texture2D" path="res://resources/img/Logos/DankNoonerLogo_SteamLibraryLogo.png" id="6_logo"]
-[ext_resource type="PackedScene" path="res://levels/racetracks/stunt_track_01/stunt_track_01.tscn" id="7_city"]
+[ext_resource type="PackedScene" path="res://levels/racetracks/stunt_city/stunt_city.tscn" id="7_city"]
 [node name="KeyArtStudio" type="Node3D" node_paths=PackedStringArray("featured_prop")]
 script = ExtResource("1_studio")
 bike_definition = ExtResource("3_bike")
