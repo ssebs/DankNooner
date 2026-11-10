@@ -41,6 +41,11 @@ enum Trick {
 	BLUNTSLIDE,
 	WILLY,
 	OVER_WILLY,
+	HEELFLIP,
+	BS_SHUVIT,
+	FS_SHUVIT,
+	TRE_FLIP,
+	LAZERFLIP,
 }
 enum Dir {UP, DOWN, LEFT, RIGHT}
 ## TAP / DOUBLE_TAP latch their trick for TAP_TRICK_DURATION; HOLD / DOUBLE_TAP_HOLD keep it active
@@ -97,9 +102,22 @@ const AIR_TRICKS: Array[Trick] = [
 	Trick.SPREAD_EAGLE,
 	Trick.SUPERMAN,
 	Trick.KICKFLIP,
+	Trick.HEELFLIP,
+	Trick.TRE_FLIP,
+	Trick.LAZERFLIP,
 	Trick.T_POSE,
 	Trick.KNEE_KNOCKER,
 ]
+## The flip anims' BikeSkin roll window, as fractions of TAP_TRICK_DURATION (their length). A
+## tre / lazer's spin follows it so both turn at once (paired_flip_progress).
+const FLIP_ROLL_START: float = 0.2
+const FLIP_ROLL_END: float = 0.75
+## Shuvit -> [its flip, the two combined]. Goofy: BS (nose left) pairs with the kickflip, so steer
+## and flip go the same way.
+const SHUV_FLIP_PAIRS: Dictionary = {
+	Trick.BS_SHUVIT: [Trick.KICKFLIP, Trick.TRE_FLIP],
+	Trick.FS_SHUVIT: [Trick.HEELFLIP, Trick.LAZERFLIP],
+}
 ## Held-trick score scale while wheelieing (_wheelie_score_mult): ramps from MIN at the wheelie
 ## threshold to 1 below the balance point, BP from it up; LOCKED while balance-locked. Consts (rollback).
 const WHEELIE_MIN_SCORE_MULT: float = 0.5
@@ -117,28 +135,28 @@ const BINDINGS: Dictionary = {
 	TrickState.WHEELIE:
 	{
 		Gesture.TAP: [Trick.NONE, Trick.HEEL_CLICKER, Trick.NONE, Trick.NONE],
-		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.NONE],
+		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.HEELFLIP],
 		Gesture.HOLD: [Trick.HIGH_CHAIR, Trick.NONE, Trick.KNEE_KNOCKER, Trick.T_POSE],
 		Gesture.DOUBLE_TAP_HOLD: [Trick.NONE, Trick.NONE, Trick.NONE, Trick.NONE],
 	},
 	TrickState.GROUND:
 	{
 		Gesture.TAP: [Trick.NONE, Trick.HEEL_CLICKER, Trick.NONE, Trick.NONE],
-		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.NONE],
+		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.HEELFLIP],
 		Gesture.HOLD: [Trick.HIGH_CHAIR, Trick.TWO_LEFT_FEET, Trick.KNEE_KNOCKER, Trick.T_POSE],
 		Gesture.DOUBLE_TAP_HOLD: [Trick.NONE, Trick.NONE, Trick.NONE, Trick.NONE],
 	},
 	TrickState.AIR:
 	{
 		Gesture.TAP: [Trick.NONE, Trick.HEEL_CLICKER, Trick.NONE, Trick.NONE],
-		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.NONE],
+		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.HEELFLIP],
 		Gesture.HOLD: [Trick.HIGH_CHAIR, Trick.NONE, Trick.KNEE_KNOCKER, Trick.T_POSE],
 		Gesture.DOUBLE_TAP_HOLD: [Trick.NONE, Trick.NONE, Trick.SPREAD_EAGLE, Trick.SUPERMAN],
 	},
 	TrickState.GRIND:
 	{
 		Gesture.TAP: [Trick.NONE, Trick.HEEL_CLICKER, Trick.NONE, Trick.NONE],
-		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.NONE],
+		Gesture.DOUBLE_TAP: [Trick.NONE, Trick.NONE, Trick.KICKFLIP, Trick.HEELFLIP],
 		Gesture.HOLD: [Trick.HIGH_CHAIR, Trick.NONE, Trick.KNEE_KNOCKER, Trick.T_POSE],
 		Gesture.DOUBLE_TAP_HOLD: [Trick.NONE, Trick.NONE, Trick.NONE, Trick.NONE],
 	},
@@ -169,6 +187,8 @@ var _trick_timer: float = 0.0
 var _wheelie_exit_hold: float = 0.0 # synced — seconds pitch has been under WHEELIE_EXIT_PITCH_DEG
 ## Full air rotations already paid out this airtime — synced so a resim doesn't double-award.
 var _air_flips_awarded: int = 0
+## Same, for full turns of the bike under the rider (shuvits).
+var _shuvs_awarded: int = 0
 ## Synced — last tick was a real jump (past AIR_TRICK_MIN_AIRTIME). MovementController zeroes
 ## air_time on the landing tick, so the landing check needs last tick's value.
 var _was_airborne: bool = false
@@ -184,6 +204,9 @@ var _tap_age: float = 0.0
 ## Latched tap trick and its remaining seconds (synced). Timer >0 = _tap_trick is the active trick.
 var _tap_trick: Trick = Trick.NONE
 var _tap_trick_timer: float = 0.0
+## Synced: the drift's way (-1 left / 1 right / 0 none) on the last ground tick, so leaving the
+## ground mid-drift kicks a shuvit (_update_drift_shuvit).
+var _drift_takeoff_dir: int = 0
 
 
 func _ready():
@@ -196,7 +219,9 @@ func on_movement_rollback_tick(delta: float):
 	if player_entity.is_crashed:
 		return
 
+	_update_drift_shuvit()
 	_update_gestures(delta)
+	_latch_shuvit()
 	# Physics-driven one-shot — rides the tap-trick latch so it stays active through the hop.
 	if movement_controller.bunny_hopped:
 		_tap_trick = Trick.BUNNY_HOP
@@ -260,12 +285,64 @@ func _update_gestures(delta: float):
 			_tap_dir = NO_DIR
 
 
+## Leaving the ground mid-drift kicks a shuvit the drift's way (slip_angle < 0 = left = BS), once
+## the jump is real, so a drift over a bump doesn't spin. A ramp launch rising fast enough to clear
+## AIR_TRICK_MIN_AIRTIME (airtime 2·vy / g) counts straight away rather than waiting it out.
+func _update_drift_shuvit():
+	if movement_controller.is_on_floor:
+		_drift_takeoff_dir = 0
+		if movement_controller.is_drifting:
+			_drift_takeoff_dir = -1 if movement_controller.slip_angle < 0.0 else 1
+		return
+	var launch_airtime := 2.0 * player_entity.velocity.y / MovementController.FALL_GRAVITY
+	var real_jump := (
+		trick_state() == TrickState.AIR or launch_airtime >= AIR_TRICK_MIN_AIRTIME
+	)
+	if _drift_takeoff_dir != 0 and real_jump:
+		movement_controller.queue_shuvit(_drift_takeoff_dir < 0)
+		_drift_takeoff_dir = 0
+
+
+## Steer pushed past the stick-trick threshold: -1 left, 1 right, else 0.
+func _held_steer_dir() -> int:
+	var steer := input_controller.nfx_steer
+	return 0 if absf(steer) < -TRICK_CAM_THRESHOLD else int(signf(steer))
+
+
 func _latch_gesture(gesture: Gesture, dir: int):
 	var trick := _bound_trick(gesture, dir)
+	# A flip right after its shuvit landed the spin first: upgrade, latching anew for the flip.
+	var pair: Array = SHUV_FLIP_PAIRS.get(_tap_trick, [])
+	if _tap_trick_timer > 0.0 and not pair.is_empty() and pair[0] == trick:
+		_tap_trick = pair[1]
+		_tap_trick_timer = TAP_TRICK_DURATION
+		return
 	# Skip while a tap trick is already latched.
 	if trick != Trick.NONE and _tap_trick_timer <= 0.0:
 		_tap_trick = trick
 		_tap_trick_timer = TAP_TRICK_DURATION
+		_spin_with_flip(trick)
+
+
+## How far through its roll (0..1) the latched flip pairing with a spin this way is, else -1.
+## MovementController spins with it.
+func paired_flip_progress(left: bool) -> float:
+	var shuvit := Trick.BS_SHUVIT if left else Trick.FS_SHUVIT
+	if _tap_trick_timer <= 0.0 or _tap_trick not in SHUV_FLIP_PAIRS[shuvit]:
+		return -1.0
+	var t := 1.0 - _tap_trick_timer / TAP_TRICK_DURATION
+	return clampf(inverse_lerp(FLIP_ROLL_START, FLIP_ROLL_END, t), 0.0, 1.0)
+
+
+## Steer held the flip's way as it pops adds its shuvit (tre / lazer, see SHUV_FLIP_PAIRS), unless
+## one is already spinning.
+func _spin_with_flip(flip: Trick):
+	if movement_controller.shuv_target != 0.0:
+		return
+	for shuvit: Trick in SHUV_FLIP_PAIRS:
+		var left := shuvit == Trick.BS_SHUVIT
+		if SHUV_FLIP_PAIRS[shuvit][0] == flip and _held_steer_dir() == (-1 if left else 1):
+			movement_controller.queue_shuvit(left)
 
 
 ## BINDINGS HOLD / DOUBLE_TAP_HOLD trick for the stick held past the tap window, else NONE.
@@ -327,6 +404,32 @@ func _award_flip_boost():
 			_air_flips_awarded = completed
 	else:
 		_air_flips_awarded = 0
+
+
+## Latch a shuvit per full turn of the bike under the rider (same 0.9 turn as has_flipped). Its flip
+## (SHUV_FLIP_PAIRS) still latched becomes the tre / lazer, keeping the flip's timer so landing
+## mid-flip still bails (the flip-second order is in _latch_gesture). Any other latched tap trick
+## holds the shuvit back until it runs out.
+func _latch_shuvit():
+	if movement_controller.shuv_target == 0.0:
+		_shuvs_awarded = 0
+		return
+	var yaw := movement_controller.shuv_yaw
+	if int(absf(yaw) / TAU + 0.1) <= _shuvs_awarded:
+		return
+	var shuvit := Trick.BS_SHUVIT if yaw > 0.0 else Trick.FS_SHUVIT
+	if _tap_trick_timer > 0.0:
+		# A 720: end the first shuvit so the next turn re-latches (and scores) next tick.
+		if _tap_trick == shuvit:
+			_tap_trick_timer = 0.0
+			return
+		if _tap_trick != SHUV_FLIP_PAIRS[shuvit][0]:
+			return
+		_tap_trick = SHUV_FLIP_PAIRS[shuvit][1]
+	else:
+		_tap_trick = shuvit
+		_tap_trick_timer = TAP_TRICK_DURATION
+	_shuvs_awarded += 1
 
 
 ## Touching down from a real jump past the wheelie / stoppie threshold banks a bonus. The landing
@@ -490,6 +593,7 @@ func do_reset():
 	_last_trick = Trick.NONE
 	_flip_emitted = false
 	_air_flips_awarded = 0
+	_shuvs_awarded = 0
 	_was_airborne = false
 	_wheelie_exit_hold = 0.0
 	_hold_dir = NO_DIR
@@ -499,6 +603,7 @@ func do_reset():
 	_tap_age = 0.0
 	_tap_trick = Trick.NONE
 	_tap_trick_timer = 0.0
+	_drift_takeoff_dir = 0
 	ComboRules.reset(self)
 
 
@@ -629,6 +734,16 @@ static func trick_to_str(trick: Trick) -> String:
 			return "WILLY"
 		Trick.OVER_WILLY:
 			return "OVER_WILLY"
+		Trick.HEELFLIP:
+			return "HEELFLIP"
+		Trick.BS_SHUVIT:
+			return "BS_SHUVIT"
+		Trick.FS_SHUVIT:
+			return "FS_SHUVIT"
+		Trick.TRE_FLIP:
+			return "TRE_FLIP"
+		Trick.LAZERFLIP:
+			return "LAZERFLIP"
 	return "NONE"
 
 
@@ -706,6 +821,16 @@ static func str_to_trick(s: String) -> Trick:
 			return Trick.WILLY
 		"OVER_WILLY":
 			return Trick.OVER_WILLY
+		"HEELFLIP":
+			return Trick.HEELFLIP
+		"BS_SHUVIT":
+			return Trick.BS_SHUVIT
+		"FS_SHUVIT":
+			return Trick.FS_SHUVIT
+		"TRE_FLIP":
+			return Trick.TRE_FLIP
+		"LAZERFLIP":
+			return Trick.LAZERFLIP
 	return Trick.NONE
 
 

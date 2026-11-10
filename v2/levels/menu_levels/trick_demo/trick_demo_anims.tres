@@ -212,112 +212,6 @@ tracks/7/keys = {
 }]
 }
 
-[sub_resource type="Animation" id="Animation_i4op6"]
-resource_name = "air_high_chair"
-length = 4.570926675212563
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Rig:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [1.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Rig:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 4.5709267),
-"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2),
-"update": 0,
-"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213998989193397, 6.046171791757635, 6.776518617501065, 7.405039466423688, 7.931734338525501, 8.356603233806508, 8.679646152266706, 8.9008630939061, 9.020254058724682, 9.037819046722454, 8.953558057899421, 8.767471092255581, 8.479558149790932, 8.089819230505473, 7.598254334399211, 7.004863461472137, 6.309646611724256, 5.512603785155566, 4.613734981766072, 3.6130402015557586, 2.510519444524647, 1.306172710672726, 0.0, 0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Rig:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 3.5709267, 4.5709267),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 23.783598808368016, 33.78359880836801]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Rig:rotation:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 3.8209267, 4.5709267),
-"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, -2),
-"update": 0,
-"values": [0.0, 0.0, -0.2279279552640238, -0.5050984347171386, -0.7748722046681501, -0.9360003374941616, -0.8879133662987633, -0.8398263951033649, -0.7917394239079666, -0.7436524527125683, -0.6955654815171699, -0.6474785103217717, -0.5993915391263732, -0.5513045679309749, -0.5032175967355765, -0.4551306255401782, -0.40704365434477985, -0.3589566831493818, -0.3108697119539833, -0.2627827407585849, -0.2146957695631866, -0.1666087983677883, -0.11852182717239002, -0.07043485597699162, -0.02234788478159333, 0.02573908641380518, 0.07382605760920347, 0.12191302880460186, 0.17000000000000004, 0.0, 0.0]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Rig:rotation:y")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Rig:rotation:z")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath(".:rear_wheel_spin")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/7/type = "method"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath(".")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(1.4264599, 3.0709267),
-"transitions": PackedFloat32Array(1, 1),
-"values": [{
-"args": [],
-"method": &"trick_on"
-}, {
-"args": [],
-"method": &"trick_off"
-}]
-}
-
 [sub_resource type="Animation" id="Animation_tuk1w"]
 resource_name = "air_kickflip"
 length = 4.570926675212563
@@ -414,6 +308,112 @@ tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
 "times": PackedFloat32Array(1.5264598, 3.0709267),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_i4op6"]
+resource_name = "air_high_chair"
+length = 4.570926675212563
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.45, 1.39, 2.8, 4.28, 5.213998989193397, 6.046171791757635, 6.776518617501065, 7.405039466423688, 7.931734338525501, 8.356603233806508, 8.679646152266706, 8.9008630939061, 9.020254058724682, 9.037819046722454, 8.953558057899421, 8.767471092255581, 8.479558149790932, 8.089819230505473, 7.598254334399211, 7.004863461472137, 6.309646611724256, 5.512603785155566, 4.613734981766072, 3.6130402015557586, 2.510519444524647, 1.306172710672726, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 3.5709267, 4.5709267),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-6.0, 0.93, 2.87, 4.57, 6.01, 7.1, 23.783598808368016, 33.78359880836801]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5775, 0.7434589, 0.90534025, 1.0732874, 1.2264599, 1.3283932, 1.4303266, 1.5322598, 1.6341932, 1.7361265, 1.8380599, 1.9399933, 2.0419266, 2.1438599, 2.2457933, 2.3477266, 2.4496598, 2.5515933, 2.6535265, 2.75546, 2.8573933, 2.9593267, 3.06126, 3.1631932, 3.2651267, 3.36706, 3.4689934, 3.5709267, 3.8209267, 4.5709267),
+"transitions": PackedFloat32Array(-2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.2279279552640238, -0.5050984347171386, -0.7748722046681501, -0.9360003374941616, -0.8879133662987633, -0.8398263951033649, -0.7917394239079666, -0.7436524527125683, -0.6955654815171699, -0.6474785103217717, -0.5993915391263732, -0.5513045679309749, -0.5032175967355765, -0.4551306255401782, -0.40704365434477985, -0.3589566831493818, -0.3108697119539833, -0.2627827407585849, -0.2146957695631866, -0.1666087983677883, -0.11852182717239002, -0.07043485597699162, -0.02234788478159333, 0.02573908641380518, 0.07382605760920347, 0.12191302880460186, 0.17000000000000004, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.4264599, 3.0709267),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
 "args": [],
@@ -2120,112 +2120,6 @@ tracks/7/keys = {
 }]
 }
 
-[sub_resource type="Animation" id="Animation_c3jhj"]
-resource_name = "ground_high_chair"
-length = 3.4
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Rig:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [-13.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Rig:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Rig:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 3.4),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [-4.0, 30.0]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Rig:rotation:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Rig:rotation:y")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Rig:rotation:z")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath(".:rear_wheel_spin")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/7/type = "method"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath(".")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0.8, 2.6),
-"transitions": PackedFloat32Array(1, 1),
-"values": [{
-"args": [],
-"method": &"trick_on"
-}, {
-"args": [],
-"method": &"trick_off"
-}]
-}
-
 [sub_resource type="Animation" id="Animation_aax4a"]
 resource_name = "ground_kickflip"
 length = 2.8
@@ -2322,6 +2216,112 @@ tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
 "times": PackedFloat32Array(0.8, 1.8),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_c3jhj"]
+resource_name = "ground_high_chair"
+length = 3.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 3.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 30.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.8, 2.6),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
 "args": [],
@@ -3604,112 +3604,6 @@ tracks/7/keys = {
 }]
 }
 
-[sub_resource type="Animation" id="Animation_xy2bk"]
-resource_name = "wheelie_high_chair"
-length = 4.0
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Rig:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [-13.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Rig:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.3, 0.8, 3.2, 3.6, 4),
-"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
-"update": 0,
-"values": [0.0, 0.0, 0.32, 0.32, 0.0, 0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Rig:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 4),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [-4.0, 36.0]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Rig:rotation:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.3, 0.8, 3.2, 3.6, 4),
-"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
-"update": 0,
-"values": [0.0, 0.0, -0.5236, -0.5236, 0.0, 0.0]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Rig:rotation:y")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Rig:rotation:z")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath(".:rear_wheel_spin")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [0.0]
-}
-tracks/7/type = "method"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath(".")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(1.1, 2.8),
-"transitions": PackedFloat32Array(1, 1),
-"values": [{
-"args": [],
-"method": &"trick_on"
-}, {
-"args": [],
-"method": &"trick_off"
-}]
-}
-
 [sub_resource type="Animation" id="Animation_boqrv"]
 resource_name = "wheelie_kickflip"
 length = 3.4
@@ -3806,6 +3700,112 @@ tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
 "times": PackedFloat32Array(1.1, 2.1),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"trick_on"
+}, {
+"args": [],
+"method": &"trick_off"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_xy2bk"]
+resource_name = "wheelie_high_chair"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Rig:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [-13.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Rig:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 3.2, 3.6, 4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, 0.32, 0.32, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rig:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.0, 36.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Rig:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 3.2, 3.6, 4),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.0, -0.5236, -0.5236, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Rig:rotation:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Rig:rotation:z")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:rear_wheel_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(1.1, 2.8),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
 "args": [],
@@ -4138,6 +4138,7 @@ tracks/7/keys = {
 _data = {
 &"air": SubResource("Animation_3g617"),
 &"air_heel_clicker": SubResource("Animation_hfd0i"),
+&"air_heelflip": SubResource("Animation_tuk1w"),
 &"air_high_chair": SubResource("Animation_i4op6"),
 &"air_kickflip": SubResource("Animation_tuk1w"),
 &"air_knee_knocker": SubResource("Animation_kavhi"),
@@ -4146,6 +4147,7 @@ _data = {
 &"air_t_pose": SubResource("Animation_qkysu"),
 &"backflip": SubResource("Animation_3i4d3"),
 &"boardslide": SubResource("Animation_grind_boardslide"),
+&"bs_shuvit": SubResource("Animation_tuk1w"),
 &"bunny_hop": SubResource("Animation_vlujj"),
 &"burnout": SubResource("Animation_ciwuw"),
 &"crooked": SubResource("Animation_grind_crooked"),
@@ -4153,23 +4155,28 @@ _data = {
 &"feeble": SubResource("Animation_grind_feeble"),
 &"five_o": SubResource("Animation_grind_five_o"),
 &"frontflip": SubResource("Animation_u0yg6"),
+&"fs_shuvit": SubResource("Animation_tuk1w"),
 &"grind": SubResource("Animation_grind_grind"),
 &"ground": SubResource("Animation_12b5o"),
 &"ground_heel_clicker": SubResource("Animation_l58wy"),
+&"ground_heelflip": SubResource("Animation_aax4a"),
 &"ground_high_chair": SubResource("Animation_c3jhj"),
 &"ground_kickflip": SubResource("Animation_aax4a"),
 &"ground_knee_knocker": SubResource("Animation_qlx68"),
 &"ground_t_pose": SubResource("Animation_twt27"),
 &"ground_two_left_feet": SubResource("Animation_3c866"),
+&"lazerflip": SubResource("Animation_tuk1w"),
 &"lipslide": SubResource("Animation_grind_lipslide"),
 &"nosegrind": SubResource("Animation_grind_nosegrind"),
 &"noseslide": SubResource("Animation_grind_noseslide"),
 &"salad": SubResource("Animation_grind_salad"),
 &"stoppie": SubResource("Animation_b8yhw"),
 &"tailslide": SubResource("Animation_grind_tailslide"),
+&"tre_flip": SubResource("Animation_tuk1w"),
 &"wheelie": SubResource("Animation_iiunx"),
 &"wheelie_drift_wheelie": SubResource("Animation_8ygjq"),
 &"wheelie_heel_clicker": SubResource("Animation_vdxnv"),
+&"wheelie_heelflip": SubResource("Animation_boqrv"),
 &"wheelie_high_chair": SubResource("Animation_xy2bk"),
 &"wheelie_kickflip": SubResource("Animation_boqrv"),
 &"wheelie_knee_knocker": SubResource("Animation_fegw2"),

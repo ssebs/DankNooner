@@ -105,7 +105,8 @@ func on_movement_rollback_tick(delta: float):
 	)
 
 
-## Crash if the player touches down mid air-trick. Releasing the trick before landing is safe.
+## Crash if the player touches down mid air-trick, or with the bike turned under them (shuvit).
+## Releasing the trick before landing is safe.
 ## Checks _prev_air_trick (last tick's), not current_trick: trick_controller runs before us and has
 ## already transitioned to the ground state on the landing tick.
 func _detect_air_trick_landing():
@@ -114,6 +115,10 @@ func _detect_air_trick_landing():
 	var just_landed = not movement_controller.was_on_floor
 	if just_landed and TrickController.is_air_trick(_prev_air_trick):
 		DebugUtils.DebugMsg("landed mid air-trick crash (%s)" % TrickController.trick_to_str(_prev_air_trick))
+		trigger_crash(CrashType.HIGHSIDE)
+	# MovementController only keeps shuv_yaw on a landing outside the snap window (a 180 bails).
+	elif just_landed and movement_controller.shuv_yaw != 0.0:
+		DebugUtils.DebugMsg("landed crooked shuvit crash (%.0f°)" % rad_to_deg(movement_controller.shuv_yaw))
 		trigger_crash(CrashType.HIGHSIDE)
 
 

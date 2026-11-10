@@ -23,6 +23,10 @@ const HOWTO_TRICKS: Array[TrickController.Trick] = [
 	TrickController.Trick.BACKFLIP,
 	TrickController.Trick.FRONTFLIP,
 	TrickController.Trick.BUNNY_HOP,
+	TrickController.Trick.BS_SHUVIT,
+	TrickController.Trick.FS_SHUVIT,
+	TrickController.Trick.TRE_FLIP,
+	TrickController.Trick.LAZERFLIP,
 ]
 ## Physics-driven tricks listed under a state's tab instead of the how-to tab (same key rule). Listed
 ## before the stick tricks, so the base wheelie / stoppie lead their tabs.

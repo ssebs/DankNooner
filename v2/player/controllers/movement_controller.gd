@@ -85,6 +85,7 @@ const MIN_LOOP_SPEED: float = 20.0 # speed needed at fully inverted (180°)
 # Trick tuning
 const TRICK_DISABLE_ANGLE: float = 30.0 # (degrees)
 const AIR_TRICK_ROTATION_SPEED: float = 4.0 # rad/s pitch control while airborne
+const SHUV_SPIN_SPEED: float = 10.0 # rad/s bike yaw under the rider in a shuvit (see queue_shuvit)
 const WHEELIE_AIR_GRACE: float = 1.0 # short hops (curbs) keep the wheelie pitch_angle
 const LANDING_SNAP_ANGLE_DEG: float = 30.0 # forgiveness window — flips landing this close to upright snap to neutral
 # Steering authority while up on the front wheel. Reduced input is allowed; shoving past the
@@ -153,6 +154,11 @@ var grind_to: Vector3 = Vector3.ZERO
 var grind_yaw: float = 0.0 # synced — heading vs rail direction, + = turned left
 
 var air_pitch_total: float = 0.0 # cumulative pitch rotation while airborne (for flip counting)
+## Synced — bike yaw under the rider (shuvit), + = nose left, spinning toward shuv_target (whole
+## turns, see queue_shuvit). Both clear when it gets there or lands near a whole turn; a landing
+## anywhere else leaves it set so CrashController bails it.
+var shuv_yaw: float = 0.0
+var shuv_target: float = 0.0
 var air_time: float = 0.0 # time since takeoff (for wheelie grace window)
 var was_on_floor: bool = false # previous tick's floor state (for landing detection)
 var is_on_floor: bool = false # cached once per tick to avoid redundant move_and_slide calls
@@ -237,6 +243,10 @@ func on_movement_rollback_tick(delta: float):
 			# Nose-first touchdown on the gas — the drive plants the rear, no stoppie under power.
 			if pitch_angle < 0.0 and input_controller.nfx_throttle > 0.5:
 				pitch_angle = 0.0
+			# Near a whole turn lands it (dropping any queued turn); otherwise CrashController bails it.
+			if absf(wrapf(shuv_yaw, -PI, PI)) <= deg_to_rad(LANDING_SNAP_ANGLE_DEG):
+				shuv_yaw = 0.0
+				shuv_target = 0.0
 			air_pitch_total = 0.0
 			air_time = 0.0
 			_wheelie_grace_consumed = false
@@ -259,6 +269,16 @@ func on_movement_rollback_tick(delta: float):
 				pitch_angle = 0.0
 				air_pitch_total = 0.0
 			_wheelie_grace_consumed = true
+	if shuv_target != 0.0:
+		var flip := player_entity.trick_controller.paired_flip_progress(shuv_target > 0.0)
+		if flip < 0.0:
+			shuv_yaw = move_toward(shuv_yaw, shuv_target, SHUV_SPIN_SPEED * delta)
+		elif absf(shuv_target * flip) > absf(shuv_yaw):
+			# Tre / lazer: turn with the flip's roll, holding (never rewinding) if already ahead.
+			shuv_yaw = shuv_target * flip
+		if shuv_yaw == shuv_target:
+			shuv_yaw = 0.0
+			shuv_target = 0.0
 	# After the landing block, so a rail landing gets the same pitch normalization.
 	if is_grinding:
 		_grind_calc(delta)
@@ -542,6 +562,14 @@ func _detach_from_surface(delta: float):
 	player_entity.up_direction = (
 		player_entity.up_direction.slerp(Vector3.UP, correction_speed * delta).normalized()
 	)
+
+
+## Queue a full turn of the bike under the rider (TrickController: drifting into a jump, or a flip). Stacking
+## one mid-spin makes a 720; the other way is ignored until the spin finishes.
+func queue_shuvit(left: bool) -> void:
+	var turn := TAU if left else -TAU
+	if shuv_target == 0.0 or signf(shuv_target) == signf(turn):
+		shuv_target += turn
 
 
 ## Front brake does nothing while the front wheel is lofted (wheelie) — nothing to brake in the air.
@@ -1320,6 +1348,8 @@ func do_reset():
 	grind_yaw = 0.0
 	_grind_gas_released = false
 	air_pitch_total = 0.0
+	shuv_yaw = 0.0
+	shuv_target = 0.0
 	air_time = 0.0
 	_wheelie_grace_consumed = false
 	player_entity.up_direction = Vector3.UP

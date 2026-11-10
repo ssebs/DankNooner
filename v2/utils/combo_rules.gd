@@ -63,8 +63,14 @@ const HELD_TRICK_SCORE: Dictionary = {
 const ONE_TIME_TRICK_SCORE: Dictionary = {
 	TrickController.Trick.HEEL_CLICKER: 1.5,
 	TrickController.Trick.KICKFLIP: 3.0,
-	TrickController.Trick.BACKFLIP: 5.0,
-	TrickController.Trick.FRONTFLIP: 5.0,
+	TrickController.Trick.HEELFLIP: 3.0,
+	TrickController.Trick.BS_SHUVIT: 3.0,
+	TrickController.Trick.FS_SHUVIT: 3.0,
+	# On top of the kickflip / heelflip they upgrade, which already banked.
+	TrickController.Trick.TRE_FLIP: 5.0,
+	TrickController.Trick.LAZERFLIP: 5.0,
+	TrickController.Trick.BACKFLIP: 3.0,
+	TrickController.Trick.FRONTFLIP: 3.0,
 	TrickController.Trick.THREESIXTY: 5.0,
 	TrickController.Trick.BUNNY_HOP: 4.0,
 }

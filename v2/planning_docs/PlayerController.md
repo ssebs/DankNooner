@@ -206,6 +206,7 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   - Detects ground tricks (wheelie variants, stoppie) from `movement_controller.pitch_angle` and air tricks (flips, heel clicker, high chair) from input + airtime
   - Some tricks (e.g. high chair) latch — entry on a gesture, persist while the gating input + condition hold
   - Emits `trick_started(trick_type)` / `trick_ended(trick_type)` on transitions
+  - Shuvits and tre / lazer flips: see [Shuvits](#shuvits)
   - `ComboRules.accrue()` (`utils/combo_rules.gd`, shared with race bots) — accrues its `combo_time` / `combo_grace` / `combo_multiplier` and
     fills `BoostController.boost_amount` while any trick is held. `TrickManager` banks the
     score off these when the combo ends — see [ComboAndBoost.md](./ComboAndBoost.md) for the
@@ -224,7 +225,7 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     but deliberately leaves `boost_amount` alone
 - **CrashController** (`crash_controller.gd`)
   - Runs in rollback tick after the other controllers
-  - Detects crashes from over-rotation (wheelie/stoppie past trick limits, side lean), stoppie steer washout, steep-slope stalls, speed-wobble and drift highsides / spinouts, brake washouts (a grabbed front brake held while leaned at speed: gamepad needs a fast squeeze, KBM any press; `washout_time` drives the tire squeal and holds `grip_usage` at its peak, and on gamepad a fast squeeze while leaned spikes `grip_usage` too), power washouts (more `drive` than the lean allows, held for the washout window above the washout speed; allowed gas falls off steeply only near max lean, leaving maintenance throttle at full lean; `power_washout_time` squeals and feeds `grip_usage` the same way), killbox/obstacle collisions (a glancing layer-2 hit reflects the heading off the wall, wobbles the rider away, and costs `WALL_GLANCE_SPEED_LOSS` instead), upside-down landings, and landing while still mid air-trick (`TrickController.is_air_trick` — stick tricks only, not flips)
+  - Detects crashes from over-rotation (wheelie/stoppie past trick limits, side lean), stoppie steer washout, steep-slope stalls, speed-wobble and drift highsides / spinouts, brake washouts (a grabbed front brake held while leaned at speed: gamepad needs a fast squeeze, KBM any press; `washout_time` drives the tire squeal and holds `grip_usage` at its peak, and on gamepad a fast squeeze while leaned spikes `grip_usage` too), power washouts (more `drive` than the lean allows, held for the washout window above the washout speed; allowed gas falls off steeply only near max lean, leaving maintenance throttle at full lean; `power_washout_time` squeals and feeds `grip_usage` the same way), killbox/obstacle collisions (a glancing layer-2 hit reflects the heading off the wall, wobbles the rider away, and costs `WALL_GLANCE_SPEED_LOSS` instead), upside-down landings, landing while still mid air-trick (`TrickController.is_air_trick` — stick tricks only, not flips), and landing with the bike turned under the rider ([Shuvits](#shuvits))
   - **Unstable surfaces**: lean-crash threshold tightens (scaled by `movement_controller.get_unstable_factor()` via `UNSTABLE_LEAN_THRESHOLD_REDUCTION_DEG`); front brake while steering on unstable triggers a lowside (`UNSTABLE_LOWSIDE_BRAKE_THRESHOLD`, `UNSTABLE_LOWSIDE_STEER_THRESHOLD_DEG`)
   - `trigger_crash()` — sim state only: sets `is_crashed`, bumps the synced `crash_count`, and sets
     velocity (zero, or the highside launch). Ragdoll, camera and SFX fire in `PlayerEntity._process()`
@@ -248,6 +249,40 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   same controllers off `hud_manager.local_player` and feeds `BoostGauge` / `TrickPopups`
   (`player/hud_elements/`), with all display strings on `tr()` keys. See
   [Architecture — HUD Manager](./Architecture.md#hud-manager).
+
+## Shuvits
+
+The rider is goofy: the flips' legs point left. Kickflip (double tap left) kicks the right foot
+back and rolls the bike +Z; heelflip (double tap right) flicks it forward and rolls −Z.
+
+- **Spin** — leaving the ground mid-drift (`TrickController._update_drift_shuvit()`: the synced
+  `_drift_takeoff_dir` from the last ground tick, fired once the jump is real so a drift over a
+  bump doesn't spin: past `AIR_TRICK_MIN_AIRTIME`, or on the first air tick when the launch's
+  `2·vy / FALL_GRAVITY` already clears it), or steer held the flip's way as a kickflip / heelflip pops
+  (`_spin_with_flip()`), calls `MovementController.queue_shuvit()`: a whole turn onto the synced
+  `shuv_target`, which the synced `shuv_yaw` (+ = nose left) spins toward at `SHUV_SPIN_SPEED`,
+  clearing both on arrival. Drift left (`slip_angle` < 0) spins BS, right FS. A same-way queue
+  mid-spin stacks a 720; the other way is ignored. While its paired flip is latched the spin
+  instead follows `TrickController.paired_flip_progress()` (the roll window
+  `FLIP_ROLL_START` / `FLIP_ROLL_END`, which must match the flip anims' roll keys), holding if
+  already ahead, so a tre / lazer spins and rolls together. AnimationController chases `shuv_yaw` per
+  frame, since it steps at the tick rate
+- **Landing** — the landing tick clears both within `LANDING_SNAP_ANGLE_DEG` of a whole turn
+  (dropping any queued turn). Otherwise `shuv_yaw` is left set and CrashController highsides on
+  it, so landing mid-spin bails. Rails land through the same tick
+- **Scoring** — `TrickController._latch_shuvit()` latches one trick per completed turn (0.9 turn,
+  like `has_flipped()`; `_shuvs_awarded` is synced). Nose left is backside (`BS_SHUVIT`), right is
+  frontside (`FS_SHUVIT`). `SHUV_FLIP_PAIRS` combines a shuvit with its flip (tre / lazer), so the
+  drift or steer and the flip go the same way. Either order: a flip still latched when the turn completes
+  upgrades keeping its timer; a flip tapped while the shuvit is latched upgrades and relatches for
+  the flip. Landing mid-flip still bails. Any other latched tap trick holds the shuvit back until
+  it ends; a 720 drops the first shuvit so the second re-latches
+- **Visuals** — AnimationController sets `bike_skin.rotation.y` from `shuv_yaw` after the anim
+  layers apply (a flip's roll track writes the whole rotation; euler YXZ rolls the flip about the
+  spun bike). The `shuvit_bs` / `shuvit_fs` rider pose is scrubbed by the turn instead of played,
+  and sits out the flip tricks, whose pose already has the rider up. On the player the shuvits
+  skip their canned anims and tre / lazer play only their flip; bots and the tricks demo play the
+  canned ones (they key the yaw themselves)
 
 ## Grinding
 

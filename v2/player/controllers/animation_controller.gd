@@ -57,6 +57,13 @@ const BELLY_GRINDS: Dictionary = {
 	TrickController.Trick.SUSKI: Vector2i(-1, 1),
 	TrickController.Trick.SALAD: Vector2i(-1, 1),
 }
+## Their anims pop the rider off the bike already, so the shuvit pose sits them out.
+const FLIP_POSE_TRICKS: Array[TrickController.Trick] = [
+	TrickController.Trick.KICKFLIP,
+	TrickController.Trick.HEELFLIP,
+	TrickController.Trick.TRE_FLIP,
+	TrickController.Trick.LAZERFLIP,
+]
 
 # Animation track paths (relative to visual_root, which is anim root_node).
 # Cached as NodePaths so CustomAnimPlayer.find_track lookups are cheap.
@@ -176,6 +183,11 @@ var _shotgun_equip_layer: CustomAnimPlayer.Layer
 var _wheelie_cam_anim: Animation
 var _wheelie_cam_layer: CustomAnimPlayer.Layer
 var _was_in_balance_point: bool = false
+var _shuvit_bs_anim: Animation
+var _shuvit_fs_anim: Animation
+var _shuvit_layer: CustomAnimPlayer.Layer
+## shuv_yaw steps at the tick rate; this chases it per frame (see _update_shuvit_anim).
+var _shuv_visual_yaw: float = 0.0
 
 # Proc pose carried between frames (no anim deltas applied). Keeping this separate
 # from what gets committed to the nodes prevents anim-delta drift across frames —
@@ -308,6 +320,7 @@ func _update_riding(delta: float) -> void:
 	_update_reverse_anim()
 	_update_wheelie_cam_anim()
 	_update_shotgun_anim()
+	_update_shuvit_anim(delta)
 
 	# Snapshot proc-only state for next frame, then layer anim deltas onto a copy.
 	_proc_pose = pose
@@ -315,6 +328,9 @@ func _update_riding(delta: float) -> void:
 	_apply_anim_deltas(final_pose, delta)
 	_commit_pose(final_pose)
 	_anim_runner.apply_to_nodes(player_entity, _POSE_PIPELINE_PATHS)
+	# After the anims, whose flip roll track writes the whole rotation. Euler YXZ, so a flip's roll
+	# turns with the spin.
+	bike_skin.rotation.y = _shuv_visual_yaw
 
 	_update_idle_timer(delta)
 
@@ -589,6 +605,27 @@ func _update_wheelie_cam_anim() -> void:
 	_was_in_balance_point = in_bp
 
 
+## Rider pops off the pegs while the bike turns under them, scrubbed by the turn so the pose holds
+## wherever the spin stops. Sits out a flip, whose pose already has them up.
+func _update_shuvit_anim(delta: float) -> void:
+	var yaw := movement_controller.shuv_yaw
+	# Chase the synced yaw a bit faster than it spins; the short way round makes the whole-turn
+	# resets (2π -> 0) free.
+	var step := MovementController.SHUV_SPIN_SPEED * 1.5 * delta
+	var diff := clampf(angle_difference(_shuv_visual_yaw, yaw), -step, step)
+	_shuv_visual_yaw = wrapf(_shuv_visual_yaw + diff, -PI, PI)
+	var anim := _shuvit_bs_anim if yaw > 0.0 else _shuvit_fs_anim
+	var want := yaw != 0.0 and trick_controller.current_trick not in FLIP_POSE_TRICKS
+	if _shuvit_layer != null and (not want or _shuvit_layer.anim != anim):
+		_anim_runner.stop(_shuvit_layer)
+		_shuvit_layer = null
+	if want and _shuvit_layer == null:
+		_shuvit_layer = _anim_runner.play_one_shot(anim, 0.0)
+	if _shuvit_layer != null:
+		var turned := _shuv_visual_yaw * signf(yaw)
+		_shuvit_layer.time = fposmod(turned, TAU) / TAU * anim.length
+
+
 func _update_idle_timer(delta: float) -> void:
 	# Reversing keeps us in RIDING — idle anim would fight the back_up pose.
 	if movement_controller.is_reversing:
@@ -663,15 +700,31 @@ func initialize() -> void:
 	# Bat rests hidden — the RESET pose leaves it visible, and bat_swing shows it while swinging.
 	player_entity.get_node("%BaseballBat").visible = false
 
+	_shuvit_bs_anim = TrickAnimator.load_anim("shuvit_bs")
+	_shuvit_fs_anim = TrickAnimator.load_anim("shuvit_fs")
+
 	if _tricks == null:
 		_tricks = TrickAnimator.new(_anim_runner)
-		trick_controller.trick_started.connect(_tricks.start)
+		trick_controller.trick_started.connect(_on_trick_started)
 		trick_controller.trick_ended.connect(_tricks.end)
 
 	# Places the exhaust-tip marker (+ its flame VFX child) per-bike at runtime, same as the
 	# editor tools do — hand/foot come from _sync_targets_from_bike below.
 	_load_wheel_markers_from_definition(_bd)
 	_sync_targets_from_bike()
+
+
+## The player's spin is the synced shuv_yaw (_update_shuvit_anim), so the shuvit tricks skip their
+## canned anims and a tre / lazer plays only its flip, a no-op if that's already running.
+func _on_trick_started(trick: TrickController.Trick) -> void:
+	for shuvit: TrickController.Trick in TrickController.SHUV_FLIP_PAIRS:
+		var pair: Array = TrickController.SHUV_FLIP_PAIRS[shuvit]
+		if trick == shuvit:
+			return
+		if trick == pair[1]:
+			_tricks.start(pair[0])
+			return
+	_tricks.start(trick)
 
 
 ## Sync hand/foot target transforms from saved positions/rotations in BikeSkinDefinition,
@@ -743,6 +796,7 @@ func start_ragdoll(launch_impulse: Vector3 = Vector3.ZERO) -> void:
 	_bat_swing_layer = null
 	_shotgun_equip_layer = null
 	_wheelie_cam_layer = null
+	_shuvit_layer = null
 	_was_in_balance_point = false
 	character_skin.disable_ik()
 	character_skin.start_ragdoll(launch_impulse)
@@ -774,6 +828,8 @@ func do_reset():
 	_bat_swing_layer = null
 	_shotgun_equip_layer = null
 	_wheelie_cam_layer = null
+	_shuvit_layer = null
+	_shuv_visual_yaw = 0.0
 	_was_in_balance_point = false
 	_proc_pose = null
 
