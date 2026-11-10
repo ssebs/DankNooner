@@ -247,7 +247,7 @@ At 0° the pivot is the ground contact; at 90° it's the back of the tire (wheel
 
 ## Belly grinds
 
-Some grinds ride the bike's underside rather than its wheels. `BELLY_GRINDS` maps each to which end drops past the rail: smith / feeble hinge on the rear grind spot nose down, willy / over willy on the front spot tail down (both by `BELLY_GRIND_TILT_DEG`), and boardslide / lipslide sit level on the midpoint of the two spots. Straight grinds (50-50, 5-0, nosegrind) stay on the wheels: riding along the rail, they're already on the rail line.
+Some grinds ride the bike's underside rather than its wheels. `BELLY_GRINDS` maps each to which end drops past the rail: smith / feeble hinge on the rear grind spot nose down, willy / over willy on the front spot tail down (both by `BELLY_GRIND_TILT_DEG`, offset from the lean's pitch like any grind), and boardslide / lipslide sit level on the midpoint of the two spots. Straight grinds (50-50, 5-0, nosegrind) stay on the wheels: riding along the rail, they're already on the rail line.
 
 While one is active (`TrickController.grind_pose_trick()`, read every frame from synced state), `_update_riding` swaps the pitch target for that tilt and eases an offset (`_grind_hinge_offset`) that moves the grind spot onto the body origin, which is the rail line. Visual only: the sim's `pitch_angle` keeps classifying the grind, so leaning still changes grinds while the pose holds.
 

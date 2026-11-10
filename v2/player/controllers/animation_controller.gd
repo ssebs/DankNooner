@@ -43,7 +43,7 @@ const MAX_CHEST_Z_OFFSET: float = 0.2
 const MAX_BUTT_Z_OFFSET: float = 0.1
 ## Belly grinds ride a grind spot on the rail instead of the wheels: Vector2i(spot, tilt).
 ## spot: -1 rear, 1 front, 0 midpoint. tilt: -1 nose down, 1 tail down, 0 level, by
-## BELLY_GRIND_TILT_DEG.
+## BELLY_GRIND_TILT_DEG on top of the lean's pitch.
 const BELLY_GRIND_TILT_DEG: float = 20.0
 const BELLY_GRINDS: Dictionary = {
 	TrickController.Trick.SMITH: Vector2i(-1, -1),
@@ -272,7 +272,7 @@ func _update_riding(delta: float) -> void:
 	var belly_grind := BELLY_GRINDS.has(grind)
 	var belly: Vector2i = BELLY_GRINDS.get(grind, Vector2i.ZERO)
 	if belly_grind:
-		_apply_pitch_ground(pose, blend, belly.y * deg_to_rad(BELLY_GRIND_TILT_DEG))
+		_apply_pitch_ground(pose, blend, pitch + belly.y * deg_to_rad(BELLY_GRIND_TILT_DEG))
 	elif not movement_controller.is_on_floor:
 		_apply_pitch_air(pose, blend, pitch)
 	else:
