@@ -84,8 +84,8 @@ if [[ "$confirm" =~ ^[Yy]$ ]]; then
     sed -i.bak "s/config\/version=\"[^\"]*\"/config\/version=\"$NEW_TAG\"/" ./project.godot && rm ./project.godot.bak
     write_changelog
 
-    read -p "Edit CHANGELOG.md wording first? [Y/n] " edit
-    edit=${edit:-Y}
+    read -p "Edit CHANGELOG.md wording first? [y/N] " edit
+    edit=${edit:-N}
     [[ "$edit" =~ ^[Yy]$ ]] && eval "$(git var GIT_EDITOR) ./CHANGELOG.md"
 
     git add ./project.godot ./CHANGELOG.md
