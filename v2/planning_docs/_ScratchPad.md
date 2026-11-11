@@ -24,17 +24,17 @@ Make a hoodie
 
 ## NOW
 
-- [ ] Still seeing low fps on Mac release build.
-- [ ] find a way to record my gameplay but play it back from another camera angle/slowmo
-  - [ ] Replay studio for trailer footage: review the "Calls I made" section, then plan. Spec: [____REPLAY_WIP.md](./____REPLAY_WIP.md)
-  - [ ] also see `resources/img/marketing` and `scripts/key_art`. currently exists but jank! getting better, but not library header
-
+- [ ] [Progression/Challenges](./Progression.md)
 
 ---
 ##
 ## NEXT
 
-- [ ] [Progression/Challenges](./Progression.md)
+- [ ] Still seeing low fps on Mac release build.
+- [ ] find a way to record my gameplay but play it back from another camera angle/slowmo
+  - [ ] Replay studio for trailer footage: review the "Calls I made" section, then plan. Spec: [____REPLAY_WIP.md](./____REPLAY_WIP.md)
+  - [ ] also see `resources/img/marketing` and `scripts/key_art`. currently exists but jank! getting better, but not library header
+
 
 - [ ] Red triangles over enemy racers head
 
