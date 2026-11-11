@@ -402,13 +402,6 @@ expand_margin_bottom = 0.0
 content_margin_top = 12.0
 content_margin_bottom = 12.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tabpad"]
-content_margin_left = 32.0
-content_margin_top = 24.0
-content_margin_right = 32.0
-content_margin_bottom = 24.0
-bg_color = Color(0, 0, 0, 0)
-
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_6tpw2"]
 content_margin_left = 12.0
 content_margin_top = 12.0
@@ -672,8 +665,6 @@ NameTagLabel/colors/font_outline_color = Color(0, 0, 0, 1)
 NameTagLabel/constants/outline_size = 12
 PaddedLabel/base_type = &"Label"
 PaddedLabel/styles/normal = SubResource("StyleBoxEmpty_labelpad")
-PaddedTabContainer/base_type = &"TabContainer"
-PaddedTabContainer/styles/panel = SubResource("StyleBoxFlat_tabpad")
 PingLabel/base_type = &"Label"
 PingLabel/colors/font_color = Color(0.2, 1, 0.55, 1)
 PopupMenu/styles/normal = SubResource("StyleBoxTexture_btn_normal")

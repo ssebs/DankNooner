@@ -69,20 +69,27 @@ tab_1/title = "Ground"
 tab_2/title = "Air"
 tab_3/title = "TRICKS_HOWTO_TAB"
 
-[node name="Footer" type="HBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout" unique_id=1846203544]
+[node name="FooterMargin" type="MarginContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 0
+
+[node name="Footer" type="HBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/FooterMargin" unique_id=1846203544]
 layout_mode = 2
 
-[node name="CloseTricksBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer/Layout/Footer" unique_id=1846203527]
+[node name="CloseTricksBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer/Layout/FooterMargin/Footer" unique_id=1846203527]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "BACK_LABEL"
 
-[node name="Spacer" type="Control" parent="UI/AspectRatioContainer/MarginContainer/Layout/Footer"]
+[node name="Spacer" type="Control" parent="UI/AspectRatioContainer/MarginContainer/Layout/FooterMargin/Footer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ClearPinBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer/Layout/Footer" unique_id=1846203545]
+[node name="ClearPinBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer/Layout/FooterMargin/Footer" unique_id=1846203545]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2

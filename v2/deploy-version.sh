@@ -69,11 +69,20 @@ echo ""
 echo "New tag: $NEW_TAG"
 echo ""
 
-mapfile -t COMMITS < <(git log "$PREV_TAG"..HEAD --no-merges --format=%s)
+# Bash 3.2 compatible (macOS): no mapfile, ${c,,} or declare -A
+COMMITS=()
+while IFS= read -r c; do COMMITS+=("$c"); done < <(git log "$PREV_TAG"..HEAD --no-merges --format=%s)
 CHECKED=()
-for c in "${COMMITS[@]}"; do
-    if [[ "${c,,}" =~ $JUNK_RE ]]; then CHECKED+=(0); else CHECKED+=(1); fi
+shopt -s nocasematch
+for i in "${!COMMITS[@]}"; do
+    # Junk and repeat subjects start unchecked; the newest copy of a repeat stays checked
+    CHECKED[i]=1
+    [[ "${COMMITS[i]}" =~ $JUNK_RE ]] && CHECKED[i]=0
+    for ((j = 0; j < i; j++)); do
+        [[ "${COMMITS[i]}" == "${COMMITS[j]}" ]] && CHECKED[i]=0
+    done
 done
+shopt -u nocasematch
 ((${#COMMITS[@]})) && pick_commits
 
 echo ""
