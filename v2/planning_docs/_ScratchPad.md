@@ -29,9 +29,7 @@ Make a hoodie
   - [ ] Replay studio for trailer footage: review the "Calls I made" section, then plan. Spec: [____REPLAY_WIP.md](./____REPLAY_WIP.md)
   - [ ] also see `resources/img/marketing` and `scripts/key_art`. currently exists but jank! getting better, but not library header
 
-
-
-
+- [ ] burnout too hard to do donut
 
 ---
 ##

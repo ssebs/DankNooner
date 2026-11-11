@@ -55,17 +55,17 @@
       - [x] smith
     - [x] burnouts
     - [x] bunny hops
-  - [ ] FIX:
+  - [x] FIX:
     - [x] trail braking needs more run up space, not going fast enough to trail brake
-    - [ ] respawn player if they do the wrong trick/grind
+    - [x] respawn player if they do the wrong trick/grind
     - [x] AdvancedTutorialEvent should not be part of the leveldefinition, autostartevent should handle it.
     - [x] cleanup map / events for adv tricks
     - [x] first grind should say do a 50/50 instead of saying land facing it
     - [x] trail braking / progressive braking needs a redo
-    - [ ] burnout msg confusing
-    - [ ] Brake hard in a lean tutorial, 1s too long. (0.5s better)	
-      - [ ] Could also use a (steer, brake now) after gaining some speed
-    - [ ] !tell player that you cant use front brake if youre doing a wheelie during stoppie tut!
+    - [x] burnout msg confusing
+    - [x] Brake hard in a lean tutorial, 1s too long. (0.5s better)	
+      - [x] Could also use a (steer, brake now) after gaining some speed
+    - [x] !tell player that you cant use front brake if youre doing a wheelie during stoppie tut!
 	
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins

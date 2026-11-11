@@ -857,6 +857,7 @@ highlight_key = "TOUR_TUT_ADV_PROGRESSIVE_HIGHLIGHT"
 
 [node name="LeanBrake_Progressive" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking" unique_id=397459832]
 script = ExtResource("leanbrake")
+duration = 0.5
 
 [node name="Teleport_Trail" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking" unique_id=292209346 node_paths=PackedStringArray("marker")]
 script = ExtResource("teleport")
@@ -897,13 +898,7 @@ tour_id = &"tut_adv_burnout"
 script = ExtResource("step")
 title_key = "TRICK_NAME_BURNOUT"
 body_key = "TOUR_TUT_ADV_BURNOUT_BODY"
-highlight_key = "TOUR_TUT_ADV_BURNOUT_REV_HIGHLIGHT"
-
-[node name="Step2" type="Node" parent="TutorialCircle/AdvancedEvent/Mission2_GroundAndAir/Burnout_Tour/Tour" unique_id=1964001337]
-script = ExtResource("step")
-title_key = "TRICK_NAME_BURNOUT"
-body_key = "TOUR_TUT_ADV_BURNOUT_DUMP_BODY"
-highlight_key = "TOUR_TUT_ADV_BURNOUT_DUMP_HIGHLIGHT"
+highlight_key = "TRICK_HOWTO_BURNOUT"
 
 [node name="PerformTrick_Burnout" type="Node" parent="TutorialCircle/AdvancedEvent/Mission2_GroundAndAir" unique_id=878927701]
 script = ExtResource("trick")

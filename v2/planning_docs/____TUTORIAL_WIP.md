@@ -169,6 +169,10 @@ Where the built code differs from the task text below, this section wins:
     ("squeeze on a pad, tap on a keyboard").
   - Reused strings: `TRICK_NAME_*` as tour titles and `TRICK_HOWTO_*` as highlights where they fit.
   - Task 10's Advanced button is in (locked until Tutorial 1 is done). The reset button isn't.
+- **Advanced playtest fixes (2026-11-10):** progressive braking is 0.5s and its HUD reads
+  `TUT_ADV_LEAN_IN` until leaned, then `TUT_ADV_BRAKE_NOW`. The burnout tour is one step with
+  `TRICK_HOWTO_BURNOUT` as the highlight. The stoppie highlight says the front brake does nothing
+  in a wheelie. Every air and grind lesson already has `retry_on_miss`.
 
 ---
 

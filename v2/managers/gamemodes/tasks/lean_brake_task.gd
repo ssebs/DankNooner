@@ -2,7 +2,7 @@
 ## Front brake while leaned over (CrashController's washout zone) without crashing. A crash clears
 ## the runner's state, so it starts over.
 ## - PROGRESSIVE: `duration` seconds in total of hard braking while leaned. On a pad only easing in
-##   survives; on a keyboard each tap adds its pressed time.
+##   survives; on a keyboard each tap adds its pressed time. The HUD says when to brake.
 ## - TRAIL: brake upright, lean in still braking, then let go while still leaned.
 class_name LeanBrakeTask extends GameModeTask
 
@@ -24,7 +24,8 @@ func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
 	if mode == Mode.TRAIL:
 		return _check_trail(player, delta, state)
 	var brake := player.input_controller.nfx_front_brake
-	if _is_leaned(player) and brake > CrashController.WASHOUT_BRAKE:
+	state["leaned"] = _is_leaned(player)
+	if state["leaned"] and brake > CrashController.WASHOUT_BRAKE:
 		state["t"] = state.get("t", 0.0) + delta
 	return state.get("t", 0.0) >= duration
 
@@ -68,7 +69,8 @@ func _is_leaned(player: PlayerEntity) -> bool:
 func get_progress(state: Dictionary) -> String:
 	if mode == Mode.TRAIL:
 		return tr(TRAIL_STEP_KEYS[state.get("step", TrailStep.UPRIGHT)])
-	return "%.1f / %.1fs" % [state.get("t", 0.0), duration]
+	var prompt := tr("TUT_ADV_BRAKE_NOW" if state.get("leaned", false) else "TUT_ADV_LEAN_IN")
+	return "%s  %.1f / %.1fs" % [prompt, state.get("t", 0.0), duration]
 
 
 func get_objective_text() -> String:
