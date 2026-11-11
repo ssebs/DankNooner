@@ -14,6 +14,8 @@ point_count = 2
 [resource]
 script = ExtResource("2_3klvi")
 skin_name = "sport_default"
+price = 12000
+unlock_level = 5
 bike_type = ExtResource("9_type")
 mesh_res = ExtResource("1_uy60g")
 mesh_position_offset = Vector3(0, 0.57, 0)

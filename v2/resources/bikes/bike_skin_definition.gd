@@ -11,6 +11,8 @@ class_name BikeSkinDefinition extends Resource
 
 ## Garage cost; 0 = owned by default.
 @export var price: int = 0
+## Rider level needed before it can be bought; 0 = no gate. Owning it skips the gate.
+@export var unlock_level: int = 0
 
 ## Simulation tuning shared by every skin of this type. Read through the forwarders below.
 @export var bike_type: BikeTypeDefinition
@@ -229,6 +231,7 @@ func _copy_from(other: BikeSkinDefinition) -> void:
 	skin_name = other.skin_name
 	base_res_path = other.base_res_path
 	price = other.price
+	unlock_level = other.unlock_level
 	bike_type = other.bike_type
 	mesh_res = other.mesh_res
 	mesh_position_offset = other.mesh_position_offset

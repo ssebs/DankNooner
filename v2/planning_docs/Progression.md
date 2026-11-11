@@ -20,6 +20,15 @@
 >   scales it to 0.14; its wheels spin on +Z. Paint is its own material (surface 2) on the
 >   body and `Top`; the textured surface 0 stays as is. Markers other than the wheels are copied from the naked bike.
 >
+> - **Rider-level gate** (steps 2 + 7, bikes only), built 2026-11-10, untested.
+>   `BikeSkinDefinition.unlock_level` + `SaveManager.is_locked()`. Locked garage rows are
+>   disabled, show "🔒 Lvl N · $price", and still preview. Naked: Lvl 2 / $7,000; sport:
+>   Lvl 5 / $12,000; mini free. `BikeMod.price` defaults to $200 (`ColorMod` is 0). Deferred to
+>   step 4: the finished-list requirement for variants and mastery gates for mods.
+> - **Save version 2** (`SaveManager.save_version`): any save with another version is replaced by
+>   a new one on load, so pre-gate saves don't keep bikes they never bought. Settings
+>   (`settings.json`) are untouched.
+>
 > **Next:** the retro sport bike (Street Vendor Cart stand-in), once the model is split in Blender.
 >
 > **Blender edits needed** for the stand-in (it's one mesh; `bike_skin.gd`
@@ -34,8 +43,9 @@
 > **Open questions:**
 > - **Variant audio:** engine sound is per skin already (`engine_sound_id` + pitch/curves); new
 >   sounds come later. Traffic rolls every skin, which is fine.
-> - Still open from before: character level gates, rider-level gates beyond the naked bike,
->   who writes the challenge lists, and the stat set.
+> - Answered 2026-11-10: characters are price-only; naked and sport both need a rider level;
+>   Claude drafts the challenge lists for the user to edit; stats cover a broad Career page.
+> - Still open: the actual level numbers for naked and sport (economy pass).
 
 > **Demo scope.** The full release adds a story on top ([Story](./Story.md)); the big map's plans
 > are in TODO's New Large Map. Neither is covered here.
@@ -88,7 +98,8 @@ free roam and in events, unlocks that show progress, and money to spend on what 
 - `current_save["progression"]` holds per-event time attack PBs and `owned` skin paths.
   `TimeAttackComponent` and `RunnerGameMode.rpc_earn` are the pattern for writing a client's save
   from a server-run event: the server RPCs each client, which writes its own save.
-- **Garage shop:** characters and horns cost money; bikes and colors are free today. A 0 price
+- **Garage shop:** characters, horns and bikes cost money; colors are free. Bikes can also need
+  a rider level (`unlock_level`, checked by `SaveManager.is_locked()`). A 0 price
   counts as owned (`SaveManager.is_owned()`). A new save owns only what its default loadout uses.
   The garage (`garage_ui.gd`, free roam `GarageActivity` or the customize menu) lists every skin on
   disk with its price, tinted when unaffordable.
@@ -104,8 +115,8 @@ Targets to tune toward. Prices, levels and payout bases are set on the definitio
 
 - A new save owns the mini bike, at rider level 1, with starting money that buys neither of the
   other bikes.
-- The naked bike is a short save-up plus a rider level; the sport bike takes roughly half an hour
-  of events. Raise the per-event `payout_money` bases to hit this, not the formula.
+- The naked bike is a short save-up plus a low rider level; the sport bike needs a higher rider
+  level and takes roughly half an hour of events. Raise the per-event `payout_money` bases to hit this, not the formula.
 - Event XP scales with event difficulty (per-event `payout_xp`).
 - Three dailies are worth about ten races of XP.
 - Cosmetics are cheap next to bikes, so buying one doesn't wreck the bike savings.
@@ -115,10 +126,10 @@ Targets to tune toward. Prices, levels and payout bases are set on the definitio
 | Item | Unlocked by | Then |
 |---|---|---|
 | Mini bike (Grom) | owned on a new save | — |
-| Naked, sport bikes | rider level (naked) | bought with $ |
+| Naked, sport bikes | rider level (sport's is higher) | bought with $ |
 | Other skins of a type | finishing that type's challenge list | bought with $ |
-| Bike mods | bike-type mastery level | bought with $ |
-| Characters | rider level | bought with $ |
+| Bike mods | bike-type mastery level | bought with $ (default $200) |
+| Characters | nothing | bought with $ |
 | Horns | nothing | bought with $ |
 | Colors | nothing | free |
 
@@ -182,6 +193,9 @@ plus the existing `+$N` / `+N XP` pops (`RidingHUDState.pop_earned`). `AudioMana
 ## Stats and achievements
 
 - **Two scopes:** lifetime totals, and per-bike-type counters. Both saved.
+- **Broad set for the Career page,** not only what challenges read: trick counts and times
+  (wheelie, stoppie, balance point, airtime, flips, grinds), crashes, wins and finishes by mode,
+  plus distance, top speed, near misses and money earned.
 - **Save is the source of truth.** The same counters push to Steam stats, which drive Steam
   achievements. Achievements are bragging rights for 100%ing; they unlock nothing in game.
 - **The demo ships no Steam achievements,** but the system is built and the demo still saves
@@ -254,7 +268,7 @@ better idea; the rest were decided.
    and points at its type. The type also carries its challenge list and mod ladder. ~24 scripts
    reference `BikeSkinDefinition` (player, NPC racers, traffic, garage), so read through the
    definition rather than renaming every field read.
-2. **Unlock requirements.** Purchasable definitions (bike skins, characters, mods) get a
+2. **Unlock requirements.** Bike skins and mods (not characters) get a
    requirement: rider level, mastery level, or finished list. One check (beside
    `SaveManager.is_owned()`) answers "locked, and why", used by the garage and `purchase()`.
 3. **Stats tracker.** Server-side, ticking every rider from synced state like `RaceChallenge`
@@ -298,5 +312,5 @@ tricks for unique challenges, and the tutorial (which comes before all of this f
 
 ## Open questions
 
-- **Character level gates:** which characters unlock at which rider level.
-- **Gamba wheel** on level up (in TODO): in or out of the demo?
+- **Bike level gates:** the rider levels for naked and sport (economy pass).
+- **Gamba wheel** on level up (in TODO): out for now.

@@ -140,6 +140,8 @@ Resource at `resources/bikes/bike_skin_definition.gd`. Grouped in the inspector:
 
 **Animation** — `lean_multiplier`, `weight_shift_multiplier`
 
+**Shop** — `price`, and `unlock_level`: the rider level needed before it can be bought (0 = no gate). `SaveManager.is_locked()` checks it; owning the bike skips it. The garage shows locked bikes as disabled rows with the requirement next to the price, and they still preview on focus.
+
 **Type** — `bike_type: BikeTypeDefinition`. Its fields are forwarded as read-only properties, so callers keep reading `bd.max_speed`.
 
 ### BikeTypeDefinition
@@ -233,7 +235,7 @@ Instance `npc_animal_entity.tscn`, set `animal_skin_definition` on **that instan
 
 ## Mods
 
-`BikeMod` (`resources/bikes/mods/bike_mod.gd`) is a base `Resource` with a single `apply(vehicle_skin: Node3D)` method — typed to `Node3D` rather than `BikeSkin` so one mod ecosystem serves both `BikeSkin` and `CarSkin` (any vehicle skin exposing `mesh_skin`). Subclass it to create composable overrides that stack on top of the base definition.
+`BikeMod` (`resources/bikes/mods/bike_mod.gd`) is a base `Resource` with a single `apply(vehicle_skin: Node3D)` method — typed to `Node3D` rather than `BikeSkin` so one mod ecosystem serves both `BikeSkin` and `CarSkin` (any vehicle skin exposing `mesh_skin`). Subclass it to create composable overrides that stack on top of the base definition. Each mod has a garage `price`; `ColorMod` sets 0, since colors are free. Nothing sells mods yet.
 
 `BikeSkin._apply_definition()` calls `_apply_mods()` after `_set_mesh_colors()`, so mods always win over base colors.
 

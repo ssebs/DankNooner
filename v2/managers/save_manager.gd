@@ -7,7 +7,9 @@ signal save_changed(current_save: Dictionary)
 signal save_item_updated(save_key: String, save_value: Variant)
 
 @export var save_slot: int = 1
-@export var save_version: int = 1
+## Bumping this wipes every older save on load (settings are a separate file).
+## 2: bike unlock gates, so free-era saves don't keep bikes they never bought.
+@export var save_version: int = 2
 @export var default_player_definition: PlayerDefinition = load(
 	"res://resources/player/default_player_definition.tres"
 )
@@ -29,8 +31,7 @@ var default_save: Dictionary = {
 	# TrickRow.pin ids shown on the riding HUD
 	"pinned_tricks": [],
 	# Earned per-player records. time_attack: "<level>/<event>" -> {best_lap_ms, best_run_ms}
-	# owned: res paths of bought bike/character skins (see is_owned). Set by new-save seeding or
-	# the pre-garage migration in load_save, so its absence marks an old save.
+	# owned: res paths of bought bike/character skins (see is_owned). Seeded on a new save.
 	"progression": {"time_attack": {}},
 }
 
@@ -95,6 +96,11 @@ func _referenced_skin_paths(player_def: PlayerDefinition) -> Array:
 ## A skin is owned once bought, or if it's free.
 func is_owned(path: String) -> bool:
 	return load(path).price == 0 or path in current_save["progression"]["owned"]
+
+
+## A bike skin is locked until the rider reaches its unlock_level, unless already owned.
+func is_locked(path: String) -> bool:
+	return !is_owned(path) and get_player_definition().level() < load(path).unlock_level
 
 
 ## Spend `price` to own `path`. In memory only — the caller's next update_save writes it.
@@ -207,14 +213,13 @@ func load_save():
 		_save_default_save()
 		return
 
-	# old/missing version means an outdated save format — migrate by filling
-	# any missing keys with defaults instead of discarding the file
-	var needs_migration: bool = json_dict.get("version", -1) != save_version
-	if needs_migration:
+	if json_dict.get("version", -1) != save_version:
 		DebugUtils.DebugErrMsg(
-			"savegame.json version mismatch (%s != %s), filling missing keys with defaults"
-			% [json_dict.get("version", "none"), save_version]
+			"%s is version %s, not %s: replacing it with a new save"
+			% [save_path, json_dict.get("version", "none"), save_version]
 		)
+		_save_default_save()
+		return
 
 	for key in default_save.keys():
 		if key == "player_definition":
@@ -224,15 +229,6 @@ func load_save():
 			current_save["player_definition"] = player_def
 		else:
 			current_save[key] = json_dict.get(key, default_save[key])
-	current_save["version"] = save_version
-
-	if !current_save["progression"].has("owned"):
-		# Pre-garage save: keep everything it already uses.
-		current_save["progression"]["owned"] = _referenced_skin_paths(current_save["player_definition"])
-		needs_migration = true
-
-	if needs_migration:
-		save_save()  # persist migrated save
 	save_changed.emit(current_save)
 
 

@@ -26,7 +26,12 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
-	
+
+- [ ] [Progression/Challenges](./Progression.md)
+  - [x] bike variants (scooter=>mini, cruiser=>naked)
+  - [ ] lock bikes behind XP level
+
+
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
 
@@ -217,6 +222,8 @@
 ---
 
 ## Done ✅
+
+- [x] main menu: random bike, profile's rider
 
 - [x] burnout doesn't do donut fast enough when steering
 

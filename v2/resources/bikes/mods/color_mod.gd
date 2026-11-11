@@ -5,6 +5,10 @@ class_name ColorMod extends BikeMod
 @export var colors: Array[Color] = []
 
 
+func _init() -> void:
+	price = 0
+
+
 ##override
 func apply(vehicle_skin: Node3D) -> void:
 	vehicle_skin.mesh_skin.update_all_colors(colors)

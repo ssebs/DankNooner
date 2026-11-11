@@ -358,7 +358,9 @@ func _build_bike_page():
 			def.price,
 			loadout.bike.base_res_path == path,
 			_preview.bind(def, _shown_character()),
-			_apply_bike.bind(path)
+			_apply_bike.bind(path),
+			false,
+			def.unlock_level if _save_manager.is_locked(path) else 0
 		)
 
 
@@ -476,12 +478,16 @@ func _add_skin_row(
 	is_current: bool,
 	preview: Callable,
 	apply: Callable,
-	demo_locked := false
+	demo_locked := false,
+	locked_level := 0
 ):
+	# Locked rows still preview on focus, so riders can see what unlocks next.
 	if demo_locked and UtilsConstants.is_demo_build():
-		var locked_row := _add_row(_skin_label(skin_name), tr("DEMO_LOCKED_LABEL"), func(): pass, preview)
-		locked_row.disabled = true
-		locked_row.tooltip_text = tr("DEMO_LOCKED_TOOLTIP")
+		_add_locked_row(skin_name, tr("DEMO_LOCKED_LABEL"), tr("DEMO_LOCKED_TOOLTIP"), preview)
+		return
+	if locked_level > 0:
+		var right := tr("GARAGE_LOCKED_LEVEL") % [locked_level, MoneyLabel.format(price)]
+		_add_locked_row(skin_name, right, tr("GARAGE_LOCKED_TOOLTIP") % locked_level, preview)
 		return
 	var owned := _save_manager.is_owned(path)
 	# Re-picking the current one would reset its colors.
@@ -507,6 +513,12 @@ func _on_row_focused(control: Control, preview: Callable):
 		preview.call()
 	else:
 		_preview_current()
+
+
+func _add_locked_row(skin_name: String, right: String, tooltip: String, preview: Callable):
+	var row := _add_row(_skin_label(skin_name), right, func(): pass, preview)
+	row.disabled = true
+	row.tooltip_text = tooltip
 
 
 func _on_skin_pressed(skin_name: String, path: String, price: int, apply: Callable):
