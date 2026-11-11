@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://player/hud_elements/input_prompt.tscn" id="5_prompt"]
 [ext_resource type="Script" path="res://utils/tour/tour.gd" id="6_tour"]
 [ext_resource type="Script" path="res://utils/tour/tour_step.gd" id="7_tourstep"]
+[ext_resource type="Material" path="res://resources/shaders/vignette.tres" id="4_vignette"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bare"]
 
@@ -80,6 +81,16 @@ grow_vertical = 2
 mouse_filter = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_ui")
+
+[node name="Vignette" type="ColorRect" parent="."]
+material = ExtResource("4_vignette")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="SaveCard" parent="." instance=ExtResource("3_card")]
 unique_name_in_owner = true

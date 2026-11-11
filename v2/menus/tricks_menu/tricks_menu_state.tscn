@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bemkxmpmhjikk" path="res://menus/tricks_menu/tricks_menu_state.gd" id="1_tricks"]
 [ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_theme"]
 [ext_resource type="Script" path="res://menus/prompt_tab_container.gd" id="3_ptabs"]
+[ext_resource type="Material" path="res://resources/shaders/vignette.tres" id="4_vignette"]
 
 [node name="TricksMenuState" type="Node" unique_id=1846203517]
 script = ExtResource("1_tricks")
@@ -16,6 +17,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_theme")
+
+[node name="Vignette" type="ColorRect" parent="UI"]
+material = ExtResource("4_vignette")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="BGTint" type="ColorRect" parent="UI" unique_id=1846203519]
 unique_name_in_owner = true

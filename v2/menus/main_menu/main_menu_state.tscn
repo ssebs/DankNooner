@@ -3,16 +3,9 @@
 [ext_resource type="Script" uid="uid://cv4bvroelqvpy" path="res://menus/main_menu/main_menu_state.gd" id="1_k7k4a"]
 [ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_3qbku"]
 [ext_resource type="Shader" uid="uid://bfe77je5epdua" path="res://resources/shaders/soft_shadow.gdshader" id="3_shadow"]
-[ext_resource type="Shader" uid="uid://6etvnw08civj" path="res://resources/shaders/vignette.gdshader" id="4_vignette"]
+[ext_resource type="Material" path="res://resources/shaders/vignette.tres" id="4_vignette"]
 [ext_resource type="Texture2D" uid="uid://b7mda1eajtkqe" path="res://resources/img/Logos/DankNoonerLogo_TextIconOnly.png" id="6_lw7v1"]
 [ext_resource type="PackedScene" path="res://menus/main_menu/components/current_save_card.tscn" id="8_card"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_vignette"]
-shader = ExtResource("4_vignette")
-shader_parameter/color = Color(0, 0, 0, 0.85)
-shader_parameter/center = Vector2(0.65, 0.5)
-shader_parameter/inner_radius = 0.35
-shader_parameter/outer_radius = 1.1
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_shadow"]
 shader = ExtResource("3_shadow")
@@ -36,7 +29,7 @@ grow_vertical = 2
 theme = ExtResource("2_3qbku")
 
 [node name="Vignette" type="ColorRect" parent="UI" unique_id=297389049]
-material = SubResource("ShaderMaterial_vignette")
+material = ExtResource("4_vignette")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
