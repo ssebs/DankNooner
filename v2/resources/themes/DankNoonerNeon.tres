@@ -402,20 +402,12 @@ expand_margin_bottom = 0.0
 content_margin_top = 12.0
 content_margin_bottom = 12.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_tabpad"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tabpad"]
 content_margin_left = 32.0
 content_margin_top = 24.0
 content_margin_right = 32.0
 content_margin_bottom = 24.0
-texture = ExtResource("neon_panel")
-texture_margin_left = 19.0
-texture_margin_top = 19.0
-texture_margin_right = 19.0
-texture_margin_bottom = 19.0
-expand_margin_left = 0.0
-expand_margin_top = 0.0
-expand_margin_right = 0.0
-expand_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_6tpw2"]
 content_margin_left = 12.0
@@ -573,6 +565,31 @@ expand_margin_top = 0.0
 expand_margin_right = 0.0
 expand_margin_bottom = 0.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scrolltrack"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.255, 0.686, 1, 0.08)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scrollgrab"]
+bg_color = Color(0.16, 0.34, 0.48, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scrollgrabhot"]
+bg_color = Color(0.255, 0.686, 1, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
 [resource]
 default_font = ExtResource("1_kytw6")
 default_font_size = 24
@@ -693,11 +710,11 @@ TabButton/styles/hover = SubResource("StyleBoxFlat_tabhover")
 TabButton/styles/hover_pressed = SubResource("StyleBoxFlat_tabsel")
 TabButton/styles/normal = SubResource("StyleBoxFlat_tabunsel")
 TabButton/styles/pressed = SubResource("StyleBoxFlat_tabsel")
-TabContainer/colors/font_hovered_color = Color(0.25490198, 0.6862745, 1, 1)
+TabContainer/colors/font_hovered_color = Color(0.95, 0.95, 0.95, 1)
 TabContainer/colors/font_outline_color = Color(0, 0, 0, 1)
 TabContainer/colors/font_selected_color = Color(1, 1, 1, 1)
-TabContainer/colors/font_unselected_color = Color(0.7, 0.7, 0.7, 1)
-TabContainer/constants/outline_size = 4
+TabContainer/colors/font_unselected_color = Color(0.875, 0.875, 0.875, 1)
+TabContainer/constants/outline_size = 0
 TabContainer/constants/side_margin = 0
 TabContainer/styles/panel = SubResource("StyleBoxEmpty_iun4r")
 TabContainer/styles/tab_hovered = SubResource("StyleBoxFlat_tabhover")
@@ -715,6 +732,16 @@ TitleLabel/font_sizes/font_size = 76
 TrickRowPanel/base_type = &"PanelContainer"
 TrickRowPanel/styles/panel = SubResource("StyleBoxFlat_trkrow")
 VBoxContainer/constants/separation = 12
+HScrollBar/styles/grabber = SubResource("StyleBoxFlat_scrollgrab")
+HScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_scrollgrabhot")
+HScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_scrollgrabhot")
+HScrollBar/styles/scroll = SubResource("StyleBoxFlat_scrolltrack")
+HScrollBar/styles/scroll_focus = SubResource("StyleBoxFlat_scrolltrack")
+VScrollBar/styles/grabber = SubResource("StyleBoxFlat_scrollgrab")
+VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_scrollgrabhot")
+VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_scrollgrabhot")
+VScrollBar/styles/scroll = SubResource("StyleBoxFlat_scrolltrack")
+VScrollBar/styles/scroll_focus = SubResource("StyleBoxFlat_scrolltrack")
 Label/colors/font_shadow_color = Color(0, 0, 0, 0.6)
 Label/constants/shadow_offset_x = 0
 Label/constants/shadow_offset_y = 2
@@ -725,6 +752,7 @@ Button/colors/font_pressed_color = Color(0.02, 0.027, 0.06, 1)
 Button/colors/font_hover_pressed_color = Color(0.02, 0.027, 0.06, 1)
 TabButton/colors/font_pressed_color = Color(1, 1, 1, 1)
 TabButton/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+TabContainer/constants/tab_separation = 8
 CheckBox/colors/font_pressed_color = Color(1, 1, 1, 1)
 CheckBox/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
 Heading1Label/fonts/font = SubResource("Font_Bold")

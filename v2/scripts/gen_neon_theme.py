@@ -180,6 +180,11 @@ PROPS = {
     "Button/colors/font_hover_pressed_color": (*MENU.bot, 1),
     "TabButton/colors/font_pressed_color": (1, 1, 1, 1),
     "TabButton/colors/font_hover_pressed_color": (1, 1, 1, 1),
+    # TabContainer tabs (tricks, settings) read like the garage's TabButtons: plain text, no outline.
+    "TabContainer/constants/outline_size": 0,
+    "TabContainer/constants/tab_separation": 8,  # the garage tab strip's HBox separation
+    "TabContainer/colors/font_unselected_color": (0.875, 0.875, 0.875, 1),
+    "TabContainer/colors/font_hovered_color": (0.95, 0.95, 0.95, 1),
     "CheckBox/colors/font_pressed_color": (1, 1, 1, 1),
     "CheckBox/colors/font_hover_pressed_color": (1, 1, 1, 1),
     "Heading1Label/fonts/font": _font("Bold"),
@@ -229,7 +234,6 @@ SWAPS = {
     "StyleBoxFlat_fadetop": "fade_top",
     "StyleBoxFlat_faderight": "fade_right",
     "StyleBoxFlat_fadebottom": "fade_bottom",
-    "StyleBoxFlat_tabpad": "panel",
     "StyleBoxFlat_boostfill": "boost_fill",
 }
 # External StyleBox files the base theme references: ext id -> _boxes() name.
