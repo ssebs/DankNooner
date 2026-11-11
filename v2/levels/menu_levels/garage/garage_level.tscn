@@ -1,8 +1,9 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" uid="uid://dv0brm8irhlth" path="res://levels/level_definition.gd" id="1_lvl"]
-[ext_resource type="PackedScene" path="res://levels/components/garage/garage.tscn" id="2_garage"]
+[ext_resource type="PackedScene" uid="uid://brxybm0yftn41" path="res://levels/assets/graybox/graybox_staticbody.tscn" id="2_gb"]
 [ext_resource type="Environment" path="res://levels/assets/night_environment.tres" id="3_env"]
+[ext_resource type="PackedScene" uid="uid://bmti2mikrlp48" path="res://levels/components/interactable/garage_bay.tscn" id="4_bay"]
 
 [node name="GarageLevel" type="Node3D"]
 script = ExtResource("1_lvl")
@@ -17,5 +18,16 @@ transform = Transform3D(0.19617997, -0.94997144, -0.24303903, 0.92850906, 0.1002
 light_color = Color(0.6, 0.65, 1, 1)
 light_energy = 0.5
 
-[node name="Garage" parent="." instance=ExtResource("2_garage")]
-unique_name_in_owner = true
+[node name="Ground" parent="." instance=ExtResource("2_gb")]
+shape_mode = 1
+width = 64.0
+depth = 64.0
+
+[node name="KeyLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 1)
+light_color = Color(0.8392157, 0.7882353, 0.22352941, 1)
+light_energy = 2.0
+omni_range = 8.0
+
+[node name="GarageBay" parent="." instance=ExtResource("4_bay")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1093269, 0)

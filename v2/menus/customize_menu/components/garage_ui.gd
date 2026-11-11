@@ -30,12 +30,12 @@ const TAB_MAX_WIDTH: float = 200
 @onready var _add_tab_btn: Button = %AddTabBtn
 @onready var _prev_tab_prompt: InputPrompt = %PrevTabPrompt
 @onready var _next_tab_prompt: InputPrompt = %NextTabPrompt
-@onready var _close_btn: Button = %CloseBtn
 @onready var _money: MoneyLabel = %Money
 @onready var _title: Label = %Title
 @onready var _count: Label = %Count
 @onready var _back_btn: Button = %BackBtn
 @onready var _set_active_btn: Button = %SetActiveBtn
+@onready var _active_label: Label = %ActiveLabel
 @onready var _delete_btn: Button = %DeleteBtn
 @onready var _leave_btn: Button = %LeaveBtn
 @onready var _pose_btn: Button = %PoseBtn
@@ -91,7 +91,6 @@ func _ready():
 	_set_active_btn.pressed.connect(func(): _set_active(_tab))
 	_delete_btn.pressed.connect(_on_delete_pressed)
 	_leave_btn.pressed.connect(exit_requested.emit)
-	_close_btn.pressed.connect(exit_requested.emit)
 	_pose_btn.pressed.connect(pose_requested.emit)
 	for color in UtilsConstants.SKIN_COLOR_PRESETS:
 		if color not in _picker.get_presets():
@@ -211,12 +210,15 @@ func _rebuild_tabs():
 	for i in _player_def.loadouts.size():
 		var loadout := _player_def.loadouts[i]
 		var label := loadout.name if loadout.name != "" else str(i + 1)
-		# Same marker as a row's current pick.
-		_add_tab(("* " if i == _player_def.active_loadout_index else "") + label, i + 1)
+		var tab_btn := _add_tab(label, i + 1)
+		# The active loadout's name in the same blue as the Saves menu's "(active)".
+		if i == _player_def.active_loadout_index:
+			for state in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color"]:
+				tab_btn.add_theme_color_override(state, UtilsConstants.UI_BLUE)
 	_add_tab_btn.visible = _player_def.loadouts.size() < PlayerDefinition.MAX_LOADOUTS
 
 
-func _add_tab(label: String, tab: int):
+func _add_tab(label: String, tab: int) -> Button:
 	var btn := Button.new()
 	btn.text = label
 	btn.theme_type_variation = &"TabButton"
@@ -232,6 +234,7 @@ func _add_tab(label: String, tab: int):
 	if tab == _tab:
 		# Deferred so the strip has laid out the new tabs.
 		_tab_scroll.ensure_control_visible.call_deferred(btn)
+	return btn
 
 
 ## Right-click makes a loadout active without switching to it.
@@ -267,6 +270,7 @@ func _rebuild(focus_index: int = -1):
 	var is_loadout_root := _tab != 0 and _pages.size() == 1
 	_set_active_btn.visible = is_loadout_root
 	_delete_btn.visible = is_loadout_root
+	_active_label.visible = false
 	_rebuild_tabs()
 	for child in _rows.get_children():
 		# Not free(): this can run inside a row's own pressed signal.
@@ -339,11 +343,10 @@ func _build_loadout_root():
 		horn_label = _skin_label(loadout.horn.skin_name)
 	_add_row(tr("GARAGE_HORN"), horn_label + " >", _push.bind(Page.HORN))
 	var is_active := _tab - 1 == _player_def.active_loadout_index
-	_set_active_btn.text = tr("GARAGE_ACTIVE") if is_active else tr("SET_ACTIVE_LABEL")
-	_set_active_btn.disabled = is_active
-	# Already active reads as a status, not a dead button.
-	_set_active_btn.flat = is_active
-	_delete_btn.disabled = _player_def.loadouts.size() <= 1
+	# Status, not dead buttons: the active loadout gets a label, the last one can't be deleted.
+	_set_active_btn.visible = !is_active
+	_active_label.visible = is_active
+	_delete_btn.visible = _player_def.loadouts.size() > 1
 
 
 func _build_bike_page():
@@ -461,6 +464,11 @@ func _add_text_row(label: String, text: String, on_changed: Callable):
 	entry.text_changed.connect(on_changed)
 	box.add_child(name_label)
 	box.add_child(entry)
+	# Inset the entry's right edge like the label's left, in line with GarageRow's right-hand values.
+	var spacer := Control.new()
+	spacer.custom_minimum_size.x = indent.content_margin_left
+	box.add_theme_constant_override("separation", 0)
+	box.add_child(spacer)
 	_rows.add_child(box)
 	_wire_focus(entry, Callable())
 

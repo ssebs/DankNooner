@@ -223,7 +223,7 @@ SWAPS = {
     "StyleBoxFlat_rowbtnhoverpressed": "row_hover_pressed",
     "StyleBoxFlat_rowbtnpressed": "row_pressed",
     "StyleBoxFlat_rowbtnfocus": "row_focus",
-    "StyleBoxFlat_garagerowsel": "btn_hover",
+    "StyleBoxFlat_garagerowsel": "row_focus",
     "StyleBoxFlat_feedpanel": "feed",
     "StyleBoxFlat_fadeleft": "fade_left",
     "StyleBoxFlat_fadetop": "fade_top",

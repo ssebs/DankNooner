@@ -59,6 +59,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_default_cursor_shape = 2
+theme_override_constants/icon_max_width = 28
 text = "CLOSE_LABEL"
 icon = ExtResource("3_close")
 flat = true
