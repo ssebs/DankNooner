@@ -35,24 +35,18 @@ emission_energy_multiplier = 1.6
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n2011"]
 albedo_color = Color(0.64483345, 0.4745, 0.73, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_euboa"]
-albedo_color = Color(0.64483345, 0.4745, 0.73, 1)
-
 [node name="Vespa" unique_id=102277829 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node", "taillight_mesh") instance=ExtResource("1_vespa")]
 script = ExtResource("2_skin")
-slots = Array[ExtResource("3_slot")]([SubResource("Resource_paint"), SubResource("Resource_paint")])
-meshes = [NodePath("Vespa"), NodePath("Top")]
+slots = Array[ExtResource("3_slot")]([SubResource("Resource_paint"), SubResource("Resource_paint"), SubResource("Resource_paint")])
+meshes = [NodePath("Vespa"), NodePath("Top"), NodePath("Top/Fender")]
 steering_rotation_node = NodePath("Top")
 front_wheel_node = NodePath("Top/FrontWheel")
 rear_wheel_node = NodePath("RearWheel")
 taillight_slot = SubResource("Resource_tail")
 taillight_mesh = NodePath("Taillight")
 
-[node name="Taillight" parent="." index="2" unique_id=151277812]
+[node name="Taillight" parent="." index="2" unique_id=1839639716]
 surface_material_override/0 = SubResource("StandardMaterial3D_gw5tl")
 
-[node name="Top" parent="." index="3" unique_id=591011520]
+[node name="Top" parent="." index="3" unique_id=962704694]
 surface_material_override/0 = SubResource("StandardMaterial3D_n2011")
-
-[node name="Vespa" parent="." index="5" unique_id=426050731]
-surface_material_override/0 = SubResource("StandardMaterial3D_euboa")

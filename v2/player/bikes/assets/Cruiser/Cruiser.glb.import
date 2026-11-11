@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b73ksf5e0r6q5"
-path="res://.godot/imported/cruiserbygoogle.glb-9451e190419c7903d188e672da3f260b.scn"
+uid="uid://c71n2pyxndi4h"
+path="res://.godot/imported/Cruiser.glb-29e404d8f5ddab05c69d88936a005ff0.scn"
 
 [deps]
 
-source_file="res://player/bikes/assets/Cruiser/cruiserbygoogle.glb"
-dest_files=["res://.godot/imported/cruiserbygoogle.glb-9451e190419c7903d188e672da3f260b.scn"]
+source_file="res://player/bikes/assets/Cruiser/Cruiser.glb"
+dest_files=["res://.godot/imported/Cruiser.glb-29e404d8f5ddab05c69d88936a005ff0.scn"]
 
 [params]
 

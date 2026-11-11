@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="BikeSkinDefinition" format=3 uid="uid://bpqsi4bki6m64"]
+
+[ext_resource type="PackedScene" uid="uid://we2oyx0a2h22" path="res://player/bikes/scenes/cruiser_bike.tscn" id="1_hvuo0"]
+[ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/bikes/bike_skin_definition.gd" id="2_4wyad"]
+[ext_resource type="Curve" path="res://resources/bikes/ninja_rpm_pitch_curve.tres" id="2_dq2nd"]
+[ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="4_bec7v"]
+[ext_resource type="Resource" path="res://resources/bikes/types/naked_bike_type.tres" id="9_type"]
+
+[resource]
+script = ExtResource("2_4wyad")
+skin_name = "cruiser"
+bike_type = ExtResource("9_type")
+mesh_res = ExtResource("1_hvuo0")
+mesh_position_offset = Vector3(0, 0.014, 0.004)
+mesh_rotation_offset_degrees = Vector3(0, -90, 0)
+mesh_scale_multiplier = Vector3(0.15, 0.15, 0.15)
+training_wheels_marker_position = Vector3(0, 0.045939356, -0.65252227)
+seat_marker_position = Vector3(1.3546188e-08, 0.8980796, -0.30633464)
+front_wheel_ground_position = Vector3(-7.1693265e-09, 0, 0.7484802)
+rear_wheel_ground_position = Vector3(7.965895e-09, 0, -0.7527557)
+rear_wheel_back_position = Vector3(1.09531015e-08, 0, -1.0875391)
+front_wheel_front_position = Vector3(-1.0953116e-08, 0, 1.0885391)
+exhaust_tip_position = Vector3(-0.16667293, 0.2560584, -0.9620907)
+exhaust_tip_rotation_degrees = Vector3(2.966927, 5.0817924, 0.26371798)
+headlight_position = Vector3(-8.010887e-08, 0.9572637, 0.5636448)
+headlight_rotation_degrees = Vector3(0, -179.99995, 0)
+gas_cap_position = Vector3(-1.23408235e-08, 1.0241582, 0.10433705)
+grind_spot_rear_position = Vector3(-4.039542e-10, 0.23086351, -0.36127907)
+grind_spot_front_position = Vector3(9.598789e-09, 0.27369508, 0.34268266)
+chest_position = Vector3(3.651141e-08, 1.1764848, -0.24979444)
+chest_rotation = Vector3(0, -5.6843426e-14, 0)
+head_position = Vector3(-1.5670119e-07, 1.7314824, -0.2957811)
+head_rotation = Vector3(0, -2.842171e-14, 0)
+left_arm_magnet_position = Vector3(0.6170054, 1.0199555, 0.024424452)
+right_arm_magnet_position = Vector3(-0.617, 1.02, 0.024)
+left_hand_position = Vector3(-1.7201144, 2.3639317, -2.4913764)
+right_hand_position = Vector3(-1.6514299, 2.3666658, 2.2765603)
+left_hand_rotation = Vector3(1.3844821, -0.42036575, -3.014204)
+right_hand_rotation = Vector3(1.229199, 2.831223, 2.7548482)
+left_foot_position = Vector3(0.22294392, 0.492577, 0.29187527)
+right_foot_position = Vector3(-0.223, 0.493, 0.292)
+left_foot_rotation = Vector3(-1.230285, -1.9834919, -0.96164936)
+right_foot_rotation = Vector3(-1.3418242, 1.3634045, 1.6955742)
+left_leg_magnet_position = Vector3(0.29177234, 0.56925595, 0.42887357)
+right_leg_magnet_position = Vector3(-0.292, 0.569, 0.429)
+engine_min_pitch = 0.8
+engine_max_pitch = 2.5
+metadata/_custom_type_script = "uid://bqkmh4ppf72gt"

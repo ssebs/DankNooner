@@ -3,7 +3,7 @@
 > **WIP 2026-11-10: bike type split + skin variants.** Working on [New systems](#new-systems)
 > step 1 only. Gamba wheel is out for now.
 >
-> **Built (untested in game):**
+> **Built (scooter ridden and working 2026-11-10; the other types not re-checked):**
 > - `BikeTypeDefinition` (`resources/bikes/bike_type_definition.gd`) holds the Collision,
 >   Gearing, Physics, Tricks and Surfaces groups. The mini, naked and sport `.tres` files in
 >   `resources/bikes/types/` carry the old per-bike values. Documented in
@@ -12,28 +12,28 @@
 >   `to_dict`/`from_dict` didn't change either: the type comes with the base def.
 > - **Scooter** (mini type): `player/bikes/scenes/scooter_bike.tscn` and
 >   `resources/bikes/skins/scooter_skin_definition.tres`. Mesh scale, offset and wheel markers
->   were computed from the glb. Every other marker and the rider pose are copied from the Grom
->   and need placing.
+>   were computed from the glb. Markers placed by hand. `Top`'s origin must sit on the centreline
+>   with zero rotation, because the game overwrites its rotation to steer.
 >
-> **Next:** cruiser (naked) and the retro sport bike (Street Vendor Cart stand-in), once the
-> models are split in Blender.
+> - **Cruiser** (naked type): `cruiser_bike.tscn` + `cruiser_skin_definition.tres`, built
+>   2026-11-10, untested. The glb faces +X and is unscaled, so the skin rotates it -90° and
+>   scales it to 0.14; its wheels spin on -Z. Paint is its own material (surface 2) on the
+>   body and `Top`; the textured surface 0 stays as is. Markers other than the wheels are copied from the naked bike.
 >
-> **Blender edits needed** for the cruiser and the stand-in (both are one mesh; `bike_skin.gd`
+> **Next:** the retro sport bike (Street Vendor Cart stand-in), once the model is split in Blender.
+>
+> **Blender edits needed** for the stand-in (it's one mesh; `bike_skin.gd`
 > needs a steering node for the handlebar IK proxy, and wheel nodes for spin):
 > - Split out separate objects for `FrontWheel`, `RearWheel` and a `Handlebars`/`RotationPoint`
 >   that parents the bars, fork and front wheel. Pivots go at the wheel axles and the steering
 >   head. This matches Grom (`RotationPoint/FrontWheel`, `RearWheel`) and naked (`Handlebars/FontWheel`).
-> - Split the paintable body into its own object or material slot. The cruiser has one
->   textured material, so painting it tints the whole bike.
+> - Split the paintable body into its own object or material slot.
 > - Optional: a separate taillight object, for the brake light and boost trail.
-> - Apply transforms, forward = the same axis as the existing bikes. The cruiser is about 14.5
->   units long along X and 9.4 tall, so scale it to about 2.4 m and rotate it to face forward.
+> - Steering node: origin on the centreline, zero rotation (the game overwrites it).
 >
 > **Open questions:**
-> - **Traffic:** NPC traffic rolls every skin in `resources/bikes/skins/` unless the level's
->   `TrafficSettings.bike_roster` is set, so the scooter (and later the cart stand-in) will show up as
->   traffic. Restrict the rosters, or let them roll?
-> - **Variant audio:** same engine sound as the type, or new ones? Default is the type's sound.
+> - **Variant audio:** engine sound is per skin already (`engine_sound_id` + pitch/curves); new
+>   sounds come later. Traffic rolls every skin, which is fine.
 > - Still open from before: character level gates, rider-level gates beyond the naked bike,
 >   who writes the challenge lists, and the stat set.
 

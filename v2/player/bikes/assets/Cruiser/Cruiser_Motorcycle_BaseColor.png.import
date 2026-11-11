@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4avpm1y5g68c"
-path.s3tc="res://.godot/imported/cruiserbygoogle_Motorcycle_BaseColor.png-4bcefac970bc44fbc6ddbb530c4151ca.s3tc.ctex"
-path.etc2="res://.godot/imported/cruiserbygoogle_Motorcycle_BaseColor.png-4bcefac970bc44fbc6ddbb530c4151ca.etc2.ctex"
+uid="uid://br07pwqy1ud3"
+path.s3tc="res://.godot/imported/Cruiser_Motorcycle_BaseColor.png-f01ad3de827cbbf29880fafd9e7fa0f6.s3tc.ctex"
+path.etc2="res://.godot/imported/Cruiser_Motorcycle_BaseColor.png-f01ad3de827cbbf29880fafd9e7fa0f6.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -15,8 +15,8 @@ generator_parameters={
 
 [deps]
 
-source_file="res://player/bikes/assets/Cruiser/cruiserbygoogle_Motorcycle_BaseColor.png"
-dest_files=["res://.godot/imported/cruiserbygoogle_Motorcycle_BaseColor.png-4bcefac970bc44fbc6ddbb530c4151ca.s3tc.ctex", "res://.godot/imported/cruiserbygoogle_Motorcycle_BaseColor.png-4bcefac970bc44fbc6ddbb530c4151ca.etc2.ctex"]
+source_file="res://player/bikes/assets/Cruiser/Cruiser_Motorcycle_BaseColor.png"
+dest_files=["res://.godot/imported/Cruiser_Motorcycle_BaseColor.png-f01ad3de827cbbf29880fafd9e7fa0f6.s3tc.ctex", "res://.godot/imported/Cruiser_Motorcycle_BaseColor.png-f01ad3de827cbbf29880fafd9e7fa0f6.etc2.ctex"]
 
 [params]
 
