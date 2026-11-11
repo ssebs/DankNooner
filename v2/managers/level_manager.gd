@@ -138,17 +138,14 @@ func spawn_menu_level():
 	spawn_level(LevelName.BG_GRAY_LEVEL, InputStateManager.InputState.IN_MENU)
 
 
-## Spawn the main menu level, its demo rider looping the level's trick + crash run on
-## PlayerEntity's default skins
-func spawn_main_menu_level():
+## Spawn the main menu level, its demo rider looping the level's trick + crash run on a random
+## bike, ridden by `character`
+func spawn_main_menu_level(character: CharacterSkinDefinition):
 	spawn_level(LevelName.MAIN_MENU_LEVEL, InputStateManager.InputState.IN_MENU)
 	var demo: TrickDemo = current_level.get_node("%TrickDemo")
 	demo.camera.make_current()
-	# Untyped lookup: resolving player_entity_scene statically here cycles through its preload
-	var level: Node = current_level
-	var player = level.player_entity_scene.instantiate()
-	demo.show_rider(player.bike_definition, player.character_definition)
-	player.free()
+	var bikes := SkinScanner.scan_skin_dir(GarageUI.BIKE_SKINS_DIR).values()
+	demo.show_rider(load(bikes.pick_random()), character)
 
 
 ## Spawn the menu garage level, viewed through its bay's camera. Returns the bay.

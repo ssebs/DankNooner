@@ -65,7 +65,7 @@ func Enter(_state_context: StateContext):
 		_on_play_btn_pressed.call_deferred()
 
 	if level_manager.current_level_name != LevelManager.LevelName.MAIN_MENU_LEVEL:
-		level_manager.spawn_main_menu_level()
+		level_manager.spawn_main_menu_level(save_manager.get_player_definition().character_skin)
 		if audio_manager:
 			audio_manager.play_minimize()
 
