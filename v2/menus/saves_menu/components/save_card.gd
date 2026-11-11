@@ -14,7 +14,9 @@ const OLD_VERSION_MODULATE := Color(1, 1, 1, 0.4)
 @onready var _preview: SavePreview = %Preview
 @onready var _active_label: Label = %ActiveLabel
 @onready var _name_edit: LineEdit = %NameEdit
-@onready var _stats_label: Label = %StatsLabel
+@onready var _stats: Control = %Stats
+@onready var _level_label: Label = %LevelLabel
+@onready var _money_label: Label = %MoneyLabel
 @onready var _version_label: Label = %VersionLabel
 @onready var _delete_btn: Button = %DeleteBtn
 
@@ -34,11 +36,8 @@ static func display_name(slot: int, save_dict: Dictionary) -> String:
 	return TranslationServer.translate("SAVE_SLOT_DEFAULT_NAME").format({"slot": slot})
 
 
-static func stats_text(player_def: PlayerDefinition) -> String:
-	return (
-		TranslationServer.translate("SAVE_SLOT_STATS")
-		.format({"level": player_def.level(), "money": MoneyLabel.format(player_def.money)})
-	)
+static func level_text(player_def: PlayerDefinition) -> String:
+	return TranslationServer.translate("SAVE_SLOT_LEVEL").format({"level": player_def.level()})
 
 
 func _ready():
@@ -95,7 +94,7 @@ func show_save(slot: int, save_dict: Dictionary, is_current_version: bool) -> vo
 	_version_label.text = tr("SAVE_SLOT_VERSION").format({"version": int(save_dict.get("version", 0))})
 	_filled.modulate = Color.WHITE if is_current_version else OLD_VERSION_MODULATE
 	_name_edit.editable = is_current_version
-	_stats_label.visible = is_current_version
+	_stats.visible = is_current_version
 	_preview.visible = is_current_version
 	# An older save's player_definition may not parse.
 	if !is_current_version:
@@ -103,7 +102,8 @@ func show_save(slot: int, save_dict: Dictionary, is_current_version: bool) -> vo
 
 	var player_def := PlayerDefinition.new()
 	player_def.from_dict(save_dict["player_definition"])
-	_stats_label.text = stats_text(player_def)
+	_level_label.text = level_text(player_def)
+	_money_label.text = MoneyLabel.format(player_def.money)
 	_preview.show_player(player_def)
 
 

@@ -7,7 +7,8 @@ signal pressed
 const HOVER_MODULATE := Color(1.25, 1.25, 1.25)
 
 @onready var _portrait: SavePreview = %Portrait
-@onready var _stats_label: Label = %StatsLabel
+@onready var _level_label: Label = %LevelLabel
+@onready var _money_label: Label = %MoneyLabel
 @onready var _name_label: Label = %NameLabel
 
 
@@ -23,6 +24,7 @@ func _gui_input(event: InputEvent):
 
 
 func show_save(slot: int, save_dict: Dictionary, player_def: PlayerDefinition) -> void:
-	_stats_label.text = SaveCard.stats_text(player_def)
+	_level_label.text = SaveCard.level_text(player_def)
+	_money_label.text = MoneyLabel.format(player_def.money)
 	_name_label.text = SaveCard.display_name(slot, save_dict)
 	_portrait.show_player(player_def)

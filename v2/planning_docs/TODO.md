@@ -226,6 +226,8 @@
 
 ## Done ✅
 
+- [x] remove gray bg from splash images
+
 - [x] main menu: random bike, profile's rider
 
 - [x] burnout doesn't do donut fast enough when steering

@@ -2,6 +2,9 @@
 
 [ext_resource type="Script" path="res://menus/saves_menu/components/save_card.gd" id="1_card"]
 [ext_resource type="PackedScene" path="res://menus/saves_menu/components/save_preview.tscn" id="2_preview"]
+[ext_resource type="Texture2D" uid="uid://dombbuh0a3fxn" path="res://resources/img/Icons/flair_disabled_cross.svg" id="3_close"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_x"]
 
 [node name="SaveCard" type="PanelContainer"]
 custom_minimum_size = Vector2(300, 440)
@@ -28,12 +31,51 @@ visible = false
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="ActiveLabel" type="Label" parent="Margin/Filled"]
+[node name="TopRow" type="HBoxContainer" parent="Margin/Filled"]
+layout_mode = 2
+
+[node name="VersionLabel" type="Label" parent="Margin/Filled/TopRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 18
+auto_translate_mode = 2
+
+[node name="ActiveLabel" type="Label" parent="Margin/Filled/TopRow"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"OwnLabel"
 text = "SAVE_SLOT_ACTIVE"
-horizontal_alignment = 1
+
+[node name="DeleteSlot" type="Control" parent="Margin/Filled/TopRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="DeleteBtn" type="Button" parent="Margin/Filled/TopRow/DeleteSlot"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_top = -6.0
+offset_bottom = 34.0
+grow_horizontal = 0
+tooltip_text = "DELETE_LABEL"
+mouse_default_cursor_shape = 2
+theme_override_colors/icon_hover_color = Color(1.4, 1.4, 1.4, 1)
+theme_override_styles/normal = SubResource("StyleBoxEmpty_x")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_x")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_x")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_x")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_x")
+icon = ExtResource("3_close")
+flat = true
+icon_alignment = 1
+expand_icon = true
 
 [node name="Preview" parent="Margin/Filled" instance=ExtResource("2_preview")]
 unique_name_in_owner = true
@@ -45,24 +87,19 @@ unique_name_in_owner = true
 layout_mode = 2
 max_length = 24
 
-[node name="StatsLabel" type="Label" parent="Margin/Filled"]
+[node name="Stats" type="HBoxContainer" parent="Margin/Filled"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LevelLabel" type="Label" parent="Margin/Filled/Stats"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.25, 1)
 auto_translate_mode = 2
 
-[node name="VersionLabel" type="Label" parent="Margin/Filled"]
+[node name="MoneyLabel" type="Label" parent="Margin/Filled/Stats"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"MoneyLabel"
 auto_translate_mode = 2
-
-[node name="Buttons" type="HBoxContainer" parent="Margin/Filled"]
-layout_mode = 2
-size_flags_vertical = 10
-theme_override_constants/separation = 36
-
-[node name="DeleteBtn" type="Button" parent="Margin/Filled/Buttons"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_default_cursor_shape = 2
-text = "DELETE_LABEL"
