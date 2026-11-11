@@ -1,0 +1,80 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://menus/main_menu/components/current_save_card.gd" id="1_card"]
+[ext_resource type="PackedScene" path="res://menus/saves_menu/components/save_preview.tscn" id="2_preview"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 28.0
+content_margin_bottom = 8.0
+bg_color = Color(0.02, 0.027, 0.06, 0.75)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.255, 0.686, 1, 0.5)
+corner_radius_top_left = 56
+corner_radius_top_right = 56
+corner_radius_bottom_right = 56
+corner_radius_bottom_left = 56
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_circle"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.02, 0.04, 0.12, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.255, 0.686, 1, 1)
+corner_radius_top_left = 48
+corner_radius_top_right = 48
+corner_radius_bottom_right = 48
+corner_radius_bottom_left = 48
+
+[node name="CurrentSaveCard" type="PanelContainer"]
+size_flags_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill")
+script = ExtResource("1_card")
+
+[node name="Row" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Avatar" type="PanelContainer" parent="Row"]
+clip_children = 2
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_circle")
+
+[node name="Portrait" parent="Row/Avatar" instance=ExtResource("2_preview")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 0)
+layout_mode = 2
+
+[node name="Camera3D" parent="Row/Avatar/Portrait/PreviewViewport"]
+transform = Transform3D(-0.7686, 0.1011, -0.632, 0, 0.9878, 0.158, 0.6399, 0.1214, -0.759, -1, 1.5, -1.2)
+
+[node name="Text" type="VBoxContainer" parent="Row"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="StatsLabel" type="Label" parent="Row/Text"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Heading2Label"
+auto_translate_mode = 2
+
+[node name="NameLabel" type="Label" parent="Row/Text"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 18
+auto_translate_mode = 2
+
+[editable path="Row/Avatar/Portrait"]

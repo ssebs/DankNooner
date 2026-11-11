@@ -25,9 +25,11 @@
 >   disabled, show "🔒 Lvl N · $price", and still preview. Mini is free; naked and sport are
 >   gated, sport higher. `BikeMod.price` has a default (`ColorMod` is 0). New saves start on the
 >   mini (`default_player_definition.tres`). Deferred to step 4: the finished-list requirement for variants and mastery gates for mods.
-> - **Save version 2** (`SaveManager.save_version`): any save with another version is replaced by
->   a new one on load, so pre-gate saves don't keep bikes they never bought. Settings
+> - **Save version 2** (`SaveManager.save_version`): a save with another version isn't loaded,
+>   so pre-gate saves don't keep bikes they never bought. It stays on disk, grayed out in the
+>   [Saves menu](#save-slots); boot starts a new save in a free slot. Settings
 >   (`settings.json`) are untouched.
+> - **Saves menu** ([Save slots](#save-slots), step 8): built 2026-11-10, untested.
 >
 > **Next:** the retro sport bike (Street Vendor Cart stand-in), once the model is split in Blender.
 >
@@ -267,15 +269,30 @@ requirement next to the price; locked items can't be bought.
 
 ## Save slots
 
-A save slot menu to save/load specific saves. Demo and full builds share `user://` (`export.sh`
-only swaps the app id) and Steam Cloud syncs `savegame_*.json`, so demo saves are named
-`savegame_%d_demo.json`: still inside the cloud pattern, never colliding with a full save. Each
-build lists only its own saves. See also "Demo savegame" in TODO's Steam Prep.
+Decided 2026-11-10. Demo and full builds share `user://` (`export.sh` only swaps the app id) and
+Steam Cloud syncs `savegame_*.json`, so demo saves are named `savegame_%d_demo.json`: still inside
+the cloud pattern, never colliding with a full save. Each build lists only its own saves. See also
+"Demo savegame" in TODO's Steam Prep.
 
-- **Existing saves are full game saves.** Full saves keep today's `savegame_%d.json` names, so
-  old files show up as full-build slots with no migration. The demo starts with no slots.
-- **Slots are renamable.** The name is stored inside the save, so file names stay slot-numbered
-  and inside the cloud pattern.
+- **Saves menu:** a main menu button opens a horizontal row of slot cards (scrollbar hidden): one
+  per save on disk, then empty cards in the lowest free slots until there are at least 3.
+- **Active slot:** saved in `settings.json`, one key per build (`save_slot`, `demo_save_slot`),
+  default 1. Its card shows a gray "(active)" under the name.
+- **Card:** a still preview of the save's active loadout at the top, a renamable name (stored in
+  the save; blank shows "Save N"), rider level, money and save version. Clicking the card asks
+  "Load?" and makes it active (not on the active or an old card, which also don't hover); Delete
+  asks first. An empty card is a big `+` that starts a new save there and makes it active.
+- **Preview:** `SavePreview`, a `SubViewport` posing a `RiderVisual`, drawn once each time the
+  menu opens. Never written to disk.
+- **Main menu** shows the active save in place of the old greeting (`CurrentSaveCard`): the rider
+  in a circle, level and money, the save name small. Display only; the Saves button opens the
+  menu.
+- **Old versions** (any `version` but `save_version`) are grayed out, show their version, and can
+  only be deleted. A migrate button comes later.
+- **Boot on an old version:** the old file is kept, and a new save starts in the first free slot
+  (4+ if 1–3 are taken), which becomes active. Corrupt files are still replaced in place.
+- **Deleting the active save** switches to another current-version save, or a new one if none
+  are left.
 
 
 ## Payouts
@@ -338,7 +355,7 @@ better idea; the rest were decided.
 7. **Garage lock state.** The requirement next to the price; locked rows can't be bought.
 8. **Save slot menu + demo file naming.** Only the demo's `save_path` changes (adds `_demo`);
    full saves keep their names (see [Save slots](#save-slots)).
-9. **Console commands** for playtesting, beside `give_money` in `SaveManager`:
+9. **Console commands** for playtesting, beside `dbg_set_money` in `SaveManager`:
    `add_player_xp <amount>`, `add_bike_level <type> <levels>` (completes that many of the
    type's challenges, since mastery comes from challenges, not XP) and `unlock_bike_max <type>`.
    They write the save like normal progress, so the unlocks behave the same as earned ones.

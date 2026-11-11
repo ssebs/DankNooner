@@ -6,27 +6,34 @@ class_name SaveManager extends BaseManager
 signal save_changed(current_save: Dictionary)
 signal save_item_updated(save_key: String, save_value: Variant)
 
-@export var save_slot: int = 1
-## Bumping this wipes every older save on load (settings are a separate file).
+## Bumping this retires every older save: it stays on disk, grayed out in the Saves menu, and
+## boot starts a new save in a free slot (settings are a separate file).
 ## 2: bike unlock gates, so free-era saves don't keep bikes they never bought.
 @export var save_version: int = 2
 @export var default_player_definition: PlayerDefinition = load(
 	"res://resources/player/default_player_definition.tres"
 )
 @export var steam_manager: SteamManager
+## Holds the active slot (_slot_setting); loads before this manager.
+@export var settings_manager: SettingsManager
 
 ## Progression keys each tutorial's milestones save under. Only the first gates the Play menu.
 const TUTORIAL_KEY := "tutorial"
 const ADVANCED_TUTORIAL_KEY := "tutorial_advanced"
 
+## The active slot, read from settings in deferred_init.
+var save_slot: int = 1
+
 var save_path: String:
 	get:
-		return "user://savegame_%d.json" % save_slot
+		return slot_path(save_slot)
 
 ## NOTE - key names (str) are hard coded in lots of places!
 ## if using a Definition, be sure to call to_dict/from_dict when save/loading it in the impl
 var default_save: Dictionary = {
 	"version": save_version,
+	# Saves menu card name; blank shows "Save N"
+	"name": "",
 	"player_definition": default_player_definition,
 	# TrickRow.pin ids shown on the riding HUD
 	"pinned_tricks": [],
@@ -37,6 +44,11 @@ var default_save: Dictionary = {
 
 var current_save: Dictionary
 
+## settings.json key for the active slot, one per build like the save files.
+var _slot_setting: String:
+	get:
+		return "demo_save_slot" if UtilsConstants.is_demo_build() else "save_slot"
+
 
 func _ready():
 	if Engine.is_editor_hint():
@@ -46,14 +58,92 @@ func _ready():
 
 
 func deferred_init():
-	Console.add_command("give_money", _give_money, ["amount"], 1, "Add money to your profile")
+	Console.add_command("dbg_set_money", _set_money, ["amount"], 1, "Set your profile's money")
+	Console.add_command("dbg_set_level", _set_level, ["level"], 1, "Set your level, at its minimum XP")
 	Console.add_command("dbg_skip_tutorial", mark_tutorial_complete, [], 0, "Mark the tutorial complete")
 	Console.add_command("dbg_reset_tutorials", _reset_tutorials, [], 0, "Clear tour and tutorial progress")
+	# JSON loads numbers as floats, hence the int().
+	save_slot = int(settings_manager.current_settings[_slot_setting])
+	_load_active()
+
+
+## Demo saves get their own names, so neither build loads the other's (both share user://).
+func slot_path(slot: int) -> String:
+	return "user://savegame_%d%s.json" % [slot, "_demo" if UtilsConstants.is_demo_build() else ""]
+
+
+## Slots with a save on disk for this build, ascending.
+func saved_slots() -> Array[int]:
+	var slots: Array[int] = []
+	var slot_re := RegEx.create_from_string("^savegame_(\\d+)")
+	for file in DirAccess.get_files_at("user://"):
+		var found := slot_re.search(file)
+		# The path check drops the other build's saves.
+		if found != null and slot_path(int(found.get_string(1))) == "user://" + file:
+			slots.append(int(found.get_string(1)))
+	slots.sort()
+	return slots
+
+
+## The raw save in `slot`, {} if it's empty or won't parse.
+func read_slot(slot: int) -> Dictionary:
+	if !FileAccess.file_exists(slot_path(slot)):
+		return {}
+	return DictJSONSaverLoader.load_json_from_file(slot_path(slot))
+
+
+## Older versions don't load; they only show (grayed out) in the Saves menu.
+func is_current_version(save_dict: Dictionary) -> bool:
+	return save_dict.get("version", -1) == save_version
+
+
+## Make `slot` active and load it, starting a new save there if it's empty.
+func switch_slot(slot: int) -> void:
+	_set_slot(slot)
+	_load_active()
+
+
+## Deleting the active save moves to the lowest current-version save left, else a new save in
+## the same slot.
+func delete_slot(slot: int) -> void:
+	DirAccess.remove_absolute(slot_path(slot))
+	if slot != save_slot:
+		return
+	for other in saved_slots():
+		if is_current_version(read_slot(other)):
+			switch_slot(other)
+			return
+	switch_slot(slot)
+
+
+func rename_slot(slot: int, slot_name: String) -> void:
+	if slot == save_slot:
+		current_save["name"] = slot_name
+		save_save()
+		return
+	var save_dict := read_slot(slot)
+	save_dict["name"] = slot_name
+	DictJSONSaverLoader.save_json_to_file(slot_path(slot), save_dict)
+
+
+func _set_slot(slot: int) -> void:
+	save_slot = slot
+	settings_manager.update_setting(_slot_setting, slot, false, true)
+
+
+func _load_active() -> void:
 	if FileAccess.file_exists(save_path):
 		load_save()
 	else:
 		_save_default_save()
 	_apply_steam_profile()
+
+
+func _first_free_slot() -> int:
+	var slot := 1
+	while FileAccess.file_exists(slot_path(slot)):
+		slot += 1
+	return slot
 
 
 ## New save: a private copy of default_player_definition (so edits don't leak into the shared
@@ -174,11 +264,19 @@ func earn(money: int, xp: int) -> void:
 	save_save()
 
 
-func _give_money(amount: String) -> void:
+func _set_money(amount: String) -> void:
 	var player_def := get_player_definition()
-	player_def.money += amount.to_float()
+	player_def.money = amount.to_float()
 	update_save("player_definition", player_def, true, true)
 	Console.print_line("money: %d" % player_def.money)
+
+
+## Inverse of PlayerDefinition.level().
+func _set_level(level: String) -> void:
+	var player_def := get_player_definition()
+	player_def.xp = (level.to_int() - 1) ** 2 * UtilsConstants.XP_PER_LEVEL
+	update_save("player_definition", player_def, true, true)
+	Console.print_line("level: %d, xp: %d" % [player_def.level(), player_def.xp])
 
 
 func update_save(
@@ -213,11 +311,12 @@ func load_save():
 		_save_default_save()
 		return
 
-	if json_dict.get("version", -1) != save_version:
+	if !is_current_version(json_dict):
 		DebugUtils.DebugErrMsg(
-			"%s is version %s, not %s: replacing it with a new save"
+			"%s is version %s, not %s: keeping it, starting a new save in a free slot"
 			% [save_path, json_dict.get("version", "none"), save_version]
 		)
+		_set_slot(_first_free_slot())
 		_save_default_save()
 		return
 

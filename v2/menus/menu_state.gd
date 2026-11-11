@@ -16,7 +16,8 @@ func _ready():
 	_wire_button_click_sounds()
 
 
-func _wire_button_click_sounds():
+## `root`: a subtree built after _ready (e.g. instanced cards), else the whole menu.
+func _wire_button_click_sounds(root: Node = self):
 	var audio_manager: AudioManager
 	for mgr in get_tree().get_nodes_in_group("Managers"):
 		if mgr is AudioManager:
@@ -24,7 +25,7 @@ func _wire_button_click_sounds():
 			break
 	if audio_manager == null:
 		return
-	for btn in find_children("*", "Button", true, false):
+	for btn in root.find_children("*", "Button", true, false):
 		(btn as Button).pressed.connect(audio_manager.play_menu_click)
 
 

@@ -100,7 +100,7 @@ var _near_peers: Dictionary[int, PackedInt32Array] = {}
 var _pending_delta: Dictionary[int, float] = {}
 var _tick_count: int = 0
 var _next_lod_ms: int = 0
-## Server: set_traffic's rider count, overriding the map's. -1 = the map's.
+## Server: dbg_set_traffic's rider count, overriding the map's. -1 = the map's.
 var _debug_count: int = -1
 var _for_race: bool = false
 ## The traffic_density setting, kept in step by _on_all_settings_changed.
@@ -112,7 +112,7 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 	Console.add_command(
-		"set_traffic", _set_debug_count, ["count"], 1, "Set the NPC traffic count, -1 for the map's (host only)"
+		"dbg_set_traffic", _set_debug_count, ["count"], 1, "Set the NPC traffic count, -1 for the map's (host only)"
 	)
 	settings_manager.all_settings_changed.connect(_on_all_settings_changed)
 
@@ -212,10 +212,10 @@ func stop_traffic() -> void:
 func _set_debug_count(arg: String) -> void:
 	# Null peer in menus — the count still applies to the next session
 	if multiplayer.multiplayer_peer != null and !multiplayer.is_server():
-		Console.print_line("set_traffic: host only")
+		Console.print_line("dbg_set_traffic: host only")
 		return
 	if !arg.is_valid_int():
-		Console.print_line("set_traffic: '%s' is not a number" % arg)
+		Console.print_line("dbg_set_traffic: '%s' is not a number" % arg)
 		return
 	_debug_count = int(arg)
 	# Running (_network is set) — respawn at the new count

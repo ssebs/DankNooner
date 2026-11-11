@@ -37,6 +37,7 @@ signal item_dropped(peer_id: int)
 
 const OIL_SLICK_SCENE := preload("res://levels/components/pickups/oil_slick.tscn")
 const RAMP_SCENE := preload("res://levels/components/pickups/deployable_ramp.tscn")
+const PICKUP_SPAWNER_SCENE := preload("res://levels/components/pickups/pickup_spawner.tscn")
 const RALLY_UP_BIKE := preload("res://resources/bikes/skins/mini_default_skin_definition.tres")
 const RALLY_UP_CHARACTER := preload(
 	"res://resources/player/skins/astronaut_default_skin_definition.tres"
@@ -55,12 +56,22 @@ var _held: Dictionary[int, PickupItemDefinition] = {}
 var _next_deployable_id: int = 0
 ## Server-only: bumped per Rally Up so an earlier use's timer can't end a later one early.
 var _rally_up_id: int = 0
+## dbg_give_item's items, read from the spawner scene's item list so every spawnable item is givable.
+var _item_definitions: Dictionary[String, PickupItemDefinition] = {}
 
 
 func _ready():
 	if Engine.is_editor_hint():
 		return
 	gamemode_manager.player_disconnected.connect(_on_player_disconnected)
+	var spawner: PickupSpawner = PICKUP_SPAWNER_SCENE.instantiate()
+	for definition in spawner.items:
+		var item_name: String = PickupItemDefinition.PickupItemType.keys()[definition.item_type]
+		_item_definitions[item_name.to_lower()] = definition
+	spawner.free()
+	Console.add_command("dbg_give_item", _give_item, ["item"], 1, "Collect an item as if from a pickup (host only)")
+	Console.add_command_autocomplete_list("dbg_give_item", PackedStringArray(_item_definitions.keys()))
+	Console.add_command("dbg_items_list", _items_list, [], 0, "List all dbg_give_item items")
 
 
 ## Server-only. Returns false (pickup stays put) when a held item would overflow the slot, or a
@@ -336,6 +347,28 @@ func _rpc_set_shotgun_held(peer_id: int, held: bool):
 @rpc("call_local", "reliable")
 func _rpc_fire_shotgun(peer_id: int, has_hit: bool, hit_pos: Vector3):
 	spawn_manager.get_rider(peer_id).animation_controller.play_shotgun_fire(has_hit, hit_pos)
+
+
+#endregion
+
+#region Debug console
+
+
+func _items_list() -> void:
+	for item in _item_definitions:
+		Console.print_line(item)
+
+
+## Straight into collect, which is server-side — a client has no slots to fill.
+func _give_item(arg: String) -> void:
+	if !multiplayer.is_server():
+		Console.print_line("dbg_give_item: host only")
+		return
+	if !_item_definitions.has(arg):
+		Console.print_line("dbg_give_item: no item '%s' (%s)" % [arg, ", ".join(PackedStringArray(_item_definitions.keys()))])
+		return
+	if !collect(multiplayer.get_unique_id(), _item_definitions[arg]):
+		Console.print_line("dbg_give_item: already holding an item")
 
 
 #endregion

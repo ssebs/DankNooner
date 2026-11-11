@@ -71,6 +71,9 @@ var default_settings: Dictionary = {
 	"auto_transmission": true,
 	"traffic_density": 1.0, # host only, scales free-roam traffic_count
 	"controls": {}, # Input Map overrides, see ControlBindings
+	# Active save slots, one per build (SaveManager.slot_path); set from the Saves menu
+	"save_slot": 1,
+	"demo_save_slot": 1,
 	# "bike_skin": "res://resources/bikes/skins/sport_default_skin_definition.tres",
 	# "character_skin": "res://resources/player/skins/biker_default_skin_definition.tres",
 }

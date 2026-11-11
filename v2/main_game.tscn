@@ -63,6 +63,7 @@
 [ext_resource type="PackedScene" path="res://menus/credits_menu/credits_menu_state.tscn" id="62_credits"]
 [ext_resource type="PackedScene" path="res://menus/server_browser_menu/server_browser_menu_state.tscn" id="63_srvbrowse"]
 [ext_resource type="PackedScene" path="res://managers/tour/tour_manager.tscn" id="64_tour"]
+[ext_resource type="PackedScene" path="res://menus/saves_menu/saves_menu_state.tscn" id="65_saves"]
 [ext_resource type="Script" uid="uid://uj0l0u0v0f0d" path="res://managers/npc_traffic_manager.gd" id="99_npctm"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
@@ -149,7 +150,7 @@ level_manager = NodePath("../../../LevelManager")
 main_menu_state = NodePath("../MainMenuState")
 audio_manager = NodePath("../../../AudioManager")
 
-[node name="MainMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=494197480 node_paths=PackedStringArray("menu_manager", "level_manager", "audio_manager", "save_manager", "steam_manager", "settings_menu_state", "play_menu_state", "customize_menu_state", "tricks_menu_state", "credits_menu_state") instance=ExtResource("6_2pltu")]
+[node name="MainMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=494197480 node_paths=PackedStringArray("menu_manager", "level_manager", "audio_manager", "save_manager", "steam_manager", "settings_menu_state", "play_menu_state", "customize_menu_state", "tricks_menu_state", "credits_menu_state", "saves_menu_state") instance=ExtResource("6_2pltu")]
 menu_manager = NodePath("../..")
 level_manager = NodePath("../../../LevelManager")
 audio_manager = NodePath("../../../AudioManager")
@@ -160,6 +161,7 @@ play_menu_state = NodePath("../PlayMenuState")
 customize_menu_state = NodePath("../CustomizeMenuState")
 tricks_menu_state = NodePath("../TricksMenuState")
 credits_menu_state = NodePath("../CreditsMenuState")
+saves_menu_state = NodePath("../SavesMenuState")
 
 [node name="PlayMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=207724047 node_paths=PackedStringArray("menu_manager", "connection_manager", "steam_manager", "save_manager", "main_menu_state", "lobby_menu_state", "customize_menu_state", "server_browser_menu_state") instance=ExtResource("7_f52ns")]
 menu_manager = NodePath("../..")
@@ -220,6 +222,9 @@ tricks_menu_state = NodePath("../TricksMenuState")
 
 [node name="CreditsMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1489866704 instance=ExtResource("62_credits")]
 
+[node name="SavesMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1489866705 node_paths=PackedStringArray("save_manager") instance=ExtResource("65_saves")]
+save_manager = NodePath("../../../SaveManager")
+
 [node name="TricksMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1846203517 node_paths=PackedStringArray("menu_manager", "save_manager", "level_manager", "input_state_manager") instance=ExtResource("38_trkmn")]
 menu_manager = NodePath("../..")
 save_manager = NodePath("../../../SaveManager")
@@ -232,10 +237,11 @@ input_state_manager = NodePath("../../../InputStateManager")
 script = ExtResource("17_borgi")
 metadata/_custom_type_script = "uid://cvf883jhga841"
 
-[node name="SaveManager" type="Node" parent="ManagerManager" unique_id=1113043161 node_paths=PackedStringArray("steam_manager") groups=["Managers"]]
+[node name="SaveManager" type="Node" parent="ManagerManager" unique_id=1113043161 node_paths=PackedStringArray("steam_manager", "settings_manager") groups=["Managers"]]
 script = ExtResource("19_wt57k")
 default_player_definition = ExtResource("20_pk5u2")
 steam_manager = NodePath("../SteamManager")
+settings_manager = NodePath("../SettingsManager")
 metadata/_custom_type_script = "uid://didbm7t5dal30"
 
 [node name="HUDManager" type="Node" parent="ManagerManager" unique_id=654912404 node_paths=PackedStringArray("state_machine", "null_hud_state", "riding_hud_state", "fuel_up_hud_state", "garage_hud_state") groups=["Managers"]]

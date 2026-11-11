@@ -11,8 +11,10 @@ class_name MainMenuState extends MenuState
 @export var customize_menu_state: MenuState
 @export var tricks_menu_state: MenuState
 @export var credits_menu_state: MenuState
+@export var saves_menu_state: MenuState
 
 @onready var settings_btn: Button = %SettingsBtn
+@onready var saves_btn: Button = %SavesBtn
 @onready var play_btn: Button = %PlayBtn
 @onready var customize_btn: Button = %CustomizeBtn
 @onready var quit_btn: Button = %QuitBtn
@@ -21,7 +23,7 @@ class_name MainMenuState extends MenuState
 @onready var discord_btn: Button = %DiscordBtn
 @onready var wishlist_btn: Button = %WishlistBtn
 @onready var version_label: Label = %VersionLabel
-@onready var greeting_label: Label = %GreetingLabel
+@onready var current_save_card: CurrentSaveCard = %CurrentSaveCard
 @onready var steam_status_label: Label = %SteamStatusLabel
 
 
@@ -48,6 +50,7 @@ func Enter(_state_context: StateContext):
 	ui.show()
 	play_btn.pressed.connect(_on_play_btn_pressed)
 	settings_btn.pressed.connect(_on_settings_btn_pressed)
+	saves_btn.pressed.connect(_on_saves_btn_pressed)
 	quit_btn.pressed.connect(_on_quit_btn_pressed)
 	customize_btn.pressed.connect(_on_customize_btn_pressed)
 	tricks_btn.pressed.connect(_on_tricks_btn_pressed)
@@ -56,8 +59,10 @@ func Enter(_state_context: StateContext):
 	wishlist_btn.pressed.connect(_on_wishlist_btn_pressed)
 	steam_manager.invite_received.connect(_on_invite_received)
 
-	var username := save_manager.get_player_definition().username
-	greeting_label.text = tr("MAIN_MENU_GREETING").format({"name": username})
+	# The save being played; switched from the Saves menu, so refreshed on every Enter.
+	current_save_card.show_save(
+		save_manager.save_slot, save_manager.current_save, save_manager.get_player_definition()
+	)
 	steam_status_label.visible = steam_manager.is_logged_in()
 	if !steam_manager.pending_game_id.is_empty():
 		_on_invite_received.call_deferred()
@@ -77,6 +82,7 @@ func Exit(_state_context: StateContext):
 
 	play_btn.pressed.disconnect(_on_play_btn_pressed)
 	settings_btn.pressed.disconnect(_on_settings_btn_pressed)
+	saves_btn.pressed.disconnect(_on_saves_btn_pressed)
 	quit_btn.pressed.disconnect(_on_quit_btn_pressed)
 	customize_btn.pressed.disconnect(_on_customize_btn_pressed)
 	tricks_btn.pressed.disconnect(_on_tricks_btn_pressed)
@@ -113,6 +119,10 @@ func _on_play_btn_pressed():
 
 func _on_settings_btn_pressed():
 	transitioned.emit(settings_menu_state, StateContext.NewWithReturn(self))
+
+
+func _on_saves_btn_pressed():
+	transitioned.emit(saves_menu_state, StateContext.NewWithReturn(self))
 
 
 func _on_quit_btn_pressed():

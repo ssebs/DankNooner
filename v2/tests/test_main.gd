@@ -40,14 +40,18 @@ func _use_test_files(main_game: MainGame, peer: int) -> void:
 	var settings_manager := main_game.settings_manager
 	settings_manager.settings_path = "user://test_settings_%d.json" % peer
 	# The project boots maximized; switching to windowed lands on run.py's --position/--resolution
+	# SaveManager reads its slot from settings (save_slot; the test build isn't the demo).
 	DictJSONSaverLoader.save_json_to_file(
 		settings_manager.settings_path,
-		{"version": settings_manager.settings_version, "fullscreen_mode": "windowed"}
+		{
+			"version": settings_manager.settings_version,
+			"fullscreen_mode": "windowed",
+			"save_slot": SAVE_SLOT_BASE + peer,
+		}
 	)
 	for manager in settings_manager.get_parent().get_children():
 		if manager is SaveManager:
-			manager.save_slot = SAVE_SLOT_BASE + peer
-			DirAccess.remove_absolute(manager.save_path)  # fresh save every run
+			DirAccess.remove_absolute(manager.slot_path(SAVE_SLOT_BASE + peer))  # fresh save every run
 			# A fresh save gates the Play menu behind the tutorial. Deferred past deferred_init's seeding.
 			manager.save_changed.connect(
 				manager.mark_tutorial_complete.unbind(1), CONNECT_DEFERRED | CONNECT_ONE_SHOT

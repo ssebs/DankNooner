@@ -90,7 +90,7 @@ func add_segment():
 
 
 ## Fills the meter. Routed through the rollback tick (rb_do_max_boost) like add_segment so the
-## write to synced boost_amount survives resimulation. Debug console (max_boost).
+## write to synced boost_amount survives resimulation. Debug console (dbg_max_boost).
 func fill():
 	boost_amount = BOOST_SEGMENTS
 
