@@ -144,7 +144,7 @@ text_overrun_behavior = 3
 
 [node name="MusicControls" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/Root/Body/MusicPanel" unique_id=1846203606]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 8
 alignment = 1
 
 [node name="PrevSongBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Root/Body/MusicPanel/MusicControls" unique_id=1846203607]

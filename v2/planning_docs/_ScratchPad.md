@@ -26,6 +26,9 @@ Make a hoodie
 
 - [ ] you should be able to customize the color of the glow in the bike skins
 - [ ] in game popups fight the pause/menus. too easy to roll thru them, or close on accident and have to drive back over it
+- [ ] move profile customization (username) to under the profile/saves component
+  - [ ] could list challenges/career
+  - [ ] Change "Profile" to "All" for default on all loadouts
 ---
 ##
 ## NEXT

@@ -8,7 +8,7 @@ script = ExtResource("1_panel")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 8
 
 [node name="IPLabel" type="Label" parent="HBoxContainer"]
 unique_name_in_owner = true

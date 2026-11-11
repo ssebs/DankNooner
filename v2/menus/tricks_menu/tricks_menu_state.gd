@@ -56,7 +56,7 @@ const STATE_HOWTO_TRICKS: Dictionary = {
 	],
 }
 
-@onready var state_tabs: TabContainer = %StateTabs
+@onready var state_tabs: PromptTabContainer = %StateTabs
 @onready var close_tricks_btn: Button = %CloseTricksBtn
 @onready var clear_pin_btn: Button = %ClearPinBtn
 @onready var bg_tint: ColorRect = %BGTint
@@ -119,6 +119,7 @@ func Exit(_state_context: StateContext):
 
 
 func _on_device_changed(gamepad: bool):
+	state_tabs.show_prompts(gamepad)
 	for row in _rows:
 		row.set_gamepad(gamepad)
 

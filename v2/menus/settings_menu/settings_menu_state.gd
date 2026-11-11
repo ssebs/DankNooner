@@ -5,6 +5,7 @@ class_name SettingsMenuState extends MenuState
 @export var settings_manager: SettingsManager
 @export var audio_manager: AudioManager
 @export var main_menu_state: MenuState
+@export var input_state_manager: InputStateManager
 
 ## Settings keys each tab's Reset restores, by tab index. Controls reset through ControlsTab.
 const TAB_SETTING_KEYS: Array = [
@@ -26,7 +27,7 @@ const TAB_SETTING_KEYS: Array = [
 @onready var back_btn: Button = %BackBtn
 @onready var save_btn: Button = %SaveBtn
 @onready var reset_btn: Button = %ResetBtn
-@onready var tab_container: TabContainer = %TabContainer
+@onready var tab_container: PromptTabContainer = %TabContainer
 @onready var controls_tab: ControlsTab = %Controls
 @onready var audio_tab: Control = %Audio
 
@@ -113,6 +114,8 @@ func Enter(state_context: StateContext):
 	traffic_density.value_changed.connect(_on_traffic_density_changed)
 	tab_container.tab_changed.connect(_on_tab_changed)
 	_on_tab_changed(tab_container.current_tab)
+	input_state_manager.device_changed.connect(tab_container.show_prompts)
+	tab_container.show_prompts(input_state_manager.is_gamepad)
 
 	settings_manager.load_settings()
 
@@ -123,6 +126,7 @@ func Exit(_state_context: StateContext):
 	back_btn.pressed.disconnect(_on_back_pressed)
 	save_btn.pressed.disconnect(_on_save_pressed)
 	reset_btn.pressed.disconnect(_on_reset_pressed)
+	input_state_manager.device_changed.disconnect(tab_container.show_prompts)
 
 	settings_manager.setting_updated.disconnect(_on_setting_updated)
 	settings_manager.all_settings_changed.disconnect(_on_all_settings_changed)

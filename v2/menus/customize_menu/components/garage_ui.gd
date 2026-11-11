@@ -456,7 +456,7 @@ func _add_text_row(label: String, text: String, on_changed: Callable):
 	name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	# Line up with GarageRow's label, which sits inside the button's content margin.
 	var indent := StyleBoxEmpty.new()
-	indent.content_margin_left = get_theme_stylebox("normal", "Button").content_margin_left
+	indent.content_margin_left = get_theme_stylebox("normal", "GarageRowButton").content_margin_left
 	name_label.add_theme_stylebox_override("normal", indent)
 	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var entry := LineEdit.new()

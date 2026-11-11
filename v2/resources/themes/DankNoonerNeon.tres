@@ -36,18 +36,18 @@ fallbacks = Array[Font]([ExtResource("font_emoji")])
 base_font = ExtResource("font_Bold")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_normal"]
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 texture = ExtResource("neon_btn_normal")
 texture_margin_left = 29.0
 texture_margin_top = 29.0
 texture_margin_right = 29.0
 texture_margin_bottom = 29.0
-expand_margin_left = 12.0
+expand_margin_left = 0.0
 expand_margin_top = 0.0
-expand_margin_right = 12.0
+expand_margin_right = 0.0
 expand_margin_bottom = 0.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_boost_track"]
@@ -86,6 +86,9 @@ expand_margin_top = 4.0
 expand_margin_right = 4.0
 expand_margin_bottom = 4.0
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tabpanel"]
+content_margin_top = 12.0
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iun4r"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_boostfill"]
@@ -104,78 +107,78 @@ expand_margin_right = 0.0
 expand_margin_bottom = 0.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_vtut7"]
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 texture = ExtResource("neon_btn_disabled")
 texture_margin_left = 29.0
 texture_margin_top = 29.0
 texture_margin_right = 29.0
 texture_margin_bottom = 29.0
-expand_margin_left = 12.0
+expand_margin_left = 0.0
 expand_margin_top = 0.0
-expand_margin_right = 12.0
+expand_margin_right = 0.0
 expand_margin_bottom = 0.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_bvbyg"]
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 texture = ExtResource("neon_btn_focus")
 texture_margin_left = 42.0
 texture_margin_top = 42.0
 texture_margin_right = 42.0
 texture_margin_bottom = 42.0
-expand_margin_left = 24.0
+expand_margin_left = 12.0
 expand_margin_top = 12.0
-expand_margin_right = 24.0
+expand_margin_right = 12.0
 expand_margin_bottom = 12.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_hydtf"]
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 texture = ExtResource("neon_btn_hover")
 texture_margin_left = 43.0
 texture_margin_top = 43.0
 texture_margin_right = 43.0
 texture_margin_bottom = 43.0
-expand_margin_left = 26.0
+expand_margin_left = 14.0
 expand_margin_top = 14.0
-expand_margin_right = 26.0
+expand_margin_right = 14.0
 expand_margin_bottom = 14.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_yn56u"]
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 texture = ExtResource("neon_btn_hover")
 texture_margin_left = 43.0
 texture_margin_top = 43.0
 texture_margin_right = 43.0
 texture_margin_bottom = 43.0
-expand_margin_left = 26.0
+expand_margin_left = 14.0
 expand_margin_top = 14.0
-expand_margin_right = 26.0
+expand_margin_right = 14.0
 expand_margin_bottom = 14.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_7depn"]
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 texture = ExtResource("neon_btn_pressed")
 texture_margin_left = 45.0
 texture_margin_top = 45.0
 texture_margin_right = 45.0
 texture_margin_bottom = 45.0
-expand_margin_left = 28.0
+expand_margin_left = 16.0
 expand_margin_top = 16.0
-expand_margin_right = 28.0
+expand_margin_right = 16.0
 expand_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_feedpanel"]
@@ -209,9 +212,9 @@ texture_margin_left = 21.0
 texture_margin_top = 21.0
 texture_margin_right = 21.0
 texture_margin_bottom = 21.0
-expand_margin_left = 20.0
+expand_margin_left = 16.0
 expand_margin_top = 8.0
-expand_margin_right = 20.0
+expand_margin_right = 16.0
 expand_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_trkchip"]
@@ -229,35 +232,34 @@ expand_margin_top = 0.0
 expand_margin_right = 0.0
 expand_margin_bottom = 0.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_k75rx"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k75rx"]
 content_margin_left = 12.0
 content_margin_top = 12.0
 content_margin_right = 12.0
 content_margin_bottom = 12.0
-texture = ExtResource("neon_btn_pressed")
-texture_margin_left = 45.0
-texture_margin_top = 45.0
-texture_margin_right = 45.0
-texture_margin_bottom = 45.0
-expand_margin_left = 16.0
-expand_margin_top = 16.0
-expand_margin_right = 16.0
-expand_margin_bottom = 16.0
+bg_color = Color(0.255, 0.686, 1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0.255, 0.686, 1, 0.5)
+shadow_size = 8
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_iu7fo"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iu7fo"]
 content_margin_left = 12.0
 content_margin_top = 12.0
 content_margin_right = 12.0
 content_margin_bottom = 12.0
-texture = ExtResource("neon_input")
-texture_margin_left = 19.0
-texture_margin_top = 19.0
-texture_margin_right = 19.0
-texture_margin_bottom = 19.0
-expand_margin_left = 0.0
-expand_margin_top = 0.0
-expand_margin_right = 0.0
-expand_margin_bottom = 0.0
+bg_color = Color(0.02, 0.039, 0.122, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.149, 0.388, 0.576, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_hudpanel"]
 content_margin_left = 12.0
@@ -335,37 +337,37 @@ expand_margin_right = 0.0
 expand_margin_bottom = 0.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_inset"]
-content_margin_left = 26.0
-content_margin_right = 26.0
+content_margin_left = 16.0
+content_margin_right = 16.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_wtkwa"]
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 texture = ExtResource("neon_input_focus")
 texture_margin_left = 31.0
 texture_margin_top = 31.0
 texture_margin_right = 31.0
 texture_margin_bottom = 31.0
-expand_margin_left = 24.0
+expand_margin_left = 12.0
 expand_margin_top = 12.0
-expand_margin_right = 24.0
+expand_margin_right = 12.0
 expand_margin_bottom = 12.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_gbla1"]
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 texture = ExtResource("neon_input")
 texture_margin_left = 19.0
 texture_margin_top = 19.0
 texture_margin_right = 19.0
 texture_margin_bottom = 19.0
-expand_margin_left = 12.0
+expand_margin_left = 0.0
 expand_margin_top = 0.0
-expand_margin_right = 12.0
+expand_margin_right = 0.0
 expand_margin_bottom = 0.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_backdrop"]
@@ -418,18 +420,18 @@ expand_margin_right = 0.0
 expand_margin_bottom = 0.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_4v18w"]
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 texture = ExtResource("neon_btn_primary")
 texture_margin_left = 45.0
 texture_margin_top = 45.0
 texture_margin_right = 45.0
 texture_margin_bottom = 45.0
-expand_margin_left = 28.0
+expand_margin_left = 16.0
 expand_margin_top = 16.0
-expand_margin_right = 28.0
+expand_margin_right = 16.0
 expand_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tabsel"]
@@ -707,7 +709,7 @@ TabContainer/colors/font_selected_color = Color(1, 1, 1, 1)
 TabContainer/colors/font_unselected_color = Color(0.875, 0.875, 0.875, 1)
 TabContainer/constants/outline_size = 0
 TabContainer/constants/side_margin = 0
-TabContainer/styles/panel = SubResource("StyleBoxEmpty_iun4r")
+TabContainer/styles/panel = SubResource("StyleBoxEmpty_tabpanel")
 TabContainer/styles/tab_hovered = SubResource("StyleBoxFlat_tabhover")
 TabContainer/styles/tab_selected = SubResource("StyleBoxFlat_tabsel")
 TabContainer/styles/tab_unselected = SubResource("StyleBoxFlat_tabunsel")

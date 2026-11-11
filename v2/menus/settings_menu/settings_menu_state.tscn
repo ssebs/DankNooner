@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://b6tnccpx0gwjg" path="res://menus/settings_menu/settings_menu_state.gd" id="1_hdace"]
 [ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_hdace"]
 [ext_resource type="Script" path="res://menus/settings_menu/controls_tab.gd" id="3_ctrltab"]
+[ext_resource type="Script" path="res://menus/prompt_tab_container.gd" id="4_ptabs"]
 
 [node name="SettingsMenuState" type="Node" unique_id=207724047]
 script = ExtResource("1_hdace")
@@ -42,6 +43,7 @@ layout_mode = 2
 
 [node name="Layout" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1400000010]
 layout_mode = 2
+size_flags_horizontal = 0
 
 [node name="TitleLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Layout" unique_id=380572322]
 layout_mode = 2
@@ -59,6 +61,7 @@ theme_type_variation = &"MenuBackdropPanel"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+script = ExtResource("4_ptabs")
 current_tab = 0
 tab_0/title = "DISPLAY_SETTINGS_LABEL"
 tab_1/title = "VOLUME_SETTINGS_LABEL"
@@ -72,37 +75,43 @@ horizontal_scroll_mode = 0
 follow_focus = true
 metadata/_tab_index = 0
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display" unique_id=1034889296]
-custom_minimum_size = Vector2(600, 0)
+[node name="Grid" type="GridContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display" unique_id=1034889296]
 layout_mode = 2
+custom_minimum_size = Vector2(800, 0)
 size_flags_horizontal = 0
+theme_override_constants/h_separation = 32
+theme_override_constants/v_separation = 12
+columns = 2
 
-[node name="QUALITY_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2"]
+[node name="QUALITY_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid"]
 layout_mode = 2
+vertical_alignment = 1
 text = "QUALITY_LABEL"
 
-[node name="QualityOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2"]
+[node name="QualityOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 
-[node name="signal_host_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2" unique_id=677060126]
+[node name="signal_host_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid" unique_id=677060126]
 visible = false
 layout_mode = 2
+vertical_alignment = 1
 text = "WEBRTC_HOST_LABEL"
 
-[node name="SignalHostEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2" unique_id=132303083]
+[node name="SignalHostEntry" type="LineEdit" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid" unique_id=132303083]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 placeholder_text = "home.ssebs.com"
 
-[node name="RESOLUTION_SCALE_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2" unique_id=1674945763]
+[node name="RESOLUTION_SCALE_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid" unique_id=1674945763]
 unique_name_in_owner = true
 layout_mode = 2
+vertical_alignment = 1
 text = "RESOLUTION_SCALE_LABEL"
 
-[node name="ResolutionScaleSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2" unique_id=1590972204]
+[node name="ResolutionScaleSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid" unique_id=1590972204]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -114,11 +123,12 @@ step = 0.25
 value = 1.0
 ticks_on_borders = true
 
-[node name="gamma_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2"]
+[node name="gamma_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid"]
 layout_mode = 2
+vertical_alignment = 1
 text = "GAMMA_LABEL"
 
-[node name="GammaSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2"]
+[node name="GammaSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -128,11 +138,12 @@ max_value = 1.0
 step = 0.05
 value = 0.5
 
-[node name="window_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2" unique_id=1233927487]
+[node name="window_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid" unique_id=1233927487]
 layout_mode = 2
+vertical_alignment = 1
 text = "WINDOW_SETTINGS_LABEL"
 
-[node name="WindowModeOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2" unique_id=1732712393]
+[node name="WindowModeOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid" unique_id=1732712393]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -147,50 +158,55 @@ popup/item_2/id = 4
 popup/item_3/text = "WINDOW_MODE_MAXIMIZED"
 popup/item_3/id = 2
 
-[node name="VSYNC_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2"]
+[node name="VSYNC_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid"]
 layout_mode = 2
+vertical_alignment = 1
 text = "VSYNC_LABEL"
 
-[node name="VSyncCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2"]
+[node name="VSyncCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "TRUE"
 
-[node name="AA_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2"]
+[node name="AA_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid"]
 layout_mode = 2
+vertical_alignment = 1
 text = "AA_LABEL"
 
-[node name="AAOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2"]
+[node name="AAOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 
-[node name="REDUCED_EFFECTS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2"]
+[node name="REDUCED_EFFECTS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid"]
 layout_mode = 2
+vertical_alignment = 1
 text = "REDUCED_EFFECTS_LABEL"
 
-[node name="ReducedEffectsCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2"]
+[node name="ReducedEffectsCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "TRUE"
 
-[node name="SHOW_FPS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2"]
+[node name="SHOW_FPS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid"]
 layout_mode = 2
+vertical_alignment = 1
 text = "SHOW_FPS_LABEL"
 
-[node name="ShowFPSCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2"]
+[node name="ShowFPSCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "TRUE"
 
-[node name="LANGUAGE_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2" unique_id=1382044917]
+[node name="LANGUAGE_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid" unique_id=1382044917]
 layout_mode = 2
+vertical_alignment = 1
 text = "LANGUAGE_LABEL"
 
-[node name="LanguageOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/VBoxContainer2" unique_id=842316570]
+[node name="LanguageOpt" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Display/Grid" unique_id=842316570]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -204,16 +220,20 @@ horizontal_scroll_mode = 0
 follow_focus = true
 metadata/_tab_index = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio" unique_id=1712998538]
-custom_minimum_size = Vector2(600, 0)
+[node name="Grid" type="GridContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio" unique_id=1712998538]
 layout_mode = 2
+custom_minimum_size = Vector2(800, 0)
 size_flags_horizontal = 0
+theme_override_constants/h_separation = 32
+theme_override_constants/v_separation = 12
+columns = 2
 
-[node name="master_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/VBoxContainer" unique_id=330750496]
+[node name="master_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/Grid" unique_id=330750496]
 layout_mode = 2
+vertical_alignment = 1
 text = "MASTER_VOLUME_LABEL"
 
-[node name="MasterVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/VBoxContainer" unique_id=1475189282]
+[node name="MasterVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/Grid" unique_id=1475189282]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -223,11 +243,12 @@ max_value = 1.0
 step = 0.05
 value = 0.5
 
-[node name="music_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/VBoxContainer" unique_id=55761047]
+[node name="music_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/Grid" unique_id=55761047]
 layout_mode = 2
+vertical_alignment = 1
 text = "MUSIC_VOLUME_LABEL"
 
-[node name="MusicVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/VBoxContainer" unique_id=1911176273]
+[node name="MusicVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/Grid" unique_id=1911176273]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -237,11 +258,12 @@ max_value = 1.0
 step = 0.05
 value = 0.5
 
-[node name="sfx_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/VBoxContainer" unique_id=1442766106]
+[node name="sfx_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/Grid" unique_id=1442766106]
 layout_mode = 2
+vertical_alignment = 1
 text = "SFX_VOLUME_LABEL"
 
-[node name="SFXVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/VBoxContainer" unique_id=349890090]
+[node name="SFXVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/Grid" unique_id=349890090]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -252,11 +274,12 @@ step = 0.05
 value = 0.5
 ticks_on_borders = true
 
-[node name="menu_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/VBoxContainer" unique_id=1261293644]
+[node name="menu_vol_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/Grid" unique_id=1261293644]
 layout_mode = 2
+vertical_alignment = 1
 text = "MENU_VOLUME_LABEL"
 
-[node name="MenuVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/VBoxContainer" unique_id=744152966]
+[node name="MenuVolSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/Grid" unique_id=744152966]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -267,21 +290,23 @@ step = 0.05
 value = 0.5
 ticks_on_borders = true
 
-[node name="MUTE_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/VBoxContainer" unique_id=1960384521]
+[node name="MUTE_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/Grid" unique_id=1960384521]
 layout_mode = 2
+vertical_alignment = 1
 text = "MUTE_LABEL"
 
-[node name="MuteCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/VBoxContainer" unique_id=517290834]
+[node name="MuteCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/Grid" unique_id=517290834]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "TRUE"
 
-[node name="MUTE_UNFOCUSED_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/VBoxContainer" unique_id=1203857466]
+[node name="MUTE_UNFOCUSED_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/Grid" unique_id=1203857466]
 layout_mode = 2
+vertical_alignment = 1
 text = "MUTE_UNFOCUSED_LABEL"
 
-[node name="MuteUnfocusedCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/VBoxContainer" unique_id=698412237]
+[node name="MuteUnfocusedCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/Grid" unique_id=698412237]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -295,16 +320,20 @@ horizontal_scroll_mode = 0
 follow_focus = true
 metadata/_tab_index = 2
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay" unique_id=659821076]
-custom_minimum_size = Vector2(600, 0)
+[node name="Grid" type="GridContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay" unique_id=659821076]
 layout_mode = 2
+custom_minimum_size = Vector2(800, 0)
 size_flags_horizontal = 0
+theme_override_constants/h_separation = 32
+theme_override_constants/v_separation = 12
+columns = 2
 
-[node name="difficulty_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/VBoxContainer3" unique_id=1699862036]
+[node name="difficulty_label" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/Grid" unique_id=1699862036]
 layout_mode = 2
+vertical_alignment = 1
 text = "DIFFICULTY_LABEL"
 
-[node name="DifficultyOptBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/VBoxContainer3" unique_id=686647650]
+[node name="DifficultyOptBtn" type="OptionButton" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/Grid" unique_id=686647650]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -315,11 +344,12 @@ popup/item_0/id = 0
 popup/item_1/text = "DIFFICULTY_HARD"
 popup/item_1/id = 1
 
-[node name="JOY_CAM_SENS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/VBoxContainer3" unique_id=1201152798]
+[node name="JOY_CAM_SENS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/Grid" unique_id=1201152798]
 layout_mode = 2
+vertical_alignment = 1
 text = "JOY_CAM_SENS_LABEL"
 
-[node name="JoyCamSensSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/VBoxContainer3" unique_id=316649520]
+[node name="JoyCamSensSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/Grid" unique_id=316649520]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -330,11 +360,12 @@ step = 0.01
 value = 0.5
 ticks_on_borders = true
 
-[node name="MOUSE_CAM_SENS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/VBoxContainer3" unique_id=696720195]
+[node name="MOUSE_CAM_SENS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/Grid" unique_id=696720195]
 layout_mode = 2
+vertical_alignment = 1
 text = "MOUSE_CAM_SENS_LABEL"
 
-[node name="MouseCamSensSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/VBoxContainer3" unique_id=605227675]
+[node name="MouseCamSensSlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/Grid" unique_id=605227675]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -345,32 +376,35 @@ step = 0.01
 value = 0.5
 ticks_on_borders = true
 
-[node name="INVERT_CAM_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/VBoxContainer3" unique_id=1054639833]
+[node name="INVERT_CAM_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/Grid" unique_id=1054639833]
 layout_mode = 2
+vertical_alignment = 1
 text = "INVERT_CAM_LABEL"
 
-[node name="InvertCamCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/VBoxContainer3" unique_id=259754545]
+[node name="InvertCamCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/Grid" unique_id=259754545]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "TRUE"
 
-[node name="AUTO_TRANSMISSION_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/VBoxContainer3" unique_id=1054639834]
+[node name="AUTO_TRANSMISSION_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/Grid" unique_id=1054639834]
 layout_mode = 2
+vertical_alignment = 1
 text = "AUTO_TRANSMISSION_LABEL"
 
-[node name="AutoTransmissionCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/VBoxContainer3" unique_id=259754546]
+[node name="AutoTransmissionCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/Grid" unique_id=259754546]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "TRUE"
 
-[node name="TRAFFIC_DENSITY_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/VBoxContainer3" unique_id=1054639835]
+[node name="TRAFFIC_DENSITY_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/Grid" unique_id=1054639835]
 unique_name_in_owner = true
 layout_mode = 2
+vertical_alignment = 1
 text = "TRAFFIC_DENSITY_LABEL"
 
-[node name="TrafficDensitySlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/VBoxContainer3" unique_id=316649521]
+[node name="TrafficDensitySlider" type="HSlider" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Gameplay/Grid" unique_id=316649521]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -398,7 +432,7 @@ follow_focus = true
 [node name="ControlsGrid" type="GridContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Controls/ScrollContainer" unique_id=1630594025]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/h_separation = 36
+theme_override_constants/h_separation = 12
 columns = 4
 
 [node name="DuplicateLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Controls" unique_id=1186254733]
@@ -412,34 +446,27 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "CONTROLS_HINT_LABEL"
 
-[node name="FooterMargin" type="MarginContainer" parent="UI/AspectContainer/MarginContainer/Layout"]
+[node name="Footer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/Layout" unique_id=1674008939]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 0
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 0
+theme_override_constants/separation = 12
 
-[node name="Footer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/Layout/FooterMargin" unique_id=1674008939]
-layout_mode = 2
-theme_override_constants/separation = 36
-
-[node name="BackBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Layout/FooterMargin/Footer" unique_id=1870693339]
+[node name="BackBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Layout/Footer" unique_id=1870693339]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "BACK_LABEL"
 
-[node name="SaveBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Layout/FooterMargin/Footer" unique_id=1073023423]
+[node name="SaveBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Layout/Footer" unique_id=1073023423]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "SAVE_LABEL"
 
-[node name="Spacer" type="Control" parent="UI/AspectContainer/MarginContainer/Layout/FooterMargin/Footer"]
+[node name="Spacer" type="Control" parent="UI/AspectContainer/MarginContainer/Layout/Footer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ResetBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Layout/FooterMargin/Footer" unique_id=462288263]
+[node name="ResetBtn" type="Button" parent="UI/AspectContainer/MarginContainer/Layout/Footer" unique_id=462288263]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2

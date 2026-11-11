@@ -96,7 +96,7 @@ autowrap_mode = 3
 
 [node name="Buttons" type="HBoxContainer" parent="UI/ConfirmBox/Inset/VBox"]
 layout_mode = 2
-theme_override_constants/separation = 36
+theme_override_constants/separation = 12
 
 [node name="ConfirmNoBtn" type="Button" parent="UI/ConfirmBox/Inset/VBox/Buttons"]
 unique_name_in_owner = true

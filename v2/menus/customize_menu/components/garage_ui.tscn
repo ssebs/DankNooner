@@ -10,8 +10,8 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bare"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_header"]
-content_margin_left = 38.0
-content_margin_right = 38.0
+content_margin_left = 28.0
+content_margin_right = 28.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_picker_box"]
 content_margin_left = 8.0
@@ -212,7 +212,7 @@ theme_type_variation = &"InsetPanel"
 
 [node name="Actions" type="HBoxContainer" parent="Column/Panel/VBox/Footer"]
 layout_mode = 2
-theme_override_constants/separation = 36
+theme_override_constants/separation = 12
 
 [node name="SetActiveBtn" type="Button" parent="Column/Panel/VBox/Footer/Actions"]
 unique_name_in_owner = true
@@ -297,7 +297,7 @@ autowrap_mode = 3
 
 [node name="Buttons" type="HBoxContainer" parent="ConfirmBox/Inset/VBox"]
 layout_mode = 2
-theme_override_constants/separation = 36
+theme_override_constants/separation = 12
 
 [node name="ConfirmNoBtn" type="Button" parent="ConfirmBox/Inset/VBox/Buttons"]
 unique_name_in_owner = true
