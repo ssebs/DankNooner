@@ -128,7 +128,7 @@ func get_respawn_hold_time() -> float:
 	return _respawn_hold_time
 
 
-## Hold loadouts to open the bar, cam up/down to pick, release to swap.
+## Hold loadouts to open the bar, cam up/down (or scroll wheel, in _unhandled_input) to pick, release to swap.
 func _poll_loadout_bar():
 	if Input.is_action_just_pressed("loadouts"):
 		_loadout_pick = save_manager.get_player_definition().active_loadout_index
@@ -139,7 +139,11 @@ func _poll_loadout_bar():
 		_switch_loadout(_loadout_pick)
 		_close_loadout_bar()
 		return
-	var step := int(Input.is_action_just_pressed("cam_down")) - int(Input.is_action_just_pressed("cam_up"))
+	_step_loadout_pick(int(Input.is_action_just_pressed("cam_down")) - int(Input.is_action_just_pressed("cam_up")))
+
+
+## Move the bar's highlight by step (-1 up, 1 down), stopping at the ends.
+func _step_loadout_pick(step: int):
 	var last := save_manager.get_player_definition().loadouts.size() - 1
 	if step != 0 and clampi(_loadout_pick + step, 0, last) != _loadout_pick:
 		_loadout_pick += step
@@ -171,6 +175,11 @@ func _unhandled_input(event: InputEvent):
 		InputStateManager.InputState.DISABLED, InputStateManager.InputState.IN_TOUR:
 			return
 		InputStateManager.InputState.IN_GAME:
+			if is_loadout_bar_open() and event is InputEventMouseButton and event.pressed:
+				if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+					_step_loadout_pick(-1)
+				elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+					_step_loadout_pick(1)
 			if event.is_action_pressed("pause"):
 				pause_requested.emit()
 			elif event.is_action_pressed("open_map"):
