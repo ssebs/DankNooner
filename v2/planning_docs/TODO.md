@@ -218,6 +218,8 @@
 
 ## Done ✅
 
+- [x] burnout doesn't do donut fast enough when steering
+
 - [x] Add product feature tour / walk thru for tutorials
   - [x] `planning_docs/____TUTORIAL_WIP.md`
   - [x] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)

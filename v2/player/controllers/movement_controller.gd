@@ -1219,9 +1219,13 @@ func _drift_calc(delta: float):
 	# travel direction (forward.rotated(UP, slip_angle) in _velocity_calc) hold its
 	# world heading instead of being dragged with the nose. Steering builds the
 	# slide; countersteer unwinds it. This is the momentum-based (Forza-style) feel.
-	var carve = steer * DRIFT_YAW_RATE * player_entity.bike_definition.steer_curve.sample(speed_pct) * delta
+	# Burnout donut pivots in place: steer_curve's standstill floor would stall it, and with no
+	# travel line to hold, the carve mustn't build slip (it'd spin out in under a second).
+	var steer_factor = 1.0 if burnout_sustain else player_entity.bike_definition.steer_curve.sample(speed_pct)
+	var carve = steer * DRIFT_YAW_RATE * steer_factor * delta
 	player_entity.rotate_y(-carve)
-	slip_angle += carve
+	if not burnout_sustain:
+		slip_angle += carve
 
 	# Grip pulls the travel line back toward the heading. Throttle/brake holds the
 	# slide (suppresses recovery); lifting lets grip catch up and the drift unwinds.
