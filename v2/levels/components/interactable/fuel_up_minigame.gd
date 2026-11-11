@@ -258,7 +258,7 @@ func _process(delta: float):
 	_sale_label.text = "$%.2f" % bill
 
 
-## One frame of spray: into the tank (up to full) if the tip's in the cap, else spilled. Recoil shoves the
+## One frame of spray: into the tank if the tip's in the cap, else (or past full) spilled. Recoil shoves the
 ## cursor itself (so the rider pulls back to where they were), harder the longer it sprays. Web
 ## ignores warp_mouse, so it has no recoil.
 func _spray(delta: float):
@@ -269,15 +269,13 @@ func _spray(delta: float):
 	_nudge_cursor(recoil)
 	var pumped := delta / fill_secs
 	if _over_cap:
-		# A full tank takes no more, so isn't billed for more.
-		pumped = minf(pumped, 1.0 - fill)
-		fill += pumped
+		fill = minf(fill + pumped, 1.0)
 	bill = minf(bill + pumped * price, _save_manager.get_player_definition().money)
 
 
-## Spraying off the cap. A full tank just stops taking gas, so overfilling isn't a spill.
+## Spraying off the cap, or into a full tank.
 func is_spilling() -> bool:
-	return _spraying and !_over_cap
+	return _spraying and (!_over_cap or _is_full())
 
 
 ## The bill has reached the wallet, so the pump's cut off.

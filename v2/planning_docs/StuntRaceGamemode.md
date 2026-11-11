@@ -118,8 +118,8 @@ partial fill.
   spray time, plus random kicks) and the rider pulls against it. Web ignores `warp_mouse`, so it
   has no recoil. Spray that misses the cap spills, with `%SpillParticles` spraying
   from the tip, the looping `WATER_FLOWING` sfx, a spilling prompt, and a one-shot callout popped
-  off the gauge. Spill costs only money; spraying into a full tank does nothing, so overfilling
-  isn't a spill.
+  off the gauge. Spill costs only money; holding the spray past a full tank spills
+  too.
 - **Price:** gas is paid by the second of spray, spilled or not. The pump's
   `FreeRoamActivity.price` is a full tank's cost, and its `get_start_price()` is 0, so nothing is
   charged to start. The running `bill` shows on the pump's `%SaleLabel` and comes off the fuel-up

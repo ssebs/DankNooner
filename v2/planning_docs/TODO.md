@@ -64,7 +64,9 @@
     - [x] first grind should say do a 50/50 instead of saying land facing it
     - [x] trail braking / progressive braking needs a redo
     - [ ] burnout msg confusing
-    - [ ] !tell player that you cant use front brake if youre doing a wheelie!
+    - [ ] Brake hard in a lean tutorial, 1s too long. (0.5s better)	
+      - [ ] Could also use a (steer, brake now) after gaining some speed
+    - [ ] !tell player that you cant use front brake if youre doing a wheelie during stoppie tut!
 	
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -256,6 +258,8 @@
 ---
 
 ## Done ✅
+
+- [x] Spill gas if holding past max fill
 
 - [x] Don't allow skate flip tricks during wheelie 
 
