@@ -26,46 +26,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
-- [ ] Add product feature tour / walk thru for tutorials
-  - [ ] `planning_docs/____TUTORIAL_WIP.md`
-  - [x] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
-  - [x] Each one saves saying it's done
-  - [x] tutorial level / tutorials + lock out main game until tut is done
-    - [x] working level
-    - [x] working steps / explainations
-    - [x] improve tutorial feel
-    - [x] improve tutorial level map
-    - [x] grab gas can => just check boost used, not full amount. (ended up grabbing next item & being confused)
-    - [x] using shotgun but missing needs to reset you but say you were too far away
-  - [x] reset tutorial doesnt work for customization
-  - [x] 1: MSF Course
-    - [x] Basic movement (gas, brake, steer, camera, shift gears, lean, clutch)
-    - [x] Wheelies (basic, balance point, clutch up)
-    - [x] Stoppies
-    - [x] Drift
-    - [x] Air tricks
-    - [x] Trick mods
-  - [x] 2: Advanced:
-    - [x] Progressive braking (0% -> 100% causes crash)
-    - [x] trail braking
-    - [x] kickflip / superman
-    - [x] grinds
-      - [x] 50/50
-      - [x] salad
-      - [x] smith
-    - [x] burnouts
-    - [x] bunny hops
-  - [x] FIX:
-    - [x] trail braking needs more run up space, not going fast enough to trail brake
-    - [x] respawn player if they do the wrong trick/grind
-    - [x] AdvancedTutorialEvent should not be part of the leveldefinition, autostartevent should handle it.
-    - [x] cleanup map / events for adv tricks
-    - [x] first grind should say do a 50/50 instead of saying land facing it
-    - [x] trail braking / progressive braking needs a redo
-    - [x] burnout msg confusing
-    - [x] Brake hard in a lean tutorial, 1s too long. (0.5s better)	
-      - [x] Could also use a (steer, brake now) after gaining some speed
-    - [x] !tell player that you cant use front brake if youre doing a wheelie during stoppie tut!
 	
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -257,6 +217,47 @@
 ---
 
 ## Done ✅
+
+- [x] Add product feature tour / walk thru for tutorials
+  - [x] `planning_docs/____TUTORIAL_WIP.md`
+  - [x] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
+  - [x] Each one saves saying it's done
+  - [x] tutorial level / tutorials + lock out main game until tut is done
+    - [x] working level
+    - [x] working steps / explainations
+    - [x] improve tutorial feel
+    - [x] improve tutorial level map
+    - [x] grab gas can => just check boost used, not full amount. (ended up grabbing next item & being confused)
+    - [x] using shotgun but missing needs to reset you but say you were too far away
+  - [x] reset tutorial doesnt work for customization
+  - [x] 1: MSF Course
+    - [x] Basic movement (gas, brake, steer, camera, shift gears, lean, clutch)
+    - [x] Wheelies (basic, balance point, clutch up)
+    - [x] Stoppies
+    - [x] Drift
+    - [x] Air tricks
+    - [x] Trick mods
+  - [x] 2: Advanced:
+    - [x] Progressive braking (0% -> 100% causes crash)
+    - [x] trail braking
+    - [x] kickflip / superman
+    - [x] grinds
+      - [x] 50/50
+      - [x] salad
+      - [x] smith
+    - [x] burnouts
+    - [x] bunny hops
+  - [x] FIX:
+    - [x] trail braking needs more run up space, not going fast enough to trail brake
+    - [x] respawn player if they do the wrong trick/grind
+    - [x] AdvancedTutorialEvent should not be part of the leveldefinition, autostartevent should handle it.
+    - [x] cleanup map / events for adv tricks
+    - [x] first grind should say do a 50/50 instead of saying land facing it
+    - [x] trail braking / progressive braking needs a redo
+    - [x] burnout msg confusing
+    - [x] Brake hard in a lean tutorial, 1s too long. (0.5s better)	
+      - [x] Could also use a (steer, brake now) after gaining some speed
+    - [x] !tell player that you cant use front brake if youre doing a wheelie during stoppie tut!
 
 - [x] rewrite grind instructions
 
