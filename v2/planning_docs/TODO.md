@@ -26,7 +26,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
-
 - [ ] Add product feature tour / walk thru for tutorials
   - [ ] `planning_docs/____TUTORIAL_WIP.md`
   - [x] add fill up giant warning (DO NOT HOLD, TAP A, CLICK and RELEASE)
@@ -258,6 +257,8 @@
 ---
 
 ## Done ✅
+
+- [x] rewrite grind instructions
 
 - [x] Spill gas if holding past max fill
 

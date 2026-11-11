@@ -344,7 +344,7 @@ Pitch zones are the wheelie / stoppie thresholds. Yaw zones: straight, angled
 
 - How you land picks the starting cell (level, wheelie or stoppie); steering and leaning move
   between cells. The tricks menu's Grind tab lists each grind with a `TRICK_HOWTO_<NAME>` phrased
-  as "land X, then steer / lean Y".
+  as "on a rail, lean / stay level X, then steer Y", since pitch is set on the rail, not only on landing.
 - A held right-stick trick overrides the grind as `current_trick` (`TrickState.GRIND` row in
   `BINDINGS`; no trick button needed on the rail), and the grind keeps scoring underneath it. See
   [ComboAndBoost.md](./ComboAndBoost.md).

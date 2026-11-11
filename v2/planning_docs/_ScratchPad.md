@@ -30,8 +30,7 @@ Make a hoodie
   - [ ] also see `resources/img/marketing` and `scripts/key_art`. currently exists but jank! getting better, but not library header
 
 
-- [ ] salad grind instructions need to say lean back a bit, lean angle changes what grind you do
-  - [ ] for all grinds
+
 
 
 ---
