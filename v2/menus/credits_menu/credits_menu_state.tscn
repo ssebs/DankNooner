@@ -33,6 +33,13 @@ layout_mode = 2
 [node name="Layout" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer"]
 layout_mode = 2
 
+[node name="TitleLabel" type="Label" parent="UI/AspectRatioContainer/MarginContainer/Layout"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_type_variation = &"TitleLabel"
+text = "CREDITS_LABEL"
+
 [node name="Backdrop" type="PanelContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -40,11 +47,6 @@ theme_type_variation = &"MenuBackdropPanel"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Backdrop"]
 layout_mode = 2
-
-[node name="TitleLabel" type="Label" parent="UI/AspectRatioContainer/MarginContainer/Layout/Backdrop/VBoxContainer"]
-layout_mode = 2
-theme_type_variation = &"TitleLabel"
-text = "CREDITS_LABEL"
 
 [node name="CreditsText" type="RichTextLabel" parent="UI/AspectRatioContainer/MarginContainer/Layout/Backdrop/VBoxContainer"]
 unique_name_in_owner = true
