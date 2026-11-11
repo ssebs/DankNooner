@@ -22,9 +22,9 @@
 >
 > - **Rider-level gate** (steps 2 + 7, bikes only), built 2026-11-10, untested.
 >   `BikeSkinDefinition.unlock_level` + `SaveManager.is_locked()`. Locked garage rows are
->   disabled, show "🔒 Lvl N · $price", and still preview. Naked: Lvl 2 / $7,000; sport:
->   Lvl 5 / $12,000; mini free. `BikeMod.price` defaults to $200 (`ColorMod` is 0). Deferred to
->   step 4: the finished-list requirement for variants and mastery gates for mods.
+>   disabled, show "🔒 Lvl N · $price", and still preview. Mini is free; naked and sport are
+>   gated, sport higher. `BikeMod.price` has a default (`ColorMod` is 0). New saves start on the
+>   mini (`default_player_definition.tres`). Deferred to step 4: the finished-list requirement for variants and mastery gates for mods.
 > - **Save version 2** (`SaveManager.save_version`): any save with another version is replaced by
 >   a new one on load, so pre-gate saves don't keep bikes they never bought. Settings
 >   (`settings.json`) are untouched.
@@ -109,15 +109,62 @@ free roam and in events, unlocks that show progress, and money to spend on what 
 
 ## Economy
 
+### XP and money today
+
+- **Where it comes from:** only event [payouts](#payouts) and time attack laps. Free roam,
+  challenges and dailies pay nothing yet. No event overrides the `payout_money` / `payout_xp`
+  defaults on `GameModeEventDefinition`, so every event pays the same base.
+- **Rider level** is derived from total XP (`PlayerDefinition.level()`, `XP_PER_LEVEL`); each level
+  costs more XP than the last. Reaching a level pays nothing and plays nothing; it only lifts
+  bike `unlock_level` gates and shows on the riding HUD.
+- **Money** starts at the default definition's amount and is spent in the garage, on priced free
+  roam activities and on fuel-ups.
+- **Off target:** with flat payouts, the gated bikes take far longer to afford than
+  [Pacing](#pacing) wants.
+
+**Next:**
+1. [Economy pass](#economy-pass): payouts that ramp with rider level, sized to the pacing
+   targets. Planned, not built.
+2. Challenges and dailies as a second income (steps 3 and 4), which also unlock variants and mods.
+3. A level-up moment: a HUD callout when a level is crossed, naming anything it just unlocked.
+   Not designed yet.
+
+### Economy pass
+
+Decided 2026-11-10, not built.
+
+- **Raise payouts, don't cut prices.** Bikes stay well above cosmetics.
+- **No difficulty tiers.** Every event shares one base payout; it ramps with the rider's
+  **level** instead: `(event base × place multiplier + score × rate) × level multiplier`. This
+  changes the [payout](#payouts) formula. The level multiplier also offsets each level costing
+  more XP than the last, so levels don't slow to a crawl.
+- **Demo scope:** only Stunt City ships, so the demo's events are its stunt races, track race,
+  time attacks, trick battle and crash launch. One event runs about 30 s to 2 min.
+- **Tutorial** keeps its existing one-off payout.
+
+Open, to settle before building:
+
+- **Score magnitudes:** the user reads score and earned columns off a few stunt race and trick
+  battle results screens. The score rates are tuned so the score adds to the base without
+  swamping it.
+- **Multiplier shape:** linear per level (simplest), capped or not.
+- **Where the server gets the level:** payouts are computed on the server, so it needs each
+  rider's level. Check whether the lobby's synced player data carries `xp` before adding
+  anything.
+- **The numbers:** event base money and XP, the level multiplier, and starting money, sized
+  against [Pacing](#pacing) with a quick simulation of a grinder and a 100%er.
+
 ### Pacing
 
 Targets to tune toward. Prices, levels and payout bases are set on the definitions.
 
 - A new save owns the mini bike, at rider level 1, with starting money that buys neither of the
   other bikes.
-- The naked bike is a short save-up plus a low rider level; the sport bike needs a higher rider
-  level and takes roughly half an hour of events. Raise the per-event `payout_money` bases to hit this, not the formula.
-- Event XP scales with event difficulty (per-event `payout_xp`).
+- The naked bike is a short save-up plus a low rider level.
+- A player grinding toward the sport bike gets it in about **30 minutes** of events.
+- A 100%er (every bike, variant, mod and challenge) takes about **an hour**; challenges and mods
+  add to the run beyond events.
+- Payouts ramp with rider level (see [Economy pass](#economy-pass)), not with event difficulty.
 - Three dailies are worth about ten races of XP.
 - Cosmetics are cheap next to bikes, so buying one doesn't wreck the bike savings.
 
@@ -295,8 +342,8 @@ better idea; the rest were decided.
    `add_player_xp <amount>`, `add_bike_level <type> <levels>` (completes that many of the
    type's challenges, since mastery comes from challenges, not XP) and `unlock_bike_max <type>`.
    They write the save like normal progress, so the unlocks behave the same as earned ones.
-10. **Economy pass.** Bike prices and level gates, per-event payout bases, daily rewards, starting
-   money on `default_player_definition.tres`.
+10. **Economy pass.** The level-ramped payout (see [Economy pass](#economy-pass)), bike prices and
+   level gates, daily rewards, starting money on `default_player_definition.tres`.
 
 Depends on, but isn't part of this: NPC racer AI difficulty ramping with event difficulty, more
 tricks for unique challenges, and the tutorial (which comes before all of this for a new player).

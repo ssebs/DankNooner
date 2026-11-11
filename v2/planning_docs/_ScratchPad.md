@@ -24,7 +24,6 @@ Make a hoodie
 
 ## NOW
 
-- [ ] [Progression/Challenges](./Progression.md)
 
 ---
 ##

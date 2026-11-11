@@ -29,7 +29,10 @@
 
 - [ ] [Progression/Challenges](./Progression.md)
   - [x] bike variants (scooter=>mini, cruiser=>naked)
+  - [x] wipe old saves
   - [ ] lock bikes behind XP level
+  - [ ] update economy (XP+$ for events / scoring calculations)
+    - [ ] SAVE TO NEW DOC
 
 
 ### Steam Prep
