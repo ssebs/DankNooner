@@ -1,27 +1,20 @@
 [gd_resource type="Resource" script_class="BikeSkinDefinition" format=3 uid="uid://cvkjasqlccy3m"]
 
-[ext_resource type="Curve" uid="uid://bc4775t6u5ngh" path="res://player/bikes/resources/lean_speed_curve.tres" id="2_bu6nc"]
 [ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/bikes/bike_skin_definition.gd" id="3_0j748"]
 [ext_resource type="PackedScene" uid="uid://baudp5rgxd4fd" path="res://player/bikes/scenes/mini_bike.tscn" id="3_bu6nc"]
 [ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_us0rk"]
 [ext_resource type="Resource" uid="uid://i0r5np06lfvi" path="res://resources/bikes/mods/color_mods/blue_color.tres" id="4_0j748"]
-[ext_resource type="Curve" uid="uid://ct2j0k3sl7m3u" path="res://player/bikes/resources/steer_speed_curve.tres" id="4_us0rk"]
-[ext_resource type="Curve" uid="uid://dlqmqgtip7b61" path="res://resources/bikes/power_curve.tres" id="5_us0rk"]
 [ext_resource type="Curve" uid="uid://c1f077u0478o4" path="res://resources/bikes/grom_rpm_pitch_curve.tres" id="6_grom"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oq5os"]
-radius = 0.4
-height = 1.8
+[ext_resource type="Resource" path="res://resources/bikes/types/mini_bike_type.tres" id="9_type"]
 
 [resource]
 script = ExtResource("3_0j748")
 skin_name = "mini_default"
+bike_type = ExtResource("9_type")
 mesh_res = ExtResource("3_bu6nc")
 mesh_position_offset = Vector3(0, 0.57, 0)
 mesh_rotation_offset_degrees = Vector3(0, 180, 0)
 mesh_scale_multiplier = Vector3(0.35, 0.35, 0.35)
-collision_shape = SubResource("CapsuleShape3D_oq5os")
-collision_position_offset = Vector3(0, 0.4, -0.01)
 training_wheels_marker_position = Vector3(0, 0.045939356, -0.65252227)
 seat_marker_position = Vector3(2.271363e-08, 0.7942474, -0.15042555)
 front_wheel_ground_position = Vector3(-8.902339e-08, 0, 0.58957523)
@@ -56,11 +49,4 @@ engine_sound_id = 1
 engine_min_pitch = 0.55
 engine_max_pitch = 1.4
 engine_rpm_pitch_curve = ExtResource("6_grom")
-gear_ratios = Array[float]([2.92, 2.05, 1.6, 1.0])
-num_gears = 4
-max_rpm = 8000.0
-max_speed = 60.0
-acceleration = 8.0
-brake_strength = 20.0
-lean_speed = 4.0
 metadata/_custom_type_script = "uid://bqkmh4ppf72gt"

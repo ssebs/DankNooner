@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://cigmq4771hbm1"]
+
+[ext_resource type="PackedScene" uid="uid://bpo4qsl7rtsxg" path="res://player/bikes/assets/Vespa/Vespa.glb" id="1_vespa"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="2_skin"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="3_slot"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_paint"]
+
+[sub_resource type="Resource" id="Resource_paint"]
+script = ExtResource("3_slot")
+color = Color(0.64483345, 0.4745, 0.73, 1)
+use_standard_material = true
+standard_material = SubResource("StandardMaterial3D_paint")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tail"]
+albedo_color = Color(0.58, 0, 0.066, 1)
+emission_enabled = true
+emission = Color(1, 0.03, 0.03, 1)
+emission_energy_multiplier = 1.6
+
+[sub_resource type="Resource" id="Resource_tail"]
+script = ExtResource("3_slot")
+color = Color(0.58, 0, 0.066, 1)
+use_standard_material = true
+standard_material = SubResource("StandardMaterial3D_tail")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gw5tl"]
+albedo_color = Color(0.58, 0, 0.066, 1)
+emission_enabled = true
+emission = Color(1, 0.03, 0.03, 1)
+emission_energy_multiplier = 1.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n2011"]
+albedo_color = Color(0.64483345, 0.4745, 0.73, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_euboa"]
+albedo_color = Color(0.64483345, 0.4745, 0.73, 1)
+
+[node name="Vespa" unique_id=102277829 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node", "taillight_mesh") instance=ExtResource("1_vespa")]
+script = ExtResource("2_skin")
+slots = Array[ExtResource("3_slot")]([SubResource("Resource_paint"), SubResource("Resource_paint")])
+meshes = [NodePath("Vespa"), NodePath("Top")]
+steering_rotation_node = NodePath("Top")
+front_wheel_node = NodePath("Top/FrontWheel")
+rear_wheel_node = NodePath("RearWheel")
+taillight_slot = SubResource("Resource_tail")
+taillight_mesh = NodePath("Taillight")
+
+[node name="Taillight" parent="." index="2" unique_id=151277812]
+surface_material_override/0 = SubResource("StandardMaterial3D_gw5tl")
+
+[node name="Top" parent="." index="3" unique_id=591011520]
+surface_material_override/0 = SubResource("StandardMaterial3D_n2011")
+
+[node name="Vespa" parent="." index="5" unique_id=426050731]
+surface_material_override/0 = SubResource("StandardMaterial3D_euboa")

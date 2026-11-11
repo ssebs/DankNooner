@@ -1,40 +1,37 @@
 # Progression
 
-> **WIP 2026-11-10: bike type split + skin variants.** Started on [New systems](#new-systems)
-> step 1 only. No code written yet. Gamba wheel is out for now.
+> **WIP 2026-11-10: bike type split + skin variants.** Working on [New systems](#new-systems)
+> step 1 only. Gamba wheel is out for now.
 >
-> **Plan:**
-> - New `BikeTypeDefinition` (`resources/bikes/bike_type_definition.gd`) takes the Collision,
->   Gearing, Physics, Tricks and Surfaces groups from `BikeSkinDefinition`. Three
->   `.tres` files in `resources/bikes/types/` get today's per-bike values.
-> - `BikeSkinDefinition` gets `@export var bike_type` plus read-only forwarding getters, so the
->   ~130 `bd.max_speed`-style reads (and the duck-typed `definition.collision_*` reads in
->   `npc_rider_entity`) stay untouched. No writes to these fields exist outside the def.
->   `_copy_from` copies `bike_type`; `to_dict`/`from_dict` don't change, because the type
->   comes with the base def.
-> - Variants: `naked_cruiser` (cruiserbygoogle.glb), `mini_vespa` (Vespa by Jasmine Roberts),
->   `sport_retro` (Street Vendor Cart stand-in until RetroSportsBike.glb exists). Each glb
->   gets copied into `player/bikes/assets/<Name>/`, gets a `SkinColor` scene in
->   `player/bikes/scenes/`, and a skin `.tres` whose markers start from its type's default.
->   Price stays 0 until the economy pass. The garage label comes from `skin_name`
->   (`naked_cruiser` shows as "Naked Cruiser").
+> **Built (untested in game):**
+> - `BikeTypeDefinition` (`resources/bikes/bike_type_definition.gd`) holds the Collision,
+>   Gearing, Physics, Tricks and Surfaces groups. The mini, naked and sport `.tres` files in
+>   `resources/bikes/types/` carry the old per-bike values. Documented in
+>   [Skins](./Skins.md#biketypedefinition).
+> - `BikeSkinDefinition.bike_type` plus read-only forwarders, so callers didn't change.
+>   `to_dict`/`from_dict` didn't change either: the type comes with the base def.
+> - **Scooter** (mini type): `player/bikes/scenes/scooter_bike.tscn` and
+>   `resources/bikes/skins/scooter_skin_definition.tres`. Mesh scale, offset and wheel markers
+>   were computed from the glb. Every other marker and the rider pose are copied from the Grom
+>   and need placing.
 >
-> **Blender edits needed** (all three are one mesh today; `bike_skin.gd` needs a steering
-> node for the handlebar IK proxy, and wheel nodes for spin):
+> **Next:** cruiser (naked) and the retro sport bike (Street Vendor Cart stand-in), once the
+> models are split in Blender.
+>
+> **Blender edits needed** for the cruiser and the stand-in (both are one mesh; `bike_skin.gd`
+> needs a steering node for the handlebar IK proxy, and wheel nodes for spin):
 > - Split out separate objects for `FrontWheel`, `RearWheel` and a `Handlebars`/`RotationPoint`
 >   that parents the bars, fork and front wheel. Pivots go at the wheel axles and the steering
 >   head. This matches Grom (`RotationPoint/FrontWheel`, `RearWheel`) and naked (`Handlebars/FontWheel`).
-> - Split the paintable body into its own object or material slot. Vespa's body is
->   `Material.001` (surface 0). The cruiser has one textured material, so painting it tints
->   the whole bike.
+> - Split the paintable body into its own object or material slot. The cruiser has one
+>   textured material, so painting it tints the whole bike.
 > - Optional: a separate taillight object, for the brake light and boost trail.
 > - Apply transforms, forward = the same axis as the existing bikes. The cruiser is about 14.5
 >   units long along X and 9.4 tall, so scale it to about 2.4 m and rotate it to face forward.
->   The Vespa is about 4.4 long along Z and 3.2 tall.
 >
 > **Open questions:**
 > - **Traffic:** NPC traffic rolls every skin in `resources/bikes/skins/` unless the level's
->   `TrafficSettings.bike_roster` is set, so the cart stand-in and the Vespa will show up as
+>   `TrafficSettings.bike_roster` is set, so the scooter (and later the cart stand-in) will show up as
 >   traffic. Restrict the rosters, or let them roll?
 > - **Variant audio:** same engine sound as the type, or new ones? Default is the type's sound.
 > - Still open from before: character level gates, rider-level gates beyond the naked bike,

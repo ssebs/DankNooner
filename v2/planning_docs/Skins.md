@@ -1,6 +1,6 @@
 # Skin System
 
-The skin system allows runtime color customization of character and bike meshes using a slot-based approach. `BikeSkinDefinition` also stores per-bike rider pose, wheel markers, and physics/gearing/trick tuning.
+The skin system allows runtime color customization of character and bike meshes using a slot-based approach. `BikeSkinDefinition` also stores per-bike rider pose and wheel markers; physics/gearing/trick tuning lives on its `BikeTypeDefinition`.
 
 ## Overview
 
@@ -124,7 +124,7 @@ Resource at `resources/player/character_skin_definition.gd`:
 
 ## Bike Skin System
 
-`BikeSkin` (scene) displays a `BikeSkinDefinition` (resource). Unlike characters, the bike definition is the **single source of truth for per-bike tuning** — visuals, collision, rider pose, wheel markers, gearing, physics, and trick limits all live here.
+`BikeSkin` (scene) displays a `BikeSkinDefinition` (resource). Unlike characters, the bike definition is the **single source of truth for per-bike tuning**: visuals, rider pose and wheel markers live here, and simulation tuning comes from its `bike_type`.
 
 ### BikeSkinDefinition
 
@@ -134,19 +134,29 @@ Resource at `resources/bikes/bike_skin_definition.gd`. Grouped in the inspector:
 
 **Mods** — `mods: Array[BikeMod]` — applied after base colors at spawn (see [Mods](#mods) below)
 
-**Collision** — `collision_shape`, `collision_position_offset`, `collision_rotation_offset_degrees`, `collision_scale_multiplier`
-
 **Markers** — `seat_marker_position`, `front_wheel_ground_position`, `rear_wheel_ground_position`, `front_wheel_front_position`, `rear_wheel_back_position`, `training_wheels_marker_*`. Wheel positions feed raycasts (`PlayerEntity._init_raycasts`) and the wheelie/stoppie pivot arc.
 
 **Rider Pose** — chest/head/magnet/hand/foot positions+rotations and arm/leg magnets. Hand and foot transforms are stored in **handlebar-parent / `bike_skin` local space**, so they survive steering rotation when reapplied each tick by `AnimationController._sync_targets_from_bike()`. Authored via the editor tools on `AnimationController` (Save Default Pose / Play Default Pose). See [AnimationController](./AnimationController.md).
 
 **Animation** — `lean_multiplier`, `weight_shift_multiplier`
 
-**Gearing** — `gear_ratios`, `num_gears`, `max_rpm`, `idle_rpm`, `stall_rpm`
+**Type** — `bike_type: BikeTypeDefinition`. Its fields are forwarded as read-only properties, so callers keep reading `bd.max_speed`.
+
+### BikeTypeDefinition
+
+Resource at `resources/bikes/bike_type_definition.gd`, one `.tres` per type in `resources/bikes/types/` (mini, naked, sport). Everything that affects simulation, so every skin of a type rides identically (multiplayer fairness, see [Progression](./Progression.md#bike-types-and-skins)):
+
+**Collision** — `collision_shape`, `collision_position_offset`, `collision_rotation_offset_degrees`, `collision_scale_multiplier`
+
+**Gearing** — `gear_ratios`, `num_gears`, `max_rpm`, `idle_rpm`, `stall_rpm`, `power_curve`, `shift_cut_time`
 
 **Physics** — `max_speed`, `acceleration`, `brake_strength`, `friction`, `engine_brake_strength`, `max_lean_angle_deg`, `lean_speed`, `turn_speed`, `lean_curve`, `steer_curve`
 
 **Tricks** — `wheelie_balance_point_deg`, `max_wheelie_angle_deg`, `max_stoppie_angle_deg`, `wheelie_rpm_threshold`, `wheelie_balance_point_width_deg`, `rotation_speed`, `return_speed`
+
+**Surfaces** — `unstable_surface_factor`
+
+Adding a skin variant: a `SkinColor` scene in `player/bikes/scenes/`, a skin `.tres` in `resources/bikes/skins/` pointing at the type, then place its markers.
 
 ### Authoring Per-Bike Pose / Markers
 

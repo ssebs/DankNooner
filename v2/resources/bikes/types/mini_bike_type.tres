@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="BikeTypeDefinition" format=3 uid="uid://c2to26bln0awb"]
+
+[ext_resource type="Curve" uid="uid://bc4775t6u5ngh" path="res://player/bikes/resources/lean_speed_curve.tres" id="1_e6d3a"]
+[ext_resource type="Script" uid="uid://cd642c2igur4x" path="res://resources/bikes/bike_type_definition.gd" id="1_type"]
+[ext_resource type="Curve" uid="uid://dlqmqgtip7b61" path="res://resources/bikes/power_curve.tres" id="2_miuqu"]
+[ext_resource type="Curve" uid="uid://ct2j0k3sl7m3u" path="res://player/bikes/resources/steer_speed_curve.tres" id="4_vs4ap"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oq5os"]
+radius = 0.4
+height = 1.8
+
+[resource]
+script = ExtResource("1_type")
+collision_shape = SubResource("CapsuleShape3D_oq5os")
+collision_position_offset = Vector3(0, 0.4, -0.01)
+gear_ratios = Array[float]([2.92, 2.05, 1.6, 1.0])
+num_gears = 4
+max_rpm = 8000.0
+max_speed = 60.0
+acceleration = 8.0
+brake_strength = 20.0
+lean_speed = 4.0

@@ -267,7 +267,7 @@ What the list can't tell you:
 - Gear shifts applied from `input_controller.nfx_target_gear` each rollback tick
 - **Automatic transmission** (`auto_transmission` setting) is a client-side input assist in `InputController._auto_shift()`, NOT a GearingController feature — `nfx_target_gear` is a netfox *input* property owned by the local client, so the server must never write it. Upshift/downshift RPM ratios and the between-shift cooldown are consts on `InputController`; the upshift threshold sits just under the rev-limiter cut so the auto box shifts instead of bouncing off it. Forced on while `BoostController.is_boosting`, whatever the setting says.
 - Power output = throttle x power_curve x torque_multiplier x engagement
-- Gear ratios, max_rpm, idle_rpm, stall_rpm are defined in `BikeSkinDefinition`
+- Gear ratios, max_rpm, idle_rpm, stall_rpm are defined in `BikeTypeDefinition` (read through `BikeSkinDefinition`)
 
 #### TrickController
 
@@ -312,7 +312,7 @@ Earn, spend and bank have three separate owners, and the split is **not** option
 
 Runs after physics each rollback tick and tests, in order: air-trick landing, drift
 spinout/highside, then the ground checks. Every threshold is an `@export` on the controller or a
-limit on `BikeSkinDefinition` — read the values there, not here.
+limit on `BikeTypeDefinition` — read the values there, not here.
 
 - **Killbox** contact — always crashes, whatever the speed or angle
 - **Pitch** past the bike definition's `max_wheelie_angle_deg` / `max_stoppie_angle_deg`

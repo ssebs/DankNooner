@@ -12,6 +12,9 @@ class_name BikeSkinDefinition extends Resource
 ## Garage cost; 0 = owned by default.
 @export var price: int = 0
 
+## Simulation tuning shared by every skin of this type. Read through the forwarders below.
+@export var bike_type: BikeTypeDefinition
+
 @export_group("Mesh")
 ## The SkinColor scene to instantiate
 @export var mesh_res: PackedScene:
@@ -26,13 +29,6 @@ class_name BikeSkinDefinition extends Resource
 @export var mesh_scale_multiplier: Vector3 = Vector3.ONE
 ## One per unique SkinSlot, applied before mods. Empty = the mesh's own slot colors.
 @export var colors: Array[Color] = []
-
-@export_group("Collision")
-# TODO: use this
-@export var collision_shape: Shape3D = preload("res://resources/bikes/hitbox/bike_hitbox.tres")
-@export var collision_position_offset: Vector3 = Vector3(0, 0.44, 0)
-@export var collision_rotation_offset_degrees: Vector3 = Vector3(90, 0, 0)
-@export var collision_scale_multiplier: Vector3 = Vector3.ONE
 
 ## Marker positions
 @export_group("Markers")
@@ -101,53 +97,101 @@ var engine_rpm_pitch_curve: Curve = preload("res://resources/bikes/ninja_rpm_pit
 ## Multiplier for rider weight shift animation (forward/back)
 @export var weight_shift_multiplier: float = 1.0
 
-@export_group("Gearing")
-@export var gear_ratios: Array[float] = [2.92, 2.05, 1.6, 1.25, 1, 0.8]
-@export var num_gears: int = 6
-@export var max_rpm: float = 11000.0
-@export var idle_rpm: float = 1000.0
-@export var stall_rpm: float = 800.0
-@export var power_curve: Curve = preload("res://resources/bikes/power_curve.tres")
-## Seconds of zero drive power after each shift while RPM glides to the new gear.
-@export var shift_cut_time: float = 0.15
-
-@export_group("Physics")
-@export var max_speed: float = 88.0
-@export var acceleration: float = 10.0
-@export var brake_strength: float = 30.0
-@export var friction: float = 2.0
-@export var engine_brake_strength: float = 12.0
-@export var max_lean_angle_deg: float = 50.0
-@export var lean_speed: float = 2.6
-@export var turn_speed: float = 2.0
-## Lean amount vs speed (X=speed%, Y=lean multiplier)
-@export var lean_curve: Curve = preload("res://player/bikes/resources/lean_speed_curve.tres")
-## Steer responsiveness vs speed (X=speed%, Y=steer multiplier) — bell curve shape
-## Low at standstill, peaks ~20mph equiv, tapers at top speed
-@export var steer_curve: Curve = preload("res://player/bikes/resources/steer_speed_curve.tres")
-
-@export_group("Tricks")
-@export var wheelie_balance_point_deg: float = 70.0
-@export var max_wheelie_angle_deg: float = 115.0
-@export var max_stoppie_angle_deg: float = 105.0
-@export var wheelie_rpm_threshold: float = 0.4
-## Half-width of the balance point sweet spot (total range = balance_point ± this)
-@export var wheelie_balance_point_width_deg: float = 12.0
-@export var rotation_speed: float = 1.75
-@export var return_speed: float = 1.25
-
-@export_group("Surfaces")
-## How strongly this bike is affected by layer 5 (unstable_collision) surfaces.
-## 1.0 = full effect (street bike), 0.0 = ignored (dirtbike). Scales drag, wheelie suppression,
-## lean-crash threshold reduction, and front-brake-while-steering lowside trigger.
-@export_range(0.0, 1.0, 0.05) var unstable_surface_factor: float = 1.0
-
 const USER_SKIN_DIR: String = "user://skins/"
 const SKIN_PFX: String = "bike_skin_"
 
+#region bike_type forwarders
+var collision_shape: Shape3D:
+	get:
+		return bike_type.collision_shape
+var collision_position_offset: Vector3:
+	get:
+		return bike_type.collision_position_offset
+var collision_rotation_offset_degrees: Vector3:
+	get:
+		return bike_type.collision_rotation_offset_degrees
+var collision_scale_multiplier: Vector3:
+	get:
+		return bike_type.collision_scale_multiplier
+var gear_ratios: Array[float]:
+	get:
+		return bike_type.gear_ratios
+var num_gears: int:
+	get:
+		return bike_type.num_gears
+var max_rpm: float:
+	get:
+		return bike_type.max_rpm
+var idle_rpm: float:
+	get:
+		return bike_type.idle_rpm
+var stall_rpm: float:
+	get:
+		return bike_type.stall_rpm
+var power_curve: Curve:
+	get:
+		return bike_type.power_curve
+var shift_cut_time: float:
+	get:
+		return bike_type.shift_cut_time
+var max_speed: float:
+	get:
+		return bike_type.max_speed
+var acceleration: float:
+	get:
+		return bike_type.acceleration
+var brake_strength: float:
+	get:
+		return bike_type.brake_strength
+var friction: float:
+	get:
+		return bike_type.friction
+var engine_brake_strength: float:
+	get:
+		return bike_type.engine_brake_strength
+var max_lean_angle_deg: float:
+	get:
+		return bike_type.max_lean_angle_deg
 var max_lean_angle_rad: float:
 	get:
-		return deg_to_rad(max_lean_angle_deg)
+		return bike_type.max_lean_angle_rad
+var lean_speed: float:
+	get:
+		return bike_type.lean_speed
+var turn_speed: float:
+	get:
+		return bike_type.turn_speed
+var lean_curve: Curve:
+	get:
+		return bike_type.lean_curve
+var steer_curve: Curve:
+	get:
+		return bike_type.steer_curve
+var wheelie_balance_point_deg: float:
+	get:
+		return bike_type.wheelie_balance_point_deg
+var max_wheelie_angle_deg: float:
+	get:
+		return bike_type.max_wheelie_angle_deg
+var max_stoppie_angle_deg: float:
+	get:
+		return bike_type.max_stoppie_angle_deg
+var wheelie_rpm_threshold: float:
+	get:
+		return bike_type.wheelie_rpm_threshold
+var wheelie_balance_point_width_deg: float:
+	get:
+		return bike_type.wheelie_balance_point_width_deg
+var rotation_speed: float:
+	get:
+		return bike_type.rotation_speed
+var return_speed: float:
+	get:
+		return bike_type.return_speed
+var unstable_surface_factor: float:
+	get:
+		return bike_type.unstable_surface_factor
+#endregion
 
 
 func get_user_save_path() -> String:
@@ -185,15 +229,12 @@ func _copy_from(other: BikeSkinDefinition) -> void:
 	skin_name = other.skin_name
 	base_res_path = other.base_res_path
 	price = other.price
+	bike_type = other.bike_type
 	mesh_res = other.mesh_res
 	mesh_position_offset = other.mesh_position_offset
 	mesh_rotation_offset_degrees = other.mesh_rotation_offset_degrees
 	mesh_scale_multiplier = other.mesh_scale_multiplier
 	colors = other.colors.duplicate()
-	collision_shape = other.collision_shape
-	collision_position_offset = other.collision_position_offset
-	collision_rotation_offset_degrees = other.collision_rotation_offset_degrees
-	collision_scale_multiplier = other.collision_scale_multiplier
 	training_wheels_marker_position = other.training_wheels_marker_position
 	training_wheels_marker_rotation_degrees = other.training_wheels_marker_rotation_degrees
 	seat_marker_position = other.seat_marker_position
@@ -232,31 +273,6 @@ func _copy_from(other: BikeSkinDefinition) -> void:
 	engine_blend_curve = other.engine_blend_curve
 	lean_multiplier = other.lean_multiplier
 	weight_shift_multiplier = other.weight_shift_multiplier
-	gear_ratios = other.gear_ratios.duplicate()
-	num_gears = other.num_gears
-	max_rpm = other.max_rpm
-	idle_rpm = other.idle_rpm
-	stall_rpm = other.stall_rpm
-	power_curve = other.power_curve
-	shift_cut_time = other.shift_cut_time
-	max_speed = other.max_speed
-	acceleration = other.acceleration
-	brake_strength = other.brake_strength
-	friction = other.friction
-	engine_brake_strength = other.engine_brake_strength
-	max_lean_angle_deg = other.max_lean_angle_deg
-	lean_speed = other.lean_speed
-	turn_speed = other.turn_speed
-	lean_curve = other.lean_curve
-	steer_curve = other.steer_curve
-	wheelie_balance_point_deg = other.wheelie_balance_point_deg
-	max_wheelie_angle_deg = other.max_wheelie_angle_deg
-	max_stoppie_angle_deg = other.max_stoppie_angle_deg
-	wheelie_rpm_threshold = other.wheelie_rpm_threshold
-	wheelie_balance_point_width_deg = other.wheelie_balance_point_width_deg
-	rotation_speed = other.rotation_speed
-	return_speed = other.return_speed
-	unstable_surface_factor = other.unstable_surface_factor
 
 
 ## res:// path of the base bike (sport, mini, ...) this def is, or was customized from.
