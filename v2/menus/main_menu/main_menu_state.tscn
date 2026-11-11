@@ -94,9 +94,11 @@ grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
 
-[node name="CurrentSaveCard" parent="UI/AspectContainer/Content/MarginContainer/TitleBox" unique_id=1293896951 instance=ExtResource("8_card")]
+[node name="CurrentSaveCard" parent="UI/AspectContainer/Content/MarginContainer" unique_id=1293896951 instance=ExtResource("8_card")]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
 
 [node name="TitleLabel" type="Label" parent="UI/AspectContainer/Content/MarginContainer" unique_id=42565368]
 visible = false
@@ -135,11 +137,6 @@ layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "TRICKS_LABEL"
 
-[node name="SavesBtn" type="Button" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer" unique_id=1846203531]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_default_cursor_shape = 2
-text = "SAVES_LABEL"
 
 [node name="QuitBtn" type="Button" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer" unique_id=1042468218]
 unique_name_in_owner = true

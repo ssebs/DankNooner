@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://dscubnqixeg5d" path="res://menus/splash_menu/splash_menu_state.gd" id="1_4ta0w"]
 [ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_id3t2"]
-[ext_resource type="Texture2D" uid="uid://b26ogu1ndl1rv" path="res://resources/img/SplashScreen/GodotSplash.png" id="3_y56m1"]
-[ext_resource type="Texture2D" uid="uid://bemuhperq1pyq" path="res://resources/img/SplashScreen/ssebs_splash.png" id="5_5g6xa"]
+[ext_resource type="Texture2D" uid="uid://okv4gyjr6oc5" path="res://resources/img/SplashScreen/splash_screens_0002_GodotLogo.png" id="3_3y01v"]
+[ext_resource type="Texture2D" uid="uid://ck46xjl5r18id" path="res://resources/img/SplashScreen/splash_screens_0001_RocketOnly.png" id="4_u1b71"]
 
 [node name="SplashMenuState" type="Node" unique_id=2055861891]
 script = ExtResource("1_4ta0w")
@@ -39,14 +39,14 @@ theme_override_constants/margin_bottom = 0
 [node name="Splash01" type="TextureRect" parent="UI/AspectContainer/SplashesToShow" unique_id=661161262]
 visible = false
 layout_mode = 2
-texture = ExtResource("3_y56m1")
+texture = ExtResource("3_3y01v")
 expand_mode = 2
 
 [node name="Splash03" type="TextureRect" parent="UI/AspectContainer/SplashesToShow" unique_id=993923213]
 visible = false
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
-texture = ExtResource("5_5g6xa")
+texture = ExtResource("4_u1b71")
 expand_mode = 2
 
 [node name="Label" type="Label" parent="UI/AspectContainer/SplashesToShow/Splash03" unique_id=465921873]

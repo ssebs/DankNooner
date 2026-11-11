@@ -28,6 +28,13 @@ visible = false
 layout_mode = 2
 theme_override_constants/separation = 12
 
+[node name="ActiveLabel" type="Label" parent="Margin/Filled"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"OwnLabel"
+text = "SAVE_SLOT_ACTIVE"
+horizontal_alignment = 1
+
 [node name="Preview" parent="Margin/Filled" instance=ExtResource("2_preview")]
 unique_name_in_owner = true
 layout_mode = 2
@@ -37,12 +44,6 @@ size_flags_horizontal = 4
 unique_name_in_owner = true
 layout_mode = 2
 max_length = 24
-
-[node name="ActiveLabel" type="Label" parent="Margin/Filled"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
-text = "SAVE_SLOT_ACTIVE"
 
 [node name="StatsLabel" type="Label" parent="Margin/Filled"]
 unique_name_in_owner = true

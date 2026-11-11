@@ -36,7 +36,7 @@ corner_radius_bottom_right = 48
 corner_radius_bottom_left = 48
 
 [node name="CurrentSaveCard" type="PanelContainer"]
-size_flags_horizontal = 0
+mouse_default_cursor_shape = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_pill")
 script = ExtResource("1_card")
 
@@ -48,6 +48,7 @@ theme_override_constants/separation = 16
 clip_children = 2
 custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+mouse_filter = 1
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_circle")
 

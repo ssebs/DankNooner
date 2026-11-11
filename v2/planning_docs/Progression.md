@@ -266,6 +266,10 @@ A new menu, reachable from the main, play, lobby and pause menus:
 The pause menu also shows challenge progress. The garage must show a lock state with its
 requirement next to the price; locked items can't be bought.
 
+**Idea:** the main menu's profile card (`CurrentSaveCard`, top right) could show the dailies or
+Career at a glance (e.g. daily progress under the level and money), or open the Career / Daily
+pages on click. It opens the Saves menu today, so this needs deciding.
+
 
 ## Save slots
 
@@ -274,19 +278,18 @@ Steam Cloud syncs `savegame_*.json`, so demo saves are named `savegame_%d_demo.j
 the cloud pattern, never colliding with a full save. Each build lists only its own saves. See also
 "Demo savegame" in TODO's Steam Prep.
 
-- **Saves menu:** a main menu button opens a horizontal row of slot cards (scrollbar hidden): one
+- **Saves menu:** the main menu's save card opens a horizontal row of slot cards (scrollbar hidden): one
   per save on disk, then empty cards in the lowest free slots until there are at least 3.
 - **Active slot:** saved in `settings.json`, one key per build (`save_slot`, `demo_save_slot`),
-  default 1. Its card shows a gray "(active)" under the name.
+  default 1. Its card shows "(active)" in blue at the top.
 - **Card:** a still preview of the save's active loadout at the top, a renamable name (stored in
   the save; blank shows "Save N"), rider level, money and save version. Clicking the card asks
   "Load?" and makes it active (not on the active or an old card, which also don't hover); Delete
   asks first. An empty card is a big `+` that starts a new save there and makes it active.
 - **Preview:** `SavePreview`, a `SubViewport` posing a `RiderVisual`, drawn once each time the
   menu opens. Never written to disk.
-- **Main menu** shows the active save in place of the old greeting (`CurrentSaveCard`): the rider
-  in a circle, level and money, the save name small. Display only; the Saves button opens the
-  menu.
+- **Main menu** shows the active save top right (`CurrentSaveCard`, replacing the old greeting):
+  the rider in a circle, level and money, the save name small. Clicking it opens the Saves menu.
 - **Old versions** (any `version` but `save_version`) are grayed out, show their version, and can
   only be deleted. A migrate button comes later.
 - **Boot on an old version:** the old file is kept, and a new save starts in the first free slot

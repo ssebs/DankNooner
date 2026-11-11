@@ -14,7 +14,6 @@ class_name MainMenuState extends MenuState
 @export var saves_menu_state: MenuState
 
 @onready var settings_btn: Button = %SettingsBtn
-@onready var saves_btn: Button = %SavesBtn
 @onready var play_btn: Button = %PlayBtn
 @onready var customize_btn: Button = %CustomizeBtn
 @onready var quit_btn: Button = %QuitBtn
@@ -50,7 +49,7 @@ func Enter(_state_context: StateContext):
 	ui.show()
 	play_btn.pressed.connect(_on_play_btn_pressed)
 	settings_btn.pressed.connect(_on_settings_btn_pressed)
-	saves_btn.pressed.connect(_on_saves_btn_pressed)
+	current_save_card.pressed.connect(_on_save_card_pressed)
 	quit_btn.pressed.connect(_on_quit_btn_pressed)
 	customize_btn.pressed.connect(_on_customize_btn_pressed)
 	tricks_btn.pressed.connect(_on_tricks_btn_pressed)
@@ -82,7 +81,7 @@ func Exit(_state_context: StateContext):
 
 	play_btn.pressed.disconnect(_on_play_btn_pressed)
 	settings_btn.pressed.disconnect(_on_settings_btn_pressed)
-	saves_btn.pressed.disconnect(_on_saves_btn_pressed)
+	current_save_card.pressed.disconnect(_on_save_card_pressed)
 	quit_btn.pressed.disconnect(_on_quit_btn_pressed)
 	customize_btn.pressed.disconnect(_on_customize_btn_pressed)
 	tricks_btn.pressed.disconnect(_on_tricks_btn_pressed)
@@ -121,7 +120,9 @@ func _on_settings_btn_pressed():
 	transitioned.emit(settings_menu_state, StateContext.NewWithReturn(self))
 
 
-func _on_saves_btn_pressed():
+## Not a Button, so MenuState doesn't wire its click sound.
+func _on_save_card_pressed():
+	audio_manager.play_menu_click()
 	transitioned.emit(saves_menu_state, StateContext.NewWithReturn(self))
 
 

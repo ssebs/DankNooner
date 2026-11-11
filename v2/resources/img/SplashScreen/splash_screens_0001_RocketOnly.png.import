@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b26ogu1ndl1rv"
-path="res://.godot/imported/GodotSplash.png-ccfbaae215dff5eea64dd346f335cb29.ctex"
+uid="uid://ck46xjl5r18id"
+path="res://.godot/imported/splash_screens_0001_RocketOnly.png-ef85370299e5e026cd868a652d98759e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/img/SplashScreen/GodotSplash.png"
-dest_files=["res://.godot/imported/GodotSplash.png-ccfbaae215dff5eea64dd346f335cb29.ctex"]
+source_file="res://resources/img/SplashScreen/splash_screens_0001_RocketOnly.png"
+dest_files=["res://.godot/imported/splash_screens_0001_RocketOnly.png-ef85370299e5e026cd868a652d98759e.ctex"]
 
 [params]
 

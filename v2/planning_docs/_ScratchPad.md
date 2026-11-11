@@ -25,6 +25,7 @@ Make a hoodie
 ## NOW
 
 - [ ] you should be able to customize the color of the glow in the bike skins
+- [ ] remove gray bg from splash images
 ---
 ##
 ## NEXT

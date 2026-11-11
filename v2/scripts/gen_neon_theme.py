@@ -48,6 +48,8 @@ SKY = PALETTE["UI_SKY"]
 WHITE = (1.0, 1.0, 1.0)
 
 PANEL_RADII = (16, 16, 16, 16)  # tl, tr, br, bl
+# Pill ends on a one-line button (~60px tall: radius + border + 2 must fit half of it).
+BUTTON_RADII = (26, 26, 26, 26)
 ROW_RADII = (10, 10, 10, 10)
 CHIP_RADII = (12, 12, 12, 12)
 BACKDROP_RADII = (24, 24, 24, 24)
@@ -119,12 +121,12 @@ def _boxes(k: Look) -> dict:
     return {
         "panel": Box(border=b, **panel, **rest),
         "backdrop": Box(BACKDROP_RADII, b, **fill(k.top, k.bot, k.alpha - 0.05), **lit(k.edge, 0.3 * k.rest_glow, 18, dim)),
-        "btn_normal": Box(border=b, **button, **lit(k.edge, 0.3 * k.rest_glow, 10, dim)),
-        "btn_hover": Box(border=b, **hover),
-        "btn_pressed": Box(border=b, **pressed),
-        "btn_focus": Box(border=b + 1, **focus),
-        "btn_disabled": Box(border=b, **disabled),
-        "btn_primary": Box(border=b, **fill(_mix(k.top, k.hot, 0.6), _mix(k.bot, k.hot, 0.25), 1.0), **lit(k.hot, 0.7, 16, k.hot_border)),
+        "btn_normal": Box(BUTTON_RADII, b, **button, **lit(k.edge, 0.3 * k.rest_glow, 10, dim)),
+        "btn_hover": Box(BUTTON_RADII, b, **hover),
+        "btn_pressed": Box(BUTTON_RADII, b, **pressed),
+        "btn_focus": Box(BUTTON_RADII, b + 1, **focus),
+        "btn_disabled": Box(BUTTON_RADII, b, **disabled),
+        "btn_primary": Box(BUTTON_RADII, b, **fill(_mix(k.top, k.hot, 0.6), _mix(k.bot, k.hot, 0.25), 1.0), **lit(k.hot, 0.7, 16, k.hot_border)),
         # BoostCell is 20px across either way, its fill 12px: margins must fit inside those.
         "boost_track": Box((6, 6, 6, 2), 2, **fill(GLASS, GLASS, 0.85), **lit(k.edge, 0.45, 8)),
         # White, so BoostGauge can tint it through modulate_color.
