@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.1.1 - 2026-11-11
+
+- consistent menus finally
+- ui improvements
+- new theme for all
+- customize menu ui
+- improve ui for saves
+- new btn design + profile / save btn + rm gray by from splash imgs
+- save load menu
+
 ## v0.1.0 - 2026-11-10
 
 - start progression
