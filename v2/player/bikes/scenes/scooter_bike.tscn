@@ -42,6 +42,7 @@ meshes = [NodePath("Vespa"), NodePath("Top"), NodePath("Top/Fender")]
 steering_rotation_node = NodePath("Top")
 front_wheel_node = NodePath("Top/FrontWheel")
 rear_wheel_node = NodePath("RearWheel")
+wheel_rot_axis = Vector3(-1, 0, 0)
 taillight_slot = SubResource("Resource_tail")
 taillight_mesh = NodePath("Taillight")
 

@@ -16,8 +16,8 @@
 >   with zero rotation, because the game overwrites its rotation to steer.
 >
 > - **Cruiser** (naked type): `cruiser_bike.tscn` + `cruiser_skin_definition.tres`, built
->   2026-11-10, untested. The glb faces +X and is unscaled, so the skin rotates it -90° and
->   scales it to 0.14; its wheels spin on -Z. Paint is its own material (surface 2) on the
+>   and working 2026-11-10. The glb faces +X and is unscaled, so the skin rotates it -90° and
+>   scales it to 0.14; its wheels spin on +Z. Paint is its own material (surface 2) on the
 >   body and `Top`; the textured surface 0 stays as is. Markers other than the wheels are copied from the naked bike.
 >
 > **Next:** the retro sport bike (Street Vendor Cart stand-in), once the model is split in Blender.
