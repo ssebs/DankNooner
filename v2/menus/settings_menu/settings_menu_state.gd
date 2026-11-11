@@ -272,7 +272,12 @@ func _on_tab_changed(tab: int):
 
 
 func _focus_current_tab():
-	tab_container.get_current_tab_control().find_next_valid_focus().grab_focus()
+	var tab := tab_container.get_current_tab_control()
+	tab.find_next_valid_focus().grab_focus()
+	# The first control is at the top, but follow_focus judges it by the stale layout of a tab
+	# that was hidden, and scrolls past its label.
+	if tab is ScrollContainer:
+		tab.scroll_vertical = 0
 
 
 func _on_save_pressed():

@@ -418,7 +418,9 @@ text = "CONTROLS_HINT_LABEL"
 [node name="FooterMargin" type="MarginContainer" parent="UI/AspectContainer/MarginContainer/Layout"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 0
 
 [node name="Footer" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/Layout/FooterMargin" unique_id=1674008939]
 layout_mode = 2

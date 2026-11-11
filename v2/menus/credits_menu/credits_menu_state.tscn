@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://menus/credits_menu/credits_menu_state.gd" id="1_credits"]
 [ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_theme"]
-[ext_resource type="Texture2D" uid="uid://dombbuh0a3fxn" path="res://resources/img/Icons/flair_disabled_cross.svg" id="3_close"]
 [ext_resource type="FontFile" uid="uid://tyej4l632h7k" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-Regular.ttf" id="4_regular"]
 [ext_resource type="FontFile" uid="uid://8tlasykxhy4g" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-SemiBold.ttf" id="5_semibold"]
 
@@ -31,19 +30,23 @@ ratio = 1.778
 [node name="MarginContainer" type="MarginContainer" parent="UI/AspectRatioContainer"]
 layout_mode = 2
 
-[node name="Backdrop" type="PanelContainer" parent="UI/AspectRatioContainer/MarginContainer"]
+[node name="Layout" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer"]
 layout_mode = 2
+
+[node name="Backdrop" type="PanelContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout"]
+layout_mode = 2
+size_flags_vertical = 3
 theme_type_variation = &"MenuBackdropPanel"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Backdrop"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Backdrop"]
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="UI/AspectRatioContainer/MarginContainer/Backdrop/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="UI/AspectRatioContainer/MarginContainer/Layout/Backdrop/VBoxContainer"]
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
 text = "CREDITS_LABEL"
 
-[node name="CreditsText" type="RichTextLabel" parent="UI/AspectRatioContainer/MarginContainer/Backdrop/VBoxContainer"]
+[node name="CreditsText" type="RichTextLabel" parent="UI/AspectRatioContainer/MarginContainer/Layout/Backdrop/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -52,12 +55,9 @@ theme_override_fonts/normal_font = ExtResource("4_regular")
 theme_override_fonts/bold_font = ExtResource("5_semibold")
 bbcode_enabled = true
 
-[node name="CloseCreditsBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer/Backdrop/VBoxContainer"]
+[node name="CloseCreditsBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer/Layout"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 0
 mouse_default_cursor_shape = 2
-theme_override_constants/icon_max_width = 28
-text = "CLOSE_LABEL"
-icon = ExtResource("3_close")
-flat = true
+text = "BACK_LABEL"

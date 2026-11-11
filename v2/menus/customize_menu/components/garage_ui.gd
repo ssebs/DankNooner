@@ -30,7 +30,8 @@ const TAB_MAX_WIDTH: float = 200
 @onready var _add_tab_btn: Button = %AddTabBtn
 @onready var _prev_tab_prompt: InputPrompt = %PrevTabPrompt
 @onready var _next_tab_prompt: InputPrompt = %NextTabPrompt
-@onready var _money: MoneyLabel = %Money
+@onready var _save_card: CurrentSaveCard = %SaveCard
+@onready var _money: MoneyLabel = _save_card.money_label
 @onready var _title: Label = %Title
 @onready var _count: Label = %Count
 @onready var _back_btn: Button = %BackBtn
@@ -114,6 +115,7 @@ func open(
 	_input_state_manager.device_changed.connect(_show_tab_prompts)
 	_show_tab_prompts(_input_state_manager.is_gamepad)
 	_player_def = save_manager.get_player_definition()
+	_save_card.show_save(save_manager.save_slot, save_manager.current_save, _player_def)
 	_bikes = SkinScanner.scan_skin_dir(BIKE_SKINS_DIR)
 	_characters = _sorted_skins(SkinScanner.scan_skin_dir(CHARACTER_SKINS_DIR))
 	_horns = _sorted_skins(SkinScanner.scan_skin_dir(HornDefinition.SKINS_DIR))

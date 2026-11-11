@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://menus/main_menu/components/current_save_card.gd" id="1_card"]
 [ext_resource type="PackedScene" path="res://menus/saves_menu/components/save_preview.tscn" id="2_preview"]
+[ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="3_money"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill"]
 content_margin_left = 8.0
@@ -80,6 +81,7 @@ auto_translate_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"MoneyLabel"
+script = ExtResource("3_money")
 theme_override_font_sizes/font_size = 32
 auto_translate_mode = 2
 

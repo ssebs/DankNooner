@@ -40,36 +40,40 @@ ratio = 1.778
 layout_mode = 2
 theme = ExtResource("2_theme")
 
-[node name="Backdrop" type="PanelContainer" parent="UI/AspectRatioContainer/MarginContainer" unique_id=1846203550]
+[node name="Layout" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer" unique_id=1846203551]
 layout_mode = 2
+
+[node name="Backdrop" type="PanelContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout" unique_id=1846203550]
+layout_mode = 2
+size_flags_vertical = 3
 theme_type_variation = &"MenuBackdropPanel"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Backdrop" unique_id=1846203522]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Backdrop" unique_id=1846203522]
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="UI/AspectRatioContainer/MarginContainer/Backdrop/VBoxContainer" unique_id=1846203523]
+[node name="TitleLabel" type="Label" parent="UI/AspectRatioContainer/MarginContainer/Layout/Backdrop/VBoxContainer" unique_id=1846203523]
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
 text = "TRICKS_LABEL"
 
-[node name="HintRow" type="HBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Backdrop/VBoxContainer" unique_id=1846203544]
+[node name="HintRow" type="HBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Backdrop/VBoxContainer" unique_id=1846203544]
 layout_mode = 2
 
-[node name="HintLabel" type="Label" parent="UI/AspectRatioContainer/MarginContainer/Backdrop/VBoxContainer/HintRow" unique_id=1846203524]
+[node name="HintLabel" type="Label" parent="UI/AspectRatioContainer/MarginContainer/Layout/Backdrop/VBoxContainer/HintRow" unique_id=1846203524]
 modulate = Color(1, 1, 1, 0.7)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "TRICKS_HINT_LABEL"
 autowrap_mode = 3
 
-[node name="ClearPinBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer/Backdrop/VBoxContainer/HintRow" unique_id=1846203545]
+[node name="ClearPinBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer/Layout/Backdrop/VBoxContainer/HintRow" unique_id=1846203545]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4
 mouse_default_cursor_shape = 2
 text = "CLEAR_PIN_LABEL"
 
-[node name="StateTabs" type="TabContainer" parent="UI/AspectRatioContainer/MarginContainer/Backdrop/VBoxContainer" unique_id=1846203529]
+[node name="StateTabs" type="TabContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Backdrop/VBoxContainer" unique_id=1846203529]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -80,9 +84,9 @@ tab_1/title = "Ground"
 tab_2/title = "Air"
 tab_3/title = "TRICKS_HOWTO_TAB"
 
-[node name="CloseTricksBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer/Backdrop/VBoxContainer" unique_id=1846203527]
+[node name="CloseTricksBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer/Layout" unique_id=1846203527]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 0
 mouse_default_cursor_shape = 2
-text = "CLOSE_LABEL"
+text = "BACK_LABEL"
