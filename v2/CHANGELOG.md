@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.0 - 2026-11-10
+
+- start progression
+- main menu: random bike, profile's rider
+- Scroll wheel now moves the highlight in the loadout bar while you hold the loadouts button
+- fix scooter wheel spin
+- add cruiser bike
+- add vespa
+- fix  burnout doesn't do donut fast enough when steering
+- finish tutorials
+- rewrite grind instructions
+- Spill gas if holding past max fill
+
 ## v0.0.169 - 2026-11-09
 
 - cleanup advanced tutorial + Don't allow skate flip tricks during wheelie
