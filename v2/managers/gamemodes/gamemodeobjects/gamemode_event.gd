@@ -23,8 +23,11 @@ class_name GameModeEvent extends Node3D
 ## Where a DriveToStartRunner sends riders. Fires while this event runs, hidden until that runner
 ## shows it.
 @export var start_zone: TriggerZone
-## Editor: bake the racing line bots ride on this event and show it; again to hide it. Bakes on the
-## main thread, so the editor stalls for about a second.
+## Race events: the road navmesh with this event's own props in it, which bots race on. Set by Bake
+## on the level's NPCNavRegion.
+@export var road_navmesh: NavigationMesh
+## Editor: bake the racing line bots ride on this event (on its road_navmesh) and show it; again to
+## hide it. Bakes on the main thread, so the editor stalls for about a second.
 @export_tool_button("Preview Racing Line") var preview_line_btn = toggle_racing_line_preview
 
 ## Unowned, so saving the scene never keeps it.
@@ -38,13 +41,24 @@ func toggle_racing_line_preview() -> void:
 		return
 	# Untyped level root: this script loads with the player scene, so keep level types out of it
 	var region: NPCNavRegion = get_tree().edited_scene_root.npc_nav_region
+	var shared := region.navigation_mesh
+	await region.swap_navmesh(get_road_navmesh(shared))
 	var line := NPCRacingLine.bake(region.get_rid(), get_racing_route(), RaceTask.is_lap_route(get_checkpoints()))
+	region.navigation_mesh = shared
 	# Loaded on click, not preloaded: this script is in the player scene's load chain
 	_line_preview = load("res://levels/assets/props/racing_line.tscn").instantiate()
 	_line_preview.curve = line.get_curve()
 	add_child(_line_preview)
 	# The curve is in world space
 	_line_preview.global_transform = Transform3D.IDENTITY
+
+
+## road_navmesh, or fallback (the shared road mesh) if Bake hasn't made one.
+func get_road_navmesh(fallback: NavigationMesh) -> NavigationMesh:
+	if road_navmesh == null:
+		push_error("%s has no road_navmesh: press Bake on the level's NPCNavRegion" % get_path())
+		return fallback
+	return road_navmesh
 
 
 func get_circle() -> EventStartCircle:

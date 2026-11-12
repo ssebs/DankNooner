@@ -48,6 +48,10 @@ var _spawn_transforms: Dictionary[int, Transform3D] = {}
 var _next_id: int = -1
 ## Bumped on despawn, so a bake still waiting on the nav map from a race that ended is dropped.
 var _bake_generation: int = 0
+## The level's road region while bake_racing_line has the race's own mesh swapped in, and the
+## shared mesh despawn_all_npcs puts back. Null otherwise.
+var _race_region: NPCNavRegion
+var _shared_navmesh: NavigationMesh
 var _draw_racing_line: bool = false
 
 ## Every peer: the line shown to players; null outside a race with bots.
@@ -113,6 +117,11 @@ func despawn_all_npcs() -> void:
 	racing_line = null
 	rpc_hide_racing_line.rpc()
 	_bake_generation += 1
+	# Races without bots never swap a mesh in — skip is intentional
+	if _race_region != null:
+		_race_region.navigation_mesh = _shared_navmesh
+		_race_region = null
+		_shared_navmesh = null
 
 
 ## Server only. Bakes the racing line through event's checkpoints. Bots hold on the grid until it
@@ -120,9 +129,10 @@ func despawn_all_npcs() -> void:
 func bake_racing_line(event: GameModeEvent) -> void:
 	var region := level_manager.current_level.npc_nav_region
 	var generation := _bake_generation
-	# A level loaded this frame has no synced nav map yet, and paths on it come back empty
-	while NavigationServer3D.map_get_iteration_id(region.get_navigation_map()) == 0:
-		await NavigationServer3D.map_changed
+	_race_region = region
+	_shared_navmesh = region.navigation_mesh
+	# The race's own props are cut into its mesh, so the line and rejoin paths steer round them
+	await region.swap_navmesh(event.get_road_navmesh(_shared_navmesh))
 	# The race ended (or restarted) while we waited — skip is intentional
 	if generation != _bake_generation:
 		return
