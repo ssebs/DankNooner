@@ -5,9 +5,6 @@
 ##
 ## Braking is per bot, not baked here: each bot runs braking_profile with its own deceleration,
 ## so bots brake from their own numbers and never from one shared knob.
-##
-## Peers get a display copy (from_baked) off the server's points and corner speeds, to draw the line
-## and colour it by speed. It has no curvature or road room, so bot code run on it errors.
 class_name NPCRacingLine extends RefCounted
 
 ## Bake tuning: metres between samples, Laplacian smoothing passes, the lateral acceleration
@@ -54,24 +51,19 @@ static func bake(road_region: RID, route: PackedVector3Array, is_closed: bool) -
 	return line
 
 
-## A display copy of a baked line, from its get_points and get_corner_speeds.
-static func from_baked(points: PackedVector3Array, corner_speed: PackedFloat32Array, is_closed: bool) -> NPCRacingLine:
+## A baked line's curve rebuilt from its get_points, so peers can draw it.
+static func curve_through(points: PackedVector3Array, is_closed: bool) -> Curve3D:
 	var line := NPCRacingLine.new(is_closed)
 	line._fit_curve(points)
-	line._corner_speed = corner_speed
-	return line
+	return line._curve
 
 
-## The curve's control points: all from_baked needs, with get_corner_speeds, to rebuild it.
+## The curve's control points: all curve_through needs to rebuild it.
 func get_points() -> PackedVector3Array:
 	var points := PackedVector3Array()
 	for i in _curve.point_count:
 		points.append(_curve.get_point_position(i))
 	return points
-
-
-func get_corner_speeds() -> PackedFloat32Array:
-	return _corner_speed
 
 
 func get_curve() -> Curve3D:
@@ -340,5 +332,4 @@ func _room(road_region: RID, origin: Vector3, dir: Vector3, max_half_width: floa
 
 func _index(s: float) -> int:
 	var i := int(round(wrap_offset(s) / sample_spacing))
-	# Corner speeds, not curvature: a display copy has only those
-	return i % _corner_speed.size() if closed else mini(i, _corner_speed.size() - 1)
+	return i % _curvature.size() if closed else mini(i, _curvature.size() - 1)

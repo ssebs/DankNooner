@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://bndutgo5sksl8"]
+[gd_scene format=4 uid="uid://bndutgo5sksl8"]
 
 [ext_resource type="Script" uid="uid://bu3fcdxqeus0s" path="res://levels/assets/props/racing_line.gd" id="1_b8crp"]
 
@@ -15,9 +15,33 @@ load_path = "res://.godot/imported/ArrowTexRightClear.png-8195a0e20673f810d60fec
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0k62k"]
 resource_local_to_scene = true
 transparency = 1
-albedo_color = Color(0.25490198, 0.6862745, 1, 1)
-albedo_texture = SubResource("CompressedTexture2D_b8crp")
 cull_mode = 2
+albedo_color = Color(0.255, 0.686, 1, 1)
+albedo_texture = SubResource("CompressedTexture2D_b8crp")
+emission_enabled = true
+emission = Color(0.255, 0.686, 1, 1)
+emission_energy_multiplier = 0.6
+distance_fade_mode = 1
+distance_fade_min_distance = 3.0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_b8crp"]
+_surfaces = [{
+"aabb": AABB(-3.2694223, 0.3, -5.291254, 5.5414085, 1e-05, 5.2899528),
+"attribute_data": PackedByteArray("AAAAAAAAAAAAAAAAAACAPwAAAEAAAAAAAAAAQAAAgD8AAIBAAAAAAAAAgEAAAIA/AADAQAAAAAAAAMBAAACAPwAAAEEAAAAAAAAAQQAAgD8AACBBAAAAAAAAIEEAAIA/AABAQQAAAAAAAEBBAACAPwAAYEEAAAAAAABgQQAAgD8AAIBBAAAAAAAAgEEAAIA/AACQQQAAAAAAAJBBAACAPwAAoEEAAAAAAACgQQAAgD8AALBBAAAAAAAAsEEAAIA/AADAQQAAAAAAAMBBAACAPwAA0EEAAAAAAADQQQAAgD84DNJBAAAAADgM0kEAAIA/"),
+"format": 34359738391,
+"primitive": 4,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 30,
+"vertex_data": PackedByteArray("a7HhP5qZmT5LQSe+qtgQQJqZmT4bmSW+dRviP5qZmT7955S/sA0RQJqZmT73spS/gYXiP5qZmT7ocwrAtkIRQJqZmT5kWQrAlQ7jP5qZmT4uAknAOWgRQJqZmT70ykvAWd7DP5qZmT4SCIHAJAcAQJqZmT62eIbAoteSP5qZmT7KD5LASiemP5qZmT7iUKHAxrtMPpqZmT60kZXAe/OEPpqZmT5edKXAPXM/v5qZmT6EWZnASTlHv5qZmT70UanAgMm/v5qZmT5WGY7AOu/iv5qZmT5ieJvAK3kQwJqZmT4LWH3AvSUrwJqZmT68gofAQI4awJqZmT4ZS0TAAPI5wJqZmT5vg0rAkOsmwJqZmT5w7AXACHZGwJqZmT4iUwvAYiEtwJqZmT7NTpC/vBNNwJqZmT5HAJS/3NIwwJqZmT5FKwS+NsVQwJqZmT4RtyG+3UsxwJqZmT7Ykqq6Nz5RwJqZmT6iB/e8/3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+/")
+}, {
+"aabb": AABB(-3.0198388, 0.050000012, -5.0417156, 5.0427732, 0.5, 5.0259876),
+"attribute_data": PackedByteArray("AAAAAAAAAAAAAAAAAACAPwAAAEAAAAAAAAAAQAAAgD8AAIBAAAAAAAAAgEAAAIA/AADAQAAAAAAAAMBAAACAPwAAAEEAAAAAAAAAQQAAgD8AACBBAAAAAAAAIEEAAIA/AABAQQAAAAAAAEBBAACAPwAAYEEAAAAAAABgQQAAgD8AAIBBAAAAAAAAgEEAAIA/AACQQQAAAAAAAJBBAACAPwAAoEEAAAAAAACgQQAAgD8AALBBAAAAAAAAsEEAAIA/AADAQQAAAAAAAMBBAACAPwAA0EEAAAAAAADQQQAAgD84DNJBAAAAADgM0kEAAIA/"),
+"format": 34359738391,
+"primitive": 4,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 30,
+"vertex_data": PackedByteArray("sNgAQNDMTD0zbSa+sNgAQM3MDD8zbSa+tQ0BQNDMTD16zZS/tQ0BQM3MDD96zZS/u0IBQNDMTD2mZgrAu0IBQM3MDD+mZgrAwncBQNDMTD2RZkrAwncBQM3MDD+RZkrAUPbhP9DMTD1kwIPAUPbhP83MDD9kwIPAdn+cP9DMTD1WsJnAdn+cP83MDD9WsJnAXlFrPtDMTD0Jg53AXlFrPs3MDD8Jg53AQ1ZDv9DMTD28VaHAQ1ZDv83MDD+8VaHAXVzRv9DMTD3cyJTAXVzRv83MDD/cyJTAdM8dwNDMTD1hF4PAdM8dwM3MDD9hF4PAIEAqwNDMTD1EZ0fAIEAqwM3MDD9EZ0fAzLA2wNDMTD3JnwjAzLA2wM3MDD/JnwjAjxo9wNDMTD2KJ5K/jxo9wM3MDD+KJ5K/CcxAwNDMTD0r8RK+CcxAwM3MDD8r8RK+CkVBwNDMTD1o2IC8CkVBwM3MDD9o2IC8lf//f5V//7+V//9/lX//v5X//3+Vf/+/lf//f5V//7+V//9/lX//v5X//3+Vf/+///9HijWKjb///0eKNYqNv////KECn2S6///8oQKfZLr//znhl5zSkv//OeGXnNKS//8/8pKNmYf//z/yko2ZhwAAp/iueOCDAACn+K544IMAADzNu1dcoQAAPM27V1yhAAADs6RXn7IAAAOzpFefsgAAKpWAa/e9AAAqlYBr970AALaSvW1vvgAAtpK9bW++AAD+hgZ5y78AAP6GBnnLvwAA/oYGecu/AAD+hgZ5y78AAP6GBnnLvwAA/oYGecu/")
+}]
 
 [node name="RacingLine" type="Path3D" unique_id=1078920868]
 curve = SubResource("Curve3D_nrmxx")
@@ -27,3 +51,4 @@ script = ExtResource("1_b8crp")
 unique_name_in_owner = true
 material_override = SubResource("StandardMaterial3D_0k62k")
 cast_shadow = 0
+mesh = SubResource("ArrayMesh_b8crp")

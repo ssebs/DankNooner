@@ -1,13 +1,11 @@
 @tool
-## An arrow strip along the curve, built once into a mesh (a CSG sweep re-evaluates, and costs too
-## much over a whole track). Rebuilt whenever the curve changes. semantic_color fades the strip.
+## Arrow strips along the curve, built once into a mesh (a CSG sweep re-evaluates, and costs too
+## much over a whole track): a + in cross-section, a flat chevron strip crossed by an upright one of
+## the same size so it reads from low angles too. Rebuilt whenever the curve changes. semantic_color fades it, glow too.
 class_name RacingLine extends Path3D
 
 @export var semantic_color := SemanticColors.Value.OK:
 	set(v):
-		# Set every frame by a speed readout; an unchanged value must not restart the fade
-		if v == semantic_color:
-			return
 		semantic_color = v
 		if not is_node_ready():
 			return
@@ -18,12 +16,11 @@ class_name RacingLine extends Path3D
 			_elapsed = 0.0
 
 const TRANSITION_DURATION := 0.5
-## Metres between the strip's cross-sections, its width, how high it floats over the curve, and
-## the length of one arrow.
+## Metres between cross-sections, each strip's width (the + is WIDTH across and WIDTH tall), and
+## how high its bottom floats over the curve.
 const STEP := 1.0
-const WIDTH := 1.0
-const LIFT := 0.15
-const ARROW_LENGTH := 2.0
+const WIDTH := 0.5
+const LIFT := -.8
 
 @onready var mesh_instance: MeshInstance3D = %Mesh
 
@@ -47,29 +44,55 @@ func _process(delta: float):
 
 func apply_color(color: Color):
 	_material().albedo_color = color
+	_material().emission = color
 
 
 func _material() -> StandardMaterial3D:
 	return mesh_instance.material_override as StandardMaterial3D
 
 
-## A flat triangle strip centred on the curve, u running along it so the arrows point the way it goes.
 func _build_mesh() -> void:
 	var length := curve.get_baked_length()
-	var verts := PackedVector3Array()
-	var normals := PackedVector3Array()
-	var uvs := PackedVector2Array()
+	var ats := PackedFloat32Array()
+	var centres := PackedVector3Array()
+	var rights := PackedVector3Array()
 	for i in int(length / STEP) + 2:
 		var at := minf(i * STEP, length)
 		var forward := curve.sample_baked(minf(at + 0.5, length)) - curve.sample_baked(maxf(at - 0.5, 0.0))
 		forward.y = 0.0
-		var half := forward.normalized().cross(Vector3.UP) * WIDTH * 0.5
-		var p := curve.sample_baked(at) + Vector3.UP * LIFT
-		var u := at / ARROW_LENGTH
-		verts.append(p - half)
-		verts.append(p + half)
-		normals.append(Vector3.UP)
-		normals.append(Vector3.UP)
+		ats.append(at)
+		centres.append(curve.sample_baked(at) + Vector3.UP * (LIFT + WIDTH * 0.5))
+		rights.append(forward.normalized().cross(Vector3.UP))
+	var half := WIDTH * 0.5
+	var mesh := ArrayMesh.new()
+	_add_strip(mesh, ats, centres, rights, Vector2(-half, 0.0), Vector2(half, 0.0))
+	_add_strip(mesh, ats, centres, rights, Vector2(0.0, -half), Vector2(0.0, half))
+	mesh_instance.mesh = mesh
+
+
+## One triangle strip along the cross-sections, between edges a and b (x = metres right of the
+## centre, y = metres up). u runs along the curve so the arrows point the way it goes, one texture
+## tile per WIDTH so both strips show the same single row of chevrons, in step.
+func _add_strip(
+	mesh: ArrayMesh,
+	ats: PackedFloat32Array,
+	centres: PackedVector3Array,
+	rights: PackedVector3Array,
+	a: Vector2,
+	b: Vector2
+) -> void:
+	var verts := PackedVector3Array()
+	var normals := PackedVector3Array()
+	var uvs := PackedVector2Array()
+	for i in centres.size():
+		var right := rights[i]
+		# Flat lanes face up, the fin faces sideways
+		var normal := Vector3.UP if is_zero_approx(b.y - a.y) else right
+		var u := ats[i] / WIDTH
+		verts.append(centres[i] + right * a.x + Vector3.UP * a.y)
+		verts.append(centres[i] + right * b.x + Vector3.UP * b.y)
+		normals.append(normal)
+		normals.append(normal)
 		uvs.append(Vector2(u, 0.0))
 		uvs.append(Vector2(u, 1.0))
 	var arrays := []
@@ -77,6 +100,4 @@ func _build_mesh() -> void:
 	arrays[Mesh.ARRAY_VERTEX] = verts
 	arrays[Mesh.ARRAY_NORMAL] = normals
 	arrays[Mesh.ARRAY_TEX_UV] = uvs
-	var mesh := ArrayMesh.new()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLE_STRIP, arrays)
-	mesh_instance.mesh = mesh

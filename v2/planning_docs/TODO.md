@@ -27,8 +27,6 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 
-- [ ] improve racing npc + performance
-- [ ] racing line visual+setting
 - [ ] dbg_unlock_all (lots of $/xp/all things unlocked/1 loadout per bike)
 
 - [ ] [Progression/Challenges](./Progression.md)
@@ -37,7 +35,6 @@
   - [ ] lock bikes behind XP level
   - [ ] update economy (XP+$ for events / scoring calculations)
     - [ ] SAVE TO NEW DOC
-
 
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -229,6 +226,10 @@
 ---
 
 ## Done ✅
+
+- [x] improve racing npc + performance
+
+- [x] racing line visual+setting
 
 - [x] you should be able to customize the color of the glow in the bike skins
 

@@ -3286,7 +3286,7 @@ transform = Transform3D(0.039946012, 0, 0.9992018, 0, 1, 0, -0.9992018, 0, 0.039
 size = 32
 density = 2
 layout_seed = 15
-snapped_heights = PackedFloat32Array(nan, -255.63728, -255.71912, -255.62662)
+snapped_heights = PackedFloat32Array(-255.65047, -255.63728, -255.71912, -255.62662)
 
 [node name="TreeBundle19" parent="_Trees_/IslandTrackTrees" unique_id=1069682775 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, -607.4633, 256, 254.91446)
@@ -3373,7 +3373,7 @@ transform = Transform3D(-0.019094229, 0, -0.99981767, 0, 1, 0, 0.99981767, 0, -0
 size = 32
 density = 1
 layout_seed = 23
-snapped_heights = PackedFloat32Array(nan, -255.7152, -255.64899, -255.6631)
+snapped_heights = PackedFloat32Array(-255.64131, -255.7152, -255.64899, -255.6631)
 
 [node name="TreeBundle32" parent="_Trees_/IslandTrackTrees" unique_id=687172498 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(-0.27373877, 0, -0.96180403, 0, 1, 0, 0.96180403, 0, -0.27373877, -905.3496, 256, 232.02315)
@@ -3605,7 +3605,7 @@ aspect = 2
 density = 2
 layout_seed = -1
 has_collision = true
-snapped_heights = PackedFloat32Array(-250.23627, -249.24321, -251.21628, -254.4277, -253.54903, nan, -255.32013, -255.66383)
+snapped_heights = PackedFloat32Array(-250.23627, -249.24321, -251.21628, -254.4277, -253.54903, -253.57274, -255.32013, -255.66383)
 
 [node name="TreeBundle18" parent="_Trees_/Treesoutskirtsandintown" unique_id=1966125027 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -239.5, 256, 160)
@@ -3720,7 +3720,7 @@ transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -475
 size = 16
 aspect = 4
 has_collision = true
-snapped_heights = PackedFloat32Array(nan, -255.66507, -255.58182, -255.6476, -255.61609, -255.6762, -255.59137, nan, nan, -255.63464, -255.71545, -255.71448, -255.74643, -255.58717, -255.63492, nan)
+snapped_heights = PackedFloat32Array(nan, -255.66507, -255.58182, -255.6476, -255.61609, -255.6762, -255.59137, -255.70132, nan, -255.63464, -255.71545, -255.71448, -255.74643, -255.58717, -255.63492, -255.70044)
 
 [node name="TreeBundle50" parent="_Trees_/Treesoutskirtsandintown" unique_id=2106627367 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -413.5, 256, 370)

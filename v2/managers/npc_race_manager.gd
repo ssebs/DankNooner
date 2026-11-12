@@ -15,8 +15,6 @@ signal npc_despawned(npc_id: int)
 @export var settings_manager: SettingsManager
 @export var spawn_manager: SpawnManager
 @export var item_manager: ItemManager
-## For local_player, whose speed colours the shown racing line.
-@export var hud_manager: HUDManager
 ## Round-robin source of NPC names + skins. Spawned NPCs get
 ## "<username> <n>" so reused definitions stay distinguishable in results.
 @export var npc_definitions: Array[PlayerDefinition] = [
@@ -34,8 +32,6 @@ signal npc_despawned(npc_id: int)
 
 const NPC_SCENE: PackedScene = preload("res://entities/npc/npc_rider_entity.tscn")
 const RACING_LINE_SCENE: PackedScene = preload("res://levels/assets/props/racing_line.tscn")
-## The shown line goes gold within this fraction under its target speed, red over it.
-const LINE_WARN_RATIO := 0.1
 ## dbg_racing_line drawings live until the next toggle or bake clears them
 const DRAW_SECONDS := 1.0e9
 
@@ -54,12 +50,8 @@ var _next_id: int = -1
 var _bake_generation: int = 0
 var _draw_racing_line: bool = false
 
-## Every peer: the line shown to players, its display copy, and the local player's braking profile
-## on it with the brake strength that profile was built for.
+## Every peer: the line shown to players; null outside a race with bots.
 var _shown_line: RacingLine
-var _display_line: NPCRacingLine
-var _player_profile := PackedFloat32Array()
-var _player_profile_brake: float = -1.0
 
 
 func _ready():
@@ -67,6 +59,7 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 	Console.add_command("dbg_racing_line", _toggle_racing_line_debug, [], 0, "Toggle the NPC racing line debug draw")
+	settings_manager.all_settings_changed.connect(_on_settings_changed)
 
 
 ## Server-only AI tick: retarget each NPC at the checkpoint RaceTask expects
@@ -98,35 +91,6 @@ func _physics_process(delta: float):
 			_maybe_use_item(npc_id, npc, delta)
 			_maybe_boost(npc_id, npc)
 	DebugUtils.Prof("npc_race_manager", t)  # PROF: temp
-
-
-## Every peer: show the line per the setting, coloured by the local player's speed against the
-## speed it carries there — red over it, gold close under it, blue otherwise.
-func _process(_delta: float) -> void:
-	# No line outside a race with bots — skip is intentional
-	if Engine.is_editor_hint() or _display_line == null:
-		return
-	# Freed with the level when a client disconnects mid-race — skip is intentional
-	if !is_instance_valid(_shown_line):
-		_hide_line()
-		return
-	_shown_line.visible = settings_manager.current_settings["show_racing_line"]
-	var player := hud_manager.local_player
-	# Not spawned yet (late join, level loading) — skip is intentional
-	if !_shown_line.visible or player == null:
-		return
-	var brake := player.bike_definition.brake_strength
-	if brake != _player_profile_brake:
-		_player_profile = _display_line.braking_profile(brake, 1.0)
-		_player_profile_brake = brake
-	var s := _display_line.closest_offset(player.global_position)
-	var ratio := player.movement_controller.speed / _display_line.profile_speed(_player_profile, s)
-	if ratio > 1.0:
-		_shown_line.semantic_color = SemanticColors.Value.ERR
-	elif ratio > 1.0 - LINE_WARN_RATIO:
-		_shown_line.semantic_color = SemanticColors.Value.WARN
-	else:
-		_shown_line.semantic_color = SemanticColors.Value.OK
 
 
 #region Spawn / despawn (server API + broadcast RPCs)
@@ -184,7 +148,7 @@ func bake_racing_line(event: GameModeEvent) -> void:
 	for npc_id in _npcs:
 		_race_state(npc_id).racing_line = racing_line
 	rpc_show_racing_line.rpc(
-		racing_line.get_points(), racing_line.get_corner_speeds(), racing_line.closed
+		racing_line.get_points(), racing_line.closed
 	)
 	if _draw_racing_line:
 		_draw_line()
@@ -201,7 +165,7 @@ func sync_npcs_to_peer(peer_id: int) -> void:
 	if racing_line == null:
 		return
 	rpc_show_racing_line.rpc_id(
-		peer_id, racing_line.get_points(), racing_line.get_corner_speeds(), racing_line.closed
+		peer_id, racing_line.get_points(), racing_line.closed
 	)
 
 
@@ -301,11 +265,11 @@ func rpc_despawn_npc(npc_id: int):
 
 
 @rpc("call_local", "reliable")
-func rpc_show_racing_line(points: PackedVector3Array, corner_speed: PackedFloat32Array, is_closed: bool) -> void:
+func rpc_show_racing_line(points: PackedVector3Array, is_closed: bool) -> void:
 	_hide_line()
-	_display_line = NPCRacingLine.from_baked(points, corner_speed, is_closed)
 	_shown_line = RACING_LINE_SCENE.instantiate()
-	_shown_line.curve = _display_line.get_curve()
+	_shown_line.curve = NPCRacingLine.curve_through(points, is_closed)
+	_shown_line.visible = settings_manager.current_settings["show_racing_line"]
 	level_manager.current_level.add_child(_shown_line)
 	# The curve is in world space
 	_shown_line.global_transform = Transform3D.IDENTITY
@@ -320,8 +284,13 @@ func _hide_line() -> void:
 	if is_instance_valid(_shown_line):
 		_shown_line.queue_free()
 	_shown_line = null
-	_display_line = null
-	_player_profile_brake = -1.0
+
+
+func _on_settings_changed(settings: Dictionary) -> void:
+	# No line outside a race with bots, or freed with the level on a mid-race disconnect — skip is
+	# intentional
+	if is_instance_valid(_shown_line):
+		_shown_line.visible = settings["show_racing_line"]
 
 
 #endregion
@@ -495,8 +464,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("spawn_manager must not be empty")
 	if item_manager == null:
 		issues.append("item_manager must not be empty")
-	if hud_manager == null:
-		issues.append("hud_manager must not be empty")
 	if npc_definitions.is_empty():
 		issues.append("npc_definitions must not be empty")
 	return issues
