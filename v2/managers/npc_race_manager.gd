@@ -22,7 +22,7 @@ signal npc_despawned(npc_id: int)
 ]
 @export var respawn_delay: float = 3.0
 ## How far the host's Easy / Hard difficulty setting moves bot skill off its centre.
-@export var difficulty_skill_shift: float = 0.25
+@export var difficulty_skill_shift: float = 0.5
 ## Bot item use: a held oil slick drops once a rider is within this many metres behind, and a held
 ## Rally Up goes off after this many seconds on average.
 @export var oil_slick_trigger_distance: float = 15.0

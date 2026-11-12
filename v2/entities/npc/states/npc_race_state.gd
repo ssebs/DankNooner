@@ -88,6 +88,9 @@ enum Mistake { NONE, LATE_BRAKE, RUN_WIDE }
 const CRASH_COLLISION_MASK: int = 2  # 1 << 1 (layer 2)
 const SCAN_HEIGHT: float = 2.0
 const MAX_SCAN_RESULTS: int = 32
+## Squeezed alongside a rider with no room to hold overtake_clearance, the rear bot rides this much
+## (m/s) under its speed to drop in behind it.
+const YIELD_SPEED_DROP: float = 3.0
 ## A bot runs its expensive queries (forward scan, rejoin path) once every THINK_FRAMES physics
 ## frames, on its own think_slot, so a grid of bots never queries on the same frame.
 const THINK_FRAMES: int = 12
@@ -231,7 +234,7 @@ func _roll_style() -> void:
 
 ## Scale the base tuning and this bot's style by skill.
 func _apply_difficulty() -> void:
-	npc.move_speed *= _skill_scale(0.82, 1.12)
+	npc.move_speed *= _skill_scale(0.75, 1.12)
 	npc.min_turn_speed *= _skill_scale(0.85, 1.15)
 	_corner_carry *= _skill_scale(0.9, 1.08)
 	_brake_scale *= _skill_scale(0.85, 1.1)
@@ -266,9 +269,9 @@ func _drive(delta: float) -> void:
 	if thinking:
 		_scan_ahead(pos)
 	_update_mistake(now)
-	var speed_cap := _avoid(now)
-
 	var steer_s := _s + _steer_lookahead()
+	var speed_cap := minf(_avoid(now), _yield_speed(steer_s))
+
 	var lateral_target := _clear_of_alongside(_lateral_target(steer_s, now))
 	_lateral = move_toward(_lateral, lateral_target, offset_response * _reaction * delta)
 	var spot := racing_line.point_at(_s) + racing_line.right_at(_s) * _lateral
@@ -427,6 +430,27 @@ func _clear_of_alongside(target: float) -> float:
 		else:
 			target = maxf(target, _ahead_lateral[i] + overtake_clearance)
 	return target
+
+
+## Under the speed of the rider alongside and ahead of us that leaves no road room at s to hold
+## overtake_clearance off it on our side, so we drop in behind it; INF when nobody squeezes us.
+## Crossing to its other side would ride through it. Two side by side otherwise squeeze together
+## wherever the road narrows.
+func _yield_speed(s: float) -> float:
+	var cap := INF
+	# Along the line, not our heading: both of a pair must agree which one is behind
+	var forward := Vector3.UP.cross(racing_line.right_at(_s))
+	for i in _ahead_riders.size():
+		if !is_instance_valid(_ahead_riders[i]) or absf(_ahead_dist[i]) > alongside_length:
+			continue
+		if (_ahead_riders[i].global_position - npc.global_position).dot(forward) <= 0.0:
+			continue
+		var side := -1.0 if _ahead_lateral[i] >= _lateral else 1.0
+		var room := racing_line.half_width_at(s, side) - side * _ahead_lateral[i]
+		if room < overtake_clearance:
+			# Floored: a negative target speed rides the bike backwards
+			cap = minf(cap, maxf(0.0, npc.horizontal_speed(_ahead_riders[i]) - YIELD_SPEED_DROP))
+	return cap
 
 
 func _lane_taken(lateral: float, skip: int) -> bool:
