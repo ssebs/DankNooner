@@ -293,9 +293,10 @@ func to_dict() -> Dictionary:
 	for mod in mods:
 		if mod and mod.resource_path != "":
 			mod_paths.append(mod.resource_path)
+	# Floats, not hex: glow slots carry HDR intensity (> 1) that to_html() would clamp.
 	var colors_arr: Array = []
 	for c in colors:
-		colors_arr.append(c.to_html())
+		colors_arr.append([c.r, c.g, c.b])
 	return {
 		"skin_name": skin_name,
 		"base_res_path": get_base_path(),
@@ -319,8 +320,12 @@ func from_dict(dict: Dictionary) -> void:
 	base_res_path = base_path
 	skin_name = dict.get("skin_name", base_def.skin_name)
 	colors.clear()
-	for hex in dict.get("colors", []):
-		colors.append(Color.html(hex))
+	for c in dict.get("colors", []):
+		# Hex strings are saves from before glow slots.
+		colors.append(Color.html(c) if c is String else Color(c[0], c[1], c[2]))
+	# Partial saves predate glow slots; fill so a 1-color array can't broadcast onto the glow.
+	if !colors.is_empty():
+		colors = SkinColor.get_unique_slot_colors(mesh_res, colors)
 
 	var rebuilt_mods: Array[BikeMod] = []
 	for mp in dict.get("mod_paths", []):

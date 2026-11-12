@@ -8,6 +8,7 @@
 
 [sub_resource type="Resource" id="Resource_8pjdv"]
 script = ExtResource("3_82gmx")
+display_name = "GARAGE_SLOT_BODY"
 color = Color(0.0225, 0.06187501, 0.09, 1)
 use_standard_material = true
 standard_material = SubResource("StandardMaterial3D_yvpo1")
@@ -17,6 +18,7 @@ metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 
 [sub_resource type="Resource" id="Resource_5ahef"]
 script = ExtResource("3_82gmx")
+display_name = "GARAGE_SLOT_REAR_WHEEL"
 color = Color(0.25490198, 0.6862745, 1, 1)
 use_standard_material = true
 standard_material = SubResource("StandardMaterial3D_56qvq")
@@ -26,6 +28,7 @@ metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 
 [sub_resource type="Resource" id="Resource_kk1mv"]
 script = ExtResource("3_82gmx")
+display_name = "GARAGE_SLOT_FRONT_WHEEL"
 color = Color(0.25490198, 0.6862745, 1, 1)
 use_standard_material = true
 standard_material = SubResource("StandardMaterial3D_afa67")
@@ -59,10 +62,25 @@ emission_enabled = true
 emission = Color(1, 0.03, 0.03, 1)
 emission_energy_multiplier = 1.6
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_glow"]
+albedo_color = Color(0.052860674, 0.42869055, 1, 1)
+emission_enabled = true
+emission = Color(0.052860674, 0.42869055, 1, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="Resource" id="Resource_glow"]
+script = ExtResource("3_82gmx")
+display_name = "GARAGE_SLOT_NEON"
+color = Color(0.052860674, 0.42869055, 1, 1)
+use_standard_material = true
+surface_index = 1
+standard_material = SubResource("StandardMaterial3D_glow")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
 [node name="r7" unique_id=394643670 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node", "taillight_mesh") instance=ExtResource("4_8pjdv")]
 script = ExtResource("2_4okic")
-slots = Array[ExtResource("3_82gmx")]([SubResource("Resource_8pjdv"), SubResource("Resource_5ahef"), SubResource("Resource_kk1mv")])
-meshes = [NodePath("Body"), NodePath("RearWheelSpin/RearWheel"), NodePath("SteerHinge/FrontWheelSpin/FrontWheel_001")]
+slots = Array[ExtResource("3_82gmx")]([SubResource("Resource_8pjdv"), SubResource("Resource_5ahef"), SubResource("Resource_kk1mv"), SubResource("Resource_glow"), SubResource("Resource_glow"), SubResource("Resource_glow")])
+meshes = [NodePath("Body"), NodePath("RearWheelSpin/RearWheel"), NodePath("SteerHinge/FrontWheelSpin/FrontWheel_001"), NodePath("Body"), NodePath("RearWheelSpin/RearWheel"), NodePath("SteerHinge/FrontWheelSpin/FrontWheel_001")]
 steering_rotation_node = NodePath("SteerHinge")
 front_wheel_node = NodePath("SteerHinge/FrontWheelSpin")
 rear_wheel_node = NodePath("RearWheelSpin")

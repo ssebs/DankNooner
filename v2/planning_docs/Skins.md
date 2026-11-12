@@ -16,6 +16,7 @@ Resource at `components/skin_slot.gd`. Pure data spec — runtime state lives on
 
 | Property                | Type               | Description                                                     |
 | ----------------------- | ------------------ | --------------------------------------------------------------- |
+| `display_name`          | String             | Localization key for the garage color row; empty = "Color N"    |
 | `color`                 | Color              | Default color baked into the runtime material at spawn          |
 | `use_standard_material` | bool               | If true, uses StandardMaterial3D; if false, uses ShaderMaterial |
 | `surface_index`         | int                | Which mesh surface to override (for multi-material meshes)      |
@@ -23,6 +24,8 @@ Resource at `components/skin_slot.gd`. Pure data spec — runtime state lives on
 | `shader_material`       | ShaderMaterial     | Material used when `use_standard_material = false`              |
 
 Helpers: `make_runtime_material()` returns a fresh duplicate of the configured material; `apply_color_to(mat, color)` writes a color into a runtime material (albedo for standard, `replacement_color` shader param for shader).
+
+**Glow slots** — a standard slot whose `standard_material` has emission on (`is_glow()`). `apply_color_to` writes the color to albedo *and* emission; an HDR color (> 1) scales the material's authored `emission_energy_multiplier` (2 on every bike), so the garage picker's intensity slider, enabled only for glow rows, sets strength. Each bike's glow slot is last in `slots` so NPC paint (`update_slot_color(0)`) skips it. They point at the neon surface the GLBs already ship (scooter has two: body surface 3 and `Trim` surface 0).
 
 ### SkinColor
 
@@ -273,6 +276,8 @@ Skins can be saved/loaded from `user://skins/` for runtime customization:
 - Loads into the inspector for editing
 
 Both `CharacterSkinDefinition` and `BikeSkinDefinition` support save/load + dict serialization.
+
+Bike `colors` serialize as `[r, g, b]` float arrays so glow intensity survives (hex from older saves still loads); `from_dict` fills partial arrays to every unique slot so a 1-color save can't broadcast onto the glow.
 
 `BikeSkinDefinition.to_dict()` ships only the **base bike res:// path** + **mod res:// paths** — never `resource_path`, which can be a local `user://` file. `from_dict()` loads the base and applies the mods — no disk write, since it runs per player on every lobby sync on every peer. This is what enables customized bikes to sync across the lobby. `SpawnManager._on_lobby_players_updated` compares `to_dict()` contents and only calls `update_skins()` on riders whose skin actually changed.
 

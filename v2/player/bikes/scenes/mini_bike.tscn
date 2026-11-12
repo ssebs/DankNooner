@@ -8,6 +8,7 @@
 
 [sub_resource type="Resource" id="Resource_cvxtv"]
 script = ExtResource("3_1jg8m")
+display_name = "GARAGE_SLOT_BODY"
 color = Color(0.25490198, 0.6862745, 1, 1)
 use_standard_material = true
 standard_material = SubResource("StandardMaterial3D_kl2q6")
@@ -32,10 +33,25 @@ use_standard_material = true
 standard_material = SubResource("StandardMaterial3D_tail")
 metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_glow"]
+albedo_color = Color(0.052860674, 0.42869055, 1, 1)
+emission_enabled = true
+emission = Color(0.052860674, 0.42869055, 1, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="Resource" id="Resource_glow"]
+script = ExtResource("3_1jg8m")
+display_name = "GARAGE_SLOT_NEON"
+color = Color(0.052860674, 0.42869055, 1, 1)
+use_standard_material = true
+surface_index = 1
+standard_material = SubResource("StandardMaterial3D_glow")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
 [node name="Grom" unique_id=352392882 node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node", "taillight_mesh") instance=ExtResource("1_kl2q6")]
 script = ExtResource("2_cvxtv")
-slots = Array[ExtResource("3_1jg8m")]([SubResource("Resource_cvxtv"), SubResource("Resource_cvxtv")])
-meshes = [NodePath("RotationPoint/Frontfender"), NodePath("PaintedBody")]
+slots = Array[ExtResource("3_1jg8m")]([SubResource("Resource_cvxtv"), SubResource("Resource_cvxtv"), SubResource("Resource_glow"), SubResource("Resource_glow"), SubResource("Resource_glow"), SubResource("Resource_glow"), SubResource("Resource_glow"), SubResource("Resource_glow")])
+meshes = [NodePath("RotationPoint/Frontfender"), NodePath("PaintedBody"), NodePath("PaintedBody"), NodePath("RearWheel"), NodePath("RotationPoint/Dash"), NodePath("RotationPoint/FrontAssembly"), NodePath("RotationPoint/Frontfender"), NodePath("RotationPoint/FrontWheel")]
 steering_rotation_node = NodePath("RotationPoint")
 front_wheel_node = NodePath("RotationPoint/FrontWheel")
 rear_wheel_node = NodePath("RearWheel")

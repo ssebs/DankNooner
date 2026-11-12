@@ -54,7 +54,6 @@ func _ready() -> void:
 	if taillight_slot:
 		taillight_material = taillight_slot.make_runtime_material()
 		taillight_mesh.set_surface_override_material(taillight_slot.surface_index, taillight_material)
-		taillight_slot.apply_color_to(taillight_material, taillight_slot.color)
 
 
 ## Update a single slot's color. If the slot at `index` appears at multiple positions in
@@ -90,6 +89,14 @@ static func get_unique_slot_colors(scene: PackedScene, overrides: Array[Color] =
 		var i := out.size()
 		var has_override := i < overrides.size() and overrides[i] != Color.TRANSPARENT
 		out.append(overrides[i] if has_override else slot.color)
+	skin.free()
+	return out
+
+
+## Unique slots in `scene` (a SkinColor scene), in the same order as get_unique_slot_colors.
+static func get_unique_slots(scene: PackedScene) -> Array[SkinSlot]:
+	var skin := scene.instantiate() as SkinColor
+	var out := skin._unique_slots()
 	skin.free()
 	return out
 

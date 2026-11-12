@@ -71,6 +71,8 @@ var _tab: int = 0
 var _pages: Array[Page] = []
 ## The unique-slot colors a *_COLORS page edits; _color_slot is the one in the picker.
 var _colors: Array[Color] = []
+## The slot behind each _colors entry; glow slots get the picker's intensity slider.
+var _color_slots: Array[SkinSlot] = []
 var _color_slot: int = -1
 ## The bike or character def the open picker writes to.
 var _color_target: Resource
@@ -429,8 +431,11 @@ func _build_horn_page():
 func _build_colors_page(title: String, mesh_res: PackedScene, colors: Array[Color]):
 	_title.text = title
 	_colors = SkinColor.get_unique_slot_colors(mesh_res, colors)
+	_color_slots = SkinColor.get_unique_slots(mesh_res)
 	for i in _colors.size():
-		var row := _add_row(tr("GARAGE_COLOR_SLOT") % (i + 1), "", _open_color_panel.bind(i))
+		var slot_name := _color_slots[i].display_name
+		var label := tr(slot_name) if slot_name else tr("GARAGE_COLOR_SLOT") % (i + 1)
+		var row := _add_row(label, "", _open_color_panel.bind(i))
 		row.set_swatch(_colors[i])
 
 
@@ -611,6 +616,7 @@ func _delete_loadout():
 func _open_color_panel(slot: int):
 	_color_target = _loadout().bike if _pages.back() == Page.BIKE_COLORS else _edited_character()
 	_color_slot = slot
+	_picker.edit_intensity = _color_slots[slot].is_glow()
 	_picker.color = _colors[slot]
 	_color_panel.show()
 
