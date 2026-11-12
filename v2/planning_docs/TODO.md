@@ -227,6 +227,8 @@
 
 ## Done ✅
 
+- [x] Red triangles over enemy racers head
+
 - [x] improve racing npc + performance
 
 - [x] racing line visual+setting

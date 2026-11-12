@@ -42,7 +42,6 @@ Make a hoodie
   - [ ] also see `resources/img/marketing` and `scripts/key_art`. currently exists but jank! getting better, but not library header
 
 
-- [ ] Red triangles over enemy racers head
 
 
 

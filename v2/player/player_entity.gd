@@ -99,6 +99,9 @@ const LAUNCH_SETTLE_SPEED: float = 0.5
 ## ...for this long, so the stall on first hitting the ground doesn't read as stopped.
 const LAUNCH_SETTLE_HOLD_SECS: float = 0.75
 
+const ENEMY_MARKER_MATERIAL: Material = preload("res://levels/assets/props/marker_red.tres")
+const FREE_ROAM_MARKER_MATERIAL: Material = preload("res://levels/assets/props/marker_teal.tres")
+
 @onready var controllers_node: Node3D = %_Controllers
 
 @onready var visual_root: Node3D = %VisualRoot
@@ -108,6 +111,8 @@ const LAUNCH_SETTLE_HOLD_SECS: float = 0.75
 ## 2D so it draws over the 3D pass's glow; placed over name_tag_marker each frame
 @onready var name_label: Label = %NameLabel
 @onready var name_tag_marker: Marker3D = %NameTagMarker
+## Red over other racers, teal in free roam
+@onready var racer_marker: MeshInstance3D = %RacerMarker
 @onready var rear_raycast: RayCast3D = %RearRayCast
 @onready var front_raycast: RayCast3D = %FrontRayCast
 @onready var rollback_sync: RollbackSynchronizer = %RollbackSynchronizer
@@ -384,6 +389,10 @@ func _process(delta: float) -> void:
 		name_label.position = (
 			camera.unproject_position(name_tag_marker.global_position) - name_label.size / 2
 		)
+		var is_free_roam := gamemode_manager.current_game_mode == GameModeType.Kind.FREE_ROAM
+		racer_marker.material_override = (
+			FREE_ROAM_MARKER_MATERIAL if is_free_roam else ENEMY_MARKER_MATERIAL
+		)
 		return
 
 	# NOS boost SFX on the is_boosting rising edge — one-shot per boost.
@@ -613,6 +622,7 @@ func _deferred_init():
 	if int(name) == multiplayer.get_unique_id():
 		is_local_client = true
 		name_label.hide()
+		racer_marker.hide()
 		camera_controller.deferred_init()
 		_init_audio()
 		hud_manager.local_player = self

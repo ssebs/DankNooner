@@ -219,6 +219,8 @@ func rpc_spawn_npc(npc_id: int, pos: Vector3, basis: Basis):
 	npc.global_transform = Transform3D(basis, pos)
 	_npcs[npc_id] = npc
 	_spawn_transforms[npc_id] = Transform3D(basis, pos)
+	# Traffic shares the scene; only race bots get the marker
+	npc.get_node("%RacerMarker").show()
 
 	if !multiplayer.is_server():
 		return

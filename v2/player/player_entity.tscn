@@ -28,6 +28,8 @@
 [ext_resource type="Script" uid="uid://bwdtoema4uxn2" path="res://entities/vfx/shotgun_tracers.gd" id="34_tracers"]
 [ext_resource type="Script" uid="uid://dw30pbra6r0a4" path="res://entities/vfx/boost_trail.gd" id="35_trail"]
 [ext_resource type="Material" uid="uid://tsxn2jb72gby" path="res://levels/assets/props/neon_red.tres" id="36_neon"]
+[ext_resource type="PrismMesh" path="res://levels/assets/props/marker_triangle.tres" id="37_tri"]
+[ext_resource type="Material" path="res://levels/assets/props/marker_red.tres" id="38_mkr"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oq5os"]
 radius = 0.4
@@ -376,6 +378,13 @@ shape = SubResource("BoxShape3D_wig4y")
 [node name="NameTagMarker" type="Marker3D" parent="." unique_id=1811367941]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1839552, 0)
+
+[node name="RacerMarker" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(-0.048, 4.196293e-09, 0, -4.196293e-09, -0.048, 0, 0, 0, 0.048, 0, 2.7, 0)
+cast_shadow = 0
+material_override = ExtResource("38_mkr")
+mesh = ExtResource("37_tri")
 
 [node name="NameTagLayer" type="CanvasLayer" parent="." unique_id=1460283917]
 layer = -1

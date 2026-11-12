@@ -19,6 +19,8 @@
 [ext_resource type="Script" path="res://entities/npc/npc_trick_controller.gd" id="18_npctr"]
 [ext_resource type="Script" path="res://entities/vfx/boost_trail.gd" id="19_trail"]
 [ext_resource type="Material" uid="uid://tsxn2jb72gby" path="res://levels/assets/props/neon_red.tres" id="20_neon"]
+[ext_resource type="PrismMesh" path="res://levels/assets/props/marker_triangle.tres" id="21_tri"]
+[ext_resource type="Material" path="res://levels/assets/props/marker_red.tres" id="22_mkr"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gun"]
 size = Vector3(8, 20, 2)
@@ -122,6 +124,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1839552, 0)
 visible = false
 billboard = 1
 text = "NPC"
+
+[node name="RacerMarker" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(-0.048, 4.196293e-09, 0, -4.196293e-09, -0.048, 0, 0, 0, 0.048, 0, 2.7, 0)
+visible = false
+cast_shadow = 0
+material_override = ExtResource("22_mkr")
+mesh = ExtResource("21_tri")
 
 [node name="GunCollisionArea" type="Area3D" parent="."]
 unique_name_in_owner = true
