@@ -221,7 +221,7 @@ func on_movement_rollback_tick(delta: float):
 	is_on_floor = is_grinding or is_on_floor_netfox()
 	_on_unstable_surface = _detect_unstable_surface()
 	if is_on_floor:
-		_floor_normal = _get_blended_surface_normal()
+		_floor_normal = blended_surface_normal(front_raycast, rear_raycast, player_entity.get_floor_normal())
 		# Landing — normalize pitch to effective angle from upright
 		# e.g. 290° → -70° (70° from ground), full 360° → ~0°
 		if not was_on_floor:
@@ -474,24 +474,19 @@ func is_stalled_on_steep_slope() -> bool:
 
 
 ## Blend normals from front + rear raycasts for smoother ramp transitions.
-## Falls back to CharacterBody3D floor normal if neither raycast hits.
-func _get_blended_surface_normal() -> Vector3:
-	var front_hit = front_raycast.is_colliding()
-	var rear_hit = rear_raycast.is_colliding()
+## Falls back to the body's floor normal if neither raycast hits. Static: race bots share it.
+static func blended_surface_normal(front: RayCast3D, rear: RayCast3D, fallback: Vector3) -> Vector3:
+	var front_hit = front.is_colliding()
+	var rear_hit = rear.is_colliding()
 
 	if front_hit and rear_hit:
-		return (
-			front_raycast
-			.get_collision_normal()
-			.lerp(rear_raycast.get_collision_normal(), 0.5)
-			.normalized()
-		)
+		return front.get_collision_normal().lerp(rear.get_collision_normal(), 0.5).normalized()
 	if front_hit:
-		return front_raycast.get_collision_normal()
+		return front.get_collision_normal()
 	if rear_hit:
-		return rear_raycast.get_collision_normal()
+		return rear.get_collision_normal()
 
-	return player_entity.get_floor_normal()
+	return fallback
 
 
 ## Align bike's up_direction to surface normal for ramp/loop riding

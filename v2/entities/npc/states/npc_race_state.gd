@@ -155,12 +155,16 @@ func Enter(_state_context: StateContext):
 	_stuck_timer = 0.0
 	_stuck_anchor = npc.global_position
 	npc.hit_by_racer.connect(_on_hit_by_racer)
+	npc.front_raycast.enabled = true
+	npc.rear_raycast.enabled = true
 
 
 func Exit(_state_context: StateContext):
 	if Engine.is_editor_hint():
 		return
 	npc.hit_by_racer.disconnect(_on_hit_by_racer)
+	npc.front_raycast.enabled = false
+	npc.rear_raycast.enabled = false
 
 
 func Physics_Update(delta: float):

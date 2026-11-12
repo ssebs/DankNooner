@@ -2368,7 +2368,6 @@ respawn_in_place = true
 
 [node name="EventStartCircle3" parent="." unique_id=1774353091 node_paths=PackedStringArray("props", "spawns", "checkpoints") instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 86.94812, 0, 532.8915)
-visible = false
 props = NodePath("Props")
 spawns = NodePath("Spawns")
 checkpoints = NodePath("Checkpoints")
@@ -2416,15 +2415,15 @@ transform = Transform3D(-1.0000001, 0, -8.7422784e-08, 0, 1, 0, 8.7422784e-08, 0
 width = 32.0
 
 [node name="CheckpointMarker3" parent="EventStartCircle3/Checkpoints/RaceCheckpoints" unique_id=1101634320 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(1.3113417e-07, 0, -1.0000001, 0, 1, 0, 1.0000001, 0, 1.3113417e-07, -245.12637, 0.48388386, 121.117615)
-width = 32.0
+transform = Transform3D(1.3113417e-07, 0, -1.0000001, 0, 1, 0, 1.0000001, 0, 1.3113417e-07, -238.12637, 0.48388386, 121.117615)
+width = 36.0
 
 [node name="CheckpointMarker4" parent="EventStartCircle3/Checkpoints/RaceCheckpoints" unique_id=1601959176 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
 transform = Transform3D(1.3113417e-07, 0, -1.0000001, 0, 1, 0, 1.0000001, 0, 1.3113417e-07, -54.626343, 0.24987507, 186.61761)
 width = 32.0
 
 [node name="CheckpointMarker5" parent="EventStartCircle3/Checkpoints/RaceCheckpoints" unique_id=395736886 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(1.0000001, 0, 1.7484557e-07, 0, 1, 0, -1.7484557e-07, 0, 1.0000001, -9.12635, 0.24987602, 168.61761)
+transform = Transform3D(1.0000001, 0, 3.4969113e-07, 0, 1, 0, -3.4969113e-07, 0, 1.0000001, -9.12635, 0.24987602, 169.61761)
 width = 32.0
 
 [node name="CheckpointMarker6" parent="EventStartCircle3/Checkpoints/RaceCheckpoints" unique_id=1531819014 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
@@ -2480,7 +2479,6 @@ respawn_in_place = true
 
 [node name="EventStartCircle4" parent="." unique_id=1657448105 node_paths=PackedStringArray("gas_station", "props", "spawns", "checkpoints") instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 54.44812, 0, 677.8915)
-visible = false
 gas_station = NodePath("../GasStations/StuntRace4Gasstation")
 props = NodePath("Props")
 spawns = NodePath("Spawns")
@@ -2576,7 +2574,7 @@ transform = Transform3D(-0.99999994, 0, -5.9604645e-08, 0, 1, 0, 5.9604645e-08, 
 width = 32.0
 
 [node name="CheckpointMarker9" parent="EventStartCircle4/Checkpoints/RaceCheckpoints" unique_id=285780755 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
-transform = Transform3D(-1.589326e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, -1.589326e-08, -888.26105, 0.35736382, 42.79535)
+transform = Transform3D(-1.589326e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, -1.589326e-08, -908.26105, 0.35736382, 42.79535)
 width = 32.0
 
 [node name="CheckpointMarker10" parent="EventStartCircle4/Checkpoints/RaceCheckpoints" unique_id=107396237 groups=["stunt_checkpoints"] instance=ExtResource("19_clf25")]
@@ -7605,6 +7603,12 @@ metadata/_edit_lock_ = true
 [node name="edge_C" type="Path3D" parent="RoadManager/Bridgeroad2/RP_002" unique_id=580136058]
 curve = SubResource("Curve3D_mt8p4")
 metadata/_edit_lock_ = true
+
+[node name="GrayBox_StaticBody" parent="." unique_id=2056842866 instance=ExtResource("18_dc022")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -904, 1.5499976, 673)
+collision_layer = 3
+width = 16.0
+height = 3.0
 
 [editable path="EventStartCircle1/Props/TrickBattleProps/TrickBattleArena"]
 [editable path="StuntCity_REMEMBER_TO_REPLACE_ME"]

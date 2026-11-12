@@ -230,6 +230,14 @@ func _widen(points: PackedVector3Array, road_region: RID, max_half_width: float)
 		right.append(Vector2(right_3d.x, right_3d.z))
 		room_left.append(_room(road_region, points[i], -right_3d, max_half_width))
 		room_right.append(_room(road_region, points[i], right_3d, max_half_width))
+	# A turn tighter than the road is wide has no racing line to find: shifting across it could
+	# swing the line past the turn's centre and fold it over itself. Hold those points on the
+	# smoothed line; the corner speed brakes for them.
+	for i in n:
+		var k := _curvature_through(base[_wrap(i - 1, n)], base[i], base[_wrap(i + 1, n)])
+		if absf(k) * (room_left[i] + room_right[i]) > 1.0:
+			room_left[i] = 0.0
+			room_right[i] = 0.0
 	var lateral := PackedFloat32Array()
 	lateral.resize(n)
 

@@ -547,11 +547,17 @@ func _init_collision_shape():
 ## positions are VisualRoot-local. The raycasts live in PlayerEntity space, so
 ## rotate the offsets by VisualRoot's basis or they land on the mirrored side.
 func _init_raycasts():
-	var b := visual_root.transform.basis
-	front_raycast.position = b * bike_definition.front_wheel_ground_position + Vector3.UP * 0.5
-	front_raycast.target_position = Vector3.DOWN * 1.5
-	rear_raycast.position = b * bike_definition.rear_wheel_ground_position + Vector3.UP * 0.5
-	rear_raycast.target_position = Vector3.DOWN * 1.5
+	place_wheel_raycasts(front_raycast, rear_raycast, visual_root.transform.basis, bike_definition)
+
+
+## Static so race bots place theirs the same way.
+static func place_wheel_raycasts(
+	front: RayCast3D, rear: RayCast3D, visual_basis: Basis, bike: BikeSkinDefinition
+) -> void:
+	front.position = visual_basis * bike.front_wheel_ground_position + Vector3.UP * 0.5
+	front.target_position = Vector3.DOWN * 1.5
+	rear.position = visual_basis * bike.rear_wheel_ground_position + Vector3.UP * 0.5
+	rear.target_position = Vector3.DOWN * 1.5
 
 
 func _init_ik():

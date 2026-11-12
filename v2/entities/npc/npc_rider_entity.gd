@@ -86,6 +86,10 @@ const NEAR_MISS_MARGIN: float = 1.0
 @onready var near_miss_shape: CollisionShape3D = $NearMissArea/CollisionShape3D
 @onready var synchronizer: MultiplayerSynchronizer = $MultiplayerSynchronizer
 @onready var boost_trail: BoostTrail = %BoostTrail
+## Ground probes under each wheel, as on the player. Off unless a race bot is driving (NPCRaceState):
+## traffic rides rails and never reads them.
+@onready var front_raycast: RayCast3D = %FrontRayCast
+@onready var rear_raycast: RayCast3D = %RearRayCast
 
 ## Only the half this vehicle actually uses survives — see _enter_tree.
 var bike_skin: BikeSkin
@@ -212,6 +216,7 @@ func _ready():
 	animation_controller.initialize()
 	if vehicle_type != VehicleType.CAR:
 		name_label.text = username
+		PlayerEntity.place_wheel_raycasts(front_raycast, rear_raycast, visual_root.transform.basis, bike_definition)
 
 	add_to_group(UtilsConstants.GROUPS["Racers"])
 	set_multiplayer_authority(1)
@@ -331,15 +336,16 @@ func steer_lookahead() -> float:
 
 
 ## Ramp toward target_speed and point the velocity at target, along the floor like the player's
-## (MovementController), so a ramp's lip launches us instead of stopping us. In the air we keep the
-## launch: no steering, no throttle.
+## (MovementController), so a ramp's lip launches us instead of stopping us. The floor is the
+## wheels' blended ground normal, not the body's contact: a curb's edge would aim us at the sky.
+## In the air we keep the launch: no steering, no throttle.
 func steer_toward(target: Vector3, target_speed: float, delta: float) -> void:
 	if !is_on_floor():
 		return
 	var dir := target - global_position
 	dir.y = 0.0
 	ramp_speed(target_speed, delta)
-	velocity = dir.slide(get_floor_normal()).normalized() * current_speed
+	velocity = dir.slide(_surface_normal()).normalized() * current_speed
 
 
 func ramp_speed(target_speed: float, delta: float) -> void:
@@ -366,14 +372,24 @@ func coast_to_stop(delta: float) -> void:
 
 
 func apply_gravity_and_move(delta: float) -> void:
+	var was_on_floor := is_on_floor()
 	velocity.y -= GRAVITY * delta
 	pre_slide_velocity = velocity
 	move_and_slide()
+	# MovementController's re-snap: a curb top leaves the floor for a tick, so pull back down unless
+	# we're really heading off it (a ramp lip). With the probes off (idle) it's the body's normal.
+	var off_floor_vel := pre_slide_velocity.dot(_surface_normal())
+	if was_on_floor and !is_on_floor() and (off_floor_vel <= 0.0 or is_zero_approx(off_floor_vel)):
+		apply_floor_snap()
 	# Server-only in practice: clients have the behavior state machine's physics disabled
 	# (see _ready), so this is the one place the replicated pose is written. The body turns
 	# with it on next tick's restore.
 	sync_yaw = _yaw_toward_velocity(global_rotation.y, delta)
 	sync_position = global_position
+
+
+func _surface_normal() -> Vector3:
+	return MovementController.blended_surface_normal(front_raycast, rear_raycast, get_floor_normal())
 
 
 ## Randomized per call so riders never settle into scanning on the same tick.

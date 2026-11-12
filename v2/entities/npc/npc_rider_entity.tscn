@@ -161,3 +161,11 @@ cast_shadow = 0
 material_override = ExtResource("20_neon")
 script = ExtResource("19_trail")
 bike_skin = NodePath("../VisualRoot/BikeSkin")
+
+[node name="FrontRayCast" type="RayCast3D" parent="."]
+unique_name_in_owner = true
+enabled = false
+
+[node name="RearRayCast" type="RayCast3D" parent="."]
+unique_name_in_owner = true
+enabled = false
