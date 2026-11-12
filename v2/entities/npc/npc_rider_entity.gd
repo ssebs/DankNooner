@@ -62,11 +62,9 @@ enum VehicleType {BIKE, CAR}
 ## Paint pool this rider picks its color from, set by the spawning manager off the
 ## level's TrafficSettings. Empty leaves the skin's authored color alone.
 @export var paint_colors: Array[Color] = []
-## How long a cached "rider ahead" / corner-speed reading is reused before re-scanning.
-## Both sweeps are expensive: NPCRaceState's forward scan is a physics shape query, and
-## lane_speed does two baked-curve searches. Running either
-## at full tick rate is what caps rider count. Rolled per rider so scans spread across
-## frames instead of spiking on one. Steering itself still updates every tick.
+## How long a cached traffic lane-check / corner-speed reading is reused before re-scanning.
+## lane_speed does two baked-curve searches; running it at full tick rate is what caps rider count.
+## Rolled per rider so scans spread across frames instead of spiking on one. Steering itself still updates every tick.
 @export var scan_interval_min: float = 0.15
 @export var scan_interval_max: float = 0.25
 

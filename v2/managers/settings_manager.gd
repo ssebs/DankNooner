@@ -70,6 +70,7 @@ var default_settings: Dictionary = {
 	"difficulty": 0, # 0 is easy, 1 is hard. TODO make enum
 	"auto_transmission": true,
 	"traffic_density": 1.0, # host only, scales free-roam traffic_count
+	"show_racing_line": true,
 	"controls": {}, # Input Map overrides, see ControlBindings
 	# Active save slots, one per build (SaveManager.slot_path); set from the Saves menu
 	"save_slot": 1,

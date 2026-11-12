@@ -21,7 +21,15 @@ const TAB_SETTING_KEYS: Array = [
 		"language",
 	],
 	["master_vol", "music_vol", "sfx_vol", "menu_vol", "mute", "mute_unfocused"],
-	["difficulty", "joy_cam_sens", "mouse_cam_sens", "invert_cam", "auto_transmission", "traffic_density"],
+	[
+		"difficulty",
+		"joy_cam_sens",
+		"mouse_cam_sens",
+		"invert_cam",
+		"auto_transmission",
+		"traffic_density",
+		"show_racing_line",
+	],
 ]
 
 @onready var back_btn: Button = %BackBtn
@@ -53,6 +61,7 @@ const TAB_SETTING_KEYS: Array = [
 @onready var mouse_cam_sens: HSlider = %MouseCamSensSlider
 @onready var invert_cam: CheckBox = %InvertCamCheck
 @onready var auto_transmission: CheckBox = %AutoTransmissionCheck
+@onready var show_racing_line: CheckBox = %ShowRacingLineCheck
 ## 0 is easy, 1 is hard. TODO make enum
 @onready var difficulty_opt: OptionButton = %DifficultyOptBtn
 @onready var traffic_density_label: Label = %TRAFFIC_DENSITY_LABEL
@@ -178,6 +187,7 @@ func load_settings_into_ui(settings: Dictionary):
 	mouse_cam_sens.value = settings["mouse_cam_sens"]
 	invert_cam.button_pressed = settings["invert_cam"]
 	auto_transmission.button_pressed = settings["auto_transmission"]
+	show_racing_line.button_pressed = settings["show_racing_line"]
 	difficulty_opt.selected = settings["difficulty"]
 	traffic_density.value = settings["traffic_density"]
 	_on_traffic_density_changed(traffic_density.value)
@@ -207,6 +217,7 @@ func _settings_from_ui() -> Dictionary:
 		"auto_transmission": auto_transmission.button_pressed,
 		"difficulty": difficulty_opt.selected,
 		"traffic_density": traffic_density.value,
+		"show_racing_line": show_racing_line.button_pressed,
 	}
 
 

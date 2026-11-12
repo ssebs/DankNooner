@@ -5,8 +5,17 @@
 ##
 ## Braking is per bot, not baked here: each bot runs braking_profile with its own deceleration,
 ## so bots brake from their own numbers and never from one shared knob.
+##
+## Peers get a display copy (from_baked) off the server's points and corner speeds, to draw the line
+## and colour it by speed. It has no curvature or road room, so bot code run on it errors.
 class_name NPCRacingLine extends RefCounted
 
+## Bake tuning: metres between samples, Laplacian smoothing passes, the lateral acceleration
+## (m/s^2) the corner speeds allow, and how far road room is probed.
+const SAMPLE_SPACING: float = 4.0
+const SMOOTHING_PASSES: int = 6
+const CORNER_GRIP: float = 16.0
+const MAX_HALF_WIDTH: float = 12.0
 ## Road-room probe step: the navmesh's cell size, finer than the samples so widths aren't coarse.
 const ROOM_STEP: float = 0.5
 ## Below this curvature (1/m) a sample counts as straight, which caps corner speed.
@@ -18,7 +27,7 @@ const WIDEN_PASSES: int = 50
 const WIDEN_PROBE: float = 0.01
 
 var closed: bool
-var sample_spacing: float
+var sample_spacing: float = SAMPLE_SPACING
 
 var _curve := Curve3D.new()
 ## Indexed by sample, sample i sits at offset i * sample_spacing.
@@ -28,23 +37,45 @@ var _room_left := PackedFloat32Array()
 var _room_right := PackedFloat32Array()
 
 
-func _init(
-	road_region: RID,
-	checkpoints: PackedVector3Array,
-	is_closed: bool,
-	spacing: float,
-	smoothing_passes: int,
-	corner_grip: float,
-	max_half_width: float
-) -> void:
+func _init(is_closed: bool) -> void:
 	closed = is_closed
-	sample_spacing = spacing
-	var points := _resample(_corridor(road_region, checkpoints))
-	for i in smoothing_passes:
-		points = _smooth(points, road_region)
-	points = _widen(points, road_region, max_half_width)
-	_fit_curve(points)
-	_bake_samples(road_region, corner_grip, max_half_width)
+
+
+## The full line off the road navmesh, through route (GameModeEvent.get_racing_route). Safe off the
+## main thread.
+static func bake(road_region: RID, route: PackedVector3Array, is_closed: bool) -> NPCRacingLine:
+	var line := NPCRacingLine.new(is_closed)
+	var points := line._resample(line._corridor(road_region, route))
+	for i in SMOOTHING_PASSES:
+		points = line._smooth(points, road_region)
+	points = line._widen(points, road_region, MAX_HALF_WIDTH)
+	line._fit_curve(points)
+	line._bake_samples(road_region, CORNER_GRIP, MAX_HALF_WIDTH)
+	return line
+
+
+## A display copy of a baked line, from its get_points and get_corner_speeds.
+static func from_baked(points: PackedVector3Array, corner_speed: PackedFloat32Array, is_closed: bool) -> NPCRacingLine:
+	var line := NPCRacingLine.new(is_closed)
+	line._fit_curve(points)
+	line._corner_speed = corner_speed
+	return line
+
+
+## The curve's control points: all from_baked needs, with get_corner_speeds, to rebuild it.
+func get_points() -> PackedVector3Array:
+	var points := PackedVector3Array()
+	for i in _curve.point_count:
+		points.append(_curve.get_point_position(i))
+	return points
+
+
+func get_corner_speeds() -> PackedFloat32Array:
+	return _corner_speed
+
+
+func get_curve() -> Curve3D:
+	return _curve
 
 
 func get_length() -> float:
@@ -309,4 +340,5 @@ func _room(road_region: RID, origin: Vector3, dir: Vector3, max_half_width: floa
 
 func _index(s: float) -> int:
 	var i := int(round(wrap_offset(s) / sample_spacing))
-	return i % _curvature.size() if closed else mini(i, _curvature.size() - 1)
+	# Corner speeds, not curvature: a display copy has only those
+	return i % _corner_speed.size() if closed else mini(i, _corner_speed.size() - 1)

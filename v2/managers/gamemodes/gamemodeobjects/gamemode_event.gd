@@ -23,6 +23,28 @@ class_name GameModeEvent extends Node3D
 ## Where a DriveToStartRunner sends riders. Fires while this event runs, hidden until that runner
 ## shows it.
 @export var start_zone: TriggerZone
+## Editor: bake the racing line bots ride on this event and show it; again to hide it. Bakes on the
+## main thread, so the editor stalls for about a second.
+@export_tool_button("Preview Racing Line") var preview_line_btn = toggle_racing_line_preview
+
+## Unowned, so saving the scene never keeps it.
+var _line_preview: RacingLine
+
+
+func toggle_racing_line_preview() -> void:
+	if is_instance_valid(_line_preview):
+		_line_preview.queue_free()
+		_line_preview = null
+		return
+	# Untyped level root: this script loads with the player scene, so keep level types out of it
+	var region: NPCNavRegion = get_tree().edited_scene_root.npc_nav_region
+	var line := NPCRacingLine.bake(region.get_rid(), get_racing_route(), RaceTask.is_lap_route(get_checkpoints()))
+	# Loaded on click, not preloaded: this script is in the player scene's load chain
+	_line_preview = load("res://levels/assets/props/racing_line.tscn").instantiate()
+	_line_preview.curve = line.get_curve()
+	add_child(_line_preview)
+	# The curve is in world space
+	_line_preview.global_transform = Transform3D.IDENTITY
 
 
 func get_circle() -> EventStartCircle:
@@ -47,6 +69,21 @@ func get_checkpoints() -> Array[CheckPointMarker]:
 	var out: Array[CheckPointMarker] = []
 	out.assign(checkpoints.find_children("*", "CheckPointMarker", false))
 	return out
+
+
+## The points race bots' line runs through: the checkpoints in order. A point-to-point route starts
+## on the grid's centre, since its first checkpoint can sit far up the road.
+func get_racing_route() -> PackedVector3Array:
+	var positions := PackedVector3Array()
+	if !RaceTask.is_lap_route(get_checkpoints()):
+		var grid_markers := get_spawn_markers()
+		var grid_center := Vector3.ZERO
+		for marker in grid_markers:
+			grid_center += marker.global_position
+		positions.append(grid_center / grid_markers.size())
+	for checkpoint in get_checkpoints():
+		positions.append(checkpoint.global_position)
+	return positions
 
 
 func get_pickup_spawners() -> Array[PickupSpawner]:

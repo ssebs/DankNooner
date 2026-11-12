@@ -17,26 +17,13 @@ resource_local_to_scene = true
 transparency = 1
 albedo_color = Color(0.25490198, 0.6862745, 1, 1)
 albedo_texture = SubResource("CompressedTexture2D_b8crp")
-uv1_scale = Vector3(6.5, 6.5, 6.5)
-uv1_offset = Vector3(0, -0.715, 0)
-uv1_world_triplanar = true
+cull_mode = 2
 
 [node name="RacingLine" type="Path3D" unique_id=1078920868]
 curve = SubResource("Curve3D_nrmxx")
 script = ExtResource("1_b8crp")
 
-[node name="CSGPolygon3D" type="CSGPolygon3D" parent="." unique_id=2117017971]
+[node name="Mesh" type="MeshInstance3D" parent="." unique_id=2117017971]
 unique_name_in_owner = true
-polygon = PackedVector2Array(0, 0, 0.02, 0.04, 0.98, 0.04, 1, 0)
-mode = 2
-path_node = NodePath("..")
-path_interval_type = 0
-path_interval = 1.0
-path_simplify_angle = 0.0
-path_rotation = 2
-path_rotation_accurate = false
-path_local = true
-path_continuous_u = true
-path_u_distance = 10.0
-path_joined = false
-material = SubResource("StandardMaterial3D_0k62k")
+material_override = SubResource("StandardMaterial3D_0k62k")
+cast_shadow = 0

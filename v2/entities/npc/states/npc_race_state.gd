@@ -88,7 +88,12 @@ enum Mistake { NONE, LATE_BRAKE, RUN_WIDE }
 const CRASH_COLLISION_MASK: int = 2  # 1 << 1 (layer 2)
 const SCAN_HEIGHT: float = 2.0
 const MAX_SCAN_RESULTS: int = 32
+## A bot runs its expensive queries (forward scan, rejoin path) once every THINK_FRAMES physics
+## frames, on its own think_slot, so a grid of bots never queries on the same frame.
+const THINK_FRAMES: int = 12
 
+## Which physics frame of THINK_FRAMES this bot thinks on. NPCRaceManager sets it at spawn.
+var think_slot: int = 0
 
 ## Set by NPCRaceManager once the bake lands; null until then and the bot holds on the grid.
 var racing_line: NPCRacingLine:
@@ -110,14 +115,13 @@ var _profile := PackedFloat32Array()
 ## Progress along the line (m) and current sideways offset from it (m, + = right).
 var _s: float = 0.0
 var _lateral: float = 0.0
-## Navmesh path to the current steer goal: where it was asked from, its corners, its end.
+## Navmesh path back to the line while rejoining: where it was asked from, its corners, its end.
 var _path := PackedVector3Array()
-## Last forward scan, reused until the next (see NPCRiderEntity.scan_interval_min): each rider
-## ahead with its distance along our heading and its sideways offset from the line.
+## Last forward scan, reused until the next think: each rider ahead with its distance along our
+## heading and its sideways offset from the line.
 var _ahead_riders: Array[Node3D] = []
 var _ahead_dist := PackedFloat32Array()
 var _ahead_lateral := PackedFloat32Array()
-var _scan_next_ms: int = 0
 var _scan_box := BoxShape3D.new()
 var _scan_query := PhysicsShapeQueryParameters3D.new()
 var _overtake_lateral: float = 0.0
@@ -125,7 +129,6 @@ var _overtake_until_ms: int = 0
 var _mistake: Mistake = Mistake.NONE
 var _mistake_until_ms: int = 0
 var _next_mistake_ms: int = 0
-var _path_next_ms: int = 0
 var _stuck_timer: float = 0.0
 var _air_time: float = 0.0
 ## Left the ground moving up (a ramp lip), not off a bump or another bike.
@@ -254,8 +257,10 @@ func _fit_to_line() -> void:
 func _drive(delta: float) -> void:
 	var pos := npc.global_position
 	var now := Time.get_ticks_msec()
+	var thinking := Engine.get_physics_frames() % THINK_FRAMES == think_slot
 	_s = racing_line.track_offset(pos, _s, npc.max_steer_lookahead * 2.0)
-	_scan_ahead(pos, now)
+	if thinking:
+		_scan_ahead(pos)
 	_update_mistake(now)
 	var speed_cap := _avoid(now)
 
@@ -263,14 +268,12 @@ func _drive(delta: float) -> void:
 	var lateral_target := _clear_of_alongside(_lateral_target(steer_s, now))
 	_lateral = move_toward(_lateral, lateral_target, offset_response * _reaction * delta)
 	var spot := racing_line.point_at(_s) + racing_line.right_at(_s) * _lateral
-	var goal: Vector3
-	var off_line := Vector2(spot.x - pos.x, spot.z - pos.z).length()
-	var rejoining := off_line > rejoin_distance
-	if rejoining:
-		goal = racing_line.point_at(_s + rejoin_lookahead)
+	var target: Vector3
+	if _flat(spot - pos).length() > rejoin_distance:
+		target = _rejoin_target(pos, thinking)
 	else:
-		goal = _steer_point(steer_s)
-	var target := _path_target(pos, goal)
+		_path.clear()
+		target = _steer_point(steer_s)
 
 	var speed_s := _s - late_brake_distance if _mistake == Mistake.LATE_BRAKE else _s
 	var line_speed := maxf(npc.min_turn_speed, racing_line.profile_speed(_profile, speed_s))
@@ -278,24 +281,11 @@ func _drive(delta: float) -> void:
 	npc.steer_toward(target, target_speed, delta)
 
 
-## Our offset's point on the line at s, walked back toward the line until it's on the nav map.
-## Snapping it straight to the closest point puts it on the near rim of a small hole (a pole),
-## aiming the bot head-on at it. Whole nav map, so dodges may still cross grass, never a wall.
+## Our offset's point on the line at s, held inside the baked road room. No navmesh query: the
+## lookahead cap keeps the straight shot within max_corner_cut of the line, so it stays on the road.
 func _steer_point(s: float) -> Vector3:
-	var map := npc.get_world_3d().navigation_map
-	var line_point := racing_line.point_at(s)
-	var right := racing_line.right_at(s)
-	var lateral := _lateral
-	var ahead := line_point + right * lateral
-	var on_map := NavigationServer3D.map_get_closest_point(map, ahead)
-	while (
-		_flat(on_map - ahead).length() > NPCRacingLine.ROOM_STEP * 0.5
-		and absf(lateral) > NPCRacingLine.ROOM_STEP
-	):
-		lateral = move_toward(lateral, 0.0, NPCRacingLine.ROOM_STEP)
-		ahead = line_point + right * lateral
-		on_map = NavigationServer3D.map_get_closest_point(map, ahead)
-	return on_map
+	var lateral := clampf(_lateral, -racing_line.half_width_at(s, -1.0), racing_line.half_width_at(s, 1.0))
+	return racing_line.point_at(s) + racing_line.right_at(s) * lateral
 
 
 ## The speed-based lookahead, shortened through bends: chasing a point L ahead on curvature k
@@ -329,12 +319,9 @@ func _wander(s: float) -> float:
 
 
 ## One box along our heading, from alongside_length behind to the avoid reach ahead, hitting racer
-## bodies and traffic ContactAreas alike. Throttled: a shape query per bot per tick is what the scan
-## cadence exists to avoid.
-func _scan_ahead(pos: Vector3, now: int) -> void:
-	if now < _scan_next_ms:
-		return
-	_scan_next_ms = now + npc.next_scan_delay_ms()
+## bodies and traffic ContactAreas alike. Think frames only: a shape query per bot per tick is too
+## expensive.
+func _scan_ahead(pos: Vector3) -> void:
 	var forward := -npc.global_basis.z
 	forward.y = 0.0
 	forward = forward.normalized()
@@ -461,13 +448,12 @@ func _mistake_gap_ms() -> int:
 	return int(mistake_interval * randf_range(0.5, 1.5) * 1000.0)
 
 
-## Steer at goal, or at the next navmesh corner on the way when a wall is in between: a straight
-## shot at a point ahead cuts through any wall the line wraps round. Also how a bot knocked off the
-## line paths back. Road and grass both, the grass region's travel cost keeps it on the road.
-func _path_target(pos: Vector3, goal: Vector3) -> Vector3:
-	var now := Time.get_ticks_msec()
-	if now >= _path_next_ms:
-		_path_next_ms = now + npc.next_scan_delay_ms()
+## A bot knocked off the line paths back to a point rejoin_lookahead up it: a straight shot would
+## cut through any wall in between. Repathed on think frames only, straight at the goal until the
+## first path lands. Road and grass both, the grass region's travel cost keeps it on the road.
+func _rejoin_target(pos: Vector3, thinking: bool) -> Vector3:
+	var goal := racing_line.point_at(_s + rejoin_lookahead)
+	if thinking:
 		_path = NavigationServer3D.map_get_path(
 			npc.get_world_3d().navigation_map,
 			pos,

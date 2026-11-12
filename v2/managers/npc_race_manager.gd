@@ -15,6 +15,8 @@ signal npc_despawned(npc_id: int)
 @export var settings_manager: SettingsManager
 @export var spawn_manager: SpawnManager
 @export var item_manager: ItemManager
+## For local_player, whose speed colours the shown racing line.
+@export var hud_manager: HUDManager
 ## Round-robin source of NPC names + skins. Spawned NPCs get
 ## "<username> <n>" so reused definitions stay distinguishable in results.
 @export var npc_definitions: Array[PlayerDefinition] = [
@@ -23,12 +25,6 @@ signal npc_despawned(npc_id: int)
 @export var respawn_delay: float = 3.0
 ## How far the host's Easy / Hard difficulty setting moves bot skill off its centre.
 @export var difficulty_skill_shift: float = 0.25
-## Racing line bake (see NPCRacingLine): metres between samples, Laplacian smoothing passes, the
-## lateral acceleration (m/s^2) the line's corner speeds allow, and how far road room is probed.
-@export var line_sample_spacing: float = 4.0
-@export var line_smoothing_passes: int = 6
-@export var corner_grip: float = 16.0
-@export var line_max_half_width: float = 12.0
 ## Bot item use: a held oil slick drops once a rider is within this many metres behind, and a held
 ## Rally Up goes off after this many seconds on average.
 @export var oil_slick_trigger_distance: float = 15.0
@@ -37,6 +33,9 @@ signal npc_despawned(npc_id: int)
 @export var boost_cone_deg: float = 10.0
 
 const NPC_SCENE: PackedScene = preload("res://entities/npc/npc_rider_entity.tscn")
+const RACING_LINE_SCENE: PackedScene = preload("res://levels/assets/props/racing_line.tscn")
+## The shown line goes gold within this fraction under its target speed, red over it.
+const LINE_WARN_RATIO := 0.1
 ## dbg_racing_line drawings live until the next toggle or bake clears them
 const DRAW_SECONDS := 1.0e9
 
@@ -54,6 +53,13 @@ var _next_id: int = -1
 ## Bumped on despawn, so a bake still waiting on the nav map from a race that ended is dropped.
 var _bake_generation: int = 0
 var _draw_racing_line: bool = false
+
+## Every peer: the line shown to players, its display copy, and the local player's braking profile
+## on it with the brake strength that profile was built for.
+var _shown_line: RacingLine
+var _display_line: NPCRacingLine
+var _player_profile := PackedFloat32Array()
+var _player_profile_brake: float = -1.0
 
 
 func _ready():
@@ -94,6 +100,35 @@ func _physics_process(delta: float):
 	DebugUtils.Prof("npc_race_manager", t)  # PROF: temp
 
 
+## Every peer: show the line per the setting, coloured by the local player's speed against the
+## speed it carries there — red over it, gold close under it, blue otherwise.
+func _process(_delta: float) -> void:
+	# No line outside a race with bots — skip is intentional
+	if Engine.is_editor_hint() or _display_line == null:
+		return
+	# Freed with the level when a client disconnects mid-race — skip is intentional
+	if !is_instance_valid(_shown_line):
+		_hide_line()
+		return
+	_shown_line.visible = settings_manager.current_settings["show_racing_line"]
+	var player := hud_manager.local_player
+	# Not spawned yet (late join, level loading) — skip is intentional
+	if !_shown_line.visible or player == null:
+		return
+	var brake := player.bike_definition.brake_strength
+	if brake != _player_profile_brake:
+		_player_profile = _display_line.braking_profile(brake, 1.0)
+		_player_profile_brake = brake
+	var s := _display_line.closest_offset(player.global_position)
+	var ratio := player.movement_controller.speed / _display_line.profile_speed(_player_profile, s)
+	if ratio > 1.0:
+		_shown_line.semantic_color = SemanticColors.Value.ERR
+	elif ratio > 1.0 - LINE_WARN_RATIO:
+		_shown_line.semantic_color = SemanticColors.Value.WARN
+	else:
+		_shown_line.semantic_color = SemanticColors.Value.OK
+
+
 #region Spawn / despawn (server API + broadcast RPCs)
 
 
@@ -112,6 +147,7 @@ func despawn_all_npcs() -> void:
 		rpc_despawn_npc.rpc(npc_id)
 	# Its navmesh belongs to the level being torn down; the next race bakes its own.
 	racing_line = null
+	rpc_hide_racing_line.rpc()
 	_bake_generation += 1
 
 
@@ -126,34 +162,14 @@ func bake_racing_line(event: GameModeEvent) -> void:
 	# The race ended (or restarted) while we waited — skip is intentional
 	if generation != _bake_generation:
 		return
-	var checkpoints := event.get_checkpoints()
-	var is_lap := RaceTask.is_lap_route(checkpoints)
-	var positions := PackedVector3Array()
-	# A point-to-point first checkpoint can sit far up the road, so start the line on the grid
-	if !is_lap:
-		var grid_markers := event.get_spawn_markers()
-		var grid_center := Vector3.ZERO
-		for marker in grid_markers:
-			grid_center += marker.global_position
-		positions.append(grid_center / grid_markers.size())
-	for checkpoint in checkpoints:
-		positions.append(checkpoint.global_position)
+	# Read here: scene nodes aren't safe to touch from the worker thread
+	var positions := event.get_racing_route()
+	var is_lap := RaceTask.is_lap_route(event.get_checkpoints())
 	var region_rid := region.get_rid()
 	var baked: Array[NPCRacingLine] = []
 	# About a second of navmesh queries — off the main thread so the race start doesn't hitch
 	var task := WorkerThreadPool.add_task(
-		func():
-			baked.append(
-				NPCRacingLine.new(
-					region_rid,
-					positions,
-					is_lap,
-					line_sample_spacing,
-					line_smoothing_passes,
-					corner_grip,
-					line_max_half_width
-				)
-			)
+		func(): baked.append(NPCRacingLine.bake(region_rid, positions, is_lap))
 	)
 	while !WorkerThreadPool.is_task_completed(task):
 		await get_tree().process_frame
@@ -167,6 +183,9 @@ func bake_racing_line(event: GameModeEvent) -> void:
 	)
 	for npc_id in _npcs:
 		_race_state(npc_id).racing_line = racing_line
+	rpc_show_racing_line.rpc(
+		racing_line.get_points(), racing_line.get_corner_speeds(), racing_line.closed
+	)
 	if _draw_racing_line:
 		_draw_line()
 
@@ -178,6 +197,12 @@ func sync_npcs_to_peer(peer_id: int) -> void:
 	for npc_id in _npcs:
 		var npc := _npcs[npc_id]
 		rpc_spawn_npc.rpc_id(peer_id, npc_id, npc.global_position, npc.global_basis)
+	# Still baking — the broadcast when it lands reaches them — skip is intentional
+	if racing_line == null:
+		return
+	rpc_show_racing_line.rpc_id(
+		peer_id, racing_line.get_points(), racing_line.get_corner_speeds(), racing_line.closed
+	)
 
 
 func get_npc_ids() -> Array[int]:
@@ -229,6 +254,8 @@ func rpc_spawn_npc(npc_id: int, pos: Vector3, basis: Basis):
 	# Null while the bake waits on the nav map — the bake hands it over when it lands
 	race_state.racing_line = racing_line
 	race_state.skill = _bot_skill()
+	# Ids count down from -1, so consecutive bots think on consecutive frames
+	race_state.think_slot = -npc_id % NPCRaceState.THINK_FRAMES
 	# Wedged on geometry the lanes don't model — same wipeout + checkpoint respawn a
 	# crash gets, which is exactly the recovery we want.
 	race_state.stuck.connect(crash_npc.bind(npc_id))
@@ -266,6 +293,35 @@ func rpc_despawn_npc(npc_id: int):
 	_spawn_transforms.erase(npc_id)
 	if multiplayer.is_server():
 		npc_despawned.emit(npc_id)
+
+
+#endregion
+
+#region Player racing line (every peer)
+
+
+@rpc("call_local", "reliable")
+func rpc_show_racing_line(points: PackedVector3Array, corner_speed: PackedFloat32Array, is_closed: bool) -> void:
+	_hide_line()
+	_display_line = NPCRacingLine.from_baked(points, corner_speed, is_closed)
+	_shown_line = RACING_LINE_SCENE.instantiate()
+	_shown_line.curve = _display_line.get_curve()
+	level_manager.current_level.add_child(_shown_line)
+	# The curve is in world space
+	_shown_line.global_transform = Transform3D.IDENTITY
+
+
+@rpc("call_local", "reliable")
+func rpc_hide_racing_line() -> void:
+	_hide_line()
+
+
+func _hide_line() -> void:
+	if is_instance_valid(_shown_line):
+		_shown_line.queue_free()
+	_shown_line = null
+	_display_line = null
+	_player_profile_brake = -1.0
 
 
 #endregion
@@ -439,6 +495,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("spawn_manager must not be empty")
 	if item_manager == null:
 		issues.append("item_manager must not be empty")
+	if hud_manager == null:
+		issues.append("hud_manager must not be empty")
 	if npc_definitions.is_empty():
 		issues.append("npc_definitions must not be empty")
 	return issues

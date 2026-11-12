@@ -10,6 +10,13 @@ class_name NPCNavRegion extends NavigationRegion3D
 @export_flags_3d_physics var exclude_layers: int = 0
 
 
+func _ready() -> void:
+	# The toolbar's Bake NavigationMesh can't leave exclude_layers out, so redo its bake ours.
+	# Ours never emits bake_finished, so this can't loop.
+	if Engine.is_editor_hint():
+		bake_finished.connect(bake)
+
+
 func bake() -> void:
 	var excluded: Dictionary[Node, int] = {}
 	for node in _source_nodes():
