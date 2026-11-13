@@ -22,8 +22,8 @@
 >
 > - **Rider-level gate** (steps 2 + 7, bikes only), built 2026-11-10, untested.
 >   `BikeSkinDefinition.unlock_level` + `SaveManager.is_locked()`. Locked garage rows are
->   disabled, show "🔒 Lvl N · $price", and still preview. Mini is free; naked and sport are
->   gated, sport higher. `BikeMod.price` has a default (`ColorMod` is 0). New saves start on the
+>   disabled, show "🔒 Lvl N · $price", and still preview. Mini is free; naked, cruiser and sport
+>   are gated, sport higher. `BikeMod.price` has a default (`ColorMod` is 0). New saves start on the
 >   mini (`default_player_definition.tres`). Deferred to step 4: the finished-list requirement for variants and mastery gates for mods.
 > - **Save version 2** (`SaveManager.save_version`): a save with another version isn't loaded,
 >   so pre-gate saves don't keep bikes they never bought. It stays on disk, grayed out in the

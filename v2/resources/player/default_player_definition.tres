@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="PlayerDefinition" format=3 uid="uid://ba1bidrtscoc7"]
 
+[ext_resource type="Resource" uid="uid://bxa7gt83qt1yh" path="res://resources/player/skins/squid_default_skin_definition.tres" id="1_2vuwb"]
 [ext_resource type="Script" uid="uid://283a7n5utttx" path="res://resources/player/player_definition.gd" id="1_nop61"]
 [ext_resource type="Resource" path="res://resources/horns/skins/car_horn.tres" id="2_2vuwb"]
-[ext_resource type="Resource" uid="uid://d2u40ds684dd5" path="res://resources/player/skins/clanker_default_skin_definition.tres" id="2_clank"]
 [ext_resource type="Texture2D" uid="uid://c3b2p5gk67ghq" path="res://resources/img/Logos/Logo.svg" id="2_hooav"]
 [ext_resource type="Script" uid="uid://ctppcknl8khsn" path="res://resources/player/loadout.gd" id="3_ldout"]
 [ext_resource type="Resource" uid="uid://cvkjasqlccy3m" path="res://resources/bikes/skins/mini_default_skin_definition.tres" id="4_2vuwb"]
@@ -15,5 +15,6 @@ bike = ExtResource("4_2vuwb")
 [resource]
 script = ExtResource("1_nop61")
 money = 5000.0
+default_character = ExtResource("1_2vuwb")
 loadouts = Array[ExtResource("3_ldout")]([SubResource("Resource_ldout")])
 metadata/_custom_type_script = "uid://283a7n5utttx"

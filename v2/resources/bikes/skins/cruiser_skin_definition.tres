@@ -9,6 +9,8 @@
 [resource]
 script = ExtResource("2_4wyad")
 skin_name = "cruiser"
+price = 9000
+unlock_level = 2
 bike_type = ExtResource("9_type")
 mesh_res = ExtResource("1_hvuo0")
 mesh_position_offset = Vector3(0, 0.014, 0.004)
