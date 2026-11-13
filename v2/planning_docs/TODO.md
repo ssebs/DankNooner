@@ -227,6 +227,8 @@
 
 ## Done ✅
 
+- [x] must re-press gas when switching camera
+
 - [x] add multi-lang fonts
 
 - [x] Red triangles over enemy racers head

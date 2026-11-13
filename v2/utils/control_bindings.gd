@@ -59,10 +59,16 @@ const TOKEN_ALIASES: Dictionary = {
 }
 
 static var _token_regex := RegEx.create_from_string("\\{(\\w+)\\}")
+## Last overrides applied; null until the first apply().
+static var _applied_overrides = null
 
 
 ## Rebuild InputMap for every remappable action from defaults + overrides.
 static func apply(overrides: Dictionary):
+	# Erasing events releases held actions, so any unrelated settings save would drop the throttle
+	if overrides == _applied_overrides:
+		return
+	_applied_overrides = overrides.duplicate(true)
 	for actions in UtilsConstants.CONTROL_CATEGORIES.values():
 		for action in actions:
 			InputMap.action_erase_events(action)

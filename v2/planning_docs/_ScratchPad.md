@@ -32,7 +32,7 @@ Make a hoodie
 - [ ] move profile customization (username) to under the profile/saves component
   - [ ] could list challenges/career
   - [ ] Change "Profile" to "All" for default on all loadouts
-- [ ] must re-press gas when switching camera
+
 ---
 ##
 ## NEXT
