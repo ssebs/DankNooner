@@ -49,7 +49,8 @@ func on_tab_key_pressed(_dir: int):
 
 
 func get_first_button_for_focus() -> Button:
-	var buttons = find_children("*", "Button", true, true)
-	if len(buttons) == 0:
-		return null
-	return buttons[0]
+	# Skips unfocusable buttons, e.g. the profile card's tabs above the main menu's Play.
+	for btn: Button in find_children("*", "Button", true, true):
+		if btn.focus_mode != Control.FOCUS_NONE:
+			return btn
+	return null

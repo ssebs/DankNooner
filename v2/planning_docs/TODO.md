@@ -36,6 +36,7 @@
   - [x] move profile customization (username) to under the profile/saves page
   - [ ] list career in expandable panel under it
   - [ ] use actual challenges instead of placeholders
+  - [ ] controller support
 
 - [ ] dbg_unlock_all (lots of $/xp/all things unlocked/1 loadout per bike)
 
