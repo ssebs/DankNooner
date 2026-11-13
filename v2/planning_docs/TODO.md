@@ -227,6 +227,8 @@
 
 ## Done ✅
 
+- [x] add multi-lang fonts
+
 - [x] Red triangles over enemy racers head
 
 - [x] improve racing npc + performance

@@ -33,7 +33,6 @@ Make a hoodie
   - [ ] could list challenges/career
   - [ ] Change "Profile" to "All" for default on all loadouts
 - [ ] must re-press gas when switching camera
-- [ ] ship translation fonts (no JP/chinese)
 ---
 ##
 ## NEXT
