@@ -27,6 +27,16 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 
+- [ ] new profile component
+  - [x] show in-game instead of current stacked counters
+  - [x] should always be clickable
+  - [x] Change "Profile" to "All" for default on all loadouts
+  - [x] list challenges in expandable panel under it
+  - [x] list leaderboard in expandable panel under it
+  - [x] move profile customization (username) to under the profile/saves page
+  - [ ] list career in expandable panel under it
+  - [ ] use actual challenges instead of placeholders
+
 - [ ] dbg_unlock_all (lots of $/xp/all things unlocked/1 loadout per bike)
 
 - [ ] [Progression/Challenges](./Progression.md)

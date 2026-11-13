@@ -7,12 +7,11 @@
 [ext_resource type="PackedScene" uid="uid://cmnmap7blip01" path="res://player/controllers/minimap/minimap.tscn" id="4_ltqsj"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/boost_gauge.tscn" id="7_3xx38"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/input_prompt.tscn" id="8_inpmt"]
-[ext_resource type="Script" uid="uid://bbuk3w2ml0an0" path="res://player/hud_elements/race_leaderboard.gd" id="99_rldbd"]
 [ext_resource type="Script" uid="uid://cqsjngdd8k28k" path="res://player/hud_elements/trick_popups.gd" id="99_scrpp"]
 [ext_resource type="Script" path="res://player/hud_elements/target_compass.gd" id="99_tcmps"]
 [ext_resource type="Script" path="res://player/hud_elements/trick_stick_indicator.gd" id="99_tstik"]
 [ext_resource type="PackedScene" uid="uid://b1thmb3dtnail" path="res://utils/components/thumbnail_3d.tscn" id="99_thumb"]
-[ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="99_money"]
+[ext_resource type="PackedScene" path="res://menus/main_menu/components/current_save_card.tscn" id="99_card"]
 [ext_resource type="Script" path="res://player/hud_elements/trick_feed.gd" id="99_tfeed"]
 [ext_resource type="Script" path="res://player/hud_elements/loadout_bar.gd" id="99_ldbar"]
 
@@ -124,32 +123,13 @@ size_flags_vertical = 0
 mouse_filter = 2
 theme_override_constants/separation = 24
 
-[node name="MoneyXP" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/TopRightVBox"]
+[node name="ProfileCard" parent="UI/AspectContainer/MarginContainer/TopRightVBox" instance=ExtResource("99_card")]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
-mouse_filter = 2
-theme_override_constants/separation = 24
-
-[node name="HUD_Money" type="Label" parent="UI/AspectContainer/MarginContainer/TopRightVBox/MoneyXP"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 28
-script = ExtResource("99_money")
-
-[node name="HUD_XP" type="Label" parent="UI/AspectContainer/MarginContainer/TopRightVBox/MoneyXP"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"XPLabel"
-theme_override_font_sizes/font_size = 28
-
-[node name="HUD_Leaderboard" type="Control" parent="UI/AspectContainer/MarginContainer/TopRightVBox" unique_id=1156886562]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-size_flags_horizontal = 8
-mouse_filter = 2
-script = ExtResource("99_rldbd")
-font_size = 20
+clickable = false
+expandable = false
+board_overrides = true
 
 [node name="HUD_EventTricks" type="Label" parent="UI/AspectContainer/MarginContainer/TopRightVBox"]
 unique_name_in_owner = true

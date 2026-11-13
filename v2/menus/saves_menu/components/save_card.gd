@@ -113,10 +113,11 @@ func _on_name_focus_exited():
 		name_submitted.emit(_name_edit.text)
 
 
-## Shows the "(active)" subtitle; no redraw. Call after show_save.
-func set_active(is_active: bool) -> void:
+## Shows the "(active)" subtitle; no redraw. Call after show_save. `locked`: no load or delete.
+func set_active(is_active: bool, locked: bool = false) -> void:
 	# Faded, not hidden, so every card's preview sits at the same height.
 	_active_label.modulate.a = 1.0 if is_active else 0.0
-	_loadable = _new_btn.visible or (_is_current_version and !is_active)
+	_delete_btn.visible = !locked
+	_loadable = !locked and (_new_btn.visible or (_is_current_version and !is_active))
 	mouse_default_cursor_shape = CURSOR_POINTING_HAND if _loadable else CURSOR_ARROW
 	_restyle()

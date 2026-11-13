@@ -302,7 +302,7 @@ func Update(delta: float):
 	_leaderboard_refresh_accum = LEADERBOARD_REFRESH_SECS
 	var secs := ceili(_round_left)
 	var headers := PackedStringArray(["⏱ %d:%02d" % [secs / 60, secs % 60], "💰"])
-	riding_hud_state.push_leaderboard(headers, _leaderboard_rows(), PackedInt32Array())
+	riding_hud_state.push_leaderboard(headers, _leaderboard_rows(), PackedInt32Array(), false)
 
 
 #region Trick round (server only)

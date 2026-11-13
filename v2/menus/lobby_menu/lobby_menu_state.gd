@@ -21,6 +21,7 @@ const AUTO_HOST_LOBBY_SIZE := 2
 
 @onready var back_btn: Button = %BackBtn
 @onready var level_select_panel: LevelSelectPanel = %LevelSelectPanel
+@onready var profile_card: CurrentSaveCard = %ProfileCard
 @onready var customize_btn: Button = %CustomizeBtn
 
 @onready var lobby_panel: LobbyPanel = %LobbyPanel
@@ -47,6 +48,9 @@ func Enter(state_context: StateContext):
 
 	ui.show()
 	loading_ui.hide()
+	profile_card.show_save(
+		save_manager.save_slot, save_manager.current_save, save_manager.get_player_definition()
+	)
 
 	back_btn.pressed.connect(_on_back_pressed)
 	level_select_panel.start_pressed.connect(_on_start_pressed)

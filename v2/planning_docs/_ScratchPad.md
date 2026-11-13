@@ -27,11 +27,7 @@ Make a hoodie
 
 - [ ] in game popups fight the pause/menus. too easy to roll thru them, or close on accident and have to drive back over it
   - [ ] if console is open, no other input should work![alt text](<Screenshot 2026-11-11 at 22.26.28.png>)
-- [ ] show profile component in-game instead of current stacked counters
-  - [ ] should always be clickable (in customize menu too)
-- [ ] move profile customization (username) to under the profile/saves component
-  - [ ] could list challenges/career
-  - [ ] Change "Profile" to "All" for default on all loadouts
+
 
 ---
 ##

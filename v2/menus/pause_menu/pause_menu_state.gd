@@ -11,10 +11,12 @@ class_name PauseMenuState extends MenuState
 @export var lobby_manager: LobbyManager
 @export var steam_manager: SteamManager
 @export var audio_manager: AudioManager
+@export var save_manager: SaveManager
 
 @export var main_menu_state: MenuState
 @export var settings_menu_state: MenuState
 @export var tricks_menu_state: MenuState
+@export var saves_menu_state: MenuState
 
 const PLAY_ICON := preload("res://resources/img/Icons/play.png")
 const PAUSE_ICON := preload("res://resources/img/Icons/pause.png")
@@ -33,6 +35,7 @@ const PAUSE_ICON := preload("res://resources/img/Icons/pause.png")
 @onready var prev_song_btn: Button = %PrevSongBtn
 @onready var play_pause_btn: Button = %PlayPauseBtn
 @onready var skip_song_btn: Button = %SkipSongBtn
+@onready var profile_card: CurrentSaveCard = %ProfileCard
 
 @onready var bg_tint: ColorRect = %BGTint
 
@@ -54,6 +57,10 @@ func Enter(_state_context: StateContext):
 	skip_song_btn.pressed.connect(_on_skip_song_pressed)
 	audio_manager.music_track_changed.connect(_update_now_playing)
 	_update_now_playing()
+	profile_card.pressed.connect(_on_profile_card_pressed)
+	profile_card.show_save(
+		save_manager.save_slot, save_manager.current_save, save_manager.get_player_definition()
+	)
 
 	cancel_event_btn.visible = gamemode_manager.get_current_gamemode().can_cancel_event()
 	# Free roam only shows this for its garage / fill-up activities, which aren't events.
@@ -99,6 +106,7 @@ func Exit(_state_context: StateContext):
 	play_pause_btn.pressed.disconnect(_on_play_pause_pressed)
 	skip_song_btn.pressed.disconnect(_on_skip_song_pressed)
 	audio_manager.music_track_changed.disconnect(_update_now_playing)
+	profile_card.pressed.disconnect(_on_profile_card_pressed)
 
 	if level_select_panel.start_pressed.is_connected(_on_level_select_start_pressed):
 		level_select_panel.start_pressed.disconnect(_on_level_select_start_pressed)
@@ -128,6 +136,12 @@ func _on_play_pause_pressed():
 
 func _on_skip_song_pressed():
 	audio_manager.skip_music_track()
+
+
+## Not a Button, so MenuState doesn't wire its click sound.
+func _on_profile_card_pressed():
+	audio_manager.play_menu_click()
+	transitioned.emit(saves_menu_state, PauseStateContext.NewFromPause(self, true))
 
 
 func _on_tricks_pressed():

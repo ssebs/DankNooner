@@ -3,22 +3,24 @@
 [ext_resource type="Script" path="res://menus/main_menu/components/current_save_card.gd" id="1_card"]
 [ext_resource type="PackedScene" path="res://menus/saves_menu/components/save_preview.tscn" id="2_preview"]
 [ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="3_money"]
+[ext_resource type="Texture2D" path="res://resources/img/Icons/arrowUp.png" id="4_arrow"]
+[ext_resource type="Script" path="res://player/hud_elements/race_leaderboard.gd" id="5_board"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill"]
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 28.0
-content_margin_bottom = 8.0
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 16.0
+content_margin_bottom = 6.0
 bg_color = Color(0.02, 0.027, 0.06, 0.75)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.255, 0.686, 1, 0.5)
-corner_radius_top_left = 56
-corner_radius_top_right = 56
-corner_radius_bottom_right = 56
-corner_radius_bottom_left = 56
+corner_radius_top_left = 44
+corner_radius_top_right = 44
+corner_radius_bottom_right = 44
+corner_radius_bottom_left = 44
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_circle"]
 content_margin_left = 3.0
@@ -31,65 +33,160 @@ border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
 border_color = Color(0.255, 0.686, 1, 1)
-corner_radius_top_left = 48
-corner_radius_top_right = 48
-corner_radius_bottom_right = 48
-corner_radius_bottom_left = 48
+corner_radius_top_left = 36
+corner_radius_top_right = 36
+corner_radius_bottom_right = 36
+corner_radius_bottom_left = 36
 
-[node name="CurrentSaveCard" type="PanelContainer"]
-mouse_default_cursor_shape = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_pill")
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_drop"]
+content_margin_left = 20.0
+content_margin_top = 12.0
+content_margin_right = 20.0
+content_margin_bottom = 12.0
+bg_color = Color(0.02, 0.027, 0.06, 0.75)
+border_width_left = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.255, 0.686, 1, 0.5)
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="CurrentSaveCard" type="VBoxContainer"]
+mouse_filter = 2
+theme_override_constants/separation = 0
 script = ExtResource("1_card")
 
-[node name="Row" type="HBoxContainer" parent="."]
+[node name="Pill" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
-theme_override_constants/separation = 16
+mouse_default_cursor_shape = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill")
 
-[node name="Avatar" type="PanelContainer" parent="Row"]
+[node name="Row" type="HBoxContainer" parent="Pill"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Avatar" type="PanelContainer" parent="Pill/Row"]
 clip_children = 2
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(72, 72)
 layout_mode = 2
 mouse_filter = 1
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_circle")
 
-[node name="Portrait" parent="Row/Avatar" instance=ExtResource("2_preview")]
+[node name="Portrait" parent="Pill/Row/Avatar" instance=ExtResource("2_preview")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 0)
 layout_mode = 2
 
-[node name="Camera3D" parent="Row/Avatar/Portrait/PreviewViewport"]
+[node name="Camera3D" parent="Pill/Row/Avatar/Portrait/PreviewViewport"]
 transform = Transform3D(-0.7686, 0.1011, -0.632, 0, 0.9878, 0.158, 0.6399, 0.1214, -0.759, -1, 1.5, -1.2)
 
-[node name="Text" type="VBoxContainer" parent="Row"]
+[node name="Text" type="VBoxContainer" parent="Pill/Row"]
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_override_constants/separation = 0
 
-[node name="Stats" type="HBoxContainer" parent="Row/Text"]
+[node name="Stats" type="HBoxContainer" parent="Pill/Row/Text"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="LevelLabel" type="Label" parent="Row/Text/Stats"]
+[node name="LevelLabel" type="Label" parent="Pill/Row/Text/Stats"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Heading2Label"
 theme_override_colors/font_color = Color(1, 0.82, 0.25, 1)
+theme_override_font_sizes/font_size = 26
 auto_translate_mode = 2
 
-[node name="MoneyLabel" type="Label" parent="Row/Text/Stats"]
+[node name="MoneyLabel" type="Label" parent="Pill/Row/Text/Stats"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"MoneyLabel"
 script = ExtResource("3_money")
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 26
 auto_translate_mode = 2
 
-[node name="NameLabel" type="Label" parent="Row/Text"]
+[node name="NameLabel" type="Label" parent="Pill/Row/Text"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 15
 auto_translate_mode = 2
 
-[editable path="Row/Avatar/Portrait"]
+[node name="CaretBtn" type="TextureButton" parent="Pill/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+mouse_default_cursor_shape = 2
+pivot_offset = Vector2(12, 12)
+texture_normal = ExtResource("4_arrow")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Drop" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 0
+
+[node name="Panel" type="PanelContainer" parent="Drop"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_drop")
+
+[node name="Content" type="VBoxContainer" parent="Drop/Panel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="Tabs" type="HBoxContainer" parent="Drop/Panel/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="ChallengesTab" type="Button" parent="Drop/Panel/Content/Tabs"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme_type_variation = &"TabButton"
+theme_override_font_sizes/font_size = 15
+toggle_mode = true
+text = "CHALLENGES_LABEL"
+
+[node name="LeaderboardTab" type="Button" parent="Drop/Panel/Content/Tabs"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme_type_variation = &"TabButton"
+theme_override_font_sizes/font_size = 15
+toggle_mode = true
+text = "LEADERBOARD_LABEL"
+
+[node name="ChallengeList" type="VBoxContainer" parent="Drop/Panel/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="Leaderboard" type="Control" parent="Drop/Panel/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+script = ExtResource("5_board")
+font_size = 17
+
+[editable path="Pill/Row/Avatar/Portrait"]

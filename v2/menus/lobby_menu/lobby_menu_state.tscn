@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" path="res://menus/lobby_menu/level_select_panel.tscn" id="3_lspanel"]
 [ext_resource type="Script" uid="uid://muodw5580tnr" path="res://addons/tattomoosa.spinner/spinner.gd" id="4_wpkl5"]
 [ext_resource type="PackedScene" path="res://menus/lobby_menu/lobby_panel.tscn" id="6_lpanel"]
+[ext_resource type="PackedScene" path="res://menus/main_menu/components/current_save_card.tscn" id="7_card"]
 
 [node name="LobbyMenuState" type="Node" unique_id=1093433336]
 script = ExtResource("1_1jh13")
@@ -200,6 +201,17 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(512, 0)
 layout_mode = 2
 size_flags_vertical = 4
+
+[node name="RightColumn" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ProfileCard" parent="UI/AspectContainer/MarginContainer/Body/RightColumn" instance=ExtResource("7_card")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+clickable = false
 
 [node name="TimeoutTimer" type="Timer" parent="." unique_id=2081652172]
 unique_name_in_owner = true

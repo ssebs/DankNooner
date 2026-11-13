@@ -41,9 +41,7 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _fps_label: Label = %HUD_FPS
 @onready var _game_msg: Label = %HUD_GAME_MSG
 @onready var _crash_respawn_hint: HBoxContainer = %HUD_CrashRespawnHint
-@onready var _money: MoneyLabel = %HUD_Money
-@onready var _xp_label: Label = %HUD_XP
-@onready var _leaderboard: RaceLeaderboard = %HUD_Leaderboard
+@onready var _profile_card: CurrentSaveCard = %ProfileCard
 @onready var _trick_popups: TrickPopups = %TrickPopups
 @onready var _trick_feed: TrickFeed = %HUD_TrickFeed
 @onready var _target_compass: TargetCompass = %TargetCompass
@@ -171,6 +169,9 @@ func Enter(_state_context: StateContext):
 	_on_gear_changed(1)
 	_rebuild_trick_rows()
 	_show_trick_prompt(TrickController.TrickState.NONE)
+	_profile_card.show_save(
+		save_manager.save_slot, save_manager.current_save, save_manager.get_player_definition()
+	)
 
 
 	show_ui()
@@ -206,12 +207,7 @@ func Physics_Update(delta: float):
 	_speed_num.modulate = Color.WHITE.lerp(_RPM_COLOR_HIGH, player_entity.grip_usage)
 	_fps_label.visible = player_entity.settings_manager.current_settings["show_fps"]
 	_fps_label.text = tr("HUD_FPS").format({"value": int(Engine.get_frames_per_second())})
-	var player_def := save_manager.get_player_definition()
-	_money.text = MoneyLabel.format(player_def.money)
-	_xp_label.text = (
-		tr("HUD_XP")
-		.format({"level": player_def.level(), "xp": MoneyLabel.group_digits(player_def.xp)})
-	)
+	_profile_card.show_stats(save_manager.get_player_definition())
 
 	# Boost meter + combo multiplier are server-authoritative (TrickManager) and arrive
 	# via RollbackSynchronizer, so poll the synced vars rather than tracking them here.
@@ -361,27 +357,29 @@ func _on_respawned():
 
 ## Something was too pricey.
 func flash_money():
-	_money.flash()
+	_profile_card.money_label.flash()
 
 
-## A "+$N" off the money and a "+N XP" off the XP readout, same pop. Zero amounts don't pop.
+## A "+$N" off the money and a "+N XP" off the level, same pop. Zero amounts don't pop.
 func pop_earned(money: int, xp: int):
 	if money > 0:
-		_money.pop_earned(money)
+		_profile_card.money_label.pop_earned(money)
 	if xp > 0:
-		HUDFlash.pop(_xp_label)
+		var level_label := _profile_card.level_label
+		HUDFlash.pop(level_label)
 		HUDFlash.pop(
 			TrickPopups.spawn_pop(
-				_xp_label,
+				level_label,
 				"+%s %s" % [MoneyLabel.group_digits(xp), tr("LB_XP")],
-				_xp_label.get_theme_color("font_color"),
-				_xp_label.size / 2.0,
+				level_label.get_theme_color("font_color"),
+				level_label.size / 2.0,
 				MoneyLabel.EARNED_DRIFT
 			)
 		)
 
 
 func _on_loadout_pick_changed(index: int):
+	_profile_card.set_peek(index >= 0)
 	if index < 0:
 		_loadout_bar.hide()
 		return
@@ -514,9 +512,12 @@ func push_checkpoint_marker(
 
 
 ## Server-side: broadcast the live leaderboard (see RaceLeaderboard.set_board) and the race
-## challenges' hint tricks. Called from RaceGameMode's LeaderboardComponent.
-func push_leaderboard(headers: PackedStringArray, rows: Array, tricks: PackedInt32Array) -> void:
-	_rpc_set_leaderboard.rpc(headers, rows, tricks)
+## challenges' hint tricks. Called from RaceGameMode's LeaderboardComponent. `is_event`: false for
+## free roam's board, which doesn't take over the profile card's panel.
+func push_leaderboard(
+	headers: PackedStringArray, rows: Array, tricks: PackedInt32Array, is_event: bool = true
+) -> void:
+	_rpc_set_leaderboard.rpc(headers, rows, tricks, is_event)
 
 
 func clear_leaderboard() -> void:
@@ -526,9 +527,10 @@ func clear_leaderboard() -> void:
 ## headers/cells are pre-localized by the server — don't tr() again, same as the event
 ## pane's step text.
 @rpc("call_local", "unreliable")
-func _rpc_set_leaderboard(headers: PackedStringArray, rows: Array, tricks: PackedInt32Array):
-	_leaderboard.set_board(headers, rows)
-	_leaderboard.show()
+func _rpc_set_leaderboard(
+	headers: PackedStringArray, rows: Array, tricks: PackedInt32Array, is_event: bool
+):
+	_profile_card.show_board(headers, rows, is_event)
 	_has_leaderboard = true
 	_update_event_panel()
 	# Resent every refresh; only rebuild when it changes.
@@ -539,8 +541,7 @@ func _rpc_set_leaderboard(headers: PackedStringArray, rows: Array, tricks: Packe
 
 @rpc("call_local", "reliable")
 func _rpc_clear_leaderboard():
-	_leaderboard.clear()
-	_leaderboard.hide()
+	_profile_card.clear_board()
 	_has_leaderboard = false
 	_update_event_panel()
 	_challenge_tricks = PackedInt32Array()
@@ -800,6 +801,7 @@ func _rpc_callout(text: String):
 func hide_ui() -> void:
 	ui.visible = false
 	_loadout_bar.hide()
+	_profile_card.set_peek(false)
 	minimap.deactivate()
 	_target_compass.deactivate()
 

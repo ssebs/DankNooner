@@ -1,4 +1,4 @@
-## GTA-style garage list: a Profile tab, a tab per loadout and a `+` tab, each with a page stack.
+## GTA-style garage list: an All tab (profile defaults), a tab per loadout and a `+` tab, each with a page stack.
 ## Focusing (or hovering) a row previews it; accepting applies or buys it. Edits and purchases
 ## mutate the in-memory PlayerDefinition and commit() saves them in one push. Hosts
 ## (CustomizeMenuState, GarageHUDState) wire preview_changed and pose_requested to a GarageSet and
@@ -316,7 +316,6 @@ func _focus_row(index: int):
 
 func _build_profile_root():
 	_title.text = tr("GARAGE_PROFILE_TAB")
-	_add_text_row(tr("USERNAME_LABEL"), _player_def.username, func(t: String): _player_def.username = t)
 	_add_row(
 		tr("GARAGE_CHARACTER"),
 		_skin_label(_player_def.default_character.skin_name) + " >",

@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" path="res://resources/img/Icons/previous.png" id="5_prev"]
 [ext_resource type="Texture2D" path="res://resources/img/Icons/pause.png" id="6_pause"]
 [ext_resource type="Texture2D" path="res://resources/img/Icons/next.png" id="7_next"]
+[ext_resource type="PackedScene" path="res://menus/main_menu/components/current_save_card.tscn" id="8_card"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_divider"]
 color = Color(0.149, 0.389, 0.577, 1)
@@ -176,8 +177,8 @@ icon = ExtResource("7_next")
 
 [node name="Card" type="PanelContainer" parent="UI/AspectContainer/MarginContainer/Root/Body"]
 layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 8
+size_flags_horizontal = 4
+size_flags_vertical = 0
 theme_type_variation = &"MenuPanel"
 
 [node name="CardMargin" type="MarginContainer" parent="UI/AspectContainer/MarginContainer/Root/Body/Card"]
@@ -208,3 +209,18 @@ theme_override_styles/separator = SubResource("StyleBoxLine_divider")
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+
+[node name="ProfileMargin" type="MarginContainer" parent="UI/AspectContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme = ExtResource("2_wn568")
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 48
+
+[node name="ProfileCard" parent="UI/AspectContainer/ProfileMargin" instance=ExtResource("8_card")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
