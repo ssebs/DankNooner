@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://resources/img/arrow_texture_mine/ArrowTexClear.png" id="1_tex"]
+
+[resource]
+transparency = 1
+albedo_texture = ExtResource("1_tex")
+emission_enabled = true
+emission = Color(0, 1, 0.015686274, 1)
+emission_energy_multiplier = 2.0
+emission_operator = 1
+emission_texture = ExtResource("1_tex")
+uv1_scale = Vector3(1.5, 1.5, 1.5)
+uv1_triplanar = true

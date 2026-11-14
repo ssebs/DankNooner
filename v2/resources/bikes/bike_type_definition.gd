@@ -55,6 +55,8 @@ class_name BikeTypeDefinition extends Resource
 @export var name_key: String = ""
 ## This type's challenge list; each finished one is a mastery level (see ChallengeManager).
 @export var challenges: Array[ChallengeDefinition] = []
+## Unlocked by finishing the whole list; empty for none yet.
+@export var mastery_mod: BikeMod
 
 var max_lean_angle_rad: float:
 	get:

@@ -24,6 +24,8 @@ enum Goal {
 @export var modes: Array[GameModeType.Kind] = []
 @export var money: int = 250
 @export var xp: int = 50
+## Unlocked by finishing it (a TextureMod for bike challenges); empty for none (dailies).
+@export var reward_mod: BikeMod
 
 
 ## Progress after one sample.

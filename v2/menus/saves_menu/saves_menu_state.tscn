@@ -4,14 +4,9 @@
 [ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_theme"]
 [ext_resource type="PackedScene" path="res://menus/main_menu/components/profile_card.tscn" id="3_card"]
 [ext_resource type="Script" path="res://menus/prompt_tab_container.gd" id="4_ptabs"]
-[ext_resource type="Script" path="res://resources/bikes/bike_type_definition.gd" id="5_btype"]
-[ext_resource type="Resource" path="res://resources/bikes/types/mini_bike_type.tres" id="6_mini"]
-[ext_resource type="Resource" path="res://resources/bikes/types/naked_bike_type.tres" id="7_naked"]
-[ext_resource type="Resource" path="res://resources/bikes/types/sport_bike_type.tres" id="8_sport"]
 
 [node name="SavesMenuState" type="Node"]
 script = ExtResource("1_saves")
-bike_types = Array[ExtResource("5_btype")]([ExtResource("6_mini"), ExtResource("7_naked"), ExtResource("8_sport")])
 
 [node name="UI" type="Control" parent="."]
 unique_name_in_owner = true
@@ -72,13 +67,39 @@ unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("4_ptabs")
 current_tab = 0
-tab_0/title = "SAVE_SLOTS_LABEL"
-tab_1/title = "CAREER_LABEL"
-tab_2/title = "BIKE_CHALLENGES_LABEL"
+tab_0/title = "CAREER_LABEL"
+tab_1/title = "BIKE_CHALLENGES_LABEL"
+tab_2/title = "SAVE_SLOTS_LABEL"
+
+[node name="Career" type="ScrollContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs"]
+visible = false
+layout_mode = 2
+theme_type_variation = &"InsetScroll"
+horizontal_scroll_mode = 0
+metadata/_tab_index = 0
+
+[node name="CareerList" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs/Career"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="BikeChallenges" type="ScrollContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs"]
+visible = false
+layout_mode = 2
+theme_type_variation = &"InsetScroll"
+horizontal_scroll_mode = 0
+metadata/_tab_index = 1
+
+[node name="BikeList" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs/BikeChallenges"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
 
 [node name="SaveSlots" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs"]
 layout_mode = 2
-metadata/_tab_index = 0
+metadata/_tab_index = 2
 
 [node name="UsernameRow" type="HBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs/SaveSlots"]
 layout_mode = 2
@@ -106,32 +127,6 @@ layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 6
 theme_override_constants/separation = 64
-
-[node name="Career" type="ScrollContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs"]
-visible = false
-layout_mode = 2
-theme_type_variation = &"InsetScroll"
-horizontal_scroll_mode = 0
-metadata/_tab_index = 1
-
-[node name="CareerList" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs/Career"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 12
-
-[node name="BikeChallenges" type="ScrollContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs"]
-visible = false
-layout_mode = 2
-theme_type_variation = &"InsetScroll"
-horizontal_scroll_mode = 0
-metadata/_tab_index = 2
-
-[node name="BikeList" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs/BikeChallenges"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 12
 
 [node name="Side" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body"]
 layout_mode = 2

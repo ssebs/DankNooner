@@ -91,9 +91,6 @@
 - [ ] Rewards are skin unlocks? Or currency to buy unlocks
   - [ ] Xp unlocks, money buys items?
   - [ ] Gamba: spin the wheel (or roulette / random game) to win unique prizes when leveling up? Can buy with $
-- [ ] Save slot menu: save/load specific saves, split between demo vs full game saves (see "Demo savegame" under Steam Prep)
-  - `SaveManager.save_slot` already picks `user://savegame_%d.json`, no menu yet
-  - both builds share `user://` (export.sh only swaps app_id) and Steam Cloud syncs `savegame_*.json`, so demo saves are `savegame_%d_demo.json`, existing files stay full game saves (still matches the pattern; names never collide with full saves)
 
 ### Controller UX Improvements
 - [ ] full navigation across menus, HUDs & in-world UI
@@ -126,29 +123,26 @@
 ### Progression & Customization for final game
 
 - [ ] Unlocks / Progression for bikes / characters w/ money / XP w/ Story — see [Progression](./Progression.md)
-  - [ ] pay to unlock bikes + unlock at certain level?
+  - [x] pay to unlock bikes + unlock at certain level?
   - [ ] maybe like simpsons hit & run where 1 level has 1 bike type/map?
   - [ ] How will this work with multiplayer? Could be everyone follows host's save
     - [ ] idea 1 - each player's story progress lives in their own save. When playing together, the host's events run and everyone gets paid, but story progress only advances for the players who were at that point in the story.
   - [ ] Story/Plot - growing a social media account to be a biketok content creator, need to get followers to progress (like skate 2/3), events are hosted like actual stunt events/competitions in skate
   - [ ] Collectables
-  - [ ] Unlockable mods
+  - [x] Unlockable mods
   - [x] unlockable skins
-  - [ ] Stats
-    - [ ] total trick history (total time played, total wheelies, races won, etc.)
+  - [x] Stats
+    - [x] total trick history (total time played, total wheelies, races won, etc.)
 - [ ] More skins / models (unlocks)
-	```
-	../assets_excluded_from_export/cruiserbygoogle.glb
-	../assets_excluded_from_export/Exercise Bike by Dave Edwards - 9DwoznfSPHY.glb
-	../assets_excluded_from_export/Office Chair by Quaternius - UfKvrZBK6C.glb
-	../assets_excluded_from_export/Street Vendor Cart by Alan Zimmerman - f_LuAcP2_Yh.glb
-	../assets_excluded_from_export/Unicycle by Poly by Google - c4eT6ivB_Tm.glb
-	../assets_excluded_from_export/Vespa by Jasmine Roberts - blGLclvvdEM.glb
-	../assets_excluded_from_export/Witch Broom by MiniPoly - gwE8397gO3.glb
-	```
+  - [x] Cruiser
+  - [x] vespa
+  - [ ] ../assets_excluded_from_export/Exercise Bike by Dave Edwards - 9DwoznfSPHY.glb
+  - [ ] ../assets_excluded_from_export/Office Chair by Quaternius - UfKvrZBK6C.glb
+  - [ ] ../assets_excluded_from_export/Street Vendor Cart by Alan Zimmerman - f_LuAcP2_Yh.glb
+  - [ ] ../assets_excluded_from_export/Unicycle by Poly by Google - c4eT6ivB_Tm.glb
+  - [ ] ../assets_excluded_from_export/Witch Broom by MiniPoly - gwE8397gO3.glb
   - [ ] dirt bike
   - [ ] retro sport bike / cafe racer (xsr)
-  - [ ] vespa
   - [ ] tron bike
   - [ ] pocket bike
   - [ ] use shrunken car as a joke motorcycle
@@ -164,12 +158,7 @@
     - [x] pughead from guac and load
     - [x] zombie from guac and load
     - [x] misc
-- [ ] Mods
-  - [ ] Wings as mod for sport bike
-  - [ ] Scraper mod — add sparks during wheelie
-  - [ ] Training wheels (lowside prevention)
-  - [ ] Underglow on bike
-  - [ ] exhaust
+
 
 ### Gamemodes / scoring
 - [ ] Trick Battle / Score Attack gamemode
@@ -242,6 +231,10 @@
 ---
 
 ## Done ✅
+
+- [x] Save slot menu: save/load specific saves, split between demo vs full game saves (see "Demo savegame" under Steam Prep)
+  - `SaveManager.save_slot` already picks `user://savegame_%d.json`, no menu yet
+  - both builds share `user://` (export.sh only swaps app_id) and Steam Cloud syncs `savegame_*.json`, so demo saves are `savegame_%d_demo.json`, existing files stay full game saves (still matches the pattern; names never collide with full saves)
 
 - [x] Add training wheels + wheelie bar mod markers; fix stale hand/foot sync on bike swap
 

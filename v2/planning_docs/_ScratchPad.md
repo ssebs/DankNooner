@@ -24,6 +24,23 @@ Make a hoodie
 
 ## NOW
 
+- [ ] are we showing all the career stats/per bike stats somewhere?
+- [ ] hold tab in game, show mouse cursor. allow toggling profile challenges or clicking on the loadout to change it
+
+
+- [ ] Mods
+  - [ ] Wings as mod for sport bike 
+    - [x] mesh
+    - [ ] (more air time) effect
+  - [ ] Scraper/12 bar mod
+    - [x] mesh
+    - [ ] add sparks during wheelie / loopout prevention effect
+  - [ ] Training wheels
+    - [x] mesh
+    - [ ] (lowside prevention) effect
+  - [ ] Underglow on bike
+  - [ ] exhaust
+
 - [ ] in tutorial - "Do a wheelie for 2s" should be in the new profilecard panel instead of showing the challenges
   - [ ] also gold text?
 - [ ] "you loop out" => 'you crash'
@@ -37,6 +54,9 @@ Make a hoodie
 - [ ] mini bike should not be so unstable when hitting rear brake / steering. 
 - [ ] gas station minimap icon looks like gun store
 
+- [ ] new mod for sport bike => wings
+  - [ ] slow down gravity so you get more air time
+  - [ ] needs trick slot/mesh
 
 ---
 ##

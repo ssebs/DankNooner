@@ -18,6 +18,8 @@ signal save_item_updated(save_key: String, save_value: Variant)
 @export var settings_manager: SettingsManager
 ## Templates refresh_dailies draws DAILY_COUNT from each day.
 @export var daily_pool: Array[ChallengeDefinition] = []
+## Every bike type, in unlock order (challenge lists, mod rewards).
+@export var bike_types: Array[BikeTypeDefinition] = []
 
 ## Progression keys each tutorial's milestones save under. Only the first gates the Play menu.
 const TUTORIAL_KEY := "tutorial"
@@ -206,6 +208,29 @@ func is_locked(path: String) -> bool:
 			or mastery(def.bike_type) < def.unlock_mastery
 		)
 	)
+
+
+## Every mod a challenge unlocks, in list order: {"mod", "bike_type", "challenge" (null = the
+## type's mastery_mod, for finishing the list), "earned"}. A mod may appear under several sources.
+func mod_rewards() -> Array[Dictionary]:
+	var progress := bike_challenge_progress(current_save)
+	var rewards: Array[Dictionary] = []
+	for bike_type in bike_types:
+		for challenge in bike_type.challenges:
+			# Not every challenge has a reward yet — skip is intentional
+			if challenge.reward_mod == null:
+				continue
+			var done: bool = progress.get(challenge.resource_path, 0.0) >= challenge.target
+			rewards.append(
+				{"mod": challenge.reward_mod, "bike_type": bike_type, "challenge": challenge, "earned": done}
+			)
+		# Not every type has a mastery mod yet — skip is intentional
+		if bike_type.mastery_mod != null:
+			var mastered := mastery(bike_type) == bike_type.challenges.size()
+			rewards.append(
+				{"mod": bike_type.mastery_mod, "bike_type": bike_type, "challenge": null, "earned": mastered}
+			)
+	return rewards
 
 
 ## Finished challenges in a bike type's list.

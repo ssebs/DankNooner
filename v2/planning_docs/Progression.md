@@ -46,8 +46,10 @@ Steps refer to [New systems](#new-systems).
   type's challenges, unfinished first (`ProfileCard.challenge_rows`). On the HUD a row whose count
   goes up pops (punches on completion) and the panel peeks open on its tab for a few seconds; the
   completion callout holds longer than a trick's. The Saves menu's Bike Challenges tab lists every
-  type (`SavesMenuState.bike_types`, `BikeTypeDefinition.name_key`) under a finished / listed
-  header. Career tabs are still stub data (`STUB_CAREER`). Daily tab (built 2026-11-14) untested.
+  type (`SaveManager.bike_types`, `BikeTypeDefinition.name_key`) under a finished / listed
+  header, as a row of cards: the challenge's reward thumbnail over its row (built 2026-11-14,
+  untested). Every challenge row shows its payout (money green, XP gold). Save Slots is the
+  Saves menu's last tab. Career tabs are still stub data (`STUB_CAREER`). Daily tab (built 2026-11-14) untested.
 - **Console:** `dbg_set_money`, `dbg_set_level`, `dbg_unlock_all`.
 - **Stats tracker** (step 3, verified 2026-11-14): `StatsManager` +
   `SaveManager.add_stat` / `max_stat`, saved under `progression.stats` as `lifetime` and `by_type`.
@@ -70,6 +72,17 @@ Steps refer to [New systems](#new-systems).
   `is_locked()`; base skins keep `unlock_level`. Garage locked rows read "🔒 Type done/needed ·
   $price". The challenge that reaches a skin's gate adds a held "Skin unlocked!" callout.
   Scooter and cruiser need the full current list (cruiser no longer needs a rider level).
+- **Mod rewards** (step 2, built 2026-11-14, untested): `ChallengeDefinition.reward_mod` (a
+  `TextureMod`) and `BikeTypeDefinition.mastery_mod` (an `AttachmentMod` for the whole list: mini
+  wheelie bar, naked training wheels), listed by `SaveManager.mod_rewards()`. A type has one reward
+  per challenge: the last challenge has no `reward_mod`, and its card shows the mastery mod. Placeholder
+  textures: the arrow wall's arrows in three tints (`resources/bikes/mods/arrow_*_mod.tres`). The
+  Saves menu cards show each reward as a `Thumbnail3D` of the type's base bike wearing it (the
+  mastery mod noted "Do all challenges"), dimmed until earned; the garage preview rebuilds on a mod
+  change. The garage's Bike Mods
+  page lists every reward mod: locked until a source challenge is done, then bought like a skin,
+  then pressed to fit / remove on the loadout bike (`mods`, saved per loadout). One TextureMod at a
+  time; changing the bike drops its mods, like its colors.
 
 
 ## Next
@@ -80,9 +93,8 @@ In build order:
 2. **Challenge content:** full lists per type (about 10), a bigger daily pool, confetti VFX, the
    Daily tab's time to reset, and auto-opening the card on unseen dailies.
 3. **Mod ladder** (rest of step 2, see [Bike challenges](#bike-challenges-and-mastery)):
-   `AttachmentMod` + editor previews built 2026-11-14 (see [Skins](./Skins.md#attachmentmod)).
-   Left: place the mod markers on every bike, a texture mod, a garage mods page to buy / fit
-   them into the loadout bike's `mods`, and the mastery gates (`unlock_mastery` is the pattern).
+   built 2026-11-14 (see [Built](#built)). Left: place the mod markers on every bike, real
+   textures to replace the arrow placeholders, and a mod for sport's list.
 4. **Career tabs on real stats** (step 6), with achievement progress.
 5. **Console commands** (step 9): `add_bike_level <type> <levels>`, `unlock_bike_max <type>`.
 6. **Steam stats + achievements** (step 5): full build only.
@@ -91,8 +103,8 @@ In build order:
 
 Still open:
 
-- **Mod shop.** Where unlocked mods are bought and fitted (garage page?), and whether a fitted
-  mod is per loadout.
+- **Mods across a bike change:** they reset with the colors today; keeping them is an option, since
+  mods fit any bike.
 - **Sport's level gate:** 5 or 6 (see [Economy](./Economy.md#pacing)).
 - **Variant audio:** engine sound is per skin already (`engine_sound_id` + pitch/curves); new
   sounds come later.

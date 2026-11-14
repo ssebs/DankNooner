@@ -77,11 +77,15 @@ func hide_preview():
 	visible = false
 
 
-## Same mesh: repaint only, since color drags preview every frame. Else rebuild, returning true.
+## Same mesh and mods: repaint only, since color drags preview every frame. Else rebuild, returning
+## true.
 func _show(skin: Node3D, def: Resource) -> bool:
 	if skin.skin_definition == def:
 		return false
-	var same_mesh: bool = skin.skin_definition.mesh_res == def.mesh_res
+	# Character defs have no mods: get() is null on both sides.
+	var same_mesh: bool = (
+		skin.skin_definition.mesh_res == def.mesh_res and skin.skin_definition.get("mods") == def.get("mods")
+	)
 	skin.skin_definition = def
 	if same_mesh and !def.colors.is_empty():
 		skin.mesh_skin.update_all_colors(def.colors)

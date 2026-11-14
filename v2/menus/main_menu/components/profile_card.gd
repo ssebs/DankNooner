@@ -270,7 +270,13 @@ static func challenge_rows(
 	var done: Array[Dictionary] = []
 	for challenge in challenges:
 		var progress: float = progress_by_path.get(challenge.resource_path, 0.0)
-		var row := {"title": challenge.title(), "progress": progress, "target": challenge.target}
+		var row := {
+			"title": challenge.title(),
+			"progress": progress,
+			"target": challenge.target,
+			"money": challenge.money,
+			"xp": challenge.xp,
+		}
 		(done if progress >= challenge.target else todo).append(row)
 	todo.append_array(done)
 	return todo
@@ -281,7 +287,9 @@ static func build_rows(list: VBoxContainer, entries: Array[Dictionary]):
 	for entry in entries:
 		var row: ChallengeRow = CHALLENGE_ROW_SCENE.instantiate()
 		list.add_child(row)
-		row.show_challenge(entry["title"], entry["progress"], entry["target"])
+		row.show_challenge(
+			entry["title"], entry["progress"], entry["target"], entry.get("money", 0), entry.get("xp", 0)
+		)
 
 
 ## shown: _challenge_progress as it was before this refresh.
@@ -296,7 +304,9 @@ func _show_rows(tab: Tab, list: VBoxContainer, rows: Array, shown: Dictionary, j
 	for i in rows.size():
 		var entry: Dictionary = rows[i]
 		var row: ChallengeRow = list.get_child(i)
-		row.show_challenge(entry["title"], entry["progress"], entry["target"])
+		row.show_challenge(
+			entry["title"], entry["progress"], entry["target"], entry.get("money", 0), entry.get("xp", 0)
+		)
 		var key := "%d:%s" % [tab, entry["title"]]
 		_challenge_progress[key] = entry["progress"]
 		if juice and int(entry["progress"]) > int(shown.get(key, entry["progress"])):

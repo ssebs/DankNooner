@@ -11,7 +11,7 @@ signal pose_requested
 ## Back was pressed on a tab's root page.
 signal exit_requested
 
-enum Page { ROOT, BIKE, BIKE_COLORS, CHARACTER, CHARACTER_COLORS, HORN }
+enum Page { ROOT, BIKE, BIKE_COLORS, BIKE_MODS, CHARACTER, CHARACTER_COLORS, HORN }
 
 const GARAGE_ROW := preload("res://menus/customize_menu/components/garage_row.tscn")
 const BIKE_SKINS_DIR := "res://resources/bikes/skins/"
@@ -290,6 +290,8 @@ func _rebuild(focus_index: int = -1):
 			_build_bike_page()
 		Page.BIKE_COLORS:
 			_build_colors_page(tr("GARAGE_BIKE_COLORS"), _loadout().bike.mesh_res, _loadout().bike.colors)
+		Page.BIKE_MODS:
+			_build_mods_page()
 		Page.CHARACTER:
 			_build_character_page()
 		Page.CHARACTER_COLORS:
@@ -335,6 +337,7 @@ func _build_loadout_root():
 		_push.bind(Page.BIKE)
 	)
 	_add_row(tr("GARAGE_BIKE_COLORS"), ">", _push.bind(Page.BIKE_COLORS))
+	_add_row(tr("GARAGE_BIKE_MODS"), ">", _push.bind(Page.BIKE_MODS))
 	var character_label := tr("GARAGE_PROFILE_DEFAULT")
 	if loadout.character != null:
 		character_label = skin_label(loadout.character.skin_name)
@@ -442,6 +445,52 @@ func _build_horn_page():
 			_apply_horn.bind(def),
 			def.demo_locked
 		)
+
+
+## Every mod challenges unlock (SaveManager.mod_rewards), once each. Locked until one of its
+## challenges is done, then bought like a skin; pressing an owned one fits or removes it.
+func _build_mods_page():
+	_title.text = tr("GARAGE_BIKE_MODS")
+	var rewards := _save_manager.mod_rewards()
+	var mods: Array[BikeMod] = []
+	for reward in rewards:
+		if reward["mod"] not in mods:
+			mods.append(reward["mod"])
+	var fitted := _loadout().bike.mods
+	for mod in mods:
+		var sources := rewards.filter(func(reward): return reward["mod"] == mod)
+		var mod_name := mod.resource_path.get_file().get_basename().trim_suffix("_mod")
+		# Hover tries it on (a fitted one shows as is); _toggle_mod shows the real result after a press.
+		var preview := _preview.bind(
+			_loadout().bike if mod in fitted else _with_mod_toggled(mod), _shown_character()
+		)
+		if !sources.any(func(reward): return reward["earned"]):
+			var source: Dictionary = sources[0]
+			var type_name := tr(source["bike_type"].name_key)
+			var goal := tr("REWARD_ALL_CHALLENGES")
+			if source["challenge"] != null:
+				goal = source["challenge"].title()
+			var right := tr("GARAGE_LOCKED_MOD").format(
+				{"type": type_name, "price": MoneyLabel.format(mod.price)}
+			)
+			_add_locked_row(mod_name, right, "%s: %s" % [type_name, goal], preview)
+			continue
+		var path := mod.resource_path
+		var owned := _save_manager.is_owned(path)
+		var right := MoneyLabel.format(mod.price)
+		if owned:
+			right = tr("GARAGE_FITTED") if mod in fitted else tr("GARAGE_OWNED")
+		var row := _add_row(
+			skin_label(mod_name),
+			right,
+			_on_skin_pressed.bind(mod_name, path, mod.price, _toggle_mod.bind(mod)),
+			preview,
+			mod in fitted
+		)
+		if owned:
+			row.set_right_color(GarageRow.OWNED_COLOR)
+		elif _player_def.money < mod.price:
+			row.set_right_color(GarageRow.UNAFFORDABLE_COLOR)
 
 
 ## One row per unique slot of `mesh_res`; pressing one opens the picker on it.
@@ -585,6 +634,26 @@ func _apply_bike(path: String):
 	var bike := BikeSkinDefinition.new()
 	bike.from_dict(load(path).to_dict())
 	_loadout().bike = bike
+
+
+func _toggle_mod(mod: BikeMod):
+	_loadout().bike = _with_mod_toggled(mod)
+	# After the rebuild's refocus, whose hover preview would show the row's try-on instead.
+	_preview_current.call_deferred()
+
+
+## A copy of the loadout bike with `mod` fitted, or removed if it already is. A bike wears one
+## TextureMod at a time.
+func _with_mod_toggled(mod: BikeMod) -> BikeSkinDefinition:
+	var bike: BikeSkinDefinition = _loadout().bike.duplicate()
+	var mods: Array[BikeMod] = []
+	if mod in bike.mods:
+		mods.assign(bike.mods.filter(func(fitted): return fitted != mod))
+	else:
+		mods.assign(bike.mods.filter(func(fitted): return !(mod is TextureMod and fitted is TextureMod)))
+		mods.append(mod)
+	bike.mods = mods
+	return bike
 
 
 ## "" = back to the profile default (loadout tabs only).

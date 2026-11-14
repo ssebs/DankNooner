@@ -238,7 +238,7 @@ Instance `npc_animal_entity.tscn`, set `animal_skin_definition` on **that instan
 
 ## Mods
 
-`BikeMod` (`resources/bikes/mods/bike_mod.gd`) is a base `Resource` with a single `apply(vehicle_skin: Node3D)` method — typed to `Node3D` rather than `BikeSkin` so one mod ecosystem serves both `BikeSkin` and `CarSkin` (any vehicle skin exposing `mesh_skin`). Subclass it to create composable overrides that stack on top of the base definition. Each mod has a garage `price`; `ColorMod` sets 0, since colors are free. Nothing sells or fits mods yet.
+`BikeMod` (`resources/bikes/mods/bike_mod.gd`) is a base `Resource` with a single `apply(vehicle_skin: Node3D)` method — typed to `Node3D` rather than `BikeSkin` so one mod ecosystem serves both `BikeSkin` and `CarSkin` (any vehicle skin exposing `mesh_skin`). Subclass it to create composable overrides that stack on top of the base definition. Each mod has a garage `price`; `ColorMod` sets 0, since colors are free. Challenge rewards are sold and fitted on the garage's Bike Mods page (see [Progression](./Progression.md#built)).
 
 `BikeSkin._apply_definition()` calls `_apply_mods()` after `_set_mesh_colors()`, so mods always win over base colors.
 
@@ -257,6 +257,12 @@ Placing the markers: `PlayerEntity.mod_previews` lists the AttachmentMods whose 
 mod's mirrored copy follows the marker live. Pick the bike on
 `BikeSkin`, press Init IK from Bike (or Play Default Pose) to load its markers and previews, move
 the markers, then Save Default Pose.
+
+### TextureMod
+
+`TextureMod` (`resources/bikes/mods/texture_mod.gd`) sets `material` as the `material_overlay` of
+the skin's paintable meshes (`SkinColor.meshes`), so it draws over the colors. A bike wears one at a
+time (the garage swaps them).
 
 ### ColorMod
 

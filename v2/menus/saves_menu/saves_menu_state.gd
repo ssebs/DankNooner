@@ -8,11 +8,14 @@ class_name SavesMenuState extends MenuState
 
 @export var save_manager: SaveManager
 @export var input_state_manager: InputStateManager
-## Listed in this order on the Bike Challenges tab.
-@export var bike_types: Array[BikeTypeDefinition] = []
 
 const MIN_CARDS := 3
 const SAVE_CARD_SCENE := preload("res://menus/saves_menu/components/save_card.tscn")
+const THUMB_SCENE := preload("res://utils/components/thumbnail_3d.tscn")
+const CARD_WIDTH := 220.0
+const REWARD_THUMB_SIZE := Vector2(220, 132)
+## A reward not yet earned, matching LoadoutBar's locked slots.
+const REWARD_LOCKED_ALPHA := LoadoutBar.LOCKED_ALPHA
 
 @onready var _bg_tint: ColorRect = %BGTint
 @onready var _tabs: PromptTabContainer = %Tabs
@@ -42,8 +45,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("save_manager is not set")
 	if input_state_manager == null:
 		warnings.append("input_state_manager is not set")
-	if bike_types.is_empty():
-		warnings.append("bike_types is empty")
 	return warnings
 
 
@@ -89,14 +90,69 @@ func _build_challenge_lists():
 	var active_type := save_manager.get_player_definition().bike_skin.bike_type
 	var progress := SaveManager.bike_challenge_progress(save_manager.current_save)
 	ProfileCard.build_rows(_challenge_list, ProfileCard.challenge_rows(active_type.challenges, progress))
-	for bike_type in bike_types:
-		var rows := ProfileCard.challenge_rows(bike_type.challenges, progress)
+	for bike_type in save_manager.bike_types:
 		var header := Label.new()
 		header.theme_type_variation = &"Heading2Label"
 		header.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
-		header.text = "%s  %d/%d" % [tr(bike_type.name_key), save_manager.mastery(bike_type), rows.size()]
+		var done := save_manager.mastery(bike_type)
+		header.text = "%s  %d/%d" % [tr(bike_type.name_key), done, bike_type.challenges.size()]
 		_bike_list.add_child(header)
-		ProfileCard.build_rows(_bike_list, rows)
+		var cards := HBoxContainer.new()
+		cards.add_theme_constant_override("separation", 24)
+		_bike_list.add_child(cards)
+		var base := _base_skin(bike_type)
+		var rewards := save_manager.mod_rewards().filter(func(r): return r["bike_type"] == bike_type)
+		for i in bike_type.challenges.size():
+			var challenge := bike_type.challenges[i]
+			var one: Array[ChallengeDefinition] = [challenge]
+			var row := ProfileCard.challenge_rows(one, progress)[0]
+			# The last card shows the mod finishing the list earns, when its challenge has no own reward
+			var is_mastery_card := i == bike_type.challenges.size() - 1 and challenge.reward_mod == null
+			var source: Variant = null if is_mastery_card else challenge
+			var reward: Array = rewards.filter(func(r): return r["challenge"] == source)
+			_add_challenge_card(cards, base, row, reward[0] if !reward.is_empty() else {})
+
+
+## A card: the reward (base bike wearing it, dimmed until earned; "Do all challenges" over the
+## mastery mod's), then the challenge's row. Cards in a row share its height (the HBox stretches
+## them). reward: a SaveManager.mod_rewards entry, empty for none.
+func _add_challenge_card(cards: Container, base: BikeSkinDefinition, row: Dictionary, reward: Dictionary):
+	var card := PanelContainer.new()
+	card.theme_type_variation = &"ObjectPanel"
+	card.custom_minimum_size.x = CARD_WIDTH
+	cards.add_child(card)
+	var body := VBoxContainer.new()
+	card.add_child(body)
+	if !reward.is_empty():
+		# Stacks its children, so the note sits over the thumbnail without adding height.
+		var frame := MarginContainer.new()
+		body.add_child(frame)
+		var thumb: Thumbnail3D = THUMB_SCENE.instantiate()
+		thumb.custom_minimum_size = REWARD_THUMB_SIZE
+		thumb.modulate.a = 1.0 if reward["earned"] else REWARD_LOCKED_ALPHA
+		frame.add_child(thumb)
+		var fitted: BikeSkinDefinition = base.duplicate()
+		var mods: Array[BikeMod] = [reward["mod"]]
+		fitted.mods = mods
+		thumb.set_skin(Thumbnail3D.Type.BIKE, fitted)
+		if reward["challenge"] == null:
+			var note := Label.new()
+			note.add_theme_font_size_override("font_size", 13)
+			note.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+			note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			note.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			note.text = tr("REWARD_ALL_CHALLENGES")
+			frame.add_child(note)
+	var typed: Array[Dictionary] = [row]
+	ProfileCard.build_rows(body, typed)
+
+
+## The type's base skin (the one no mastery gates), which its reward thumbnails wear.
+func _base_skin(bike_type: BikeTypeDefinition) -> BikeSkinDefinition:
+	var bases := SkinScanner.scan_skin_dir(GarageUI.BIKE_SKINS_DIR).values().map(load).filter(
+		func(skin: BikeSkinDefinition): return skin.bike_type == bike_type and skin.unlock_mastery == 0
+	)
+	return bases[0]
 
 
 func _build_cards():
