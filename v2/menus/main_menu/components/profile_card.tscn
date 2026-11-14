@@ -192,16 +192,6 @@ theme_override_font_sizes/font_size = 15
 toggle_mode = true
 text = "BIKE_CHALLENGES_LABEL"
 
-[node name="CareerTab" type="Button" parent="Drop/Panel/Content/Tabs"]
-unique_name_in_owner = true
-layout_mode = 2
-focus_mode = 0
-mouse_default_cursor_shape = 2
-theme_type_variation = &"TabButton"
-theme_override_font_sizes/font_size = 15
-toggle_mode = true
-text = "CAREER_LABEL"
-
 [node name="LeaderboardTab" type="Button" parent="Drop/Panel/Content/Tabs"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -231,12 +221,14 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 12
 
-[node name="CareerList" type="VBoxContainer" parent="Drop/Panel/Content"]
+[node name="ChallengesDone" type="Label" parent="Drop/Panel/Content"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 12
+theme_override_font_sizes/font_size = 17
+horizontal_alignment = 1
+autowrap_mode = 3
+auto_translate_mode = 2
 
 [node name="Leaderboard" type="Control" parent="Drop/Panel/Content"]
 unique_name_in_owner = true

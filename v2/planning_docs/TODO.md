@@ -27,20 +27,6 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 
-- [ ] new profile component
-  - [x] show in-game instead of current stacked counters
-  - [x] should always be clickable
-  - [x] Change "Profile" to "All" for default on all loadouts
-  - [x] list challenges in expandable panel under it
-  - [x] list leaderboard in expandable panel under it
-  - [x] move profile customization (username) to under the profile/saves page
-  - [x] controller support
-  - [x] list career in expandable panel under it
-  - [x] profile/saves menu:
-    - [x] challenges should show on right 1/4 screen
-    - [x] tabs take up 3/4 of screen: Save Slots, Career (stats), Bike Challenges
-  - [ ] use actual challenges instead of placeholders
-
 - [ ] [Progression/Challenges](./Progression.md)
   - [x] bike variants (scooter=>mini, cruiser=>naked)
   - [x] wipe old saves
@@ -48,8 +34,8 @@
   - [x] update economy (XP+$ for events / scoring calculations)
     - [x] add unit tests
     - [x] SAVE TO NEW DOC
-  - [ ] stats tracker
-  - [ ] challenges
+  - [ ] stats tracker w/ ui
+  - [x] daily / bike challenges
   - [ ] ui
 
 ### Steam Prep
@@ -159,7 +145,6 @@
     - [x] zombie from guac and load
     - [x] misc
 
-
 ### Gamemodes / scoring
 - [ ] Trick Battle / Score Attack gamemode
   - [x] (longest wheelie / most combo tricks)
@@ -200,8 +185,8 @@
   - [x] kickflip
   - [ ] https://www.youtube.com/shorts/cAxcIZ83MfU
   - [x] near miss tricks / score
-  - [ ] 180 / 360 / 720 tricks
-  - [ ] hardflip / mix backflip / 180 tricks
+  - [x] 180 / 360 / 720 tricks
+  - [x] hardflip / mix backflip / 180 tricks
 - [ ] trick tweaks (just move butt a little from base trick)
   - [x] Land into wheelie / stoppie should be a trick
   - [ ] Wheelie + RIGHT animation (hand grab) — IK hand twd ground
@@ -231,6 +216,20 @@
 ---
 
 ## Done ✅
+
+- [x] new profile component
+  - [x] show in-game instead of current stacked counters
+  - [x] should always be clickable
+  - [x] Change "Profile" to "All" for default on all loadouts
+  - [x] list challenges in expandable panel under it
+  - [x] list leaderboard in expandable panel under it
+  - [x] move profile customization (username) to under the profile/saves page
+  - [x] controller support
+  - [x] list career in expandable panel under it
+  - [x] profile/saves menu:
+    - [x] challenges should show on right 1/4 screen
+    - [x] tabs take up 3/4 of screen: Save Slots, Career (stats), Bike Challenges
+  - [x] use actual challenges instead of placeholders
 
 - [x] Save slot menu: save/load specific saves, split between demo vs full game saves (see "Demo savegame" under Steam Prep)
   - `SaveManager.save_slot` already picks `user://savegame_%d.json`, no menu yet

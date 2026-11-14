@@ -25,6 +25,22 @@ func _complete(challenge: ChallengeDefinition):
 		tr("CHALLENGE_COMPLETE").format({"title": challenge.title()})
 	)
 	audio_manager.play_sfx(AudioManager.Sfx.CONFETTI_HORN)
+	if challenge.reward_mod != null:
+		_unlock_mod(challenge.reward_mod)
+
+
+## Callout + thumbnail on the rider's bike; unread in the garage until its row is focused.
+func _unlock_mod(mod: BikeMod):
+	var unread := save_manager.unread_mods()
+	if mod.resource_path not in unread:
+		unread.append(mod.resource_path)
+	save_manager.save_save()
+	var bike: BikeSkinDefinition = save_manager.get_player_definition().bike_skin.duplicate()
+	var mods: Array[BikeMod] = [mod]
+	bike.mods = mods
+	riding_hud_state.pop_unlocked(
+		tr("SKIN_UNLOCKED").format({"skin": GarageUI.skin_label(GarageUI.mod_file_name(mod))}), bike
+	)
 
 
 #region handlers
@@ -62,7 +78,8 @@ func _advance(
 	return finished
 
 
-## A callout per skin of bike_type whose unlock_mastery the type just reached.
+## A callout per skin of bike_type whose unlock_mastery the type just reached, and its mastery mod
+## once the list is done.
 func _announce_unlocks(bike_type: BikeTypeDefinition):
 	var mastery := save_manager.mastery(bike_type)
 	for path: String in SkinScanner.scan_skin_dir(GarageUI.BIKE_SKINS_DIR).values():
@@ -71,6 +88,8 @@ func _announce_unlocks(bike_type: BikeTypeDefinition):
 			riding_hud_state.pop_challenge_done(
 				tr("SKIN_UNLOCKED").format({"skin": GarageUI.skin_label(skin.skin_name)})
 			)
+	if mastery == bike_type.challenges.size() and bike_type.mastery_mod != null:
+		_unlock_mod(bike_type.mastery_mod)
 #endregion
 
 

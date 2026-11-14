@@ -5,11 +5,11 @@
 [ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/bikes/hitbox/bike_hitbox.tres" id="5_egaje"]
 [ext_resource type="Curve" uid="uid://bc4775t6u5ngh" path="res://player/bikes/resources/lean_speed_curve.tres" id="6_e06ed"]
 [ext_resource type="Curve" uid="uid://ct2j0k3sl7m3u" path="res://player/bikes/resources/steer_speed_curve.tres" id="9_pclgt"]
-[ext_resource type="Resource" path="res://resources/challenges/naked/stoppies_3s.tres" id="c0_chal"]
-[ext_resource type="Resource" path="res://resources/challenges/naked/backflips_stunt_race.tres" id="c1_chal"]
-[ext_resource type="Resource" path="res://resources/challenges/naked/trick_battle_wins.tres" id="c2_chal"]
+[ext_resource type="Resource" uid="uid://cprt1oydc4o0u" path="res://resources/challenges/naked/stoppies_3s.tres" id="c0_chal"]
+[ext_resource type="Resource" uid="uid://v4a188pwk2yi" path="res://resources/challenges/naked/backflips_stunt_race.tres" id="c1_chal"]
+[ext_resource type="Resource" uid="uid://bwlijk6fxrota" path="res://resources/challenges/naked/trick_battle_wins.tres" id="c2_chal"]
 [ext_resource type="Script" uid="uid://dg10iwnfkiwf3" path="res://resources/challenges/challenge_definition.gd" id="cs_chal"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/training_wheels_mod.tres" id="m_mastery"]
+[ext_resource type="Resource" uid="uid://c3jxw4a0vjh33" path="res://resources/bikes/mods/training_wheels_mod.tres" id="m_mastery"]
 
 [resource]
 script = ExtResource("1_type")

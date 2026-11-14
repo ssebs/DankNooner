@@ -76,6 +76,7 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _item_hint: HBoxContainer = %HUD_ItemHint
 @onready var _horn_drop_hint: Label = %HUD_HornDropHint
 @onready var _loadout_bar: LoadoutBar = %HUD_LoadoutBar
+@onready var _unlock_thumbnail: Thumbnail3D = %HUD_UnlockThumbnail
 
 
 var player_entity: PlayerEntity
@@ -95,6 +96,7 @@ var _respawn_pulse_t: float = 0.0
 ## Countdown keeping the quick-tap "Respawning..." text up for a split second after release.
 var _respawn_flash_t: float = 0.0
 var _event_warning_tween: Tween = null
+var _unlock_tween: Tween = null
 ## Local-only marker for the respawn point you saved (see _rpc_respawn_point_set). A child of your
 ## player so it goes with them; hidden once anything else moves the point.
 var _respawn_ring: Node3D = null
@@ -167,6 +169,7 @@ func Enter(_state_context: StateContext):
 	input_state_mgr.respawn_quick_fired.connect(_on_respawn_quick_fired)
 	input_state_mgr.loadout_pick_changed.connect(_on_loadout_pick_changed)
 	save_manager.save_item_updated.connect(_on_save_item_updated)
+	save_manager.leveled_up.connect(_on_leveled_up)
 
 	# Manual inits
 	_on_gear_changed(1)
@@ -194,6 +197,7 @@ func Exit(_state_context: StateContext):
 	input_state_mgr.respawn_quick_fired.disconnect(_on_respawn_quick_fired)
 	input_state_mgr.loadout_pick_changed.disconnect(_on_loadout_pick_changed)
 	save_manager.save_item_updated.disconnect(_on_save_item_updated)
+	save_manager.leveled_up.disconnect(_on_leveled_up)
 
 	hide_ui()
 
@@ -374,6 +378,19 @@ func pop_challenge_done(text: String):
 	_trick_popups.pop_callout(text, TrickPopups.CALLOUT_COLOR, _CHALLENGE_DONE_HOLD_SECS)
 
 
+## Local: an unlock's callout (a mod, a bike), with the bike over it for as long.
+func pop_unlocked(text: String, bike: BikeSkinDefinition):
+	pop_challenge_done(text)
+	_unlock_thumbnail.set_skin(Thumbnail3D.Type.BIKE, bike)
+	_unlock_thumbnail.show()
+	HUDFlash.pop(_unlock_thumbnail)
+	if _unlock_tween != null:
+		_unlock_tween.kill()
+	_unlock_tween = create_tween()
+	_unlock_tween.tween_interval(_CHALLENGE_DONE_HOLD_SECS)
+	_unlock_tween.tween_callback(_unlock_thumbnail.hide)
+
+
 ## A "+$N" off the money and a "+N XP" off the level, same pop. Zero amounts don't pop.
 func pop_earned(money: int, xp: int):
 	if money > 0:
@@ -410,6 +427,16 @@ func _on_respawn_quick_fired():
 func _on_save_item_updated(key: String, _value: Variant):
 	if key == "pinned_tricks":
 		_rebuild_trick_rows()
+
+
+## The new level, then each bike it unlocks.
+func _on_leveled_up(level: int):
+	pop_challenge_done(tr("LEVEL_UP").format({"level": level}))
+	player_entity.audio_manager.play_sfx(AudioManager.Sfx.CONFETTI_HORN)
+	for path: String in SkinScanner.scan_skin_dir(GarageUI.BIKE_SKINS_DIR).values():
+		var skin: BikeSkinDefinition = load(path)
+		if skin.unlock_level == level:
+			pop_unlocked(tr("SKIN_UNLOCKED").format({"skin": GarageUI.skin_label(skin.skin_name)}), skin)
 
 
 ## Pinned tricks (tricks menu).

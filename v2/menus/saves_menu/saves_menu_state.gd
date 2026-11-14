@@ -3,7 +3,7 @@
 ## Save Slots tab: the active save's username, then a card per save on disk (this build's only, see
 ## SaveManager.slot_path) and empty cards in the lowest free slots up to MIN_CARDS. From the pause
 ## menu (a PauseStateContext) it's rename-only: no empty cards, load or delete. Cards are rebuilt,
-## previews included, on Enter, and so is the Career list; the challenge lists follow the active save.
+## previews included, on Enter; the Career table and challenge lists follow the active save.
 class_name SavesMenuState extends MenuState
 
 @export var save_manager: SaveManager
@@ -13,9 +13,14 @@ const MIN_CARDS := 3
 const SAVE_CARD_SCENE := preload("res://menus/saves_menu/components/save_card.tscn")
 const THUMB_SCENE := preload("res://utils/components/thumbnail_3d.tscn")
 const CARD_WIDTH := 220.0
-const REWARD_THUMB_SIZE := Vector2(220, 132)
+const REWARD_THUMB_SIZE := Vector2(172, 112)
 ## A reward not yet earned, matching LoadoutBar's locked slots.
 const REWARD_LOCKED_ALPHA := LoadoutBar.LOCKED_ALPHA
+## Career column widths, so every section's grid lines up.
+const CAREER_NAME_WIDTH := 220.0
+const CAREER_VALUE_WIDTH := 110.0
+## A bike type's cell for a stat it has no entry for.
+const CAREER_NONE := "-"
 
 @onready var _bg_tint: ColorRect = %BGTint
 @onready var _tabs: PromptTabContainer = %Tabs
@@ -63,7 +68,6 @@ func Enter(state_context: StateContext):
 	input_state_manager.device_changed.connect(_tabs.show_prompts)
 	_tabs.show_prompts(input_state_manager.is_gamepad)
 	_build_cards()
-	ProfileCard.build_rows(_career_list, ProfileCard.STUB_CAREER)
 
 
 func Exit(_state_context: StateContext):
@@ -78,6 +82,101 @@ func Exit(_state_context: StateContext):
 		for child in list.get_children():
 			child.queue_free()
 	_card_by_slot.clear()
+
+
+## progression.stats, a section per category: a line per stat, columns Total then each bike type.
+## Only stats the save has show.
+func _build_career():
+	for child in _career_list.get_children():
+		_career_list.remove_child(child)
+		child.queue_free()
+	var stats: Dictionary = save_manager.current_save["progression"].get("stats", {})
+	var scopes: Array[Dictionary] = [stats.get("lifetime", {})]
+	var columns: PackedStringArray = ["", "", tr("CAREER_TOTAL")]
+	for bike_type in save_manager.bike_types:
+		scopes.append(stats.get("by_type", {}).get(SaveManager.stat_type_key(bike_type), {}))
+		columns.append(tr(bike_type.name_key))
+
+	var riding := [
+		[tr("CAREER_DISTANCE"), "", "distance", _format_distance],
+		[tr("CAREER_TOP_SPEED"), "", "top_speed", _format_speed],
+		[tr("CAREER_CRASHES"), "", "crashes", MoneyLabel.group_digits],
+		[tr("CAREER_MONEY_EARNED"), "", "money_earned", MoneyLabel.format],
+	]
+	riding.append_array(_career_run_rows(tr("CAREER_AIRTIME"), "airtime"))
+	var tricks := []
+	for trick: String in TrickController.Trick.keys():
+		tricks.append_array(_career_run_rows(tr("TRICK_NAME_" + trick), trick))
+	var events := []
+	for mode: String in GameModeType.Kind.keys():
+		events.append([tr("EVENT_%s_NAME" % mode), tr("CAREER_PLAYED"), mode + "_played", MoneyLabel.group_digits])
+		events.append(["", tr("CAREER_WINS"), mode + "_wins", MoneyLabel.group_digits])
+
+	_add_career_section("CAREER_RIDING", riding, scopes, columns)
+	_add_career_section("CAREER_TRICKS", tricks, scopes, columns)
+	_add_career_section("CAREER_EVENTS", events, scopes, columns)
+	if _career_list.get_child_count() == 0:
+		var empty := Label.new()
+		empty.text = "CAREER_EMPTY"
+		_career_list.add_child(empty)
+
+
+## A run stat's lines (see StatsManager._add_runs): count, total time, best.
+func _career_run_rows(title: String, key: String) -> Array:
+	return [
+		[title, tr("CAREER_COUNT"), key + "_count", MoneyLabel.group_digits],
+		["", tr("CAREER_TIME"), key + "_secs", _format_secs],
+		["", tr("CAREER_BEST"), key + "_best_secs", _format_secs],
+	]
+
+
+## rows: [title, sub-label, stat key, format(value) -> String]; lines missing from the lifetime
+## scope (scopes[0]) are left out, and the section with them.
+func _add_career_section(
+	title_key: String, rows: Array, scopes: Array[Dictionary], columns: PackedStringArray
+):
+	var shown := rows.filter(func(row): return scopes[0].has(row[2]))
+	if shown.is_empty():
+		return
+	var header := Label.new()
+	header.theme_type_variation = &"Heading2Label"
+	header.text = title_key
+	_career_list.add_child(header)
+	var grid := GridContainer.new()
+	grid.columns = columns.size()
+	_career_list.add_child(grid)
+	for column in columns:
+		_add_career_cell(grid, column)
+	for row: Array in shown:
+		_add_career_cell(grid, row[0])
+		_add_career_cell(grid, row[1])
+		for scope in scopes:
+			_add_career_cell(grid, row[3].call(scope[row[2]]) if scope.has(row[2]) else CAREER_NONE)
+
+
+## Name, sub-label, then values, right-aligned.
+func _add_career_cell(grid: GridContainer, text: String):
+	var cell := Label.new()
+	cell.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+	cell.text = text
+	var column := grid.get_child_count() % grid.columns
+	cell.custom_minimum_size.x = CAREER_NAME_WIDTH if column == 0 else CAREER_VALUE_WIDTH
+	if column >= 2:
+		cell.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	grid.add_child(cell)
+
+
+## Saved distance is speed x seconds, and the HUD shows speed as mph.
+func _format_distance(value: float) -> String:
+	return "%.1f %s" % [value / 3600.0, tr("CAREER_DISTANCE_UNIT")]
+
+
+func _format_speed(value: float) -> String:
+	return "%d %s" % [int(value), tr("HUD_SPEED_UNIT")]
+
+
+static func _format_secs(value: float) -> String:
+	return "%.1fs" % value if value < 60.0 else RaceTask.format_time_ms(int(value * 1000.0))
 
 
 ## The active bike's challenges, and a mastery header (finished / listed) per bike type over its
@@ -113,19 +212,26 @@ func _build_challenge_lists():
 			_add_challenge_card(cards, base, row, reward[0] if !reward.is_empty() else {})
 
 
-## A card: the reward (base bike wearing it, dimmed until earned; "Do all challenges" over the
-## mastery mod's), then the challenge's row. Cards in a row share its height (the HBox stretches
-## them). reward: a SaveManager.mod_rewards entry, empty for none.
+## A card: the reward's name, the reward (base bike wearing it, dimmed until earned; "Do all
+## challenges" over the mastery mod's), then the challenge's row. Cards in a row share its height (the HBox
+## stretches them). reward: a SaveManager.mod_rewards entry, empty for none.
 func _add_challenge_card(cards: Container, base: BikeSkinDefinition, row: Dictionary, reward: Dictionary):
 	var card := PanelContainer.new()
-	card.theme_type_variation = &"ObjectPanel"
+	card.theme_type_variation = &"TrickRowPanel"
 	card.custom_minimum_size.x = CARD_WIDTH
 	cards.add_child(card)
 	var body := VBoxContainer.new()
 	card.add_child(body)
 	if !reward.is_empty():
+		var title := Label.new()
+		title.add_theme_font_size_override("font_size", 20)
+		title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		title.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+		title.text = GarageUI.skin_label(GarageUI.mod_file_name(reward["mod"]))
+		body.add_child(title)
 		# Stacks its children, so the note sits over the thumbnail without adding height.
-		var frame := MarginContainer.new()
+		var frame := PanelContainer.new()
+		frame.theme_type_variation = &"BarePanel"
 		body.add_child(frame)
 		var thumb: Thumbnail3D = THUMB_SCENE.instantiate()
 		thumb.custom_minimum_size = REWARD_THUMB_SIZE
@@ -137,8 +243,8 @@ func _add_challenge_card(cards: Container, base: BikeSkinDefinition, row: Dictio
 		thumb.set_skin(Thumbnail3D.Type.BIKE, fitted)
 		if reward["challenge"] == null:
 			var note := Label.new()
-			note.add_theme_font_size_override("font_size", 13)
-			note.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+			note.add_theme_font_size_override("font_size", 20)
+			note.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 			note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			note.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			note.text = tr("REWARD_ALL_CHALLENGES")
@@ -213,6 +319,7 @@ func _show_active():
 	_profile_card.show_save(
 		save_manager.save_slot, save_manager.current_save, save_manager.get_player_definition()
 	)
+	_build_career()
 	_build_challenge_lists()
 
 

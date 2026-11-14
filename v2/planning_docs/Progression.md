@@ -49,7 +49,7 @@ Steps refer to [New systems](#new-systems).
   type (`SaveManager.bike_types`, `BikeTypeDefinition.name_key`) under a finished / listed
   header, as a row of cards: the challenge's reward thumbnail over its row (built 2026-11-14,
   untested). Every challenge row shows its payout (money green, XP gold). Save Slots is the
-  Saves menu's last tab. Career tabs are still stub data (`STUB_CAREER`). Daily tab (built 2026-11-14) untested.
+  Saves menu's last tab. Daily tab (built 2026-11-14) untested.
 - **Console:** `dbg_set_money`, `dbg_set_level`, `dbg_unlock_all`.
 - **Stats tracker** (step 3, verified 2026-11-14): `StatsManager` +
   `SaveManager.add_stat` / `max_stat`, saved under `progression.stats` as `lifetime` and `by_type`.
@@ -83,6 +83,19 @@ Steps refer to [New systems](#new-systems).
   page lists every reward mod: locked until a source challenge is done, then bought like a skin,
   then pressed to fit / remove on the loadout bike (`mods`, saved per loadout). One TextureMod at a
   time; changing the bike drops its mods, like its colors.
+- **Mod unlock + unread** (built 2026-11-14, untested): earning a reward mod pops a "{mod} unlocked!"
+  callout with a `Thumbnail3D` of the rider's bike wearing it, held as long as the callout
+  (`RidingHUDState.pop_unlocked`). The mod goes into `progression.unread_mods` until its Bike
+  Mods row is focused; while unread, a gold `UnreadDot` marks that row, the Bike Mods row, loadout
+  tabs whose bike type earned it, and the main menu's Customize button.
+- **Career tab** (part of step 6, built 2026-11-14, untested): the Saves menu's Career tab reads
+  `progression.stats` into Riding / Tricks / Events sections, a line per stat with columns Total
+  then each bike type (`SaveManager.stat_type_key`); run stats (tricks, airtime) show count, total
+  time and best. Only stats the save has show. Distance shows in miles to match the HUD's mph. The
+  profile card has no Career tab. No achievement progress yet (step 5).
+- **Level-up callout** (built 2026-11-14, untested): `SaveManager.earn` emits `leveled_up` once per
+  level crossed; `RidingHUDState` pops a held "Level N!" with `CONFETTI_HORN`, then "{bike}
+  unlocked!" with its thumbnail for each bike whose `unlock_level` that is.
 
 
 ## Next
@@ -95,16 +108,12 @@ In build order:
 3. **Mod ladder** (rest of step 2, see [Bike challenges](#bike-challenges-and-mastery)):
    built 2026-11-14 (see [Built](#built)). Left: place the mod markers on every bike, real
    textures to replace the arrow placeholders, and a mod for sport's list.
-4. **Career tabs on real stats** (step 6), with achievement progress.
+4. **Achievement progress** on the Career tab, with step 5.
 5. **Console commands** (step 9): `add_bike_level <type> <levels>`, `unlock_bike_max <type>`.
 6. **Steam stats + achievements** (step 5): full build only.
-7. **Level-up callout:** a HUD moment naming what a level just unlocked (see
-   [Economy](./Economy.md#later)).
 
 Still open:
 
-- **Mods across a bike change:** they reset with the colors today; keeping them is an option, since
-  mods fit any bike.
 - **Sport's level gate:** 5 or 6 (see [Economy](./Economy.md#pacing)).
 - **Variant audio:** engine sound is per skin already (`engine_sound_id` + pitch/curves); new
   sounds come later.
@@ -287,6 +296,8 @@ A new menu, reachable from the main, play, lobby and pause menus:
 
 The pause menu also shows challenge progress. The garage must show a lock state with its
 requirement next to the price; locked items can't be bought.
+
+**Decided 2026-11-14:** Career lives only in the Saves menu, not the profile card.
 
 **Idea:** the main menu's profile card (`ProfileCard`, top right) could show the dailies or
 Career at a glance (e.g. daily progress under the level and money), or open the Career / Daily

@@ -16,6 +16,7 @@ class_name MainMenuState extends MenuState
 @onready var settings_btn: Button = %SettingsBtn
 @onready var play_btn: Button = %PlayBtn
 @onready var customize_btn: Button = %CustomizeBtn
+@onready var customize_unread_dot: Control = %UnreadDot
 @onready var quit_btn: Button = %QuitBtn
 @onready var tricks_btn: Button = %TricksBtn
 @onready var credits_btn: Button = %CreditsBtn
@@ -47,6 +48,7 @@ func _ready():
 
 func Enter(_state_context: StateContext):
 	ui.show()
+	customize_unread_dot.visible = !save_manager.unread_mods().is_empty()
 	play_btn.pressed.connect(_on_play_btn_pressed)
 	settings_btn.pressed.connect(_on_settings_btn_pressed)
 	profile_card.pressed.connect(_on_save_card_pressed)

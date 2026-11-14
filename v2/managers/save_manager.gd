@@ -5,6 +5,8 @@ class_name SaveManager extends BaseManager
 ## through save_item_updated (a PB save must not re-push player metadata mid-race).
 signal save_changed(current_save: Dictionary)
 signal save_item_updated(save_key: String, save_value: Variant)
+## earn() crossed into `level`; once per level crossed.
+signal leveled_up(level: int)
 
 ## Bumping this retires every older save: it stays on disk, grayed out in the Saves menu, and
 ## boot starts a new save in a free slot (settings are a separate file).
@@ -233,6 +235,11 @@ func mod_rewards() -> Array[Dictionary]:
 	return rewards
 
 
+## Earned mods (resource paths) the garage hasn't shown yet. Edit in place; the next write saves it.
+func unread_mods() -> Array:
+	return current_save["progression"].get_or_add("unread_mods", [])
+
+
 ## Finished challenges in a bike type's list.
 func mastery(bike_type: BikeTypeDefinition) -> int:
 	var progress := bike_challenge_progress(current_save)
@@ -340,12 +347,16 @@ func refresh_dailies() -> void:
 ## progression.stats: {"lifetime": {key: value}, "by_type": {type file name: {key: value}}}.
 func _stat_scopes() -> Array[Dictionary]:
 	var stats: Dictionary = current_save["progression"].get_or_add("stats", {})
-	var bike_type := get_player_definition().bike_skin.bike_type
 	var by_type: Dictionary = stats.get_or_add("by_type", {})
 	return [
 		stats.get_or_add("lifetime", {}),
-		by_type.get_or_add(bike_type.resource_path.get_file().get_basename(), {}),
+		by_type.get_or_add(stat_type_key(get_player_definition().bike_skin.bike_type), {}),
 	]
+
+
+## A bike type's key under progression.stats.by_type.
+static func stat_type_key(bike_type: BikeTypeDefinition) -> String:
+	return bike_type.resource_path.get_file().get_basename()
 
 
 ## Take `amount` off the profile and write it. False, and nothing taken, if it's short.
@@ -362,10 +373,13 @@ func spend(amount: int) -> bool:
 ## Credit an event payout and write it. Like spend(), doesn't emit save_item_updated.
 func earn(money: int, xp: int) -> void:
 	var player_def := get_player_definition()
+	var level_before := player_def.level()
 	player_def.money += money
 	player_def.xp += xp
 	add_stat("money_earned", money)
 	save_save()
+	for level in range(level_before + 1, player_def.level() + 1):
+		leveled_up.emit(level)
 
 
 func _set_money(amount: String) -> void:

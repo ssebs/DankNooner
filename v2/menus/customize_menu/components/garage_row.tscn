@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://menus/customize_menu/components/garage_row.gd" id="1_row"]
+[ext_resource type="PackedScene" path="res://utils/components/unread_dot.tscn" id="2_dot"]
 
 [node name="GarageRow" type="Button"]
 size_flags_horizontal = 3
@@ -45,6 +46,11 @@ custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
+
+[node name="UnreadDot" parent="HBox" instance=ExtResource("2_dot")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
 
 [node name="Right" type="Label" parent="HBox"]
 unique_name_in_owner = true

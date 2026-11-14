@@ -6,6 +6,7 @@
 [ext_resource type="Material" path="res://resources/shaders/vignette.tres" id="4_vignette"]
 [ext_resource type="Texture2D" uid="uid://b7mda1eajtkqe" path="res://resources/img/Logos/DankNoonerLogo_TextIconOnly.png" id="6_lw7v1"]
 [ext_resource type="PackedScene" path="res://menus/main_menu/components/profile_card.tscn" id="8_card"]
+[ext_resource type="PackedScene" path="res://utils/components/unread_dot.tscn" id="unread_dot"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_shadow"]
 shader = ExtResource("3_shadow")
@@ -118,6 +119,19 @@ unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "CUSTOMIZE_LABEL"
+
+[node name="UnreadDot" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer/CustomizeBtn" instance=ExtResource("unread_dot")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -14.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = 14.0
+grow_horizontal = 0
 
 [node name="SettingsBtn" type="Button" parent="UI/AspectContainer/Content/MarginContainer/VBoxContainer" unique_id=358161549]
 unique_name_in_owner = true

@@ -26,6 +26,9 @@ Make a hoodie
 
 - [ ] are we showing all the career stats/per bike stats somewhere?
 - [ ] hold tab in game, show mouse cursor. allow toggling profile challenges or clicking on the loadout to change it
+  - [ ] bike challenge in game alternates w/ daily challenges without me selecting it
+- [ ] stoppie should have timer too
+- [ ] trick battle needs npcs
 
 
 - [ ] Mods
@@ -35,6 +38,7 @@ Make a hoodie
   - [ ] Scraper/12 bar mod
     - [x] mesh
     - [ ] add sparks during wheelie / loopout prevention effect
+      - [ ] when at balance point do sparks, dont actually check if its touching the ground
   - [ ] Training wheels
     - [x] mesh
     - [ ] (lowside prevention) effect
@@ -45,10 +49,10 @@ Make a hoodie
   - [ ] also gold text?
 - [ ] "you loop out" => 'you crash'
 - [ ] add world border to tutorial
-- [ ] add killbox
-- [ ] make tutorial road longer
+- [x] add killbox
+- [x] make tutorial road longer
 - [ ] needs to be a way to re-read the tutorial step
-- [ ] number in tutorial doesnt make sense
+- [ ] number in tutorial doesnt make sense (multiple tut stages shouldnt exist, at least w/ count)
 - [ ] make red warn label more obvious
 - [ ] make press A to open eventstartcircle more obvious
 - [ ] mini bike should not be so unstable when hitting rear brake / steering. 

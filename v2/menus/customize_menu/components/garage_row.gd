@@ -8,6 +8,7 @@ const UNAFFORDABLE_COLOR := UtilsConstants.UI_RED
 @onready var _label: Label = %Label
 @onready var _right: Label = %Right
 @onready var _swatch: ColorRect = %Swatch
+@onready var _unread_dot: Control = %UnreadDot
 
 
 # The anchored labels don't size the button, so match a theme button with one line of text.
@@ -32,3 +33,8 @@ func set_right_color(color: Color):
 func set_swatch(color: Color):
 	_swatch.color = color
 	_swatch.show()
+
+
+## Something new behind this row (an earned mod not yet seen).
+func set_unread(unread: bool):
+	_unread_dot.visible = unread

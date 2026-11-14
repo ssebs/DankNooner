@@ -630,3 +630,18 @@ layout_mode = 2
 theme_type_variation = &"RespawnBar"
 step = 1.0
 show_percentage = false
+
+[node name="HUD_UnlockThumbnail" parent="UI/AspectContainer/MarginContainer/TrickPopups" instance=ExtResource("99_thumb")]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(192, 112)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 114.0
+offset_top = -346.0
+offset_right = 306.0
+offset_bottom = -234.0

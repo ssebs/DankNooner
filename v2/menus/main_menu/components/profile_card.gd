@@ -1,15 +1,14 @@
 ## The active save: the rider in a circle, level and money, then the save name small. Clicking it
-## opens the Saves menu (main + pause menus). The caret drops a panel with three tabs: up to
-## today's dailies and MAX_CHALLENGES bike ChallengeRows, career stats as ChallengeRows, and the live
-## leaderboard (fed by
-## RidingHUDState). Open/closed and
+## opens the Saves menu (main + pause menus). The caret drops a panel with three tabs: today's
+## dailies, up to MAX_CHALLENGES bike ChallengeRows, and the live leaderboard (fed by
+## RidingHUDState). Career stats live in the Saves menu. Open/closed and
 ## the tab are shared by every card for the run, so the pause menu's pick is what the HUD shows.
 class_name ProfileCard extends VBoxContainer
 
 signal pressed
 
 ## LEADERBOARD stays last (see _on_tab_key_input).
-enum Tab { DAILY, CHALLENGES, CAREER, LEADERBOARD }
+enum Tab { DAILY, CHALLENGES, LEADERBOARD }
 
 ## Off: no hover, hand cursor or pressed.
 @export var clickable: bool = true
@@ -36,15 +35,6 @@ const CHALLENGE_ROW_SCENE := preload("res://menus/main_menu/components/challenge
 const CHALLENGE_PEEK_SECS := 3.0
 const CHALLENGE_DONE_PEEK_SECS := 6.0
 
-# TODO: real lifetime stats + achievements, Progression.md steps 3 + 5.
-const STUB_CAREER: Array[Dictionary] = [
-	{"title": "Balance point wheelie (min)", "progress": 1, "target": 5},
-	{"title": "Stunt races won", "progress": 12, "target": 100},
-	{"title": "Stunt battles won", "progress": 4, "target": 100},
-	{"title": "Bike types unlocked", "progress": 2, "target": 3},
-	{"title": "Crashes", "progress": 318, "target": 1000},
-]
-
 ## Until the caret is first pressed the panel opens itself for a leaderboard or a new daily,
 ## and the caret pulses.
 static var _opened_once: bool = false
@@ -69,11 +59,11 @@ static var _board_is_event: bool = false
 @onready var _drop: Control = %Drop
 @onready var _daily_tab: Button = %DailyTab
 @onready var _challenges_tab: Button = %ChallengesTab
-@onready var _career_tab: Button = %CareerTab
 @onready var _leaderboard_tab: Button = %LeaderboardTab
 @onready var _daily_list: VBoxContainer = %DailyList
 @onready var _challenge_list: VBoxContainer = %ChallengeList
-@onready var _career_list: VBoxContainer = %CareerList
+## Replaces the list once the bike type's challenges are all finished.
+@onready var _challenges_done: Label = %ChallengesDone
 @onready var _leaderboard: RaceLeaderboard = %Leaderboard
 @onready var _prev_tab_prompt: InputPrompt = %PrevTabPrompt
 @onready var _next_tab_prompt: InputPrompt = %NextTabPrompt
@@ -97,6 +87,8 @@ var _challenge_progress: Dictionary[String, float] = {}
 var _challenge_peek_until: int = 0
 ## The tab the challenge peek shows.
 var _challenge_peek_tab: Tab = Tab.CHALLENGES
+## Every challenge in the shown bike type's list is finished.
+var _bike_done: bool = false
 
 
 func _ready():
@@ -104,7 +96,6 @@ func _ready():
 	if !expandable:
 		_daily_tab.mouse_filter = MOUSE_FILTER_IGNORE
 		_challenges_tab.mouse_filter = MOUSE_FILTER_IGNORE
-		_career_tab.mouse_filter = MOUSE_FILTER_IGNORE
 		_leaderboard_tab.mouse_filter = MOUSE_FILTER_IGNORE
 	else:
 		_caret.focus_mode = FOCUS_ALL
@@ -129,9 +120,7 @@ func _ready():
 			focusable.focus_exited.connect(_show_tab_prompts)
 		_daily_tab.pressed.connect(_on_tab_pressed.bind(Tab.DAILY))
 		_challenges_tab.pressed.connect(_on_tab_pressed.bind(Tab.CHALLENGES))
-		_career_tab.pressed.connect(_on_tab_pressed.bind(Tab.CAREER))
 		_leaderboard_tab.pressed.connect(_on_tab_pressed.bind(Tab.LEADERBOARD))
-	build_rows(_career_list, STUB_CAREER)
 	_apply(true)
 	if !clickable:
 		_pill.mouse_default_cursor_shape = CURSOR_ARROW
@@ -229,8 +218,19 @@ func show_challenges(bike_type: BikeTypeDefinition, save_dict: Dictionary, juice
 		SaveManager.daily_challenges(save_dict), SaveManager.daily_progress(save_dict)
 	)
 	_show_rows(Tab.DAILY, _daily_list, dailies, shown, juice)
+	# Named for the type, so it's clear which bike's list this is (main menu: the active loadout's).
+	_challenges_tab.text = bike_type.name_key
 	var bike := challenge_rows(bike_type.challenges, SaveManager.bike_challenge_progress(save_dict))
-	_show_rows(Tab.CHALLENGES, _challenge_list, bike.slice(0, MAX_CHALLENGES), shown, juice)
+	var bike_done := bike.all(func(row): return row["progress"] >= row["target"])
+	_challenges_done.text = tr("BIKE_CHALLENGES_DONE").format({"type": tr(bike_type.name_key)})
+	var listed := [] if bike_done else bike.slice(0, MAX_CHALLENGES)
+	_show_rows(Tab.CHALLENGES, _challenge_list, listed, shown, juice)
+	if bike_done != _bike_done:
+		_bike_done = bike_done
+		if bike_done and juice:
+			HUDFlash.punch(_challenges_done)
+			_peek_challenges(Tab.CHALLENGES, CHALLENGE_DONE_PEEK_SECS)
+		_apply()
 	if _challenge_peek_until > 0 and Time.get_ticks_msec() >= _challenge_peek_until:
 		_challenge_peek_until = 0
 		_apply()
@@ -384,15 +384,13 @@ func _apply(snap: bool = false):
 	# Display-only (the riding HUD) shows just the active tab.
 	_daily_tab.visible = expandable or tab == Tab.DAILY
 	_challenges_tab.visible = expandable or tab == Tab.CHALLENGES
-	_career_tab.visible = expandable or tab == Tab.CAREER
 	_leaderboard_tab.visible = has_board and (expandable or tab == Tab.LEADERBOARD)
 	_daily_tab.set_pressed_no_signal(tab == Tab.DAILY)
 	_challenges_tab.set_pressed_no_signal(tab == Tab.CHALLENGES)
-	_career_tab.set_pressed_no_signal(tab == Tab.CAREER)
 	_leaderboard_tab.set_pressed_no_signal(tab == Tab.LEADERBOARD)
 	_daily_list.visible = tab == Tab.DAILY
-	_challenge_list.visible = tab == Tab.CHALLENGES
-	_career_list.visible = tab == Tab.CAREER
+	_challenge_list.visible = tab == Tab.CHALLENGES and !_bike_done
+	_challenges_done.visible = tab == Tab.CHALLENGES and _bike_done
 	_leaderboard.visible = tab == Tab.LEADERBOARD
 	if has_board:
 		_leaderboard.set_board(_board_headers, _board_rows)

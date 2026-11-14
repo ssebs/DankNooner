@@ -82,7 +82,8 @@ func rpc_event_result(kind: GameModeType.Kind, won: bool):
 
 #region handlers
 func _on_player_spawned(player: PlayerEntity):
-	if !player.is_local_client:
+	# is_local_client is set deferred, after this emit; node name is the peer id
+	if int(str(player.name)) != multiplayer.get_unique_id():
 		return
 	_player = player
 	_air_t = 0.0

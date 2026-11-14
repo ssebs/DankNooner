@@ -157,4 +157,4 @@ GUT (`addons/gut`, excluded from exports), in `tests/unit/`:
 
 - Challenges and dailies as a second income ([Progression](./Progression.md#challenges)).
 - A level-up moment: a HUD callout when a level is crossed, naming anything it just unlocked.
-  Not designed yet.
+  Built 2026-11-14 ([Progression](./Progression.md#built)).

@@ -14,6 +14,7 @@ signal exit_requested
 enum Page { ROOT, BIKE, BIKE_COLORS, BIKE_MODS, CHARACTER, CHARACTER_COLORS, HORN }
 
 const GARAGE_ROW := preload("res://menus/customize_menu/components/garage_row.tscn")
+const UNREAD_DOT := preload("res://utils/components/unread_dot.tscn")
 const BIKE_SKINS_DIR := "res://resources/bikes/skins/"
 const CHARACTER_SKINS_DIR := PlayerDefinition.CHARACTER_SKINS_DIR
 ## Smaller than the shared theme's default, so the list stays out of the way of the preview.
@@ -211,10 +212,15 @@ func _rebuild_tabs():
 		_tabs.remove_child(child)
 		child.queue_free()
 	_profile_tab.button_pressed = _tab == 0
+	var unread_types := _unread_bike_types()
 	for i in _player_def.loadouts.size():
 		var loadout := _player_def.loadouts[i]
 		var label := loadout.name if loadout.name != "" else str(i + 1)
 		var tab_btn := _add_tab(label, i + 1)
+		if loadout.bike.bike_type in unread_types:
+			var dot: Control = UNREAD_DOT.instantiate()
+			tab_btn.add_child(dot)
+			dot.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_MINSIZE, 4)
 		# The active loadout's name in the same blue as the Saves menu's "(active)".
 		if i == _player_def.active_loadout_index:
 			for state in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color"]:
@@ -337,7 +343,9 @@ func _build_loadout_root():
 		_push.bind(Page.BIKE)
 	)
 	_add_row(tr("GARAGE_BIKE_COLORS"), ">", _push.bind(Page.BIKE_COLORS))
-	_add_row(tr("GARAGE_BIKE_MODS"), ">", _push.bind(Page.BIKE_MODS))
+	_add_row(tr("GARAGE_BIKE_MODS"), ">", _push.bind(Page.BIKE_MODS)).set_unread(
+		!_save_manager.unread_mods().is_empty()
+	)
 	var character_label := tr("GARAGE_PROFILE_DEFAULT")
 	if loadout.character != null:
 		character_label = skin_label(loadout.character.skin_name)
@@ -459,7 +467,7 @@ func _build_mods_page():
 	var fitted := _loadout().bike.mods
 	for mod in mods:
 		var sources := rewards.filter(func(reward): return reward["mod"] == mod)
-		var mod_name := mod.resource_path.get_file().get_basename().trim_suffix("_mod")
+		var mod_name := GarageUI.mod_file_name(mod)
 		# Hover tries it on (a fitted one shows as is); _toggle_mod shows the real result after a press.
 		var preview := _preview.bind(
 			_loadout().bike if mod in fitted else _with_mod_toggled(mod), _shown_character()
@@ -491,6 +499,9 @@ func _build_mods_page():
 			row.set_right_color(GarageRow.OWNED_COLOR)
 		elif _player_def.money < mod.price:
 			row.set_right_color(GarageRow.UNAFFORDABLE_COLOR)
+		if path in _save_manager.unread_mods():
+			row.set_unread(true)
+			row.focus_entered.connect(_mark_mod_read.bind(row, path), CONNECT_ONE_SHOT)
 
 
 ## One row per unique slot of `mesh_res`; pressing one opens the picker on it.
@@ -583,6 +594,20 @@ func _add_skin_row(
 		row.set_right_color(GarageRow.OWNED_COLOR)
 	elif _player_def.money < price:
 		row.set_right_color(GarageRow.UNAFFORDABLE_COLOR)
+
+
+## Saved with the next commit().
+func _mark_mod_read(row: GarageRow, path: String):
+	_save_manager.unread_mods().erase(path)
+	row.set_unread(false)
+
+
+## Bike types with an earned mod not yet focused in the Bike Mods page.
+func _unread_bike_types() -> Array:
+	var unread := _save_manager.unread_mods()
+	return _save_manager.mod_rewards().filter(func(r): return r["mod"].resource_path in unread).map(
+		func(r): return r["bike_type"]
+	)
 
 
 ## Rows are direct children of _rows, except a text row's LineEdit.
@@ -817,6 +842,11 @@ func _focused_index() -> int:
 
 
 ## "naked_default" -> "Naked"
+## A mod's name, from its file (arrow_blue_mod.tres -> arrow_blue).
+static func mod_file_name(mod: BikeMod) -> String:
+	return mod.resource_path.get_file().get_basename().trim_suffix("_mod")
+
+
 static func skin_label(skin_name: String) -> String:
 	return skin_name.trim_suffix("_default").capitalize()
 
