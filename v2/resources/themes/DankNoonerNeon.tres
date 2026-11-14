@@ -4,26 +4,19 @@
 [ext_resource type="Texture2D" uid="uid://drilpv5hu6f3o" path="res://resources/icons/checkbox-checked.svg" id="2_hydtf"]
 [ext_resource type="Texture2D" uid="uid://bpsmj74n6f4lq" path="res://resources/icons/checkbox-unchecked.svg" id="3_7depn"]
 [ext_resource type="Texture2D" uid="uid://vvvtkn4b0s0q" path="res://resources/img/Icons/circleIcon.png" id="4_7depn"]
+[ext_resource type="Texture2D" uid="uid://by7s6urgec673" path="res://resources/img/Icons/arrowDown24.png" id="arrow_down"]
 [ext_resource type="FontFile" uid="uid://dypj4f1xkypun" path="res://resources/fonts/MuseoModerno/static/MuseoModerno-Bold.ttf" id="font_Bold"]
 [ext_resource type="FontFile" uid="uid://drtwjd40gf17m" path="res://resources/fonts/Noto_Color_Emoji/NotoColorEmoji-Regular.ttf" id="font_emoji"]
-[ext_resource type="Texture2D" uid="uid://by7s6urgec673" path="res://resources/img/Icons/arrowDown24.png" id="arrow_down"]
 [ext_resource type="Texture2D" uid="uid://ddukuq0mh7dna" path="res://resources/themes/neon/backdrop.png" id="neon_backdrop"]
 [ext_resource type="Texture2D" uid="uid://c23t0780psp7q" path="res://resources/themes/neon/boost_fill.png" id="neon_boost_fill"]
 [ext_resource type="Texture2D" uid="uid://ojeew371p2ue" path="res://resources/themes/neon/boost_track.png" id="neon_boost_track"]
-[ext_resource type="Texture2D" uid="uid://bw6hduwws8kr6" path="res://resources/themes/neon/btn_disabled.png" id="neon_btn_disabled"]
-[ext_resource type="Texture2D" uid="uid://got8ibvsbkwv" path="res://resources/themes/neon/btn_focus.png" id="neon_btn_focus"]
-[ext_resource type="Texture2D" uid="uid://be0umwadh85y0" path="res://resources/themes/neon/btn_hover.png" id="neon_btn_hover"]
 [ext_resource type="Texture2D" uid="uid://iglemg1wrm1x" path="res://resources/themes/neon/btn_normal.png" id="neon_btn_normal"]
-[ext_resource type="Texture2D" uid="uid://30jrom0lk6uy" path="res://resources/themes/neon/btn_pressed.png" id="neon_btn_pressed"]
-[ext_resource type="Texture2D" uid="uid://cr7s2rg88h443" path="res://resources/themes/neon/btn_primary.png" id="neon_btn_primary"]
 [ext_resource type="Texture2D" uid="uid://bj4n8a0mkwnp8" path="res://resources/themes/neon/chip.png" id="neon_chip"]
 [ext_resource type="Texture2D" uid="uid://uj1mf65mxl8" path="res://resources/themes/neon/fade_bottom.png" id="neon_fade_bottom"]
 [ext_resource type="Texture2D" uid="uid://djwscw5kcevby" path="res://resources/themes/neon/fade_left.png" id="neon_fade_left"]
 [ext_resource type="Texture2D" uid="uid://d2bwh8rvajoad" path="res://resources/themes/neon/fade_right.png" id="neon_fade_right"]
 [ext_resource type="Texture2D" uid="uid://gqmyh6a52j1e" path="res://resources/themes/neon/fade_top.png" id="neon_fade_top"]
 [ext_resource type="Texture2D" uid="uid://b2yf07epfuapg" path="res://resources/themes/neon/feed.png" id="neon_feed"]
-[ext_resource type="Texture2D" uid="uid://c5wfkaapm7ags" path="res://resources/themes/neon/input.png" id="neon_input"]
-[ext_resource type="Texture2D" uid="uid://clwyxswxu6hy5" path="res://resources/themes/neon/input_focus.png" id="neon_input_focus"]
 [ext_resource type="Texture2D" uid="uid://cqbbuoq3j58px" path="res://resources/themes/neon/panel.png" id="neon_panel"]
 [ext_resource type="Texture2D" uid="uid://ba8t3h03tibnb" path="res://resources/themes/neon/row_focus.png" id="neon_row_focus"]
 [ext_resource type="Texture2D" uid="uid://bw2mtidsylqp3" path="res://resources/themes/neon/row_hover.png" id="neon_row_hover"]
@@ -81,61 +74,41 @@ texture_margin_top = 6.0
 texture_margin_right = 6.0
 texture_margin_bottom = 6.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_vtut7"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btnpill"]
 content_margin_left = 24.0
 content_margin_top = 12.0
 content_margin_right = 24.0
 content_margin_bottom = 12.0
-texture = ExtResource("neon_btn_disabled")
-texture_margin_left = 29.0
-texture_margin_top = 29.0
-texture_margin_right = 29.0
-texture_margin_bottom = 29.0
+bg_color = Color(0.02, 0.027, 0.06, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.255, 0.686, 1, 0.5)
+corner_radius_top_left = 44
+corner_radius_top_right = 44
+corner_radius_bottom_right = 44
+corner_radius_bottom_left = 44
+shadow_color = Color(0.255, 0.686, 1, 0.25)
+shadow_size = 8
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_bvbyg"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btnpillhot"]
 content_margin_left = 24.0
 content_margin_top = 12.0
 content_margin_right = 24.0
 content_margin_bottom = 12.0
-texture = ExtResource("neon_btn_focus")
-texture_margin_left = 42.0
-texture_margin_top = 42.0
-texture_margin_right = 42.0
-texture_margin_bottom = 42.0
-expand_margin_left = 12.0
-expand_margin_top = 12.0
-expand_margin_right = 12.0
-expand_margin_bottom = 12.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_hydtf"]
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_btn_hover")
-texture_margin_left = 43.0
-texture_margin_top = 43.0
-texture_margin_right = 43.0
-texture_margin_bottom = 43.0
-expand_margin_left = 14.0
-expand_margin_top = 14.0
-expand_margin_right = 14.0
-expand_margin_bottom = 14.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_yn56u"]
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_btn_hover")
-texture_margin_left = 43.0
-texture_margin_top = 43.0
-texture_margin_right = 43.0
-texture_margin_bottom = 43.0
-expand_margin_left = 14.0
-expand_margin_top = 14.0
-expand_margin_right = 14.0
-expand_margin_bottom = 14.0
+bg_color = Color(0.02, 0.027, 0.06, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 1, 0.015686274, 1)
+corner_radius_top_left = 44
+corner_radius_top_right = 44
+corner_radius_bottom_right = 44
+corner_radius_bottom_left = 44
+shadow_color = Color(0, 1, 0.015686274, 0.45)
+shadow_size = 10
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_normal"]
 content_margin_left = 24.0
@@ -147,21 +120,6 @@ texture_margin_left = 29.0
 texture_margin_top = 29.0
 texture_margin_right = 29.0
 texture_margin_bottom = 29.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_7depn"]
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_btn_pressed")
-texture_margin_left = 45.0
-texture_margin_top = 45.0
-texture_margin_right = 45.0
-texture_margin_bottom = 45.0
-expand_margin_left = 16.0
-expand_margin_top = 16.0
-expand_margin_right = 16.0
-expand_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_fadebottom"]
 content_margin_left = 12.0
@@ -234,6 +192,7 @@ texture_margin_left = 21.0
 texture_margin_top = 21.0
 texture_margin_right = 21.0
 texture_margin_bottom = 21.0
+modulate_color = Color(0, 1, 0.015686274, 1)
 expand_margin_left = 16.0
 expand_margin_top = 8.0
 expand_margin_right = 16.0
@@ -325,32 +284,6 @@ base_font = ExtResource("font_Bold")
 content_margin_left = 16.0
 content_margin_right = 16.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_wtkwa"]
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_input_focus")
-texture_margin_left = 31.0
-texture_margin_top = 31.0
-texture_margin_right = 31.0
-texture_margin_bottom = 31.0
-expand_margin_left = 12.0
-expand_margin_top = 12.0
-expand_margin_right = 12.0
-expand_margin_bottom = 12.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_gbla1"]
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_input")
-texture_margin_left = 19.0
-texture_margin_top = 19.0
-texture_margin_right = 19.0
-texture_margin_bottom = 19.0
-
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_backdrop"]
 content_margin_left = 32.0
 content_margin_top = 24.0
@@ -377,20 +310,28 @@ texture_margin_bottom = 19.0
 content_margin_top = 12.0
 content_margin_bottom = 12.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxFlat_4v18w"]
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_btn_primary")
-texture_margin_left = 45.0
-texture_margin_top = 45.0
-texture_margin_right = 45.0
-texture_margin_bottom = 45.0
-expand_margin_left = 16.0
-expand_margin_top = 16.0
-expand_margin_right = 16.0
-expand_margin_bottom = 16.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_optpopuphover"]
+bg_color = Color(0.255, 0.686, 1, 0.25)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_optpopup"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.02, 0.027, 0.06, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.255, 0.686, 1, 0.5)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tabsel"]
 content_margin_left = 20.0
@@ -513,61 +454,6 @@ texture_margin_top = 19.0
 texture_margin_right = 19.0
 texture_margin_bottom = 19.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_optpill"]
-content_margin_left = 24.0
-content_margin_top = 10.0
-content_margin_right = 16.0
-content_margin_bottom = 10.0
-bg_color = Color(0.02, 0.027, 0.06, 0.75)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.255, 0.686, 1, 0.5)
-corner_radius_top_left = 44
-corner_radius_top_right = 44
-corner_radius_bottom_right = 44
-corner_radius_bottom_left = 44
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_optpillhot"]
-content_margin_left = 24.0
-content_margin_top = 10.0
-content_margin_right = 16.0
-content_margin_bottom = 10.0
-bg_color = Color(0.04, 0.07, 0.14, 0.85)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.255, 0.686, 1, 1)
-corner_radius_top_left = 44
-corner_radius_top_right = 44
-corner_radius_bottom_right = 44
-corner_radius_bottom_left = 44
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_optpopup"]
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.02, 0.027, 0.06, 0.95)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.255, 0.686, 1, 0.5)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_optpopuphover"]
-bg_color = Color(0.255, 0.686, 1, 0.25)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
 [resource]
 default_font = ExtResource("1_kytw6")
 default_font_size = 24
@@ -578,23 +464,23 @@ BarePanel/styles/panel = SubResource("StyleBoxEmpty_iun4r")
 BoostCell/base_type = &"ProgressBar"
 BoostCell/styles/background = SubResource("StyleBoxTexture_boost_track")
 BoostCell/styles/fill = SubResource("StyleBoxFlat_boostfill")
-Button/colors/font_hover_pressed_color = Color(0.02, 0.027, 0.06, 1)
-Button/colors/font_pressed_color = Color(0.02, 0.027, 0.06, 1)
+Button/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(1, 1, 1, 1)
 Button/constants/h_separation = 12
-Button/styles/disabled = SubResource("StyleBoxFlat_vtut7")
-Button/styles/focus = SubResource("StyleBoxFlat_bvbyg")
-Button/styles/hover = SubResource("StyleBoxFlat_hydtf")
-Button/styles/hover_pressed = SubResource("StyleBoxFlat_yn56u")
-Button/styles/normal = SubResource("StyleBoxTexture_btn_normal")
-Button/styles/pressed = SubResource("StyleBoxFlat_7depn")
+Button/styles/disabled = SubResource("StyleBoxFlat_btnpill")
+Button/styles/focus = SubResource("StyleBoxFlat_btnpillhot")
+Button/styles/hover = SubResource("StyleBoxFlat_btnpillhot")
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_btnpillhot")
+Button/styles/normal = SubResource("StyleBoxFlat_btnpill")
+Button/styles/pressed = SubResource("StyleBoxFlat_btnpillhot")
 CheckBox/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
 CheckBox/colors/font_pressed_color = Color(1, 1, 1, 1)
 CheckBox/constants/icon_max_width = 36
 CheckBox/icons/checked = ExtResource("2_hydtf")
 CheckBox/icons/unchecked = ExtResource("3_7depn")
-CheckBox/styles/hover_pressed = SubResource("StyleBoxFlat_hydtf")
-CheckBox/styles/normal = SubResource("StyleBoxTexture_btn_normal")
-CheckBox/styles/pressed = SubResource("StyleBoxTexture_btn_normal")
+CheckBox/styles/hover_pressed = SubResource("StyleBoxFlat_btnpillhot")
+CheckBox/styles/normal = SubResource("StyleBoxFlat_btnpill")
+CheckBox/styles/pressed = SubResource("StyleBoxFlat_btnpill")
 ChipPanel/base_type = &"PanelContainer"
 ChipPanel/styles/panel = SubResource("StyleBoxTexture_btn_normal")
 DangerButton/base_type = &"Button"
@@ -647,8 +533,8 @@ InsetScroll/styles/panel = SubResource("StyleBoxEmpty_inset")
 Label/colors/font_shadow_color = Color(0, 0, 0, 0.6)
 Label/constants/shadow_offset_x = 0
 Label/constants/shadow_offset_y = 2
-LineEdit/styles/focus = SubResource("StyleBoxFlat_wtkwa")
-LineEdit/styles/normal = SubResource("StyleBoxFlat_gbla1")
+LineEdit/styles/focus = SubResource("StyleBoxFlat_btnpillhot")
+LineEdit/styles/normal = SubResource("StyleBoxFlat_btnpill")
 MarginContainer/constants/margin_bottom = 64
 MarginContainer/constants/margin_left = 64
 MarginContainer/constants/margin_right = 64
@@ -665,6 +551,8 @@ NameTagLabel/base_type = &"Label"
 NameTagLabel/colors/font_color = Color(0.2, 1, 0.55, 1)
 NameTagLabel/colors/font_outline_color = Color(0, 0, 0, 1)
 NameTagLabel/constants/outline_size = 12
+OptionButton/constants/arrow_margin = 16
+OptionButton/icons/arrow = ExtResource("arrow_down")
 OwnLabel/base_type = &"Label"
 OwnLabel/colors/font_color = Color(0.255, 0.686, 1, 1)
 PaddedLabel/base_type = &"Label"
@@ -673,16 +561,6 @@ PingLabel/base_type = &"Label"
 PingLabel/colors/font_color = Color(0.2, 1, 0.55, 1)
 PopupLabel/base_type = &"Label"
 PopupLabel/font_sizes/font_size = 36
-OptionButton/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
-OptionButton/colors/font_pressed_color = Color(1, 1, 1, 1)
-OptionButton/constants/arrow_margin = 16
-OptionButton/icons/arrow = ExtResource("arrow_down")
-OptionButton/styles/disabled = SubResource("StyleBoxFlat_optpill")
-OptionButton/styles/focus = SubResource("StyleBoxFlat_optpillhot")
-OptionButton/styles/hover = SubResource("StyleBoxFlat_optpillhot")
-OptionButton/styles/hover_pressed = SubResource("StyleBoxFlat_optpillhot")
-OptionButton/styles/normal = SubResource("StyleBoxFlat_optpill")
-OptionButton/styles/pressed = SubResource("StyleBoxFlat_optpillhot")
 PopupMenu/colors/font_hover_color = Color(1, 1, 1, 1)
 PopupMenu/styles/hover = SubResource("StyleBoxFlat_optpopuphover")
 PopupMenu/styles/normal = SubResource("StyleBoxTexture_btn_normal")
@@ -691,7 +569,6 @@ PrimaryButton/base_type = &"Button"
 PrimaryButton/colors/font_outline_color = Color(0, 0, 0, 1)
 PrimaryButton/constants/outline_size = 4
 PrimaryButton/font_sizes/font_size = 32
-PrimaryButton/styles/normal = SubResource("StyleBoxFlat_4v18w")
 ProfileTabButton/base_type = &"TabButton"
 ProfileTabButton/colors/font_color = Color(0.25490198, 0.6862745, 1, 1)
 ProfileTabButton/colors/font_focus_color = Color(0.25490198, 0.6862745, 1, 1)

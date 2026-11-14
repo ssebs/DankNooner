@@ -27,12 +27,14 @@ const AUTO_JOIN_ADDR := "127.0.0.1"
 @onready var tutorial_btn: Button = %TutorialBtn
 @onready var advanced_tutorial_btn: Button = %AdvancedTutorialBtn
 @onready var free_roam_btn: Button = %FreeRoamBtn
+@onready var story_btn: Button = %StoryBtn
 @onready var host_btn: Button = %HostBtn
 @onready var join_btn: Button = %JoinBtn
-@onready var paste_btn: Button = %PasteBtn
+@onready var code_row: Control = %CodeRow
 @onready var code_entry: LineEdit = %CodeEntry
 @onready var host_mode_opt: OptionButton = %HostModeOpt
 @onready var server_browser_btn: Button = %ServerBrowserBtn
+@onready var profile_card: ProfileCard = %ProfileCard
 
 
 func Enter(_state_context: StateContext):
@@ -45,12 +47,17 @@ func Enter(_state_context: StateContext):
 	free_roam_btn.pressed.connect(_on_free_roam_btn_pressed)
 	host_btn.pressed.connect(_on_host_btn_pressed)
 	join_btn.pressed.connect(_on_join_btn_pressed)
-	paste_btn.pressed.connect(_on_paste_btn_pressed)
+	host_mode_opt.item_selected.connect(_on_host_mode_selected)
 	code_entry.text_changed.connect(_on_code_text_changed)
 	server_browser_btn.pressed.connect(_on_server_browser_pressed)
 	steam_manager.invite_received.connect(_on_invite_received)
 
+	profile_card.show_save(
+		save_manager.save_slot, save_manager.current_save, save_manager.get_player_definition()
+	)
 	server_browser_btn.visible = steam_manager.is_logged_in()
+	# Story isn't built yet; always shows locked
+	story_btn.text = "%s %s" % [tr("STORY_LABEL"), tr("DEMO_LOCKED_LABEL")]
 
 	# Raw keys: OptionButton auto-translates. First item is the default
 	host_mode_opt.clear()
@@ -59,6 +66,7 @@ func Enter(_state_context: StateContext):
 	host_mode_opt.add_item("USE_WEBRTC_LABEL", ConnectionManager.ConnectionMode.WEBRTC)
 	host_mode_opt.add_item("USE_IPPORT_LABEL", ConnectionManager.ConnectionMode.IP_PORT)
 	host_mode_opt.select(0)
+	_on_host_mode_selected(0)
 	_update_placeholder()
 
 	# Everything but the main tutorial (Advanced too) stays locked until it's been finished once.
@@ -66,7 +74,7 @@ func Enter(_state_context: StateContext):
 	# On top (so MenuManager focuses it) until the tutorial's done, then last.
 	tutorials_section.get_parent().move_child(tutorials_section, 0 if locked else -1)
 	for control: BaseButton in [
-		customize_btn, free_roam_btn, host_btn, paste_btn, host_mode_opt, server_browser_btn,
+		customize_btn, free_roam_btn, host_btn, host_mode_opt, server_browser_btn,
 		advanced_tutorial_btn
 	]:
 		control.disabled = locked
@@ -97,15 +105,15 @@ func Exit(_state_context: StateContext):
 	free_roam_btn.pressed.disconnect(_on_free_roam_btn_pressed)
 	host_btn.pressed.disconnect(_on_host_btn_pressed)
 	join_btn.pressed.disconnect(_on_join_btn_pressed)
-	paste_btn.pressed.disconnect(_on_paste_btn_pressed)
+	host_mode_opt.item_selected.disconnect(_on_host_mode_selected)
 	code_entry.text_changed.disconnect(_on_code_text_changed)
 	server_browser_btn.pressed.disconnect(_on_server_browser_pressed)
 	steam_manager.invite_received.disconnect(_on_invite_received)
 
 
-func _on_paste_btn_pressed():
-	code_entry.text = DisplayServer.clipboard_get()
-	_on_code_text_changed(code_entry.text)
+## Steam joins go through invites and the server browser, so the code row is for the other transports
+func _on_host_mode_selected(_index: int):
+	code_row.visible = host_mode_opt.get_selected_id() != ConnectionManager.ConnectionMode.STEAM
 
 
 func _on_code_text_changed(new_text: String):

@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="3_money"]
 [ext_resource type="Texture2D" path="res://resources/img/Icons/arrowUp.png" id="4_arrow"]
 [ext_resource type="Script" path="res://player/hud_elements/race_leaderboard.gd" id="5_board"]
+[ext_resource type="PackedScene" path="res://player/hud_elements/input_prompt.tscn" id="6_prompt"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill"]
 content_margin_left = 6.0
@@ -116,11 +117,21 @@ theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_font_sizes/font_size = 15
 auto_translate_mode = 2
 
-[node name="CaretBtn" type="TextureButton" parent="Pill/Row"]
+[node name="CaretSlot" type="Control" parent="Pill/Row"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="CaretBtn" type="TextureButton" parent="Pill/Row/CaretSlot"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 focus_mode = 0
 mouse_default_cursor_shape = 2
 pivot_offset = Vector2(12, 12)
@@ -155,6 +166,12 @@ mouse_filter = 2
 theme_override_constants/separation = 8
 alignment = 1
 
+[node name="PrevTabPrompt" parent="Drop/Panel/Content/Tabs" instance=ExtResource("6_prompt")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+action = "ui_tab_prev"
+
 [node name="ChallengesTab" type="Button" parent="Drop/Panel/Content/Tabs"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -164,6 +181,16 @@ theme_type_variation = &"TabButton"
 theme_override_font_sizes/font_size = 15
 toggle_mode = true
 text = "CHALLENGES_LABEL"
+
+[node name="CareerTab" type="Button" parent="Drop/Panel/Content/Tabs"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme_type_variation = &"TabButton"
+theme_override_font_sizes/font_size = 15
+toggle_mode = true
+text = "CAREER_LABEL"
 
 [node name="LeaderboardTab" type="Button" parent="Drop/Panel/Content/Tabs"]
 unique_name_in_owner = true
@@ -175,8 +202,21 @@ theme_override_font_sizes/font_size = 15
 toggle_mode = true
 text = "LEADERBOARD_LABEL"
 
+[node name="NextTabPrompt" parent="Drop/Panel/Content/Tabs" instance=ExtResource("6_prompt")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+action = "ui_tab_next"
+
 [node name="ChallengeList" type="VBoxContainer" parent="Drop/Panel/Content"]
 unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="CareerList" type="VBoxContainer" parent="Drop/Panel/Content"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 12

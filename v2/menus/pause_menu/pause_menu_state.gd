@@ -58,6 +58,10 @@ func Enter(_state_context: StateContext):
 	audio_manager.music_track_changed.connect(_update_now_playing)
 	_update_now_playing()
 	profile_card.pressed.connect(_on_profile_card_pressed)
+	# The card sits top right, past where geometric focus search looks from these.
+	var card := profile_card.get_focus_target()
+	resume_btn.focus_neighbor_right = resume_btn.get_path_to(card)
+	lobby_panel.ip_copy_btn.focus_neighbor_right = lobby_panel.ip_copy_btn.get_path_to(card)
 	profile_card.show_save(
 		save_manager.save_slot, save_manager.current_save, save_manager.get_player_definition()
 	)

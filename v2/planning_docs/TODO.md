@@ -34,14 +34,12 @@
   - [x] list challenges in expandable panel under it
   - [x] list leaderboard in expandable panel under it
   - [x] move profile customization (username) to under the profile/saves page
-  - [ ] list career in expandable panel under it
-  - [ ] controller support
+  - [x] controller support
+  - [x] list career in expandable panel under it
   - [ ] profile/saves menu:
     - [ ] challenges should show on right 1/4 screen
     - [ ] tabs take up 3/4 of screen: Save Slots, Career (stats), Bike Challenges
   - [ ] use actual challenges instead of placeholders
-
-- [ ] dbg_unlock_all (lots of $/xp/all things unlocked/1 loadout per bike)
 
 - [ ] [Progression/Challenges](./Progression.md)
   - [x] bike variants (scooter=>mini, cruiser=>naked)
@@ -240,6 +238,8 @@
 ---
 
 ## Done ✅
+
+- [x] dbg_unlock_all (lots of $/xp/all things unlocked/1 loadout per bike)
 
 - [x] in game popups fight the pause/menus. too easy to roll thru them, or close on accident and have to drive back over it
 

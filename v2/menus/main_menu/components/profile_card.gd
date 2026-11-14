@@ -1,12 +1,13 @@
 ## The active save: the rider in a circle, level and money, then the save name small. Clicking it
-## opens the Saves menu (main + pause menus). The caret drops a panel with two tabs: up to
-## MAX_CHALLENGES ChallengeRows, and the live leaderboard (fed by RidingHUDState). Open/closed and
+## opens the Saves menu (main + pause menus). The caret drops a panel with three tabs: up to
+## MAX_CHALLENGES ChallengeRows, career stats as ChallengeRows, and the live leaderboard (fed by
+## RidingHUDState). Open/closed and
 ## the tab are shared by every card for the run, so the pause menu's pick is what the HUD shows.
 class_name ProfileCard extends VBoxContainer
 
 signal pressed
 
-enum Tab { CHALLENGES, LEADERBOARD }
+enum Tab { CHALLENGES, CAREER, LEADERBOARD }
 
 ## Off: no hover, hand cursor or pressed.
 @export var clickable: bool = true
@@ -25,6 +26,7 @@ const CARET_PULSE_SCALE := 1.3
 const CARET_PULSE_SECS := 0.5
 const CARET_PULSE_GAP_SECS := 1.2
 const OPEN_SECS := 0.4
+const CARET_RING_GROW := 4.0
 const CHALLENGE_ROW_SCENE := preload("res://menus/main_menu/components/challenge_row.tscn")
 
 # TODO: real challenges + dailies, Progression.md steps 3-4. is_new = an unseen daily.
@@ -35,6 +37,15 @@ const _STUB_CHALLENGES: Array[Dictionary] = [
 	{"title": "Win a stunt race", "progress": 0, "target": 1, "is_new": false},
 	{"title": "Grind 100m of rail", "progress": 18, "target": 100, "is_new": false},
 	{"title": "Ride 10km", "progress": 2, "target": 10, "is_new": false},
+]
+
+# TODO: real lifetime stats + achievements, Progression.md steps 3 + 5.
+const _STUB_CAREER: Array[Dictionary] = [
+	{"title": "Balance point wheelie (min)", "progress": 1, "target": 5},
+	{"title": "Stunt races won", "progress": 12, "target": 100},
+	{"title": "Stunt battles won", "progress": 4, "target": 100},
+	{"title": "Bike types unlocked", "progress": 2, "target": 3},
+	{"title": "Crashes", "progress": 318, "target": 1000},
 ]
 
 ## Until the caret is first pressed the panel opens itself for a leaderboard or a new daily,
@@ -56,11 +67,17 @@ static var _board_is_event: bool = false
 @onready var _portrait: SavePreview = %Portrait
 @onready var _name_label: Label = %NameLabel
 @onready var _caret: TextureButton = %CaretBtn
+## A plain Control, so the Row's re-sort can't reset the caret's rotation.
+@onready var _caret_slot: Control = %CaretSlot
 @onready var _drop: Control = %Drop
 @onready var _challenges_tab: Button = %ChallengesTab
+@onready var _career_tab: Button = %CareerTab
 @onready var _leaderboard_tab: Button = %LeaderboardTab
 @onready var _challenge_list: VBoxContainer = %ChallengeList
+@onready var _career_list: VBoxContainer = %CareerList
 @onready var _leaderboard: RaceLeaderboard = %Leaderboard
+@onready var _prev_tab_prompt: InputPrompt = %PrevTabPrompt
+@onready var _next_tab_prompt: InputPrompt = %NextTabPrompt
 
 var _caret_tween: Tween
 var _open_tween: Tween
@@ -72,22 +89,59 @@ var _reveal: float = 1.0
 var _slid_open: bool = false
 ## Held open on top of the shared state (see set_peek).
 var _peek: bool = false
+## The tab on screen, which can differ from _tab (no board, or board_overrides).
+var _shown_tab: Tab = Tab.CHALLENGES
+var _input_state_manager: InputStateManager
 
 
 func _ready():
-	_caret.visible = expandable
+	_caret_slot.visible = expandable
 	if !expandable:
 		_challenges_tab.mouse_filter = MOUSE_FILTER_IGNORE
+		_career_tab.mouse_filter = MOUSE_FILTER_IGNORE
 		_leaderboard_tab.mouse_filter = MOUSE_FILTER_IGNORE
 	else:
+		_caret.focus_mode = FOCUS_ALL
+		# A TextureButton draws no focus style, so ring it with the buttons' one, hollow.
+		var ring: StyleBoxFlat = get_theme_stylebox("focus", "Button").duplicate()
+		ring.draw_center = false
+		_caret.draw.connect(func():
+			if _caret.has_focus():
+				_caret.draw_style_box(ring, Rect2(Vector2.ZERO, _caret.size).grow(CARET_RING_GROW))
+		)
+		_caret.focus_entered.connect(_caret.queue_redraw)
+		_caret.focus_exited.connect(_caret.queue_redraw)
 		_caret.pressed.connect(_on_caret_pressed)
+		_caret.gui_input.connect(_on_tab_key_input.bind(_caret))
+		_pill.gui_input.connect(_on_tab_key_input.bind(_pill))
+		_input_state_manager = get_tree().get_first_node_in_group(
+			UtilsConstants.GROUPS["InputStateManager"]
+		)
+		_input_state_manager.device_changed.connect(_show_tab_prompts.unbind(1))
+		for focusable: Control in [_pill, _caret]:
+			focusable.focus_entered.connect(_show_tab_prompts)
+			focusable.focus_exited.connect(_show_tab_prompts)
 		_challenges_tab.pressed.connect(_on_tab_pressed.bind(Tab.CHALLENGES))
+		_career_tab.pressed.connect(_on_tab_pressed.bind(Tab.CAREER))
 		_leaderboard_tab.pressed.connect(_on_tab_pressed.bind(Tab.LEADERBOARD))
-	_build_challenges()
+	_build_rows(_challenge_list, _STUB_CHALLENGES.slice(0, MAX_CHALLENGES))
+	_build_rows(_career_list, _STUB_CAREER)
 	_apply(true)
 	if !clickable:
 		_pill.mouse_default_cursor_shape = CURSOR_ARROW
 		return
+	_pill.focus_mode = FOCUS_ALL
+	# The caret sits inside the pill, so geometric focus search never picks it.
+	if expandable:
+		_pill.focus_neighbor_right = _pill.get_path_to(_caret)
+		_caret.focus_neighbor_left = _caret.get_path_to(_pill)
+	# Focus borrows the buttons' focus border color.
+	var pill_style: StyleBoxFlat = _pill.get_theme_stylebox("panel")
+	var focus_style: StyleBoxFlat = pill_style.duplicate()
+	var button_focus: StyleBoxFlat = get_theme_stylebox("focus", "Button")
+	focus_style.border_color = button_focus.border_color
+	_pill.focus_entered.connect(func(): _pill.add_theme_stylebox_override("panel", focus_style))
+	_pill.focus_exited.connect(func(): _pill.add_theme_stylebox_override("panel", pill_style))
 	_pill.gui_input.connect(_on_pill_gui_input)
 	_pill.mouse_entered.connect(func(): _pill.modulate = HOVER_MODULATE)
 	_pill.mouse_exited.connect(func(): _pill.modulate = Color.WHITE)
@@ -110,12 +164,46 @@ func _on_pill_gui_input(event: InputEvent):
 		and !event.pressed
 	):
 		pressed.emit()
+	# A PanelContainer isn't a Button, so a focused pill takes ui_accept itself.
+	elif event.is_action_pressed("ui_accept"):
+		_pill.accept_event()
+		pressed.emit()
+
+
+## LB/RB on the focused card flips its tabs, ahead of the menu's own (InputStateManager's
+## _unhandled_input).
+func _on_tab_key_input(event: InputEvent, focused: Control):
+	var dir := 0
+	if event.is_action_pressed("ui_tab_prev"):
+		dir = -1
+	elif event.is_action_pressed("ui_tab_next"):
+		dir = 1
+	if dir == 0:
+		return
+	focused.accept_event()
+	# Leaderboard is the last tab, so dropping it from the wrap skips it while it's hidden.
+	var tab_count := Tab.size() if _leaderboard_tab.visible else Tab.LEADERBOARD
+	_on_tab_pressed(wrapi(_shown_tab + dir, 0, tab_count) as Tab)
+
+
+## The LB/RB prompts only while LB/RB work: a gamepad on the focused card.
+func _show_tab_prompts():
+	var on := _input_state_manager.is_gamepad and (_pill.has_focus() or _caret.has_focus())
+	for prompt: InputPrompt in [_prev_tab_prompt, _next_tab_prompt]:
+		# refresh() hides it when the action is unbound.
+		prompt.refresh(true)
+		prompt.visible = prompt.visible and on
 
 
 func show_save(slot: int, save_dict: Dictionary, player_def: PlayerDefinition) -> void:
 	show_stats(player_def)
 	_name_label.text = SaveCard.display_name(slot, save_dict)
 	_portrait.show_player(player_def)
+
+
+## For a host's focus neighbors; only focusable when clickable.
+func get_focus_target() -> Control:
+	return _pill
 
 
 ## Level + money only; no portrait redraw, so it's cheap to call every frame.
@@ -149,11 +237,11 @@ func clear_board() -> void:
 	_apply()
 
 
-func _build_challenges():
-	for challenge in _STUB_CHALLENGES.slice(0, MAX_CHALLENGES):
+func _build_rows(list: VBoxContainer, entries: Array[Dictionary]):
+	for entry in entries:
 		var row: ChallengeRow = CHALLENGE_ROW_SCENE.instantiate()
-		_challenge_list.add_child(row)
-		row.show_challenge(challenge["title"], challenge["progress"], challenge["target"])
+		list.add_child(row)
+		row.show_challenge(entry["title"], entry["progress"], entry["target"])
 
 
 ## Unrolls the panel down from the pill, or rolls it back up, from wherever it is now.
@@ -202,16 +290,22 @@ func _apply(snap: bool = false):
 	var expanded := _expanded
 	if !_opened_once:
 		expanded = has_board or _STUB_CHALLENGES.any(func(c): return c["is_new"])
-	var tab := _tab if has_board else Tab.CHALLENGES
+	var tab := Tab.CHALLENGES if _tab == Tab.LEADERBOARD and !has_board else _tab
 	if board_overrides and has_board and _board_is_event:
 		expanded = true
 		tab = Tab.LEADERBOARD
 	expanded = expanded or _peek
+	_shown_tab = tab
 
-	_leaderboard_tab.visible = has_board
+	# Display-only (the riding HUD) shows just the active tab.
+	_challenges_tab.visible = expandable or tab == Tab.CHALLENGES
+	_career_tab.visible = expandable or tab == Tab.CAREER
+	_leaderboard_tab.visible = has_board and (expandable or tab == Tab.LEADERBOARD)
 	_challenges_tab.set_pressed_no_signal(tab == Tab.CHALLENGES)
+	_career_tab.set_pressed_no_signal(tab == Tab.CAREER)
 	_leaderboard_tab.set_pressed_no_signal(tab == Tab.LEADERBOARD)
 	_challenge_list.visible = tab == Tab.CHALLENGES
+	_career_list.visible = tab == Tab.CAREER
 	_leaderboard.visible = tab == Tab.LEADERBOARD
 	if has_board:
 		_leaderboard.set_board(_board_headers, _board_rows)
