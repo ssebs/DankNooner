@@ -41,46 +41,56 @@ Steps refer to [New systems](#new-systems).
   [Save slots](#save-slots).
 - **Economy pass** (step 10): level-ramped payouts, tested and balanced per minute. See
   [Economy](./Economy.md).
-- **Challenge UI** (part of step 6, built 2026-11-14, untested): the profile card's Bike
-  Challenges tab (every menu card + the riding HUD, live) lists the active bike type's challenges,
-  unfinished first (`ProfileCard.challenge_rows`). On the HUD a row whose count goes up pops (punches
-  on completion) and the panel peeks open on that tab for a few seconds; the completion callout
-  holds longer than a trick's. Dailies will get their own tab. The Saves menu's Bike Challenges tab lists every type
-  (`SavesMenuState.bike_types`, `BikeTypeDefinition.name_key`) under a finished / listed header.
-  Career tabs are still stub data (`STUB_CAREER`).
+- **Challenge UI** (part of step 6, verified 2026-11-14): the profile card's Daily and Bike
+  Challenges tabs (every menu card + the riding HUD, live) list today's dailies and the active bike
+  type's challenges, unfinished first (`ProfileCard.challenge_rows`). On the HUD a row whose count
+  goes up pops (punches on completion) and the panel peeks open on its tab for a few seconds; the
+  completion callout holds longer than a trick's. The Saves menu's Bike Challenges tab lists every
+  type (`SavesMenuState.bike_types`, `BikeTypeDefinition.name_key`) under a finished / listed
+  header. Career tabs are still stub data (`STUB_CAREER`). Daily tab (built 2026-11-14) untested.
 - **Console:** `dbg_set_money`, `dbg_set_level`, `dbg_unlock_all`.
 - **Stats tracker** (step 3, verified 2026-11-14): `StatsManager` +
   `SaveManager.add_stat` / `max_stat`, saved under `progression.stats` as `lifetime` and `by_type`.
   Trick counts, hold seconds and best holds come from `TrickManager.combo_banked`'s `holds` (server,
-  sent to each rider; flips count per rotation); distance, top speed, airtime and crashes from the local rider; money earned
-  from `SaveManager.earn`; `<MODE>_played` / `_wins` from `GamemodeManager.event_placed` (a solo
+  sent to each rider; flips count per rotation); distance, top speed, airtime and crashes from
+  the local rider; money earned from `SaveManager.earn`; `<MODE>_played` / `_wins` from `GamemodeManager.event_placed` (a solo
   event with no bots counts as a win). `LongestWheelieChallenge` reads the same holds.
-- **Bike challenges** (step 4 minus dailies, built 2026-11-14, untested): `ChallengeDefinition`
+- **Bike challenges** (step 4, verified 2026-11-14): `ChallengeDefinition`
   (stat key, COUNT / TOTAL / BEST goal, target, optional modes, money + XP) in
   `BikeTypeDefinition.challenges`. `ChallengeManager` runs on each rider's client off
   `StatsManager.stat_recorded`, counts only on the active bike's type, from zero; progress saved
   under `progression.challenges` by resource path. Completion pays via `SaveManager.earn` with a
   callout + `CONFETTI_HORN`. Starter lists are placeholders (2–3 per type), rewards unsized.
+- **Dailies** (step 4, built 2026-11-14, untested): `SaveManager.daily_pool` (templates in
+  `resources/challenges/daily/`); `refresh_dailies()` draws `DAILY_COUNT` on load and on the first
+  stat sample of a new local day, saved under `progression.daily` (`date`, `picks`, `progress`).
+  `ChallengeManager` advances them on any bike, paid and juiced like bike challenges.
+- **Mastery skin gate** (step 2, built 2026-11-14, untested): `BikeSkinDefinition.unlock_mastery`
+  (finished challenges of its type, `SaveManager.mastery()`) gates a type's variant skins in
+  `is_locked()`; base skins keep `unlock_level`. Garage locked rows read "🔒 Type done/needed ·
+  $price". The challenge that reaches a skin's gate adds a held "Skin unlocked!" callout.
+  Scooter and cruiser need the full current list (cruiser no longer needs a rider level).
 
 
 ## Next
 
 In build order:
 
-1. **Challenges** (step 4): full lists per type (about 10), sized rewards, confetti VFX, then
-   dailies. Mastery (finished count) has no reader until the unlocks / UI below.
-2. **Unlock requirements, the rest of step 2:** mastery level gates mods; a finished list gates a
-   type's other skins.
-3. **Career tabs on real stats** (step 6), with achievement progress.
-4. **Console commands** (step 9): `add_bike_level <type> <levels>`, `unlock_bike_max <type>`.
-5. **Steam stats + achievements** (step 5): full build only.
-6. **Level-up callout:** a HUD moment naming what a level just unlocked (see
+1. **Payouts:** size challenge and daily rewards (see [Economy](./Economy.md)).
+2. **Challenge content:** full lists per type (about 10), a bigger daily pool, confetti VFX, the
+   Daily tab's time to reset, and auto-opening the card on unseen dailies.
+3. **Mod ladder** (rest of step 2): mastery levels gate mods once mod models exist (see
+   [3D models to make](#3d-models-to-make)); `unlock_mastery` is the pattern.
+4. **Career tabs on real stats** (step 6), with achievement progress.
+5. **Console commands** (step 9): `add_bike_level <type> <levels>`, `unlock_bike_max <type>`.
+6. **Steam stats + achievements** (step 5): full build only.
+7. **Level-up callout:** a HUD moment naming what a level just unlocked (see
    [Economy](./Economy.md#later)).
 
 Still open:
 
-- **What mastery unlocks.** Only `ColorMod` exists, so the mod ladder needs content (below)
-  before mastery can reward anything. Deciding later.
+- **Mod ladder content.** Mastery unlocks variant skins today; mods need models (below) and a
+  mod shop before they can join the ladder.
 - **Sport's level gate:** 5 or 6 (see [Economy](./Economy.md#pacing)).
 - **Variant audio:** engine sound is per skin already (`engine_sound_id` + pitch/curves); new
   sounds come later.
@@ -163,7 +173,7 @@ Earning, payouts, rider level and pacing targets are in [Economy](./Economy.md).
 |---|---|---|
 | Mini bike (Grom) | owned on a new save | — |
 | Naked, sport bikes | rider level (sport's is higher) | bought with $ |
-| Other skins of a type | finishing that type's challenge list (until challenges exist: cruiser uses a rider level, scooter is price-only) | bought with $ |
+| Other skins of a type | that type's mastery (`unlock_mastery`) | bought with $ |
 | Bike mods | bike-type mastery level | bought with $ (default $200) |
 | Characters | nothing | bought with $ |
 | Horns | nothing | bought with $ |

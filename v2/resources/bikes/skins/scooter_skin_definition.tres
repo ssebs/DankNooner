@@ -10,6 +10,7 @@
 script = ExtResource("3_0j748")
 skin_name = "scooter"
 price = 4200
+unlock_mastery = 3
 bike_type = ExtResource("9_type")
 mesh_res = ExtResource("3_bu6nc")
 mesh_position_offset = Vector3(0, 0.4, 0)

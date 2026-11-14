@@ -16,10 +16,13 @@ signal save_item_updated(save_key: String, save_value: Variant)
 @export var steam_manager: SteamManager
 ## Holds the active slot (_slot_setting); loads before this manager.
 @export var settings_manager: SettingsManager
+## Templates refresh_dailies draws DAILY_COUNT from each day.
+@export var daily_pool: Array[ChallengeDefinition] = []
 
 ## Progression keys each tutorial's milestones save under. Only the first gates the Play menu.
 const TUTORIAL_KEY := "tutorial"
 const ADVANCED_TUTORIAL_KEY := "tutorial_advanced"
+const DAILY_COUNT := 3
 
 ## The active slot, read from settings in deferred_init.
 var save_slot: int = 1
@@ -139,6 +142,7 @@ func _load_active() -> void:
 		load_save()
 	else:
 		_save_default_save()
+	refresh_dailies()
 	_apply_steam_profile()
 
 
@@ -191,9 +195,25 @@ func is_owned(path: String) -> bool:
 	return load(path).price == 0 or path in current_save["progression"]["owned"]
 
 
-## A bike skin is locked until the rider reaches its unlock_level, unless already owned.
+## A bike skin is locked until the rider reaches its unlock_level and its type its
+## unlock_mastery, unless already owned.
 func is_locked(path: String) -> bool:
-	return !is_owned(path) and get_player_definition().level() < load(path).unlock_level
+	var def: BikeSkinDefinition = load(path)
+	return (
+		!is_owned(path)
+		and (
+			get_player_definition().level() < def.unlock_level
+			or mastery(def.bike_type) < def.unlock_mastery
+		)
+	)
+
+
+## Finished challenges in a bike type's list.
+func mastery(bike_type: BikeTypeDefinition) -> int:
+	var progress := bike_challenge_progress(current_save)
+	return bike_type.challenges.filter(
+		func(c: ChallengeDefinition): return progress.get(c.resource_path, 0.0) >= c.target
+	).size()
 
 
 ## Spend `price` to own `path`. In memory only — the caller's next update_save writes it.
@@ -260,19 +280,36 @@ func max_stat(key: String, value: float) -> void:
 		scope[key] = maxf(scope.get(key, 0.0), value)
 
 
-## A challenge's progress (ChallengeDefinition.apply) in the active save.
-func get_challenge_progress(challenge: ChallengeDefinition) -> float:
-	return challenge_progress(current_save, challenge)
+## Resource path -> progress (ChallengeDefinition.apply) of a save's bike challenges.
+static func bike_challenge_progress(save_dict: Dictionary) -> Dictionary:
+	return save_dict["progression"].get_or_add("challenges", {})
 
 
-## A challenge's progress in a save dict, saved by resource path.
-static func challenge_progress(save_dict: Dictionary, challenge: ChallengeDefinition) -> float:
-	return save_dict["progression"].get("challenges", {}).get(challenge.resource_path, 0.0)
+## Resource path -> progress of today's dailies.
+static func daily_progress(save_dict: Dictionary) -> Dictionary:
+	return save_dict["progression"].get_or_add("daily", {}).get_or_add("progress", {})
 
 
-## Not written to disk.
-func set_challenge_progress(challenge: ChallengeDefinition, progress: float) -> void:
-	current_save["progression"].get_or_add("challenges", {})[challenge.resource_path] = progress
+## Today's dailies (see refresh_dailies).
+static func daily_challenges(save_dict: Dictionary) -> Array[ChallengeDefinition]:
+	var challenges: Array[ChallengeDefinition] = []
+	for path: String in save_dict["progression"].get("daily", {}).get("picks", []):
+		challenges.append(load(path))
+	return challenges
+
+
+## Draws new dailies, with fresh progress, once the local date has moved on. Writes if so.
+func refresh_dailies() -> void:
+	var today := Time.get_date_string_from_system()
+	var daily: Dictionary = current_save["progression"].get_or_add("daily", {})
+	if daily.get("date", "") == today:
+		return
+	var pool := daily_pool.duplicate()
+	pool.shuffle()
+	daily["date"] = today
+	daily["picks"] = pool.slice(0, DAILY_COUNT).map(func(c): return c.resource_path)
+	daily["progress"] = {}
+	save_save()
 
 
 ## progression.stats: {"lifetime": {key: value}, "by_type": {type file name: {key: value}}}.

@@ -12,8 +12,8 @@
 
 ## Today
 
-- **Where it comes from:** event [payouts](#payouts), time attack laps and bike challenges
-  (placeholder rewards, not yet sized). Free roam and dailies pay nothing yet. No event overrides the `payout_money` / `payout_xp`
+- **Where it comes from:** event [payouts](#payouts), time attack laps, bike challenges and
+  dailies (placeholder rewards, not yet sized). Free roam pays nothing yet. No event overrides the `payout_money` / `payout_xp`
   defaults on `GameModeEventDefinition`, so every event pays the same base.
 - **Rider level** is derived from total XP (`PlayerDefinition.level()`, `XP_PER_LEVEL`):
   `1 + sqrt(xp / 100)`, so level *n* → *n+1* costs `100 × (2n − 1)` XP. Reaching a level pays

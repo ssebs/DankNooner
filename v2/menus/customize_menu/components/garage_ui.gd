@@ -318,11 +318,11 @@ func _build_profile_root():
 	_title.text = tr("GARAGE_PROFILE_TAB")
 	_add_row(
 		tr("GARAGE_CHARACTER"),
-		_skin_label(_player_def.default_character.skin_name) + " >",
+		skin_label(_player_def.default_character.skin_name) + " >",
 		_push.bind(Page.CHARACTER)
 	)
 	_add_row(tr("GARAGE_CHARACTER_COLORS"), ">", _push.bind(Page.CHARACTER_COLORS))
-	_add_row(tr("GARAGE_HORN"), _skin_label(_player_def.default_horn.skin_name) + " >", _push.bind(Page.HORN))
+	_add_row(tr("GARAGE_HORN"), skin_label(_player_def.default_horn.skin_name) + " >", _push.bind(Page.HORN))
 
 
 func _build_loadout_root():
@@ -331,19 +331,19 @@ func _build_loadout_root():
 	_add_text_row(tr("NAME_LABEL"), loadout.name, _on_loadout_name_changed)
 	_add_row(
 		tr("GARAGE_BIKE"),
-		_skin_label(_bikes.find_key(loadout.bike.base_res_path)) + " >",
+		skin_label(_bikes.find_key(loadout.bike.base_res_path)) + " >",
 		_push.bind(Page.BIKE)
 	)
 	_add_row(tr("GARAGE_BIKE_COLORS"), ">", _push.bind(Page.BIKE_COLORS))
 	var character_label := tr("GARAGE_PROFILE_DEFAULT")
 	if loadout.character != null:
-		character_label = _skin_label(loadout.character.skin_name)
+		character_label = skin_label(loadout.character.skin_name)
 	_add_row(tr("GARAGE_CHARACTER"), character_label + " >", _push.bind(Page.CHARACTER))
 	if loadout.character != null:
 		_add_row(tr("GARAGE_CHARACTER_COLORS"), ">", _push.bind(Page.CHARACTER_COLORS))
 	var horn_label := tr("GARAGE_PROFILE_DEFAULT")
 	if loadout.horn != null:
-		horn_label = _skin_label(loadout.horn.skin_name)
+		horn_label = skin_label(loadout.horn.skin_name)
 	_add_row(tr("GARAGE_HORN"), horn_label + " >", _push.bind(Page.HORN))
 	var is_active := _tab - 1 == _player_def.active_loadout_index
 	# Status, not dead buttons: the active loadout gets a label, the last one can't be deleted.
@@ -366,8 +366,26 @@ func _build_bike_page():
 			_preview.bind(def, _shown_character()),
 			_apply_bike.bind(path),
 			false,
-			def.unlock_level if _save_manager.is_locked(path) else 0
+			_bike_lock_text(def) if _save_manager.is_locked(path) else PackedStringArray()
 		)
+
+
+## [right label, tooltip] for a locked bike: the rider level gate first, then the mastery gate.
+func _bike_lock_text(def: BikeSkinDefinition) -> PackedStringArray:
+	var price := MoneyLabel.format(def.price)
+	if _player_def.level() < def.unlock_level:
+		return [
+			tr("GARAGE_LOCKED_LEVEL") % [def.unlock_level, price],
+			tr("GARAGE_LOCKED_TOOLTIP") % def.unlock_level,
+		]
+	var type_name := tr(def.bike_type.name_key)
+	var done := _save_manager.mastery(def.bike_type)
+	return [
+		tr("GARAGE_LOCKED_MASTERY").format(
+			{"type": type_name, "done": done, "count": def.unlock_mastery, "price": price}
+		),
+		tr("GARAGE_LOCKED_MASTERY_TOOLTIP").format({"type": type_name, "count": def.unlock_mastery}),
+	]
 
 
 func _build_character_page():
@@ -380,7 +398,7 @@ func _build_character_page():
 		current_name = loadout.character.skin_name if loadout.character != null else ""
 		_add_row(
 			tr("GARAGE_PROFILE_DEFAULT"),
-			_skin_label(_player_def.default_character.skin_name),
+			skin_label(_player_def.default_character.skin_name),
 			_apply_character.bind(""),
 			_preview.bind(loadout.bike, _player_def.default_character),
 			loadout.character == null
@@ -407,7 +425,7 @@ func _build_horn_page():
 		current = loadout.horn
 		_add_row(
 			tr("GARAGE_PROFILE_DEFAULT"),
-			_skin_label(_player_def.default_horn.skin_name),
+			skin_label(_player_def.default_horn.skin_name),
 			_apply_horn.bind(null),
 			_preview_horn.bind(_player_def.default_horn),
 			loadout.horn == null
@@ -493,21 +511,20 @@ func _add_skin_row(
 	preview: Callable,
 	apply: Callable,
 	demo_locked := false,
-	locked_level := 0
+	lock_text := PackedStringArray()
 ):
 	# Locked rows still preview on focus, so riders can see what unlocks next.
 	if demo_locked and UtilsConstants.is_demo_build():
 		_add_locked_row(skin_name, tr("DEMO_LOCKED_LABEL"), tr("DEMO_LOCKED_TOOLTIP"), preview)
 		return
-	if locked_level > 0:
-		var right := tr("GARAGE_LOCKED_LEVEL") % [locked_level, MoneyLabel.format(price)]
-		_add_locked_row(skin_name, right, tr("GARAGE_LOCKED_TOOLTIP") % locked_level, preview)
+	if !lock_text.is_empty():
+		_add_locked_row(skin_name, lock_text[0], lock_text[1], preview)
 		return
 	var owned := _save_manager.is_owned(path)
 	# Re-picking the current one would reset its colors.
 	var on_press := (func(): pass) if is_current else _on_skin_pressed.bind(skin_name, path, price, apply)
 	var row := _add_row(
-		_skin_label(skin_name),
+		skin_label(skin_name),
 		tr("GARAGE_OWNED") if owned else MoneyLabel.format(price),
 		on_press,
 		preview,
@@ -530,7 +547,7 @@ func _on_row_focused(control: Control, preview: Callable):
 
 
 func _add_locked_row(skin_name: String, right: String, tooltip: String, preview: Callable):
-	var row := _add_row(_skin_label(skin_name), right, func(): pass, preview)
+	var row := _add_row(skin_label(skin_name), right, func(): pass, preview)
 	row.disabled = true
 	row.tooltip_text = tooltip
 
@@ -543,7 +560,7 @@ func _on_skin_pressed(skin_name: String, path: String, price: int, apply: Callab
 	if _player_def.money < price:
 		return
 	_open_confirm(
-		tr("GARAGE_BUY_CONFIRM") % [_skin_label(skin_name), MoneyLabel.format(price)],
+		tr("GARAGE_BUY_CONFIRM") % [skin_label(skin_name), MoneyLabel.format(price)],
 		tr("GARAGE_BUY"),
 		func():
 			_save_manager.purchase(path, price)
@@ -731,7 +748,7 @@ func _focused_index() -> int:
 
 
 ## "naked_default" -> "Naked"
-static func _skin_label(skin_name: String) -> String:
+static func skin_label(skin_name: String) -> String:
 	return skin_name.trim_suffix("_default").capitalize()
 
 
@@ -745,7 +762,7 @@ static func _sorted_skins(skins: Dictionary) -> Dictionary:
 			var b_locked: bool = is_demo and load(skins[b]).demo_locked
 			if a_locked != b_locked:
 				return b_locked
-			return _skin_label(a).naturalnocasecmp_to(_skin_label(b)) < 0
+			return skin_label(a).naturalnocasecmp_to(skin_label(b)) < 0
 	)
 	var sorted: Dictionary = {}
 	for skin_name in names:

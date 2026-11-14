@@ -13,6 +13,9 @@ class_name BikeSkinDefinition extends Resource
 @export var price: int = 0
 ## Rider level needed before it can be bought; 0 = no gate. Owning it skips the gate.
 @export var unlock_level: int = 0
+## Finished challenges of bike_type (mastery) needed before it can be bought; 0 = no gate. For a
+## type's variant skins. Owning it skips the gate.
+@export var unlock_mastery: int = 0
 
 ## Simulation tuning shared by every skin of this type. Read through the forwarders below.
 @export var bike_type: BikeTypeDefinition
@@ -232,6 +235,7 @@ func _copy_from(other: BikeSkinDefinition) -> void:
 	base_res_path = other.base_res_path
 	price = other.price
 	unlock_level = other.unlock_level
+	unlock_mastery = other.unlock_mastery
 	bike_type = other.bike_type
 	mesh_res = other.mesh_res
 	mesh_position_offset = other.mesh_position_offset

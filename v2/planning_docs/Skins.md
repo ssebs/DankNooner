@@ -143,7 +143,7 @@ Resource at `resources/bikes/bike_skin_definition.gd`. Grouped in the inspector:
 
 **Animation** — `lean_multiplier`, `weight_shift_multiplier`
 
-**Shop** — `price`, and `unlock_level`: the rider level needed before it can be bought (0 = no gate). `SaveManager.is_locked()` checks it; owning the bike skips it. The garage shows locked bikes as disabled rows with the requirement next to the price, and they still preview on focus.
+**Shop** — `price`, `unlock_level`: the rider level needed before it can be bought (0 = no gate), and `unlock_mastery`: finished challenges of its `bike_type` needed (0 = no gate; for a type's variant skins). `SaveManager.is_locked()` checks both; owning the bike skips them. The garage shows locked bikes as disabled rows with the requirement next to the price, and they still preview on focus.
 
 **Type** — `bike_type: BikeTypeDefinition`. Its fields are forwarded as read-only properties, so callers keep reading `bd.max_speed`.
 

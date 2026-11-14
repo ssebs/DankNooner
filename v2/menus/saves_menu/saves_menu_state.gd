@@ -87,16 +87,14 @@ func _build_challenge_lists():
 			list.remove_child(child)
 			child.queue_free()
 	var active_type := save_manager.get_player_definition().bike_skin.bike_type
-	ProfileCard.build_rows(
-		_challenge_list, ProfileCard.challenge_rows(active_type, save_manager.current_save)
-	)
+	var progress := SaveManager.bike_challenge_progress(save_manager.current_save)
+	ProfileCard.build_rows(_challenge_list, ProfileCard.challenge_rows(active_type.challenges, progress))
 	for bike_type in bike_types:
-		var rows := ProfileCard.challenge_rows(bike_type, save_manager.current_save)
-		var done := rows.filter(func(row): return row["progress"] >= row["target"]).size()
+		var rows := ProfileCard.challenge_rows(bike_type.challenges, progress)
 		var header := Label.new()
 		header.theme_type_variation = &"Heading2Label"
 		header.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
-		header.text = "%s  %d/%d" % [tr(bike_type.name_key), done, rows.size()]
+		header.text = "%s  %d/%d" % [tr(bike_type.name_key), save_manager.mastery(bike_type), rows.size()]
 		_bike_list.add_child(header)
 		ProfileCard.build_rows(_bike_list, rows)
 

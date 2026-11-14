@@ -172,6 +172,16 @@ visible = false
 layout_mode = 2
 action = "ui_tab_prev"
 
+[node name="DailyTab" type="Button" parent="Drop/Panel/Content/Tabs"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme_type_variation = &"TabButton"
+theme_override_font_sizes/font_size = 15
+toggle_mode = true
+text = "DAILY_LABEL"
+
 [node name="ChallengesTab" type="Button" parent="Drop/Panel/Content/Tabs"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -207,6 +217,13 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 action = "ui_tab_next"
+
+[node name="DailyList" type="VBoxContainer" parent="Drop/Panel/Content"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
 
 [node name="ChallengeList" type="VBoxContainer" parent="Drop/Panel/Content"]
 unique_name_in_owner = true
