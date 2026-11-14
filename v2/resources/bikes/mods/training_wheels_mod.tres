@@ -1,10 +1,10 @@
 [gd_resource type="Resource" script_class="AttachmentMod" format=3 uid="uid://c3jxw4a0vjh33"]
 
+[ext_resource type="PackedScene" uid="uid://cw3kmoboewyrt" path="res://player/bikes/assets/Mods/TrainingWheels_Left.glb" id="1_b0n8i"]
 [ext_resource type="Script" uid="uid://4x06v11v4n7a" path="res://resources/bikes/mods/attachment_mod.gd" id="1_mod"]
-[ext_resource type="PackedScene" uid="uid://7483ebqgusby" path="res://player/bikes/assets/Mods/TrainingWheels_Leftglb.glb" id="2_scene"]
 
 [resource]
 script = ExtResource("1_mod")
-scene = ExtResource("2_scene")
-price = 50
+scene = ExtResource("1_b0n8i")
 mirror_x = true
+price = 50

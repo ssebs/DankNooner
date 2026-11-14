@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cfvk3xfcwo2pi"
-path="res://.godot/imported/TrainingWheels_Leftglb.glb-f65965f588cfd3e39165c77e4199f574.scn"
+uid="uid://cw3kmoboewyrt"
+path="res://.godot/imported/TrainingWheels_Left.glb-8b66eaed97b02bc74af39f240a942bb0.scn"
 
 [deps]
 
-source_file="res://player/bikes/assets/Mods/TrainingWheels_Leftglb.glb"
-dest_files=["res://.godot/imported/TrainingWheels_Leftglb.glb-f65965f588cfd3e39165c77e4199f574.scn"]
+source_file="res://player/bikes/assets/Mods/TrainingWheels_Left.glb"
+dest_files=["res://.godot/imported/TrainingWheels_Left.glb-8b66eaed97b02bc74af39f240a942bb0.scn"]
 
 [params]
 

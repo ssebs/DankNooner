@@ -243,6 +243,8 @@
 
 ## Done ✅
 
+- [x] Add training wheels + wheelie bar mod markers; fix stale hand/foot sync on bike swap
+
 - [x] make hud in game consistent with new menu controls
 
 - [x] dbg_unlock_all (lots of $/xp/all things unlocked/1 loadout per bike)
