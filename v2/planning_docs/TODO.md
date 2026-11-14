@@ -36,9 +36,9 @@
   - [x] move profile customization (username) to under the profile/saves page
   - [x] controller support
   - [x] list career in expandable panel under it
-  - [ ] profile/saves menu:
-    - [ ] challenges should show on right 1/4 screen
-    - [ ] tabs take up 3/4 of screen: Save Slots, Career (stats), Bike Challenges
+  - [x] profile/saves menu:
+    - [x] challenges should show on right 1/4 screen
+    - [x] tabs take up 3/4 of screen: Save Slots, Career (stats), Bike Challenges
   - [ ] use actual challenges instead of placeholders
 
 - [ ] [Progression/Challenges](./Progression.md)

@@ -1,20 +1,18 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://player/hud_elements/input_prompt.gd" id="1_inpmt"]
+[ext_resource type="Shader" path="res://resources/shaders/icon_outline.gdshader" id="2_outln"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_outline"]
+shader = ExtResource("2_outln")
 
 [node name="InputPrompt" type="HBoxContainer"]
 mouse_filter = 2
 script = ExtResource("1_inpmt")
 
-[node name="IconChip" type="PanelContainer" parent="."]
+[node name="Icon" type="TextureRect" parent="."]
 unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-theme_type_variation = &"GestureChipPanel"
-
-[node name="Icon" type="TextureRect" parent="IconChip"]
-unique_name_in_owner = true
+material = SubResource("ShaderMaterial_outline")
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 mouse_filter = 2

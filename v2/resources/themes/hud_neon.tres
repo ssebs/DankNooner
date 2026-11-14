@@ -90,8 +90,6 @@ shadow_color = Color(0.255, 0.686, 1, 0.45)
 shadow_size = 8
 
 [resource]
-GestureChipPanel/base_type = &"PanelContainer"
-GestureChipPanel/styles/panel = SubResource("StyleBoxFlat_hudobject")
 GestureChipLabel/base_type = &"Label"
 GestureChipLabel/styles/normal = SubResource("StyleBoxFlat_hudchip")
 HeldKeyLabel/base_type = &"GestureChipLabel"
