@@ -248,6 +248,44 @@ func mark_tutorial_complete() -> void:
 	save_save()
 
 
+## Add to a career stat, lifetime and for the active bike's type. Not written to disk.
+func add_stat(key: String, amount: float) -> void:
+	for scope in _stat_scopes():
+		scope[key] = scope.get(key, 0.0) + amount
+
+
+## Raise a career stat (a best) to value, lifetime and for the active bike's type. Not written.
+func max_stat(key: String, value: float) -> void:
+	for scope in _stat_scopes():
+		scope[key] = maxf(scope.get(key, 0.0), value)
+
+
+## A challenge's progress (ChallengeDefinition.apply) in the active save.
+func get_challenge_progress(challenge: ChallengeDefinition) -> float:
+	return challenge_progress(current_save, challenge)
+
+
+## A challenge's progress in a save dict, saved by resource path.
+static func challenge_progress(save_dict: Dictionary, challenge: ChallengeDefinition) -> float:
+	return save_dict["progression"].get("challenges", {}).get(challenge.resource_path, 0.0)
+
+
+## Not written to disk.
+func set_challenge_progress(challenge: ChallengeDefinition, progress: float) -> void:
+	current_save["progression"].get_or_add("challenges", {})[challenge.resource_path] = progress
+
+
+## progression.stats: {"lifetime": {key: value}, "by_type": {type file name: {key: value}}}.
+func _stat_scopes() -> Array[Dictionary]:
+	var stats: Dictionary = current_save["progression"].get_or_add("stats", {})
+	var bike_type := get_player_definition().bike_skin.bike_type
+	var by_type: Dictionary = stats.get_or_add("by_type", {})
+	return [
+		stats.get_or_add("lifetime", {}),
+		by_type.get_or_add(bike_type.resource_path.get_file().get_basename(), {}),
+	]
+
+
 ## Take `amount` off the profile and write it. False, and nothing taken, if it's short.
 ## Doesn't emit save_item_updated — that re-pushes player metadata; HUDs poll money instead.
 func spend(amount: int) -> bool:
@@ -264,6 +302,7 @@ func earn(money: int, xp: int) -> void:
 	var player_def := get_player_definition()
 	player_def.money += money
 	player_def.xp += xp
+	add_stat("money_earned", money)
 	save_save()
 
 

@@ -41,25 +41,40 @@ Steps refer to [New systems](#new-systems).
   [Save slots](#save-slots).
 - **Economy pass** (step 10): level-ramped payouts, tested and balanced per minute. See
   [Economy](./Economy.md).
-- **UI shells, on stub data:** the profile card's Challenges / Career tabs (`profile_card.gd`
-  `STUB_CHALLENGES`, `STUB_CAREER`) and the Saves menu's Career and Bike Challenges tabs
-  (`saves_menu_state.gd` `_STUB_BIKE_CHALLENGES`).
+- **Challenge UI** (part of step 6, built 2026-11-14, untested): the profile card's Bike
+  Challenges tab (every menu card + the riding HUD, live) lists the active bike type's challenges,
+  unfinished first (`ProfileCard.challenge_rows`). On the HUD a row whose count goes up pops (punches
+  on completion) and the panel peeks open on that tab for a few seconds; the completion callout
+  holds longer than a trick's. Dailies will get their own tab. The Saves menu's Bike Challenges tab lists every type
+  (`SavesMenuState.bike_types`, `BikeTypeDefinition.name_key`) under a finished / listed header.
+  Career tabs are still stub data (`STUB_CAREER`).
 - **Console:** `dbg_set_money`, `dbg_set_level`, `dbg_unlock_all`.
+- **Stats tracker** (step 3, verified 2026-11-14): `StatsManager` +
+  `SaveManager.add_stat` / `max_stat`, saved under `progression.stats` as `lifetime` and `by_type`.
+  Trick counts, hold seconds and best holds come from `TrickManager.combo_banked`'s `holds` (server,
+  sent to each rider; flips count per rotation); distance, top speed, airtime and crashes from the local rider; money earned
+  from `SaveManager.earn`; `<MODE>_played` / `_wins` from `GamemodeManager.event_placed` (a solo
+  event with no bots counts as a win). `LongestWheelieChallenge` reads the same holds.
+- **Bike challenges** (step 4 minus dailies, built 2026-11-14, untested): `ChallengeDefinition`
+  (stat key, COUNT / TOTAL / BEST goal, target, optional modes, money + XP) in
+  `BikeTypeDefinition.challenges`. `ChallengeManager` runs on each rider's client off
+  `StatsManager.stat_recorded`, counts only on the active bike's type, from zero; progress saved
+  under `progression.challenges` by resource path. Completion pays via `SaveManager.earn` with a
+  callout + `CONFETTI_HORN`. Starter lists are placeholders (2–3 per type), rewards unsized.
 
 
 ## Next
 
 In build order:
 
-1. **Stats tracker** (step 3): everything challenges count comes from it.
-2. **Challenges** (step 4): per-bike-type lists + mastery, then dailies. Completion pays through
-   `SaveManager.earn` and plays the [completion](#completion) juice.
-3. **Unlock requirements, the rest of step 2:** mastery level gates mods; a finished list gates a
+1. **Challenges** (step 4): full lists per type (about 10), sized rewards, confetti VFX, then
+   dailies. Mastery (finished count) has no reader until the unlocks / UI below.
+2. **Unlock requirements, the rest of step 2:** mastery level gates mods; a finished list gates a
    type's other skins.
-4. **Swap the UI stubs for real data** (step 6), plus the pause menu's challenge progress.
-5. **Console commands** (step 9): `add_bike_level <type> <levels>`, `unlock_bike_max <type>`.
-6. **Steam stats + achievements** (step 5): full build only.
-7. **Level-up callout:** a HUD moment naming what a level just unlocked (see
+3. **Career tabs on real stats** (step 6), with achievement progress.
+4. **Console commands** (step 9): `add_bike_level <type> <levels>`, `unlock_bike_max <type>`.
+5. **Steam stats + achievements** (step 5): full build only.
+6. **Level-up callout:** a HUD moment naming what a level just unlocked (see
    [Economy](./Economy.md#later)).
 
 Still open:
@@ -222,8 +237,7 @@ plus the existing `+$N` / `+N XP` pops (`RidingHUDState.pop_earned`). `AudioMana
   stats; achievements are configured on the full app only.
 - Achievement ideas: 5 minutes total wheelie time in the balance point; unlock each bike type;
   win 100 stunt races; win 100 stunt battles; crash 1,000 times.
-- "In the balance point" already exists as a HUD check (`trick_popups.gd`); stats must share one
-  definition with it, not copy it.
+- "In the balance point" is `MovementController.in_balance_point`; stats must read it, not copy it.
 
 
 ## Challenges menu

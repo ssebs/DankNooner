@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://ylnfkd3cjyjp" path="res://levels/assets/props/tree_bundle.tscn" id="16_s2csy"]
 [ext_resource type="PackedScene" uid="uid://dfi8s52umbdwg" path="res://levels/assets/map_terrain_mine/MainMenuMountains.glb" id="17_cjcyd"]
 [ext_resource type="Script" uid="uid://bjt7k3nrl24c8" path="res://managers/gamemodes/challenges/race_challenge.gd" id="18_7dn64"]
+[ext_resource type="PackedScene" uid="uid://bxjk6as3o5j26" path="res://managers/gamemodes/gamemodeobjects/killbox.tscn" id="45_a3kpy"]
 [ext_resource type="Script" uid="uid://bdmmuje756nof" path="res://managers/gamemodes/tasks/boost_task.gd" id="boost"]
 [ext_resource type="Script" uid="uid://b40syrl038fb3" path="res://managers/gamemodes/tasks/checkpoint_task.gd" id="checkpoint"]
 [ext_resource type="PackedScene" uid="uid://hxxsuaaohfd7" path="res://managers/gamemodes/gamemodeobjects/event_start_circle.tscn" id="circle"]
@@ -89,35 +90,35 @@ auto_start_event = NodePath("TutorialCircle/TutorialEvent")
 [node name="Scenery" type="Node3D" parent="." unique_id=773524769]
 
 [node name="Road" parent="Scenery" unique_id=1468636586 instance=ExtResource("6_gb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0, -204.75)
 shape_mode = 1
 width = 16.0
-depth = 400.0
+depth = 800.0
 material_override = SubResource("StandardMaterial3D_m7gr6")
 neon_edges = true
 
 [node name="RampRoad" parent="Scenery" unique_id=544037384 instance=ExtResource("6_gb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -204.75)
 shape_mode = 1
 width = 12.0
-depth = 400.0
+depth = 800.0
 material_override = SubResource("StandardMaterial3D_m7gr6")
 neon_edges = true
 
 [node name="ItemsRoad" parent="Scenery" unique_id=206702751 instance=ExtResource("6_gb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, -204.75)
 shape_mode = 1
 width = 12.0
-depth = 400.0
+depth = 800.0
 material_override = SubResource("StandardMaterial3D_m7gr6")
 neon_edges = true
 
 [node name="Ground" parent="Scenery" unique_id=18230696 instance=ExtResource("6_gb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -63, -0.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -63, -0.1, -204.75)
 shape_mode = 1
 width = 200.0
 height = 0.1
-depth = 400.0
+depth = 800.0
 
 [node name="Garage" parent="Scenery" unique_id=364297433 instance=ExtResource("5_iwe6j")]
 transform = Transform3D(-4.3711385e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, -4.3711385e-08, -35, 0, 0)
@@ -1059,5 +1060,8 @@ min_duration = 0.5
 must_land = true
 help_pin = "SMITH"
 retry_on_miss = true
+
+[node name="Killbox" parent="." unique_id=1054789626 instance=ExtResource("45_a3kpy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -64, 0)
 
 [editable path="MainMenuMountains"]

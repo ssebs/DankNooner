@@ -11,6 +11,8 @@ signal player_latejoined(peer_id: int)
 signal player_disconnected(peer_id: int)
 ## Emitted when a match ends and we return to the lobby/menu.
 signal match_ended
+## Server: a rider placed in an event's results (RunnerGameMode._pay_out).
+signal event_placed(peer_id: int, won: bool)
 
 enum MatchState {
 	IN_LOBBY,

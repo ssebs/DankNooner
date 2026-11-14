@@ -251,12 +251,12 @@ func _ease_icon(weight: float) -> void:
 
 
 ## text is already localized.
-func pop_callout(text: String, color: Color = CALLOUT_COLOR) -> void:
+func pop_callout(text: String, color: Color = CALLOUT_COLOR, hold: float = HOLD_SECS) -> void:
 	var holder := Control.new()
 	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(holder)
 	_callouts.append(holder)
-	HUDFlash.wheelie(spawn_pop(holder, text, color, size / 2.0 + CALLOUT_ORIGIN, SINK_PX))
+	HUDFlash.wheelie(spawn_pop(holder, text, color, size / 2.0 + CALLOUT_ORIGIN, SINK_PX, hold))
 	# The pop frees its label when done; the holder goes with it
 	holder.child_exiting_tree.connect(_drop_callout.bind(holder).unbind(1))
 
@@ -312,11 +312,12 @@ func _spawn(text: String, color: Color, origin: Vector2) -> Label:
 	return spawn_pop(self, text, color, size / 2.0 + origin, SINK_PX)
 
 
-## A pop centered on `center` in `parent`'s space: holds, then moves by `drift` as it fades. The
+## A pop centered on `center` in `parent`'s space: holds `hold` secs, then moves by `drift` as it
+## fades. The
 ## caller gives it its entry verb (HUDFlash). Static so other HUD elements (MoneyLabel) pop the
 ## same way.
 static func spawn_pop(
-	parent: Control, text: String, color: Color, center: Vector2, drift: Vector2
+	parent: Control, text: String, color: Color, center: Vector2, drift: Vector2, hold: float = HOLD_SECS
 ) -> Label:
 	var label := _make_label(color)
 	label.text = text
@@ -324,7 +325,7 @@ static func spawn_pop(
 	_center_on(label, center)
 
 	var tween := label.create_tween()
-	tween.tween_interval(HOLD_SECS)
+	tween.tween_interval(hold)
 	tween.set_parallel()
 	tween.chain().tween_property(label, "position", label.position + drift, SINK_SECS)
 	tween.tween_property(label, "modulate:a", 0.0, SINK_SECS)

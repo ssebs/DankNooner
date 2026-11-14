@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ChallengeDefinition" format=3]
+
+[ext_resource type="Script" path="res://resources/challenges/challenge_definition.gd" id="1_chal"]
+
+[resource]
+script = ExtResource("1_chal")
+title_key = "CHAL_COUNT_BUNNY_HOP"
+stat = "BUNNY_HOP"
+target = 10.0

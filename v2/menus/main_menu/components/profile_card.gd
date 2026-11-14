@@ -30,16 +30,9 @@ const CARET_PULSE_GAP_SECS := 1.2
 const OPEN_SECS := 0.4
 const CARET_RING_GROW := 4.0
 const CHALLENGE_ROW_SCENE := preload("res://menus/main_menu/components/challenge_row.tscn")
-
-# TODO: real challenges + dailies, Progression.md steps 3-4. is_new = an unseen daily.
-const STUB_CHALLENGES: Array[Dictionary] = [
-	{"title": "Hold a 5s wheelie", "progress": 3, "target": 10, "is_new": true},
-	{"title": "Land 5 backflips", "progress": 5, "target": 5, "is_new": false},
-	{"title": "1 minute of airtime", "progress": 42, "target": 60, "is_new": false},
-	{"title": "Win a stunt race", "progress": 0, "target": 1, "is_new": false},
-	{"title": "Grind 100m of rail", "progress": 18, "target": 100, "is_new": false},
-	{"title": "Ride 10km", "progress": 2, "target": 10, "is_new": false},
-]
+## How long a challenge's progress / completion holds the panel open on its tab.
+const CHALLENGE_PEEK_SECS := 3.0
+const CHALLENGE_DONE_PEEK_SECS := 6.0
 
 # TODO: real lifetime stats + achievements, Progression.md steps 3 + 5.
 const STUB_CAREER: Array[Dictionary] = [
@@ -94,6 +87,10 @@ var _peek: bool = false
 ## The tab on screen, which can differ from _tab (no board, or board_overrides).
 var _shown_tab: Tab = Tab.CHALLENGES
 var _input_state_manager: InputStateManager
+## title -> the progress last shown, to juice what went up (see show_challenges).
+var _challenge_progress: Dictionary[String, float] = {}
+## Ticks msec the challenge peek closes at; 0 when not peeking.
+var _challenge_peek_until: int = 0
 
 
 func _ready():
@@ -126,7 +123,6 @@ func _ready():
 		_challenges_tab.pressed.connect(_on_tab_pressed.bind(Tab.CHALLENGES))
 		_career_tab.pressed.connect(_on_tab_pressed.bind(Tab.CAREER))
 		_leaderboard_tab.pressed.connect(_on_tab_pressed.bind(Tab.LEADERBOARD))
-	build_rows(_challenge_list, STUB_CHALLENGES.slice(0, MAX_CHALLENGES))
 	build_rows(_career_list, STUB_CAREER)
 	_apply(true)
 	if !clickable:
@@ -199,6 +195,7 @@ func _show_tab_prompts():
 
 func show_save(slot: int, save_dict: Dictionary, player_def: PlayerDefinition) -> void:
 	show_stats(player_def)
+	show_challenges(player_def.bike_skin.bike_type, save_dict, false)
 	_name_label.text = SaveCard.display_name(slot, save_dict)
 	_portrait.show_player(player_def)
 
@@ -212,6 +209,35 @@ func get_focus_target() -> Control:
 func show_stats(player_def: PlayerDefinition) -> void:
 	level_label.text = SaveCard.level_text(player_def)
 	money_label.text = MoneyLabel.format(player_def.money)
+
+
+## The bike type's challenges, unfinished first. Rows are updated in place, so the riding HUD calls
+## this every frame. juice: a row whose count went up pops (punches when it finishes) and the panel
+## peeks open on its tab.
+func show_challenges(bike_type: BikeTypeDefinition, save_dict: Dictionary, juice: bool) -> void:
+	var rows := challenge_rows(bike_type, save_dict).slice(0, MAX_CHALLENGES)
+	if rows.size() != _challenge_list.get_child_count():
+		for child in _challenge_list.get_children():
+			_challenge_list.remove_child(child)
+			child.queue_free()
+		build_rows(_challenge_list, rows)
+	var shown := _challenge_progress
+	_challenge_progress = {}
+	for i in rows.size():
+		var entry: Dictionary = rows[i]
+		var row: ChallengeRow = _challenge_list.get_child(i)
+		row.show_challenge(entry["title"], entry["progress"], entry["target"])
+		_challenge_progress[entry["title"]] = entry["progress"]
+		if juice and int(entry["progress"]) > int(shown.get(entry["title"], entry["progress"])):
+			var done: bool = entry["progress"] >= entry["target"]
+			if done:
+				HUDFlash.punch(row)
+			else:
+				HUDFlash.pop(row)
+			_peek_challenges(CHALLENGE_DONE_PEEK_SECS if done else CHALLENGE_PEEK_SECS)
+	if _challenge_peek_until > 0 and Time.get_ticks_msec() >= _challenge_peek_until:
+		_challenge_peek_until = 0
+		_apply()
 
 
 ## See RaceLeaderboard.set_board. Kept for every card, so the pause menu shows the HUD's board.
@@ -239,12 +265,29 @@ func clear_board() -> void:
 	_apply()
 
 
+## Rows (see build_rows) for a bike type's challenges in a save dict, unfinished first.
+static func challenge_rows(bike_type: BikeTypeDefinition, save_dict: Dictionary) -> Array[Dictionary]:
+	var todo: Array[Dictionary] = []
+	var done: Array[Dictionary] = []
+	for challenge in bike_type.challenges:
+		var progress := SaveManager.challenge_progress(save_dict, challenge)
+		var row := {"title": challenge.title(), "progress": progress, "target": challenge.target}
+		(done if progress >= challenge.target else todo).append(row)
+	todo.append_array(done)
+	return todo
+
+
 ## Also builds the Saves menu's lists.
 static func build_rows(list: VBoxContainer, entries: Array[Dictionary]):
 	for entry in entries:
 		var row: ChallengeRow = CHALLENGE_ROW_SCENE.instantiate()
 		list.add_child(row)
 		row.show_challenge(entry["title"], entry["progress"], entry["target"])
+
+
+func _peek_challenges(secs: float):
+	_challenge_peek_until = maxi(_challenge_peek_until, Time.get_ticks_msec() + int(secs * 1000.0))
+	_apply()
 
 
 ## Unrolls the panel down from the pill, or rolls it back up, from wherever it is now.
@@ -292,8 +335,12 @@ func _apply(snap: bool = false):
 	var has_board := !_board_headers.is_empty()
 	var expanded := _expanded
 	if !_opened_once:
-		expanded = has_board or STUB_CHALLENGES.any(func(c): return c["is_new"])
+		# TODO: also open for an unseen daily (Progression.md#dailies).
+		expanded = has_board
 	var tab := Tab.CHALLENGES if _tab == Tab.LEADERBOARD and !has_board else _tab
+	if _challenge_peek_until > 0:
+		expanded = true
+		tab = Tab.CHALLENGES
 	if board_overrides and has_board and _board_is_event:
 		expanded = true
 		tab = Tab.LEADERBOARD

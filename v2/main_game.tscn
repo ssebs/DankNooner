@@ -65,6 +65,8 @@
 [ext_resource type="PackedScene" path="res://managers/tour/tour_manager.tscn" id="64_tour"]
 [ext_resource type="PackedScene" path="res://menus/saves_menu/saves_menu_state.tscn" id="65_saves"]
 [ext_resource type="Script" uid="uid://uj0l0u0v0f0d" path="res://managers/npc_traffic_manager.gd" id="99_npctm"]
+[ext_resource type="Script" path="res://managers/stats_manager.gd" id="100_stats"]
+[ext_resource type="Script" path="res://managers/challenge_manager.gd" id="101_chal"]
 
 [node name="MainGame" type="Node" unique_id=936339405 node_paths=PackedStringArray("settings_manager")]
 script = ExtResource("1_1oj5k")
@@ -555,6 +557,21 @@ gamemode_manager = NodePath("../GamemodeManager")
 riding_hud_state = NodePath("../HUDManager/StateMachine/RidingHUDState")
 npc_traffic_manager = NodePath("../NPCTrafficManager")
 npc_race_manager = NodePath("../NPCRaceManager")
+
+[node name="StatsManager" type="Node" parent="ManagerManager" node_paths=PackedStringArray("save_manager", "spawn_manager", "trick_manager", "gamemode_manager") groups=["Managers"]]
+script = ExtResource("100_stats")
+save_manager = NodePath("../SaveManager")
+spawn_manager = NodePath("../SpawnManager")
+trick_manager = NodePath("../TrickManager")
+gamemode_manager = NodePath("../GamemodeManager")
+
+[node name="ChallengeManager" type="Node" parent="ManagerManager" node_paths=PackedStringArray("save_manager", "stats_manager", "gamemode_manager", "riding_hud_state", "audio_manager") groups=["Managers"]]
+script = ExtResource("101_chal")
+save_manager = NodePath("../SaveManager")
+stats_manager = NodePath("../StatsManager")
+gamemode_manager = NodePath("../GamemodeManager")
+riding_hud_state = NodePath("../HUDManager/StateMachine/RidingHUDState")
+audio_manager = NodePath("../AudioManager")
 
 [node name="NPCRaceManager" type="Node" parent="ManagerManager" unique_id=1218916391 node_paths=PackedStringArray("level_manager", "settings_manager", "spawn_manager", "item_manager") groups=["Managers"]]
 script = ExtResource("31_npcrm")

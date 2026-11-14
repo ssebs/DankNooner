@@ -4,9 +4,14 @@
 [ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_theme"]
 [ext_resource type="PackedScene" path="res://menus/main_menu/components/profile_card.tscn" id="3_card"]
 [ext_resource type="Script" path="res://menus/prompt_tab_container.gd" id="4_ptabs"]
+[ext_resource type="Script" path="res://resources/bikes/bike_type_definition.gd" id="5_btype"]
+[ext_resource type="Resource" path="res://resources/bikes/types/mini_bike_type.tres" id="6_mini"]
+[ext_resource type="Resource" path="res://resources/bikes/types/naked_bike_type.tres" id="7_naked"]
+[ext_resource type="Resource" path="res://resources/bikes/types/sport_bike_type.tres" id="8_sport"]
 
 [node name="SavesMenuState" type="Node"]
 script = ExtResource("1_saves")
+bike_types = Array[ExtResource("5_btype")]([ExtResource("6_mini"), ExtResource("7_naked"), ExtResource("8_sport")])
 
 [node name="UI" type="Control" parent="."]
 unique_name_in_owner = true

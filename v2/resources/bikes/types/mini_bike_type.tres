@@ -4,6 +4,10 @@
 [ext_resource type="Script" uid="uid://cd642c2igur4x" path="res://resources/bikes/bike_type_definition.gd" id="1_type"]
 [ext_resource type="Curve" uid="uid://dlqmqgtip7b61" path="res://resources/bikes/power_curve.tres" id="2_miuqu"]
 [ext_resource type="Curve" uid="uid://ct2j0k3sl7m3u" path="res://player/bikes/resources/steer_speed_curve.tres" id="4_vs4ap"]
+[ext_resource type="Resource" path="res://resources/challenges/mini/bunny_hops.tres" id="c0_chal"]
+[ext_resource type="Resource" path="res://resources/challenges/mini/wheelie_5s.tres" id="c1_chal"]
+[ext_resource type="Resource" path="res://resources/challenges/mini/airtime_60s.tres" id="c2_chal"]
+[ext_resource type="Script" uid="uid://dg10iwnfkiwf3" path="res://resources/challenges/challenge_definition.gd" id="cs_chal"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oq5os"]
 radius = 0.4
@@ -20,3 +24,5 @@ max_speed = 60.0
 acceleration = 8.0
 brake_strength = 20.0
 lean_speed = 4.0
+name_key = "BIKE_TYPE_MINI"
+challenges = Array[ExtResource("cs_chal")]([ExtResource("c0_chal"), ExtResource("c1_chal"), ExtResource("c2_chal")])

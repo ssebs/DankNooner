@@ -18,10 +18,7 @@ const CLUTCH_UP_GRACE: float = 0.5
 
 func check(player: PlayerEntity, delta: float, state: Dictionary) -> bool:
 	var movement := player.movement_controller
-	var is_wheelie := (
-		player.trick_controller.current_trick
-		in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]
-	)
+	var is_wheelie := player.trick_controller.current_trick in TrickController.WHEELIE_TRICKS
 	if state.get("trick_done", false):
 		return !player.is_crashed and !is_wheelie
 	if !is_wheelie:

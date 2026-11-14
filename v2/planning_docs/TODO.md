@@ -45,9 +45,12 @@
   - [x] bike variants (scooter=>mini, cruiser=>naked)
   - [x] wipe old saves
   - [x] lock bikes behind XP level
-  - [ ] update economy (XP+$ for events / scoring calculations)
-    - [ ] add unit tests
-    - [ ] SAVE TO NEW DOC
+  - [x] update economy (XP+$ for events / scoring calculations)
+    - [x] add unit tests
+    - [x] SAVE TO NEW DOC
+  - [ ] stats tracker
+  - [ ] challenges
+  - [ ] ui
 
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins

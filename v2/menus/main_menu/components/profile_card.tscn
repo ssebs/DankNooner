@@ -180,7 +180,7 @@ mouse_default_cursor_shape = 2
 theme_type_variation = &"TabButton"
 theme_override_font_sizes/font_size = 15
 toggle_mode = true
-text = "CHALLENGES_LABEL"
+text = "BIKE_CHALLENGES_LABEL"
 
 [node name="CareerTab" type="Button" parent="Drop/Panel/Content/Tabs"]
 unique_name_in_owner = true

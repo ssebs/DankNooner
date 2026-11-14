@@ -25,6 +25,8 @@ var is_boosting: bool:
 	get:
 		return boost_burn_target >= 0.0
 
+## A bot's flip is always one rotation (see TrickController.air_flips).
+var air_flips: int = 0
 var _trick_left: float = 0.0
 
 
@@ -35,11 +37,13 @@ func start_trick(trick: TrickController.Trick, duration: float, airborne: bool) 
 	ComboRules.start_trick(self, self, trick, airborne)
 	if trick in [TrickController.Trick.BACKFLIP, TrickController.Trick.FRONTFLIP]:
 		ComboRules.award_flips(self, self, 1)
+		air_flips = 1
 
 
 func end_trick() -> void:
 	current_trick = TrickController.Trick.NONE
 	_trick_left = 0.0
+	air_flips = 0
 
 
 ## Server, every driving tick: run the trick out, accrue the combo, drain an active burn.

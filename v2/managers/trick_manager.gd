@@ -17,8 +17,10 @@
 ## `trick_controller`, `is_crashed` and `username`. A bot's bail posts straight away (no launch).
 class_name TrickManager extends BaseManager
 
-## Emitted (server) when a combo ends cleanly and its score is banked.
-signal combo_banked(peer_id: int, points: float, duration: float, multiplier: int)
+## Emitted (server) when a combo ends cleanly and its score is banked. holds: trick -> each
+## continuous hold's seconds in the combo; wheelie variants share one hold, keyed WHEELIE_SITTING.
+## Flips are one 0s entry per rotation, so a double backflip counts twice.
+signal combo_banked(peer_id: int, points: float, duration: float, multiplier: int, holds: Dictionary)
 ## Emitted (server) when a crash voids an in-progress combo — nothing was banked.
 signal combo_voided(peer_id: int, lost_duration: float, lost_points: float)
 
@@ -33,8 +35,14 @@ signal combo_voided(peer_id: int, lost_duration: float, lost_points: float)
 ## the multiplier.
 @export var points_per_second: float = 10.0
 
-## peer_id -> {"points", "prev_time", "prev_score", "bonus_score", "peak_mult", "tricks", "crashed",
-## "bail"}. "bail" holds the last crash's feed line until its launch is measured.
+## Counted per rotation (see _track_flips), not as holds.
+const FLIP_TRICKS: Array[TrickController.Trick] = [
+	TrickController.Trick.BACKFLIP, TrickController.Trick.FRONTFLIP
+]
+
+## peer_id -> {"points", "prev_time", "prev_score", "bonus_score", "peak_mult", "tricks", "holds",
+## "hold_trick", "hold_t", "flip_trick", "flips", "crashed", "bail"}. "bail" holds the last crash's
+## feed line until its launch is measured.
 var _peer_states: Dictionary[int, Dictionary] = {}
 ## peer_id -> tricks whose combo_score counts twice. Apart from _peer_states so reset_peer (every
 ## spawn) keeps it.
@@ -54,7 +62,7 @@ func _ready():
 	npc_race_manager.npc_despawned.connect(_on_player_disconnected)
 
 
-func _process(_delta: float):
+func _process(delta: float):
 	if Engine.is_editor_hint():
 		return
 	if multiplayer.multiplayer_peer == null or !multiplayer.is_server():
@@ -62,14 +70,14 @@ func _process(_delta: float):
 
 	for peer_id in _peer_states:
 		if peer_id < 0:
-			_track_combo(peer_id, npc_race_manager.get_npc(peer_id))
+			_track_combo(peer_id, npc_race_manager.get_npc(peer_id), delta)
 			continue
 		# Player despawns (level swap / disconnect) before its row is cleared — skip until
 		# _on_player_disconnected catches up.
 		var player := spawn_manager.get_player_by_peer_id(peer_id)
 		if player == null:
 			continue
-		_track_combo(peer_id, player)
+		_track_combo(peer_id, player, delta)
 
 
 ## Watch a rider's combo state; bank the run the frame it drops back to zero.
@@ -77,7 +85,7 @@ func _process(_delta: float):
 ## Crashing voids the run outright — no partial credit. Checked before the combo_time test
 ## because a crash freezes combo_time (the rollback tick bails on is_crashed) and only zeroes
 ## it at the respawn; without this the run would bank on the way down like a clean finish.
-func _track_combo(peer_id: int, rider: Node3D):
+func _track_combo(peer_id: int, rider: Node3D, delta: float):
 	var st := _peer_states[peer_id]
 
 	if rider.is_crashed:
@@ -101,6 +109,9 @@ func _track_combo(peer_id: int, rider: Node3D):
 			st["bonus_score"] = 0.0
 			st["peak_mult"] = 1
 			st["tricks"] = []
+			st["holds"] = {}
+			st["hold_trick"] = TrickController.Trick.NONE
+			st["hold_t"] = 0.0
 		# Bots get no launch measure, so their bail line posts now
 		if peer_id < 0:
 			_on_player_launch_measured(peer_id, 0.0)
@@ -124,6 +135,8 @@ func _track_combo(peer_id: int, rider: Node3D):
 			and (tricks.is_empty() or tricks[-1] != tc.current_trick)
 		):
 			tricks.append(tc.current_trick)
+		_track_flips(st, tc)
+		_track_hold(st, tc.current_trick, delta)
 		return
 
 	if st["prev_time"] <= 0.0:
@@ -133,6 +146,8 @@ func _track_combo(peer_id: int, rider: Node3D):
 	var multiplier: int = st["peak_mult"]
 	var bonus: bool = st["bonus_score"] > 0.0
 	var points: float = get_open_combo_points(peer_id)
+	_track_hold(st, TrickController.Trick.NONE, 0.0)
+	var holds: Dictionary = st["holds"]
 	st["points"] += points
 	riding_hud_state.push_trickfeed(
 		rider.username, peer_id, PackedInt32Array(st["tricks"]), int(points), multiplier, false, 0.0, ""
@@ -142,10 +157,36 @@ func _track_combo(peer_id: int, rider: Node3D):
 	st["bonus_score"] = 0.0
 	st["peak_mult"] = 1
 	st["tricks"] = []
-	combo_banked.emit(peer_id, points, duration, multiplier)
+	st["holds"] = {}
+	combo_banked.emit(peer_id, points, duration, multiplier, holds)
 	# A bot has no HUD to pop on
 	if peer_id >= 0:
 		riding_hud_state.push_score_popup(peer_id, int(points), multiplier, bonus)
+
+
+## One holds entry per new rotation, under the flip trick latched at its start (the trick fires at
+## the first rotation only).
+func _track_flips(st: Dictionary, tc):
+	if tc.current_trick in FLIP_TRICKS:
+		st["flip_trick"] = tc.current_trick
+	for i in tc.air_flips - st["flips"]:
+		st["holds"].get_or_add(st["flip_trick"], []).append(0.0)
+	st["flips"] = tc.air_flips
+
+
+## Time the trick held now; a change of trick closes the previous hold into st["holds"].
+func _track_hold(st: Dictionary, trick: int, delta: float):
+	if trick in FLIP_TRICKS:
+		trick = TrickController.Trick.NONE
+	if trick in TrickController.WHEELIE_TRICKS:
+		trick = TrickController.Trick.WHEELIE_SITTING
+	if trick != st["hold_trick"]:
+		if st["hold_trick"] != TrickController.Trick.NONE:
+			st["holds"].get_or_add(st["hold_trick"], []).append(st["hold_t"])
+		st["hold_trick"] = trick
+		st["hold_t"] = 0.0
+	if trick != TrickController.Trick.NONE:
+		st["hold_t"] += delta
 
 
 #region public api
@@ -177,6 +218,11 @@ func reset_peer(peer_id: int):
 		"bonus_score": 0.0,
 		"peak_mult": 1,
 		"tricks": [],
+		"holds": {},
+		"hold_trick": TrickController.Trick.NONE,
+		"hold_t": 0.0,
+		"flip_trick": TrickController.Trick.BACKFLIP,
+		"flips": 0,
 		"crashed": crashed,
 		"bail": old.get("bail", {}),
 	}

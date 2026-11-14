@@ -3,43 +3,16 @@
 ## Save Slots tab: the active save's username, then a card per save on disk (this build's only, see
 ## SaveManager.slot_path) and empty cards in the lowest free slots up to MIN_CARDS. From the pause
 ## menu (a PauseStateContext) it's rename-only: no empty cards, load or delete. Cards are rebuilt,
-## previews included, on Enter, and so are the Career, Bike Challenges and challenge lists.
+## previews included, on Enter, and so is the Career list; the challenge lists follow the active save.
 class_name SavesMenuState extends MenuState
 
 @export var save_manager: SaveManager
 @export var input_state_manager: InputStateManager
+## Listed in this order on the Bike Challenges tab.
+@export var bike_types: Array[BikeTypeDefinition] = []
 
 const MIN_CARDS := 3
 const SAVE_CARD_SCENE := preload("res://menus/saves_menu/components/save_card.tscn")
-
-# TODO: real bike challenges + mastery, Progression.md step 4. Bike type -> its list.
-const _STUB_BIKE_CHALLENGES: Dictionary = {
-	"Mini": {
-		"mastery": 2,
-		"challenges": [
-			{"title": "Land 10 bunny hops", "progress": 10, "target": 10},
-			{"title": "Hold a 5s wheelie", "progress": 10, "target": 10},
-			{"title": "Grind 50m of rail", "progress": 12, "target": 50},
-		],
-	},
-	"Naked": {
-		"mastery": 1,
-		"challenges": [
-			{"title": "Hold a 3s stoppie", "progress": 10, "target": 10},
-			{"title": "Win 5 stunt battles", "progress": 2, "target": 5},
-			{"title": "1 minute of airtime", "progress": 18, "target": 60},
-		],
-	},
-	"Sport": {
-		"mastery": 0,
-		"challenges": [
-			{"title": "Hit 250 km/h", "progress": 0, "target": 1},
-			{"title": "Win 5 stunt races", "progress": 1, "target": 5},
-			{"title": "Hold a 10s wheelie", "progress": 4, "target": 10},
-		],
-	},
-}
-const _MAX_MASTERY := 10
 
 @onready var _bg_tint: ColorRect = %BGTint
 @onready var _tabs: PromptTabContainer = %Tabs
@@ -69,6 +42,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("save_manager is not set")
 	if input_state_manager == null:
 		warnings.append("input_state_manager is not set")
+	if bike_types.is_empty():
+		warnings.append("bike_types is empty")
 	return warnings
 
 
@@ -88,8 +63,6 @@ func Enter(state_context: StateContext):
 	_tabs.show_prompts(input_state_manager.is_gamepad)
 	_build_cards()
 	ProfileCard.build_rows(_career_list, ProfileCard.STUB_CAREER)
-	ProfileCard.build_rows(_challenge_list, ProfileCard.STUB_CHALLENGES)
-	_build_bike_lists()
 
 
 func Exit(_state_context: StateContext):
@@ -106,18 +79,26 @@ func Exit(_state_context: StateContext):
 	_card_by_slot.clear()
 
 
-## A mastery header per bike type over its challenges.
-func _build_bike_lists():
-	for bike_type: String in _STUB_BIKE_CHALLENGES:
-		var bike: Dictionary = _STUB_BIKE_CHALLENGES[bike_type]
+## The active bike's challenges, and a mastery header (finished / listed) per bike type over its
+## challenges. Rebuilt whenever the active save changes.
+func _build_challenge_lists():
+	for list: Node in [_bike_list, _challenge_list]:
+		for child in list.get_children():
+			list.remove_child(child)
+			child.queue_free()
+	var active_type := save_manager.get_player_definition().bike_skin.bike_type
+	ProfileCard.build_rows(
+		_challenge_list, ProfileCard.challenge_rows(active_type, save_manager.current_save)
+	)
+	for bike_type in bike_types:
+		var rows := ProfileCard.challenge_rows(bike_type, save_manager.current_save)
+		var done := rows.filter(func(row): return row["progress"] >= row["target"]).size()
 		var header := Label.new()
 		header.theme_type_variation = &"Heading2Label"
 		header.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
-		header.text = "%s  %d/%d" % [bike_type, bike["mastery"], _MAX_MASTERY]
+		header.text = "%s  %d/%d" % [tr(bike_type.name_key), done, rows.size()]
 		_bike_list.add_child(header)
-		var challenges: Array[Dictionary] = []
-		challenges.assign(bike["challenges"])
-		ProfileCard.build_rows(_bike_list, challenges)
+		ProfileCard.build_rows(_bike_list, rows)
 
 
 func _build_cards():
@@ -178,6 +159,7 @@ func _show_active():
 	_profile_card.show_save(
 		save_manager.save_slot, save_manager.current_save, save_manager.get_player_definition()
 	)
+	_build_challenge_lists()
 
 
 func _on_slot_name_submitted(slot_name: String, slot: int):

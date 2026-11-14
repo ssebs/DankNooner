@@ -10,6 +10,8 @@ class_name RidingHUDState extends HUDState
 const _TRICK_ROW_SCENE := preload("res://menus/tricks_menu/components/trick_row.tscn")
 const _RPM_COLOR_LOW := UtilsConstants.UI_BLUE
 const _RPM_COLOR_HIGH := UtilsConstants.UI_RED
+## A finished challenge's callout stays readable this long.
+const _CHALLENGE_DONE_HOLD_SECS := 2.5
 ## Not trick gold, so a grabbed item doesn't read as a trick callout.
 const _ITEM_CALLOUT_COLOR := UtilsConstants.UI_BLUE
 
@@ -208,7 +210,9 @@ func Physics_Update(delta: float):
 	_speed_num.modulate = Color.WHITE.lerp(_RPM_COLOR_HIGH, player_entity.grip_usage)
 	_fps_label.visible = player_entity.settings_manager.current_settings["show_fps"]
 	_fps_label.text = tr("HUD_FPS").format({"value": int(Engine.get_frames_per_second())})
-	_profile_card.show_stats(save_manager.get_player_definition())
+	var player_def := save_manager.get_player_definition()
+	_profile_card.show_stats(player_def)
+	_profile_card.show_challenges(player_def.bike_skin.bike_type, save_manager.current_save, true)
 
 	# Boost meter + combo multiplier are server-authoritative (TrickManager) and arrive
 	# via RollbackSynchronizer, so poll the synced vars rather than tracking them here.
@@ -229,8 +233,7 @@ func Physics_Update(delta: float):
 	# Display-only local accumulation — the challenge's authoritative best is server-side.
 	var wheelie_held: bool = (
 		not player_entity.is_crashed
-		and trick_controller.current_trick
-		in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]
+		and trick_controller.current_trick in TrickController.WHEELIE_TRICKS
 	)
 	_wheelie_attempt_t = _wheelie_attempt_t + delta if _has_leaderboard and wheelie_held else 0.0
 	_update_pitch_icon()
@@ -316,7 +319,7 @@ func _update_pitch_icon():
 		var snap := MovementController.LANDING_SNAP_ANGLE_DEG
 		window = Vector4(-180.0, -snap, snap, 180.0)
 		pivot = Vector2(0.5, 0.5)
-	elif trick in [TrickController.Trick.WHEELIE_SITTING, TrickController.Trick.WHEELIE_MOD]:
+	elif trick in TrickController.WHEELIE_TRICKS:
 		var bp: float = bd.wheelie_balance_point_deg
 		var width: float = bd.wheelie_balance_point_width_deg
 		window = Vector4(0.0, bp - width, bp + width, bd.max_wheelie_angle_deg)
@@ -364,6 +367,11 @@ func set_event_picker_hint(shown: bool):
 ## Something was too pricey.
 func flash_money():
 	_profile_card.money_label.flash()
+
+
+## Local: a finished challenge's callout, held longer than a trick's.
+func pop_challenge_done(text: String):
+	_trick_popups.pop_callout(text, TrickPopups.CALLOUT_COLOR, _CHALLENGE_DONE_HOLD_SECS)
 
 
 ## A "+$N" off the money and a "+N XP" off the level, same pop. Zero amounts don't pop.

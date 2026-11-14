@@ -4,7 +4,7 @@
 class_name BestComboChallenge extends RaceChallenge
 
 
-func on_combo_banked(peer_id: int, points: float) -> void:
+func on_combo_banked(peer_id: int, points: float, _holds: Dictionary) -> void:
 	_best[peer_id] = maxf(_best.get(peer_id, 0.0), points)
 
 

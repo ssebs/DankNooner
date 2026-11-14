@@ -388,7 +388,9 @@ func _end_round():
 	_round_left = ROUND_SECS
 
 
-func _on_combo_banked(peer_id: int, points: float, _duration: float, _multiplier: int):
+func _on_combo_banked(
+	peer_id: int, points: float, _duration: float, _multiplier: int, _holds: Dictionary
+):
 	if !multiplayer.is_server():
 		return
 	_round_points[peer_id] = _round_points.get(peer_id, 0.0) + points

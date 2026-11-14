@@ -59,6 +59,8 @@ enum TrickState {NONE, GROUND, WHEELIE, AIR, GRIND}
 @export var movement_controller: MovementController
 @export var boost_controller: BoostController
 
+## The plain wheelie tricks (not DRIFT_WHEELIE); a hold may switch between them.
+const WHEELIE_TRICKS: Array[Trick] = [Trick.WHEELIE_SITTING, Trick.WHEELIE_MOD]
 const TRICK_CAM_THRESHOLD: float = -0.5
 const TWO_LEFT_FEET_SPEED_THRESHOLD: float = 20
 ## Airborne time before any right-stick air trick can register. A bump or curb mid-ground-trick isn't
@@ -179,6 +181,10 @@ var combo_multiplier: int = 1
 ## Score the combo in progress has earned (see ComboRules.HELD_TRICK_SCORE / ONE_TIME_TRICK_SCORE).
 ## TrickManager banks it when the combo ends.
 var combo_score: float = 0.0
+## Full flips this jump (TrickManager counts each; the BACKFLIP / FRONTFLIP trick fires once).
+var air_flips: int:
+	get:
+		return _air_flips_awarded
 
 var current_trick: Trick = Trick.NONE
 var _last_trick: Trick = Trick.NONE
@@ -507,7 +513,7 @@ func _detect_current_trick(delta: float) -> Trick:
 			return wheelie_held
 		return Trick.WHEELIE_SITTING
 
-	if _last_trick in [Trick.WHEELIE_SITTING, Trick.WHEELIE_MOD] and not wheelie_setting_down(delta):
+	if _last_trick in WHEELIE_TRICKS and not wheelie_setting_down(delta):
 		if movement_controller.pitch_angle <= deg_to_rad(WHEELIE_EXIT_PITCH_DEG):
 			_wheelie_exit_hold += delta
 		else:
@@ -647,7 +653,7 @@ func is_wheelie_stick_trick() -> bool:
 ## MovementController reads it before this tick's _detect_current_trick, which ends the wheelie.
 func wheelie_setting_down(delta: float) -> bool:
 	return (
-		_last_trick in [Trick.WHEELIE_SITTING, Trick.WHEELIE_MOD]
+		_last_trick in WHEELIE_TRICKS
 		and movement_controller.pitch_angle <= deg_to_rad(WHEELIE_EXIT_PITCH_DEG)
 		and _wheelie_exit_hold + delta >= WHEELIE_EXIT_DELAY
 	)

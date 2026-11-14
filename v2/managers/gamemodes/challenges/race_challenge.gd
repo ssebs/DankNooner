@@ -28,8 +28,9 @@ func tick(_peer_id: int, _rider: Node3D, _delta: float) -> void:
 	pass
 
 
-## A combo ended cleanly and TrickManager banked it. Override in the subclass.
-func on_combo_banked(_peer_id: int, _points: float) -> void:
+## A combo ended cleanly and TrickManager banked it (holds: see TrickManager.combo_banked).
+## Override in the subclass.
+func on_combo_banked(_peer_id: int, _points: float, _holds: Dictionary) -> void:
 	pass
 
 

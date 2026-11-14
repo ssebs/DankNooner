@@ -50,6 +50,12 @@ class_name BikeTypeDefinition extends Resource
 ## lean-crash threshold reduction, and front-brake-while-steering lowside trigger.
 @export_range(0.0, 1.0, 0.05) var unstable_surface_factor: float = 1.0
 
+@export_group("Progression")
+## Localized name, e.g. the Saves menu's challenge list header.
+@export var name_key: String = ""
+## This type's challenge list; each finished one is a mastery level (see ChallengeManager).
+@export var challenges: Array[ChallengeDefinition] = []
+
 var max_lean_angle_rad: float:
 	get:
 		return deg_to_rad(max_lean_angle_deg)

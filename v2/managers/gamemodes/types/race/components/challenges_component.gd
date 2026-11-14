@@ -89,11 +89,13 @@ func _riders() -> Dictionary[int, Node3D]:
 	return riders
 
 
-func _on_combo_banked(peer_id: int, points: float, _duration: float, _multiplier: int):
+func _on_combo_banked(
+	peer_id: int, points: float, _duration: float, _multiplier: int, holds: Dictionary
+):
 	if _finished.has(peer_id):
 		return
 	for challenge in _challenges:
-		challenge.on_combo_banked(peer_id, points)
+		challenge.on_combo_banked(peer_id, points, holds)
 
 
 func _on_combo_voided(peer_id: int, _lost_duration: float, _lost_points: float):

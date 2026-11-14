@@ -224,6 +224,7 @@ func _pay_out(data: ResultsData):
 		var xp := place_payout(def.payout_xp, xp_rate, place, score, _is_score_mode())
 		DebugUtils.DebugMsg("[economy] results peer %d: place %d, score %.0f" % [peer_id, place, score])
 		earn(peer_id, money, xp)
+		gamemode_manager.event_placed.emit(peer_id, place == 0 and (score > 0.0 or !_is_score_mode()))
 
 
 ## Server: pay one rider, scaled by their rider level, and add it to their results columns.

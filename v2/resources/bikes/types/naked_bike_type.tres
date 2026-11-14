@@ -1,9 +1,18 @@
-[gd_resource type="Resource" script_class="BikeTypeDefinition" format=3]
+[gd_resource type="Resource" script_class="BikeTypeDefinition" format=3 uid="uid://dn0nww50th4r6"]
 
-[ext_resource type="Script" path="res://resources/bikes/bike_type_definition.gd" id="1_type"]
+[ext_resource type="Script" uid="uid://cd642c2igur4x" path="res://resources/bikes/bike_type_definition.gd" id="1_type"]
 [ext_resource type="Curve" uid="uid://botndymf27a6o" path="res://resources/bikes/naked_power_curve.tres" id="2_power"]
+[ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/bikes/hitbox/bike_hitbox.tres" id="5_egaje"]
+[ext_resource type="Curve" uid="uid://bc4775t6u5ngh" path="res://player/bikes/resources/lean_speed_curve.tres" id="6_e06ed"]
+[ext_resource type="Curve" uid="uid://ct2j0k3sl7m3u" path="res://player/bikes/resources/steer_speed_curve.tres" id="9_pclgt"]
+[ext_resource type="Resource" path="res://resources/challenges/naked/stoppies_3s.tres" id="c0_chal"]
+[ext_resource type="Resource" path="res://resources/challenges/naked/backflips_stunt_race.tres" id="c1_chal"]
+[ext_resource type="Resource" path="res://resources/challenges/naked/trick_battle_wins.tres" id="c2_chal"]
+[ext_resource type="Script" uid="uid://dg10iwnfkiwf3" path="res://resources/challenges/challenge_definition.gd" id="cs_chal"]
 
 [resource]
 script = ExtResource("1_type")
 power_curve = ExtResource("2_power")
 max_speed = 100.0
+name_key = "BIKE_TYPE_NAKED"
+challenges = Array[ExtResource("cs_chal")]([ExtResource("c0_chal"), ExtResource("c1_chal"), ExtResource("c2_chal")])
