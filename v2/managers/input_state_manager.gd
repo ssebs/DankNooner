@@ -74,6 +74,9 @@ func _ready():
 	if !Engine.is_editor_hint():
 		# Device detection keeps tour icons live while a tutorial tour pauses the game (IN_TOUR is inert).
 		process_mode = Node.PROCESS_MODE_ALWAYS
+		Console.add_command(
+			"dbg_gamepad_prompts", _toggle_gamepad_prompts, [], 0, "Toggle gamepad glyphs on keyboard/mouse"
+		)
 
 	if (
 		(OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios"))
@@ -88,6 +91,7 @@ func _input(event: InputEvent):
 		gamepad = false
 	elif ControlBindings.is_gamepad(event):
 		gamepad = true
+	gamepad = gamepad or DebugUtils.gamepad_prompts
 	if gamepad != is_gamepad:
 		is_gamepad = gamepad
 		device_changed.emit(gamepad)
@@ -287,3 +291,10 @@ func showhide_mouse_cursor():
 				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 #endregion
+
+
+func _toggle_gamepad_prompts() -> void:
+	DebugUtils.gamepad_prompts = !DebugUtils.gamepad_prompts
+	is_gamepad = DebugUtils.gamepad_prompts
+	device_changed.emit(is_gamepad)
+	Console.print_line("dbg_gamepad_prompts: %s" % DebugUtils.gamepad_prompts)

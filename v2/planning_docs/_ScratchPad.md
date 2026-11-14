@@ -24,9 +24,6 @@ Make a hoodie
 
 ## NOW
 
-
-
-
 ---
 ##
 ## NEXT

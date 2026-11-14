@@ -395,7 +395,7 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
 - **Riding HUD layout is one job per corner, no panels** — FPS + event pane top-left, money/XP +
   progress line top-centre, leaderboard + trick feed top-right, held item + minimap bottom-left, speed/gear/RPM + vertical boost gauge
   bottom-right, trick prompt mid-left. Labels read over the world via the outline/shadow in
-  `resources/themes/hud.tres`, set on the HUD's `MarginContainer`.
+  `resources/themes/hud_neon.tres`, set on the HUD's `MarginContainer`.
 - **Button prompts are `InputPrompt`s** (`player/hud_elements/`) — the glyph an action is bound to
   on the rider's current device (`InputController.is_gamepad`), resolved through `ControlBindings`
   (shared with Settings > Controls). `RidingHUDState` re-glyphs them on a device switch and on every

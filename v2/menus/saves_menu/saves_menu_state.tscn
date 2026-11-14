@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://menus/saves_menu/saves_menu_state.gd" id="1_saves"]
 [ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_theme"]
 [ext_resource type="PackedScene" path="res://menus/main_menu/components/profile_card.tscn" id="3_card"]
+[ext_resource type="Script" path="res://menus/prompt_tab_container.gd" id="4_ptabs"]
 
 [node name="SavesMenuState" type="Node"]
 script = ExtResource("1_saves")
@@ -50,41 +51,118 @@ size_flags_vertical = 0
 theme_type_variation = &"TitleLabel"
 text = "PROFILE_LABEL"
 
-[node name="UsernameRow" type="HBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout"]
+[node name="Body" type="HBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="TabPanel" type="PanelContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+theme_type_variation = &"MenuBackdropPanel"
+
+[node name="Tabs" type="TabContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("4_ptabs")
+current_tab = 0
+tab_0/title = "SAVE_SLOTS_LABEL"
+tab_1/title = "CAREER_LABEL"
+tab_2/title = "BIKE_CHALLENGES_LABEL"
+
+[node name="SaveSlots" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="UsernameRow" type="HBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs/SaveSlots"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="UsernameLabel" type="Label" parent="UI/AspectRatioContainer/MarginContainer/Layout/UsernameRow"]
+[node name="UsernameLabel" type="Label" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs/SaveSlots/UsernameRow"]
 layout_mode = 2
 text = "USERNAME_LABEL"
 
-[node name="UsernameEdit" type="LineEdit" parent="UI/AspectRatioContainer/MarginContainer/Layout/UsernameRow"]
+[node name="UsernameEdit" type="LineEdit" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs/SaveSlots/UsernameRow"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
 max_length = 32
 
-[node name="Backdrop" type="PanelContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_type_variation = &"MenuBackdropPanel"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Backdrop"]
-layout_mode = 2
-
-[node name="Scroll" type="ScrollContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Backdrop/VBoxContainer"]
+[node name="Scroll" type="ScrollContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs/SaveSlots"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 3
 vertical_scroll_mode = 0
 
-[node name="Cards" type="HBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Backdrop/VBoxContainer/Scroll"]
+[node name="Cards" type="HBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs/SaveSlots/Scroll"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 6
 theme_override_constants/separation = 64
 
+[node name="Career" type="ScrollContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs"]
+visible = false
+layout_mode = 2
+theme_type_variation = &"InsetScroll"
+horizontal_scroll_mode = 0
+metadata/_tab_index = 1
+
+[node name="CareerList" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs/Career"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="BikeChallenges" type="ScrollContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs"]
+visible = false
+layout_mode = 2
+theme_type_variation = &"InsetScroll"
+horizontal_scroll_mode = 0
+metadata/_tab_index = 2
+
+[node name="BikeList" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs/BikeChallenges"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="Side" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+
+[node name="ProfileCard" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/Side" instance=ExtResource("3_card")]
+unique_name_in_owner = true
+layout_mode = 2
+clickable = false
+expandable = false
+show_drop = false
+
+[node name="ChallengesPanel" type="PanelContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/Side"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"MenuBackdropPanel"
+
+[node name="Scroll" type="ScrollContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/Side/ChallengesPanel"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="Content" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/Side/ChallengesPanel/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="ChallengesLabel" type="Label" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/Side/ChallengesPanel/Scroll/Content"]
+layout_mode = 2
+theme_type_variation = &"Heading2Label"
+text = "CHALLENGES_LABEL"
+
+[node name="ChallengeList" type="VBoxContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/Side/ChallengesPanel/Scroll/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 12
 
 [node name="CloseBtn" type="Button" parent="UI/AspectRatioContainer/MarginContainer/Layout"]
 unique_name_in_owner = true
@@ -92,13 +170,6 @@ layout_mode = 2
 size_flags_horizontal = 0
 mouse_default_cursor_shape = 2
 text = "BACK_LABEL"
-
-[node name="ProfileCard" parent="UI/AspectRatioContainer/MarginContainer" instance=ExtResource("3_card")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 0
-clickable = false
 
 [node name="ConfirmBox" type="PanelContainer" parent="UI"]
 unique_name_in_owner = true

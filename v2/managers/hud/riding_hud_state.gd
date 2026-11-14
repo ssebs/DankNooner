@@ -235,7 +235,7 @@ func Physics_Update(delta: float):
 	_wheelie_attempt_t = _wheelie_attempt_t + delta if _has_leaderboard and wheelie_held else 0.0
 	_update_pitch_icon()
 
-	if input_controller.is_gamepad != _shown_gamepad:
+	if (input_controller.is_gamepad or DebugUtils.gamepad_prompts) != _shown_gamepad:
 		_refresh_prompts()
 	# The list only opens while the trick button is held, in any state.
 	var held := input_controller.nfx_trick_held
@@ -451,7 +451,7 @@ func _show_trick_prompt(state: TrickController.TrickState):
 
 ## Re-glyph every prompt for the rider's current device and bindings.
 func _refresh_prompts():
-	_shown_gamepad = input_controller.is_gamepad
+	_shown_gamepad = input_controller.is_gamepad or DebugUtils.gamepad_prompts
 	for prompt in _prompts:
 		prompt.refresh(_shown_gamepad)
 	var rows := _trick_rows.get_children()

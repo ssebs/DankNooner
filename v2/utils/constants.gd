@@ -98,8 +98,7 @@ const SKIN_COLOR_PRESETS: Array[Color] = [
 	Color(0.9140625, 0.101872444, 0.017852783, 1),
 ]
 
-## UI palette, shared by code and theme: scripts/gen_neon_theme.py reads every `UI_*` Color
-## here, so keep each on one line as `const UI_X: Color = Color(r, g, b)`.
+## UI palette, shared by code and the neon themes (DankNoonerNeon.tres, hud_neon.tres).
 ## UI chrome, menus and HUD — the world's neon edge blue (neon_edges.gdshader edge_color).
 const UI_BLUE: Color = Color(0.255, 0.686, 1.0)
 ## Combo tier 1, bonus tricks.

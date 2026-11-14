@@ -3,6 +3,7 @@ class_name InputPrompt extends HBoxContainer
 
 @export var action: String
 
+@onready var _icon_chip: PanelContainer = %IconChip
 @onready var _icon: TextureRect = %Icon
 @onready var _key: Label = %Key
 
@@ -15,7 +16,7 @@ func refresh(gamepad: bool) -> void:
 	if event == null:
 		return
 	_icon.texture = ControlBindings.event_icon(event)
-	_icon.visible = _icon.texture != null
+	_icon_chip.visible = _icon.texture != null
 	# Every key/mouse binding on this device, e.g. trick reads "T / Right Click".
 	var texts := PackedStringArray()
 	for bound in InputMap.action_get_events(action):

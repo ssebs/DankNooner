@@ -1,19 +1,54 @@
 @tool
-## Profile: the active save's username, then a card per save on disk (this build's only, see
+## Profile: tabs on the left 3/4, the active save's ProfileCard and challenges on the right 1/4.
+## Save Slots tab: the active save's username, then a card per save on disk (this build's only, see
 ## SaveManager.slot_path) and empty cards in the lowest free slots up to MIN_CARDS. From the pause
 ## menu (a PauseStateContext) it's rename-only: no empty cards, load or delete. Cards are rebuilt,
-## previews included, on Enter.
+## previews included, on Enter, and so are the Career, Bike Challenges and challenge lists.
 class_name SavesMenuState extends MenuState
 
 @export var save_manager: SaveManager
+@export var input_state_manager: InputStateManager
 
 const MIN_CARDS := 3
 const SAVE_CARD_SCENE := preload("res://menus/saves_menu/components/save_card.tscn")
 
+# TODO: real bike challenges + mastery, Progression.md step 4. Bike type -> its list.
+const _STUB_BIKE_CHALLENGES: Dictionary = {
+	"Mini": {
+		"mastery": 2,
+		"challenges": [
+			{"title": "Land 10 bunny hops", "progress": 10, "target": 10},
+			{"title": "Hold a 5s wheelie", "progress": 10, "target": 10},
+			{"title": "Grind 50m of rail", "progress": 12, "target": 50},
+		],
+	},
+	"Naked": {
+		"mastery": 1,
+		"challenges": [
+			{"title": "Hold a 3s stoppie", "progress": 10, "target": 10},
+			{"title": "Win 5 stunt battles", "progress": 2, "target": 5},
+			{"title": "1 minute of airtime", "progress": 18, "target": 60},
+		],
+	},
+	"Sport": {
+		"mastery": 0,
+		"challenges": [
+			{"title": "Hit 250 km/h", "progress": 0, "target": 1},
+			{"title": "Win 5 stunt races", "progress": 1, "target": 5},
+			{"title": "Hold a 10s wheelie", "progress": 4, "target": 10},
+		],
+	},
+}
+const _MAX_MASTERY := 10
+
 @onready var _bg_tint: ColorRect = %BGTint
+@onready var _tabs: PromptTabContainer = %Tabs
 @onready var _username_edit: LineEdit = %UsernameEdit
 @onready var _profile_card: ProfileCard = %ProfileCard
 @onready var _cards: HBoxContainer = %Cards
+@onready var _career_list: VBoxContainer = %CareerList
+@onready var _bike_list: VBoxContainer = %BikeList
+@onready var _challenge_list: VBoxContainer = %ChallengeList
 @onready var _close_btn: Button = %CloseBtn
 @onready var _confirm_box: Control = %ConfirmBox
 @onready var _confirm_label: Label = %ConfirmLabel
@@ -32,6 +67,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	if save_manager == null:
 		warnings.append("save_manager is not set")
+	if input_state_manager == null:
+		warnings.append("input_state_manager is not set")
 	return warnings
 
 
@@ -47,7 +84,12 @@ func Enter(state_context: StateContext):
 	_close_btn.pressed.connect(_on_close_pressed)
 	_confirm_yes_btn.pressed.connect(_on_confirm_yes)
 	_confirm_no_btn.pressed.connect(_confirm_box.hide)
+	input_state_manager.device_changed.connect(_tabs.show_prompts)
+	_tabs.show_prompts(input_state_manager.is_gamepad)
 	_build_cards()
+	ProfileCard.build_rows(_career_list, ProfileCard.STUB_CAREER)
+	ProfileCard.build_rows(_challenge_list, ProfileCard.STUB_CHALLENGES)
+	_build_bike_lists()
 
 
 func Exit(_state_context: StateContext):
@@ -57,9 +99,25 @@ func Exit(_state_context: StateContext):
 	_close_btn.pressed.disconnect(_on_close_pressed)
 	_confirm_yes_btn.pressed.disconnect(_on_confirm_yes)
 	_confirm_no_btn.pressed.disconnect(_confirm_box.hide)
-	for card in _cards.get_children():
-		card.queue_free()
+	input_state_manager.device_changed.disconnect(_tabs.show_prompts)
+	for list: Node in [_cards, _career_list, _bike_list, _challenge_list]:
+		for child in list.get_children():
+			child.queue_free()
 	_card_by_slot.clear()
+
+
+## A mastery header per bike type over its challenges.
+func _build_bike_lists():
+	for bike_type: String in _STUB_BIKE_CHALLENGES:
+		var bike: Dictionary = _STUB_BIKE_CHALLENGES[bike_type]
+		var header := Label.new()
+		header.theme_type_variation = &"Heading2Label"
+		header.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+		header.text = "%s  %d/%d" % [bike_type, bike["mastery"], _MAX_MASTERY]
+		_bike_list.add_child(header)
+		var challenges: Array[Dictionary] = []
+		challenges.assign(bike["challenges"])
+		ProfileCard.build_rows(_bike_list, challenges)
 
 
 func _build_cards():
@@ -172,3 +230,8 @@ func on_cancel_key_pressed():
 		_confirm_box.hide()
 		return
 	_on_close_pressed()
+
+
+#override
+func on_tab_key_pressed(dir: int):
+	_tabs.current_tab = wrapi(_tabs.current_tab + dir, 0, _tabs.get_tab_count())

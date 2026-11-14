@@ -14,6 +14,8 @@ enum Tab { CHALLENGES, CAREER, LEADERBOARD }
 ## Off: no caret and the tabs can't be clicked; the panel just mirrors the shared state (the
 ## riding HUD).
 @export var expandable: bool = true
+## Off: the pill alone, never the panel (the Saves menu, which lists them itself).
+@export var show_drop: bool = true
 ## On: an event's board (see show_board) always shows, open on the leaderboard, whatever the
 ## shared state (the riding HUD; pause can still look at challenges).
 @export var board_overrides: bool = false
@@ -30,7 +32,7 @@ const CARET_RING_GROW := 4.0
 const CHALLENGE_ROW_SCENE := preload("res://menus/main_menu/components/challenge_row.tscn")
 
 # TODO: real challenges + dailies, Progression.md steps 3-4. is_new = an unseen daily.
-const _STUB_CHALLENGES: Array[Dictionary] = [
+const STUB_CHALLENGES: Array[Dictionary] = [
 	{"title": "Hold a 5s wheelie", "progress": 3, "target": 10, "is_new": true},
 	{"title": "Land 5 backflips", "progress": 5, "target": 5, "is_new": false},
 	{"title": "1 minute of airtime", "progress": 42, "target": 60, "is_new": false},
@@ -40,7 +42,7 @@ const _STUB_CHALLENGES: Array[Dictionary] = [
 ]
 
 # TODO: real lifetime stats + achievements, Progression.md steps 3 + 5.
-const _STUB_CAREER: Array[Dictionary] = [
+const STUB_CAREER: Array[Dictionary] = [
 	{"title": "Balance point wheelie (min)", "progress": 1, "target": 5},
 	{"title": "Stunt races won", "progress": 12, "target": 100},
 	{"title": "Stunt battles won", "progress": 4, "target": 100},
@@ -124,8 +126,8 @@ func _ready():
 		_challenges_tab.pressed.connect(_on_tab_pressed.bind(Tab.CHALLENGES))
 		_career_tab.pressed.connect(_on_tab_pressed.bind(Tab.CAREER))
 		_leaderboard_tab.pressed.connect(_on_tab_pressed.bind(Tab.LEADERBOARD))
-	_build_rows(_challenge_list, _STUB_CHALLENGES.slice(0, MAX_CHALLENGES))
-	_build_rows(_career_list, _STUB_CAREER)
+	build_rows(_challenge_list, STUB_CHALLENGES.slice(0, MAX_CHALLENGES))
+	build_rows(_career_list, STUB_CAREER)
 	_apply(true)
 	if !clickable:
 		_pill.mouse_default_cursor_shape = CURSOR_ARROW
@@ -237,7 +239,8 @@ func clear_board() -> void:
 	_apply()
 
 
-func _build_rows(list: VBoxContainer, entries: Array[Dictionary]):
+## Also builds the Saves menu's lists.
+static func build_rows(list: VBoxContainer, entries: Array[Dictionary]):
 	for entry in entries:
 		var row: ChallengeRow = CHALLENGE_ROW_SCENE.instantiate()
 		list.add_child(row)
@@ -289,12 +292,12 @@ func _apply(snap: bool = false):
 	var has_board := !_board_headers.is_empty()
 	var expanded := _expanded
 	if !_opened_once:
-		expanded = has_board or _STUB_CHALLENGES.any(func(c): return c["is_new"])
+		expanded = has_board or STUB_CHALLENGES.any(func(c): return c["is_new"])
 	var tab := Tab.CHALLENGES if _tab == Tab.LEADERBOARD and !has_board else _tab
 	if board_overrides and has_board and _board_is_event:
 		expanded = true
 		tab = Tab.LEADERBOARD
-	expanded = expanded or _peek
+	expanded = (expanded or _peek) and show_drop
 	_shown_tab = tab
 
 	# Display-only (the riding HUD) shows just the active tab.

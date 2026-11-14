@@ -585,6 +585,8 @@ PROFILE_LABEL,"Profile","Perfil","Profil","Profil","Profilo","プロフィール
 CHALLENGES_LABEL,"Challenges","Desafíos","Défis","Herausforderungen","Sfide","チャレンジ","도전 과제","挑战","Испытания","Wyzwania"
 LEADERBOARD_LABEL,"Leaderboard","Clasificación","Classement","Rangliste","Classifica","ランキング","순위표","排行榜","Таблица лидеров","Ranking"
 CAREER_LABEL,"Career","Carrera","Carrière","Karriere","Carriera","キャリア","커리어","生涯","Карьера","Kariera"
+SAVE_SLOTS_LABEL,"Save Slots","Partidas guardadas","Emplacements de sauvegarde","Spielstände","Slot di salvataggio","セーブスロット","저장 슬롯","存档栏位","Слоты сохранений","Sloty zapisu"
+BIKE_CHALLENGES_LABEL,"Bike Challenges","Desafíos de moto","Défis moto","Motorrad-Herausforderungen","Sfide moto","バイクチャレンジ","바이크 도전 과제","摩托车挑战","Испытания байков","Wyzwania motocyklowe"
 LOAD_LABEL,"Load","Cargar","Charger","Laden","Carica","ロード","불러오기","读取","Загрузить","Wczytaj"
 SAVE_SLOT_DEFAULT_NAME,"Save {slot}","Partida {slot}","Sauvegarde {slot}","Spielstand {slot}","Salvataggio {slot}","セーブ {slot}","저장 {slot}","存档 {slot}","Сохранение {slot}","Zapis {slot}"
 SAVE_SLOT_LEVEL,"Lv {level}","Nv {level}","Niv {level}","Lv {level}","Liv {level}","Lv {level}","Lv {level}","{level}级","Ур {level}","Poz {level}"

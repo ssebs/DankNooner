@@ -225,8 +225,9 @@ saves_menu_state = NodePath("../SavesMenuState")
 
 [node name="CreditsMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1489866704 instance=ExtResource("62_credits")]
 
-[node name="SavesMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1489866705 node_paths=PackedStringArray("save_manager") instance=ExtResource("65_saves")]
+[node name="SavesMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1489866705 node_paths=PackedStringArray("save_manager", "input_state_manager") instance=ExtResource("65_saves")]
 save_manager = NodePath("../../../SaveManager")
+input_state_manager = NodePath("../../../InputStateManager")
 
 [node name="TricksMenuState" parent="ManagerManager/MenuManager/StateMachine" unique_id=1846203517 node_paths=PackedStringArray("menu_manager", "save_manager", "level_manager", "input_state_manager") instance=ExtResource("38_trkmn")]
 menu_manager = NodePath("../..")

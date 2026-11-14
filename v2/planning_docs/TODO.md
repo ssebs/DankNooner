@@ -239,6 +239,8 @@
 
 ## Done ✅
 
+- [x] make hud in game consistent with new menu controls
+
 - [x] dbg_unlock_all (lots of $/xp/all things unlocked/1 loadout per bike)
 
 - [x] in game popups fight the pause/menus. too easy to roll thru them, or close on accident and have to drive back over it

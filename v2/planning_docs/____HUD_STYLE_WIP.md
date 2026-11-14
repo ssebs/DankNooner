@@ -119,8 +119,8 @@ The logo bike under the live score, tilting about its rear wheel (today's behavi
 
 ## What exists today
 
-- **Theme:** `scripts/gen_neon_theme.py` generates `DankNoonerNeon.tres` and `hud_neon.tres` from
-  `DankNooner.tres` / `hud.tres` and the `UI_*` palette in `utils/constants.gd`. The default font
+- **Theme:** `DankNoonerNeon.tres` (menus) and `hud_neon.tres` (riding HUD overlay) are hand-edited;
+  the neon 9-patch PNGs in `resources/themes/neon/` are pre-rendered. The default font
   (`resources/fonts/museo_moderno_emoji.tres`) is already SemiBold; Bold is used for headings and the
   feed's names/points. No Medium variation exists. Scanlines were removed 2026-10-27.
 - **Variations in play on the riding HUD:** `HUDPanel` (event panel, leaderboard panel), `FeedPanel`
