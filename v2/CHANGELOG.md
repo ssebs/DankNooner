@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.1.3 - 2026-11-13
+
+- profilecard controller support
+- fix in game popups fight the pause/menus. too easy to roll thru them, or close on accident and have to drive back over it
+- rename profile component to ProfileCard
+- new profile component
+- must re-press gas when switching camera
+- add multi-lang fonts
+- cruiser should cost $
+
 ## v0.1.2 - 2026-11-12
 
 - Red triangles over enemy racers head
