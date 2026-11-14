@@ -23,9 +23,9 @@ const CRASH_LOOP_WINDOW_MS: int = 1000
 const CRASH_LOOP_LIMIT: int = 3
 
 var _ctx: GamemodeStateContext
-## The circle whose event picker is open — its events are what the picker indexes.
+## The circle the local rider is in — ui_accept opens its picker, whose events the picker indexes.
 var _entered_circle: EventStartCircle
-## The activity whose picker is open instead; null while a circle's is.
+## The activity the local rider is in instead; null while a circle is.
 var _entered_activity: FreeRoamActivity
 ## peer_id -> points banked this round. Server only.
 var _round_points: Dictionary[int, float] = {}
@@ -88,6 +88,7 @@ func Enter(state_context: StateContext):
 	gamemode_manager.player_disconnected.connect(_on_player_disconnected)
 	gamemode_manager.player_latejoined.connect(_on_player_latejoined)
 	trick_manager.combo_banked.connect(_on_combo_banked)
+	input_state_manager.accept_pressed.connect(_on_accept_pressed)
 
 	_signals_event_circles(true)
 	_signals_activities(true)
@@ -186,22 +187,8 @@ func _on_event_circle_entered(peer_id: int, source_circle: EventStartCircle):
 
 	_entered_circle = source_circle
 	_entered_activity = null
-	var names := PackedStringArray()
-	var descriptions := PackedStringArray()
-	# Time attack events' personal-best save keys, "" for the rest.
-	var pb_keys := PackedStringArray()
-	for event in source_circle.get_events():
-		names.append(event.definition.name)
-		descriptions.append(event.definition.description)
-		var is_time_attack := event.definition.target_gamemode == GameModeType.Kind.TIME_ATTACK
-		pb_keys.append(
-			TimeAttackComponent.event_key(gamemode_manager.current_level_name, event)
-			if is_time_attack else ""
-		)
-
-	_open_event_picker(peer_id, names, descriptions, pb_keys, false)
-
-	# TODO - set player velocity to 0
+	# Lobby-wide events are the host's call (see GamemodeEventHUDState.on_player_entered_circle).
+	riding_hud_state.set_event_picker_hint(multiplayer.is_server())
 
 
 func _on_event_circle_exited(peer_id: int, source_circle: EventStartCircle):
@@ -212,7 +199,46 @@ func _on_event_circle_exited(peer_id: int, source_circle: EventStartCircle):
 	if peer_id != multiplayer.get_unique_id():
 		return
 	DebugUtils.DebugMsg("%d exited eventcircle: %s" % [peer_id, source_circle.name])
-	_close_event_picker(peer_id)
+	_leave_picker_area(peer_id)
+
+
+## ui_accept inside a circle or activity opens its picker.
+func _on_accept_pressed():
+	var peer_id := multiplayer.get_unique_id()
+	if _entered_activity != null:
+		_open_event_picker(
+			peer_id,
+			PackedStringArray([_entered_activity.event_name]),
+			PackedStringArray([_entered_activity.event_description]),
+			PackedStringArray([""]),
+			true
+		)
+		return
+	# Outside every circle, or a client in a lobby-wide one — nothing to open.
+	if _entered_circle == null or !multiplayer.is_server():
+		return
+	var names := PackedStringArray()
+	var descriptions := PackedStringArray()
+	# Time attack events' personal-best save keys, "" for the rest.
+	var pb_keys := PackedStringArray()
+	for event in _entered_circle.get_events():
+		names.append(event.definition.name)
+		descriptions.append(event.definition.description)
+		var is_time_attack := event.definition.target_gamemode == GameModeType.Kind.TIME_ATTACK
+		pb_keys.append(
+			TimeAttackComponent.event_key(gamemode_manager.current_level_name, event)
+			if is_time_attack else ""
+		)
+	_open_event_picker(peer_id, names, descriptions, pb_keys, false)
+
+
+## The local rider left a circle or activity. The picker's open only if a respawn moved them out.
+func _leave_picker_area(peer_id: int):
+	_entered_circle = null
+	_entered_activity = null
+	riding_hud_state.set_event_picker_hint(false)
+	if game_mode_event_hud_state.ui.visible:
+		_close_event_picker(peer_id)
 
 
 func _open_event_picker(
@@ -268,9 +294,17 @@ func Exit(_state_context: StateContext):
 	gamemode_manager.player_disconnected.disconnect(_on_player_disconnected)
 	gamemode_manager.player_latejoined.disconnect(_on_player_latejoined)
 	trick_manager.combo_banked.disconnect(_on_combo_banked)
+	input_state_manager.accept_pressed.disconnect(_on_accept_pressed)
 
 	_signals_event_circles(false)
 	_signals_activities(false)
+
+	_entered_circle = null
+	_entered_activity = null
+	riding_hud_state.set_event_picker_hint(false)
+	# Local: the server may be mid-teardown, and unfreezes everyone below.
+	if game_mode_event_hud_state.ui.visible:
+		game_mode_event_hud_state.hide_ui_for_peer()
 
 	# Host started an event mid-activity — that event places and freezes riders itself.
 	if _activity != null:
@@ -282,6 +316,12 @@ func Exit(_state_context: StateContext):
 		for peer_id in _running:
 			_running[peer_id].server_end(peer_id, 0.0, spawn_manager)
 		_running.clear()
+		# Riders the host's event start caught in an open picker. Before the next mode's freezes.
+		for peer_id in gamemode_manager.lobby_manager.lobby_players:
+			# Player may not be spawned yet (late-join) — skip is intentional.
+			var player := spawn_manager.get_player_by_peer_id(peer_id)
+			if player != null:
+				CountdownTask.unfreeze(player)
 		if npc_traffic_manager != null:
 			npc_traffic_manager.stop_traffic()
 		pickup_spawn_manager.deactivate_pickups()
@@ -365,13 +405,7 @@ func _on_activity_entered(peer_id: int, activity: FreeRoamActivity):
 		return
 	_entered_circle = null
 	_entered_activity = activity
-	_open_event_picker(
-		peer_id,
-		PackedStringArray([activity.event_name]),
-		PackedStringArray([activity.event_description]),
-		PackedStringArray([""]),
-		true
-	)
+	riding_hud_state.set_event_picker_hint(true)
 
 
 func _on_activity_exited(peer_id: int, _exited: FreeRoamActivity):
@@ -380,7 +414,7 @@ func _on_activity_exited(peer_id: int, _exited: FreeRoamActivity):
 		return
 	if peer_id != multiplayer.get_unique_id() or _activity != null:
 		return
-	_close_event_picker(peer_id)
+	_leave_picker_area(peer_id)
 
 
 ## Client-callable: start `activity_path` for YOU. The server derives the rider from the sender.
@@ -424,6 +458,8 @@ func request_end_activity(result: float):
 @rpc("call_local", "reliable")
 func _rpc_begin_activity(activity_path: NodePath):
 	_activity = get_node(activity_path)
+	# The exit it parks you past is skipped while it runs, so don't leave a stale circle to reopen.
+	_leave_picker_area(multiplayer.get_unique_id())
 	# Affordable — checked when the picker was submitted.
 	save_manager.spend(_activity.get_start_price())
 	_activity.finished.connect(_on_activity_finished, CONNECT_ONE_SHOT)

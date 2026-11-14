@@ -78,15 +78,13 @@ func _gather():
 		return
 	if input_disabled:
 		return
-	if _text_field_focused():
-		return
 
 	if _pending_gear_reset:
 		nfx_target_gear = 1
 		_pending_gear_reset = false
 
 	# Zeroed, not skipped: skipping would hold whatever was pressed when the menu opened
-	if _input_state_manager.is_menu_open():
+	if _is_ui_open() or _is_typing():
 		nfx_throttle = 0.0
 		nfx_front_brake = 0.0
 		nfx_rear_brake = 0.0
@@ -146,10 +144,10 @@ func _process(delta):
 		return
 	if !is_multiplayer_authority():
 		return
-	if _text_field_focused():
+	if _is_typing():
 		return
 
-	var in_menu := _input_state_manager.is_menu_open()
+	var in_menu := _is_ui_open()
 	if !in_menu and Input.is_action_just_pressed("switch_cam"):
 		cam_switch_pressed.emit()
 	if !in_menu and Input.is_action_just_pressed("reset_cam"):
@@ -218,11 +216,19 @@ func _auto_shift(delta: float):
 		_auto_shift_cooldown = AUTO_SHIFT_COOLDOWN
 
 
-## True when a text field has keyboard focus (e.g. username/code entry) — game
-## input polls global Input and bypasses GUI focus, so block it while typing.
-func _text_field_focused() -> bool:
+## A menu or the event picker owns input.
+func _is_ui_open() -> bool:
+	return (
+		_input_state_manager.is_menu_open()
+		or _input_state_manager.current_input_state == InputStateManager.InputState.IN_EVENT_PICKER
+	)
+
+
+## True when the console is open or a text field has keyboard focus (e.g. username/code entry) —
+## game input polls global Input and bypasses GUI focus, so block it while typing.
+func _is_typing() -> bool:
 	var focused := get_viewport().gui_get_focus_owner()
-	return focused is LineEdit or focused is TextEdit
+	return Console.is_visible() or focused is LineEdit or focused is TextEdit
 
 
 #region KBM/Gamepad switching

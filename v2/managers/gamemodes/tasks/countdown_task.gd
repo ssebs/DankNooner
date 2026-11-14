@@ -48,11 +48,14 @@ static func freeze(player: PlayerEntity) -> void:
 	player.input_controller.nfx_lean = 0.0
 	# rb_* freeze command — PlayerEntity applies it in _rollback_tick so the freeze syncs to clients too.
 	player.rb_lock_movement = true
+	# Last call before the tick wins, e.g. the event picker's unfreeze then an activity's freeze.
+	player.rb_unlock_movement = false
 
 
 static func unfreeze(player: PlayerEntity) -> void:
 	player.input_controller.input_disabled = false
 	player.rb_unlock_movement = true
+	player.rb_lock_movement = false
 
 
 @rpc("call_local", "reliable")

@@ -108,6 +108,7 @@ HUD_RESPAWNING,"Respawning...","Reapareciendo...","Réapparition...","Respawn...
 HUD_FULL_RESPAWNING,"Full respawning...","Reaparición completa...","Réapparition complète...","Kompletter Respawn...","Riapparizione completa...","完全リスポーン中...","완전 리스폰 중...","完全重生中...","Полное возрождение...","Pełne odradzanie..."
 HUD_RESPAWN_POINT_SET,"Respawn point set!","¡Punto de reaparición fijado!","Point de réapparition fixé !","Respawn-Punkt gesetzt!","Punto di riapparizione impostato!","リスポーン地点を設定!","리스폰 지점 설정!","重生点已设置！","Точка возрождения задана!","Punkt odrodzenia ustawiony!"
 HUD_RESPAWN_POINT_HINT,"Tap: here · Hold: checkpoint · Double tap: set","Toca: aquí · Mantén: punto de control · Doble toque: fijar","Appui : ici · Maintien : point de contrôle · Double appui : fixer","Tippen: hier · Halten: Checkpoint · Doppelt: setzen","Tocca: qui · Tieni: checkpoint · Doppio tocco: imposta","押す: その場 · 長押し: チェックポイント · 2回押し: 設定","탭: 제자리 · 길게: 체크포인트 · 두 번: 설정","轻按：原地 · 长按：检查点 · 双击：设置","Нажать: здесь · Удерживать: чекпоинт · Дважды: задать","Kliknij: tutaj · Przytrzymaj: punkt kontrolny · Dwa razy: ustaw"
+HUD_OPEN_EVENT_PICKER,"Events","Eventos","Épreuves","Events","Eventi","イベント","이벤트","活动","События","Wydarzenia"
 MAP_LEGEND_YOU,"You","Tú","Vous","Du","Tu","あなた","나","你","Вы","Ty"
 MAP_LEGEND_PLAYER,"Player","Jugador","Joueur","Spieler","Giocatore","プレイヤー","플레이어","玩家","Игрок","Gracz"
 MAP_LEGEND_NPC,"Rider","Piloto","Pilote","Fahrer","Pilota","ライダー","라이더","车手","Гонщик","Motocyklista"

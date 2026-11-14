@@ -129,6 +129,9 @@ static func event_icon(event: InputEvent) -> Texture2D:
 ## Key name or mouse button loc key; "" for pad input, which uses event_icon().
 static func event_text(event: InputEvent) -> String:
 	if event is InputEventKey:
+		# Built-in ui_* actions (e.g. ui_accept's prompt) bind by keycode, not physical key.
+		if event.physical_keycode == KEY_NONE:
+			return OS.get_keycode_string(event.keycode)
 		var keycode := DisplayServer.keyboard_get_keycode_from_physical(event.physical_keycode)
 		return OS.get_keycode_string(keycode)
 	if event is InputEventMouseButton:

@@ -41,6 +41,7 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _fps_label: Label = %HUD_FPS
 @onready var _game_msg: Label = %HUD_GAME_MSG
 @onready var _crash_respawn_hint: HBoxContainer = %HUD_CrashRespawnHint
+@onready var _event_picker_hint: HBoxContainer = %HUD_EventPickerHint
 @onready var _profile_card: ProfileCard = %ProfileCard
 @onready var _trick_popups: TrickPopups = %TrickPopups
 @onready var _trick_feed: TrickFeed = %HUD_TrickFeed
@@ -65,7 +66,7 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _prompts: Array[InputPrompt] = [
 	%HUD_TrickPromptBtn, %HUD_BoostPrompt, %HUD_MapPrompt, %HUD_RespawnPrompt, %HUD_ItemPrompt,
 	%HUD_HornPrompt, %HUD_LeanForwardPrompt, %HUD_LeanBackPrompt, %HUD_RearBrakePrompt,
-	%HUD_ClutchPrompt, %HUD_CrashRespawnPrompt, %HUD_LoadoutsPrompt
+	%HUD_ClutchPrompt, %HUD_CrashRespawnPrompt, %HUD_LoadoutsPrompt, %HUD_EventPickerPrompt
 ]
 @onready var _held_item_panel: HBoxContainer = %HUD_HeldItem
 @onready var _held_item_thumbnail: Thumbnail3D = %HUD_HeldItemThumbnail
@@ -353,6 +354,11 @@ func _on_crashed(_peer_id: int):
 func _on_respawned():
 	_game_msg.visible = false
 	_crash_respawn_hint.visible = false
+
+
+## Local, from FreeRoamGameMode: the rider is in a circle whose picker they can open.
+func set_event_picker_hint(shown: bool):
+	_event_picker_hint.visible = shown
 
 
 ## Something was too pricey.

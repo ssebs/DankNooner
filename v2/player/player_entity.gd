@@ -297,7 +297,7 @@ func _rollback_tick(delta: float, tick: int, _is_fresh: bool):
 		wobble_controller.wobble_vel += rb_wobble_strength # tank-slapper kick (synced state)
 
 	if rb_lock_movement or rb_unlock_movement:
-		# Unlock wins when both land on one tick
+		# Unlock wins when both land on one tick (CountdownTask.freeze/unfreeze clear the other)
 		movement_locked = !rb_unlock_movement
 		rb_lock_movement = false
 		rb_unlock_movement = false

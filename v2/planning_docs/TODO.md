@@ -27,10 +27,6 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 
-- [ ] in game popups fight the pause/menus. too easy to roll thru them, or close on accident and have to drive back over it
-  - [ ] if console is open, no other input should work![alt text](<Screenshot 2026-11-11 at 22.26.28.png>)
-
-
 - [ ] new profile component
   - [x] show in-game instead of current stacked counters
   - [x] should always be clickable
@@ -50,7 +46,7 @@
 - [ ] [Progression/Challenges](./Progression.md)
   - [x] bike variants (scooter=>mini, cruiser=>naked)
   - [x] wipe old saves
-  - [ ] lock bikes behind XP level
+  - [x] lock bikes behind XP level
   - [ ] update economy (XP+$ for events / scoring calculations)
     - [ ] SAVE TO NEW DOC
 
@@ -244,6 +240,8 @@
 ---
 
 ## Done ✅
+
+- [x] in game popups fight the pause/menus. too easy to roll thru them, or close on accident and have to drive back over it
 
 - [x] must re-press gas when switching camera
 

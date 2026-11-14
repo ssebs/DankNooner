@@ -12,6 +12,8 @@ signal respawn_quick_fired
 signal loadout_pick_changed(index: int)
 ## Last input flipped between gamepad and keyboard/mouse. For UI with no player to ask.
 signal device_changed(is_gamepad: bool)
+## ui_accept while riding. Opens the event picker inside an event circle.
+signal accept_pressed
 
 enum InputState {
 	IN_MENU,
@@ -23,6 +25,8 @@ enum InputState {
 	IN_MINIGAME,
 	## A TourManager overlay is open; it handles its own input.
 	IN_TOUR,
+	## The event picker is open over a frozen rider; GamemodeEventHUDState handles its own input.
+	IN_EVENT_PICKER,
 }
 
 @export var menu_manager: MenuManager
@@ -96,7 +100,7 @@ func _input(event: InputEvent):
 ## needs per-frame timing: crossing the threshold fires a full respawn immediately, and releasing
 ## before it fires a quick in-place respawn. A second tap saves that spot as the respawn point.
 func _process(delta: float):
-	if current_input_state != InputState.IN_GAME:
+	if current_input_state != InputState.IN_GAME or Console.is_visible():
 		_respawn_hold_time = 0.0
 		_respawn_press_spent = false
 		_close_loadout_bar()
@@ -171,8 +175,11 @@ func can_swap_loadout(idx: int) -> bool:
 
 #region InputState (in game vs in menu)
 func _unhandled_input(event: InputEvent):
+	# Gamepad and mouse presses get past the console's focused LineEdit.
+	if Console.is_visible():
+		return
 	match current_input_state:
-		InputStateManager.InputState.DISABLED, InputStateManager.InputState.IN_TOUR:
+		InputState.DISABLED, InputState.IN_TOUR, InputState.IN_EVENT_PICKER:
 			return
 		InputStateManager.InputState.IN_GAME:
 			if is_loadout_bar_open() and event is InputEventMouseButton and event.pressed:
@@ -196,6 +203,8 @@ func _unhandled_input(event: InputEvent):
 				_horn_released_msec = Time.get_ticks_msec()
 			elif event.is_action_pressed("horn"):
 				_try_drop_item()
+			elif event.is_action_pressed("ui_accept"):
+				accept_pressed.emit()
 		InputStateManager.InputState.IN_GAME_PAUSED:
 			var menu_state := menu_manager.state_machine.current_state as MenuState
 			if event.is_action_pressed("pause"):
@@ -271,7 +280,7 @@ func showhide_mouse_cursor():
 	match current_input_state:
 		InputStateManager.InputState.IN_MENU, InputStateManager.InputState.IN_GAME_PAUSED:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		InputStateManager.InputState.IN_MAP, InputStateManager.InputState.IN_MINIGAME, InputStateManager.InputState.IN_TOUR:
+		InputState.IN_MAP, InputState.IN_MINIGAME, InputState.IN_TOUR, InputState.IN_EVENT_PICKER:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		InputStateManager.InputState.IN_GAME, InputStateManager.InputState.DISABLED:
 			if !is_mobile:

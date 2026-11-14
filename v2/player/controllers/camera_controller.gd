@@ -167,6 +167,7 @@ func _input(event: InputEvent):
 		event is InputEventMouseMotion
 		and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
 		and not Input.is_action_pressed("trick")
+		and not Console.is_visible()
 	):
 		_mouse_delta += event.relative
 

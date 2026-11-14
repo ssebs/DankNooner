@@ -62,6 +62,9 @@ func deferred_init():
 	Console.add_command("dbg_set_level", _set_level, ["level"], 1, "Set your level, at its minimum XP")
 	Console.add_command("dbg_skip_tutorial", mark_tutorial_complete, [], 0, "Mark the tutorial complete")
 	Console.add_command("dbg_reset_tutorials", _reset_tutorials, [], 0, "Clear tour and tutorial progress")
+	Console.add_command(
+		"dbg_unlock_all", _unlock_all, [], 0, "Max money/XP, own all skins, skip tutorial, loadout per bike"
+	)
 	# JSON loads numbers as floats, hence the int().
 	save_slot = int(settings_manager.current_settings[_slot_setting])
 	_load_active()
@@ -277,6 +280,28 @@ func _set_level(level: String) -> void:
 	player_def.xp = (level.to_int() - 1) ** 2 * UtilsConstants.XP_PER_LEVEL
 	update_save("player_definition", player_def, true, true)
 	Console.print_line("level: %d, xp: %d" % [player_def.level(), player_def.xp])
+
+
+func _unlock_all() -> void:
+	_set_money("1000000")
+	_set_level("30")
+	mark_tutorial_complete()
+	var owned: Array = current_save["progression"]["owned"]
+	for dir in [GarageUI.BIKE_SKINS_DIR, PlayerDefinition.CHARACTER_SKINS_DIR, HornDefinition.SKINS_DIR]:
+		for path in SkinScanner.scan_skin_dir(dir).values():
+			if path not in owned:
+				owned.append(path)
+	var player_def := get_player_definition()
+	var loadout_bikes := player_def.loadouts.map(func(l: Loadout): return l.bike.base_res_path)
+	for path in SkinScanner.scan_skin_dir(GarageUI.BIKE_SKINS_DIR).values():
+		if path in loadout_bikes or player_def.loadouts.size() >= PlayerDefinition.MAX_LOADOUTS:
+			continue
+		var loadout := Loadout.new()
+		loadout.from_dict({"bike": {"base_res_path": path}})
+		loadout.name = loadout.bike.skin_name
+		player_def.loadouts.append(loadout)
+	update_save("player_definition", player_def, true, true)
+	Console.print_line("unlocked all, %d loadouts" % player_def.loadouts.size())
 
 
 func update_save(

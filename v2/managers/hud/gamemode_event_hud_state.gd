@@ -8,6 +8,7 @@ signal hud_submitted(peer_id: int, event_index: int)
 @export var hud_manager: HUDManager
 @export var input_state_manager: InputStateManager
 @export var save_manager: SaveManager
+@export var spawn_manager: SpawnManager
 
 @onready var submit_btn: Button = %SubmitBtn
 @onready var close_btn: Button = %CloseBtn
@@ -42,6 +43,7 @@ func on_player_entered_circle(
 	if peer_id != 1 and !per_rider:
 		return
 
+	CountdownTask.freeze(spawn_manager.get_player_by_peer_id(peer_id))
 	set_gamemode_hud_and_show_ui.rpc_id(
 		peer_id, event_names, event_descriptions, pb_keys, per_rider
 	)
@@ -64,7 +66,7 @@ func set_gamemode_hud_and_show_ui(
 	event_picker.visible = event_names.size() > 1
 	event_picker.select(0)
 	_show_event(0)
-	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME_PAUSED
+	input_state_manager.current_input_state = InputStateManager.InputState.IN_EVENT_PICKER
 	show_ui()
 
 
@@ -80,14 +82,16 @@ func on_player_close_pressed(peer_id: int):
 	if !multiplayer.is_server():
 		return
 
+	CountdownTask.unfreeze(spawn_manager.get_player_by_peer_id(peer_id))
 	hide_ui_for_peer.rpc_id(peer_id)
 	hud_closed.emit(peer_id)
 
 
 @rpc("call_local", "reliable")
 func hide_ui_for_peer():
-	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
+	# Before the state change, which _on_input_state_changed would otherwise undo.
 	hide_ui()
+	input_state_manager.current_input_state = InputStateManager.InputState.IN_GAME
 
 
 func show_ui():
@@ -96,6 +100,8 @@ func show_ui():
 		submit_btn.pressed.connect(_on_submit_pressed)
 	if !close_btn.pressed.is_connected(_on_close_pressed):
 		close_btn.pressed.connect(_on_close_pressed)
+	if !input_state_manager.input_state_changed.is_connected(_on_input_state_changed):
+		input_state_manager.input_state_changed.connect(_on_input_state_changed)
 	submit_btn.call_deferred("grab_focus")
 
 
@@ -105,6 +111,28 @@ func hide_ui():
 		submit_btn.pressed.disconnect(_on_submit_pressed)
 	if close_btn.pressed.has_connections():
 		close_btn.pressed.disconnect(_on_close_pressed)
+	if input_state_manager.input_state_changed.is_connected(_on_input_state_changed):
+		input_state_manager.input_state_changed.disconnect(_on_input_state_changed)
+
+
+func _unhandled_input(event: InputEvent):
+	if (
+		input_state_manager.current_input_state != InputStateManager.InputState.IN_EVENT_PICKER
+		or Console.is_visible()
+	):
+		return
+	# Esc is both; pause wins so keyboard can still reach the pause menu.
+	if event.is_action_pressed("pause"):
+		input_state_manager.pause_requested.emit()
+	elif event.is_action_pressed("ui_cancel"):
+		_on_close_pressed()
+
+
+## Unpause always lands on IN_GAME — hand input back to the picker while it's still up.
+func _on_input_state_changed(new_state: InputStateManager.InputState):
+	if new_state == InputStateManager.InputState.IN_GAME:
+		input_state_manager.current_input_state = InputStateManager.InputState.IN_EVENT_PICKER
+		submit_btn.grab_focus()
 
 
 func _on_submit_pressed():
@@ -121,4 +149,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_state_manager must not be empty")
 	if save_manager == null:
 		issues.append("save_manager must not be empty")
+	if spawn_manager == null:
+		issues.append("spawn_manager must not be empty")
 	return issues

@@ -82,6 +82,11 @@ func is_picker_open_for(event_name: String) -> bool:
 	return is_picker_open() and _picker().gm_name.text == _runner.tr(event_name)
 
 
+## The ui_accept press that opens the picker of the circle this peer's rider is in.
+func open_picker() -> void:
+	_runner.input_state_manager.accept_pressed.emit()
+
+
 ## Pause menu → Cancel Event.
 func cancel_event() -> bool:
 	if not await _pause():

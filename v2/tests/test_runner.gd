@@ -228,7 +228,7 @@ func _run_activity(peer_id: int, activity: FreeRoamActivity) -> void:
 	var circle: Node3D = activity.get_node("%PlayerStartCircle")
 	_activities_done.erase(peer_id)
 	_activity_orders[peer_id] = {"mode": "idle", "activity": activity.event_name}
-	# Riding onto the circle opens the picker; the rider's own peer submits it
+	# The rider's own peer opens the picker once on the circle, then submits it
 	spawn_manager.respawn_player_in_place.rpc(peer_id, circle.global_position, _upright(circle))
 	var done := func(): return peer_id in _activities_done
 	var finished := await wait_until(done, "peer %d to finish %s" % [peer_id, activity.name], ACTIVITY_TIMEOUT_S)
@@ -263,7 +263,11 @@ func _run_event(circle: EventStartCircle, index: int, rejoined: bool) -> bool:
 	spawn_manager.respawn_player_in_place.rpc(1, circle.global_position, _upright(circle))
 	# Opens on the circle's first event; the last activity's picker may still be up
 	var first_event := circle.get_events()[0].definition.name
-	var picker_open := func(): return _menus.is_picker_open_for(first_event)
+	var picker_open := func():
+		# Pressed until the respawn lands in the circle
+		if not _menus.is_picker_open():
+			_menus.open_picker()
+		return _menus.is_picker_open_for(first_event)
 	if not await wait_until(picker_open, "the event picker at %s" % circle.name):
 		return await _recover(label)
 	_menus.submit_picker(index)
@@ -435,6 +439,8 @@ func _watch_activities() -> void:
 		var hud_state := hud_manager.state_machine.current_state
 		if activity != "" and activity != _spent_activity and _menus.is_picker_open_for(activity):
 			_menus.submit_picker(0)
+		elif activity != "" and activity != _spent_activity and not _menus.is_picker_open():
+			_menus.open_picker()
 		elif hud_state == hud_manager.fuel_up_hud_state:
 			_busy = true
 			request_mouse.rpc_id(1)
